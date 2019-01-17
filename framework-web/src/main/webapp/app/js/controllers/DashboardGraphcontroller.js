@@ -790,13 +790,16 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
 
     $scope.filterAttribureIdValues = []
     $scope.selectedAttributeValue = []
+   
     if (data.filterInfo && data.filterInfo.length > 0) {
+      $scope.isFilterAttrInProges=true;
       var filterAttribureIdValue = [];
       for (var n = 0; n < data.filterInfo.length; n++) {
         var filterattributeidvalepromise = DahsboardSerivce.getAttributeValues(data.filterInfo[n].ref.uuid, data.filterInfo[n].attrId || "", data.filterInfo[n].ref.type);
         filterAttribureIdValue.push(filterattributeidvalepromise);
       }//End For Loop
       $q.all(filterAttribureIdValue).then(function (result) {
+        $scope.isFilterAttrInProges=false;
         for (var i = 0; i < result.length; i++) {
           var filterAttribureIdvalueJSON = {};
           var defaultvalue = {}

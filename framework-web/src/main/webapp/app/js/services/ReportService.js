@@ -163,6 +163,9 @@ DatavisualizationModule.factory('ReportFactory', function ($http, $location) {
 		if (type == "datapod") {
 			url = url + "datapod/getAttributeValues1?action=view&datapodUUID=" + uuid + "&attributeId=" + attributeId;
 		}
+		else if(type == "formula"){
+			url = url + "datapod/getFormulaValues?action=view&uuid=" + uuid+"&type="+type
+		}
 		else {
 			url = url + "dataset/getAttributeValues?action=view&uuid=" + uuid + "&attributeId=" + attributeId;
 		}

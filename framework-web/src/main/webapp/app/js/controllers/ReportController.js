@@ -659,10 +659,19 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 						filterAttribureIdvalueJSON.vizpodversion = data.filterInfo[i].ref.uuid;
 					filterAttribureIdvalueJSON.datapoduuid = data.filterInfo[i].ref.uuid;
 					filterAttribureIdvalueJSON.type = data.filterInfo[i].ref.type;
-					filterAttribureIdvalueJSON.datapodattrId = data.filterInfo[i].attrId;
-					filterAttribureIdvalueJSON.dname = data.filterInfo[i].ref.name + "." + data.filterInfo[i].attrName;
+					if(data.filterInfo[i].ref.type !="formula"){
+						filterAttribureIdvalueJSON.datapodattrId = data.filterInfo[i].attrId;
+						filterAttribureIdvalueJSON.attrName =data.filterInfo[i].attrName;
+						filterAttribureIdvalueJSON.dname = data.filterInfo[i].ref.name + "." + data.filterInfo[i].attrName;
+					  }
+					  else{
+						filterAttribureIdvalueJSON.attrName =data.filterInfo[i].ref.name;
+						filterAttribureIdvalueJSON.dname = "formula"+"." +data.filterInfo[i].ref.name;
+					  }
+					//filterAttribureIdvalueJSON.datapodattrId = data.filterInfo[i].attrId;
+				//	filterAttribureIdvalueJSON.dname = data.filterInfo[i].ref.name + "." + data.filterInfo[i].attrName;
 					filterAttribureIdvalueJSON.name = data.filterInfo[i].ref.name
-					filterAttribureIdvalueJSON.attrName = data.filterInfo[i].attrName;
+				//	filterAttribureIdvalueJSON.attrName = data.filterInfo[i].attrName;
 
 					// if(result[i].data.length >0)
 					// result[i].data.sort(sortAlphaNum('value'));
@@ -702,8 +711,15 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 				ref.type = $scope.filterAttribureIdValues[i].type;
 				ref.uuid = $scope.filterAttribureIdValues[i].datapoduuid
 				filterList.ref = ref;
-				filterList.attrId = $scope.filterAttribureIdValues[i].datapodattrId
-				filterTag.text = $scope.filterAttribureIdValues[i].attrName + " - " + $scope.selectedAttributeValue[i].value;
+				if($scope.filterAttribureIdValues[i].type !="formual"){
+					filterList.attrId = $scope.filterAttribureIdValues[i].datapodattrId;
+					filterTag.text = $scope.filterAttribureIdValues[i].attrName + " - " + $scope.selectedAttributeValue[i].value;
+				  }
+				  else{
+					filterTag.text = $scope.filterAttribureIdValues[i].name + " - " + $scope.selectedAttributeValue[i].value;
+				  }
+			//	filterList.attrId = $scope.filterAttribureIdValues[i].datapodattrId
+			//	filterTag.text = $scope.filterAttribureIdValues[i].attrName + " - " + $scope.selectedAttributeValue[i].value;
 				filterTag.index = i;
 				filterTag.value = $scope.selectedAttributeValue[i].value;
 				filterList.value = $scope.selectedAttributeValue[i].value;//"'"+$scope.selectedAttributeValue[i].value+"'";
