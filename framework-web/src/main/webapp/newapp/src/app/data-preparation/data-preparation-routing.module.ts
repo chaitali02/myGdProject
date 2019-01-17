@@ -20,8 +20,7 @@ const routes: Routes = [
         children: [
         //{path: '', component: DatapodComponent},
         {path: 'datapod/:id/:version/:mode', component: DatapodComponent,pathMatch:'full' },
-        {path: 'datapod', component: DatapodComponent},
-        
+        {path: 'datapod', component: DatapodComponent},        
         {path: 'datapod/datapod/:id/:version/:mode', redirectTo : 'datapod/:id/:version/:mode'},
         {path: 'datapod/datapod', redirectTo : 'datapod'},
         {path: 'formula/:id/:version/:mode', component: FormulaComponent, pathMatch: 'full'},
@@ -30,9 +29,11 @@ const routes: Routes = [
         {path: 'dataset/:id/:version/:mode', component: DatasetComponent, pathMatch: 'full'},
         {path: 'dataset/dataset/:id/:version/:mode', component:DatasetComponent, pathMatch: 'full'},
         {path: 'dataset', component: DatasetComponent, pathMatch: 'full'}, 
+        
         {path: 'expression/:id/:version/:mode', component: ExpressionComponent, pathMatch: 'full'},
         {path: 'expression/expression/:id/:version/:mode', component:ExpressionComponent, pathMatch: 'full'},
         {path: 'expression', component: ExpressionComponent, pathMatch: 'full'}, 
+        
         {path: 'filter/:id/:version/:mode', component: FilterComponent, pathMatch: 'full'},
         {path: 'filter/filter/:id/:version/:mode', component: FilterComponent, pathMatch: 'full'},
         {path: 'filter', component: FilterComponent, pathMatch: 'full'},

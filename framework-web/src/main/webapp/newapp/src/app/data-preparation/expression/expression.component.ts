@@ -50,7 +50,12 @@ export class ExpressionComponent implements OnInit {
   operators: any;
   isSubmitEnable: any;
   isDependonDisabled : boolean;
+  isHomeEnable: boolean = false;
+  showGraph: boolean = false;
+  isRefreshEnable: boolean = true;
+
   constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
+    this.uuid = '';
     this.isDependonDisabled = false;
     this.showExpression = true;
     this.expression = {};
@@ -706,10 +711,19 @@ export class ExpressionComponent implements OnInit {
     }, 1000);
   }
   enableEdit(uuid, version) {
+    this.isRefreshEnable = false;
     this.router.navigate(['app/dataPreparation/expression', uuid, version, 'false']);
   }
-  showview(uuid, version) {
-    this.router.navigate(['app/dataPreparation/expression', uuid, version, 'true']);
+  // showview(uuid, version) {
+  //   this.router.navigate(['app/dataPreparation/expression', uuid, version, 'true']);
+  // }
+  showMainPage(uuid, version){ 
+    this.isHomeEnable = false;
+    this.showGraph = false;
   }
-
+  showDatapodGraph(uuid,version){
+    console.log("Show datapod Graph call... ");
+    this.showGraph = true;
+    this.isHomeEnable = true;
+  }
 }
