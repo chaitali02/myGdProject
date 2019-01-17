@@ -194,10 +194,10 @@
                         </p-dropdown>
                       </div>
                     </div>
-                    <div class="portlet box green">
+                    <div class="portlet light bordered">
                       <div class="portlet-title">
                         <div class="caption">
-                          <i class="fa fa-gift"></i>Filter
+                          Filter
                         </div>
                       </div>
                       <div class="portlet-body form">
@@ -215,11 +215,12 @@
                                     (click)="checkAllFilterRow()" />
                                 </th>
                                 <th style="text-align: center; Vertical-align: middle;width:5%;">Logical Operator</th>
-                                <th style="text-align: center;width:15%;">LHS Type</th>
-                                <th style="text-align: center;width:20%;">LHS Attribute</th>
+                                <th style="text-align: center;width:13%;">LHS Type</th>
+                                <th style="text-align: center;width:15%;">LHS Attribute</th>
                                 <th style="text-align: center;width:15%;">Operator</th>
-                                <th style="text-align: center;width:25%;">RHS Type</th>
+                                <th style="text-align: center;width:20%;">RHS Type</th>
                                 <th style="text-align: center;width:20%;">RHS Attribute</th>
+                                <th style="text-align: center;width:12%;">Move</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -509,13 +510,13 @@
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Ref Integrity Check</label>
                       <div class="col-md-3 col-sm-3 col-xs-12">
                         <p-dropdown [options]="allRefIntegrity" [(ngModel)]="selectRefIntegrity" name="selectRefIntegrity" dataKey="uuid" [disabled]="mode == 'true' || !IsSelectSoureceAttr"
-                          [style]="{'width':'100%','padding':'3px'}" [filter]="true" (onChange)="changeRefIntegrity()">
+                          [style]="{'width':'100%','padding':'3px'}" [filter]="true" placeholder = "-Select-" (onChange)="changeRefIntegrity()">
                         </p-dropdown>
                       </div>
 
                       <div class="col-md-3 col-sm-3 col-xs-12">
                         <p-dropdown [options]="allIntegrityAttribute" [(ngModel)]="selectIntegrityAttribute" name="selectIntegrityAttribute" dataKey="u_Id"
-                          [disabled]="mode == 'true' || !IsSelectSoureceAttr" [style]="{'width':'100%','padding':'3px'}" [filter]="true">
+                          [disabled]="mode == 'true' || !IsSelectSoureceAttr" placeholder = "-Select-" [style]="{'width':'100%','padding':'3px'}" [filter]="true">
                         </p-dropdown>
                       </div>
                     </div>
