@@ -17,6 +17,8 @@ import { SESSION_STORAGE, WebStorageService } from 'angular-webstorage-service'
   encapsulation: ViewEncapsulation.None
 })
 export class DatasetComponent implements OnInit {
+  progressbarWidth: string;
+  continueCount: number;
   paramlistArray: any[];
   functionArray: any[];
   dialogAttriNameArray: any[];
@@ -86,9 +88,12 @@ export class DatasetComponent implements OnInit {
 
   constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _datasetService: DatasetService, private activeroute: ActivatedRoute, @Inject(SESSION_STORAGE) private storage: WebStorageService) {
     this.baseUrl = config.getBaseUrl();
+    this.continueCount = 1;
+    this.progressbarWidth = 25 * this.continueCount + "%";
     this.showdatapod = true;
     this.dataset = {};
     this.dataset["active"] = true
+    this.dataset["locked"] = false
     this.isSubmitEnable1 = true;
     this.displayDialogBox = false;
     this.dialogAttributeName = {};
@@ -176,6 +181,14 @@ export class DatasetComponent implements OnInit {
     //this._location.back();
     this.router.navigate(['app/list/dataset']);
   }
+  countContinue = function () {
+    this.continueCount = this.continueCount + 1;
+    this.progressbarWidth = 25 * this.continueCount + "%";
+  }
+  countBack = function () {
+    this.continueCount = this.continueCount - 1;
+    this.progressbarWidth = 25 * this.continueCount + "%";
+  }
   onChangeActive(event) {
     if (event === true) {
       this.dataset.active = 'Y';
@@ -190,6 +203,14 @@ export class DatasetComponent implements OnInit {
     }
     else {
       this.dataset.published = 'N';
+    }
+  }
+  onChangeLock(event) {
+    if (event === true) {
+      this.dataset.locked = 'Y';
+    }
+    else {
+      this.dataset.locked = 'N';
     }
   }
   getOneByUuidAndVersion(id, version) {
@@ -237,6 +258,7 @@ export class DatasetComponent implements OnInit {
     }//End If
     this.dataset.published = response["published"] == 'Y' ? true : false
     this.dataset.active = response["active"] == 'Y' ? true : false
+    this.dataset.locked = response["locked"] == 'Y' ? true : false
     // const version: Version = new Version();
     // version.label = response['version'];
     // version.uuid = response['uuid'];
