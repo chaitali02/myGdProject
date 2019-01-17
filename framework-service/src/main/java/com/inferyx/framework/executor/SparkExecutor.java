@@ -2112,6 +2112,8 @@ public class SparkExecutor<T> implements IExecutor {
 			, String trainingDfSql, String validationDfSql, Map<String, EncodingType> encodingDetails) throws IOException {
 
 		String []origFieldArray = new String[fieldArray.length];
+		origFieldArray = fieldArray;
+		
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
 		String assembledDFSQL = "SELECT * FROM " + tableName;
@@ -2177,9 +2179,8 @@ public class SparkExecutor<T> implements IExecutor {
 				trngDf.printSchema();
 				valDf.printSchema();				
 				
-				origFieldArray = fieldArray;
 				fieldArray = encoderCols.toArray(new String[encoderCols.size()]);
-			}						
+			}
 			
 			VectorAssembler vectorAssembler = new VectorAssembler();
 			vectorAssembler.setInputCols(fieldArray).setOutputCol("features");
