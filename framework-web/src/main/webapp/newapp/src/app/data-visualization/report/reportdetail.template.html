@@ -237,7 +237,7 @@
               <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
 
                 <a class="btn btn-primary" (click)="cancelDialogBox()">Cancel</a>
-                <input type="button" class="btn btn-success" value="Submit" (click)="submit()" name="submit" [disabled]="(!iSSubmitEnable == false|| mode == false || myNewForm.form.dirty == true)?false:true"
+                <input type="button" class="btn btn-success" value="Submit" (click)="submit()" name="submit" [disabled]="(!isSubmitEnable == false|| mode == false || myNewForm.form.dirty == true)?false:true"
                   (mouseenter)="checkEmpty()">
                 <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" *ngIf="isSubmit=='true'">
                   <div class="bounce1"></div>
@@ -252,7 +252,7 @@
                 <div class="caption">
                   <i class="fa fa-gift"></i>Source Attribute
                 </div>
-                <div class="actions">
+                <div class="actions" [ngClass]="mode=='true'?'currentpage':'notcurrentpage'">
                   <a class="btn pull-right" (click)="autoPopulate()" tooltip-placement="top" uib-tooltip="Auto Populate">
                     <span class="fa fa-map-signs" aria-hidden="true" style="color:#ffffff;"></span>
                   </a>
@@ -440,10 +440,13 @@
             <button type="button" data-dismiss="modal" class="btn dark btn-outline" (click)="cancelFilterDialog()">Close</button>
             <button type="button" class="btn green" (click)="submitFilterDialog(filterDropdownValue, filterAttribureIdValues)">Submit</button>
           </p-footer>
-
         </p-dialog>
-
       </div>
+
+      <div class="portlet-body form" *ngIf="showGraph">
+        {{"Knowledge Graph"}}
+      </div>
+      
     </div>
   </div>
 </div>
