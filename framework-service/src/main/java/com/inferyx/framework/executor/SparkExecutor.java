@@ -2301,7 +2301,7 @@ public class SparkExecutor<T> implements IExecutor {
 				sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");
 				
 //				if(encodingDetails == null || (encodingDetails != null && !encodingDetails.isEmpty())) {
-					saveTrainedTestDataset(trainedDataSet, valDf2, defaultPath, rowIdentifierCols, includeFeatures, fieldArray, trainName);
+					saveTrainedTestDataset(trainedDataSet, valDf2, defaultPath, rowIdentifierCols, includeFeatures, origFieldArray, trainName);
 //				}
 				return trngModel;
 			} catch (Exception e) {
@@ -2423,6 +2423,9 @@ public class SparkExecutor<T> implements IExecutor {
 		logger.info("trainedDataset >>>>>>>>>>> ");
 		trainedDataSet.printSchema();
 		trainedDataSet.show();
+		for (String colName : colNameList) {
+			logger.info("colName : " + colName);
+		}
 		trainedDataSet = trainedDataSet.select("rowNum", colNameList.toArray(new String[colNameList.size()]));
 		//creating column prediction_status
 		Dataset<Row> predictionStatusDF = null;
