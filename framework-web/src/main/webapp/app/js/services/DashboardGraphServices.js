@@ -6,9 +6,15 @@ DatavisualizationModule.factory('DahsboardFactory', function ($http, $location) 
 	var factory = {}
 
 	factory.findAttributeValues = function (uuid, attributeId, type) {
+		
+		console.log(type)
 		var url = $location.absUrl().split("app")[0]
 		if (type == "datapod") {
 			url = url + "datapod/getAttributeValues1?action=view&datapodUUID=" + uuid + "&attributeId=" + attributeId;
+		}
+		else if(type == "formula"){
+			debugger
+			url = url + "datapod/getFormulaValues?action=view&uuid=" + uuid+"&type="+type
 		}
 		else {
 			url = url + "dataset/getAttributeValues?action=view&uuid=" + uuid + "&attributeId=" + attributeId;

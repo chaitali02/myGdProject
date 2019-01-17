@@ -1384,12 +1384,16 @@ public class DatapodServiceImpl {
 		MetaIdentifier dependsOn = formula.getDependsOn().getRef();
 		Object dependsOnObj = commonServiceImpl.getOneByUuidAndVersion(dependsOn.getUuid(), dependsOn.getVersion(), dependsOn.getType().toString(), "N");
 		String dependsOnSql = generateSqlByObject(dependsOnObj, runMode);
+		String dependsOnAliaseName = "";
+		if(dependsOnObj instanceof Datapod) {
+			dependsOnAliaseName = ((Datapod)dependsOnObj).getName();
+		} 
 		
 		StringBuilder builder = new StringBuilder("SELECT").append(" ");
-		builder.append(formulaQuery).append(" AS ").append(formula.getName()).append(" ");
+		builder.append(formulaQuery).append(" AS value ");//.append(formula.getName()).append(" ");
 		builder.append("FROM").append(" ").append("(");
-		builder.append(dependsOnSql).append(" ").append(" tab");
-		builder.append(")").append(dependsOn.getName());
+		builder.append(dependsOnSql).append(" ").append(dependsOnAliaseName);
+		builder.append(")").append(" ").append(dependsOn.getName());
 		
 		logger.info("SQL gnerated for formula values: "+builder.toString());
 		

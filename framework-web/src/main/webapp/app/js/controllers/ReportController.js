@@ -829,6 +829,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 				$scope.sourcedatapodattribute = response;
 				$scope.lhsdatapodattributefilter = response;
 				$scope.allattribute = response;
+				$scope.getFormulaByType();
 			}
 		}
 	}
@@ -842,9 +843,32 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 			$scope.attributeTableArray = null;
 			$scope.filterAttributeTags = null;
 			$scope.addAttribute();
+			$scope.getFormulaByType();
 		}
 	}
+    $scope.getFormulaByType = function () {
+		ReportSerivce.getFormulaByType($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessFormula(response.data) });
+		var onSuccessFormula = function (response) {
+			$scope.allSourceFormula = response;;
+			$scope.allFilterormula = response;
+			//$scope.allFilterormula.splice(0, 1);
+			debugger
+			if(response && response.length >0){
+				$scope.allattribute=$scope.allattribute.concat(response);
+			}
 
+			// for (var i = 0; i < response.length; i++) {
+			// 	var formulajson = {};
+			// 	formulajson.index = $scope.sourcedatapodattribute.length;
+			// 	formulajson.id = response[i].ref.uuid;
+			// 	formulajson.uuid = response[i].ref.uuid;
+			// 	formulajson.dname = "formula"+"."+response[i].ref.name
+			// 	formulajson.name = response[i].ref.name
+			// 	formulajson.type = "formula"
+			// 	$scope.sourcedatapodattribute.push(formulajson)
+			// }//End For
+		}//End onSuccessGetFormulaByType
+	}
 
 	if (typeof $stateParams.id != "undefined") {
 		$scope.showactive = "true"
@@ -882,6 +906,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 				defaultoption.type = $scope.report.dependsOn.ref.type
 				defaultoption.uuid = $scope.report.dependsOn.ref.uuid
 				$scope.allSource.defaultoption = defaultoption;
+				$scope.getFormulaByType();
 			}
 
 			ReportSerivce.getExpressionByType($scope.report.dependsOn.ref.uuid, $scope.selectSourceType).then(function (response) { onSuccessExpression(response.data) });
@@ -889,12 +914,13 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 				$scope.allExpress = response
 			}
 
-			ReportSerivce.getFormulaByType($scope.report.dependsOn.ref.uuid, $scope.selectSourceType).then(function (response) { onSuccessFormula(response.data) });
-			var onSuccessFormula = function (response) {
-				$scope.allSourceFormula = response
-				$scope.allFilterormula = response;
-				$scope.allFilterormula.splice(0, 1);
-			}
+			// ReportSerivce.getFormulaByType($scope.report.dependsOn.ref.uuid, $scope.selectSourceType).then(function (response) { onSuccessFormula(response.data) });
+			// var onSuccessFormula = function (response) {
+			// 	$scope.allSourceFormula = response
+			// 	$scope.allFilterormula = response;
+			// 	$scope.allFilterormula.splice(0, 1);
+			// }
+			
 
 			ReportSerivce.getAllAttributeBySource($scope.report.dependsOn.ref.uuid, $scope.report.dependsOn.ref.type).then(function (response) { onSuccessGetDatapodByRelation(response.data) })
 			var onSuccessGetDatapodByRelation = function (response) {
@@ -957,11 +983,12 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 			var onSuccessExpression = function (response) {
 				$scope.allExpress = response
 			}
-			ReportSerivce.getFormulaByType($scope.report.dependsOn.ref.uuid, $scope.selectSourceType).then(function (response) { onSuccessFormula(response.data) });
-			var onSuccessFormula = function (response) {
-				$scope.allSourceFormula = response
-				$scope.allFilterormula = response;
-			}
+			// ReportSerivce.getFormulaByType($scope.report.dependsOn.ref.uuid, $scope.selectSourceType).then(function (response) { onSuccessFormula(response.data) });
+			// var onSuccessFormula = function (response) {
+			// 	$scope.allSourceFormula = response
+			// 	$scope.allFilterormula = response;
+			// }
+			$scope.getFormulaByType();
 			ReportSerivce.getAllAttributeBySource($scope.report.dependsOn.ref.uuid, $scope.report.dependsOn.ref.type).then(function (response) { onSuccessGetDatapodByRelation(response.data) })
 			var onSuccessGetDatapodByRelation = function (response) {
 				$scope.sourcedatapodattribute = response;
@@ -1516,7 +1543,9 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 				ref.type = $scope.filterAttributeTags[i].type;
 				ref.uuid = $scope.filterAttributeTags[i].uuid;
 				filterInfo.ref = ref;
-				filterInfo.attrId = $scope.filterAttributeTags[i].attributeId
+				if($scope.filterAttributeTags[i].type !="formula"){
+					filterInfo.attrId = $scope.filterAttributeTags[i].attributeId;
+				}
 				filterInfoArray[i] = filterInfo;
 			}
 		}

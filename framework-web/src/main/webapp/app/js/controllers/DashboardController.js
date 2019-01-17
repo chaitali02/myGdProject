@@ -68,10 +68,12 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 			columns: []
 		});
 	}
+
 	$scope.addSectionColumn = function (row) {
 		var len=row.columns.length-1;
 		row.columns.push({ edit: true,rowNo:row.columns[len].rowNo, colNo: row.columns[len].colNo+1});
 	}
+
 	$scope.removeSectionColumn = function (columns, i) {
 		columns.splice(i, 1);
 		if (columns.length == 0 && $scope.sectionRows.length > 1) {
@@ -79,6 +81,7 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 		}
 
 	}
+
 	$scope.convertSectionInfo = function (sectionInfo) {
 		if (!sectionInfo[0].rowNo) {
 			var row = 0;
@@ -106,6 +109,7 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 		console.log($scope.sectionRows);
 		$scope.reConvertSectionInfo($scope.sectionRows)
 	}
+
 	$scope.reConvertSectionInfo = function (rows) {
 
 		var arr = [];
@@ -149,6 +153,7 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 		// 		$scope.tempDragColIndex = undefined;
 		// }
 	}
+
 	var dragDisableTimeOut = {};
 	$scope.dragoverCallback = function (index, external, type, rowIndex, row) {
 		
@@ -332,10 +337,26 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 			$scope.sourcedatapodattribute = response;
 			$scope.lhsdatapodattributefilter = response;
 			$scope.allattribute = response;
+			$scope.getFormulaByType()//Call Function
 		}
 	}
-	$scope.selectType = function () {
 
+    $scope.getFormulaByType = function () {
+		MetadataDahsboardSerivce.getFormulaByType($scope.alldependsOn.defaultoption.uuid, $scope.selectDependsOnType).then(function (response) { onSuccessGetFormulaByType(response.data) });
+		var onSuccessGetFormulaByType = function (response) {
+			for (var i = 0; i < response.length; i++) {
+				var formulajson = {};
+				formulajson.index = $scope.sourcedatapodattribute.length;
+				formulajson.id = response[i].uuid;
+				formulajson.uuid = response[i].uuid
+				formulajson.dname = "formula"+"."+response[i].name
+				formulajson.name = response[i].name
+				formulajson.type = "formula"
+				$scope.sourcedatapodattribute.push(formulajson)
+			}//End For
+		}//End onSuccessGetFormulaByType
+	}
+	$scope.selectType = function () {
 		MetadataDahsboardSerivce.getAllLatest($scope.selectDependsOnType).then(function (response) { onSuccessGetAllLatest(response.data) });
 		var onSuccessGetAllLatest = function (response) {
 			$scope.alldependsOn = response;
@@ -562,7 +583,9 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 				ref.type = $scope.filterAttributeTags[i].type;
 				ref.uuid = $scope.filterAttributeTags[i].uuid;
 				filterInfo.ref = ref;
-				filterInfo.attrId = $scope.filterAttributeTags[i].attributeId
+				if($scope.filterAttributeTags[i].type !="formula"){
+					filterInfo.attrId = $scope.filterAttributeTags[i].attributeId;
+				}
 				filterInfoArray[i] = filterInfo;
 			}
 		}
