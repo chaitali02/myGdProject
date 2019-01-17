@@ -13,6 +13,7 @@ import { DatapodComponent} from '../data-preparation/datapod/datapod.component';
 import {FormulaComponent} from '../data-preparation/formula/formula.component';
 import {FilterComponent} from '../data-preparation/filter/filter.component';
 import {LoadComponent} from '../data-preparation/load/load.component';
+import { ResultComponent } from './result/result.component';
 
 const routes: Routes = [
     {
@@ -48,6 +49,9 @@ const routes: Routes = [
         {path: 'load/:id/:version/:mode', component: LoadComponent, pathMatch: 'full'},
         {path: 'load/filter/:id/:version/:mode', component: LoadComponent, pathMatch: 'full'},
         {path: 'load', component: LoadComponent, pathMatch: 'full'},
+
+        {path: 'mapexec/:id/:version/:mode', component: ResultComponent, pathMatch: 'full'},
+       // {path: 'mapexec', component: ResultComponent, pathMatch: 'full'},
 
         {path: 'expressionDataset/:depends/:dependsOnLabel/:dependsOnUuid', component: ExpressionComponent, pathMatch: 'full'}, 
         ]

@@ -34,6 +34,8 @@ import { TooltipModule } from 'primeng/components/tooltip/tooltip';
 import { StorageServiceModule } from 'angular-webstorage-service'
 import { DialogModule } from 'primeng/components/dialog/dialog';
 import {DragDropModule} from 'primeng/components/dragdrop/dragdrop';
+import { ResultComponent } from './result/result.component';
+import { ResultModule } from '../shared/module/result.module';
 
 @NgModule({
     imports: [
@@ -54,7 +56,8 @@ import {DragDropModule} from 'primeng/components/dragdrop/dragdrop';
         TooltipModule,
         StorageServiceModule,
         DialogModule,
-        DragDropModule        
+        DragDropModule,
+        ResultModule        
     ],
     declarations: [
         DataPreparationComponent,
@@ -67,6 +70,7 @@ import {DragDropModule} from 'primeng/components/dragdrop/dragdrop';
         MapComponent,
         RelationComponent,
         LoadComponent,
+        ResultComponent,
         
     ],
     providers: [
