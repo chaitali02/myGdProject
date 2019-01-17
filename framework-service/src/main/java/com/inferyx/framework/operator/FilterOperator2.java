@@ -30,6 +30,7 @@ import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Filter;
 import com.inferyx.framework.domain.FilterInfo;
+import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -103,6 +104,13 @@ public class FilterOperator2 {
 				builder.append(" AND (").append(generateDataSetFilterSql(dataSet, filterIdentifier.getAttrId(), filterIdentifier.getValue())).append(")");
 				MetaIdentifier dataSetRef = new MetaIdentifier(MetaType.dataset, dataSet.getUuid(), dataSet.getVersion());
 				usedRefKeySet.add(dataSetRef);
+				break;
+			case formula:
+				MetaIdentifier formulaRef = filterIdentifier.getRef();
+				Formula formula = (Formula) commonServiceImpl.getOneByUuidAndVersion(formulaRef.getUuid(), formulaRef.getVersion(), formulaRef.getType().toString());
+				builder.append(" AND (").append(generateFormulaFilterSql(formula, filterIdentifier.getValue())).append(")");
+				formulaRef.setVersion(formula.getVersion());
+				usedRefKeySet.add(formulaRef);
 				break;
 			default:
 				builder.append("");
@@ -218,5 +226,12 @@ public class FilterOperator2 {
 			}
 		}
 		return String.format("%s = %s", dataSet.sql(attrName), value);
+	}
+	
+	private String generateFormulaFilterSql(Formula formula, String value) {
+		if(formula != null) {
+			return String.format("%s = %s", formula.getName(), value);
+		} 
+		return "";
 	}
 }
