@@ -50,6 +50,7 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 	$scope.vizpod = {};
 	$scope.vizpodTypes = ["bar-chart", "pie-chart", "line-chart", "donut-chart", "area-chart", "bubble-chart", "world-map", "usa-map", "data-grid", 'network-graph','bar-line-chart','heat-map']
 	$scope.VizpodSourceTypes = ['datapod','dataset','relation'];
+	$scope.sortOrders=["ASC","DESC"];
 	$scope.vizpod.versions = [];
 	$scope.isshowmodel = false;
 	$scope.isShowSimpleData=false;
@@ -472,6 +473,7 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 			$scope.grouplist = response.groups;
 			$scope.valuelist = response.values;
 			$scope.filterAttributeTags = response.detailAttr;
+			$scope.sortByAttributeTags = response.sortByAttr;
 			var tags = [];
 			if (response.vizpoddata.tags != null) {
 				for (var i = 0; i < response.vizpoddata.tags.length; i++) {
@@ -518,6 +520,13 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 			return $filter('filter')($scope.allattribute, query);
 		});
 	}
+	$scope.loadAttrAndFormula = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.allSourceAttribute, query);
+		});
+	}
+
+	
 	$scope.selectVersion = function () {
 		$scope.myform.$dirty = false;
 		$scope.allSource = null;
@@ -581,6 +590,8 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 		vizpodjson.uuid = $scope.vizpoddata.uuid;
 		vizpodjson.name = $scope.vizpoddata.name;
 		vizpodjson.limit = $scope.vizpoddata.limit;
+		vizpodjson.sortOrder = $scope.vizpoddata.sortOrder;
+
 		var tagArray = [];
 
 		if ($scope.tags != null) {
@@ -657,12 +668,27 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 			valuearray[i] = valuejson
 		}
 		vizpodjson.values = valuearray;
-		vizpodjson.filterInfo = [],
-			vizpodjson.dimension = [],
-			console.log(JSON.stringify(vizpodjson));
-		VizpodSerivce.submit(vizpodjson, 'vizpod',upd_tag).then(function (response) { onSuccess(response.data) }, function (response) {
-				onError(response.data)
-			});
+		vizpodjson.filterInfo = [];
+		vizpodjson.dimension = [];
+		var sortByArray=[];
+		if($scope.sortByAttributeTags && $scope.sortByAttributeTags.length){
+			for (var i = 0; i < $scope.sortByAttributeTags.length; i++) {
+				var sortByjson = {}
+				var ref = {}
+				ref.uuid = $scope.sortByAttributeTags[i].uuid
+				ref.type = $scope.sortByAttributeTags[i].type;
+				sortByjson.ref = ref;
+				if ($scope.sortByAttributeTags[i].type == "datapod" || $scope.sortByAttributeTags[i].type == "dataset" ) {
+					sortByjson.attributeId = $scope.sortByAttributeTags[i].attributeId;
+				}
+
+				sortByArray[i] = sortByjson
+			}
+	    }
+		vizpodjson.sortBy=sortByArray;
+		console.log(JSON.stringify(vizpodjson));
+		VizpodSerivce.submit(vizpodjson, 'vizpod',upd_tag)
+			.then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data)});
 		var onSuccess = function (response) {
 			$scope.isshowmodel = true;
 			$scope.dataLoading = false;

@@ -39,7 +39,7 @@
     "value": null
   },
   "type": "bar-chart",
-  "limit": "10",
+  "limit": 10,
   "keys": [
     {
       "ref": {
