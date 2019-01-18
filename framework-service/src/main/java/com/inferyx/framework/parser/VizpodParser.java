@@ -25,12 +25,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.common.ConstantsUtil;
+import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Expression;
+import com.inferyx.framework.domain.Filter;
 import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.FormulaType;
 import com.inferyx.framework.domain.MetaIdentifier;
@@ -90,7 +92,8 @@ public class VizpodParser {
 		groupByBuilder.append(blankSpace);
 		groupByBuilder.append("GROUP BY");
 		groupByBuilder.append(blankSpace);
-
+//		String formulaSql2 = "";
+		
 		if ((MetaType.datapod).equals(vizpod.getSource().getRef().getType())) {
 			StringBuilder finalBuilder = new StringBuilder();			
 			if(flag) {
@@ -403,13 +406,29 @@ public class VizpodParser {
 			if (vizpod.getValues().size() > 0 && flag == false) 
 				for (AttributeDetails attrDet : vizpod.getValues()) 
 					attrDetList.add(attrDet);
+			
 			List<AttributeSource> attributeInfo = new ArrayList<>();
 			for (AttributeDetails attrDet : attrDetList) {
 				for(AttributeSource attributeSource : dataSet.getAttributeInfo()) {
 					if(attributeSource.getAttrSourceId().equalsIgnoreCase(attrDet.getAttributeId()+"")) {
 						attributeInfo.add(attributeSource);
-					}
+					} 
 				}
+				
+//				if(attrDet.getRef().getType() == MetaType.formula)	{
+//					Formula formula = (Formula) commonServiceImpl.getLatestByUuid(attrDet.getRef().getUuid(), MetaType.formula.toString());
+//					Datasource vizDS = commonServiceImpl.getDatasourceByObject(vizpod);
+//					if(formulaSql2 != null && !formulaSql2.isEmpty()) {
+//						String tempFormulaSql = formulaOperator.generateSql(formula, null, null, null, vizDS);
+//						if(tempFormulaSql != null && !tempFormulaSql.isEmpty() && !tempFormulaSql.equalsIgnoreCase(" ")) {
+//							formulaSql2 = formulaSql2+", "+tempFormulaSql;
+//							formulaSql2 = formulaSql2.concat(" AS "+formula.getName()+ " ");
+//						} 
+//					} else {
+//						formulaSql2 = formulaOperator.generateSql(formula, null, null, null, vizDS);
+//						formulaSql2 = formulaSql2.concat(" AS "+formula.getName()+ " ");
+//					}						 				
+//				}
 			}
 
 			dataSet.setAttributeInfo(attributeInfo);
@@ -420,10 +439,16 @@ public class VizpodParser {
 		/******** following custom code is written specifically to remove table name from filter query else above commented code can work *******/  	
 			StringBuilder queryBuilder = new StringBuilder();
 			selectBuilder = new StringBuilder(datasetOperator.generateSelect(dataSet, null, null, null, runMode));
+//			if(formulaSql2 != null && !formulaSql2.isEmpty()) {
+//				selectBuilder.append(", ").append(formulaSql2);
+//			}
 			fromBuilder.append(" FROM ").append(datasetOperator.generateFrom(dataSet, null, null, usedRefKeySet, runMode));
 			whereBuilder.append(datasetOperator.generateWhere());
 			whereBuilder.append(" ").append(datasetOperator.generateFilter(dataSet, null, null, usedRefKeySet, null, null));
 			Datasource datasource = commonServiceImpl.getDatasourceByObject(vizpod);
+			
+//			List<AttributeRefHolder> tempFormulaInfo = getFilterInfoWithoutFormula(vizpod.getFilterInfo());
+//			whereBuilder.append(" ").append(filterOperator2.generateSql(tempFormulaInfo, null, null, usedRefKeySet, false, false, runMode, datasource));
 			whereBuilder.append(" ").append(filterOperator2.generateSql(vizpod.getFilterInfo(), null, null, usedRefKeySet, false, false, runMode, datasource));
 			//if(allowColNameInFltr) {
 				Pattern pattern = Pattern.compile("(\\b(\\w+)\\.)(?=([^\"']*[\"'][^\"']*[\"'])*[^\"']*$)");
@@ -436,6 +461,16 @@ public class VizpodParser {
 				
 			groupByBuilder = new StringBuilder(datasetOperator.generateGroupBy(dataSet, null, null, null));
 			havingBuilder =  new StringBuilder(datasetOperator.generateHaving(dataSet, null, null, usedRefKeySet, null, null));
+//			List<AttributeRefHolder> formulaFilterInfo = getFilterInfoByFormula(vizpod.getFilterInfo());
+//			if(formulaFilterInfo != null && !formulaFilterInfo.isEmpty()) {
+//				String filterQuery = filterOperator2.generateSql(vizpod.getFilterInfo(), null, null, usedRefKeySet, true, true, runMode, datasource);
+//				if(havingBuilder != null && havingBuilder.length() > 0) {
+//					havingBuilder.append(filterQuery);
+//				} else {
+//					havingBuilder.append(filterQuery);
+//				}
+//			}
+				
 			
 			queryBuilder.append(selectBuilder);
 			queryBuilder.append(fromBuilder);
@@ -445,6 +480,32 @@ public class VizpodParser {
 			result = queryBuilder.toString();
 		}
 		return result;
+	}
+	
+	public List<AttributeRefHolder> getFilterInfoByFormula(List<AttributeRefHolder> filterInfo){
+		if(filterInfo != null) {
+			List<AttributeRefHolder> formulaFilterInfo = new ArrayList<>();
+			for(AttributeRefHolder attrRefHolder : filterInfo) {
+				if(attrRefHolder.getRef().getType().equals(MetaType.formula)) {
+					formulaFilterInfo.add(attrRefHolder);
+				}
+			}
+			return formulaFilterInfo;
+		}
+		return null;
+	}
+	
+	public List<AttributeRefHolder> getFilterInfoWithoutFormula(List<AttributeRefHolder> filterInfo){
+		if(filterInfo != null) {
+			List<AttributeRefHolder> tempFormulaInfo = new ArrayList<>();
+			for(AttributeRefHolder attrRefHolder : filterInfo) {
+				if(!attrRefHolder.getRef().getType().equals(MetaType.formula)) {
+					tempFormulaInfo.add(attrRefHolder);
+				}
+			}
+			return tempFormulaInfo;
+		}
+		return null;
 	}
 	
 }

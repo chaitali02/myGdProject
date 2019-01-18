@@ -569,6 +569,36 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		}, 100);
 
 	}
+	
+	
+    $scope.autoPopulate=function(){
+		$scope.attributeTableArray=[];
+		for(var i=0;i<$scope.sourcedatapodattribute.length;i++){
+			var attributeinfo = {};
+			attributeinfo.id =i;
+			attributeinfo.sourcedatapod=$scope.sourcedatapodattribute[i];
+			attributeinfo.name=$scope.sourcedatapodattribute[i].name;
+			attributeinfo.sourceAttributeType = $scope.sourceAttributeTypes[1];
+			attributeinfo.isSourceAtributeSimple = false;
+			attributeinfo.isSourceAtributeDatapod = true;
+			attributeinfo.isSourceAtributeFormula = false;
+			attributeinfo.isSourceAtributeExpression = false;
+			attributeinfo.isSourceAtributeFunction = false;
+			attributeinfo.isSourceAtributeParamList = false;
+			attributeinfo.isSourceName=true;
+			$scope.attributeTableArray.push(attributeinfo);
+			setTimeout(function(index){
+			//	console.log(index);
+				$scope.onChangeSourceName(index);
+			},10,(i));
+
+		}
+		
+	}
+	$scope.ondrop = function(e) {
+		console.log(e);
+		$scope.myform.$dirty=true;
+	}
 
 	$scope.onTagRemove = function (e) {
 		console.log(e);
@@ -629,10 +659,19 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 						filterAttribureIdvalueJSON.vizpodversion = data.filterInfo[i].ref.uuid;
 					filterAttribureIdvalueJSON.datapoduuid = data.filterInfo[i].ref.uuid;
 					filterAttribureIdvalueJSON.type = data.filterInfo[i].ref.type;
-					filterAttribureIdvalueJSON.datapodattrId = data.filterInfo[i].attrId;
-					filterAttribureIdvalueJSON.dname = data.filterInfo[i].ref.name + "." + data.filterInfo[i].attrName;
+					if(data.filterInfo[i].ref.type !="formula"){
+						filterAttribureIdvalueJSON.datapodattrId = data.filterInfo[i].attrId;
+						filterAttribureIdvalueJSON.attrName =data.filterInfo[i].attrName;
+						filterAttribureIdvalueJSON.dname = data.filterInfo[i].ref.name + "." + data.filterInfo[i].attrName;
+					  }
+					  else{
+						filterAttribureIdvalueJSON.attrName =data.filterInfo[i].ref.name;
+						filterAttribureIdvalueJSON.dname = "formula"+"." +data.filterInfo[i].ref.name;
+					  }
+					//filterAttribureIdvalueJSON.datapodattrId = data.filterInfo[i].attrId;
+				//	filterAttribureIdvalueJSON.dname = data.filterInfo[i].ref.name + "." + data.filterInfo[i].attrName;
 					filterAttribureIdvalueJSON.name = data.filterInfo[i].ref.name
-					filterAttribureIdvalueJSON.attrName = data.filterInfo[i].attrName;
+				//	filterAttribureIdvalueJSON.attrName = data.filterInfo[i].attrName;
 
 					// if(result[i].data.length >0)
 					// result[i].data.sort(sortAlphaNum('value'));
@@ -672,8 +711,15 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 				ref.type = $scope.filterAttribureIdValues[i].type;
 				ref.uuid = $scope.filterAttribureIdValues[i].datapoduuid
 				filterList.ref = ref;
-				filterList.attrId = $scope.filterAttribureIdValues[i].datapodattrId
-				filterTag.text = $scope.filterAttribureIdValues[i].attrName + " - " + $scope.selectedAttributeValue[i].value;
+				if($scope.filterAttribureIdValues[i].type !="formual"){
+					filterList.attrId = $scope.filterAttribureIdValues[i].datapodattrId;
+					filterTag.text = $scope.filterAttribureIdValues[i].attrName + " - " + $scope.selectedAttributeValue[i].value;
+				  }
+				  else{
+					filterTag.text = $scope.filterAttribureIdValues[i].name + " - " + $scope.selectedAttributeValue[i].value;
+				  }
+			//	filterList.attrId = $scope.filterAttribureIdValues[i].datapodattrId
+			//	filterTag.text = $scope.filterAttribureIdValues[i].attrName + " - " + $scope.selectedAttributeValue[i].value;
 				filterTag.index = i;
 				filterTag.value = $scope.selectedAttributeValue[i].value;
 				filterList.value = $scope.selectedAttributeValue[i].value;//"'"+$scope.selectedAttributeValue[i].value+"'";
@@ -799,6 +845,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 				$scope.sourcedatapodattribute = response;
 				$scope.lhsdatapodattributefilter = response;
 				$scope.allattribute = response;
+				$scope.getFormulaByType();
 			}
 		}
 	}
@@ -812,9 +859,32 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 			$scope.attributeTableArray = null;
 			$scope.filterAttributeTags = null;
 			$scope.addAttribute();
+			$scope.getFormulaByType();
 		}
 	}
+    $scope.getFormulaByType = function () {
+		ReportSerivce.getFormulaByType($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessFormula(response.data) });
+		var onSuccessFormula = function (response) {
+			$scope.allSourceFormula = response;;
+			$scope.allFilterormula = response;
+			//$scope.allFilterormula.splice(0, 1);
+			debugger
+			if(response && response.length >0){
+				$scope.allattribute=$scope.allattribute.concat(response);
+			}
 
+			// for (var i = 0; i < response.length; i++) {
+			// 	var formulajson = {};
+			// 	formulajson.index = $scope.sourcedatapodattribute.length;
+			// 	formulajson.id = response[i].ref.uuid;
+			// 	formulajson.uuid = response[i].ref.uuid;
+			// 	formulajson.dname = "formula"+"."+response[i].ref.name
+			// 	formulajson.name = response[i].ref.name
+			// 	formulajson.type = "formula"
+			// 	$scope.sourcedatapodattribute.push(formulajson)
+			// }//End For
+		}//End onSuccessGetFormulaByType
+	}
 
 	if (typeof $stateParams.id != "undefined") {
 		$scope.showactive = "true"
@@ -852,6 +922,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 				defaultoption.type = $scope.report.dependsOn.ref.type
 				defaultoption.uuid = $scope.report.dependsOn.ref.uuid
 				$scope.allSource.defaultoption = defaultoption;
+				$scope.getFormulaByType();
 			}
 
 			ReportSerivce.getExpressionByType($scope.report.dependsOn.ref.uuid, $scope.selectSourceType).then(function (response) { onSuccessExpression(response.data) });
@@ -859,12 +930,13 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 				$scope.allExpress = response
 			}
 
-			ReportSerivce.getFormulaByType($scope.report.dependsOn.ref.uuid, $scope.selectSourceType).then(function (response) { onSuccessFormula(response.data) });
-			var onSuccessFormula = function (response) {
-				$scope.allSourceFormula = response
-				$scope.allFilterormula = response;
-				$scope.allFilterormula.splice(0, 1);
-			}
+			// ReportSerivce.getFormulaByType($scope.report.dependsOn.ref.uuid, $scope.selectSourceType).then(function (response) { onSuccessFormula(response.data) });
+			// var onSuccessFormula = function (response) {
+			// 	$scope.allSourceFormula = response
+			// 	$scope.allFilterormula = response;
+			// 	$scope.allFilterormula.splice(0, 1);
+			// }
+			
 
 			ReportSerivce.getAllAttributeBySource($scope.report.dependsOn.ref.uuid, $scope.report.dependsOn.ref.type).then(function (response) { onSuccessGetDatapodByRelation(response.data) })
 			var onSuccessGetDatapodByRelation = function (response) {
@@ -927,11 +999,12 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 			var onSuccessExpression = function (response) {
 				$scope.allExpress = response
 			}
-			ReportSerivce.getFormulaByType($scope.report.dependsOn.ref.uuid, $scope.selectSourceType).then(function (response) { onSuccessFormula(response.data) });
-			var onSuccessFormula = function (response) {
-				$scope.allSourceFormula = response
-				$scope.allFilterormula = response;
-			}
+			// ReportSerivce.getFormulaByType($scope.report.dependsOn.ref.uuid, $scope.selectSourceType).then(function (response) { onSuccessFormula(response.data) });
+			// var onSuccessFormula = function (response) {
+			// 	$scope.allSourceFormula = response
+			// 	$scope.allFilterormula = response;
+			// }
+			$scope.getFormulaByType();
 			ReportSerivce.getAllAttributeBySource($scope.report.dependsOn.ref.uuid, $scope.report.dependsOn.ref.type).then(function (response) { onSuccessGetDatapodByRelation(response.data) })
 			var onSuccessGetDatapodByRelation = function (response) {
 				$scope.sourcedatapodattribute = response;
@@ -1458,14 +1531,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		reportJson.footer = $scope.report.footer;
 		reportJson.headerAlign = $scope.report.headerAlign;
 		reportJson.footerAlign = $scope.report.footerAlign;
-		//	reportJson.srcChg = "y";
-
-		// if ($scope.reposrtCompare == null) {
-		// 	reportJson.srcChg = "y";
-		// 	reportJson.sourceChg = "y";
-		// 	reportJson.filterChg = "y";
-		// }
-
+		
 		var tagArray = [];
 		if ($scope.tags != null) {
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
@@ -1485,123 +1551,6 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		dependsOn.ref = ref;
 		reportJson.dependsOn = dependsOn;
 
-		// if ($scope.reposrtCompare != null && $scope.reposrtCompare.dependsOn.ref.uuid != $scope.allSource.defaultoption.uuid) {
-		// 	reportJson.sourceChg = "y";
-		// }
-		// else {
-		// 	reportJson.sourceChg = "n";
-		// }
-
-		//filterInfo
-		// var filterInfoArray = [];
-		// var filter = {}
-		// if ($scope.reposrtCompare != null && $scope.reposrtCompare.filter != null) {
-		// 	filter.uuid = $scope.reposrtCompare.filter.uuid;
-		// 	filter.name = $scope.reposrtCompare.filter.name;
-		// 	filter.version = $scope.reposrtCompare.filter.version;
-		// 	filter.createdBy = $scope.reposrtCompare.filter.createdBy;
-		// 	filter.createdOn = $scope.reposrtCompare.filter.createdOn;
-		// 	filter.active = $scope.reposrtCompare.filter.active;
-		// 	filter.tags = $scope.reposrtCompare.filter.tags;
-		// 	filter.desc = $scope.reposrtCompare.filter.desc;
-		// 	filter.dependsOn = $scope.reposrtCompare.filter.dependsOn;
-		// }
-
-		/*if ($scope.filterTableArray.length > 0) {
-			for (var i = 0; i < $scope.filterTableArray.length; i++) {
-				if ($scope.reposrtCompare != null && $scope.reposrtCompare.filter != null && $scope.reposrtCompare.filter.filterInfo.length == $scope.filterTableArray.length) {
-					if ($scope.reposrtCompare.filterChg == "y") {
-						reportJson.filterChg = "y";
-					}
-					else {
-						reportJson.filterChg = "n";
-					}
-				}
-				else {
-					reportJson.filterChg = "y";
-				}
-				var filterInfo = {};
-				var operand = []
-				var lhsoperand = {}
-				var lhsref = {}
-				var rhsoperand = {}
-				var rhsref = {};
-				if (typeof $scope.filterTableArray[i].logicalOperator == "undefined") {
-					filterInfo.logicalOperator = ""
-				}
-				else {
-					filterInfo.logicalOperator = $scope.filterTableArray[i].logicalOperator
-				}
-				filterInfo.operator = $scope.filterTableArray[i].operator;
-				if ($scope.filterTableArray[i].lhstype.text == "string") {
-
-					lhsref.type = "simple";
-					lhsoperand.ref = lhsref;
-					lhsoperand.value = $scope.filterTableArray[i].lhsvalue;
-				}
-				else if ($scope.filterTableArray[i].lhstype.text == "datapod") {
-					lhsref.type=$scope.filterTableArray[i].lhsdatapodAttribute.type
-					lhsref.uuid = $scope.filterTableArray[i].lhsdatapodAttribute.uuid;
-
-					lhsoperand.ref = lhsref;
-					lhsoperand.attributeId = $scope.filterTableArray[i].lhsdatapodAttribute.attributeId;
-				}
-				else if ($scope.filterTableArray[i].lhstype.text == "formula") {
-
-					lhsref.type = "formula";
-					lhsref.uuid = $scope.filterTableArray[i].lhsformula.uuid;
-					lhsoperand.ref = lhsref;
-				}
-				operand[0] = lhsoperand;
-				if ($scope.filterTableArray[i].rhstype.text == "string") {
-
-					rhsref.type = "simple";
-					rhsoperand.ref = rhsref;
-					rhsoperand.value = $scope.filterTableArray[i].rhsvalue;
-				}
-				else if ($scope.filterTableArray[i].rhstype.text == "datapod") {
-					rhsref.type =$scope.filterTableArray[i].rhsdatapodAttribute.type;
-					rhsref.uuid = $scope.filterTableArray[i].rhsdatapodAttribute.uuid;
-
-					rhsoperand.ref = rhsref;
-					rhsoperand.attributeId = $scope.filterTableArray[i].rhsdatapodAttribute.attributeId;
-				}
-				else if ($scope.filterTableArray[i].rhstype.text == "formula") {
-
-					rhsref.type = "formula";
-					rhsref.uuid = $scope.filterTableArray[i].rhsformula.uuid;
-					rhsoperand.ref = rhsref;
-				}
-				else if ($scope.filterTableArray[i].rhstype.text == "function") {
-					rhsref.type = "function";
-					rhsref.uuid = $scope.filterTableArray[i].rhsfunction.uuid;
-					rhsoperand.ref = rhsref;
-				}
-				else if ($scope.filterTableArray[i].rhstype.text == "dataset") {
-					rhsref.type = "dataset";
-					rhsref.uuid = $scope.filterTableArray[i].rhsdataset.uuid;
-					rhsoperand.ref = rhsref;
-					rhsoperand.attributeId = $scope.filterTableArray[i].rhsdataset.attributeId;
-				}
-				else if ($scope.filterTableArray[i].rhstype.text == "paramlist") {
-
-					rhsref.type = "paramlist";
-					rhsref.uuid = $scope.filterTableArray[i].rhsparamlist.uuid;
-					rhsoperand.ref = rhsref;
-					rhsoperand.attributeId = $scope.filterTableArray[i].rhsparamlist.attributeId;
-				}
-				operand[1] = rhsoperand;
-				filterInfo.operand = operand;
-				filterInfoArray[i] = filterInfo;
-
-			}//End FilterInfo
-			filter.filterInfo = filterInfoArray;
-			reportJson.filter = filter;
-		}
-		else {
-			reportJson.filter = null;
-			reportJson.filterChg = "y";
-		}*/
 		var filterInfoArray = [];
 		if ($scope.filterAttributeTags != null) {
 			for (var i = 0; i < $scope.filterAttributeTags.length; i++) {
@@ -1610,7 +1559,9 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 				ref.type = $scope.filterAttributeTags[i].type;
 				ref.uuid = $scope.filterAttributeTags[i].uuid;
 				filterInfo.ref = ref;
-				filterInfo.attrId = $scope.filterAttributeTags[i].attributeId
+				if($scope.filterAttributeTags[i].type !="formula"){
+					filterInfo.attrId = $scope.filterAttributeTags[i].attributeId;
+				}
 				filterInfoArray[i] = filterInfo;
 			}
 		}

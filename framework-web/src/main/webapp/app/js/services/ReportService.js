@@ -163,6 +163,9 @@ DatavisualizationModule.factory('ReportFactory', function ($http, $location) {
 		if (type == "datapod") {
 			url = url + "datapod/getAttributeValues1?action=view&datapodUUID=" + uuid + "&attributeId=" + attributeId;
 		}
+		else if(type == "formula"){
+			url = url + "datapod/getFormulaValues?action=view&uuid=" + uuid+"&type="+type
+		}
 		else {
 			url = url + "dataset/getAttributeValues?action=view&uuid=" + uuid + "&attributeId=" + attributeId;
 		}
@@ -338,8 +341,12 @@ DatavisualizationModule.service('ReportSerivce', function ($http, $q, sortFactor
 				var formulajson = {}
 				formulajson.name = response[i].ref.name;
 				formulajson.uuid = response[i].ref.uuid;
+				formulajson.id = response[i].ref.uuid;
 				formulajson.class = "";
 				formulajson.iconclass = "";
+				formulajson.dname = "formula"+"."+response[i].ref.name
+				formulajson.name = response[i].ref.name
+				formulajson.type = "formula"
 				formulaarray.push(formulajson);
 
 			}
@@ -466,9 +473,15 @@ DatavisualizationModule.service('ReportSerivce', function ($http, $q, sortFactor
 					var filterinfo = {};
 					filterinfo.uuid = response.filterInfo[i].ref.uuid;
 					filterinfo.type = response.filterInfo[i].ref.type;
-					filterinfo.dname = response.filterInfo[i].ref.name + "." + response.filterInfo[i].attrName;
-					filterinfo.attributeId = response.filterInfo[i].attrId;
-					filterinfo.id = response.filterInfo[i].ref.uuid+"_"+i;
+					if(response.filterInfo[i].ref.type !="formula"){
+						filterinfo.attributeId = response.filterInfo[i].attrId;
+						filterinfo.dname = response.filterInfo[i].ref.name + "." + response.filterInfo[i].attrName;
+						filterinfo.id = response.filterInfo[i].ref.uuid + "_" + response.filterInfo[i].attrId;
+					}
+					else{
+						filterinfo.dname = "formula"+"."+response.filterInfo[i].ref.name;
+						filterinfo.id = response.filterInfo[i].ref.uuid;
+					}
 					filterInfoArray[i] = filterinfo;
 				}
 		    }

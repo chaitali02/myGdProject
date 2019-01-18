@@ -107,15 +107,36 @@ MetadataModule.factory('MetadataDahsboardFactory', function ($http, $location) {
 		return $http({
 			method: 'GET',
 			url: url + "metadata/getAttributesByRelation?action=view&uuid=" + uuid + "&type=" + type,
-		}).
-			then(function (response, status, headers) {
-				return response;
-			})
+		}).then(function (response, status, headers) {
+			return response;
+		})
 	}
+
+	factory.findFormulaByType = function(uuid,type) {
+        var url = $location.absUrl().split("app")[0]
+        return $http({
+          method: 'GET',
+          url: url + "metadata/getFormulaByType?action=view&uuid="+uuid+"&type="+type,
+        }).then(function(response, status, headers) {
+          return response;
+        })
+      }
 	return factory;
 });
 
 MetadataModule.service('MetadataDahsboardSerivce', function ($q, sortFactory, MetadataDahsboardFactory) {
+	this.getFormulaByType = function(uuid,type) {
+        var deferred = $q.defer();
+        MetadataDahsboardFactory.findFormulaByType(uuid,type).then(function(response) {
+          onSuccess(response.data)
+        });
+        var onSuccess = function(response) {
+          deferred.resolve({
+            data: response
+          })
+        }
+        return deferred.promise;
+      }
 	this.getAllAttributeBySource = function (uuid, type) {
 		var deferred = $q.defer();
 		if (type == "relation") {
@@ -273,10 +294,16 @@ MetadataModule.service('MetadataDahsboardSerivce', function ($q, sortFactory, Me
 				var filterinfo = {};
 				filterinfo.uuid = response.filterInfo[i].ref.uuid;
 				filterinfo.type = response.filterInfo[i].ref.type;
-				filterinfo.dname = response.filterInfo[i].ref.name + "." + response.filterInfo[i].attrName;
-				//profileinfo.version=response.filterInfo[i].ref.version;
-				filterinfo.attributeId = response.filterInfo[i].attrId;
-				filterinfo.id = response.filterInfo[i].ref.uuid + "_" + response.filterInfo[i].attrId
+				if(response.filterInfo[i].ref.type !="formula"){
+					filterinfo.attributeId = response.filterInfo[i].attrId;
+					filterinfo.dname = response.filterInfo[i].ref.name + "." + response.filterInfo[i].attrName;
+					filterinfo.id = response.filterInfo[i].ref.uuid + "_" + response.filterInfo[i].attrId
+				}
+				else{
+					filterinfo.dname = "formula"+"."+response.filterInfo[i].ref.name;
+					filterinfo.id = response.filterInfo[i].ref.uuid;
+				}
+			
 
 				filterInfoArray[i] = filterinfo;
 			}
@@ -326,9 +353,15 @@ MetadataModule.service('MetadataDahsboardSerivce', function ($q, sortFactory, Me
 				var filterinfo = {};
 				filterinfo.uuid = response.filterInfo[i].ref.uuid;
 				filterinfo.type = response.filterInfo[i].ref.type;
-				filterinfo.dname = response.filterInfo[i].ref.name + "." + response.filterInfo[i].attrName;
-				filterinfo.attributeId = response.filterInfo[i].attrId;
-				filterinfo.id = response.filterInfo[i].ref.uuid + "_" + response.filterInfo[i].attrId
+				if(response.filterInfo[i].ref.type !="formula"){
+					filterinfo.attributeId = response.filterInfo[i].attrId;
+					filterinfo.dname = response.filterInfo[i].ref.name + "." + response.filterInfo[i].attrName;
+					filterinfo.id = response.filterInfo[i].ref.uuid + "_" + response.filterInfo[i].attrId;
+				}
+				else{
+					filterinfo.dname = "formula"+"."+response.filterInfo[i].ref.name;
+					filterinfo.id = response.filterInfo[i].ref.uuid;
+				}
 				filterInfoArray[i] = filterinfo;
 			}
 			dashboardjson.filterInfo = filterInfoArray
