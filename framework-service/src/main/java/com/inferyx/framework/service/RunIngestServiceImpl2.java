@@ -848,7 +848,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						
 						tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
 						
-						String targetFileName = ingestServiceImpl.generateFileName(ingest.getTargetDetail().getValue(), ingest.getTargetExtn(), ingest.getTargetFormat());
+						String targetFileName = ingestServiceImpl.generateFileName(targetDp.getName(), ingest.getTargetExtn(), ingest.getTargetFormat());
 						String targetExtension = ingest.getTargetExtn();
 						
 						if(targetExtension != null) {
