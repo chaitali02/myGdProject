@@ -19,6 +19,7 @@ import { AttributeHolder } from './../metadata/domain/domain.attributeHolder'
 })
 
 export class BusinessRulesDetailComponent {
+	isNullArray: { 'value': string; 'label': string; }[];
 	iSSubmitEnable: boolean;
 	dragIndex: any;
 	dropIndex: any;
@@ -161,6 +162,10 @@ export class BusinessRulesDetailComponent {
 			{ 'value': '', 'label': '' },
 			{ 'value': 'AND', 'label': 'AND' },
 			{ 'value': 'OR', 'label': 'OR' }]
+			this.isNullArray = [
+				{ 'value': 'NULL', 'label': 'NULL' },
+				{ 'value': 'NOT NULL', 'label': 'NOT NULL' }
+			  ]
 	}
 
 	public goBack() {
