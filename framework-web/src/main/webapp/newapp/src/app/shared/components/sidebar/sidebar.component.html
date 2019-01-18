@@ -127,8 +127,13 @@
       <ul class="sub-menu" [style.display]="selectedItemId === DataPreparationMenu.id && toggle ==true ? 'block' : none">
         <li class="nav-item" *ngFor="let metadatasubmenu of DataPreparationMenu.subMenu ">
           <a [routerLink]="['list', metadatasubmenu.type]" class="nav-link">
-            <span class="title">{{metadatasubmenu.name}}</span>
+            <span class="title" style="text-transform: capitalize">{{metadatasubmenu.name}}</span>
             <!-- <span class="badge badge-success" *ngIf="_MetaStats!=null" [innerHTML]="_MetaStats[metadatasubmenu.type].count"></span> -->
+          </a>
+        </li>
+        <li class="nav-item">
+          <a [routerLink]="['list/mapexec']">
+            <span class="title">Results</span>
           </a>
         </li>
       </ul>

@@ -72,6 +72,11 @@ export class FormulaComponent {
   selectedVersion: Version
   sourceattribute: any;
   msgs: any;
+  isHomeEnable: boolean = false;
+  isEditEnable: boolean = true;
+  isGraphEnable: boolean = true;
+  isRefreshEnable:boolean = false;
+  showGraph: boolean = false
 
   constructor(config: AppConfig, public router: Router, private _commonService: CommonService, private activatedRoute: ActivatedRoute, private _service: MetaDataDataPodService, private _location: Location) {
     this.baseUrl = config.getBaseUrl();
@@ -129,6 +134,7 @@ export class FormulaComponent {
       { 'type': 'simple', 'value': '>', 'class': 'formula_function btn ' },
       { 'type': 'simple', 'value': '<=', 'class': 'formula_function btn ' },
       { 'type': 'simple', 'value': '>=', 'class': 'formula_function btn' },
+		  { "type": "simple", "value": ",", "class":  'formula_button btn btn-icon-only ' },
       { 'type': 'simple', 'value': 'AND', 'class': 'formula_function btn ' },
       { 'type': 'simple', 'value': 'OR', 'class': 'formula_function btn ' },
       { 'type': 'simple', 'value': 'SUM', 'class': 'formula_function btn ' },
@@ -673,6 +679,7 @@ export class FormulaComponent {
   }
 
   enableEdit(uuid, version) {
+    this.isRefreshEnable = false;
     this.router.navigate(['app/dataPreparation/formula', uuid, version, 'false']);
   }
   showview(uuid, version) {
@@ -719,9 +726,17 @@ export class FormulaComponent {
 			this.DblClcikEditDetail["isEdit"]=true;
 			this.DblClcikEditDetail["index"]=index; 
 		}
-		this.onChangeAttribute(type1["text"]);
-		
-		 
+		this.onChangeAttribute(type1["text"]);		 
 	};
   
+  showMainPage(uuid, version){
+    this.isHomeEnable = false;
+    this.showGraph = false;
+  }
+  showFormulaGraph(uuid,version){
+    console.log("Show Formula Graph call... ");
+    this.showGraph = true;
+    this.isHomeEnable = true;
+  }
+
 }

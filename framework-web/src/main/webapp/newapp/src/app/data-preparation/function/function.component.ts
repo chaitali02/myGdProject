@@ -42,6 +42,12 @@ export class FunctionComponent implements OnInit {
   active: any;
   published: any;
   isSubmitEnable: any;
+  isHomeEnable: boolean = false;
+  showGraph: boolean = false;
+  isGraphEnable: boolean = true;
+  isEditEnable : boolean = true;
+  isRefreshEnable: boolean = true;
+
   constructor(config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
     this.showFunctionData = true;
     this.functionData = {};
@@ -349,14 +355,24 @@ export class FunctionComponent implements OnInit {
   }
 
   enableEdit(uuid, version) {
+    this.isRefreshEnable = false;
     this.router.navigate(['app/dataPreparation/function', uuid, version, 'false']);
   }
-
   showview(uuid, version) {
     this.router.navigate(['app/dataPreparation/function', uuid, version, 'true']);
   }
   public goBack() {
     // this._location.back();
     this.router.navigate(['app/list/function']);
+  }
+  showMainPage(uuid, version){
+    this.isHomeEnable = false;
+    this.showGraph = false;
+  }
+  showFunctionGraph(uuid,version){
+    console.log("Show Formula Graph call... ");
+    this.showGraph = true;
+    this.isHomeEnable = true;
+    //this.isRefreshEnable = true;
   }
 }

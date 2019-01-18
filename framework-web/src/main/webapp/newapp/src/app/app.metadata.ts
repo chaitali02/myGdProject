@@ -288,19 +288,7 @@ export class AppMetadata {
         moduleCaption: 'Job Monitoring',
         class: 'fa fa-link'
       },
-      'mapexec': {
-        name: 'map',
-        caption: 'map Exec',
-        execType: 'mapExec',
-        metaType: 'map',
-        color: '#EB54C3',
-        allowInMenu: false,
-        listState: 'jobmonitoringlist',
-        detailState: 'mapExec',
-        moduleState: 'JobMonitoring',
-        moduleCaption: 'Job Monitoring',
-        class: 'fa fa-link'
-      },
+  
       'mapExec': {
         name: 'map',
         caption: 'Map',
@@ -1774,6 +1762,47 @@ export class AppMetadata {
         moduleCaption: 'BatchScheduler',
         class: 'fa fa-tasks'
       },
+      // 'ModelResult': {
+      //   name: 'model',
+      //   caption: 'ModelResult',
+      //   execType: 'modelExec',
+      //   metaType: 'modelExec',
+      //   color: '#EB54C3',
+      //   allowInMenu: false,
+      //   listState: 'jobmonitoringlist',
+      //   detailState: 'modelExec',
+      //   resultState: 'modelexec',
+      //   moduleState: 'dataScience',
+      //   moduleCaption: 'Data Science',
+      //   class: 'fa fa-flask'
+      // },
+      'mapexec': {
+        name: 'mapexec',
+        caption: 'Map Exec',
+        execType: 'mapexec',
+        metaType: 'mapexec',
+        color: '#EB54C3',
+        allowInMenu: false,
+        listState: 'jobmonitoringlist',
+        detailState: 'mapexec',
+        resultState: 'mapexec',
+        moduleState: 'dataPreparation',
+        moduleCaption: 'Data Preparation',
+        class: 'fa fa-tasks'
+      },
+      // 'mapexec': {
+      //   name: 'map',
+      //   caption: 'map Exec',
+      //   execType: 'mapExec',
+      //   metaType: 'map',
+      //   color: '#EB54C3',
+      //   allowInMenu: false,
+      //   listState: 'jobmonitoringlist',
+      //   detailState: 'mapExec',
+      //   moduleState: 'JobMonitoring',
+      //   moduleCaption: 'Job Monitoring',
+      //   class: 'fa fa-link'
+      // },
       'batchExec': {
         name: 'batch',
         caption: 'Batch Exec',
@@ -1959,8 +1988,8 @@ export class AppMetadata {
       attrs: { '.connection': { stroke: 'gray' }, '.marker-target': { d: 'M 10 0 L 0 5 L 10 10 z', fill: 'gray', stroke: 'gray' } }
     };
 
-    this.validElementTypes = ['dag', 'stage', 'dq', 'dqgroup', 'map', 'load', 'profile', 'profilegroup', 'model', 'rule', 'rulegroup', 'recon', 'recongroup', 'ingest', 'ingestgroup'];
-    this.validTaskTypes = ['dq', 'dqgroup', 'map', 'load', 'profile', 'profilegroup', 'model', 'rule', 'rulegroup', 'recon', 'recongroup', 'ingest', 'ingestgroup'];
+    this.validElementTypes = ['dag', 'stage', 'dq', 'dqgroup', 'map', 'load', 'profile', 'profilegroup', 'model', 'rule', 'rulegroup', 'recon', 'recongroup', 'ingest', 'ingestgroup','mapexec'];
+    this.validTaskTypes = ['dq', 'dqgroup', 'map', 'load', 'profile', 'profilegroup', 'model', 'rule', 'rulegroup', 'recon', 'recongroup', 'ingest', 'ingestgroup','mapexec'];
     this.defaultElement = {
       markup: '<g class="rotatable"><g class="scalable"><image class="body" /></g><image class="remove" title="Remove"/><g class="status"><image class="statusImg"><title class="statusTitle">Status</title></image></g><text class="label" /><g class="inPorts"/><g class="outPorts"/></g>',
       size: { width: 50, height: 50 },

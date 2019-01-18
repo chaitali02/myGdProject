@@ -851,109 +851,111 @@ export class DataQualityDetailComponent {
     }
 
     let filterInfoArray = [];
-    if (this.dqdata.filterTableArray.length > 0) {
-      for (let i = 0; i < this.dqdata.filterTableArray.length; i++) {
-
-        let filterInfo = {};
-        filterInfo["logicalOperator"] = this.dqdata.filterTableArray[i].logicalOperator;
-        filterInfo["operator"] = this.dqdata.filterTableArray[i].operator;
-        filterInfo["operand"] = [];
-
-        if (this.dqdata.filterTableArray[i].lhsType == 'integer' || this.dqdata.filterTableArray[i].lhsType == 'string') {
-          let operatorObj = {};
-          let ref = {}
-          ref["type"] = "simple";
-          operatorObj["ref"] = ref;
-          operatorObj["value"] = this.dqdata.filterTableArray[i].lhsAttribute;
-          operatorObj["attributeType"] = "string"
-          filterInfo["operand"][0] = operatorObj;
-        }
-        else if (this.dqdata.filterTableArray[i].lhsType == 'formula') {
-          let operatorObj = {};
-          let ref = {}
-          ref["type"] = "formula";
-          ref["uuid"] = this.dqdata.filterTableArray[i].lhsAttribute.uuid;
-          operatorObj["ref"] = ref;
-          // operatorObj["attributeId"] = this.dataset.filterTableArray[i].lhsAttribute;
-          filterInfo["operand"][0] = operatorObj;
-        }
-        else if (this.dqdata.filterTableArray[i].lhsType == 'datapod') {
-          let operatorObj = {};
-          let ref = {}
-          ref["type"] = "datapod";
-          ref["uuid"] = this.dqdata.filterTableArray[i].lhsAttribute.uuid;
-          operatorObj["ref"] = ref;
-          operatorObj["attributeId"] = this.dqdata.filterTableArray[i].lhsAttribute.attributeId;
-          filterInfo["operand"][0] = operatorObj;
-        }
-        if (this.dqdata.filterTableArray[i].rhsType == 'integer' || this.dqdata.filterTableArray[i].rhsType == 'string') {
-          let operatorObj = {};
-          let ref = {}
-          ref["type"] = "simple";
-          operatorObj["ref"] = ref;
-          operatorObj["value"] = this.dqdata.filterTableArray[i].rhsAttribute;
-          operatorObj["attributeType"] = "string"
-          filterInfo["operand"][1] = operatorObj;
-
-          if (this.dqdata.filterTableArray[i].rhsType == 'integer' && this.dqdata.filterTableArray[i].operator == 'BETWEEN') {
+    if(this.dqdata.filterTableArray != null){
+      if (this.dqdata.filterTableArray.length > 0) {
+        for (let i = 0; i < this.dqdata.filterTableArray.length; i++) { 
+          let filterInfo = {};
+          filterInfo["logicalOperator"] = this.dqdata.filterTableArray[i].logicalOperator;
+          filterInfo["operator"] = this.dqdata.filterTableArray[i].operator;
+          filterInfo["operand"] = [];
+  
+          if (this.dqdata.filterTableArray[i].lhsType == 'integer' || this.dqdata.filterTableArray[i].lhsType == 'string') {
             let operatorObj = {};
             let ref = {}
             ref["type"] = "simple";
             operatorObj["ref"] = ref;
-            operatorObj["value"] = this.dqdata.filterTableArray[i].rhsAttribute1 + "and" + this.dqdata.filterTableArray[i].rhsAttribute2;
+            operatorObj["value"] = this.dqdata.filterTableArray[i].lhsAttribute;
+            operatorObj["attributeType"] = "string"
+            filterInfo["operand"][0] = operatorObj;
+          }
+          else if (this.dqdata.filterTableArray[i].lhsType == 'formula') {
+            let operatorObj = {};
+            let ref = {}
+            ref["type"] = "formula";
+            ref["uuid"] = this.dqdata.filterTableArray[i].lhsAttribute.uuid;
+            operatorObj["ref"] = ref;
+            // operatorObj["attributeId"] = this.dataset.filterTableArray[i].lhsAttribute;
+            filterInfo["operand"][0] = operatorObj;
+          }
+          else if (this.dqdata.filterTableArray[i].lhsType == 'datapod') {
+            let operatorObj = {};
+            let ref = {}
+            ref["type"] = "datapod";
+            ref["uuid"] = this.dqdata.filterTableArray[i].lhsAttribute.uuid;
+            operatorObj["ref"] = ref;
+            operatorObj["attributeId"] = this.dqdata.filterTableArray[i].lhsAttribute.attributeId;
+            filterInfo["operand"][0] = operatorObj;
+          }
+          if (this.dqdata.filterTableArray[i].rhsType == 'integer' || this.dqdata.filterTableArray[i].rhsType == 'string') {
+            let operatorObj = {};
+            let ref = {}
+            ref["type"] = "simple";
+            operatorObj["ref"] = ref;
+            operatorObj["value"] = this.dqdata.filterTableArray[i].rhsAttribute;
+            operatorObj["attributeType"] = "string"
+            filterInfo["operand"][1] = operatorObj;
+  
+            if (this.dqdata.filterTableArray[i].rhsType == 'integer' && this.dqdata.filterTableArray[i].operator == 'BETWEEN') {
+              let operatorObj = {};
+              let ref = {}
+              ref["type"] = "simple";
+              operatorObj["ref"] = ref;
+              operatorObj["value"] = this.dqdata.filterTableArray[i].rhsAttribute1 + "and" + this.dqdata.filterTableArray[i].rhsAttribute2;
+              filterInfo["operand"][1] = operatorObj;
+            }
+          }
+          else if (this.dqdata.filterTableArray[i].rhsType == 'formula') {
+            let operatorObj = {};
+            let ref = {}
+            ref["type"] = "formula";
+            ref["uuid"] = this.dqdata.filterTableArray[i].rhsAttribute.uuid;
+            operatorObj["ref"] = ref;
+            //operatorObj["attributeId"] = this.dataset.filterTableArray[i].rhsAttribute;
             filterInfo["operand"][1] = operatorObj;
           }
+          else if (this.dqdata.filterTableArray[i].rhsType == 'function') {
+            let operatorObj = {};
+            let ref = {}
+            ref["type"] = "function";
+            ref["uuid"] = this.dqdata.filterTableArray[i].rhsAttribute.uuid;
+            operatorObj["ref"] = ref;
+            //operatorObj["attributeId"] = this.dataset.filterTableArray[i].rhsAttribute;
+            filterInfo["operand"][1] = operatorObj;
+          }
+          else if (this.dqdata.filterTableArray[i].rhsType == 'paramlist') {
+            let operatorObj = {};
+            let ref = {}
+            ref["type"] = "paramlist";
+            ref["uuid"] = this.dqdata.filterTableArray[i].rhsAttribute.uuid;
+            operatorObj["ref"] = ref;
+            operatorObj["attributeId"] = this.dqdata.filterTableArray[i].rhsAttribute.attributeId;
+            filterInfo["operand"][1] = operatorObj;
+          }
+          else if (this.dqdata.filterTableArray[i].rhsType == 'dataset') {
+            let operatorObj = {};
+            let ref = {}
+            ref["type"] = "dataset";
+            ref["uuid"] = this.dqdata.filterTableArray[i].rhsAttribute.uuid;
+            operatorObj["ref"] = ref;
+            operatorObj["attributeId"] = this.dqdata.filterTableArray[i].rhsAttribute.attributeId;
+            filterInfo["operand"][1] = operatorObj;
+          }
+          else if (this.dqdata.filterTableArray[i].rhsType == 'datapod') {
+            let operatorObj = {};
+            let ref = {}
+            ref["type"] = "datapod";
+            ref["uuid"] = this.dqdata.filterTableArray[i].rhsAttribute.uuid;
+            operatorObj["ref"] = ref;
+            operatorObj["attributeId"] = this.dqdata.filterTableArray[i].rhsAttribute.attributeId;
+            filterInfo["operand"][1] = operatorObj;
+          }
+          filterInfoArray[i] = filterInfo;
         }
-        else if (this.dqdata.filterTableArray[i].rhsType == 'formula') {
-          let operatorObj = {};
-          let ref = {}
-          ref["type"] = "formula";
-          ref["uuid"] = this.dqdata.filterTableArray[i].rhsAttribute.uuid;
-          operatorObj["ref"] = ref;
-          //operatorObj["attributeId"] = this.dataset.filterTableArray[i].rhsAttribute;
-          filterInfo["operand"][1] = operatorObj;
-        }
-        else if (this.dqdata.filterTableArray[i].rhsType == 'function') {
-          let operatorObj = {};
-          let ref = {}
-          ref["type"] = "function";
-          ref["uuid"] = this.dqdata.filterTableArray[i].rhsAttribute.uuid;
-          operatorObj["ref"] = ref;
-          //operatorObj["attributeId"] = this.dataset.filterTableArray[i].rhsAttribute;
-          filterInfo["operand"][1] = operatorObj;
-        }
-        else if (this.dqdata.filterTableArray[i].rhsType == 'paramlist') {
-          let operatorObj = {};
-          let ref = {}
-          ref["type"] = "paramlist";
-          ref["uuid"] = this.dqdata.filterTableArray[i].rhsAttribute.uuid;
-          operatorObj["ref"] = ref;
-          operatorObj["attributeId"] = this.dqdata.filterTableArray[i].rhsAttribute.attributeId;
-          filterInfo["operand"][1] = operatorObj;
-        }
-        else if (this.dqdata.filterTableArray[i].rhsType == 'dataset') {
-          let operatorObj = {};
-          let ref = {}
-          ref["type"] = "dataset";
-          ref["uuid"] = this.dqdata.filterTableArray[i].rhsAttribute.uuid;
-          operatorObj["ref"] = ref;
-          operatorObj["attributeId"] = this.dqdata.filterTableArray[i].rhsAttribute.attributeId;
-          filterInfo["operand"][1] = operatorObj;
-        }
-        else if (this.dqdata.filterTableArray[i].rhsType == 'datapod') {
-          let operatorObj = {};
-          let ref = {}
-          ref["type"] = "datapod";
-          ref["uuid"] = this.dqdata.filterTableArray[i].rhsAttribute.uuid;
-          operatorObj["ref"] = ref;
-          operatorObj["attributeId"] = this.dqdata.filterTableArray[i].rhsAttribute.attributeId;
-          filterInfo["operand"][1] = operatorObj;
-        }
-        filterInfoArray[i] = filterInfo;
+        dqJson["filterInfo"] = filterInfoArray;
+        console.log(JSON.stringify(filterInfoArray));
       }
-      dqJson["filterInfo"] = filterInfoArray;
-      console.log(JSON.stringify(filterInfoArray));
     }
+    
     console.log(JSON.stringify(dqJson));
     this._commonService.submit("dq", dqJson).subscribe(
       response => { this.OnSuccessubmit(response) },

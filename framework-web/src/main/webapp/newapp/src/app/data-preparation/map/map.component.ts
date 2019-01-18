@@ -16,6 +16,10 @@ import { DependsOn } from './dependsOn'
   styleUrls: ['./map.component.css']
 })
 export class MapComponent implements OnInit {
+  showGraph: boolean;
+  isHomeEnable: boolean;
+  showDropdown: boolean;
+  allAutoMapTable: { value: string; label: string; }[];
   VersionList: SelectItem[] = [];
   selectedVersion: Version
   selectVersion: any;
@@ -58,9 +62,11 @@ export class MapComponent implements OnInit {
   isSubmitEnable: any;
 
   constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _mapService: MapServices) {
-
+    this.showDropdown = false
     this.showMapData = true;
     this.mapData = {};
+    this.showGraph = false
+    this.isHomeEnable = false
     this.mapData["active"] = true;
     this.isSubmitEnable = true;
     this.selectVersion = { "version": "" };
@@ -94,7 +100,10 @@ export class MapComponent implements OnInit {
       { "value": "formula", "label": "formula" }
     ]
     this.mapTableArray = []
-
+    this.allAutoMapTable = [
+      { value: 'ByName', label: 'By Name' },
+      { value: 'ByOrder', label: 'By Order' }
+    ]
   }
 
   ngOnInit() {
@@ -684,6 +693,93 @@ export class MapComponent implements OnInit {
   }
   showview(uuid, version) {
     this.router.navigate(['app/dataPreparation/map', uuid, version, 'true']);
+  }
+
+  showMainPage() {
+    this.isHomeEnable = false
+    // this._location.back();
+    this.showGraph = false;
+  }
+
+  showDagGraph(uuid, version) {
+    this.isHomeEnable = true;
+    this.showGraph = true;
+  }
+
+
+  autoMapFeature(selectedAutoMode) {
+    
+    //let temp = this.attributeTableArray;
+    //  this.attributeTableArray = [];
+    if (selectedAutoMode == "By Order") {
+      //if (this.allMapTargetAttribute) {
+       // for (var i = 0; i < this.mapTableArray.length; i++) {debugger
+         // var mapInfo = {};
+          //mapInfo["attrMapId"] = i;
+          //mapInfo["sourceType"] = "datapod";
+
+          // let sourceObj = {};
+          // if (this.allMapTargetAttribute.length > i) {debugger
+
+
+
+           // this.getAllAttributeBySource();
+
+
+
+           // this.onChangeSourceAttribute(this.mapTableArray[i].sourceAttributeType.value,i)
+
+
+            // sourceObj["label"] = this.mapTableArray[i]["sourceattribute"]["label"];
+            // sourceObj["id"] = this.mapTableArray[i]["sourceattribute"]["id"];
+            // sourceObj["uuid"] = this.mapTableArray[i]["sourceattribute"]["uuid"];
+            // sourceObj["type"] = this.mapTableArray[i]["sourceattribute"]["type"];
+            // sourceObj["attributeId"] = this.mapTableArray[i]["sourceattribute"]["attributeId"];
+            // sourceObj["dname"] = this.mapTableArray[i]["sourceattribute"]["dname"];
+            // sourceObj["trackName"] = this.mapTableArray[i]["sourceattribute"]["trackName"];
+
+          // }
+          // else {debugger
+          //   sourceObj = {};
+          //   mapInfo["sourceattribute"] = sourceObj;
+          //   this.mapTableArray[i]["sourceattribute"] = mapInfo["sourceattribute"]
+          // }
+     
+        // }
+        console.log(JSON.stringify(this.mapTableArray));
+     // }
+    }
+
+    else if (selectedAutoMode == "By Name") {
+      for (var i = 0; i < this.mapTableArray.length; i++) {
+        var mapInfo = {};
+
+        let sourceObj = {};
+        for (let j = 0; j < this.allMapTargetAttribute.length; j++) {
+          console.log(this.allMapTargetAttribute[j]["name"]);
+          console.log(this.mapTableArray[i]["sourceattribute"]["label"]);
+          if (this.allMapTargetAttribute[j]["name"] == (this.mapTableArray[i]["sourceattribute"]["label"]).split(".")[1]) {
+          
+
+            sourceObj["label"] = this.mapTableArray[i]["sourceattribute"]["label"];
+            sourceObj["id"] = this.mapTableArray[i]["sourceattribute"]["id"];
+            sourceObj["uuid"] = this.mapTableArray[i]["sourceattribute"]["uuid"];
+            sourceObj["type"] = this.mapTableArray[i]["sourceattribute"]["type"];
+            sourceObj["attributeId"] = this.mapTableArray[i]["sourceattribute"]["attributeId"];
+            sourceObj["dname"] = this.mapTableArray[i]["sourceattribute"]["dname"];
+            sourceObj["trackName"] = this.mapTableArray[i]["sourceattribute"]["trackName"];
+
+            break;
+          }
+          else {
+            sourceObj = {};
+          }
+        }
+        mapInfo["sourceattribute"] = sourceObj;
+        this.mapTableArray[i]["sourceattribute"] = mapInfo["sourceattribute"]
+      }
+      console.log(JSON.stringify(this.mapTableArray));
+    }
   }
 
 }

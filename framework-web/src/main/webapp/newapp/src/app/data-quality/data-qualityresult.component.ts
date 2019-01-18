@@ -19,6 +19,7 @@ import { AppConfig } from '../app.config';
 })
 
 export class DataQualityResultComponent {
+  isResultTable: boolean;
   //showHome: boolean;
   showKnowledgeGraph: boolean;
   isHomeEnable: boolean;
@@ -42,6 +43,7 @@ export class DataQualityResultComponent {
   @ViewChild(TableRenderComponent) d_tableRenderComponent: TableRenderComponent;
   constructor(private _config: AppConfig, private http: Http, private _location: Location, private _activatedRoute: ActivatedRoute, private router: Router, public appMetadata: AppMetadata, private _commonService: CommonService) {
     this.baseUrl = _config.getBaseUrl();
+ 
     this.showKnowledgeGraph = false;
     this.numRows = 100;
     this.isHomeEnable = false;
@@ -104,6 +106,7 @@ export class DataQualityResultComponent {
       }
       else {
         this.istableShow = true;
+        this.isResultTable = true;
       }
     }
     if (this.istableShow == true) {
@@ -119,6 +122,7 @@ export class DataQualityResultComponent {
   }
 
   public goBack() {
+    this.isResultTable = false
     if (this.istableShow == true) {
       this._location.back();
     }
@@ -172,7 +176,13 @@ export class DataQualityResultComponent {
   cancelDialogBox(){
     this.displayDialogBox = false;
   }
-
+  downloadShow(param:any) {
+    this.isResultTable = true;
+    console.log(param)
+    this.uuidJointJs = param.uuid;
+    this.versionJointJs = param.version;
+    this.typeJointJs = param.type;
+  }
 }
 
 
