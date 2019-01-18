@@ -1156,7 +1156,6 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 	}
 
 	$scope.isDublication = function (arr, field, index, name) {
-		debugger
 		var res = -1;
 	//	console.log(name)
 		for (var i = 0; i < arr.length ; i++) {
