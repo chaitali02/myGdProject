@@ -377,10 +377,10 @@ public class VizpodParser {
 			havingBuilder.append(filterOperator2.generateSql(vizpod.getFilterInfo(), null, null, usedRefKeySet, true, true, runMode, datasource));
 			
 			// Limit Builder
-			if (vizpod.getLimit() != null){
-				limitBuilder.append(" limit " + vizpod.getLimit());
-				limitBuilder.append(blankSpace);
-			}
+//			if (vizpod.getLimit() != null){
+//				limitBuilder.append(" limit " + vizpod.getLimit());
+//				limitBuilder.append(blankSpace);
+//			}
 			
 			result = selectBuilder.length() > 0 ? selectBuilder.substring(0, selectBuilder.length() - 1) : "";
 			result += fromBuilder.length() > 0 ? fromBuilder.substring(0, fromBuilder.length() - 1) : "";

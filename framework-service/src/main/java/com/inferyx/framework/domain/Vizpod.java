@@ -19,7 +19,7 @@ public class Vizpod extends BaseEntity {
 	private String title;
 	private MetaIdentifierHolder source;
 	private String type;
-	private String limit;
+	private int limit;
 	private List<AttributeDetails> keys;
 	private List<AttributeDetails> dimension;
 	private List<AttributeDetails> detailAttr;
@@ -28,6 +28,8 @@ public class Vizpod extends BaseEntity {
 //	private static Datapod datapod;
 	private List<AttributeDetails> groups;
 	private List<AttributeDetails> values;
+	private List<AttributeDetails> sortBy;
+    private String sortOrder;
 
 	public List<AttributeDetails> getDetailAttr() {
 		return detailAttr;
@@ -61,11 +63,11 @@ public class Vizpod extends BaseEntity {
 		this.type = type;
 	}
 
-	public String getLimit() {
+	public int getLimit() {
 		return limit;
 	}
 
-	public void setLimit(String limit) {
+	public void setLimit(int limit) {
 		this.limit = limit;
 	}
 
@@ -166,5 +168,21 @@ public class Vizpod extends BaseEntity {
 //			return datapod.getAttribute(getAttributeId()).getName().toString().concat(" as ").concat(alias).concat(" ");
 //		}
 
+	}
+
+	public List<AttributeDetails> getSortBy() {
+		return sortBy;
+	}
+
+	public void setSortBy(List<AttributeDetails> sortBy) {
+		this.sortBy = sortBy;
+	}
+
+	public String getSortOrder() {
+		return sortOrder;
+	}
+
+	public void setSortOrder(String sortOrder) {
+		this.sortOrder = sortOrder;
 	}
 }
