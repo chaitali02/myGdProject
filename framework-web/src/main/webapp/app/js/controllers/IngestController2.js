@@ -192,30 +192,33 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 			}
 			if (TargetType == "TABLE") {
 				$scope.allTargetDatasource = response;
-				if($scope.selectedSourceType == 'FILE' && $scope.selectedTargetType == 'TABLE'){
-					if($scope.allTargetDatasource && $scope.allTargetDatasource.length >0){
-						for(var i=0;i<$scope.allTargetDatasource.length;i++){
-							if($scope.allTargetDatasource[i].type == 'HIVE'){
-								if($scope.allSourceDatasource)
-									$scope.allSourceDatasource.push($scope.allTargetDatasource[i]);
-								else{
-									$scope.allSourceDatasource=[];
-									$scope.allSourceDatasource.push($scope.allTargetDatasource[i]);
+				setTimeout(function(){
+					if($scope.selectedSourceType == 'FILE' && $scope.selectedTargetType == 'TABLE'){
+						if($scope.allTargetDatasource && $scope.allTargetDatasource.length >0){
+							for(var i=0;i<$scope.allTargetDatasource.length;i++){
+								if($scope.allTargetDatasource[i].type == 'HIVE'){
+									if($scope.allSourceDatasource)
+										$scope.allSourceDatasource.push($scope.allTargetDatasource[i]);
+									else{
+										$scope.allSourceDatasource=[];
+										$scope.allSourceDatasource.push($scope.allTargetDatasource[i]);
+									}
 								}
 							}
-						}
-						/*for(var i=0;i<$scope.allSourceDatasource.length;i++){
-							if($scope.allSourceDatasource[i].type == 'FILE'){
-								if($scope.allSourceDatasource)
-									$scope.allTargetDatasource.push($scope.allSourceDatasource[i]);
-								else{
-									$scope.allSourceDatasource=[];
-									$scope.allTargetDatasource.push($scope.allSourceDatasource[i]);
+							for(var i=0;i<$scope.allSourceDatasource.length;i++){
+								if($scope.allSourceDatasource[i].type == 'FILE'){
+									if($scope.allSourceDatasource)
+										$scope.allTargetDatasource.push($scope.allSourceDatasource[i]);
+									else{
+										$scope.allSourceDatasource=[];
+										$scope.allTargetDatasource.push($scope.allSourceDatasource[i]);
+									}
 								}
 							}
-						}*/
-					}	
-				}
+						}	
+					}
+				},100);
+			
 			}
 			
 			if(sourceType =="STREAM" && TargetType =="FILE"){
