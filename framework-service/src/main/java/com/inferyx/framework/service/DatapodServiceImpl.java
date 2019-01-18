@@ -1390,7 +1390,7 @@ public class DatapodServiceImpl {
 		} 
 		
 		StringBuilder builder = new StringBuilder("SELECT").append(" ");
-		builder.append(formulaQuery).append(" AS value ");//.append(formula.getName()).append(" ");
+		builder.append("DISTINCT").append(" ").append(formulaQuery).append(" AS value ");
 		builder.append("FROM").append(" ").append("(");
 		builder.append(dependsOnSql).append(" ").append(dependsOnAliaseName);
 		builder.append(")").append(" ").append(dependsOn.getName());
@@ -1415,6 +1415,9 @@ public class DatapodServiceImpl {
 			Object relDependsOn = commonServiceImpl.getOneByUuidAndVersion(dependsOn.getUuid(), dependsOn.getVersion(), dependsOn.getType().toString(), "N");
 			String dependsOnSql = generateSqlByObject(relDependsOn, runMode);
 			String relSql = relationOperator.generateSql((Relation)object, null, null, null, new HashSet<>(), runMode);
+			if(relSql != null && !relSql.isEmpty()) {
+				return "SELECT * FROM "+relSql;
+			} 
 		}
 		
 		return null;
