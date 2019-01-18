@@ -11,7 +11,6 @@
 package com.inferyx.framework.parser;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -32,7 +31,6 @@ import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Expression;
-import com.inferyx.framework.domain.Filter;
 import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.FormulaType;
 import com.inferyx.framework.domain.MetaIdentifier;
@@ -83,15 +81,15 @@ public class VizpodParser {
 		StringBuilder limitBuilder = new StringBuilder();
 		StringBuilder groupByBuilder = new StringBuilder();
 		StringBuilder havingBuilder = new StringBuilder();
+		StringBuilder orderByBuilder = new StringBuilder();
 		boolean hasFuncInVal = false;
 		String result = "";
 		String comma = ",";
 		String blankSpace = " ";
-		selectBuilder.append("SELECT ");
-		selectBuilder.append(blankSpace);
-		groupByBuilder.append(blankSpace);
-		groupByBuilder.append("GROUP BY");
-		groupByBuilder.append(blankSpace);
+		selectBuilder.append("SELECT ").append(blankSpace);
+		groupByBuilder.append(blankSpace).append("GROUP BY").append(blankSpace);
+		orderByBuilder.append(blankSpace).append("ORDER BY").append(blankSpace);
+		
 //		String formulaSql2 = "";
 		
 		if ((MetaType.datapod).equals(vizpod.getSource().getRef().getType())) {
@@ -228,7 +226,10 @@ public class VizpodParser {
 				}
 			}
 			
-			
+			orderByBuilder = generateOderBy(vizpod.getSortBy(), vizpod.getSortOrder());
+			if (orderByBuilder.length() > 0) {
+				finalBuilder.append(orderByBuilder).append(" ");
+			}
 			
 			result = finalBuilder.length() > 0 ? finalBuilder.substring(0, finalBuilder.length() - 1) : "";
 			logger.info(String.format("Final Vizpod filter %s", result));
@@ -375,7 +376,7 @@ public class VizpodParser {
 			// Having Builder
 			Datasource datasource = commonServiceImpl.getDatasourceByObject(vizpod);
 			havingBuilder.append(filterOperator2.generateSql(vizpod.getFilterInfo(), null, null, usedRefKeySet, true, true, runMode, datasource));
-			
+			orderByBuilder = generateOderBy(vizpod.getSortBy(), vizpod.getSortOrder());
 			// Limit Builder
 //			if (vizpod.getLimit() != null){
 //				limitBuilder.append(" limit " + vizpod.getLimit());
@@ -388,6 +389,7 @@ public class VizpodParser {
 			result += groupByBuilder.length() > 0 ? groupByBuilder.substring(0, groupByBuilder.length() - 1) : "";
 //			result += havingBuilder.length() > 0 ? havingBuilder.substring(0, groupByBuilder.length() - 1) : "";
 			result += StringUtils.isBlank(havingBuilder.toString()) ? ConstantsUtil.BLANK : ConstantsUtil.HAVING_1_1.concat(havingBuilder.toString());			
+			result = orderByBuilder.length() > 0 ? orderByBuilder.toString() : "";			
 			result += limitBuilder.length() > 0 ? limitBuilder.substring(0, limitBuilder.length() - 1) : "";
 			logger.info(String.format("Final Vizpod filter %s", result));
 		} else if ((MetaType.dataset).equals(vizpod.getSource().getRef().getType())) {
@@ -470,18 +472,37 @@ public class VizpodParser {
 //					havingBuilder.append(filterQuery);
 //				}
 //			}
-				
+			
+			orderByBuilder = generateOderBy(vizpod.getSortBy(), vizpod.getSortOrder());
 			
 			queryBuilder.append(selectBuilder);
 			queryBuilder.append(fromBuilder);
 			queryBuilder.append(whereBuilder);
 			queryBuilder.append(groupByBuilder);
 			queryBuilder.append(StringUtils.isBlank(havingBuilder.toString()) ? ConstantsUtil.BLANK : ConstantsUtil.HAVING_1_1.concat(havingBuilder.toString()));
+			queryBuilder.append(orderByBuilder);
 			result = queryBuilder.toString();
 		}
 		return result;
 	}
 	
+	private StringBuilder generateOderBy(List<AttributeDetails> sortBy, String sortOrder) {
+		StringBuilder orderByBuilder = new StringBuilder(" ORDER BY ");
+		if(sortBy != null && !sortBy.isEmpty()) {
+			int i = 0;
+			for(AttributeDetails attributeDetails : sortBy) {
+				orderByBuilder.append(attributeDetails.getAttributeName());
+				if(i<sortBy.size()-1) {
+					orderByBuilder.append(", ");
+				}
+				i++;
+			}
+			orderByBuilder.append(" ").append(sortOrder);
+		}
+		
+		return orderByBuilder;
+	}
+
 	public List<AttributeRefHolder> getFilterInfoByFormula(List<AttributeRefHolder> filterInfo){
 		if(filterInfo != null) {
 			List<AttributeRefHolder> formulaFilterInfo = new ArrayList<>();
