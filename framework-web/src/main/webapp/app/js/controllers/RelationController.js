@@ -283,6 +283,7 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 	$scope.selectOption = function () {
 		MetadataRelationSerivce.getAllAttributeBySource($scope.alldatapod.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessGetAttributesByDatapod(response.data) });
 		var onSuccessGetAttributesByDatapod = function (response) {
+			$scope.rhsAllAttribute=[];
 			$scope.lhsAllAttribute = response;
 			$scope.rhsAllAttribute[0]=response;
 			$scope.allJoinDatapod();
