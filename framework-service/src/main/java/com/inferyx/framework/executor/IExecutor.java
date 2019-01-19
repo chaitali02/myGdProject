@@ -594,18 +594,6 @@ public interface IExecutor {
 	 * 
 	 * @Ganesh
 	 *
-	 * @param trndModel 
-	 * @param clientContext
-	 * @return Map<String, Object>
-	 * @throws IOException
-	 */
-	Map<String, Object> summary(Object trndModel, List<String> summaryMethods, String clientContext)
-			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
-			NoSuchMethodException, SecurityException;
-	/**
-	 * 
-	 * @Ganesh
-	 *
 	 * @param rowObjList
 	 * @param attributes
 	 * @param tableName
@@ -804,4 +792,22 @@ public interface IExecutor {
 	 */
 	ResultSetHolder createAndRegister(List<Row> data, StructType structType, String tableName, String clientContext)
 			throws IOException;
+
+	/**
+	 * 
+	 * @param trndModel
+	 * @param trainClass
+	 * @param summaryMethods
+	 * @param clientContext
+	 * @return
+	 * @throws IOException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 */
+	Map<String, Object> summary(Object trndModel, String trainClass, List<String> summaryMethods, String clientContext)
+			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, ClassNotFoundException;
 }

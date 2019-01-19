@@ -47,7 +47,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.spark.ml.PipelineModel;
+import org.apache.spark.ml.Transformer;
 import org.apache.spark.ml.param.ParamMap;
+import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.types.DataType;
@@ -1622,6 +1625,7 @@ public class ModelServiceImpl {
 		try {
 			m1 = dynamicClass.getMethod("save", paramSave);
 			try {
+				logger.info("Model save location : " + path);
 				m1.invoke(obj, path);
 				return true;
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
@@ -1775,6 +1779,7 @@ public class ModelServiceImpl {
 			}			
 		
 			String tableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), RunMode.BATCH);
+			logger.info("Table name : " + tableName);
 			String sql = "SELECT * FROM "+tableName;
 			return sql;
 		} else if (source instanceof DataSet) {
@@ -1853,15 +1858,26 @@ public class ModelServiceImpl {
 			location = location.replaceAll("/data", "");
 		if(!location.contains(hdfsInfo.getHdfsURL()))
 			location = hdfsInfo.getHdfsURL() + location;
+		if (location.contains("/model")) {
+			location = location.replaceAll("/model/.*", "/model/");
+		}
+		logger.info("Model paths for prediction : " + location);
 
 		//Object trainedModel = modelClass.getMethod("load", String.class).invoke(modelClass, location);
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
+		modelClass = PipelineModel.class;
 		Object trainedModel = exec.loadTrainedModel(modelClass, location);
+		PipelineModel pipelineModel = (PipelineModel)trainedModel;
+		Transformer []transformers = pipelineModel.stages();
+		for (Transformer transformer: transformers) {
+			logger.info("Transoformer : " + transformer.uid());
+		}
 		return trainedModel;
 	}
 
 	public boolean predict(Predict predict, ExecParams execParams, PredictExec predictExec, RunMode runMode) throws Exception {
+		logger.info("Inside predict");
 		boolean isSuccess = false;
 		try {
 			predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.InProgress);
@@ -2089,6 +2105,7 @@ public class ModelServiceImpl {
 				}
 			} else {					
 				if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
+					logger.info("Model depends on formula");
 					//getting data from source
 					String sql = generateSQLBySource(source, execParams);
 					ResultSetHolder rsHolder = exec.executeAndRegisterByDatasource(sql, (tableName+"_pred_data"), sourceDS, appUuid);
@@ -2129,6 +2146,7 @@ public class ModelServiceImpl {
 					tempTableList.add((tableName+"_pred_data"));
 					sparkExecutor.dropTempTable(tempTableList);
 				} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
+					logger.info("Model depends on algorithm");
 					TrainExec trainExec = modelExecServiceImpl.getLatestTrainExecByTrain(predict.getTrainInfo().getRef().getUuid(), predict.getTrainInfo().getRef().getVersion());
 					if (trainExec == null) {
 						throw new Exception("No trained model found.");
@@ -2150,10 +2168,13 @@ public class ModelServiceImpl {
 
 					Map<String, EncodingType> encodingDetails = getEncodingDetailsByFeatureAttrMap(predict.getFeatureAttrMap());
 					if(encodingDetails != null && !encodingDetails.isEmpty()) {
-						rsHolder = sparkExecutor.preparePredictDfForEncoding(rsHolder, encodingDetails, true, (tableName+"_pred_assembled_data"));
+//						rsHolder = sparkExecutor.preparePredictDfForEncoding(rsHolder, encodingDetails, true, (tableName+"_pred_assembled_data"));
 					}
 					//assembling the data to for feature vector
-					exec.assembleDF(fieldArray, rsHolder, null, (tableName+"_pred_assembled_data"), sourceDS, true, appUuid);
+//					exec.assembleDF(fieldArray, rsHolder, null, (tableName+"_pred_assembled_data"), sourceDS, true, appUuid);
+					
+					exec.registerDataFrameAsTable(rsHolder, tableName+"_pred_assembled_data");
+					
 					
 					String key = String.format("%s_%s", model.getUuid().replaceAll("-", "_"), model.getVersion());
 					Object trainedModel = null;
@@ -2164,6 +2185,7 @@ public class ModelServiceImpl {
 						trainedModelMap.put(key, trainedModel);
 					}
 					//prediction operation
+					logger.info("Trained Model class " + trainedModel.getClass().getName());
 					rsHolder =  exec.predict(trainedModel, target, filePathUrl, (tableName+"_pred_assembled_data"), appUuid, encodingDetails);
 
 					List<String> rowIdentifierCols = getRowIdentifierCols(predict.getRowIdentifier());
