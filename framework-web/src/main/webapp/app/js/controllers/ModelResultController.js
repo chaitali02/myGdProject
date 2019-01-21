@@ -425,13 +425,48 @@ DatascienceModule.controller('ResultTrainController2', function ($filter, $state
                 //console.log();
             });
     };
-
+    
+    $scope.$on("dowloadAction", function (evt, data) {
+        $scope.downloadAction = data;
+       
+    });
     $scope.downloadMoldeResult = function () {
-        if ($scope.modelData.customFlag == "N") {
+        debugger
+        console.log($scope.downloadAction);
+        if($scope.downloadAction.tab ==3){
+            $scope.downloadTrainSet();
+        }
+        else if ($scope.modelData.customFlag == "N") {
             $scope.downloadTrainData();
             return;
         }
 
+    }
+    $scope.downloadTrainSet =function(){
+        debugger
+        ModelService.downloadTrainSet($scope.downloadAction.uuid, $scope.downloadAction.version,"trainexec").then(function (response) { onSuccessDownloadTrainSet(response.data) });
+        var onSuccessDownloadTrainSet= function (response) {
+            var linkElement = document.createElement('a');
+            try {
+                var jsonobj = angular.toJson(response, true);
+                var blob = new Blob([jsonobj], {
+                    type: "text/xml"
+                });
+                var url = window.URL.createObjectURL(blob);
+                linkElement.setAttribute('href', url);
+                linkElement.setAttribute("download", $scope.downloadAction.uuid + ".xls");
+                var clickEvent = new MouseEvent(
+                    "click", {
+                        "view": window,
+                        "bubbles": true,
+                        "cancelable": false
+                    });
+                linkElement.dispatchEvent(clickEvent);
+            } catch (ex) {
+                console.log(ex);
+           
+    }
+    }
     }
 
     $scope.downloadTrainData = function () {

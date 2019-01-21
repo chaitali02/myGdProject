@@ -250,11 +250,34 @@ DatascienceModule.factory('ModelFactory', function ($http, $location) {
       url: url + "model/train/getTrainSet?action=view&uuid=" + uuid + "&version=" + version+"&type="+type,
       method: "GET"
     }).then(function (response) { return response })
+  };
+  factory.downloadTrainSet = function (uuid,version,type) {
+    var url = $location.absUrl().split("app")[0]
+    return $http({
+      url: url + "model/train/getTestSet/download?action=view&uuid=" + uuid + "&version=" + version+"&type="+type,
+      method: "GET",
+      responseType: 'arraybuffer'
+    }).then(function (response) { return response })
   }; 
   return factory;
 })
 
 DatascienceModule.service("ModelService", function ($http, ModelFactory, $q, sortFactory){
+  this.downloadTrainSet = function (uuid, version, type) {
+    var deferred = $q.defer();
+    ModelFactory.downloadTrainSet(uuid, version ,type).then(function (response) { onSuccess(response.data) },function (response) { onError(response.data) });
+    var onSuccess = function (response) {
+      deferred.resolve({
+        data: response
+      });
+    }
+    var onError = function (response) {
+      deferred.reject({
+        data: response
+      })
+    }
+    return deferred.promise;
+  }
   this.getTrainSet = function (uuid, version, type) {
     var deferred = $q.defer();
     ModelFactory.findTrainSet(uuid, version ,type).then(function (response) { onSuccess(response.data) },function (response) { onError(response.data) });

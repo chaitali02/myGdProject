@@ -260,11 +260,17 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
           return'actual-true';
         }
       }
+
       $scope.getTrainResult({ uuid: $scope.data.uuid, version: $scope.data.version});
       $scope.refreshDataTestSet = function (searchtext) {
         var data = $filter('filter')($scope.originalDataTestSet, searchtext, undefined);
         $scope.featureImportanceArr = data;
         $scope.gridOptionsTestSet.data = data;
+      };
+      $scope.refreshDataTrainSet = function (searchtext) {
+        var data = $filter('filter')($scope.originalDataTrainSet, searchtext, undefined);
+        $scope.featureImportanceArr = data;
+        $scope.gridOptionsTrainSet.data = data;
       };
 
       $scope.getTestSet = function (data) {
@@ -318,12 +324,15 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
         }
 
         if(index == 3 && ($scope.gridOptionsTestSet.data.length ==0)){
+          $scope.$emit("dowloadAction",{ uuid: $scope.data.uuid, version: $scope.data.version,tab:3});
           $scope.getTestSet({ uuid: $scope.data.uuid, version: $scope.data.version});
         }
         if([0,1,2].indexOf(index) !=-1 && ($scope.modelresult ==null)){
+          $scope.$emit("dowloadAction",{ uuid: $scope.data.uuid, version: $scope.data.version,tab:0});
           $scope.getTrainResult({ uuid: $scope.data.uuid, version: $scope.data.version});
         }
         if(index == 4 &&$scope.gridOptionsTrainSet.data.length ==0){
+          $scope.$emit("dowloadAction",{ uuid: $scope.data.uuid, version: $scope.data.version,tab:4});
           $scope.getTrainSet({ uuid: $scope.data.uuid, version: $scope.data.version});
 
         }
@@ -341,6 +350,10 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
       $scope.onPageChanged = function () {
         $scope.gridOptionsTestSet.data = $scope.getResults($scope.paginationTestSet, $scope.originalDataTestSet);
         console.log($scope.gridOptionsTestSet.data);
+      };
+      $scope.onPageChangedTrainSet = function () {
+        $scope.gridOptionsTrainSet.data = $scope.getResults($scope.paginationTrainSet, $scope.originalDataTrainSet);
+        console.log($scope.gridOptionsTrainSet.data);
       };
 
       $scope.getResults = function (pagination, params) {
