@@ -3999,32 +3999,19 @@ public class ModelServiceImpl {
 		}
 	}
 
-	public HttpServletResponse download(String trainExecUuid, String trainExecVersion, String format, int rows, String setType, RunMode runMode, HttpServletResponse response) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(trainExecUuid, trainExecVersion, MetaType.trainExec.toString());
-		if(setType.equalsIgnoreCase("trainSet")) {
-			MetaIdentifier dependsOnMI = trainExec.getDependsOn().getRef();
-			Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(), dependsOnMI.getVersion(), dependsOnMI.getType().toString());
-			if(train.getSaveTrainingSet().equalsIgnoreCase("N")) {
-				return null;
-			}
-		}
+	public HttpServletResponse download(String trainExecUuid, String trainExecVersion, String format, int rows, String setType, RunMode runMode, HttpServletResponse response) throws Exception {
+		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
+		if(rows > maxRows) {
+			logger.error("Requested rows exceeded the limit of "+maxRows);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Requested rows exceeded the limit of "+maxRows, null);
+			throw new RuntimeException("Requested rows exceeded the limit of "+maxRows);
+		}		
 		
-		MetaIdentifier datastoreMI = trainExec.getResult().getRef();
-		DataStore dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(datastoreMI.getUuid(), datastoreMI.getVersion(), datastoreMI.getType().toString());
-		String modelLocation = dataStore.getLocation();
-		String defaultTrainPath = modelLocation.substring(0, modelLocation.indexOf("/model"));
-		defaultTrainPath = defaultTrainPath.startsWith("file") ? defaultTrainPath : "file://".concat(defaultTrainPath);
-		
-		String trainOrTestSetPath = null;		
-		if(setType.equalsIgnoreCase("trainSet")) {
-			trainOrTestSetPath = defaultTrainPath.endsWith("/") ? defaultTrainPath.concat("train_set") : defaultTrainPath.concat("/").concat("train_set");
-		} else if(setType.equalsIgnoreCase("testSet")) {
-			trainOrTestSetPath = defaultTrainPath.endsWith("/") ? defaultTrainPath.concat("test_set") : defaultTrainPath.concat("/").concat("test_set");
-		}
-		
-		
-		Datasource appDatasource = commonServiceImpl.getDatasourceByApp();
-		IExecutor exec = execFactory.getExecutor(appDatasource.getType());
-		return null;
+		List<Map<String, Object>> results = getTrainOrTestSet(trainExecUuid, trainExecVersion, setType);
+		response = commonServiceImpl.download(trainExecUuid, trainExecVersion, format
+				, 0, rows, response, 0, null, null, null
+				, runMode, results, MetaType.downloadExec
+				, new MetaIdentifierHolder(new MetaIdentifier(MetaType.dataset, trainExecUuid, trainExecVersion)));
+		return response;
 	}
 }

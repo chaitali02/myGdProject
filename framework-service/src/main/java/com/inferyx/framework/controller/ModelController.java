@@ -538,7 +538,7 @@ public class ModelController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode,
-			HttpServletResponse response) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			HttpServletResponse response) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		response = modelServiceImpl.download(trainExecUuid, trainExecVersion, format, rows, "trainSet", runMode, response);
 	}
@@ -552,7 +552,7 @@ public class ModelController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode,
-			HttpServletResponse response) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			HttpServletResponse response) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		response = modelServiceImpl.download(trainExecUuid, trainExecVersion, format, rows, "testSet", runMode, response);
 	}
