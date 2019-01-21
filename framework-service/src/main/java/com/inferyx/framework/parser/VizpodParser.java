@@ -88,7 +88,6 @@ public class VizpodParser {
 		String blankSpace = " ";
 		selectBuilder.append("SELECT ").append(blankSpace);
 		groupByBuilder.append(blankSpace).append("GROUP BY").append(blankSpace);
-		orderByBuilder.append(blankSpace).append("ORDER BY").append(blankSpace);
 		
 //		String formulaSql2 = "";
 		
@@ -487,8 +486,9 @@ public class VizpodParser {
 	}
 	
 	private StringBuilder generateOderBy(List<AttributeDetails> sortBy, String sortOrder) {
-		StringBuilder orderByBuilder = new StringBuilder(" ORDER BY ");
+		StringBuilder orderByBuilder = new StringBuilder();
 		if(sortBy != null && !sortBy.isEmpty()) {
+			orderByBuilder.append(" ORDER BY ");
 			int i = 0;
 			for(AttributeDetails attributeDetails : sortBy) {
 				orderByBuilder.append(attributeDetails.getAttributeName());
