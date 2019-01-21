@@ -355,15 +355,17 @@ public interface IExecutor {
 	 * @param clientContext
 	 * @param trainOtherParam TODO
 	 * @param trainResult TODO
-	 * @param defaultPath TODO
+	 * @param testSetPath TODO
 	 * @param rowIdentifierCols TODO
 	 * @param includeFeatures TODO
 	 * @param trainingDfSql TODO
 	 * @param validationDfSql TODO
 	 * @param encodingDetails TODO
+	 * @param saveTrainingSet TODO
+	 * @param trainingSetPath TODO
 	 * @return 
 	 */
-	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext,Object algoClass, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql, Map<String, EncodingType> encodingDetails) throws IOException;
+	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext,Object algoClass, Map<String, String> trainOtherParam, TrainResult trainResult, String testSetPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql, Map<String, EncodingType> encodingDetails, String saveTrainingSet, String trainingSetPath) throws IOException;
 	
 	/**
 	 * 
@@ -577,17 +579,19 @@ public interface IExecutor {
 	 * @param clientContext
 	 * @param trainOtherParam TODO
 	 * @param trainResult TODO
-	 * @param defaultPath TODO
+	 * @param testSetPath TODO
 	 * @param rowIdentifierCols TODO
 	 * @param includeFeatures TODO
 	 * @param trainingDfSql TODO
 	 * @param validationDfSql TODO
 	 * @param enodingDetails TODO
+	 * @param saveTrainingSet TODO
+	 * @param trainingSetPath TODO
 	 * @return Object
 	 * @throws IOException
 	 */
 	Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName,
-			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql, Map<String, EncodingType> enodingDetails)
+			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam, TrainResult trainResult, String testSetPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql, Map<String, EncodingType> enodingDetails, String saveTrainingSet, String trainingSetPath)
 			throws IOException;
 	
 	/**
@@ -749,7 +753,7 @@ public interface IExecutor {
 	 * @return data
 	 * @throws IOException
 	 */
-	List<Map<String, Object>> fetchTestSet(String location) throws IOException;
+	List<Map<String, Object>> fetchTrainOrTestSet(String location) throws IOException;
 
 	/**
 	 * @Ganesh

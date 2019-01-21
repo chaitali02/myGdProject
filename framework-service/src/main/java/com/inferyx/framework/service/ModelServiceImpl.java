@@ -906,7 +906,7 @@ public class ModelServiceImpl {
 		return result;
 	}
 	
-	public HttpServletResponse download(String execUuid, String execVersion, HttpServletResponse response,RunMode runMode) throws Exception {
+	public HttpServletResponse download(String execUuid, String execVersion, HttpServletResponse response, RunMode runMode) throws Exception {
 		TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
 				MetaType.trainExec.toString());
 		DataStore datastore = dataStoreServiceImpl.getDatastore(trainExec.getResult().getRef().getUuid(),
@@ -3668,18 +3668,33 @@ public class ModelServiceImpl {
 		return exec.executeAndFetchByDatasource(query, appDS, query);
 	}
 
-	public List<Map<String, Object>> getTestSet(String trainExecUuid, String trainExecVersion) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
+	public List<Map<String, Object>> getTrainOrTestSet(String trainExecUuid, String trainExecVersion, String setType) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
 		TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(trainExecUuid, trainExecVersion, MetaType.trainExec.toString());
+		if(setType.equalsIgnoreCase("trainSet")) {
+			MetaIdentifier dependsOnMI = trainExec.getDependsOn().getRef();
+			Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(), dependsOnMI.getVersion(), dependsOnMI.getType().toString());
+			if(train.getSaveTrainingSet().equalsIgnoreCase("N")) {
+				return new ArrayList<>();
+			}
+		}
+		
 		MetaIdentifier datastoreMI = trainExec.getResult().getRef();
 		DataStore dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(datastoreMI.getUuid(), datastoreMI.getVersion(), datastoreMI.getType().toString());
 		String modelLocation = dataStore.getLocation();
 		String defaultTrainPath = modelLocation.substring(0, modelLocation.indexOf("/model"));
 		defaultTrainPath = defaultTrainPath.startsWith("file") ? defaultTrainPath : "file://".concat(defaultTrainPath);
-		String testSetPath = defaultTrainPath.endsWith("/") ? defaultTrainPath.concat("test_set") : defaultTrainPath.concat("/").concat("test_set");
+		
+		String trainOrTestSetPath = null;		
+		if(setType.equalsIgnoreCase("trainSet")) {
+			trainOrTestSetPath = defaultTrainPath.endsWith("/") ? defaultTrainPath.concat("train_set") : defaultTrainPath.concat("/").concat("train_set");
+		} else if(setType.equalsIgnoreCase("testSet")) {
+			trainOrTestSetPath = defaultTrainPath.endsWith("/") ? defaultTrainPath.concat("test_set") : defaultTrainPath.concat("/").concat("test_set");
+		}
+		
 		
 		Datasource appDatasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(appDatasource.getType());
-		return exec.fetchTestSet(testSetPath);		
+		return exec.fetchTrainOrTestSet(trainOrTestSetPath);		
 	}
 
 	public List<TrainExec> getTrainExecByModel(String modelUuid
@@ -3982,5 +3997,21 @@ public class ModelServiceImpl {
 		} else {
 			return null;
 		}
+	}
+
+	public HttpServletResponse download(String trainExecUuid, String trainExecVersion, String format, int rows, String setType, RunMode runMode, HttpServletResponse response) throws Exception {
+		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
+		if(rows > maxRows) {
+			logger.error("Requested rows exceeded the limit of "+maxRows);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Requested rows exceeded the limit of "+maxRows, null);
+			throw new RuntimeException("Requested rows exceeded the limit of "+maxRows);
+		}		
+		
+		List<Map<String, Object>> results = getTrainOrTestSet(trainExecUuid, trainExecVersion, setType);
+		response = commonServiceImpl.download(trainExecUuid, trainExecVersion, format
+				, 0, rows, response, 0, null, null, null
+				, runMode, results, MetaType.downloadExec
+				, new MetaIdentifierHolder(new MetaIdentifier(MetaType.dataset, trainExecUuid, trainExecVersion)));
+		return response;
 	}
 }

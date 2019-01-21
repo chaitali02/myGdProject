@@ -479,7 +479,7 @@ public class ModelController {
 			@RequestParam(value = "version", required = false) String trainExecVersion,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws Exception {
-		return modelServiceImpl.getTestSet(trainExecUuid, trainExecVersion);
+		return modelServiceImpl.getTrainOrTestSet(trainExecUuid, trainExecVersion, "testSet");
 	}
 	
 	@RequestMapping(value = "/train/getTrainExecByModel", method = RequestMethod.GET)
@@ -519,5 +519,41 @@ public class ModelController {
 			@RequestParam(value = "endDate", required = false) String endDate,
 			@RequestParam(value = "status", required = false) String status) throws Exception {
 		return modelServiceImpl.getTrainExecViewByCriteria(modelUuid, modelVersion, trainExecUuid, active, startDate, endDate, status);
+	}
+	
+	@RequestMapping(value = "/train/getTrainSet", method = RequestMethod.GET)
+	public List<Map<String, Object>> getTrainSet(@RequestParam("uuid") String trainExecUuid,
+			@RequestParam(value = "version", required = false) String trainExecVersion,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws Exception {
+		return modelServiceImpl.getTrainOrTestSet(trainExecUuid, trainExecVersion, "trainSet");
+	}
+	
+	@RequestMapping(value = "train/getTrainSet/download", method = RequestMethod.POST)
+	public void getTrainSetDownload(
+			@RequestParam(value = "uuid") String trainExecUuid,
+			@RequestParam(value = "version", required = false) String trainExecVersion,
+			@RequestParam(value = "format", defaultValue = "excel") String format,
+			@RequestParam(value = "rows", defaultValue = "200") int rows,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode,
+			HttpServletResponse response) throws Exception {
+		RunMode runMode = Helper.getExecutionMode(mode);
+		response = modelServiceImpl.download(trainExecUuid, trainExecVersion, format, rows, "trainSet", runMode, response);
+	}
+	
+	@RequestMapping(value = "train/getTestSet/download", method = RequestMethod.POST)
+	public void getTestSetDownload(
+			@RequestParam(value = "uuid") String trainExecUuid,
+			@RequestParam(value = "version", required = false) String trainExecVersion,
+			@RequestParam(value = "format", defaultValue = "excel") String format,
+			@RequestParam(value = "rows", defaultValue = "200") int rows,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode,
+			HttpServletResponse response) throws Exception {
+		RunMode runMode = Helper.getExecutionMode(mode);
+		response = modelServiceImpl.download(trainExecUuid, trainExecVersion, format, rows, "testSet", runMode, response);
 	}
 }
