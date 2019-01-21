@@ -2,7 +2,8 @@ AdminModule = angular.module('AdminModule');
 
 AdminModule.controller('MetadataApplicationController', function ($state, $scope, $stateParams, $rootScope, MetadataApplicationSerivce, $sessionStorage, privilegeSvc, CommonService, $timeout, $filter) {
 	
-	$scope.SourceTypes = ["file", "hive", "impala", 'mysql', 'oracle']
+	$scope.SourceTypes = ["file", "hive", "impala", 'mysql', 'oracle'];
+	$scope.applicationTypes=['ADMIN','DEFAULT'];
 	$scope.dataLoading = false;
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
@@ -476,6 +477,7 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		applicationJson.locked = $scope.applicationdata.locked;
 		applicationJson.published = $scope.applicationdata.published;
 		applicationJson.deployPort = $scope.applicationdata.deployPort;
+		applicationJson.applicationType= $scope.applicationdata.applicationType;
 		var tagArray = [];
 		if ($scope.tags != null) {
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
