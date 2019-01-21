@@ -622,6 +622,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
   //  TrainJson.encodingType =$scope.selectEncodingType;
 
     TrainJson.includeFeatures = $scope.trainData.includeFeatures;
+    TrainJson.saveTrainingSet = $scope.trainData.saveTrainingSet;
     var tagArray = [];
     if ($scope.tags != null) {
       for (var counttag = 0; counttag < $scope.tags.length; counttag++) {

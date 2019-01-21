@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.inferyx.framework.domain;
 
+import com.inferyx.framework.enums.ApplicationType;
+
 /**
  * @author Ganesh
  *
@@ -21,6 +23,7 @@ public class ApplicationView extends BaseEntity {
 	private MetaIdentifierHolder dataSource;
 	private String deployPort;
 	private MetaIdentifierHolder orgInfo;
+	private ApplicationType applicationType;
 
 	/**
 	 *
@@ -117,6 +120,13 @@ public class ApplicationView extends BaseEntity {
 	}
 	public void setOrgInfo(MetaIdentifierHolder orgInfo) {
 		this.orgInfo = orgInfo;
+	}
+	public ApplicationType getApplicationType() {
+		return this.applicationType;
+	}
+
+	public void setApplicationType(ApplicationType applicationType) {
+		this.applicationType = applicationType;
 	}
 
 }

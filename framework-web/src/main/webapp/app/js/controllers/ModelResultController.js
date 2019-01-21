@@ -341,9 +341,16 @@ DatascienceModule.controller('ResultTrainController2', function ($filter, $state
         }
     }
 
+    $scope.getTrainByTrainExec = function () {
+        ModelService.getTrainByTrainExec($scope.modelDetail.uuid, $scope.modelDetail.version, 'train').then(function (response) { onSuccessGetTrainByTrainExec(response.data) });
+        var onSuccessGetTrainByTrainExec = function (response) {
+            $scope.trainData = response;
+        }
+    }
+
     $scope.getAlgorithumByTrainExec();
     $scope.getModelByTrainExec();
-
+    $scope.getTrainByTrainExec();
 
     $scope.showPMMLResult = function () {
         if ($scope.isPMMLDownload) {
@@ -425,13 +432,84 @@ DatascienceModule.controller('ResultTrainController2', function ($filter, $state
                 //console.log();
             });
     };
-
+    
+    $scope.$on("dowloadAction", function (evt, data) {
+        $scope.downloadAction = data;
+       
+    });
     $scope.downloadMoldeResult = function () {
-        if ($scope.modelData.customFlag == "N") {
+        if($scope.downloadAction.tab ==3){
+            $scope.downloadTestSet();
+        }
+        else if($scope.downloadAction.tab ==4){
+            $scope.downloadTrainSet();
+        }
+        else if ($scope.modelData.customFlag == "N") {
             $scope.downloadTrainData();
             return;
         }
 
+    }
+
+    $scope.downloadTestSet =function(){
+        ModelService.downloadTestSet($scope.downloadAction.uuid, $scope.downloadAction.version,"trainexec").then(function (response) { onSuccessDownloadTestSet(response.data) });
+        var onSuccessDownloadTestSet= function (response) {
+            headers = response.headers();
+            // console.log(typeof (data))
+            var filename = headers['filename'];
+            var contentType = headers['content-type'];
+            var linkElement = document.createElement('a');
+            try {
+                var blob = new Blob([response.data], {
+                    type: contentType
+                });
+                var url = window.URL.createObjectURL(blob);
+                linkElement.setAttribute('href', url);
+                linkElement.setAttribute("download", filename);
+                //LoadXML("showPMML",url);
+                var clickEvent = new MouseEvent(
+                    "click", {
+                        "view": window,
+                        "bubbles": true,
+                        "cancelable": false
+                    });
+                linkElement.dispatchEvent(clickEvent);
+            } catch (ex) {
+                // console.log(ex);
+            }
+        }
+    }
+
+    $scope.downloadTrainSet =function(){
+        if($scope.downloadAction.tab ==4 && $scope.trainData.saveTrainingSet =="N"){
+            return false;
+        }
+        ModelService.downloadTrainSet($scope.downloadAction.uuid, $scope.downloadAction.version,"trainexec").then(function (response) { onSuccessDownloadTrainSet(response.data) });
+        var onSuccessDownloadTrainSet= function (response) {
+            headers = response.headers();
+            // console.log(typeof (data))
+            var filename = headers['filename'];
+            var contentType = headers['content-type'];
+            var linkElement = document.createElement('a');
+            try {
+                var blob = new Blob([response.data], {
+                    type: contentType
+                });
+                var url = window.URL.createObjectURL(blob);
+                linkElement.setAttribute('href', url);
+                linkElement.setAttribute("download", filename);
+                //LoadXML("showPMML",url);
+                var clickEvent = new MouseEvent(
+                    "click", {
+                        "view": window,
+                        "bubbles": true,
+                        "cancelable": false
+                    });
+                linkElement.dispatchEvent(clickEvent);
+            } catch (ex) {
+                // console.log(ex);
+            }
+        }
     }
 
     $scope.downloadTrainData = function () {

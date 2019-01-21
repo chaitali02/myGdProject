@@ -323,6 +323,46 @@
                     </div>
                 </div>
             </uib-tab>
+            <uib-tab index="4" heading="Train Result" select="go(4)">
+                    <div class="spinner centercontent" ng-if="isProgessTrainTrainSet">
+                        <div class="bounce1"></div>
+                        <div class="bounce2"></div>
+                        <div class="bounce3"></div>
+                    </div>
+                    <h3  ng-if="!isProgessTrainTrainSet && !isErrorTrainTestSet&& gridOptionsTrainSet.data.length==0 && originalDataTrainSet.length ==0" style="font-size:14px;color:blue;">No data available</h3>
+                    <h3  ng-if="!isProgessTrainTrainSet && isErrorTrainTestSet" style="font-size:14px;color:red;">Some Error Occur</h3>
+                    <div ng-if="!isProgessTrainTrainSet && originalDataTrainSet.length >0">
+                        <div class="row" ng-if="!isProgessTrainTrainSet && !isErrorTrainTrainSet">
+                            <div class="col-md-6 col-sm-6">
+                            </div>
+                            <div class="col-md-6 col-sm-6">
+                                <div class="" id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
+                                    <label>Search:</label>
+                                    <input type="search" class="form-control input-sm input-small input-inline" ng-change="refreshDataTrainSet(searchtext)" ng-model="searchtext"
+                                        aria-controls="datastoredatatable">
+                                </div>
+                            </div>
+                            <br>
+                            <div class="col-md-12">
+                                <div ui-grid="gridOptionsTrainSet" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter class="grid" ng-style="getGridStyleTrainSet()">
+                                    <div class="nodatawatermark_results" ng-show="!gridOptionsTrainSet.data.length && !isProgessTrainSet && !isErrorTrainTestSet" style="top:52%;">No data available</div>
+                                </div>    
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6" style="margin-top:17px">
+                                Showing {{paginationTrainSet.to}} to {{paginationTrainSet.from}} of {{paginationTrainSet.totalItems}} records
+                            </div>
+                            <div class="col-md-6">
+                                <ul uib-pagination items-per-page="paginationTrainSet.pageSize" total-items="paginationTrainSet.totalItems" ng-model="paginationTrainSet.currentPage"
+                                ng-change="onPageChangedTrainSet()" style="float:right;overflow:hidden;z-index:1;" max-size="paginationTrainSet.maxSize"
+                                class="pagination-md" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                                last-text="&raquo;">
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
         </uib-tabset>
     </div>
 </div>

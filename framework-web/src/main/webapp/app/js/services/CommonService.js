@@ -113,6 +113,22 @@
        console.log("factory"+JSON.stringify(max));
        return max[propertyName];
     }
+    factory.downloadTrainSet = function (uuid,version,type) {
+      var url = $location.absUrl().split("app")[0]
+      return $http({
+        url: url + "model/train/getTrainSet/download?action=view&uuid=" + uuid + "&version=" + version+"&type="+type,
+        method: "GET",
+        responseType: 'arraybuffer'
+      }).then(function (response) { return response })
+    }; 
+    factory.downloadTestSet = function (uuid,version,type) {
+      var url = $location.absUrl().split("app")[0]
+      return $http({
+        url: url + "model/train/getTestSet/download?action=view&uuid=" + uuid + "&version=" + version+"&type="+type,
+        method: "GET",
+        responseType: 'arraybuffer'
+      }).then(function (response) { return response })
+    }; 
     return factory;
   });
 
@@ -1107,7 +1123,7 @@
     }
     return deferred.promise;
   }
-
+   
   this.getParamByApp = function(uuid,type) {
     var deferred = $q.defer();
     var url;
@@ -1119,6 +1135,37 @@
       deferred.resolve({
         data: response
       });
+    }
+    return deferred.promise;
+  }
+
+  this.downloadTrainSet = function (uuid, version, type) {
+    var deferred = $q.defer();
+    CommonFactory.downloadTrainSet(uuid, version ,type).then(function (response) { onSuccess(response) },function (response) { onError(response.data) });
+    var onSuccess = function (response) {
+      deferred.resolve({
+        data: response
+      });
+    }
+    var onError = function (response) {
+      deferred.reject({
+        data: response
+      })
+    }
+    return deferred.promise;
+  }
+  this.downloadTestSet = function (uuid, version, type) {
+    var deferred = $q.defer();
+    CommonFactory.downloadTestSet(uuid, version ,type).then(function (response) { onSuccess(response) },function (response) { onError(response.data) });
+    var onSuccess = function (response) {
+      deferred.resolve({
+        data: response
+      });
+    }
+    var onError = function (response) {
+      deferred.reject({
+        data: response
+      })
     }
     return deferred.promise;
   }

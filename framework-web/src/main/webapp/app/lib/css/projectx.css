@@ -1442,11 +1442,11 @@ transition: right 1m
   }
 
   .actual-true{
-    background-color:green;
+    background-color:#71F354;
     color:white;
   }
 
   .actual-false{
     color:white;
-    background-color:red;
+    background-color:#DF0000;
   }

@@ -4009,13 +4009,13 @@ public class ModelServiceImpl {
 		response = commonServiceImpl.download(trainExecUuid, trainExecVersion, format
 				, 0, rows, response, 0, null, null, null
 				, runMode, results, MetaType.downloadExec
-				, new MetaIdentifierHolder(new MetaIdentifier(MetaType.dataset, trainExecUuid, trainExecVersion)));
+				, new MetaIdentifierHolder(new MetaIdentifier(MetaType.trainExec, trainExecUuid, trainExecVersion)));
 		return response;
 	}
 	
 	public Train getTrainByTrainExec(String trainExecUuid, String trainExecVersion) throws JsonProcessingException {
 		TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(trainExecUuid
-															, trainExecUuid
+															, trainExecVersion
 															, MetaType.trainExec.toString()
 															, "N");
 		
