@@ -344,8 +344,8 @@
                                                                 <li  ng-click="autoMapFeature('By Order')">
                                                                     <a href="javascript:;">By Order</a>
                                                                 </li>
-                                                                <li  ng-click="autoRefersh()">
-                                                                    <a href="javascript:;">Auto Refersh</a>
+                                                                <li  ng-click="autoReset()">
+                                                                    <a href="javascript:;">Reset</a>
                                                                 </li>
                                                               
                                                             </ul>
@@ -446,7 +446,6 @@
                                                                                 </td>
                                                                             <td>
                                                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                                    {{data.imputeMethod}}
                                                                                     <div  ng-if="data.imputeMethod.isModelShow">
                                                                                         <input type="text" class="form-control" ng-model="data.imputeMethod.imputeValue" title="{{data.imputeMethod.imputeValue}}" ng-disabled="true">
                                                                                     </div>

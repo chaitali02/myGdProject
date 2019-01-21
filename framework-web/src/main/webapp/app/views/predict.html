@@ -237,7 +237,7 @@
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12 col-lg-3">Model</label>
                                             <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
                                                 <select name="modelName" select2 class="form-control" ng-disabled="false" required data-ng-model="selectModel" ng-options="r as r.name for r in allModel track by r.uuid"
-                                                    ng-change="onChangeModel(selectModel)">
+                                                    ng-change="onChangeModel(true,selectModel)">
                                                     <!-- <option value="">-Select-</option> -->
                                                 </select>
                                                 <input name="modelName" type="hidden" ng-model="selectModel.uuid" required />
@@ -340,6 +340,9 @@
                                                                 <li class="divider" style="margin: 0px;"> </li>
                                                                 <li ng-click="autoMapFeature('By Order')">
                                                                     <a href="javascript:;">By Order</a>
+                                                                </li>
+                                                                <li  ng-click="autoReset()">
+                                                                    <a href="javascript:;">Reset</a>
                                                                 </li>
 
                                                             </ul>
