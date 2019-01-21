@@ -24,6 +24,7 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
         fastWatch: true,
         columnDefs: [],
       };
+
       $scope.gridOptions.columnDefs = [{
         displayName: 'Feature Name',
         name: 'label',
@@ -67,7 +68,29 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
         maxSize: 5,
       }
 
+      $scope.paginationTrainSet = {
+        currentPage: 1,
+        pageSize: 10,
+        paginationPageSizes: [10, 25, 50, 75, 100],
+        maxSize: 5,
+      }
+
       $scope.filteredRowsTestSet;
+      $scope.filteredRowsTrainSet;
+      $scope.gridOptionsTrainSet = {
+        rowHeight: 40,
+        useExternalPagination: true,
+        exporterMenuPdf: false,
+        enableSorting: true,
+        useExternalSorting: false,
+        enableFiltering: false,
+        enableRowSelection: true,
+        enableSelectAll: true,
+        enableGridMenu: true,
+        fastWatch: true,
+        columnDefs: [],
+        data:[],
+      };
       $scope.gridOptionsTestSet = {
         rowHeight: 40,
         useExternalPagination: true,
@@ -96,9 +119,25 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
         }
         return style;
       }
+      $scope.getGridStyleTrainSet = function () {
+        var style = {
+          'margin-top': '10px',
+          'margin-bottom': '10px',
+        }
+        if ($scope.filteredRowsTrainSet && $scope.filteredRowsTrainSet.length > 0) {
+          style['height'] = (($scope.filteredRowsTrainSet.length < 10 ? $scope.filteredRowsTrainSet.length * 40 : 400) + 60) + 'px';
+        } else {
+          style['height'] = "200px"
+        }
+        return style;
+      }
       $scope.gridOptionsTestSet.onRegisterApi = function (gridApi) {
         $scope.gridApiTestSet = gridApi;
         $scope.filteredRowsTestSet = $scope.gridApiTestSet.core.getVisibleRows($scope.gridApiTestSet.grid);
+      };
+      $scope.gridOptionsTrainSet.onRegisterApi = function (gridApi) {
+        $scope.gridApiTrainSet = gridApi;
+        $scope.filteredRowsTrainSet = $scope.gridApiTrainSet.core.getVisibleRows($scope.gridApiTrainSet.grid);
       };
      
       $rootScope.refreshMoldeResult = function () {
@@ -227,6 +266,7 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
         $scope.featureImportanceArr = data;
         $scope.gridOptionsTestSet.data = data;
       };
+
       $scope.getTestSet = function (data) {
         var uuid = data.uuid;
         var version = data.version;
@@ -243,13 +283,31 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
         var onError=function(){
           $scope.isProgessTrainSet = false;
           $scope.isErrorTrainTestSet = true;
+        }   
+      }
+      
+      $scope.getTrainSet = function (data) {
+        var uuid = data.uuid;
+        var version = data.version;
+        $scope.isProgessTrainTrainSet = true;
+        $scope.isErrorTrainTrainSet = false;
+        ModelService.getTrainSet(uuid, version, 'trainexec').then(function (response) { onSuccessGetTestSet(response.data) },function (response) { onError(response.data) });
+        var onSuccessGetTestSet = function (response) {
+          $scope.isProgessTrainTrainSet = false;
+          $scope.isErrorTrainTrainSet = false;
+          $scope.gridOptionsTrainSet.data = $scope.getResults($scope.paginationTrainSet,response);
+          $scope.gridOptionsTrainSet.columnDefs = $scope.getColumnData(response);
+          $scope.originalDataTrainSet = response;
+        } //End onSuccessGetModelResult
+        var onError=function(){
+          $scope.isProgessTrainTrainSet = false;
+          $scope.isErrorTrainTestSet = true;
         }
         
       }
-     
+      
       $scope.go = function (index) {
         $scope.activeTabIndex = index;
-        
         if(index == 1){
           $timeout(function () {
             $scope.showChart = true;
@@ -264,6 +322,10 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
         }
         if([0,1,2].indexOf(index) !=-1 && ($scope.modelresult ==null)){
           $scope.getTrainResult({ uuid: $scope.data.uuid, version: $scope.data.version});
+        }
+        if(index == 4 &&$scope.gridOptionsTrainSet.data.length ==0){
+          $scope.getTrainSet({ uuid: $scope.data.uuid, version: $scope.data.version});
+
         }
       }
 

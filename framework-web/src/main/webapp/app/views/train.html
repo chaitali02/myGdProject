@@ -299,7 +299,27 @@
                                                 </tags-input>
                                             </div>
                                         </div>
-                                         <div class="form-group">
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">Include Features</label>
+                                            <div class="col-md-1">
+                                                <div class="mt-checkbox-list" style="margin-top:-7px">
+                                                    <label class="mt-checkbox mt-checkbox-outline">
+                                                        <input ng-disabled="{{mode}}" type="checkbox" ng-model="trainData.includeFeatures" ng-true-value="'Y'" ng-false-value="'N'">
+                                                        <span ng-disabled="{{mode}}"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <label class="control-label col-md-2 col-sm-2 col-xs-12" >Save Training Set</label>
+                                            <div class="col-md-1">
+                                                <div class="mt-checkbox-list" style="margin-top:-7px">
+                                                    <label class="mt-checkbox mt-checkbox-outline">
+                                                        <input ng-disabled="{{mode}}" type="checkbox" ng-model="trainData.saveTrainingSet" ng-true-value="'Y'" ng-false-value="'N'">
+                                                        <span ng-disabled="{{mode}}"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                         <!-- <div class="form-group">
                                             <label class="col-md-3 control-label">Include Features
                                             </label>
                                             <div class="col-md-9">
@@ -310,7 +330,18 @@
                                                     </label>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> -->
+                                        <!-- <div class="form-group">
+                                            <label class="col-md-3 control-label">Save Training Set</label>
+                                            <div class="col-md-9">
+                                                <div class="mt-checkbox-list" style="margin-top:-7px">
+                                                    <label class="mt-checkbox mt-checkbox-outline">
+                                                        <input ng-disabled="{{mode}}" type="checkbox" ng-model="trainData.saveTrainingSet" ng-true-value="'Y'" ng-false-value="'N'">
+                                                        <span ng-disabled="{{mode}}"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div> -->
                                         <!-- <div class="form-group">
                                             <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Encoding Type</label>
                                             <div class="col-md-6">

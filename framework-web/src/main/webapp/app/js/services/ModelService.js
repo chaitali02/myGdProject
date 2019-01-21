@@ -237,11 +237,17 @@ DatascienceModule.factory('ModelFactory', function ($http, $location) {
     }).then(function (response) { return response })
   }; 
 
-
   factory.findTestSet = function (uuid,version,type) {
     var url = $location.absUrl().split("app")[0]
     return $http({
       url: url + "model/train/getTestSet?action=view&uuid=" + uuid + "&version=" + version+"&type="+type,
+      method: "GET"
+    }).then(function (response) { return response })
+  };
+  factory.findTrainSet = function (uuid,version,type) {
+    var url = $location.absUrl().split("app")[0]
+    return $http({
+      url: url + "model/train/getTrainSet?action=view&uuid=" + uuid + "&version=" + version+"&type="+type,
       method: "GET"
     }).then(function (response) { return response })
   }; 
@@ -249,6 +255,21 @@ DatascienceModule.factory('ModelFactory', function ($http, $location) {
 })
 
 DatascienceModule.service("ModelService", function ($http, ModelFactory, $q, sortFactory){
+  this.getTrainSet = function (uuid, version, type) {
+    var deferred = $q.defer();
+    ModelFactory.findTrainSet(uuid, version ,type).then(function (response) { onSuccess(response.data) },function (response) { onError(response.data) });
+    var onSuccess = function (response) {
+      deferred.resolve({
+        data: response
+      });
+    }
+    var onError = function (response) {
+      deferred.reject({
+        data: response
+      })
+    }
+    return deferred.promise;
+  }
   this.getTestSet = function (uuid, version, type) {
     var deferred = $q.defer();
     ModelFactory.findTestSet(uuid, version ,type).then(function (response) { onSuccess(response.data) },function (response) { onError(response.data) });
