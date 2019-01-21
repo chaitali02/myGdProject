@@ -756,7 +756,7 @@ public class ImpalaExecutor implements IExecutor {
 		return null;
 	}
 	@Override
-	public List<Map<String, Object>> fetchTestSet(String location) throws IOException {
+	public List<Map<String, Object>> fetchTrainOrTestSet(String location) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
