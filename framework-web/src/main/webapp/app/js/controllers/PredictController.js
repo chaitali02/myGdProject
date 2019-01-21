@@ -461,7 +461,7 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
         var imputeMethod={};
         featureMap.featureMapId=response.featureAttrMap[i].featureMapId;
         featureMap.id = response.featureAttrMap[i].featureMapId;
-        featureMap.encodingType= response.featureAttrMap[i].encodingType;
+       // featureMap.encodingType= response.featureAttrMap[i].encodingType;
         sourceFeature.uuid = response.featureAttrMap[i].feature.ref.uuid;
         sourceFeature.type = response.featureAttrMap[i].feature.ref.type;
         sourceFeature.featureId = response.featureAttrMap[i].feature.featureId;
@@ -649,7 +649,7 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
         var featureMapObj={};
         featureMapObj.featureMapId =$scope.featureMapTableArray[i].id;
         featureMapObj.featureDisplaySeq =i;
-        featureMapObj.encodingType= $scope.featureMapTableArray[i].encodingType;
+       // featureMapObj.encodingType= $scope.featureMapTableArray[i].encodingType;
         var sourceFeature={};
         var sourceFeatureRef={};
         var targetFeature={};
@@ -671,7 +671,7 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
         featureMapObj.attribute=targetFeature;
         if($scope.featureMapTableArray[i].imputeMethod.imputeType =="default"){
           imputeMethodRef.type="model";
-          imputeMethodRef.uuid = $scope.featureMapTableArray[i].imputeMethod.uuid;
+          imputeMethodRef.uuid = $scope.featureMapTableArray[i].sourceFeature.uuid;
           imputeMethod.ref = imputeMethodRef;
           imputeMethod.featureId = $scope.featureMapTableArray[i].imputeMethod.featureId;
 

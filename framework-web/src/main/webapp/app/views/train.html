@@ -390,7 +390,7 @@
                                                                             <th style="width:5%; text-align:center">ID</th>
                                                                             <th style="width:18%;text-align: center">Features</th>
                                                                             <th style="width:18%;text-align: center">Attributes</th>
-                                                                            <th style="width:11%;text-align: center">Encoding Type</th>
+                                                                            <!-- <th style="width:11%;text-align: center">Encoding Type</th> -->
                                                                             <th style="width:10%;text-align: center">Impute Method</th>
                                                                             <th style="width:10%;text-align: center">Impute Value</th>
                                                                             <th style="width:5%;text-align: center">Move</th>
@@ -429,14 +429,14 @@
                                                                                     </div>
                                                                                 </span>
                                                                             </td>
-                                                                            <td> 
+                                                                            <!-- <td> 
                                                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                                     <select class="form-control" ng-disabled="{{mode}}" data-ng-model="data.encodingType"
                                                                                         ng-options="r  for r in encodingTypes | orderBy">
                                                                                         <option value="">-Select-</option>
                                                                                     </select>
                                                                                 </span>
-                                                                            </td>
+                                                                            </td> -->
                                                                             
                                                                             <td> 
                                                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
@@ -446,6 +446,7 @@
                                                                                 </td>
                                                                             <td>
                                                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                                    {{data.imputeMethod}}
                                                                                     <div  ng-if="data.imputeMethod.isModelShow">
                                                                                         <input type="text" class="form-control" ng-model="data.imputeMethod.imputeValue" title="{{data.imputeMethod.imputeValue}}" ng-disabled="true">
                                                                                     </div>

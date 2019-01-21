@@ -112,7 +112,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
   });
 
   $scope.autoRefersh=function(){
-    debugger
+    
     if($scope.featureMapTableArray.length !=$scope.modelData.features.length){
       var featureMapTableArray=[]
       for(var i=$scope.featureMapTableArray.length;i < $scope.modelData.features.length;i++){
@@ -342,6 +342,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
           featureMap.sourceFeature = sourceFeature;
           featureMapTableArray[i] = featureMap;
           imputeMethod.type="model";
+          imputeMethod.uuid=response.uuid;
           imputeMethod.imputeType="default";
           imputeMethod.imputeValue=response.features[i].defaultValue;
           imputeMethod.featureId = response.features[i].featureId;
@@ -349,6 +350,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
           imputeMethod.isModelShow=true;
           imputeMethod.isSimpleShow=false;
           imputeMethod.isFunctionShow=false;
+
           imputeMethod.sourceFeature = sourceFeature;
           featureMap.imputeMethod=imputeMethod;
           $scope.originalFeatureMapTableArray = featureMapTableArray;
@@ -522,7 +524,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
         targetFeature.id = response.featureAttrMap[i].attribute.ref.uuid + "_" + response.featureAttrMap[i].attribute.attrId;
         targetFeature.dname = response.featureAttrMap[i].attribute.ref.name + "." + response.featureAttrMap[i].attribute.attrName;
         featureAttrMap.targetFeature = targetFeature;
-        featureAttrMap.encodingType= response.featureAttrMap[i].encodingType;
+       // featureAttrMap.encodingType= response.featureAttrMap[i].encodingType;
        // console.log(response.featureAttrMap[i].imputeMethod.ref.type)
        if(response.featureAttrMap[i].imputeMethod !=null){
           if(response.featureAttrMap[i].imputeMethod.ref.type =="model"){
@@ -554,9 +556,10 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
             imputeMethod.selectedFunction=selectedFunction;
           }
           
-          featureAttrMap.imputeMethod=imputeMethod;
           imputeMethod.uuid = response.featureAttrMap[i].imputeMethod.ref.uuid;
           imputeMethod.type = response.featureAttrMap[i].imputeMethod.ref.type;
+          featureAttrMap.imputeMethod=imputeMethod;
+
         }
         featureAttrMap.featureAttrMap=featureAttrMap;
         featureMapTableArray[i] = featureAttrMap;
@@ -675,7 +678,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
         var featureMapObj = {};
         featureMapObj.featureMapId = $scope.featureMapTableArray[i].id;
         featureMapObj.featureDisplaySeq = i;
-        featureMapObj.encodingType= $scope.featureMapTableArray[i].encodingType;
+        //featureMapObj.encodingType= $scope.featureMapTableArray[i].encodingType;
         var sourceFeature = {};
         var sourceFeatureRef = {};
         var targetFeature = {};
@@ -693,10 +696,10 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
         targetFeature.ref = targetFeatureRef
         targetFeature.attrId = $scope.featureMapTableArray[i].targetFeature.attributeId;
         featureMapObj.attribute = targetFeature;
-        
+        debugger
         if($scope.featureMapTableArray[i].imputeMethod.imputeType =="default"){
           imputeMethodRef.type="model";
-          imputeMethodRef.uuid = $scope.featureMapTableArray[i].imputeMethod.uuid;
+          imputeMethodRef.uuid =  $scope.featureMapTableArray[i].sourceFeature.uuid;;
           imputeMethod.ref = imputeMethodRef;
           imputeMethod.featureId = $scope.featureMapTableArray[i].imputeMethod.featureId;
 

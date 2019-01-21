@@ -3,7 +3,7 @@
  */
 DatascienceModule = angular.module('DatascienceModule');
 
-DatascienceModule.controller('CreateModelController', function($state, $stateParams, $rootScope, $scope, $sessionStorage, $timeout, $filter, ModelService, $http, $location, $anchorScroll, privilegeSvc, CommonService, CommonFactory) {
+DatascienceModule.controller('CreateModelController', function($state, $stateParams, $rootScope, $scope, $sessionStorage, $timeout, $filter, ModelService, $http, $location, $anchorScroll, privilegeSvc, CommonService, CommonFactory,CF_ENCODINGTYPE) {
   $scope.featuureType=["integer","string","double"];
   $scope.mode = "false";
 
@@ -66,7 +66,8 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
   $scope.backCount;
   $scope.isLabelDisable = true;
   $scope.isDependencyShow = false;
-  
+  $scope.encodingTypes=CF_ENCODINGTYPE.encodingType;//["ORDINAL", "ONEHOT", "BINARY", "BASEN","HASHING"];
+
   var notify = {
     type: 'success',
     title: 'Success',
@@ -515,9 +516,10 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
           var featureObj={};
           featureObj.featureId=$scope.modeldata.features[i].featureId;
           featureObj.id=parseInt($scope.modeldata.features[i].featureId);
-          featureObj.name=$scope.modeldata.features[i].name
-          featureObj.type=$scope.modeldata.features[i].type
-          featureObj.desc=$scope.modeldata.features[i].desc
+          featureObj.name=$scope.modeldata.features[i].name;
+          featureObj.type=$scope.modeldata.features[i].type;
+          featureObj.desc=$scope.modeldata.features[i].desc;
+          featureObj.encodingType=$scope.modeldata.features[i].encodingType;
           featureObj.minVal=$scope.modeldata.features[i].type =="string"?"":$scope.modeldata.features[i].minVal
           featureObj.maxVal=$scope.modeldata.features[i].type =="string"?"":$scope.modeldata.features[i].maxVal
           featureObj.defaultValue=$scope.modeldata.features[i].defaultValue;
@@ -602,9 +604,10 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
           var featureObj={};
           featureObj.featureId=$scope.modeldata.features[i].featureId;
           featureObj.id=parseInt($scope.modeldata.features[i].featureId);
-          featureObj.name=$scope.modeldata.features[i].name
-          featureObj.type=$scope.modeldata.features[i].type
-          featureObj.desc=$scope.modeldata.features[i].desc
+          featureObj.name=$scope.modeldata.features[i].name;
+          featureObj.type=$scope.modeldata.features[i].type;
+          featureObj.desc=$scope.modeldata.features[i].desc;
+          featureObj.encodingType= $scope.modeldata.features[i].encodingType;
           featureObj.minVal=$scope.modeldata.features[i].type =="string"?"":$scope.modeldata.features[i].minVal
           featureObj.maxVal=$scope.modeldata.features[i].type =="string"?"":$scope.modeldata.features[i].maxVal
           featureObj.defaultValue=$scope.modeldata.features[i].defaultValue;
@@ -705,9 +708,10 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
         var featureObj={};
         featureObj.featureId =$scope.featureTableArray[i].id;
 			  featureObj.featureDisplaySeq = i;
-        featureObj.name=$scope.featureTableArray[i].name
-        featureObj.type=$scope.featureTableArray[i].type
-        featureObj.desc=$scope.featureTableArray[i].desc
+        featureObj.name=$scope.featureTableArray[i].name;
+        featureObj.type=$scope.featureTableArray[i].type;
+        featureObj.desc=$scope.featureTableArray[i].desc;
+        featureObj.encodingType= $scope.featureTableArray[i].encodingType;
         featureObj.minVal=$scope.featureTableArray[i].type =="string"?"":$scope.featureTableArray[i].minVal
         featureObj.maxVal=$scope.featureTableArray[i].type =="string"?"":$scope.featureTableArray[i].maxVal
         featureObj.defaultValue=$scope.featureTableArray[i].defaultValue;

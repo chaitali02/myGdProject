@@ -192,7 +192,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 			}
 			if (TargetType == "TABLE") {
 				$scope.allTargetDatasource = response;
-				setTimeout(function(){
+				//setTimeout(function(){
 					if($scope.selectedSourceType == 'FILE' && $scope.selectedTargetType == 'TABLE'){
 						if($scope.allTargetDatasource && $scope.allTargetDatasource.length >0){
 							for(var i=0;i<$scope.allTargetDatasource.length;i++){
@@ -217,7 +217,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 							}
 						}	
 					}
-				},100);
+				//},100);
 			
 			}
 			
