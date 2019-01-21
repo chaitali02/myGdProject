@@ -556,4 +556,13 @@ public class ModelController {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		response = modelServiceImpl.download(trainExecUuid, trainExecVersion, format, rows, "testSet", runMode, response);
 	}
+	
+	@RequestMapping(value = "getTrainByTrainExec", method = RequestMethod.GET)
+	public Train getTrainByTrainExec(
+			@RequestParam(value = "uuid") String trainExecUuid,
+			@RequestParam(value = "version", required = false) String trainExecVersion,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
+		return modelServiceImpl.getTrainByTrainExec(trainExecUuid, trainExecVersion);
+	}
 }

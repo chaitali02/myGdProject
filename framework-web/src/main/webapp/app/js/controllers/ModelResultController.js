@@ -341,9 +341,16 @@ DatascienceModule.controller('ResultTrainController2', function ($filter, $state
         }
     }
 
+    $scope.getTrainByTrainExec = function () {
+        ModelService.getTrainByTrainExec($scope.modelDetail.uuid, $scope.modelDetail.version, 'train').then(function (response) { onSuccessGetTrainByTrainExec(response.data) });
+        var onSuccessGetTrainByTrainExec = function (response) {
+            $scope.trainData = response;
+        }
+    }
+
     $scope.getAlgorithumByTrainExec();
     $scope.getModelByTrainExec();
-
+    $scope.getTrainByTrainExec();
 
     $scope.showPMMLResult = function () {
         if ($scope.isPMMLDownload) {
@@ -474,6 +481,9 @@ DatascienceModule.controller('ResultTrainController2', function ($filter, $state
     }
 
     $scope.downloadTrainSet =function(){
+        if($scope.downloadAction.tab ==4 && $scope.trainData.saveTrainingSet =="N"){
+            return false;
+        }
         ModelService.downloadTrainSet($scope.downloadAction.uuid, $scope.downloadAction.version,"trainexec").then(function (response) { onSuccessDownloadTrainSet(response.data) });
         var onSuccessDownloadTrainSet= function (response) {
             headers = response.headers();

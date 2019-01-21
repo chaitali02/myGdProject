@@ -388,7 +388,7 @@ public class VizpodParser {
 			result += groupByBuilder.length() > 0 ? groupByBuilder.substring(0, groupByBuilder.length() - 1) : "";
 //			result += havingBuilder.length() > 0 ? havingBuilder.substring(0, groupByBuilder.length() - 1) : "";
 			result += StringUtils.isBlank(havingBuilder.toString()) ? ConstantsUtil.BLANK : ConstantsUtil.HAVING_1_1.concat(havingBuilder.toString());			
-			result = orderByBuilder.length() > 0 ? orderByBuilder.toString() : "";			
+			result += orderByBuilder.length() > 0 ? orderByBuilder.toString() : "";			
 			result += limitBuilder.length() > 0 ? limitBuilder.substring(0, limitBuilder.length() - 1) : "";
 			logger.info(String.format("Final Vizpod filter %s", result));
 		} else if ((MetaType.dataset).equals(vizpod.getSource().getRef().getType())) {

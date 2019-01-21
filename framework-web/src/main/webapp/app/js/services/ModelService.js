@@ -199,6 +199,13 @@ DatascienceModule.factory('ModelFactory', function ($http, $location) {
       method: "GET",
     }).then(function (response) { return response })
   }
+  factory.findTrainByTrainExec = function (uuid, version, type) {
+    var url = $location.absUrl().split("app")[0]
+    return $http({
+      url: url + "model/getTrainByTrainExec?action=view&uuid=" + uuid + "&version=" + version + "&type=" + type,
+      method: "GET",
+    }).then(function (response) { return response })
+  }
   factory.findParamListByFormula=function(uuid,type){
     var url=$location.absUrl().split("app")[0]
     return $http({
@@ -525,7 +532,16 @@ DatascienceModule.service("ModelService", function ($http, ModelFactory, $q, sor
 
     return deferred.promise;
   }
-
+  this.getTrainByTrainExec = function (uuid, version,type) {
+    var deferred = $q.defer();
+    ModelFactory.findTrainByTrainExec(uuid, version,type).then(function (response) { onSuccess(response.data) });
+    var onSuccess = function (response) {
+      deferred.resolve({
+        data: response
+      })
+    }
+    return deferred.promise;
+  }
   this.getModelByTrainExec = function (uuid, version) {
     var deferred = $q.defer();
     ModelFactory.findModelByTrainExec(uuid, version).then(function (response) { onSuccess(response.data) });

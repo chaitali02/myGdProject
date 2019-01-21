@@ -4014,4 +4014,17 @@ public class ModelServiceImpl {
 				, new MetaIdentifierHolder(new MetaIdentifier(MetaType.trainExec, trainExecUuid, trainExecVersion)));
 		return response;
 	}
+	
+	public Train getTrainByTrainExec(String trainExecUuid, String trainExecVersion) throws JsonProcessingException {
+		TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(trainExecUuid
+															, trainExecVersion
+															, MetaType.trainExec.toString()
+															, "N");
+		
+		MetaIdentifier dependsOnMI = trainExec.getDependsOn().getRef();
+		return (Train) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid()
+				, dependsOnMI.getVersion()
+				, MetaType.train.toString()
+				, "N");
+	}
 }
