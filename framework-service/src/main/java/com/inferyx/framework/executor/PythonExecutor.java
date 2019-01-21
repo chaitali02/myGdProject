@@ -540,15 +540,6 @@ public class PythonExecutor implements IExecutor {
 	}
 
 	@Override
-	public Map<String, Object> summary(Object trndModel, List<String> summaryMethods, String clientContext) throws IOException {
-		Map<String, Object> summary = new HashMap<>();
-		String modelPath = (String) trndModel;
-		modelPath = modelPath  + "/" + "model.spec";
-		summary = new ObjectMapper().readValue(new File(modelPath), HashMap.class);
-		return summary;
-	}
-
-	@Override
 	public ResultSetHolder create(List<RowObj> rowObjList, List<Attribute> attributes, String tableName,
 			String clientContext) throws IOException {
 		// TODO Auto-generated method stub
@@ -667,6 +658,17 @@ public class PythonExecutor implements IExecutor {
 			String clientContext) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public Map<String, Object> summary(Object trndModel, String trainClass, List<String> summaryMethods, String clientContext)
+			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, ClassNotFoundException {
+		Map<String, Object> summary = new HashMap<>();
+		String modelPath = (String) trndModel;
+		modelPath = modelPath  + "/" + "model.spec";
+		summary = new ObjectMapper().readValue(new File(modelPath), HashMap.class);
+		return summary;
 	}
 
 }

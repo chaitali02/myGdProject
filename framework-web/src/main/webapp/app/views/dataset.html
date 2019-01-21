@@ -69,13 +69,12 @@
               tooltip ng-class="(showForm==true || isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="showview(dataset.uuid,dataset.version)">
               <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
             </a> -->
-
             <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Sample Records" data-toggle="tooltip" data-placement="top"
               tooltip data-ng-click="isShowSimpleData ==false?showSampleTable(dataset):''" ng-hide="isAdd" ng-class="isShowSimpleData==true? 'currentpage':'notcurrentpage'">
               <i class="fa fa-table icon-circle"></i>
             </a>
             <a class="btn btn-circle btn-icon-only btn-default" ng-click="downloadFile(dataset)" tooltip-placement="top" uib-tooltip="Download" ng-hide="isAdd" ng-class="isDownloadDataset==true? 'currentpage':'notcurrentpage'"
-            ng-disabled="isDownloadDataset">
+               ng-disabled="isDownloadDataset">
               <i class="fa fa-download icon-circle"></i>
             </a>
             <a class="btn btn-circle btn-icon-only btn-default " title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip
@@ -89,10 +88,9 @@
               tooltip>
               <i class="fa fa-refresh icon-circle" aria-hidden="true"></i>
             </a>
-          
             <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" ng-click="genericClose($event,'dataset')" data-ui-sref="metadata({type:'dataset'})"
               title="Close" data-toggle="tooltip" data-placement="top" tooltip>
-              <i class="fa fa-times  icon-circle"></i>
+              <i class="fa fa-times   icon-circle"></i>
             </a>
           </div>
         </div>
@@ -596,7 +594,7 @@
 
                           <div class="row" style="overflow-y: auto;overflow-x: hidden;max-height:400px;">
                             <div class="col-md-12">
-                              <table class=" row-border hover table  table-striped table-bordered" style="table-layout:fixed;">
+                              <table class=" row-border hover table  table-striped table-bordered">
                                 <thead>
                                   <tr>
                                     <th style="text-align: center; Vertical-align: middle;width:5%;">
@@ -609,7 +607,7 @@
                                     <th style="width:30%;text-align: center">Name</th>
                                     <th style="width:20%;text-align: center">Source Type</th>
                                     <th style="width:30%;text-align: center">Source Name</th>
-                                    <th style="width:10%;text-align: center">Move</th>
+                                    <th style="width:20%;text-align: center">Move</th>
                                   </tr>
                                 </thead>
                                 <tbody id="{{$index}}" ng-repeat="data in attributeTableArray" drag-drop draggable="{{isDragable}}" after-drop="ondrop">
@@ -815,7 +813,7 @@
           <button type="button" class="close" data-dismiss="modal" ng-click="ClosePop()" aria-hidden="true"></button>
           <h4 class="modal-title">Download</h4>
         </div>
-        <form class="form-horizontal" name="myform3" id="downloadModel" ng-submit="submitDownload()" novalidate="novalidate">
+        <form class="form-horizontal" name="myform4" id="downloadModel" ng-submit="submitDownload()" novalidate="novalidate">
           <div class="modal-body" style="padding-top:0px">
             <div class="slimScrollDiv" style="position: relative; overflow-y: auto !important; width:auto;padding:10px;">
               <div class="scroller" style="max-height:150px;min-height:110px; overflow-y: auto !important; width: auto;margin-top:30px"
