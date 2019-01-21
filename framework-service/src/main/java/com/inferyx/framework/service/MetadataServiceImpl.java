@@ -101,8 +101,10 @@ import com.inferyx.framework.domain.ProfileGroupExec;
 import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.ReconGroupExec;
 import com.inferyx.framework.domain.ReportExec;
+import com.inferyx.framework.domain.Role;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.User;
+import com.inferyx.framework.enums.ApplicationType;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.RuleGroupExec;
@@ -670,17 +672,50 @@ public class MetadataServiceImpl {
 		// Apply filter
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy z");
 		// to find
-		//String appUuid = null ;
-		String appUuid =commonServiceImpl.findAppId(type);
+		Application application = commonServiceImpl.getApp();
+		
 
 //		appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 //				? securityServiceImpl.getAppInfo().getRef().getUuid()
 //				: null;
+		String appUuid = null;
+		List<Application> appList = null;
+		List<String> orgAppUuidList = null;
+		if(application.getApplicationType().equals(ApplicationType.ADMIN)) {
+			try {
+				MetaIdentifier roleInfoMI = securityServiceImpl.getRoleInfo().getRef();
+				Role role = (Role) commonServiceImpl.getOneByUuidAndVersion(roleInfoMI.getUuid(), roleInfoMI.getVersion(), roleInfoMI.getType().toString(), "N");
+				
+				if(role.getName().equalsIgnoreCase("admin")) {
+					MetaIdentifier orgInfoMI = securityServiceImpl.getOrgInfo().getRef();
+					appList = commonServiceImpl.getAppByOrg(orgInfoMI.getUuid());
+					if(appList != null && !appList.isEmpty()) {
+						orgAppUuidList = new ArrayList<>();
+						for(Application orgApp : appList) {
+							orgAppUuidList.add(orgApp.getUuid());
+						}
+					} else {
+						appUuid = application.getUuid();
+					}
+				} else {
+					appUuid = application.getUuid();
+				}				
+			} catch (JSONException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				appUuid = application.getUuid();
+			}
+		} else {
+			appUuid = application.getUuid();
+		}
 		
-
 		try {
-			if (appUuid != null)
+			if(orgAppUuidList != null && !orgAppUuidList.isEmpty()) {
+				criteriaList.add(where("appInfo.ref.uuid").in(orgAppUuidList));
+			} else if (appUuid != null) {
 				criteriaList.add(where("appInfo.ref.uuid").is(appUuid));
+			}			
+				
 			if (name != null && !name.isEmpty())
 				criteriaList.add(where("name").is(name));
 			if (userName != null && !userName.isEmpty()) {
