@@ -189,19 +189,19 @@ export class MapComponent implements OnInit {
   getOneByUuidAndVersion(id, version) {
     this._commonService.getOneByUuidAndVersion(id, version, 'map')
       .subscribe(
-      response => {
-        this.onSuccessgetOneByUuidAndVersion(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.onSuccessgetOneByUuidAndVersion(response)
+        },
+        error => console.log("Error :: " + error));
   }
 
   getAllVersionByUuid() {
     this._commonService.getAllVersionByUuid('map', this.id)
       .subscribe(
-      response => {
-        this.OnSuccesgetAllVersionByUuid(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.OnSuccesgetAllVersionByUuid(response)
+        },
+        error => console.log("Error :: " + error));
   }
 
   onSuccessgetOneByUuidAndVersion(response) {
@@ -708,78 +708,74 @@ export class MapComponent implements OnInit {
 
 
   autoMapFeature(selectedAutoMode) {
-    
-    //let temp = this.attributeTableArray;
-    //  this.attributeTableArray = [];
+
     if (selectedAutoMode == "By Order") {
-      //if (this.allMapTargetAttribute) {
-       // for (var i = 0; i < this.mapTableArray.length; i++) {debugger
-         // var mapInfo = {};
-          //mapInfo["attrMapId"] = i;
-          //mapInfo["sourceType"] = "datapod";
-
-          // let sourceObj = {};
-          // if (this.allMapTargetAttribute.length > i) {debugger
-
-
-
-           // this.getAllAttributeBySource();
-
-
-
-           // this.onChangeSourceAttribute(this.mapTableArray[i].sourceAttributeType.value,i)
-
-
-            // sourceObj["label"] = this.mapTableArray[i]["sourceattribute"]["label"];
-            // sourceObj["id"] = this.mapTableArray[i]["sourceattribute"]["id"];
-            // sourceObj["uuid"] = this.mapTableArray[i]["sourceattribute"]["uuid"];
-            // sourceObj["type"] = this.mapTableArray[i]["sourceattribute"]["type"];
-            // sourceObj["attributeId"] = this.mapTableArray[i]["sourceattribute"]["attributeId"];
-            // sourceObj["dname"] = this.mapTableArray[i]["sourceattribute"]["dname"];
-            // sourceObj["trackName"] = this.mapTableArray[i]["sourceattribute"]["trackName"];
-
-          // }
-          // else {debugger
-          //   sourceObj = {};
-          //   mapInfo["sourceattribute"] = sourceObj;
-          //   this.mapTableArray[i]["sourceattribute"] = mapInfo["sourceattribute"]
-          // }
-     
-        // }
-        console.log(JSON.stringify(this.mapTableArray));
-     // }
+      this.emptyAttribure();
+      for (let i = 0; i < this.allMapSourceAttribute.length; i++) {
+        if (this.allMapSourceAttribute && this.allMapSourceAttribute.length > 0) {
+          let sourceObj = {}
+          this.fillSourceAttr(sourceObj, i);
+          this.mapTableArray[i].sourceattribute = sourceObj;
+          this.fillSourceType(i);
+        }
+      }
     }
-
     else if (selectedAutoMode == "By Name") {
-      for (var i = 0; i < this.mapTableArray.length; i++) {
+      this.emptyAttribure();
+      let index = 0;
+      for (let i = 0; i < this.allMapSourceAttribute.length; i++) {
         var mapInfo = {};
-
         let sourceObj = {};
         for (let j = 0; j < this.allMapTargetAttribute.length; j++) {
-          console.log(this.allMapTargetAttribute[j]["name"]);
-          console.log(this.mapTableArray[i]["sourceattribute"]["label"]);
-          if (this.allMapTargetAttribute[j]["name"] == (this.mapTableArray[i]["sourceattribute"]["label"]).split(".")[1]) {
-          
-
-            sourceObj["label"] = this.mapTableArray[i]["sourceattribute"]["label"];
-            sourceObj["id"] = this.mapTableArray[i]["sourceattribute"]["id"];
-            sourceObj["uuid"] = this.mapTableArray[i]["sourceattribute"]["uuid"];
-            sourceObj["type"] = this.mapTableArray[i]["sourceattribute"]["type"];
-            sourceObj["attributeId"] = this.mapTableArray[i]["sourceattribute"]["attributeId"];
-            sourceObj["dname"] = this.mapTableArray[i]["sourceattribute"]["dname"];
-            sourceObj["trackName"] = this.mapTableArray[i]["sourceattribute"]["trackName"];
-
+          if (this.allMapTargetAttribute[j]["name"] == (this.allMapSourceAttribute[i]["label"]).split(".")[1]) {
+            this.fillSourceAttr(sourceObj, i);
+            index = j;
             break;
           }
           else {
-            sourceObj = {};
+            sourceObj["id"] = "";
+            sourceObj["dname"] = "";
+            sourceObj["label"] = "";
+            sourceObj["value"] = {};
+            sourceObj["value"]["label"] = "";
+            sourceObj["value"]["id"] = "";
+            index = i;
           }
         }
-        mapInfo["sourceattribute"] = sourceObj;
-        this.mapTableArray[i]["sourceattribute"] = mapInfo["sourceattribute"]
+       // mapInfo["sourceattribute"] = sourceObj;
+        this.mapTableArray[index]["sourceattribute"] = sourceObj;
+        this.fillSourceType(index);
       }
       console.log(JSON.stringify(this.mapTableArray));
     }
   }
 
+  fillSourceAttr(sourceObj, i) {
+    sourceObj["id"] = this.allMapSourceAttribute[i]["value"]["id"];
+    sourceObj["dname"] = (this.allMapSourceAttribute[i]["label"]).split(".")[1];
+    sourceObj["label"] = this.allMapSourceAttribute[i]["label"];
+    sourceObj["value"] = {};
+    sourceObj["value"]["label"] = this.allMapSourceAttribute[i]["label"];
+    sourceObj["value"]["id"] = this.allMapSourceAttribute[i]["value"]["id"];
+  }
+  emptyAttribure() {
+    for (let i = 0; i < this.allMapTargetAttribute.length; i++) {
+      let mapinfo = {};
+      let obj = {}
+      obj["value"] = "string";
+      obj["label"] = "string";
+      mapinfo["isSourceAtributeSimple"] = false;
+      mapinfo["isSourceAtributeDatapod"] = true;
+      mapinfo["isSourceAtributeFormula"] = false;
+      mapinfo["isSourceAtributeExpression"] = false;
+      mapinfo["sourceAttributeType"] = obj
+      this.mapTableArray[i] = mapinfo;
+    }
+  }
+  fillSourceType(i) {
+    let obj = {};
+    obj["value"] = "datapod";
+    obj["label"] = "attribute";
+    this.mapTableArray[i].sourceAttributeType = obj;
+  }
 }

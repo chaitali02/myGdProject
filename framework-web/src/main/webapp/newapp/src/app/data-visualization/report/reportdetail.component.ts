@@ -101,7 +101,7 @@ export class ReportDetailComponent {
     constructor(private activatedRoute: ActivatedRoute, private http: Http, public router: Router, private _dashboardService: DashboardService, private _commonService: CommonService, private _location: Location, private _datasetService: DatasetService, private _reportService: ReportService) {
         this.reportdata = {};
         this.IsDisable = "false";
-        this.isSubmitEnable = true;
+        this.isSubmitEnable = false;
         this.reportdata["active"] = true;
         this.keylist = [];
         this.valuelist = [];
@@ -1061,6 +1061,8 @@ export class ReportDetailComponent {
     }
     showDependencyGraph(uuid, version) {
         console.log("showDependencyGraph call.....");
+        this.showGraph = true;
+        this.isHomeEnable = true;
     }
 
     dragStart(event, data) {
@@ -1080,6 +1082,7 @@ export class ReportDetailComponent {
     }
 
     autoPopulate() {
+        this.isSubmitEnable = true
         this.attributeTableArray = [];
         for (var i = 0; i < this.allMapSourceAttribute.length; i++) {
             var attributeinfo = {};
