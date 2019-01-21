@@ -1220,3 +1220,7 @@ cursor: not-allowed !important;
   color: #a0a0a0;
   background: none;
 } */
+
+.checkClass{
+  border-color: #e73d4a;
+}

@@ -1,13 +1,14 @@
 import { CommonService } from './../../metadata/services/common.service';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { AppConfig } from './../../app.config';
-import { Component, OnInit, ViewEncapsulation, Inject } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, Inject, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { DatasetService } from '../../metadata/services/dataset.service';
 import { NgOption } from '@ng-select/ng-select';
 import { Version } from '../../shared/version'
 import { SelectItem } from 'primeng/primeng';
 import { DependsOn } from './dependsOn'
+import { NgForm } from '@angular/forms';
 import { AppMetadata } from '../../app.metadata';
 import { SESSION_STORAGE, WebStorageService } from 'angular-webstorage-service'
 @Component({
@@ -17,6 +18,11 @@ import { SESSION_STORAGE, WebStorageService } from 'angular-webstorage-service'
   encapsulation: ViewEncapsulation.None
 })
 export class DatasetComponent implements OnInit {
+  isHomeEnable: boolean;
+  showGraph: boolean;
+  duplicateString: any;
+  isDuplication: boolean;
+  chkDuplicate: boolean = false;
   progressbarWidth: string;
   continueCount: number;
   paramlistArray: any[];
@@ -35,8 +41,8 @@ export class DatasetComponent implements OnInit {
   columnOptions: any[];
   cols: any[];
   colsdata: any;
-  IsError: boolean;
-  IsTableShow: boolean;
+  IsError: boolean = false;
+  IsTableShow: boolean = false;
   showgraphdiv: boolean;
   graphDataStatus: boolean;
   showgraph: boolean;
@@ -85,12 +91,17 @@ export class DatasetComponent implements OnInit {
   VersionList: SelectItem[] = [];
   isSubmitEnable1: any;
   baseUrl: any;
-
+  // myNewForm: any
+  @ViewChild('myNewForm') public myNewForm: NgForm;
+  // private myNewForm: any;
   constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _datasetService: DatasetService, private activeroute: ActivatedRoute, @Inject(SESSION_STORAGE) private storage: WebStorageService) {
     this.baseUrl = config.getBaseUrl();
+    //this.myNewForm = {}
     this.continueCount = 1;
     this.progressbarWidth = 25 * this.continueCount + "%";
     this.showdatapod = true;
+    this.showGraph = false;
+    this.isHomeEnable = false;
     this.dataset = {};
     this.dataset["active"] = true
     this.dataset["locked"] = false
@@ -117,6 +128,7 @@ export class DatasetComponent implements OnInit {
       { 'value': 'NOT EXISTS', 'label': 'NOT EXISTS' },
       { 'value': 'IN', 'label': 'IN' },
       { 'value': 'NOT IN', 'label': 'NOT IN' },
+      { 'value': 'IS', 'label': 'IS' }
     ];
     this.logicalOperators = [
       { 'value': '', 'label': '' },
@@ -181,7 +193,12 @@ export class DatasetComponent implements OnInit {
     //this._location.back();
     this.router.navigate(['app/list/dataset']);
   }
-  countContinue = function () {
+  countContinue() {
+    if (this.continueCount == 3) {
+      if (this.isDuplication == true) {
+        return true;
+      }
+    }
     this.continueCount = this.continueCount + 1;
     this.progressbarWidth = 25 * this.continueCount + "%";
   }
@@ -409,8 +426,6 @@ export class DatasetComponent implements OnInit {
       }
     }
 
-
-
     let attributeJson = {};
     attributeJson["attributeData"] = response;
 
@@ -435,6 +450,8 @@ export class DatasetComponent implements OnInit {
           attributeinfojson["isSourceAtributeDatapod"] = true;
           attributeinfojson["isSourceAtributeFormula"] = false;
           attributeinfojson["isSourceAtributeExpression"] = false;
+          this.getAllAttributeBySource();
+
         }
         else if (response.attributeInfo[i].sourceAttr.ref.type == "simple") {
           let obj = {}
@@ -498,6 +515,7 @@ export class DatasetComponent implements OnInit {
           this.getAllFunctions(false, 0);
         }
         attributeinfojson["sourceattribute"] = sourceattribute;
+        //attributeinfojson["duplicateString"] = this.duplicateString;
         attributearray[i] = attributeinfojson
       }
       this.dataset.attributeTableArray = attributearray
@@ -554,6 +572,7 @@ export class DatasetComponent implements OnInit {
   }
   changeType() {
     this.dataset.filterTableArray = [];
+    this.dataset.attributeTableArray = [];
     this._commonService.getAllAttributeBySource(this.dataset.sourcedata.uuid, this.dataset.source).subscribe(
       response => {
         this.OnSuccesgetAllAttributeBySource(response)
@@ -584,11 +603,16 @@ export class DatasetComponent implements OnInit {
     this.lhsdatapodattributefilter = response;
     let temp = []
     for (const n in response) {
+
       let allname = {};
       allname["label"] = response[n]['dname'];
       allname["value"] = {};
       allname["value"]["label"] = response[n]['dname'];
       allname["value"]["id"] = response[n]['id'];
+      allname["value"]["name"] = response[n]['name'];
+      allname["value"]["datapodname"] = response[n]['datapodname'];
+      allname["value"]["attributeId"] = response[n]['attributeId'];
+      allname["value"]["uuid"] = response[n]['uuid'];
       temp[n] = allname;
     }
     this.allMapSourceAttribute = temp
@@ -777,6 +801,7 @@ export class DatasetComponent implements OnInit {
       error => console.log('Error :: ' + error)
     )
   }
+
   onSuccessgetAllFormula(response, defaulfMode, index) {
     //this.allMapFormula = response
     let temp = []
@@ -790,10 +815,12 @@ export class DatasetComponent implements OnInit {
     }
     this.allMapFormula = temp;
     if (defaulfMode == true) {
-      let sourceformula = {};
-      sourceformula["uuid"] = this.allMapFormula[0]["value"].uuid;
-      sourceformula["label"] = this.allMapFormula[0].label;
-      this.dataset.attributeTableArray[index].sourceformula = sourceformula;
+      if (this.allMapFormula != null) {
+        let sourceformula = {};
+        sourceformula["uuid"] = this.allMapFormula[0]["value"].uuid;
+        sourceformula["label"] = this.allMapFormula[0].label;
+        this.dataset.attributeTableArray[index].sourceformula = sourceformula;
+      }
     }
   }
   addRow() {
@@ -847,6 +874,7 @@ export class DatasetComponent implements OnInit {
     });
   }
   addAttribute() {
+    var that = this;
     if (this.dataset.attributeTableArray == null) {
       this.dataset.attributeTableArray = [];
     }
@@ -857,7 +885,20 @@ export class DatasetComponent implements OnInit {
     attrinfo["sourceAttributeType"] = { "value": "string", "label": "string" };
     attrinfo["isSourceAtributeSimple"] = true;
     attrinfo["isSourceAtributeDatapod"] = false;
-    this.dataset.attributeTableArray.splice(this.dataset.attributeTableArray.length, 0, attrinfo);
+    this.isDublication(this.dataset.attributeTableArray, attrinfo, function (err, obj, arr) {
+
+      if (err) {
+        console.log(err)
+      }
+      if (obj) {
+        console.log("aaaaa0", obj)
+        that.dataset.attributeTableArray.push(obj);
+      }
+      if (arr) {
+        that.dataset.attributeTableArray = arr;
+      }
+    });
+    //this.dataset.attributeTableArray.splice(this.dataset.attributeTableArray.length, 0, attrinfo);
   }
   removeAttribute() {
     var newDataList = [];
@@ -873,6 +914,7 @@ export class DatasetComponent implements OnInit {
     if (data != null) {
       this.dataset.attributeTableArray[index].name = data.label.split(".")[1]
     }
+    this.onChangeSourceName(index);
   }
   onChangeFormula(data, index) {
     this.dataset.attributeTableArray[index].name = data.name
@@ -890,7 +932,7 @@ export class DatasetComponent implements OnInit {
     this.graphDataStatus = false;
     this.showgraphdiv = false;
     //const api_url = this.baseUrl + 'datapod/getDatapodSample?action=view&datapodUUID=' + data.uuid + '&datapodVersion=' + data.version + '&row=100';
-    const DatapodSampleData = this._datasetService.getDatasetSample(data.uuid, data.version).subscribe(
+    const DatapodSampleData = this._datasetService.getDatasetSample(data.uuid, data.version.label).subscribe(
       response => { this.OnSuccesDatapodSample(response) },
       error => {
         this.IsTableShow = true;
@@ -901,7 +943,9 @@ export class DatasetComponent implements OnInit {
   }
 
   OnSuccesDatapodSample(response) {
+    
     this.IsTableShow = true;
+    this.IsError = false;
     this.colsdata = response
     let columns = [];
     if (response.length && response.length > 0) {
@@ -1035,10 +1079,18 @@ export class DatasetComponent implements OnInit {
     this.dataset.filterTableArray[index].rhsAttribute = null;
     if (this.dataset.filterTableArray[index].operator == 'EXISTS' || this.dataset.filterTableArray[index].operator == 'NOT EXISTS') {
       this.dataset.filterTableArray[index].rhsType = 'dataset';
+      let rhsAttribute = {};
+      rhsAttribute["label"] = "-Select-";
+      rhsAttribute["uuid"] = "";
+      rhsAttribute["attributeId"] = "";
+      this.dataset.filterTableArray[index]["rhsAttribute"] = rhsAttribute
+    }
+    else if(this.dataset.filterTableArray[index].operator == 'IS'){
+			this.dataset.filterTableArray[index].rhsType = 'string';
     }
     else{
 			this.dataset.filterTableArray[index].rhsType = 'integer';
-		}	
+		}
   }
 
   enableEdit(uuid, version) {
@@ -1321,12 +1373,133 @@ export class DatasetComponent implements OnInit {
       this.goBack();
     }, 1000);
   }
-  //   enableEdit(uuid, version) {
-  //     this.router.navigate(['app/dataPreparation/dataset',uuid,version, 'false']);
-
-  //  }
+  // enableEdit(uuid, version) {
+  //   this.router.navigate(['app/dataPreparation/dataset',uuid,version, 'false']);
+  // }
   //  showview(uuid, version) {
   //     this.router.navigate(['app/dataPreparation/dataset',uuid,version, 'true']);
   // }
 
+  showMainPage() {
+    this.isHomeEnable = false
+    // this._location.back();
+    this.showGraph = false;
+    this.IsTableShow = false
+  }
+
+  showDagGraph(uuid, version) {
+    this.isHomeEnable = true;
+    this.showGraph = true;
+  }
+
+  autoPopulate() {
+    this.dataset.attributeTableArray = [];
+    for (var i = 0; i < this.allMapSourceAttribute.length; i++) {
+      var that = this;
+      var attributeinfo = {};
+      attributeinfo["id"] = i + 1;
+
+      attributeinfo["name"] = (this.allMapSourceAttribute[i].value.label).split(".")[1];
+
+      attributeinfo["sourceattribute"] = {};
+      attributeinfo["sourceattribute"]["uuid"] = this.allMapSourceAttribute[i].value.uuid;
+      attributeinfo["sourceattribute"]["label"] = this.allMapSourceAttribute[i].value.datapodname;
+      attributeinfo["sourceattribute"]["dname"] = this.allMapSourceAttribute[i].value.label;
+      attributeinfo["sourceattribute"]["type"] = "datapod";
+      attributeinfo["sourceattribute"]["attributeId"] = this.allMapSourceAttribute[i].value.attributeId;
+      attributeinfo["sourceattribute"]["id"] = this.allMapSourceAttribute[i].value.id;
+
+      let obj = {}
+      obj["value"] = "datapod"
+      obj["label"] = "attribute"
+      attributeinfo["sourceAttributeType"] = obj;
+
+      attributeinfo["isSourceAtributeSimple"] = false;
+      attributeinfo["isSourceAtributeDatapod"] = true;
+      attributeinfo["isSourceAtributeFormula"] = false;
+      attributeinfo["isSourceAtributeExpression"] = false;
+      attributeinfo["isSourceAtributeFunction"] = false;
+      attributeinfo["isSourceAtributeParamList"] = false;
+      this.isDublication(this.dataset.attributeTableArray, attributeinfo, function (err, obj, arr) {
+
+        if (err) {
+          console.log(err)
+        }
+        if (obj) {
+          console.log("aaaaa0", obj)
+          that.dataset.attributeTableArray.push(obj);
+        }
+        if (arr) {
+          that.dataset.attributeTableArray = arr;
+        }
+      });
+    }
+  }
+  isDublication(arr, newObj, cb) {
+    this.chkDuplicate = false;
+    let len = arr.length;
+    var count = 0;
+    if (arr.length == 0) {
+      newObj.dup = false
+      cb(null, newObj)
+    }
+    else {
+      for (let i = 0; i < len; i++) {
+        if (arr[i]["name"] == newObj["name"]) {
+          arr[i].dup = true;
+          arr[i].dupIndex = len;
+          newObj.dupIndex = i;
+          count++;
+        }
+      }
+      if (count > 0) {
+        newObj.dup = true
+        // newObj.dupIndex=i;
+        this.chkDuplicate = true
+        cb(null, newObj, arr)
+      }
+      else {
+        newObj.dup = false
+        cb(null, newObj)
+      }
+    }
+  }
+  onChangeSourceName(ind) {
+    var nam = this.dataset.attributeTableArray[ind].name;
+    var count = 0;
+    console.log(this.dataset.attributeTableArray.length);
+    for (var i = 0; i < this.dataset.attributeTableArray.length; i++) {
+      if (this.dataset.attributeTableArray[i].name == nam && i != ind) {
+        this.dataset.attributeTableArray[i].dupIndex = ind;
+        this.dataset.attributeTableArray[ind].dupIndex = i;
+        count++;
+      }
+    }
+    if (count > 0) {
+      this.dataset.attributeTableArray[ind].dup = true;
+      //if(this.dataset.attributeTableArray[ind].dupIndex){
+      var indx = this.dataset.attributeTableArray[ind].dupIndex;
+      this.dataset.attributeTableArray[indx].dup = true;
+      //}  
+    }
+    else {
+      this.dataset.attributeTableArray[ind].dup = false;
+      //if(this.dataset.attributeTableArray[ind].dupIndex){
+      var indx = this.dataset.attributeTableArray[ind].dupIndex;
+      this.dataset.attributeTableArray[indx].dup = false;
+    }
+    for (var j = 0; j < this.dataset.attributeTableArray.length; j++) {
+      var cont = 0
+      if (this.dataset.attributeTableArray[j].dup == true) {
+        cont++;
+      }
+      if (cont == 0) {
+        this.chkDuplicate = false;
+      }
+      else {
+        this.chkDuplicate = true;
+      }
+    }
+  }
 }
+
