@@ -23,7 +23,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -90,7 +89,6 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Operator;
 import com.inferyx.framework.domain.OperatorExec;
-import com.inferyx.framework.domain.Organization;
 import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.ParamInfo;
 import com.inferyx.framework.domain.ParamList;
@@ -2308,10 +2306,7 @@ public class MetadataServiceImpl {
 
 	private List<Application> getApplicationByOrg(String orgUuid)throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException, IOException {
 		List<Application> latestApplicationList = new ArrayList<>();
-//		Query query = new Query();
-//		query.fields().include("uuid");
-//		query.addCriteria(Criteria.where("orgInfo.ref.uuid").is(orgUuid));
-		
+	
 		MatchOperation filter = match(new Criteria("orgInfo.ref.uuid").is(orgUuid));
 		GroupOperation groupByUuid = group("uuid").max("version").as("version"); 
 		SortOperation sortByVersion = sort(new Sort(Direction.DESC, "version"));

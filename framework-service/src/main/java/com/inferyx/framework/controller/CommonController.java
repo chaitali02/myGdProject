@@ -35,6 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
@@ -408,12 +409,18 @@ public class CommonController<T> {
 	
 	@RequestMapping(value = "/getUserByApp", method = RequestMethod.GET)
 	public @ResponseBody List<User> getUserByApp(
-			@RequestParam(value = "action", required=false) String uuid,
+			@RequestParam(value = "action", required=false) String action,
 			@RequestParam(value = "type", required = false) String type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException, ParseException  {
 		return commonServiceImpl.getUserByApp();
 	}
 	
-	
+	@RequestMapping(value = "/getAppByOrg", method = RequestMethod.GET)
+	public @ResponseBody List<Application> getAppByOrg(
+			@RequestParam(value = "uuid") String orgUuid,
+			@RequestParam(value = "action", required=false) String action,
+			@RequestParam(value = "type", required = false) String type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException, ParseException  {
+		return commonServiceImpl.getAppByOrg(orgUuid);
+	}
 	
 	
 }

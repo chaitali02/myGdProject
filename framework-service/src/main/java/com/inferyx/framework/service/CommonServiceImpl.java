@@ -4645,8 +4645,23 @@ public class CommonServiceImpl <T> {
 			
 		}
 			return userList;
-		}	
+		}
+
+	public List<Application> getAppByOrg(String orgUuid) throws JsonProcessingException {
 		
-
-
+		List<Application> latestApplicationList = new ArrayList<>();
+		MatchOperation filter = match(new Criteria("orgInfo.ref.uuid").is(orgUuid));
+		GroupOperation groupByUuid = group("uuid").max("version").as("version");
+		SortOperation sortByVersion = sort(new Sort(Direction.DESC, "version"));
+		Aggregation appAggr = newAggregation(filter, groupByUuid, sortByVersion);
+		AggregationResults<Application> applicationAggrResults = mongoTemplate.aggregate(appAggr, MetaType.application.toString().toLowerCase(), Application.class);
+		List<Application> sortedApplicationList = applicationAggrResults.getMappedResults();
+		for(Application application : sortedApplicationList) {
+			Application appTemp=(Application)getLatestByUuid(application.getId(), MetaType.application.toString(),"N");
+			if(appTemp.getOrgInfo().getRef().getUuid().equals(orgUuid)) {
+				latestApplicationList.add(appTemp);
+			}	
+		}	
+		return latestApplicationList;
+	}	
 }

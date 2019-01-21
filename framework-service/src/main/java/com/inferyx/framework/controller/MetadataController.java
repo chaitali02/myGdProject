@@ -54,7 +54,6 @@ import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaStatsHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
-import com.inferyx.framework.domain.Organization;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Registry;
 import com.inferyx.framework.domain.RolePriv;
