@@ -340,7 +340,7 @@
                                 <td>
                                   <select class="form-control" [(ngModel)]="data.rhsType" name="rhsType+{{i}}" style="width:100%" (click)="onChangeRhsType(i)"
                                     [disabled]="mode == 'true'" placeholder="--Select--">
-                                    <ng-container *ngIf="data.operator !== 'BETWEEN' && data.operator !== 'EXISTS' && data.operator !== 'NOT EXISTS' && data.operator !== 'IN' && data.operator !== 'NOT IN' ">
+                                    <ng-container *ngIf="data.operator !== 'BETWEEN' && data.operator !== 'EXISTS' && data.operator !== 'NOT EXISTS' && data.operator !== 'IN' && data.operator !== 'NOT IN' && data.operator !== 'IS' ">
                                       <option [ngValue]="rhsTypeArray[0].value">{{rhsTypeArray[0].label}}</option>
                                       <option [ngValue]="rhsTypeArray[1].value">{{rhsTypeArray[1].label}}</option>
                                       <option [ngValue]="rhsTypeArray[2].value">{{rhsTypeArray[2].label}}</option>
@@ -379,6 +379,15 @@
                                       <option [ngValue]="rhsTypeArray[5].value" >{{rhsTypeArray[5].label}}</option>
                                       <option [ngValue]="rhsTypeArray[6].value" >{{rhsTypeArray[6].label}}</option>
                                     </ng-container>
+                                    <ng-container *ngIf="data.operator == 'IS' ">
+                                        <option [ngValue]="rhsTypeArray[0].value">{{rhsTypeArray[0].label}}</option>
+                                        <option [ngValue]="rhsTypeArray[1].value" disabled>{{rhsTypeArray[1].label}}</option>
+                                        <option [ngValue]="rhsTypeArray[2].value" disabled>{{rhsTypeArray[2].label}}</option>
+                                        <option [ngValue]="rhsTypeArray[3].value" disabled>{{rhsTypeArray[3].label}}</option>
+                                        <option [ngValue]="rhsTypeArray[4].value" disabled>{{rhsTypeArray[4].label}}</option>
+                                        <option [ngValue]="rhsTypeArray[5].value" disabled>{{rhsTypeArray[5].label}}</option>
+                                        <option [ngValue]="rhsTypeArray[6].value" disabled>{{rhsTypeArray[6].label}}</option>
+                                        </ng-container>
                                   </select>
                                 </td>
                                 <td>
@@ -386,7 +395,7 @@
                                     *ngIf="data.rhsType == 'integer'&& data.operator != 'BETWEEN'"
                                     placeholder="--Enter integer value--">
                                   <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}" [disabled]="mode == 'true'"
-                                    *ngIf="data.rhsType == 'string'&& data.operator != 'BETWEEN'"
+                                    *ngIf="data.rhsType == 'string'&& data.operator != 'BETWEEN'&& data.operator != 'IS'"
                                     placeholder="--Enter string--">
                                   <div *ngIf="data.operator == 'BETWEEN' && (data.rhsType == 'integer'|| data.rhsType == 'string')">
                                     <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute1" name="rhsAttribute1+{{i}}" style="width:40%;display: inline-block"
@@ -418,7 +427,11 @@
                                       [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" dataKey="uuid">
                                     </p-dropdown>
                                   </div>
-
+                                  <div *ngIf="data.rhsType == 'string' && data.operator == 'IS'">
+                                      <p-dropdown [options]="isNullArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}" [style]="{'width':'100%','padding':'3px'}"
+                                      [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--">
+                                      </p-dropdown>
+                                    </div>
                                   <p-dialog header="Search Attribute" [(visible)]="displayDialogBox" [modal]="true" [responsive]="true" [width]="400" [resizable]="true"
                                     [baseZIndex]="1000" [contentStyle]="{'height':'200px'}">
 
@@ -631,7 +644,7 @@
                                 <td>
                                   <select class="form-control" [(ngModel)]="data.rhsType" name="rhsType+{{i}}" style="width:100%" (click)="onChangeRhsTypeTarget(i)"
                                     [disabled]="mode == 'true'" placeholder="--Select--">
-                                    <ng-container *ngIf="data.operator !== 'BETWEEN' && data.operator !== 'EXISTS' && data.operator !== 'NOT EXISTS' && data.operator !== 'IN' && data.operator !== 'NOT IN' ">
+                                    <ng-container *ngIf="data.operator !== 'BETWEEN' && data.operator !== 'EXISTS' && data.operator !== 'NOT EXISTS' && data.operator !== 'IN' && data.operator !== 'NOT IN'&& data.operator !== 'IS' ">
                                       <option [ngValue]="rhsTypeArray[0].value">{{rhsTypeArray[0].label}}</option>
                                       <option [ngValue]="rhsTypeArray[1].value">{{rhsTypeArray[1].label}}</option>
                                       <option [ngValue]="rhsTypeArray[2].value">{{rhsTypeArray[2].label}}</option>
@@ -670,6 +683,15 @@
                                       <option [ngValue]="rhsTypeArray[5].value" >{{rhsTypeArray[5].label}}</option>
                                       <option [ngValue]="rhsTypeArray[6].value" >{{rhsTypeArray[6].label}}</option>
                                     </ng-container>
+                                    <ng-container *ngIf="data.operator == 'IS' ">
+                                        <option [ngValue]="rhsTypeArray[0].value">{{rhsTypeArray[0].label}}</option>
+                                        <option [ngValue]="rhsTypeArray[1].value" disabled>{{rhsTypeArray[1].label}}</option>
+                                        <option [ngValue]="rhsTypeArray[2].value" disabled>{{rhsTypeArray[2].label}}</option>
+                                        <option [ngValue]="rhsTypeArray[3].value" disabled>{{rhsTypeArray[3].label}}</option>
+                                        <option [ngValue]="rhsTypeArray[4].value" disabled>{{rhsTypeArray[4].label}}</option>
+                                        <option [ngValue]="rhsTypeArray[5].value" disabled>{{rhsTypeArray[5].label}}</option>
+                                        <option [ngValue]="rhsTypeArray[6].value" disabled>{{rhsTypeArray[6].label}}</option>
+                                        </ng-container>
                                   </select>
                                 </td>
                                 <td>
@@ -677,7 +699,7 @@
                                     *ngIf="data.rhsType == 'integer'&& data.operator != 'BETWEEN'"
                                     placeholder="--Enter integer value--">
                                   <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}" [disabled]="mode == 'true'"
-                                    *ngIf="data.rhsType == 'string'&& data.operator != 'BETWEEN'"
+                                    *ngIf="data.rhsType == 'string'&& data.operator != 'BETWEEN'&& data.operator != 'IS'"
                                     placeholder="--Enter string--">
                                   <div *ngIf="data.operator == 'BETWEEN' && (data.rhsType == 'integer'|| data.rhsType == 'string')">
                                     <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute1" name="rhsAttribute1+{{i}}" style="width:40%;display: inline-block"
@@ -709,7 +731,11 @@
                                       [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" dataKey="uuid">
                                     </p-dropdown>
                                   </div>
-
+                                  <div *ngIf="data.rhsType == 'string' && data.operator == 'IS'">
+                                      <p-dropdown [options]="isNullArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}" [style]="{'width':'100%','padding':'3px'}"
+                                      [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--">
+                                      </p-dropdown>
+                                    </div>
                                   <p-dialog header="Search Attribute" [(visible)]="displayDialogBoxTarget" [modal]="true" [responsive]="true" [width]="400" [resizable]="true"
                                     [baseZIndex]="1000" [contentStyle]="{'height':'200px'}">
 
