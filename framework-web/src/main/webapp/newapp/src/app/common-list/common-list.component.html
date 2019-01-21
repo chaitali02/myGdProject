@@ -170,7 +170,7 @@
       <div class="col-md-12">
         <p-dataTable #dt [value]="rowData1" exportFilename="data" [(selection)]="selectedData" (onRowSelect)="onRowSelect($event)"
           selectionMode="multiple" [metaKeySelection]="false" scrollable="true" resizableColumns="true" scrollHeight="440px"
-          [globalFilter]="gb" sortMode="multiple" [paginator]="true" [rows]="10" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]">
+          [globalFilter]="gb" sortMode="multiple" [paginator]="true" paginatorDropdownAppendTo="body" [rows]="10" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [sortField]="createdOn">
           <!-- <p-column field="uuid" header="UUID" [sortable]="true"></p-column> -->
           <p-column field="name" header="Name" [sortable]="true"></p-column>
           <p-column field="version" header="Version" [sortable]="true"></p-column>
