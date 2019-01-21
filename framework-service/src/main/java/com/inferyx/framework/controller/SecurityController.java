@@ -169,4 +169,14 @@ public class SecurityController {
 	public @ResponseBody String getAppRole(@RequestParam(value="userName") String userName) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {
 		return securityServiceImpl.getAppRole(userName);
 	}
+	
+	@RequestMapping(value = "/getOrgInfo", method = RequestMethod.GET)
+	public @ResponseBody MetaIdentifierHolder getOrgInfo(@RequestParam(value = "uuid" , required = false) String uuid,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action)
+			throws IOException, JSONException, java.text.ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
+		return securityServiceImpl.getOrgInfo();
+	}
+	
+	
 }

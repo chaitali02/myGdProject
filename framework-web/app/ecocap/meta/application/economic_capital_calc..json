@@ -3,6 +3,7 @@
   "version": "1547482006",
   "name": "Economic Capital Calc.",
   "desc": "Economic Capital Calculation",
+  "applicationType": "DEFAULT",
   "createdBy": {
     "ref": {
       "type": "user",

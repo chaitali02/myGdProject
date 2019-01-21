@@ -3,6 +3,7 @@
   "version": "1547482153",
   "name": "Predictive Maintenance",
   "desc": "Predictive Maintenance",
+  "applicationType": "DEFAULT",
   "createdBy": {
     "ref": {
       "type": "user",

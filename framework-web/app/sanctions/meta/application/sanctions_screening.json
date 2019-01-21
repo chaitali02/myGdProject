@@ -3,6 +3,7 @@
   "version": "1547486102",
   "name": "Sanctions Screening",
   "desc": "Sanctions Screening",
+  "applicationType": "DEFAULT",
   "createdBy": {
     "ref": {
       "type": "user",

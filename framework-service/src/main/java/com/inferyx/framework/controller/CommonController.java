@@ -100,7 +100,7 @@ public class CommonController<T> {
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/getLatestByUuid", method = RequestMethod.GET)
-	public @ResponseBody String getLatestByUuid(@RequestParam("uuid") String uuid, 
+	public @ResponseBody String getLatestByUuid(@RequestParam("uuid") String uuid,
 			@RequestParam("type") String type,
 			@RequestParam(value = "action", required = false) String action)
 			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
