@@ -4172,7 +4172,7 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	@Override
-	public List<Map<String, Object>> fetchTestSet(String location) throws IOException {
+	public List<Map<String, Object>> fetchTrainOrTestSet(String location) throws IOException {
 		List<Map<String, Object>> data = new ArrayList<>();
 		
 		IConnector conn = connFactory.getConnector(ExecContext.spark.toString());

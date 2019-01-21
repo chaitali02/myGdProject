@@ -753,7 +753,7 @@ public interface IExecutor {
 	 * @return data
 	 * @throws IOException
 	 */
-	List<Map<String, Object>> fetchTestSet(String location) throws IOException;
+	List<Map<String, Object>> fetchTrainOrTestSet(String location) throws IOException;
 
 	/**
 	 * @Ganesh
