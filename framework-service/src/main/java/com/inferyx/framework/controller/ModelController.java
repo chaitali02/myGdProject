@@ -529,7 +529,7 @@ public class ModelController {
 		return modelServiceImpl.getTrainOrTestSet(trainExecUuid, trainExecVersion, "trainSet");
 	}
 	
-	@RequestMapping(value = "train/getTrainSet/download", method = RequestMethod.POST)
+	@RequestMapping(value = "train/getTrainSet/download", method = RequestMethod.GET)
 	public void getTrainSetDownload(
 			@RequestParam(value = "uuid") String trainExecUuid,
 			@RequestParam(value = "version", required = false) String trainExecVersion,
@@ -543,7 +543,7 @@ public class ModelController {
 		response = modelServiceImpl.download(trainExecUuid, trainExecVersion, format, rows, "trainSet", runMode, response);
 	}
 	
-	@RequestMapping(value = "train/getTestSet/download", method = RequestMethod.POST)
+	@RequestMapping(value = "train/getTestSet/download", method = RequestMethod.GET)
 	public void getTestSetDownload(
 			@RequestParam(value = "uuid") String trainExecUuid,
 			@RequestParam(value = "version", required = false) String trainExecVersion,
@@ -555,5 +555,14 @@ public class ModelController {
 			HttpServletResponse response) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		response = modelServiceImpl.download(trainExecUuid, trainExecVersion, format, rows, "testSet", runMode, response);
+	}
+	
+	@RequestMapping(value = "getTrainByTrainExec", method = RequestMethod.GET)
+	public Train getTrainByTrainExec(
+			@RequestParam(value = "uuid") String trainExecUuid,
+			@RequestParam(value = "version", required = false) String trainExecVersion,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
+		return modelServiceImpl.getTrainByTrainExec(trainExecUuid, trainExecVersion);
 	}
 }
