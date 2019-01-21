@@ -2308,10 +2308,7 @@ public class MetadataServiceImpl {
 
 	private List<Application> getApplicationByOrg(String orgUuid)throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException, IOException {
 		List<Application> latestApplicationList = new ArrayList<>();
-//		Query query = new Query();
-//		query.fields().include("uuid");
-//		query.addCriteria(Criteria.where("orgInfo.ref.uuid").is(orgUuid));
-		
+	
 		MatchOperation filter = match(new Criteria("orgInfo.ref.uuid").is(orgUuid));
 		GroupOperation groupByUuid = group("uuid").max("version").as("version"); 
 		SortOperation sortByVersion = sort(new Sort(Direction.DESC, "version"));
