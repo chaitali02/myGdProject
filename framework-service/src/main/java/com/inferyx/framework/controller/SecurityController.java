@@ -63,7 +63,7 @@ public class SecurityController {
 			@RequestParam(value = "action", required = false) String action)
 			throws JsonProcessingException {
 		ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-		HttpSession session = requestAttributes.getRequest().getSession();       
+		HttpSession session = requestAttributes.getRequest().getSession();      
 		SessionContext sessionContext = (SessionContext) session.getAttribute("sessionContext");
 		return sessionContext;
 	}
