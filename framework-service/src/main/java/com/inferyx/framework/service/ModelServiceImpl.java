@@ -1848,6 +1848,15 @@ public class ModelServiceImpl {
 		Class<?> modelClass = Class.forName(modelClassName);
 
 		MetaIdentifierHolder datastoreHolder = trainExec.getResult();
+		Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainExec.getDependsOn().getRef().getUuid(), 
+																		trainExec.getDependsOn().getRef().getVersion(), 
+																		trainExec.getDependsOn().getRef().getType().toString());
+		Model model = null;
+		if (train != null) {
+			model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), 
+															train.getDependsOn().getRef().getVersion(), 
+															train.getDependsOn().getRef().getType().toString());
+		}
 		DataStore dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(datastoreHolder.getRef().getUuid(),
 				datastoreHolder.getRef().getVersion(), datastoreHolder.getRef().getType().toString());
 		if (dataStore == null)
@@ -1866,13 +1875,15 @@ public class ModelServiceImpl {
 		//Object trainedModel = modelClass.getMethod("load", String.class).invoke(modelClass, location);
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
-		modelClass = PipelineModel.class;
+		if (model != null && model.getType().equalsIgnoreCase("SPARK")) {
+			modelClass = PipelineModel.class;
+		}
 		Object trainedModel = exec.loadTrainedModel(modelClass, location);
-		PipelineModel pipelineModel = (PipelineModel)trainedModel;
+		/*PipelineModel pipelineModel = (PipelineModel)trainedModel;
 		Transformer []transformers = pipelineModel.stages();
 		for (Transformer transformer: transformers) {
 			logger.info("Transoformer : " + transformer.uid());
-		}
+		}*/
 		return trainedModel;
 	}
 
@@ -2187,7 +2198,8 @@ public class ModelServiceImpl {
 					//prediction operation
 					logger.info("Trained Model class " + trainedModel.getClass().getName());
 					rsHolder =  exec.predict(trainedModel, target, filePathUrl, (tableName+"_pred_assembled_data"), appUuid, encodingDetails);
-
+					logger.info("After predict");
+					
 					List<String> rowIdentifierCols = getRowIdentifierCols(predict.getRowIdentifier());
 					if(predict.getTarget().getRef().getType().equals(MetaType.datapod)) {
 						Datasource targetDatasource = commonServiceImpl.getDatasourceByObject(target);
@@ -2199,13 +2211,20 @@ public class ModelServiceImpl {
 					} else {
 						targetTableName = targetDatasource.getDbname().concat(".").concat(target.getName());					
 					}
-					if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
+					logger.info("Read dataframes : ");
+					logger.info("Predicted DF");
+					sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_assembled_data"), appUuid).getDataFrame().show();
+					logger.info("feature DF");
+					sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_mapped_data"), appUuid).getDataFrame().show();
+					logger.info("source DF");
+					sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_data"), appUuid).getDataFrame().show();
+//					if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
 						isResultSaved = sparkExecutor.savePredictionResult(sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_assembled_data"), appUuid).getDataFrame()
 								, sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_mapped_data"), appUuid).getDataFrame()
 								, sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_data"), appUuid).getDataFrame()
 								, filePathUrl, rowIdentifierCols, predict.getIncludeFeatures(), fieldArray, algorithm.getTrainClass()
 								, target, targetDatasource, targetTableName, SaveMode.APPEND.toString());		
-					}
+//					}
 						//generating datastore for datapod
 						count = rsHolder.getCountRows();
 						createDatastore(filePathUrl, predict.getName(), 
@@ -2215,15 +2234,22 @@ public class ModelServiceImpl {
 								Helper.getPersistModeFromRunMode(runMode.toString()), runMode);		
 					} else {
 						//writing into file
-						if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
+						logger.info("Read dataframes : ");
+						logger.info("Predicted DF");
+						sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_assembled_data"), appUuid).getDataFrame().show();
+						logger.info("feature DF");
+						sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_mapped_data"), appUuid).getDataFrame().show();
+						logger.info("source DF");
+						sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_data"), appUuid).getDataFrame().show();
+//						if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
 							isResultSaved = sparkExecutor.savePredictionResult(sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_assembled_data"), appUuid).getDataFrame()
 									, sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_mapped_data"), appUuid).getDataFrame()
 									, sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_data"), appUuid).getDataFrame()
 									, filePathUrl, rowIdentifierCols, predict.getIncludeFeatures(), fieldArray, algorithm.getTrainClass()
 									, null, null, null, null);
-						}
+//						}
 					}
-					
+					logger.info("After writing prediction results");
 					//dropping temp table(s)
 					List<String> tempTableList = new ArrayList<>();
 					tempTableList.add((tableName+"_pred_data"));
@@ -2244,10 +2270,12 @@ public class ModelServiceImpl {
 					new MetaIdentifier(MetaType.predictExec, predictExec.getUuid(), predictExec.getVersion()),
 					predictExec.getAppInfo(), predictExec.getCreatedBy(), SaveMode.APPEND.toString(), resultRef, count, 
 					Helper.getPersistModeFromRunMode(runMode.toString()), runMode);
+			logger.info("After create Datastore");
 
 			predictExec.setLocation(filePathUrl);
 			predictExec.setResult(resultRef);
 			commonServiceImpl.save(MetaType.predictExec.toString(), predictExec);
+			logger.info("After saving predictExec");
 			if (result != null) {
 				isSuccess = true;
 				predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.Completed);
@@ -3631,7 +3659,7 @@ public class ModelServiceImpl {
 				//modelExecServiceImpl.getAttributeNames(predict);
 
 
-		exec.assembleDF(fieldArray, (tableName+"_pred_data"), algorithm.getTrainClass(), null, appUuid);
+//		exec.assembleDF(fieldArray, (tableName+"_pred_data"), algorithm.getTrainClass(), null, appUuid);
 		
 	
 		rsHolder = exec.predict(trainedModel, null, null, (tableName + "_pred_data"), appUuid, null);

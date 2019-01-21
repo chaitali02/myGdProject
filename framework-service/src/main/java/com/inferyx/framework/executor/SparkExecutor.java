@@ -1958,16 +1958,22 @@ public class SparkExecutor<T> implements IExecutor {
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
 //		df = df.na().fill(0.0, df.columns());
-
+		logger.info("After executeSql");
 		df.printSchema();
+		df.show();
 		//performing prediction
 		@SuppressWarnings("unchecked")
 		Dataset<Row> predictionDf = (Dataset<Row>) trainedModel.getClass().getMethod("transform", Dataset.class).invoke(trainedModel, df);
+		logger.info("After obtaining predictionDf");
+		predictionDf.printSchema();
+		predictionDf.show();
+		logger.info("Going to register temp table");
 		
 		//registring temp table
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
 		sparkSession.sqlContext().registerDataFrameAsTable(predictionDf, tableName);
+		logger.info("After registering prediction DataFrame as temp table");
 		
 		//creating and returning ResultSetHolder 
 		ResultSetHolder rsHolder = new ResultSetHolder();
@@ -1975,6 +1981,7 @@ public class SparkExecutor<T> implements IExecutor {
 		rsHolder.setDataFrame(predictionDf);
 		rsHolder.setCountRows(predictionDf.count());
 		rsHolder.setTableName(tableName);
+		logger.info("Return RSHolder");
 		return rsHolder;
 	}
 	
@@ -2126,8 +2133,8 @@ public class SparkExecutor<T> implements IExecutor {
 			Dataset<Row> trngDf = splits[0];
 			Dataset<Row> valDf = splits[1];
 			Dataset<Row> valDf2 = splits[1];
-			Dataset<Row> trainingDf = null;
-			Dataset<Row> validateDf = null;
+//			Dataset<Row> trainingDf = null;
+//			Dataset<Row> validateDf = null;
 			
 			registerTempTable(trngDf, "tempTrngDf");
 			trngDf = readTempTable(trainingDfSql, clientContext).getDataFrame();
@@ -2193,8 +2200,8 @@ public class SparkExecutor<T> implements IExecutor {
 				
 				logger.info("Printing trained training and validation dataset schema 1");
 				trngDf.printSchema();
-				trngDf.printSchema();
-				if(encodingDetails != null && !encodingDetails.isEmpty()) {
+				valDf.printSchema();
+				/*if(encodingDetails != null && !encodingDetails.isEmpty()) {
 					for (String field : origFieldArray) {
 						if (encodingDetails.containsKey(field)) {
 							selectEncodedCols.add(field+"_vec");
@@ -2211,19 +2218,15 @@ public class SparkExecutor<T> implements IExecutor {
 //					validateDf = valDf.withColumn("label", valDf.col("label").cast("Double")).select("label", vectorAssembler.getInputCols());
 					trainingDf = trngDf;
 					validateDf = valDf;
-				}
-			} else {
+				}*/
+			} /*else {
 				trainingDf = trngDf;
 				validateDf = valDf;
-			}	
+			}*/	
 
-			logger.info("Printing trained training and validation dataset schema 2");
-			trainingDf.printSchema();
-			validateDf.printSchema();
-			
 			trainResult.setTotalRecords(df.count());
-			trainResult.setTrainingSet(trainingDf.count());
-			trainResult.setValidationSet(validateDf.count());
+			trainResult.setTrainingSet(trngDf.count());
+			trainResult.setValidationSet(valDf.count());
 			trainResult.setNumFeatures(fieldArray.length);
 			
 			Set<String> encodingCols = null;
@@ -2231,7 +2234,7 @@ public class SparkExecutor<T> implements IExecutor {
 				encodingCols = encodingDetails.keySet();
 			}
 			
-			for(String col : trainingDf.columns()) {
+			/*for(String col : trainingDf.columns()) {
 				if(encodingCols != null 
 						&& !encodingCols.isEmpty() ) {
 					if(!encodingCols.contains(col)
@@ -2243,10 +2246,10 @@ public class SparkExecutor<T> implements IExecutor {
 				} else {
 					trainingDf = trainingDf.withColumn(col, trainingDf.col(col).cast(DataTypes.DoubleType));
 				}
-			}
+			}*/
 			
 			trngDf = trngDf.na().fill(0.0,trngDf.columns());
-			trainingDf = trainingDf.na().fill(0.0,trainingDf.columns());
+			/*trainingDf = trainingDf.na().fill(0.0,trainingDf.columns());
 			
 			for(String col : validateDf.columns()) {
 				if(encodingCols != null 
@@ -2260,14 +2263,14 @@ public class SparkExecutor<T> implements IExecutor {
 				} else {
 					validateDf = validateDf.withColumn(col, validateDf.col(col).cast(DataTypes.DoubleType));
 				}
-			}
+			}*/
 			
 			valDf = valDf.na().fill(0.0,valDf.columns());
-			validateDf = validateDf.na().fill(0.0,validateDf.columns());
+//			validateDf = validateDf.na().fill(0.0,validateDf.columns());
 			
 			logger.info("Printing trained training and validation dataset schema 3");
-			trainingDf.printSchema();
-			validateDf.printSchema();
+			trngDf.printSchema();
+			valDf.printSchema();
 			
 			
 			pipelineStagesTrng.add(vectorAssembler);
@@ -2288,13 +2291,13 @@ public class SparkExecutor<T> implements IExecutor {
 				
 				logger.info("Printing trained training and validation dataset schema 4");
 				trainedDataSet.printSchema();
-				validateDf.printSchema();
+				valDf.printSchema();
 				
-				if(encodingDetails != null && !encodingDetails.isEmpty()) {
+				/*if(encodingDetails != null && !encodingDetails.isEmpty()) {
 					for(String colName : encodingDetails.keySet()) {
 						trainedDataSet = trainedDataSet.drop(colName+"_vec");
 					}
-				}
+				}*/
 				
 				stopWatch.stop();
 				trainResult.setTimeTaken(stopWatch.getTotalTimeMillis()+" ms");
