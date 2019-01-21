@@ -39,7 +39,7 @@
     "value": null
   },
   "type": "donut-chart",
-  "limit": null,
+  "limit": -1,
   "keys": [
     {
       "ref": {

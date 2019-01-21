@@ -3,7 +3,7 @@
 MetadataModule = angular.module('MetadataModule');
 /* Start MetadataDatasetController*/
 
-MetadataModule.controller('MetadataDatasetController', function (dagMetaDataService, $rootScope, $state, $scope, $stateParams, $cookieStore, $timeout, $filter, MetadataSerivce, MetadataDatasetSerivce, $sessionStorage, privilegeSvc, CommonService, CommonFactory, CF_FILTER,$location,$anchorScroll) {
+MetadataModule.controller('MetadataDatasetController', function (dagMetaDataService, $rootScope, $state, $scope, $stateParams, $cookieStore, $timeout, $filter, MetadataSerivce, MetadataDatasetSerivce, $sessionStorage, privilegeSvc, CommonService, CommonFactory, CF_FILTER,$location,$anchorScroll,CF_DOWNLOAD,$http) {
 	$rootScope.isCommentVeiwPrivlage = true;
 
 	if ($stateParams.mode == 'true') {
@@ -66,6 +66,12 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 	$scope.isShowSimpleData = false;
 	$scope.isDependencyShow = false;
 	$scope.isSimpleRecord = false;
+	$scope.download={};
+	$scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
+	$scope.download.formates=CF_DOWNLOAD.formate;
+	$scope.download.selectFormate=CF_DOWNLOAD.formate[0];
+	$scope.download.maxrow=CF_DOWNLOAD.framework_download_maxrow;
+	$scope.download.limit_to=CF_DOWNLOAD.limit_to;
 	$scope.privileges = [];
 	$scope.privileges = privilegeSvc.privileges['dataset'] || [];
 	$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
@@ -1039,9 +1045,16 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		angular.forEach($scope.attributeTableArray, function (selected) {
 			if (!selected.selected) {
 				newDataList.push(selected);
+				
 			}
 		});
+
 		$scope.attributeTableArray = newDataList;
+		for(var i=0;i<$scope.attributeTableArray.length;i++){
+			setTimeout(function(index){
+				$scope.onChangeSourceName(index);
+			},10,(i));
+		}
 	}
 
     $scope.autoPopulate=function(){
@@ -1547,6 +1560,57 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		var limit = ($scope.pagination.pageSize * $scope.pagination.currentPage);
 		var offset = (($scope.pagination.currentPage - 1) * $scope.pagination.pageSize)
 		$scope.gridOptions.data = params.slice(offset, limit);
+	}
+
+	$scope.downloadFile = function (data) {
+		if($scope.isDownloadDataset)
+		  return false;
+		$scope.download.uuid = data.uuid;
+		$scope.download.version = data.version;
+		$scope.download.type="dataset";
+		$('#downloadSample').modal({
+			backdrop: 'static',
+			keyboard: false
+		});
+	};
+
+    $scope.submitDownload =function(){
+		$scope.isDownloadDataset=true;
+		$('#downloadSample').modal("hide");
+		var url = $location.absUrl().split("app")[0]
+		$http({
+			method: 'GET',
+			url: url+$scope.download.type+"/download?action=view&uuid="+$scope.download.uuid+"&version="+$scope.download.version + "&rows="+$scope.download.rows+"&formate="+$scope.download.selectFormate,
+			responseType: 'arraybuffer'
+		}).success(function (data, status, headers) {
+			$scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
+			$scope.isDownloadDataset=false;
+			headers = headers();
+			var filename = headers['filename'];
+			var contentType = headers['content-type'];
+			var linkElement = document.createElement('a');
+			try {
+				var blob = new Blob([data], {
+					type: contentType
+				});
+				var url = window.URL.createObjectURL(blob);
+				linkElement.setAttribute('href', url);
+				linkElement.setAttribute("download",filename);
+
+				var clickEvent = new MouseEvent("click", {
+					"view": window,
+					"bubbles": true,
+					"cancelable": false
+				});
+				linkElement.dispatchEvent(clickEvent);
+			} catch (ex) {
+				console.log(ex);
+			}
+		}).error(function (data) {
+			$scope.isDownloadDatapod=false;
+			console.log(data);
+			$('#downloadSample').modal("hide");
+		});
 	}
 
 });/* End MetadataDatasetController*/

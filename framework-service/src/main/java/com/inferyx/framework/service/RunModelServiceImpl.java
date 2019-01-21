@@ -851,7 +851,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 				boolean isModelSved = modelServiceImpl.save(algorithm.getModelClass(), trndModel, filePathUrl+"/model");
 				String defaultDir = null;
 				if (algorithm.getSavePmml().equalsIgnoreCase("Y")) {
-					if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
+//					if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
 						try {
 							String filePathUrl_2 = null;
 							if(filePathUrl.contains(hdfsInfo.getHdfsURL()))
@@ -875,14 +875,14 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
-					}					
+//					}					
 				}
 				if (isModelSved) {	
 					logger.info("Inside isModelSaved : trainOtherParam : " + trainOtherParam);
 					defaultDir = filePathUrl.replaceAll(hdfsInfo.getHdfsURL(), "");
 					if(trndModel instanceof CrossValidatorModel) {
 						filePathUrl = filePathUrl+"/model" + "/bestModel" + "/stages/" + customDirectories.get(1) + "/data/";
-						Map<String, Object> summary = exec.summary(trndModel, algorithm.getSummaryMethods(), appUuid);
+						Map<String, Object> summary = exec.summary(trndModel, algorithm.getTrainClass(), algorithm.getSummaryMethods(), appUuid);
 						
 						String fileName = tableName+".result";
 //						if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
@@ -908,7 +908,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 						}
 					} else if(trndModel instanceof PipelineModel) {
 						filePathUrl = filePathUrl+"/model" + "/stages/" + customDirectories.get(1) + "/data/";
-						Map<String, Object> summary = exec.summary(trndModel, algorithm.getSummaryMethods(), appUuid);
+						Map<String, Object> summary = exec.summary(trndModel, algorithm.getTrainClass(), algorithm.getSummaryMethods(), appUuid);
 												
 						String fileName = tableName+".result";
 						

@@ -543,16 +543,6 @@ public class DL4JExecutor implements IExecutor {
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.inferyx.framework.executor.IExecutor#summary(java.lang.Object, java.util.List, java.lang.String)
-	 */
-	@Override
-	public Map<String, Object> summary(Object trndModel, List<String> summaryMethods, String clientContext)
-			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
-			NoSuchMethodException, SecurityException {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	/* (non-Javadoc)
 	 * @see com.inferyx.framework.executor.IExecutor#create(java.util.List, java.util.List, java.lang.String, java.lang.String)
@@ -921,6 +911,14 @@ public class DL4JExecutor implements IExecutor {
 	@Override
 	public ResultSetHolder createAndRegister(List<Row> data, StructType structType, String tableName,
 			String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Map<String, Object> summary(Object trndModel, String trainClass, List<String> summaryMethods, String clientContext)
+			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, ClassNotFoundException {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -111,6 +111,40 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     $scope.isDestoryState = true;
   });
 
+  $scope.autoRefersh=function(){
+    debugger
+    if($scope.featureMapTableArray.length !=$scope.modelData.features.length){
+      var featureMapTableArray=[]
+      for(var i=$scope.featureMapTableArray.length;i < $scope.modelData.features.length;i++){
+        var featureMap = {};
+        var sourceFeature = {};
+        var targetFeature = {};
+        var imputeMethod={};
+        featureMap.featureMapId = i;
+        featureMap.id = i;
+        featureMap.index = i;
+        sourceFeature.uuid = $scope.modelData.uuid;
+        sourceFeature.type = "model";
+        sourceFeature.featureId = $scope.modelData.features[i].featureId;
+        sourceFeature.featureName = $scope.modelData.features[i].name;
+        featureMap.sourceFeature = sourceFeature;
+        imputeMethod.type="model";
+        imputeMethod.imputeType="default";
+        imputeMethod.imputeValue=$scope.modelData.features[i].defaultValue;
+        imputeMethod.featureId = $scope.modelData.features[i].featureId;
+        imputeMethod.defaultValue = $scope.modelData.features[i].defaultValue;
+        imputeMethod.isModelShow=true;
+        imputeMethod.isSimpleShow=false;
+        imputeMethod.isFunctionShow=false;
+        imputeMethod.sourceFeature = sourceFeature;
+        featureMap.imputeMethod=imputeMethod;
+        $scope.originalFeatureMapTableArray[i] = featureMap;
+        $scope.featureMapTableArray[i] = featureMap
+      }
+      
+    }
+  }
+
   $scope.autoMapFeature = function (type) {
     $scope.selectedAutoMode = type
     if ($scope.selectedAutoMode == "By Name") {

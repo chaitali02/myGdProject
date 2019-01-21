@@ -479,11 +479,6 @@ public class RExecutor implements IExecutor {
 		return null;
 	}
 
-	@Override
-	public Map<String, Object> summary(Object trndModel, List<String> summaryMethods, String clientContext) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public ResultSetHolder create(List<RowObj> rowObjList, List<Attribute> attributes, String tableName,
@@ -602,6 +597,14 @@ public class RExecutor implements IExecutor {
 	@Override
 	public ResultSetHolder createAndRegister(List<Row> data, StructType structType, String tableName,
 			String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Map<String, Object> summary(Object trndModel, String trainClass, List<String> summaryMethods, String clientContext)
+			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, ClassNotFoundException {
 		// TODO Auto-generated method stub
 		return null;
 	}

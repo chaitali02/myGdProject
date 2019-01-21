@@ -177,7 +177,35 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
     }
     $scope.onChangeDependsOnType(true);
 
+  }  
+  
+  $scope.isDublication = function (arr, field, index, name) {
+		var res = -1;
+		for (var i = 0; i < arr.length ; i++) {
+			if (arr[i][field] == arr[index][field] && i != index) {
+			    $scope.myform2[name].$invalid = true;
+				  res = i;
+				  break
+      } 
+      else {
+				$scope.myform2[name].$invalid = false;	
+			}
+		}
+		return res;
   }
+  
+  $scope.onChangeFeatureName = function (index) {
+      if ($scope.featureTableArray[index].name) {
+        var res = $scope.isDublication($scope.featureTableArray, "name", index, "featureName" + index);
+        if (res != -1) {
+          $scope.isDuplication = true;
+        } else {
+          $scope.isDuplication = false;
+        }
+      }
+    //	console.log($scope.myform3)
+  
+    }
 
   // $scope.onChageTrainPercent=function(){
   //   $scope.modeldata.valPercent=100-$scope.modeldata.trainPercent;
@@ -206,6 +234,8 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
     var len = $scope.featureTableArray.length + 1
     var feature= {};
     feature.featureId="1";
+    var temLen=len-1;
+    
     if($scope.featureTableArray.length ==0){
       feature.id = $scope.featureTableArray.length ;//len - 1;
 		}else{
@@ -220,6 +250,9 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
     feature.paramListInfo={};
     $scope.featureTableArray.splice($scope.featureTableArray.length, 0, feature);
     $scope.focusRow(len-1)
+    setTimeout(function(){
+      $scope.myform2["featureName"+temLen].$invalid = false;
+    });
   }
   $scope.ondrop = function(e) {
 		console.log(e);
