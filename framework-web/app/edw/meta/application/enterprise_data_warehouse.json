@@ -3,6 +3,7 @@
   "version": "1547482049",
   "name": "Enterprise Data Warehouse",
   "desc": "Enterprise Data Warehouse Application",
+  "applicationType": "DEFAULT",
   "createdBy": {
     "ref": {
       "type": "user",

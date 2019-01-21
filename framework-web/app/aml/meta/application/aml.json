@@ -3,6 +3,7 @@
     "version" : "1521430822",
     "name" : "Anti Money Laundering",
     "desc" : "Anti Money Laundering",
+    "applicationType": "DEFAULT",
     "createdBy" : {
         "ref" : {
             "type" : "user",

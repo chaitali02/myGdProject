@@ -3,6 +3,7 @@
   "version": "1547482210",
   "name": "Credit Card Fraud Detection",
   "desc": "Credit Card Fraud Detection",
+  "applicationType": "DEFAULT",
   "createdBy": {
     "ref": {
       "type": "user",
