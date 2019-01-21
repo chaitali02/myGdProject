@@ -431,9 +431,10 @@ DatascienceModule.controller('ResultTrainController2', function ($filter, $state
        
     });
     $scope.downloadMoldeResult = function () {
-        debugger
-        console.log($scope.downloadAction);
         if($scope.downloadAction.tab ==3){
+            $scope.downloadTestSet();
+        }
+        else if($scope.downloadAction.tab ==4){
             $scope.downloadTrainSet();
         }
         else if ($scope.modelData.customFlag == "N") {
@@ -442,19 +443,23 @@ DatascienceModule.controller('ResultTrainController2', function ($filter, $state
         }
 
     }
-    $scope.downloadTrainSet =function(){
-        debugger
-        ModelService.downloadTrainSet($scope.downloadAction.uuid, $scope.downloadAction.version,"trainexec").then(function (response) { onSuccessDownloadTrainSet(response.data) });
-        var onSuccessDownloadTrainSet= function (response) {
+
+    $scope.downloadTestSet =function(){
+        ModelService.downloadTestSet($scope.downloadAction.uuid, $scope.downloadAction.version,"trainexec").then(function (response) { onSuccessDownloadTestSet(response.data) });
+        var onSuccessDownloadTestSet= function (response) {
+            headers = response.headers();
+            // console.log(typeof (data))
+            var filename = headers['filename'];
+            var contentType = headers['content-type'];
             var linkElement = document.createElement('a');
             try {
-                var jsonobj = angular.toJson(response, true);
-                var blob = new Blob([jsonobj], {
-                    type: "text/xml"
+                var blob = new Blob([response.data], {
+                    type: contentType
                 });
                 var url = window.URL.createObjectURL(blob);
                 linkElement.setAttribute('href', url);
-                linkElement.setAttribute("download", $scope.downloadAction.uuid + ".xls");
+                linkElement.setAttribute("download", filename);
+                //LoadXML("showPMML",url);
                 var clickEvent = new MouseEvent(
                     "click", {
                         "view": window,
@@ -463,10 +468,38 @@ DatascienceModule.controller('ResultTrainController2', function ($filter, $state
                     });
                 linkElement.dispatchEvent(clickEvent);
             } catch (ex) {
-                console.log(ex);
-           
+                // console.log(ex);
+            }
+        }
     }
-    }
+
+    $scope.downloadTrainSet =function(){
+        ModelService.downloadTrainSet($scope.downloadAction.uuid, $scope.downloadAction.version,"trainexec").then(function (response) { onSuccessDownloadTrainSet(response.data) });
+        var onSuccessDownloadTrainSet= function (response) {
+            headers = response.headers();
+            // console.log(typeof (data))
+            var filename = headers['filename'];
+            var contentType = headers['content-type'];
+            var linkElement = document.createElement('a');
+            try {
+                var blob = new Blob([response.data], {
+                    type: contentType
+                });
+                var url = window.URL.createObjectURL(blob);
+                linkElement.setAttribute('href', url);
+                linkElement.setAttribute("download", filename);
+                //LoadXML("showPMML",url);
+                var clickEvent = new MouseEvent(
+                    "click", {
+                        "view": window,
+                        "bubbles": true,
+                        "cancelable": false
+                    });
+                linkElement.dispatchEvent(clickEvent);
+            } catch (ex) {
+                // console.log(ex);
+            }
+        }
     }
 
     $scope.downloadTrainData = function () {

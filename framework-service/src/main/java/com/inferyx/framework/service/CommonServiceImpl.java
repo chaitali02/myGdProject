@@ -13,6 +13,12 @@ package com.inferyx.framework.service;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.mongodb.core.aggregation.SortOperation;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort;
+
+
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -40,19 +46,22 @@ import javax.activation.MimetypesFileTypeMap;
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.aggregation.GroupOperation;
+import org.springframework.data.mongodb.core.aggregation.MatchOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
@@ -65,6 +74,7 @@ import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.GraphInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.MetadataUtil;
+import com.inferyx.framework.common.SessionHelper;
 import com.inferyx.framework.common.WorkbookUtil;
 import com.inferyx.framework.dao.IActivityDao;
 import com.inferyx.framework.dao.IAlgorithmDao;
@@ -484,7 +494,8 @@ public class CommonServiceImpl <T> {
 	IProcessExecDao iProcessExecDao;
 	@Autowired
 	IOrganizationDao iOrganizationDao;
-	
+	@Autowired
+	SessionHelper sessionHelper;
 	/**
 	 * @Ganesh
 	 *
@@ -4615,4 +4626,27 @@ public class CommonServiceImpl <T> {
 		
 		return null;
 	}
+
+	public List<User> getUserByApp() throws JsonProcessingException {
+		
+		String appId = "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb";
+		List<User> userList = new ArrayList<>();
+		
+		MatchOperation filter = match(new Criteria("appInfo.ref.uuid").is(appId));
+		GroupOperation groupByUuid = group("uuid").max("version").as("version"); 
+		SortOperation sortByVersion = sort(new Sort(Direction.DESC, "version"));
+		Aggregation userAggr = newAggregation(filter, groupByUuid, sortByVersion);
+		AggregationResults<User> userAggrResults = mongoTemplate.aggregate(userAggr, MetaType.user.toString().toLowerCase(), User.class);
+		List<User> sortedUserList = userAggrResults.getMappedResults();
+		for(User user : sortedUserList) {
+			User userTemp=(User) getLatestByUuid(user.getId(), MetaType.user.toString(),"N");
+				userList.add(userTemp);
+				
+			
+		}
+			return userList;
+		}	
+		
+
+
 }

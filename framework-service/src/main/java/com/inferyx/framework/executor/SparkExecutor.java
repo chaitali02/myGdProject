@@ -2254,6 +2254,10 @@ public class SparkExecutor<T> implements IExecutor {
 				}
 			}*/
 			
+			for(String col : trngDf.columns()) {
+				trngDf = trngDf.withColumn(col, trngDf.col(col).cast(DataTypes.DoubleType));
+			}
+			
 			trngDf = trngDf.na().fill(0.0,trngDf.columns());
 			/*trainingDf = trainingDf.na().fill(0.0,trainingDf.columns());
 			
@@ -2270,6 +2274,10 @@ public class SparkExecutor<T> implements IExecutor {
 					validateDf = validateDf.withColumn(col, validateDf.col(col).cast(DataTypes.DoubleType));
 				}
 			}*/
+			
+			for(String col : valDf.columns()) {
+				valDf = valDf.withColumn(col, valDf.col(col).cast(DataTypes.DoubleType));
+			}
 			
 			valDf = valDf.na().fill(0.0,valDf.columns());
 //			validateDf = validateDf.na().fill(0.0,validateDf.columns());
@@ -2552,10 +2560,8 @@ public class SparkExecutor<T> implements IExecutor {
 				if(!colNameList.contains(colName)) {
 					uniqueRowIdentifierCols.add(colName);
 				} 
-				
-				System.out.println("duplicate col list: ");
 				if(colNameList.contains(colName)) {
-					System.out.println(colName);
+					logger.info("duplicate column: "+colName);
 				}
 			}
 			return uniqueRowIdentifierCols;

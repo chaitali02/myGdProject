@@ -45,10 +45,12 @@ import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.Role;
 import com.inferyx.framework.domain.RolePriv;
 import com.inferyx.framework.domain.Session;
 import com.inferyx.framework.domain.SessionContext;
+import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.register.GraphRegister;
 
@@ -212,7 +214,35 @@ public class SecurityServiceImpl  implements Serializable{
 		}
 		return appInfo;
 	}
-
+	
+	public MetaIdentifierHolder getOrgInfo() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException, IOException {
+		SessionContext sessionContext = null;
+		try {
+			ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+			HttpSession session = requestAttributes.getRequest().getSession(false);
+			if(session == null)
+				sessionContext = FrameworkThreadLocal.getSessionContext().get();
+			else
+				sessionContext = (SessionContext) session.getAttribute("sessionContext");
+			
+			return sessionContext.getOrgInfo();	
+		} catch (Exception e) {
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.organization, null, null));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "No organization information available.\n"+e.toString(), dependsOn);
+			throw new RuntimeException("No organization information available.");	
+		}	
+	}	
+		
+	
+	
 	public MetaIdentifierHolder getRoleInfo() {
 		MetaIdentifierHolder roleInfo = new MetaIdentifierHolder();		
 		SessionContext sessionContext = null;
@@ -543,4 +573,6 @@ public class SecurityServiceImpl  implements Serializable{
 				roleInfoList = newList;
 		return roleInfoList;		
 	}
+
+	
 }

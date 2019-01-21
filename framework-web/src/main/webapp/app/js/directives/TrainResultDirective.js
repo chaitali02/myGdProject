@@ -8,6 +8,7 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
     },
     link: function ($scope, element, attrs) {
       $scope.$watch('data', function (newValue, oldValue) {
+        $scope.$emit("dowloadAction",{ uuid: $scope.data.uuid, version: $scope.data.version,tab:0});
       $scope.isTrainResultProgess = false;
       $scope.activeTabIndex=0;
       $scope.filteredRows;

@@ -329,6 +329,64 @@ DataPipelineModule.directive('gridResultsDirective', function ($rootScope, $comp
         $scope.gridOptions.data = params.slice(offset, limit);
       }
 
+
+      $scope.downloadTestSet =function(){
+        CommonService.downloadTestSet($scope.downloadAction.uuid, $scope.downloadAction.version,"trainexec").then(function (response) { onSuccessDownloadTestSet(response.data) });
+        var onSuccessDownloadTestSet= function (response) {
+          headers = response.headers();
+          // console.log(typeof (data))
+          var filename = headers['filename'];
+          var contentType = headers['content-type'];
+          var linkElement = document.createElement('a');
+          try {
+              var blob = new Blob([response.data], {
+                  type: contentType
+              });
+              var url = window.URL.createObjectURL(blob);
+              linkElement.setAttribute('href', url);
+              linkElement.setAttribute("download", filename);
+              //LoadXML("showPMML",url);
+              var clickEvent = new MouseEvent(
+                  "click", {
+                      "view": window,
+                      "bubbles": true,
+                      "cancelable": false
+                  });
+              linkElement.dispatchEvent(clickEvent);
+          } catch (ex) {
+              // console.log(ex);
+          }
+        }
+    }
+
+    $scope.downloadTrainSet =function(){
+        CommonService.downloadTrainSet($scope.downloadAction.uuid, $scope.downloadAction.version,"trainexec").then(function (response) { onSuccessDownloadTrainSet(response.data) });
+        var onSuccessDownloadTrainSet= function (response) {
+          headers = response.headers();
+          // console.log(typeof (data))
+          var filename = headers['filename'];
+          var contentType = headers['content-type'];
+          var linkElement = document.createElement('a');
+          try {
+              var blob = new Blob([response.data], {
+                  type: contentType
+              });
+              var url = window.URL.createObjectURL(blob);
+              linkElement.setAttribute('href', url);
+              linkElement.setAttribute("download", filename);
+              //LoadXML("showPMML",url);
+              var clickEvent = new MouseEvent(
+                  "click", {
+                      "view": window,
+                      "bubbles": true,
+                      "cancelable": false
+                  });
+              linkElement.dispatchEvent(clickEvent);
+          } catch (ex) {
+              // console.log(ex);
+          }
+        }
+    }
       $scope.downloadTrainData = function (uuid) {
         var linkElement = document.createElement('a');
         try {
@@ -397,9 +455,11 @@ DataPipelineModule.directive('gridResultsDirective', function ($rootScope, $comp
           keyboard: false
         });
       }
-
+      $scope.$on("dowloadAction", function (evt, data) {
+        $scope.downloadAction = data;
+       
+      });
       window.downloadPiplineFile = function () {
-        debugger
         var uuid = $scope.downloadDetail.uuid;
         var version = $scope.downloadDetail.version;
         var baseurl = $location.absUrl().split("app")[0];
@@ -453,8 +513,16 @@ DataPipelineModule.directive('gridResultsDirective', function ($rootScope, $comp
               url: url,
             })
             .success(function (data, status, headers) {
-              if (data.customFlag == "N") {
+              if(data.customFlag == "N") {
+                if($scope.downloadAction.tab ==3){
+                  $scope.downloadTestSet();
+                }
+                else if($scope.downloadAction.tab ==4){
+                  $scope.downloadTrainSet();
+                }
+                else{
                 $scope.downloadTrainData(uuid);
+                }
                 return false;
               }
               else {
