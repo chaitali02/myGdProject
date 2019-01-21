@@ -237,7 +237,7 @@
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12 col-lg-3">Model</label>
                                             <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
                                                 <select name="modelName" select2 class="form-control" ng-disabled="false" required data-ng-model="selectModel" ng-options="r as r.name for r in allModel track by r.uuid"
-                                                    ng-change="onChangeModel(selectModel)">
+                                                    ng-change="onChangeModel(true,selectModel)">
                                                     <!-- <option value="">-Select-</option> -->
                                                 </select>
                                                 <input name="modelName" type="hidden" ng-model="selectModel.uuid" required />
@@ -341,6 +341,9 @@
                                                                 <li ng-click="autoMapFeature('By Order')">
                                                                     <a href="javascript:;">By Order</a>
                                                                 </li>
+                                                                <li  ng-click="autoReset()">
+                                                                    <a href="javascript:;">Reset</a>
+                                                                </li>
 
                                                             </ul>
                                                         </div>
@@ -357,7 +360,7 @@
                                                                             <th style="width:5%; text-align:center">ID</th>
                                                                             <th style="width:18%;text-align: center">Features</th>
                                                                             <th style="width:18%;text-align: center">Attributes</th>
-                                                                            <th style="width:11%;text-align: center">Encoding Type</th>
+                                                                            <!-- <th style="width:11%;text-align: center">Encoding Type</th> -->
                                                                             <th style="width:10%;text-align: center">Impute Method</th>
                                                                             <th style="width:10%;text-align: center">Impute Value</th>
                                                                             <th style="width:5%;text-align: center">Move</th>
@@ -385,14 +388,14 @@
                                                                                     </div>
                                                                                 </span>
                                                                             </td>
-                                                                            <td> 
+                                                                            <!-- <td> 
                                                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                                     <select class="form-control" ng-disabled="{{mode}}" data-ng-model="data.encodingType"
                                                                                         ng-options="r  for r in encodingTypes | orderBy">
                                                                                         <option value="">-Select-</option>
                                                                                     </select>
                                                                                 </span>
-                                                                            </td>
+                                                                            </td> -->
                                                                             <td>
                                                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                                     <select ng-model="data.imputeMethod.imputeType" ng-options=" x for x in imputeTypes " ng-disabled="{{mode}}" class="form-control"
