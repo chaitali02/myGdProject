@@ -744,6 +744,10 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 
 				String filePathUrl = String.format("%s%s%s", Helper.getPropertyValue("framework.hdfs.URI"), Helper.getPropertyValue("framework.model.train.path"), filePath);
 				String testSetPath = filePathUrl.endsWith("/") ? filePathUrl.concat("test_set") : filePathUrl.concat("/").concat("test_set");
+				String trainingSetPath = null;
+				if(train.getSaveTrainingSet().equalsIgnoreCase("Y")) {
+					trainingSetPath = filePathUrl.endsWith("/") ? filePathUrl.concat("train_set") : filePathUrl.concat("/").concat("train_set");
+				}
 				
 				Map<String, EncodingType> encodingDetails = getEncodingDetailsByFeatureAttrMap(train.getFeatureAttrMap());
 				
@@ -791,7 +795,8 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 					trndModel = exec.train(paramMap, fieldArray, label, algorithm.getTrainClass(), train.getTrainPercent()
 							, train.getValPercent(), (tableName+"_train_source_data"), tempTrngDfSql
 							, algoclass, trainOtherParam, trainResult, testSetPath
-							, rowIdentifierCols, train.getIncludeFeatures(), tempTrngDfSql, tempValDfSql, encodingDetails);
+							, rowIdentifierCols, train.getIncludeFeatures(), tempTrngDfSql
+							, tempValDfSql, encodingDetails, train.getSaveTrainingSet(), trainingSetPath);
 				} else if (!model.getType().equalsIgnoreCase(ExecContext.DL4J.toString())) {		
 					//With hypertuning
 					List<ParamListHolder> paramListHolderList = null;
@@ -805,7 +810,8 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 									trndModel = exec.trainCrossValidation(paramMap, fieldArray, label, algorithm.getTrainClass()
 											, train.getTrainPercent(), train.getValPercent(), (tableName+"_train_source_data")
 											, hyperParamList.getParams(), appUuid, trainOtherParam, trainResult, testSetPath
-											, rowIdentifierCols, train.getIncludeFeatures(), tempTrngDfSql, tempValDfSql, encodingDetails);
+											, rowIdentifierCols, train.getIncludeFeatures(), tempTrngDfSql
+											, tempValDfSql, encodingDetails, train.getSaveTrainingSet(), trainingSetPath);
 								}
 							}
 						} else if(execParams.getParamListInfo() != null) {
@@ -817,7 +823,8 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 								trndModel = exec.trainCrossValidation(paramMap, fieldArray, label, algorithm.getTrainClass()
 										, train.getTrainPercent(), train.getValPercent(), (tableName+"_train_source_data")
 										, hyperParamList.getParams(), appUuid, trainOtherParam, trainResult, testSetPath
-										, rowIdentifierCols, train.getIncludeFeatures(), tempTrngDfSql, tempValDfSql, encodingDetails);
+										, rowIdentifierCols, train.getIncludeFeatures(), tempTrngDfSql
+										, tempValDfSql, encodingDetails, train.getSaveTrainingSet(), trainingSetPath);
 							}
 						}
 					} else {
@@ -833,7 +840,8 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 							trndModel = exec.trainCrossValidation(paramMap, fieldArray, label, algorithm.getTrainClass()
 									, train.getTrainPercent(), train.getValPercent(), (tableName+"_train_source_data")
 									, hyperParamList.getParams(), appUuid, trainOtherParam, trainResult, testSetPath
-									, rowIdentifierCols, train.getIncludeFeatures(), tempTrngDfSql, tempValDfSql, encodingDetails);
+									, rowIdentifierCols, train.getIncludeFeatures(), tempTrngDfSql
+									, tempValDfSql, encodingDetails, train.getSaveTrainingSet(), trainingSetPath);
 						}
 					}
 				} else {

@@ -26,6 +26,25 @@ public class Train extends BaseEntity {
 	private String featureImportance;
 	private List<AttributeRefHolder> rowIdentifier;
 	private String includeFeatures = "N";
+	private String saveTrainingSet = "N";
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the saveTrainingSet
+	 */
+	public String getSaveTrainingSet() {
+		return saveTrainingSet;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param saveTrainingSet the saveTrainingSet to set
+	 */
+	public void setSaveTrainingSet(String saveTrainingSet) {
+		this.saveTrainingSet = saveTrainingSet;
+	}
 
 	/**
 	 *
