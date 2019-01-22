@@ -618,17 +618,21 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		var onSuccessGetResultByDatastore = function (response) {
 			$scope.sample.rows=CF_SAMPLE.framework_sample_minrows;
 			$scope.isEnableDSRB(data);
-			$scope.gridOptions.columnDefs = [];
+		    $scope.gridOptions.columnDefs = [];
 			$scope.isDataInpogress = false;
 			$scope.tableclass = "";
 			$scope.spinner = false
+			var columnDefs=[];
 			for (var j = 0; j <$scope.datapoddata.attributes.length; j++) {
 				var attribute = {};
 				attribute.name = $scope.datapoddata.attributes[j].name;
 				attribute.displayName = $scope.datapoddata.attributes[j].dispName;
 				attribute.width = attribute.displayName.split('').length + 2 + "%" // Math.floor(Math.random() * (120 - 50 + 1)) + 150
-				$scope.gridOptions.columnDefs.push(attribute)
+				columnDefs.push(attribute)
 			}
+			setTimeout(function(){
+				$scope.gridOptions.columnDefs=columnDefs;
+			},10);
 			$scope.counter = 0;
 			$scope.originalData = response;
 			if ($scope.originalData.length > 0) {
