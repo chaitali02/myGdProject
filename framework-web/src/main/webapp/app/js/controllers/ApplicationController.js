@@ -504,7 +504,7 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		datasource.ref = ref;
 		applicationJson.dataSource = datasource;
 		applicationJson.paramList={};
-        if($scope.applicationCompare != null & $scope.applicationCompare.paramList !=null ){
+        if($scope.applicationCompare != null && $scope.applicationCompare.paramList !=null ){
 			applicationJson.paramList.uuid=$scope.applicationCompare.paramList.uuid;
 			applicationJson.paramList.paramListType=$scope.applicationCompare.paramList.paramListType;
 			applicationJson.paramList.templateFlg=$scope.applicationCompare.paramList.templateFlg;
@@ -514,7 +514,7 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 			applicationJson.paramList.templateFlg="Y";
 		}
 		var paramInfoArray = [];
-		if ($scope.paramtable.length > 0) {
+		if ($scope.paramtable && $scope.paramtable.length > 0) {
 			for (var i = 0; i < $scope.paramtable.length; i++) {
 				var paraminfo = {};
 				paraminfo.paramId = $scope.paramtable[i].paramId;

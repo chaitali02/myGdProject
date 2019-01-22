@@ -367,22 +367,24 @@
                                 </div>
                               </div>
                             </div>
-                            <div class="row" style="overflow-y: auto;overflow-x: hidden;max-height: 330px;">
-                              <div class="col-md-12">
-                              <table class=" row-border hover table table-striped table-bordered">
+                            <div class="row" >
+                              <div class="col-md-12" style="overflow-x:auto;max-height: 330px;">
+                              <table class=" row-border hover table table-striped table-bordered"style="width:1400px;">
                                 <thead>
                                   <tr>
-                                    <th style="text-align: center; Vertical-align:middle;width:5%;"><input style="width: 16px;height:16px;" type="checkbox" ng-model="slectAllRow" ng-click="selectAllRow()" ng-disabled="{{mode}}" /></th>
-                                    <th style="width:6%; text-align:center">ID</th>
-                                    <th style="width:15%; text-align:center">Name</th>
-                                    <th style="width:12%; text-align:center">Type</th>
-                                    <th style="width:11%; text-align:center">Desc</th>
-                                    <th style="width:9%; text-align:center">Min Value</th>
-                                    <th style="width:10%; text-align:center">Max Value</th>
-                                    <th style="width:12%; text-align:center">Default Value</th>
-                                    <th style="width:12%;text-align: center">Encoding Type</th>
+                                    <th style="text-align: center; Vertical-align:middle;width:2%;"><input style="width: 16px;height:16px;" type="checkbox" ng-model="slectAllRow" ng-click="selectAllRow()" ng-disabled="{{mode}}" /></th>
+                                    <th style="width:3%; text-align:center">ID</th>
+                                    <th style="width:10%; text-align:center">Name</th>
+                                    <th style="width:8%; text-align:center">Type</th>
+                                    <th style="width:10%; text-align:center">Desc</th>
+                                    <th style="width:6%; text-align:center">Min Value</th>
+                                    <th style="width:6%; text-align:center">Max Value</th>
+                                    <!-- <th style="width:12%; text-align:center">Default Value</th> -->
+                                    <th style="width:8%;text-align: center">Encoding Type</th>
+                                    <th style="width:10%;text-align: center">Impute Method</th>
+                                    <th style="width:10%;text-align: center">Impute Value</th>
                                     <th style="width:20%; text-align:center" ng-show="isParamListShow">Params</th>
-                                    <th style="width:10%;text-align: center">Move</th>
+                                    <th style="width:4%;text-align: center">Move</th>
                                   </tr>
                                 </thead>
                                 <tbody ng-repeat="data in featureTableArray" id="{{$index}}" drag-drop draggable="{{isDragable}}" after-drop="ondrop">
@@ -395,7 +397,7 @@
                                     data-direction="{{data.name.jqyouiDirection}}" 
                                     drag-drop draggable="{{isDragable}}" after-drop="ondrop"> -->
                                     <tr>
-                                    <td style="text-align: center; Vertical-align: middle;width:5%;">
+                                    <td style="text-align: center; Vertical-align: middle;width:2%;">
                                       <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected"/>
                                     </td>
                                     <td>
@@ -408,14 +410,14 @@
                                     </td>
                                     <td><span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                         <select class="form-control" ng-disabled="{{mode}}" data-ng-model="data.type" ng-options="r for r in featuureType"
-                                          ng-change="onChangeFeatureType($index)">
+                                          ng-change="onChangeFeatureType($index)" required disable-validation-message="">
                                         </select>
                                       </span>
                                     </td>
                                     <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.desc" title="{{data.desc}}"ng-disabled="{{mode}}"></span></td>
                                     <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.minVal" title="{{data.minVal}}"ng-disabled="{{mode}}|| data.isMinMaxDiabled"></span></td>
                                     <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" ng-model="data.maxVal" title="{{data.maxVal}}" ng-disabled="{{mode}} || data.isMinMaxDiabled"></span> </td>
-                                    <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" name="defaultValue{{$index}}" ng-model="data.defaultValue" title="{{data.defaultValue}}" ng-disabled="{{mode}}" ng-pattern="/^[0-9\.]{1,20}$/"  disable-validation-message="" uib-tooltip="{{myform2['defaultValue'+$index].$valid ? '' : 'enter only numeric value'}}"></span> </td>
+                                    <!-- <td><span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control" name="defaultValue{{$index}}" ng-model="data.defaultValue" title="{{data.defaultValue}}" ng-disabled="{{mode}}" ng-pattern="/^[0-9\.]{1,20}$/"  disable-validation-message="" uib-tooltip="{{myform2['defaultValue'+$index].$valid ? '' : 'enter only numeric value'}}"></span> </td> -->
                                     <td ng-show="isParamListShow"><span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                       <select  select2 class="form-control" ng-disabled="{{mode}}" data-ng-model="data.paramListInfo" ng-options="r as r.dname for r in allParamlist track by r.uuid+r.paramId" ng-change="onChangeParamInfo($index)" >
                                       </select>
@@ -428,6 +430,27 @@
                                         </select>
                                       </span>
                                     </td>
+                                    <td> 
+                                      <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                          <select  ng-model="data.imputeMethod.imputeType" ng-options=" x for x in imputeTypes "
+                                              ng-disabled="{{mode}}" class="form-control" ng-change="onChangeInputeType($index,data.imputeMethod.imputeType)">
+                                              <option value="">-Select-</option>
+                                            </select>
+                                      </span>
+                                  </td>
+                                  <td>
+                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                        <div ng-if="data.imputeMethod.isSimpleShow">
+                                          <input type="text" class="form-control" ng-model="data.imputeMethod.imputeValue" title="{{data.imputeMethod.imputeValue}}" ng-disabled="{{mode}}" required disable-validation-message="">
+                                        </div>
+
+                                        <div ng-if="data.imputeMethod.isFunctionShow">  
+                                          <select select2 ng-model="data.imputeMethod.selectedFunction" ng-options=" x as x.name  for x in allFunction track by x.uuid" 
+                                            ng-disabled="{{mode}}" class="form-control" required disable-validation-message=""></select>
+                                        </div>
+                                        <div ng-if="!data.imputeMethod" style="text-align:center">NA</div>
+                                    </span>
+                                  </td>
                                     <td>
                                       <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                         <div style="text-align: center;">

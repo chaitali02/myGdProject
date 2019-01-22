@@ -460,6 +460,7 @@ DataPipelineModule.directive('gridResultsDirective', function ($rootScope, $comp
        
       });
       window.downloadPiplineFile = function () {
+        debugger
         var uuid = $scope.downloadDetail.uuid;
         var version = $scope.downloadDetail.version;
         var baseurl = $location.absUrl().split("app")[0];
@@ -479,6 +480,10 @@ DataPipelineModule.directive('gridResultsDirective', function ($rootScope, $comp
           }
           else if ($scope.downloadDetail.type == "dataqual") {
             url = baseurl + "dataqual/download?action=view&dataQualExecUUID=" + uuid + "&dataQualExecVersion=" + version + "&mode=" + mode;
+            $scope.downloaddata(url, uuid);
+          } 
+          else if($scope.downloadDetail.type == "rule"){
+            url = baseurl + "rule/download?action=view&ruleExecUUID=" + uuid + "&ruleExecVersion=" + version + "&mode=" + mode;
             $scope.downloaddata(url, uuid);
           }
 

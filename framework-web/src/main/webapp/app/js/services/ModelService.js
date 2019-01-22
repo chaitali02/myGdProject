@@ -273,11 +273,31 @@ DatascienceModule.factory('ModelFactory', function ($http, $location) {
       method: "GET",
       responseType: 'arraybuffer'
     }).then(function (response) { return response })
-  }; 
+  };
+  factory.findFunctionByCategory = function (type, category) {
+    var url = $location.absUrl().split("app")[0]
+    return $http({
+        method: 'GET',
+        url: url + "metadata/getFunctionByCategory?action=view&type="+type+"category="+category,
+    }).
+        then(function (response, status, headers) {
+            return response;
+        })
+  } 
   return factory;
 })
 
 DatascienceModule.service("ModelService", function ($http, ModelFactory, $q, sortFactory){
+  this.getFunctionByCategory = function (type, category) {
+    var deferred = $q.defer();
+    ModelFactory.findFunctionByCategory(type,category).then(function (response) { onSuccess(response.data) });
+    var onSuccess = function (response) {
+      deferred.resolve({
+        data: response
+      });
+    }
+    return deferred.promise;
+  }
   this.downloadTrainSet = function (uuid, version, type) {
     var deferred = $q.defer();
     ModelFactory.downloadTrainSet(uuid, version ,type).then(function (response) { onSuccess(response) },function (response) { onError(response.data) });
