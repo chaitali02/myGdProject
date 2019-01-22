@@ -323,17 +323,16 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
         else{
           $scope.showChart = false;
         }
-
+      
+        $scope.$emit("dowloadAction",{ uuid: $scope.data.uuid, version: $scope.data.version,tab:index});
         if(index == 3 && ($scope.gridOptionsTestSet.data.length ==0)){
-          $scope.$emit("dowloadAction",{ uuid: $scope.data.uuid, version: $scope.data.version,tab:3});
+        
           $scope.getTestSet({ uuid: $scope.data.uuid, version: $scope.data.version});
         }
         if([0,1,2].indexOf(index) !=-1 && ($scope.modelresult ==null)){
-          $scope.$emit("dowloadAction",{ uuid: $scope.data.uuid, version: $scope.data.version,tab:0});
           $scope.getTrainResult({ uuid: $scope.data.uuid, version: $scope.data.version});
         }
         if(index == 4 &&$scope.gridOptionsTrainSet.data.length ==0){
-          $scope.$emit("dowloadAction",{ uuid: $scope.data.uuid, version: $scope.data.version,tab:4});
           $scope.getTrainSet({ uuid: $scope.data.uuid, version: $scope.data.version});
 
         }

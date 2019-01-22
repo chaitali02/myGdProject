@@ -552,6 +552,7 @@ DatascienceModule.controller('ResultModelController', function ($filter, $state,
     $scope.download.selectFormate = CF_DOWNLOAD.formate[0];
     $scope.download.maxrow = CF_DOWNLOAD.framework_download_maxrow;
     $scope.download.limit_to = CF_DOWNLOAD.limit_to;
+    $scope.name=$stateParams.name;
     $scope.pagination = {
         currentPage: 1,
         pageSize: 10,

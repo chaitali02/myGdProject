@@ -796,7 +796,6 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
         }else{
           //featureObj.paramListInfo=null
         }
-        debugger
         if($scope.featureTableArray[i].imputeMethod){
           if($scope.featureTableArray[i].imputeMethod.imputeType =="function"){
             imputeMethodRef.type="function";
