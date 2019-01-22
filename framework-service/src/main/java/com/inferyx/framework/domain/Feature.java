@@ -20,10 +20,10 @@ public class Feature {
 	private String desc;
 	private int minVal;
 	private int maxVal;
-	private double defaultValue;
+//	private double defaultValue;
 	private ParamListHolder paramListInfo;
 	private EncodingType encodingType;
-
+    private MetaIdentifierHolder imputeMethod;
 	
 	
 	
@@ -148,13 +148,13 @@ public class Feature {
 		this.featureDisplaySeq = featureDisplaySeq;
 	}
 	
-	public double getDefaultValue() {
-		return defaultValue;
-	}
-	
-	public void setDefaultValue(double defaultValue) {
-		this.defaultValue = defaultValue;
-	}
+//	public double getDefaultValue() {
+//		return defaultValue;
+//	}
+//	
+//	public void setDefaultValue(double defaultValue) {
+//		this.defaultValue = defaultValue;
+//	}
 	/**
 	 * @Ganesh
 	 *
@@ -171,5 +171,12 @@ public class Feature {
 	 */
 	public void setEncodingType(EncodingType encodingType) {
 		this.encodingType = encodingType;
+	}
+	
+	public MetaIdentifierHolder getImputeMethod() {
+		return imputeMethod;
+	}
+	public void setImputeMethod(MetaIdentifierHolder imputeMethod) {
+		this.imputeMethod = imputeMethod;
 	}
 }

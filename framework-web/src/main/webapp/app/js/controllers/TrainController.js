@@ -337,18 +337,18 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
           sourceFeature.featureName = response.features[i].name;
           featureMap.sourceFeature = sourceFeature;
           featureMapTableArray[i] = featureMap;
-          imputeMethod.type="model";
-          imputeMethod.uuid=response.uuid;
-          imputeMethod.imputeType="default";
-          imputeMethod.imputeValue=response.features[i].defaultValue;
-          imputeMethod.featureId = response.features[i].featureId;
-          imputeMethod.defaultValue = response.features[i].defaultValue;
-          imputeMethod.isModelShow=true;
-          imputeMethod.isSimpleShow=false;
-          imputeMethod.isFunctionShow=false;
+          // imputeMethod.type="model";
+          // imputeMethod.uuid=response.uuid;
+          // imputeMethod.imputeType="default";
+          // imputeMethod.imputeValue=response.features[i].defaultValue;
+          // imputeMethod.featureId = response.features[i].featureId;
+          // imputeMethod.defaultValue = response.features[i].defaultValue;
+          // imputeMethod.isModelShow=true;
+          // imputeMethod.isSimpleShow=false;
+          // imputeMethod.isFunctionShow=false;
 
-          imputeMethod.sourceFeature = sourceFeature;
-          featureMap.imputeMethod=imputeMethod;
+          // imputeMethod.sourceFeature = sourceFeature;
+          // featureMap.imputeMethod=imputeMethod;
           $scope.originalFeatureMapTableArray = featureMapTableArray;
           $scope.featureMapTableArray = featureMapTableArray//$scope.getResults($scope.pagination,featureMapTableArray);//featureMapTableArray;
         }
@@ -522,41 +522,41 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
         featureAttrMap.targetFeature = targetFeature;
        // featureAttrMap.encodingType= response.featureAttrMap[i].encodingType;
        // console.log(response.featureAttrMap[i].imputeMethod.ref.type)
-       if(response.featureAttrMap[i].imputeMethod !=null){
-          if(response.featureAttrMap[i].imputeMethod.ref.type =="model"){
-            imputeMethod.imputeType="default";
-            imputeMethod.imputeValue=response.featureAttrMap[i].imputeMethod.featureDefaultValue;
-            imputeMethod.isModelShow=true;
-            imputeMethod.isSimpleShow=false;
-            imputeMethod.isFunctionShow=false;
-            imputeMethod.featureId = response.featureAttrMap[i].feature.featureId;
-            imputeMethod.featureName = response.featureAttrMap[i].feature.featureName;
-            imputeMethod.id = response.featureAttrMap[i].featureMapId;
-          }
-          else if(response.featureAttrMap[i].imputeMethod.ref.type =="simple"){
-            imputeMethod.imputeType="custom";
-            imputeMethod.imputeValue=response.featureAttrMap[i].imputeMethod.value;
-            imputeMethod.isModelShow=false;
-            imputeMethod.isSimpleShow=true;
-            imputeMethod.isFunctionShow=false;
-          }
-          else if(response.featureAttrMap[i].imputeMethod.ref.type =="function"){
-            imputeMethod.imputeType="function";
-            imputeMethod.isModelShow=false;
-            imputeMethod.isSimpleShow=false;
-            imputeMethod.isFunctionShow=true;
-            $scope.getFunctionByCategory();
-            var selectedFunction={};
-            selectedFunction.uuid = response.featureAttrMap[i].imputeMethod.ref.uuid;
-            selectedFunction.type = response.featureAttrMap[i].imputeMethod.ref.type;
-            imputeMethod.selectedFunction=selectedFunction;
-          }
+      //  if(response.featureAttrMap[i].imputeMethod !=null){
+      //     if(response.featureAttrMap[i].imputeMethod.ref.type =="model"){
+      //       imputeMethod.imputeType="default";
+      //       imputeMethod.imputeValue=response.featureAttrMap[i].imputeMethod.featureDefaultValue;
+      //       imputeMethod.isModelShow=true;
+      //       imputeMethod.isSimpleShow=false;
+      //       imputeMethod.isFunctionShow=false;
+      //       imputeMethod.featureId = response.featureAttrMap[i].feature.featureId;
+      //       imputeMethod.featureName = response.featureAttrMap[i].feature.featureName;
+      //       imputeMethod.id = response.featureAttrMap[i].featureMapId;
+      //     }
+      //     else if(response.featureAttrMap[i].imputeMethod.ref.type =="simple"){
+      //       imputeMethod.imputeType="custom";
+      //       imputeMethod.imputeValue=response.featureAttrMap[i].imputeMethod.value;
+      //       imputeMethod.isModelShow=false;
+      //       imputeMethod.isSimpleShow=true;
+      //       imputeMethod.isFunctionShow=false;
+      //     }
+      //     else if(response.featureAttrMap[i].imputeMethod.ref.type =="function"){
+      //       imputeMethod.imputeType="function";
+      //       imputeMethod.isModelShow=false;
+      //       imputeMethod.isSimpleShow=false;
+      //       imputeMethod.isFunctionShow=true;
+      //       $scope.getFunctionByCategory();
+      //       var selectedFunction={};
+      //       selectedFunction.uuid = response.featureAttrMap[i].imputeMethod.ref.uuid;
+      //       selectedFunction.type = response.featureAttrMap[i].imputeMethod.ref.type;
+      //       imputeMethod.selectedFunction=selectedFunction;
+      //     }
           
-          imputeMethod.uuid = response.featureAttrMap[i].imputeMethod.ref.uuid;
-          imputeMethod.type = response.featureAttrMap[i].imputeMethod.ref.type;
-          featureAttrMap.imputeMethod=imputeMethod;
+      //     imputeMethod.uuid = response.featureAttrMap[i].imputeMethod.ref.uuid;
+      //     imputeMethod.type = response.featureAttrMap[i].imputeMethod.ref.type;
+      //     featureAttrMap.imputeMethod=imputeMethod;
 
-        }
+      //   }
         featureAttrMap.featureAttrMap=featureAttrMap;
         featureMapTableArray[i] = featureAttrMap;
       }
@@ -693,24 +693,23 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
         targetFeature.ref = targetFeatureRef
         targetFeature.attrId = $scope.featureMapTableArray[i].targetFeature.attributeId;
         featureMapObj.attribute = targetFeature;
-        debugger
-        if($scope.featureMapTableArray[i].imputeMethod.imputeType =="default"){
-          imputeMethodRef.type="model";
-          imputeMethodRef.uuid =  $scope.featureMapTableArray[i].sourceFeature.uuid;;
-          imputeMethod.ref = imputeMethodRef;
-          imputeMethod.featureId = $scope.featureMapTableArray[i].imputeMethod.featureId;
+        // if($scope.featureMapTableArray[i].imputeMethod.imputeType =="default"){
+        //   imputeMethodRef.type="model";
+        //   imputeMethodRef.uuid =  $scope.featureMapTableArray[i].sourceFeature.uuid;;
+        //   imputeMethod.ref = imputeMethodRef;
+        //   imputeMethod.featureId = $scope.featureMapTableArray[i].imputeMethod.featureId;
 
-        }else if($scope.featureMapTableArray[i].imputeMethod.imputeType =="function"){
-          imputeMethodRef.type="function";
-          imputeMethodRef.uuid = $scope.featureMapTableArray[i].imputeMethod.selectedFunction.uuid;
-          imputeMethod.ref = imputeMethodRef;
-        }
-        else{
-          imputeMethodRef.type="simple";
-          imputeMethod.ref = imputeMethodRef;
-          imputeMethod.value = $scope.featureMapTableArray[i].imputeMethod.imputeValue;
-        }
-        featureMapObj.imputeMethod = imputeMethod;
+        // }else if($scope.featureMapTableArray[i].imputeMethod.imputeType =="function"){
+        //   imputeMethodRef.type="function";
+        //   imputeMethodRef.uuid = $scope.featureMapTableArray[i].imputeMethod.selectedFunction.uuid;
+        //   imputeMethod.ref = imputeMethodRef;
+        // }
+        // else{
+        //   imputeMethodRef.type="simple";
+        //   imputeMethod.ref = imputeMethodRef;
+        //   imputeMethod.value = $scope.featureMapTableArray[i].imputeMethod.imputeValue;
+        // }
+        // featureMapObj.imputeMethod = imputeMethod;
         featureMap[i] = featureMapObj;
       }
     }
