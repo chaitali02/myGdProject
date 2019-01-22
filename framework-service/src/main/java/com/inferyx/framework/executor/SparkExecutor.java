@@ -2489,7 +2489,12 @@ public class SparkExecutor<T> implements IExecutor {
 		featureDF = featureDF.withColumn("rowNum", functions.row_number().over(Window.orderBy(featureDF.columns()[featureDF.columns().length-1])));
 		
 //		sourceDF = sourceDF.na().fill(0.0,sourceDF.columns());
-		predictedDF = predictedDF.withColumn("rowNum", functions.row_number().over(Window.orderBy(predictedDF.columns()[predictedDF.columns().length-1]))).select("rowNum", "features", "prediction");
+		if (trainName.contains("LogisticRegression")
+				|| trainName.contains("GBTClassifier")) {
+			predictedDF = predictedDF.withColumn("rowNum", functions.row_number().over(Window.orderBy(predictedDF.columns()[predictedDF.columns().length-1]))).select("rowNum", "features", "probability", "prediction");
+		} else {
+			predictedDF = predictedDF.withColumn("rowNum", functions.row_number().over(Window.orderBy(predictedDF.columns()[predictedDF.columns().length-1]))).select("rowNum", "features", "prediction");
+		}
 		predictedDF = featureDF.join(predictedDF, "rowNum");
 		
 		List<String> colNameList = new ArrayList<>();
