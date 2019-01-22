@@ -514,7 +514,7 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 			applicationJson.paramList.templateFlg="Y";
 		}
 		var paramInfoArray = [];
-		if ($scope.paramtable.length > 0) {
+		if ($scope.paramtable && $scope.paramtable.length > 0) {
 			for (var i = 0; i < $scope.paramtable.length; i++) {
 				var paraminfo = {};
 				paraminfo.paramId = $scope.paramtable[i].paramId;
