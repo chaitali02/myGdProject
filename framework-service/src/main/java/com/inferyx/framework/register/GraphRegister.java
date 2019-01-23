@@ -12,7 +12,9 @@ package com.inferyx.framework.register;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -106,7 +108,10 @@ import com.inferyx.framework.dao.IVizpodDao;
 import com.inferyx.framework.dao.IVizpodExecDao;
 import com.inferyx.framework.domain.Edge;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.ProcessExec;
+import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Vertex;
+import com.inferyx.framework.enums.ProcessType;
 import com.inferyx.framework.service.AlgorithmServiceImpl;
 import com.inferyx.framework.service.ApplicationServiceImpl;
 import com.inferyx.framework.service.CommonServiceImpl;
@@ -1197,63 +1202,82 @@ public class GraphRegister<T> {
 		return edgeList;
 	}
 	
-	public void buildGraph() throws IOException, ParseException, JSONException, java.text.ParseException, NoSuchMethodException, NullPointerException {
-		List<Row> totalEdgeList = new ArrayList<Row>();
-		List<Row> totalVertexList = new ArrayList<Row>();
-		java.util.Map<String, Row> edgeRowMap = new HashMap<>();
-		java.util.Map<String, Row> verticesRowMap = new HashMap<>();
-		
-		//java.util.Map<String, Object> objectMap = new HashMap<String, Object>();
-		//ObjectMapper mapper = new ObjectMapper();
-		ObjectWriter writer = new ObjectMapper().writer().withDefaultPrettyPrinter();
-	    
-
-		logger.info("Graph flag is set to " + graphFlag.isMode());
-		if (!graphFlag.isMode()) {
-			logger.info("Skipping building of graph.");
-		}
-		String result =null;
-		List<MetaType> metaTypes =  MetaType.getMetaList();
-		for(MetaType mType : metaTypes){
-			try {
-				//Object dao = this.getClass().getMethod(GET + Helper.getDaoClass(mType)).invoke(this);
-				
-				@SuppressWarnings("unchecked")
-				//change method findAllLatestWithoutAppUuid to findAll due to version concept...
-				//List<T> objectList = (List<T>) commonServiceImpl.findAllLatestWithoutAppUuid(mType);
-				List<T> objectList = (List<T>) commonServiceImpl.findAll(mType);
-				if (objectList == null ) {
-					continue;
-				}
-				for (Object obj : objectList) {
-					result = writer.writeValueAsString(obj);
-					graphServiceImpl.createVnE(result, totalVertexList, totalEdgeList, verticesRowMap, edgeRowMap, mType.toString(), null);
-				}
-				logger.info("  Vertex size after "+mType + " : " + objectList.size()+" Total : "+verticesRowMap.size());
-				//logger.info(" Total vertex size after "+mType + " : " + totalVertexList.size());
-			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-					| SecurityException | NullPointerException e) {
-				e.printStackTrace();
+	public void buildGraph() throws Exception {
+		ProcessExec processExec = new ProcessExec();
+		try {
+			List<Row> totalEdgeList = new ArrayList<Row>();
+			List<Row> totalVertexList = new ArrayList<Row>();
+			java.util.Map<String, Row> edgeRowMap = new HashMap<>();
+			java.util.Map<String, Row> verticesRowMap = new HashMap<>();
+			
+			SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+			Date startDate = formatter.parse((new Date()).toString());
+			
+			processExec.setProcessType(ProcessType.BUILDING_GRAPH_ENGINE);
+			processExec.setBaseEntity();			
+			commonServiceImpl.setMetaStatus(processExec, MetaType.processExec, Status.Stage.NotStarted);
+			commonServiceImpl.setMetaStatus(processExec, MetaType.processExec, Status.Stage.InProgress);
+			processExec.setStartTime(startDate);
+			
+			//java.util.Map<String, Object> objectMap = new HashMap<String, Object>();
+			//ObjectMapper mapper = new ObjectMapper();
+			ObjectWriter writer = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		    
+	
+			logger.info("Graph flag is set to " + graphFlag.isMode());
+			if (!graphFlag.isMode()) {
+				logger.info("Skipping building of graph.");
 			}
-		}
-		/*List<T> objectList = commonServiceImpl.findAllLatest(MetaType.function);
-		for(Object obj: objectList) {
-			BaseEntity baseEntity = (BaseEntity)obj;
-			logger.info(baseEntity.getCreatedBy().getRef().toString());
-		}*/
-		this.vertexRowMap = verticesRowMap;
-		this.edgeRowMap = edgeRowMap;
-		
-	   graphServiceImpl.deleteAllVertices();
-		
-		logger.info(" Total vertex size current appInfo: " + verticesRowMap.size());
-		totalVertexList = createTotVertexList(verticesRowMap);
-		graphServiceImpl.saveVertices(totalVertexList, null);
-		graphServiceImpl.deleteAllEdges();
-		logger.info(" Total edge size current appInfo  : " + edgeRowMap.size());
-		//totalEdgeList = createTotEdgeList(edgeRowMap);
-		graphServiceImpl.saveEdges(totalEdgeList, null);
-		}
+			String result =null;
+			List<MetaType> metaTypes =  MetaType.getMetaList();
+			for(MetaType mType : metaTypes){
+				try {
+					//Object dao = this.getClass().getMethod(GET + Helper.getDaoClass(mType)).invoke(this);
+					
+					@SuppressWarnings("unchecked")
+					//change method findAllLatestWithoutAppUuid to findAll due to version concept...
+					//List<T> objectList = (List<T>) commonServiceImpl.findAllLatestWithoutAppUuid(mType);
+					List<T> objectList = (List<T>) commonServiceImpl.findAll(mType);
+					if (objectList == null ) {
+						continue;
+					}
+					for (Object obj : objectList) {
+						result = writer.writeValueAsString(obj);
+						graphServiceImpl.createVnE(result, totalVertexList, totalEdgeList, verticesRowMap, edgeRowMap, mType.toString(), null);
+					}
+					logger.info("  Vertex size after "+mType + " : " + objectList.size()+" Total : "+verticesRowMap.size());
+					//logger.info(" Total vertex size after "+mType + " : " + totalVertexList.size());
+				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+						| SecurityException | NullPointerException e) {
+					e.printStackTrace();
+				}
+			}
+			/*List<T> objectList = commonServiceImpl.findAllLatest(MetaType.function);
+			for(Object obj: objectList) {
+				BaseEntity baseEntity = (BaseEntity)obj;
+				logger.info(baseEntity.getCreatedBy().getRef().toString());
+			}*/
+			this.vertexRowMap = verticesRowMap;
+			this.edgeRowMap = edgeRowMap;
+			
+			graphServiceImpl.deleteAllVertices();
+			
+			logger.info(" Total vertex size current appInfo: " + verticesRowMap.size());
+			totalVertexList = createTotVertexList(verticesRowMap);
+			graphServiceImpl.saveVertices(totalVertexList, null);
+			graphServiceImpl.deleteAllEdges();
+			logger.info(" Total edge size current appInfo  : " + edgeRowMap.size());
+			//totalEdgeList = createTotEdgeList(edgeRowMap);
+			graphServiceImpl.saveEdges(totalEdgeList, null);
+
+			Date stopTime = formatter.parse((new Date()).toString());
+			processExec.setStopTime(stopTime);
+			commonServiceImpl.setMetaStatus(processExec, MetaType.processExec, Status.Stage.Completed);
+		}  catch (Exception e) {
+			commonServiceImpl.setMetaStatus(processExec, MetaType.processExec, Status.Stage.Failed);
+			throw new RuntimeException(e);
+		}	
+	}
 	
 	/*public void loadGraph() {
 		

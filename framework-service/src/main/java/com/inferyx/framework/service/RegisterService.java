@@ -69,6 +69,7 @@ import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.domain.DeployExec;
 import com.inferyx.framework.domain.DownloadExec;
 import com.inferyx.framework.domain.Expression;
 import com.inferyx.framework.domain.Filter;
@@ -91,6 +92,7 @@ import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamSet;
 import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.Privilege;
+import com.inferyx.framework.domain.ProcessExec;
 import com.inferyx.framework.domain.Profile;
 import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.ProfileGroup;
@@ -4231,9 +4233,21 @@ public class RegisterService {
 					ingestGroupExec.getCreatedBy().getRef().getName(), ingestGroupExec.getCreatedOn()));
 		}
 
+		int processExecCount = commonServiceImpl.findAllLatest(MetaType.processExec).size();
+		ProcessExec processExec = (ProcessExec) commonServiceImpl.getLatest(MetaType.processExec.toString());
+		if (processExec != null) {
+			countHolder.add(addToCount(MetaType.processExec.toString(), processExecCount,
+					processExec.getCreatedBy().getRef().getName(), processExec.getCreatedOn()));
+		}
+		
+		int deployExecCount = commonServiceImpl.findAllLatest(MetaType.deployExec).size();
+		DeployExec deployExec = (DeployExec) commonServiceImpl.getLatest(MetaType.deployExec.toString());
+		if (deployExec != null) {
+			countHolder.add(addToCount(MetaType.deployExec.toString(), deployExecCount,
+					deployExec.getCreatedBy().getRef().getName(), deployExec.getCreatedOn()));
+		}
+		
 		return countHolder;
-		
-		
 	}
 
 	public long getMetaStatsByType() throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
