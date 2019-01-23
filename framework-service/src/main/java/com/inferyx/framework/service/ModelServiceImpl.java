@@ -90,6 +90,7 @@ import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
+import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
@@ -140,6 +141,7 @@ import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.DatasetOperator;
 import com.inferyx.framework.operator.GenerateDataOperator;
+import com.inferyx.framework.operator.ImputeOperator;
 import com.inferyx.framework.operator.PredictMLOperator;
 import com.inferyx.framework.operator.RuleOperator;
 import com.inferyx.framework.operator.SimulateMLOperator;
@@ -220,6 +222,8 @@ public class ModelServiceImpl {
 	private TrainResultViewServiceImpl trainResultViewServiceImpl;
 	@Resource(name="trainedModelMap")
 	private ConcurrentHashMap<String, Object> trainedModelMap;
+	@Autowired
+	private ImputeOperator imputeOperator;
 	
 	//private ParamMap paramMap;
 
@@ -1546,6 +1550,7 @@ public class ModelServiceImpl {
 		runModelServiceImpl.setAlgoclass(algoClass);
 		runModelServiceImpl.setDl4jExecutor(dl4jExecutor);
 		runModelServiceImpl.setTrainResultViewServiceImpl(trainResultViewServiceImpl);
+		runModelServiceImpl.setImputeOperator(imputeOperator);
 		/*FutureTask<TaskHolder> futureTask = new FutureTask<TaskHolder>(runModelServiceImpl);
 		metaExecutor.execute(futureTask);
 		taskList.add(futureTask);
@@ -2166,10 +2171,21 @@ public class ModelServiceImpl {
 //					rsHolder = exec.replaceNullValByDoubleValFromDF(rsHolder, null, sourceDS, (tableName+"_pred_data"), true, appUuid);
 					fieldArray = getMappedAttrs(predict.getFeatureAttrMap());
 					
+
+					//finding impute values of attribute
+					LinkedHashMap<String, Object> attributeImputeValues = imputeOperator.getAttributeImputeValue(predict.getFeatureAttrMap(), source, model, execParams, runMode);
+					
+					//mapping impute values with its mapped column
+					LinkedHashMap<String, Object> imputeAttributeNameWithValues = getAttributeNamesWithImputeValues(predict.getFeatureAttrMap(), attributeImputeValues);
+					
+					
 					//getting data from source
 					String sourceSql = generateSQLBySource(source, execParams);
 					ResultSetHolder rsHolder = exec.executeAndRegisterByDatasource(sourceSql, (tableName+"_pred_data"), sourceDS, appUuid);
 					
+					//applying imputation valued per column to data
+					rsHolder = exec.applyAttrImputeValuesToData(rsHolder, imputeAttributeNameWithValues, true, (tableName+"_pred_data"));
+
 					//getting data having only feature columns
 					String mappedFeatureAttrSql = generateFeatureSQLByTempTable(predict.getFeatureAttrMap(), (tableName+"_pred_data"), null, (tableName+"_pred_mapped_data"));
 					rsHolder = sparkExecutor.readTempTable(mappedFeatureAttrSql, appUuid);
@@ -4024,5 +4040,42 @@ public class ModelServiceImpl {
 				, dependsOnMI.getVersion()
 				, MetaType.train.toString()
 				, "N");
+	}
+	
+
+	public LinkedHashMap<String, Object> getAttributeNamesWithImputeValues(List<FeatureAttrMap> featureAttrMapList, LinkedHashMap<String, Object> attributeImputeValues) throws JsonProcessingException {
+		LinkedHashMap<String, Object> imputeAttributeNameWithValues = new LinkedHashMap<>();
+		Object object = null;
+		String objectUuid = null;
+		for(FeatureAttrMap featureAttrMap : featureAttrMapList) {
+			MetaIdentifier attributeMI = featureAttrMap.getAttribute().getRef();
+			for(String imputAttrValKey : attributeImputeValues.keySet()) {
+				if(featureAttrMap.getFeatureMapId().equalsIgnoreCase(imputAttrValKey)) {
+					if(object == null 
+							|| (object != null && objectUuid != null && !((BaseEntity)object).getUuid().equalsIgnoreCase(objectUuid))) {
+						object = commonServiceImpl.getOneByUuidAndVersion(attributeMI.getUuid(), attributeMI.getVersion(), attributeMI.getType().toString(), "N");
+						objectUuid = ((BaseEntity)object).getUuid();
+					} 
+					String attributeName = getAttributeNameByObject(object, Integer.parseInt(featureAttrMap.getAttribute().getAttrId()));
+					imputeAttributeNameWithValues.put(attributeName, attributeImputeValues.get(imputAttrValKey));
+					break;
+				}
+			}
+		}
+		return imputeAttributeNameWithValues;
+	}
+	
+	public String getAttributeNameByObject(Object object, Integer attributeId) throws NullPointerException {
+		if(object instanceof Datapod) {
+			Datapod datapod = (Datapod)object;
+			return datapod.getAttributeName(attributeId);			
+		} else if(object instanceof DataSet) {
+			DataSet dataSet = (DataSet)object;
+			return dataSet.getAttributeName(attributeId);										
+		} else if(object instanceof Rule) {
+			Rule rule = (Rule)object;
+			return rule.getAttributeName(attributeId);					
+		}
+		return null;
 	}
 }

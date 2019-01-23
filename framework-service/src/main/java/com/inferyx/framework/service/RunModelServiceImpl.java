@@ -16,6 +16,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,16 +33,21 @@ import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.ml.tuning.CrossValidatorModel;
 import org.apache.spark.sql.SaveMode;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.CustomLogger;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.controller.TrainResultViewServiceImpl;
 import com.inferyx.framework.domain.Algorithm;
+import com.inferyx.framework.domain.BaseEntity;
+import com.inferyx.framework.domain.DataSet;
+import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.FeatureAttrMap;
 import com.inferyx.framework.domain.FrameworkThreadLocal;
+import com.inferyx.framework.domain.Key;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -50,6 +56,7 @@ import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ParamSetHolder;
 import com.inferyx.framework.domain.ResultSetHolder;
+import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.SessionContext;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Train;
@@ -61,6 +68,7 @@ import com.inferyx.framework.executor.DL4JExecutor;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
+import com.inferyx.framework.operator.ImputeOperator;
 
 public class RunModelServiceImpl implements Callable<TaskHolder> {
 
@@ -95,7 +103,26 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 	private MetaType execType;
 	private MetadataServiceImpl metadataServiceImpl;
 	private TrainResultViewServiceImpl trainResultViewServiceImpl;
+	private ImputeOperator imputeOperator;
 	
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the imputeOperator
+	 */
+	public ImputeOperator getImputeOperator() {
+		return imputeOperator;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param imputeOperator the imputeOperator to set
+	 */
+	public void setImputeOperator(ImputeOperator imputeOperator) {
+		this.imputeOperator = imputeOperator;
+	}
 
 	/**
 	 * @Ganesh
@@ -761,11 +788,19 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 //				String sql = modelServiceImpl.generateSQLBySource(source, execParams);
 //				exec.executeAndRegister(sql, (tableName+"_train_data"), appUuid);
 				
+				//finding impute values of attribute
+				LinkedHashMap<String, Object> attributeImputeValues = imputeOperator.getAttributeImputeValue(train.getFeatureAttrMap(), source, model, execParams, runMode);
+				
+				//mapping impute values with its mapped column
+				LinkedHashMap<String, Object> imputeAttributeNameWithValues = modelServiceImpl.getAttributeNamesWithImputeValues(train.getFeatureAttrMap(), attributeImputeValues);
+				
 				String sourceSql = modelServiceImpl.generateSQLBySource(source, execParams);
 				
 				ResultSetHolder sourceRsHolder = exec.executeAndRegisterByDatasource(sourceSql, (tableName+"_train_source_data"), trainSrcDatasource, appUuid);
 				sourceRsHolder.setTableName((tableName+"_train_source_data"));
-				
+
+				//applying imputation valued per column to data
+				sourceRsHolder = exec.applyAttrImputeValuesToData(sourceRsHolder, imputeAttributeNameWithValues, true, (tableName+"_train_source_data"));
 //				String featureMappedSQL = modelServiceImpl.generateFeatureSQLBySource(train.getFeatureAttrMap(), source, execParams, fieldArray, label, (tableName+"_train_source_data"));
 //				ResultSetHolder sourceRsHolder = exec.executeAndRegisterByDatasource(featureMappedSQL, (tableName+"_train_source_data"), trainSrcDatasource, appUuid);
 //				sourceRsHolder.setTableName((tableName+"_train_source_data"));

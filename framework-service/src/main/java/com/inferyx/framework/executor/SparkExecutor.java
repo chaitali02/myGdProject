@@ -126,6 +126,7 @@ import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Feature;
+import com.inferyx.framework.domain.FeatureAttrMap;
 import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.Load;
@@ -4205,5 +4206,29 @@ public class SparkExecutor<T> implements IExecutor {
 		}
 
 		return data;
+	}	
+
+	@Override
+	public Object getImputeValue(ResultSetHolder rshHolder) throws Exception{
+		rshHolder.getDataFrame().show(false);
+		return rshHolder.getDataFrame().first().get(0);
+	}
+
+	@Override
+	public ResultSetHolder applyAttrImputeValuesToData(ResultSetHolder rsHolder, LinkedHashMap<String, Object> imputeAttributeNameWithValues, boolean registerTempTable, String tempTableName) throws IOException {
+		Dataset<Row> df = rsHolder.getDataFrame();	
+		
+		df.show(Integer.parseInt(""+df.count()), false);
+		df = df.na().fill(imputeAttributeNameWithValues);
+		df.show(Integer.parseInt(""+df.count()), false);
+		
+		if(registerTempTable) {
+			IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+			ConnectionHolder conHolder = connector.getConnection();
+			SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
+			sparkSession.sqlContext().registerDataFrameAsTable(df, tempTableName);
+		}
+		rsHolder.setDataFrame(df);
+		return rsHolder;
 	}
 }
