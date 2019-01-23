@@ -427,7 +427,7 @@ public class DataStoreServiceImpl {
 		}
 		String datasource = dp.getDatasource().getRef().getUuid();
 		//Datasource ds = datasourceServiceImpl.findLatestByUuid(datasource);
-				Datasource ds = (Datasource) commonServiceImpl.getLatestByUuid(datasource, MetaType.datasource.toString());
+		Datasource ds = (Datasource) commonServiceImpl.getLatestByUuid(datasource, MetaType.datasource.toString());
 		String dsType = ds.getType();
 		if (/*!engine.getExecEngine().equalsIgnoreCase("livy-spark")
 				&& !dsType.equalsIgnoreCase(ExecContext.spark.toString()) 

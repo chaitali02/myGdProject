@@ -832,4 +832,18 @@ public class HiveExecutor implements IExecutor{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public Object getImputeValue(ResultSetHolder rshHolder) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResultSetHolder applyAttrImputeValuesToData(ResultSetHolder rsHolder,
+			LinkedHashMap<String, Object> imputeAttributeNameWithValues, boolean registerTempTable,
+			String tempTableName) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

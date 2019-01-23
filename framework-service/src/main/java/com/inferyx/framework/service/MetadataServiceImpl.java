@@ -96,6 +96,7 @@ import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ParamSet;
 import com.inferyx.framework.domain.ParamSetHolder;
 import com.inferyx.framework.domain.PredictExec;
+import com.inferyx.framework.domain.ProcessExec;
 import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.ProfileGroupExec;
 import com.inferyx.framework.domain.ReconExec;
@@ -540,6 +541,11 @@ public class MetadataServiceImpl {
 			else if(type.equalsIgnoreCase(MetaType.uploadExec.toString())){
 				UploadExec execObject = new UploadExec();
 				execObject = (UploadExec) metaObject;
+				execStatus = (List<Status>) execObject.getStatusList();	
+			} 
+			else if(type.equalsIgnoreCase(MetaType.processExec.toString())){
+				ProcessExec execObject = new ProcessExec();
+				execObject = (ProcessExec) metaObject;
 				execStatus = (List<Status>) execObject.getStatusList();	
 			} 
 				

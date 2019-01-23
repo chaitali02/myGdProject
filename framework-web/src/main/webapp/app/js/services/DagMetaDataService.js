@@ -2103,7 +2103,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       'processexec':{
         name : 'process',
         caption:'processexec',
-        execType:'processexec',
+        execType:'processExec',
         metaType:'processexec',
         color : '#FF3AF5',
         parentIconCaption:'',

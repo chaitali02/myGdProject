@@ -52,6 +52,7 @@ import com.inferyx.framework.domain.Session;
 import com.inferyx.framework.domain.SessionContext;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.User;
+import com.inferyx.framework.enums.ApplicationType;
 import com.inferyx.framework.register.GraphRegister;
 
 
@@ -531,14 +532,17 @@ public class SecurityServiceImpl  implements Serializable{
 		sessionContext.setPrivInfo(privInfo);
 	}
 	
-	public List<AppRole> resolveAppVsRole(ConcurrentHashMap<String, List<MetaIdentifierHolder>> rawList, List<MetaIdentifierHolder> aholderList, MetaIdentifierHolder defaultAppId){
+	public List<AppRole> resolveAppVsRole(ConcurrentHashMap<String, List<MetaIdentifierHolder>> rawList, List<MetaIdentifierHolder> aholderList, MetaIdentifierHolder defaultAppId) throws JsonProcessingException{
 		List<AppRole> resolvedAppRoleList = new ArrayList<>();
 		MetaIdentifierHolder appInfo = new MetaIdentifierHolder();
+		ApplicationType applicationType = null;
 		for(Entry<String, List<MetaIdentifierHolder>> entry : rawList.entrySet()) {
 			boolean isDefault = false;
 			for(MetaIdentifierHolder ref : aholderList) {
 				if(ref.getRef().getUuid().equalsIgnoreCase(entry.getKey())) {
 					appInfo = ref;
+					Application application=(Application)commonServiceImpl.getLatestByUuid(appInfo.getRef().getUuid(),appInfo.getRef().getType().toString(),"N");
+					applicationType=application.getApplicationType();
 					if(ref.getRef().getUuid().equalsIgnoreCase(defaultAppId.getRef().getUuid())) {
 						isDefault = true;
 					}
@@ -546,9 +550,9 @@ public class SecurityServiceImpl  implements Serializable{
 			}
 			AppRole appRole = null;
 			if(isDefault) {
-				appRole = new AppRole(appInfo, entry.getValue(), defaultAppId);
+				appRole = new AppRole(appInfo, entry.getValue(), defaultAppId,applicationType);
 			} else {
-				appRole = new AppRole(appInfo, entry.getValue(), null);
+				appRole = new AppRole(appInfo, entry.getValue(), null,applicationType);
 			}			
 			resolvedAppRoleList.add(appRole);
 		}

@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -814,4 +815,27 @@ public interface IExecutor {
 	Map<String, Object> summary(Object trndModel, String trainClass, List<String> summaryMethods, String clientContext)
 			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, ClassNotFoundException;
+
+	/**
+	 * @Ganesh
+	 *  
+	 * @param rshHolder
+	 * @return Object
+	 * @throws Exception
+	 */
+	Object getImputeValue(ResultSetHolder rshHolder) throws Exception;
+
+	/**
+	 * @Ganesh
+	 *  
+	 * @param rshHolder
+	 * @param imputeAttributeNameWithValues
+	 * @param registerTempTable
+	 * @param tempTableName
+	 * @return ResultSetHolder
+	 * @throws IOException
+	 */
+	ResultSetHolder applyAttrImputeValuesToData(ResultSetHolder rsHolder,
+			LinkedHashMap<String, Object> imputeAttributeNameWithValues, boolean registerTempTable,
+			String tempTableName) throws IOException;
 }
