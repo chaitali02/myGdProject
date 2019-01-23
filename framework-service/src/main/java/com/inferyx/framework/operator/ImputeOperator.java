@@ -3,14 +3,20 @@
  */
 package com.inferyx.framework.operator;
 
+import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.apache.spark.sql.SaveMode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.BaseExec;
@@ -18,15 +24,19 @@ import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.FeatureAttrMap;
 import com.inferyx.framework.domain.FeatureRefHolder;
 import com.inferyx.framework.domain.Function;
+import com.inferyx.framework.domain.Key;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.ResultSetHolder;
+import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
@@ -41,6 +51,7 @@ import com.inferyx.framework.service.ParamSetServiceImpl;
  * @author joy
  *
  */
+@Component
 public class ImputeOperator implements IOperator {
 	
 	private static String SELECT = " SELECT ";
@@ -65,6 +76,8 @@ public class ImputeOperator implements IOperator {
 	private Helper helper;
 	@Autowired
 	Engine engine;
+	@Autowired
+	private RuleOperator ruleOperator;
 	
 	static final Logger logger = Logger.getLogger(GenerateDataOperator.class);
 
@@ -133,7 +146,7 @@ public class ImputeOperator implements IOperator {
 		Map<String, String> otherParams = execParams.getOtherParams();
 
 		ParamListHolder locationInfo = paramSetServiceImpl.getParamByName(execParams, "saveLocation");
-		List<ParamListHolder> paramListInfo = execParams.getParamListInfo();
+//		List<ParamListHolder> paramListInfo = execParams.getParamListInfo();
 		
 		MetaIdentifier locDpIdentifier = locationInfo.getParamValue().getRef();
 		Datapod locationDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(locDpIdentifier.getUuid(), locDpIdentifier.getVersion(), locDpIdentifier.getType().toString());
@@ -206,4 +219,70 @@ public class ImputeOperator implements IOperator {
 		return otherParams;
 	}
 
+	public LinkedHashMap<String, Object> getAttributeImputeValue(List<FeatureAttrMap> featureAttrMapList, Object sourceObj, Model model, ExecParams execParams, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		LinkedHashMap<String, Object> attributeImputeValues = new LinkedHashMap<>();
+		
+		Datasource appDs = commonServiceImpl.getDatasourceByApp();
+		String appUuid = commonServiceImpl.getApp().getUuid();
+		
+		for(FeatureAttrMap featureAttrMap : featureAttrMapList) {
+			for(Feature feature : model.getFeatures()) {
+				try {
+					if(feature.getFeatureId().equalsIgnoreCase(featureAttrMap.getFeatureMapId())) {
+						
+						if(feature.getImputeMethod() != null 
+								&& feature.getImputeMethod().getRef().getType().equals(MetaType.simple)) {
+							attributeImputeValues.put(feature.getFeatureId(), feature.getImputeMethod().getValue());
+							logger.info("impute value for attribute "+feature.getName()+": "+feature.getImputeMethod().getValue());
+						} else if(feature.getImputeMethod() != null 
+								&& feature.getImputeMethod().getRef().getType().equals(MetaType.function)) {
+							
+							MetaIdentifier functionMI = feature.getImputeMethod().getRef();
+							Function function = (Function) commonServiceImpl.getOneByUuidAndVersion(functionMI.getUuid(), functionMI.getVersion(), functionMI.getType().toString(), "N");
+							Datasource sourceDs = commonServiceImpl.getDatasourceByObject(sourceObj);
+							String resolvedFunction = functionOperator.generateSql(function, null, execParams != null ? execParams.getOtherParams() : null, sourceDs);
+							
+							IExecutor exec = execFactory.getExecutor(appDs.getType());
+							String attrSql = null;
+							String attrName = null;
+							if(sourceObj instanceof Datapod) {
+								Datapod datapod = (Datapod)sourceObj;
+								attrName = datapod.getAttributeName(Integer.parseInt(featureAttrMap.getAttribute().getAttrId()));
+								dataStoreServiceImpl.setRunMode(runMode);
+								String tableName = dataStoreServiceImpl.getTableNameByDatapod(new Key(datapod.getUuid(), datapod.getVersion()), runMode);
+								String generatedFunction = generateFunction(resolvedFunction, attrName);
+								attrSql = "SELECT "+generatedFunction+" FROM "+tableName+" "+datapod.getName();
+							} else if(sourceObj instanceof DataSet) {
+								DataSet dataSet = (DataSet)sourceObj;
+								attrName = dataSet.getAttributeName(Integer.parseInt(featureAttrMap.getAttribute().getAttrId()));
+								String generatedFunction = generateFunction(resolvedFunction, attrName);
+								String innerSql = datasetOperator.generateSql(dataSet, null, execParams != null ? execParams.getOtherParams() : null, new HashSet<>(), execParams, runMode);
+								attrSql = "SELECT "+generatedFunction+" FROM ("+innerSql+") "+dataSet.getName();								
+							} else if(sourceObj instanceof Rule) {
+								Rule rule = (Rule)sourceObj;
+								attrName = rule.getAttributeName(Integer.parseInt(featureAttrMap.getAttribute().getAttrId()));
+								String generatedFunction = generateFunction(resolvedFunction, attrName);
+								String innerSql = ruleOperator.generateSql(rule, null, execParams != null ? execParams.getOtherParams() : null, new HashSet<>(), execParams, runMode);
+								attrSql = "SELECT "+generatedFunction+" FROM ("+innerSql+") "+rule.getName();								
+							}
+							
+							ResultSetHolder rsHolder = exec.executeSqlByDatasource(attrSql, sourceDs, appUuid);
+							Object attrValue = exec.getImputeValue(rsHolder);
+							attributeImputeValues.put(feature.getFeatureId(), attrValue);
+							logger.info("impute value for attribute "+attrName+": "+attrValue);						
+						}
+						break;
+					}
+				} catch (Exception e) {
+					// TODO: handle exception
+					e.printStackTrace();
+				}				
+			} 
+		}
+		return attributeImputeValues;
+	}
+	
+	public String generateFunction(String resolvedFunction, String attributeName) {
+		return resolvedFunction.endsWith("(") ? resolvedFunction.concat(attributeName).concat(")") : resolvedFunction.concat("(").concat(attributeName).concat(")");
+	}
 }

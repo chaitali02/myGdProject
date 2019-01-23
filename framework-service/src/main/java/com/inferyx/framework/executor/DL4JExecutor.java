@@ -11,6 +11,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -919,6 +920,20 @@ public class DL4JExecutor implements IExecutor {
 	public Map<String, Object> summary(Object trndModel, String trainClass, List<String> summaryMethods, String clientContext)
 			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, ClassNotFoundException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object getImputeValue(ResultSetHolder rshHolder) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResultSetHolder applyAttrImputeValuesToData(ResultSetHolder rsHolder,
+			LinkedHashMap<String, Object> imputeAttributeNameWithValues, boolean registerTempTable,
+			String tempTableName) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}

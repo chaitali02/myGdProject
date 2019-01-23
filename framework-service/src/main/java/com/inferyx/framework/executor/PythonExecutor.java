@@ -24,6 +24,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -669,6 +670,20 @@ public class PythonExecutor implements IExecutor {
 		modelPath = modelPath  + "/" + "model.spec";
 		summary = new ObjectMapper().readValue(new File(modelPath), HashMap.class);
 		return summary;
+	}
+
+	@Override
+	public Object getImputeValue(ResultSetHolder rshHolder) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResultSetHolder applyAttrImputeValuesToData(ResultSetHolder rsHolder,
+			LinkedHashMap<String, Object> imputeAttributeNameWithValues, boolean registerTempTable,
+			String tempTableName) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
