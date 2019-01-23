@@ -40,6 +40,7 @@ import com.inferyx.framework.controller.TrainResultViewServiceImpl;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.FeatureAttrMap;
 import com.inferyx.framework.domain.FrameworkThreadLocal;
 import com.inferyx.framework.domain.MetaIdentifier;
@@ -749,7 +750,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 					trainingSetPath = filePathUrl.endsWith("/") ? filePathUrl.concat("train_set") : filePathUrl.concat("/").concat("train_set");
 				}
 				
-				Map<String, EncodingType> encodingDetails = getEncodingDetailsByFeatureAttrMap(train.getFeatureAttrMap());
+				Map<String, EncodingType> encodingDetails = getEncodingDetailsByFeatureAttrMap(train.getFeatureAttrMap(), model.getFeatures());
 				
 				trainOtherParam.put("confusionMatrixTableName", trainName+"confusionMatrix");
 				exec = execFactory.getExecutor(datasource.getType());
@@ -1025,11 +1026,17 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 		}		
 	}
 	
-	private Map<String, EncodingType> getEncodingDetailsByFeatureAttrMap(List<FeatureAttrMap> featureAttrMap) {
+	private Map<String, EncodingType> getEncodingDetailsByFeatureAttrMap(List<FeatureAttrMap> featureAttrMap, List<Feature> features) {
 		Map<String, EncodingType> encodingDetails = new LinkedHashMap<>();
+		Map<String, Feature> featureModelMap = new HashMap<>();
+		for (Feature feature : features) {
+			featureModelMap.put(feature.getFeatureId(), feature);
+		}
 		for(FeatureAttrMap attrMap : featureAttrMap) {
-			if(attrMap.getEncodingType() != null) {
-				encodingDetails.put(attrMap.getFeature().getFeatureName(), attrMap.getEncodingType());
+			EncodingType encodingType = (featureModelMap.containsKey(attrMap.getFeature().getFeatureId()))?
+					featureModelMap.get(attrMap.getFeature().getFeatureId()).getEncodingType():null;
+			if (encodingType != null) {
+				encodingDetails.put(attrMap.getFeature().getFeatureName(), encodingType);
 			}
 		}
 		if(!encodingDetails.isEmpty()) {
