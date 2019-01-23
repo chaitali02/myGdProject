@@ -18,6 +18,10 @@ import { SESSION_STORAGE, WebStorageService } from 'angular-webstorage-service'
   encapsulation: ViewEncapsulation.None
 })
 export class DatasetComponent implements OnInit {
+  dropIndexSourceAttr: any;
+  dragIndexSourceAttr: any;
+  dropIndex: any;
+  dragIndex: any;
   isHomeEnable: boolean;
   showGraph: boolean;
   duplicateString: any;
@@ -91,8 +95,8 @@ export class DatasetComponent implements OnInit {
   VersionList: SelectItem[] = [];
   isSubmitEnable1: any;
   baseUrl: any;
-  // myNewForm: any
-  @ViewChild('myNewForm') public myNewForm: NgForm;
+  // // myNewForm: any
+  // @ViewChild('myNewForm') public myNewForm: NgForm;
   // private myNewForm: any;
   constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _datasetService: DatasetService, private activeroute: ActivatedRoute, @Inject(SESSION_STORAGE) private storage: WebStorageService) {
     this.baseUrl = config.getBaseUrl();
@@ -1293,7 +1297,6 @@ export class DatasetComponent implements OnInit {
         }
         filterInfoArray[i] = filterInfo;
       }
-
       datasetJson["filterInfo"] = filterInfoArray;
       console.log(JSON.stringify(filterInfoArray));
     }
@@ -1487,6 +1490,7 @@ export class DatasetComponent implements OnInit {
       //if(this.dataset.attributeTableArray[ind].dupIndex){
       var indx = this.dataset.attributeTableArray[ind].dupIndex;
       this.dataset.attributeTableArray[indx].dup = false;
+      //}
     }
     for (var j = 0; j < this.dataset.attributeTableArray.length; j++) {
       var cont = 0
@@ -1500,6 +1504,82 @@ export class DatasetComponent implements OnInit {
         this.chkDuplicate = true;
       }
     }
+  }
+
+  onAttrRowDown(index){
+		var rowTempIndex=this.dataset.filterTableArray[index];
+    var rowTempIndexPlus=this.dataset.filterTableArray[index+1];
+		this.dataset.filterTableArray[index]=rowTempIndexPlus;
+    this.dataset.filterTableArray[index+1]=rowTempIndex;
+    this.isSubmitEnable1=true;
+	}
+	
+	onAttrRowUp(index){
+		var rowTempIndex=this.dataset.filterTableArray[index];
+    var rowTempIndexMines=this.dataset.filterTableArray[index-1];
+		this.dataset.filterTableArray[index]=rowTempIndexMines;
+    this.dataset.filterTableArray[index-1]=rowTempIndex;
+    this.isSubmitEnable1=true;
+  }
+
+  dragStart(event,data){
+    console.log(event)
+    console.log(data)
+    this.dragIndex=data;
+  }
+
+  dragEnd(event){
+    console.log(event);
+  }
+
+  drop(event,data){
+    if(this.mode=='false'){
+      this.dropIndex=data;
+      // console.log(event)
+      //  console.log(data)
+      var item=this.dataset.filterTableArray[this.dragIndex]
+      this.dataset.filterTableArray.splice(this.dragIndex,1)
+      this.dataset.filterTableArray.splice(this.dropIndex,0,item)
+      this.isSubmitEnable1=true;
+    }    
+  }
+
+  onAttrRowDownSourceAttr(index){
+		var rowTempIndex=this.dataset.attributeTableArray[index];
+    var rowTempIndexPlus=this.dataset.attributeTableArray[index+1];
+		this.dataset.attributeTableArray[index]=rowTempIndexPlus;
+    this.dataset.attributeTableArray[index+1]=rowTempIndex;
+    this.isSubmitEnable1=true;
+	}
+	
+	onAttrRowUpSourceAttr(index){
+		var rowTempIndex=this.dataset.attributeTableArray[index];
+    var rowTempIndexMines=this.dataset.attributeTableArray[index-1];
+		this.dataset.attributeTableArray[index]=rowTempIndexMines;
+    this.dataset.attributeTableArray[index-1]=rowTempIndex;
+    this.isSubmitEnable1=true;
+  }
+
+  dragStartSourceAttr(event,data){
+    console.log(event)
+    console.log(data)
+    this.dragIndexSourceAttr=data;
+  }
+
+  dragEndSourceAttr(event){
+    console.log(event);
+  }
+
+  dropSourceAttr(event,data){
+    if(this.mode=='false'){
+      this.dropIndexSourceAttr=data;
+      // console.log(event)
+      //  console.log(data)
+      var item=this.dataset.attributeTableArray[this.dragIndexSourceAttr]
+      this.dataset.attributeTableArray.splice(this.dragIndexSourceAttr,1)
+      this.dataset.attributeTableArray.splice(this.dropIndexSourceAttr,0,item)
+      this.isSubmitEnable1=true;
+    }    
   }
 }
 
