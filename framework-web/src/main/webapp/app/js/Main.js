@@ -618,7 +618,7 @@ InferyxApp.controller('AppRoleController', function ($scope,$sessionStorage,$roo
     var onAppSuccess = function (response) {
         $scope.AppData = response
        
-            $scope.RoleData = response[0].roleInfo
+            $scope.RoleData = response[0].roleInfo;
             $scope.selectedRole = response[0].roleInfo[0]
             $scope.selectedApp = response[0];
             
@@ -626,6 +626,8 @@ InferyxApp.controller('AppRoleController', function ($scope,$sessionStorage,$roo
                 if(response[i].defaultAppId !=null){
                     console.log("Y"+response[i].appId.ref.uuid)
                     $scope.selectedApp = response[i];
+                    $scope.selectedRole = $scope.selectedApp.roleInfo[0];
+                    $scope.RoleData = response[i].roleInfo;
                     break;
                 }
             }
@@ -637,6 +639,7 @@ InferyxApp.controller('AppRoleController', function ($scope,$sessionStorage,$roo
             $scope.selectRoleStatus = true;
             localStorage.role = $scope.selectedRole.ref.name;
             $rootScope.role = localStorage.role;
+            $rootScope.appType=$scope.selectedApp.applicationType;
             AppRoleService.getTZ().then(function (responseTz) { onSuccessgetTZ(responseTz.data) });
             var onSuccessgetTZ = function (responseTz) {
                 localStorage.serverTz = responseTz;
@@ -647,14 +650,15 @@ InferyxApp.controller('AppRoleController', function ($scope,$sessionStorage,$roo
    
     $scope.getselectApp = function () {
         if ($scope.selectedApp != null) {
-            localStorage.appName = $scope.selectedApp.appId.ref.name
-            $rootScope.appUuid = $scope.selectedApp.appId.ref.uuid
+            localStorage.appName = $scope.selectedApp.appId.ref.name;
+            $rootScope.appUuid = $scope.selectedApp.appId.ref.uuid;
             $scope.selectAppStatus = true;
             $scope.selectRoleStatus = true;
             $scope.RoleData = $scope.selectedApp.roleInfo
             $scope.selectedRole = $scope.selectedApp.roleInfo[0]
             localStorage.role = $scope.selectedRole.ref.name
             $rootScope.role = localStorage.role;
+            $rootScope.appType=$scope.selectedApp.applicationType;
         }
         else {
             $scope.selectAppStatus = false;
