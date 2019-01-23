@@ -687,7 +687,7 @@ export class AppMetadata {
 
       'dataset': {
         name: 'dataset',
-        caption: 'Data Set',
+        caption: 'Dataset',
         execType: '',
         metaType: 'dataset',
         color: '#0d01b5',
@@ -1762,20 +1762,6 @@ export class AppMetadata {
         moduleCaption: 'BatchScheduler',
         class: 'fa fa-tasks'
       },
-      // 'ModelResult': {
-      //   name: 'model',
-      //   caption: 'ModelResult',
-      //   execType: 'modelExec',
-      //   metaType: 'modelExec',
-      //   color: '#EB54C3',
-      //   allowInMenu: false,
-      //   listState: 'jobmonitoringlist',
-      //   detailState: 'modelExec',
-      //   resultState: 'modelexec',
-      //   moduleState: 'dataScience',
-      //   moduleCaption: 'Data Science',
-      //   class: 'fa fa-flask'
-      // },
       'mapexec': {
         name: 'mapexec',
         caption: 'Map Exec',
@@ -1790,19 +1776,6 @@ export class AppMetadata {
         moduleCaption: 'Data Preparation',
         class: 'fa fa-tasks'
       },
-      // 'mapexec': {
-      //   name: 'map',
-      //   caption: 'map Exec',
-      //   execType: 'mapExec',
-      //   metaType: 'map',
-      //   color: '#EB54C3',
-      //   allowInMenu: false,
-      //   listState: 'jobmonitoringlist',
-      //   detailState: 'mapExec',
-      //   moduleState: 'JobMonitoring',
-      //   moduleCaption: 'Job Monitoring',
-      //   class: 'fa fa-link'
-      // },
       'batchExec': {
         name: 'batch',
         caption: 'Batch Exec',
@@ -1886,7 +1859,24 @@ export class AppMetadata {
         childMenu: [],
         allowInChildMenu: false,
         class: 'fa fa-tasks'
-      }
+      },
+      'reportExec': {
+        name: 'report',
+        caption: 'Report Exec',
+        execType: 'reportexec',
+        metaType: 'reportexec',
+        color: '#8E44AD',
+        iconCaption: '',
+        allowInMenu: false,
+        listState: 'jobmonitoringlist',
+        detailState: 'reportExec',
+        moduleState: 'JobMonitoring',
+        resultState: 'reportExec',
+        moduleCaption: 'Data Visualization',
+        childMenu: [],
+        allowInChildMenu: false,
+        class: 'fa fa-flask'
+      },
     }
 
     this.obj.statusDefs = {
