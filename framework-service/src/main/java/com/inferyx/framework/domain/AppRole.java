@@ -12,8 +12,11 @@ package com.inferyx.framework.domain;
 
 import java.util.List;
 
+import com.inferyx.framework.enums.ApplicationType;
+
 public class AppRole {
 	MetaIdentifierHolder defaultAppId ;
+	private ApplicationType applicationType;
 	MetaIdentifierHolder appId;
 	List<MetaIdentifierHolder> roleInfo;
 	
@@ -34,11 +37,12 @@ public class AppRole {
 		this.appId = appId;
 		this.roleInfo = roleInfo;
 	}
-	public AppRole(MetaIdentifierHolder appId, List<MetaIdentifierHolder> roleInfo, MetaIdentifierHolder defaultAppId ) {
+	public AppRole(MetaIdentifierHolder appId, List<MetaIdentifierHolder> roleInfo, MetaIdentifierHolder defaultAppId,ApplicationType applicationType ) {
 		super();
 		this.appId = appId;
 		this.roleInfo = roleInfo;
 		this.defaultAppId=defaultAppId;
+		this.applicationType=applicationType;
 	}
 
 	public MetaIdentifierHolder getAppId() {
@@ -55,6 +59,14 @@ public class AppRole {
 
 	public void setRoleInfo(List<MetaIdentifierHolder> roleInfo) {
 		this.roleInfo = roleInfo;
+	}
+	
+	public ApplicationType getApplicationType() {
+		return this.applicationType;
+	}
+
+	public void setApplicationType(ApplicationType applicationType) {
+		this.applicationType = applicationType;
 	}
 
 	@Override
