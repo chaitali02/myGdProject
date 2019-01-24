@@ -11,7 +11,9 @@ import { DatePipe } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
 import { forkJoin } from "rxjs/observable/forkJoin";
 import { SharedService } from '../shared/shared.service';
-import { _ } from 'underscore/underscore.js'
+import { _ } from 'underscore/underscore.js';
+// import * as saveSvgAsPng from '../../../assets/c3/c3-core/saveSvgAsPng.js';
+
 @Component({
   selector: 'app-login',
   templateUrl: './system-monitoring.component.html',
@@ -57,6 +59,10 @@ export class SystemMonitoringComponent implements OnInit {
   items: any
   moduleType: any = "session";
   cols: any
+
+  sdatacol: any;
+  saveSvgAsPng: any;
+
   allStatus = [
     {
       "caption": "In Progress",
@@ -115,17 +121,21 @@ export class SystemMonitoringComponent implements OnInit {
       "value": "expired"
     }
   ];
-  tabs = [
+
+  tabs: any[] = [
     { caption: 'Sessions', type: 'session' },
     { caption: 'Jobs', type: 'jobs' },
     { caption: 'Threads', type: 'threads' }
   ];
 
+  showDetailTable: boolean = true;
+
   constructor(private http: Http, public _sharedService: SharedService, public datePipe: DatePipe, public router: Router, public metaconfig: AppMetadata, private activatedRoute: ActivatedRoute, private _commonService: CommonService, private systemMonitoringService: SystemMonitoringService, private activeroute: ActivatedRoute) {
-    this.breadcrumbDataFrom = [{
-      "caption": "System Monitoring",
-      "routeurl": null
-    }
+    this.breadcrumbDataFrom = [
+      {
+        "caption": "System Monitoring",
+        "routeurl": null
+      }
     ]
 
     this.clear();
@@ -138,13 +148,6 @@ export class SystemMonitoringComponent implements OnInit {
     })
 
     this.allAppliName = [];
-    //this.gridTitle=metaconfig.getMetadataDefs(this.type)['caption']
-    //this.routerUrl=metaconfig.getMetadataDefs(this.type)['detailState']
-
-    // if(this.type.indexOf("exec") !=-1){
-    //     temp=this.type.split("exec")[0];
-    //     this.selectedType=temp;
-    // }
   }
   clear() {
     this.active = "";
@@ -194,11 +197,12 @@ export class SystemMonitoringComponent implements OnInit {
   onTabChange(event) {
 
     if (event.index == "0") {
+
+      console.log("session");
+      this.showDetailTable = true;
+
       this.clear()
       this.moduleType = "session"
-      if (this.showDiv) {
-        this.showDiv = !this.showDiv
-      }
       this.items = [
         {
           label: 'View', icon: 'fa fa-eye', command: (onclick) => {
@@ -207,22 +211,23 @@ export class SystemMonitoringComponent implements OnInit {
         },
         {
           label: 'Kill', icon: 'fa fa-pencil-square-o', command: (onclick) => {
-            //this.edit(this.rowUUid,this.rowVersion)
           }
         }]
       this.cols = [
-        //{field: 'uuid', header: 'UUID'},
         { field: 'appName', header: 'Application' },
-        //{field: 'version', header: 'Version'},
         { field: 'createdBy.ref.name', header: 'User' },
         { field: 'createdOn', header: 'Created On' },
         { field: 'status', header: 'Status' },
       ];
       this.getActiveSession()
-      console.log(this.showDiv)
       this.gridTitle = "Sessions Details"
     }
+
     else if (event.index == "1") {
+
+      console.log("jobs");
+      this.showDetailTable = true;
+
       this.clear()
       this.moduleType = "jobs";
       this.status = "InProgress"
@@ -232,29 +237,25 @@ export class SystemMonitoringComponent implements OnInit {
             this.viewPage(this.rowUuid, this.rowVersion)
           }
         }]
-      if (this.showDiv) {
-        this.showDiv = !this.showDiv
-      }
       this.cols = [
         { field: 'appName', header: 'Application' },
         { field: 'type', header: 'Meta' },
         { field: 'name', header: 'Name' },
-        //{field: 'version', header: 'Version'},
         { field: 'createdBy.ref.name', header: 'Created By' },
         { field: 'createdOn', header: 'Created On' },
         { field: 'status', header: 'Status' },
 
       ];
-      console.log(this.showDiv)
       this.getActiveJobs();
       this.gridTitle = "Jobs Details"
     }
 
     else {
+
+      this.showDetailTable = true;
+      console.log("threads");
       this.clear()
       this.moduleType = "threads";
-      this.showDiv = false
-      //this.showDiv=!this.showDiv
       this.items = [
         {
           label: 'View', icon: 'fa fa-eye', command: (onclick) => {
@@ -292,8 +293,8 @@ export class SystemMonitoringComponent implements OnInit {
   getAllLatestAppli() {
     this._commonService.getAllLatest('application')
       .subscribe(
-      response => { this.OnSucessgetAllLatest(response) },
-      error => console.log("Error :: " + error)
+        response => { this.OnSucessgetAllLatest(response) },
+        error => console.log("Error :: " + error)
       )
   }
 
@@ -319,8 +320,8 @@ export class SystemMonitoringComponent implements OnInit {
   getAllLatestUser() {
     this._commonService.getAllLatest('user')
       .subscribe(
-      response => { this.OnSucessgetAllLatestUser(response) },
-      error => console.log("Error :: " + error)
+        response => { this.OnSucessgetAllLatestUser(response) },
+        error => console.log("Error :: " + error)
       )
   }
 
@@ -344,8 +345,8 @@ export class SystemMonitoringComponent implements OnInit {
   getAllMeta() {
     this.systemMonitoringService.getMetaExecList()
       .subscribe(
-      response => { this.OnSucessgetAllMeta(response) },
-      error => console.log("Error :: " + error)
+        response => { this.OnSucessgetAllMeta(response) },
+        error => console.log("Error :: " + error)
       )
   }
 
@@ -381,8 +382,8 @@ export class SystemMonitoringComponent implements OnInit {
     }
     this.systemMonitoringService.getActiveSession(this.username.label || '', this.app.uuid, startDateUtcStr, endDateUtcStr, this.tags, this.active)
       .subscribe(
-      response => { this.onSucessgetActiveSession(response) },
-      error => console.log("Error :: " + error)
+        response => { this.onSucessgetActiveSession(response) },
+        error => console.log("Error :: " + error)
       )
   }
 
@@ -393,8 +394,8 @@ export class SystemMonitoringComponent implements OnInit {
   getActiveJobs() {
     this.systemMonitoringService.getActiveJobByCriteria(this.type.label || '', this.username.label || '', this.app.uuid, this.startDate, this.endDate, this.tags, this.status)
       .subscribe(
-      response => { this.onSucessgetActiveJobs(response) },
-      error => console.log("Error :: " + error)
+        response => { this.onSucessgetActiveJobs(response) },
+        error => console.log("Error :: " + error)
       )
   }
 
@@ -405,8 +406,8 @@ export class SystemMonitoringComponent implements OnInit {
   getActiveThreads() {
     this.systemMonitoringService.getActiveThread()
       .subscribe(
-      response => { this.onSucessgetActiveThreads(response) },
-      error => console.log("Error :: " + error)
+        response => { this.onSucessgetActiveThreads(response) },
+        error => console.log("Error :: " + error)
       )
   }
 
@@ -415,7 +416,11 @@ export class SystemMonitoringComponent implements OnInit {
     //console.log(this.rowData1)
   }
   getdata(mode, type) {
+
     if (type == "session") {
+
+      this.showDetailTable = false;
+
       this.color = ["#76d7c4", "#85c1e9", "#84F0BA", "#bb8fce", "#7fb3d5", "#85c1e9", "#76d7c4", "#73c6b6", "#7dcea0", "#82e0aa", "#f7dc6f", "#f8c471", "#f0b27a", "#e59866"];
       var startDateUtcStr = "";
       var endDateUtcStr = "";
@@ -429,8 +434,7 @@ export class SystemMonitoringComponent implements OnInit {
         let endDateUtc = new Date(this.endDate.getUTCFullYear(), this.endDate.getUTCMonth(), this.endDate.getUTCDate(), this.endDate.getUTCHours(), this.endDate.getUTCMinutes(), this.endDate.getUTCSeconds())
         endDateUtcStr = this.datePipe.transform(endDateUtc, "EEE MMM dd hh:mm:ss yyyy").toString() + " UTC"//endDateUtc.toString().split("GMT")[0]+"UTC";
       }
-      //this.getSessionByUser();
-      //this.getSessionCountByStatus()
+
       let observables = new Array();
       let _vizpodtrack = [];
       let promises = []
@@ -461,6 +465,7 @@ export class SystemMonitoringComponent implements OnInit {
               jobgraphdataArray[count] = jobgraphData
               count = count + 1;
             });
+
             jobresult["id"] = "chart" + i;
             jobresult["title"] = i == 0 ? "Session-User" : "Session-Status"
             jobresult["type"] = i == 0 ? "pie" : "donut"
@@ -469,9 +474,8 @@ export class SystemMonitoringComponent implements OnInit {
             jobresult["showtooltiptitle"] = "Expand";
             jobresult["iconClass"] = "fa fa-expand";
             jobresult["colExp"] = true;
-            jobresult["datacolumns"] = jobgraphcolumnArray
-            jobresult["datapoints"] = jobgraphdataArray
-
+            jobresult["datacolumns"] = jobgraphcolumnArray;
+            jobresult["datapoints"] = jobgraphdataArray;
             jobArray[i] = jobresult
           }
 
@@ -481,7 +485,11 @@ export class SystemMonitoringComponent implements OnInit {
         error => console.log('Error: ', error)
       );
     }
+
+
     else if (type == "jobs") {
+      this.showDetailTable = false;
+
       this.color = ["#76d7c4", "#85c1e9", "#84F0BA", "#bb8fce", "#7fb3d5", "#85c1e9", "#76d7c4", "#73c6b6", "#7dcea0", "#82e0aa", "#f7dc6f", "#f8c471", "#f0b27a", "#e59866"];
       var startDateUtcStr = "";
       var endDateUtcStr = "";
@@ -495,12 +503,16 @@ export class SystemMonitoringComponent implements OnInit {
         let endDateUtc = new Date(this.endDate.getUTCFullYear(), this.endDate.getUTCMonth(), this.endDate.getUTCDate(), this.endDate.getUTCHours(), this.endDate.getUTCMinutes(), this.endDate.getUTCSeconds())
         endDateUtcStr = this.datePipe.transform(endDateUtc, "EEE MMM dd hh:mm:ss yyyy").toString() + " UTC"//endDateUtc.toString().split("GMT")[0]+"UTC";
       }
-      //this.getSessionByUser();
-      //this.getSessionCountByStatus()
+
       let observables = new Array();
       let _vizpodtrack = [];
       let promises = []
-      var apiList = [{ "url": "system/getJobCountByApp", "type": "bar", "title": "Jobs-App" }, { "url": "system/getJobCountByUser", "type": "pie", "title": "Jobs-User" }, { "url": "system/getJobCountByMeta", "type": "pie", title: "Jobs-Meta" }, { "url": "system/getJobCountByStatus", "type": "donut", "title": "Jobs-Status" }];
+      var apiList = [
+        { "url": "system/getJobCountByApp", "type": "bar", "title": "Jobs-App" },
+        { "url": "system/getJobCountByUser", "type": "pie", "title": "Jobs-User" },
+        { "url": "system/getJobCountByMeta", "type": "pie", "title": "Jobs-Meta" },
+        { "url": "system/getJobCountByStatus", "type": "donut", "title": "Jobs-Status" }
+      ];
       var jobArray = []
       for (var i = 0; i < apiList.length; i++) {
         var url = apiList[i].url + "?type=" + (this.type.label || '') + "&userName=" + (this.username.label || '') + "&startDate=" + startDateUtcStr + "&endDate=" + endDateUtcStr + "&tags=" + this.tags + "&appuuid=" + this.app.uuid + "&status=" + this.active
@@ -509,8 +521,8 @@ export class SystemMonitoringComponent implements OnInit {
       }
       forkJoin(promises).subscribe(
         result => {
-          console.log(result)
-          //   var resultArray=[];
+          console.log(result);
+
           for (var i = 0; i < result.length; i++) {
             var jobresult = {};
             var resultArray = [];
@@ -518,22 +530,17 @@ export class SystemMonitoringComponent implements OnInit {
             var jobgraphdataArray = []
             var count = 0;
             resultArray[i] = result[i]
+
             _.map(resultArray[i], function (value, key) {
               var jobgraphcolumn = {};
               var jobgraphData = {};
-              if (i == 2) {
-                jobgraphcolumn["id"] = key;
-                jobgraphcolumnArray[count] = key;
-              }
-
-              else {
-                jobgraphcolumn["id"] = key
-                jobgraphcolumnArray[count] = key;
-              }
+              jobgraphcolumn["id"] = key
+              jobgraphcolumnArray[count] = key;
               jobgraphData[jobgraphcolumn["id"]] = value;
               jobgraphdataArray[count] = jobgraphData
               count = count + 1;
             });
+
             jobresult["id"] = "chart" + (i + 5)
             jobresult["show"] = true;
             jobresult["showtooltiptitle"] = "Expand";
@@ -552,24 +559,33 @@ export class SystemMonitoringComponent implements OnInit {
         },
         error => console.log('Error: ', error)
       );
+
+
     }
   }
-  fullScreen(index) {
-    if (this.graphSessionData[index].iconClass != "fa fa-expand") {
-      for (let i = 0; i < this.graphSessionData.length; i++) {
-        this.graphSessionData[i].show = true;
+  fullScreen(index) {debugger
+    let graphData;
+    if(this.graphSessionData){
+      graphData = this.graphSessionData;
+    }
+    else{
+      graphData = this.graphJobData;
+    }
+    if (graphData[index].iconClass != "fa fa-expand") {
+      for (let i = 0; i < graphData.length; i++) {
+        graphData[i].show = true;
         //this.graphSessionData[index]["showtooltiptitle"]="Expand";
-        this.graphSessionData[index].iconClass = "fa fa-expand";
-        this.graphSessionData[index].width = "";
+        graphData[index].iconClass = "fa fa-expand";
+        graphData[index].width = "";
       }
     } else {
-      for (let i = 0; i < this.graphSessionData.length; i++) {
-        this.graphSessionData[i].show = false;
+      for (let i = 0; i < graphData.length; i++) {
+        graphData[i].show = false;
       }
-      this.graphSessionData[index].show = true;
+      graphData[index].show = true;
       //this.graphSessionData[index]["showtooltiptitle"]="Compress";
-      this.graphSessionData[index].iconClass = "fa fa-compress";
-      this.graphSessionData[index].width = "100%";
+      graphData[index].iconClass = "fa fa-compress";
+      graphData[index].width = "100%";
     }
     window.dispatchEvent(new Event('resize'));
 
@@ -578,12 +594,20 @@ export class SystemMonitoringComponent implements OnInit {
     // }, 100);
   }
   collapseExpend(index) {
-    this.graphSessionData[index].colExp = !this.graphSessionData[index].colExp
+    let graphData;
+    if(this.graphSessionData){
+      graphData = this.graphSessionData;
+    }
+    else{
+      graphData = this.graphJobData;
+    }
+    graphData[index].colExp = !graphData[index].colExp
     window.dispatchEvent(new Event('resize'));
     // $timeout(function() {
     //   Window.dispatchEvent(new Event("resize"));
     // }, 100);
   }
+  
   onClickMenu(data) {
     // alert(this.type)
     console.log(data);
@@ -669,5 +693,11 @@ export class SystemMonitoringComponent implements OnInit {
 
     }
   }
+  
+  savePng(index: any){
+    console.log("savePng call index is: "+index);debugger
+   
+  }
+
 
 }

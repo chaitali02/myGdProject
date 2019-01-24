@@ -1,53 +1,53 @@
-<app-breadcrumb [breadcrumbData]="breadcrumbDataFrom" ></app-breadcrumb>
+<app-breadcrumb [breadcrumbData]="breadcrumbDataFrom"></app-breadcrumb>
 <br>
-<p-growl [(value)]="msgs" ></p-growl>
+<p-growl [(value)]="msgs"></p-growl>
 <p-tabView (onChange)="onTabChange($event)">
-    <p-tabPanel *ngFor="let tab of tabs" header="{{tab.caption}}">
-<div class="portlet box green">
-  <div class="portlet-title">
-    <div class="caption">
-      <i class="icon-magnifier"></i>Search Criteria
-    </div>
-    <div class="tools">
-      <a title="Refresh" data-toggle="tooltip" data-placement="top" (click)="refershGrid()" data-original-title=""  title="">
-        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
-      </a>
-      <a href="javascript:;" class="collapse" data-original-title="" title="" style="height:14px;"></a>
-    </div>
-  </div>
-  <div class="portlet-body">
-      <form class="form-horizontal">
-          <div class="row">
-            <div class="col-md-12">
-              <div class="col-md-4 col-sm-6 col-xs-12 custpadding">
-                <div class="form-group">
-                  <label class="control-label col-md-3 col-sm-3 col-xs-6">App</label>
-                  <div class="col-md-9 col-sm-9 col-xs-6">
-                      <p-dropdown [options]="apps"          
-                      [(ngModel)]="app"
-                      name="app"
-                      [style]="{'width':'100%','padding':'3px'}"
-                      [filter]="true"
-                      [disabled]="mode == 'false'"
-                      >
+
+
+  <div *ngFor="let tab of tabs; let i = index">
+    <p-tabPanel [header]="tab.caption" class="customTabview" [selected]="i == 0">
+      <div class="portlet box green">
+        <div class="portlet-title">
+          <div class="caption">
+            <i class="icon-magnifier"></i>Search Criteria
+          </div>
+          <div class="tools">
+            <a title="Refresh" data-toggle="tooltip" data-placement="top" (click)="refershGrid()" data-original-title=""
+              title="">
+              <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+            </a>
+            <a href="javascript:;" class="collapse" data-original-title="" title="" style="height:14px;"></a>
+          </div>
+        </div>
+        <div class="portlet-body">
+          <form class="form-horizontal">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="col-md-4 col-sm-6 col-xs-12 custpadding">
+                  <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-6">App</label>
+                    <div class="col-md-9 col-sm-9 col-xs-6">
+                      <p-dropdown [options]="apps" [(ngModel)]="app" name="app" [style]="{'width':'100%','padding':'3px'}"
+                        [filter]="true" [disabled]="mode == 'false'">
                       </p-dropdown>
-                    <!-- <select title="Application"  class="form-control ng-pristine ng-valid ng-not-empty ng-touched" data-ng-model="searchForm.app" ng-options="r as r.name for r in apps" select2>
+                      <!-- <select title="Application"  class="form-control ng-pristine ng-valid ng-not-empty ng-touched" data-ng-model="searchForm.app" ng-options="r as r.name for r in apps" select2>
                       <option value="">-Select-</option>
                     </select> -->
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="col-md-5 col-sm-6 col-xs-12">
+                <div class="col-md-5 col-sm-6 col-xs-12">
                   <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Start Date</label>
-                      <div class="col-md-9 col-sm-9 col-xs-9">
-                          <p-calendar format="ddd MMM D HH:mm:ss YYYY z" [(ngModel)]="startDate" name="startDate" [showTime]="true" [utc]="true" [showIcon]="true"></p-calendar> 
-                        <!-- <form #form="ngForm">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Start Date</label>
+                    <div class="col-md-9 col-sm-9 col-xs-9">
+                      <p-calendar format="ddd MMM D HH:mm:ss YYYY z" [(ngModel)]="startDate" name="startDate"
+                        [showTime]="true" [utc]="true" [showIcon]="true"></p-calendar>
+                      <!-- <form #form="ngForm">
                           <date-picker mode="datetime" format="ddd MMM D HH:mm:ss YYYY z" [(ngModel)]="startDate" name="startDate"></date-picker>
                         </form> -->
-                      </div>
                     </div>
-              <!-- <div class="form-group">
+                  </div>
+                  <!-- <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12" style="padding-right:0px;text-align:left">Start Date</label>
                 <div class="col-md-9 col-sm-9 col-xs-9">
                   <a class="dropdown-toggle" id="start_date" role="button" data-toggle="dropdown" data-target="#"
@@ -67,49 +67,45 @@
                   </ul>
                 </div>
               </div> -->
-            </div>
-            <div class="col-md-3 col-sm-6 col-xs-12 custpadding" >
-                <div class="form-group">
-                  <label class="control-label col-md-3 col-sm-3 col-xs-6" style="padding-right:0px">Tags</label>
-                  <div class="col-md-9 col-sm-9 col-xs-6">
-                    <tag-input [(ngModel)]="tags" name="tags" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;"></tag-input>
+                </div>
+                <div class="col-md-3 col-sm-6 col-xs-12 custpadding">
+                  <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-6" style="padding-right:0px">Tags</label>
+                    <div class="col-md-9 col-sm-9 col-xs-6">
+                      <tag-input [(ngModel)]="tags" name="tags" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;"></tag-input>
+                    </div>
                   </div>
                 </div>
+
               </div>
-    
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            <div class="col-md-4 col-sm-6 col-xs-12 custpadding">
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-6" for="select" >User</label>
-                <div class="col-md-9 col-sm-9 col-xs-6">
-                    <p-dropdown [options]="allUserName"          
-                    [(ngModel)]="username"
-                    name="username"
-                    [style]="{'width':'100%','padding':'3px'}"
-                    [filter]="true"
-                    [disabled]="mode == 'false'"
-                    >
-                    </p-dropdown>
-                  <!-- <select class="form-control" select2 data-ng-model="searchForm.username" ng-options="r.name as r.name for r in allUSerName">
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="col-md-4 col-sm-6 col-xs-12 custpadding">
+                  <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-6" for="select">User</label>
+                    <div class="col-md-9 col-sm-9 col-xs-6">
+                      <p-dropdown [options]="allUserName" [(ngModel)]="username" name="username" [style]="{'width':'100%','padding':'3px'}"
+                        [filter]="true" [disabled]="mode == 'false'">
+                      </p-dropdown>
+                      <!-- <select class="form-control" select2 data-ng-model="searchForm.username" ng-options="r.name as r.name for r in allUSerName">
                     <option value="">-Select-</option>
                   </select > -->
+                    </div>
+                  </div>
                 </div>
-              </div>
-           </div>
-              <div class="col-md-5 col-sm-6 col-xs-12">
+                <div class="col-md-5 col-sm-6 col-xs-12">
                   <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">End Date</label>
-                      <div class="col-md-9 col-sm-9 col-xs-9">
-                          <p-calendar format="ddd MMM D HH:mm:ss YYYY z" [(ngModel)]="endDate" name="endDate" [showTime]="true" [showIcon]="true"></p-calendar> 
-                        <!-- <form #form="ngForm">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">End Date</label>
+                    <div class="col-md-9 col-sm-9 col-xs-9">
+                      <p-calendar format="ddd MMM D HH:mm:ss YYYY z" [(ngModel)]="endDate" name="endDate" [showTime]="true"
+                        [showIcon]="true"></p-calendar>
+                      <!-- <form #form="ngForm">
                           <date-picker mode="datetime" format="ddd MMM D HH:mm:ss YYYY" [(ngModel)]="endDate" name="endDate"></date-picker>
                         </form> -->
-                      </div>
                     </div>
-              <!-- <div class="form-group">
+                  </div>
+                  <!-- <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-6">End Date </label>
                 <div class="col-md-9 col-sm-9 col-xs-6">
                   <a class="dropdown-toggle" id="end_date" role="button" data-toggle="dropdown" data-target="#"
@@ -128,254 +124,330 @@
                   </ul>
                 </div>
               </div> -->
-            </div>
-            <div class="col-md-3 col-sm-6 col-xs-12 custpadding" *ngIf="moduleType=='session'">
+                </div>
+                <div class="col-md-3 col-sm-6 col-xs-12 custpadding" *ngIf="moduleType=='session'">
 
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12" style="padding-right:0px">Status</label>
-                <div class="col-md-9 col-sm-6 col-xs-12">
-                    <p-dropdown [options]="allActive"          
-                    [(ngModel)]="active"
-                    name="active"
-                    [style]="{'width':'100%','padding':'3px'}"
-                    [filter]="true"
-                    [disabled]="mode == 'false'"
-                    >
-                    </p-dropdown>
-                    <!-- <label class="btn btn-default" ng-model="searchForm.active" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
+                  <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" style="padding-right:0px">Status</label>
+                    <div class="col-md-9 col-sm-6 col-xs-12">
+                      <p-dropdown [options]="allActive" [(ngModel)]="active" name="active" [style]="{'width':'100%','padding':'3px'}"
+                        [filter]="true" [disabled]="mode == 'false'">
+                      </p-dropdown>
+                      <!-- <label class="btn btn-default" ng-model="searchForm.active" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
                     <label class="btn btn-default" ng-model="searchForm.active" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label> -->
-                    <!-- <select class="form-control" select2 data-ng-model="searchForm.active" ng-options="r.name as r.caption for r in allActive">
+                      <!-- <select class="form-control" select2 data-ng-model="searchForm.active" ng-options="r.name as r.caption for r in allActive">
                    
                  </select > -->
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div class="col-md-3 col-sm-6 col-xs-12 custpadding" *ngIf="moduleType=='jobs'||moduleType=='threads'">
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-6">Meta</label>
-                <div class="col-md-9 col-sm-9 col-xs-6">
-                    <p-dropdown [options]="Alltypes"          
-                    [(ngModel)]="type"
-                    name="type"
-                    [style]="{'width':'100%','padding':'3px'}"
-                    [filter]="true"
-                    [disabled]="mode == 'false'"
-                    >
-                    </p-dropdown>
-                  <!-- <select title="Type"  class="form-control ng-pristine ng-valid ng-not-empty ng-touched" data-ng-model="searchForm.type" ng-options="r.name   as r.name for r in Alltypes" select2>
+                <div class="col-md-3 col-sm-6 col-xs-12 custpadding" *ngIf="moduleType=='jobs'||moduleType=='threads'">
+                  <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-6">Meta</label>
+                    <div class="col-md-9 col-sm-9 col-xs-6">
+                      <p-dropdown [options]="Alltypes" [(ngModel)]="type" name="type" [style]="{'width':'100%','padding':'3px'}"
+                        [filter]="true" [disabled]="mode == 'false'">
+                      </p-dropdown>
+                      <!-- <select title="Type"  class="form-control ng-pristine ng-valid ng-not-empty ng-touched" data-ng-model="searchForm.type" ng-options="r.name   as r.name for r in Alltypes" select2>
                     <option value="">-Select-</option>
                   </select> -->
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-    
-        <div class="row">
-          <div class="col-md-12">
-            <div class="col-md-4 col-sm-6 col-xs-12 custpadding" >
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-6"></label>
-                <div class="col-md-9 col-sm-9 col-xs-6">
-                  <input type="submit" class="btn btn-success" value="Search" name="submit" (click)="searchCriteria()">
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="col-md-4 col-sm-6 col-xs-12 custpadding">
+                  <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-6"></label>
+                    <div class="col-md-9 col-sm-9 col-xs-6">
+                      <input type="submit" class="btn btn-success" value="Search" name="submit" (click)="searchCriteria()">
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-             <div class="col-md-5 col-sm-6 col-xs-12">
-            <!-- <div class="form-group">
+                <div class="col-md-5 col-sm-6 col-xs-12">
+                  <!-- <div class="form-group">
               <label class="control-label col-md-3 col-sm-3 col-xs-12"></label>
               <div class="col-md-8 col-sm-9 col-xs-9">
                 <i>Timezone is {{currentTimezone}}</i>
               </div>
             </div> -->
-            <div class="form-group" *ngIf="moduleType=='jobs'">
-              <label class="control-label col-md-3 col-sm-3 col-xs-6" >Status</label>
-              <div class="col-md-8 col-sm-6 col-xs-12">
-                  <p-dropdown [options]="allStatus"          
-                  [(ngModel)]="status"
-                  name="status"
-                  [style]="{'width':'100%','padding':'3px'}"
-                  [filter]="true"
-                  [disabled]="mode == 'false'"
-                  >
-                  </p-dropdown>
-                 <!-- <select class="form-control" select2 data-ng-model="searchForm.status" ng-options="r.name as r.caption for r in allStatus">
+                  <div class="form-group" *ngIf="moduleType=='jobs'">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-6">Status</label>
+                    <div class="col-md-8 col-sm-6 col-xs-12">
+                      <p-dropdown [options]="allStatus" [(ngModel)]="status" name="status" [style]="{'width':'100%','padding':'3px'}"
+                        [filter]="true" [disabled]="mode == 'false'">
+                      </p-dropdown>
+                      <!-- <select class="form-control" select2 data-ng-model="searchForm.status" ng-options="r.name as r.caption for r in allStatus">
               </select > -->
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+            <!--<span style="float:right;padding-right: 3%;color: blue;"><i>Timezone is {{currentTimezone}}</i></span>-->
+          </form>
         </div>
-        </div>
-        <!--<span style="float:right;padding-right: 3%;color: blue;"><i>Timezone is {{currentTimezone}}</i></span>-->
-      </form>
-  </div>
-</div>
+      </div>
 
-<div class="portlet box green">
-<div class="portlet-title">
-<div class="caption">
-  <i class="fa fa-cogs"></i><span [innerHTML]="gridTitle"></span>
-</div>
-  <div class="tools">
-    <a title="View Graph" data-toggle="tooltip" *ngIf="(moduleType=='jobs' || moduleType=='session') && !showDiv " (click)="getdata('graph',moduleType);showDiv = !showDiv">
-      <span class="fa fa-bar-chart" style="color:white;"></span>
-    </a>
-    <a title="View List" data-toggle="tooltip" *ngIf="(moduleType=='jobs' || moduleType=='session') && showDiv" (click)="getdata('all',moduleType);showDiv = !showDiv">
-      <span class="fa fa-table" style="color:white;"></span>
-    </a>
-    <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip (click)="refreshSearchMon()">
-      <i class="fa fa-refresh" aria-hidden="true" style="display:block;margin: 2px auto;color:white;">
-      </i>
-    </a>
-    <a href="javascript:;"  class="collapse aSize" style="height:14px;">
-    </a>
-  </div>
-  </div>
-  <div class="portlet-body" *ngIf="!showDiv"> 
-      <div class="row">
-          <div class="col-md-12 col-sm-12">
-            <div class="col-md-3 col-md-offset-9" style="padding:4px 5px;border-bottom: 0 none">
-                <i class="fa fa-search" style="margin-left: 12%; margin-top: 2%;"></i>
-                <input #gb type="text" style="float:right;" pInputText  placeholder="Search">
-              </div>
+      <div class="portlet box green">
+        <div class="portlet-title">
+          <div class="caption">
+            <i class="fa fa-cogs"></i><span [innerHTML]="gridTitle"></span>
+          </div>
+          <div class="tools">
+
+            <a title="View Graph" data-toggle="tooltip" *ngIf="(moduleType=='jobs' || moduleType=='session') && showDetailTable "
+              (click)="getdata('graph',moduleType);!showDetailTable = showDetailTable">
+              <span class="fa fa-bar-chart" style="color:white;"></span>
+            </a>
+            <a title="View List" data-toggle="tooltip" *ngIf="(moduleType=='jobs' || moduleType=='session') && !showDetailTable"
+              (click)="getdata('all',moduleType);showDetailTable = !showDetailTable">
+              <span class="fa fa-table" style="color:white;"></span>
+            </a>
+            <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip (click)="refreshSearchMon()">
+              <i class="fa fa-refresh" aria-hidden="true" style="display:block;margin: 2px auto;color:white;">
+              </i>
+            </a>
+            <a href="javascript:;" class="collapse aSize" style="height:14px;">
+            </a>
+
           </div>
         </div>
-      <br>
-  <div class="row">
-      <div class="col-md-12"  *ngIf="rowData1">
-          <p-dataTable #dt [value]="rowData1" exportFilename="data" [(selection)]="selectedData" selectionMode="multiple" [metaKeySelection]="false" scrollable="true" resizableColumns="true" scrollHeight="440px" [globalFilter]="gb" sortMode="multiple" [paginator]="true" [rows]="10" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]">
-              <p-column *ngFor="let col of cols" [field]="col.field" [header]="col.header"></p-column>
-              <p-column header="Action" *ngIf="moduleType!='threads'">
-                  <ng-template let-col let-car="rowData" pTemplate="body">
+
+        <div class="portlet-body">
+          <div *ngIf="showDetailTable">
+            <div class="row">
+              <div class="col-md-12 col-sm-12">
+                <div class="col-md-3 col-md-offset-9" style="padding:4px 5px;border-bottom: 0 none">
+                  <i class="fa fa-search" style="margin-left: 12%; margin-top: 2%;"></i>
+                  <input #gb type="text" style="float:right;" pInputText placeholder="Search">
+                </div>
+              </div>
+            </div>
+            <br>
+            <div class="row">
+              <div class="col-md-12" *ngIf="rowData1">
+                <p-dataTable #dt [value]="rowData1" exportFilename="data" [(selection)]="selectedData" selectionMode="multiple"
+                  [metaKeySelection]="false" scrollable="true" resizableColumns="true" scrollHeight="440px"
+                  [globalFilter]="gb" sortMode="multiple" [paginator]="true" [rows]="10" [pageLinks]="3"
+                  [rowsPerPageOptions]="[5,10,20]">
+                  <p-column *ngFor="let col of cols" [field]="col.field" [header]="col.header"></p-column>
+                  <p-column header="Action" *ngIf="tab.type!='threads'">
+                    <ng-template let-col let-car="rowData" pTemplate="body">
                       <p-menu #menu popup="popup" [model]="items" appendTo="body"></p-menu>
                       <div style="text-align: center;">
-                      <button type="button" pButton label="Action" icon="fa fa-angle-down" iconPos="right" (click)="menu.toggle($event);onClickMenu(car);"></button>  
-                    </div>
+                        <button type="button" pButton label="Action" icon="fa fa-angle-down" iconPos="right" (click)="menu.toggle($event);onClickMenu(car);"></button>
+                      </div>
                     </ng-template>
-              </p-column>                    
-          </p-dataTable>
+                  </p-column>
+                </p-dataTable>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- session graph -->
+
+          <div *ngIf="!showDetailTable">
+            <div class="row" *ngIf="tab.type=='session'">
+              <div>
+                <div class="col-md-6" *ngIf="graphSessionData!=null && graphSessionData[0].show" [ngStyle]="{ 'width': graphSessionData[0].width }">
+                  <div class="portlet light bordered" style="max-height:500px;">
+                    <div class="portlet-title">
+                      <div class="caption" *ngIf="graphSessionData!=null">
+                        <span class="caption-subject font-dark">{{graphSessionData[0].title}}</span>
+                      </div>
+                      <div class="actions" *ngIf="graphSessionData!=null">
+                        <a title="Download" class="btn btn-circle btn-icon-only btn-default" (click)="savePng(0)">
+                          <i class="fa fa-download" aria-hidden="true" style="display:block;margin: 2px auto;">
+                          </i>
+                        </a>
+                        <a class="btn btn-circle btn-icon-only btn-default" (click)="fullScreen(0)">
+                          <i class="{{graphSessionData[0].iconClass}}" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:;" class="btn btn-circle btn-icon-only btn-default" (click)="collapseExpend(0)">
+                          <span [ngClass]="graphSessionData[0].colExp==true?'fa fa-chevron-down':'fa fa-chevron-up'"
+                            aria-hidden="true"></span>
+                        </a>
+                      </div>
+                    </div>
+                    <div class="portlet-body" *ngIf="graphSessionData[0].colExp">
+                      <div *ngIf="graphSessionData!=null">
+                        <c3-chart [chartId]="graphSessionData[0].id" [chartData]="graphSessionData[0].datapoints"
+                          [ChartColumns]="graphSessionData[0].datacolumns" [chartColor]="color" [chartType]="graphSessionData[0].type"
+                          [chartDatax]=" "></c3-chart>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6" *ngIf="graphSessionData!=null && graphSessionData[1].show" [ngStyle]="{ 'width': graphSessionData[1].width }">
+                  <div class="portlet light bordered" style="max-height:500px;">
+                    <div class="portlet-title">
+                      <div class="caption" *ngIf="graphSessionData!=null">
+                        <span class="caption-subject font-dark">{{graphSessionData[1].title}}</span>
+                      </div>
+                      <div class="actions" *ngIf="graphSessionData!=null">
+                        <a title="Download" class="btn btn-circle btn-icon-only btn-default" (click)="savePng($index)">
+                          <i class="fa fa-download" aria-hidden="true" style="display:block;margin: 2px auto;">
+                          </i>
+                        </a>
+                        <a class="btn btn-circle btn-icon-only btn-default" (click)="fullScreen(1)">
+                          <i class="{{graphSessionData[1].iconClass}}" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:;" class="btn btn-circle btn-icon-only btn-default" (click)="collapseExpend(1)">
+                          <span [ngClass]="graphSessionData[1].colExp==true?'fa fa-chevron-down':'fa fa-chevron-up'"
+                            aria-hidden="true"></span>
+                        </a>
+                      </div>
+                    </div>
+                    <div class="portlet-body" *ngIf="graphSessionData[1].colExp">
+                      <div *ngIf="graphSessionData!=null">
+                        <c3-chart [chartId]="graphSessionData[1].id" [chartData]="graphSessionData[1].datapoints"
+                          [ChartColumns]="graphSessionData[1].datacolumns" [chartColor]="color" [chartType]="graphSessionData[1].type"
+                          [chartDatax]=" "></c3-chart>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <!-- job graph -->
+            <div class="row" *ngIf="tab.type=='jobs'">
+
+              <div class="col-md-6" *ngIf="graphJobData!=null && graphJobData[0].show" [ngStyle]="{ 'width': graphJobData[0].width }">
+                <div class="portlet light bordered" style="max-height:500px;">
+                  <div class="portlet-title">
+                    <div class="caption" *ngIf="graphJobData!=null">
+                      <span class="caption-subject font-dark">{{graphJobData[0].title}}</span>
+                    </div>
+                    <div class="actions" *ngIf="graphJobData!=null">
+                      <a title="Download" class="btn btn-circle btn-icon-only btn-default" (click)="savePng($index)">
+                        <i class="fa fa-download" aria-hidden="true" style="display:block;margin: 2px auto;">
+                        </i>
+                      </a>
+                      <a class="btn btn-circle btn-icon-only btn-default" (click)="fullScreen(0)">
+                        <i class="{{graphJobData[0].iconClass}}" aria-hidden="true"></i>
+                      </a>
+                      <a href="javascript:;" class="btn btn-circle btn-icon-only btn-default" (click)="collapseExpend(0)">
+                        <span [ngClass]="graphJobData[0].colExp==true?'fa fa-chevron-down':'fa fa-chevron-up'"
+                          aria-hidden="true"></span>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="portlet-body" *ngIf="graphJobData[0].colExp">
+                    <div>
+                      <c3-chart [chartId]="graphJobData[0].id" [chartData]="graphJobData[0].datapoints" [ChartColumns]="graphJobData[0].datacolumns"
+                        [chartColor]="color" [chartType]="graphJobData[0].type" [chartDatax]=" "></c3-chart>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6" *ngIf="graphJobData!=null && graphJobData[1].show" [ngStyle]="{ 'width': graphJobData[1].width }">
+                <div class="portlet light bordered" style="max-height:500px;">
+                  <div class="portlet-title">
+                    <div class="caption" *ngIf="graphJobData!=null">
+                      <span class="caption-subject font-dark">{{graphJobData[1].title}}</span>
+                    </div>
+                    <div class="actions" *ngIf="graphJobData!=null">
+                      <a title="Download" class="btn btn-circle btn-icon-only btn-default" (click)="savePng($index)">
+                        <i class="fa fa-download" aria-hidden="true" style="display:block;margin: 2px auto;">
+                        </i>
+                      </a>
+                      <a class="btn btn-circle btn-icon-only btn-default" (click)="fullScreen(1)">
+                        <i class="{{graphJobData[1].iconClass}}" aria-hidden="true"></i>
+                      </a>
+                      <a href="javascript:;" class="btn btn-circle btn-icon-only btn-default" (click)="collapseExpend(1)">
+                        <span [ngClass]="graphJobData[1].colExp==true?'fa fa-chevron-down':'fa fa-chevron-up'"
+                          aria-hidden="true"></span>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="portlet-body" *ngIf="graphJobData[1].colExp">
+                    <div *ngIf="graphJobData!=null">
+                      <c3-chart [chartId]="graphJobData[1].id" [chartData]="graphJobData[1].datapoints" [ChartColumns]="graphJobData[1].datacolumns"
+                        [chartColor]="color" [chartType]="graphJobData[1].type" [chartDatax]=" "></c3-chart>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="col-md-6" *ngIf="graphJobData!=null && graphJobData[2].show" [ngStyle]="{ 'width': graphJobData[2].width }">
+                <div class="portlet light bordered" style="max-height:500px;">
+                  <div class="portlet-title">
+                    <div class="caption" *ngIf="graphJobData!=null">
+                      <span class="caption-subject font-dark">{{graphJobData[2].title}}</span>
+                    </div>
+                    <div class="actions" *ngIf="graphJobData!=null">
+                      <a title="Download" class="btn btn-circle btn-icon-only btn-default" (click)="savePng($index)">
+                        <i class="fa fa-download" aria-hidden="true" style="display:block;margin: 2px auto;">
+                        </i>
+                      </a>
+                      <a class="btn btn-circle btn-icon-only btn-default" (click)="fullScreen(2)">
+                        <i class="{{graphJobData[2].iconClass}}" aria-hidden="true"></i>
+                      </a>
+                      <a href="javascript:;" class="btn btn-circle btn-icon-only btn-default" (click)="collapseExpend(2)">
+                        <span [ngClass]="graphJobData[2].colExp==true?'fa fa-chevron-down':'fa fa-chevron-up'"
+                          aria-hidden="true"></span>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="portlet-body" *ngIf="graphJobData[2].colExp">
+                    <div>
+                      <c3-chart [chartId]="graphJobData[2].id" [chartData]="graphJobData[2].datapoints" [ChartColumns]="graphJobData[2].datacolumns"
+                        [chartColor]="color" [chartType]="graphJobData[2].type" [chartDatax]=" "></c3-chart>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6" *ngIf="graphJobData!=null && graphJobData[3].show" [ngStyle]="{ 'width': graphJobData[3].width }">
+                <div class="portlet light bordered" style="max-height:500px;">
+                  <div class="portlet-title">
+                    <div class="caption" *ngIf="graphJobData!=null">
+                      <span class="caption-subject font-dark">{{graphJobData[3].title}}</span>
+                    </div>
+                    <div class="actions" *ngIf="graphJobData!=null">
+                      <a title="Download" class="btn btn-circle btn-icon-only btn-default" (click)="savePng($index)">
+                        <i class="fa fa-download" aria-hidden="true" style="display:block;margin: 2px auto;">
+                        </i>
+                      </a>
+                      <a class="btn btn-circle btn-icon-only btn-default" (click)="fullScreen(3)">
+                        <i class="{{graphJobData[3].iconClass}}" aria-hidden="true"></i>
+                      </a>
+                      <a href="javascript:;" class="btn btn-circle btn-icon-only btn-default" (click)="collapseExpend(3)">
+                        <span [ngClass]="graphJobData[3].colExp==true?'fa fa-chevron-down':'fa fa-chevron-up'"
+                          aria-hidden="true"></span>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="portlet-body" *ngIf="graphJobData[3].colExp">
+                    <div *ngIf="graphJobData!=null">
+                      <c3-chart [chartId]="graphJobData[3].id" [chartData]="graphJobData[3].datapoints" [ChartColumns]="graphJobData[3].datacolumns"
+                        [chartColor]="color" [chartType]="graphJobData[3].type" [chartDatax]=" "></c3-chart>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- no Thread graph -->
+            <div class="row" *ngIf="tab.type=='threads'">
+            </div>
+
+          </div>
         </div>
-      </div>
-    </div>
-    <div class="portlet-body" *ngIf="showDiv">
-      <div class="row" *ngIf="moduleType=='session'">
-        <div class="col-md-6" *ngIf="graphSessionData!=null && graphSessionData[0].show" [ngStyle]="{ 'width': graphSessionData[0].width }">
-          <div class="portlet light bordered" style="max-height:500px;">
-            <div class="portlet-title">
-              <div class="caption" *ngIf="graphSessionData!=null"> 
-                <span class="caption-subject font-dark">{{graphSessionData[0].title}}</span>
-              </div>
-              <div class="actions" *ngIf="graphSessionData!=null">
-                <a title="Download" class="btn btn-circle btn-icon-only btn-default" ng-click="savePng($index)">
-                  <i class="fa fa-download" aria-hidden="true" style="display:block;margin: 2px auto;">
-                  </i>
-                </a>
-              <a class="btn btn-circle btn-icon-only btn-default" (click)="fullScreen(0)">
-                <i class="{{graphSessionData[0].iconClass}}" aria-hidden="true"></i>
-              </a>
-              <a href="javascript:;" class="btn btn-circle btn-icon-only btn-default" (click)="collapseExpend(0)">
-                 <span [ngClass]="graphSessionData[0].colExp==true?'fa fa-chevron-down':'fa fa-chevron-up'" aria-hidden="true"></span>
-              </a>
 
-              </div>
-            </div>
-            <div class="portlet-body" *ngIf="graphSessionData[0].colExp">
-                <div *ngIf="graphSessionData!=null"> 
-                    <c3-chart [chartId]="graphSessionData[0].id" [chartData]="graphSessionData[0].datapoints" [ChartColumns]="graphSessionData[0].datacolumns" [chartColor]="color" [chartType]="graphSessionData[0].type" [chartDatax]=" "></c3-chart>
-               </div>
-          </div>
-        </div>
       </div>
-        <div class="col-md-6" *ngIf="graphSessionData!=null && graphSessionData[1].show" [ngStyle]="{ 'width': graphSessionData[1].width }">
-            <div class="portlet light bordered" style="max-height:500px;">
-              <div class="portlet-title">
-                <div class="caption" *ngIf="graphSessionData!=null"> 
-                  <span class="caption-subject font-dark">{{graphSessionData[1].title}}</span>
-                </div>
-                <div class="actions" *ngIf="graphSessionData!=null">
-                  <a title="Download" class="btn btn-circle btn-icon-only btn-default" ng-click="savePng($index)">
-                    <i class="fa fa-download" aria-hidden="true" style="display:block;margin: 2px auto;">
-                    </i>
-                  </a>
-                <a class="btn btn-circle btn-icon-only btn-default"  (click)="fullScreen(1)">
-                  <i class="{{graphSessionData[1].iconClass}}" aria-hidden="true"></i>
-                </a>
-                <a href="javascript:;" class="btn btn-circle btn-icon-only btn-default" (click)="collapseExpend(1)">
-                   <span [ngClass]="graphSessionData[1].colExp==true?'fa fa-chevron-down':'fa fa-chevron-up'" aria-hidden="true"></span>
-                </a>
-  
-                </div>
-              </div>
-              <div class="portlet-body" *ngIf="graphSessionData[1].colExp">
-                  <div *ngIf="graphSessionData!=null"> 
-                      <c3-chart [chartId]="graphSessionData[1].id" [chartData]="graphSessionData[1].datapoints" [ChartColumns]="graphSessionData[1].datacolumns" [chartColor]="color" [chartType]="graphSessionData[1].type" [chartDatax]=" "></c3-chart>
-                 </div>
-            </div>
-          </div>
-          </div>
 
-        
-      </div>
-      <div class="row" *ngIf="moduleType=='jobs'">
-        <div class="col-md-6" *ngIf="graphJobData!=null && graphJobData[0].show" [ngStyle]="{ 'width': graphJobData[0].width }">
-          <div class="portlet light bordered" style="max-height:500px;">
-            <div class="portlet-title">
-              <div class="caption" *ngIf="graphJobData!=null"> 
-                <span class="caption-subject font-dark">{{graphJobData[0].title}}</span>
-              </div>
-              <div class="actions" *ngIf="graphJobData!=null">
-                <a title="Download" class="btn btn-circle btn-icon-only btn-default" ng-click="savePng($index)">
-                  <i class="fa fa-download" aria-hidden="true" style="display:block;margin: 2px auto;">
-                  </i>
-                </a>
-              <a class="btn btn-circle btn-icon-only btn-default" (click)="fullScreen(0)">
-                <i class="{{graphJobData[0].iconClass}}" aria-hidden="true"></i>
-              </a>
-              <a href="javascript:;" class="btn btn-circle btn-icon-only btn-default" (click)="collapseExpend(0)">
-                 <span [ngClass]="graphJobData[0].colExp==true?'fa fa-chevron-down':'fa fa-chevron-up'" aria-hidden="true"></span>
-              </a>
 
-              </div>
-            </div>
-            <div class="portlet-body" *ngIf="graphJobData[0].colExp">
-                <div > 
-                    <c3-chart [chartId]="graphJobData[0].id" [chartData]="graphJobData[0].datapoints" [ChartColumns]="graphJobData[0].datacolumns" [chartColor]="color" [chartType]="graphJobData[0].type" [chartDatax]=" "></c3-chart>
-               </div>
-          </div>
-        </div>
-      </div>
-        <div class="col-md-6" *ngIf="graphJobData!=null && graphJobData[1].show" [ngStyle]="{ 'width': graphJobData[1].width }">
-            <div class="portlet light bordered" style="max-height:500px;">
-              <div class="portlet-title">
-                <div class="caption" *ngIf="graphJobData!=null"> 
-                  <span class="caption-subject font-dark">{{graphJobData[1].title}}</span>
-                </div>
-                <div class="actions" *ngIf="graphJobData!=null">
-                  <a title="Download" class="btn btn-circle btn-icon-only btn-default" ng-click="savePng($index)">
-                    <i class="fa fa-download" aria-hidden="true" style="display:block;margin: 2px auto;">
-                    </i>
-                  </a>
-                <a class="btn btn-circle btn-icon-only btn-default"  (click)="fullScreen(1)">
-                  <i class="{{graphJobData[1].iconClass}}" aria-hidden="true"></i>
-                </a>
-                <a href="javascript:;" class="btn btn-circle btn-icon-only btn-default" (click)="collapseExpend(1)">
-                   <span [ngClass]="graphJobData[1].colExp==true?'fa fa-chevron-down':'fa fa-chevron-up'" aria-hidden="true"></span>
-                </a>
-  
-                </div>
-              </div>
-              <div class="portlet-body" *ngIf="graphJobData[1].colExp">
-                  <div *ngIf="graphJobData!=null"> 
-                      <c3-chart [chartId]="graphJobData[1].id" [chartData]="graphJobData[1].datapoints" [ChartColumns]="graphJobData[1].datacolumns" [chartColor]="color" [chartType]="graphJobData[1].type" [chartDatax]=" "></c3-chart>
-                 </div>
-            </div>
-          </div>
-          </div>
 
-        
-      </div>
-    </div>
+    </p-tabPanel>
   </div>
-  
-  </p-tabPanel>
 </p-tabView>

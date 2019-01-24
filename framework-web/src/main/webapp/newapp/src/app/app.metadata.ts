@@ -191,6 +191,7 @@ export class AppMetadata {
         moduleCaption: 'Data Reconciliation',
         childMenu: [],
         allowInChildMenu: false,
+        class: 'fa fa-compress'
       },
 
       'recongroup': {
@@ -211,10 +212,11 @@ export class AppMetadata {
         moduleState: 'recongroup',
         childMenu: [],
         allowInChildMenu: false,
+        class: 'fa fa-compress'
       },
       'reconexec': {
         name: 'recon',
-        caption: 'Recon Exec',
+        caption: 'Recon',
         color: '#EB54C3',
         icon: '',
         iconCaption: '',
@@ -228,27 +230,28 @@ export class AppMetadata {
         moduleCaption: 'Data Reconciliation',
         childMenu: [],
         allowInChildMenu: false,
+        class: 'fa fa-compress'
       },
       'reconExec': {
         name: 'recon',
         caption: 'Recon Exec',
-        color: '#EB54C3',
-        icon: '',
+        execType: 'reconexec',
+        metaType: 'reconexec',
+        color: '#8E44AD',
         iconCaption: '',
-        execType: 'reconExec',
-        metaType: 'reconExec',
         allowInMenu: false,
-        moduleState: 'reconexec',
         listState: 'jobmonitoringlist',
-        detailState: 'jobexecutorlistreconexec',
-        resultState: 'viewdrresultspage',
-        moduleCaption: 'Data Reconciliation',
+        detailState: 'reconExec',
+        moduleState: 'JobMonitoring',
+        resultState: 'reconExec',
+        moduleCaption: 'Job Monitoring',
         childMenu: [],
         allowInChildMenu: false,
+        class: 'fa fa-compress'
       },
       'recongroupexec': {
         name: 'recongroup',
-        caption: 'Recon Group Exec',
+        caption: 'Recon Group',
         execType: 'recongroupExec',
         metaType: 'recongroupExec',
         color: '#EB54C3',
@@ -261,10 +264,28 @@ export class AppMetadata {
         resultState: 'viewdrresultspage',
         childMenu: [],
         allowInChildMenu: false,
+        class: 'fa fa-compress'
+      },
+      'recongroupExec': {
+        name: 'recongroup',
+        caption: 'Recon Group Exec',
+        execType: 'recongroupExec',
+        metaType: 'recongroupExec',
+        color: '#EB54C3',
+        iconCaption: '',
+        allowInMenu: false,
+        listState: 'jobmonitoringlist',
+        resultState: 'recongroupExec',
+        detailState: 'recongroupExec',
+        moduleState: 'JobMonitoring',
+        moduleCaption: 'Job Monitoring',
+        childMenu: [],
+        allowInChildMenu: false,
+        class: 'fa fa-compress'
       },
       'loadexec': {
         name: 'load',
-        caption: 'load Exec',
+        caption: 'load',
         execType: 'loadExec',
         metaType: 'loadExec',
         color: '#EB54C3',
@@ -304,7 +325,7 @@ export class AppMetadata {
       },
       'dqgroupexec': {
         name: 'dqgroup',
-        caption: 'DQ Group Exec',
+        caption: 'DQ Group',
         execType: 'dqgroupExec',
         metaType: 'dqgroupExec',
         color: '#dceaab',
@@ -332,7 +353,7 @@ export class AppMetadata {
       },
       'ruleexec': {
         name: 'rule',
-        caption: 'Rule Exec',
+        caption: 'Rule',
         execType: 'ruleExec',
         metaType: 'ruleExec',
         color: '#EB54C3',
@@ -360,7 +381,7 @@ export class AppMetadata {
       },
       'rulegroupexec': {
         name: 'rulegroup',
-        caption: 'Rule Group Exec',
+        caption: 'Rule Group',
         execType: 'rulegroupExec',
         metaType: 'rulegroupExec',
         color: '#EB54C3',
@@ -388,7 +409,7 @@ export class AppMetadata {
       },
       'profileexec': {
         name: 'profile',
-        caption: 'Profile Exec',
+        caption: 'Profile',
         execType: 'profileExec',
         metaType: 'profileExec',
         color: '#EB54C3',
@@ -416,7 +437,7 @@ export class AppMetadata {
       },
       'profilegroupexec': {
         name: 'profilegroup',
-        caption: 'Profile Group Exec',
+        caption: 'Profile Group',
         execType: 'profilegroupExec',
         metaType: 'profilegroupExec',
         color: '#EB54C3',
@@ -444,7 +465,7 @@ export class AppMetadata {
       },
       'dagexec': {
         name: 'pipeline',
-        caption: 'Pipeline Exec',
+        caption: 'Pipeline',
         execType: 'dagexec',
         metaType: 'dagexec',
         color: '#e59866',
@@ -472,7 +493,7 @@ export class AppMetadata {
       },
       'downloadexec': {
         name: 'downloadexec',
-        caption: 'Download Exec',
+        caption: 'Download',
         execType: 'downloadexec',
         metaType: 'downloadexec',
         color: '#5C9BD1',
@@ -543,7 +564,7 @@ export class AppMetadata {
       },
       'vizexec': {
         name: 'vizpod',
-        caption: 'Vizpod Exec',
+        caption: 'Vizpod',
         execType: 'vizexec',
         metaType: 'vizexec',
         color: '#fff8dc',
@@ -596,7 +617,7 @@ export class AppMetadata {
       },
       'dqexec': {
         name: 'dq',
-        caption: 'Data Quality Exec',
+        caption: 'Data Quality',
         execType: 'dqexec',
         metaType: 'dqexec',
         color: '#EB54C3',
@@ -1092,7 +1113,7 @@ export class AppMetadata {
       },
       'operatorexec': {
         name: 'operatorexec',
-        caption: 'Operator Exec',
+        caption: 'Operator',
         execType: 'operatorexec',
         metaType: 'operatorexec',
         color: '#DCEDC8',
@@ -1433,7 +1454,7 @@ export class AppMetadata {
       },
       'predictexec': {
         name: 'predictexec',
-        caption: 'Prediction Exec',
+        caption: 'Prediction',
         execType: 'predictexec',
         metaType: 'predictexec',
         color: '#EB54C3',
@@ -1481,7 +1502,7 @@ export class AppMetadata {
       },
       'simulateexec': {
         name: 'simulateexec',
-        caption: 'Simulation Exec',
+        caption: 'Simulation',
         execType: 'simulateExec',
         metaType: 'simulateExec',
         color: '#EB54C3',
@@ -1508,7 +1529,7 @@ export class AppMetadata {
         detailState: 'simulateExec',
         moduleState: 'JobMonitoring',
         resultState: 'simulateexec',
-        moduleCaption: 'Data Science',
+        moduleCaption: 'Job Monitoring',
         class: 'fa fa-flask'
       },
 
@@ -1530,7 +1551,7 @@ export class AppMetadata {
       },
       'trainexec': {
         name: 'trainexec',
-        caption: 'Train Exec',
+        caption: 'Train',
         execType: 'trainexec',
         metaType: 'trainexec',
         color: '#8E44AD',
@@ -1545,7 +1566,6 @@ export class AppMetadata {
         allowInChildMenu: false,
         class: 'fa fa-flask'
       },
-
       'trainExec': {
         name: 'train',
         caption: 'Train Exec',
@@ -1666,7 +1686,7 @@ export class AppMetadata {
       },
       'ingestexec': {
         name: 'ingestexec',
-        caption: 'Ingest Exec',
+        caption: 'Ingest',
         execType: 'ingestexec',
         metaType: 'ingestexec',
         color: '#8E44AD',
@@ -1679,7 +1699,7 @@ export class AppMetadata {
         moduleCaption: 'Data Ingestion',
         childMenu: [],
         allowInChildMenu: false,
-        class: 'fa fa-flask'
+        class: 'fa fa-random'
       },
       'ingestExec': {
         name: 'ingest',
@@ -1693,14 +1713,14 @@ export class AppMetadata {
         detailState: 'ingestExec',
         moduleState: 'JobMonitoring',
         resultState: 'ingestExec',
-        moduleCaption: 'Data Ingestion',
+        moduleCaption: 'Job Monitoring',
         childMenu: [],
         allowInChildMenu: false,
-        class: 'fa fa-flask'
+        class: 'fa fa-random'
       },
       'ingestgroupexec': {
         name: 'ingestgroup',
-        caption: 'Ingest Group Exec',
+        caption: 'Ingest Group',
         execType: 'ingestgroupExec',
         metaType: 'ingestgroupExec',
         color: '#EB54C3',
@@ -1710,7 +1730,7 @@ export class AppMetadata {
         resultState: 'ingestgroupexec',
         moduleState: 'dataIngestion',
         moduleCaption: 'Data Ingestion',
-        class: 'fa fa-users'
+        class: 'fa fa-random'
       },
       'ingestgroupExec': {
         name: 'ingestgroup',
@@ -1724,7 +1744,7 @@ export class AppMetadata {
         resultState: 'ingestgroupExec',
         moduleState: 'JobMonitoring',
         moduleCaption: 'Job Monitoring',
-        class: 'fa fa-users'
+        class: 'fa fa-random'
       },
       'batch': {
         name: 'batch',
@@ -1743,7 +1763,7 @@ export class AppMetadata {
       },
       'batchexec': {
         name: 'batchexec',
-        caption: 'Batch Exec',
+        caption: 'Batch',
         execType: 'batchexec',
         metaType: 'batchexec',
         color: '#EB54C3',
@@ -1757,7 +1777,7 @@ export class AppMetadata {
       },
       'mapexec': {
         name: 'mapexec',
-        caption: 'Map Exec',
+        caption: 'Map',
         execType: 'mapexec',
         metaType: 'mapexec',
         color: '#EB54C3',
@@ -1767,7 +1787,7 @@ export class AppMetadata {
         resultState: 'mapexec',
         moduleState: 'dataPreparation',
         moduleCaption: 'Data Preparation',
-        class: 'fa fa-tasks'
+        class: 'fa fa-link'
       },
       'batchExec': {
         name: 'batch',
@@ -1801,7 +1821,7 @@ export class AppMetadata {
       },
       'graphexec': {
         name: 'graphexec',
-        caption: 'Graph Exec',
+        caption: 'Graph',
         execType: 'graphexec',
         metaType: 'graphexec',
         color: '#EB54C3',
@@ -1837,7 +1857,7 @@ export class AppMetadata {
       },
       'reportexec': {
         name: 'reportexec',
-        caption: 'Report Exec',
+        caption: 'Report',
         execType: 'reportexec',
         metaType: 'reportexec',
         color: '#EB54C3',
@@ -1851,7 +1871,7 @@ export class AppMetadata {
         moduleCaption: 'Data Visualization',
         childMenu: [],
         allowInChildMenu: false,
-        class: 'fa fa-tasks'
+        class: 'fa fa-line-chart'
       },
       'reportExec': {
         name: 'report',
@@ -1865,7 +1885,7 @@ export class AppMetadata {
         detailState: 'reportExec',
         moduleState: 'JobMonitoring',
         resultState: 'reportExec',
-        moduleCaption: 'Data Visualization',
+        moduleCaption: 'Job Monitoring',
         childMenu: [],
         allowInChildMenu: false,
         class: 'fa fa-flask'
