@@ -6,16 +6,15 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
 import { CommonService } from '../../../metadata/services/common.service';
 import { Version } from '../../../shared/version';
 
-
 @Component({
   selector: 'app-downloadExec',
   styleUrls: [],
   templateUrl: './downloadExec.template.html',
-
 })
 
 export class DownloadExecComponent {
-
+  showGraph: boolean;
+  isHomeEnable: boolean;
   breadcrumbDataFrom: any;
   id: any;
   version: any;
@@ -37,10 +36,11 @@ export class DownloadExecComponent {
   location: any;
   showResultTrain: any;
 
-
   constructor(private datePipe: DatePipe, private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
     this.showResultTrain = true;
     this.downloadData = {};
+    this.isHomeEnable = false;
+    this.showGraph = false;
     this.breadcrumbDataFrom = [{
       "caption": "Job Monitoring ",
       "routeurl": "/app/jobMonitoring"
@@ -48,15 +48,12 @@ export class DownloadExecComponent {
     {
       "caption": "download Exec",
       "routeurl": "/app/list/downloadExec"
-
     },
     {
       "caption": "",
       "routeurl": null
-
     }
     ]
-
   }
 
   ngOnInit() {
@@ -68,7 +65,6 @@ export class DownloadExecComponent {
     if (this.mode !== undefined) {
       this.getOneByUuidAndVersion(this.id, this.version)
       this.getAllVersionByUuid()
-
     }
   }
 
@@ -142,5 +138,16 @@ export class DownloadExecComponent {
 
   public goBack() {
     this._location.back();
+  }
+
+  showMainPage() {
+    this.isHomeEnable = false
+    // this._location.back();
+    this.showGraph = false;
+  }
+
+  showDagGraph(uuid, version) {
+    this.isHomeEnable = true;
+    this.showGraph = true;
   }
 }

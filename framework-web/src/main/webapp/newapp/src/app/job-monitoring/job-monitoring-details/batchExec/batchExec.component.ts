@@ -14,6 +14,8 @@ import { AppHepler } from '../../../app.helper';
   styleUrls: []
 })
 export class BatchExecComponent implements OnInit {
+  showGraph: boolean;
+  isHomeEnable: boolean;
 
   breadcrumbDataFrom: any;
   id: any;
@@ -47,6 +49,8 @@ export class BatchExecComponent implements OnInit {
   constructor(private datePipe: DatePipe, public apphelper: AppHepler, private _location: Location, public statusDefs: AppMetadata, public metaconfig: AppMetadata, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
     this.showResultModel = true;
     this.batchResultData = {};
+    this.isHomeEnable = false;
+    this.showGraph = false;
     this.operatorInfo = {};
     this.operatorType = null;
     this.operatorName = null;
@@ -186,5 +190,16 @@ export class BatchExecComponent implements OnInit {
 
   refershGrid(){
     console.log("refresh Call...");
+  }
+
+  showMainPage() {
+    this.isHomeEnable = false
+    // this._location.back();
+    this.showGraph = false;
+  }
+
+  showDagGraph(uuid, version) {
+    this.isHomeEnable = true;
+    this.showGraph = true;
   }
 }

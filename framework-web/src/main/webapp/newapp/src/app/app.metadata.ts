@@ -498,12 +498,10 @@ export class AppMetadata {
         resultState: 'downloadExec',
         moduleCaption: 'Job Monitoring',
         class: 'fa fa-download'
-
-
       },
       'uploadexec': {
         name: 'upload',
-        caption: 'File Manager',
+        caption: 'Upload Exec',
         execType: 'uploadexec',
         metaType: 'uploadexec',
         color: '#2AB4C0',
@@ -514,7 +512,6 @@ export class AppMetadata {
         moduleState: 'admin',
         moduleCaption: 'Admin',
         class: 'fa fa-upload'
-
       },
       'uploadExec': {
         name: 'upload',
@@ -530,8 +527,6 @@ export class AppMetadata {
         resultState: 'uploadExec',
         moduleCaption: 'Job Monitoring',
         class: 'fa fa-upload'
-
-
       },
       'pipelineexec': {
         name: 'pipeline',
@@ -572,7 +567,6 @@ export class AppMetadata {
         moduleState: 'JobMonitoring',
         moduleCaption: 'Job Monitoring',
         class: 'fa fa-line-chart'
-
       },
       'viz': {
         name: 'vizpod',
@@ -586,7 +580,6 @@ export class AppMetadata {
         moduleState: 'dataVisualization',
         moduleCaption: 'Data Visualization',
         class: 'fa fa-line-chart'
-
       },
       'vizpodexec': {
         name: 'vizpod',
