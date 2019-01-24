@@ -242,33 +242,18 @@ public class ImputeOperator implements IOperator {
 							sourceDs = commonServiceImpl.getDatasourceByObject(sourceObj);
 							String resolvedFunction = functionOperator.generateSql(function, null, execParams != null ? execParams.getOtherParams() : null, sourceDs);
 							
-							String attrSql = null;							
-							if(sourceObj instanceof Datapod) {
-								Datapod datapod = (Datapod)sourceObj;
-								dataStoreServiceImpl.setRunMode(runMode);
-								String tableName = dataStoreServiceImpl.getTableNameByDatapod(new Key(datapod.getUuid(), datapod.getVersion()), runMode);
-								String generatedFunction = generateFunction(resolvedFunction, attrName);
-								attrSql = "SELECT '"+attrName+"' AS key, "+generatedFunction+" AS value FROM "+tableName+" "+datapod.getName();
-							} else if(sourceObj instanceof DataSet) {
-								DataSet dataSet = (DataSet)sourceObj;
-								String generatedFunction = generateFunction(resolvedFunction, attrName);
-								String innerSql = datasetOperator.generateSql(dataSet, null, execParams != null ? execParams.getOtherParams() : null, new HashSet<>(), execParams, runMode);
-								attrSql = "SELECT '"+attrName+"' AS key, "+generatedFunction+" AS value FROM ("+innerSql+") "+dataSet.getName();								
-							} else if(sourceObj instanceof Rule) {
-								Rule rule = (Rule)sourceObj;
-								String generatedFunction = generateFunction(resolvedFunction, attrName);
-								String innerSql = ruleOperator.generateSql(rule, null, execParams != null ? execParams.getOtherParams() : null, new HashSet<>(), execParams, runMode);
-								attrSql = "SELECT '"+attrName+"' AS key, "+generatedFunction+" AS value FROM ("+innerSql+") "+rule.getName();								
-							}
+							String attrSql = generateAttrSqlBySource(sourceObj, attrName, resolvedFunction, execParams, runMode);
 							
-							if(queryUnionBuilder.length() > 0) {
-								queryUnionBuilder.append(" UNION ALL ").append(attrSql);
-							} else {
-								queryUnionBuilder.append(attrSql);
-							}
-							
-							attributeImputeValues.put(attrName, attrSql);
-							logger.info("impute query for attribute "+attrName+": "+attrSql);						
+							if(attrSql != null && !attrSql.isEmpty()) {
+								if(queryUnionBuilder.length() > 0) {
+									queryUnionBuilder.append(" UNION ALL ").append(attrSql);
+								} else {
+									queryUnionBuilder.append(attrSql);
+								}
+								
+								attributeImputeValues.put(attrName, attrSql);
+								logger.info("impute query for attribute "+attrName+": "+attrSql);
+							}						
 						}
 						break;
 					}
@@ -300,6 +285,27 @@ public class ImputeOperator implements IOperator {
 			}
 		}
 		return attributeImputeValues;
+	}
+	
+	public String generateAttrSqlBySource(Object sourceObj, String attrName, String resolvedFunction, ExecParams execParams, RunMode runMode) throws Exception {
+		if(sourceObj instanceof Datapod) {
+			Datapod datapod = (Datapod)sourceObj;
+			dataStoreServiceImpl.setRunMode(runMode);
+			String tableName = dataStoreServiceImpl.getTableNameByDatapod(new Key(datapod.getUuid(), datapod.getVersion()), runMode);
+			String generatedFunction = generateFunction(resolvedFunction, attrName);
+			return "SELECT '"+attrName+"' AS key, "+generatedFunction+" AS value FROM "+tableName+" "+datapod.getName();
+		} else if(sourceObj instanceof DataSet) {
+			DataSet dataSet = (DataSet)sourceObj;
+			String generatedFunction = generateFunction(resolvedFunction, attrName);
+			String innerSql = datasetOperator.generateSql(dataSet, null, execParams != null ? execParams.getOtherParams() : null, new HashSet<>(), execParams, runMode);
+			return "SELECT '"+attrName+"' AS key, "+generatedFunction+" AS value FROM ("+innerSql+") "+dataSet.getName();								
+		} else if(sourceObj instanceof Rule) {
+			Rule rule = (Rule)sourceObj;
+			String generatedFunction = generateFunction(resolvedFunction, attrName);
+			String innerSql = ruleOperator.generateSql(rule, null, execParams != null ? execParams.getOtherParams() : null, new HashSet<>(), execParams, runMode);
+			return "SELECT '"+attrName+"' AS key, "+generatedFunction+" AS value FROM ("+innerSql+") "+rule.getName();								
+		}
+		return null;
 	}
 	
 	public String getAttributeNameByObject(Object object, Integer attributeId) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {		
