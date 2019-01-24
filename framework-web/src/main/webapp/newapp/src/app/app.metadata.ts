@@ -244,7 +244,7 @@ export class AppMetadata {
         detailState: 'reconExec',
         moduleState: 'JobMonitoring',
         resultState: 'reconExec',
-        moduleCaption: 'Data Reconciliation',
+        moduleCaption: 'Job Monitoring',
         childMenu: [],
         allowInChildMenu: false,
         class: 'fa fa-compress'
@@ -1536,7 +1536,7 @@ export class AppMetadata {
         detailState: 'simulateExec',
         moduleState: 'JobMonitoring',
         resultState: 'simulateexec',
-        moduleCaption: 'Data Science',
+        moduleCaption: 'Job Monitoring',
         class: 'fa fa-flask'
       },
 
@@ -1720,7 +1720,7 @@ export class AppMetadata {
         detailState: 'ingestExec',
         moduleState: 'JobMonitoring',
         resultState: 'ingestExec',
-        moduleCaption: 'Data Ingestion',
+        moduleCaption: 'Job Monitoring',
         childMenu: [],
         allowInChildMenu: false,
         class: 'fa fa-random'
@@ -1892,7 +1892,7 @@ export class AppMetadata {
         detailState: 'reportExec',
         moduleState: 'JobMonitoring',
         resultState: 'reportExec',
-        moduleCaption: 'Data Visualization',
+        moduleCaption: 'Job Monitoring',
         childMenu: [],
         allowInChildMenu: false,
         class: 'fa fa-flask'
