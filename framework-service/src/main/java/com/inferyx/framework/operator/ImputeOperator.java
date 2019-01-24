@@ -79,7 +79,7 @@ public class ImputeOperator implements IOperator {
 	@Autowired
 	private RuleOperator ruleOperator;
 	
-	static final Logger logger = Logger.getLogger(GenerateDataOperator.class);
+	static final Logger logger = Logger.getLogger(ImputeOperator.class);
 
 	/**
 	 * 
@@ -219,7 +219,7 @@ public class ImputeOperator implements IOperator {
 		return otherParams;
 	}
 
-	public LinkedHashMap<String, Object> resolveAttributeImputeValue(List<FeatureAttrMap> featureAttrMapList, Object sourceObj, Model model, ExecParams execParams, RunMode runMode) throws Exception {
+	public LinkedHashMap<String, Object> resolveAttributeImputeValue(List<FeatureAttrMap> featureAttrMapList, Object sourceObj, Model model, ExecParams execParams, RunMode runMode, String tableName) throws Exception {
 		LinkedHashMap<String, Object> attributeImputeValues = new LinkedHashMap<>();		
 		StringBuilder queryUnionBuilder = new StringBuilder();
 		Datasource sourceDs = null;
@@ -227,7 +227,7 @@ public class ImputeOperator implements IOperator {
 		for(FeatureAttrMap featureAttrMap : featureAttrMapList) {
 			for(Feature feature : model.getFeatures()) {
 				try {
-					if(feature.getFeatureId().equalsIgnoreCase(featureAttrMap.getFeatureMapId())) {
+					if(feature.getFeatureId().equalsIgnoreCase(featureAttrMap.getFeature().getFeatureId())) {
 						
 						String attrName = getAttributeNameByObject(sourceObj, Integer.parseInt(featureAttrMap.getAttribute().getAttrId()));
 						if(feature.getImputeMethod() != null 
@@ -242,7 +242,7 @@ public class ImputeOperator implements IOperator {
 							sourceDs = commonServiceImpl.getDatasourceByObject(sourceObj);
 							String resolvedFunction = functionOperator.generateSql(function, null, execParams != null ? execParams.getOtherParams() : null, sourceDs);
 							
-							String attrSql = generateAttrSqlBySource(sourceObj, attrName, resolvedFunction, execParams, runMode);
+							String attrSql = generateAttrSqlBySource(sourceObj, attrName, resolvedFunction, execParams, runMode, tableName);
 							
 							if(attrSql != null && !attrSql.isEmpty()) {
 								if(queryUnionBuilder.length() > 0) {
@@ -270,7 +270,7 @@ public class ImputeOperator implements IOperator {
 			String appUuid = commonServiceImpl.getApp().getUuid();
 			IExecutor exec = execFactory.getExecutor(appDs.getType());
 			try {
-				ResultSetHolder rsHolder = exec.executeSqlByDatasource(queryUnionBuilder.toString(), sourceDs, appUuid);				
+				ResultSetHolder rsHolder = exec.executeSqlByDatasource(queryUnionBuilder.toString(), appDs, appUuid);				
 				LinkedHashMap<String, Object> resolvedAttrImputeValues = exec.getImputeValue(rsHolder);
 				
 				Set<String> attrSet = resolvedAttrImputeValues.keySet();
@@ -287,23 +287,20 @@ public class ImputeOperator implements IOperator {
 		return attributeImputeValues;
 	}
 	
-	public String generateAttrSqlBySource(Object sourceObj, String attrName, String resolvedFunction, ExecParams execParams, RunMode runMode) throws Exception {
+	public String generateAttrSqlBySource(Object sourceObj, String attrName, String resolvedFunction, ExecParams execParams, RunMode runMode, String tableName) throws Exception {
 		if(sourceObj instanceof Datapod) {
 			Datapod datapod = (Datapod)sourceObj;
 			dataStoreServiceImpl.setRunMode(runMode);
-			String tableName = dataStoreServiceImpl.getTableNameByDatapod(new Key(datapod.getUuid(), datapod.getVersion()), runMode);
 			String generatedFunction = generateFunction(resolvedFunction, attrName);
 			return "SELECT '"+attrName+"' AS key, "+generatedFunction+" AS value FROM "+tableName+" "+datapod.getName();
 		} else if(sourceObj instanceof DataSet) {
 			DataSet dataSet = (DataSet)sourceObj;
 			String generatedFunction = generateFunction(resolvedFunction, attrName);
-			String innerSql = datasetOperator.generateSql(dataSet, null, execParams != null ? execParams.getOtherParams() : null, new HashSet<>(), execParams, runMode);
-			return "SELECT '"+attrName+"' AS key, "+generatedFunction+" AS value FROM ("+innerSql+") "+dataSet.getName();								
+			return "SELECT '"+attrName+"' AS key, "+generatedFunction+" AS value FROM "+tableName+" "+dataSet.getName();								
 		} else if(sourceObj instanceof Rule) {
 			Rule rule = (Rule)sourceObj;
 			String generatedFunction = generateFunction(resolvedFunction, attrName);
-			String innerSql = ruleOperator.generateSql(rule, null, execParams != null ? execParams.getOtherParams() : null, new HashSet<>(), execParams, runMode);
-			return "SELECT '"+attrName+"' AS key, "+generatedFunction+" AS value FROM ("+innerSql+") "+rule.getName();								
+			return "SELECT '"+attrName+"' AS key, "+generatedFunction+" AS value FROM "+tableName+" "+rule.getName();								
 		}
 		return null;
 	}

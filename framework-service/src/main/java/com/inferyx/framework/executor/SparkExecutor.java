@@ -4183,7 +4183,8 @@ public class SparkExecutor<T> implements IExecutor {
 	@Override
 	public LinkedHashMap<String, Object> getImputeValue(ResultSetHolder rsHolder) throws Exception{
 		LinkedHashMap<String, Object> resolvedAttrImputeValues = new LinkedHashMap<>();
-		Dataset<Row> df = rsHolder.getDataFrame();				
+		Dataset<Row> df = rsHolder.getDataFrame();	
+
 		Row[] rows = (Row[]) df.head(Integer.parseInt(""+df.count()));
 		for (Row row : rows) {
 			resolvedAttrImputeValues.put((String) row.get(0), row.get(1));
@@ -4195,9 +4196,9 @@ public class SparkExecutor<T> implements IExecutor {
 	public ResultSetHolder applyAttrImputeValuesToData(ResultSetHolder rsHolder, LinkedHashMap<String, Object> imputeAttributeNameWithValues, boolean registerTempTable, String tempTableName) throws IOException {
 		Dataset<Row> df = rsHolder.getDataFrame();	
 		
-		df.show(Integer.parseInt(""+df.count()), false);
+//		df.show(Integer.parseInt(""+df.count()), false);
 		df = df.na().fill(imputeAttributeNameWithValues);
-		df.show(Integer.parseInt(""+df.count()), false);
+//		df.show(Integer.parseInt(""+df.count()), false);
 		
 		if(registerTempTable) {
 			IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());

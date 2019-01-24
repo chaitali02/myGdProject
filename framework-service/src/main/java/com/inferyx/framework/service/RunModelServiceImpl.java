@@ -781,15 +781,15 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 				String label = commonServiceImpl.resolveLabel(train.getLabelInfo());
 //				String sql = modelServiceImpl.generateSQLBySource(source, execParams);
 //				exec.executeAndRegister(sql, (tableName+"_train_data"), appUuid);
-				
-				//finding impute values of attribute
-				LinkedHashMap<String, Object> resolvedimputeAttributeValues = imputeOperator.resolveAttributeImputeValue(train.getFeatureAttrMap(), source, model, execParams, runMode);
 
 				String sourceSql = modelServiceImpl.generateSQLBySource(source, execParams);
 				
 				ResultSetHolder sourceRsHolder = exec.executeAndRegisterByDatasource(sourceSql, (tableName+"_train_source_data"), trainSrcDatasource, appUuid);
 				sourceRsHolder.setTableName((tableName+"_train_source_data"));
 
+				//finding impute values of attribute
+				LinkedHashMap<String, Object> resolvedimputeAttributeValues = imputeOperator.resolveAttributeImputeValue(train.getFeatureAttrMap(), source, model, execParams, runMode, (tableName+"_train_source_data"));
+				
 				//applying imputation valued per column to data
 				sourceRsHolder = exec.applyAttrImputeValuesToData(sourceRsHolder, resolvedimputeAttributeValues, true, (tableName+"_train_source_data"));
 //				String featureMappedSQL = modelServiceImpl.generateFeatureSQLBySource(train.getFeatureAttrMap(), source, execParams, fieldArray, label, (tableName+"_train_source_data"));
