@@ -37,7 +37,10 @@ import { UploadExecComponent } from './uploadExec/uploadExec.componet'
 import { BatchExecComponent } from './batchExec/batchExec.component';
 import { IngestExecComponent } from './ingestExec/ingestExec.component';
 import { ReportExecComponent } from './reportExec/reportExec.component';
+import { ReconExecComponent } from './reconExec/reconExec.component';
 import { DialogModule } from 'primeng/components/dialog/dialog';
+import { ReconGroupExecComponent } from './reconGroupExec/reconGroupExec.component';
+import { IngestGroupExecComponent } from './ingestGroupExec/ingestGroupExec.component';
 
 @NgModule({
     imports: [
@@ -77,7 +80,10 @@ import { DialogModule } from 'primeng/components/dialog/dialog';
         UploadExecComponent,
         BatchExecComponent,
         IngestExecComponent,
-        ReportExecComponent
+        IngestGroupExecComponent,
+        ReportExecComponent,
+        ReconExecComponent,
+        ReconGroupExecComponent
     ],
     providers: [
         CommonService
