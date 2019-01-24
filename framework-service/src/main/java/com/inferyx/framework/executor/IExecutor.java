@@ -819,11 +819,11 @@ public interface IExecutor {
 	/**
 	 * @Ganesh
 	 *  
-	 * @param rshHolder
+	 * @param rsHolder
 	 * @return Object
 	 * @throws Exception
 	 */
-	Object getImputeValue(ResultSetHolder rshHolder) throws Exception;
+	LinkedHashMap<String, Object> getImputeValue(ResultSetHolder rsHolder) throws Exception;
 
 	/**
 	 * @Ganesh

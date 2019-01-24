@@ -3,15 +3,21 @@
  */
 package com.inferyx.framework.operator;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.apache.spark.ml.linalg.Vector;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SaveMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -219,57 +225,56 @@ public class ImputeOperator implements IOperator {
 		return otherParams;
 	}
 
-	public LinkedHashMap<String, Object> getAttributeImputeValue(List<FeatureAttrMap> featureAttrMapList, Object sourceObj, Model model, ExecParams execParams, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		LinkedHashMap<String, Object> attributeImputeValues = new LinkedHashMap<>();
-		
-		Datasource appDs = commonServiceImpl.getDatasourceByApp();
-		String appUuid = commonServiceImpl.getApp().getUuid();
+	public LinkedHashMap<String, Object> resolveAttributeImputeValue(List<FeatureAttrMap> featureAttrMapList, Object sourceObj, Model model, ExecParams execParams, RunMode runMode) throws Exception {
+		LinkedHashMap<String, Object> attributeImputeValues = new LinkedHashMap<>();		
+		StringBuilder queryUnionBuilder = new StringBuilder();
+		Datasource sourceDs = null;
 		
 		for(FeatureAttrMap featureAttrMap : featureAttrMapList) {
 			for(Feature feature : model.getFeatures()) {
 				try {
 					if(feature.getFeatureId().equalsIgnoreCase(featureAttrMap.getFeatureMapId())) {
 						
+						String attrName = getAttributeNameByObject(sourceObj, Integer.parseInt(featureAttrMap.getAttribute().getAttrId()));
 						if(feature.getImputeMethod() != null 
 								&& feature.getImputeMethod().getRef().getType().equals(MetaType.simple)) {
-							attributeImputeValues.put(feature.getFeatureId(), feature.getImputeMethod().getValue());
+							attributeImputeValues.put(attrName, feature.getImputeMethod().getValue());
 							logger.info("impute value for attribute "+feature.getName()+": "+feature.getImputeMethod().getValue());
 						} else if(feature.getImputeMethod() != null 
 								&& feature.getImputeMethod().getRef().getType().equals(MetaType.function)) {
 							
 							MetaIdentifier functionMI = feature.getImputeMethod().getRef();
 							Function function = (Function) commonServiceImpl.getOneByUuidAndVersion(functionMI.getUuid(), functionMI.getVersion(), functionMI.getType().toString(), "N");
-							Datasource sourceDs = commonServiceImpl.getDatasourceByObject(sourceObj);
+							sourceDs = commonServiceImpl.getDatasourceByObject(sourceObj);
 							String resolvedFunction = functionOperator.generateSql(function, null, execParams != null ? execParams.getOtherParams() : null, sourceDs);
 							
-							IExecutor exec = execFactory.getExecutor(appDs.getType());
-							String attrSql = null;
-							String attrName = null;
+							String attrSql = null;							
 							if(sourceObj instanceof Datapod) {
 								Datapod datapod = (Datapod)sourceObj;
-								attrName = datapod.getAttributeName(Integer.parseInt(featureAttrMap.getAttribute().getAttrId()));
 								dataStoreServiceImpl.setRunMode(runMode);
 								String tableName = dataStoreServiceImpl.getTableNameByDatapod(new Key(datapod.getUuid(), datapod.getVersion()), runMode);
 								String generatedFunction = generateFunction(resolvedFunction, attrName);
-								attrSql = "SELECT "+generatedFunction+" FROM "+tableName+" "+datapod.getName();
+								attrSql = "SELECT '"+attrName+"' AS key, "+generatedFunction+" AS value FROM "+tableName+" "+datapod.getName();
 							} else if(sourceObj instanceof DataSet) {
 								DataSet dataSet = (DataSet)sourceObj;
-								attrName = dataSet.getAttributeName(Integer.parseInt(featureAttrMap.getAttribute().getAttrId()));
 								String generatedFunction = generateFunction(resolvedFunction, attrName);
 								String innerSql = datasetOperator.generateSql(dataSet, null, execParams != null ? execParams.getOtherParams() : null, new HashSet<>(), execParams, runMode);
-								attrSql = "SELECT "+generatedFunction+" FROM ("+innerSql+") "+dataSet.getName();								
+								attrSql = "SELECT '"+attrName+"' AS key, "+generatedFunction+" AS value FROM ("+innerSql+") "+dataSet.getName();								
 							} else if(sourceObj instanceof Rule) {
 								Rule rule = (Rule)sourceObj;
-								attrName = rule.getAttributeName(Integer.parseInt(featureAttrMap.getAttribute().getAttrId()));
 								String generatedFunction = generateFunction(resolvedFunction, attrName);
 								String innerSql = ruleOperator.generateSql(rule, null, execParams != null ? execParams.getOtherParams() : null, new HashSet<>(), execParams, runMode);
-								attrSql = "SELECT "+generatedFunction+" FROM ("+innerSql+") "+rule.getName();								
+								attrSql = "SELECT '"+attrName+"' AS key, "+generatedFunction+" AS value FROM ("+innerSql+") "+rule.getName();								
 							}
 							
-							ResultSetHolder rsHolder = exec.executeSqlByDatasource(attrSql, sourceDs, appUuid);
-							Object attrValue = exec.getImputeValue(rsHolder);
-							attributeImputeValues.put(feature.getFeatureId(), attrValue);
-							logger.info("impute value for attribute "+attrName+": "+attrValue);						
+							if(queryUnionBuilder.length() > 0) {
+								queryUnionBuilder.append(" UNION ALL ").append(attrSql);
+							} else {
+								queryUnionBuilder.append(attrSql);
+							}
+							
+							attributeImputeValues.put(attrName, attrSql);
+							logger.info("impute query for attribute "+attrName+": "+attrSql);						
 						}
 						break;
 					}
@@ -279,7 +284,32 @@ public class ImputeOperator implements IOperator {
 				}				
 			} 
 		}
+		
+		if(queryUnionBuilder.length() > 0) {
+			logger.info("impute union query: "+queryUnionBuilder);		
+			Datasource appDs = commonServiceImpl.getDatasourceByApp();
+			String appUuid = commonServiceImpl.getApp().getUuid();
+			IExecutor exec = execFactory.getExecutor(appDs.getType());
+			try {
+				ResultSetHolder rsHolder = exec.executeSqlByDatasource(queryUnionBuilder.toString(), sourceDs, appUuid);				
+				LinkedHashMap<String, Object> resolvedAttrImputeValues = exec.getImputeValue(rsHolder);
+				
+				Set<String> attrSet = resolvedAttrImputeValues.keySet();
+				for(String attrName : attributeImputeValues.keySet()) {						
+					if(attrSet.contains(attrName)) {
+						attributeImputeValues.put(attrName, resolvedAttrImputeValues.get(attrName));
+					}
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		return attributeImputeValues;
+	}
+	
+	public String getAttributeNameByObject(Object object, Integer attributeId) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {		
+		return (String) object.getClass().getMethod("getAttributeName", Integer.class).invoke(object, attributeId);
 	}
 	
 	public String generateFunction(String resolvedFunction, String attributeName) {

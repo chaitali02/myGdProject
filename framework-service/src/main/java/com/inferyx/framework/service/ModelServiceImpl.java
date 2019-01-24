@@ -2173,18 +2173,14 @@ public class ModelServiceImpl {
 					
 
 					//finding impute values of attribute
-					LinkedHashMap<String, Object> attributeImputeValues = imputeOperator.getAttributeImputeValue(predict.getFeatureAttrMap(), source, model, execParams, runMode);
-					
-					//mapping impute values with its mapped column
-					LinkedHashMap<String, Object> imputeAttributeNameWithValues = getAttributeNamesWithImputeValues(predict.getFeatureAttrMap(), attributeImputeValues);
-					
+					LinkedHashMap<String, Object> resolvedimputeAttributeValues = imputeOperator.resolveAttributeImputeValue(predict.getFeatureAttrMap(), source, model, execParams, runMode);
 					
 					//getting data from source
 					String sourceSql = generateSQLBySource(source, execParams);
 					ResultSetHolder rsHolder = exec.executeAndRegisterByDatasource(sourceSql, (tableName+"_pred_data"), sourceDS, appUuid);
 					
 					//applying imputation valued per column to data
-					rsHolder = exec.applyAttrImputeValuesToData(rsHolder, imputeAttributeNameWithValues, true, (tableName+"_pred_data"));
+					rsHolder = exec.applyAttrImputeValuesToData(rsHolder, resolvedimputeAttributeValues, true, (tableName+"_pred_data"));
 
 					//getting data having only feature columns
 					String mappedFeatureAttrSql = generateFeatureSQLByTempTable(predict.getFeatureAttrMap(), (tableName+"_pred_data"), null, (tableName+"_pred_mapped_data"));

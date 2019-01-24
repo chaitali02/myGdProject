@@ -4182,9 +4182,14 @@ public class SparkExecutor<T> implements IExecutor {
 	}	
 
 	@Override
-	public Object getImputeValue(ResultSetHolder rshHolder) throws Exception{
-		rshHolder.getDataFrame().show(false);
-		return rshHolder.getDataFrame().first().get(0);
+	public LinkedHashMap<String, Object> getImputeValue(ResultSetHolder rsHolder) throws Exception{
+		LinkedHashMap<String, Object> resolvedAttrImputeValues = new LinkedHashMap<>();
+		Dataset<Row> df = rsHolder.getDataFrame();				
+		Row[] rows = (Row[]) df.head(Integer.parseInt(""+df.count()));
+		for (Row row : rows) {
+			resolvedAttrImputeValues.put((String) row.get(0), row.get(1));
+		}
+		return resolvedAttrImputeValues;
 	}
 
 	@Override

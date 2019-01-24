@@ -753,7 +753,7 @@ public class OracleExecutor implements IExecutor {
 	}
 
 	@Override
-	public Object getImputeValue(ResultSetHolder rshHolder) throws Exception {
+	public LinkedHashMap<String, Object> getImputeValue(ResultSetHolder rsHolder) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
