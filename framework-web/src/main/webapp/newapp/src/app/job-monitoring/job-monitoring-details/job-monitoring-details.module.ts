@@ -36,6 +36,8 @@ import { DownloadExecComponent } from './downloadExec/downloadExec.component';
 import { UploadExecComponent } from './uploadExec/uploadExec.componet'
 import { BatchExecComponent } from './batchExec/batchExec.component';
 import { IngestExecComponent } from './ingestExec/ingestExec.component';
+import { ReportExecComponent } from './reportExec/reportExec.component';
+import { DialogModule } from 'primeng/components/dialog/dialog';
 
 @NgModule({
     imports: [
@@ -52,7 +54,9 @@ import { IngestExecComponent } from './ingestExec/ingestExec.component';
         MultiSelectModule,
         DropdownModule,
         GrowlModule,
-        CheckboxModule
+        CheckboxModule,
+        DialogModule
+       
     ],
     declarations: [
         jobMonitoringDetailsComponent,
@@ -72,7 +76,8 @@ import { IngestExecComponent } from './ingestExec/ingestExec.component';
         DownloadExecComponent,
         UploadExecComponent,
         BatchExecComponent,
-        IngestExecComponent
+        IngestExecComponent,
+        ReportExecComponent
     ],
     providers: [
         CommonService
