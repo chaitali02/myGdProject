@@ -1,189 +1,189 @@
 {
-  "uuid": "e9acda6c-7d1c-465b-acb6-b36237c39f41",
-  "version": "1547070288",
-  "name": "ds_device_data_summary_features",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn": "Wed Jan 09 16:44:48 EST 2019",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
-        "version": "1521430822",
-        "name": "Dept Of Transportation"
-      },
-      "value": null
-    }
-  ],
-  "dependsOn": {
-    "ref": {
-      "type": "dataset",
-      "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
-      "version": null,
-      "name": "ds_device_data_base_features"
-    },
-    "value": null
-  },
-  "filterInfo": null,
-  "attributeInfo": [
-    {
-      "attrSourceId": "0",
-      "attrDisplaySeq": "0",
-      "attrSourceName": "deviceid",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
-          "version": null,
-          "name": null
+    "uuid" : "e9acda6c-7d1c-465b-acb6-b36237c39f41",
+    "version" : "1547070288",
+    "name" : "ds_device_data_summary_features",
+    "desc" : null,
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
         },
-        "value": null,
-        "attrId": "0",
-        "attrName": "deviceid",
-        "attrType": "string",
-        "attrUnitType": null
-      }
+        "value" : null
     },
-    {
-      "attrSourceId": "1",
-      "attrDisplaySeq": "1",
-      "attrSourceName": "date",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
-          "version": null,
-          "name": null
+    "createdOn" : ISODate("2019-01-25T10:09:00.849Z"),
+    "tags" : [],
+    "active" : "Y",
+    "locked" : "N",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+                "version" : "1521430822",
+                "name" : "Dept Of Transportation"
+            },
+            "value" : null
+        }
+    ],
+    "dependsOn" : {
+        "ref" : {
+            "type" : "dataset",
+            "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
+            "version" : null,
+            "name" : "ds_device_data_base_features"
         },
-        "value": null,
-        "attrId": "1",
-        "attrName": "date",
-        "attrType": "string",
-        "attrUnitType": null
-      }
+        "value" : null
     },
-    {
-      "attrSourceId": "2",
-      "attrDisplaySeq": "2",
-      "attrSourceName": "warn_type1_total_rollingmean_3",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "034d7b8d-12f5-4e5a-8437-2abab11fd2a5",
-          "version": null,
-          "name": "fm_warn_type1_total_rollingmean_3"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": "fm_warn_type1_total_rollingmean_3",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "3",
-      "attrDisplaySeq": "3",
-      "attrSourceName": "warn_type1_total_rollingdiff_3",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "ed14a823-9352-40b6-ba6a-e295dabf9edb",
-          "version": null,
-          "name": "fm_warn_type1_total_rollingdiff_3"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": "fm_warn_type1_total_rollingdiff_3",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "4",
-      "attrDisplaySeq": "4",
-      "attrSourceName": "warn_type1_total_rollingstd_3",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "0873c539-7bde-4ef0-b35b-21a0e7b05844",
-          "version": null,
-          "name": "fm_warn_type1_total_rollingstd_3"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": "fm_warn_type1_total_rollingstd_3",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "5",
-      "attrDisplaySeq": "5",
-      "attrSourceName": "warn_type1_total_rollingmax_3",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "e4588c3e-1b5f-4b5f-b126-b045860306b6",
-          "version": null,
-          "name": "fm_warn_type1_total_rollingmax_3"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": "fm_warn_type1_total_rollingmax_3",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "6",
-      "attrDisplaySeq": "6",
-      "attrSourceName": "warn_type1_total_rollingmin_3",
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "5b0c9fae-3b01-4c26-a481-c8f4fb469e7e",
-          "version": null,
-          "name": "fm_warn_type1_total_rollingmin_3"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": "fm_warn_type1_total_rollingmin_3",
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrSourceId": "7",
-      "attrDisplaySeq": "7",
-      "attrSourceName": "version",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "33",
-        "attrName": "version",
-        "attrType": "Integer",
-        "attrUnitType": null
-      }
-    }
-  ],
-  "groupBy": null,
-  "limit": -1
+    "filterInfo" : null,
+    "attributeInfo" : [ 
+        {
+            "attrSourceId" : "0",
+            "attrDisplaySeq" : "0",
+            "attrSourceName" : "deviceid",
+            "sourceAttr" : {
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
+                    "version" : null,
+                    "name" : null
+                },
+                "value" : null,
+                "attrId" : "0",
+                "attrName" : "deviceid",
+                "attrType" : "string",
+                "attrUnitType" : null
+            }
+        }, 
+        {
+            "attrSourceId" : "1",
+            "attrDisplaySeq" : "1",
+            "attrSourceName" : "date",
+            "sourceAttr" : {
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
+                    "version" : null,
+                    "name" : null
+                },
+                "value" : null,
+                "attrId" : "1",
+                "attrName" : "date",
+                "attrType" : "string",
+                "attrUnitType" : null
+            }
+        }, 
+        {
+            "attrSourceId" : "2",
+            "attrDisplaySeq" : "2",
+            "attrSourceName" : "warn_type1_total_rollingmean_3",
+            "sourceAttr" : {
+                "ref" : {
+                    "type" : "formula",
+                    "uuid" : "131ddfc8-1e0f-11e9-ab14-d663bd873d93",
+                    "version" : null,
+                    "name" : "fm_warn_type1_total_rollingmean_3"
+                },
+                "value" : null,
+                "attrId" : null,
+                "attrName" : "fm_warn_type1_total_rollingmean_3",
+                "attrType" : null,
+                "attrUnitType" : null
+            }
+        }, 
+        {
+            "attrSourceId" : "3",
+            "attrDisplaySeq" : "3",
+            "attrSourceName" : "warn_type1_total_rollingdiff_3",
+            "sourceAttr" : {
+                "ref" : {
+                    "type" : "formula",
+                    "uuid" : "c56f98e0-1e1b-11e9-ab14-d663bd873d93",
+                    "version" : null,
+                    "name" : "fm_warn_type1_total_rollingdiff_3"
+                },
+                "value" : null,
+                "attrId" : null,
+                "attrName" : "fm_warn_type1_total_rollingdiff_3",
+                "attrType" : null,
+                "attrUnitType" : null
+            }
+        }, 
+        {
+            "attrSourceId" : "4",
+            "attrDisplaySeq" : "4",
+            "attrSourceName" : "warn_type1_total_rollingstd_3",
+            "sourceAttr" : {
+                "ref" : {
+                    "type" : "formula",
+                    "uuid" : "fa2cbf54-1e1b-11e9-ab14-d663bd873d93",
+                    "version" : null,
+                    "name" : "fm_warn_type1_total_rollingstd_3"
+                },
+                "value" : null,
+                "attrId" : null,
+                "attrName" : "fm_warn_type1_total_rollingstd_3",
+                "attrType" : null,
+                "attrUnitType" : null
+            }
+        }, 
+        {
+            "attrSourceId" : "5",
+            "attrDisplaySeq" : "5",
+            "attrSourceName" : "warn_type1_total_rollingmax_3",
+            "sourceAttr" : {
+                "ref" : {
+                    "type" : "formula",
+                    "uuid" : "95840a1c-1e1b-11e9-ab14-d663bd873d93",
+                    "version" : null,
+                    "name" : "fm_warn_type1_total_rollingmax_3"
+                },
+                "value" : null,
+                "attrId" : null,
+                "attrName" : "fm_warn_type1_total_rollingmax_3",
+                "attrType" : null,
+                "attrUnitType" : null
+            }
+        }, 
+        {
+            "attrSourceId" : "6",
+            "attrDisplaySeq" : "6",
+            "attrSourceName" : "warn_type1_total_rollingmin_3",
+            "sourceAttr" : {
+                "ref" : {
+                    "type" : "formula",
+                    "uuid" : "e56d1afa-1e1b-11e9-ab14-d663bd873d93",
+                    "version" : null,
+                    "name" : "fm_warn_type1_total_rollingmin_3"
+                },
+                "value" : null,
+                "attrId" : null,
+                "attrName" : "fm_warn_type1_total_rollingmin_3",
+                "attrType" : null,
+                "attrUnitType" : null
+            }
+        }, 
+        {
+            "attrSourceId" : "7",
+            "attrDisplaySeq" : "7",
+            "attrSourceName" : "version",
+            "sourceAttr" : {
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
+                    "version" : null,
+                    "name" : null
+                },
+                "value" : null,
+                "attrId" : "33",
+                "attrName" : "version",
+                "attrType" : "Integer",
+                "attrUnitType" : null
+            }
+        }
+    ],
+    "groupBy" : null,
+    "limit" : -1
 }
