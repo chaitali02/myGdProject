@@ -3264,7 +3264,7 @@ public class SparkExecutor<T> implements IExecutor {
 		}
 		Transformer[] transformers = pipelineModel.stages();
 		for (Transformer transformer : transformers) {
-			if(transformer instanceof org.apache.spark.ml.Model<?> && Class.forName(trainClass).isInstance(transformer)) {
+			if(transformer instanceof org.apache.spark.ml.Model<?>) {
 				org.apache.spark.ml.Model<?> model = (org.apache.spark.ml.Model<?>)transformer;
 				for(String method : summaryMethods) {
 					Object result = model.getClass().getMethod(method.trim()).invoke(model);
