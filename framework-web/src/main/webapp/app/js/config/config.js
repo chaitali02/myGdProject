@@ -97,6 +97,12 @@ InferyxApp.constant('CF_DOWNLOAD',{
     limit_to:6,
     formate:["excel"],
 });
+
+InferyxApp.constant('CF_GRID',{
+    framework_autopopulate_grid:200,
+   
+});
+
 InferyxApp.constant('CF_ENCODINGTYPE',{
     encodingType:["ORDINAL", "ONEHOT", "BINARY", "BASEN","HASHING"]
 });
