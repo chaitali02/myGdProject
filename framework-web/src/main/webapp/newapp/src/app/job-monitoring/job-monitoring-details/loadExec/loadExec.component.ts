@@ -15,9 +15,10 @@ import { DatePipe } from '@angular/common';
   selector: 'app-loadExec',
   styleUrls: [],
   templateUrl: './loadExec.template.html',
-  
 })
 export class LoadExecComponent {
+  showGraph: boolean;
+  isHomeEnable: boolean;
   statusList: any[];
   dependsOn: any;
   VersionList: SelectItem[] = [];
@@ -53,6 +54,8 @@ export class LoadExecComponent {
 
   constructor(private datePipe: DatePipe,private _location: Location,config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
   this.loadData={};
+  this.isHomeEnable = false;
+  this.showGraph = false;
   this.targets={'uuid':"","label":""}
   this.selectVersion={"version":""};
     this.showLoad = true;
@@ -63,15 +66,12 @@ export class LoadExecComponent {
     {
       "caption":"Load",
       "routeurl":"/app/list/loadExec"
-
     },
     {
       "caption":"",
       "routeurl":null
-
     }
     ]
-    
   }
 
   ngOnInit() {
@@ -80,12 +80,12 @@ export class LoadExecComponent {
       this.version = params['version'];
       this.mode = params['mode'];
     }); 
-    if(this.mode !== undefined) {   
-      this.getOneByUuidAndVersion(this.id,this.version)
-      this.getAllVersionByUuid()
-      
+    if(this.mode !== undefined) { 
+      this.getAllVersionByUuid();  
+      this.getOneByUuidAndVersion(this.id,this.version);
     }
   }
+
   public goBack() {
     this._location.back();
   }
@@ -106,7 +106,6 @@ export class LoadExecComponent {
     error => console.log("Error :: " + error));
   }
 
-
   onSuccessgetOneByUuidAndVersion(response){
     this.loadData=response
     this.createdBy=this.loadData.createdBy.ref.name;
@@ -115,7 +114,7 @@ export class LoadExecComponent {
     var statusList = [];
     for (let i = 0; i < response.statusList.length; i++) {
       d = this.datePipe.transform(new Date(response.statusList[i].createdOn), "EEE MMM dd HH:mm:ss Z yyyy");
-      d = d.toString().replace("+0530", "IST");
+      d = d.toString().replace("GMT+5:30", "IST");
       statusList[i] = response.statusList[i].stage + "-" + d;
     }
     this.statusList = statusList
@@ -127,6 +126,7 @@ export class LoadExecComponent {
  
     this.breadcrumbDataFrom[2].caption=this.loadData.name;
   }
+
   OnSuccesgetAllVersionByUuid(response) {
     var temp=[]
     for (const i in response) {
@@ -139,6 +139,7 @@ export class LoadExecComponent {
     }
     this.VersionList=temp
   }
+
   onVersionChange(){ 
     this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid,this.selectedVersion.label,'loadexec')
     .subscribe(
@@ -163,7 +164,15 @@ export class LoadExecComponent {
       this.loadData.published = 'N';
     }
   }
-  
+    showMainPage() {
+    this.isHomeEnable = false;
+    this.showGraph = false;
+  }
+
+  showDagGraph(uuid, version) {
+    this.isHomeEnable = true;
+    this.showGraph = true;
+  }
 }
 
 

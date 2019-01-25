@@ -35,8 +35,8 @@ export class IngestExecComponent {
       this.mode = params['mode'];
     }); 
     if(this.mode !== undefined) {   
-      this.getOneByUuidAndVersion(this.id,this.version)
       this.getAllVersionByUuid();
+      this.getOneByUuidAndVersion(this.id,this.version)
     }		
 		
 		this.breadcrumbDataFrom=[{
@@ -81,7 +81,7 @@ export class IngestExecComponent {
     var statusList = [];
     for (let i = 0; i < response.statusList.length; i++) {
       d = this.datePipe.transform(new Date(response.statusList[i].createdOn), "EEE MMM dd HH:mm:ss Z yyyy");
-      d = d.toString().replace("+0530", "IST");
+      d = d.toString().replace("GMT+5:30", "IST");
       statusList[i] = response.statusList[i].stage + "-" + d;
     }
 		this.statusList = statusList
@@ -142,6 +142,4 @@ export class IngestExecComponent {
     this.isHomeEnable = true;
     this.showGraph = true;
   }
-
-
 }

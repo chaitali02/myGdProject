@@ -91,7 +91,7 @@ export class ReportExecComponent implements OnInit {
     var statusList = [];
     for (let i = 0; i < response.statusList.length; i++) {
       d = this.datePipe.transform(new Date(response.statusList[i].createdOn), "EEE MMM dd HH:mm:ss Z yyyy");
-      d = d.toString().replace("+0530", "IST");
+      d = d.toString().replace("GMT+5:30", "IST");
       statusList[i] = response.statusList[i].stage + "-" + d;
     }
 		this.statusList = statusList
@@ -117,7 +117,7 @@ export class ReportExecComponent implements OnInit {
       ver["value"]["uuid"]=response[i]['uuid']; 
       temp[i]=ver;
     }
-    this.VersionList=temp
+    this.VersionList=temp;
 	}
 	
   onVersionChange(){
@@ -147,7 +147,6 @@ export class ReportExecComponent implements OnInit {
 	}
 	
   showSqlFormater(){
-    console.log(sqlFormatter.format("SELECT * FROM table1"));
     this.formattedQuery = sqlFormatter.format(this.exec);
     this.displayDialogBox = true;
   }

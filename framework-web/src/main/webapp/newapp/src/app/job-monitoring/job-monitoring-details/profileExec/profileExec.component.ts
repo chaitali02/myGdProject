@@ -5,7 +5,7 @@ import { AppConfig } from '../../../app.config';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { CommonService } from '../../../metadata/services/common.service';
 import { Version } from '../../../shared/version';
-
+import * as sqlFormatter from "sql-formatter";
 
 @Component({
   selector: 'app-profileExec',
@@ -13,6 +13,10 @@ import { Version } from '../../../shared/version';
   styleUrls: []
 })
 export class ProfileExecComponent implements OnInit {
+  displayDialogBox: boolean;
+  formattedQuery: any;
+  showGraph: boolean;
+  isHomeEnable: boolean;
 
   breadcrumbDataFrom: any;
   id : any;
@@ -38,25 +42,24 @@ export class ProfileExecComponent implements OnInit {
   constructor(private datePipe: DatePipe,private _location: Location,config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService){
     this.showResultModel = true;
     this.profileResultData = {};
+    this.displayDialogBox = false;
+    this.isHomeEnable = false
+    this.showGraph = false;
     this.breadcrumbDataFrom=[{
         "caption":"Job Monitoring ",
         "routeurl":"/app/jobMonitoring"
       },
       {
         "caption":"Profile",
-        "routeurl":"/app/list/profileExec"
-  
+        "routeurl":"/app/list/profileExec"  
       },
       {
         "caption":"",
-        "routeurl":null
-  
+        "routeurl":null  
       }
-      ]
-      
+      ]     
     }
   
-
     ngOnInit() {
       this.activatedRoute.params.subscribe((params: Params) => {
         this.id = params['id'];
@@ -66,7 +69,6 @@ export class ProfileExecComponent implements OnInit {
       if(this.mode !== undefined) { 
       this.getOneByUuidAndVersion(this.id,this.version)
       this.getAllVersionByUuid()
-      
       }
     }
 
@@ -119,7 +121,7 @@ export class ProfileExecComponent implements OnInit {
     var statusList = [];
     for (let i = 0; i < response.statusList.length; i++) {
       d = this.datePipe.transform(new Date(response.statusList[i].createdOn), "EEE MMM dd HH:mm:ss Z yyyy");
-      d = d.toString().replace("+0530", "IST");
+      d = d.toString().replace("GMT+5:30", "IST");
       statusList[i] = response.statusList[i].stage + "-" + d;
     }
     this.statusList = statusList
@@ -154,5 +156,24 @@ export class ProfileExecComponent implements OnInit {
 
   public goBack() {
     this._location.back();
+  }
+  
+  showMainPage() {
+    this.isHomeEnable = false
+    this.showGraph = false;
+  }
+
+  showDagGraph(uuid, version) {
+    this.isHomeEnable = true;
+    this.showGraph = true;
+  }
+
+  showSqlFormater(){
+    this.formattedQuery = sqlFormatter.format(this.profileResultData.exec);
+    this.displayDialogBox = true;
+  }
+
+  cancelDialogBox(){
+    this.displayDialogBox = false;
   }
 }

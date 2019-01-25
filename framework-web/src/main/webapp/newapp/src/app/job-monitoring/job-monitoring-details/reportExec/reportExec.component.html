@@ -156,7 +156,7 @@
               </div>
 
               <p-dialog header="Exec" [(visible)]="displayDialogBox" [modal]="true" [responsive]="true" [width]="900" [baseZIndex]="1000"
-                [contentStyle]="{'height':'425px'}">
+                [contentStyle]="{'min-height':'425px'}">
                 <textarea [disabled]="true" [(ngModel)]="formattedQuery" name="formattedQuery" class="form-control noresize " rows="20" style="resize:none;"></textarea>
                 <p-footer>
                   <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3" style="padding-bottom: 12px;">

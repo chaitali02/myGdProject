@@ -14,6 +14,8 @@ import { AppMetadata } from '../../../app.metadata'
   styleUrls: []
 })
 export class RuleGroupExecComponent implements OnInit {
+  showGraph: boolean;
+  isHomeEnable: boolean;
 
   breadcrumbDataFrom: any;
   id : any;
@@ -40,6 +42,8 @@ export class RuleGroupExecComponent implements OnInit {
   constructor(private datePipe: DatePipe,private _location: Location,config: AppConfig,public metaconfig: AppMetadata, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService){
     this.showResultModel = true;
     this.rulegroupResultData = {};
+    this.isHomeEnable = false;
+    this.showGraph = false;
     this.execList = [];
     this.breadcrumbDataFrom=[{
         "caption":"Job Monitoring ",
@@ -47,16 +51,13 @@ export class RuleGroupExecComponent implements OnInit {
       },
       {
         "caption":"Rule Group",
-        "routeurl":"/app/list/rulegroupExec"
-  
+        "routeurl":"/app/list/rulegroupExec"  
       },
       {
         "caption":"",
-        "routeurl":null
-  
+        "routeurl":null 
       }
-      ]
-      
+      ]      
     }
 
     ngOnInit() {
@@ -108,14 +109,12 @@ export class RuleGroupExecComponent implements OnInit {
 
     this.rulegroupResultData=response
     this.createdBy=this.rulegroupResultData.createdBy.ref.name;
-    this.dependsOn=this.rulegroupResultData.dependsOn.ref.name;
-
-   
+    this.dependsOn=this.rulegroupResultData.dependsOn.ref.name;   
     var d
     var statusList = [];
     for (let i = 0; i < response.statusList.length; i++) {
       d = this.datePipe.transform(new Date(response.statusList[i].createdOn), "EEE MMM dd HH:mm:ss Z yyyy");
-      d = d.toString().replace("+0530", "IST");
+      d = d.toString().replace("GMT+5:30", "IST");
       statusList[i] = response.statusList[i].stage + "-" + d;
     }
     this.statusList = statusList
@@ -172,10 +171,19 @@ export class RuleGroupExecComponent implements OnInit {
     // var innerUuid = innerData.operators[0].operatorInfo.ref.uuid;
     // var innerVersion = innerData.operators[0].operatorInfo.ref.version;
 
-
     this.routerUrl=this.metaconfig.getMetadataDefs(item.type)['detailState'];
 
     this.router.navigate(['../../../../../JobMonitoring',item.type,item.uuid, item.version,'true'],{ relativeTo: this.activatedRoute });
-
   }
+  
+  showMainPage() {
+    this.isHomeEnable = false;
+    this.showGraph = false;
+  }
+
+  showDagGraph(uuid, version) {
+    this.isHomeEnable = true;
+    this.showGraph = true;
+  }
+
 }

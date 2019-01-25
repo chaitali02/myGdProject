@@ -6,15 +6,14 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
 import { CommonService } from '../../../metadata/services/common.service';
 import { Version } from '../../../shared/version';
 
-
 @Component({
     selector: 'app-trainExec',
     styleUrls: [],
-    templateUrl: './trainExec.template.html',
-    
-  })
-  
+    templateUrl: './trainExec.template.html',    
+  })  
 export class TrainExecComponent{
+  showGraph: boolean;
+  isHomeEnable: boolean;
 
   breadcrumbDataFrom: any;
   id : any;
@@ -37,10 +36,11 @@ export class TrainExecComponent{
   result : any;
   showResultTrain : any;
  
-  
   constructor(private datePipe: DatePipe,private _location: Location,config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService){
     this.showResultTrain = true;
     this.trainResultData = {};
+    this.isHomeEnable = false;
+    this.showGraph = false;
     this.breadcrumbDataFrom=[{
         "caption":"Job Monitoring ",
         "routeurl":"/app/jobMonitoring"
@@ -48,15 +48,12 @@ export class TrainExecComponent{
       {
         "caption":"train Exec",
         "routeurl":"/app/list/trainExec"
-  
       },
       {
         "caption":"",
         "routeurl":null
-  
       }
       ]
-      
     }
   
     ngOnInit() {
@@ -66,9 +63,8 @@ export class TrainExecComponent{
         this.mode = params['mode'];
       }); 
       if(this.mode !== undefined) { 
-      this.getOneByUuidAndVersion(this.id,this.version)
-      this.getAllVersionByUuid()
-      
+        this.getAllVersionByUuid();
+        this.getOneByUuidAndVersion(this.id,this.version);
       }
     }
 
@@ -97,6 +93,7 @@ export class TrainExecComponent{
         this.onSuccessgetOneByUuidAndVersion(response)},
       error => console.log("Error :: " + error)); 
     }
+
     getAllVersionByUuid(){
       this._commonService.getAllVersionByUuid('trainexec',this.id)
       .subscribe(
@@ -104,11 +101,12 @@ export class TrainExecComponent{
         this.OnSuccesgetAllVersionByUuid(response)},
       error => console.log("Error :: " + error));
     }
-   onSuccessgetOneByUuidAndVersion(response){
+
+    onSuccessgetOneByUuidAndVersion(response){
       this.trainResultData=response
       this.createdBy=this.trainResultData.createdBy.ref.name;
       this.dependsOn=this.trainResultData.dependsOn.ref.name;
-   //   this.result=this.trainResultData.result.ref.name;
+      //this.result=this.trainResultData.result.ref.name;
       if (this.trainResultData.result !== null) {
         this.result = this.trainResultData.result.ref.name;
       }
@@ -117,7 +115,7 @@ export class TrainExecComponent{
       var statusList = [];
       for (let i = 0; i < response.statusList.length; i++) {
         d = this.datePipe.transform(new Date(response.statusList[i].createdOn), "EEE MMM dd HH:mm:ss Z yyyy");
-        d = d.toString().replace("+0530", "IST");
+        d = d.toString().replace("GMT+5:30", "IST");
         statusList[i] = response.statusList[i].stage + "-" + d;
       }
       this.statusList = statusList
@@ -130,6 +128,7 @@ export class TrainExecComponent{
    
       this.breadcrumbDataFrom[2].caption=this.trainResultData.name;
     }
+
     OnSuccesgetAllVersionByUuid(response) {
       var temp=[]
       for (const i in response) {
@@ -142,6 +141,7 @@ export class TrainExecComponent{
       }
       this.VersionList=temp
     }
+
     onVersionChange(){ 
       this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid,this.selectedVersion.label,'trainexec')
       .subscribe(
@@ -152,5 +152,15 @@ export class TrainExecComponent{
 
     public goBack() {
       this._location.back();
+    }
+    
+    showMainPage() {
+      this.isHomeEnable = false;
+      this.showGraph = false;
+    }
+  
+    showDagGraph(uuid, version) {
+      this.isHomeEnable = true;
+      this.showGraph = true;
     }
 }

@@ -522,7 +522,7 @@ export class AppMetadata {
       },
       'uploadexec': {
         name: 'upload',
-        caption: 'Upload Exec',
+        caption: 'Upload',
         execType: 'uploadexec',
         metaType: 'uploadexec',
         color: '#2AB4C0',

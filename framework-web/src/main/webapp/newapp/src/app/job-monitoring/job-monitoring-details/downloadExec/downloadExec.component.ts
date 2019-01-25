@@ -141,8 +141,7 @@ export class DownloadExecComponent {
   }
 
   showMainPage() {
-    this.isHomeEnable = false
-    // this._location.back();
+    this.isHomeEnable = false;
     this.showGraph = false;
   }
 
