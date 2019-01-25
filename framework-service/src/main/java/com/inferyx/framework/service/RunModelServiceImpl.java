@@ -916,7 +916,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 					defaultDir = filePathUrl.replaceAll(hdfsInfo.getHdfsURL(), "");
 					if(trndModel instanceof CrossValidatorModel) {
 						filePathUrl = filePathUrl+"/model" + "/bestModel" + "/stages/" + customDirectories.get(1) + "/data/";
-						Map<String, Object> summary = exec.summary(trndModel, algorithm.getTrainClass(), algorithm.getSummaryMethods(), appUuid);
+						Map<String, Object> summary = exec.summary(trndModel, algorithm.getModelClass(), algorithm.getSummaryMethods(), appUuid);
 						
 						String fileName = tableName+".result";
 //						if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
@@ -942,7 +942,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 						}
 					} else if(trndModel instanceof PipelineModel) {
 						filePathUrl = filePathUrl+"/model" + "/stages/" + customDirectories.get(1) + "/data/";
-						Map<String, Object> summary = exec.summary(trndModel, algorithm.getTrainClass(), algorithm.getSummaryMethods(), appUuid);
+						Map<String, Object> summary = exec.summary(trndModel, algorithm.getModelClass(), algorithm.getSummaryMethods(), appUuid);
 												
 						String fileName = tableName+".result";
 						
