@@ -3690,7 +3690,7 @@ public class ModelServiceImpl {
 		MetaIdentifier datastoreMI = trainExec.getResult().getRef();
 		DataStore dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(datastoreMI.getUuid(), datastoreMI.getVersion(), datastoreMI.getType().toString());
 		String modelLocation = dataStore.getLocation();
-		String defaultTrainPath = modelLocation.substring(0, modelLocation.indexOf("/model"));
+		String defaultTrainPath = modelLocation.substring(0, modelLocation.lastIndexOf("/model"));
 		defaultTrainPath = defaultTrainPath.startsWith("file") ? defaultTrainPath : "file://".concat(defaultTrainPath);
 		
 		String trainOrTestSetPath = null;		
