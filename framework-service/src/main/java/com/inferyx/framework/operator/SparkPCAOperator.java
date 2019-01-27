@@ -99,7 +99,7 @@ public class SparkPCAOperator implements IOperator, Serializable {
 //		ParamListHolder outputFeaturesInfo = paramSetServiceImpl.getParamByName(execParams, "outputFeatures");
 		ParamListHolder inputColListInfo = paramSetServiceImpl.getParamByName(execParams, "inputColList");	// Input feature column list
 		ParamListHolder outputFeatureNameInfo = paramSetServiceImpl.getParamByName(execParams, "outputFeatureName");	// Output Feature Name
-		ParamListHolder inputKeyInfo = paramSetServiceImpl.getParamByName(execParams, "inputKeyInfo");	// Input Key Names
+		ParamListHolder inputKeyInfo = paramSetServiceImpl.getParamByName(execParams, "inputKeyNames");	// Input Key Names
 		ParamListHolder locationInfo = paramSetServiceImpl.getParamByName(execParams, "saveLocation");	// Location for datapod save
 		
 		MetaIdentifier locDpIdentifier = locationInfo.getParamValue().getRef();
