@@ -4381,6 +4381,58 @@ public class CommonServiceImpl <T> {
 	
 	/**
 	 * 
+	 * @param sourceData
+	 * @param runMode
+	 * @return
+	 * @throws Exception
+	 */
+	public String getTableNameBySource(Object sourceData, RunMode runMode) throws Exception {
+		String sourceTableName = null;
+		if(sourceData instanceof Datapod) {
+			Datapod datapod = (Datapod) sourceData;
+			sourceTableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+		} else if(sourceData instanceof DataSet) {
+			DataSet dataSet = (DataSet) sourceData;
+			MetaIdentifierHolder dependsOn = dataSet.getDependsOn();
+			if(dependsOn.getRef().getType().equals(MetaType.datapod)) {
+				Datapod datapod = (Datapod) getOneByUuidAndVersion(dependsOn.getRef().getUuid(), dependsOn.getRef().getVersion(), dependsOn.getRef().getType().toString(), "N");
+				sourceTableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+			} else if(dependsOn.getRef().getType().equals(MetaType.relation)) {
+				Relation relation = (Relation) sourceData;
+				Datapod datapod = (Datapod) getOneByUuidAndVersion(relation.getDependsOn().getRef().getUuid(), relation.getDependsOn().getRef().getVersion(), relation.getDependsOn().getRef().getType().toString(), "N");
+				sourceTableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+			}
+		} else if(sourceData instanceof Rule) {
+			Rule rule = (Rule) sourceData;
+			MetaIdentifierHolder sourceHolder = rule.getSource();
+			if(sourceHolder.getRef().getType().equals(MetaType.datapod)) {
+				Datapod datapod = (Datapod) getOneByUuidAndVersion(sourceHolder.getRef().getUuid(), sourceHolder.getRef().getVersion(), sourceHolder.getRef().getType().toString(), "N");
+				sourceTableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+			} else if(sourceHolder.getRef().getType().equals(MetaType.dataset)) {
+				DataSet dataSet = (DataSet) getOneByUuidAndVersion(sourceHolder.getRef().getUuid(), sourceHolder.getRef().getVersion(), sourceHolder.getRef().getType().toString(), "N");
+				MetaIdentifierHolder dependsOn = dataSet.getDependsOn();
+				if(dependsOn.getRef().getType().equals(MetaType.datapod)) {
+					Datapod datapod = (Datapod) getOneByUuidAndVersion(dependsOn.getRef().getUuid(), dependsOn.getRef().getVersion(), dependsOn.getRef().getType().toString(), "N");
+					sourceTableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+				} else if(dependsOn.getRef().getType().equals(MetaType.relation)) {
+					Relation relation = (Relation) sourceData;
+					Datapod datapod = (Datapod) getOneByUuidAndVersion(relation.getDependsOn().getRef().getUuid(), relation.getDependsOn().getRef().getVersion(), relation.getDependsOn().getRef().getType().toString(), "N");
+					sourceTableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+				}
+			} else if(sourceHolder.getRef().getType().equals(MetaType.relation)) {
+				Relation relation = (Relation) getOneByUuidAndVersion(sourceHolder.getRef().getUuid(), sourceHolder.getRef().getVersion(), sourceHolder.getRef().getType().toString(), "N");
+				Datapod datapod = (Datapod) getOneByUuidAndVersion(relation.getDependsOn().getRef().getUuid(), relation.getDependsOn().getRef().getVersion(), relation.getDependsOn().getRef().getType().toString(), "N");
+				sourceTableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+			} else if(sourceHolder.getRef().getType().equals(MetaType.rule)) {
+				Rule rule2 = (Rule) getOneByUuidAndVersion(sourceHolder.getRef().getUuid(), sourceHolder.getRef().getVersion(), sourceHolder.getRef().getType().toString(), "N");
+				sourceTableName = getTableNameBySource(rule2, runMode);
+			}
+		}
+		return sourceTableName;
+	}
+	
+	/**
+	 * 
 	 * @param object
 	 * @param baseExec
 	 * @param execParams
