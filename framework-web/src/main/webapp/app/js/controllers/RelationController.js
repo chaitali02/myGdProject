@@ -365,17 +365,21 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 				index = key;
 			}
 		});
+
 		$scope.relationTableArray = newDataList;
+		
 		if (index != null) {
 			$scope.rhsAllAttribute.splice(index, 1);
-			$scope.selectOption();
+			//$scope.selectOption();
 		}
+		
 		if ($scope.selectalljoin == true) {
 			$scope.lhsAllAttribute = null;
 			$scope.rhsAllAttribute = [];
 		}
+		
 		$scope.selectalljoin = false;
-
+         
 	}
 
 	$scope.selectAllSubRow = function (index) {
