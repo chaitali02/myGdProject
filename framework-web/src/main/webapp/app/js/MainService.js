@@ -304,10 +304,15 @@ InferyxApp.service('LogoutService', function ($http,$location,$rootScope) {
 });
 InferyxApp.factory('sortFactory', function () {
 	return{
-	  sortByProperty : function (property) {
-          return function (x, y) {
-             return ((x[property] === y[property]) ? 0 : ((x[property] > y[property]) ? 1 : -1));
-         }
+	  	sortByProperty : function (property,orderBy) {
+        	return function (x, y) {
+				console.log(orderBy)
+				if(orderBy =='desc')
+             		return ((x[property] === y[property]) ? 0 : ((x[property] < y[property]) ? 1 : -1));
+				else 
+					return ((x[property] === y[property]) ? 0 : ((x[property] > y[property]) ? 1 : -1));
+				
+		}
       }
    }
 });

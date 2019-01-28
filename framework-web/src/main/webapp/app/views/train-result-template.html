@@ -23,36 +23,35 @@
 
         </div>
     </div> -->
-    <style>
-      /* body { 
+<style>
+    /* body { 
   font-size: 12px; 
   font-family: 'Open Sans';
 } */
-      
-      path.curve { 
-          stroke-width: 3;
-          fill: none;
-          opacity: .7;
-      }
-      
-      .axis path,
-      .axis line {
-          fill: none;
-          stroke: grey;
-          stroke-width: 2;
-          shape-rendering: crispEdges;
-          opacity: 1;
-      }
-      
-      .d3-tip {
-          font-family: Verdana;
-          background: rgba(0, 0, 0, 0.8);
-          padding: 8px;
-          color: #fff; 
-          z-index: 5070;
-        }
-      
-      </style>    
+
+    path.curve {
+        stroke-width: 3;
+        fill: none;
+        opacity: .7;
+    }
+
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: grey;
+        stroke-width: 2;
+        shape-rendering: crispEdges;
+        opacity: 1;
+    }
+
+    .d3-tip {
+        font-family: Verdana;
+        background: rgba(0, 0, 0, 0.8);
+        padding: 8px;
+        color: #fff;
+        z-index: 5070;
+    }
+</style>
 <div class="row trainResult">
     <div class="col-md-12">
         <uib-tabset active="activeTabIndex">
@@ -138,11 +137,13 @@
                 </div>
                 <div class="row" ng-if="showChart && modelresult.featureImportance !=null && !isTrainResultProgess">
                     <div class="col-md-12" ng-if="featureImportanceNonZero &&  featureImportanceNonZero.length >0">
-                        <div bar-chart-horizontal id="chart{{modelresult.uuid}}" style=" max-height:1000px;" chartid="modelresult.uuid" data="featureImportanceNonZero" title="title"></div>
+                        <div bar-chart-horizontal id="chart{{modelresult.uuid}}" style=" max-height:1000px;" chartid="modelresult.uuid" data="featureImportanceNonZero"
+                            title="title"></div>
                     </div>
-                    <h3 ng-if="featureImportanceNonZero &&  featureImportanceNonZero.length ==0" style="font-size:14px;color:blue;">All Feature Importance values < 1%</h3>
+                    <h3 ng-if="featureImportanceNonZero &&  featureImportanceNonZero.length ==0" style="font-size:14px;color:blue;">All Feature Importance values
+                        < 1%</h3>
                 </div>
-                <h3  ng-if="modelresult.featureImportance ==null && isTrainResultProgess ==false" style="font-size:14px;color:blue;">Feature Importance Not Available</h3>
+                <h3 ng-if="modelresult.featureImportance ==null && isTrainResultProgess ==false" style="font-size:14px;color:blue;">Feature Importance Not Available</h3>
 
                 <div ng-if="modelresult.featureImportance !=null && !isTrainResultProgess">
                     <br>
@@ -160,13 +161,13 @@
                         </div>
                     </div>
                     <br>
-                    
+
                     <div class="row" ng-if="modelresult.featureImportance !=null && !isTrainResultProgess">
                         <div class="col-md-12">
                             <div ui-grid="gridOptions" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter class="grid" ng-style="getGridStyle()">
                                 <div class="nodatawatermark_results" ng-show="!gridOptions.data.length" style="top:52%;">No data available</div>
                             </div>
-                           
+
                         </div>
                     </div>
                 </div>
@@ -214,7 +215,7 @@
                                         <td style="width:60%">
                                             <b>{{ modelresult.logLoss}}</b>
                                         </td>
-            
+
                                     </tr>
                                     <tr>
                                         <td style="width:40%">Lift</td>
@@ -227,33 +228,36 @@
                                         <td style="width:60%" ng-if="modelresult.rocAUC !=null">
                                             <b>{{ modelresult.rocAUC[0] | number : 2}}</b>
                                         </td>
-            
+
                                         <td style="width:60%" ng-if="modelresult.rocAUC ==null">
-                                             <b>{{ modelresult.accuracy | number : 2}} %</b>
+                                            <b>{{ modelresult.accuracy | number : 2}} %</b>
                                         </td>
                                     </tr>
                                 </table>
                             </div>
-                            <div class="col-md-6"  ng-if="!isTrainResultProgess && modelresult.rocCurve !=null ">
-                                <roc-curve-chart id="roc" data="modelresult" ></roc-curve-chart>
+                            <div class="col-md-6" ng-if="!isTrainResultProgess && modelresult.rocCurve !=null ">
+                                <roc-curve-chart id="roc" data="modelresult"></roc-curve-chart>
                             </div>
-                            <div class="centercontent" style="height:300px;" >
+                            <div class="centercontent" style="height:300px;">
                                 <h3 ng-if="modelresult.rocCurve ==null && isTrainResultProgess ==false" style="font-size:14px;color:blue;">ROC Curve Not Available</h3>
                             </div>
-                            
+
                         </div>
                     </div>
-                    
+
                 </div>
                 <br>
-                
+
                 <h4>Confusion Matrix </h4>
                 <hr>
-                
+
                 <div ng-if="modelresult.confusionMatrix.length ==3">
                     <table class="table table-bordered" style="table-layout:fixed;width:50%">
                         <thead>
-                            <tr><th style="width:8%;border:1px solid white !important;"></th><th  colspan="4" style="border: 1px solid white !important;text-align: center;border-bottom: 1px solid #e7ecf1 !important;">Predicted</th></tr>
+                            <tr>
+                                <th style="width:8%;border:1px solid white !important;"></th>
+                                <th colspan="4" style="border: 1px solid white !important;text-align: center;border-bottom: 1px solid #e7ecf1 !important;">Predicted</th>
+                            </tr>
                             <tr>
                                 <th style="width:16%;border:1px solid white !important; border-right: 1px solid #e7ecf1 !important;"></th>
                                 <th style="width:16%"></th>
@@ -266,23 +270,73 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td rowspan="3" class="rotaion-td"><b>Actual</b></td>
-                                <td style="width:15%"><b>True</b></td>
-                                <td  style="text-align:center" ng-repeat="data in modelresult.confusionMatrix[0] track by $index" ng-class="getClassAcutalTrue(data,modelresult.confusionMatrix[0],$index)">{{data}}</td>
+                                <td rowspan="3" class="rotaion-td">
+                                    <b>Actual</b>
+                                </td>
+                                <td style="width:15%">
+                                    <b>True</b>
+                                </td>
+                                <td style="text-align:center" ng-repeat="data in modelresult.confusionMatrix[0] track by $index" ng-class="getClassAcutalTrue(data,modelresult.confusionMatrix[0],$index)">{{data}}</td>
                             </tr>
                             <tr>
-                                <td style="width:15%"><b>False</b></td>
-                                <td style="text-align:center"  ng-repeat="data in modelresult.confusionMatrix[1] track by $index" ng-class="getClassAcutalFalse(data,modelresult.confusionMatrix[0],$index)">{{data}}</td>
-                                
+                                <td style="width:15%">
+                                    <b>False</b>
+                                </td>
+                                <td style="text-align:center" ng-repeat="data in modelresult.confusionMatrix[1] track by $index" ng-class="getClassAcutalFalse(data,modelresult.confusionMatrix[0],$index)">{{data}}</td>
+
                             </tr>
                             <tr>
-                                <td style="width:8%"><b>Total</b></td>
-                                <td style="text-align:center"  ng-repeat="data in modelresult.confusionMatrix[2] track by $index ">{{data}}</td>
+                                <td style="width:8%">
+                                    <b>Total</b>
+                                </td>
+                                <td style="text-align:center" ng-repeat="data in modelresult.confusionMatrix[2] track by $index ">{{data}}</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                <h3   ng-if="modelresult.confusionMatrix.length !=3" style="font-size:14px;color:blue;">Confusion Matrix Not Available</h3>
+                <h3 ng-if="modelresult.confusionMatrix.length !=3" style="font-size:14px;color:blue;">Confusion Matrix Not Available</h3>
+            </uib-tab>
+            <uib-tab index="4" heading="Train Result" select="go(4)">
+                <div class="spinner centercontent" ng-if="isProgessTrainTrainSet">
+                    <div class="bounce1"></div>
+                    <div class="bounce2"></div>
+                    <div class="bounce3"></div>
+                </div>
+                <h3 ng-if="!isProgessTrainTrainSet && !isErrorTrainTestSet&& gridOptionsTrainSet.data.length==0 && originalDataTrainSet.length ==0"
+                    style="font-size:14px;color:blue;">No data available</h3>
+                <h3 ng-if="!isProgessTrainTrainSet && isErrorTrainTestSet" style="font-size:14px;color:red;">Some Error Occur</h3>
+                <div ng-if="!isProgessTrainTrainSet && originalDataTrainSet.length >0">
+                    <div class="row" ng-if="!isProgessTrainTrainSet && !isErrorTrainTrainSet">
+                        <div class="col-md-6 col-sm-6">
+                        </div>
+                        <div class="col-md-6 col-sm-6">
+                            <div class="" id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
+                                <label>Search:</label>
+                                <input type="search" class="form-control input-sm input-small input-inline" ng-change="refreshDataTrainSet(searchtext)" ng-model="searchtext"
+                                    aria-controls="datastoredatatable">
+                            </div>
+                        </div>
+                        <br>
+                        <div class="col-md-12">
+                            <div ui-grid="gridOptionsTrainSet" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter class="grid" ng-style="getGridStyleTrainSet()">
+                                <div class="nodatawatermark_results" ng-show="!gridOptionsTrainSet.data.length && !isProgessTrainSet && !isErrorTrainTestSet"
+                                    style="top:52%;">No data available</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6" style="margin-top:17px">
+                            Showing {{paginationTrainSet.to}} to {{paginationTrainSet.from}} of {{paginationTrainSet.totalItems}} records
+                        </div>
+                        <div class="col-md-6">
+                            <ul uib-pagination items-per-page="paginationTrainSet.pageSize" total-items="paginationTrainSet.totalItems" ng-model="paginationTrainSet.currentPage"
+                                ng-change="onPageChangedTrainSet()" style="float:right;overflow:hidden;z-index:1;" max-size="paginationTrainSet.maxSize"
+                                class="pagination-md" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                                last-text="&raquo;">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </uib-tab>
             <uib-tab index="3" heading="Test Result" select="go(3)">
                 <div class="spinner centercontent" ng-if="isProgessTrainSet">
@@ -290,7 +344,7 @@
                     <div class="bounce2"></div>
                     <div class="bounce3"></div>
                 </div>
-                <h3  ng-if="!isProgessTrainSet && isErrorTrainTestSet" style="font-size:14px;color:red;">Some Error Occur</h3>
+                <h3 ng-if="!isProgessTrainSet && isErrorTrainTestSet" style="font-size:14px;color:red;">Some Error Occur</h3>
                 <div ng-if="!isProgessTrainSet">
                     <div class="row" ng-if="!isProgessTrainSet && !isErrorTrainTestSet">
                         <div class="col-md-6 col-sm-6">
@@ -305,8 +359,9 @@
                         <br>
                         <div class="col-md-12">
                             <div ui-grid="gridOptionsTestSet" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter class="grid" ng-style="getGridStyleTestSet()">
-                                <div class="nodatawatermark_results" ng-show="!gridOptionsTestSet.data.length && !isProgessTrainSet && !isErrorTrainTestSet" style="top:52%;">No data available</div>
-                            </div>    
+                                <div class="nodatawatermark_results" ng-show="!gridOptionsTestSet.data.length && !isProgessTrainSet && !isErrorTrainTestSet"
+                                    style="top:52%;">No data available</div>
+                            </div>
                         </div>
                     </div>
                     <div class="row">
@@ -315,54 +370,15 @@
                         </div>
                         <div class="col-md-6">
                             <ul uib-pagination items-per-page="paginationTestSet.pageSize" total-items="paginationTestSet.totalItems" ng-model="paginationTestSet.currentPage"
-                            ng-change="onPageChanged()" style="float:right;overflow:hidden;z-index:1;" max-size="paginationTestSet.maxSize"
-                            class="pagination-md" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
-                            last-text="&raquo;">
+                                ng-change="onPageChanged()" style="float:right;overflow:hidden;z-index:1;" max-size="paginationTestSet.maxSize"
+                                class="pagination-md" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                                last-text="&raquo;">
                             </ul>
                         </div>
                     </div>
                 </div>
             </uib-tab>
-            <uib-tab index="4" heading="Train Result" select="go(4)">
-                    <div class="spinner centercontent" ng-if="isProgessTrainTrainSet">
-                        <div class="bounce1"></div>
-                        <div class="bounce2"></div>
-                        <div class="bounce3"></div>
-                    </div>
-                    <h3  ng-if="!isProgessTrainTrainSet && !isErrorTrainTestSet&& gridOptionsTrainSet.data.length==0 && originalDataTrainSet.length ==0" style="font-size:14px;color:blue;">No data available</h3>
-                    <h3  ng-if="!isProgessTrainTrainSet && isErrorTrainTestSet" style="font-size:14px;color:red;">Some Error Occur</h3>
-                    <div ng-if="!isProgessTrainTrainSet && originalDataTrainSet.length >0">
-                        <div class="row" ng-if="!isProgessTrainTrainSet && !isErrorTrainTrainSet">
-                            <div class="col-md-6 col-sm-6">
-                            </div>
-                            <div class="col-md-6 col-sm-6">
-                                <div class="" id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
-                                    <label>Search:</label>
-                                    <input type="search" class="form-control input-sm input-small input-inline" ng-change="refreshDataTrainSet(searchtext)" ng-model="searchtext"
-                                        aria-controls="datastoredatatable">
-                                </div>
-                            </div>
-                            <br>
-                            <div class="col-md-12">
-                                <div ui-grid="gridOptionsTrainSet" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter class="grid" ng-style="getGridStyleTrainSet()">
-                                    <div class="nodatawatermark_results" ng-show="!gridOptionsTrainSet.data.length && !isProgessTrainSet && !isErrorTrainTestSet" style="top:52%;">No data available</div>
-                                </div>    
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6" style="margin-top:17px">
-                                Showing {{paginationTrainSet.to}} to {{paginationTrainSet.from}} of {{paginationTrainSet.totalItems}} records
-                            </div>
-                            <div class="col-md-6">
-                                <ul uib-pagination items-per-page="paginationTrainSet.pageSize" total-items="paginationTrainSet.totalItems" ng-model="paginationTrainSet.currentPage"
-                                ng-change="onPageChangedTrainSet()" style="float:right;overflow:hidden;z-index:1;" max-size="paginationTrainSet.maxSize"
-                                class="pagination-md" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
-                                last-text="&raquo;">
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </uib-tab>
+
         </uib-tabset>
     </div>
 </div>
