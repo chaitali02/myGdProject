@@ -308,6 +308,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
     angular.forEach($scope.targetFilterTable, function(selected) {
       if (!selected.selected) {
         newDataList.push(selected);
+        $scope.targetFitlerAttrTableSelectedItem=[];
       }
     });
     if (newDataList.length > 0) {
@@ -1237,7 +1238,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 				$(".actions").removeClass("open");
 			}
 		}else{
-      if(index <= $scope.sourceFilterTable.length){
+      if(index <= $scope.targetFilterTable.length){
 				$scope.autoMove(index-1,'targetFilterAttr');
 				$scope.moveTo=null;
 				$(".actions").removeClass("open");
