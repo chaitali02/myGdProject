@@ -101,7 +101,8 @@
               data-ng-click="showGraph(datapoddata.uuid,datapoddata.version)" style="height:14px;">
               <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
             </a>
-            <a title="Refresh" ng-class="(showFrom==true && isShowSimpleData==false || (isDataInpogress ==true))? 'currentpage':'notcurrentpage'" ng-click="isShowSimpleData ? showSampleTable(datapoddata) :isShowCompareMetaData ? showCompareMetaData(datapoddata):isShowDatastore ==true ? showDatastrores(datapoddata):broadcastRefreshData()"
+            <a title="Refresh" ng-class="(showFrom==true && isShowSimpleData==false || (isDataInpogress ==true))? 'currentpage':'notcurrentpage'"
+              ng-click="isShowSimpleData ? showSampleTable(datapoddata) :isShowCompareMetaData ? showCompareMetaData(datapoddata):isShowDatastore ==true ? showDatastrores(datapoddata):broadcastRefreshData()"
               data-toggle="tooltip" data-placement="top" tooltip>
               <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
             </a>
@@ -303,7 +304,7 @@
                   </div>
 
                   <div class="col-md-6 form-group">
-                      <!-- style="float:left;margin-left: -3%;padding-right: 0px;" -->
+                    <!-- style="float:left;margin-left: -3%;padding-right: 0px;" -->
                     <label class="control-label col-md-2 col-sm-6 col-xs-12" style="padding-right: 0px;width:60px;padding-left:0px;">Name
                       <span class="required" aria-required="true"> * </span>
                     </label>
@@ -374,6 +375,31 @@
                 <div class="x_title">
                   <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-disabled="{{mode}}" ng-click="removeRow()"></button>
                   <button type="button" class=" btn btn-success fa fa-plus pull-right" ng-disabled="{{mode}}" ng-click="addRow()"></button>
+                  <div class="actions pull-right" style="position:relative;">
+                    <a class="btn green-haze btn-outline btn-circle auto-map btn-sm" ng-disabled="attrTableSelectedItem.length ==1 && attributetable.length >1 ?false:true"
+                      href="javascript:;" data-toggle="dropdown" tooltip-placement="left" uib-tooltip="Move" data-hover="dropdown"
+                      data-close-others="true" aria-expanded="false">
+                      <span class="fa fa-arrows" aria-hidden="true"></span>
+                      <i class="fa fa-angle-down"></i>
+                    </a>
+                    <ul class="dropdown-menu pull-right" style="z-index:10000;top:28px;right:45px;position:absolute">
+                      <li ng-click="autoMove(0)">
+                        <a href="javascript:;" ng-disabled="attrTableSelectedItem[0]==0?true:false">Top</a>
+                      </li>
+                      <li class="divider" style="margin: 0px;"> </li>
+                      <li ng-click="autoMove(attributetable.length-1)">
+                        <a href="javascript:;" ng-disabled="attrTableSelectedItem[0]==attributetable.length-1 ? true:false">Bottom</a>
+                      </li>
+                      <li class="divider" style="margin: 0px;"> </li>
+                      <li>
+                        <div class="form-group" style="margin: 1%;">
+                          <input type="number" class="form-control" ng-if="attrTableSelectedItem.length == 1" ng-model="moveTo" min="0" max="{{attributetable.length}}"
+                            name="moveto" style="border:0" placeholder="Move To" ng-model-options="{debounce:3000}" ng-change="autoMoveTo(moveTo)"
+                            focus-me="true" required />
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
                   <h4>
                     <strong>Attribute Details</strong>
                   </h4>
@@ -389,20 +415,20 @@
                     <thead>
                       <tr>
                         <th style="text-align: center; Vertical-align: middle;width:5%;">
-                          <input style="width: 16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="selectallattribute"
-                            ng-change="selectAllRow()" />
+                          <input style="width: 16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="selectallattribute" ng-change="selectAllRow()"
+                          />
                         </th>
-                        <th style="width:5%;text-align:center">ID</th>
+                        <th style="width:7%;text-align:center">ID</th>
                         <th style="width:5%;" class="text-center">Key</th>
                         <th style="width:6%;" class="text-center">Partition</th>
                         <th style="width:5%;" class="text-center">Active</th>
                         <th class="text-center">Display Name</th>
                         <th class="text-center">Name</th>
                         <th class="text-center" style="width:11%;">Type</th>
-                        <th class="text-center"  style="width: 7%;">Length</th>
-                        <th class="text-center"  style="width:12%;">Unit Type</th>
+                        <th class="text-center" style="width: 7%;">Length</th>
+                        <th class="text-center" style="width:12%;">Unit Type</th>
                         <th class="text-center">Desc</th>
-                        <th class="text-center;" style="width: 7%;">Move</th>
+                        <!-- <th class="text-center;" style="width: 7%;">Move</th> -->
                       </tr>
                     </thead>
                     <tbody>
@@ -410,7 +436,7 @@
                       <tr ng-repeat="tabledata in attributetable" drag-drop draggable="{{isDragable}}" after-drop="ondrop">
                         <td style="text-align: center; Vertical-align: middle;width:5%;">
                           <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                            <input style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" ng-disabled="{{mode}}" />
+                            <input style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" ng-disabled="{{mode}}" ng-change="onChangeAttrRow($index,tabledata.selected)" />
                           </span>
                         </td>
                         <td>
@@ -459,8 +485,8 @@
                         </td>
                         <td>
                           <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                              
-                            <select ng-model="tabledata.attrUnitType"  ng-options="x.text as x.caption for x in unitTypes" ng-disabled="{{mode}}" class="form-control">
+
+                            <select ng-model="tabledata.attrUnitType" ng-options="x.text as x.caption for x in unitTypes" ng-disabled="{{mode}}" class="form-control">
                               <option value="">-Select-</option>
                             </select>
                             <!-- <input type="text" ng-model="tabledata.attrUnitType" title="{{tabledata.attrUnitType}}" ng-disabled="{{mode}}" class="form-control"> -->
@@ -471,20 +497,18 @@
                             <input type="text" ng-model="tabledata.desc" title="{{tabledata.desc}}" ng-disabled="{{mode}}" class="form-control">
                           </span>
                         </td>
-                        <td>
+                        <!-- <td>
                           <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                             <div style="text-align: center;">
                               <a class="move-column" ng-disabled="($index == 0 || {{mode}}==true) ?true:false" ng-click="onAttrRowUp($index)">
-                                <!-- <i class="glyphicon glyphicon-arrow-up"></i> -->
                                 <i class="glyphicon glyphicon-circle-arrow-up" style="font-size:20px"></i>
                               </a>
                               <a class="move-column" ng-disabled="($index == attributetable.length-1 || {{mode}}) ? true:false" ng-click="onAttrRowDown($index)">
-                                <!-- <i class="glyphicon glyphicon-arrow-down"></i> -->
                                 <i class="glyphicon glyphicon-circle-arrow-down	" style="font-size:20px"></i>
                               </a>
                             </div>
                           </span>
-                        </td>
+                        </td> -->
                       </tr>
                     </tbody>
                   </table>
@@ -642,81 +666,82 @@
     </div>
   </div>
   <div id="histogamModel" class="modal fade bs-modal-lg in" style="display: none;">
-      <div class="modal-dialog" style="width:52%">
-        <div class="modal-content" style="resize: both;overflow: auto;">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" ng-click="ClosePop()" aria-hidden="true"></button>
-            <h4 class="modal-title">{{histogramDetail.dname}}.{{histogramDetail.name}} </h4>
-          </div>
-          <form class="form-horizontal" name="sampleModelForm" ng-submit="sample.type =='datastore'?getResultByDatastore(sample.data):submitSample()"
-            novalidate="novalidate">
-            <div class="modal-body" style="padding:0px">
-              <div class="slimScrollDiv" style="position: relative; overflow-y: auto !important; width:auto;padding:10px;">
-                <div class="scroller" style="height:360px;overflow-y: auto !important; width: auto;margin-top:0px" data-always-visible="1"
-                  data-rail-visible1="1" data-initialized="1">
-                  <div class="centercontent"ng-if="isHistogramError">
-                      <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
+    <div class="modal-dialog" style="width:52%">
+      <div class="modal-content" style="resize: both;overflow: auto;">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" ng-click="ClosePop()" aria-hidden="true"></button>
+          <h4 class="modal-title">{{histogramDetail.dname}}.{{histogramDetail.name}} </h4>
+        </div>
+        <form class="form-horizontal" name="sampleModelForm" ng-submit="sample.type =='datastore'?getResultByDatastore(sample.data):submitSample()"
+          novalidate="novalidate">
+          <div class="modal-body" style="padding:0px">
+            <div class="slimScrollDiv" style="position: relative; overflow-y: auto !important; width:auto;padding:10px;">
+              <div class="scroller" style="height:360px;overflow-y: auto !important; width: auto;margin-top:0px" data-always-visible="1"
+                data-rail-visible1="1" data-initialized="1">
+                <div class="centercontent" ng-if="isHistogramError">
+                  <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
+                </div>
+                <div class="centercontent" ng-if="isHistogramInprogess">
+                  <div class="spinner">
+                    <div class="bounce1"></div>
+                    <div class="bounce2"></div>
+                    <div class="bounce3"></div>
                   </div>
-                  <div class="centercontent" ng-if="isHistogramInprogess">
-                      <div class="spinner">
-                        <div class="bounce1"></div>
-                        <div class="bounce2"></div>
-                        <div class="bounce3"></div>
-                      </div>
+                </div>
+                <br>
+                <div style="margin-bottom: 10px; float:right;">
+                  <a class="btn btn-circle btn-icon-only btn-default" ng-if="isShowDataGrid" tooltip-placement="left" uib-tooltip="Chart" ng-click="onClickChart()">
+                    <i class="fa fa-line-chart" style="display:block;margin:2px 0px 0px 1px;"></i>
+                  </a>
+                  <a class="btn btn-circle btn-icon-only btn-default" ng-if="isShowChart" tooltip-placement="left" uib-tooltip="Grid" ng-click="onClickGrid()">
+                    <i class="fa fa-th" style="display:block;margin:2px 0px 0px 1px;"></i>
+                  </a>
+
+                </div>
+
+                <div class="row" ng-if="datacol !=null && !isHistogramError && !isHistogramInprogess && isShowChart" style="width:97%;margin-top:10px;">
+                  <div class="col-md-12">
+                    <c3chart chartGroup="chart" bindto-id="histrogramDatapod" chart-data="datacol.datapoints" chart-columns="datacol.datacolumns"
+                      chart-x="datacol.datax" enable-zoom="true" callback-function="handleCallbackGroup">
+                      <chart-bar ratio="0.5" />
+                      <chart-axes values-x="">
+                        <chart-axis>
+                          <chart-axis-x axis-position="outer-center" axis-height="50px" axis-type="category" axis-label="">
+                            <chart-axis-x-tick tick-rotate="25" tick-multiline="false" ng-if="datacol.datapoints.length >9" tick-culling-max="5" />
+                            <chart-axis-x-tick tick-rotate="25" tick-multiline="false" ng-if="datacol.datapoints.length <=10" />
+                          </chart-axis-x>
+                          <chart-axis-Y>
+                            <chart-axis-y-tick tick-format-function="time_format" />
+                          </chart-axis-Y>
+                        </chart-axis>
+                        <!-- <chart-events on-contex-menu="showClick({vizpod:datacol,dataobj:data})"/> -->
+                    </c3chart>
                   </div>
-                  <br>
-                  <div style="margin-bottom: 10px; float:right;">
-                    <a class="btn btn-circle btn-icon-only btn-default" ng-if="isShowDataGrid" tooltip-placement="left" uib-tooltip="Chart" ng-click="onClickChart()">
-                      <i class="fa fa-line-chart" style="display:block;margin:2px 0px 0px 1px;"></i>   
-                    </a>
-                    <a class="btn btn-circle btn-icon-only btn-default" ng-if="isShowChart" tooltip-placement="left" uib-tooltip="Grid" ng-click="onClickGrid()">
-                        <i class="fa fa-th" style="display:block;margin:2px 0px 0px 1px;"></i>   
-                      </a>
-                  
-                  </div>
-                
-                  <div class="row" ng-if="datacol !=null && !isHistogramError && !isHistogramInprogess && isShowChart" style="width:97%;margin-top:10px;">
-                     <div class="col-md-12">
-                        <c3chart chartGroup="chart" bindto-id="histrogramDatapod" chart-data="datacol.datapoints" chart-columns="datacol.datacolumns" chart-x="datacol.datax" enable-zoom="true" callback-function="handleCallbackGroup">
-                          <chart-bar ratio="0.5" />
-                            <chart-axes values-x="" >
-                          <chart-axis>
-                            <chart-axis-x axis-position="outer-center" axis-height="50px" axis-type="category" axis-label="">
-                              <chart-axis-x-tick tick-rotate="25" tick-multiline="false" ng-if="datacol.datapoints.length >9" tick-culling-max="5"  />
-                              <chart-axis-x-tick tick-rotate="25" tick-multiline="false" ng-if="datacol.datapoints.length <=10"  />
-                            </chart-axis-x>
-                            <chart-axis-Y>
-                              <chart-axis-y-tick tick-format-function="time_format"/>
-                            </chart-axis-Y>
-                          </chart-axis>
-                          <!-- <chart-events on-contex-menu="showClick({vizpod:datacol,dataobj:data})"/> -->
-                        </c3chart>
-                     </div>
-                   </div>
-                   <div class="row" ng-show="isShowDataGrid  && !isHistogramError && !isHistogramInprogess">
-                     <div class="col-md-12"> 
-                        <div class="row">
-                          <div class="col-md-6 col-sm-6">
-                            <!-- <div class="dataTables_length" id="sample_1_length">
+                </div>
+                <div class="row" ng-show="isShowDataGrid  && !isHistogramError && !isHistogramInprogess">
+                  <div class="col-md-12">
+                    <div class="row">
+                      <div class="col-md-6 col-sm-6">
+                        <!-- <div class="dataTables_length" id="sample_1_length">
                               <label>Show
                                 <select name="sample_1_length" aria-controls="sample_1" class="form-control input-sm input-xsmall input-inline" ng-model="pagination.pageSize"
                                   ng-options="r for r in pagination.paginationPageSizes" ng-change="onPerPageChange()">
                                 </select>
                               </label>
                             </div> -->
-                          </div>
-                          <div class="col-md-6 col-sm-6">
-                            <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
-                              <label>Search:</label>
-                              <input type="search" class="form-control input-sm input-small   input-inline" ng-change="refreshDataHistogram(searchTextHostogram)" ng-model="searchTextHostogram"
-                                aria-controls="datastoredatatable">
-                            </div>
-                          </div>
+                      </div>
+                      <div class="col-md-6 col-sm-6">
+                        <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
+                          <label>Search:</label>
+                          <input type="search" class="form-control input-sm input-small   input-inline" ng-change="refreshDataHistogram(searchTextHostogram)"
+                            ng-model="searchTextHostogram" aria-controls="datastoredatatable">
                         </div>
-                        <div ui-grid="gridOptionsHitogram" class="grid" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter ng-style="getGridStyleHistogram()">
-                          <div class="nodatawatermark_results" ng-show="!gridOptionsHitogram.data.length" style="top:41%;">No data available</div>
-                        </div>
-                        <!-- <div class="row">
+                      </div>
+                    </div>
+                    <div ui-grid="gridOptionsHitogram" class="grid" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter ng-style="getGridStyleHistogram()">
+                      <div class="nodatawatermark_results" ng-show="!gridOptionsHitogram.data.length" style="top:41%;">No data available</div>
+                    </div>
+                    <!-- <div class="row">
                           <div class="col-md-6" style="margin-top:17px">
                             Showing {{pagination.to}} to {{pagination.from}} of {{pagination.totalItems}} records
                           </div>
@@ -727,17 +752,17 @@
                               last-text="&raquo;"></ul>
                           </div>
                         </div> -->
-                     </div>
-                   </div>
                   </div>
+                </div>
               </div>
             </div>
-            <!--End Model Body-->
-            <div class="modal-footer">
-              <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
-            </div>
-          </form>
-        </div>
+          </div>
+          <!--End Model Body-->
+          <div class="modal-footer">
+            <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+          </div>
+        </form>
       </div>
     </div>
+  </div>
 </div>

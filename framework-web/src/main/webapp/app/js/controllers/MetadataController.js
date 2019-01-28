@@ -1178,6 +1178,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			if (!selected.selected) {
 				newDataList.push(selected);
 			}
+			$scope.attrTableSelectedItem=[];
 		});
 		$scope.attributetable = newDataList;
 	}
@@ -1255,6 +1256,37 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			console.log(data);
 			$('#downloadSample').modal("hide");
 		});
+	}
+
+	$scope.attrTableSelectedItem=[];
+	$scope.onChangeAttrRow=function(index,status){
+		if(status ==true){
+			$scope.attrTableSelectedItem.push(index);
+		}
+		else{
+			let tempIndex=$scope.attrTableSelectedItem.indexOf(index);
+
+			if(tempIndex !=-1){
+				$scope.attrTableSelectedItem.splice(tempIndex, 1);
+
+			}
+		}	
+	}
+	$scope.autoMove=function(index){
+		var tempAtrr=$scope.attributetable[$scope.attrTableSelectedItem[0]];
+		$scope.attributetable.splice($scope.attrTableSelectedItem[0],1);
+		$scope.attributetable.splice(index,0,tempAtrr);
+		$scope.attrTableSelectedItem=[];
+		$scope.attributetable[index].selected=false;
+	
+	}
+
+	$scope.autoMoveTo=function(index){
+		if(index <= $scope.attributetable.length){
+			$scope.autoMove(index-1,'mapAttr');
+			$scope.moveTo=null;
+			$(".actions").removeClass("open");
+		}
 	}
 })/* End MetadataDatapodController*/
 
