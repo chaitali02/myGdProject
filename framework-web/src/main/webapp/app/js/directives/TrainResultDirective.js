@@ -1,5 +1,5 @@
 var InferyxApp = angular.module("InferyxApp");
-InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, CommonService, dagMetaDataService, CF_META_TYPES, ModelService,uiGridConstants) {
+InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, CommonService, dagMetaDataService, CF_META_TYPES, ModelService,uiGridConstants,sortFactory) {
   return {
     scope: {
 
@@ -168,7 +168,7 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
           }
           return obj;
         })
-        console.log(JSON.stringify(featureImportanceArr));
+       // console.log(JSON.stringify(featureImportanceArr));
         var featureImportanceChartArr = [];
         var count = 0;
         if (featureImportanceArr && featureImportanceArr.length > 0) {
@@ -180,6 +180,11 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
           }
         }
         $scope.featureImportanceNonZero=featureImportanceChartArr;
+       /// console.log($scope.featureImportanceNonZero);
+        $scope.featureImportanceNonZero.sort(sortFactory.sortByProperty("Importance",'desc'));
+        // console.log($scope.featureImportanceNonZero);
+        
+
       }
 
       $scope.getTrainResult = function (data) {
