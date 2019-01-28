@@ -14,6 +14,7 @@ import com.inferyx.framework.operator.GenerateDataForValList;
 import com.inferyx.framework.operator.GenerateDataOperator;
 import com.inferyx.framework.operator.IOperator;
 import com.inferyx.framework.operator.MatrixMultOperator;
+import com.inferyx.framework.operator.SparkPCAOperator;
 import com.inferyx.framework.operator.TransposeOperator;
 
 /**
@@ -37,6 +38,9 @@ public class CustomOperatorFactory implements IOperatorFactory {
 	MatrixMultOperator matrixMultOperator;
 	@Autowired
 	HistogramOperator histogramOperator;
+	
+	@Autowired
+	SparkPCAOperator sparkPCAOperator;
 
 	/**
 	 * 
@@ -59,6 +63,7 @@ public class CustomOperatorFactory implements IOperatorFactory {
 			case cloneData : return cloneDataOperator;
 			case matrix : return matrixMultOperator;
 			case HISTOGRAM : return histogramOperator;
+			case PCA:		return sparkPCAOperator ;
 			default : throw new IllegalArgumentException("Invalid Operator Type");
 		}
 	}

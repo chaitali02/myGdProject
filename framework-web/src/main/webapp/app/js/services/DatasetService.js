@@ -179,7 +179,7 @@ MetadataModule.factory('MetadataDatasetFactory', function ($http, $location) {
 	return factory;
 });
 
-MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactory, MetadataDatasetFactory) {
+MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactory, MetadataDatasetFactory,CF_GRID) {
 	this.getDatasetSample = function (data) {
 		var deferred = $q.defer();
 		MetadataDatasetFactory.findDatasetSample(data.uuid, data.version).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
@@ -750,6 +750,10 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 				attributeInfo.name = response.attributeInfo[n].attrSourceName;
 				attributeInfo.id = response.attributeInfo[n].attrSourceId;
 				attributeInfo.index = n+1;
+				if(response.attributeInfo.length >CF_GRID.framework_autopopulate_grid)
+					attributeInfo.isOnDropDown=false;
+				else
+					attributeInfo.isOnDropDown=true;
 				if (response.attributeInfo[n].sourceAttr.ref.type == "simple") {
 					var obj = {}
 					obj.text = "string"
@@ -771,7 +775,7 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 					sourcedatapod.type = response.attributeInfo[n].sourceAttr.ref.type;
 					sourcedatapod.attributeId = response.attributeInfo[n].sourceAttr.attrId;
 					sourcedatapod.attrType = response.attributeInfo[n].sourceAttr.attrType
-					sourcedatapod.name = "";
+					sourcedatapod.name = response.attributeInfo[n].sourceAttr.attrName;
 					var obj = {}
 					obj.text = "datapod"
 					obj.caption = "attribute";

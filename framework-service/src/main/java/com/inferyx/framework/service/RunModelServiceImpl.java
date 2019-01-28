@@ -16,7 +16,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,22 +32,17 @@ import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.ml.tuning.CrossValidatorModel;
 import org.apache.spark.sql.SaveMode;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.CustomLogger;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.controller.TrainResultViewServiceImpl;
 import com.inferyx.framework.domain.Algorithm;
-import com.inferyx.framework.domain.BaseEntity;
-import com.inferyx.framework.domain.DataSet;
-import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.FeatureAttrMap;
 import com.inferyx.framework.domain.FrameworkThreadLocal;
-import com.inferyx.framework.domain.Key;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -57,7 +51,6 @@ import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ParamSetHolder;
 import com.inferyx.framework.domain.ResultSetHolder;
-import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.SessionContext;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Train;
@@ -788,20 +781,17 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 				String label = commonServiceImpl.resolveLabel(train.getLabelInfo());
 //				String sql = modelServiceImpl.generateSQLBySource(source, execParams);
 //				exec.executeAndRegister(sql, (tableName+"_train_data"), appUuid);
-				
-				//finding impute values of attribute
-				LinkedHashMap<String, Object> attributeImputeValues = imputeOperator.getAttributeImputeValue(train.getFeatureAttrMap(), source, model, execParams, runMode);
-				
-				//mapping impute values with its mapped column
-				LinkedHashMap<String, Object> imputeAttributeNameWithValues = modelServiceImpl.getAttributeNamesWithImputeValues(train.getFeatureAttrMap(), attributeImputeValues);
-				
+
 				String sourceSql = modelServiceImpl.generateSQLBySource(source, execParams);
 				
 				ResultSetHolder sourceRsHolder = exec.executeAndRegisterByDatasource(sourceSql, (tableName+"_train_source_data"), trainSrcDatasource, appUuid);
 				sourceRsHolder.setTableName((tableName+"_train_source_data"));
 
+				//finding impute values of attribute
+				LinkedHashMap<String, Object> resolvedimputeAttributeValues = imputeOperator.resolveAttributeImputeValue(train.getFeatureAttrMap(), source, model, execParams, runMode, (tableName+"_train_source_data"));
+				
 				//applying imputation valued per column to data
-				sourceRsHolder = exec.applyAttrImputeValuesToData(sourceRsHolder, imputeAttributeNameWithValues, true, (tableName+"_train_source_data"));
+				sourceRsHolder = exec.applyAttrImputeValuesToData(sourceRsHolder, resolvedimputeAttributeValues, true, (tableName+"_train_source_data"));
 //				String featureMappedSQL = modelServiceImpl.generateFeatureSQLBySource(train.getFeatureAttrMap(), source, execParams, fieldArray, label, (tableName+"_train_source_data"));
 //				ResultSetHolder sourceRsHolder = exec.executeAndRegisterByDatasource(featureMappedSQL, (tableName+"_train_source_data"), trainSrcDatasource, appUuid);
 //				sourceRsHolder.setTableName((tableName+"_train_source_data"));
@@ -926,7 +916,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 					defaultDir = filePathUrl.replaceAll(hdfsInfo.getHdfsURL(), "");
 					if(trndModel instanceof CrossValidatorModel) {
 						filePathUrl = filePathUrl+"/model" + "/bestModel" + "/stages/" + customDirectories.get(1) + "/data/";
-						Map<String, Object> summary = exec.summary(trndModel, algorithm.getTrainClass(), algorithm.getSummaryMethods(), appUuid);
+						Map<String, Object> summary = exec.summary(trndModel, algorithm.getModelClass(), algorithm.getSummaryMethods(), appUuid);
 						
 						String fileName = tableName+".result";
 //						if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
@@ -952,7 +942,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 						}
 					} else if(trndModel instanceof PipelineModel) {
 						filePathUrl = filePathUrl+"/model" + "/stages/" + customDirectories.get(1) + "/data/";
-						Map<String, Object> summary = exec.summary(trndModel, algorithm.getTrainClass(), algorithm.getSummaryMethods(), appUuid);
+						Map<String, Object> summary = exec.summary(trndModel, algorithm.getModelClass(), algorithm.getSummaryMethods(), appUuid);
 												
 						String fileName = tableName+".result";
 						

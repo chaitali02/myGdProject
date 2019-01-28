@@ -281,6 +281,7 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
     angular.forEach($scope.featureTableArray, function(selected) {
       if (!selected.selected) {
         newDataList.push(selected);
+        $scope.attrTableSelectedItem=[];
       }
     });
     $scope.featureTableArray = newDataList;
@@ -875,6 +876,36 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
     $scope.isshowmodel = sessionStorage.isshowmodel
   };
 
+  $scope.attrTableSelectedItem=[];
+	$scope.onChangeAttrRow=function(index,status){
+		if(status ==true){
+			$scope.attrTableSelectedItem.push(index);
+		}
+		else{
+			let tempIndex=$scope.attrTableSelectedItem.indexOf(index);
+
+			if(tempIndex !=-1){
+				$scope.attrTableSelectedItem.splice(tempIndex, 1);
+
+			}
+		}	
+	}
+	$scope.autoMove=function(index){
+		var tempAtrr=$scope.featureTableArray[$scope.attrTableSelectedItem[0]];
+		$scope.featureTableArray.splice($scope.attrTableSelectedItem[0],1);
+		$scope.featureTableArray.splice(index,0,tempAtrr);
+		$scope.attrTableSelectedItem=[];
+		$scope.featureTableArray[index].selected=false;
+	
+	}
+
+	$scope.autoMoveTo=function(index){
+		if(index <= $scope.featureTableArray.length){
+			$scope.autoMove(index-1,'mapAttr');
+			$scope.moveTo=null;
+			$(".actions").removeClass("open");
+		}
+	}
 
 }); //End CreateModelController
 

@@ -1450,3 +1450,12 @@ transition: right 1m
     color:white;
     background-color:#DF0000;
   }
+
+  #disabler {
+    width: 100%;
+    height: 200px;
+    background-color: #bbb;
+    opacity: 0.5;
+    margin-bottom: -200px;
+    pointer-events: none;
+   }

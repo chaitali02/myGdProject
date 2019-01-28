@@ -289,6 +289,34 @@
                                                             <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-disabled="{{mode}}" ng-click="removeFilterRow()"
                                                                 ng-disabled="isButtonEnaple"></button>
                                                             <button type="Button" class=" btn btn-success fa fa-plus pull-right" ng-disabled="{{mode}}" ng-click="addRowFilter();" ng-disabled="isButtonEnaple"></button>
+
+                                                            <div class="actions pull-right" style="position:relative;padding-right: 5px;">
+                                                                <a class="btn green-haze btn-outline btn-circle auto-map btn-sm" ng-disabled="fitlerAttrTableSelectedItem.length ==1 && filterTableArray.length >1 ?false:true"
+                                                                    href="javascript:;" data-toggle="dropdown" tooltip-placement="left"
+                                                                    uib-tooltip="Move" data-hover="dropdown" data-close-others="true"
+                                                                    aria-expanded="false">
+                                                                    <span class="fa fa-arrows" aria-hidden="true"></span>
+                                                                    <i class="fa fa-angle-down"></i>
+                                                                </a>
+                                                                <ul class="dropdown-menu pull-right" style="z-index:10000;top:28px;right:45px;position:absolute">
+                                                                    <li ng-click="autoMove(0,'filterAttr')">
+                                                                        <a href="javascript:;" ng-disabled="fitlerAttrTableSelectedItem[0]==0?true:false">Top</a>
+                                                                    </li>
+                                                                    <li class="divider" style="margin: 0px;"> </li>
+                                                                    <li ng-click="autoMove(filterTableArray.length-1,'filterAttr')">
+                                                                        <a href="javascript:;" ng-disabled="fitlerAttrTableSelectedItem[0]==filterTableArray.length-1 ? true:false">Bottom</a>
+                                                                    </li>
+                                                                    <li class="divider" style="margin: 0px;"> </li>
+                                                                    <li>
+                                                                        <div class="form-group" style="margin: 1%;">
+                                                                            <input type="number" class="form-control" ng-if="fitlerAttrTableSelectedItem.length == 1" ng-model="moveTo" min="0" max="{{filterTableArray.length}}"
+                                                                                name="moveto" style="border:0" placeholder="Move To"
+                                                                                ng-model-options="{debounce:3000}" ng-change="autoMoveTo(moveTo,'filterAttr')"
+                                                                                focus-me="true" required />
+                                                                        </div>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -310,19 +338,19 @@
                                                                 <th style="width:13%;text-align:center;">Operator</th>
                                                                 <th style="width:13%;text-align:center;">RHS Type</th>
                                                                 <th style="width:180px;text-align:center;">RHS Attribute</th>
-                                                                <th style="width:8%;text-align:center;">Move</th>
+                                                                <!-- <th style="width:8%;text-align:center;">Move</th> -->
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             <tr ng-repeat="tabledata in filterTableArray" drag-drop draggable="{{isDragable}}" after-drop="onFilterDrop">
                                                                 <td style="text-align:center;Vertical-align:middle;">
                                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                        <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" />
+                                                                        <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" ng-change="onChangeFilterAttRow($index,tabledata.selected)" />
                                                                     </span>
                                                                 </td>
                                                                 <td>
                                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                    
+
                                                                         <select ng-model="tabledata.logicalOperator" ng-options="x for x in logicalOperator" ng-disabled="$first||{{mode}}" class="form-control"></select>
                                                                     </span>
                                                                 </td>
@@ -371,7 +399,7 @@
                                                                 </td>
                                                                 <td>
                                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                        <select ng-change="selectrhsType(tabledata.rhstype.text,$index)" ng-model="tabledata.rhstype"  ng-options="x as x.caption disable when x.disabled for x in tabledata.rhsTypes | orderBy : 'caption' track by x.text+x.caption"
+                                                                        <select ng-change="selectrhsType(tabledata.rhstype.text,$index)" ng-model="tabledata.rhstype" ng-options="x as x.caption disable when x.disabled for x in tabledata.rhsTypes | orderBy : 'caption' track by x.text+x.caption"
                                                                             ng-disabled=" {{mode}}" class="form-control">
                                                                         </select>
                                                                     </span>
@@ -426,8 +454,8 @@
                                                                         </span>
                                                                         <div ng-if="['IS'].indexOf(tabledata.operator) !=-1">
                                                                             <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                                <select  class="form-control"  ng-model="tabledata.rhsvalue" ng-options="r for r in rhsNA"
-                                                                                ng-disabled="{{mode}}" required disable-validation-message=""></select>
+                                                                                <select class="form-control" ng-model="tabledata.rhsvalue" ng-options="r for r in rhsNA" ng-disabled="{{mode}}" required
+                                                                                    disable-validation-message=""></select>
                                                                             </span>
                                                                         </div>
                                                                     </div>
@@ -480,7 +508,7 @@
                                                                         </span>
                                                                     </div>
                                                                 </td>
-                                                                <td>
+                                                                <!-- <td>
                                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                         <div style="text-align: center;">
                                                                             <a class="move-column" ng-disabled="($index == 0 || {{mode}}==true) ?true:false" ng-click="onAttrFilterRowUp($index)">
@@ -491,7 +519,7 @@
                                                                             </a>
                                                                         </div>
                                                                     </span>
-                                                                </td>
+                                                                </td> -->
                                                             </tr>
                                                         </tbody>
                                                     </table>
