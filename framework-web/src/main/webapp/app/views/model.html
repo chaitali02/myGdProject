@@ -45,7 +45,7 @@
               tooltip  ng-hide="isAdd"  ng-class="(showForm==true)? 'currentpage':'notcurrentpage'" data-ng-click="showHome(modeldata.uuid,modeldata.version,mode)">
               <i class="fa fa-home icon-circle home-icon-circle"></i>
             </a>
-            <a  class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top" tooltip ng-class="(isEdit==true || isPrivlage || modeldata.locked == 'Y')? 'currentpage':'notcurrentpage'"
+            <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top" tooltip ng-class="(isEdit==true || isPrivlage || modeldata.locked == 'Y')? 'currentpage':'notcurrentpage'"
               ng-hide="isAdd" data-ng-click="enableEdit(modeldata.uuid,modeldata.version)">
                <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
            </a>
@@ -348,6 +348,31 @@
                                 <div class="x_title" style="padding:10px;">
                                   <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-disabled="{{mode}}"  ng-click="removeRow()"></button>
                                   <button type="Button" class=" btn btn-success fa fa-plus pull-right" ng-disabled="{{mode}}" ng-click="addRow()"></button>
+                                  <div class="actions pull-right" style="position:relative;padding-right: 5px;">
+                                      <a class="btn green-haze btn-outline btn-circle auto-map btn-sm" ng-disabled="attrTableSelectedItem.length ==1 && featureTableArray.length >1 ?false:true"
+                                        href="javascript:;" data-toggle="dropdown" tooltip-placement="left" uib-tooltip="Move" data-hover="dropdown"
+                                        data-close-others="true" aria-expanded="false">
+                                        <span class="fa fa-arrows" aria-hidden="true"></span>
+                                        <i class="fa fa-angle-down"></i>
+                                      </a>
+                                      <ul class="dropdown-menu pull-right" style="z-index:10000;top:28px;right:45px;position:absolute">
+                                        <li ng-click="autoMove(0)">
+                                          <a href="javascript:;" ng-disabled="attrTableSelectedItem[0]==0?true:false">Top</a>
+                                        </li>
+                                        <li class="divider" style="margin: 0px;"> </li>
+                                        <li ng-click="autoMove(featureTableArray.length-1)">
+                                          <a href="javascript:;" ng-disabled="attrTableSelectedItem[0]==featureTableArray.length-1 ? true:false">Bottom</a>
+                                        </li>
+                                        <li class="divider" style="margin: 0px;"> </li>
+                                        <li>
+                                          <div class="form-group" style="margin: 1%;">
+                                            <input type="number" class="form-control" ng-if="attrTableSelectedItem.length == 1" ng-model="moveTo" min="0" max="{{featureTableArray.length}}"
+                                              name="moveto" style="border:0" placeholder="Move To" ng-model-options="{debounce:3000}" ng-change="autoMoveTo(moveTo)"
+                                              focus-me="true" required />
+                                          </div>
+                                        </li>
+                                      </ul>
+                                    </div>
                                 </div>
                               </div>
                             </div>
@@ -373,7 +398,7 @@
                                 <thead>
                                   <tr>
                                     <th style="text-align: center; Vertical-align:middle;width:2%;"><input style="width: 16px;height:16px;" type="checkbox" ng-model="slectAllRow" ng-click="selectAllRow()" ng-disabled="{{mode}}" /></th>
-                                    <th style="width:3%; text-align:center">ID</th>
+                                    <th style="width:5%; text-align:center">ID</th>
                                     <th style="width:10%; text-align:center">Name</th>
                                     <th style="width:8%; text-align:center">Type</th>
                                     <th style="width:10%; text-align:center">Desc</th>
@@ -384,7 +409,7 @@
                                     <th style="width:10%;text-align: center">Impute Method</th>
                                     <th style="width:10%;text-align: center">Impute Value</th>
                                     <th style="width:20%; text-align:center" ng-show="isParamListShow">Params</th>
-                                    <th style="width:4%;text-align: center">Move</th>
+                                    <!-- <th style="width:4%;text-align: center">Move</th> -->
                                   </tr>
                                 </thead>
                                 <tbody ng-repeat="data in featureTableArray" id="{{$index}}" drag-drop draggable="{{isDragable}}" after-drop="ondrop">
@@ -398,7 +423,7 @@
                                     drag-drop draggable="{{isDragable}}" after-drop="ondrop"> -->
                                     <tr>
                                     <td style="text-align: center; Vertical-align: middle;width:2%;">
-                                      <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected"/>
+                                      <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected" ng-change="onChangeAttrRow($index,data.selected)"/>
                                     </td>
                                     <td>
                                       <span class="form-group" style="margin-left:0px;margin-right: 0px;"><input type="text" class="form-control"  ng-value="$index+1" ng-disabled="true"></span>
@@ -451,21 +476,19 @@
                                         <div ng-if="!data.imputeMethod" style="text-align:center">NA</div>
                                     </span>
                                   </td>
-                                    <td>
+                                    <!-- <td>
                                       <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                         <div style="text-align: center;">
                                           <a class="move-column" ng-disabled="($index == 0 || {{mode}}==true) ?true:false" ng-click="onAttrRowUp($index)">
-                                            <!-- <i class="glyphicon glyphicon-arrow-up"></i> -->
                                             <i class="glyphicon glyphicon-circle-arrow-up" style="font-size:20px"></i>
                                           </a>
                                           <a class="move-column" ng-disabled="($index == featureTableArray.length-1 || {{mode}}) ? true:false" ng-click="onAttrRowDown($index)">
-                                            <!-- <i class="glyphicon glyphicon-arrow-down"></i> -->
                                             <i class="glyphicon glyphicon-circle-arrow-down	" style="font-size:20px"></i>
 
                                           </a>
                                         </div>
                                       </span>
-                                    </td>
+                                    </td> -->
                                   </tr>
                                 </tbody>
                               </table>
