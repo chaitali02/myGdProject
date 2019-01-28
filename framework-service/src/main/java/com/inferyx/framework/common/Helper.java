@@ -576,6 +576,7 @@ public class Helper {
 				case "gendatavallist" : return OperatorType.genDataValList;
 				case "matrix" : return OperatorType.matrix;
 				case "histogram" : return OperatorType.HISTOGRAM;
+				case "pca"       : return OperatorType.PCA;
 				default : return null;
 			}
 		}
