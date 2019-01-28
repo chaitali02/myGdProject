@@ -826,6 +826,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			if (!selected.selected) {
 				newDataList.push(selected);
 			}
+			$scope.fitlerAttrTableSelectedItem=[];
 		});
 
 		if (newDataList.length > 0) {
@@ -1048,9 +1049,8 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		angular.forEach($scope.attributeTableArray, function (selected) {
 			if (!selected.selected) {
 				newDataList.push(selected);
-				
 			}
-		$scope.attrTableSelectedItem=[];
+			$scope.attrTableSelectedItem=[];
 		});
 
 		$scope.attributeTableArray = newDataList;
@@ -1660,7 +1660,8 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			$('#downloadSample').modal("hide");
 		});
 	}
-    $scope.attrTableSelectedItem=[];
+	$scope.attrTableSelectedItem=[];
+
 	$scope.onChangeAttRow=function(index,status){
 		if(status ==true){
 			$scope.attrTableSelectedItem.push(index);
@@ -1674,20 +1675,57 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			}
 		}	
 	}
-	$scope.autoMove=function(index){
-		
-		var tempAtrr=$scope.attributeTableArray[$scope.attrTableSelectedItem[0]];
-		$scope.attributeTableArray.splice($scope.attrTableSelectedItem[0],1);
-		$scope.attributeTableArray.splice(index,0,tempAtrr);
-		$scope.attrTableSelectedItem=[];
-        $scope.attributeTableArray[index].selected=false;
+	$scope.fitlerAttrTableSelectedItem=[];
+	$scope.onChangeFilterAttRow=function(index,status){
+		if(status ==true){
+			$scope.fitlerAttrTableSelectedItem.push(index);
+		}
+		else{
+			let tempIndex=$scope.fitlerAttrTableSelectedItem.indexOf(index);
+
+			if(tempIndex !=-1){
+				$scope.fitlerAttrTableSelectedItem.splice(tempIndex, 1);
+
+			}
+		}	
+	}
+	$scope.autoMove=function(index,type){
+		if(type=="mapAttr"){
+			var tempAtrr=$scope.attributeTableArray[$scope.attrTableSelectedItem[0]];
+			$scope.attributeTableArray.splice($scope.attrTableSelectedItem[0],1);
+			$scope.attributeTableArray.splice(index,0,tempAtrr);
+			$scope.attrTableSelectedItem=[];
+			$scope.attributeTableArray[index].selected=false;
+		}
+		else{
+			var tempAtrr=$scope.filterTableArray[$scope.fitlerAttrTableSelectedItem[0]];
+			$scope.filterTableArray.splice($scope.fitlerAttrTableSelectedItem[0],1);
+			$scope.filterTableArray.splice(index,0,tempAtrr);
+			$scope.fitlerAttrTableSelectedItem=[];
+			$scope.filterTableArray[index].selected=false;
+			$scope.filterTableArray[0].logicalOperator="";
+			if($scope.filterTableArray[index].logicalOperator =="" && index !=0){
+				$scope.filterTableArray[index].logicalOperator=$scope.logicalOperator[0];
+			}else if($scope.filterTableArray[index].logicalOperator =="" && index ==0){
+				$scope.filterTableArray[index+1].logicalOperator=$scope.logicalOperator[0];
+			}
+		}
 	}
 
-	$scope.autoMoveTo=function(index){
-		if(index < $scope.attributeTableArray.length){
-			$scope.autoMove(index-1);
-			$scope.moveTo=null;
-			$(".actions").removeClass("open");
+	$scope.autoMoveTo=function(index,type){
+		if(type =="mapAttr"){
+			if(index <= $scope.attributeTableArray.length){
+				$scope.autoMove(index-1,'mapAttr');
+				$scope.moveTo=null;
+				$(".actions").removeClass("open");
+			}
+		}
+		else{
+			if(index <= $scope.filterTableArray.length){
+				$scope.autoMove(index-1,'filterAttr');
+				$scope.moveTo=null;
+				$(".actions").removeClass("open");
+			}
 		}
 	}
 });/* End MetadataDatasetController*/
