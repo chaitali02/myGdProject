@@ -126,7 +126,6 @@ import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Distribution;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Feature;
-import com.inferyx.framework.domain.FeatureAttrMap;
 import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.Load;
@@ -2840,8 +2839,8 @@ public class SparkExecutor<T> implements IExecutor {
 			Dataset<Row> trngDf = splits[0];
 			Dataset<Row> valDf = splits[1];
 			Dataset<Row> valDf2 = splits[1];
-			Dataset<Row> trainingDf = null;
-			Dataset<Row> validateDf = null;
+//			Dataset<Row> trainingDf = null;
+//			Dataset<Row> validateDf = null;
 			
 			registerTempTable(trngDf, "tempTrngDf");
 			trngDf = readTempTable(trainingDfSql, clientContext).getDataFrame();
@@ -2859,16 +2858,16 @@ public class SparkExecutor<T> implements IExecutor {
 				trngDf.write().mode(SaveMode.Append).parquet(trainingSetPath);
 			}
 			
+			List<PipelineStage> pipelineStagesTrng = new ArrayList<>();
 			if(encodingDetails != null && !encodingDetails.isEmpty()) {
-				List<PipelineStage> pipelineStagesTrng = new ArrayList<>();
 				for(String colName : encodingDetails.keySet()) {
 					encodeDataframe(colName, colName.concat("_vec"), encodingDetails.get(colName), pipelineStagesTrng);
 				}
 				
 				//fitting training dataframe
-				Pipeline pipelineTrng = new Pipeline().setStages(pipelineStagesTrng.toArray(new PipelineStage[pipelineStagesTrng.size()]));
+				/*Pipeline pipelineTrng = new Pipeline().setStages(pipelineStagesTrng.toArray(new PipelineStage[pipelineStagesTrng.size()]));
 				PipelineModel trngModel = pipelineTrng.fit(trngDf);
-				trngDf = trngModel.transform(trngDf);
+				trngDf = trngModel.transform(trngDf);*/
 				List<String> encoderCols = new ArrayList<>();
 				for(String col : encodingDetails.keySet()) {
 					encoderCols.add(col+"_vec");
@@ -2879,7 +2878,7 @@ public class SparkExecutor<T> implements IExecutor {
 					}
 				}
 
-				valDf = trngModel.transform(valDf);
+//				valDf = trngModel.transform(valDf);
 				
 				/*for(String colName : encodingDetails.keySet()) {
 					trngDf = trngDf.drop(colName);
@@ -2888,12 +2887,12 @@ public class SparkExecutor<T> implements IExecutor {
 					valDf = valDf.withColumnRenamed(colName+"_vec", colName);
 				}*/
 				
-				for(String colName : valDf.columns()) {
+				/*for(String colName : valDf.columns()) {
 					if(colName.endsWith("_category_index")) {
 						trngDf = trngDf.drop(colName);
 						valDf = valDf.drop(colName);
 					}
-				}
+				}*/
 				
 				logger.info("Printing trained training and validation dataset schema");
 				trngDf.printSchema();
@@ -2905,6 +2904,7 @@ public class SparkExecutor<T> implements IExecutor {
 			
 			VectorAssembler vectorAssembler = new VectorAssembler();
 			vectorAssembler.setInputCols(fieldArray).setOutputCol("features");
+			pipelineStagesTrng.add(vectorAssembler);
 			List<String> selectEncodedCols = new ArrayList<String>();
 			
 			Class<?> dynamicClass = Class.forName(trainName);
@@ -2923,7 +2923,7 @@ public class SparkExecutor<T> implements IExecutor {
 				logger.info("Printing trained training and validation dataset schema 1");
 				trngDf.printSchema();
 				trngDf.printSchema();
-				if(encodingDetails != null && !encodingDetails.isEmpty()) {
+				/*if(encodingDetails != null && !encodingDetails.isEmpty()) {
 					for (String field : origFieldArray) {
 						if (encodingDetails.containsKey(field)) {
 							selectEncodedCols.add(field+"_vec");
@@ -2936,19 +2936,19 @@ public class SparkExecutor<T> implements IExecutor {
 				} else {
 					trainingDf = trngDf.withColumn("label", trngDf.col("label").cast("Double")).select("label", vectorAssembler.getInputCols());
 					validateDf = valDf.withColumn("label", valDf.col("label").cast("Double")).select("label", vectorAssembler.getInputCols());
-				}
-			} else {
+				}*/
+			} /*else {
 				trainingDf = trngDf;
 				validateDf = valDf;
-			}
+			}*/
 
 			logger.info("Printing trained training and validation dataset schema 2");
-			trainingDf.printSchema();
-			validateDf.printSchema();
+			trngDf.printSchema();
+			valDf.printSchema();
 			
 			trainResult.setTotalRecords(df.count());
-			trainResult.setTrainingSet(trainingDf.count());
-			trainResult.setValidationSet(validateDf.count());
+			trainResult.setTrainingSet(trngDf.count());
+			trainResult.setValidationSet(valDf.count());
 			trainResult.setNumFeatures(fieldArray.length);
 
 			Set<String> encodingCols = null;
@@ -2956,48 +2956,25 @@ public class SparkExecutor<T> implements IExecutor {
 				encodingCols = encodingDetails.keySet();
 			}
 			
-			for(String col : trainingDf.columns()) {
-				if(encodingCols != null 
-						&& !encodingCols.isEmpty()) {
-					if(!encodingCols.contains(col)
-						&& !encodingDetails.keySet().contains(col)
-						&& !col.endsWith("_vec")
-						&& !col.endsWith("_category_index")) {
-						trainingDf = trainingDf.withColumn(col, trainingDf.col(col).cast(DataTypes.DoubleType));
-					}
-				} else {
-					trainingDf = trainingDf.withColumn(col, trainingDf.col(col).cast(DataTypes.DoubleType));
-				}
-			}
+			trngDf = castUnEncodedCols(trngDf, encodingDetails, encodingCols);
 						
-			trainingDf = trainingDf.na().fill(0.0,trainingDf.columns());
+			trngDf = trngDf.na().fill(0.0,trngDf.columns());
 			
-			for(String col : validateDf.columns()) {
-				if(encodingCols != null 
-						&& !encodingCols.isEmpty()) {
-					if(!encodingCols.contains(col)
-						&& !encodingDetails.keySet().contains(col)
-						&& !col.endsWith("_vec")
-						&& !col.endsWith("_category_index")) {
-						validateDf = validateDf.withColumn(col, validateDf.col(col).cast(DataTypes.DoubleType));
-					}
-				} else {
-					validateDf = validateDf.withColumn(col, validateDf.col(col).cast(DataTypes.DoubleType));
-				}
-			}
+			valDf = castUnEncodedCols(valDf, encodingDetails, encodingCols);
 			
-			validateDf = validateDf.na().fill(0.0,validateDf.columns());
+			valDf = valDf.na().fill(0.0,valDf.columns());
 
 			logger.info("Printing trained training and validation dataset schema 3");
-			trainingDf.printSchema();
-			validateDf.printSchema();
+			trngDf.printSchema();
+			valDf.printSchema();
 			
 			method = dynamicClass.getMethod("setFeaturesCol", String.class);
 			method.invoke(obj, "features");
 			
+			pipelineStagesTrng.add((PipelineStage) obj);
 			
-			
-			Pipeline pipeline = new Pipeline().setStages(new PipelineStage[] {vectorAssembler, (PipelineStage) obj });
+			Pipeline pipeline = new Pipeline().setStages(pipelineStagesTrng.toArray(new PipelineStage[pipelineStagesTrng.size()]));
+//			Pipeline pipeline = new Pipeline().setStages(new PipelineStage[] {vectorAssembler, (PipelineStage) obj });
 			
 			int numFolds = 3;
 			for(com.inferyx.framework.domain.Param param : hyperParamList) {
@@ -3016,7 +2993,7 @@ public class SparkExecutor<T> implements IExecutor {
 			StopWatch stopWatch = new StopWatch();
 			stopWatch.start();
 			try {
-				cvModel = cv.fit(trainingDf);
+				cvModel = cv.fit(trngDf);
 			} catch (Exception e) {
 				e.printStackTrace();
 				throw new RuntimeException("Training failed.");
@@ -3025,7 +3002,7 @@ public class SparkExecutor<T> implements IExecutor {
 				throw new RuntimeException("Training failed.");
 			}
 			
-			Dataset<Row> trainedDataSet = cvModel.transform(validateDf);
+			Dataset<Row> trainedDataSet = cvModel.transform(valDf);
 			stopWatch.stop();
 			trainResult.setTimeTaken(stopWatch.getTotalTimeMillis()+" ms");
 			
@@ -4182,18 +4159,24 @@ public class SparkExecutor<T> implements IExecutor {
 	}	
 
 	@Override
-	public Object getImputeValue(ResultSetHolder rshHolder) throws Exception{
-		rshHolder.getDataFrame().show(false);
-		return rshHolder.getDataFrame().first().get(0);
+	public LinkedHashMap<String, Object> getImputeValue(ResultSetHolder rsHolder) throws Exception{
+		LinkedHashMap<String, Object> resolvedAttrImputeValues = new LinkedHashMap<>();
+		Dataset<Row> df = rsHolder.getDataFrame();	
+
+		Row[] rows = (Row[]) df.head(Integer.parseInt(""+df.count()));
+		for (Row row : rows) {
+			resolvedAttrImputeValues.put((String) row.get(0), row.get(1));
+		}
+		return resolvedAttrImputeValues;
 	}
 
 	@Override
 	public ResultSetHolder applyAttrImputeValuesToData(ResultSetHolder rsHolder, LinkedHashMap<String, Object> imputeAttributeNameWithValues, boolean registerTempTable, String tempTableName) throws IOException {
 		Dataset<Row> df = rsHolder.getDataFrame();	
 		
-		df.show(Integer.parseInt(""+df.count()), false);
+//		df.show(Integer.parseInt(""+df.count()), false);
 		df = df.na().fill(imputeAttributeNameWithValues);
-		df.show(Integer.parseInt(""+df.count()), false);
+//		df.show(Integer.parseInt(""+df.count()), false);
 		
 		if(registerTempTable) {
 			IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());

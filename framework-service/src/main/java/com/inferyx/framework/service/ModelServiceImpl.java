@@ -2171,20 +2171,15 @@ public class ModelServiceImpl {
 //					rsHolder = exec.replaceNullValByDoubleValFromDF(rsHolder, null, sourceDS, (tableName+"_pred_data"), true, appUuid);
 					fieldArray = getMappedAttrs(predict.getFeatureAttrMap());
 					
-
-					//finding impute values of attribute
-					LinkedHashMap<String, Object> attributeImputeValues = imputeOperator.getAttributeImputeValue(predict.getFeatureAttrMap(), source, model, execParams, runMode);
-					
-					//mapping impute values with its mapped column
-					LinkedHashMap<String, Object> imputeAttributeNameWithValues = getAttributeNamesWithImputeValues(predict.getFeatureAttrMap(), attributeImputeValues);
-					
-					
 					//getting data from source
 					String sourceSql = generateSQLBySource(source, execParams);
-					ResultSetHolder rsHolder = exec.executeAndRegisterByDatasource(sourceSql, (tableName+"_pred_data"), sourceDS, appUuid);
+					ResultSetHolder rsHolder = exec.executeAndRegisterByDatasource(sourceSql, (tableName+"_pred_data"), sourceDS, appUuid);					
+
+					//finding impute values of attribute
+					LinkedHashMap<String, Object> resolvedimputeAttributeValues = imputeOperator.resolveAttributeImputeValue(predict.getFeatureAttrMap(), source, model, execParams, runMode, (tableName+"_pred_data"));
 					
 					//applying imputation valued per column to data
-					rsHolder = exec.applyAttrImputeValuesToData(rsHolder, imputeAttributeNameWithValues, true, (tableName+"_pred_data"));
+					rsHolder = exec.applyAttrImputeValuesToData(rsHolder, resolvedimputeAttributeValues, true, (tableName+"_pred_data"));
 
 					//getting data having only feature columns
 					String mappedFeatureAttrSql = generateFeatureSQLByTempTable(predict.getFeatureAttrMap(), (tableName+"_pred_data"), null, (tableName+"_pred_mapped_data"));
@@ -3695,7 +3690,7 @@ public class ModelServiceImpl {
 		MetaIdentifier datastoreMI = trainExec.getResult().getRef();
 		DataStore dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(datastoreMI.getUuid(), datastoreMI.getVersion(), datastoreMI.getType().toString());
 		String modelLocation = dataStore.getLocation();
-		String defaultTrainPath = modelLocation.substring(0, modelLocation.indexOf("/model"));
+		String defaultTrainPath = modelLocation.substring(0, modelLocation.lastIndexOf("/model"));
 		defaultTrainPath = defaultTrainPath.startsWith("file") ? defaultTrainPath : "file://".concat(defaultTrainPath);
 		
 		String trainOrTestSetPath = null;		
@@ -4043,27 +4038,28 @@ public class ModelServiceImpl {
 	}
 	
 
-	public LinkedHashMap<String, Object> getAttributeNamesWithImputeValues(List<FeatureAttrMap> featureAttrMapList, LinkedHashMap<String, Object> attributeImputeValues) throws JsonProcessingException {
-		LinkedHashMap<String, Object> imputeAttributeNameWithValues = new LinkedHashMap<>();
-		Object object = null;
-		String objectUuid = null;
-		for(FeatureAttrMap featureAttrMap : featureAttrMapList) {
-			MetaIdentifier attributeMI = featureAttrMap.getAttribute().getRef();
-			for(String imputAttrValKey : attributeImputeValues.keySet()) {
-				if(featureAttrMap.getFeatureMapId().equalsIgnoreCase(imputAttrValKey)) {
-					if(object == null 
-							|| (object != null && objectUuid != null && !((BaseEntity)object).getUuid().equalsIgnoreCase(objectUuid))) {
-						object = commonServiceImpl.getOneByUuidAndVersion(attributeMI.getUuid(), attributeMI.getVersion(), attributeMI.getType().toString(), "N");
-						objectUuid = ((BaseEntity)object).getUuid();
-					} 
-					String attributeName = getAttributeNameByObject(object, Integer.parseInt(featureAttrMap.getAttribute().getAttrId()));
-					imputeAttributeNameWithValues.put(attributeName, attributeImputeValues.get(imputAttrValKey));
-					break;
-				}
-			}
-		}
-		return imputeAttributeNameWithValues;
-	}
+	/********************** UNUSED **********************/
+//	public LinkedHashMap<String, Object> getAttributeNamesWithImputeValues(List<FeatureAttrMap> featureAttrMapList, LinkedHashMap<String, Object> attributeImputeValues) throws JsonProcessingException {
+//		LinkedHashMap<String, Object> imputeAttributeNameWithValues = new LinkedHashMap<>();
+//		Object object = null;
+//		String objectUuid = null;
+//		for(FeatureAttrMap featureAttrMap : featureAttrMapList) {
+//			MetaIdentifier attributeMI = featureAttrMap.getAttribute().getRef();
+//			for(String imputAttrValKey : attributeImputeValues.keySet()) {
+//				if(featureAttrMap.getFeatureMapId().equalsIgnoreCase(imputAttrValKey)) {
+//					if(object == null 
+//							|| (object != null && objectUuid != null && !((BaseEntity)object).getUuid().equalsIgnoreCase(objectUuid))) {
+//						object = commonServiceImpl.getOneByUuidAndVersion(attributeMI.getUuid(), attributeMI.getVersion(), attributeMI.getType().toString(), "N");
+//						objectUuid = ((BaseEntity)object).getUuid();
+//					} 
+//					String attributeName = getAttributeNameByObject(object, Integer.parseInt(featureAttrMap.getAttribute().getAttrId()));
+//					imputeAttributeNameWithValues.put(attributeName, attributeImputeValues.get(imputAttrValKey));
+//					break;
+//				}
+//			}
+//		}
+//		return imputeAttributeNameWithValues;
+//	}
 	
 	public String getAttributeNameByObject(Object object, Integer attributeId) throws NullPointerException {
 		if(object instanceof Datapod) {

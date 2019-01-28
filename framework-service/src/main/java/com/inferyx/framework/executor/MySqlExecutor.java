@@ -67,7 +67,6 @@ import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Param;
-import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.ResultType;
@@ -864,13 +863,13 @@ public class MySqlExecutor implements IExecutor {
 			String saveMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		// TODO Auto-generated method stub
-		return null;
+		return sparkExecutor.persistDataframe(rsHolder, datasource, targetDatapod, saveMode);
 	}
 
 	@Override
 	public List<Map<String, Object>> fetchTrainOrTestSet(String location) throws IOException {
 		// TODO Auto-generated method stub
-		return null;
+		return sparkExecutor.fetchTrainOrTestSet(location);
 	}
 
 	@Override
@@ -883,29 +882,26 @@ public class MySqlExecutor implements IExecutor {
 	@Override
 	public Object assembleDF(String[] fieldArray, ResultSetHolder rsHolder, String sql, String tempTableName,
 			Datasource datasource, boolean registerTempTable, String clientContext) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		return sparkExecutor.assembleDF(fieldArray, rsHolder, sql, tempTableName, datasource, registerTempTable, clientContext);
 	}
 
 	@Override
 	public ResultSetHolder createAndRegister(List<Row> data, StructType structType, String tableName,
 			String clientContext) throws IOException {
 		// TODO Auto-generated method stub
-		return null;
+		return sparkExecutor.createAndRegister(data, structType, tableName, clientContext);
 	}
 
 	@Override
 	public Map<String, Object> summary(Object trndModel, String trainClass, List<String> summaryMethods, String clientContext)
 			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, ClassNotFoundException {
-		// TODO Auto-generated method stub
-		return null;
+		return sparkExecutor.summary(trndModel, trainClass, summaryMethods, clientContext);
 	}
 
 	@Override
-	public Object getImputeValue(ResultSetHolder rshHolder) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public LinkedHashMap<String, Object> getImputeValue(ResultSetHolder rsHolder) throws Exception {		
+		return sparkExecutor.getImputeValue(rsHolder);
 	}
 
 	@Override
@@ -913,6 +909,6 @@ public class MySqlExecutor implements IExecutor {
 			LinkedHashMap<String, Object> imputeAttributeNameWithValues, boolean registerTempTable,
 			String tempTableName) throws IOException {
 		// TODO Auto-generated method stub
-		return null;
+		return sparkExecutor.applyAttrImputeValuesToData(rsHolder, imputeAttributeNameWithValues, registerTempTable, tempTableName);
 	}
 }
