@@ -1,6 +1,6 @@
 {
   "uuid": "69dc4863-89ac-45d8-a6f0-cddc1b6b2682",
-  "version": "1547749025",
+  "version": "1548556532",
   "name": "rel_ds_device_data_final_features",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Thu Jan 17 13:17:05 EST 2019",
+  "createdOn": "Sun Jan 27 08:05:32 IST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -181,6 +181,391 @@
                 "uuid": "e9acda6c-7d1c-465b-acb6-b36237c39f41",
                 "version": null,
                 "name": "ds_device_data_summary_features"
+              },
+              "attributeId": 1,
+              "value": null,
+              "attributeName": "date",
+              "attributeType": "string"
+            }
+          ]
+        }
+      ],
+      "logicaloperand": null
+    },
+    {
+      "join": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "6d245885-46fa-4af8-a778-821257c5371c",
+          "version": null,
+          "name": "ds_device_data_compute_rolling_diff"
+        },
+        "value": null
+      },
+      "joinType": "",
+      "joinKey": [
+        {
+          "display_seq": null,
+          "logicalOperator": "",
+          "operator": "=",
+          "operand": [
+            {
+              "ref": {
+                "type": "dataset",
+                "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
+                "version": null,
+                "name": "ds_device_data_base_features"
+              },
+              "attributeId": 0,
+              "value": null,
+              "attributeName": "deviceid",
+              "attributeType": "string"
+            },
+            {
+              "ref": {
+                "type": "dataset",
+                "uuid": "6d245885-46fa-4af8-a778-821257c5371c",
+                "version": null,
+                "name": "ds_device_data_compute_rolling_diff"
+              },
+              "attributeId": 0,
+              "value": null,
+              "attributeName": "deviceid",
+              "attributeType": "string"
+            }
+          ]
+        },
+        {
+          "display_seq": null,
+          "logicalOperator": "AND",
+          "operator": "=",
+          "operand": [
+            {
+              "ref": {
+                "type": "dataset",
+                "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
+                "version": null,
+                "name": "ds_device_data_base_features"
+              },
+              "attributeId": 1,
+              "value": null,
+              "attributeName": "date",
+              "attributeType": "string"
+            },
+            {
+              "ref": {
+                "type": "dataset",
+                "uuid": "6d245885-46fa-4af8-a778-821257c5371c",
+                "version": null,
+                "name": "ds_device_data_compute_rolling_diff"
+              },
+              "attributeId": 1,
+              "value": null,
+              "attributeName": "date",
+              "attributeType": "string"
+            }
+          ]
+        }
+      ],
+      "logicaloperand": null
+    },
+    {
+      "join": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "6d245885-46fa-4af8-a778-821257c5371d",
+          "version": null,
+          "name": "ds_device_data_compute_rolling_max"
+        },
+        "value": null
+      },
+      "joinType": "",
+      "joinKey": [
+        {
+          "display_seq": null,
+          "logicalOperator": "",
+          "operator": "=",
+          "operand": [
+            {
+              "ref": {
+                "type": "dataset",
+                "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
+                "version": null,
+                "name": "ds_device_data_base_features"
+              },
+              "attributeId": 0,
+              "value": null,
+              "attributeName": "deviceid",
+              "attributeType": "string"
+            },
+            {
+              "ref": {
+                "type": "dataset",
+                "uuid": "6d245885-46fa-4af8-a778-821257c5371d",
+                "version": null,
+                "name": "ds_device_data_compute_rolling_max"
+              },
+              "attributeId": 0,
+              "value": null,
+              "attributeName": "deviceid",
+              "attributeType": "string"
+            }
+          ]
+        },
+        {
+          "display_seq": null,
+          "logicalOperator": "AND",
+          "operator": "=",
+          "operand": [
+            {
+              "ref": {
+                "type": "dataset",
+                "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
+                "version": null,
+                "name": "ds_device_data_base_features"
+              },
+              "attributeId": 1,
+              "value": null,
+              "attributeName": "date",
+              "attributeType": "string"
+            },
+            {
+              "ref": {
+                "type": "dataset",
+                "uuid": "6d245885-46fa-4af8-a778-821257c5371d",
+                "version": null,
+                "name": "ds_device_data_compute_rolling_max"
+              },
+              "attributeId": 1,
+              "value": null,
+              "attributeName": "date",
+              "attributeType": "string"
+            }
+          ]
+        }
+      ],
+      "logicaloperand": null
+    },
+    {
+      "join": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "6d245885-46fa-4af8-a778-821257c5371b",
+          "version": null,
+          "name": "ds_device_data_compute_rolling_mean"
+        },
+        "value": null
+      },
+      "joinType": "",
+      "joinKey": [
+        {
+          "display_seq": null,
+          "logicalOperator": "",
+          "operator": "=",
+          "operand": [
+            {
+              "ref": {
+                "type": "dataset",
+                "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
+                "version": null,
+                "name": "ds_device_data_base_features"
+              },
+              "attributeId": 0,
+              "value": null,
+              "attributeName": "deviceid",
+              "attributeType": "string"
+            },
+            {
+              "ref": {
+                "type": "dataset",
+                "uuid": "6d245885-46fa-4af8-a778-821257c5371b",
+                "version": null,
+                "name": "ds_device_data_compute_rolling_mean"
+              },
+              "attributeId": 0,
+              "value": null,
+              "attributeName": "deviceid",
+              "attributeType": "string"
+            }
+          ]
+        },
+        {
+          "display_seq": null,
+          "logicalOperator": "AND",
+          "operator": "=",
+          "operand": [
+            {
+              "ref": {
+                "type": "dataset",
+                "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
+                "version": null,
+                "name": "ds_device_data_base_features"
+              },
+              "attributeId": 1,
+              "value": null,
+              "attributeName": "date",
+              "attributeType": "string"
+            },
+            {
+              "ref": {
+                "type": "dataset",
+                "uuid": "6d245885-46fa-4af8-a778-821257c5371b",
+                "version": null,
+                "name": "ds_device_data_compute_rolling_mean"
+              },
+              "attributeId": 1,
+              "value": null,
+              "attributeName": "date",
+              "attributeType": "string"
+            }
+          ]
+        }
+      ],
+      "logicaloperand": null
+    },
+    {
+      "join": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "6d245885-46fa-4af8-a778-821257c5371e",
+          "version": null,
+          "name": "ds_device_data_compute_rolling_min"
+        },
+        "value": null
+      },
+      "joinType": "",
+      "joinKey": [
+        {
+          "display_seq": null,
+          "logicalOperator": "",
+          "operator": "=",
+          "operand": [
+            {
+              "ref": {
+                "type": "dataset",
+                "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
+                "version": null,
+                "name": "ds_device_data_base_features"
+              },
+              "attributeId": 0,
+              "value": null,
+              "attributeName": "deviceid",
+              "attributeType": "string"
+            },
+            {
+              "ref": {
+                "type": "dataset",
+                "uuid": "6d245885-46fa-4af8-a778-821257c5371e",
+                "version": null,
+                "name": "ds_device_data_compute_rolling_min"
+              },
+              "attributeId": 0,
+              "value": null,
+              "attributeName": "deviceid",
+              "attributeType": "string"
+            }
+          ]
+        },
+        {
+          "display_seq": null,
+          "logicalOperator": "AND",
+          "operator": "=",
+          "operand": [
+            {
+              "ref": {
+                "type": "dataset",
+                "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
+                "version": null,
+                "name": "ds_device_data_base_features"
+              },
+              "attributeId": 1,
+              "value": null,
+              "attributeName": "date",
+              "attributeType": "string"
+            },
+            {
+              "ref": {
+                "type": "dataset",
+                "uuid": "6d245885-46fa-4af8-a778-821257c5371e",
+                "version": null,
+                "name": "ds_device_data_compute_rolling_min"
+              },
+              "attributeId": 1,
+              "value": null,
+              "attributeName": "date",
+              "attributeType": "string"
+            }
+          ]
+        }
+      ],
+      "logicaloperand": null
+    },
+    {
+      "join": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "6d245885-46fa-4af8-a778-821257c5371f",
+          "version": null,
+          "name": "ds_device_data_compute_rolling_std"
+        },
+        "value": null
+      },
+      "joinType": "",
+      "joinKey": [
+        {
+          "display_seq": null,
+          "logicalOperator": "",
+          "operator": "=",
+          "operand": [
+            {
+              "ref": {
+                "type": "dataset",
+                "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
+                "version": null,
+                "name": "ds_device_data_base_features"
+              },
+              "attributeId": 0,
+              "value": null,
+              "attributeName": "deviceid",
+              "attributeType": "string"
+            },
+            {
+              "ref": {
+                "type": "dataset",
+                "uuid": "6d245885-46fa-4af8-a778-821257c5371f",
+                "version": null,
+                "name": "ds_device_data_compute_rolling_std"
+              },
+              "attributeId": 0,
+              "value": null,
+              "attributeName": "deviceid",
+              "attributeType": "string"
+            }
+          ]
+        },
+        {
+          "display_seq": null,
+          "logicalOperator": "AND",
+          "operator": "=",
+          "operand": [
+            {
+              "ref": {
+                "type": "dataset",
+                "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
+                "version": null,
+                "name": "ds_device_data_base_features"
+              },
+              "attributeId": 1,
+              "value": null,
+              "attributeName": "date",
+              "attributeType": "string"
+            },
+            {
+              "ref": {
+                "type": "dataset",
+                "uuid": "6d245885-46fa-4af8-a778-821257c5371f",
+                "version": null,
+                "name": "ds_device_data_compute_rolling_std"
               },
               "attributeId": 1,
               "value": null,
