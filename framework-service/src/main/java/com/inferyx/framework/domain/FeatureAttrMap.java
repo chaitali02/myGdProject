@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.inferyx.framework.domain;
 
-import com.inferyx.framework.enums.EncodingType;
-
 /**
  * @author Ganesh
  *
@@ -22,26 +20,6 @@ public class FeatureAttrMap {
 	private String featureDisplaySeq;
 	private FeatureRefHolder feature; //source
 	private AttributeRefHolder attribute; //target
-	private FeatureRefHolder imputeMethod;
-	private EncodingType encodingType;
-
-	/**
-	 * @Ganesh
-	 *
-	 * @return the encodingType
-	 */
-	public EncodingType getEncodingType() {
-		return encodingType;
-	}
-
-	/**
-	 * @Ganesh
-	 *
-	 * @param encodingType the encodingType to set
-	 */
-	public void setEncodingType(EncodingType encodingType) {
-		this.encodingType = encodingType;
-	}
 	
 	/**
 	 *
@@ -103,14 +81,5 @@ public class FeatureAttrMap {
 	}
 	public void setFeatureDisplaySeq(String featureDisplaySeq) {
 		this.featureDisplaySeq = featureDisplaySeq;
-	}
-	
-	public FeatureRefHolder getImputeMethod() {
-		return imputeMethod;
-	}
-	
-	public void setImputeMethod(FeatureRefHolder imputeMethod) {
-		this.imputeMethod = imputeMethod;
-	}
-		
+	}		
 }

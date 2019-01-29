@@ -90,7 +90,6 @@ import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
-import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
@@ -2186,7 +2185,7 @@ public class ModelServiceImpl {
 					rsHolder = sparkExecutor.readTempTable(mappedFeatureAttrSql, appUuid);
 					sparkExecutor.registerTempTable(rsHolder.getDataFrame(), (tableName+"_pred_mapped_data"));	
 
-					Map<String, EncodingType> encodingDetails = getEncodingDetailsByFeatureAttrMap(predict.getFeatureAttrMap());
+					Map<String, EncodingType> encodingDetails = getEncodingDetailsByFeatureAttrMap(predict.getFeatureAttrMap(), model.getFeatures());
 					if(encodingDetails != null && !encodingDetails.isEmpty()) {
 //						rsHolder = sparkExecutor.preparePredictDfForEncoding(rsHolder, encodingDetails, true, (tableName+"_pred_assembled_data"));
 					}
@@ -2309,11 +2308,17 @@ public class ModelServiceImpl {
 		return isSuccess;
 	}
 	
-	private Map<String, EncodingType> getEncodingDetailsByFeatureAttrMap(List<FeatureAttrMap> featureAttrMap) {
+	private Map<String, EncodingType> getEncodingDetailsByFeatureAttrMap(List<FeatureAttrMap> featureAttrMap, List<Feature> features) {
 		Map<String, EncodingType> encodingDetails = new LinkedHashMap<>();
+		Map<String, Feature> featureModelMap = new HashMap<>();
+		for (Feature feature : features) {
+			featureModelMap.put(feature.getFeatureId(), feature);
+		}
 		for(FeatureAttrMap attrMap : featureAttrMap) {
-			if(attrMap.getEncodingType() != null) {
-				encodingDetails.put(attrMap.getFeature().getFeatureName(), attrMap.getEncodingType());
+			EncodingType encodingType = (featureModelMap.containsKey(attrMap.getFeature().getFeatureId()))?
+					featureModelMap.get(attrMap.getFeature().getFeatureId()).getEncodingType():null;
+			if (encodingType != null) {
+				encodingDetails.put(attrMap.getFeature().getFeatureName(), encodingType);
 			}
 		}
 		if(!encodingDetails.isEmpty()) {
