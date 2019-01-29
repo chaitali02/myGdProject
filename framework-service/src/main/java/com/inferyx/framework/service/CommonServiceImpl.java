@@ -1781,9 +1781,6 @@ public class CommonServiceImpl <T> {
 			return null;
 		}
 		if(object != null) {
-			if(object instanceof TaskOperator) {
-				System.out.println();
-			}
 			Method [] methodList = object.getClass().getMethods();
 			ArrayList listObj = null;
 			Class [] interfaces = null;
