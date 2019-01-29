@@ -10,7 +10,11 @@
  *******************************************************************************/
 package com.inferyx.framework.domain;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+
+import com.inferyx.framework.enums.EncodingType;
 
 /** 
  * @author Ganesh
@@ -43,7 +47,41 @@ public class TrainInput {
 	String includeFeatures;
 	double trainPercent;
 	double testPercent;
+	Map<String, EncodingType> encodingDetails;
+	LinkedHashMap<String, Object> imputeDetails;
 	
+	/**
+	 * @Ganesh
+	 *
+	 * @return the encodingDetails
+	 */
+	public Map<String, EncodingType> getEncodingDetails() {
+		return encodingDetails;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param encodingDetails the encodingDetails to set
+	 */
+	public void setEncodingDetails(Map<String, EncodingType> encodingDetails) {
+		this.encodingDetails = encodingDetails;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @return the imputeDetails
+	 */
+	public LinkedHashMap<String, Object> getImputeDetails() {
+		return imputeDetails;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param imputeDetails the imputeDetails to set
+	 */
+	public void setImputeDetails(LinkedHashMap<String, Object> imputeDetails) {
+		this.imputeDetails = imputeDetails;
+	}
 	/**
 	 * 
 	 * @ Ganesh
