@@ -1,0 +1,41 @@
+{
+    "roleId" : {
+        "ref" : {
+            "type" : "role",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f87"
+        }
+    },
+    "appId" : {
+        "ref" : {
+            "type" : "application",
+            "uuid" : "fb3ec0c4-59eb-4e75-b12d-72d6a19609d9"
+        }
+    },
+    "uuid" : "5c88c2d6-c80e-4196-afc4-f8cf6c6e9470",
+    "version" : "1548397842",
+    "name" : "dot_admin",
+    "desc" : "Admin group for dot application",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85",
+            "version" : "1464977196",
+            "name" : "admin"
+        }
+    },
+    "createdOn" : ISODate("2019-01-25T06:30:42.000Z"),
+    "tags" : [],
+    "active" : "Y",
+    "locked" : "N",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb",
+                "version" : "1464977196",
+                "name" : "Administration"
+            }
+        }
+    ]
+}
