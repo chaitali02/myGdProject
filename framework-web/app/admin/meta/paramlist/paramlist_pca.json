@@ -2,7 +2,7 @@
     "_id" : ObjectId("5c4fa6d5c7a80e188712e52c"),
     "uuid" : "dae183bc-0f49-455a-8e25-ce6f01577f29",
     "version" : "1525519035",
-    "name" : "paramlist_spark_pca",
+    "name" : "paramlist_pca",
     "desc" : "PCA Operator Paramlist",
     "createdBy" : {
         "ref" : {
