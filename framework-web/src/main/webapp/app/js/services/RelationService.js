@@ -123,10 +123,34 @@ MetadataModule.factory('MetadataRelationFactory', function ($http, $location) {
 			method: "GET",
 		}).then(function (response) { return response })
 	}
+
+	factory.findSample = function (uuid, version) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			url: url + "relation/getSample?action=view&uuid=" + uuid + "&version=" + version + "&row=100",
+			method: "GET",
+		}).then(function (response) { return response })
+	}
 	return factory;
 });
 
 MetadataModule.service('MetadataRelationSerivce', function ($q, sortFactory, MetadataRelationFactory) {
+
+	this.getSample = function (data) {
+		var deferred = $q.defer();
+		MetadataRelationFactory.findSample(data.uuid, data.version).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			});
+		}
+		var onError = function (response) {
+			deferred.reject({
+				data: response
+			})
+		}
+		return deferred.promise;
+	}
 	var that = this;
 	this.getAllAttributeBySource = function (uuid, type, version) {
 		var deferred = $q.defer();
