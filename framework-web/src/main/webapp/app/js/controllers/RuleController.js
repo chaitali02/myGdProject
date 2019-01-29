@@ -1,5 +1,5 @@
 RuleModule = angular.module('RuleModule');
-RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $cookieStore, $stateParams, $rootScope, $scope, $timeout, $filter, RuleService, CommonFactory, dagMetaDataService, CommonService, CF_FILTER, $location, $anchorScroll, CF_SUCCESS_MSG) {
+RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $cookieStore, $stateParams, $rootScope, $scope, $timeout, $filter, RuleService, CommonFactory, dagMetaDataService, CommonService, CF_FILTER, $location, $anchorScroll, CF_SUCCESS_MSG, CF_GRID) {
   $scope.mode = "false";
   $scope.rule = {};
   $scope.rule.versions = []
@@ -514,6 +514,11 @@ var confirmDialog = function(newVal, yes, no) {
   }
 
   $scope.countContinue = function () {
+    if($scope.continueCount == 3){
+			if($scope.isDuplication ==true){
+				return true;
+			}
+		}
     $scope.continueCount = $scope.continueCount + 1;
     if ($scope.continueCount >= 4) {
       $scope.isSubmitShow = true;
@@ -1041,6 +1046,7 @@ var confirmDialog = function(newVal, yes, no) {
     angular.forEach($scope.filterTableArray, function (selected) {
       if (!selected.selected) {
         newDataList.push(selected);
+        $scope.fitlerAttrTableSelectedItem=[];
       }
     });
     if(newDataList.length > 0) {
@@ -1143,6 +1149,47 @@ var confirmDialog = function(newVal, yes, no) {
     }
   }
   
+
+  function isDublication (arr, field, index, name,darray) {
+		var res = [];
+		for(var i = 0; i < arr.length;i++){
+			if (arr[i][field] == arr[index][field] && i != index) {
+			    $scope.myform3[name].$invalid = true;
+				darray.push(i);
+				break
+			}
+			else {
+				$scope.myform3[name].$invalid = false;	
+			}
+		}
+		
+		return darray;
+	}
+	
+	$scope.onChangeSourceName1 = function (index,dupArray) {
+		$scope.attributeTableArray[index].isSourceName = true;
+		if ($scope.attributeTableArray[index].name) {
+			var result = isDublication($scope.attributeTableArray, "name", index, "sourceName" + index,dupArray);
+		}
+		return dupArray
+	}
+
+	$scope.onChangeSourceName = function (index) {
+		$scope.attributeTableArray[index].isSourceName = true;
+		var dupArray=[];
+		for(var i=0;i<$scope.attributeTableArray.length;i++){
+			setTimeout(function(index){
+				if ($scope.attributeTableArray[index].name) {
+					var res = isDublication($scope.attributeTableArray, "name", index, "sourceName" +index, dupArray);
+					if(res.length >0 ){
+						$scope.isDuplication = true;
+					}else {
+						$scope.isDuplication = false;
+					}
+				}
+			},10,(i));
+		}
+	}
   $scope.onChangeSimple = function () {
 	
 	}
@@ -1279,16 +1326,68 @@ var confirmDialog = function(newVal, yes, no) {
 
   $scope.onChangeAttributeDatapod = function (data, index) {
     $scope.attributeTableArray[index].name = data.name
+    var dupArray=[];
+		for(var i=0;i<$scope.attributeTableArray.length;i++){
+			setTimeout(function(index){
+				if ($scope.attributeTableArray[index].name) {
+					var res =isDublication($scope.attributeTableArray, "name", index, "sourceName" +index, dupArray);
+					if(res.length >0 ){
+						$scope.isDuplication = true;
+					}else {
+						$scope.isDuplication = false;
+					}
+				}
+			},10,(i));
+		}
   }
   $scope.onChangeFormula = function (data, index) {
-    $scope.attributeTableArray[index].name = data.name
+    $scope.attributeTableArray[index].name = data.name;
+    var dupArray=[];
+		for(var i=0;i<$scope.attributeTableArray.length;i++){
+			setTimeout(function(index){
+				if ($scope.attributeTableArray[index].name) {
+					var res =isDublication($scope.attributeTableArray, "name", index, "sourceName" +index, dupArray);
+					if(res.length >0 ){
+						$scope.isDuplication = true;
+					}else {
+						$scope.isDuplication = false;
+					}
+				}
+			},10,(i));
+		}
   }
   $scope.onChangeExpression = function (data, index) {
-    $scope.attributeTableArray[index].name = data.name
+    $scope.attributeTableArray[index].name = data.name;
+    var dupArray=[];
+		for(var i=0;i<$scope.attributeTableArray.length;i++){
+			setTimeout(function(index){
+				if ($scope.attributeTableArray[index].name) {
+					var res =isDublication($scope.attributeTableArray, "name", index, "sourceName" +index, dupArray);
+					if(res.length >0 ){
+						$scope.isDuplication = true;
+					}else {
+						$scope.isDuplication = false;
+					}
+				}
+			},10,(i));
+		}
   }
 
   $scope.onChangeAttributeParamlist = function (data, index) {
-    $scope.attributeTableArray[index].name = data.paramName
+    $scope.attributeTableArray[index].name = data.paramName;
+    var dupArray=[];
+		for(var i=0;i<$scope.attributeTableArray.length;i++){
+			setTimeout(function(index){
+				if ($scope.attributeTableArray[index].name) {
+					var res =isDublication($scope.attributeTableArray, "name", index, "sourceName" +index, dupArray);
+					if(res.length >0 ){
+						$scope.isDuplication = true;
+					}else {
+						$scope.isDuplication = false;
+					}
+				}
+			},10,(i));
+		}
   }
 
   $scope.checkAllAttributeRow = function () {
@@ -1319,10 +1418,18 @@ var confirmDialog = function(newVal, yes, no) {
   }
 
   $scope.autoPopulate=function(){
-		$scope.attributeTableArray=[];
+    $scope.isAutoMapInprogess=true;
+    $scope.attributeTableArray=[];
+    $scope.attrTableSelectedItem=[];
+    var dupArray=[];
+    $timeout(function(){
 		for(var i=0;i<$scope.sourcedatapodattribute.length;i++){
 			var attributeinfo = {};
-			attributeinfo.id =i;
+      attributeinfo.id =i;
+      if($scope.sourcedatapodattribute.length >CF_GRID.framework_autopopulate_grid)
+				attributeinfo.isOnDropDown=false;
+			else
+				attributeinfo.isOnDropDown=true;
 			attributeinfo.sourcedatapod=$scope.sourcedatapodattribute[i];
 			attributeinfo.name=$scope.sourcedatapodattribute[i].name;
 			attributeinfo.sourceAttributeType = $scope.sourceAttributeTypes[1];
@@ -1332,9 +1439,22 @@ var confirmDialog = function(newVal, yes, no) {
 			attributeinfo.isSourceAtributeExpression = false;
 			attributeinfo.isSourceAtributeFunction = false;
 			attributeinfo.isSourceAtributeParamList = false;
-			$scope.attributeTableArray.push(attributeinfo);
+      $scope.attributeTableArray.push(attributeinfo);
+      setTimeout(function(index){
+				var result=$scope.onChangeSourceName1(index,dupArray);
+				if(result.length >0 ){
+					$scope.isDuplication = true;
+				}else {
+					$scope.isDuplication = false;
+				}
+      },10,(i));
+      
+
 		}
-		
+		if(i== $scope.attributeTableArray.length)
+      $scope.isAutoMapInprogess=false;
+
+    },40);
 	}
 
   $scope.onAttrRowDown=function(index){  
@@ -1362,9 +1482,22 @@ var confirmDialog = function(newVal, yes, no) {
     angular.forEach($scope.attributeTableArray, function (selected) {
       if (!selected.selected) {
         newDataList.push(selected);
+        $scope.attrTableSelectedItem=[];
+
       }
     });
     $scope.attributeTableArray = newDataList;
+    var dupArray=[];
+		for(var i=0;i<$scope.attributeTableArray.length;i++){
+			setTimeout(function(index){
+				var result=$scope.onChangeSourceName1(index,dupArray);
+				if(result.length >0 ){
+					$scope.isDuplication = true;
+				}else {
+					$scope.isDuplication = false;
+				}
+			},10,(i));
+		}
   }
 
   // $scope.hideOk = function (m) {
@@ -1578,16 +1711,18 @@ var confirmDialog = function(newVal, yes, no) {
           sourceAttr.value = $scope.attributeTableArray[l].sourcesimple;
           attributeinfo.sourceAttr = sourceAttr;
         } else if ($scope.attributeTableArray[l].sourceAttributeType.text == "datapod") {
-          if ($scope.rulsourcetype == "dataset") {
-            ref.type = "dataset";
-            ref.uuid = $scope.ruleRelation.defaultoption.uuid;
-          } else if ($scope.rulsourcetype == "rule") {
-            ref.type = "rule";
-            ref.uuid = $scope.ruleRelation.defaultoption.uuid;
-          } else {
-            ref.type = "datapod";
-            ref.uuid = $scope.attributeTableArray[l].sourcedatapod.uuid;
-          }
+          // if ($scope.rulsourcetype == "dataset") {
+          //   ref.type = "dataset";
+          //   ref.uuid = $scope.ruleRelation.defaultoption.uuid;
+          // } else if ($scope.rulsourcetype == "rule") {
+          //   ref.type = "rule";
+          //   ref.uuid = $scope.ruleRelation.defaultoption.uuid;
+          // } else {
+          //   ref.type = "datapod";
+          //   ref.uuid = $scope.attributeTableArray[l].sourcedatapod.uuid;
+          // }
+          ref.type = $scope.attributeTableArray[l].sourcedatapod.type;
+			  	ref.uuid = $scope.attributeTableArray[l].sourcedatapod.uuid;
           sourceAttr.ref = ref;
           sourceAttr.attrId = $scope.attributeTableArray[l].sourcedatapod.attributeId;
           sourceAttr.attrType = $scope.attributeTableArray[l].sourcedatapod.attrType;
@@ -1664,6 +1799,74 @@ var confirmDialog = function(newVal, yes, no) {
       $scope.$emit('notify', notify);
     }
   }
+
+  $scope.attrTableSelectedItem=[];
+	$scope.onChangeAttRow=function(index,status){
+		if(status ==true){
+			$scope.attrTableSelectedItem.push(index);
+		}
+		else{
+			let tempIndex=$scope.attrTableSelectedItem.indexOf(index);
+
+			if(tempIndex !=-1){
+				$scope.attrTableSelectedItem.splice(tempIndex, 1);
+
+			}
+		}	
+	}
+	$scope.fitlerAttrTableSelectedItem=[];
+	$scope.onChangeFilterAttRow=function(index,status){
+		if(status ==true){
+			$scope.fitlerAttrTableSelectedItem.push(index);
+		}
+		else{
+			let tempIndex=$scope.fitlerAttrTableSelectedItem.indexOf(index);
+
+			if(tempIndex !=-1){
+				$scope.fitlerAttrTableSelectedItem.splice(tempIndex, 1);
+
+			}
+		}	
+	}
+	$scope.autoMove=function(index,type){
+		if(type=="mapAttr"){
+			var tempAtrr=$scope.attributeTableArray[$scope.attrTableSelectedItem[0]];
+			$scope.attributeTableArray.splice($scope.attrTableSelectedItem[0],1);
+			$scope.attributeTableArray.splice(index,0,tempAtrr);
+			$scope.attrTableSelectedItem=[];
+			$scope.attributeTableArray[index].selected=false;
+		}
+		else{
+			var tempAtrr=$scope.filterTableArray[$scope.fitlerAttrTableSelectedItem[0]];
+			$scope.filterTableArray.splice($scope.fitlerAttrTableSelectedItem[0],1);
+			$scope.filterTableArray.splice(index,0,tempAtrr);
+			$scope.fitlerAttrTableSelectedItem=[];
+			$scope.filterTableArray[index].selected=false;
+			$scope.filterTableArray[0].logicalOperator="";
+			if($scope.filterTableArray[index].logicalOperator =="" && index !=0){
+				$scope.filterTableArray[index].logicalOperator=$scope.logicalOperator[0];
+			}else if($scope.filterTableArray[index].logicalOperator =="" && index ==0){
+				$scope.filterTableArray[index+1].logicalOperator=$scope.logicalOperator[0];
+			}
+		}
+	}
+
+	$scope.autoMoveTo=function(index,type){
+		if(type =="mapAttr"){
+			if(index <= $scope.attributeTableArray.length){
+				$scope.autoMove(index-1,'mapAttr');
+				$scope.moveTo=null;
+				$(".actions").removeClass("open");
+			}
+		}
+		else{
+			if(index <= $scope.filterTableArray.length){
+				$scope.autoMove(index-1,'filterAttr');
+				$scope.moveTo=null;
+				$(".actions").removeClass("open");
+			}
+		}
+	}
 
 });
 
@@ -1983,6 +2186,8 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
       $scope.$emit('notify', notify);
     }
   } //End Submit Function
+
+  
 });
 
 

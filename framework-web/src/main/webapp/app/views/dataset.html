@@ -581,22 +581,18 @@
                 <!-- Start Tab3 -->
                 <div class="tab-pane" id="tab3" ng-class="{'active' : continueCount == 3}">
                   <form class="form-horizontal" name="myform3" id="submit_form3" ng-submit="countContinue()" novalidate="novalidate">
-                    <div class="centercontent" style="min-height:500px;" ng-show="isAutoMapInprogess">
-                      <div class="spinner">
-                        <div class="bounce1"></div>
-                        <div class="bounce2"></div>
-                        <div class="bounce3"></div>
-                      </div>
-                    </div>
-                    <div class="row" ng-hide="isAutoMapInprogess">
+                    
+                    <div class="row" >
 
                       <div class="portlet light bordered">
+
                         <div class="portlet-title">
                           <div class="caption">
                             <span class="caption-subject  sbold ">Source Attribute</span>
                           </div>
 
                           <div class="actions" style="position:relative;">
+                           
                             <a class="btn green-haze btn-outline btn-circle auto-map btn-sm" ng-disabled="attrTableSelectedItem.length ==1 && attributeTableArray.length >1 ?false:true"
                               href="javascript:;" data-toggle="dropdown" tooltip-placement="left" uib-tooltip="Move" data-hover="dropdown"
                               data-close-others="true" aria-expanded="false">
@@ -628,7 +624,14 @@
                         </div>
 
                         <div class="portlet-body">
-                          <div class="row">
+                          <div class="centercontent" style="min-height:500px;" ng-show="isAutoMapInprogess">
+                            <div class="spinner">
+                              <div class="bounce1"></div>
+                              <div class="bounce2"></div>
+                              <div class="bounce3"></div>
+                            </div>
+                          </div>
+                          <div class="row" ng-hide="isAutoMapInprogess">
                             <div class="col-md-12" style="margin-bottom:10px;">
                               <div class="col-md-6" style="padding:0px;">
                                 <div class="btn-group btn-group-devided" data-toggle="buttons" style="width:45%;">
@@ -646,7 +649,7 @@
                               </div>
                             </div>
                           </div>
-                          <div class="row" style="overflow-y: auto;overflow-x: hidden;max-height:400px;">
+                          <div class="row" style="overflow-y: auto;overflow-x: hidden;max-height:400px;"  ng-hide="isAutoMapInprogess">
                             <div class="col-md-12">
                               <table class=" row-border hover table  table-striped table-bordered" style="table-layout:fixed;">
                                 <thead>
@@ -668,12 +671,10 @@
                                   <!-- <tr data-drop="true" data-drag={{isDragable}} ng-model="attributeTableArray" jqyoui-droppable="{index: {{$index}}}" jqyoui-draggable="{index: {{$index}},'cancel':'.select2', 'animate':false,insertInline: true, direction:'jqyouiDirection'}"
                                             data-jqyoui-options="{revert: 'invalid',helper: 'clone',zIndex: 350}" data-direction="{{data.name.jqyouiDirection}}"> -->
                                   <tr id="{{$index}}" ng-repeat="data in attributeTableArray" drag-drop draggable="{{isDragable}}" after-drop="ondrop">
-
                                     <td style="text-align: center; Vertical-align: middle;width:5%;">
                                       <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                         <input class="form-control" ng-disabled="{{mode}}" style="height:16px;" type="checkbox" ng-model="data.selected" ng-change="onChangeAttRow($index,data.selected)"
                                         />
-
                                       </span>
                                     </td>
                                     <td>
