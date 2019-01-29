@@ -90,52 +90,52 @@ public class ImputeOperator implements IOperator {
 
 	@Override
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
-		Train train = null;
-		Predict predict = null;
-		List<FeatureAttrMap> featureAttrMapList = null;
-		FeatureRefHolder imputeRefHolder = null;
-		Function function = null;
-		String featureName = null;
-		Datasource appDatasource = commonServiceImpl.getDatasourceByApp();
-		StringBuilder sb = new StringBuilder(SELECT);
-		String sql = null;
-		if (baseExec == null) {
-			return baseExec;
-		}
-		MetaIdentifier baseEntityRef = baseExec.getDependsOn().getRef();
-		if (baseEntityRef!= null && baseEntityRef.getType() == MetaType.train) {
-			train = (Train) commonServiceImpl.getOneByUuidAndVersion(baseEntityRef.getUuid(), baseEntityRef.getVersion(), baseEntityRef.getType().toString());
-			featureAttrMapList = train.getFeatureAttrMap();
-		} else {
-			predict = (Predict) commonServiceImpl.getOneByUuidAndVersion(baseEntityRef.getUuid(), baseEntityRef.getVersion(), baseEntityRef.getType().toString());
-			featureAttrMapList = predict.getFeatureAttrMap();
-		}
-		// Get the impute attributes and parse
-		if (featureAttrMapList == null || featureAttrMapList.size() <= 0) {
-			return null;
-		}
-		for (FeatureAttrMap featureAttrMap : featureAttrMapList) {
-			imputeRefHolder = featureAttrMap.getImputeMethod();
-			featureName = featureAttrMap.getFeature().getFeatureName();
-			sb.append("'").append(featureName).append("' AS feature_name, ");
-			if (imputeRefHolder.getRef().getType() == MetaType.simple) {
-				sb.append("'").append(imputeRefHolder.getValue()).append("' ").append(AS).append(featureName).append(", ");
-			} else if (imputeRefHolder.getRef().getType() == MetaType.function) {
-				function = (Function) commonServiceImpl.getOneByUuidAndVersion(imputeRefHolder.getRef().getUuid(), imputeRefHolder.getRef().getVersion(), imputeRefHolder.getRef().getType().toString());
-				sb.append(functionOperator.generateSql(function, null, execParams.getOtherParams(), appDatasource)).append("' ").append(AS).append(featureName).append("_").append("impute, ");
-			}
-		}
-		sb.append(FROM);
-		MetaIdentifier attrRef = featureAttrMapList.get(0).getAttribute().getRef();
-		if (attrRef.getType() == MetaType.datapod) {
-			Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(attrRef.getUuid(), attrRef.getVersion(), attrRef.getType().toString());
-			sb.append(datapod.getName());
-		} else if (attrRef.getType() == MetaType.dataset) {
-			DataSet dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(attrRef.getUuid(), attrRef.getVersion(), attrRef.getType().toString());
-			sb.append("(").append(datasetOperator.generateSql(dataset, null, execParams.getOtherParams(), null, execParams, runMode)).append(") ").append(dataset.getName());
-		}
-		sql = sb.toString().replaceAll(",  FROM ", FROM);
-		baseExec.setExec(sql);
+//		Train train = null;
+//		Predict predict = null;
+//		List<FeatureAttrMap> featureAttrMapList = null;
+//		FeatureRefHolder imputeRefHolder = null;
+//		Function function = null;
+//		String featureName = null;
+//		Datasource appDatasource = commonServiceImpl.getDatasourceByApp();
+//		StringBuilder sb = new StringBuilder(SELECT);
+//		String sql = null;
+//		if (baseExec == null) {
+//			return baseExec;
+//		}
+//		MetaIdentifier baseEntityRef = baseExec.getDependsOn().getRef();
+//		if (baseEntityRef!= null && baseEntityRef.getType() == MetaType.train) {
+//			train = (Train) commonServiceImpl.getOneByUuidAndVersion(baseEntityRef.getUuid(), baseEntityRef.getVersion(), baseEntityRef.getType().toString());
+//			featureAttrMapList = train.getFeatureAttrMap();
+//		} else {
+//			predict = (Predict) commonServiceImpl.getOneByUuidAndVersion(baseEntityRef.getUuid(), baseEntityRef.getVersion(), baseEntityRef.getType().toString());
+//			featureAttrMapList = predict.getFeatureAttrMap();
+//		}
+//		// Get the impute attributes and parse
+//		if (featureAttrMapList == null || featureAttrMapList.size() <= 0) {
+//			return null;
+//		}
+//		for (FeatureAttrMap featureAttrMap : featureAttrMapList) {
+//			imputeRefHolder = featureAttrMap.getImputeMethod();
+//			featureName = featureAttrMap.getFeature().getFeatureName();
+//			sb.append("'").append(featureName).append("' AS feature_name, ");
+//			if (imputeRefHolder.getRef().getType() == MetaType.simple) {
+//				sb.append("'").append(imputeRefHolder.getValue()).append("' ").append(AS).append(featureName).append(", ");
+//			} else if (imputeRefHolder.getRef().getType() == MetaType.function) {
+//				function = (Function) commonServiceImpl.getOneByUuidAndVersion(imputeRefHolder.getRef().getUuid(), imputeRefHolder.getRef().getVersion(), imputeRefHolder.getRef().getType().toString());
+//				sb.append(functionOperator.generateSql(function, null, execParams.getOtherParams(), appDatasource)).append("' ").append(AS).append(featureName).append("_").append("impute, ");
+//			}
+//		}
+//		sb.append(FROM);
+//		MetaIdentifier attrRef = featureAttrMapList.get(0).getAttribute().getRef();
+//		if (attrRef.getType() == MetaType.datapod) {
+//			Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(attrRef.getUuid(), attrRef.getVersion(), attrRef.getType().toString());
+//			sb.append(datapod.getName());
+//		} else if (attrRef.getType() == MetaType.dataset) {
+//			DataSet dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(attrRef.getUuid(), attrRef.getVersion(), attrRef.getType().toString());
+//			sb.append("(").append(datasetOperator.generateSql(dataset, null, execParams.getOtherParams(), null, execParams, runMode)).append(") ").append(dataset.getName());
+//		}
+//		sql = sb.toString().replaceAll(",  FROM ", FROM);
+//		baseExec.setExec(sql);
 		return baseExec;
 	}
 
