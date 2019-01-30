@@ -49,7 +49,7 @@ export class KnowledgeGraphComponent {
             top: 20,
             right: 180,
             bottom: 20,
-            left: 180
+            left: 240
         }
         this.width = 1060 - this.margin["right"] - this.margin["left"],
         this.height = 600 - this.margin["top"] - this.margin["bottom"];
@@ -82,7 +82,7 @@ export class KnowledgeGraphComponent {
                 response.children[i].depth=1;
             }
         }
-        this.createSvg()
+        this.createSvg(this.height, this.width)
         this.treeOrignaldata = response;
         this.treemap = this.d3.tree().size([this.height, this.width]);
         this.root = this.d3.hierarchy(this.treeData, function (d) { return d.children; });
@@ -106,7 +106,9 @@ export class KnowledgeGraphComponent {
     }
 
     update(source, angularThis) {
-        
+        var w = this.d3.select("svg.tree-graph").attr("width");
+        this.d3.select("svg.tree-graph").attr("width", parseInt(w) + 100);
+        this.d3.select("svg.tree-graph").attr("height", this.height);
 
         var treeData = this.treemap(source);
         var nodes = treeData.descendants(),
@@ -391,11 +393,11 @@ export class KnowledgeGraphComponent {
              return  child;
            }
 
-    createSvg() {
+    createSvg(height,width) {
         this.d3.select("#network-graph-wrapper svg.tree-graph").remove();
         this.svg = this.d3.select("#network-graph-wrapper").append("svg")
-            .attr("width", this.width + this.margin["right"] + this.margin["left"])
-            .attr("height", this.height + this.margin["top"] + this.margin["bottom"])
+            .attr("width", width + this.margin["right"] + this.margin["left"])
+            .attr("height", height + this.margin["top"] + this.margin["bottom"])
             .attr('class', 'tree-graph')
             .append("g")
             .attr("transform", "translate(" + this.margin["left"] + "," + this.margin["top"] + ")")
