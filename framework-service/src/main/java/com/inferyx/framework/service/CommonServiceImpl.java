@@ -4671,6 +4671,11 @@ public class CommonServiceImpl <T> {
 			MetaIdentifier profileDependsOn = profile.getDependsOn().getRef();
 			Object dependsOnObj = getOneByUuidAndVersion(profileDependsOn.getUuid(), profileDependsOn.getVersion(), profileDependsOn.getType().toString());
 			return getDatapodByObject(dependsOnObj);	
+		} else if(object instanceof Relation) {
+			Relation relation = (Relation) object;
+			MetaIdentifier relationDependsOn = relation.getDependsOn().getRef();
+			Object dependsOnObj = getOneByUuidAndVersion(relationDependsOn.getUuid(), relationDependsOn.getVersion(), relationDependsOn.getType().toString());
+			return getDatapodByObject(dependsOnObj);	
 		}
 		
 		return null;

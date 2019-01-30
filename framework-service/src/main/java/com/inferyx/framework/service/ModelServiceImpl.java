@@ -1943,9 +1943,16 @@ public class ModelServiceImpl {
 					MetaIdentifier dataStoreMI = trainExec.getResult().getRef();
 					DataStore dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(dataStoreMI.getUuid(), dataStoreMI.getVersion(), dataStoreMI.getType().toString());
 
+					Map<String, EncodingType> encodingDetails = getEncodingDetails(predict.getFeatureAttrMap(), model.getFeatures());
+//					LinkedHashMap<String, Object> imputationDetails = imputeOperator.resolveAttributeImputeValue(predict.getFeatureAttrMap(), source, model, execParams, runMode, (tableName+"_train_source_data"));
+					
+					
 					List<String> argList = new ArrayList<>();
 					PredictInput predictInput = new PredictInput();
 					Map<String, Object> otherParams = new HashMap<>();
+
+					predictInput.setEncodingDetails(encodingDetails);
+//					predictInput.setImputeDetails(imputationDetails);					
 					
 					predictInput.setIncludeFeatures(predict.getIncludeFeatures());
 					
@@ -2014,7 +2021,11 @@ public class ModelServiceImpl {
 						if(!saveFile.exists()) {
 							exec.executeAndRegisterByDatasource(mappedFeatureAttrSql, tableName, sourceDS, appUuid);
 							String doubleCastSql = "SELECT * FROM " + tableName;
-							sparkExecutor.castDFCloumnsToDoubleType(null, doubleCastSql, sourceDS, tableName, true, appUuid);	
+							
+							if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
+								sparkExecutor.castDFCloumnsToDoubleType(null, doubleCastSql, sourceDS, tableName, true, appUuid);	
+							}
+							
 							exec.saveTrainFile(fieldArray, predictName, train.getTrainPercent(), train.getValPercent(), tableName, appUuid, saveFileName);
 							saveFileName = renameFileAndGetFilePathFromDir(saveFileName, "input_data", FileType.CSV.toString().toLowerCase());
 							saveFileName = URI+saveFileName;
@@ -2185,7 +2196,7 @@ public class ModelServiceImpl {
 					rsHolder = sparkExecutor.readTempTable(mappedFeatureAttrSql, appUuid);
 					sparkExecutor.registerTempTable(rsHolder.getDataFrame(), (tableName+"_pred_mapped_data"));	
 
-					Map<String, EncodingType> encodingDetails = getEncodingDetailsByFeatureAttrMap(predict.getFeatureAttrMap(), model.getFeatures());
+					Map<String, EncodingType> encodingDetails = getEncodingDetails(predict.getFeatureAttrMap(), model.getFeatures());
 					if(encodingDetails != null && !encodingDetails.isEmpty()) {
 //						rsHolder = sparkExecutor.preparePredictDfForEncoding(rsHolder, encodingDetails, true, (tableName+"_pred_assembled_data"));
 					}
@@ -2308,7 +2319,7 @@ public class ModelServiceImpl {
 		return isSuccess;
 	}
 	
-	private Map<String, EncodingType> getEncodingDetailsByFeatureAttrMap(List<FeatureAttrMap> featureAttrMap, List<Feature> features) {
+	private Map<String, EncodingType> getEncodingDetails(List<FeatureAttrMap> featureAttrMap, List<Feature> features) {
 		Map<String, EncodingType> encodingDetails = new LinkedHashMap<>();
 		Map<String, Feature> featureModelMap = new HashMap<>();
 		for (Feature feature : features) {
@@ -3001,9 +3012,16 @@ public class ModelServiceImpl {
 					String sql = generateFeatureSQLBySource(train.getFeatureAttrMap(), source, execParams, fieldArray, label, tableName);
 					String appUuid = commonServiceImpl.getApp().getUuid();
 
+					Map<String, EncodingType> encodingDetails = getEncodingDetails(train.getFeatureAttrMap(), model.getFeatures());
+//					LinkedHashMap<String, Object> imputationDetails = imputeOperator.resolveAttributeImputeValue(train.getFeatureAttrMap(), source, model, execParams, runMode, (tableName+"_train_source_data"));
+					
 					TrainInput trainInput = new TrainInput();
 					Map<String, Object> otherParams = new HashMap<>();
 					
+					trainInput.setEncodingDetails(encodingDetails);
+//					trainInput.setImputeDetails(imputationDetails);
+					
+					trainInput.setSaveTrainingSet(train.getSaveTrainingSet());
 					trainInput.setTrainPercent(train.getTrainPercent()/100);
 					trainInput.setTestPercent(train.getValPercent()/100);
 					trainInput.setIncludeFeatures(train.getIncludeFeatures());
@@ -3101,8 +3119,12 @@ public class ModelServiceImpl {
 						exec = execFactory.getExecutor(datasource.getType());
 						if(!trainInPathFile.exists()) {							
 							exec.executeAndRegisterByDatasource(sql, tableName, sourceDS, appUuid);	
-							String doubleCastSql = "SELECT * FROM " + tableName;
-							sparkExecutor.castDFCloumnsToDoubleType(null, doubleCastSql, sourceDS, tableName, true, appUuid);													
+							
+							String doubleCastSql = "SELECT * FROM " + tableName;							
+							if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
+								sparkExecutor.castDFCloumnsToDoubleType(null, doubleCastSql, sourceDS, tableName, true, appUuid);	
+							}
+																			
 							exec.saveTrainFile(fieldArray, trainName, train.getTrainPercent(), train.getValPercent(), tableName, appUuid, "file://"+trainInputPath);
 							trainInputPath = renameFileAndGetFilePathFromDir(trainInputPath, "input_data", FileType.CSV.toString().toLowerCase());
 						}		

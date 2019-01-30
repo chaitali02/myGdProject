@@ -49,7 +49,24 @@ public class TrainInput {
 	double testPercent;
 	Map<String, EncodingType> encodingDetails;
 	LinkedHashMap<String, Object> imputeDetails;
+	String saveTrainingSet;
 	
+	/**
+	 * @Ganesh
+	 *
+	 * @return the saveTrainingSet
+	 */
+	public String getSaveTrainingSet() {
+		return saveTrainingSet;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param saveTrainingSet the saveTrainingSet to set
+	 */
+	public void setSaveTrainingSet(String saveTrainingSet) {
+		this.saveTrainingSet = saveTrainingSet;
+	}
 	/**
 	 * @Ganesh
 	 *

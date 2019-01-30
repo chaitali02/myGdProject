@@ -89,10 +89,14 @@ testPercent=0.0
 output_result = dict() 
 outputResultPath=""
 numHiddenLayers=0
+encodingDetails=None
+imputationDetails=None
+saveTrainingSet=None
+
 
 # Iteration over all arguments:
-plist = ["nEpochs", "seed", "iterations", "learningRate", "optimizationAlgo", "weightInit", "updater", "momentum", "numInput", "numOutputs", "numHidden", "numLayers", "layerNames", "activation", "lossFunction", "sourceFilePath", "modelFilePath", "targetPath", "sourceDsType", "tableName", "operation", "url", "hostName", "dbName", "userName", "password", "query", "special_space_replacer", "port", "otherParams", "sourceHostName", "sourceDbName", "sourcePort", "sourceUserName", "sourcePassword", "targetHostName", "targetDbName" , "targetPort", "targetUserName", "targetPassword", "targetDsType", "targetTableName", "targetDriver", "testSetPath", "includeFeatures", "rowIdentifier",
-         "sourceAttrDetails", "featureAttrDetails", "sourceQuery", "inputSourceFileName", "trainPercent", "testPercent", "outputResultPath", "rowIdentifier", "numHiddenLayers"]
+plist = ["nEpochs", "seed", "iterations", "learningRate", "optimizationAlgo", "weightInit", "updater", "momentum", "numInput", "numOutputs", "numHidden", "numLayers", "layerNames", "activation", "lossFunction", "sourceFilePath", "modelFilePath", "targetPath", "sourceDsType", "tableName", "operation", "url", "hostName", "dbName", "userName", "password", "query", "special_space_replacer", "port", "otherParams", "sourceHostName", "sourceDbName", "sourcePort", "sourceUserName", "sourcePassword", "targetHostName", "targetDbName" , "targetPort", "targetUserName", "targetPassword", "targetDsType", "targetTableName", "targetDriver", "testSetPath", "includeFeatures", "rowIdentifier","sourceAttrDetails", "featureAttrDetails", "sourceQuery", "inputSourceFileName", "trainPercent", "testPercent",
+    "outputResultPath", "rowIdentifier", "numHiddenLayers", "encodingDetails", "imputationDetails", "saveTrainingSet"]
 
 i = 0
 for eachArg in sys.argv:
@@ -202,6 +206,15 @@ for value in input_config:
         
     if value == "testPercent":
         testPercent = input_config[value]
+     
+    if value == "encodingDetails":
+        encodingDetails = input_config[value]
+        
+    if value == "imputationDetails":
+        imputationDetails = input_config[value]
+        
+    if value == "saveTrainingSet":
+        saveTrainingSet = input_config[value]
 
 if otherParams != None:
     for value in otherParams:
@@ -292,7 +305,7 @@ if targetDsDetails != None:
 
 
 print()
-print("printing params:")
+print("printing ANN params:")
 print("nEpochs: ", nEpochs)
 print("seed: ", seed)
 print("iterations: ", iterations)
@@ -346,6 +359,10 @@ print("targetDbName: ", targetDbName)
 print("targetPort: ", targetPort)
 print("targetUserName: ", targetUserName)
 print("targetPassword: ", targetPassword)
+
+print("encodingDetails: ", encodingDetails)
+print("imputationDetails: ", imputationDetails)
+print("saveTrainingSet: ", saveTrainingSet)
 print()
 print()
 
@@ -390,7 +407,7 @@ def getData(csvPath, dsType, hostName, dbName, port, userName, password, sqlQuer
         connection = hive.Connection(host=hostName, port=port, auth='NONE', username=userName, database=dbName)
         print("connected to hive...")
         dataset = pd.read_sql(sqlQuery, con=connection)
-        sparkSession = SparkSession.builder.appName('pandasToSparkDF').getOrCreate()
+        sparkSession = getSparkSession()
         
         # import pyhs2
         # conn = pyhs2.connect(host=hostName, port=port, authMechanism="PLAIN", user=userName, password=password, database=dbName)
@@ -428,6 +445,9 @@ def getData(csvPath, dsType, hostName, dbName, port, userName, password, sqlQuer
         #    cur.execute('SHOW TABLES')
         #    cur.fetchall()
         
+def getSparkSession():
+    return SparkSession.builder.appName('spark_ann').getOrCreate()
+        
 def addIndexToSparkDf(spark_df: DataFrame):
     from pyspark.sql.window import Window
     from pyspark.sql.functions import row_number
@@ -442,7 +462,7 @@ def joinSparkDfByIndex(dfLHS, dfRHS):
     return joined_df
 
 def createSparkDfByPandasDfAndSparkSchema(pd_df, schema):  
-    sparkSession = SparkSession.builder.appName('pandasToSparkDF').getOrCreate()
+    sparkSession = getSparkSession()
     spark_df = sparkSession.createDataFrame(pd_df, schema)
     return spark_df
 
@@ -478,7 +498,7 @@ def generatePredictStatus(spark_df: DataFrame):
     from pyspark.sql.types import StructType, StructField, StringType
     
     schema = StructType([StructField("prediction_status", StringType(), True)])
-    sparkSession = SparkSession.builder.appName('pandasToSparkDF').getOrCreate()
+    sparkSession = getSparkSession()
     mapped_row = spark_df.rdd.map(lambda x: Row(prepareStatus(x[1], x[2])))
     prediction_status_df = sparkSession.createDataFrame(mapped_row, schema)
     
@@ -527,10 +547,30 @@ def model():
     
     return classifier
     
+#encode data
+def encodeData(encodingDataset, encodingDetailsList):
+    print("encodingDetails: ", encodingDetailsList)
+    for val in encodingDetailsList:
+        print("Encoding column: ", val, "Encoding type: ", encodingDetailsList[val])
+        oneHot = None
+        if encodingDetailsList[val] == "ONEHOT":
+            catenc = pd.factorize(encodingDataset[val])
+            encodingDataset = encodingDataset.drop(val, axis = 1)
+            encodingDataset[val] = catenc[0]
+            
+    return encodingDataset            
+    
 #train operation
 def train():
     # Encoding categorical data
     dataset = getData(sourceFilePath, sourceDsType, sourceHostName, sourceDbName, sourcePort, sourceUserName, sourcePassword, query)
+    
+    # dataset = dataset.iloc[:, 1:].fillna(0.0)
+    if(encodingDetails != None):
+        dataset = encodeData(dataset, encodingDetails).astype(dtype='float64', copy=True, errors='ignore') 
+    
+    print("encoded df: ")
+    print(dataset)
     
     print("total_size: ", len(dataset))    
     output_result["total_size"]=len(dataset)
@@ -554,6 +594,10 @@ def train():
     sc = StandardScaler()
     X_train = sc.fit_transform(X_train)
     X_test = sc.transform(X_test)
+    
+    # print(">>>>>>>>>>>>>>>type(X_train)", type(X_train))
+    # trainSet_pd_df = pd.DataFrame(X_train)
+    # # saveSparkDf(joined_df, testSetPath)
         
     print("train_size: ", len(X_train))
     print("test_size: ", len(X_test))
@@ -712,6 +756,13 @@ def predict():
     # Importing the dataset
     #    dataset = pd.read_csv(sourceFilePath)
     dataset2 = getData(sourceFilePath, sourceDsType, sourceHostName, sourceDbName, sourcePort, sourceUserName, sourcePassword, query)
+    
+    # dataset = dataset.iloc[:, 1:].fillna(0.0)
+    if(encodingDetails != None):
+        dataset2 = encodeData(dataset2, encodingDetails).astype(dtype='float64', copy=True, errors='ignore')
+        
+    print("encoded df: ")
+    print(dataset2)
     
     print("predict dataset size: ", len(dataset2))
     
