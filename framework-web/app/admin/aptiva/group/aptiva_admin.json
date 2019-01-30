@@ -1,0 +1,41 @@
+{
+    "roleId" : {
+        "ref" : {
+            "type" : "role",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f87"
+        }
+    },
+    "appId" : {
+        "ref" : {
+            "type" : "application",
+            "uuid" : "aea8db49-46d5-46e1-9911-4fd9a3034b9e"
+        }
+    },
+    "uuid" : "29792fd8-74f1-4940-a0d8-89f039df5138",
+    "version" : "1548397815",
+    "name" : "aptiva_admin",
+    "desc" : "Admin group for aptiva application",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85",
+            "version" : "1464977196",
+            "name" : "admin"
+        }
+    },
+    "createdOn" : ISODate("2019-01-25T06:30:15.000Z"),
+    "tags" : [],
+    "active" : "Y",
+    "locked" : "N",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb",
+                "version" : "1464977196",
+                "name" : "Administration"
+            }
+        }
+    ]
+}

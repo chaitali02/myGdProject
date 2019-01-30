@@ -1,0 +1,41 @@
+{
+    "roleId" : {
+        "ref" : {
+            "type" : "role",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f88"
+        }
+    },
+    "appId" : {
+        "ref" : {
+            "type" : "application",
+            "uuid" : "aea8db49-46d5-46e1-9911-4fd9a3034b9e"
+        }
+    },
+    "uuid" : "08df4700-feaf-4672-b361-e14687b531bd",
+    "version" : "1548397788",
+    "name" : "aptiva_analyst",
+    "desc" : "Analyst group for aptiva application",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85",
+            "version" : "1464977196",
+            "name" : "admin"
+        }
+    },
+    "createdOn" : ISODate("2019-01-25T06:29:48.000Z"),
+    "tags" : [],
+    "active" : "Y",
+    "locked" : "N",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb",
+                "version" : "1464977196",
+                "name" : "Administration"
+            }
+        }
+    ]
+}

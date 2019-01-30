@@ -442,19 +442,33 @@
                                                                             </td>
                                                                             <td>
                                                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                                    <div style="width:100%;">
-                                                                                    <ui-select required disable-validation-message="" ng-model="data.targetFeature" append-to-body="true" theme="" ng-disabled="{{mode}}" on-select="onChangeSourceAttribute(data.sourceAttributeType.text,$index)">
-                                                                                        <ui-select-match>
-                                                                                            <span title="{{data.targetFeature.dname}}" style="font-family: 'Open Sans', sans-serif;color:#555"  >{{data.targetFeature.name}}</span>
-                                                                                        </ui-select-match>
-                                                                                        <!-- ui-disable-choice="x.attrType=='string'" -->
-                                                                                        <ui-select-choices repeat="x in allTargetAttribute | propsFilter: {name: $select.search, attrType: $select.search} track by x.id" position='up' >
-                                                                                            <!-- <span class="{{x.iconclass}}"></span> -->
-                                                                                            <div class="{{x.attrType=='string'?'fa-downcase-string':['float','decimal','double'].indexOf(x.attrType) !=-1?'fa-downcase-decimal':'fa-downcase-integer'}}"></div>
-                                                                                            <span  style="font-family: 'Open Sans', sans-serif;padding:6px;"  title="{{x.dname}}"  ng-bind-html="x.name | highlight: $select.search"></span>
-                                                                                           
-                                                                                        </ui-select-choices>
-                                                                                    </ui-select>
+                                                                                    <div ng-if="!data.isOnDropDown">
+                                                                                        <div class="col-md-11" style="padding: 0px;">
+                                                                                            <input type="text" class="form-control" ng-model="data.targetFeature.name" required disable-validation-message=""
+                                                                                                ng-disabled="false" readonly ng-dblclick="data.isOnDropDown=!data.isOnDropDown"
+                                                                                            />
+                                                                                        </div>
+                                                                                        <div class="col-md-1" style="padding:7px 0px 0px 9px;">
+                                                                                            <a ng-disabled="{{mode}}">
+                                                                                                <span class="fa fa-pencil" ng-click="data.isOnDropDown=!data.isOnDropDown" tooltip-placement="left"
+                                                                                                    uib-tooltip="Edit"></span>
+                                                                                            </a>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                
+                                                                                    <div style="width:100%;" ng-if="data.isOnDropDown">
+                                                                                        <ui-select required disable-validation-message="" ng-model="data.targetFeature" append-to-body="true" theme="" ng-disabled="{{mode}}" on-select="onChangeSourceAttribute(data.sourceAttributeType.text,$index)">
+                                                                                            <ui-select-match>
+                                                                                                <span title="{{data.targetFeature.dname}}" style="font-family: 'Open Sans', sans-serif;color:#555"  >{{data.targetFeature.name}}</span>
+                                                                                            </ui-select-match>
+                                                                                            <!-- ui-disable-choice="x.attrType=='string'" -->
+                                                                                            <ui-select-choices repeat="x in allTargetAttribute | propsFilter: {name: $select.search, attrType: $select.search} track by x.id" position='up' >
+                                                                                                <!-- <span class="{{x.iconclass}}"></span> -->
+                                                                                                <div class="{{x.attrType=='string'?'fa-downcase-string':['float','decimal','double'].indexOf(x.attrType) !=-1?'fa-downcase-decimal':'fa-downcase-integer'}}"></div>
+                                                                                                <span  style="font-family: 'Open Sans', sans-serif;padding:6px;"  title="{{x.dname}}"  ng-bind-html="x.name | highlight: $select.search"></span>
+                                                                                            
+                                                                                            </ui-select-choices>
+                                                                                        </ui-select>
                                                                                     <!-- <select select2 ng-model="data.targetFeature" ng-options=" x as x.dname disable when  x.attrType =='string' for x in allTargetAttribute track by x.id" ng-change="onChangeSourceAttribute(data.sourceAttributeType.text,$index)"
                                                                                         ng-disabled="{{mode}}" class="form-control"></select> -->
                                                                                     </div>

@@ -105,7 +105,7 @@ public class SparkPCAOperator implements IOperator, Serializable {
 		MetaIdentifier locDpIdentifier = locationInfo.getParamValue().getRef();
 		Datapod locationDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(locDpIdentifier.getUuid(), locDpIdentifier.getVersion(), locDpIdentifier.getType().toString());
 		
-		MetaIdentifier sourceDataIdentifier = sourceDatapodInfo.getAttributeInfo().get(0).getRef();
+		MetaIdentifier sourceDataIdentifier = sourceDatapodInfo.getParamValue().getRef();
 		Datapod sourceData = null;
 		DataSet sourceDataset = null;
 		String sourceTableSql = null;
@@ -129,37 +129,41 @@ public class SparkPCAOperator implements IOperator, Serializable {
 		
 		List<PipelineStage> pipelineStagesTrng = new ArrayList<>();
 		
-		String inputColListStr = (StringUtils.isBlank(inputColListInfo.getAttributeInfo().get(0).getValue())) 
-								? null 
-								: (String) inputColListInfo.getAttributeInfo().get(0).getValue();
+		MetaIdentifier inputColListId = inputColListInfo.getAttributeInfo().get(0).getRef(); 
 		
-		String inputKeyListStr = (StringUtils.isBlank(inputKeyInfo.getAttributeInfo().get(0).getValue())) 
-								? null 
-								: (String) inputKeyInfo.getAttributeInfo().get(0).getValue();
-		int numFeaturesK = (StringUtils.isBlank(numFeatures.getAttributeInfo().get(0).getValue())) 
+		MetaIdentifier inputKeyListId = inputKeyInfo.getAttributeInfo().get(0).getRef();
+		
+		int numFeaturesK = (StringUtils.isBlank(numFeatures.getParamValue().getValue())) 
 							? 0 
-							: Integer.parseInt(numFeatures.getAttributeInfo().get(0).getValue());
+							: Integer.parseInt(numFeatures.getParamValue().getValue());
 		
-		String outputFeatureName = (StringUtils.isBlank(outputFeatureNameInfo.getAttributeInfo().get(0).getValue())) 
+		/*String outputFeatureName = (StringUtils.isBlank(outputFeatureNameInfo.getAttributeInfo().get(0).getValue())) 
 									? null 
-									: (String) outputFeatureNameInfo.getAttributeInfo().get(0).getValue();
+									: (String) outputFeatureNameInfo.getAttributeInfo().get(0).getValue();*/
+		String outputFeatureName = "features";
 
-		String []inputCols = inputColListStr.split(",");
+		Object inputCols = commonServiceImpl.getOneByUuidAndVersion(inputColListId.getUuid(), inputColListId.getVersion(), inputColListId.getType().toString());
+		List<String> featureAttrList = commonServiceImpl.getColumnNameList(inputCols, inputColListInfo);
+		Object inputKeys = commonServiceImpl.getOneByUuidAndVersion(inputKeyListId.getUuid(), inputKeyListId.getVersion(), inputKeyListId.getType().toString());
+		List<String> keyAttrList = commonServiceImpl.getColumnNameList(inputKeys, inputKeyInfo);
 		
 		VectorAssembler vectorAssembler = new VectorAssembler();
-		vectorAssembler.setInputCols(inputCols).setOutputCol("pcaInputFeatures");
+		vectorAssembler.setInputCols(featureAttrList.toArray(new String[featureAttrList.size()])).setOutputCol("pcaInputFeatures");
 		
 		PCA pca = new PCA()
 					.setInputCol("pcaInputFeatures")
 					.setOutputCol(outputFeatureName)
 					.setK(numFeaturesK);
 		
+		pipelineStagesTrng.add(vectorAssembler);
+		pipelineStagesTrng.add(pca);
+		
 		Pipeline pipeline = new Pipeline().setStages(pipelineStagesTrng.toArray(new PipelineStage[pipelineStagesTrng.size()]));
 		Dataset<Row> trngDf = exec.executeSql(" SELECT * FROM " + sourceTableSql).getDataFrame();
 		Dataset<Row> destDf = pipeline.fit(trngDf).transform(trngDf);
 		List<Column> colList = new ArrayList<>();
 		
-		Arrays.asList(inputKeyListStr.split(",")).forEach(col -> colList.add(new Column(col)));
+		keyAttrList.forEach(col -> colList.add(new Column(col)));
 		colList.add(new Column(outputFeatureName));
 		
 		destDf = destDf.select(colList.toArray(new Column[colList.size()]));
@@ -228,7 +232,8 @@ public class SparkPCAOperator implements IOperator, Serializable {
 		
 		Datapod sourceData = null;
 		DataSet sourceDataset = null;
-		MetaIdentifier sourceDataIdentifier = sourceDatapodInfo.getAttributeInfo().get(0).getRef();
+		MetaIdentifier sourceDataIdentifier = sourceDatapodInfo.getParamValue().getRef();
+//		MetaIdentifier sourceDataIdentifier = sourceDatapodInfo.getAttributeInfo().get(0).getRef();
 		if (sourceDataIdentifier.getType() == MetaType.datapod) {
 			sourceData = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceDataIdentifier.getUuid(), sourceDataIdentifier.getVersion(), sourceDataIdentifier.getType().toString());
 		} else if (sourceDataIdentifier.getType() == MetaType.dataset) {

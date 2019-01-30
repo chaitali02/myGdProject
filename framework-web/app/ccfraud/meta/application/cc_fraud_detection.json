@@ -1,60 +1,47 @@
 {
-  "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce",
-  "version": "1547482210",
-  "name": "Credit Card Fraud Detection",
-  "desc": "Credit Card Fraud Detection",
-  "applicationType": "DEFAULT",
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
+    "dataSource" : {
+        "ref" : {
+            "type" : "datasource",
+            "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
+        }
     },
-    "value": null
-  },
-  "createdOn": "Mon Jan 14 11:10:10 EST 2019",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb",
-        "version": "1464977196",
-        "name": "Administration"
-      },
-      "value": null
-    }
-  ],
-  "dataSource": {
-    "ref": {
-      "type": "datasource",
-      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
-      "version": null,
-      "name": "file_data"
+    "paramList" : {
+        "ref" : {
+            "type" : "paramlist",
+            "uuid" : "3a11e888-a9c5-453c-9b36-00d5dec7536b"
+        }
     },
-    "value": null
-  },
-  "paramList": {
-    "ref": {
-      "type": "paramlist",
-      "uuid": "b77907d6-2a24-4cfc-8710-b395496ab095",
-      "version": null,
-      "name": "paramlist_Credit Card Fraud Detection"
+    "deployPort" : "5001",
+    "orgInfo" : {
+        "ref" : {
+            "type" : "organization",
+            "uuid" : "39937670-837c-4027-aa45-aff8a57b738a"
+        }
     },
-    "value": null
-  },
-  "deployPort": "5001",
-  "orgInfo": {
-    "ref": {
-      "type": "organization",
-      "uuid": "58e8ba76-101c-4e90-bf09-9cfd2b954a86",
-      "version": null,
-      "name": "Inferyx Inc"
+    "applicationType" : "DEFAULT",
+    "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce",
+    "version" : "1548315796",
+    "name" : "Credit Card Fraud Detection",
+    "desc" : "Credit Card Fraud Detection",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85",
+            "version" : "1464977196",
+            "name" : "admin"
+        }
     },
-    "value": null
-  }
+    "createdOn" : ISODate("2019-01-24T07:43:16.000Z"),
+    "tags" : [],
+    "active" : "Y",
+    "locked" : "N",
+    "published" : "N",
+    "appInfo" : [ 
+         {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "39937670-837c-4027-aa45-aff8a57b738a"
+            }
+        }
+    ]
 }

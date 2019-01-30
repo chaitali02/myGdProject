@@ -381,7 +381,21 @@
                                                                             </td>
                                                                             <td>
                                                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                                    <div style="width:100%;">
+                                                                                    <div ng-if="!data.isOnDropDown">
+                                                                                        <div class="col-md-11" style="padding: 0px;">
+                                                                                            <input type="text" class="form-control" ng-model="data.targetFeature.name" required disable-validation-message=""
+                                                                                                ng-disabled="false" readonly ng-dblclick="data.isOnDropDown=!data.isOnDropDown"
+                                                                                            />
+                                                                                        </div>
+                                                                                        <div class="col-md-1" style="padding:7px 0px 0px 9px;">
+                                                                                            <a ng-disabled="{{mode}}">
+                                                                                                <span class="fa fa-pencil" ng-click="data.isOnDropDown=!data.isOnDropDown" tooltip-placement="left"
+                                                                                                    uib-tooltip="Edit"></span>
+                                                                                            </a>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                        
+                                                                                    <div style="width:100%;" ng-if="data.isOnDropDown">
                                                                                         <select select2 ng-model="data.targetFeature" ng-options=" x as x.name  for x in allTargetAttribute track by x.attributeId"
                                                                                             ng-change="onChangeSourceAttribute(data.sourceAttributeType.text,$index)"
                                                                                             ng-disabled="{{mode}}" class="form-control"></select>

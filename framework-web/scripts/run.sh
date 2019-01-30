@@ -1,4 +1,7 @@
 ./install_application.sh localhost refresh ../app/admin/meta
+./install_application.sh localhost append ../app/admin/aptiva
+./install_application.sh localhost append ../app/admin/dot
+./install_application.sh localhost append ../app/admin/mufg
 ./install_application.sh localhost append ../app/edw/meta
 ./install_application.sh localhost append ../app/ccfraud/meta
 ./install_application.sh localhost append ../app/ecocap/meta

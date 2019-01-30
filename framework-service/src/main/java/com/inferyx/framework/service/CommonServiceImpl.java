@@ -4718,4 +4718,39 @@ public class CommonServiceImpl <T> {
 		}	
 		return latestApplicationList;
 	}	
+	
+public List<String> getColumnNameList(Object source, ParamListHolder holder ){
+		
+		List<String> columns = new ArrayList<>();
+		List<AttributeRefHolder> attributeInfo = holder.getAttributeInfo();
+		if(source instanceof Datapod) {
+			Datapod datapod = (Datapod) source;
+			
+			for(Attribute attribute : datapod.getAttributes()) {
+				for(AttributeRefHolder attributeRefHolder : attributeInfo)
+					if(attribute.getAttributeId().equals(Integer.parseInt(""+attributeRefHolder.getAttrId()))) {
+						columns.add(attribute.getName());
+					}
+			}
+		} else if(source instanceof DataSet) {
+			DataSet dataSet = (DataSet) source;
+			
+			for(AttributeSource attributeSource : dataSet.getAttributeInfo()) {
+				for(AttributeRefHolder attributeRefHolder : attributeInfo)
+					if(attributeSource.getAttrSourceId().equalsIgnoreCase(""+attributeRefHolder.getAttrId())) {
+						columns.add(attributeSource.getAttrSourceName());
+					}
+			}
+		} else if(source instanceof Rule) {
+			Rule rule = (Rule) source;
+
+			for(AttributeSource attributeSource : rule.getAttributeInfo()) {
+				for(AttributeRefHolder attributeRefHolder : attributeInfo)
+					if(attributeSource.getAttrSourceId().equalsIgnoreCase(""+attributeRefHolder.getAttrId())) {
+						columns.add(attributeSource.getAttrSourceName());
+					}
+			}
+		}
+		return columns;
+	}
 }

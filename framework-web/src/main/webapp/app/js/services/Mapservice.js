@@ -166,7 +166,7 @@ MetadataModule.factory('MetadataMapFactory', function ($http, $location) {
 	return factory;
 });
 
-MetadataModule.service('MetadataMapSerivce', function ($q, sortFactory, MetadataMapFactory) {
+MetadataModule.service('MetadataMapSerivce', function ($q, sortFactory, MetadataMapFactory,CF_GRID) {
 	this.getNumRowsbyExec = function (uuid, version, type) {
 		var deferred = $q.defer();
 		MetadataMapFactory.findNumRowsbyExec(uuid, version, type)
@@ -506,11 +506,16 @@ MetadataModule.service('MetadataMapSerivce', function ($q, sortFactory, Metadata
 			var maparray = [];
 			for (var i = 0; i < response.attributeMap.length; i++) {
 				var attributemapjson = {};
+				if(response.attributeMap.length >CF_GRID.framework_autopopulate_grid)
+					attributemapjson.isOnDropDown=false;
+				else
+					attributemapjson.isOnDropDown=true;
 				if (response.attributeMap[i].sourceAttr.ref.type == "datapod" || response.attributeMap[i].sourceAttr.ref.type == "dataset" || response.attributeMap[i].sourceAttr.ref.type == "rule") {
 					var sourceattribute = {}
 					sourceattribute.uuid = response.attributeMap[i].sourceAttr.ref.uuid;
 					sourceattribute.type = response.attributeMap[i].sourceAttr.ref.type;
 					sourceattribute.attributeId = response.attributeMap[i].sourceAttr.attrId;
+					sourceattribute.name = response.attributeMap[i].sourceAttr.attrName;
 					var obj = {}
 					obj.text = "datapod"
 					obj.caption = "attribute"
@@ -537,7 +542,7 @@ MetadataModule.service('MetadataMapSerivce', function ($q, sortFactory, Metadata
 				if (response.attributeMap[i].sourceAttr.ref.type == "expression") {
 					var sourceexpression = {};
 					sourceexpression.uuid = response.attributeMap[i].sourceAttr.ref.uuid;
-					sourceexpression.name = "";
+					sourceexpression.name = response.attributeMap[i].sourceAttr.ref.name;
 					var obj = {}
 					obj.text = "expression"
 					obj.caption = "expression"
@@ -552,7 +557,7 @@ MetadataModule.service('MetadataMapSerivce', function ($q, sortFactory, Metadata
 				if (response.attributeMap[i].sourceAttr.ref.type == "formula") {
 					var sourceformula = {};
 					sourceformula.uuid = response.attributeMap[i].sourceAttr.ref.uuid;
-					sourceformula.name = "";
+					sourceformula.name = response.attributeMap[i].sourceAttr.ref.name;
 					var obj = {}
 					obj.text = "formula"
 					obj.caption = "formula"
@@ -567,7 +572,7 @@ MetadataModule.service('MetadataMapSerivce', function ($q, sortFactory, Metadata
 				if (response.attributeMap[i].sourceAttr.ref.type == "function") {
 					var sourcefunction = {};
 					sourcefunction.uuid = response.attributeMap[i].sourceAttr.ref.uuid;
-					sourcefunction.name = "";
+					sourcefunction.name =response.attributeMap[i].sourceAttr.ref.name;
 					var obj = {}
 					obj.text = "function"
 					obj.caption = "function"

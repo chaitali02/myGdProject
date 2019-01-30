@@ -1,33 +1,4 @@
 {
-    "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-    "version" : "1521430822",
-    "name" : "Anti Money Laundering",
-    "desc" : "Anti Money Laundering",
-    "applicationType": "DEFAULT",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
-        }
-    },
-    "createdOn" : ISODate("2018-08-24T15:03:19.386Z"),
-    "tags" : null,
-    "active" : "Y",
-  "locked" : "N",
-    "published" : "N",
-    "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }, {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
-            }
-        }
-    ],
     "dataSource" : {
         "ref" : {
             "type" : "datasource",
@@ -40,11 +11,37 @@
             "uuid" : "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z"
         }
     },
-     "deployPort" : "5001",
-     "orgInfo" : {
+    "deployPort" : "5001",
+    "orgInfo" : {
         "ref" : {
-            "uuid" : "58e8ba76-101c-4e90-bf09-9cfd2b954a86",
-            "type" : "organization"
+            "type" : "organization",
+            "uuid" : "39937670-837c-4027-aa45-aff8a57b738a"
         }
-    }
+    },
+    "applicationType" : "DEFAULT",
+    "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+    "version" : "1548315745",
+    "name" : "Anti Money Laundering",
+    "desc" : "Anti Money Laundering",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85",
+            "version" : "1464977196",
+            "name" : "admin"
+        }
+    },
+    "createdOn" : ISODate("2019-01-28T07:16:47.169Z"),
+    "tags" : [],
+    "active" : "Y",
+    "locked" : "N",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "39937670-837c-4027-aa45-aff8a57b738a"
+            }
+        }
+    ]
 }

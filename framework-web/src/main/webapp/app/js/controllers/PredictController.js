@@ -3,7 +3,8 @@
  */
 DatascienceModule = angular.module('DatascienceModule');
 
-DatascienceModule.controller('CreatePredictController', function($state, $stateParams, $rootScope, $scope, $sessionStorage, $timeout, $filter, PredictService,$http,$location,privilegeSvc,CommonService,CF_ENCODINGTYPE) {
+DatascienceModule.controller('CreatePredictController', function($state, $stateParams, $rootScope, $scope, $sessionStorage, 
+  $timeout, $filter, PredictService, $http, $location, privilegeSvc, CommonService, CF_ENCODINGTYPE, CF_GRID) {
 
   $scope.isTargetNameDisabled=false;
   $scope.dataLoading = false;
@@ -307,6 +308,12 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
           featureMap.featureMapId = i;
           featureMap.id =i;
           featureMap.index =i;
+          if(response.features.length > CF_GRID.framework_autopopulate_grid){
+            featureMap.isOnDropDown=false;
+          }	
+          else{
+            featureMap.isOnDropDown=true;
+          }
           sourceFeature.uuid = response.uuid;
           sourceFeature.type = "model";
           sourceFeature.featureId = response.features[i].featureId;
@@ -418,6 +425,17 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
       $scope.getAllAttribute();
     }
   }
+
+  $scope.onChangeSourceAttribute=function(data,index){
+    setTimeout(function(){
+			if($scope.featureMapTableArray.length > CF_GRID.framework_autopopulate_grid){
+				$scope.featureMapTableArray[index].isOnDropDown=false;
+			}	
+			else{
+				$scope.featureMapTableArray[index].isOnDropDown=true;
+			}
+		},10);
+  }
   $scope.getOneByUuidandVersion=function(uuid,version){
     PredictService.getOneByUuidandVersion(uuid,version,"predict").then(function(response){ onSuccessGetLatestByUuid(response.data)} ,function(response){ onError(response.data)});
     var onSuccessGetLatestByUuid = function(response) {
@@ -498,6 +516,12 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
         var imputeMethod={};
         featureMap.featureMapId=response.featureAttrMap[i].featureMapId;
         featureMap.id = response.featureAttrMap[i].featureMapId;
+        if(response.featureAttrMap.length > CF_GRID.framework_autopopulate_grid){
+          featureMap.isOnDropDown=false;
+        }	
+        else{
+          featureMap.isOnDropDown=true;
+        }
        // featureMap.encodingType= response.featureAttrMap[i].encodingType;
         sourceFeature.uuid = response.featureAttrMap[i].feature.ref.uuid;
         sourceFeature.type = response.featureAttrMap[i].feature.ref.type;

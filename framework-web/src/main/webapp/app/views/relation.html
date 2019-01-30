@@ -57,12 +57,16 @@
               ng-click="showView(relationdata.uuid,relationdata.version)" ng-hide="isAdd" style="height:16px;">
               <span class="glyphicon glyphicon-file" style="color:white;"></span>
             </a> -->
-            <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" ng-show="isDependencyShow" tooltip ng-class="showFrom==false? 'currentpage':'notcurrentpage'"
+            <a href="javascript:;" title="Sample Records" data-toggle="tooltip" data-placement="top" tooltip data-ng-click="isShowSimpleData ==false?showSampleTable(relationdata):''"
+              ng-hide="isAdd" ng-class="isShowSimpleData==true? 'currentpage':'notcurrentpage'">
+              <i class="fa fa-table icon-circle" style="display:block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+            </a>
+            <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" ng-show="isDependencyShow" tooltip ng-class="showGraphDiv==true? 'currentpage':'notcurrentpage'"
               data-ng-click="showGraph(relationdata.uuid,relationdata.version)" style="height:14px;">
               <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
             </a>
 
-            <a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip ng-class="showFrom==true? 'currentpage':'notcurrentpage'">
+            <a title="Refresh" ng-click="isShowSimpleData==true?showSampleTable(relationdata):broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip ng-class="showFrom==true? 'currentpage':'notcurrentpage'">
               <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
             </a>
 
@@ -81,6 +85,58 @@
               <div class="bounce3"></div>
             </div>
             <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="relationdata.uuid" version="relation.defaultVersion.version">
+            </div>
+          </div>
+          <div class="form-body {{tableclass}}" ng-show="isShowSimpleData">
+            <div class="spinner" ng-show="spinner">
+              <div class="bounce1"></div>
+              <div class="bounce2"></div>
+              <div class="bounce3"></div>
+            </div>
+            <div ng-show="isDataError">
+              <h3 style="font-size:14px;color:red;">{{datamessage}}</h3>
+            </div>
+
+            <div ng-show="!isDataInpogress ">
+              <div class="row">
+                <div class="col-md-6 col-sm-6">
+                  <div class="dataTables_length" id="sample_1_length">
+                    <label>Show
+                      <select name="sample_1_length" aria-controls="sample_1" class="form-control input-sm input-xsmall input-inline" ng-model="pagination.pageSize"
+                        ng-options="r for r in pagination.paginationPageSizes" ng-change="onPerPageChange()">
+                      </select>
+                    </label>
+                  </div>
+                </div>
+                <div class="col-md-6 col-sm-6">
+                  <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
+                    <label>Search:</label>
+                    <input type="search" class="form-control input-sm input-small input-inline" ng-change="refreshData(searchtext)" ng-model="searchtext"
+                      aria-controls="datastoredatatable">
+                  </div>
+                </div>
+              </div>
+              <div ui-grid="gridOptions" class="grid" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter ng-style="getGridStyle()">
+                <div class="nodatawatermark_results" ng-show="!gridOptions.data.length" style="top:52%;">No data available</div>
+              </div>
+              <div class="row">
+                <div class="col-md-6" style="margin-top:17px">
+                  Showing {{pagination.to}} to {{pagination.from}} of {{pagination.totalItems}} records
+                </div>
+                <div class="col-md-6">
+                  <ul uib-pagination items-per-page="pagination.pageSize" total-items="pagination.totalItems" ng-model="pagination.currentPage"
+                    ng-change="pageChanged()" style="float:right;overflow:hidden;z-index:1;" max-size="pagination.maxSize"
+                    class="pagination-md" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
+                    last-text="&raquo;"></ul>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6"></div>
+                <div class="col-md-6" >
+                  <div style="color:blue;float:right;font-style: italic;">Note : Showing Max 50 Columns</div>
+                  
+                </div>
+              </div>
             </div>
           </div>
           <div class="form-body" data-ng-show="showFrom" style="padding-top:50px;">
@@ -356,5 +412,6 @@
         </div>
       </div>
     </div>
-  </div><!-- BEGIN MAIN JS-->
+  </div>
+  <!-- BEGIN MAIN JS-->
 </div>

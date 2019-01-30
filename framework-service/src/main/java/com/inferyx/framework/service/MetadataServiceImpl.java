@@ -170,7 +170,13 @@ public class MetadataServiceImpl {
 				Application application = (Application) commonServiceImpl.getLatestByUuid(appUuid, MetaType.application.toString(),"N");
 				//Object iDao = commonServiceImpl.getClass().getMethod(GET + Helper.getDaoClass(MetaType.application)).invoke(commonServiceImpl);
 				//Application application = (Application) Helper.getDomainClass(MetaType.application).cast(iDao.getClass().getMethod("findLatestByUuid",String.class,Sort.class ).invoke(iDao, appUuid,new Sort(Sort.Direction.DESC, "version")));	
+				
 				baseEntity.getAppInfo().get(i).getRef().setName(application.getName());
+				if(baseEntity.getAppInfo().get(i).getRef().getName()==null)
+				{
+					System.out.println("ss");
+
+				}
 			}
 		}		
 		return baseEntity;
@@ -687,7 +693,7 @@ public class MetadataServiceImpl {
 		String appUuid = null;
 		List<Application> appList = null;
 		List<String> orgAppUuidList = null;
-		if(application.getApplicationType().equals(ApplicationType.ADMIN)) {
+		/*if(application.getApplicationType().equals(ApplicationType.ADMIN)) {
 			try {
 				MetaIdentifier roleInfoMI = securityServiceImpl.getRoleInfo().getRef();
 				Role role = (Role) commonServiceImpl.getOneByUuidAndVersion(roleInfoMI.getUuid(), roleInfoMI.getVersion(), roleInfoMI.getType().toString(), "N");
@@ -713,8 +719,9 @@ public class MetadataServiceImpl {
 			}
 		} else {
 			appUuid = application.getUuid();
-		}
-		
+		}*/
+		appUuid = application.getUuid();
+
 		try {
 			if(orgAppUuidList != null && !orgAppUuidList.isEmpty()) {
 				criteriaList.add(where("appInfo.ref.uuid").in(orgAppUuidList));
