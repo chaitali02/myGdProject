@@ -1,0 +1,53 @@
+<!-- <div class="network-graph-zoom-slider col-md-1 col-md-offset-11">
+    <div class="col-md-1" style="height:100px; width:100px;">
+      <a ng-click="changeSliderForward()"  tooltip-placement="top" uib-tooltip="Zoom in"><i class="fa fa-search-plus" style="margin: 0 23px;z-index: 980;position: relative;font-size: 17px;margin-top: 5px;color: #999;"></i></a>
+      <rzslider rz-slider-model="zoomSize" rz-slider-options="{floor: 1, ceil: 20,minLimit:1,maxLimit:20,hidePointerLabels:true,hideLimitLabels:true,vertical: true}"></rzslider>
+        <a ng-click="changeSliderBack()"  tooltip-placement="top" uib-tooltip="Zoom out"><i class="fa fa-search-minus" style="margin: 0 23px;z-index: 980;position: relative;font-size: 17px;margin-top: 5px;color: #999;"></i></a>
+        <span class="fa-stack" style="margin-left:16px; margin-top:15px; z-index: 980;" ng-click="resize()" tooltip-placement="top" uib-tooltip="Reset">
+            <i class="fa fa-circle fa-stack-2x" style="color: #999;font-size: 21px;"></i>
+            <i class="fa fa-undo fa-stack-1x fa-inverse" style="margin:-4px 0px 0px 0px;font-size: 10px;"></i>
+</span>
+    </div>
+  </div> -->
+  
+   <!-- <div class="col-md-3 col-md-offset-9" style="margin-top-3%;position: absolute;right: 11px;margin: -6px -10px;">-->
+    <!--<div class="col-md-2 col-md-offset-10" style="margin-top-3%;position: absolute;right: 11px;margin: -6px -10px;">--> 
+  
+    <div class="col-md-2" style="margin-top:3%;position:absolute;margin:16px -9px;z-index:100;" *ngIf="showButton"> 
+        <div class="form-group">
+            <div class="col-md-12 col-sm-12 col-xs-12" style="margin-left: 25%;">
+                <div class="btn-group">
+                    <a type="button" class="btn btn-circle btn-default"  name="degree" (click)="onChangeDegree(true)" *ngIf="degree == -1" uncheckable style="height: 40px;width:40px;"><i class="fa fa-arrow-down" aria-hidden="true"></i></a>   
+                    <a type="button" class="btn btn-circle btn-default" name="degree" (click)="onChangeDegree(false)" *ngIf="degree == 1" uncheckable style="height: 40px;width:40px;"><i class="fa fa-arrow-up" aria-hidden="true"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+  <div *ngIf="showTooltip" class="tooltipcustom" id="divtoshow" style="position: fixed;display:none;z-index:9999;min-width:320px;min-height: 80px;opacity: 0.8;
+    font-family: Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;">
+
+    <div style="margin-top: 5px;margin-right: 15px">
+      <div class="row">
+        <div class="col-md-1">
+          <div class="one" id="colorID"style="margin-left:5px;margin-bottom: 10px"></div>
+          
+          </div>
+        <div class="col-md-5" id="elementTypeText">{{nodeDetail.caption}}</div>
+      </div>
+
+      <div class="row" style="margin-top: 5px">
+        <span style="margin-left:20px;">Id</span>
+        <span id="task_Id" style="margin-left:58px">{{nodeDetail.uuid}}</span>
+      </div>
+        <div class="row" style="margin-top: 5px">
+        <span style="margin-left:20px;">Type</span>
+        <span id="task_Id" style="margin-left:40px">{{nodeDetail.type}}</span>
+      </div>
+      <div class="row" style="margin-top: 5px">
+        <span style="margin-left:20px">Name</span>
+        <span id="task_Name" style="margin-left:33px">{{nodeDetail.name}}</span>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div id="network-graph-wrapper" style="height:500px;"></div>

@@ -189,8 +189,8 @@ modifyResponse(response){
   return attributes;
 }
 
-getGraphResults(version:String,degree:String,uuid:Number): Observable<any[]> {
-    let url ='/graph/getGraphResults?action=view&uuid='+uuid+'&version='+version+'&degree='+degree;
+getGraphResults(version:String,degree:Number,uuid:Number): Observable<any[]> {
+    let url ='/graph/getTreeGraphResults?action=view&uuid='+uuid+'&version='+version+'&degree='+degree;
     return this._sharedService.getCall(url)
     .map((response: Response) => {
         return <any[]>response.json();

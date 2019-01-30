@@ -4,7 +4,7 @@ import { CommonModule }       from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { D3Service, D3, Selection } from 'd3-ng2-service';
 import { C3Component } from '../components';
-import { ClockComponent,BreadcrumbComponent } from '../components';
+import { ClockComponent,BreadcrumbComponent,KnowledgeGraphComponent } from '../components';
 import { D3Component } from '../../D3/d3.component';
 import { ModelComponent} from '../popUpModel/model.component';
 import { ParamlistComponent } from '../components/paramlist/paramlist.component';
@@ -30,12 +30,12 @@ import {MultiSelectModule, DataTableModule} from 'primeng/primeng';
         CalendarModule
         //DataTableModule
     ],
-    exports: [CommonModule,ClockComponent,BreadcrumbComponent,D3Component,C3Component,ModelComponent,ParamlistComponent,
+    exports: [CommonModule,ClockComponent,BreadcrumbComponent,D3Component,C3Component,ModelComponent,ParamlistComponent,KnowledgeGraphComponent,
         //DataPiplineResultComponent,
         MultiSelectModule
     ],
     declarations: [
-        ClockComponent,BreadcrumbComponent,D3Component,C3Component,ModelComponent,ParamlistComponent,
+        ClockComponent,BreadcrumbComponent,D3Component,C3Component,ModelComponent,ParamlistComponent,KnowledgeGraphComponent
         //DataPiplineResultComponent,
         //JointjsComponent,
         //JointjsGroupComponent,

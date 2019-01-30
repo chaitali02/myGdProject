@@ -416,12 +416,16 @@ public class MongoGraphServiceImpl {
 				 */
 				vertexMap.put(vertex.getUuid() + "_" + relationName, vertex);
 			}
+			String arr[] = {};
 			for (String vertexKey : vertexMap.keySet()) {
 				Vertex vertex = vertexMap.get(vertexKey);
 				if (!vertex.getUuid().equals(uuid)) {
 					// vertex.setParent(parentvertex.getName());
 					Map<String, Object> mapresult = getVertexMap(vertex, degree);
 					// mapresult.put("id",mapresult.get("id")+parentvertex.getUuid());
+					 mapresult.put("id",null);
+					 mapresult.put("color",null);
+					mapresult.put("children",arr);
 					graphVertex.add(mapresult);
 				}
 			}
