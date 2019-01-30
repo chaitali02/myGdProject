@@ -3,7 +3,8 @@
  */
 DatascienceModule = angular.module('DatascienceModule');
 
-DatascienceModule.controller('CreateTrainController', function ($state, $stateParams, $rootScope, $scope, $sessionStorage, $timeout, $filter, TrainService, $http, $location, CommonService, privilegeSvc,CF_ENCODINGTYPE) {
+DatascienceModule.controller('CreateTrainController', function ($state, $stateParams, $rootScope, $scope, $sessionStorage,
+  $timeout, $filter, TrainService, $http, $location, CommonService, privilegeSvc, CF_ENCODINGTYPE, CF_GRID) {
 
   $scope.isTargetNameDisabled = false;
   $scope.dataLoading = false;
@@ -331,6 +332,12 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
           featureMap.featureMapId = i;
           featureMap.id = i;
           featureMap.index = i;
+          if(response.features.length > CF_GRID.framework_autopopulate_grid){
+            featureMap.isOnDropDown=false;
+          }	
+          else{
+            featureMap.isOnDropDown=true;
+          }
           sourceFeature.uuid = response.uuid;
           sourceFeature.type = "model";
           sourceFeature.featureId = response.features[i].featureId;
@@ -443,6 +450,17 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
       $scope.featureMapTableArray[i].targetFeature = null;
     }
   }
+  
+  $scope.onChangeSourceAttribute=function(data,index){
+    setTimeout(function(){
+			if($scope.featureMapTableArray.length > CF_GRID.framework_autopopulate_grid){
+				$scope.featureMapTableArray[index].isOnDropDown=false;
+			}	
+			else{
+				$scope.featureMapTableArray[index].isOnDropDown=true;
+			}
+		},10);
+  }
 
   $scope.getOneByUuidandVersion = function (uuid, version) {
 
@@ -507,6 +525,12 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
         var imputeMethod={};
         featureAttrMap.featureAttrMapId = response.featureAttrMap[i].featureMapId;
         featureAttrMap.id = response.featureAttrMap[i].featureMapId;
+        if(response.featureAttrMap.length > CF_GRID.framework_autopopulate_grid){
+          featureAttrMap.isOnDropDown=false;
+        }	
+        else{
+          featureAttrMap.isOnDropDown=true;
+        }
         sourceFeature.uuid = response.featureAttrMap[i].feature.ref.uuid;
         sourceFeature.type = response.featureAttrMap[i].feature.ref.type;
         sourceFeature.featureId = response.featureAttrMap[i].feature.featureId;
