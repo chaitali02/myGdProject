@@ -94,7 +94,7 @@
 							</div>
 						</div>
 						<div ng-show="!isEditInprogess && !isEditVeiwError">
-							<form class="form-horizontal" novalidate="novalidate" name="myform" ng-submit="submitMap()" form-on-change="mapFormChange()"
+							<form class="form-horizontal" novalidate="novalidate" name="myform" ng-submit="submitMap()" 
 							 prevent-enter-submit>
 								<div class="form-body">
 									<div class="form-group" ng-show="mapdata.uuid">
@@ -196,8 +196,6 @@
 										</div>
 									</div>
 
-
-
 									<div class="form-group">
 										<label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
 										<div class="col-md-6 col-sm-6 col-xs-12">
@@ -244,8 +242,10 @@
 											</span>
 										</div>
 									</div>
-                                    <div class="btn-group pull-right">
-										<a class="btn green-haze btn-outline btn-circle auto-map btn-sm" ng-disabled="{{mode}}" href="javascript:;" data-toggle="dropdown" tooltip-placement="left" uib-tooltip="Auto Map" data-hover="dropdown" data-close-others="true" aria-expanded="false">  <span class="fa fa-map-signs" aria-hidden="true"></span>
+									<div class="btn-group pull-right">
+										<a class="btn green-haze btn-outline btn-circle auto-map btn-sm" ng-disabled="{{mode}}" href="javascript:;" data-toggle="dropdown"
+										 tooltip-placement="left" uib-tooltip="Auto Map" data-hover="dropdown" data-close-others="true" aria-expanded="false">
+											<span class="fa fa-map-signs" aria-hidden="true"></span>
 											<i class="fa fa-angle-down"></i>
 										</a>
 										<ul class="dropdown-menu pull-right">
@@ -253,12 +253,12 @@
 												<a href="javascript:;">By Name</a>
 											</li>
 											<li class="divider" style="margin: 0px;"> </li>
-											<li  ng-click="autoMapFeature('By Order')">
+											<li ng-click="autoMapFeature('By Order')">
 												<a href="javascript:;">By Order</a>
 											</li>
-										  
+
 										</ul>
-									
+
 									</div>
 									<div class="x_title">
 										<!-- <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-disabled="true" ng-click="removeRow()"></button>
@@ -271,69 +271,133 @@
 									</div>
 									<br/>
 
-									<div>
-										<table class=" row-border hover table  table-striped table-bordered">
-											<thead>
-												<tr>
-													<th style="width:7%;" class="text-center">ID</th>
-													<th style="width:20%;text-align: center">Source Type</th>
-													<th style="width:45%;" class="text-center">Source Attributes</th>
-													<th style="width:45%;" class="text-center">Target Attributes</th>
+									<div class="row" style="overflow-y: auto;overflow-x: hidden;max-height:400px;">
+										<div class="col-md-12">
+											<table class=" row-border hover table  table-striped table-bordered">
+												<thead>
+													<tr>
+														<th style="width:7%;" class="text-center">ID</th>
+														<th style="width:20%;text-align: center">Source Type</th>
+														<th style="width:45%;" class="text-center">Source Attributes</th>
+														<th style="width:45%;" class="text-center">Target Attributes</th>
 
-												</tr>
-											</thead>
-											<tbody>
-												<tr ng-repeat="tabledata in allMapTargetAttribute">
-													<td>
-														<span class="form-group" style="margin-left:0px;margin-right: 0px;">
-															<input type="text" ng-model="$index" ng-disabled="true" class="form-control">
-														</span>
-													</td>
-													<td>
-														<span class="form-group" style="margin-left:0px;margin-right: 0px;">
-															<select ng-init="setDefaultAttributeType($index)" ng-model="mapTableArray[$index].sourceAttributeType" ng-options=" x as x.caption for x in sourceAttributeTypes track by x.text"
-															 ng-change="onChangeSourceAttribute(mapTableArray[$index].sourceAttributeType.text,$index)" ng-disabled="{{mode}}"
-															 class="form-control"></select>
-														</span>
-													</td>
-													<td>
-														<span class="form-group" style="margin-left:0px;margin-right: 0px;">
-															<input type="text" class="form-control" ng-model="mapTableArray[$index].sourcesimple" ng-show="mapTableArray[$index].isSourceAtributeSimple"
-															 ng-disabled="{{mode}}">
-														</span>
-														<div ng-show="mapTableArray[$index].isSourceAtributeDatapod">
+													</tr>
+												</thead>
+												<tbody>
+													<tr ng-repeat="tabledata in allMapTargetAttribute">
+														<td>
 															<span class="form-group" style="margin-left:0px;margin-right: 0px;">
-																<select select2 class="form-control" ng-disabled="{{mode}}" ng-model="mapTableArray[$index].sourceattribute" ng-options="r as r.dname for r in allMapSourceAttribute track by r.uuid+r.attributeId"></select>
+																<input type="text" ng-model="$index" ng-disabled="true" class="form-control">
 															</span>
-														</div>
-														<div ng-show="mapTableArray[$index].isSourceAtributeFormula">
+														</td>
+														<td>
 															<span class="form-group" style="margin-left:0px;margin-right: 0px;">
-																<select select2 ng-model="mapTableArray[$index].sourceformula" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in allMapLodeFormula track by c.uuid"
-																 style="font-family: 'FontAwesome', Helvetica;">
-																	<!-- <option value="">Create New &#xf067;</option> -->
-																</select>
+																<select ng-model="mapTableArray[$index].sourceAttributeType" ng-options=" x as x.caption for x in sourceAttributeTypes track by x.text"
+																 ng-change="onChangeSourceAttribute(mapTableArray[$index].sourceAttributeType.text,$index)" ng-disabled="{{mode}}"
+																 class="form-control"></select>
 															</span>
-														</div>
-														<div ng-show="mapTableArray[$index].isSourceAtributeExpression">
+														</td>
+														<td>
 															<span class="form-group" style="margin-left:0px;margin-right: 0px;">
-																<select select2 ng-model="mapTableArray[$index].sourceexpression" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in allMapLodeExpression track by c.uuid"></select>
+																<input type="text" class="form-control" ng-model="mapTableArray[$index].sourcesimple" ng-show="mapTableArray[$index].isSourceAtributeSimple"
+																 ng-disabled="{{mode}}">
 															</span>
-														</div>
-														<div ng-show="mapTableArray[$index].isSourceAtributeFunction">
+															<div ng-show="mapTableArray[$index].isSourceAtributeDatapod">
+																<span class="form-group" style="margin-left:0px;margin-right: 0px;">
+																	<div ng-if="!mapTableArray[$index].isOnDropDown">
+																		<div class="col-md-11" style="padding: 0px;">
+																			<input type="text" class="form-control" ng-model="mapTableArray[$index].sourceattribute.name" required disable-validation-message=""
+																			 ng-disabled="false" readonly ng-dblclick="mapTableArray[$index].isOnDropDown=!mapTableArray[$index].isOnDropDown"
+																			/>
+																		</div>
+																		<div class="col-md-1" style="padding:7px 0px 0px 9px;">
+																			<a ng-disabled="{{mode}}">
+																				<span class="fa fa-pencil" ng-click="mapTableArray[$index].isOnDropDown=!mapTableArray[$index].isOnDropDown" tooltip-placement="left"
+																				 uib-tooltip="Edit"></span>
+																			</a>
+																		</div>
+																	</div>
+																	<div ng-if="mapTableArray[$index].isOnDropDown">
+																		<select select2 class="form-control" ng-disabled="{{mode}}" ng-model="mapTableArray[$index].sourceattribute" ng-change="onChangeAttribute($index)"
+																		 ng-options="r as r.dname for r in allMapSourceAttribute track by r.uuid+r.attributeId"></select>
+																	</div>
+																</span>
+															</div>
+															<div ng-show="mapTableArray[$index].isSourceAtributeFormula">
+																<span class="form-group" style="margin-left:0px;margin-right: 0px;">
+																	<div ng-if="!mapTableArray[$index].isOnDropDown">
+																		<div class="col-md-11" style="padding: 0px;">
+																			<input type="text" class="form-control" ng-model="mapTableArray[$index].sourceformula.name" required disable-validation-message=""
+																			 ng-disabled="false" readonly ng-dblclick="mapTableArray[$index].isOnDropDown=!mapTableArray[$index].isOnDropDown"
+																			/>
+																		</div>
+																		<div class="col-md-1" style="padding:7px 0px 0px 9px;">
+																			<a ng-disabled="{{mode}}">
+																				<span class="fa fa-pencil" ng-click="mapTableArray[$index].isOnDropDown=!mapTableArray[$index].isOnDropDown" tooltip-placement="left"
+																				 uib-tooltip="Edit"></span>
+																			</a>
+																		</div>
+																	</div>
+																	<div ng-if="mapTableArray[$index].isOnDropDown">
+																		<select select2 ng-model="mapTableArray[$index].sourceformula" ng-disabled="{{mode}}" class="form-control"
+																		ng-change="onChangeFormula($index)"ng-options="c as  c.name for c in allMapLodeFormula track by c.uuid"
+																		 style="font-family: 'FontAwesome', Helvetica;">
+																			<!-- <option value="">Create New &#xf067;</option> -->
+																		</select>
+																	</div>
+																</span>
+															</div>
+															<div ng-show="mapTableArray[$index].isSourceAtributeExpression">
+																<span class="form-group" style="margin-left:0px;margin-right: 0px;">
+																	<div ng-if="!mapTableArray[$index].isOnDropDown">
+																		<div class="col-md-11" style="padding: 0px;">
+																			<input type="text" class="form-control" ng-model="mapTableArray[$index].sourceexpression.name" required disable-validation-message=""
+																			 ng-disabled="false" readonly ng-dblclick="mapTableArray[$index].isOnDropDown=!mapTableArray[$index].isOnDropDown"
+																			/>
+																		</div>
+																		<div class="col-md-1" style="padding:7px 0px 0px 9px;">
+																			<a ng-disabled="{{mode}}">
+																				<span class="fa fa-pencil" ng-click="mapTableArray[$index].isOnDropDown=!mapTableArray[$index].isOnDropDown" tooltip-placement="left"
+																				 uib-tooltip="Edit"></span>
+																			</a>
+																		</div>
+																	</div>
+																	<div ng-if="mapTableArray[$index].isOnDropDown">
+																		<select select2 ng-model="mapTableArray[$index].sourceexpression" ng-disabled="{{mode}}" class="form-control" ng-change="onChangeExpression($index)" ng-options="c as  c.name for c in allMapLodeExpression track by c.uuid"></select>
+																	</div>
+																</span>
+															</div>
+															<div ng-show="mapTableArray[$index].isSourceAtributeFunction">
+																<span class="form-group" style="margin-left:0px;margin-right:0px;">
+																	<div ng-if="!mapTableArray[$index].isOnDropDown">
+																		<div class="col-md-11" style="padding: 0px;">
+																			<input type="text" class="form-control" ng-model="mapTableArray[$index].sourcefunction.name" required disable-validation-message=""
+																			 ng-disabled="false" readonly ng-dblclick="mapTableArray[$index].isOnDropDown=!mapTableArray[$index].isOnDropDown"
+																			/>
+																		</div>
+																		<div class="col-md-1" style="padding:7px 0px 0px 9px;">
+																			<a ng-disabled="{{mode}}">
+																				<span class="fa fa-pencil" ng-click="mapTableArray[$index].isOnDropDown=!mapTableArray[$index].isOnDropDown" tooltip-placement="left"
+																				 uib-tooltip="Edit"></span>
+																			</a>
+																		</div>
+																	</div>
+																	<div ng-if="mapTableArray[$index].isOnDropDown">
+																		<select select2 ng-model="mapTableArray[$index].sourcefunction" ng-change="onChangeFunction($index)" ng-disabled="{{mode}}"
+																		 class="form-control" ng-options="c as  c.name for c in ruleLodeFunction | orderBy: 'name' track by c.uuid"></select>
+																	</div>
+																</span>
+															</div>
+														</td>
+														<td>
 															<span class="form-group" style="margin-left:0px;margin-right: 0px;">
-																<select select2 ng-model="mapTableArray[$index].sourcefunction" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in ruleLodeFunction | orderBy: 'name' track by c.uuid"
-																 ng-change="onChangeFunction(mapTableArray[$index].sourcefunction,$index)"></select>
+																<input type="text" ng-model="tabledata.dname" title="{{tabledata.dname}}" ng-disabled="true" class="form-control">
 															</span>
-														</div>
-													</td>
-													<td>
-														<span class="form-group" style="margin-left:0px;margin-right: 0px;">
-															<input type="text" ng-model="tabledata.dname" title="{{tabledata.dname}}" ng-disabled="true" class="form-control">
-														</span>
-													</td>
-												</tr>
-											</tbody>
-										</table>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
 									</div>
 							    </form>
 							</div>

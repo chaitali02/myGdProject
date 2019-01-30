@@ -716,7 +716,7 @@
                                           <div ng-if="data.isOnDropDown">
                                             <select select2 ng-model="data.sourcedatapod" ng-show="data.isSourceAtributeDatapod" ng-disabled="{{mode}}" class="form-control"
                                               ng-options="c as (c.datapodname + '.' + c.name) for c in sourcedatapodattribute  | orderBy:'datapodname' track by c.uuid+c.attributeId"
-                                              ng-change="onChangeAttributeDatapod(data.sourcedatapod,$index);attributeTableArray.length >200 ? data.isOnDropDown=false:data.isOnDropDown=true"
+                                              ng-change="onChangeAttributeDatapod(data.sourcedatapod,$index)"
                                               required disable-validation-message="">
                                             </select>
                                           </div>
@@ -736,7 +736,7 @@
                                             </div>
                                           </div>
                                           <div ng-if="data.isOnDropDown">
-                                            <ui-select required disable-validation-message="" ng-model="data.sourceformula" theme="" ng-disabled="{{mode}}" on-select="onChangeFormula(data.sourceformula,$index);data.isOnDropDown=false">
+                                            <ui-select required disable-validation-message="" ng-model="data.sourceformula" theme="" ng-disabled="{{mode}}" on-select="onChangeFormula(data.sourceformula,$index)">
                                               <ui-select-match>
                                                 <span title="{{data.sourceformula.name}}">{{data.sourceformula.name}}</span>
                                               </ui-select-match>
@@ -764,7 +764,7 @@
                                             </div>
                                           </div>
                                           <div ng-if="data.isOnDropDown">
-                                            <ui-select required disable-validation-message="" ng-model="data.sourceexpression" theme="" ng-disabled="{{mode}}" on-select="onChangeExpression(data.sourceexpression,$index);data.isOnDropDown=false">
+                                            <ui-select required disable-validation-message="" ng-model="data.sourceexpression" theme="" ng-disabled="{{mode}}" on-select="onChangeExpression(data.sourceexpression,$index)">
                                               <ui-select-match>
                                                 <span title="{{data.soureexpression.name}}">{{data.sourceexpression.name}}</span>
                                               </ui-select-match>
@@ -793,7 +793,7 @@
                                           </div>
                                           <div ng-if="data.isOnDropDown">
                                             <select select2 ng-model="data.sourcefunction" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in ruleLodeFunction track by c.uuid"
-                                              ng-change="data.isOnDropDown=false"></select>
+                                              ng-change="ngChangeFunction($index)"></select>
                                           </div>
                                         </span>
                                       </div>
@@ -812,7 +812,7 @@
                                           </div>
                                           <div ng-if="data.isOnDropDown">
                                             <select select2 class="form-control" data-ng-model="data.sourceparamlist" ng-options="r as r.caption for r in allparamlistParams track by r.uuid+r.attributeId"
-                                              ng-disabled="{{mode}}" required disable-validation-message="" ng-change="onChangeParamlist(data.sourceparamlist,$index);data.isOnDropDown=false"></select>
+                                              ng-disabled="{{mode}}" required disable-validation-message="" ng-change="onChangeParamlist(data.sourceparamlist,$index)"></select>
                                           </div>
                                         </span>
                                       </div>

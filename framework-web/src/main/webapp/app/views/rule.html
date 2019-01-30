@@ -701,7 +701,7 @@
                                         <div ng-if="data.isOnDropDown">
                                           <select select2 ng-model="data.sourcedatapod" ng-show="data.isSourceAtributeDatapod" ng-disabled="{{mode}}" class="form-control"
                                             ng-options="c as (c.datapodname + '.' + c.name) for c in sourcedatapodattribute track by c.uuid+c.attributeId"
-                                            ng-change="onChangeAttributeDatapod(data.sourcedatapod,$index);attributeTableArray.length >200 ? data.isOnDropDown=false:data.isOnDropDown=true"></select>
+                                            ng-change="onChangeAttributeDatapod(data.sourcedatapod,$index)"></select>
                                         </div>
                                       </span>
                                     </div>
@@ -720,7 +720,7 @@
                                           </div>
                                         <div ng-if="data.isOnDropDown">
                                           <select select2 ng-model="data.sourceformula" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in ruleLodeFormula track by c.uuid"
-                                            ng-change="onChangeFormula(data.sourceformula,$index);attributeTableArray.length >200 ? data.isOnDropDown=false:data.isOnDropDown=true"></select>
+                                            ng-change="onChangeFormula(data.sourceformula,$index)"></select>
                                         </div>
                                       </span>
                                     </div>
@@ -739,7 +739,7 @@
                                           </div>
                                           <div ng-if="data.isOnDropDown">
                                             <select select2 ng-model="data.sourceexpression" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in ruleLodeExpression track by c.uuid"
-                                              ng-change="onChangeExpression(data.sourceexpression,$index);attributeTableArray.length >200 ? data.isOnDropDown=false:data.isOnDropDown=true"></select>
+                                              ng-change="onChangeExpression(data.sourceexpression,$index)"></select>
                                           </div>
                                       </span>
                                     </div>
@@ -758,7 +758,7 @@
                                         </div>
                                         <div ng-if="data.isOnDropDown">
                                           <select select2 ng-model="data.sourcefunction" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in ruleLodeFunction track by c.uuid"
-                                          ng-change="onChangeFunction(data.sourcefunction,$index);attributeTableArray.length >200 ? data.isOnDropDown=false:data.isOnDropDown=true"></select>
+                                          ng-change="onChangeFunction(data.sourcefunction,$index)"></select>
                                         </div>
                                       </span>
                                     </div>
@@ -778,7 +778,7 @@
                                         <div ng-if="data.isOnDropDown">
                                           <select select2 ng-model="data.sourceparamlist" ng-show="data.isSourceAtributeParamList" ng-disabled="{{mode}}" class="form-control"
                                             ng-options="c as c.name for c in ruleLodeParamList track by c.uuid+c.attributeId"
-                                            ng-change="onChangeAttributeParamlist(data.sourceparamlist,$index);attributeTableArray.length >200 ? data.isOnDropDown=false:data.isOnDropDown=true"></select>
+                                            ng-change="onChangeAttributeParamlist(data.sourceparamlist,$index);"></select>
                                         </div>
                                       </span>
                                     </div>

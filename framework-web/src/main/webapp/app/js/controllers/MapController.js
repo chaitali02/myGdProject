@@ -2,43 +2,48 @@ MetadataModule = angular.module('MetadataModule');
 
 
 /*code for map */
-MetadataModule.controller('MetadataMapController', function ($rootScope, $state, $scope, $stateParams, $cookieStore, MetadataSerivce, MetadataMapSerivce, privilegeSvc,CommonService,$timeout,$filter) {
+MetadataModule.controller('MetadataMapController', function ($rootScope, $state, $scope, $stateParams, 
+	$cookieStore, MetadataSerivce, MetadataMapSerivce, privilegeSvc, CommonService, $timeout, $filter, CF_GRID) {
+
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
 		$scope.isversionEnable = false;
 		$scope.isAdd = false;
 		var privileges = privilegeSvc.privileges['comment'] || [];
-		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
-		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
 		$scope.$on('privilegesUpdated', function (e, data) {
 			var privileges = privilegeSvc.privileges['comment'] || [];
 			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
-			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
-			
-		});  
+			$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
+
+		});
 	}
+
 	else if ($stateParams.mode == 'false') {
 		$scope.isEdit = true;
 		$scope.isversionEnable = true;
 		$scope.isAdd = false;
-		$scope.isPanelActiveOpen=true;
+		$scope.isPanelActiveOpen = true;
 		var privileges = privilegeSvc.privileges['comment'] || [];
 		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
-		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
 		$scope.$on('privilegesUpdated', function (e, data) {
 			var privileges = privilegeSvc.privileges['comment'] || [];
 			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
-			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
-			
+			$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
+
 		});
 	}
+
 	else {
 		$scope.isAdd = true;
 	}
-	$scope.userDetail={};
+
+	$scope.userDetail = {};
 	$scope.allAutoMap = ["By Name", "By Order"];
-	$scope.userDetail.uuid= $rootScope.setUseruuid;
-	$scope.userDetail.name= $rootScope.setUserName;	
+	$scope.userDetail.uuid = $rootScope.setUseruuid;
+	$scope.userDetail.name = $rootScope.setUserName;
 	$scope.tags = null;
 	$scope.name;
 	$scope.mode = ""
@@ -62,11 +67,11 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
 
-	$scope.getLovByType = function() {
+	$scope.getLovByType = function () {
 		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
 		var onSuccessGetLovByType = function (response) {
-			console.log(response)
-			$scope.lobTag=response[0].value
+			//console.log(response)
+			$scope.lobTag = response[0].value
 		}
 	}
 	$scope.loadTag = function (query) {
@@ -74,12 +79,12 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 			return $filter('filter')($scope.lobTag, query);
 		});
 	};
-    $scope.getLovByType();
+	$scope.getLovByType();
 	$scope.showPage = function () {
 		$scope.showFrom = true;
 		$scope.showGraphDiv = false
 	}
-	$scope.showHome=function(uuid, version,mode){
+	$scope.showHome = function (uuid, version, mode) {
 		$scope.showPage()
 		$state.go('metaListmap', {
 			id: uuid,
@@ -88,7 +93,7 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 		});
 	}
 	$scope.enableEdit = function (uuid, version) {
-		if($scope.isPrivlage || $scope.mapdata.locked =="Y"){
+		if ($scope.isPrivlage || $scope.mapdata.locked == "Y") {
 			return false;
 		}
 		$scope.showPage()
@@ -99,14 +104,14 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 		});
 	}
 	$scope.showView = function (uuid, version) {
-		if(!$scope.isEdit){
+		if (!$scope.isEdit) {
 			$scope.showPage()
 			$state.go('metaListmap', {
 				id: uuid,
 				version: version,
 				mode: 'true'
 			});
-	  }
+		}
 	}
 	var notify = {
 		type: 'success',
@@ -172,11 +177,11 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 
 		}
 	}
-	$scope.onChangeTargetType=function(){
+	$scope.onChangeTargetType = function () {
 		MetadataMapSerivce.getAllLatest("datapod").then(function (response) { onSuccessGetAllLatestByTarget(response.data) });
 		var onSuccessGetAllLatestByTarget = function (response) {
 			$scope.allMapTarget = response;
-			$scope.allMapTarget.defaultoption=null;
+			$scope.allMapTarget.defaultoption = null;
 		}
 	}
 
@@ -196,23 +201,63 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 				mapinfo.sourceAttributeType = obj
 				$scope.mapTableArray[i] = mapinfo;
 			}
-			
+
 		}
 
 	}
 	$scope.setDefaultAttributeType = function ($index) {
-
 		//alert($scope.mapTableArray.length)
-
-
-
 	}
+	$scope.onChangeFormula=function(){
+		setTimeout(function(){
+			if($scope.mapTableArray.length > CF_GRID.framework_autopopulate_grid){
+				$scope.mapTableArray[index].isOnDropDown=false;
+			}	
+			else{
+				$scope.mapTableArray[index].isOnDropDown=true;
+			}
+		},10);
+	}
+
+    $scope.onChangeExpression=function(){
+		setTimeout(function(){
+			if($scope.mapTableArray.length > CF_GRID.framework_autopopulate_grid){
+				$scope.mapTableArray[index].isOnDropDown=false;
+			}	
+			else{
+				$scope.mapTableArray[index].isOnDropDown=true;
+			}
+		},10);
+	}
+	$scope.onChangeAttribute=function(index){
+		setTimeout(function(){
+			if($scope.mapTableArray.length > CF_GRID.framework_autopopulate_grid){
+				$scope.mapTableArray[index].isOnDropDown=false;
+			}	
+			else{
+				$scope.mapTableArray[index].isOnDropDown=true;
+			}
+		},10);
+	}
+
+	$scope.onChangeFunction=function(index){
+		setTimeout(function(){
+			if($scope.mapTableArray.length > CF_GRID.framework_autopopulate_grid){
+				$scope.mapTableArray[index].isOnDropDown=false;
+			}
+			else{
+				$scope.mapTableArray[index].isOnDropDown=true;
+			}
+		},10);
+	}
+
 	$scope.onChangeSourceAttribute = function (type, index) {
+		$scope.mapTableArray[index].isOnDropDown=true;
 		if (type == "string") {
 			$scope.mapTableArray[index].isSourceAtributeSimple = true;
 			$scope.mapTableArray[index].isSourceAtributeDatapod = false;
 			$scope.mapTableArray[index].isSourceAtributeFormula = false;
-			$scope.mapTableArray[index].sourcesimple = "''";
+			$scope.mapTableArray[index].sourcesimple = "";
 			$scope.mapTableArray[index].isSourceAtributeExpression = false;
 			$scope.mapTableArray[index].isSourceAtributeFunction = false;
 
@@ -268,38 +313,47 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 		}
 
 	}
-	
+
 	$scope.autoMapFeature = function (type) {
 		$scope.selectedAutoMode = type
 		if ($scope.selectedAutoMode == "By Name") {
-		  var allMapSourceAttribute = {};
-		  angular.forEach($scope.allMapSourceAttribute, function (val, key) {
-			allMapSourceAttribute[val.name] = val;
-		  });
-	
-		  if ($scope.mapTableArray && $scope.mapTableArray.length > 0) {
-			for (var i = 0; i < $scope.mapTableArray.length; i++) {
-				$scope.mapTableArray[i].sourceattribute=null;
-				setTimeout(function(index){
-					var temp= $scope.allMapTargetAttribute[index].name;
-					$scope.mapTableArray[index].sourceattribute = allMapSourceAttribute[temp]
-				},10,i);
+			var allMapSourceAttribute = {};
+			angular.forEach($scope.allMapSourceAttribute, function (val, key) {
+				allMapSourceAttribute[val.name] = val;
+			});
+
+			if ($scope.mapTableArray && $scope.mapTableArray.length > 0) {
+				for (var i = 0; i < $scope.mapTableArray.length; i++) {
+					$scope.mapTableArray[i].sourceattribute = null;
+					setTimeout(function (index) {
+						var temp = $scope.allMapTargetAttribute[index].name;
+						$scope.mapTableArray[index].sourceattribute = allMapSourceAttribute[temp];
+						if($scope.mapTableArray.length > CF_GRID.framework_autopopulate_grid)
+							$scope.mapTableArray[index].isOnDropDown=false;
+						else
+							$scope.mapTableArray[index].isOnDropDown=true;
+					}, 10, i);
+				}
 			}
-		  }
 		}
 		if ($scope.selectedAutoMode == "By Order") {
-		  if ($scope.mapTableArray && $scope.mapTableArray.length > 0) {
-			for (var i = 0; i < $scope.allMapTargetAttribute.length; i++) {
-				$scope.mapTableArray[i].sourceattribute=null;
-				setTimeout(function(index){
-					$scope.mapTableArray[index].sourceattribute = $scope.allMapSourceAttribute[index];
-				},10,i);
+			if ($scope.mapTableArray && $scope.mapTableArray.length > 0) {
+				for (var i = 0; i < $scope.allMapTargetAttribute.length; i++) {
+					$scope.mapTableArray[i].sourceattribute = null;
+					setTimeout(function (index) {
+						$scope.mapTableArray[index].sourceattribute = $scope.allMapSourceAttribute[index];
+						$scope.mapTableArray[index].sourceattribute = allMapSourceAttribute[temp];
+						if($scope.allMapTargetAttribute.length > CF_GRID.framework_autopopulate_grid)
+							$scope.mapTableArray[index].isOnDropDown=false;
+						else
+							$scope.mapTableArray[index].isOnDropDown=true;
+					}, 10, i);
+				}
 			}
-		  }
-	
+
 		}
-	
-	  }
+
+	}
 	$scope.convertUppdercase = function (value) {
 		var resultvalue = value.split("_");
 		var resultjoint = [];
@@ -309,7 +363,7 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 		return resultjoint.toString().replace(/,/g, " ");
 	}
 
-   
+
 
 
 
@@ -317,8 +371,8 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 
 		$scope.mode = $stateParams.mode;
 		$scope.isDependencyShow = true;
-		$scope.isEditInprogess=true;
-		$scope.isEditVeiwError=false;
+		$scope.isEditInprogess = true;
+		$scope.isEditVeiwError = false;
 		MetadataMapSerivce.getAllVersionByUuid($stateParams.id, "map")
 			.then(function (response) { onSuccessGetAllVersionByUuid(response.data) });
 		var onSuccessGetAllVersionByUuid = function (response) {
@@ -330,9 +384,9 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 		}
 
 		MetadataMapSerivce.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'map')
-			.then(function (response) { onSuccess(response.data) },function (response) { onError(response.data)});
+			.then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
-			$scope.isEditInprogess=false;
+			$scope.isEditInprogess = false;
 			$scope.algorithmData = response;
 			var defaultversion = {};
 			$scope.mapdata = response.mapdata
@@ -392,24 +446,24 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 				$scope.tags = tags;
 			}
 		}
-		var onError=function(){
-			$scope.isEditInprogess=false;
-			$scope.isEditVeiwError=true;
+		var onError = function () {
+			$scope.isEditInprogess = false;
+			$scope.isEditVeiwError = true;
 		};
 	}//End If
 	else {
-		$scope.mapdata={};
-		$scope.mapdata.locked="N";
+		$scope.mapdata = {};
+		$scope.mapdata.locked = "N";
 	}
 
 	$scope.selectVersion = function () {
 		$scope.myform.$dirty = false;
-		$scope.isEditInprogess=true;
-		$scope.isEditVeiwError=false;
+		$scope.isEditInprogess = true;
+		$scope.isEditVeiwError = false;
 		MetadataMapSerivce.getOneByUuidAndVersion($scope.map.defaultVersion.uuid, $scope.map.defaultVersion.version, 'map')
-			.then(function (response) { onSuccess(response.data) },function (response) { onError(response.data)});
+			.then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
-			$scope.isEditInprogess=false;
+			$scope.isEditInprogess = false;
 			var defaultversion = {};
 			$scope.mapdata = response.mapdata;
 			$scope.mapTableArray = response.maptabalearray
@@ -474,14 +528,14 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 				$scope.tags = tags;
 			}
 		}
-		var onError=function(){
-			$scope.isEditInprogess=false;
-			$scope.isEditVeiwError=true;
+		var onError = function () {
+			$scope.isEditInprogess = false;
+			$scope.isEditVeiwError = true;
 		};
 	}
 
 	$scope.submitMap = function () {
-		var upd_tag="N"
+		var upd_tag = "N"
 		$scope.isshowmodel = true;
 		$scope.dataLoading = true;
 		$scope.iSSubmitEnable = false;
@@ -497,8 +551,8 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 				tagArray[counttag] = $scope.tags[counttag].text;
 			}
 			var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
-			if(result ==false){
-				upd_tag="Y"	
+			if (result == false) {
+				upd_tag = "Y"
 			}
 		}
 		mapJson.tags = tagArray;
@@ -548,7 +602,7 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 				// else {
 				// 	sourceref.type = $scope.sourcetype;
 				// }
-				sourceref.type=$scope.mapTableArray[i].sourceattribute.type;
+				sourceref.type = $scope.mapTableArray[i].sourceattribute.type;
 				sourceAttr.ref = sourceref;
 				sourceAttr.attrId = $scope.mapTableArray[i].sourceattribute.attributeId;
 				attributemap.sourceAttr = sourceAttr;
@@ -586,22 +640,22 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 		}
 		mapJson.attributeMap = attributemaparray;
 		console.log(JSON.stringify(mapJson))
-		MetadataMapSerivce.submit(mapJson, 'map',upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		MetadataMapSerivce.submit(mapJson, 'map', upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			$scope.isshowmodel = true;
 			$scope.dataLoading = false;
 			$scope.iSSubmitEnable = false;
 			$scope.mapHasChanged = true;
 			notify.type = 'success',
-			notify.title = 'Success',
-			notify.content = 'Map Saved Successfully'
+				notify.title = 'Success',
+				notify.content = 'Map Saved Successfully'
 			$scope.$emit('notify', notify);
 			$scope.okmapsave();
 		}
 		var onError = function (response) {
 			notify.type = 'error',
-			notify.title = 'Error',
-			notify.content = "Some Error Occurred"
+				notify.title = 'Error',
+				notify.content = "Some Error Occurred"
 			$scope.$emit('notify', notify);
 		}
 	}

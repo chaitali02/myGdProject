@@ -41,6 +41,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		$scope.isAdd = true;
 		$scope.isDragable = "true";
 	}
+	$scope.gridLimt=CF_GRID.framework_autopopulate_grid
 	$scope.isAutoMapInprogess=false;
 	$scope.continueCount=1;
 	$scope.userDetail = {}
@@ -1234,6 +1235,14 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			//	console.log($filter('unique')($scope.attributeTableArray,"name"));
 		}
 		var dupArray=[];
+		setTimeout(function(){
+			if($scope.attributeTableArray.length > CF_GRID.framework_autopopulate_grid){
+				$scope.attributeTableArray[index].isOnDropDown=false;
+			}	
+			else{
+				$scope.attributeTableArray[index].isOnDropDown=true;
+			}
+		},10);
 		for(var i=0;i<$scope.attributeTableArray.length;i++){
 			setTimeout(function(index){
 				if ($scope.attributeTableArray[index].name) {
@@ -1252,6 +1261,14 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		if (!$scope.attributeTableArray[index].isSourceName)
 			$scope.attributeTableArray[index].name = data.name;
 		var dupArray=[];
+		setTimeout(function(){
+			if($scope.attributeTableArray.length > CF_GRID.framework_autopopulate_grid){
+				$scope.attributeTableArray[index].isOnDropDown=false;
+			}	
+			else{
+				$scope.attributeTableArray[index].isOnDropDown=true;
+			}
+		},10);
 		for(var i=0;i<$scope.attributeTableArray.length;i++){
 			setTimeout(function(index){
 				if ($scope.attributeTableArray[index].name) {
@@ -1269,6 +1286,14 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 	$scope.onChangeExpression = function (data, index) {
 		if (!$scope.attributeTableArray[index].isSourceName)
 			$scope.attributeTableArray[index].name = data.name;
+		setTimeout(function(){
+			if($scope.attributeTableArray.length > CF_GRID.framework_autopopulate_grid){
+				$scope.attributeTableArray[index].isOnDropDown=false;
+			}	
+			else{
+				$scope.attributeTableArray[index].isOnDropDown=true;
+			}
+		},10);	
 		var dupArray=[];
 		for(var i=0;i<$scope.attributeTableArray.length;i++){
 			setTimeout(function(index){
@@ -1287,6 +1312,40 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		if (!$scope.attributeTableArray[index].isSourceName)
 			$scope.attributeTableArray[index].name = data.paramName;
 		var dupArray=[];
+		setTimeout(function(){
+			if($scope.attributeTableArray.length > CF_GRID.framework_autopopulate_grid){
+				$scope.attributeTableArray[index].isOnDropDown=false;
+			}	
+			else{
+				$scope.attributeTableArray[index].isOnDropDown=true;
+			}
+		},10);
+		for(var i=0;i<$scope.attributeTableArray.length;i++){
+			setTimeout(function(index){
+				if ($scope.attributeTableArray[index].name) {
+					var res = isDublication($scope.attributeTableArray, "name", index, "sourceName" +index, dupArray);
+					if(res.length >0 ){
+						$scope.isDuplication = true;
+					}else {
+						$scope.isDuplication = false;
+					}
+				}
+			},10,(i));
+		}
+	}
+	
+	$scope.ngChangeFunction=function(){
+		if (!$scope.attributeTableArray[index].isSourceName)
+		$scope.attributeTableArray[index].name = data.paramName;
+		var dupArray=[];
+		setTimeout(function(){
+			if($scope.attributeTableArray.length > CF_GRID.framework_autopopulate_grid){
+				$scope.attributeTableArray[index].isOnDropDown=false;
+			}	
+			else{
+				$scope.attributeTableArray[index].isOnDropDown=true;
+			}
+		},10);
 		for(var i=0;i<$scope.attributeTableArray.length;i++){
 			setTimeout(function(index){
 				if ($scope.attributeTableArray[index].name) {

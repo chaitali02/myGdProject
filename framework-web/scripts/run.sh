@@ -1,4 +1,4 @@
-./install_application.sh localhost refresh ../app/admin/inferyx
+./install_application.sh localhost refresh ../app/admin/meta
 ./install_application.sh localhost append ../app/admin/aptiva
 ./install_application.sh localhost append ../app/admin/dot
 ./install_application.sh localhost append ../app/admin/mufg

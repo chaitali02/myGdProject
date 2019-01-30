@@ -1190,27 +1190,28 @@ var confirmDialog = function(newVal, yes, no) {
 			},10,(i));
 		}
 	}
-  $scope.onChangeSimple = function () {
+  // $scope.onChangeSimple = function () {
 	
-	}
+	// }
 	
 
-  $scope.onChangeAttribute=function(){
+  // $scope.onChangeAttribute=function(){
 	
-	}
+	// }
 
-	$scope.onChangeFromula=function(){
+	// $scope.onChangeFromula=function(){
 	
-  }
-  $scope.onChangeFunction=function(){
+  // }
+  // $scope.onChangeFunction=function(){
    
-  }
+  // }
   
-  $scope.onChangeRhsParamList=function(){
+  // $scope.onChangeRhsParamList=function(){
    
-  }
+  // }
 
   $scope.onChangeSourceAttribute = function (type, index) {
+    $scope.attributeTableArray[index].isOnDropDown=true;
     if (type == "string") {
       $scope.attributeTableArray[index].isSourceAtributeSimple = true;
       $scope.attributeTableArray[index].sourcesimple = "''";
@@ -1323,9 +1324,41 @@ var confirmDialog = function(newVal, yes, no) {
     }
     $scope.getOneByUuidParamList();
   }
-
+  
+  $scope.onChangeFunction=function(data,index){
+    $scope.attributeTableArray[index].name = data.name;
+    setTimeout(function(){
+			if($scope.attributeTableArray.length > CF_GRID.framework_autopopulate_grid){
+				$scope.attributeTableArray[index].isOnDropDown=false;
+			}	
+			else{
+				$scope.attributeTableArray[index].isOnDropDown=true;
+			}
+		},10);
+    var dupArray=[];
+		for(var i=0;i<$scope.attributeTableArray.length;i++){
+			setTimeout(function(index){
+				if ($scope.attributeTableArray[index].name) {
+					var res =isDublication($scope.attributeTableArray, "name", index, "sourceName" +index, dupArray);
+					if(res.length >0 ){
+						$scope.isDuplication = true;
+					}else {
+						$scope.isDuplication = false;
+					}
+				}
+			},10,(i));
+		}
+  }
   $scope.onChangeAttributeDatapod = function (data, index) {
-    $scope.attributeTableArray[index].name = data.name
+    $scope.attributeTableArray[index].name = data.name;
+    setTimeout(function(){
+			if($scope.attributeTableArray.length > CF_GRID.framework_autopopulate_grid){
+				$scope.attributeTableArray[index].isOnDropDown=false;
+			}	
+			else{
+				$scope.attributeTableArray[index].isOnDropDown=true;
+			}
+		},10);
     var dupArray=[];
 		for(var i=0;i<$scope.attributeTableArray.length;i++){
 			setTimeout(function(index){
@@ -1342,6 +1375,14 @@ var confirmDialog = function(newVal, yes, no) {
   }
   $scope.onChangeFormula = function (data, index) {
     $scope.attributeTableArray[index].name = data.name;
+    setTimeout(function(){
+			if($scope.attributeTableArray.length > CF_GRID.framework_autopopulate_grid){
+				$scope.attributeTableArray[index].isOnDropDown=false;
+			}	
+			else{
+				$scope.attributeTableArray[index].isOnDropDown=true;
+			}
+		},10);
     var dupArray=[];
 		for(var i=0;i<$scope.attributeTableArray.length;i++){
 			setTimeout(function(index){
@@ -1358,6 +1399,14 @@ var confirmDialog = function(newVal, yes, no) {
   }
   $scope.onChangeExpression = function (data, index) {
     $scope.attributeTableArray[index].name = data.name;
+    setTimeout(function(){
+			if($scope.attributeTableArray.length > CF_GRID.framework_autopopulate_grid){
+				$scope.attributeTableArray[index].isOnDropDown=false;
+			}	
+			else{
+				$scope.attributeTableArray[index].isOnDropDown=true;
+			}
+		},10);
     var dupArray=[];
 		for(var i=0;i<$scope.attributeTableArray.length;i++){
 			setTimeout(function(index){
@@ -1375,6 +1424,14 @@ var confirmDialog = function(newVal, yes, no) {
 
   $scope.onChangeAttributeParamlist = function (data, index) {
     $scope.attributeTableArray[index].name = data.paramName;
+    setTimeout(function(){
+			if($scope.attributeTableArray.length > CF_GRID.framework_autopopulate_grid){
+				$scope.attributeTableArray[index].isOnDropDown=false;
+			}	
+			else{
+				$scope.attributeTableArray[index].isOnDropDown=true;
+			}
+		},10);
     var dupArray=[];
 		for(var i=0;i<$scope.attributeTableArray.length;i++){
 			setTimeout(function(index){
