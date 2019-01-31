@@ -1003,7 +1003,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 				String saveFileName = Helper.getPropertyValue("framework.model.train.path")+"/csv/"+tableName;
 				String modelFileName = Helper.getPropertyValue("framework.model.train.path")+"/"+model.getName();
 				exec = execFactory.getExecutor(datasource.getType());
-				exec.saveTrainFile(fieldArray, trainName, train.getTrainPercent(), train.getValPercent(), tableName, appUuid, saveFileName);
+				exec.saveDataframeAsCSV(tableName, saveFileName, appUuid);
 				List<ParamListHolder> paramInfoList = execParams.getParamListInfo();
 				List<String> argList = Arrays.asList(paramInfoList.stream().map(p -> p.getParamName() + "~\"" + p.getParamValue().getValue() + "\"")
 										.collect(Collectors.joining("~")).split("~"));

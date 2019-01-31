@@ -2013,20 +2013,26 @@ public class ModelServiceImpl {
 					String sourceDsType = sourceDS.getType().toLowerCase();
 					predictInput.setSourceDsType(sourceDsType);
 					
+					exec.executeAndRegisterByDatasource(sourceQuery, tableName, sourceDS, appUuid);	
+					LinkedHashMap<String, Object> imputationDetails = imputeOperator.resolveAttributeImputeValue(predict.getFeatureAttrMap(), source, model, execParams, runMode, tableName);					
+					LinkedHashMap<String, Object> remappedImputationDetails = remapSourceImpueValToFeature(source, predict.getFeatureAttrMap(), model.getFeatures(), imputationDetails);
+					predictInput.setImputationDetails(remappedImputationDetails);
+					
 					if(sourceDsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
 						sourceDsType = appDatasource.getType().toLowerCase();
 						String saveFileName = Helper.getPropertyValue("framework.model.predict.path")+filePath+"/"+"input";
 						
 						File saveFile = new File(saveFileName);
 						if(!saveFile.exists()) {
-							exec.executeAndRegisterByDatasource(mappedFeatureAttrSql, tableName, sourceDS, appUuid);
-							String doubleCastSql = "SELECT * FROM " + tableName;
+							String mappedAttrSql = generateFeatureSQLByTempTable(predict.getFeatureAttrMap(), tableName, null, tableName);
+							exec.executeAndRegisterByDatasource(mappedAttrSql, tableName, appDatasource, appUuid);	
 							
 							if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
+								String doubleCastSql = "SELECT * FROM " + tableName;
 								sparkExecutor.castDFCloumnsToDoubleType(null, doubleCastSql, sourceDS, tableName, true, appUuid);	
 							}
 							
-							exec.saveTrainFile(fieldArray, predictName, train.getTrainPercent(), train.getValPercent(), tableName, appUuid, saveFileName);
+							exec.saveDataframeAsCSV(tableName, saveFileName, appUuid);
 							saveFileName = renameFileAndGetFilePathFromDir(saveFileName, "input_data", FileType.CSV.toString().toLowerCase());
 							saveFileName = URI+saveFileName;
 							logger.info("Saved file name : " + saveFileName);
@@ -2043,7 +2049,7 @@ public class ModelServiceImpl {
 							File inputSourceFile = new File(inputSourceFileName);
 							if(!inputSourceFile.exists()) {
 								exec.executeAndRegisterByDatasource(sourceCustomQuery, tableName.concat("_sourceQuery"), sourceDS, appUuid);
-								exec.saveTrainFile(fieldArray, predictName, train.getTrainPercent(), train.getValPercent(), tableName.concat("_sourceQuery"), appUuid, "file://"+inputSourceFileName);
+								exec.saveDataframeAsCSV(tableName.concat("_sourceQuery"), "file://"+inputSourceFileName, appUuid);
 								String inputSourceFilePath = renameFileAndGetFilePathFromDir(inputSourceFileName, "input_source_data", FileType.CSV.toString().toLowerCase());
 								otherParams.put("inputSourceFileName", "file://"+inputSourceFilePath);
 							}		
@@ -2347,77 +2353,79 @@ public class ModelServiceImpl {
 		}
 		return mappedAttrs;
 	}
-	
-	public void customCreate(ExecParams execParams, String tableName, RunMode runMode, List<Map<String, String>> labelFeatures, List<FeatureAttrMap> featureAttrMap) throws Exception {
-		String featureName = null;
-		int count = 0;
-		StructType structType = null;
-//		List<StructField> structList = new ArrayList<>();
-		StructField []stuctFields = null;
-		int i = 0;
-		List<Row> rows = new ArrayList<>();
-		for (Map<String, String> labelFeature : labelFeatures) {
-			Object []values = new Object[featureAttrMap.size()];
-			DataType dataType = null;
-			if (count == 0) {
-				stuctFields = new StructField[featureAttrMap.size()];
-			}
-			for (FeatureAttrMap featureAttr : featureAttrMap) {
-				featureName = featureAttr.getFeature().getFeatureName();
-				if (count == 0) {
-					dataType = DataTypes.DoubleType;
-					/*if (featureAttr.getAttribute().getAttrType().equalsIgnoreCase("double")) {
-						dataType = DataTypes.DoubleType;
-					} else if (featureAttr.getAttribute().getAttrType().equalsIgnoreCase("integer")) {
-						dataType = DataTypes.IntegerType;
-					} else if (featureAttr.getAttribute().getAttrType().equalsIgnoreCase("string")) {
-						dataType = DataTypes.StringType;
-					}*/
-					stuctFields[i] = new StructField(featureName, dataType, true, Metadata.empty());
-				}
-				values[i] = Double.parseDouble(labelFeature.get(featureName));
-				i++;
-			}
-			Row row = RowFactory.create(values);
-			rows.add(row);
-		}
-//		stuctFields = new StructField[structList.size()];
-		structType = new StructType(stuctFields);
-		
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		IExecutor exec = execFactory.getExecutor(datasource.getType());
-		exec.createAndRegister(rows, structType, tableName, commonServiceImpl.getApp().getUuid());
-		
-//		otherParams.put("datapodUuid_" + tableName + "_tableName", tableName);
-			
-//		return otherParams;
-	}
-	
-	public List<String> predict(Predict predict, PredictExec predictExec, ExecParams execParams, Model model, RunMode runMode, String appUuid, List<Map<String, String>> labelFeatures) throws Exception {
-		String tableName = predictExec.getUuid() + "_" + predictExec.getVersion() + "_" + model.getUuid();
-		tableName = tableName.replaceAll("-", "_");
-		//getting data having only feature columns
-		String mappedFeatureAttrSql = generateFeatureSQLByTempTable(predict.getFeatureAttrMap(), (tableName+"_pred_data"), null, (tableName+"_pred_mapped_data"));
-		customCreate(execParams, tableName+"_pred_data", runMode, labelFeatures, predict.getFeatureAttrMap());
-		ResultSetHolder rsHolder = sparkExecutor.readTempTable(mappedFeatureAttrSql, appUuid);
-		sparkExecutor.registerTempTable(rsHolder.getDataFrame(), (tableName+"_pred_mapped_data"));
-		
-		
-		String []fieldArray = getMappedAttrs(predict.getFeatureAttrMap());
-		
-		//assembling the data to for feature vector
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		IExecutor exec = execFactory.getExecutor(datasource.getType());
-//		Datasource sourceDS =  Get Spark datasource
-		exec.assembleDF(fieldArray, rsHolder, null, (tableName+"_pred_assembled_data"), datasource, true, appUuid);
-//		Object trainedModel = getTrainedModelByTrainExec(algorithm.getModelClass(), trainExec);
-		
-		//prediction operation
-		rsHolder =  exec.predict(model, null, null, (tableName+"_pred_assembled_data"), appUuid, null);
 
-		List<String> rowIdentifierCols = getRowIdentifierCols(predict.getRowIdentifier());
-		return rowIdentifierCols;
-	}
+	/********************** UNUSED **********************/
+//	public void customCreate(ExecParams execParams, String tableName, RunMode runMode, List<Map<String, String>> labelFeatures, List<FeatureAttrMap> featureAttrMap) throws Exception {
+//		String featureName = null;
+//		int count = 0;
+//		StructType structType = null;
+////		List<StructField> structList = new ArrayList<>();
+//		StructField []stuctFields = null;
+//		int i = 0;
+//		List<Row> rows = new ArrayList<>();
+//		for (Map<String, String> labelFeature : labelFeatures) {
+//			Object []values = new Object[featureAttrMap.size()];
+//			DataType dataType = null;
+//			if (count == 0) {
+//				stuctFields = new StructField[featureAttrMap.size()];
+//			}
+//			for (FeatureAttrMap featureAttr : featureAttrMap) {
+//				featureName = featureAttr.getFeature().getFeatureName();
+//				if (count == 0) {
+//					dataType = DataTypes.DoubleType;
+//					/*if (featureAttr.getAttribute().getAttrType().equalsIgnoreCase("double")) {
+//						dataType = DataTypes.DoubleType;
+//					} else if (featureAttr.getAttribute().getAttrType().equalsIgnoreCase("integer")) {
+//						dataType = DataTypes.IntegerType;
+//					} else if (featureAttr.getAttribute().getAttrType().equalsIgnoreCase("string")) {
+//						dataType = DataTypes.StringType;
+//					}*/
+//					stuctFields[i] = new StructField(featureName, dataType, true, Metadata.empty());
+//				}
+//				values[i] = Double.parseDouble(labelFeature.get(featureName));
+//				i++;
+//			}
+//			Row row = RowFactory.create(values);
+//			rows.add(row);
+//		}
+////		stuctFields = new StructField[structList.size()];
+//		structType = new StructType(stuctFields);
+//		
+//		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+//		IExecutor exec = execFactory.getExecutor(datasource.getType());
+//		exec.createAndRegister(rows, structType, tableName, commonServiceImpl.getApp().getUuid());
+//		
+////		otherParams.put("datapodUuid_" + tableName + "_tableName", tableName);
+//			
+////		return otherParams;
+//	}
+
+	/********************** UNUSED **********************/
+//	public List<String> predict(Predict predict, PredictExec predictExec, ExecParams execParams, Model model, RunMode runMode, String appUuid, List<Map<String, String>> labelFeatures) throws Exception {
+//		String tableName = predictExec.getUuid() + "_" + predictExec.getVersion() + "_" + model.getUuid();
+//		tableName = tableName.replaceAll("-", "_");
+//		//getting data having only feature columns
+//		String mappedFeatureAttrSql = generateFeatureSQLByTempTable(predict.getFeatureAttrMap(), (tableName+"_pred_data"), null, (tableName+"_pred_mapped_data"));
+//		customCreate(execParams, tableName+"_pred_data", runMode, labelFeatures, predict.getFeatureAttrMap());
+//		ResultSetHolder rsHolder = sparkExecutor.readTempTable(mappedFeatureAttrSql, appUuid);
+//		sparkExecutor.registerTempTable(rsHolder.getDataFrame(), (tableName+"_pred_mapped_data"));
+//		
+//		
+//		String []fieldArray = getMappedAttrs(predict.getFeatureAttrMap());
+//		
+//		//assembling the data to for feature vector
+//		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+//		IExecutor exec = execFactory.getExecutor(datasource.getType());
+////		Datasource sourceDS =  Get Spark datasource
+//		exec.assembleDF(fieldArray, rsHolder, null, (tableName+"_pred_assembled_data"), datasource, true, appUuid);
+////		Object trainedModel = getTrainedModelByTrainExec(algorithm.getModelClass(), trainExec);
+//		
+//		//prediction operation
+//		rsHolder =  exec.predict(model, null, null, (tableName+"_pred_assembled_data"), appUuid, null);
+//
+//		List<String> rowIdentifierCols = getRowIdentifierCols(predict.getRowIdentifier());
+//		return rowIdentifierCols;
+//	}
 
 	
 	public String generateFeatureSQLBySource(List<FeatureAttrMap> mappedFeatures, Object source, ExecParams execParams, String[] fieldArray, String label,  String tableName) throws Exception {
@@ -3013,13 +3021,11 @@ public class ModelServiceImpl {
 					String appUuid = commonServiceImpl.getApp().getUuid();
 
 					Map<String, EncodingType> encodingDetails = getEncodingDetails(train.getFeatureAttrMap(), model.getFeatures());
-//					LinkedHashMap<String, Object> imputationDetails = imputeOperator.resolveAttributeImputeValue(train.getFeatureAttrMap(), source, model, execParams, runMode, (tableName+"_train_source_data"));
 					
 					TrainInput trainInput = new TrainInput();
 					Map<String, Object> otherParams = new HashMap<>();
 					
 					trainInput.setEncodingDetails(encodingDetails);
-//					trainInput.setImputeDetails(imputationDetails);
 					
 					trainInput.setSaveTrainingSet(train.getSaveTrainingSet());
 					trainInput.setTrainPercent(train.getTrainPercent()/100);
@@ -3105,27 +3111,31 @@ public class ModelServiceImpl {
 					Datasource sourceDS = commonServiceImpl.getDatasourceByObject(train);
 					String sourceDsType = sourceDS.getType().toLowerCase();
 					trainInput.setSourceDsType(sourceDsType);
+
+					Datasource appDs = commonServiceImpl.getDatasourceByApp();
+					IExecutor exec = execFactory.getExecutor(appDs.getType());
+					exec.executeAndRegisterByDatasource(sourceQuery, tableName, sourceDS, appUuid);	
+					LinkedHashMap<String, Object> imputationDetails = imputeOperator.resolveAttributeImputeValue(train.getFeatureAttrMap(), source, model, execParams, runMode, tableName);					
+					LinkedHashMap<String, Object> remappedImputationDetails = remapSourceImpueValToFeature(source, train.getFeatureAttrMap(), model.getFeatures(), imputationDetails);
+					trainInput.setImputationDetails(remappedImputationDetails);
 					
-					String inputSourceFileName = null;
-					
+					String inputSourceFileName = null;					
 					if(sourceDsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
 						sourceDsType = MetaType.file.toString().toLowerCase();
 						String trainInputPath = Helper.getPropertyValue("framework.model.train.path")+filePath+"/"+"input";
 						logger.info("Saved file name : " + trainInputPath);
 						
 						File trainInPathFile = new File(trainInputPath);
-						Datasource datasource = commonServiceImpl.getDatasourceByApp();
-						IExecutor exec = null;
-						exec = execFactory.getExecutor(datasource.getType());
-						if(!trainInPathFile.exists()) {							
-							exec.executeAndRegisterByDatasource(sql, tableName, sourceDS, appUuid);	
-							
-							String doubleCastSql = "SELECT * FROM " + tableName;							
+						if(!trainInPathFile.exists()) {	
+							String mappedAttrSql = generateFeatureSQLByTempTable(train.getFeatureAttrMap(), tableName, label, tableName);
+							exec.executeAndRegisterByDatasource(mappedAttrSql, tableName, appDs, appUuid);	
+													
 							if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
+								String doubleCastSql = "SELECT * FROM " + tableName;	
 								sparkExecutor.castDFCloumnsToDoubleType(null, doubleCastSql, sourceDS, tableName, true, appUuid);	
 							}
 																			
-							exec.saveTrainFile(fieldArray, trainName, train.getTrainPercent(), train.getValPercent(), tableName, appUuid, "file://"+trainInputPath);
+							exec.saveDataframeAsCSV(tableName, "file://"+trainInputPath, appUuid);
 							trainInputPath = renameFileAndGetFilePathFromDir(trainInputPath, "input_data", FileType.CSV.toString().toLowerCase());
 						}		
 						
@@ -3139,7 +3149,7 @@ public class ModelServiceImpl {
 							File inputSourceFile = new File(inputSourceFileName);
 							if(!inputSourceFile.exists()) {
 								exec.executeAndRegisterByDatasource(sourceCustomQuery, tableName.concat("_sourceQuery"), sourceDS, appUuid);
-								exec.saveTrainFile(fieldArray, trainName, train.getTrainPercent(), train.getValPercent(), tableName.concat("_sourceQuery"), appUuid, "file://"+inputSourceFileName);
+								exec.saveDataframeAsCSV(tableName.concat("_sourceQuery"), "file://"+inputSourceFileName, appUuid);
 								String inputSourceFilePath = renameFileAndGetFilePathFromDir(inputSourceFileName, "input_source_data", FileType.CSV.toString().toLowerCase());
 								otherParams.put("inputSourceFileName", "file://"+inputSourceFilePath);
 							}		
@@ -3339,6 +3349,23 @@ public class ModelServiceImpl {
 		}
 	}
 	
+	private LinkedHashMap<String, Object> remapSourceImpueValToFeature(Object source,
+			List<FeatureAttrMap> featureAttrMapList, List<Feature> features,
+			LinkedHashMap<String, Object> imputationDetails) throws NumberFormatException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+
+		LinkedHashMap<String, Object> remappedImputationDetails = new LinkedHashMap<>();
+		for(Feature feature : features) {
+			for(FeatureAttrMap featureAttrMap : featureAttrMapList) {
+				if(featureAttrMap.getFeature().getFeatureId().equalsIgnoreCase(feature.getFeatureId())) {
+					String mappedAttr = getAttributeNameByObject(source, Integer.parseInt(featureAttrMap.getAttribute().getAttrId()));
+					remappedImputationDetails.put(feature.getName(), imputationDetails.get(mappedAttr));								
+					break;
+				}
+			}
+		}
+		return remappedImputationDetails;
+	}
+
 	public List<String> removeDuplicateColNames(String[] fieldArray, List<String> rowIdentifierCols ) {
 		if(rowIdentifierCols != null && !rowIdentifierCols.isEmpty()) {
 			List<String> colNameList = Arrays.asList(fieldArray);
@@ -4087,18 +4114,23 @@ public class ModelServiceImpl {
 //		}
 //		return imputeAttributeNameWithValues;
 //	}
+
+	/********************** UNUSED **********************/
+//	public String getAttributeNameByObject(Object object, Integer attributeId) throws NullPointerException {
+//		if(object instanceof Datapod) {
+//			Datapod datapod = (Datapod)object;
+//			return datapod.getAttributeName(attributeId);			
+//		} else if(object instanceof DataSet) {
+//			DataSet dataSet = (DataSet)object;
+//			return dataSet.getAttributeName(attributeId);										
+//		} else if(object instanceof Rule) {
+//			Rule rule = (Rule)object;
+//			return rule.getAttributeName(attributeId);					
+//		}
+//		return null;
+//	}
 	
-	public String getAttributeNameByObject(Object object, Integer attributeId) throws NullPointerException {
-		if(object instanceof Datapod) {
-			Datapod datapod = (Datapod)object;
-			return datapod.getAttributeName(attributeId);			
-		} else if(object instanceof DataSet) {
-			DataSet dataSet = (DataSet)object;
-			return dataSet.getAttributeName(attributeId);										
-		} else if(object instanceof Rule) {
-			Rule rule = (Rule)object;
-			return rule.getAttributeName(attributeId);					
-		}
-		return null;
+	public String getAttributeNameByObject(Object object, Integer attributeId) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {		
+		return (String) object.getClass().getMethod("getAttributeName", Integer.class).invoke(object, attributeId);
 	}
 }
