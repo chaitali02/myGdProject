@@ -31,6 +31,7 @@ export class PrivilegeComponent implements OnInit {
   uuid: any;
   active: any;
   published: any;
+  locked: any;
   depends: any;
   allName: any;
   privType: any;
@@ -39,6 +40,12 @@ export class PrivilegeComponent implements OnInit {
   metaOptions: any;
   msgs: any;
   isSubmitEnable: any;
+
+  isHomeEnable: boolean = false
+  showGraph: boolean = false;
+  isDependencyGraphEnable: boolean = true;
+  isShowReportData: boolean = true;
+
   constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
     this.showPrivilege = true;
     this.privilege = {};
@@ -58,17 +65,20 @@ export class PrivilegeComponent implements OnInit {
       "routeurl": null
     }
     ]
-    this.typeSelect = [{ 'value': 'Add', 'label': 'Add' },
-    { 'value': 'View', 'label': 'View' },
-    { 'value': 'Edit', 'label': 'Edit' },
-    { 'value': 'Delete', 'label': 'Delete' },
-    { 'value': 'Execute', 'label': 'Execute' },
-    { 'value': 'Clone', 'label': 'Clone' },
-    { 'value': 'Export', 'label': 'Export' },
-    { 'value': 'Restore', 'label': 'Restore' },
-    { 'value': 'Publish', 'label': 'Publish' },
-    { 'value': 'Unpublish', 'label': 'Unpublish' }
-    ]
+    this.typeSelect = [
+      { 'value': 'Add', 'label': 'Add' },
+      { 'value': 'View', 'label': 'View' },
+      { 'value': 'Edit', 'label': 'Edit' },
+      { 'value': 'Delete', 'label': 'Delete' },
+      { 'value': 'Execute', 'label': 'Execute' },
+      { 'value': 'Clone', 'label': 'Clone' },
+      { 'value': 'Export', 'label': 'Export' },
+      { 'value': 'Restore', 'label': 'Restore' },
+      { 'value': 'Publish', 'label': 'Publish' },
+      { 'value': 'Unpublish', 'label': 'Unpublish' },
+      { 'value': 'Lock', 'label': 'Lock' },
+      { 'value': 'Unlock', 'label': 'Unlock' }
+    ]	
   }
 
   ngOnInit() {
@@ -87,19 +97,19 @@ export class PrivilegeComponent implements OnInit {
   getOneByUuidAndVersion() {
     this._commonService.getOneByUuidAndVersion(this.id, this.version, 'privilege')
       .subscribe(
-      response => {
-        this.onSuccessgetOneByUuidAndVersion(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.onSuccessgetOneByUuidAndVersion(response)
+        },
+        error => console.log("Error :: " + error));
   }
 
   getAllVersionByUuid() {
     this._commonService.getAllVersionByUuid('privilege', this.id)
       .subscribe(
-      response => {
-        this.OnSuccesgetAllVersionByUuid(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.OnSuccesgetAllVersionByUuid(response)
+        },
+        error => console.log("Error :: " + error));
   }
 
   onSuccessgetOneByUuidAndVersion(response) {
@@ -122,12 +132,16 @@ export class PrivilegeComponent implements OnInit {
       this.privilege.tags = tags;
     }//End If
     this.createdBy = response.createdBy.ref.name;
+    this.privilege.locked = response["locked"] == 'Y' ? true : false;
     this.privilege.published = response["published"] == 'Y' ? true : false
     this.privilege.active = response["active"] == 'Y' ? true : false
     this.version = response['version'];
-    this.meta = response.metaId.ref.name;
     this.privType = response.privType;
 
+    let meta = {};
+      meta["uuid"] = response.metaId.ref.uuid;
+      meta["label"] = response.metaId.ref.name;
+      this.meta = meta;
   }
 
   OnSuccesgetAllVersionByUuid(response) {
@@ -146,10 +160,10 @@ export class PrivilegeComponent implements OnInit {
   changeMeta() {
     this._commonService.getAll('meta')
       .subscribe(
-      response => {
-        this.OnSuccesgetAll(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.OnSuccesgetAll(response)
+        },
+        error => console.log("Error :: " + error));
   }
 
   OnSuccesgetAll(response) {
@@ -161,8 +175,8 @@ export class PrivilegeComponent implements OnInit {
       meta["value"] = {}
       meta["value"]["uuid"] = response[i]['uuid'];
 
-      meta["value"]["name"] = response[i]['name'];
-      meta["value"]["label"] = response[i]['label'];
+     // meta["value"]["name"] = response[i]['name'];
+      meta["value"]["label"] = response[i]['name'];
       this.metaOptions[i] = meta;
     }
   }
@@ -170,10 +184,10 @@ export class PrivilegeComponent implements OnInit {
   onVersionChange() {
     this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, 'privilege')
       .subscribe(
-      response => {//console.log(response)},
-        this.onSuccessgetOneByUuidAndVersion(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {//console.log(response)},
+          this.onSuccessgetOneByUuidAndVersion(response)
+        },
+        error => console.log("Error :: " + error));
   }
 
   onChangeActive(event) {
@@ -215,7 +229,8 @@ export class PrivilegeComponent implements OnInit {
     privilegeJson['tags'] = tagArray
     privilegeJson["desc"] = this.privilege.desc;
     privilegeJson["active"] = this.privilege.active == true ? 'Y' : "N"
-    privilegeJson["published"] = this.privilege.published == true ? 'Y' : "N"
+    privilegeJson["published"] = this.privilege.published == true ? 'Y' : "N";
+    privilegeJson["locked"] = this.privilege.locked == true ? 'Y' : "N";
     privilegeJson["privType"] = this.privType;
 
     let metaId = {};
@@ -253,6 +268,19 @@ export class PrivilegeComponent implements OnInit {
   }
   showview(uuid, version) {
     this.router.navigate(['app/admin/privilege', uuid, version, 'true']);
+  }
+
+  showMainPage(uuid, version) {
+    this.isHomeEnable = false
+    this.showGraph = false;
+    this.isDependencyGraphEnable = true;
+    this.isShowReportData = true;
+  }
+  showDependencyGraph(uuid, version) {
+    console.log("showDependencyGraph call.....");
+    this.showGraph = true;
+    this.isDependencyGraphEnable = false;
+    this.isHomeEnable = true;
   }
 
 }
