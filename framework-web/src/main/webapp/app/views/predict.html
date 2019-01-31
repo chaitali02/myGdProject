@@ -16,7 +16,7 @@
                         <i class="fa fa-circle"></i>
                     </li>
                     <li>
-                        <span>{{predictData.name | strReplace:'_':' '|capitalize}}</span>
+                        <span>{{predictData.name}}</span>
                     </li>
                 </ul>
                 <div class="page-toolbar">
@@ -325,7 +325,31 @@
                                                         <span class="caption-subject  sbold ">Features</span>
                                                     </div>
                                                     <div class="actions">
-                                                  
+                                                        <div class="btn-group">
+                                                            <a class="btn green-haze btn-outline btn-circle auto-map btn-sm" ng-disabled="attrTableSelectedItem.length ==1 && featureMapTableArray.length >1 ?false:true"
+                                                                href="javascript:;" data-toggle="dropdown" tooltip-placement="left" uib-tooltip="Move" data-hover="dropdown"
+                                                                data-close-others="true" aria-expanded="false">
+                                                                <span class="fa fa-arrows" aria-hidden="true"></span>
+                                                                <i class="fa fa-angle-down"></i>
+                                                            </a>
+                                                            <ul class="dropdown-menu pull-right" style="z-index:10000;top:28px;right:45px;position:absolute">
+                                                                <li ng-click="autoMove(0)">
+                                                                    <a href="javascript:;" ng-disabled="attrTableSelectedItem[0]==0?true:false">Top</a>
+                                                                </li>
+                                                                <li class="divider" style="margin: 0px;"> </li>
+                                                                <li ng-click="autoMove(featureMapTableArray.length-1)">
+                                                                    <a href="javascript:;" ng-disabled="attrTableSelectedItem[0]==featureMapTableArray.length-1 ? true:false">Bottom</a>
+                                                                </li>
+                                                                <li class="divider" style="margin: 0px;"> </li>
+                                                                <li>
+                                                                    <div class="form-group" style="margin: 1%;">
+                                                                    <input type="number" class="form-control" ng-if="attrTableSelectedItem.length == 1" ng-model="moveTo" min="0" max="{{featureMapTableArray.length}}"
+                                                                        name="moveto" style="border:0" placeholder="Move To" ng-model-options="{debounce:3000}" ng-change="autoMoveTo(moveTo)"
+                                                                        focus-me="true" required />
+                                                                    </div>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
                                                         <div class="btn-group">
                                                             <a class="btn green-haze btn-outline btn-circle auto-map btn-sm" ng-disabled="{{mode}}" href="javascript:;" data-toggle="dropdown"
                                                                 tooltip-placement="left" uib-tooltip="Auto Map" data-hover="dropdown"
@@ -356,19 +380,23 @@
                                                             <div class="">
                                                                 <table class=" row-border hover table  table-striped table-bordered" style="table-layout:fixed;">
                                                                     <thead>
-                                                                        <tr>
+                                                                        <tr> 
+                                                                            <th style="text-align: center; Vertical-align:middle;width:2%;"><input style="width: 16px;height:16px;" type="checkbox" ng-model="slectAllRow" ng-click="selectAllRow()" ng-disabled="true" /></th>
                                                                             <th style="width:5%; text-align:center">ID</th>
                                                                             <th style="width:18%;text-align: center">Features</th>
                                                                             <th style="width:18%;text-align: center">Attributes</th>
                                                                             <!-- <th style="width:11%;text-align: center">Encoding Type</th> -->
                                                                             <!-- <th style="width:10%;text-align: center">Impute Method</th>
                                                                             <th style="width:10%;text-align: center">Impute Value</th> -->
-                                                                            <th style="width:5%;text-align: center">Move</th>
+                                                                            <!-- <th style="width:5%;text-align: center">Move</th> -->
 
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody ng-repeat="data in featureMapTableArray" drag-drop draggable="{{isDragable}}" after-drop="ondrop">
                                                                         <tr>
+                                                                            <td style="text-align: center; Vertical-align: middle;width:2%;">
+                                                                                <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected" ng-change="onChangeAttrRow($index,data.selected)"/>
+                                                                            </td>
                                                                             <td>
                                                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                                     <input type="text" class="form-control" ng-value="$index+1" ng-disabled="true">
@@ -434,7 +462,7 @@
                                                                                     </div>
                                                                                 </span>
                                                                             </td> -->
-                                                                            <td>
+                                                                            <!-- <td>
                                                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                                     <div style="text-align: center;">
                                                                                         <a class="move-column" ng-disabled="($index == 0 || {{mode}}==true) ?true:false" ng-click="onAttrRowUp($index)">
@@ -447,7 +475,7 @@
                                                                                         </a>
                                                                                     </div>
                                                                                 </span>
-                                                                            </td>
+                                                                            </td> -->
                                                                         </tr>
                                                                     </tbody>
                                                                 </table>
