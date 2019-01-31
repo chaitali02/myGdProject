@@ -591,11 +591,13 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, SharedPrope
 
 InferyxApp.controller('AppRoleController', function ($scope,$sessionStorage,$rootScope, $cookieStore, AppRoleService, $cookieStore, $window, $state, privilegeSvc, LhsService, $stateParams) {
     $rootScope.reOpen=localStorage.reOpen;
+    console.log($scope.selectedApp)
     
     if (localStorage.isAppRoleExists && $rootScope.reOpen ==false) {
         $rootScope.setUserName = JSON.parse(localStorage.userdetail).name
         $rootScope.setUseruuid = JSON.parse(localStorage.userdetail).userUUID
-        $scope.username = JSON.parse(localStorage.userdetail).userName;        
+        $scope.username = JSON.parse(localStorage.userdetail).userName;   
+        $rootScope.appUuid = localStorage.appUuid;     
         return false;
     }
   
@@ -605,7 +607,8 @@ InferyxApp.controller('AppRoleController', function ($scope,$sessionStorage,$roo
     $scope.selectRoleStatus = false;
     $rootScope.setUserName = JSON.parse(localStorage.userdetail).name
     $rootScope.setUseruuid = JSON.parse(localStorage.userdetail).userUUID
-    $scope.username = JSON.parse(localStorage.userdetail).userName
+    $scope.username = JSON.parse(localStorage.userdetail).userName;
+    $rootScope.appUuid = localStorage.appUuid; 
     $rootScope.isSubmit = false;
     AppRoleService.getLatestByUuid($rootScope.setUseruuid, "user").then(function (response) { onSuccessGetLatestByUuid(response.data) });
     var onSuccessGetLatestByUuid = function (response) {
@@ -692,7 +695,8 @@ InferyxApp.controller('AppRoleController', function ($scope,$sessionStorage,$roo
         if ($scope.selectedApp != null) {
             AppRoleService.setSecurityAppRole($scope.selectedApp.appId.ref.uuid, $scope.selectedRole.ref.uuid).then(function (response) { onSecurityAppRoleSuccess(response) })
             var onSecurityAppRoleSuccess = function (response) {
-                localStorage.isAppRoleExists = true
+                localStorage.isAppRoleExists = true;
+                localStorage.appUuid=$scope.selectedApp.appId.ref.uuid;
                 console.log(JSON.stringify(response.data));
                 $rootScope.metaStats={};
                 LhsService.getMetaStats().then(function (response) { onSuccessGetMetaStats(response.data) });
