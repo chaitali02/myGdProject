@@ -192,8 +192,12 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 			$scope.applicationOrgDetail=response;
 			if($scope.applicationOrgDetail.applicationType =="SYSADMIN"){
 				$scope.getAllLatestOrgnization();
+				if($scope.applicationdata.applicationType =="SYSADMIN"){
+					$scope.applicationTypes=$scope.disabledApplicatoinType($scope.applicationTypes,['DEFAULT']);
+				}
+				else
 				$scope.applicationTypes=$scope.disabledApplicatoinType($scope.applicationTypes,['DEFAULT','SYSADMIN']);
-
+                
 			}
 			else{
 				$scope.selectOrgInfo={};
@@ -429,6 +433,7 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 			defaultversion.uuid = response.application.uuid;
 			$scope.application.defaultVersion = defaultversion;
 			var tags = [];
+		
 			if (response.tags != null) {
 				for (var i = 0; i < response.application.tags.length; i++) {
 					var tag = {};
@@ -451,6 +456,8 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 				}
 			}
 			$scope.getLatestByUuid();
+			
+		
 			$scope.selectOrgInfo={};
 			if($scope.applicationdata.orgInfo !=null){
 				$scope.selectOrgInfo.uuid=$scope.applicationdata.orgInfo.ref.uuid;

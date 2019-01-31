@@ -17,6 +17,20 @@
     "active" : "Y",
     "locked" : "N",
     "published" : "N",
+     "dataSource" : {
+        "ref" : {
+            "type" : "datasource",
+            "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
+        }
+    },
+    "deployPort" : "5001",
+    "orgInfo" : {
+        "ref" : {
+            "type" : "organization",
+            "uuid" : "548b440b-5366-487a-a982-45ebfe9e708c"
+        }
+    },
+    "applicationType" : "APPADMIN",
     "appInfo" : [ 
         {
             "ref" : {
