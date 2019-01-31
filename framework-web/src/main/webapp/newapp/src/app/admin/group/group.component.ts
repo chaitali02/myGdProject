@@ -30,6 +30,7 @@ export class GroupComponent implements OnInit {
   uuid: any;
   active: any;
   published: any;
+  locked: any;
   depends: any;
   allName: any;
   roleInfoArray: any;
@@ -54,6 +55,11 @@ export class GroupComponent implements OnInit {
   appIdName: any;
   appIdUuid: any;
   //depenDependsOn : DependsOn;
+
+  isHomeEnable: boolean = false
+  showGraph: boolean = false;
+  isDependencyGraphEnable: boolean = true;
+  isShowReportData: boolean = true;
 
   constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
     this.showGroup = true;
@@ -131,7 +137,8 @@ export class GroupComponent implements OnInit {
     version.uuid = response['uuid'];
     this.selectedVersion = version
     this.createdBy = response.createdBy.ref.name;
-    this.published = response["published"] == 'Y' ? true : false
+    this.published = response["published"] == 'Y' ? true : false;
+    this.group.locked = response["locked"] == 'Y' ? true : false;
     this.active = response["active"] == 'Y' ? true : false
     var tags = [];
     if (response.tags != null) {
@@ -310,7 +317,8 @@ export class GroupComponent implements OnInit {
     groupJson["appId"] = appId1;
 
     groupJson["active"] = this.group.active == true ? 'Y' : "N"
-    groupJson["published"] = this.group.published == true ? 'Y' : "N"
+    groupJson["published"] = this.group.published == true ? 'Y' : "N";
+    groupJson["locked"] = this.group.locked == true ? 'Y' : "N";
 
 
     console.log(JSON.stringify(groupJson));
@@ -341,6 +349,19 @@ export class GroupComponent implements OnInit {
   showview(uuid, version) {
     this.router.navigate(['app/admin/group', uuid, version, 'true']);
 
+  }
+
+  showMainPage(uuid, version) {
+    this.isHomeEnable = false
+    this.showGraph = false;
+    this.isDependencyGraphEnable = true;
+    this.isShowReportData = true;
+  }
+  showDependencyGraph(uuid, version) {
+    console.log("showDependencyGraph call.....");
+    this.showGraph = true;
+    this.isDependencyGraphEnable = false;
+    this.isHomeEnable = true;
   }
 
 }

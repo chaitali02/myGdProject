@@ -32,6 +32,7 @@ export class DatastoreComponent implements OnInit {
   uuid: any;
   active: any;
   published: any;
+  locked: any;
   depends: any;
   meta: any;
   metaIdOnType: { 'value': string; 'label': string; }[];
@@ -54,6 +55,12 @@ export class DatastoreComponent implements OnInit {
   datastoreAllMata: any;
   location: any;
   isSubmitEnable: any;
+
+  isHomeEnable: boolean = false
+  showGraph: boolean = false;
+  isDependencyGraphEnable: boolean = true;
+  isShowReportData: boolean = true;
+
   constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
     this.showDatastore = true;
     this.datastore = {};
@@ -103,19 +110,19 @@ export class DatastoreComponent implements OnInit {
   getOneByUuidAndVersion() {
     this._commonService.getOneByUuidAndVersion(this.id, this.version, 'datastore')
       .subscribe(
-      response => {
-        this.onSuccessgetOneByUuidAndVersion(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.onSuccessgetOneByUuidAndVersion(response)
+        },
+        error => console.log("Error :: " + error));
   }
 
   getAllVersionByUuid() {
     this._commonService.getAllVersionByUuid('datastore', this.id)
       .subscribe(
-      response => {
-        this.OnSuccesgetAllVersionByUuid(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.OnSuccesgetAllVersionByUuid(response)
+        },
+        error => console.log("Error :: " + error));
   }
 
   onSuccessgetOneByUuidAndVersion(response) {
@@ -126,7 +133,8 @@ export class DatastoreComponent implements OnInit {
     version.uuid = response['uuid'];
     this.selectedVersion = version
     this.createdBy = response.createdBy.ref.name;
-    this.datastore.published = response["published"] == 'Y' ? true : false
+    this.datastore.published = response["published"] == 'Y' ? true : false;
+    this.datastore.locked = response["locked"] == 'Y' ? true : false;
     this.datastore.active = response["active"] == 'Y' ? true : false
     this.version = response['version'];
 
@@ -182,10 +190,10 @@ export class DatastoreComponent implements OnInit {
   onVersionChange() {
     this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, 'datastore')
       .subscribe(
-      response => {//console.log(response)},
-        this.onSuccessgetOneByUuidAndVersion(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {//console.log(response)},
+          this.onSuccessgetOneByUuidAndVersion(response)
+        },
+        error => console.log("Error :: " + error));
   }
 
   selectTypeMeta() {
@@ -281,7 +289,8 @@ export class DatastoreComponent implements OnInit {
     datastoreJson["execId"] = execId;
 
     datastoreJson["active"] = this.datastore.active == true ? 'Y' : "N"
-    datastoreJson["published"] = this.datastore.published == true ? 'Y' : "N"
+    datastoreJson["published"] = this.datastore.published == true ? 'Y' : "N";
+    datastoreJson["locked"] = this.datastore.locked == true ? 'Y' : "N";
     datastoreJson["location"] = this.datastore.location
 
     console.log(JSON.stringify(datastoreJson))
@@ -301,5 +310,21 @@ export class DatastoreComponent implements OnInit {
 
   public goBack() {
     this._location.back();
+  }
+
+  showMainPage(uuid, version) {
+    this.isHomeEnable = false
+    this.showGraph = false;
+    this.isDependencyGraphEnable = true;
+    this.isShowReportData = true;
+  }
+  showDependencyGraph(uuid, version) {
+    console.log("showDependencyGraph call.....");
+    this.showGraph = true;
+    this.isDependencyGraphEnable = false;
+    this.isHomeEnable = true;
+  }
+  enableEdit(uuid, version) {
+    console.log("enableEdit call.....");
   }
 }
