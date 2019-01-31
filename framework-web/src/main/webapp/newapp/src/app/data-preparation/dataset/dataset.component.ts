@@ -11,6 +11,7 @@ import { DependsOn } from './dependsOn'
 import { NgForm } from '@angular/forms';
 import { AppMetadata } from '../../app.metadata';
 import { SESSION_STORAGE, WebStorageService } from 'angular-webstorage-service'
+import { KnowledgeGraphComponent } from '../../shared/components/knowledgeGraph/knowledgeGraph.component';
 @Component({
   selector: 'app-dataset',
   templateUrl: './dataset.template.html',
@@ -98,6 +99,7 @@ export class DatasetComponent implements OnInit {
   // // myNewForm: any
   // @ViewChild('myNewForm') public myNewForm: NgForm;
   // private myNewForm: any;
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
   constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _datasetService: DatasetService, private activeroute: ActivatedRoute, @Inject(SESSION_STORAGE) private storage: WebStorageService) {
     this.baseUrl = config.getBaseUrl();
     //this.myNewForm = {}
@@ -193,6 +195,16 @@ export class DatasetComponent implements OnInit {
       this.getFromLocal(0);
     })
   }
+
+  showDagGraph(id, version) {
+    console.log("showDagGraph Call... ");
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id, this.version);
+    }, 1000);
+  }
+  
   public goBack() {
     //this._location.back();
     this.router.navigate(['app/list/dataset']);
@@ -237,28 +249,28 @@ export class DatasetComponent implements OnInit {
   getOneByUuidAndVersion(id, version) {
     this._commonService.getOneByUuidAndVersion(id, version, 'dataset')
       .subscribe(
-      response => {
-        this.onSuccessgetOneByUuidAndVersion(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.onSuccessgetOneByUuidAndVersion(response)
+        },
+        error => console.log("Error :: " + error));
   }
 
   getAllVersionByUuid() {
     this._commonService.getAllVersionByUuid('dataset', this.id)
       .subscribe(
-      response => {
-        this.OnSuccesgetAllVersionByUuid(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.OnSuccesgetAllVersionByUuid(response)
+        },
+        error => console.log("Error :: " + error));
   }
 
   getAllVersionByUuid2() {
     this._commonService.getAllVersionByUuid('dataset', this.dataset.uuid)
       .subscribe(
-      response => {
-        this.OnSuccesgetAllVersionByUuid(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.OnSuccesgetAllVersionByUuid(response)
+        },
+        error => console.log("Error :: " + error));
   }
 
   onSuccessgetOneByUuidAndVersion(response) {
@@ -319,7 +331,7 @@ export class DatasetComponent implements OnInit {
         if (response.filterInfo[k].operand[0].ref.type == 'formula') {
           this._commonService.getFormulaByType(this.dataset.sourcedata.uuid, this.dataset.source)
             .subscribe(response => { this.onSuccessgetFormulaByLhsType(response) },
-            error => console.log("Error ::", error))
+              error => console.log("Error ::", error))
 
           let lhsAttri1 = {}
           lhsAttri1["uuid"] = response.filterInfo[k].operand[0].ref.uuid;
@@ -331,7 +343,7 @@ export class DatasetComponent implements OnInit {
 
           this._commonService.getAllAttributeBySource(this.dataset.sourcedata.uuid, this.dataset.source)
             .subscribe(response => { this.onSuccessgetAllAttributeBySourceLhs(response) },
-            error => console.log("Error ::", error))
+              error => console.log("Error ::", error))
           let lhsAttri = {}
           lhsAttri["uuid"] = response.filterInfo[k].operand[0].ref.uuid;
           lhsAttri["label"] = response.filterInfo[k].operand[0].ref.name + "." + response.filterInfo[k].operand[0].attributeName;
@@ -354,7 +366,7 @@ export class DatasetComponent implements OnInit {
         if (response.filterInfo[k].operand[1].ref.type == 'formula') {
           this._commonService.getFormulaByType(this.dataset.sourcedata.uuid, this.dataset.source)
             .subscribe(response => { this.onSuccessgetFormulaByRhsType(response) },
-            error => console.log("Error ::", error))
+              error => console.log("Error ::", error))
           //filterInfo["rhsAttribute"] = response.filterInfo[k].operand[1].ref.name;
           let rhsAttri = {}
           rhsAttri["uuid"] = response.filterInfo[k].operand[1].ref.uuid;
@@ -365,7 +377,7 @@ export class DatasetComponent implements OnInit {
         else if (response.filterInfo[k].operand[1].ref.type == 'datapod') {
           this._commonService.getAllAttributeBySource(this.dataset.sourcedata.uuid, this.dataset.source)
             .subscribe(response => { this.onSuccessgetAllAttributeBySourceRhs1(response) },
-            error => console.log("Error ::", error))
+              error => console.log("Error ::", error))
 
           let rhsAttri1 = {}
           rhsAttri1["uuid"] = response.filterInfo[k].operand[1].ref.uuid;
@@ -377,7 +389,7 @@ export class DatasetComponent implements OnInit {
         else if (response.filterInfo[k].operand[1].ref.type == 'function') {
           this._commonService.getFunctionByCriteria("", "N", "function")
             .subscribe(response => { this.onSuccessgetFunctionByCriteria(response) },
-            error => console.log("Error ::", error))
+              error => console.log("Error ::", error))
 
           let rhsAttri = {}
           rhsAttri["uuid"] = response["filterInfo"][k].operand[1].ref.uuid;
@@ -387,7 +399,7 @@ export class DatasetComponent implements OnInit {
         else if (response.filterInfo[k].operand[1].ref.type == 'paramlist') {
           this._commonService.getParamByApp("", "application")
             .subscribe(response => { this.onSuccessgetParamByApp(response) },
-            error => console.log("Error ::", error))
+              error => console.log("Error ::", error))
 
           let rhsAttri = {}
           rhsAttri["uuid"] = response["filterInfo"][k].operand[1].ref.uuid;
@@ -770,20 +782,20 @@ export class DatasetComponent implements OnInit {
 
       this._commonService.getAllLatest(this.dataset.source)
         .subscribe(response => { this.OnSuccesgetAllLatest(response) },
-        error => console.log('Error :: ' + error))
+          error => console.log('Error :: ' + error))
 
       this._commonService.getFormulaByType(this.dataset.sourcedata.uuid, this.dataset.source)
         .subscribe(response => { this.onSuccessgetFormulaByLhsType(response) },
-        error => console.log("Error ::", error))
+          error => console.log("Error ::", error))
 
       this._commonService.getFormulaByType(this.dataset.sourcedata.uuid, this.dataset.source)
         .subscribe(response => { this.onSuccessgetFormulaByRhsType(response) },
-        error => console.log("Error ::", error))
+          error => console.log("Error ::", error))
 
 
       this._commonService.getAllAttributeBySource(this.dataset.sourcedata.uuid, this.dataset.source)
         .subscribe(response => { this.onSuccessgetAllAttributeBySourceLhs(response) },
-        error => console.log("Error ::", error))
+          error => console.log("Error ::", error))
 
       this.getAllAttributeBySource();
       this.getAllFormula(false, 0);
@@ -947,7 +959,7 @@ export class DatasetComponent implements OnInit {
   }
 
   OnSuccesDatapodSample(response) {
-    
+
     this.IsTableShow = true;
     this.IsError = false;
     this.colsdata = response
@@ -1000,13 +1012,13 @@ export class DatasetComponent implements OnInit {
     if (this.dataset.filterTableArray[index]["lhsType"] == 'formula') {
       this._commonService.getFormulaByType(this.dataset.sourcedata.uuid, this.dataset.source)
         .subscribe(response => { this.onSuccessgetFormulaByLhsType(response) },
-        error => console.log("Error ::", error))
+          error => console.log("Error ::", error))
     }
 
     else if (this.dataset.filterTableArray[index]["lhsType"] == 'datapod') {
       this._commonService.getAllAttributeBySource(this.dataset.sourcedata.uuid, this.dataset.source)
         .subscribe(response => { this.onSuccessgetAllAttributeBySourceLhs(response) },
-        error => console.log("Error ::", error))
+          error => console.log("Error ::", error))
     }
 
     else {
@@ -1020,24 +1032,24 @@ export class DatasetComponent implements OnInit {
     if (this.dataset.filterTableArray[index]["rhsType"] == 'formula') {
       this._commonService.getFormulaByType(this.dataset.sourcedata.uuid, this.dataset.source)
         .subscribe(response => { this.onSuccessgetFormulaByRhsType(response) },
-        error => console.log("Error ::", error))
+          error => console.log("Error ::", error))
     }
 
     else if (this.dataset.filterTableArray[index]["rhsType"] == 'datapod') {
       this._commonService.getAllAttributeBySource(this.dataset.sourcedata.uuid, this.dataset.source)
         .subscribe(response => { this.onSuccessgetAllAttributeBySourceRhs1(response) },
-        error => console.log("Error ::", error))
+          error => console.log("Error ::", error))
     }
     else if (this.dataset.filterTableArray[index]["rhsType"] == 'function') {
       this._commonService.getFunctionByCriteria("", "N", "function")
         .subscribe(response => { this.onSuccessgetFunctionByCriteria(response) },
-        error => console.log("Error ::", error))
+          error => console.log("Error ::", error))
 
     }
     else if (this.dataset.filterTableArray[index]["rhsType"] == 'paramlist') {
       this._commonService.getParamByApp("", "application")
         .subscribe(response => { this.onSuccessgetParamByApp(response) },
-        error => console.log("Error ::", error))
+          error => console.log("Error ::", error))
     }
     else if (this.dataset.filterTableArray[index]["rhsType"] == 'dataset') {
       let rhsAttribute = {};
@@ -1089,12 +1101,12 @@ export class DatasetComponent implements OnInit {
       rhsAttribute["attributeId"] = "";
       this.dataset.filterTableArray[index]["rhsAttribute"] = rhsAttribute
     }
-    else if(this.dataset.filterTableArray[index].operator == 'IS'){
-			this.dataset.filterTableArray[index].rhsType = 'string';
+    else if (this.dataset.filterTableArray[index].operator == 'IS') {
+      this.dataset.filterTableArray[index].rhsType = 'string';
     }
-    else{
-			this.dataset.filterTableArray[index].rhsType = 'integer';
-		}
+    else {
+      this.dataset.filterTableArray[index].rhsType = 'integer';
+    }
   }
 
   enableEdit(uuid, version) {
@@ -1119,7 +1131,7 @@ export class DatasetComponent implements OnInit {
     this.displayDialogBox = true;
     this._commonService.getAllLatest("dataset")
       .subscribe(response => { this.onSuccessgetAllLatest(response) },
-      error => console.log("Error ::", error))
+        error => console.log("Error ::", error))
   }
 
   onSuccessgetAllLatest(response) {
@@ -1141,7 +1153,7 @@ export class DatasetComponent implements OnInit {
   onChangeDialogAttribute() {
     this._commonService.getAttributesByDataset("dataset", this.dialogSelectName.uuid)
       .subscribe(response => { this.onSuccessgetAttributesByDataset(response) },
-      error => console.log("Error ::", error))
+        error => console.log("Error ::", error))
   }
 
   onSuccessgetAttributesByDataset(response) {
@@ -1390,10 +1402,6 @@ export class DatasetComponent implements OnInit {
     this.IsTableShow = false
   }
 
-  showDagGraph(uuid, version) {
-    this.isHomeEnable = true;
-    this.showGraph = true;
-  }
 
   autoPopulate() {
     this.dataset.attributeTableArray = [];
@@ -1506,80 +1514,80 @@ export class DatasetComponent implements OnInit {
     }
   }
 
-  onAttrRowDown(index){
-		var rowTempIndex=this.dataset.filterTableArray[index];
-    var rowTempIndexPlus=this.dataset.filterTableArray[index+1];
-		this.dataset.filterTableArray[index]=rowTempIndexPlus;
-    this.dataset.filterTableArray[index+1]=rowTempIndex;
-    this.isSubmitEnable1=true;
-	}
-	
-	onAttrRowUp(index){
-		var rowTempIndex=this.dataset.filterTableArray[index];
-    var rowTempIndexMines=this.dataset.filterTableArray[index-1];
-		this.dataset.filterTableArray[index]=rowTempIndexMines;
-    this.dataset.filterTableArray[index-1]=rowTempIndex;
-    this.isSubmitEnable1=true;
+  onAttrRowDown(index) {
+    var rowTempIndex = this.dataset.filterTableArray[index];
+    var rowTempIndexPlus = this.dataset.filterTableArray[index + 1];
+    this.dataset.filterTableArray[index] = rowTempIndexPlus;
+    this.dataset.filterTableArray[index + 1] = rowTempIndex;
+    this.isSubmitEnable1 = true;
   }
 
-  dragStart(event,data){
+  onAttrRowUp(index) {
+    var rowTempIndex = this.dataset.filterTableArray[index];
+    var rowTempIndexMines = this.dataset.filterTableArray[index - 1];
+    this.dataset.filterTableArray[index] = rowTempIndexMines;
+    this.dataset.filterTableArray[index - 1] = rowTempIndex;
+    this.isSubmitEnable1 = true;
+  }
+
+  dragStart(event, data) {
     console.log(event)
     console.log(data)
-    this.dragIndex=data;
+    this.dragIndex = data;
   }
 
-  dragEnd(event){
+  dragEnd(event) {
     console.log(event);
   }
 
-  drop(event,data){
-    if(this.mode=='false'){
-      this.dropIndex=data;
+  drop(event, data) {
+    if (this.mode == 'false') {
+      this.dropIndex = data;
       // console.log(event)
       //  console.log(data)
-      var item=this.dataset.filterTableArray[this.dragIndex]
-      this.dataset.filterTableArray.splice(this.dragIndex,1)
-      this.dataset.filterTableArray.splice(this.dropIndex,0,item)
-      this.isSubmitEnable1=true;
-    }    
+      var item = this.dataset.filterTableArray[this.dragIndex]
+      this.dataset.filterTableArray.splice(this.dragIndex, 1)
+      this.dataset.filterTableArray.splice(this.dropIndex, 0, item)
+      this.isSubmitEnable1 = true;
+    }
   }
 
-  onAttrRowDownSourceAttr(index){
-		var rowTempIndex=this.dataset.attributeTableArray[index];
-    var rowTempIndexPlus=this.dataset.attributeTableArray[index+1];
-		this.dataset.attributeTableArray[index]=rowTempIndexPlus;
-    this.dataset.attributeTableArray[index+1]=rowTempIndex;
-    this.isSubmitEnable1=true;
-	}
-	
-	onAttrRowUpSourceAttr(index){
-		var rowTempIndex=this.dataset.attributeTableArray[index];
-    var rowTempIndexMines=this.dataset.attributeTableArray[index-1];
-		this.dataset.attributeTableArray[index]=rowTempIndexMines;
-    this.dataset.attributeTableArray[index-1]=rowTempIndex;
-    this.isSubmitEnable1=true;
+  onAttrRowDownSourceAttr(index) {
+    var rowTempIndex = this.dataset.attributeTableArray[index];
+    var rowTempIndexPlus = this.dataset.attributeTableArray[index + 1];
+    this.dataset.attributeTableArray[index] = rowTempIndexPlus;
+    this.dataset.attributeTableArray[index + 1] = rowTempIndex;
+    this.isSubmitEnable1 = true;
   }
 
-  dragStartSourceAttr(event,data){
+  onAttrRowUpSourceAttr(index) {
+    var rowTempIndex = this.dataset.attributeTableArray[index];
+    var rowTempIndexMines = this.dataset.attributeTableArray[index - 1];
+    this.dataset.attributeTableArray[index] = rowTempIndexMines;
+    this.dataset.attributeTableArray[index - 1] = rowTempIndex;
+    this.isSubmitEnable1 = true;
+  }
+
+  dragStartSourceAttr(event, data) {
     console.log(event)
     console.log(data)
-    this.dragIndexSourceAttr=data;
+    this.dragIndexSourceAttr = data;
   }
 
-  dragEndSourceAttr(event){
+  dragEndSourceAttr(event) {
     console.log(event);
   }
 
-  dropSourceAttr(event,data){
-    if(this.mode=='false'){
-      this.dropIndexSourceAttr=data;
+  dropSourceAttr(event, data) {
+    if (this.mode == 'false') {
+      this.dropIndexSourceAttr = data;
       // console.log(event)
       //  console.log(data)
-      var item=this.dataset.attributeTableArray[this.dragIndexSourceAttr]
-      this.dataset.attributeTableArray.splice(this.dragIndexSourceAttr,1)
-      this.dataset.attributeTableArray.splice(this.dropIndexSourceAttr,0,item)
-      this.isSubmitEnable1=true;
-    }    
+      var item = this.dataset.attributeTableArray[this.dragIndexSourceAttr]
+      this.dataset.attributeTableArray.splice(this.dragIndexSourceAttr, 1)
+      this.dataset.attributeTableArray.splice(this.dropIndexSourceAttr, 0, item)
+      this.isSubmitEnable1 = true;
+    }
   }
 }
 

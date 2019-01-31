@@ -24,7 +24,7 @@
             <!-- <a title="View" data-toggle="tooltip" (click)="showview(functionData.uuid,functionData.version)" data-placement="top" tooltip style="height:16px;" *ngIf="mode">
               <span class="glyphicon glyphicon-file" style="color:white;"></span>
             </a> -->
-            <a title="Show Dependencies" data-toggle="tooltip" (click)="showFunctionGraph(functionData.uuid,functionData.version)"
+            <a title="Show Dependencies" data-toggle="tooltip" (click)="showDagGraph(functionData.uuid,functionData.version)"
               data-placement="top" tooltip style="height:14px;" *ngIf="mode" [ngClass]="isGraphEnable==true?'notcurrentpage':'currentpage'">
               <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
             </a>
@@ -277,10 +277,24 @@
           </div>
 
         </div>
+      </div>
 
-        <div class="portlet-body form" *ngIf="showGraph">
+      <!-- <div class="portlet-body form" *ngIf="showGraph">
           {{"Knowledge Graph"}}
+        </div> -->
+
+      <div class="form-body graph-body" *ngIf="showGraph" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=');">
+        <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
+        <div class="spinner" id="graphloader">
+          <div class="bounce1"></div>
+          <div class="bounce2"></div>
+          <div class="bounce3"></div>
+        </div>
+        <div class="show-graph-body" id="graphWrapper">
+          <knowledge-graph></knowledge-graph>
         </div>
       </div>
+
+
     </div>
   </div>
