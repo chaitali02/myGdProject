@@ -208,7 +208,7 @@
                 <div class="form-group" >
                     <label class="col-md-3 control-label">Application Type</label>
                     <div class="col-md-6">
-                        <select class="form-control" ng-disabled="{{mode}}" data-ng-model="applicationdata.applicationType" ng-options="r for r in applicationTypes"
+                        <select class="form-control" ng-disabled="{{mode}}" data-ng-model="applicationdata.applicationType" ng-options="r.text as r.caption disable when r.disabled for r in applicationTypes"
                         ng-change="selectType()" required>
                       </select>
                     </div>
@@ -226,9 +226,16 @@
 
                   </label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
-                    <select class="form-control" select2 ng-disabled="{{mode}}" data-ng-model="selectOrgInfo" ng-options="r as r.name for r in allOrgnization  track by r.uuid "
-                      required>
-                    </select>
+                    <div ng-if="applicationOrgDetail.applicationType =='SYSADMIN'">
+                        <select class="form-control" select2 ng-disabled="{{mode}}" data-ng-model="selectOrgInfo" ng-options="r as r.name for r in allOrgnization  track by r.uuid "
+                        required>
+                      </select>
+                    </div>
+                    <div ng-if="applicationOrgDetail.applicationType =='APPADMIN' ||applicationOrgDetail.applicationType =='DEFAULT'  ">
+
+                        <input type="text" ng-model="applicationOrgDetail.orgInfo.ref.name" ng-disabled="true" class="form-control">
+                    </div>
+                   
                   </div>
                 </div>
                 <div class="form-group" style="padding-top: 10px;">

@@ -3,7 +3,7 @@ AdminModule = angular.module('AdminModule');
 AdminModule.controller('MetadataApplicationController', function ($state, $scope, $stateParams, $rootScope, MetadataApplicationSerivce, $sessionStorage, privilegeSvc, CommonService, $timeout, $filter) {
 	
 	$scope.SourceTypes = ["file", "hive", "impala", 'mysql', 'oracle'];
-	$scope.applicationTypes=['ADMIN','DEFAULT'];
+	$scope.applicationTypes=[{"caption":"SYSADMIN",'text':'SYSADMIN',"disabled":false},{"caption":"APPADMIN",'text':'APPADMIN',"disabled":false},{"caption":"DEFAULT",'text':'DEFAULT',"disabled":false}];
 	$scope.dataLoading = false;
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
@@ -165,14 +165,44 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		}
 	}
 	
-	
+	$scope.disabledApplicatoinType=function(applicationType,arrayStr){
+		if(applicationType && applicationType.length){
+			for(var i=0;i<applicationType.length;i++){
+				applicationType[i].disabled=false;
+				var index = arrayStr.indexOf(applicationType[i].text);
+				if(index !=-1){
+					applicationType[i].disabled=true;
+				}
+
+			}
+		}
+		return applicationType;
+	}
 
 	$scope.getAllLatestOrgnization = function () {
 		CommonService.getAllLatest('organization').then(function (response) { onGetAllLatest(response.data) });
 		var onGetAllLatest = function (response) {
 			$scope.allOrgnization = response;
 		}
+	};
+	
+	$scope.getLatestByUuid=function(){
+		MetadataApplicationSerivce.getLatestByUuid($rootScope.appUuid,'application').then(function(response){onSuccessGetLatestByUuid(response.data)});
+	    var onSuccessGetLatestByUuid=function(response){
+			$scope.applicationOrgDetail=response;
+			if($scope.applicationOrgDetail.applicationType =="SYSADMIN"){
+				$scope.getAllLatestOrgnization();
+				$scope.applicationTypes=$scope.disabledApplicatoinType($scope.applicationTypes,['DEFAULT','SYSADMIN']);
+
+			}
+			else{
+				$scope.selectOrgInfo={};
+				$scope.selectOrgInfo.uuid=$scope.applicationOrgDetail.orgInfo.ref.uuid;
+				$scope.applicationTypes=$scope.disabledApplicatoinType($scope.applicationTypes,['APPADMIN','SYSADMIN']);
+			}
+		}
 	}
+
 	
 	$scope.selectType = function () {
 		MetadataApplicationSerivce.getDatasourceByType($scope.selectSourceType.toUpperCase()).then(function (response) { onSuccessGetDatasourceByType(response.data) })
@@ -357,7 +387,7 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 				}
 			}
 			$scope.paramtable=response.paramInfo;
-			$scope.getAllLatestOrgnization();
+			$scope.getLatestByUuid();
 			$scope.selectOrgInfo={};
 			if($scope.applicationdata.orgInfo !=null){
 				$scope.selectOrgInfo.uuid=$scope.applicationdata.orgInfo.ref.uuid;
@@ -420,7 +450,7 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 					$scope.selectDataSource = selectDataSource
 				}
 			}
-			$scope.getAllLatestOrgnization();
+			$scope.getLatestByUuid();
 			$scope.selectOrgInfo={};
 			if($scope.applicationdata.orgInfo !=null){
 				$scope.selectOrgInfo.uuid=$scope.applicationdata.orgInfo.ref.uuid;
@@ -442,7 +472,7 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		}
 	}//End IF
 	else{
-		$scope.getAllLatestOrgnization();
+		$scope.getLatestByUuid();
 		$scope.applicationdata={};
 		$scope.applicationdata.locked="N";
 	}
