@@ -3093,6 +3093,7 @@ public class ModelServiceImpl {
 					String defaultDir = Helper.getPropertyValue("framework.model.train.path")+filePath+"/";
 					String testSetPath = "file://".concat(defaultDir).concat(defaultDir.endsWith("/") ? "test_set" : "/test_set");
 					trainInput.setTestSetPath(testSetPath);
+					
 					String modelFileName = defaultDir.concat(defaultDir.endsWith("/") ? "model" : "/model");
 
 					String outputResultPath = defaultDir.concat(defaultDir.endsWith("/") ? "train_op_result" : "/train_op_result").concat("/").concat("train_op_result");
@@ -3111,13 +3112,19 @@ public class ModelServiceImpl {
 					Datasource sourceDS = commonServiceImpl.getDatasourceByObject(train);
 					String sourceDsType = sourceDS.getType().toLowerCase();
 					trainInput.setSourceDsType(sourceDsType);
-
+					
 					Datasource appDs = commonServiceImpl.getDatasourceByApp();
 					IExecutor exec = execFactory.getExecutor(appDs.getType());
 					exec.executeAndRegisterByDatasource(sourceQuery, tableName, sourceDS, appUuid);	
 					LinkedHashMap<String, Object> imputationDetails = imputeOperator.resolveAttributeImputeValue(train.getFeatureAttrMap(), source, model, execParams, runMode, tableName);					
 					LinkedHashMap<String, Object> remappedImputationDetails = remapSourceImpueValToFeature(source, train.getFeatureAttrMap(), model.getFeatures(), imputationDetails);
 					trainInput.setImputationDetails(remappedImputationDetails);
+					
+					if(train.getSaveTrainingSet().equalsIgnoreCase("Y")) {
+						String trainSetPath = "file://".concat(defaultDir).concat(defaultDir.endsWith("/") ? "train_set" : "/train_set");
+						trainInput.setSaveTrainingSet(train.getSaveTrainingSet());
+						otherParams.put("trainSetPath", trainSetPath);
+					}
 					
 					String inputSourceFileName = null;					
 					if(sourceDsType.equalsIgnoreCase(ExecContext.FILE.toString())) {

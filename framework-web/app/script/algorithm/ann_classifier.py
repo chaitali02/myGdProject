@@ -26,6 +26,7 @@ from keras.wrappers.scikit_learn import KerasClassifier, KerasRegressor
 import eli5
 from eli5.sklearn import PermutationImportance
 from keras.models import model_from_json
+from sklearn.model_selection import train_test_split
 
 
 print("Inside python script ")
@@ -575,6 +576,15 @@ def train():
     # Encoding categorical data
     dataset = getData(sourceFilePath, sourceDsType, sourceHostName, sourceDbName, sourcePort, sourceUserName, sourcePassword, query)
     
+    if saveTrainingSet == "Y":
+        tempDataset = dataset
+        X = dataset.iloc[:, 1:]
+        X_train, X_test = train_test_split(X, test_size = testPercent, random_state = 0)
+        schema = getSparkSchemaByDtypes(X_train.dtypes)
+        spark_df = createSparkDfByPandasDfAndSparkSchema(X_train, schema)
+        saveSparkDf(spark_df, otherParams["trainSetPath"])
+        print("trainingset saved at: ", otherParams["trainSetPath"])
+    
     if imputationDetails != None:
         dataset = imputeData(dataset, imputationDetails)
         print("data after imputation:")
@@ -588,7 +598,7 @@ def train():
     print("total_size: ", len(dataset))    
     output_result["total_size"]=len(dataset)
     
-    from sklearn.preprocessing import LabelEncoder, OneHotEncoder
+    from sklearn.preprocessing import LabelEncoder
     labelencoder_X_1 = LabelEncoder()
     dataset.iloc[0] = labelencoder_X_1.fit_transform(dataset.iloc[0])
     print('label encoding done')
@@ -599,7 +609,6 @@ def train():
     print(y)
     
     # Splitting the dataset into the Training set and Test set
-    from sklearn.model_selection import train_test_split
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = testPercent, random_state = 0)
     
     # Feature Scaling
@@ -608,10 +617,6 @@ def train():
     X_train = sc.fit_transform(X_train)
     X_test = sc.transform(X_test)
     
-    # print(">>>>>>>>>>>>>>>type(X_train)", type(X_train))
-    # trainSet_pd_df = pd.DataFrame(X_train)
-    # # saveSparkDf(joined_df, testSetPath)
-        
     print("train_size: ", len(X_train))
     print("test_size: ", len(X_test))
     
