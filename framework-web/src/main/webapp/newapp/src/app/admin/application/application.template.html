@@ -19,7 +19,7 @@
               <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.2,1.2);"></i>
             </a>
             <a title="Edit" (click)="enableEdit(uuid,version)" data-toggle="tooltip" data-placement="top" tooltip="Edit"
-              style="height:16px;" [ngClass]="mode == 'true'?'currentpage':'currentpage'">
+              style="height:16px;" [ngClass]="mode == 'true'?'notcurrentpage':'currentpage'">
               <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
             <a title="Show Dependencies" data-toggle="tooltip" (click)="showDependencyGraph(uuid,version)"
