@@ -13,6 +13,8 @@ import { Version } from '../../shared/version';
   styleUrls: ['./user.component.css']
 })
 export class UserComponent implements OnInit {
+  showGraph: boolean;
+  isHomeEnable: boolean;
   breadcrumbDataFrom: any;
   showUser: any;
   user: any;
@@ -52,6 +54,8 @@ export class UserComponent implements OnInit {
     this.showUser = true;
     this.user = {};
     this.user["active"] = true
+    this.isHomeEnable = false;
+    this.showGraph = false;
     this.groupInfoTags = null
     this.roleInfoTags = null
     this.getAllLatestGroupResponse = null;
@@ -149,10 +153,10 @@ export class UserComponent implements OnInit {
       version.label = response['version'];
       version.uuid = response['uuid'];
       this.selectedVersion = version
+      this.user.locked = response["locked"] == 'Y' ? true : false
       this.user.published = response["published"] == 'Y' ? true : false
       this.user.active = response["active"] == 'Y' ? true : false
       this.version = response['version'];
-
       // this.groupInfoTags = response.groupInfo;
       var tags = [];
       if (response.tags != null) {
@@ -175,8 +179,6 @@ export class UserComponent implements OnInit {
       }
       this.groupInfoTags = groupInfoNew;
 
-
-
       // this.roleInfoTags = response.roleInfo;
       let roleInfoNew = [];
 
@@ -195,7 +197,6 @@ export class UserComponent implements OnInit {
     }
   }
 
-
   onSuccesgetAllVersionByUuid(response) {
     var temp = []
     for (const i in response) {
@@ -212,7 +213,6 @@ export class UserComponent implements OnInit {
   onSuccessgetAllLatestGroup(response) {
     this.getAllLatestGroupResponse = response;
     this.groupInfoArray = [];
-
     for (const i in response) {
       let groupref = {};
       groupref["id"] = response[i]['uuid'];
@@ -223,7 +223,6 @@ export class UserComponent implements OnInit {
     }
     for (const i in response) {
       console.log(JSON.stringify(this.groupInfoArray[i]));
-
     }
   }
 
@@ -241,11 +240,9 @@ export class UserComponent implements OnInit {
     }
     for (const i in response) {
       console.log(JSON.stringify(this.roleInfoArray[i]));
-
     }
     console.log("getAllLatest is executed");
   }
-
 
   onVersionChange() {
     this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, 'user')
@@ -271,6 +268,15 @@ export class UserComponent implements OnInit {
     }
     else {
       this.user.published = 'N';
+    }
+  }
+
+  onChangeLocked(event) {
+    if (event === true) {
+      this.user.locked = 'Y';
+    }
+    else {
+      this.user.locked = 'N';
     }
   }
 
@@ -309,7 +315,6 @@ export class UserComponent implements OnInit {
     if (this.user.tags != null) {
       for (var counttag = 0; counttag < this.user.tags.length; counttag++) {
         tagArray[counttag] = this.user.tags[counttag].value;
-
       }
     }
     userJson['tags'] = tagArray
@@ -326,7 +331,6 @@ export class UserComponent implements OnInit {
         groupRef["ref"] = groupInfoRef;
         groupInfoArrayNew.push(groupRef);
       }
-
     }
 
     let roleInfoArrayNew = [];
@@ -339,12 +343,12 @@ export class UserComponent implements OnInit {
         roleRef["ref"] = roleInfoRef;
         roleInfoArrayNew.push(roleRef);
       }
-
     }
     userJson["groupInfo"] = groupInfoArrayNew;
     //  userJson["roleInfo"]=roleInfoArrayNew;
     userJson["active"] = this.user.active == true ? 'Y' : "N"
     userJson["published"] = this.user.published == true ? 'Y' : "N"
+    userJson["locked"] = this.user.locked == true ? 'Y' : "N"
     userJson["password"] = this.user.password;
     userJson["firstName"] = this.user.firstName;
     userJson["middleName"] = this.user.middleName;
@@ -390,23 +394,31 @@ export class UserComponent implements OnInit {
     };
   }
 
-  showview(uuid, version) {
-    this.router.navigate(['app/admin/user', uuid, version, 'true']);
-    this.dropdownSettingsGroup = {
-      singleSelection: false,
-      selectAllText: 'Select All',
-      unSelectAllText: 'UnSelect All',
-      enableSearchFilter: true,
-      disabled: false
-    };
+  // showview(uuid, version) {
+  //   this.router.navigate(['app/admin/user', uuid, version, 'true']);
+  //   this.dropdownSettingsGroup = {
+  //     singleSelection: false,
+  //     selectAllText: 'Select All',
+  //     unSelectAllText: 'UnSelect All',
+  //     enableSearchFilter: true,
+  //     disabled: false
+  //   };
 
-    this.dropdownSettingsRole = {
-      singleSelection: false,
-      selectAllText: 'Select All',
-      unSelectAllText: 'UnSelect All',
-      enableSearchFilter: true,
-      disabled: false
-    };
+  //   this.dropdownSettingsRole = {
+  //     singleSelection: false,
+  //     selectAllText: 'Select All',
+  //     unSelectAllText: 'UnSelect All',
+  //     enableSearchFilter: true,
+  //     disabled: false
+  //   };
+  // }
+  showMainPage() {
+    this.isHomeEnable = false;
+    this.showGraph = false;
   }
 
+  showDagGraph(uuid, version) {
+    this.isHomeEnable = true;
+    this.showGraph = true;
+  }
 }

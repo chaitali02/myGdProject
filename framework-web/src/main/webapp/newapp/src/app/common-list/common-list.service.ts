@@ -350,7 +350,7 @@ executeWithParams(type, uuid, version, data): Observable<any[]>{
   
 }
 
-  uploadFile(fd, filename, type,uuid,version,fileType,dataSourceUuid) {debugger
+  uploadFile(fd, filename, type,uuid,version,fileType,dataSourceUuid) {
 
     // common/upload?action=edit&fileName=dim_state.csv&type=null&uuid=null&version=null&fileType=csv
     // &dataSourceUuid=d7c11fd7-ec1a-40c7-ba25-7da1e8b73020

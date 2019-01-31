@@ -1,10 +1,10 @@
 <div>
-  <app-breadcrumb [breadcrumbData]="breadcrumbDataFrom" ></app-breadcrumb>
+  <app-breadcrumb [breadcrumbData]="breadcrumbDataFrom"></app-breadcrumb>
   <br>
-  <p-growl [(value)]="msgs" ></p-growl>
+  <p-growl [(value)]="msgs"></p-growl>
   <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
   <!-- BEGIN MAIN CONTENT -->
-  <div class="row" >
+  <div class="row">
     <div class="col-md-12">
       <!-- BEGIN: ACCORDION DEMO -->
       <div class="portlet box green">
@@ -13,16 +13,19 @@
             <i class="fa fa-gift"></i>{{user.name}}
           </div>
           <div class="tools">
-            <a title="Edit" (click)="enableEdit(uuid,version)" data-toggle="tooltip" data-placement="top" tooltip  style="height:16px;" *ngIf="mode">
-              <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+            <a style="color:white" title="Main" data-placement="top" tooltip [ngClass]="isHomeEnable==true ? 'notcurrentpage':'currentpage'"
+              data- (click)="showMainPage(uuid,version)" *ngIf="mode">
+              <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
-            <a title="View" data-toggle="tooltip" (click)="showview(uuid,version)" data-placement="top" tooltip style="height:16px;" *ngIf="mode">
-              <span class="glyphicon glyphicon-file" style="color:white;"></span>
+            <a href="javascript:;" title="Edit" data-placement="top" tooltip [ngClass]="mode=='true' && showGraph == false && user.locked == false? 'notcurrentpage':'currentpage'"
+              data- (click)="enableEdit(uuid,version)" *ngIf="mode">
+              <i class="fa fa-edit" style="display: inline;margin:2px auto;color:white;"></i>
             </a>
-            <a title="Show Dependencies" data-toggle="tooltip" (click)="showDatapodGraph(uuid,version)" data-placement="top" tooltip style="height:14px;" *ngIf="mode" >
-              <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
+            <a href="javascript:;" title="Knowledge Graph" data-placement="top" tooltip [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'"
+              data- (click)="showDagGraph(uuid,version)" *ngIf="mode">
+              <i class="fa fa-sitemap" style="display: inline;margin:2px auto;color:white;"></i>
             </a>
-            <a  title="Refresh"  data-toggle="tooltip" data-placement="top" tooltip>
+            <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip>
               <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
             </a>
             <a title="Close" data-toggle="tooltip" data-placement="top" tooltip style="height:14px;" (click)="goBack()">
@@ -30,22 +33,23 @@
             </a>
           </div>
         </div>
-      
+
         <div class="portlet-body form">
-          <div class="form-body graph-body" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=')" *ngIf="showgraphdiv">
+          <div class="form-body graph-body" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=')"
+            *ngIf="showgraphdiv">
             <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
             <!--<div class="spinner" id="graphloader">-->
-              <!--<div class="bounce1"></div>-->
-              <!--<div class="bounce2"></div>-->
-              <!--<div class="bounce3"></div>-->
+            <!--<div class="bounce1"></div>-->
+            <!--<div class="bounce2"></div>-->
+            <!--<div class="bounce3"></div>-->
             <!--</div>-->
             <div class="form-body show-graph-body" id="graphWrapper">
               <app-d3></app-d3>
             </div>
           </div>
 
-          <div class="form-body"  style="padding-top:50px;" *ngIf="getAllLatestGroupResponse != null  && getAllLatestRoleResponse != null">
-            <form  class="form-horizontal"  name="myform" novalidate="novalidate" (ngSubmit)="submitUser()" #myNewForm = "ngForm">
+          <div class="form-body" style="padding-top:50px;" *ngIf="getAllLatestGroupResponse != null  && getAllLatestRoleResponse != null && !showGraph">
+            <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="submitUser()" #myNewForm="ngForm">
               <div class="form-group" *ngIf="mode">
                 <label class="col-md-3 control-label">UUID</label>
                 <div class="col-md-6">
@@ -65,20 +69,15 @@
               <div class="form-group" *ngIf="mode">
                 <label class="col-md-3 control-label">Version </label>
                 <div class="col-md-6">
-                  <p-dropdown [options]="VersionList"          
-                  [(ngModel)]="selectedVersion"
-                  name="version"
-                  [style]="{'width':'100%','padding':'3px'}"
-                  [filter]="true"
-                  [disabled]="mode == 'false'"
-                 (onChange)="onVersionChange()">
+                  <p-dropdown [options]="VersionList" [(ngModel)]="selectedVersion" name="version" [style]="{'width':'100%','padding':'3px'}"
+                    [filter]="true" [disabled]="mode == 'false'" (onChange)="onVersionChange()">
                   </p-dropdown>
                 </div>
               </div>
 
               <div class="form-group" *ngIf="mode">
                 <label class="col-md-3 control-label">CreatedBy</label>
-                <div class="col-md-6" >
+                <div class="col-md-6">
                   <input type="text" class="form-control" [disabled]="true" [(ngModel)]="createdBy" name="createdBy">
                 </div>
               </div>
@@ -86,21 +85,21 @@
               <div class="form-group" *ngIf="mode">
                 <label class="col-md-3 control-label">CreatedOn</label>
                 <div class="col-md-6">
-                  <input type="text"  class="form-control" [disabled]="true" [(ngModel)]="user.createdOn" name="createdOn">
+                  <input type="text" class="form-control" [disabled]="true" [(ngModel)]="user.createdOn" name="createdOn">
                 </div>
               </div>
 
               <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12" >Tags</label>
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
                   <tag-input [(ngModel)]="user.tags" [disable]="mode == 'true'" name="tags" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px; padding-left:5px"></tag-input>
                 </div>
               </div>
-            
+
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
                 <div class="col-md-6">
-                  <textarea [disabled]="mode == 'true'" [(ngModel)]="user.desc" name="desc" class="form-control noresize "  rows="2" style="resize:none;"></textarea>
+                  <textarea [disabled]="mode == 'true'" [(ngModel)]="user.desc" name="desc" class="form-control " rows="2" style="resize:none;"></textarea>
                 </div>
               </div>
 
@@ -108,7 +107,18 @@
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
                   <div class="btn-group">
-                    <ui-switch (change)="onChangeActive($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="user.active" name="active" [checked]="active" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                    <ui-switch (change)="onChangeActive($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="user.active" name="active"
+                      [checked]="active" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="btn-group">
+                    <ui-switch (change)="onChangeLocked($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="user.locked" name="locked"
+                      [checked]="locked" labelOn="Yes" labelOff="No"></ui-switch>
                   </div>
                 </div>
               </div>
@@ -117,44 +127,28 @@
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
                   <div class="btn-group">
-                    <ui-switch (change)="onChangePublished($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="user.published" name="published" [checked]="published" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                    <ui-switch (change)="onChangePublished($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="user.published"
+                      name="published" [checked]="published" labelOn="Yes" labelOff="No"></ui-switch>
                   </div>
                 </div>
               </div>
 
-              <div class="form-group" >
-                <label class="col-md-3 control-label">GroupInfo</label>
-                <div class="col-md-6">      
-                <angular2-multiselect [data]="groupInfoArray" [(ngModel)]="groupInfoTags" name="groupInfoTags"
-                [settings] ="dropdownSettingsGroup"                  
-                (onSelect) ="onItemSelect($event)" 
-                (onDeSelect) ="OnItemDeSelect($event)"
-                (onSelectAll)="onSelectAll($event)"
-                (onDeSelectAll) ="onDeSelectAll($event)">
-                </angular2-multiselect>    
-                </div>  
-              </div>
-              
-              <!-- <div class="form-group" >
-                
-                <label class="col-md-3 control-label">RoleInfo</label>
-                 <div class="col-md-6">           
-                <angular2-multiselect [data]="roleInfoArray" [(ngModel)]="roleInfoTags" name="roleInfoTags"
-                [settings] ="dropdownSettingsRole"  
-                (onSelect) ="onItemSelect($event)" 
-                (onDeSelect) ="OnItemDeSelect($event)"
-                (onSelectAll)="onSelectAll($event)"
-                (onDeSelectAll) ="onDeSelectAll($event)">
-                </angular2-multiselect> 
-                </div>  
-              </div> -->
-              
               <div class="form-group">
                 <label class="col-md-3 control-label">Password
                   <span class="required" aria-required="true"> * </span>
                 </label>
                 <div class="col-md-6">
                   <input type="password" class="form-control" [(ngModel)]="user.password" name="password" placeholder="" [disabled]="mode == 'true'">
+                </div>
+              </div> 
+
+              <div class="form-group">
+                <label class="col-md-3 control-label">GroupInfo</label>
+                <div class="col-md-6">
+                  <angular2-multiselect [data]="groupInfoArray" [(ngModel)]="groupInfoTags" name="groupInfoTags" [settings]="dropdownSettingsGroup"
+                    (onSelect)="onItemSelect($event)" (onDeSelect)="OnItemDeSelect($event)" (onSelectAll)="onSelectAll($event)"
+                    (onDeSelectAll)="onDeSelectAll($event)">
+                  </angular2-multiselect>
                 </div>
               </div>
 
@@ -196,11 +190,14 @@
                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                   <a class="btn btn-primary" (click)="goBack()">Cancel</a>
 
-                  <input type="submit" class="btn btn-success" value="Submit"  name="submit" [disabled]="(!iSSubmitEnable == false|| mode == false || myNewForm.form.dirty == true)?false:true">  
+                  <input type="submit" class="btn btn-success" value="Submit" name="submit" [disabled]="(!isSubmitEnable == false|| mode == false || myNewForm.form.dirty == true)?false:true">
 
                 </div>
               </div>
             </form>
+          </div>
+          <div *ngIf="showGraph">
+            {{"Knowledge Graph"}}
           </div>
         </div>
       </div>
