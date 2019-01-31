@@ -129,8 +129,8 @@ export class KnowledgeGraphComponent {
             .on("mouseout", function (d) {
                 $(".tooltipcustom").css("display", "none");
                 this.nodeDetail = null;
-
             })
+            .on('contextmenu', function (d) { angularThis.rightClickNode(d,this.i,angularThis) })
 
 
         nodeEnter.append('circle')
@@ -468,4 +468,57 @@ export class KnowledgeGraphComponent {
             this.getGraphData(this.uuid, this.version)
         }
     }
+    rightClickNode(d, i,angularThis) {
+        angularThis.d3.event.preventDefault();
+        var Nodedata = d;
+        if(Nodedata.data.metaRef.ref.uuid.indexOf("_") !=-1){
+            return false;
+        }
+        angularThis.d3.selectAll('.context-menu').data([1])
+            .enter()
+            .append('div')
+            .attr('class', 'context-menu');
+
+        // close menu
+        angularThis.d3.select('body').on('click.context-menu', function () {
+            angularThis.d3.select('.context-menu').style('display', 'none');
+        });
+        
+        // this gets executed when a contextmenu event occurs
+        angularThis.d3.selectAll('.context-menu')
+            .html('')
+            .append('ul')
+            .selectAll('li')
+            .data(angularThis.menus).enter()
+            .append('li')
+            .on('click', function (d) {
+            
+                angularThis.navigateTo(Nodedata, d);
+                angularThis.d3.select('.context-menu').style('display', 'none');
+            })
+            .text(function (d) {
+                return d;
+            });
+
+            angularThis.d3.select('.context-menu').style('display', 'none');
+
+        // show the context menu
+        angularThis.d3.select('.context-menu')
+            .style('left', (this.d3.event.pageX - 2) + 'px')
+            .style('top', (this.d3.event.pageY - 2) + 'px')
+            .style('display', 'block');
+            angularThis.d3.event.preventDefault();
+    }
+    navigateTo(data, d) {debugger
+        
+            if (d == "Show Details" && data.metaRef.ref.type != null && data.metaRef.ref.type != "attributes") {
+                data.metaRef.ref.name = data.name
+                data.metaRef.ref.type = data.metaRef.ref.type
+                // dagMetaDataService.navigateTo(data.metaRef.ref);
+            } else if (d == "Show Details" && data.metaRef.ref.type != null && data.metaRef.ref.type == "attributes") {
+                data.metaRef.ref.name = data.name
+                data.metaRef.ref.type = data.metaRef.ref.type
+                // dagMetaDataService.navigateTo(data.parent.metaRef.ref);
+            }
+        }
 }
