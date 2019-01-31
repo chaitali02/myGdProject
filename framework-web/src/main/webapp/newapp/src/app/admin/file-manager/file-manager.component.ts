@@ -43,7 +43,7 @@ export class FileManagerComponent implements OnInit {
   allStatus: any[];
   uploadfileName: any;
   dataSourceArray: any;
-  breadcrumbDataFrom : any[];
+  breadcrumbDataFrom: any[];
   constructor(private _location: Location, private activatedRoute: ActivatedRoute, private http: Http, private config: AppConfig, public router: Router, public metaconfig: AppMetadata, public apphelper: AppHepler, private datePipe: DatePipe, private activeroute: ActivatedRoute, private _commonService: CommonService, private _commonListService: CommonListService, private _fileManagerService: FileManagerService) {
     this.breadcrumbDataFrom = [{
       "caption": "Admin",
@@ -55,7 +55,7 @@ export class FileManagerComponent implements OnInit {
     }
     ];
     this.active = " ";
-    this.status =null;
+    this.status = null;
     this.rowData1 = null;
     this.execname = {};
     this.startDate = "";
@@ -222,6 +222,7 @@ export class FileManagerComponent implements OnInit {
     this._RowData = response;
     this.rowData1 = this._RowData;
   }
+
   formatPublish(data) {
     if (data == "Y") {
       return "Yes"
@@ -232,6 +233,8 @@ export class FileManagerComponent implements OnInit {
   }
 
   upload() {
+    this.uploadfileName = "";
+    this.dataSource = {};
     this.dialogBoxVisible = true;
     this._fileManagerService.getDatasourceByType("FILE").subscribe(
       response => { this.onSuccessgetDatasourceByType(response) },
@@ -267,22 +270,31 @@ export class FileManagerComponent implements OnInit {
 
   submitDialogBox() {
     this._fileManagerService.uploadFile(this.fileData, this.fileName, null, null, null, "csv", this.dataSource.uuid).subscribe(
-      response => {
-        this.getBaseEntityByCriteria();
-        if (response["code"] !== 404) {
-          this.msgs = [];
-          this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'file uploaded Successfully' });
-          setTimeout(() => { this.goBack() }, 1000);
-        }
-        else if(response["code"] == 404){
-          this.msgs = [];
-          this.msgs.push({ severity: 'info', summary: 'Failed Message', detail: 'file already uploaded' });
-          setTimeout(() => { this.goBack() }, 1000);
-        }
-      },
-      error => { console.log("Error ::",error) }
+      response => {this.onSuccessUploadFile(response)},
+      errorResponse => {this.onerrorResponse(errorResponse)}
     )
     this.dialogBoxVisible = false;
+  }
+
+  onSuccessUploadFile(response) {
+    if (response["code"] !== 404) {
+      this.msgs = [];
+      this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'file uploaded Successfully' });
+      setTimeout(() => { this.goBack() }, 1000);
+    }
+    this.getBaseEntityByCriteria();
+  }
+
+  onerrorResponse(errorResponse){
+    let bodyObj = JSON.parse(errorResponse["_body"]);
+
+    if (bodyObj.code == 404) {
+      let msgDetail = bodyObj["message"];
+      this.msgs = [];
+      this.msgs.push({severity:'info', summary:'Info Message', detail:msgDetail});
+      setTimeout(() => { this.goBack() }, 1000);
+    }
+    this.getBaseEntityByCriteria();
   }
 
   download(rowUUid) {

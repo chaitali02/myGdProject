@@ -9,6 +9,8 @@ import { Location, DatePipe } from '@angular/common';
 	templateUrl: './ingestExec.template.html'
 })
 export class IngestExecComponent {
+  showGraph: boolean;
+  isHomeEnable: boolean;
 	statusList: any[];
 	selectedVersion: any;
 	VersionList: any[];
@@ -24,15 +26,17 @@ export class IngestExecComponent {
 	version: any;
 	breadcrumbDataFrom: any;
 	constructor(private datePipe: DatePipe,private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
-		this.ingestData = {};
+    this.ingestData = {};
+    this.isHomeEnable = false;
+    this.showGraph = false;
 		this.activatedRoute.params.subscribe((params: Params) => {
       this.id = params['id'];
       this.version = params['version'];
       this.mode = params['mode'];
     }); 
     if(this.mode !== undefined) {   
-      this.getOneByUuidAndVersion(this.id,this.version)
       this.getAllVersionByUuid();
+      this.getOneByUuidAndVersion(this.id,this.version)
     }		
 		
 		this.breadcrumbDataFrom=[{
@@ -77,7 +81,7 @@ export class IngestExecComponent {
     var statusList = [];
     for (let i = 0; i < response.statusList.length; i++) {
       d = this.datePipe.transform(new Date(response.statusList[i].createdOn), "EEE MMM dd HH:mm:ss Z yyyy");
-      d = d.toString().replace("+0530", "IST");
+      d = d.toString().replace("GMT+5:30", "IST");
       statusList[i] = response.statusList[i].stage + "-" + d;
     }
 		this.statusList = statusList
@@ -128,6 +132,14 @@ export class IngestExecComponent {
       this.ingestData.published = 'N';
     }
 	}
-	
+  showMainPage() {
+    this.isHomeEnable = false
+    // this._location.back();
+    this.showGraph = false;
+  }
 
+  showDagGraph(uuid, version) {
+    this.isHomeEnable = true;
+    this.showGraph = true;
+  }
 }

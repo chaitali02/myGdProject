@@ -57,7 +57,8 @@ import { ResultModule } from '../shared/module/result.module';
         StorageServiceModule,
         DialogModule,
         DragDropModule,
-        ResultModule        
+        ResultModule
+      
     ],
     declarations: [
         DataPreparationComponent,

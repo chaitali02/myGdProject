@@ -29,12 +29,13 @@ import { CommonListService } from "../../common-list/common-list.service";
   providers: [DatePipe]
 })
 export class SettingsComponent implements OnInit {
+  isInprogessStatus: boolean;
+  isCheckingStatus: boolean;
   isPublish: boolean;
   isActive: boolean;
   showRestore: boolean;
   serverStatus: string;
   statusView: boolean;
-
   rowUUid: any;
   startDate: any;
   execname: any;
@@ -289,6 +290,7 @@ export class SettingsComponent implements OnInit {
       this.ShowView = false
       this.graphView = false
       this.statusView = true
+      this.getProcessStatus();
     }
   }
   addRow() {
@@ -587,6 +589,7 @@ export class SettingsComponent implements OnInit {
       error => console.log("Error :: " + error)
       )
   }
+
   export(rowUUid, rowName) {
     this._commonListService.export(rowUUid, 'appconfig')
       .subscribe(
@@ -602,7 +605,61 @@ export class SettingsComponent implements OnInit {
       error => console.log("Error :: " + error)
       )
   }
-  add(){
+
+  add() {
     this.router.navigate(['app/admin/settings/settingsDetail']);
+  }
+
+  getProcessStatus() {
+    this.isCheckingStatus = true;
+    this.serverStatus = "Checking Status";
+    this._settingsService.getProcessStatus().subscribe(
+      response => { this.onSuccessgetProcessStatus(response) },
+      error => { this.onErrorgetProcessStatus(error) })
+  }
+
+  onSuccessgetProcessStatus(response) {
+    this.isCheckingStatus = false;
+    this.serverStatus = "Running";
+  }
+
+  onErrorgetProcessStatus(error) {
+    this.isCheckingStatus = false;
+    this.serverStatus = "Not Running";
+  }
+
+  startServer() {
+    this.isInprogessStatus = true;
+    this._settingsService.startProcess().subscribe(
+      response => { this.onSuccessstartServer(response) },
+      error => { this.onErrorstartServer(error) })
+  }
+
+  onSuccessstartServer(response) {
+    this.isInprogessStatus = false;
+    this.serverStatus = "Checking Status"
+    this.getProcessStatus();
+  }
+
+  onErrorstartServer(error) {
+    this.isInprogessStatus = false;
+    this.getProcessStatus();
+  }
+
+  stopProcess() {
+    this.isInprogessStatus = true;
+    this._settingsService.stopProcess()
+      .subscribe(response => { this.onSuccessstopProcess(response) },
+      error => { this.onErrorstopProcess(error) })
+  }
+
+  onSuccessstopProcess(response) {
+    this.isInprogessStatus = false;
+    this.getProcessStatus();
+  }
+
+  onErrorstopProcess(error) {
+    this.isInprogessStatus = false;
+    this.getProcessStatus();
   }
 }

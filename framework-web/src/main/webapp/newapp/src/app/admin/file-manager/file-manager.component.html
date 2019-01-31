@@ -106,7 +106,7 @@
     </div>
     <div class="actions">
       <a (click)="upload()" class="btn btn-default btn-sm">
-        <i class="fa fa-plus"></i> Upload 
+        <i class="fa fa-plus"></i> Upload
       </a>
     </div>
   </div>
@@ -135,13 +135,13 @@
               {{formatActive(active[colactive.field])}}
             </ng-template>
           </p-column> -->
-          <p-column field="published"  header="Published" [sortable]="true" [style]="{'text-align':'center'}">
-              <ng-template let-colpublished let-published="rowData" pTemplate="body">
-                {{formatPublish(published[colpublished.field])}}
-  
-              </ng-template>
+          <p-column field="published" header="Published" [sortable]="true" [style]="{'text-align':'center'}">
+            <ng-template let-colpublished let-published="rowData" pTemplate="body">
+              {{formatPublish(published[colpublished.field])}}
+
+            </ng-template>
           </p-column>
-          <p-column field="status.stage"  header="Status" [sortable]="true" [style]="{'text-align':'center'}">
+          <p-column field="status.stage" header="Status" [sortable]="true" [style]="{'text-align':'center'}">
             <ng-template let-colstatus let-statused="rowData" pTemplate="body">
               <div class="label-sm label-success" *ngIf="statused.status!=null" [ngStyle]="{'width':'88%','font-size':'13px','padding':'2px','color':'white','margin': '0 auto','font-weight':'300','background-color':statused.status.color}">{{statused.status.stage}}</div>
               <div class="label-sm label-success" *ngIf="statused.status==null" [ngStyle]="{'width':'88%','font-size':'13px','padding':'2px','color':'white','margin': '0 auto','font-weight':'300','background-color':'#36c6d3'}">-N-A-</div>
@@ -173,46 +173,32 @@
 </div>
 
 <p-dialog header="File Upload" [(visible)]="dialogBoxVisible" [modal]="true" [responsive]="true" [width]="450" [resizable]="true"
-[baseZIndex]="1000" [contentStyle]="{'height':'200px'}">
+  [baseZIndex]="1000" [contentStyle]="{'height':'180px'}">
 
-<div class="form-group col">
-  <label class="control-label col-md-4 col-sm-3 col-xs-12">Data Source</label>
-  <div class="col-md-6 col-sm-6 col-xs-12">
-    <p-dropdown [options]="dataSourceArray" [(ngModel)]="dataSource" name="dataSource+{{i}}" [style]="{'width':'200px','padding':'3px'}"
-      [filter]="true" placeholder="--Select--">
-    </p-dropdown>
-  </div>
-</div>
-&nbsp;
-&nbsp;
-<div class= "col">
-  <div class="form-group" style="display : inline">
-    <div class="col-md-4"><label class="control-label ">Select file</label></div>
-    <div class="col-md-6 col-sm-6 col-xs-12">
-      <input type="file"  #fileupload [(ngModel)]="uploadfileName" accept=".csv"  [disabled]="mode == 'true'"  (change)="fileChange(fileupload.files)"/>
-      {{fileupload.myFile}}
+  <div class="form-group">
+    <div class="row">
+      <label class="control-label col-md-4 col-sm-4 col-xs-12">Data Source</label>
+      <div class="col-md-6 col-sm-6 col-xs-12">
+        <p-dropdown [options]="dataSourceArray" [(ngModel)]="dataSource" name="dataSource+{{i}}" [style]="{'width':'200px','padding':'3px'}"
+          [filter]="true" placeholder="--Select--">
+        </p-dropdown>
+      </div>
     </div>
-    <!-- <input type="file"  #fileupload [(ngModel)]="myFile" name="myFile" accept=".zip" (change)="fileChange(fileupload.files)"/>                     -->
-    <!-- {{fileupload.myFile}} -->
-
-    <!-- <div class="col-md-2">
-       <span><i class="fa fa-folder"></i></span> 
-    </div> -->
-    <!-- <div class="col-md-6">
-      <input type="file" #fileupload [(ngModel)]="myFile" name="myFile" accept=".zip" (change)="fileChange(fileupload.files)" /> {{fileupload.myFile}}
-    </div> -->
-    <!-- <p-dropdown [options]="dialogAttriNameArray" [(ngModel)]="dialogAttributeName" name="dialogAttributeName+{{i}}" [style]="{'width':'200px','padding':'3px'}"
-          [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" dataKey="uuid">
-        </p-dropdown> -->
-
   </div>
-</div>
-<p-footer>
-  <div style="padding-top: 10px;">
-    <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-1">
-      <a class="btn btn-primary" (click)="cancelDialogBox()">Cancel</a>
+
+  <div class="form-group">
+    <div class="row">
+      <label class="control-label col-md-4 col-sm-4 col-xs-12">Select file</label>
+      <div class="col-md-6 col-sm-6 col-xs-12">
+        <input type="file" #fileupload [(ngModel)]="uploadfileName" accept=".csv" [disabled]="mode == 'true'" (change)="fileChange(fileupload.files)"
+        /> {{fileupload.myFile}}
+      </div>
+    </div>
+  </div>
+  <p-footer>
+    <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3" style="padding-bottom : 10px">
+      <a class="btn dark btn-outline" (click)="cancelDialogBox()">Cancel</a>
       <input type="button" class="btn btn-success" value="Submit" name="submit" (click)="submitDialogBox()">
     </div>
-  </div>
-</p-footer>
+  </p-footer>
 </p-dialog>

@@ -14,6 +14,8 @@ import { AppHepler } from '../../../app.helper';
   styleUrls: []
 })
 export class BatchExecComponent implements OnInit {
+  showGraph: boolean;
+  isHomeEnable: boolean;
 
   breadcrumbDataFrom: any;
   id: any;
@@ -47,6 +49,8 @@ export class BatchExecComponent implements OnInit {
   constructor(private datePipe: DatePipe, public apphelper: AppHepler, private _location: Location, public statusDefs: AppMetadata, public metaconfig: AppMetadata, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
     this.showResultModel = true;
     this.batchResultData = {};
+    this.isHomeEnable = false;
+    this.showGraph = false;
     this.operatorInfo = {};
     this.operatorType = null;
     this.operatorName = null;
@@ -74,7 +78,6 @@ export class BatchExecComponent implements OnInit {
     if (this.mode !== undefined) {
       this.getOneByUuidAndVersion(this.id, this.version)
       this.getAllVersionByUuid()
-
     }
   }
 
@@ -94,24 +97,23 @@ export class BatchExecComponent implements OnInit {
     else {
       this.batchResultData.published = 'N';
     }
-
   }
 
   getOneByUuidAndVersion(id, version) {
     this._commonService.getOneByUuidAndVersion(id, version, 'batchexec')
       .subscribe(
-        response => {
-          this.onSuccessgetOneByUuidAndVersion(response)
-        },
-        error => console.log("Error :: " + error));
+      response => {
+        this.onSuccessgetOneByUuidAndVersion(response)
+      },
+      error => console.log("Error :: " + error));
   }
   getAllVersionByUuid() {
     this._commonService.getAllVersionByUuid('batchexec', this.id)
       .subscribe(
-        response => {
-          this.OnSuccesgetAllVersionByUuid(response)
-        },
-        error => console.log("Error :: " + error));
+      response => {
+        this.OnSuccesgetAllVersionByUuid(response)
+      },
+      error => console.log("Error :: " + error));
   }
 
   onSuccessgetOneByUuidAndVersion(response) {
@@ -135,7 +137,7 @@ export class BatchExecComponent implements OnInit {
     this.tags = response['tags'];
 
     this.breadcrumbDataFrom[2].caption = this.batchResultData.name;
-    
+
     var execList = [];
     for (let i = 0; i < response.execList.length; i++) {
       var execlist = {};
@@ -160,14 +162,16 @@ export class BatchExecComponent implements OnInit {
     }
     this.VersionList = temp
   }
+
   onVersionChange() {
     this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, 'batchexec')
       .subscribe(
-        response => {
-          this.onSuccessgetOneByUuidAndVersion(response)
-        },
-        error => console.log("Error :: " + error));
+      response => {
+        this.onSuccessgetOneByUuidAndVersion(response)
+      },
+      error => console.log("Error :: " + error));
   }
+
   public goBack() {
     this._location.back();
   }
@@ -177,14 +181,25 @@ export class BatchExecComponent implements OnInit {
     var innerUuid = innerData.uuid;
     var innerVersion = innerData.version;
     this.routerUrl = this.metaconfig.getMetadataDefs(innerType)['detailState']
-    this.router.navigate(["../../../../../list/dagExec/JobMonitoring/"+innerType, innerUuid, innerVersion, 'true'], { relativeTo: this.activatedRoute });
+    this.router.navigate(["../../../../../list/dagExec/JobMonitoring/" + innerType, innerUuid, innerVersion, 'true'], { relativeTo: this.activatedRoute });
   }
 
-  showview(uuid: string, version:string){
+  showview(uuid: string, version: string) {
     this.showExec = true
   }
 
-  refershGrid(){
+  refershGrid() {
     console.log("refresh Call...");
+  }
+
+  showMainPage() {
+    this.isHomeEnable = false
+    // this._location.back();
+    this.showGraph = false;
+  }
+
+  showDagGraph(uuid, version) {
+    this.isHomeEnable = true;
+    this.showGraph = true;
   }
 }

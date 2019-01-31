@@ -1,3 +1,4 @@
+import { MetadataService } from './../metadata/services/metadata.service';
 import { Settings } from './../metadata/domain/domain.settings';
 import { AdminComponent } from './admin.component';
 import { TagInputModule } from 'ngx-chips';
@@ -93,7 +94,8 @@ import { DialogModule } from 'primeng/components/dialog/dialog';
         CommonListService,
         MigrationAssistService,
         ApplicationService,
-        FileManagerService
+        FileManagerService,
+        MetadataService
     ]
 })
  

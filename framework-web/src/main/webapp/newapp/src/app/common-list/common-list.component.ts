@@ -34,6 +34,7 @@ interface FileReaderEventTarget extends EventTarget {
 })
 
 export class CommonListComponent {
+  rowLocked: any;
   parentType: any;
   selectAllAttributeRow: any;
   paramtableArray: any[];
@@ -120,7 +121,7 @@ export class CommonListComponent {
   msgs: Message[] = [];
   items: any
   typeSimple: string[];
-  nonExecTypes: any = ['datapod', 'dataset', 'expression', 'filter', 'formula', 'function', 'load', 'relation', 'algorithm', 'distribution', 'paramlist', 'paramset', 'training', 'prediction', 'operator', 'activity', 'application', 'datasource', 'datastore', 'group', 'privilege', 'role', 'session', 'user', 'vizpod', 'dashboard', 'profileexec', 'profilegroupexec', 'ruleexec', 'rulegroupexec', 'dqexec', 'dqgroupexec', 'dagexec', 'mapexec', 'loadexec', 'vizexec', 'trainexec', 'predictexec', 'simulateexec', 'downloadexec', 'uploadexec', 'batchexec', 'report', 'reportexec','reconexec','recongroupexec','ingestexec','ingestgroupexec','mapexec'];
+  nonExecTypes: any = ['datapod', 'dataset', 'expression', 'filter', 'formula', 'function', 'load', 'relation', 'algorithm', 'distribution', 'paramlist', 'paramset', 'training', 'prediction', 'operator', 'activity', 'application', 'datasource', 'datastore', 'group', 'privilege', 'role', 'session', 'user', 'vizpod', 'dashboard', 'profileexec', 'profilegroupexec', 'ruleexec', 'rulegroupexec', 'dqexec', 'dqgroupexec', 'dagexec', 'mapexec', 'loadexec', 'vizexec', 'trainexec', 'predictexec', 'simulateexec', 'downloadexec', 'uploadexec', 'batchexec', 'report', 'reportexec', 'reconexec', 'recongroupexec', 'ingestexec', 'ingestgroupexec', 'mapexec'];
   // nonExecTypes:any = ['datapod','dataset','expression','filter','formula','function','load','relation','algorithm','paramlist','paramset','training','activity','application','datasource','datastore','group','privilege','role','session','user','vizpod','dashboard','profileexec','profilegroupexec','ruleexec','rulegroupexec','dqexec','dqgroupexec','dagexec','mapexec','loadexec','vizexec','trainexec'];
   allStatus = [
     {
@@ -405,7 +406,7 @@ export class CommonListComponent {
       this.routerUrl = this.metaconfig.getMetadataDefs(this.type)['graphState']
       this.router.navigate(["./" + _moduleUrl + "/" + this.routerUrl, uuid, version, 'true'], { relativeTo: this.activeroute });
     }
-    else if (this.type == "ingestexec" ||this.type == "ingestgroupexec" || this.type == "batchexec" || this.type == "dagexec" || this.type == "profileexec" || this.type == "profilegroupexec" || this.type == 'ruleexec' || this.type == 'rulegroupexec' || this.type == 'dqexec' || this.type == "dqgroupexec" || this.type == "trainexec" || this.type == "recongroupexec" || this.type == "reconexec") {
+    else if (this.type == "ingestexec" || this.type == "ingestgroupexec" || this.type == "batchexec" || this.type == "dagexec" || this.type == "profileexec" || this.type == "profilegroupexec" || this.type == 'ruleexec' || this.type == 'rulegroupexec' || this.type == 'dqexec' || this.type == "dqgroupexec" || this.type == "trainexec" || this.type == "recongroupexec" || this.type == "reconexec") {
       let _moduleUrl = this.metaconfig.getMetadataDefs(this.type)['moduleState']
       this.routerUrl = this.metaconfig.getMetadataDefs(this.type)['resultState']
       this.router.navigate(["./" + _moduleUrl + "/" + this.routerUrl, uuid, version, this.type, 'true'], { relativeTo: this.activeroute });
@@ -591,13 +592,13 @@ export class CommonListComponent {
     if (data == "okExecute()") {
 
       if (this.type == "rule") {
-        this._commonService.getOneByUuidAndVersion(this.executeId,this.executeVersion,'rule').subscribe
-        (
+        this._commonService.getOneByUuidAndVersion(this.executeId, this.executeVersion, 'rule').subscribe
+          (
           response => {
-            if(response["paramlist"]==null){
+            if (response["paramlist"] == null) {
               this.okExecute();
             }
-            else{
+            else {
               this.getParams()
             }
           },
@@ -983,6 +984,13 @@ export class CommonListComponent {
     if (this.type == 'ingestexec') {
       this.items[0].disabled = true;
     }
+    if (data.locked == 'Y') {
+      this.items[1].disabled = true;
+    }else if(data.locked == 'N' && this.type == 'session' && this.type == 'load'){
+      this.items[1].disabled = false;
+    }
+
+
     this.rowUUid = data.uuid
     this.rowVersion = data.version
     this.rowID = data.id
@@ -1010,7 +1018,6 @@ export class CommonListComponent {
       response => { this.OnSucessgetAllLatest(response) },
       error => console.log("Error :: " + error)
       )
-
   }
   OnSucessgetAllLatest(response) {
 
@@ -1037,8 +1044,8 @@ export class CommonListComponent {
       response => { this.OnSucessgetAllLatestUser(response) },
       error => console.log("Error :: " + error)
       )
-
   }
+
   OnSucessgetAllLatestUser(response) {
     this.allUserName = []
     let temp = []
@@ -1065,8 +1072,8 @@ export class CommonListComponent {
   selectAllRows() {
     this.gridOptions.api.selectAll();
   }
-  onSearchCriteria() {
 
+  onSearchCriteria() {
     let startDateUtcStr = "";
     let endDateUtcStr = "";
     console.log(this.execname.label);
@@ -1091,7 +1098,6 @@ export class CommonListComponent {
       response => { this.getGrid(response) },
       error => console.log("Error :: " + error)
       )
-
   }
   onChange(value) {
     this.selectedType = value;

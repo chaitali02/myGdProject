@@ -3,8 +3,8 @@
 <p-growl [(value)]="msgs"></p-growl>
 <p-tabView (onChange)="onTabChange($event)">
 
-    <p-tabPanel *ngFor="let tab of tabs" header="{{tab.caption}}" class="customTabview">
-
+    <p-tabPanel *ngFor="let tab of tabs; let i = index" header="{{tab.caption}}" class="customTabview"  [selected]="i == 0">
+        <!-- <p-tabPanel *ngFor="let tab of tabs;  let i = index" header="{{tab.caption}}" [selected]="i == 0"> -->
         <div class="portlet box green">
             <div class="portlet-title">
                 <div class="caption">

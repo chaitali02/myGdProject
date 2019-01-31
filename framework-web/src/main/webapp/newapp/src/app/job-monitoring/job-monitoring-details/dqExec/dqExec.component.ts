@@ -5,7 +5,7 @@ import { AppConfig } from '../../../app.config';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { CommonService } from '../../../metadata/services/common.service';
 import { Version } from '../../../shared/version';
-
+import * as sqlFormatter from "sql-formatter";
 
 @Component({
   selector: 'app-dqExec',
@@ -13,162 +13,183 @@ import { Version } from '../../../shared/version';
   styleUrls: []
 })
 export class DqExecComponent implements OnInit {
+  displayDialogBox: boolean;
+  formattedQuery: any;
+  showGraph: boolean;
+  isHomeEnable: boolean;
 
   breadcrumbDataFrom: any;
-  id : any;
-  version : any;
+  id: any;
+  version: any;
   VersionList: SelectItem[] = [];
   selectedVersion: Version;
-  mode : any;
-  dqResultData : any;
-  uuid : any;
-  name : any;
-  createdBy : any;
-  createdOn : any;
-  tags : any;
-  desc : any;
-  active : any;
-  published : any;
-  statusList : any;
-  dependsOn : any;
-  refKeyList : any;
-  results : any;
-  exec : any;
-  showResultModel : any;
+  mode: any;
+  dqResultData: any;
+  uuid: any;
+  name: any;
+  createdBy: any;
+  createdOn: any;
+  tags: any;
+  desc: any;
+  active: any;
+  published: any;
+  statusList: any;
+  dependsOn: any;
+  refKeyList: any;
+  results: any;
+  exec: any;
+  showResultModel: any;
 
-  constructor(private datePipe: DatePipe,private _location: Location,config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService){
-
+  constructor(private datePipe: DatePipe, private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
     this.showResultModel = true;
     this.dqResultData = {};
+    this.isHomeEnable = false;
+    this.showGraph = false;
     this.refKeyList = [];
-    this.breadcrumbDataFrom=[{
-        "caption":"Job Monitoring ",
-        "routeurl":"/app/jobMonitoring"
-      },
-      {
-        "caption":"DQ Group Exec ",
-        "routeurl":"/app/list/dqExec"
-  
-      },
-      {
-        "caption":"",
-        "routeurl":null
-  
-      }
-      ]
-      
+    this.breadcrumbDataFrom = [{
+      "caption": "Job Monitoring ",
+      "routeurl": "/app/jobMonitoring"
+    },
+    {
+      "caption": "DQ Group Exec ",
+      "routeurl": "/app/list/dqExec"
+    },
+    {
+      "caption": "",
+      "routeurl": null
     }
+    ]
+  }
 
-    ngOnInit() {
-      this.activatedRoute.params.subscribe((params: Params) => {
-        this.id = params['id'];
-        this.version = params['version'];
-        this.mode = params['mode'];
-      }); 
-      if(this.mode !== undefined) { 
-      this.getOneByUuidAndVersion(this.id,this.version)
+  ngOnInit() {
+    this.activatedRoute.params.subscribe((params: Params) => {
+      this.id = params['id'];
+      this.version = params['version'];
+      this.mode = params['mode'];
+    });
+    if (this.mode !== undefined) {
+      this.getOneByUuidAndVersion(this.id, this.version)
       this.getAllVersionByUuid()
-      }
     }
+  }
 
-    onChangeActive(event) {
-      if(event === true) {
-        this.dqResultData.active = 'Y';
-      }
-      else {
-        this.dqResultData.active = 'N';
-      }
+  onChangeActive(event) {
+    if (event === true) {
+      this.dqResultData.active = 'Y';
     }
-
-    onChangePublished(event) {
-      if(event === true) {
-        this.dqResultData.published = 'Y';
-      }
-      else {
-        this.dqResultData.published = 'N';
-      }
+    else {
+      this.dqResultData.active = 'N';
     }
-    
+  }
 
-    getOneByUuidAndVersion(id,version){
-      this._commonService.getOneByUuidAndVersion(id,version,'dqexec')
+  onChangePublished(event) {
+    if (event === true) {
+      this.dqResultData.published = 'Y';
+    }
+    else {
+      this.dqResultData.published = 'N';
+    }
+  }
+
+  getOneByUuidAndVersion(id, version) {
+    this._commonService.getOneByUuidAndVersion(id, version, 'dqexec')
       .subscribe(
-      response =>{//console.log(response)},
-        this.onSuccessgetOneByUuidAndVersion(response)},
-      error => console.log("Error :: " + error)); 
-    }
-
-    getAllVersionByUuid(){
-      this._commonService.getAllVersionByUuid('dqexec',this.id)
-      .subscribe(
-      response =>{
-        this.OnSuccesgetAllVersionByUuid(response)},
+      response => {//console.log(response)},
+        this.onSuccessgetOneByUuidAndVersion(response)
+      },
       error => console.log("Error :: " + error));
-    }
+  }
 
-    onSuccessgetOneByUuidAndVersion(response){
+  getAllVersionByUuid() {
+    this._commonService.getAllVersionByUuid('dqexec', this.id)
+      .subscribe(
+      response => {
+        this.OnSuccesgetAllVersionByUuid(response)
+      },
+      error => console.log("Error :: " + error));
+  }
+
+  onSuccessgetOneByUuidAndVersion(response) {
     const version: Version = new Version();
     version.label = response['version'];
     version.uuid = response['uuid'];
-    this.selectedVersion=version
-    this.dqResultData=response
-    this.createdBy=this.dqResultData.createdBy.ref.name;
-    this.dependsOn=this.dqResultData.dependsOn.ref.name;
+    this.selectedVersion = version
+    this.dqResultData = response
+    this.createdBy = this.dqResultData.createdBy.ref.name;
+    this.dependsOn = this.dqResultData.dependsOn.ref.name;
 
-   
     var d
     var statusList = [];
     for (let i = 0; i < response.statusList.length; i++) {
       d = this.datePipe.transform(new Date(response.statusList[i].createdOn), "EEE MMM dd HH:mm:ss Z yyyy");
-      d = d.toString().replace("+0530", "IST");
+      d = d.toString().replace("GMT+5:30", "IST");
       statusList[i] = response.statusList[i].stage + "-" + d;
     }
     this.statusList = statusList
-  
+
     let refKeyListObj = [];
-    for(let i=0;i<response.refKeyList.length;i++){
+    for (let i = 0; i < response.refKeyList.length; i++) {
 
       let ref = {};
-        ref["type"] = response.refKeyList[i].type;
-        ref["uuid"] = response.refKeyList[i].uuid;
-        ref["name"] = response.refKeyList[i].name;
-        
-        refKeyListObj[i] = ref["type"]+"-"+ref["name"];        
+      ref["type"] = response.refKeyList[i].type;
+      ref["uuid"] = response.refKeyList[i].uuid;
+      ref["name"] = response.refKeyList[i].name;
+
+      refKeyListObj[i] = ref["type"] + "-" + ref["name"];
     }
-   
-    this.refKeyList =refKeyListObj;
+
+    this.refKeyList = refKeyListObj;
 
     this.published = response['published'];
-    if(this.published === 'Y') { this.published = true; } else { this.published = false; }
+    if (this.published === 'Y') { this.published = true; } else { this.published = false; }
     this.active = response['active'];
-    if(this.active === 'Y') { this.active = true; } else { this.active = false; }
+    if (this.active === 'Y') { this.active = true; } else { this.active = false; }
     this.tags = response['tags'];
- 
-    this.breadcrumbDataFrom[2].caption=this.dqResultData.name;
+
+    this.breadcrumbDataFrom[2].caption = this.dqResultData.name;
   }
 
-OnSuccesgetAllVersionByUuid(response) {
-    var temp=[]
+  OnSuccesgetAllVersionByUuid(response) {
+    var temp = []
     for (const i in response) {
-      let ver={};
-      ver["label"]=response[i]['version'];
-      ver["value"]={};
-      ver["value"]["label"]=response[i]['version'];      
-      ver["value"]["uuid"]=response[i]['uuid']; 
-      temp[i]=ver;
+      let ver = {};
+      ver["label"] = response[i]['version'];
+      ver["value"] = {};
+      ver["value"]["label"] = response[i]['version'];
+      ver["value"]["uuid"] = response[i]['uuid'];
+      temp[i] = ver;
     }
-    this.VersionList=temp
+    this.VersionList = temp
   }
-  onVersionChange(){ 
-    this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid,this.selectedVersion.label,'dqexec')
-    .subscribe(
-    response =>{//console.log(response)},
-      this.onSuccessgetOneByUuidAndVersion(response)},
-    error => console.log("Error :: " + error)); 
+  onVersionChange() {
+    this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, 'dqexec')
+      .subscribe(
+      response => {//console.log(response)},
+        this.onSuccessgetOneByUuidAndVersion(response)
+      },
+      error => console.log("Error :: " + error));
   }
-
 
   public goBack() {
     this._location.back();
+  }
+
+  showMainPage() {
+    this.isHomeEnable = false;
+    this.showGraph = false;
+  }
+  
+  showDagGraph(uuid, version) {
+    this.isHomeEnable = true;
+    this.showGraph = true;
+  }
+
+  showSqlFormater() {
+    this.formattedQuery = sqlFormatter.format(this.dqResultData.exec);
+    this.displayDialogBox = true;
+  }
+  
+  cancelDialogBox(){
+    this.displayDialogBox = false;
   }
 }

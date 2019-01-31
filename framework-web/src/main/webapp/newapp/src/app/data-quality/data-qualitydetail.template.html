@@ -484,7 +484,7 @@
                           <option *ngFor="let app of datatype" [ngValue]="app">{{app}} </option>
                         </select> -->
                         <p-dropdown [options]="datatype" [(ngModel)]="dqdata.selectDataType" name="selectDataType+{{i}}" [style]="{'width':'200px','padding':'3px'}"
-                          [disabled]="mode == 'true' || !IsSelectSoureceAttr" [filter]="true" placeholder="--Select--" (change)="OnselectType()">
+                          [disabled]="mode == 'true' || !IsSelectSoureceAttr" [filter]="true" placeholder="--Select--" (onChange)="OnselectType()">
                         </p-dropdown>
                       </div>
                     </div>
@@ -492,7 +492,7 @@
                     <div class="form-group taginput">
                       <label class="control-label col-md-3">Date Format Check</label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
-                        <select class="form-control" [(ngModel)]="selectdatefromate" name="selectdatefromate" [disabled]="mode == 'true' || !IsSelectSoureceAttr || !IsSelectDataType">
+                        <select class="form-control" [(ngModel)]="selectdatefromate" name="selectdatefromate" [disabled]="mode == 'true' || !IsSelectSoureceAttr || !IsSelectDataType ">
                           <option *ngFor="let app of datefromate" [ngValue]="app">{{app}} </option>
                         </select>
                       </div>

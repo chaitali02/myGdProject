@@ -250,12 +250,22 @@
             </div>
           </div>
           <div class="row">
-            <div class=" col-md-3 col-md-offset-3" style="padding-top : 10px ; padding-bottom :10px">
+            <div class=" col-md-2 col-md-offset-3" style="padding-top : 10px ; padding-bottom :10px">
               <!-- <div class="col-md-4 col-sm-6 col-xs-12 col-md-offset-3"> -->
-              <input type="submit" class="btn btn-success" value="Start" name="submit">
-              <input type="submit" class="btn btn-success" value="Stop" name="submit1"> &nbsp; &nbsp;
+              <input type="submit" class="btn btn-success" value="Start" name="submit" (click)="startServer()" [disabled]="(serverStatus =='Running' || serverStatus =='Checking Status')?true:false">
+              <input type="submit" class="btn btn-success" value="Stop" name="submit1" (click)="stopProcess()" [disabled]="(serverStatus =='Not Running' || serverStatus =='Checking Status')?true:false"> 
             </div>
+            <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" *ngIf="isInprogessStatus">
+              <div class="bounce1"></div>
+              <div class="bounce2"></div>
+              <div class="bounce3"></div>
+            </span>
           </div>
+          <!-- <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" *ngIf="isInprogessStatus">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+          </span> -->
         </div>
       </p-tabPanel>
     </div>

@@ -14,6 +14,8 @@ import { AppMetadata } from '../../../app.metadata';
     templateUrl: './migration-assist-import.template.html'
 })
 export class MigrationAssistImportComponent implements OnInit {
+    showGraph: boolean;
+    isHomeEnable: boolean;
     selectAllAttributeRow: any;
     breadcrumbDataFrom: any;
     showImportData: any;
@@ -34,9 +36,9 @@ export class MigrationAssistImportComponent implements OnInit {
     allName: any;
     msgs: any;
     isSubmitEnable: any;
-  
+
     metaType: any
-    
+
     dropdownSettingsMeta: any;
     metaInfo: any;
     includeDep: any;
@@ -49,19 +51,21 @@ export class MigrationAssistImportComponent implements OnInit {
     filename: any;
     importTags: any;
     selectedRows: any;
-    count : any;
-    statusPath : any;
-    statusColor : any;
-    statusCaption : any;
-    statusInfo : any[];
-    statusType : any;
-    constructor(private _location: Location, private config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _commonListService: CommonListService, private _migrationAssistService: MigrationAssistService, private _appMetaData : AppMetadata) {
+    count: any;
+    statusPath: any;
+    statusColor: any;
+    statusCaption: any;
+    statusInfo: any[];
+    statusType: any;
+    constructor(private _location: Location, private config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _commonListService: CommonListService, private _migrationAssistService: MigrationAssistService, private _appMetaData: AppMetadata) {
         this.showImportData = true;
         this.importData = {};
         this.importData["active"] = true
+        this.isHomeEnable = false
+        this.showGraph = false;
         this.isSubmitEnable = false;
         this.isValidate = true;
-        this.count =0;
+        this.count = 0;
         this.breadcrumbDataFrom = [{
             "caption": "Admin",
             "routeurl": "/app/admin/migration-assist"
@@ -101,10 +105,10 @@ export class MigrationAssistImportComponent implements OnInit {
                 // this.dropdownSettingsMeta.disabled = "this.mode !== undefined" ? false : true
                 this.isSubmitEnable = true;
             }
-           
+
         })
         this.metaType = {};
-        
+
     }
 
     onItemSelect(item: any) {
@@ -153,7 +157,7 @@ export class MigrationAssistImportComponent implements OnInit {
 
         //this.application.published=response["published"] == 'Y' ? true : false
         this.importData.active = response["active"] == 'Y' ? true : false
-       
+
         this.location = response.location;
         this.includeDep = response.includeDep;
     }
@@ -188,7 +192,7 @@ export class MigrationAssistImportComponent implements OnInit {
     }
 
     submitImport() {
-        let importJson = {};     
+        let importJson = {};
         importJson["name"] = this.importData.name;
         //let tagArray=[];
         const tagstemp = [];
@@ -221,7 +225,7 @@ export class MigrationAssistImportComponent implements OnInit {
         console.log(JSON.stringify(importJson));
 
 
-        this._migrationAssistService.importSubmit(this.filename,"import",importJson).subscribe(
+        this._migrationAssistService.importSubmit(this.filename, "import", importJson).subscribe(
             response => { this.OnSuccessubmit(response) },
             error => console.log('Error :: ' + error)
         )
@@ -260,8 +264,8 @@ export class MigrationAssistImportComponent implements OnInit {
     fileChange(files: any) {
         console.log("file upload");
         console.log(files);
-        this.myFile = files[0].nativeElement;
-        console.log("file name is" + this.myFile);
+        // this.myFile = files[0].nativeElement;
+        // console.log("file name is" + this.myFile);
 
         var f = files[0];
         console.log(f);
@@ -292,19 +296,17 @@ export class MigrationAssistImportComponent implements OnInit {
                 metaInfoUpload["version"] = " " :
                 metaInfoUpload["version"] = obj.metaInfo[i].ref.version
             )
-            metaInfoUpload["status"] = this._appMetaData.getStatusDefs("Resume")['caption'];
+                metaInfoUpload["status"] = this._appMetaData.getStatusDefs("Resume")['caption'];
             this.metaInfoUpload[i] = metaInfoUpload;
         }
     }
 
     clickOnCheckbox(i) {
         console.log(this.metaInfoUpload[i].selected);
-        if(this.metaInfoUpload[i].selected == true)
-        { this.count++ }
-        else{this.count--}
-       
-        if(this.count !== 0 )
-        {this.isValidate = false}
+        if (this.metaInfoUpload[i].selected == true) { this.count++ }
+        else { this.count-- }
+
+        if (this.count !== 0) { this.isValidate = false }
     }
 
     validate() {
@@ -326,7 +328,7 @@ export class MigrationAssistImportComponent implements OnInit {
         });
         this.importTags = metainfoarray
         console.log(JSON.stringify(this.importTags))
-     
+
         for (var i = 0; i < this.importTags.length; i++) {
             var metainfo = {};
             var ref = {}
@@ -360,12 +362,12 @@ export class MigrationAssistImportComponent implements OnInit {
 
         for (const i in this.metaInfoUpload) {
             for (const j in validateArray) {
-                if (this.metaInfoUpload[i].uuid == validateArray[j].ref.uuid) { 
-                    if( validateArray[j]["status"]== 'true'){            
-                        let st1 =  this._appMetaData.getStatusDefs("Completed")['caption'];           
-                        this.metaInfoUpload[i]["status"] = this._appMetaData.getStatusDefs("Completed")['caption']; 
-                    } 
-                    else if( validateArray[j]["status"] == 'false'){
+                if (this.metaInfoUpload[i].uuid == validateArray[j].ref.uuid) {
+                    if (validateArray[j]["status"] == 'true') {
+                        let st1 = this._appMetaData.getStatusDefs("Completed")['caption'];
+                        this.metaInfoUpload[i]["status"] = this._appMetaData.getStatusDefs("Completed")['caption'];
+                    }
+                    else if (validateArray[j]["status"] == 'false') {
                         let st2 = this._appMetaData.getStatusDefs("Failed")['caption'];
                         this.metaInfoUpload[i]["status"] = this._appMetaData.getStatusDefs("Failed")['caption'];
                     }
@@ -378,12 +380,19 @@ export class MigrationAssistImportComponent implements OnInit {
             let check = "on"
             this.isSubmitEnable = true;
             if ((this.metaInfoUpload[i]["status"] == "Resume" || this.metaInfoUpload[i]["status"] == "Failed") && check !== "off") {
-                check = "off";              
+                check = "off";
             }
-            if (check == "off")
-            {this.isSubmitEnable = false}
+            if (check == "off") { this.isSubmitEnable = false }
         }
     }
+    showMainPage() {
+        this.isHomeEnable = false
+        this.showGraph = false;
+    }
 
+    showDagGraph(uuid, version) {
+        this.isHomeEnable = true;
+        this.showGraph = true;
+    }
 }
 

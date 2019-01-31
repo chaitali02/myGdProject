@@ -9,7 +9,7 @@
       <div class="portlet box green">
         <div class="portlet-title">
           <div class="caption">
-            <i class="fa fa-gift"></i>{{simulateResultData.name}}
+            <i class="fa fa-gift"></i>{{reportData.name}}
           </div>
           <div class="tools">
             <a style="color:white" title="Main" data-placement="top" tooltip [ngClass]="isHomeEnable==true ? 'notcurrentpage':'currentpage'"
@@ -43,12 +43,13 @@
             </div>
           </div>
 
+          <!-- <div class="form-body" [hidden]="!showLoad" style="padding-top:50px;"> -->
           <div class="form-body" style="padding-top:50px;" *ngIf="!showGraph">
-            <form class="form-horizontal" name="myform" novalidate="novalidate">
+            <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="submitIngest()">
               <div class="form-group" *ngIf="mode">
                 <label class="col-md-3 control-label">UUID</label>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="simulateResultData.uuid" name="uuid" placeholder="" [disabled]="true">
+                  <input type="text" class="form-control" [(ngModel)]="reportData.uuid" name="uuid" placeholder="" [disabled]="true">
                 </div>
               </div>
               <div class="form-group">
@@ -56,7 +57,7 @@
                   <span class="required" aria-required="true"> * </span>
                 </label>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="simulateResultData.name" name="name" placeholder="" [disabled]="mode == 'true'">
+                  <input type="text" class="form-control" [(ngModel)]="reportData.name" name="name" placeholder="" [disabled]="mode == 'true'">
                 </div>
               </div>
               <div class="form-group" *ngIf="mode">
@@ -67,6 +68,7 @@
                   </p-dropdown>
                 </div>
               </div>
+
               <div class="form-group">
                 <label class="col-md-3 control-label">CreatedBy</label>
                 <div class="col-md-6" *ngIf="locations!=''">
@@ -76,7 +78,7 @@
               <div class="form-group">
                 <label class="col-md-3 control-label">CreatedOn</label>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" [disabled]="true" [(ngModel)]="simulateResultData.createdOn" name="createdOn">
+                  <input type="text" class="form-control" [disabled]="true" [(ngModel)]="reportData.createdOn" name="createdOn">
                 </div>
               </div>
               <div class="form-group taginput">
@@ -88,13 +90,7 @@
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
                 <div class="col-md-6">
-                  <textarea [disabled]="true" [(ngModel)]="simulateResultData.desc" name="desc" class="form-control noresize " rows="2" style="resize:none;"></textarea>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-md-3 control-label">Status</label>
-                <div class="col-md-6">
-                  <tag-input [(ngModel)]="statusList" name="status" [hideForm]="true" [disable]="true" theme='bootstrap' style=" max-height: 110px;overflow-x: hidden;padding-left:5px; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;background-color: #eef1f5;"></tag-input>
+                  <textarea [disabled]="true" [(ngModel)]="reportData.desc" name="desc" class="form-control noresize " rows="2" style="resize:none;"></textarea>
                 </div>
               </div>
               <div class="form-group">
@@ -110,9 +106,16 @@
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
                   <div class="btn-group">
-                    <ui-switch (change)="onChangePublished($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="published" name="published"
+                    <ui-switch (change)="onChangePublish($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="published" name="published"
                       [checked]="published" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
                   </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-3 control-label">Status</label>
+                <div class="col-md-6">
+                  <tag-input *ngIf="statusList" [(ngModel)]="statusList" name="status" [hideForm]="true" [disable]="true" theme='bootstrap'
+                    style=" max-height: 110px;overflow-x: hidden;padding-left:5px; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;background-color: #eef1f5;"></tag-input>
                 </div>
               </div>
               <div class="form-group">
@@ -121,11 +124,10 @@
                   <input type="text" class="form-control" [disabled]="true" [(ngModel)]="dependsOn" name="dependsOn">
                 </div>
               </div>
-
               <div class="form-group">
                 <label class="col-md-3 control-label">Ref Key List</label>
                 <div class="col-md-6">
-                  <tag-input [(ngModel)]="simulateResultData.refKeyList" name="refKeyList" [hideForm]="true" [disable]="true" theme='bootstrap'
+                  <tag-input *ngIf="refKeyList" [(ngModel)]="refKeyList" name="refKeyList" [hideForm]="true" [disable]="true" theme='bootstrap'
                     style=" height: 110px;overflow-x: hidden;padding-left:5px; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;background-color: #eef1f5;"></tag-input>
                 </div>
               </div>
@@ -133,6 +135,15 @@
                 <label class="col-md-3 control-label">Result</label>
                 <div class="col-md-6">
                   <input type="text" class="form-control" [disabled]="true" [(ngModel)]="result" name="result">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-3 control-label">Exec</label>
+                <div class="col-md-6">
+                  <textarea [disabled]="true" [(ngModel)]="exec" name="exec" class="form-control noresize " rows="4" style="resize:none;"></textarea>
+                </div>
+                <div class="col-md-1" tooltip-placement="left" title="Show Query" style="padding:0px;" (click)="showSqlFormater()">
+                  <i class="fa fa-external-link"></i>
                 </div>
               </div>
               <div class="form-group" style="padding-top: 10px;">
@@ -143,12 +154,23 @@
 
                 </div>
               </div>
+
+              <p-dialog header="Exec" [(visible)]="displayDialogBox" [modal]="true" [responsive]="true" [width]="900" [baseZIndex]="1000"
+                [contentStyle]="{'min-height':'425px'}">
+                <textarea [disabled]="true" [(ngModel)]="formattedQuery" name="formattedQuery" class="form-control noresize " rows="20" style="resize:none;"></textarea>
+                <p-footer>
+                  <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3" style="padding-bottom: 12px;">
+                    <a class="btn dark btn-outline" (click)="cancelDialogBox()">Cancel</a>
+                  </div>
+                </p-footer>
+              </p-dialog>
             </form>
           </div>
           <div *ngIf="showGraph">
-            {{"Knowledge Graph"}}
+            {{"Knowledge graph"}}
           </div>
         </div>
+
       </div>
     </div>
   </div>

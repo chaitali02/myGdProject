@@ -11,11 +11,10 @@ import { Version } from '../../../shared/version';
   selector: 'app-simulateExec',
   styleUrls: [],
   templateUrl: './simulateExec.template.html',
-
 })
-
 export class SimulateExecComponent {
-
+  showGraph: boolean;
+  isHomeEnable: boolean;
   breadcrumbDataFrom: any;
   id: any;
   version: any;
@@ -37,10 +36,11 @@ export class SimulateExecComponent {
   result: any;
   showResultPredict: any;
 
-
   constructor(private datePipe: DatePipe, private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
     this.showResultPredict = true;
     this.simulateResultData = {};
+    this.isHomeEnable = false
+    this.showGraph = false;
     this.breadcrumbDataFrom = [{
       "caption": "Job Monitoring ",
       "routeurl": "/app/jobMonitoring"
@@ -48,15 +48,12 @@ export class SimulateExecComponent {
     {
       "caption": "Simulation Exec",
       "routeurl": "/app/list/simulateExec"
-
     },
     {
       "caption": "",
       "routeurl": null
-
     }
     ]
-
   }
 
   ngOnInit() {
@@ -66,9 +63,8 @@ export class SimulateExecComponent {
       this.mode = params['mode'];
     });
     if (this.mode !== undefined) {
-      this.getOneByUuidAndVersion(this.id, this.version)
       this.getAllVersionByUuid()
-
+      this.getOneByUuidAndVersion(this.id, this.version)
     }
   }
 
@@ -118,7 +114,7 @@ export class SimulateExecComponent {
     var statusList = [];
     for (let i = 0; i < response.statusList.length; i++) {
       d = this.datePipe.transform(new Date(response.statusList[i].createdOn), "EEE MMM dd HH:mm:ss Z yyyy");
-      d = d.toString().replace("+0530", "IST");
+      d = d.toString().replace("GMT+5:30", "IST");
       statusList[i] = response.statusList[i].stage + "-" + d;
     }
     this.statusList = statusList
@@ -154,5 +150,15 @@ export class SimulateExecComponent {
 
   public goBack() {
     this._location.back();
+  }
+
+  showMainPage() {
+    this.isHomeEnable = false;
+    this.showGraph = false;
+  }
+
+  showDagGraph(uuid, version) {
+    this.isHomeEnable = true;
+    this.showGraph = true;
   }
 }

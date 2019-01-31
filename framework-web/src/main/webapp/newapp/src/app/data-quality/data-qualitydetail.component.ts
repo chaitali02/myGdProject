@@ -185,7 +185,7 @@ export class DataQualityDetailComponent {
     this.getAllAttributeBySource();
   }
   OnselectType = function () {
-    if (this.selectDataType == "Date") {
+    if (this.dqdata.selectDataType == "Date") {
       this.IsSelectDataType = true;
     }
     else {

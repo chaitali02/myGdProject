@@ -9,13 +9,11 @@ import { AppMetadata } from '../../../app.metadata';
 
 
 @Component({
-  selector: 'app-profileGroupExec',
-  templateUrl: './profileGroupExec.template.html',
+  selector: 'app-reconGroupExec',
+  templateUrl: './reconGroupExec.template.html',
   styleUrls: []
 })
-export class ProfileGroupExecComponent implements OnInit {
-  showGraph: boolean;
-  isHomeEnable: boolean;
+export class ReconGroupExecComponent implements OnInit {
 
   breadcrumbDataFrom: any;
   id: any;
@@ -23,7 +21,7 @@ export class ProfileGroupExecComponent implements OnInit {
   VersionList: SelectItem[] = [];
   selectedVersion: Version;
   mode: any;
-  profilegroupResultData: any;
+  recongroupResultData: any;
   uuid: any;
   name: any;
   createdBy: any;
@@ -38,27 +36,31 @@ export class ProfileGroupExecComponent implements OnInit {
   results: any;
   showResultModel: any;
   routerUrl: any;
+  isHomeEnable: boolean;
+  showGraph: boolean;
 
   constructor(private datePipe: DatePipe, private _location: Location, public metaconfig: AppMetadata, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
-
-    this.showResultModel = true;
-    this.profilegroupResultData = {};
-    this.isHomeEnable = false;
     this.showGraph = false;
+    this.isHomeEnable = false;
+    this.showResultModel = true;
+    this.recongroupResultData = {};
     this.execList = [];
     this.breadcrumbDataFrom = [{
       "caption": "Job Monitoring ",
       "routeurl": "/app/jobMonitoring"
     },
     {
-      "caption": "Profile Group",
-      "routeurl": "/app/list/profilegroupExec"
+      "caption": "Recon Group Exec",
+      "routeurl": "/app/list/recongroupExec"
+
     },
     {
       "caption": "",
       "routeurl": null
+
     }
     ]
+
   }
 
   ngOnInit() {
@@ -68,50 +70,53 @@ export class ProfileGroupExecComponent implements OnInit {
       this.mode = params['mode'];
     });
     if (this.mode !== undefined) {
+      this.getOneByUuidAndVersion(this.id, this.version)
       this.getAllVersionByUuid()
-      this.getOneByUuidAndVersion(this.id, this.version);
+
     }
   }
 
   onChangeActive(event) {
     if (event === true) {
-      this.profilegroupResultData.active = 'Y';
+      this.recongroupResultData.active = 'Y';
     }
     else {
-      this.profilegroupResultData.active = 'N';
+      this.recongroupResultData.active = 'N';
     }
   }
 
   onChangePublish(event) {
     if (event === true) {
-      this.profilegroupResultData.published = 'Y';
+      this.recongroupResultData.published = 'Y';
     }
     else {
-      this.profilegroupResultData.published = 'N';
+      this.recongroupResultData.published = 'N';
     }
   }
 
   getOneByUuidAndVersion(id, version) {
-    this._commonService.getOneByUuidAndVersion(id, version, 'profilegroupexec')
+    this._commonService.getOneByUuidAndVersion(id, version, 'recongroupexec')
       .subscribe(
-      response => {//console.log(response)},
-        this.onSuccessgetOneByUuidAndVersion(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {//console.log(response)},
+          this.onSuccessgetOneByUuidAndVersion(response)
+        },
+        error => console.log("Error :: " + error));
   }
   getAllVersionByUuid() {
-    this._commonService.getAllVersionByUuid('profilegroupexec', this.id)
+    this._commonService.getAllVersionByUuid('recongroupexec', this.id)
       .subscribe(
-      response => {
-        this.OnSuccesgetAllVersionByUuid(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.OnSuccesgetAllVersionByUuid(response)
+        },
+        error => console.log("Error :: " + error));
   }
 
   onSuccessgetOneByUuidAndVersion(response) {
-    this.profilegroupResultData = response
-    this.createdBy = this.profilegroupResultData.createdBy.ref.name;
-    this.dependsOn = this.profilegroupResultData.dependsOn.ref.name;
+
+    this.recongroupResultData = response
+    this.createdBy = this.recongroupResultData.createdBy.ref.name;
+    this.dependsOn = this.recongroupResultData.dependsOn.ref.name;
+
 
     var d
     var statusList = [];
@@ -142,7 +147,7 @@ export class ProfileGroupExecComponent implements OnInit {
     if (this.active === 'Y') { this.active = true; } else { this.active = false; }
     this.tags = response['tags'];
 
-    this.breadcrumbDataFrom[2].caption = this.profilegroupResultData.name;
+    this.breadcrumbDataFrom[2].caption = this.recongroupResultData.name;
   }
   OnSuccesgetAllVersionByUuid(response) {
     var temp = []
@@ -157,12 +162,12 @@ export class ProfileGroupExecComponent implements OnInit {
     this.VersionList = temp
   }
   onVersionChange() {
-    this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, 'profilegroupexec')
+    this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, 'recongroupexec')
       .subscribe(
-      response => {//console.log(response)},
-        this.onSuccessgetOneByUuidAndVersion(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {//console.log(response)},
+          this.onSuccessgetOneByUuidAndVersion(response)
+        },
+        error => console.log("Error :: " + error));
   }
 
   public goBack() {
@@ -174,12 +179,17 @@ export class ProfileGroupExecComponent implements OnInit {
     // var innerType = innerData.operators[0].operatorInfo.ref.type;
     // var innerUuid = innerData.operators[0].operatorInfo.ref.uuid;
     // var innerVersion = innerData.operators[0].operatorInfo.ref.version;
+
+
     this.routerUrl = this.metaconfig.getMetadataDefs(item.type)['detailState']
 
     this.router.navigate(['../../../../../JobMonitoring', item.type, item.uuid, item.version, 'true'], { relativeTo: this.activatedRoute });
+
   }
+
   showMainPage() {
     this.isHomeEnable = false
+    // this._location.back();
     this.showGraph = false;
   }
 

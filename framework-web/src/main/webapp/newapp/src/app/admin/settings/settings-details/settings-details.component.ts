@@ -133,7 +133,6 @@ export class SettingsDetailsComponent implements OnInit {
     settingsJson["uuid"] = this.uuid
     settingsJson["name"] = this.name
 
-
     var tagArray = [];
     if (this.tags != null) {
       for (var counttag = 0; counttag < this.tags.length; counttag++) {
@@ -172,13 +171,6 @@ export class SettingsDetailsComponent implements OnInit {
     setTimeout(() => {
       this.goBack()
     }, 1000);
-
-
-    // this.msgs = [];
-    // this.isSubmit = "true"
-    // this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'Ingest Rule Saved Successfully' });
-    // setTimeout(() => { this.goBack() }, 1000);
-
   }
 
   onVersionChange() {

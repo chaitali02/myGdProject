@@ -12,187 +12,189 @@ import { RegisterSourceService } from '../../metadata/services/registerSource.se
 })
 export class RegisterSourceComponent implements OnInit {
   isDataSourceInpogress: boolean;
-  searchButtonText: string="Register";
-  registered: boolean =false;
+  searchButtonText: string = "Register";
+  registered: boolean = false;
   tableData: any;
-  id : any;
-  version : any;
-  mode : any;
+  id: any;
+  version: any;
+  mode: any;
   breadcrumbDataFrom: { "caption": string; "routeurl": any; }[];
-  typeSelect : {'value': string; 'label': string; }[];
-  type : any;
-  allNamesTypes : any;
-  uuid : any;
-  typeUuid : any;
-  selectAllAttributeRow : any;
-  msgs : any;
-  isSubmitEnable : any;
-  registerArray : any;
-  index : any;
-  registerdata : any;
-  arr : any;
+  typeSelect: { 'value': string; 'label': string; }[];
+  type: any;
+  allNamesTypes: any;
+  uuid: any;
+  typeUuid: any;
+  selectAllAttributeRow: any;
+  msgs: any;
+  isSubmitEnable: any;
+  registerArray: any;
+  index: any;
+  registerdata: any;
+  arr: any;
 
-  constructor(private _location : Location,private _datapodService : DatapodService,config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService,private _regiSourceService : RegisterSourceService) {
-    this.isSubmitEnable =true;
-    this.tableData = [] 
-    this.breadcrumbDataFrom=[{
-      "caption":"Admin",
-      "routeurl":'/app/admin/registerSource'
+  constructor(private _location: Location, private _datapodService: DatapodService, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _regiSourceService: RegisterSourceService) {
+    this.isSubmitEnable = true;
+    this.tableData = []
+    this.breadcrumbDataFrom = [{
+      "caption": "Admin",
+      "routeurl": '/app/admin/registerSource'
     },
     {
-      "caption":"Register Source",
-      "routeurl":null
-    }    
+      "caption": "Register Source",
+      "routeurl": null
+    }
     ]
 
     this.typeSelect = [
-    {'value': 'FILE', 'label': 'FILE' },
-    {'value': 'HIVE', 'label': 'HIVE' }
-    ]    
-   }
+      { 'value': 'FILE', 'label': 'FILE' },
+      { 'value': 'HIVE', 'label': 'HIVE' }
+    ]
+  }
 
   ngOnInit() {
-    this.activatedRoute.params.subscribe((params : Params) => {
+    this.activatedRoute.params.subscribe((params: Params) => {
       this.id = params['id'];
       this.version = params['version'];
-      this.mode = params['mode'];     
+      this.mode = params['mode'];
     })
     this.selectType()
   }
 
-  selectType() { 
-    this.tableData= null
-    let appId=localStorage.getItem('appDetails');
+  selectType() {
+    this.tableData = null
+    let appId = localStorage.getItem('appDetails');
     this._datapodService.getDatasourceByApp(appId).subscribe(
-      response => { this.OnSuccesGetSelectType(response)},
+      response => { this.OnSuccesGetSelectType(response) },
       error => console.log('Error :: ' + error)
-    ) 
+    )
   }
 
-  OnSuccesGetSelectType(response){
-   this.allNamesTypes = [];
+  OnSuccesGetSelectType(response) {
+    this.allNamesTypes = [];
     for (const i in response) {
-      let allNameType={};
-      allNameType["label"]=response[i]['name'];
+      let allNameType = {};
+      allNameType["label"] = response[i]['name'];
       //allNameType["value"]=response[i]['uuid'];
-      allNameType["value"]={}
-      allNameType["value"]["uuid"]=response[i]['uuid'];
-      allNameType["value"]["version"]=response[i]['version']
-      this.allNamesTypes[i]=allNameType;                      
-    } 
+      allNameType["value"] = {}
+      allNameType["value"]["uuid"] = response[i]['uuid'];
+      allNameType["value"]["version"] = response[i]['version']
+      this.allNamesTypes[i] = allNameType;
+    }
   }
-  search(){
+
+  search() {
     let registeredStatus
     this.searchButtonText = "Register";
     this.isDataSourceInpogress = true;
-    if(this.registered==true){
-
-       registeredStatus = 'Registered';
+    if (this.registered == true) {
+      registeredStatus = 'Registered';
     }
     else {
       registeredStatus = 'UnRegistered';
     }
-    this._commonService.getRegistryByDatasource(this.allNamesTypes[0]["value"]["uuid"],registeredStatus).subscribe(
-      response => { this.onSuccessGetRegistryByDatasource(response)},
+    this._commonService.getRegistryByDatasource(this.allNamesTypes[0]["value"]["uuid"], registeredStatus).subscribe(
+      response => { this.onSuccessGetRegistryByDatasource(response) },
       error => console.log('Error :: ' + error)
     )
   }
+  
   ChangeTableData() {
-    this._commonService.getRegistryByDatasource(this.allNamesTypes[0]["value"]["uuid"],this.registered).subscribe(
-      response => { this.onSuccessGetRegistryByDatasource(response)},
+    this._commonService.getRegistryByDatasource(this.allNamesTypes[0]["value"]["uuid"], this.registered).subscribe(
+      response => { this.onSuccessGetRegistryByDatasource(response) },
       error => console.log('Error :: ' + error)
-    ) 
+    )
   }
 
-  onSuccessGetRegistryByDatasource(response){ 
-    this.tableData = response; 
-  }  
+  onSuccessGetRegistryByDatasource(response) {
+    this.tableData = response;
+  }
 
-  checkAllAttributeRow(){
-    if (!this.selectAllAttributeRow){
+  checkAllAttributeRow() {
+    if (!this.selectAllAttributeRow) {
       this.selectAllAttributeRow = true;
-      }
+    }
     else {
       this.selectAllAttributeRow = false;
-      }
+    }
     this.tableData.forEach(registerjson => {
       registerjson.selected = this.selectAllAttributeRow;
       console.log(JSON.stringify(registerjson))
       console.log(JSON.stringify(registerjson.selected))
-    });    
+    });
   }
 
-  selectRegisterSource(index){
+  selectRegisterSource(index) {
     let result = true;
-    for(let i=0;i<this.tableData.length;i++){
-      if(i == index){
-    
+    for (let i = 0; i < this.tableData.length; i++) {
+      if (i == index) {
+
         result = false
-        i=this.tableData.length;
+        i = this.tableData.length;
       }
     }
     this.isSubmitEnable = result;
   }
 
-  submitRegisterSource(){
+  submitRegisterSource() {
     let count = 0;
     this.searchButtonText = "Registering";
-    this.registerArray=[];
-    for(let i=0;i<this.tableData.length;i++){
-      let registerObj = {}   
+    this.registerArray = [];
+    for (let i = 0; i < this.tableData.length; i++) {
+      let registerObj = {}
 
-      if(this.tableData[i].selected == true){  
-        this.tableData[i].status="Registering"    
-        registerObj["id"]=this.tableData[i].id;
-        registerObj["name"]=this.tableData[i].name;
-        registerObj["desc"]=this.tableData[i].desc;
-        registerObj["registeredOn"]=this.tableData[i].registeredOn;
-        registerObj["status"]=this.tableData[i].status;
-        this.registerArray[count]=registerObj;
+      if (this.tableData[i].selected == true) {
+        this.tableData[i].status = "Registering"
+        registerObj["id"] = this.tableData[i].id;
+        registerObj["name"] = this.tableData[i].name;
+        registerObj["desc"] = this.tableData[i].desc;
+        registerObj["registeredOn"] = this.tableData[i].registeredOn;
+        registerObj["status"] = this.tableData[i].status;
+        this.registerArray[count] = registerObj;
         count = count + 1;
       }
     }
     console.log(JSON.stringify(this.registerArray))
-    
-    this._regiSourceService.getRegister(this.allNamesTypes[0]["value"]["uuid"],this.allNamesTypes[0]["value"]["version"],this.registerArray,this.type).subscribe(
-    response => { this.OnSuccessubmit(response)},
-    error => console.log('Error :: ' + error)
-    )}
 
-    OnSuccessubmit(response){
-      console.log('success');
-      this.searchButtonText = "Register";
-      this.registerdata = response;
-          
-      for(let i=0;i<this.registerdata.length;i++){
-        let resultObj = {};
-        this.arr = this.registerdata[i].id-1;
-       resultObj["id"] = this.registerdata[i].id;
-       resultObj["name"] = this.registerdata[i].name;
-       resultObj["desc"] = this.registerdata[i].desc;
-       resultObj["registeredOn"] = this.registerdata[i].registeredOn;
-       if(response[i]["status"] == "UnRegistered"){   
-         resultObj["status"]="Not Registered"
-        }
-        else{
-          resultObj["status"]=response[i].status
-        }
-        resultObj["selected"]= false;
-        this.tableData[this.arr] = resultObj;
-       
+    this._regiSourceService.getRegister(this.allNamesTypes[0]["value"]["uuid"], this.allNamesTypes[0]["value"]["version"], this.registerArray, this.type).subscribe(
+      response => { this.OnSuccessubmit(response) },
+      error => console.log('Error :: ' + error)
+    )
+  }
+
+  OnSuccessubmit(response) {
+    console.log('success');
+    this.searchButtonText = "Register";
+    this.registerdata = response;
+
+    for (let i = 0; i < this.registerdata.length; i++) {
+      let resultObj = {};
+      this.arr = this.registerdata[i].id - 1;
+      resultObj["id"] = this.registerdata[i].id;
+      resultObj["name"] = this.registerdata[i].name;
+      resultObj["desc"] = this.registerdata[i].desc;
+      resultObj["registeredOn"] = this.registerdata[i].registeredOn;
+      if (response[i]["status"] == "UnRegistered") {
+        resultObj["status"] = "Not Registered"
       }
-      this.msgs = [];
-      this.msgs.push({severity:'success', summary:'Success Message', detail:'RegisterSource Submitted Successfully'});
-      // this.router.navigate(['app/admin/registerSource']);
-      setTimeout(() => {
-        this.router.navigate(['app/admin/registerSource']);
-        }, 1000);     
-    }
+      else {
+        resultObj["status"] = response[i].status
+      }
+      resultObj["selected"] = false;
+      this.tableData[this.arr] = resultObj;
 
-  refreshTableData(){
-    for(let i=0;i<this.tableData.length;i++)
-    this.tableData[i].selected =false;
-    this.registerArray=null;
+    }
+    this.msgs = [];
+    this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'RegisterSource Submitted Successfully' });
+    // this.router.navigate(['app/admin/registerSource']);
+    setTimeout(() => {
+      this.router.navigate(['app/admin/registerSource']);
+    }, 1000);
+  }
+
+  refreshTableData() {
+    for (let i = 0; i < this.tableData.length; i++)
+      this.tableData[i].selected = false;
+    this.registerArray = null;
   }
   onChange(event) {
     if (event === true) {

@@ -1,7 +1,7 @@
 <div>
   <app-breadcrumb [breadcrumbData]="breadcrumbDataFrom"></app-breadcrumb>
   <br>
-  <p-messages [(value)]="msgs" style="position:fixed;top:60px;right:20px;z-index:1000"></p-messages>
+  <!-- <p-messages  style="position:fixed;top:60px;right:20px;z-index:1000"></p-messages> -->
   <!-- BEGIN MAIN CONTENT -->
   <div class="row">
     <div class="col-md-12">
@@ -9,7 +9,7 @@
       <div class="portlet box green">
         <div class="portlet-title">
           <div class="caption">
-            <i class="fa fa-gift"></i>{{simulateResultData.name}}
+            <i class="fa fa-gift"></i>{{ingestgroupResultData.name}}
           </div>
           <div class="tools">
             <a style="color:white" title="Main" data-placement="top" tooltip [ngClass]="isHomeEnable==true ? 'notcurrentpage':'currentpage'"
@@ -48,7 +48,8 @@
               <div class="form-group" *ngIf="mode">
                 <label class="col-md-3 control-label">UUID</label>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="simulateResultData.uuid" name="uuid" placeholder="" [disabled]="true">
+                  <input type="text" class="form-control" [(ngModel)]="ingestgroupResultData.uuid" name="uuid"
+                    placeholder="" [disabled]="true">
                 </div>
               </div>
               <div class="form-group">
@@ -56,7 +57,8 @@
                   <span class="required" aria-required="true"> * </span>
                 </label>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="simulateResultData.name" name="name" placeholder="" [disabled]="mode == 'true'">
+                  <input type="text" class="form-control" [(ngModel)]="ingestgroupResultData.name" name="name"
+                    placeholder="" [disabled]="mode == 'true'">
                 </div>
               </div>
               <div class="form-group" *ngIf="mode">
@@ -76,7 +78,8 @@
               <div class="form-group">
                 <label class="col-md-3 control-label">CreatedOn</label>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" [disabled]="true" [(ngModel)]="simulateResultData.createdOn" name="createdOn">
+                  <input type="text" class="form-control" [disabled]="true" [(ngModel)]="ingestgroupResultData.createdOn"
+                    name="createdOn">
                 </div>
               </div>
               <div class="form-group taginput">
@@ -88,21 +91,16 @@
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
                 <div class="col-md-6">
-                  <textarea [disabled]="true" [(ngModel)]="simulateResultData.desc" name="desc" class="form-control noresize " rows="2" style="resize:none;"></textarea>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="col-md-3 control-label">Status</label>
-                <div class="col-md-6">
-                  <tag-input [(ngModel)]="statusList" name="status" [hideForm]="true" [disable]="true" theme='bootstrap' style=" max-height: 110px;overflow-x: hidden;padding-left:5px; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;background-color: #eef1f5;"></tag-input>
+                  <textarea [disabled]="true" [(ngModel)]="ingestgroupResultData.desc" name="desc" class="form-control noresize "
+                    rows="2" style="resize:none;"></textarea>
                 </div>
               </div>
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
                   <div class="btn-group">
-                    <ui-switch (change)="onChangeActive($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="active" name="active"
-                      [checked]="active" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                    <ui-switch (change)="onChangeActive($event)" [disabled]="mode == 'true' || mode == 'false'"
+                      [(ngModel)]="active" name="active" [checked]="active" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
                   </div>
                 </div>
               </div>
@@ -110,9 +108,17 @@
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
                   <div class="btn-group">
-                    <ui-switch (change)="onChangePublished($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="published" name="published"
-                      [checked]="published" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                    <ui-switch (change)="onChangePublished($event)" [disabled]="mode == 'true' || mode == 'false'"
+                      [(ngModel)]="published" name="published" [checked]="published" color="#32c5d2" labelOn="Yes"
+                      labelOff="No"></ui-switch>
                   </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-md-3 control-label">Status</label>
+                <div class="col-md-6">
+                  <tag-input *ngIf="statusList" [(ngModel)]="statusList" name="statusList" [hideForm]="true" [disable]="true"
+                    theme='bootstrap' style=" max-height: 110px;overflow-x: hidden;padding-left:5px; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;background-color: #eef1f5;"></tag-input>
                 </div>
               </div>
               <div class="form-group">
@@ -121,19 +127,48 @@
                   <input type="text" class="form-control" [disabled]="true" [(ngModel)]="dependsOn" name="dependsOn">
                 </div>
               </div>
+              <div class="form-group">
+                <label class="col-md-3 control-label">Ingest Exec List</label>
+                <!-- <div class="col-md-6">
+                    <tag-input [(ngModel)]="execList" name="execList" [hideForm]="true" [disable]="true"  theme='bootstrap' style=" max-height: 110px;overflow-x: hidden;padding-left:5px; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;background-color: #eef1f5;"></tag-input>
+                  </div> -->
 
-              <div class="form-group">
-                <label class="col-md-3 control-label">Ref Key List</label>
                 <div class="col-md-6">
-                  <tag-input [(ngModel)]="simulateResultData.refKeyList" name="refKeyList" [hideForm]="true" [disable]="true" theme='bootstrap'
-                    style=" height: 110px;overflow-x: hidden;padding-left:5px; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;background-color: #eef1f5;"></tag-input>
+
+
+                  <ul class="tagitdd" style="height:100px; background-color:#eef1f5">
+                    <li title="{{item}}" class="tagit-choice-dd tagit-choice-editable-dd" *ngFor="let item of execList;let i=index"
+                      style="max-height: 110px;overflow-x: hidden;
+                          padding-left:5px;
+                          border: 1px solid #ccc; 
+                          border-radius: 5px;
+                          background-color:#6da9db;
+                          color:#fff;
+                          display: inline-block;
+                          margin-bottom: 0;
+                          font-weight: 400;
+                          text-align: center;
+                          vertical-align: middle;
+                          -ms-touch-action: manipulation;
+                          touch-action: manipulation;
+                          cursor: pointer;
+                          border: 1px solid transparent;
+                          white-space: nowrap;
+                          padding: 6px 26px 5px 8px;
+                          font-size: 14px;                       
+                          border-radius: 4px;                        
+                          user-select: none;">
+                      <span class="tagit-label">{{item.name}}</span>
+                      <a class="tagit-close-dd">
+                        <span class="text-icon" (click)="showDetails(item)">
+                          <i class="fa fa-eye" style="color: #fff; padding-right: 5px;"></i>
+                        </span>
+                        <span class="ui-icon ui-icon-close"></span>
+                      </a>
+                    </li>
+                  </ul>
                 </div>
-              </div>
-              <div class="form-group">
-                <label class="col-md-3 control-label">Result</label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" [disabled]="true" [(ngModel)]="result" name="result">
-                </div>
+
               </div>
               <div class="form-group" style="padding-top: 10px;">
                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
@@ -146,7 +181,7 @@
             </form>
           </div>
           <div *ngIf="showGraph">
-            {{"Knowledge Graph"}}
+            {{"Knowledge graph"}}
           </div>
         </div>
       </div>

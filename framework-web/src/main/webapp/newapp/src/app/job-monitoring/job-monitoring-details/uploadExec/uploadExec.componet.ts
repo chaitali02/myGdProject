@@ -15,6 +15,8 @@ import { Version } from '../../../shared/version';
 })
 
 export class UploadExecComponent {
+    showGraph: boolean;
+    isHomeEnable: boolean;
 
     breadcrumbDataFrom: any;
     id: any;
@@ -36,13 +38,13 @@ export class UploadExecComponent {
     refKeyList: any;
     location: any;
     filename: any;
-
     showResultTrain: any;
-
 
     constructor(private datePipe: DatePipe, private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
         this.showResultTrain = true;
         this.uploadData = {};
+        this.isHomeEnable = false;
+        this.showGraph = false;
         this.breadcrumbDataFrom = [{
             "caption": "Job Monitoring ",
             "routeurl": "/app/jobMonitoring"
@@ -50,12 +52,10 @@ export class UploadExecComponent {
         {
             "caption": "upload Exec",
             "routeurl": "/app/list/uploadExec"
-
         },
         {
             "caption": "",
             "routeurl": null
-
         }
         ]
 
@@ -146,4 +146,15 @@ export class UploadExecComponent {
     public goBack() {
         this._location.back();
     }
+
+    showMainPage() {
+        this.isHomeEnable = false
+        // this._location.back();
+        this.showGraph = false;
+      }
+    
+      showDagGraph(uuid, version) {
+        this.isHomeEnable = true;
+        this.showGraph = true;
+      }
 }
