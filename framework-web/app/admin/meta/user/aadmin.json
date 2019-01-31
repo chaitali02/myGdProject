@@ -2,49 +2,31 @@
 	"firstName": "Administrator",
 	"middleName": "",
 	"lastName": "Administrator",
-	"emailId": "admin@inferyx.com",
+	"emailId": "admin@aptivaa.com",
 	"password": "admin",
 	"groupInfo": [
 		{
 			"ref": {
 				"type": "group",
-				"uuid": "986e84eb-03ab-46e1-82cc-83f48e6a70tx"
-			}
-		},
-		{
-			"ref": {
-				"type": "group",
-				"uuid": "986e84eb-03ab-46e1-82cc-83f48e6a7yo1"
-			}
-		},
-		{
-			"ref": {
-				"type": "group",
-				"uuid": "986e84eb-03ab-46e1-82cc-83f48e6a70c3"
-			}
-		},
-		{
-			"ref": {
-				"type": "group",
-				"uuid": "986e84eb-03ab-46e1-82cc-83f48e6a70tz"
+				"uuid": "29792fd8-74f1-4940-a0d8-89f039df5138"
 			}
 		}
 	],
 	"defaultGroup": {
 		"ref": {
 			"type": "group",
-			"uuid": "986e84eb-03ab-46e1-82cc-83f48e6a70tz"
+			"uuid": "29792fd8-74f1-4940-a0d8-89f039df5138"
 		}
 	},
 	"orgInfo": {
 		"ref": {
 			"type": "organization",
-			"uuid": "39937670-837c-4027-aa45-aff8a57b738a"
+			"uuid": "548b440b-5366-487a-a982-45ebfe9e708c"
 		}
 	},
-	"uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3263",
+	"uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3266",
 	"version": "1548315952",
-	"name": "M_admin",
+	"name": "aadmin",
 	"desc": "Admin user",
 	"createdBy": {
 		"ref": {

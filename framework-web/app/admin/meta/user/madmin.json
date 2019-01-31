@@ -2,31 +2,49 @@
 	"firstName": "Administrator",
 	"middleName": "",
 	"lastName": "Administrator",
-	"emailId": "admin@inferyx.com",
+	"emailId": "admin@mufg.com",
 	"password": "admin",
 	"groupInfo": [
 		{
 			"ref": {
 				"type": "group",
-				"uuid": "a93bac6e-51c9-11e8-9c2d-fa7ae01bbebc"
+				"uuid": "986e84eb-03ab-46e1-82cc-83f48e6a70tx"
+			}
+		},
+		{
+			"ref": {
+				"type": "group",
+				"uuid": "986e84eb-03ab-46e1-82cc-83f48e6a7yo1"
+			}
+		},
+		{
+			"ref": {
+				"type": "group",
+				"uuid": "986e84eb-03ab-46e1-82cc-83f48e6a70c3"
+			}
+		},
+		{
+			"ref": {
+				"type": "group",
+				"uuid": "986e84eb-03ab-46e1-82cc-83f48e6a70tz"
 			}
 		}
 	],
 	"defaultGroup": {
 		"ref": {
 			"type": "group",
-			"uuid": "a93bac6e-51c9-11e8-9c2d-fa7ae01bbebc"
+			"uuid": "986e84eb-03ab-46e1-82cc-83f48e6a70tz"
 		}
 	},
 	"orgInfo": {
 		"ref": {
 			"type": "organization",
-			"uuid": "548b440b-5366-487a-a982-45ebfe9e708c"
+			"uuid": "39937670-837c-4027-aa45-aff8a57b738a"
 		}
 	},
-	"uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3266",
+	"uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3263",
 	"version": "1548315952",
-	"name": "A_admin",
+	"name": "madmin",
 	"desc": "Admin user",
 	"createdBy": {
 		"ref": {

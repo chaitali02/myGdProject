@@ -1,21 +1,21 @@
 {
-  "uuid": "c9ae165b-db06-4f9e-8ba8-a77b01001dfg",
-  "version": "1525530938",
-  "name": "Histogram",
-  "desc": "Calculate histogram on columns",
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196"
-    }
-  },
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "operatorType" : "Histogram",
+    "uuid" : "c9ae165b-db06-4f9e-8ba8-a77b01001f9b",
+    "version" : "1525530938",
+    "name" : "Impute Data",
+    "desc" : "Impute missing data",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196"
+        }
+    },
+    "createdOn" : ISODate("2018-12-10T00:54:55.581Z"),
+    "tags" : [],
+    "active" : "Y",
+    "locked" : "N",
+    "published" : "N",
+    "operatorType" : "Impute",
     "appInfo" : [ 
         {
             "ref" : {
@@ -61,10 +61,10 @@
             }
         }
     ],
-  "paramList": {
-    "ref": {
-      "type": "paramlist",
-      "uuid": "e6760bda-cd34-4a5b-bb56-e7604da8b6f7"
+    "paramList" : {
+        "ref" : {
+            "type" : "paramlist",
+            "uuid" : "1f21db3e-7009-45af-bca0-5559f8b29e31"
+        }
     }
-  }
 }
