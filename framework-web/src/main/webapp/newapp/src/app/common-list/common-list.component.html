@@ -130,7 +130,7 @@
       <span [innerHTML]="gridTitle"></span>
     </div>
     <div class="actions">
-      <a *ngIf="isExec=='false'" (click)="add()" [attr.disabled] = "type == session" class="btn btn-default btn-sm">
+      <a *ngIf="isExec=='false'" (click)="add()" [attr.disabled]="type == 'session' ? 'disabled' : null" class="btn btn-default btn-sm">
         <i class="fa fa-plus"></i> Add </a>
       <div class="btn-group" dropdown style="text-align:center" *ngIf="isExec=='false'">
         <button dropdownToggle type="button" class="btn btn-default btn-sm dropdown-toggle">
