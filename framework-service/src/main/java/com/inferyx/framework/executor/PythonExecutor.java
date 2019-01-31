@@ -606,8 +606,7 @@ public class PythonExecutor implements IExecutor {
 	}
 
 	@Override
-	public Boolean saveTrainFile(String[] fieldArray, String trainName, double trainPercent, double valPercent,
-			String tableName, String clientContext, String saveFileName) throws IOException {
+	public Boolean saveDataframeAsCSV(String tableName, String saveFileName, String clientContext) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}

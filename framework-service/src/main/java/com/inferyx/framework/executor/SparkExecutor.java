@@ -2075,41 +2075,16 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	@Override
-	public Boolean saveTrainFile(String[] fieldArray, String trainName, double trainPercent, double valPercent, String tableName, String clientContext, String saveFileName) throws IOException {
-//		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
-//		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
-		String assembledDFSQL = "SELECT * FROM " + tableName;
-		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
-		df.printSchema();
-		
+	public Boolean saveDataframeAsCSV(String tableName, String saveFileName, String clientContext) throws IOException {		
 		try {
-//			Dataset<Row>[] splits = df.randomSplit(new double[] { trainPercent / 100, valPercent / 100 }, 12345);
-//			Dataset<Row> trngDf = splits[0];
-//			Dataset<Row> valDf = splits[1];
-//			Dataset<Row> trainingDf = null;
-//			Dataset<Row> validateDf = null;
-//			
-//			VectorAssembler vectorAssembler = new VectorAssembler();
-//			vectorAssembler.setInputCols(fieldArray).setOutputCol("features");
-//			
-//			/*Class<?> dynamicClass = Class.forName(trainName);
-//			Object obj = dynamicClass.newInstance();*/
-//			trainingDf = trngDf;
-//			validateDf = valDf;
-//
-//			for(String col : trainingDf.columns()) {
-//				trainingDf = trainingDf.withColumn(col, trainingDf.col(col).cast(DataTypes.DoubleType));
-//			}
-//			
-//			for(String col : validateDf.columns()) {
-//				validateDf = validateDf.withColumn(col, validateDf.col(col).cast(DataTypes.DoubleType));
-//			}
+			String assembledDFSQL = "SELECT * FROM " + tableName;
+			Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
 			df.coalesce(1).write().option("header", "true").csv(saveFileName);
+			return true;
 		} catch(Exception e) {
 			e.printStackTrace();
 			return false;
 		}
-		return true;
 	}
 	
 	@Override

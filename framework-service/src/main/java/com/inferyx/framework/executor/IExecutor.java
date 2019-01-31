@@ -696,18 +696,13 @@ public interface IExecutor {
 
 	/**
 	 * 
-	 * @param fieldArray
-	 * @param trainName
-	 * @param trainPercent
-	 * @param valPercent
 	 * @param tableName
-	 * @param clientContext
 	 * @param saveFileName
+	 * @param clientContext
 	 * @return
 	 * @throws IOException
 	 */
-	Boolean saveTrainFile(String[] fieldArray, String trainName, double trainPercent, double valPercent,
-			String tableName, String clientContext, String saveFileName) throws IOException;
+	Boolean saveDataframeAsCSV(String tableName, String saveFileName, String clientContext) throws IOException;
 
 	/**
 	 * @Ganesh
