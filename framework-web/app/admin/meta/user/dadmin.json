@@ -1,51 +1,33 @@
 {
-	"firstName": "analyst",
+	"firstName": "Administrator",
 	"middleName": "",
-	"lastName": "analyst",
-	"emailId": "analyst@inferyx.com",
-	"password": "analyst",
+	"lastName": "Administrator",
+	"emailId": "admin@dot.com",
+	"password": "admin",
 	"groupInfo": [
 		{
 			"ref": {
 				"type": "group",
-				"uuid": "74f8e00c-6661-4d11-8ed2-c6edd0ddcd67"
-			}
-		},
-		{
-			"ref": {
-				"type": "group",
-				"uuid": "74f8e00c-6661-4d11-8ed2-c6edd0ddcyo2"
-			}
-		},
-		{
-			"ref": {
-				"type": "group",
-				"uuid": "986e84eb-03ab-46e1-82cc-83f48e6a70c2"
-			}
-		},
-		{
-			"ref": {
-				"type": "group",
-				"uuid": "74f8e00c-6661-4d11-8ed2-c6edd0ddcd6z"
+				"uuid": "986e84eb-03ab-46e1-82cc-83f48e6a70dz"
 			}
 		}
 	],
 	"defaultGroup": {
 		"ref": {
 			"type": "group",
-			"uuid": "74f8e00c-6661-4d11-8ed2-c6edd0ddcd67"
+			"uuid": "986e84eb-03ab-46e1-82cc-83f48e6a70dz"
 		}
 	},
 	"orgInfo": {
 		"ref": {
 			"type": "organization",
-			"uuid": "39937670-837c-4027-aa45-aff8a57b738a"
+			"uuid": "fb3ec0c4-59eb-4e75-b12d-72d6a19609d9"
 		}
 	},
-	"uuid": "b9099cf2-cabs-4b5a-8b74-eec30fcc3263",
+	"uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3264",
 	"version": "1548315952",
-	"name": "M_analyst",
-	"desc": "analyst user",
+	"name": "dadmin",
+	"desc": "Admin user",
 	"createdBy": {
 		"ref": {
 			"type": "user",

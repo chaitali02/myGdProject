@@ -369,7 +369,8 @@ print()
 # Importing the dataset
 dataset = None
 def getData(csvPath, dsType, hostName, dbName, port, userName, password, sqlQuery):
-    print("inside method getData() >>>>>>>>> dsType : hostName : dbName : port : userName : password :: "+dsType+" : "+hostName+" : "+dbName+" : "+port+" : "+userName+" : "+password)
+    print("inside method getData()")
+    print("dsType : hostName : dbName : port : userName : password <<<<< >>>>> ", dsType, " : ", hostName, " : ", dbName, " : ", port, " : ", userName, " : ", password)
     if dsType == "file":
         dataset = pd.read_csv(csvPath)
         return dataset
@@ -549,9 +550,9 @@ def model():
     
 #encode data
 def encodeData(encodingDataset, encodingDetailsList):
-    print("encodingDetails: ", encodingDetailsList)
+    print("Encoding dataset: ")
     for val in encodingDetailsList:
-        print("Encoding column: ", val, "Encoding type: ", encodingDetailsList[val])
+        print("column : value", "<<<<< >>>>>", val, " : ", encodingDetailsList[val])
         oneHot = None
         if encodingDetailsList[val] == "ONEHOT":
             catenc = pd.factorize(encodingDataset[val])
@@ -560,17 +561,29 @@ def encodeData(encodingDataset, encodingDetailsList):
             
     return encodingDataset            
     
+def imputeData(imputationDataset, imputationDetailsList):
+    print("Imputing dataset: ")
+    for val in imputationDetailsList:
+        print("column : value", "<<<<< >>>>>", val, " : ", imputationDetailsList[val])
+        # imputationDataset.loc[imputationDataset[val].isnull(),val] = imputationDetailsList[val]
+        imputationDataset[val].fillna(imputationDetailsList[val], inplace=True)
+            
+    return  imputationDataset       
+    
 #train operation
 def train():
     # Encoding categorical data
     dataset = getData(sourceFilePath, sourceDsType, sourceHostName, sourceDbName, sourcePort, sourceUserName, sourcePassword, query)
     
-    # dataset = dataset.iloc[:, 1:].fillna(0.0)
+    if imputationDetails != None:
+        dataset = imputeData(dataset, imputationDetails)
+        print("data after imputation:")
+        print(dataset)
+        
     if(encodingDetails != None):
         dataset = encodeData(dataset, encodingDetails).astype(dtype='float64', copy=True, errors='ignore') 
-    
-    print("encoded df: ")
-    print(dataset)
+        print("data after encoding: ")
+        print(dataset)
     
     print("total_size: ", len(dataset))    
     output_result["total_size"]=len(dataset)
@@ -757,12 +770,16 @@ def predict():
     #    dataset = pd.read_csv(sourceFilePath)
     dataset2 = getData(sourceFilePath, sourceDsType, sourceHostName, sourceDbName, sourcePort, sourceUserName, sourcePassword, query)
     
+    if imputationDetails != None:
+        dataset2 = imputeData(dataset2, imputationDetails)
+        print("data after imputation:")
+        print(dataset2)
+        
     # dataset = dataset.iloc[:, 1:].fillna(0.0)
     if(encodingDetails != None):
         dataset2 = encodeData(dataset2, encodingDetails).astype(dtype='float64', copy=True, errors='ignore')
-        
-    print("encoded df: ")
-    print(dataset2)
+        print("data after encoding:")
+        print(dataset2)
     
     print("predict dataset size: ", len(dataset2))
     

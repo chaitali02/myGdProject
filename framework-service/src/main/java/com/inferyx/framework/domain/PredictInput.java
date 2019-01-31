@@ -53,7 +53,7 @@ public class PredictInput {
 	List<String> rowIdentifier;
 	String includeFeatures;
 	Map<String, EncodingType> encodingDetails;
-	LinkedHashMap<String, Object> imputeDetails;
+	LinkedHashMap<String, Object> imputationDetails;
 	
 	/**
 	 * @Ganesh
@@ -74,18 +74,18 @@ public class PredictInput {
 	/**
 	 * @Ganesh
 	 *
-	 * @return the imputeDetails
+	 * @return the imputationDetails
 	 */
-	public LinkedHashMap<String, Object> getImputeDetails() {
-		return imputeDetails;
+	public LinkedHashMap<String, Object> getImputationDetails() {
+		return imputationDetails;
 	}
 	/**
 	 * @Ganesh
 	 *
-	 * @param imputeDetails the imputeDetails to set
+	 * @param imputationDetails the imputationDetails to set
 	 */
-	public void setImputeDetails(LinkedHashMap<String, Object> imputeDetails) {
-		this.imputeDetails = imputeDetails;
+	public void setImputationDetails(LinkedHashMap<String, Object> imputationDetails) {
+		this.imputationDetails = imputationDetails;
 	}
 	/**
 	 * 

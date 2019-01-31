@@ -4,9 +4,7 @@
 package com.inferyx.framework.operator;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,18 +24,14 @@ import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.FeatureAttrMap;
-import com.inferyx.framework.domain.FeatureRefHolder;
 import com.inferyx.framework.domain.Function;
-import com.inferyx.framework.domain.Key;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.ParamListHolder;
-import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Rule;
-import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
@@ -45,6 +39,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
 import com.inferyx.framework.service.DatapodServiceImpl;
+import com.inferyx.framework.service.ModelServiceImpl;
 import com.inferyx.framework.service.ParamSetServiceImpl;
 
 /**
@@ -54,9 +49,9 @@ import com.inferyx.framework.service.ParamSetServiceImpl;
 @Component
 public class ImputeOperator implements IOperator {
 	
-	private static String SELECT = " SELECT ";
-	private static String FROM = " FROM ";
-	private static String AS = " AS ";
+//	private static String SELECT = " SELECT ";
+//	private static String FROM = " FROM ";
+//	private static String AS = " AS ";
 	
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
@@ -77,7 +72,7 @@ public class ImputeOperator implements IOperator {
 	@Autowired
 	Engine engine;
 	@Autowired
-	private RuleOperator ruleOperator;
+	private ModelServiceImpl modelServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(ImputeOperator.class);
 
@@ -229,7 +224,7 @@ public class ImputeOperator implements IOperator {
 				try {
 					if(feature.getFeatureId().equalsIgnoreCase(featureAttrMap.getFeature().getFeatureId())) {
 						
-						String attrName = getAttributeNameByObject(sourceObj, Integer.parseInt(featureAttrMap.getAttribute().getAttrId()));
+						String attrName = modelServiceImpl.getAttributeNameByObject(sourceObj, Integer.parseInt(featureAttrMap.getAttribute().getAttrId()));
 						if(feature.getImputeMethod() != null 
 								&& feature.getImputeMethod().getRef().getType().equals(MetaType.simple)) {
 							attributeImputeValues.put(attrName, feature.getImputeMethod().getValue());
@@ -303,10 +298,6 @@ public class ImputeOperator implements IOperator {
 			return "SELECT '"+attrName+"' AS key, "+generatedFunction+" AS value FROM "+tableName+" "+rule.getName();								
 		}
 		return null;
-	}
-	
-	public String getAttributeNameByObject(Object object, Integer attributeId) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {		
-		return (String) object.getClass().getMethod("getAttributeName", Integer.class).invoke(object, attributeId);
 	}
 	
 	public String generateFunction(String resolvedFunction, String attributeName) {
