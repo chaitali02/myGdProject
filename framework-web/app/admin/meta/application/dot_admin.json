@@ -1,7 +1,7 @@
 {
     "uuid" : "fb3ec0c4-59eb-4e75-b12d-72d6a19609d9",
     "version" : "1547481808",
-    "name" : "Department of Transportation - FL",
+    "name" : "DOT Admin",
     "desc" : null,
     "createdBy" : {
         "ref" : {
@@ -27,9 +27,5 @@
             },
             "value" : null
         }
-    ],
-    "contact" : [],
-    "phone" : [],
-    "email" : [],
-    "address" : []
+    ]
 }

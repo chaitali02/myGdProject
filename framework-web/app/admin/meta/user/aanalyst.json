@@ -2,32 +2,32 @@
 	"firstName": "analyst",
 	"middleName": "",
 	"lastName": "analyst",
-	"emailId": "analyst@inferyx.com",
+	"emailId": "analyst@aptivaa.com",
 	"password": "analyst",
 	"groupInfo": [
 		{
 			"ref": {
 				"type": "group",
-				"uuid": "74f8e00c-6661-4d11-8ed2-c6edd0ddcdez"
+				"uuid": "a93baa3e-51c9-11e8-9c2d-fa7ae01bbebc"
 			}
 		}
 	],
 	"defaultGroup": {
 		"ref": {
 			"type": "group",
-			"uuid": "74f8e00c-6661-4d11-8ed2-c6edd0ddcdez"
+			"uuid": "a93baa3e-51c9-11e8-9c2d-fa7ae01bbebc"
 		}
 	},
 	"orgInfo": {
 		"ref": {
 			"type": "organization",
-			"uuid": "fb3ec0c4-59eb-4e75-b12d-72d6a19609d9"
+			"uuid": "548b440b-5366-487a-a982-45ebfe9e708c"
 		}
 	},
-	"uuid": "b90933f2-cabb-4b5a-8b74-eec30fcc3264",
+	"uuid": "b9199cf2-cabb-4b5a-8b74-eec30fcc3266",
 	"version": "1548315952",
-	"name": "D_analyst",
-	"desc": "analyst user",
+	"name": "aanalyst",
+	"desc": "Admin user",
 	"createdBy": {
 		"ref": {
 			"type": "user",

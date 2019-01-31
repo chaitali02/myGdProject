@@ -1,21 +1,21 @@
 {
-  "uuid": "c9ae165b-db06-4f9e-8ba8-a77b01001dfg",
-  "version": "1525530938",
-  "name": "Histogram",
-  "desc": "Calculate histogram on columns",
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196"
-    }
-  },
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-  "tags": [],
-  "active" : "Y",
-  "locked" : "N",
-  "published": "N",
-  "operatorType" : "Histogram",
+    "uuid" : "c9ae165b-db06-4f9e-8ba8-a77b01001f9h",
+    "version" : "1525530938",
+    "name" : "Principal Component Analysis",
+    "desc" : "Principal Component Analysis",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196"
+        }
+    },
+    "createdOn" : ISODate("2019-01-29T00:42:29.467Z"),
+    "tags" : [],
+    "active" : "Y",
+    "locked" : "N",
+    "published" : "N",
+    "operatorType" : "PCA",
     "appInfo" : [ 
         {
             "ref" : {
@@ -61,10 +61,10 @@
             }
         }
     ],
-  "paramList": {
-    "ref": {
-      "type": "paramlist",
-      "uuid": "e6760bda-cd34-4a5b-bb56-e7604da8b6f7"
+    "paramList" : {
+        "ref" : {
+            "type" : "paramlist",
+            "uuid" : "dae183bc-0f49-455a-8e25-ce6f01577f29"
+        }
     }
-  }
 }

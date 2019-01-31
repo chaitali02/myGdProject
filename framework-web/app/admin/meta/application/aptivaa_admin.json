@@ -21,8 +21,8 @@
     "applicationType" : "ADMIN",
     "uuid" : "aea8db49-46d5-46e1-9911-4fd9a3034b9e",
     "version" : "1548249437",
-    "name" : "Aptiva Admin",
-    "desc" : "Aptiva Admin",
+    "name" : "Aptivaa Admin",
+    "desc" : "Aptivaa Admin",
     "createdBy" : {
         "ref" : {
             "type" : "user",
