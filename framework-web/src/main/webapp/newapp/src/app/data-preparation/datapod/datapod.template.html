@@ -41,16 +41,13 @@
             </a>
           </div> -->
           <div class="tools">
-            <!-- <a title="View" data-toggle="tooltip" (click)="showview(uuid,version)" data-placement="top" tooltip style="height:16px;"
-              *ngIf="mode">
-              <span class="glyphicon glyphicon-file" style="color:white;"></span>
-            </a> -->
-            <a href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top" tooltip *ngIf="mode" style="height:16px;font-size:16px;"
-              (click)="showview(uuid,version)">
+            <a style="color:white" title="Main" data-placement="top" tooltip [ngClass]="isHomeEnable==true ? 'notcurrentpage':'currentpage'"
+              data- (click)="showMainPage(datapodjson.uuid,datapodjson.version)">
               <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
-            <a title="Edit" ng-disabled="isPrivlage" (click)="enableEdit(uuid,version)" data-toggle="tooltip"
-              data-placement="top" tooltip style="height:16px;" *ngIf="mode">
+
+            <a href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top" tooltip [ngClass]="mode == 'true' && showGraph == false?'notcurrentpage':'currentpage'"
+              data-(click)="enableEdit(datapodjson.uuid,datapodjson.version)">
               <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
 
@@ -58,29 +55,32 @@
               style="height:16px;">
               <i class="fa fa-clone" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
+
             <a title="Sample Records" data-toggle="tooltip" data-placement="top" tooltip *ngIf="mode" (click)="showDatapodSampleTable(locations)"
               style="height:16px;">
               <i class="fa fa-table" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
+
             <a title="Data Store" data-toggle="tooltip" data-placement="top" tooltip *ngIf="mode" (click)="showDatastrores(locations)"
               style="height:16px;">
               <i class="fa fa-database" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
+
             <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top"
               tooltip (click)="downloadDatapodResult('datapod')" *ngIf="mode">
               <i class="fa fa-download" area-hidden="true"></i>
             </a>
 
-            <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Show Dependencies"
-              data-placement="top" tooltip [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'" data-(click)="showDagGraph(uuid,version)">
-              <i class="fa fa-sitemap" style="margin:2px auto;color:#a0a0a0;"></i>
+            <a href="javascript:;" title="Show Dependencies" data-placement="top" tooltip [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'"
+              data- (click)="showDagGraph(datapodjson.uuid,datapodjson.version)">
+              <i class="fa fa-sitemap" style="display: inline;margin:2px auto;color:white;"></i>
             </a>
-            
+
             <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip>
-              <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+              <i class="fa fa-refresh" aria-hidden="true" style="display: inline;margin: 2px auto;color:white;"></i>
             </a>
             <a title="Close" data-toggle="tooltip" data-placement="top" tooltip style="height:14px;" (click)="goBack()">
-              <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform:scale(1,1.2)"></i>
+              <i class="fa fa-times" aria-hidden="true" style="display: inline;margin: 2px auto;color:white;"></i>
             </a>
           </div>
         </div>
@@ -246,7 +246,7 @@
             </div>
           </div>
 
-          <div class="form-body" [hidden]="!showdatapod" style="padding-top:50px;">
+          <div class="form-body" [hidden]="!showdatapod" style="padding-top:50px;" *ngIf="!showGraph">
             <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="submitDatapod()" #myNewForm="ngForm">
               <div class="form-group" *ngIf="mode">
                 <label class="col-md-3 control-label">UUID</label>

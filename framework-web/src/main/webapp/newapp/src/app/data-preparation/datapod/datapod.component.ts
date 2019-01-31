@@ -108,6 +108,7 @@ export class DatapodComponent {
 
   constructor(private _config: AppConfig,public metaconfig: AppMetadata, public apphelper: AppHepler, private http: Http, private _commonService: CommonService, private _datapodService: DatapodService, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _service: MetaDataDataPodService, private route: ActivatedRoute) {
     this.baseUrl = config.getBaseUrl();
+    this.isHomeEnable = false
     this.selectVersion = { "version": "" };
     this.showdatapod = true;
     this.isSubmitEnable = true;
@@ -158,6 +159,12 @@ export class DatapodComponent {
     });
   }
 
+  showMainPage() {
+    this.isHomeEnable = false
+    // this._location.back();
+    this.showGraph = false;
+  }
+  
   showDagGraph(uuid,version){
     this.isHomeEnable = true;
     this.showGraph = true;

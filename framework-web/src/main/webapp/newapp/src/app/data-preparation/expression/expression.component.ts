@@ -60,6 +60,7 @@ export class ExpressionComponent implements OnInit {
     this.uuid = '';
     this.isDependonDisabled = false;
     this.showExpression = true;
+    this.isHomeEnable = false
     this.showGraph = false
     this.expression = {};
     this.tags = [];

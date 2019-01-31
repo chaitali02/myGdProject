@@ -52,6 +52,7 @@ export class FunctionComponent implements OnInit {
 
   constructor(config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
     this.showFunctionData = true;
+    this.isHomeEnable = false
     this.functionData = {};
     this.functionData["active"] = true
 

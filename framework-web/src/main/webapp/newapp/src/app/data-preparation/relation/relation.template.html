@@ -14,17 +14,17 @@
           
           <div class="tools">
             <a style="color:white" title="Main" data-placement="top" tooltip [ngClass]="isHomeEnable==true ? 'notcurrentpage':'currentpage'"
-              data- (click)="showMainPage(mapData.uuid,mapData.version)">
+              data- (click)="showMainPage(relationData.uuid,relationData.version)">
               <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
 
             <a href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top" tooltip [ngClass]="mode == 'true' && showGraph == false? 'notcurrentpage':'currentpage'"
-              data-(click)="enableEdit(mapData.uuid,mapData.version)">
+              data-(click)="enableEdit(relationData.uuid,relationData.version)">
               <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
 
             <a href="javascript:;" title="Show Dependencies" data-placement="top" tooltip [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'"
-              data- (click)="showDagGraph(mapData.uuid,mapData.version)">
+              data- (click)="showDagGraph(relationData.uuid,relationData.version)">
               <i class="fa fa-sitemap" style="display: inline;margin:2px auto;color:white;"></i>
             </a>
             <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip>
