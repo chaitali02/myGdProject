@@ -1,45 +1,13 @@
 {
-  "uuid": "0ed9fb89-a7db-4c78-a5ab-3b2729f04201",
-  "version": "1547761505",
-  "name": "RLU Prediction - GBT",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
+    "type" : "SPARK",
+    "dependsOn" : {
+        "ref" : {
+            "type" : "algorithm",
+            "uuid" : "b1061392-5ef7-454c-8280-cf8180fc0035"
+        }
     },
-    "value": null
-  },
-  "createdOn": "Thu Jan 17 16:45:04 EST 2019",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
-        "version": "1521430822",
-        "name": "Dept Of Transportation"
-      },
-      "value": null
-    }
-  ],
-  "type": "SPARK",
-  "dependsOn": {
-    "ref": {
-      "type": "algorithm",
-      "uuid": "b1061392-5ef7-454c-8280-cf8180fc0035",
-      "version": null,
-      "name": "Gradient Boosted Trees"
-    },
-    "value": null
-  },
-  "label": "problem_reported",
-  "features": [ 
+    "label" : "problem_reported",
+    "features" : [ 
         {
             "featureId" : "1",
             "featureDisplaySeq" : "0",
@@ -712,54 +680,38 @@
         {
             "featureId" : "68",
             "featureDisplaySeq" : "67",
-            "name" : "warn_type1_total_rollingmean_3",
-            "type" : "integer",
+            "name" : "features",
+            "type" : "string",
             "desc" : "",
             "minVal" : 0,
-            "maxVal" : 0,
-            "encodingType" : "ONEHOT"
-        }, 
-        {
-            "featureId" : "69",
-            "featureDisplaySeq" : "68",
-            "name" : "warn_type1_total_rollingdiff_3",
-            "type" : "integer",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "encodingType" : "ONEHOT"
-        }, 
-        {
-            "featureId" : "70",
-            "featureDisplaySeq" : "69",
-            "name" : "warn_type1_total_rollingstd_3",
-            "type" : "integer",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "encodingType" : "ONEHOT"
-        }, 
-        {
-            "featureId" : "72",
-            "featureDisplaySeq" : "70",
-            "name" : "warn_type1_total_rollingmax_3",
-            "type" : "integer",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "encodingType" : "ONEHOT"
-        }, 
-        {
-            "featureId" : "73",
-            "featureDisplaySeq" : "71",
-            "name" : "warn_type1_total_rollingmin_3",
-            "type" : "integer",
-            "desc" : "",
-            "minVal" : 0,
-            "maxVal" : 0,
-            "encodingType" : "ONEHOT"
+            "maxVal" : 0
         }
-  ],
-  "scriptName": null,
-  "customFlag": "N"
+    ],
+    "customFlag" : "N",
+    "uuid" : "0ed9fb89-a7db-4c78-a5ab-3b2729f04201",
+    "version" : "1549028764",
+    "name" : "RLU Prediction - GBT",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2019-02-01T13:46:04.000Z"),
+    "tags" : [],
+    "active" : "Y",
+    "locked" : "N",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+                "version" : "1521430822",
+                "name" : "Dept Of Transportation"
+            }
+        }
+    ]
 }

@@ -1297,83 +1297,7 @@
                 }
             },
             "attribute" : {
-                "attrId" : "80",
-                "ref" : {
-                    "type" : "dataset",
-                    "uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84"
-                }
-            }
-        }, 
-        {
-            "featureMapId" : "68",
-            "featureDisplaySeq" : "68",
-            "feature" : {
-                "featureId" : "69",
-                "featureDefaultValue" : 0.0,
-                "ref" : {
-                    "type" : "model",
-                    "uuid" : "0ed9fb89-a7db-4c78-a5ab-3b2729f04201"
-                }
-            },
-            "attribute" : {
-                "attrId" : "81",
-                "ref" : {
-                    "type" : "dataset",
-                    "uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84"
-                }
-            }
-        }, 
-        {
-            "featureMapId" : "69",
-            "featureDisplaySeq" : "69",
-            "feature" : {
-                "featureId" : "70",
-                "featureDefaultValue" : 0.0,
-                "ref" : {
-                    "type" : "model",
-                    "uuid" : "0ed9fb89-a7db-4c78-a5ab-3b2729f04201"
-                }
-            },
-            "attribute" : {
-                "attrId" : "82",
-                "ref" : {
-                    "type" : "dataset",
-                    "uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84"
-                }
-            }
-        }, 
-        {
-            "featureMapId" : "70",
-            "featureDisplaySeq" : "70",
-            "feature" : {
-                "featureId" : "72",
-                "featureDefaultValue" : 0.0,
-                "ref" : {
-                    "type" : "model",
-                    "uuid" : "0ed9fb89-a7db-4c78-a5ab-3b2729f04201"
-                }
-            },
-            "attribute" : {
-                "attrId" : "83",
-                "ref" : {
-                    "type" : "dataset",
-                    "uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84"
-                }
-            }
-        }, 
-        {
-            "featureMapId" : "71",
-            "featureDisplaySeq" : "71",
-            "feature" : {
-                "featureId" : "73",
-                "featureDefaultValue" : 0.0,
-                "ref" : {
-                    "type" : "model",
-                    "uuid" : "0ed9fb89-a7db-4c78-a5ab-3b2729f04201"
-                }
-            },
-            "attribute" : {
-                "attrId" : "84",
+                "attrId" : "86",
                 "ref" : {
                     "type" : "dataset",
                     "uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84"
@@ -1410,7 +1334,7 @@
     "includeFeatures" : "Y",
     "saveTrainingSet" : "N",
     "uuid" : "7f019a46-2d40-4b91-b7be-3ce93f6c65b0",
-    "version" : "1548999466",
+    "version" : "1549029014",
     "name" : "RLU Prediction - GBT",
     "createdBy" : {
         "ref" : {
@@ -1420,7 +1344,7 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2019-02-01T05:37:46.000Z"),
+    "createdOn" : ISODate("2019-02-01T13:50:14.000Z"),
     "tags" : [],
     "active" : "Y",
     "locked" : "N",
