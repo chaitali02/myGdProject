@@ -142,7 +142,23 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 		}
 	}
 	
+	$scope.getLatestByUuid=function(){
+		AdminUserService.getLatestByUuid($rootScope.appUuid,'application').then(function(response){onSuccessGetLatestByUuid(response.data)});
+	    var onSuccessGetLatestByUuid=function(response){
+			$scope.applicationOrgDetail=response;
+			if($scope.applicationOrgDetail.applicationType =="SYSADMIN"){
+				$scope.getAllLatestOrgnization();
+				
 
+			}
+			else{
+				$scope.selectOrgInfo={};
+				$scope.selectOrgInfo.uuid=$scope.applicationOrgDetail.orgInfo.ref.uuid;
+				$scope.getGroupsByOrg($scope.selectOrgInfo.uuid);
+
+			}
+		}
+	}
 	// AdminUserService.getAllLatest('role').then(function (response) { onSuccessGetAllLatestRole(response.data) });
 	// var onSuccessGetAllLatestRole = function (response) {
 	// 	var roleInfoArray = [];
@@ -255,7 +271,8 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 					$scope.tags = tags;
 				}
 			}//End Innter If
-            $scope.getAllLatestOrgnization();
+			$scope.getLatestByUuid();
+           // $scope.getAllLatestOrgnization();
 			$scope.selectOrgInfo={};
 			
 			if(response.orgInfo !=null){
@@ -315,7 +332,9 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 					$scope.tags = tags;
 				}
 			}//End Innter If
-			$scope.getAllLatestOrgnization();
+			$scope.getLatestByUuid();
+
+			//$scope.getAllLatestOrgnization();
 			$scope.selectOrgInfo={};
 			if(response.orgInfo !=null){
 				$scope.getGroupsByOrg(response.orgInfo.ref.uuid);	
@@ -333,6 +352,8 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 	else{
 		$scope.userdata={};
 		$scope.userdata.locked="N";
+		$scope.getLatestByUuid();
+		//$scope.getAllLatestOrgnization();
 	}
 
 

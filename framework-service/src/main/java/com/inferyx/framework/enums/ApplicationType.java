@@ -1,5 +1,5 @@
 package com.inferyx.framework.enums;
 
 public enum ApplicationType {
-	ADMIN, DEFAULT;
+	ADMIN, DEFAULT, SYSADMIN, APPADMIN;
 }
