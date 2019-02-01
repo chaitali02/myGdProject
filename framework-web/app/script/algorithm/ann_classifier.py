@@ -577,13 +577,17 @@ def train():
     dataset = getData(sourceFilePath, sourceDsType, sourceHostName, sourceDbName, sourcePort, sourceUserName, sourcePassword, query)
     
     if saveTrainingSet == "Y":
-        tempDataset = dataset
         X = dataset.iloc[:, 1:]
         X_train, X_test = train_test_split(X, test_size = testPercent, random_state = 0)
         schema = getSparkSchemaByDtypes(X_train.dtypes)
         spark_df = createSparkDfByPandasDfAndSparkSchema(X_train, schema)
         saveSparkDf(spark_df, otherParams["trainSetPath"])
         print("trainingset saved at: ", otherParams["trainSetPath"])
+        spark_df = None
+        schema = None
+        X_train = None
+        X_test = None
+        X = None
     
     if imputationDetails != None:
         dataset = imputeData(dataset, imputationDetails)
