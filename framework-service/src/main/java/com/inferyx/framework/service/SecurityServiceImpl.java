@@ -476,6 +476,7 @@ public class SecurityServiceImpl  implements Serializable{
 		return privInfo;
 	}
 	public String getAppRole(String userName) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException{
+		System.out.println("userName: "+userName);
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		User user = userServiceImpl.findUserByName(userName);
 		user=(User) commonServiceImpl.getLatestByUuid(user.getUuid(),MetaType.user.toString(),"N");

@@ -1906,51 +1906,48 @@ public class SparkExecutor<T> implements IExecutor {
 				
 		return valueList;
 	}
-	
-	public ResultSetHolder preparePredictDfForEncoding(ResultSetHolder rsHolder, Map<String, EncodingType> encodingDetails, boolean registerTempTable, String tempTableName) throws IOException {
-//*******************************************************************************************************************
-//*******************************************************************************************************************
-			Dataset<Row> df = rsHolder.getDataFrame();
-			logger.info("df 1");
-			df.printSchema();
-			List<PipelineStage> pipelineStagesTrng = new ArrayList<>();
-			for(String colName : encodingDetails.keySet()) {
-				encodeDataframe(colName, colName.concat("_vec"), encodingDetails.get(colName), pipelineStagesTrng);
-			}
-			
-			//fitting training dataframe
-			Pipeline pipelineTrng = new Pipeline().setStages(pipelineStagesTrng.toArray(new PipelineStage[pipelineStagesTrng.size()]));
-			PipelineModel trngModel = pipelineTrng.fit(df);
-			df = trngModel.transform(df);
-			logger.info("df 2");
-			df.printSchema();
-			
-			List<String> columnNames = new ArrayList<>(Arrays.asList(df.columns()));
-			
-			for(String colName : encodingDetails.keySet()) {
-				logger.info("colName : " + colName);
-//				df = df.drop(colName);
-				df = columnNames.contains(colName+"_vec")?df.withColumnRenamed(colName, colName+"_raw"):df;
-				df = df.withColumnRenamed(colName+"_vec", colName);
-			}
-			
-			for(String colName : df.columns()) {
-				if(colName.endsWith("_category_index")) {
-					df = df.drop(colName);
-				}
-			}	
-			logger.info("df 3");
-			df.printSchema();
-			rsHolder.setDataFrame(df);
-//*******************************************************************************************************************
-//*******************************************************************************************************************
-			if(registerTempTable) {
-				IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
-				SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
-				sparkSession.sqlContext().registerDataFrameAsTable(df, tempTableName);
-			}
-			return rsHolder;
-	}
+
+	/********************** UNUSED **********************/
+//	public ResultSetHolder preparePredictDfForEncoding(ResultSetHolder rsHolder, Map<String, EncodingType> encodingDetails, boolean registerTempTable, String tempTableName) throws IOException {
+//			Dataset<Row> df = rsHolder.getDataFrame();
+//			logger.info("df 1");
+//			df.printSchema();
+//			List<PipelineStage> pipelineStagesTrng = new ArrayList<>();
+//			for(String colName : encodingDetails.keySet()) {
+//				encodeDataframe(colName, colName.concat("_vec"), encodingDetails.get(colName), pipelineStagesTrng);
+//			}
+//			
+//			//fitting training dataframe
+//			Pipeline pipelineTrng = new Pipeline().setStages(pipelineStagesTrng.toArray(new PipelineStage[pipelineStagesTrng.size()]));
+//			PipelineModel trngModel = pipelineTrng.fit(df);
+//			df = trngModel.transform(df);
+//			logger.info("df 2");
+//			df.printSchema();
+//			
+//			List<String> columnNames = new ArrayList<>(Arrays.asList(df.columns()));
+//			
+//			for(String colName : encodingDetails.keySet()) {
+//				logger.info("colName : " + colName);
+////				df = df.drop(colName);
+//				df = columnNames.contains(colName+"_vec")?df.withColumnRenamed(colName, colName+"_raw"):df;
+//				df = df.withColumnRenamed(colName+"_vec", colName);
+//			}
+//			
+//			for(String colName : df.columns()) {
+//				if(colName.endsWith("_category_index")) {
+//					df = df.drop(colName);
+//				}
+//			}	
+//			logger.info("df 3");
+//			df.printSchema();
+//			rsHolder.setDataFrame(df);
+//			if(registerTempTable) {
+//				IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+//				SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
+//				sparkSession.sqlContext().registerDataFrameAsTable(df, tempTableName);
+//			}
+//			return rsHolder;
+//	}
 	
 	@Override
 	public ResultSetHolder predict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName, String clientContext, Map<String, EncodingType> encodingDetails) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
@@ -2315,46 +2312,6 @@ public class SparkExecutor<T> implements IExecutor {
 
 		}
 		return pipelineStageList;
-	}
-
-	public void testEncode() throws IOException {
-		List<Row> data = Arrays.asList(
-				  RowFactory.create(0, "a"),
-				  RowFactory.create(1, "b"),
-				  RowFactory.create(2, "c"),
-				  RowFactory.create(3, "a"),
-				  RowFactory.create(4, "a"),
-				  RowFactory.create(5, "c")
-				);
-
-				StructType schema = new StructType(new StructField[]{
-				  new StructField("id", DataTypes.IntegerType, false, Metadata.empty()),
-				  new StructField("category", DataTypes.StringType, false, Metadata.empty())
-				});
-
-				IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
-				SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
-				Dataset<Row> df = sparkSession.createDataFrame(data, schema);
-
-				StringIndexerModel indexer = new StringIndexer()
-				  .setInputCol("category")
-				  .setOutputCol("categoryIndex")
-				  .setHandleInvalid("keep")
-				  .fit(df);
-				Dataset<Row> indexed = indexer.transform(df);
-				
-				System.out.println("showing indexed>>");
-				indexed.show(false);
-				
-				org.apache.spark.ml.feature.OneHotEncoder encoder = new org.apache.spark.ml.feature.OneHotEncoder()
-				  .setInputCol("categoryIndex")
-				  .setOutputCol("categoryVec");
-
-				Dataset<Row> encoded = encoder.transform(indexed);
-
-				System.out.println("showing encoded>>");
-				encoded.show(false);
-				System.out.println();
 	}
 	
 	public void saveTrainedTestDataset(Dataset<Row> trainedDataSet, Dataset<Row> valDf
