@@ -3,19 +3,19 @@
 	"middleName": "",
 	"lastName": "Administrator",
 	"emailId": "admin@dot.com",
-	"password": "admin",
+	"password": "dadmin",
 	"groupInfo": [
 		{
 			"ref": {
 				"type": "group",
-				"uuid": "986e84eb-03ab-46e1-82cc-83f48e6a70dz"
+				"uuid": "5c88c2d6-c80e-4196-afc4-f8cf6c6e9470"
 			}
 		}
 	],
 	"defaultGroup": {
 		"ref": {
 			"type": "group",
-			"uuid": "986e84eb-03ab-46e1-82cc-83f48e6a70dz"
+			"uuid": "5c88c2d6-c80e-4196-afc4-f8cf6c6e9470"
 		}
 	},
 	"orgInfo": {
