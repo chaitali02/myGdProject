@@ -3,15 +3,7 @@
  */
 AdminModule = angular.module('AdminModule');
 AdminModule.factory('MetadataApplicationFactory', function ($http, $location) {
-	var factory = {}
-	factory.findLatestByUuid = function (uuid, type) {
-		var url = $location.absUrl().split("app")[0]
-		return $http({
-			url: url + "common/getLatestByUuid?action=view&uuid=" + uuid + "&type=" + type,
-			method: "GET",
-		}).then(function (response) { return response })
-	}
-	var factory = {}
+	var factory = {};
 	factory.findLatestByUuid = function (uuid, type) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
@@ -114,9 +106,9 @@ AdminModule.service('MetadataApplicationSerivce', function ($q, sortFactory, Met
 		return deferred.promise;
 	};
 
-	this.getLatestByUuid = function (id, type) {
+	this.getLatestByUuid = function (uuid, type) {
 		var deferred = $q.defer();
-		MetadataApplicationFactory.findLatestByUuid(id, type).then(function (response) { onSuccess(response.data) });
+		MetadataApplicationFactory.findLatestByUuid(uuid, type).then(function (response) { onSuccess(response.data) });
 		var onSuccess = function (response) {
 			deferred.resolve({
 				data: response

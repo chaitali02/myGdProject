@@ -810,7 +810,37 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
       }
     }
   }
+  
+  $scope.attrTableSelectedItem=[];
+	$scope.onChangeAttrRow=function(index,status){
+		if(status ==true){
+			$scope.attrTableSelectedItem.push(index);
+		}
+		else{
+			let tempIndex=$scope.attrTableSelectedItem.indexOf(index);
 
+			if(tempIndex !=-1){
+				$scope.attrTableSelectedItem.splice(tempIndex, 1);
+
+			}
+		}	
+	}
+	$scope.autoMove=function(index){
+		var tempAtrr=$scope.featureMapTableArray[$scope.attrTableSelectedItem[0]];
+		$scope.featureMapTableArray.splice($scope.attrTableSelectedItem[0],1);
+		$scope.featureMapTableArray.splice(index,0,tempAtrr);
+		$scope.attrTableSelectedItem=[];
+		$scope.featureMapTableArray[index].selected=false;
+	
+	}
+
+	$scope.autoMoveTo=function(index){
+		if(index <= $scope.featureMapTableArray.length){
+			$scope.autoMove(index-1,'mapAttr');
+			$scope.moveTo=null;
+			$(".btn-group ").removeClass("open");
+		}
+	}
   // $scope.getResults = function(pagination,params) {
   //   pagination.totalItems=params.length;
   //   if(pagination.totalItems >0){

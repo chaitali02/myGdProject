@@ -212,9 +212,15 @@
                                             <span class="required" aria-required="true"> * </span>
                                     </label>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
-                                        <select class="form-control" select2 ng-disabled="{{mode}}" ng-change="onChangeOrg()" data-ng-model="selectOrgInfo" ng-options="r as r.name for r in allOrgnization  track by r.uuid "
-                                        required>
-                                        </select>
+                                        <div ng-if="applicationOrgDetail.applicationType =='SYSADMIN'">
+                                                <select class="form-control" select2 ng-disabled="{{mode}}" data-ng-model="selectOrgInfo" ng-change="onChangeOrg()" ng-options="r as r.name for r in allOrgnization  track by r.uuid "
+                                                required>
+                                                </select>
+                                        </div>
+                                        <div ng-if="applicationOrgDetail.applicationType =='APPADMIN' ||applicationOrgDetail.applicationType =='DEFAULT'  ">
+                        
+                                            <input type="text" ng-model="applicationOrgDetail.orgInfo.ref.name" ng-disabled="true" class="form-control">
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group">

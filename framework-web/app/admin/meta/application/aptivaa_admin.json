@@ -18,7 +18,7 @@
             "uuid" : "548b440b-5366-487a-a982-45ebfe9e708c"
         }
     },
-    "applicationType" : "ADMIN",
+    "applicationType" : "APPADMIN",
     "uuid" : "aea8db49-46d5-46e1-9911-4fd9a3034b9e",
     "version" : "1548249437",
     "name" : "Aptivaa Admin",

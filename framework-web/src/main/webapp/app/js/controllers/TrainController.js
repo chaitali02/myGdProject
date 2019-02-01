@@ -4,7 +4,7 @@
 DatascienceModule = angular.module('DatascienceModule');
 
 DatascienceModule.controller('CreateTrainController', function ($state, $stateParams, $rootScope, $scope, $sessionStorage,
-  $timeout, $filter, TrainService, $http, $location, CommonService, privilegeSvc, CF_ENCODINGTYPE, CF_GRID) {
+  $timeout, $filter, TrainService, $http, $location, CommonService, privilegeSvc,CF_ENCODINGTYPE, CF_GRID) {
 
   $scope.isTargetNameDisabled = false;
   $scope.dataLoading = false;
@@ -964,39 +964,39 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
       stage.selected = $scope.selectAllParam;
     });
   }
+  $scope.attrTableSelectedItem=[];
+	$scope.onChangeAttrRow=function(index,status){
+		if(status ==true){
+			$scope.attrTableSelectedItem.push(index);
+		}
+		else{
+			let tempIndex=$scope.attrTableSelectedItem.indexOf(index);
 
-  // $scope.getResults = function(pagination,params) {
-  //   pagination.totalItems=params.length;
-  //   if(pagination.totalItems >0){
-  //     pagination.to = (((pagination.currentPage - 1) * (pagination.usePageSize))+1);
-  //   }
-  //   else{
-  //     pagination.to=0;
-  //   }
-  //   if(pagination.totalItems < (pagination.usePageSize*pagination.currentPage)) {
-  //       pagination.from = pagination.totalItems;
-  //   } else {
-  //     pagination.from = ((pagination.currentPage) * pagination.usePageSize);
-  //   }
-  //   var limit = (pagination.usePageSize* pagination.currentPage);
-  //   var offset = ((pagination.currentPage - 1) * pagination.usePageSize)
-  //   return params.slice(offset,limit);
-  // }
+			if(tempIndex !=-1){
+				$scope.attrTableSelectedItem.splice(tempIndex, 1);
 
-  // $scope.onPageChanged = function(){
-  //   $scope.featureMapTableArray =$scope.getResults($scope.pagination,$scope.originalFeatureMapTableArray);
-  // };
-  // $scope.onPerPageChange=function(){
-  //   if($scope.pagination.pageSize == 'All'){
-  //     $scope.pagination.usePageSize=$scope.originalFeatureMapTableArray.length;
-  //   }else{
-  //     $scope.pagination.usePageSize=$scope.pagination.pageSize;
-  //   }
-  //   $scope.featureMapTableArray =$scope.getResults($scope.pagination,$scope.originalFeatureMapTableArray);
-  // }  
+			}
+		}	
+	}
+	$scope.autoMove=function(index){
+		var tempAtrr=$scope.featureMapTableArray[$scope.attrTableSelectedItem[0]];
+		$scope.featureMapTableArray.splice($scope.attrTableSelectedItem[0],1);
+		$scope.featureMapTableArray.splice(index,0,tempAtrr);
+		$scope.attrTableSelectedItem=[];
+		$scope.featureMapTableArray[index].selected=false;
+	
+	}
 
-
+	$scope.autoMoveTo=function(index){
+		if(index <= $scope.featureMapTableArray.length){
+			$scope.autoMove(index-1,'mapAttr');
+			$scope.moveTo=null;
+			$(".btn-group ").removeClass("open");
+		}
+	}
+  
 }); //End CreateModelController
+
 
 DatascienceModule.filter('propsFilter', function () {
   return function (items, props) {
