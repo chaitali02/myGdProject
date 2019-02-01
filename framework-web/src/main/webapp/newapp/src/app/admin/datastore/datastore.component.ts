@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AppConfig } from '../../app.config';
 import { SelectItem } from 'primeng/primeng';
 import { ActivatedRoute, Router, Params } from '@angular/router';
@@ -7,6 +7,7 @@ import { CommonService } from '../../metadata/services/common.service';
 import { datasource } from '../../data-preparation/datapod/datapod';
 import { Datastore } from '../../metadata/domain/domain.datastore';
 import { Version } from '../../shared/version';
+import { KnowledgeGraphComponent } from '../../shared/components/knowledgeGraph/knowledgeGraph.component';
 
 @Component({
   selector: 'app-datastore',
@@ -57,12 +58,14 @@ export class DatastoreComponent implements OnInit {
   isSubmitEnable: any;
 
   isHomeEnable: boolean = false
-  showGraph: boolean = false;
+  showGraph: boolean;
   isDependencyGraphEnable: boolean = true;
   isShowReportData: boolean = true;
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
 
   constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
     this.showDatastore = true;
+    this.showGraph = false
     this.datastore = {};
     this.datastore["active"] = true
     this.metaId = {};
@@ -105,6 +108,14 @@ export class DatastoreComponent implements OnInit {
         this.getAllVersionByUuid();
       }
     })
+  }
+
+  showDagGraph(uuid,version){
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id,this.version);
+    }, 1000); 
   }
 
   getOneByUuidAndVersion() {
@@ -312,18 +323,12 @@ export class DatastoreComponent implements OnInit {
     this._location.back();
   }
 
-  showMainPage(uuid, version) {
+  showMainPage() {
     this.isHomeEnable = false
+    // this._location.back();
     this.showGraph = false;
-    this.isDependencyGraphEnable = true;
-    this.isShowReportData = true;
   }
-  showDependencyGraph(uuid, version) {
-    console.log("showDependencyGraph call.....");
-    this.showGraph = true;
-    this.isDependencyGraphEnable = false;
-    this.isHomeEnable = true;
-  }
+
   enableEdit(uuid, version) {
     console.log("enableEdit call.....");
   }

@@ -32,15 +32,15 @@
           </div>
 
           <div class="portlet-body form">
-            <div class="form-body graph-body" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=')" *ngIf="showgraphdiv">
+            <div class="form-body graph-body" *ngIf="showGraph" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=');">
               <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
-              <!--<div class="spinner" id="graphloader">-->
-                <!--<div class="bounce1"></div>-->
-                <!--<div class="bounce2"></div>-->
-                <!--<div class="bounce3"></div>-->
-              <!--</div>-->
-              <div class="form-body show-graph-body" id="graphWrapper">
-                <app-d3></app-d3>
+              <div class="spinner" id="graphloader">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
+              </div>
+              <div class="show-graph-body" id="graphWrapper" >
+                <knowledge-graph ></knowledge-graph>
               </div>
             </div>
           

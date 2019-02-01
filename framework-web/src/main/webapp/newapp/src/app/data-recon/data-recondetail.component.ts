@@ -1,5 +1,5 @@
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Router, Event as RouterEvent, ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
 import { Message } from 'primeng/components/common/api';
@@ -11,6 +11,7 @@ import { DataReconService } from '../metadata/services/dataRecon.services';
 import { Version } from './../metadata/domain/version'
 import { DependsOn } from './dependsOn'
 import { AttributeHolder } from './../metadata/domain/domain.attributeHolder'
+import { KnowledgeGraphComponent } from '../shared/components/knowledgeGraph/knowledgeGraph.component';
 @Component({
   selector: 'app-data-recon',
   templateUrl: './data-recondetail.template.html',
@@ -107,7 +108,11 @@ export class DataReconDetailComponent {
   isSubmit: any
   IsSelectDataType: any
   IsSelectSoureceAttr: any
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
   constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _dataReconService: DataReconService) {
+    
+    this.showGraph = false;
+    this.isHomeEnable = false;
     this.recondata = {};
     this.displayDialogBox = false;
     this.displayDialogBoxTarget = false;
@@ -118,7 +123,7 @@ export class DataReconDetailComponent {
     this.continueCount = 1;
     this.IsSelectSoureceAttr = false;
     this.isSubmit = "false"
-    this.sources = ["datapod","dataset"];
+    this.sources = ["datapod", "dataset"];
     this.source = this.sources[0];
     this.target = this.sources[0];
     this.progressbarWidth = 25 * this.continueCount + "%";
@@ -205,6 +210,14 @@ export class DataReconDetailComponent {
     });
   }
 
+  showDagGraph(uuid, version) {
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id, this.version);
+    }, 1000);
+  }
+
   public goBack() {
     //this._location.back();
     this.router.navigate(['app/list/recon']);
@@ -212,12 +225,12 @@ export class DataReconDetailComponent {
   onChangeSource() {
     this.selectAttribute = null;
     this.getAllAttributeBySource();
-    this.filterTableArray=null
+    this.filterTableArray = null
   }
   onChangeTarget() {
     this.selectAttribute = null;
     this.getAllAttributeByTarget();
-    this.targetFilterTableArray=null
+    this.targetFilterTableArray = null
   }
   OnselectType = function () {
     if (this.selectDataType == "Date") {
@@ -274,7 +287,7 @@ export class DataReconDetailComponent {
     this.allNames = temp
     if (this.mode !== undefined) {
       this.getAllAttributeBySource();
-     // this.getAllAttributeByTarget();
+      // this.getAllAttributeByTarget();
     }
     // if(this.mode != undefined  && this.IsSelectSoureceAttr) {
     //   this.allRefIntegrity=this.allNames;
@@ -306,7 +319,7 @@ export class DataReconDetailComponent {
     }
     this.allNamesTarget = temp
     if (this.mode !== undefined) {
-      
+
       this.getAllAttributeByTarget();
     }
 
@@ -407,10 +420,10 @@ export class DataReconDetailComponent {
   getOneByUuidAndVersion(id, version) {
     this._dataReconService.getOneByUuidAndVersion(id, version, 'recon')
       .subscribe(
-      response => {
-        this.onSuccessgetOneByUuidAndVersion(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.onSuccessgetOneByUuidAndVersion(response)
+        },
+        error => console.log("Error :: " + error));
   }
   onSuccessgetOneByUuidAndVersion(response) {
     this.breadcrumbDataFrom[2].caption = response.recondata.name
@@ -458,8 +471,8 @@ export class DataReconDetailComponent {
     let targetAttr: DependsOn = new DependsOn();
     targetAttr.label = response.recondata["targetAttr"]["attrName"];
     targetAttr["attrId"] = response.recondata["targetAttr"]["attrId"];
-    this.source=response.recondata["sourceAttr"]["ref"]["type"];
-    this.target=response.recondata["targetAttr"]["ref"]["type"];
+    this.source = response.recondata["sourceAttr"]["ref"]["type"];
+    this.target = response.recondata["targetAttr"]["ref"]["type"];
     //this.sourcedata=dependOnTemp;
     // this.getAllVersionByUuid();
     this.getAllLatestSource();
@@ -482,19 +495,19 @@ export class DataReconDetailComponent {
 
     this._commonService.getAllAttributeBySource(this.selectSourceType.uuid, this.source)
       .subscribe(response => { this.onSuccessgetAllAttributeBySource(response) },
-      error => console.log("Error ::", error))
+        error => console.log("Error ::", error))
 
     this._commonService.getFormulaByType(this.selectSourceType.uuid, this.source)
       .subscribe(response => { this.onSuccessgetFormulaByType(response) },
-      error => console.log("Error ::", error))
+        error => console.log("Error ::", error))
 
     this._commonService.getFunctionByCriteria("", "N", "function")
       .subscribe(response => { this.onSuccessgetFunctionByCriteria(response) },
-      error => console.log("Error ::", error))
+        error => console.log("Error ::", error))
 
     this._commonService.getParamByApp("", "application")
       .subscribe(response => { this.onSuccessgetParamByApp(response) },
-      error => console.log("Error ::", error))
+        error => console.log("Error ::", error))
 
     this.filterTableArray = response.filterTableArray
     this.targetFilterTableArray = response.targetFilterTableArray
@@ -506,22 +519,22 @@ export class DataReconDetailComponent {
     if (this.filterTableArray[index]["rhsType"] == 'formula') {
       this._commonService.getFormulaByType(this.selectSourceType.uuid, this.source)
         .subscribe(response => { this.onSuccessgetFormulaByType(response) },
-        error => console.log("Error ::", error))
+          error => console.log("Error ::", error))
     }
     else if (this.filterTableArray[index]["rhsType"] == 'datapod') {
       this._commonService.getAllAttributeBySource(this.selectSourceType.uuid, this.source)
         .subscribe(response => { this.onSuccessgetAllAttributeBySource(response) },
-        error => console.log("Error ::", error))
+          error => console.log("Error ::", error))
     }
     else if (this.filterTableArray[index]["rhsType"] == 'function') {
       this._commonService.getFunctionByCriteria("", "N", "function")
         .subscribe(response => { this.onSuccessgetFunctionByCriteria(response) },
-        error => console.log("Error ::", error))
+          error => console.log("Error ::", error))
     }
     else if (this.filterTableArray[index]["rhsType"] == 'paramlist') {
       this._commonService.getParamByApp("", "application")
         .subscribe(response => { this.onSuccessgetParamByApp(response) },
-        error => console.log("Error ::", error))
+          error => console.log("Error ::", error))
     }
     else if (this.filterTableArray[index]["rhsType"] == 'dataset') {
       let rhsAttribute = {};
@@ -540,13 +553,13 @@ export class DataReconDetailComponent {
     if (this.filterTableArray[index]["lhsType"] == 'formula') {
       this._commonService.getFormulaByType(this.selectSourceType.uuid, this.source)
         .subscribe(response => { this.onSuccessgetFormulaByType(response) },
-        error => console.log("Error ::", error))
+          error => console.log("Error ::", error))
     }
 
     else if (this.filterTableArray[index]["lhsType"] == 'datapod') {
       this._commonService.getAllAttributeBySource(this.selectSourceType.uuid, this.source)
         .subscribe(response => { this.onSuccessgetAllAttributeBySource(response) },
-        error => console.log("Error ::", error))
+          error => console.log("Error ::", error))
     }
     else {
       this.filterTableArray[index]["lhsAttribute"] = null;
@@ -559,22 +572,22 @@ export class DataReconDetailComponent {
     if (this.targetFilterTableArray[index]["rhsType"] == 'formula') {
       this._commonService.getFormulaByType(this.selectSourceType.uuid, this.source)
         .subscribe(response => { this.onSuccessgetFormulaByType(response) },
-        error => console.log("Error ::", error))
+          error => console.log("Error ::", error))
     }
     else if (this.targetFilterTableArray[index]["rhsType"] == 'datapod') {
       this._commonService.getAllAttributeBySource(this.selectSourceType.uuid, this.source)
         .subscribe(response => { this.onSuccessgetAllAttributeBySource(response) },
-        error => console.log("Error ::", error))
+          error => console.log("Error ::", error))
     }
     else if (this.targetFilterTableArray[index]["rhsType"] == 'function') {
       this._commonService.getFunctionByCriteria("", "N", "function")
         .subscribe(response => { this.onSuccessgetFunctionByCriteria(response) },
-        error => console.log("Error ::", error))
+          error => console.log("Error ::", error))
     }
     else if (this.targetFilterTableArray[index]["rhsType"] == 'paramlist') {
       this._commonService.getParamByApp("", "application")
         .subscribe(response => { this.onSuccessgetParamByApp(response) },
-        error => console.log("Error ::", error))
+          error => console.log("Error ::", error))
     }
     else if (this.targetFilterTableArray[index]["rhsType"] == 'dataset') {
       let rhsAttribute = {};
@@ -593,12 +606,12 @@ export class DataReconDetailComponent {
     if (this.targetFilterTableArray[index]["lhsType"] == 'formula') {
       this._commonService.getFormulaByType(this.selectSourceType.uuid, this.source)
         .subscribe(response => { this.onSuccessgetFormulaByType(response) },
-        error => console.log("Error ::", error))
+          error => console.log("Error ::", error))
     }
     else if (this.targetFilterTableArray[index]["lhsType"] == 'datapod') {
       this._commonService.getAllAttributeBySource(this.selectSourceType.uuid, this.source)
         .subscribe(response => { this.onSuccessgetAllAttributeBySource(response) },
-        error => console.log("Error ::", error))
+          error => console.log("Error ::", error))
     }
     else {
       this.targetFilterTableArray[index]["lhsAttribute"] = null;
@@ -627,7 +640,7 @@ export class DataReconDetailComponent {
       attributeObj["value"]["uuid"] = response[i].uuid;
       attributeObj["value"]["label"] = response[i].dname;
       attributeObj["value"]["attributeId"] = response[i].attributeId;
-      attributeObj["value"]["id"] = response[i].uuid+"_"+response[i].attributeId;
+      attributeObj["value"]["id"] = response[i].uuid + "_" + response[i].attributeId;
       temp1[i] = attributeObj
       this.attributesArray = temp1;
     }
@@ -636,10 +649,10 @@ export class DataReconDetailComponent {
   getAllVersionByUuid() {
     this._commonService.getAllVersionByUuid('recon', this.id)
       .subscribe(
-      response => {
-        this.OnSuccesgetAllVersionByUuid(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.OnSuccesgetAllVersionByUuid(response)
+        },
+        error => console.log("Error :: " + error));
   }
   OnSuccesgetAllVersionByUuid(response) {
     for (const i in response) {
@@ -687,18 +700,18 @@ export class DataReconDetailComponent {
       error => console.log('Error :: ' + error)
     )
   }
-  changeSourceType(){
+  changeSourceType() {
     this.getAllLatestSource()
-    this.filterTableArray=[]
+    this.filterTableArray = []
   }
-  changeTargetType(){
-    
+  changeTargetType() {
+
     this.getAllLatestTarget();
     // this._commonService.getAllLatest(this.target).subscribe(
     //   response => { this.OnSuccesgetAllLatest(response) },
     //   error => console.log('Error :: ' + error)
     // )
-    this.targetFilterTableArray=[]
+    this.targetFilterTableArray = []
   }
   OnSuccesgetAllAttributeBySourceDrop(response2, defaultValue, index, type) {
     let temp = []
@@ -928,7 +941,7 @@ export class DataReconDetailComponent {
     this.paramlistArray = temp;
   }
 
-  onChangeOperator(index){
+  onChangeOperator(index) {
     this.filterTableArray[index].rhsAttribute = null;
     if (this.filterTableArray[index].operator == 'EXISTS' || this.filterTableArray[index].operator == 'NOT EXISTS') {
       this.filterTableArray[index].rhsType = 'dataset';
@@ -938,22 +951,22 @@ export class DataReconDetailComponent {
       rhsAttribute["attributeId"] = "";
       this.filterTableArray[index]["rhsAttribute"] = rhsAttribute
     }
-    else if(this.filterTableArray[index].operator == 'IS'){
-			this.filterTableArray[index].rhsType = 'string';
+    else if (this.filterTableArray[index].operator == 'IS') {
+      this.filterTableArray[index].rhsType = 'string';
     }
-    else{
-			this.filterTableArray[index].rhsType = 'integer';
-		}
+    else {
+      this.filterTableArray[index].rhsType = 'integer';
+    }
     // this.filterTableArray[index].rhsAttribute = null;
     // if(this.filterTableArray[index].operator == 'EXISTS' || this.filterTableArray[index].operator == 'NOT EXISTS'){
     //   this.filterTableArray[index].rhsType = 'dataset' ;
     // }
     // else{
-		// 	this.filterTableArray[index].rhsType = 'integer';
-		// }	
+    // 	this.filterTableArray[index].rhsType = 'integer';
+    // }	
   }
 
-  onChangeOperatorTarget(index){
+  onChangeOperatorTarget(index) {
     this.targetFilterTableArray[index].rhsAttribute = null;
     if (this.targetFilterTableArray[index].operator == 'EXISTS' || this.targetFilterTableArray[index].operator == 'NOT EXISTS') {
       this.targetFilterTableArray[index].rhsType = 'dataset';
@@ -963,26 +976,26 @@ export class DataReconDetailComponent {
       rhsAttribute["attributeId"] = "";
       this.targetFilterTableArray[index]["rhsAttribute"] = rhsAttribute
     }
-    else if(this.targetFilterTableArray[index].operator == 'IS'){
-			this.targetFilterTableArray[index].rhsType = 'string';
+    else if (this.targetFilterTableArray[index].operator == 'IS') {
+      this.targetFilterTableArray[index].rhsType = 'string';
     }
-    else{
-			this.filterTableArray[index].rhsType = 'integer';
-		}
+    else {
+      this.filterTableArray[index].rhsType = 'integer';
+    }
     // this.filterTableArray[index].rhsAttribute = null;
     // if(this.targetFilterTableArray[index].operator == 'EXISTS' || this.targetFilterTableArray[index].operator == 'NOT EXISTS'){
     //   this.targetFilterTableArray[index].rhsType = 'dataset' ;
     // }
     // else{
-		// 	this.filterTableArray[index].rhsType = 'integer';
-		// }	
+    // 	this.filterTableArray[index].rhsType = 'integer';
+    // }	
   }
 
   searchOption(index) {
     this.displayDialogBox = true;
     this._commonService.getAllLatest("dataset")
       .subscribe(response => { this.onSuccessgetAllLatestDialogBox(response) },
-      error => console.log("Error ::", error))
+        error => console.log("Error ::", error))
   }
 
   onSuccessgetAllLatestDialogBox(response) {
@@ -1003,7 +1016,7 @@ export class DataReconDetailComponent {
   onChangeDialogAttribute() {
     this._commonService.getAttributesByDataset("dataset", this.dialogSelectName.uuid)
       .subscribe(response => { this.onSuccessgetAttributesByDatasetDialogBox(response) },
-      error => console.log("Error ::", error))
+        error => console.log("Error ::", error))
   }
 
   onSuccessgetAttributesByDatasetDialogBox(response) {
@@ -1038,7 +1051,7 @@ export class DataReconDetailComponent {
     this.displayDialogBoxTarget = true;
     this._commonService.getAllLatest("dataset")
       .subscribe(response => { this.onSuccessgetAllLatestDialogBoxTarget(response) },
-      error => console.log("Error ::", error))
+        error => console.log("Error ::", error))
   }
 
   onSuccessgetAllLatestDialogBoxTarget(response) {
@@ -1059,7 +1072,7 @@ export class DataReconDetailComponent {
   onChangeDialogTargetAttribute() {
     this._commonService.getAttributesByDataset("dataset", this.dialogSelectNameTarget.uuid)
       .subscribe(response => { this.onSuccessgetAttributesByDatasetDialogBoxTarget(response) },
-      error => console.log("Error ::", error))
+        error => console.log("Error ::", error))
   }
 
   onSuccessgetAttributesByDatasetDialogBoxTarget(response) {
@@ -1108,7 +1121,7 @@ export class DataReconDetailComponent {
     dqJson["locked"] = this.recondata.locked == true ? 'Y' : "N"
     dqJson["sourceDistinct"] = this.recondata.sourceDistinct == true ? 'Y' : "N"
     dqJson["targetDistinct"] = this.recondata.targetDistinct == true ? 'Y' : "N"
-    
+
     var sourceattribute = {}
     var ref = {}
     //sourceattribute["attrName"]=this.selectSourceAtrribute["attrName"]
@@ -1414,79 +1427,74 @@ export class DataReconDetailComponent {
       }, 1000);
     }
   }
-  onAttrRowDown(index){
-		var rowTempIndex=this.filterTableArray[index];
-    var rowTempIndexPlus=this.filterTableArray[index+1];
-		this.filterTableArray[index]=rowTempIndexPlus;
-    this.filterTableArray[index+1]=rowTempIndex;
-    this.iSSubmitEnable=true
+  onAttrRowDown(index) {
+    var rowTempIndex = this.filterTableArray[index];
+    var rowTempIndexPlus = this.filterTableArray[index + 1];
+    this.filterTableArray[index] = rowTempIndexPlus;
+    this.filterTableArray[index + 1] = rowTempIndex;
+    this.iSSubmitEnable = true
 
-	}
-	
-	onAttrRowUp(index){
-		var rowTempIndex=this.filterTableArray[index];
-    var rowTempIndexMines=this.filterTableArray[index-1];
-		this.filterTableArray[index]=rowTempIndexMines;
-    this.filterTableArray[index-1]=rowTempIndex;
-    this.iSSubmitEnable=true
   }
-  dragStart(event,data){
+
+  onAttrRowUp(index) {
+    var rowTempIndex = this.filterTableArray[index];
+    var rowTempIndexMines = this.filterTableArray[index - 1];
+    this.filterTableArray[index] = rowTempIndexMines;
+    this.filterTableArray[index - 1] = rowTempIndex;
+    this.iSSubmitEnable = true
+  }
+  dragStart(event, data) {
     console.log(event)
     console.log(data)
-    this.dragIndex=data
+    this.dragIndex = data
   }
-  dragEnd(event){
+  dragEnd(event) {
     console.log(event)
   }
-  drop(event,data){
-    if(this.mode=='false'){
-      this.dropIndex=data
+  drop(event, data) {
+    if (this.mode == 'false') {
+      this.dropIndex = data
       // console.log(event)
       // console.log(data)
-      var item=this.filterTableArray[this.dragIndex]
-      this.filterTableArray.splice(this.dragIndex,1)
-      this.filterTableArray.splice(this.dropIndex,0,item)
-      this.iSSubmitEnable=true
+      var item = this.filterTableArray[this.dragIndex]
+      this.filterTableArray.splice(this.dragIndex, 1)
+      this.filterTableArray.splice(this.dropIndex, 0, item)
+      this.iSSubmitEnable = true
     }
-    
+
   }
-  dropTrgt(event,data){
-    if(this.mode=='false'){
-      this.dropIndex=data
+  dropTrgt(event, data) {
+    if (this.mode == 'false') {
+      this.dropIndex = data
       // console.log(event)
       // console.log(data)
-      var item=this.targetFilterTableArray[this.dragIndex]
-      this.targetFilterTableArray.splice(this.dragIndex,1)
-      this.targetFilterTableArray.splice(this.dropIndex,0,item)
-      this.iSSubmitEnable=true
-    } 
-    
-  }
-  onTrgtRowDown(index){
-    var rowTempIndex=this.targetFilterTableArray[index];
-    var rowTempIndexPlus=this.targetFilterTableArray[index+1];
-    this.targetFilterTableArray[index]=rowTempIndexPlus;
-    this.targetFilterTableArray[index+1]=rowTempIndex;
-    this.iSSubmitEnable=true
+      var item = this.targetFilterTableArray[this.dragIndex]
+      this.targetFilterTableArray.splice(this.dragIndex, 1)
+      this.targetFilterTableArray.splice(this.dropIndex, 0, item)
+      this.iSSubmitEnable = true
+    }
 
   }
-  
-  onTrgtRowUp(index){
-    var rowTempIndex=this.targetFilterTableArray[index];
-    var rowTempIndexMines=this.targetFilterTableArray[index-1];
-    this.targetFilterTableArray[index]=rowTempIndexMines;
-    this.targetFilterTableArray[index-1]=rowTempIndex;
-    this.iSSubmitEnable=true
+  onTrgtRowDown(index) {
+    var rowTempIndex = this.targetFilterTableArray[index];
+    var rowTempIndexPlus = this.targetFilterTableArray[index + 1];
+    this.targetFilterTableArray[index] = rowTempIndexPlus;
+    this.targetFilterTableArray[index + 1] = rowTempIndex;
+    this.iSSubmitEnable = true
+
   }
-  showMainPage(){
+
+  onTrgtRowUp(index) {
+    var rowTempIndex = this.targetFilterTableArray[index];
+    var rowTempIndexMines = this.targetFilterTableArray[index - 1];
+    this.targetFilterTableArray[index] = rowTempIndexMines;
+    this.targetFilterTableArray[index - 1] = rowTempIndex;
+    this.iSSubmitEnable = true
+  }
+  showMainPage() {
     this.isHomeEnable = false
-   // this._location.back();
-   this.showGraph = false;
-  }
-
-  showDagGraph(uuid,version){
-    this.isHomeEnable = true;
-    this.showGraph = true;
+    // this._location.back();
+    this.showGraph = false;
   }
 }
 

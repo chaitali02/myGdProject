@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DatePipe, Location } from '@angular/common';
 import { SelectItem } from 'primeng/primeng';
 import { AppConfig } from '../../../app.config';
@@ -7,6 +7,7 @@ import { CommonService } from '../../../metadata/services/common.service';
 import { Version } from '../../../shared/version';
 
 import { AppMetadata } from '../../../app.metadata'
+import { KnowledgeGraphComponent } from '../../../shared/components/knowledgeGraph/knowledgeGraph.component';
 
 @Component({
   selector: 'app-ruleGroupExec',
@@ -38,6 +39,7 @@ export class RuleGroupExecComponent implements OnInit {
   results : any;
   showResultModel : any;
   routerUrl : any;
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
 
   constructor(private datePipe: DatePipe,private _location: Location,config: AppConfig,public metaconfig: AppMetadata, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService){
     this.showResultModel = true;
@@ -71,6 +73,14 @@ export class RuleGroupExecComponent implements OnInit {
       this.getAllVersionByUuid()
       
       }
+    }
+
+    showDagGraph(uuid,version){
+      this.isHomeEnable = true;
+      this.showGraph = true;
+      setTimeout(() => {
+        this.d_KnowledgeGraphComponent.getGraphData(this.id,this.version);
+      }, 1000); 
     }
 
     onChangeActive(event) {
@@ -181,9 +191,5 @@ export class RuleGroupExecComponent implements OnInit {
     this.showGraph = false;
   }
 
-  showDagGraph(uuid, version) {
-    this.isHomeEnable = true;
-    this.showGraph = true;
-  }
 
 }

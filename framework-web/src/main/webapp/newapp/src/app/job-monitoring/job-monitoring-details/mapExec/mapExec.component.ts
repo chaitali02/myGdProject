@@ -1,4 +1,4 @@
-import { NgModule, Component, ViewEncapsulation, Input } from '@angular/core';
+import { NgModule, Component, ViewEncapsulation, Input, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { AppConfig } from '../../../app.config';
 import { GridOptions } from 'ag-grid/main';
@@ -11,6 +11,7 @@ import { SelectItem } from 'primeng/primeng';
 import { DependsOn } from './dependsOn';
 import { DatePipe } from '@angular/common';
 import * as sqlFormatter from "sql-formatter";
+import { KnowledgeGraphComponent } from '../../../shared/components/knowledgeGraph/knowledgeGraph.component';
 
 @Component({
   selector: 'app-mapExec',
@@ -57,7 +58,8 @@ export class MapExecComponent {
   LoadTargetType: any;
   loadTargetType: any;
   results: any;
-
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
+  
   constructor(private datePipe: DatePipe, private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
     this.mapData = {};
     this.targets = { 'uuid': "", "label": "" }
@@ -92,6 +94,15 @@ export class MapExecComponent {
       this.getOneByUuidAndVersion(this.id, this.version);
     }
   }
+
+  showDagGraph(uuid,version){
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id,this.version);
+    }, 1000); 
+  }
+
   public goBack() {
     this._location.back();
   }
@@ -189,11 +200,6 @@ export class MapExecComponent {
   showMainPage() {
     this.isHomeEnable = false;
     this.showGraph = false;
-  }
-
-  showDagGraph(uuid, version) {
-    this.isHomeEnable = true;
-    this.showGraph = true;
   }
 
   showSqlFormater() {

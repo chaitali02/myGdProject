@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DatePipe, Location } from '@angular/common';
 import { SelectItem } from 'primeng/primeng';
 import { AppConfig } from '../../../app.config';
@@ -6,6 +6,7 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
 import { CommonService } from '../../../metadata/services/common.service';
 import { Version } from '../../../shared/version';
 import * as sqlFormatter from "sql-formatter";
+import { KnowledgeGraphComponent } from '../../../shared/components/knowledgeGraph/knowledgeGraph.component';
 
 @Component({
   selector: 'app-dqExec',
@@ -39,6 +40,7 @@ export class DqExecComponent implements OnInit {
   results: any;
   exec: any;
   showResultModel: any;
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
 
   constructor(private datePipe: DatePipe, private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
     this.showResultModel = true;
@@ -59,6 +61,15 @@ export class DqExecComponent implements OnInit {
       "routeurl": null
     }
     ]
+  }
+
+
+  showDagGraph(uuid, version) {
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id, this.version);
+    }, 1000);
   }
 
   ngOnInit() {
@@ -94,19 +105,19 @@ export class DqExecComponent implements OnInit {
   getOneByUuidAndVersion(id, version) {
     this._commonService.getOneByUuidAndVersion(id, version, 'dqexec')
       .subscribe(
-      response => {//console.log(response)},
-        this.onSuccessgetOneByUuidAndVersion(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {//console.log(response)},
+          this.onSuccessgetOneByUuidAndVersion(response)
+        },
+        error => console.log("Error :: " + error));
   }
 
   getAllVersionByUuid() {
     this._commonService.getAllVersionByUuid('dqexec', this.id)
       .subscribe(
-      response => {
-        this.OnSuccesgetAllVersionByUuid(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.OnSuccesgetAllVersionByUuid(response)
+        },
+        error => console.log("Error :: " + error));
   }
 
   onSuccessgetOneByUuidAndVersion(response) {
@@ -164,10 +175,10 @@ export class DqExecComponent implements OnInit {
   onVersionChange() {
     this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, 'dqexec')
       .subscribe(
-      response => {//console.log(response)},
-        this.onSuccessgetOneByUuidAndVersion(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {//console.log(response)},
+          this.onSuccessgetOneByUuidAndVersion(response)
+        },
+        error => console.log("Error :: " + error));
   }
 
   public goBack() {
@@ -178,18 +189,13 @@ export class DqExecComponent implements OnInit {
     this.isHomeEnable = false;
     this.showGraph = false;
   }
-  
-  showDagGraph(uuid, version) {
-    this.isHomeEnable = true;
-    this.showGraph = true;
-  }
 
   showSqlFormater() {
     this.formattedQuery = sqlFormatter.format(this.dqResultData.exec);
     this.displayDialogBox = true;
   }
-  
-  cancelDialogBox(){
+
+  cancelDialogBox() {
     this.displayDialogBox = false;
   }
 }

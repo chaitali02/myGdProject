@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, ViewChild } from '@angular/core'
 import { AppConfig } from '../../../app.config';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { CommonService } from '../../../metadata/services/common.service';
@@ -8,6 +8,7 @@ import { Location } from '@angular/common';
 import { Observable } from 'rxjs/Observable';
 import { MigrationAssistService } from '../../../metadata/services/migration-assist.services';
 import { AppMetadata } from '../../../app.metadata';
+import { KnowledgeGraphComponent } from '../../../shared/components/knowledgeGraph/knowledgeGraph.component';
 
 @Component({
     selector: 'app-migration-assist-import',
@@ -57,6 +58,7 @@ export class MigrationAssistImportComponent implements OnInit {
     statusCaption: any;
     statusInfo: any[];
     statusType: any;
+    @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
     constructor(private _location: Location, private config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _commonListService: CommonListService, private _migrationAssistService: MigrationAssistService, private _appMetaData: AppMetadata) {
         this.showImportData = true;
         this.importData = {};
@@ -111,6 +113,14 @@ export class MigrationAssistImportComponent implements OnInit {
 
     }
 
+    showDagGraph(uuid, version) {
+        this.isHomeEnable = true;
+        this.showGraph = true;
+        setTimeout(() => {
+            this.d_KnowledgeGraphComponent.getGraphData(this.id, this.version);
+        }, 1000);
+    }
+
     onItemSelect(item: any) {
         //console.log(item);
         // console.log(this.selectedItems);
@@ -129,19 +139,19 @@ export class MigrationAssistImportComponent implements OnInit {
     getOneByUuidAndVersion() {
         this._commonService.getOneByUuidAndVersion(this.id, this.version, 'import')
             .subscribe(
-            response => {
-                this.onSuccessgetOneByUuidAndVersion(response)
-            },
-            error => console.log("Error :: " + error));
+                response => {
+                    this.onSuccessgetOneByUuidAndVersion(response)
+                },
+                error => console.log("Error :: " + error));
     }
 
     getAllVersionByUuid() {
         this._commonService.getAllVersionByUuid('export', this.id)
             .subscribe(
-            response => {
-                this.OnSuccesgetAllVersionByUuid(response)
-            },
-            error => console.log("Error :: " + error));
+                response => {
+                    this.OnSuccesgetAllVersionByUuid(response)
+                },
+                error => console.log("Error :: " + error));
     }
 
     onSuccessgetOneByUuidAndVersion(response) {
@@ -279,9 +289,9 @@ export class MigrationAssistImportComponent implements OnInit {
 
         this._migrationAssistService.uploadFile(fd, f.name, "import", filetype)
             .subscribe(
-            response => {
-                this.onSuccessUpload(response);
-            })
+                response => {
+                    this.onSuccessUpload(response);
+                })
     }
 
     onSuccessUpload(response) {
@@ -344,8 +354,8 @@ export class MigrationAssistImportComponent implements OnInit {
 
         this._migrationAssistService.validateDependancy(this.filename, importJson1)
             .subscribe(
-            response => { this.onSuccessSubmit1(response) },
-            error => console.log('Error :: ' + error))
+                response => { this.onSuccessSubmit1(response) },
+                error => console.log('Error :: ' + error))
     }
     onSuccessSubmit1(response) {
         let validateResponse = JSON.parse(response);
@@ -385,14 +395,12 @@ export class MigrationAssistImportComponent implements OnInit {
             if (check == "off") { this.isSubmitEnable = false }
         }
     }
+
     showMainPage() {
         this.isHomeEnable = false
+        // this._location.back();
         this.showGraph = false;
     }
 
-    showDagGraph(uuid, version) {
-        this.isHomeEnable = true;
-        this.showGraph = true;
-    }
 }
 

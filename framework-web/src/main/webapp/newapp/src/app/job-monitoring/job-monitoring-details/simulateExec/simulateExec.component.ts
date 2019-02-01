@@ -1,10 +1,11 @@
 import { AppConfig } from './../../../app.config';
 import { SelectItem } from 'primeng/primeng';
-import { Component } from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
 import { DatePipe, Location } from "@angular/common";
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { CommonService } from '../../../metadata/services/common.service';
 import { Version } from '../../../shared/version';
+import { KnowledgeGraphComponent } from '../../../shared/components/knowledgeGraph/knowledgeGraph.component';
 
 
 @Component({
@@ -35,6 +36,7 @@ export class SimulateExecComponent {
   refKeyList: any;
   result: any;
   showResultPredict: any;
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
 
   constructor(private datePipe: DatePipe, private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
     this.showResultPredict = true;
@@ -66,6 +68,14 @@ export class SimulateExecComponent {
       this.getAllVersionByUuid()
       this.getOneByUuidAndVersion(this.id, this.version)
     }
+  }
+
+  showDagGraph(uuid,version){
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id,this.version);
+    }, 1000); 
   }
 
   onChangeActive(event) {
@@ -157,8 +167,4 @@ export class SimulateExecComponent {
     this.showGraph = false;
   }
 
-  showDagGraph(uuid, version) {
-    this.isHomeEnable = true;
-    this.showGraph = true;
-  }
 }

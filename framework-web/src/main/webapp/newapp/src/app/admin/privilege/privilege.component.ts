@@ -1,10 +1,11 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AppConfig } from '../../app.config';
 import { SelectItem } from 'primeng/primeng';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { CommonService } from '../../metadata/services/common.service';
 import { Version } from '../../shared/version';
+import { KnowledgeGraphComponent } from '../../shared/components/knowledgeGraph/knowledgeGraph.component';
 
 
 @Component({
@@ -45,6 +46,7 @@ export class PrivilegeComponent implements OnInit {
   showGraph: boolean = false;
   isDependencyGraphEnable: boolean = true;
   isShowReportData: boolean = true;
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
 
   constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
     this.showPrivilege = true;
@@ -92,6 +94,14 @@ export class PrivilegeComponent implements OnInit {
 
       } this.changeMeta();
     })
+  }
+
+  showDagGraph(uuid,version){
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id,this.version);
+    }, 1000); 
   }
 
   getOneByUuidAndVersion() {
@@ -270,17 +280,10 @@ export class PrivilegeComponent implements OnInit {
     this.router.navigate(['app/admin/privilege', uuid, version, 'true']);
   }
 
-  showMainPage(uuid, version) {
+  showMainPage() {
     this.isHomeEnable = false
+    // this._location.back();
     this.showGraph = false;
-    this.isDependencyGraphEnable = true;
-    this.isShowReportData = true;
-  }
-  showDependencyGraph(uuid, version) {
-    console.log("showDependencyGraph call.....");
-    this.showGraph = true;
-    this.isDependencyGraphEnable = false;
-    this.isHomeEnable = true;
   }
 
 }

@@ -30,16 +30,15 @@
 				</div>
 
 				<div class="portlet-body form">
-					<div class="form-body graph-body" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=')"
-					 *ngIf="showgraphdiv">
+					<div class="form-body graph-body" *ngIf="showGraph" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=');">
 						<div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
-						<!--<div class="spinner" id="graphloader">-->
-						<!--<div class="bounce1"></div>-->
-						<!--<div class="bounce2"></div>-->
-						<!--<div class="bounce3"></div>-->
-						<!--</div>-->
-						<div class="form-body show-graph-body" id="graphWrapper">
-							<app-d3></app-d3>
+						<div class="spinner" id="graphloader">
+							<div class="bounce1"></div>
+							<div class="bounce2"></div>
+							<div class="bounce3"></div>
+						</div>
+						<div class="show-graph-body" id="graphWrapper">
+							<knowledge-graph></knowledge-graph>
 						</div>
 					</div>
 
@@ -88,15 +87,16 @@
 							<div class="form-group">
 								<label class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
 								<div class="col-md-6">
-									<textarea [disabled]="true" [(ngModel)]="ingestData.desc" name="desc" class="form-control noresize " rows="2" style="resize:none;"></textarea>
+									<textarea [disabled]="true" [(ngModel)]="ingestData.desc" name="desc" class="form-control noresize " rows="2"
+									 style="resize:none;"></textarea>
 								</div>
 							</div>
 							<div class="form-group">
 								<label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
 								<div class="col-md-6 col-sm-6 col-xs-12">
 									<div class="btn-group">
-										<ui-switch (change)="onChangeActive($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="active" name="active"
-										 [checked]="active" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+										<ui-switch (change)="onChangeActive($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="active"
+										 name="active" [checked]="active" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
 									</div>
 								</div>
 							</div>
@@ -104,8 +104,8 @@
 								<label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
 								<div class="col-md-6 col-sm-6 col-xs-12">
 									<div class="btn-group">
-										<ui-switch (change)="onChangePublish($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="published" name="published"
-										 [checked]="published" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+										<ui-switch (change)="onChangePublish($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="published"
+										 name="published" [checked]="published" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
 									</div>
 								</div>
 							</div>
@@ -131,9 +131,6 @@
 								</div>
 							</div>
 						</form>
-					</div>
-					<div *ngIf="showGraph">
-						{{"Knowledge Graph"}}
 					</div>
 				</div>
 			</div>
