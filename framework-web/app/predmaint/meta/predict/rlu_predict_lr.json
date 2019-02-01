@@ -11,12 +11,18 @@
             "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
         }
     },
+    "target" : {
+        "ref" : {
+            "type" : "file"
+        }
+    },
     "featureAttrMap" : [ 
         {
             "featureMapId" : "0",
             "featureDisplaySeq" : "0",
             "feature" : {
                 "featureId" : "0",
+                "featureName" : "warn_type1_total",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -36,6 +42,7 @@
             "featureDisplaySeq" : "1",
             "feature" : {
                 "featureId" : "1",
+                "featureName" : "warn_type2_total",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -55,6 +62,7 @@
             "featureDisplaySeq" : "2",
             "feature" : {
                 "featureId" : "2",
+                "featureName" : "cat1",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -74,6 +82,7 @@
             "featureDisplaySeq" : "3",
             "feature" : {
                 "featureId" : "3",
+                "featureName" : "cat2",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -93,6 +102,7 @@
             "featureDisplaySeq" : "4",
             "feature" : {
                 "featureId" : "4",
+                "featureName" : "cat3",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -112,6 +122,7 @@
             "featureDisplaySeq" : "5",
             "feature" : {
                 "featureId" : "5",
+                "featureName" : "cat4",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -131,6 +142,7 @@
             "featureDisplaySeq" : "6",
             "feature" : {
                 "featureId" : "6",
+                "featureName" : "fault_code_type_1_count",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -150,6 +162,7 @@
             "featureDisplaySeq" : "7",
             "feature" : {
                 "featureId" : "7",
+                "featureName" : "fault_code_type_2_count",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -169,6 +182,7 @@
             "featureDisplaySeq" : "8",
             "feature" : {
                 "featureId" : "8",
+                "featureName" : "fault_code_type_3_count",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -188,6 +202,7 @@
             "featureDisplaySeq" : "9",
             "feature" : {
                 "featureId" : "9",
+                "featureName" : "fault_code_type_4_count",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -207,6 +222,7 @@
             "featureDisplaySeq" : "10",
             "feature" : {
                 "featureId" : "10",
+                "featureName" : "problem_type_1_per_usage1",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -226,6 +242,7 @@
             "featureDisplaySeq" : "11",
             "feature" : {
                 "featureId" : "11",
+                "featureName" : "problem_type_2_per_usage1",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -245,6 +262,7 @@
             "featureDisplaySeq" : "12",
             "feature" : {
                 "featureId" : "12",
+                "featureName" : "problem_type_3_per_usage1",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -264,6 +282,7 @@
             "featureDisplaySeq" : "13",
             "feature" : {
                 "featureId" : "13",
+                "featureName" : "problem_type_4_per_usage1",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -283,6 +302,7 @@
             "featureDisplaySeq" : "14",
             "feature" : {
                 "featureId" : "14",
+                "featureName" : "fault_code_type_1_count_per_usage1",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -302,6 +322,7 @@
             "featureDisplaySeq" : "15",
             "feature" : {
                 "featureId" : "15",
+                "featureName" : "fault_code_type_2_count_per_usage1",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -321,6 +342,7 @@
             "featureDisplaySeq" : "16",
             "feature" : {
                 "featureId" : "16",
+                "featureName" : "fault_code_type_3_count_per_usage1",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -340,6 +362,7 @@
             "featureDisplaySeq" : "17",
             "feature" : {
                 "featureId" : "17",
+                "featureName" : "fault_code_type_4_count_per_usage1",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -359,6 +382,7 @@
             "featureDisplaySeq" : "18",
             "feature" : {
                 "featureId" : "18",
+                "featureName" : "problem_type_1_per_usage2",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -378,6 +402,7 @@
             "featureDisplaySeq" : "19",
             "feature" : {
                 "featureId" : "19",
+                "featureName" : "problem_type_2_per_usage2",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -397,6 +422,7 @@
             "featureDisplaySeq" : "20",
             "feature" : {
                 "featureId" : "20",
+                "featureName" : "problem_type_3_per_usage2",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -416,6 +442,7 @@
             "featureDisplaySeq" : "21",
             "feature" : {
                 "featureId" : "21",
+                "featureName" : "problem_type_4_per_usage2",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -435,6 +462,7 @@
             "featureDisplaySeq" : "22",
             "feature" : {
                 "featureId" : "22",
+                "featureName" : "fault_code_type_1_count_per_usage2",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -454,6 +482,7 @@
             "featureDisplaySeq" : "23",
             "feature" : {
                 "featureId" : "23",
+                "featureName" : "fault_code_type_2_count_per_usage2",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -473,6 +502,7 @@
             "featureDisplaySeq" : "24",
             "feature" : {
                 "featureId" : "24",
+                "featureName" : "fault_code_type_3_count_per_usage2",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -492,6 +522,7 @@
             "featureDisplaySeq" : "25",
             "feature" : {
                 "featureId" : "25",
+                "featureName" : "fault_code_type_4_count_per_usage2",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -511,6 +542,7 @@
             "featureDisplaySeq" : "26",
             "feature" : {
                 "featureId" : "26",
+                "featureName" : "problem_type_1",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -530,6 +562,7 @@
             "featureDisplaySeq" : "27",
             "feature" : {
                 "featureId" : "27",
+                "featureName" : "problem_type_2",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -549,6 +582,7 @@
             "featureDisplaySeq" : "28",
             "feature" : {
                 "featureId" : "28",
+                "featureName" : "problem_type_3",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -568,6 +602,7 @@
             "featureDisplaySeq" : "29",
             "feature" : {
                 "featureId" : "29",
+                "featureName" : "problem_type_4",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -587,6 +622,7 @@
             "featureDisplaySeq" : "30",
             "feature" : {
                 "featureId" : "30",
+                "featureName" : "usage_count_1",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -606,6 +642,7 @@
             "featureDisplaySeq" : "31",
             "feature" : {
                 "featureId" : "31",
+                "featureName" : "usage_count_2",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -625,6 +662,7 @@
             "featureDisplaySeq" : "32",
             "feature" : {
                 "featureId" : "32",
+                "featureName" : "error_count_1",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -644,6 +682,7 @@
             "featureDisplaySeq" : "33",
             "feature" : {
                 "featureId" : "33",
+                "featureName" : "error_count_2",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -663,6 +702,7 @@
             "featureDisplaySeq" : "34",
             "feature" : {
                 "featureId" : "34",
+                "featureName" : "error_count_3",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -682,6 +722,7 @@
             "featureDisplaySeq" : "35",
             "feature" : {
                 "featureId" : "35",
+                "featureName" : "error_count_4",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -701,6 +742,7 @@
             "featureDisplaySeq" : "36",
             "feature" : {
                 "featureId" : "36",
+                "featureName" : "error_count_5",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -720,6 +762,7 @@
             "featureDisplaySeq" : "37",
             "feature" : {
                 "featureId" : "37",
+                "featureName" : "error_count_6",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -739,6 +782,7 @@
             "featureDisplaySeq" : "38",
             "feature" : {
                 "featureId" : "38",
+                "featureName" : "error_count_7",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -758,6 +802,7 @@
             "featureDisplaySeq" : "39",
             "feature" : {
                 "featureId" : "39",
+                "featureName" : "date_month",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -777,6 +822,7 @@
             "featureDisplaySeq" : "40",
             "feature" : {
                 "featureId" : "40",
+                "featureName" : "date_week",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -796,6 +842,7 @@
             "featureDisplaySeq" : "41",
             "feature" : {
                 "featureId" : "41",
+                "featureName" : "date_day",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -815,6 +862,7 @@
             "featureDisplaySeq" : "42",
             "feature" : {
                 "featureId" : "42",
+                "featureName" : "deviceid",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -834,6 +882,7 @@
             "featureDisplaySeq" : "43",
             "feature" : {
                 "featureId" : "43",
+                "featureName" : "date",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -849,16 +898,12 @@
             }
         }
     ],
-    "trainPercent" : 80.0,
-    "valPercent" : 20.0,
-    "labelInfo" : {
-        "attrId" : "33",
+    "trainInfo" : {
         "ref" : {
-            "type" : "dataset",
-            "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+            "type" : "train",
+            "uuid" : "422c6673-fca2-40ba-9735-80a517bf2be9"
         }
     },
-    "useHyperParams" : "N",
     "rowIdentifier" : [ 
         {
             "attrId" : "0",
@@ -876,9 +921,8 @@
         }
     ],
     "includeFeatures" : "Y",
-    "saveTrainingSet" : "Y",
-    "uuid" : "422c6673-fca2-40ba-9735-80a517bf2be9",
-    "version" : "1548948475",
+    "uuid" : "704529c0-627c-4de6-875e-f993ba296890",
+    "version" : "1548947436",
     "name" : "RLU Prediction - LR",
     "createdBy" : {
         "ref" : {
@@ -888,7 +932,7 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2019-01-31T15:27:55.000Z"),
+    "createdOn" : ISODate("2019-01-31T15:10:36.000Z"),
     "tags" : [],
     "active" : "Y",
     "locked" : "N",
@@ -898,8 +942,7 @@
             "ref" : {
                 "type" : "application",
                 "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
-                "version" : "1521430822",
-                "name" : "Dept Of Transportation"
+                "version" : "1547482153"
             }
         }
     ]

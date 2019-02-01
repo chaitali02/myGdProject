@@ -2,7 +2,7 @@
     "dependsOn" : {
         "ref" : {
             "type" : "model",
-            "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+            "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
         }
     },
     "source" : {
@@ -11,16 +11,22 @@
             "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
         }
     },
+    "target" : {
+        "ref" : {
+            "type" : "file"
+        }
+    },
     "featureAttrMap" : [ 
         {
             "featureMapId" : "0",
             "featureDisplaySeq" : "0",
             "feature" : {
                 "featureId" : "0",
+                "featureName" : "warn_type1_total",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -36,10 +42,11 @@
             "featureDisplaySeq" : "1",
             "feature" : {
                 "featureId" : "1",
+                "featureName" : "warn_type2_total",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -55,10 +62,11 @@
             "featureDisplaySeq" : "2",
             "feature" : {
                 "featureId" : "2",
+                "featureName" : "cat1",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -74,10 +82,11 @@
             "featureDisplaySeq" : "3",
             "feature" : {
                 "featureId" : "3",
+                "featureName" : "cat2",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -93,10 +102,11 @@
             "featureDisplaySeq" : "4",
             "feature" : {
                 "featureId" : "4",
+                "featureName" : "cat3",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -112,10 +122,11 @@
             "featureDisplaySeq" : "5",
             "feature" : {
                 "featureId" : "5",
+                "featureName" : "cat4",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -131,10 +142,11 @@
             "featureDisplaySeq" : "6",
             "feature" : {
                 "featureId" : "6",
+                "featureName" : "fault_code_type_1_count",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -150,10 +162,11 @@
             "featureDisplaySeq" : "7",
             "feature" : {
                 "featureId" : "7",
+                "featureName" : "fault_code_type_2_count",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -169,10 +182,11 @@
             "featureDisplaySeq" : "8",
             "feature" : {
                 "featureId" : "8",
+                "featureName" : "fault_code_type_3_count",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -188,10 +202,11 @@
             "featureDisplaySeq" : "9",
             "feature" : {
                 "featureId" : "9",
+                "featureName" : "fault_code_type_4_count",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -207,10 +222,11 @@
             "featureDisplaySeq" : "10",
             "feature" : {
                 "featureId" : "10",
+                "featureName" : "problem_type_1_per_usage1",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -226,10 +242,11 @@
             "featureDisplaySeq" : "11",
             "feature" : {
                 "featureId" : "11",
+                "featureName" : "problem_type_2_per_usage1",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -245,10 +262,11 @@
             "featureDisplaySeq" : "12",
             "feature" : {
                 "featureId" : "12",
+                "featureName" : "problem_type_3_per_usage1",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -264,10 +282,11 @@
             "featureDisplaySeq" : "13",
             "feature" : {
                 "featureId" : "13",
+                "featureName" : "problem_type_4_per_usage1",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -283,10 +302,11 @@
             "featureDisplaySeq" : "14",
             "feature" : {
                 "featureId" : "14",
+                "featureName" : "fault_code_type_1_count_per_usage1",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -302,10 +322,11 @@
             "featureDisplaySeq" : "15",
             "feature" : {
                 "featureId" : "15",
+                "featureName" : "fault_code_type_2_count_per_usage1",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -321,10 +342,11 @@
             "featureDisplaySeq" : "16",
             "feature" : {
                 "featureId" : "16",
+                "featureName" : "fault_code_type_3_count_per_usage1",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -340,10 +362,11 @@
             "featureDisplaySeq" : "17",
             "feature" : {
                 "featureId" : "17",
+                "featureName" : "fault_code_type_4_count_per_usage1",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -359,10 +382,11 @@
             "featureDisplaySeq" : "18",
             "feature" : {
                 "featureId" : "18",
+                "featureName" : "problem_type_1_per_usage2",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -378,10 +402,11 @@
             "featureDisplaySeq" : "19",
             "feature" : {
                 "featureId" : "19",
+                "featureName" : "problem_type_2_per_usage2",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -397,10 +422,11 @@
             "featureDisplaySeq" : "20",
             "feature" : {
                 "featureId" : "20",
+                "featureName" : "problem_type_3_per_usage2",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -416,10 +442,11 @@
             "featureDisplaySeq" : "21",
             "feature" : {
                 "featureId" : "21",
+                "featureName" : "problem_type_4_per_usage2",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -435,10 +462,11 @@
             "featureDisplaySeq" : "22",
             "feature" : {
                 "featureId" : "22",
+                "featureName" : "fault_code_type_1_count_per_usage2",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -454,10 +482,11 @@
             "featureDisplaySeq" : "23",
             "feature" : {
                 "featureId" : "23",
+                "featureName" : "fault_code_type_2_count_per_usage2",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -473,10 +502,11 @@
             "featureDisplaySeq" : "24",
             "feature" : {
                 "featureId" : "24",
+                "featureName" : "fault_code_type_3_count_per_usage2",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -492,10 +522,11 @@
             "featureDisplaySeq" : "25",
             "feature" : {
                 "featureId" : "25",
+                "featureName" : "fault_code_type_4_count_per_usage2",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -511,10 +542,11 @@
             "featureDisplaySeq" : "26",
             "feature" : {
                 "featureId" : "26",
+                "featureName" : "problem_type_1",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -530,10 +562,11 @@
             "featureDisplaySeq" : "27",
             "feature" : {
                 "featureId" : "27",
+                "featureName" : "problem_type_2",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -549,10 +582,11 @@
             "featureDisplaySeq" : "28",
             "feature" : {
                 "featureId" : "28",
+                "featureName" : "problem_type_3",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -568,10 +602,11 @@
             "featureDisplaySeq" : "29",
             "feature" : {
                 "featureId" : "29",
+                "featureName" : "problem_type_4",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -587,10 +622,11 @@
             "featureDisplaySeq" : "30",
             "feature" : {
                 "featureId" : "30",
+                "featureName" : "usage_count_1",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -606,10 +642,11 @@
             "featureDisplaySeq" : "31",
             "feature" : {
                 "featureId" : "31",
+                "featureName" : "usage_count_2",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -625,10 +662,11 @@
             "featureDisplaySeq" : "32",
             "feature" : {
                 "featureId" : "32",
+                "featureName" : "error_count_1",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -644,10 +682,11 @@
             "featureDisplaySeq" : "33",
             "feature" : {
                 "featureId" : "33",
+                "featureName" : "error_count_2",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -663,10 +702,11 @@
             "featureDisplaySeq" : "34",
             "feature" : {
                 "featureId" : "34",
+                "featureName" : "error_count_3",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -682,10 +722,11 @@
             "featureDisplaySeq" : "35",
             "feature" : {
                 "featureId" : "35",
+                "featureName" : "error_count_4",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -701,10 +742,11 @@
             "featureDisplaySeq" : "36",
             "feature" : {
                 "featureId" : "36",
+                "featureName" : "error_count_5",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -720,10 +762,11 @@
             "featureDisplaySeq" : "37",
             "feature" : {
                 "featureId" : "37",
+                "featureName" : "error_count_6",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -739,10 +782,11 @@
             "featureDisplaySeq" : "38",
             "feature" : {
                 "featureId" : "38",
+                "featureName" : "error_count_7",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -758,10 +802,11 @@
             "featureDisplaySeq" : "39",
             "feature" : {
                 "featureId" : "39",
+                "featureName" : "date_month",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -777,10 +822,11 @@
             "featureDisplaySeq" : "40",
             "feature" : {
                 "featureId" : "40",
+                "featureName" : "date_week",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -796,10 +842,11 @@
             "featureDisplaySeq" : "41",
             "feature" : {
                 "featureId" : "41",
+                "featureName" : "date_day",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -815,10 +862,11 @@
             "featureDisplaySeq" : "42",
             "feature" : {
                 "featureId" : "42",
+                "featureName" : "deviceid",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -834,10 +882,11 @@
             "featureDisplaySeq" : "43",
             "feature" : {
                 "featureId" : "43",
+                "featureName" : "date",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
-                    "uuid" : "844ad45c-e2a8-4ecd-8813-c371bd141d0a"
+                    "uuid" : "4c5ae226-d161-4eb8-b66b-44a20a32af02"
                 }
             },
             "attribute" : {
@@ -849,16 +898,12 @@
             }
         }
     ],
-    "trainPercent" : 80.0,
-    "valPercent" : 20.0,
-    "labelInfo" : {
-        "attrId" : "33",
+    "trainInfo" : {
         "ref" : {
-            "type" : "dataset",
-            "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+            "type" : "train",
+            "uuid" : "0fe1b1d3-ac2b-4009-b410-3ced654bd520"
         }
     },
-    "useHyperParams" : "N",
     "rowIdentifier" : [ 
         {
             "attrId" : "0",
@@ -876,10 +921,9 @@
         }
     ],
     "includeFeatures" : "Y",
-    "saveTrainingSet" : "Y",
-    "uuid" : "422c6673-fca2-40ba-9735-80a517bf2be9",
-    "version" : "1548948475",
-    "name" : "RLU Prediction - LR",
+    "uuid" : "0eb3dba6-c58a-4016-b26f-39f78665f0fd",
+    "version" : "1548947604",
+    "name" : "RLU Prediction - DTC",
     "createdBy" : {
         "ref" : {
             "type" : "user",
@@ -888,7 +932,7 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2019-01-31T15:27:55.000Z"),
+    "createdOn" : ISODate("2019-01-31T15:13:24.000Z"),
     "tags" : [],
     "active" : "Y",
     "locked" : "N",
@@ -898,8 +942,7 @@
             "ref" : {
                 "type" : "application",
                 "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
-                "version" : "1521430822",
-                "name" : "Dept Of Transportation"
+                "version" : "1547482153"
             }
         }
     ]
