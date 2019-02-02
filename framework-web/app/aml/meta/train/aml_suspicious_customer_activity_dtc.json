@@ -1359,5 +1359,15 @@
                 "name" : "Anti Money Laundering"
             }
         }
-    ]
+    ],
+    "trainLocation" : {
+        "ref" : {
+            "type" : "file"
+        }
+    },
+    "testLocation" : {
+        "ref" : {
+            "type" : "file"
+        }
+    }
 }

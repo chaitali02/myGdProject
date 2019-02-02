@@ -3117,5 +3117,15 @@
       "attrUnitType": null
     }
   ],
-  "includeFeatures": "Y"
+  "includeFeatures": "Y",
+  "trainLocation" : {
+        "ref" : {
+            "type" : "file"
+        }
+    },
+    "testLocation" : {
+        "ref" : {
+            "type" : "file"
+        }
+    }
 }

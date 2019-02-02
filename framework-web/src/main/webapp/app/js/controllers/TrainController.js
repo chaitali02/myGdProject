@@ -61,8 +61,11 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
   $scope.sourceTypes = ["datapod", "dataset", "rule"];
   $scope.selectSourceType = $scope.sourceTypes[0];
   $scope.isDestoryState = false;
-  //$scope.targetTypes = ["datapod", "file"];
-  //$scope.selectTargetType = $scope.targetTypes[0];
+  $scope.saveTypes = ["file","datapod"];
+  $scope.selectedTrainSaveType = $scope.saveTypes[0];
+  $scope.selectedTestSaveType = $scope.saveTypes[0];
+  $scope.isTrainSaveDisabled=true;
+  $scope.isTestSaveDisabled=true;
   $scope.paramTypes = ["paramlist", "paramset"];
   $scope.imputeTypes=["custom","default","function"];
   $scope.encodingTypes=CF_ENCODINGTYPE.encodingType;//["ORDINAL", "ONEHOT", "BINARY", "BASEN","HASHING"];
@@ -273,15 +276,18 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
 
   // }
 
-  // $scope.getAllLetestTarget=function(defaultValue){
-  //   TrainService.getAllLatest($scope.selectTargetType).then(function(response) { onGetAllLatest(response.data)});
-  //   var onGetAllLatest = function(response) {
-  //     $scope.allTarget = response;
-  //     if(typeof $stateParams.id == "undefined" || defaultValue ==true) {
-  //       $scope.selectTarget=response[0];
-  //     }
-  //   }
-  // }
+  $scope.getAllLetestTarget=function(defaultValue,type){
+    TrainService.getAllLatest("datapod").then(function(response) { onGetAllLatest(response.data)});
+    var onGetAllLatest = function(response) {
+      if(type =='train'){
+        $scope.allTrainLocation=response;
+      }
+      else if(type =="test"){
+        $scope.allTestLocation=response;        
+      }
+    }
+  }
+
   $scope.loadAttribute = function (query) {
     return $timeout(function () {
       return $filter('filter')($scope.allsourceLabel, query);
@@ -380,16 +386,28 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     $scope.featureMapTableArray[index - 1] = rowTempIndex;
   }
 
-  $scope.onChangeTargeType = function () {
-    if ($scope.selectTargetType == 'datapod') {
-      $scope.isTargetNameDisabled = false;
-      $scope.getAllLetestTarget(true);
+  $scope.onChangeTrainType = function () {
+    if ($scope.selectedTrainSaveType == 'datapod') {
+      $scope.isTrainSaveDisabled = false;
+      $scope.getAllLetestTarget(true,'train');
 
     } else {
-      $scope.isTargetNameDisabled = true;
-      $scope.allTarget = [];
+      $scope.isTrainSaveDisabled = true;
+      $scope.allTrainLocation = [];
     }
   }
+  
+  $scope.onChangeTestType = function () {
+    if ($scope.selectedTestSaveType == 'datapod') {
+      $scope.isTestSaveDisabled = false;
+      $scope.getAllLetestTarget(true,'test');
+
+    } else {
+      $scope.isTestSaveDisabled = true;
+      $scope.allTestLocation = [];
+    }
+  }
+  
   
   $scope.onChangeInputeType=function(index,imputeType){
     if(imputeType=="default"){
@@ -515,6 +533,34 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
           tag.text = response.tags[i];
           tags[i] = tag
           $scope.tags = tags;
+        }
+      }
+      
+      var selectedTrainLocation={};
+      $scope.selectedTrainLocation=null;
+      
+      if(response.trainLocation !=null){
+        selectedTrainLocation.uuid=response.trainLocation.ref.uuid;
+        selectedTrainLocation.name=response.trainLocation.ref.name;
+        $scope.selectedTrainSaveType=response.trainLocation.ref.type;
+        $scope.selectedTrainSaveType=="file"?$scope.isTrainSaveDisabled=true:$scope.isTrainSaveDisabled=false;
+        $scope.selectedTrainLocation=selectedTrainLocation;
+        if($scope.selectedTrainSaveType !="file"){
+          $scope.onChangeTrainType();
+        }
+      }
+
+        
+      var selectedTestLocation={};
+      $scope.selectedTestLocation=null;
+      if(response.testLocation !=null){
+        selectedTestLocation.uuid=response.testLocation.ref.uuid;
+        selectedTestLocation.name=response.testLocation.ref.name;
+        $scope.selectedTestSaveType=response.testLocation.ref.type;
+        $scope.selectedTestSaveType=="file"?$scope.isTestSaveDisabled=true:$scope.isTestSaveDisabled=false;
+        $scope.selectedTestLocation=selectedTestLocation;
+        if($scope.selectedTestLocation !="file"){
+          $scope.onChangeTestType();
         }
       }
 
@@ -647,6 +693,24 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
 
     TrainJson.includeFeatures = $scope.trainData.includeFeatures;
     TrainJson.saveTrainingSet = $scope.trainData.saveTrainingSet;
+
+    var trainLocation={};
+    var trainLocationRef={};
+    trainLocationRef.type=$scope.selectedTrainSaveType;
+    if($scope.selectedTrainSaveType =="datapod")
+      trainLocationRef.uuid=$scope.selectedTrainLocation.uuid;
+    trainLocation.ref=trainLocationRef;
+    TrainJson.trainLocation=trainLocation;
+
+    var testLocation={};
+    var testLocationRef={};
+    testLocationRef.type=$scope.selectedTestSaveType;
+    if($scope.selectedTestSaveType =="datapod")
+      testLocationRef.uuid=$scope.selectedTrainLocation.uuid;
+    testLocation.ref=testLocationRef;
+    TrainJson.testLocation=testLocation;
+
+
     var tagArray = [];
     if ($scope.tags != null) {
       for (var counttag = 0; counttag < $scope.tags.length; counttag++) {

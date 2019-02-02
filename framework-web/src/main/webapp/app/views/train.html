@@ -590,6 +590,31 @@
                                             </div>
                                         </div> -->
                                         <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Save Train Result</label>
+                                            <div class="col-md-2 col-sm-2 col-xs-12">
+                                                <select class="form-control" ng-disabled="{{mode}}" data-ng-model="selectedTrainSaveType" ng-options="r for r in saveTypes"
+                                                    ng-change="onChangeTrainType()">
+                                                </select>
+                                            </div>
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.4%;float:left;margin-left:-1%;">Name</label>
+                                            <div class="col-md-3 col-sm-3 col-xs-12">
+                                                <select class="form-control" select2 ng-disabled="{{mode}} || isTrainSaveDisabled" data-ng-model="selectedTrainLocation" ng-options="r as r.name for r in allTrainLocation  track by r.uuid " ng-required="!isTrainSaveDisabled">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Save Test Result</label>
+                                            <div class="col-md-2 col-sm-2 col-xs-12">
+                                                <select class="form-control" ng-disabled="{{mode}}" data-ng-model="selectedTestSaveType" ng-options="r for r in saveTypes" ng-change="onChangeTestType()">
+                                                </select>
+                                            </div>
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.4%;float:left;margin-left:-1%;">Name</label>
+                                            <div class="col-md-3 col-sm-3 col-xs-12">
+                                                <select class="form-control" select2 ng-disabled="{{mode}} || isTestSaveDisabled" data-ng-model="selectedTestLocation" ng-options="r as r.name for r in allTestLocation  track by r.uuid " ng-required="!isTestSaveDisabled">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12">Train Percent</label>
                                             <div class="col-md-2 col-sm-2 col-xs-12" style="width:95px;">
                                                 <input type="number" limit-to="2" class="form-control" ng-disabled="{{mode}}" ng-model="trainData.trainPercent" name="trainPercent"
