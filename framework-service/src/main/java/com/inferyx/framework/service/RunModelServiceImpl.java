@@ -38,6 +38,7 @@ import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.controller.TrainResultViewServiceImpl;
 import com.inferyx.framework.domain.Algorithm;
+import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Feature;
@@ -815,14 +816,72 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 				
 				List<String> rowIdentifierCols = modelServiceImpl.getRowIdentifierCols(train.getRowIdentifier());
 				
-				Object trndModel = null;			    
+				Object trndModel = null;
+				Datapod testLocationDP=null;
+				Datasource testLocationDS=null;
+				String testLocationTableName = null;
+				String testLocationPath=null;
+				String testLPathFilePathUrl=null;
+				Datapod trainLocationDP=null;
+				Datasource trainLocationDS=null;
+				String trainLocationTableName = null;
+				String trainLocationPath=null;
+				String trainLPathFilePathUrl=null;
+				if(train.getTestLocation().getRef().getType().equals(MetaType.datapod)) {
+					testLocationDP=(Datapod) commonServiceImpl.getOneByUuidAndVersion(train.getTestLocation().getRef().getUuid(),null, train.getTestLocation().getRef().getType().toString());
+					testLocationDS = commonServiceImpl.getDatasourceByObject(testLocationDP);
+					String tLPath = String.format("/%s/%s/%s", testLocationDP.getUuid(), testLocationDP.getVersion(), trainExec.getVersion());
+					testLPathFilePathUrl = String.format("%s%s",hdfsInfo.getHdfsURL()+hdfsInfo.getSchemaPath(), tLPath);
+
+					//writing into table
+					
+					if(testLocationDS.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+						testLocationTableName = testLocationDS.getSid().concat(".").concat(testLocationDP.getName());
+					} else {
+						testLocationTableName = testLocationDS.getDbname().concat(".").concat(testLocationDP.getName());					
+					}
+				}
+				if(train.getTrainLocation().getRef().getType().equals(MetaType.datapod)) {
+					trainLocationDP=(Datapod) commonServiceImpl.getOneByUuidAndVersion(train.getTrainLocation().getRef().getUuid(),null, train.getTrainLocation().getRef().getType().toString());
+					trainLocationDS = commonServiceImpl.getDatasourceByObject(trainLocationDP);
+					String tLPath = String.format("/%s/%s/%s", trainLocationDP.getUuid(), trainLocationDP.getVersion(), trainExec.getVersion());
+					trainLPathFilePathUrl = String.format("%s%s",hdfsInfo.getHdfsURL()+hdfsInfo.getSchemaPath(), tLPath);
+
+					//writing into table
+					
+					if(trainLocationDS.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+						trainLocationTableName = trainLocationDS.getSid().concat(".").concat(trainLocationDP.getName());
+					} else {
+						testLocationTableName = trainLocationDS.getDbname().concat(".").concat(trainLocationDP.getName());					
+					}
+				}
 				if(train.getUseHyperParams().equalsIgnoreCase("N") && !model.getType().equalsIgnoreCase(ExecContext.DL4J.toString())) {
 					//Without hypertuning
+						
+
 					trndModel = exec.train(paramMap, fieldArray, label, algorithm.getTrainClass(), train.getTrainPercent()
 							, train.getValPercent(), (tableName+"_train_source_data"), tempTrngDfSql
 							, algoclass, trainOtherParam, trainResult, testSetPath
 							, rowIdentifierCols, train.getIncludeFeatures(), tempTrngDfSql
-							, tempValDfSql, encodingDetails, train.getSaveTrainingSet(), trainingSetPath);
+							, tempValDfSql, encodingDetails, train.getSaveTrainingSet(), 
+							trainingSetPath, testLocationDP,testLocationDS, 
+							testLocationTableName, testLPathFilePathUrl, trainLocationDP, trainLocationDS, testLocationTableName, trainLPathFilePathUrl);
+					if(testLocationDP !=null) {
+						dataStoreServiceImpl.setRunMode(RunMode.BATCH);
+						dataStoreServiceImpl.create(testLPathFilePathUrl, trainName,
+							new MetaIdentifier(MetaType.datapod, testLocationDP.getUuid(), testLocationDP.getVersion()),
+							new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion()),
+							trainExec.getAppInfo(), trainExec.getCreatedBy(), SaveMode.Append.toString(), null);
+					 }
+					if(trainLocationDP !=null && train.getSaveTrainingSet().equalsIgnoreCase("Y")) {
+						dataStoreServiceImpl.setRunMode(RunMode.BATCH);
+						dataStoreServiceImpl.create(trainLPathFilePathUrl, trainName,
+							new MetaIdentifier(MetaType.datapod, trainLocationDP.getUuid(),trainLocationDP.getVersion()),
+							new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion()),
+							trainExec.getAppInfo(), trainExec.getCreatedBy(), SaveMode.Append.toString(), null);
+					 }
+					
+					
 				} else if (!model.getType().equalsIgnoreCase(ExecContext.DL4J.toString())) {		
 					//With hypertuning
 					List<ParamListHolder> paramListHolderList = null;
@@ -837,7 +896,23 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 											, train.getTrainPercent(), train.getValPercent(), (tableName+"_train_source_data")
 											, hyperParamList.getParams(), appUuid, trainOtherParam, trainResult, testSetPath
 											, rowIdentifierCols, train.getIncludeFeatures(), tempTrngDfSql
-											, tempValDfSql, encodingDetails, train.getSaveTrainingSet(), trainingSetPath);
+											, tempValDfSql, encodingDetails, train.getSaveTrainingSet(), trainingSetPath, testLocationDP, testLocationDS, testLocationTableName, testLPathFilePathUrl, null, null, null, null);
+									
+									if(testLocationDP !=null) {
+										dataStoreServiceImpl.setRunMode(RunMode.BATCH);
+										dataStoreServiceImpl.create(testLPathFilePathUrl, trainName,
+										new MetaIdentifier(MetaType.datapod, testLocationDP.getUuid(), testLocationDP.getVersion()),
+										new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion()),
+										trainExec.getAppInfo(), trainExec.getCreatedBy(), SaveMode.Append.toString(), null);
+									}
+									
+									if(trainLocationDP !=null &&  train.getSaveTrainingSet().equalsIgnoreCase("Y")) {
+										dataStoreServiceImpl.setRunMode(RunMode.BATCH);
+										dataStoreServiceImpl.create(trainLPathFilePathUrl, trainName,
+											new MetaIdentifier(MetaType.datapod, trainLocationDP.getUuid(),trainLocationDP.getVersion()),
+											new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion()),
+											trainExec.getAppInfo(), trainExec.getCreatedBy(), SaveMode.Append.toString(), null);
+									 }
 								}
 							}
 						} else if(execParams.getParamListInfo() != null) {
@@ -850,8 +925,23 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 										, train.getTrainPercent(), train.getValPercent(), (tableName+"_train_source_data")
 										, hyperParamList.getParams(), appUuid, trainOtherParam, trainResult, testSetPath
 										, rowIdentifierCols, train.getIncludeFeatures(), tempTrngDfSql
-										, tempValDfSql, encodingDetails, train.getSaveTrainingSet(), trainingSetPath);
+										, tempValDfSql, encodingDetails, train.getSaveTrainingSet(), trainingSetPath, testLocationDP, testLocationDS, testLocationTableName, testLPathFilePathUrl, null, null, null, null);
+								if(testLocationDP !=null) {
+									dataStoreServiceImpl.setRunMode(RunMode.BATCH);
+									dataStoreServiceImpl.create(testLPathFilePathUrl, trainName,
+									new MetaIdentifier(MetaType.datapod, testLocationDP.getUuid(), testLocationDP.getVersion()),
+									new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion()),
+									trainExec.getAppInfo(), trainExec.getCreatedBy(), SaveMode.Append.toString(), null);
+								}
+								if(trainLocationDP !=null &&  train.getSaveTrainingSet().equalsIgnoreCase("Y")) {
+									dataStoreServiceImpl.setRunMode(RunMode.BATCH);
+									dataStoreServiceImpl.create(trainLPathFilePathUrl, trainName,
+										new MetaIdentifier(MetaType.datapod, trainLocationDP.getUuid(),trainLocationDP.getVersion()),
+										new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion()),
+										trainExec.getAppInfo(), trainExec.getCreatedBy(), SaveMode.Append.toString(), null);
+								 }
 							}
+							
 						}
 					} else {
 						ParamListHolder plHolder = new ParamListHolder();
@@ -867,7 +957,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 									, train.getTrainPercent(), train.getValPercent(), (tableName+"_train_source_data")
 									, hyperParamList.getParams(), appUuid, trainOtherParam, trainResult, testSetPath
 									, rowIdentifierCols, train.getIncludeFeatures(), tempTrngDfSql
-									, tempValDfSql, encodingDetails, train.getSaveTrainingSet(), trainingSetPath);
+									, tempValDfSql, encodingDetails, train.getSaveTrainingSet(), trainingSetPath, testLocationDP,testLocationDS, testLocationTableName, testLPathFilePathUrl, null, null, null, null);
 						}
 					}
 				} else {

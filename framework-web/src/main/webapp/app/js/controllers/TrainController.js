@@ -706,7 +706,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     var testLocationRef={};
     testLocationRef.type=$scope.selectedTestSaveType;
     if($scope.selectedTestSaveType =="datapod")
-      testLocationRef.uuid=$scope.selectedTrainLocation.uuid;
+      testLocationRef.uuid=$scope.selectedTestLocation.uuid;
     testLocation.ref=testLocationRef;
     TrainJson.testLocation=testLocation;
 

@@ -3738,15 +3738,15 @@ public class ModelServiceImpl {
 		return exec.executeAndFetchByDatasource(query, appDS, query);
 	}
 
-	public List<Map<String, Object>> getTrainOrTestSet(String trainExecUuid, String trainExecVersion, String setType) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
+	public List<Map<String, Object>> getTrainOrTestSet(String trainExecUuid, String trainExecVersion, String setType) throws Exception {
 		TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(trainExecUuid, trainExecVersion, MetaType.trainExec.toString());
-		if(setType.equalsIgnoreCase("trainSet")) {
+		
 			MetaIdentifier dependsOnMI = trainExec.getDependsOn().getRef();
 			Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(), dependsOnMI.getVersion(), dependsOnMI.getType().toString());
-			if(train.getSaveTrainingSet().equalsIgnoreCase("N")) {
+			if(train.getSaveTrainingSet().equalsIgnoreCase("N") && setType.equalsIgnoreCase("trainSet")) {
 				return new ArrayList<>();
 			}
-		}
+		
 		
 		MetaIdentifier datastoreMI = trainExec.getResult().getRef();
 		DataStore dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(datastoreMI.getUuid(), datastoreMI.getVersion(), datastoreMI.getType().toString());
@@ -3757,13 +3757,24 @@ public class ModelServiceImpl {
 		String trainOrTestSetPath = null;		
 		if(setType.equalsIgnoreCase("trainSet")) {
 			trainOrTestSetPath = defaultTrainPath.endsWith("/") ? defaultTrainPath.concat("train_set") : defaultTrainPath.concat("/").concat("train_set");
-		} else if(setType.equalsIgnoreCase("testSet")) {
+			 if(train.getTrainLocation() !=null && train.getTrainLocation().getRef().getType().equals(MetaType.datapod)) {
+			    	Datapod datapod= (Datapod)commonServiceImpl.getOneByUuidAndVersion(train.getTrainLocation().getRef().getUuid(), null,MetaType.datapod.toString());
+			    	DataStore ds =dataStoreServiceImpl.findDataStoreByMeta(datapod.getUuid(),datapod.getVersion());
+			    	return dataStoreServiceImpl.getDatapodResults(ds.getUuid(), ds.getVersion(),null , 0 , 100 , null, 0, null, null, null, RunMode.BATCH);
+			    }
+		 } else if(setType.equalsIgnoreCase("testSet")) {
 			trainOrTestSetPath = defaultTrainPath.endsWith("/") ? defaultTrainPath.concat("test_set") : defaultTrainPath.concat("/").concat("test_set");
+		    if(train.getTestLocation() !=null && train.getTestLocation().getRef().getType().equals(MetaType.datapod)) {
+		    	Datapod datapod= (Datapod)commonServiceImpl.getOneByUuidAndVersion(train.getTestLocation().getRef().getUuid(), null,MetaType.datapod.toString());
+		    	DataStore ds =dataStoreServiceImpl.findDataStoreByMeta(datapod.getUuid(),datapod.getVersion());
+		    	return dataStoreServiceImpl.getDatapodResults(ds.getUuid(), ds.getVersion(),null , 0 , 100 , null, 0, null, null, null, RunMode.BATCH);
+		    }
 		}
 		
 		
 		Datasource appDatasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(appDatasource.getType());
+		
 		return exec.fetchTrainOrTestSet(trainOrTestSetPath);		
 	}
 

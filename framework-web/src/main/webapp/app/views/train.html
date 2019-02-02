@@ -608,6 +608,7 @@
                                                 <select class="form-control" ng-disabled="{{mode}}" data-ng-model="selectedTestSaveType" ng-options="r for r in saveTypes" ng-change="onChangeTestType()">
                                                 </select>
                                             </div>
+                                            
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.4%;float:left;margin-left:-1%;">Name</label>
                                             <div class="col-md-3 col-sm-3 col-xs-12">
                                                 <select class="form-control" select2 ng-disabled="{{mode}} || isTestSaveDisabled" data-ng-model="selectedTestLocation" ng-options="r as r.name for r in allTestLocation  track by r.uuid " ng-required="!isTestSaveDisabled">

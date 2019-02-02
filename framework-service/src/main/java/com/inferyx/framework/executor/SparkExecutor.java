@@ -129,6 +129,7 @@ import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.Load;
+import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.ResultSetHolder;
@@ -2090,7 +2091,9 @@ public class SparkExecutor<T> implements IExecutor {
 			, Object algoClass, Map<String, String> trainOtherParam, TrainResult trainResult
 			, String testSetPath, List<String> rowIdentifierCols, String includeFeatures
 			, String trainingDfSql, String validationDfSql, Map<String, EncodingType> encodingDetails,
-			String saveTrainingSet, String trainingSetPath) throws IOException {
+			String saveTrainingSet, String trainingSetPath, Datapod testLocationDP, Datasource testLocationDs, 
+			String testLocationTableName, String testLFilePathUrl,
+			Datapod trainLocationDP, Datasource trainLocationDS, String trainLocationTableName, String trainFilePathUrl) throws IOException {
 
 		String []origFieldArray = new String[fieldArray.length];
 		origFieldArray = fieldArray;
@@ -2120,7 +2123,8 @@ public class SparkExecutor<T> implements IExecutor {
 			
 	    //saving training set 
 			if(saveTrainingSet.equalsIgnoreCase("Y")) {
-				trngDf.write().mode(SaveMode.Append).parquet(trainingSetPath);
+				//trngDf.write().mode(SaveMode.Append).parquet(trainingSetPath);
+				saveTrainDataset(trngDf,trainingSetPath, trainLocationDP, trainLocationDS ,trainLocationTableName, trainFilePathUrl);
 			}
 			
 			List<PipelineStage> pipelineStagesTrng = new ArrayList<>();
@@ -2247,7 +2251,7 @@ public class SparkExecutor<T> implements IExecutor {
 				sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");
 				
 //				if(encodingDetails == null || (encodingDetails != null && !encodingDetails.isEmpty())) {
-					saveTrainedTestDataset(trainedDataSet, valDf2, testSetPath, rowIdentifierCols, includeFeatures, origFieldArray, trainName);
+					saveTrainedTestDataset(trainedDataSet, valDf2, testSetPath, rowIdentifierCols, includeFeatures, origFieldArray, trainName, testLocationDP, testLocationDs, testLocationTableName, testLFilePathUrl);
 //				}
 				return trngModel;
 			} catch (Exception e) {
@@ -2314,9 +2318,43 @@ public class SparkExecutor<T> implements IExecutor {
 		return pipelineStageList;
 	}
 	
+	public void saveTrainDataset(Dataset<Row> trainedDataSet,String defaultPath, Datapod trainLocationDP, Datasource trainLocationDs, String trainLTableName , String tLFilePathUrl) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		if(trainLocationDP != null) {
+			ResultSetHolder rsHolder = new ResultSetHolder();
+			rsHolder.setDataFrame(trainedDataSet);
+			rsHolder.setTableName(trainLTableName);
+			trainedDataSet.show(true);
+			
+			//check whether the number of attributes of datapod and dataframe
+			//are equal if not then throw exception
+			if(trainLocationDP !=null) {
+				if(trainedDataSet.columns().length != trainLocationDP.getAttributes().size()) {
+					throw new RuntimeException("Datapod '" + trainLocationDP.getName() + "' column size(" + trainLocationDP.getAttributes().size() + ") does not match with column size("+ trainedDataSet.columns().length +") of dataframe");
+				}
+				
+				if(trainLTableName != null && !trainLTableName.isEmpty()) {
+					rsHolder = applySchema(rsHolder, trainLocationDP, null, trainLTableName, false);
+					trainedDataSet = rsHolder.getDataFrame();
+				}
+			}
+			
+			//write according to datasource
+			if(!trainLocationDs.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+				persistDataframe(rsHolder, trainLocationDs, trainLocationDP,SaveMode.Append.toString());
+			} else {
+				
+				trainedDataSet.write().mode(SaveMode.Append).parquet(tLFilePathUrl);
+			}
+			
+			
+		}else {
+			trainedDataSet.write().mode(SaveMode.Append).parquet(defaultPath);
+		}
+	}
+	
 	public void saveTrainedTestDataset(Dataset<Row> trainedDataSet, Dataset<Row> valDf
 			, String defaultPath, List<String> rowIdentifierCols, String includeFeatures
-			, String[] fieldArray, String trainName) throws IOException {
+			, String[] fieldArray, String trainName, Datapod testLocationDP, Datasource testLocationDs, String testLTableName , String tLFilePathUrl) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		if(includeFeatures.equalsIgnoreCase("Y")) {
 			rowIdentifierCols = removeDuplicateColNames(fieldArray, rowIdentifierCols);
 		}
@@ -2375,7 +2413,36 @@ public class SparkExecutor<T> implements IExecutor {
 		joinedDF = joinedDF.drop("rowNum");
 		joinedDF.printSchema();
 		joinedDF.show();
-		joinedDF.write().mode(SaveMode.Append).parquet(defaultPath);
+		if(testLocationDP != null) {
+			ResultSetHolder rsHolder = new ResultSetHolder();
+			rsHolder.setDataFrame(joinedDF);
+			rsHolder.setTableName(testLTableName);
+			
+			//check whether the number of attributes of datapod and dataframe
+			//are equal if not then throw exception
+			if(testLocationDP !=null) {
+				if(joinedDF.columns().length != testLocationDP.getAttributes().size()) {
+					throw new RuntimeException("Datapod '" + testLocationDP.getName() + "' column size(" + testLocationDP.getAttributes().size() + ") does not match with column size("+ joinedDF.columns().length +") of dataframe");
+				}
+				
+				if(testLTableName != null && !testLTableName.isEmpty()) {
+					rsHolder = applySchema(rsHolder, testLocationDP, null, testLTableName, false);
+					joinedDF = rsHolder.getDataFrame();
+				}
+			}
+			
+			//write according to datasource
+			if(!testLocationDs.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+				persistDataframe(rsHolder, testLocationDs, testLocationDP,SaveMode.Append.toString());
+			} else {
+				
+				joinedDF.write().mode(SaveMode.Append).parquet(tLFilePathUrl);
+			}
+			
+			
+		}else {
+			joinedDF.write().mode(SaveMode.Append).parquet(defaultPath);
+		}
 	}
 
 	public boolean savePredictionResult(Dataset<Row> predictedDF, Dataset<Row> featureDF
@@ -2758,7 +2825,10 @@ public class SparkExecutor<T> implements IExecutor {
 			, double trainPercent, double valPercent, String tableName
 			, List<com.inferyx.framework.domain.Param> hyperParamList, String clientContext
 			, Map<String, String> trainOtherParam, TrainResult trainResult, String testSetPath
-			, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql, Map<String, EncodingType> encodingDetails, String saveTrainingSet, String trainingSetPath) throws IOException {
+			, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql,
+			Map<String, EncodingType> encodingDetails, String saveTrainingSet, String trainingSetPath, Datapod testLocationDP, 
+			Datasource testLocationDs, String testLocationTableName, String testLFilePathUrl, Datapod trainLocationDP, 
+			Datasource trainLocationDS, String trainLocationTableName, String trainLocationFilePathUrl) throws IOException {
 		String []origFieldArray = fieldArray;
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
@@ -2786,10 +2856,13 @@ public class SparkExecutor<T> implements IExecutor {
 			dropTempTable(tempTableList);
 						
          //saving training set 
+//			if(saveTrainingSet.equalsIgnoreCase("Y")) {
+//				trngDf.write().mode(SaveMode.Append).parquet(trainingSetPath);
+//			}
 			if(saveTrainingSet.equalsIgnoreCase("Y")) {
-				trngDf.write().mode(SaveMode.Append).parquet(trainingSetPath);
+				//trngDf.write().mode(SaveMode.Append).parquet(trainingSetPath);
+				saveTrainDataset(trngDf,trainingSetPath, trainLocationDP, trainLocationDS ,trainLocationTableName, trainLocationFilePathUrl);
 			}
-			
 			List<PipelineStage> pipelineStagesTrng = new ArrayList<>();
 			if(encodingDetails != null && !encodingDetails.isEmpty()) {
 				for(String colName : encodingDetails.keySet()) {
@@ -2944,7 +3017,7 @@ public class SparkExecutor<T> implements IExecutor {
 			}
 			sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");
 //			if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
-				saveTrainedTestDataset(trainedDataSet, valDf2, testSetPath, rowIdentifierCols, includeFeatures, fieldArray, trainName);
+				saveTrainedTestDataset(trainedDataSet, valDf2, testSetPath, rowIdentifierCols, includeFeatures, fieldArray, trainName,testLocationDP, testLocationDs, testLocationTableName, testLFilePathUrl);
 //			}
 			return cvModel;
 		} catch (ClassNotFoundException
