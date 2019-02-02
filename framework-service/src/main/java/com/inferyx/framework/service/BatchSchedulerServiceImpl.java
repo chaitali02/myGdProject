@@ -47,10 +47,12 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.domain.Batch;
 import com.inferyx.framework.domain.BatchExec;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Schedule;
+import com.inferyx.framework.domain.User;
 import com.inferyx.framework.enums.RunMode;
 
 /**
@@ -69,6 +71,10 @@ public class BatchSchedulerServiceImpl {
 	private MongoTemplate mongoTemplate;
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
+	@Autowired
+	private SecurityServiceImpl securityServiceImpl;
+	@Autowired
+	private FrameworkThreadServiceImpl frameworkThreadServiceImpl;
 	
 	static Logger logger = Logger.getLogger(BatchSchedulerServiceImpl.class);
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat ("EEE MMM dd HH:mm:ss z yyyy");
@@ -386,6 +392,15 @@ public class BatchSchedulerServiceImpl {
 				logger.info("Scheduler triggered. Submitting batch...");
 			    for(Schedule schedule : schedules) {
 			  	  	MetaIdentifier batchMI = schedule.getDependsOn().getRef();
+			  	  	// as this is a batch, careful about appInfo
+					try {
+						securityServiceImpl.getAppInfo();
+					} catch(Exception e) {
+						logger.info("AppInfo not available. Fallback on creating FrameworkThreadLocal as this is a batch");
+						Batch batch = (Batch) commonServiceImpl.getOneByUuidAndVersion(batchMI.getUuid(), batchMI.getVersion(), MetaType.batch.toString());
+						User user = (User) commonServiceImpl.getOneByUuidAndVersion(batch.getCreatedBy().getRef().getUuid(), batch.getCreatedBy().getRef().getVersion(), batch.getCreatedBy().getRef().getType().toString());
+						frameworkThreadServiceImpl.setSession(user.getName(), batch.getAppInfo().get(0));
+					}
 			  	  	BatchExec batchExec = batchServiceImpl.create(batchMI.getUuid(), batchMI.getVersion(), null, null, RunMode.BATCH);
 			    	batchServiceImpl.submitBatch(batchMI.getUuid(), batchMI.getVersion(), batchExec, null, null, RunMode.BATCH);
 			    }

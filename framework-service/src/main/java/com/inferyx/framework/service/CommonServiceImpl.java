@@ -2361,8 +2361,12 @@ public class CommonServiceImpl <T> {
 		return null;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public T save(String type, Object object) throws JsonProcessingException, JSONException, ParseException {
+		return save(type, object, null);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public T save(String type, Object object, MetaIdentifierHolder appInfo) throws JsonProcessingException, JSONException, ParseException {
 		ObjectMapper mapper = new ObjectMapper();
 		try{		
 			if(type.equalsIgnoreCase(MetaType.log.toString())){
@@ -2370,7 +2374,12 @@ public class CommonServiceImpl <T> {
 			return (T) logServiceImpl.save(log);
 			}
 			MetaType metaType = Helper.getMetaType(type);
-			MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
+			MetaIdentifierHolder meta = null; 
+			if (null == appInfo) {
+				meta = securityServiceImpl.getAppInfo(); 
+			} else {
+				meta = appInfo;
+			}
 			BaseEntity baseEntityLatest=null;
 			Map<String,Object> map=null;
 			String uuid =null;
