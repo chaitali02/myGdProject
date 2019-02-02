@@ -64,7 +64,7 @@ export class TableRenderComponent {
       this.results(type, params.uuid, params.version,this.modeOfExec)
     })   
   }
-  results(type, uuid, version,mode){debugger
+  results(type, uuid, version,mode){
     if(type == 'dq'){
       type = 'dataqual';
     }

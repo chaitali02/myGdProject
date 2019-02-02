@@ -49,8 +49,8 @@ export class DataReconresultComponent {
   @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
 
   constructor(private http: Http, private _config: AppConfig, private _location: Location, private _activatedRoute: ActivatedRoute, private router: Router, public appMetadata: AppMetadata, private _commonService: CommonService) {
-    
-    this.showGraph = false;
+    this.showGraph = false
+    this.isHomeEnable = false
     this.baseUrl = _config.getBaseUrl();
     this.isgraphShow = false;
     this.istableShow = false;
@@ -92,13 +92,25 @@ export class DataReconresultComponent {
   }
 
   showMainPage() {
+    this.showHome = true
     this.isHomeEnable = false
     // this._location.back();
+    this.showKnowledgeGraph = false;
     this.showGraph = false;
+    this.istableShow = true;
+    this.isResultTable = true;
+    setTimeout(() => {
+      this.params["type"] = this.appMetadata.getMetadataDefs(this._type.toLowerCase())['name']
+      this.d_tableRenderComponent.renderTable(this.params);
+      this.downloadUuid = this.params.uuid;
+      this.downloadVersion = this.params.version;
+      this.downloadType = this.params.type;
+    }, 1000);
   }
   showDagGraph(uuid, version) {
     this.isHomeEnable = true;
     this.showGraph = true;
+    this.isResultTable = false;
     setTimeout(() => {
       this.d_KnowledgeGraphComponent.getGraphData(this._uuid, this._version);
     }, 2000);

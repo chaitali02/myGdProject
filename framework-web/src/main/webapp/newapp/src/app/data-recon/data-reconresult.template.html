@@ -8,22 +8,23 @@
                     <i class="fa fa-cogs"></i>Result
                 </div>
                 <div class="tools">
-                    <a title="Main" style="color:white;" title="Main" data-placement="top" tooltip [ngClass]="showHome==false?'currentpage':'notcurrentpage'"
+                    <a title="Main" style="color:white;" title="Main" data-placement="top" tooltip [ngClass]="isHomeEnable==true?'notcurrentpage':'currentpage'"
                         (click)="showMainPage()">
                         <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.2,1.2);"></i>
                     </a>
-                    <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top"
-                        tooltip (click)="opendownloadResult()" *ngIf="isResultTable==true">
+                   
+                    <!-- <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top" tooltip (click)="downloadResult()"
+                        [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'" *ngIf="isResultTable == true">
+                        <i class="fa fa-download" area-hidden="true"></i>
+                    </a> -->
+                    <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top" tooltip (click)="downloadResult()" [ngClass]="isResultTable == true?'notcurrentpage':'currentpage'">
                         <i class="fa fa-download" area-hidden="true"></i>
                     </a>
-                    <!-- <a style="color:white;" href="javascript:;" title="Show Dependencies" data-placement="top" tooltip
-                        [ngClass]="showHome==true? 'currentpage':'notcurrentpage'" data- (click)="showGraph()">
+                    <a style="color:white;" href="javascript:;" title="Show Dependencies" data-placement="top" tooltip [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'"
+                        data- (click)="showDagGraph()">
                         <i class="fa fa-sitemap" style="margin:2px auto;"></i>
-                    </a> -->
-                    <a href="javascript:;" title="Show Dependencies" data-placement="top" tooltip [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'"
-                        data- (click)="showDagGraph(uuid,version)">
-                        <i class="fa fa-sitemap" style="display: inline;margin:2px auto;color:white;"></i>
                     </a>
+
                     <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip (click)="broadcastRefreshData()">
                         <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
                     </a>
@@ -39,7 +40,7 @@
                 <div *ngIf="istableShow && !showGraph">
                     <app-resulttable [tableParms]="tableparms"></app-resulttable>
                 </div>
-                <div class="form-body graph-body" *ngIf="showGraph && !isgraphShow && !istableShow" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=');">
+                <div class="form-body graph-body" *ngIf="showGraph" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=');">
                     <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
                     <div class="spinner" id="graphloader">
                         <div class="bounce1"></div>
