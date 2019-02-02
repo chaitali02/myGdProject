@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { AppMetadata } from '../../app.metadata';
 import { CommonService } from '../../metadata/services/common.service';
@@ -11,8 +11,9 @@ import { Http, Headers } from '@angular/http';
 import { AppConfig } from '../../app.config';
 import { ResponseContentType } from '@angular/http';
 import { DataScienceResultService } from '../../metadata/services/dataScienceResult.service';
- //import { NgxJsonViewerModule } from 'ngx-json-viewer';
- //import JSONFormatter from 'json-formatter-js';
+import { KnowledgeGraphComponent } from '../../shared/components/knowledgeGraph/knowledgeGraph.component';
+//import { NgxJsonViewerModule } from 'ngx-json-viewer';
+//import JSONFormatter from 'json-formatter-js';
 @Component({
   selector: 'app-results',
   templateUrl: './resultDetails.component.html',
@@ -43,9 +44,15 @@ export class ResultDetailsComponent {
   id: any;
   uid: any;
   baseUrl: any;
-  constructor( private http : Http, private config : AppConfig, private _location: Location, private _activatedRoute: ActivatedRoute, private router: Router, public appMetadata: AppMetadata, private _commonService: CommonService, private _resultService: DataScienceResultService, private _commonListService: CommonListService) {
-  this.baseUrl = config.getBaseUrl();
-  
+  showGraph: boolean;
+  isHomeEnable: boolean;
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
+  constructor(private http: Http, private config: AppConfig, private _location: Location, private _activatedRoute: ActivatedRoute, private router: Router, public appMetadata: AppMetadata, private _commonService: CommonService, private _resultService: DataScienceResultService, private _commonListService: CommonListService) {
+    
+    this.showGraph = false;
+    this.isHomeEnable = false;
+    this.baseUrl = config.getBaseUrl();
+
     this.modelResult = {};
     this.breadcrumbDataFrom = [{
       "caption": "Data Science ",
@@ -69,8 +76,8 @@ export class ResultDetailsComponent {
     });
     if (this.type == "training") {
       this.getModelByTrainExec();
-      this.getTrainResults();    
-      this.tableHeading = "Training Result"; 
+      this.getTrainResults();
+      this.tableHeading = "Training Result";
       this.showDiv = true;
       this.ppml = false;
     }
@@ -86,6 +93,20 @@ export class ResultDetailsComponent {
     }
   }
 
+  showMainPage() {
+    this.isHomeEnable = false
+    // this._location.back();
+    this.showGraph = false;
+  }
+
+  showDagGraph(uuid, version) {
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id, this.version);
+    }, 1000);
+  }
+
   getModelByTrainExec() {
     this._resultService.getModelByTrainExec(this.id, this.version).subscribe(
       response => { this.onSuccessgetModelByTrainExec(response) },
@@ -96,7 +117,7 @@ export class ResultDetailsComponent {
     this.modelData = response;
   }
 
-  savePng() { 
+  savePng() {
     const headers = new Headers();
     headers.append('Accept', 'text/plain');
     if (this.type == "predict") {
@@ -123,7 +144,7 @@ export class ResultDetailsComponent {
     }
   }
 
-  private saveToFileSystem(response) { 
+  private saveToFileSystem(response) {
     const contentDispositionHeader: string = response.headers.get('Content-Type');
     const parts: string[] = contentDispositionHeader.split(';');
     const filename = parts[1];
@@ -132,7 +153,7 @@ export class ResultDetailsComponent {
   }
 
   downloadTrainData() {
-    let filename = this.id+".txt";
+    let filename = this.id + ".txt";
     console.log(JSON.stringify(this.modelResult));
     console.log(this.modelResult);
     const blob = new Blob([JSON.stringify(this.modelResult)], { type: 'text/xml' });
@@ -156,34 +177,34 @@ export class ResultDetailsComponent {
   getTrainResults() {
     this._resultService.getTrainResults(this.id, this.version)
       .subscribe(
-      response => {
-        this.onSuccessgetModelResults(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.onSuccessgetModelResults(response)
+        },
+        error => console.log("Error :: " + error));
   }
   getPredictResults() {
     this._resultService.getPredictResults(this.id, this.version)
       .subscribe(
-      response => {
-        this.onSuccessgetPredictResults(response)
-      },
-      error => {
-        this.IsTableShow = true;
-        console.log("Error :: " + error)
-        this.IsError = true;
-      });
+        response => {
+          this.onSuccessgetPredictResults(response)
+        },
+        error => {
+          this.IsTableShow = true;
+          console.log("Error :: " + error)
+          this.IsError = true;
+        });
   }
   getSimulateResults() {
     this._resultService.getSimulateResults(this.id, this.version)
       .subscribe(
-      response => {
-        this.onSuccessgetPredictResults(response)
-      },
-      error => {
-        this.IsTableShow = true;
-        console.log("Error :: " + error)
-        this.IsError = true;
-      });
+        response => {
+          this.onSuccessgetPredictResults(response)
+        },
+        error => {
+          this.IsTableShow = true;
+          console.log("Error :: " + error)
+          this.IsError = true;
+        });
 
   }
   onSuccessgetModelResults(response) {
