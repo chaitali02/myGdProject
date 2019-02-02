@@ -25,18 +25,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Helper;
+import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.Key;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
+import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
@@ -64,6 +68,8 @@ public class SparkPCAOperator implements IOperator, Serializable {
 	private DatasetServiceImpl datasetServiceImpl;
 	@Autowired
 	private Helper helper;
+	@Autowired
+	private SparkExecutor<?> sparkExecutor;
 	
 	static final Logger logger = Logger.getLogger(SparkPCAOperator.class);
 
@@ -98,7 +104,7 @@ public class SparkPCAOperator implements IOperator, Serializable {
 //		ParamListHolder inputFeaturesInfo = paramSetServiceImpl.getParamByName(execParams, "inputFeatures");
 //		ParamListHolder outputFeaturesInfo = paramSetServiceImpl.getParamByName(execParams, "outputFeatures");
 		ParamListHolder inputColListInfo = paramSetServiceImpl.getParamByName(execParams, "inputColList");	// Input feature column list
-		ParamListHolder outputFeatureNameInfo = paramSetServiceImpl.getParamByName(execParams, "outputFeatureName");	// Output Feature Name
+//		ParamListHolder outputFeatureNameInfo = paramSetServiceImpl.getParamByName(execParams, "outputFeatureName");	// Output Feature Name
 		ParamListHolder inputKeyInfo = paramSetServiceImpl.getParamByName(execParams, "inputKeyNames");	// Input Key Names
 		ParamListHolder locationInfo = paramSetServiceImpl.getParamByName(execParams, "saveLocation");	// Location for datapod save
 		
@@ -174,9 +180,20 @@ public class SparkPCAOperator implements IOperator, Serializable {
 		ResultSetHolder rsHolder = new ResultSetHolder();
 		rsHolder.setDataFrame(destDf);
 		rsHolder.setCountRows(destDf.count());
-		Datasource destDS = commonServiceImpl.getDatasourceByObject(locationDatapod);
 		
-		exec.persistDataframe(rsHolder, destDS, locationDatapod, SaveMode.Append.toString());
+		Datasource destDS = commonServiceImpl.getDatasourceByObject(locationDatapod);	
+
+		String tableName = getTableName(baseExec, locationDatapod, destDS, runMode);		
+		rsHolder.setTableName(tableName);
+		if(destDS.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+				|| destDS.getType().equalsIgnoreCase(ExecContext.spark.toString())) {
+			String defaultPath = "file://".concat(Helper.getPropertyValue("framework.schema.Path"));
+			defaultPath = defaultPath.endsWith("/") ? defaultPath : defaultPath.concat("/");
+			String filePathUrl = String.format("%s/%s/%s/%s", defaultPath, locationDatapod.getUuid(), locationDatapod.getVersion(), baseExec.getVersion());
+			sparkExecutor.registerAndPersistDataframe(rsHolder, locationDatapod, SaveMode.Append.toString(), filePathUrl, null, "true", false);
+		} else {
+			exec.persistDataframe(rsHolder, destDS, locationDatapod, SaveMode.Append.toString());
+		}
 		
 		Object metaExec = commonServiceImpl.getOneByUuidAndVersion(baseExec.getUuid(), baseExec.getVersion(), MetaType.operatorExec.toString());
 		MetaIdentifierHolder createdBy = (MetaIdentifierHolder) metaExec.getClass().getMethod("getCreatedBy").invoke(metaExec);
@@ -193,6 +210,19 @@ public class SparkPCAOperator implements IOperator, Serializable {
 		commonServiceImpl.save(MetaType.operatorExec.toString(), metaExec);
 		
 		return null;
+	}
+
+	public void persistDatastore() {
+		
+	}
+	
+	private String getTableName(BaseExec baseExec, BaseEntity baseEntity, Datasource datasource, RunMode runMode) {
+		if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+				|| datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())) {
+			return String.format("%s_%s_%s", baseEntity.getUuid().replaceAll("-", "_"), baseEntity.getVersion(), baseExec.getVersion());
+		} else {
+			return datasource.getDbname().concat(".").concat(baseEntity.getName());
+		}
 	}
 
 	/* (non-Javadoc)

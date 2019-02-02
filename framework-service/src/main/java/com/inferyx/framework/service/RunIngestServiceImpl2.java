@@ -843,8 +843,6 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						sqoopExecutor.execute(sqoopInput, inputParams);
 					} else if(targetDS.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
 						//this is export block from local file to local Table(i.e file)
-//****************************************************************************************************************************************
-//****************************************************************************************************************************************
 						
 						tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
 						
@@ -947,8 +945,6 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 							}
 						}
 						countRows = rsHolder.getCountRows();
-//****************************************************************************************************************************************
-//****************************************************************************************************************************************
 					} else {
 						//this is export block from local file to Table
 

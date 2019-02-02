@@ -208,8 +208,9 @@ public class SecurityServiceImpl  implements Serializable{
 				appInfo = sessionContext.getAppInfo();
 			} else {
 				logger.info("Null Session context. Unable to get appInfo.");
-				MetaIdentifier appMeta = new MetaIdentifier(MetaType.application,"d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd","1547482049");
-				appInfo.setRef(appMeta);
+				throw e;
+				/*MetaIdentifier appMeta = new MetaIdentifier(MetaType.application,"d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd","1547482049");
+				appInfo.setRef(appMeta);*/
 			}
 			//e.printStackTrace();
 		}
@@ -476,6 +477,7 @@ public class SecurityServiceImpl  implements Serializable{
 		return privInfo;
 	}
 	public String getAppRole(String userName) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException{
+		System.out.println("userName: "+userName);
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		User user = userServiceImpl.findUserByName(userName);
 		user=(User) commonServiceImpl.getLatestByUuid(user.getUuid(),MetaType.user.toString(),"N");

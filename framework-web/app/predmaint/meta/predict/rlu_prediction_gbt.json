@@ -11,12 +11,19 @@
             "uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84"
         }
     },
+    "target" : {
+        "ref" : {
+            "type" : "datapod",
+            "uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyt"
+        }
+    },
     "featureAttrMap" : [ 
         {
             "featureMapId" : "0",
             "featureDisplaySeq" : "0",
             "feature" : {
                 "featureId" : "1",
+                "featureName" : "usage_count_1",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -36,6 +43,7 @@
             "featureDisplaySeq" : "1",
             "feature" : {
                 "featureId" : "2",
+                "featureName" : "usage_count_2",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -55,6 +63,7 @@
             "featureDisplaySeq" : "2",
             "feature" : {
                 "featureId" : "3",
+                "featureName" : "problem_type_1",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -74,6 +83,7 @@
             "featureDisplaySeq" : "3",
             "feature" : {
                 "featureId" : "4",
+                "featureName" : "problem_type_2",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -93,6 +103,7 @@
             "featureDisplaySeq" : "4",
             "feature" : {
                 "featureId" : "5",
+                "featureName" : "problem_type_3",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -112,6 +123,7 @@
             "featureDisplaySeq" : "5",
             "feature" : {
                 "featureId" : "6",
+                "featureName" : "problem_type_4",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -131,6 +143,7 @@
             "featureDisplaySeq" : "6",
             "feature" : {
                 "featureId" : "7",
+                "featureName" : "error_count_1",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -150,6 +163,7 @@
             "featureDisplaySeq" : "7",
             "feature" : {
                 "featureId" : "8",
+                "featureName" : "error_count_2",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -169,6 +183,7 @@
             "featureDisplaySeq" : "8",
             "feature" : {
                 "featureId" : "9",
+                "featureName" : "error_count_3",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -188,6 +203,7 @@
             "featureDisplaySeq" : "9",
             "feature" : {
                 "featureId" : "10",
+                "featureName" : "error_count_4",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -207,6 +223,7 @@
             "featureDisplaySeq" : "10",
             "feature" : {
                 "featureId" : "11",
+                "featureName" : "error_count_5",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -226,6 +243,7 @@
             "featureDisplaySeq" : "11",
             "feature" : {
                 "featureId" : "12",
+                "featureName" : "error_count_6",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -245,6 +263,7 @@
             "featureDisplaySeq" : "12",
             "feature" : {
                 "featureId" : "13",
+                "featureName" : "error_count_7",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -264,6 +283,7 @@
             "featureDisplaySeq" : "13",
             "feature" : {
                 "featureId" : "14",
+                "featureName" : "error_count_8",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -283,6 +303,7 @@
             "featureDisplaySeq" : "14",
             "feature" : {
                 "featureId" : "15",
+                "featureName" : "date_month",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -302,6 +323,7 @@
             "featureDisplaySeq" : "15",
             "feature" : {
                 "featureId" : "16",
+                "featureName" : "date_week",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -321,6 +343,7 @@
             "featureDisplaySeq" : "16",
             "feature" : {
                 "featureId" : "17",
+                "featureName" : "date_day",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -340,6 +363,7 @@
             "featureDisplaySeq" : "17",
             "feature" : {
                 "featureId" : "18",
+                "featureName" : "warn_type1_total",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -359,6 +383,7 @@
             "featureDisplaySeq" : "18",
             "feature" : {
                 "featureId" : "19",
+                "featureName" : "warn_type2_total",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -378,6 +403,7 @@
             "featureDisplaySeq" : "19",
             "feature" : {
                 "featureId" : "20",
+                "featureName" : "fault_code_type_1_count",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -397,6 +423,7 @@
             "featureDisplaySeq" : "20",
             "feature" : {
                 "featureId" : "21",
+                "featureName" : "fault_code_type_2_count",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -416,6 +443,7 @@
             "featureDisplaySeq" : "21",
             "feature" : {
                 "featureId" : "22",
+                "featureName" : "fault_code_type_3_count",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -435,6 +463,7 @@
             "featureDisplaySeq" : "22",
             "feature" : {
                 "featureId" : "23",
+                "featureName" : "fault_code_type_4_count",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -454,6 +483,7 @@
             "featureDisplaySeq" : "23",
             "feature" : {
                 "featureId" : "24",
+                "featureName" : "problem_type_1_per_usage1",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -473,6 +503,7 @@
             "featureDisplaySeq" : "24",
             "feature" : {
                 "featureId" : "25",
+                "featureName" : "problem_type_2_per_usage1",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -492,6 +523,7 @@
             "featureDisplaySeq" : "25",
             "feature" : {
                 "featureId" : "26",
+                "featureName" : "problem_type_3_per_usage1",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -511,6 +543,7 @@
             "featureDisplaySeq" : "26",
             "feature" : {
                 "featureId" : "27",
+                "featureName" : "problem_type_4_per_usage1",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -530,6 +563,7 @@
             "featureDisplaySeq" : "27",
             "feature" : {
                 "featureId" : "28",
+                "featureName" : "fault_code_type_1_count_per_usage1",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -549,6 +583,7 @@
             "featureDisplaySeq" : "28",
             "feature" : {
                 "featureId" : "29",
+                "featureName" : "fault_code_type_2_count_per_usage1",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -568,6 +603,7 @@
             "featureDisplaySeq" : "29",
             "feature" : {
                 "featureId" : "30",
+                "featureName" : "fault_code_type_3_count_per_usage1",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -587,6 +623,7 @@
             "featureDisplaySeq" : "30",
             "feature" : {
                 "featureId" : "31",
+                "featureName" : "fault_code_type_4_count_per_usage1",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -606,6 +643,7 @@
             "featureDisplaySeq" : "31",
             "feature" : {
                 "featureId" : "32",
+                "featureName" : "problem_type_1_per_usage2",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -625,6 +663,7 @@
             "featureDisplaySeq" : "32",
             "feature" : {
                 "featureId" : "33",
+                "featureName" : "problem_type_2_per_usage2",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -644,6 +683,7 @@
             "featureDisplaySeq" : "33",
             "feature" : {
                 "featureId" : "34",
+                "featureName" : "problem_type_3_per_usage2",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -663,6 +703,7 @@
             "featureDisplaySeq" : "34",
             "feature" : {
                 "featureId" : "35",
+                "featureName" : "problem_type_4_per_usage2",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -682,6 +723,7 @@
             "featureDisplaySeq" : "35",
             "feature" : {
                 "featureId" : "36",
+                "featureName" : "fault_code_type_1_count_per_usage2",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -701,6 +743,7 @@
             "featureDisplaySeq" : "36",
             "feature" : {
                 "featureId" : "37",
+                "featureName" : "fault_code_type_2_count_per_usage2",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -720,6 +763,7 @@
             "featureDisplaySeq" : "37",
             "feature" : {
                 "featureId" : "38",
+                "featureName" : "fault_code_type_3_count_per_usage2",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -739,6 +783,7 @@
             "featureDisplaySeq" : "38",
             "feature" : {
                 "featureId" : "39",
+                "featureName" : "fault_code_type_4_count_per_usage2",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -758,6 +803,7 @@
             "featureDisplaySeq" : "39",
             "feature" : {
                 "featureId" : "40",
+                "featureName" : "problem_type_1_category",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -777,6 +823,7 @@
             "featureDisplaySeq" : "40",
             "feature" : {
                 "featureId" : "41",
+                "featureName" : "problem_type_2_category",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -796,6 +843,7 @@
             "featureDisplaySeq" : "41",
             "feature" : {
                 "featureId" : "42",
+                "featureName" : "problem_type_3_category",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -815,6 +863,7 @@
             "featureDisplaySeq" : "42",
             "feature" : {
                 "featureId" : "43",
+                "featureName" : "problem_type_4_category",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -834,6 +883,7 @@
             "featureDisplaySeq" : "43",
             "feature" : {
                 "featureId" : "44",
+                "featureName" : "problem_type_1_per_usage1_category",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -853,6 +903,7 @@
             "featureDisplaySeq" : "44",
             "feature" : {
                 "featureId" : "45",
+                "featureName" : "problem_type_2_per_usage1_category",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -872,6 +923,7 @@
             "featureDisplaySeq" : "45",
             "feature" : {
                 "featureId" : "46",
+                "featureName" : "problem_type_3_per_usage1_category",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -891,6 +943,7 @@
             "featureDisplaySeq" : "46",
             "feature" : {
                 "featureId" : "47",
+                "featureName" : "problem_type_4_per_usage1_category",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -910,6 +963,7 @@
             "featureDisplaySeq" : "47",
             "feature" : {
                 "featureId" : "48",
+                "featureName" : "problem_type_1_per_usage2_category",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -929,6 +983,7 @@
             "featureDisplaySeq" : "48",
             "feature" : {
                 "featureId" : "49",
+                "featureName" : "problem_type_2_per_usage2_category",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -948,6 +1003,7 @@
             "featureDisplaySeq" : "49",
             "feature" : {
                 "featureId" : "50",
+                "featureName" : "problem_type_3_per_usage2_category",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -967,6 +1023,7 @@
             "featureDisplaySeq" : "50",
             "feature" : {
                 "featureId" : "51",
+                "featureName" : "problem_type_4_per_usage2_category",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -986,6 +1043,7 @@
             "featureDisplaySeq" : "51",
             "feature" : {
                 "featureId" : "52",
+                "featureName" : "fault_code_type_1_count_category",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -1005,6 +1063,7 @@
             "featureDisplaySeq" : "52",
             "feature" : {
                 "featureId" : "53",
+                "featureName" : "fault_code_type_2_count_category",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -1024,6 +1083,7 @@
             "featureDisplaySeq" : "53",
             "feature" : {
                 "featureId" : "54",
+                "featureName" : "fault_code_type_3_count_category",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -1043,6 +1103,7 @@
             "featureDisplaySeq" : "54",
             "feature" : {
                 "featureId" : "55",
+                "featureName" : "fault_code_type_4_count_category",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -1062,6 +1123,7 @@
             "featureDisplaySeq" : "55",
             "feature" : {
                 "featureId" : "56",
+                "featureName" : "fault_code_type_1_count_per_usage1_category",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -1081,6 +1143,7 @@
             "featureDisplaySeq" : "56",
             "feature" : {
                 "featureId" : "57",
+                "featureName" : "fault_code_type_2_count_per_usage1_category",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -1100,6 +1163,7 @@
             "featureDisplaySeq" : "57",
             "feature" : {
                 "featureId" : "58",
+                "featureName" : "fault_code_type_3_count_per_usage1_category",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -1119,6 +1183,7 @@
             "featureDisplaySeq" : "58",
             "feature" : {
                 "featureId" : "59",
+                "featureName" : "fault_code_type_4_count_per_usage1_category",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -1138,6 +1203,7 @@
             "featureDisplaySeq" : "59",
             "feature" : {
                 "featureId" : "60",
+                "featureName" : "fault_code_type_1_count_per_usage2_category",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -1157,6 +1223,7 @@
             "featureDisplaySeq" : "60",
             "feature" : {
                 "featureId" : "61",
+                "featureName" : "fault_code_type_2_count_per_usage2_category",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -1176,6 +1243,7 @@
             "featureDisplaySeq" : "61",
             "feature" : {
                 "featureId" : "62",
+                "featureName" : "fault_code_type_3_count_per_usage2_category",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -1195,6 +1263,7 @@
             "featureDisplaySeq" : "62",
             "feature" : {
                 "featureId" : "63",
+                "featureName" : "fault_code_type_4_count_per_usage2_category",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -1214,6 +1283,7 @@
             "featureDisplaySeq" : "63",
             "feature" : {
                 "featureId" : "64",
+                "featureName" : "cat1",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -1233,6 +1303,7 @@
             "featureDisplaySeq" : "64",
             "feature" : {
                 "featureId" : "65",
+                "featureName" : "cat2",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -1252,6 +1323,7 @@
             "featureDisplaySeq" : "65",
             "feature" : {
                 "featureId" : "66",
+                "featureName" : "cat3",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -1271,6 +1343,7 @@
             "featureDisplaySeq" : "66",
             "feature" : {
                 "featureId" : "67",
+                "featureName" : "cat4",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -1290,6 +1363,7 @@
             "featureDisplaySeq" : "67",
             "feature" : {
                 "featureId" : "68",
+                "featureName" : "warn_type1_total_rollingmean_3",
                 "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
@@ -1297,7 +1371,87 @@
                 }
             },
             "attribute" : {
-                "attrId" : "86",
+                "attrId" : "80",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "68",
+            "featureDisplaySeq" : "68",
+            "feature" : {
+                "featureId" : "69",
+                "featureName" : "warn_type1_total_rollingdiff_3",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "0ed9fb89-a7db-4c78-a5ab-3b2729f04201"
+                }
+            },
+            "attribute" : {
+                "attrId" : "81",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "69",
+            "featureDisplaySeq" : "69",
+            "feature" : {
+                "featureId" : "70",
+                "featureName" : "warn_type1_total_rollingstd_3",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "0ed9fb89-a7db-4c78-a5ab-3b2729f04201"
+                }
+            },
+            "attribute" : {
+                "attrId" : "82",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "70",
+            "featureDisplaySeq" : "70",
+            "feature" : {
+                "featureId" : "72",
+                "featureName" : "warn_type1_total_rollingmax_3",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "0ed9fb89-a7db-4c78-a5ab-3b2729f04201"
+                }
+            },
+            "attribute" : {
+                "attrId" : "83",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84"
+                }
+            }
+        }, 
+        {
+            "featureMapId" : "71",
+            "featureDisplaySeq" : "71",
+            "feature" : {
+                "featureId" : "73",
+                "featureName" : "warn_type1_total_rollingmin_3",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model",
+                    "uuid" : "0ed9fb89-a7db-4c78-a5ab-3b2729f04201"
+                }
+            },
+            "attribute" : {
+                "attrId" : "84",
                 "ref" : {
                     "type" : "dataset",
                     "uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84"
@@ -1305,16 +1459,12 @@
             }
         }
     ],
-    "trainPercent" : 80.0,
-    "valPercent" : 20.0,
-    "labelInfo" : {
-        "attrId" : "32",
+    "trainInfo" : {
         "ref" : {
-            "type" : "dataset",
-            "uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84"
+            "type" : "train",
+            "uuid" : "7f019a46-2d40-4b91-b7be-3ce93f6c65b0"
         }
     },
-    "useHyperParams" : "N",
     "rowIdentifier" : [ 
         {
             "attrId" : "0",
@@ -1332,9 +1482,8 @@
         }
     ],
     "includeFeatures" : "Y",
-    "saveTrainingSet" : "N",
-    "uuid" : "7f019a46-2d40-4b91-b7be-3ce93f6c65b0",
-    "version" : "1549029014",
+    "uuid" : "69801d80-3840-480f-a56d-50f7a74ee55d",
+    "version" : "1548948664",
     "name" : "RLU Prediction - GBT",
     "createdBy" : {
         "ref" : {
@@ -1344,7 +1493,7 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2019-02-01T13:50:14.000Z"),
+    "createdOn" : ISODate("2019-01-31T15:31:04.000Z"),
     "tags" : [],
     "active" : "Y",
     "locked" : "N",
@@ -1354,19 +1503,8 @@
             "ref" : {
                 "type" : "application",
                 "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
-                "version" : "1547482153",
-                "name" : "Predictive Maintenance"
+                "version" : "1547482153"
             }
         }
-    ],
-     "trainLocation" : {
-        "ref" : {
-            "type" : "file"
-        }
-    },
-    "testLocation" : {
-        "ref" : {
-            "type" : "file"
-        }
-    }
+    ]
 }
