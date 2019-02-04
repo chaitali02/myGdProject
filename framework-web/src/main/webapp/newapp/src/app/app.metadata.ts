@@ -5,7 +5,7 @@ export class AppMetadata {
   defaultElement: any
   validElementTypes: string[];
   defaultLink: { attrs: { '.connection': { stroke: string; }; '.marker-target': { d: string; fill: string; stroke: string; }; }; };
-  customElements: { 'dag': any; 'stage': any; 'dq': any; 'dqgroup': any; 'map': any; 'load': any; 'profile': any; 'profilegroup': any; 'model': any; 'rulegroup': any; 'rule': any; 'recon':any,'recongroup':any};
+  customElements: { 'dag': any; 'stage': any; 'dq': any; 'dqgroup': any; 'map': any; 'load': any; 'profile': any; 'profilegroup': any; 'model': any; 'rulegroup': any; 'rule': any; 'recon': any, 'recongroup': any,'ingest':any,'ingestgroup':any};
   obj: any;
   constructor() {
     this.obj = {};
@@ -191,6 +191,7 @@ export class AppMetadata {
         moduleCaption: 'Data Reconciliation',
         childMenu: [],
         allowInChildMenu: false,
+        class: 'fa fa-compress'
       },
 
       'recongroup': {
@@ -211,10 +212,11 @@ export class AppMetadata {
         moduleState: 'recongroup',
         childMenu: [],
         allowInChildMenu: false,
+        class: 'fa fa-compress'
       },
       'reconexec': {
         name: 'recon',
-        caption: 'Recon Exec',
+        caption: 'Recon',
         color: '#EB54C3',
         icon: '',
         iconCaption: '',
@@ -225,30 +227,31 @@ export class AppMetadata {
         listState: 'jobmonitoringlist',
         detailState: 'jobexecutorlistreconexec',
         resultState: 'viewdrresultspage',
-        moduleCaption: 'Data Reconciliation',        
+        moduleCaption: 'Data Reconciliation',
         childMenu: [],
         allowInChildMenu: false,
+        class: 'fa fa-compress'
       },
       'reconExec': {
         name: 'recon',
         caption: 'Recon Exec',
-        color: '#EB54C3',
-        icon: '',
+        execType: 'reconexec',
+        metaType: 'reconexec',
+        color: '#8E44AD',
         iconCaption: '',
-        execType: 'reconExec',
-        metaType: 'reconExec',
         allowInMenu: false,
-        moduleState: 'reconexec',
         listState: 'jobmonitoringlist',
-        detailState: 'jobexecutorlistreconexec',
-        resultState: 'viewdrresultspage',
-        moduleCaption: 'Data Reconciliation',        
+        detailState: 'reconExec',
+        moduleState: 'JobMonitoring',
+        resultState: 'reconExec',
+        moduleCaption: 'Job Monitoring',
         childMenu: [],
         allowInChildMenu: false,
+        class: 'fa fa-compress'
       },
       'recongroupexec': {
         name: 'recongroup',
-        caption: 'Recon Group Exec',
+        caption: 'Recon Group',
         execType: 'recongroupExec',
         metaType: 'recongroupExec',
         color: '#EB54C3',
@@ -261,10 +264,28 @@ export class AppMetadata {
         resultState: 'viewdrresultspage',
         childMenu: [],
         allowInChildMenu: false,
+        class: 'fa fa-compress'
+      },
+      'recongroupExec': {
+        name: 'recongroup',
+        caption: 'Recon Group Exec',
+        execType: 'recongroupExec',
+        metaType: 'recongroupExec',
+        color: '#EB54C3',
+        iconCaption: '',
+        allowInMenu: false,
+        listState: 'jobmonitoringlist',
+        resultState: 'recongroupExec',
+        detailState: 'recongroupExec',
+        moduleState: 'JobMonitoring',
+        moduleCaption: 'Job Monitoring',
+        childMenu: [],
+        allowInChildMenu: false,
+        class: 'fa fa-compress'
       },
       'loadexec': {
         name: 'load',
-        caption: 'load Exec',
+        caption: 'load',
         execType: 'loadExec',
         metaType: 'loadExec',
         color: '#EB54C3',
@@ -288,19 +309,7 @@ export class AppMetadata {
         moduleCaption: 'Job Monitoring',
         class: 'fa fa-link'
       },
-      'mapexec': {
-        name: 'map',
-        caption: 'map Exec',
-        execType: 'mapExec',
-        metaType: 'map',
-        color: '#EB54C3',
-        allowInMenu: false,
-        listState: 'jobmonitoringlist',
-        detailState: 'mapExec',
-        moduleState: 'JobMonitoring',
-        moduleCaption: 'Job Monitoring',
-        class: 'fa fa-link'
-      },
+  
       'mapExec': {
         name: 'map',
         caption: 'Map',
@@ -316,7 +325,7 @@ export class AppMetadata {
       },
       'dqgroupexec': {
         name: 'dqgroup',
-        caption: 'DQ Group Exec',
+        caption: 'DQ Group',
         execType: 'dqgroupExec',
         metaType: 'dqgroupExec',
         color: '#dceaab',
@@ -344,7 +353,7 @@ export class AppMetadata {
       },
       'ruleexec': {
         name: 'rule',
-        caption: 'Rule Exec',
+        caption: 'Rule',
         execType: 'ruleExec',
         metaType: 'ruleExec',
         color: '#EB54C3',
@@ -372,7 +381,7 @@ export class AppMetadata {
       },
       'rulegroupexec': {
         name: 'rulegroup',
-        caption: 'Rule Group Exec',
+        caption: 'Rule Group',
         execType: 'rulegroupExec',
         metaType: 'rulegroupExec',
         color: '#EB54C3',
@@ -400,7 +409,7 @@ export class AppMetadata {
       },
       'profileexec': {
         name: 'profile',
-        caption: 'Profile Exec',
+        caption: 'Profile',
         execType: 'profileExec',
         metaType: 'profileExec',
         color: '#EB54C3',
@@ -428,7 +437,7 @@ export class AppMetadata {
       },
       'profilegroupexec': {
         name: 'profilegroup',
-        caption: 'Profile Group Exec',
+        caption: 'Profile Group',
         execType: 'profilegroupExec',
         metaType: 'profilegroupExec',
         color: '#EB54C3',
@@ -456,7 +465,7 @@ export class AppMetadata {
       },
       'dagexec': {
         name: 'pipeline',
-        caption: 'Pipeline Exec',
+        caption: 'Pipeline',
         execType: 'dagexec',
         metaType: 'dagexec',
         color: '#e59866',
@@ -484,7 +493,7 @@ export class AppMetadata {
       },
       'downloadexec': {
         name: 'downloadexec',
-        caption: 'Download Exec',
+        caption: 'Download',
         execType: 'downloadexec',
         metaType: 'downloadexec',
         color: '#5C9BD1',
@@ -495,27 +504,25 @@ export class AppMetadata {
         moduleState: 'dataScience',
         moduleCaption: 'Data Science',
         class: 'fa fa-download'
- },
- 'downloadExec': {
-  name: 'download',
-  caption: 'download Exec',
-  execType: 'downloadExec',
-  metaType: 'downloadExec',
-  color: '#5C9BD1',
-  iconCaption: '',
-  allowInMenu: false,
-  listState: 'jobmonitoringlist',
-  detailState: 'downloadExec',
-  moduleState: 'JobMonitoring',
-  resultState: 'downloadExec',
-  moduleCaption: 'Job Monitoring',
-  class: 'fa fa-download'
-
-
-},
+      },
+      'downloadExec': {
+        name: 'download',
+        caption: 'download Exec',
+        execType: 'downloadExec',
+        metaType: 'downloadExec',
+        color: '#5C9BD1',
+        iconCaption: '',
+        allowInMenu: false,
+        listState: 'jobmonitoringlist',
+        detailState: 'downloadExec',
+        moduleState: 'JobMonitoring',
+        resultState: 'downloadExec',
+        moduleCaption: 'Job Monitoring',
+        class: 'fa fa-download'
+      },
       'uploadexec': {
         name: 'upload',
-        caption: 'Upload Exec',
+        caption: 'Upload',
         execType: 'uploadexec',
         metaType: 'uploadexec',
         color: '#2AB4C0',
@@ -523,28 +530,25 @@ export class AppMetadata {
         listState: 'jobmonitoringlist',
         detailState: 'uploadExec',
         resultState: 'uploadexec',
-        moduleState: 'dataPreparation',
-        moduleCaption: 'Data Preparation',
+        moduleState: 'admin',
+        moduleCaption: 'Admin',
         class: 'fa fa-upload'
-
-  },
-  'uploadExec': {
-    name: 'upload',
-    caption: 'upload Exec',
-    execType: 'uploadExec',
-    metaType: 'uploadExec',
-    color: '#2AB4C0',
-    iconCaption: '',
-    allowInMenu: false,
-    listState: 'jobmonitoringlist',
-    detailState: 'uploadExec',
-    moduleState: 'JobMonitoring',
-    resultState: 'uploadExec',
-    moduleCaption: 'Job Monitoring',
-    class: 'fa fa-upload'
-  
-  
-  },
+      },
+      'uploadExec': {
+        name: 'upload',
+        caption: 'upload Exec',
+        execType: 'uploadExec',
+        metaType: 'uploadExec',
+        color: '#2AB4C0',
+        iconCaption: '',
+        allowInMenu: false,
+        listState: 'jobmonitoringlist',
+        detailState: 'uploadExec',
+        moduleState: 'JobMonitoring',
+        resultState: 'uploadExec',
+        moduleCaption: 'Job Monitoring',
+        class: 'fa fa-upload'
+      },
       'pipelineexec': {
         name: 'pipeline',
         caption: 'Pipeline',
@@ -560,7 +564,7 @@ export class AppMetadata {
       },
       'vizexec': {
         name: 'vizpod',
-        caption: 'Vizpod Exec',
+        caption: 'Vizpod',
         execType: 'vizexec',
         metaType: 'vizexec',
         color: '#fff8dc',
@@ -584,7 +588,6 @@ export class AppMetadata {
         moduleState: 'JobMonitoring',
         moduleCaption: 'Job Monitoring',
         class: 'fa fa-line-chart'
-
       },
       'viz': {
         name: 'vizpod',
@@ -598,7 +601,6 @@ export class AppMetadata {
         moduleState: 'dataVisualization',
         moduleCaption: 'Data Visualization',
         class: 'fa fa-line-chart'
-
       },
       'vizpodexec': {
         name: 'vizpod',
@@ -615,7 +617,7 @@ export class AppMetadata {
       },
       'dqexec': {
         name: 'dq',
-        caption: 'Data Quality Exec',
+        caption: 'Data Quality',
         execType: 'dqexec',
         metaType: 'dqexec',
         color: '#EB54C3',
@@ -699,7 +701,7 @@ export class AppMetadata {
 
       'dataset': {
         name: 'dataset',
-        caption: 'Data Set',
+        caption: 'Dataset',
         execType: '',
         metaType: 'dataset',
         color: '#0d01b5',
@@ -1111,7 +1113,7 @@ export class AppMetadata {
       },
       'operatorexec': {
         name: 'operatorexec',
-        caption: 'Operator Exec',
+        caption: 'Operator',
         execType: 'operatorexec',
         metaType: 'operatorexec',
         color: '#DCEDC8',
@@ -1452,7 +1454,7 @@ export class AppMetadata {
       },
       'predictexec': {
         name: 'predictexec',
-        caption: 'Prediction Exec',
+        caption: 'Prediction',
         execType: 'predictexec',
         metaType: 'predictexec',
         color: '#EB54C3',
@@ -1500,7 +1502,7 @@ export class AppMetadata {
       },
       'simulateexec': {
         name: 'simulateexec',
-        caption: 'Simulation Exec',
+        caption: 'Simulation',
         execType: 'simulateExec',
         metaType: 'simulateExec',
         color: '#EB54C3',
@@ -1527,10 +1529,10 @@ export class AppMetadata {
         detailState: 'simulateExec',
         moduleState: 'JobMonitoring',
         resultState: 'simulateexec',
-        moduleCaption: 'Data Science',
+        moduleCaption: 'Job Monitoring',
         class: 'fa fa-flask'
       },
-      
+
       'train': {
         name: 'train',
         caption: 'Training',
@@ -1549,7 +1551,7 @@ export class AppMetadata {
       },
       'trainexec': {
         name: 'trainexec',
-        caption: 'Train Exec',
+        caption: 'Train',
         execType: 'trainexec',
         metaType: 'trainexec',
         color: '#8E44AD',
@@ -1564,7 +1566,6 @@ export class AppMetadata {
         allowInChildMenu: false,
         class: 'fa fa-flask'
       },
-
       'trainExec': {
         name: 'train',
         caption: 'Train Exec',
@@ -1652,7 +1653,243 @@ export class AppMetadata {
         resultState: '',
         childMenu: [],
         allowInChildMenu: false,
-      }
+      },
+      'ingest': {
+        name: 'dataIngest',
+        caption: 'Rule',
+        color: '#00A8F0',
+        icon: 'ingest.svg',
+        execType: 'ingestExec',
+        metaType: 'ingest',
+        iconPath: 'assets/img/ingest.svg',
+        allowInMenu: true,
+        state: 'createingest',
+        detailState: 'ingest',
+        moduleState: 'dataIngestion',
+        moduleCaption: 'Data Ingestion',
+        class: 'fa fa-users'
+      },
+      'ingestgroup': {
+        name: 'dataIngestgroup',
+        caption: 'Rule Group',
+        color: '#00A8F0',
+        icon: 'dataIngestgroup.svg',
+        execType: 'dataIngestgroupExec',
+        metaType: 'dataIngestgroup',
+        iconPath: 'assets/img/ingest.svg',
+        allowInMenu: true,
+        state: 'createingestgroup',
+        detailState: 'ingestgroup',
+        moduleCaption: 'Data Ingestion',
+        moduleState: 'dataIngestion',
+        class: 'fa fa-users'
+      },
+      'ingestexec': {
+        name: 'ingestexec',
+        caption: 'Ingest',
+        execType: 'ingestexec',
+        metaType: 'ingestexec',
+        color: '#8E44AD',
+        iconCaption: '',
+        allowInMenu: false,
+        listState: 'jobmonitoringlist',
+        detailState: 'ingestExec',
+        moduleState: 'dataIngestion',
+        resultState: 'ingestexec',
+        moduleCaption: 'Data Ingestion',
+        childMenu: [],
+        allowInChildMenu: false,
+        class: 'fa fa-random'
+      },
+      'ingestExec': {
+        name: 'ingest',
+        caption: 'Ingest Exec',
+        execType: 'ingestexec',
+        metaType: 'ingestexec',
+        color: '#8E44AD',
+        iconCaption: '',
+        allowInMenu: false,
+        listState: 'jobmonitoringlist',
+        detailState: 'ingestExec',
+        moduleState: 'JobMonitoring',
+        resultState: 'ingestExec',
+        moduleCaption: 'Job Monitoring',
+        childMenu: [],
+        allowInChildMenu: false,
+        class: 'fa fa-random'
+      },
+      'ingestgroupexec': {
+        name: 'ingestgroup',
+        caption: 'Ingest Group',
+        execType: 'ingestgroupExec',
+        metaType: 'ingestgroupExec',
+        color: '#EB54C3',
+        allowInMenu: false,
+        listState: 'jobmonitoringlist',
+        detailState: 'ingestgroupExec',
+        resultState: 'ingestgroupexec',
+        moduleState: 'dataIngestion',
+        moduleCaption: 'Data Ingestion',
+        class: 'fa fa-random'
+      },
+      'ingestgroupExec': {
+        name: 'ingestgroup',
+        caption: 'Ingest Group',
+        execType: 'ingestgroupExec',
+        metaType: 'ingestgroupExec',
+        color: '#EB54C3',
+        allowInMenu: false,
+        listState: 'jobmonitoringlist',
+        detailState: 'ingestgroupExec',
+        resultState: 'ingestgroupExec',
+        moduleState: 'JobMonitoring',
+        moduleCaption: 'Job Monitoring',
+        class: 'fa fa-random'
+      },
+      'batch': {
+        name: 'batch',
+        caption: 'batch',
+        color: '#00A8F0',
+        icon: 'batch.svg',
+        execType: 'batchExec',
+        metaType: 'batch',
+        iconPath: 'assets/img/batch.svg',
+        allowInMenu: true,
+        //state: 'createbatch',
+        detailState: 'batch',
+        moduleState: 'batchScheduler',
+        moduleCaption: 'Batch Scheduler',
+        class: 'fa fa-tasks'
+      },
+      'batchexec': {
+        name: 'batchexec',
+        caption: 'Batch',
+        execType: 'batchexec',
+        metaType: 'batchexec',
+        color: '#EB54C3',
+        allowInMenu: false,
+        listState: 'jobmonitoringlist',
+        detailState: 'jobexecutorlistbatchexec',
+        resultState: 'batchexec',
+        moduleState: 'batchScheduler',
+        moduleCaption: 'BatchScheduler',
+        class: 'fa fa-tasks'
+      },
+      'mapexec': {
+        name: 'mapexec',
+        caption: 'Map',
+        execType: 'mapexec',
+        metaType: 'mapexec',
+        color: '#EB54C3',
+        allowInMenu: false,
+        listState: 'jobmonitoringlist',
+        detailState: 'mapexec',
+        resultState: 'mapexec',
+        moduleState: 'dataPreparation',
+        moduleCaption: 'Data Preparation',
+        class: 'fa fa-link'
+      },
+      'batchExec': {
+        name: 'batch',
+        caption: 'Batch Exec',
+        execType: 'batchExec',
+        metaType: 'batchExec',
+        color: '#EB54C3',
+        allowInMenu: false,
+        listState: 'jobmonitoringlist',
+        detailState: 'batchExec',
+        resultState: 'batchExec',
+        moduleState: 'JobMonitoring',
+        moduleCaption: 'Job Monitoring',
+        class: 'fa fa-tasks'
+      },
+      'graphpod': {
+        name: 'graphpod',
+        caption: 'Graph',
+        execType: 'graphExec',
+        metaType: 'graphpod',
+        color: '#00E5FF',
+        parentIconCaption: '',
+        allowInMenu: false,
+        listState: 'listgraphpod',
+        detailState: 'graphpod',
+        childMenu: [],
+        moduleState: 'graphAnalysis',
+        moduleCaption: 'Graph Analysis',
+        allowInChildMenu: false,
+        class: 'fa fa-bar-chart'
+      },
+      'graphexec': {
+        name: 'graphexec',
+        caption: 'Graph',
+        execType: 'graphexec',
+        metaType: 'graphexec',
+        color: '#EB54C3',
+        parentIconCaption: '',
+        allowInMenu: false,
+        listState: 'graphpodresultlist',
+        joblistState: 'jobmonitoringlist',
+        detailState: 'jobexecutorlistgraphexec',
+        resultState: 'graphpodresult',
+        moduleState: 'graphpod',
+        moduleCaption: 'Graph Analysis',
+        childMenu: [],
+        allowInChildMenu: false,
+        class: 'fa fa-bar-chart'
+      },
+      'report': {
+        name: 'report',
+        caption: 'Report',
+        execType: 'report',
+        metaType: 'report',
+        color: '#EB54C3',
+        parentIconCaption: '',
+        allowInMenu: false,
+        listState: 'reportresultlist',
+        //joblistState:'jobmonitoringlist',
+        detailState: 'report',
+        //resultState:'reportresult',
+        moduleState: 'dataVisualization',
+        moduleCaption: 'Data Visualization',
+        childMenu: [],
+        allowInChildMenu: false,
+        class: 'fa fa-tasks'
+      },
+      'reportexec': {
+        name: 'reportexec',
+        caption: 'Report',
+        execType: 'reportexec',
+        metaType: 'reportexec',
+        color: '#EB54C3',
+        parentIconCaption: '',
+        allowInMenu: false,
+        listState: 'reportresultlist',
+        joblistState: 'jobmonitoringlist',
+        detailState: 'jobexecutorlistreportexec',
+        resultState: 'reportresult',
+        moduleState: 'dataVisualization',
+        moduleCaption: 'Data Visualization',
+        childMenu: [],
+        allowInChildMenu: false,
+        class: 'fa fa-line-chart'
+      },
+      'reportExec': {
+        name: 'report',
+        caption: 'Report Exec',
+        execType: 'reportexec',
+        metaType: 'reportexec',
+        color: '#8E44AD',
+        iconCaption: '',
+        allowInMenu: false,
+        listState: 'jobmonitoringlist',
+        detailState: 'reportExec',
+        moduleState: 'JobMonitoring',
+        resultState: 'reportExec',
+        moduleCaption: 'Job Monitoring',
+        childMenu: [],
+        allowInChildMenu: false,
+        class: 'fa fa-flask'
+      },
     }
 
     this.obj.statusDefs = {
@@ -1729,13 +1966,33 @@ export class AppMetadata {
         color: '#ed6b75',//'#d80029',
         iconPath: '',
       },
+      'NOCHANGE':{
+        name : 'NoChange',
+        caption:'No Change',
+        color :'#36c6d3',//'#9CBB62',
+      },
+      'MODIFIED':{
+        name : 'Modified',
+        caption:'Modified',
+        color :'#F1C40F',//'#5083C3',
+      },
+      'DELETED':{
+        name : 'Deleted',
+        caption:'Deleted',
+        color :'#ed6b75',//'#C34E4E',
+      },
+      'NEW':{
+        name : 'New',
+        caption:'New',
+        color :'#006df0',//'#4FACC5',
+      },
     }
     this.defaultLink = {
       attrs: { '.connection': { stroke: 'gray' }, '.marker-target': { d: 'M 10 0 L 0 5 L 10 10 z', fill: 'gray', stroke: 'gray' } }
     };
 
-    this.validElementTypes = ['dag', 'stage', 'dq', 'dqgroup', 'map', 'load', 'profile', 'profilegroup', 'model', 'rule', 'rulegroup','recon','recongroup'];
-    this.validTaskTypes = ['dq', 'dqgroup', 'map', 'load', 'profile', 'profilegroup', 'model', 'rule', 'rulegroup','recon','recongroup'];
+    this.validElementTypes = ['dag', 'stage', 'dq', 'dqgroup', 'map', 'load', 'profile', 'profilegroup', 'model', 'rule', 'rulegroup', 'recon', 'recongroup', 'ingest', 'ingestgroup','mapexec'];
+    this.validTaskTypes = ['dq', 'dqgroup', 'map', 'load', 'profile', 'profilegroup', 'model', 'rule', 'rulegroup', 'recon', 'recongroup', 'ingest', 'ingestgroup','mapexec'];
     this.defaultElement = {
       markup: '<g class="rotatable"><g class="scalable"><image class="body" /></g><image class="remove" title="Remove"/><g class="status"><image class="statusImg"><title class="statusTitle">Status</title></image></g><text class="label" /><g class="inPorts"/><g class="outPorts"/></g>',
       size: { width: 50, height: 50 },
@@ -1900,12 +2157,40 @@ export class AppMetadata {
         }
       }),
 
+  
+
       'profilegroup': Object.assign({}, this.defaultElement, {
         elementType: 'profilegroup',
         attrs: {
           '.body': {
             elementType: 'profilegroup',
             "xlink:href": this.obj.metadataDefs['profilegroup'].iconPath
+          },
+          '.statusImg': {
+            x: "55", y: "-20", height: "25px", width: "25px",
+            "xlink:href": ""
+          },
+        }
+      }),
+      'ingestgroup': Object.assign({}, this.defaultElement, {
+        elementType: 'ingestgroup',
+        attrs: {
+          '.body': {
+            elementType: 'ingestgroup',
+            "xlink:href": this.obj.metadataDefs['ingestgroup'].iconPath
+          },
+          '.statusImg': {
+            x: "55", y: "-20", height: "25px", width: "25px",
+            "xlink:href": ""
+          },
+        }
+      }),
+      'ingest': Object.assign({}, this.defaultElement, {
+        elementType: 'ingest',
+        attrs: {
+          '.body': {
+            elementType: 'ingest',
+            "xlink:href": this.obj.metadataDefs['ingest'].iconPath
           },
           '.statusImg': {
             x: "55", y: "-20", height: "25px", width: "25px",
@@ -1940,6 +2225,7 @@ export class AppMetadata {
           },
         }
       }),
+
       'model': Object.assign({}, this.defaultElement, {
         elementType: 'model',
         attrs: {

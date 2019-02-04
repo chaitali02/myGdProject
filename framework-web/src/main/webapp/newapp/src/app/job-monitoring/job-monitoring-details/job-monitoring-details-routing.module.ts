@@ -17,9 +17,12 @@ import { RuleGroupExecComponent } from './ruleGroupExec/ruleGroupExec.component'
 import { PipelineExecComponent } from './pipelineExec/pipelineExec.component';
 import { DownloadExecComponent } from './downloadExec/downloadExec.component';
 import { UploadExecComponent } from './uploadExec/uploadExec.componet';
-
-DownloadExecComponent
-
+import { BatchExecComponent } from './batchExec/batchExec.component';
+import { IngestExecComponent } from './ingestExec/ingestExec.component';
+import { ReportExecComponent } from './reportExec/reportExec.component';
+import { ReconExecComponent } from './reconExec/reconExec.component';
+import { ReconGroupExecComponent } from './reconGroupExec/reconGroupExec.component';
+import { IngestGroupExecComponent } from './ingestGroupExec/ingestGroupExec.component';
 
 const routes: Routes = [
     {
@@ -39,9 +42,13 @@ const routes: Routes = [
             { path: 'rulegroupExec/:id/:version/:mode', component: RuleGroupExecComponent, pathMatch: 'full' },
             { path: 'dagExec/:id/:version/:mode', component: PipelineExecComponent, pathMatch: 'full' },
             { path: 'downloadExec/:id/:version/:mode', component: DownloadExecComponent, pathMatch: 'full' },
-            { path: 'uploadExec/:id/:version/:mode', component: UploadExecComponent, pathMatch: 'full' }
-
-            
+            { path: 'uploadExec/:id/:version/:mode', component: UploadExecComponent, pathMatch: 'full' },
+            { path: 'batchExec/:id/:version/:mode', component: BatchExecComponent, pathMatch: 'full' },
+            { path: 'ingestExec/:id/:version/:mode', component: IngestExecComponent, pathMatch: 'full' },
+            { path: 'ingestgroupExec/:id/:version/:mode', component: IngestGroupExecComponent, pathMatch: 'full' },
+            { path: 'reportExec/:id/:version/:mode', component: ReportExecComponent, pathMatch: 'full' },
+            { path: 'reconExec/:id/:version/:mode', component: ReconExecComponent, pathMatch: 'full' },
+            { path: 'recongroupExec/:id/:version/:mode', component: ReconGroupExecComponent, pathMatch: 'full' }
         ]
     }
 ]

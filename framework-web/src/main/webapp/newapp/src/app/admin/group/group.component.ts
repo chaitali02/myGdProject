@@ -1,11 +1,12 @@
 import { Location } from '@angular/common';
-import { Component, OnInit, group } from '@angular/core';
+import { Component, OnInit, group, ViewChild } from '@angular/core';
 import { AppConfig } from '../../app.config';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { SelectItem } from 'primeng/primeng';
 import { CommonService } from '../../metadata/services/common.service';
 import { Version } from '../../shared/version';
 import { DependsOn } from './dependsOn'
+import { KnowledgeGraphComponent } from '../../shared/components/knowledgeGraph/knowledgeGraph.component';
 
 @Component({
   selector: 'app-group',
@@ -30,6 +31,7 @@ export class GroupComponent implements OnInit {
   uuid: any;
   active: any;
   published: any;
+  locked: any;
   depends: any;
   allName: any;
   roleInfoArray: any;
@@ -54,6 +56,11 @@ export class GroupComponent implements OnInit {
   appIdName: any;
   appIdUuid: any;
   //depenDependsOn : DependsOn;
+
+  isHomeEnable: boolean = false
+  showGraph: boolean = false;
+  isShowReportData: boolean = true;
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
 
   constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
     this.showGroup = true;
@@ -103,22 +110,30 @@ export class GroupComponent implements OnInit {
     })
   }
 
+  showDagGraph(uuid, version) {
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id, this.version);
+    }, 1000);
+  }
+
   getOneByUuidAndVersion() {
     this._commonService.getOneByUuidAndVersion(this.id, this.version, 'group')
       .subscribe(
-      response => {
-        this.onSuccessgetOneByUuidAndVersion(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.onSuccessgetOneByUuidAndVersion(response)
+        },
+        error => console.log("Error :: " + error));
   }
 
   getAllVersionByUuid() {
     this._commonService.getAllVersionByUuid('group', this.id)
       .subscribe(
-      response => {
-        this.OnSuccesgetAllVersionByUuid(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.OnSuccesgetAllVersionByUuid(response)
+        },
+        error => console.log("Error :: " + error));
   }
 
   onSuccessgetOneByUuidAndVersion(response) {
@@ -131,7 +146,8 @@ export class GroupComponent implements OnInit {
     version.uuid = response['uuid'];
     this.selectedVersion = version
     this.createdBy = response.createdBy.ref.name;
-    this.published = response["published"] == 'Y' ? true : false
+    this.published = response["published"] == 'Y' ? true : false;
+    this.group.locked = response["locked"] == 'Y' ? true : false;
     this.active = response["active"] == 'Y' ? true : false
     var tags = [];
     if (response.tags != null) {
@@ -171,10 +187,10 @@ export class GroupComponent implements OnInit {
   getAllLatestRole() {
     this._commonService.getAllLatest('role')
       .subscribe(
-      response => {
-        this.onSuccessgetAllLatestRole(response)
-      },
-      error => console.log("Error ::" + error));
+        response => {
+          this.onSuccessgetAllLatestRole(response)
+        },
+        error => console.log("Error ::" + error));
   }
 
   onSuccessgetAllLatestRole(response) {
@@ -201,10 +217,10 @@ export class GroupComponent implements OnInit {
   getAllLatestAppli() {
     this._commonService.getAllLatest('application')
       .subscribe(
-      response => {
-        this.onSuccessgetAllLatestAppli(response)
-      },
-      error => console.log("Error ::" + error));
+        response => {
+          this.onSuccessgetAllLatestAppli(response)
+        },
+        error => console.log("Error ::" + error));
   }
 
   onSuccessgetAllLatestAppli(response) {
@@ -229,10 +245,10 @@ export class GroupComponent implements OnInit {
   onVersionChange() {
     this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, 'group')
       .subscribe(
-      response => {
-        this.onSuccessgetOneByUuidAndVersion(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.onSuccessgetOneByUuidAndVersion(response)
+        },
+        error => console.log("Error :: " + error));
   }
 
   onChangeActive(event) {
@@ -310,7 +326,8 @@ export class GroupComponent implements OnInit {
     groupJson["appId"] = appId1;
 
     groupJson["active"] = this.group.active == true ? 'Y' : "N"
-    groupJson["published"] = this.group.published == true ? 'Y' : "N"
+    groupJson["published"] = this.group.published == true ? 'Y' : "N";
+    groupJson["locked"] = this.group.locked == true ? 'Y' : "N";
 
 
     console.log(JSON.stringify(groupJson));
@@ -341,6 +358,12 @@ export class GroupComponent implements OnInit {
   showview(uuid, version) {
     this.router.navigate(['app/admin/group', uuid, version, 'true']);
 
+  }
+
+  showMainPage() {
+    this.isHomeEnable = false
+    // this._location.back();
+    this.showGraph = false;
   }
 
 }

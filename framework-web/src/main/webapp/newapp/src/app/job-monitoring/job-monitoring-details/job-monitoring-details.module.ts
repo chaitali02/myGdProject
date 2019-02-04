@@ -33,8 +33,14 @@ import { RuleExecComponent } from './ruleExec/ruleExec.component';
 import { RuleGroupExecComponent } from './ruleGroupExec/ruleGroupExec.component';
 import { PipelineExecComponent } from './pipelineExec/pipelineExec.component';
 import { DownloadExecComponent } from './downloadExec/downloadExec.component';
-import {UploadExecComponent } from './uploadExec/uploadExec.componet'
-
+import { UploadExecComponent } from './uploadExec/uploadExec.componet'
+import { BatchExecComponent } from './batchExec/batchExec.component';
+import { IngestExecComponent } from './ingestExec/ingestExec.component';
+import { ReportExecComponent } from './reportExec/reportExec.component';
+import { ReconExecComponent } from './reconExec/reconExec.component';
+import { DialogModule } from 'primeng/components/dialog/dialog';
+import { ReconGroupExecComponent } from './reconGroupExec/reconGroupExec.component';
+import { IngestGroupExecComponent } from './ingestGroupExec/ingestGroupExec.component';
 
 @NgModule({
     imports: [
@@ -52,6 +58,8 @@ import {UploadExecComponent } from './uploadExec/uploadExec.componet'
         DropdownModule,
         GrowlModule,
         CheckboxModule,
+        DialogModule
+       
     ],
     declarations: [
         jobMonitoringDetailsComponent,
@@ -69,8 +77,13 @@ import {UploadExecComponent } from './uploadExec/uploadExec.componet'
         PredictExecComponent,
         SimulateExecComponent,
         DownloadExecComponent,
-        UploadExecComponent
-
+        UploadExecComponent,
+        BatchExecComponent,
+        IngestExecComponent,
+        IngestGroupExecComponent,
+        ReportExecComponent,
+        ReconExecComponent,
+        ReconGroupExecComponent
     ],
     providers: [
         CommonService

@@ -1,3 +1,4 @@
+import { Component } from '@angular/core';
 import { NgModule } from '@angular/core';
 import { CommonModule ,DatePipe} from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -14,18 +15,18 @@ import { ProjectSharedModule } from '../shared/module/shared.module';
 import { ResultModule } from '../shared/module/result.module';
 
 import { DataPiplineComponent } from './data-pipeline.component';
-import { DataPiplineResultComponent } from './data-pipelineresult.component';
-import{ JointjsComponent} from './jointjs.component';
+//import{ JointjsComponent} from '../shared/components/jointjs/jointjs.component';
 
 
 import{CommonService}from '../metadata/services/common.service';
 import { DataPipelineService } from '../metadata/services/dataPipeline.service';
-import{JointjsService} from './jointjsservice'
+import{JointjsService} from '../shared/components/jointjs/jointjsservice'
 import{SharedDataService} from './shareddata.service'
 import { D3Service, D3, Selection } from 'd3-ng2-service';
 
 import { datapiplinerouting} from './data-pipeline-routing'
 import { UiSwitchModule } from 'ngx-toggle-switch/src';
+import { DataPiplineResultComponent } from './data-pipelineresult.component';
 
 @NgModule({
     imports: [
@@ -49,7 +50,7 @@ import { UiSwitchModule } from 'ngx-toggle-switch/src';
     declarations: [
         DataPiplineComponent,
         DataPiplineResultComponent,
-        JointjsComponent
+        //JointjsComponent
      ],
     providers: [
         CommonService,
@@ -57,10 +58,12 @@ import { UiSwitchModule } from 'ngx-toggle-switch/src';
         JointjsService,
         D3Service,
         SharedDataService,
-        JointjsComponent
+        //JointjsComponent
         
     ],
-  entryComponents: [JointjsComponent],
+  entryComponents: [
+      //JointjsComponent
+    ],
 })
 
 export class DataPiplineModule { }

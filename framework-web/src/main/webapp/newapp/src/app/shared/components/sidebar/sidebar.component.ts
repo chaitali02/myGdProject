@@ -1,3 +1,4 @@
+import { debug } from 'util';
 import { Component, OnInit } from '@angular/core';
 import { SidebarService } from './sidebar.service';
 import 'rxjs/add/operator/toPromise';
@@ -28,6 +29,10 @@ export class SidebarComponent {
     id:any;
     subMenu: any[];
   }
+  DataIngestionMenu: {
+    id:any;
+    subMenu: any[];
+  }
   DataPreparationMenu: {
     id:any;
     subMenu: any[];
@@ -48,10 +53,19 @@ export class SidebarComponent {
     id:any;
     subMenu: any[];
   }
+  GraphAnalysis: {
+    id:any;
+    subMenu: any[];
+  }
   DataVisualizationMenu: {
     id:any;
     subMenu: any[];
   }
+  BatchSchedulerMenu: {
+    id:any;
+    subMenu: any[];
+  }
+
   constructor(private http: Http, private _sidebarService: SidebarService) {
     this.adminMenu = {id:7,subMenu: [] };
     //this.DataScienceMenu = {  id:5, subMenu: [] };
@@ -66,8 +80,11 @@ export class SidebarComponent {
       {
         name: "Vizpod",
         type: "vizpod"
-      }
-      ]
+      },
+      {
+        name: "Report",
+        type: "report"
+      }]
     };
     this.DataProfileMenu = {
       id:1,
@@ -100,8 +117,13 @@ export class SidebarComponent {
         name: "Rule Results",
         type: "dqexec"
       }
+      // {
+      //   name: "Compare Results",
+      //   type: "comparedq"
+      // }
       ]
     };
+
     this.BusinessRuleMenu = {
       id:4,
       subMenu: [{
@@ -137,6 +159,23 @@ export class SidebarComponent {
       {
         name: "Results",
         type: "dagexec"
+      }
+      ]
+    };
+    this.GraphAnalysis = {
+      id:12,
+      subMenu: [
+      //   {
+      //   name: "Create",
+      //   type: "dag"
+      // },
+      {
+        name: "List",
+        type: "graphpod"
+      },
+      {
+        name: "Results",
+        type: "graphexec"
       }
       ]
     };
@@ -196,8 +235,43 @@ export class SidebarComponent {
         type: "reconexec"
       }
       ]
+    };
+    this.BatchSchedulerMenu={
+      id:13,
+      subMenu: [
+        // {
+        //   name: "Create New",
+        //   type: "batchscheduler"
+        // },
+        {
+          name: "List",
+          type: "batch"
+        },
+        {
+          name: "Batch Result",
+          type: "batchexec"
+        }
+      ]
+    }
+  
+    this.DataIngestionMenu={
+      id:12,
+      subMenu: [{
+        name: "Rule",
+        type: "ingest"
+      },
+      {
+        name: "Rule Group",
+        type: "ingestgroup"
+      },
+      {
+        name: "Rule Results",
+        type: "ingestexec"
+      }
+      ]
     }
   }
+  
   ngOnInit(): void {
     this.getAll();
 

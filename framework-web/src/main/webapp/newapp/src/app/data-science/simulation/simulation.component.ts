@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { Location } from '@angular/common';
 import { SelectItem } from 'primeng/primeng';
@@ -17,12 +17,14 @@ import { Simulation } from '../../metadata/domain/domain.simulation';
 import { TypeaheadOptions } from 'ngx-bootstrap/typeahead/typeahead-options.class';
 import { Dependson } from '../../metadata/domain/domain.dependson';
 import { sourceUrl } from '@angular/compiler';
-
+import { KnowledgeGraphComponent } from '../../shared/components/knowledgeGraph/knowledgeGraph.component';
 @Component({
   selector: 'app-simulation',
   templateUrl: './simulation.template.html',
 })
 export class SimulationComponent implements OnInit {
+  isHomeEnable: boolean;
+  showGraph: boolean;
 
   attributeInfoTag: any[];
   allAttributeinto: any;
@@ -75,9 +77,11 @@ export class SimulationComponent implements OnInit {
   paramListHolder: any;
   attributeTypes: any;
   paramListHolderArray: any[];
-
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
   constructor(config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _location: Location, private _simulateService: SimulationService, private _commonListService: CommonListService) {
     this.simulation = {};
+    this.isHomeEnable = false;
+    this.showGraph = false;
     this.simulation["active"] = true;
     this.featureMapTableArray = [];
     this.continueCount = 1;
@@ -818,6 +822,18 @@ export class SimulationComponent implements OnInit {
     setTimeout(() => {
       this.goBack();
     }, 1000);
+  }
+  showMainPage(){
+    this.isHomeEnable = false;
+    this.showGraph = false;
+  }
+
+  showDagGraph(uuid,version){
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id,this.version);
+    }, 1000);  
   }
 }
 

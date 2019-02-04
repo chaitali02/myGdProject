@@ -1,10 +1,11 @@
 import { AppConfig } from './../../../app.config';
 import { SelectItem } from 'primeng/primeng';
-import { Component } from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
 import { DatePipe, Location } from "@angular/common";
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { CommonService } from '../../../metadata/services/common.service';
 import { Version } from '../../../shared/version';
+import { KnowledgeGraphComponent } from '../../../shared/components/knowledgeGraph/knowledgeGraph.component';
 
 
 @Component({
@@ -15,6 +16,8 @@ import { Version } from '../../../shared/version';
 })
 
 export class UploadExecComponent {
+    showGraph: boolean;
+    isHomeEnable: boolean;
 
     breadcrumbDataFrom: any;
     id: any;
@@ -36,13 +39,14 @@ export class UploadExecComponent {
     refKeyList: any;
     location: any;
     filename: any;
-
     showResultTrain: any;
-
+    @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
 
     constructor(private datePipe: DatePipe, private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
         this.showResultTrain = true;
         this.uploadData = {};
+        this.isHomeEnable = false;
+        this.showGraph = false;
         this.breadcrumbDataFrom = [{
             "caption": "Job Monitoring ",
             "routeurl": "/app/jobMonitoring"
@@ -50,12 +54,10 @@ export class UploadExecComponent {
         {
             "caption": "upload Exec",
             "routeurl": "/app/list/uploadExec"
-
         },
         {
             "caption": "",
             "routeurl": null
-
         }
         ]
 
@@ -72,6 +74,14 @@ export class UploadExecComponent {
             this.getAllVersionByUuid()
 
         }
+    }
+
+    showDagGraph(uuid, version) {
+        this.isHomeEnable = true;
+        this.showGraph = true;
+        setTimeout(() => {
+            this.d_KnowledgeGraphComponent.getGraphData(this.id, this.version);
+        }, 1000);
     }
 
     onChangeActive(event) {
@@ -95,18 +105,18 @@ export class UploadExecComponent {
     getOneByUuidAndVersion(id, version) {
         this._commonService.getOneByUuidAndVersion(id, version, 'uploadexec')
             .subscribe(
-            response => {//console.log(response)},
-                this.onSuccessgetOneByUuidAndVersion(response)
-            },
-            error => console.log("Error :: " + error));
+                response => {//console.log(response)},
+                    this.onSuccessgetOneByUuidAndVersion(response)
+                },
+                error => console.log("Error :: " + error));
     }
     getAllVersionByUuid() {
         this._commonService.getAllVersionByUuid('uploadexec', this.id)
             .subscribe(
-            response => {
-                this.OnSuccesgetAllVersionByUuid(response)
-            },
-            error => console.log("Error :: " + error));
+                response => {
+                    this.OnSuccesgetAllVersionByUuid(response)
+                },
+                error => console.log("Error :: " + error));
     }
     onSuccessgetOneByUuidAndVersion(response) {
         this.uploadData = response
@@ -137,13 +147,20 @@ export class UploadExecComponent {
     onVersionChange() {
         this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, 'uploadexec')
             .subscribe(
-            response => {//console.log(response)},
-                this.onSuccessgetOneByUuidAndVersion(response)
-            },
-            error => console.log("Error :: " + error));
+                response => {//console.log(response)},
+                    this.onSuccessgetOneByUuidAndVersion(response)
+                },
+                error => console.log("Error :: " + error));
     }
 
     public goBack() {
         this._location.back();
     }
+
+    showMainPage() {
+        this.isHomeEnable = false
+        // this._location.back();
+        this.showGraph = false;
+    }
+
 }

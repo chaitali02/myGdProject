@@ -1,5 +1,5 @@
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Router, Event as RouterEvent, ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
 import { Message } from 'primeng/components/common/api';
@@ -12,795 +12,1342 @@ import { RuleService } from '../metadata/services/rule.service';
 import { Version } from './../metadata/domain/version'
 import { DependsOn } from './dependsOn'
 import { AttributeHolder } from './../metadata/domain/domain.attributeHolder'
+import { KnowledgeGraphComponent } from '../shared/components/knowledgeGraph/knowledgeGraph.component';
 
 @Component({
-    selector: 'app-business-rulesdetail',
-    templateUrl: './business-rulesdetail.templete.html',
+	selector: 'app-business-rulesdetail',
+	templateUrl: './business-rulesdetail.templete.html',
 })
 
 export class BusinessRulesDetailComponent {
-    allParameterset: any;
-    selectallattribute: any;
-    isTabelShow: boolean;
-    paramtable: any[];
-    paramtablecol: any;
-    paramsetdata: any;
-    isShowExecutionparam: boolean;
-    selectParameterlist: any;
-    checkboxModelexecution: any;
-    allParameterList: any[];
-    selectAllAttributeRow: any;
-    allFormula: any[];
-    allExpression: any[];
-    allFunction: any[];
-    allSourceAttribute: any;
-    sourceAttributeTypes: { "text": string; "label": string; }[];
-    attributeTableArray: any;
-    breadcrumbDataFrom: { "caption": string; "routeurl": string; }[];
-    dataqualitycompare: any;
-    selectedAllFitlerRow: boolean;
-    lhsdatapodattributefilter: any[];
-    operators: string[];
-    logicalOperators: string[];
-    filterTableArray: any;
-    datatype: string[];
-    allNames: any[];
-    sourcedata: DependsOn;
-    source: string;
-    sources: string[];
-    selectedVersion: Version;
-    VersionList: SelectItem[] = [];
-    msgs: any[];
-    tags: any;
-    createdBy: any;
-    dqdata: any;
-    mode: any;
-    version: any;
-    uuid: any;
-    id: any;
-    continueCount: any;
-    progressbarWidth: any;
-    isSubmit: any
-    constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _ruleService: RuleService) {
-        this.dqdata = {};
-        this.logicalOperators = ["", "AND", "OR"]
-        this.operators = ["=", "<", ">", "<=", ">=", "BETWEEN"];
-        this.continueCount = 1;
-        this.isSubmit = "false"
-        this.sources = ["datapod", "relation", "dataset", "rule"];
-        this.source = this.sources[0];
-        this.progressbarWidth = 25 * this.continueCount + "%";
-        this.dataqualitycompare = null;
-        this.filterTableArray = null;
-        this.dqdata["active"] = true
-        this.breadcrumbDataFrom = [{
-            "caption": "Business Rules",
-            "routeurl": "/app/list/rule"
-        },
-        {
-            "caption": "Rule",
-            "routeurl": "/app/list/rule"
-        },
-        {
-            "caption": "",
-            "routeurl": null
-        }
-        ]
-        this.sourceAttributeTypes = [
-            { "text": "function", "label": "function" },
-            { "text": "string", "label": "string" },
-            { "text": "datapod", "label": "attribute" },
-            { "text": "expression", "label": "expression" },
-            { "text": "formula", "label": "formula" }
-        ]
-        this.activatedRoute.params.subscribe((params: Params) => {
-            this.id = params['id'];
-            this.version = params['version'];
-            this.mode = params['mode'];
-            if (this.mode !== undefined) {
-                this.getOneByUuidAndVersion(this.id, this.version);
-                this.getAllVersionByUuid();
-                this.getAllParamertLsit();
-
-            }
-            else {
-                this.getAllLatest(true)
-                this.getAllParamertLsit();
-            }
-        });
-    }
-
-    public goBack() {
-        // this._location.back();
-        this.router.navigate(['app/list/rule'])
-    }
-
-    changeType() {
-        this.filterTableArray = null;
-        this.attributeTableArray = null;
-        this.getAllLatest(true)
-    }
-    changeSourceType() {
-        this.filterTableArray = null;
-        this.attributeTableArray = null;
-        this.getAllAttributeBySource();
-    }
-
-    countContinue = function () {
-        this.continueCount = this.continueCount + 1;
-        this.progressbarWidth = 25 * this.continueCount + "%";
-    }
-
-    countBack = function () {
-        this.continueCount = this.continueCount - 1;
-        this.progressbarWidth = 25 * this.continueCount + "%";
-    }
-
-    addRow() {
-        let newDataList = [];
-        if (this.filterTableArray == null) {
-            this.filterTableArray = [];
-        }
-        else {
-            newDataList = this.filterTableArray
-        }
-        var len = this.filterTableArray.length + 1
-        var filertable = {};
-        filertable["logicalOperator"] = " ";
-        let lhsFilter: AttributeHolder = new AttributeHolder();
-        lhsFilter.label = this.lhsdatapodattributefilter[0].label;
-        lhsFilter.u_Id = this.lhsdatapodattributefilter[0].value.u_Id;
-        lhsFilter.uuid = this.lhsdatapodattributefilter[0].value.uuid;
-        lhsFilter.attrId = this.lhsdatapodattributefilter[0].value.attrId;
-        filertable["lhsFilter"] = lhsFilter;
-        filertable["operator"] = this.operators[0]
-        filertable["filtervalue"] = " "
-        newDataList.splice(this.filterTableArray.length, 0, filertable);
-        this.filterTableArray = newDataList;
-    }
-
-    removeRow() {
-        let newDataList = [];
-        this.selectedAllFitlerRow = false;
-        this.filterTableArray.forEach(selected => {
-            if (!selected.selected) {
-                newDataList.push(selected);
-            }
-        });
-        if (newDataList.length > 0) {
-            newDataList[0].logicalOperator = "";
-        }
-        this.filterTableArray = newDataList;
-    }
-    checkAllFilterRow() {
-        if (!this.selectedAllFitlerRow) {
-            this.selectedAllFitlerRow = true;
-        }
-        else {
-            this.selectedAllFitlerRow = false;
-        }
-        this.filterTableArray.forEach(filter => {
-            filter.selected = this.selectedAllFitlerRow;
-        });
-    }
+	isNullArray: { 'value': string; 'label': string; }[];
+	iSSubmitEnable: boolean;
+	dragIndex: any;
+	dropIndex: any;
+	showGraph: boolean;
+	isHomeEnable: boolean;
+	dialogAttributeName: any;
+	dialogAttriNameArray: any[];
+	dialogAttriArray: any[];
+	displayDialogBox: boolean;
+	dialogSelectName: any;
+	paramlistArray: any[];
+	functionArray: any[];
+	rhsTypeArray: { value: string; label: string; }[];
+	lhsTypeArray: { 'value': string; 'label': string; }[];
+	rhsFormulaArray: any[];
+	attributesArray: any[];
+	lhsFormulaArray: any[];
+	allParameterset: any;
+	selectallattribute: any;
+	isTabelShow: boolean;
+	paramtable: any[];
+	paramtablecol: any;
+	paramsetdata: any;
+	isShowExecutionparam: boolean;
+	selectParameterlist: any;
+	checkboxModelexecution: any;
+	allParameterList: any[];
+	selectAllAttributeRow: any;
+	allFormula: any[];
+	allExpression: any[];
+	allFunction: any[];
+	allSourceAttribute: any;
+	sourceAttributeTypes: { "text": string; "label": string; }[];
+	attributeTableArray: any[];
+	breadcrumbDataFrom: { "caption": string; "routeurl": string; }[];
+	dataqualitycompare: any;
+	selectedAllFitlerRow: boolean;
+	lhsdatapodattributefilter: any[];
+	operators: any[];
+	logicalOperators: any[];
+	filterTableArray: any;
+	datatype: string[];
+	allNames: any[];
+	sourcedata: DependsOn;
+	source: string;
+	sources: string[];
+	selectedVersion: Version;
+	VersionList: SelectItem[] = [];
+	msgs: any[];
+	tags: any;
+	createdBy: any;
+	dqdata: any;
+	mode: any;
+	version: any;
+	uuid: any;
+	id: any;
+	continueCount: any;
+	progressbarWidth: any;
+	isSubmit: any
+	@ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
+	
+	constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _ruleService: RuleService) {
+		
+		this.showGraph = false;
+		this.isHomeEnable = false;
+		this.dqdata = {};
+		this.continueCount = 1;
+		this.isSubmit = "false";
+		this.displayDialogBox = false;
+		this.dialogAttributeName = {};
+		this.dialogSelectName = {};
+		this.sources = ["datapod", "relation", "dataset", "rule"];
+		this.source = this.sources[0];
+		this.progressbarWidth = 25 * this.continueCount + "%";
+		this.dataqualitycompare = null;
+		this.filterTableArray = null;
+		this.dqdata["active"] = true;
+		this.breadcrumbDataFrom = [{
+			"caption": "Business Rules",
+			"routeurl": "/app/list/rule"
+		},
+		{
+			"caption": "Rule",
+			"routeurl": "/app/list/rule"
+		},
+		{
+			"caption": "",
+			"routeurl": null
+		}
+		]
+		this.sourceAttributeTypes = [
+			{ "text": "function", "label": "function" },
+			{ "text": "string", "label": "string" },
+			{ "text": "datapod", "label": "attribute" },
+			{ "text": "expression", "label": "expression" },
+			{ "text": "formula", "label": "formula" }
+		]
+		this.activatedRoute.params.subscribe((params: Params) => {
+			this.id = params['id'];
+			this.version = params['version'];
+			this.mode = params['mode'];
+			if (this.mode !== undefined) {
+				this.getOneByUuidAndVersion(this.id, this.version);
+				this.getAllVersionByUuid();
+				this.getAllParamertLsit();
+			}
+			else {
+				this.getAllLatest(true)
+				this.getAllParamertLsit();
+			}
+		});
+		this.lhsTypeArray = [
+			{ 'value': 'string', 'label': 'string' },
+			{ 'value': 'integer', 'label': 'integer' },
+			{ 'value': 'datapod', 'label': 'attribute' },
+			{ 'value': 'formula', 'label': 'formula' }
+		];
+		this.rhsTypeArray = [
+			{ value: 'string', label: 'string' },
+			{ value: 'integer', label: 'integer' },
+			{ value: 'datapod', label: 'attribute' },
+			{ value: 'formula', label: 'formula' },
+			{ value: 'dataset', label: 'dataset' },
+			{ value: 'function', label: 'function' },
+			{ value: 'paramlist', label: 'paramlist' }
+		]
+		this.operators = [
+			{ 'value': '<', 'label': 'LESS THAN(<)' },
+			{ 'value': '>', 'label': 'GREATER THAN(>)' },
+			{ 'value': '<=', 'label': 'LESS OR  EQUAL(<=)' },
+			{ 'value': '>=', 'label': 'GREATER OR EQUAL(>=)' },
+			{ 'value': '=', 'label': 'EQUAL TO(=)' },
+			{ 'value': '!=', 'label': 'NOT EQUAL(!=)' },
+			{ 'value': 'BETWEEN', 'label': 'BETWEEN' },
+			{ 'value': 'LIKE', 'label': 'LIKE' },
+			{ 'value': 'NOT LIKE', 'label': 'NOT LIKE' },
+			{ 'value': 'RLIKE', 'label': 'RLIKE' },
+			{ 'value': 'EXISTS', 'label': 'EXISTS' },
+			{ 'value': 'NOT EXISTS', 'label': 'NOT EXISTS' },
+			{ 'value': 'IN', 'label': 'IN' },
+			{ 'value': 'NOT IN', 'label': 'NOT IN' },
+			{ 'value': 'IS', 'label': 'IS' },
+		];
+		this.logicalOperators = [
+			{ 'value': '', 'label': '' },
+			{ 'value': 'AND', 'label': 'AND' },
+			{ 'value': 'OR', 'label': 'OR' }]
+		this.isNullArray = [
+			{ 'value': 'NULL', 'label': 'NULL' },
+			{ 'value': 'NOT NULL', 'label': 'NOT NULL' }
+		]
+	}
 
 
-    onChangeSourceAttribute(type, index) {
-        if (type == "string") {
-            this.attributeTableArray[index].isSourceAtributeSimple = true;
-            this.attributeTableArray[index].isSourceAtributeDatapod = false;
-            this.attributeTableArray[index].isSourceAtributeFormula = false;
-            this.attributeTableArray[index].sourcesimple = "''";
-            this.attributeTableArray[index].isSourceAtributeExpression = false;
-            this.attributeTableArray[index].isSourceAtributeFunction = false;
-        }
-        else if (type == "datapod") {
-            this.attributeTableArray[index].isSourceAtributeSimple = false;
-            this.attributeTableArray[index].isSourceAtributeDatapod = true;
-            this.attributeTableArray[index].isSourceAtributeFormula = false;
-            this.attributeTableArray[index].isSourceAtributeExpression = false;
-            this.attributeTableArray[index].isSourceAtributeFunction = false;
-            this.attributeTableArray[index].sourceattribute = {}
-            this.getAllAttributeBySource()
-        }
-        else if (type == "formula") {
-            this.attributeTableArray[index].isSourceAtributeSimple = false;
-            this.attributeTableArray[index].isSourceAtributeDatapod = false;
-            this.attributeTableArray[index].isSourceAtributeFormula = true;
-            this.attributeTableArray[index].isSourceAtributeExpression = false;
-            this.attributeTableArray[index].isSourceAtributeFunction = false;
-            this.attributeTableArray[index].sourceformula = {}
-            this.getAllFormula()
-        }
-        else if (type == "expression") {
-            this.attributeTableArray[index].isSourceAtributeSimple = false;
-            this.attributeTableArray[index].isSourceAtributeDatapod = false;
-            this.attributeTableArray[index].isSourceAtributeFormula = false;
-            this.attributeTableArray[index].isSourceAtributeExpression = true;
-            this.attributeTableArray[index].isSourceAtributeFunction = false;
-            this.attributeTableArray[index].sourceexpression = {}
-            this.getAllExpression()
-        }
-        else if (type == "function") {
-            this.attributeTableArray[index].isSourceAtributeSimple = false;
-            this.attributeTableArray[index].isSourceAtributeDatapod = false;
-            this.attributeTableArray[index].isSourceAtributeFormula = false;
-            this.attributeTableArray[index].isSourceAtributeExpression = false;
-            this.attributeTableArray[index].isSourceAtributeFunction = true;
-            this.attributeTableArray[index].isSourceAtributeFunction = true;
-            this.attributeTableArray[index].sourcefunction = {}
-            this.getAllFunctions()
-        }
-    }
+	showDagGraph(uuid, version) {
+		this.isHomeEnable = true;
+		this.showGraph = true;
+		setTimeout(() => {
+			this.d_KnowledgeGraphComponent.getGraphData(this.id, this.version);
+		}, 1000);
+	}
 
-    checkAllAttributeRow() {
+	public goBack() {
+		// this._location.back();
+		this.router.navigate(['app/list/rule']);
+	}
 
-        if (!this.selectAllAttributeRow) {
-            this.selectAllAttributeRow = true;
-        }
-        else {
-            this.selectAllAttributeRow = false;
-        }
-        this.attributeTableArray.forEach(attribute => {
-            attribute.selected = this.selectAllAttributeRow;
-        });
-    }
-    addAttribute() {
-        if (this.attributeTableArray == null) {
-            this.attributeTableArray = [];
-        }
-        let len = this.attributeTableArray.length + 1
-        let attrinfo = {};
-        attrinfo["name"] = "attribute" + len;
-        attrinfo["id"] = len - 1;
-        attrinfo["sourceAttributeType"] = { "value": "string", "label": "string" };
-        attrinfo["isSourceAtributeSimple"] = true;
-        attrinfo["isSourceAtributeDatapod"] = false;
-        this.attributeTableArray.splice(this.attributeTableArray.length, 0, attrinfo);
-    }
+	changeType() {
+		this.dqdata.filterTableArray = null;
+		this.dqdata.attributeTableArray = null;
+		this.getAllLatest(true)
+	}
+	changeSourceType() {
+		this.dqdata.filterTableArray = null;
+		this.dqdata.attributeTableArray = null;
+		this.getAllAttributeBySource();
+	}
 
-    removeAttribute() {
-        var newDataList = [];
-        this.selectAllAttributeRow = false
-        this.attributeTableArray.forEach(selected => {
-            if (!selected.selected) {
-                newDataList.push(selected);
-            }
-        });
-        this.attributeTableArray = newDataList;
-    }
+	countContinue = function () {
+		this.continueCount = this.continueCount + 1;
+		this.progressbarWidth = 25 * this.continueCount + "%";
+	}
 
-    onChangeAttributeDatapod(data, index) {
-        if (data != null) {
-            this.attributeTableArray[index].name = data.label.split(".")[1]
-        }
-    }
-    onChangeFormula(data, index) {
-        this.attributeTableArray[index].name = data.name
-    }
-    onChangeExpression(data, index) {
-        this.attributeTableArray[index].name = data.name
-    }
+	countBack = function () {
+		this.continueCount = this.continueCount - 1;
+		this.progressbarWidth = 25 * this.continueCount + "%";
+	}
 
-    onSelectparamSet() {
+	onChangeSourceAttribute(type, index) {
+		if (type == "string") {
+			this.attributeTableArray[index].isSourceAtributeSimple = true;
+			this.attributeTableArray[index].isSourceAtributeDatapod = false;
+			this.attributeTableArray[index].isSourceAtributeFormula = false;
+			this.attributeTableArray[index].sourcesimple = "''";
+			this.attributeTableArray[index].isSourceAtributeExpression = false;
+			this.attributeTableArray[index].isSourceAtributeFunction = false;
+		}
+		else if (type == "datapod") {
+			this.attributeTableArray[index].isSourceAtributeSimple = false;
+			this.attributeTableArray[index].isSourceAtributeDatapod = true;
+			this.attributeTableArray[index].isSourceAtributeFormula = false;
+			this.attributeTableArray[index].isSourceAtributeExpression = false;
+			this.attributeTableArray[index].isSourceAtributeFunction = false;
+			this.attributeTableArray[index].sourceattribute = {}
+			this.getAllAttributeBySource()
+		}
+		else if (type == "formula") {
+			this.attributeTableArray[index].isSourceAtributeSimple = false;
+			this.attributeTableArray[index].isSourceAtributeDatapod = false;
+			this.attributeTableArray[index].isSourceAtributeFormula = true;
+			this.attributeTableArray[index].isSourceAtributeExpression = false;
+			this.attributeTableArray[index].isSourceAtributeFunction = false;
+			this.attributeTableArray[index].sourceformula = {}
+			this.getAllFormula()
+		}
+		else if (type == "expression") {
+			this.attributeTableArray[index].isSourceAtributeSimple = false;
+			this.attributeTableArray[index].isSourceAtributeDatapod = false;
+			this.attributeTableArray[index].isSourceAtributeFormula = false;
+			this.attributeTableArray[index].isSourceAtributeExpression = true;
+			this.attributeTableArray[index].isSourceAtributeFunction = false;
+			this.attributeTableArray[index].sourceexpression = {}
+			this.getAllExpression()
+		}
+		else if (type == "function") {
+			this.attributeTableArray[index].isSourceAtributeSimple = false;
+			this.attributeTableArray[index].isSourceAtributeDatapod = false;
+			this.attributeTableArray[index].isSourceAtributeFormula = false;
+			this.attributeTableArray[index].isSourceAtributeExpression = false;
+			this.attributeTableArray[index].isSourceAtributeFunction = true;
+			this.attributeTableArray[index].isSourceAtributeFunction = true;
+			this.attributeTableArray[index].sourcefunction = {}
+			this.getAllFunctions()
+		}
+	}
 
-        var paramSetjson = {};
-        var paramInfoArray = [];
-        if (this.paramsetdata && this.paramsetdata != null) {
-            for (var i = 0; i < this.paramsetdata.paramInfo.length; i++) {
-                var paramInfo = {};
-                paramInfo["paramSetId"] = this.paramsetdata.paramInfo[i].paramSetId
-                paramInfo["selected"] = false
-                var paramSetValarray = [];
-                for (var j = 0; j < this.paramsetdata.paramInfo[i].paramSetVal.length; j++) {
-                    var paramSetValjson = {};
-                    paramSetValjson["paramId"] = this.paramsetdata.paramInfo[i].paramSetVal[j].paramId;
-                    paramSetValjson["paramName"] = this.paramsetdata.paramInfo[i].paramSetVal[j].paramName;
-                    paramSetValjson["value"] = this.paramsetdata.paramInfo[i].paramSetVal[j].value;
-                    paramSetValjson["ref"] = this.paramsetdata.paramInfo[i].paramSetVal[j].ref;
-                    paramSetValarray[j] = paramSetValjson;
-                    paramInfo["paramSetVal"] = paramSetValarray;
-                    paramInfo["value"] = this.paramsetdata.paramInfo[i].paramSetVal[j].value;
-                }
-                paramInfoArray[i] = paramInfo;
-            }
-            this.paramtablecol = paramInfoArray[0].paramSetVal;
-            this.paramtable = paramInfoArray;
-            paramSetjson["paramInfoArray"] = paramInfoArray;
-            this.isTabelShow = true;
-        } else {
-            this.isTabelShow = false;
-        }
-    }
-    changeCheckboxExecution() {
-        if (this.checkboxModelexecution == true && this.selectParameterlist != null) {
-            this._ruleService.getParamSetByParamList(this.selectParameterlist.uuid, 'rule')
-                .subscribe(
-                response => {
-                    this.onSuccessGetParamSetByParmLsit(response)
-                },
-                error => console.log("Error :: " + error));
-        } else {
-            this.isShowExecutionparam = false;
-            this.allParameterset = null;
-        }
-    }
+	checkAllAttributeRow() {
 
-    onSuccessGetParamSetByParmLsit(response) {
-        this.allParameterset = response
-        this.isShowExecutionparam = true;
+		if (!this.selectAllAttributeRow) {
+			this.selectAllAttributeRow = true;
+		}
+		else {
+			this.selectAllAttributeRow = false;
+		}
+		this.attributeTableArray.forEach(attribute => {
+			attribute.selected = this.selectAllAttributeRow;
+		});
+	}
+	addAttribute() {
+		if (this.attributeTableArray == null) {
+			this.attributeTableArray = [];
+		}
+		let len = this.attributeTableArray.length + 1
+		let attrinfo = {};
+		attrinfo["name"] = "attribute" + len;
+		attrinfo["id"] = len - 1;
+		attrinfo["sourceAttributeType"] = { "value": "string", "label": "string" };
+		attrinfo["isSourceAtributeSimple"] = true;
+		attrinfo["isSourceAtributeDatapod"] = false;
+		this.attributeTableArray.splice(this.attributeTableArray.length, 0, attrinfo);
+	}
 
-    }
-    selectAllRow() {
+	removeAttribute() {
+		var newDataList = [];
+		this.selectAllAttributeRow = false
+		this.attributeTableArray.forEach(selected => {
+			if (!selected.selected) {
+				newDataList.push(selected);
+			}
+		});
+		this.attributeTableArray = newDataList;
+	}
 
-        if (!this.selectallattribute) {
-            this.selectallattribute = true;
-        }
-        else {
-            this.selectallattribute = false;
-        }
-        this.paramtable.forEach(stage => {
+	onChangeAttributeDatapod(data, index) {
+		if (data != null) {
+			this.attributeTableArray[index].name = data.label.split(".")[1]
+		}
+	}
+	onChangeFormula(data, index) {
+		this.attributeTableArray[index].name = data.name
+	}
+	onChangeExpression(data, index) {
+		this.attributeTableArray[index].name = data.name
+	}
 
-            stage.selected = this.selectallattribute;
-        });
-    }
+	onSelectparamSet() {
+		var paramSetjson = {};
+		var paramInfoArray = [];
+		if (this.paramsetdata && this.paramsetdata != null) {
+			for (var i = 0; i < this.paramsetdata.paramInfo.length; i++) {
+				var paramInfo = {};
+				paramInfo["paramSetId"] = this.paramsetdata.paramInfo[i].paramSetId
+				paramInfo["selected"] = false
+				var paramSetValarray = [];
+				for (var j = 0; j < this.paramsetdata.paramInfo[i].paramSetVal.length; j++) {
+					var paramSetValjson = {};
+					paramSetValjson["paramId"] = this.paramsetdata.paramInfo[i].paramSetVal[j].paramId;
+					paramSetValjson["paramName"] = this.paramsetdata.paramInfo[i].paramSetVal[j].paramName;
+					paramSetValjson["value"] = this.paramsetdata.paramInfo[i].paramSetVal[j].value;
+					paramSetValjson["ref"] = this.paramsetdata.paramInfo[i].paramSetVal[j].ref;
+					paramSetValarray[j] = paramSetValjson;
+					paramInfo["paramSetVal"] = paramSetValarray;
+					paramInfo["value"] = this.paramsetdata.paramInfo[i].paramSetVal[j].value;
+				}
+				paramInfoArray[i] = paramInfo;
+			}
+			this.paramtablecol = paramInfoArray[0].paramSetVal;
+			this.paramtable = paramInfoArray;
+			paramSetjson["paramInfoArray"] = paramInfoArray;
+			this.isTabelShow = true;
+		} else {
+			this.isTabelShow = false;
+		}
+	}
+	changeCheckboxExecution() {
+		if (this.checkboxModelexecution == true && this.selectParameterlist != null) {
+			this._ruleService.getParamSetByParamList(this.selectParameterlist.uuid, 'rule')
+				.subscribe(
+					response => {
+						this.onSuccessGetParamSetByParmLsit(response)
+					},
+					error => console.log("Error :: " + error));
+		} else {
+			this.isShowExecutionparam = false;
+			this.allParameterset = null;
+		}
+	}
 
-    changeParamertLsitType() {
-        if (this.selectParameterlist == null) {
-            this.isShowExecutionparam = false;
-            //this.allParameterList = null;
-        }
+	onSuccessGetParamSetByParmLsit(response) {
+		this.allParameterset = response
+		this.isShowExecutionparam = true;
+	}
 
-    }
+	selectAllRow() {
+		if (!this.selectallattribute) {
+			this.selectallattribute = true;
+		}
+		else {
+			this.selectallattribute = false;
+		}
+		this.paramtable.forEach(stage => {
 
-    modelExecute(modeldetail) {
-        let newDataList = [];
-        this.selectallattribute = false;
-        let execParams = {}
-        if (this.paramtable) {
-            this.paramtable.forEach(selected => {
-                if (selected.selected) {
-                    newDataList.push(selected);
-                }
-            });
+			stage.selected = this.selectallattribute;
+		});
+	}
 
-            let paramInfoArray = [];
+	changeParamertLsitType() {
+		if (this.selectParameterlist == null) {
+			this.isShowExecutionparam = false;
+			//this.allParameterList = null;
+		}
+	}
 
-            if (this.paramtable && newDataList.length > 0) {
-                let ref = {}
-                ref["uuid"] = this.paramsetdata.uuid;
-                ref["version"] = this.paramsetdata.version;
-                for (var i = 0; i < newDataList.length; i++) {
-                    var paraminfo = {};
-                    paraminfo["paramSetId"] = newDataList[i].paramSetId;
-                    paraminfo["ref"] = ref;
-                    paramInfoArray[i] = paraminfo;
-                }
-            }
+	modelExecute(modeldetail) {
+		let newDataList = [];
+		this.selectallattribute = false;
+		let execParams = {}
+		if (this.paramtable) {
+			this.paramtable.forEach(selected => {
+				if (selected.selected) {
+					newDataList.push(selected);
+				}
+			});
 
-            if (paramInfoArray.length > 0) {
-                execParams["paramInfo"] = paramInfoArray;
-            }
-            else {
-                execParams = null
-            }
-        }
-        console.log(JSON.stringify(execParams));
-        this._ruleService.execute(modeldetail["uuid"], modeldetail["version"], execParams).subscribe(
-            response => { this.onSuccessExecute(response) },
-            error => console.log('Error :: ' + error)
-        )
-    }
+			let paramInfoArray = [];
 
-    onSuccessExecute(response) {
-        this.msgs = [];
-        this.isSubmit = "true"
-        this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'Rule Saved and Submited Successfully' });
-        setTimeout(() => {
-            this.goBack()
-        }, 1000);
+			if (this.paramtable && newDataList.length > 0) {
+				let ref = {}
+				ref["uuid"] = this.paramsetdata.uuid;
+				ref["version"] = this.paramsetdata.version;
+				for (var i = 0; i < newDataList.length; i++) {
+					var paraminfo = {};
+					paraminfo["paramSetId"] = newDataList[i].paramSetId;
+					paraminfo["ref"] = ref;
+					paramInfoArray[i] = paraminfo;
+				}
+			}
 
-    }
+			if (paramInfoArray.length > 0) {
+				execParams["paramInfo"] = paramInfoArray;
+			}
+			else {
+				execParams = null
+			}
+		}
+		console.log(JSON.stringify(execParams));
+		this._ruleService.execute(modeldetail["uuid"], modeldetail["version"], execParams).subscribe(
+			response => { this.onSuccessExecute(response) },
+			error => console.log('Error :: ' + error)
+		)
+	}
 
+	onSuccessExecute(response) {
+		this.msgs = [];
+		this.isSubmit = "true"
+		this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'Rule Saved and Submited Successfully' });
+		setTimeout(() => {
+			this.goBack()
+		}, 1000);
+	}
 
-    getAllFunctions() {
-        this._commonService.getAllLatestFunction("function", "N").subscribe(
-            response => { this.onSuccessFunction(response) },
-            error => console.log('Error :: ' + error)
-        )
-    }
-    onSuccessFunction(response) {
-        let temp = []
-        for (const n in response) {
-            let allname = {};
-            allname["label"] = response[n]['name'];
-            allname["value"] = {};
-            allname["value"]["label"] = response[n]['name'];
-            allname["value"]["uuid"] = response[n]['uuid'];
-            allname["value"]["u_Id"] = response[n]['uuid'];
-            temp[n] = allname;
-        }
-        this.allFunction = temp
-    }
-    getAllExpression() {
-        this._commonService.getExpressionByType(this.sourcedata.uuid, this.source).subscribe(
-            response => { this.onSuccessExpression(response) },
-            error => console.log('Error :: ' + error)
-        )
-    }
+	onChangeOperator(index) {
+		this.dqdata.filterTableArray[index].rhsAttribute = null;
+		if (this.dqdata.filterTableArray[index].operator == 'EXISTS' || this.dqdata.filterTableArray[index].operator == 'NOT EXISTS') {
+			this.dqdata.filterTableArray[index].rhsType = 'dataset';
+			let rhsAttribute = {};
+			rhsAttribute["label"] = "-Select-";
+			rhsAttribute["uuid"] = "";
+			rhsAttribute["attributeId"] = "";
+			this.dqdata.filterTableArray[index]["rhsAttribute"] = rhsAttribute
+		}
+		else if (this.dqdata.filterTableArray[index].operator == 'IS') {
+			this.dqdata.filterTableArray[index].rhsType = 'string';
+		}
+		else {
+			this.dqdata.filterTableArray[index].rhsType = 'integer';
+		}
+		// this.dqdata.filterTableArray[index].rhsAttribute = null;
+		// if (this.dqdata.filterTableArray[index].operator == 'EXISTS' || this.dqdata.filterTableArray[index].operator == 'NOT EXISTS') {
+		// 	this.dqdata.filterTableArray[index].rhsType = 'dataset';
+		// }
+		// else{
+		// 	this.dqdata.filterTableArray[index].rhsType = 'integer';
+		// }	
+	}
 
-    onSuccessExpression(response) {
-        let temp = []
-        for (const n in response) {
-            let allname = {};
-            allname["label"] = response[n]['name'];
-            allname["value"] = {};
-            allname["value"]["label"] = response[n]['name'];
-            allname["value"]["uuid"] = response[n]['uuid'];
-            allname["value"]["u_Id"] = response[n]['uuid'];
-            temp[n] = allname;
-        }
-        this.allExpression = temp
-    }
+	getAllFunctions() {
+		this._commonService.getAllLatestFunction("function", "N").subscribe(
+			response => { this.onSuccessFunction(response) },
+			error => console.log('Error :: ' + error)
+		)
+	}
+	onSuccessFunction(response) {
+		let temp = []
+		for (const n in response) {
+			let allname = {};
+			allname["label"] = response[n]['name'];
+			allname["value"] = {};
+			allname["value"]["label"] = response[n]['name'];
+			allname["value"]["uuid"] = response[n]['uuid'];
+			allname["value"]["u_Id"] = response[n]['uuid'];
+			temp[n] = allname;
+		}
+		this.allFunction = temp
+	}
+	getAllExpression() {
+		this._commonService.getExpressionByType(this.sourcedata.uuid, this.source).subscribe(
+			response => { this.onSuccessExpression(response) },
+			error => console.log('Error :: ' + error)
+		)
+	}
 
-    getAllFormula() {
-        this._commonService.getFormulaByType(this.sourcedata.uuid, "formula").subscribe(
-            response => { this.onSuccessgetAllFormula(response) },
-            error => console.log('Error :: ' + error)
-        )
-    }
+	onSuccessExpression(response) {
+		let temp = []
+		for (const n in response) {
+			let allname = {};
+			allname["label"] = response[n]['name'];
+			allname["value"] = {};
+			allname["value"]["label"] = response[n]['name'];
+			allname["value"]["uuid"] = response[n]['uuid'];
+			allname["value"]["u_Id"] = response[n]['uuid'];
+			temp[n] = allname;
+		}
+		this.allExpression = temp
+	}
 
-    onSuccessgetAllFormula(response) {
-        let temp = []
-        for (const n in response) {
-            let allname = {};
-            allname["label"] = response[n]['name'];
-            allname["value"] = {};
-            allname["value"]["label"] = response[n]['name'];
-            allname["value"]["uuid"] = response[n]['uuid'];
-            allname["value"]["u_Id"] = response[n]['uuid'];
-            temp[n] = allname;
-        }
-        this.allFormula = temp
-    }
-    getAllParamertLsit() {
-        this._commonService.getAllLatest("paramlist").subscribe(
-            response => { this.OnSuccesgetAllParameter(response) },
-            error => console.log('Error :: ' + error)
-        )
-    }
-    OnSuccesgetAllParameter(response) {
-        let temp = []
-        let allname = {}
-        allname["label"] = '-select-'
-        allname["value"] = null;
-        for (const n in response) {
-            let allname = {};
-            allname["label"] = response[n]['name'];
-            allname["value"] = {};
-            allname["value"]["label"] = response[n]['name'];
-            allname["value"]["uuid"] = response[n]['uuid'];
-            temp[n] = allname;
-        }
-        this.allParameterList = temp
-        this.allParameterList.splice(0, 0, allname);
+	getAllFormula() {
+		this._commonService.getFormulaByType(this.sourcedata.uuid, "formula").subscribe(
+			response => { this.onSuccessgetAllFormula(response) },
+			error => console.log('Error :: ' + error)
+		)
+	}
 
-    }
-    getAllLatest(IsDefault) {
-        this._commonService.getAllLatest(this.source).subscribe(
-            response => { this.OnSuccesgetAllLatest(response, IsDefault) },
-            error => console.log('Error :: ' + error)
-        )
-    }
+	onSuccessgetAllFormula(response) {
+		let temp = []
+		for (const n in response) {
+			let allname = {};
+			allname["label"] = response[n]['name'];
+			allname["value"] = {};
+			allname["value"]["label"] = response[n]['name'];
+			allname["value"]["uuid"] = response[n]['uuid'];
+			allname["value"]["u_Id"] = response[n]['uuid'];
+			temp[n] = allname;
+		}
+		this.allFormula = temp
+	}
+	getAllParamertLsit() {
+		this._commonService.getAllLatestParamListByTemplate('Y', "paramlist", "rule").subscribe(
+			response => { this.OnSuccesgetAllParameter(response) },
+			error => console.log('Error :: ' + error)
+		)
+	}
+	OnSuccesgetAllParameter(response) {
+		let temp = []
+		let allname = {}
+		allname["label"] = '-select-'
+		allname["value"] = null;
+		for (const n in response) {
+			let allname = {};
+			allname["label"] = response[n]['name'];
+			allname["value"] = {};
+			allname["value"]["label"] = response[n]['name'];
+			allname["value"]["uuid"] = response[n]['uuid'];
+			temp[n] = allname;
+		}
+		this.allParameterList = temp
+		this.allParameterList.splice(0, 0, allname);
 
-    OnSuccesgetAllLatest(response1, IsDefault) {
-        let temp = []
-        if (this.mode == undefined || IsDefault == true) {
-            let dependOnTemp: DependsOn = new DependsOn();
-            dependOnTemp.label = response1[0]["name"];
-            dependOnTemp.uuid = response1[0]["uuid"];
-            this.sourcedata = dependOnTemp
-        }
-        for (const n in response1) {
-            let allname = {};
-            allname["label"] = response1[n]['name'];
-            allname["value"] = {};
-            allname["value"]["label"] = response1[n]['name'];
-            allname["value"]["uuid"] = response1[n]['uuid'];
-            temp[n] = allname;
-        }
-        this.allNames = temp
-        this.getAllAttributeBySource();
+	}
+	getAllLatest(IsDefault) {
+		this._commonService.getAllLatest(this.source).subscribe(
+			response => { this.OnSuccesgetAllLatest(response, IsDefault) },
+			error => console.log('Error :: ' + error)
+		)
+	}
 
-    }
+	OnSuccesgetAllLatest(response1, IsDefault) {
+		let temp = []
+		if (this.mode == undefined || IsDefault == true) {
+			let dependOnTemp: DependsOn = new DependsOn();
+			dependOnTemp.label = response1[0]["name"];
+			dependOnTemp.uuid = response1[0]["uuid"];
+			this.sourcedata = dependOnTemp
+		}
+		for (const n in response1) {
+			let allname = {};
+			allname["label"] = response1[n]['name'];
+			allname["value"] = {};
+			allname["value"]["label"] = response1[n]['name'];
+			allname["value"]["uuid"] = response1[n]['uuid'];
+			temp[n] = allname;
+		}
+		this.allNames = temp
+		this.getAllAttributeBySource();
+	}
 
-    getAllAttributeBySource() {
-        this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source).subscribe(
-            response => { this.OnSuccesgetAllAttributeBySource(response) },
-            error => console.log('Error :: ' + this.sourcedata.uuid)
-        )
-    }
+	getAllAttributeBySource() {
+		this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source).subscribe(
+			response => { this.OnSuccesgetAllAttributeBySource(response) },
+			error => console.log('Error :: ' + this.sourcedata.uuid)
+		)
+	}
 
-    OnSuccesgetAllAttributeBySource(response) {
-        this.allSourceAttribute = []
-        this.lhsdatapodattributefilter = null
-        let attribute = []
-        for (const n in response) {
-            let allname = {};
-            allname["label"] = response[n]['dname'];
-            allname["value"] = {};
-            allname["value"]["label"] = response[n]['dname'];
-            allname["value"]["u_Id"] = response[n]['id'];
-            allname["value"]["uuid"] = response[n]['uuid'];
-            allname["value"]["attrId"] = response[n]['attributeId'];
-            attribute[n] = allname
-        }
-        this.allSourceAttribute = attribute
-        this.lhsdatapodattributefilter = attribute
-    }
+	OnSuccesgetAllAttributeBySource(response) {
+		this.allSourceAttribute = []
+		this.lhsdatapodattributefilter = null
+		let attribute = []
+		for (const n in response) {
+			let allname = {};
+			allname["label"] = response[n]['dname'];
+			allname["value"] = {};
+			allname["value"]["label"] = response[n]['dname'];
+			allname["value"]["u_Id"] = response[n]['id'];
+			allname["value"]["uuid"] = response[n]['uuid'];
+			allname["value"]["attrId"] = response[n]['attributeId'];
+			attribute[n] = allname
+		}
+		this.allSourceAttribute = attribute
+		this.lhsdatapodattributefilter = attribute
+	}
 
-    getOneByUuidAndVersion(id, version) {
-        this._ruleService.getOneByUuidAndVersion(id, version, 'rule')
-            .subscribe(
-            response => {
-                this.onSuccessgetOneByUuidAndVersion(response)
-            },
-            error => console.log("Error :: " + error));
-    }
+	getOneByUuidAndVersion(id, version) {
+		this._ruleService.getOneByUuidAndVersion(id, version, 'rule')
+			.subscribe(
+				response => {
+					this.onSuccessgetOneByUuidAndVersion(response)
+				},
+				error => console.log("Error :: " + error));
+	}
 
-    onSuccessgetOneByUuidAndVersion(response) {
-        this.breadcrumbDataFrom[2].caption = response.dqdata.name
-        this.dqdata = response.dqdata;
-        this.dataqualitycompare = response.dqdata;
-        this.filterTableArray = response.filterInfo
-        console.log(response.sourceAttributes)
-        this.attributeTableArray = response.sourceAttributes
-        this.createdBy = response.dqdata.createdBy.ref.name
-        this.dqdata.published = response.dqdata["published"] == 'Y' ? true : false
-        this.dqdata.active = response.dqdata["active"] == 'Y' ? true : false
-        var tags = [];
-        if (response.dqdata.tags != null) {
-            for (var i = 0; i < response.dqdata.tags.length; i++) {
-                var tag = {};
-                tag['value'] = response.dqdata.tags[i];
-                tag['display'] = response.dqdata.tags[i];
-                tags[i] = tag
+	onSuccessgetFunctionByCriteria(response) {
+		let temp = [];
+		for (const i in response) {
+			let attributeObj = {};
+			attributeObj["label"] = response[i].name;
+			attributeObj["value"] = {};
+			attributeObj["value"]["uuid"] = response[i].uuid;
+			attributeObj["value"]["label"] = response[i].name;
+			temp[i] = attributeObj
+		}
+		this.functionArray = temp;
+	}
 
-            }//End For
-            this.tags = tags;
-        }//End If
-        const version: Version = new Version();
-        this.uuid = response.uuid
-        version.label = response.dqdata['version'];
-        version.uuid = response.dqdata['uuid'];
-        version.u_Id = response.dqdata['uuid'] + "_" + response.dqdata['version'];
-        this.selectedVersion = version
-        this.source = response.dqdata["source"]["ref"].type
-        let dependOnTemp: DependsOn = new DependsOn();
-        dependOnTemp.label = response.dqdata["source"]["ref"]["name"];
-        dependOnTemp.uuid = response.dqdata["source"]["ref"]["uuid"];
-        this.sourcedata = dependOnTemp;
-        this.getAllLatest(false);
-        this.getAllFunctions()
-    }
+	onSuccessgetParamByApp(response) {
+		let temp = [];
+		for (const i in response) {
+			let attributeObj = {};
+			attributeObj["label"] = "app." + response[i].paramName;
+			attributeObj["value"] = {};
+			attributeObj["value"]["uuid"] = response[i].ref.uuid;
+			attributeObj["value"]["attributeId"] = response[i].paramId;
+			attributeObj["value"]["label"] = "app." + response[i].paramName;
+			temp[i] = attributeObj
+		}
+		this.paramlistArray = temp;
+	}
 
-    getAllVersionByUuid() {
-        this._commonService.getAllVersionByUuid('rule', this.id)
-            .subscribe(
-            response => {
-                this.OnSuccesgetAllVersionByUuid(response)
-            },
-            error => console.log("Error :: " + error));
-    }
+	onSuccessgetOneByUuidAndVersion(response) {
+		this.breadcrumbDataFrom[2].caption = response.dqdata.name
+		this.dqdata = response.dqdata;
+		this.dataqualitycompare = response.dqdata;
+		this.attributeTableArray = response.sourceAttributes
+		this.createdBy = response.dqdata.createdBy.ref.name
+		this.dqdata.published = response.dqdata["published"] == 'Y' ? true : false
+		this.dqdata.active = response.dqdata["active"] == 'Y' ? true : false
+		this.dqdata.locked = response.dqdata["locked"] == 'Y' ? true : false
+		var tags = [];
+		if (response.dqdata.tags != null) {
+			for (var i = 0; i < response.dqdata.tags.length; i++) {
+				var tag = {};
+				tag['value'] = response.dqdata.tags[i];
+				tag['display'] = response.dqdata.tags[i];
+				tags[i] = tag
+			}//End For
+			this.tags = tags;
+		}//End If
+		const version: Version = new Version();
+		this.uuid = response.uuid
+		version.label = response.dqdata['version'];
+		version.uuid = response.dqdata['uuid'];
+		version.u_Id = response.dqdata['uuid'] + "_" + response.dqdata['version'];
+		this.selectedVersion = version
+		this.source = response.dqdata["source"]["ref"].type
+		let dependOnTemp: DependsOn = new DependsOn();
+		dependOnTemp.label = response.dqdata["source"]["ref"]["name"];
+		dependOnTemp.uuid = response.dqdata["source"]["ref"]["uuid"];
+		this.sourcedata = dependOnTemp;
+		this.getAllLatest(false);
+		this.getAllFunctions()
 
-    OnSuccesgetAllVersionByUuid(response) {
-        var temp = []
-        for (const i in response) {
-            let ver = {};
-            ver["label"] = response[i]['version'];
-            ver["value"] = {};
-            ver["value"]["label"] = response[i]['version'];
-            ver["value"]["uuid"] = response[i]['uuid'];
-            ver["value"]["u_Id"] = response[i]['uuid'] + "_" + response[i]['version']
-            temp[i] = ver;
-        }
-        this.VersionList = temp
-    }
+		if (response.dqdata.filterInfo != null) {
+			let filterInfoArray = [];
+			if (response.dqdata.filterInfo.length > 0) {
+				for (let k = 0; k < response.dqdata.filterInfo.length; k++) {
+					let filterInfo = {};
+					let lhsFilter = {};
+					filterInfo["logicalOperator"] = response.dqdata.filterInfo[k].logicalOperator
+					filterInfo["lhsType"] = response.dqdata.filterInfo[k].operand[0].ref.type;
+					filterInfo["operator"] = response.dqdata.filterInfo[k].operator;
+					filterInfo["rhsType"] = response.dqdata.filterInfo[k].operand[1].ref.type;
 
-    onVersionChange() {
-        this.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label);
-    }
-    ruleSubmit() {
-        this.isSubmit = "true"
-        let dqJson = {};
-        dqJson["uuid"] = this.dqdata.uuid;
-        dqJson["name"] = this.dqdata.name;
-        dqJson["desc"] = this.dqdata.desc;
+					if (response.dqdata.filterInfo[k].operand[0].ref.type == 'formula') {
+						this._commonService.getFormulaByType(this.sourcedata.uuid, this.source)
+							.subscribe(response => { this.onSuccessgetFormulaByLhsType(response) },
+								error => console.log("Error ::", error))
 
-        var tagArray = [];
-        if (this.tags != null) {
-            for (var counttag = 0; counttag < this.tags.length; counttag++) {
-                tagArray[counttag] = this.tags[counttag].value;
+						let lhsAttri1 = {}
+						lhsAttri1["uuid"] = response.dqdata.filterInfo[k].operand[0].ref.uuid;
+						lhsAttri1["label"] = response.dqdata.filterInfo[k].operand[0].ref.name;
+						filterInfo["lhsAttribute"] = lhsAttri1;
+					}
 
-            }
-        }
-        dqJson['tags'] = tagArray
-        dqJson["active"] = this.dqdata.active == true ? 'Y' : "N"
-        dqJson["published"] = this.dqdata.published == true ? 'Y' : "N"
-        let source = {};
-        let ref = {};
-        ref["type"] = this.source
-        ref["uuid"] = this.sourcedata.uuid;
-        source["ref"] = ref;
-        dqJson["source"] = source;
+					else if (response.dqdata.filterInfo[k].operand[0].ref.type == 'datapod') {
 
+						this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source)
+							.subscribe(response => { this.onSuccessgetAllAttributeBySourceLhs(response) },
+								error => console.log("Error ::", error))
+						let lhsAttri = {}
+						lhsAttri["uuid"] = response.dqdata.filterInfo[k].operand[0].ref.uuid;
+						lhsAttri["label"] = response.dqdata.filterInfo[k].operand[0].ref.name + "." + response.dqdata.filterInfo[k].operand[0].attributeName;
+						lhsAttri["attributeId"] = response.dqdata.filterInfo[k].operand[0].attributeId;
+						filterInfo["lhsAttribute"] = lhsAttri;
+					}
 
-        var filterInfoArray = [];
-        var filter = {}
-        if (this.dataqualitycompare != null) {
-            if (this.dataqualitycompare.filter != null) {
-                filter["uuid"] = this.dataqualitycompare.filter.uuid;
-                filter["name"] = this.dataqualitycompare.filter.name;
-                filter["createdBy"] = this.dataqualitycompare.filter.createdBy;
-                filter["createdOn"] = this.dataqualitycompare.filter.createdOn;
-                filter["active"] = this.dataqualitycompare.filter.active;
-                filter["tags"] = this.dataqualitycompare.filter.tags;
-                filter["desc"] = this.dataqualitycompare.filter.desc;
-                filter["dependsOn"] = this.dataqualitycompare.filter.dependsOn;
-            }
-        }
-        if (this.filterTableArray != null) {
-            if (this.filterTableArray.length > 0) {
-                for (var i = 0; i < this.filterTableArray.length; i++) {
-                    if (this.dataqualitycompare != null && this.dataqualitycompare.filter != null && this.dataqualitycompare.filter.filterInfo.length == this.filterTableArray.length) {
-                        if (this.dataqualitycompare.filter.filterInfo[i].operand[0].attributeId != this.filterTableArray[i].lhsFilter.attributeId ||
-                            this.filterTableArray[i].logicalOperator != this.dataqualitycompare.filter.filterInfo[i].logicalOperator ||
-                            this.filterTableArray[i].filtervalue != this.dataqualitycompare.filter.filterInfo[i].operand[1].value ||
-                            this.filterTableArray[i].operator != this.dataqualitycompare.filter.filterInfo[i].operator) {
+					else if (response.dqdata.filterInfo[k].operand[0].ref.type == 'simple') {
+						let stringValue = response.dqdata.filterInfo[k].operand[0].value;
+						let onlyNumbers = /^[0-9]+$/;
+						let result = onlyNumbers.test(stringValue);
+						if (result == true) {
+							filterInfo["lhsType"] = 'integer';
+						} else {
+							filterInfo["lhsType"] = 'string';
+						}
+						filterInfo["lhsAttribute"] = response.dqdata.filterInfo[k].operand[0].value;
+					}
 
-                            dqJson["filterChg"] = "y";
-                        }//End IF 
-                        else {
-                            dqJson["filterChg"] = "n";
-                        }
-                    }//End IF
-                    else {
-                        dqJson["filterChg"] = "y";
-                    }
-                    let filterInfo = {};
-                    let operand = [];
-                    let operandfirst = {};
-                    let reffirst = {};
-                    let operandsecond = {};
-                    let refsecond = {};
-                    reffirst["type"] = "datapod"
-                    reffirst["uuid"] = this.filterTableArray[i].lhsFilter.uuid
-                    operandfirst["ref"] = reffirst;
-                    operandfirst["attributeId"] = this.filterTableArray[i].lhsFilter.attrId
-                    operand[0] = operandfirst;
-                    refsecond["type"] = "simple";
-                    operandsecond["ref"] = refsecond;
-                    if (typeof this.filterTableArray[i].filtervalue == "undefined") {
-                        operandsecond["value"] = "";
-                    } else {
-                        operandsecond["value"] = this.filterTableArray[i].filtervalue
-                    }
-                    operand[1] = operandsecond;
-                    if (typeof this.filterTableArray[i].logicalOperator == "undefined") {
-                        filterInfo["logicalOperator"] = "";
-                    } else {
-                        filterInfo["logicalOperator"] = this.filterTableArray[i].logicalOperator
-                    }
-                    filterInfo["operator"] = this.filterTableArray[i].operator
-                    filterInfo["operand"] = operand;
-                    filterInfoArray[i] = filterInfo;
-                } //End FOR Loop       
-                filter["filterInfo"] = filterInfoArray;
-                dqJson["filter"] = filter;
-            }// End IF
-            else {
-                dqJson["filter"] = null;
-                dqJson["filterChg"] = "n";
-            }
-        }//End IF 
-        else {
-            dqJson["filter"] = null;
-            dqJson["filterChg"] = "n";
+					if (response.dqdata.filterInfo[k].operand[1].ref.type == 'formula') {
+						this._commonService.getFormulaByType(this.sourcedata.uuid, this.source)
+							.subscribe(response => { this.onSuccessgetFormulaByRhsType(response) },
+								error => console.log("Error ::", error))
+						//filterInfo["rhsAttribute"] = response.filterInfo[k].operand[1].ref.name;
+						let rhsAttri = {}
+						rhsAttri["uuid"] = response.dqdata.filterInfo[k].operand[1].ref.uuid;
+						rhsAttri["label"] = response.dqdata.filterInfo[k].operand[1].ref.name;
+						filterInfo["rhsAttribute"] = rhsAttri;
+					}
 
-        }
+					else if (response.dqdata.filterInfo[k].operand[1].ref.type == 'datapod') {
+						this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source)
+							.subscribe(response => { this.onSuccessgetAllAttributeBySourceRhs(response) },
+								error => console.log("Error ::", error))
 
-        var sourceAttributesArray = [];
-        for (var i = 0; i < this.attributeTableArray.length; i++) {
-            let attributemap = {};
-            attributemap["attrSourceId"] = i;
-            attributemap["attrSourceName"] = this.attributeTableArray[i].name
-            let sourceAttr = {};
-            let sourceref = {};
-            if (this.attributeTableArray[i].sourceAttributeType.text == "string") {
-                sourceref["type"] = "simple";
-                sourceAttr["ref"] = sourceref;
-                if (typeof this.attributeTableArray[i].sourcesimple == "undefined") {
-                    sourceAttr["value"] = "";
-                }
-                else {
-                    sourceAttr["value"] = this.attributeTableArray[i].sourcesimple;
-                }
-                attributemap["sourceAttr"] = sourceAttr;
-            }// End Simple IF
+						let rhsAttri1 = {}
+						rhsAttri1["uuid"] = response.dqdata.filterInfo[k].operand[1].ref.uuid;
+						rhsAttri1["label"] = response.dqdata.filterInfo[k].operand[1].ref.name + "." + response.dqdata.filterInfo[k].operand[1].attributeName;
+						rhsAttri1["attributeId"] = response.dqdata.filterInfo[k].operand[1].attributeId;
+						filterInfo["rhsAttribute"] = rhsAttri1;
+					}
 
-            else if (this.attributeTableArray[i].sourceAttributeType.text == "datapod") {
-                let uuid = this.attributeTableArray[i].sourceattribute.uuid
-                let attrid = this.attributeTableArray[i].sourceattribute.attrId
-                sourceref["uuid"] = uuid;
-                if (this.source == "relation") {
-                    sourceref["type"] = "datapod";
-                }
-                else {
-                    sourceref["type"] = this.source;
-                }
-                sourceAttr["ref"] = sourceref;
-                sourceAttr["attrId"] = attrid;
-                attributemap["sourceAttr"] = sourceAttr;
-            } // End Datapod ELSE IF
+					else if (response.dqdata.filterInfo[k].operand[1].ref.type == 'function') {
+						this._commonService.getFunctionByCriteria("", "N", "function")
+							.subscribe(response => { this.onSuccessgetFunctionByCriteria(response) },
+								error => console.log("Error ::", error))
 
-            else if (this.attributeTableArray[i].sourceAttributeType.text == "expression") {
-                sourceref["type"] = "expression";
-                sourceref["uuid"] = this.attributeTableArray[i].sourceexpression.uuid;
-                sourceAttr["ref"] = sourceref;
-                attributemap["sourceAttr"] = sourceAttr;
+						let rhsAttri = {}
+						rhsAttri["uuid"] = response.dqdata["filterInfo"][k].operand[1].ref.uuid;
+						rhsAttri["label"] = response.dqdata["filterInfo"][k].operand[1].ref.name;
+						filterInfo["rhsAttribute"] = rhsAttri;
+					}
 
-            }// End Expresson ELSEIF
+					else if (response.dqdata.filterInfo[k].operand[1].ref.type == 'paramlist') {
+						this._commonService.getParamByApp("", "application")
+							.subscribe(response => { this.onSuccessgetParamByApp(response) },
+								error => console.log("Error ::", error))
 
-            else if (this.attributeTableArray[i].sourceAttributeType.text == "formula") {
-                sourceref["type"] = "formula";
-                sourceref["uuid"] = this.attributeTableArray[i].sourceformula.uuid;
-                sourceAttr["ref"] = sourceref;
-                attributemap["sourceAttr"] = sourceAttr;
+						let rhsAttri = {}
+						rhsAttri["uuid"] = response.dqdata["filterInfo"][k].operand[1].ref.uuid;
+						rhsAttri["attributeId"] = response.dqdata["filterInfo"][k].operand[1].attributeId;
+						rhsAttri["label"] = "app." + response.dqdata["filterInfo"][k].operand[1].attributeName;
+						filterInfo["rhsAttribute"] = rhsAttri;
+					}
 
-            } // End Fromula ELSEIF
-            else if (this.attributeTableArray[i].sourceAttributeType.text == "function") {
-                sourceref["type"] = "function";
-                sourceref["uuid"] = this.attributeTableArray[i].sourcefunction.uuid;
-                sourceAttr["ref"] = sourceref;
-                attributemap["sourceAttr"] = sourceAttr
-            }
-            sourceAttributesArray[i] = attributemap;
-        }//End FOR Loop
+					else if (response.dqdata.filterInfo[k].operand[1].ref.type == 'dataset') {
+						let rhsAttri = {}
+						rhsAttri["uuid"] = response.dqdata["filterInfo"][k].operand[1].ref.uuid;
+						rhsAttri["attributeId"] = response.dqdata["filterInfo"][k].operand[1].attributeId;
+						rhsAttri["label"] = response.dqdata["filterInfo"][k].operand[1].attributeName;
+						filterInfo["rhsAttribute"] = rhsAttri;
+					}
 
-        dqJson["attributeInfo"] = sourceAttributesArray;
-        console.log(dqJson);
-        this._commonService.submit("ruleview", dqJson).subscribe(
-            response => { this.OnSuccessubmit(response) },
-            error => console.log('Error :: ' + error)
-        )
-    }
+					else if (response.dqdata.filterInfo[k].operand[1].ref.type == 'simple') {
+						let stringValue = response.dqdata.filterInfo[k].operand[1].value;
+						let onlyNumbers = /^[0-9]+$/;
+						let result = onlyNumbers.test(stringValue);
+						if (result == true) {
+							filterInfo["rhsType"] = 'integer';
+						} else {
+							filterInfo["rhsType"] = 'string';
+						}
+						filterInfo["rhsAttribute"] = response.dqdata.filterInfo[k].operand[1].value;
 
-    OnSuccessubmit(response) {
-        if (this.checkboxModelexecution == true) {
-            this._commonService.getOneById("rule", response).subscribe(
-                response => {
-                    this.modelExecute(response);
-                    this.goBack()
-                },
-                error => console.log('Error :: ' + error)
-            )
-        } //End if
-        else {
-            this.msgs = [];
-            this.isSubmit = "true"
-            this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'Rule Saved Successfully' });
-            setTimeout(() => {
-                this.goBack()
-            }, 1000);
+						let result2 = stringValue.includes("and")
+						if (result2 == true) {
+							filterInfo["rhsType"] = 'integer';
 
-        }
-    }
-    enableEdit(uuid, version) {
-        this.router.navigate(['app/businessRules/rule', uuid, version, 'false']);
-    }
+							let betweenValArray = []
+							betweenValArray = stringValue.split("and");
+							filterInfo["rhsAttribute1"] = betweenValArray[0];
+							filterInfo["rhsAttribute2"] = betweenValArray[1];
+						}
+					}
+					filterInfoArray.push(filterInfo);
+				}
+			}
+			this.dqdata.filterTableArray = filterInfoArray
+		}
+	}
 
-    showview(uuid, version) {
-        this.router.navigate(['app/businessRules/rule', uuid, version, 'true']);
-    }
+	getAllVersionByUuid() {
+		this._commonService.getAllVersionByUuid('rule', this.id)
+			.subscribe(
+				response => {
+					this.OnSuccesgetAllVersionByUuid(response)
+				},
+				error => console.log("Error :: " + error));
+	}
+
+	OnSuccesgetAllVersionByUuid(response) {
+		var temp = []
+		for (const i in response) {
+			let ver = {};
+			ver["label"] = response[i]['version'];
+			ver["value"] = {};
+			ver["value"]["label"] = response[i]['version'];
+			ver["value"]["uuid"] = response[i]['uuid'];
+			ver["value"]["u_Id"] = response[i]['uuid'] + "_" + response[i]['version']
+			temp[i] = ver;
+		}
+		this.VersionList = temp
+	}
+
+	onVersionChange() {
+		this.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label);
+	}
+
+	onSuccessgetFormulaByLhsType(response) {
+		this.lhsFormulaArray = []
+		for (const i in response) {
+			let formulaObj = {};
+			formulaObj["label"] = response[i].name;
+			formulaObj["value"] = {};
+			formulaObj["value"]["uuid"] = response[i].uuid;
+			formulaObj["value"]["label"] = response[i].name;
+			this.lhsFormulaArray[i] = formulaObj;
+		}
+	}
+
+	onSuccessgetAllAttributeBySourceLhs(response) {
+		this.attributesArray = []
+		let temp1 = [];
+		for (const i in response) {
+			let attributeObj = {};
+			attributeObj["label"] = response[i].dname;
+			attributeObj["value"] = {};
+			attributeObj["value"]["uuid"] = response[i].uuid;
+			attributeObj["value"]["label"] = response[i].dname;
+			attributeObj["value"]["attributeId"] = response[i].attributeId;
+			temp1[i] = attributeObj
+			this.attributesArray = temp1;
+		}
+	}
+
+	onSuccessgetFormulaByRhsType(response) {
+		this.rhsFormulaArray = [];
+		let rhsFormulaObj = {};
+		let temp = [];
+		for (const i in response) {
+			rhsFormulaObj["label"] = response[i].name;
+			rhsFormulaObj["value"] = {};
+			rhsFormulaObj["value"]["label"] = response[i].name;
+			rhsFormulaObj["value"]["uuid"] = response[i].uuid;
+			temp[i] = rhsFormulaObj;
+		}
+		this.rhsFormulaArray = temp
+	}
+
+	onSuccessgetAllAttributeBySourceRhs(response) {
+		this.attributesArray = []
+		let temp1 = [];
+		for (const i in response) {
+			let attributeObj = {};
+			attributeObj["label"] = response[i].dname;
+			attributeObj["value"] = {};
+			attributeObj["value"]["uuid"] = response[i].uuid;
+			attributeObj["value"]["label"] = response[i].dname;
+			attributeObj["value"]["attributeId"] = response[i].attributeId;
+			temp1[i] = attributeObj
+			this.attributesArray = temp1;
+		}
+	}
+
+	onChangeLhsType(index) {
+		this.dqdata.filterTableArray[index]["lhsAttribute"] = null;
+		if (this.dqdata.filterTableArray[index]["lhsType"] == 'formula') {
+			this._commonService.getFormulaByType(this.sourcedata.uuid, this.source)
+				.subscribe(response => { this.onSuccessgetFormulaByLhsType(response) },
+					error => console.log("Error ::", error))
+		}
+
+		else if (this.dqdata.filterTableArray[index]["lhsType"] == 'datapod') {
+			this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source)
+				.subscribe(response => { this.onSuccessgetAllAttributeBySourceLhs(response) },
+					error => console.log("Error ::", error))
+		}
+
+		else {
+			this.dqdata.filterTableArray[index]["lhsAttribute"] = null;
+		}
+	}
+
+	onChangeRhsType(index) {
+		this.dqdata.filterTableArray[index]["rhsAttribute"] = null;
+		if (this.dqdata.filterTableArray[index]["rhsType"] == 'formula') {
+			this._commonService.getFormulaByType(this.sourcedata.uuid, this.source)
+				.subscribe(response => { this.onSuccessgetFormulaByRhsType(response) },
+					error => console.log("Error ::", error))
+		}
+
+		else if (this.dqdata.filterTableArray[index]["rhsType"] == 'datapod') {
+			this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source)
+				.subscribe(response => { this.onSuccessgetAllAttributeBySourceRhs(response) },
+					error => console.log("Error ::", error))
+		}
+
+		else if (this.dqdata.filterTableArray[index]["rhsType"] == 'function') {
+			this._commonService.getFunctionByCriteria("", "N", "function")
+				.subscribe(response => { this.onSuccessgetFunctionByCriteria(response) },
+					error => console.log("Error ::", error))
+		}
+
+		else if (this.dqdata.filterTableArray[index]["rhsType"] == 'paramlist') {
+			this._commonService.getParamByApp("", "application")
+				.subscribe(response => { this.onSuccessgetParamByApp(response) },
+					error => console.log("Error ::", error))
+		}
+
+		else if (this.dqdata.filterTableArray[index]["rhsType"] == 'dataset') {
+			let rhsAttribute = {};
+			rhsAttribute["label"] = "-Select-";
+			rhsAttribute["uuid"] = "";
+			rhsAttribute["attributeId"] = "";
+			this.dqdata.filterTableArray[index]["rhsAttribute"] = rhsAttribute;
+		}
+
+		else {
+			this.dqdata.filterTableArray[index]["rhsAttribute"] = null;
+		}
+	}
+
+	addRow() {
+		if (this.dqdata.filterTableArray == null) {
+			this.dqdata.filterTableArray = [];
+		}
+		var len = this.dqdata.filterTableArray.length + 1
+		var filertable = {};
+		filertable["logicalOperator"] = ""
+		filertable["lhsType"] = "integer"
+		filertable["lhsAttribute"] = ""
+		filertable["operator"] = ""
+		filertable["rhsType"] = "integer"
+		filertable["rhsAttribute"] = ""
+		this.dqdata.filterTableArray.splice(this.dqdata.filterTableArray.length, 0, filertable);
+	}
+
+	removeRow() {
+		let newDataList = [];
+		this.selectedAllFitlerRow = false;
+		this.dqdata.filterTableArray.forEach(selected => {
+			if (!selected.selected) {
+				newDataList.push(selected);
+			}
+		});
+		if (newDataList.length > 0) {
+			newDataList[0].logicalOperator = "";
+		}
+		this.dqdata.filterTableArray = newDataList;
+	}
+
+	checkAllFilterRow() {
+		if (!this.selectedAllFitlerRow) {
+			this.selectedAllFitlerRow = true;
+		}
+		else {
+			this.selectedAllFitlerRow = false;
+		}
+		this.dqdata.filterTableArray.forEach(filter => {
+			filter.selected = this.selectedAllFitlerRow;
+		});
+	}
+
+	searchOption(index) {
+		this.displayDialogBox = true;
+		this._commonService.getAllLatest("dataset")
+			.subscribe(response => { this.onSuccessgetAllLatestDialogBox(response) },
+				error => console.log("Error ::", error))
+	}
+
+	onSuccessgetAllLatestDialogBox(response) {
+		this.dialogAttriArray = [];
+		let temp = [];
+		for (const i in response) {
+			let dialogAttriObj = {};
+
+			dialogAttriObj["label"] = response[i].name;
+			dialogAttriObj["value"] = {};
+			dialogAttriObj["value"]["label"] = response[i].name;
+			dialogAttriObj["value"]["uuid"] = response[i].uuid;
+			temp[i] = dialogAttriObj;
+		}
+		this.dialogAttriArray = temp
+		console.log(JSON.stringify(this.dialogAttriArray));
+	}
+
+	onChangeDialogAttribute() {
+		this._commonService.getAttributesByDataset("dataset", this.dialogSelectName.uuid)
+			.subscribe(response => { this.onSuccessgetAttributesByDatasetDialogBox(response) },
+				error => console.log("Error ::", error))
+	}
+
+	onSuccessgetAttributesByDatasetDialogBox(response) {
+		this.dialogAttriNameArray = [];
+		for (const i in response) {
+			let dialogAttriNameObj = {};
+			dialogAttriNameObj["label"] = response[i].attrName;
+			dialogAttriNameObj["value"] = {};
+			dialogAttriNameObj["value"]["label"] = response[i].attrName;
+			dialogAttriNameObj["value"]["attributeId"] = response[i].attrId;
+			dialogAttriNameObj["value"]["uuid"] = response[i].ref.uuid;
+			this.dialogAttriNameArray[i] = dialogAttriNameObj;
+		}
+	}
+
+	submitDialogBox(index) {
+		this.displayDialogBox = false;
+		let rhsattribute = {}
+		rhsattribute["label"] = this.dialogAttributeName.label;
+		rhsattribute["uuid"] = this.dialogAttributeName.uuid;
+		rhsattribute["attributeId"] = this.dialogAttributeName.attributeId;
+		this.dqdata.filterTableArray[index].rhsAttribute = rhsattribute;
+	}
+
+	cancelDialogBox() {
+		this.displayDialogBox = false;
+	}
+	autoPopulate() {
+		this.attributeTableArray = [];
+		for (var i = 0; i < this.allSourceAttribute.length; i++) {
+			var attributeinfo = {};
+			attributeinfo["id"] = i;
+			attributeinfo["sourceattribute"] = {};
+			attributeinfo["name"] = this.allSourceAttribute[i].value.label
+			attributeinfo["sourceattribute"]["attrId"] = this.allSourceAttribute[i].value.attrId;
+			attributeinfo["sourceattribute"]["uuid"] = this.allSourceAttribute[i].value.uuid;
+			attributeinfo["sourceattribute"]["u_Id"] = this.allSourceAttribute[i].value.u_Id
+			attributeinfo["sourceattribute"]["label"] = this.allSourceAttribute[i].value.label;
+			attributeinfo["sourceAttributeType"] = this.sourceAttributeTypes[2];
+			attributeinfo["isSourceAtributeSimple"] = false;
+			attributeinfo["isSourceAtributeDatapod"] = true;
+			attributeinfo["isSourceAtributeFormula"] = false;
+			attributeinfo["isSourceAtributeExpression"] = false;
+			attributeinfo["isSourceAtributeFunction"] = false;
+			attributeinfo["isSourceAtributeParamList"] = false;
+			this.attributeTableArray.push(attributeinfo);
+		}
+
+	}
+	ruleSubmit() {
+		this.isSubmit = "true"
+		let dqJson = {};
+		dqJson["uuid"] = this.dqdata.uuid;
+		dqJson["name"] = this.dqdata.name;
+		dqJson["desc"] = this.dqdata.desc;
+		var tagArray = [];
+		if (this.tags != null) {
+			for (var counttag = 0; counttag < this.tags.length; counttag++) {
+				tagArray[counttag] = this.tags[counttag].value;
+			}
+		}
+		dqJson['tags'] = tagArray
+		dqJson["active"] = this.dqdata.active == true ? 'Y' : "N"
+		dqJson["published"] = this.dqdata.published == true ? 'Y' : "N"
+		dqJson["locked"] = this.dqdata.locked == true ? 'Y' : "N"
+		let source = {};
+		let ref = {};
+		ref["type"] = this.source
+		ref["uuid"] = this.sourcedata.uuid;
+		source["ref"] = ref;
+		dqJson["source"] = source;
+		if (this.selectParameterlist != null) {
+			let paramlist = {}
+			let ref = {}
+			ref["uuid"] = this.selectParameterlist.uuid;
+			ref["type"] = 'paramlist';
+			paramlist["ref"] = ref
+			dqJson["paramList"] = paramlist;
+		}
+		else
+			dqJson["paramList"] = null;
+
+		let filterInfoArray = [];
+		if (this.dqdata.filterTableArray != null) {
+			if (this.dqdata.filterTableArray.length > 0) {
+				for (let i = 0; i < this.dqdata.filterTableArray.length; i++) {
+
+					let filterInfo = {};
+					filterInfo["logicalOperator"] = this.dqdata.filterTableArray[i].logicalOperator;
+					filterInfo["operator"] = this.dqdata.filterTableArray[i].operator;
+					filterInfo["operand"] = [];
+
+					if (this.dqdata.filterTableArray[i].lhsType == 'integer' || this.dqdata.filterTableArray[i].lhsType == 'string') {
+						let operatorObj = {};
+						let ref = {}
+						ref["type"] = "simple";
+						operatorObj["ref"] = ref;
+						operatorObj["value"] = this.dqdata.filterTableArray[i].lhsAttribute;
+						operatorObj["attributeType"] = "string"
+						filterInfo["operand"][0] = operatorObj;
+					}
+					else if (this.dqdata.filterTableArray[i].lhsType == 'formula') {
+						let operatorObj = {};
+						let ref = {}
+						ref["type"] = "formula";
+						ref["uuid"] = this.dqdata.filterTableArray[i].lhsAttribute.uuid;
+						operatorObj["ref"] = ref;
+						// operatorObj["attributeId"] = this.dataset.filterTableArray[i].lhsAttribute;
+						filterInfo["operand"][0] = operatorObj;
+					}
+					else if (this.dqdata.filterTableArray[i].lhsType == 'datapod') {
+						let operatorObj = {};
+						let ref = {}
+						ref["type"] = "datapod";
+						ref["uuid"] = this.dqdata.filterTableArray[i].lhsAttribute.uuid;
+						operatorObj["ref"] = ref;
+						operatorObj["attributeId"] = this.dqdata.filterTableArray[i].lhsAttribute.attributeId;
+						filterInfo["operand"][0] = operatorObj;
+					}
+					if (this.dqdata.filterTableArray[i].rhsType == 'integer' || this.dqdata.filterTableArray[i].rhsType == 'string') {
+						let operatorObj = {};
+						let ref = {}
+						ref["type"] = "simple";
+						operatorObj["ref"] = ref;
+						operatorObj["value"] = this.dqdata.filterTableArray[i].rhsAttribute;
+						operatorObj["attributeType"] = "string"
+						filterInfo["operand"][1] = operatorObj;
+
+						if (this.dqdata.filterTableArray[i].rhsType == 'integer' && this.dqdata.filterTableArray[i].operator == 'BETWEEN') {
+							let operatorObj = {};
+							let ref = {}
+							ref["type"] = "simple";
+							operatorObj["ref"] = ref;
+							operatorObj["value"] = this.dqdata.filterTableArray[i].rhsAttribute1 + "and" + this.dqdata.filterTableArray[i].rhsAttribute2;
+							filterInfo["operand"][1] = operatorObj;
+						}
+					}
+					else if (this.dqdata.filterTableArray[i].rhsType == 'formula') {
+						let operatorObj = {};
+						let ref = {}
+						ref["type"] = "formula";
+						ref["uuid"] = this.dqdata.filterTableArray[i].rhsAttribute.uuid;
+						operatorObj["ref"] = ref;
+						//operatorObj["attributeId"] = this.dataset.filterTableArray[i].rhsAttribute;
+						filterInfo["operand"][1] = operatorObj;
+					}
+					else if (this.dqdata.filterTableArray[i].rhsType == 'function') {
+						let operatorObj = {};
+						let ref = {}
+						ref["type"] = "function";
+						ref["uuid"] = this.dqdata.filterTableArray[i].rhsAttribute.uuid;
+						operatorObj["ref"] = ref;
+						//operatorObj["attributeId"] = this.dataset.filterTableArray[i].rhsAttribute;
+						filterInfo["operand"][1] = operatorObj;
+					}
+					else if (this.dqdata.filterTableArray[i].rhsType == 'paramlist') {
+						let operatorObj = {};
+						let ref = {}
+						ref["type"] = "paramlist";
+						ref["uuid"] = this.dqdata.filterTableArray[i].rhsAttribute.uuid;
+						operatorObj["ref"] = ref;
+						operatorObj["attributeId"] = this.dqdata.filterTableArray[i].rhsAttribute.attributeId;
+						filterInfo["operand"][1] = operatorObj;
+					}
+					else if (this.dqdata.filterTableArray[i].rhsType == 'dataset') {
+						let operatorObj = {};
+						let ref = {}
+						ref["type"] = "dataset";
+						ref["uuid"] = this.dqdata.filterTableArray[i].rhsAttribute.uuid;
+						operatorObj["ref"] = ref;
+						operatorObj["attributeId"] = this.dqdata.filterTableArray[i].rhsAttribute.attributeId;
+						filterInfo["operand"][1] = operatorObj;
+					}
+					else if (this.dqdata.filterTableArray[i].rhsType == 'datapod') {
+						let operatorObj = {};
+						let ref = {}
+						ref["type"] = "datapod";
+						ref["uuid"] = this.dqdata.filterTableArray[i].rhsAttribute.uuid;
+						operatorObj["ref"] = ref;
+						operatorObj["attributeId"] = this.dqdata.filterTableArray[i].rhsAttribute.attributeId;
+						filterInfo["operand"][1] = operatorObj;
+					}
+					filterInfoArray[i] = filterInfo;
+				}
+				dqJson["filterInfo"] = filterInfoArray;
+				console.log(JSON.stringify(filterInfoArray));
+			}
+		}
+		if (this.attributeTableArray != null) {
+			var sourceAttributesArray = [];
+			for (var i = 0; i < this.attributeTableArray.length; i++) {
+				let attributemap = {};
+				attributemap["attrSourceId"] = i;
+				attributemap["attrSourceName"] = this.attributeTableArray[i].name
+				let sourceAttr = {};
+				let sourceref = {};
+				if (this.attributeTableArray[i].sourceAttributeType.text == "string") {
+					sourceref["type"] = "simple";
+					sourceAttr["ref"] = sourceref;
+					if (typeof this.attributeTableArray[i].sourcesimple == "undefined") {
+						sourceAttr["value"] = "";
+					}
+					else {
+						sourceAttr["value"] = this.attributeTableArray[i].sourcesimple;
+					}
+					attributemap["sourceAttr"] = sourceAttr;
+				}// End Simple IF
+
+				else if (this.attributeTableArray[i].sourceAttributeType.text == "datapod") {
+					let uuid = this.attributeTableArray[i].sourceattribute.uuid
+					let attrid = this.attributeTableArray[i].sourceattribute.attrId
+					sourceref["uuid"] = uuid;
+					if (this.source == "relation") {
+						sourceref["type"] = "datapod";
+					}
+					else {
+						sourceref["type"] = this.source;
+					}
+					sourceAttr["ref"] = sourceref;
+					sourceAttr["attrId"] = attrid;
+					attributemap["sourceAttr"] = sourceAttr;
+				} // End Datapod ELSE IF
+
+				else if (this.attributeTableArray[i].sourceAttributeType.text == "expression") {
+					sourceref["type"] = "expression";
+					sourceref["uuid"] = this.attributeTableArray[i].sourceexpression.uuid;
+					sourceAttr["ref"] = sourceref;
+					attributemap["sourceAttr"] = sourceAttr;
+				}// End Expresson ELSEIF
+
+				else if (this.attributeTableArray[i].sourceAttributeType.text == "formula") {
+					sourceref["type"] = "formula";
+					sourceref["uuid"] = this.attributeTableArray[i].sourceformula.uuid;
+					sourceAttr["ref"] = sourceref;
+					attributemap["sourceAttr"] = sourceAttr;
+
+				} // End Fromula ELSEIF
+				else if (this.attributeTableArray[i].sourceAttributeType.text == "function") {
+					sourceref["type"] = "function";
+					sourceref["uuid"] = this.attributeTableArray[i].sourcefunction.uuid;
+					sourceAttr["ref"] = sourceref;
+					attributemap["sourceAttr"] = sourceAttr
+				}
+				sourceAttributesArray[i] = attributemap;
+			}//End FOR Loop
+
+			dqJson["attributeInfo"] = sourceAttributesArray;
+		}
+		console.log(dqJson);
+		this._commonService.submit("rule", dqJson).subscribe(
+			response => { this.OnSuccessubmit(response) },
+			error => console.log('Error :: ' + error)
+		)
+	}
+
+	OnSuccessubmit(response) {
+		if (this.checkboxModelexecution == true) {
+			this._commonService.getOneById("rule", response).subscribe(
+				response => {
+					this.modelExecute(response);
+					this.goBack()
+				},
+				error => console.log('Error :: ' + error)
+			)
+		} //End if
+		else {
+			this.msgs = [];
+			this.isSubmit = "true"
+			this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'Rule Saved Successfully' });
+			setTimeout(() => {
+				this.goBack()
+			}, 1000);
+
+		}
+	}
+	enableEdit(uuid, version) {
+		this.router.navigate(['app/businessRules/rule', uuid, version, 'false']);
+	}
+
+	showview(uuid, version) {
+		this.router.navigate(['app/businessRules/rule', uuid, version, 'true']);
+	}
+	showMainPage() {
+		this.isHomeEnable = false
+		// this._location.back();
+		this.showGraph = false;
+	}
+
+	
+	onFilterRowDown(index) {
+		var rowTempIndex = this.dqdata.filterTableArray[index];
+		var rowTempIndexPlus = this.dqdata.filterTableArray[index + 1];
+		this.dqdata.filterTableArray[index] = rowTempIndexPlus;
+		this.dqdata.filterTableArray[index + 1] = rowTempIndex;
+		this.iSSubmitEnable = true
+
+	}
+
+	onFilterRowUp(index) {
+		var rowTempIndex = this.dqdata.filterTableArray[index];
+		var rowTempIndexMines = this.dqdata.filterTableArray[index - 1];
+		this.dqdata.filterTableArray[index] = rowTempIndexMines;
+		this.dqdata.filterTableArray[index - 1] = rowTempIndex;
+		this.iSSubmitEnable = true
+	}
+	dragStart(event, data) {
+		console.log(event)
+		console.log(data)
+		this.dragIndex = data
+	}
+	dragEnd(event) {
+		console.log(event)
+	}
+	drop(event, data) {
+		if (this.mode == 'false') {
+			this.dropIndex = data
+			// console.log(event)
+			// console.log(data)
+			var item = this.dqdata.filterTableArray[this.dragIndex]
+			this.dqdata.filterTableArray.splice(this.dragIndex, 1)
+			this.dqdata.filterTableArray.splice(this.dropIndex, 0, item)
+			this.iSSubmitEnable = true
+		}
+
+	}
+	onAttrRowDown(index) {
+		var rowTempIndex = this.attributeTableArray[index];
+		var rowTempIndexPlus = this.attributeTableArray[index + 1];
+		this.attributeTableArray[index] = rowTempIndexPlus;
+		this.attributeTableArray[index + 1] = rowTempIndex;
+		this.iSSubmitEnable = true
+
+	}
+
+	onAttrRowUp(index) {
+		var rowTempIndex = this.attributeTableArray[index];
+		var rowTempIndexMines = this.attributeTableArray[index - 1];
+		this.attributeTableArray[index] = rowTempIndexMines;
+		this.attributeTableArray[index - 1] = rowTempIndex;
+		this.iSSubmitEnable = true
+	}
+	dragAttrStart(event, data) {
+		console.log(event)
+		console.log(data)
+		this.dragIndex = data
+	}
+	dragAttrEnd(event) {
+		console.log(event)
+	}
+	dropAttr(event, data) {
+		if (this.mode == 'false') {
+			this.dropIndex = data
+			// console.log(event)
+			// console.log(data)
+			var item = this.attributeTableArray[this.dragIndex]
+			this.attributeTableArray.splice(this.dragIndex, 1)
+			this.attributeTableArray.splice(this.dropIndex, 0, item)
+			this.iSSubmitEnable = true
+		}
+
+	}
 }
 

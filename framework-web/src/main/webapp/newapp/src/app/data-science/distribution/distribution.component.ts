@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { Location } from '@angular/common';
 import { SelectItem } from 'primeng/primeng';
@@ -11,13 +11,15 @@ import { DistributionService } from '../../metadata/services/distribution.servic
 import { Version } from '../../metadata/domain/version';
 import { DependsOn } from '../dependsOn';
 import { debug } from 'util';
-
+import { KnowledgeGraphComponent } from '../../shared/components/knowledgeGraph/knowledgeGraph.component';
 
 @Component({
   selector: 'app-distribution',
   templateUrl: './distribution.template.html',
 })
 export class DistributionComponent implements OnInit {
+  showGraph: boolean;
+  isHomeEnable: boolean;
   selectallattribute: any;
   ishowExecutionparam: boolean;
   dropdownSettings: { singleSelection: boolean; text: string; selectAllText: string; unSelectAllText: string; enableSearchFilter: boolean; classes: string; maxHeight: number; disabled: boolean; };
@@ -44,14 +46,15 @@ export class DistributionComponent implements OnInit {
   arrayParamList: any;
   selectedParamlist: any;
   paramList: DependsOn;
-
-
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
   constructor(config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _location: Location, private _modelService: DistributionService) {
     this.distribution = true;
     this.distribution = {};
     //this.paramList ={'label':"","uuid":""}
     this.distribution["active"] = true;
     this.isSubmitEnable = true
+    this.isHomeEnable = false
+    this.showGraph = false;
     this.dropdownSettings = {
       singleSelection: false,
       text: "Select Attrubutes",
@@ -80,11 +83,7 @@ export class DistributionComponent implements OnInit {
       { "value": "R", "label": "R" },
       { "value": "JAVA", "label": "JAVA" },
       { "value": "MATH3", "label": "MATH3" }
-
-
     ]
-
-
   }
 
   ngOnInit() {
@@ -187,9 +186,6 @@ export class DistributionComponent implements OnInit {
     }
   }
 
-
-
-
   onVersionChange() {
     this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, 'distribution')
       .subscribe(
@@ -224,7 +220,7 @@ export class DistributionComponent implements OnInit {
       }
     }
     distributionJson['tags'] = tagArray
-   // distributionJson["tags"] = tagstemp;
+    // distributionJson["tags"] = tagstemp;
     distributionJson["desc"] = this.distribution.desc;
     distributionJson["active"] = this.distribution.active == true ? "Y" : "N";
     distributionJson["published"] = this.distribution.published == true ? "Y" : "N";
@@ -261,11 +257,18 @@ export class DistributionComponent implements OnInit {
     this.router.navigate(['app/dataScience/distribution', uuid, version, 'false']);
   }
 
-  showview(uuid, version) {
-    this.router.navigate(['app/dataScience/distribution', uuid, version, 'true']);
+  showMainPage() {
+    this.isHomeEnable = false
+    this.showGraph = false;
   }
 
-
+  showDagGraph(uuid, version) {
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(uuid, version);
+    }, 1000);
+  }
 
 
 }

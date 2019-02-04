@@ -19,9 +19,10 @@ import{DataReconresultComponent} from './data-reconresult.component'
 import { CommonService}from '../metadata/services/common.service';
 import { DataReconService}from '../metadata/services/dataRecon.services';
 
-import {JointjsService} from '../data-pipeline/jointjsservice'
+import {JointjsService} from '../shared/components/jointjs/jointjsservice'
 import { routing1} from './data-recon-routing.module'
-
+import { DialogModule } from 'primeng/components/dialog/dialog';
+import {DragDropModule} from 'primeng/components/dragdrop/dragdrop';
 
 @NgModule({
     imports: [
@@ -33,8 +34,9 @@ import { routing1} from './data-recon-routing.module'
         CheckboxModule,
         routing1,
         ResultModule,
-        ProjectSharedModule
-       
+        ProjectSharedModule,
+        DialogModule,
+        DragDropModule
     ],
     declarations: [
         DataReconComponent,
@@ -54,4 +56,4 @@ import { routing1} from './data-recon-routing.module'
 
 })
 
-export class DataReconModule {debugger; }
+export class DataReconModule {; }

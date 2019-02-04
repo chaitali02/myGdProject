@@ -804,6 +804,7 @@ div[joint-graph-directive]:hover .joint-graph-zoom-slider, div[render-group-dire
 }
 .currentpage{
 opacity:0.6  !important;
+cursor: not-allowed !important;
 }
 .notcurrentpage{
 opacity:1 !important;
@@ -1155,4 +1156,71 @@ cursor: not-allowed !important;
     to {
       -webkit-transform: rotate(360deg);
     }
+}
+
+
+
+/*--Week selector start--*/
+.weekDays-selector{
+  float: left; 
+  overflow: auto;
+  margin-top: 4px;
+}
+.weekDays-selector input {
+  display: none!important;
+  margin-right: 4px;
+}
+
+.weekDays-selector input[type=checkbox] + label {
+  display: inline-block;
+  border-radius: 50%;
+  background: #dddddd;
+  height: 35px;
+  width: 35px;
+  margin-right: 3px;
+  line-height: 36px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 11px;
+  color: #313131;
+}
+
+.weekDays-selector input[type=checkbox]:checked + label {
+  background: #4285f4;
+  color: #ffffff;
+}
+/*--Week selector end--*/
+/*--Dialog titlebar disable--*/
+.dialogBox .ui-dialog-titlebar{
+  display: none !important;
+}
+
+.dialogBox3 .ui-dialog{
+  position: fixed;
+  padding: 0;
+  width: 21% !important;
+}
+
+.filterChips{
+  /* border-bottom: 1px solid darkgray !important; */
+  margin-left: 2%;
+  margin-right: 8%;
+}
+
+.linkDisabled{
+  cursor: not-allowed !important;
+}
+
+/* .btn.btn-outline.green-haze.auto-map{
+  border-color: #a0a0a0;
+  color: #a0a0a0;
+}
+.btn.btn-outline.green-haze{
+  border-color: #44b6ae;
+  color: #a0a0a0;
+  background: none;
+} */
+
+.checkClass{
+  border-color: #e73d4a;
 }

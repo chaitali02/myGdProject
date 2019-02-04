@@ -1,21 +1,21 @@
 import { AppConfig } from './../../../app.config';
 import { SelectItem } from 'primeng/primeng';
-import { Component } from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
 import { DatePipe, Location } from "@angular/common";
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { CommonService } from '../../../metadata/services/common.service';
 import { Version } from '../../../shared/version';
+import { KnowledgeGraphComponent } from '../../../shared/components/knowledgeGraph/knowledgeGraph.component';
 
 
 @Component({
   selector: 'app-simulateExec',
   styleUrls: [],
   templateUrl: './simulateExec.template.html',
-
 })
-
 export class SimulateExecComponent {
-
+  showGraph: boolean;
+  isHomeEnable: boolean;
   breadcrumbDataFrom: any;
   id: any;
   version: any;
@@ -36,11 +36,13 @@ export class SimulateExecComponent {
   refKeyList: any;
   result: any;
   showResultPredict: any;
-
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
 
   constructor(private datePipe: DatePipe, private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
     this.showResultPredict = true;
     this.simulateResultData = {};
+    this.isHomeEnable = false
+    this.showGraph = false;
     this.breadcrumbDataFrom = [{
       "caption": "Job Monitoring ",
       "routeurl": "/app/jobMonitoring"
@@ -48,15 +50,12 @@ export class SimulateExecComponent {
     {
       "caption": "Simulation Exec",
       "routeurl": "/app/list/simulateExec"
-
     },
     {
       "caption": "",
       "routeurl": null
-
     }
     ]
-
   }
 
   ngOnInit() {
@@ -66,10 +65,17 @@ export class SimulateExecComponent {
       this.mode = params['mode'];
     });
     if (this.mode !== undefined) {
-      this.getOneByUuidAndVersion(this.id, this.version)
       this.getAllVersionByUuid()
-
+      this.getOneByUuidAndVersion(this.id, this.version)
     }
+  }
+
+  showDagGraph(uuid,version){
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id,this.version);
+    }, 1000); 
   }
 
   onChangeActive(event) {
@@ -118,7 +124,7 @@ export class SimulateExecComponent {
     var statusList = [];
     for (let i = 0; i < response.statusList.length; i++) {
       d = this.datePipe.transform(new Date(response.statusList[i].createdOn), "EEE MMM dd HH:mm:ss Z yyyy");
-      d = d.toString().replace("+0530", "IST");
+      d = d.toString().replace("GMT+5:30", "IST");
       statusList[i] = response.statusList[i].stage + "-" + d;
     }
     this.statusList = statusList
@@ -155,4 +161,10 @@ export class SimulateExecComponent {
   public goBack() {
     this._location.back();
   }
+
+  showMainPage() {
+    this.isHomeEnable = false;
+    this.showGraph = false;
+  }
+
 }

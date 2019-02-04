@@ -1,5 +1,5 @@
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router, Event as RouterEvent, ActivatedRoute, Params } from '@angular/router';
 import { SelectItem } from 'primeng/primeng';
@@ -9,6 +9,7 @@ import { AppMetadata } from '../app.metadata';
 import { CommonService } from './../metadata/services/common.service';
 
 import { Version } from './../metadata/domain/version'
+import { KnowledgeGraphComponent } from '../shared/components/knowledgeGraph/knowledgeGraph.component';
 @Component({
   selector: 'app-profile',
   templateUrl: './data-profilegroupdetail.template.html',
@@ -16,6 +17,12 @@ import { Version } from './../metadata/domain/version'
 })
 
 export class DataProfileGroupDetailComponent {
+  showProfileGroupForm: boolean;
+  graphDataStatus: boolean;
+  showgraphdiv: boolean;
+  showProfileGroup: boolean;
+  showGraph: boolean;
+  isHomeEnable: boolean;
   checkboxModelexecution: boolean;
   breadcrumbDataFrom: { "caption": string; "routeurl": string; }[];
   IsProgerssShow: string;
@@ -34,12 +41,15 @@ export class DataProfileGroupDetailComponent {
   uuid: any;
   id: any;
   routerUrl: any;
-  dataprofilegroup: any
+  dataprofilegroup: any;
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
   constructor(private activatedRoute: ActivatedRoute, private router: Router, public metaconfig: AppMetadata, private _commonService: CommonService, private _location: Location) {
     this.dataprofilegroup = {};
     this.dataprofilegroup["active"] = true
     this.isSubmitEnable = true;
     this.IsProgerssShow = "false";
+    this.isHomeEnable = false;
+    this.showGraph = false;
     this.dropdownSettings = {
       singleSelection: false,
       text: "Select Attrubutes",
@@ -63,11 +73,7 @@ export class DataProfileGroupDetailComponent {
       "routeurl": null
     }
     ]
-
-
   }
-
-
   ngOnInit() {
     this.activatedRoute.params.subscribe((params: Params) => {
       this.id = params['id'];
@@ -127,6 +133,7 @@ export class DataProfileGroupDetailComponent {
 
     this.dataprofilegroup.published = response["published"] == 'Y' ? true : false
     this.dataprofilegroup.active = response["active"] == 'Y' ? true : false
+    this.dataprofilegroup.locked = response["locked"] == 'Y' ? true : false
     const version: Version = new Version();
     this.uuid = response.uuid;
     version.label = response['version'];
@@ -191,6 +198,7 @@ export class DataProfileGroupDetailComponent {
     profileJson['tags'] = tagArray;
     profileJson["active"] = this.dataprofilegroup.active == true ? 'Y' : "N"
     profileJson["published"] = this.dataprofilegroup.published == true ? 'Y' : "N"
+    profileJson["locked"] = this.dataprofilegroup.locked == true ? 'Y' : "N"
     let ruleInfo = [];
     for (let i = 0; i < this.selectedItems.length; i++) {
       let rules = {}
@@ -248,6 +256,7 @@ export class DataProfileGroupDetailComponent {
     this.msgs.push({ severity: msgtype, summary: msgsumary, detail: msg });
   }
   enableEdit(uuid, version) {
+    //this.showProfileGroupePage()
     this.router.navigate(['app/dataProfiling/profilegroup', uuid, version, 'false']);
     this.dropdownSettings = {
       singleSelection: false,
@@ -261,18 +270,42 @@ export class DataProfileGroupDetailComponent {
     };
 
   }
-  showview(uuid, version) {
-    this.router.navigate(['app/dataProfiling/profilegroup', uuid, version, 'true']);
-    this.dropdownSettings = {
-      singleSelection: false,
-      text: "Select Attrubutes",
-      selectAllText: 'Select All',
-      unSelectAllText: 'UnSelect All',
-      enableSearchFilter: true,
-      classes: "myclass custom-class",
-      maxHeight: 110,
-      disabled: false
-    };
+  // showview(uuid, version) {
+  //   this.router.navigate(['app/dataProfiling/profilegroup', uuid, version, 'true']);
+  //   this.dropdownSettings = {
+  //     singleSelection: false,
+  //     text: "Select Attrubutes",
+  //     selectAllText: 'Select All',
+  //     unSelectAllText: 'UnSelect All',
+  //     enableSearchFilter: true,
+  //     classes: "myclass custom-class",
+  //     maxHeight: 110,
+  //     disabled: false
+  //   };
 
+  // }
+  clear(){
+    this.selectedItems=[]
   }
+  showProfileGroupePage() {
+		this.showProfileGroup = true;
+		this.showgraphdiv = false;
+		this.graphDataStatus = false;
+		this.showProfileGroupForm = true;
+
+	}
+
+  showMainPage(){
+    this.isHomeEnable = false;
+    this.showGraph = false;
+  }
+
+  showDagGraph(uuid,version){
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id,this.version);
+    }, 1000);  
+  }
+	
 }

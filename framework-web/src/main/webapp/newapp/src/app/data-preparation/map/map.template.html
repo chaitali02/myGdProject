@@ -1,9 +1,10 @@
 <div>
-  <app-breadcrumb [breadcrumbData]="breadcrumbDataFrom" ></app-breadcrumb>
+  <app-breadcrumb [breadcrumbData]="breadcrumbDataFrom"></app-breadcrumb>
   <br>
-  <p-growl [(value)]="msgs" ></p-growl>
-  <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>  <!-- BEGIN MAIN CONTENT -->
-  <div class="row" >
+  <p-growl [(value)]="msgs"></p-growl>
+  <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+  <!-- BEGIN MAIN CONTENT -->
+  <div class="row">
     <div class="col-md-12">
       <!-- BEGIN: ACCORDION DEMO -->
       <div class="portlet box green">
@@ -12,40 +13,45 @@
             <i class="fa fa-gift"></i>{{mapData.name}}
           </div>
           <div class="tools">
-            <a title="Edit" (click)="enableEdit(uuid,version)" data-toggle="tooltip" data-placement="top" tooltip  style="height:16px;" *ngIf="mode">
+            <a style="color:white" title="Main" data-placement="top" tooltip [ngClass]="isHomeEnable==true ? 'notcurrentpage':'currentpage'"
+              data- (click)="showMainPage(mapData.uuid,mapData.version)">
+              <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+            </a>
+
+            <a href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top" tooltip [ngClass]="mode == 'true' && showGraph == false? 'notcurrentpage':'currentpage'"
+              data-(click)="enableEdit(mapData.uuid,mapData.version)">
               <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
-            <a title="View" data-toggle="tooltip" (click)="showview(uuid,version)" data-placement="top" tooltip style="height:16px;" *ngIf="mode">
-              <span class="glyphicon glyphicon-file" style="color:white;"></span>
+
+            <a href="javascript:;" title="Show Dependencies" data-placement="top" tooltip [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'"
+              data- (click)="showDagGraph(mapData.uuid,mapData.version)">
+              <i class="fa fa-sitemap" style="display: inline;margin:2px auto;color:white;"></i>
             </a>
-            <a title="Show Dependencies" data-toggle="tooltip" (click)="showDatapodGraph(uuid,version)" data-placement="top" tooltip style="height:14px;" *ngIf="mode">
-              <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
-            </a>
-            <a  title="Refresh"  data-toggle="tooltip" data-placement="top" tooltip>
-              <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+            <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip>
+              <i class="fa fa-refresh" aria-hidden="true" style="display: inline;margin: 2px auto;color:white;"></i>
             </a>
             <a title="Close" data-toggle="tooltip" data-placement="top" tooltip style="height:14px;" (click)="goBack()">
-              <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform:scale(1,1.2)"></i>
+              <i class="fa fa-times" aria-hidden="true" style="display: inline;margin: 2px auto;color:white;"></i>
             </a>
           </div>
-        </div> 
+        </div>
 
         <div class="portlet-body form">
-          <div class="form-body graph-body" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=')" *ngIf="showgraphdiv">
+          <div class="form-body graph-body" *ngIf="showGraph" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=');">
             <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
-              <!--<div class="spinner" id="graphloader">-->
-                <!--<div class="bounce1"></div>-->
-                <!--<div class="bounce2"></div>-->
-                <!--<div class="bounce3"></div>-->
-              <!--</div>-->
-            <div class="form-body show-graph-body" id="graphWrapper">
-              <app-d3></app-d3>
+            <div class="spinner" id="graphloader">
+              <div class="bounce1"></div>
+              <div class="bounce2"></div>
+              <div class="bounce3"></div>
+            </div>
+            <div class="show-graph-body" id="graphWrapper" >
+              <knowledge-graph ></knowledge-graph>
             </div>
           </div>
 
-          <div class="form-body"  style="padding-top:50px;">
-            <form  class="form-horizontal"  name="myform" novalidate="novalidate" (ngSubmit)="submitMap()" #myNewForm = "ngForm">
-              <div class="form-group" *ngIf="mode" >
+          <div class="form-body" style="padding-top:50px;" *ngIf="!showGraph">
+            <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="submitMap()" #myNewForm="ngForm">
+              <div class="form-group" *ngIf="mode">
                 <label class="col-md-3 control-label">UUID</label>
                 <div class="col-md-6">
                   <input type="text" class="form-control" [(ngModel)]="mapData.uuid" name="uuid" placeholder="" [disabled]="true">
@@ -62,112 +68,77 @@
               <div class="form-group" *ngIf="mode">
                 <label class="col-md-3 control-label">Version </label>
                 <div class="col-md-6">
-                  <p-dropdown [options]="VersionList"          
-                  [(ngModel)]="selectedVersion"
-                  name="version"
-                  [style]="{'width':'100%','padding':'3px'}"
-                  [filter]="true"
-                  [disabled]="mode == 'false'"
-                  (onChange)="onVersionChange()"
-                  >
+                  <p-dropdown [options]="VersionList" [(ngModel)]="selectedVersion" name="version" [style]="{'width':'100%','padding':'3px'}"
+                    [filter]="true" [disabled]="mode == 'false'" (onChange)="onVersionChange()">
                   </p-dropdown>
                 </div>
               </div>
 
-              <div class="form-group" *ngIf="mode" >
+              <div class="form-group" *ngIf="mode">
                 <label class="col-md-3 control-label">CreatedBy</label>
-                <div class="col-md-6" >
+                <div class="col-md-6">
                   <input type="text" class="form-control" [disabled]="true" [(ngModel)]="createdBy" name="createdBy">
                 </div>
               </div>
 
-              <div class="form-group"  *ngIf="mode" >
+              <div class="form-group" *ngIf="mode">
                 <label class="col-md-3 control-label">CreatedOn</label>
                 <div class="col-md-6">
-                  <input type="text"  class="form-control" [disabled]="true" [(ngModel)]="mapData.createdOn" name="createdOn">
+                  <input type="text" class="form-control" [disabled]="true" [(ngModel)]="mapData.createdOn" name="createdOn">
                 </div>
               </div>
-              
+
               <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12" >Tags</label>
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                  <tag-input [(ngModel)]="tags" name="tags" [disable]="mode == 'true'"  theme='bootstrap' style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px; padding-left:5px"></tag-input>                  
+                  <tag-input [(ngModel)]="tags" name="tags" [disable]="mode == 'true'" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px; padding-left:5px"></tag-input>
                 </div>
               </div>
 
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
                 <div class="col-md-6">
-                  <textarea [disabled]="mode == 'true'" [(ngModel)]="mapData.desc" name="desc" class="form-control noresize "  rows="2" style="resize:none;"></textarea>
+                  <textarea [disabled]="mode == 'true'" [(ngModel)]="mapData.desc" name="desc" class="form-control noresize " rows="2" style="resize:none;"></textarea>
                 </div>
               </div>
               <div class="form-group">
-                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Source</label>
-                  <div class="col-md-2 col-sm-2 col-xs-12">
-                      <select class="form-control" [(ngModel)]="source" name="source" (change)="selectSourceType()" [disabled]="mode == 'true'">
-                          <option *ngFor="let app of sources" [ngValue]="app.value" >{{app.label}} </option>
-                        </select>
-                  </div>
-                  <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.4%;float:left;margin-left:-1%;">Name
-                      <span class="required" aria-required="true"> * </span>
-                    </label>
-                  <div class="col-md-3 col-sm-4 col-xs-12" >
-                      <p-dropdown [options]="allNames"          
-                      [(ngModel)]="sourcedata"
-                      name="sourcedata"
-                      [disabled]="mode == 'true'"
-                      [style]="{'width':'100%','padding':'3px'}"
-                      [filter]="true"
-                      (onChange)="onChangeSource()"
-                      >
-                    </p-dropdown>
-                      <!-- <p-dropdown [options]="allNames"          
-                      [(ngModel)]="sourcedata"
-                      name="sourcedata"
-                      optionLabel="name"
-                      [disabled]="mode == 'true'"
-                      [style]="{'width':'100%','padding':'3px'}"
-                      [filter]="true"
-                      (onChange)="onChangeSource()">
-                    </p-dropdown> -->
-                  </div>
-              </div>
-            <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Target</label>
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Source</label>
                 <div class="col-md-2 col-sm-2 col-xs-12">
-                    <select class="form-control" [(ngModel)]="target" name="target" [disabled]="mode == 'true'">
-                        <option *ngFor="let app of targets" [ngValue]="app.value" >{{app.label}} </option>
-                      </select>
+                  <select class="form-control" [(ngModel)]="source" name="source" (change)="selectSourceType()" [disabled]="mode == 'true'">
+                    <option *ngFor="let app of sources" [ngValue]="app.value">{{app.label}} </option>
+                  </select>
                 </div>
                 <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.4%;float:left;margin-left:-1%;">Name
-                    <span class="required" aria-required="true"> * </span>
-                  </label>
+                  <span class="required" aria-required="true"> * </span>
+                </label>
                 <div class="col-md-3 col-sm-4 col-xs-12">
-                    <p-dropdown [options]="allTargetNames"          
-                    [(ngModel)]="targetdata"
-                    name="targetdata"
-                    [disabled]="mode == 'true'"
-                    [style]="{'width':'100%','padding':'3px'}"
-                    [filter]="true"
-                    (onChange)="onChangeTarget()"
-                    >
+                  <p-dropdown [options]="allNames" [(ngModel)]="sourcedata" name="sourcedata" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}"
+                    [filter]="true" (onChange)="onChangeSource()">
                   </p-dropdown>
-                    <!-- <p-dropdown [options]="allTargetNames"          
-                    [(ngModel)]="targetdata"
-                    name="targetdata"
-                    optionLabel="name"
-                    [disabled]="mode == 'true'"
-                    [style]="{'width':'100%','padding':'3px'}"
-                    [filter]="true"
-                    (onChange)="onChangeTarget()">
-                  </p-dropdown> -->
                 </div>
-            </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Target</label>
+                <div class="col-md-2 col-sm-2 col-xs-12">
+                  <select class="form-control" [(ngModel)]="target" name="target" [disabled]="mode == 'true'">
+                    <option *ngFor="let app of targets" [ngValue]="app.value">{{app.label}} </option>
+                  </select>
+                </div>
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.4%;float:left;margin-left:-1%;">Name
+                  <span class="required" aria-required="true"> * </span>
+                </label>
+                <div class="col-md-3 col-sm-4 col-xs-12">
+                  <p-dropdown [options]="allTargetNames" [(ngModel)]="targetdata" name="targetdata" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}"
+                    [filter]="true" (onChange)="onChangeTarget()">
+                  </p-dropdown>
+                </div>
+              </div>
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
                   <div class="btn-group">
-                    <ui-switch (change)="onChangeActive($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="mapData.active" name="active" [checked]="active" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                    <ui-switch (change)="onChangeActive($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="mapData.active"
+                      name="active" [checked]="active" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
                   </div>
                 </div>
               </div>
@@ -176,7 +147,8 @@
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
                   <div class="btn-group">
-                    <ui-switch (change)="onChangePublish($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="mapData.published" name="published" [checked]="published" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                    <ui-switch (change)="onChangePublish($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="mapData.published"
+                      name="published" [checked]="published" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
                   </div>
                 </div>
               </div>
@@ -185,113 +157,103 @@
                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                   <a class="btn btn-primary" (click)="goBack()">Cancel</a>
 
-                  <input type="submit" class="btn btn-success" value="Submit"  name="submit" [disabled]="(!iSSubmitEnable == false|| mode == false || myNewForm.form.dirty == true)?false:true">  
+                  <input type="submit" class="btn btn-success" value="Submit" name="submit" [disabled]="(!iSSubmitEnable == false|| mode == false || myNewForm.form.dirty == true)?false:true">
 
                 </div>
               </div>
               <div class="x_title">
-                  <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right" [disabled]="true"></button>
-                  <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" [disabled]="true"></button>
-                  <h4><strong>Details</strong></h4>
-                  <hr>
+
+                <div class="btn-group pull-right">
+                  <a class="btn green-haze btn-outline btn-circle auto-map btn-sm" href="javascript:;" data-toggle="dropdown" tooltip-placement="left"
+                    uib-tooltip="Auto Map" data-hover="dropdown" data-close-others="true" aria-expanded="false">
+                    <span class="fa fa-map-signs" aria-hidden="true"></span>
+                    <i class="fa fa-angle-down"></i>
+                  </a>
+                  <ul class="dropdown-menu pull-right">
+                    <li (click)="autoMapFeature('By Name')">
+                      <a href="javascript:;">By Name</a>
+                    </li>
+                    <li class="divider" style="margin: 0px;"> </li>
+                    <li (click)="autoMapFeature('By Order')">
+                      <a href="javascript:;">By Order</a>
+                    </li>
+                  </ul>
                 </div>
-                <br>
-                <div>
-                    <table  class=" row-border hover table  table-striped table-bordered">
-                   <thead>
-                     <tr>
-                       <th style="text-align: center; Vertical-align: middle;width:10%;">ID</th>
-                       <th style="text-align: center;width:15%;">Source Type</th>
-                       <th style="text-align: center;width:35%;">Source Attributes</th>
-                       <th style="text-align: center;width:35%;">Target Attributes</th>
-                     </tr>
-                   </thead>
-                   <tbody>
-                      <tr *ngFor="let data of allMapTargetAttribute;let i=index">
-                         <td style="width:10%;"><input style="text-align:center;" type="text" [value]="i" name="id[i]" [disabled]="true" class="form-control">                  
-                       <td>
-                           <select class="form-control" [(ngModel)]="mapTableArray[i].sourceAttributeType.value" (change)="onChangeSourceAttribute(mapTableArray[i].sourceAttributeType.value,i)"  name="sourceAttributeType+{{i}}" [disabled]="mode == 'true'">
-                               <option *ngFor="let app of sourceAttributeTypes" [ngValue]="app.value">{{app.label}}</option>
-                             </select>
-                       </td>
-                       <td>  
-                          <input type="text" class="form-control" [(ngModel)]="mapTableArray[i].sourcesimple" name="sourcesimple+{{i}}" *ngIf="mapTableArray[i].isSourceAtributeSimple" [disabled]="mode == 'true'">
-                          <div *ngIf="mapTableArray[i].isSourceAtributeDatapod">
-                              <p-dropdown [options]="allMapSourceAttribute"          
-                              [(ngModel)]="mapTableArray[i].sourceattribute"
-                              name="sourceattribute+{{i}}"
-                              dataKey="id"
-                              [disabled]="mode == 'true'"
-                              [style]="{'width':'100%','padding':'3px'}"
-                              [filter]="true"
-                              >
-                              </p-dropdown>
-                              </div>
-                          <div *ngIf="mapTableArray[i].isSourceAtributeFormula">
-                              <p-dropdown [options]="allMapFormula"          
-                              [(ngModel)]="mapTableArray[i].sourceformula"
-                              name="sourceformula+{{i}}"
-                              dataKey="uuid"
-                              [disabled]="mode == 'true'"
-                              [style]="{'width':'100%','padding':'3px'}"
-                              [filter]="true"
-                              >
-                              </p-dropdown>
-                              <!-- <p-dropdown [options]="allMapFormula"          
-                              [(ngModel)]="mapTableArray[i].sourceformula"
-                              name="sourceformula"
-                              optionLabel="name"
-                              [disabled]="mode == 'true'"
-                              [style]="{'width':'100%','padding':'3px'}"
-                              [filter]="true">
-                              </p-dropdown> -->
-                          </div>
-                          <div *ngIf="mapTableArray[i].isSourceAtributeExpression">
-                              <p-dropdown [options]="allMapExpression"          
-                              [(ngModel)]="mapTableArray[i].sourceexpression"
-                              name="sourceexpression+{{i}}"
-                              dataKey="uuid"
-                              [disabled]="mode == 'true'"
-                              [style]="{'width':'100%','padding':'3px'}"
-                              [filter]="true"
-                              >
-                              </p-dropdown>
-                              <!-- <p-dropdown [options]="allMapExpression"          
-                              [(ngModel)]="mapTableArray[i].sourceexpression"
-                              name="sourceexpression"
-                              optionLabel="name"
-                              [disabled]="mode == 'true'"
-                              [style]="{'width':'100%','padding':'3px'}"
-                              [filter]="true">
-                              </p-dropdown>                             -->
-                          </div>
-                          <div *ngIf="mapTableArray[i].isSourceAtributeFunction">
-                              <p-dropdown [options]="ruleLoadFunction"          
-                              [(ngModel)]="mapTableArray[i].sourcefunction"
-                              name="sourcefunction+{{i}}"
-                              dataKey="uuid"
-                              [disabled]="mode == 'true'"
-                              [style]="{'width':'100%','padding':'3px'}"
-                              [filter]="true"
-                              >
-                              </p-dropdown>
-                              <!-- <p-dropdown [options]="ruleLoadFunction"          
-                              [(ngModel)]="mapTableArray[i].sourcefunction"
-                              name="sourcefunction"
-                              optionLabel="name"
-                              [disabled]="mode == 'true'"
-                              [style]="{'width':'100%','padding':'3px'}"
-                              [filter]="true">
-                              </p-dropdown> -->
-                          </div> 
-                       </td>
-                       <td><input type="text" class="form-control" [(ngModel)]="data.dname"  name="dname+{{i}}" [disabled]="true"></td>
-                     </tr> 
-                   </tbody> 
-               </table>
-               </div>
+                <!-- <a class="btn green-haze btn-outline btn-circle auto-map btn-sm" ng-disabled="false" href="javascript:;" data-toggle="dropdown" tooltip-placement="left" title="Auto Map"
+                   data- (click)="automap()" style="float: right; border-radius: 17px;">
+                  <span class="fa fa-map-signs" aria-hidden="true"></span>
+                  <i class="fa fa-angle-down"></i>
+                  
+                </a>
+                <div *ngIf="showDropdown == true && showDropdown == !false">
+                  <p-dropdown [options]="allAutoMapTable" [(ngModel)]="selectedAutoMode" name="selectedAutoMode" [style]="{'float': 'right','width':'150px','padding':'3px'}"
+                  [filter]="true" [disabled]="mode == 'true'"(onChange)="autoMap12()" [appendTo]= "body" placeholder="--Select--">
+                </p-dropdown>
+                </div> -->
+                <h4>
+                  <strong>Details</strong>
+                </h4>
+                <hr>
+              </div>
+              <br>
+              <div>
+                <table class=" row-border hover table  table-striped table-bordered">
+                  <thead>
+                    <tr>
+                      <th style="text-align: center; Vertical-align: middle;width:10%;">ID</th>
+                      <th style="text-align: center;width:15%;">Source Type</th>
+                      <th style="text-align: center;width:35%;">Source Attributes</th>
+                      <th style="text-align: center;width:35%;">Target Attributes</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let data of allMapTargetAttribute;let i=index">
+                      <td style="width:10%;">
+                        <input style="text-align:center;" type="text" [value]="i" name="id[i]" [disabled]="true" class="form-control">
+                      </td>
+                      
+                      <td>
+                        <select class="form-control" [(ngModel)]="mapTableArray[i].sourceAttributeType.value" (change)="onChangeSourceAttribute(mapTableArray[i].sourceAttributeType.value,i)"
+                          name="sourceAttributeType+{{i}}" [disabled]="mode == 'true'">
+                          <option *ngFor="let app of sourceAttributeTypes" [ngValue]="app.value">{{app.label}}</option>
+                        </select>
+                      </td>
+
+                      <td>
+                        <input type="text" class="form-control" [(ngModel)]="mapTableArray[i].sourcesimple" name="sourcesimple+{{i}}" *ngIf="mapTableArray[i].isSourceAtributeSimple"
+                          [disabled]="mode == 'true'">
+                        <div *ngIf="mapTableArray[i].isSourceAtributeDatapod">
+                          <p-dropdown [options]="allMapSourceAttribute" [(ngModel)]="mapTableArray[i].sourceattribute" name="sourceattribute+{{i}}"
+                            dataKey="id" [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}" [filter]="true" placeholder="-Select-">
+                          </p-dropdown>
+                        </div>
+                        <div *ngIf="mapTableArray[i].isSourceAtributeFormula">
+                          <p-dropdown [options]="allMapFormula" [(ngModel)]="mapTableArray[i].sourceformula" name="sourceformula+{{i}}" dataKey="uuid"
+                            [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}" [filter]="true" placeholder="-Select-">
+                          </p-dropdown>
+                        </div>
+                        <div *ngIf="mapTableArray[i].isSourceAtributeExpression">
+                          <p-dropdown [options]="allMapExpression" [(ngModel)]="mapTableArray[i].sourceexpression" name="sourceexpression+{{i}}" dataKey="uuid"
+                            [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}" [filter]="true" placeholder="-Select-">
+                          </p-dropdown>
+                        </div>
+                        <div *ngIf="mapTableArray[i].isSourceAtributeFunction">
+                          <p-dropdown [options]="ruleLoadFunction" [(ngModel)]="mapTableArray[i].sourcefunction" name="sourcefunction+{{i}}" dataKey="uuid"
+                            [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}" [filter]="true" placeholder="-Select-">
+                          </p-dropdown>
+                        </div>
+                      </td>
+
+                      <td>
+                        <input type="text" class="form-control" [(ngModel)]="data.dname" name="dname+{{i}}" [disabled]="true">
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </form>
           </div>
+
         </div>
       </div>
     </div>

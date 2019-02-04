@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AppConfig } from '../../app.config';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { CommonService } from '../../metadata/services/common.service';
@@ -7,18 +7,23 @@ import { Location } from '@angular/common';
 import { Version } from './version';
 import { SelectItem } from 'primeng/primeng';
 import { DependsOn } from './dependsOn'
+import { KnowledgeGraphComponent } from '../../shared/components/knowledgeGraph/knowledgeGraph.component';
 @Component({
   selector: 'app-relation',
   templateUrl: './relation.template.html',
   styleUrls: ['./relation.component.css']
 })
 export class RelationComponent implements OnInit {
+  showGraph: boolean;
+  isHomeEnable: boolean;
+  DependsName: any[];
+  allDatasets: any[];
   selectallrow: any;
   rhsAllAttribute: any[];
   rowData: any;
   msgs: any[];
   operators: string[];
-  relationTableArray: any;
+  relationTableArray: any[];
   joinType: any;
   allNames: SelectItem[] = [];
   dependsOn: DependsOn
@@ -51,10 +56,13 @@ export class RelationComponent implements OnInit {
   selectedVersion: Version
   dialogVisible: boolean;
   isSubmitEnable: any;
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
 
   constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _RelationService: RelationService) {
     this.showRelationData = true;
     this.relationData = {};
+
+    this.isHomeEnable = false
     this.relationData["active"] = true
     this.isSubmitEnable = true;
     this.dependsOn = { 'uuid': "", "label": "" }
@@ -76,17 +84,20 @@ export class RelationComponent implements OnInit {
     this.depends = "datapod"
     this.dependsOnType = [
       { 'value': 'datapod', 'label': 'datapod' },
+      { 'value': 'dataset', 'label': 'dataset' },
     ];
     this.joinType = [
       { label: 'EQUI JOIN', value: 'EQUI JOIN' },
       { label: 'LEFT OUTER', value: 'LEFT OUTER' },
       { label: 'RIGHT OUTER', value: 'RIGHT OUTER' },
       { label: 'FULL OUTER', value: 'FULL OUTER' },
-      { label: 'LEFT SEMI', value: 'LEFT SEMI' }
+      { label: 'LEFT SEMI', value: 'LEFT SEMI' },
+      { label: 'CROSS JOIN', value: 'CROSS' }
     ];
     //this.joinType=["EQUI JOIN","LEFT OUTER",'RIGHT OUTER','FULL OUTER','LEFT SEMI']
     this.logicalOperators = ["", "AND", "OR"]
-    this.operators = ["=", "<", ">"];
+    this.operators = ["=", "IN", "NOT IN"];
+
   }
 
   ngOnInit() {
@@ -113,25 +124,26 @@ export class RelationComponent implements OnInit {
   getOneByUuidAndVersion(id, version) {
     this._commonService.getOneByUuidAndVersion(id, version, 'relation')
       .subscribe(
-      response => {
-        this.onSuccessgetOneByUuidAndVersion(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.onSuccessgetOneByUuidAndVersion(response)
+        },
+        error => console.log("Error :: " + error));
   }
 
   getAllVersionByUuid() {
     this._commonService.getAllVersionByUuid('relation', this.id)
       .subscribe(
-      response => {
-        this.OnSuccesgetAllVersionByUuid(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.OnSuccesgetAllVersionByUuid(response)
+        },
+        error => console.log("Error :: " + error));
   }
   onSuccessgetOneByUuidAndVersion(response) {
     this.relationData = response;
     this.createdBy = response.createdBy.ref.name;
     this.relationData.published = response["published"] == 'Y' ? true : false
     this.relationData.active = response["active"] == 'Y' ? true : false
+    this.relationData.locked = response["locked"] == 'Y' ? true : false
     const version: Version = new Version();
     this.uuid = response.uuid;
     version.label = response['version'];
@@ -168,7 +180,7 @@ export class RelationComponent implements OnInit {
       else {
         relationInfo["relationJoinType"] = response.relationInfo[i].joinType;
       }
-
+      relationInfo["type"] = response.relationInfo[i].join.ref.type
       var ref = {};
       ref["label"] = response.relationInfo[i].join.ref.name;
       // ref["name"]=response.relationInfo[i].join.ref.name;
@@ -184,34 +196,97 @@ export class RelationComponent implements OnInit {
         var rhsoperand = {};
         joinjson["logicalOperator"] = response.relationInfo[i].joinKey[l].logicalOperator
         joinjson["relationOperator"] = response.relationInfo[i].joinKey[l].operator
-        lhsoperand["uuid"] = response.relationInfo[i].joinKey[l].operand[0].ref.uuid;
+        //lhsoperand["uuid"] = response.relationInfo[i].joinKey[l].operand[0].ref.uuid;
         lhsoperand["name"] = response.relationInfo[i].joinKey[l].operand[0].ref.name;
         lhsoperand["attributeId"] = response.relationInfo[i].joinKey[l].operand[0].attributeId;
         lhsoperand["attributeName"] = response.relationInfo[i].joinKey[l].operand[0].attributeName;
-        lhsoperand["id"] = lhsoperand["uuid"] + "_" + lhsoperand["attributeId"];
+        lhsoperand["uuid"] = response.relationInfo[i].joinKey[l].operand[0].ref.uuid + "_" + lhsoperand["attributeId"];
         lhsoperand["dname"] = lhsoperand["name"] + "." + lhsoperand["attributeName"];
-        rhsoperand["uuid"] = response.relationInfo[i].joinKey[l].operand[1].ref.uuid;
+        // rhsoperand["uuid"] = response.relationInfo[i].joinKey[l].operand[1].ref.uuid;
         rhsoperand["name"] = response.relationInfo[i].joinKey[l].operand[1].ref.name;
         rhsoperand["attributeId"] = response.relationInfo[i].joinKey[l].operand[1].attributeId;
         rhsoperand["attributeName"] = response.relationInfo[i].joinKey[l].operand[1].attributeName;
-        rhsoperand["id"] = rhsoperand["uuid"] + "_" + rhsoperand["attributeId"];
+        rhsoperand["uuid"] = response.relationInfo[i].joinKey[l].operand[1].ref.uuid + "_" + rhsoperand["attributeId"];
         rhsoperand["dname"] = rhsoperand["name"] + "." + rhsoperand["attributeName"];
         joinjson["lhsoperand"] = lhsoperand
         joinjson["rhsoperand"] = rhsoperand
         joinKeyArray.push(joinjson);
         relationInfo["joinKey"] = joinKeyArray;
+        relationInfo["expanded"] = false;
       }
       relationInfoArray.push(relationInfo);
-
+      this.onChangeRelationType(response.relationInfo[i].join.ref.type)
     }
 
     this.relationTableArray = relationInfoArray;
+
     console.log(JSON.stringify(this.relationTableArray))
     this.getallLatest()
-    this.getRhsData();
+    //this.getRhsData();
+    this._RelationService.getAttributesByRelation(this.id, this.version, "relation").subscribe(
+      response => {
+        let temp = []
+        for (const n in response.allattributes) {
+          let allname = {};
+          allname["label"] = response.allattributes[n]['dname'];
+          allname["value"] = response.allattributes[n]['uuid'];
+          allname["value"] = {};
+          allname["value"]["label"] = response.allattributes[n]['dname'];
+          allname["value"]["uuid"] = response.allattributes[n]['uuid'] + "_" + response.allattributes[n].attributeId;;
+          temp[n] = allname;
+          this.allAttribute.push(temp[n])
+        }
+      },
+      error => console.log('Error :: ' + error)
+    )
+
+    // this._commonService.getAllLatest(this.relationTableArray["type"]).subscribe(
+    //   response => { this.OnSuccesgetAllLatestRelations(response,this.relationTableArray["type"]) },
+    //   error => console.log('Error :: ' + error)
+    // )
+  }
+  onChangeSource() {
+    this.getallLatest()
+    this.relationTableArray = [];
+  }
+  onChangeRelationType(data) {
+    this._commonService.getAllLatest(data).subscribe(
+      response => { this.OnSuccesgetAllLatestRelations(response, data) },
+      error => console.log('Error :: ' + error)
+    )
+  }
+  OnSuccesgetAllLatestRelations(response, data) {
+    if (data == 'datapod') {
+      let temp = []
+      for (const n in response) {
+        let allname = {};
+        allname["label"] = response[n]['name'];
+        allname["value"] = response[n]['uuid'];
+        allname["value"] = {};
+        allname["value"]["label"] = response[n]['name'];
+        allname["value"]["uuid"] = response[n]['uuid'];
+        temp[n] = allname;
+      }
+      //this.allAttribute=temp
+      this.allNames = temp
+    }
+    else {
+      let temp = []
+      for (const n in response) {
+        let allname = {};
+        allname["label"] = response[n]['name'];
+        allname["value"] = response[n]['uuid'];
+        allname["value"] = {};
+        allname["value"]["label"] = response[n]['name'];
+        allname["value"]["uuid"] = response[n]['uuid'];
+        temp[n] = allname;
+      }
+      //this.allAttribute=temp
+      this.allDatasets = temp
+    }
   }
   getallLatest() {
-    this._commonService.getAllLatest("datapod").subscribe(
+    this._commonService.getAllLatest(this.depends).subscribe(
       response => { this.OnSuccesgetAllLatest(response) },
       error => console.log('Error :: ' + error)
     )
@@ -229,7 +304,7 @@ export class RelationComponent implements OnInit {
       temp[n] = allname;
     }
     //this.allAttribute=temp
-    this.allNames = temp
+    this.DependsName = temp
     if (this.mode !== undefined) {
       this.getRhsData()
     }
@@ -245,14 +320,14 @@ export class RelationComponent implements OnInit {
   }
   OnSuccesgetAllLhsAttributeBySource(response) {
     this.allAttribute = response.allattributes
-    this.rhsAllAttribute = [];
-    var count = 0;
-    for (var i = 0; i < response.attributes.length; i++) {
-      if (i != 0) {
-        this.rhsAllAttribute[count] = response.attributes[i];
-        count = count + 1;
-      }
-    }
+    //this.rhsAllAttribute[0] = response.allattributes;
+    // var count = 0;
+    // for (var i = 0; i < response.attributes.length; i++) {
+    //   if (i != 0) {
+    //     this.rhsAllAttribute[count] = response.attributes[i];
+    //     count = count + 1;
+    //   }
+    // }
   }
   OnSuccesgetAllVersionByUuid(response) {
     //this.versions = response;
@@ -268,7 +343,7 @@ export class RelationComponent implements OnInit {
   }
   changeType() {
     //this.getRhsData()
-    this._RelationService.getAllAttributeBySource(this.dependsOn.uuid, "datapod").subscribe(
+    this._RelationService.getAllAttributeBySource(this.dependsOn.uuid, this.depends).subscribe(
       response => { this.OnSucceschangeType(response) },
       error => console.log('Error :: ' + error)
     )
@@ -285,11 +360,12 @@ export class RelationComponent implements OnInit {
       temp[n] = allname;
     }
     this.allAttribute = temp
+    this.relationTableArray = [];
   }
-  changeJoin(data, index) {
+  changeJoin(data, index, type) {
     {
       if (typeof data != "undefined") {
-        this._RelationService.getAllAttributeBySource(data.uuid, "datapod").subscribe(
+        this._RelationService.getAllAttributeBySource(data.uuid, type).subscribe(
           response => {
             let temp = []
             for (const n in response) {
@@ -300,8 +376,9 @@ export class RelationComponent implements OnInit {
               allname["value"]["label"] = response[n]['dname'];
               allname["value"]["uuid"] = response[n]['uuid'] + "_" + response[n].attributeId;;
               temp[n] = allname;
+              this.allAttribute.push(temp[n])
             }
-            this.rhsAllAttribute[index] = temp
+            // this.rhsAllAttribute[index] = temp
           },
           error => console.log('Error :: ' + error)
         )
@@ -355,12 +432,16 @@ export class RelationComponent implements OnInit {
     this.relationTableArray[index].joinKey = newDataList;
   }
   addJoinSubRow(index) {
-    var joinKey = {}
+    //this.relationTableArray[index]["expanded"]=false
+    let joinKey = {}
+    let table = []
     joinKey["logicalOperator"] = this.logicalOperators[0];
     joinKey["relationOperator"] = this.operators[0];
-    joinKey["rhsoperand"] = "''";
-    joinKey["lhsoperand"] = "''";
-    this.relationTableArray[index].joinKey.splice(this.relationTableArray[index].joinKey.length, 0, joinKey);
+    joinKey["rhsoperand"] = {};
+    joinKey["lhsoperand"] = {};
+    this.relationTableArray[index]["joinKey"].splice(1, 0, joinKey);
+    //this.relationTableArray[index]["expanded"]=true
+
   }
   selectAllRow() {
     this.relationTableArray.forEach(relation => {
@@ -370,17 +451,22 @@ export class RelationComponent implements OnInit {
 
   addRow() {
     if (this.relationTableArray == null) {
-
       this.relationTableArray = [];
     }
     var relationtable = {};
     var joinKey = [];
     relationtable["relationJoinType"] = this.joinType[0];
     var joinkey = {};
+    joinkey["relationOperator"] = this.operators[0]
     joinKey.push(joinkey)
     relationtable["joinKey"] = joinKey
+    relationtable["type"] = this.depends
+    relationtable["relationJoinType"] = this.joinType[0].value
+    relationtable["join"] = this.allNames[0]
+    relationtable["joinMetaType"] = this.depends
+    relationtable["expanded"] = false
     this.relationTableArray.splice(this.relationTableArray.length, 0, relationtable);
-
+    this.getRhsData()
   }
   removeRow() {
     let newDataList = [];
@@ -405,7 +491,7 @@ export class RelationComponent implements OnInit {
     //	relationjson["published"]=this.relationData.published;
     relationjson["active"] = this.relationData.active == true ? 'Y' : "N"
     relationjson["published"] = this.relationData.published == true ? 'Y' : "N"
-
+    relationjson["locked"] = this.relationData.locked == true ? 'Y' : "N"
     var tagArray = [];
     if (this.relationData.tags != null) {
       for (var counttag = 0; counttag < this.relationData.tags.length; counttag++) {
@@ -445,7 +531,7 @@ export class RelationComponent implements OnInit {
           }
 
 
-          joinref["type"] = "datapod";
+          joinref["type"] = this.relationTableArray[j].type;
           joinref["uuid"] = this.relationTableArray[j].join.uuid;
           join["ref"] = joinref;
           relationInfo["join"] = join;
@@ -466,27 +552,27 @@ export class RelationComponent implements OnInit {
             }
 
             JoinKeyDetail["operator"] = this.relationTableArray[j].joinKey[i].relationOperator
-            firstoperandref["type"] = "datapod";
-            if (this.relationTableArray[j].joinKey[i].lhsoperand.id) {
-              var uuid = this.relationTableArray[j].joinKey[i].lhsoperand.id.split("_")[0]
-              var attrid = this.relationTableArray[j].joinKey[i].lhsoperand.id.split("_")[1]
-            }
-            else {
-              var uuid = this.relationTableArray[j].joinKey[i].lhsoperand.uuid.split("_")[0]
-              var attrid = this.relationTableArray[j].joinKey[i].lhsoperand.uuid.split("_")[1]
-            }
+            firstoperandref["type"] = this.relationTableArray[j].type;
+            // if (this.relationTableArray[j].joinKey[i].lhsoperand.id) {
+            //   var uuid = this.relationTableArray[j].joinKey[i].lhsoperand.uuid.split("_")[0]
+            //   var attrid = this.relationTableArray[j].joinKey[i].lhsoperand.uuid.split("_")[1]
+            // }
+            // else {
+            var uuid = this.relationTableArray[j].joinKey[i].lhsoperand.uuid.split("_")[0]
+            var attrid = this.relationTableArray[j].joinKey[i].lhsoperand.uuid.split("_")[1]
+            // }
             firstoperandref["uuid"] = uuid
             firstoperad["ref"] = firstoperandref;
             firstoperad["attributeId"] = attrid
-            scecondoperandref["type"] = "datapod";
-            if (this.relationTableArray[j].joinKey[i].rhsoperand.id) {
-              var rhsUuid = this.relationTableArray[j].joinKey[i].rhsoperand.id.split("_")[0]
-              var rhsAttrid = this.relationTableArray[j].joinKey[i].rhsoperand.id.split("_")[1]
-            }
-            else {
-              var rhsUuid = this.relationTableArray[j].joinKey[i].rhsoperand.uuid.split("_")[0]
-              var rhsAttrid = this.relationTableArray[j].joinKey[i].rhsoperand.uuid.split("_")[1]
-            }
+            scecondoperandref["type"] = this.relationTableArray[j].type;
+            // if (this.relationTableArray[j].joinKey[i].rhsoperand.id) {
+            //   var rhsUuid = this.relationTableArray[j].joinKey[i].rhsoperand.id.split("_")[0]
+            //   var rhsAttrid = this.relationTableArray[j].joinKey[i].rhsoperand.id.split("_")[1]
+            // }
+            // else {
+            var rhsUuid = this.relationTableArray[j].joinKey[i].rhsoperand.uuid.split("_")[0]
+            var rhsAttrid = this.relationTableArray[j].joinKey[i].rhsoperand.uuid.split("_")[1]
+            // }
             scecondoperandref["uuid"] = rhsUuid
             scecondoperad["attributeId"] = rhsAttrid
             scecondoperad["ref"] = scecondoperandref;
@@ -526,6 +612,31 @@ export class RelationComponent implements OnInit {
   showview(uuid, version) {
     this.router.navigate(['app/dataPreparation/relation', uuid, version, 'true']);
   }
+  showMainPage() {
+    this.isHomeEnable = false
+    // this._location.back();
+    this.showGraph = false;
+  }
 
+  showDagGraph(uuid, version) {
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id, this.version);
+    }, 1000);
+  }
+
+  expandAll(allExpanded) {
+
+    for (let i = 0; i < this.relationTableArray.length; i++) {
+      if (allExpanded) {
+        this.relationTableArray[i]["expanded"] = true
+      }
+      else {
+        this.relationTableArray[i]["expanded"] = false
+      }
+    }
+
+  }
 
 }

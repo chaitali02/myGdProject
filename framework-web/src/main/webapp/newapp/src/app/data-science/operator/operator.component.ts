@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { Location } from '@angular/common';
 import { SelectItem } from 'primeng/primeng';
@@ -11,13 +11,14 @@ import { OperatorService } from '../../metadata/services/operator.service';
 import { Version } from '../../metadata/domain/version';
 import { error } from 'util';
 import { DependsOn } from '../dependsOn';
-
-
+import { KnowledgeGraphComponent } from '../../shared/components/knowledgeGraph/knowledgeGraph.component'
 @Component({
   selector: 'app-operator',
   templateUrl: './operator.template.html',
 })
 export class OperatorComponent implements OnInit {
+  showGraph: boolean;
+  isHomeEnable: boolean;
   selectallattribute: any;
   ishowExecutionparam: boolean;
   dropdownSettings: { singleSelection: boolean; text: string; selectAllText: string; unSelectAllText: string; enableSearchFilter: boolean; classes: string; maxHeight: number; disabled: boolean; };
@@ -42,10 +43,12 @@ export class OperatorComponent implements OnInit {
   paramList: DependsOn;
   operatortypesOption: { 'value': String, 'label': String }[];
   operatorType: any;
-
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
   constructor(config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _location: Location, private _OperatorService: OperatorService) {
     this.operator = true;
     this.operator = {};
+    this.isHomeEnable = false;
+    this.showGraph = false;
     //this.paramList ={'label':"","uuid":""}
     this.operator["active"] = true;
 
@@ -67,9 +70,7 @@ export class OperatorComponent implements OnInit {
       { "value": "GenerateData", "label": "GenerateData" },
       { "value": "Transpose", "label": "Transpose" },
       { "value": "CloneData", "label": "CloneData" }
-
     ]
-
   }
 
   ngOnInit() {
@@ -233,13 +234,22 @@ export class OperatorComponent implements OnInit {
       this.goBack()
     }, 1000);
   }
+
   enableEdit(uuid, version) {
     this.router.navigate(['app/dataScience/operator', uuid, version, 'false']);
   }
 
+  showMainPage() {
+    this.isHomeEnable = false;
+    this.showGraph = false;
+  }
 
-  showview(uuid, version) {
-    this.router.navigate(['app/dataScience/operator', uuid, version, 'true']);
+  showDagGraph(uuid, version) {
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(uuid, version);
+    }, 1000);
   }
 
 }

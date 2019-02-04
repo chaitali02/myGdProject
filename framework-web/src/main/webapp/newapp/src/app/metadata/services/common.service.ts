@@ -1,3 +1,4 @@
+import { debug } from 'util';
 import { Observable } from 'rxjs/Observable';
 import { Inject, Injectable, Input } from '@angular/core';
 import { Http,Response } from '@angular/http'
@@ -66,15 +67,21 @@ export class CommonService{
   })
   .catch(this.handleError);
   }
-
-submit(type:any,data:any): Observable<any[]> {debugger
-    let url ='/common/submit?action=edit&type='+type;
+  
+submit(type:any,data:any,upd_tag?): Observable<any[]> {
+  let url
+  if(upd_tag){
+    url ='/common/submit?action=edit&type='+type+'&upd_tag='+upd_tag;
+  }
+  else{
+    url ='/common/submit?action=edit&type='+type;
+  }     
     return this._sharedService.postCall(url,data)
     .map((response: Response) => {
       return <any>response.text();
-})
+  })
    .catch(this.handleError);
-}
+  }
 
 getAllLatest(type:String): Observable<any[]> {
     let url ='/common/getAllLatest?action=view&type='+type;
@@ -128,7 +135,7 @@ getAllAttributeBySource(uuid:any,type:String){
      url ='/metadata/getAttributesByDataset?action=view&uuid='+uuid+'&type='+type;
   }
   else if(type == "datapod"){
-     url ='/metadata/getAttributesByDatapod?action=view&uuid='+uuid+'&type='+type;
+     url ='metadata/getAttributesByDatapod?action=view&uuid='+uuid+'&type='+type;
   }
   else if(type == "relation"){
     url ='/metadata/getDatapodByRelation?action=view&relationUuid='+uuid+'&type=datapod';
@@ -174,14 +181,16 @@ modifyResponse(response){
     attributedetail["attributeId"]=response[j].attrId;
     attributedetail["dname"]=response[j].ref.name+"."+response[j].attrName;
     attributedetail["id"]=response[j].ref.uuid+"_"+response[j].attrId;
+    attributedetail["attrType"]=response[j].attrType;
+    
     attributes.push(attributedetail)
     
   }
   return attributes;
 }
 
-getGraphResults(version:String,degree:String,uuid:Number): Observable<any[]> {
-    let url ='/graph/getGraphResults?action=view&uuid='+uuid+'&version='+version+'&degree='+degree;
+getGraphResults(version:String,degree:Number,uuid:Number): Observable<any[]> {
+    let url ='/graph/getTreeGraphResults?action=view&uuid='+uuid+'&version='+version+'&degree='+degree;
     return this._sharedService.getCall(url)
     .map((response: Response) => {
         return <any[]>response.json();
@@ -196,6 +205,15 @@ getFormulaByType(uuid:Number,type:String): Observable<any[]> {
       return <any[]>response.json();
 })
    .catch(this.handleError);
+}
+
+getFormulaByType2(uuid:Number,type:String): Observable<any[]> {
+  let url ='/metadata/getFormulaByType2?action=view&uuid='+uuid+'&type='+type;
+  return this._sharedService.getCall(url)
+  .map((response: Response) => {
+    return <any[]>response.json();
+})
+ .catch(this.handleError);
 }
 
 getExpressionByType(uuid:Number,type:String): Observable<any[]> {
@@ -223,6 +241,24 @@ getRuleExecByRule(uuid:Number): Observable<any[]> {
     return <any[]>response.json();
 })
  .catch(this.handleError);
+}
+
+getFunctionByCriteria(category: any, inputReq: any, type: any): Observable<any[]> {
+  let url = '/metadata/getFunctionByCriteria?action=view&category=' + category + '&inputReq=' + inputReq + '&type=' + type;
+  return this._sharedService.getCall(url)
+    .map((response: Response) => {
+      return <any[]>response.json();
+    })
+    .catch(this.handleError);
+}
+
+getParamByApp(uuid: any, type: any): Observable<any[]> {
+  let url = '/metadata/getParamByApp?action=view&uuid=' + uuid + '&type=' + type;
+  return this._sharedService.getCall(url)
+    .map((response: Response) => {
+      return <any[]>response.json();
+    })
+    .catch(this.handleError);
 }
 
 getAllLatestParamListByTemplate(templateFlg:any,type:String,paramListType:any):Observable<any[]>{
@@ -281,6 +317,14 @@ getNumRowsbyExec(uuid, version, type): Observable<any>{
 })
  .catch(this.handleError);
 }
+getParamListChilds(uuid, version, type): Observable<any>{
+  let url ="metadata/getParamListChilds?action=view&uuid=" +uuid+"&version="+version+"&type="+type
+  return this._sharedService.getCall(url)
+  .map((response: Response) => {
+    return <any[]>response.json();
+})
+ .catch(this.handleError);
+}
 
 execute(uuid,version,type,action): Observable<any> {
   let url;
@@ -307,10 +351,32 @@ execute(uuid,version,type,action): Observable<any> {
     }
   if(type=="predict"){
     url = '/model/predict/execute?action='+ action +'&uuid=' + uuid + '&version=' + version + '&type=' + type;
-}
-
+  }
+  if(type=="ingest"){
+  url = '/ingest/execute?action='+ action +'&uuid=' + uuid + '&version=' + version + '&type=' + type;
+  }
+  if(type=="ingestgroup"){
+    url = '/ingest/executeGroup?action='+ action +'&uuid=' + uuid + '&version=' + version ;
+    }
+  if(type=="batch"){
+    url = '/batch/execute?action='+ action +'&uuid=' + uuid + '&version=' + version;
+  }
+  if(type=="recongroup"){
+    url = '/recon/executeGroup?action='+ action +'&uuid=' + uuid + '&version=' + version ;
+    }
+  if(type=="recon"){
+    url = '/recon/execute?action='+ action +'&uuid=' + uuid + '&version=' + version;
+  }
   let body=null
   return this._sharedService.postCall(url,body)
+  .map((response: Response) => {
+    return <any[]>response.json();
+})
+ .catch(this.handleError);
+}
+getParamByParamList(uuid:Number, type:String): Observable<any[]> {
+  let url ="metadata/getParamByParamList?action=view&uuid=" + uuid + "&type=" + type;
+  return this._sharedService.getCall(url)
   .map((response: Response) => {
     return <any[]>response.json();
 })

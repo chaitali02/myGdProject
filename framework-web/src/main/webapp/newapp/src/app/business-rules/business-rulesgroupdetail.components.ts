@@ -1,5 +1,5 @@
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router, Event as RouterEvent, ActivatedRoute, Params } from '@angular/router';
 import { SelectItem } from 'primeng/primeng';
@@ -9,6 +9,7 @@ import { AppMetadata } from '../app.metadata';
 import { CommonService } from './../metadata/services/common.service';
 
 import { Version } from './../metadata/domain/version'
+import { KnowledgeGraphComponent } from '../shared/components/knowledgeGraph/knowledgeGraph.component';
 @Component({
   selector: 'app-qualityGroup',
   templateUrl: './business-rulesgroupdetail.template.html',
@@ -16,6 +17,12 @@ import { Version } from './../metadata/domain/version'
 })
 
 export class BusinessRulesGroupDetailComponent {
+  showGraph: boolean;
+  isHomeEnable: boolean;
+  graphDataStatus: boolean;
+  showProfileGroupForm: boolean;
+  showgraphdiv: boolean;
+  showProfileGroup: boolean;
   checkboxModelexecution: boolean;
   breadcrumbDataFrom: { "caption": string; "routeurl": string; }[];
   IsProgerssShow: string;
@@ -34,8 +41,13 @@ export class BusinessRulesGroupDetailComponent {
   uuid: any;
   id: any;
   routerUrl: any;
-  datarulegroup: any
+  datarulegroup: any;
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
+
   constructor(private activatedRoute: ActivatedRoute, private router: Router, public metaconfig: AppMetadata, private _commonService: CommonService, private _location: Location) {
+    
+    this.showGraph = false;
+    this.isHomeEnable = false;
     this.datarulegroup = {};
     this.datarulegroup["active"] = true
     this.isSubmitEnable = true;
@@ -83,6 +95,15 @@ export class BusinessRulesGroupDetailComponent {
       }
     });
   }
+
+  showDagGraph(uuid, version) {
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id, this.version);
+    }, 1000);
+  }
+
   getAllLatest() {
     this._commonService.getAllLatest("rule").subscribe(
       response => { this.OnSuccesgetAllLatest(response) },
@@ -103,10 +124,10 @@ export class BusinessRulesGroupDetailComponent {
   getOneByUuidAndVersion(id, version) {
     this._commonService.getOneByUuidAndVersion(id, version, 'rulegroup')
       .subscribe(
-      response => {
-        this.onSuccessgetOneByUuidAndVersion(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.onSuccessgetOneByUuidAndVersion(response)
+        },
+        error => console.log("Error :: " + error));
   }
   onSuccessgetOneByUuidAndVersion(response) {
     this.breadcrumbDataFrom[2].caption = response.name;
@@ -114,6 +135,7 @@ export class BusinessRulesGroupDetailComponent {
     this.createdBy = response.createdBy.ref.name
     this.datarulegroup.published = response["published"] == 'Y' ? true : false
     this.datarulegroup.active = response["active"] == 'Y' ? true : false
+    this.datarulegroup.locked = response["locked"] == 'Y' ? true : false
     const version: Version = new Version();
     this.uuid = response.uuid;
     version.label = response['version'];
@@ -144,10 +166,10 @@ export class BusinessRulesGroupDetailComponent {
   getAllVersionByUuid() {
     this._commonService.getAllVersionByUuid('rulegroup', this.id)
       .subscribe(
-      response => {
-        this.OnSuccesgetAllVersionByUuid(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.OnSuccesgetAllVersionByUuid(response)
+        },
+        error => console.log("Error :: " + error));
   }
   OnSuccesgetAllVersionByUuid(response) {
     for (const i in response) {
@@ -186,6 +208,7 @@ export class BusinessRulesGroupDetailComponent {
     rulegroupJson['tags'] = tagArray
     rulegroupJson["active"] = this.datarulegroup.active == true ? 'Y' : "N"
     rulegroupJson["published"] = this.datarulegroup.published == true ? 'Y' : "N"
+    rulegroupJson["locked"] = this.datarulegroup.locked == true ? 'Y' : "N"
     let ruleInfo = [];
     for (let i = 0; i < this.selectedItems.length; i++) {
       let rules = {}
@@ -272,5 +295,21 @@ export class BusinessRulesGroupDetailComponent {
       disabled: false
     };
 
+  }
+  clear() {
+    this.selectedItems = []
+  }
+  showProfileGroupePage() {
+    this.showProfileGroup = true;
+    this.showgraphdiv = false;
+    this.graphDataStatus = false;
+    this.showProfileGroupForm = true;
+
+  }
+
+  showMainPage() {
+    this.isHomeEnable = false
+    // this._location.back();
+    this.showGraph = false;
   }
 }

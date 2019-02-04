@@ -1447,7 +1447,7 @@ transition: right 1m
   }
 
   .actual-false{
-    color:white;
+    /* color:white;
     background-color:#DF0000;
   }
 
@@ -1458,4 +1458,7 @@ transition: right 1m
     opacity: 0.5;
     margin-bottom: -200px;
     pointer-events: none;
-   }
+   } */
+    color:red;
+  }
+ 

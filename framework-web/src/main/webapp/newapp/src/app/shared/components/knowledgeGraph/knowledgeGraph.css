@@ -1,0 +1,58 @@
+/* .node circle {
+    fill: #fff;
+    stroke: steelblue;
+    stroke-width: 3px;
+  }
+  
+  .node text {
+    font: 12px sans-serif;
+  } */
+  
+  /* .link {
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 2px;
+  } */
+  .link line {
+    stroke: #666;
+ }
+ .link line.separator {
+    stroke: #fff;
+    stroke-width: 2px;
+  }
+  .node circle {
+    /*stroke: #000;
+    stroke-width: 1.5px;*/
+  }
+  .node text {
+    font: 10px sans-serif;
+    pointer-events: none;
+  }
+  .node-refesh{
+  position: static
+  }
+  .node text {
+    font: 12px sans-serif;
+  }
+  .node span {
+    font: 12px sans-serif;
+  }
+  
+  path.link {
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 1.5px;
+  }
+  .link text {
+    font: 10px sans-serif;
+    /* fill: #CC0000; */
+  }
+  path.link:hover{
+    stroke: #32c5d2;
+    opacity: 0.5;
+    cursor: move;
+    stroke-width: 2px;
+  }
+  /* #network-graph-wrapper{
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=");
+  } */

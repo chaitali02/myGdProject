@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AppConfig } from '../../app.config';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { CommonService } from '../../metadata/services/common.service';
@@ -9,6 +9,7 @@ import { MessageService } from 'primeng/components/common/messageservice';
 import { Version } from '../../shared/version'
 import { SelectItem } from 'primeng/primeng';
 import { DependsOn } from './dependsOn'
+import { KnowledgeGraphComponent } from '../../shared/components/knowledgeGraph/knowledgeGraph.component';
 
 @Component({
   selector: 'app-map',
@@ -16,6 +17,10 @@ import { DependsOn } from './dependsOn'
   styleUrls: ['./map.component.css']
 })
 export class MapComponent implements OnInit {
+  showGraph: boolean;
+  isHomeEnable: boolean;
+  showDropdown: boolean;
+  allAutoMapTable: { value: string; label: string; }[];
   VersionList: SelectItem[] = [];
   selectedVersion: Version
   selectVersion: any;
@@ -56,11 +61,14 @@ export class MapComponent implements OnInit {
   allMapFormula: SelectItem[] = [];
   breadcrumbDataFrom: any;
   isSubmitEnable: any;
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
 
   constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _mapService: MapServices) {
-
+    this.showDropdown = false
     this.showMapData = true;
     this.mapData = {};
+    this.showGraph = false
+    this.isHomeEnable = false
     this.mapData["active"] = true;
     this.isSubmitEnable = true;
     this.selectVersion = { "version": "" };
@@ -94,7 +102,10 @@ export class MapComponent implements OnInit {
       { "value": "formula", "label": "formula" }
     ]
     this.mapTableArray = []
-
+    this.allAutoMapTable = [
+      { value: 'ByName', label: 'By Name' },
+      { value: 'ByOrder', label: 'By Order' }
+    ]
   }
 
   ngOnInit() {
@@ -180,19 +191,19 @@ export class MapComponent implements OnInit {
   getOneByUuidAndVersion(id, version) {
     this._commonService.getOneByUuidAndVersion(id, version, 'map')
       .subscribe(
-      response => {
-        this.onSuccessgetOneByUuidAndVersion(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.onSuccessgetOneByUuidAndVersion(response)
+        },
+        error => console.log("Error :: " + error));
   }
 
   getAllVersionByUuid() {
     this._commonService.getAllVersionByUuid('map', this.id)
       .subscribe(
-      response => {
-        this.OnSuccesgetAllVersionByUuid(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.OnSuccesgetAllVersionByUuid(response)
+        },
+        error => console.log("Error :: " + error));
   }
 
   onSuccessgetOneByUuidAndVersion(response) {
@@ -686,4 +697,90 @@ export class MapComponent implements OnInit {
     this.router.navigate(['app/dataPreparation/map', uuid, version, 'true']);
   }
 
+  showMainPage() {
+    this.isHomeEnable = false
+    // this._location.back();
+    this.showGraph = false;
+  }
+
+  showDagGraph(uuid,version){
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id,this.version);
+    }, 1000); 
+  }
+
+
+  autoMapFeature(selectedAutoMode) {
+
+    if (selectedAutoMode == "By Order") {
+      this.emptyAttribure();
+      for (let i = 0; i < this.allMapSourceAttribute.length; i++) {
+        if (this.allMapSourceAttribute && this.allMapSourceAttribute.length > 0) {
+          let sourceObj = {}
+          this.fillSourceAttr(sourceObj, i);
+          this.mapTableArray[i].sourceattribute = sourceObj;
+          this.fillSourceType(i);
+        }
+      }
+    }
+    else if (selectedAutoMode == "By Name") {
+      this.emptyAttribure();
+      let index = 0;
+      for (let i = 0; i < this.allMapSourceAttribute.length; i++) {
+        var mapInfo = {};
+        let sourceObj = {};
+        for (let j = 0; j < this.allMapTargetAttribute.length; j++) {
+          if (this.allMapTargetAttribute[j]["name"] == (this.allMapSourceAttribute[i]["label"]).split(".")[1]) {
+            this.fillSourceAttr(sourceObj, i);
+            index = j;
+            break;
+          }
+          else {
+            sourceObj["id"] = "";
+            sourceObj["dname"] = "";
+            sourceObj["label"] = "";
+            sourceObj["value"] = {};
+            sourceObj["value"]["label"] = "";
+            sourceObj["value"]["id"] = "";
+            index = i;
+          }
+        }
+       // mapInfo["sourceattribute"] = sourceObj;
+        this.mapTableArray[index]["sourceattribute"] = sourceObj;
+        this.fillSourceType(index);
+      }
+      console.log(JSON.stringify(this.mapTableArray));
+    }
+  }
+
+  fillSourceAttr(sourceObj, i) {
+    sourceObj["id"] = this.allMapSourceAttribute[i]["value"]["id"];
+    sourceObj["dname"] = (this.allMapSourceAttribute[i]["label"]).split(".")[1];
+    sourceObj["label"] = this.allMapSourceAttribute[i]["label"];
+    sourceObj["value"] = {};
+    sourceObj["value"]["label"] = this.allMapSourceAttribute[i]["label"];
+    sourceObj["value"]["id"] = this.allMapSourceAttribute[i]["value"]["id"];
+  }
+  emptyAttribure() {
+    for (let i = 0; i < this.allMapTargetAttribute.length; i++) {
+      let mapinfo = {};
+      let obj = {}
+      obj["value"] = "string";
+      obj["label"] = "string";
+      mapinfo["isSourceAtributeSimple"] = false;
+      mapinfo["isSourceAtributeDatapod"] = true;
+      mapinfo["isSourceAtributeFormula"] = false;
+      mapinfo["isSourceAtributeExpression"] = false;
+      mapinfo["sourceAttributeType"] = obj
+      this.mapTableArray[i] = mapinfo;
+    }
+  }
+  fillSourceType(i) {
+    let obj = {};
+    obj["value"] = "datapod";
+    obj["label"] = "attribute";
+    this.mapTableArray[i].sourceAttributeType = obj;
+  }
 }

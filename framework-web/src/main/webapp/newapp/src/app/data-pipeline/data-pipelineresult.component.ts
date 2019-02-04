@@ -5,12 +5,12 @@ import { Location } from '@angular/common';
 import { Message } from 'primeng/components/common/api';
 import { MessageService } from 'primeng/components/common/messageservice';
 
-import { JointjsComponent } from './jointjs.component';
+import { JointjsComponent } from '../shared/components/jointjs/jointjs.component';
 import { JointjsGroupComponent } from '../shared/components/jointjsgroup/jointjsgroup.component'
 
 import { CommonService } from '../metadata/services/common.service';
 import { DataPipelineService } from '../metadata/services/dataPipeline.service';
-import { JointjsService } from './jointjsservice'
+import { JointjsService } from '../shared/components/jointjs/jointjsservice'
 import { SharedDataService } from './shareddata.service'
 
 import { Http, Headers } from '@angular/http';

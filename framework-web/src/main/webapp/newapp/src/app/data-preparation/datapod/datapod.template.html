@@ -9,9 +9,10 @@
       <div class="portlet box green">
         <div class="portlet-title">
           <div class="caption">
-            <i class="fa fa-gift"></i>{{datapodjson.name}}
+            <i class="fa fa-gift"></i>{{isShowDatastore == true ?'Data Store':isShowCompareMetaData ==true?'Compare
+            Metadata':datapodjson.name}}
           </div>
-          <div class="tools">
+          <!-- <div class="tools">
             <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top" tooltip (click)="downloadDatapodResult()"
               *ngIf="isShowSimpleData">
               <i class="fa fa-download" area-hidden="true"></i>
@@ -38,46 +39,220 @@
             <a title="Close" data-toggle="tooltip" data-placement="top" tooltip style="height:14px;" (click)="goBack()">
               <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform:scale(1,1.2)"></i>
             </a>
+          </div> -->
+          <div class="tools">
+            <a style="color:white" title="Main" data-placement="top" tooltip [ngClass]="isHomeEnable==true ? 'notcurrentpage':'currentpage'"
+              data- (click)="showMainPage(datapodjson.uuid,datapodjson.version)">
+              <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+            </a>
+
+            <a href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top" tooltip [ngClass]="mode == 'true' && showGraph == false?'notcurrentpage':'currentpage'"
+              data-(click)="enableEdit(datapodjson.uuid,datapodjson.version)">
+              <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+            </a>
+
+            <a title="Meta Compare" data-toggle="tooltip" data-placement="top" tooltip *ngIf="mode" (click)="showCompareMetaData(locations)"
+              style="height:16px;">
+              <i class="fa fa-clone" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+            </a>
+
+            <a title="Sample Records" data-toggle="tooltip" data-placement="top" tooltip *ngIf="mode" (click)="showDatapodSampleTable(locations)"
+              style="height:16px;">
+              <i class="fa fa-table" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+            </a>
+
+            <a title="Data Store" data-toggle="tooltip" data-placement="top" tooltip *ngIf="mode" (click)="showDatastrores(locations)"
+              style="height:16px;">
+              <i class="fa fa-database" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+            </a>
+
+            <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top"
+              tooltip (click)="downloadDatapodResult('datapod')" *ngIf="mode">
+              <i class="fa fa-download" area-hidden="true"></i>
+            </a>
+
+            <a href="javascript:;" title="Show Dependencies" data-placement="top" tooltip [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'"
+              data- (click)="showDagGraph(datapodjson.uuid,datapodjson.version)">
+              <i class="fa fa-sitemap" style="display: inline;margin:2px auto;color:white;"></i>
+            </a>
+
+            <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip>
+              <i class="fa fa-refresh" aria-hidden="true" style="display: inline;margin: 2px auto;color:white;"></i>
+            </a>
+            <a title="Close" data-toggle="tooltip" data-placement="top" tooltip style="height:14px;" (click)="goBack()">
+              <i class="fa fa-times" aria-hidden="true" style="display: inline;margin: 2px auto;color:white;"></i>
+            </a>
           </div>
         </div>
 
         <div class="portlet-body form">
-          <div class="form-body {{tableclass}}" *ngIf="isShowSimpleData">
+          <div class="form-body" *ngIf="isShowCompareMetaData">
+            <div class="row">
+              <div class="col-md-12 col-sm-12">
+                <div class="col-md-4 col-md-offset-8" style="padding-top: 4px;padding-left: 51px;border-bottom: 0 none">
+                  <!-- <i class="fa fa-search" style="margin-top: 2%;"> </i>  -->
+                  <label>Search:</label>
+                  <input #gb type="text" pInputText placeholder="Search">
+                  <a class="btn btn-primary fa fa-random " tooltip-placement="left" uib-tooltip="Meta Sync"
+                    [attr.disabled]="isMetaSysn" (click)="synchronousMetadata(datapoddata)" style="line-height:1;padding: 6px 5px;border: none;"></a>
+                </div>
+              </div>
+            </div>
+            <br>
+
+            <div class="row" *ngIf="isShowCompareMetaData  && IsTableShow == true;else falsyTemplate">
+              <div class="col-md-12" *ngIf="metaCompareData !=null">
+                <p-dataTable [globalFilter]="gb" [value]="metaCompareData" scrollable="true" scrollHeight="440px"
+                  scrollWidth="980px">
+                  <p-headerColumnGroup>
+                    <p-row>
+                      <p-column header="File" colspan="3"></p-column>
+                      <p-column header="Datapod" colspan="3"></p-column>
+                      <p-column header="Status"></p-column>
+                    </p-row>
+                    <p-row>
+                      <p-column header="Attributes"></p-column>
+                      <p-column header="Type"></p-column>
+                      <p-column header="Length"></p-column>
+                      <p-column header="Attributes"></p-column>
+                      <p-column header="Type"></p-column>
+                      <p-column header="Length"></p-column>
+                      <p-column></p-column>
+                    </p-row>
+                  </p-headerColumnGroup>
+                  <p-column field="sourceAttribute"></p-column>
+                  <p-column field="sourceType"></p-column>
+                  <p-column field="sourceLength"></p-column>
+                  <p-column field="targetAttribute"></p-column>
+                  <p-column field="targetType"></p-column>
+                  <p-column field="targetLength"></p-column>
+                  <p-column field="status" header="Status" [sortable]="true" [style]="{'text-align':'center'}">
+                    <ng-template let-colstatus let-statused="rowData" pTemplate="body">
+                      <div class="label-sm label-success" *ngIf="statused.status !=null" [ngStyle]="{'width':'88%','font-size':'13px','padding':'2px','color':'white','margin': '0 auto','font-weight':'300','background-color':statused.status.color}">{{statused.status.value}}</div>
+                      <!-- <div class="label-sm label-success" *ngIf="status==null" [ngStyle]="{'width':'88%','font-size':'13px','padding':'2px','color':'white','margin': '0 auto','font-weight':'300','background-color':'#36c6d3'}">-N-A-</div> -->
+                    </ng-template>
+                  </p-column>
+                  <!-- <p-column field="status"></p-column>                       -->
+                </p-dataTable>
+
+              </div>
+            </div>
+            <ng-template #falsyTemplate>
+              <div class="spinner text-center">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
+              </div>
+            </ng-template>
+          </div>
+          <div class="form-body" *ngIf="isShowSimpleData">
+            <div class="row">
+              <div class="col-md-12 col-sm-12">
+                <div class="col-md-3 col-md-offset-9" style="padding:4px 25px;border-bottom: 0 none">
+                  <i class="fa fa-search" style="margin-top: 2%;"></i>
+                  <input #gbs type="text" style="float:right;" pInputText placeholder="Search">
+                </div>
+              </div>
+            </div>
+            <br>
             <div class="row" *ngIf="IsTableShow == true;else falsyTemplate ">
               <div class="col-md-12" *ngIf="cols !=null">
-                <p-dataTable [value]="colsdata" [paginator]="true" [rows]="10" [pageLinks]="3" #dt exportFilename="data" selectionMode="multiple"
-                  [metaKeySelection]="false" scrollable="true" scrollWidth="980px" resizableColumns="true" scrollHeight="440px"
-                  [globalFilter]="gb" sortMode="multiple">
-                  <p-column *ngFor="let col of cols" [field]="col.field" [header]="col.header" [style]="{'width':col.colwidth}" [sortable]="true"></p-column>
+                <p-dataTable [value]="colsdata" [paginator]="true" [rows]="10" [pageLinks]="3" #dt exportFilename="data"
+                  selectionMode="multiple" [metaKeySelection]="false" scrollable="true" scrollWidth="980px"
+                  resizableColumns="true" scrollHeight="440px" [globalFilter]="gbs" sortMode="multiple">
+                  <p-column *ngFor="let col of cols" [field]="col.field" [header]="col.header" [style]="{'width':col.colwidth}"
+                    [sortable]="true">
+                    <ng-template let-colstatus let-statused="col.header" pTemplate="header">
+                      <!-- <i class="{{ col.colDef.attrType=='string'?'fa-downcase-string':col.colDef.attrType=='date'?'fa-downcase-date':['float','decimal','double'].indexOf( col.colDef.attrType) !=-1?'fa-downcase-decimal':'fa-downcase-integer'}}"
+                          tooltip-placement="right" tooltip-append-to-body="true" style="font-size:11px;"></i> -->
+                      <span>{{col.header}}
+                        <i class="fa fa-bar-chart" style="color:#3EBBAE;font-size:15px;" aria-hidden="true"
+                          tooltip-placement="left" tooltip-append-to-body="true" uib-tooltip="Histogram" (click)="calculateHistrogram(col)"></i>
+                      </span>
+
+                    </ng-template>
+                  </p-column>
+
                 </p-dataTable>
               </div>
             </div>
-            <!-- <ng-template #falsyTemplate>
-                    <div class="spinner text-center">
-                        <div class="bounce1"></div>
-                        <div class="bounce2"></div>
-                        <div class="bounce3"></div>
-                    </div>
-                </ng-template> -->
+            <ng-template #falsyTemplate>
+              <div class="spinner text-center">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
+              </div>
+            </ng-template>
             <div class="centercontent" *ngIf="IsError">
               <span style="font-size:14px;color:red;">Some error occur</span>
             </div>
           </div>
+          <div class="form-body" *ngIf="isShowDatastore">
+            <div class="row">
 
-          <div class="form-body graph-body" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=')"
+              <div class="col-md-12" *ngIf="rowData1 !=null && IsTableShow == true;else falsyTemplate">
+
+                <p-dataTable #dt [value]="rowData1" exportFilename="data" [(selection)]="selectedData" (onRowSelect)="onRowSelect($event)"
+                  selectionMode="multiple" [metaKeySelection]="false" scrollable="true" resizableColumns="true"
+                  scrollHeight="440px" [globalFilter]="gb" sortMode="multiple" [paginator]="true" [rows]="10"
+                  [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [rowsPerPageOptions]="[5,10,20]">
+
+                  <p-column field="name" header="Name" [sortable]="true" [style]="{'text-align':'center'}"></p-column>
+                  <p-column field="version" header="Version" [sortable]="true" [style]="{'text-align':'center'}"></p-column>
+                  <p-column field="createdBy.ref.name" header="Created By" [sortable]="true" [style]="{'text-align':'center'}"></p-column>
+                  <p-column field="createdOn" header="Created On" [sortable]="true" [style]="{'text-align':'center'}"></p-column>
+                  <p-column field="numRows" header="Rows" [sortable]="true" [style]="{'text-align':'center'}"></p-column>
+                  <p-column header="Action" [style]="{'text-align':'center'}">
+                    <ng-template let-col let-car="rowData" pTemplate="body">
+                      <label class="control-label" style="padding-right: 5%;">
+                        <input type="radio" (change)="onChangeRadio(car)" [disabled]="isDisabled" name="selectedType">
+                      </label>
+                    </ng-template>
+                  </p-column>
+                </p-dataTable>
+              </div>
+            </div>
+            <ng-template #falsyTemplate>
+              <div class="spinner text-center">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
+              </div>
+            </ng-template>
+            <div class="centercontent" *ngIf="IsError">
+              <span style="font-size:14px;color:red;">Some error occur</span>
+            </div>
+
+            <br>
+            <br>
+
+          </div>
+          <!-- <div class="form-body graph-body" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=')"
             *ngIf="showgraphdiv">
             <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
             <div class="form-body show-graph-body" id="graphWrapper">
               <app-d3></app-d3>
             </div>
+          </div> -->
+          <div class="form-body graph-body" *ngIf="showGraph" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=');">
+            <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
+            <div class="spinner" id="graphloader">
+              <div class="bounce1"></div>
+              <div class="bounce2"></div>
+              <div class="bounce3"></div>
+            </div>
+            <div class="show-graph-body" id="graphWrapper">
+              <knowledge-graph></knowledge-graph>
+            </div>
           </div>
 
-          <div class="form-body" [hidden]="!showdatapod" style="padding-top:50px;">
+          <div class="form-body" [hidden]="!showdatapod" style="padding-top:50px;" *ngIf="!showGraph">
             <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="submitDatapod()" #myNewForm="ngForm">
               <div class="form-group" *ngIf="mode">
                 <label class="col-md-3 control-label">UUID</label>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="datapodjson.uuid" name="uuid" placeholder="" [disabled]="true">
+                  <input type="text" class="form-control" [(ngModel)]="datapodjson.uuid" name="uuid" placeholder=""
+                    [disabled]="true">
                 </div>
               </div>
 
@@ -86,7 +261,8 @@
                   <span class="required" aria-required="true"> * </span>
                 </label>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="datapodjson.name" name="name" placeholder="" [disabled]="mode == 'true'">
+                  <input type="text" class="form-control" [(ngModel)]="datapodjson.name" name="name" placeholder=""
+                    [disabled]="mode == 'true'">
                 </div>
               </div>
 
@@ -115,14 +291,15 @@
               <div class="form-group taginput">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                  <tag-input [(ngModel)]="datapodjson.tags" name="tags" [disable]="mode == 'true'" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;"></tag-input>
+                  <tag-input [(ngModel)]="datapodjson.tags" name="tags" [disable]="mode == 'true'" theme='bootstrap'
+                    style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;"></tag-input>
                 </div>
               </div>
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
                 <div class="col-md-6">
-                  <textarea [disabled]="mode == 'true'" [(ngModel)]="datapodjson.desc" name="desc" class="form-control noresize " rows="2"
-                    style="resize:none;"></textarea>
+                  <textarea [disabled]="mode == 'true'" [(ngModel)]="datapodjson.desc" name="desc" class="form-control noresize "
+                    rows="2" style="resize:none;"></textarea>
                 </div>
               </div>
 
@@ -132,8 +309,8 @@
                     <span class="required" aria-required="true"> * </span>
                   </label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
-                    <select class="form-control" [disabled]="mode == 'true'" [(ngModel)]="selectdatasourceType" name="datasource_name" #d name="d"
-                      id="d" (change)="selectType(d.value)">
+                    <select class="form-control" [disabled]="mode == 'true'" [(ngModel)]="selectdatasourceType" name="datasource_name"
+                      #d name="d" id="d" (change)="selectType(d.value)">
                       <option *ngFor="let d of datasourceType" [value]="d.value">{{d.name}}</option>
                     </select>
                   </div>
@@ -155,8 +332,8 @@
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
                   <div class="btn-group">
-                    <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="active" name="active" [checked]="active" color="#32c5d2"
-                      labelOn="Yes" labelOff="No"></ui-switch>
+                    <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="active" name="active"
+                      [checked]="active" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
                   </div>
                 </div>
               </div>
@@ -165,8 +342,8 @@
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
                   <div class="btn-group">
-                    <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="published" name="published" [checked]="published"
-                      color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                    <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="published" name="published"
+                      [checked]="published" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
                   </div>
                 </div>
               </div>
@@ -175,7 +352,8 @@
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Cache</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
                   <div class="btn-group">
-                    <ui-switch [(ngModel)]="cache" name="cache" [checked]="cache" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                    <ui-switch [(ngModel)]="cache" name="cache" [checked]="cache" color="#32c5d2" labelOn="Yes"
+                      labelOff="No"></ui-switch>
                   </div>
                 </div>
               </div>
@@ -199,13 +377,13 @@
                 </h4>
                 <hr>
               </div>
-              <br/>
+              <br />
               <table class=" row-border hover table  table-striped table-bordered">
                 <thead>
                   <tr>
                     <th style="text-align: center; Vertical-align: middle;width:5%;">
-                      <input style="width: 16px;height:16px;" type="checkbox" [disabled]="mode" [(ngModel)]="selectallattribute" (click)="checkAllAttributeRow()"
-                        name="selectAll" />
+                      <input style="width: 16px;height:16px;" type="checkbox" [disabled]="mode" [(ngModel)]="selectallattribute"
+                        (click)="checkAllAttributeRow()" name="selectAll" />
                     </th>
                     <th style="width:6%;text-align:center">ID</th>
                     <th style="width:6%;" class="text-center">Key</th>
@@ -215,49 +393,233 @@
                     <th class="text-center">Name</th>
                     <th class="text-center" style="width:14%;">Type</th>
                     <th class="text-center">Desc</th>
+                    <th class="text-center" style="width:7%;">Move</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let tabledata of attributes;let i =index">
+                  <tr *ngFor="let tabledata of attributes;let i =index" pDraggable="cars" (onDragStart)="dragStart($event,i)"
+                    (onDragEnd)="dragEnd($event)" pDroppable="cars" (onDrop)="drop($event,i)">
                     <td style="text-align: center; Vertical-align: middle;width:5%;">
-                      <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="tabledata.selected" name="selected+{{i}}" [disabled]="mode"
-                      />
+                      <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="tabledata.selected" name="selected+{{i}}"
+                        [disabled]="mode" />
                     </td>
                     <td>
                       <input type="text" [value]="i" name="{{i}}" [disabled]="true" class="form-control">
                     </td>
                     <td style="text-align: center; Vertical-align: middle;">
-                      <input type="checkbox" style="width: 16px;height:16px;" [(ngModel)]="tabledata.key" name="key+{{i}}" [disabled]="mode">
+                      <input type="checkbox" style="width: 16px;height:16px;" [(ngModel)]="tabledata.key" name="key+{{i}}"
+                        [disabled]="mode">
                     </td>
                     <td style="text-align: center; Vertical-align: middle;">
-                      <input type="checkbox" style="width: 16px;height:16px;" [(ngModel)]="tabledata.partition" name="partition+{{i}}" [disabled]="mode">
+                      <input type="checkbox" style="width: 16px;height:16px;" [(ngModel)]="tabledata.partition" name="partition+{{i}}"
+                        [disabled]="mode">
                     </td>
                     <td style="text-align: center; Vertical-align: middle;">
-                      <input type="checkbox" style="width: 16px;height:16px;" [(ngModel)]="tabledata.active" name="active+{{i}}" [disabled]="mode">
+                      <input type="checkbox" style="width: 16px;height:16px;" [(ngModel)]="tabledata.active" name="active+{{i}}"
+                        [disabled]="mode">
                     </td>
                     <td>
-                      <input type="text" [(ngModel)]="tabledata.dispName" title="{{tabledata.dispName}}" [disabled]="mode" class="form-control"
-                        name="dispName+{{i}}">
-                      <td>
-                        <input type="text" [(ngModel)]="tabledata.name" title="{{tabledata.name}}" [disabled]="tabledata.isAttributeEnable || mode"
-                          class="form-control" name="name+{{i}}">
-                      </td>
-                      <td>
-                        <select class="form-control" [disabled]="mode == 'true'" [(ngModel)]="tabledata.type" name="d{{i}}">
-                          <option *ngFor="let d of attrtypes" [value]="d">{{d}}</option>
-                        </select>
+                      <input type="text" [(ngModel)]="tabledata.dispName" title="{{tabledata.dispName}}" [disabled]="mode"
+                        class="form-control" name="dispName+{{i}}">
+                    <td>
+                      <input type="text" [(ngModel)]="tabledata.name" title="{{tabledata.name}}" [disabled]="tabledata.isAttributeEnable || mode"
+                        class="form-control" name="name+{{i}}">
+                    </td>
+                    <td>
+                      <select class="form-control" [disabled]="mode == 'true'" [(ngModel)]="tabledata.type" name="d{{i}}">
+                        <option *ngFor="let d of attrtypes" [value]="d">{{d}}</option>
+                      </select>
 
-                      </td>
-                      <td>
-                        <input type="text" [(ngModel)]="tabledata.desc" title="{{tabledata.desc}}" [disabled]="mode" class="form-control" name="desc+{{i}}">
-                      </td>
+                    </td>
+                    <td>
+                      <input type="text" [(ngModel)]="tabledata.desc" title="{{tabledata.desc}}" [disabled]="mode"
+                        class="form-control" name="desc+{{i}}">
+                    </td>
+                    <td>
+                      <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                        <div style="text-align: center;">
+                          <a class="move-column" [attr.disabled]="(i == 0 || mode == 'true') ?'disabled' : null"
+                            (click)="onAttrRowUp(i)">
+                            <!-- <i class="glyphicon glyphicon-arrow-up"></i> -->
+                            <i class="glyphicon glyphicon-circle-arrow-up" style="font-size:20px"></i>
+                          </a>
+                          <a class="move-column" [attr.disabled]="(i == attributes.length-1 ||mode == 'true') ? 'disabled' : null"
+                            (click)="onAttrRowDown(i)">
+                            <!-- <i class="glyphicon glyphicon-arrow-down"></i> -->
+                            <i class="glyphicon glyphicon-circle-arrow-down	" style="font-size:20px"></i>
+                          </a>
+                        </div>
+                      </span>
+                    </td>
                   </tr>
                 </tbody>
               </table>
             </form>
           </div>
         </div>
+
+      </div>
+      <br>
+
+
+      <div class="row" *ngIf="showgetResults">
+        <div class="col-md-12">
+
+          <div class="portlet box green" [ngStyle]="{'min-height':length}" *ngIf="showgetResults">
+            <div class="portlet-title">
+              <div class="caption">
+                <i class="fa fa-gift"></i>Results
+              </div>
+              <div class="tools">
+                <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top"
+                  tooltip (click)="downloadDatastoreResult('datastore',datastoreDetail)">
+                  <i class="fa fa-download" area-hidden="true"></i>
+                </a>
+                <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip>
+                  <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                </a>
+
+              </div>
+            </div>
+
+
+            <div class="portlet-body form col-md-12" *ngIf="resultcols !=null && IsTableShow1 == true;else falsyTemplate">
+              <div class="row" style="padding-top: 2%;">
+                <div class="col-md-12 col-sm-12">
+                  <div class="col-md-3 col-md-offset-9" style="padding:4px 25px;border-bottom: 0 none">
+                    <i class="fa fa-search" style="margin-top: 2%;"></i>
+                    <input #gb type="text" style="float:right;" pInputText placeholder="Search">
+                  </div>
+                </div>
+              </div>
+
+              <p-dataTable [value]="resultData" [paginator]="true" [rows]="10" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]"
+                #dt exportFilename="data" selectionMode="multiple" [metaKeySelection]="false" scrollable="true"
+                resizableColumns="true" scrollHeight="440px" [globalFilter]="gb" sortMode="multiple" [style]="{'width':'100%','padding':'2%','margin':'0 auto'}">
+                <p-column *ngFor="let col of resultcols" [field]="col.field" [header]="col.header" [style]="{'width':col.colwidth}"
+                  [sortable]="true"></p-column>
+              </p-dataTable>
+            </div>
+            <ng-template #falsyTemplate>
+              <div class="spinner text-center">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
+              </div>
+            </ng-template>
+            <!-- </div>                    -->
+            <div class="centercontent" *ngIf="IsError">
+              <span style="font-size:14px;color:red;">Some error occur</span>
+            </div>
+
+          </div>
+        </div>
       </div>
     </div>
   </div>
+</div>
+<p-dialog header="Download" [(visible)]="isDownloadModel" [modal]="true" [responsive]="true" [minWidth]="450"
+  [resizable]="true" [baseZIndex]="1000" [contentStyle]="{'min-height':'250px'}">
+  <div class="modal-body" *ngIf="isDownloadModel">
+    <form class="form-horizontal" novalidate="novalidate" name="myform1">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="col-md-3 control-label">Rows</label>
+            <div class="col-md-8">
+              <input type="number" min="1" class="form-control" name="rows" [(ngModel)]="download.rows" max="100000">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-3 control-label">Format</label>
+            <div class="col-md-8">
+              <select class="form-control" [(ngModel)]="download.selectFormat" name="selectFormate">
+                <option *ngFor="let r of download.format" [value]="r">{{r}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn dark btn-outline" (click)="close()">Close</button>
+    <button type="button" class="btn green" (click)="SubmitDownload(source)">Submit</button>
+  </div>
+</p-dialog>
+<div *ngIf="showHistogramModel">
+  <p-dialog header="{{histogramDetail.dname}}.{{histogramDetail.name}}" [(visible)]="showHistogramModel" [modal]="true"
+    [responsive]="true" [width]="650" [resizable]="true" [baseZIndex]="1000" [contentStyle]="{'height':'500px'}">
+    <div class="modal-body" *ngIf="showHistogramModel">
+      <form class="form-horizontal" novalidate="novalidate" name="myform1">
+        <div class="centercontent" *ngIf="isHistogramError">
+          <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
+        </div>
+        <div class="centercontent" *ngIf="isHistogramInprogess">
+          <div class="spinner">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+          </div>
+        </div>
+        <div style="margin-bottom: 10px;">
+          <a class="btn btn-circle btn-icon-only btn-default" *ngIf="isShowDataGrid" tooltip-placement="right"
+            uib-tooltip="Chart" (click)="onClickChart()">
+            <i class="fa fa-line-chart" style="display:block;margin:2px 0px 0px 1px;"></i>
+          </a>
+          <a class="btn btn-circle btn-icon-only btn-default" *ngIf="isShowChart" tooltip-placement="right" uib-tooltip="Grid"
+            (click)="onClickGrid()">
+            <i class="fa fa-th" style="display:block;margin:2px 0px 0px 1px;"></i>
+          </a>
+        </div>
+
+        <div class="row" *ngIf="datacol !=null && !isHistogramError && !isHistogramInprogess && isShowChart" style="width:97%;">
+          <div class="col-md-12" *ngIf="datacol!=null">
+            <c3-chart [chartId]="'histrogramDatapod'" [chartData]="datacol.datapoints" [ChartColumns]="[datacol.datacolumns[0].id]"
+              [chartColor]="['#D8A2DE']" [chartType]="'bar'" [chartDatax]="datacol.datax.id"></c3-chart>
+            <!-- <c3chart chartGroup="chart" bindto-id="histrogramDatapod" chart-data="datacol.datapoints" chart-columns="datacol.datacolumns" chart-x="datacol.datax" enable-zoom="true" callback-function="handleCallbackGroup">
+                       <chart-bar ratio="0.5" />
+                         <chart-axes values-x="" >
+                       <chart-axis>
+                         <chart-axis-x axis-position="outer-center" axis-height="50px" axis-type="category" axis-label="">
+                           <chart-axis-x-tick tick-rotate="25" tick-multiline="false" ng-if="datacol.datapoints.length >9" tick-culling-max="5"  />
+                           <chart-axis-x-tick tick-rotate="25" tick-multiline="false" ng-if="datacol.datapoints.length <=10"  />
+                         </chart-axis-x>
+                         <chart-axis-Y>
+                           <chart-axis-y-tick tick-format-function="time_format"/>
+                         </chart-axis-Y>
+                       </chart-axis>                      
+                     </c3chart> -->
+          </div>
+        </div>
+        <div class="row" *ngIf="isShowDataGrid  && !isHistogramError && !isHistogramInprogess">
+          <div class="row">
+            <div class="col-md-12 col-sm-12">
+              <div class="col-md-6 col-md-offset-6" style="padding-left: 45px;">
+                <!-- <i class="fa fa-search" style="margin-top: 2%;"> </i>  -->
+                <label>Search:</label>
+                <input #hb type="text" pInputText placeholder="Search">
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="col-md-12">
+            <p-dataTable #dt [value]="histogramcols" exportFilename="data" [(selection)]="selectedData" (onRowSelect)="onRowSelect($event)"
+              selectionMode="multiple" [metaKeySelection]="false" scrollable="true" resizableColumns="true"
+              scrollHeight="440px" [globalFilter]="hb" sortMode="multiple" [paginator]="true" [rows]="10" [pageLinks]="3"
+              [rowsPerPageOptions]="[5,10,20]" [rowsPerPageOptions]="[5,10,20]">
+
+              <p-column field="bucket" header="Bucket" [sortable]="true" [style]="{'text-align':'center'}"></p-column>
+              <p-column field="frequency" header="Frequency" [sortable]="true" [style]="{'text-align':'center'}"></p-column>
+
+            </p-dataTable>
+
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn dark btn-outline" (click)="closeHistogram()">Close</button>
+    </div>
+  </p-dialog>
 </div>

@@ -52,7 +52,7 @@ export class RelationService{
                  attributedetail["label"]=response[j].name+"."+response[j].attributes[i].name;
                  attributedetail["value"]={};
                  attributedetail["value"]["label"]=response[j].name+"."+response[j].attributes[i].name;      
-                 attributedetail["value"]["id"]=response[j].uuid+"_"+response[j].attributes[i].attributeId;
+                 attributedetail["value"]["uuid"]=response[j].uuid+"_"+response[j].attributes[i].attributeId;
                 //  attributedetail["value"]["uuid"]=response[j].uuid;
                 //  attributedetail["value"]["datapodname"]=response[j].name;
                 //  attributedetail["value"]["name"]=response[j].attributes[i].name;
@@ -84,7 +84,58 @@ export class RelationService{
       }
       return attributes;
     }
+    getAttributesByRelation(uuid, version, type): Observable<any>{
+      let url ="metadata/getAttributesByRelation?action=view&uuid=" + uuid + "&type=" + type
+      return this._sharedService.getCall(url)
+      .map((response: Response) => {      
+          return this.modifyResponseAttributes(response.json());      
+        
+    })
+     .catch(this.handleError);
+    }
     private handleError(error: Response) {
         return Observable.throw(error.statusText);
+    }
+    modifyResponseAttributes(response){
+      var allattributes = [];
+      var attributes = [];
+      var isNew = true;
+      var count = 0;
+      var attr;
+      for (var j = 0; j < response.length; j++) {
+
+        var attributedetail = {};
+        attributedetail["uuid"] = response[j].ref.uuid;
+        attributedetail["type"] = response[j].ref.type;
+        attributedetail["datapodname"] = response[j].ref.name;
+        attributedetail["name"] = response[j].attrName;
+        attributedetail["attributeId"] = response[j].attrId;
+        attributedetail["attrType"] = response[j].attrType;
+        attributedetail["dname"] = response[j].ref.name + "." + response[j].attrName;
+        allattributes.push(attributedetail);
+        if (j == 0) {
+          attr = [];
+          attr.push(attributedetail);
+
+        }
+        if (j > 0 && attr.length > 0 && attr[attr.length - 1].uuid == attributedetail["uuid"])
+          attr.push(attributedetail);
+        else {
+          if (j != 0) {
+            attributes[count] = attr;
+            attr = [];
+            attr.push(attributedetail);
+
+            count = count + 1;
+          }
+        }
+
+
+      }
+      attributes[count] = attr;
+      var relationattribute = {}
+      relationattribute["allattributes"] = allattributes;
+      relationattribute["attributes"] = attributes
+      return relationattribute;
     }
 }

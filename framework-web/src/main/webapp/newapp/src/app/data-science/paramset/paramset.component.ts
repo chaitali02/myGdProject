@@ -3,19 +3,19 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
 import { AppConfig } from './../../app.config';
 
 import { SelectItem } from 'primeng/primeng';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Version } from '../../shared/version';
 import { CommonService } from '../../metadata/services/common.service';
 import { DependsOn } from '../dependsOn';
-
+import { KnowledgeGraphComponent } from '../../shared/components/knowledgeGraph/knowledgeGraph.component'
 @Component({
   selector: 'app-paramset',
   templateUrl: './paramset.component.html',
   styleUrls: ['./paramset.component.css']
 })
 export class ParamsetComponent implements OnInit {
-
-
+  showGraph: boolean;
+  isHomeEnable: boolean;
   breadcrumbDataFrom: any;
   showParamset: any;
   versions: any[];
@@ -43,9 +43,12 @@ export class ParamsetComponent implements OnInit {
   msgs: any;
   paramTableCol2: any;
   isSubmitEnable: any;
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
   constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
     this.showParamset = true;
     this.paramset = {};
+    this.isHomeEnable = false
+    this.showGraph = false;
     this.paramSetVal = [];
     this.paramset["active"] = true;
     this.isSubmitEnable = true;
@@ -338,15 +341,23 @@ export class ParamsetComponent implements OnInit {
   public goBack() {
     //this._location.back();
     this.router.navigate(['app/list/paramset']);
-
   }
+
   enableEdit(uuid, version) {
     this.router.navigate(['app/dataScience/paramset', uuid, version, 'false']);
   }
 
-  showview(uuid, version) {
-    this.router.navigate(['app/dataScience/paramset', uuid, version, 'true']);
+  showMainPage() {
+    this.isHomeEnable = false
+    this.showGraph = false;
   }
 
+  showDagGraph(uuid, version) {
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(uuid, version);
+    }, 1000);
+  }
 
 }

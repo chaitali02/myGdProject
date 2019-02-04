@@ -50,6 +50,11 @@ import {OrderByMeta} from '../metadata-navigator/pipes/orderBy';
 import { CalendarModule } from 'primeng/components/calendar/calendar';
 import { DialogModule } from 'primeng/components/dialog/dialog';
 import { MultiSelectModule } from 'primeng/components/multiselect/multiselect';
+import { CompareResultComponent } from '../compareresult/compareresult.component';
+import { DataQualityService } from '../metadata/services/dataQuality.services';
+import { MetadataService } from '../metadata/services/metadata.service';
+import { RuleService } from '../metadata/services/rule.service';
+import { DataReconService } from '../metadata/services/dataRecon.services';
 // import { SystemMonitoringService } from '../metadata/services/systemMonitoring.service';
 // import { SystemMonitoringComponent } from '../system-monitoring/system-monitoring.component'
 @NgModule({
@@ -88,6 +93,7 @@ import { MultiSelectModule } from 'primeng/components/multiselect/multiselect';
         //ModelComponent,
         metadataNavigatorComponent,
         jobMonitoringComponent,
+        CompareResultComponent,
         FilterPipeDD,
         FilterJobPipe,
         OrderBy,
@@ -104,7 +110,11 @@ import { MultiSelectModule } from 'primeng/components/multiselect/multiselect';
         CommonListService,
         metadataNavigatorService,
         jobMonitoringService,
-        CommonService
+        CommonService,
+        DataQualityService,
+        MetadataService,
+        RuleService,
+        DataReconService
     ],
     entryComponents: [],
 })

@@ -1,5 +1,5 @@
 import { Value } from './../../metadata/domain/domain.value';
-import { NgModule, Component, ViewEncapsulation, Input } from '@angular/core';
+import { NgModule, Component, ViewEncapsulation, Input, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { SelectItem } from 'primeng/primeng';
 import { Location } from '@angular/common';
@@ -13,6 +13,7 @@ import { MetaDataDataPodService } from '../datapod/datapod.service';
 
 import { Version } from '../../shared/version'
 import { DependsOn } from './dependsOn'
+import { KnowledgeGraphComponent } from '../../shared/components/knowledgeGraph/knowledgeGraph.component';
 @Component({
   selector: 'app-data-preparation-fromula',
   styleUrls: ['./formula.component.css'],
@@ -20,6 +21,11 @@ import { DependsOn } from './dependsOn'
 })
 
 export class FormulaComponent {
+  DblClcikEditDetail: {};
+  attributeinfo: {};
+  lodeParamlist: any[];
+  isSourceAtributeParamlist: boolean;
+  sourcefunction: any;
   sourceexpression: any;
   sourceformula: any;
   sourcesimple: any;
@@ -67,6 +73,12 @@ export class FormulaComponent {
   selectedVersion: Version
   sourceattribute: any;
   msgs: any;
+  isHomeEnable: boolean = false;
+  isEditEnable: boolean = true;
+  isGraphEnable: boolean = true;
+  isRefreshEnable:boolean = false;
+  showGraph: boolean = false
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
 
   constructor(config: AppConfig, public router: Router, private _commonService: CommonService, private activatedRoute: ActivatedRoute, private _service: MetaDataDataPodService, private _location: Location) {
     this.baseUrl = config.getBaseUrl();
@@ -88,6 +100,7 @@ export class FormulaComponent {
   }
 
   ngOnInit() {
+    this.lodeParamlist=[]
     this.formulaarray = [];
     this.formulajson["active"] = true;
     this.isSourceAtributeSimple = true;
@@ -105,10 +118,11 @@ export class FormulaComponent {
       { "text": "datapod", "caption": "attribute" },
       { "text": "expression", "caption": "expression" },
       { "text": "formula", "caption": "formula" },
-      { "text": "function", "caption": "function" }
+      { "text": "function", "caption": "function" },
+      { "text": "paramlist", "caption": "paramlist" }
     ]
     this.selectAttribute = this.attributeTypes[0].text
-    this.depandsOnTypes = ['datapod', 'relation', 'dataset', 'paramlist'];
+    this.depandsOnTypes = ["datapod", "relation", 'dataset','rule', 'paramlist'];
     this.formulafuction = [
       { 'type': 'simple', 'value': '+', 'class': 'formula_function btn' },
       { 'type': 'simple', 'value': '-', 'class': 'formula_function btn' },
@@ -122,6 +136,7 @@ export class FormulaComponent {
       { 'type': 'simple', 'value': '>', 'class': 'formula_function btn ' },
       { 'type': 'simple', 'value': '<=', 'class': 'formula_function btn ' },
       { 'type': 'simple', 'value': '>=', 'class': 'formula_function btn' },
+		  { "type": "simple", "value": ",", "class":  'formula_button btn btn-icon-only ' },
       { 'type': 'simple', 'value': 'AND', 'class': 'formula_function btn ' },
       { 'type': 'simple', 'value': 'OR', 'class': 'formula_function btn ' },
       { 'type': 'simple', 'value': 'SUM', 'class': 'formula_function btn ' },
@@ -134,8 +149,23 @@ export class FormulaComponent {
       { 'type': 'simple', 'value': 'ELSE', 'class': 'formula_function btn ' },
       { 'type': 'simple', 'value': 'END', 'class': 'formula_function btn ' },
       { 'type': 'simple', 'value': 'THEN', 'class': 'formula_function btn ' },
+      { "type": "simple", "value": "OVER", "class": "formula_button btn " },
+      { "type": "simple", "value": "ORDER BY", "class": "formula_button btn " },
+      { "type": "simple", "value": "PARTITION BY", "class": "formula_button btn " },
+      
+      { "type": "simple", "value": "ASC", "class": "formula_button btn " },
+      { "type": "simple", "value": "DESC", "class": "formula_button btn  " },
     ];
   }
+
+  showDagGraph(uuid,version){
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id,this.version);
+    }, 1000); 
+  }
+
   public goBack() {
     this._location.back();
   }
@@ -149,6 +179,9 @@ export class FormulaComponent {
 
   addAttribute() {
     var len = this.formulaarray.length;
+    if(this.DblClcikEditDetail !=null){
+			len =this.DblClcikEditDetail["index"];
+		}
     var data = {}
     if (this.selectAttribute == "datapod") {
       if (this.sourceattribute != null) {
@@ -156,6 +189,7 @@ export class FormulaComponent {
         data["value"] = this.sourceattribute.label
         data["uuid"] = this.sourceattribute.uuid
         data["attrId"] = this.sourceattribute.attributeId;
+        data["id"]=this.sourceattribute.uuid+"_"+this.sourceattribute.attributeId
         this.sourceattribute = null;
       }
     }
@@ -179,18 +213,24 @@ export class FormulaComponent {
       data["uuid"] = this.sourceexpression.uuid;
       this.sourceexpression = null;
     }
-    // else if(this.selectAttribute =="function"){
-    //   // CommonService.getOneByUuidAndVersion($scope.sourcefunction.uuid,$scope.sourcefunction.version,'function').then(function (response) {onSuccess(response.data)});
-    //   // var onSuccess=function(response){
-    //   // console.log(JSON.stringify($scope.sourcefunction))
-    //   // data.type=$scope.attributeType.text
-    //   //     data.value=response.functionInfo.toUpperCase();
-    //   //     data.uuid=$scope.sourcefunction.uuid;
-    //   //     data.category=response.category
-    //   //     $scope.sourcefunction=null;
-    // }
+    else if(this.selectAttribute =="function"){
+      this._commonService.getLatestByUuid(this.sourcefunction.uuid,'function').subscribe(
+        response => { 
+           data["type"]=this.attributeTypes.text
+           data["value"]=response.functionInfo[0]["name"].toUpperCase();
+           data["uuid"]=this.sourcefunction.uuid;
+           data["category"]=response.category
+           this.sourcefunction=null;
+         },
+        error => console.log('Error :: ' + error)
+      )
+    }
+    else{
+
+    }
     //}
     this.formulaarray[len] = data;
+    this.DblClcikEditDetail=null;
   }
   getAllVersionByUuid() {
     this._commonService.getAllVersionByUuid("formula", this.formulajson.uuid).subscribe(
@@ -244,7 +284,10 @@ export class FormulaComponent {
       error => console.log('Error :: ' + error)
     )
   }
-
+  clearFormula(){
+    this.formulaarray=[]
+    this.formulaInfo = {}
+  }
   OnSuccesgetAllAttributeBySource(response) {
     let temp = []
     for (const n in response) {
@@ -257,8 +300,9 @@ export class FormulaComponent {
       allname1["value"]["id"] = response[n]['id'];
       temp[n] = allname1;
     }
+    //this.formulaarray=[]
     this.allAttribute = temp;
-    this.sourceattribute = this.allAttribute[0];
+   // this.sourceattribute = this.allAttribute[0];
   }
 
   getAllFunctions() {
@@ -359,7 +403,7 @@ export class FormulaComponent {
     dependOnTemp.label = response["dependsOn"]["ref"]["name"];
     dependOnTemp.uuid = response["dependsOn"]["ref"]["uuid"];
     this.dependsOn = dependOnTemp
-
+    
     this.formulaarray = [];
     const functionArray = ['+', '-', '/', '%', '*', '(', ')', '=', '<=', '>=', '<', '>', 'sum', 'max', 'mix', 'count', 'avg', 'case', 'when', 'else', 'end', 'then'];
     for (var i = 0; i < response.formulaInfo.length; i++) {
@@ -377,12 +421,13 @@ export class FormulaComponent {
         formulainfo["type"] = response.formulaInfo[i].ref.type;
         formulainfo["uuid"] = response.formulaInfo[i].ref.uuid;
         formulainfo["attrId"] = response.formulaInfo[i].attributeId;
+        formulainfo["id"] = response.formulaInfo[i].ref.uuid+"_"+response.formulaInfo[i].attributeId;
         formulainfo["value"] = response.formulaInfo[i].ref.name + "." + response.formulaInfo[i].attributeName;
         //formulainfo["value"] = response.formulaInfo[i].value;
       }
       else {
         if (response.formulaInfo[i].ref.type == "function") {
-          formulainfo["value"] = response.formulaInfo[i].ref.name;
+          formulainfo["value"] = response.formulaInfo[i].ref.name.split("(")[0].toUpperCase();
         }
         else {
           formulainfo["value"] = response.formulaInfo[i].ref.name;
@@ -417,6 +462,7 @@ export class FormulaComponent {
       this.isSourceAtributeFormula = false;
       this.isSourceAtributeExpression = false;
       this.isSourceAtributeFunction = false;
+      this.isSourceAtributeParamlist = false;
     }
     else if (type == "datapod") {
       this.isSourceAtributeSimple = false;
@@ -424,6 +470,7 @@ export class FormulaComponent {
       this.isSourceAtributeFormula = false;
       this.isSourceAtributeExpression = false;
       this.isSourceAtributeFunction = false;
+      this.isSourceAtributeParamlist = false;
       this.getAllAttributeBySource()
     }
     else if (type == "formula") {
@@ -432,6 +479,7 @@ export class FormulaComponent {
       this.isSourceAtributeFormula = true;
       this.isSourceAtributeExpression = false;
       this.isSourceAtributeFunction = false;
+      this.isSourceAtributeParamlist = false;
       this.getAllFormula();
     }
     else if (type == "expression") {
@@ -440,6 +488,7 @@ export class FormulaComponent {
       this.isSourceAtributeFormula = false;
       this.isSourceAtributeExpression = true;
       this.isSourceAtributeFunction = false;
+      this.isSourceAtributeParamlist = false;
       this.getAllExpression();
     }
     else if (type == "function") {
@@ -448,9 +497,60 @@ export class FormulaComponent {
       this.isSourceAtributeFormula = false;
       this.isSourceAtributeExpression = false;
       this.isSourceAtributeFunction = true;
+      this.isSourceAtributeParamlist = false;
       this.getAllFunctions();
     }
-  }
+    else if (type == "paramlist") {
+			this.isSourceAtributeSimple = false;
+			this.isSourceAtributeDatapod = false;
+			this.isSourceAtributeFormula = false;
+			this.isSourceAtributeExpression = false;
+			this.isSourceAtributeFunction = false;
+      this.isSourceAtributeParamlist = true;
+      this.getAllParam()
+			// .getParamByParamList(this.allformuladepands.defaultoption.uuid,"paramlist").then(function (response) { onSuccessParamlist(response.data) });
+			// var onSuccessParamlist = function (response) {
+			// 	if(this.lodeParamlist && this.lodeParamlist.length ==0){
+			// 		this.lodeParamlist = response;
+			// 	}else if(this.lodeParamlist.length >0  && this.lodeParamlist[0].uuid != response[0].uuid){
+			// 		for(var i=0;i<response.length;i++){
+			// 			var paramjson={}
+			// 			var paramsjson = {};
+			// 			paramsjson.uuid = response[i].uuid;
+			// 			paramsjson.name = response[i].name 
+			// 			paramsjson.dname = response[i].datapodname+"."+response[i].dname;
+			// 			paramsjson.attributeId = response[i].attributeId;
+			// 			paramsjson.attrType = response[i].paramType;
+			// 			paramsjson.paramName = response[i].paramName;
+			// 			paramsjson.caption = "formula."+paramsjson.paramName;
+			// 			this.lodeParamlist.push(paramsjson);
+					}
+				}
+			
+        getAllParam(){
+          this._commonService.getParamByParamList(this.dependsOn.uuid,"paramlist")
+          .subscribe(
+          response => {
+            // if(this.lodeParamlist && this.lodeParamlist.length ==0){
+            //   this.lodeParamlist = response;
+            // }else if(this.lodeParamlist.length >0  && this.lodeParamlist[0].uuid != response[0].uuid){
+              for(var i=0;i<response.length;i++){
+                var paramjson={}
+                var paramsjson = {};
+                paramsjson["uuid"] = response[i].uuid;
+                paramsjson["name"] = response[i].name 
+                paramsjson["dname"] = response[i].datapodname+"."+response[i].dname;
+                paramsjson["attributeId"] = response[i].attributeId;
+                paramsjson["attrType"] = response[i].paramType;
+                paramsjson["paramName"] = response[i].paramName;
+                paramsjson["caption"] = "formula."+paramsjson["paramName"];
+                this.lodeParamlist.push(paramsjson);
+              }
+           // }
+          },   
+          error => console.log("Error :: " + error));
+          }
+  
 
   onSuccessGetFunctionByFunctionInfo(response) {
     const len = this.formulaarray.length;
@@ -558,7 +658,7 @@ export class FormulaComponent {
               formulaSubmitJson["formulaType"] = this.formulaarray[i].formulatype;
           }
           if (this.formulaarray[i].type == "function") {
-            //alert($scope.formulainfoarray[i].category)
+            //alert(this.formulainfoarray[i].category)
             if (this.formulaarray[i].category == "aggregate") {
               formulaSubmitJson["formulaType"] = "aggr"
             }
@@ -590,9 +690,64 @@ export class FormulaComponent {
   }
 
   enableEdit(uuid, version) {
+    this.isRefreshEnable = false;
     this.router.navigate(['app/dataPreparation/formula', uuid, version, 'false']);
   }
   showview(uuid, version) {
     this.router.navigate(['app/dataPreparation/formula', uuid, version, 'true']);
   }
+  onDbclcikEdit(type,index){
+		// if(!this.isEdit && !this.isAdd ){
+		// 	return false;
+		// }
+		//console.log(this.formulainfoarray[index]);
+	 	if(["datapod",'dataset','rule','paramlist'].indexOf(type) != -1){
+			this.attributeinfo={};
+			var type1={};
+	 	    type1["text"]=type;
+		    this.selectAttribute= type;
+			var attributeInfo={}
+			 attributeInfo["uuid"]=this.formulaarray[index].uuid
+			 attributeInfo["type"]=this.formulaarray[index].type
+       attributeInfo["id"]=this.formulaarray[index].id
+			attributeInfo["attributeId"]=this.formulaarray[index].attrId;
+      attributeInfo["dname"]= this.formulaarray[index].value;
+      this.sourceattribute=attributeInfo;
+			//setTimeout(function(){ this.sourceattribute=attributeInfo; },10);
+			this.DblClcikEditDetail={};
+			this.DblClcikEditDetail["isEdit"]=true;
+			this.DblClcikEditDetail["index"]=index; 
+		}
+		else if (type == "string" || type == "simple"){
+			var type1={};
+	 	    type1["text"]="string"//this.formulainfoarray[index].type;
+		    this["attributeType"]= type1;
+			this.sourcesimple=this.formulaarray[index].value;
+			this.DblClcikEditDetail={};
+			this.DblClcikEditDetail["isEdit"]=true;
+			this.DblClcikEditDetail["index"]=index; 
+		}else{
+			var type1={};
+	 	    type1["text"]=this.formulaarray[index].type;
+			this.selectAttribute= type;
+			this.sourcefunction={}
+			this.sourcefunction.uuid=this.formulaarray[index].uuid;
+			this.sourcefunction.name=this.formulaarray[index].name;
+			this.DblClcikEditDetail={};
+			this.DblClcikEditDetail["isEdit"]=true;
+			this.DblClcikEditDetail["index"]=index; 
+		}
+		this.onChangeAttribute(type1["text"]);		 
+	};
+  
+  showMainPage(uuid, version){
+    this.isHomeEnable = false;
+    this.showGraph = false;
+  }
+  showFormulaGraph(uuid,version){
+    console.log("Show Formula Graph call... ");
+    this.showGraph = true;
+    this.isHomeEnable = true;
+  }
+
 }

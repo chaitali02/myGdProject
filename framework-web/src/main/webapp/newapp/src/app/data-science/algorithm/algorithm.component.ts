@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { AppConfig } from './../../app.config';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { SelectItem } from 'primeng/primeng';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { CommonService } from '../../metadata/services/common.service';
@@ -11,13 +11,15 @@ import { TagInputModule } from 'ngx-chips';
 import { Observable } from 'rxjs/Observable';
 import { filter, map } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
-
+import { KnowledgeGraphComponent } from '../../shared/components/knowledgeGraph/knowledgeGraph.component'
 @Component({
   selector: 'app-algorithm',
   templateUrl: './algorithm.template.html',
   styleUrls: []
 })
 export class AlgorithmComponent implements OnInit {
+  showGraph: boolean;
+  isHomeEnable: boolean;
   alltags: any;
   savePmml: any;
   summaryMethods: any[]
@@ -52,12 +54,12 @@ export class AlgorithmComponent implements OnInit {
   isSubmitEnable: any;
   text: any;
   labelRequired: any
-
-
-
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
   constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _algorithmService: AlgorithmService) {
     this.showAlgorithm = true;
     this.algorithm = {};
+    this.isHomeEnable = false;
+    this.showGraph = false;
     this.algorithm["active"] = true;
     this.algorithm["labelRequired"] = true;
     this.isSubmitEnable = true;
@@ -88,7 +90,6 @@ export class AlgorithmComponent implements OnInit {
       { "value": "CLASSIFICATION", "label": "CLASSIFICATION" },
       { "value": "REGRESSION", "label": "REGRESSION" },
       { "value": "SIMULATION", "label": "SIMULATION" }
-
     ]
   }
 
@@ -123,7 +124,6 @@ export class AlgorithmComponent implements OnInit {
       },
       error => console.log("Error :: " + error));
   }
-
 
   onSuccessgetOneByUuidAndVersion(response) {
     this.algorithm = response;
@@ -178,7 +178,6 @@ export class AlgorithmComponent implements OnInit {
     }//End If
     this.breadcrumbDataFrom[2].caption = this.algorithm.name;
     console.log('Data is' + response);
-
   }
 
   OnSuccessgetAllVersionByUuid(response) {
@@ -190,13 +189,9 @@ export class AlgorithmComponent implements OnInit {
       ver["value"]["label"] = response[i]['version'];
       ver["value"]["uuid"] = response[i]['uuid'];
       temp[i] = ver;
-
     }
     this.VersionList = temp
-
   }
-
-
 
   onVersionChange() {
     this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, 'algorithm')
@@ -244,7 +239,6 @@ export class AlgorithmComponent implements OnInit {
 
   }
   onSuccessGetAllLatestParamListByTemplate(response) {
-
     this.allParamlist = [];
     for (const i in response) {
       let refParam = {};
@@ -335,9 +329,17 @@ export class AlgorithmComponent implements OnInit {
     this.router.navigate(['app/dataScience/algorithm', uuid, version, 'false']);
   }
 
-  showview(uuid, version) {
-    this.router.navigate(['app/dataScience/algorithm', uuid, version, 'true']);
+  showMainPage() {
+    this.isHomeEnable = false
+    this.showGraph = false;
   }
 
+  showDagGraph(uuid, version) {
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(uuid, version);
+    }, 1000);
+  }
 
 }

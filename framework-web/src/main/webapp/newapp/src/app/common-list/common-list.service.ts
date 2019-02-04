@@ -160,7 +160,7 @@ export class CommonListService {
       this.url = this.baseUrl + 'dataqual/executeGroup?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
     }
     if (type == "dag") {
-      this.url = this.baseUrl + 'dag/execute?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
+      this.url = this.baseUrl + 'dag/execute?action=' + action + '&uuid=' + uuid + '&version=' + version;
     }
     if (type == "train") {
       this.url = this.baseUrl + 'model/train/execute?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
@@ -176,6 +176,12 @@ export class CommonListService {
     }
     if (type == "recongroup") {
       this.url = this.baseUrl + 'recon/executeGroup?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
+    }
+    if (type == "batch") {
+      this.url = this.baseUrl + 'batch/execute?action=' + action + '&uuid=' + uuid + '&version=' + version;
+    }
+    if (type == "ingest") {
+      this.url = this.baseUrl + 'ingest/execute?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
     }
     let body = JSON.stringify({});
     this.headers = null;
@@ -227,6 +233,9 @@ export class CommonListService {
     if (type == "simulateexec") {
       this.url = this.baseUrl + 'model/simulate/restart?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
     }
+    if (type == "batchexec") {
+      this.url = this.baseUrl + 'batch/restart?action=' + action + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
+    }
     let body = JSON.stringify({});
     this.headers = null;
     this.headers = new Headers({ 'sessionId': this.sessionId });
@@ -276,6 +285,10 @@ export class CommonListService {
     if (type == "simulateexec") {
       this.url = this.baseUrl + 'model/simulate/kill?status=' + status + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
     }
+    if (type == "batchexec") {
+      this.url = this.baseUrl + 'batch/kill?status=' + status + '&uuid=' + uuid + '&version=' + version + '&type=' + type;
+    }
+    
     let body = {};
     this.headers = null;
     this.headers = new Headers({ 'sessionId': this.sessionId });
@@ -289,7 +302,7 @@ export class CommonListService {
     // .catch(this.handleError);
   }
 
-//   executeWithParams(uuid,version,type,action,execParams){debugger
+//   executeWithParams(uuid,version,type,action,execParams){
 //     this.headers=null;
 //     this.headers=new Headers({'sessionId': this.sessionId});
 //     if(type=="rule"){
@@ -337,16 +350,22 @@ executeWithParams(type, uuid, version, data): Observable<any[]>{
   
 }
 
-  uploadFile(fd, filename, type) {
-    var url = this.baseUrl + 'metadata/file?action=edit&fileName=' + filename + '&type=' + type;
-    let body = fd;
-    return this.http
+  uploadFile(fd, filename, type,uuid,version,fileType,dataSourceUuid) {
+
+    // common/upload?action=edit&fileName=dim_state.csv&type=null&uuid=null&version=null&fileType=csv
+    // &dataSourceUuid=d7c11fd7-ec1a-40c7-ba25-7da1e8b73020
+
+    // var url = this.baseUrl + 'metadata/file?action=edit&fileName=' + filename + '&type=' + type;
+    //let baseUrl = "http://localhost:8080"
+    var url = this.baseUrl+'/common/upload?action=edit&fileName=' + filename + '&type=' + type +'&uuid=' + uuid + '&version='+version+ '&fileType='+fileType+'&dataSourceUuid='+dataSourceUuid;
+     let body = fd;
+    return this.http 
       .post(url, body, { headers: this.headers })
+
   }
-  private handleError(error: Response) {
+ private handleError(error: Response) {
     return Observable.throw(error.statusText);
   }
-
   downloadFile(id,version){
     var url=this.baseUrl+'/model/predict/download?action=view&predictExecUUID='+id+'&predictExecVersion='+version+'&mode=BATCH';
     // return this.http

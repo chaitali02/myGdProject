@@ -1,4 +1,4 @@
-<app-breadcrumb [breadcrumbData]="breadcrumbDataFrom" ></app-breadcrumb>
+<app-breadcrumb [breadcrumbData]="breadcrumbDataFrom"></app-breadcrumb>
 <br>
 <div class="row" *ngIf="showDiv">
     <div class="col-md-12">
@@ -8,16 +8,29 @@
                     <i class="fa fa-cogs"></i>{{tableHeading}}
                 </div>
                 <div class="tools">
-                    <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top" tooltip (click)="savePng()">                   
+                    <a title="Main" style="color:white;" title="Main" data-placement="top" tooltip [ngClass]="isHomeEnable==true?'notcurrentpage':'currentpage'"
+                        (click)="showMainPage()">
+                        <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.2,1.2);"></i>
+                    </a>
+                    <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top"
+                        tooltip (click)="savePng()" [ngClass]="isHomeEnable == false?'notcurrentpage':'currentpage'">
                         <i class="fa fa-download" area-hidden="true"></i>
                     </a>
-                    <a style="margin:2px auto;color:white;" href="javascript:;" title="Show Details" data-toggle="tooltip" data-placement="top" tooltip  ng-class="showgraphdiv==false? 'currentpage':'notcurrentpage'" (click)="ppml = false">
+                    <!-- <a style="margin:2px auto;color:white;" href="javascript:;" title="Show Details" data-toggle="tooltip"
+                        data-placement="top" tooltip ng-class="showgraphdiv==false? 'currentpage':'notcurrentpage'"
+                        (click)="ppml = false">
                         <i class="glyphicon glyphicon-file" disabled="true" area-hidden="true"></i>
-                    </a>
-                    <a title="Show PMML" (click)="showPMMLResult()" data-toggle="tooltip" data-placement="top" tooltip ng-disabled="isPMMLDownload"  style="pointer-events: auto;" ng-show="type=='train'"  ng-class="isPMMLDownload==true?'currentpage':'notcurrentpage'">
+                    </a> -->
+                    <a title="Show PMML" (click)="showPMMLResult()" data-toggle="tooltip" data-placement="top" tooltip
+                        ng-disabled="isPMMLDownload" style="pointer-events: auto;" ng-show="type=='train'" ng-class="isPMMLDownload==true?'currentpage':'notcurrentpage'">
                         <i class="fa  fa-file-excel-o" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
-                      </a>
-                    <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip onClick="refreshSubGroupGraph()" ng-if="!showgraphdiv && (daggroupExecName || resultExecName)">
+                    </a>
+                    <a style="color:white;" href="javascript:;" title="Show Dependencies" data-placement="top" tooltip
+                        [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'" data- (click)="showDagGraph()">
+                        <i class="fa fa-sitemap" style="margin:2px auto;"></i>
+                    </a>
+                    <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip onClick="refreshSubGroupGraph()"
+                        ng-if="!showgraphdiv && (daggroupExecName || resultExecName)">
                         <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
                     </a>
                     <a title="Close" (click)="goBack()" style="height:14px;">
@@ -26,18 +39,29 @@
                 </div>
             </div>
             <div class="portlet-body" style="min-height:100px;">
-                <div class="form-body" *ngIf="!ppml">
-                    <form  class="form-horizontal" name="myform">
-                        <div class="form-group" >
+                <div class="form-body graph-body" *ngIf="showGraph" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=');">
+                    <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
+                    <div class="spinner" id="graphloader">
+                        <div class="bounce1"></div>
+                        <div class="bounce2"></div>
+                        <div class="bounce3"></div>
+                    </div>
+                    <div class="show-graph-body" id="graphWrapper">
+                        <knowledge-graph></knowledge-graph>
+                    </div>
+                </div>
+                <div class="form-body" *ngIf="!ppml && !showGraph">
+                    <form class="form-horizontal" name="myform">
+                        <div class="form-group">
                             <div class="col-md-12" style="padding: 3px 12px;background-color: #f5f5f5;border: 1px solid #ccc;
                             border-radius: 4px; margin: -10px 10px 0px 10px; width: 98%;max-height: 400px; overflow-y: scroll">
-                            <ngx-json-viewer [json]="modelResult" [expanded]="false"></ngx-json-viewer>                            
+                                <ngx-json-viewer [json]="modelResult" [expanded]="false"></ngx-json-viewer>
                             </div>
                         </div>
                     </form>
                 </div>
-                <div class="form-body" *ngIf="ppml">
-                        <!-- <div display-xml-tree="pmmlData"></div> -->
+                <div class="form-body" *ngIf="ppml && !showGraph">
+                    <!-- <div display-xml-tree="pmmlData"></div> -->
                     <pre lang="xml">{{pmmlData}}
                          <!-- <code class="html highlight">
                         </code>  -->
@@ -45,9 +69,9 @@
                 </div>
             </div>
         </div>
-    </div>   
+    </div>
 </div>
-<div class="row" *ngIf="showDiv==false;else falsyTemplate">    
+<div class="row" *ngIf="showDiv==false;else falsyTemplate">
     <div class="col-md-12">
         <div class="portlet box green">
             <div class="portlet-title">
@@ -55,39 +79,47 @@
                     <i class="fa fa-cogs"></i>{{tableHeading}}
                 </div>
                 <div class="tools">
-                    <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top" tooltip (click)="savePng()">
+                    <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top"
+                        tooltip (click)="savePng()">
                         <i class="fa fa-download" area-hidden="true"></i>
                     </a>
-                    <a style="margin:2px auto;color:white;" href="javascript:;" title="Show Details" data-toggle="tooltip" data-placement="top" tooltip  ng-class="showgraphdiv==false? 'currentpage':'notcurrentpage'" ng-click="showgraphdiv = false">
+                    <a style="margin:2px auto;color:white;" href="javascript:;" title="Show Details" data-toggle="tooltip"
+                        data-placement="top" tooltip ng-class="showgraphdiv==false? 'currentpage':'notcurrentpage'"
+                        ng-click="showgraphdiv = false">
                         <i class="glyphicon glyphicon-file" disabled="true" area-hidden="true"></i>
                     </a>
-                    <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip onClick="refreshSubGroupGraph()" ng-if="!showgraphdiv && (daggroupExecName || resultExecName)">
+                    <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip onClick="refreshSubGroupGraph()"
+                        ng-if="!showgraphdiv && (daggroupExecName || resultExecName)">
                         <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
                     </a>
-                    <a title="Close"  (click)="goBack()" style="height:14px;">
+                    <a title="Close" (click)="goBack()" style="height:14px;">
                         <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
                     </a>
                 </div>
             </div>
             <div class="portlet-body">
                 <div class="row" *ngIf="showDiv==false;else falsyTemplate">
-                    <div class="col-md-12" *ngIf="cols !=null">                           
-                        <p-dataTable [value]="colsdata"  #dt  exportFilename="data"    selectionMode="multiple" [metaKeySelection]="false" scrollable="true" resizableColumns="true" scrollHeight="440px" [globalFilter]="gb" sortMode="multiple" [paginator]="true" [rows]="10" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]">
-                            <p-column *ngFor="let col of cols" [field]="col.field" [header]="col.header" [style]="{'width':col.colwidth}" [sortable]="true"></p-column>
+                    <div class="col-md-12" *ngIf="cols !=null">
+                        <p-dataTable [value]="colsdata" #dt exportFilename="data" selectionMode="multiple"
+                            [metaKeySelection]="false" scrollable="true" resizableColumns="true" scrollHeight="440px"
+                            [globalFilter]="gb" sortMode="multiple" [paginator]="true" [rows]="10" [pageLinks]="3"
+                            [rowsPerPageOptions]="[5,10,20]">
+                            <p-column *ngFor="let col of cols" [field]="col.field" [header]="col.header" [style]="{'width':col.colwidth}"
+                                [sortable]="true"></p-column>
                         </p-dataTable>
                     </div>
                 </div>
-            </div>  
-        </div>  
+            </div>
+        </div>
     </div>
     <ng-template #falsyTemplate>
         <div class="spinner text-center">
             <div class="bounce1"></div>
             <div class="bounce2"></div>
             <div class="bounce3"></div>
-            </div>
+        </div>
     </ng-template>
-    <div class ="centercontent" *ngIf="IsError">
+    <div class="centercontent" *ngIf="IsError">
         <span style="font-size:14px;color:red;">Some error occur</span>
-    </div>  
+    </div>
 </div>

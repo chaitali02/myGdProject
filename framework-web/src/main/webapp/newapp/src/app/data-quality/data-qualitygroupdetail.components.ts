@@ -1,22 +1,21 @@
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router, Event as RouterEvent, ActivatedRoute, Params } from '@angular/router';
 import { SelectItem } from 'primeng/primeng';
-
 import { AppMetadata } from '../app.metadata';
-
 import { CommonService } from './../metadata/services/common.service';
 import { DataQualityService } from '../metadata/services/dataQuality.services';
-
 import { Version } from './../metadata/domain/version'
+import { KnowledgeGraphComponent } from '../shared/components/knowledgeGraph/knowledgeGraph.component';
 @Component({
   selector: 'app-qualityGroup',
   templateUrl: './data-qualitygroupdetail.template.html',
   styleUrls: []
 })
-
 export class DataQualityGroupDetailComponent {
+  showGraph: boolean;
+  isHomeEnable: boolean;
   checkboxModelexecution: boolean;
   breadcrumbDataFrom: { "caption": string; "routeurl": string; }[];
   IsProgerssShow: string;
@@ -25,7 +24,6 @@ export class DataQualityGroupDetailComponent {
   dropdownSettings: { singleSelection: boolean; text: string; selectAllText: string; unSelectAllText: string; enableSearchFilter: boolean; classes: string; maxHeight: number, disabled: any };
   selectedItems: any
   dropdownList: any;
-
   selectedVersion: Version;
   VersionList: SelectItem[] = [];
   allNames: SelectItem[] = [];
@@ -35,9 +33,12 @@ export class DataQualityGroupDetailComponent {
   uuid: any;
   id: any;
   routerUrl: any;
-  datadqgroup: any
+  datadqgroup: any;
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
   constructor(private activatedRoute: ActivatedRoute, private router: Router, public metaconfig: AppMetadata, private _commonService: CommonService, private _location: Location, private _dataQualityService: DataQualityService) {
     this.datadqgroup = {};
+    this.isHomeEnable = false;
+    this.showGraph = false;
     this.datadqgroup["active"] = true
     this.isSubmitEnable = true;
     this.IsProgerssShow = "false";
@@ -64,8 +65,6 @@ export class DataQualityGroupDetailComponent {
       "routeurl": null
     }
     ]
-
-
   }
 
   ngOnInit() {
@@ -74,8 +73,8 @@ export class DataQualityGroupDetailComponent {
       this.version = params['version'];
       this.mode = params['mode'];
       if (this.mode !== undefined) {
-        this.getOneByUuidAndVersion(this.id, this.version);
         this.getAllVersionByUuid();
+        this.getOneByUuidAndVersion(this.id, this.version);       
         this.getAllLatest();
         this.dropdownSettings.disabled = this.mode == "false" ? false : true
       }
@@ -110,7 +109,6 @@ export class DataQualityGroupDetailComponent {
       error => console.log("Error :: " + error));
   }
   onSuccessgetOneByUuidAndVersion(response) {
-
     this.breadcrumbDataFrom[2].caption = response.name;
     this.datadqgroup = response;
     this.createdBy = response.createdBy.ref.name
@@ -121,7 +119,6 @@ export class DataQualityGroupDetailComponent {
         tag['value'] = response.tags[i];
         tag['display'] = response.tags[i];
         tags[i] = tag
-
       }//End For
       this.datadqgroup.tags = tags;
     }//End If
@@ -175,7 +172,6 @@ export class DataQualityGroupDetailComponent {
   }
 
   submit() {
-
     this.isSubmitEnable = true;
     this.IsProgerssShow = "true";
     let dqgroupJson = {}
@@ -186,7 +182,6 @@ export class DataQualityGroupDetailComponent {
     if (this.datadqgroup.tags != null) {
       for (var counttag = 0; counttag < this.datadqgroup.tags.length; counttag++) {
         tagArray[counttag] = this.datadqgroup.tags[counttag].value;
-
       }
     }
     dqgroupJson['tags'] = tagArray;
@@ -208,7 +203,6 @@ export class DataQualityGroupDetailComponent {
       response => { this.OnSuccessubmit(response) },
       error => console.log('Error :: ' + error)
     )
-
   }
   OnSuccessubmit(response) {
     if (this.checkboxModelexecution == true) {
@@ -260,20 +254,23 @@ export class DataQualityGroupDetailComponent {
       maxHeight: 110,
       disabled: true
     };
+  }
+
+  clear() {
+    this.selectedItems = []
+  }
+  
+  showMainPage(uuid,version){
+    this.isHomeEnable = false;
+   this.showGraph = false;
 
   }
-  showview(uuid, version) {
-    this.router.navigate(['app/dataQuality/dqgroup', uuid, version, 'true']);
-    this.dropdownSettings = {
-      singleSelection: false,
-      text: "Select Attrubutes",
-      selectAllText: 'Select All',
-      unSelectAllText: 'UnSelect All',
-      enableSearchFilter: true,
-      classes: "myclass custom-class",
-      maxHeight: 110,
-      disabled: false
-    };
 
+  showDagGraph(uuid,version){
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id,this.version);
+    }, 1000);  
   }
 }

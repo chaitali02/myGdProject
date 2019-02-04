@@ -1,5 +1,5 @@
 
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
@@ -10,7 +10,7 @@ import { VizpodService } from '../../metadata/services/vizpod.service'
 import { Version } from './../../metadata/domain/version'
 import { DependsOn } from './../dependsOn'
 import { AttributeHolder } from './../../metadata/domain/domain.attributeHolder'
-
+import { KnowledgeGraphComponent } from '../../shared/components/knowledgeGraph/knowledgeGraph.component'
 @Component({
     selector: 'app-vizpod-detail',
     styleUrls: [],
@@ -18,6 +18,8 @@ import { AttributeHolder } from './../../metadata/domain/domain.attributeHolder'
 })
 
 export class VizpodDetailComponent {
+    showGraph: boolean;
+    isHomeEnable: boolean;
     IsEmpty: string;
     IsDisable: string;
     valuelist: any;
@@ -44,11 +46,13 @@ export class VizpodDetailComponent {
     filterAttributeTags: any;
     dropdownList: any[];
     dropdownSettings: { singleSelection: boolean; text: string; selectAllText: string; unSelectAllText: string; enableSearchFilter: boolean; classes: string; maxHeight: number; disabled: boolean; };
-
+    @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
     constructor(private activatedRoute: ActivatedRoute, public router: Router, private _dashboardService: DashboardService, private _commonService: CommonService, private _location: Location, private _vizpodService: VizpodService) {
         this.vizpoddata = {};
         this.IsDisable = "false";
         this.isSubmitEnable = true;
+        this.isHomeEnable = false
+        this.showGraph = false;
         this.vizpoddata["active"] = true;
         this.keylist = [];
         this.valuelist = [];
@@ -59,7 +63,6 @@ export class VizpodDetailComponent {
                 "caption": "Data Visualization",
                 "routeurl": "/app/list/vizpod"
             },
-
             {
                 "caption": "Vizpod",
                 "routeurl": "/app/list/vizpod"
@@ -81,8 +84,6 @@ export class VizpodDetailComponent {
             maxHeight: 90,
             disabled: false
         };
-
-
     }
 
     ngOnInit() {
@@ -98,8 +99,6 @@ export class VizpodDetailComponent {
             }
             else {
                 this.getAllLatest(true);
-
-
             }
         });
 
@@ -508,7 +507,6 @@ export class VizpodDetailComponent {
             response => { this.OnSuccessubmit(response) },
             error => console.log('Error :: ' + error)
         )
-
     }
     OnSuccessubmit(response) {
         this.msgs = [];
@@ -517,18 +515,22 @@ export class VizpodDetailComponent {
         setTimeout(() => {
             this.goBack()
         }, 1000);
-
-
     }
     enableEdit(uuid, version) {
         this.router.navigate(['app/dataVisualization/vizpod', uuid, version, 'false']);
         this.dropdownSettings.disabled = true
-
-    }
-    showview(uuid, version) {
-        this.router.navigate(['app/dataVisualization/vizpod', uuid, version, 'true']);
-        this.dropdownSettings.disabled = false;
-
     }
 
+    showMainPage() {
+        this.isHomeEnable = false
+        this.showGraph = false;
+    }
+
+    showDagGraph(uuid, version) {
+        this.isHomeEnable = true;
+        this.showGraph = true;
+        setTimeout(() => {
+            this.d_KnowledgeGraphComponent.getGraphData(uuid, version);
+        }, 1000);
+    }
 }
