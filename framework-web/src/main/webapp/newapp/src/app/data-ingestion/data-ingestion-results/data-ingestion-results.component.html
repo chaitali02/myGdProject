@@ -8,7 +8,6 @@
                     <i class="fa fa-cogs"></i>Result
                 </div>
                 <div class="tools">
-
                     <a title="Main" style="color:white;" title="Main" data-placement="top" tooltip [ngClass]="isHomeEnable==true?'notcurrentpage':'currentpage'"
                         (click)="showMainPage()">
                         <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.2,1.2);"></i>
@@ -19,9 +18,8 @@
                     </a>
                     <a style="color:white;" href="javascript:;" title="Show Dependencies" data-placement="top" tooltip [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'"
                         data- (click)="showDagGraph()">
-                        <i class="fa fa-sitemap" style="margin:2px auto;"></i>
+                        <i class="fa fa-sitemap" style="margin:2px auto"></i>
                     </a>
-
                     <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip (click)="broadcastRefreshData()">
                         <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
                     </a>
@@ -31,11 +29,19 @@
                 </div>
             </div>
             <div class="portlet-body">
-                <div *ngIf="!showKnowledgeGraph ">
+                <div *ngIf="!showKnowledgeGraph">
                     <app-jointjs-group [graphParms]="params"></app-jointjs-group>
                 </div>
-                <div *ngIf="showKnowledgeGraph ">
-                    {{"Knowledge graph"}}
+                <div class="form-body graph-body" *ngIf="showKnowledgeGraph" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=');">
+                    <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
+                    <div class="spinner" id="graphloader">
+                        <div class="bounce1"></div>
+                        <div class="bounce2"></div>
+                        <div class="bounce3"></div>
+                    </div>
+                    <div class="show-graph-body" id="graphWrapper">
+                        <knowledge-graph></knowledge-graph>
+                    </div>
                 </div>
             </div>
         </div>

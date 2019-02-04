@@ -12,20 +12,22 @@ import { Http, Headers } from '@angular/http';
 import { ResponseContentType } from '@angular/http';
 import { saveAs } from 'file-saver';
 import { AppConfig } from '../app.config';
+import { KnowledgeGraphComponent } from '../shared/components/knowledgeGraph/knowledgeGraph.component';
+//import { KnowledgeGraphComponent } from '../shared/components/knowledgeGraph/knowledgeGraph.component';
+
 @Component({
   selector: 'app-dataqualityresult',
   templateUrl: './data-qualityresult.template.html',
   styleUrls: []
 })
-
 export class DataQualityResultComponent {
   isResultTable: boolean;
   //showHome: boolean;
   showKnowledgeGraph: boolean;
   isHomeEnable: boolean;
   numRows: any;
-  downloadFormatArray : any[];
-  displayDialogBox : boolean;
+  downloadFormatArray: any[];
+  displayDialogBox: boolean;
   runMode: any;
   baseUrl: any;
   typeJointJs: any;
@@ -39,11 +41,12 @@ export class DataQualityResultComponent {
   istableShow: boolean;
   isgraphShow: boolean;
   params: any
+
   @ViewChild(JointjsGroupComponent) d_JointjsGroupComponent: JointjsGroupComponent;
   @ViewChild(TableRenderComponent) d_tableRenderComponent: TableRenderComponent;
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
   constructor(private _config: AppConfig, private http: Http, private _location: Location, private _activatedRoute: ActivatedRoute, private router: Router, public appMetadata: AppMetadata, private _commonService: CommonService) {
     this.baseUrl = _config.getBaseUrl();
- 
     this.showKnowledgeGraph = false;
     this.numRows = 100;
     this.isHomeEnable = false;
@@ -65,7 +68,7 @@ export class DataQualityResultComponent {
       }
     ]
     this.downloadFormatArray = [
-      {"value" : "excel", "label" : "excel"}]
+      { "value": "excel", "label": "excel" }]
     this.params = {
       "typeLabel": "RuleGroup",
       "url": "dataqual/getdqExecBydqGroupExec?",
@@ -136,8 +139,8 @@ export class DataQualityResultComponent {
     }
   }
 
-  downloadResult(){
-    if(this.isHomeEnable == false){
+  downloadResult() {
+    if (this.isHomeEnable == false) {
       this.displayDialogBox = true;
     }
   }
@@ -149,7 +152,7 @@ export class DataQualityResultComponent {
     this.typeJointJs = this.d_tableRenderComponent.type;
 
     const headers = new Headers();
-    this.http.get(this.baseUrl + '/dataqual/download?action=view&dataQualExecUUID=' + this.uuidJointJs + '&dataQualExecVersion=' + this.versionJointJs + '&rows='+this.numRows,
+    this.http.get(this.baseUrl + '/dataqual/download?action=view&dataQualExecUUID=' + this.uuidJointJs + '&dataQualExecVersion=' + this.versionJointJs + '&rows=' + this.numRows,
       { headers: headers, responseType: ResponseContentType.Blob })
       .toPromise()
       .then(response => this.saveToFileSystem(response));
@@ -163,20 +166,32 @@ export class DataQualityResultComponent {
     saveAs(blob, filename);
   }
 
-  showMainPage(){
+  showMainPage() {
     this.isHomeEnable = false;
-   this.showKnowledgeGraph = false;
+    this.showKnowledgeGraph = false;
+    // this.istableShow = true;
+    // this.isResultTable = true;
+    setTimeout(() => {
+      this.params["type"] = this.appMetadata.getMetadataDefs(this._type.toLowerCase())['name']
+      this.d_tableRenderComponent.renderTable(this.params);
+    }, 1000);
   }
 
-  showDagGraph(uuid,version){
+  showDagGraph(uuid, version) {
     this.isHomeEnable = true;
     this.showKnowledgeGraph = true;
+    // this.istableShow = false;
+    // this.isResultTable = false;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this._uuid, this._version);
+    }, 1000);
   }
 
-  cancelDialogBox(){
+  cancelDialogBox() {
     this.displayDialogBox = false;
   }
-  downloadShow(param:any) {
+  
+  downloadShow(param: any) {
     this.isResultTable = true;
     console.log(param)
     this.uuidJointJs = param.uuid;

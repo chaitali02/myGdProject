@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { Location } from '@angular/common';
 import { SelectItem } from 'primeng/primeng';
@@ -13,12 +13,14 @@ import { DependsOn } from '../dependsOn';
 import { AttributeHolder } from '../../metadata/domain/domain.attributeHolder'
 import { ResponseOptions } from '@angular/http/src/base_response_options';
 import { debug } from 'util';
-
+import { KnowledgeGraphComponent } from '../../shared/components/knowledgeGraph/knowledgeGraph.component'
 @Component({
   selector: 'app-prediction',
   templateUrl: './prediction.template.html',
 })
 export class PredictionComponent implements OnInit {
+  showGraph: boolean;
+  isHomeEnable: boolean;
   msgs: any[];
   checkboxModelexecution: boolean;
   isTargetNameDisabled: boolean;
@@ -55,8 +57,11 @@ export class PredictionComponent implements OnInit {
   isSubmit: any
   selectedVersion: Version;
   VersionList: SelectItem[] = [];
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
   constructor(config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _location: Location, private _predictService: PredictionService) {
     this.prediction = {};
+    this.isHomeEnable = false;
+    this.showGraph = false;
     this.prediction["active"] = true;
     this.continueCount = 1;
     this.progressbarWidth = 25 * this.continueCount + "%";
@@ -81,8 +86,6 @@ export class PredictionComponent implements OnInit {
       "routeurl": null
     }
     ];
-
-
   }
 
   ngOnInit() {
@@ -590,6 +593,18 @@ export class PredictionComponent implements OnInit {
     //this.IsProgerssShow="false";
     this.msgs = [];
     this.msgs.push({ severity: msgtype, summary: msgsumary, detail: msg });
+  }
+  showMainPage(){
+    this.isHomeEnable = false;
+    this.showGraph = false;
+  }
+
+  showDagGraph(uuid,version){
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id,this.version);
+    }, 1000);  
   }
 }
 

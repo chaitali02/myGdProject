@@ -1,7 +1,7 @@
 
 import { ActivatedRoute, Router, Params } from '@angular/router';
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { SelectItem } from 'primeng/primeng';
 import { AppConfig } from '../../../app.config';
 import { Version } from '../../version';
@@ -9,6 +9,7 @@ import { CommonService } from '../../../metadata/services/common.service';
 import { DependsOn } from '../../../data-science/dependsOn';
 import { ParamlistService } from '../../../metadata/services/paramlist.service';
 import { Location, DatePipe } from '@angular/common';
+import { KnowledgeGraphComponent } from '../knowledgeGraph/knowledgeGraph.component'
 @Component({
   selector: 'app-paramlist',
   templateUrl: './paramlist.component.html',
@@ -60,27 +61,29 @@ export class ParamlistComponent implements OnInit {
   paramtableArray: any;
   templateFlg: any;
   template: any;
-
-  constructor(private datePipe: DatePipe,private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _paramlistService: ParamlistService) {
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
+  constructor(private datePipe: DatePipe, private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _paramlistService: ParamlistService) {
     this.showParamlist = true;
     this.paramlist = {};
+    this.isHomeEnable = false
+    this.showGraph = false;
     this.paramlist["active"] = true;
     this.paramlist["templateFlg"] = true;
     this.template = {};
     this.isSubmitEnable = true;
     this.paramtableArray = null;
-    this.types=[{"value":"string","label":"string"},
-		{"value":"double","label":"double"},
-	 	{"value":"date","label":"date"}, 
-		{"value":"integer","label":"integer"},
-		{"value":"decimal","label":"decimal"},
-		{"value":"attribute","label":"attribute"},
-		{"value":"attributes","label":"attribute[s]"},
-		{"value":"distribution","label":"distribution"},
-		{"value":"datapod","label":"datapod"},
-		{"value":"function","label":"function"},
-		{"value":"list","label":"list"},
-		{"value":"array","label":"array"}]
+    this.types = [{ "value": "string", "label": "string" },
+    { "value": "double", "label": "double" },
+    { "value": "date", "label": "date" },
+    { "value": "integer", "label": "integer" },
+    { "value": "decimal", "label": "decimal" },
+    { "value": "attribute", "label": "attribute" },
+    { "value": "attributes", "label": "attribute[s]" },
+    { "value": "distribution", "label": "distribution" },
+    { "value": "datapod", "label": "datapod" },
+    { "value": "function", "label": "function" },
+    { "value": "list", "label": "list" },
+    { "value": "array", "label": "array" }]
     // this.types = [{ 'value': 'date', 'label': 'date' },
     // { 'value': 'double', 'label': 'double' },
     // { 'value': 'integer', 'label': 'integer' },
@@ -141,21 +144,21 @@ export class ParamlistComponent implements OnInit {
     }
   }
 
-  onChangeIsTemplate(event,flag?) {
+  onChangeIsTemplate(event, flag?) {
     if (event === false) {
       this.paramlist.templateFlg = false;
-      
+
       this._paramlistService.getAllLatestParamListByTemplate('Y', "paramlist", "")
-        .subscribe(response => { this.onSuccessgetAllLatestParamListByTemplate(response,flag) },
+        .subscribe(response => { this.onSuccessgetAllLatestParamListByTemplate(response, flag) },
         error => console.log("Error :: " + error));
     }
     else {
       this.paramlist.templateFlg = true;
-      this.template = {}; 
+      this.template = {};
     }
   }
 
-  onSuccessgetAllLatestParamListByTemplate(response,flag?) {
+  onSuccessgetAllLatestParamListByTemplate(response, flag?) {
     console.log(response)
     var temp = []
     for (const i in response) {
@@ -170,15 +173,15 @@ export class ParamlistComponent implements OnInit {
     }
     this.allTemplateList = temp;
     console.log(JSON.stringify(this.template.params));
-  if(flag){
+    if (flag) {
+
+    }
+    else {
+      this.changeParamValue()
+    }
 
   }
-  else{
-    this.changeParamValue()
-  }
-    
-  }
-  changeParamValue(){
+  changeParamValue() {
     var arrayTemp = [];
     for (const i in this.template.params) {
       let paramtableObj = {};
@@ -233,11 +236,11 @@ export class ParamlistComponent implements OnInit {
     this.active = response['active'];
     if (this.active === 'Y') { this.active = true; } else { this.active = false; }
 
-    this.paramlist.templateFlg = response['templateFlg' ]== 'Y' ? true : false;
-    if(this.paramlist.templateFlg==false){
-      this.template["uuid"]=response['templateInfo']['ref']['uuid']
-      this.template["label"]=response['templateInfo']['ref']['name']
-      this.onChangeIsTemplate(false,true)
+    this.paramlist.templateFlg = response['templateFlg'] == 'Y' ? true : false;
+    if (this.paramlist.templateFlg == false) {
+      this.template["uuid"] = response['templateInfo']['ref']['uuid']
+      this.template["label"] = response['templateInfo']['ref']['name']
+      this.onChangeIsTemplate(false, true)
     }
     this.paramlist.parentType = response['paramListType'];
     this.parentType = this.paramlist.parentType;
@@ -264,9 +267,9 @@ export class ParamlistComponent implements OnInit {
       paramtableObj["paramType"] = response.params[i].paramType;
       paramtableObj["paramDispName"] = response.params[i].paramDispName;
       paramtableObj["paramDesc"] = response.params[i].paramDesc;
-      
-      
-      
+
+
+
       if (this.typeSimple.indexOf(response.params[i].paramType) != -1) {
         paramtableObj["paramValue"] = response.params[i].paramValue.value;
       }
@@ -285,21 +288,21 @@ export class ParamlistComponent implements OnInit {
         paramtableObj["paramValue"] = value1Temp;
       }
       else if (response.params[i].paramType == "array") {
-        var temp=response.params[i].paramValue.value.split(",");
-        let tempParamArray=[]
+        var temp = response.params[i].paramValue.value.split(",");
+        let tempParamArray = []
         for (let i = 0; i < temp.length; i++) {
           let tempParam = {};
           tempParam['value'] = temp[i];
           tempParam['display'] = temp[i];
-          tempParamArray[i] = tempParam  
+          tempParamArray[i] = tempParam
         }
-        paramtableObj["paramValue"]=tempParamArray;
+        paramtableObj["paramValue"] = tempParamArray;
       }
       else if (response.params[i].paramType == "date") {
-        let tempDate=new Date(response.params[i].paramValue.value)
+        let tempDate = new Date(response.params[i].paramValue.value)
         paramtableObj["paramValue"] = tempDate;
       }
-      
+
       else if (response.params[i].paramValue == null) {
         paramtableObj["paramValue"] = "";
       }
@@ -311,16 +314,16 @@ export class ParamlistComponent implements OnInit {
     this.getAllLatest();
     this.checkIsTemplateUsed()
   }
-  checkIsTemplateUsed(){
-    this._commonService.getParamListChilds( this.id,this.version,"paramlist").subscribe(
-      response => { 
-        if(response.length >0){
+  checkIsTemplateUsed() {
+    this._commonService.getParamListChilds(this.id, this.version, "paramlist").subscribe(
+      response => {
+        if (response.length > 0) {
           //$scope.isTableDisable=true;
-          this.isUseTemlateText=true;
-        }else{
-          this.isUseTemlateText=false;
+          this.isUseTemlateText = true;
+        } else {
+          this.isUseTemlateText = false;
         }
-       },
+      },
       error => console.log('Error :: ' + error)
     )
   }
@@ -528,24 +531,24 @@ export class ParamlistComponent implements OnInit {
             paramArray[counttag] = this.paramtableArray[i].paramValue[counttag].value;
           }
         }
-       // paramlistJson['tags'] = paramArray
-        var paramRef={}	 
-        paramRef["type"]="simple";
-        paramValue["ref"]=paramRef;
-        paramValue["value"]=paramArray.toString();;
-        attributemap["paramValue"]=paramValue
-        paramInfoArray[i] = attributemap; 
+        // paramlistJson['tags'] = paramArray
+        var paramRef = {}
+        paramRef["type"] = "simple";
+        paramValue["ref"] = paramRef;
+        paramValue["value"] = paramArray.toString();;
+        attributemap["paramValue"] = paramValue
+        paramInfoArray[i] = attributemap;
       }
       else if (this.paramtableArray[i].paramType == 'date') {
-        var paramRef={}	 
-        paramRef["type"]="simple";
-        paramValue["ref"]=paramRef;
-        
-        let tempDate=new Date(this.paramtableArray[i].paramValue)
-        let date=this.datePipe.transform(tempDate, "MM/dd/yyyy");
-        paramValue["value"]=this.paramtableArray[i].paramValue;
-        attributemap["paramValue"]=paramValue
-        paramInfoArray[i] = attributemap; 
+        var paramRef = {}
+        paramRef["type"] = "simple";
+        paramValue["ref"] = paramRef;
+
+        let tempDate = new Date(this.paramtableArray[i].paramValue)
+        let date = this.datePipe.transform(tempDate, "MM/dd/yyyy");
+        paramValue["value"] = this.paramtableArray[i].paramValue;
+        attributemap["paramValue"] = paramValue
+        paramInfoArray[i] = attributemap;
       }
       else {
         paramValue = null;
@@ -576,28 +579,26 @@ export class ParamlistComponent implements OnInit {
   }
 
   enableEdit(uuid, version) {
-    this.router.navigate(['app/dataScience/paramlist',this.parentType, uuid, version, 'false']);
+    this.router.navigate(['app/dataScience/paramlist', this.parentType, uuid, version, 'false']);
+  }
+  showMainPage() {
+    this.isHomeEnable = false
+    this.showGraph = false;
   }
 
-  showview(uuid, version) {
-    this.router.navigate(['app/dataScience/paramlist',this.parentType, uuid, version, 'true']);
+  showDagGraph(uuid, version) {
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(uuid, version);
+    }, 1000);
   }
-  showMainPage(){
-		this.isHomeEnable = false
-	   // this._location.back();
-	   this.showGraph = false;
-	  }
-	
-	  showDagGraph(uuid,version){
-		this.isHomeEnable = true;
-		this.showGraph = true;
+  onChangeType(index) {
+    if (this.paramtableArray[index]["paramType"] == "array") {
+      this.paramtableArray[index]["paramValue"] = []
     }
-    onChangeType(index){
-      if(this.paramtableArray[index]["paramType"]=="array"){
-        this.paramtableArray[index]["paramValue"]=[]
-      }
-      if(this.paramtableArray[index]["paramType"]=="date"){
-        this.paramtableArray[index]["paramValue"]=""
-      }
+    if (this.paramtableArray[index]["paramType"] == "date") {
+      this.paramtableArray[index]["paramValue"] = ""
     }
+  }
 }

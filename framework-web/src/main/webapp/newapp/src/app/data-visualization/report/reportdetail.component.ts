@@ -1,6 +1,6 @@
 import { version } from './../../../../bower_components/moment/moment.d';
 
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
@@ -15,13 +15,13 @@ import { ReportService } from '../../metadata/services/report.service';
 import { SelectItem } from 'primeng/primeng';
 import { Http } from '@angular/http';
 import { saveAs } from 'file-saver/FileSaver';
+import { KnowledgeGraphComponent } from '../../shared/components/knowledgeGraph/knowledgeGraph.component';
 
 @Component({
     selector: 'app-report-detail',
     styleUrls: [],
     templateUrl: './reportdetail.template.html'
 })
-
 export class ReportDetailComponent {
     IsEmpty: string;
     IsDisable: string;
@@ -97,12 +97,14 @@ export class ReportDetailComponent {
     isDependencyGraphEnable: boolean = true;
     dragIndex: any;
     dropIndex: any;
-
+    @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
     constructor(private activatedRoute: ActivatedRoute, private http: Http, public router: Router, private _dashboardService: DashboardService, private _commonService: CommonService, private _location: Location, private _datasetService: DatasetService, private _reportService: ReportService) {
         this.reportdata = {};
         this.IsDisable = "false";
         this.isSubmitEnable = false;
         this.reportdata["active"] = true;
+        this.isHomeEnable = false;
+        this.showGraph = false;
         this.keylist = [];
         this.valuelist = [];
         this.grouplist = [];
@@ -1052,18 +1054,18 @@ export class ReportDetailComponent {
     cancelDialogBox() {
         this.displayDialogBox = false;
     }
-    showMainPage(uuid, version) {
-        this.isHomeEnable = false
-        this.showGraph = false;
-        this.isShowReportData = true;
-        this.isShowSimpleData = false;
-        this.isRunReportEnable = true;
-    }
-    showDependencyGraph(uuid, version) {
-        console.log("showDependencyGraph call.....");
-        this.showGraph = true;
-        this.isHomeEnable = true;
-    }
+//   showMainPage(uuid, version) {
+//         this.isHomeEnable = false
+//         this.showGraph = false;
+//         this.isShowReportData = true;
+//         this.isShowSimpleData = false;
+//         this.isRunReportEnable = true;
+//     }  
+    // showDependencyGraph(uuid, version) {
+    //     console.log("showDependencyGraph call.....");
+    //     this.showGraph = true;
+    //     this.isHomeEnable = true;
+    // }
 
     dragStart(event, data) {
         this.dragIndex = data
@@ -1103,5 +1105,20 @@ export class ReportDetailComponent {
             attributeinfo["isSourceAtributeParamList"] = false;
             this.attributeTableArray.push(attributeinfo);
         }
+    }
+    showMainPage() {
+        this.isHomeEnable = false
+        this.showGraph = false;
+        this.isShowReportData = true;
+        this.isShowSimpleData = false;
+        this.isRunReportEnable = true;
+    }
+
+    showDagGraph(uuid, version) {
+        this.isHomeEnable = true;
+        this.showGraph = true;
+        setTimeout(() => {
+            this.d_KnowledgeGraphComponent.getGraphData(uuid,version);
+          }, 1000);  
     }
 }

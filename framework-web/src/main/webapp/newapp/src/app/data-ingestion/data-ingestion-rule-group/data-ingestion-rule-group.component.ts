@@ -1,11 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Version } from '../../shared/version';
 import { SelectItem } from 'primeng/primeng';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { CommonService } from '../../metadata/services/common.service';
 import { DataIngestionService } from '../../metadata/services/dataIngestion.service';
 import { Location } from '@angular/common';
-
+import { KnowledgeGraphComponent } from '../../shared/components/knowledgeGraph/knowledgeGraph.component';
 @Component({
   selector: 'app-data-ingestion-rule-group',
   templateUrl: './data-ingestion-rule-group.component.html'
@@ -30,7 +30,7 @@ export class DataIngestionRuleGroupComponent implements OnInit {
   selectedVersion: Version;
   VersionList: SelectItem[] = [];
   breadcrumbDataFrom: { "caption": string; "routeurl": string; }[];
-
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
   constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _dataInjectService: DataIngestionService) {
     this.isSubmit = "false"
     this.ingestGroupData = {};
@@ -43,7 +43,7 @@ export class DataIngestionRuleGroupComponent implements OnInit {
       "routeurl": "/app/list/ingestgroup"
     },
     {
-      "caption": "Rule",
+      "caption": "Rule Group",
       "routeurl": "/app/list/ingestgroup"
     },
     {
@@ -160,6 +160,7 @@ export class DataIngestionRuleGroupComponent implements OnInit {
       }
       this.tags = temp;
     }
+    this.ingestGroupData.locked = response["locked"] == 'Y' ? true : false;
     this.ingestGroupData.published = response["published"] == 'Y' ? true : false;
     this.ingestGroupData.active = response["active"] == 'Y' ? true : false;
     let ruleInfo = [];
@@ -191,6 +192,7 @@ export class DataIngestionRuleGroupComponent implements OnInit {
     ingestGroupJson['tags'] = tagArray
     ingestGroupJson["active"] = this.ingestGroupData.active == true ? 'Y' : "N"
     ingestGroupJson["published"] = this.ingestGroupData.published == true ? 'Y' : "N";
+    ingestGroupJson["locked"] = this.ingestGroupData.locked == true ? 'Y' : "N";
     let ruleInfo = [];
     for (const i in this.ruleInfo) {
       let ruleInfoObj = {}
@@ -267,5 +269,8 @@ export class DataIngestionRuleGroupComponent implements OnInit {
   showDagGraph(uuid, version) {
     this.isHomeEnable = true;
     this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id,this.version);
+    }, 1000);  
   }
 }

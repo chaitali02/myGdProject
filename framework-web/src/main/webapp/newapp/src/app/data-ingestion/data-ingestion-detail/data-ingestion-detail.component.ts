@@ -1,11 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { CommonService } from '../../metadata/services/common.service';
 import { Location } from '@angular/common';
 import { Version } from '../../metadata/domain/version';
 import { SelectItem } from 'primeng/primeng';
 import { DataIngestionService } from '../../metadata/services/dataIngestion.service';
-
+import { KnowledgeGraphComponent } from '../../shared/components/knowledgeGraph/knowledgeGraph.component'
 @Component({
   selector: 'app-data-ingestion-detail',
   templateUrl: './data-ingestion-detail.component.html'
@@ -16,7 +16,6 @@ export class DataIngestionDetailComponent implements OnInit {
   showGraph: boolean;
   isHomeEnable: boolean;
   isNullArray: { 'value': string; 'label': string; }[];
-
   dialogAttributeName: any;
   dialogAttriNameArray: any[];
   dialogSelectName: any;
@@ -90,7 +89,7 @@ export class DataIngestionDetailComponent implements OnInit {
   selectedVersion: Version;
   VersionList: SelectItem[] = [];
   breadcrumbDataFrom: { "caption": string; "routeurl": string; }[];
-
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
   constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _dataInjectService: DataIngestionService) {
     this.isSubmit = "false"
     this.ingestData = {};
@@ -1221,6 +1220,7 @@ export class DataIngestionDetailComponent implements OnInit {
       }
       this.tags = temp;
     }
+    this.ingestData.locked = response["locked"] == 'Y' ? true : false;
     this.ingestData.published = response["published"] == 'Y' ? true : false;
     this.ingestData.active = response["active"] == 'Y' ? true : false;
     this.selectedRuleType = response.type;
@@ -1358,6 +1358,7 @@ export class DataIngestionDetailComponent implements OnInit {
     ingestJson['tags'] = tagArray
     ingestJson["active"] = this.ingestData.active == true ? 'Y' : "N"
     ingestJson["published"] = this.ingestData.published == true ? 'Y' : "N"
+    ingestJson["locked"] = this.ingestData.locked == true ? 'Y' : "N"
     ingestJson['type'] = this.selectedRuleType;
     ingestJson["runParams"] = this.runParams;
     this.selectedSourceType = this.selectedRuleType.split("-")[0];
@@ -1676,6 +1677,9 @@ export class DataIngestionDetailComponent implements OnInit {
   showDagGraph(uuid,version){
     this.isHomeEnable = true;
     this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id,this.version);
+    }, 1000);
   }
 
   onAttrRowDown(index){

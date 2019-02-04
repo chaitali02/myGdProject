@@ -57,6 +57,7 @@ export class TableRenderComponent {
         break;
     }
     
+    
     this._jointjsGroupService.getNumRows(params.uuid,params.version,type+'exec')
     .subscribe(
     response => {
@@ -64,7 +65,7 @@ export class TableRenderComponent {
       this.results(type, params.uuid, params.version,this.modeOfExec)
     })   
   }
-  results(type, uuid, version,mode){debugger
+  results(type, uuid, version,mode){
     if(type == 'dq'){
       type = 'dataqual';
     }

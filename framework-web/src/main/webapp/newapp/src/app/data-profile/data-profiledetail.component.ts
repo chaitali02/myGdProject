@@ -1,5 +1,5 @@
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router, Event as RouterEvent, ActivatedRoute, Params } from '@angular/router';
 import { SelectItem } from 'primeng/primeng';
@@ -11,12 +11,12 @@ import { CommonService } from './../metadata/services/common.service';
 import { Version } from './../metadata/domain/version'
 import { DependsOn } from './dependsOn'
 import { AttributeHolder } from './../metadata/domain/domain.attributeHolder'
+import { KnowledgeGraphComponent } from '../shared/components/knowledgeGraph/knowledgeGraph.component'
 @Component({
   selector: 'app-profile',
   templateUrl: './data-profiledetail.template.html',
   styleUrls: []
 })
-
 export class DataProfileDetailComponent {
   dropIndex: any;
   dragIndex: any;
@@ -65,7 +65,8 @@ export class DataProfileDetailComponent {
   routerUrl: any;
   dataprofile: any
   sources: any;
-  sourcedata: DependsOn
+  sourcedata: DependsOn;
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
   constructor(private activatedRoute: ActivatedRoute, private router: Router, public metaconfig: AppMetadata, private _commonService: CommonService, private _location: Location) {
     this.dataprofile = {};
     this.dataprofile["active"] = true
@@ -839,7 +840,6 @@ export class DataProfileDetailComponent {
       response => { this.OnSuccessubmit(response) },
       error => console.log('Error :: ' + error)
     )
-
   }
   OnSuccessubmit(response) {
     if (this.checkboxModelexecution == true) {
@@ -892,8 +892,6 @@ export class DataProfileDetailComponent {
       maxHeight: 110,
       disabled: false
     };
-
-
   }
   showview(uuid, version) {
     this.router.navigate(['app/dataProfiling/profile', uuid, version, 'true']);
@@ -910,14 +908,16 @@ export class DataProfileDetailComponent {
 
   }
   showMainPage(){
-    this.isHomeEnable = false
-   // this._location.back();
-   this.showGraph = false;
+    this.isHomeEnable = false;
+    this.showGraph = false;
   }
 
   showDagGraph(uuid,version){
     this.isHomeEnable = true;
     this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id,this.version);
+    }, 1000);  
   }
   clear(){
     this.selectedItems=[]

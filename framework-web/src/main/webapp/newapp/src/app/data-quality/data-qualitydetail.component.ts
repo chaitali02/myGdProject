@@ -4,18 +4,16 @@ import { Location } from '@angular/common';
 import { Message } from 'primeng/components/common/api';
 import { SelectItem } from 'primeng/primeng';
 import { MessageService } from 'primeng/components/common/messageservice';
-
 import { CommonService } from '../metadata/services/common.service';
 import { DataQualityService } from '../metadata/services/dataQuality.services';
 import { Version } from './../metadata/domain/version'
 import { DependsOn } from './dependsOn'
 import { AttributeHolder } from './../metadata/domain/domain.attributeHolder'
-import { KnowledgeGraphComponent } from '../shared/components/knowledgeGraph/knowledgeGraph.component'
+import { KnowledgeGraphComponent } from '../shared/components/knowledgeGraph/knowledgeGraph.component';
 @Component({
   selector: 'app-data-pipeli',
   templateUrl: './data-qualitydetail.template.html',
 })
-
 export class DataQualityDetailComponent {
   dropIndex: any;
   dragIndex: any;
@@ -32,7 +30,6 @@ export class DataQualityDetailComponent {
   dialogSelectName: any;
   dialogAttriArray: any[];
   displayDialogBox: boolean;
-
   rhsTypeArray: { 'value': string; 'label': string; }[];
   lhsTypeArray: { 'value': string; 'label': string; }[];
   rhsFormulaArray: any[];
@@ -1013,18 +1010,16 @@ export class DataQualityDetailComponent {
   }
 
   showMainPage(){
-    this.isHomeEnable = false
-   // this._location.back();
-   this.showGraph = false;
+    this.isHomeEnable = false;
+    this.showGraph = false;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id,this.version);
+    }, 1000); 
   }
 
   showDagGraph(uuid,version){
     this.isHomeEnable = true;
     this.showGraph = true;
-    setTimeout(() => {
-      this.d_KnowledgeGraphComponent.getGraphData(this.id,this.version);
-    }, 1000);
-    
   }
 
   onAttrRowDown(index){

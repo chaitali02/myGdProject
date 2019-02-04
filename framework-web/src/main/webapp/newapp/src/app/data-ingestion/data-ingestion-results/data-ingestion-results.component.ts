@@ -6,7 +6,7 @@ import { AppMetadata } from '../../app.metadata';
 import { CommonService } from '../../metadata/services/common.service';
 import { Location } from '@angular/common';
 import { JointjsGroupComponent } from '../../shared/components/jointjsgroup/jointjsgroup.component';
-
+import { KnowledgeGraphComponent } from '../../shared/components/knowledgeGraph/knowledgeGraph.component';
 import { ResponseContentType } from '@angular/http';
 import { saveAs } from 'file-saver';
 
@@ -32,6 +32,7 @@ export class DataIngestionResultsComponent implements OnInit {
   _version: any;
   _uuid: any;
   @ViewChild(JointjsGroupComponent) d_JointjsGroupComponent: JointjsGroupComponent;
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
   breadcrumbDataFrom: { "caption": string; "routeurl": string; }[];
 
   constructor(private _config: AppConfig, private http: Http, private _location: Location, private _activatedRoute: ActivatedRoute, private router: Router, public appMetadata: AppMetadata, private _commonService: CommonService) {
@@ -102,6 +103,7 @@ export class DataIngestionResultsComponent implements OnInit {
     }
     this.params["type"] = this._type;
   }
+  
   public goBack() {
     this._location.back();
   }
@@ -114,6 +116,9 @@ export class DataIngestionResultsComponent implements OnInit {
   showDagGraph(uuid, version) {
     this.isHomeEnable = true;
     this.showKnowledgeGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this._uuid,this._version);
+    }, 1000); 
   }
 
   cancelDialogBox() {

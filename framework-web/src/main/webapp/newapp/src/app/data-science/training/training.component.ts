@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { Location } from '@angular/common';
 import { SelectItem } from 'primeng/primeng';
@@ -12,12 +12,14 @@ import { ResponseOptions } from '@angular/http/src/base_response_options';
 import { DependOnExp } from '../../metadata/domain/domain.dependOnExp';
 import { Param } from '../../metadata/domain/domain.param';
 import { retryWhen } from 'rxjs/operators/retryWhen';
-
+import { KnowledgeGraphComponent } from '../../shared/components/knowledgeGraph/knowledgeGraph.component';
 @Component({
   selector: 'app-training  ',
   templateUrl: './training.template.html',
 })
 export class TrainingComponent implements OnInit {
+  showGraph: boolean;
+  isHomeEnable: boolean;
   execParams1: {};
   execParams: any;
   selectParamsetName: {};
@@ -82,12 +84,15 @@ export class TrainingComponent implements OnInit {
   msgs: any[];
   //att: any;
   allType: any[];
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
   constructor(config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _location: Location, private _trainingService: TrainingService) {
     this.train = {};
     this.train["active"] = true;
     this.displayDialogBox = false;
     this.selectParamType = null;
     this.selectParamlistName = {};
+    this.isHomeEnable = false;
+    this.showGraph = false;
     this.selectParamlistName["uuid"] = " ";
     this.selectParamsetName = {};
     this.types = [{ 'value': 'date', 'label': 'date' },
@@ -797,15 +802,17 @@ export class TrainingComponent implements OnInit {
     }
     this.execParams = execParams;
     this._commonService.executeWithParams("train", response1.uuid, response1.version, this.execParams)
-    .subscribe(response => {
-      this.onSuccessExecute(response)},
-      error =>{ 
+      .subscribe(response => {
+        this.onSuccessExecute(response)
+      },
+      error => {
         console.log('Error :: ' + error)
-        this.onError()}
-    )
+        this.onError()
+      }
+      )
   }
 
-  onSuccessExecute(response){
+  onSuccessExecute(response) {
     this.showMessage('Configuration Submited and Saved Successfully', 'success', 'Success Message')
     setTimeout(() => {
       this.goBack()
@@ -818,9 +825,22 @@ export class TrainingComponent implements OnInit {
     this.msgs.push({ severity: msgtype, summary: msgsumary, detail: msg });
   }
 
-  onError(){
+  onError() {
     this.msgs = [];
     this.msgs.push({ severity: 'failed', summary: 'failed message', detail: 'execution failed' });
+  }
+
+  showMainPage() {
+    this.isHomeEnable = false
+    this.showGraph = false;
+  }
+
+  showDagGraph(uuid, version) {
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(uuid, version);
+    }, 1000);
   }
 }
 

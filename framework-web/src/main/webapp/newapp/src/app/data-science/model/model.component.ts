@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { Location } from '@angular/common';
 import { SelectItem } from 'primeng/primeng';
@@ -13,12 +13,14 @@ import { DependsOn } from './dependsOn';
 import { AttributeHolder } from '../../metadata/domain/domain.attributeHolder'
 import { DatasetService } from '../../metadata/services/dataset.service';
 import { decode } from '@angular/router/src/url_tree';
-
+import { KnowledgeGraphComponent } from '../../shared/components/knowledgeGraph/knowledgeGraph.component'
 @Component({
   selector: 'app-modelList',
   templateUrl: './model.template.html',
 })
 export class ModelComponent implements OnInit {
+  showGraph: boolean;
+  isHomeEnable: boolean;
   dependsType: any;
   IsLableSelected: boolean;
   selectallattribute: any;
@@ -92,7 +94,7 @@ export class ModelComponent implements OnInit {
   // featureObj: FeatureInterface[];
   // newCar: any;
   // attrinfo : any;
-
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
   constructor(config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _location: Location, private _modelService: ModelService, private _datasetService: DatasetService) {
     this.showModel = true;
     this.model = {};
@@ -106,6 +108,8 @@ export class ModelComponent implements OnInit {
     this.IsLableSelected = false;
     this.isParamColEnable = false;
     this.isDisabled = false;
+    this.isHomeEnable = false
+    this.showGraph = false;
     this.progressbarWidth = 25 * this.continueCount + "%";
     this.scriptTypes = [
       { "label": "SPARK", "value": "SPARK" },
@@ -185,14 +189,12 @@ export class ModelComponent implements OnInit {
   public goBack() {
     this._location.back();
     this.router.navigate(['app/list/model']);
-
-
   }
+
   changeScript() {
-
     this.checkboxCustom = this.type == "SPARK" ? false : true
-
   }
+
   getAllVersionByUuid() {
     this._commonService.getAllVersionByUuid('model', this.id)
       .subscribe(
@@ -329,7 +331,6 @@ export class ModelComponent implements OnInit {
     }
     else if (this.dependsType == "formula") {
       this.getFormulaByType2();
-
     }
   }
 
@@ -652,7 +653,18 @@ export class ModelComponent implements OnInit {
   //     this.goBack()
   //   }, 1000);
   // }
+  showMainPage() {
+    this.isHomeEnable = false
+    this.showGraph = false;
+}
 
+showDagGraph(uuid, version) {
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+        this.d_KnowledgeGraphComponent.getGraphData(uuid,version);
+      }, 1000);  
+}
 }
 
 

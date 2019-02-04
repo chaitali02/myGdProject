@@ -12,16 +12,16 @@
                         (click)="showMainPage()">
                         <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.2,1.2);"></i>
                     </a>
-                   
                     <!-- <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top" tooltip (click)="downloadResult()"
                         [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'" *ngIf="isResultTable == true">
                         <i class="fa fa-download" area-hidden="true"></i>
                     </a> -->
-                    <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top" tooltip (click)="downloadResult()" *ngIf="isResultTable == true">
+                    <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top" tooltip (click)="downloadResult()"
+                        *ngIf="isResultTable == true">
                         <i class="fa fa-download" area-hidden="true"></i>
                     </a>
                     <a style="color:white;" href="javascript:;" title="Show Dependencies" data-placement="top" tooltip [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'"
-                        data- (click)="showDagGraph()">
+                        data-(click)="showDagGraph(_uuid,_version)">
                         <i class="fa fa-sitemap" style="margin:2px auto;"></i>
                     </a>
 
@@ -38,10 +38,18 @@
                     <app-jointjs-group [graphParms]="params" (downloadShow)="downloadShow($event)"></app-jointjs-group>
                 </div>
                 <div *ngIf="istableShow && !showKnowledgeGraph">
-                    <app-resulttable [tableParms]="tableparms" ></app-resulttable>
+                    <app-resulttable [tableParms]="tableparms"></app-resulttable>
                 </div>
-                <div *ngIf="showKnowledgeGraph && !isgraphShow && !istableShow">
-                    {{"Knowledge graph"}}
+                <div class="form-body graph-body" *ngIf="showKnowledgeGraph" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=');">
+                    <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
+                    <div class="spinner" id="graphloader">
+                        <div class="bounce1"></div>
+                        <div class="bounce2"></div>
+                        <div class="bounce3"></div>
+                    </div>
+                    <div class="show-graph-body" id="graphWrapper">
+                        <knowledge-graph></knowledge-graph>
+                    </div>
                 </div>
             </div>
 
@@ -51,9 +59,9 @@
                     <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Rows</label>
                         <div class="col-md-7 col-sm-6 col-xs-12">
-                            <input type="number" limit-to="2" class="form-control" [(ngModel)]="numRows" [disabled]="mode =='true'" name="numRows"
-                                max="100" required>
-                          </div>
+                            <input type="number" limit-to="2" class="form-control" [(ngModel)]="numRows" [disabled]="mode =='true'" name="numRows" max="100"
+                                required>
+                        </div>
                     </div>
 
                     <div class="form-group" style="padding-top : 10px">

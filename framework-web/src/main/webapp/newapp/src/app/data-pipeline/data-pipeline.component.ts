@@ -29,15 +29,14 @@ import { JointjsService } from '../shared/components/jointjs/jointjsservice'
 import { SharedDataService } from './shareddata.service'
 import { SelectItem } from 'primeng/primeng';
 import { Version } from './../metadata/domain/version'
-
+import { KnowledgeGraphComponent } from '../shared/components/knowledgeGraph/knowledgeGraph.component'
 @Component({
   selector: 'app-data-pipeli',
   templateUrl: './data-pipeline.template.html',
-
-
 })
-
 export class DataPiplineComponent {
+  isHomeEnable: boolean;
+  showGraph: boolean;
   msgs: any[];
   tem: object;
   tags: any;
@@ -56,9 +55,11 @@ export class DataPiplineComponent {
   isSubmit: any
   breadcrumbDataFrom: { "caption": string; "routeurl": string; }[];
   @ViewChild(JointjsComponent) d_JointjsComponent: JointjsComponent;
-
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
   constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _jointjsService: JointjsService, private _sharedDataService: SharedDataService) {
     this.dagdata = {};
+    this.showGraph = false
+    this.isHomeEnable = false
     this.continueCount = 1;
     this.isSubmit = "false"
     this.progressbarWidth = 33.33 * this.continueCount + "%";
@@ -70,9 +71,8 @@ export class DataPiplineComponent {
       this.mode = params['mode'];
       if (this.mode !== undefined) {
         this.getOneByUuidAndVersion(this.id, this.version);
-        this. getAllVersionByUuid()
+        this.getAllVersionByUuid()
       }
-
     });
     this.breadcrumbDataFrom = [{
       "caption": "Data Pipeline",
@@ -120,25 +120,26 @@ export class DataPiplineComponent {
     this.progressbarWidth = 33.33 * this.continueCount + "%";
     this.getDagData()
   }
-  getAllVersionByUuid(){
-    this._commonService.getAllVersionByUuid('dag',this.id)
-    .subscribe(
-    response =>{
-      this.OnSuccesgetAllVersionByUuid(response)},
-    error => console.log("Error :: " + error));
+  getAllVersionByUuid() {
+    this._commonService.getAllVersionByUuid('dag', this.id)
+      .subscribe(
+      response => {
+        this.OnSuccesgetAllVersionByUuid(response)
+      },
+      error => console.log("Error :: " + error));
   }
   OnSuccesgetAllVersionByUuid(response) {
     for (const i in response) {
-      let ver={};
-      ver["label"]=response[i]['version'];
-      ver["value"]={};
-      ver["value"]["label"]=response[i]['version'];      
-      ver["value"]["uuid"]=response[i]['uuid']; 
-      this.VersionList[i]=ver;
+      let ver = {};
+      ver["label"] = response[i]['version'];
+      ver["value"] = {};
+      ver["value"]["label"] = response[i]['version'];
+      ver["value"]["uuid"] = response[i]['uuid'];
+      this.VersionList[i] = ver;
     }
-  }  
+  }
   onVersionChange() {
-      
+
     this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, 'dag')
       .subscribe(
       response => {//console.log(response)},
@@ -163,7 +164,7 @@ export class DataPiplineComponent {
     const version: Version = new Version();
     version.label = response['version'];
     version.uuid = response['uuid'];
-    this.selectedVersion=version
+    this.selectedVersion = version
     var tags = [];
     if (response.tags != null) {
       for (var i = 0; i < response.tags.length; i++) {
@@ -217,8 +218,18 @@ export class DataPiplineComponent {
     this.router.navigate(['app/dataPipeline/dag', uuid, version, 'false']);
   }
 
-  showview(uuid, version) {
-    this.router.navigate(['app/dataPipeline/dag', uuid, version, 'true']);
+  showMainPage(){
+    this.isHomeEnable = false;
+    this.showGraph = false;
   }
+
+  showDagGraph(uuid,version){
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id,this.version);
+    }, 1000);  
+  }
+
 }
 

@@ -14,21 +14,20 @@
                 </div>
 
                 <div class="actions">
-                    <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
-                        tooltip [ngClass]="(showdag==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-(click)="enableEdit(train.uuid,train.version)"
-                        *ngIf="mode">
+                        <a class="btn btn-circle btn-icon-only btn-default " title="Main" data-placement="top" tooltip [ngClass]="isHomeEnable==true ? 'notcurrentpage':'currentpage'"
+                        data- (click)="showMainPage(train.uuid,train.version)">
+                        <i class="fa fa-home" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
+                      </a>
+            
+                      <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
+                        tooltip [ngClass]="mode == 'true' && showGraph == false? 'notcurrentpage':'currentpage'" data-(click)="enableEdit(train.uuid,train.version)">
                         <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
-                    </a>
-                    <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="View" data-toggle="tooltip" data-placement="top"
-                        tooltip [ngClass]="(showdag==true && isEdit==false)? 'currentpage':'notcurrentpage'" ng-hide="isAdd"
-                        data-(click)="showview(train.uuid,train.version)" *ngIf="mode">
-                        <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
-                    </a>
-                    <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" disabled="true" title="Knowledge Graph" data-toggle="tooltip"
-                        data-placement="top" tooltip ng-show="isDependencyShow" [ngClass]="showdag==false? 'currentpage':'notcurrentpage'"
-                        data- (click)="showDagGraph(train.uuid,train .version)" *ngIf="mode">
+                      </a>
+            
+                      <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Show Dependencies" data-placement="top" tooltip
+                        [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'" data- (click)="showDagGraph(train.uuid,train.version)">
                         <i class="fa fa-sitemap" style="margin:2px auto;color:#a0a0a0;"></i>
-                    </a>
+                      </a>
                     <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default" data-(click)="broadcastRefreshData()" data-original-title=""
                         disabled="true" title="refresh">
                         <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
@@ -38,7 +37,18 @@
                     </a>
                 </div>
             </div>
-            <div class="portlet-body form">
+            <div class="form-body graph-body" *ngIf="showGraph" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=');">
+                <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
+                <div class="spinner" id="graphloader">
+                  <div class="bounce1"></div>
+                  <div class="bounce2"></div>
+                  <div class="bounce3"></div>
+                </div>
+                <div class="show-graph-body" id="graphWrapper" >
+                  <knowledge-graph ></knowledge-graph>
+                </div>
+              </div>
+            <div class="portlet-body form" *ngIf="!showGraph">
                 <div>
                     <div class="form-wizard">
                         <div class="form-body" style="padding-top: 20px;">
@@ -382,7 +392,8 @@
                                                                                 <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="tabledata.selected" name="selectedAttr+{{i}}" />
                                                                             </td>
                                                                             <td style="width:5%;">
-                                                                                <input style="text-align:center;" type="text" [(ngModel)]="tabledata.paramSetId" name="paramSetId+{{i}}" [disabled]="true" class="form-control">
+                                                                                <input style="text-align:center;" type="text" [(ngModel)]="tabledata.paramSetId" name="paramSetId+{{i}}" [disabled]="true"
+                                                                                    class="form-control">
                                                                             </td>
                                                                             <td *ngFor="let tablecol of tabledata.paramSetVal; let j=index">
                                                                                 <input type="text" class="form-control" [(ngModel)]="tablecol.value" name="value+{{i}}+{{j}}" [disabled]="true">
