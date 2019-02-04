@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.inferyx.framework.domain;
 
+import com.inferyx.framework.enums.ApplicationType;
+
 /**
  * @author Ganesh
  *
@@ -19,7 +21,10 @@ public class ApplicationView extends BaseEntity {
 	private String paramlistChg;
 	private String applicationChg;
 	private MetaIdentifierHolder dataSource;
-	
+	private String deployPort;
+	private MetaIdentifierHolder orgInfo;
+	private ApplicationType applicationType;
+
 	/**
 	 *
 	 * @Ganesh
@@ -92,4 +97,36 @@ public class ApplicationView extends BaseEntity {
 	public void setParamlistChg(String paramlistChg) {
 		this.paramlistChg = paramlistChg;
 	}
+	
+	/* @Ganesh 
+	 *
+	 * @return the deployPort
+	 */
+	public String getDeployPort() {
+		return deployPort;
+	}
+
+	/**
+	 * @Ganesh 
+	 *
+	 * @param deployPort the deployPort to set
+	 */
+	public void setDeployPort(String deployPort) {
+		this.deployPort = deployPort;
+	}
+	
+	public MetaIdentifierHolder getOrgInfo() {
+		return orgInfo;
+	}
+	public void setOrgInfo(MetaIdentifierHolder orgInfo) {
+		this.orgInfo = orgInfo;
+	}
+	public ApplicationType getApplicationType() {
+		return this.applicationType;
+	}
+
+	public void setApplicationType(ApplicationType applicationType) {
+		this.applicationType = applicationType;
+	}
+
 }

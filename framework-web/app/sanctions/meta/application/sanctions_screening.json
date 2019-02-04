@@ -1,0 +1,47 @@
+{
+    "dataSource" : {
+        "ref" : {
+            "type" : "datasource",
+            "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
+        }
+    },
+    "paramList" : {
+        "ref" : {
+            "type" : "paramlist",
+            "uuid" : "92b828c8-739e-430f-872e-e21255720197"
+        }
+    },
+    "deployPort" : "5001",
+    "orgInfo" : {
+        "ref" : {
+            "type" : "organization",
+            "uuid" : "39937670-837c-4027-aa45-aff8a57b738a"
+        }
+    },
+    "applicationType" : "DEFAULT",
+    "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbyog",
+    "version" : "1548315781",
+    "name" : "Sanctions Screening",
+    "desc" : "Sanctions Screening",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85",
+            "version" : "1464977196",
+            "name" : "admin"
+        }
+    },
+    "createdOn" : ISODate("2019-01-24T07:43:01.000Z"),
+    "tags" : [],
+    "active" : "Y",
+    "locked" : "N",
+    "published" : "N",
+    "appInfo" : [ 
+          {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "39937670-837c-4027-aa45-aff8a57b738a"
+            }
+        }
+    ]
+}

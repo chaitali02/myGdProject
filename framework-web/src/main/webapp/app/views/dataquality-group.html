@@ -36,33 +36,22 @@
           </span>
         </div>
         <div class="actions">
-          <!-- <a style="border:0px solid transparent !important;" class="btn btn-circle btn-icon-only btn-default bg-yellow bg-hover-grey-salsa font-white borderless" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showRuleGroup==true && isEdit==true)? 'currentpage':'notcurrentpage'"
-            ng-hide="isAdd" data-ng-click="enableEdit(dqruleGroupDetail.uuid,dqruleGroupDetail.version)">
-            <i class="fa fa-edit" style="display: block;margin: 2px auto;color:white;"></i>
+          <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top"
+            tooltip  ng-hide="isAdd"  ng-class="(showRuleGroup==true)? 'currentpage':'notcurrentpage'" data-ng-click="showHome(dqruleGroupDetail.uuid,dqruleGroupDetail.version,mode)">
+            <i class="fa fa-home icon-circle home-icon-circle"></i>
           </a>
-          <a style="border:0px solid transparent !important;" class="btn btn-circle btn-icon-only btn-default bg-blue bg-hover-grey-salsa font-white borderless" href="javascript:;" title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showRuleGroup==true && isEdit==false)? 'currentpage':'notcurrentpage'"
-            ng-hide="isAdd" data-ng-click="showview(dqruleGroupDetail.uuid,dqruleGroupDetail.version)">
-            <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:white;"></i>
-          </a>
-          <a style="border:0px solid transparent !important;" class="btn btn-circle btn-icon-only btn-default bg-green bg-hover-grey-salsa font-white borderless" href="javascript:;" ng-show="isDependencyShow" ng-class="showRuleGroup==false? 'currentpage':'notcurrentpage'"
-            title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip data-ng-click="showRuleGroupGraph(dqruleGroupDetail.uuid,dqruleGroupDetail.version)">
-                        <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:white;"></i>
-                    </a>
-          <a style="border:0px solid transparent !important;" href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default bg-dark bg-hover-grey-salsa font-white borderless" ng-click="broadcastRefreshData()" data-original-title="" title="">
-                            <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
-                    </a>
-          <a style="border:0px solid transparent !important;" class="btn btn-circle btn-icon-only btn-default bg-red bg-hover-grey-salsa font-white borderless" ng-click="close()" title="Close" data-toggle="tooltip" data-placement="top" tooltip>
-                       <i class="fa fa-times" style="display: block;margin: 2px auto;color:white;"></i>
-
-                    </a> -->
           <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
+            tooltip ng-class="(isEdit==true || isPrivlage || dqruleGroupDetail.locked == 'Y')? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="enableEdit(dqruleGroupDetail.uuid,dqruleGroupDetail.version)">
+            <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
+          </a>
+          <!-- <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
             tooltip ng-class="(showRuleGroup==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="enableEdit(dqruleGroupDetail.uuid,dqruleGroupDetail.version)">
             <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
           </a>
           <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="View" data-toggle="tooltip" data-placement="top"
             tooltip ng-class="(showRuleGroup==true ||  isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="showview(dqruleGroupDetail.uuid,dqruleGroupDetail.version)">
             <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
-          </a>
+          </a> -->
           <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" ng-show="isDependencyShow" ng-class="showRuleGroup==false? 'currentpage':'notcurrentpage'"
             title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip data-ng-click="showRuleGroupGraph(dqruleGroupDetail.uuid,dqruleGroupDetail.version)">
             <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:#a0a0a0"></i>
@@ -90,7 +79,17 @@
           <div class="form-body show-graph-body tree-graph" id="graphWrapper" tree-graph-directive uuid="dqruleGroupDetail.uuid" version="dqgroup.defaultVersion.version"></div>
         </div>
         <form class="form-horizontal ng-pristine ng-valid" novalidate="novalidate" name="myform" ng-submit="sbumitRuleGroup()" ng-show="showRuleGroupForm" prevent-enter-submit>
-          <div class="form-wizard">
+          <div class="centercontent" style="min-height:500px;" ng-if="isEditVeiwError" >
+            <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
+          </div>
+          <div class="centercontent" style="min-height:500px;" ng-if="isEditInprogess && !isEditVeiwError">
+            <div class="spinner">
+              <div class="bounce1"></div>
+              <div class="bounce2"></div>
+              <div class="bounce3"></div>
+            </div>
+          </div>
+          <div class="form-wizard" ng-show="!isEditInprogess && !isEditVeiwError">
             <div class="form-body">
               <div class="form-group" ng-show="dqruleGroupDetail.uuid">
                 <label class="control-label col-md-3">UUID
@@ -136,7 +135,6 @@
                 <label class="control-label col-md-3">Tag
                 </label>
                 <div class="col-md-6">
-                  <!-- <tags-input ng-model="tags" min-length="0" ng-disabled="{{mode}}"></tags-input> -->
                   <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
                     <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" 
                         max-results-to-show="10">
@@ -159,6 +157,17 @@
                     <label class="btn btn-default" ng-model="dqruleGroupDetail.active" ng-disabled="(mode=='true' || mode=='false') ? true:false"
                       uib-btn-radio="'Y'">Yes</label>
                     <label class="btn btn-default" ng-model="dqruleGroupDetail.active" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+                      uib-btn-radio="'N'" uncheckable>No</label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
+                <div class="col-md-6">
+                  <div class="btn-group">
+                    <label class="btn btn-default" ng-model="dqruleGroupDetail.locked" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+                      uib-btn-radio="'Y'">Yes</label>
+                    <label class="btn btn-default" ng-model="dqruleGroupDetail.locked" ng-disabled="(mode=='true' || mode=='false') ? true:false"
                       uib-btn-radio="'N'" uncheckable>No</label>
                   </div>
                 </div>

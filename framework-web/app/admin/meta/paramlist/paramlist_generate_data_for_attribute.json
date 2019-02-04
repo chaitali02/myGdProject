@@ -14,6 +14,7 @@
     "createdOn" : ISODate("2018-05-19T02:10:18.729Z"),
     "tags" : [],
     "active" : "Y",
+  "locked" : "N",
     "published" : "N",
     "paramListType" : "model",
     "appInfo" : [ 
@@ -29,6 +30,7 @@
                 "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
             }
         }, 
+       
         {
             "ref" : {
                 "type" : "application",
@@ -40,13 +42,33 @@
                 "type" : "application",
                 "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc"
             }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+ 		"uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbyog"
+            }
         }
     ],
     "params" : [ 
         {
             "paramId" : "0",
             "paramName" : "distribution",
-            "paramType" : "distribution",
+            "paramType" : "distribution",          
+   	     	"paramDispName" : "Distribution",
+            "paramDesc" : "",		
             "paramValue" : {
                 "ref" : {
                     "type" : "distribution",
@@ -58,7 +80,9 @@
         {
             "paramId" : "1",
             "paramName" : "numIterations",
-            "paramType" : "integer",
+            "paramType" : "integer",         
+   	     	"paramDispName" : "Num Iterations",
+            "paramDesc" : "",		
             "paramValue" : {
                 "ref" : {
                     "type" : "simple"
@@ -70,14 +94,18 @@
         {
             "paramId" : "2",
             "paramName" : "saveLocation",
-            "paramType" : "datapod",
+            "paramType" : "datapod",        
+   	     	"paramDispName" : "Save Location",
+            "paramDesc" : "",		
             "paramValue" : null,
             "paramRef" : null
         }, 
         {
             "paramId" : "3",
             "paramName" : "attrRef",
-            "paramType" : "attribute",
+            "paramType" : "attribute",   
+   	     	"paramDispName" : "Attr Ref",
+            "paramDesc" : "",		
             "paramValue" : null,
             "paramRef" : null
         }

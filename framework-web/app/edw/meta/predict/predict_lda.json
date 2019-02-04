@@ -13,16 +13,17 @@
     },
     "target" : {
         "ref" : {
-            "type" : "datapod",
-            "uuid" : "3cdb9b07-d449-4dfc-af2f-3b1245eb30e5"
+            "type" : "file"
         }
     },
     "featureAttrMap" : [ 
         {
             "featureMapId" : "0",
+            "featureDisplaySeq" : "0",
             "feature" : {
                 "featureId" : "0",
                 "featureName" : "customer_id",
+                "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
                     "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b76789"
@@ -34,13 +35,22 @@
                     "type" : "datapod",
                     "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
                 }
+            },
+            "imputeMethod" : {
+                "featureId" : "0",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
             }
         }, 
         {
             "featureMapId" : "1",
+            "featureDisplaySeq" : "1",
             "feature" : {
                 "featureId" : "1",
                 "featureName" : "address_id",
+                "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
                     "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b76789"
@@ -52,13 +62,22 @@
                     "type" : "datapod",
                     "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
                 }
+            },
+            "imputeMethod" : {
+                "featureId" : "1",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
             }
         }, 
         {
             "featureMapId" : "2",
+            "featureDisplaySeq" : "2",
             "feature" : {
                 "featureId" : "2",
                 "featureName" : "branch_id",
+                "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
                     "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b76789"
@@ -70,13 +89,22 @@
                     "type" : "datapod",
                     "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
                 }
+            },
+            "imputeMethod" : {
+                "featureId" : "2",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
             }
         }, 
         {
             "featureMapId" : "3",
+            "featureDisplaySeq" : "3",
             "feature" : {
                 "featureId" : "3",
                 "featureName" : "commute_distance_miles",
+                "featureDefaultValue" : 0.0,
                 "ref" : {
                     "type" : "model",
                     "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b76789"
@@ -88,22 +116,33 @@
                     "type" : "datapod",
                     "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
                 }
+            },
+            "imputeMethod" : {
+                "featureId" : "3",
+                "featureDefaultValue" : 0.0,
+                "ref" : {
+                    "type" : "model"
+                }
             }
         }
     ],
-    "labelInfo" : {
-        "attrId" : "4",
-        "ref" : {
-            "type" : "datapod",
-            "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
-        }
-    },
+    
     "trainInfo" : {
         "ref" : {
             "type" : "train",
             "uuid" : "ca4d4bf0-3294-4f13-a7d7-f9da26f5b8e5"
         }
     },
+     "rowIdentifier" : [ 
+        {
+            "attrId" : "0",
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "dfcd12a5-bf32-4b77-8bea-d0d0a2a1df3f"
+            }
+        }
+    ],
+    "includeFeatures" : "Y",
     "uuid" : "ea110f53-23b5-4b90-8788-bd4dbbf3c331",
     "version" : "1536047758",
     "name" : "predict_lda",
@@ -118,6 +157,7 @@
     "createdOn" : ISODate("2018-09-04T07:55:58.000Z"),
     "tags" : [],
     "active" : "Y",
+    "locked" : "N",
     "published" : "N",
     "appInfo" : [ 
         {

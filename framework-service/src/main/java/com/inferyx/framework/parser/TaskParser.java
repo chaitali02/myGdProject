@@ -14,10 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
@@ -27,9 +25,6 @@ import com.inferyx.framework.enums.RunMode;
 
 @Component
 public class TaskParser {
-	
-	@Autowired
-	protected MetadataUtil daoRegister;
 	
 	
 	public static MetaIdentifier populateRefVersion(MetaIdentifier ref, java.util.Map<String, MetaIdentifier> refKeyMap) {

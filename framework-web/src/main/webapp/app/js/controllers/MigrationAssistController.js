@@ -323,7 +323,6 @@ AdminModule.controller('DetailExportController',function($state,$stateParams,$ro
   $scope.getLovByType = function() {
 		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
 		var onSuccessGetLovByType = function (response) {
-			console.log(response)
 			$scope.lobTag=response[0].value
 		}
 	}
@@ -349,12 +348,16 @@ AdminModule.controller('DetailExportController',function($state,$stateParams,$ro
   }/*End ShowDatapodGraph*/
 
   if(typeof $stateParams.id != "undefined"){
-    $scope.mode=$stateParams.mode
+    $scope.mode=$stateParams.mode;
     $scope.isDependencyShow=true;
     $scope.isDisabled=true;
-    CommonService.getOneByUuidAndVersion($stateParams.id,$stateParams.version,"export").then(function(response){onGetOneByUuidAndVersion(response.data)});
+    $scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+    CommonService.getOneByUuidAndVersion($stateParams.id,$stateParams.version,"export")
+      .then(function(response){onGetOneByUuidAndVersion(response.data)},function (response) { onError(response.data)});
     var onGetOneByUuidAndVersion =function(response){
-      $scope.exportdata=response
+      $scope.isEditInprogess=false;
+      $scope.exportdata=response;
       var metaInfoArray=[]
       for(var i=0;i<response.metaInfo.length;i++){
         var metainfo={};
@@ -372,13 +375,16 @@ AdminModule.controller('DetailExportController',function($state,$stateParams,$ro
 					$scope.tags = tags;
 				}
 			}
-    }
+    };
+    var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		}
   }
   else{
     MigrationAssistServices.getAll().then(function(response){onSuccessGetAll(response.data)},function(response) {onError(response.data)});
     var onSuccessGetAll = function(response) {
       $scope.allmetadata = response
-      console.log($scope.allmetadata)
     }
     var onError = function(response) {
       $scope.isDataInpogress = true;
@@ -388,65 +394,44 @@ AdminModule.controller('DetailExportController',function($state,$stateParams,$ro
       $scope.spinner = false;
     }
   }
-  // $scope.getAllNames = function() {
-  //   $scope.metaNameTags = null;
-  //   $scope.isDisabled = true
-  //   if($scope.metatype.name != null) {
-  //     $scope.spinner = true;
-  //     CommonService.getAllLatest($scope.metatype.name).then(function(response){onSuccessgetAllLatest(response.data)},function(response){onError(response.data)});
-  //     var onSuccessgetAllLatest = function(response){
-  //       $scope.allmetatypename = response
-  //       $scope.isDisabled = false;
-  //       $scope.isSubmitExportEnable = false;
-  //     }
-  //     var onError = function(response) {
-  //       $scope.isDataInpogress = true;
-  //       $scope.isDataError = true;
-  //       $scope.msgclass = "errorMsg";
-  //       $scope.datamessage = "Some Error Occurred";
-  //       $scope.spinner = false;
-  //     }
-  //   }
-  // }
+  
 
   $scope.getAllLetestByMetaList=function(type){
     MigrationAssistServices.getAllByMetaList(type).then(function(response){onSuccessGetAll(response.data)},function(response) {onError(response.data)});
     var onSuccessGetAll = function(response) {
       $scope.allmetatypename=response;
       $scope.isSubmitExportEnable = false;
-      console.log(response)
     }
   }
+
   $scope.loadAllMetaName = function(query) {
     return $timeout(function() {
       return $filter('filter')($scope.allmetatypename, query);
     });
   };
+
   $scope.loadAllMetaType = function(query) {
     return $timeout(function() {
       return $filter('filter')($scope.allmetadata, query);
     });
   };
+  
   $scope.onAddMetaType=function(event){
     $timeout(function() {
-    console.log($scope.metatype)
     var type=[];
     for(var i=0;i<$scope.metatype.length;i++){
       type[i]=$scope.metatype[i].text;
     }
-    console.log(type);
     $scope.getAllLetestByMetaList(type);
    });
   }
 
   $scope.onRemoveMetaType=function(event){
     $timeout(function() {
-    console.log($scope.metatype)
     var type=[];
     for(var i=0;i<$scope.metatype.length;i++){
       type[i]=$scope.metatype[i].text;
     }
-    console.log(type);
     $scope.getAllLetestByMetaList(type);
     $scope.removeTagMetaInfo(type);
     if(type.length >0){
@@ -635,7 +620,6 @@ AdminModule.controller('DetailImportController',function($state,$stateParams,$ro
   $scope.getLovByType = function() {
 		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
 		var onSuccessGetLovByType = function (response) {
-			console.log(response)
 			$scope.lobTag=response[0].value
 		}
 	}
@@ -661,11 +645,15 @@ AdminModule.controller('DetailImportController',function($state,$stateParams,$ro
   }/*End ShowDatapodGraph*/
 
   if(typeof $stateParams.id != "undefined"){
-    $scope.mode=$stateParams.mode
+    $scope.mode=$stateParams.mode;
     $scope.isDependencyShow=true;
-    CommonService.getOneByUuidAndVersion($stateParams.id,$stateParams.version,"import").then(function(response){onGetOneByUuidAndVersion(response.data)});
+    $scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+    CommonService.getOneByUuidAndVersion($stateParams.id,$stateParams.version,"import")
+      .then(function(response){onGetOneByUuidAndVersion(response.data)},function (response) { onError(response.data)});
     var onGetOneByUuidAndVersion =function(response){
-      $scope.isSubmitEnable=true
+      $scope.isSubmitEnable=true;
+      $scope.isEditInprogess=false;
       $scope.importdata=response;
       var metainfoarray = [];
       for (var i = 0; i < response.metaInfo.length; i++) {
@@ -687,7 +675,11 @@ AdminModule.controller('DetailImportController',function($state,$stateParams,$ro
 					$scope.tags = tags;
 				}
 			}
-    }
+    };
+    var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		}
   }
 
   $scope.exportUpload = function(data) {

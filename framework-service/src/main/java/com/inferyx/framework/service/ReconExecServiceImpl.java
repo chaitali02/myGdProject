@@ -13,11 +13,9 @@ package com.inferyx.framework.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.ExecStatsHolder;
 import com.inferyx.framework.domain.MetaIdentifier;
@@ -33,11 +31,7 @@ import com.inferyx.framework.domain.User;
  *
  */
 @Service
-public class ReconExecServiceImpl extends BaseRuleExecTemplate {
-	
-	@Autowired
-	private MetadataUtil daoRegister;
-	
+public class ReconExecServiceImpl extends BaseRuleExecTemplate {	
 	/**
 	 * Kill meta thread if In Progress
 	 * @param uuid
@@ -51,7 +45,7 @@ public class ReconExecServiceImpl extends BaseRuleExecTemplate {
 		
 		Object exec = commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, type);
 		MetaIdentifierHolder resultHolder = (MetaIdentifierHolder) exec.getClass().getMethod("getResult").invoke(exec);
-		com.inferyx.framework.domain.DataStore dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(resultHolder.getRef().getUuid(), resultHolder.getRef().getVersion(), MetaType.datastore.toString());
+		com.inferyx.framework.domain.DataStore dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(resultHolder.getRef().getUuid(), resultHolder.getRef().getVersion(), MetaType.datastore.toString(), "N");
 		MetaIdentifier mi = new MetaIdentifier();
 		ExecStatsHolder execHolder=new ExecStatsHolder();
 		mi.setType(MetaType.datastore);
@@ -68,7 +62,8 @@ public class ReconExecServiceImpl extends BaseRuleExecTemplate {
 		List<ReconExec> reconExecList = new ArrayList<>();
 		ReconGroupExec reconGroupExec = (ReconGroupExec) commonServiceImpl.getOneByUuidAndVersion(reconGroupExecUuid, reconGroupExecVersion, MetaType.recongroupExec.toString());
 		for (MetaIdentifierHolder reconExecHolder : reconGroupExec.getExecList()) {
-			reconExecList.add((ReconExec)daoRegister.getRefObject(reconExecHolder.getRef()));
+//			reconExecList.add((ReconExec)daoRegister.getRefObject(reconExecHolder.getRef()));
+			reconExecList.add((ReconExec)commonServiceImpl.getOneByUuidAndVersion(reconExecHolder.getRef().getUuid(), reconExecHolder.getRef().getVersion(), reconExecHolder.getRef().getType().toString()));
 		}
 		return resolveName(reconExecList);
 	}
@@ -80,7 +75,8 @@ public class ReconExecServiceImpl extends BaseRuleExecTemplate {
 			String createdByRefUuid = reconE.getCreatedBy().getRef().getUuid();
 			User user = (User) commonServiceImpl.getLatestByUuid(createdByRefUuid, MetaType.user.toString());
 			reconExecLatest.getCreatedBy().getRef().setName(user.getName());
-			Recon recon = (Recon)daoRegister.getRefObject(reconExecLatest.getDependsOn().getRef());
+//			Recon recon = (Recon)daoRegister.getRefObject(reconExecLatest.getDependsOn().getRef());
+			Recon recon = (Recon) commonServiceImpl.getOneByUuidAndVersion(reconExecLatest.getDependsOn().getRef().getUuid(), reconExecLatest.getDependsOn().getRef().getVersion(), reconExecLatest.getDependsOn().getRef().getType().toString());
 			reconExecLatest.getDependsOn().getRef().setName(recon.getName());
 			reconExecList.add(reconExecLatest);
 		}

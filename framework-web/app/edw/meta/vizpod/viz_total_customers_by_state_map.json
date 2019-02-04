@@ -13,9 +13,10 @@
     },
     "value": null
   },
-  "createdOn": "Thu Sep 13 13:46:47 EDT 2018",
+    "createdOn" : ISODate("2018-06-03T20:05:09.000Z"),
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "appInfo": [
     {
@@ -39,7 +40,7 @@
     "value": null
   },
   "type": "usa-map",
-  "limit": null,
+  "limit": -1,
   "keys": [
     {
       "ref": {

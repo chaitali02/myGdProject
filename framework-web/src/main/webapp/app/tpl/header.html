@@ -13,7 +13,7 @@
                 <span></span>
             </div> -->
             <div class="text-center logo-default" style="margin-top:10px;font-size: 20px;color: white;font-family:timeburnernormal;">
-                <img src="assets/layouts/layout/img/logo.png" alt="logo" class="logo-default" style="height:30px;margin-top:1px"/>
+                <img src="{{appSetting.companyLog}}" alt="logo" class="logo-default" style="height:30px;margin-top:1px"/>
                 &nbsp;<div style="vertical-align: MIDDLE;display: inline-block;padding-top:3px;"> {{appSetting.companyName}}</div>
 <!--                 <div style="display: inline-block;padding-top: 3px;vertical-align: MIDDLE;color:#32c5d2 ;font-family:timeburnerbold;">YX</div>
  -->            </div>
@@ -382,8 +382,13 @@
             <!-- END LANGUAGE BAR -->
             <!-- BEGIN USER LOGIN DROPDOWN -->
             <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
+            <li class="dropdown dropdown-user" style="color:white;padding: 17px 7px 0px 10px;text-align: center;overflow: hidden;white-space:nowrap;max-width:200px;margin-bottom:-4px;text-overflow:ellipsis;">   
+               <span class="username username-hide-on-mobile" title="{{userdata.orgInfo.ref.name}}"> {{userdata.orgInfo.ref.name}}</span>
+            </li>
             <li class="dropdown dropdown-user">
+                
                 <a href="#" class="dropdown-toggle" dropdown-menu-hover data-toggle="dropdown" data-close-others="true">
+                     
                     <img alt="" class="img-circle" width="30px" ng-src="avatars/{{setUseruuid}}?{{dummyArg}}" alt="No Avatar" onerror="this.src='avatars/default.png';"/>
                     <!-- <img alt="" class="img-circle" src="{{settings.layoutPath}}/img/avatar3_small.jpg" /> -->
                     <span class="username username-hide-on-mobile"> {{setUserName}} </span>
@@ -394,6 +399,12 @@
                         <a ui-sref="adminListuser({id:'{{setUseruuid}}',mode:'true'})">
                             <i class="icon-user"></i> My Profile </a>
                     </li>
+                    <li>
+                        <a ui-sref="organizationdetail({id:'{{userdata.orgInfo.ref.uuid}}',mode:'true'})">
+                            <i class="fa fa-building"></i> My Organization    
+                        </a>
+                    </li>
+                    
                     <li>
                         <a ng-click="uploadAvatar()">
                             <!-- <i class="icon-user"></i> -->

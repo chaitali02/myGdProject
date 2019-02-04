@@ -48,30 +48,39 @@ DatadiscoveryModule.controller('DataDiscoveryController', function ($state,$filt
         stageparam.returnBack = true;
         $state.go(stageName, stageparam);
     };
-    DataDiscoveryService.getDatapodStats().then(function (response) { onSuccessGetDatapodStats(response.data) });
-    var onSuccessGetDatapodStats = function (response) {
-        $scope.allMetaCount = response;
-        $scope.originalData=response;
-        $scope.allMetaCount=$scope.getResults($scope.pagination,response);
-        // vm.pager = {};
-        // vm.setPage = setPage;
-        // if (response.length > 0) {
-        //     // initialize to page 1
-        //     vm.setPage(1);
-        // }
 
-        // function setPage(page) {
-        //     if (page < 1 || page > vm.pager.totalPages) {
-        //         return;
-        //     }
-        //     // get pager object from service
-        //     vm.pager = PagerService.GetPager(response.length, page);
-        //     // get page of items
-        //     $scope.allMetaCount = response.slice(vm.pager.startIndex, vm.pager.endIndex + 1);
-        // }
+    $scope.refersh=function(){
+        $scope.metaDetail();
+    }
 
-    }//End onSuccessGetDatapodStats
-
+    $scope.metaDetail=function(){
+        DataDiscoveryService.getDatapodStats().then(function (response) { onSuccessGetDatapodStats(response.data) });
+        var onSuccessGetDatapodStats = function (response) {
+            $scope.allMetaCount = response;
+            $scope.originalData=response;
+            $scope.allMetaCount=$scope.getResults($scope.pagination,response);
+            // vm.pager = {};
+            // vm.setPage = setPage;
+            // if (response.length > 0) {
+            //     // initialize to page 1
+            //     vm.setPage(1);
+            // }
+    
+            // function setPage(page) {
+            //     if (page < 1 || page > vm.pager.totalPages) {
+            //         return;
+            //     }
+            //     // get pager object from service
+            //     vm.pager = PagerService.GetPager(response.length, page);
+            //     // get page of items
+            //     $scope.allMetaCount = response.slice(vm.pager.startIndex, vm.pager.endIndex + 1);
+            // }
+    
+        }//End onSuccessGetDatapodStats
+    }
+    
+    $scope.metaDetail();
+   
     $scope.onPageChanged = function(){
         $scope.allMetaCount=$scope.getResults($scope.pagination,$scope.originalData);    
     };

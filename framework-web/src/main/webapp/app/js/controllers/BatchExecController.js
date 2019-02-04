@@ -34,6 +34,8 @@ JobMonitoringModule.controller('BatchExecController', function ($filter, $state,
     $scope.userDetail = {}
     $scope.userDetail.uuid = $rootScope.setUseruuid;
     $scope.userDetail.name = $rootScope.setUserName;
+    $scope.isEditInprogess=true;
+    $scope.isEditVeiwError=false;
     $scope.close = function () {
         if ($stateParams.returnBack == "true" && $rootScope.previousState) {
             //revertback
@@ -55,8 +57,10 @@ JobMonitoringModule.controller('BatchExecController', function ($filter, $state,
         //null,
 
     ];
-    JobMonitoringService.getLatestByUuid($scope.uuid, "batchexec").then(function (response) { onSuccess(response.data) });
+    JobMonitoringService.getLatestByUuid($scope.uuid, "batchexec")
+        .then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
     var onSuccess = function (response) {
+        $scope.isEditInprogess=false;
         $scope.execData = response;
         var statusList = [];
         for (i = 0; i < response.statusList.length; i++) {
@@ -75,6 +79,10 @@ JobMonitoringModule.controller('BatchExecController', function ($filter, $state,
             execList[i] = execlist;
         }
         $scope.execList = execList
+    };
+    var onError=function(){
+        $scope.isEditInprogess=false;
+        $scope.isEditVeiwError=true;
     }
 
     $scope.showGraph = function (uuid, version) {

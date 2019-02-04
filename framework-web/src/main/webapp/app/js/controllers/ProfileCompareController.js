@@ -310,9 +310,9 @@ ProfileModule.controller('ProfileComapreAttributeController',function($state,$st
     $scope.chartcolor=["#f1948a","#c39bd3","#73c6b6","#d98880","#82e0aa","#f7dc6f","#bb8fce","#f8c471","#7fb3d5","#76d7c4","#7dcea0","#f0b27a","#e59866",,"#85c1e9"];
     $scope.profileAttrAttributes=[
                         //{ name:"All",caption:"All"},
-                        { name:"minVal",caption:"minVal" },
-                        { name:"maxVal",caption:"maxVal" },
-                        { name:"avgVal",caption:"avgVal" },
+                        { name:"minval",caption:"minval" },
+                        { name:"maxVal",caption:"maxval" },
+                        { name:"avgVal",caption:"avgval" },
                         { name:"medianVal",caption:"medianVal" },
                         { name:"stdDev",caption:"stdDev" },
                         { name:"numDistinct",caption:"numDistinct" },

@@ -1,26 +1,28 @@
 JobMonitoringModule = angular.module('JobMonitoringModule');
 
-JobMonitoringModule.controller('DetailDataPipelineExecController', function($filter, $stateParams, $rootScope, $state, $scope, $sessionStorage, JobMonitoringService, sortFactory, dagMetaDataService,privilegeSvc) {
+JobMonitoringModule.controller('DetailDataPipelineExecController', function ($filter, $stateParams, $rootScope, $state, $scope, $sessionStorage, JobMonitoringService, sortFactory, dagMetaDataService, privilegeSvc) {
 
   $scope.uuid = $stateParams.id;
   $scope.mode = $stateParams.mode;
-  $rootScope.isCommentVeiwPrivlage=true;
+  $rootScope.isCommentVeiwPrivlage = true;
   var privileges = privilegeSvc.privileges['comment'] || [];
-		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
-		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
-		$scope.$on('privilegesUpdated', function (e, data) {
-			var privileges = privilegeSvc.privileges['comment'] || [];
-			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
-			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
-			
-  });  
-  $scope.userDetail={}
-	$scope.userDetail.uuid= $rootScope.setUseruuid;
-	$scope.userDetail.name= $rootScope.setUserName;
-  $scope.showdagexec = true;
+  $rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+  $rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
+  $scope.$on('privilegesUpdated', function (e, data) {
+    var privileges = privilegeSvc.privileges['comment'] || [];
+    $rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+    $rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
+
+  });
+  $scope.userDetail = {}
+  $scope.userDetail.uuid = $rootScope.setUseruuid;
+  $scope.userDetail.name = $rootScope.setUserName;
+  $scope.isEditInprogess=true;
+  $scope.isEditVeiwError=false;
+  $scope.showExec = true;
   $scope.selectTitle = dagMetaDataService.elementDefs['dagexec'].caption;
   $scope.state = dagMetaDataService.elementDefs['dagexec'].listState + "({type:'" + dagMetaDataService.elementDefs['dagexec'].execType + "'})"
-  $scope.onTaskShowDetail = function(data) {
+  $scope.onTaskShowDetail = function (data) {
     $rootScope.previousState = {};
     $rootScope.previousState.name = dagMetaDataService.elementDefs['dagexec'].detailState;
     $rootScope.previousState.params = {};
@@ -35,7 +37,7 @@ JobMonitoringModule.controller('DetailDataPipelineExecController', function($fil
     stageparam.returnBack = true;
     $state.go(stageName, stageparam);
   }
-  $scope.close = function() {
+  $scope.close = function () {
     if ($stateParams.returnBack == "true" && $rootScope.previousState) {
       //revertback
       $state.go($rootScope.previousState.name, $rootScope.previousState.params);
@@ -48,12 +50,11 @@ JobMonitoringModule.controller('DetailDataPipelineExecController', function($fil
     }
   }
 
-  JobMonitoringService.getLatestByUuid($scope.uuid, "dagexec").then(function(response) {
-    onSuccess(response.data)
-  });
-  var onSuccess = function(response) {
-
-    $scope.dagexecdata = response;
+  JobMonitoringService.getLatestByUuid($scope.uuid, "dagexec")
+  .then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
+  var onSuccess = function (response) {
+    $scope.isEditInprogess=false;
+    $scope.execData = response;
     var statusList = [];
     for (i = 0; i < response.statusList.length; i++) {
       d = $filter('date')(new Date(response.statusList[i].createdOn), "EEE MMM dd HH:mm:ss Z yyyy");
@@ -63,34 +64,32 @@ JobMonitoringModule.controller('DetailDataPipelineExecController', function($fil
     $scope.statusList = statusList
 
   }
+  var onError=function(){
+    $scope.isEditInprogess=false;
+    $scope.isEditVeiwError=true;
+  }
 
-  $scope.expandAll = function(expanded) {
+  $scope.expandAll = function (expanded) {
     $scope.$broadcast('onExpandAll', {
       expanded: expanded
     });
   };
 
-  $scope.getStagestatusList=function (index,statusList) {
-      $scope.dagexecdata.stages[index].imgPath=dagMetaDataService.statusDefs[statusList].iconPath;
+  $scope.getStagestatusList = function (index, statusList) {
+    $scope.execData.stages[index].imgPath = dagMetaDataService.statusDefs[statusList].iconPath;
   }
-  $scope.getTaskstatusList=function (parentIndex,index,statusList) {
-      //alert(statusList)
-      $scope.dagexecdata.stages[parentIndex].tasks[index].imgPathTask=dagMetaDataService.statusDefs[statusList].iconPath;
-      //alert($scope.dagexecdata.stages[parentIndex].tasks[index].imgPathTask)
+  $scope.getTaskstatusList = function (parentIndex, index, statusList) {
+    $scope.execData.stages[parentIndex].tasks[index].imgPathTask = dagMetaDataService.statusDefs[statusList].iconPath;
   }
-  $scope.showLoadGraph = function(uuid, version) {
-    $scope.showdagexec = false;
-    $scope.showgraph = false
-    $scope.graphDatastatusList = true
-    $scope.showgraphdiv = true;
+  $scope.showGraph = function (uuid, version) {
+    $scope.showExec = false;
+    $scope.showGraphDiv = true;
 
   }
 
-  $scope.showDagExecPage = function() {
-    $scope.showdagexec = true
-    $scope.showgraph = false
-    $scope.graphDatastatusList = false
-    $scope.showgraphdiv = false;
+  $scope.showExecPage = function () {
+    $scope.showExec = true
+    $scope.showGraphDiv = false;
   }
 
 });

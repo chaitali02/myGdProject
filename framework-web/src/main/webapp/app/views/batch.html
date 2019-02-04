@@ -36,14 +36,22 @@
             <i class="fa fa-gift"></i>{{batchDetail.name}}
         </div>
         <div class="tools">
+          <a  href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top"
+              tooltip  ng-hide="isAdd"  ng-class="(showForm==true)? 'currentpage':'notcurrentpage'" style="height:16px;font-size:16px;" data-ng-click="showHome(batchDetail.uuid,batchDetail.version,mode)">
+              <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+          </a>
           <a  href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
+            tooltip ng-class="(isEdit==true || isPrivlage || batchDetail.locked == 'Y')? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="enableEdit(batchDetail.uuid,batchDetail.version)">
+            <i class="fa fa-edit" style="display: block;margin: 2px auto;color:white"></i>
+          </a>
+          <!-- <a  href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
             tooltip ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="enableEdit(batchDetail.uuid,batchDetail.version)">
             <i class="fa fa-edit" style="display: block;margin: 2px auto;color:white"></i>
           </a>
           <a  href="javascript:;" title="View" data-toggle="tooltip" data-placement="top"
             tooltip ng-class="(showForm==true || isEdit==false)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="showview(batchDetail.uuid,batchDetail.version)">
             <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:white"></i>
-          </a>
+          </a> -->
           <a  href="javascript:;" title="Knowledge Graph" data-toggle="tooltip" data-placement="top"
             tooltip ng-show="isDependencyShow" ng-class="showForm==false? 'currentpage':'notcurrentpage'" data-ng-click="showGraph(batchDetail.uuid,batchDetail.version)">
             <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:white"></i>
@@ -69,12 +77,20 @@
           </div>
           <div class="form-body show-graph-body tree-graph" id="graphWrapper" tree-graph-directive uuid="batchDetail.uuid" version="batch.defaultVersion.version"></div>
         </div>
-        <form class="form-horizontal ng-pristine ng-valid" novalidate="novalidate" name="myform" ng-submit="submit()" ng-show="showForm"
+        <form class="form-horizontal ng-pristine ng-valid" novalidate="novalidate" name="myform" ng-submit="submit(myform.$dirty)" ng-show="showForm"
           prevent-enter-submit>
           <div class="form-wizard">
-
-            <div class="form-body">
-
+            <div class="centercontent" style="min-height:500px;" ng-if="isEditVeiwError">
+              <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
+            </div>
+            <div class="centercontent" style="min-height:500px;" ng-if="isEditInprogess">
+              <div class="spinner">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
+              </div>
+            </div>
+            <div class="form-body" ng-show="!isEditInprogess && !isEditVeiwError">
               <div class="form-group" ng-show="batchDetail.uuid">
                 <label class="control-label col-md-3">UUID </label>
                 <div class="col-md-6">
@@ -140,6 +156,16 @@
                   <div class="btn-group" ng-init="batchDetail.active='Y'">
                     <label class="btn btn-default" ng-model="batchDetail.active" ng-disabled="(mode=='true' || mode=='false') ? true:false" uib-btn-radio="'Y'">Yes</label>
                     <label class="btn btn-default" ng-model="batchDetail.active" ng-disabled="(mode=='true' || mode=='false') ? true:false" uib-btn-radio="'N'"
+                      uncheckable>No</label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
+                <div class="col-md-6">
+                  <div class="btn-group">
+                    <label class="btn btn-default" ng-model="batchDetail.locked" ng-disabled="(mode=='true' || mode=='false') ? true:false" uib-btn-radio="'Y'">Yes</label>
+                    <label class="btn btn-default" ng-model="batchDetail.locked" ng-disabled="(mode=='true' || mode=='false') ? true:false" uib-btn-radio="'N'"
                       uncheckable>No</label>
                   </div>
                 </div>
@@ -380,6 +406,26 @@
                                 </div>
                               </script>
                             </div>
+                            <div ng-if="data.frequencyType =='HOURLY'" >
+                                <div uib-popover-template="'hourly-popoverTemplate_data.html'" popover-append-to-body="true" popover-placement="left-bottom"
+                                  popover-is-open="data.hourlyPopoverIsOpen" ng-click="doneFrequencyDetailHourly($index)">
+                                  <div class="col-md-11" style="padding: 0px;">
+                                    <input class="form-control" ng-model="data.frequencyDetail"readonly ng-disabled="{{mode}}" required disable-validation-message="">
+                                  </div>
+                                  <div class="col-md-1" style="padding:7px 0px 0px 4px;">
+                                    <span class="fa fa-search-plus" tooltip-placement="left" uib-tooltip="Search"></span>
+                                  </div>
+                                </div>
+                                <script type="text/ng-template" id="hourly-popoverTemplate_data.html">
+                                  <div>
+                                    <hourly-selector model="myArrayOfHours"></hourly-selector>
+                                    <div style="height:50px;padding:6px 15px 0px 6px;float:right;">
+                                      <button type="button"  class="btn dark btn-outline" ng-click="closeFrequencyDetailHourly($index)">Cancel</button>  
+                                      <button type="button"  class="btn green"  ng-click="doneFrequencyDetailHourly($index)"  ng-disabled="{{mode}}">Done</button>
+                                    </div>
+                                  </div>
+                                </script>
+                              </div>
                           <div ng-if="['ONCE','DAILY','YEARLY'].indexOf(data.frequencyType) !=-1" style="text-align:center" >-NA-</div>
                         </span>
                       </td>
@@ -393,6 +439,7 @@
       </div>
     </div>
   </div>
+ 
 </div>
 <br>
 <br>

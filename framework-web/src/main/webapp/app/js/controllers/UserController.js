@@ -54,7 +54,6 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 	$scope.getLovByType = function() {
 		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
 		var onSuccessGetLovByType = function (response) {
-			console.log(response)
 			$scope.lobTag=response[0].value
 		}
 	}
@@ -75,8 +74,21 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 		$scope.showForm = true;
 		$scope.showGraphDiv = false
 	}/*End showPage*/
-
+	
+	
+	$scope.showHome=function(uuid, version,mode){
+		$scope.showPage()
+		$state.go('adminListuser', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
+	
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.userdata.locked =="Y"){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('adminListuser', {
 			id: uuid,
@@ -123,36 +135,85 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 		}
 	}
 
-	AdminUserService.getAllLatest('role').then(function (response) { onSuccessGetAllLatestRole(response.data) });
-	var onSuccessGetAllLatestRole = function (response) {
-		var roleInfoArray = [];
-		for (var i = 0; i < response.data.length; i++) {
-			var roleref = {};
-			roleref.uuid = response.data[i].uuid;
-			roleref.type = response.data[i].type;
-			roleref.id = response.data[i].uuid
-			roleref.name = response.data[i].name;
-			roleref.version = response.data[i].version;
-			roleInfoArray[i] = roleref;
+	$scope.getAllLatestOrgnization = function () {
+		CommonService.getAllLatest('organization').then(function (response) { onGetAllLatest(response.data) });
+		var onGetAllLatest = function (response) {
+			$scope.allOrgnization = response;
 		}
-		$scope.roleall = roleInfoArray;
+	}
+	
+	$scope.getLatestByUuid=function(){
+		AdminUserService.getLatestByUuid($rootScope.appUuid,'application').then(function(response){onSuccessGetLatestByUuid(response.data)});
+	    var onSuccessGetLatestByUuid=function(response){
+			$scope.applicationOrgDetail=response;
+			if($scope.applicationOrgDetail.applicationType =="SYSADMIN"){
+				$scope.getAllLatestOrgnization();
+				
+
+			}
+			else{
+				$scope.selectOrgInfo={};
+				$scope.selectOrgInfo.uuid=$scope.applicationOrgDetail.orgInfo.ref.uuid;
+				$scope.getGroupsByOrg($scope.selectOrgInfo.uuid);
+
+			}
+		}
+	}
+	// AdminUserService.getAllLatest('role').then(function (response) { onSuccessGetAllLatestRole(response.data) });
+	// var onSuccessGetAllLatestRole = function (response) {
+	// 	var roleInfoArray = [];
+	// 	for (var i = 0; i < response.data.length; i++) {
+	// 		var roleref = {};
+	// 		roleref.uuid = response.data[i].uuid;
+	// 		roleref.type = response.data[i].type;
+	// 		roleref.id = response.data[i].uuid
+	// 		roleref.name = response.data[i].name;
+	// 		roleref.version = response.data[i].version;
+	// 		roleInfoArray[i] = roleref;
+	// 	}
+	// 	$scope.roleall = roleInfoArray;
+	// }
+
+	// AdminUserService.getAllLatest('group').then(function (response) { onSuccessGetAllLatestGroup(response.data) });
+	// var onSuccessGetAllLatestGroup = function (response) {
+	// 	var groupInfoArray = [];
+	// 	for (var i = 0; i < response.data.length; i++) {
+	// 		var groupref = {};
+	// 		groupref.uuid = response.data[i].uuid;
+	// 		groupref.type = response.data[i].type;
+	// 		groupref.id = response.data[i].uuid
+	// 		groupref.name = response.data[i].name;
+	// 		groupref.version = response.data[i].version;
+	// 		groupInfoArray[i] = groupref;
+	// 	}
+	// 	$scope.groupall = groupInfoArray;
+	// }
+
+	$scope.getGroupsByOrg=function(uuid){
+		AdminUserService.getGroupsByOrg(uuid,'organization').then(function (response) { onSuccessGetGroupsByOrg(response.data) });
+		var onSuccessGetGroupsByOrg = function (response) {
+			var groupInfoArray = [];
+			for (var i = 0; i < response.length; i++) {
+				var groupref = {};
+				groupref.uuid = response[i].uuid;
+				groupref.type = response[i].type;
+				groupref.id = response[i].uuid
+				groupref.name = response[i].name;
+				groupref.version = response[i].version;
+				groupInfoArray[i] = groupref;
+			}
+			$scope.groupall = groupInfoArray;
+	   }
 	}
 
-	AdminUserService.getAllLatest('group').then(function (response) { onSuccessGetAllLatestGroup(response.data) });
-	var onSuccessGetAllLatestGroup = function (response) {
-		var groupInfoArray = [];
-		for (var i = 0; i < response.data.length; i++) {
-			var groupref = {};
-			groupref.uuid = response.data[i].uuid;
-			groupref.type = response.data[i].type;
-			groupref.id = response.data[i].uuid
-			groupref.name = response.data[i].name;
-			groupref.version = response.data[i].version;
-			groupInfoArray[i] = groupref;
+    $scope.onChangeOrg=function(){
+		if($scope.selectOrgInfo){
+			$scope.groupInfoTags=null;
+			$scope.groupall=null;	
+			$scope.getGroupsByOrg($scope.selectOrgInfo.uuid);
+			
 		}
-		$scope.groupall = groupInfoArray;
 	}
-
 
 
 	/*start showGraph*/
@@ -178,14 +239,17 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 	$scope.selectVersion = function (uuid, version) {
 		$scope.tags = null;
 		$scope.myform.$dirty = false;
-		AdminUserService.getOneByUuidAndVersion(uuid, version, 'user').then(function (response) { onGetByOneUuidandVersion(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		AdminUserService.getOneByUuidAndVersion(uuid, version, 'user')
+			.then(function (response) { onGetByOneUuidandVersion(response.data)},function (response) { onError(response.data)});
 		var onGetByOneUuidandVersion = function (response) {
+			$scope.isEditInprogess=false;
 			$scope.userdata = response;
 			var defaultversion = {};
 			defaultversion.version = response.version;
 			defaultversion.uuid = response.uuid;
 			$scope.user.defaultVersion = defaultversion;
-			//  $scope.roleInfoTags=response.roleInfo;
 			$scope.groupInfoTags = response.groupInfo;
 
 			var groupInfo = [];
@@ -198,18 +262,6 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 				groupInfo[j] = grouptag
 			}
 			$scope.groupInfoTags = groupInfo;
-
-			var roleInfo = [];
-			//    	    for(var j=0;j<response.roleInfo.length;j++){
-			//    	    	var roletag={};
-			//      	    	roletag.uuid=response.roleInfo[j].ref.uuid;
-			//    	    	roletag.type=response.roleInfo[j].ref.type;
-			//    	    	roletag.name=response.roleInfo[j].ref.name;
-			//    	    	roletag.id=response.roleInfo[j].ref.uuid;
-			//    	    	roleInfo[j]=roletag
-			//    	    }
-			//$scope.roleInfoTags=roleInfo;
-
 			var tags = [];
 			if (response.tags != null) {
 				for (var i = 0; i < response.tags.length; i++) {
@@ -219,40 +271,43 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 					$scope.tags = tags;
 				}
 			}//End Innter If
-
+			$scope.getLatestByUuid();
+           // $scope.getAllLatestOrgnization();
+			$scope.selectOrgInfo={};
+			
+			if(response.orgInfo !=null){
+				$scope.getGroupsByOrg(response.orgInfo.ref.uuid);
+				$scope.selectOrgInfo.uuid=response.orgInfo.ref.uuid;
+				$scope.selectOrgInfo.name=response.orgInfo.ref.name;
+			}
+			
+		};
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
 		}
 	} /* end selectVersion*/
 
 	/*start If*/
 	if (typeof $stateParams.id != "undefined") {
-		$scope.mode = $stateParams.mode
+		$scope.mode = $stateParams.mode;
 		$scope.isDependencyShow = true;
-		//if(typeof $sessionStorage.fromParams != "undefined"){
-		/*//if($sessionStorage.fromParams.type !="user"){
-			$scope.state=$sessionStorage.fromStateName;
-			$scope.stateparme=$sessionStorage.fromParams;
-			$sessionStorage.showgraph=true;
-			var data=$stateParams.id.split("_");
-			var uuid=data[0];
-			var version=data[1]
-			$scope.getAllVersion(uuid)//Call SelectAllVersion Function
-			$scope.selectVersion(uuid,version);//Call SelectVersion Function
-		//}//End Inner If*/
-		// }
-		//else{
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
 		$scope.getAllVersion($stateParams.id)//Call SelectAllVersion Function
 		if (!$stateParams.version) {
-			AdminUserService.getLatestByUuid($stateParams.id, "user").then(function (response) { onGetLatestByUuid(response.data) });
+			AdminUserService.getLatestByUuid($stateParams.id, "user").then(function (response) { onGetLatestByUuid(response.data)},function (response) { onError(response.data)});
 		} else {
-			CommonService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, "user").then(function (response) { onGetLatestByUuid(response.data) });
+			CommonService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, "user")
+			.then(function (response) { onGetLatestByUuid(response.data) },function (response) { onError(response.data)});
 		}
 		var onGetLatestByUuid = function (response) {
+			$scope.isEditInprogess=false;
 			$scope.userdata = response;
 			var defaultversion = {};
 			defaultversion.version = response.version;
 			defaultversion.uuid = response.uuid;
 			$scope.user.defaultVersion = defaultversion;
-			//   $scope.roleInfoTags=response.roleInfo;
 			$scope.groupInfoTags = response.groupInfo;
 
 			var groupInfo = [];
@@ -265,18 +320,9 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 				groupInfo[j] = grouptag
 			}
 			$scope.groupInfoTags = groupInfo;
-
-			//	    	    var roleInfo=[];
-			//	    	    for(var j=0;j<response.roleInfo.length;j++){
-			//	    	    	var roletag={};
-			//	      	    	roletag.uuid=response.roleInfo[j].ref.uuid;
-			//	    	    	roletag.type=response.roleInfo[j].ref.type;
-			//	    	    	roletag.name=response.roleInfo[j].ref.name;
-			//	    	    	roletag.id=response.roleInfo[j].ref.uuid;
-			//	    	    	roleInfo[j]=roletag
-			//	    	    }
-			//	    	    $scope.roleInfoTags=roleInfo;
-
+			$scope.selectDefaultGroup={};
+			$scope.selectDefaultGroup.uuid=response.defaultGroup.ref.uuid;
+			$scope.selectDefaultGroup.name=response.defaultGroup.ref.name;
 			var tags = [];
 			if (response.tags != null) {
 				for (var i = 0; i < response.tags.length; i++) {
@@ -286,9 +332,29 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 					$scope.tags = tags;
 				}
 			}//End Innter If
-		}//End getLatestByUuid
+			$scope.getLatestByUuid();
+
+			//$scope.getAllLatestOrgnization();
+			$scope.selectOrgInfo={};
+			if(response.orgInfo !=null){
+				$scope.getGroupsByOrg(response.orgInfo.ref.uuid);	
+				$scope.selectOrgInfo.uuid=response.orgInfo.ref.uuid;
+				$scope.selectOrgInfo.name=response.orgInfo.ref.name;
+
+			}
+		};//End getLatestByUuid
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		}
 		//}//End Inner Else
 	}/*End If*/
+	else{
+		$scope.userdata={};
+		$scope.userdata.locked="N";
+		$scope.getLatestByUuid();
+		//$scope.getAllLatestOrgnization();
+	}
 
 
 
@@ -327,13 +393,14 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 		userJson.name = $scope.userdata.name;
 		userJson.desc = $scope.userdata.desc;
 		userJson.active = $scope.userdata.active;
+		userJson.locked = $scope.userdata.locked;
 		userJson.published = $scope.userdata.published;
 		userJson.password = $scope.userdata.password;
 		userJson.firstName = $scope.userdata.firstName;
 		userJson.middleName = $scope.userdata.middleName;
 		userJson.lastName = $scope.userdata.lastName;
 		userJson.emailId = $scope.userdata.emailId;
-
+        
 		var tagArray = [];
 		if ($scope.tags != null) {
 			for (var c = 0; c < $scope.tags.length; c++) {
@@ -344,20 +411,15 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 				upd_tag="Y"	
 			}
 		}
-		userJson.tags = tagArray
+		userJson.tags = tagArray;
 
-		//        var roleInfoArray=[];
-		//        if($scope.roleInfoTags!=null){
-		//	   		for(var c=0;c<$scope.roleInfoTags.length;c++){
-		//		   		var roleinforef={};
-		//		   		var roleref={};
-		//		     	roleinforef.uuid=$scope.roleInfoTags[c].uuid;
-		//		     	roleinforef.type="role";
-		//	         	roleref.ref=roleinforef
-		//		     	roleInfoArray.push(roleref);
-		//		   }
-		//		}
-		//       	userJson.roleInfo=roleInfoArray
+		var orgInfo={};
+		var refOrgInfo={};
+		refOrgInfo.uuid=$scope.selectOrgInfo.uuid;
+		refOrgInfo.type="organization";	
+		orgInfo.ref=refOrgInfo;
+		userJson.orgInfo=orgInfo;
+
 
 		var groupInfoArray = [];
 		if ($scope.groupInfoTags != null) {
@@ -372,7 +434,13 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 			}
 		}
 		userJson.groupInfo = groupInfoArray
-		console.log(JSON.stringify(groupInfoArray))
+
+		var defaultGroup={};
+		var defaultGroupRef={};
+		defaultGroupRef.uuid=$scope.selectDefaultGroup.uuid;
+		defaultGroupRef.type="group";
+		defaultGroup.ref=defaultGroupRef
+		userJson.defaultGroup=defaultGroup
 		AdminUserService.submit(userJson, 'user',upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			$scope.dataLoading = false;

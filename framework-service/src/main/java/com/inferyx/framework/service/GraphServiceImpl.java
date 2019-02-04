@@ -38,6 +38,10 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.graphframes.GraphFrame;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.index.CompoundIndexDefinition;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -76,6 +80,9 @@ import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.GraphOperator;
 import com.inferyx.framework.operator.IExecutable;
 import com.inferyx.framework.operator.IParsable;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
 
 @Service
 public class GraphServiceImpl implements IParsable, IExecutable {
@@ -98,6 +105,10 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 	protected DataStoreServiceImpl dataStoreServiceImpl;
 	@Resource
 	protected ConcurrentHashMap graphpodMap;
+	@Autowired
+	SecurityServiceImpl securityServiceImpl;
+	@Autowired
+	MongoTemplate mongoTemplate;
 
 	public LogServiceImpl getLogServiceImpl() {
 		return logServiceImpl;
@@ -526,10 +537,16 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		}
 		for (int i = 0; i < verticesr.size(); i++) {
 			GraphMetaIdentifierHolder graphMetaIdentifierHolder = (GraphMetaIdentifierHolder) verticesr.get(i).get(8);
+			MetaIdentifierHolder appInfo= new MetaIdentifierHolder();
+		    List<MetaIdentifierHolder> appInfoList = new ArrayList<MetaIdentifierHolder>();
+			if(securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null) {
+				 appInfo=(MetaIdentifierHolder) securityServiceImpl.getAppInfo();				
+				 appInfoList.add(appInfo);
+				 }
 			vertex = new Vertex(verticesr.get(i).getString(0), verticesr.get(i).getString(1),
 					verticesr.get(i).getString(2), verticesr.get(i).getString(3), verticesr.get(i).getString(4),
 					verticesr.get(i).getString(5), verticesr.get(i).getString(6), verticesr.get(i).getString(7),
-					graphMetaIdentifierHolder);
+					graphMetaIdentifierHolder,appInfoList);
 			vertices.add(vertex);
 			if (i % 10000 == 0) {
 				saveVertices(vertices);
@@ -570,7 +587,14 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 	}
 
 	public void saveVertex(Vertex vertex) {
-		iVertexDao.save(vertex);
+/*
+		DBObject indexOptions = new BasicDBObject();
+		indexOptions.put("uuid", 1);
+		CompoundIndexDefinition indexDefinition =new CompoundIndexDefinition(indexOptions);
+		
+		mongoTemplate.indexOps(Vertex.class).ensureIndex(indexDefinition);*/
+		mongoTemplate.save(vertex);
+		//iVertexDao.save(vertex);
 	}
 
 	public void saveEdge(Edge edge) {
@@ -600,11 +624,26 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 	}
 
 	public void deleteAllVertices() {
-		iVertexDao.deleteAll();
+		String appUuid = null;
+		if (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null) {
+			appUuid = (String) securityServiceImpl.getAppInfo().getRef().getUuid();
+		}
+		// iVertexDao.delete(appUuid);
+		Query query = new Query();
+		query.addCriteria(Criteria.where("appInfo.ref.uuid").is(appUuid));
+		mongoTemplate.remove(query, Vertex.class);
 	}
+	
 
 	public void deleteAllEdges() {
-		iEdgeDao.deleteAll();
+		String appUuid = null;
+		if (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null) {
+			appUuid = (String) securityServiceImpl.getAppInfo().getRef().getUuid();
+		}
+	//	iEdgeDao.deleteAll(appInfo);
+		Query query = new Query();
+		query.addCriteria(Criteria.where("appInfo.ref.uuid").is(appUuid));
+		mongoTemplate.remove(query, Edge.class);
 	}
 
 	/*
@@ -758,7 +797,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		String active = document.get("active").toString();
 		Row vertexRow = RowFactory.create(UUID, Version, Name, type, null, null, CreatedOn, active);
 
-		Vertex vertex = new Vertex(UUID, Version, Name, type, null, null, CreatedOn, active, null);
+		Vertex vertex = new Vertex(UUID, Version, Name, type, null, null, CreatedOn, active, null, null);
 		saveVertex(vertex);
 
 		verticesRowList.add(vertexRow);
@@ -767,9 +806,9 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 	}
 
 	public Row createVertex(String uuid, String version, String name, String nodeType, String createdOn, String active,
-			GraphMetaIdentifierHolder graphMetaIdentifierHolder) {
+			GraphMetaIdentifierHolder graphMetaIdentifierHolder ,List<MetaIdentifierHolder> appInfo) {
 		return RowFactory.create(uuid, version, name, nodeType, null, null, createdOn, active,
-				graphMetaIdentifierHolder);
+				graphMetaIdentifierHolder,appInfo);
 	}
 
 	/*
@@ -792,7 +831,7 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		return edgeRow;
 	}
 
-	@SuppressWarnings("unused")
+	@SuppressWarnings({ "unused", "unchecked", "null" })
 	public void createVnE(String jsonString, List<Row> totalVertexList, List<Row> totalEdgeList,
 			Map<String, Row> verticesRowMap, Map<String, Row> edgeRowMap, String type,
 			GraphMetaIdentifierHolder graphMetaIdentifierHolder) throws JSONException, ParseException,
@@ -820,11 +859,20 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		graphMetaIdentifier.setVersion(srcVersion);
 		graphMetaIdentifier.setName(name);
 		graphMetaIdentifierHolder.setRef(graphMetaIdentifier);
-		Row vertexRow = createVertex(uuid, "", name, type, new Date().toString(), "Y", graphMetaIdentifierHolder);
+		MetaIdentifierHolder appInfo= new MetaIdentifierHolder();
+	    List<MetaIdentifierHolder> appInfoList = new ArrayList<MetaIdentifierHolder>();
+		if(securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null) {
+			 appInfo=(MetaIdentifierHolder) securityServiceImpl.getAppInfo();
+			
+			 appInfoList.add(appInfo);
+			 }
+		
+	
+		Row vertexRow = createVertex(uuid, "", name, type, new Date().toString(), "Y", graphMetaIdentifierHolder,appInfoList);
 		totalVertexList.add(vertexRow);
 		verticesRowMap.put(uuid.concat("_").concat(name).concat("_").concat(type).concat("_").concat("Y"), vertexRow);
 		Vertex vertex = new Vertex(uuid, "", name, type, null, null, new Date().toString(), "Y",
-				graphMetaIdentifierHolder);
+				graphMetaIdentifierHolder,appInfoList);
 		saveVertex(vertex);
 		createVnE(jsonObject, vertex, totalVertexList, totalEdgeList, verticesRowMap, edgeRowMap, null, null,
 				graphMetaIdentifierHolder);
@@ -898,13 +946,21 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 						srcVertex.getUuid().substring(srcVertex.getUuid().lastIndexOf("_") + 1) + "_" + position);
 			}
 			graphMetaIdentifierHolder.setRef(graphMeta);
+			MetaIdentifierHolder appInfo= new MetaIdentifierHolder();
+		    List<MetaIdentifierHolder> appInfoList = new ArrayList<MetaIdentifierHolder>();
+			if (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null) {
+				appInfo = (MetaIdentifierHolder) securityServiceImpl.getAppInfo();
+
+				appInfoList.add(appInfo);
+			}
+			
 			vertexRow = createVertex(srcVertex.getUuid() + "_" + position, "", position, parentName,
-					new Date().toString(), "Y", graphMetaIdentifierHolder);
+					new Date().toString(), "Y", graphMetaIdentifierHolder,appInfoList);
 			totalVertexList.add(vertexRow);
 			verticesRowMap.put(srcVertex.getUuid() + "_" + position.concat("_").concat(name + "_" + position)
 					.concat("_").concat(name).concat("_").concat("Y"), vertexRow);
 			vertex = new Vertex(srcVertex.getUuid() + "_" + position, "", position, parentName, null, null,
-					new Date().toString(), "Y", graphMetaIdentifierHolder);
+					new Date().toString(), "Y", graphMetaIdentifierHolder,appInfoList);
 			saveVertex(vertex);
 			position = null;
 			srcVertex = vertex;
@@ -1517,14 +1573,22 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 					graphMeta.setType(childObj.optString("type"));
 					graphMeta.setName(name);
 					graphMetaIdentifierHolder.setRef(graphMeta);
+					MetaIdentifierHolder appInfo= new MetaIdentifierHolder();
+				    List<MetaIdentifierHolder> appInfoList = new ArrayList<MetaIdentifierHolder>();
+					if (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null) {
+						appInfo = (MetaIdentifierHolder) securityServiceImpl.getAppInfo();
+
+						appInfoList.add(appInfo);
+					}
+					
 					vertexRow = createVertex(childUuid + "_" + version, "", name, parentName, new Date().toString(),
-							"Y", graphMetaIdentifierHolder);
+							"Y", graphMetaIdentifierHolder,appInfoList);
 					totalVertexList.add(vertexRow);
 					verticesRowMap.put(
 							childUuid.concat("_").concat(name).concat("_").concat(parentName).concat("_").concat("Y"),
 							vertexRow);
 					vertex = new Vertex(childUuid + "_" + version, "", name, parentName, null, null,
-							new Date().toString(), "Y", graphMetaIdentifierHolder);
+							new Date().toString(), "Y", graphMetaIdentifierHolder,appInfoList);
 					saveVertex(vertex);
 					continue;
 				}

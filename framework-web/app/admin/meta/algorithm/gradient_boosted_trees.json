@@ -1,9 +1,10 @@
 {
     "type" : "CLASSIFICATION",
-    "libraryType" : "R",
+    "libraryType" : "SPARKML",
     "trainClass" : "org.apache.spark.ml.classification.GBTClassifier",
     "modelClass" : "org.apache.spark.ml.classification.GBTClassificationModel",
-    "summaryMethods" : [ 
+    "summaryMethods" : [
+        "featureImportances", 
         "getMaxIter", 
         "getLossType", 
         "getCacheNodeIds", 
@@ -32,8 +33,8 @@
     },
     "uuid" : "b1061392-5ef7-454c-8280-cf8180fc0035",
     "version" : "1540549028",
-    "name" : "Gradient_Boosted_Trees",
-    "desc" : "Gradient_Boosted_Trees classification",
+    "name" : "Gradient Boosted Trees",
+    "desc" : "Gradient Boosted Trees classification",
     "createdBy" : {
         "ref" : {
             "type" : "user",
@@ -45,6 +46,7 @@
     "createdOn" : ISODate("2018-10-26T10:17:08.000Z"),
     "tags" : [],
     "active" : "Y",
+  "locked" : "N",
     "published" : "N",
     "appInfo": [
 			{

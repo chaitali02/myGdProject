@@ -35,7 +35,6 @@ import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.common.SessionHelper;
 import com.inferyx.framework.dao.IMapDao;
 import com.inferyx.framework.dao.IMapExecDao;
@@ -61,7 +60,6 @@ import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.enums.SysVarType;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.factory.ExecutorFactory;
-import com.inferyx.framework.operator.FilterOperator;
 import com.inferyx.framework.operator.IExecutable;
 import com.inferyx.framework.operator.IParsable;
 import com.inferyx.framework.operator.MapIterOperator;
@@ -74,8 +72,6 @@ public class MapServiceImpl implements IParsable, IExecutable {
 
 	@Autowired
 	GraphRegister<?> registerGraph;
-	/*@Autowired
-	JavaSparkContext javaSparkContext;*/
 	@Autowired
 	IMapDao iMapDao;
 	@Autowired
@@ -109,11 +105,7 @@ public class MapServiceImpl implements IParsable, IExecutable {
 	@Autowired
 	protected DataStoreServiceImpl dataStoreServiceImpl;
 	@Autowired
-	protected MetadataUtil daoRegister;
-	@Autowired
 	protected MapOperator mapOperator;
-	@Autowired
-	protected FilterOperator filterOperator;
 	@Autowired
 	protected MapIterOperator mapIterOperator;
 	@Autowired
@@ -521,16 +513,20 @@ public class MapServiceImpl implements IParsable, IExecutable {
 //			otherParams = new HashMap<>();
 //		}
 		
-		Datapod fromDatapod = null;
-		DataSet fromDataset = null;
+//		Datapod fromDatapod = null;
+//		DataSet fromDataset = null;
 		if (relation.getDependsOn().getRef().getType() == MetaType.datapod) {
-			fromDatapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(relation.getDependsOn().getRef(), refKeyMap));
+//			fromDatapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(relation.getDependsOn().getRef(), refKeyMap));
+			MetaIdentifier ref = TaskParser.populateRefVersion(relation.getDependsOn().getRef(), refKeyMap);
+			Datapod fromDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 			parseDatapodNames(fromDatapod, otherParams, mapExec, runMode);
 			// Derive table name on the basis of depends on value.
 			String table = getTableName(fromDatapod, otherParams, mapExec, runMode);
 			otherParams.put("relation_".concat(relation.getUuid().concat("_datapod_").concat(fromDatapod.getUuid())), table);
 		} else if (relation.getDependsOn().getRef().getType() == MetaType.dataset) {
-			fromDataset = (DataSet) daoRegister.getRefObject(TaskParser.populateRefVersion(relation.getDependsOn().getRef(), refKeyMap));
+//			fromDataset = (DataSet) daoRegister.getRefObject(TaskParser.populateRefVersion(relation.getDependsOn().getRef(), refKeyMap));
+			MetaIdentifier ref = TaskParser.populateRefVersion(relation.getDependsOn().getRef(), refKeyMap);
+			DataSet fromDataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 			parseDSDatapodNames(fromDataset, refKeyMap, otherParams, mapExec, runMode);
 		}
 
@@ -542,12 +538,18 @@ public class MapServiceImpl implements IParsable, IExecutable {
 		DataSet dataset = null;
 		for (int i = 0; i < relInfoList.size(); i++) {
 			if (relInfoList.get(i).getJoin().getRef().getType() == MetaType.datapod) {
-				datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(relInfoList.get(i).getJoin().getRef(), refKeyMap));
+//				datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(relInfoList.get(i).getJoin().getRef(), refKeyMap));
+				MetaIdentifier ref = TaskParser.populateRefVersion(relInfoList.get(i).getJoin().getRef(), refKeyMap);
+				datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
+				
 				String rightTable = getTableName(datapod, otherParams, mapExec, runMode);
 				otherParams.put("relation_".concat(relation.getUuid().concat("_datapod_").concat(datapod.getUuid())),
 						rightTable);
 			} else if (relInfoList.get(i).getJoin().getRef().getType() == MetaType.dataset) {
-				dataset = (DataSet) daoRegister.getRefObject(TaskParser.populateRefVersion(relInfoList.get(i).getJoin().getRef(), refKeyMap));
+//				dataset = (DataSet) daoRegister.getRefObject(TaskParser.populateRefVersion(relInfoList.get(i).getJoin().getRef(), refKeyMap));
+				MetaIdentifier ref = TaskParser.populateRefVersion(relInfoList.get(i).getJoin().getRef(), refKeyMap);
+				dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
+				
 				parseDSDatapodNames(dataset, refKeyMap, otherParams, mapExec, runMode);
 			}
 		} // End for
@@ -580,13 +582,21 @@ public class MapServiceImpl implements IParsable, IExecutable {
 		public void parseRuleDatapodNames(Rule rule, List<String> datapodList,
 				java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, MapExec mapExec, RunMode runMode) throws Exception {
 			if (rule.getSource().getRef().getType() == MetaType.relation) {
-				Relation relation = (Relation) daoRegister.getRefObject(rule.getSource().getRef());
+//				Relation relation = (Relation) daoRegister.getRefObject(rule.getSource().getRef());
+				Relation relation = (Relation) commonServiceImpl.getOneByUuidAndVersion(rule.getSource().getRef().getUuid(), rule.getSource().getRef().getVersion(), rule.getSource().getRef().getType().toString(), "N");
+				
 				parseRelDatapodNames(relation, refKeyMap, otherParams, mapExec, runMode);
 			} else if (rule.getSource().getRef().getType() == MetaType.datapod) {
-				Datapod datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(rule.getSource().getRef(), refKeyMap));
+//				Datapod datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(rule.getSource().getRef(), refKeyMap));
+				MetaIdentifier ref = TaskParser.populateRefVersion(rule.getSource().getRef(), refKeyMap);
+				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
+				
 				parseDatapodNames(datapod, otherParams, mapExec, runMode);
 			} else if (rule.getSource().getRef().getType() == MetaType.dataset) {
-				DataSet dataset = (DataSet) daoRegister.getRefObject(TaskParser.populateRefVersion(rule.getSource().getRef(), refKeyMap));
+//				DataSet dataset = (DataSet) daoRegister.getRefObject(TaskParser.populateRefVersion(rule.getSource().getRef(), refKeyMap));
+				MetaIdentifier ref = TaskParser.populateRefVersion(rule.getSource().getRef(), refKeyMap);
+				DataSet dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
+				
 				parseDSDatapodNames(dataset, refKeyMap, otherParams, mapExec, runMode);
 			}
 		}
@@ -595,11 +605,14 @@ public class MapServiceImpl implements IParsable, IExecutable {
 		public void parseDSDatapodNames(DataSet dataset, 
 				java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, MapExec mapExec, RunMode runMode) throws Exception {
 			if (dataset.getDependsOn().getRef().getType() == MetaType.relation) {
-				Relation relation = (Relation) daoRegister.getRefObject(dataset.getDependsOn().getRef());
+//				Relation relation = (Relation) daoRegister.getRefObject(dataset.getDependsOn().getRef());
+				Relation relation = (Relation) commonServiceImpl.getOneByUuidAndVersion(dataset.getDependsOn().getRef().getUuid(), dataset.getDependsOn().getRef().getVersion(), dataset.getDependsOn().getRef().getType().toString(), "N");
+				
 				parseRelDatapodNames(relation, refKeyMap, otherParams, mapExec, runMode);
 			} else if (dataset.getDependsOn().getRef().getType() == MetaType.datapod) {
-				Datapod datapod = (Datapod) daoRegister
-						.getRefObject(TaskParser.populateRefVersion(dataset.getDependsOn().getRef(), refKeyMap));
+//				Datapod datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(dataset.getDependsOn().getRef(), refKeyMap));
+				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dataset.getDependsOn().getRef().getUuid(), dataset.getDependsOn().getRef().getVersion(), dataset.getDependsOn().getRef().getType().toString(), "N");
+				
 				parseDatapodNames(datapod, otherParams, mapExec, runMode);
 			}
 		}
@@ -860,7 +873,8 @@ public class MapServiceImpl implements IParsable, IExecutable {
 			mapExec = new MapExec();
 			mapExec.setBaseEntity();
 		}
-		Map map = (Map) daoRegister.getRefObject(mapExec.getDependsOn().getRef());
+//		Map map = (Map) daoRegister.getRefObject(mapExec.getDependsOn().getRef());
+		Map map = (Map) commonServiceImpl.getOneByUuidAndVersion(mapExec.getDependsOn().getRef().getUuid(), mapExec.getDependsOn().getRef().getVersion(), mapExec.getDependsOn().getRef().getType().toString());
 		MetaIdentifierHolder dependsOnHolder = new MetaIdentifierHolder(new MetaIdentifier(MetaType.map, map.getUuid(), map.getVersion()));
 		if (mapExec.getDependsOn() == null) {
 			mapExec.setDependsOn(dependsOnHolder);
@@ -881,7 +895,7 @@ public class MapServiceImpl implements IParsable, IExecutable {
 		//List<Status> statusList = new ArrayList<>();
 		RunMapServiceImpl runMapServiceImpl = new RunMapServiceImpl();
 		runMapServiceImpl.setMapExecServiceImpl(mapExecServiceImpl);
-		runMapServiceImpl.setDaoRegister(daoRegister);
+//		runMapServiceImpl.setDaoRegister(daoRegister);
 		runMapServiceImpl.setiMapExecDao(iMapExecDao);
 		runMapServiceImpl.setData(data);
 		runMapServiceImpl.setDataStoreServiceImpl(dataStoreServiceImpl);
@@ -979,12 +993,25 @@ public class MapServiceImpl implements IParsable, IExecutable {
 		return null;
 	}
 
-
+    
 	@Override
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		generateSql(baseExec.getDependsOn().getRef().getUuid(), baseExec.getDependsOn().getRef().getVersion(), (MapExec) baseExec, null, 
 				null, DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(), execParams, runMode);
 		return null;
+	}
+	
+	public void restart(String uuid,String version, RunMode runMode) {
+		try {
+			MapExec mapExec =(MapExec) commonServiceImpl.getLatestByUuid(uuid,MetaType.mapExec.toString());
+		    mapExec = generateSql(mapExec.getDependsOn().getRef().getUuid(),mapExec.getDependsOn().getRef().getVersion(), mapExec, null, null, null, null, null, runMode);
+			com.inferyx.framework.domain.Map map = (com.inferyx.framework.domain.Map) commonServiceImpl.getLatestByUuid(mapExec.getDependsOn().getRef().getUuid(),MetaType.map.toString());
+			OrderKey datapodKey = map.getTarget().getRef().getKey();
+			mapExec =executeSql(mapExec, datapodKey, runMode);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 }

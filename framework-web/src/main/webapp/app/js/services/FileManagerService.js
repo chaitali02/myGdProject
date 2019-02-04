@@ -23,4 +23,17 @@ AdminModule.service('FileManagerService',function($q,CommonFactory,sortFactory){
         }
         return deferred.promise;
     }
+
+    this.getDatasourceByType=function(type){
+        var url="metadata/getDatasourceByType?action=view&type=" + type;
+        var deferred = $q.defer();
+        CommonFactory.httpGet(url).then(function(response){onSuccess(response.data)});
+        var onSuccess=function(response){
+            deferred.resolve({
+                data:response
+            });
+        }
+        return deferred.promise;
+    }
+  
 });

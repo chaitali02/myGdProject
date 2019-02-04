@@ -11,6 +11,7 @@
 package com.inferyx.framework.controller;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
@@ -38,13 +39,16 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.dao.IDatasourceDao;
+import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseEntityStatus;
 import com.inferyx.framework.domain.CommentView;
 import com.inferyx.framework.domain.DataStore;
+import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Function;
+import com.inferyx.framework.domain.Group;
 import com.inferyx.framework.domain.Lov;
 import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaStatsHolder;
@@ -57,7 +61,6 @@ import com.inferyx.framework.domain.StatusHolder;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
-import com.inferyx.framework.parser.DagParser;
 import com.inferyx.framework.parser.FormulaParser;
 import com.inferyx.framework.register.CSVRegister;
 import com.inferyx.framework.register.HiveRegister;
@@ -87,8 +90,6 @@ public class MetadataController {
 	FormulaServiceImpl formulaServiceImpl;
 	@Autowired
 	DatasourceServiceImpl datasourceServiceImpl;
-	@Autowired
-	DagParser parser;
 	@Autowired
 	HDFSInfo hdfsInfo;
 	@Autowired
@@ -533,13 +534,8 @@ public class MetadataController {
 			@RequestParam("type") String type,
 			@RequestBody List<Registry> registryList,
 			@RequestParam(value = "action", required = false) String action, 
-			@RequestParam(value = "mode", required = false) String mode) throws Exception {
-		RunMode runMode;
-		if (mode == null) {
-			runMode = RunMode.ONLINE;
-		} else {
-			runMode = RunMode.valueOf(mode); 
-		}
+			@RequestParam(value = "mode", required = false, defaultValue="ONLINE") String mode) throws Exception {
+		RunMode runMode = Helper.getExecutionMode(mode);
 		return registerService.register(uuid, version, type, registryList, runMode);
 	}
 
@@ -622,6 +618,13 @@ public class MetadataController {
 
 		return registerService.getFormulaByType(uuid);
 	}
+	@RequestMapping(value = "/getFormulaByApp", method = RequestMethod.GET)
+	public @ResponseBody String getFormulaByType(
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action)
+			throws JsonProcessingException, JSONException {
+		return registerService.getFormulaByApp();
+	}
 
 	@RequestMapping(value = "/getVizpodByType", method = RequestMethod.GET)
 	public @ResponseBody String getVizpodByType(@RequestParam("uuid") String uuid,
@@ -636,10 +639,11 @@ public class MetadataController {
 	public @ResponseBody String getFormulaByType2(@RequestParam(value="uuid",required = false) String uuid,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
-			@RequestParam(value = "formulaType", required = false,defaultValue ="") String[] formulaType)
+			@RequestParam(value = "formulaType", required = false,defaultValue ="") String[] formulaType, 
+			@RequestParam(value = "resolveFlag", required = false, defaultValue = "N") String resolveFlag)
 			throws JsonProcessingException, JSONException {
 
-		return registerService.getFormulaByType2(uuid,formulaType);
+		return registerService.getFormulaByType2(uuid,formulaType, resolveFlag);
 	}
 
 	@RequestMapping(value = "/getExpressionByType", method = RequestMethod.GET)
@@ -1057,4 +1061,44 @@ public class MetadataController {
 			@RequestParam(value = "version", required = false) String version) {
 		return metadataServiceImpl.getMessageByUuidAndVersion(uuid, version);
 	}
+	
+	@RequestMapping(value = "/getAlgorithmByLibrary",method=RequestMethod.GET)
+	public @ResponseBody List<Algorithm> getAlgorithmByLibrary(@RequestParam(value="libraryType") String libraryType, 
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
+		return metadataServiceImpl.getAlgorithmByLibrary(libraryType);
+	}
+	
+	@RequestMapping(value = "/getDpDatapod",method=RequestMethod.GET)
+	public @ResponseBody Datapod getdpByDatapod(
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws FileNotFoundException, IOException {
+		return metadataServiceImpl.getDatapodByType(MetaType.profile.toString());
+	}
+	
+	@RequestMapping(value = "/getRcDatapod",method=RequestMethod.GET)
+	public @ResponseBody Datapod getrcDatapod(
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws FileNotFoundException, IOException {
+		return metadataServiceImpl.getDatapodByType(MetaType.recon.toString());
+	}
+	
+	@RequestMapping(value = "/getDqDatapod",method=RequestMethod.GET)
+	public @ResponseBody Datapod getdqDatapod(
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws FileNotFoundException, IOException {
+		return metadataServiceImpl.getDatapodByType(MetaType.dq.toString());
+	}
+	
+	@RequestMapping(value = "/getGroupsByOrg",method=RequestMethod.GET)
+	public @ResponseBody List<Group> getGroupsByOrg(
+			@RequestParam(value = "uuid") String orgUuid, 
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws FileNotFoundException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException, JSONException {
+		return  metadataServiceImpl.getGroupsByOrg(orgUuid);
+	}
+			
+			
+			
+	
 }

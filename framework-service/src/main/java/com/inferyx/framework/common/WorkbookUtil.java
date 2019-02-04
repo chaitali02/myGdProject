@@ -40,15 +40,12 @@ import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.ReportExec;
-import com.inferyx.framework.operator.FilterOperator;
 import com.inferyx.framework.service.CommonServiceImpl;
 
 @Component
 public class WorkbookUtil {
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl; 
-	@Autowired
-	FilterOperator filterOperator;
 
 	public static HSSFWorkbook getWorkbook(Map<String, LinkedHashMap<String, String>> resultMap) {
 		HSSFWorkbook wb = new HSSFWorkbook();
@@ -267,9 +264,10 @@ public class WorkbookUtil {
 		columnStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
 		columnStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
 		
-		
+		int lastRowNum = 0;
 		for (int i = 0; i < resultList.size(); i++) {
-			Row nextrow = hssfSheet.createRow((columnRowNum+1) + i);
+			lastRowNum = (columnRowNum+1) + i;
+			Row nextrow = hssfSheet.createRow(lastRowNum);
 			columnNames = resultList.get(i).keySet().toArray(new String[resultList.get(0).keySet().size()]);
 			int cellNum = 0;
 			for (String column : columnNames) {
@@ -286,6 +284,29 @@ public class WorkbookUtil {
 			}
 			hssfSheet.autoSizeColumn(i);
 		}
+		
+	/******* adding footer *******/
+		if (report.getAttributeInfo().size() > 1) {
+			hssfSheet.addMergedRegion(new CellRangeAddress(lastRowNum+2, lastRowNum+2, 0, report.getAttributeInfo().size() - 1));
+		} else {
+			hssfSheet.addMergedRegion(new CellRangeAddress(lastRowNum+2, lastRowNum+2, 0, 1));
+		}
+		
+		Font footerFont = workBook.createFont();
+		footerFont.setBold(true);
+//		footerFont.setFontHeight((short)8);
+//		footerFont.setFontHeightInPoints((short) 10);
+		
+		CellStyle footerCellStyle = workBook.createCellStyle();
+		footerCellStyle.setAlignment(CellStyle.ALIGN_CENTER);
+		footerCellStyle.setFont(footerFont);
+		footerCellStyle.setVerticalAlignment(CellStyle.VERTICAL_CENTER);
+		
+		Row footerRow  = hssfSheet.createRow(lastRowNum+2);
+		Cell footerCell = footerRow.createCell(0);
+		footerCell.setCellStyle(footerCellStyle);
+		footerCell.setCellValue(new HSSFRichTextString(report.getFooter()));
+		
 		return workBook;
 	}
 }

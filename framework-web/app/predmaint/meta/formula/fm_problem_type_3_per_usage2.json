@@ -1,0 +1,112 @@
+{
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyt"
+		}
+	},
+	"formulaInfo" : [
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "CASE"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "WHEN"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyt"
+			},
+			"attributeId" : 8
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "="
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "0"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "THEN"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "0"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "ELSE"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyt"
+			},
+			"attributeId" : 10
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "/"
+		},
+		{
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "db48358e-4b2b-4e91-9f9c-b0373f121xyt"
+			},
+			"attributeId" : 8
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "END"
+		}
+	],
+	"formulaType" : "simple",
+	"uuid" : "f7b69402-d7c6-4c55-abc5-f76e89ec68ae",
+	"version" : "1546642302",
+	"name" : "fm_problem_type_3_per_usage2",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2019-01-04T22:51:42Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+				"version" : "1521430822",
+				"name" : "Dept Of Transportation"
+			}
+		}
+	]
+}

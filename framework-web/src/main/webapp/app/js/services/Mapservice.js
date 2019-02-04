@@ -27,10 +27,10 @@ MetadataModule.factory('MetadataMapFactory', function ($http, $location) {
 
 		}).then(function (response) { return response })
 	}
-	factory.submit = function (data,type,upd_tag){
+	factory.submit = function (data, type, upd_tag) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
-			url: url + "common/submit?action=edit&type="+type+"&upd_tag="+upd_tag,
+			url: url + "common/submit?action=edit&type=" + type + "&upd_tag=" + upd_tag,
 			headers: {
 				'Accept': '*/*',
 				'content-Type': "application/json",
@@ -140,21 +140,65 @@ MetadataModule.factory('MetadataMapFactory', function ($http, $location) {
 				return response;
 			})
 	}
-	factory.findAttributesByRelation = function (uuid,type) {
+
+	factory.findResults = function (uuid, version,mode) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
 			method: 'GET',
-			url: url + "metadata/getAttributesByRelation?action=view&uuid=" + uuid + "&type=" + type,
+			url: url + "map/getResults?action=view&uuid=" + uuid + "&version=" + version+ "&mode=" + mode + "&requestId="
 		}).
-			then(function (response, status, headers) {
-				return response;
-			})
+		then(function (response, status, headers) {
+			return response;
+		})
 	}
+
+	factory.findNumRowsbyExec = function (uuid, version,type) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			method: 'GET',
+			url: url + "metadata/getNumRowsbyExec?action=view&execUuid=" + uuid + "&execVersion=" + version+ "&type=" + type
+		}).
+		then(function (response, status, headers) {
+			return response;
+		})
+	}
+	
 	return factory;
 });
 
-MetadataModule.service('MetadataMapSerivce', function ($q, sortFactory, MetadataMapFactory) {
-
+MetadataModule.service('MetadataMapSerivce', function ($q, sortFactory, MetadataMapFactory,CF_GRID) {
+	this.getNumRowsbyExec = function (uuid, version, type) {
+		var deferred = $q.defer();
+		MetadataMapFactory.findNumRowsbyExec(uuid, version, type)
+			.then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			})
+		};
+		var onError = function (response) {
+			deferred.reject({
+			  data: response
+			})
+		};
+		return deferred.promise;
+	}
+	this.getResults = function (uuid, version, mode) {
+		var deferred = $q.defer();
+		MetadataMapFactory.findResults(uuid, version, mode)
+			.then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			})
+		};
+		var onError = function (response) {
+			deferred.reject({
+			  data: response
+			})
+		};
+		return deferred.promise;
+	}
 	this.getFormulaByType = function (uuid) {
 		var deferred = $q.defer();
 		MetadataMapFactory.findFormulaByType(uuid).then(function (response) { onSuccess(response) });
@@ -454,18 +498,24 @@ MetadataModule.service('MetadataMapSerivce', function ($q, sortFactory, Metadata
 	}
 	this.getOneByUuidAndVersion = function (uuid, version, type) {
 		var deferred = $q.defer();
-		MetadataMapFactory.findOneByUuidAndVersion(uuid, version, type).then(function (response) { onSuccess(response.data) });
+		MetadataMapFactory.findOneByUuidAndVersion(uuid, version, type)
+			.then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
 		var onSuccess = function (response) {
 			var mapjson = {};
 			mapjson.mapdata = response;
 			var maparray = [];
 			for (var i = 0; i < response.attributeMap.length; i++) {
 				var attributemapjson = {};
+				if(response.attributeMap.length >CF_GRID.framework_autopopulate_grid)
+					attributemapjson.isOnDropDown=false;
+				else
+					attributemapjson.isOnDropDown=true;
 				if (response.attributeMap[i].sourceAttr.ref.type == "datapod" || response.attributeMap[i].sourceAttr.ref.type == "dataset" || response.attributeMap[i].sourceAttr.ref.type == "rule") {
 					var sourceattribute = {}
 					sourceattribute.uuid = response.attributeMap[i].sourceAttr.ref.uuid;
 					sourceattribute.type = response.attributeMap[i].sourceAttr.ref.type;
 					sourceattribute.attributeId = response.attributeMap[i].sourceAttr.attrId;
+					sourceattribute.name = response.attributeMap[i].sourceAttr.attrName;
 					var obj = {}
 					obj.text = "datapod"
 					obj.caption = "attribute"
@@ -492,7 +542,7 @@ MetadataModule.service('MetadataMapSerivce', function ($q, sortFactory, Metadata
 				if (response.attributeMap[i].sourceAttr.ref.type == "expression") {
 					var sourceexpression = {};
 					sourceexpression.uuid = response.attributeMap[i].sourceAttr.ref.uuid;
-					sourceexpression.name = "";
+					sourceexpression.name = response.attributeMap[i].sourceAttr.ref.name;
 					var obj = {}
 					obj.text = "expression"
 					obj.caption = "expression"
@@ -507,7 +557,7 @@ MetadataModule.service('MetadataMapSerivce', function ($q, sortFactory, Metadata
 				if (response.attributeMap[i].sourceAttr.ref.type == "formula") {
 					var sourceformula = {};
 					sourceformula.uuid = response.attributeMap[i].sourceAttr.ref.uuid;
-					sourceformula.name = "";
+					sourceformula.name = response.attributeMap[i].sourceAttr.ref.name;
 					var obj = {}
 					obj.text = "formula"
 					obj.caption = "formula"
@@ -522,7 +572,7 @@ MetadataModule.service('MetadataMapSerivce', function ($q, sortFactory, Metadata
 				if (response.attributeMap[i].sourceAttr.ref.type == "function") {
 					var sourcefunction = {};
 					sourcefunction.uuid = response.attributeMap[i].sourceAttr.ref.uuid;
-					sourcefunction.name = "";
+					sourcefunction.name =response.attributeMap[i].sourceAttr.ref.name;
 					var obj = {}
 					obj.text = "function"
 					obj.caption = "function"
@@ -546,14 +596,17 @@ MetadataModule.service('MetadataMapSerivce', function ($q, sortFactory, Metadata
 			deferred.resolve({
 				data: mapjson
 			})
-		}
-
-
+		};
+		var onError = function (response) {
+			deferred.reject({
+			  data: response
+			})
+		};
 		return deferred.promise;
 	}
-	this.submit = function (data,type,upd_tag) {
+	this.submit = function (data, type, upd_tag) {
 		var deferred = $q.defer();
-		MetadataMapFactory.submit(data,type,upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		MetadataMapFactory.submit(data, type, upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			deferred.resolve({
 				data: response

@@ -26,6 +26,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.TreeSet;
 
 import org.apache.commons.lang3.time.DateUtils;
@@ -45,10 +47,12 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.domain.Batch;
 import com.inferyx.framework.domain.BatchExec;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Schedule;
+import com.inferyx.framework.domain.User;
 import com.inferyx.framework.enums.RunMode;
 
 /**
@@ -67,6 +71,10 @@ public class BatchSchedulerServiceImpl {
 	private MongoTemplate mongoTemplate;
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
+	@Autowired
+	private SecurityServiceImpl securityServiceImpl;
+	@Autowired
+	private FrameworkThreadServiceImpl frameworkThreadServiceImpl;
 	
 	static Logger logger = Logger.getLogger(BatchSchedulerServiceImpl.class);
 	SimpleDateFormat simpleDateFormat = new SimpleDateFormat ("EEE MMM dd HH:mm:ss z yyyy");
@@ -74,12 +82,12 @@ public class BatchSchedulerServiceImpl {
 	public Date getNextRunTimeBySchedule(Schedule schedule) throws ParseException {
 		switch(schedule.getFrequencyType().toUpperCase()) {
     		case "ONCE" : return schedule.getNextRunTime() == null ? schedule.getStartDate() : null;
-    		case "HOURLY" : return getNextHourlyRunTime(schedule.getStartDate(), schedule.getEndDate(), schedule.getNextRunTime());
+    		case "HOURLY" : return getNextHourlyRunTime(schedule.getStartDate(), schedule.getEndDate(), schedule.getNextRunTime(), schedule.getFrequencyDetail());
     		case "DAILY" : return getNextDailyRunTime(schedule.getStartDate(), schedule.getEndDate(), schedule.getNextRunTime());
     		case "WEEKLY" : return getNextWeelyRunTime(schedule.getStartDate(), schedule.getEndDate(), schedule.getNextRunTime(), schedule.getFrequencyDetail());
     		case "BIWEEKLY" : return getNextBiWeeklyRunTime(schedule.getStartDate(), schedule.getEndDate(), schedule.getNextRunTime(), schedule.getFrequencyDetail());
     		case "MONTHLY" : return getNextMonthlyRunTime(schedule.getStartDate(), schedule.getEndDate(), schedule.getNextRunTime(), schedule.getFrequencyDetail());
-    		case "QUARTERLY" : return getNextQuarterlyRunTime(schedule.getStartDate(), schedule.getEndDate(), schedule.getNextRunTime());
+    		case "QUARTERLY" : return getNextQuarterlyRunTime(schedule.getStartDate(), schedule.getEndDate(), schedule.getNextRunTime(), schedule.getFrequencyDetail());
     		case "YEARLY" : return getNextYearlyRunTime(schedule.getStartDate(), schedule.getEndDate(), schedule.getNextRunTime());
     		default : return null;	
 		}
@@ -109,19 +117,23 @@ public class BatchSchedulerServiceImpl {
 //		}
 	}
 	
-	private Date getNextHourlyRunTime(Date startDate, Date endDate, Date previousRunTime) throws ParseException {
+	private Date getNextHourlyRunTime(Date startDate, Date endDate, Date previousRunTime, List<String> frequencyDetail)
+			throws ParseException {
 		Date tempCurrDate = new Date();
-		Date currDate = simpleDateFormat.parse(tempCurrDate.toString());
-//		if(previousRunTime != null) {
-			Date nextRunTime = DateUtils.addHours(startDate.compareTo(currDate) >= 0 ? startDate : currDate, 1);
-			if(nextRunTime.compareTo(endDate) <= 0) {
-				return simpleDateFormat.parse(nextRunTime.toString());
-			} else {
-				return null; 
+		Date nextRunTime = new Date();
+		for (String hours : frequencyDetail) {
+			startDate.setHours(Integer.parseInt(hours));
+			Date date = startDate;
+			if (date.compareTo(tempCurrDate) >= 0) {
+				nextRunTime = date;
+				break;
 			}
-//		} else {
-//			return startDate;
-//		}
+		}
+		if (nextRunTime != null && nextRunTime.compareTo(endDate) <= 0) {
+			return nextRunTime;
+		} else {
+			return null;
+		}
 	}
 
 	/**
@@ -155,17 +167,112 @@ public class BatchSchedulerServiceImpl {
 	 * @return
 	 * @throws ParseException
 	 */
-	private Date getNextQuarterlyRunTime(Date startDate, Date endDate, Date previousRunTime) throws ParseException {
+	private Date getNextQuarterlyRunTime(Date startDate, Date endDate, Date previousRunTime, List<String> frequencyDetail) throws ParseException {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat ("EEE MMM dd HH:mm:ss z yyyy");
 		Date tempCurrDate = new Date();
 		Date currDate = simpleDateFormat.parse(tempCurrDate.toString());
-		Date nextRunTime = DateUtils.addMonths(startDate.compareTo(currDate) >= 0 ? startDate : currDate, 3);
-		if(nextRunTime.compareTo(endDate) <= 0) {
-			return simpleDateFormat.parse(nextRunTime.toString());
+//		Calendar cal = Calendar.getInstance();
+//		cal.setTime(currDate);
+//		
+//		int month = cal.get(Calendar.MONTH);
+//		System.out.println("Month now : " + month);
+//	
+//		System.out.println("cal.getActualMinimum(Calendar.MONTH) : " + cal.getActualMinimum(Calendar.MONTH));
+//		cal.set(Calendar.MONTH, cal.getActualMinimum(Calendar.MONTH));
+//		cal.set(Calendar.DAY_OF_YEAR, cal.getActualMinimum(Calendar.DAY_OF_YEAR));
+//		Date firstDayOfTheYear = cal.getTime();
+//		System.out.println("First day of the year : " + firstDayOfTheYear);
+//		firstDayOfTheYear.setHours(startDate.getHours());
+//		firstDayOfTheYear.setMinutes(startDate.getMinutes());
+//		firstDayOfTheYear.setSeconds(startDate.getSeconds());
+//		
+//		cal.set(Calendar.MONTH, cal.getActualMaximum(Calendar.MONTH));
+//		cal.set(Calendar.DAY_OF_YEAR, cal.getActualMaximum(Calendar.DAY_OF_YEAR));
+//		Date lastDayOfTheYear = cal.getTime();
+//		System.out.println("Last day of the year : " + lastDayOfTheYear);
+//		lastDayOfTheYear.setHours(startDate.getHours());
+//		lastDayOfTheYear.setMinutes(startDate.getMinutes());
+//		lastDayOfTheYear.setSeconds(startDate.getSeconds());
+		
+		Date nextRunTime = null;
+//		for(String quarter : frequencyDetail) {
+//			Date date = DateUtils.addMonths(firstDayOfTheYear, 3*(Integer.parseInt(quarter)-1));
+//			Date lastDayOfQuarter = DateUtils.addMonths(lastDayOfTheYear, -(12-3*(Integer.parseInt(quarter))));
+//			System.out.println("First day of the quarter : " + date);
+//			System.out.println("Last day of the quarter : " + lastDayOfQuarter);
+//			System.out.println("End date : " + endDate);
+//			int currentQuarter = getQuarter(currDate);
+//			if(frequencyDetail.contains(currentQuarter+"")) {
+//				currDate.setHours(startDate.getHours());
+//				currDate.setMinutes(startDate.getMinutes());
+//				currDate.setSeconds(startDate.getSeconds());
+//			}
+//			if(date.compareTo(currDate) >= 0) {
+//				nextRunTime = date;
+//				break;
+//			}
+//		}
+
+		currDate.setHours(startDate.getHours());
+		currDate.setMinutes(startDate.getMinutes());
+		currDate.setSeconds(startDate.getSeconds());
+		
+		int currentQuarter = getQuarter(currDate);
+		if(frequencyDetail.contains(currentQuarter+"")) {
+			nextRunTime = currDate;
+		} else {
+			nextRunTime = getNextQuarterDate(currDate, currentQuarter, frequencyDetail);
+		}
+		
+		logger.info("Quarterly Next Run Time : " + nextRunTime);
+		
+		if(nextRunTime!=null && nextRunTime.compareTo(endDate) <= 0 && nextRunTime.compareTo(startDate) >= 0) {
+			return nextRunTime;
 		} else {
 			return null; 
 		}
 	}
 
+	public Date getNextQuarterDate(Date currDate, int currentQuarter, List<String> frequencyDetail) {
+		for(String quarter : frequencyDetail) {
+			int qtr = Integer.parseInt(quarter);
+			if(qtr > currentQuarter) {
+				int result = 3 * (qtr - currentQuarter);
+				return DateUtils.addMonths(currDate, result);
+			} else {
+				 switch(qtr) {
+				 case 0 : return DateUtils.addMonths(currDate, 3);
+				 case 1 : return DateUtils.addMonths(currDate, 6);
+				 case 2 : return DateUtils.addMonths(currDate, 9);
+				 case 3 : return DateUtils.addMonths(currDate, 12);
+				 }
+			}
+		}
+		return null;
+	}
+	
+	public int getQuarter(Date date) {
+		switch(date.getMonth()) {
+		case 0 : return 0;
+		case 1 : return 0;
+		case 2 : return 0;
+		
+		case 3 : return 1;
+		case 4 : return 1;
+		case 5 : return 1;
+
+		case 6 : return 2;
+		case 7 : return 2;
+		case 8 : return 2;
+		
+		case 9 : return 3;
+		case 10 : return 3;
+		case 11 : return 3;
+		
+		default : return -1;
+		}
+	}
+	
 	@SuppressWarnings("deprecation")
 	private Date getNextBiWeeklyRunTime(Date startDate, Date endDate, Date previousRunTime, List<String> frequencyDetail) throws ParseException {
 		Date tempCurrDate = new Date();
@@ -235,7 +342,7 @@ public class BatchSchedulerServiceImpl {
 			}
 		}		
 		
-		if(nextRunTime.compareTo(endDate) <= 0) {
+		if( nextRunTime !=null && nextRunTime.compareTo(endDate) <= 0) {
 			return nextRunTime;
 		} else {
 			return null; 
@@ -247,7 +354,9 @@ public class BatchSchedulerServiceImpl {
 		Date currDate = simpleDateFormat.parse(tempCurrDate.toString());
 		
 //		if(previousRunTime != null) {
-			Date nextRunTime = simpleDateFormat.parse(DateUtils.addDays(startDate.compareTo(currDate) >= 0 ? startDate : currDate, 1).toString());
+			//Date nextRunTime = simpleDateFormat.parse(DateUtils.addDays(startDate.compareTo(currDate) >= 0 ? startDate : currDate, 1).toString());
+			Date nextRunTime = simpleDateFormat.parse(DateUtils.addDays(startDate,startDate.compareTo(currDate) >= 0 ? 0 : 1).toString());
+
 			if(nextRunTime.compareTo(endDate) <= 0) {
 				return nextRunTime;
 			} else {
@@ -283,6 +392,15 @@ public class BatchSchedulerServiceImpl {
 				logger.info("Scheduler triggered. Submitting batch...");
 			    for(Schedule schedule : schedules) {
 			  	  	MetaIdentifier batchMI = schedule.getDependsOn().getRef();
+			  	  	// as this is a batch, careful about appInfo
+					try {
+						securityServiceImpl.getAppInfo();
+					} catch(Exception e) {
+						logger.info("AppInfo not available. Fallback on creating FrameworkThreadLocal as this is a batch");
+						Batch batch = (Batch) commonServiceImpl.getOneByUuidAndVersion(batchMI.getUuid(), batchMI.getVersion(), MetaType.batch.toString());
+						User user = (User) commonServiceImpl.getOneByUuidAndVersion(batch.getCreatedBy().getRef().getUuid(), batch.getCreatedBy().getRef().getVersion(), batch.getCreatedBy().getRef().getType().toString());
+						frameworkThreadServiceImpl.setSession(user.getName(), batch.getAppInfo().get(0));
+					}
 			  	  	BatchExec batchExec = batchServiceImpl.create(batchMI.getUuid(), batchMI.getVersion(), null, null, RunMode.BATCH);
 			    	batchServiceImpl.submitBatch(batchMI.getUuid(), batchMI.getVersion(), batchExec, null, null, RunMode.BATCH);
 			    }

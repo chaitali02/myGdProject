@@ -1,0 +1,47 @@
+{
+    "dataSource" : {
+        "ref" : {
+            "type" : "datasource",
+            "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
+        }
+    },
+    "paramList" : {
+        "ref" : {
+            "type" : "paramlist",
+            "uuid" : "3a11e888-a9c5-453c-9b36-00d5dec7536b"
+        }
+    },
+    "deployPort" : "5001",
+    "orgInfo" : {
+        "ref" : {
+            "type" : "organization",
+            "uuid" : "39937670-837c-4027-aa45-aff8a57b738a"
+        }
+    },
+    "applicationType" : "DEFAULT",
+    "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce",
+    "version" : "1548315796",
+    "name" : "Credit Card Fraud Detection",
+    "desc" : "Credit Card Fraud Detection",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85",
+            "version" : "1464977196",
+            "name" : "admin"
+        }
+    },
+    "createdOn" : ISODate("2019-01-24T07:43:16.000Z"),
+    "tags" : [],
+    "active" : "Y",
+    "locked" : "N",
+    "published" : "N",
+    "appInfo" : [ 
+         {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "39937670-837c-4027-aa45-aff8a57b738a"
+            }
+        }
+    ]
+}

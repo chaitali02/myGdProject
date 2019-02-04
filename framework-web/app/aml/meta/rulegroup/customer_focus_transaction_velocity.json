@@ -1,40 +1,41 @@
 {
-    "ruleInfo" : [ 
-        {
-            "ref" : {
-                "type" : "rule",
-                "uuid" : "35b88f7b-8f56-4cf1-9912-7d35c7cf397a"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "rule",
-                "uuid" : "35b88f7b-8f56-4cf1-9912-7d35c7cf397b"
-            }
-        }
-    ],
-    "uuid" : "a6e36130-9f22-4b8c-b008-53f9a7cdb962",
-    "version" : "1540305560",
-    "name" : "Customer Focus - Transaction Velocity",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196",
-            "name" : "ypalrecha"
-        }
-    },
-    "createdOn" : ISODate("2018-10-23T14:39:20.000Z"),
-    "tags" : [],
-    "active" : "Y",
-    "published" : "N",
-    "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-                "version" : "1521430822"
-            }
-        }
-    ]
+	"ruleInfo" : [
+		{
+			"ref" : {
+				"type" : "rule",
+				"uuid" : "35b88f7b-8f56-4cf1-9912-7d35c7cf397a"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "rule",
+				"uuid" : "35b88f7b-8f56-4cf1-9912-7d35c7cf397b"
+			}
+		}
+	],
+	"uuid" : "a6e36130-9f22-4b8c-b008-53f9a7cdb962",
+	"version" : "1540305560",
+	"name" : "Customer Focus - Transaction Velocity",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2018-11-14T16:12:37.305Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+				"version" : "1521430822"
+			}
+		}
+	]
 }

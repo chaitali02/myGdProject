@@ -132,6 +132,12 @@
                         <span class="badge badge-success">{{metaStats[metadatasubmenu.name].count}}</span>
                      </a>
                 </li>
+                <li class="nav-item" ng-click="deInitTabs()">
+                    <a  ui-sref="maprestult" class="nav-link">
+                        <span class="title">Results</span>
+                        <span class="badge badge-success">{{metaStats['mapexec'].count}}</span>
+                    </a>
+                </li>
             </ul>
         </li>
          <!--Data Reconcilation-->
@@ -250,6 +256,8 @@
       
         <!--Admind Menu-->
         <li class="nav-item" ng-show="role=='admin'">
+        <!-- <li class="nav-item" ng-show="appType=='ADMIN'"> -->
+            <!-- {{appType}} -->
           <a href="#" class="nav-link nav-toggle">
                 <i class="{{Admindata.class}}"></i>
                 <span class="title">{{Admindata.caption}}</span>

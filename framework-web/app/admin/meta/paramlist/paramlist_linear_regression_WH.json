@@ -13,9 +13,10 @@
     "createdOn" : ISODate("2018-07-17T09:17:27.988Z"),
     "tags" : [],
     "active" : "Y",
+  "locked" : "N",
     "published" : "N",
-    	"appInfo": [
-			{
+    	"appInfo" : [ 
+        {
             "ref" : {
                 "type" : "application",
                 "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
@@ -45,13 +46,27 @@
                 "type" : "application",
                 "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
             }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+ 		"uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbyog"
+            }
         }
-	],
+    ],
     "params" : [ 
         {
             "paramId" : "0",
             "paramName" : "regParam",
             "paramType" : "list",
+  		    "paramDispName" : "Reg Param",
+ 		    "paramDesc" : "",	
             "paramValue" : {
                 "ref" : {
                     "type" : "simple"
@@ -63,6 +78,8 @@
             "paramId" : "1",
             "paramName" : "elasticNetParam",
             "paramType" : "list",
+  		    "paramDispName" : "Elastic Net Param",
+ 		    "paramDesc" : "",	
             "paramValue" : {
                 "ref" : {
                     "type" : "simple"
@@ -74,6 +91,8 @@
             "paramId" : "2",
             "paramName" : "numFolds",
             "paramType" : "integer",
+  		    "paramDispName" : "Num Folds",
+ 		    "paramDesc" : "",	
             "paramValue" : {
                 "ref" : {
                     "type" : "simple"

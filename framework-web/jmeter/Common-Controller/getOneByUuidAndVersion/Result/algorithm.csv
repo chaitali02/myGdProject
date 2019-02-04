@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testResults version="1.2">
-<httpSample t="102" lt="102" ts="1502176431116" s="true" lb="algorithm" rc="200" rm="OK" tn="getOneByUuidAndVersion 1-1" dt="text" by="1500"/>
-<httpSample t="97" lt="97" ts="1502176431221" s="true" lb="algorithm" rc="200" rm="OK" tn="getOneByUuidAndVersion 1-1" dt="text" by="1498"/>
-<httpSample t="123" lt="123" ts="1502176431324" s="true" lb="algorithm" rc="200" rm="OK" tn="getOneByUuidAndVersion 1-1" dt="text" by="1498"/>
-<httpSample t="105" lt="105" ts="1502176431448" s="true" lb="algorithm" rc="200" rm="OK" tn="getOneByUuidAndVersion 1-1" dt="text" by="1498"/>
-<httpSample t="140" lt="140" ts="1502176431560" s="true" lb="algorithm" rc="200" rm="OK" tn="getOneByUuidAndVersion 1-1" dt="text" by="1499"/>
-
-</testResults>

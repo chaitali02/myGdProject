@@ -57,6 +57,7 @@ import com.inferyx.framework.executor.KafkaExecutor;
 import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.executor.SparkStreamingExecutor;
 import com.inferyx.framework.executor.SqoopExecutor;
+import com.inferyx.framework.operator.DatasetOperator;
 import com.inferyx.framework.operator.IngestOperator;
 
 /**
@@ -84,9 +85,30 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 	private List<String> location;
 	private KafkaExecutor<?, ?> kafkaExecutor;
 	private SparkStreamingExecutor<?, ?> sparkStreamingExecutor;
-	private DataSet sourceDataset;
+	private DataSet sourceDataSet;
 	private IngestOperator ingestOperator;
+	private DatasetOperator datasetOperator;
 	
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the datasetOperator
+	 */
+	public DatasetOperator getDatasetOperator() {
+		return datasetOperator;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param datasetOperator the datasetOperator to set
+	 */
+	public void setDatasetOperator(DatasetOperator datasetOperator) {
+		this.datasetOperator = datasetOperator;
+	}
+
 	/**
 	 *
 	 * @Ganesh
@@ -135,20 +157,20 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 	 *
 	 * @Ganesh
 	 *
-	 * @return the sourceDataset
+	 * @return the sourceDataSet
 	 */
-	public DataSet getSourceDataset() {
-		return sourceDataset;
+	public DataSet getSourceDataSet() {
+		return sourceDataSet;
 	}
 
 	/**
 	 *
 	 * @Ganesh
 	 *
-	 * @param sourceDataset the sourceDataset to set
+	 * @param sourceDataSet the sourceDataSet to set
 	 */
-	public void setSourceDataset(DataSet sourceDataset) {
-		this.sourceDataset = sourceDataset;
+	public void setSourceDataSet(DataSet sourceDataSet) {
+		this.sourceDataSet = sourceDataSet;
 	}
 
 	/**
@@ -566,20 +588,20 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 			
 			IngestionType ingestionType = Helper.getIngestionType(ingest.getType());
 
-			MetaIdentifier sourceDpMI = ingest.getSourceDetail().getRef();
+			MetaIdentifier sourceDpOrDsMI = ingest.getSourceDetail().getRef();
 			String incrLastValue = null;
 			String latestIncrLastValue = null;
 			String incrColName = null;
 			
-			if(sourceDpMI.getUuid() != null) {
+			if(sourceDpOrDsMI.getUuid() != null) {
 				//finding incremental column name
-				incrColName = ingestServiceImpl.getColName(sourceDp, ingest.getIncrAttr());
+				incrColName = ingestServiceImpl.getColName(sourceDp, sourceDataSet, ingest.getIncrAttr());
 				
 				//finding last incremental value
 				incrLastValue = ingestServiceImpl.getLastIncrValue(ingest.getUuid(), ingest.getVersion());
 				
 				//finding latest incremental value
-				latestIncrLastValue = ingestServiceImpl.getNewIncrValue(sourceDp, sourceDS, ingest.getIncrAttr());
+				latestIncrLastValue = ingestServiceImpl.getNewIncrValue(sourceDp, sourceDS, sourceDataSet, ingest.getIncrAttr(), runMode);
 				
 				ingestExec.setLastIncrValue(latestIncrLastValue);
 				commonServiceImpl.save(MetaType.ingestExec.toString(), ingestExec);
@@ -597,38 +619,47 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 				
 				areAllAttrs = areAllAttrs(resolvedAttrMap.values());
 				
-				if(areAllAttrs) {
-					whereClause = whereClause.concat(ingestOperator.generateWhere(ingest, incrColName, incrLastValue));
-					whereClause = whereClause.concat(ingestOperator.generateFilter(ingest, null, null, new HashSet<>(), null, runMode));
-				}
-				
-				//removing where
-				if(whereClause.contains("WHERE")) {
-					whereClause = whereClause.replaceAll("WHERE", "").trim();
-				} else if(whereClause.contains("where")) {
-					whereClause = whereClause.replaceAll("where", "").trim();
-				}
-				
-				//removing $CONDITIONS
-				if(whereClause.contains("AND $CONDITIONS")) {
-					whereClause = whereClause.replace("AND $CONDITIONS", "").trim();
-				} else if(whereClause.contains("and $conditions")) {
-					whereClause = whereClause.replace("and $conditions", "").trim();
+				if(sourceDp != null) {
+					if(areAllAttrs) {
+						whereClause = whereClause.concat(ingestOperator.generateWhere(ingest, incrColName, incrLastValue));
+						whereClause = whereClause.concat(ingestOperator.generateFilter(ingest, null, null, new HashSet<>(), null, runMode));
+					}
+					
+					//removing where
+					if(whereClause.contains("WHERE")) {
+						whereClause = whereClause.replaceAll("WHERE", "").trim();
+					} else if(whereClause.contains("where")) {
+						whereClause = whereClause.replaceAll("where", "").trim();
+					}
+					
+					//removing $CONDITIONS
+					if(whereClause.contains("AND $CONDITIONS")) {
+						whereClause = whereClause.replace("AND $CONDITIONS", "").trim();
+					} else if(whereClause.contains("and $conditions")) {
+						whereClause = whereClause.replace("and $conditions", "").trim();
+					}					
 				}
 				
 				colAliaseNames = getMappedAttrAliaseName(ingest.getAttributeMap(), true);
 				
-				if(ingestionType.equals(IngestionType.FILETOFILE)) {
-					String tableName = null;
-					tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
-					query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), null, runMode);
-				} else if(!areAllAttrs && sourceDp != null) {
-					String tableName = sourceDS.getDbname().concat(".").concat(sourceDp.getName());					
-					query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), null, runMode);
-				} else if(!areAllAttrs && targetDp != null) {
-						String tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());					
+	//			if(sourceDp != null) {
+					if(ingestionType.equals(IngestionType.FILETOFILE)) {
+						String tableName = null;
+						tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
 						query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), null, runMode);
-				}
+					} else if(sourceDataSet != null) {
+						String tableName = sourceDS.getDbname().concat(".").concat(sourceDataSet.getName());					
+						query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), null, runMode);
+					} else if(!areAllAttrs && sourceDp != null) {
+						String tableName = sourceDS.getDbname().concat(".").concat(sourceDp.getName());					
+						query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), null, runMode);
+					} else if(!areAllAttrs && targetDp != null) {
+							String tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());					
+							query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), null, runMode);
+					}
+//				} else {
+//					query = datasetOperator.generateSql(sourceDataSet, null, null, new HashSet<>(), null, runMode);
+//				}
 			}
 			
 			if(incrLastValue != null && latestIncrLastValue != null && incrLastValue.equalsIgnoreCase(latestIncrLastValue)) {
@@ -810,6 +841,110 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 							inputParams = ingestServiceImpl.getRunParams(ingest.getRunParams());
 						}
 						sqoopExecutor.execute(sqoopInput, inputParams);
+					} else if(targetDS.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+						//this is export block from local file to local Table(i.e file)
+						
+						tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
+						
+						String targetFileName = ingestServiceImpl.generateFileName(targetDp.getName(), ingest.getTargetExtn(), ingest.getTargetFormat());
+						String targetExtension = ingest.getTargetExtn();
+						
+						if(targetExtension != null) {
+							targetExtension = targetExtension.startsWith(".") ? targetExtension.substring(1) : targetExtension;
+						} else {
+							targetExtension = ingest.getTargetFormat();
+						}
+						
+						if(targetExtension.equalsIgnoreCase(FileType.PARQUET.toString())) {
+							targetFilePathUrl = targetDS.getPath();
+							if(targetFileName.endsWith("."+FileType.PARQUET)) {
+								targetFileName = targetFileName.replace("."+FileType.PARQUET, "");
+							} else if(targetFileName.endsWith("."+FileType.PARQUET.toString().toLowerCase())) {
+								targetFileName = targetFileName.replace("."+FileType.PARQUET.toString().toLowerCase(), "");
+							}
+							targetFilePathUrl = String.format("%s%s/%s/%s/%s", targetFilePathUrl, targetFileName, ingest.getUuid(), ingest.getVersion(), ingestExec.getVersion());
+						} else {
+							if (targetExtension.toLowerCase().equalsIgnoreCase(FileType.CSV.toString())) {
+								targetFileName = targetFileName.toLowerCase().endsWith("."+FileType.CSV.toString().toLowerCase()) ? targetFileName : targetFileName.concat("."+FileType.CSV.toString().toLowerCase());
+							} else if (targetExtension.toLowerCase().equalsIgnoreCase(FileType.TSV.toString())) {
+								targetFileName = targetFileName.toLowerCase().endsWith("."+FileType.TSV.toString().toLowerCase()) ? targetFileName : targetFileName.concat("."+FileType.TSV.toString().toLowerCase());
+							}
+							else if (targetExtension.toLowerCase().equalsIgnoreCase(FileType.PSV.toString())) {
+								targetFileName = targetFileName.toLowerCase().endsWith("."+FileType.PSV.toString().toLowerCase()) ? targetFileName : targetFileName.concat("."+FileType.PSV.toString().toLowerCase());
+							} else {
+								logger.info("Invalid target format type : "+ingest.getTargetExtn().toString());						
+							}
+							targetFilePathUrl = targetDS.getPath().concat(targetFileName);
+						}		
+						
+						String sourceHeader = ingestServiceImpl.resolveHeader(ingest.getSourceHeader());
+						String targetHeader = ingestServiceImpl.resolveHeader(ingest.getTargetHeader()); 
+						
+						//reading from source
+						ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, location, Helper.getDelimetrByFormat(ingest.getSourceFormat()), sourceHeader, appUuid, true);
+						
+						//adding version column to data
+//						rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
+											
+						//map schema to source mappedAttrs	
+						if(colAliaseNames != null) {
+							if(sourceHeader.equalsIgnoreCase("false")) {
+								rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, colAliaseNames.toArray(new String[colAliaseNames.size()]), tableName, true);
+							}
+							rsHolder = sparkExecutor.mapSchema(rsHolder, query, colAliaseNames, tableName, false);
+						} 
+						
+						//applying target schema to df
+						if(targetHeader.equalsIgnoreCase("true") && colAliaseNames != null) {
+							Map<String, String> resolvedTargetAttrMap = resolveMappedAttributes(ingest.getAttributeMap(), false);
+							String[] targetCols = resolvedTargetAttrMap.keySet().toArray(new String[resolvedTargetAttrMap.keySet().size()]);
+							rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, targetCols, tableName, false);
+						}					
+						
+						String saveMode = null;
+						if(ingest.getSaveMode() != null) {
+							saveMode = ingest.getSaveMode().toString();
+						} else {
+							saveMode = SaveMode.OVERWRITE.toString();
+						}
+						
+						String tempDirPath = Helper.getPropertyValue("framework.temp.path");
+						String tempDirLocation = tempDirPath.endsWith("/") ? "file://"+tempDirPath+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/" : "file://"+tempDirPath.concat("/")+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/";
+						logger.info("temporary location: "+tempDirLocation);
+						
+						//writing to target				
+						rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, tempDirLocation,
+																	targetFileName, tableName, saveMode, ingest.getTargetFormat(), targetHeader);
+						
+						if(!ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
+							try {
+								tempDirLocation = tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/" : tempDirPath.concat("/")+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/";
+								String srcFilePath = ingestServiceImpl.getFileNameFromDir(tempDirLocation, ingest.getTargetExtn(), ingest.getTargetFormat());
+								ingestServiceImpl.moveFileTOFileOrDir(srcFilePath, targetFilePathUrl, false);
+							} catch (Exception e) {
+//									e.printStackTrace();
+							} finally {
+								String dirPathToBeDeleted = tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid() : tempDirPath.concat("/")+ingestExec.getUuid();
+								ingestServiceImpl.deleteFileOrDirectory(dirPathToBeDeleted, true);
+							}						
+						} else {
+							try {
+								String targetDirName = ingest.getTargetDetail().getValue();
+								String targetDirPath = targetDS.getPath();
+								targetDirPath = targetDirPath.endsWith("/") ? (targetDirPath + targetDirName + "/") : (targetDirPath + "/" + targetDirName + "/");
+					
+								ingestServiceImpl.deleteFileOrDirectory(targetDirPath, true);
+								tempDirLocation = tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/" : tempDirPath.concat("/")+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/";
+								String srcFilePath = ingestServiceImpl.getFileNameFromDir(tempDirLocation, ingest.getTargetExtn(), ingest.getTargetFormat());
+								ingestServiceImpl.moveFileTOFileOrDir(srcFilePath, targetFilePathUrl, true);
+							} catch (Exception e) {
+								// TODO: handle exception
+							} finally {
+								String dirPathToBeDeleted = tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid() : tempDirPath.concat("/")+ingestExec.getUuid();
+								ingestServiceImpl.deleteFileOrDirectory(dirPathToBeDeleted, true);
+							}
+						}
+						countRows = rsHolder.getCountRows();
 					} else {
 						//this is export block from local file to Table
 
@@ -855,7 +990,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						//this is export block from Hive to HDFS
 
 						logger.info("this is export block from Hive to HDFS");
-						String sourceDir = String.format("%s/%s", sourceDS.getPath(), sourceDp.getName());
+						String sourceDir = String.format("%s/%s", sourceDS.getPath(), sourceDp != null ? sourceDp.getName() : sourceDataSet.getName());
 						
 //						targetFilePathUrl = String.format("%s/%s/%s/%s/%s/%s", Helper.getPropertyValue("hive.fs.default.name"), targetDS.getPath(), ingest.getUuid(), ingest.getVersion(), ingestExec.getVersion(), ingest.getTargetDetail().getValue());
 						targetFilePathUrl = String.format("%s/%s/%s", Helper.getPropertyValue("hive.fs.default.name"), targetDS.getPath(), ingest.getTargetDetail().getValue());
@@ -896,7 +1031,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						sqoopInput.setIncrementalMode(SqoopIncrementalMode.AppendRows);
 						sqoopInput.setHiveImport(false);
 						sqoopInput.setImportIntended(true);
-						String sourceDir = String.format("%s/%s", sourceDS.getPath(), sourceDp.getName());
+						String sourceDir = String.format("%s/%s", sourceDS.getPath(), sourceDp != null ? sourceDp.getName() : sourceDataSet.getName());
 						String targetDir = String.format("%s/%s", targetDS.getPath(), ingest.getTargetDetail().getValue());
 						if(targetDir.contains(".db")) {
 							targetDir = targetDir.replaceAll(".db", "");
@@ -907,38 +1042,39 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 //						sqoopInput.setSourceDirectory(sourceDir);
 						sqoopInput.setWarehouseDirectory(targetDir);
 						sqoopInput.setDeleteMode(true);
-						if(mappedAttrs != null && areAllAttrs) {
-							sqoopInput.setTable(sourceDp.getName());
+						if(mappedAttrs != null && areAllAttrs && sourceDp != null) {
+							sqoopInput.setTable(sourceDp != null ? sourceDp.getName() : sourceDataSet.getName());
 						}
 						sqoopInput.setAppendMode(ingest.getSaveMode().equals(com.inferyx.framework.enums.SaveMode.APPEND));
-						sqoopInput.setSplitByCol(ingestServiceImpl.getColName(sourceDp, ingest.getSplitBy()));
-						if(mappedAttrs != null && areAllAttrs) {
-							sqoopInput.setAttributeMap(mappedAttrs);
-							if(!whereClause.isEmpty()) {
-								sqoopInput.setWhereClause(whereClause);
-							}
-						} else if(mappedAttrs != null && !areAllAttrs) {
-							sqoopInput.setTargetDirectory(targetDir);
-							sqoopInput.setWarehouseDirectory(null);
-							sqoopInput.setSqlQuery(query);
-						}
+						sqoopInput.setSplitByCol(ingestServiceImpl.getColName(sourceDp, sourceDataSet, ingest.getSplitBy()));
+//						if(mappedAttrs != null && areAllAttrs) {
+//							sqoopInput.setAttributeMap(mappedAttrs);
+//							if(!whereClause.isEmpty()) {
+//								sqoopInput.setWhereClause(whereClause);
+//							}
+//						} else if(mappedAttrs != null && !areAllAttrs) {
+//							sqoopInput.setTargetDirectory(targetDir);
+//							sqoopInput.setWarehouseDirectory(null);
+//							sqoopInput.setSqlQuery(query);
+//						}
+						setTableOrQuery(sqoopInput, mappedAttrs, areAllAttrs, whereClause, query, targetDir);
 //						sqoopInput.setFileLayout(sqoopExecutor.getFileLayout(ingest.getTargetFormat()));
 //						if(incrLastValue != null) {
 //							sqoopInput.setIncrementalTestColumn(incrColName);
 //							sqoopInput.setIncrementalLastValue(incrLastValue);
 //						}
-						targetFilePathUrl = targetFilePathUrl+sourceDp.getName();
+						targetFilePathUrl = targetFilePathUrl+(sourceDp != null ? sourceDp.getName() : sourceDataSet.getName());
 						Map<String, String> inputParams = null;
 						if(ingest.getRunParams() != null) {
 							inputParams = ingestServiceImpl.getRunParams(ingest.getRunParams());
 						}
-						tableName = sourceDp.getName();
+						tableName = sourceDp != null ? sourceDp.getName() : sourceDataSet.getName();
 						sqoopExecutor.execute(sqoopInput, inputParams);
 					} else {
 						//this is export block from Hive table to local file
 
 						logger.info("this is export block from Hive table to local file");
-						String sourceDir = String.format("%s/%s", sourceDS.getPath(), sourceDp.getName());
+						String sourceDir = String.format("%s/%s", sourceDS.getPath(), (sourceDp != null ? sourceDp.getName() : sourceDataSet.getName()));
 						
 						String targetFileName = ingestServiceImpl.generateFileName(ingest.getTargetDetail().getValue(), ingest.getTargetExtn(), ingest.getTargetFormat());
 						String targetExtension = ingest.getTargetExtn();
@@ -980,7 +1116,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						logger.info("sourceDir : " + sourceDir);
 						logger.info("targetDir : " + targetFilePathUrl);
 						
-						String sourceTableName = sourceDS.getDbname() +"."+sourceDp.getName();
+						String sourceTableName = sourceDS.getDbname() +"."+(sourceDp != null ? sourceDp.getName() : sourceDataSet.getName());
 
 						tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
 						
@@ -1072,7 +1208,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						//this is export block from Hive to other table
 
 						logger.info("this is export block from Hive to other table");
-						sourceDir = String.format("%s/%s", sourceDir, sourceDp.getName());
+						sourceDir = String.format("%s/%s", sourceDir, (sourceDp != null ? sourceDp.getName() : sourceDataSet.getName()));
 						logger.info("sourceDir : " + sourceDir);
 						sqoopInput.setExportDir(sourceDir);
 						sqoopInput.setSourceDirectory(sourceDir);
@@ -1084,16 +1220,28 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 							tableName = targetDp.getName();
 						}
 						sqoopInput.setTable(tableName);
+						if (targetDS.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
+							sqoopInput.setConnManagerClassName("org.apache.sqoop.manager.PostgresqlManager");
+						}
 //						sqoopInput.setHiveTableName(sourceDp.getName());
 //						sqoopInput.setOverwriteHiveTable("Y");
 //						sqoopInput.setHiveDatabaseName(sourceDS.getDbname());
 //						sqoopInput.sethCatTableName(sourceDp.getName());
-					} else if(sourceDS.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+					} else if(sourceDS.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())
+							|| sourceDS.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
 						//this is import block from ORACLE table to HIVE
 						logger.info("this is import block from ORACLE table to HIVE");
 						sqoopInput.setOverwriteHiveTable(ingest.getSaveMode().toString());
-						if(mappedAttrs != null && areAllAttrs) {
-							sqoopInput.setTable(sourceDp.getName().toUpperCase());
+						if(sourceDS.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+							if(mappedAttrs != null && areAllAttrs && sourceDp != null) {
+								sqoopInput.setTable((sourceDp != null ? sourceDp.getName() : sourceDataSet.getName()).toUpperCase());
+							}
+						} else if(sourceDS.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
+							sqoopInput.setConnManagerClassName("org.apache.sqoop.manager.PostgresqlManager");
+							if(mappedAttrs != null && areAllAttrs && sourceDp != null) {
+//								tableName = sourceDS.getDbname() +"."+ sourceDp.getName();
+								sqoopInput.setTable(sourceDp != null ? sourceDp.getName() : sourceDataSet.getName());
+							}
 						}						
 //						sqoopInput.setSqlQuery(getSqlQuery(sourceDp.getName(), incrColName, incrLastValue));
 						sqoopInput.setHiveImport(true);
@@ -1106,7 +1254,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						sqoopInput.setHiveDatabaseName(targetDS.getDbname());
 //						sqoopInput.setHCatalogTableName(targetDp.getName());
 //						sqoopInput.setHCatalogDatabaseName(targetDS.getDbname());
-					} else if(sourceDS.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
+					} /*else if(sourceDS.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
 						//this is import block from POSTGRES to HIVE table
 
 						logger.info("this is export block from POSTGRES to other table");
@@ -1118,21 +1266,22 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						sqoopInput.setDeleteMode(true);
 						sqoopInput.setFieldsTerminatedBy(',');
 						sqoopInput.setLinesTerminatedBy('\n');
+						sqoopInput.setConnManagerClassName("org.apache.sqoop.manager.PostgresqlManager");
 						if(mappedAttrs != null && areAllAttrs) {
-							tableName = sourceDS.getDbname() +"."+ sourceDp.getName();
-							sqoopInput.setTable(tableName);
+//							tableName = sourceDS.getDbname() +"."+ sourceDp.getName();
+							sqoopInput.setTable(sourceDp.getName());
 						}
 						
 						sqoopInput.setHiveTableName(targetDp.getName());
 						sqoopInput.setHiveDatabaseName(targetDS.getDbname());
 //						sqoopInput.sethCatTableName(sourceDp.getName());
-					} else if(targetDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
+					}*/ else if(targetDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
 						//this is import block from other table to HIVE
 
 						logger.info("this is import block from other table to HIVE");
 						sqoopInput.setOverwriteHiveTable(ingest.getSaveMode().toString());
-						if(mappedAttrs != null && areAllAttrs) {
-							sqoopInput.setTable(sourceDp.getName());
+						if(mappedAttrs != null && areAllAttrs && sourceDp != null) {
+							sqoopInput.setTable((sourceDp != null ? sourceDp.getName() : sourceDataSet.getName()));
 						} 
 						sqoopInput.setHiveImport(true);
 						sqoopInput.setImportIntended(true);
@@ -1149,27 +1298,31 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						tableName = targetDp.getName();
 					} 
 
-					sqoopInput.setSplitByCol(ingestServiceImpl.getColName(sourceDp, ingest.getSplitBy()));
-					if(mappedAttrs != null && areAllAttrs) {
-						sqoopInput.setAttributeMap(mappedAttrs);
-						if(!whereClause.isEmpty()) {
-							sqoopInput.setWhereClause(whereClause);
-						}
-					} else if(mappedAttrs != null && !areAllAttrs) {
-						sqoopInput.setTargetDirectory(targetDir);
-						sqoopInput.setWarehouseDirectory(null);
-						sqoopInput.setSqlQuery(query);
-					}
+					sqoopInput.setSplitByCol(ingestServiceImpl.getColName(sourceDp, sourceDataSet, ingest.getSplitBy()));
+//					if(mappedAttrs != null && areAllAttrs) {
+//						sqoopInput.setAttributeMap(mappedAttrs);
+//						if(!whereClause.isEmpty()) {
+//							sqoopInput.setWhereClause(whereClause);
+//						}
+//					} else if(mappedAttrs != null && !areAllAttrs) {
+//						sqoopInput.setTargetDirectory(targetDir);
+//						sqoopInput.setWarehouseDirectory(null);
+//						sqoopInput.setSqlQuery(query);
+//					}
+					setTableOrQuery(sqoopInput, mappedAttrs, areAllAttrs, whereClause, query, targetDir);
 					sqoopInput.setAppendMode(ingest.getSaveMode().equals(com.inferyx.framework.enums.SaveMode.APPEND));
-					if(incrLastValue != null) {
-						sqoopInput.setIncrementalTestColumn(incrColName);
-						if(!sourceDS.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
-							sqoopInput.setIncrementalLastValue(incrLastValue);
-						}
-					} else if(incrLastValue == null && sourceDS.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
-						sqoopInput.setIncrementalTestColumn(incrColName);
-					}
-					targetFilePathUrl = targetFilePathUrl+sourceDp.getName();
+//					if(incrLastValue != null) {
+//						sqoopInput.setIncrementalTestColumn(incrColName);
+//						if(!sourceDS.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+//							sqoopInput.setIncrementalLastValue(incrLastValue);
+//						}
+//					} else if(incrLastValue == null && sourceDS.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+//						sqoopInput.setIncrementalTestColumn(incrColName);
+//					}
+					
+					setIncremental(sqoopInput, incrLastValue, incrColName);
+					
+					targetFilePathUrl = targetFilePathUrl+"/"+(sourceDp != null ? sourceDp.getName() : sourceDataSet.getName());
 					Map<String, String> inputParams = null;
 					if(ingest.getRunParams() != null) {
 						inputParams = ingestServiceImpl.getRunParams(ingest.getRunParams());
@@ -1179,7 +1332,13 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 				} else if(ingestionType.equals(IngestionType.STREAMTOTABLE)) { 
 						StreamInput streamInput = getKafkaStreamInput();
 						streamInput.setIngestionType(IngestionType.STREAMTOTABLE.toString());
-						String targetTableName = targetDS.getDbname()+"."+targetDp.getName();
+						String targetTableName = null;
+						if(targetDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())
+								|| targetDS.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
+							targetTableName = targetDp.getName();
+						} else {
+							targetTableName = targetDS.getDbname()+"."+targetDp.getName();
+						}
 						streamInput.setTargetTableName(targetTableName);
 						SaveMode saveMode = ingest.getSaveMode();
 						if(saveMode == null) {
@@ -1190,6 +1349,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						streamInput.setSourceDS(sourceDS);
 						streamInput.setTargetDS(targetDS);
 						streamInput.setSourceDP(sourceDp);
+						streamInput.setSourceDataSet(sourceDataSet);
 						streamInput.setTargetDP(targetDp);
 						streamInput.setTopicName(ingest.getSourceDetail().getValue());
 						JavaInputDStream stream = sparkStreamingExecutor.stream(sourceDS, streamInput);
@@ -1225,6 +1385,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 					streamInput.setSourceDS(sourceDS);
 					streamInput.setTargetDS(targetDS);
 					streamInput.setSourceDP(sourceDp);
+					streamInput.setSourceDataSet(sourceDataSet);
 					streamInput.setTargetDP(targetDp);
 					streamInput.setTopicName(ingest.getSourceDetail().getValue());
 					streamInput.setTargetDir(targetDir);
@@ -1290,13 +1451,20 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 									String[] mappedAttrs, 
 									boolean areAllAttrs, 
 									String whereClause, 
-									String query) {
-		if(mappedAttrs != null && areAllAttrs) {
+									String query,
+									String targetDir) {
+		if(mappedAttrs != null && areAllAttrs && sourceDp !=  null) {
 			sqoopInput.setAttributeMap(mappedAttrs);
 			if(!whereClause.isEmpty()) {
 				sqoopInput.setWhereClause(whereClause);
 			}
+		} else if(sourceDataSet != null) {
+			sqoopInput.setTargetDirectory(targetDir);
+			sqoopInput.setWarehouseDirectory(null);
+			sqoopInput.setSqlQuery(query);
 		} else if(mappedAttrs != null && !areAllAttrs) {
+			sqoopInput.setTargetDirectory(targetDir);
+			sqoopInput.setWarehouseDirectory(null);
 			sqoopInput.setSqlQuery(query);
 		}
 		
@@ -1330,6 +1498,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 		boolean isFormula = false;
 		boolean isFunction = false;
 		boolean isDatapod = false;
+		boolean isDateSet = false;
 		
 		for(String attrType : values) {
 			if(attrType.equalsIgnoreCase(MetaType.attribute.toString())) {
@@ -1340,12 +1509,19 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 				isFunction = true;
 			} else if(attrType.equalsIgnoreCase(MetaType.datapod.toString())) {
 				isDatapod = true;
+			} else if(attrType.equalsIgnoreCase(MetaType.dataset.toString())) {
+				isDateSet = true;
 			}
 		}
+		
 		if(isAttribute || isFormula || isFunction) {
 			return false;
-		} else {
+		} else if(isDatapod) {
 			return isDatapod;
+		} else if(isDateSet) { 
+			return isDateSet;
+		} else {
+			return false;
 		}
 	}
 
@@ -1371,7 +1547,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 			} else{
 				attrRefHolder = attributeMap.getTargetAttr();
 			}
-			String resolvedAttr= ingestServiceImpl.resolveAttribute(attrRefHolder);
+			String resolvedAttr= ingestServiceImpl.resolveAttribute(attrRefHolder, ingest);
 			if(resolvedAttr != null) {
 				mappedAttributes.put(resolvedAttr, attrRefHolder.getRef().getType().toString());
 			}

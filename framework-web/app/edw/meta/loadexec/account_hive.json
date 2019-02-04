@@ -1,0 +1,57 @@
+{
+
+    "statusList" : [ 
+        {
+            "stage" : "NotStarted",
+            "createdOn" : ISODate("2018-11-23T13:15:56.955Z")
+        }, 
+        {
+            "stage" : "InProgress",
+            "createdOn" : ISODate("2018-11-23T13:15:56.955Z")
+        }, 
+        {
+            "stage" : "Completed",
+            "createdOn" : ISODate("2018-11-23T13:16:01.323Z")
+        }
+    ],
+    "dependsOn" : {
+        "ref" : {
+            "type" : "load",
+            "uuid" : "b8dfa8c8-ef30-11e8-8eb2-f2801f1b9fd1",
+            "version" : "1542978956"
+        }
+    },
+    "result" : {
+        "ref" : {
+            "type" : "datastore",
+            "uuid" : "7b1c1256-f9e7-4765-aecc-f6dc6c693a45",
+            "version" : "1542978961"
+        }
+    },
+    "refKeyList" : [],
+    "uuid" : "3019f27c-ef31-11e8-8eb2-f2801f1b9fd1",
+    "version" : "1542978956",
+    "name" : "account_hive",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2018-11-23T13:15:56.000Z"),
+    "active" : "Y",
+    "locked" : "N",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+                "version" : "1521430822",
+                "name" : "Fraud Analytics"
+            }
+        }
+    ]
+}

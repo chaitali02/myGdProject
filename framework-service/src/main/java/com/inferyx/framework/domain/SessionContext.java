@@ -1,4 +1,5 @@
 /*******************************************************************************
+
  * Copyright (C) Inferyx Inc, 2018 All rights reserved. 
  *
  * This unpublished material is proprietary to Inferyx Inc.
@@ -24,7 +25,18 @@ public class SessionContext {
 	private MetaIdentifierHolder roleInfo;
 	private MetaIdentifierHolder sessionInfo;
 	private MultiValueMap privInfo;
+	private MetaIdentifierHolder orgInfo;
 	
+	
+	
+	public MetaIdentifierHolder getOrgInfo() {
+		return this.orgInfo;
+	}
+
+	public void setOrgInfo(MetaIdentifierHolder orgInfo) {
+		this.orgInfo = orgInfo;
+	}
+
 	public MultiValueMap getPrivInfo() {
 		return privInfo;
 	}
@@ -60,7 +72,7 @@ public class SessionContext {
 	@Override
 	public String toString() {
 		return "SessionContext [userInfo=" + userInfo + ", appInfo=" + appInfo + ", roleInfo=" + roleInfo
-				+ ", sessionInfo=" + sessionInfo + "]";
+				+ ", sessionInfo=" + sessionInfo + ", orgInfo=" + orgInfo + "]";
 	}
 
 }

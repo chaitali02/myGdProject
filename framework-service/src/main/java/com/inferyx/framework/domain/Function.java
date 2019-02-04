@@ -1,4 +1,5 @@
 /*******************************************************************************
+
  * Copyright (C) Inferyx Inc, 2018 All rights reserved. 
  *
  * This unpublished material is proprietary to Inferyx Inc.
@@ -18,7 +19,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Function extends BaseEntity {
 
 	private String inputReq;
-	private FuncType funcType;
+//	private FuncType funcType;
 	private List<FunctionInfo> functionInfo;
 	private String category;
     
@@ -40,13 +41,13 @@ public class Function extends BaseEntity {
 		this.category = category;
 	}
 
-	public FuncType getFuncType() {
-		return funcType;
-	}
-
-	public void setFuncType(FuncType funcType) {
-		this.funcType = funcType;
-	}
+//	public FuncType getFuncType() {
+//		return funcType;
+//	}
+//
+//	public void setFuncType(FuncType funcType) {
+//		this.funcType = funcType;
+//	}
 
 	public List<FunctionInfo> getFunctionInfo() {
 		return functionInfo;

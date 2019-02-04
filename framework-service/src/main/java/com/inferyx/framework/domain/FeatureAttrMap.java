@@ -15,9 +15,18 @@ package com.inferyx.framework.domain;
  *
  */
 public class FeatureAttrMap {
+	
 	private String featureMapId;
+	private String featureDisplaySeq;
 	private FeatureRefHolder feature; //source
 	private AttributeRefHolder attribute; //target
+	
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param featureImpute the featureImpute to set
+	 */
 	/**
 	 * @Ganesh
 	 *
@@ -66,5 +75,11 @@ public class FeatureAttrMap {
 	public void setAttribute(AttributeRefHolder attribute) {
 		this.attribute = attribute;
 	}
-		
+	
+	public String getFeatureDisplaySeq() {
+		return featureDisplaySeq;
+	}
+	public void setFeatureDisplaySeq(String featureDisplaySeq) {
+		this.featureDisplaySeq = featureDisplaySeq;
+	}		
 }

@@ -343,11 +343,13 @@ RuleModule.controller('RuleComapreController',function($state,$stateParams,$root
             enddate = enddate + " UTC";
         }
         console.log(startdate);
-        console.log(enddate);
-        RuleService.getRuleExecByRulewithDate($scope.searchForm.rule.uuid,startdate,enddate).then(function(response){onSuccessGetRuleExecByRule(response.data)});
-        var onSuccessGetRuleExecByRule=function(response){
-            $scope.allSourceRuleexec =response; 
-            $scope.isInProgress=false;  
+      //  console.log($scope.searchForm);
+        if($scope.searchForm.rule){
+            RuleService.getRuleExecByRulewithDate($scope.searchForm.rule.uuid,startdate,enddate).then(function(response){onSuccessGetRuleExecByRule(response.data)});
+            var onSuccessGetRuleExecByRule=function(response){
+                $scope.allSourceRuleexec =response; 
+                $scope.isInProgress=false;  
+            }
         }
         
     }

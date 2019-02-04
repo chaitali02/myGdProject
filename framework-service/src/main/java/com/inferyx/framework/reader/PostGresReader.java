@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -30,8 +29,6 @@ import com.inferyx.framework.service.CommonServiceImpl;
  */
 @Service
 public class PostGresReader implements IReader {
-	@Autowired
-	protected MetadataUtil daoRegister;
 	@Autowired
 	protected ExecutorFactory execFactory;
 	@Autowired

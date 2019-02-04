@@ -80,7 +80,19 @@ MetadataModule.controller('MetadataLoadController', function ($rootScope, $state
 		$scope.showGraphDiv = false
 	}
 
+	$scope.showHome=function(uuid, version,mode){
+		$scope.showPage()
+		$state.go('metaListload', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
+
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.loaddata.locked =="Y"){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('metaListload', {
 			id: uuid,
@@ -194,6 +206,8 @@ MetadataModule.controller('MetadataLoadController', function ($rootScope, $state
 		}//onSuccessGetLatestByUuid
 	}//End IF
 	else {
+		$scope.loaddata={};
+		$scope.loaddata.locked="N";
 		MetadataLoadSerivce.getAllLatest("datapod").then(function (response) { onSuccessLoad(response.data) });
 		var onSuccessLoad = function (response) {
 			$scope.allload = response
@@ -255,6 +269,7 @@ MetadataModule.controller('MetadataLoadController', function ($rootScope, $state
 		loadJson.name = $scope.loaddata.name
 		loadJson.desc = $scope.loaddata.desc
 		loadJson.active = $scope.loaddata.active;
+		loadJson.locked = $scope.loaddata.locked;
 		loadJson.published = $scope.loaddata.published;
 		loadJson.header = $scope.loaddata.header;
 		loadJson.append = $scope.loaddata.append;

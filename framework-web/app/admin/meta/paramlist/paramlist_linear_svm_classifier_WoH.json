@@ -13,13 +13,14 @@
   },
 	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "paramListType" : "model",
     "templateFlg" : "Y",
     "templateInfo" : null,
- 	"appInfo": [
-			{
+ 	"appInfo" : [ 
+        {
             "ref" : {
                 "type" : "application",
                 "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
@@ -49,13 +50,27 @@
                 "type" : "application",
                 "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
             }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+ 		"uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbyog"
+            }
         }
-	],
+    ],
   "params": [
     {
       "paramId": "0",
       "paramName": "maxIter",
       "paramType": "integer",
+  	  "paramDispName" : "Max Iter",
+      "paramDesc" : "",	
       "paramValue": {
         "ref" : {
             "type" : "simple"
@@ -67,6 +82,8 @@
       "paramId": "1",
       "paramName": "regParam",
       "paramType": "double",
+  	  "paramDispName" : "Reg Param",
+      "paramDesc" : "",	
       "paramValue": {
         "ref" : {
             "type" : "simple"

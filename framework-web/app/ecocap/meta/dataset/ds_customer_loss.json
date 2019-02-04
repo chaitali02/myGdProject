@@ -31,6 +31,7 @@
     "attributeInfo" : [ 
         {
             "attrSourceId" : "0",
+            "attrDisplaySeq" : "0",
             "attrSourceName" : "cust_id",
             "sourceAttr" : {
                 "attrId" : "0",
@@ -42,6 +43,7 @@
         }, 
         {
             "attrSourceId" : "1",
+            "attrDisplaySeq" : "1",
             "attrSourceName" : "industry",
             "sourceAttr" : {
                 "attrId" : "1",
@@ -53,6 +55,7 @@
         }, 
         {
             "attrSourceId" : "2",
+            "attrDisplaySeq" : "2",
             "attrSourceName" : "exposure",
             "sourceAttr" : {
                 "attrId" : "3",
@@ -64,6 +67,7 @@
         }, 
         {
             "attrSourceId" : "3",
+            "attrDisplaySeq" : "3",
             "attrSourceName" : "lgd",
             "sourceAttr" : {
                 "attrId" : "4",
@@ -75,6 +79,7 @@
         }, 
         {
             "attrSourceId" : "4",
+            "attrDisplaySeq" : "4",
             "attrSourceName" : "correlation",
             "sourceAttr" : {
                 "attrId" : "6",
@@ -86,6 +91,7 @@
         }, 
         {
             "attrSourceId" : "5",
+            "attrDisplaySeq" : "5",
             "attrSourceName" : "sqrt_correlation",
             "sourceAttr" : {
                 "attrId" : "7",
@@ -97,6 +103,7 @@
         }, 
         {
             "attrSourceId" : "6",
+            "attrDisplaySeq" : "6",
             "attrSourceName" : "iterationid",
             "sourceAttr" : {
                 "attrId" : "0",
@@ -108,6 +115,7 @@
         }, 
         {
             "attrSourceId" : "7",
+            "attrDisplaySeq" : "7",
             "attrSourceName" : "customer",
             "sourceAttr" : {
                 "attrId" : "1",
@@ -119,6 +127,7 @@
         }, 
         {
             "attrSourceId" : "8",
+            "attrDisplaySeq" : "8",
             "attrSourceName" : "pd",
             "sourceAttr" : {
                 "attrId" : "2",
@@ -130,6 +139,7 @@
         }, 
         {
             "attrSourceId" : "9",
+            "attrDisplaySeq" : "9",
             "attrSourceName" : "iteration_id",
             "sourceAttr" : {
                 "attrId" : "0",
@@ -141,6 +151,7 @@
         }, 
         {
             "attrSourceId" : "10",
+            "attrDisplaySeq" : "10",
             "attrSourceName" : "factor",
             "sourceAttr" : {
                 "attrId" : "1",
@@ -152,6 +163,7 @@
         }, 
         {
             "attrSourceId" : "11",
+            "attrDisplaySeq" : "11",
             "attrSourceName" : "factor_value",
             "sourceAttr" : {
                 "attrId" : "2",
@@ -163,6 +175,7 @@
         }, 
         {
             "attrSourceId" : "12",
+            "attrDisplaySeq" : "12",
             "attrSourceName" : "def_point",
             "sourceAttr" : {
                 "attrId" : "8",
@@ -187,6 +200,7 @@
     "createdOn" : ISODate("2018-07-24T18:05:33.188Z"),
     "tags" : [],
     "active" : "Y",
+  "locked" : "N",
     "published" : "N",
     "appInfo" : [ 
         {

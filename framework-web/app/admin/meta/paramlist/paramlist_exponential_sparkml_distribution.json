@@ -14,9 +14,10 @@
     "createdOn" : ISODate("2018-05-27T10:24:53.151Z"),
     "tags" : [],
     "active" : "Y",
+  "locked" : "N",
     "published" : "N",
     "paramListType" : "model",
-    "appInfo" : [ 
+   "appInfo" : [ 
         {
             "ref" : {
                 "type" : "application",
@@ -29,6 +30,7 @@
                 "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
             }
         }, 
+       
         {
             "ref" : {
                 "type" : "application",
@@ -40,6 +42,24 @@
                 "type" : "application",
                 "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc"
             }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+ 		"uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbyog"
+            }
         }
     ],
     "params" : [ 
@@ -47,6 +67,8 @@
             "paramId" : "0",
             "paramName" : "mean",
             "paramType" : "double",
+   	     	"paramDispName" : "Mean",
+            "paramDesc" : "",		
             "paramValue" : {
                 "ref" : {
                     "type" : "simple"
@@ -57,7 +79,9 @@
         {
             "paramId" : "1",
             "paramName" : "size",
-            "paramType" : "long",
+            "paramType" : "long",            
+   	     	"paramDispName" : "Size",
+            "paramDesc" : "",		
             "paramValue" : {
                 "ref" : {
                     "type" : "simple"
@@ -68,7 +92,9 @@
         {
             "paramId" : "2",
             "paramName" : "numPartitions",
-            "paramType" : "integer",
+            "paramType" : "integer",           
+   	     	"paramDispName" : "Num Partitions",
+            "paramDesc" : "",		
             "paramValue" : {
                 "ref" : {
                     "type" : "simple"
@@ -79,7 +105,9 @@
         {
             "paramId" : "3",
             "paramName" : "seed",
-            "paramType" : "long",
+            "paramType" : "long",           
+   	     	"paramDispName" : "Seed",
+            "paramDesc" : "",		
             "paramValue" : {
                 "ref" : {
                     "type" : "simple"

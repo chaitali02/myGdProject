@@ -44,9 +44,11 @@
             </div>
             <div class="actions">
             
-
-              <a class="btn btn-circle btn-icon-only btn-default" ui-sref="metaListdashboard({'id':dashboarddata.uuid,'mode':'false'})" tooltip-placement="{{showtooltip}}" uib-tooltip="Edit" ng-show="hideIcon">
-                <i class="fa fa-edit " style="display:block;margin:2px 0px 0px 1px;"></i>    <!-- bg-yellow bg-hover-grey-salsa font-white fa-icon fa-edit
+              
+              <!-- ui-sref="metaListdashboard({'id':dashboarddata.uuid,'mode':'false'})" -->
+              <a class="btn btn-circle btn-icon-only btn-default"  ng-class="( isPrivlageDashboard || dashboarddata.locked == 'Y')? 'currentpage':'notcurrentpage'"  ng-click="onClickEditDashboard(dashboarddata.uuid,dashboarddata.locked)" tooltip-placement="{{showtooltip}}" uib-tooltip="Edit" ng-show="hideIcon">
+                <i class="fa fa-edit " style="display:block;margin:2px 0px 0px 1px;"></i>    
+                <!-- bg-yellow bg-hover-grey-salsa font-white fa-icon fa-edit
                  bg-blue bg-hover-grey-salsa font-white 
                 bg-green bg-hover-grey-salsa font-white -->
               </a>
@@ -87,7 +89,7 @@
                 </div>
                 <!-- <div class="col-md-1 col-sm-1" style="margin-left:4%;width:4%;margin-top:4px;cursor:pointer;padding:0px;text-align:right;"> -->
                   <div class="col-md-1 col-sm-1" style="margin-top:4px;cursor:pointer;padding:0px;text-align:right;">
-                    <span  ng-click="openFilterPopup()" tooltip-placement="left" uib-tooltip="Apply Filter"  style="font-size: 17px"><i class="fa fa-filter" style="font-size:20px;padding-bottom:5px;padding-right: 2px;"></i>Filter</span>
+                    <span class="caption-subject font-dark bold"  ng-click="openFilterPopup()" tooltip-placement="left" uib-tooltip="Select Filter"  style="font-size:16px;color: #666 !important;"><i class="fa fa-filter" style="font-size:17px;padding-bottom:5px;padding-right: 2px;"></i>Filter</span>
                 </div>
                 <br>       
               </div>
@@ -145,7 +147,8 @@
                         <a class="btn btn-circle btn-icon-only btn-default" tooltip-placement="{{showtooltip}}" ng-show="datacol.isChartShow"  uib-tooltip="Grid" ng-click="onClickGrid($parent.$index,$index)" ng-show="hideIcon">
                           <i class="fa fa-th" style="display:block;margin:2px 0px 0px 0px;"></i>   
                         </a>
-                        <a class="btn btn-circle btn-icon-only btn-default" ui-sref="dvvizpod({'id':datacol.vizpodDetails.uuid,'version':datacol.vizpodDetails.version,'mode':'false'})" tooltip-placement="{{showtooltip}}" uib-tooltip="Edit"
+                        <!-- ui-sref="dvvizpod({'id':datacol.vizpodDetails.uuid,'version':datacol.vizpodDetails.version,'mode':'false'})" -->
+                        <a class="btn btn-circle btn-icon-only btn-default"  ng-class="( isPrivlageVizpod|| datacol.vizpodDetails.locked == 'Y')? 'currentpage':'notcurrentpage'"  ng-click="onClickEditVizpod(datacol.vizpodDetails.uuid,datacol.vizpodDetails.version,datacol.vizpodDetails.locked)"  tooltip-placement="{{showtooltip}}" uib-tooltip="Edit"
                           ng-show="hideIcon">  
                        <i class="fa fa-pencil-square-o" style="display: block;margin:2px 0px 0px 1px;"></i>
                        </a>
@@ -378,7 +381,11 @@
                 <div class="slimScrollDiv" style="margin-top:10px;">
                   <div class="scroller" data-always-visible="1" data-rail-visible1="1" data-initialized="1" style="overflow-y: scroll;max-height: 300px;">
                     <form class="form-horizontal" novalidate="novalidate" name="myformFilter">
-                      <div class="form-body centercontent" ng-show="filterAttribureIdValues.length == 0">
+                      <div ng-show="filterAttribureIdValues.length == 0 && !isFilterAttrInProges">
+                        <h3 style="font-size:14px;color:blue;">Please Select Filter</h3>
+                      </div>
+
+                      <div class="form-body centercontent" ng-show="isFilterAttrInProges">
                           <div class="spinner">
                               <div class="bounce1"></div>
                               <div class="bounce2"></div>

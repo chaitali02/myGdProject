@@ -33,7 +33,8 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
     else {
         $scope.isAdd = true;
     }
-    $scope.continueCount=1;
+	$scope.continueCount=1;
+	$scope.rhsNA=['NULL',"NOT NULL"];
     $scope.ruleTypes = [{ "text": "FILE-FILE", "caption": "File - File" }, { "text": "FILE-TABLE", "caption": "File - Table" }, { "text": "TABLE-TABLE", "caption": "Table - Table" }, { "text": "TABLE-FILE", "caption": "Table - File" }, { "text": "STREAM-FILE", "caption": "Stream - File" }, { "text": "STREAM-TABLE", "caption": "Stream - Table" }];
     $scope.sourceFormate = ["CSV", "TSV", "PSV", "PARQUET"];
     $scope.targetFormate = ["CSV", "TSV", "PSV", "PARQUET"];
@@ -103,7 +104,19 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 		$scope.showForm = true;
 		$scope.showGraphDiv = false
 	}
+
+	$scope.showHome=function(uuid, version,mode){
+		$scope.showPage();
+		$state.go('ingestruledetail2', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.ingestData.locked =="Y"){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('ingestruledetail2', {
 			id: uuid,
@@ -179,30 +192,33 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 			}
 			if (TargetType == "TABLE") {
 				$scope.allTargetDatasource = response;
-				if($scope.selectedSourceType == 'FILE' && $scope.selectedTargetType == 'TABLE'){
-					if($scope.allTargetDatasource && $scope.allTargetDatasource.length >0){
-						for(var i=0;i<$scope.allTargetDatasource.length;i++){
-							if($scope.allTargetDatasource[i].type == 'HIVE'){
-								if($scope.allSourceDatasource)
-									$scope.allSourceDatasource.push($scope.allTargetDatasource[i]);
-								else{
-									$scope.allSourceDatasource=[];
-									$scope.allSourceDatasource.push($scope.allTargetDatasource[i]);
+				//setTimeout(function(){
+					if($scope.selectedSourceType == 'FILE' && $scope.selectedTargetType == 'TABLE'){
+						if($scope.allTargetDatasource && $scope.allTargetDatasource.length >0){
+							for(var i=0;i<$scope.allTargetDatasource.length;i++){
+								if($scope.allTargetDatasource[i].type == 'HIVE'){
+									if($scope.allSourceDatasource)
+										$scope.allSourceDatasource.push($scope.allTargetDatasource[i]);
+									else{
+										$scope.allSourceDatasource=[];
+										$scope.allSourceDatasource.push($scope.allTargetDatasource[i]);
+									}
 								}
 							}
-						}
-						/*for(var i=0;i<$scope.allSourceDatasource.length;i++){
-							if($scope.allSourceDatasource[i].type == 'FILE'){
-								if($scope.allSourceDatasource)
-									$scope.allTargetDatasource.push($scope.allSourceDatasource[i]);
-								else{
-									$scope.allSourceDatasource=[];
-									$scope.allTargetDatasource.push($scope.allSourceDatasource[i]);
+							for(var i=0;i<$scope.allSourceDatasource.length;i++){
+								if($scope.allSourceDatasource[i].type == 'FILE'){
+									if($scope.allSourceDatasource)
+										$scope.allTargetDatasource.push($scope.allSourceDatasource[i]);
+									else{
+										$scope.allSourceDatasource=[];
+										$scope.allTargetDatasource.push($scope.allSourceDatasource[i]);
+									}
 								}
 							}
-						}*/
-					}	
-				}
+						}	
+					}
+				//},100);
+			
 			}
 			
 			if(sourceType =="STREAM" && TargetType =="FILE"){
@@ -799,7 +815,11 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 	if (typeof $stateParams.id != "undefined") {
 		$scope.mode = $stateParams.mode;
 		$scope.isDependencyShow = true;
-		IngestRuleService.getAllVersionByUuid($stateParams.id, "ingest").then(function (response) { onSuccessGetAllVersionByUuid(response.data) });
+		$scope.showactive = "true";
+		$scope.isEditInprogess=true;
+    	$scope.isEditVeiwError=false;
+		IngestRuleService.getAllVersionByUuid($stateParams.id, "ingest")
+			.then(function (response) { onSuccessGetAllVersionByUuid(response.data) });
 		var onSuccessGetAllVersionByUuid = function (response) {
 			for (var i = 0; i < response.length; i++) {
 				var ingetversion = {};
@@ -807,8 +827,10 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 				$scope.ingest.versions[i] = ingetversion;
 			}
 		}
-		IngestRuleService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'ingest').then(function (response) { onSuccess(response.data) });
+		IngestRuleService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'ingest')
+			.then(function (response) { onSuccess(response.data) },function(response) {onError(response.data)});
 		var onSuccess = function (response) {
+			$scope.isEditInprogess=false;
 			var defaultversion = {};
 			$scope.ingestData = response.ingestData;
 			$scope.ingestCompare = response.ingestData;
@@ -908,21 +930,32 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 				tags[i] = tag
 				$scope.tags = tags;
 			}
-		}
+		};
+		var onError =function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		}; 
 	}//End If
     else{
 		
 		$scope.ingestData={};
 		$scope.ingestData.sourceHeader="N";
 		$scope.ingestData.targetHeader="N"
+		$scope.ingestData.locked="N";
 	//	$scope.onChangeRuleType();
 	}
 
 
 	$scope.selectVersion = function () {
-		$scope.myform.$dirty = false;
-		IngestRuleService.getOneByUuidAndVersion($scope.ingest.defaultVersion.uuid, $scope.ingest.defaultVersion.version, 'ingestview').then(function (response) { onSuccess(response.data) });
+		$scope.myform1.$dirty = false;
+		$scope.myform2.$dirty = false;
+		$scope.myform3.$dirty = false;
+		$scope.isEditInprogess=true;
+    	$scope.isEditVeiwError=false;
+		IngestRuleService.getOneByUuidAndVersion($scope.ingest.defaultVersion.uuid, $scope.ingest.defaultVersion.version, 'ingest')
+			.then(function (response) { onSuccess(response.data) },function(response) {onError(response.data)});
 		var onSuccess = function (response) {
+			$scope.isEditInprogess=false;
 			var defaultversion = {};
 			$scope.ingestData = response.ingestData;
 			$scope.ingestCompare = response.ingestData;
@@ -1003,7 +1036,11 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 				tags[i] = tag
 				$scope.tags = tags;
 			}
-		}
+		};
+		var onError =function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		} 
 	}
 
 	$scope.SearchAttribute = function (index, type, propertyType) {
@@ -1091,13 +1128,24 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[1];
 			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['attribute', 'formula', 'dataset', 'function', 'paramlist'])
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
-		} else if (['EXISTS', 'NOT EXISTS', 'IN', 'NOT IN'].indexOf($scope.filterTableArray[index].operator) != -1) {
+		} else if (['IN', 'NOT IN'].indexOf($scope.filterTableArray[index].operator) != -1) {
 			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, []);
 			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[4];
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
+		} 
+		else if (['EXISTS', 'NOT EXISTS'].indexOf($scope.filterTableArray[index].operator) != -1) {
+			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['attribute', 'formula', 'function', 'paramlist','string','integer']);
+			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[4];
+			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
 		} else if (['<', '>', "<=", '>='].indexOf($scope.filterTableArray[index].operator) != -1) {
-			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['string', 'dataset']);
+			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['dataset']);
 			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[1];
+			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
+		}
+		else if (['IS'].indexOf($scope.filterTableArray[index].operator) != -1) {
+			$scope.filterTableArray[index].isRhsNA=true;
+			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['attribute', 'formula', 'dataset', 'function', 'paramlist','integer']);
+			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[0];
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
 		}
 		else {
@@ -1118,7 +1166,18 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 			filter.selected = $scope.selectedAllFitlerRow;
 		});
 	}
-
+	
+	function returnRshType(){
+		var rTypes = [
+			{ "text": "string", "caption": "string", "disabled": false },
+			{ "text": "string", "caption": "integer", "disabled": false },
+			{ "text": "datapod", "caption": "attribute", "disabled": false },
+			{ "text": "formula", "caption": "formula", "disabled": false },
+			{ "text": "dataset", "caption": "dataset", "disabled": false },
+			{ "text": "paramlist", "caption": "paramlist", "disabled": false },
+			{ "text": "function", "caption": "function", "disabled": false }]
+	    return rTypes;
+	}
 	$scope.addRowFilter = function () {
 		if ($scope.filterTableArray == null) {
 			$scope.filterTableArray = [];
@@ -1136,7 +1195,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 		filertable.operator = $scope.operator[0].value
 		filertable.lhstype = $scope.lhsType[0]
 		filertable.rhstype = $scope.rhsType[0]
-		filertable.rhsTypes = CF_FILTER.rhsType;
+		filertable.rhsTypes = returnRshType();
 		filertable.rhsTypes = $scope.disableRhsType(filertable.rhsTypes, ['dataset']);
 		filertable.rhsvalue;
 		filertable.lhsvalue;
@@ -1149,12 +1208,46 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 			if (!selected.selected) {
 				newDataList.push(selected);
 			}
+		    $scope.fitlerAttrTableSelectedItem=[];
 		});
 
 		if (newDataList.length > 0) {
 			newDataList[0].logicalOperator = "";
 		}
 		$scope.filterTableArray = newDataList;
+	}
+
+	$scope.onAttrFilterRowDown=function(index){	
+		var rowTempIndex=$scope.filterTableArray[index];
+        var rowTempIndexPlus=$scope.filterTableArray[index+1];
+		$scope.filterTableArray[index]=rowTempIndexPlus;
+		$scope.filterTableArray[index+1]=rowTempIndex;
+		if(index ==0){
+			$scope.filterTableArray[index+1].logicalOperator=$scope.filterTableArray[index].logicalOperator;
+			$scope.filterTableArray[index].logicalOperator=""
+		}
+	}
+
+	$scope.onAttrFilterRowUp=function(index){
+		var rowTempIndex=$scope.filterTableArray[index];
+        var rowTempIndexMines=$scope.filterTableArray[index-1];
+		$scope.filterTableArray[index]=rowTempIndexMines;
+		$scope.filterTableArray[index-1]=rowTempIndex;
+		if(index ==1){
+			$scope.filterTableArray[index].logicalOperator=$scope.filterTableArray[index-1].logicalOperator;
+			$scope.filterTableArray[index-1].logicalOperator=""
+		}
+	}  
+	
+	$scope.onFilterDrop=function(index){
+		if(index.targetIndex== 0){
+			$scope.filterTableArray[index.sourceIndex].logicalOperator=$scope.filterTableArray[index.targetIndex].logicalOperator;
+			$scope.filterTableArray[index.targetIndex].logicalOperator=""
+		}
+		if(index.sourceIndex == 0){
+			$scope.filterTableArray[index.targetIndex].logicalOperator=$scope.filterTableArray[index.sourceIndex].logicalOperator;
+			$scope.filterTableArray[index.sourceIndex].logicalOperator=""
+		}
 	}
 
 	$scope.selectlhsType = function (type, index) {
@@ -1326,6 +1419,8 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 		}
 	}
     $scope.onChangeSourceAttribute = function (type, index) {
+		
+		$scope.ingestTableArray[index].sourcesimple=null;
 		if (type == "string") {
 			$scope.ingestTableArray[index].isSourceAtributeSimple = true;
 			$scope.ingestTableArray[index].isSourceAtributeDatapod = false;
@@ -1333,7 +1428,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 			$scope.ingestTableArray[index].sourcesimple;
 			$scope.ingestTableArray[index].isSourceAtributeExpression = false;
 			$scope.ingestTableArray[index].isSourceAtributeFunction = false;
-
+            
 		}
 		else if (type == "datapod") {
             if($scope.selectedSourceType =="FILE" ||$scope.selectedSourceType =="STREAM"){
@@ -1395,6 +1490,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 		ingestJson.name = $scope.ingestData.name;
 		ingestJson.desc = $scope.ingestData.desc;
 		ingestJson.active = $scope.ingestData.active;
+		ingestJson.locked = $scope.ingestData.locked;
 		ingestJson.published = $scope.ingestData.published;
 		ingestJson.runParams = $scope.ingestData.runParams;
 		ingestJson.sourceHeader = $scope.ingestData.sourceHeader;
@@ -1495,6 +1591,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 				var lhsref = {};
 				var rhsoperand = {};
 				var rhsref = {};
+				filterInfo.display_seq=i;
 				if (typeof $scope.filterTableArray[i].logicalOperator == "undefined") {
 					filterInfo.logicalOperator = ""
 				}
@@ -1609,7 +1706,8 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
                     sourceAttr.value = $scope.ingestTableArray[i].sourcesimple;
                     attributemap.sourceAttr = sourceAttr;
 				}
-				if ($scope.ingestTableArray[i].sourceAttributeType.text == "datapod" && typeof $scope.ingestTableArray[i].sourcesimple != "undefined") {
+				
+				if ($scope.ingestTableArray[i].sourceAttributeType.text == "datapod" &&  $scope.ingestTableArray[i].sourcesimple && typeof $scope.ingestTableArray[i].sourcesimple != "undefined") {
                     sourceref.type = "attribute";
                     sourceAttr.ref = sourceref;
                     sourceAttr.value = $scope.ingestTableArray[i].sourcesimple;
@@ -1716,6 +1814,50 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 		var hidemode = "yes";
 		if (hidemode == 'yes') {
 			setTimeout(function () { $state.go('ingestrulelist2'); }, 2000);
+		}
+	}
+
+	$scope.fitlerAttrTableSelectedItem=[];
+	$scope.onChangeFilterAttRow=function(index,status){
+		if(status ==true){
+			$scope.fitlerAttrTableSelectedItem.push(index);
+		}
+		else{
+			let tempIndex=$scope.fitlerAttrTableSelectedItem.indexOf(index);
+
+			if(tempIndex !=-1){
+				$scope.fitlerAttrTableSelectedItem.splice(tempIndex, 1);
+
+			}
+		}	
+	}
+	$scope.autoMove=function(index,type){
+		if(type=="mapAttr"){
+		}
+		else{
+			var tempAtrr=$scope.filterTableArray[$scope.fitlerAttrTableSelectedItem[0]];
+			$scope.filterTableArray.splice($scope.fitlerAttrTableSelectedItem[0],1);
+			$scope.filterTableArray.splice(index,0,tempAtrr);
+			$scope.fitlerAttrTableSelectedItem=[];
+			$scope.filterTableArray[index].selected=false;
+			$scope.filterTableArray[0].logicalOperator="";
+			if($scope.filterTableArray[index].logicalOperator =="" && index !=0){
+				$scope.filterTableArray[index].logicalOperator=$scope.logicalOperator[0];
+			}else if($scope.filterTableArray[index].logicalOperator =="" && index ==0){
+				$scope.filterTableArray[index+1].logicalOperator=$scope.logicalOperator[0];
+			}
+		}
+	}
+
+	$scope.autoMoveTo=function(index,type){
+		if(type =="mapAttr"){
+		}
+		else{
+			if(index <= $scope.filterTableArray.length){
+				$scope.autoMove(index-1,'filterAttr');
+				$scope.moveTo=null;
+				$(".actions").removeClass("open");
+			}
 		}
 	}
 

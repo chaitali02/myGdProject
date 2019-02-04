@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testResults version="1.2">
-<httpSample t="198" lt="198" ts="1502366955363" s="true" lb="ParamList" rc="200" rm="OK" tn="getParamSetByParamList 9-1" dt="text" by="2439"/>
-<httpSample t="122" lt="122" ts="1502366955563" s="true" lb="ParamList" rc="200" rm="OK" tn="getParamSetByParamList 9-1" dt="text" by="2439"/>
-<httpSample t="142" lt="142" ts="1502366955686" s="true" lb="ParamList" rc="200" rm="OK" tn="getParamSetByParamList 9-1" dt="text" by="2440"/>
-<httpSample t="85" lt="85" ts="1502366955837" s="true" lb="ParamList" rc="200" rm="OK" tn="getParamSetByParamList 9-1" dt="text" by="2441"/>
-<httpSample t="63" lt="63" ts="1502366955927" s="true" lb="ParamList" rc="200" rm="OK" tn="getParamSetByParamList 9-1" dt="text" by="2439"/>
-
-</testResults>

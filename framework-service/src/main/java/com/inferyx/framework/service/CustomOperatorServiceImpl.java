@@ -27,7 +27,6 @@ import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.common.SessionHelper;
 import com.inferyx.framework.dao.IAlgorithmDao;
 import com.inferyx.framework.dao.IModelDao;
@@ -104,8 +103,6 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 	@Autowired
 	DataSourceFactory dataSourceFactory;
 	@Autowired
-	MetadataUtil commonActivity;
-	@Autowired
 	private TransposeOldOperator transposeOldOperator;
 	@Autowired
 	Helper helper;
@@ -149,7 +146,7 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 				MetaType.operator.toString());
 		logger.info(" After operator fetch");
 		com.inferyx.framework.operator.IOperator newOperator = operatorFactory
-				.getOperator(helper.getOperatorType(operator.getOperatorType()));
+				.getOperator(Helper.getOperatorType(operator.getOperatorType()));
 		logger.info(" Before customCreate");
 		Map<String, String> otherParams = newOperator.customCreate(operatorExec, execParams, runMode);
 		logger.info(" After Set not started status");

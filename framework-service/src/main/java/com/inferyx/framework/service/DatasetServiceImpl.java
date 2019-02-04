@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -30,6 +32,7 @@ import com.inferyx.framework.dao.IFilterDao;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.DataSet;
+import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Filter;
@@ -80,7 +83,9 @@ public class DatasetServiceImpl {
 	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	AttributeMapOperator attributeMapOperator;
-
+	@Autowired
+	protected DataStoreServiceImpl dataStoreServiceImpl;
+	
 	/********************** UNUSED **********************/
 	/*public Dataset findLatest() {
 		return resolveName(iDatasetDao.findLatest(new Sort(Sort.Direction.DESC, "version")));
@@ -88,7 +93,8 @@ public class DatasetServiceImpl {
 	
 	public List<Map<String, Object>> getDatasetSample(String datasetUUID, String datasetVersion, int rows, ExecParams execParams, RunMode runMode) throws Exception {
 		//Dataset dataset = iDatasetDao.findOneByUuidAndVersion(datasetUUID, datasetVersion);
-		
+		//logger.info(" Start datasetSample ");
+		long startTime  = System.currentTimeMillis();
 		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.sample.maxrows"));
 		if(rows > maxRows) {
 			logger.error("Number of rows "+rows+" exceeded. Max row allow "+maxRows);
@@ -99,22 +105,27 @@ public class DatasetServiceImpl {
 		}
 		
 		DataSet dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(datasetUUID, datasetVersion, MetaType.dataset.toString());
-		List<Map<String, Object>> data = new ArrayList<>();	
+		List<Map<String, Object>> data = new ArrayList<>();
 		String sql = datasetOperator.generateSql(dataset, null, null,new HashSet<>(), execParams, runMode);
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
 		//ResultSetHolder rsHolder = null;
-		data = exec.executeAndFetch(sql, commonServiceImpl.getApp().getUuid());
-		/*DataFrame df = rsHolder.getDataFrame();		
-			Row[] dfRows = df.limit(rows).collect();
-			String[] columns = df.columns();
-			for (Row row : dfRows) {
-				Map<String, Object> object = new LinkedHashMap<String, Object>(columns.length);
-				for (String column : columns) {
-					object.put(column, row.getAs(column));
-				}
-				data.add(object);
-			}*/
+		Datasource dsDatasource = commonServiceImpl.getDatasourceByObject(dataset);
+		try {
+			data = exec.executeAndFetchByDatasource(sql, dsDatasource, commonServiceImpl.getApp().getUuid());		
+		}catch (Exception e) {
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), message != null ? message : "No data found for dataset "+dataset.getName()+".", null);
+			throw new RuntimeException(message != null ? message : "No data found for dataset "+dataset.getName()+".");
+		}
+		logger.info("Time elapsed in getDatasetSample : " + (System.currentTimeMillis() - startTime)/1000 + " s");
 		return data;
 	}
 
@@ -423,7 +434,7 @@ public class DatasetServiceImpl {
 	 * return dataset; }
 	 */
 
-	public String getAttributeSql(MetadataUtil daoRegister, DataSet dataset, String attributeId) {
+	public String getAttributeSql(DataSet dataset, String attributeId) {
 		List<AttributeSource> sourceAttrs = dataset.getAttributeInfo();
 		for (AttributeSource sourceAttr : sourceAttrs) {
 			if (sourceAttr.getSourceAttr() != null 
@@ -437,7 +448,7 @@ public class DatasetServiceImpl {
 		return null;
 	}
 
-	public String getAttributeName(MetadataUtil daoRegister, DataSet dataset, String attributeId) {
+	public String getAttributeName(DataSet dataset, String attributeId) {
 		List<AttributeSource> sourceAttrs = dataset.getAttributeInfo();
 		for (AttributeSource sourceAttr : sourceAttrs) {
 			if (sourceAttr.getSourceAttr() != null 
@@ -517,7 +528,10 @@ public class DatasetServiceImpl {
 	
 	public String generateSql (DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 
 			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
-		return datasetOperator.generateSql(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode);
+		long startTime = System.currentTimeMillis();
+		String sql = datasetOperator.generateSql(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode);
+		logger.info("Time elapsed in generateSql : " + (System.currentTimeMillis() - startTime)/1000 + " s");
+		return sql;
 	}
 
 	public List<Map<String, Object>> getAttributeValues(String datasetUuid, int attributeID, RunMode runMode) throws Exception {
@@ -544,7 +558,24 @@ public class DatasetServiceImpl {
 		builder.append(" FROM ");
 		builder.append(datasetOperator.generateFrom(dataSet, null, null, new HashSet<>(), runMode));
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		Datasource datapodDS = commonServiceImpl.getDatasourceByObject(dataSet);
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
-		return exec.executeAndFetch(builder.toString(), commonServiceImpl.getApp().getUuid());
+//		return exec.executeAndFetch(builder.toString(), commonServiceImpl.getApp().getUuid());
+		return exec.executeAndFetchByDatasource(builder.toString(), datapodDS, commonServiceImpl.getApp().getUuid());
+	}
+	
+	
+	public HttpServletResponse download(String uuid, String version, String format,int rows,RunMode runMode, HttpServletResponse response) throws Exception {
+		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
+		if(rows > maxRows) {
+			logger.error("Requested rows exceeded the limit of "+maxRows);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Requested rows exceeded the limit of "+maxRows, null);
+			throw new RuntimeException("Requested rows exceeded the limit of "+maxRows);
+		}
+//		getDatasetSample(uuid, version, rows, null, runMode);
+		List<Map<String, Object>> results = getDatasetSample(uuid, version, rows, null, runMode);
+		response = commonServiceImpl.download(uuid, version, format, 0, rows, response, 0, null, null, null, runMode, results, MetaType.downloadExec, new MetaIdentifierHolder(new MetaIdentifier(MetaType.dataset,uuid,version)));
+		return response;
+
 	}
 }

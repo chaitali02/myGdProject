@@ -7,12 +7,12 @@ public class SSHManagerTest {
 /**
  * Test of sendCommand method, of class SSHManager.
  */
-@Test
+//@Test
 public void testSendCommand()
 {
     System.out.println("sendCommand");
 
-    String command = "python3 /home/rohini/Desktop/train_linear_regression_model_tensorflow.py";
+    String command = "python3 /user/hive/warehouse/framework/model/script/606527f4-be8f-465b-82e3-10f17c700cd4_1541224994.py";
    
 //    String command = "python3\n"
 //    				+"import subprocess\n" 

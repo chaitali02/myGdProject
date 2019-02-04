@@ -17,10 +17,11 @@
         padding: 20px 0 0;
     }
 </style>
-<div class="row" ng-controller="ResultTrainController">
+
+
+<div class="row " ng-controller="ResultTrainController2">
     <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
     <div class="col-md-12">
-
         <div class="page-bar">
             <ul class="page-breadcrumb">
                 <li>
@@ -32,7 +33,12 @@
                     <i class="fa fa-circle"></i>
                 </li>
                 <li>
-                    <span>Model Results</span>
+                    <span>Train Results</span>
+                    <i class="fa fa-circle"></i>
+                </li>
+                <li>
+                    <span>{{modelDetail.name}}</span>
+                    
                 </li>
             </ul>
             <div class="page-toolbar">
@@ -44,76 +50,83 @@
             </div>
         </div>
         <br>
-
-        <div class="portlet box green" ng-show="!isShowPMML">
-            <div class="portlet-title">
-                <div class="caption">
-                    <i class="fa fa-cogs"></i>{{caption}} Result
-                </div>
-                <div class="tools">
-                    <a title="Download" ng-click="downloadMoldeResult()" data-toggle="tooltip" data-placement="top" tooltip ng-disabled="isPMMLDownload"
-                        style="pointer-events: auto;">
-                        <i class="fa fa-download" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
-                    </a>
-                    <a title="Show Result" data-toggle="tooltip" data-placement="top" class="currentpage" tooltip style="height:16px;">
-                        <span class="glyphicon glyphicon-file" style="color: white;" ng-disabled="true"></span>
-                    </a>
-                    <a title="Show PMML" ng-click="showPMMLResult()" data-toggle="tooltip" data-placement="top" tooltip ng-disabled="isPMMLDownload"
-                        style="pointer-events: auto;" ng-show="type=='train'" ng-class="isPMMLDownload==true?'currentpage':'notcurrentpage'">
-                        <i class="fa  fa-file-excel-o" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
-                    </a>
-
-                    <a title="Refresh" ng-click="refreshMoldeResult()" data-toggle="tooltip" data-placement="top" tooltip>
-                        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
-                    </a>
-                    <a title="Close" data-toggle="tooltip" data-placement="top" tooltip href="javascript:;" ng-click="close()">
-                        <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
-                    </a>
-                    <!--<a href="javascript:;" class="collapse" data-original-title="" title=""> </a> -->
-                </div>
-            </div>
-            <div class="portlet-body" style="min-heigth:100px;">
-                <div ng-if="type =='train'">
-                    <div class="row">
-                        <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
-                            <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
-                                <input style="width:15px !important;height:15px;margin:0 0 0;" class="form-control input-sm input-small input-inline" type="checkbox"
-                                    ng-model="autoRefreshResult" ng-change="autoRefreshResultOnChange()" />
-                                <label style="vertical-align:middle;margin-bottom:0px;">Auto Refresh:</label>
-                                <input style="width:55px !important;" min="5" max="99" type="number" class="form-control input-sm input-small input-inline"
-                                    ng-model="autoRefreshCounterResult" />
-                                <label style="vertical-align:middle;margin-bottom:0px;">secs</label>
-                            </div>
-                        </div>
+        <div ng-hide="onAccess">
+            <div class="portlet box green" ng-show="!isShowPMML">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-cogs"></i>{{caption}} Result
                     </div>
-                    <br>
-                    <div class="row">
-                        <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12" ng-if="modelresult != null">
-                            <train-result execjson='modelresult'></train-result>
-                        </div>
+                    <div class="tools">
+                        <a title="Main" data-toggle="tooltip" data-placement="top" ng-click="showResultPage()"  ng-class="!isGraphShow==true? 'currentpage':'notcurrentpage'" tooltip style="height:16px;font-size:16px;">
+                            <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+                        </a> 
+                        
+                        <a title="Download" ng-click="downloadMoldeResult()" data-toggle="tooltip" data-placement="top" tooltip ng-disabled="false"
+                            style="pointer-events: auto;"  ng-class="(downloadAction.tab == 4 && trainData.saveTrainingSet=='N')?'currentpage':'notcurrentpage'">
+                            <i class="fa fa-download" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                        </a>
+                        <!-- <a title="Show Result" data-toggle="tooltip" data-placement="top" ng-click="showResultPage()"  ng-class="!isGraphShow==true? 'currentpage':'notcurrentpage'" tooltip style="height:16px;">
+                            <span class="glyphicon glyphicon-file" style="color: white;" ng-disabled="true"></span>
+                        </a> -->
+                        <a title="Show PMML" ng-click="showPMMLResult()" data-toggle="tooltip" data-placement="top" tooltip ng-disabled="isPMMLDownload"
+                            style="pointer-events: auto;" ng-class="isPMMLDownload==true?'currentpage':'notcurrentpage'">
+                            <i class="fa  fa-file-excel-o" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                        </a>
+                        <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip data-ng-click="showGraph()" ng-class="isGraphShow==true? 'currentpage':'notcurrentpage'">
+                            <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
+                        </a>
+                        <a title="Refresh" ng-click="isGraphShow?broadcastRefreshData():refreshMoldeResult()" data-toggle="tooltip" data-placement="top" tooltip>
+                            <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                        </a>
+                        <a title="Close" data-toggle="tooltip" data-placement="top" tooltip href="javascript:;" ng-click="close()">
+                            <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
+                        </a>
                     </div>
                 </div>
-                <!--End Train result-->
+                <div class="portlet-body" style="min-heigth:100px;z-index:10">
+                    <div ng-if="isGraphShow" class="form-body graph-body">
+                        <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
+                        <div class="spinner text-center" id="graphloader">
+                            <div class="bounce1"></div>
+                            <div class="bounce2"></div>
+                            <div class="bounce3"></div>
+                        </div>
+                        <div class="form-body show-graph-body" id="graphWrapper"tree-graph-directive uuid="modelDetail.uuid" version="modelDetail.version">
+                        </div>
+                    </div>
+                    <div  ng-if="!isGraphShow">
+                        <form class="form-horizontal" name="myform">
+                            <!-- execjson='modelresult' -->
+                            <train-result data="modelDetail"></train-result>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
-
         <div class="portlet box green" ng-show="isShowPMML">
             <div class="portlet-title">
                 <div class="caption">
                     <i class="fa fa-cogs"></i>PMML Result
                 </div>
                 <div class="tools">
+                    <a title="Main" data-toggle="tooltip" data-placement="top" tooltip style="height:16px;font-size:16px;"  ng-class="(!isGraphShow==true && !isShowPMML ==true)? 'currentpage':'notcurrentpage'" ng-click="showResultPage()">
+                        <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+                    </a>
                     <a title="Download" ng-click="downloadPMMLResult()" data-toggle="tooltip" data-placement="top" tooltip ng-disabled="isPMMLDownload">
                         <i class="fa fa-download" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
                     </a>
-                    <a title="Show Result" data-toggle="tooltip" data-placement="top" tooltip style="height:16px;" ng-click="isShowPMML=false">
+                    
+                    <!-- <a title="Show Result" data-toggle="tooltip" data-placement="top" tooltip style="height:16px;"  ng-class="(!isGraphShow==true && !isShowPMML ==true)? 'currentpage':'notcurrentpage'" ng-click="showResultPage()">
                         <span class="glyphicon glyphicon-file" style="color: white;"></span>
-                    </a>
+                    </a> -->
                     <a title="Show PMML" ng-click="showPMMLResult()" class="currentpage" data-toggle="tooltip" data-placement="top" tooltip ng-disabled="true"
-                        style="pointer-events: auto;" ng-show="type=='train'">
+                        style="pointer-events: auto;">
                         <i class="fa  fa-file-excel-o" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
                     </a>
-                    <a title="Refresh" ng-click="refreshMoldeResult()" data-toggle="tooltip" data-placement="top" tooltip>
+                    <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip data-ng-click="showGraph()" ng-class="isGraphShow==true? 'currentpage':'notcurrentpage'">
+                        <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
+                    </a>
+                    <a title="Refresh" ng-click="isGraphShow?broadcastRefreshData(): showPMMLResult()" data-toggle="tooltip" data-placement="top" tooltip>
                         <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
                     </a>
                     <a title="Close" data-toggle="tooltip" data-placement="top" tooltip href="javascript:;" ng-click="close()">
@@ -125,61 +138,36 @@
             <div class="portlet-body" style="min-heigth:100px;">
                 <div class="row">
                     <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
-                        <div>
+                        <div ng-if="isGraphShow" class="form-body graph-body">
+                            <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
+                            <div class="spinner text-center" id="graphloader">
+                                <div class="bounce1"></div>
+                                <div class="bounce2"></div>
+                                <div class="bounce3"></div>
+                            </div>
+                            <div class="form-body show-graph-body" id="graphWrapper"tree-graph-directive uuid="modelDetail.uuid" version="modelDetail.version">
+                            </div>
+                        </div>
+                        <div ng-if="!isGraphShow">
+                            <div class="form-body text-center" id="errorMsg" ng-if="isPmmlError" style="color:red;">Some Error Occured</div>
+                            <div class="spinner text-center" id="graphloader" ng-if="isPmmlInprogess">
+                                <div class="bounce1"></div>
+                                <div class="bounce2"></div>
+                                <div class="bounce3"></div>
+                            </div>
+                            <div ng-show="!isPmmlInprogess && !isPmmlError">
                             <div class="showClips">
                                 <div id="" style="height:500px;overflow: auto;">
                                     <div class="copyClip pull-right" title="copy" ngclipboard data-clipboard-text="{{pMMLResult}}"> </div>
                                     <div id="showPMML" style="height:500px;overflow: auto;"></div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <div id="downloadSample" class="modal fade bs-modal-lg in" style="display: none;">
-            <div class="modal-dialog" style="width:40%">
-                <div class="modal-content" style="resize: both;overflow: auto;">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                        <h4 class="modal-title">Download</h4>
-                    </div>
-                    <form class="form-horizontal" name="myform3" ng-submit="submitDownload()" novalidate="novalidate">
-                        <div class="modal-body" style="padding-top:0px">
-                            <div class="slimScrollDiv" style="position: relative; overflow-y: auto !important; width:auto;padding:10px;">
-                                <div class="scroller" style="max-height:150px;min-height:110px; overflow-y: auto !important; width: auto;margin-top:30px"
-                                    data-always-visible="1" data-rail-visible1="1" data-initialized="1">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label class="col-md-3 control-label">Rows</label>
-                                                <div class="col-md-8">
-                                                    <input type="number" min="1" class="form-control" ng-model="download.rows" max="{{download.maxrow}}" required max-err-type="maxLimitDownload">
-
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-md-3 control-label">Format</label>
-                                                <div class="col-md-8">
-                                                    <select class="form-control" data-ng-model="download.selectFormate" ng-options="r for r in download.formates" required>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
-                        <!--End Model Body-->
-                        <div class="modal-footer">
-                            <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
-                            <button type="submit" class="btn green">Submit</button>
-                        </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
 </div>

@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
@@ -42,20 +43,23 @@ import org.apache.hadoop.fs.RemoteIterator;
 import org.apache.log4j.Logger;
 import org.apache.spark.SparkContext;
 import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.function.MapFunction;
 import org.apache.spark.ml.Pipeline;
 import org.apache.spark.ml.PipelineModel;
 import org.apache.spark.ml.PipelineStage;
 import org.apache.spark.ml.Transformer;
 import org.apache.spark.ml.classification.DecisionTreeClassifier;
 import org.apache.spark.ml.classification.LogisticRegressionTrainingSummary;
-import org.apache.spark.ml.classification.RandomForestClassificationModel;
 import org.apache.spark.ml.clustering.KMeansSummary;
 import org.apache.spark.ml.clustering.LocalLDAModel;
 import org.apache.spark.ml.evaluation.BinaryClassificationEvaluator;
 import org.apache.spark.ml.evaluation.Evaluator;
 import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator;
 import org.apache.spark.ml.evaluation.RegressionEvaluator;
+import org.apache.spark.ml.feature.OneHotEncoder;
 import org.apache.spark.ml.feature.RFormula;
+import org.apache.spark.ml.feature.StringIndexer;
+import org.apache.spark.ml.feature.StringIndexerModel;
 import org.apache.spark.ml.feature.VectorAssembler;
 import org.apache.spark.ml.linalg.Vector;
 import org.apache.spark.ml.linalg.VectorUDT;
@@ -87,6 +91,8 @@ import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.functions;
+import org.apache.spark.sql.expressions.Window;
 import org.apache.spark.sql.types.DataType;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.Metadata;
@@ -100,13 +106,13 @@ import org.jpmml.model.MetroJAXBUtil;
 import org.jpmml.sparkml.ConverterUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StopWatch;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.HistogramUtil;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.domain.Algorithm;
@@ -123,6 +129,7 @@ import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.Load;
+import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.ResultSetHolder;
@@ -130,8 +137,11 @@ import com.inferyx.framework.domain.ResultType;
 import com.inferyx.framework.domain.RowObj;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
+import com.inferyx.framework.domain.TrainResult;
 import com.inferyx.framework.enums.Compare;
+import com.inferyx.framework.enums.EncodingType;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.executor.helper.SparkExecHelper;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
@@ -158,8 +168,6 @@ public class SparkExecutor<T> implements IExecutor {
 	@Autowired
 	DataSourceFactory dataSourceFactory;
 	@Autowired
-	MetadataUtil commonActivity;
-	@Autowired
 	HDFSInfo hdfsInfo;
 	@Autowired
 	ParamSetServiceImpl paramSetServiceImpl;
@@ -172,8 +180,6 @@ public class SparkExecutor<T> implements IExecutor {
 	@Autowired
 	private ExecutorFactory execFactory;
 	@Autowired
-	private MetadataUtil daoRegister;
-	@Autowired
 	private DataSourceFactory datasourceFactory;
 	@Autowired
 	private ModelServiceImpl modelServiceImpl;
@@ -183,6 +189,8 @@ public class SparkExecutor<T> implements IExecutor {
 	private MatrixToRddConverter matrixToRddConverter;
 	@Autowired
 	private HistogramUtil histogramUtil;
+	@Autowired
+	private SparkExecHelper sparkExecHelper;
 	
 	static final Logger logger = Logger.getLogger(SparkExecutor.class);
 	
@@ -304,12 +312,20 @@ public class SparkExecutor<T> implements IExecutor {
 			Dataset<Row> df = null;
 			if (datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
 					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.FILE.toString())
-					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.HIVE.toString())
-					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
+					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.HIVE.toString())) {
 				for (String sessionParam : commonServiceImpl.getAllDSSessionParams()) {
 					sparkSession.sql("SET "+sessionParam);
 				}
 				df = sparkSession.sql(sql);
+			} else if (datasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
+				df = sparkSession.sqlContext().read().format("jdbc")
+						.option("spark.driver.extraClassPath", datasource.getDriver())
+						.option("spark.executor.extraClassPath", datasource.getDriver())
+						.option("driver", datasource.getDriver())
+						.option("url", Helper.genUrlByDatasource(datasource))
+						.option("user", datasource.getUsername())
+						.option("password", datasource.getPassword())
+						.option("dbtable", "(" + sql + ") as impala_table").load();
 			} else if (datasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())) {
 				df = sparkSession.sqlContext().read().format("jdbc")
 						.option("spark.driver.extraClassPath", datasource.getDriver())
@@ -390,6 +406,48 @@ public class SparkExecutor<T> implements IExecutor {
 		return data;
 	}
 
+	@Override
+	public List<Map<String, Object>> executeAndFetchByDatasource(String sql, Datasource datasource, String clientContext) throws IOException {
+		logger.info(sql);
+		logger.info("Started SQL Execution");
+		List<Map<String, Object>> data = new ArrayList<>();
+		ResultSetHolder rsHolder = executeSqlByDatasource(sql, datasource, clientContext);
+		Dataset<Row> dfSorted = rsHolder.getDataFrame();
+		dfSorted.printSchema();
+		Row[] rows = (Row[]) dfSorted.head(Integer.parseInt("" + dfSorted.count()));
+		String[] columns = dfSorted.columns();
+		for (Row row : rows) {
+			Map<String, Object> object = new LinkedHashMap<String, Object>(columns.length);
+			for (String column : columns) {
+				object.put(column, (row.getAs(column) == null ? "" :
+					(row.getAs(column) instanceof Vector) ? Arrays.toString((double[])((Vector)row.getAs(column)).toArray()) : row.getAs(column)));
+			}
+			data.add(object);
+		}
+		logger.info("Completed SQL Execution");		
+		return data;
+	}
+	
+	public List<Map<String, Object>> executeAndFetchFromTempTable(String sql, String clientContext) throws IOException {
+		logger.info(" Inside executeAndFetchFromTempTable  for SQL : " + sql);
+		List<Map<String, Object>> data = new ArrayList<>();
+		ResultSetHolder rsHolder = readTempTable(sql, clientContext);
+		Dataset<Row> dfSorted = rsHolder.getDataFrame();
+		dfSorted.printSchema();
+		Row[] rows = (Row[]) dfSorted.head(Integer.parseInt("" + dfSorted.count()));
+		String[] columns = dfSorted.columns();
+		for (Row row : rows) {
+			Map<String, Object> object = new LinkedHashMap<String, Object>(columns.length);
+			for (String column : columns) {
+				object.put(column, (row.getAs(column) == null ? "" :
+					(row.getAs(column) instanceof Vector) ? Arrays.toString((double[])((Vector)row.getAs(column)).toArray()) : row.getAs(column)));
+			}
+			data.add(object);
+		}
+		return data;
+	}
+	
+	@Override
 	public ResultSetHolder executeAndRegister(String sql, String tableName, String clientContext) throws IOException {
 		ResultSetHolder resHolder = executeSql(sql, clientContext);
 		Dataset<Row> df = resHolder.getDataFrame();
@@ -398,7 +456,88 @@ public class SparkExecutor<T> implements IExecutor {
 		df.createOrReplaceGlobalTempView(tableName);
 		registerTempTable(df, tableName);
 		logger.info("temp table registered: " + tableName);
+		df.show(false);
 		return resHolder;
+	}
+	
+	@Override
+	public ResultSetHolder executeAndRegisterByDatasource(String sql, String tableName, Datasource datasource, String clientContext) throws IOException {
+		ResultSetHolder rsHolder = executeSqlByDatasource(sql, datasource, clientContext);
+		Dataset<Row> df = rsHolder.getDataFrame();		
+		long countRows = df.count();
+
+		rsHolder.setCountRows(countRows);
+		rsHolder.setTableName(tableName);
+		df.createOrReplaceGlobalTempView(tableName);
+		registerTempTable(df, tableName);
+		logger.info("temp table registered: " + tableName);
+		return rsHolder;
+	}
+	
+	public ResultSetHolder castDFCloumnsToDoubleType(ResultSetHolder rsHolder, String sql, Datasource datasource, String tableName, boolean registerTempTable, String clientContext) throws IOException {
+		if(rsHolder == null || rsHolder.getDataFrame() == null) {
+			rsHolder = executeSqlByDatasource(sql, datasource, clientContext);
+			rsHolder.setTableName(tableName);
+		} 
+		Dataset<Row> df = rsHolder.getDataFrame();
+		
+		for(String colName : df.columns()) {
+			df = df.withColumn(colName, df.col(colName).cast(DataTypes.DoubleType));
+		}
+		
+		if(registerTempTable) {
+			registerTempTable(df, tableName);
+		}
+		return rsHolder;
+	}
+	
+	@Override
+	public ResultSetHolder replaceNullValByDoubleValFromDF(ResultSetHolder rsHolder, String sql, Datasource datasource, String tableName, boolean registerTempTable, String clientContext) throws IOException {
+		if(rsHolder == null || rsHolder.getDataFrame() == null) {
+			rsHolder = executeSqlByDatasource(sql, datasource, clientContext);
+			rsHolder.setTableName(tableName);
+		} 
+		Dataset<Row> df = rsHolder.getDataFrame();
+		df = df.na().fill(0.0, df.columns());
+		rsHolder.setDataFrame(df);
+		if(registerTempTable) {
+			registerTempTable(df, tableName);
+		}
+		return rsHolder;
+	}
+	
+	@Override
+	public ResultSetHolder createAndRegister(List<Row> data, StructType structType, String tableName, String clientContext) throws IOException {
+		ResultSetHolder rsHolder = new ResultSetHolder();
+		try {
+			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+			if (datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
+					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.FILE.toString())
+					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.HIVE.toString())
+					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
+				IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+				ConnectionHolder conHolder = connector.getConnection();
+				Object obj = conHolder.getStmtObject();
+				if (obj instanceof SparkSession) {
+					SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
+					Dataset<Row> df = sparkSession.createDataFrame(data, structType);
+//					df.show();
+					rsHolder.setDataFrame(df);
+					rsHolder.setType(ResultType.dataframe);
+					long countRows = df.count();
+					rsHolder.setCountRows(countRows);
+					df.createOrReplaceGlobalTempView(tableName);
+					registerTempTable(df, tableName);
+					logger.info("temp table registered: " + tableName);
+				}
+			}
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+				| SecurityException | NullPointerException | ParseException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return rsHolder;
 	}
 	
 	@Override
@@ -457,6 +596,19 @@ public class SparkExecutor<T> implements IExecutor {
 		return true;
 	}
 
+	public ResultSetHolder readTempTable(String sql, String clientContext) throws IOException {
+		ResultSetHolder rsHolder = new ResultSetHolder();
+		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+		ConnectionHolder conHolder = connector.getConnection();
+		SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
+		Dataset<Row> df = sparkSession.sql(sql);
+		
+		rsHolder.setDataFrame(df);
+		rsHolder.setCountRows(df.count());
+		rsHolder.setType(ResultType.dataframe);
+		return rsHolder;
+	}
+	
 	/**
 	 * Get all table names
 	 * 
@@ -504,7 +656,7 @@ public class SparkExecutor<T> implements IExecutor {
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		ConnectionHolder conHolder = connector.getConnection();
 		Object obj = conHolder.getStmtObject();
-		IReader iReader = dataSourceFactory.getDatapodReader(datapod, commonActivity);
+		IReader iReader = dataSourceFactory.getDatapodReader(datapod);
 		String filePath = datastore.getLocation();
 		String hdfsLocation = String.format("%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath());
 		if (!filePath.contains(hdfsLocation)) {
@@ -531,7 +683,7 @@ public class SparkExecutor<T> implements IExecutor {
 		ResultSetHolder rsHolder = executeSql(sql);
 
 		try {
-			datapodWriter = dataSourceFactory.getDatapodWriter(datapod, commonActivity);
+			datapodWriter = dataSourceFactory.getDatapodWriter(datapod);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
 				| NoSuchMethodException | SecurityException | NullPointerException | ParseException e) {
 			// TODO Auto-generated catch block
@@ -582,7 +734,7 @@ public class SparkExecutor<T> implements IExecutor {
 		// Write datapod
 		IWriter datapodWriter = null;
 		try {
-			datapodWriter = dataSourceFactory.getDatapodWriter(datapod, commonActivity);
+			datapodWriter = dataSourceFactory.getDatapodWriter(datapod);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
 				| NoSuchMethodException | SecurityException | NullPointerException | ParseException e) {
 			// TODO Auto-generated catch block
@@ -623,7 +775,7 @@ public class SparkExecutor<T> implements IExecutor {
 			registerTempTable(rsHolder.getDataFrame(), tableName);
 			logger.info("temp table registered: " + tableName);
 			try {
-				datapodWriter = dataSourceFactory.getDatapodWriter(datapod, commonActivity);
+				datapodWriter = dataSourceFactory.getDatapodWriter(datapod);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
 					| NoSuchMethodException | SecurityException | NullPointerException | ParseException e) {
 				// TODO Auto-generated catch block
@@ -652,7 +804,7 @@ public class SparkExecutor<T> implements IExecutor {
 			// hiveContext = (HiveContext) conHolder.getStmtObject();
 			rsHolder = executeAndRegister(sql, tableName, clientContext);
 			try {
-				datapodWriter = dataSourceFactory.getDatapodWriter(datapod, commonActivity);
+				datapodWriter = dataSourceFactory.getDatapodWriter(datapod);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
 					| NoSuchMethodException | SecurityException | NullPointerException | ParseException e) {
 				// TODO Auto-generated catch block
@@ -833,7 +985,7 @@ public class SparkExecutor<T> implements IExecutor {
 	@Override
 	public String fetchAndCreatePMML(DataStore datastore, Datapod datapod, String clientContext) throws Exception {
 		Dataset<Row> df = null;
-		IReader iReader = dataSourceFactory.getDatapodReader(datapod, commonActivity);
+		IReader iReader = dataSourceFactory.getDatapodReader(datapod);
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IConnector conn = connFactory.getConnector(datasource.getType().toLowerCase());
 		ConnectionHolder conHolder = conn.getConnection();
@@ -862,7 +1014,7 @@ public class SparkExecutor<T> implements IExecutor {
 			logger.error("Datastore is not available for this datapod.");
 			throw new Exception("Datastore is not available for this datapod.");
 		}
-		IReader iReader = dataSourceFactory.getDatapodReader(datapod, null);
+		IReader iReader = dataSourceFactory.getDatapodReader(datapod);
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IConnector conn = connFactory.getConnector(datasource.getType().toLowerCase());
 		ConnectionHolder conHolder = conn.getConnection();
@@ -966,9 +1118,10 @@ public class SparkExecutor<T> implements IExecutor {
 		} else {
 			rsHolder2.setDataFrame(dfTask);
 			rsHolder2.setType(ResultType.dataframe);
+			
 		}
-		
-		IWriter datapodWriter = datasourceFactory.getDatapodWriter(datapod, daoRegister);
+		rsHolder2.setTableName(datapodTableName);
+		IWriter datapodWriter = datasourceFactory.getDatapodWriter(datapod);
 		datapodWriter.write(rsHolder2, filePathUrl, datapod, SaveMode.Overwrite.toString());
 		return count;
 	}
@@ -983,7 +1136,7 @@ public class SparkExecutor<T> implements IExecutor {
 			IConnector connection = connFactory.getConnector(datasource.getType().toLowerCase());
 			IReader iReader;
 			try {
-				iReader = dataSourceFactory.getDatapodReader(datapod, commonActivity);
+				iReader = dataSourceFactory.getDatapodReader(datapod);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
 					| SecurityException | NullPointerException | ParseException e) {
 				// TODO Auto-generated catch block
@@ -1034,10 +1187,15 @@ public class SparkExecutor<T> implements IExecutor {
 			boolean writeToParquet, String clientContext) throws Exception {
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
-		Dataset<Row> df = sparkSession.read().format("com.databricks.spark.csv").option("inferSchema", "true")
-				.option("header", "true").load(csvFileName);
+		Dataset<Row> df = sparkSession.read()
+						.format("com.databricks.spark.csv")
+						.option("inferSchema", "true")
+						.option("header", "true")
+						.load(csvFileName);
 		df.printSchema();
+		
 		StructType st = df.schema();
+		
 		Seq<StructField> seqFields = st.thisCollection();
 		Iterator<StructField> iter = st.iterator();
 		List<Attribute> attributes = new ArrayList<Attribute>();
@@ -1047,10 +1205,14 @@ public class SparkExecutor<T> implements IExecutor {
 			if(!sf.dataType().typeName().equalsIgnoreCase("version")) {
 				Attribute attr1 = new Attribute();
 				attr1.setAttributeId(i++);
-				attr1.setType(sf.dataType().typeName());
-				attr1.setName(sf.name());
-				attr1.setDesc(sf.name());
-				attr1.setDispName(sf.name());
+				if (!sf.dataType().typeName().equalsIgnoreCase("timestamp")) {
+					attr1.setType((sf.dataType().typeName()));
+				} else {
+					attr1.setType("string");
+				}
+				attr1.setName(sf.name().toLowerCase());
+				attr1.setDesc(sf.name().toLowerCase());
+				attr1.setDispName(sf.name().toLowerCase());
 				attr1.setActive("Y");
 				attr1.setLength(null);
 				attributes.add(attr1);
@@ -1310,8 +1472,14 @@ public class SparkExecutor<T> implements IExecutor {
 			throw new Exception();
 		}
 //		IReader iReader = dataSourceFactory.getDatapodReader(datapod, null);
-		Datasource datasource = commonServiceImpl.getDatasourceByDatapod(datapod);
-		IConnector conn = connFactory.getConnector(datasource.getType().toLowerCase());
+//		Datasource datasource = null;
+//		if(datapod != null) {
+//			datasource = commonServiceImpl.getDatasourceByDatapod(datapod);
+//		} else {
+//		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+//		}
+		
+		IConnector conn = connFactory.getConnector(ExecContext.spark.toString());
 		ConnectionHolder conHolder = conn.getConnection();
 
 //		Object obj = conHolder.getStmtObject();
@@ -1541,7 +1709,6 @@ public class SparkExecutor<T> implements IExecutor {
 	public String assembleRandomDF(String[] fieldArray, String tableName, boolean isDistribution, String clientContext) throws IOException{
 		String sql = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(sql, clientContext).getDataFrame();
-		df.show(false);
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
 		
@@ -1551,7 +1718,6 @@ public class SparkExecutor<T> implements IExecutor {
 			fieldArray = df.columns();
 
 		df.printSchema();
-		df.show(false);
 		
 		VectorAssembler va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
 		Dataset<Row> assembledDf = va.transform(df);
@@ -1574,29 +1740,44 @@ public class SparkExecutor<T> implements IExecutor {
 		Dataset<Row> df = executeSql(sql, clientContext).getDataFrame();
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
-		
+		df.show(false);
 		VectorAssembler va = new VectorAssembler();
-		Dataset<Row> transformedDf = null;
-
-		if (trainName.contains("LinearRegression")
-				|| trainName.contains("LogisticRegression")) {
-			va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
-			Dataset<Row> trainingTmp = va.transform(df);
-			transformedDf = trainingTmp.withColumn("label", trainingTmp.col(label).cast("Double"))
-					.select("label", "features");
-
-			logger.info("DataFrame count: " + transformedDf.count());
-
-		} else {
-			va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
-			transformedDf = va.transform(df);
-		}
 		
-//		transformedDf.show(false);
+
+		va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
+		Dataset<Row> transformedDf = va.transform(df).select("features");
+				
+		transformedDf.show(false);
 		sparkSession.sqlContext().registerDataFrameAsTable(transformedDf, tableName);
 		return va;
 	}
 
+	@Override
+	public Object assembleDF(String[] fieldArray, ResultSetHolder rsHolder, String sql, String tempTableName, Datasource datasource, boolean registerTempTable, String clientContext) throws IOException{
+		//get dataframe as per the provided option
+		Dataset<Row> df = null;
+		if(rsHolder != null && rsHolder.getDataFrame() != null) {
+			df = rsHolder.getDataFrame();
+		} else {
+			df = executeSqlByDatasource(sql, datasource, clientContext).getDataFrame();			
+		}
+		
+		//assemble dataframe
+		VectorAssembler va = new VectorAssembler();
+		va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
+		Dataset<Row> transformedDf = va.transform(df).select("features");
+		
+		rsHolder.setDataFrame(df);
+		
+		//register temp table if flag, registerTempTable, is set
+		if(registerTempTable) {
+			IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+			SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
+			sparkSession.sqlContext().registerDataFrameAsTable(transformedDf, tempTableName);
+		}
+		return rsHolder;
+	}
+	
 	/********************** UNUSED **********************/
 	/**
 	 * 
@@ -1726,60 +1907,80 @@ public class SparkExecutor<T> implements IExecutor {
 				
 		return valueList;
 	}
+
+	/********************** UNUSED **********************/
+//	public ResultSetHolder preparePredictDfForEncoding(ResultSetHolder rsHolder, Map<String, EncodingType> encodingDetails, boolean registerTempTable, String tempTableName) throws IOException {
+//			Dataset<Row> df = rsHolder.getDataFrame();
+//			logger.info("df 1");
+//			df.printSchema();
+//			List<PipelineStage> pipelineStagesTrng = new ArrayList<>();
+//			for(String colName : encodingDetails.keySet()) {
+//				encodeDataframe(colName, colName.concat("_vec"), encodingDetails.get(colName), pipelineStagesTrng);
+//			}
+//			
+//			//fitting training dataframe
+//			Pipeline pipelineTrng = new Pipeline().setStages(pipelineStagesTrng.toArray(new PipelineStage[pipelineStagesTrng.size()]));
+//			PipelineModel trngModel = pipelineTrng.fit(df);
+//			df = trngModel.transform(df);
+//			logger.info("df 2");
+//			df.printSchema();
+//			
+//			List<String> columnNames = new ArrayList<>(Arrays.asList(df.columns()));
+//			
+//			for(String colName : encodingDetails.keySet()) {
+//				logger.info("colName : " + colName);
+////				df = df.drop(colName);
+//				df = columnNames.contains(colName+"_vec")?df.withColumnRenamed(colName, colName+"_raw"):df;
+//				df = df.withColumnRenamed(colName+"_vec", colName);
+//			}
+//			
+//			for(String colName : df.columns()) {
+//				if(colName.endsWith("_category_index")) {
+//					df = df.drop(colName);
+//				}
+//			}	
+//			logger.info("df 3");
+//			df.printSchema();
+//			rsHolder.setDataFrame(df);
+//			if(registerTempTable) {
+//				IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+//				SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
+//				sparkSession.sqlContext().registerDataFrameAsTable(df, tempTableName);
+//			}
+//			return rsHolder;
+//	}
 	
 	@Override
-	public ResultSetHolder predict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName, String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public ResultSetHolder predict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName, String clientContext, Map<String, EncodingType> encodingDetails) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		//getting data to be predicted
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
-//		df.show(false);
-		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
-		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
-//		df.show(true);
-		
+//		df = df.na().fill(0.0, df.columns());
+		logger.info("After executeSql");
+		df.printSchema();
+		df.show();
+		//performing prediction
 		@SuppressWarnings("unchecked")
 		Dataset<Row> predictionDf = (Dataset<Row>) trainedModel.getClass().getMethod("transform", Dataset.class).invoke(trainedModel, df);
+		logger.info("After obtaining predictionDf");
+		predictionDf.printSchema();
+		predictionDf.show();
+		logger.info("Going to register temp table");
 		
-//		predictionDf.show(true);
-//		Evaluator evaluator = getEvaluatorByTrainClass("LogisticRegressor");
-//		RegressionEvaluator regressionEvaluator = (RegressionEvaluator) evaluator;
-//		regressionEvaluator.setMetricName(regressionEvaluator.getMetricName());
-//		double accuracy = regressionEvaluator.evaluate(predictionDf);
-//		System.out.println("accuracy: "+accuracy);
-//		System.out.println();
-		//String uid = (String) trainedModel.getClass().getMethod("uid").invoke(trainedModel);
-
-		//if (targetType.equalsIgnoreCase(MetaType.datapod.toString())) {
-			/*Datasource datasource = commonServiceImpl.getDatasourceByApp();
-
-			df.createOrReplaceGlobalTempView("tempPredictResult");
-			IConnector connector = connectionFactory.getConnector(datasource.getType().toLowerCase());
-			ConnectionHolder conHolder = connector.getConnection();
-			if (conHolder.getStmtObject() instanceof SparkSession) {
-				SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
-				predictionDf.persist(StorageLevel.MEMORY_AND_DISK());
-				//sparkSession.sqlContext().registerDataFrameAsTable(predictionDf, "tempPredictResult");
-			}*/
-
-//			String columns = "";
-//			for (String col : predictionDf.columns())
-//				columns = columns.concat(col).concat(" AS ").concat(col).concat(",");
-//			columns = columns.substring(0, columns.length() - 2);
-//			String sql = "SELECT " + columns + " FROM " + "tempPredictResult";
-//			ResultSetHolder rsHolder = executeSql(sql, commonServiceImpl.getApp().getUuid());
-//
-//			Dataset<Row> dfTask = rsHolder.getDataFrame();
-//			dfTask.show(true);
-//			dfTask.cache();
-//			predictionDf.show(false);
-			sparkSession.sqlContext().registerDataFrameAsTable(predictionDf, tableName);
-//			IWriter datapodWriter = datasourceFactory.getDatapodWriter(targetDp, daoRegister);
-//			datapodWriter.write(predictionDf, filePathUrl + "/data", targetDp, SaveMode.Append.toString());
-			ResultSetHolder rsHolder = new ResultSetHolder();
-			rsHolder.setType(ResultType.dataframe);
-			rsHolder.setDataFrame(predictionDf);
-			rsHolder.setCountRows(predictionDf.count());
-			rsHolder.setTableName(tableName);
-			return rsHolder;
+		//registring temp table
+		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
+		sparkSession.sqlContext().registerDataFrameAsTable(predictionDf, tableName);
+		logger.info("After registering prediction DataFrame as temp table");
+		
+		//creating and returning ResultSetHolder 
+		ResultSetHolder rsHolder = new ResultSetHolder();
+		rsHolder.setType(ResultType.dataframe);
+		rsHolder.setDataFrame(predictionDf);
+		rsHolder.setCountRows(predictionDf.count());
+		rsHolder.setTableName(tableName);
+		logger.info("Return RSHolder");
+		return rsHolder;
 	}
 	
 	@Override
@@ -1791,11 +1992,13 @@ public class SparkExecutor<T> implements IExecutor {
 		}
 		return featureWeightList;
 	}
+	
+	@Override
 	public ResultSetHolder persistDataframe(ResultSetHolder rsHolder, Datasource datasource, Datapod targetDatapod, String saveMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-
 		logger.info("inside method persistDataframe");
 		Dataset<Row> df = rsHolder.getDataFrame();
 //		df.show(false);
+		df.printSchema();
 		
 		datasource = commonServiceImpl.getDatasourceByDatapod(targetDatapod);		
 		if(datasource.getType().equalsIgnoreCase(ExecContext.HIVE.toString())
@@ -1807,15 +2010,59 @@ public class SparkExecutor<T> implements IExecutor {
 					}
 				}
 
-			df.write().mode(saveMode).insertInto(rsHolder.getTableName());
+				Map<String, String> options = new HashMap<>();
+				options.put("driver", datasource.getDriver());
+				options.put("user", datasource.getUsername());
+				options.put("password", datasource.getPassword());
+				df.write().mode(saveMode).options(options).insertInto(rsHolder.getTableName());
 		} else {
 			String url = Helper.genUrlByDatasource(datasource);
 			Properties connectionProperties = new Properties();
 			connectionProperties.put("driver", datasource.getDriver());
 			connectionProperties.put("user", datasource.getUsername());
 			connectionProperties.put("password", datasource.getPassword());
-			if(Arrays.asList(df.columns()).contains("features"))
-				df = df.withColumn("features", df.col("features").cast(DataTypes.StringType));
+			List<String> vectorFields = new ArrayList<>(); 
+			
+			// Find out vector type columns
+			Tuple2<String, String>[] tuple2 = df.dtypes();
+			for(Tuple2<String, String> tuple22 : tuple2) {
+				if(tuple22._2().toLowerCase().contains("vector")) {
+//					df = df.withColumn(tuple22._1(), df.col(tuple22._1()).cast(DataTypes.StringType));
+					vectorFields.add(tuple22._1());
+				}
+			}
+			
+//			if(Arrays.asList(df.columns()).contains("features")) {
+				/*df = df.withColumn("features", df.col("features").cast(DataTypes.StringType));*/
+			if(!vectorFields.isEmpty()) {
+				String []fieldNames = df.schema().fieldNames();
+				StructField []fields = df.schema().fields();
+				StructField []newFields = new StructField[fields.length];
+			
+			
+				for (int i = 0; i < fieldNames.length; i++) {
+					if (vectorFields.contains(fieldNames[i])) {
+						newFields[i] = new StructField(fieldNames[i],
+								DataTypes.StringType, true,
+								Metadata.empty());
+					} else {
+						newFields[i] = fields[i];
+					}
+				}
+				
+				df = sparkExecHelper.parseFeatures(df, newFields, vectorFields);
+			}
+
+			df.printSchema();
+			df.show();
+//			}
+			/*Tuple2<String, String>[] tuple2 = df.dtypes();
+			for(Tuple2<String, String> tuple22 : tuple2) {
+				if(tuple22._2().toLowerCase().contains("vector")) {
+					df = df.withColumn(tuple22._1(), df.col(tuple22._1()).cast(DataTypes.StringType));
+				}
+			}*/
+			
 //			if(partitionColList.size() > 0) {
 //				df.write().mode(SaveMode.Append)/*.partitionBy(partitionColList.toArray(new String[partitionColList.size()]))*/.jdbc(url, rsHolder.getTableName(), connectionProperties);
 //			} else {
@@ -1826,24 +2073,90 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	@Override
-	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, String clientContext, Object algoClass, Map<String, String> trainOtherParam ) throws IOException {
+	public Boolean saveDataframeAsCSV(String tableName, String saveFileName, String clientContext) throws IOException {		
+		try {
+			String assembledDFSQL = "SELECT * FROM " + tableName;
+			Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
+			df.coalesce(1).write().option("header", "true").csv(saveFileName);
+			return true;
+		} catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	@Override
+	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName
+			, double trainPercent, double valPercent, String tableName, String clientContext
+			, Object algoClass, Map<String, String> trainOtherParam, TrainResult trainResult
+			, String testSetPath, List<String> rowIdentifierCols, String includeFeatures
+			, String trainingDfSql, String validationDfSql, Map<String, EncodingType> encodingDetails,
+			String saveTrainingSet, String trainingSetPath, Datapod testLocationDP, Datasource testLocationDs, 
+			String testLocationTableName, String testLFilePathUrl,
+			Datapod trainLocationDP, Datasource trainLocationDS, String trainLocationTableName, String trainFilePathUrl) throws IOException {
+
+		String []origFieldArray = new String[fieldArray.length];
+		origFieldArray = fieldArray;
+		
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
 		df.printSchema();
+		
 		try {
 			Dataset<Row>[] splits = df.randomSplit(new double[] { trainPercent / 100, valPercent / 100 }, 12345);
 			Dataset<Row> trngDf = splits[0];
 			Dataset<Row> valDf = splits[1];
-			Dataset<Row> trainingDf = null;
-			Dataset<Row> validateDf = null;
+			Dataset<Row> valDf2 = splits[1];
+			
+			registerTempTable(trngDf, "tempTrngDf");
+			trngDf = readTempTable(trainingDfSql, clientContext).getDataFrame();
+			registerTempTable(valDf, "tempValDf");
+			valDf = readTempTable(validationDfSql, clientContext).getDataFrame();
+			
+			//dropping temptables tempTrngDf and tempValDf
+			List<String> tempTableList = new ArrayList<>();
+			tempTableList.add("tempTrngDf");
+			tempTableList.add("tempValDf");
+			dropTempTable(tempTableList);
+			
+	    //saving training set 
+			if(saveTrainingSet.equalsIgnoreCase("Y")) {
+				//trngDf.write().mode(SaveMode.Append).parquet(trainingSetPath);
+				saveTrainDataset(trngDf,trainingSetPath, trainLocationDP, trainLocationDS ,trainLocationTableName, trainFilePathUrl);
+			}
+			
+			List<PipelineStage> pipelineStagesTrng = new ArrayList<>();
+			if(encodingDetails != null && !encodingDetails.isEmpty()) {
+				for(String colName : encodingDetails.keySet()) {
+					encodeDataframe(colName, colName.concat("_vec"), encodingDetails.get(colName), pipelineStagesTrng);
+				}
+				
+				List<String> encoderCols = new ArrayList<>();
+				for(String col : encodingDetails.keySet()) {
+					encoderCols.add(col+"_vec");
+				}
+				for(String nonStrngCol : fieldArray) {
+					if(!encodingDetails.keySet().contains(nonStrngCol)) {
+						encoderCols.add(nonStrngCol);
+					}
+				}
+
+				logger.info("Printing trained training and validation dataset schema");
+				trngDf.printSchema();
+				valDf.printSchema();				
+				trngDf.distinct().show();
+				fieldArray = encoderCols.toArray(new String[encoderCols.size()]);
+			}
 			
 			VectorAssembler vectorAssembler = new VectorAssembler();
 			vectorAssembler.setInputCols(fieldArray).setOutputCol("features");
-			
-			/*Class<?> dynamicClass = Class.forName(trainName);
-			Object obj = dynamicClass.newInstance();*/
+			for (String colname : vectorAssembler.getInputCols()) {
+				logger.info("Vecassembler input col : " + colname);
+			}
+			List<String> selectEncodedCols = new ArrayList<String>();
+					
 			Method method = null;
 			if (trainName.contains("LinearRegression")
 					|| trainName.contains("LogisticRegression")
@@ -1855,37 +2168,91 @@ public class SparkExecutor<T> implements IExecutor {
 				method = algoClass.getClass().getMethod("setLabelCol", String.class);
 				method.invoke(algoClass, "label");
 				
-				trainingDf = trngDf.withColumn("label", trngDf.col(label).cast("Double")).select("label", vectorAssembler.getInputCols());
-				validateDf = valDf.withColumn("label", valDf.col(label).cast("Double")).select("label", vectorAssembler.getInputCols());
-			} else {
+				logger.info("Printing trained training and validation dataset schema 1");
+				trngDf.printSchema();
+				valDf.printSchema();
+//				trngDf.distinct().show();
+				/*if(encodingDetails != null && !encodingDetails.isEmpty()) {
+					for (String field : origFieldArray) {
+						if (encodingDetails.containsKey(field)) {
+							selectEncodedCols.add(field+"_vec");
+						}
+						logger.info(field);
+						selectEncodedCols.add(field);
+					}
+//					trainingDf = trngDf.withColumn("label", trngDf.col("label").cast("Double")).select("label", selectEncodedCols.toArray(new String[selectEncodedCols.size()]));
+//					validateDf = valDf.withColumn("label", valDf.col("label").cast("Double")).select("label", selectEncodedCols.toArray(new String[selectEncodedCols.size()]));
+					trainingDf = trngDf;
+					validateDf = valDf;
+				} else {
+//					trainingDf = trngDf.withColumn("label", trngDf.col("label").cast("Double")).select("label", vectorAssembler.getInputCols());
+//					validateDf = valDf.withColumn("label", valDf.col("label").cast("Double")).select("label", vectorAssembler.getInputCols());
+					trainingDf = trngDf;
+					validateDf = valDf;
+				}*/
+			} /*else {
 				trainingDf = trngDf;
 				validateDf = valDf;
-			}	
+			}*/	
 
-			for(String col : trainingDf.columns())
-				trainingDf = trainingDf.withColumn(col, trainingDf.col(col).cast(DataTypes.DoubleType));
-
-			for(String col : validateDf.columns())
-				validateDf = validateDf.withColumn(col, validateDf.col(col).cast(DataTypes.DoubleType));
+			trainResult.setTotalRecords(df.count());
+			trainResult.setTrainingSet(trngDf.count());
+			trainResult.setValidationSet(valDf.count());
+			trainResult.setNumFeatures(fieldArray.length);
 			
-			Pipeline pipeline = new Pipeline().setStages(new PipelineStage[] {vectorAssembler, (PipelineStage) algoClass});
+			Set<String> encodingCols = null;
+			if(encodingDetails != null && !encodingDetails.isEmpty()) {
+				encodingCols = encodingDetails.keySet();
+			}
+			
+			trngDf = castUnEncodedCols(trngDf, encodingDetails, encodingCols);
+			
+			trngDf = trngDf.na().fill(0.0,trngDf.columns());
+			
+			valDf = castUnEncodedCols(valDf, encodingDetails, encodingCols);
+			
+			valDf = valDf.na().fill(0.0,valDf.columns());
+			
+			logger.info("Printing trained training and validation dataset schema 3");
+			trngDf.printSchema();
+			valDf.printSchema();
+			
+			
+			pipelineStagesTrng.add(vectorAssembler);
+			pipelineStagesTrng.add((PipelineStage) algoClass);
+//			Pipeline pipeline = new Pipeline().setStages(new PipelineStage[] {vectorAssembler, (PipelineStage) algoClass});
+			logger.info("Before train pipeline creation");
+			Pipeline pipeline = new Pipeline().setStages(pipelineStagesTrng.toArray(new PipelineStage[pipelineStagesTrng.size()]));
 			try {
+				StopWatch stopWatch = new StopWatch();
+				stopWatch.start();
 				PipelineModel trngModel = null;
+				logger.info("Before train pipeline fit");
 				if (null != paramMap) {
-					trngModel = pipeline.fit(trainingDf, paramMap);
+					trngModel = pipeline.fit(trngDf, paramMap);
 				} else {
-					trngModel = pipeline.fit(trainingDf);
+					trngModel = pipeline.fit(trngDf);
 				}
-				Dataset<Row> trainedDataSet = trngModel.transform(validateDf);
-				trainedDataSet.show(false); 
+				logger.info("After train pipeline fit");
+				Dataset<Row> trainedDataSet = trngModel.transform(valDf);
+				
+				logger.info("Printing trained training and validation dataset schema 4");
+				trainedDataSet.printSchema();
+				valDf.printSchema();
+				
+				stopWatch.stop();
+				trainResult.setTimeTaken(stopWatch.getTotalTimeMillis()+" ms");
+				
 				if(trainOtherParam !=null) {
-					String cMTableName=trainOtherParam.get("confusionMatrixTableName");
+					String cMTableName = trainOtherParam.get("confusionMatrixTableName");
 					sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, cMTableName);
-					
-				}
-			
+				}			
 				
 				sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");
+				
+//				if(encodingDetails == null || (encodingDetails != null && !encodingDetails.isEmpty())) {
+					saveTrainedTestDataset(trainedDataSet, valDf2, testSetPath, rowIdentifierCols, includeFeatures, origFieldArray, trainName, testLocationDP, testLocationDs, testLocationTableName, testLFilePathUrl);
+//				}
 				return trngModel;
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -1910,17 +2277,288 @@ public class SparkExecutor<T> implements IExecutor {
 		}
 	}
 
+	/**
+	 * 
+	 * @param df
+	 * @param encodingDetails
+	 * @param encodingCols
+	 * @return
+	 */
+	public Dataset<Row> castUnEncodedCols(Dataset<Row> df, Map<String, EncodingType> encodingDetails, Set<String> encodingCols) {
+		for(String col : df.columns()) {
+			if(encodingCols != null 
+					&& !encodingCols.isEmpty() ) {
+				if(!encodingCols.contains(col)
+					&& !encodingDetails.keySet().contains(col)) {
+					df = df.withColumn(col, df.col(col).cast(DataTypes.DoubleType));
+				}
+			} else {
+				df = df.withColumn(col, df.col(col).cast(DataTypes.DoubleType));
+			}
+		}
+		return df;
+	}
+	
+//		if(inputCols.length != outputCols.length) {
+	public List<PipelineStage> encodeDataframe(String inputCol, String outputCol, EncodingType encodingType,  List<PipelineStage> pipelineStageList) throws IOException {
+//			throw new RuntimeException("The number of input columns "+inputCols.length+" must be the same as the number of output columns "+outputCols.length+".");
+//		}
+
+		if(encodingType.equals(EncodingType.ONEHOT)) {
+			StringIndexer stringIndexer = new StringIndexer()
+					  .setInputCol(inputCol)
+					  .setOutputCol(inputCol+"_category_index")
+					  .setHandleInvalid("keep");
+			pipelineStageList.add(stringIndexer);
+		
+			OneHotEncoder encoder = new OneHotEncoder().setInputCol(inputCol+"_category_index").setOutputCol(outputCol);
+			pipelineStageList.add(encoder);
+
+		}
+		return pipelineStageList;
+	}
+	
+	public void saveTrainDataset(Dataset<Row> trainedDataSet,String defaultPath, Datapod trainLocationDP, Datasource trainLocationDs, String trainLTableName , String tLFilePathUrl) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		if(trainLocationDP != null) {
+			ResultSetHolder rsHolder = new ResultSetHolder();
+			rsHolder.setDataFrame(trainedDataSet);
+			rsHolder.setTableName(trainLTableName);
+			trainedDataSet.show(true);
+			
+			//check whether the number of attributes of datapod and dataframe
+			//are equal if not then throw exception
+			if(trainLocationDP !=null) {
+				if(trainedDataSet.columns().length != trainLocationDP.getAttributes().size()) {
+					throw new RuntimeException("Datapod '" + trainLocationDP.getName() + "' column size(" + trainLocationDP.getAttributes().size() + ") does not match with column size("+ trainedDataSet.columns().length +") of dataframe");
+				}
+				
+				if(trainLTableName != null && !trainLTableName.isEmpty()) {
+					rsHolder = applySchema(rsHolder, trainLocationDP, null, trainLTableName, false);
+					trainedDataSet = rsHolder.getDataFrame();
+				}
+			}
+			
+			//write according to datasource
+			if(!trainLocationDs.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+				persistDataframe(rsHolder, trainLocationDs, trainLocationDP,SaveMode.Append.toString());
+			} else {
+				
+				trainedDataSet.write().mode(SaveMode.Append).parquet(tLFilePathUrl);
+			}
+			
+			
+		}else {
+			trainedDataSet.write().mode(SaveMode.Append).parquet(defaultPath);
+		}
+	}
+	
+	public void saveTrainedTestDataset(Dataset<Row> trainedDataSet, Dataset<Row> valDf
+			, String defaultPath, List<String> rowIdentifierCols, String includeFeatures
+			, String[] fieldArray, String trainName, Datapod testLocationDP, Datasource testLocationDs, String testLTableName , String tLFilePathUrl) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		if(includeFeatures.equalsIgnoreCase("Y")) {
+			rowIdentifierCols = removeDuplicateColNames(fieldArray, rowIdentifierCols);
+		}
+		if(rowIdentifierCols != null && !rowIdentifierCols.isEmpty()) {
+			valDf = valDf.withColumn("rowNum", functions.row_number().over(Window.orderBy(valDf.columns()[valDf.columns().length-1])));
+			valDf = valDf.select("rowNum", rowIdentifierCols.toArray(new String[rowIdentifierCols.size()]));
+		}		
+		logger.info("trainedDataSet show 0");
+		trainedDataSet.printSchema();
+		trainedDataSet.show();
+		
+		List<String> predDFCols = Arrays.asList(trainedDataSet.columns());
+		
+//		sourceDF = sourceDF.na().fill(0.0,sourceDF.columns());
+		trainedDataSet = trainedDataSet.withColumn("rowNum", functions.row_number().over(Window.orderBy(trainedDataSet.columns()[trainedDataSet.columns().length-1])));
+		
+		List<String> colNameList = new ArrayList<>();
+		if(includeFeatures.equalsIgnoreCase("Y")) {
+			for(String cloName : fieldArray) {
+				colNameList.add(cloName);
+			}
+		} 
+		colNameList.add("label");
+		if(predDFCols.contains("prediction")) {
+			colNameList.add("prediction");
+		}
+		if (trainName.contains("LogisticRegression")
+				|| trainName.contains("GBTClassifier")) {
+			colNameList.add("probability");
+		}
+
+		logger.info("trainedDataset >>>>>>>>>>> ");
+		trainedDataSet.printSchema();
+		trainedDataSet.show();
+		for (String colName : colNameList) {
+			logger.info("colName : " + colName);
+		}
+		trainedDataSet = trainedDataSet.select("rowNum", colNameList.toArray(new String[colNameList.size()]));
+		//creating column prediction_status
+		Dataset<Row> predictionStatusDF = null;
+		if(predDFCols.contains("prediction")) {
+			predictionStatusDF = sparkExecHelper.getPredictionCompareStatus(trainedDataSet);
+		}
+		//joining dataframes
+		Dataset<Row> joinedDF = null;
+		if(rowIdentifierCols != null && !rowIdentifierCols.isEmpty()) {
+			if(predictionStatusDF != null) {
+				joinedDF = valDf.join(trainedDataSet, "rowNum").join(predictionStatusDF, "rowNum");
+			} else {
+				joinedDF = valDf.join(trainedDataSet, "rowNum");
+			}
+		} else {
+			joinedDF = trainedDataSet.join(predictionStatusDF, "rowNum");
+		}		
+		
+		joinedDF = joinedDF.drop("rowNum");
+		joinedDF.printSchema();
+		joinedDF.show();
+		if(testLocationDP != null) {
+			ResultSetHolder rsHolder = new ResultSetHolder();
+			rsHolder.setDataFrame(joinedDF);
+			rsHolder.setTableName(testLTableName);
+			
+			//check whether the number of attributes of datapod and dataframe
+			//are equal if not then throw exception
+			if(testLocationDP !=null) {
+				if(joinedDF.columns().length != testLocationDP.getAttributes().size()) {
+					throw new RuntimeException("Datapod '" + testLocationDP.getName() + "' column size(" + testLocationDP.getAttributes().size() + ") does not match with column size("+ joinedDF.columns().length +") of dataframe");
+				}
+				
+				if(testLTableName != null && !testLTableName.isEmpty()) {
+					rsHolder = applySchema(rsHolder, testLocationDP, null, testLTableName, false);
+					joinedDF = rsHolder.getDataFrame();
+				}
+			}
+			
+			//write according to datasource
+			if(!testLocationDs.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+				persistDataframe(rsHolder, testLocationDs, testLocationDP,SaveMode.Append.toString());
+			} else {
+				
+				joinedDF.write().mode(SaveMode.Append).parquet(tLFilePathUrl);
+			}
+			
+			
+		}else {
+			joinedDF.write().mode(SaveMode.Append).parquet(defaultPath);
+		}
+	}
+
+	public boolean savePredictionResult(Dataset<Row> predictedDF, Dataset<Row> featureDF
+			, Dataset<Row> sourceDF, String targetPath, List<String> rowIdentifierCols
+			, String includeFeatures, String[] fieldArray, String trainName
+			, Datapod targetDp, Datasource targetDS, String targetTableName
+			, String saveMode) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		if(includeFeatures.equalsIgnoreCase("Y")) {
+			rowIdentifierCols = removeDuplicateColNames(fieldArray, rowIdentifierCols);
+		}
+		if(rowIdentifierCols != null && !rowIdentifierCols.isEmpty()) {
+			sourceDF = sourceDF.withColumn("rowNum", functions.row_number().over(Window.orderBy(sourceDF.columns()[sourceDF.columns().length-1])));
+			sourceDF = sourceDF.select("rowNum", rowIdentifierCols.toArray(new String[rowIdentifierCols.size()]));
+		}		
+		
+		featureDF = featureDF.withColumn("rowNum", functions.row_number().over(Window.orderBy(featureDF.columns()[featureDF.columns().length-1])));
+		
+//		sourceDF = sourceDF.na().fill(0.0,sourceDF.columns());
+		if (trainName.contains("LogisticRegression")
+				|| trainName.contains("GBTClassifier")) {
+			predictedDF = predictedDF.withColumn("rowNum", functions.row_number().over(Window.orderBy(predictedDF.columns()[predictedDF.columns().length-1]))).select("rowNum", "features", "probability", "prediction");
+		} else {
+			predictedDF = predictedDF.withColumn("rowNum", functions.row_number().over(Window.orderBy(predictedDF.columns()[predictedDF.columns().length-1]))).select("rowNum", "features", "prediction");
+		}
+		predictedDF = featureDF.join(predictedDF, "rowNum");
+		
+		List<String> colNameList = new ArrayList<>();
+		if(includeFeatures.equalsIgnoreCase("Y")) {
+			for(String cloName : fieldArray) {
+				colNameList.add(cloName);
+			}
+		} 
+		
+		
+		if (trainName.contains("LogisticRegression")
+				|| trainName.contains("GBTClassifier")) {
+			colNameList.add("probability");
+		}
+		if(!trainName.contains("LDA"))
+		colNameList.add("prediction");
+
+		predictedDF = predictedDF.select("rowNum", colNameList.toArray(new String[colNameList.size()]));
+		
+		Dataset<Row> joinedDF = null;
+		if(rowIdentifierCols != null && !rowIdentifierCols.isEmpty()) {
+			joinedDF = sourceDF.join(predictedDF, "rowNum");
+		} else {
+			joinedDF = predictedDF;
+		}
+		
+		//droping rowNum column
+		joinedDF = joinedDF.drop("rowNum");
+		
+		//saving result
+		if(targetDp != null) {
+			ResultSetHolder rsHolder = new ResultSetHolder();
+			rsHolder.setDataFrame(joinedDF);
+			rsHolder.setTableName(targetTableName);
+			
+			//check whether the number of attributes of datapod and dataframe
+			//are equal if not then throw exception
+			if(targetDp !=null) {
+				if(joinedDF.columns().length != targetDp.getAttributes().size()) {
+					throw new RuntimeException("Datapod '" + targetDp.getName() + "' column size(" + targetDp.getAttributes().size() + ") does not match with column size("+ joinedDF.columns().length +") of dataframe");
+				}
+				
+				if(targetTableName != null && !targetTableName.isEmpty()) {
+					rsHolder = applySchema(rsHolder, targetDp, null, targetTableName, false);
+					joinedDF = rsHolder.getDataFrame();
+				}
+			}
+			
+			//write according to datasource
+			if(!targetDS.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+				persistDataframe(rsHolder, targetDS, targetDp, saveMode);
+			} else {
+				joinedDF.write().mode(SaveMode.Append).parquet(targetPath);
+			}
+			
+			return true;
+		} else {
+			joinedDF.write().mode(SaveMode.Append).parquet(targetPath);
+			return true;
+		}
+	}
+	
+	public List<String> removeDuplicateColNames(String[] fieldArray, List<String> rowIdentifierCols ) {
+		if(rowIdentifierCols != null && !rowIdentifierCols.isEmpty()) {
+			List<String> colNameList = Arrays.asList(fieldArray);
+			List<String> uniqueRowIdentifierCols = new ArrayList<>();
+			for(String colName : rowIdentifierCols) {
+				if(!colNameList.contains(colName)) {
+					uniqueRowIdentifierCols.add(colName);
+				} 
+				if(colNameList.contains(colName)) {
+					logger.info("duplicate column: "+colName);
+				}
+			}
+			return uniqueRowIdentifierCols;
+		}
+		return null;
+	}
+	
 	@Override
 	public boolean savePMML(Object trngModel, String trainedDSName, String pmmlLocation, String clientContext) throws IOException, JAXBException {
-		
+		logger.info("Inside savePMML");
 		String sql = "SELECT * FROM " + trainedDSName;
 		Dataset<Row> trainedDataSet = executeSql(sql, clientContext).getDataFrame();
+		trainedDataSet.show(false);
 		trainedDataSet.printSchema();
 		PMML pmml = null;
-		if(trngModel instanceof CrossValidatorModel)
+		if(trngModel instanceof CrossValidatorModel) {
 			pmml = ConverterUtil.toPMML(trainedDataSet.schema(), (PipelineModel)((CrossValidatorModel)trngModel).bestModel());
-		else if(trngModel instanceof PipelineModel)
+		} else if(trngModel instanceof PipelineModel) {
 			pmml = ConverterUtil.toPMML(trainedDataSet.schema(), (PipelineModel)trngModel);
+		}
 		
 		MetroJAXBUtil.marshalPMML(pmml, new FileOutputStream(new File(pmmlLocation), true));					
 		return true;
@@ -2001,9 +2639,7 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	@Override
-	public String renameDfColumnName(String tableName, Map<String, String> mappingList, String clientContext) throws IOException {
-		
-		String sql = "SELECT * FROM " + tableName;
+	public String renameDfColumnName(String sql, String tableName, Map<String, String> mappingList, String clientContext) throws IOException {
 		Dataset<Row> df = executeSql(sql, clientContext).getDataFrame();
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
@@ -2046,7 +2682,7 @@ public class SparkExecutor<T> implements IExecutor {
 		} else {
 			mlReader = modelClass.getMethod("read").invoke(modelClass);
 		}
-		
+		logger.info("Model location : " + location);
 		Object mlReader2 = mlReader.getClass().getMethod("context", SQLContext.class).invoke(mlReader, sparkSession.sqlContext());
 		trainedModel = mlReader2.getClass().getMethod("load", String.class).invoke(mlReader2, location);
 		//LinearRegressionModel.read().context(sparkSession.sqlContext()).load(arg0)
@@ -2113,7 +2749,7 @@ public class SparkExecutor<T> implements IExecutor {
 		Dataset<Row> df = sparkSession.read()
 									  .format("com.databricks.spark.csv")
 									  .option("dateFormat", "dd-MM-yyyy")
-									  .option("inferSchema", "true")
+									  .option("inferSchema", "false")
 									  .option("header", "true")
 									  .option("treatEmptyValuesAsNulls", true)
 									  .option("nullValue", "0")
@@ -2121,9 +2757,10 @@ public class SparkExecutor<T> implements IExecutor {
 //		df.show(false);
 		rsHolder.setDataFrame(df);
 		rsHolder.setTableName(targetTableName);
+		df.show(false);
 //		String schema = createTableSchema(df.schema().fields(), datasource, tableName);
 //		createTable(schema, datasource);
-		rsHolder = persistDataframe(rsHolder, datasource, datapod, null);
+		rsHolder = persistDataframe(rsHolder, datasource, datapod, "append");
 		rsHolder.setCountRows(df.count());
 		return rsHolder;
 	}
@@ -2184,7 +2821,15 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	@Override
-	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName, double trainPercent, double valPercent, String tableName, List<com.inferyx.framework.domain.Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam) throws IOException {
+	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName
+			, double trainPercent, double valPercent, String tableName
+			, List<com.inferyx.framework.domain.Param> hyperParamList, String clientContext
+			, Map<String, String> trainOtherParam, TrainResult trainResult, String testSetPath
+			, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql,
+			Map<String, EncodingType> encodingDetails, String saveTrainingSet, String trainingSetPath, Datapod testLocationDP, 
+			Datasource testLocationDs, String testLocationTableName, String testLFilePathUrl, Datapod trainLocationDP, 
+			Datasource trainLocationDS, String trainLocationTableName, String trainLocationFilePathUrl) throws IOException {
+		String []origFieldArray = fieldArray;
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
@@ -2195,11 +2840,77 @@ public class SparkExecutor<T> implements IExecutor {
 			Dataset<Row>[] splits = df.randomSplit(new double[] { trainPercent / 100, valPercent / 100 }, 12345);
 			Dataset<Row> trngDf = splits[0];
 			Dataset<Row> valDf = splits[1];
-			Dataset<Row> trainingDf = null;
-			Dataset<Row> validateDf = null;
+			Dataset<Row> valDf2 = splits[1];
+//			Dataset<Row> trainingDf = null;
+//			Dataset<Row> validateDf = null;
+			
+			registerTempTable(trngDf, "tempTrngDf");
+			trngDf = readTempTable(trainingDfSql, clientContext).getDataFrame();
+			registerTempTable(valDf, "tempValDf");
+			valDf = readTempTable(validationDfSql, clientContext).getDataFrame();
+			
+			//dropping temptables tempTrngDf and tempValDf
+			List<String> tempTableList = new ArrayList<>();
+			tempTableList.add("tempTrngDf");
+			tempTableList.add("tempValDf");
+			dropTempTable(tempTableList);
+						
+         //saving training set 
+//			if(saveTrainingSet.equalsIgnoreCase("Y")) {
+//				trngDf.write().mode(SaveMode.Append).parquet(trainingSetPath);
+//			}
+			if(saveTrainingSet.equalsIgnoreCase("Y")) {
+				//trngDf.write().mode(SaveMode.Append).parquet(trainingSetPath);
+				saveTrainDataset(trngDf,trainingSetPath, trainLocationDP, trainLocationDS ,trainLocationTableName, trainLocationFilePathUrl);
+			}
+			List<PipelineStage> pipelineStagesTrng = new ArrayList<>();
+			if(encodingDetails != null && !encodingDetails.isEmpty()) {
+				for(String colName : encodingDetails.keySet()) {
+					encodeDataframe(colName, colName.concat("_vec"), encodingDetails.get(colName), pipelineStagesTrng);
+				}
+				
+				//fitting training dataframe
+				/*Pipeline pipelineTrng = new Pipeline().setStages(pipelineStagesTrng.toArray(new PipelineStage[pipelineStagesTrng.size()]));
+				PipelineModel trngModel = pipelineTrng.fit(trngDf);
+				trngDf = trngModel.transform(trngDf);*/
+				List<String> encoderCols = new ArrayList<>();
+				for(String col : encodingDetails.keySet()) {
+					encoderCols.add(col+"_vec");
+				}
+				for(String nonStrngCol : fieldArray) {
+					if(!encodingDetails.keySet().contains(nonStrngCol)) {
+						encoderCols.add(nonStrngCol);
+					}
+				}
+
+//				valDf = trngModel.transform(valDf);
+				
+				/*for(String colName : encodingDetails.keySet()) {
+					trngDf = trngDf.drop(colName);
+					trngDf = trngDf.withColumnRenamed(colName+"_vec", colName);
+					valDf = valDf.drop(colName);
+					valDf = valDf.withColumnRenamed(colName+"_vec", colName);
+				}*/
+				
+				/*for(String colName : valDf.columns()) {
+					if(colName.endsWith("_category_index")) {
+						trngDf = trngDf.drop(colName);
+						valDf = valDf.drop(colName);
+					}
+				}*/
+				
+				logger.info("Printing trained training and validation dataset schema");
+				trngDf.printSchema();
+				valDf.printSchema();				
+				
+				origFieldArray = fieldArray;
+				fieldArray = encoderCols.toArray(new String[encoderCols.size()]);
+			}									
 			
 			VectorAssembler vectorAssembler = new VectorAssembler();
 			vectorAssembler.setInputCols(fieldArray).setOutputCol("features");
+			pipelineStagesTrng.add(vectorAssembler);
+			List<String> selectEncodedCols = new ArrayList<String>();
 			
 			Class<?> dynamicClass = Class.forName(trainName);
 			Object obj = dynamicClass.newInstance();
@@ -2214,21 +2925,61 @@ public class SparkExecutor<T> implements IExecutor {
 				method = dynamicClass.getMethod("setLabelCol", String.class);
 				method.invoke(obj, "label");
 				
-				trainingDf = trngDf.withColumn("label", trngDf.col(label).cast("Double")).select("label", vectorAssembler.getInputCols());
-				validateDf = valDf.withColumn("label", valDf.col(label).cast("Double")).select("label", vectorAssembler.getInputCols());
-			} else {
+				logger.info("Printing trained training and validation dataset schema 1");
+				trngDf.printSchema();
+				trngDf.printSchema();
+				/*if(encodingDetails != null && !encodingDetails.isEmpty()) {
+					for (String field : origFieldArray) {
+						if (encodingDetails.containsKey(field)) {
+							selectEncodedCols.add(field+"_vec");
+						}
+						logger.info(field);
+						selectEncodedCols.add(field);
+					}
+					trainingDf = trngDf.withColumn("label", trngDf.col("label").cast("Double")).select("label", selectEncodedCols.toArray(new String[selectEncodedCols.size()]));
+					validateDf = valDf.withColumn("label", valDf.col("label").cast("Double")).select("label", selectEncodedCols.toArray(new String[selectEncodedCols.size()]));
+				} else {
+					trainingDf = trngDf.withColumn("label", trngDf.col("label").cast("Double")).select("label", vectorAssembler.getInputCols());
+					validateDf = valDf.withColumn("label", valDf.col("label").cast("Double")).select("label", vectorAssembler.getInputCols());
+				}*/
+			} /*else {
 				trainingDf = trngDf;
 				validateDf = valDf;
-			}
-			for(String col : trainingDf.columns())
-				trainingDf = trainingDf.withColumn(col, trainingDf.col(col).cast(DataTypes.DoubleType));
+			}*/
 
-			for(String col : validateDf.columns())
-				validateDf = validateDf.withColumn(col, validateDf.col(col).cast(DataTypes.DoubleType));
+			logger.info("Printing trained training and validation dataset schema 2");
+			trngDf.printSchema();
+			valDf.printSchema();
+			
+			trainResult.setTotalRecords(df.count());
+			trainResult.setTrainingSet(trngDf.count());
+			trainResult.setValidationSet(valDf.count());
+			trainResult.setNumFeatures(fieldArray.length);
+
+			Set<String> encodingCols = null;
+			if(encodingDetails != null && !encodingDetails.isEmpty()) {
+				encodingCols = encodingDetails.keySet();
+			}
+			
+			trngDf = castUnEncodedCols(trngDf, encodingDetails, encodingCols);
+						
+			trngDf = trngDf.na().fill(0.0,trngDf.columns());
+			
+			valDf = castUnEncodedCols(valDf, encodingDetails, encodingCols);
+			
+			valDf = valDf.na().fill(0.0,valDf.columns());
+
+			logger.info("Printing trained training and validation dataset schema 3");
+			trngDf.printSchema();
+			valDf.printSchema();
+			
 			method = dynamicClass.getMethod("setFeaturesCol", String.class);
 			method.invoke(obj, "features");
 			
-			Pipeline pipeline = new Pipeline().setStages(new PipelineStage[] {vectorAssembler, (PipelineStage) obj });
+			pipelineStagesTrng.add((PipelineStage) obj);
+			
+			Pipeline pipeline = new Pipeline().setStages(pipelineStagesTrng.toArray(new PipelineStage[pipelineStagesTrng.size()]));
+//			Pipeline pipeline = new Pipeline().setStages(new PipelineStage[] {vectorAssembler, (PipelineStage) obj });
 			
 			int numFolds = 3;
 			for(com.inferyx.framework.domain.Param param : hyperParamList) {
@@ -2244,8 +2995,10 @@ public class SparkExecutor<T> implements IExecutor {
 					.setEstimatorParamMaps(getHyperParams(hyperParamList, obj))
 					.setNumFolds(numFolds);
 			CrossValidatorModel cvModel = null;
+			StopWatch stopWatch = new StopWatch();
+			stopWatch.start();
 			try {
-				cvModel = cv.fit(trainingDf);
+				cvModel = cv.fit(trngDf);
 			} catch (Exception e) {
 				e.printStackTrace();
 				throw new RuntimeException("Training failed.");
@@ -2253,16 +3006,19 @@ public class SparkExecutor<T> implements IExecutor {
 				e.printStackTrace();
 				throw new RuntimeException("Training failed.");
 			}
-			Dataset<Row> trainedDataSet = cvModel.transform(validateDf);
 			
-			trainedDataSet.show();
-				if(trainOtherParam !=null) {
-					String cMTableName=trainOtherParam.get("confusionMatrixTableName");
-					sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, cMTableName);
-					
-				}
+			Dataset<Row> trainedDataSet = cvModel.transform(valDf);
+			stopWatch.stop();
+			trainResult.setTimeTaken(stopWatch.getTotalTimeMillis()+" ms");
+			
+			if(trainOtherParam !=null) {
+				String cMTableName=trainOtherParam.get("confusionMatrixTableName");
+				sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, cMTableName);
+			}
 			sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");
-//			trainedDataSet.show(false);
+//			if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
+				saveTrainedTestDataset(trainedDataSet, valDf2, testSetPath, rowIdentifierCols, includeFeatures, fieldArray, trainName,testLocationDP, testLocationDs, testLocationTableName, testLFilePathUrl);
+//			}
 			return cvModel;
 		} catch (ClassNotFoundException
 				| IllegalAccessException 
@@ -2481,7 +3237,7 @@ public class SparkExecutor<T> implements IExecutor {
 //	}
 	
 	@Override
-	public Map<String, Object> summary(Object trndModel, List<String> summaryMethods, String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+	public Map<String, Object> summary(Object trndModel, String trainClass, List<String> summaryMethods, String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException {
 		Map<String, Object> outPutMap = new HashMap<>();
 		PipelineModel pipelineModel = null;
 		if(trndModel instanceof PipelineModel) {
@@ -2491,7 +3247,7 @@ public class SparkExecutor<T> implements IExecutor {
 		}
 		Transformer[] transformers = pipelineModel.stages();
 		for (Transformer transformer : transformers) {
-			if(transformer instanceof org.apache.spark.ml.Model<?>) {
+			if(transformer instanceof org.apache.spark.ml.Model<?> && Class.forName(trainClass).isInstance(transformer)) {
 				org.apache.spark.ml.Model<?> model = (org.apache.spark.ml.Model<?>)transformer;
 				for(String method : summaryMethods) {
 					Object result = model.getClass().getMethod(method.trim()).invoke(model);
@@ -2515,6 +3271,7 @@ public class SparkExecutor<T> implements IExecutor {
 				}
 			}
 		}		
+		logger.info("outPutMap : " + outPutMap);
 		return outPutMap;
 	}
 
@@ -2651,10 +3408,12 @@ public class SparkExecutor<T> implements IExecutor {
 		if(result instanceof KMeansSummary) {
 			outPutMap = kmeansClusteringModelSummay(outPutMap, result);
 		} else if(result instanceof LogisticRegressionTrainingSummary) {
+			logger.info("Inside LogisticRegressionTrainingSummary >>>>");
 			outPutMap = logisticRegressionSummay(outPutMap, result);
 		} else if(result instanceof LinearRegressionTrainingSummary) {
 			outPutMap = linearRegressionSummay(outPutMap, result);
 		}
+		logger.info("outPutMap : " + outPutMap);
 		return outPutMap;
 	}
 	
@@ -2694,19 +3453,29 @@ public class SparkExecutor<T> implements IExecutor {
 	
 	@Override
 	public ResultSetHolder histogram(Datapod locationDatapod, String locationTableName, String sql, String key, int numBuckets, String clientContext) throws IOException {
-		StructField[] fieldArray = new StructField[locationDatapod.getAttributes().size()];
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
-		StructType schema = new StructType(fieldArray);	
-		if(locationDatapod.getAttributes().size() > 4) {
-			throw new RuntimeException("Datapod '" + locationDatapod.getName() + "' column size(" + locationDatapod.getAttributes().size() + ") must be 4");
-		} else {
-			int count = 0;
-			for(Attribute attribute : locationDatapod.getAttributes()) {
-				StructField field = new StructField(attribute.getName(), (DataType)getDataType(attribute.getType()), true, Metadata.empty());
-				fieldArray[count] = field;
-				count++;
+		
+		StructType schema = null;
+		if(locationDatapod != null) {
+			StructField[] fieldArray = new StructField[locationDatapod.getAttributes().size()];
+			schema = new StructType(fieldArray);	
+		
+			if(locationDatapod.getAttributes().size() > 4) {
+				throw new RuntimeException("Datapod '" + locationDatapod.getName() + "' column size(" + locationDatapod.getAttributes().size() + ") must be 4");
+			} else {
+				int count = 0;
+				for(Attribute attribute : locationDatapod.getAttributes()) {
+					StructField field = new StructField(attribute.getName(), (DataType)getDataType(attribute.getType()), true, Metadata.empty());
+					fieldArray[count] = field;
+					count++;
+				}
 			}
+		} else {
+			StructField[] fields = new StructField[2];
+			fields[0] = new StructField("bucket", DataTypes.StringType, true, Metadata.empty());
+			fields[1] = new StructField("frequency", DataTypes.IntegerType, true, Metadata.empty());
+			schema = new StructType(fields);
 		}
 		
 
@@ -2723,7 +3492,11 @@ public class SparkExecutor<T> implements IExecutor {
 				String bucket = ds[i]+" - "+ds[i+1];
 				int frequency = (int) ls[i];
 				int version = Integer.parseInt(Helper.getVersion());
+				if(key != null) {
 				rowList.add(RowFactory.create(key, bucket, frequency, version));
+				} else {
+					rowList.add(RowFactory.create(bucket, frequency));
+				}
 			}
 		}
 		
@@ -2968,18 +3741,7 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	public ResultSetHolder registerAndPersistDataframe(ResultSetHolder rsHolder, Datapod datapod, String saveMode, String filePathUrl, String tableName, String header, boolean registerTempTable) throws IOException {
-
 		logger.info("inside method registerAndPersistDataframe");
-//		IWriter datapodWriter = null;
-//		try {
-//			datapodWriter = dataSourceFactory.getDatapodWriter(datapod, commonActivity);
-//		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
-//				| NoSuchMethodException | SecurityException | NullPointerException | ParseException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//			throw new IOException("Can not write data.");
-//		}		
-//		datapodWriter.write(rsHolder, filePathUrl, datapod, saveMode);
 
 		Dataset<Row> df = rsHolder.getDataFrame();
 //		df.show(true);
@@ -3117,12 +3879,20 @@ public class SparkExecutor<T> implements IExecutor {
 			Dataset<Row> df = null;
 			if (datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
 					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.FILE.toString())
-					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.HIVE.toString())
-					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
+					|| datasource.getType().toLowerCase().equalsIgnoreCase(ExecContext.HIVE.toString())) {
 				for (String sessionParam : commonServiceImpl.getAllDSSessionParams()) {
 					sparkSession.sql("SET "+sessionParam);
 				}
 				df = sparkSession.sql(sql);
+			} else if (datasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
+				df = sparkSession.sqlContext().read().format("jdbc")
+						.option("spark.driver.extraClassPath", datasource.getDriver())
+						.option("spark.executor.extraClassPath", datasource.getDriver())
+						.option("driver", datasource.getDriver())
+						.option("url", Helper.genUrlByDatasource(datasource))
+						.option("user", datasource.getUsername())
+						.option("password", datasource.getPassword())
+						.option("dbtable", "(" + sql + ") as impala_table").load();
 			} else if (datasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())) {
 				df = sparkSession.sqlContext().read().format("jdbc")
 						.option("spark.driver.extraClassPath", datasource.getDriver())
@@ -3213,60 +3983,213 @@ public class SparkExecutor<T> implements IExecutor {
 		return rsHolder;
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
-	public Map<String, Object>  calculateConfusionMatrixAndRoc(Map<String, Object>summary, String tableName, String clientContext) throws IOException{
+	public Map<String, Object>  calculateConfusionMatrixAndRoc(Map<String, Object> summary, String tableName, String clientContext) throws IOException{
+		logger.info("Calculating confusion metrics and roc");
 		String assembledDFSQL = "SELECT * FROM " + tableName;
-		Dataset<Row>trainedDataSet = executeSql(assembledDFSQL, clientContext).getDataFrame();
+		Dataset<Row> trainedDataSet = executeSql(assembledDFSQL, clientContext).getDataFrame();
 		trainedDataSet.printSchema();
-		trainedDataSet.show();
-		MulticlassMetrics metrics = new MulticlassMetrics(trainedDataSet);
 		
-		Matrix confusion = metrics.confusionMatrix();		
-		int size = metrics.confusionMatrix().numCols();
-	    double[] matrixArray = metrics.confusionMatrix().toArray();
-	    double[][] matrix = new double[size][size];
-	    // set values of matrix into a 2D array
-	    for (int i = 0; i < size; i++) {
-	        for (int j = 0; j < size; j++) {
-	              matrix[i][j] = matrixArray[(j * size) + i];
-	            }
-	        }
-	    System.out.println("Confusion matrix: \n" + confusion);
-	    summary.put("confusionMatrix",matrix);
-	    summary.put("accuracy",metrics.accuracy());
-	    
-	    // Stats by labels
-	    for (int i = 0; i < metrics.labels().length; i++) {
-	    	summary.put("precision",metrics.precision(metrics.labels()[i]));
-	      System.out.format("Class %f precision = %f\n", metrics.labels()[i],metrics.precision(
-	        metrics.labels()[i]));
-	      summary.put("accuracy",metrics.recall(metrics.labels()[i]));
-	      System.out.format("Class %f recall = %f\n", metrics.labels()[i], metrics.recall(
-	        metrics.labels()[i]));
-	      summary.put("recall",metrics.accuracy());
-	      System.out.format("Class %f F1 score = %f\n", metrics.labels()[i], metrics.fMeasure(
-	        metrics.labels()[i]));
-	    }
+//		trainedDataSet = trainedDataSet.na().fill(0.0,trainedDataSet.columns());
+		trainedDataSet.show(false);
+		List<String> predDFCols = Arrays.asList(trainedDataSet.columns());
+		if(predDFCols.contains("prediction")) {
+			MulticlassMetrics metrics = new MulticlassMetrics(trainedDataSet.map((MapFunction<Row, Row>) row -> 
+			RowFactory.create( 
+					Double.parseDouble(""+row.get(row.fieldIndex("prediction"))),
+					Double.parseDouble(""+row.get(row.fieldIndex("label")))), 
+					Encoders.kryo(Row.class)));
 
-	    //Weighted stats
-	    System.out.format("Weighted precision = %f\n", metrics.weightedPrecision());
-	    System.out.format("Weighted recall = %f\n", metrics.weightedRecall());
-	    System.out.format("Weighted F1 score = %f\n", metrics.weightedFMeasure());
-	    System.out.format("Weighted false positive rate = %f\n", metrics.weightedFalsePositiveRate());
-	    
+			Matrix confusion = metrics.confusionMatrix();	
+			
+			
+			int size = metrics.confusionMatrix().numCols();
+			if (size < 2) {
+				size = 2;
+			}
+			double[] matrixArray = metrics.confusionMatrix().toArray();
+			int matArrLen = matrixArray.length;
+			double[][] matrix = new double[size][size];
+			// set values of matrix into a 2D array
+			for (int i = 0; i < size; i++) {
+				for (int j = 0; j < size; j++) {
+					if (((j * size) + i) > matArrLen-1) {
+						matrix[i][j] = 0.0;
+					} else {
+						matrix[i][j] = matrixArray[(j * size) + i];
+					}
+				}
+			}
+			System.out.println("Confusion matrix: \n" + confusion);
+			summary.put("confusionMatrix", matrix);
+			summary.put("accuracy",metrics.accuracy());
+			
+			
+			// Stats by labels
+			/*for (int i = 0; i < metrics.labels().length; i++) {
+			summary.put("precision",metrics.precision(metrics.labels()[i]));
+			System.out.format("Class %f precision = %f\n", metrics.labels()[i],metrics.precision(
+			metrics.labels()[i]));
+			summary.put("accuracy",metrics.recall(metrics.labels()[i]));
+			System.out.format("Class %f recall = %f\n", metrics.labels()[i], metrics.recall(
+			metrics.labels()[i]));
+			summary.put("recall",metrics.accuracy());
+			System.out.format("Class %f F1 score = %f\n", metrics.labels()[i], metrics.fMeasure(
+			metrics.labels()[i]));
+			summary.put("f1Score", metrics.fMeasure(metrics.labels()[i]));
+			
+			}*/
+			summary.put("precision",metrics.precision());
+			summary.put("accuracy",metrics.accuracy());
+			summary.put("recall",metrics.recall());
+			summary.put("f1Score",metrics.fMeasure());
+			
+			//Weighted stats
+			System.out.format("Weighted precision = %f\n", metrics.weightedPrecision());
+			System.out.format("Weighted recall = %f\n", metrics.weightedRecall());
+			System.out.format("Weighted F1 score = %f\n", metrics.weightedFMeasure());
+			System.out.format("Weighted false positive rate = %f\n", metrics.weightedFalsePositiveRate());
+		} 
+		
 	    //For Roc
-	    BinaryClassificationMetrics binaryClassificationMetrics = new BinaryClassificationMetrics(trainedDataSet);
+	    BinaryClassificationMetrics binaryClassificationMetrics = new BinaryClassificationMetrics(trainedDataSet.map((MapFunction<Row, Row>) row -> 
+		RowFactory.create(Double.parseDouble(""+row.get(row.fieldIndex("label"))), 
+				Double.parseDouble(""+row.get(row.fieldIndex("prediction")))), 
+				Encoders.kryo(Row.class)));
+	    
+	    
 		System.out.println("Roc: \n" + binaryClassificationMetrics.roc().toJavaRDD().collect());
+		System.out.println("Area Roc: \n" + binaryClassificationMetrics.areaUnderROC());
+		
+		double TP = trainedDataSet.select("label", "prediction").filter("label = prediction and prediction > 0").count();
+		double TN = trainedDataSet.select("label", "prediction").filter("label = prediction and prediction = 0").count();
+		double FP = trainedDataSet.select("label", "prediction").filter("label <> prediction and prediction > 0").count();
+		double FN = trainedDataSet.select("label", "prediction").filter("label <> prediction and prediction = 0").count();
+		
+//		double[] confMat = {TP, FN, FP, TN};
+		double[][] confusionMatrix = {{TP, FN}, {FP, TN}};
+		System.out.println("Confusion matrix: \n" + confusionMatrix);
+		summary.put("confusionMatrix", confusionMatrix);
 		
 		List<Object> rocList = new ArrayList<>();
+//		List<Map<String, Object>> rocList = new ArrayList<>();
+//		rocList = sparkExecHelper.getRoc(binaryClassificationMetrics.roc().toJavaRDD());
 		for(Tuple2<?, ?> tuple2 : binaryClassificationMetrics.roc().toJavaRDD().collect()) {
+			logger.info("("+tuple2._1()+","+tuple2._2()+")");
 			rocList.add("("+tuple2._1()+","+tuple2._2()+")");
 		}
 		if(!rocList.isEmpty()) {
 			summary.put("roc", rocList);
 		}
+		
+		// AUROC 
+		List<Double> auRoc = new ArrayList<>();
+		auRoc.add(binaryClassificationMetrics.areaUnderROC());
+		summary.put("auroc", auRoc);		
 		// AUPRC
 	//	System.out.println("Area under precision-recall curve = " + binaryClassificationMetrics.areaUnderPR());
 		return summary ;
+	}
+
+	@Override
+	public PipelineModel trainDL(ExecParams execParams, String[] fieldArray, String label, String trainName,
+			double trainPercent, double valPercent, String tableName, String clientContext, Object algoClass,
+			Map<String, String> trainOtherParam) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public ResultSetHolder createAndRegisterDataset(List<Row> rowRDD, StructType schema, String tableName)
+			throws AnalysisException {
+		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+		SparkSession sparkSession = null;
+		try {
+			sparkSession = (SparkSession) connector.getConnection().getStmtObject();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Dataset<Row> dataset = sparkSession.createDataFrame(rowRDD, schema);
+		for (String col : dataset.columns()) {
+			dataset = dataset.withColumn(col, dataset.col(col).cast(DataTypes.DoubleType));
+		}
+		dataset.createOrReplaceTempView(tableName);
+		ResultSetHolder rsHolder = new ResultSetHolder();
+		rsHolder.setCountRows(dataset.count());
+		rsHolder.setDataFrame(dataset);
+		rsHolder.setTableName(tableName);
+		rsHolder.setType(ResultType.dataframe);
+		return rsHolder;
+	}
+	
+	public boolean dropTempTable(List<String> tempTableList) {
+		try {
+			IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+			ConnectionHolder conHolder = connector.getConnection();
+			SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
+			for(String tempTableName : tempTableList) {
+				sparkSession.sqlContext().dropTempTable(tempTableName);
+			}
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+	}
+	
+	@Override
+	public List<Map<String, Object>> fetchTrainOrTestSet(String location) throws IOException {
+		List<Map<String, Object>> data = new ArrayList<>();
+		
+		IConnector conn = connFactory.getConnector(ExecContext.spark.toString());
+		ConnectionHolder conHolder = conn.getConnection();
+
+		SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
+		DataFrameReader reader = sparkSession.read();
+		Dataset<Row> df = reader.load(location);
+
+		String[] columns = df.columns();
+		Row [] rows = (Row[]) df.head(Integer.parseInt(""+df.count()));
+		for (Row row : rows) {
+			Map<String, Object> object = new LinkedHashMap<String, Object>(columns.length);
+			for (String column : columns) {
+				object.put(column, (row.getAs(column) == null ? "" :
+					(row.getAs(column) instanceof Vector) ? Arrays.toString((double[])((Vector)row.getAs(column)).toArray()) : row.getAs(column)));
+			}
+			data.add(object);
+		}
+
+		return data;
+	}	
+
+	@Override
+	public LinkedHashMap<String, Object> getImputeValue(ResultSetHolder rsHolder) throws Exception{
+		LinkedHashMap<String, Object> resolvedAttrImputeValues = new LinkedHashMap<>();
+		Dataset<Row> df = rsHolder.getDataFrame();	
+
+		Row[] rows = (Row[]) df.head(Integer.parseInt(""+df.count()));
+		for (Row row : rows) {
+			resolvedAttrImputeValues.put((String) row.get(0), row.get(1));
+		}
+		return resolvedAttrImputeValues;
+	}
+
+	@Override
+	public ResultSetHolder applyAttrImputeValuesToData(ResultSetHolder rsHolder, LinkedHashMap<String, Object> imputeAttributeNameWithValues, boolean registerTempTable, String tempTableName) throws IOException {
+		Dataset<Row> df = rsHolder.getDataFrame();	
+		
+//		df.show(Integer.parseInt(""+df.count()), false);
+		df = df.na().fill(imputeAttributeNameWithValues);
+//		df.show(Integer.parseInt(""+df.count()), false);
+		
+		if(registerTempTable) {
+			IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+			ConnectionHolder conHolder = connector.getConnection();
+			SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
+			sparkSession.sqlContext().registerDataFrameAsTable(df, tempTableName);
+		}
+		rsHolder.setDataFrame(df);
+		return rsHolder;
 	}
 }

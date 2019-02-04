@@ -10,15 +10,10 @@
  *******************************************************************************/
 package com.inferyx.framework.operator;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import com.inferyx.framework.common.MetadataUtil;
 
 @Component
 public class GroupOperator {
-	
-	@Autowired protected MetadataUtil daoRegister;
 
 	/*public String generateSql(Map map,
 			java.util.Map<String, MetaIdentifier> refKeyMap, 

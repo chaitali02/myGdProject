@@ -4,6 +4,8 @@
 			"paramId": 0,
 			"paramName": "threshold",
 			"paramType": "double",
+   	   	    "paramDispName" : "Threshold",
+            "paramDesc" : "",	
 			"paramValue": {
 				"ref" : {
 				    "type" : "simple"
@@ -15,6 +17,8 @@
 			"paramId": 1,
 			"paramName": "maxIter",
 			"paramType": "integer",
+   	   	    "paramDispName" : "Max Iter",
+            "paramDesc" : "",	
 			"paramValue": {
 				"ref" : {
 				    "type" : "simple"
@@ -26,6 +30,8 @@
 			"paramId": 4,
 			"paramName": "tol",
 			"paramType": "double",
+   	   	    "paramDispName" : "Tol",
+            "paramDesc" : "",	
 			"paramValue": {
 				"ref" : {
 				    "type" : "simple"
@@ -49,13 +55,14 @@
 		"DEV",
 		"0.1.0"
 	],
-	"active": "Y",
+	"active" : "Y",
+  "locked" : "N",
 	"published": "N",
     "paramListType" : "model",
     "templateFlg" : "Y",
     "templateInfo" : null,
-		"appInfo": [
-			{
+		"appInfo" : [ 
+        {
             "ref" : {
                 "type" : "application",
                 "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
@@ -85,6 +92,18 @@
                 "type" : "application",
                 "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
             }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+ 		"uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbyog"
+            }
         }
-	]
+    ]
 }

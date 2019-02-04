@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.inferyx.framework.operator;
 
-import java.lang.reflect.InvocationTargetException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,12 +20,10 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.MetadataUtil;
-import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.Datapod;
+import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.FilterInfo;
@@ -39,24 +35,24 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.SourceAttr;
-import com.inferyx.framework.enums.OperandType;
-import com.inferyx.framework.enums.OperatorType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.service.CommonServiceImpl;
-import com.inferyx.framework.service.DataStoreServiceImpl;
+import com.inferyx.framework.service.DatasetServiceImpl;
 import com.inferyx.framework.service.MetadataServiceImpl;
 import com.inferyx.framework.service.RegisterService;
+import com.inferyx.framework.service.RuleServiceImpl;
 
 @Component
 public class JoinKeyOperator {
 	Logger logger=Logger.getLogger(JoinKeyOperator.class);
-	@Autowired protected MetadataUtil daoRegister;
 	@Autowired protected FormulaOperator formulaOperator;
 	@Autowired protected RegisterService registerService;
 	@Autowired MetadataServiceImpl metadataServiceImpl;
 	@Autowired protected FunctionOperator functionOperator;
 	@Autowired protected CommonServiceImpl<?> commonServiceImpl;
+	@Autowired protected DatasetServiceImpl datasetServiceImpl;
+	@Autowired protected RuleServiceImpl ruleServiceImpl;
 	@Autowired protected DatasetOperator datasetOperator;
 	
 	public String generateSql(List<FilterInfo> filters, MetaIdentifierHolder filterSource
@@ -66,7 +62,7 @@ public class JoinKeyOperator {
 			, ExecParams execParams
 			, Boolean isAggrAllowed
 			, Boolean isAggrReqd
-			, RunMode runMode) throws Exception {
+			, RunMode runMode, Datasource datasource) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		StringBuilder filterBuilder = new StringBuilder("");
 		builder.append("(").append(" ");
@@ -76,7 +72,7 @@ public class JoinKeyOperator {
 		}
 
 		for (FilterInfo filterInfo : filters) {
-			String filter = generateSql(filterInfo, filterSource, refKeyMap, otherParams, usedRefKeySet, execParams, isAggrAllowed, isAggrReqd, runMode);
+			String filter = generateSql(filterInfo, filterSource, refKeyMap, otherParams, usedRefKeySet, execParams, isAggrAllowed, isAggrReqd, runMode, datasource);
 			if (StringUtils.isNotBlank(filter)) {
 				if (StringUtils.isNotBlank(filterBuilder)) {
 					filterBuilder.append(" ").append(filterInfo.getLogicalOperator()).append(" ");
@@ -103,15 +99,20 @@ public class JoinKeyOperator {
 			, ExecParams execParams
 			, Boolean isAggrAllowed
 			, Boolean isAggrReqd
-			, RunMode runMode) throws Exception {
+			, RunMode runMode, Datasource datasource) throws Exception {
 		List<String> operandValue = new ArrayList<>(2);
 		int aggrCount = 0;
 		for (SourceAttr sourceAttr : filterInfo.getOperand()) {
 			logger.info(String.format("Processing metaIdentifier %s", sourceAttr.getRef().toString()));
+//			logger.info("Filter source : " + filterSource.getRef());
 			if (sourceAttr.getRef().getType().equals(MetaType.simple)) {
 				if (StringUtils.isBlank(sourceAttr.getValue())) {
 					operandValue.add("''");
-				} else {
+				}
+				else if(sourceAttr.getValue() !=null && filterInfo.getOperator().trim().equalsIgnoreCase("IS")) {
+					operandValue.add(sourceAttr.getValue());
+				}
+				else {
 					String value = sourceAttr.getValue();
 					if(value != null && sourceAttr.getAttributeType() !=null) {
 						String attrType=sourceAttr.getAttributeType();
@@ -143,36 +144,50 @@ public class JoinKeyOperator {
 				operandValue.add(value);
 			} else if (sourceAttr.getRef().getType() == MetaType.dataset) {
 				MetaIdentifier filterSourceMI = sourceAttr.getRef();				
-				DataSet dataset = (DataSet) daoRegister.getRefObject(TaskParser.populateRefVersion(filterSourceMI, refKeyMap));
-				List<AttributeRefHolder> datasetAttributes = registerService.getAttributesByDataset(dataset.getUuid());
-				String attrName = datasetAttributes.get(sourceAttr.getAttributeId()).getAttrName();
+//				DataSet dataset = (DataSet) daoRegister.getRefObject(TaskParser.populateRefVersion(filterSourceMI, refKeyMap));
+				MetaIdentifier ref = TaskParser.populateRefVersion(filterSourceMI, refKeyMap);
+				DataSet dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
+//				List<AttributeRefHolder> datasetAttributes = registerService.getAttributesByDataset(dataset.getUuid());
+//				String attrName = datasetAttributes.get(sourceAttr.getAttributeId()).getAttrName();
+				String attrName = datasetServiceImpl.getAttributeName(dataset,sourceAttr.getAttributeId().toString());
 				operandValue.add(dataset.sql(attrName));
 				MetaIdentifier datasetRef = new MetaIdentifier(MetaType.dataset, dataset.getUuid(), dataset.getVersion());
 				usedRefKeySet.add(datasetRef);				
 			} else if (sourceAttr.getRef().getType() == MetaType.rule) {
-				Rule rule = (Rule) daoRegister.getRefObject(TaskParser.populateRefVersion(filterSource.getRef(), refKeyMap));
-				List<AttributeRefHolder> datasetAttributes = registerService.getAttributesByRule(rule.getUuid());
-				String attrName = datasetAttributes.get(sourceAttr.getAttributeId()).getAttrName();
+//				Rule rule = (Rule) daoRegister.getRefObject(TaskParser.populateRefVersion(filterSource.getRef(), refKeyMap));
+				MetaIdentifier ref = TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap);
+				logger.info(" Filter source : " + ref);
+				Rule rule = (Rule) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
+//				List<AttributeRefHolder> datasetAttributes = registerService.getAttributesByRule(rule.getUuid());
+//				String attrName = datasetAttributes.get(sourceAttr.getAttributeId()).getAttrName();
+				String attrName = ruleServiceImpl.getAttributeName(rule,sourceAttr.getAttributeId().toString());
+//				logger.info(" Rule sql : " + rule.sql(attrName));
 				operandValue.add(rule.sql(attrName));
 				MetaIdentifier ruleRef = new MetaIdentifier(MetaType.rule, rule.getUuid(), rule.getVersion());
 				usedRefKeySet.add(ruleRef);
 			} else if (sourceAttr.getRef().getType() == MetaType.datapod) {
-				Datapod datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
+//				Datapod datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
+				MetaIdentifier ref = TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap);
+				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
+						
 				operandValue.add(datapod.sql(sourceAttr.getAttributeId()));
 				MetaIdentifier datapodRef = new MetaIdentifier(MetaType.datapod, datapod.getUuid(), datapod.getVersion());
 				usedRefKeySet.add(datapodRef);
 			} else if (sourceAttr.getRef().getType() == MetaType.formula) {
-				Formula formulaRef = (Formula) daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
+//				Formula formulaRef = (Formula) daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
+				MetaIdentifier ref = TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap);
+				Formula formulaRef = (Formula) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 				if (formulaRef.getFormulaType().equals(FormulaType.aggr)) {
 					aggrCount += 1;
 				}
-				operandValue.add(formulaOperator.generateSql(formulaRef, refKeyMap, otherParams, execParams));
+				operandValue.add(formulaOperator.generateSql(formulaRef, refKeyMap, otherParams, execParams, datasource));
 				MetaIdentifier formulaRef1 = new MetaIdentifier(MetaType.formula, formulaRef.getUuid(), formulaRef.getVersion());
 				usedRefKeySet.add(formulaRef1);
-			}	
-			 else if (sourceAttr.getRef().getType() == MetaType.function) {
-					Function functionRef = (Function) daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
-					operandValue.add(functionOperator.generateSql(functionRef, refKeyMap, otherParams));
+			} else if (sourceAttr.getRef().getType() == MetaType.function) {
+//					Function functionRef = (Function) daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
+					MetaIdentifier ref = TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap);
+					Function functionRef = (Function) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
+					operandValue.add(functionOperator.generateSql(functionRef, refKeyMap, otherParams, datasource));
 					MetaIdentifier functionRef1 = new MetaIdentifier(MetaType.function, functionRef.getUuid(), functionRef.getVersion());
 					usedRefKeySet.add(functionRef1);
 				}	
@@ -189,13 +204,16 @@ public class JoinKeyOperator {
 				|| filterInfo.getOperator().trim().equalsIgnoreCase("NOT EXISTS")) {
 			if(filterInfo.getOperand().get(1).getRef().getType().equals(MetaType.dataset)) {
 				MetaIdentifier dataSetMI = filterInfo.getOperand().get(1).getRef();
-				DataSet dataSet = (DataSet) commonServiceImpl.getOneByUuidAndVersion(dataSetMI.getUuid(), dataSetMI.getVersion(), dataSetMI.getType().toString());
+				DataSet dataSet = (DataSet) commonServiceImpl.getOneByUuidAndVersion(dataSetMI.getUuid(), dataSetMI.getVersion(), dataSetMI.getType().toString(),"N");
 				String subQuery = generateSubqueryByDataset(dataSet, refKeyMap, otherParams, usedRefKeySet, execParams, runMode);
 				return generateRHSQuery(operandValue, filterInfo, filterSource, subQuery, dataSet.getName());
 			} else {
 				return generateRHSOperand(operandValue, filterInfo, filterSource);
 			}			
 		} else {
+			if(operandValue.size() == 1)
+				return String.format("(%s %s)", operandValue.get(0), filterInfo.getOperator());
+			else
 			return String.format("(%s %s %s)", operandValue.get(0), filterInfo.getOperator(), operandValue.get(1));
 		}		
 	}

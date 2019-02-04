@@ -11,6 +11,7 @@
 package com.inferyx.framework.controller;
 
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
@@ -34,12 +35,14 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaStatsHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.ParamList;
+import com.inferyx.framework.domain.User;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.ImportServiceImpl;
 import com.inferyx.framework.service.MessageServiceImpl;
@@ -98,7 +101,7 @@ public class CommonController<T> {
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/getLatestByUuid", method = RequestMethod.GET)
-	public @ResponseBody String getLatestByUuid(@RequestParam("uuid") String uuid, 
+	public @ResponseBody String getLatestByUuid(@RequestParam("uuid") String uuid,
 			@RequestParam("type") String type,
 			@RequestParam(value = "action", required = false) String action)
 			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
@@ -171,9 +174,11 @@ public class CommonController<T> {
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/submit", method = RequestMethod.POST)
-	public String save(@RequestBody Object metaObject, @RequestParam("type") String type,
+	public String save(@RequestBody Object metaObject,
+			@RequestParam("type") String type,
 			@RequestParam(value = "upd_tag", required = false, defaultValue = "N") String upd_tag,
-			@RequestParam(value = "action", required = false) String action, HttpServletRequest request)
+			@RequestParam(value = "action", required = false) String action,
+			HttpServletRequest request)
 			throws Exception {
 		if (type.equalsIgnoreCase(MetaType.datasetview.toString()) 
 				|| type.equalsIgnoreCase(MetaType.dqview.toString())
@@ -244,6 +249,28 @@ public class CommonController<T> {
 			return objectWriter.writeValueAsString(baseEntity);
 		else {
 			Message unAuthorised = messageServiceImpl.save(new Message("401", MessageStatus.FAIL.toString(), "Unauthorised to unpublish."));
+			response.setStatus(401);
+			return objectWriter.writeValueAsString(unAuthorised);
+		}			
+	}
+	@RequestMapping(value = "/lock", method = RequestMethod.PUT)
+	public String lock(@RequestParam("id") String id, 
+			@RequestParam("type") String type,
+			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException {
+		BaseEntity baseEntity = commonServiceImpl.locked(id, type);
+		return objectWriter.writeValueAsString(baseEntity);
+	}
+	
+	@RequestMapping(value = "/unLock", method = RequestMethod.PUT)
+	public String unLock(@RequestParam("id") String id, 
+			@RequestParam("type") String type,
+			@RequestParam(value = "action", required = false) String action,
+			HttpServletResponse response) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException {
+		BaseEntity baseEntity = commonServiceImpl.unLocked(id, type);
+		if(baseEntity != null)
+			return objectWriter.writeValueAsString(baseEntity);
+		else {
+			Message unAuthorised = messageServiceImpl.save(new Message("401", MessageStatus.FAIL.toString(), "Unauthorised to unlock."));
 			response.setStatus(401);
 			return objectWriter.writeValueAsString(unAuthorised);
 		}			
@@ -340,9 +367,10 @@ public class CommonController<T> {
 											   @RequestParam(value = "type", required = false) String type,
 											   @RequestParam(value = "uuid", required = false) String uuid,
 											   @RequestParam(value = "version", required = false) String version,
+											   @RequestParam(value = "dataSourceUuid", required = false) String dataSourceUuid,
 											   @RequestParam(value = "action", required = false) String action)
-											throws IOException, JSONException, ParseException {
-		List<MetaIdentifierHolder> result = commonServiceImpl.uploadGenric(multiPartFile,extension ,fileType, type,uuid,version,action);
+											throws IOException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
+		List<MetaIdentifierHolder> result = commonServiceImpl.uploadGenric(multiPartFile,extension ,fileType, type,uuid,version,action,dataSourceUuid);
 		
 		return result;
 	}
@@ -369,4 +397,30 @@ public class CommonController<T> {
 														   @RequestParam(value = "paramListType") MetaType paramListType) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException{
 		return commonServiceImpl.getAllLatestParamListByTemplate(templateFlg, null, null, paramListType);
 	}
+	
+//	@RequestMapping(value = "/getUserByApp",method=RequestMethod.GET)
+//	public @ResponseBody List<User> getUserByApp(@RequestParam(value = "uuid") String appUuid, 
+//									@RequestParam(value = "type", required = false) String type,
+//									@RequestParam(value = "action", required = false) String action) throws FileNotFoundException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException, JSONException {
+//						return  commonServiceImpl.getUserByApp(appUuid);
+//	}
+	
+	
+	
+	@RequestMapping(value = "/getUserByApp", method = RequestMethod.GET)
+	public @ResponseBody List<User> getUserByApp(
+			@RequestParam(value = "action", required=false) String action,
+			@RequestParam(value = "type", required = false) String type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException, ParseException  {
+		return commonServiceImpl.getUserByApp();
+	}
+	
+	@RequestMapping(value = "/getAppByOrg", method = RequestMethod.GET)
+	public @ResponseBody List<Application> getAppByOrg(
+			@RequestParam(value = "uuid") String orgUuid,
+			@RequestParam(value = "action", required=false) String action,
+			@RequestParam(value = "type", required = false) String type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException, ParseException  {
+		return commonServiceImpl.getAppByOrg(orgUuid);
+	}
+	
+	
 }

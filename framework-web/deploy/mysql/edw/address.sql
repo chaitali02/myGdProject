@@ -1,16 +1,16 @@
-DROP TABLE IF EXISTS ADDRESS;
-CREATE TABLE ADDRESS(	
-	ADDRESS_ID VARCHAR(50) DEFAULT 0 NOT NULL,
-	ADDRESS_LINE1 VARCHAR(50),
-	ADDRESS_LINE2 VARCHAR(50),
-	ADDRESS_LINE3 VARCHAR(50),
-	CITY VARCHAR(100),
-	COUNTY VARCHAR(100),
-	STATE VARCHAR(100),
-	ZIPCODE INTEGER(10),
-	COUNTRY VARCHAR(100),
-	LATITUDE VARCHAR(50),
-	LONGITUDE VARCHAR(50),
-	LOAD_DATE VARCHAR(10),
-	LOAD_ID INTEGER(50), 
-CONSTRAINT ADDRESS_ID_PK  PRIMARY KEY(ADDRESS_ID));
+drop table if exists address;
+create table address(	
+	address_id varchar(50) default 0 not null,
+	address_line1 varchar(50),
+	address_line2 varchar(50),
+	address_line3 varchar(50),
+	city varchar(100),
+	county varchar(100),
+	state varchar(100),
+	zipcode integer(10),
+	country varchar(100),
+	latitude varchar(50),
+	longitude varchar(50),
+	load_date varchar(10),
+	load_id integer(50), 
+constraint address_id_pk  primary key(address_id));

@@ -1,6 +1,6 @@
 
 MetadataModule = angular.module('MetadataModule');
-MetadataModule.controller('MetadataRelationController', function ($state, $rootScope, $scope, $stateParams, $cookieStore, MetadataRelationSerivce, privilegeSvc, CommonService, $timeout, $filter) {
+MetadataModule.controller('MetadataRelationController', function ($state, $rootScope, $scope, $stateParams, $cookieStore, MetadataRelationSerivce, privilegeSvc, CommonService, $timeout, $filter , dagMetaDataService) {
 	$scope.mode = "false";
 	$scope.relationdata;
 	$scope.showFrom = true;
@@ -20,6 +20,7 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 	$scope.isshowmodel = false;
 	$scope.isSubmitEnable = true;
 	$scope.relationHasChanged = true;
+	$scope.isShowSimpleData=false;
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
 		$scope.isversionEnable = false;
@@ -56,6 +57,44 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 	$scope.userDetail.uuid = $rootScope.setUseruuid;
 	$scope.userDetail.name = $rootScope.setUserName;
 	$scope.isDependencyShow = false;
+	$scope.filteredRows =[];
+	$scope.gridOptions = dagMetaDataService.gridOptionsDefault;
+	$scope.gridOptions = {
+		rowHeight: 40,
+		enableGridMenu: true,
+		useExternalPagination: true,
+		exporterMenuPdf: false,
+		exporterPdfOrientation: 'landscape',
+		exporterPdfPageSize: 'A4',
+		exporterPdfDefaultStyle: { fontSize: 9 },
+		exporterPdfTableHeaderStyle: { fontSize: 10, bold: true, italics: true, color: 'red' },
+	}
+	$scope.gridOptions.columnDefs = [];
+	$scope.gridOptions.onRegisterApi = function (gridApi) {
+		$scope.gridApi = gridApi;
+		$scope.filteredRows = $scope.gridApi.core.getVisibleRows($scope.gridApi.grid);
+	};
+	$scope.pagination = {
+		currentPage: 1,
+		pageSize: 10,
+		paginationPageSizes: [10, 25, 50, 75, 100],
+		maxSize: 5,
+	}
+
+	$scope.getGridStyle = function () {
+		var style = {
+			'margin-top': '10px',
+			'margin-bottom': '10px',
+		}
+		if ($scope.filteredRows && $scope.filteredRows.length > 0) {
+			style['height'] = (($scope.filteredRows.length < 10 ? $scope.filteredRows.length * 40 : 400) + 50) + 'px';
+		}
+		else {
+			style['height'] = "100px";
+		}
+		return style;
+	}
+
 	$scope.privileges = [];
 	$scope.privileges = privilegeSvc.privileges['relation'] || [];
 	$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
@@ -77,12 +116,25 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 		});
 	};
 	$scope.getLovByType();
+	
 	$scope.showPage = function () {
 		$scope.showFrom = true;
-		$scope.showGraphDiv = false
+		$scope.showGraphDiv = false;
+		$scope.isShowSimpleData =false;
 	}
 
+	$scope.showHome=function(uuid, version,mode){
+		$scope.showPage()
+		$state.go('metaListrelation', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.relationdata.locked =="Y"){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('metaListrelation', {
 			id: uuid,
@@ -120,11 +172,102 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 	$scope.showGraph = function (uuid, version) {
 		$scope.showFrom = false;
 		$scope.showGraphDiv = true;
+		$scope.isShowSimpleData =false;
 	}
 
 	$scope.onChangeName = function (data) {
 		$scope.relationName = data;
 	}
+	
+	$scope.refreshData = function (searchtext) {
+		var data = $filter('filter')($scope.originalData,searchtext, undefined);
+		$scope.getResults(data)
+	};
+
+	
+	$scope.showSampleTable = function (data) {
+		$scope.isShowSimpleData = true
+		$scope.isDataInpogress = true
+		$scope.isDataError = false;
+		$scope.tableclass = "centercontent";
+		$scope.showFrom = false;
+		$scope.showGraphDiv = false;
+		$scope.spinner = true;
+		MetadataRelationSerivce.getSample(data).then(function (response) { onSuccessGetSample(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetSample= function (response) {
+			$scope.gridOptions.columnDefs = [];
+			$scope.isDataInpogress = false;
+			$scope.tableclass = "";
+			$scope.spinner = false;
+			$scope.originalData = response;
+			if ($scope.originalData.length > 0) {
+				$scope.getResults($scope.originalData);
+				$scope.gridOptions.columnDefs=$scope.getColumns($scope.originalData);
+			}
+
+			$scope.spinner = false;
+		}
+		var onError = function (response) {
+			$scope.isDataInpogress = true;
+			$scope.isDataError = true;
+			$scope.msgclass = "errorMsg";
+			$scope.datamessage = "Some Error Occurred";
+			$scope.spinner = false;
+		}
+	}
+
+    $scope.getResults = function (params) {
+		$scope.pagination.totalItems = params.length;
+		if ($scope.pagination.totalItems > 0) {
+			$scope.pagination.to = ((($scope.pagination.currentPage - 1) * ($scope.pagination.pageSize)) + 1);
+		}
+		else {
+			$scope.pagination.to = 0;
+		}
+		if ($scope.pagination.totalItems < ($scope.pagination.pageSize * $scope.pagination.currentPage)) {
+			$scope.pagination.from = $scope.pagination.totalItems;
+		} else {
+			$scope.pagination.from = (($scope.pagination.currentPage) * $scope.pagination.pageSize);
+		}
+		var limit = ($scope.pagination.pageSize * $scope.pagination.currentPage);
+		var offset = (($scope.pagination.currentPage - 1) * $scope.pagination.pageSize)
+		$scope.gridOptions.data = params.slice(offset, limit);
+	}
+
+    $scope.selectPage = function (pageNo) {
+		$scope.pagination.currentPage = pageNo;
+	};
+	$scope.onPerPageChange = function () {
+		$scope.pagination.currentPage = 1;
+		$scope.getResults($scope.originalData)
+	}
+	$scope.pageChanged = function () {
+		$scope.getResults($scope.originalData)
+	};
+
+	$scope.getColumns= function (data) {
+        var columns = [];
+        var count = 0;
+        if (data.length && data.length > 0) {
+          angular.forEach(data[0], function (value, key) {
+            count = count + 1;
+		  });
+		  var countTemp=0;
+          angular.forEach(data[0], function (val, key) {
+			var width;
+			if(countTemp <= 50){
+				if(count > 3)
+					width = key.split('').length + 5 + "%"
+				else
+					width = (100 / count) + "%";
+				columns.push({ "name": key, "displayName": key.toLowerCase(),width: width, visible: true});
+			    countTemp=countTemp+1;
+			}
+          });
+		}
+		
+        return columns;
+      }
 
 	$scope.convertUppdercase = function (value) {
 		var resultvalue = value.split("_");
@@ -139,18 +282,21 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 		$scope.showactive = "true"
 		$scope.mode = $stateParams.mode
 		$scope.isDependencyShow = true;
-		MetadataRelationSerivce.getAllVersionByUuid($stateParams.id, "relation").then(function (response) { onSuccessGetAllVersionByUuid(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		MetadataRelationSerivce.getAllVersionByUuid($stateParams.id, "relation")
+			.then(function (response) { onSuccessGetAllVersionByUuid(response.data) });
 		var onSuccessGetAllVersionByUuid = function (response) {
 			for (var i = 0; i < response.length; i++) {
 				var relationversion = {};
 				relationversion.version = response[i].version;
 				$scope.relation.versions[i] = relationversion;
-
 			}
 		}
-
-		MetadataRelationSerivce.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'relation').then(function (response) { onSuccess(response.data) });
+		MetadataRelationSerivce.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'relation')
+			.then(function (response) { onSuccess(response.data) },function (response) { onError(response.data)});
 		var onSuccess = function (response) {
+			$scope.isEditInprogess=false;
 			var defaultversion = {};
 			var defaultoption = {};
 			defaultversion.version = response.relationdata.version;
@@ -169,7 +315,8 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 			}
 
 			$scope.rhsAllAttribute = [];
-			MetadataRelationSerivce.getAllAttributeBySource($scope.relationdata.uuid, "relation", $scope.relationdata.version).then(function (response) { onSuccessGetAttributesByDatapod(response.data) });
+			MetadataRelationSerivce.getAllAttributeBySource($scope.relationdata.uuid, "relation", $scope.relationdata.version)
+				.then(function (response) { onSuccessGetAttributesByDatapod(response.data) });
 			var onSuccessGetAttributesByDatapod = function (response) {
 				$scope.rhsAllAttribute = [];
 				$scope.lhsAllAttribute = response.allattributes;
@@ -203,10 +350,16 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 			// }
 		
 		} //End Onsuccess()
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		};
 
 	}//End IF
 	else {
-		$scope.showactive = "false"
+		$scope.showactive = "false";
+		$scope.relationdata={};
+		$scope.relationdata.locked="N";
 		MetadataRelationSerivce.getAllLatest("datapod").then(function (response) { onSuccessrelation(response.data) });
 		var onSuccessrelation = function (response) {
 			$scope.alldatapod = response
@@ -236,7 +389,6 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 	}
 	 
 	$scope.onChangeJoinMetaType=function(type,index){
-	
 		MetadataRelationSerivce.getAllLatest(type).then(function (response) { onSuccessrelation(response.data) });
 		var onSuccessrelation = function (response) {
 			console.log(response)
@@ -264,6 +416,7 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 	$scope.selectOption = function () {
 		MetadataRelationSerivce.getAllAttributeBySource($scope.alldatapod.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessGetAttributesByDatapod(response.data) });
 		var onSuccessGetAttributesByDatapod = function (response) {
+			$scope.rhsAllAttribute=[];
 			$scope.lhsAllAttribute = response;
 			$scope.rhsAllAttribute[0]=response;
 			$scope.allJoinDatapod();
@@ -289,6 +442,8 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 		if (data !=null && typeof data != "undefined") {
 			MetadataRelationSerivce.getAllAttributeBySource(data.uuid,type).then(function (response) { onSuccessGetAttributesByDatapod(response.data) });
 			var onSuccessGetAttributesByDatapod = function (response) {
+				console.log($scope.rhsAllAttribute)
+				$scope.rhsAllAttribute.splice([index+1],1);
 			    $scope.rhsAllAttribute.splice([index+1],0,response);
 				$scope.joinRHS();
 			}	
@@ -343,17 +498,21 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 				index = key;
 			}
 		});
+
 		$scope.relationTableArray = newDataList;
+		
 		if (index != null) {
 			$scope.rhsAllAttribute.splice(index, 1);
-			$scope.selectOption();
+			//$scope.selectOption();
 		}
+		
 		if ($scope.selectalljoin == true) {
 			$scope.lhsAllAttribute = null;
 			$scope.rhsAllAttribute = [];
 		}
+		
 		$scope.selectalljoin = false;
-
+         
 	}
 
 	$scope.selectAllSubRow = function (index) {
@@ -389,8 +548,12 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 	$scope.selectVersion = function () {
 		$scope.alldatapod = null;
 		$scope.myform.$dirty = false;
-		MetadataRelationSerivce.getOneByUuidAndVersion($scope.relation.defaultVersion.uuid, $scope.relation.defaultVersion.version, 'relation').then(function (response) { onSuccess(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		MetadataRelationSerivce.getOneByUuidAndVersion($scope.relation.defaultVersion.uuid, $scope.relation.defaultVersion.version, 'relation')
+			.then(function (response) { onSuccess(response.data) },function (response) { onError(response.data)});
 		var onSuccess = function (response) {
+			$scope.isEditInprogess=false;
 			var defaultversion = {};
 			var defaultoption = {};
 			defaultversion.version = response.relationdata.version;
@@ -420,9 +583,6 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 					}
 
 				}
-
-
-
 			}
 			MetadataRelationSerivce.getAllLatest($scope.selectSourceType).then(function (response) { onSuccessrelation(response.data) });
 			var onSuccessrelation = function (response) {
@@ -434,6 +594,10 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 				$scope.allJoinDatapod();
 			}
 		}
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		};
 
 	}
 
@@ -448,6 +612,7 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 		relationjson.uuid = $scope.relationdata.uuid;
 		relationjson.name = $scope.relationdata.name;
 		relationjson.active = $scope.relationdata.active;
+		relationjson.locked = $scope.relationdata.locked;
 		relationjson.desc = $scope.relationdata.desc;
 		relationjson.published = $scope.relationdata.published;
 		var tagArray = [];

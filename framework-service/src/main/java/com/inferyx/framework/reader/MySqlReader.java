@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -31,8 +30,6 @@ import com.inferyx.framework.service.CommonServiceImpl;
 
 @Service
 public class MySqlReader implements IReader {
-	@Autowired
-	protected MetadataUtil daoRegister;
 	@Autowired
 	protected ExecutorFactory execFactory;
 	@Autowired
@@ -50,7 +47,7 @@ public class MySqlReader implements IReader {
 																				datapod.getDatasource().getRef().getType().toString());
 			IExecutor exec = execFactory.getExecutor(execDatasource.getType());
 			String dbName = tableDatasource.getDbname();		
-			rsHolder = exec.executeSql("SELECT * FROM "+dbName+"."+datapod.getName());
+			rsHolder = exec.executeSqlByDatasource("SELECT * FROM "+dbName+"."+datapod.getName(), tableDatasource, null);
 			rsHolder.setTableName(Helper.genTableName(datastore.getLocation()));
 		} catch (IllegalArgumentException | SecurityException | NullPointerException e) {
 			e.printStackTrace();

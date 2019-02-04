@@ -1,0 +1,261 @@
+{
+  "uuid": "9e557aba-be17-4e77-96f8-41644cad6245",
+  "version": "1531208312",
+  "name": "Fraud Detection Decision Tree Model",
+  "desc": "Decision Tree Model for detection fraudulent transactions with Hyper Params.",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+    }
+  },
+    "createdOn" : ISODate("2018-06-03T18:34:22.000Z"),
+  "tags": [],
+  "active" : "Y",
+  "locked" : "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
+      }
+    }
+  ],
+  "type": "SPARK",
+  "dependsOn": {
+    "ref": {
+      "type": "algorithm",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b75678"
+    }
+  },
+  "label": "fraud_indicator",
+  "features": [
+    {
+      "featureId": "0",
+      "name": "account_balance",
+      "type": "double",
+      "desc": "account_balance",
+      "minVal": 0,
+      "maxVal": 0
+    },
+    {
+      "featureId": "1",
+      "name": "min_daily_balance",
+      "type": "double",
+      "desc": "min_daily_balance",
+      "minVal": 0,
+      "maxVal": 0
+    },
+    {
+      "featureId": "2",
+      "name": "max_daily_balance",
+      "type": "double",
+      "desc": "max_daily_balance",
+      "minVal": 0,
+      "maxVal": 0
+    },
+    {
+      "featureId": "3",
+      "name": "avg_daily_balance",
+      "type": "double",
+      "desc": "avg_daily_balance",
+      "minVal": 0,
+      "maxVal": 0
+    },
+    {
+      "featureId": "4",
+      "name": "min_monthly_balance",
+      "type": "double",
+      "desc": "min_monthly_balance",
+      "minVal": 0,
+      "maxVal": 0
+    },
+    {
+      "featureId": "5",
+      "name": "max_monthly_balance",
+      "type": "double",
+      "desc": "max_monthly_balance",
+      "minVal": 0,
+      "maxVal": 0
+    },
+    {
+      "featureId": "6",
+      "name": "avg_monthly_balance",
+      "type": "double",
+      "desc": "avg_monthly_balance",
+      "minVal": 0,
+      "maxVal": 0
+    },
+    {
+      "featureId": "7",
+      "name": "min_quarterly_balance",
+      "type": "double",
+      "desc": "min_quarterly_balance",
+      "minVal": 0,
+      "maxVal": 0
+    },
+    {
+      "featureId": "8",
+      "name": "max_quarterly_balance",
+      "type": "double",
+      "desc": "max_quarterly_balance",
+      "minVal": 0,
+      "maxVal": 0
+    },
+    {
+      "featureId": "9",
+      "name": "avg_quarterly_balance",
+      "type": "double",
+      "desc": "avg_quarterly_balance",
+      "minVal": 0,
+      "maxVal": 0
+    },
+    {
+      "featureId": "10",
+      "name": "min_yearly_balance",
+      "type": "double",
+      "desc": "min_yearly_balance",
+      "minVal": 0,
+      "maxVal": 0
+    },
+    {
+      "featureId": "11",
+      "name": "max_yearly_balance",
+      "type": "double",
+      "desc": "max_yearly_balance",
+      "minVal": 0,
+      "maxVal": 0
+    },
+    {
+      "featureId": "12",
+      "name": "avg_yearly_balance",
+      "type": "double",
+      "desc": "avg_yearly_balance",
+      "minVal": 0,
+      "maxVal": 0
+    },
+    {
+      "featureId": "13",
+      "name": "transaction_amount",
+      "type": "double",
+      "desc": "transaction_amount",
+      "minVal": 0,
+      "maxVal": 0
+    },
+    {
+      "featureId": "14",
+      "name": "min_daily_tran_amount",
+      "type": "double",
+      "desc": "min_daily_tran_amount",
+      "minVal": 0,
+      "maxVal": 0
+    },
+    {
+      "featureId": "15",
+      "name": "max_daily_tran_amount",
+      "type": "double",
+      "desc": "max_daily_tran_amount",
+      "minVal": 0,
+      "maxVal": 0
+    },
+    {
+      "featureId": "16",
+      "name": "avg_daily_tran_amount",
+      "type": "double",
+      "desc": "avg_daily_tran_amount",
+      "minVal": 0,
+      "maxVal": 0
+    },
+    {
+      "featureId": "17",
+      "name": "min_monthly_tran_amount",
+      "type": "double",
+      "desc": "min_monthly_tran_amount",
+      "minVal": 0,
+      "maxVal": 0
+    },
+    {
+      "featureId": "18",
+      "name": "max_monthly_tran_amount",
+      "type": "double",
+      "desc": "max_monthly_tran_amount",
+      "minVal": 0,
+      "maxVal": 0
+    },
+    {
+      "featureId": "19",
+      "name": "avg_monthly_tran_amount",
+      "type": "double",
+      "desc": "avg_monthly_tran_amount",
+      "minVal": 0,
+      "maxVal": 0
+    },
+    {
+      "featureId": "20",
+      "name": "min_yearly_tran_amount",
+      "type": "double",
+      "desc": "min_yearly_tran_amount",
+      "minVal": 0,
+      "maxVal": 0
+    },
+    {
+      "featureId": "21",
+      "name": "max_yearly_tran_amount",
+      "type": "double",
+      "desc": "max_yearly_tran_amount",
+      "minVal": 0,
+      "maxVal": 0
+    },
+    {
+      "featureId": "22",
+      "name": "avg_yearly_tran_amount",
+      "type": "double",
+      "desc": "avg_yearly_tran_amount",
+      "minVal": 0,
+      "maxVal": 0
+    },
+    {
+      "featureId": "23",
+      "name": "num_daily_transactions",
+      "type": "double",
+      "desc": "num_daily_transactions",
+      "minVal": 0,
+      "maxVal": 0
+    },
+    {
+      "featureId": "24",
+      "name": "num_monthly_transactions",
+      "type": "double",
+      "desc": "num_monthly_transactions",
+      "minVal": 0,
+      "maxVal": 0
+    },
+    {
+      "featureId": "25",
+      "name": "num_quarterly_transactions",
+      "type": "double",
+      "desc": "num_quarterly_transactions",
+      "minVal": 0,
+      "maxVal": 0
+    },
+    {
+      "featureId": "26",
+      "name": "num_yearly_transactions",
+      "type": "double",
+      "desc": "num_yearly_transactions",
+      "minVal": 0,
+      "maxVal": 0
+    },
+    {
+      "featureId": "27",
+      "name": "num_payment_default_times",
+      "type": "double",
+      "desc": "num_payment_default_times",
+      "minVal": 0,
+      "maxVal": 0
+    }
+  ],
+  "scriptName": null,
+  "customFlag": "N"
+}

@@ -11,6 +11,8 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		$scope.isEdit = false;
 		$scope.isversionEnable = false;
 		$scope.isAdd = false;
+		$scope.mode="true";
+		$scope.isDragable = "false";
 		var privileges = privilegeSvc.privileges['comment'] || [];
 		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
 		$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
@@ -24,9 +26,11 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 
 	else if ($stateParams.mode == 'false') {
 		$scope.isEdit = true;
+		$scope.mode="false";
 		$scope.isversionEnable = true;
 		$scope.isAdd = false;
 		$scope.isPanelActiveOpen = true;
+		$scope.isDragable = "true";
 		var privileges = privilegeSvc.privileges['comment'] || [];
 		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
 		$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
@@ -39,7 +43,11 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	}
 	else {
 		$scope.isAdd = true;
+		$scope.mode="false";
+		$scope.isDragable = "true";
+
 	}
+	$scope.unitTypes=[{"text":"*","caption":"* Text"},{"text":"#","caption":"# Number"},{"text":"$","caption":"$ Currrency"},{"text":"%","caption":"% Percent"}];
 	$scope.path = dagMetaDataService.compareMetaDataStatusDefs;
 	$scope.download={};
 	$scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
@@ -52,7 +60,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	$scope.sample.rows=CF_SAMPLE.framework_sample_minrows;
 	$scope.sample.limit_to=CF_SAMPLE.limit_to;
 	$scope.isAttributeEnable = false;
-	$scope.mode = ""
+	
 	$scope.dataLoading = false;
 	$scope.datapoddata = null;
 	$scope.attributetable = null;
@@ -61,7 +69,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	$scope.data = null;
 	$scope.showGraphDiv = false
 	$scope.datapod = {};
-	$scope.type = ["string", "float", "bigint", 'double', 'timestamp', 'integer', 'decimal','varchar'];
+	$scope.type = ["string", "float", "bigint", 'double', 'timestamp', 'integer', 'decimal','varchar',"long"];
 	$scope.SourceTypes = ["file", "hive", "impala", 'mysql', 'oracle', 'postgres']
 	$scope.datapod.versions = [];
 	$scope.datasetHasChanged = true;
@@ -126,8 +134,18 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		$scope.isShowCompareMetaData=false;
 
 	}/*End ShowGraph*/
-
+    $scope.showHome=function(uuid, version,mode){
+		$scope.showPage()
+		$state.go('metaListdatapod', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.datapoddata.locked =="Y"){
+          return false;
+		}
 		$scope.showPage()
 		$state.go('metaListdatapod', {
 			id: uuid,
@@ -145,6 +163,40 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 				mode: 'true'
 			});
 		}
+	}
+	
+	$scope.gridOptionsHitogram={
+		rowHeight: 40,
+		enableGridMenu: true,
+		useExternalPagination: true,
+		exporterMenuPdf: true,
+		exporterPdfOrientation: 'landscape',
+		exporterPdfPageSize: 'A4',
+		exporterPdfDefaultStyle: { fontSize: 9 },
+		exporterPdfTableHeaderStyle: { fontSize: 10, bold: true, italics: true, color: 'red' },
+	}
+
+	$scope.filteredRowsHitogram = [];
+	$scope.gridOptionsHitogram.onRegisterApi = function (gridApi) {
+		$scope.gridOptionsHitogram = gridApi;
+		$scope.filteredRowsHitogram = $scope.gridOptionsHitogram.core.getVisibleRows($scope.gridOptionsHitogram.grid);
+	};
+	
+	$scope.getGridStyleHistogram = function () {
+		
+		var style = {
+			'margin-top': '10px',
+			'margin-bottom': '10px',
+			'width':'100%;'
+		}
+		if ($scope.filteredRowsHitogram && $scope.filteredRowsHitogram.length > 0) {
+			style['height'] = (($scope.filteredRowsHitogram.length < 10 ? $scope.filteredRowsHitogram.length * 50 : 400) + 70) + 'px';
+		}
+		else {
+		
+			style['height'] = "150px";
+		}
+		return style;
 	}
 
 	$scope.gridOptions = {
@@ -173,10 +225,10 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		headerTemplate: 'views/header-template.html',
 		superColDefs: [{
 			name: 'sourceParant',
-			displayName: 'Source'
+			displayName:'Source'
 		}, {
 			name: 'targetParant',
-			displayName:'Target'
+			displayName:'Datapod'
 		},
 		 {
 			name: 'statusParant',
@@ -221,6 +273,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div class="label-sm" style=" width: 88%;font-size: 13px;padding: 2px;color: white;margin: -2px auto;font-weight: 300;background-color:{{grid.appScope.path[row.entity.status].color}} !important" ng-style="">{{grid.appScope.path[row.entity.status].caption}}</div></div>'
 		}],
 	};  
+
 
 	$scope.filteredRowsCompareMetaData = [];
 	$scope.gridOptionsCompareMetaData.onRegisterApi = function (gridApi) {
@@ -565,21 +618,25 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		var onSuccessGetResultByDatastore = function (response) {
 			$scope.sample.rows=CF_SAMPLE.framework_sample_minrows;
 			$scope.isEnableDSRB(data);
-			$scope.gridOptions.columnDefs = [];
+		    $scope.gridOptions.columnDefs = [];
 			$scope.isDataInpogress = false;
 			$scope.tableclass = "";
 			$scope.spinner = false
+			var columnDefs=[];
 			for (var j = 0; j <$scope.datapoddata.attributes.length; j++) {
 				var attribute = {};
 				attribute.name = $scope.datapoddata.attributes[j].name;
 				attribute.displayName = $scope.datapoddata.attributes[j].dispName;
 				attribute.width = attribute.displayName.split('').length + 2 + "%" // Math.floor(Math.random() * (120 - 50 + 1)) + 150
-				$scope.gridOptions.columnDefs.push(attribute)
+				columnDefs.push(attribute)
 			}
+			setTimeout(function(){
+				$scope.gridOptions.columnDefs=columnDefs;
+			},10);
 			$scope.counter = 0;
 			$scope.originalData = response;
 			if ($scope.originalData.length > 0) {
-				$scope.getResults($scope.originalData);
+				$scope.gridOptions.data=$scope.getResults($scope.originalData);
 			}
 			$scope.spinner = false;
 
@@ -594,7 +651,106 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			$scope.isEnableDSRB(data);
 		}
 	}
+	function ConvertTwoDisit(data, propName) {
+		// if(isNaN(data[0][propName])){
+		 if (data.length > 0 &&  data[0][propName].indexOf(" - ") != -1) {
+		   for (var i = 0; i < data.length; i++) {
+			 a = data[i][propName].split(' - ')[0];
+			 b = data[i][propName].split('-')[1]
+			 data[i][propName] = parseFloat(a).toFixed(2) + " - " + parseFloat(b).toFixed(2);
+			 // console.log(data[i][propName])
+		   }
+		 }
+		// }
+		// console.log(data)
+		 return data;
+	}
+	
+	$scope.refreshDataHistogram=function(str){
+       console.log(str)
+		var data = $filter('filter')($scope.originalDataHistogram, str, undefined);
+		$scope.gridOptionsHitogram.data= data;//$scope.getResults(data);
+	}
+
+	$scope.onClickChart=function(){
+		$scope.isShowDataGrid=false;
+		$scope.isShowChart=true;
+	}
+
+	$scope.onClickGrid=function(){
+		$scope.searchTextHostogram;
+		$scope.isShowDataGrid=true;
+		$scope.isShowChart=false;
+		$scope.gridOptionsHitogram.columnDefs=[];
+		$scope.gridOptionsHitogram.columnDefs=[
+			{
+				name: 'bucket',
+				displayName: 'Bucket',
+				cellClass: 'text-center',
+				headerCellClass: 'text-center'
+			},
+			{
+				name: 'frequency',
+				displayName: 'Frequency',
+				cellClass: 'text-center',
+				headerCellClass: 'text-center'
+		    }
+		]
+		$scope.gridOptionsHitogram.data=$scope.originalDataHistogram//$scope.getResults($scope.originalDataHistogram);
+	}
+
+	$scope.calculateHistrogram=function(row){
+		$scope.histogramDetail=row.colDef;
+		$scope.isShowDataGrid=false;
+		$scope.isShowChart=false;
+		console.log(row);
+		$('#histogamModel').modal({
+			backdrop: 'static',
+			keyboard: false
+		});
+		$scope.datacol=null;
+		$scope.isHistogramInprogess=true;
+		$scope.isHistogramError=false;
+		MetadataDatapodSerivce.getAttrHistogram(row.colDef.uuid,row.colDef.version,'datapod',row.colDef.attributeId).then(function (response) { onSuccessGetAttrHistogram(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetAttrHistogram = function (response) {
+			console.log(response);
+			$scope.isShowDataGrid=false;
+			$scope.isShowChart=true;
+			if(row.colDef.attrType !="string"){
+				ConvertTwoDisit(response, 'bucket');
+			}
+			$scope.isHistogramInprogess=false;
+			$scope.isHistogramError=false;
+			$scope.datacol={};
+			if(response.length >=20){
+				$scope.datacol.datapoints=response.slice(0,20);
+
+			}else{
+				$scope.datacol.datapoints=response;
+			}
+			$scope.originalDataHistogram=response;
+			var dataColumn={}
+			dataColumn.id="frequency";
+			dataColumn.name="frequency"
+			dataColumn.type="bar"
+			dataColumn.color="#D8A2DE";
+			$scope.datacol.datacolumns=[];
+			$scope.datacol.datacolumns[0]=dataColumn;
+			var datax={};
+			datax.id ="bucket";
+			$scope.datacol.datax=datax;
+			
+		}
+		var onError =function(){
+			$scope.isHistogramInprogess=false;
+			$scope.isHistogramError=true;
+		}
+	}
+
 	$scope.showSampleTable = function (data) {
+		if($scope.isDataInpogress){
+			return false;
+		};
 		$scope.isDataError = false;
 		$scope.isShowSimpleData = true
 		$scope.isDataInpogress = true
@@ -614,17 +770,24 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			$scope.isDataInpogress = false;
 			$scope.tableclass = "";
 			$scope.spinner = false
+			console.log(data.attributes)
 			for (var j = 0; j <data.attributes.length; j++) {
 				var attribute = {};
 				attribute.name =data.attributes[j].name;
+				attribute.dname =data.name;
+				attribute.uuid=data.uuid;
+				attribute.version=data.version;
+				attribute.attributeId=data.attributes[j].attributeId;
+                attribute.headerCellTemplate='views/datapod-sample-header-template.html'
 				attribute.displayName =data.attributes[j].dispName;
-				attribute.width = attribute.displayName.split('').length + 2 + "%" // Math.floor(Math.random() * (120 - 50 + 1)) + 150
+				attribute.attrType =data.attributes[j].type;
+				attribute.width = attribute.displayName.split('').length + 5 + "%" // Math.floor(Math.random() * (120 - 50 + 1)) + 150
 				$scope.gridOptions.columnDefs.push(attribute)
 			}
 			$scope.counter = 0;
 			$scope.originalData = response;
 			if ($scope.originalData.length > 0) {
-				$scope.getResults($scope.originalData);
+				$scope.gridOptions.data=$scope.getResults($scope.originalData);
 			}
 			$scope.spinner = false;
 
@@ -640,19 +803,25 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	}
 
 	
-
+	$scope.ondrop = function(e) {
+		console.log(e);
+		$scope.myform.$dirty=true;
+	}
 	$scope.selectPage = function (pageNo) {
 		$scope.pagination.currentPage = pageNo;
 	};
 
 	$scope.onPerPageChange = function () {
 		$scope.pagination.currentPage = 1;
-		$scope.getResults($scope.originalData)
+		$scope.gridOptions.data=$scope.getResults($scope.originalData)
 	}
 
 	$scope.pageChanged = function () {
-		$scope.getResults($scope.originalData)
+		$scope.gridOptions.data=$scope.getResults($scope.originalData)
 	};
+	$scope.pageChangedHistogram=function(){
+		$scope.gridOptionsHitogram.data=$scope.getResults($scope.originalDataHistogram);
+	}
 
 	$scope.getResults = function (params) {
 		$scope.pagination.totalItems = params.length;
@@ -669,13 +838,14 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		}
 		var limit = ($scope.pagination.pageSize * $scope.pagination.currentPage);
 		var offset = (($scope.pagination.currentPage - 1) * $scope.pagination.pageSize)
-		$scope.gridOptions.data = params.slice(offset, limit);
+	//	$scope.gridOptions.data = params.slice(offset, limit);
+		return params.slice(offset, limit);
 		console.log($scope.gridOptions.data)
 	}
 
 	$scope.refreshData = function () {
 		var data = $filter('filter')($scope.originalData, $scope.searchtext, undefined);
-		$scope.getResults(data);
+		$scope.gridOptions.data=$scope.getResults(data);
 	};
 	$scope.refreshCompareMetaData = function (searchtext) {
 		$scope.gridOptionsCompareMetaData.data = $filter('filter')($scope.originalCompareMetaData,searchtext, undefined);
@@ -686,6 +856,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		if($scope.isShowCompareMetaData){
 			return false
 		}
+		$scope.gridOptionsCompareMetaData.superColDefs[0].displayName=$scope.selectSourceType.charAt(0).toUpperCase() + $scope.selectSourceType.slice(1);;
 		$scope.isShowCompareMetaData=true;
 		$scope.showFrom = false;
 		$scope.isShowSimpleData = false
@@ -767,6 +938,8 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		$scope.isDependencyShow = true;
 		$scope.isSimpleRecord = true;
 		$scope.mode = $stateParams.mode;
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
 		MetadataDatapodSerivce.getAllVersionByUuid($stateParams.id, 'datapod').then(function (response) { onSuccessGetAllVersionByUuid(response.data) });
 		var onSuccessGetAllVersionByUuid = function (response) {
 			for (var i = 0; i < response.length; i++) {
@@ -775,8 +948,10 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 				$scope.datapod.versions[i] = datapodversion;
 			}
 		}
-		MetadataDatapodSerivce.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'datapod').then(function (response) { onSuccessGetLatestByUuid(response.data) });
+		MetadataDatapodSerivce.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'datapod')
+			.then(function (response) { onSuccessGetLatestByUuid(response.data)},function (response) { onError(response.data)});
 		var onSuccessGetLatestByUuid = function (response) {
+			$scope.isEditInprogess=false;
 			var defaultversion = {};
 			$scope.datapoddata = response.datapodata
 			var tags = [];
@@ -806,16 +981,28 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 					$scope.selectDataSource = selectDataSource
 				}
 			}
-		}
+		};
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		};
 	} /*End If*/
+	else{
+		$scope.datapoddata={};
+		$scope.datapoddata.locked="N";
+	}
 
 
 	/* Start selectVersion*/
 	$scope.selectVersion = function () {
 		$scope.myform.$dirty = false;
-		MetadataDatapodSerivce.getOneByUuidAndVersion($scope.datapod.defaultVersion.uuid, $scope.datapod.defaultVersion.version, 'datapod').then(function (response) { onSuccess(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		MetadataDatapodSerivce.getOneByUuidAndVersion($scope.datapod.defaultVersion.uuid, $scope.datapod.defaultVersion.version, 'datapod')
+			.then(function (response) { onSuccess(response.data) });
 		var onSuccess = function (response) {
 			var defaultversion = {};
+			$scope.isEditInprogess=false;
 			$scope.datapoddata = response.datapodata
 			$scope.gridOptionsDatapod.data = $scope.datapoddata.attributes;
 			$scope.attributetable = response.attributes
@@ -844,7 +1031,11 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 					$scope.tags = tags;
 				}
 			}
-		}
+		};
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		};
 	}/* End selectVersion*/
 
 	$scope.okdatapodsave = function () {
@@ -881,6 +1072,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 
 		datapodJson.tags = tagArray
 		datapodJson.active = $scope.datapoddata.active;
+		datapodJson.locked = $scope.datapoddata.locked;
 		datapodJson.published = $scope.datapoddata.published;
 		datapodJson.cache = $scope.datapoddata.cache;
 		var datasource = {};
@@ -891,9 +1083,10 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		datapodJson.datasource = datasource;
 		var attributesarray = [];
 		var count = 0;
-		for (var datapodattr = 0; datapodattr < $scope.gridOptionsDatapod.data.length; datapodattr++) {
+		// for (var datapodattr = 0; datapodattr < $scope.gridOptionsDatapod.data.length; datapodattr++) {
+			for (var datapodattr = 0; datapodattr < $scope.attributetable.length; datapodattr++) {
 			var attributes = {};
-			attributes.attributeId = datapodattr
+			/*attributes.attributeId = datapodattr
 			attributes.name = $scope.gridOptionsDatapod.data[datapodattr].name;
 			attributes.type = $scope.gridOptionsDatapod.data[datapodattr].type;
 			attributes.desc = $scope.gridOptionsDatapod.data[datapodattr].desc;
@@ -909,6 +1102,29 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			}
 			if ($scope.gridOptionsDatapod.data[datapodattr].partition == "Y") {
 				attributes.partition = $scope.gridOptionsDatapod.data[datapodattr].partition;
+			}
+			else {
+				attributes.partition = "N"
+			}*/
+            
+			attributes.attributeId = $scope.attributetable[datapodattr].attributeId
+			attributes.displaySeq=datapodattr;
+			attributes.name = $scope.attributetable[datapodattr].name;
+			attributes.type = $scope.attributetable[datapodattr].type;
+			attributes.desc = $scope.attributetable[datapodattr].desc;
+			attributes.dispName = $scope.attributetable[datapodattr].dispName;
+			attributes.active = $scope.attributetable[datapodattr].active;
+			attributes.length = $scope.attributetable[datapodattr].length;
+			attributes.attrUnitType = $scope.attributetable[datapodattr].attrUnitType;
+			if ($scope.attributetable[datapodattr].key == "Y") {
+				attributes.key = count;
+				count = count + 1;
+			}
+			else {
+				attributes.key = ""
+			}
+			if ($scope.attributetable[datapodattr].partition == "Y") {
+				attributes.partition = $scope.attributetable[datapodattr].partition;
 			}
 			else {
 				attributes.partition = "N"
@@ -937,9 +1153,13 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 
 
 	$scope.addRow = function () {
+		if($scope.attributetable ==null){
+			$scope.attributetable=[];
+		}
 		var attributejson = {}
-		attributejson.attributeId = $scope.gridOptionsDatapod.data.length//$scope.attributetable.length;
-		$scope.gridOptionsDatapod.data.push(attributejson);
+		attributejson.attributeId = $scope.attributetable.length//$scope.attributetable.length;
+		//$scope.gridOptionsDatapod.data.push(attributejson);
+		$scope.attributetable.push(attributejson)
 	}
 
 	$scope.selectAllRow = function () {
@@ -949,9 +1169,33 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	}
 	$scope.removeRow = function () {
 		$scope.iSSubmitEnable = true;
-		angular.forEach($scope.gridApi.selection.getSelectedRows(), function (data, index) {
-			$scope.gridOptionsDatapod.data.splice($scope.gridOptionsDatapod.data.lastIndexOf(data), 1);
+		// angular.forEach($scope.gridApi.selection.getSelectedRows(), function (data, index) {
+		// 	$scope.gridOptionsDatapod.data.splice($scope.gridOptionsDatapod.data.lastIndexOf(data), 1);
+		// });
+		var newDataList = [];
+		$scope.selectallattribute = false;
+		angular.forEach($scope.attributetable, function (selected) {
+			if (!selected.selected) {
+				newDataList.push(selected);
+			}
+			$scope.attrTableSelectedItem=[];
 		});
+		$scope.attributetable = newDataList;
+	}
+
+	$scope.onAttrRowDown=function(index){
+		var rowTempIndex=$scope.attributetable[index];
+        var rowTempIndexPlus=$scope.attributetable[index+1];
+		$scope.attributetable[index]=rowTempIndexPlus;
+		$scope.attributetable[index+1]=rowTempIndex;
+
+	}
+	
+	$scope.onAttrRowUp=function(index){
+		var rowTempIndex=$scope.attributetable[index];
+        var rowTempIndexMines=$scope.attributetable[index-1];
+		$scope.attributetable[index]=rowTempIndexMines;
+		$scope.attributetable[index-1]=rowTempIndex;
 	}
 	$scope.downloadFileByDatastore = function (data) {
 		$scope.download.uuid = data.uuid;
@@ -1012,6 +1256,37 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			console.log(data);
 			$('#downloadSample').modal("hide");
 		});
+	}
+
+	$scope.attrTableSelectedItem=[];
+	$scope.onChangeAttrRow=function(index,status){
+		if(status ==true){
+			$scope.attrTableSelectedItem.push(index);
+		}
+		else{
+			let tempIndex=$scope.attrTableSelectedItem.indexOf(index);
+
+			if(tempIndex !=-1){
+				$scope.attrTableSelectedItem.splice(tempIndex, 1);
+
+			}
+		}	
+	}
+	$scope.autoMove=function(index){
+		var tempAtrr=$scope.attributetable[$scope.attrTableSelectedItem[0]];
+		$scope.attributetable.splice($scope.attrTableSelectedItem[0],1);
+		$scope.attributetable.splice(index,0,tempAtrr);
+		$scope.attrTableSelectedItem=[];
+		$scope.attributetable[index].selected=false;
+	
+	}
+
+	$scope.autoMoveTo=function(index){
+		if(index <= $scope.attributetable.length){
+			$scope.autoMove(index-1,'mapAttr');
+			$scope.moveTo=null;
+			$(".actions").removeClass("open");
+		}
 	}
 })/* End MetadataDatapodController*/
 

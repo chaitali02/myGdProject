@@ -11,28 +11,11 @@
 package com.inferyx.framework.parser;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Component;
 
-import com.inferyx.framework.common.MetadataUtil;
-import com.inferyx.framework.factory.ExecutorFactory;
-import com.inferyx.framework.operator.DQOperator;
-import com.inferyx.framework.service.CommonServiceImpl;
-
 @Component
-public class DataQualParser {
-	
-	@Autowired
-	protected MetadataUtil daoRegister;
-	@Autowired
-	protected DQOperator dqOperator;
-	/*@Autowired
-	private HiveContext hiveContext;*/
-	@Autowired
-	private ExecutorFactory execFactory; 
-	@Autowired
-	private CommonServiceImpl<?> commonServiceImpl;
-	
+public class DataQualParser {	
 	static final Logger logger = Logger.getLogger(DataQualParser.class);
 	
 	/*public void parseDQ(String dqUUID, String dqVersion, Set<MetaIdentifier> usedRefKeySet) throws Exception {

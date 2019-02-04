@@ -20,11 +20,9 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.inferyx.framework.common.MetadataUtil;
-import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.DataSet;
-import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
+import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.FilterInfo;
 import com.inferyx.framework.domain.MetaIdentifier;
@@ -39,9 +37,6 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
  
 @Component
 public class RelationOperator {
-	
-	@Autowired
-	protected MetadataUtil daoRegister;
 	@Autowired
 	protected CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
@@ -71,8 +66,9 @@ public class RelationOperator {
 		String table = "";
 		String dsVersion = null;
 		if (relation.getDependsOn().getRef().getType() == MetaType.datapod) {
-			fromDatapod = (Datapod) daoRegister
-					.getRefObject(TaskParser.populateRefVersion(relation.getDependsOn().getRef(), refKeyMap));
+//			fromDatapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(relation.getDependsOn().getRef(), refKeyMap));
+			MetaIdentifier ref = TaskParser.populateRefVersion(relation.getDependsOn().getRef(), refKeyMap);
+			fromDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 			datapodTracker.put(fromDatapod.getUuid(), new Short((short) 1));
 			MetaIdentifier fromDatapodRef = new MetaIdentifier(MetaType.datapod, fromDatapod.getUuid(), fromDatapod.getVersion());
 			usedRefKeySet.add(fromDatapodRef);
@@ -119,7 +115,9 @@ public class RelationOperator {
 			String rightTable = null;
 			String rightDsVersion = null;
 			if (relInfoList.get(i).getJoin().getRef().getType() == MetaType.datapod) {
-				datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(relInfoList.get(i).getJoin().getRef(), refKeyMap));
+//				datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(relInfoList.get(i).getJoin().getRef(), refKeyMap));
+				MetaIdentifier ref = TaskParser.populateRefVersion(relInfoList.get(i).getJoin().getRef(), refKeyMap);
+				datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 				if (!datapodTracker.containsKey(datapod.getUuid())) {
 					datapodTracker.put(datapod.getUuid(), new Short((short) 1));
 				} else {
@@ -164,6 +162,8 @@ public class RelationOperator {
 					rightTable = populateVerUnion(tableArr);
 				}
 			}
+			
+			Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(relation);
 			if (relation.getDependsOn().getRef().getType() == MetaType.datapod) {
 				MetaIdentifier joinMI = relInfoList.get(i).getJoin().getRef();
 				if(joinMI.getType().equals(MetaType.dataset)) {
@@ -177,7 +177,7 @@ public class RelationOperator {
 						builder.append(rightDataset.getName()).append("_").append(datapodTracker.get(rightDataset.getUuid()));
 					}
 					if (joinKey != null && joinKey.size() > 0) {
-						builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relInfoList.get(i).getJoin(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, null));
+						builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relInfoList.get(i).getJoin(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, null, mapSourceDS));
 					}
 				} else {
 					builder.append(joinType + " JOIN ").append(" ").append(rightTable).append("  ");
@@ -187,7 +187,7 @@ public class RelationOperator {
 						builder.append(datapod.getName()).append("_").append(datapodTracker.get(datapod.getUuid()));
 					}
 					if (joinKey != null && joinKey.size() > 0) {
-						builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relation.getDependsOn(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, null));
+						builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relation.getDependsOn(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, null, mapSourceDS));
 					}
 				}
 			} else if (relation.getDependsOn().getRef().getType() == MetaType.dataset) {
@@ -203,7 +203,7 @@ public class RelationOperator {
 						builder.append(rightDataset.getName()).append("_").append(datapodTracker.get(rightDataset.getUuid()));
 					}
 					if (joinKey != null && joinKey.size() > 0) {
-						builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relInfoList.get(i).getJoin(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, null));
+						builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relInfoList.get(i).getJoin(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, null, mapSourceDS));
 					}
 				} else if(joinMI.getType().equals(MetaType.datapod)) {
 					datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(relInfoList.get(i).getJoin().getRef().getUuid()
@@ -217,14 +217,14 @@ public class RelationOperator {
 							builder.append(datapod.getName()).append("_").append(datapodTracker.get(datapod.getUuid()));
 						}
 						if (joinKey != null && joinKey.size() > 0) {
-							builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relInfoList.get(i).getJoin(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, null));
+							builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey,relInfoList.get(i).getJoin(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, null, mapSourceDS));
 						}
 					} else {
 						builder.append(joinType + " JOIN ").append(" ");
 						builder.append(dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode)).append(" ").append(datapod.getName()).append(" ");
 
 						if (joinKey != null && joinKey.size() > 0) {
-							builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey, relInfoList.get(i).getJoin(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, null));
+							builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey, relInfoList.get(i).getJoin(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, null, mapSourceDS));
 						}
 					}
 				}
@@ -236,22 +236,23 @@ public class RelationOperator {
 		}
 		return builder.toString();
 	}
-	
-	/**
-	 * Get latest datastore for a combination of datapod uuid and dimension list 
-	 * @param metaUuid
-	 * @param dimensionList
-	 * @return
-	 */
-	private DataStore getDatastoreByDim(String metaUuid, List<AttributeRefHolder> dimensionList) {
-		if (StringUtils.isBlank(metaUuid) || dimensionList == null || dimensionList.isEmpty()) {
-			return null;
-		}
-		// Fetch dataStore list by dimensions
-		List<DataStore> dataStoreList = dataStoreServiceImpl.getDataStoreByDim(metaUuid, dimensionList);
-		// Return latest dataStorS for the matching dimensions
-		return dataStoreList.get(0);
-	}
+
+	/********************** UNUSED **********************/
+//	/**
+//	 * Get latest datastore for a combination of datapod uuid and dimension list 
+//	 * @param metaUuid
+//	 * @param dimensionList
+//	 * @return
+//	 */
+//	private DataStore getDatastoreByDim(String metaUuid, List<AttributeRefHolder> dimensionList) {
+//		if (StringUtils.isBlank(metaUuid) || dimensionList == null || dimensionList.isEmpty()) {
+//			return null;
+//		}
+//		// Fetch dataStore list by dimensions
+//		List<DataStore> dataStoreList = dataStoreServiceImpl.getDataStoreByDim(metaUuid, dimensionList);
+//		// Return latest dataStorS for the matching dimensions
+//		return dataStoreList.get(0);
+//	}
 	
 	/** 
 	 * Utility to create SQL to union all data from all versions of a datapod if multiple versions are chosen from vizpod
@@ -277,4 +278,17 @@ public class RelationOperator {
 		return versionUnion.toString();
 	}
 	
+	public String generateSampleDataSql(Relation relation
+			, java.util.Map<String, MetaIdentifier> refKeyMap
+			, HashMap<String, String> otherParams
+			, ExecParams execParams
+			, Set<MetaIdentifier> usedRefKeySet
+			, int limit
+			, RunMode runMode) throws Exception {
+		StringBuilder sampleDatSql = new StringBuilder("SELECT * FROM "); 
+		String relSql = generateSql(relation, refKeyMap, otherParams, execParams, usedRefKeySet, runMode);
+		sampleDatSql.append(relSql);
+		sampleDatSql.append(" LIMIT ").append(limit);
+		return sampleDatSql.toString();
+	}
 }

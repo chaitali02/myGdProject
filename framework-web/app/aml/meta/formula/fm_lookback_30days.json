@@ -1,0 +1,74 @@
+{
+	"dependsOn" : {
+		"ref" : {
+			"type" : "paramlist",
+			"uuid" : "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z"
+		}
+	},
+	"formulaInfo" : [
+		{
+			"ref" : {
+				"type" : "function",
+				"uuid" : "9e3e2936-02fb-11e7-93ae-92361f002695"
+			}
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "("
+		},
+		{
+			"ref" : {
+				"type" : "paramlist",
+				"uuid" : "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z"
+			},
+			"attributeId" : 0
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : ","
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "30"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : ")"
+		}
+	],
+	"formulaType" : "custom",
+	"uuid" : "70665ca3-143c-4f4b-8a35-7a5abac8ed5e",
+	"version" : "1542493338",
+	"name" : "fm_lookback_30days",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2018-11-17T22:22:18Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+				"version" : "1521430822",
+				"name" : "Anti Money Laundering"
+			}
+		}
+	]
+}

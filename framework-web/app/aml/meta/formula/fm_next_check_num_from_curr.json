@@ -1,0 +1,56 @@
+{
+	"dependsOn" : {
+		"ref" : {
+			"type" : "dataset",
+			"uuid" : "c4b908e1-8a41-463e-b09f-dd17f8c9e571"
+		}
+	},
+	"formulaInfo" : [
+		{
+			"ref" : {
+				"type" : "dataset",
+				"uuid" : "c4b908e1-8a41-463e-b09f-dd17f8c9e571"
+			},
+			"attributeId" : 11
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "+"
+		},
+		{
+			"ref" : {
+				"type" : "simple"
+			},
+			"value" : "1"
+		}
+	],
+	"formulaType" : "simple",
+	"uuid" : "a26cd4e2-6b58-468e-803c-66244aa9a320",
+	"version" : "1542593425",
+	"name" : "fm_next_check_num_from_curr",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		}
+	},
+	"createdOn" : ISODate("2018-11-19T02:10:25Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+				"version" : "1521430822",
+				"name" : "Anti Money Laundering"
+			}
+		}
+	]
+}

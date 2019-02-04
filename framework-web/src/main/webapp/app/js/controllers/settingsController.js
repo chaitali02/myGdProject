@@ -1,17 +1,22 @@
 AdminModule = angular.module('AdminModule');
-
-
 var notify = {
   type: 'success',
   title: 'Success',
   timeout: 3000 //time in ms
 };
+
 AdminModule.controller('settingsController', function (cacheService,$scope,$stateParams,$window, SettingsService,dagMetaDataService,CommonService,FileSaver,Blob,$filter,$state,privilegeSvc) {
 
 
   $scope.activeForm = 0;
   $scope.go = function (index) {
-    $scope.tabIndex = index
+    $scope.tabIndex = index;
+    if(index ==5){
+      $scope.getProcessStatus();
+    }
+    if(index == 3){
+      $scope.refresh();
+    }
   }
   if (typeof $stateParams.index != "undefined") {
   $scope.activeForm=$stateParams.index;
@@ -160,22 +165,157 @@ AdminModule.controller('settingsController', function (cacheService,$scope,$stat
   //***********************************End General,Rule,Meta Engin*********************************
 
   //***********************************Start Graph Engin*******************************************
+
+  $scope.searchForm = {};
+  $scope.tz = localStorage.serverTz;
+  var matches = $scope.tz.match(/\b(\w)/g);
+  $scope.timezone = matches.join('');
+  $scope.autoRefreshCounter = 05;
+  $scope.autoRefreshResult = false;
+  $scope.path = dagMetaDataService.statusDefs;
+   
+  $scope.getGridStyle = function () {
+      var style = {
+          'margin-top': '10px',
+          'margin-bottom': '10px',
+      }
+      if ($scope.filteredRows && $scope.filteredRows.length > 0) {
+          style['height'] = (($scope.filteredRows.length < 10 ? $scope.filteredRows.length * 40 : 400) + 40) + 'px';
+      } else {
+          style['height'] = "100px"
+      }
+      return style;
+  }
+  $scope.gridOptionsGraphEngin = {};
+  $scope.gridOptionsGraphEngin = dagMetaDataService.gridOptionsResultDefault;
+  $scope.gridOptionsGraphEngin.columnDefs.push( {
+    displayName: 'Status',
+    name: 'status',
+    cellClass: 'text-center',
+    headerCellClass: 'text-center',
+    maxWidth: 100,
+    cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div class="label-sm label-success" style=" width: 88%;font-size: 13px;padding: 2px;color: white;margin: 0 auto;font-weight: 300;background-color:{{grid.appScope.path[row.entity.status].color}} !important" ng-style="">{{row.entity.status}}</div></div>'
+  });
+  
+  $scope.gridOptionsGraphEngin.onRegisterApi = function (gridApi) {
+      $scope.gridApi = gridApi;
+      $scope.filteredRows = $scope.gridApi.core.getVisibleRows($scope.gridApi.grid);
+  };
+  
+  $scope.refreshDataGraphEngin = function (searchtext) {
+      $scope.gridOptionsGraphEngin.data = $filter('filter')($scope.originalDataGraphEngin,searchtext, undefined);
+  };
+   
+  $scope.refresh = function () {
+    $scope.searchForm.execname = "";
+    $scope.allExecName = [];
+    $scope.searchForm.username = "";
+    $scope.searchForm.tags = [];
+    $scope.searchForm.status = "";
+    $scope.searchForm.startdate = null;
+    $scope.searchForm.enddate = null;
+    $scope.allStatus = [{
+        "caption": "Not Started",
+        "name": "NotStarted"
+    },
+    {
+        "caption": "In Progress",
+        "name": "InProgress"
+    },
+    {
+        "caption": "Completed",
+        "name": "Completed"
+    },
+    {
+        "caption": "Failed",
+        "name": "Failed"
+    }
+    ];
+    $scope.getAllLatest();
+    $scope.getBaseEntityStatusByCriteria();
+  };
+  
+  var myVar;
+  $scope.autoRefreshOnChange = function (autorefresh) {
+    $scope.autorefresh=autorefresh;
+    if ($scope.autorefresh) {
+        myVar = setInterval(function () {
+            $scope.getBaseEntityStatusByCriteria();
+        }, $scope.autoRefreshCounter + "000");
+    }
+    else {
+        clearInterval(myVar);
+    }
+  }
+
+ 
+  $scope.$on('$destroy', function () {
+      // Make sure that the interval is destroyed too
+      clearInterval(myVar);
+      
+  });
+ 
+  $scope.getAllLatest = function () {
+    CommonService.getAllLatest("user").then(function (response) { onSuccessGetAllLatestExec(response.data) });
+    var onSuccessGetAllLatestExec = function (response) {
+        $scope.allUser = response;
+    }
+  }
+
+  $scope.getBaseEntityStatusByCriteria = function () {
+    var startdate = ""
+    if ($scope.searchForm.startdate != null) {
+        startdate = $filter('date')($scope.searchForm.startdate, "EEE MMM dd HH:mm:ss yyyy", 'UTC');
+        startdate = startdate + " UTC"
+    }
+    var enddate = "";
+    if ($scope.searchForm.enddate != null) {
+        enddate = $filter('date')($scope.searchForm.enddate, "EEE MMM dd HH:mm:ss yyyy", 'UTC');
+        enddate = enddate + " UTC";
+    }
+
+    var tags = [];
+    if ($scope.searchForm.tags) {
+        for (i = 0; i < $scope.searchForm.tags.length; i++) {
+            tags[i] = $scope.searchForm.tags[i].text;
+        }
+    }
+    tags = tags.toString();
+    CommonService.getBaseEntityStatusByCriteria(dagMetaDataService.elementDefs['processexec'].execType, $scope.searchForm.execname || '', $scope.searchForm.username || "", startdate, enddate, tags, $scope.searchForm.active || '', $scope.searchForm.published || '', $scope.searchForm.status || '').then(function (response) { onSuccess(response.data) }, function error() {
+        $scope.loading = false;
+    });
+    var onSuccess = function (response) {
+        // console.log(response);
+        $scope.gridOptionsGraphEngin.data = response;
+        $scope.originalDataGraphEngin = response;
+    }
+  }
+  
+  
   $scope.goToPriviousTab = function () {
     $scope.activeForm = 2
   }
   
   $scope.callBulidGraph = function () {
-    $scope.isDataLodingBG = true;
+    //$scope.isDataLodingBG = true;
+    $scope.autorefresh=true;
+    $scope.autoRefreshOnChange ($scope.autorefresh);
     SettingsService.buildGraph().then(function (response) { onSuccess(response.data) });
     var onSuccess = function (response) {
+      $scope.autorefresh=false;
       notify.type = 'success',
-        notify.title = 'Success',
-        notify.content = 'Graph Build Successfully'
+      notify.title = 'Success',
+      notify.content = 'Graph Refreshed Successfully'
       $scope.$emit('notify', notify);
-      $scope.isDataLodingBG = false;
+      //$scope.isDataLodingBG = false;
+      $scope.getBaseEntityStatusByCriteria();
     }
   }
+
+
 //***************************************End Graph Engin************************************************
+
+
 
 //***************************************Start Application Engin****************************************
 $scope.isUpload=-1;
@@ -369,11 +509,54 @@ $scope.okClone = function () {
 }
 $scope.gridOptions.data = [];
 $scope.selectData=function(data){
-  $scope.gridOptions.data = data.data;
-  $scope.originalData=$scope.gridOptions.data 
+  //$scope.gridOptions.data = data.data;
+  //$scope.originalData=$scope.gridOptions.data 
 }
 
 //***************************************End Application Engin****************************************
+
+//***************************************Start Prediction Engin****************************************
+$scope.getProcessStatus=function(){
+  $scope.isCheckingStatus=true;
+  $scope.serverStatus="Checking Status"
+  SettingsService.getProcessStatus().then(function (response) {onSuccessGetProcessStatus(response.data)},function(response){ OnError(response)});
+  var onSuccessGetProcessStatus= function (response) {
+    $scope.isCheckingStatus=false;
+    $scope.serverStatus="Running"
+  }
+  var OnError=function(response){
+    $scope.isCheckingStatus=false;
+    $scope.serverStatus="Not Running"
+  }
+}
+
+$scope.startServer=function(){
+  $scope.isInprogessStatus=true;
+  SettingsService.startProcess().then(function (response) {onSuccessGetStartProcess(response.data)},function(response){ OnError(response)});
+  var onSuccessGetStartProcess= function (response) {
+    $scope.isInprogessStatus=false;
+    $scope.serverStatus="Checking Status"
+    $scope.getProcessStatus();
+  }
+  var OnError=function(response){
+    $scope.isInprogessStatus=false;
+    $scope.getProcessStatus();
+  }
+}
+
+  $scope.stopeServer=function(){
+    $scope.isInprogessStatus=true;
+    SettingsService.stopProcess().then(function (response) {onSuccessGetStopProcess(response.data)},function(response){ OnError(response)});
+    var onSuccessGetStopProcess= function (response) {
+      $scope.isInprogessStatus=false;
+      $scope.getProcessStatus();
+    }
+    var OnError=function(response){
+      $scope.isInprogessStatus=false;
+      $scope.getProcessStatus();
+  }
+}
+//***************************************End Prediction Engin******************************************
 
 
 });

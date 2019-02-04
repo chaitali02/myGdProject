@@ -1,10 +1,10 @@
-DROP TABLE IF EXISTS INDUSTRY_FACTOR_TRANSPOSE; 
+drop table if exists industry_factor_transpose; 
 
-CREATE TABLE INDUSTRY_FACTOR_TRANSPOSE 
+create table industry_factor_transpose 
   ( 
-     ITERATION_ID   INTEGER(50), 
-     REPORTING_DATE VARCHAR(50), 
-     FACTOR         VARCHAR(50), 
-     FACTOR_VALUE   DECIMAL(10, 2), 
-     VERSION        INTEGER(50) 
+     iteration_id   integer(50), 
+     reporting_date varchar(50), 
+     factor         varchar(50), 
+     factor_value   decimal(10, 2), 
+     version        integer(50) 
   );

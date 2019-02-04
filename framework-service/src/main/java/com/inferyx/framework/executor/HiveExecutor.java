@@ -36,9 +36,11 @@ import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.sql.AnalysisException;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
+import org.apache.spark.sql.types.StructType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.connector.ConnectionHolder;
@@ -64,7 +66,9 @@ import com.inferyx.framework.domain.ResultType;
 import com.inferyx.framework.domain.RowObj;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
+import com.inferyx.framework.domain.TrainResult;
 import com.inferyx.framework.enums.Compare;
+import com.inferyx.framework.enums.EncodingType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
@@ -343,14 +347,14 @@ public class HiveExecutor implements IExecutor{
 
 	@Override
 	public ResultSetHolder predict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
-			String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException,
+			String clientContext, Map<String, EncodingType> encodingDetails) throws IOException, IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName,
-			double trainPercent, double valPercent, String tableName, String clientContext , Object algoclass, Map<String, String> trainOtherParam) throws IOException {
+			double trainPercent, double valPercent, String tableName, String clientContext , Object algoclass, Map<String, String> trainOtherParam, TrainResult trainResult, String testSetPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql, Map<String, EncodingType> encodingDetails, String saveTrainingSet, String trainingSetPath, Datapod testLocationDP, Datasource testLocationDS, String testLocationTableName, String testLFilePathUrl, Datapod trainLocationDP, Datasource trainLocationDS, String trainLocationTableName, String trainFilePathUrl) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -433,7 +437,7 @@ public class HiveExecutor implements IExecutor{
 	 * @see com.inferyx.framework.executor.IExecutor#renameDfColumnName(java.lang.String, java.util.Map, java.lang.String)
 	 */
 	@Override
-	public String renameDfColumnName(String tableName, Map<String, String> mappingList, String clientContext)
+	public String renameDfColumnName(String sql, String tableName, Map<String, String> mappingList, String clientContext)
 			throws IOException {
 		// TODO Auto-generated method stub
 		return null;
@@ -527,14 +531,8 @@ public class HiveExecutor implements IExecutor{
 
 	@Override
 	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName,
-			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam)
+			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam, TrainResult trainResult, String testSetPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql, Map<String, EncodingType> enodingDetails, String saveTrainingSet, String trainingSetPath, Datapod testLocationDP, Datasource testLocationDS, String testLocationTableName, String testLFilePathUrl, Datapod trainLocationDP, Datasource trainLocationDS, String trainLocationTableName, String trainLocationFilePathUrl)
 			throws IOException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<String, Object> summary(Object trndModel, List<String> summaryMethods, String clientContext) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -571,7 +569,7 @@ public class HiveExecutor implements IExecutor{
 					sourceTableName = sourceTableName.replaceAll(datasource.getDbname()+".", "");
 				}
 				IConnector connector = connectionFactory.getConnector(ExecContext.HIVE.toString());
-				ConnectionHolder connectionHolder = connector.getConnection();
+				ConnectionHolder connectionHolder = connector.getConnectionByDatasource(datasource);//getConnection();
 				Connection con = ((Statement) connectionHolder.getStmtObject()).getConnection();
 				
 				DatabaseMetaData dbMetaData = con.getMetaData();
@@ -740,5 +738,107 @@ public class HiveExecutor implements IExecutor{
 			String clientContext) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public PipelineModel trainDL(ExecParams execParams, String[] fieldArray, String label, String trainName,
+			double trainPercent, double valPercent, String tableName, String clientContext, Object algoClass,
+			Map<String, String> trainOtherParam) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Boolean saveDataframeAsCSV(String tableName, String saveFileName, String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Map<String, Object>> executeAndFetchByDatasource(String sql, Datasource datasource,
+			String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		List<Map<String, Object>> data = new ArrayList<>();
+		try {
+			ResultSetHolder rsHolder = executeSqlByDatasource(sql, datasource, clientContext);
+			ResultSet rsSorted = rsHolder.getResultSet();
+			ResultSetMetaData rsmd = rsSorted.getMetaData();
+			int numOfCols = rsmd.getColumnCount();
+			while(rsSorted.next()) {
+				Map<String, Object> object = new LinkedHashMap<String, Object>(numOfCols);
+				for(int i = 1; i<= numOfCols; i++) {
+					//System.out.println(rsmd.getColumnName(i).substring(rsmd.getColumnName(i).indexOf(".")+1) +"  "+ rsSorted.getObject(i).toString());
+					if(rsmd.getColumnName(i).contains("."))
+						object.put(rsmd.getColumnName(i).substring(rsmd.getColumnName(i).indexOf(".")+1), rsSorted.getObject(i));
+					else
+						object.put(rsmd.getColumnName(i), rsSorted.getObject(i));
+				}
+				data.add(object);
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+			throw new IOException("Failed to execute SQL query.");
+		}
+		return data;
+	}
+
+	@Override
+	public ResultSetHolder executeAndRegisterByDatasource(String sql, String tableName, Datasource datasource,
+			String clientContext) throws IOException {
+		return executeSqlByDatasource(sql, datasource, clientContext);
+	}
+
+	@Override
+	public ResultSetHolder persistDataframe(ResultSetHolder rsHolder, Datasource datasource, Datapod targetDatapod,
+			String saveMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException,
+			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		// TODO Auto-generated method stub
+		return sparkExecutor.persistDataframe(rsHolder, datasource, targetDatapod, saveMode);
+	}
+
+	@Override
+	public List<Map<String, Object>> fetchTrainOrTestSet(String location) throws IOException {
+		// TODO Auto-generated method stub
+		return sparkExecutor.fetchTrainOrTestSet(location);
+	}
+
+	@Override
+	public ResultSetHolder replaceNullValByDoubleValFromDF(ResultSetHolder rsHolder, String sql, Datasource datasource,
+			String tableName, boolean registerTempTable, String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object assembleDF(String[] fieldArray, ResultSetHolder rsHolder, String sql, String tempTableName,
+			Datasource datasource, boolean registerTempTable, String clientContext) throws IOException {
+		return sparkExecutor.assembleDF(fieldArray, rsHolder, sql, tempTableName, datasource, registerTempTable, clientContext);
+	}
+
+	@Override
+	public ResultSetHolder createAndRegister(List<Row> data, StructType structType, String tableName,
+			String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return sparkExecutor.createAndRegister(data, structType, tableName, clientContext);
+	}
+
+	@Override
+	public Map<String, Object> summary(Object trndModel, String trainClass, List<String> summaryMethods, String clientContext)
+			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, ClassNotFoundException {
+		return sparkExecutor.summary(trndModel, trainClass, summaryMethods, clientContext);
+	}
+
+	@Override
+	public LinkedHashMap<String, Object> getImputeValue(ResultSetHolder rsHolder) throws Exception {		
+		return sparkExecutor.getImputeValue(rsHolder);
+	}
+
+	@Override
+	public ResultSetHolder applyAttrImputeValuesToData(ResultSetHolder rsHolder,
+			LinkedHashMap<String, Object> imputeAttributeNameWithValues, boolean registerTempTable,
+			String tempTableName) throws IOException {
+		// TODO Auto-generated method stub
+		return sparkExecutor.applyAttrImputeValuesToData(rsHolder, imputeAttributeNameWithValues, registerTempTable, tempTableName);
 	}
 }

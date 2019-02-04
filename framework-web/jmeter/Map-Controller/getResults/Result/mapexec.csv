@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testResults version="1.2">
-<httpSample t="1064" lt="1064" ts="1502199223595" s="true" lb="mapexec" rc="200" rm="OK" tn="getResults 4-1" dt="text" by="2759"/>
-<httpSample t="1665" lt="1664" ts="1502199224662" s="true" lb="mapexec" rc="200" rm="OK" tn="getResults 4-1" dt="text" by="2761"/>
-<httpSample t="643" lt="643" ts="1502199226329" s="true" lb="mapexec" rc="200" rm="OK" tn="getResults 4-1" dt="text" by="2760"/>
-<httpSample t="464" lt="463" ts="1502199226974" s="true" lb="mapexec" rc="200" rm="OK" tn="getResults 4-1" dt="text" by="2761"/>
-<httpSample t="595" lt="595" ts="1502199227440" s="true" lb="mapexec" rc="200" rm="OK" tn="getResults 4-1" dt="text" by="2759"/>
-
-</testResults>

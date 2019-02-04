@@ -14,7 +14,8 @@
   },
   "createdOn": "Sat Aug 11 16:33:37 EDT 2018",
   "tags": [],
-  "active": "Y",
+  "active" : "Y",
+  "locked" : "N",
   "published": "N",
   "appInfo": [
     {
@@ -38,7 +39,7 @@
     "value": null
   },
   "type": "bar-chart",
-  "limit": null,
+  "limit": -1,
   "keys": [
     {
       "ref": {

@@ -41,5 +41,7 @@ Copy PRODUCT_TYPE FROM '/user/hive/warehouse/framework/app/edw/data/csv/noheader
 
 Copy TRANSACTION FROM '/user/hive/warehouse/framework/app/edw/data/csv/noheader/transaction.csv' With csv delimiter ',';
 
+Copy TRANSACTION_TYPE FROM '/user/hive/warehouse/framework/app/edw/data/csv/noheader/transaction_type.csv' With csv delimiter ',';
+
 
 

@@ -22,14 +22,15 @@ import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
+import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Filter;
 import com.inferyx.framework.domain.FilterInfo;
+import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -43,7 +44,6 @@ import com.inferyx.framework.service.CommonServiceImpl;
  */
 @Component
 public class FilterOperator2 {
-	@Autowired protected MetadataUtil daoRegister;
 	@Autowired protected CommonServiceImpl<?> commonServiceImpl;
 	@Autowired protected JoinKeyOperator joinKeyOperator;
 	private final String COMMA = ", ";
@@ -55,8 +55,8 @@ public class FilterOperator2 {
 			, HashMap<String, String> otherParams
 			, Set<MetaIdentifier> usedRefKeySet
 			, Boolean isAggrAllowed
-			, Boolean isAggrReqd, RunMode runMode) throws Exception {
-		return generateSql(filterIdentifierList, refKeyMap, otherParams, usedRefKeySet, null, isAggrAllowed, isAggrReqd, runMode);
+			, Boolean isAggrReqd, RunMode runMode, Datasource mapSourceDS) throws Exception {
+		return generateSql(filterIdentifierList, refKeyMap, otherParams, usedRefKeySet, null, isAggrAllowed, isAggrReqd, runMode, mapSourceDS);
 	}
 	
 	public String generateSql(List<AttributeRefHolder> filterIdentifierList
@@ -65,7 +65,7 @@ public class FilterOperator2 {
 			, Set<MetaIdentifier> usedRefKeySet
 			, ExecParams execParams
 			, Boolean isAggrAllowed
-			, Boolean isAggrReqd, RunMode runMode) throws Exception {
+			, Boolean isAggrReqd, RunMode runMode, Datasource mapSourceDS) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		if (filterIdentifierList == null || filterIdentifierList.size() <= 0) {
 			return "";
@@ -81,7 +81,8 @@ public class FilterOperator2 {
 				filter = (Filter) commonServiceImpl.getOneByUuidAndVersion(filterKey.getUUID(), filterKey.getVersion(), MetaType.filter.toString());
 				MetaIdentifier filterRef = new MetaIdentifier(MetaType.filter, filter.getUuid(), filter.getVersion());
 				usedRefKeySet.add(filterRef);
-				String filterStr = joinKeyOperator.generateSql(filter.getFilterInfo(), filter.getDependsOn(), refKeyMap, otherParams, usedRefKeySet, execParams,isAggrAllowed, isAggrReqd, runMode);
+				
+				String filterStr = joinKeyOperator.generateSql(filter.getFilterInfo(), filter.getDependsOn(), refKeyMap, otherParams, usedRefKeySet, execParams,isAggrAllowed, isAggrReqd, runMode, mapSourceDS);
 				if (StringUtils.isBlank(filterStr)) {
 					builder.append(ConstantsUtil.BLANK);
 				} /*else if (isAggrReqd) {
@@ -104,6 +105,13 @@ public class FilterOperator2 {
 				MetaIdentifier dataSetRef = new MetaIdentifier(MetaType.dataset, dataSet.getUuid(), dataSet.getVersion());
 				usedRefKeySet.add(dataSetRef);
 				break;
+			case formula:
+				MetaIdentifier formulaRef = filterIdentifier.getRef();
+				Formula formula = (Formula) commonServiceImpl.getOneByUuidAndVersion(formulaRef.getUuid(), formulaRef.getVersion(), formulaRef.getType().toString());
+				builder.append(" AND (").append(generateFormulaFilterSql(formula, filterIdentifier.getValue())).append(")");
+				formulaRef.setVersion(formula.getVersion());
+				usedRefKeySet.add(formulaRef);
+				break;
 			default:
 				builder.append("");
 				break;
@@ -119,13 +127,13 @@ public class FilterOperator2 {
 			, Set<MetaIdentifier> usedRefKeySet
 			, ExecParams execParams
 			, Boolean isAggrAllowed
-			, Boolean isAggrReqd, RunMode runMode) throws Exception {
+			, Boolean isAggrReqd, RunMode runMode, Datasource mapSourceDS) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		if (filterInfo == null || filterInfo.size() <= 0) {
 			return "";
 		}
 		
-		String filterStr = joinKeyOperator.generateSql(filterInfo, filterSource, refKeyMap, otherParams, usedRefKeySet, execParams,isAggrAllowed, isAggrReqd, runMode);
+		String filterStr = joinKeyOperator.generateSql(filterInfo, filterSource, refKeyMap, otherParams, usedRefKeySet, execParams,isAggrAllowed, isAggrReqd, runMode, mapSourceDS);
 		if (StringUtils.isBlank(filterStr)) {
 			builder.append(ConstantsUtil.BLANK);
 		} else {
@@ -142,7 +150,7 @@ public class FilterOperator2 {
 	 * @throws Exception 
 	 */
 	public String generateSelectWithFilter(List<AttributeRefHolder> filterIdentifierList, Set<MetaIdentifier> usedRefKeySet,
-											ExecParams execParams) throws Exception {
+											ExecParams execParams, Datasource mapSourceDS) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		if (filterIdentifierList == null || filterIdentifierList.isEmpty()) {
 			return "";
@@ -158,7 +166,7 @@ public class FilterOperator2 {
 				case filter : 
 					OrderKey filterKey = filterIdentifier.getRef().getKey();
 					com.inferyx.framework.domain.Filter filter = (Filter) commonServiceImpl.getOneByUuidAndVersion(filterKey.getUUID(), filterKey.getVersion(), MetaType.filter.toString());
-					builder.append(" (").append(joinKeyOperator.generateSql(filter.getFilterInfo(),filter.getDependsOn(), null, null, usedRefKeySet, execParams, true, false, null)).append(")");
+					builder.append(" (").append(joinKeyOperator.generateSql(filter.getFilterInfo(),filter.getDependsOn(), null, null, usedRefKeySet, execParams, true, false, null, mapSourceDS)).append(")");
 					builder.append(" as ").append(filter.getName()).append(COMMA);
 					break;
 				case datapod:
@@ -218,5 +226,12 @@ public class FilterOperator2 {
 			}
 		}
 		return String.format("%s = %s", dataSet.sql(attrName), value);
+	}
+	
+	private String generateFormulaFilterSql(Formula formula, String value) {
+		if(formula != null) {
+			return String.format("%s = %s", formula.getName(), value);
+		} 
+		return "";
 	}
 }

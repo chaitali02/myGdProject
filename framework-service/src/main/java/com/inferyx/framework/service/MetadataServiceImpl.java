@@ -15,6 +15,8 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.matc
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
@@ -53,7 +55,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IMetaDao;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.Application;
@@ -74,6 +75,7 @@ import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.FrameworkThreadLocal;
 import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.GraphExec;
+import com.inferyx.framework.domain.Group;
 import com.inferyx.framework.domain.IngestExec;
 import com.inferyx.framework.domain.IngestGroupExec;
 import com.inferyx.framework.domain.LoadExec;
@@ -94,13 +96,16 @@ import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ParamSet;
 import com.inferyx.framework.domain.ParamSetHolder;
 import com.inferyx.framework.domain.PredictExec;
+import com.inferyx.framework.domain.ProcessExec;
 import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.ProfileGroupExec;
 import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.ReconGroupExec;
 import com.inferyx.framework.domain.ReportExec;
+import com.inferyx.framework.domain.Role;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.User;
+import com.inferyx.framework.enums.ApplicationType;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.RuleGroupExec;
@@ -127,8 +132,6 @@ public class MetadataServiceImpl {
 	LoadServiceImpl loadServiceImpl;
 	@Autowired
 	UserServiceImpl userServiceImpl;
-	@Autowired
-	MetadataUtil daoRegister;
 	@Autowired
 	ApplicationServiceImpl applicationServiceImpl;
 	@Autowired
@@ -162,12 +165,18 @@ public class MetadataServiceImpl {
 		//Resolve appname
 		if (baseEntity.getAppInfo() != null) {
 			for (int i = 0; i < baseEntity.getAppInfo().size(); i++) {
-				//logger.info(" Baseentity : " + baseEntity.getName() + " : " + baseEntity.getUuid() + " : " + baseEntity.getAppInfo().size());
+//				logger.info(" Baseentity : " + baseEntity.getName() + " : " + baseEntity.getUuid() + " : " + baseEntity.getAppInfo().size());
 				String appUuid = baseEntity.getAppInfo().get(i).getRef().getUuid();
 				Application application = (Application) commonServiceImpl.getLatestByUuid(appUuid, MetaType.application.toString(),"N");
 				//Object iDao = commonServiceImpl.getClass().getMethod(GET + Helper.getDaoClass(MetaType.application)).invoke(commonServiceImpl);
 				//Application application = (Application) Helper.getDomainClass(MetaType.application).cast(iDao.getClass().getMethod("findLatestByUuid",String.class,Sort.class ).invoke(iDao, appUuid,new Sort(Sort.Direction.DESC, "version")));	
+				
 				baseEntity.getAppInfo().get(i).getRef().setName(application.getName());
+				if(baseEntity.getAppInfo().get(i).getRef().getName()==null)
+				{
+					System.out.println("ss");
+
+				}
 			}
 		}		
 		return baseEntity;
@@ -369,7 +378,7 @@ public class MetadataServiceImpl {
 		query.fields().include("statusList");
 		
 		//Apply filter
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat ("EEE MMM dd hh:mm:ss yyyy z");
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat ("EEE MMM dd HH:mm:ss yyyy z");
 		
 		//to find 
 		if(!StringUtils.isBlank(role) && role.equalsIgnoreCase("admin")) {
@@ -393,9 +402,9 @@ public class MetadataServiceImpl {
 			query.addCriteria(Criteria.where("_id").ne("1").andOperator(Criteria.where("createdOn").gte(simpleDateFormat.parse(startDate)),
 							  										  Criteria.where("createdOn").lte(simpleDateFormat.parse(endDate))));
 			else if (startDate != null && !startDate.isEmpty())
-			query.addCriteria(Criteria.where("createdOn").gte(startDate));
+			query.addCriteria(Criteria.where("createdOn").gte(simpleDateFormat.parse(startDate)));
 			else if (endDate != null && !endDate.isEmpty())
-			query.addCriteria(Criteria.where("createdOn").lte(endDate));
+			query.addCriteria(Criteria.where("createdOn").lte(simpleDateFormat.parse(endDate)));
 			if (tags != null && !tags.isEmpty()) {
 				ArrayList<?> tagList= new ArrayList<>(Arrays.asList(tags.split(",")));
 				query.addCriteria(Criteria.where("tags").all(tagList));
@@ -535,6 +544,16 @@ public class MetadataServiceImpl {
 				execObject = (IngestGroupExec) metaObject;
 				execStatus = (List<Status>) execObject.getStatusList();	
 			} 
+			else if(type.equalsIgnoreCase(MetaType.uploadExec.toString())){
+				UploadExec execObject = new UploadExec();
+				execObject = (UploadExec) metaObject;
+				execStatus = (List<Status>) execObject.getStatusList();	
+			} 
+			else if(type.equalsIgnoreCase(MetaType.processExec.toString())){
+				ProcessExec execObject = new ProcessExec();
+				execObject = (ProcessExec) metaObject;
+				execStatus = (List<Status>) execObject.getStatusList();	
+			} 
 				
 			BaseEntityStatus baseEntityStatus = new BaseEntityStatus();			
 			BaseEntity baseEntityTmp = (BaseEntity) metaObject;			
@@ -663,19 +682,53 @@ public class MetadataServiceImpl {
 		Criteria criteria = new Criteria();
 		List<Criteria> criteriaList = new ArrayList<Criteria>();
 		// Apply filter
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd hh:mm:ss yyyy z");
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy z");
 		// to find
-		//String appUuid = null ;
-		String appUuid =commonServiceImpl.findAppId(type);
+		Application application = commonServiceImpl.getApp();
+		
 
 //		appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 //				? securityServiceImpl.getAppInfo().getRef().getUuid()
 //				: null;
-		
+		String appUuid = null;
+		List<Application> appList = null;
+		List<String> orgAppUuidList = null;
+		/*if(application.getApplicationType().equals(ApplicationType.ADMIN)) {
+			try {
+				MetaIdentifier roleInfoMI = securityServiceImpl.getRoleInfo().getRef();
+				Role role = (Role) commonServiceImpl.getOneByUuidAndVersion(roleInfoMI.getUuid(), roleInfoMI.getVersion(), roleInfoMI.getType().toString(), "N");
+				
+				if(role.getName().equalsIgnoreCase("admin")) {
+					MetaIdentifier orgInfoMI = securityServiceImpl.getOrgInfo().getRef();
+					appList = commonServiceImpl.getAppByOrg(orgInfoMI.getUuid());
+					if(appList != null && !appList.isEmpty()) {
+						orgAppUuidList = new ArrayList<>();
+						for(Application orgApp : appList) {
+							orgAppUuidList.add(orgApp.getUuid());
+						}
+					} else {
+						appUuid = application.getUuid();
+					}
+				} else {
+					appUuid = application.getUuid();
+				}				
+			} catch (JSONException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				appUuid = application.getUuid();
+			}
+		} else {
+			appUuid = application.getUuid();
+		}*/
+		appUuid = application.getUuid();
 
 		try {
-			if (appUuid != null)
+			if(orgAppUuidList != null && !orgAppUuidList.isEmpty()) {
+				criteriaList.add(where("appInfo.ref.uuid").in(orgAppUuidList));
+			} else if (appUuid != null) {
 				criteriaList.add(where("appInfo.ref.uuid").is(appUuid));
+			}			
+				
 			if (name != null && !name.isEmpty())
 				criteriaList.add(where("name").is(name));
 			if (userName != null && !userName.isEmpty()) {
@@ -697,25 +750,29 @@ public class MetadataServiceImpl {
 			if ((startDate != null && !startDate.isEmpty()) && (endDate != null && !endDate.isEmpty())) {
 				criteriaList.add(where("_id").ne("1").and("createdOn").lte(simpleDateFormat.parse(endDate))
 						.gte(simpleDateFormat.parse(startDate)));
-			}
-
-			else if (startDate != null && !startDate.isEmpty())
+			} else if (startDate != null && !startDate.isEmpty()) {
 				criteriaList.add(where("createdOn").gte(simpleDateFormat.parse(startDate)));
-			else if (endDate != null && !endDate.isEmpty())
+			} else if (endDate != null && !endDate.isEmpty()) {
 				criteriaList.add(where("createdOn").lte(simpleDateFormat.parse(endDate)));
+			}
+			
 			if (tags != null && !tags.isEmpty()) {
 				ArrayList tagList = new ArrayList(Arrays.asList(tags.split(",")));
 				criteriaList.add(where("tags").all(tagList));
 			}
+			
 			if (active != null && !active.isEmpty()) {
 				criteriaList.add(where("active").is(active));
 			}
+			
 			if (StringUtils.isNotBlank(uuid)) {
 				criteriaList.add(where("uuid").is(uuid));
 			}
+			
 			if (StringUtils.isNotBlank(version)) {
 				criteriaList.add(where("version").is(version));
 			}
+			
 			if (StringUtils.isNotBlank(published)) {
 				criteriaList.add(where("published").is(published));
 			}
@@ -760,6 +817,7 @@ public class MetadataServiceImpl {
 			baseEntity.setCreatedOn(baseEntityTmp.getCreatedOn());
 			baseEntity.setTags(baseEntityTmp.getTags());
 			baseEntity.setActive(baseEntityTmp.getActive());
+			baseEntity.setLocked(baseEntityTmp.getLocked());
 			baseEntity.setPublished(baseEntityTmp.getPublished());
 			baseEntity.setAppInfo(baseEntityTmp.getAppInfo());
 			baseEntityList.add(baseEntity);
@@ -1041,7 +1099,8 @@ public class MetadataServiceImpl {
 		
 		for(MetaIdentifierHolder refHolder : holderList) {
 			statusHolder = new StatusHolder();
-			Object object = daoRegister.getRefObject(refHolder.getRef());
+//			Object object = daoRegister.getRefObject(refHolder.getRef());
+			Object object = commonServiceImpl.getOneByUuidAndVersion(refHolder.getRef().getUuid(), refHolder.getRef().getVersion(), refHolder.getRef().getType().toString(), "N");
 			refHolder.getRef().setName((String) object.getClass().getMethod("getName").invoke(object));
 			statusHolder.setMetaRef(refHolder);
 			statusHolder.setStatusList((List<Status>) object.getClass().getMethod("getStatusList").invoke(object));
@@ -1137,7 +1196,7 @@ public class MetadataServiceImpl {
 		query.fields().include("category");
 		
 
-		query.addCriteria(Criteria.where("category").is(category));
+		query.addCriteria(Criteria.where("category").is(category.toUpperCase()));
 
 		List<Function> function = new ArrayList<>();
 		function = (List<Function>) mongoTemplate.find(query, Function.class);
@@ -1148,13 +1207,15 @@ public class MetadataServiceImpl {
 	public List<ParamListHolder> getParamByParamList(String paramListUuid) throws JsonProcessingException {	
 		List<ParamListHolder> holderList = new ArrayList<>();
 			
-		ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(paramListUuid, MetaType.paramlist.toString(),"N");			
+		ParamList paramList = (ParamList) commonServiceImpl.getLatestByUuid(paramListUuid, MetaType.paramlist.toString(), "N");			
 		
 		for(Param param : paramList.getParams()) {
 			ParamListHolder paramListHolder = new ParamListHolder();
 			paramListHolder.setParamId(param.getParamId());
 			paramListHolder.setParamName(param.getParamName());
 			paramListHolder.setParamType(param.getParamType());
+			paramListHolder.setParamDispName(param.getParamDispName());
+			paramListHolder.setParamDesc(param.getParamDesc());
 //			if (param.getParamType().equalsIgnoreCase(ParamDataType.ONEDARRAY.toString())
 //					|| param.getParamType().equalsIgnoreCase(ParamDataType.TWODARRAY.toString())) {
 				paramListHolder.setParamValue(param.getParamValue());	
@@ -1210,7 +1271,8 @@ public class MetadataServiceImpl {
 				paramListHolder.setParamId(param.getParamId());
 				paramListHolder.setParamName(param.getParamName());
 				paramListHolder.setParamType(param.getParamType());
-//				if (param.getParamType().equalsIgnoreCase(ParamDataType.ONEDARRAY.toString())
+			
+				//if (param.getParamType().equalsIgnoreCase(ParamDataType.ONEDARRAY.toString())
 //						|| param.getParamType().equalsIgnoreCase(ParamDataType.TWODARRAY.toString())) 
 					paramListHolder.setParamValue(param.getParamValue());		
 //				else
@@ -1360,7 +1422,7 @@ public class MetadataServiceImpl {
 		Criteria criteria = new Criteria();
 		List<Criteria> criteriaList = new ArrayList<Criteria>();
 
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd hh:mm:ss yyyy z");
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy z");
 
 		String appUuid = commonServiceImpl.findAppId(type);
 
@@ -1445,6 +1507,7 @@ public class MetadataServiceImpl {
 		query2.fields().include("active");
 		query2.fields().include("desc");
 		query2.fields().include("published");
+		query2.fields().include("locked");
 		query2.addCriteria(			
 				Criteria.where("uuid").in(uuidList).andOperator(Criteria.where("version").in(versionList)));
 				paramList = (List<ParamList>) mongoTemplate.find(query2, ParamList.class);
@@ -1565,13 +1628,13 @@ public class MetadataServiceImpl {
 	}
 
 	public List<ParamListHolder> getParamListByTrain(String trainUuid, String trainVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainUuid, trainVersion, MetaType.train.toString());
-		Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), train.getDependsOn().getRef().getType().toString());
+		Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainUuid, trainVersion, MetaType.train.toString(),"N");
+		Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), train.getDependsOn().getRef().getType().toString(), "N");
 
 		//ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(algorithm.getParamList().getRef().getUuid(), algorithm.getParamList().getRef().getVersion(), algorithm.getParamList().getRef().getType().toString());
 		List<ParamListHolder> plHolderList = new ArrayList<>();
-		if(model.getType().equalsIgnoreCase(ExecContext.spark.toString())) {
-			Algorithm algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(), model.getDependsOn().getRef().getType().toString());
+		if(model.getType().equalsIgnoreCase(ExecContext.spark.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+			Algorithm algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(model.getDependsOn().getRef().getUuid(), model.getDependsOn().getRef().getVersion(), model.getDependsOn().getRef().getType().toString() ,"N");
 			MetaIdentifier plMI = null;
 			if(train.getUseHyperParams().equalsIgnoreCase("Y")) {
 				plMI = algorithm.getParamListWH().getRef();
@@ -1582,7 +1645,8 @@ public class MetadataServiceImpl {
 			ParamListHolder plHolder = new ParamListHolder();
 			plHolder.setRef(plMI);
 			plHolderList.add(plHolder);
-			ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(plMI.getUuid(), plMI.getVersion(), plMI.getType().toString());
+			ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(plMI.getUuid(), plMI.getVersion(), plMI.getType().toString() ,"N");
+			plHolder.getRef().setName(paramList.getName());
 			if(paramList.getTemplateFlg().equalsIgnoreCase("Y")) {
 				List<ParamList> childs = commonServiceImpl.getAllLatestParamListByTemplate(null, paramList.getUuid(), paramList.getVersion(), MetaType.model);
 				plHolderList.addAll(persistPLTemplateChilds(childs));
@@ -1807,9 +1871,12 @@ public class MetadataServiceImpl {
 			} else if(execParams.getParamListHolder() != null) {
 				return paramListServiceImpl.getParamValue(execParams, attributeId, ref);
 			} else if (execParams.getParamListInfo() != null){
-				ParamList paramList = (ParamList)daoRegister.getRefObject(ref);
+//				ParamList paramList = (ParamList)daoRegister.getRefObject(ref);
+				ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 				Application application = commonServiceImpl.getApp(); 
-				ParamList appParamList = (ParamList)daoRegister.getRefObject(application.getParamList().getRef());
+//				ParamList appParamList = (ParamList)daoRegister.getRefObject(application.getParamList().getRef());
+				ParamList appParamList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(application.getParamList().getRef().getUuid(), application.getParamList().getRef().getVersion(), application.getParamList().getRef().getType().toString(), "N");
+				
 				String paramName = null;
 				com.inferyx.framework.domain.Param param = null;
 				for (int i = 0; i < paramList.getParams().size(); i++) {
@@ -1838,7 +1905,8 @@ public class MetadataServiceImpl {
 					return param.getParamValue().getValue();
 				}
 			} else {
-				ParamList paramList = (ParamList)daoRegister.getRefObject(ref);
+//				ParamList paramList = (ParamList)daoRegister.getRefObject(ref);
+				ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 				for (com.inferyx.framework.domain.Param param : paramList.getParams()) {
 					if (param.getParamId().equals(attributeId+"")) {
 						return param.getParamValue().getValue();
@@ -1849,8 +1917,10 @@ public class MetadataServiceImpl {
 			String paramName = null;
 			String refParamValue = null;
 			Application application = commonServiceImpl.getApp(); 
-			ParamList appParamList = (ParamList)daoRegister.getRefObject(application.getParamList().getRef());
-			ParamList paramList = (ParamList)daoRegister.getRefObject(ref);
+//			ParamList appParamList = (ParamList)daoRegister.getRefObject(application.getParamList().getRef());
+			ParamList appParamList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(application.getParamList().getRef().getUuid(), application.getParamList().getRef().getVersion(), application.getParamList().getRef().getType().toString(), "N");
+//			ParamList paramList = (ParamList)daoRegister.getRefObject(ref);
+			ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 			for (com.inferyx.framework.domain.Param param : paramList.getParams()) {
 				if (param.getParamId().equals(attributeId.toString())) {
 					if(appParamList == null) {
@@ -1949,15 +2019,17 @@ public class MetadataServiceImpl {
 		}
 		 paramList = (ParamList) commonServiceImpl
 				.getLatestByUuid(application.getParamList().getRef().getUuid(), MetaType.paramlist.toString(), "N");
-		for(Param param : paramList.getParams()) {
-			ParamListHolder paramListHolder = new ParamListHolder();
-			paramListHolder.setParamId(param.getParamId());
-			paramListHolder.setParamName(param.getParamName());
-			paramListHolder.setParamType(param.getParamType());
-			paramListHolder.setParamValue(param.getParamValue());		
-			paramListHolder.setRef(new MetaIdentifier(MetaType.paramlist, paramList.getUuid(), paramList.getVersion()));
-			paramListHolder.getRef().setName(paramList.getName());
-			holderList.add(paramListHolder);
+	    if(paramList !=null) {
+			for(Param param : paramList.getParams()) {
+				ParamListHolder paramListHolder = new ParamListHolder();
+				paramListHolder.setParamId(param.getParamId());
+				paramListHolder.setParamName(param.getParamName());
+				paramListHolder.setParamType(param.getParamType());
+				paramListHolder.setParamValue(param.getParamValue());		
+				paramListHolder.setRef(new MetaIdentifier(MetaType.paramlist, paramList.getUuid(), paramList.getVersion()));
+				paramListHolder.getRef().setName(paramList.getName());
+				holderList.add(paramListHolder);
+			}
 		}
 		return holderList;
 		}	
@@ -1985,12 +2057,17 @@ public class MetadataServiceImpl {
 		if (uuid != null && !uuid.isEmpty()) {
 			query.addCriteria(Criteria.where("metaId.ref.uuid").is(uuid));
 		}
-		List<DataStore> datastoreList = new ArrayList<>();
-		datastoreList = (List<DataStore>) mongoTemplate.find(query, DataStore.class);
 		
-		
-		return datastoreList;
-
+		List<DataStore> datastoreList = mongoTemplate.find(query, DataStore.class);
+		if(datastoreList != null && !datastoreList.isEmpty()) {
+			List<DataStore> resolvedDatastoreList = new ArrayList<>();
+			for(DataStore dataStore : datastoreList) {
+				dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(dataStore.getUuid(), dataStore.getVersion(), MetaType.datastore.toString(), "Y");
+				resolvedDatastoreList.add(dataStore);
+			}		
+			return resolvedDatastoreList;
+		}
+		return null;
 	}
 
 	public List<ParamListHolder> getParamListByDag(String dagUuid, String dagVersion, MetaType paramListType) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
@@ -2220,4 +2297,106 @@ public class MetadataServiceImpl {
 		messages = (List<Message>) mongoTemplate.find(query, Message.class);		
 		return messages;
 	}
+
+	public List<Algorithm> getAlgorithmByLibrary(String libraryType) throws JsonProcessingException {
+		List<Algorithm> latestAlgoList = new ArrayList<>();
+		
+		MatchOperation filter = match(new Criteria("libraryType").is(libraryType.toUpperCase()));
+		GroupOperation groupByUuid = group("uuid").max("version").as("version"); 
+		SortOperation sortByVersion = sort(new Sort(Direction.DESC, "version"));
+		Aggregation algoAggr = newAggregation(filter, groupByUuid, sortByVersion);
+		AggregationResults<Algorithm> algoAggrResults = mongoTemplate.aggregate(algoAggr, MetaType.algorithm.toString().toLowerCase(), Algorithm.class);
+		List<Algorithm> sortedAlgoList = algoAggrResults.getMappedResults();
+		
+		for(Algorithm algorithm : sortedAlgoList) {
+			latestAlgoList.add((Algorithm) commonServiceImpl.getOneByUuidAndVersion(algorithm.getId(), algorithm.getVersion(), MetaType.algorithm.toString()));
+		}
+		
+		return latestAlgoList;
+	}
+	
+	
+	public Datapod getDatapodByType(String type) throws FileNotFoundException, IOException {
+		
+		if(type.equalsIgnoreCase(MetaType.profile.toString()))
+			{
+			Datapod dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+					Helper.getPropertyValue("framework.profile.datapod.uuid"), null, MetaType.datapod.toString());
+			return dp;
+			}
+		else if(type.equalsIgnoreCase(MetaType.recon.toString())){
+			Datapod dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+					Helper.getPropertyValue("framework.recon.datapod.uuid"), null, MetaType.datapod.toString());
+			return dp;
+		}
+		else if(type.equalsIgnoreCase(MetaType.dq.toString())){
+			Datapod dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+					Helper.getPropertyValue("framework.dataqual.datapod.uuid"), null, MetaType.datapod.toString());
+			return dp;
+		}
+		return null;
+	}
+
+	public List<Group> getGroupsByOrg(String orgUuid) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException, IOException{
+		
+		List<Group> groupList = new ArrayList<>();
+		List<Application> appList = getApplicationByOrg(orgUuid);
+			for(Application app : appList) {
+				if(groupList.size() == 0) {
+					groupList=getGroupByApplication(app.getUuid());
+				}else {
+					groupList.addAll(getGroupByApplication(app.getUuid()));
+				}
+			}
+			
+		return groupList;
+	}
+
+	private List<Application> getApplicationByOrg(String orgUuid)throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException, IOException {
+		List<Application> latestApplicationList = new ArrayList<>();
+	
+		MatchOperation filter = match(new Criteria("orgInfo.ref.uuid").is(orgUuid));
+		GroupOperation groupByUuid = group("uuid").max("version").as("version"); 
+		SortOperation sortByVersion = sort(new Sort(Direction.DESC, "version"));
+		Aggregation appAggr = newAggregation(filter, groupByUuid, sortByVersion);
+		AggregationResults<Application> applicationAggrResults = mongoTemplate.aggregate(appAggr, MetaType.application.toString().toLowerCase(), Application.class);
+		List<Application> sortedApplicationList = applicationAggrResults.getMappedResults();
+		for(Application application : sortedApplicationList) {
+			Application appTemp=(Application) commonServiceImpl.getLatestByUuid(application.getId(), MetaType.application.toString(),"N");
+			if(appTemp.getOrgInfo().getRef().getUuid().equals(orgUuid)) {
+				latestApplicationList.add(appTemp);
+			}	
+		}
+		
+		return latestApplicationList;
+	}
+	
+	private List<Group> getGroupByApplication(String appUuid) throws JsonProcessingException {
+		List<Group> groupList= new ArrayList<>();
+		/*Query query = new Query();
+		query.fields().include("uuid");
+		query.fields().include("version");
+		query.fields().include("name");
+		query.fields().include("createdOn");
+		query.fields().include("active");
+		query.fields().include("appInfo");
+		query.fields().include("createdBy");
+		query.addCriteria(Criteria.where("appId.ref.uuid").is(appUuid));
+		groupList=mongoTemplate.find(query, Group.class);
+		return groupList;*/
+		
+		MatchOperation filter = match(new Criteria("appId.ref.uuid").is(appUuid));
+		GroupOperation groupByUuid = group("uuid").max("version").as("version"); 
+		SortOperation sortByVersion = sort(new Sort(Direction.DESC, "version"));
+		Aggregation appAggr = newAggregation(filter, groupByUuid, sortByVersion);
+		AggregationResults<Group> groupAggrResults = mongoTemplate.aggregate(appAggr, MetaType.group.toString().toLowerCase(), Group.class);
+		List<Group> sortedGroupList = groupAggrResults.getMappedResults();
+		for(Group group : sortedGroupList) {
+			Group appTemp=(Group) commonServiceImpl.getLatestByUuid(group.getId(), MetaType.group.toString(),"N");			
+			groupList.add(appTemp);
+	
+		}
+		return groupList;
+	}
+	
 }

@@ -1,5 +1,5 @@
 RuleModule = angular.module('RuleModule');
-RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $cookieStore, $stateParams, $rootScope, $scope, $timeout, $filter, RuleService, dagMetaDataService,CommonService,CF_FILTER) {
+RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $cookieStore, $stateParams, $rootScope, $scope, $timeout, $filter, RuleService, CommonFactory, dagMetaDataService, CommonService, CF_FILTER, $location, $anchorScroll, CF_SUCCESS_MSG, CF_GRID) {
   $scope.mode = "false";
   $scope.rule = {};
   $scope.rule.versions = []
@@ -11,6 +11,8 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
   $scope.logicalOperator = ["AND","OR"];
   $scope.spacialOperator=['<','>','<=','>=','=','!=','LIKE','NOT LIKE','RLIKE'];
   $scope.paramTypes=["paramlist","paramset"];
+  $scope.rhsNA=['NULL',"NOT NULL"];
+  $scope.isDestoryState = false; 
   $scope.operator = CF_FILTER.operator;//["=", "<", ">", "<=", ">=", "BETWEEN"];
   $scope.lhsType = [
 		{ "text": "string", "caption": "string" },
@@ -78,10 +80,12 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
   $scope.isSubmitShow = false;
   $scope.continueCount = 1;
   $scope.backCount;
+  $scope.ruleLodeFormula=null;
   if ($stateParams.mode == 'true') {
     $scope.isEdit = false;
     $scope.isversionEnable = false;
     $scope.isAdd = false;
+    $scope.isDragable = "false";
     var privileges = privilegeSvc.privileges['comment'] || [];
 		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
 		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
@@ -97,6 +101,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
     $scope.isversionEnable = true;
     $scope.isAdd = false;
     $scope.isPanelActiveOpen=true;
+    $scope.isDragable = "true";
 		var privileges = privilegeSvc.privileges['comment'] || [];
 		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
 		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
@@ -109,6 +114,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
   }
   else {
     $scope.isAdd = true;
+    $scope.isDragable = "true";
   }
   $scope.userDetail={}
 	$scope.userDetail.uuid= $rootScope.setUseruuid;
@@ -133,18 +139,34 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
 			return $filter('filter')($scope.lobTag, query);
 		});
 	};
-    $scope.getLovByType();
+  
+  $scope.getLovByType();
+
+  $scope.$on('$destroy', function () {
+    $scope.isDestoryState = true;
+  });
+
   $scope.showPage = function () {
     $scope.showFrom = true
     $scope.showGraphDiv = false
   }
-
+  $scope.showHome=function(uuid, version,mode){
+		$scope.showPage();
+		$state.go('createrules', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
   $scope.showGraph = function (uuid, version) {
     $scope.showFrom = false
     $scope.showGraphDiv = true;
   }
 
   $scope.enableEdit = function (uuid, version) {
+    if($scope.isPrivlage || $scope.ruleData.locked =="Y"){
+      return false;
+    } 
     $scope.showPage()
     $state.go('createrules', {
       id: uuid,
@@ -193,13 +215,27 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
 
     }
   }
+  
+var confirmDialog = function(newVal, yes, no) {
+    setTimeout(function() {
+      if (typeof $stateParams.id != "undefined") {
+        $scope.showModal1 = true;
+      }
 
- 
-  $scope.selectSourceType = function () {
-    $scope.attributeTableArray = null
-    if ($scope.filterTableArray != null) {
-      $scope.showModal1 = true;
-    }
+      $scope.hideOk=function(value){
+        $scope.showModal1 = false;
+        yes();
+      }
+      $scope.hideCancel=function(value){
+        $scope.showModal1 = false; 
+        no();
+      }
+    }, 0);
+  }
+   
+  $scope.selectSourceTypeGen=function(){
+    $scope.attributeTableArray=[];
+    $scope.filterTableArray=[];
     $scope.datapodAttributeTags = null;
     $scope.lhsdatapodattributefilter = null;
     RuleService.getAllLatestActive($scope.rulsourcetype).then(function (response) {
@@ -212,10 +248,6 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
             return el.uuid !== $scope.ruleData.uuid;
         });
         $scope.ruleRelation.options = temp
-      }
-      
-      if ($scope.filterTableArray != null) {
-        $scope.showModal1 = true;
       }
       if ($scope.ruleRelation != null) {
         RuleService.getAllAttributeBySource($scope.ruleRelation.defaultoption.uuid, $scope.rulsourcetype).then(function (response) {
@@ -238,6 +270,22 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
         } //End getAllAttributeBySources
       } //End If
     } //End getAllLatestActive
+  }
+  $scope.selectSourceType = function (oldValue,newValue) {
+   if(typeof $stateParams.id != "undefined") {
+    confirmDialog($scope.rulsourcetype, function() {
+      $scope.selectSourceTypeGen();
+      },
+      function() {
+        $scope.rulsourcetype = oldValue
+    //  $scope.$apply(function() {$scope.rulsourcetype = oldValue;});
+      });
+    }
+    else{
+      $scope.selectSourceTypeGen();
+    }
+
+   
   } //End selectSourceType
 
 
@@ -247,6 +295,8 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
     $scope.mode = $stateParams.mode;
     $scope.ruleRelation;
     $scope.isDependencyShow = true;
+    $scope.isEditInprogess=true;
+    $scope.isEditVeiwError=false;
     RuleService.getAllVersionByUuid($stateParams.id, "rule").then(function (response) {
       onGetAllVersionByUuid(response.data)
     });
@@ -257,19 +307,19 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
         $scope.rule.versions[i] = ruleversion;
       }
     }
-    RuleService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'rule').then(function (response) { onSuccess(response.data)});
+    RuleService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'rule')
+      .then(function (response) { onSuccess(response.data)},function(response) {onError(response.data)});
     var onSuccess = function (response) {
-      $scope.ruleData = response.ruledata
+      $scope.isEditInprogess=false;
+      $scope.ruleData = response.ruledata;
       $scope.tags = response.ruledata.tags
       var defaultversion = {};
       defaultversion.version = response.ruledata.version;
       defaultversion.uuid = response.ruledata.uuid;
       $scope.rule.defaultVersion = defaultversion;
-
       if (response.filterInfo.length > 0) {
         $scope.filterTableArray = response.filterInfo
       }
-
       $scope.attributeTableArray = response.sourceAttributes
       $scope.datapodAttributeTags = response.sourceAttributes
       $scope.rulsourcetype = response.ruledata.source.ref.type;
@@ -332,7 +382,11 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
         $scope.sourcedatapodattribute = response;
       }
 
-    }
+    };
+    var onError =function(){
+      $scope.isEditInprogess=false;
+      $scope.isEditVeiwError=true;
+    } 
   }
   else {
     $scope.showactive = "false"
@@ -346,16 +400,26 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
         $scope.allparamlist.defaultoption = null;
       $scope.getOneByUuidParamList();
       $scope.allparamlistParams=[];
+      $scope.ruleData={};
+      $scope.ruleData.locked="N";
+      $scope.ruleData.active="Y";
+      $scope.ruleData.published="N";
+      
     }
   } //End Else
 
   $scope.selectVersion = function () {
     $scope.attributeTableArray = null;
-    $scope.myform.$dirty = false;
+    $scope.myform1.$dirty = false;
+    $scope.myform2.$dirty = false;
+    $scope.myform3.$dirty = false;
+    $scope.isEditInprogess=true;
+    $scope.isEditVeiwError=false;
     RuleService.getOneByUuidAndVersion($scope.rule.defaultVersion.uuid, $scope.rule.defaultVersion.version, 'rule')
-    .then(function (response) { onSuccess(response.data)});
+    .then(function (response) { onSuccess(response.data)},function(response) {onError(response.data)});
     var onSuccess = function (response) {
-      $scope.ruleData = response.ruledata
+      $scope.isEditInprogess=false;
+      $scope.ruleData = response.ruledata;
       $scope.tags = response.ruledata.tags
       var defaultversion = {};
       defaultversion.version = response.ruledata.version;
@@ -424,6 +488,10 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
       }
 
     } //End getOneByUuidAndVersion
+    var onError =function(){
+      $scope.isEditInprogess=false;
+      $scope.isEditVeiwError=true;
+    } 
   } //End selectVersion
 
   $scope.hideInputbox = function (index) {
@@ -446,6 +514,11 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
   }
 
   $scope.countContinue = function () {
+    if($scope.continueCount == 3){
+			if($scope.isDuplication ==true){
+				return true;
+			}
+		}
     $scope.continueCount = $scope.continueCount + 1;
     if ($scope.continueCount >= 4) {
       $scope.isSubmitShow = true;
@@ -530,7 +603,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
     });
     var onSuccessGetExecuteModel = function (response) {
      $scope.dataLoading = false;
-      $scope.saveMessage = "Rule Saved and Submited Successfully"
+      $scope.saveMessage = CF_SUCCESS_MSG.ruleSaveExecute//"Rule Saved and Submitted Successfully"
       notify.type = 'success',
       notify.title = 'Success',
       notify.content = $scope.saveMessage
@@ -686,6 +759,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
     } else {
       $scope.isShowExecutionparam = false;
       $scope.allparamset = null;
+      $scope.dataLoading=false;
     }
   }
   $scope.closeParalistPopup=function(){
@@ -722,38 +796,55 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
       $scope.modelExecute(result.data);
     } 
   }
-
+  $scope.ondrop = function(e) {
+		console.log(e);
+		$scope.myform3.$dirty=true;
+	}
   $scope.countBack = function () {
     $scope.continueCount = $scope.continueCount - 1;
     $scope.isSubmitShow = false;
     $scope.isShowRuleExec = false;
     $scope.isShowRuleResult = false;
   }
-
-  $scope.selectOption = function () {
+  $scope.selectOptionGen=function(){
     $scope.attributeTableArray = [];
-    if ($scope.filterTableArray != null) {
-      $scope.showModal1 = true;
+      $scope.datapodAttributeTags = null;
+      RuleService.getAllAttributeBySource($scope.ruleRelation.defaultoption.uuid, $scope.rulsourcetype).then(function (response) {
+        onSuccess(response.data)
+      });
+      var onSuccess = function (response) {
+        $scope.isButtonEnaple = false;
+        $scope.lhsdatapodattributefilter = response;
+        $scope.sourcedatapodattribute = response
+        $scope.loadSourceAttribue = response;
+        if ($scope.filterTableArray != null) {
+          for (var i = 0; i < $scope.filterTableArray.length; i++) {
+            var filterinfo = {};
+            filterinfo.logicalOperator = $scope.logicalOperator[1];
+            filterinfo.operator = $scope.operator[0];
+            filterinfo.lhsFilter = $scope.lhsdatapodattributefilter[i]
+            $scope.filterTableArray[i] = filterinfo
+          }
+        } 
+      }
+  }
+  $scope.selectOption = function (oldValue,newValue) {
+    if (typeof $stateParams.id != "undefined") {
+      confirmDialog($scope.ruleRelation, function() {
+        $scope.selectOptionGen();
+      } ,
+      function() {
+        $scope.ruleRelation.defaultoption={};
+        setTimeout(function(){
+          $scope.ruleRelation.defaultoption.uuid=JSON.parse(oldValue).uuid;
+          $scope.ruleRelation.defaultoption.name=JSON.parse(oldValue).name;
+        },100);
+        //$scope.$apply(function() {$scope.select = oldSelect;});
+      });
+    }else{
+      $scope.selectOptionGen();
     }
-    $scope.datapodAttributeTags = null;
-    RuleService.getAllAttributeBySource($scope.ruleRelation.defaultoption.uuid, $scope.rulsourcetype).then(function (response) {
-      onSuccess(response.data)
-    });
-    var onSuccess = function (response) {
-      $scope.isButtonEnaple = false;
-      $scope.lhsdatapodattributefilter = response;
-      $scope.sourcedatapodattribute = response
-      $scope.loadSourceAttribue = response;
-      if ($scope.filterTableArray != null) {
-        for (var i = 0; i < $scope.filterTableArray.length; i++) {
-          var filterinfo = {};
-          filterinfo.logicalOperator = $scope.logicalOperator[1];
-          filterinfo.operator = $scope.operator[0];
-          filterinfo.lhsFilter = $scope.lhsdatapodattributefilter[i]
-          $scope.filterTableArray[i] = filterinfo
-        }
-      } 
-    }
+    
   }
 
 
@@ -844,19 +935,31 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
 	}
 
   $scope.onChangeOperator=function(index){
-	
+    $scope.filterTableArray[index].isRhsNA=false;
 		if($scope.filterTableArray[index].operator =='BETWEEN'){
 			$scope.filterTableArray[index].rhstype=	$scope.filterTableArray[index].rhsTypes[1];
 		  $scope.filterTableArray[index].rhsTypes=$scope.disableRhsType($scope.filterTableArray[index].rhsTypes,['attribute','formula','dataset','function','paramlist'])
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
-		}else if(['EXISTS','NOT EXISTS','IN','NOT IN'].indexOf($scope.filterTableArray[index].operator) !=-1){
+		}else if(['IN','NOT IN'].indexOf($scope.filterTableArray[index].operator) !=-1){
 			$scope.filterTableArray[index].rhsTypes=$scope.disableRhsType($scope.filterTableArray[index].rhsTypes,[]);
 			$scope.filterTableArray[index].rhstype=	$scope.filterTableArray[index].rhsTypes[4];
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
-		}else if(['<','>',"<=",'>='].indexOf($scope.filterTableArray[index].operator) !=-1){
-      $scope.filterTableArray[index].rhsTypes=$scope.disableRhsType($scope.filterTableArray[index].rhsTypes,['string','dataset']);
+    }
+    else if (['EXISTS', 'NOT EXISTS'].indexOf($scope.filterTableArray[index].operator) != -1) {
+			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['attribute', 'formula', 'function', 'paramlist','string','integer']);
+			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[4];
+			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
+		} 
+    else if(['<','>',"<=",'>='].indexOf($scope.filterTableArray[index].operator) !=-1){
+      $scope.filterTableArray[index].rhsTypes=$scope.disableRhsType($scope.filterTableArray[index].rhsTypes,['dataset']);
 			$scope.filterTableArray[index].rhstype=	$scope.filterTableArray[index].rhsTypes[1];
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text,index);
+    }
+    else if (['IS'].indexOf($scope.filterTableArray[index].operator) != -1) {
+			$scope.filterTableArray[index].isRhsNA=true;
+			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['attribute', 'formula', 'dataset', 'function', 'paramlist','integer']);
+			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[0];
+			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
 		}
 		else{
 			$scope.filterTableArray[index].rhsTypes=$scope.disableRhsType($scope.filterTableArray[index].rhsTypes,['dataset']);
@@ -870,8 +973,18 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
     });
   }
     
-  
-  $scope.addRowFilter = function () {
+  function returnRshType(){
+		var rTypes = [
+			{ "text": "string", "caption": "string", "disabled": false },
+			{ "text": "string", "caption": "integer", "disabled": false },
+			{ "text": "datapod", "caption": "attribute", "disabled": false },
+			{ "text": "formula", "caption": "formula", "disabled": false },
+			{ "text": "dataset", "caption": "dataset", "disabled": false },
+			{ "text": "paramlist", "caption": "paramlist", "disabled": false },
+			{ "text": "function", "caption": "function", "disabled": false }]
+	    return rTypes;
+	}
+	$scope.addRowFilter = function () {
 		if ($scope.filterTableArray == null) {
 			$scope.filterTableArray = [];
 		}
@@ -881,27 +994,59 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
 		filertable.islhsSimple = true;
 		filertable.isrhsDatapod = false;
 		filertable.isrhsFormula = false;
-    filertable.isrhsSimple = true;
-    if($scope.filterTableArray.length >0){
-      filertable.logicalOperator=$scope.logicalOperator[0]
-    }
-		filertable.lhsFilter = $scope.lhsdatapodattributefilter[0]
-    filertable.operator = $scope.operator[0].value
-    filertable.lhstype = $scope.lhsType[0];
-    filertable.rhsTypes=CF_FILTER.rhsType;
+		filertable.isrhsSimple = true;
+		filertable.lhsFilter = $scope.lhsdatapodattributefilter[0];
+		filertable.logicalOperator = $scope.filterTableArray.length == 0 ? "" : $scope.logicalOperator[0]
+		filertable.operator = $scope.operator[0].value
+		filertable.lhstype = $scope.lhsType[0]
+		filertable.rhstype = $scope.rhsType[0];
+		filertable.rhsTypes=returnRshType();
     filertable.rhsTypes=$scope.disableRhsType(filertable.rhsTypes,['dataset']);
 		filertable.rhstype = filertable.rhsTypes[0];
 		filertable.rhsvalue;
 		filertable.lhsvalue;
 		$scope.filterTableArray.splice($scope.filterTableArray.length, 0, filertable);
   }
-  
+  $scope.onAttrFilterRowDown=function(index){	
+		var rowTempIndex=$scope.filterTableArray[index];
+        var rowTempIndexPlus=$scope.filterTableArray[index+1];
+		$scope.filterTableArray[index]=rowTempIndexPlus;
+		$scope.filterTableArray[index+1]=rowTempIndex;
+		if(index ==0){
+			$scope.filterTableArray[index+1].logicalOperator=$scope.filterTableArray[index].logicalOperator;
+			$scope.filterTableArray[index].logicalOperator=""
+		}
+	}
+
+	$scope.onAttrFilterRowUp=function(index){
+		var rowTempIndex=$scope.filterTableArray[index];
+        var rowTempIndexMines=$scope.filterTableArray[index-1];
+		$scope.filterTableArray[index]=rowTempIndexMines;
+		$scope.filterTableArray[index-1]=rowTempIndex;
+		if(index ==1){
+			$scope.filterTableArray[index].logicalOperator=$scope.filterTableArray[index-1].logicalOperator;
+			$scope.filterTableArray[index-1].logicalOperator=""
+		}
+	}  
+	
+	$scope.onFilterDrop=function(index){
+		if(index.targetIndex== 0){
+			$scope.filterTableArray[index.sourceIndex].logicalOperator=$scope.filterTableArray[index.targetIndex].logicalOperator;
+			$scope.filterTableArray[index.targetIndex].logicalOperator=""
+		}
+		if(index.sourceIndex == 0){
+			$scope.filterTableArray[index.targetIndex].logicalOperator=$scope.filterTableArray[index.sourceIndex].logicalOperator;
+			$scope.filterTableArray[index.sourceIndex].logicalOperator=""
+		}
+	}
+
   $scope.removeFilterRow = function () {
     var newDataList = [];
     $scope.checkAll = false;
     angular.forEach($scope.filterTableArray, function (selected) {
       if (!selected.selected) {
         newDataList.push(selected);
+        $scope.fitlerAttrTableSelectedItem=[];
       }
     });
     if(newDataList.length > 0) {
@@ -1004,27 +1149,69 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
     }
   }
   
-  $scope.onChangeSimple = function () {
-	
+
+  function isDublication (arr, field, index, name,darray) {
+		var res = [];
+		for(var i = 0; i < arr.length;i++){
+			if (arr[i][field] == arr[index][field] && i != index) {
+			    $scope.myform3[name].$invalid = true;
+				darray.push(i);
+				break
+			}
+			else {
+				$scope.myform3[name].$invalid = false;	
+			}
+		}
+		
+		return darray;
 	}
 	
-
-  $scope.onChangeAttribute=function(){
-	
+	$scope.onChangeSourceName1 = function (index,dupArray) {
+		$scope.attributeTableArray[index].isSourceName = true;
+		if ($scope.attributeTableArray[index].name) {
+			var result = isDublication($scope.attributeTableArray, "name", index, "sourceName" + index,dupArray);
+		}
+		return dupArray
 	}
 
-	$scope.onChangeFromula=function(){
+	$scope.onChangeSourceName = function (index) {
+		$scope.attributeTableArray[index].isSourceName = true;
+		var dupArray=[];
+		for(var i=0;i<$scope.attributeTableArray.length;i++){
+			setTimeout(function(index){
+				if ($scope.attributeTableArray[index].name) {
+					var res = isDublication($scope.attributeTableArray, "name", index, "sourceName" +index, dupArray);
+					if(res.length >0 ){
+						$scope.isDuplication = true;
+					}else {
+						$scope.isDuplication = false;
+					}
+				}
+			},10,(i));
+		}
+	}
+  // $scope.onChangeSimple = function () {
 	
-  }
-  $scope.onChangeFunction=function(){
+	// }
+	
+
+  // $scope.onChangeAttribute=function(){
+	
+	// }
+
+	// $scope.onChangeFromula=function(){
+	
+  // }
+  // $scope.onChangeFunction=function(){
    
-  }
+  // }
   
-  $scope.onChangeRhsParamList=function(){
+  // $scope.onChangeRhsParamList=function(){
    
-  }
+  // }
 
   $scope.onChangeSourceAttribute = function (type, index) {
+    $scope.attributeTableArray[index].isOnDropDown=true;
     if (type == "string") {
       $scope.attributeTableArray[index].isSourceAtributeSimple = true;
       $scope.attributeTableArray[index].sourcesimple = "''";
@@ -1048,7 +1235,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
       $scope.attributeTableArray[index].isSourceAtributeExpression = false;
       $scope.attributeTableArray[index].isSourceAtributeFunction = false;
       $scope.attributeTableArray[index].isSourceAtributeParamList = false;
-        if($scope.ruleLodeFormula && $scope.ruleLodeFormula.length ==0)
+        if($scope.ruleLodeFormula==null)
         $scope.getSourceByFormula();
 
     } else if (type == "expression") {
@@ -1137,19 +1324,127 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
     }
     $scope.getOneByUuidParamList();
   }
-
+  
+  $scope.onChangeFunction=function(data,index){
+    $scope.attributeTableArray[index].name = data.name;
+    setTimeout(function(){
+			if($scope.attributeTableArray.length > CF_GRID.framework_autopopulate_grid){
+				$scope.attributeTableArray[index].isOnDropDown=false;
+			}	
+			else{
+				$scope.attributeTableArray[index].isOnDropDown=true;
+			}
+		},10);
+    var dupArray=[];
+		for(var i=0;i<$scope.attributeTableArray.length;i++){
+			setTimeout(function(index){
+				if ($scope.attributeTableArray[index].name) {
+					var res =isDublication($scope.attributeTableArray, "name", index, "sourceName" +index, dupArray);
+					if(res.length >0 ){
+						$scope.isDuplication = true;
+					}else {
+						$scope.isDuplication = false;
+					}
+				}
+			},10,(i));
+		}
+  }
   $scope.onChangeAttributeDatapod = function (data, index) {
-    $scope.attributeTableArray[index].name = data.name
+    $scope.attributeTableArray[index].name = data.name;
+    setTimeout(function(){
+			if($scope.attributeTableArray.length > CF_GRID.framework_autopopulate_grid){
+				$scope.attributeTableArray[index].isOnDropDown=false;
+			}	
+			else{
+				$scope.attributeTableArray[index].isOnDropDown=true;
+			}
+		},10);
+    var dupArray=[];
+		for(var i=0;i<$scope.attributeTableArray.length;i++){
+			setTimeout(function(index){
+				if ($scope.attributeTableArray[index].name) {
+					var res =isDublication($scope.attributeTableArray, "name", index, "sourceName" +index, dupArray);
+					if(res.length >0 ){
+						$scope.isDuplication = true;
+					}else {
+						$scope.isDuplication = false;
+					}
+				}
+			},10,(i));
+		}
   }
   $scope.onChangeFormula = function (data, index) {
-    $scope.attributeTableArray[index].name = data.name
+    $scope.attributeTableArray[index].name = data.name;
+    setTimeout(function(){
+			if($scope.attributeTableArray.length > CF_GRID.framework_autopopulate_grid){
+				$scope.attributeTableArray[index].isOnDropDown=false;
+			}	
+			else{
+				$scope.attributeTableArray[index].isOnDropDown=true;
+			}
+		},10);
+    var dupArray=[];
+		for(var i=0;i<$scope.attributeTableArray.length;i++){
+			setTimeout(function(index){
+				if ($scope.attributeTableArray[index].name) {
+					var res =isDublication($scope.attributeTableArray, "name", index, "sourceName" +index, dupArray);
+					if(res.length >0 ){
+						$scope.isDuplication = true;
+					}else {
+						$scope.isDuplication = false;
+					}
+				}
+			},10,(i));
+		}
   }
   $scope.onChangeExpression = function (data, index) {
-    $scope.attributeTableArray[index].name = data.name
+    $scope.attributeTableArray[index].name = data.name;
+    setTimeout(function(){
+			if($scope.attributeTableArray.length > CF_GRID.framework_autopopulate_grid){
+				$scope.attributeTableArray[index].isOnDropDown=false;
+			}	
+			else{
+				$scope.attributeTableArray[index].isOnDropDown=true;
+			}
+		},10);
+    var dupArray=[];
+		for(var i=0;i<$scope.attributeTableArray.length;i++){
+			setTimeout(function(index){
+				if ($scope.attributeTableArray[index].name) {
+					var res =isDublication($scope.attributeTableArray, "name", index, "sourceName" +index, dupArray);
+					if(res.length >0 ){
+						$scope.isDuplication = true;
+					}else {
+						$scope.isDuplication = false;
+					}
+				}
+			},10,(i));
+		}
   }
 
   $scope.onChangeAttributeParamlist = function (data, index) {
-    $scope.attributeTableArray[index].name = data.paramName
+    $scope.attributeTableArray[index].name = data.paramName;
+    setTimeout(function(){
+			if($scope.attributeTableArray.length > CF_GRID.framework_autopopulate_grid){
+				$scope.attributeTableArray[index].isOnDropDown=false;
+			}	
+			else{
+				$scope.attributeTableArray[index].isOnDropDown=true;
+			}
+		},10);
+    var dupArray=[];
+		for(var i=0;i<$scope.attributeTableArray.length;i++){
+			setTimeout(function(index){
+				if ($scope.attributeTableArray[index].name) {
+					var res =isDublication($scope.attributeTableArray, "name", index, "sourceName" +index, dupArray);
+					if(res.length >0 ){
+						$scope.isDuplication = true;
+					}else {
+						$scope.isDuplication = false;
+					}
+				}
+			},10,(i));
+		}
   }
 
   $scope.checkAllAttributeRow = function () {
@@ -1163,13 +1458,79 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
       $scope.attributeTableArray = [];
     }
     var len = $scope.attributeTableArray.length + 1
-    var attrivuteinfo = {};
-    attrivuteinfo.name = "attribute" + len;
-    attrivuteinfo.sourceAttributeType = $scope.sourceAttributeTypes[0];
-    attrivuteinfo.isSourceAtributeSimple = true;
-    attrivuteinfo.sourcesimple;
-    attrivuteinfo.isSourceAtributeDatapod = false;
-    $scope.attributeTableArray.splice($scope.attributeTableArray.length, 0, attrivuteinfo);
+    var attributeinfo = {};
+    attributeinfo.name = "attribute" + len;
+    if($scope.attributeTableArray.length ==0){
+			attributeinfo.id=$scope.attributeTableArray.length;
+		}else{
+			attributeinfo.id =CommonFactory.getMaxSourceSeqId($scope.attributeTableArray,"id")+1;
+		}
+		attributeinfo.index = len;
+    attributeinfo.sourceAttributeType = $scope.sourceAttributeTypes[0];
+    attributeinfo.isSourceAtributeSimple = true;
+    attributeinfo.sourcesimple;
+    attributeinfo.isSourceAtributeDatapod = false;
+    $scope.attributeTableArray.splice($scope.attributeTableArray.length, 0, attributeinfo);
+    $scope.focusRow(len-1)
+  }
+
+  $scope.autoPopulate=function(){
+    $scope.isAutoMapInprogess=true;
+    $scope.attributeTableArray=[];
+    $scope.attrTableSelectedItem=[];
+    var dupArray=[];
+    $timeout(function(){
+		for(var i=0;i<$scope.sourcedatapodattribute.length;i++){
+			var attributeinfo = {};
+      attributeinfo.id =i;
+      if($scope.sourcedatapodattribute.length >CF_GRID.framework_autopopulate_grid)
+				attributeinfo.isOnDropDown=false;
+			else
+				attributeinfo.isOnDropDown=true;
+			attributeinfo.sourcedatapod=$scope.sourcedatapodattribute[i];
+			attributeinfo.name=$scope.sourcedatapodattribute[i].name;
+			attributeinfo.sourceAttributeType = $scope.sourceAttributeTypes[1];
+			attributeinfo.isSourceAtributeSimple = false;
+			attributeinfo.isSourceAtributeDatapod = true;
+			attributeinfo.isSourceAtributeFormula = false;
+			attributeinfo.isSourceAtributeExpression = false;
+			attributeinfo.isSourceAtributeFunction = false;
+			attributeinfo.isSourceAtributeParamList = false;
+      $scope.attributeTableArray.push(attributeinfo);
+      setTimeout(function(index){
+				var result=$scope.onChangeSourceName1(index,dupArray);
+				if(result.length >0 ){
+					$scope.isDuplication = true;
+				}else {
+					$scope.isDuplication = false;
+				}
+      },10,(i));
+      
+
+		}
+		if(i== $scope.attributeTableArray.length)
+      $scope.isAutoMapInprogess=false;
+
+    },40);
+	}
+
+  $scope.onAttrRowDown=function(index){  
+    var rowTempIndex=$scope.attributeTableArray[index];
+    var rowTempIndexPlus=$scope.attributeTableArray[index+1];
+    $scope.attributeTableArray[index]=rowTempIndexPlus;
+    $scope.attributeTableArray[index+1]=rowTempIndex;
+  }
+  $scope.onAttrRowUp=function(index){
+    var rowTempIndex=$scope.attributeTableArray[index];
+    var rowTempIndexMines=$scope.attributeTableArray[index-1];
+    $scope.attributeTableArray[index]=rowTempIndexMines;
+    $scope.attributeTableArray[index-1]=rowTempIndex;
+  }
+  $scope.focusRow = function(rowId){
+    $timeout(function() {
+      $location.hash(rowId);
+      $anchorScroll();
+    });
   }
 
   $scope.removeAttribute = function () {
@@ -1178,23 +1539,37 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
     angular.forEach($scope.attributeTableArray, function (selected) {
       if (!selected.selected) {
         newDataList.push(selected);
+        $scope.attrTableSelectedItem=[];
+
       }
     });
     $scope.attributeTableArray = newDataList;
+    var dupArray=[];
+		for(var i=0;i<$scope.attributeTableArray.length;i++){
+			setTimeout(function(index){
+				var result=$scope.onChangeSourceName1(index,dupArray);
+				if(result.length >0 ){
+					$scope.isDuplication = true;
+				}else {
+					$scope.isDuplication = false;
+				}
+			},10,(i));
+		}
   }
 
-  $scope.hideOk = function (m) {
-    if (m === 1) {
-      $scope.showModal1 = false;
-      $scope.filterTableArray = [];
-    }
-  }
+  // $scope.hideOk = function (m) {
+  //   if (m === 1) {
+  //     $scope.showModal1 = false;
+  //     $scope.filterTableArray = [];
+  //     $scope.attributeTableArray=[];
+  //   }
+  // }
 
-  $scope.hideCancel = function (m) {
-    if (m === 1) {
-      $scope.showModal1 = false;
-    }
-  }
+  // $scope.hideCancel = function (m) {
+  //   if (m === 1) {
+  //     $scope.showModal1 = false;
+  //   }
+  // }
 
   $scope.modalOneShown = function () {
     //console.log('model one shown');
@@ -1210,9 +1585,8 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
   }
 
   $scope.okrulesave = function () {
-    $('#rulesave').css("dispaly", "none");
     var hidemode = "yes";
-    if (hidemode == 'yes') {
+  if (hidemode == 'yes' && $scope.isDestoryState==false) {
       setTimeout(function () {
         $state.go('viewrule');
       }, 2000);
@@ -1231,6 +1605,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
     ruleJson.name = $scope.ruleData.name;
     ruleJson.desc = $scope.ruleData.desc;
     ruleJson.active = $scope.ruleData.active;
+    ruleJson.locked = $scope.ruleData.locked;
     ruleJson.published = $scope.ruleData.published;
     var tagArray = [];
     if ($scope.tags != null) {
@@ -1246,7 +1621,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
     var ref = {};
     ref.type = $scope.rulsourcetype
     ref.uuid = $scope.ruleRelation.defaultoption.uuid;
-    ref.version = $scope.ruleRelation.defaultoption.version;
+   // ref.version = $scope.ruleRelation.defaultoption.version;
     source.ref = ref;
     ruleJson.source = source;
     if ($scope.allparamlist && $scope.allparamlist.defaultoption != null) {
@@ -1269,7 +1644,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
           var lhsref = {};
           var rhsoperand = {};
           var rhsref = {};
-
+          filterInfo.display_seq=i;
           if (typeof $scope.filterTableArray[i].logicalOperator == "undefined") {
             filterInfo.logicalOperator=""
           }
@@ -1382,7 +1757,8 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
     if ($scope.attributeTableArray) {
       for (var l = 0; l < $scope.attributeTableArray.length; l++) {
         attributeinfo = {}
-        attributeinfo.attrSourceId = l;
+        attributeinfo.attrSourceId =$scope.attributeTableArray[l].id;
+			  attributeinfo.attrDisplaySeq = l;
         attributeinfo.attrSourceName = $scope.attributeTableArray[l].name
         var ref = {};
         var sourceAttr = {};
@@ -1392,16 +1768,18 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
           sourceAttr.value = $scope.attributeTableArray[l].sourcesimple;
           attributeinfo.sourceAttr = sourceAttr;
         } else if ($scope.attributeTableArray[l].sourceAttributeType.text == "datapod") {
-          if ($scope.rulsourcetype == "dataset") {
-            ref.type = "dataset";
-            ref.uuid = $scope.ruleRelation.defaultoption.uuid;
-          } else if ($scope.rulsourcetype == "rule") {
-            ref.type = "rule";
-            ref.uuid = $scope.ruleRelation.defaultoption.uuid;
-          } else {
-            ref.type = "datapod";
-            ref.uuid = $scope.attributeTableArray[l].sourcedatapod.uuid;
-          }
+          // if ($scope.rulsourcetype == "dataset") {
+          //   ref.type = "dataset";
+          //   ref.uuid = $scope.ruleRelation.defaultoption.uuid;
+          // } else if ($scope.rulsourcetype == "rule") {
+          //   ref.type = "rule";
+          //   ref.uuid = $scope.ruleRelation.defaultoption.uuid;
+          // } else {
+          //   ref.type = "datapod";
+          //   ref.uuid = $scope.attributeTableArray[l].sourcedatapod.uuid;
+          // }
+          ref.type = $scope.attributeTableArray[l].sourcedatapod.type;
+			  	ref.uuid = $scope.attributeTableArray[l].sourcedatapod.uuid;
           sourceAttr.ref = ref;
           sourceAttr.attrId = $scope.attributeTableArray[l].sourcedatapod.attributeId;
           sourceAttr.attrType = $scope.attributeTableArray[l].sourcedatapod.attrType;
@@ -1443,7 +1821,7 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
       onSuccess(response.data)
     }, function (response) { onError(response.data) });
     var onSuccess = function (response) {
-      if(options.execution == "YES") {
+      if(options.execution == "YES" && $scope.allparamlist.defaultoption != null) {
         $scope.ruleId=response.data;
         $scope.showParamlistPopup();
         // RuleService.getOneById(response.data, "rule").then(function (response) {
@@ -1453,9 +1831,17 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
         //   $scope.modelExecute(result.data);
         // }
       } //End if
+      else if(options.execution == "YES" && $scope.allparamlist.defaultoption == null){
+          RuleService.getOneById(response.data, "rule").then(function (response) {
+          onSuccessGetOneById(response.data)
+        });
+        var onSuccessGetOneById = function (result) {
+          $scope.modelExecute(result.data);
+        }
+      }
       else {
         $scope.dataLoading = false;
-        $scope.saveMessage = "Rule Saved Successfully"
+        $scope.saveMessage = CF_SUCCESS_MSG.ruleSave//"Rule Saved Successfully"
         notify.type = 'success',
         notify.title = 'Success',
         notify.content = $scope.saveMessage
@@ -1471,10 +1857,78 @@ RuleModule.controller('DetailRuleController', function (privilegeSvc, $state, $c
     }
   }
 
+  $scope.attrTableSelectedItem=[];
+	$scope.onChangeAttRow=function(index,status){
+		if(status ==true){
+			$scope.attrTableSelectedItem.push(index);
+		}
+		else{
+			let tempIndex=$scope.attrTableSelectedItem.indexOf(index);
+
+			if(tempIndex !=-1){
+				$scope.attrTableSelectedItem.splice(tempIndex, 1);
+
+			}
+		}	
+	}
+	$scope.fitlerAttrTableSelectedItem=[];
+	$scope.onChangeFilterAttRow=function(index,status){
+		if(status ==true){
+			$scope.fitlerAttrTableSelectedItem.push(index);
+		}
+		else{
+			let tempIndex=$scope.fitlerAttrTableSelectedItem.indexOf(index);
+
+			if(tempIndex !=-1){
+				$scope.fitlerAttrTableSelectedItem.splice(tempIndex, 1);
+
+			}
+		}	
+	}
+	$scope.autoMove=function(index,type){
+		if(type=="mapAttr"){
+			var tempAtrr=$scope.attributeTableArray[$scope.attrTableSelectedItem[0]];
+			$scope.attributeTableArray.splice($scope.attrTableSelectedItem[0],1);
+			$scope.attributeTableArray.splice(index,0,tempAtrr);
+			$scope.attrTableSelectedItem=[];
+			$scope.attributeTableArray[index].selected=false;
+		}
+		else{
+			var tempAtrr=$scope.filterTableArray[$scope.fitlerAttrTableSelectedItem[0]];
+			$scope.filterTableArray.splice($scope.fitlerAttrTableSelectedItem[0],1);
+			$scope.filterTableArray.splice(index,0,tempAtrr);
+			$scope.fitlerAttrTableSelectedItem=[];
+			$scope.filterTableArray[index].selected=false;
+			$scope.filterTableArray[0].logicalOperator="";
+			if($scope.filterTableArray[index].logicalOperator =="" && index !=0){
+				$scope.filterTableArray[index].logicalOperator=$scope.logicalOperator[0];
+			}else if($scope.filterTableArray[index].logicalOperator =="" && index ==0){
+				$scope.filterTableArray[index+1].logicalOperator=$scope.logicalOperator[0];
+			}
+		}
+	}
+
+	$scope.autoMoveTo=function(index,type){
+		if(type =="mapAttr"){
+			if(index <= $scope.attributeTableArray.length){
+				$scope.autoMove(index-1,'mapAttr');
+				$scope.moveTo=null;
+				$(".actions").removeClass("open");
+			}
+		}
+		else{
+			if(index <= $scope.filterTableArray.length){
+				$scope.autoMove(index-1,'filterAttr');
+				$scope.moveTo=null;
+				$(".actions").removeClass("open");
+			}
+		}
+	}
+
 });
 
 
-RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $filter, $stateParams, $rootScope, $scope, RuleGroupService, privilegeSvc,CommonService) {
+RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $filter, $stateParams, $rootScope, $scope, RuleGroupService, privilegeSvc,CommonService, CF_SUCCESS_MSG) {
   $scope.select = 'rules group';
   if ($stateParams.mode == 'true') {
     $scope.isEdit = false;
@@ -1508,6 +1962,7 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
   else {
     $scope.isAdd = true;
   }
+  $scope.isDestoryState = false;
   $scope.userDetail={}
 	$scope.userDetail.uuid= $rootScope.setUseruuid;
 	$scope.userDetail.name= $rootScope.setUserName;
@@ -1545,6 +2000,10 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
 	};
   $scope.getLovByType();
 
+  $scope.$on('$destroy', function () {
+    $scope.isDestoryState = true;
+  });
+
   $scope.showPage = function () {
     $scope.showForm = true;
     $scope.showGraphDiv = false;
@@ -1557,6 +2016,9 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
   }
 
   $scope.enableEdit = function (uuid, version) {
+    if($scope.isPrivlage || $scope.ruleGroupDetail.locked =="Y"){
+      return false;
+    } 
     $scope.showPage()
     $state.go('createrulesgroup', {
       id: uuid,
@@ -1564,6 +2026,16 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
       mode: 'false'
     });
   }
+
+  $scope.showHome=function(uuid, version,mode){
+		$scope.showPage();
+		$state.go('createrulesgroup', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+  }
+  
   $scope.showview = function (uuid, version) {
     if(!$scope.isEdit){
       $scope.showPage()
@@ -1595,8 +2067,9 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
   if (typeof $stateParams.id != "undefined") {
     $scope.mode = $stateParams.mode;
     $scope.isDependencyShow = true;
-    RuleGroupService.getAllVersionByUuid($stateParams.id, "rulegroup").then(function (response) {
-      onGetAllVersionByUuid(response.data)
+    $scope.isEditInprogess=true;
+    $scope.isEditVeiwError=false;
+    RuleGroupService.getAllVersionByUuid($stateParams.id, "rulegroup").then(function (response) {onGetAllVersionByUuid(response.data)
     });
     var onGetAllVersionByUuid = function (response) {
       for (var i = 0; i < response.length; i++) {
@@ -1606,11 +2079,10 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
       }
 
     }
-    RuleGroupService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'rulegroup').then(function (response) {
-      onsuccess(response.data)
-    });
+    RuleGroupService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'rulegroup')
+    .then(function (response) { onsuccess(response.data)},function(response) {onError(response.data)});
     var onsuccess = function (response) {
-      //console.log(JSON.stringify(response))
+      $scope.isEditInprogess=false;
       $scope.ruleGroupDetail = response;
       if(response.tag)
       $scope.tags = response.tags;
@@ -1624,39 +2096,50 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
         var ruletag = {};
         ruletag.uuid = response.ruleInfo[i].ref.uuid;
         ruletag.name = response.ruleInfo[i].ref.name;
-        ruletag.id = response.ruleInfo[i].ref.uuid //+ "_" + response.ruleInfo[i].ref.version;
+        ruletag.id = response.ruleInfo[i].ref.uuid 
         ruletag.version = response.ruleInfo[i].ref.version;
         ruleTagArray[i] = ruletag;
       }
       $scope.ruleTags = ruleTagArray
     }
+    var onError =function(){
+      $scope.isEditInprogess=false;
+      $scope.isEditVeiwError=true;
+    } 
+  }else{
+    $scope.ruleGroupDetail={};
+    $scope.ruleGroupDetail.locked="N";
   }
 
   $scope.selectVersion = function () {
     $scope.myform.$dirty = false;
-    RuleGroupService.getOneByUuidAndVersion($scope.rulegroup.defaultVersion.uuid, $scope.rulegroup.defaultVersion.version, 'rulegroup').then(function (response) {
-      onsuccess(response.data)
-    });
+    $scope.isEditInprogess=true;
+    $scope.isEditVeiwError=false;
+    RuleGroupService.getOneByUuidAndVersion($scope.rulegroup.defaultVersion.uuid, $scope.rulegroup.defaultVersion.version, 'rulegroup')
+    .then(function (response) { onsuccess(response.data)},function(response) {onError(response.data)});
     var onsuccess = function (response) {
-      //console.log(JSON.stringify(response))
+      $scope.isEditInprogess=false;
       $scope.ruleGroupDetail = response;
       $scope.tags = response.tags;
       var defaultversion = {};
       defaultversion.version = response.version;
       defaultversion.uuid = response.uuid;
       $scope.rulegroup.defaultVersion = defaultversion;
-      // $scope.checkboxModelparallel=
       var ruleTagArray = [];
       for (var i = 0; i < response.ruleInfo.length; i++) {
         var ruletag = {};
         ruletag.uuid = response.ruleInfo[i].ref.uuid;
         ruletag.name = response.ruleInfo[i].ref.name;
-        ruletag.id = response.ruleInfo[i].ref.uuid //+ "_" + response.ruleInfo[i].ref.version;
+        ruletag.id = response.ruleInfo[i].ref.uuid;
         ruletag.version = response.ruleInfo[i].ref.version;
         ruleTagArray[i] = ruletag;
       }
       $scope.ruleTags = ruleTagArray
-    }
+    };
+    var onError =function(){
+      $scope.isEditInprogess=false;
+      $scope.isEditVeiwError=true;
+    } 
   }
 
   $scope.loadRules = function (query) {
@@ -1666,8 +2149,9 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
   };
 
   $scope.okrulesave = function () {
+
     var hidemode = "yes";
-    if (hidemode == 'yes') {
+  if (hidemode == 'yes' && $scope.isDestoryState==false) {
       setTimeout(function () {
         $state.go('rulesgroup');
       }, 2000);
@@ -1687,6 +2171,7 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
     ruleGroupJson.name = $scope.ruleGroupDetail.name;
     ruleGroupJson.desc = $scope.ruleGroupDetail.desc;
     ruleGroupJson.active = $scope.ruleGroupDetail.active;
+    ruleGroupJson.locked = $scope.ruleGroupDetail.locked;
     ruleGroupJson.published = $scope.ruleGroupDetail.published;
     var tagArray = [];
     if ($scope.tags != null) {
@@ -1727,7 +2212,7 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
           var onSuccess = function (response) {
             console.log(JSON.stringify(response))
             $scope.dataLoading = false;
-            $scope.saveMessage = "Rule Group Saved and Submitted Successfully"
+            $scope.saveMessage = CF_SUCCESS_MSG.ruleGroupSaveExecute//"Rule Groups Saved and Submitted Successfully"
             notify.type = 'success',
             notify.title = 'Success',
             notify.content = $scope.saveMessage
@@ -1742,7 +2227,7 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
       } //End If
       else {
         $scope.dataLoading = false;
-        $scope.saveMessage = "Rule Group Saved Successfully"
+        $scope.saveMessage =  CF_SUCCESS_MSG.ruleGroupSave//"Rule Groups Saved Successfully"
         notify.type = 'success',
         notify.title = 'Success',
         notify.content = $scope.saveMessage
@@ -1758,6 +2243,8 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
       $scope.$emit('notify', notify);
     }
   } //End Submit Function
+
+  
 });
 
 

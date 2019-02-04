@@ -17,14 +17,11 @@ import java.util.concurrent.Callable;
 import org.apache.log4j.Logger;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
-import org.apache.spark.sql.SQLContext;
-import org.apache.spark.sql.SaveMode;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IMapExecDao;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -40,6 +37,7 @@ import com.inferyx.framework.domain.ResultType;
 import com.inferyx.framework.domain.SessionContext;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.enums.SaveMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ConnectionFactory;
@@ -50,7 +48,6 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 	ConnectionFactory connFactory;
 	
 	protected MapExec mapExec;
-	protected MetadataUtil daoRegister;
 	protected IMapExecDao iMapExecDao;
 	protected List<java.util.Map<String, Object>> data;
 	private HDFSInfo hdfsInfo;
@@ -189,60 +186,41 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 		this.iMapExecDao = iMapExecDao;
 	}
 
-	public MetadataUtil getDaoRegister() {
-		return daoRegister;
-	}
-
-
 	public MapExec getMapExec() {
 		return mapExec;
 	}
 
-
 	public void setMapExec(MapExec mapExec) {
 		this.mapExec = mapExec;
-	}
-
-
-	public void setDaoRegister(MetadataUtil daoRegister) {
-		this.daoRegister = daoRegister;
-	}
- 
+	} 
 	
 	public List<java.util.Map<String, Object>> getData() {
 		return data;
 	}
 
-
 	public void setData(List<java.util.Map<String, Object>> data) {
 		this.data = data;
-	}
-	
+	}	
 
 	public HDFSInfo getHdfsInfo() {
 		return hdfsInfo;
 	}
 
-
 	public void setHdfsInfo(HDFSInfo hdfsInfo) {
 		this.hdfsInfo = hdfsInfo;
 	}
-
 
 	public DataStoreServiceImpl getDataStoreServiceImpl() {
 		return dataStoreServiceImpl;
 	}
 
-
 	public void setDataStoreServiceImpl(DataStoreServiceImpl dataStoreServiceImpl) {
 		this.dataStoreServiceImpl = dataStoreServiceImpl;
 	}
 
-
 	public Map getMap() {
 		return map;
 	}
-
 
 	public void setMap(Map map) {
 		this.map = map;
@@ -314,97 +292,95 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 			long countRows = -1L;
 			// Set status to In Progress
 			mapExec = (MapExec) commonServiceImpl.setMetaStatus(mapExec, MetaType.mapExec, Status.Stage.InProgress);
-//			statusList = commonServiceImpl.setMetaStatus(mapExec.getUuid(), mapExec.getVersion(), MetaType.mapExec, Status.Stage.InProgress);
-//			mapExec.setStatus(statusList);
-//			mapExecServiceImpl.save(mapExec);
 			
 			if (datapodKey.getVersion() == null) {
-				MetaIdentifier datapodKeyRef = new MetaIdentifier(MetaType.datapod, datapodKey.getUUID(), datapodKey.getVersion());
-			    daoRegister.getRefObject(datapodKeyRef);
-			    datapodKey.setVersion(datapodKeyRef.getVersion());
+//				MetaIdentifier datapodKeyRef = new MetaIdentifier(MetaType.datapod, datapodKey.getUUID(), datapodKey.getVersion());
+//			    daoRegister.getRefObject(datapodKeyRef);
+				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodKey.getUUID(), datapodKey.getVersion(), MetaType.datapod.toString(), "N");
+			    datapodKey.setVersion(datapod.getVersion());
 			}
 			// Form file and table name
-			String filePath = String.format("/%s/%s/%s", 
-					datapodKey.getUUID(), 
-					datapodKey.getVersion(), 
-					mapExec.getVersion());
+			String filePath = String.format("/%s/%s/%s", datapodKey.getUUID(), datapodKey.getVersion(), mapExec.getVersion());
 			String mapTableName  = null;
 			mapTableName = String.format("%s_%s_%s", datapodKey.getUUID().replace("-", "_"), datapodKey.getVersion(), mapExec.getVersion());
-			Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersionWithoutAppUuid(datapodKey.getUUID(), datapodKey.getVersion(), MetaType.datapod.toString());
+			Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersionWithoutAppUuid(datapodKey.getUUID(), datapodKey.getVersion(), MetaType.datapod.toString());
 			Datasource appDatasource = commonServiceImpl.getDatasourceByApp();
-			Datasource tgtDatasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid(), datapod.getDatasource().getRef().getVersion(), datapod.getDatasource().getRef().getType().toString());
-			/*String executionEngine = engine.getExecEngine();
-			if(executionEngine.equalsIgnoreCase("livy-spark"))
-				executionEngine = "livy_spark";*/
+			Datasource targetDatasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(targetDatapod.getDatasource().getRef().getUuid(), targetDatapod.getDatasource().getRef().getVersion(), targetDatapod.getDatasource().getRef().getType().toString());
+			
 			IExecutor exec = execFactory.getExecutor(appDatasource.getType());
 			logger.info("Before map execution ");
 			String sql = mapExec.getExec();
-			if (/*!datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
-					&&*/ !tgtDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+			if (!targetDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+					&& appDatasource.getType().equalsIgnoreCase(targetDatasource.getType())) {
 				mapTableName = dataStoreServiceImpl.getTableNameByDatapod(datapodKey, runMode);
 				logger.info("Datapod: "+datapodKey.getUUID());
-				if(sql.startsWith("."))
-					sql = sql.substring(1);
 				
-				String partitionColls = Helper.getPartitionColumns(datapod);				
+				String partitionColls = Helper.getPartitionColumns(targetDatapod);				
 				logger.info("Partition collumns: "+partitionColls);
+				
 				String partitionClause = "";
-				if(partitionColls != null && !partitionColls.isEmpty())
+				if(partitionColls != null && !partitionColls.isEmpty()) {
 					partitionClause = " PARTITION ( " + partitionColls +" ) ";
-				if(tgtDatasource.getType().equalsIgnoreCase(ExecContext.HIVE.toString())
-						|| tgtDatasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString()))
+				}
+				
+				if(targetDatasource.getType().equalsIgnoreCase(ExecContext.HIVE.toString())
+						|| targetDatasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
 					sql = "INSERT OVERWRITE TABLE " + mapTableName +" "+ partitionClause + " " + sql;
-				else if(tgtDatasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())
-						|| tgtDatasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())
-						|| tgtDatasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString()))	
+				} else if(targetDatasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())
+						|| targetDatasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())
+						|| targetDatasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
 						sql = "INSERT INTO " + mapTableName + " " + sql;
+				}
 			}
 
 			logger.info("Running SQL : " + sql);
 			ResultSetHolder rsHolder = null;
-			Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(map.getTarget().getRef().getUuid(), map.getTarget().getRef().getVersion(), MetaType.datapod.toString());
-			Datasource targetDatasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(targetDatapod.getDatasource().getRef().getUuid(), 
-																								targetDatapod.getDatasource().getRef().getVersion(), 
-																								targetDatapod.getDatasource().getRef().getType().toString());
-			if(/*datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
-					||*/ targetDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString()))
-				rsHolder = exec.executeRegisterAndPersist(sql, mapTableName, filePath, datapod, SaveMode.Append.toString(), true, appUuid);
-			else
-				rsHolder = exec.executeSql(sql);
+
+			Datasource mapDatasource = commonServiceImpl.getDatasourceByObject(map);
+			if(appDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+					&& !targetDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+				rsHolder = exec.executeSqlByDatasource(sql, mapDatasource, appUuid);
+				if(targetDatasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+					mapTableName = targetDatasource.getSid().concat(".").concat(targetDatapod.getName());
+				} else {
+					mapTableName = targetDatasource.getDbname().concat(".").concat(targetDatapod.getName());					
+				}
+				rsHolder.setTableName(mapTableName);
+				rsHolder = exec.persistDataframe(rsHolder, targetDatasource, targetDatapod, SaveMode.APPEND.toString());
+			} else if(targetDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+				rsHolder = exec.executeRegisterAndPersist(sql, mapTableName, filePath, targetDatapod, SaveMode.APPEND.toString(), true, appUuid);
+			} else {
+				rsHolder = exec.executeSqlByDatasource(sql, mapDatasource, appUuid);
+			}
 			
 			if(rsHolder.getType().equals(ResultType.resultset) 
-					&& appDatasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString()))
-				rsHolder = exec.executeSql("SELECT * FROM " + mapTableName + " WHERE rownum<= " + 100 );
-			else if(rsHolder.getType().equals(ResultType.resultset) &&
-					(/*!datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
-							||*/ !appDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())))
-					rsHolder = exec.executeSql("SELECT * FROM " + mapTableName + " LIMIT " + 100 );
+					&& targetDatasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+				rsHolder = exec.executeSqlByDatasource("SELECT * FROM " + mapTableName + " WHERE rownum <= " + 100, mapDatasource, appUuid);
+			} else if(rsHolder.getType().equals(ResultType.resultset) &&
+					!targetDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+					rsHolder = exec.executeSqlByDatasource("SELECT * FROM " + mapTableName + " LIMIT " + 100, mapDatasource, appUuid);
+			}
 			
-			logger.info("After map execution before reading result ");
+			logger.info("After map execution.");
 			// Persist dataStore
 			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
-			Map map = (Map) daoRegister.getRefObject(new MetaIdentifier(MetaType.map,mapExec.getDependsOn().getRef().getUuid(),mapExec.getDependsOn().getRef().getVersion()));
+//			Map map = (Map) daoRegister.getRefObject(new MetaIdentifier(MetaType.map,mapExec.getDependsOn().getRef().getUuid(),mapExec.getDependsOn().getRef().getVersion()));
+			Map map = (Map) commonServiceImpl.getOneByUuidAndVersion(mapExec.getDependsOn().getRef().getUuid(), mapExec.getDependsOn().getRef().getVersion(), MetaType.map.toString(), "N");
 			logger.info("Before map persist ");
 			dataStoreServiceImpl.setRunMode(runMode);
-//			Datapod targetDatapod = (Datapod) commonServiceImpl.getLatestByUuid(map.getTarget().getRef().getUuid(), MetaType.datapod.toString());
+
 			map.getTarget().getRef().setVersion(targetDatapod.getVersion());
 			countRows = rsHolder.getCountRows();
 			dataStoreServiceImpl.create(filePath, mapTableName
 					, new MetaIdentifier(MetaType.datapod, map.getTarget().getRef().getUuid(), map.getTarget().getRef().getVersion())
 					, new MetaIdentifier(MetaType.mapExec, mapExec.getUuid(), mapExec.getVersion())
-					, map.getAppInfo(), map.getCreatedBy(), SaveMode.Append.toString(), resultRef, countRows
+					, map.getAppInfo(), map.getCreatedBy(), SaveMode.APPEND.toString(), resultRef, countRows
 					, Helper.getPersistModeFromRunMode(runMode.toString()), null);
 			logger.info("After map persist ");
 			mapExec.setResult(resultRef);
 			mapExec = (MapExec) commonServiceImpl.setMetaStatus(mapExec, MetaType.mapExec, Status.Stage.Completed);			
-//			statusList = commonServiceImpl.setMetaStatus(mapExec.getUuid(), mapExec.getVersion(), MetaType.mapExec, Status.Stage.Completed);
-//			mapExec.setStatus(statusList);
-//			mapExecServiceImpl.save(mapExec);
 		} catch (Exception e) {
 			mapExec = (MapExec) commonServiceImpl.setMetaStatus(mapExec, MetaType.mapExec, Status.Stage.Failed);			
-//			statusList = commonServiceImpl.setMetaStatus(mapExec.getUuid(), mapExec.getVersion(), MetaType.mapExec, Status.Stage.Failed);
-//			mapExec.setStatus(statusList);
-//			iMapExecDao.save(mapExec);
 			e.printStackTrace();
 			String message = null;
 			try {

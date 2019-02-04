@@ -10,42 +10,28 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.FutureTask;
 
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
-import org.apache.spark.api.java.JavaSparkContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.AggregationResults;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.MetadataUtil;
-import com.inferyx.framework.dao.IMapExecDao;
 import com.inferyx.framework.dao.IRuleGroupExecDao;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.ExecStatsHolder;
-import com.inferyx.framework.domain.Map;
 import com.inferyx.framework.domain.MapExec;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Status;
-import com.inferyx.framework.domain.User;
 import com.inferyx.framework.register.GraphRegister;
 
 @Service
@@ -56,8 +42,6 @@ public class MapExecServiceImpl {
 	JavaSparkContext javaSparkContext;*/
 	@Autowired
 	MongoTemplate mongoTemplate;
-	@Autowired
-	private IMapExecDao iMapExecDao;
 	@Autowired
 	UserServiceImpl userServiceImpl;	
 	@Autowired
@@ -74,8 +58,6 @@ public class MapExecServiceImpl {
 	MapServiceImpl mapServiceImpl;
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
-	@Autowired
-	MetadataUtil daoRegister;
 	@Resource(name="taskThreadMap")
 	ConcurrentHashMap taskThreadMap;
 	
@@ -323,8 +305,9 @@ public class MapExecServiceImpl {
 	 * @throws JsonProcessingException 
 	 */
 	public void kill (String uuid, String version) throws JsonProcessingException {
-		MetaIdentifier mapExecIdentifier = new MetaIdentifier(MetaType.mapExec, uuid, version);
-		MapExec mapExec = (MapExec) daoRegister.getRefObject(mapExecIdentifier);
+		MetaIdentifier mapExecMI = new MetaIdentifier(MetaType.mapExec, uuid, version);
+//		MapExec mapExec = (MapExec) daoRegister.getRefObject(mapExecMI);
+		MapExec mapExec = (MapExec) commonServiceImpl.getOneByUuidAndVersion(mapExecMI.getUuid(), mapExecMI.getVersion(), mapExecMI.getType().toString());
 		if (mapExec == null) {
 			logger.info("Nothing to kill. Aborting ... ");
 			return;

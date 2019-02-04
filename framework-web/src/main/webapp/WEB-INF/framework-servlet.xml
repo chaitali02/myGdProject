@@ -131,6 +131,8 @@
 	<bean id="zkConnMap" name="zkConnThreadList" class="java.util.concurrent.ConcurrentHashMap" />
 	<bean id="kafkaConsumerMap" name="kafkaConsumerMap" class="java.util.concurrent.ConcurrentHashMap" />
 	<bean id="streamMap" name="streamMap" class="java.util.concurrent.ConcurrentHashMap" />
+	<bean id="trainedModelMap" name="trainedModelMap" class="java.util.concurrent.ConcurrentHashMap" />
+	<bean id="portPIdMap" name="portPIdMap" class="java.util.concurrent.ConcurrentHashMap" />
 	
 	<bean id="livyClientImpl" class="com.inferyx.framework.client.LivyClientImpl">
 		<property name="sparkInfo" ref="sparkInfo" />
@@ -383,7 +385,7 @@
 	<bean id="postGresWriter" class="com.inferyx.framework.writer.PostGresWriter"/>
 	<bean id="postGresReader" class="com.inferyx.framework.reader.PostGresReader"/>
 	<bean id="postGresRegister" class="com.inferyx.framework.register.PostGresRegister"/> 
-	<bean id="profilePostGresOperator" class="com.inferyx.framework.operator.ProfilePostGresOperator"/>
+	<!-- <bean id="profilePostGresOperator" class="com.inferyx.framework.operator.ProfilePostGresOperator"/> -->
 	
 	<bean id="reconOperat
 		  or" class="com.inferyx.framework.operator.ReconOperator"/>
@@ -400,6 +402,7 @@
 	<bean id="transposeOldOperator" class="com.inferyx.framework.operator.TransposeOldOperator"/>
 	<bean id="loadOperator" class="com.inferyx.framework.operator.LoadOperator"/>
 	<bean id="histogramOperator" class="com.inferyx.framework.operator.HistogramOperator"/>
+	<bean id="sparkPCAOperator" class="com.inferyx.framework.operator.SparkPCAOperator"/>
 		
 	<!-- AOP beans mapping -->	
 	 <bean id="loggingAspect" class="com.inferyx.framework.aspect.LoggingAspect"/>

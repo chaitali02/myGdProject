@@ -74,8 +74,18 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 		$scope.showFrom = true;
 		$scope.showGraphDiv = false
 	}
-
+	$scope.showHome=function(uuid, version,mode){
+		$scope.showPage()
+		$state.go('metaListformula', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.formuladata.locked =="Y"){
+			return false;
+		  }
 		$scope.showPage()
 		$state.go('metaListformula', {
 			id: uuid,
@@ -126,6 +136,16 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 		{ "type": "simple", "value": "ELSE", "class": "formula_function btn " },
 		{ "type": "simple", "value": "END", "class": "formula_function btn " },
 		{ "type": "simple", "value": "THEN", "class": "formula_function btn " },
+		// { "type": "simple", "value": "OVER", "class": "formula_button btn " },
+		{ "type": "simple", "value": "IN", "class": "formula_button btn " },
+		{ "type": "simple", "value": "ORDER BY", "class": "formula_button btn " },
+		{ "type": "simple", "value": "PARTITION BY", "class": "formula_button btn " },
+		{ "type": "simple", "value": "BETWEEN", "class": "formula_button btn " },
+		{ "type": "simple", "value": " != ", "class": "formula_button btn " },
+		
+		{ "type": "simple", "value": "ASC", "class": "formula_button btn " },
+		{ "type": "simple", "value": "DESC", "class": "formula_button btn  " },
+			
 	]
 	$scope.fornulaHasChanged = true;
 	$scope.isshowmodel = false;
@@ -304,7 +324,10 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 		$scope.showactive = "true"
 		$scope.mode = $stateParams.mode;
 		$scope.isDependencyShow = true;
-		MetadataFormulaSerivce.getAllVersionByUuid($stateParams.id, "formula").then(function (response) { onSuccessGetAllVersionByUuid(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		MetadataFormulaSerivce.getAllVersionByUuid($stateParams.id, "formula")
+			.then(function (response) { onSuccessGetAllVersionByUuid(response.data) });
 		var onSuccessGetAllVersionByUuid = function (response) {
 			for (var i = 0; i < response.length; i++) {
 				var formulaversion = {};
@@ -312,8 +335,10 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 				$scope.formula.versions[i] = formulaversion;
 			}
 		}
-		MetadataFormulaSerivce.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'formula').then(function (response) { onSuccess(response.data) });
+		MetadataFormulaSerivce.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'formula')
+			.then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
 		var onSuccess = function (response) {
+			$scope.isEditInprogess=false;
 			var defaultversion = {};
 			$scope.formuladata = response.formuladata
 			$scope.formulainfoarray = response.formulainfoarray
@@ -350,11 +375,13 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 				}
 			}
 
-		}
+		};
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		};
 	} //End if
-
 	else {
-
 		if ($sessionStorage.fromStateName  && typeof $sessionStorage.fromStateName != "undefined" && $sessionStorage.fromStateName != "metadata" && $sessionStorage.fromStateName != "metaListformula") {
 			$scope.showactive = "false"
 			$scope.selectedDependsOnType = $sessionStorage.dependon.type
@@ -373,6 +400,10 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 				}
 			}
 		}//End Inner If
+		else{
+			$scope.formuladata={};
+			$scope.formuladata.locked="N";
+		}
 	}//End Else
 
 	$scope.clear = function () {
@@ -390,7 +421,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 			return false;
 		}
 		$scope.myform.$dirty=true ;
-		var aggrfun = ["SUM", "MIN", "MAX", "COUNT", "AVG"]
+		var aggrfun = ["SUM", "MIN", "MAX", "COUNT", "AVG","OVER"]
 		var len = $scope.formulainfoarray.length;
 		if (aggrfun.indexOf(data.value) > -1) {
 			MetadataFormulaSerivce.getFunctionByFunctionInfo(data.value.toLowerCase()).then(function (response) { onSuccessGetFunctionByFunctionInfo(response.data) });
@@ -457,7 +488,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 			}
 		}
 		else if($scope.attributeType.text == "paramlist"){
-			debugger
+			
 			data.type = $scope.attributeType.text
 			data.value = $scope.sourceparamlist.dname
 			data.uuid = $scope.sourceparamlist.uuid;
@@ -570,8 +601,12 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 	$scope.selectVersion = function () {
 		$scope.allformuladepands = null;
 		$scope.myform.$dirty = false;
-		MetadataFormulaSerivce.getOneByUuidAndVersion($scope.formula.defaultVersion.uuid, $scope.formula.defaultVersion.version, 'formula').then(function (response) { onSuccess(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		MetadataFormulaSerivce.getOneByUuidAndVersion($scope.formula.defaultVersion.uuid, $scope.formula.defaultVersion.version, 'formula')
+			.then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
 		var onSuccess = function (response) {
+			$scope.isEditInprogess=false;
 			var defaultversion = {};
 			$scope.formuladata = response.formuladata
 			$scope.formulainfoarray = response.formulainfoarray
@@ -580,7 +615,8 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 			defaultversion.uuid = response.formuladata.uuid;
 			$scope.formula.defaultVersion = defaultversion;
 			$scope.selectedDependsOnType = response.formuladata.dependsOn.ref.type
-			MetadataFormulaSerivce.getAllLatest(response.formuladata.dependsOn.ref.type).then(function (response) { onSuccessGetAllLatest(response.data) });
+			MetadataFormulaSerivce.getAllLatest(response.formuladata.dependsOn.ref.type)
+				.then(function (response) { onSuccessGetAllLatest(response.data) });
 			var onSuccessGetAllLatest = function (response) {
 				$scope.allformuladepands = response
 				var defaultoption = {};
@@ -588,7 +624,8 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 				defaultoption.name = $scope.formuladata.dependsOn.ref.name;
 				$scope.allformuladepands.defaultoption = defaultoption;
 			}
-			MetadataFormulaSerivce.getAllAttributeBySource($scope.formuladata.dependsOn.ref.uuid, $scope.formuladata.dependsOn.ref.type).then(function (response) { onSuccessGetAllAttributeBySource(response.data) });
+			MetadataFormulaSerivce.getAllAttributeBySource($scope.formuladata.dependsOn.ref.uuid, $scope.formuladata.dependsOn.ref.type)
+				.then(function (response) { onSuccessGetAllAttributeBySource(response.data) });
 			var onSuccessGetAllAttributeBySource = function (resposne) {
 				$scope.allAttribute = resposne;
 			}
@@ -601,8 +638,11 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 					$scope.tags = tags;
 				}
 			}
-
-		}
+		};
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		};
 	}//End selectVersion
 
 
@@ -637,7 +677,8 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 		ref.uuid = $scope.allformuladepands.defaultoption.uuid
 		dependsOn.ref = ref;
 		formulaJson.dependsOn = dependsOn;
-		formulaJson.active = $scope.formuladata.active
+		formulaJson.active = $scope.formuladata.active;
+		formulaJson.locked = $scope.formuladata.locked;
 		formulaJson.published = $scope.formuladata.published
 		var formulaArray = [];
 		if ($scope.formulainfoarray.length > 0) {
@@ -686,7 +727,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 							formulaJson.formulaType = $scope.formulainfoarray[i].formulatype;
 					}
 					if ($scope.formulainfoarray[i].type == "function") {
-						if ($scope.formulainfoarray[i].category == "aggregate") {
+						if ($scope.formulainfoarray[i].category == "AGGREGATE") {
 							formulaJson.formulaType = "aggr"
 						}
 					}

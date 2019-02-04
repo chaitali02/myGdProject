@@ -24,7 +24,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IAlgorithmDao;
 import com.inferyx.framework.dao.IModelDao;
 import com.inferyx.framework.dao.IParamListDao;
@@ -75,8 +74,6 @@ public class ParamSetServiceImpl {
 	AlgorithmServiceImpl algorithmServiceImpl;
 	@Autowired
 	ParamListServiceImpl paramListServiceImpl;
-	@Autowired
-	MetadataUtil daoRegister;
 	@Autowired
 	RuleServiceImpl ruleServiceImpl;
 	@Autowired
@@ -461,7 +458,8 @@ public class ParamSetServiceImpl {
 		}
 		
 		if (paramSetHolder == null) {
-			ParamList paramList = (ParamList)daoRegister.getRefObject(ref);
+//			ParamList paramList = (ParamList)daoRegister.getRefObject(ref);
+			ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 			for (com.inferyx.framework.domain.Param param : paramList.getParams()) {
 				if (param.getParamId().equals(attributeId+"")) {
 					return param.getParamValue().getValue();
@@ -469,14 +467,18 @@ public class ParamSetServiceImpl {
 			}
 		}
 		
-		ParamSet paramSet = (ParamSet) daoRegister.getRefObject(paramSetHolder.getRef());
+//		ParamSet paramSet = (ParamSet) daoRegister.getRefObject(paramSetHolder.getRef());
+		ParamSet paramSet = (ParamSet) commonServiceImpl.getOneByUuidAndVersion(paramSetHolder.getRef().getUuid(), paramSetHolder.getRef().getVersion(), paramSetHolder.getRef().getType().toString(), "N");
+		
 		ParamInfo paramInfo = paramSet.getParamInfo().get(Integer.parseInt(paramSetHolder.getParamSetId()));
 		for (ParamListHolder paramListHolder : paramInfo.getParamSetVal()) {
 			if (paramListHolder.getParamId().equals(attributeId.toString())) {
 				if (StringUtils.isNotBlank(paramListHolder.getValue())) {
 					return paramListHolder.getValue();
 				} else {
-					ParamList paramList = (ParamList)daoRegister.getRefObject(paramListHolder.getRef());
+//					ParamList paramList = (ParamList)daoRegister.getRefObject(paramListHolder.getRef());
+					ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(paramListHolder.getRef().getUuid(), paramListHolder.getRef().getVersion(), paramListHolder.getRef().getType().toString(), "N");
+					
 					for (com.inferyx.framework.domain.Param param : paramList.getParams()) {
 						if (param.getParamId().equals(attributeId+"")) {
 							return param.getParamValue().getValue();

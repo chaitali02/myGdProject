@@ -1,10 +1,10 @@
-DROP TABLE IF EXISTS PORTFOLIO_LOSS_SIMULATION_AGGR; 
+drop table if exists portfolio_loss_simulation_aggr; 
 
-CREATE TABLE PORTFOLIO_LOSS_SIMULATION_AGGR 
+create table portfolio_loss_simulation_aggr 
   ( 
-     EXPECTED_LOSS    DECIMAL(10, 2), 
-     VALUE_AT_RISK    DECIMAL(10, 2), 
-     ECONOMIC_CAPITAL DECIMAL(10, 2), 
-     REPORTING_DATE   VARCHAR(50), 
-     VERSION          INTEGER(50) 
+     expected_loss    decimal(10, 2), 
+     value_at_risk    decimal(10, 2), 
+     economic_capital decimal(10, 2), 
+     reporting_date   varchar(50), 
+     version          integer(50) 
   );

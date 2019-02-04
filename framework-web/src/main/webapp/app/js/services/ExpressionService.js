@@ -20,10 +20,10 @@ MetadataModule.factory('MetadataExpressionFactory', function ($http, $location) 
 
 		}).then(function (response) { return response })
 	}
-	factory.submit = function (data,type,upd_tag) {
+	factory.submit = function (data, type, upd_tag) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
-			url: url + "common/submit?action=edit&type="+type+"&upd_tag="+upd_tag,
+			url: url + "common/submit?action=edit&type=" + type + "&upd_tag=" + upd_tag,
 			headers: {
 				'Accept': '*/*',
 				'content-Type': "application/json",
@@ -383,7 +383,8 @@ MetadataModule.service('MetadataExpressionSerivce', function ($q, sortFactory, M
 
 	this.getOneByUuidAndVersion = function (uuid, version, type) {
 		var deferred = $q.defer();
-		MetadataExpressionFactory.findOneByUuidAndVersion(uuid, version, type).then(function (response) { onSuccess(response.data) });
+		MetadataExpressionFactory.findOneByUuidAndVersion(uuid, version, type)
+			.then(function (response) { onSuccess(response.data) },function (response) { onError(response.data)});
 		var onSuccess = function (response) {
 
 			var expressionjson = {};
@@ -517,12 +518,17 @@ MetadataModule.service('MetadataExpressionSerivce', function ($q, sortFactory, M
 			deferred.resolve({
 				data: expressionjson
 			});
+		};
+		var onError = function (response) {
+			deferred.reject({
+			  data: response
+			})
 		}
 		return deferred.promise;
 	}
-	this.submit = function (data, type,upd_tag) {
+	this.submit = function (data, type, upd_tag) {
 		var deferred = $q.defer();
-		MetadataExpressionFactory.submit(data,type,upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		MetadataExpressionFactory.submit(data, type, upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			deferred.resolve({
 				data: response

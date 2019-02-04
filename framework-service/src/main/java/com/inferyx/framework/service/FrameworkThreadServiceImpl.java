@@ -102,7 +102,7 @@ public class FrameworkThreadServiceImpl {
 //			sessionDO.setSessionId(RequestContextHolder.currentRequestAttributes().getSessionId());
 
 			// Session savedSession = save(sessionDO);
-			commonServiceImpl.save(MetaType.session.toString(), sessionDO);
+			commonServiceImpl.save(MetaType.session.toString(), sessionDO, appInfo);
 
 			MetaIdentifier sessionMeta = new MetaIdentifier(MetaType.session, sessionDO.getUuid(),
 					sessionDO.getVersion());

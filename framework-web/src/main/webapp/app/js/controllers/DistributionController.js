@@ -73,7 +73,18 @@ DatascienceModule.controller('DistributionDetailController', function (CommonSer
 		$scope.showForm = true
 		$scope.showGraphDiv = false
 	}
+	$scope.showHome=function(uuid, version,mode){
+		$scope.showPage()
+		$state.go('createdistribution', {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
 	$scope.enableEdit = function (uuid, version) {
+		if($scope.isPrivlage || $scope.distributionData.locked =="Y"){
+			return false;
+		}
 		$scope.showPage();
 		$state.go('createdistribution', {
 			id: uuid,
@@ -125,23 +136,27 @@ DatascienceModule.controller('DistributionDetailController', function (CommonSer
 	if (typeof $stateParams.id != "undefined") {
 		$scope.mode = $stateParams.mode
 		$scope.isDependencyShow = true;
-		$scope.getAllVersion($stateParams.id)
-		CommonService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, "distribution").then(function (response) { onSuccessGetLatestByUuid(response.data) });
+		$scope.getAllVersion($stateParams.id);
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		CommonService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, "distribution")
+			.then(function (response){onSuccessGetLatestByUuid(response.data)},function(response){onError(response.data)});
 		var onSuccessGetLatestByUuid = function (response) {
-			$scope.distributionData = response
+			$scope.isEditInprogess=false;
+			$scope.distributionData = response;;
 			var defaultversion = {};
 			defaultversion.version = response.version;
 			defaultversion.uuid = response.uuid;
 			$scope.distribution.defaultVersion = defaultversion;
-		
-			$scope.selectedLibrary = response.library
+			$scope.selectedLibrary = response.library;
 			if($scope.distributionData.paramList !=null){
-				DistributionService.getAllLatest("paramlist").then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
+				DistributionService.getAllLatest("paramlist").
+					then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
 				var onSuccessGetAllLatestParamlist = function (response) {
 					$scope.allParamlist = response;
 					var paramlist = {};
 					paramlist.uuid = $scope.distributionData.paramList.ref.uuid;
-					paramlist.name = ""
+					paramlist.name = "";
 					$scope.selectedParamlist = paramlist;
 				}
 			}
@@ -150,17 +165,23 @@ DatascienceModule.controller('DistributionDetailController', function (CommonSer
 				for (var i = 0; i < response.tags.length; i++) {
 					var tag = {};
 					tag.text = response.tags[i];
-					tags[i] = tag
+					tags[i] = tag;
 					$scope.tags = tags;
 				}
 			}
 		}
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		}
 	}//End If
 	else {
-		DistributionService.getAllLatest("paramlist").then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
+		$scope.distributionData={};
+		$scope.distributionData.locked="N";
+		DistributionService.getAllLatest("paramlist")
+			.then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
 		var onSuccessGetAllLatestParamlist = function (response) {
 			$scope.allParamlist = response;
-			//$scope.selectedParamlist = $scope.allParamlist[0];
 		}
 	}
 
@@ -170,9 +191,13 @@ DatascienceModule.controller('DistributionDetailController', function (CommonSer
 		$scope.allParamlist = null;
 		$scope.selectedParamlist = null;
 		$scope.selectedLibrary = null;
-		DistributionService.getOneByUuidandVersion(uuid, version, 'distribution').then(function (response) { onGetByOneUuidandVersion(response.data) });
+		$scope.isEditInprogess=true;
+		$scope.isEditVeiwError=false;
+		DistributionService.getOneByUuidandVersion(uuid,version,'distribution')
+			.then(function (response) { onGetByOneUuidandVersion(response.data) },function(response){onError(response.data)});
 		var onGetByOneUuidandVersion = function (response) {
-			$scope.distributionData = response
+			$scope.isEditInprogess=false;
+			$scope.distributionData = response;
 			var defaultversion = {};
 			defaultversion.version = response.version;
 			defaultversion.uuid = response.uuid;
@@ -180,7 +205,8 @@ DatascienceModule.controller('DistributionDetailController', function (CommonSer
 			$scope.selecttype = response.type
 			$scope.selectedLibrary = response.library
 			if($scope.distributionData.paramList !=null){
-				DistributionService.getAllLatest("paramlist").then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
+				DistributionService.getAllLatest("paramlist")
+					.then(function (response) { onSuccessGetAllLatestParamlist(response.data) });
 				var onSuccessGetAllLatestParamlist = function (response) {
 					$scope.allParamlist = response;
 					var paramlist = {};
@@ -190,7 +216,10 @@ DatascienceModule.controller('DistributionDetailController', function (CommonSer
 				}
 		    }
 		}
-
+		var onError=function(){
+			$scope.isEditInprogess=false;
+			$scope.isEditVeiwError=true;
+		}
 	}
 
 	$scope.submit = function () {
@@ -204,6 +233,7 @@ DatascienceModule.controller('DistributionDetailController', function (CommonSer
 		distributionJson.name = $scope.distributionData.name;
 		distributionJson.desc = $scope.distributionData.desc;
 		distributionJson.active = $scope.distributionData.active;
+		distributionJson.locked = $scope.distributionData.locked;
 		distributionJson.published = $scope.distributionData.published;
 		distributionJson.library = $scope.selectedLibrary;
 		distributionJson.className = $scope.distributionData.className;

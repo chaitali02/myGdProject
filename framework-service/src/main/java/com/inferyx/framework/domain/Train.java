@@ -24,6 +24,72 @@ public class Train extends BaseEntity {
 	private AttributeRefHolder labelInfo;
 	private String useHyperParams;
 	private String featureImportance;
+	private List<AttributeRefHolder> rowIdentifier;
+	private String includeFeatures = "N";
+	private String saveTrainingSet = "N";
+	private MetaIdentifierHolder trainLocation;
+	private MetaIdentifierHolder testLocation;
+
+
+
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the saveTrainingSet
+	 */
+	public String getSaveTrainingSet() {
+		return saveTrainingSet;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param saveTrainingSet the saveTrainingSet to set
+	 */
+	public void setSaveTrainingSet(String saveTrainingSet) {
+		this.saveTrainingSet = saveTrainingSet;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the rowIdentifier
+	 */
+	public List<AttributeRefHolder> getRowIdentifier() {
+		return this.rowIdentifier;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param rowIdentifier the rowIdentifier to set
+	 */
+	public void setRowIdentifier(List<AttributeRefHolder> rowIdentifier) {
+		this.rowIdentifier = rowIdentifier;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @return the includeFeatures
+	 */
+	public String getIncludeFeatures() {
+		return this.includeFeatures;
+	}
+
+	/**
+	 *
+	 * @Ganesh
+	 *
+	 * @param includeFeatures the includeFeatures to set
+	 */
+	public void setIncludeFeatures(String includeFeatures) {
+		this.includeFeatures = includeFeatures;
+	}
 
 	/**
 	 *
@@ -121,4 +187,19 @@ public class Train extends BaseEntity {
 		this.valPercent = valPercent;
 	}
 
+	public MetaIdentifierHolder getTrainLocation() {
+		return trainLocation;
+	}
+
+	public void setTrainLocation(MetaIdentifierHolder trainLocation) {
+		this.trainLocation = trainLocation;
+	}
+
+	public MetaIdentifierHolder getTestLocation() {
+		return testLocation;
+	}
+
+	public void setTestLocation(MetaIdentifierHolder testLocation) {
+		this.testLocation = testLocation;
+	}
 }

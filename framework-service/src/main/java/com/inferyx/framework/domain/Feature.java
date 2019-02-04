@@ -10,15 +10,22 @@
  *******************************************************************************/
 package com.inferyx.framework.domain;
 
+import com.inferyx.framework.enums.EncodingType;
 
 public class Feature {
 	private String featureId;
+	private String featureDisplaySeq;
 	private String name;
 	private String type;
 	private String desc;
 	private int minVal;
 	private int maxVal;
+//	private double defaultValue;
 	private ParamListHolder paramListInfo;
+	private EncodingType encodingType;
+    private MetaIdentifierHolder imputeMethod;
+	
+	
 	
 	/**
 	 * @Ganesh
@@ -133,4 +140,43 @@ public class Feature {
 		this.maxVal = maxVal;
 	}
 	
+	public String getFeatureDisplaySeq() {
+		return featureDisplaySeq;
+	}
+	
+	public void setFeatureDisplaySeq(String featureDisplaySeq) {
+		this.featureDisplaySeq = featureDisplaySeq;
+	}
+	
+//	public double getDefaultValue() {
+//		return defaultValue;
+//	}
+//	
+//	public void setDefaultValue(double defaultValue) {
+//		this.defaultValue = defaultValue;
+//	}
+	/**
+	 * @Ganesh
+	 *
+	 * @return the encodingType
+	 */
+	public EncodingType getEncodingType() {
+		return encodingType;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param encodingType the encodingType to set
+	 */
+	public void setEncodingType(EncodingType encodingType) {
+		this.encodingType = encodingType;
+	}
+	
+	public MetaIdentifierHolder getImputeMethod() {
+		return imputeMethod;
+	}
+	public void setImputeMethod(MetaIdentifierHolder imputeMethod) {
+		this.imputeMethod = imputeMethod;
+	}
 }

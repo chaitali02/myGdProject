@@ -15,11 +15,32 @@ import java.util.Date;
 public class Status implements Comparable<Status>{
 
   public enum Stage {
-		Initialized("Initialized"), NotStarted("Not Started"), InProgress("In Progress"), Completed("Completed"), Failed("Failed"), Suspend("Suspend"),Killed("Killed"),login("login"),logout("logout"),expired("expired"),active("active"), Inactive("inactive"), OnHold("OnHold"), OffHold("OffHold"), Resume("Resume"), Terminating ("Terminating");
-	  private String displayName;
-	  public String displayName() {
+		Initialized("Initialized"),
+		NotStarted("Not Started"), 
+		InProgress("In Progress"),
+		Completed("Completed"), 
+		Failed("Failed"), 
+		Suspend("Suspend"),
+		Killed("Killed"),
+		login("login"),
+		logout("logout"),
+		expired("expired"),
+		active("active"), 
+		Inactive("inactive"),
+		OnHold("OnHold"),
+		OffHold("OffHold"),
+		Resume("Resume"),
+		Terminating ("Terminating"),
+		STARTED("started"),
+		STOPPED("stopped");
+	  
+	  
+	private String displayName;
+	
+	public String displayName() {
 		return displayName;
 	}
+	
 	@Override
 	public String toString(){
 		return displayName;
@@ -33,8 +54,7 @@ public class Status implements Comparable<Status>{
 	private Stage stage;
 	private Date createdOn;
 	
-	public Status()
-	{
+	public Status() {
 		
 	}
 	

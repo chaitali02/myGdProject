@@ -10,22 +10,24 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.stream.Collectors;
 
 import javax.xml.bind.JAXBException;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.ml.PipelineModel;
-import org.apache.spark.ml.Transformer;
 import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.ml.tuning.CrossValidatorModel;
 import org.apache.spark.sql.SaveMode;
@@ -34,9 +36,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.CustomLogger;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
+import com.inferyx.framework.controller.TrainResultViewServiceImpl;
 import com.inferyx.framework.domain.Algorithm;
+import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.FeatureAttrMap;
 import com.inferyx.framework.domain.FrameworkThreadLocal;
 import com.inferyx.framework.domain.MetaIdentifier;
@@ -46,14 +51,19 @@ import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ParamSetHolder;
+import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.SessionContext;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainExec;
+import com.inferyx.framework.domain.TrainResult;
+import com.inferyx.framework.enums.EncodingType;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.executor.DL4JExecutor;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
+import com.inferyx.framework.operator.ImputeOperator;
 
 public class RunModelServiceImpl implements Callable<TaskHolder> {
 
@@ -63,7 +73,6 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 	private String algorithmUUID;
 	private String algorithmVersion;
 	private AlgorithmServiceImpl algorithmServiceImpl;
-	/*private ModelExec modelExec;*/
 	private DataStoreServiceImpl dataStoreServiceImpl;
 	private Model model;
 	private ModelExecServiceImpl modelExecServiceImpl;
@@ -84,20 +93,67 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 	private TrainExec trainExec;
 	private Train train;
 	private Object algoclass;
-	
-
+	private DL4JExecutor dl4jExecutor;
 	private String name;
 	private MetaType execType;
+	private MetadataServiceImpl metadataServiceImpl;
+	private TrainResultViewServiceImpl trainResultViewServiceImpl;
+	private ImputeOperator imputeOperator;
 	
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the imputeOperator
+	 */
+	public ImputeOperator getImputeOperator() {
+		return imputeOperator;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param imputeOperator the imputeOperator to set
+	 */
+	public void setImputeOperator(ImputeOperator imputeOperator) {
+		this.imputeOperator = imputeOperator;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the algoclass
+	 */
 	public Object getAlgoclass() {
 		return this.algoclass;
 	}
 
+	/**
+	 * @Ganesh
+	 *
+	 * @param algoclass the algoclass to set
+	 */
 	public void setAlgoclass(Object algoclass) {
 		this.algoclass = algoclass;
 	}
-	MetadataServiceImpl metadataServiceImpl;
 
+	/**
+	 * @Ganesh
+	 *
+	 * @return the trainResultViewServiceImpl
+	 */
+	public TrainResultViewServiceImpl getTrainResultViewServiceImpl() {
+		return this.trainResultViewServiceImpl;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param trainResultViewServiceImpl the trainResultViewServiceImpl to set
+	 */
+	public void setTrainResultViewServiceImpl(TrainResultViewServiceImpl trainResultViewServiceImpl) {
+		this.trainResultViewServiceImpl = trainResultViewServiceImpl;
+	}
 
 	/**
 	 * @Ganesh
@@ -610,6 +666,20 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 	 * }
 	 */
 	
+	/**
+	 * @return the dl4jExecutor
+	 */
+	public DL4JExecutor getDl4jExecutor() {
+		return dl4jExecutor;
+	}
+
+	/**
+	 * @param dl4jExecutor the dl4jExecutor to set
+	 */
+	public void setDl4jExecutor(DL4JExecutor dl4jExecutor) {
+		this.dl4jExecutor = dl4jExecutor;
+	}
+
 	@Override
 	public TaskHolder call() {
 		try {
@@ -617,84 +687,120 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 			execute();
 			trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec,
 					Status.Stage.Completed);
-			if (model.getType().equalsIgnoreCase(ExecContext.R.toString())
-					|| model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-				customLogger.writeLog(this.getClass(),
-						trainExec.getStatusList().size() > 0
-								? "Latest status: "
-										+ trainExec.getStatusList().get(trainExec.getStatusList().size() - 1).getStage()
-								: "Status list is empty",
-						logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
-			}
+//			if (model.getType().equalsIgnoreCase(ExecContext.R.toString())
+//					|| model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+//				customLogger.writeLog(this.getClass(),
+//						trainExec.getStatusList().size() > 0
+//								? "Latest status: "
+//										+ trainExec.getStatusList().get(trainExec.getStatusList().size() - 1).getStage()
+//								: "Status list is empty",
+//						logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
+//			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			try {
-				if (modelType.equalsIgnoreCase(ExecContext.R.toString())
-						|| modelType.equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-					customLogger.writeErrorLog(this.getClass(),
-							StringUtils.join(ExceptionUtils.getRootCauseStackTrace(e), System.lineSeparator()), logPath,
-							Thread.currentThread().getStackTrace()[1].getLineNumber());
-				}
+//				if (modelType.equalsIgnoreCase(ExecContext.R.toString())
+//						|| modelType.equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+//					customLogger.writeErrorLog(this.getClass(),
+//							StringUtils.join(ExceptionUtils.getRootCauseStackTrace(e), System.lineSeparator()), logPath,
+//							Thread.currentThread().getStackTrace()[1].getLineNumber());
+//				}
 				trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec,
 						Status.Stage.Failed);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 
-				if (model.getType().equalsIgnoreCase(ExecContext.R.toString())
-						|| model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-					customLogger.writeErrorLog(this.getClass(),
-							StringUtils.join(ExceptionUtils.getRootCauseStackTrace(e), System.lineSeparator()), logPath,
-							Thread.currentThread().getStackTrace()[1].getLineNumber());
-				}
+//				if (model.getType().equalsIgnoreCase(ExecContext.R.toString())
+//						|| model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+//					customLogger.writeErrorLog(this.getClass(),
+//							StringUtils.join(ExceptionUtils.getRootCauseStackTrace(e), System.lineSeparator()), logPath,
+//							Thread.currentThread().getStackTrace()[1].getLineNumber());
+//				}
 			}
 		}
 		TaskHolder taskHolder = new TaskHolder(name, new MetaIdentifier(execType, trainExec.getUuid(), trainExec.getVersion()));
 		return taskHolder;
 	}
 	
-	@SuppressWarnings({ "unused" })
+	@SuppressWarnings({ "unused", "unchecked"})
 	public void execute() throws Exception {
 		try {
+			
+			TrainResult trainResult = trainResultViewServiceImpl.getTrainResultByTrainExec(trainExec.getUuid(), trainExec.getVersion());
+			if(trainResult == null) {
+				trainResult = new TrainResult();
+			}
+			trainResult.setName(train.getName());
+			trainResult.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion())));
+			trainResult.setParamList(new MetaIdentifierHolder(execParams.getParamListInfo().get(0).getRef()));
+			trainResult.setBaseEntity();
+			
+			Datasource trainSrcDatasource = commonServiceImpl.getDatasourceByObject(train);
+			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+			
+			IExecutor exec = null;
 			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 			Map<String,String> trainOtherParam = new HashMap<>();
 			List<Status> statusList = trainExec.getStatusList();
 			trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.InProgress);
-			if (model.getType().equalsIgnoreCase(ExecContext.R.toString())
-					|| model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-				customLogger.writeLog(this.getClass(), trainExec.getStatusList().size() > 0
-						? "Latest status: " + trainExec.getStatusList().get(trainExec.getStatusList().size() - 1).getStage()
-						: "Status list is empty", logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
-			}
+//			if (model.getType().equalsIgnoreCase(ExecContext.R.toString())
+//					|| model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+//				customLogger.writeLog(this.getClass(), trainExec.getStatusList().size() > 0
+//						? "Latest status: " + trainExec.getStatusList().get(trainExec.getStatusList().size() - 1).getStage()
+//						: "Status list is empty", logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
+//			}
 			boolean isSuccess = false;
 			Object result = null;
-			
+			String[] fieldArray = modelExecServiceImpl.getMappedFeatureNames(train);
+			String trainName = String.format("%s_%s_%s", train.getUuid().replace("-", "_"), train.getVersion(), trainExec.getVersion());
+			String filePath = String.format("/%s/%s/%s", train.getUuid(), train.getVersion(), trainExec.getVersion());
+			String tableName = String.format("%s_%s_%s", train.getUuid().replace("-", "_"), train.getVersion(), trainExec.getVersion());
+			String appUuid = commonServiceImpl.getApp().getUuid();
+
 			if (!modelType.equalsIgnoreCase(ExecContext.R.toString())
 					&& !modelType.equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-				Algorithm algorithm = null;
-				if (algorithmVersion != null) {
-					algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(algorithmUUID, algorithmVersion,
-							MetaType.algorithm.toString());
-				} else {
-					algorithm = (Algorithm) commonServiceImpl.getLatestByUuid(algorithmUUID, MetaType.algorithm.toString());
+				Algorithm algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(algorithmUUID, algorithmVersion, MetaType.algorithm.toString(), "N");
+
+				trainResult.setAlgorithm(algorithm.getName());
+				trainResult.setAlgoType(model.getType());
+
+				String filePathUrl = String.format("%s%s%s", Helper.getPropertyValue("framework.hdfs.URI"), Helper.getPropertyValue("framework.model.train.path"), filePath);
+				String testSetPath = filePathUrl.endsWith("/") ? filePathUrl.concat("test_set") : filePathUrl.concat("/").concat("test_set");
+				String trainingSetPath = null;
+				if(train.getSaveTrainingSet().equalsIgnoreCase("Y")) {
+					trainingSetPath = filePathUrl.endsWith("/") ? filePathUrl.concat("train_set") : filePathUrl.concat("/").concat("train_set");
 				}
-
-
-				String[] fieldArray = modelExecServiceImpl.getAttributeNames(train);
-				String trainName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), trainExec.getVersion());
-				String filePath = String.format("/%s/%s/%s", model.getUuid().replace("-", "_"), model.getVersion(), trainExec.getVersion());
-				String tableName = String.format("%s_%s_%s", model.getUuid().replace("-", "_"), model.getVersion(), trainExec.getVersion());
-
-				String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), Helper.getPropertyValue("framework.model.train.path"), filePath);
-				trainOtherParam.put("confusionMatrixTableName",trainName+"confusionMatrix");
-				Datasource datasource = commonServiceImpl.getDatasourceByApp();
-				IExecutor exec = execFactory.getExecutor(datasource.getType());
-
-				String appUuid = commonServiceImpl.getApp().getUuid();
 				
+				Map<String, EncodingType> encodingDetails = getEncodingDetailsByFeatureAttrMap(train.getFeatureAttrMap(), model.getFeatures());
+				
+				trainOtherParam.put("confusionMatrixTableName", trainName+"confusionMatrix");
+				exec = execFactory.getExecutor(datasource.getType());
+
 				Object source = (Object) commonServiceImpl.getOneByUuidAndVersion(train.getSource().getRef().getUuid(),
 						train.getSource().getRef().getVersion(), train.getSource().getRef().getType().toString());
-				String sql = modelServiceImpl.generateSQLBySource(source, execParams);
-				exec.executeAndRegister(sql, (tableName+"_train_data"), appUuid);
+				
+				String label = commonServiceImpl.resolveLabel(train.getLabelInfo());
+//				String sql = modelServiceImpl.generateSQLBySource(source, execParams);
+//				exec.executeAndRegister(sql, (tableName+"_train_data"), appUuid);
+
+				String sourceSql = modelServiceImpl.generateSQLBySource(source, execParams);
+				
+				ResultSetHolder sourceRsHolder = exec.executeAndRegisterByDatasource(sourceSql, (tableName+"_train_source_data"), trainSrcDatasource, appUuid);
+				sourceRsHolder.setTableName((tableName+"_train_source_data"));
+
+				//finding impute values of attribute
+				LinkedHashMap<String, Object> resolvedimputeAttributeValues = imputeOperator.resolveAttributeImputeValue(train.getFeatureAttrMap(), source, model, execParams, runMode, (tableName+"_train_source_data"));
+				
+				//applying imputation valued per column to data
+				sourceRsHolder = exec.applyAttrImputeValuesToData(sourceRsHolder, resolvedimputeAttributeValues, true, (tableName+"_train_source_data"));
+//				String featureMappedSQL = modelServiceImpl.generateFeatureSQLBySource(train.getFeatureAttrMap(), source, execParams, fieldArray, label, (tableName+"_train_source_data"));
+//				ResultSetHolder sourceRsHolder = exec.executeAndRegisterByDatasource(featureMappedSQL, (tableName+"_train_source_data"), trainSrcDatasource, appUuid);
+//				sourceRsHolder.setTableName((tableName+"_train_source_data"));
+
+//				sourceRsHolder = exec.replaceNullValByDoubleValFromDF(sourceRsHolder, null, trainSrcDatasource, (tableName+"_train_source_data"), true, appUuid);
+				long rowCount = sourceRsHolder.getCountRows();
+				
+//				trainResult.setTotalRecords(rowCount);
 				
 				//Object va = exec.assembleDF(fieldArray, (tableName+"_train_data"), algorithm.getTrainName(), model.getLabel(), appUuid);
 				Map<String, String> mappingList = new LinkedHashMap<>();
@@ -702,15 +808,81 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 					mappingList.put(featureAttrMap.getAttribute().getAttrName(), featureAttrMap.getFeature().getFeatureName());
 				}
 
-				String label = commonServiceImpl.resolveLabel(train.getLabelInfo());
-				exec.renameDfColumnName((tableName+"_train_data"), mappingList, appUuid);
+//				String sql = "SELECT * FROM " + (tableName+"_train_source_data");
+//				exec.renameDfColumnName(sql, (tableName+"_train_mapped_data"), mappingList, appUuid);
+				
+				String tempTrngDfSql = modelServiceImpl.generateFeatureSQLByTempTable(train.getFeatureAttrMap(), "tempTrngDf", label, tableName.concat("_tempTrngDf"));
+				String tempValDfSql = modelServiceImpl.generateFeatureSQLByTempTable(train.getFeatureAttrMap(), "tempValDf", label, tableName.concat("_tempValDf"));
+				
+				List<String> rowIdentifierCols = modelServiceImpl.getRowIdentifierCols(train.getRowIdentifier());
 				
 				Object trndModel = null;
-			    
-				if(train.getUseHyperParams().equalsIgnoreCase("N")) {
+				Datapod testLocationDP=null;
+				Datasource testLocationDS=null;
+				String testLocationTableName = null;
+				String testLocationPath=null;
+				String testLPathFilePathUrl=null;
+				Datapod trainLocationDP=null;
+				Datasource trainLocationDS=null;
+				String trainLocationTableName = null;
+				String trainLocationPath=null;
+				String trainLPathFilePathUrl=null;
+				if(train.getTestLocation().getRef().getType().equals(MetaType.datapod)) {
+					testLocationDP=(Datapod) commonServiceImpl.getOneByUuidAndVersion(train.getTestLocation().getRef().getUuid(),null, train.getTestLocation().getRef().getType().toString());
+					testLocationDS = commonServiceImpl.getDatasourceByObject(testLocationDP);
+					String tLPath = String.format("/%s/%s/%s", testLocationDP.getUuid(), testLocationDP.getVersion(), trainExec.getVersion());
+					testLPathFilePathUrl = String.format("%s%s",hdfsInfo.getHdfsURL()+hdfsInfo.getSchemaPath(), tLPath);
+
+					//writing into table
+					
+					if(testLocationDS.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+						testLocationTableName = testLocationDS.getSid().concat(".").concat(testLocationDP.getName());
+					} else {
+						testLocationTableName = testLocationDS.getDbname().concat(".").concat(testLocationDP.getName());					
+					}
+				}
+				if(train.getTrainLocation().getRef().getType().equals(MetaType.datapod)) {
+					trainLocationDP=(Datapod) commonServiceImpl.getOneByUuidAndVersion(train.getTrainLocation().getRef().getUuid(),null, train.getTrainLocation().getRef().getType().toString());
+					trainLocationDS = commonServiceImpl.getDatasourceByObject(trainLocationDP);
+					String tLPath = String.format("/%s/%s/%s", trainLocationDP.getUuid(), trainLocationDP.getVersion(), trainExec.getVersion());
+					trainLPathFilePathUrl = String.format("%s%s",hdfsInfo.getHdfsURL()+hdfsInfo.getSchemaPath(), tLPath);
+
+					//writing into table
+					
+					if(trainLocationDS.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+						trainLocationTableName = trainLocationDS.getSid().concat(".").concat(trainLocationDP.getName());
+					} else {
+						testLocationTableName = trainLocationDS.getDbname().concat(".").concat(trainLocationDP.getName());					
+					}
+				}
+				if(train.getUseHyperParams().equalsIgnoreCase("N") && !model.getType().equalsIgnoreCase(ExecContext.DL4J.toString())) {
 					//Without hypertuning
-					trndModel = exec.train(paramMap, fieldArray, label, algorithm.getTrainClass(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), appUuid, algoclass, trainOtherParam);
-				} else {		
+						
+
+					trndModel = exec.train(paramMap, fieldArray, label, algorithm.getTrainClass(), train.getTrainPercent()
+							, train.getValPercent(), (tableName+"_train_source_data"), tempTrngDfSql
+							, algoclass, trainOtherParam, trainResult, testSetPath
+							, rowIdentifierCols, train.getIncludeFeatures(), tempTrngDfSql
+							, tempValDfSql, encodingDetails, train.getSaveTrainingSet(), 
+							trainingSetPath, testLocationDP,testLocationDS, 
+							testLocationTableName, testLPathFilePathUrl, trainLocationDP, trainLocationDS, testLocationTableName, trainLPathFilePathUrl);
+					if(testLocationDP !=null) {
+						dataStoreServiceImpl.setRunMode(RunMode.BATCH);
+						dataStoreServiceImpl.create(testLPathFilePathUrl, trainName,
+							new MetaIdentifier(MetaType.datapod, testLocationDP.getUuid(), testLocationDP.getVersion()),
+							new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion()),
+							trainExec.getAppInfo(), trainExec.getCreatedBy(), SaveMode.Append.toString(), null);
+					 }
+					if(trainLocationDP !=null && train.getSaveTrainingSet().equalsIgnoreCase("Y")) {
+						dataStoreServiceImpl.setRunMode(RunMode.BATCH);
+						dataStoreServiceImpl.create(trainLPathFilePathUrl, trainName,
+							new MetaIdentifier(MetaType.datapod, trainLocationDP.getUuid(),trainLocationDP.getVersion()),
+							new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion()),
+							trainExec.getAppInfo(), trainExec.getCreatedBy(), SaveMode.Append.toString(), null);
+					 }
+					
+					
+				} else if (!model.getType().equalsIgnoreCase(ExecContext.DL4J.toString())) {		
 					//With hypertuning
 					List<ParamListHolder> paramListHolderList = null;
 					if(execParams != null) {
@@ -720,7 +892,27 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 								for(ParamListHolder paramListHolder : paramListHolderList) {
 									MetaIdentifier hyperParamMI = paramListHolder.getRef();
 									ParamList hyperParamList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(hyperParamMI.getUuid(), hyperParamMI.getVersion(), hyperParamMI.getType().toString());
-									trndModel = exec.trainCrossValidation(paramMap, fieldArray, label, algorithm.getTrainClass(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), hyperParamList.getParams(), appUuid, trainOtherParam);
+									trndModel = exec.trainCrossValidation(paramMap, fieldArray, label, algorithm.getTrainClass()
+											, train.getTrainPercent(), train.getValPercent(), (tableName+"_train_source_data")
+											, hyperParamList.getParams(), appUuid, trainOtherParam, trainResult, testSetPath
+											, rowIdentifierCols, train.getIncludeFeatures(), tempTrngDfSql
+											, tempValDfSql, encodingDetails, train.getSaveTrainingSet(), trainingSetPath, testLocationDP, testLocationDS, testLocationTableName, testLPathFilePathUrl, null, null, null, null);
+									
+									if(testLocationDP !=null) {
+										dataStoreServiceImpl.setRunMode(RunMode.BATCH);
+										dataStoreServiceImpl.create(testLPathFilePathUrl, trainName,
+										new MetaIdentifier(MetaType.datapod, testLocationDP.getUuid(), testLocationDP.getVersion()),
+										new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion()),
+										trainExec.getAppInfo(), trainExec.getCreatedBy(), SaveMode.Append.toString(), null);
+									}
+									
+									if(trainLocationDP !=null &&  train.getSaveTrainingSet().equalsIgnoreCase("Y")) {
+										dataStoreServiceImpl.setRunMode(RunMode.BATCH);
+										dataStoreServiceImpl.create(trainLPathFilePathUrl, trainName,
+											new MetaIdentifier(MetaType.datapod, trainLocationDP.getUuid(),trainLocationDP.getVersion()),
+											new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion()),
+											trainExec.getAppInfo(), trainExec.getCreatedBy(), SaveMode.Append.toString(), null);
+									 }
 								}
 							}
 						} else if(execParams.getParamListInfo() != null) {
@@ -729,8 +921,27 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 							for(ParamListHolder paramListHolder : paramListHolderList) {
 								MetaIdentifier hyperParamMI = paramListHolder.getRef();
 								ParamList hyperParamList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(hyperParamMI.getUuid(), hyperParamMI.getVersion(), hyperParamMI.getType().toString());
-								trndModel = exec.trainCrossValidation(paramMap, fieldArray, label, algorithm.getTrainClass(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), hyperParamList.getParams(), appUuid, trainOtherParam);
+								trndModel = exec.trainCrossValidation(paramMap, fieldArray, label, algorithm.getTrainClass()
+										, train.getTrainPercent(), train.getValPercent(), (tableName+"_train_source_data")
+										, hyperParamList.getParams(), appUuid, trainOtherParam, trainResult, testSetPath
+										, rowIdentifierCols, train.getIncludeFeatures(), tempTrngDfSql
+										, tempValDfSql, encodingDetails, train.getSaveTrainingSet(), trainingSetPath, testLocationDP, testLocationDS, testLocationTableName, testLPathFilePathUrl, null, null, null, null);
+								if(testLocationDP !=null) {
+									dataStoreServiceImpl.setRunMode(RunMode.BATCH);
+									dataStoreServiceImpl.create(testLPathFilePathUrl, trainName,
+									new MetaIdentifier(MetaType.datapod, testLocationDP.getUuid(), testLocationDP.getVersion()),
+									new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion()),
+									trainExec.getAppInfo(), trainExec.getCreatedBy(), SaveMode.Append.toString(), null);
+								}
+								if(trainLocationDP !=null &&  train.getSaveTrainingSet().equalsIgnoreCase("Y")) {
+									dataStoreServiceImpl.setRunMode(RunMode.BATCH);
+									dataStoreServiceImpl.create(trainLPathFilePathUrl, trainName,
+										new MetaIdentifier(MetaType.datapod, trainLocationDP.getUuid(),trainLocationDP.getVersion()),
+										new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion()),
+										trainExec.getAppInfo(), trainExec.getCreatedBy(), SaveMode.Append.toString(), null);
+								 }
 							}
+							
 						}
 					} else {
 						ParamListHolder plHolder = new ParamListHolder();
@@ -740,73 +951,122 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 						
 						for(ParamListHolder paramListHolder : paramListHolderList) {
 							MetaIdentifier hyperParamMI = paramListHolder.getRef();
-							ParamList hyperParamList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(hyperParamMI.getUuid(), hyperParamMI.getVersion(), hyperParamMI.getType().toString());
-							trndModel = exec.trainCrossValidation(paramMap, fieldArray, label, algorithm.getTrainClass(), train.getTrainPercent(), train.getValPercent(), (tableName+"_train_data"), hyperParamList.getParams(), appUuid, trainOtherParam);
+							ParamList hyperParamList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(hyperParamMI.getUuid()
+									, hyperParamMI.getVersion(), hyperParamMI.getType().toString());
+							trndModel = exec.trainCrossValidation(paramMap, fieldArray, label, algorithm.getTrainClass()
+									, train.getTrainPercent(), train.getValPercent(), (tableName+"_train_source_data")
+									, hyperParamList.getParams(), appUuid, trainOtherParam, trainResult, testSetPath
+									, rowIdentifierCols, train.getIncludeFeatures(), tempTrngDfSql
+									, tempValDfSql, encodingDetails, train.getSaveTrainingSet(), trainingSetPath, testLocationDP,testLocationDS, testLocationTableName, testLPathFilePathUrl, null, null, null, null);
 						}
 					}
+				} else {
+					String featureMappedSQL = modelServiceImpl.generateFeatureSQLBySource(train.getFeatureAttrMap(), source, execParams, fieldArray, label, (tableName+"_train_source_data"));
+					sourceRsHolder = exec.executeAndRegisterByDatasource(featureMappedSQL, (tableName+"_train_source_data"), trainSrcDatasource, appUuid);
+					sourceRsHolder.setTableName((tableName+"_train_source_data"));
+					trndModel = dl4jExecutor.trainDL(execParams, fieldArray, label, algorithm.getTrainClass()
+							, train.getTrainPercent(), train.getValPercent(), (tableName+"_train_source_data")
+							, appUuid, algoclass, trainOtherParam);
 				}
 								
 				result = trndModel;				
 				List<String> customDirectories = exec.getCustomDirsFromTrainedModel(trndModel);
 
-				boolean isModelSved = modelServiceImpl.save(algorithm.getModelClass(), trndModel, filePathUrl);
+				boolean isModelSved = modelServiceImpl.save(algorithm.getModelClass(), trndModel, filePathUrl+"/model");
 				String defaultDir = null;
 				if (algorithm.getSavePmml().equalsIgnoreCase("Y")) {
-					try {
-						String filePathUrl_2 = null;
-						if(filePathUrl.contains(hdfsInfo.getHdfsURL()))
-							filePathUrl_2 = filePathUrl.replaceAll(hdfsInfo.getHdfsURL(), "");
-						defaultDir = filePathUrl_2;
-						String pmmlLocation = filePathUrl_2 + "/" + model.getUuid() + "_" + model.getVersion() + "_"
-								+ (filePathUrl_2.substring(filePathUrl_2.lastIndexOf("/") + 1)) + ".pmml";
-						boolean isSaved = exec.savePMML(trndModel, "trainedDataSet", pmmlLocation, appUuid);
-						if(isSaved)
-							logger.info("PMML saved at location: "+pmmlLocation);
-						else
-							logger.info("PMML not saved.");
-					 }catch (JAXBException e) {
-						e.printStackTrace();
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+//					if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
+						try {
+							String filePathUrl_2 = null;
+							if(filePathUrl.contains(hdfsInfo.getHdfsURL()))
+								filePathUrl_2 = filePathUrl.replaceAll(hdfsInfo.getHdfsURL(), "");
+							defaultDir = filePathUrl_2;
+							String pmmlLocation = filePathUrl_2 + "/" + train.getUuid() + "_" + train.getVersion() + "_"
+									+ (filePathUrl_2.substring(filePathUrl_2.lastIndexOf("/") + 1)) + ".pmml";
+							
+							File pmmlFile = new File(pmmlLocation);
+							if(pmmlFile.exists()) {
+							FileUtils.forceDelete(pmmlFile);
+							} 
+							boolean isSaved = exec.savePMML(trndModel, "trainedDataSet", pmmlLocation, appUuid);
+							if(isSaved) {
+								logger.info("PMML saved at location: "+pmmlLocation);
+							} else {
+								logger.info("PMML not saved.");
+							}
+						 }catch (JAXBException e) {
+							e.printStackTrace();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+//					}					
 				}
 				if (isModelSved) {	
+					logger.info("Inside isModelSaved : trainOtherParam : " + trainOtherParam);
 					defaultDir = filePathUrl.replaceAll(hdfsInfo.getHdfsURL(), "");
 					if(trndModel instanceof CrossValidatorModel) {
-						filePathUrl = filePathUrl + "/bestModel" + "/stages/" + customDirectories.get(1) + "/data/";
-						Map<String, Object> summary = exec.summary(trndModel, algorithm.getSummaryMethods(), appUuid);
+						filePathUrl = filePathUrl+"/model" + "/bestModel" + "/stages/" + customDirectories.get(1) + "/data/";
+						Map<String, Object> summary = exec.summary(trndModel, algorithm.getModelClass(), algorithm.getSummaryMethods(), appUuid);
 						
-//						if(train.getFeatureImportance() != null && train.getFeatureImportance().equalsIgnoreCase("Y")) {
-//							try {
-//								Transformer[] transformer = ((PipelineModel) trndModel).stages();
-//								List<Double> featureWeightList = exec.featureImportance(transformer[1], appUuid);
-//								if(!featureWeightList.isEmpty()) {
-//									summary.put("featureImportances", featureWeightList);
-//								}
-//							} catch (Exception e) {
-//								e.printStackTrace();
-//							}							
-//						}
 						String fileName = tableName+".result";
-						summary = exec.calculateConfusionMatrixAndRoc(summary,trainOtherParam.get("confusionMatrixTableName"),appUuid);
-						writeSummaryToFile(summary, defaultDir, fileName);
+//						if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
+							summary = exec.calculateConfusionMatrixAndRoc(summary,trainOtherParam.get("confusionMatrixTableName"),appUuid);
+//						}
+						
+//						trainResult.setFeatureImportance(exec.featureImportance(trndModel, null));
+						
+						if(summary != null && !summary.isEmpty()) {
+							double[] featureimportancesArr = (double[])summary.get("featureimportances");						
+							if(featureimportancesArr != null) {
+								List<Double> featureImportance = Arrays.asList(ArrayUtils.toObject(featureimportancesArr));
+								trainResult.setFeatureImportance(featureImportance);
+							}
+							trainResult.setAccuracy((double) summary.get("accuracy"));
+							trainResult.setRecall((double) summary.get("recall"));
+							trainResult.setF1Score((double) summary.get("f1Score"));
+							trainResult.setPrecision((double) summary.get("precision"));
+							trainResult.setRocAUC((List<Double>)summary.get("auroc"));
+//							trainResult.setRocCurve((List<Map<String, Object>>)summary.get("roc"));
+							
+							writeSummaryToFile(summary, defaultDir, fileName);
+						}
 					} else if(trndModel instanceof PipelineModel) {
-						filePathUrl = filePathUrl + "/stages/" + customDirectories.get(1) + "/data/";
-						Map<String, Object> summary = exec.summary(trndModel, algorithm.getSummaryMethods(), appUuid);
-//						if(train.getFeatureImportance() != null && train.getFeatureImportance().equalsIgnoreCase("Y")) {
-//							try {
-//								Transformer[] transformer = ((PipelineModel) trndModel).stages();
-//								List<Double> featureWeightList = exec.featureImportance(transformer[1], appUuid);
-//								if(!featureWeightList.isEmpty()) {
-//									summary.put("featureImportances", featureWeightList);
-//								}
-//							} catch (Exception e) {
-//								e.printStackTrace();
-//							}							
-//						}
-						
+						filePathUrl = filePathUrl+"/model" + "/stages/" + customDirectories.get(1) + "/data/";
+						Map<String, Object> summary = exec.summary(trndModel, algorithm.getModelClass(), algorithm.getSummaryMethods(), appUuid);
+												
 						String fileName = tableName+".result";
-						summary = exec.calculateConfusionMatrixAndRoc(summary,trainOtherParam.get("confusionMatrixTableName"),appUuid);
+						
+//						trainResult.setFeatureImportance(exec.featureImportance(trndModel, null));
+
+//						if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
+							summary = exec.calculateConfusionMatrixAndRoc(summary,trainOtherParam.get("confusionMatrixTableName"),appUuid);
+//						}
+						double[] featureimportancesArr = (double[])summary.get("featureimportances");	
+						if(featureimportancesArr != null) {
+							List<Double> featureImportance = Arrays.asList(ArrayUtils.toObject(featureimportancesArr));
+							trainResult.setFeatureImportance(featureImportance);
+						}	
+						if(summary.get("accuracy") != null) {
+							trainResult.setAccuracy((double) summary.get("accuracy"));
+						}
+						if(summary.get("recall") != null) {
+							trainResult.setRecall((double) summary.get("recall"));
+						}
+						if(summary.get("f1Score") != null) {
+							trainResult.setF1Score((double) summary.get("f1Score"));
+						}
+						if(summary.get("precision") != null) {
+							trainResult.setPrecision((double) summary.get("precision"));
+						}
+						if(summary.get("confusionMatrix") != null) {
+							trainResult.setConfusionMatrix(summary.get("confusionMatrix"));
+						}
+						if(summary.get("auroc") != null) {
+							trainResult.setRocAUC((List<Double>)summary.get("auroc"));
+						}
+//						trainResult.setRocAUC((summary.get("roc") == null)?null:(List<Double>) summary.get("roc"));
+//						trainResult.setRocCurve((List<Map<String, Object>>)summary.get("roc"));
+						
 						writeSummaryToFile(summary, defaultDir, fileName);
 					} else {
 						filePathUrl = null;
@@ -814,7 +1074,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 				} else {
 					filePathUrl = null;
 				}
-				
+				commonServiceImpl.save(MetaType.trainresult.toString(), trainResult);
 				//result = exec.fetchAndTrainModel(train, model, fieldArray, algorithm, trainName, filePath, paramMap, securityServiceImpl.getAppInfo().getRef().getUuid());
 				dataStoreServiceImpl.setRunMode(RunMode.BATCH);
 				dataStoreServiceImpl.create(filePathUrl, trainName,
@@ -829,22 +1089,41 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 			}
 			if (modelType != null && (modelType.equalsIgnoreCase(ExecContext.R.toString())
 					|| modelType.equalsIgnoreCase(ExecContext.PYTHON.toString()))) {
-				isSuccess = modelServiceImpl.executeScript(model.getType(), model.getScriptName(), trainExec.getUuid(),
-						trainExec.getVersion());
+				// Save the data as csv
+				String saveFileName = Helper.getPropertyValue("framework.model.train.path")+"/csv/"+tableName;
+				String modelFileName = Helper.getPropertyValue("framework.model.train.path")+"/"+model.getName();
+				exec = execFactory.getExecutor(datasource.getType());
+				exec.saveDataframeAsCSV(tableName, saveFileName, appUuid);
+				List<ParamListHolder> paramInfoList = execParams.getParamListInfo();
+				List<String> argList = Arrays.asList(paramInfoList.stream().map(p -> p.getParamName() + "~\"" + p.getParamValue().getValue() + "\"")
+										.collect(Collectors.joining("~")).split("~"));
+				argList.add("filename");
+				argList.add(saveFileName);
+				argList.add("modelFileName");
+				argList.add(modelFileName);
+				List<String> scriptPrintedMsgs = modelServiceImpl.executeScript(model.getType(), model.getScriptName(), trainExec.getUuid(),
+						trainExec.getVersion(), argList);
+				if(scriptPrintedMsgs.isEmpty()) {
+					isSuccess = false;
+				}
 				// customLogger.writeLog(this.getClass(), "Script executed ....", logPath);
 			}
 
+//			List<String> tempTableList = new ArrayList<>();
+//			tempTableList.add((tableName+"_pred_data"));
+//			sparkExecutor.dropTempTable(tempTableList);
+			
 			if (!isSuccess) {
 				trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.Failed);
-				if (model.getType().equalsIgnoreCase(ExecContext.R.toString())
-						|| model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-					customLogger.writeLog(this.getClass(),
-							trainExec.getStatusList().size() > 0
-									? "Latest status: "
-											+ trainExec.getStatusList().get(trainExec.getStatusList().size() - 1).getStage()
-									: "Status list is empty",
-							logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
-				}
+//				if (model.getType().equalsIgnoreCase(ExecContext.R.toString())
+//						|| model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+//					customLogger.writeLog(this.getClass(),
+//							trainExec.getStatusList().size() > 0
+//									? "Latest status: "
+//											+ trainExec.getStatusList().get(trainExec.getStatusList().size() - 1).getStage()
+//									: "Status list is empty",
+//							logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
+//				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -862,6 +1141,26 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 		}		
 	}
 	
+	private Map<String, EncodingType> getEncodingDetailsByFeatureAttrMap(List<FeatureAttrMap> featureAttrMap, List<Feature> features) {
+		Map<String, EncodingType> encodingDetails = new LinkedHashMap<>();
+		Map<String, Feature> featureModelMap = new HashMap<>();
+		for (Feature feature : features) {
+			featureModelMap.put(feature.getFeatureId(), feature);
+		}
+		for(FeatureAttrMap attrMap : featureAttrMap) {
+			EncodingType encodingType = (featureModelMap.containsKey(attrMap.getFeature().getFeatureId()))?
+					featureModelMap.get(attrMap.getFeature().getFeatureId()).getEncodingType():null;
+			if (encodingType != null) {
+				encodingDetails.put(attrMap.getFeature().getFeatureName(), encodingType);
+			}
+		}
+		if(!encodingDetails.isEmpty()) {
+			return encodingDetails;
+		}else {
+			return null;
+		}
+	}
+
 	public String writeSummaryToFile(Map<String, Object> summary, String directory, String fileName) throws IOException {		
 		String filePath = directory + "/" + fileName;		
 		String resultJson = new ObjectMapper().writeValueAsString(summary);

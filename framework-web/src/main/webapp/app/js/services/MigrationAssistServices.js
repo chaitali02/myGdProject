@@ -21,12 +21,12 @@ AdminModule.service("MigrationAssistServices", function ($q, MigrationAssistFact
 		var deferred = $q.defer();
 		MigrationAssistFactory.findAll().then(function (response) { OnSuccess(response.data) }, function (response) { onError(response.data) });
 		var OnSuccess = function (response) {
-			var metaList=[]
-			for(var i=0;i<response.length;i++){
-				var metaObj={};
-				metaObj.uuid=response[i].uuid;
-				metaObj.text=response[i].name;
-        metaList[i]=metaObj;
+			var metaList = []
+			for (var i = 0; i < response.length; i++) {
+				var metaObj = {};
+				metaObj.uuid = response[i].uuid;
+				metaObj.text = response[i].name;
+				metaList[i] = metaObj;
 			}
 			deferred.resolve({
 				data: metaList
@@ -39,7 +39,8 @@ AdminModule.service("MigrationAssistServices", function ($q, MigrationAssistFact
 		}
 		return deferred.promise;
 	}/*End getRegistryByDatasource*/
-	this.validateDependancy = function (data,filename) {
+	
+	this.validateDependancy = function (data, filename) {
 		var deferred = $q.defer();
 		var url = "admin/import/validate?type=import&action=edit&fileName=" + filename
 		CommonFactory.httpPost(url, data).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
@@ -60,21 +61,21 @@ AdminModule.service("MigrationAssistServices", function ($q, MigrationAssistFact
 		var url = "admin/getAllByMetaList?action=view&type=" + type
 		CommonFactory.httpGet(url).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
-			var allMataList=[]
-			var count=0;
-			for(var i=0;i<type.length;i++){
+			var allMataList = []
+			var count = 0;
+			for (var i = 0; i < type.length; i++) {
 				var result = response[type[i]]
-				for(var j=0;j<result.length;j++){
-					var metaList={};
-					metaList.type=type[i];
-					metaList.name=metaList.type+"-"+result[j].name;
-					metaList.uuid=result[j].uuid
-					metaList.id=result[j].uuid
-					allMataList[count]=metaList;
-					count=count+1
+				for (var j = 0; j < result.length; j++) {
+					var metaList = {};
+					metaList.type = type[i];
+					metaList.name = metaList.type + "-" + result[j].name;
+					metaList.uuid = result[j].uuid
+					metaList.id = result[j].uuid
+					allMataList[count] = metaList;
+					count = count + 1
 				}
 			}
-		  console.log(allMataList);
+			console.log(allMataList);
 			deferred.resolve({
 				data: allMataList
 			});
@@ -86,9 +87,9 @@ AdminModule.service("MigrationAssistServices", function ($q, MigrationAssistFact
 		}
 		return deferred.promise;
 	}
-	this.importSubmit = function (data, type, filename,upd_tag) {
+	this.importSubmit = function (data, type, filename, upd_tag) {
 		var deferred = $q.defer();
-		var url = "admin/import/submit?action=add" + "&type=" + type + "&fileName=" + filename +"&upd_tag="+upd_tag;
+		var url = "admin/import/submit?action=add" + "&type=" + type + "&fileName=" + filename + "&upd_tag=" + upd_tag;
 		CommonFactory.httpPost(url, data).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			deferred.resolve({
@@ -102,9 +103,9 @@ AdminModule.service("MigrationAssistServices", function ($q, MigrationAssistFact
 		}
 		return deferred.promise;
 	}
-	this.exportSubmit = function (data,type,upd_tag) {
+	this.exportSubmit = function (data, type, upd_tag) {
 		var deferred = $q.defer();
-		var url = "admin/export/submit?action=add" + "&type=" + type+"&upd_tag="+upd_tag;
+		var url = "admin/export/submit?action=add" + "&type=" + type + "&upd_tag=" + upd_tag;
 		CommonFactory.httpPost(url, data).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			deferred.resolve({
@@ -118,6 +119,7 @@ AdminModule.service("MigrationAssistServices", function ($q, MigrationAssistFact
 		}
 		return deferred.promise;
 	}
+
 	this.submit = function (data, type) {
 		var deferred = $q.defer();
 		var url = "common/submit?action=add" + "&type=" + type;

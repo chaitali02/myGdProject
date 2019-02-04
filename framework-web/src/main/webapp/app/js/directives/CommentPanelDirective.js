@@ -10,7 +10,7 @@ InferyxApp.directive('commentPanelDirective', function ($timeout, privilegeSvc,C
             options: '=',
         }, 
         link: function (scope, element, attrs) {
-            console.log(scope.commentData)
+         //   console.log(scope.commentData)
             scope.isRequire=true
             scope.panelOpen=false;
             scope.isFileUpload=false;

@@ -27,13 +27,13 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.common.DagExecUtil;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.AttributeMap;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
+import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
@@ -47,6 +47,7 @@ import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
+
 @Component
 public class RuleOperator implements IParsable, IReferenceable {
 	
@@ -57,11 +58,7 @@ public class RuleOperator implements IParsable, IReferenceable {
 	@Autowired
 	RelationOperator relationOperator;
 	@Autowired
-	MetadataUtil daoRegister;
-	@Autowired
 	DatasetOperator datasetOperator;
-	@Autowired
-	FilterOperator filterOperator;
 	@Autowired
 	DataStoreServiceImpl datastoreServiceImpl;
 	@Autowired
@@ -118,10 +115,14 @@ public class RuleOperator implements IParsable, IReferenceable {
 		Relation relation = null;
 		usedRefKeySet.add(rule.getSource().getRef());
 		if (rule.getSource().getRef().getType() == MetaType.relation) {
-			relation = (Relation) daoRegister.getRefObject(rule.getSource().getRef()); 
+//			relation = (Relation) daoRegister.getRefObject(rule.getSource().getRef()); 
+			relation = (Relation) commonServiceImpl.getOneByUuidAndVersion(rule.getSource().getRef().getUuid(), rule.getSource().getRef().getVersion(), rule.getSource().getRef().getType().toString(), "N");
 			builder.append(relationOperator.generateSql(relation, refKeyMap, otherParams, null, usedRefKeySet, runMode));
 		} else if (rule.getSource().getRef().getType() == MetaType.datapod) {
-			Datapod datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(rule.getSource().getRef(), refKeyMap));
+//			Datapod datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(rule.getSource().getRef(), refKeyMap));
+			MetaIdentifier ref = TaskParser.populateRefVersion(rule.getSource().getRef(), refKeyMap);
+			Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
+			
 			String table = null;
 			if (otherParams == null	|| otherParams.get("datapod_".concat(datapod.getUuid())) == null) {
 				table = datastoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
@@ -131,10 +132,14 @@ public class RuleOperator implements IParsable, IReferenceable {
 			}
 			builder.append(String.format(table, datapod.getName())).append("  ").append(datapod.getName()).append(" ");
 		} else if (rule.getSource().getRef().getType() == MetaType.dataset) {
-			DataSet dataset = (DataSet) daoRegister.getRefObject(rule.getSource().getRef());
+//			DataSet dataset = (DataSet) daoRegister.getRefObject(rule.getSource().getRef());
+			DataSet dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(rule.getSource().getRef().getUuid(), rule.getSource().getRef().getVersion(), rule.getSource().getRef().getType().toString(), "N");
+			
 			builder.append("(").append(datasetOperator.generateSql(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode)).append(")  ").append(dataset.getName());
 		} else if (rule.getSource().getRef().getType() == MetaType.rule) {
-			Rule innerRule = (Rule) daoRegister.getRefObject(rule.getSource().getRef());
+//			Rule innerRule = (Rule) daoRegister.getRefObject(rule.getSource().getRef());
+			Rule innerRule = (Rule) commonServiceImpl.getOneByUuidAndVersion(rule.getSource().getRef().getUuid(), rule.getSource().getRef().getVersion(), rule.getSource().getRef().getType().toString(), "N");
+			
 			builder.append("(").append(generateSql(innerRule, refKeyMap, otherParams, usedRefKeySet, execParams, runMode)).append(")  ").append(innerRule.getName());
 		}
 		return builder.toString();
@@ -145,7 +150,8 @@ public class RuleOperator implements IParsable, IReferenceable {
 	}
 	
 	public String selectGroupBy (Rule rule, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		return attributeMapOperator.selectGroupBy(attributeMapOperator.createAttrMap(rule.getAttributeInfo()), refKeyMap, otherParams, execParams);
+		MetaIdentifierHolder ruleSource = new MetaIdentifierHolder(rule.getRef(MetaType.rule));
+		return attributeMapOperator.selectGroupBy(attributeMapOperator.createAttrMap(rule.getAttributeInfo()), refKeyMap, otherParams, execParams, ruleSource);
 	}
 	
 	public String generateFilter (Rule rule, 
@@ -155,7 +161,8 @@ public class RuleOperator implements IParsable, IReferenceable {
 									ExecParams execParams, RunMode runMode) throws Exception {
 		if (rule.getFilterInfo() != null && !rule.getFilterInfo().isEmpty()) {
 			MetaIdentifierHolder filterSource = new MetaIdentifierHolder(new MetaIdentifier(MetaType.rule, rule.getUuid(), rule.getVersion()));
-			String filter = filterOperator2.generateSql(rule.getFilterInfo(), refKeyMap, filterSource, otherParams, usedRefKeySet, execParams, false, false, runMode);
+			Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(rule);
+			String filter = filterOperator2.generateSql(rule.getFilterInfo(), refKeyMap, filterSource, otherParams, usedRefKeySet, execParams, false, false, runMode, mapSourceDS);
 			return filter;
 		}
 		return ConstantsUtil.BLANK;
@@ -164,7 +171,8 @@ public class RuleOperator implements IParsable, IReferenceable {
 	public String generateHaving (Rule rule, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
 		if (rule.getFilterInfo() != null && !rule.getFilterInfo().isEmpty()) {
 			MetaIdentifierHolder filterSource = new MetaIdentifierHolder(new MetaIdentifier(MetaType.rule, rule.getUuid(), rule.getVersion()));
-			String filterStr = filterOperator2.generateSql(rule.getFilterInfo(), refKeyMap, filterSource, otherParams, usedRefKeySet, execParams, true, true, runMode);
+			Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(rule);
+			String filterStr = filterOperator2.generateSql(rule.getFilterInfo(), refKeyMap, filterSource, otherParams, usedRefKeySet, execParams, true, true, runMode, mapSourceDS);
 			return StringUtils.isBlank(filterStr) ? ConstantsUtil.BLANK : ConstantsUtil.HAVING_1_1.concat(filterStr);
 		}
 		return ConstantsUtil.BLANK;

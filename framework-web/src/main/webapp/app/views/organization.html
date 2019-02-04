@@ -1,0 +1,456 @@
+<style type="text/css">
+  .adminPage .tab-pane {
+    margin: 20px 20px;
+  }
+
+  .nav>li>a {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+  }
+
+  .adminPage .tab-content {
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .adminPage .nav-tabs,
+  .adminPage .nav-pills {
+    margin-bottom: 0px !important;
+  }
+
+  .adminPage .nav-tabs>li.active>a,
+  .adminPage .nav-tabs>li.active>a:focus,
+  .adminPage .nav-tabs>li.active>a:hover {
+    color: #555;
+    background-color: #fff;
+    border: none;
+    border-bottom: 4px solid #9fe4ea;
+    cursor: default;
+  }
+</style>
+<div class="adminPage" data-ng-controller="OrganizationDetailController">
+  <!-- BEGIN PAGE HEADER-->
+  <div class="page-bar">
+    <ul class="page-breadcrumb">
+      <li>
+        <a ui-sref="home">Home</a>
+        <i class="fa fa-circle"></i>
+      </li>
+      <li>
+        <a ui-sref="admin({type:'application'})">{{$state.current.data.pageTitle}}</a>
+        <i class="fa fa-circle"></i>
+      </li>
+      <li>
+        <a ui-sref="admin({type:'application'})">Organization</a>
+        <i class="fa fa-circle"></i>
+      </li>
+      <li>
+        <span>{{organizationData.name}}</span>
+      </li>
+    </ul>
+    <div class="page-toolbar">
+      <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+        <i class="icon-calendar"></i>&nbsp;
+        <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
+      </div>
+    </div>
+  </div>
+  <!-- END PAGE HEADER-->
+  <br>
+  <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+  <div options="dirOptions" type="'application'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="organizationData"
+    comment-panel-directive></div>
+
+  <!-- BEGIN MAIN CONTENT -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="portlet box green">
+        <div class="portlet-title">
+          <div class="caption">
+            <i class="fa fa-gift"></i>{{organizationData.name}}
+          </div>
+          <div class="tools">
+            <a href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top" tooltip ng-hide="isAdd" ng-class="(showForm==true)? 'currentpage':'notcurrentpage'"
+              style="height:16px;font-size:16px;" data-ng-click="showHome(organizationData.uuid,organizationData.version,mode)">
+              <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+            </a>
+            <a title="Edit" ng-class="(isEdit==true || isPrivlage || organizationData.locked == 'Y')? 'currentpage':'notcurrentpage'"
+              data-toggle="tooltip" data-placement="top" tooltip ng-click="enableEdit(organizationData.uuid,organizationData.version)"
+              ng-hide="isAdd" style="height:16px;">
+              <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+            </a>
+            <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="showForm==false? 'currentpage':'notcurrentpage'"
+              data-ng-click="showGraph(organizationData.uuid,organizationData.version)" style="height:14px;">
+              <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
+            </a>
+            <a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip ng-class="showForm==true? 'currentpage':'notcurrentpage'">
+              <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+            </a>
+            <a title="Close" ng-click="close()" data-toggle="tooltip" data-placement="top" tooltip>
+              <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
+            </a>
+          </div>
+        </div>
+        <div class="portlet-body">
+
+          <div class="form-body graph-body" ng-if="showGraphDiv">
+            <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
+            <div class="spinner" id="graphloader">
+              <div class="bounce1"></div>
+              <div class="bounce2"></div>
+              <div class="bounce3"></div>
+            </div>
+            <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="organizationData.uuid" version="organization.defaultVersion.version">
+            </div>
+          </div>
+
+          <div class="form-body" data-ng-show="showForm" style="padding-top:50px;">
+            <div class="centercontent" style="min-height:500px;" ng-if="isEditVeiwError">
+              <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
+            </div>
+            <div class="centercontent" style="min-height:500px;" ng-if="isEditInprogess">
+              <div class="spinner">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
+              </div>
+            </div>
+            <div ng-show="!isEditInprogess && !isEditVeiwError">
+              <form class="form-horizontal" novalidate="novalidate" name="myform" ng-submit="submit()" prevent-enter-submit>
+
+                <div class="form-group" ng-show="organizationData.uuid">
+                  <label class="col-md-3 control-label">UUID</label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" data-ng-disabled="true" ng-model="organizationData.uuid">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">Name
+                    <span class="required" aria-required="true"> * </span>
+                  </label>
+                  </label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="organizationData.name" required="">
+                  </div>
+                </div>
+
+                <div class="form-group" ng-show="organizationData.uuid">
+                  <label class="col-md-3 control-label">Version</label>
+                  <div class="col-md-6">
+                    <select class="form-control" select2 name="version" ng-disabled="false" ng-change="selectVersion(organization.defaultVersion.uuid, organization.defaultVersion.version)"
+                      data-ng-model="organization.defaultVersion.version" ng-options="c.version as c.version for c in organization.versions">
+                    </select>
+                  </div>
+                </div>
+
+                <div class="form-group" ng-show="organizationData.uuid">
+                  <label class="col-md-3 control-label">CreatedBy</label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" ng-disabled="true" ng-model="organizationData.createdBy.ref.name">
+                  </div>
+                </div>
+
+                <div class="form-group" ng-show="organizationData.uuid">
+                  <label class="col-md-3 control-label">CreatedOn</label>
+                  <div class="col-md-6">
+                    <input type="text" ng-model="organizationData.createdOn" ng-disabled="true" class="form-control">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
+                  <div class="col-md-6">
+                    <textarea class="form-control noresize" ng-disabled="{{mode}}" ng-model="organizationData.desc" rows="2" style="resize:none;">
+                    </textarea>
+                  </div>
+                </div>
+
+
+                <div class="form-group taginput">
+                  <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <tags-input ng-model="tags" ng-disabled="{{mode}}" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
+                      <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" max-results-to-show="10">
+                      </auto-complete>
+                    </tags-input>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="btn-group" ng-init="organizationData.active='Y'">
+                      <label class="btn btn-default" ng-model="organizationData.active" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-model="organizationData.active" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="btn-group">
+                      <label class="btn btn-default" ng-model="organizationData.locked" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-model="organizationData.locked" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="btn-group" ng-init="organizationData.published='N'">
+                      <label class="btn btn-default" ng-model="organizationData.published" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-model="organizationData.published" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group" style="padding-top: 10px;">
+                  <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                    <a ng-click="close()" class="btn btn-primary">Cancel</a>
+                    <input type="submit" class="btn btn-success" value="Submit" name="submit" ng-disabled="(!iSSubmitEnable == false|| mode == false || myform.$dirty ==true)?false:true">
+                    <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
+                      <div class="bounce1"></div>
+                      <div class="bounce2"></div>
+                      <div class="bounce3"></div>
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <uib-tabset active="activeForm">
+                    <uib-tab index="0" heading="Contact" select="go(0)">
+                      <div>
+                        <div class="row">
+                          <div class="x_title">
+                            <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right" ng-click="removeRowContact()" ng-disabled="{{mode}}"></button>
+                            <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" ng-click="addRowContact()" ng-disabled="{{mode}}||contactTableInfo.length >=3"></button>
+                          </div>
+                          <br>
+                          <hr>
+                        </div>
+                        <table class=" row-border hover table  table-striped table-bordered">
+                          <thead>
+                            <tr>
+                              <th style="width:5%;text-align: center; Vertical-align:middle;">
+                                <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                                  <input ng-disabled="{{mode}}" style="width:16px;height:16px;" type="checkbox" ng-model="selectedAllContact" ng-click="selectAllContactRow()" />
+                                </span>
+                              </th>
+                              <th style="text-align: center; Vertical-align: middle;width:25%;">Title</th>
+                              <th style="text-align: center;width:20%;">Name</th>
+                              <th style="text-align: center;width:20%;">Phone</th>
+                              <th style="text-align: center;width:20%;">EmailId</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr ng-repeat="data in contactTableInfo">
+                              <td style="text-align:center;Vertical-align:middle;">
+                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                  <input ng-disabled="{{mode}}" style="width:16px;height:16px;" type="checkbox" ng-model="data.selected" />
+                                </span>
+                              </td>
+                              <td>
+                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                  <select select2 class="form-control" ng-disabled="{{mode}}" data-ng-model="data.title" ng-options="r  for r in contactTitle | orderBy" required disable-validation-message="">
+                                  </select>
+                                </span>
+                              </td>
+                              <td>
+                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                  <input type="text" class="form-control" ng-model="data.name" title="{{data.name}}" ng-disabled="{{mode}}">
+                                </span>
+                              </td>
+                              <td>
+                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                  <input type="text" class="form-control" ng-model="data.phone" title="{{data.phone}}" ng-disabled="{{mode}}">
+                                </span>
+                              </td>
+                              <td>
+                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                  <input type="text" class="form-control" ng-model="data.emailId" title="{{data.emailId}}" ng-disabled="{{mode}}">
+                                </span>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </uib-tab>
+                    <uib-tab index="1" heading="Phone" select="go(1)">
+                      <div>
+                        <div class="row">
+                          <div class="x_title">
+                            <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right" ng-click="removeRowPhone()" ng-disabled="{{mode}}"></button>
+                            <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" ng-click="addRowPhone()" ng-disabled="{{mode}} ||phoneTableInfo.length >=3"></button>
+                          </div>
+                          <br>
+                          <hr>
+                        </div>
+                        <table class=" row-border hover table  table-striped table-bordered">
+                          <thead>
+                            <tr>
+                              <th style="width:5%;text-align: center; Vertical-align: middle;">
+                                <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                                  <input  ng-disabled="{{mode}}"style="width: 16px;height:16px;" type="checkbox" ng-model="selectedAllPhone" ng-click="selectAllPhoneRow()" />
+                                </span>
+                              </th>
+                              <th style="text-align: center; Vertical-align: middle;width:50%;">Type</th>
+                              <th style="text-align: center;width:50%;">Number</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr ng-repeat="data in phoneTableInfo">
+                              <td style="text-align:center;Vertical-align:middle;">
+                                <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                                  <input style="width:16px;height:16px;" type="checkbox" ng-model="data.selected" ng-disabled="{{mode}}" />
+                                </span>
+                              </td>
+                              <td>
+                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                  <select select2 class="form-control" ng-disabled="{{mode}}" data-ng-model="data.type" ng-options="r  for r in phoneType | orderBy" required disable-validation-message=""></select>
+                                </span>
+                              </td>
+                              <td>
+                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                  <input type="text" class="form-control" ng-model="data.number" title="{{data.number}}" ng-disabled="{{mode}}">
+                                </span>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </uib-tab>
+                    <uib-tab index="2" heading="Email" select="go(2)">
+                      <div>
+                        <div class="row">
+                          <div class="x_title">
+                            <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right" ng-click="removeRowEmail()" ng-disabled="{{mode}}"></button>
+                            <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" ng-click="addRowEmail()" ng-disabled="{{mode}}||emailTableInfo.length >=3"></button>
+                          </div>
+                          <br>
+                          <hr>
+                        </div>
+                        <table class=" row-border hover table  table-striped table-bordered">
+                          <thead>
+                            <tr>
+                              <th style="width:5%;text-align: center; Vertical-align: middle;">
+                                <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                                  <input ng-disabled="{{mode}}" style="width:16px;height:16px;" type="checkbox" ng-model="selectedAllEmail" ng-click="selectAllEmailRow()" />
+                                </span>
+                              </th>
+                              <th style="text-align: center; Vertical-align: middle;width:50%;">Type</th>
+                              <th style="text-align: center;width:50%;">EmailId</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr ng-repeat="data in emailTableInfo">
+                              <td style="text-align:center;Vertical-align:middle;">
+                                <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                                  <input ng-disabled="{{mode}}" style="width:16px;height:16px;" type="checkbox" ng-model="data.selected" />
+                                </span>
+                              </td>
+                              <td>
+                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                  <select select2 class="form-control" ng-disabled="{{mode}}" data-ng-model="data.type" ng-options="r  for r in emailType | orderBy" required disable-validation-message="">
+                                  </select>
+                                </span>
+                              </td>
+                              <td>
+                                <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                                  <input type="text" class="form-control" ng-model="data.emailId" title="{{data.emailId}}" ng-disabled="{{mode}}">
+                                </span>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </uib-tab>
+                    <uib-tab index="3" heading="Address" select="go(3)">
+                      <div>
+                        <div class="row">
+                          <div class="x_title">
+                            <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right" ng-click="removeRowAddress()" ng-disabled="{{mode}}"></button>
+                            <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" ng-click="addRowAddress()" ng-disabled="{{mode}} ||addressTableInfo.length >=3"></button>
+                          </div>
+                          <br>
+                          <hr>
+                        </div>
+                        <table class=" row-border hover table  table-striped table-bordered">
+                          <thead>
+                            <tr>
+                              <th style="width:5%;text-align: center; Vertical-align: middle;">
+                                <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                                  <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="selectedAllAddress" ng-click="selectAllAddressRow()" />
+                                </span>
+                              </th>
+                              <th style="text-align: center; Vertical-align: middle;width:10%;">Type</th>
+                              <th style="text-align: center;width:10%;">Address Line 1</th>
+                              <th style="text-align: center;width:10%;">Address Line 2</th>
+                              <th style="text-align: center;width:10%;">City</th>
+                              <th style="text-align: center;width:10%;">State</th>
+                              <th style="text-align: center;width:10%;">Country</th>
+                              <th style="text-align: center;width:10%;">Zipcode</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr ng-repeat="data in addressTableInfo">
+                              <td style="text-align:center;Vertical-align:middle;">
+                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                  <input ng-disabled="{{mode}}" style="width:16px;height:16px;" type="checkbox" ng-model="data.selected" />
+                                </span>
+                              </td>
+                              <td>
+                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                  <select select2 class="form-control" ng-disabled="{{mode}}" data-ng-model="data.type" ng-options="r  for r in addressType | orderBy" required disable-validation-message="">
+                                  </select>
+                                </span>
+                              </td>
+                              <td>
+                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                  <input type="text" class="form-control" ng-model="data.addressLine1" title="{{data.addressLine1}}" ng-disabled="{{mode}}">
+                                </span>
+                              </td>
+                              <td>
+                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                  <input type="text" class="form-control" ng-model="data.addressLine2" title="{{data.addressLine2}}" ng-disabled="{{mode}}">
+                                </span>
+                              </td>
+                              <td>
+                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                  <input type="text" class="form-control" ng-model="data.city" title="{{data.city}}" ng-disabled="{{mode}}">
+                                </span>
+                              </td>
+                              <td>
+                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                  <input type="text" class="form-control" ng-model="data.state" title="{{data.state}}" ng-disabled="{{mode}}">
+                                </span>
+                              </td>
+                              <td>
+                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                  <input type="text" class="form-control" ng-model="data.country" title="{{data.country}}" ng-disabled="{{mode}}">
+                                </span>
+                              </td>
+                              <td>
+                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                  <input type="text" class="form-control" ng-model="data.zipcode" title="{{data.zipcode}}" ng-disabled="{{mode}}">
+                                </span>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </uib-tab>
+                  </uib-tabset>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+<br>
+<br>

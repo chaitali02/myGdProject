@@ -107,15 +107,36 @@ MetadataModule.factory('MetadataDahsboardFactory', function ($http, $location) {
 		return $http({
 			method: 'GET',
 			url: url + "metadata/getAttributesByRelation?action=view&uuid=" + uuid + "&type=" + type,
-		}).
-			then(function (response, status, headers) {
-				return response;
-			})
+		}).then(function (response, status, headers) {
+			return response;
+		})
 	}
+
+	factory.findFormulaByType = function(uuid,type) {
+        var url = $location.absUrl().split("app")[0]
+        return $http({
+          method: 'GET',
+          url: url + "metadata/getFormulaByType?action=view&uuid="+uuid+"&type="+type,
+        }).then(function(response, status, headers) {
+          return response;
+        })
+      }
 	return factory;
 });
 
 MetadataModule.service('MetadataDahsboardSerivce', function ($q, sortFactory, MetadataDahsboardFactory) {
+	this.getFormulaByType = function(uuid,type) {
+        var deferred = $q.defer();
+        MetadataDahsboardFactory.findFormulaByType(uuid,type).then(function(response) {
+          onSuccess(response.data)
+        });
+        var onSuccess = function(response) {
+          deferred.resolve({
+            data: response
+          })
+        }
+        return deferred.promise;
+      }
 	this.getAllAttributeBySource = function (uuid, type) {
 		var deferred = $q.defer();
 		if (type == "relation") {
@@ -245,9 +266,8 @@ MetadataModule.service('MetadataDahsboardSerivce', function ($q, sortFactory, Me
 	};
 
 	this.getLatestByUuidView = function (id, type) {
-		
 		var deferred = $q.defer();
-		MetadataDahsboardFactory.findLatestByUuid(id, type).then(function (response) { onSuccess(response.data) });
+		MetadataDahsboardFactory.findLatestByUuid(id, type).then(function (response) { onSuccess(response.data) },function (response) { onError(response.data)});
 		var onSuccess = function (response) {
 			var dashboardjson = {};
 			dashboardjson.dashboarddata = response;
@@ -274,33 +294,27 @@ MetadataModule.service('MetadataDahsboardSerivce', function ($q, sortFactory, Me
 				var filterinfo = {};
 				filterinfo.uuid = response.filterInfo[i].ref.uuid;
 				filterinfo.type = response.filterInfo[i].ref.type;
-				filterinfo.dname = response.filterInfo[i].ref.name + "." + response.filterInfo[i].attrName;
-				//profileinfo.version=response.filterInfo[i].ref.version;
-				filterinfo.attributeId = response.filterInfo[i].attrId;
-				filterinfo.id = response.filterInfo[i].ref.uuid + "_" + response.filterInfo[i].attrId
+				if(response.filterInfo[i].ref.type !="formula"){
+					filterinfo.attributeId = response.filterInfo[i].attrId;
+					filterinfo.dname = response.filterInfo[i].ref.name + "." + response.filterInfo[i].attrName;
+					filterinfo.id = response.filterInfo[i].ref.uuid + "_" + response.filterInfo[i].attrId
+				}
+				else{
+					filterinfo.dname = "formula"+"."+response.filterInfo[i].ref.name;
+					filterinfo.id = response.filterInfo[i].ref.uuid;
+				}
+			
 
 				filterInfoArray[i] = filterinfo;
 			}
 			dashboardjson.filterInfo = filterInfoArray
-			/*var filterInfoArray=[];
-		   if(response.filter !=null){
-			  for(var k=0;k<response.filter.filterInfo.length;k++){
-				  var filterInfo={};
-				  var lhsFilter={};
-				  lhsFilter.uuid=response.filter.filterInfo[k].operand[0].ref.uuid
-				  lhsFilter.datapodname=response.filter.filterInfo[k].operand[0].ref.name
-				  lhsFilter.attributeId=response.filter.filterInfo[k].operand[0].attributeId;
-				  lhsFilter.name=response.filter.filterInfo[k].operand[0].attributeName;
-				  filterInfo.logicalOperator=response.filter.filterInfo[k].logicalOperator
-				  filterInfo.lhsFilter=lhsFilter;
-				  filterInfo.operator=response.filter.filterInfo[k].operator;
-				  filterInfo.filtervalue=response.filter.filterInfo[k].operand[1].value;
-				  filterInfoArray.push(filterInfo);
-			 }
-		  }
-		   dashboardjson.filterInfo=filterInfoArray*/
 			deferred.resolve({
 				data: dashboardjson
+			})
+		}
+		var onError = function (response) {
+			deferred.reject({
+			  data: response
 			})
 		}
 		return deferred.promise;
@@ -311,7 +325,8 @@ MetadataModule.service('MetadataDahsboardSerivce', function ($q, sortFactory, Me
 
 	this.getOneByUuidAndVersionView = function (uuid, version, type) {
 		var deferred = $q.defer();
-		MetadataDahsboardFactory.findOneByUuidAndVersion(uuid, version, type).then(function (response) { onSuccess(response.data) });
+		MetadataDahsboardFactory.findOneByUuidAndVersion(uuid, version, type)
+			.then(function (response) { onSuccess(response.data) },function (response) { onError(response.data)});
 		var onSuccess = function (response) {
 			var dashboardjson = {};
 			dashboardjson.dashboarddata = response;
@@ -338,33 +353,25 @@ MetadataModule.service('MetadataDahsboardSerivce', function ($q, sortFactory, Me
 				var filterinfo = {};
 				filterinfo.uuid = response.filterInfo[i].ref.uuid;
 				filterinfo.type = response.filterInfo[i].ref.type;
-				filterinfo.dname = response.filterInfo[i].ref.name + "." + response.filterInfo[i].attrName;
-				//profileinfo.version=response.filterInfo[i].ref.version;
-				filterinfo.attributeId = response.filterInfo[i].attrId;
-				filterinfo.id = response.filterInfo[i].ref.uuid + "_" + response.filterInfo[i].attrId
-
+				if(response.filterInfo[i].ref.type !="formula"){
+					filterinfo.attributeId = response.filterInfo[i].attrId;
+					filterinfo.dname = response.filterInfo[i].ref.name + "." + response.filterInfo[i].attrName;
+					filterinfo.id = response.filterInfo[i].ref.uuid + "_" + response.filterInfo[i].attrId;
+				}
+				else{
+					filterinfo.dname = "formula"+"."+response.filterInfo[i].ref.name;
+					filterinfo.id = response.filterInfo[i].ref.uuid;
+				}
 				filterInfoArray[i] = filterinfo;
 			}
 			dashboardjson.filterInfo = filterInfoArray
-			/*var filterInfoArray=[];
-		   if(response.filter !=null){
-			  for(var k=0;k<response.filter.filterInfo.length;k++){
-				  var filterInfo={};
-				  var lhsFilter={};
-				  lhsFilter.uuid=response.filter.filterInfo[k].operand[0].ref.uuid
-				  lhsFilter.datapodname=response.filter.filterInfo[k].operand[0].ref.name
-				  lhsFilter.attributeId=response.filter.filterInfo[k].operand[0].attributeId;
-				  lhsFilter.name=response.filter.filterInfo[k].operand[0].attributeName;
-				  filterInfo.logicalOperator=response.filter.filterInfo[k].logicalOperator
-				  filterInfo.lhsFilter=lhsFilter;
-				  filterInfo.operator=response.filter.filterInfo[k].operator;
-				  filterInfo.filtervalue=response.filter.filterInfo[k].operand[1].value;
-				  filterInfoArray.push(filterInfo);
-			 }
-		  }*/
-			// dashboardjson.filterInfo=filterInfoArray
 			deferred.resolve({
 				data: dashboardjson
+			})
+		}
+		var onError = function (response) {
+			deferred.reject({
+			  data: response
 			})
 		}
 		return deferred.promise;

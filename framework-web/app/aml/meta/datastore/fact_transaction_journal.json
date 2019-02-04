@@ -1,44 +1,54 @@
 {
-    "metaId" : {
-        "ref" : {
-            "type" : "datapod",
-            "uuid" : "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-            "version" : "1539946337"
-        }
+  "uuid": "23bdf611-4373-4266-aa00-5f3e29868f1c",
+  "version": "1542598080",
+  "name": "fact_transaction_journal",
+  "desc": "Creating datastore for fact_transaction_journal",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
     },
-    "execId" : {
-        "ref" : {
-            "type" : "loadExec",
-            "uuid" : "00220182-502f-446b-9681-7dd69af30d28",
-            "version" : "1540018386"
-        }
+    "value": null
+  },
+  "createdOn": "Sun Nov 18 22:28:00 EST 2018",
+  "tags": null,
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+        "version": "1521430822",
+        "name": "Anti Money Laundering"
+      },
+      "value": null
+    }
+  ],
+  "metaId": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+      "version": "1542590225",
+      "name": "fact_transaction_journal"
     },
-    "location" : "/5e87bde8-18ed-4b0e-993a-d19d26c495ad/1539946337/1540018386",
-    "persistMode" : "DISK_ONLY",
-    "numRows" : NumberLong(24),
-    "runMode" : "BATCH",
-    "uuid" : "bdcb806e-0e8b-4127-ac91-fdc5b01c5f15",
-    "version" : "1540018388",
-    "name" : "fact_transaction_journal",
-    "desc" : "Creating datastore for fact_transaction_journal",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
-            "version" : "1464977196",
-            "name" : "ypalrecha"
-        }
+    "value": null
+  },
+  "execId": {
+    "ref": {
+      "type": "loadExec",
+      "uuid": "3c297fa0-e492-436a-ae91-3441ded70877",
+      "version": "1542598079",
+      "name": "fact_transaction_journal"
     },
-    "createdOn" : ISODate("2018-10-20T06:53:08.000Z"),
-    "active" : "Y",
-    "published" : "N",
-    "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-                "version" : "1521430822"
-            }
-        }
-    ]
+    "value": null
+  },
+  "location": "/5e87bde8-18ed-4b0e-993a-d19d26c495ad/1542590225/1542598079",
+  "persistMode": "DISK_ONLY",
+  "dimInfo": null,
+  "numRows": 6012,
+  "runMode": "BATCH"
 }

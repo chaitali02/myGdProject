@@ -311,6 +311,16 @@ RuleModule.factory('RuleFactory', function ($http, $location) {
       return response;
     })
   }
+  factory.findAttributesByRelation = function (uuid, type) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			method: 'GET',
+			url: url + "metadata/getAttributesByRelation?action=view&uuid=" + uuid + "&type=" + type,
+		}).
+			then(function (response, status, headers) {
+				return response;
+			})
+	}
   factory.disableRhsType=function(arrayStr){
     var rTypes=[
       { "text": "string", "caption": "string","disabled":false },
@@ -335,7 +345,7 @@ RuleModule.factory('RuleFactory', function ($http, $location) {
 })
 
 
-RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory,CF_FILTER) {
+RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory,CF_FILTER, CF_GRID) {
   var factory = {};
 
   factory.executeRuleWithParams = function (uuid, version, data) {
@@ -528,6 +538,7 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory,CF_FILT
       for (var j = 0; j < response.length; j++) {
         var attributedetail = {};
         attributedetail.uuid = response[j].datapodRef.uuid;
+        attributedetail.uuid = response[j].datapodRef.type;
         attributedetail.datapodname = response[j].datapodRef.name;
         attributedetail.name = response[j].attributeName;
         attributedetail.dname = response[j].datapodRef.name + "." + response[j].attributeName;
@@ -594,11 +605,18 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory,CF_FILT
           filterInfo.rhsTypes=null;
           if(filterInfo.operator =='BETWEEN'){
             filterInfo.rhsTypes =RuleFactory.disableRhsType(['attribute','formula','dataset','function','paramlist'])
-          }else if(['EXISTS','NOT EXISTS','IN','NOT IN'].indexOf(filterInfo.operator) !=-1){
+          }else if(['IN','NOT IN'].indexOf(filterInfo.operator) !=-1){
             filterInfo.rhsTypes=RuleFactory.disableRhsType([]);
           }else if(['<','>',"<=",'>='].indexOf(filterInfo.operator) !=-1){
             filterInfo.rhsTypes=RuleFactory.disableRhsType(['string','dataset']);
           }
+          else if (['EXISTS', 'NOT EXISTS'].indexOf(filterInfo.operator) != -1) {
+						filterInfo.rhsTypes = RuleFactory.disableRhsType(['attribute', 'formula', 'function', 'paramlist','string','integer']);
+					}
+					else if (['IS'].indexOf(filterInfo.operator) != -1){
+						
+						filterInfo.rhsTypes = RuleFactory.disableRhsType(['attribute', 'formula', 'dataset', 'function', 'paramlist']);
+					}
           else{
             filterInfo.rhsTypes=RuleFactory.disableRhsType(['dataset']);
           }
@@ -655,6 +673,8 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory,CF_FILT
             filterInfo.isrhsFormula = false;
             filterInfo.isrhsDataset = false;
             filterInfo.rhsvalue =response.filterInfo[i].operand[1].value;
+            var temp=response.filterInfo[i].operator;
+						temp=temp.replace(/ /g,'');
             if(response.filterInfo[i].operator =="BETWEEN"){
 							obj.caption = "integer";
 							filterInfo.rhsvalue1=response.filterInfo[i].operand[1].value.split("and")[0];
@@ -666,6 +686,9 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory,CF_FILT
 						}else if(response.filterInfo[i].operator =='=' && response.filterInfo[i].operand[1].attributeType =="integer"){
 							obj.caption = "integer";
 							filterInfo.rhsvalue = response.filterInfo[i].operand[1].value
+            }
+            else if(temp == "ISNULL" || temp == "ISNOTNULL" ){
+							filterInfo.isRhsNA = true;
 						}
 						else{
 						filterInfo.rhsvalue = response.filterInfo[i].operand[1].value//.replace(/["']/g, "");
@@ -796,11 +819,17 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory,CF_FILT
       var sourceAttributesArray = [];
       for (var n = 0; n < response.attributeInfo.length; n++) {
         var attributeInfo = {};
-        attributeInfo.name = response.attributeInfo[n].attrSourceName
+        attributeInfo.name = response.attributeInfo[n].attrSourceName;
+        attributeInfo.id = response.attributeInfo[n].attrSourceId;
+        if(response.attributeInfo.length >CF_GRID.framework_autopopulate_grid)
+          attributeInfo.isOnDropDown=false;
+        else
+          attributeInfo.isOnDropDown=true;
         if (response.attributeInfo[n].sourceAttr.ref.type == "simple") {
           var obj = {}
           obj.text = "string"
-          obj.caption = "string"
+          obj.caption = "string";
+          attributeInfo.id=parseInt(response.attributeInfo[n].attrSourceId);
           attributeInfo.sourceAttributeType = obj;
           attributeInfo.isSourceAtributeSimple = true;
           attributeInfo.sourcesimple = response.attributeInfo[n].sourceAttr.value
@@ -814,12 +843,15 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory,CF_FILT
         if (response.attributeInfo[n].sourceAttr.ref.type == "datapod" || response.attributeInfo[n].sourceAttr.ref.type == "dataset" || response.attributeInfo[n].sourceAttr.ref.type == "rule") {
           var sourcedatapod = {};
           sourcedatapod.uuid = response.attributeInfo[n].sourceAttr.ref.uuid;
+          sourcedatapod.type = response.attributeInfo[n].sourceAttr.ref.type;
           sourcedatapod.attributeId = response.attributeInfo[n].sourceAttr.attrId;
-          sourcedatapod.attrType = response.attributeInfo[n].sourceAttr.attrType
-          sourcedatapod.name = "";
+          sourcedatapod.attrType = response.attributeInfo[n].sourceAttr.attrType;
+          sourcedatapod.name = response.attributeInfo[n].sourceAttr.attrName;
+          debugger
           var obj = {}
           obj.text = "datapod"
-          obj.caption = "attribute"
+          obj.caption = "attribute";
+          attributeInfo.id=parseInt(response.attributeInfo[n].attrSourceId);
           attributeInfo.sourceAttributeType = obj;
           attributeInfo.sourcedatapod = sourcedatapod;
           attributeInfo.isSourceAtributeSimple = false;
@@ -833,10 +865,12 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory,CF_FILT
         if (response.attributeInfo[n].sourceAttr.ref.type == "expression") {
           var sourceexpression = {};
           sourceexpression.uuid = response.attributeInfo[n].sourceAttr.ref.uuid;
-          sourceexpression.name = "";
+          sourceexpression.type = response.attributeInfo[n].sourceAttr.ref.type;
+					sourceexpression.name = response.attributeInfo[n].sourceAttr.ref.name;
           var obj = {}
           obj.text = "expression"
-          obj.caption = "expression"
+          obj.caption = "expression";
+          attributeInfo.id=parseInt(response.attributeInfo[n].attrSourceId);
           attributeInfo.sourceAttributeType = obj;
           attributeInfo.sourceexpression = sourceexpression;
           attributeInfo.isSourceAtributeSimple = false;
@@ -849,10 +883,12 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory,CF_FILT
         if (response.attributeInfo[n].sourceAttr.ref.type == "formula") {
           var sourceformula = {};
           sourceformula.uuid = response.attributeInfo[n].sourceAttr.ref.uuid;
-          sourceformula.name = "";
+          sourceformula.type = response.attributeInfo[n].sourceAttr.ref.type;
+          sourceformula.name = response.attributeInfo[n].sourceAttr.ref.name;
           var obj = {}
           obj.text = "formula"
-          obj.caption = "formula"
+          obj.caption = "formula";
+          attributeInfo.id=parseInt(response.attributeInfo[n].attrSourceId)
           attributeInfo.sourceAttributeType = obj;
           attributeInfo.sourceformula = sourceformula;
           attributeInfo.isSourceAtributeSimple = false;
@@ -865,10 +901,12 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory,CF_FILT
         if (response.attributeInfo[n].sourceAttr.ref.type == "function") {
           var sourcefunction = {};
           sourcefunction.uuid = response.attributeInfo[n].sourceAttr.ref.uuid;
-          sourcefunction.name = "";
+          sourcefunction.type = response.attributeInfo[n].sourceAttr.ref.type;
+          sourcefunction.name = response.attributeInfo[n].sourceAttr.ref.name;
           var obj = {}
           obj.text = "function"
-          obj.caption = "function"
+          obj.caption = "function";
+          attributeInfo.id=parseInt(response.attributeInfo[n].attrSourceId);
           attributeInfo.sourceAttributeType = obj;
           attributeInfo.sourcefunction = sourcefunction;
           attributeInfo.isSourceAtributeSimple = false;
@@ -881,12 +919,14 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory,CF_FILT
         if (response.attributeInfo[n].sourceAttr.ref.type == "paramlist") {
           var sourceparamlist = {};
           sourceparamlist.uuid = response.attributeInfo[n].sourceAttr.ref.uuid;
+          sourceparamlist.type = response.attributeInfo[n].sourceAttr.ref.type;
           sourceparamlist.attributeId = response.attributeInfo[n].sourceAttr.attrId;
-          sourceparamlist.attrType = response.attributeInfo[n].sourceAttr.attrType
-          sourceparamlist.name = "";
+          sourceparamlist.attrType = response.attributeInfo[n].sourceAttr.attrType;
+          sourceparamlist.name =response.attributeInfo[n].sourceAttr.attrName;
           var obj = {}
           obj.text = "paramlist"
-          obj.caption = "paramlist"
+          obj.caption = "paramlist";
+          attributeInfo.id=parseInt(response.attributeInfo[n].attrSourceId);
           attributeInfo.sourceAttributeType = obj;
           attributeInfo.sourceparamlist = sourceparamlist;
           attributeInfo.isSourceAtributeSimple = false;
@@ -898,6 +938,7 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory,CF_FILT
         }
         sourceAttributesArray[n] = attributeInfo
       }
+      console.log(sourceAttributesArray);
       ruleJSOn.sourceAttributes = sourceAttributesArray
       deferred.resolve({
         data: ruleJSOn
@@ -1216,26 +1257,45 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory,CF_FILT
   factory.getAllAttributeBySource = function (uuid, type) {
     var deferred = $q.defer();
     if (type == "relation") {
-      RuleFactory.findDatapodByRelation(uuid, type).then(function (response) { onSuccess(response.data) });
-      var onSuccess = function (response) {
-        var attributes = [];
-        for (var j = 0; j < response.length; j++) {
-          for (var i = 0; i < response[j].attributes.length; i++) {
-            var attributedetail = {};
-            attributedetail.uuid = response[j].uuid;
-            attributedetail.datapodname = response[j].name;
-            attributedetail.name = response[j].attributes[i].name;
-            attributedetail.dname = response[j].name + "." + response[j].attributes[i].name;
-            attributedetail.attributeId = response[j].attributes[i].attributeId;
-            attributedetail.attrType = response[j].attributes[i].attrType;
-            attributes.push(attributedetail)
-          }
-        }
-        //console.log(JSON.stringify(attributes))
-        deferred.resolve({
-          data: attributes
-        })
-      }
+      // RuleFactory.findDatapodByRelation(uuid, type).then(function (response) { onSuccess(response.data) });
+      // var onSuccess = function (response) {
+      //   var attributes = [];
+      //   for (var j = 0; j < response.length; j++) {
+      //     for (var i = 0; i < response[j].attributes.length; i++) {
+      //       var attributedetail = {};
+      //       attributedetail.uuid = response[j].uuid;
+      //       attributedetail.datapodname = response[j].name;
+      //       attributedetail.name = response[j].attributes[i].name;
+      //       attributedetail.dname = response[j].name + "." + response[j].attributes[i].name;
+      //       attributedetail.attributeId = response[j].attributes[i].attributeId;
+      //       attributedetail.attrType = response[j].attributes[i].attrType;
+      //       attributes.push(attributedetail)
+      //     }
+      //   }
+      //   //console.log(JSON.stringify(attributes))
+      //   deferred.resolve({
+      //     data: attributes
+      //   })
+      // }
+      RuleFactory.findAttributesByRelation(uuid, "relation", "").then(function (response) { onSuccess(response.data) });
+			var onSuccess = function (response) {
+				var attributes = [];
+				for (var j = 0; j < response.length; j++) {
+					var attributedetail = {};
+					attributedetail.uuid = response[j].ref.uuid;
+					attributedetail.type = response[j].ref.type;
+					attributedetail.datapodname = response[j].ref.name;
+					attributedetail.name = response[j].attrName;
+					attributedetail.attributeId = response[j].attrId;
+					attributedetail.attrType = response[j].attrType;
+					attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
+					attributes.push(attributedetail)
+				}
+
+				deferred.resolve({
+					data: attributes
+				})
+			}
     }
     if (type == "dataset") {
       RuleFactory.findDatapodByDataset(uuid, type).then(function (response) { onSuccess(response.data) });
@@ -1244,6 +1304,7 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory,CF_FILT
         for (var j = 0; j < response.length; j++) {
           var attributedetail = {};
           attributedetail.uuid = response[j].ref.uuid;
+          attributedetail.type = response[j].ref.type;
           attributedetail.datapodname = response[j].ref.name;
           attributedetail.name = response[j].attrName;
           attributedetail.attributeId = response[j].attrId;
@@ -1263,6 +1324,7 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory,CF_FILT
         for (var j = 0; j < response.length; j++) {
           var attributedetail = {};
           attributedetail.uuid = response[j].ref.uuid;
+          attributedetail.type = response[j].ref.type;
           attributedetail.datapodname = response[j].ref.name;
           attributedetail.name = response[j].attrName;
           attributedetail.attributeId = response[j].attrId;
@@ -1283,6 +1345,7 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory,CF_FILT
         for (var j = 0; j < response.length; j++) {
           var attributedetail = {};
           attributedetail.uuid = response[j].ref.uuid;
+          attributedetail.type = response[j].ref.type;
           attributedetail.datapodname = response[j].ref.name;
           attributedetail.name = response[j].attrName;
           attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
@@ -1301,7 +1364,8 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory,CF_FILT
 				var attributes = [];
 				for (var j = 0; j < response.length; j++) {
 					var attributedetail = {};
-					attributedetail.uuid = response[j].ref.uuid;
+          attributedetail.uuid = response[j].ref.uuid;
+          attributedetail.type = response[j].ref.type;
 					attributedetail.datapodname = response[j].ref.name;
 					attributedetail.name = response[j].paramName ;
 					attributedetail.dname = response[j].paramName //response[j].ref.name + "." + response[j].paramName;

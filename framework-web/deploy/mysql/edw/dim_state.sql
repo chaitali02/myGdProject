@@ -1,10 +1,10 @@
-DROP TABLE IF EXISTS DIM_STATE;
-CREATE TABLE DIM_STATE(	
-	STATE_ID VARCHAR(50) DEFAULT 0 NOT NULL,
-	STATE_CODE VARCHAR(10),
-	STATE_NAME VARCHAR(100),
-	COUNTRY_CODE VARCHAR(10),
-	STATE_POPULATION INTEGER(10),
-	LOAD_DATE VARCHAR(10),
-	LOAD_ID INTEGER(50), 
-CONSTRAINT STATE_ID_PK  PRIMARY KEY(STATE_ID));
+drop table if exists dim_state;
+create table dim_state(	
+	state_id varchar(50) default 0 not null,
+	state_code varchar(10),
+	state_name varchar(100),
+	country_code varchar(10),
+	state_population integer(10),
+	load_date varchar(10),
+	load_id integer(50), 
+constraint state_id_pk  primary key(state_id));
