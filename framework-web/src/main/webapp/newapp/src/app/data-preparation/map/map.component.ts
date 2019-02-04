@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AppConfig } from '../../app.config';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { CommonService } from '../../metadata/services/common.service';
@@ -9,6 +9,7 @@ import { MessageService } from 'primeng/components/common/messageservice';
 import { Version } from '../../shared/version'
 import { SelectItem } from 'primeng/primeng';
 import { DependsOn } from './dependsOn'
+import { KnowledgeGraphComponent } from '../../shared/components/knowledgeGraph/knowledgeGraph.component';
 
 @Component({
   selector: 'app-map',
@@ -60,6 +61,7 @@ export class MapComponent implements OnInit {
   allMapFormula: SelectItem[] = [];
   breadcrumbDataFrom: any;
   isSubmitEnable: any;
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
 
   constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _mapService: MapServices) {
     this.showDropdown = false
@@ -701,9 +703,12 @@ export class MapComponent implements OnInit {
     this.showGraph = false;
   }
 
-  showDagGraph(uuid, version) {
+  showDagGraph(uuid,version){
     this.isHomeEnable = true;
     this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id,this.version);
+    }, 1000); 
   }
 
 

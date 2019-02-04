@@ -1,10 +1,11 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AppConfig } from '../../app.config';
 import { SelectItem } from 'primeng/primeng';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { CommonService } from '../../metadata/services/common.service';
 import { Version } from '../../shared/version';
+import { KnowledgeGraphComponent } from '../../shared/components';
 
 @Component({
   selector: 'app-role',
@@ -41,6 +42,7 @@ export class RoleComponent implements OnInit {
   msgs: any;
   booleanPrivInfo: any;
   isSubmitEnable: any;
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
 
   constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
     this.privResponse = null;
@@ -85,6 +87,14 @@ export class RoleComponent implements OnInit {
         this.dropdownSettingsPrivilege.disabled = this.mode == "false" ? false : true
       } this.getAllLatestPrivilege();
     })
+  }
+
+  showDagGraph(uuid,version){
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id,this.version);
+    }, 1000); 
   }
 
   getOneByUuidAndVersion() {
@@ -302,12 +312,9 @@ export class RoleComponent implements OnInit {
   }
 
   showMainPage() {
-    this.isHomeEnable = false;
+    this.isHomeEnable = false
+    // this._location.back();
     this.showGraph = false;
   }
 
-  showDagGraph(uuid, version) {
-    this.isHomeEnable = true;
-    this.showGraph = true;
-  }
 }

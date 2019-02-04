@@ -1,5 +1,5 @@
 // import { version } from './../../../../../../../../target/framework/app/bower_components/moment/moment.d';
-import { NgModule, Component, ViewEncapsulation, Input } from '@angular/core';
+import { NgModule, Component, ViewEncapsulation, Input, ViewChild } from '@angular/core';
 import { MetaDataDataPodService } from './datapod.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { count } from 'rxjs/operators';
@@ -18,6 +18,7 @@ import { DatapodService } from '../../metadata/services/datapod.service';
 import { Http, Headers } from '@angular/http';
 import { ResponseContentType } from '@angular/http';
 import { saveAs } from 'file-saver';
+import { KnowledgeGraphComponent } from '../../shared/components/knowledgeGraph/knowledgeGraph.component';
 
 @Component({
   selector: 'app-data-preparation',
@@ -85,7 +86,7 @@ export class DatapodComponent {
   showdatapod: any;
   showgraph: any;
   graphDataStatus: any;
-  showgraphdiv: any;
+  showGraph: any;
 
   versions: any;
   mode: string;
@@ -102,12 +103,16 @@ export class DatapodComponent {
   datasource_name: any;
   breadcrumbDataFrom: { "caption": string; "routeurl": string; }[];
   isSubmitEnable: any;
+  isHomeEnable: boolean;
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
 
   constructor(private _config: AppConfig,public metaconfig: AppMetadata, public apphelper: AppHepler, private http: Http, private _commonService: CommonService, private _datapodService: DatapodService, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _service: MetaDataDataPodService, private route: ActivatedRoute) {
     this.baseUrl = config.getBaseUrl();
+    this.isHomeEnable = false
     this.selectVersion = { "version": "" };
     this.showdatapod = true;
     this.isSubmitEnable = true;
+    this.showGraph = false
     this.uuid = '';
     this.download={}
     this.download["format"]=["excel"]
@@ -152,6 +157,20 @@ export class DatapodComponent {
         this.selectType(this.selectdatasourceType);
       }
     });
+  }
+
+  showMainPage() {
+    this.isHomeEnable = false
+    // this._location.back();
+    this.showGraph = false;
+  }
+  
+  showDagGraph(uuid,version){
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id,this.version);
+    }, 1000);    
   }
 
   public goBack() {
@@ -245,7 +264,7 @@ export class DatapodComponent {
     this.showdatapod = false;
     this.showgraph = false;
     this.graphDataStatus = false;
-    this.showgraphdiv = false;
+    this.showGraph = false;
     this.IsTableShow = false;
     this.isShowDatastore=false
     this.isShowCompareMetaData=false
@@ -393,7 +412,7 @@ export class DatapodComponent {
     this.isShowSimpleData = false;
     this.showgraph = false;
     this.graphDataStatus = false;
-    this.showgraphdiv = false
+    this.showGraph = false
     this.isShowDatastore=false
     this.showgetResults=false
   }
@@ -404,7 +423,7 @@ export class DatapodComponent {
     this.showgraph = false;
     this.isShowSimpleData = false;
     this.graphDataStatus = true;
-    this.showgraphdiv = true;
+    this.showGraph = true;
     this.isShowDatastore=false
     this.showgetResults=false
   }
@@ -545,7 +564,7 @@ export class DatapodComponent {
     this.showgraph = false;
     this.isShowSimpleData = false;
     this.graphDataStatus = false;
-    this.showgraphdiv = false;
+    this.showGraph = false;
     this.isShowDatastore=false
     this.showgetResults=false
     this._datapodService.compareMetadata(data.uuid,data.version,'datapod').subscribe(
@@ -692,7 +711,8 @@ onSuccessgetAttrHistogram(response){
       this.attributes.splice(this.dragIndex,1)
       this.attributes.splice(this.dropIndex,0,item)
       this.iSSubmitEnable=true
-    }
-    
+    }    
   }
+
+  
 }

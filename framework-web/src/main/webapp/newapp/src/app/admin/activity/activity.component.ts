@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AppConfig } from '../../app.config';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { SelectItem } from 'primeng/primeng';
 import { CommonService } from '../../metadata/services/common.service';
 import { Location } from '@angular/common';
 import { Version } from '../../shared/version';
+import { KnowledgeGraphComponent } from '../../shared/components';
 
 @Component({
   selector: 'app-activity',
@@ -47,6 +48,7 @@ export class ActivityComponent implements OnInit {
   showGraph: boolean = false;
   isDependencyGraphEnable: boolean = true;
   isShowReportData: boolean = true;
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
 
 
   constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
@@ -82,6 +84,14 @@ export class ActivityComponent implements OnInit {
       this.getAllVersionByUuid();
 
     })
+  }
+
+  showDagGraph(uuid,version){
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id,this.version);
+    }, 1000); 
   }
 
   getOneByUuidAndVersion() {
@@ -236,12 +246,7 @@ export class ActivityComponent implements OnInit {
     this.isDependencyGraphEnable = true;
     this.isShowReportData = true;
   }
-  showDependencyGraph(uuid, version) {
-    console.log("showDependencyGraph call.....");
-    this.showGraph = true;
-    this.isDependencyGraphEnable = false;
-    this.isHomeEnable = true;
-  }
+  
   enableEdit(uuid, version) {
     console.log("enableEdit call.....");
   }

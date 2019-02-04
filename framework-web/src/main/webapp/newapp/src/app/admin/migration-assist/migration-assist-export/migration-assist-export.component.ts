@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AppConfig } from '../../../app.config';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { CommonService } from '../../../metadata/services/common.service';
 import { Location } from '@angular/common';
 import { Observable } from 'rxjs/Observable';
 import { MigrationAssistService } from '../../../metadata/services/migration-assist.services';
+import { KnowledgeGraphComponent } from '../../../shared/components/knowledgeGraph/knowledgeGraph.component';
 
 @Component({
   selector: 'app-migration-assist-export',
@@ -42,6 +43,7 @@ export class MigrationAssistExportComponent implements OnInit {
   location: any;
   type: any;
   allMataList: any;
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
   constructor(private _location: Location, private config: AppConfig, private activatedRoute: ActivatedRoute, private router: Router, private _commonService: CommonService, private _migrationAssist: MigrationAssistService) {
     this.showExportData = true;
     this.exportData = {};
@@ -101,6 +103,14 @@ export class MigrationAssistExportComponent implements OnInit {
     this.metaTypeArray = [];
     this.metaType = [];
     this.allMataList = []
+  }
+
+  showDagGraph(uuid,version){
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id,this.version);
+    }, 1000); 
   }
 
   getAll() {
@@ -303,11 +313,8 @@ export class MigrationAssistExportComponent implements OnInit {
 
   showMainPage() {
     this.isHomeEnable = false
+    // this._location.back();
     this.showGraph = false;
   }
 
-  showDagGraph(uuid, version) {
-    this.isHomeEnable = true;
-    this.showGraph = true;
-  }
 }

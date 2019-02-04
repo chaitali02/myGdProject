@@ -1,18 +1,19 @@
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { AppConfig } from './../../app.config';
 import { CommonService } from './../../metadata/services/common.service';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { Version } from '../../shared/version'
 import { SelectItem } from 'primeng/primeng';
 import { DependsOn } from './dependsOn'
+import { KnowledgeGraphComponent } from '../../shared/components/knowledgeGraph/knowledgeGraph.component';
 @Component({
   selector: 'app-expression',
   templateUrl: './expression.template.html',
   styleUrls: ['./expression.component.css']
 })
 export class ExpressionComponent implements OnInit {
-  @Input() 
+  @Input()
   childMessage: string;
   VersionList: SelectItem[] = [];
   selectedVersion: Version
@@ -49,15 +50,18 @@ export class ExpressionComponent implements OnInit {
   logicalOperators: any;
   operators: any;
   isSubmitEnable: any;
-  isDependonDisabled : boolean;
+  isDependonDisabled: boolean;
   isHomeEnable: boolean = false;
-  showGraph: boolean = false;
+  showGraph: boolean;
   isRefreshEnable: boolean = true;
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
 
   constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
     this.uuid = '';
     this.isDependonDisabled = false;
     this.showExpression = true;
+    this.isHomeEnable = false
+    this.showGraph = false
     this.expression = {};
     this.tags = [];
     this.expression["active"] = true
@@ -103,11 +107,12 @@ export class ExpressionComponent implements OnInit {
       this.depends = params['depends'];
       this.dependsOn["uuid"] = params['dependsOnUuid'];
       this.dependsOn["label"] = params['dependsOnLabel'];
-      if(this.depends != null){
+      if (this.depends != null) {
         this._commonService.getAllLatest(this.depends).subscribe(
-          response => { 
+          response => {
             this.isDependonDisabled = true;
-            this.OnSuccesgetAllLatest(response, false) },
+            this.OnSuccesgetAllLatest(response, false)
+          },
           error => console.log('Error :: ' + error)
         )
       }
@@ -138,22 +143,31 @@ export class ExpressionComponent implements OnInit {
     // })
   }
 
+  showDagGraph(uuid, version) {
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id, this.version);
+    }, 1000);
+
+  }
+
   getOneByUuidAndVersion(id, version) {
     this._commonService.getOneByUuidAndVersion(id, version, 'expression')
       .subscribe(
-      response => {
-        this.onSuccessgetOneByUuidAndVersion(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.onSuccessgetOneByUuidAndVersion(response)
+        },
+        error => console.log("Error :: " + error));
   }
 
   getAllVersionByUuid() {
     this._commonService.getAllVersionByUuid('expression', this.id)
       .subscribe(
-      response => {
-        this.OnSuccesgetAllVersionByUuid(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.OnSuccesgetAllVersionByUuid(response)
+        },
+        error => console.log("Error :: " + error));
   }
 
   onSuccessgetOneByUuidAndVersion(response) {
@@ -184,7 +198,7 @@ export class ExpressionComponent implements OnInit {
     this.dependsOn = dependOnTemp
     this.breadcrumbDataFrom[2].caption = this.expression.name;
     this.depends = response["dependsOn"]["ref"]["type"];
-    this.dependsOn.uuid=response["dependsOn"]["ref"]["uuid"];
+    this.dependsOn.uuid = response["dependsOn"]["ref"]["uuid"];
     let expressionjson = {};
     expressionjson["expression"] = response;
     let expressionListArray = [];
@@ -326,7 +340,7 @@ export class ExpressionComponent implements OnInit {
     )
   }
   public goBack() {
-     this._location.back();
+    this._location.back();
     //this.router.navigate(['app/list/expression']);
   }
   OnSuccesgetAllVersionByUuid(response) {
@@ -717,13 +731,9 @@ export class ExpressionComponent implements OnInit {
   // showview(uuid, version) {
   //   this.router.navigate(['app/dataPreparation/expression', uuid, version, 'true']);
   // }
-  showMainPage(uuid, version){ 
+  showMainPage(uuid, version) {
     this.isHomeEnable = false;
     this.showGraph = false;
   }
-  showDatapodGraph(uuid,version){
-    console.log("Show datapod Graph call... ");
-    this.showGraph = true;
-    this.isHomeEnable = true;
-  }
+
 }

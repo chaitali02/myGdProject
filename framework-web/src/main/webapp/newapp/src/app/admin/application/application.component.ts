@@ -1,5 +1,6 @@
+import { KnowledgeGraphComponent } from './../../shared/components/knowledgeGraph/knowledgeGraph.component';
 import { Location, DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AppConfig } from '../../app.config';
 import { SelectItem } from 'primeng/primeng';
 import { ActivatedRoute, Router, Params } from '@angular/router';
@@ -60,6 +61,7 @@ export class ApplicationComponent implements OnInit {
   allMapFormula: any;
   typeDistributions: any[];
   typeFunctions: any[];
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
 
   constructor(private _location: Location, private config: AppConfig, private activatedRoute: ActivatedRoute,
     public router: Router, private _commonService: CommonService, private _applicationService: ApplicationService,
@@ -125,6 +127,14 @@ export class ApplicationComponent implements OnInit {
       { "name": "list", "caption": "list" },
       { "name": "array", "caption": "array" }
     ];
+  }
+
+  showDagGraph(uuid, version) {
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id, this.version);
+    }, 1000);
   }
 
   getOneByUuidAndVersion() {
@@ -417,12 +427,6 @@ export class ApplicationComponent implements OnInit {
     this.showGraph = false;
     this.isDependencyGraphEnable = true;
     this.isShowReportData = true;
-  }
-  showDependencyGraph(uuid, version) {
-    console.log("showDependencyGraph call.....");
-    this.showGraph = true;
-    this.isDependencyGraphEnable = false;
-    this.isHomeEnable = true;
   }
 
   addRow() {

@@ -29,6 +29,7 @@ import { JointjsService } from './jointjsservice'
 import { SharedDataService } from './shareddata.service'
 import { SelectItem } from 'primeng/primeng';
 import { Version } from './../metadata/domain/version'
+import { KnowledgeGraphComponent } from '../shared/components/knowledgeGraph/knowledgeGraph.component';
 declare var jQuery: any;
 @Component({
   selector: 'app-graph-analysis',
@@ -89,6 +90,9 @@ export class GraphAnalysisComponent {
   
   edgeHighlightColor:["#b71c1c","#004D40","#FF9800","#BF360C","#0D47A1","#263238","#000000"]
   @ViewChild('searchAttrModel') searchAttrModel: ElementRef;
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
+  isHomeEnable: boolean;
+  showGraph: boolean;
   // ngOnInit() {
   //   this.selectType='datapod'
   //   this.onChangeType()
@@ -104,6 +108,9 @@ export class GraphAnalysisComponent {
 
   
   constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _jointjsService: JointjsService, private _sharedDataService: SharedDataService) {
+    
+    this.showGraph = false;
+    this.isHomeEnable = false;
     this.graphData = {};
     this.nodeTableArray=[]
     this.nodeIconMap={"home":{"caption":"Home","value":"home","class":"fa fa-home","code":"\uf015","color":"#5C9BD1"},
@@ -164,6 +171,19 @@ export class GraphAnalysisComponent {
       }; 
   }
 
+  showMainPage() {
+    this.isHomeEnable = false
+    // this._location.back();
+    this.showGraph = false;
+  }
+
+  showDagGraph(uuid,version){
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id,this.version);
+    }, 1000); 
+  }
   public goBack() {
     //this._location.back();
     this.router.navigate(['app/list/graphpod']);

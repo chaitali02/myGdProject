@@ -12,28 +12,30 @@
           <div class="caption">
             <i class="fa fa-gift"></i>{{datastore.name}}
           </div>
+          
           <div class="tools">
-
-            <a title="Main" style="color:white;" title="Main" data-placement="top" tooltip [ngClass]="isHomeEnable==true?'notcurrentpage':'currentpage'"
-              (click)="showMainPage(uuid,version)">
-              <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.2,1.2);"></i>
+            <a style="color:white" title="Main" data-placement="top" tooltip [ngClass]="isHomeEnable==true ? 'notcurrentpage':'currentpage'"
+              data-(click)="showMainPage(datastore.uuid,datastore.version)">
+              <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
-            <a title="Edit" (click)="enableEdit(uuid,version)" data-toggle="tooltip" data-placement="top" tooltip="Edit"
-              style="height:16px;" [ngClass]="mode == 'true'?'notcurrentpage':'currentpage'">
+
+            <a href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top" tooltip [ngClass]="mode == 'true' && showGraph == false? 'notcurrentpage':'currentpage'"
+              data-(click)="enableEdit(datastore.uuid,datastore.version)">
               <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
-            <a title="Show Dependencies" data-toggle="tooltip" (click)="showDependencyGraph(uuid,version)"
-              data-placement="top" tooltip style="height:14px;" *ngIf="mode" [ngClass]="isDependencyGraphEnable==true?'notcurrentpage':'currentpage'">
-              <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
-            </a>
-            <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip="refresh" [ngClass]="isRefreshEnable==true?'notcurrentpage':'currentpage'">
-              <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
-            </a>
-            <a title="Close" data-toggle="tooltip" data-placement="top" tooltip="close" style="height:14px;" (click)="goBack()">
-              <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform:scale(1,1.2)"></i>
-            </a>
 
+            <a href="javascript:;" title="Show Dependencies" data-placement="top" tooltip [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'"
+              data-(click)="showDagGraph(datastore.uuid,datastore.version)">
+              <i class="fa fa-sitemap" style="display: inline;margin:2px auto;color:white;"></i>
+            </a>
+            <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip>
+              <i class="fa fa-refresh" aria-hidden="true" style="display: inline;margin: 2px auto;color:white;"></i>
+            </a>
+            <a title="Close" data-toggle="tooltip" data-placement="top" tooltip style="height:14px;" (click)="goBack()">
+              <i class="fa fa-times" aria-hidden="true" style="display: inline;margin: 2px auto;color:white;"></i>
+            </a>
           </div>
+
         </div>
 
         <div class="portlet-body form">
@@ -187,19 +189,18 @@
             </form>
           </div>
 
-          <div *ngIf="showGraph">
-            <div class="form-body graph-body" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=')">
-              <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
-              <!--<div class="spinner" id="graphloader">-->
-              <!--<div class="bounce1"></div>-->
-              <!--<div class="bounce2"></div>-->
-              <!--<div class="bounce3"></div>-->
-              <!--</div>-->
-              <div class="form-body show-graph-body" id="graphWrapper">
-                <app-d3></app-d3>
-              </div>
+          <div class="form-body graph-body" *ngIf="showGraph" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=');">
+            <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
+            <div class="spinner" id="graphloader">
+              <div class="bounce1"></div>
+              <div class="bounce2"></div>
+              <div class="bounce3"></div>
+            </div>
+            <div class="show-graph-body" id="graphWrapper">
+              <knowledge-graph></knowledge-graph>
             </div>
           </div>
+
         </div>
       </div>
     </div>

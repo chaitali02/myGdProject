@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonService } from '../metadata/services/common.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Version } from './../metadata/domain/version'
@@ -7,6 +7,7 @@ import { Location, DatePipe } from '@angular/common';
 import { AppConfig } from '../app.config';
 import moment = require('moment');
 import { FrequencyType } from './frequencyType';
+import { KnowledgeGraphComponent } from '../shared/components/knowledgeGraph/knowledgeGraph.component';
 
 @Component({
   selector: 'app-batch-scheduler',
@@ -112,9 +113,15 @@ export class BatchSchedulerComponent implements OnInit {
   sortArr: any;
   minimumDate: Date;
   startDate= new Date();
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
+  showGraph: boolean;
+  isHomeEnable: boolean;
   
 
   constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private datePipe: DatePipe) {
+    
+    this.showGraph = false
+    this.isHomeEnable = false;
     this.privResponse = null;
     this.pipelineInfoTags = null;
 
@@ -170,6 +177,20 @@ export class BatchSchedulerComponent implements OnInit {
     })
     this.attrtypes = ["Once", "Daily", "Weekly", "Bi-Weekly", "Hourly", "Quarterly", "Monthly", "Yearly"];
     this.attrtype = this.attrtypes[0];
+  }
+  
+  showMainPage() {
+    this.isHomeEnable = false
+    // this._location.back();
+    this.showGraph = false;
+  }
+
+  showDagGraph(uuid,version){
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id,this.version);
+    }, 1000); 
   }
 
   getOneByUuidAndVersion() {

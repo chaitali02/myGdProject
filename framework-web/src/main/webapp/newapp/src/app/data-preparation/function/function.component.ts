@@ -1,9 +1,10 @@
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { AppConfig } from './../../app.config';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonService } from '../../metadata/services/common.service';
 import { SelectItem } from 'primeng/primeng';
 import { Version } from '../../metadata/domain/version'
+import { KnowledgeGraphComponent } from '../../shared/components/knowledgeGraph/knowledgeGraph.component';
 
 
 @Component({
@@ -45,11 +46,13 @@ export class FunctionComponent implements OnInit {
   isHomeEnable: boolean = false;
   showGraph: boolean = false;
   isGraphEnable: boolean = true;
-  isEditEnable : boolean = true;
+  isEditEnable: boolean = true;
   isRefreshEnable: boolean = true;
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
 
   constructor(config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
     this.showFunctionData = true;
+    this.isHomeEnable = false
     this.functionData = {};
     this.functionData["active"] = true
 
@@ -107,22 +110,30 @@ export class FunctionComponent implements OnInit {
     })
   }
 
+  showDagGraph(uuid, version) {
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id, this.version);
+    }, 1000);
+  }
+
   getOneByUuidAndVersion() {
     this._commonService.getOneByUuidAndVersion(this.id, this.version, 'function')
       .subscribe(
-      response => {
-        this.onSuccessgetOneByUuidAndVersion(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.onSuccessgetOneByUuidAndVersion(response)
+        },
+        error => console.log("Error :: " + error));
   }
 
   getAllVersionByUuid() {
     this._commonService.getAllVersionByUuid('function', this.id)
       .subscribe(
-      response => {
-        this.OnSuccesgetAllVersionByUuid(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.OnSuccesgetAllVersionByUuid(response)
+        },
+        error => console.log("Error :: " + error));
   }
 
   onSuccessgetOneByUuidAndVersion(response) {
@@ -198,10 +209,10 @@ export class FunctionComponent implements OnInit {
   onVersionChange() {
     this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, 'function')
       .subscribe(
-      response => {//console.log(response)},
-        this.onSuccessgetOneByUuidAndVersion(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {//console.log(response)},
+          this.onSuccessgetOneByUuidAndVersion(response)
+        },
+        error => console.log("Error :: " + error));
   }
   selectAllRow() {
     this.functionTableArray.forEach(relation => {
@@ -365,14 +376,9 @@ export class FunctionComponent implements OnInit {
     // this._location.back();
     this.router.navigate(['app/list/function']);
   }
-  showMainPage(uuid, version){
+  showMainPage(uuid, version) {
     this.isHomeEnable = false;
     this.showGraph = false;
   }
-  showFunctionGraph(uuid,version){
-    console.log("Show Formula Graph call... ");
-    this.showGraph = true;
-    this.isHomeEnable = true;
-    //this.isRefreshEnable = true;
-  }
+
 }

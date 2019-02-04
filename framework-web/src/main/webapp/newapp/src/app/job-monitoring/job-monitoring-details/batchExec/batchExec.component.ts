@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DatePipe, Location } from '@angular/common';
 import { AppConfig } from '../../../app.config';
 import { SelectItem } from 'primeng/primeng';
@@ -7,6 +7,7 @@ import { CommonService } from '../../../metadata/services/common.service';
 import { AppMetadata } from '../../../app.metadata';
 import { Version } from '../../../shared/version';
 import { AppHepler } from '../../../app.helper';
+import { KnowledgeGraphComponent } from '../../../shared/components/knowledgeGraph/knowledgeGraph.component';
 
 @Component({
   selector: 'app-batchExec',
@@ -45,6 +46,7 @@ export class BatchExecComponent implements OnInit {
   ref: any;
   execList: any[] = [];
   showExec: boolean = false;
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
 
   constructor(private datePipe: DatePipe, public apphelper: AppHepler, private _location: Location, public statusDefs: AppMetadata, public metaconfig: AppMetadata, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
     this.showResultModel = true;
@@ -79,6 +81,14 @@ export class BatchExecComponent implements OnInit {
       this.getOneByUuidAndVersion(this.id, this.version)
       this.getAllVersionByUuid()
     }
+  }
+
+  showDagGraph(uuid,version){
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id,this.version);
+    }, 1000); 
   }
 
   onChangeActive(event) {
@@ -198,8 +208,4 @@ export class BatchExecComponent implements OnInit {
     this.showGraph = false;
   }
 
-  showDagGraph(uuid, version) {
-    this.isHomeEnable = true;
-    this.showGraph = true;
-  }
 }

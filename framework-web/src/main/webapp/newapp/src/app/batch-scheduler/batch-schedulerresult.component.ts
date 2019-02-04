@@ -1,6 +1,6 @@
 import { Http } from '@angular/http';
 import * as c3 from 'c3'
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AppMetadata } from '../app.metadata';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { MetadataService } from '../metadata/services/metadata.service';
@@ -10,6 +10,7 @@ import { MenuModule, MenuItem } from 'primeng/primeng';
 import * as moment from 'moment'
 import { CommonListService } from '../common-list/common-list.service';
 import { DatePipe } from '@angular/common';
+import { KnowledgeGraphComponent } from '../shared/components/knowledgeGraph/knowledgeGraph.component';
 
 @Component({
   selector: 'app-batch-schedulerresult-component',
@@ -35,8 +36,15 @@ export class BatchSchedulerResultComponent {
   starttime: any = "- N/A -";
   endtime: any = "- N/A -";
   duration: any = "- N/A -";
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
+  showGraph: boolean;
+  isHomeEnable: boolean;
+  showHome: boolean;
 
   constructor(private _commonListService: CommonListService, private http: Http, public _sharedService: SharedService, public router: Router, public metaconfig: AppMetadata, private activatedRoute: ActivatedRoute, private _metadataService: MetadataService, private activeroute: ActivatedRoute,private datePipe: DatePipe) {
+    this.showGraph = false
+    this.isHomeEnable = false
+    
     this.breadcrumbDataFrom = [{
       "caption": "Batch Scheduler",
       "routeurl": "/app/list/batchexec"
@@ -81,6 +89,22 @@ export class BatchSchedulerResultComponent {
     })
 
   }
+
+  showMainPage() {
+    this.showHome = true
+    this.isHomeEnable = false
+    // this._location.back();
+    this.showGraph = false;
+  }
+
+  showDagGraph(uuid, version) {
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id, this.version);
+    }, 1000);
+  }
+
   getExecListByBatchExec(): any {
     this._metadataService.getExecListByBatchExec(this.id, this.version, 'batchexec')
       .subscribe(

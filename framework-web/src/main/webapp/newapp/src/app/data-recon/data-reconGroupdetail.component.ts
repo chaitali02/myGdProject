@@ -1,5 +1,5 @@
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router, Event as RouterEvent, ActivatedRoute, Params } from '@angular/router';
 import { SelectItem } from 'primeng/primeng';
@@ -9,6 +9,7 @@ import { AppMetadata } from '../app.metadata';
 import { CommonService } from './../metadata/services/common.service';
 
 import { Version } from './../metadata/domain/version'
+import { KnowledgeGraphComponent } from '../shared/components/knowledgeGraph/knowledgeGraph.component';
 @Component({
   selector: 'app-recon',
   templateUrl: './data-reconGroupdetail.template.html',
@@ -41,7 +42,12 @@ export class DataReconGroupDetailComponent {
   id: any;
   routerUrl: any;
   datarecongroup: any
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
+
   constructor(private activatedRoute: ActivatedRoute, private router: Router, public metaconfig: AppMetadata, private _commonService: CommonService, private _location: Location) {
+    
+    this.showGraph = false;
+    this.isHomeEnable = false;
     this.datarecongroup = {};
     this.datarecongroup["active"] = true
     this.isSubmitEnable = true;
@@ -90,6 +96,15 @@ export class DataReconGroupDetailComponent {
       }
     });
   }
+
+  showDagGraph(uuid, version) {
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id, this.version);
+    }, 1000);
+  }
+
   getAllLatest() {
     this._commonService.getAllLatest("recon").subscribe(
       response => { this.OnSuccesgetAllLatest(response) },
@@ -110,10 +125,10 @@ export class DataReconGroupDetailComponent {
   getOneByUuidAndVersion(id, version) {
     this._commonService.getOneByUuidAndVersion(id, version, 'recongroup')
       .subscribe(
-      response => {
-        this.onSuccessgetOneByUuidAndVersion(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.onSuccessgetOneByUuidAndVersion(response)
+        },
+        error => console.log("Error :: " + error));
   }
   onSuccessgetOneByUuidAndVersion(response) {
     this.breadcrumbDataFrom[2].caption = response.name;
@@ -152,10 +167,10 @@ export class DataReconGroupDetailComponent {
   getAllVersionByUuid() {
     this._commonService.getAllVersionByUuid('recongroup', this.id)
       .subscribe(
-      response => {
-        this.OnSuccesgetAllVersionByUuid(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.OnSuccesgetAllVersionByUuid(response)
+        },
+        error => console.log("Error :: " + error));
   }
   OnSuccesgetAllVersionByUuid(response) {
     for (const i in response) {
@@ -170,10 +185,10 @@ export class DataReconGroupDetailComponent {
   onVersionChange() {
     this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, 'recongroup')
       .subscribe(
-      response => {//console.log(response)},
-        this.onSuccessgetOneByUuidAndVersion(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {//console.log(response)},
+          this.onSuccessgetOneByUuidAndVersion(response)
+        },
+        error => console.log("Error :: " + error));
   }
   public goBack() {
     // this._location.back();
@@ -281,24 +296,20 @@ export class DataReconGroupDetailComponent {
     };
 
   }
-  clear(){
-    this.selectedItems=[]
+  clear() {
+    this.selectedItems = []
   }
   showProfileGroupePage() {
-		this.showProfileGroup = true;
-		this.showgraphdiv = false;
-		this.graphDataStatus = false;
-		this.showProfileGroupForm = true;
+    this.showProfileGroup = true;
+    this.showgraphdiv = false;
+    this.graphDataStatus = false;
+    this.showProfileGroupForm = true;
 
-	}
-
-	showMainPage(){
-    this.isHomeEnable = false
-   // this._location.back();
-   this.showGraph = false;
   }
-  showDagGraph(uuid,version){
-    this.isHomeEnable = true;
-    this.showGraph = true;
+
+  showMainPage() {
+    this.isHomeEnable = false
+    // this._location.back();
+    this.showGraph = false;
   }
 }

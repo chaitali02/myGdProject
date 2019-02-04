@@ -31,25 +31,25 @@
         </div>
 
         <div class="portlet-body form">
-          <div class="form-body graph-body" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=')"
-            *ngIf="showgraphdiv">
+          <div class="form-body graph-body" *ngIf="showGraph" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=');">
             <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
-            <!--<div class="spinner" id="graphloader">-->
-            <!--<div class="bounce1"></div>-->
-            <!--<div class="bounce2"></div>-->
-            <!--<div class="bounce3"></div>-->
-            <!--</div>-->
-            <div class="form-body show-graph-body" id="graphWrapper">
-              <app-d3></app-d3>
+            <div class="spinner" id="graphloader">
+              <div class="bounce1"></div>
+              <div class="bounce2"></div>
+              <div class="bounce3"></div>
+            </div>
+            <div class="show-graph-body" id="graphWrapper">
+              <knowledge-graph></knowledge-graph>
             </div>
           </div>
 
-          <div class="form-body" style="padding-top:50px;"*ngIf="!showGraph">
+          <div class="form-body" style="padding-top:50px;" *ngIf="!showGraph">
             <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="submitImport()">
               <div class="form-group" *ngIf="mode">
                 <label class="col-md-3 control-label">UUID</label>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="importData.uuid" name="uuid" placeholder="" [disabled]="true">
+                  <input type="text" class="form-control" [(ngModel)]="importData.uuid" name="uuid" placeholder=""
+                    [disabled]="true">
                 </div>
               </div>
 
@@ -58,14 +58,16 @@
                   <span class="required" aria-required="true"> * </span>
                 </label>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="importData.name" name="name" placeholder="" [disabled]="mode == 'true'">
+                  <input type="text" class="form-control" [(ngModel)]="importData.name" name="name" placeholder=""
+                    [disabled]="mode == 'true'">
                 </div>
               </div>
 
               <div class="form-group" *ngIf="mode">
                 <label class="col-md-3 control-label">Version </label>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="importData.version" name="version" placeholder="" [disabled]="mode == 'true'">
+                  <input type="text" class="form-control" [(ngModel)]="importData.version" name="version" placeholder=""
+                    [disabled]="mode == 'true'">
                 </div>
               </div>
 
@@ -93,7 +95,8 @@
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
                 <div class="col-md-6">
-                  <textarea [disabled]="mode == 'true'" [(ngModel)]="importData.desc" name="desc" class="form-control noresize" rows="2" style="resize:none;"></textarea>
+                  <textarea [disabled]="mode == 'true'" [(ngModel)]="importData.desc" name="desc" class="form-control noresize"
+                    rows="2" style="resize:none;"></textarea>
                 </div>
               </div>
 
@@ -101,8 +104,9 @@
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
                   <div class="btn-group">
-                    <ui-switch (change)="onChangeActive($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="importData.active"
-                      name="active" [checked]="active" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                    <ui-switch (change)="onChangeActive($event)" [disabled]="mode == 'true' || mode == 'false'"
+                      [(ngModel)]="importData.active" name="active" [checked]="active" color="#32c5d2" labelOn="Yes"
+                      labelOff="No"></ui-switch>
                   </div>
                 </div>
               </div>
@@ -143,7 +147,8 @@
               <div class="form-group">
                 <label class="col-md-3 control-label">Include Dependencies ?</label>
                 <div class="col-md-6">
-                  <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="importData.includeDep" name="includeDep" (change)="onChangeCheckbox($event)">
+                  <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="importData.includeDep" name="includeDep"
+                    (change)="onChangeCheckbox($event)">
 
                 </div>
               </div>
@@ -152,10 +157,11 @@
                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                   <a class="btn btn-primary" (click)="goBack()">Cancel</a>
 
-                  <input type="submit" class="btn btn-success" value="Submit" name="submit" *ngIf="isSubmitEnable" [disabled]="mode == 'true'">
+                  <input type="submit" class="btn btn-success" value="Submit" name="submit" *ngIf="isSubmitEnable"
+                    [disabled]="mode == 'true'">
 
-                  <input type="button" class="btn btn-success" value="Validate" name="validate" *ngIf="!mode && !isSubmitEnable" [disabled]="isValidate"
-                    (click)="validate()">
+                  <input type="button" class="btn btn-success" value="Validate" name="validate" *ngIf="!mode && !isSubmitEnable"
+                    [disabled]="isValidate" (click)="validate()">
 
                 </div>
               </div>
@@ -179,7 +185,8 @@
                   <tr *ngFor="let obj of importData.metaInfo let i=index">
 
                     <td style="text-align: center; Vertical-align: middle;">
-                      <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="obj.selected" name="selected+{{i}}" (change)="selectAllSubRow(i)">
+                      <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="obj.selected" name="selected+{{i}}"
+                        (change)="selectAllSubRow(i)">
                     </td>
                     <td>
                       <input type="text" class="form-control" [(ngModel)]="obj.ref.type" name="type+{{i}}" [disabled]="mode == 'true'">
@@ -188,7 +195,8 @@
                       <input type="text" class="form-control" [(ngModel)]="obj.ref.name" name="name+{{i}}" [disabled]="mode == 'true'">
                     </td>
                     <td>
-                      <input type="text" class="form-control" [(ngModel)]="obj.ref.version" name="version+{{i}}" [disabled]="mode == 'true'">
+                      <input type="text" class="form-control" [(ngModel)]="obj.ref.version" name="version+{{i}}"
+                        [disabled]="mode == 'true'">
                     </td>
                   </tr>
                 </tbody>

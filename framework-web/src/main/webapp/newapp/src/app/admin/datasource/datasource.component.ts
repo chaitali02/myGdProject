@@ -1,11 +1,12 @@
 
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AppConfig } from '../../app.config';
 import { SelectItem, DataGridModule } from 'primeng/primeng';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { CommonService } from '../../metadata/services/common.service';
 import { Version } from '../../shared/version';
+import { KnowledgeGraphComponent } from '../../shared/components/knowledgeGraph/knowledgeGraph.component';
 
 
 @Component({
@@ -18,6 +19,8 @@ export class DatasourceComponent implements OnInit {
   breadcrumbDataFrom: any;
   showDatasource: any;
   datasource: any;
+  showGraph: boolean;
+  isHomeEnable: boolean;
   versions: any[];
   VersionList: SelectItem[] = [];
   selectedVersion: Version;
@@ -48,9 +51,12 @@ export class DatasourceComponent implements OnInit {
   typeOn: any;
   allNames: any;
   isSubmitEnable: any;
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
 
   constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
     this.showDatasource = true;
+    this.isHomeEnable = false;
+    this.showGraph = false
     this.datasource = {};
     this.datasource["active"] = true
     this.isSubmitEnable = true;
@@ -82,6 +88,20 @@ export class DatasourceComponent implements OnInit {
         this.getAllVersionByUuid();
       }
     })
+  }
+
+  showDagGraph(uuid,version){
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id,this.version);
+    }, 1000); 
+  }
+
+  showMainPage() {
+    this.isHomeEnable = false
+    // this._location.back();
+    this.showGraph = false;
   }
 
   getOneByUuidAndVersion() {

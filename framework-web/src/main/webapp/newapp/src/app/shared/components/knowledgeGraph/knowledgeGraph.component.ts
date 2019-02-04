@@ -5,6 +5,8 @@ import { D3Service, D3, Selection } from 'd3-ng2-service';
 import * as $ from 'jquery';
 import { AppMetadata } from '../../../app.metadata';
 import { CommonService } from '../../../metadata/services/common.service';
+import { Router, Event as RouterEvent, ActivatedRoute, Params } from '@angular/router';
+
 @Component({
     encapsulation: ViewEncapsulation.None,
     selector: 'knowledge-graph',
@@ -41,7 +43,7 @@ export class KnowledgeGraphComponent {
     tree;
     svg;
     // degree = "1";
-    constructor(private element: ElementRef,private d3Service: D3Service, public metaconfig: AppMetadata, public _commonService: CommonService) {
+    constructor(private router: Router,private element: ElementRef,private d3Service: D3Service, public metaconfig: AppMetadata, public _commonService: CommonService) {
         this.d3 = d3Service.getD3();
     }
     ngOnInit() {
@@ -108,7 +110,7 @@ export class KnowledgeGraphComponent {
     update(source, angularThis) {
         var w = this.d3.select("svg.tree-graph").attr("width");
         this.d3.select("svg.tree-graph").attr("width", parseInt(w) + 100);
-        this.d3.select("svg.tree-graph").attr("height", this.height);
+        this.d3.select("svg.tree-graph").attr("height", this.height+100);
 
         var treeData = this.treemap(source);
         var nodes = treeData.descendants(),
@@ -493,7 +495,7 @@ export class KnowledgeGraphComponent {
             .append('li')
             .on('click', function (d) {
             
-                angularThis.navigateTo(Nodedata, d);
+                angularThis.navigateTo(Nodedata, d,angularThis);
                 angularThis.d3.select('.context-menu').style('display', 'none');
             })
             .text(function (d) {
@@ -509,15 +511,28 @@ export class KnowledgeGraphComponent {
             .style('display', 'block');
             angularThis.d3.event.preventDefault();
     }
-    navigateTo(data, d) {debugger
+    navigateTo(data, d,angularThis) {
         
-            if (d == "Show Details" && data.metaRef.ref.type != null && data.metaRef.ref.type != "attributes") {
-                data.metaRef.ref.name = data.name
-                data.metaRef.ref.type = data.metaRef.ref.type
+            if (d == "Show Details" && data.data.metaRef.ref.type != null && data.data.metaRef.ref.type != "attributes") {
+                data.data.metaRef.ref.name = data.data.name
+                data.data.metaRef.ref.type = data.data.metaRef.ref.type
+                let _moduleUrl
+                let _routerUrl
+                _moduleUrl = this.metaconfig.getMetadataDefs(data.data.metaRef.ref.type)['moduleState']
+                _routerUrl = this.metaconfig.getMetadataDefs(data.data.metaRef.ref.type)['detailState']
+                let url=this.router.createUrlTree(["/app/" + _moduleUrl + "/" + _routerUrl, data.data.metaRef.ref.uuid, data.data.metaRef.ref.version, 'true'])
+                this.router.navigate([]).then(result => {  window.open(url.toString(),'_blank'); });
+                //this.router.navigate(["/app/" + _moduleUrl + "/" + _routerUrl, data.data.metaRef.ref.uuid, data.data.metaRef.ref.version, 'true']);
                 // dagMetaDataService.navigateTo(data.metaRef.ref);
-            } else if (d == "Show Details" && data.metaRef.ref.type != null && data.metaRef.ref.type == "attributes") {
-                data.metaRef.ref.name = data.name
-                data.metaRef.ref.type = data.metaRef.ref.type
+            } else if (d == "Show Details" && data.data.metaRef.ref.type != null && data.data.metaRef.ref.type == "attributes") {
+                data.data.metaRef.ref.name = data.data.name
+                data.data.metaRef.ref.type = data.data.metaRef.ref.type
+                let _moduleUrl
+                let _routerUrl
+                _moduleUrl = this.metaconfig.getMetadataDefs(data.data.parent.metaRef.ref.type)['moduleState']
+                _routerUrl = this.metaconfig.getMetadataDefs(data.data.parent.metaRef.ref.type)['detailState']
+                let url=this.router.createUrlTree(["/app/" + _moduleUrl + "/" + _routerUrl, data.data.parent.metaRef.ref.uuid, data.data.parent.metaRef.ref.version, 'true'])
+                this.router.navigate([]).then(result => {  window.open(url.toString(),'_blank'); });
                 // dagMetaDataService.navigateTo(data.parent.metaRef.ref);
             }
         }

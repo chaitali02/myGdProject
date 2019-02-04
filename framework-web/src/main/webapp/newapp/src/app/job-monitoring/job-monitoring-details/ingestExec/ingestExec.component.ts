@@ -1,8 +1,9 @@
-import { Component } from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
 import { AppConfig } from "../../../app.config";
 import { ActivatedRoute, Router, Params } from "@angular/router";
 import { CommonService } from "../../../metadata/services/common.service";
 import { Location, DatePipe } from '@angular/common';
+import { KnowledgeGraphComponent } from "../../../shared/components/knowledgeGraph/knowledgeGraph.component";
 
 @Component({
 	selector: 'app-ingestExec',
@@ -25,6 +26,8 @@ export class IngestExecComponent {
 	mode: any;
 	version: any;
 	breadcrumbDataFrom: any;
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
+  
 	constructor(private datePipe: DatePipe,private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
     this.ingestData = {};
     this.isHomeEnable = false;
@@ -52,6 +55,14 @@ export class IngestExecComponent {
       "routeurl":null
 		}]		
 	}
+
+  showDagGraph(uuid,version){
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id,this.version);
+    }, 1000); 
+  }
 
 	public goBack() {
     this._location.back();
@@ -138,8 +149,4 @@ export class IngestExecComponent {
     this.showGraph = false;
   }
 
-  showDagGraph(uuid, version) {
-    this.isHomeEnable = true;
-    this.showGraph = true;
-  }
 }

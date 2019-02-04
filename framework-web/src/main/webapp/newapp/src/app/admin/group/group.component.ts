@@ -1,11 +1,12 @@
 import { Location } from '@angular/common';
-import { Component, OnInit, group } from '@angular/core';
+import { Component, OnInit, group, ViewChild } from '@angular/core';
 import { AppConfig } from '../../app.config';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { SelectItem } from 'primeng/primeng';
 import { CommonService } from '../../metadata/services/common.service';
 import { Version } from '../../shared/version';
 import { DependsOn } from './dependsOn'
+import { KnowledgeGraphComponent } from '../../shared/components/knowledgeGraph/knowledgeGraph.component';
 
 @Component({
   selector: 'app-group',
@@ -58,8 +59,8 @@ export class GroupComponent implements OnInit {
 
   isHomeEnable: boolean = false
   showGraph: boolean = false;
-  isDependencyGraphEnable: boolean = true;
   isShowReportData: boolean = true;
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
 
   constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
     this.showGroup = true;
@@ -109,22 +110,30 @@ export class GroupComponent implements OnInit {
     })
   }
 
+  showDagGraph(uuid, version) {
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id, this.version);
+    }, 1000);
+  }
+
   getOneByUuidAndVersion() {
     this._commonService.getOneByUuidAndVersion(this.id, this.version, 'group')
       .subscribe(
-      response => {
-        this.onSuccessgetOneByUuidAndVersion(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.onSuccessgetOneByUuidAndVersion(response)
+        },
+        error => console.log("Error :: " + error));
   }
 
   getAllVersionByUuid() {
     this._commonService.getAllVersionByUuid('group', this.id)
       .subscribe(
-      response => {
-        this.OnSuccesgetAllVersionByUuid(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.OnSuccesgetAllVersionByUuid(response)
+        },
+        error => console.log("Error :: " + error));
   }
 
   onSuccessgetOneByUuidAndVersion(response) {
@@ -178,10 +187,10 @@ export class GroupComponent implements OnInit {
   getAllLatestRole() {
     this._commonService.getAllLatest('role')
       .subscribe(
-      response => {
-        this.onSuccessgetAllLatestRole(response)
-      },
-      error => console.log("Error ::" + error));
+        response => {
+          this.onSuccessgetAllLatestRole(response)
+        },
+        error => console.log("Error ::" + error));
   }
 
   onSuccessgetAllLatestRole(response) {
@@ -208,10 +217,10 @@ export class GroupComponent implements OnInit {
   getAllLatestAppli() {
     this._commonService.getAllLatest('application')
       .subscribe(
-      response => {
-        this.onSuccessgetAllLatestAppli(response)
-      },
-      error => console.log("Error ::" + error));
+        response => {
+          this.onSuccessgetAllLatestAppli(response)
+        },
+        error => console.log("Error ::" + error));
   }
 
   onSuccessgetAllLatestAppli(response) {
@@ -236,10 +245,10 @@ export class GroupComponent implements OnInit {
   onVersionChange() {
     this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, 'group')
       .subscribe(
-      response => {
-        this.onSuccessgetOneByUuidAndVersion(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.onSuccessgetOneByUuidAndVersion(response)
+        },
+        error => console.log("Error :: " + error));
   }
 
   onChangeActive(event) {
@@ -351,17 +360,10 @@ export class GroupComponent implements OnInit {
 
   }
 
-  showMainPage(uuid, version) {
+  showMainPage() {
     this.isHomeEnable = false
+    // this._location.back();
     this.showGraph = false;
-    this.isDependencyGraphEnable = true;
-    this.isShowReportData = true;
-  }
-  showDependencyGraph(uuid, version) {
-    console.log("showDependencyGraph call.....");
-    this.showGraph = true;
-    this.isDependencyGraphEnable = false;
-    this.isHomeEnable = true;
   }
 
 }

@@ -1,5 +1,5 @@
 import { Value } from './../../metadata/domain/domain.value';
-import { NgModule, Component, ViewEncapsulation, Input } from '@angular/core';
+import { NgModule, Component, ViewEncapsulation, Input, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { SelectItem } from 'primeng/primeng';
 import { Location } from '@angular/common';
@@ -13,6 +13,7 @@ import { MetaDataDataPodService } from '../datapod/datapod.service';
 
 import { Version } from '../../shared/version'
 import { DependsOn } from './dependsOn'
+import { KnowledgeGraphComponent } from '../../shared/components/knowledgeGraph/knowledgeGraph.component';
 @Component({
   selector: 'app-data-preparation-fromula',
   styleUrls: ['./formula.component.css'],
@@ -77,6 +78,7 @@ export class FormulaComponent {
   isGraphEnable: boolean = true;
   isRefreshEnable:boolean = false;
   showGraph: boolean = false
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
 
   constructor(config: AppConfig, public router: Router, private _commonService: CommonService, private activatedRoute: ActivatedRoute, private _service: MetaDataDataPodService, private _location: Location) {
     this.baseUrl = config.getBaseUrl();
@@ -155,6 +157,15 @@ export class FormulaComponent {
       { "type": "simple", "value": "DESC", "class": "formula_button btn  " },
     ];
   }
+
+  showDagGraph(uuid,version){
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id,this.version);
+    }, 1000); 
+  }
+
   public goBack() {
     this._location.back();
   }
