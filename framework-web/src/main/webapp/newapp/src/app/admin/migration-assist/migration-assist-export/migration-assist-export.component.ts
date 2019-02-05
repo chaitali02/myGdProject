@@ -3,7 +3,6 @@ import { AppConfig } from '../../../app.config';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { CommonService } from '../../../metadata/services/common.service';
 import { Location } from '@angular/common';
-import { Observable } from 'rxjs/Observable';
 import { MigrationAssistService } from '../../../metadata/services/migration-assist.services';
 import { KnowledgeGraphComponent } from '../../../shared/components/knowledgeGraph/knowledgeGraph.component';
 

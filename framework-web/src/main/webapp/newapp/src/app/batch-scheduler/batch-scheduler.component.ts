@@ -5,7 +5,9 @@ import { Version } from './../metadata/domain/version'
 import { SelectItem } from 'primeng/primeng';
 import { Location, DatePipe } from '@angular/common';
 import { AppConfig } from '../app.config';
-import moment = require('moment');
+// import moment = require('moment');
+declare var require: any;
+const moment=  require('moment');
 import { FrequencyType } from './frequencyType';
 import { KnowledgeGraphComponent } from '../shared/components/knowledgeGraph/knowledgeGraph.component';
 

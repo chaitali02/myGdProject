@@ -1,87 +1,87 @@
-import { Observable } from 'rxjs/Observable';
+import { Observable, throwError } from 'rxjs';
 import { Inject, Injectable, Input } from '@angular/core';
+import { map, catchError } from "rxjs/operators";
+
 import { Http, Response } from '@angular/http'
+
 import { SharedService } from '../../shared/shared.service';
 import { CommonService } from './common.service';
 import { AttributeHolder } from './../../metadata/domain/domain.attributeHolder'
-// import 'rxjs/add/operator/map';
-// import 'rxjs/add/operator/catch';
-// import 'rxjs/add/operator/promise';
+
 
 @Injectable()
 
 export class DataReconService {
 
   constructor(@Inject(Http) private http: Http, private _sharedService: SharedService, private _commonService: CommonService) { }
+  // private handleError(error: Response) {
+  //   return Observable.throw(error.statusText);
+  // }
 
+  private handleError<T>(error: any, result?: T) {
+    return throwError(error);
+  }
+  
   getDataQualExecByDataqual(uuid: Number): Observable<any[]> {
     let url = '/dataQual/getDataQualExecByDataqual?action=view&dataQualUUID=' + uuid;
     return this._sharedService.getCall(url)
-      .map((response: Response) => {
-        return <any[]>response.json();
-      })
-      .catch(this.handleError);
+      .pipe(
+        map(response => { return <any[]>response.json(); }),
+        catchError(error => this.handleError<string>(error, "Network Error!")))
+
   }
 
   getdqGroupExecBydqGroup(uuid: Number, version: String): Observable<any[]> {
     let url = '/dataqual/getdqGroupExecBydqGroup?action=view&dqGroupUUID=' + uuid + '&dqGroupVersion=' + version;
     return this._sharedService.getCall(url)
-      .map((response: Response) => {
-        return <any[]>response.json();
-      })
-      .catch(this.handleError);
+      .pipe(
+        map(response => { return <any[]>response.json(); }),
+        catchError(error => this.handleError<string>(error, "Network Error!")))
   }
 
   executeRule(uuid: Number, version: String): Observable<any[]> {
     let url = '/dataqual/execute?action=execute&uuid=' + uuid + '&version=' + version;
     return this._sharedService.getCall(url)
-      .map((response: Response) => {
-        return <any[]>response.json();
-      })
-      .catch(this.handleError);
+      .pipe(
+        map(response => { return <any[]>response.json(); }),
+        catchError(error => this.handleError<string>(error, "Network Error!")))
   }
 
   getdqExecBydqGroupExec(uuid: Number, version: String): Observable<any[]> {
     let url = '/dataqual/getdqExecBydqGroupExec?action=view&dataQualGroupExecUuid=' + uuid + '&dataQualGroupExecVersion=' + version;
     return this._sharedService.getCall(url)
-      .map((response: Response) => {
-        return <any[]>response.json();
-      })
-      .catch(this.handleError);
+      .pipe(
+        map(response => { return <any[]>response.json(); }),
+        catchError(error => this.handleError<string>(error, "Network Error!")))
   }
 
   executeDQGroup(uuid: Number, version: String): Observable<any[]> {
     let url = '/dataqual/executeGroup?action=execute&uuid=' + uuid + '&version=' + version;
     return this._sharedService.getCall(url)
-      .map((response: Response) => {
-        return <any[]>response.json();
-      })
-      .catch(this.handleError);
+      .pipe(
+        map(response => { return <any[]>response.json(); }),
+        catchError(error => this.handleError<string>(error, "Network Error!")))
   }
 
   getNumRowsbyExec(uuid: Number, version: String, type: String): Observable<any[]> {
     let url = '/metadata/getNumRowsbyExec?action=view&execUuid=' + uuid + '&execVersion=' + version + '&type=' + type;
     return this._sharedService.getCall(url)
-      .map((response: Response) => {
-        return <any[]>response.json();
-      })
-      .catch(this.handleError);
+      .pipe(
+        map(response => { return <any[]>response.json(); }),
+        catchError(error => this.handleError<string>(error, "Network Error!")))
   }
   getFunctionByCategory(type) {
     let url = "metadata/getFunctionByCategory?action=view&type=" + type
     return this._sharedService.getCall(url)
-      .map((response: Response) => {
-        return <any[]>response.json();
-      })
-      .catch(this.handleError);
+      .pipe(
+        map(response => { return <any[]>response.json(); }),
+        catchError(error => this.handleError<string>(error, "Network Error!")))
   }
-  private handleError(error: Response) {
-    return Observable.throw(error.statusText);
-  }
+
 
   getOneByUuidAndVersion(uuid, version, type): Observable<any> {
     return this._commonService.getOneByUuidAndVersion(uuid, version, type)
-      .map((response: Response) => {
+      .pipe(map(response => {
         let reconJson = {};
         reconJson["recondata"] = response
         if (response["sourceFilter"] != null) {
@@ -301,24 +301,25 @@ export class DataReconService {
         }
         console.log(response)
         return <any>reconJson;
-      })
+      }), catchError(error => this.handleError<string>(error, "Network Error!")))
   }
 
   getReconExecByRecon(uuid: number, startDate: string, endDate: string): Observable<any[]> {
     let url = '/recon/getReconExecByRecon?action=view&uuid=' + uuid + '&startDate=' + startDate + '&endDate=' + endDate;
     return this._sharedService.getCall(url)
-      .map((response: Response) => {
-        return <any[]>response.json();
-      })
-      .catch(this.handleError);
+      .pipe(
+        map(response => { return <any[]>response.json(); }),
+        catchError(error => this.handleError<string>(error, "Network Error!")))
   }
 
   getResults(uuid: Number, version: String, type: String, mode: String, requestId?: Number): Observable<any[]> {
     let url = '/recon/getResults?action=view&uuid=' + uuid + '&version=' + version + '&type=' + type + '&mode=' + mode + '&requestId=' + requestId;
     return this._sharedService.getCall(url)
-      .map((response: Response) => {
-        return <any[]>response.json();
-      })
-      .catch(this.handleError);
+      .pipe(
+        map(response => { return <any[]>response.json(); }),
+        catchError(error => this.handleError<string>(error, "Network Error!")))
   }
+
+
+
 }

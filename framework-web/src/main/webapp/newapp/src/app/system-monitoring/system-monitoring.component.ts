@@ -1,18 +1,16 @@
 import { Http } from '@angular/http';
-import * as c3 from 'c3'
 import { Component, OnInit } from '@angular/core';
-import { AppMetadata } from '../app.metadata';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { CommonService } from '../metadata/services/common.service';
-// import{ DependsOn } from './dependsOn';
-import { SystemMonitoringService } from '../metadata/services/systemMonitoring.service';
-import { MenuModule, MenuItem } from 'primeng/primeng';
 import { DatePipe } from '@angular/common';
-import { DomSanitizer } from '@angular/platform-browser';
-import { forkJoin } from "rxjs/observable/forkJoin";
-import { SharedService } from '../shared/shared.service';
+import { Observable, throwError,forkJoin } from "rxjs";
+import { map, catchError } from "rxjs/operators";
 import { _ } from 'underscore/underscore.js';
-// import * as saveSvgAsPng from '../../../assets/c3/c3-core/saveSvgAsPng.js';
+
+
+import { AppMetadata } from '../app.metadata';
+import { CommonService } from '../metadata/services/common.service';
+import { SystemMonitoringService } from '../metadata/services/systemMonitoring.service';
+import { SharedService } from '../shared/shared.service';
 
 @Component({
   selector: 'app-login',

@@ -1,29 +1,28 @@
-import { debug } from 'util';
-import { Observable } from 'rxjs/Observable';
+
 import { Inject, Injectable, Input } from '@angular/core';
 import { Http, Response, Headers, ResponseContentType } from '@angular/http'
+import { Observable, throwError } from 'rxjs';
+import { map, catchError } from "rxjs/operators";
+
 import { SharedService } from '../../shared/shared.service';
-import 'rxjs/add/operator/map';
-// impo  [x: string]: any;
-import 'rxjs/add/operator/catch';
-// import 'rxjs/add/operator/promise';
+
 
 @Injectable()
 
 export class FileManagerService {
     headers: Headers;
-    constructor( @Inject(Http) private http: Http, private _sharedService: SharedService) { }
+    constructor(@Inject(Http) private http: Http, private _sharedService: SharedService) { }
+    private handleError<T>(error: any, result?: T) {
+        return throwError(error);
+    }
     getDatasourceByType(type: String): Observable<any> {
         let url = "/metadata/getDatasourceByType?action=view&type=" + type;
         return this._sharedService.getCall(url)
-            .map((response: Response) => {
-                return <any[]>response.json();
-            })
-            .catch(this.handleError);
+            .pipe(
+                map(response => { return <any[]>response.json(); }),
+                catchError(error => this.handleError<string>(error, "Network Error!")));
     }
-    private handleError(error: Response) {
-        return Observable.throw(error.statusText);
-    }
+
 
     uploadFile(fd, filename, type, uuid, version, fileType, dataSourceUuid) {
         let baseUrl = "http://localhost:8080";

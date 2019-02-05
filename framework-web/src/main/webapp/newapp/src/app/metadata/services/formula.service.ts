@@ -1,35 +1,32 @@
 import { Response, Http } from '@angular/http';
+import { Injectable, Inject, Input } from '@angular/core';
+import { Observable, throwError } from 'rxjs';
+import { map, catchError } from "rxjs/operators";
+
 import { SharedService } from './../../shared/shared.service';
-import { Observable } from 'rxjs/Observable';
-import { Injectable,Inject,Input } from '@angular/core';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/promise';
 
 @Injectable()
 export class FormulaService {
-  
-  constructor(@Inject(Http) private http: Http,private _sharedService: SharedService) { }
-  
-    getExpressionByType(uuid:Number,type:String): Observable<any[]> {
-        let url ='/metadata/getExpressionByType?action=view&uuid='+uuid+'&type='+type;
+
+    constructor(@Inject(Http) private http: Http, private _sharedService: SharedService) { }
+    private handleError<T>(error: any, result?: T) {
+        return throwError(error);
+    }
+    getExpressionByType(uuid: Number, type: String): Observable<any[]> {
+        let url = '/metadata/getExpressionByType?action=view&uuid=' + uuid + '&type=' + type;
         return this._sharedService.getCall(url)
-        .map((response: Response) => {
-          return <any[]>response.json();
-    })
-       .catch(this.handleError);
+            .pipe(
+                map(response => { return <any[]>response.json(); }),
+                catchError(error => this.handleError<string>(error, "Network Error!")));
     }
 
-    getFunctionByFunctionInfo(functioninfo:String): Observable<any[]> {
-        let url ='/metadata/getFunctionByFunctionInfo?type=function&action=view&functionInfo='+functioninfo;
+    getFunctionByFunctionInfo(functioninfo: String): Observable<any[]> {
+        let url = '/metadata/getFunctionByFunctionInfo?type=function&action=view&functionInfo=' + functioninfo;
         return this._sharedService.getCall(url)
-        .map((response: Response) => {
-          return <any[]>response.json();
-    })
-       .catch(this.handleError);
+            .pipe(
+                map(response => { return <any[]>response.json(); }),
+                catchError(error => this.handleError<string>(error, "Network Error!")));
     }
 
-    private handleError(error: Response) {
-        return Observable.throw(error.statusText);
-    }  
+
 }

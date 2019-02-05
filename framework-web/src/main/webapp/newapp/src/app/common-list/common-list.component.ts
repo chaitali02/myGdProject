@@ -1,14 +1,11 @@
 import { Component, ViewEncapsulation, ElementRef, Renderer, NgZone, ViewChild, Input, } from "@angular/core";
 import { DatePipe } from '@angular/common';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { GridOptions, GridApi } from "ag-grid/main";
 import { DomSanitizer } from '@angular/platform-browser';
 import { MenuModule, MenuItem } from 'primeng/primeng';
 import { CommonListService } from './common-list.service';
-import 'rxjs/add/operator/toPromise';
-import 'rxjs/add/operator/catch';
+
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
-import { ICellRendererAngularComp } from "ag-grid-angular";
 import { FormGroup, FormBuilder } from "@angular/forms";
 import { SelectItem } from 'primeng/components/common/api';
 import { Message } from 'primeng/components/common/api';
@@ -102,8 +99,7 @@ export class CommonListComponent {
   active: string;
   selectedType: any;
   isExec: any;
-  gridOptions: GridOptions;
-  gridapi: GridApi;
+ 
   columnDefs: any[]
   rowData1: any[];
   rowData: any
@@ -264,18 +260,7 @@ export class CommonListComponent {
       }
     ]
     this.typeSimple = ["string", "double", "date", "integer", "list"];
-    this.gridOptions = <GridOptions>{
-      enableFilter: true,
-      enableSorting: true,
-      enableColResize: true,
-      suppressMenuHide: false,
-      headerHeight: 40,
-      rowSelection: 'single',
-      context: {
-        componentParent: this
-      }
-    };
-    this.gridOptions.rowHeight = 40;
+    
     this.columnDefs = [
       { headerName: "UUID", field: "uuid", width: 400 },
       { headerName: "Name", field: "name" },
@@ -1069,10 +1054,7 @@ export class CommonListComponent {
     params.api.sizeColumnsToFit();
   }
 
-  selectAllRows() {
-    this.gridOptions.api.selectAll();
-  }
-
+  
   onSearchCriteria() {
     let startDateUtcStr = "";
     let endDateUtcStr = "";
@@ -1109,8 +1091,7 @@ export class CommonListComponent {
   }
   onSelectionChanged(event: any) { console.log("selection", event); }
   public onQuickFilterChanged($event) {
-    this.gridOptions.api.setQuickFilter($event.target.value);
-    //this.gridOptions.onModelUpdated()
+    
   }
 
   //code for training execution

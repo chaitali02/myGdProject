@@ -25,7 +25,7 @@ import{SharedDataService} from './shareddata.service'
 import { D3Service, D3, Selection } from 'd3-ng2-service';
 
 import { datapiplinerouting} from './data-pipeline-routing'
-import { UiSwitchModule } from 'ngx-toggle-switch/src';
+// import { UiSwitchModule } from 'ngx-toggle-switch/src';
 import { DataPiplineResultComponent } from './data-pipelineresult.component';
 
 @NgModule({
@@ -39,7 +39,7 @@ import { DataPiplineResultComponent } from './data-pipelineresult.component';
         DropdownModule,
         SharedModule,
         MessagesModule,
-        UiSwitchModule,
+        // UiSwitchModule,
         MessageModule,
         GrowlModule,
         DataTableModule,

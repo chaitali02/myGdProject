@@ -1,14 +1,11 @@
 import { OnInit, Component, ViewEncapsulation, ElementRef, Renderer, NgZone, ViewChild, Input } from "@angular/core";
 
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { GridOptions, GridApi } from "ag-grid/main";
 import { DomSanitizer } from '@angular/platform-browser';
 import { MenuModule, MenuItem } from 'primeng/primeng';
 
-import 'rxjs/add/operator/toPromise';
-import 'rxjs/add/operator/catch';
+
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
-import { ICellRendererAngularComp } from "ag-grid-angular";
 import { FormGroup, FormBuilder } from "@angular/forms";
 import { SelectItem } from 'primeng/components/common/api';
 import { Message } from 'primeng/components/common/api';

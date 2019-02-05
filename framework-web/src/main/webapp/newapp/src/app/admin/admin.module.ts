@@ -2,8 +2,7 @@ import { MetadataService } from './../metadata/services/metadata.service';
 import { Settings } from './../metadata/domain/domain.settings';
 import { AdminComponent } from './admin.component';
 import { TagInputModule } from 'ngx-chips';
-import { UiSwitchModule } from 'ngx-toggle-switch/src';
-import { AgGridModule } from 'ag-grid-angular/main';
+// import { UiSwitchModule } from 'ngx-toggle-switch/src';
 import { FormsModule } from '@angular/forms';
 import { CommonModule , DatePipe} from '@angular/common';
 import { NgModule } from '@angular/core';
@@ -51,8 +50,7 @@ import { DialogModule } from 'primeng/components/dialog/dialog';
         FormsModule,
         routing1,
         ProjectSharedModule,
-        AgGridModule,
-        UiSwitchModule,
+        // UiSwitchModule,
         TagInputModule,
         MessagesModule,
         MessageModule,

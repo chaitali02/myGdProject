@@ -1,7 +1,9 @@
 import { Injectable, Inject, Input } from "@angular/core";
 import { Http, Response, Headers, ResponseContentType } from "@angular/http";
+import { Observable, throwError } from 'rxjs';
+import { map, catchError } from "rxjs/operators";
+
 import { SharedService } from "../../shared/shared.service";
-import { Observable } from "rxjs/Observable";
 import { CommonService } from "./common.service";
 
 @Injectable()
@@ -11,32 +13,31 @@ export class ReportService {
 	baseUrl: string;
 	headers: Headers;
 	constructor(@Inject(Http) private http: Http, private _sharedService: SharedService, private _commonService: CommonService) { }
-
+	private handleError<T>(error: any, result?: T) {
+        return throwError(error);
+    }
 	getParamByApp(uuid: any, type: any): Observable<any[]> {
 		let url = '/metadata/getParamByApp?action=view&uuid=' + uuid + '&type=' + type;
 		return this._sharedService.getCall(url)
-			.map((response: Response) => {
-				return <any[]>response.json();
-			})
-			.catch(this.handleError);
+		.pipe(
+			map(response => { return <any[]>response.json(); }),
+			catchError(error => this.handleError<string>(error, "Network Error!")));
 	}
 
 	reportExecute(uuid: any, version: any, data: any): Observable<any[]> {
 		let url = '/report/execute?action=execute&uuid=' + uuid + '&version=' + version + '&type=report';
 		return this._sharedService.postCall(url, data)
-			.map((response: Response) => {
-				return <any>response.json();
-			})
-			.catch(this.handleError);
+		.pipe(
+			map(response => { return <any[]>response.json(); }),
+			catchError(error => this.handleError<string>(error, "Network Error!")));
 	}
 
 	getReportSample(uuid: any, version: any): Observable<any[]> {
 		let url = '/report/getReportSample?action=view&uuid=' + uuid + '&version=' + version + '&rows=100';
 		return this._sharedService.getCall(url)
-			.map((response: Response) => {
-				return <any[]>response.json();
-			})
-			.catch(this.handleError);
+		.pipe(
+			map(response => { return <any[]>response.json(); }),
+			catchError(error => this.handleError<string>(error, "Network Error!")));
 	}
 
 	download(uuid: string, version: string, rows: number) {
@@ -55,14 +56,9 @@ export class ReportService {
 		}
 
 		return this._sharedService.getCall(url)
-			.map((response: Response) => {
-				return <any[]>response.json();
-			})
-			.catch(this.handleError);
-	}
-
-	private handleError(error: Response) {
-		return Observable.throw(error.statusText);
+		.pipe(
+			map(response => { return <any[]>response.json(); }),
+			catchError(error => this.handleError<string>(error, "Network Error!")));
 	}
 
 }

@@ -2,8 +2,7 @@ import { DatasetComponent } from './dataset/dataset.component';
 import { NgModule } from '@angular/core';
 import { CommonModule , DatePipe} from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AgGridModule } from 'ag-grid-angular/main';
-import { UiSwitchModule } from 'ngx-toggle-switch/src';
+// import { UiSwitchModule } from 'ngx-toggle-switch/src';
 import { TagInputModule } from 'ngx-chips';
 import { MessagesModule} from 'primeng/primeng';
 import { MessageModule} from 'primeng/primeng';
@@ -43,8 +42,7 @@ import { ResultModule } from '../shared/module/result.module';
         FormsModule,
         routing1,
         ProjectSharedModule,
-        AgGridModule,
-        UiSwitchModule,
+        // UiSwitchModule,
         TagInputModule,
         MessagesModule,
         MessageModule,

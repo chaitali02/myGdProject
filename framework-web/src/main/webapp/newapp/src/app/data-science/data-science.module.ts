@@ -1,8 +1,7 @@
 
 import { routing1 } from './data-science-routing.module'
 import { TagInputModule } from 'ngx-chips';
-import { UiSwitchModule } from 'ngx-toggle-switch/src';
-import { AgGridModule } from 'ag-grid-angular/main';
+// import { UiSwitchModule } from 'ngx-toggle-switch/src';
 import { FormsModule } from '@angular/forms';
 import { CommonModule , DatePipe} from '@angular/common';
 import { NgModule } from '@angular/core';
@@ -43,7 +42,6 @@ import { DialogModule } from 'primeng/components/dialog/dialog'
 import { CommonListService } from '../common-list/common-list.service';
 import { CalendarModule } from 'primeng/components/calendar/calendar';
 import {ResultDetailsComponent} from './results/resultDetails.component';
-import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { DataScienceResultService } from '../metadata/services/dataScienceResult.service';
 import { AlgorithmService } from '../metadata/services/algorithm.service';
 import { ParamlistService } from '../metadata/services/paramlist.service';
@@ -55,8 +53,7 @@ import { ParamlistService } from '../metadata/services/paramlist.service';
         FormsModule,
         routing1,
         ProjectSharedModule,
-        AgGridModule,
-        UiSwitchModule,
+        // UiSwitchModule,
         TagInputModule,
         MessagesModule,
         MessageModule,
@@ -69,7 +66,6 @@ import { ParamlistService } from '../metadata/services/paramlist.service';
         DialogModule,
         CalendarModule,
         MenuModule,
-        NgxJsonViewerModule
 
     ],
     declarations :[

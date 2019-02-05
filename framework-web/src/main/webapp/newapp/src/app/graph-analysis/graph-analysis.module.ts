@@ -26,7 +26,7 @@ import{SharedDataService} from './shareddata.service'
 import { D3Service, D3, Selection } from 'd3-ng2-service';
 
 import { graphanalysisrouting} from './graph-analysis-routing'
-import { UiSwitchModule } from 'ngx-toggle-switch/src';
+// import { UiSwitchModule } from 'ngx-toggle-switch/src';
 import { DialogModule } from 'primeng/components/dialog/dialog';
 @NgModule({
     imports: [
@@ -39,7 +39,7 @@ import { DialogModule } from 'primeng/components/dialog/dialog';
         DropdownModule,
         SharedModule,
         MessagesModule,
-        UiSwitchModule,
+        // UiSwitchModule,
         MessageModule,
         GrowlModule,
         DataTableModule,

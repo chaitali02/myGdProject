@@ -2,14 +2,13 @@ import { DragDropModule } from 'primeng/components/dragdrop/dragdrop';
 import { NgModule } from '@angular/core';
 import { CommonModule ,DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AgGridModule } from 'ag-grid-angular/main';
 import { MultiSelectModule, DialogModule, ChipsModule } from 'primeng/primeng';
 import { DropdownModule,SelectItem } from 'primeng/primeng';
 import { DataTableModule,SharedModule } from 'primeng/primeng';
 import { GrowlModule } from 'primeng/primeng';
-import { UiSwitchModule } from 'ngx-toggle-switch/src';
+// import { UiSwitchModule } from 'ngx-toggle-switch/src';
 import { TagInputModule } from 'ngx-chips';
-import { DndListModule } from 'ngx-drag-and-drop-lists';
+// import { DndListModule } from 'ngx-drag-and-drop-lists';
 import {DndModule} from 'ng2-dnd';
 
 import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown/angular2-multiselect-dropdown';
@@ -39,10 +38,9 @@ import { ReportService } from '../metadata/services/report.service';
         DataTableModule,
         SharedModule,
         GrowlModule,
-        AgGridModule.withComponents(''),
-        UiSwitchModule,
+        // UiSwitchModule,
         TagInputModule,
-        DndListModule,
+        
         AngularMultiSelectModule,
         DndModule.forRoot(),
         routing1,
