@@ -136,9 +136,12 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 		{ "type": "simple", "value": "ELSE", "class": "formula_function btn " },
 		{ "type": "simple", "value": "END", "class": "formula_function btn " },
 		{ "type": "simple", "value": "THEN", "class": "formula_function btn " },
-		{ "type": "simple", "value": "OVER", "class": "formula_button btn " },
+		// { "type": "simple", "value": "OVER", "class": "formula_button btn " },
+		{ "type": "simple", "value": "IN", "class": "formula_button btn " },
 		{ "type": "simple", "value": "ORDER BY", "class": "formula_button btn " },
 		{ "type": "simple", "value": "PARTITION BY", "class": "formula_button btn " },
+		{ "type": "simple", "value": "BETWEEN", "class": "formula_button btn " },
+		{ "type": "simple", "value": " != ", "class": "formula_button btn " },
 		
 		{ "type": "simple", "value": "ASC", "class": "formula_button btn " },
 		{ "type": "simple", "value": "DESC", "class": "formula_button btn  " },
@@ -418,7 +421,7 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 			return false;
 		}
 		$scope.myform.$dirty=true ;
-		var aggrfun = ["SUM", "MIN", "MAX", "COUNT", "AVG"]
+		var aggrfun = ["SUM", "MIN", "MAX", "COUNT", "AVG","OVER"]
 		var len = $scope.formulainfoarray.length;
 		if (aggrfun.indexOf(data.value) > -1) {
 			MetadataFormulaSerivce.getFunctionByFunctionInfo(data.value.toLowerCase()).then(function (response) { onSuccessGetFunctionByFunctionInfo(response.data) });

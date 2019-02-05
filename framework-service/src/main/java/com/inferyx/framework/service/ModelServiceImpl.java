@@ -46,8 +46,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
+import org.apache.spark.ml.PipelineModel;
 import org.apache.spark.ml.param.ParamMap;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.RowFactory;
@@ -79,7 +79,6 @@ import com.inferyx.framework.common.CustomLogger;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.common.SessionHelper;
 import com.inferyx.framework.controller.TrainResultViewServiceImpl;
 import com.inferyx.framework.dao.IAlgorithmDao;
@@ -128,6 +127,7 @@ import com.inferyx.framework.domain.TrainResult;
 import com.inferyx.framework.domain.TrainResultView;
 import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
+import com.inferyx.framework.enums.EncodingType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.enums.SaveMode;
 import com.inferyx.framework.enums.SimulationType;
@@ -140,6 +140,7 @@ import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.DatasetOperator;
 import com.inferyx.framework.operator.GenerateDataOperator;
+import com.inferyx.framework.operator.ImputeOperator;
 import com.inferyx.framework.operator.PredictMLOperator;
 import com.inferyx.framework.operator.RuleOperator;
 import com.inferyx.framework.operator.SimulateMLOperator;
@@ -197,8 +198,6 @@ public class ModelServiceImpl {
 	@Autowired
 	DataSourceFactory dataSourceFactory;
 	@Autowired
-	MetadataUtil commonActivity;
-	@Autowired
 	private PredictMLOperator predictMLOperator;
 	@Autowired
 	private DatasetOperator datasetOperator;
@@ -222,6 +221,8 @@ public class ModelServiceImpl {
 	private TrainResultViewServiceImpl trainResultViewServiceImpl;
 	@Resource(name="trainedModelMap")
 	private ConcurrentHashMap<String, Object> trainedModelMap;
+	@Autowired
+	private ImputeOperator imputeOperator;
 	
 	//private ParamMap paramMap;
 
@@ -333,13 +334,13 @@ public class ModelServiceImpl {
 			for (int i = 0; i < model.getFeatures().size(); i++) {
 				String attributeId = model.getFeatures().get(i).getFeatureId();
 				//Datapod datapodDO = datapodServiceImpl.findLatestByUuid(model.getFeatures().get(i).getRef().getUuid());
-				if(model.getFeatures().get(i).getType().equals(MetaType.dataset)) {
+				if(model.getFeatures().get(i).getType().equals(MetaType.dataset.toString())) {
 					DataSet datasetDO = (DataSet) commonServiceImpl.getLatestByUuid(model.getFeatures().get(i).getFeatureId(), MetaType.dataset.toString());
 					String datapodName = datasetDO.getName();
 					model.getFeatures().get(i).setName(datapodName);
 					List<AttributeSource> attributeSourceList = datasetDO.getAttributeInfo();
 					model.getFeatures().get(i).setName(attributeSourceList.get(Integer.parseInt(attributeId)).getAttrSourceName());	
-				}else if(model.getFeatures().get(i).getType().equals(MetaType.datapod)) {					
+				}else if(model.getFeatures().get(i).getType().equals(MetaType.datapod.toString())) {					
 					Datapod datapodDO = (Datapod) commonServiceImpl.getLatestByUuid(model.getFeatures().get(i).getFeatureId(), MetaType.datapod.toString());
 					String datapodName = datapodDO.getName();
 					model.getFeatures().get(i).setName(datapodName);
@@ -902,10 +903,11 @@ public class ModelServiceImpl {
 		while ((strLine = buffReader.readLine()) != null)   {
 			result = result.concat(strLine).concat("\n");
 		}
+		buffReader.close();
 		return result;
 	}
 	
-	public HttpServletResponse download(String execUuid, String execVersion, HttpServletResponse response,RunMode runMode) throws Exception {
+	public HttpServletResponse download(String execUuid, String execVersion, HttpServletResponse response, RunMode runMode) throws Exception {
 		TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
 				MetaType.trainExec.toString());
 		DataStore datastore = dataStoreServiceImpl.getDatastore(trainExec.getResult().getRef().getUuid(),
@@ -1401,7 +1403,7 @@ public class ModelServiceImpl {
 	
 	public TrainExec create(Train train, Model model, ExecParams execParams, ParamMap paramMap,
 			TrainExec trainExec) throws Exception {
-		String logPath = null;
+//		String logPath = null;
 		
 		try {
 			MetaIdentifierHolder trainRef = new MetaIdentifierHolder();
@@ -1417,16 +1419,16 @@ public class ModelServiceImpl {
 				 * log file_name formation : modeluuid + modelversion + trainexecversion
 				 * 
 				 */
-				if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-					logPath = Helper.getPropertyValue("framework.model.log.path") + "/" + model.getUuid() + "_" + model.getVersion() + "_"+ trainExec.getVersion()+".log";
-					logger.info(" Custom log path : " + logPath);
-				}
-				if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-					customLogger.writeLog(this.getClass(),
-							"Created raw model exec, uuid: " + trainExec.getUuid(), 
-							logPath,
-							Thread.currentThread().getStackTrace()[1].getLineNumber());
-				}
+//				if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+//					logPath = Helper.getPropertyValue("framework.model.log.path") + "/" + model.getUuid() + "_" + model.getVersion() + "_"+ trainExec.getVersion()+".log";
+//					logger.info(" Custom log path : " + logPath);
+//				}
+//				if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+//					customLogger.writeLog(this.getClass(),
+//							"Created raw model exec, uuid: " + trainExec.getUuid(), 
+//							logPath,
+//							Thread.currentThread().getStackTrace()[1].getLineNumber());
+//				}
 			}
 			trainExec.setExecParams(execParams);
 			
@@ -1438,14 +1440,14 @@ public class ModelServiceImpl {
 			trainExec.setName(train.getName());
 			trainExec.setAppInfo(train.getAppInfo());	
 			//iModelExecDao.save(modelExec);
-			if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-				logPath = Helper.getPropertyValue("framework.model.log.path") + "/" + model.getUuid() + "_" + model.getVersion() + "_"+ trainExec.getVersion()+".log";
-				logger.info(" Custom log path : " + logPath);                                                                                                         
-				customLogger.writeLog(this.getClass(), 
-						"Saving raw modelExec, uuid: " + trainExec.getUuid(),
-						logPath, 
-						Thread.currentThread().getStackTrace()[1].getLineNumber());
-			}
+//			if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+//				logPath = Helper.getPropertyValue("framework.model.log.path") + "/" + model.getUuid() + "_" + model.getVersion() + "_"+ trainExec.getVersion()+".log";
+//				logger.info(" Custom log path : " + logPath);                                                                                                         
+//				customLogger.writeLog(this.getClass(), 
+//						"Saving raw modelExec, uuid: " + trainExec.getUuid(),
+//						logPath, 
+//						Thread.currentThread().getStackTrace()[1].getLineNumber());
+//			}
 			commonServiceImpl.save(MetaType.trainExec.toString(), trainExec);
 			
 			if (Helper.getLatestStatus(statusList) != null 
@@ -1453,12 +1455,12 @@ public class ModelServiceImpl {
 							|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Completed, new Date())) 
 							|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.OnHold, new Date())))) {
 				logger.info(" This process is In Progress or has been completed previously or is On Hold. Hence it cannot be rerun. ");
-				if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-					customLogger.writeLog(this.getClass(),
-							"This process is In Progress or has been completed previously or is On Hold. Hence it cannot be rerun.", 
-							logPath,
-							Thread.currentThread().getStackTrace()[1].getLineNumber());
-				}
+//				if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+//					customLogger.writeLog(this.getClass(),
+//							"This process is In Progress or has been completed previously or is On Hold. Hence it cannot be rerun.", 
+//							logPath,
+//							Thread.currentThread().getStackTrace()[1].getLineNumber());
+//				}
 				return trainExec;
 			}
 			
@@ -1466,26 +1468,26 @@ public class ModelServiceImpl {
 			trainExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 
 			trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.NotStarted);
-			if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-				customLogger.writeLog(this.getClass(),
-						trainExec.getStatusList().size()>0 ? "Latest status: "+trainExec.getStatusList().get(trainExec.getStatusList().size()-1).getStage() : "Status list is empty", 
-						logPath,
-						Thread.currentThread().getStackTrace()[1].getLineNumber());
-			}
+//			if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+//				customLogger.writeLog(this.getClass(),
+//						trainExec.getStatusList().size()>0 ? "Latest status: "+trainExec.getStatusList().get(trainExec.getStatusList().size()-1).getStage() : "Status list is empty", 
+//						logPath,
+//						Thread.currentThread().getStackTrace()[1].getLineNumber());
+//			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e);
-			if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-				customLogger.writeErrorLog(this.getClass(), StringUtils.join(ExceptionUtils.getRootCauseStackTrace(e), System.lineSeparator()), 
-						logPath,
-						Thread.currentThread().getStackTrace()[1].getLineNumber());
-			
-			}
+//			if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+//				customLogger.writeErrorLog(this.getClass(), StringUtils.join(ExceptionUtils.getRootCauseStackTrace(e), System.lineSeparator()), 
+//						logPath,
+//						Thread.currentThread().getStackTrace()[1].getLineNumber());
+//			
+//			}
 			
 			trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.Failed);
-			if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-				customLogger.writeLog(this.getClass(), trainExec.getStatusList().size()>0 ? "Train exec creation failed, status: "+trainExec.getStatusList().get(trainExec.getStatusList().size()-1).getStage() : "Status list is empty", logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
-			}
+//			if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
+//				customLogger.writeLog(this.getClass(), trainExec.getStatusList().size()>0 ? "Train exec creation failed, status: "+trainExec.getStatusList().get(trainExec.getStatusList().size()-1).getStage() : "Status list is empty", logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
+//			}
 			e.printStackTrace();
 			String message = null;
 			try {
@@ -1547,6 +1549,7 @@ public class ModelServiceImpl {
 		runModelServiceImpl.setAlgoclass(algoClass);
 		runModelServiceImpl.setDl4jExecutor(dl4jExecutor);
 		runModelServiceImpl.setTrainResultViewServiceImpl(trainResultViewServiceImpl);
+		runModelServiceImpl.setImputeOperator(imputeOperator);
 		/*FutureTask<TaskHolder> futureTask = new FutureTask<TaskHolder>(runModelServiceImpl);
 		metaExecutor.execute(futureTask);
 		taskList.add(futureTask);
@@ -1624,6 +1627,7 @@ public class ModelServiceImpl {
 		try {
 			m1 = dynamicClass.getMethod("save", paramSave);
 			try {
+				logger.info("Model save location : " + path);
 				m1.invoke(obj, path);
 				return true;
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
@@ -1777,6 +1781,7 @@ public class ModelServiceImpl {
 			}			
 		
 			String tableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), RunMode.BATCH);
+			logger.info("Table name : " + tableName);
 			String sql = "SELECT * FROM "+tableName;
 			return sql;
 		} else if (source instanceof DataSet) {
@@ -1845,6 +1850,15 @@ public class ModelServiceImpl {
 		Class<?> modelClass = Class.forName(modelClassName);
 
 		MetaIdentifierHolder datastoreHolder = trainExec.getResult();
+		Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainExec.getDependsOn().getRef().getUuid(), 
+																		trainExec.getDependsOn().getRef().getVersion(), 
+																		trainExec.getDependsOn().getRef().getType().toString());
+		Model model = null;
+		if (train != null) {
+			model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), 
+															train.getDependsOn().getRef().getVersion(), 
+															train.getDependsOn().getRef().getType().toString());
+		}
 		DataStore dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(datastoreHolder.getRef().getUuid(),
 				datastoreHolder.getRef().getVersion(), datastoreHolder.getRef().getType().toString());
 		if (dataStore == null)
@@ -1855,15 +1869,28 @@ public class ModelServiceImpl {
 			location = location.replaceAll("/data", "");
 		if(!location.contains(hdfsInfo.getHdfsURL()))
 			location = hdfsInfo.getHdfsURL() + location;
+		if (location.contains("/model")) {
+			location = location.replaceAll("/model/.*", "/model/");
+		}
+		logger.info("Model paths for prediction : " + location);
 
 		//Object trainedModel = modelClass.getMethod("load", String.class).invoke(modelClass, location);
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
+		if (model != null && model.getType().equalsIgnoreCase("SPARK")) {
+			modelClass = PipelineModel.class;
+		}
 		Object trainedModel = exec.loadTrainedModel(modelClass, location);
+		/*PipelineModel pipelineModel = (PipelineModel)trainedModel;
+		Transformer []transformers = pipelineModel.stages();
+		for (Transformer transformer: transformers) {
+			logger.info("Transoformer : " + transformer.uid());
+		}*/
 		return trainedModel;
 	}
 
 	public boolean predict(Predict predict, ExecParams execParams, PredictExec predictExec, RunMode runMode) throws Exception {
+		logger.info("Inside predict");
 		boolean isSuccess = false;
 		try {
 			predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.InProgress);
@@ -1916,9 +1943,16 @@ public class ModelServiceImpl {
 					MetaIdentifier dataStoreMI = trainExec.getResult().getRef();
 					DataStore dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(dataStoreMI.getUuid(), dataStoreMI.getVersion(), dataStoreMI.getType().toString());
 
+					Map<String, EncodingType> encodingDetails = getEncodingDetails(predict.getFeatureAttrMap(), model.getFeatures());
+//					LinkedHashMap<String, Object> imputationDetails = imputeOperator.resolveAttributeImputeValue(predict.getFeatureAttrMap(), source, model, execParams, runMode, (tableName+"_train_source_data"));
+					
+					
 					List<String> argList = new ArrayList<>();
 					PredictInput predictInput = new PredictInput();
 					Map<String, Object> otherParams = new HashMap<>();
+
+					predictInput.setEncodingDetails(encodingDetails);
+//					predictInput.setImputeDetails(imputationDetails);					
 					
 					predictInput.setIncludeFeatures(predict.getIncludeFeatures());
 					
@@ -1979,16 +2013,26 @@ public class ModelServiceImpl {
 					String sourceDsType = sourceDS.getType().toLowerCase();
 					predictInput.setSourceDsType(sourceDsType);
 					
+					exec.executeAndRegisterByDatasource(sourceQuery, tableName, sourceDS, appUuid);	
+					LinkedHashMap<String, Object> imputationDetails = imputeOperator.resolveAttributeImputeValue(predict.getFeatureAttrMap(), source, model, execParams, runMode, tableName);					
+					LinkedHashMap<String, Object> remappedImputationDetails = remapSourceImpueValToFeature(source, predict.getFeatureAttrMap(), model.getFeatures(), imputationDetails);
+					predictInput.setImputationDetails(remappedImputationDetails);
+					
 					if(sourceDsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
 						sourceDsType = appDatasource.getType().toLowerCase();
 						String saveFileName = Helper.getPropertyValue("framework.model.predict.path")+filePath+"/"+"input";
 						
 						File saveFile = new File(saveFileName);
 						if(!saveFile.exists()) {
-							exec.executeAndRegisterByDatasource(mappedFeatureAttrSql, tableName, sourceDS, appUuid);
-							String doubleCastSql = "SELECT * FROM " + tableName;
-							sparkExecutor.castDFCloumnsToDoubleType(null, doubleCastSql, sourceDS, tableName, true, appUuid);	
-							exec.saveTrainFile(fieldArray, predictName, train.getTrainPercent(), train.getValPercent(), tableName, appUuid, saveFileName);
+							String mappedAttrSql = generateFeatureSQLByTempTable(predict.getFeatureAttrMap(), tableName, null, tableName);
+							exec.executeAndRegisterByDatasource(mappedAttrSql, tableName, appDatasource, appUuid);	
+							
+							if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
+								String doubleCastSql = "SELECT * FROM " + tableName;
+								sparkExecutor.castDFCloumnsToDoubleType(null, doubleCastSql, sourceDS, tableName, true, appUuid);	
+							}
+							
+							exec.saveDataframeAsCSV(tableName, saveFileName, appUuid);
 							saveFileName = renameFileAndGetFilePathFromDir(saveFileName, "input_data", FileType.CSV.toString().toLowerCase());
 							saveFileName = URI+saveFileName;
 							logger.info("Saved file name : " + saveFileName);
@@ -2005,7 +2049,7 @@ public class ModelServiceImpl {
 							File inputSourceFile = new File(inputSourceFileName);
 							if(!inputSourceFile.exists()) {
 								exec.executeAndRegisterByDatasource(sourceCustomQuery, tableName.concat("_sourceQuery"), sourceDS, appUuid);
-								exec.saveTrainFile(fieldArray, predictName, train.getTrainPercent(), train.getValPercent(), tableName.concat("_sourceQuery"), appUuid, "file://"+inputSourceFileName);
+								exec.saveDataframeAsCSV(tableName.concat("_sourceQuery"), "file://"+inputSourceFileName, appUuid);
 								String inputSourceFilePath = renameFileAndGetFilePathFromDir(inputSourceFileName, "input_source_data", FileType.CSV.toString().toLowerCase());
 								otherParams.put("inputSourceFileName", "file://"+inputSourceFilePath);
 							}		
@@ -2091,6 +2135,7 @@ public class ModelServiceImpl {
 				}
 			} else {					
 				if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
+					logger.info("Model depends on formula");
 					//getting data from source
 					String sql = generateSQLBySource(source, execParams);
 					ResultSetHolder rsHolder = exec.executeAndRegisterByDatasource(sql, (tableName+"_pred_data"), sourceDS, appUuid);
@@ -2131,6 +2176,7 @@ public class ModelServiceImpl {
 					tempTableList.add((tableName+"_pred_data"));
 					sparkExecutor.dropTempTable(tempTableList);
 				} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
+					logger.info("Model depends on algorithm");
 					TrainExec trainExec = modelExecServiceImpl.getLatestTrainExecByTrain(predict.getTrainInfo().getRef().getUuid(), predict.getTrainInfo().getRef().getVersion());
 					if (trainExec == null) {
 						throw new Exception("No trained model found.");
@@ -2143,15 +2189,28 @@ public class ModelServiceImpl {
 					
 					//getting data from source
 					String sourceSql = generateSQLBySource(source, execParams);
-					ResultSetHolder rsHolder = exec.executeAndRegisterByDatasource(sourceSql, (tableName+"_pred_data"), sourceDS, appUuid);
+					ResultSetHolder rsHolder = exec.executeAndRegisterByDatasource(sourceSql, (tableName+"_pred_data"), sourceDS, appUuid);					
+
+					//finding impute values of attribute
+					LinkedHashMap<String, Object> resolvedimputeAttributeValues = imputeOperator.resolveAttributeImputeValue(predict.getFeatureAttrMap(), source, model, execParams, runMode, (tableName+"_pred_data"));
 					
+					//applying imputation valued per column to data
+					rsHolder = exec.applyAttrImputeValuesToData(rsHolder, resolvedimputeAttributeValues, true, (tableName+"_pred_data"));
+
 					//getting data having only feature columns
 					String mappedFeatureAttrSql = generateFeatureSQLByTempTable(predict.getFeatureAttrMap(), (tableName+"_pred_data"), null, (tableName+"_pred_mapped_data"));
 					rsHolder = sparkExecutor.readTempTable(mappedFeatureAttrSql, appUuid);
 					sparkExecutor.registerTempTable(rsHolder.getDataFrame(), (tableName+"_pred_mapped_data"));	
-					
+
+					Map<String, EncodingType> encodingDetails = getEncodingDetails(predict.getFeatureAttrMap(), model.getFeatures());
+					if(encodingDetails != null && !encodingDetails.isEmpty()) {
+//						rsHolder = sparkExecutor.preparePredictDfForEncoding(rsHolder, encodingDetails, true, (tableName+"_pred_assembled_data"));
+					}
 					//assembling the data to for feature vector
-					exec.assembleDF(fieldArray, rsHolder, null, (tableName+"_pred_assembled_data"), sourceDS, true, appUuid);
+//					exec.assembleDF(fieldArray, rsHolder, null, (tableName+"_pred_assembled_data"), sourceDS, true, appUuid);
+					
+					exec.registerDataFrameAsTable(rsHolder, tableName+"_pred_assembled_data");
+					
 					
 					String key = String.format("%s_%s", model.getUuid().replaceAll("-", "_"), model.getVersion());
 					Object trainedModel = null;
@@ -2161,10 +2220,11 @@ public class ModelServiceImpl {
 						trainedModel = getTrainedModelByTrainExec(algorithm.getModelClass(), trainExec);
 						trainedModelMap.put(key, trainedModel);
 					}
-					
 					//prediction operation
-					rsHolder =  exec.predict(trainedModel, target, filePathUrl, (tableName+"_pred_assembled_data"), appUuid);
-
+					logger.info("Trained Model class " + trainedModel.getClass().getName());
+					rsHolder =  exec.predict(trainedModel, target, filePathUrl, (tableName+"_pred_assembled_data"), appUuid, encodingDetails);
+					logger.info("After predict");
+					
 					List<String> rowIdentifierCols = getRowIdentifierCols(predict.getRowIdentifier());
 					if(predict.getTarget().getRef().getType().equals(MetaType.datapod)) {
 						Datasource targetDatasource = commonServiceImpl.getDatasourceByObject(target);
@@ -2176,13 +2236,20 @@ public class ModelServiceImpl {
 					} else {
 						targetTableName = targetDatasource.getDbname().concat(".").concat(target.getName());					
 					}
-					
-					isResultSaved = sparkExecutor.savePredictionResult(sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_assembled_data"), appUuid).getDataFrame()
-							, sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_mapped_data"), appUuid).getDataFrame()
-							, sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_data"), appUuid).getDataFrame()
-							, filePathUrl, rowIdentifierCols, predict.getIncludeFeatures(), fieldArray, algorithm.getTrainClass()
-							, target, targetDatasource, targetTableName, SaveMode.APPEND.toString());		
-					
+					logger.info("Read dataframes : ");
+					logger.info("Predicted DF");
+					sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_assembled_data"), appUuid).getDataFrame().show();
+					logger.info("feature DF");
+					sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_mapped_data"), appUuid).getDataFrame().show();
+					logger.info("source DF");
+					sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_data"), appUuid).getDataFrame().show();
+//					if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
+						isResultSaved = sparkExecutor.savePredictionResult(sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_assembled_data"), appUuid).getDataFrame()
+								, sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_mapped_data"), appUuid).getDataFrame()
+								, sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_data"), appUuid).getDataFrame()
+								, filePathUrl, rowIdentifierCols, predict.getIncludeFeatures(), fieldArray, algorithm.getTrainClass()
+								, target, targetDatasource, targetTableName, SaveMode.APPEND.toString());		
+//					}
 						//generating datastore for datapod
 						count = rsHolder.getCountRows();
 						createDatastore(filePathUrl, predict.getName(), 
@@ -2192,13 +2259,22 @@ public class ModelServiceImpl {
 								Helper.getPersistModeFromRunMode(runMode.toString()), runMode);		
 					} else {
 						//writing into file
-						isResultSaved = sparkExecutor.savePredictionResult(sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_assembled_data"), appUuid).getDataFrame()
-								, sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_mapped_data"), appUuid).getDataFrame()
-								, sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_data"), appUuid).getDataFrame()
-								, filePathUrl, rowIdentifierCols, predict.getIncludeFeatures(), fieldArray, algorithm.getTrainClass()
-								, null, null, null, null);
+						logger.info("Read dataframes : ");
+						logger.info("Predicted DF");
+						sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_assembled_data"), appUuid).getDataFrame().show();
+						logger.info("feature DF");
+						sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_mapped_data"), appUuid).getDataFrame().show();
+						logger.info("source DF");
+						sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_data"), appUuid).getDataFrame().show();
+//						if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
+							isResultSaved = sparkExecutor.savePredictionResult(sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_assembled_data"), appUuid).getDataFrame()
+									, sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_mapped_data"), appUuid).getDataFrame()
+									, sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_data"), appUuid).getDataFrame()
+									, filePathUrl, rowIdentifierCols, predict.getIncludeFeatures(), fieldArray, algorithm.getTrainClass()
+									, null, null, null, null);
+//						}
 					}
-					
+					logger.info("After writing prediction results");
 					//dropping temp table(s)
 					List<String> tempTableList = new ArrayList<>();
 					tempTableList.add((tableName+"_pred_data"));
@@ -2219,10 +2295,12 @@ public class ModelServiceImpl {
 					new MetaIdentifier(MetaType.predictExec, predictExec.getUuid(), predictExec.getVersion()),
 					predictExec.getAppInfo(), predictExec.getCreatedBy(), SaveMode.APPEND.toString(), resultRef, count, 
 					Helper.getPersistModeFromRunMode(runMode.toString()), runMode);
+			logger.info("After create Datastore");
 
 			predictExec.setLocation(filePathUrl);
 			predictExec.setResult(resultRef);
 			commonServiceImpl.save(MetaType.predictExec.toString(), predictExec);
+			logger.info("After saving predictExec");
 			if (result != null) {
 				isSuccess = true;
 				predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.Completed);
@@ -2247,6 +2325,26 @@ public class ModelServiceImpl {
 		return isSuccess;
 	}
 	
+	private Map<String, EncodingType> getEncodingDetails(List<FeatureAttrMap> featureAttrMap, List<Feature> features) {
+		Map<String, EncodingType> encodingDetails = new LinkedHashMap<>();
+		Map<String, Feature> featureModelMap = new HashMap<>();
+		for (Feature feature : features) {
+			featureModelMap.put(feature.getFeatureId(), feature);
+		}
+		for(FeatureAttrMap attrMap : featureAttrMap) {
+			EncodingType encodingType = (featureModelMap.containsKey(attrMap.getFeature().getFeatureId()))?
+					featureModelMap.get(attrMap.getFeature().getFeatureId()).getEncodingType():null;
+			if (encodingType != null) {
+				encodingDetails.put(attrMap.getFeature().getFeatureName(), encodingType);
+			}
+		}
+		if(!encodingDetails.isEmpty()) {
+			return encodingDetails;
+		}else {
+			return null;
+		}
+	}
+	
 	public String[] getMappedAttrs(List<FeatureAttrMap> mappedFeatures) {
 		String[] mappedAttrs = new String[mappedFeatures.size()];
 		
@@ -2255,77 +2353,79 @@ public class ModelServiceImpl {
 		}
 		return mappedAttrs;
 	}
-	
-	public void customCreate(ExecParams execParams, String tableName, RunMode runMode, List<Map<String, String>> labelFeatures, List<FeatureAttrMap> featureAttrMap) throws Exception {
-		String featureName = null;
-		int count = 0;
-		StructType structType = null;
-//		List<StructField> structList = new ArrayList<>();
-		StructField []stuctFields = null;
-		int i = 0;
-		List<Row> rows = new ArrayList<>();
-		for (Map<String, String> labelFeature : labelFeatures) {
-			Object []values = new Object[featureAttrMap.size()];
-			DataType dataType = null;
-			if (count == 0) {
-				stuctFields = new StructField[featureAttrMap.size()];
-			}
-			for (FeatureAttrMap featureAttr : featureAttrMap) {
-				featureName = featureAttr.getFeature().getFeatureName();
-				if (count == 0) {
-					dataType = DataTypes.DoubleType;
-					/*if (featureAttr.getAttribute().getAttrType().equalsIgnoreCase("double")) {
-						dataType = DataTypes.DoubleType;
-					} else if (featureAttr.getAttribute().getAttrType().equalsIgnoreCase("integer")) {
-						dataType = DataTypes.IntegerType;
-					} else if (featureAttr.getAttribute().getAttrType().equalsIgnoreCase("string")) {
-						dataType = DataTypes.StringType;
-					}*/
-					stuctFields[i] = new StructField(featureName, dataType, true, Metadata.empty());
-				}
-				values[i] = Double.parseDouble(labelFeature.get(featureName));
-				i++;
-			}
-			Row row = RowFactory.create(values);
-			rows.add(row);
-		}
-//		stuctFields = new StructField[structList.size()];
-		structType = new StructType(stuctFields);
-		
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		IExecutor exec = execFactory.getExecutor(datasource.getType());
-		exec.createAndRegister(rows, structType, tableName, commonServiceImpl.getApp().getUuid());
-		
-//		otherParams.put("datapodUuid_" + tableName + "_tableName", tableName);
-			
-//		return otherParams;
-	}
-	
-	public List<String> predict(Predict predict, PredictExec predictExec, ExecParams execParams, Model model, RunMode runMode, String appUuid, List<Map<String, String>> labelFeatures) throws Exception {
-		String tableName = predictExec.getUuid() + "_" + predictExec.getVersion() + "_" + model.getUuid();
-		tableName = tableName.replaceAll("-", "_");
-		//getting data having only feature columns
-		String mappedFeatureAttrSql = generateFeatureSQLByTempTable(predict.getFeatureAttrMap(), (tableName+"_pred_data"), null, (tableName+"_pred_mapped_data"));
-		customCreate(execParams, tableName+"_pred_data", runMode, labelFeatures, predict.getFeatureAttrMap());
-		ResultSetHolder rsHolder = sparkExecutor.readTempTable(mappedFeatureAttrSql, appUuid);
-		sparkExecutor.registerTempTable(rsHolder.getDataFrame(), (tableName+"_pred_mapped_data"));
-		
-		
-		String []fieldArray = getMappedAttrs(predict.getFeatureAttrMap());
-		
-		//assembling the data to for feature vector
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		IExecutor exec = execFactory.getExecutor(datasource.getType());
-//		Datasource sourceDS =  Get Spark datasource
-		exec.assembleDF(fieldArray, rsHolder, null, (tableName+"_pred_assembled_data"), datasource, true, appUuid);
-//		Object trainedModel = getTrainedModelByTrainExec(algorithm.getModelClass(), trainExec);
-		
-		//prediction operation
-		rsHolder =  exec.predict(model, null, null, (tableName+"_pred_assembled_data"), appUuid);
 
-		List<String> rowIdentifierCols = getRowIdentifierCols(predict.getRowIdentifier());
-		return rowIdentifierCols;
-	}
+	/********************** UNUSED **********************/
+//	public void customCreate(ExecParams execParams, String tableName, RunMode runMode, List<Map<String, String>> labelFeatures, List<FeatureAttrMap> featureAttrMap) throws Exception {
+//		String featureName = null;
+//		int count = 0;
+//		StructType structType = null;
+////		List<StructField> structList = new ArrayList<>();
+//		StructField []stuctFields = null;
+//		int i = 0;
+//		List<Row> rows = new ArrayList<>();
+//		for (Map<String, String> labelFeature : labelFeatures) {
+//			Object []values = new Object[featureAttrMap.size()];
+//			DataType dataType = null;
+//			if (count == 0) {
+//				stuctFields = new StructField[featureAttrMap.size()];
+//			}
+//			for (FeatureAttrMap featureAttr : featureAttrMap) {
+//				featureName = featureAttr.getFeature().getFeatureName();
+//				if (count == 0) {
+//					dataType = DataTypes.DoubleType;
+//					/*if (featureAttr.getAttribute().getAttrType().equalsIgnoreCase("double")) {
+//						dataType = DataTypes.DoubleType;
+//					} else if (featureAttr.getAttribute().getAttrType().equalsIgnoreCase("integer")) {
+//						dataType = DataTypes.IntegerType;
+//					} else if (featureAttr.getAttribute().getAttrType().equalsIgnoreCase("string")) {
+//						dataType = DataTypes.StringType;
+//					}*/
+//					stuctFields[i] = new StructField(featureName, dataType, true, Metadata.empty());
+//				}
+//				values[i] = Double.parseDouble(labelFeature.get(featureName));
+//				i++;
+//			}
+//			Row row = RowFactory.create(values);
+//			rows.add(row);
+//		}
+////		stuctFields = new StructField[structList.size()];
+//		structType = new StructType(stuctFields);
+//		
+//		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+//		IExecutor exec = execFactory.getExecutor(datasource.getType());
+//		exec.createAndRegister(rows, structType, tableName, commonServiceImpl.getApp().getUuid());
+//		
+////		otherParams.put("datapodUuid_" + tableName + "_tableName", tableName);
+//			
+////		return otherParams;
+//	}
+
+	/********************** UNUSED **********************/
+//	public List<String> predict(Predict predict, PredictExec predictExec, ExecParams execParams, Model model, RunMode runMode, String appUuid, List<Map<String, String>> labelFeatures) throws Exception {
+//		String tableName = predictExec.getUuid() + "_" + predictExec.getVersion() + "_" + model.getUuid();
+//		tableName = tableName.replaceAll("-", "_");
+//		//getting data having only feature columns
+//		String mappedFeatureAttrSql = generateFeatureSQLByTempTable(predict.getFeatureAttrMap(), (tableName+"_pred_data"), null, (tableName+"_pred_mapped_data"));
+//		customCreate(execParams, tableName+"_pred_data", runMode, labelFeatures, predict.getFeatureAttrMap());
+//		ResultSetHolder rsHolder = sparkExecutor.readTempTable(mappedFeatureAttrSql, appUuid);
+//		sparkExecutor.registerTempTable(rsHolder.getDataFrame(), (tableName+"_pred_mapped_data"));
+//		
+//		
+//		String []fieldArray = getMappedAttrs(predict.getFeatureAttrMap());
+//		
+//		//assembling the data to for feature vector
+//		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+//		IExecutor exec = execFactory.getExecutor(datasource.getType());
+////		Datasource sourceDS =  Get Spark datasource
+//		exec.assembleDF(fieldArray, rsHolder, null, (tableName+"_pred_assembled_data"), datasource, true, appUuid);
+////		Object trainedModel = getTrainedModelByTrainExec(algorithm.getModelClass(), trainExec);
+//		
+//		//prediction operation
+//		rsHolder =  exec.predict(model, null, null, (tableName+"_pred_assembled_data"), appUuid, null);
+//
+//		List<String> rowIdentifierCols = getRowIdentifierCols(predict.getRowIdentifier());
+//		return rowIdentifierCols;
+//	}
 
 	
 	public String generateFeatureSQLBySource(List<FeatureAttrMap> mappedFeatures, Object source, ExecParams execParams, String[] fieldArray, String label,  String tableName) throws Exception {
@@ -2920,9 +3020,14 @@ public class ModelServiceImpl {
 					String sql = generateFeatureSQLBySource(train.getFeatureAttrMap(), source, execParams, fieldArray, label, tableName);
 					String appUuid = commonServiceImpl.getApp().getUuid();
 
+					Map<String, EncodingType> encodingDetails = getEncodingDetails(train.getFeatureAttrMap(), model.getFeatures());
+					
 					TrainInput trainInput = new TrainInput();
 					Map<String, Object> otherParams = new HashMap<>();
 					
+					trainInput.setEncodingDetails(encodingDetails);
+					
+					trainInput.setSaveTrainingSet(train.getSaveTrainingSet());
 					trainInput.setTrainPercent(train.getTrainPercent()/100);
 					trainInput.setTestPercent(train.getValPercent()/100);
 					trainInput.setIncludeFeatures(train.getIncludeFeatures());
@@ -2988,6 +3093,7 @@ public class ModelServiceImpl {
 					String defaultDir = Helper.getPropertyValue("framework.model.train.path")+filePath+"/";
 					String testSetPath = "file://".concat(defaultDir).concat(defaultDir.endsWith("/") ? "test_set" : "/test_set");
 					trainInput.setTestSetPath(testSetPath);
+					
 					String modelFileName = defaultDir.concat(defaultDir.endsWith("/") ? "model" : "/model");
 
 					String outputResultPath = defaultDir.concat(defaultDir.endsWith("/") ? "train_op_result" : "/train_op_result").concat("/").concat("train_op_result");
@@ -3007,22 +3113,36 @@ public class ModelServiceImpl {
 					String sourceDsType = sourceDS.getType().toLowerCase();
 					trainInput.setSourceDsType(sourceDsType);
 					
-					String inputSourceFileName = null;
+					Datasource appDs = commonServiceImpl.getDatasourceByApp();
+					IExecutor exec = execFactory.getExecutor(appDs.getType());
+					exec.executeAndRegisterByDatasource(sourceQuery, tableName, sourceDS, appUuid);	
+					LinkedHashMap<String, Object> imputationDetails = imputeOperator.resolveAttributeImputeValue(train.getFeatureAttrMap(), source, model, execParams, runMode, tableName);					
+					LinkedHashMap<String, Object> remappedImputationDetails = remapSourceImpueValToFeature(source, train.getFeatureAttrMap(), model.getFeatures(), imputationDetails);
+					trainInput.setImputationDetails(remappedImputationDetails);
 					
+					if(train.getSaveTrainingSet().equalsIgnoreCase("Y")) {
+						String trainSetPath = "file://".concat(defaultDir).concat(defaultDir.endsWith("/") ? "train_set" : "/train_set");
+						trainInput.setSaveTrainingSet(train.getSaveTrainingSet());
+						otherParams.put("trainSetPath", trainSetPath);
+					}
+					
+					String inputSourceFileName = null;					
 					if(sourceDsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
 						sourceDsType = MetaType.file.toString().toLowerCase();
 						String trainInputPath = Helper.getPropertyValue("framework.model.train.path")+filePath+"/"+"input";
 						logger.info("Saved file name : " + trainInputPath);
 						
 						File trainInPathFile = new File(trainInputPath);
-						Datasource datasource = commonServiceImpl.getDatasourceByApp();
-						IExecutor exec = null;
-						exec = execFactory.getExecutor(datasource.getType());
-						if(!trainInPathFile.exists()) {							
-							exec.executeAndRegisterByDatasource(sql, tableName, sourceDS, appUuid);	
-							String doubleCastSql = "SELECT * FROM " + tableName;
-							sparkExecutor.castDFCloumnsToDoubleType(null, doubleCastSql, sourceDS, tableName, true, appUuid);													
-							exec.saveTrainFile(fieldArray, trainName, train.getTrainPercent(), train.getValPercent(), tableName, appUuid, "file://"+trainInputPath);
+						if(!trainInPathFile.exists()) {	
+							String mappedAttrSql = generateFeatureSQLByTempTable(train.getFeatureAttrMap(), tableName, label, tableName);
+							exec.executeAndRegisterByDatasource(mappedAttrSql, tableName, appDs, appUuid);	
+													
+							if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
+								String doubleCastSql = "SELECT * FROM " + tableName;	
+								sparkExecutor.castDFCloumnsToDoubleType(null, doubleCastSql, sourceDS, tableName, true, appUuid);	
+							}
+																			
+							exec.saveDataframeAsCSV(tableName, "file://"+trainInputPath, appUuid);
 							trainInputPath = renameFileAndGetFilePathFromDir(trainInputPath, "input_data", FileType.CSV.toString().toLowerCase());
 						}		
 						
@@ -3036,7 +3156,7 @@ public class ModelServiceImpl {
 							File inputSourceFile = new File(inputSourceFileName);
 							if(!inputSourceFile.exists()) {
 								exec.executeAndRegisterByDatasource(sourceCustomQuery, tableName.concat("_sourceQuery"), sourceDS, appUuid);
-								exec.saveTrainFile(fieldArray, trainName, train.getTrainPercent(), train.getValPercent(), tableName.concat("_sourceQuery"), appUuid, "file://"+inputSourceFileName);
+								exec.saveDataframeAsCSV(tableName.concat("_sourceQuery"), "file://"+inputSourceFileName, appUuid);
 								String inputSourceFilePath = renameFileAndGetFilePathFromDir(inputSourceFileName, "input_source_data", FileType.CSV.toString().toLowerCase());
 								otherParams.put("inputSourceFileName", "file://"+inputSourceFilePath);
 							}		
@@ -3224,10 +3344,41 @@ public class ModelServiceImpl {
 		} catch (Exception e) {
 			e.printStackTrace();
 			trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.Failed);
-			throw new RuntimeException(e);
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder(new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Train execution failed.", dependsOn);
+			throw new RuntimeException((message != null) ? message : "Train execution failed.");			 		
 		}
 	}
 	
+	private LinkedHashMap<String, Object> remapSourceImpueValToFeature(Object source,
+			List<FeatureAttrMap> featureAttrMapList, List<Feature> features,
+			LinkedHashMap<String, Object> imputationDetails) throws NumberFormatException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+
+		LinkedHashMap<String, Object> remappedImputationDetails = new LinkedHashMap<>();
+		for(Feature feature : features) {
+			for(FeatureAttrMap featureAttrMap : featureAttrMapList) {
+				if(featureAttrMap.getFeature().getFeatureId().equalsIgnoreCase(feature.getFeatureId())) {
+					String mappedAttr = getAttributeNameByObject(source, Integer.parseInt(featureAttrMap.getAttribute().getAttrId()));
+					if(imputationDetails.get(mappedAttr) !=null)
+					remappedImputationDetails.put(feature.getName(), imputationDetails.get(mappedAttr));								
+					break;
+				}
+			}
+		}
+		if(!remappedImputationDetails.isEmpty()) {
+			return remappedImputationDetails;
+		}else {
+			return null;
+		}
+		//return remappedImputationDetails;
+	}
+
 	public List<String> removeDuplicateColNames(String[] fieldArray, List<String> rowIdentifierCols ) {
 		if(rowIdentifierCols != null && !rowIdentifierCols.isEmpty()) {
 			List<String> colNameList = Arrays.asList(fieldArray);
@@ -3584,27 +3735,53 @@ public class ModelServiceImpl {
 				//modelExecServiceImpl.getAttributeNames(predict);
 
 
-		exec.assembleDF(fieldArray, (tableName+"_pred_data"), algorithm.getTrainClass(), null, appUuid);
+//		exec.assembleDF(fieldArray, (tableName+"_pred_data"), algorithm.getTrainClass(), null, appUuid);
 		
 	
-		rsHolder = exec.predict(trainedModel, null, null, (tableName + "_pred_data"), appUuid);
+		rsHolder = exec.predict(trainedModel, null, null, (tableName + "_pred_data"), appUuid, null);
 		String query = "SELECT * FROM " + rsHolder.getTableName();
 
 		return exec.executeAndFetchByDatasource(query, appDS, query);
 	}
 
-	public List<Map<String, Object>> getTestSet(String trainExecUuid, String trainExecVersion) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
+	public List<Map<String, Object>> getTrainOrTestSet(String trainExecUuid, String trainExecVersion, String setType) throws Exception {
 		TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(trainExecUuid, trainExecVersion, MetaType.trainExec.toString());
+		
+			MetaIdentifier dependsOnMI = trainExec.getDependsOn().getRef();
+			Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(), dependsOnMI.getVersion(), dependsOnMI.getType().toString());
+			if(train.getSaveTrainingSet().equalsIgnoreCase("N") && setType.equalsIgnoreCase("trainSet")) {
+				return new ArrayList<>();
+			}
+		
+		
 		MetaIdentifier datastoreMI = trainExec.getResult().getRef();
 		DataStore dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(datastoreMI.getUuid(), datastoreMI.getVersion(), datastoreMI.getType().toString());
 		String modelLocation = dataStore.getLocation();
-		String defaultTrainPath = modelLocation.substring(0, modelLocation.indexOf("/model"));
+		String defaultTrainPath = modelLocation.substring(0, modelLocation.lastIndexOf("/model"));
 		defaultTrainPath = defaultTrainPath.startsWith("file") ? defaultTrainPath : "file://".concat(defaultTrainPath);
-		String testSetPath = defaultTrainPath.endsWith("/") ? defaultTrainPath.concat("test_set") : defaultTrainPath.concat("/").concat("test_set");
+		
+		String trainOrTestSetPath = null;		
+		if(setType.equalsIgnoreCase("trainSet")) {
+			trainOrTestSetPath = defaultTrainPath.endsWith("/") ? defaultTrainPath.concat("train_set") : defaultTrainPath.concat("/").concat("train_set");
+			 if(train.getTrainLocation() !=null && train.getTrainLocation().getRef().getType().equals(MetaType.datapod)) {
+			    	Datapod datapod= (Datapod)commonServiceImpl.getOneByUuidAndVersion(train.getTrainLocation().getRef().getUuid(), null,MetaType.datapod.toString());
+			    	DataStore ds =dataStoreServiceImpl.findDataStoreByMeta(datapod.getUuid(),datapod.getVersion());
+			    	return dataStoreServiceImpl.getDatapodResults(ds.getUuid(), ds.getVersion(),null , 0 , 100 , null, 0, null, null, null, RunMode.BATCH);
+			    }
+		 } else if(setType.equalsIgnoreCase("testSet")) {
+			trainOrTestSetPath = defaultTrainPath.endsWith("/") ? defaultTrainPath.concat("test_set") : defaultTrainPath.concat("/").concat("test_set");
+		    if(train.getTestLocation() !=null && train.getTestLocation().getRef().getType().equals(MetaType.datapod)) {
+		    	Datapod datapod= (Datapod)commonServiceImpl.getOneByUuidAndVersion(train.getTestLocation().getRef().getUuid(), null,MetaType.datapod.toString());
+		    	DataStore ds =dataStoreServiceImpl.findDataStoreByMeta(datapod.getUuid(),datapod.getVersion());
+		    	return dataStoreServiceImpl.getDatapodResults(ds.getUuid(), ds.getVersion(),null , 0 , 100 , null, 0, null, null, null, RunMode.BATCH);
+		    }
+		}
+		
 		
 		Datasource appDatasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(appDatasource.getType());
-		return exec.fetchTestSet(testSetPath);		
+		
+		return exec.fetchTrainOrTestSet(trainOrTestSetPath);		
 	}
 
 	public List<TrainExec> getTrainExecByModel(String modelUuid
@@ -3907,5 +4084,77 @@ public class ModelServiceImpl {
 		} else {
 			return null;
 		}
+	}
+
+	public HttpServletResponse download(String trainExecUuid, String trainExecVersion, String format, int rows, String setType, RunMode runMode, HttpServletResponse response) throws Exception {
+		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
+		if(rows > maxRows) {
+			logger.error("Requested rows exceeded the limit of "+maxRows);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Requested rows exceeded the limit of "+maxRows, null);
+			throw new RuntimeException("Requested rows exceeded the limit of "+maxRows);
+		}		
+		
+		List<Map<String, Object>> results = getTrainOrTestSet(trainExecUuid, trainExecVersion, setType);
+		response = commonServiceImpl.download(trainExecUuid, trainExecVersion, format
+				, 0, rows, response, 0, null, null, null
+				, runMode, results, MetaType.downloadExec
+				, new MetaIdentifierHolder(new MetaIdentifier(MetaType.trainExec, trainExecUuid, trainExecVersion)));
+		return response;
+	}
+	
+	public Train getTrainByTrainExec(String trainExecUuid, String trainExecVersion) throws JsonProcessingException {
+		TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(trainExecUuid
+															, trainExecVersion
+															, MetaType.trainExec.toString()
+															, "N");
+		
+		MetaIdentifier dependsOnMI = trainExec.getDependsOn().getRef();
+		return (Train) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid()
+				, dependsOnMI.getVersion()
+				, MetaType.train.toString()
+				, "N");
+	}
+	
+
+	/********************** UNUSED **********************/
+//	public LinkedHashMap<String, Object> getAttributeNamesWithImputeValues(List<FeatureAttrMap> featureAttrMapList, LinkedHashMap<String, Object> attributeImputeValues) throws JsonProcessingException {
+//		LinkedHashMap<String, Object> imputeAttributeNameWithValues = new LinkedHashMap<>();
+//		Object object = null;
+//		String objectUuid = null;
+//		for(FeatureAttrMap featureAttrMap : featureAttrMapList) {
+//			MetaIdentifier attributeMI = featureAttrMap.getAttribute().getRef();
+//			for(String imputAttrValKey : attributeImputeValues.keySet()) {
+//				if(featureAttrMap.getFeatureMapId().equalsIgnoreCase(imputAttrValKey)) {
+//					if(object == null 
+//							|| (object != null && objectUuid != null && !((BaseEntity)object).getUuid().equalsIgnoreCase(objectUuid))) {
+//						object = commonServiceImpl.getOneByUuidAndVersion(attributeMI.getUuid(), attributeMI.getVersion(), attributeMI.getType().toString(), "N");
+//						objectUuid = ((BaseEntity)object).getUuid();
+//					} 
+//					String attributeName = getAttributeNameByObject(object, Integer.parseInt(featureAttrMap.getAttribute().getAttrId()));
+//					imputeAttributeNameWithValues.put(attributeName, attributeImputeValues.get(imputAttrValKey));
+//					break;
+//				}
+//			}
+//		}
+//		return imputeAttributeNameWithValues;
+//	}
+
+	/********************** UNUSED **********************/
+//	public String getAttributeNameByObject(Object object, Integer attributeId) throws NullPointerException {
+//		if(object instanceof Datapod) {
+//			Datapod datapod = (Datapod)object;
+//			return datapod.getAttributeName(attributeId);			
+//		} else if(object instanceof DataSet) {
+//			DataSet dataSet = (DataSet)object;
+//			return dataSet.getAttributeName(attributeId);										
+//		} else if(object instanceof Rule) {
+//			Rule rule = (Rule)object;
+//			return rule.getAttributeName(attributeId);					
+//		}
+//		return null;
+//	}
+	
+	public String getAttributeNameByObject(Object object, Integer attributeId) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {		
+		return (String) object.getClass().getMethod("getAttributeName", Integer.class).invoke(object, attributeId);
 	}
 }

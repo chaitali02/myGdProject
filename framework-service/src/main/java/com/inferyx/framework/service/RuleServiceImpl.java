@@ -33,7 +33,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IRuleDao;
 import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.BaseExec;
@@ -80,8 +79,6 @@ public class RuleServiceImpl extends RuleTemplate {
 	FilterServiceImpl filterServiceImpl;
 	@Autowired
 	DatapodServiceImpl datapodServiceImpl;
-	@Autowired
-	protected MetadataUtil daoRegister;
 	@Autowired
 	UserServiceImpl userServiceImpl;
 	@Autowired
@@ -351,6 +348,18 @@ public class RuleServiceImpl extends RuleTemplate {
 	 * ruleExecMetaList; }
 	 */
 
+	public String getAttributeName(Rule rule, String attributeId) {
+		List<AttributeSource> sourceAttrs = rule.getAttributeInfo();
+		for (AttributeSource sourceAttr : sourceAttrs) {
+			if (sourceAttr.getSourceAttr() != null 
+					&& sourceAttr.getAttrSourceId() != null 
+					&& sourceAttr.getAttrSourceId().equals(attributeId)) {
+				return sourceAttr.getAttrSourceName();
+			}
+		}
+		return null;
+	}
+	
 	public void restart(String type, String uuid, String version, List<FutureTask<TaskHolder>> taskList,
 			ThreadPoolTaskExecutor metaExecutor, ExecParams execParams, RunMode runMode) throws Exception {
 		// RuleExec ruleExec= ruleExecServiceImpl.findOneByUuidAndVersion(uuid,
@@ -719,7 +728,7 @@ public class RuleServiceImpl extends RuleTemplate {
 	 * @param attributeId
 	 * @return
 	 */
-	public String getAttributeSql(MetadataUtil daoRegister, Rule rule, String attributeId) {
+	public String getAttributeSql(Rule rule, String attributeId) {
 		List<AttributeSource> sourceAttrs = rule.getAttributeInfo();
 		for (AttributeSource sourceAttr : sourceAttrs) {
 			if (sourceAttr.getSourceAttr() != null && sourceAttr.getAttrSourceId() != null
@@ -771,14 +780,14 @@ public class RuleServiceImpl extends RuleTemplate {
 		ruleExec.setExec(ruleOperator.generateSql(rule, refKeyMap, otherParams, usedRefKeySet, ruleExec.getExecParams(), runMode));
 		if(rule.getParamList() != null) {
 			MetaIdentifier mi = rule.getParamList().getRef();
-			ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(mi.getUuid(), mi.getVersion(), mi.getType().toString());
+			ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(mi.getUuid(), mi.getVersion(), mi.getType().toString(), "N");
 			usedRefKeySet.add(new MetaIdentifier(MetaType.paramlist, paramList.getUuid(), paramList.getVersion()));
 		}
 		ruleExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 		logger.info("sql_generated: " + ruleExec.getExec());
 		synchronized (ruleExec.getUuid()) {
-			RuleExec ruleExec1 = (RuleExec) daoRegister
-					.getRefObject(new MetaIdentifier(MetaType.ruleExec, ruleExec.getUuid(), ruleExec.getVersion()));
+//			RuleExec ruleExec1 = (RuleExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.ruleExec, ruleExec.getUuid(), ruleExec.getVersion()));
+			RuleExec ruleExec1 = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(ruleExec.getUuid(), ruleExec.getVersion(), MetaType.ruleExec.toString(), "N");
 			ruleExec1.setExec(ruleExec.getExec());
 			ruleExec1.setRefKeyList(ruleExec.getRefKeyList());
 			// iRuleExecDao.save(ruleExec1);

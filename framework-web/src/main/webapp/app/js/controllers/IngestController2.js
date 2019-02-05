@@ -192,30 +192,33 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 			}
 			if (TargetType == "TABLE") {
 				$scope.allTargetDatasource = response;
-				if($scope.selectedSourceType == 'FILE' && $scope.selectedTargetType == 'TABLE'){
-					if($scope.allTargetDatasource && $scope.allTargetDatasource.length >0){
-						for(var i=0;i<$scope.allTargetDatasource.length;i++){
-							if($scope.allTargetDatasource[i].type == 'HIVE'){
-								if($scope.allSourceDatasource)
-									$scope.allSourceDatasource.push($scope.allTargetDatasource[i]);
-								else{
-									$scope.allSourceDatasource=[];
-									$scope.allSourceDatasource.push($scope.allTargetDatasource[i]);
+				//setTimeout(function(){
+					if($scope.selectedSourceType == 'FILE' && $scope.selectedTargetType == 'TABLE'){
+						if($scope.allTargetDatasource && $scope.allTargetDatasource.length >0){
+							for(var i=0;i<$scope.allTargetDatasource.length;i++){
+								if($scope.allTargetDatasource[i].type == 'HIVE'){
+									if($scope.allSourceDatasource)
+										$scope.allSourceDatasource.push($scope.allTargetDatasource[i]);
+									else{
+										$scope.allSourceDatasource=[];
+										$scope.allSourceDatasource.push($scope.allTargetDatasource[i]);
+									}
 								}
 							}
-						}
-						/*for(var i=0;i<$scope.allSourceDatasource.length;i++){
-							if($scope.allSourceDatasource[i].type == 'FILE'){
-								if($scope.allSourceDatasource)
-									$scope.allTargetDatasource.push($scope.allSourceDatasource[i]);
-								else{
-									$scope.allSourceDatasource=[];
-									$scope.allTargetDatasource.push($scope.allSourceDatasource[i]);
+							for(var i=0;i<$scope.allSourceDatasource.length;i++){
+								if($scope.allSourceDatasource[i].type == 'FILE'){
+									if($scope.allSourceDatasource)
+										$scope.allTargetDatasource.push($scope.allSourceDatasource[i]);
+									else{
+										$scope.allSourceDatasource=[];
+										$scope.allTargetDatasource.push($scope.allSourceDatasource[i]);
+									}
 								}
 							}
-						}*/
-					}	
-				}
+						}	
+					}
+				//},100);
+			
 			}
 			
 			if(sourceType =="STREAM" && TargetType =="FILE"){
@@ -1205,6 +1208,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 			if (!selected.selected) {
 				newDataList.push(selected);
 			}
+		    $scope.fitlerAttrTableSelectedItem=[];
 		});
 
 		if (newDataList.length > 0) {
@@ -1810,6 +1814,50 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 		var hidemode = "yes";
 		if (hidemode == 'yes') {
 			setTimeout(function () { $state.go('ingestrulelist2'); }, 2000);
+		}
+	}
+
+	$scope.fitlerAttrTableSelectedItem=[];
+	$scope.onChangeFilterAttRow=function(index,status){
+		if(status ==true){
+			$scope.fitlerAttrTableSelectedItem.push(index);
+		}
+		else{
+			let tempIndex=$scope.fitlerAttrTableSelectedItem.indexOf(index);
+
+			if(tempIndex !=-1){
+				$scope.fitlerAttrTableSelectedItem.splice(tempIndex, 1);
+
+			}
+		}	
+	}
+	$scope.autoMove=function(index,type){
+		if(type=="mapAttr"){
+		}
+		else{
+			var tempAtrr=$scope.filterTableArray[$scope.fitlerAttrTableSelectedItem[0]];
+			$scope.filterTableArray.splice($scope.fitlerAttrTableSelectedItem[0],1);
+			$scope.filterTableArray.splice(index,0,tempAtrr);
+			$scope.fitlerAttrTableSelectedItem=[];
+			$scope.filterTableArray[index].selected=false;
+			$scope.filterTableArray[0].logicalOperator="";
+			if($scope.filterTableArray[index].logicalOperator =="" && index !=0){
+				$scope.filterTableArray[index].logicalOperator=$scope.logicalOperator[0];
+			}else if($scope.filterTableArray[index].logicalOperator =="" && index ==0){
+				$scope.filterTableArray[index+1].logicalOperator=$scope.logicalOperator[0];
+			}
+		}
+	}
+
+	$scope.autoMoveTo=function(index,type){
+		if(type =="mapAttr"){
+		}
+		else{
+			if(index <= $scope.filterTableArray.length){
+				$scope.autoMove(index-1,'filterAttr');
+				$scope.moveTo=null;
+				$(".actions").removeClass("open");
+			}
 		}
 	}
 

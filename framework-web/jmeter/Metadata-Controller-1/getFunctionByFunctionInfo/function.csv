@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testResults version="1.2">
-<httpSample t="342" lt="339" ts="1502345383091" s="true" lb="function" rc="200" rm="OK" tn="getFunctionByFunctionInfo 10-1" dt="text" by="1190"/>
-<httpSample t="46" lt="46" ts="1502345383619" s="true" lb="function" rc="200" rm="OK" tn="getFunctionByFunctionInfo 10-1" dt="text" by="1192"/>
-<httpSample t="26" lt="26" ts="1502345383669" s="true" lb="function" rc="200" rm="OK" tn="getFunctionByFunctionInfo 10-1" dt="text" by="1192"/>
-<httpSample t="11" lt="9" ts="1502345383739" s="true" lb="function" rc="200" rm="OK" tn="getFunctionByFunctionInfo 10-1" dt="text" by="1191"/>
-<httpSample t="70" lt="69" ts="1502345383795" s="true" lb="function" rc="200" rm="OK" tn="getFunctionByFunctionInfo 10-1" dt="text" by="1191"/>
-
-</testResults>

@@ -1,0 +1,924 @@
+{
+    "dependsOn" : {
+        "ref" : {
+            "type" : "relation",
+            "uuid" : "69dc4863-89ac-45d8-a6f0-cddc1b6b2682"
+        }
+    },
+    "attributeInfo" : [ 
+        {
+            "attrSourceId" : "0",
+            "attrDisplaySeq" : "0",
+            "attrSourceName" : "deviceid",
+            "sourceAttr" : {
+                "attrId" : "0",
+                "attrType" : "string",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "1",
+            "attrDisplaySeq" : "1",
+            "attrSourceName" : "date",
+            "sourceAttr" : {
+                "attrId" : "1",
+                "attrType" : "string",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "2",
+            "attrDisplaySeq" : "2",
+            "attrSourceName" : "warn_type1_total",
+            "sourceAttr" : {
+                "attrId" : "2",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "3",
+            "attrDisplaySeq" : "3",
+            "attrSourceName" : "warn_type2_total",
+            "sourceAttr" : {
+                "attrId" : "3",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "8",
+            "attrDisplaySeq" : "4",
+            "attrSourceName" : "fault_code_type_1_count",
+            "sourceAttr" : {
+                "attrId" : "8",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "9",
+            "attrDisplaySeq" : "5",
+            "attrSourceName" : "fault_code_type_2_count",
+            "sourceAttr" : {
+                "attrId" : "9",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "10",
+            "attrDisplaySeq" : "6",
+            "attrSourceName" : "fault_code_type_3_count",
+            "sourceAttr" : {
+                "attrId" : "10",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "11",
+            "attrDisplaySeq" : "7",
+            "attrSourceName" : "fault_code_type_4_count",
+            "sourceAttr" : {
+                "attrId" : "11",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "12",
+            "attrDisplaySeq" : "8",
+            "attrSourceName" : "problem_type_1_per_usage1",
+            "sourceAttr" : {
+                "attrId" : "12",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "13",
+            "attrDisplaySeq" : "9",
+            "attrSourceName" : "problem_type_2_per_usage1",
+            "sourceAttr" : {
+                "attrId" : "13",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "14",
+            "attrDisplaySeq" : "10",
+            "attrSourceName" : "problem_type_3_per_usage1",
+            "sourceAttr" : {
+                "attrId" : "14",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "15",
+            "attrDisplaySeq" : "11",
+            "attrSourceName" : "problem_type_4_per_usage1",
+            "sourceAttr" : {
+                "attrId" : "15",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "16",
+            "attrDisplaySeq" : "12",
+            "attrSourceName" : "fault_code_type_1_count_per_usage1",
+            "sourceAttr" : {
+                "attrId" : "16",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "17",
+            "attrDisplaySeq" : "13",
+            "attrSourceName" : "fault_code_type_2_count_per_usage1",
+            "sourceAttr" : {
+                "attrId" : "17",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "18",
+            "attrDisplaySeq" : "14",
+            "attrSourceName" : "fault_code_type_3_count_per_usage1",
+            "sourceAttr" : {
+                "attrId" : "18",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "19",
+            "attrDisplaySeq" : "15",
+            "attrSourceName" : "fault_code_type_4_count_per_usage1",
+            "sourceAttr" : {
+                "attrId" : "19",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "20",
+            "attrDisplaySeq" : "16",
+            "attrSourceName" : "problem_type_1_per_usage2",
+            "sourceAttr" : {
+                "attrId" : "20",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "21",
+            "attrDisplaySeq" : "17",
+            "attrSourceName" : "problem_type_2_per_usage2",
+            "sourceAttr" : {
+                "attrId" : "21",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "22",
+            "attrDisplaySeq" : "18",
+            "attrSourceName" : "problem_type_3_per_usage2",
+            "sourceAttr" : {
+                "attrId" : "22",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "23",
+            "attrDisplaySeq" : "19",
+            "attrSourceName" : "problem_type_4_per_usage2",
+            "sourceAttr" : {
+                "attrId" : "23",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "24",
+            "attrDisplaySeq" : "20",
+            "attrSourceName" : "fault_code_type_1_count_per_usage2",
+            "sourceAttr" : {
+                "attrId" : "24",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "25",
+            "attrDisplaySeq" : "21",
+            "attrSourceName" : "fault_code_type_2_count_per_usage2",
+            "sourceAttr" : {
+                "attrId" : "25",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "26",
+            "attrDisplaySeq" : "22",
+            "attrSourceName" : "fault_code_type_3_count_per_usage2",
+            "sourceAttr" : {
+                "attrId" : "26",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "27",
+            "attrDisplaySeq" : "23",
+            "attrSourceName" : "fault_code_type_4_count_per_usage2",
+            "sourceAttr" : {
+                "attrId" : "27",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "28",
+            "attrDisplaySeq" : "24",
+            "attrSourceName" : "problem_type_1",
+            "sourceAttr" : {
+                "attrId" : "28",
+                "attrType" : "integer",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "29",
+            "attrDisplaySeq" : "25",
+            "attrSourceName" : "problem_type_2",
+            "sourceAttr" : {
+                "attrId" : "29",
+                "attrType" : "integer",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "30",
+            "attrDisplaySeq" : "26",
+            "attrSourceName" : "problem_type_3",
+            "sourceAttr" : {
+                "attrId" : "30",
+                "attrType" : "integer",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "31",
+            "attrDisplaySeq" : "27",
+            "attrSourceName" : "problem_type_4",
+            "sourceAttr" : {
+                "attrId" : "31",
+                "attrType" : "integer",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "32",
+            "attrDisplaySeq" : "28",
+            "attrSourceName" : "problemreported",
+            "sourceAttr" : {
+                "attrId" : "33",
+                "attrType" : "integer",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "33",
+            "attrDisplaySeq" : "29",
+            "attrSourceName" : "usage_count_1",
+            "sourceAttr" : {
+                "attrId" : "34",
+                "attrType" : "integer",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "34",
+            "attrDisplaySeq" : "30",
+            "attrSourceName" : "usage_count_2",
+            "sourceAttr" : {
+                "attrId" : "35",
+                "attrType" : "integer",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "35",
+            "attrDisplaySeq" : "31",
+            "attrSourceName" : "error_count_1",
+            "sourceAttr" : {
+                "attrId" : "36",
+                "attrType" : "integer",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "36",
+            "attrDisplaySeq" : "32",
+            "attrSourceName" : "error_count_2",
+            "sourceAttr" : {
+                "attrId" : "37",
+                "attrType" : "integer",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "37",
+            "attrDisplaySeq" : "33",
+            "attrSourceName" : "error_count_3",
+            "sourceAttr" : {
+                "attrId" : "38",
+                "attrType" : "integer",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "38",
+            "attrDisplaySeq" : "34",
+            "attrSourceName" : "error_count_4",
+            "sourceAttr" : {
+                "attrId" : "39",
+                "attrType" : "integer",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "39",
+            "attrDisplaySeq" : "35",
+            "attrSourceName" : "error_count_5",
+            "sourceAttr" : {
+                "attrId" : "40",
+                "attrType" : "integer",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "40",
+            "attrDisplaySeq" : "36",
+            "attrSourceName" : "error_count_6",
+            "sourceAttr" : {
+                "attrId" : "41",
+                "attrType" : "integer",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "41",
+            "attrDisplaySeq" : "37",
+            "attrSourceName" : "error_count_7",
+            "sourceAttr" : {
+                "attrId" : "42",
+                "attrType" : "integer",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "42",
+            "attrDisplaySeq" : "38",
+            "attrSourceName" : "error_count_8",
+            "sourceAttr" : {
+                "attrId" : "43",
+                "attrType" : "integer",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "43",
+            "attrDisplaySeq" : "39",
+            "attrSourceName" : "date_month",
+            "sourceAttr" : {
+                "attrId" : "44",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "44",
+            "attrDisplaySeq" : "40",
+            "attrSourceName" : "date_week",
+            "sourceAttr" : {
+                "attrId" : "45",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "45",
+            "attrDisplaySeq" : "41",
+            "attrSourceName" : "date_day",
+            "sourceAttr" : {
+                "attrId" : "46",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "49",
+            "attrDisplaySeq" : "42",
+            "attrSourceName" : "cat1",
+            "sourceAttr" : {
+                "attrId" : "4",
+                "attrType" : "string",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5c630b73-2e9d-407a-9974-a9bde69d55d6"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "50",
+            "attrDisplaySeq" : "43",
+            "attrSourceName" : "cat2",
+            "sourceAttr" : {
+                "attrId" : "5",
+                "attrType" : "string",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5c630b73-2e9d-407a-9974-a9bde69d55d6"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "51",
+            "attrDisplaySeq" : "44",
+            "attrSourceName" : "cat3",
+            "sourceAttr" : {
+                "attrId" : "6",
+                "attrType" : "string",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5c630b73-2e9d-407a-9974-a9bde69d55d6"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "52",
+            "attrDisplaySeq" : "45",
+            "attrSourceName" : "cat4",
+            "sourceAttr" : {
+                "attrId" : "7",
+                "attrType" : "string",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5c630b73-2e9d-407a-9974-a9bde69d55d6"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "53",
+            "attrDisplaySeq" : "46",
+            "attrSourceName" : "problem_type_1_category",
+            "sourceAttr" : {
+                "attrId" : "32",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5c630b73-2e9d-407a-9974-a9bde69d55d6"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "54",
+            "attrDisplaySeq" : "47",
+            "attrSourceName" : "problem_type_2_category",
+            "sourceAttr" : {
+                "attrId" : "33",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5c630b73-2e9d-407a-9974-a9bde69d55d6"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "55",
+            "attrDisplaySeq" : "48",
+            "attrSourceName" : "problem_type_3_category",
+            "sourceAttr" : {
+                "attrId" : "34",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5c630b73-2e9d-407a-9974-a9bde69d55d6"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "56",
+            "attrDisplaySeq" : "49",
+            "attrSourceName" : "problem_type_4_category",
+            "sourceAttr" : {
+                "attrId" : "35",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5c630b73-2e9d-407a-9974-a9bde69d55d6"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "57",
+            "attrDisplaySeq" : "50",
+            "attrSourceName" : "problem_type_1_per_usage1_category",
+            "sourceAttr" : {
+                "attrId" : "36",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5c630b73-2e9d-407a-9974-a9bde69d55d6"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "58",
+            "attrDisplaySeq" : "51",
+            "attrSourceName" : "problem_type_2_per_usage1_category",
+            "sourceAttr" : {
+                "attrId" : "37",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5c630b73-2e9d-407a-9974-a9bde69d55d6"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "59",
+            "attrDisplaySeq" : "52",
+            "attrSourceName" : "problem_type_3_per_usage1_category",
+            "sourceAttr" : {
+                "attrId" : "38",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5c630b73-2e9d-407a-9974-a9bde69d55d6"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "60",
+            "attrDisplaySeq" : "53",
+            "attrSourceName" : "problem_type_4_per_usage1_category",
+            "sourceAttr" : {
+                "attrId" : "39",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5c630b73-2e9d-407a-9974-a9bde69d55d6"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "61",
+            "attrDisplaySeq" : "54",
+            "attrSourceName" : "problem_type_1_per_usage2_category",
+            "sourceAttr" : {
+                "attrId" : "40",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5c630b73-2e9d-407a-9974-a9bde69d55d6"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "62",
+            "attrDisplaySeq" : "55",
+            "attrSourceName" : "problem_type_2_per_usage2_category",
+            "sourceAttr" : {
+                "attrId" : "41",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5c630b73-2e9d-407a-9974-a9bde69d55d6"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "63",
+            "attrDisplaySeq" : "56",
+            "attrSourceName" : "problem_type_3_per_usage2_category",
+            "sourceAttr" : {
+                "attrId" : "42",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5c630b73-2e9d-407a-9974-a9bde69d55d6"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "64",
+            "attrDisplaySeq" : "57",
+            "attrSourceName" : "problem_type_4_per_usage2_category",
+            "sourceAttr" : {
+                "attrId" : "43",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5c630b73-2e9d-407a-9974-a9bde69d55d6"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "65",
+            "attrDisplaySeq" : "58",
+            "attrSourceName" : "fault_code_type_1_count_category",
+            "sourceAttr" : {
+                "attrId" : "44",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5c630b73-2e9d-407a-9974-a9bde69d55d6"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "66",
+            "attrDisplaySeq" : "59",
+            "attrSourceName" : "fault_code_type_2_count_category",
+            "sourceAttr" : {
+                "attrId" : "45",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5c630b73-2e9d-407a-9974-a9bde69d55d6"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "67",
+            "attrDisplaySeq" : "60",
+            "attrSourceName" : "fault_code_type_3_count_category",
+            "sourceAttr" : {
+                "attrId" : "46",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5c630b73-2e9d-407a-9974-a9bde69d55d6"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "68",
+            "attrDisplaySeq" : "61",
+            "attrSourceName" : "fault_code_type_4_count_category",
+            "sourceAttr" : {
+                "attrId" : "47",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5c630b73-2e9d-407a-9974-a9bde69d55d6"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "69",
+            "attrDisplaySeq" : "62",
+            "attrSourceName" : "fault_code_type_1_count_per_usage1_category",
+            "sourceAttr" : {
+                "attrId" : "48",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5c630b73-2e9d-407a-9974-a9bde69d55d6"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "70",
+            "attrDisplaySeq" : "63",
+            "attrSourceName" : "fault_code_type_2_count_per_usage1_category",
+            "sourceAttr" : {
+                "attrId" : "49",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5c630b73-2e9d-407a-9974-a9bde69d55d6"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "71",
+            "attrDisplaySeq" : "64",
+            "attrSourceName" : "fault_code_type_3_count_per_usage1_category",
+            "sourceAttr" : {
+                "attrId" : "50",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5c630b73-2e9d-407a-9974-a9bde69d55d6"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "72",
+            "attrDisplaySeq" : "65",
+            "attrSourceName" : "fault_code_type_4_count_per_usage1_category",
+            "sourceAttr" : {
+                "attrId" : "51",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5c630b73-2e9d-407a-9974-a9bde69d55d6"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "73",
+            "attrDisplaySeq" : "66",
+            "attrSourceName" : "fault_code_type_1_count_per_usage2_category",
+            "sourceAttr" : {
+                "attrId" : "52",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5c630b73-2e9d-407a-9974-a9bde69d55d6"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "74",
+            "attrDisplaySeq" : "67",
+            "attrSourceName" : "fault_code_type_2_count_per_usage2_category",
+            "sourceAttr" : {
+                "attrId" : "53",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5c630b73-2e9d-407a-9974-a9bde69d55d6"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "75",
+            "attrDisplaySeq" : "68",
+            "attrSourceName" : "fault_code_type_3_count_per_usage2_category",
+            "sourceAttr" : {
+                "attrId" : "54",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5c630b73-2e9d-407a-9974-a9bde69d55d6"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "76",
+            "attrDisplaySeq" : "69",
+            "attrSourceName" : "fault_code_type_4_count_per_usage2_category",
+            "sourceAttr" : {
+                "attrId" : "55",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5c630b73-2e9d-407a-9974-a9bde69d55d6"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "85",
+            "attrDisplaySeq" : "70",
+            "attrSourceName" : "version",
+            "sourceAttr" : {
+                "attrId" : "57",
+                "attrType" : "Integer",
+                "ref" : {
+                    "type" : "dataset",
+                    "uuid" : "5c630b73-2e9d-407a-9974-a9bde69d55d6"
+                }
+            }
+        }, 
+        {
+            "attrSourceId" : "86",
+            "attrDisplaySeq" : "71",
+            "attrSourceName" : "features",
+            "sourceAttr" : {
+                "attrId" : "2",
+                "attrType" : "vector",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "97c96749-3c7a-4e21-9269-9a3cefe8ef89"
+                }
+            }
+        }
+    ],
+    "limit" : -1,
+    "uuid" : "5e203d49-590f-4925-827b-b4b84cfa2a84",
+    "version" : "1549028536",
+    "name" : "ds_device_data_final_features",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2019-02-01T13:42:16.000Z"),
+    "tags" : [],
+    "active" : "Y",
+    "locked" : "N",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+                "version" : "1547482153",
+                "name" : "Predictive Maintenance"
+            }
+        }
+    ]
+}

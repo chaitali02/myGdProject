@@ -801,6 +801,11 @@ public class VizpodServiceImpl {
 		List<Map<String, Object>> data = new ArrayList<>();
 		try {
 			Vizpod vizpod = (Vizpod) commonServiceImpl.getOneByUuidAndVersion(vizpodUUID, vizpodVersion, MetaType.vizpod.toString());
+			
+			if(vizpod.getLimit() != -1 && vizpod.getLimit() != 0 && vizpod.getLimit() < limit) {
+				limit = vizpod.getLimit();
+			}
+			
 			List<String> orderList = new ArrayList<>();
 			List<String> sortList = new ArrayList<>();
 			if(StringUtils.isNotBlank(order)) {	

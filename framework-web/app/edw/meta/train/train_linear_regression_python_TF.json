@@ -63,5 +63,15 @@
                 }
         }
     ],
-    "includeFeatures" : "N"
+    "includeFeatures" : "N",
+    "trainLocation" : {
+        "ref" : {
+            "type" : "file"
+        }
+    },
+    "testLocation" : {
+        "ref" : {
+            "type" : "file"
+        }
+    }
 }

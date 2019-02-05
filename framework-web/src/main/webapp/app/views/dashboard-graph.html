@@ -89,7 +89,7 @@
                 </div>
                 <!-- <div class="col-md-1 col-sm-1" style="margin-left:4%;width:4%;margin-top:4px;cursor:pointer;padding:0px;text-align:right;"> -->
                   <div class="col-md-1 col-sm-1" style="margin-top:4px;cursor:pointer;padding:0px;text-align:right;">
-                    <span  ng-click="openFilterPopup()" tooltip-placement="left" uib-tooltip="Apply Filter"  style="font-size: 17px"><i class="fa fa-filter" style="font-size:20px;padding-bottom:5px;padding-right: 2px;"></i>Filter</span>
+                    <span class="caption-subject font-dark bold"  ng-click="openFilterPopup()" tooltip-placement="left" uib-tooltip="Select Filter"  style="font-size:16px;color: #666 !important;"><i class="fa fa-filter" style="font-size:17px;padding-bottom:5px;padding-right: 2px;"></i>Filter</span>
                 </div>
                 <br>       
               </div>
@@ -381,7 +381,11 @@
                 <div class="slimScrollDiv" style="margin-top:10px;">
                   <div class="scroller" data-always-visible="1" data-rail-visible1="1" data-initialized="1" style="overflow-y: scroll;max-height: 300px;">
                     <form class="form-horizontal" novalidate="novalidate" name="myformFilter">
-                      <div class="form-body centercontent" ng-show="filterAttribureIdValues.length == 0">
+                      <div ng-show="filterAttribureIdValues.length == 0 && !isFilterAttrInProges">
+                        <h3 style="font-size:14px;color:blue;">Please Select Filter</h3>
+                      </div>
+
+                      <div class="form-body centercontent" ng-show="isFilterAttrInProges">
                           <div class="spinner">
                               <div class="bounce1"></div>
                               <div class="bounce2"></div>

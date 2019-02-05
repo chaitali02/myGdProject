@@ -753,7 +753,13 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
         ref.type = $scope.filterAttribureIdValues[i].type;
         ref.uuid = $scope.filterAttribureIdValues[i].datapoduuid
         filterList.ref = ref;
-        filterList.attrId = $scope.filterAttribureIdValues[i].datapodattrId
+        if($scope.filterAttribureIdValues[i].type !="formual"){
+          filterList.attrId = $scope.filterAttribureIdValues[i].datapodattrId;
+          filterTag.text = $scope.filterAttribureIdValues[i].attrName + " - " + $scope.selectedAttributeValue[i].value;
+        }
+        else{
+          filterTag.text = $scope.filterAttribureIdValues[i].name + " - " + $scope.selectedAttributeValue[i].value;
+        }
         filterList.value = $scope.selectedAttributeValue[i].value;//"'"+$scope.selectedAttributeValue[i].value+"'";
         $scope.filterListarray[count] = filterList;
         filterTag.text = $scope.filterAttribureIdValues[i].attrName + " - " + $scope.selectedAttributeValue[i].value;
@@ -784,25 +790,36 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
 
     $scope.filterAttribureIdValues = []
     $scope.selectedAttributeValue = []
+   
     if (data.filterInfo && data.filterInfo.length > 0) {
+      $scope.isFilterAttrInProges=true;
       var filterAttribureIdValue = [];
       for (var n = 0; n < data.filterInfo.length; n++) {
-        var filterattributeidvalepromise = DahsboardSerivce.getAttributeValues(data.filterInfo[n].ref.uuid, data.filterInfo[n].attrId, data.filterInfo[n].ref.type);
+        var filterattributeidvalepromise = DahsboardSerivce.getAttributeValues(data.filterInfo[n].ref.uuid, data.filterInfo[n].attrId || "", data.filterInfo[n].ref.type);
         filterAttribureIdValue.push(filterattributeidvalepromise);
       }//End For Loop
       $q.all(filterAttribureIdValue).then(function (result) {
+        $scope.isFilterAttrInProges=false;
         for (var i = 0; i < result.length; i++) {
           var filterAttribureIdvalueJSON = {};
           var defaultvalue = {}
           defaultvalue.id = null;
           defaultvalue.value = "-select-"
           filterAttribureIdvalueJSON.vizpoduuid =
-            filterAttribureIdvalueJSON.vizpodversion = data.filterInfo[i].ref.uuid;
+          filterAttribureIdvalueJSON.vizpodversion = data.filterInfo[i].ref.uuid;
           filterAttribureIdvalueJSON.datapoduuid = data.filterInfo[i].ref.uuid;
+          filterAttribureIdvalueJSON.name = data.filterInfo[i].ref.name;
           filterAttribureIdvalueJSON.type = data.filterInfo[i].ref.type;
-          filterAttribureIdvalueJSON.datapodattrId = data.filterInfo[i].attrId;
-          filterAttribureIdvalueJSON.dname = data.filterInfo[i].ref.name + "." + data.filterInfo[i].attrName;
-          filterAttribureIdvalueJSON.attrName =data.filterInfo[i].attrName;
+          if(data.filterInfo[i].ref.type !="formula"){
+            filterAttribureIdvalueJSON.datapodattrId = data.filterInfo[i].attrId;
+            filterAttribureIdvalueJSON.attrName =data.filterInfo[i].attrName;
+            filterAttribureIdvalueJSON.dname = data.filterInfo[i].ref.name + "." + data.filterInfo[i].attrName;
+          }
+          else{
+            filterAttribureIdvalueJSON.attrName =data.filterInfo[i].ref.name;
+            filterAttribureIdvalueJSON.dname = "formula"+"." +data.filterInfo[i].ref.name;
+          }
+          
           filterAttribureIdvalueJSON.values = result[i].data
           filterAttribureIdvalueJSON.values.splice(0, 0, defaultvalue)
           $scope.selectedAttributeValue[i] = defaultvalue
@@ -1163,6 +1180,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
   $scope.refreshVizpod=function(rowNo,colNo){
     var parentIndex=rowNo-1;
     var index=colNo-1;
+    $scope.sectionRows[parentIndex].columns[index].isDataGridShow=false;
     $scope.sectionRows[parentIndex].columns[index].isDataError = false;
     $scope.sectionRows[parentIndex].columns[index].isInprogess = true;
     $scope.sectionRows[parentIndex].columns[index].vizpodDetails.datapoints = [];

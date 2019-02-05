@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testResults version="1.2">
-<httpSample t="2722" lt="2722" ts="1502345383086" s="true" lb="meta" rc="200" rm="OK" tn="getExecStats 13-1" dt="text" by="1055"/>
-<httpSample t="1542" lt="1542" ts="1502345385810" s="true" lb="meta" rc="200" rm="OK" tn="getExecStats 13-1" dt="text" by="1055"/>
-<httpSample t="1484" lt="1482" ts="1502345387354" s="true" lb="meta" rc="200" rm="OK" tn="getExecStats 13-1" dt="text" by="1055"/>
-<httpSample t="1426" lt="1426" ts="1502345388842" s="true" lb="meta" rc="200" rm="OK" tn="getExecStats 13-1" dt="text" by="1055"/>
-<httpSample t="1579" lt="1579" ts="1502345390271" s="true" lb="meta" rc="200" rm="OK" tn="getExecStats 13-1" dt="text" by="1055"/>
-
-</testResults>

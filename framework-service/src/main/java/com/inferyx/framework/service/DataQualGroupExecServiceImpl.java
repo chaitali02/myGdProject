@@ -19,12 +19,10 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IDataQualGroupExecDao;
 import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataQualGroupExec;
 import com.inferyx.framework.domain.MetaIdentifier;
-import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.register.GraphRegister;
@@ -45,9 +43,7 @@ public class DataQualGroupExecServiceImpl  extends BaseGroupExecTemplate {
 	@Autowired
 	SecurityServiceImpl securityServiceImpl;
 	@Autowired
-	protected IDataQualGroupExecDao iDataQualGroupExecDao;	
-	@Autowired
-	MetadataUtil daoRegister;
+	protected IDataQualGroupExecDao iDataQualGroupExecDao;
 	@Autowired
 	DataQualGroupServiceImpl dataQualGroupServiceImpl;
 	@Autowired
@@ -345,21 +341,23 @@ public class DataQualGroupExecServiceImpl  extends BaseGroupExecTemplate {
 		return baseEntityList;
 	}*/
 
-	public List<DataQualExec> findDataQualExecByDataqualGroupExec(String dataqualGroupExecUuid, String dataqualGroupExecVersion) throws JsonProcessingException {
-		/*String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;*/
-		List<DataQualExec> dataQualExecList = null;
-		DataQualGroupExec dataQualGroupExec = null;		
-		/*if (appUuid == null) {
-			dataQualGroupExec = iDataQualGroupExecDao.findOneByUuidAndVersion(dataqualGroupExecUuid, dataqualGroupExecVersion);
-		} else {
-			dataQualGroupExec = iDataQualGroupExecDao.findOneByUuidAndVersion(appUuid, dataqualGroupExecUuid, dataqualGroupExecVersion);
-		}*/
-		dataQualGroupExec = (DataQualGroupExec) commonServiceImpl.getOneByUuidAndVersion(dataqualGroupExecUuid, dataqualGroupExecVersion, MetaType.dqgroupExec.toString());
-		for (MetaIdentifierHolder dataQualExecHolder : dataQualGroupExec.getExecList()) {
-			dataQualExecList.add((DataQualExec)daoRegister.getRefObject(dataQualExecHolder.getRef()));
-		}
-		return resolveName(dataQualExecList);
-	}
+	/********************** UNUSED **********************/
+//	public List<DataQualExec> findDataQualExecByDataqualGroupExec(String dataqualGroupExecUuid, String dataqualGroupExecVersion) throws JsonProcessingException {
+//		/*String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;*/
+//		List<DataQualExec> dataQualExecList = null;
+//		DataQualGroupExec dataQualGroupExec = null;		
+//		/*if (appUuid == null) {
+//			dataQualGroupExec = iDataQualGroupExecDao.findOneByUuidAndVersion(dataqualGroupExecUuid, dataqualGroupExecVersion);
+//		} else {
+//			dataQualGroupExec = iDataQualGroupExecDao.findOneByUuidAndVersion(appUuid, dataqualGroupExecUuid, dataqualGroupExecVersion);
+//		}*/
+//		dataQualGroupExec = (DataQualGroupExec) commonServiceImpl.getOneByUuidAndVersion(dataqualGroupExecUuid, dataqualGroupExecVersion, MetaType.dqgroupExec.toString());
+//		for (MetaIdentifierHolder dataQualExecHolder : dataQualGroupExec.getExecList()) {
+////			dataQualExecList.add((DataQualExec)daoRegister.getRefObject(dataQualExecHolder.getRef()));
+//			dataQualExecList.add((DataQualExec)commonServiceImpl.getOneByUuidAndVersion(dataQualExecHolder.getRef().getUuid(), dataQualExecHolder.getRef().getVersion(), dataQualExecHolder.getRef().getType().toString()));			
+//		}
+//		return resolveName(dataQualExecList);
+//	}
 
 	public MetaIdentifier getMetaIdByExecId(String execUuid, String execVersion) throws Exception {
 		/*String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();*/

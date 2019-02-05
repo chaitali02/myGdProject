@@ -11,7 +11,6 @@
 package com.inferyx.framework.parser;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -22,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.AttributeMap;
 import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DagExec;
@@ -33,11 +31,9 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Stage;
 import com.inferyx.framework.domain.StageExec;
-import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Task;
 import com.inferyx.framework.domain.TaskExec;
-import com.inferyx.framework.enums.RunMode;
-import com.inferyx.framework.factory.TaskParserFactory;
+import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DagExecServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
 
@@ -45,10 +41,12 @@ public class DagParser {
     Logger logger =Logger.getLogger(DagParser.class);
 	@Autowired
 	DagExecServiceImpl dagExecServiceImpl;
-	@Autowired
-	private MetadataUtil daoRegister;
+//	@Autowired
+//	private MetadataUtil daoRegister;
 	@Autowired
 	DataStoreServiceImpl dataStoreServiceImpl;
+	@Autowired
+	private CommonServiceImpl<?> commonServiceImpl;
 	
 	public DagExec createDAGExec(Dag dag, ExecParams execParams) throws JsonProcessingException {
 		
@@ -138,6 +136,7 @@ public class DagParser {
 		
 	}
 
+	@SuppressWarnings("unused")
 	private List<TaskExec> createDagExecTasks(List<Task> dagTasks,List<String> dependsOn, Stage indvStg, MetaIdentifier dagRef, ExecParams execParams) throws JsonProcessingException {
 		List<TaskExec> taskExecs = new ArrayList<>();
 		java.util.Map<String, MetaIdentifier> refKeys = null;
@@ -177,26 +176,33 @@ public class DagParser {
 						|| indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType().equals(MetaType.mapiter))) {
 
 				mapRef = indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef();
-				Map map = (Map) daoRegister.getRefObject(populateRefKeys(refKeys, mapRef, inputRefKeys));
-
+//				Map map = (Map) daoRegister.getRefObject(populateRefKeys(refKeys, mapRef, inputRefKeys));
+				populateRefKeys(refKeys, mapRef, inputRefKeys);
+				Map map = (Map) commonServiceImpl.getOneByUuidAndVersion(mapRef.getUuid(), mapRef.getVersion(), mapRef.getType().toString(), "N");
+				
 				//populateRefKeys(refKeys, mapRef, inputRefKeys);
 
 				// Setting the Version for Map Object
 				sourceRef = map.getSource().getRef();
 				targetRef = map.getTarget().getRef();
-				daoRegister.getRefObject(populateRefKeys(refKeys, sourceRef, inputRefKeys));
-				daoRegister.getRefObject(populateRefKeys(refKeys, targetRef, inputRefKeys));
+//				daoRegister.getRefObject(populateRefKeys(refKeys, sourceRef, inputRefKeys));
+//				daoRegister.getRefObject(populateRefKeys(refKeys, targetRef, inputRefKeys));
+				populateRefKeys(refKeys, sourceRef, inputRefKeys);
+				populateRefKeys(refKeys, targetRef, inputRefKeys);
 				// Insert into refKeys
 				/*populateRefKeys(refKeys, sourceRef, inputRefKeys);
 				populateRefKeys(refKeys, targetRef, inputRefKeys);*/
 
 				for (AttributeMap attrMap : map.getAttributeMap()) {
 					targetAttrRef = attrMap.getTargetAttr().getRef();
-					daoRegister.getRefObject(populateRefKeys(refKeys, targetAttrRef, inputRefKeys));
+//					daoRegister.getRefObject(populateRefKeys(refKeys, targetAttrRef, inputRefKeys));
 					//populateRefKeys(refKeys, targetAttrRef, inputRefKeys);
 					sourceAttrRef = attrMap.getSourceAttr().getRef();
-					daoRegister.getRefObject(populateRefKeys(refKeys, sourceAttrRef, inputRefKeys));
+//					daoRegister.getRefObject(populateRefKeys(refKeys, sourceAttrRef, inputRefKeys));
 					//populateRefKeys(refKeys, sourceAttrRef, inputRefKeys);
+					
+					populateRefKeys(refKeys, targetAttrRef, inputRefKeys);
+					populateRefKeys(refKeys, sourceAttrRef, inputRefKeys);
 				}
 
 				// Setting the Version for Filter Object

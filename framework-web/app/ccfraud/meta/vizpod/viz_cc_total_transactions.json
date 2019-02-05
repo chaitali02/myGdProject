@@ -1,0 +1,75 @@
+{
+  "uuid": "ba084266-1ce6-4ece-8c68-a11c847575aa",
+  "version": "1536871182",
+  "name": "viz_cc_total_transactions",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+    "createdOn" : ISODate("2018-06-03T20:05:09.000Z"),
+  "tags": [],
+  "active" : "Y",
+  "locked" : "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce",
+        "version": "1521430822",
+        "name": "Fraud Analytics"
+      },
+      "value": null
+    }
+  ],
+  "title": null,
+  "source": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
+      "version": null,
+      "name": "cc_transactions"
+    },
+    "value": null
+  },
+  "type": "bar-chart",
+  "limit": -1,
+  "keys": [
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "311f9b56-474e-4119-8ce4-455a371c10d7",
+        "version": null,
+        "name": "cc_transactions"
+      },
+      "attributeId": 31,
+      "function": null,
+      "value": null,
+      "attributeName": "version"
+    }
+  ],
+  "dimension": [],
+  "detailAttr": [],
+  "filterInfo": [],
+  "groups": [],
+  "values": [
+    {
+      "ref": {
+        "type": "formula",
+        "uuid": "f2499ea7-e741-49f3-8d19-928f6dba6352",
+        "version": null,
+        "name": "fm_total_transactions"
+      },
+      "attributeId": null,
+      "function": null,
+      "value": null,
+      "attributeName": null
+    }
+  ]
+}

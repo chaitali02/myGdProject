@@ -114,7 +114,7 @@ DatascienceModule.controller('VartifAnalysisController', function (CommonService
                  execInfo.uuid=response[i].uuid;
                  execInfo.version=response[i].version;
                  execInfo.name=response[i].name;
-                 execInfo.displayname="accuracy | "+response[i].accuracy+" | "+response[i].createdOn;
+                 execInfo.displayname="accuracy ( "+response[i].accuracy+" ) | "+response[i].createdOn;
                  trainExecInfo[i]=execInfo;                                 
                 }
             }

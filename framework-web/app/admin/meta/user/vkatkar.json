@@ -33,15 +33,7 @@
                 "type" : "group",
                 "uuid" : "a93baa3e-51c9-11e8-9c2d-fa7ae01bbebc"
             }
-        }, 
-        {
-            "ref" : {
-                "type" : "group",
-                "uuid" : "986e84eb-03ab-46e1-82cc-83f48e6a70ea"
-            }
         }
-        
-        
         ],
     "uuid" : "a93baed0-51c9-11e8-9c2d-fa7ae01bbebc",
     "version" : "1521430702",
@@ -64,5 +56,17 @@
                 "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
             }
         }
-    ]
+    ],
+    "defaultGroup" : {
+        "ref" : {
+            "type" : "group",
+            "uuid" : "986e84eb-03ab-46e1-82cc-83f48e6a70c2"
+        }
+    },
+    "orgInfo" : {
+        "ref" : {
+            "uuid" : "58e8ba76-101c-4e90-bf09-9cfd2b954a86",
+            "type" : "organization"
+        }
+    }
 }

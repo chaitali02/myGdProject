@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -47,8 +46,6 @@ public class DatapodRegister {
 	DataSourceFactory dataSourceFactory;
 	@Autowired
 	HDFSInfo hdfsInfo;
-	@Autowired
-	MetadataUtil commonActivity;
 	@Autowired
 	ConnectionFactory connFactory;
 	@Autowired

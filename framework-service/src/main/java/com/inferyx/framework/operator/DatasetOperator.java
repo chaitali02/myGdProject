@@ -25,19 +25,21 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.ConstantsUtil;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.AttributeMap;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
+import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
-import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.Formula;
+import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Relation;
+import com.inferyx.framework.domain.SourceAttr;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.service.CommonServiceImpl;
@@ -50,8 +52,6 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 		@Autowired
 		RelationOperator relationOperator;
 		@Autowired
-		MetadataUtil daoRegister;
-		@Autowired
 		MapOperator mapOperator;
 		@Autowired
 		DataStoreServiceImpl datastoreServiceImpl;
@@ -62,16 +62,82 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 		
 		static final Logger logger = Logger.getLogger(DatasetOperator.class);
 		
+		/**
+		 * 
+		 * @param funcMeta
+		 * @return
+		 * @throws JsonProcessingException
+		 */
+		private Boolean funcWindowChecker(MetaIdentifier funcMeta) throws JsonProcessingException {
+			Function function = (Function) commonServiceImpl.getOneByUuidAndVersion(funcMeta.getUuid(), funcMeta.getVersion(), funcMeta.getType().toString(), "N");
+			if (function.getCategory().equalsIgnoreCase("WINDOW")) {
+				return Boolean.TRUE;
+			}
+			return Boolean.FALSE;
+		}
+		
+		/**
+		 * 
+		 * @param dataset
+		 * @return
+		 * @throws JsonProcessingException
+		 */
+		public Boolean checkWindow(DataSet dataset) throws JsonProcessingException {
+			if (dataset == null 
+					|| dataset.getAttributeInfo() == null 
+					|| dataset.getAttributeInfo().isEmpty()) {
+				return Boolean.FALSE;
+			}
+			// Get the attribute sources
+			for (AttributeSource attributeSource : dataset.getAttributeInfo()) {
+				if (attributeSource == null 
+						|| attributeSource.getSourceAttr() == null 
+						|| attributeSource.getSourceAttr().getRef() == null 
+						|| attributeSource.getSourceAttr().getRef().getType() == null) {
+					continue;
+				}
+//				logger.info("attribute type : " + attributeSource.getSourceAttr().getRef().getType());
+				if (attributeSource.getSourceAttr().getRef().getType().equals(MetaType.function)) {
+//					logger.info(" Inside attribute type function" );
+					// Extract function
+					if (funcWindowChecker(attributeSource.getSourceAttr().getRef())) {
+						return Boolean.TRUE;
+					}
+				} else if (attributeSource.getSourceAttr().getRef().getType().equals(MetaType.formula)) {
+					MetaIdentifier formulaMeta = attributeSource.getSourceAttr().getRef();
+					Formula formula = (Formula) commonServiceImpl.getOneByUuidAndVersion(formulaMeta.getUuid(), formulaMeta.getVersion(), formulaMeta.getType().toString(), "N");
+					for (SourceAttr sourceAttr :formula.getFormulaInfo()) {
+						//logger.info("Formula attribute type : "+ formula.getUuid()+""+ sourceAttr.getRef().getType());
+						if (sourceAttr.getRef().getType().equals(MetaType.function)) {
+//							logger.info(" Inside formula attribute type function" );
+							// Extract function
+							if (funcWindowChecker(sourceAttr.getRef())) {
+								return Boolean.TRUE;
+							}
+						}
+					}
+				}
+			}
+			return Boolean.FALSE;
+		}
+		
 		public String generateSql(DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 
 								Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
-			return generateSelect(dataset, refKeyMap, otherParams, execParams, runMode)
+			logger.info("Started SQL Generation");
+			logger.info(" Check for window function : " + checkWindow(dataset));
+			String sql = generateSelect(dataset, refKeyMap, otherParams, execParams, runMode)
 					.concat(getFrom())
 					.concat(generateFrom(dataset, refKeyMap, otherParams, usedRefKeySet, runMode))
 					.concat(generateWhere())
-					.concat(generateFilter(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode))
-					.concat(generateGroupBy(dataset, refKeyMap, otherParams, execParams))
-					.concat(generateHaving(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode))
-					.concat(generateLimit(dataset));
+					.concat(generateFilter(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode));
+			if (!checkWindow(dataset)) {		
+				sql = sql.concat(generateGroupBy(dataset, refKeyMap, otherParams, execParams))
+						 .concat(generateHaving(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode));
+			}
+			sql = sql.concat(generateLimit(dataset));
+			logger.info("SQL Generated: "+sql);
+			logger.info("Completed SQL Generation");
+			return sql;
 		}
 
 		public String generateSelect(DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams
@@ -112,10 +178,14 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 			logger.info("otherParams in datasetOperator : " + otherParams);
 			if (dataset.getDependsOn().getRef().getType() == MetaType.relation) {
 				usedRefKeySet.add(dataset.getDependsOn().getRef());
-				relation = (Relation) daoRegister.getRefObject(dataset.getDependsOn().getRef()); 
+//				relation = (Relation) daoRegister.getRefObject(dataset.getDependsOn().getRef());
+				MetaIdentifier ref = TaskParser.populateRefVersion(dataset.getDependsOn().getRef(), refKeyMap);
+				relation = (Relation) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 				builder.append(relationOperator.generateSql(relation, refKeyMap, otherParams, null, usedRefKeySet, runMode));
 			} else if (dataset.getDependsOn().getRef().getType() == MetaType.datapod) {
-				Datapod datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(dataset.getDependsOn().getRef(), refKeyMap));
+//				Datapod datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(dataset.getDependsOn().getRef(), refKeyMap));
+				MetaIdentifier ref = TaskParser.populateRefVersion(dataset.getDependsOn().getRef(), refKeyMap);
+				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 				String table = null;
 				/*if (otherParams == null 
 						|| otherParams.get("datapod_".concat(datapod.getUuid())) == null) {*/
@@ -136,7 +206,9 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 				logger.info("Source table in dataset " + dataset.getName() + " : " + table);
 				builder.append(String.format(table, datapod.getName())).append("  ").append(datapod.getName()).append(" ");
 			} else if (dataset.getDependsOn().getRef().getType() == MetaType.dataset) {
-                DataSet innerDS = (DataSet) daoRegister.getRefObject(dataset.getDependsOn().getRef()); 
+//				DataSet innerDS = (DataSet) daoRegister.getRefObject(dataset.getDependsOn().getRef()); 
+                MetaIdentifier ref = TaskParser.populateRefVersion(dataset.getDependsOn().getRef(), refKeyMap);
+                DataSet innerDS = (DataSet) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
                 builder.append("(").append(generateSql(innerDS, refKeyMap, otherParams, usedRefKeySet, null, runMode)).append(") ").append(innerDS.getName()).append(" ");
             }
 			return builder.toString();

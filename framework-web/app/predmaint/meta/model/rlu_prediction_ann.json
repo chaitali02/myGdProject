@@ -1,0 +1,714 @@
+{
+    "type" : "PYTHON",
+    "dependsOn" : {
+        "ref" : {
+            "type" : "algorithm",
+            "uuid" : "1f91c98a-faf6-42c0-ac16-d7309d041bd9"
+        }
+    },
+    "label" : "problem_reported",
+    "features" : [ 
+        {
+            "featureId" : "0",
+            "featureDisplaySeq" : "0",
+            "name" : "warn_type1_total",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "encodingType" : "ONEHOT",
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+                }
+            }
+        }, 
+        {
+            "featureId" : "1",
+            "featureDisplaySeq" : "1",
+            "name" : "warn_type2_total",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "encodingType" : "ONEHOT",
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "9e3e2bfc-02fb-11e7-93ae-92361f002671"
+                }
+            }
+        }, 
+        {
+            "featureId" : "2",
+            "featureDisplaySeq" : "2",
+            "name" : "cat1",
+            "type" : "string",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "encodingType" : "ONEHOT",
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "simple"
+                },
+                "value" : "0-20"
+            }
+        }, 
+        {
+            "featureId" : "3",
+            "featureDisplaySeq" : "3",
+            "name" : "cat2",
+            "type" : "string",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "encodingType" : "ONEHOT",
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "simple"
+                },
+                "value" : "0-3000"
+            }
+        }, 
+        {
+            "featureId" : "4",
+            "featureDisplaySeq" : "4",
+            "name" : "cat3",
+            "type" : "string",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "encodingType" : "ONEHOT",
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "simple"
+                },
+                "value" : "0-300"
+            }
+        }, 
+        {
+            "featureId" : "5",
+            "featureDisplaySeq" : "5",
+            "name" : "cat4",
+            "type" : "string",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "encodingType" : "ONEHOT",
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "simple"
+                },
+                "value" : "6001-11000"
+            }
+        }, 
+        {
+            "featureId" : "6",
+            "featureDisplaySeq" : "6",
+            "name" : "fault_code_type_1_count",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "encodingType" : "ONEHOT",
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+                }
+            }
+        }, 
+        {
+            "featureId" : "7",
+            "featureDisplaySeq" : "7",
+            "name" : "fault_code_type_2_count",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "encodingType" : "ONEHOT",
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+                }
+            }
+        }, 
+        {
+            "featureId" : "8",
+            "featureDisplaySeq" : "8",
+            "name" : "fault_code_type_3_count",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "encodingType" : "ONEHOT",
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+                }
+            }
+        }, 
+        {
+            "featureId" : "9",
+            "featureDisplaySeq" : "9",
+            "name" : "fault_code_type_4_count",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+                }
+            }
+        }, 
+        {
+            "featureId" : "10",
+            "featureDisplaySeq" : "10",
+            "name" : "problem_type_1_per_usage1",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+                }
+            }
+        }, 
+        {
+            "featureId" : "11",
+            "featureDisplaySeq" : "11",
+            "name" : "problem_type_2_per_usage1",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+                }
+            }
+        }, 
+        {
+            "featureId" : "12",
+            "featureDisplaySeq" : "12",
+            "name" : "problem_type_3_per_usage1",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "encodingType" : "ONEHOT",
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+                }
+            }
+        }, 
+        {
+            "featureId" : "13",
+            "featureDisplaySeq" : "13",
+            "name" : "problem_type_4_per_usage1",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "encodingType" : "ONEHOT",
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+                }
+            }
+        }, 
+        {
+            "featureId" : "14",
+            "featureDisplaySeq" : "14",
+            "name" : "fault_code_type_1_count_per_usage1",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+                }
+            }
+        }, 
+        {
+            "featureId" : "15",
+            "featureDisplaySeq" : "15",
+            "name" : "fault_code_type_2_count_per_usage1",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+                }
+            }
+        }, 
+        {
+            "featureId" : "16",
+            "featureDisplaySeq" : "16",
+            "name" : "fault_code_type_3_count_per_usage1",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+                }
+            }
+        }, 
+        {
+            "featureId" : "17",
+            "featureDisplaySeq" : "17",
+            "name" : "fault_code_type_4_count_per_usage1",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+                }
+            }
+        }, 
+        {
+            "featureId" : "18",
+            "featureDisplaySeq" : "18",
+            "name" : "problem_type_1_per_usage2",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+                }
+            }
+        }, 
+        {
+            "featureId" : "19",
+            "featureDisplaySeq" : "19",
+            "name" : "problem_type_2_per_usage2",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "encodingType" : "ONEHOT",
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+                }
+            }
+        }, 
+        {
+            "featureId" : "20",
+            "featureDisplaySeq" : "20",
+            "name" : "problem_type_3_per_usage2",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "encodingType" : "ONEHOT",
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+                }
+            }
+        }, 
+        {
+            "featureId" : "21",
+            "featureDisplaySeq" : "21",
+            "name" : "problem_type_4_per_usage2",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+                }
+            }
+        }, 
+        {
+            "featureId" : "22",
+            "featureDisplaySeq" : "22",
+            "name" : "fault_code_type_1_count_per_usage2",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+                }
+            }
+        }, 
+        {
+            "featureId" : "23",
+            "featureDisplaySeq" : "23",
+            "name" : "fault_code_type_2_count_per_usage2",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+                }
+            }
+        }, 
+        {
+            "featureId" : "24",
+            "featureDisplaySeq" : "24",
+            "name" : "fault_code_type_3_count_per_usage2",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+                }
+            }
+        }, 
+        {
+            "featureId" : "25",
+            "featureDisplaySeq" : "25",
+            "name" : "fault_code_type_4_count_per_usage2",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+                }
+            }
+        }, 
+        {
+            "featureId" : "26",
+            "featureDisplaySeq" : "26",
+            "name" : "problem_type_1",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+                }
+            }
+        }, 
+        {
+            "featureId" : "27",
+            "featureDisplaySeq" : "27",
+            "name" : "problem_type_2",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+                }
+            }
+        }, 
+        {
+            "featureId" : "28",
+            "featureDisplaySeq" : "28",
+            "name" : "problem_type_3",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+                }
+            }
+        }, 
+        {
+            "featureId" : "29",
+            "featureDisplaySeq" : "29",
+            "name" : "problem_type_4",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+                }
+            }
+        }, 
+        {
+            "featureId" : "30",
+            "featureDisplaySeq" : "30",
+            "name" : "usage_count_1",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+                }
+            }
+        }, 
+        {
+            "featureId" : "31",
+            "featureDisplaySeq" : "31",
+            "name" : "usage_count_2",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "encodingType" : "ONEHOT",
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+                }
+            }
+        }, 
+        {
+            "featureId" : "32",
+            "featureDisplaySeq" : "32",
+            "name" : "error_count_1",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+                }
+            }
+        }, 
+        {
+            "featureId" : "33",
+            "featureDisplaySeq" : "33",
+            "name" : "error_count_2",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+                }
+            }
+        }, 
+        {
+            "featureId" : "34",
+            "featureDisplaySeq" : "34",
+            "name" : "error_count_3",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+                }
+            }
+        }, 
+        {
+            "featureId" : "35",
+            "featureDisplaySeq" : "35",
+            "name" : "error_count_4",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+                }
+            }
+        }, 
+        {
+            "featureId" : "36",
+            "featureDisplaySeq" : "36",
+            "name" : "error_count_5",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+                }
+            }
+        }, 
+        {
+            "featureId" : "37",
+            "featureDisplaySeq" : "37",
+            "name" : "error_count_6",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+                }
+            }
+        }, 
+        {
+            "featureId" : "38",
+            "featureDisplaySeq" : "38",
+            "name" : "error_count_7",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "9e3e2bfc-02fb-11e7-93ae-92361f002671"
+                }
+            }
+        }, 
+        {
+            "featureId" : "39",
+            "featureDisplaySeq" : "39",
+            "name" : "date_month",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "encodingType" : "ONEHOT",
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+                }
+            }
+        }, 
+        {
+            "featureId" : "40",
+            "featureDisplaySeq" : "40",
+            "name" : "date_week",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "encodingType" : "ONEHOT",
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+                }
+            }
+        }, 
+        {
+            "featureId" : "41",
+            "featureDisplaySeq" : "41",
+            "name" : "date_day",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "encodingType" : "ONEHOT",
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "function",
+                    "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f67b4"
+                }
+            }
+        }, 
+        {
+            "featureId" : "42",
+            "featureDisplaySeq" : "42",
+            "name" : "deviceid",
+            "type" : "string",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "encodingType" : "ONEHOT",
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "simple"
+                },
+                "value" : "N0002"
+            }
+        }, 
+        {
+            "featureId" : "43",
+            "featureDisplaySeq" : "43",
+            "name" : "date",
+            "type" : "string",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0,
+            "encodingType" : "ONEHOT",
+            "imputeMethod" : {
+                "ref" : {
+                    "type" : "simple"
+                },
+                "value" : "12/08/2016"
+            }
+        }
+    ],
+    "customFlag" : "N",
+    "uuid" : "b6571479-c9a4-45aa-996a-33384d086f0e",
+    "version" : "1548942679",
+    "name" : "RLU Prediction - ANN",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
+        }
+    },
+    "createdOn" : ISODate("2019-01-31T13:51:19.000Z"),
+    "tags" : [],
+    "active" : "Y",
+    "locked" : "N",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz"
+            }
+        }
+    ]
+}

@@ -26,6 +26,7 @@ from keras.wrappers.scikit_learn import KerasClassifier, KerasRegressor
 import eli5
 from eli5.sklearn import PermutationImportance
 from keras.models import model_from_json
+from sklearn.model_selection import train_test_split
 
 
 print("Inside python script ")
@@ -89,10 +90,14 @@ testPercent=0.0
 output_result = dict() 
 outputResultPath=""
 numHiddenLayers=0
+encodingDetails=None
+imputationDetails=None
+saveTrainingSet=None
+
 
 # Iteration over all arguments:
-plist = ["nEpochs", "seed", "iterations", "learningRate", "optimizationAlgo", "weightInit", "updater", "momentum", "numInput", "numOutputs", "numHidden", "numLayers", "layerNames", "activation", "lossFunction", "sourceFilePath", "modelFilePath", "targetPath", "sourceDsType", "tableName", "operation", "url", "hostName", "dbName", "userName", "password", "query", "special_space_replacer", "port", "otherParams", "sourceHostName", "sourceDbName", "sourcePort", "sourceUserName", "sourcePassword", "targetHostName", "targetDbName" , "targetPort", "targetUserName", "targetPassword", "targetDsType", "targetTableName", "targetDriver", "testSetPath", "includeFeatures", "rowIdentifier",
-         "sourceAttrDetails", "featureAttrDetails", "sourceQuery", "inputSourceFileName", "trainPercent", "testPercent", "outputResultPath", "rowIdentifier", "numHiddenLayers"]
+plist = ["nEpochs", "seed", "iterations", "learningRate", "optimizationAlgo", "weightInit", "updater", "momentum", "numInput", "numOutputs", "numHidden", "numLayers", "layerNames", "activation", "lossFunction", "sourceFilePath", "modelFilePath", "targetPath", "sourceDsType", "tableName", "operation", "url", "hostName", "dbName", "userName", "password", "query", "special_space_replacer", "port", "otherParams", "sourceHostName", "sourceDbName", "sourcePort", "sourceUserName", "sourcePassword", "targetHostName", "targetDbName" , "targetPort", "targetUserName", "targetPassword", "targetDsType", "targetTableName", "targetDriver", "testSetPath", "includeFeatures", "rowIdentifier","sourceAttrDetails", "featureAttrDetails", "sourceQuery", "inputSourceFileName", "trainPercent", "testPercent",
+    "outputResultPath", "rowIdentifier", "numHiddenLayers", "encodingDetails", "imputationDetails", "saveTrainingSet"]
 
 i = 0
 for eachArg in sys.argv:
@@ -202,6 +207,15 @@ for value in input_config:
         
     if value == "testPercent":
         testPercent = input_config[value]
+     
+    if value == "encodingDetails":
+        encodingDetails = input_config[value]
+        
+    if value == "imputationDetails":
+        imputationDetails = input_config[value]
+        
+    if value == "saveTrainingSet":
+        saveTrainingSet = input_config[value]
 
 if otherParams != None:
     for value in otherParams:
@@ -292,7 +306,7 @@ if targetDsDetails != None:
 
 
 print()
-print("printing params:")
+print("printing ANN params:")
 print("nEpochs: ", nEpochs)
 print("seed: ", seed)
 print("iterations: ", iterations)
@@ -346,13 +360,18 @@ print("targetDbName: ", targetDbName)
 print("targetPort: ", targetPort)
 print("targetUserName: ", targetUserName)
 print("targetPassword: ", targetPassword)
+
+print("encodingDetails: ", encodingDetails)
+print("imputationDetails: ", imputationDetails)
+print("saveTrainingSet: ", saveTrainingSet)
 print()
 print()
 
 # Importing the dataset
 dataset = None
 def getData(csvPath, dsType, hostName, dbName, port, userName, password, sqlQuery):
-    print("inside method getData() >>>>>>>>> dsType : hostName : dbName : port : userName : password :: "+dsType+" : "+hostName+" : "+dbName+" : "+port+" : "+userName+" : "+password)
+    print("inside method getData()")
+    print("dsType : hostName : dbName : port : userName : password <<<<< >>>>> ", dsType, " : ", hostName, " : ", dbName, " : ", port, " : ", userName, " : ", password)
     if dsType == "file":
         dataset = pd.read_csv(csvPath)
         return dataset
@@ -390,7 +409,7 @@ def getData(csvPath, dsType, hostName, dbName, port, userName, password, sqlQuer
         connection = hive.Connection(host=hostName, port=port, auth='NONE', username=userName, database=dbName)
         print("connected to hive...")
         dataset = pd.read_sql(sqlQuery, con=connection)
-        sparkSession = SparkSession.builder.appName('pandasToSparkDF').getOrCreate()
+        sparkSession = getSparkSession()
         
         # import pyhs2
         # conn = pyhs2.connect(host=hostName, port=port, authMechanism="PLAIN", user=userName, password=password, database=dbName)
@@ -428,6 +447,9 @@ def getData(csvPath, dsType, hostName, dbName, port, userName, password, sqlQuer
         #    cur.execute('SHOW TABLES')
         #    cur.fetchall()
         
+def getSparkSession():
+    return SparkSession.builder.appName('spark_ann').getOrCreate()
+        
 def addIndexToSparkDf(spark_df: DataFrame):
     from pyspark.sql.window import Window
     from pyspark.sql.functions import row_number
@@ -442,7 +464,7 @@ def joinSparkDfByIndex(dfLHS, dfRHS):
     return joined_df
 
 def createSparkDfByPandasDfAndSparkSchema(pd_df, schema):  
-    sparkSession = SparkSession.builder.appName('pandasToSparkDF').getOrCreate()
+    sparkSession = getSparkSession()
     spark_df = sparkSession.createDataFrame(pd_df, schema)
     return spark_df
 
@@ -478,7 +500,7 @@ def generatePredictStatus(spark_df: DataFrame):
     from pyspark.sql.types import StructType, StructField, StringType
     
     schema = StructType([StructField("prediction_status", StringType(), True)])
-    sparkSession = SparkSession.builder.appName('pandasToSparkDF').getOrCreate()
+    sparkSession = getSparkSession()
     mapped_row = spark_df.rdd.map(lambda x: Row(prepareStatus(x[1], x[2])))
     prediction_status_df = sparkSession.createDataFrame(mapped_row, schema)
     
@@ -527,15 +549,60 @@ def model():
     
     return classifier
     
+#encode data
+def encodeData(encodingDataset, encodingDetailsList):
+    print("Encoding dataset: ")
+    for val in encodingDetailsList:
+        print("column : value", "<<<<< >>>>>", val, " : ", encodingDetailsList[val])
+        oneHot = None
+        if encodingDetailsList[val] == "ONEHOT":
+            catenc = pd.factorize(encodingDataset[val])
+            encodingDataset = encodingDataset.drop(val, axis = 1)
+            encodingDataset[val] = catenc[0]
+            
+    return encodingDataset            
+    
+def imputeData(imputationDataset, imputationDetailsList):
+    print("Imputing dataset: ")
+    for val in imputationDetailsList:
+        print("column : value", "<<<<< >>>>>", val, " : ", imputationDetailsList[val])
+        # imputationDataset.loc[imputationDataset[val].isnull(),val] = imputationDetailsList[val]
+        imputationDataset[val].fillna(imputationDetailsList[val], inplace=True)
+            
+    return  imputationDataset       
+    
 #train operation
 def train():
     # Encoding categorical data
     dataset = getData(sourceFilePath, sourceDsType, sourceHostName, sourceDbName, sourcePort, sourceUserName, sourcePassword, query)
     
+    if saveTrainingSet == "Y":
+        X = dataset.iloc[:, 1:]
+        X_train, X_test = train_test_split(X, test_size = testPercent, random_state = 0)
+        schema = getSparkSchemaByDtypes(X_train.dtypes)
+        spark_df = createSparkDfByPandasDfAndSparkSchema(X_train, schema)
+        saveSparkDf(spark_df, otherParams["trainSetPath"])
+        print("trainingset saved at: ", otherParams["trainSetPath"])
+        spark_df = None
+        schema = None
+        X_train = None
+        X_test = None
+        X = None
+    
+    if imputationDetails != None:
+        dataset = imputeData(dataset, imputationDetails)
+        print("data after imputation:")
+        print(dataset)
+        
+    if(encodingDetails != None):
+        dataset = encodeData(dataset, encodingDetails).astype(dtype='float64', copy=True, errors='ignore') 
+        print("data after encoding: ")
+        print(dataset)
+    
     print("total_size: ", len(dataset))    
     output_result["total_size"]=len(dataset)
     
-    from sklearn.preprocessing import LabelEncoder, OneHotEncoder
+    from sklearn.preprocessing import LabelEncoder
     labelencoder_X_1 = LabelEncoder()
     dataset.iloc[0] = labelencoder_X_1.fit_transform(dataset.iloc[0])
     print('label encoding done')
@@ -546,7 +613,6 @@ def train():
     print(y)
     
     # Splitting the dataset into the Training set and Test set
-    from sklearn.model_selection import train_test_split
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = testPercent, random_state = 0)
     
     # Feature Scaling
@@ -554,7 +620,7 @@ def train():
     sc = StandardScaler()
     X_train = sc.fit_transform(X_train)
     X_test = sc.transform(X_test)
-        
+    
     print("train_size: ", len(X_train))
     print("test_size: ", len(X_test))
     
@@ -712,6 +778,17 @@ def predict():
     # Importing the dataset
     #    dataset = pd.read_csv(sourceFilePath)
     dataset2 = getData(sourceFilePath, sourceDsType, sourceHostName, sourceDbName, sourcePort, sourceUserName, sourcePassword, query)
+    
+    if imputationDetails != None:
+        dataset2 = imputeData(dataset2, imputationDetails)
+        print("data after imputation:")
+        print(dataset2)
+        
+    # dataset = dataset.iloc[:, 1:].fillna(0.0)
+    if(encodingDetails != None):
+        dataset2 = encodeData(dataset2, encodingDetails).astype(dtype='float64', copy=True, errors='ignore')
+        print("data after encoding:")
+        print(dataset2)
     
     print("predict dataset size: ", len(dataset2))
     

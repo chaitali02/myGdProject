@@ -40,7 +40,7 @@
     "value": null
   },
   "type": "usa-map",
-  "limit": null,
+  "limit": -1,
   "keys": [
     {
       "ref": {

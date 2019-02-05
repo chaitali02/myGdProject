@@ -466,6 +466,31 @@
                                                 </div>
                                                 <div class="tools">
                                                 </div>
+                                                <div class="actions" style="position:relative;">
+                                                    <a class="btn green-haze btn-outline btn-circle auto-map btn-sm" ng-disabled="fitlerAttrTableSelectedItem.length ==1 && filterTableArray.length >1 ?false:true"
+                                                        href="javascript:;" data-toggle="dropdown" tooltip-placement="left" uib-tooltip="Move" data-hover="dropdown"
+                                                        data-close-others="true" aria-expanded="false">
+                                                        <span class="fa fa-arrows" aria-hidden="true"></span>
+                                                        <i class="fa fa-angle-down"></i>
+                                                    </a>
+                                                    <ul class="dropdown-menu pull-right" style="z-index:10000;top:28px;right:45px;position:absolute">
+                                                        <li ng-click="autoMove(0,'filterAttr')">
+                                                        <a href="javascript:;" ng-disabled="fitlerAttrTableSelectedItem[0]==0?true:false">Top</a>
+                                                        </li>
+                                                        <li class="divider" style="margin: 0px;"> </li>
+                                                        <li ng-click="autoMove(filterTableArray.length-1,'filterAttr')">
+                                                        <a href="javascript:;" ng-disabled="fitlerAttrTableSelectedItem[0]==filterTableArray.length-1 ? true:false">Bottom</a>
+                                                        </li>
+                                                        <li class="divider" style="margin: 0px;"> </li>
+                                                        <li>
+                                                        <div class="form-group" style="margin: 1%;">
+                                                            <input type="number" class="form-control" ng-if="fitlerAttrTableSelectedItem.length == 1" ng-model="moveTo" min="0" max="{{filterTableArray.length}}"
+                                                            name="moveto" style="border:0" placeholder="Move To" ng-model-options="{debounce:3000}"
+                                                            ng-change="autoMoveTo(moveTo,'filterAttr')" focus-me="true" required />
+                                                        </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
                                             </div>
                                             <div class="portlet-body form">
                                                 <div class="x_title" style="padding:10px;">
@@ -499,7 +524,7 @@
                                                             <tr ng-repeat="tabledata in filterTableArray" drag-drop draggable="{{isDragable}}" after-drop="onFilterDrop">
                                                                 <td class="chek" style="text-align:center;Vertical-align:middle;" ng-mouseenter="onMouseEnter()" ng-mouseleave="onMouseLeave()">
                                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                        <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" />
+                                                                        <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" ng-change="onChangeFilterAttRow($index,tabledata.selected)"/>
                                                                     </span>
                                                                 </td>
 
@@ -734,7 +759,7 @@
                                                         <div  style="float:right;" ng-if="selectedSourceType =='FILE' || selectedTargetType =='FILE' ">
                                                             <label>Auto Map</label>
                                                             <select class="form-control input-inline" data-ng-model="$parent.selectedAutoMode" ng-options="r  for r in allAutoMapFile"
-                                                                ng-disabled="{{mode}}" ng-change="onChangeAutoMode()">
+                                                                ng-disabled="{{mode}}||(selectedSourceType =='FILE' && selectedTargetType =='FILE' )" ng-change="onChangeAutoMode()">
                                                                 <option value="">-select-</option>
                                                             </select>
                                                         </div>

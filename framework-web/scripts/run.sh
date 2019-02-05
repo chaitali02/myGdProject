@@ -1,10 +1,13 @@
 ./install_application.sh localhost refresh ../app/admin/meta
+./install_application.sh localhost append ../app/admin/aptiva
+./install_application.sh localhost append ../app/admin/dot
+./install_application.sh localhost append ../app/admin/mufg
 ./install_application.sh localhost append ../app/edw/meta
-./install_application.sh localhost append ../app/fraud/meta
+./install_application.sh localhost append ../app/ccfraud/meta
 ./install_application.sh localhost append ../app/ecocap/meta
 ./install_application.sh localhost append ../app/aml/meta
-./install_application.sh localhost append ../app/dot/meta
-./install_application.sh localhost append ../app/predictivem/meta
+./install_application.sh localhost append ../app/predmaint/meta
+./install_application.sh localhost append ../app/sanctions/meta
 ./update_createdOn.sh localhost
 rm -r /user/hive/warehouse/framework/*
 mkdir -p /user/hive/warehouse/framework/data/

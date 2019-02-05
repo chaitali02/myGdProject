@@ -22,11 +22,35 @@ public class User extends BaseEntity
 	private String middleName;
 	private String lastName;
 	private String emailId;
-	private String password;
-	
+	private String password;	
 	private List<MetaIdentifierHolder> groupInfo = new ArrayList<>();
 	/*private List<MetaIdentifierHolder> roleInfo = new ArrayList<>();*/
+	private MetaIdentifierHolder defaultGroup;
+	private MetaIdentifierHolder orgInfo;
+	/**
+	 * @Ganesh
+	 *
+	 * @return the defaultGroup
+	 */
 	
+	public MetaIdentifierHolder getDefaultGroup() {
+		return defaultGroup;
+	}
+	
+	/**
+	 * @Ganesh
+	 *
+	 * @param defaultGroup the defaultGroup to set
+	 */
+	public void setDefaultGroup(MetaIdentifierHolder defaultGroup) {
+		this.defaultGroup = defaultGroup;
+	}
+	public MetaIdentifierHolder getOrgInfo() {
+		return orgInfo;
+	}
+	public void setOrgInfo(MetaIdentifierHolder orgInfo) {
+		this.orgInfo = orgInfo;
+	}
 	public List<MetaIdentifierHolder> getGroupInfo() {
 		return groupInfo;
 	}

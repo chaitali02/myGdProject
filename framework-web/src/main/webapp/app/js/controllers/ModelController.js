@@ -3,7 +3,7 @@
  */
 DatascienceModule = angular.module('DatascienceModule');
 
-DatascienceModule.controller('CreateModelController', function($state,$stateParams, $rootScope, $scope, $sessionStorage, $timeout, $filter, ModelService,$http,$location,$anchorScroll,privilegeSvc,CommonService) {
+DatascienceModule.controller('CreateModelController', function($state, $stateParams, $rootScope, $scope, $sessionStorage, $timeout, $filter, ModelService, $http, $location, $anchorScroll, privilegeSvc, CommonService, CommonFactory,CF_ENCODINGTYPE) {
   $scope.featuureType=["integer","string","double"];
   $scope.mode = "false";
 
@@ -54,6 +54,7 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
   $scope.model.versions = [];
   $scope.isshowmodel = false;
   //$scope.SourceTypes = ["datapod", "dataset"];
+  $scope.imputeTypes=["custom","function"];
   $scope.dependsOnType= ["algorithm", "formula"];
   $scope.selectedDependsOnType=$scope.dependsOnType[0];
   $scope.type = ["string", "double", "date"];
@@ -66,7 +67,8 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
   $scope.backCount;
   $scope.isLabelDisable = true;
   $scope.isDependencyShow = false;
-  
+  $scope.encodingTypes=CF_ENCODINGTYPE.encodingType;//["ORDINAL", "ONEHOT", "BINARY", "BASEN","HASHING"];
+
   var notify = {
     type: 'success',
     title: 'Success',
@@ -177,7 +179,35 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
     }
     $scope.onChangeDependsOnType(true);
 
+  }  
+  
+  $scope.isDublication = function (arr, field, index, name) {
+		var res = -1;
+		for (var i = 0; i < arr.length ; i++) {
+			if (arr[i][field] == arr[index][field] && i != index) {
+			    $scope.myform2[name].$invalid = true;
+				  res = i;
+				  break
+      } 
+      else {
+				$scope.myform2[name].$invalid = false;	
+			}
+		}
+		return res;
   }
+  
+  $scope.onChangeFeatureName = function (index) {
+      if ($scope.featureTableArray[index].name) {
+        var res = $scope.isDublication($scope.featureTableArray, "name", index, "featureName" + index);
+        if (res != -1) {
+          $scope.isDuplication = true;
+        } else {
+          $scope.isDuplication = false;
+        }
+      }
+    //	console.log($scope.myform3)
+  
+    }
 
   // $scope.onChageTrainPercent=function(){
   //   $scope.modeldata.valPercent=100-$scope.modeldata.trainPercent;
@@ -206,8 +236,15 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
     var len = $scope.featureTableArray.length + 1
     var feature= {};
     feature.featureId="1";
-    feature.id = len - 1;
-    feature.name = "";
+    var temLen=len-1;
+    
+    if($scope.featureTableArray.length ==0){
+      feature.id = $scope.featureTableArray.length ;//len - 1;
+		}else{
+      feature.id =CommonFactory.getMaxSourceSeqId($scope.featureTableArray,"id")+1;
+		}
+   
+    feature.name = "feature"+len;
     feature.type =  $scope.featuureType[0];
     feature.desc = "";
     feature.minVal = "";
@@ -215,6 +252,9 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
     feature.paramListInfo={};
     $scope.featureTableArray.splice($scope.featureTableArray.length, 0, feature);
     $scope.focusRow(len-1)
+    // setTimeout(function(){
+    //   $scope.myform2["featureName"+temLen].$invalid = false;
+    // });
   }
   $scope.ondrop = function(e) {
 		console.log(e);
@@ -241,6 +281,7 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
     angular.forEach($scope.featureTableArray, function(selected) {
       if (!selected.selected) {
         newDataList.push(selected);
+        $scope.attrTableSelectedItem=[];
       }
     });
     $scope.featureTableArray = newDataList;
@@ -389,6 +430,31 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
   }
   }*/
   
+  $scope.getFunctionByCategory=function(){
+    ModelService.getFunctionByCategory("function","aggregate").then(function(response) { onSuccessGetFunctionByCategory(response.data)});
+    var onSuccessGetFunctionByCategory = function(response) {
+     $scope.allFunction=response
+    }
+  }
+  $scope.onChangeInputeType=function(index,imputeType){
+    if(imputeType=="default"){
+      $scope.featureTableArray[index].imputeMethod.isModelShow=true;
+      $scope.featureTableArray[index].imputeMethod.isSimpleShow=false;
+      $scope.featureTableArray[index].imputeMethod.isFunctionShow=false;
+    }
+    else if(imputeType=="custom"){
+      $scope.featureTableArray[index].imputeMethod.isModelShow=false;
+      $scope.featureTableArray[index].imputeMethod.isSimpleShow=true;
+      $scope.featureTableArray[index].imputeMethod.isFunctionShow=false;
+    }
+    else if(imputeType=="function"){
+      $scope.featureTableArray[index].imputeMethod.isModelShow=false;
+      $scope.featureTableArray[index].imputeMethod.isSimpleShow=false;
+      $scope.featureTableArray[index].imputeMethod.isFunctionShow=true;
+      $scope.getFunctionByCategory();
+    }
+  }
+
   $scope.getModelScript=function(uuid,version){
     ModelService.getModelScript(uuid,version).then(function(response) {onGetModelScript(response)});
     var onGetModelScript = function(response) {
@@ -475,22 +541,45 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
         $scope.featureTableArray=[];
         for(var i=0;i< $scope.modeldata.features.length;i++){
           var featureObj={};
+          var imputeMethod={};
           featureObj.featureId=$scope.modeldata.features[i].featureId;
-          featureObj.id=$scope.modeldata.features[i].featureId;
-          featureObj.name=$scope.modeldata.features[i].name
-          featureObj.type=$scope.modeldata.features[i].type
-          featureObj.desc=$scope.modeldata.features[i].desc
+          featureObj.id=parseInt($scope.modeldata.features[i].featureId);
+          featureObj.name=$scope.modeldata.features[i].name;
+          featureObj.type=$scope.modeldata.features[i].type;
+          featureObj.desc=$scope.modeldata.features[i].desc;
+          featureObj.encodingType=$scope.modeldata.features[i].encodingType;
           featureObj.minVal=$scope.modeldata.features[i].type =="string"?"":$scope.modeldata.features[i].minVal
           featureObj.maxVal=$scope.modeldata.features[i].type =="string"?"":$scope.modeldata.features[i].maxVal
           featureObj.defaultValue=$scope.modeldata.features[i].defaultValue;
           featureObj.isMinMaxDiabled=$scope.modeldata.features[i].type=="string"?true:false;
+          if(response.features[i].imputeMethod !=null){
+            if(response.features[i].imputeMethod.ref.type =="simple"){
+              imputeMethod.imputeType="custom";
+              imputeMethod.imputeValue=response.features[i].imputeMethod.value;
+              imputeMethod.isSimpleShow=true;
+              imputeMethod.isFunctionShow=false;
+            }
+            else if(response.features[i].imputeMethod.ref.type =="function"){
+              imputeMethod.imputeType="function";
+              imputeMethod.isSimpleShow=false;
+              imputeMethod.isFunctionShow=true;
+              $scope.getFunctionByCategory();
+              var selectedFunction={};
+              selectedFunction.uuid = response.features[i].imputeMethod.ref.uuid;
+              selectedFunction.type = response.features[i].imputeMethod.ref.type;
+              imputeMethod.selectedFunction=selectedFunction;
+            }
+            featureObj.imputeMethod=imputeMethod;
+          }
           if($scope.selectedDependsOnType== "formula" && $scope.modeldata.features[i].paramListInfo !=null){
             var paramListInfo={};
             paramListInfo.uuid=$scope.modeldata.features[i].paramListInfo.ref.uuid;
             paramListInfo.name=$scope.modeldata.features[i].paramListInfo.ref.name;
             paramListInfo.paramId=$scope.modeldata.features[i].paramListInfo.paramId;
             featureObj.paramListInfo=paramListInfo;
-          } 
+          }
+          
+          
           $scope.featureTableArray[i]=featureObj; 
         }
        
@@ -562,14 +651,36 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
         $scope.featureTableArray=[];
         for(var i=0;i< $scope.modeldata.features.length;i++){
           var featureObj={};
-          featureObj.featureId=$scope.modeldata.features[i].featureId
-          featureObj.name=$scope.modeldata.features[i].name
-          featureObj.type=$scope.modeldata.features[i].type
-          featureObj.desc=$scope.modeldata.features[i].desc
+          featureObj.featureId=$scope.modeldata.features[i].featureId;
+          featureObj.id=parseInt($scope.modeldata.features[i].featureId);
+          featureObj.name=$scope.modeldata.features[i].name;
+          featureObj.type=$scope.modeldata.features[i].type;
+          featureObj.desc=$scope.modeldata.features[i].desc;
+          featureObj.encodingType= $scope.modeldata.features[i].encodingType;
           featureObj.minVal=$scope.modeldata.features[i].type =="string"?"":$scope.modeldata.features[i].minVal
           featureObj.maxVal=$scope.modeldata.features[i].type =="string"?"":$scope.modeldata.features[i].maxVal
           featureObj.defaultValue=$scope.modeldata.features[i].defaultValue;
           featureObj.isMinMaxDiabled=$scope.modeldata.features[i].type =="string"?true:false;
+          if(response.features[i].imputeMethod !=null){
+            if(response.features[i].imputeMethod.ref.type =="simple"){
+              imputeMethod.imputeType="custom";
+              imputeMethod.imputeValue=response.features[i].imputeMethod.value;
+              imputeMethod.isSimpleShow=true;
+              imputeMethod.isFunctionShow=false;
+            }
+            else if(response.features[i].imputeMethod.ref.type =="function"){
+              imputeMethod.imputeType="function";
+              imputeMethod.isSimpleShow=false;
+              imputeMethod.isFunctionShow=true;
+              $scope.getFunctionByCategory();
+              var selectedFunction={};
+              selectedFunction.uuid = response.features[i].imputeMethod.ref.uuid;
+              selectedFunction.type = response.features[i].imputeMethod.ref.type;
+              imputeMethod.selectedFunction=selectedFunction;
+            }
+            featureObj.imputeMethod=imputeMethod;
+  
+          }
           if($scope.selectedDependsOnType== "formula" &&  $scope.modeldata.features[i].paramListInfo){
             var paramListInfo={};
             paramListInfo.uuid=$scope.modeldata.features[i].paramListInfo.ref.uuid;
@@ -664,11 +775,14 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
       if($scope.featureTableArray.length >0){
         for(var i=0;i< $scope.featureTableArray.length;i++){
         var featureObj={};
+        var imputeMethod={};
+        var imputeMethodRef={};
         featureObj.featureId =$scope.featureTableArray[i].id;
 			  featureObj.featureDisplaySeq = i;
-        featureObj.name=$scope.featureTableArray[i].name
-        featureObj.type=$scope.featureTableArray[i].type
-        featureObj.desc=$scope.featureTableArray[i].desc
+        featureObj.name=$scope.featureTableArray[i].name;
+        featureObj.type=$scope.featureTableArray[i].type;
+        featureObj.desc=$scope.featureTableArray[i].desc;
+        featureObj.encodingType= $scope.featureTableArray[i].encodingType;
         featureObj.minVal=$scope.featureTableArray[i].type =="string"?"":$scope.featureTableArray[i].minVal
         featureObj.maxVal=$scope.featureTableArray[i].type =="string"?"":$scope.featureTableArray[i].maxVal
         featureObj.defaultValue=$scope.featureTableArray[i].defaultValue;
@@ -683,6 +797,21 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
         }else{
           //featureObj.paramListInfo=null
         }
+        if($scope.featureTableArray[i].imputeMethod){
+          if($scope.featureTableArray[i].imputeMethod.imputeType =="function"){
+            imputeMethodRef.type="function";
+            imputeMethodRef.uuid = $scope.featureTableArray[i].imputeMethod.selectedFunction.uuid;
+            imputeMethod.ref = imputeMethodRef;
+            featureObj.imputeMethod=imputeMethod;
+          }
+          else{
+            imputeMethodRef.type="simple";
+            imputeMethod.ref = imputeMethodRef;
+            imputeMethod.value = $scope.featureTableArray[i].imputeMethod.imputeValue;
+            featureObj.imputeMethod=imputeMethod;
+          }
+        }
+        
         featureArray[i]=featureObj;
       }
 
@@ -747,6 +876,36 @@ DatascienceModule.controller('CreateModelController', function($state,$statePara
     $scope.isshowmodel = sessionStorage.isshowmodel
   };
 
+  $scope.attrTableSelectedItem=[];
+	$scope.onChangeAttrRow=function(index,status){
+		if(status ==true){
+			$scope.attrTableSelectedItem.push(index);
+		}
+		else{
+			let tempIndex=$scope.attrTableSelectedItem.indexOf(index);
+
+			if(tempIndex !=-1){
+				$scope.attrTableSelectedItem.splice(tempIndex, 1);
+
+			}
+		}	
+	}
+	$scope.autoMove=function(index){
+		var tempAtrr=$scope.featureTableArray[$scope.attrTableSelectedItem[0]];
+		$scope.featureTableArray.splice($scope.attrTableSelectedItem[0],1);
+		$scope.featureTableArray.splice(index,0,tempAtrr);
+		$scope.attrTableSelectedItem=[];
+		$scope.featureTableArray[index].selected=false;
+	
+	}
+
+	$scope.autoMoveTo=function(index){
+		if(index <= $scope.featureTableArray.length){
+			$scope.autoMove(index-1,'mapAttr');
+			$scope.moveTo=null;
+			$(".actions").removeClass("open");
+		}
+	}
 
 }); //End CreateModelController
 

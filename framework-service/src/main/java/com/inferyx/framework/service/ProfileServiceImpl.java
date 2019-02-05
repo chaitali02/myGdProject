@@ -45,7 +45,6 @@ import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.common.ProfileInfo;
 import com.inferyx.framework.dao.IProfileDao;
 import com.inferyx.framework.dao.IProfileExecDao;
@@ -98,8 +97,6 @@ public class ProfileServiceImpl extends RuleTemplate {
 	ApplicationServiceImpl applicationServiceImpl;
 	@Autowired
 	RegisterService registerService;
-	@Autowired
-	MetadataUtil daoRegister;
 	@Autowired
 	HDFSInfo hdfsInfo;
 	@Autowired
@@ -560,8 +557,8 @@ public class ProfileServiceImpl extends RuleTemplate {
 //			}
 			profileExec.setExec(unionSql);
 			synchronized (profileExec.getUuid()) {
-				ProfileExec profileExec1 = (ProfileExec) daoRegister.getRefObject(
-						new MetaIdentifier(MetaType.profileExec, profileExec.getUuid(), profileExec.getVersion()));
+//				ProfileExec profileExec1 = (ProfileExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.profileExec, profileExec.getUuid(), profileExec.getVersion()));
+				ProfileExec profileExec1 = (ProfileExec) commonServiceImpl.getOneByUuidAndVersion(profileExec.getUuid(), profileExec.getVersion(), MetaType.profileExec.toString(), "N");
 				profileExec1.setExec(profileExec.getExec());
 				iProfileExecDao.save(profileExec1);
 			}
@@ -589,8 +586,9 @@ public class ProfileServiceImpl extends RuleTemplate {
 			BaseRuleExec baseRuleExec, MetaIdentifier datapodKey,
 			List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
 		try {
-			Datapod targetDatapod = (Datapod) daoRegister
-					.getRefObject(new MetaIdentifier(MetaType.datapod, profileInfo.getProfileTargetUUID(), null));
+//			Datapod targetDatapod = (Datapod) daoRegister.getRefObject(new MetaIdentifier(MetaType.datapod, profileInfo.getProfileTargetUUID(), null));
+			Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(profileInfo.getProfileTargetUUID(), null, MetaType.datapod.toString(), "N");
+			
 			MetaIdentifier targetDatapodKey = new MetaIdentifier(MetaType.datapod, targetDatapod.getUuid(),
 					targetDatapod.getVersion());
 			return super.execute(MetaType.profile, MetaType.profileExec, metaExecutor, baseRuleExec,

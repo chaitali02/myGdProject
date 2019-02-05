@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testResults version="1.2">
-<httpSample t="119" lt="119" ts="1502274881945" s="true" lb="rulegroupexec" rc="200" rm="OK" tn="getRuleExecByRGExec 6-1" dt="text" by="4490"/>
-<httpSample t="98" lt="98" ts="1502274882066" s="true" lb="rulegroupexec" rc="200" rm="OK" tn="getRuleExecByRGExec 6-1" dt="text" by="4490"/>
-<httpSample t="91" lt="91" ts="1502274882166" s="true" lb="rulegroupexec" rc="200" rm="OK" tn="getRuleExecByRGExec 6-1" dt="text" by="4491"/>
-<httpSample t="55" lt="55" ts="1502274882258" s="true" lb="rulegroupexec" rc="200" rm="OK" tn="getRuleExecByRGExec 6-1" dt="text" by="4489"/>
-<httpSample t="45" lt="45" ts="1502274882314" s="true" lb="rulegroupexec" rc="200" rm="OK" tn="getRuleExecByRGExec 6-1" dt="text" by="4489"/>
-
-</testResults>

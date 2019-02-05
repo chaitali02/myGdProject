@@ -38,6 +38,7 @@ import com.inferyx.framework.dao.IActivityDao;
 import com.inferyx.framework.dao.ISessionDao;
 import com.inferyx.framework.dao.IUserDao;
 import com.inferyx.framework.domain.Activity;
+import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.Group;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
@@ -343,9 +344,13 @@ public class SessionServiceImpl {
 			// Set default app and role
 			sessionContext.setAppInfo(userDO.getAppInfo().get(0));
 			List<MetaIdentifierHolder> roleInfoList = new ArrayList<>();
-			Group group = (Group) commonServiceImpl.getOneByUuidAndVersion(userDO.getGroupInfo().get(0).getRef().getUuid(), userDO.getGroupInfo().get(0).getRef().getVersion(), MetaType.group.toString());
+			Group group = (Group) commonServiceImpl.getOneByUuidAndVersion(userDO.getGroupInfo().get(0).getRef().getUuid(), userDO.getGroupInfo().get(0).getRef().getVersion(), MetaType.group.toString(), "N");
 			sessionContext.setRoleInfo(group.getRoleId());
 	
+			//setting orgInfo
+			Application application = (Application) commonServiceImpl.getOneByUuidAndVersion(userDO.getAppInfo().get(0).getRef().getUuid(), userDO.getAppInfo().get(0).getRef().getVersion(), MetaType.application.toString(), "N");
+			sessionContext.setOrgInfo(application.getOrgInfo());
+			
 			ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 			HttpSession session = requestAttributes.getRequest().getSession(true);
 				

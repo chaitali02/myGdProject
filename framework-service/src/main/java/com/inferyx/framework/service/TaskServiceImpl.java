@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DagExec;
@@ -286,17 +285,7 @@ public class TaskServiceImpl implements Callable<String> {
 
 	public void setDatasourceFactory(DataSourceFactory datasourceFactory) {
 		this.datasourceFactory = datasourceFactory;
-	}
-
-	public MetadataUtil getDaoRegister() {
-		return daoRegister;
-	}
-
-	public void setDaoRegister(MetadataUtil daoRegister) {
-		this.daoRegister = daoRegister;
-	}
-
-	private MetadataUtil daoRegister;		
+	}		
 		
 	public CustomOperatorServiceImpl getOperatorServiceImpl() {
 		return operatorServiceImpl;
@@ -643,7 +632,9 @@ public class TaskServiceImpl implements Callable<String> {
 		if(operatorInfo.get(0).getRef()!=null && operatorInfo.get(0).getRef().getType().equals(MetaType.load)){
 			try {
 				Load load = (Load) commonServiceImpl.getOneByUuidAndVersion(operator.getOperatorInfo().get(0).getRef().getUuid(), operator.getOperatorInfo().get(0).getRef().getVersion(), MetaType.load.toString());
-				LoadExec loadExec = (LoadExec) daoRegister.getRefObject(dagExecServiceImpl.getTaskExec(dagExecUUID, dagExecVer, stageId, taskId).getOperators().get(0).getOperatorInfo().get(0).getRef());
+//				LoadExec loadExec = (LoadExec) daoRegister.getRefObject(dagExecServiceImpl.getTaskExec(dagExecUUID, dagExecVer, stageId, taskId).getOperators().get(0).getOperatorInfo().get(0).getRef());
+				MetaIdentifier ref = dagExecServiceImpl.getTaskExec(dagExecUUID, dagExecVer, stageId, taskId).getOperators().get(0).getOperatorInfo().get(0).getRef();
+				LoadExec loadExec = (LoadExec) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 //				Datasource datasource = commonServiceImpl.getDatasourceByApp();
 				MetaIdentifier targetMI = load.getTarget().getRef();
 				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetMI.getUuid(), targetMI.getVersion(), targetMI.getType().toString());
@@ -663,7 +654,9 @@ public class TaskServiceImpl implements Callable<String> {
 
 		} else if (operatorInfo.get(0).getRef()!=null && operatorInfo.get(0).getRef().getType().equals(MetaType.map)) {
 			try {
-				MapExec mapExec = (MapExec) daoRegister.getRefObject(dagExecServiceImpl.getTaskExec(dagExecUUID, dagExecVer, stageId, taskId).getOperators().get(0).getOperatorInfo().get(0).getRef());
+//				MapExec mapExec = (MapExec) daoRegister.getRefObject(dagExecServiceImpl.getTaskExec(dagExecUUID, dagExecVer, stageId, taskId).getOperators().get(0).getOperatorInfo().get(0).getRef());
+				MetaIdentifier ref = dagExecServiceImpl.getTaskExec(dagExecUUID, dagExecVer, stageId, taskId).getOperators().get(0).getOperatorInfo().get(0).getRef();
+				MapExec mapExec = (MapExec) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 				mapServiceImpl.executeSql(mapExec, datapodKey, runMode);
 			} catch (Exception e) {
 				e.printStackTrace();

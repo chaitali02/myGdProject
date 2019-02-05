@@ -98,6 +98,22 @@ InferyxApp.constant('CF_DOWNLOAD',{
     formate:["excel"],
 });
 
+InferyxApp.constant('CF_GRID',{
+    framework_autopopulate_grid:200,
+   
+});
+
+InferyxApp.constant('CF_ENCODINGTYPE',{
+    encodingType:["ORDINAL", "ONEHOT", "BINARY", "BASEN","HASHING"]
+});
+
+
+InferyxApp.constant("CF_ORGANIZATION",{
+    contactTitle:["Owner","Partner","Manager","Director","President","Vice-President","Associate","Other"],
+    phoneType:["home","business","mobile","fax","other","number"],
+    emailType:["personal","business","other"],
+    addressType:["home","business","other"]
+});
 
 InferyxApp.constant("CF_FILTER",{
 	operator :[{"caption":"EQUAL (=)","value":"="},{"caption":" NOT EQUAL (!=)","value":"!="},

@@ -52,6 +52,7 @@
               <a ng-disabled="privileges.indexOf('Add') == -1" ng-click="addMode()" ng-hide="isExec || isJobExec" class="btn btn-default btn-sm">
                 <i class="fa fa-plus"></i> Add </a>
             </div>
+           
             <div class="tools" ng-show="isExec || isJobExec">
               <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip ng-click="refreshSearchResults()">
                 <i class="fa fa-refresh" aria-hidden="true" style="display:block;margin: 2px auto;color:white;">
@@ -68,7 +69,9 @@
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                   </button>
-                  <h4 class="modal-title">Confirm</h4>
+                  <!-- <h4 class="modal-title">Confirm</h4> -->
+                  <h4 class="modal-title" title="{{exeDetail.name}}"style="overflow: hidden;white-space:nowrap;max-width:230px;margin-bottom:-4px;
+                  text-overflow:ellipsis;">{{objDetail.name}}</h4>
                 </div>
                 <div class="modal-body"> Execute
                   <span style="text-transform: capitalize">{{caption}}</span> ?
@@ -87,7 +90,9 @@
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                   </button>
-                  <h4 class="modal-title">Confirm</h4>
+                  <!-- <h4 class="modal-title">Confirm</h4> -->
+                  <h4 class="modal-title" title="{{objDetail.name}}"style="overflow: hidden;white-space:nowrap;max-width:230px;margin-bottom:-4px;
+                  text-overflow:ellipsis;">{{objDetail.name}}</h4>
                 </div>
                 <div class="modal-body"> {{publishModalMsg}}
                   <span style="text-transform: capitalize">{{caption}}</span> ?</div>
@@ -104,7 +109,9 @@
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                   </button>
-                  <h4 class="modal-title">Confirm</h4>
+                  <!-- <h4 class="modal-title">Confirm</h4> -->
+                  <h4 class="modal-title" title="{{objDetail.name}}"style="overflow: hidden;white-space:nowrap;max-width:230px;margin-bottom:-4px;
+                  text-overflow:ellipsis;">{{objDetail.name}}</h4>
                 </div>
                 <div class="modal-body"> {{lockModalMsg}}
                   <span style="text-transform: capitalize">{{caption}}</span> ?</div>
@@ -122,7 +129,9 @@
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                   </button>
-                  <h4 class="modal-title">Confirm</h4>
+                  <!-- <h4 class="modal-title">Confirm</h4> -->
+                  <h4 class="modal-title" title="{{objDetail.name}}"style="overflow: hidden;white-space:nowrap;max-width:230px;margin-bottom:-4px;
+                  text-overflow:ellipsis;">{{objDetail.name}}</h4>
                 </div>
                 <div class="modal-body"> {{deleteModalMsg || 'Delete'}}
                   <span style="text-transform: capitalize">{{caption}}</span> ?</div>
@@ -139,7 +148,9 @@
               <div class="modal-content rulemodel">
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                  <h4 class="modal-title">Confirm</h4>
+                  <!-- <h4 class="modal-title">Confirm</h4> -->
+                  <h4 class="modal-title" title="{{objDetail.name}}"style="overflow: hidden;white-space:nowrap;max-width:230px;margin-bottom:-4px;
+                  text-overflow:ellipsis;">{{objDetail.name}}</h4>
                 </div>
                 <div class="modal-body"> Save File ?</div>
                 <div class="modal-footer">
@@ -172,7 +183,9 @@
               <div class="modal-content rulemodel">
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                  <h4 class="modal-title">Confirm</h4>
+                  <!-- <h4 class="modal-title">Confirm</h4> -->
+                  <h4 class="modal-title" title="{{objDetail.name}}"style="overflow: hidden;white-space:nowrap;max-width:230px;margin-bottom:-4px;
+                  text-overflow:ellipsis;">{{objDetail.name}}</h4>
                 </div>
                 <div class="modal-body"> {{selectDetail.setStatus}}
                   <span style="text-transform: capitalize">{{confMsg}}</span> ?</div>
@@ -188,7 +201,9 @@
               <div class="modal-content rulemodel">
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                  <h4 class="modal-title">Confirm</h4>
+                  <!-- <h4 class="modal-title">Confirm</h4> -->
+                  <h4 class="modal-title" title="{{objDetail.name}}"style="overflow: hidden;white-space:nowrap;max-width:230px;margin-bottom:-4px;
+                  text-overflow:ellipsis;">{{objDetail.name}}</h4>
                 </div>
                 <div class="modal-body"> Restart
                   <span style="text-transform: capitalize">{{confMsg}}</span> ?</div>
@@ -205,7 +220,9 @@
               <div class="modal-content rulemodel">
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                  <h4 class="modal-title">Confirm</h4>
+                  <!-- <h4 class="modal-title">Confirm</h4> -->
+                  <h4 class="modal-title" title="{{objDetail.name}}"style="overflow: hidden;white-space:nowrap;max-width:230px;margin-bottom:-4px;
+                  text-overflow:ellipsis;">{{objDetail.name}}</h4>
                 </div>
                 <div class="modal-body"> Clone
                   <span style="text-transform: capitalize">{{caption}}</span> ?</div>
@@ -644,7 +661,7 @@
           <div class="portlet-body">
             <div class="row">
               <div class="col-md-6 col-sm-6">
-                <div id="datastoredatatable_filter" class="dataTables_filter" ng-show="handleGroup!=-1 || select=='dagexec' || select=='batchexec'|| select=='ingestexec' || select=='graphexec' || isJobExec==true">
+                <div id="datastoredatatable_filter" class="dataTables_filter" ng-show="handleGroup!=-1 || select=='dagexec' || select=='batchexec'|| select=='ingestexec' || select=='graphexec'||  select=='mapexec' || isJobExec==true">
                   <input style="width:15px !important;height:15px;margin:0 0 0;" class="form-control input-sm input-small input-inline" type="checkbox"
                     ng-model="autorefresh" ng-change="autoRefreshOnChange()" />
                   <label style="vertical-align:middle;margin-bottom:0px;">Auto Refresh:</label>

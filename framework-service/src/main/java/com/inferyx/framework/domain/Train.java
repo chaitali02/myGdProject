@@ -26,6 +26,30 @@ public class Train extends BaseEntity {
 	private String featureImportance;
 	private List<AttributeRefHolder> rowIdentifier;
 	private String includeFeatures = "N";
+	private String saveTrainingSet = "N";
+	private MetaIdentifierHolder trainLocation;
+	private MetaIdentifierHolder testLocation;
+
+
+
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the saveTrainingSet
+	 */
+	public String getSaveTrainingSet() {
+		return saveTrainingSet;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param saveTrainingSet the saveTrainingSet to set
+	 */
+	public void setSaveTrainingSet(String saveTrainingSet) {
+		this.saveTrainingSet = saveTrainingSet;
+	}
 
 	/**
 	 *
@@ -163,4 +187,19 @@ public class Train extends BaseEntity {
 		this.valPercent = valPercent;
 	}
 
+	public MetaIdentifierHolder getTrainLocation() {
+		return trainLocation;
+	}
+
+	public void setTrainLocation(MetaIdentifierHolder trainLocation) {
+		this.trainLocation = trainLocation;
+	}
+
+	public MetaIdentifierHolder getTestLocation() {
+		return testLocation;
+	}
+
+	public void setTestLocation(MetaIdentifierHolder testLocation) {
+		this.testLocation = testLocation;
+	}
 }

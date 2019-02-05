@@ -12,11 +12,16 @@ package com.inferyx.framework.domain;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.inferyx.framework.enums.ApplicationType;
+
 @Document(collection="application")
 public class Application extends BaseEntity{
 	private MetaIdentifierHolder dataSource;
 	private MetaIdentifierHolder paramList;
 	private String deployPort;
+	private MetaIdentifierHolder orgInfo;
+	private ApplicationType applicationType;
+
 	
 	/**
 	 * @Ganesh 
@@ -35,6 +40,12 @@ public class Application extends BaseEntity{
 	public void setDeployPort(String deployPort) {
 		this.deployPort = deployPort;
 	}
+	public MetaIdentifierHolder getOrgInfo() {
+		return orgInfo;
+	}
+	public void setOrgInfo(MetaIdentifierHolder orgInfo) {
+		this.orgInfo = orgInfo;
+	}
 
 	public MetaIdentifierHolder getDataSource() {
 		return dataSource;
@@ -52,5 +63,11 @@ public class Application extends BaseEntity{
 		this.paramList = paramList;
 	}
 
-	
+	public ApplicationType getApplicationType() {
+		return this.applicationType;
+	}
+
+	public void setApplicationType(ApplicationType applicationType) {
+		this.applicationType = applicationType;
+	}
 }

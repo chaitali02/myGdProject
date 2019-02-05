@@ -39,9 +39,6 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 
 @Component
 public class ProfileOperator {
-
-	@Autowired
-	private MetadataUtil daoRegister;
 	@Autowired
 	private DataStoreServiceImpl datastoreServiceImpl;
 	@Autowired
@@ -76,7 +73,8 @@ public class ProfileOperator {
 		if (profile == null) {
 			return null;
 		}
-		dp = (Datapod) daoRegister.getRefObject(profile.getDependsOn().getRef());
+//		dp = (Datapod) daoRegister.getRefObject(profile.getDependsOn().getRef());
+		dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(profile.getDependsOn().getRef().getUuid(), profile.getDependsOn().getRef().getVersion(), profile.getDependsOn().getRef().getType().toString(), "N");
 		if (profile.getAttributeInfo() != null) {
 			String tableName = getTableName(dp, profileExec, datapodList, dagExec, otherParams, runMode);
 			logger.info("getProfileTableName(DP) : " + tableName);
@@ -100,8 +98,8 @@ public class ProfileOperator {
 		ExecContext execContext = helper.getExecutorContext(datasourceType);
 		switch(execContext) {
 		case HIVE : 
-			return "SELECT \'" + profile.getDependsOn().getRef().getUuid() + "\' AS datapoduuid, \'"
-					+ profile.getDependsOn().getRef().getVersion() + "\' AS datapodversion, '"
+			return "SELECT \'" + datapod.getUuid() + "\' AS datapoduuid, \'"
+					+ datapod.getVersion() + "\' AS datapodversion, '"
 					+ datapod.getName() + "' AS datapodname, " 
 					+ attrId + " AS attributeid, "
 					+ "'" + attrName + "' AS attributename, " 
@@ -128,8 +126,8 @@ public class ProfileOperator {
 					+ " WHERE 1=1 "
 					+ filterOperator2.generateSql(profile.getFilterInfo(), null, filterSource, null, new HashSet<>(), profileExec.getExecParams(), false, false, runMode, mapSourceDS);
 		case FILE : 
-			return "SELECT \'" + profile.getDependsOn().getRef().getUuid() + "\' AS datapoduuid, \'"
-					+ profile.getDependsOn().getRef().getVersion() + "\' AS datapodversion, '"
+			return "SELECT \'" + datapod.getUuid() + "\' AS datapoduuid, \'"
+					+ datapod.getVersion() + "\' AS datapodversion, '"
 					+ datapod.getName() + "' AS datapodname, " 
 					+ attrId + " AS attributeid, "
 					+ "'" + attrName + "' AS attributename, " 
@@ -157,8 +155,8 @@ public class ProfileOperator {
 					+ filterOperator2.generateSql(profile.getFilterInfo(), null, filterSource, null, new HashSet<>(), profileExec.getExecParams(), false, false, runMode, mapSourceDS);
 		case IMPALA : 
 			return "SELECT "
-					+ "'" + profile.getDependsOn().getRef().getUuid() + "' AS datapoduuid, "
-					+ "'" + profile.getDependsOn().getRef().getVersion() + "' AS datapodVersion, "
+					+ "'" + datapod.getUuid() + "' AS datapoduuid, "
+					+ "'" + datapod.getVersion() + "' AS datapodVersion, "
 					+ "'" + datapod.getName()+ "' AS datapodname,"
 					+ "cast(" + attrId + " AS string) AS attributeid, "
 					+ "'" + attrName + "' AS attributename, "
@@ -182,8 +180,8 @@ public class ProfileOperator {
 					+ " WHERE 1=1 "
 					+ filterOperator2.generateSql(profile.getFilterInfo(), null, filterSource, null, new HashSet<>(), profileExec.getExecParams(), false, false, runMode, mapSourceDS);
 		case MYSQL : 
-			return "SELECT '" + profile.getDependsOn().getRef().getUuid() + "' AS datapoduuid, '"
-					+ profile.getDependsOn().getRef().getVersion() + "' AS datapodVersion, '"
+			return "SELECT '" + datapod.getUuid() + "' AS datapoduuid, '"
+					+ datapod.getVersion() + "' AS datapodVersion, '"
 					+ datapod.getName()+"' AS datapodname, " 
 					+ attrId + " AS attributeid, '"
 					+ attrName+"' AS attributeName, " 
@@ -207,8 +205,8 @@ public class ProfileOperator {
 					+ " WHERE 1=1 "
 					+ filterOperator2.generateSql(profile.getFilterInfo(), null, filterSource, null, new HashSet<>(), profileExec.getExecParams(), false, false, runMode, mapSourceDS);
 		case ORACLE : 
-			return "SELECT \'" + profile.getDependsOn().getRef().getUuid() + "\' AS datapoduuid, \'"
-					+ profile.getDependsOn().getRef().getVersion() + "\' AS datapodVersion, "
+			return "SELECT \'" + datapod.getUuid() + "\' AS datapoduuid, \'"
+					+ datapod.getVersion() + "\' AS datapodVersion, "
 					+ " '" + datapod.getName()+"' AS datapodname, "
 					+ attrId + "  AS attributeid,"
 					+ " '"+attrName+"' AS attributename, " 
@@ -237,8 +235,8 @@ public class ProfileOperator {
 					+ " GROUP BY "+attrName;
 		case POSTGRES : 
 			String attrName1 = " cast(regexp_replace(COALESCE(NULLIF(cast(" + attrName + " as text),''),'0'), '[^0-9]+', '0', 'g') as decimal) ";
-			return "SELECT '" + profile.getDependsOn().getRef().getUuid() + "' AS datapoduuid, "
-					+ "'" + profile.getDependsOn().getRef().getVersion() + "' AS datapodVersion, '"
+			return "SELECT '" + datapod.getUuid() + "' AS datapoduuid, "
+					+ "'" + datapod.getVersion() + "' AS datapodVersion, '"
 					+ datapod.getName()+"' AS datapodname,"
 					+ attrId + " AS attributeid,'"
 					+ attrName+"' AS attributename,"

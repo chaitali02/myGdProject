@@ -11,6 +11,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -76,6 +77,7 @@ import com.inferyx.framework.domain.RowObj;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainResult;
+import com.inferyx.framework.enums.EncodingType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.service.ParamSetServiceImpl;
@@ -373,7 +375,7 @@ public class DL4JExecutor implements IExecutor {
 	 */
 	@Override
 	public ResultSetHolder predict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
-			String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException,
+			String clientContext, Map<String, EncodingType> encodingDetails) throws IOException, IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		// TODO Auto-generated method stub
 		return null;
@@ -385,7 +387,7 @@ public class DL4JExecutor implements IExecutor {
 	@Override
 	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName,
 			double trainPercent, double valPercent, String tableName, String clientContext, Object algoClass,
-			Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql) throws IOException {
+			Map<String, String> trainOtherParam, TrainResult trainResult, String testSetPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql, Map<String, EncodingType> encodingDetails, String saveTrainingSet, String trainingSetPath, Datapod testLocationDP, Datasource testLocationDS, String testLocationTableName, String testLFilePathUrl, Datapod trainLocationDP, Datasource trainLocationDS, String trainLocationTableName, String trainFilePathUrl) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -537,21 +539,11 @@ public class DL4JExecutor implements IExecutor {
 	@Override
 	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName,
 			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext,
-			Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql) throws IOException {
+			Map<String, String> trainOtherParam, TrainResult trainResult, String testSetPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql, Map<String, EncodingType> enodingDetails, String saveTrainingSet, String trainingSetPath, Datapod testLocationDP, Datasource testLocationDS, String testLocationTableName, String testLFilePathUrl, Datapod trainLocationDP, Datasource trainLocationDS, String trainLocationTableName, String trainLocationFilePathUrl) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.inferyx.framework.executor.IExecutor#summary(java.lang.Object, java.util.List, java.lang.String)
-	 */
-	@Override
-	public Map<String, Object> summary(Object trndModel, List<String> summaryMethods, String clientContext)
-			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
-			NoSuchMethodException, SecurityException {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	/* (non-Javadoc)
 	 * @see com.inferyx.framework.executor.IExecutor#create(java.util.List, java.util.List, java.lang.String, java.lang.String)
@@ -869,8 +861,7 @@ public class DL4JExecutor implements IExecutor {
 	}
 
 	@Override
-	public Boolean saveTrainFile(String[] fieldArray, String trainName, double trainPercent, double valPercent,
-			String tableName, String clientContext, String saveFileName) throws IOException {
+	public Boolean saveDataframeAsCSV(String tableName, String saveFileName, String clientContext) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -898,7 +889,7 @@ public class DL4JExecutor implements IExecutor {
 	}
 
 	@Override
-	public List<Map<String, Object>> fetchTestSet(String location) throws IOException {
+	public List<Map<String, Object>> fetchTrainOrTestSet(String location) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -920,6 +911,28 @@ public class DL4JExecutor implements IExecutor {
 	@Override
 	public ResultSetHolder createAndRegister(List<Row> data, StructType structType, String tableName,
 			String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Map<String, Object> summary(Object trndModel, String trainClass, List<String> summaryMethods, String clientContext)
+			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, ClassNotFoundException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public LinkedHashMap<String, Object> getImputeValue(ResultSetHolder rsHolder) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResultSetHolder applyAttrImputeValuesToData(ResultSetHolder rsHolder,
+			LinkedHashMap<String, Object> imputeAttributeNameWithValues, boolean registerTempTable,
+			String tempTableName) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}

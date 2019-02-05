@@ -48,6 +48,7 @@ import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Function;
+import com.inferyx.framework.domain.Group;
 import com.inferyx.framework.domain.Lov;
 import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaStatsHolder;
@@ -60,7 +61,6 @@ import com.inferyx.framework.domain.StatusHolder;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
-import com.inferyx.framework.parser.DagParser;
 import com.inferyx.framework.parser.FormulaParser;
 import com.inferyx.framework.register.CSVRegister;
 import com.inferyx.framework.register.HiveRegister;
@@ -90,8 +90,6 @@ public class MetadataController {
 	FormulaServiceImpl formulaServiceImpl;
 	@Autowired
 	DatasourceServiceImpl datasourceServiceImpl;
-	@Autowired
-	DagParser parser;
 	@Autowired
 	HDFSInfo hdfsInfo;
 	@Autowired
@@ -536,13 +534,8 @@ public class MetadataController {
 			@RequestParam("type") String type,
 			@RequestBody List<Registry> registryList,
 			@RequestParam(value = "action", required = false) String action, 
-			@RequestParam(value = "mode", required = false) String mode) throws Exception {
-		RunMode runMode;
-		if (mode == null) {
-			runMode = RunMode.ONLINE;
-		} else {
-			runMode = RunMode.valueOf(mode); 
-		}
+			@RequestParam(value = "mode", required = false, defaultValue="ONLINE") String mode) throws Exception {
+		RunMode runMode = Helper.getExecutionMode(mode);
 		return registerService.register(uuid, version, type, registryList, runMode);
 	}
 
@@ -646,10 +639,11 @@ public class MetadataController {
 	public @ResponseBody String getFormulaByType2(@RequestParam(value="uuid",required = false) String uuid,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
-			@RequestParam(value = "formulaType", required = false,defaultValue ="") String[] formulaType)
+			@RequestParam(value = "formulaType", required = false,defaultValue ="") String[] formulaType, 
+			@RequestParam(value = "resolveFlag", required = false, defaultValue = "N") String resolveFlag)
 			throws JsonProcessingException, JSONException {
 
-		return registerService.getFormulaByType2(uuid,formulaType);
+		return registerService.getFormulaByType2(uuid,formulaType, resolveFlag);
 	}
 
 	@RequestMapping(value = "/getExpressionByType", method = RequestMethod.GET)
@@ -1095,4 +1089,16 @@ public class MetadataController {
 			@RequestParam(value = "action", required = false) String action) throws FileNotFoundException, IOException {
 		return metadataServiceImpl.getDatapodByType(MetaType.dq.toString());
 	}
+	
+	@RequestMapping(value = "/getGroupsByOrg",method=RequestMethod.GET)
+	public @ResponseBody List<Group> getGroupsByOrg(
+			@RequestParam(value = "uuid") String orgUuid, 
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws FileNotFoundException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException, JSONException {
+		return  metadataServiceImpl.getGroupsByOrg(orgUuid);
+	}
+			
+			
+			
+	
 }

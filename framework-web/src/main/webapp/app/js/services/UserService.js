@@ -80,12 +80,32 @@ AdminModule.factory('AdminUserFactory', function ($http, $location) {
 
 		}).then(function (response) { return response })
 	};
+	factory.fineGroupsByOrg = function (uuid,type) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			url: url + "metadata/getGroupsByOrg?action=view&uuid=" + uuid + "&type=" + type,
+			method: "GET"
+
+		}).then(function (response) { return response })
+	};
+
+	
 	return factory;
 
 });
 
 AdminModule.service('AdminUserService', function ($q, AdminUserFactory, sortFactory) {
 
+	this.getGroupsByOrg = function (uuid, type) {
+		var deferred = $q.defer();
+		AdminUserFactory.fineGroupsByOrg(uuid, type).then(function (response) { onSuccess(response.data) });
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			});
+		}
+		return deferred.promise;
+	}
 	this.getLatestByUuid = function (uuid, type) {
 		var deferred = $q.defer();
 		AdminUserFactory.findLatestByUuid(uuid, type).then(function (response) { onSuccess(response.data) });

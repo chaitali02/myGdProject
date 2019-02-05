@@ -179,7 +179,7 @@ MetadataModule.factory('MetadataDatasetFactory', function ($http, $location) {
 	return factory;
 });
 
-MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactory, MetadataDatasetFactory) {
+MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactory, MetadataDatasetFactory,CF_GRID) {
 	this.getDatasetSample = function (data) {
 		var deferred = $q.defer();
 		MetadataDatasetFactory.findDatasetSample(data.uuid, data.version).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
@@ -750,10 +750,15 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 				attributeInfo.name = response.attributeInfo[n].attrSourceName;
 				attributeInfo.id = response.attributeInfo[n].attrSourceId;
 				attributeInfo.index = n+1;
+				if(response.attributeInfo.length >CF_GRID.framework_autopopulate_grid)
+					attributeInfo.isOnDropDown=false;
+				else
+					attributeInfo.isOnDropDown=true;
 				if (response.attributeInfo[n].sourceAttr.ref.type == "simple") {
 					var obj = {}
 					obj.text = "string"
-					obj.caption = "string"
+					obj.caption = "string";
+					attributeInfo.id=parseInt(response.attributeInfo[n].attrSourceId);
 					attributeInfo.sourceAttributeType = obj;
 					attributeInfo.isSourceAtributeSimple = true;
 					attributeInfo.sourcesimple = response.attributeInfo[n].sourceAttr.value
@@ -770,10 +775,11 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 					sourcedatapod.type = response.attributeInfo[n].sourceAttr.ref.type;
 					sourcedatapod.attributeId = response.attributeInfo[n].sourceAttr.attrId;
 					sourcedatapod.attrType = response.attributeInfo[n].sourceAttr.attrType
-					sourcedatapod.name = "";
+					sourcedatapod.name = response.attributeInfo[n].sourceAttr.attrName;
 					var obj = {}
 					obj.text = "datapod"
-					obj.caption = "attribute"
+					obj.caption = "attribute";
+					attributeInfo.id=parseInt(response.attributeInfo[n].attrSourceId);
 					attributeInfo.sourceAttributeType = obj;
 					attributeInfo.sourcedatapod = sourcedatapod;
 					attributeInfo.isSourceAtributeSimple = false;
@@ -792,7 +798,8 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 					sourceparamlist.name = "";
 					var obj = {}
 					obj.text = "paramlist"
-					obj.caption = "paramlist"
+					obj.caption = "paramlist";
+					attributeInfo.id=parseInt(response.attributeInfo[n].attrSourceId);
 					attributeInfo.sourceAttributeType = obj;
 					attributeInfo.sourceparamlist = sourceparamlist;
 					attributeInfo.isSourceAtributeSimple = false;
@@ -808,7 +815,8 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 					sourceexpression.name = response.attributeInfo[n].sourceAttr.ref.name;
 					var obj = {}
 					obj.text = "expression"
-					obj.caption = "expression"
+					obj.caption = "expression";
+					attributeInfo.id=parseInt(response.attributeInfo[n].attrSourceId);
 					attributeInfo.sourceAttributeType = obj;
 					attributeInfo.sourceexpression = sourceexpression;
 					attributeInfo.isSourceAtributeSimple = false;
@@ -825,7 +833,8 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 					sourceformula.name = response.attributeInfo[n].sourceAttr.ref.name;
 					var obj = {}
 					obj.text = "formula"
-					obj.caption = "formula"
+					obj.caption = "formula";
+					attributeInfo.id=parseInt(response.attributeInfo[n].attrSourceId);
 					attributeInfo.sourceAttributeType = obj;
 					attributeInfo.sourceformula = sourceformula;
 					attributeInfo.isSourceAtributeSimple = false;
@@ -842,7 +851,8 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 					sourcefunction.name = response.attributeInfo[n].sourceAttr.ref.name;
 					var obj = {}
 					obj.text = "function"
-					obj.caption = "function"
+					obj.caption = "function";
+					attributeInfo.id=parseInt(response.attributeInfo[n].attrSourceId);
 					attributeInfo.sourceAttributeType = obj;
 					attributeInfo.sourcefunction = sourcefunction;
 					attributeInfo.isSourceAtributeSimple = false;

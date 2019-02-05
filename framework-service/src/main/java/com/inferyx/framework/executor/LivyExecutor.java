@@ -71,6 +71,7 @@ import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainResult;
 import com.inferyx.framework.enums.Compare;
+import com.inferyx.framework.enums.EncodingType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
@@ -78,6 +79,7 @@ import com.inferyx.framework.livyjob.ExecRegAndPersistJob;
 import com.inferyx.framework.livyjob.ExecuteAndRegisterJob;
 import com.inferyx.framework.livyjob.ExecuteAndResult;
 import com.inferyx.framework.livyjob.RegisterDatapodJob;
+import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.writer.IWriter;
 
 @Component
@@ -86,14 +88,16 @@ public class LivyExecutor implements IExecutor {
 	Properties dbConfiguration;
 	@Autowired
 	LivyClientImpl livyClientImpl;
-	@Autowired
-	MetadataUtil commonActivity;
+//	@Autowired
+//	MetadataUtil commonActivity;
 	@Autowired
 	DataSourceFactory dataSourceFactory;
 	@Autowired
 	HDFSInfo hdfsInfo;
 	@Autowired 
 	protected ConnectionFactory connectionFactory;
+	@Autowired
+	private CommonServiceImpl<?> commonServiceImpl;
 	
 	
 	static final Logger logger = Logger.getLogger(LivyExecutor.class);
@@ -134,7 +138,7 @@ public class LivyExecutor implements IExecutor {
 		@SuppressWarnings("unused")
 		IWriter datapodWriter = null;
 		try {
-			datapodWriter = dataSourceFactory.getDatapodWriter(datapod, commonActivity);
+			datapodWriter = dataSourceFactory.getDatapodWriter(datapod);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
 				| SecurityException | NullPointerException | ParseException e) {
 			// TODO Auto-generated catch block
@@ -323,7 +327,7 @@ public class LivyExecutor implements IExecutor {
 
 	@Override
 	public ResultSetHolder predict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
-			String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException,
+			String clientContext, Map<String, EncodingType> encodingDetails) throws IOException, IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		// TODO Auto-generated method stub
 		return null;
@@ -331,7 +335,7 @@ public class LivyExecutor implements IExecutor {
 
 	@Override
 	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName,
-			double trainPercent, double valPercent, String tableName, String clientContext ,Object algoclass, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql) throws IOException {
+			double trainPercent, double valPercent, String tableName, String clientContext ,Object algoclass, Map<String, String> trainOtherParam, TrainResult trainResult, String testSetPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql, Map<String, EncodingType> encodingDetails, String saveTrainingSet, String trainingSetPath, Datapod testLocationDP, Datasource testLocationDS, String testLocationTableName, String testLFilePathUrl, Datapod trainLocationDP, Datasource trainLocationDS, String trainLocationTableName, String trainFilePathUrl) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -453,17 +457,12 @@ public class LivyExecutor implements IExecutor {
 
 	@Override
 	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName,
-			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql)
+			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam, TrainResult trainResult, String testSetPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql, Map<String, EncodingType> enodingDetails, String saveTrainingSet, String trainingSetPath, Datapod testLocationDP, Datasource testLocationDS, String testLocationTableName, String testLFilePathUrl, Datapod trainLocationDP, Datasource trainLocationDS, String trainLocationTableName, String trainLocationFilePathUrl)
 			throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
-	public Map<String, Object> summary(Object trndModel, List<String> summaryMethods, String clientContext) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public ResultSetHolder create(List<RowObj> rowObjList, List<Attribute> attributes, String tableName,
@@ -635,8 +634,7 @@ public class LivyExecutor implements IExecutor {
 	}
 
 	@Override
-	public Boolean saveTrainFile(String[] fieldArray, String trainName, double trainPercent, double valPercent,
-			String tableName, String clientContext, String saveFileName) throws IOException {
+	public Boolean saveDataframeAsCSV(String tableName, String saveFileName, String clientContext) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -664,7 +662,7 @@ public class LivyExecutor implements IExecutor {
 	}
 
 	@Override
-	public List<Map<String, Object>> fetchTestSet(String location) throws IOException {
+	public List<Map<String, Object>> fetchTrainOrTestSet(String location) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -686,6 +684,28 @@ public class LivyExecutor implements IExecutor {
 	@Override
 	public ResultSetHolder createAndRegister(List<Row> data, StructType structType, String tableName,
 			String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Map<String, Object> summary(Object trndModel, String trainClass, List<String> summaryMethods, String clientContext)
+			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, ClassNotFoundException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public LinkedHashMap<String, Object> getImputeValue(ResultSetHolder rsHolder) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResultSetHolder applyAttrImputeValuesToData(ResultSetHolder rsHolder,
+			LinkedHashMap<String, Object> imputeAttributeNameWithValues, boolean registerTempTable,
+			String tempTableName) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}

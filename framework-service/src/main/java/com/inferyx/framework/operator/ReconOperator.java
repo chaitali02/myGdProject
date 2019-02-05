@@ -19,7 +19,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.DagExec;
@@ -47,8 +46,6 @@ import com.inferyx.framework.service.MessageStatus;
  */
 @Component
 public class ReconOperator {
-	@Autowired
-	private MetadataUtil daoRegister;
 	@Autowired
 	private DataStoreServiceImpl datastoreServiceImpl;
 	@Autowired
@@ -124,14 +121,19 @@ public class ReconOperator {
 			String sourceDistinct = recon.getSourceDistinct();
 			String targetDistinct = recon.getTargetDistinct();
 			
-			Object sourceObj = daoRegister.getRefObject(recon.getSourceAttr().getRef());
-			Object targetObj = daoRegister.getRefObject(recon.getTargetAttr().getRef());
+//			Object sourceObj = daoRegister.getRefObject(recon.getSourceAttr().getRef());
+//			Object targetObj = daoRegister.getRefObject(recon.getTargetAttr().getRef());
+			Object sourceObj = commonServiceImpl.getOneByUuidAndVersion(recon.getSourceAttr().getRef().getUuid(), recon.getSourceAttr().getRef().getVersion(), recon.getSourceAttr().getRef().getType().toString(), "N");
+			Object targetObj = commonServiceImpl.getOneByUuidAndVersion(recon.getTargetAttr().getRef().getUuid(), recon.getTargetAttr().getRef().getVersion(), recon.getTargetAttr().getRef().getType().toString(), "N");
 			
 			resolveSource(sourceObj, recon);
 			resolveTarget(targetObj, recon);
 			
-			Function sourceFun = (Function) daoRegister.getRefObject(recon.getSourceFunc().getRef());
-			Function targetFun = (Function) daoRegister.getRefObject(recon.getTargetFunc().getRef());
+//			Function sourceFun = (Function) daoRegister.getRefObject(recon.getSourceFunc().getRef());
+//			Function targetFun = (Function) daoRegister.getRefObject(recon.getTargetFunc().getRef());
+			Function sourceFun = (Function) commonServiceImpl.getOneByUuidAndVersion(recon.getSourceFunc().getRef().getUuid(), recon.getSourceFunc().getRef().getVersion(), recon.getSourceFunc().getRef().getType().toString(), "N");
+			Function targetFun = (Function) commonServiceImpl.getOneByUuidAndVersion(recon.getTargetFunc().getRef().getUuid(), recon.getTargetFunc().getRef().getVersion(), recon.getTargetFunc().getRef().getType().toString(), "N");
+			
 			
 			String sourceVal = generateVal(sourceFun, SOURCE_ATTR_NAME, sourceDistinct, recon);
 			String targetVal = generateVal(targetFun, TARGET_ATTR_NAME, targetDistinct, recon);
@@ -302,7 +304,7 @@ public class ReconOperator {
 			TARGET_VERSION_ALIAS = "targetVersion";
 			TARGET_NAME_ALIAS = "targetName";
 			for(Attribute attribute : targetDp.getAttributes()) {
-				if(attribute.getAttributeId().equals(Integer.parseInt(recon.getSourceAttr().getAttrId()))) {
+				if(attribute.getAttributeId().equals(Integer.parseInt(recon.getTargetAttr().getAttrId()))) {
 					TARGET_ATTR_NAME = attribute.getName();
 					break;
 				} else {

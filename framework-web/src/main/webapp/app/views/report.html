@@ -168,8 +168,23 @@
 
                     <div class="portlet-body">
                         <div class="form-body" ng-show="isShowSimpleData">
+                            <div class="col-md-12 col-sm-12" style="padding:0px;padding-bottom: 20px;">
+                                <div class="col-md-12 col-sm-12"style="border-bottom:1px solid darkgray;padding:0px;">
+                                    <div class="col-md-11 col-sm-11" style="padding:0px;padding-bottom:15px;">
+                                        <div class="chip" ng-repeat=" filterdata in filterTag">
+                                            {{filterdata.text}}
+                                            <span class="chipclosebtn" ng-click="onChipsRemove($index,filterdata.index)">&times;</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1 col-sm-1" style="margin-top:4px;cursor:pointer;padding:0px;text-align:right;">
+                                        <span class="caption-subject font-dark bold"  ng-click="openFilterPopup()" tooltip-placement="left" uib-tooltip="Select Filter" style="font-size:16px;color: #666 !important;" ><i  class="fa fa-filter" style="font-size:17px;padding-right: 2px"></i>Filter</span>
+                                    </div>
+                                    <br>       
+                                </div>
+                                <br>
+                            </div>
                             <div class="row">
-                                <div class="col-md-12 col-sm-12">
+                                <!-- <div class="col-md-12 col-sm-12">
                                     <div style="border-bottom: 1px solid darkgray;">
                                         <div class="form-group">
                                             <div class="col-md-11 col-sm-11">
@@ -178,15 +193,14 @@
                                                     <span class="chipclosebtn" ng-click="onChipsRemove($index,filterdata.index)">&times;</span>
                                                 </div>
                                             </div>
-                                            <!-- <div class="col-md-1 col-sm-1" style="margin-left:4%;width:4%;margin-top: 4px;cursor: pointer;"> -->
 
-                                            <div class="col-md-1 col-sm-1" style="margin-top: 4px;cursor: pointer;">
-                                                <span ng-click="openFilterPopup()" tooltip-placement="left" uib-tooltip="Apply Filter" style="font-size:16px;" ><i  class="fa fa-filter" style="font-size:18px;padding-right: 2px"></i>Filter</span>
+                                            <div class="col-md-1 col-sm-1" style="margin-top:4px;cursor:pointer;padding:0px;">
+                                                <span class="caption-subject font-dark bold"  ng-click="openFilterPopup()" tooltip-placement="left" uib-tooltip="Select Filter" style="font-size:16px;color: #666 !important;" ><i  class="fa fa-filter" style="font-size:17px;padding-right: 2px"></i>Filter</span>
                                             </div>
                                         </div>
                                     </div>
                                     <br>
-                                </div>
+                                </div> -->
 
                                 <div class=" form-body col-md-12 col-sm-12 {{tableclass}}">
                                     <div class="spinner" ng-show="spinner">
@@ -456,6 +470,9 @@
                             <i class="fa fa-gift"></i>Source Attribute
                         </div>
                         <div class="tools">
+                            <a  ng-click="autoPopulate()"  ng-disabled="{{mode}}" tooltip-placement="left" uib-tooltip="Auto Populate">
+                                <span class="fa fa-map-signs" aria-hidden="true" style="color:white;"></span>
+                            </a> 
                         </div>
                     </div>
                     <div class="portlet-body form">
@@ -469,8 +486,8 @@
                             <button type="Button" class=" btn btn-success fa fa-plus pull-right" ng-click="addAttribute()" ng-disabled="{{mode}}"></button>
                         </div>
                         <div class="form-body" style="padding-top:50px;">
-                            <div>
-                                <div class="">
+                            <div class="row" style="overflow-y: auto;overflow-x: hidden;max-height:400px;">
+                                <div class="col-md-12">
                                     <table class=" row-border hover table  table-striped table-bordered">
                                         <thead>
                                             <tr>
@@ -486,9 +503,10 @@
                                                 <th style="width:46%;text-align: center">Source Name</th>
                                             </tr>
                                         </thead>
-                                        <tbody ng-repeat="data in attributeTableArray">
-                                            <tr data-drop="true" data-drag={{isDragable}} ng-model="attributeTableArray" jqyoui-droppable="{index: {{$index}}}" jqyoui-draggable="{index: {{$index}},'cancel':'.select2', 'animate':false,insertInline: true, direction:'jqyouiDirection'}"
-                                                data-jqyoui-options="{revert: 'invalid',helper: 'clone',zIndex: 350}" data-direction="{{data.name.jqyouiDirection}}">
+                                        <tbody ng-repeat="data in attributeTableArray" drag-drop draggable="{{isDragable}}" after-drop="ondrop">
+                                            <!-- <tr data-drop="true" data-drag={{isDragable}} ng-model="attributeTableArray" jqyoui-droppable="{index: {{$index}}}" jqyoui-draggable="{index: {{$index}},'cancel':'.select2', 'animate':false,insertInline: true, direction:'jqyouiDirection'}"
+                                                data-jqyoui-options="{revert: 'invalid',helper: 'clone',zIndex: 350}" data-direction="{{data.name.jqyouiDirection}}"> -->
+                                            <tr>
                                                 <td style="text-align: center; Vertical-align: middle;width:5%;">
                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                         <input class="form-control" ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected"
@@ -497,7 +515,7 @@
                                                 </td>
                                                 <td>
                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                        <input type="text" class="form-control" ng-model="$index" ng-value="$index+1" ng-disabled="true">
+                                                        <input type="text" class="form-control"  ng-value="$index+1" ng-disabled="true">
                                                     </span>
                                                 </td>
                                                 <td>
@@ -597,9 +615,9 @@
                                             <div class="bounce3"></div>
                                         </div>
                                     </div>
-                                    <div class="row" style="margin-top: 15px;">
+                                    <div class="" style="margin-top: 15px;">
                                         <div class="form-group" ng-repeat="data in filterAttribureIdValues">
-                                            <label class="col-md-3 control-label" title="{{data.dname}}">{{data.attrName}}</label>
+                                            <label class="col-md-4 control-label" title="{{data.dname}}">{{data.attrName}}</label>
                                             <div class="col-md-6">
                                                 <select ng-disabled="inprogressdata" title="{{dname}}" class="form-control" select2 ng-model="selectedAttributeValue[$index]"
                                                     ng-change="onChange()" ng-options="c as c.value for c in data.values  track by c.value">

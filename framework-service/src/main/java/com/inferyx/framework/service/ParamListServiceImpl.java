@@ -21,7 +21,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IParamListDao;
 import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.ExecParams;
@@ -49,8 +48,6 @@ public class ParamListServiceImpl {
 	SecurityServiceImpl securityServiceImpl;
     @Autowired
     CommonServiceImpl<?> commonServiceImpl;
-	@Autowired
-	MetadataUtil daoRegister;
 	
 	static final Logger logger = Logger.getLogger(ParamListServiceImpl.class);
 
@@ -296,9 +293,11 @@ public class ParamListServiceImpl {
 		ParamListHolder paramListHolder = null;
 		String paramName = null;
 		String refParamValue = null;
-		ParamList paramListRef = (ParamList)daoRegister.getRefObject(ref);
+//		ParamList paramListRef = (ParamList)daoRegister.getRefObject(ref);
+		ParamList paramListRef = (ParamList) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 		Application application = commonServiceImpl.getApp(); 
-		ParamList appParamList = (ParamList)daoRegister.getRefObject(application.getParamList().getRef());
+//		ParamList appParamList = (ParamList)daoRegister.getRefObject(application.getParamList().getRef()); 
+		ParamList appParamList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(application.getParamList().getRef().getUuid(), application.getParamList().getRef().getVersion(), application.getParamList().getRef().getType().toString(), "N");
 		
 		if (execParams != null) {
 			paramListHolder = execParams.getParamListHolder();
@@ -330,7 +329,9 @@ public class ParamListServiceImpl {
 			}
 		}
 		
-		ParamList paramList = (ParamList) daoRegister.getRefObject(paramListHolder.getRef());
+//		ParamList paramList = (ParamList) daoRegister.getRefObject(paramListHolder.getRef());
+		ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(paramListHolder.getRef().getUuid(), paramListHolder.getRef().getVersion(), paramListHolder.getRef().getType().toString(), "N");
+		
 		for(Param param : paramList.getParams()) {
 			if((StringUtils.isBlank(paramName) && param.getParamId().equalsIgnoreCase(attributeId.toString())) 
 					|| param.getParamName().equals(paramName)) {

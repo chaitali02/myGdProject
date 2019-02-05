@@ -17,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -68,6 +69,7 @@ import com.inferyx.framework.domain.RowObj;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainResult;
+import com.inferyx.framework.enums.EncodingType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.factory.ConnectionFactory;
 
@@ -173,8 +175,8 @@ public class RExecutor implements IExecutor {
 		if (obj instanceof RConnection) {
 			RConnection rCon = (RConnection) obj;
 			try {
-				if (logPath != null && !StringUtils.isBlank(logPath))
-					customLogger.writeLog(this.getClass(), "Script execution started.", logPath, 135);
+//				if (logPath != null && !StringUtils.isBlank(logPath))
+//					customLogger.writeLog(this.getClass(), "Script execution started.", logPath, 135);
 				rCon.voidEval("sink(\""+ logPath +"\", append=TRUE, split=FALSE)");
 				byte[] encoded = Files.readAllBytes(Paths.get(scriptPath));				
 				String fileContent = new String(encoded, Charset.defaultCharset());
@@ -194,35 +196,35 @@ public class RExecutor implements IExecutor {
 				}
 				logger.info(new ObjectMapper().writeValueAsString(nativeObject));
 
-				if (logPath != null && !StringUtils.isBlank(logPath))
-					customLogger.writeLog(this.getClass(),
-							"Result: " + new ObjectMapper().writeValueAsString(nativeObject), logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
-
-				if (logPath != null && !StringUtils.isBlank(logPath))
-					customLogger.writeLog(this.getClass(), "Script execution completed.", logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
+//				if (logPath != null && !StringUtils.isBlank(logPath))
+//					customLogger.writeLog(this.getClass(),
+//							"Result: " + new ObjectMapper().writeValueAsString(nativeObject), logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
+//
+//				if (logPath != null && !StringUtils.isBlank(logPath))
+//					customLogger.writeLog(this.getClass(), "Script execution completed.", logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
 				isSuccessful = true;
 			} catch (REngineException e) {
 				e.printStackTrace();
-
-				if (logPath != null && !StringUtils.isBlank(logPath))
-					customLogger.writeErrorLog(this.getClass(), StringUtils.join(ExceptionUtils.getRootCauseStackTrace(e), System.lineSeparator()), 
-							logPath,
-							Thread.currentThread().getStackTrace()[1].getLineNumber());
+//
+//				if (logPath != null && !StringUtils.isBlank(logPath))
+//					customLogger.writeErrorLog(this.getClass(), StringUtils.join(ExceptionUtils.getRootCauseStackTrace(e), System.lineSeparator()), 
+//							logPath,
+//							Thread.currentThread().getStackTrace()[1].getLineNumber());
 				
 				throw new IOException(e.getCause().getMessage());
 			} catch (Exception e) {
 				e.printStackTrace();
 
-				if (logPath != null && !StringUtils.isBlank(logPath))
-					customLogger.writeErrorLog(this.getClass(), StringUtils.join(ExceptionUtils.getRootCauseStackTrace(e), System.lineSeparator()), 
-							logPath,
-							Thread.currentThread().getStackTrace()[1].getLineNumber());
+//				if (logPath != null && !StringUtils.isBlank(logPath))
+//					customLogger.writeErrorLog(this.getClass(), StringUtils.join(ExceptionUtils.getRootCauseStackTrace(e), System.lineSeparator()), 
+//							logPath,
+//							Thread.currentThread().getStackTrace()[1].getLineNumber());
 				
 				throw new IOException(e.getCause().getMessage());
 			} finally {
-				if (!isSuccessful)
-					if (logPath != null && !StringUtils.isBlank(logPath))
-						customLogger.writeErrorLog(this.getClass(), "Script execution failed.", logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
+//				if (!isSuccessful)
+//					if (logPath != null && !StringUtils.isBlank(logPath))
+//						customLogger.writeErrorLog(this.getClass(), "Script execution failed.", logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
 				if (rCon != null)
 					rCon.close();
 			}
@@ -341,7 +343,7 @@ public class RExecutor implements IExecutor {
 
 	@Override
 	public ResultSetHolder predict(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
-			String clientContext) throws IOException, IllegalAccessException, IllegalArgumentException,
+			String clientContext, Map<String, EncodingType> encodingDetails) throws IOException, IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		// TODO Auto-generated method stub
 		return null;
@@ -349,7 +351,7 @@ public class RExecutor implements IExecutor {
 
 	@Override
 	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName,
-			double trainPercent, double valPercent, String tableName, String clientContext,Object algoclass, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql) throws IOException {
+			double trainPercent, double valPercent, String tableName, String clientContext,Object algoclass, Map<String, String> trainOtherParam, TrainResult trainResult, String testSetPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql, Map<String, EncodingType> encodingDetails, String saveTrainingSet, String trainingSetPath, Datapod testLocationDP, Datasource testLocationDS, String testLocationTableName, String testLFilePathUrl, Datapod trainLocationDP, Datasource trainLocationDS, String trainLocationTableName, String trainFilePathUrl) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -472,17 +474,12 @@ public class RExecutor implements IExecutor {
 
 	@Override
 	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName,
-			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam, TrainResult trainResult, String defaultPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql)
+			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam, TrainResult trainResult, String testSetPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql, Map<String, EncodingType> enodingDetails, String saveTrainingSet, String trainingSetPath, Datapod testLocationDP, Datasource testLocationDS, String testLocationTableName, String testLFilePathUrl, Datapod trainLocationDP, Datasource trainLocationDS, String trainLocationTableName, String trainLocationFilePathUrl)
 			throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
-	public Map<String, Object> summary(Object trndModel, List<String> summaryMethods, String clientContext) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public ResultSetHolder create(List<RowObj> rowObjList, List<Attribute> attributes, String tableName,
@@ -550,8 +547,7 @@ public class RExecutor implements IExecutor {
 	}
 
 	@Override
-	public Boolean saveTrainFile(String[] fieldArray, String trainName, double trainPercent, double valPercent,
-			String tableName, String clientContext, String saveFileName) throws IOException {
+	public Boolean saveDataframeAsCSV(String tableName, String saveFileName, String clientContext) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -579,7 +575,7 @@ public class RExecutor implements IExecutor {
 	}
 
 	@Override
-	public List<Map<String, Object>> fetchTestSet(String location) throws IOException {
+	public List<Map<String, Object>> fetchTrainOrTestSet(String location) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -601,6 +597,28 @@ public class RExecutor implements IExecutor {
 	@Override
 	public ResultSetHolder createAndRegister(List<Row> data, StructType structType, String tableName,
 			String clientContext) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Map<String, Object> summary(Object trndModel, String trainClass, List<String> summaryMethods, String clientContext)
+			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, ClassNotFoundException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public LinkedHashMap<String, Object> getImputeValue(ResultSetHolder rsHolder) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ResultSetHolder applyAttrImputeValuesToData(ResultSetHolder rsHolder,
+			LinkedHashMap<String, Object> imputeAttributeNameWithValues, boolean registerTempTable,
+			String tempTableName) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}

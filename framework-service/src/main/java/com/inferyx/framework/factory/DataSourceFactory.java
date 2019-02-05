@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.reader.HiveReader;
@@ -86,7 +85,7 @@ public class DataSourceFactory {
 //		}
 //	}
 
-	public IReader getDatapodReader(Datapod dp, MetadataUtil commonActivity) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public IReader getDatapodReader(Datapod dp) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 //		String dataSourceUUID = dp.getDatasource().getRef().getUuid();
 //		String dataSourceVersion = dp.getDatasource().getRef().getVersion();
 //
@@ -120,7 +119,7 @@ public class DataSourceFactory {
 		return null;
 	}
 
-	public IWriter getDatapodWriter(Datapod datapod, MetadataUtil daoRegister) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public IWriter getDatapodWriter(Datapod datapod) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		// MetaType dataSourceType = dp.getDatasource().getRef().getType();
 //		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid(), 
@@ -176,7 +175,7 @@ public class DataSourceFactory {
 		return null;
 	}
 
-	public IWriter getDatapodWriter(MetadataUtil daoRegister)
+	public IWriter getDatapodWriter()
 			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 

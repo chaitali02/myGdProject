@@ -69,6 +69,7 @@ import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.domain.DeployExec;
 import com.inferyx.framework.domain.DownloadExec;
 import com.inferyx.framework.domain.Expression;
 import com.inferyx.framework.domain.Filter;
@@ -91,6 +92,7 @@ import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamSet;
 import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.Privilege;
+import com.inferyx.framework.domain.ProcessExec;
 import com.inferyx.framework.domain.Profile;
 import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.ProfileGroup;
@@ -3696,40 +3698,33 @@ public class RegisterService {
 		return registryList;
 	}
 
-	public List<Registry> register(String uuid, String version, String type, List<Registry> registryList, RunMode runMode)
+	public List<Registry> register(String uuid, String version, String type, List<Registry> registryList, RunMode runMode) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException, IOException
 			 {
 		try {
-		Datasource ds = (Datasource) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datasource.toString());
-		if (ds.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
-			return csvRegister.register(uuid, version, registryList, runMode);
-		} else if (ds.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
-			return hiveRegister.registerDB(uuid, version, registryList, runMode);
-		}else if (ds.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
-			return impalaRegister.registerDB(uuid, version, registryList);
-		}  else if (ds.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())) {
-			return mysqlRegister.registerDB(uuid, version, registryList, runMode);
-		} else if (ds.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
-			return oracleRegister.registerDB(uuid, version, registryList, runMode);
-		} else if (ds.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
+			Datasource ds = (Datasource) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datasource.toString());
+			if (ds.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+				return csvRegister.register(uuid, version, registryList, runMode);
+			} else if (ds.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
+				return hiveRegister.registerDB(uuid, version, registryList, runMode);
+			}else if (ds.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
+				return impalaRegister.registerDB(uuid, version, registryList);
+			}  else if (ds.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())) {
+				return mysqlRegister.registerDB(uuid, version, registryList, runMode);
+			} else if (ds.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+				return oracleRegister.registerDB(uuid, version, registryList, runMode);
+			} else if (ds.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
 				return postGresRegister.registerDB(uuid, version, registryList, runMode);
-		} else {
-			return null;
-		}}
-		catch(Exception e) {
-			if(e.getMessage().contains("Cannot resolve column name"))
-			try {
-				commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (e.getMessage() != null) ? "Cannot resolve column name" : "Cannot resolve column name", null);
-			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
-					| NoSuchMethodException | SecurityException | NullPointerException | JSONException | ParseException
-					| IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}else {
-			datapodServiceImpl.setResponseMsg(e.getMessage());	
+			} else {
+				return null;
+			}
+		} catch(Exception e) {
+			if(e.getMessage().contains("Cannot resolve column name")) {				
+				commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Cannot resolve column name", null);
+			} else {
+				commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), e.toString(), null);
 			}
 		}
 		return registryList;
-
 	}
 	
 	
@@ -3940,12 +3935,17 @@ public class RegisterService {
 	}
 
 	public String getFormulaByType2(String uuid,String[] formulaType) throws JsonProcessingException {
+		return getFormulaByType2(uuid,formulaType, "Y");
+	}
+	public String getFormulaByType2(String uuid,String[] formulaType, String resolveFlag) throws JsonProcessingException {
 		String result = null;
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-		result = ow.writeValueAsString(formulaServiceImpl.findFormulaByType2(uuid,formulaType));
+		result = ow.writeValueAsString(formulaServiceImpl.findFormulaByType2(uuid,formulaType, resolveFlag));
 
 		return result;
 	}
+	
+	
 
 	public String getExpressionByType2(String uuid) throws JsonProcessingException {
 		String result = null;
@@ -4233,9 +4233,21 @@ public class RegisterService {
 					ingestGroupExec.getCreatedBy().getRef().getName(), ingestGroupExec.getCreatedOn()));
 		}
 
+		int processExecCount = commonServiceImpl.findAllLatest(MetaType.processExec).size();
+		ProcessExec processExec = (ProcessExec) commonServiceImpl.getLatest(MetaType.processExec.toString());
+		if (processExec != null) {
+			countHolder.add(addToCount(MetaType.processExec.toString(), processExecCount,
+					processExec.getCreatedBy().getRef().getName(), processExec.getCreatedOn()));
+		}
+		
+		int deployExecCount = commonServiceImpl.findAllLatest(MetaType.deployExec).size();
+		DeployExec deployExec = (DeployExec) commonServiceImpl.getLatest(MetaType.deployExec.toString());
+		if (deployExec != null) {
+			countHolder.add(addToCount(MetaType.deployExec.toString(), deployExecCount,
+					deployExec.getCreatedBy().getRef().getName(), deployExec.getCreatedOn()));
+		}
+		
 		return countHolder;
-		
-		
 	}
 
 	public long getMetaStatsByType() throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {

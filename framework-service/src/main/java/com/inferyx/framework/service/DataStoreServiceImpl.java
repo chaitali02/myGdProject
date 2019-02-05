@@ -47,7 +47,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IDataStoreDao;
 import com.inferyx.framework.dao.IDatapodDao;
 import com.inferyx.framework.dao.IDatasourceDao;
@@ -111,8 +110,6 @@ public class DataStoreServiceImpl {
 	@Autowired
 	DataSourceFactory datasourceFactory;
 	@Autowired
-	MetadataUtil daoRegister;
-	@Autowired
 	LoadExecServiceImpl loadExecServiceImpl;
 	@Autowired
 	MapExecServiceImpl mapExecServiceImpl;
@@ -126,8 +123,6 @@ public class DataStoreServiceImpl {
 	DatapodRegister datapodRegister;
 	@Autowired
 	DataSourceFactory dataSourceFactory;
-	@Autowired
-	MetadataUtil commonActivity;
 	@Autowired
 	ConnectionFactory connFactory;
 	@Autowired
@@ -400,14 +395,14 @@ public class DataStoreServiceImpl {
 							? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
 			DataStore datastoreLatest = null;
 			if (appUuid != null) {
-				datastoreLatest = iDataStoreDao.findOneByUuidAndVersion(appUuid, s.getId(), s.getVersion());
+				datastoreLatest = (DataStore) commonServiceImpl.getOneByUuidAndVersion(s.getId(), s.getVersion(),MetaType.datastore.toString());
 			} else {
-				datastoreLatest = iDataStoreDao.findOneByUuidAndVersion(s.getId(), s.getVersion());
+				datastoreLatest = datastoreLatest = (DataStore) commonServiceImpl.getOneByUuidAndVersion(s.getId(), s.getVersion(),MetaType.datastore.toString());
 			}
 			//DataStore datastore = resolveName(datastoreLatest);
 			DataStore datastore = (DataStore) commonServiceImpl.resolveName(datastoreLatest, MetaType.datastore);
 
-			result.add(datastore);
+			result.add(datastoreLatest);
 		}
 		return result;
 	}
@@ -432,7 +427,7 @@ public class DataStoreServiceImpl {
 		}
 		String datasource = dp.getDatasource().getRef().getUuid();
 		//Datasource ds = datasourceServiceImpl.findLatestByUuid(datasource);
-				Datasource ds = (Datasource) commonServiceImpl.getLatestByUuid(datasource, MetaType.datasource.toString());
+		Datasource ds = (Datasource) commonServiceImpl.getLatestByUuid(datasource, MetaType.datasource.toString());
 		String dsType = ds.getType();
 		if (/*!engine.getExecEngine().equalsIgnoreCase("livy-spark")
 				&& !dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
@@ -693,9 +688,8 @@ public class DataStoreServiceImpl {
 			logger.error("Datastore is not available for this datapod");			
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 			dependsOn.setRef(new MetaIdentifier(MetaType.datastore, datapodUUID, datapodVersion));
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "No Data Found", dependsOn);
-			//throw new RuntimeException("Datastore is not available for this datapod");
-			throw new RuntimeException("No Data Found");
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Datastore is not available for this datapod.", dependsOn);
+			throw new RuntimeException("Datastore is not available for this datapod.");
 			
 		}
 		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.sample.maxrows"));
@@ -1162,7 +1156,7 @@ public class DataStoreServiceImpl {
 				// TODO: handle exception
 			}
 
-			commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Table not found.", null);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Table not found.", null);
 			throw new RuntimeException((message != null) ? message : "Table not found.");
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -1173,7 +1167,7 @@ public class DataStoreServiceImpl {
 				// TODO: handle exception
 			}
 
-			commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Table not found.", null);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Table not found.", null);
 			throw new RuntimeException((message != null) ? message : "Table not found.");
 		}
 	}

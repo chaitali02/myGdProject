@@ -70,8 +70,12 @@
               <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
             </a> -->
             <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Sample Records" data-toggle="tooltip" data-placement="top"
-              tooltip data-ng-click="showSampleTable(dataset)" ng-hide="isAdd" ng-class="isShowSimpleData==true? 'currentpage':'notcurrentpage'">
+              tooltip data-ng-click="isShowSimpleData ==false?showSampleTable(dataset):''" ng-hide="isAdd" ng-class="isShowSimpleData==true? 'currentpage':'notcurrentpage'">
               <i class="fa fa-table icon-circle"></i>
+            </a>
+            <a class="btn btn-circle btn-icon-only btn-default" ng-click="downloadFile(dataset)" tooltip-placement="top" uib-tooltip="Download"
+              ng-hide="isAdd" ng-class="isDownloadDataset==true? 'currentpage':'notcurrentpage'" ng-disabled="isDownloadDataset">
+              <i class="fa fa-download icon-circle"></i>
             </a>
             <a class="btn btn-circle btn-icon-only btn-default " title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip
               ng-show="isDependencyShow" ng-class="(showForm==false && isShowSimpleData==false)? 'currentpage':'notcurrentpage'"
@@ -148,7 +152,7 @@
           </div>
 
           <div class="form-wizard" ng-show="showForm">
-            <div class="centercontent" style="min-height:500px;" ng-if="isEditVeiwError" >
+            <div class="centercontent" style="min-height:500px;" ng-if="isEditVeiwError">
               <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
             </div>
             <div class="centercontent" style="min-height:500px;" ng-if="isEditInprogess && !isEditVeiwError">
@@ -329,6 +333,31 @@
                         </div>
                         <div class="tools">
                         </div>
+                        <div class="actions" style="position:relative;">
+                          <a class="btn green-haze btn-outline btn-circle auto-map btn-sm" ng-disabled="fitlerAttrTableSelectedItem.length ==1 && filterTableArray.length >1 ?false:true"
+                            href="javascript:;" data-toggle="dropdown" tooltip-placement="left" uib-tooltip="Move" data-hover="dropdown"
+                            data-close-others="true" aria-expanded="false">
+                            <span class="fa fa-arrows" aria-hidden="true"></span>
+                            <i class="fa fa-angle-down"></i>
+                          </a>
+                          <ul class="dropdown-menu pull-right" style="z-index:10000;top:28px;right:45px;position:absolute">
+                            <li ng-click="autoMove(0,'filterAttr')">
+                              <a href="javascript:;" ng-disabled="fitlerAttrTableSelectedItem[0]==0?true:false">Top</a>
+                            </li>
+                            <li class="divider" style="margin: 0px;"> </li>
+                            <li ng-click="autoMove(filterTableArray.length-1,'filterAttr')">
+                              <a href="javascript:;" ng-disabled="fitlerAttrTableSelectedItem[0]==filterTableArray.length-1 ? true:false">Bottom</a>
+                            </li>
+                            <li class="divider" style="margin: 0px;"> </li>
+                            <li>
+                              <div class="form-group" style="margin: 1%;">
+                                <input type="number" class="form-control" ng-if="fitlerAttrTableSelectedItem.length == 1" ng-model="moveTo" min="0" max="{{filterTableArray.length}}"
+                                  name="moveto" style="border:0" placeholder="Move To" ng-model-options="{debounce:3000}"
+                                  ng-change="autoMoveTo(moveTo,'filterAttr')" focus-me="true" required />
+                              </div>
+                            </li>
+                          </ul>
+                        </div>
                       </div>
                       <div class="portlet-body form">
                         <div class="x_title" style="padding:10px;">
@@ -349,18 +378,18 @@
                                 <th style="width:15%;text-align:center;">Logical Operator</th>
                                 <th style="width:13%;text-align:center;"> LHS Type</th>
                                 <th style="width:180px;text-align:center;">LHS Attribute</th>
-                                <th style="width:13%;text-align:center;">Operator</th>
+                                <th style="width:15%;text-align:center;">Operator</th>
                                 <th style="width:13%;text-align:center;">RHS Type</th>
                                 <th style="width:180px;text-align:center;">RHS Attribute</th>
-                                <th style="width:8%;text-align:center;">Move</th>
+                                <!-- <th style="width:8%;text-align:center;">Move</th> -->
                               </tr>
                             </thead>
 
                             <tbody>
-                              <tr ng-repeat="tabledata in filterTableArray"  drag-drop draggable="{{isDragable}}" after-drop="onFilterDrop">
+                              <tr ng-repeat="tabledata in filterTableArray" drag-drop draggable="{{isDragable}}" after-drop="onFilterDrop">
                                 <td class="chek" style="text-align:center;Vertical-align:middle;" ng-mouseenter="onMouseEnter()" ng-mouseleave="onMouseLeave()">
                                   <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                    <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" />
+                                    <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" ng-change="onChangeFilterAttRow($index,tabledata.selected)" />
                                   </span>
                                 </td>
 
@@ -391,6 +420,7 @@
                                   </span>
                                   <div width="190px" ng-show="tabledata.islhsDatapod">
                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+
                                       <select select2 ng-show="tabledata.islhsDatapod" ng-model="tabledata.lhsdatapodAttribute" ng-disabled="{{mode}}" class="form-control"
                                         ng-change="onChangeAttribute()" ng-options="c as (c.datapodname + '.' + c.name) for c in lhsdatapodattributefilter track by c.uuid+c.attributeId">
                                       </select>
@@ -462,8 +492,8 @@
                                     </span>
                                     <div ng-if="['IS'].indexOf(tabledata.operator) !=-1">
                                       <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                        <select  class="form-control"  ng-model="tabledata.rhsvalue" ng-options="r for r in rhsNA"
-                                          ng-disabled="{{mode}}" required disable-validation-message=""></select>
+                                        <select class="form-control" ng-model="tabledata.rhsvalue" ng-options="r for r in rhsNA" ng-disabled="{{mode}}" required
+                                          disable-validation-message=""></select>
                                       </span>
                                     </div>
                                   </div>
@@ -479,8 +509,8 @@
 
                                   <div ng-if="tabledata.isrhsFormula">
                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                      <select select2 class="form-control"  ng-change="selectmetrhsType()" data-ng-model="tabledata.rhsformula"
-                                        ng-options="r as r.name for r in allFormula track by r.uuid" ng-disabled="{{mode}}">
+                                      <select select2 class="form-control" ng-change="selectmetrhsType()" data-ng-model="tabledata.rhsformula" ng-options="r as r.name for r in allFormula track by r.uuid"
+                                        ng-disabled="{{mode}}">
                                       </select>
                                     </span>
                                   </div>
@@ -511,24 +541,22 @@
                                         ng-disabled="{{mode}}" required disable-validation-message="" ng-change="onChangeRhsParamList()"></select>
                                     </span>
                                   </div>
-                                 
-                                  
+
+
                                   <!-- <div ng-if="tabledata.isRhsNA" style="text-align:center">-NA-</div> -->
                                 </td>
-                                <td>
+                                <!-- <td>
                                   <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                     <div style="text-align: center;">
                                       <a class="move-column" ng-disabled="($index == 0 || {{mode}}==true) ?true:false" ng-click="onAttrFilterRowUp($index)">
-                                        <!-- <i class="glyphicon glyphicon-arrow-up"></i> -->
                                         <i class="glyphicon glyphicon-circle-arrow-up" style="font-size:20px"></i>
                                       </a>
                                       <a class="move-column" ng-disabled="($index == filterTableArray.length-1 || {{mode}}) ? true:false" ng-click="onAttrFilterRowDown($index)">
-                                        <!-- <i class="glyphicon glyphicon-arrow-down"></i> -->
                                         <i class="glyphicon glyphicon-circle-arrow-down	" style="font-size:20px"></i>
                                       </a>
                                     </div>
                                   </span>
-                                </td>
+                                </td> -->
                               </tr>
                             </tbody>
                           </table>
@@ -552,23 +580,58 @@
 
                 <!-- Start Tab3 -->
                 <div class="tab-pane" id="tab3" ng-class="{'active' : continueCount == 3}">
-
                   <form class="form-horizontal" name="myform3" id="submit_form3" ng-submit="countContinue()" novalidate="novalidate">
-                    <div class="row">
+                    
+                    <div class="row" >
+
                       <div class="portlet light bordered">
+
                         <div class="portlet-title">
                           <div class="caption">
                             <span class="caption-subject  sbold ">Source Attribute</span>
                           </div>
-                          <div class="actions">
-                            <a class="btn btn-circle btn-icon-only btn-default" ng-click="autoPopulate()"  ng-disabled="{{mode}}" tooltip-placement="top" uib-tooltip="Auto Populate">
+
+                          <div class="actions" style="position:relative;">
+                           
+                            <a class="btn green-haze btn-outline btn-circle auto-map btn-sm" ng-disabled="attrTableSelectedItem.length ==1 && attributeTableArray.length >1 ?false:true"
+                              href="javascript:;" data-toggle="dropdown" tooltip-placement="left" uib-tooltip="Move" data-hover="dropdown"
+                              data-close-others="true" aria-expanded="false">
+                              <span class="fa fa-arrows" aria-hidden="true"></span>
+                              <i class="fa fa-angle-down"></i>
+                            </a>
+                            <ul class="dropdown-menu pull-right" style="z-index:10000;top:28px;right:45px;position:absolute">
+                              <li ng-click="autoMove(0,'mapAttr')">
+                                <a href="javascript:;" ng-disabled="attrTableSelectedItem[0]==0?true:false">Top</a>
+                              </li>
+                              <li class="divider" style="margin: 0px;"> </li>
+                              <li ng-click="autoMove(attributeTableArray.length-1,'mapAttr')">
+                                <a href="javascript:;" ng-disabled="attrTableSelectedItem[0]==attributeTableArray.length-1?true:false">Bottom</a>
+                              </li>
+                              <li class="divider" style="margin: 0px;"> </li>
+                              <li>
+                                <div class="form-group" style="margin: 1%;">
+                                  <input type="number" class="form-control" ng-if="attrTableSelectedItem.length == 1" ng-model="moveTo" min="0" max="{{attributeTableArray.length}}"
+                                    name="moveto" style="border:0" placeholder="Move To" ng-model-options="{debounce:3000}"
+                                    ng-change="autoMoveTo(moveTo,'mapAttr')" focus-me="true" required />
+                                </div>
+                              </li>
+                            </ul>
+                            <a class="btn btn-circle btn-icon-only btn-default" ng-click="autoPopulate()" ng-disabled="{{mode}}" tooltip-placement="left"
+                              uib-tooltip="Auto Populate">
                               <span class="fa fa-map-signs" aria-hidden="true" style="color:#a0a0a0;"></span>
-                            </a> 
+                            </a>
                           </div>
                         </div>
 
                         <div class="portlet-body">
-                          <div class="row">
+                          <div class="centercontent" style="min-height:500px;" ng-show="isAutoMapInprogess">
+                            <div class="spinner">
+                              <div class="bounce1"></div>
+                              <div class="bounce2"></div>
+                              <div class="bounce3"></div>
+                            </div>
+                          </div>
+                          <div class="row" ng-hide="isAutoMapInprogess">
                             <div class="col-md-12" style="margin-bottom:10px;">
                               <div class="col-md-6" style="padding:0px;">
                                 <div class="btn-group btn-group-devided" data-toggle="buttons" style="width:45%;">
@@ -586,10 +649,9 @@
                               </div>
                             </div>
                           </div>
-
-                          <div class="row" style="overflow-y: auto;overflow-x: hidden;max-height:400px;">
+                          <div class="row" style="overflow-y: auto;overflow-x: hidden;max-height:400px;"  ng-hide="isAutoMapInprogess">
                             <div class="col-md-12">
-                              <table class=" row-border hover table  table-striped table-bordered">
+                              <table class=" row-border hover table  table-striped table-bordered" style="table-layout:fixed;">
                                 <thead>
                                   <tr>
                                     <th style="text-align: center; Vertical-align: middle;width:5%;">
@@ -602,18 +664,17 @@
                                     <th style="width:30%;text-align: center">Name</th>
                                     <th style="width:20%;text-align: center">Source Type</th>
                                     <th style="width:30%;text-align: center">Source Name</th>
-                                    <th style="width:20%;text-align: center">Move</th>
+                                    <!-- <th style="width:9%;text-align: center">Move</th> -->
                                   </tr>
                                 </thead>
-                                <tbody id="{{$index}}" ng-repeat="data in attributeTableArray" drag-drop draggable="{{isDragable}}" after-drop="ondrop">
+                                <tbody>
                                   <!-- <tr data-drop="true" data-drag={{isDragable}} ng-model="attributeTableArray" jqyoui-droppable="{index: {{$index}}}" jqyoui-draggable="{index: {{$index}},'cancel':'.select2', 'animate':false,insertInline: true, direction:'jqyouiDirection'}"
                                             data-jqyoui-options="{revert: 'invalid',helper: 'clone',zIndex: 350}" data-direction="{{data.name.jqyouiDirection}}"> -->
-                                  <tr>
-
+                                  <tr id="{{$index}}" ng-repeat="data in attributeTableArray" drag-drop draggable="{{isDragable}}" after-drop="ondrop">
                                     <td style="text-align: center; Vertical-align: middle;width:5%;">
                                       <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                        <input class="form-control" ng-disabled="{{mode}}" style="height:16px;" type="checkbox" ng-model="data.selected" />
-
+                                        <input class="form-control" ng-disabled="{{mode}}" style="height:16px;" type="checkbox" ng-model="data.selected" ng-change="onChangeAttRow($index,data.selected)"
+                                        />
                                       </span>
                                     </td>
                                     <td>
@@ -624,8 +685,8 @@
                                     <td>
                                       <span class="form-group" style="margin-left:0px;margin-right: 0px;" ng-class="{ 'has-error' : myform3['sourceName'+$index].$invalid}">
                                         <input type="text" class="form-control" ng-model="data.name" name="sourceName{{$index}}" required disable-validation-message=""
-                                          title="{{data.name}}" ng-change="onChangeSourceName($index)" ng-disabled="{{mode}}"
-                                          focus-me="true">
+                                          title="{{data.name}}" ng-change="onChangeSourceName($index,false)" ng-disabled="{{mode}}">
+                                        <!-- focus-me="true" -->
                                       </span>
                                     </td>
                                     <td>
@@ -641,67 +702,133 @@
                                       </span>
                                       <div ng-if="data.isSourceAtributeDatapod">
                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                          <select select2 ng-model="data.sourcedatapod" ng-show="data.isSourceAtributeDatapod" ng-disabled="{{mode}}" class="form-control"
-                                            ng-options="c as (c.datapodname + '.' + c.name) for c in sourcedatapodattribute  | orderBy:'datapodname' track by c.uuid+c.attributeId"
-                                            ng-change="onChangeAttributeDatapod(data.sourcedatapod,$index)" required disable-validation-message=""></select>
+                                          <div ng-if="!data.isOnDropDown">
+                                            <div class="col-md-11" style="padding: 0px;">
+                                              <input type="text" class="form-control" ng-model="data.sourcedatapod.name" required disable-validation-message="" ng-disabled="false"
+                                                readonly ng-dblclick="data.isOnDropDown=!data.isOnDropDown" />
+                                            </div>
+                                            <div class="col-md-1" style="padding:7px 0px 0px 9px;">
+                                              <a ng-disabled="{{mode}}">
+                                                <span class="fa fa-pencil" ng-click="data.isOnDropDown=!data.isOnDropDown" tooltip-placement="left" uib-tooltip="Edit"></span>
+                                              </a>
+                                            </div>
+                                          </div>
+                                          <div ng-if="data.isOnDropDown">
+                                            <select select2 ng-model="data.sourcedatapod" ng-show="data.isSourceAtributeDatapod" ng-disabled="{{mode}}" class="form-control"
+                                              ng-options="c as (c.datapodname + '.' + c.name) for c in sourcedatapodattribute  | orderBy:'datapodname' track by c.uuid+c.attributeId"
+                                              ng-change="onChangeAttributeDatapod(data.sourcedatapod,$index)"
+                                              required disable-validation-message="">
+                                            </select>
+                                          </div>
                                         </span>
                                       </div>
                                       <div ng-if="data.isSourceAtributeFormula">
                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                          <ui-select required disable-validation-message="" ng-model="data.sourceformula" theme="" ng-disabled="{{mode}}" on-select="onChangeFormula(data.sourceformula,$index)">
-                                            <ui-select-match>
-                                              <span title="{{data.sourceformula.name}}">{{data.sourceformula.name}}</span>
-                                            </ui-select-match>
-                                            <ui-select-choices repeat="x in (datasetLodeFormula | filter: $select.search) track by x.uuid" position='up'>
-                                              <div ng-click="routeForFormula(x,data.id)">
-                                                <span class="{{x.iconclass}}"></span>
-                                                <span class="{{x.class}}" ng-bind-html="x.name | highlight: $select.search"></span>
-                                              </div>
-                                            </ui-select-choices>
-                                          </ui-select>
+                                          <div ng-if="!data.isOnDropDown">
+                                            <div class="col-md-11" style="padding: 0px;">
+                                              <input type="text" class="form-control" ng-model="data.sourceformula.name" required disable-validation-message="" ng-disabled="false"
+                                                readonly ng-dblclick="data.isOnDropDown=!data.isOnDropDown" />
+                                            </div>
+                                            <div class="col-md-1" style="padding:7px 0px 0px 9px;">
+                                              <a ng-disabled="{{mode}}">
+                                                <span class="fa fa-pencil" ng-click="data.isOnDropDown=!data.isOnDropDown" tooltip-placement="left" uib-tooltip="Edit"></span>
+                                              </a>
+                                            </div>
+                                          </div>
+                                          <div ng-if="data.isOnDropDown">
+                                            <ui-select required disable-validation-message="" ng-model="data.sourceformula" theme="" ng-disabled="{{mode}}" on-select="onChangeFormula(data.sourceformula,$index)">
+                                              <ui-select-match>
+                                                <span title="{{data.sourceformula.name}}">{{data.sourceformula.name}}</span>
+                                              </ui-select-match>
+                                              <ui-select-choices repeat="x in (datasetLodeFormula | filter: $select.search) track by x.uuid" position='up'>
+                                                <div ng-click="routeForFormula(x,data.id)">
+                                                  <span class="{{x.iconclass}}"></span>
+                                                  <span class="{{x.class}}" ng-bind-html="x.name | highlight: $select.search"></span>
+                                                </div>
+                                              </ui-select-choices>
+                                            </ui-select>
+                                          </div>
                                         </span>
                                       </div>
                                       <div ng-if="data.isSourceAtributeExpression">
                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                          <ui-select required disable-validation-message="" ng-model="data.sourceexpression" theme="" ng-disabled="{{mode}}" on-select="onChangeExpression(data.sourceexpression,$index)">
-                                            <ui-select-match>
-                                              <span title="{{data.soureexpression.name}}">{{data.sourceexpression.name}}</span>
-                                            </ui-select-match>
-                                            <ui-select-choices repeat="x in (datasetLodeExpression | filter: $select.search) track by x.uuid" position='up'>
-                                              <div ng-click="routeForExpression(x,data.id)">
-                                                <span class="{{x.iconclass}}"></span>
-                                                <span class="{{x.class}}" ng-bind-html="x.name | highlight: $select.search"></span>
-                                              </div>
-                                            </ui-select-choices>
-                                          </ui-select>
+                                          <div ng-if="!data.isOnDropDown">
+                                            <div class="col-md-11" style="padding: 0px;">
+                                              <input type="text" class="form-control" ng-model="data.soureexpression.name" required disable-validation-message="" ng-disabled="false"
+                                                readonly ng-dblclick="data.isOnDropDown=!data.isOnDropDown" />
+                                            </div>
+                                            <div class="col-md-1" style="padding:7px 0px 0px 9px;">
+                                              <a ng-disabled="{{mode}}">
+                                                <span class="fa fa-pencil" ng-click="data.isOnDropDown=!data.isOnDropDown" tooltip-placement="left" uib-tooltip="Edit"></span>
+                                              </a>
+                                            </div>
+                                          </div>
+                                          <div ng-if="data.isOnDropDown">
+                                            <ui-select required disable-validation-message="" ng-model="data.sourceexpression" theme="" ng-disabled="{{mode}}" on-select="onChangeExpression(data.sourceexpression,$index)">
+                                              <ui-select-match>
+                                                <span title="{{data.soureexpression.name}}">{{data.sourceexpression.name}}</span>
+                                              </ui-select-match>
+                                              <ui-select-choices repeat="x in (datasetLodeExpression | filter: $select.search) track by x.uuid" position='up'>
+                                                <div ng-click="routeForExpression(x,data.id)">
+                                                  <span class="{{x.iconclass}}"></span>
+                                                  <span class="{{x.class}}" ng-bind-html="x.name | highlight: $select.search"></span>
+                                                </div>
+                                              </ui-select-choices>
+                                            </ui-select>
+                                          </div>
                                         </span>
                                       </div>
                                       <div ng-if="data.isSourceAtributeFunction">
                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                          <select select2 ng-model="data.sourcefunction" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in ruleLodeFunction track by c.uuid"></select>
+                                          <div ng-if="!data.isOnDropDown">
+                                            <div class="col-md-11" style="padding: 0px;">
+                                              <input type="text" class="form-control" ng-model="data.sourcefunction.name" required disable-validation-message="" ng-disabled="false"
+                                                readonly ng-dblclick="data.isOnDropDown=!data.isOnDropDown" />
+                                            </div>
+                                            <div class="col-md-1" style="padding:7px 0px 0px 9px;">
+                                              <a ng-disabled="{{mode}}">
+                                                <span class="fa fa-pencil" ng-click="data.isOnDropDown=!data.isOnDropDown" tooltip-placement="left" uib-tooltip="Edit"></span>
+                                              </a>
+                                            </div>
+                                          </div>
+                                          <div ng-if="data.isOnDropDown">
+                                            <select select2 ng-model="data.sourcefunction" ng-disabled="{{mode}}" class="form-control" ng-options="c as  c.name for c in ruleLodeFunction track by c.uuid"
+                                              ng-change="ngChangeFunction($index)"></select>
+                                          </div>
                                         </span>
                                       </div>
                                       <div ng-if="data.isSourceAtributeParamList">
                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                          <select select2 class="form-control" data-ng-model="data.sourceparamlist" ng-options="r as r.caption for r in allparamlistParams track by r.uuid+r.attributeId"
-                                            ng-disabled="{{mode}}" required disable-validation-message="" ng-change="onChangeParamlist(data.sourceparamlist,$index)"></select>
+                                          <div ng-if="!data.isOnDropDown">
+                                            <div class="col-md-11" style="padding: 0px;">
+                                              <input type="text" class="form-control" ng-model="data.sourceparamlist.name" required disable-validation-message="" ng-disabled="false"
+                                                readonly ng-dblclick="data.isOnDropDown=!data.isOnDropDown" />
+                                            </div>
+                                            <div class="col-md-1" style="padding:7px 0px 0px 9px;">
+                                              <a ng-disabled="{{mode}}">
+                                                <span class="fa fa-pencil" ng-click="data.isOnDropDown=!data.isOnDropDown" tooltip-placement="left" uib-tooltip="Edit"></span>
+                                              </a>
+                                            </div>
+                                          </div>
+                                          <div ng-if="data.isOnDropDown">
+                                            <select select2 class="form-control" data-ng-model="data.sourceparamlist" ng-options="r as r.caption for r in allparamlistParams track by r.uuid+r.attributeId"
+                                              ng-disabled="{{mode}}" required disable-validation-message="" ng-change="onChangeParamlist(data.sourceparamlist,$index)"></select>
+                                          </div>
                                         </span>
                                       </div>
                                     </td>
-                                    <td>
+                                    <!-- <td>
                                       <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                         <div style="text-align: center;">
                                           <a class="move-column" ng-disabled="($index == 0 || {{mode}}==true) ?true:false" ng-click="onAttrRowUp($index)">
-                                            <!-- <i class="glyphicon glyphicon-arrow-up"></i> -->
                                             <i class="glyphicon glyphicon-circle-arrow-up" style="font-size:20px"></i>
                                           </a>
                                           <a class="move-column" ng-disabled="($index == attributeTableArray.length-1 || {{mode}}) ? true:false" ng-click="onAttrRowDown($index)">
-                                            <!-- <i class="glyphicon glyphicon-arrow-down"></i> -->
                                             <i class="glyphicon glyphicon-circle-arrow-down	" style="font-size:20px"></i>
                                           </a>
                                         </div>
                                       </span>
-                                    </td>
+                                    </td> -->
                                   </tr>
                                 </tbody>
                               </table>
@@ -725,6 +852,7 @@
                     </div>
 
                   </form>
+
                 </div>
                 <!-- End Tab3 -->
 
@@ -797,6 +925,49 @@
           <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
           <button type="button" class="btn green" ng-click="SubmitSearchAttr()">Submit</button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="downloadSample" class="modal fade bs-modal-lg in" style="display: none;">
+    <div class="modal-dialog" style="width:40%">
+      <div class="modal-content" style="resize: both;overflow: auto;">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" ng-click="ClosePop()" aria-hidden="true"></button>
+          <h4 class="modal-title">Download</h4>
+        </div>
+        <form class="form-horizontal" name="myform4" id="downloadModel" ng-submit="submitDownload()" novalidate="novalidate">
+          <div class="modal-body" style="padding-top:0px">
+            <div class="slimScrollDiv" style="position: relative; overflow-y: auto !important; width:auto;padding:10px;">
+              <div class="scroller" style="max-height:150px;min-height:110px; overflow-y: auto !important; width: auto;margin-top:30px"
+                data-always-visible="1" data-rail-visible1="1" data-initialized="1">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label class="col-md-3 control-label">Rows</label>
+                      <div class="col-md-8">
+                        <!-- limit-to="{{download.limit_to}}" -->
+                        <input type="number" min="1" class="form-control" ng-model="download.rows" max="{{download.maxrow}}" required max-err-type="maxLimitDownload">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="col-md-3 control-label">Format</label>
+                      <div class="col-md-8">
+                        <select class="form-control" data-ng-model="download.selectFormate" ng-options="r for r in download.formates" required>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--End Model Body-->
+          <div class="modal-footer">
+            <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+            <button type="submit" class="btn green">Submit</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>

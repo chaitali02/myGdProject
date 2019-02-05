@@ -21,7 +21,6 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.AggregateFunc;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
@@ -45,7 +44,6 @@ import com.inferyx.framework.service.RuleServiceImpl;
 @Component
 public class FormulaOperator {
 	
-	@Autowired protected MetadataUtil daoRegister;
 	@Autowired protected DatasetServiceImpl datasetServiceImpl;
 	@Autowired protected FunctionOperator functionOperator;
 	@Autowired protected ParamListServiceImpl paramListServiceImpl;
@@ -108,23 +106,27 @@ public class FormulaOperator {
 				}
 			}  
 			if (sourceAttr.getRef().getType() == MetaType.function) {
-				Function function = (Function) daoRegister.getRefObject(sourceAttr.getRef());
+//				Function function = (Function) daoRegister.getRefObject(sourceAttr.getRef());
+				Function function = (Function) commonServiceImpl.getOneByUuidAndVersion(sourceAttr.getRef().getUuid(), sourceAttr.getRef().getVersion(), sourceAttr.getRef().getType().toString(), "N");
+						
 				builder.append(functionOperator.generateSql(function, refKeyMap, otherParams, datasource));
 			}
 			// implementing nested formula
 			if (sourceAttr.getRef().getType() == MetaType.formula) {
 				builder.append(" ");
-				Formula innerFormula = (Formula) daoRegister
-						.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
+//				Formula innerFormula = (Formula) daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
+				MetaIdentifier ref = TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap);
+				Formula innerFormula = (Formula)  commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
+						
 				Datasource datasource2 = commonServiceImpl.getDatasourceByObject(formula);
 				builder.append(" (" + generateSql(innerFormula, refKeyMap, otherParams, execParams, datasource2) + ") ");
 			}
 
 			if (sourceAttr.getRef().getType() == MetaType.datapod) {
 				builder.append(" ");
-				Datapod datapod = (Datapod) daoRegister
-						.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
-				
+//				Datapod datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
+				MetaIdentifier ref = TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap);
+				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 				if (formula.getFormulaType() != null && formula.getFormulaType().equals(FormulaType.percentage)) {
 
 					if (!pctFormula) {
@@ -142,16 +144,20 @@ public class FormulaOperator {
 			
 			if (sourceAttr.getRef().getType() == MetaType.dataset) {
 				builder.append(" ");
-				DataSet dataset = (DataSet) daoRegister
-						.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
-				builder.append(datasetServiceImpl.getAttributeSql(daoRegister, dataset, sourceAttr.getAttributeId()+"")).append(" ").toString();
+//				DataSet dataset = (DataSet) daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
+				MetaIdentifier ref = TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap);
+				DataSet dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
+						
+				builder.append(datasetServiceImpl.getAttributeSql(dataset, sourceAttr.getAttributeId()+"")).append(" ").toString();
 			}
 			
 			if (sourceAttr.getRef().getType() == MetaType.rule) {
 				builder.append(" ");
-				Rule rule = (Rule) daoRegister
-						.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
-				builder.append(ruleServiceImpl.getAttributeSql(daoRegister, rule, sourceAttr.getAttributeId()+"")).append(" ").toString();
+//				Rule rule = (Rule) daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
+				MetaIdentifier ref = TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap);
+				Rule rule = (Rule) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
+						
+				builder.append(ruleServiceImpl.getAttributeSql(rule, sourceAttr.getAttributeId()+"")).append(" ").toString();
 			}
 		}
 		if (formula.getFormulaType() != null && formula.getFormulaType().equals(FormulaType.sum_aggr)) {
@@ -298,8 +304,10 @@ public class FormulaOperator {
 				}
 			}
 			if (sourceAttr.getRef().getType() == MetaType.formula) {
-				Formula innerFormula = (Formula) daoRegister
-						.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
+//				Formula innerFormula = (Formula) daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
+				MetaIdentifier ref = TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap);
+				Formula innerFormula = (Formula) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
+						
 				if (isGroupBy(innerFormula, refKeyMap, otherParam)) {
 					return true;
 				}
@@ -347,21 +355,27 @@ public class FormulaOperator {
 			
 			// implementing nested formula
 			if (sourceAttr.getRef().getType() == MetaType.formula && !isInAggr) {
-				Formula innerFormula = (Formula) daoRegister
-						.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
+//				Formula innerFormula = (Formula) daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
+				MetaIdentifier ref = TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap);
+				Formula innerFormula = (Formula) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
+						
 				builder.append(selectGroupBy(innerFormula, refKeyMap, otherParams));
 			}
 
 			if (sourceAttr.getRef().getType() == MetaType.datapod && !isInAggr) {
-				Datapod datapod = (Datapod) daoRegister
-						.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
+//				Datapod datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
+				MetaIdentifier ref = TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap);
+				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
+						
 				builder.append(datapod.sql(sourceAttr.getAttributeId())).append(", ");
 			}
 			
 			if (sourceAttr.getRef().getType() == MetaType.dataset && !isInAggr) {
-				DataSet dataset = (DataSet) daoRegister
-						.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
-				builder.append(datasetServiceImpl.getAttributeSql(daoRegister, dataset, sourceAttr.getAttributeId()+"")).append(", ");
+//				DataSet dataset = (DataSet) daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
+				MetaIdentifier ref = TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap);
+				DataSet dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
+						
+				builder.append(datasetServiceImpl.getAttributeSql(dataset, sourceAttr.getAttributeId()+"")).append(", ");
 			}
 
 		}// End for formula

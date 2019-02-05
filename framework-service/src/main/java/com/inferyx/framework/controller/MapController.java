@@ -15,8 +15,10 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.FutureTask;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -38,6 +40,7 @@ import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.MapServiceImpl;
+import com.inferyx.framework.service.TaskHolder;
 
 @RestController
 @RequestMapping(value = "/map")
@@ -131,4 +134,36 @@ public class MapController {
 		RunMode runMode = Helper.getExecutionMode((mode.equals("undefined")) ? mode="BATCH" : mode);
 		return mapServiceImpl.getMapResults(mapExecUUID, mapExecVersion, offset, limit, sortBy, order, requestId, runMode);
 	}
+	
+	@RequestMapping(value="/setStatus", method= RequestMethod.PUT)
+	public boolean setStatus(@RequestParam("uuid") String uuid, 
+			@RequestParam("version") String version,
+			@RequestParam("status") String status,
+			@RequestParam("type") String type,
+			@RequestParam(value = "action", required = false) String action) throws Exception {
+		try {
+			commonServiceImpl.setStatus(type,uuid,version,status);			
+		}catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
+	@RequestMapping(value="/restart", method= RequestMethod.POST)
+	public boolean restart(@RequestParam("uuid") String uuid, 
+			@RequestParam("version") String version,
+			@RequestParam("type") String type,
+			@RequestParam(value = "action", required = false) String action, 
+			@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception {
+			RunMode runMode = Helper.getExecutionMode(mode);
+			try {
+				mapServiceImpl.restart(uuid,version,runMode);
+			
+			}catch (Exception e) {
+				e.printStackTrace();
+				return false;
+			}
+			return true;
+	}	
 }

@@ -66,25 +66,25 @@ public class RConnector implements IConnector {
 			if ((rHost != null && rPort != null) && (!StringUtils.isBlank(rHost) && !StringUtils.isBlank(rPort))) {
 				int port = Integer.parseInt(rPort);
 
-					if(logPath != null && !StringUtils.isBlank(logPath))
-						customLogger.writeLog(this.getClass(), "Acquiring connection from "+rHost+".", logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
+//					if(logPath != null && !StringUtils.isBlank(logPath))
+//						customLogger.writeLog(this.getClass(), "Acquiring connection from "+rHost+".", logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
 					
 					rCon = new RConnection(rHost, port);
 					conholder.setType(ExecContext.R.toString());
 					conholder.setConObject(rCon);
 					
-					if(logPath != null && !StringUtils.isBlank(logPath))
-						customLogger.writeLog(this.getClass(), "Connection acquired from "+rHost+".", logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
+//					if(logPath != null && !StringUtils.isBlank(logPath))
+//						customLogger.writeLog(this.getClass(), "Connection acquired from "+rHost+".", logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
 			} else {
-					if(logPath != null && !StringUtils.isBlank(logPath))
-						customLogger.writeLog(this.getClass(), "Acquiring default connection.", logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
+//					if(logPath != null && !StringUtils.isBlank(logPath))
+//						customLogger.writeLog(this.getClass(), "Acquiring default connection.", logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
 					
 					rCon = new RConnection();
 					conholder.setType(ExecContext.R.toString());
 					conholder.setConObject(rCon);
 					
-					if(logPath != null && !StringUtils.isBlank(logPath))
-						customLogger.writeLog(this.getClass(), "Connection acquired.", logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
+//					if(logPath != null && !StringUtils.isBlank(logPath))
+//						customLogger.writeLog(this.getClass(), "Connection acquired.", logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
 			}
 			
 		} catch (IllegalArgumentException 
@@ -92,10 +92,10 @@ public class RConnector implements IConnector {
 				| NullPointerException 
 				| RserveException e) {
 			e.printStackTrace();
-			if (logPath != null && !StringUtils.isBlank(logPath))
-				customLogger.writeErrorLog(this.getClass(), StringUtils.join(ExceptionUtils.getRootCauseStackTrace(e), System.lineSeparator()), 
-						logPath,
-						Thread.currentThread().getStackTrace()[1].getLineNumber());
+//			if (logPath != null && !StringUtils.isBlank(logPath))
+//				customLogger.writeErrorLog(this.getClass(), StringUtils.join(ExceptionUtils.getRootCauseStackTrace(e), System.lineSeparator()), 
+//						logPath,
+//						Thread.currentThread().getStackTrace()[1].getLineNumber());
 			
 			throw new IOException(e.getCause().getMessage());
 		}

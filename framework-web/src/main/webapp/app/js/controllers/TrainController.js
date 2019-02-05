@@ -3,7 +3,8 @@
  */
 DatascienceModule = angular.module('DatascienceModule');
 
-DatascienceModule.controller('CreateTrainController', function ($state, $stateParams, $rootScope, $scope, $sessionStorage, $timeout, $filter, TrainService, $http, $location, CommonService, privilegeSvc) {
+DatascienceModule.controller('CreateTrainController', function ($state, $stateParams, $rootScope, $scope, $sessionStorage,
+  $timeout, $filter, TrainService, $http, $location, CommonService, privilegeSvc,CF_ENCODINGTYPE, CF_GRID) {
 
   $scope.isTargetNameDisabled = false;
   $scope.dataLoading = false;
@@ -60,10 +61,14 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
   $scope.sourceTypes = ["datapod", "dataset", "rule"];
   $scope.selectSourceType = $scope.sourceTypes[0];
   $scope.isDestoryState = false;
-  //$scope.targetTypes = ["datapod", "file"];
-  //$scope.selectTargetType = $scope.targetTypes[0];
+  $scope.saveTypes = ["file","datapod"];
+  $scope.selectedTrainSaveType = $scope.saveTypes[0];
+  $scope.selectedTestSaveType = $scope.saveTypes[0];
+  $scope.isTrainSaveDisabled=true;
+  $scope.isTestSaveDisabled=true;
   $scope.paramTypes = ["paramlist", "paramset"];
   $scope.imputeTypes=["custom","default","function"];
+  $scope.encodingTypes=CF_ENCODINGTYPE.encodingType;//["ORDINAL", "ONEHOT", "BINARY", "BASEN","HASHING"];
   $scope.isSubmitShow = false;
   $scope.continueCount = 1;
   $scope.backCount;
@@ -109,6 +114,36 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
   $scope.$on('$destroy', function () {
     $scope.isDestoryState = true;
   });
+
+  $scope.autoReset=function(){
+    var featureMapTableArray=[]
+    for(var i=0;i < $scope.modelData.features.length;i++){
+      var featureMap = {};
+      var sourceFeature = {};
+      var targetFeature = {};
+      var imputeMethod={};
+      featureMap.featureMapId = i;
+      featureMap.id = i;
+      featureMap.index = i;
+      sourceFeature.uuid = $scope.modelData.uuid;
+      sourceFeature.type = "model";
+      sourceFeature.featureId = $scope.modelData.features[i].featureId;
+      sourceFeature.featureName = $scope.modelData.features[i].name;
+      featureMap.sourceFeature = sourceFeature;
+      imputeMethod.type="model";
+      imputeMethod.imputeType="default";
+      imputeMethod.imputeValue=$scope.modelData.features[i].defaultValue;
+      imputeMethod.featureId = $scope.modelData.features[i].featureId;
+      imputeMethod.defaultValue = $scope.modelData.features[i].defaultValue;
+      imputeMethod.isModelShow=true;
+      imputeMethod.isSimpleShow=false;
+      imputeMethod.isFunctionShow=false;
+      imputeMethod.sourceFeature = sourceFeature;
+      featureMap.imputeMethod=imputeMethod;
+      $scope.originalFeatureMapTableArray[i] = featureMap;
+      $scope.featureMapTableArray[i] = featureMap
+    }
+  }
 
   $scope.autoMapFeature = function (type) {
     $scope.selectedAutoMode = type
@@ -241,15 +276,18 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
 
   // }
 
-  // $scope.getAllLetestTarget=function(defaultValue){
-  //   TrainService.getAllLatest($scope.selectTargetType).then(function(response) { onGetAllLatest(response.data)});
-  //   var onGetAllLatest = function(response) {
-  //     $scope.allTarget = response;
-  //     if(typeof $stateParams.id == "undefined" || defaultValue ==true) {
-  //       $scope.selectTarget=response[0];
-  //     }
-  //   }
-  // }
+  $scope.getAllLetestTarget=function(defaultValue,type){
+    TrainService.getAllLatest("datapod").then(function(response) { onGetAllLatest(response.data)});
+    var onGetAllLatest = function(response) {
+      if(type =='train'){
+        $scope.allTrainLocation=response;
+      }
+      else if(type =="test"){
+        $scope.allTestLocation=response;        
+      }
+    }
+  }
+
   $scope.loadAttribute = function (query) {
     return $timeout(function () {
       return $filter('filter')($scope.allsourceLabel, query);
@@ -300,22 +338,30 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
           featureMap.featureMapId = i;
           featureMap.id = i;
           featureMap.index = i;
+          if(response.features.length > CF_GRID.framework_autopopulate_grid){
+            featureMap.isOnDropDown=false;
+          }	
+          else{
+            featureMap.isOnDropDown=true;
+          }
           sourceFeature.uuid = response.uuid;
           sourceFeature.type = "model";
           sourceFeature.featureId = response.features[i].featureId;
           sourceFeature.featureName = response.features[i].name;
           featureMap.sourceFeature = sourceFeature;
           featureMapTableArray[i] = featureMap;
-          imputeMethod.type="model";
-          imputeMethod.imputeType="default";
-          imputeMethod.imputeValue=response.features[i].defaultValue;
-          imputeMethod.featureId = response.features[i].featureId;
-          imputeMethod.defaultValue = response.features[i].defaultValue;
-          imputeMethod.isModelShow=true;
-          imputeMethod.isSimpleShow=false;
-          imputeMethod.isFunctionShow=false;
-          imputeMethod.sourceFeature = sourceFeature;
-          featureMap.imputeMethod=imputeMethod;
+          // imputeMethod.type="model";
+          // imputeMethod.uuid=response.uuid;
+          // imputeMethod.imputeType="default";
+          // imputeMethod.imputeValue=response.features[i].defaultValue;
+          // imputeMethod.featureId = response.features[i].featureId;
+          // imputeMethod.defaultValue = response.features[i].defaultValue;
+          // imputeMethod.isModelShow=true;
+          // imputeMethod.isSimpleShow=false;
+          // imputeMethod.isFunctionShow=false;
+
+          // imputeMethod.sourceFeature = sourceFeature;
+          // featureMap.imputeMethod=imputeMethod;
           $scope.originalFeatureMapTableArray = featureMapTableArray;
           $scope.featureMapTableArray = featureMapTableArray//$scope.getResults($scope.pagination,featureMapTableArray);//featureMapTableArray;
         }
@@ -340,16 +386,28 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     $scope.featureMapTableArray[index - 1] = rowTempIndex;
   }
 
-  $scope.onChangeTargeType = function () {
-    if ($scope.selectTargetType == 'datapod') {
-      $scope.isTargetNameDisabled = false;
-      $scope.getAllLetestTarget(true);
+  $scope.onChangeTrainType = function () {
+    if ($scope.selectedTrainSaveType == 'datapod') {
+      $scope.isTrainSaveDisabled = false;
+      $scope.getAllLetestTarget(true,'train');
 
     } else {
-      $scope.isTargetNameDisabled = true;
-      $scope.allTarget = [];
+      $scope.isTrainSaveDisabled = true;
+      $scope.allTrainLocation = [];
     }
   }
+  
+  $scope.onChangeTestType = function () {
+    if ($scope.selectedTestSaveType == 'datapod') {
+      $scope.isTestSaveDisabled = false;
+      $scope.getAllLetestTarget(true,'test');
+
+    } else {
+      $scope.isTestSaveDisabled = true;
+      $scope.allTestLocation = [];
+    }
+  }
+  
   
   $scope.onChangeInputeType=function(index,imputeType){
     if(imputeType=="default"){
@@ -410,6 +468,17 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
       $scope.featureMapTableArray[i].targetFeature = null;
     }
   }
+  
+  $scope.onChangeSourceAttribute=function(data,index){
+    setTimeout(function(){
+			if($scope.featureMapTableArray.length > CF_GRID.framework_autopopulate_grid){
+				$scope.featureMapTableArray[index].isOnDropDown=false;
+			}	
+			else{
+				$scope.featureMapTableArray[index].isOnDropDown=true;
+			}
+		},10);
+  }
 
   $scope.getOneByUuidandVersion = function (uuid, version) {
 
@@ -440,6 +509,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
       selectLabel.uuid = response.labelInfo.ref.uuid;
       selectLabel.attributeId = response.labelInfo.attrId;
       $scope.selectLabel = selectLabel;
+      //$scope.selectEncodingType=response.encodingType;    
       var rowIdentifierTags = [];
       if (response.rowIdentifier != null) {
         for (var i = 0; i < response.rowIdentifier.length; i++) {
@@ -465,6 +535,34 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
           $scope.tags = tags;
         }
       }
+      
+      var selectedTrainLocation={};
+      $scope.selectedTrainLocation=null;
+      
+      if(response.trainLocation !=null){
+        selectedTrainLocation.uuid=response.trainLocation.ref.uuid;
+        selectedTrainLocation.name=response.trainLocation.ref.name;
+        $scope.selectedTrainSaveType=response.trainLocation.ref.type;
+        $scope.selectedTrainSaveType=="file"?$scope.isTrainSaveDisabled=true:$scope.isTrainSaveDisabled=false;
+        $scope.selectedTrainLocation=selectedTrainLocation;
+        if($scope.selectedTrainSaveType !="file"){
+          $scope.onChangeTrainType();
+        }
+      }
+
+        
+      var selectedTestLocation={};
+      $scope.selectedTestLocation=null;
+      if(response.testLocation !=null){
+        selectedTestLocation.uuid=response.testLocation.ref.uuid;
+        selectedTestLocation.name=response.testLocation.ref.name;
+        $scope.selectedTestSaveType=response.testLocation.ref.type;
+        $scope.selectedTestSaveType=="file"?$scope.isTestSaveDisabled=true:$scope.isTestSaveDisabled=false;
+        $scope.selectedTestLocation=selectedTestLocation;
+        if($scope.selectedTestLocation !="file"){
+          $scope.onChangeTestType();
+        }
+      }
 
       for (var i = 0; i < response.featureAttrMap.length; i++) {
         var featureAttrMap = {};
@@ -473,6 +571,12 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
         var imputeMethod={};
         featureAttrMap.featureAttrMapId = response.featureAttrMap[i].featureMapId;
         featureAttrMap.id = response.featureAttrMap[i].featureMapId;
+        if(response.featureAttrMap.length > CF_GRID.framework_autopopulate_grid){
+          featureAttrMap.isOnDropDown=false;
+        }	
+        else{
+          featureAttrMap.isOnDropDown=true;
+        }
         sourceFeature.uuid = response.featureAttrMap[i].feature.ref.uuid;
         sourceFeature.type = response.featureAttrMap[i].feature.ref.type;
         sourceFeature.featureId = response.featureAttrMap[i].feature.featureId;
@@ -486,41 +590,43 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
         targetFeature.id = response.featureAttrMap[i].attribute.ref.uuid + "_" + response.featureAttrMap[i].attribute.attrId;
         targetFeature.dname = response.featureAttrMap[i].attribute.ref.name + "." + response.featureAttrMap[i].attribute.attrName;
         featureAttrMap.targetFeature = targetFeature;
+       // featureAttrMap.encodingType= response.featureAttrMap[i].encodingType;
        // console.log(response.featureAttrMap[i].imputeMethod.ref.type)
-       if(response.featureAttrMap[i].imputeMethod !=null){
-          if(response.featureAttrMap[i].imputeMethod.ref.type =="model"){
-            imputeMethod.imputeType="default";
-            imputeMethod.imputeValue=response.featureAttrMap[i].imputeMethod.featureDefaultValue;
-            imputeMethod.isModelShow=true;
-            imputeMethod.isSimpleShow=false;
-            imputeMethod.isFunctionShow=false;
-            imputeMethod.featureId = response.featureAttrMap[i].feature.featureId;
-            imputeMethod.featureName = response.featureAttrMap[i].feature.featureName;
-            imputeMethod.id = response.featureAttrMap[i].featureMapId;
-          }
-          else if(response.featureAttrMap[i].imputeMethod.ref.type =="simple"){
-            imputeMethod.imputeType="custom";
-            imputeMethod.imputeValue=response.featureAttrMap[i].imputeMethod.value;
-            imputeMethod.isModelShow=false;
-            imputeMethod.isSimpleShow=true;
-            imputeMethod.isFunctionShow=false;
-          }
-          else if(response.featureAttrMap[i].imputeMethod.ref.type =="function"){
-            imputeMethod.imputeType="function";
-            imputeMethod.isModelShow=false;
-            imputeMethod.isSimpleShow=false;
-            imputeMethod.isFunctionShow=true;
-            $scope.getFunctionByCategory();
-            var selectedFunction={};
-            selectedFunction.uuid = response.featureAttrMap[i].imputeMethod.ref.uuid;
-            selectedFunction.type = response.featureAttrMap[i].imputeMethod.ref.type;
-            imputeMethod.selectedFunction=selectedFunction;
-          }
+      //  if(response.featureAttrMap[i].imputeMethod !=null){
+      //     if(response.featureAttrMap[i].imputeMethod.ref.type =="model"){
+      //       imputeMethod.imputeType="default";
+      //       imputeMethod.imputeValue=response.featureAttrMap[i].imputeMethod.featureDefaultValue;
+      //       imputeMethod.isModelShow=true;
+      //       imputeMethod.isSimpleShow=false;
+      //       imputeMethod.isFunctionShow=false;
+      //       imputeMethod.featureId = response.featureAttrMap[i].feature.featureId;
+      //       imputeMethod.featureName = response.featureAttrMap[i].feature.featureName;
+      //       imputeMethod.id = response.featureAttrMap[i].featureMapId;
+      //     }
+      //     else if(response.featureAttrMap[i].imputeMethod.ref.type =="simple"){
+      //       imputeMethod.imputeType="custom";
+      //       imputeMethod.imputeValue=response.featureAttrMap[i].imputeMethod.value;
+      //       imputeMethod.isModelShow=false;
+      //       imputeMethod.isSimpleShow=true;
+      //       imputeMethod.isFunctionShow=false;
+      //     }
+      //     else if(response.featureAttrMap[i].imputeMethod.ref.type =="function"){
+      //       imputeMethod.imputeType="function";
+      //       imputeMethod.isModelShow=false;
+      //       imputeMethod.isSimpleShow=false;
+      //       imputeMethod.isFunctionShow=true;
+      //       $scope.getFunctionByCategory();
+      //       var selectedFunction={};
+      //       selectedFunction.uuid = response.featureAttrMap[i].imputeMethod.ref.uuid;
+      //       selectedFunction.type = response.featureAttrMap[i].imputeMethod.ref.type;
+      //       imputeMethod.selectedFunction=selectedFunction;
+      //     }
           
-          featureAttrMap.imputeMethod=imputeMethod;
-          imputeMethod.uuid = response.featureAttrMap[i].imputeMethod.ref.uuid;
-          imputeMethod.type = response.featureAttrMap[i].imputeMethod.ref.type;
-        }
+      //     imputeMethod.uuid = response.featureAttrMap[i].imputeMethod.ref.uuid;
+      //     imputeMethod.type = response.featureAttrMap[i].imputeMethod.ref.type;
+      //     featureAttrMap.imputeMethod=imputeMethod;
+
+      //   }
         featureAttrMap.featureAttrMap=featureAttrMap;
         featureMapTableArray[i] = featureAttrMap;
       }
@@ -555,7 +661,11 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     $scope.allModel = [];
     $scope.allsourceLabel = null;
     $scope.selectLabel = null;
+   // $scope.selectEncodingType=null;
+   //$scope.encodingTypes=[];
     setTimeout(function () {
+     // $scope.selectEncodingType="";
+    //  $scope.encodingTypes=["ORDINAL", "ONEHOTt", "BINARY", "BASEN","HASHING"];
       $scope.getAllLetestModel();
       $scope.getAllLetestSource();
       $scope.getOneByUuidandVersion(uuid, version);
@@ -579,7 +689,28 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     TrainJson.trainPercent = $scope.trainData.trainPercent;
     TrainJson.useHyperParams = $scope.trainData.useHyperParams;
     //TrainJson.featureImportance=$scope.trainData.featureImportance;
+  //  TrainJson.encodingType =$scope.selectEncodingType;
+
     TrainJson.includeFeatures = $scope.trainData.includeFeatures;
+    TrainJson.saveTrainingSet = $scope.trainData.saveTrainingSet;
+
+    var trainLocation={};
+    var trainLocationRef={};
+    trainLocationRef.type=$scope.selectedTrainSaveType;
+    if($scope.selectedTrainSaveType =="datapod")
+      trainLocationRef.uuid=$scope.selectedTrainLocation.uuid;
+    trainLocation.ref=trainLocationRef;
+    TrainJson.trainLocation=trainLocation;
+
+    var testLocation={};
+    var testLocationRef={};
+    testLocationRef.type=$scope.selectedTestSaveType;
+    if($scope.selectedTestSaveType =="datapod")
+      testLocationRef.uuid=$scope.selectedTestLocation.uuid;
+    testLocation.ref=testLocationRef;
+    TrainJson.testLocation=testLocation;
+
+
     var tagArray = [];
     if ($scope.tags != null) {
       for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
@@ -632,6 +763,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
         var featureMapObj = {};
         featureMapObj.featureMapId = $scope.featureMapTableArray[i].id;
         featureMapObj.featureDisplaySeq = i;
+        //featureMapObj.encodingType= $scope.featureMapTableArray[i].encodingType;
         var sourceFeature = {};
         var sourceFeatureRef = {};
         var targetFeature = {};
@@ -649,24 +781,23 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
         targetFeature.ref = targetFeatureRef
         targetFeature.attrId = $scope.featureMapTableArray[i].targetFeature.attributeId;
         featureMapObj.attribute = targetFeature;
-        
-        if($scope.featureMapTableArray[i].imputeMethod.imputeType =="default"){
-          imputeMethodRef.type="model";
-          imputeMethodRef.uuid = $scope.featureMapTableArray[i].imputeMethod.uuid;
-          imputeMethod.ref = imputeMethodRef;
-          imputeMethod.featureId = $scope.featureMapTableArray[i].imputeMethod.featureId;
+        // if($scope.featureMapTableArray[i].imputeMethod.imputeType =="default"){
+        //   imputeMethodRef.type="model";
+        //   imputeMethodRef.uuid =  $scope.featureMapTableArray[i].sourceFeature.uuid;;
+        //   imputeMethod.ref = imputeMethodRef;
+        //   imputeMethod.featureId = $scope.featureMapTableArray[i].imputeMethod.featureId;
 
-        }else if($scope.featureMapTableArray[i].imputeMethod.imputeType =="function"){
-          imputeMethodRef.type="function";
-          imputeMethodRef.uuid = $scope.featureMapTableArray[i].imputeMethod.selectedFunction.uuid;
-          imputeMethod.ref = imputeMethodRef;
-        }
-        else{
-          imputeMethodRef.type="simple";
-          imputeMethod.ref = imputeMethodRef;
-          imputeMethod.value = $scope.featureMapTableArray[i].imputeMethod.imputeValue;
-        }
-        featureMapObj.imputeMethod = imputeMethod;
+        // }else if($scope.featureMapTableArray[i].imputeMethod.imputeType =="function"){
+        //   imputeMethodRef.type="function";
+        //   imputeMethodRef.uuid = $scope.featureMapTableArray[i].imputeMethod.selectedFunction.uuid;
+        //   imputeMethod.ref = imputeMethodRef;
+        // }
+        // else{
+        //   imputeMethodRef.type="simple";
+        //   imputeMethod.ref = imputeMethodRef;
+        //   imputeMethod.value = $scope.featureMapTableArray[i].imputeMethod.imputeValue;
+        // }
+        // featureMapObj.imputeMethod = imputeMethod;
         featureMap[i] = featureMapObj;
       }
     }
@@ -897,39 +1028,39 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
       stage.selected = $scope.selectAllParam;
     });
   }
+  $scope.attrTableSelectedItem=[];
+	$scope.onChangeAttrRow=function(index,status){
+		if(status ==true){
+			$scope.attrTableSelectedItem.push(index);
+		}
+		else{
+			let tempIndex=$scope.attrTableSelectedItem.indexOf(index);
 
-  // $scope.getResults = function(pagination,params) {
-  //   pagination.totalItems=params.length;
-  //   if(pagination.totalItems >0){
-  //     pagination.to = (((pagination.currentPage - 1) * (pagination.usePageSize))+1);
-  //   }
-  //   else{
-  //     pagination.to=0;
-  //   }
-  //   if(pagination.totalItems < (pagination.usePageSize*pagination.currentPage)) {
-  //       pagination.from = pagination.totalItems;
-  //   } else {
-  //     pagination.from = ((pagination.currentPage) * pagination.usePageSize);
-  //   }
-  //   var limit = (pagination.usePageSize* pagination.currentPage);
-  //   var offset = ((pagination.currentPage - 1) * pagination.usePageSize)
-  //   return params.slice(offset,limit);
-  // }
+			if(tempIndex !=-1){
+				$scope.attrTableSelectedItem.splice(tempIndex, 1);
 
-  // $scope.onPageChanged = function(){
-  //   $scope.featureMapTableArray =$scope.getResults($scope.pagination,$scope.originalFeatureMapTableArray);
-  // };
-  // $scope.onPerPageChange=function(){
-  //   if($scope.pagination.pageSize == 'All'){
-  //     $scope.pagination.usePageSize=$scope.originalFeatureMapTableArray.length;
-  //   }else{
-  //     $scope.pagination.usePageSize=$scope.pagination.pageSize;
-  //   }
-  //   $scope.featureMapTableArray =$scope.getResults($scope.pagination,$scope.originalFeatureMapTableArray);
-  // }  
+			}
+		}	
+	}
+	$scope.autoMove=function(index){
+		var tempAtrr=$scope.featureMapTableArray[$scope.attrTableSelectedItem[0]];
+		$scope.featureMapTableArray.splice($scope.attrTableSelectedItem[0],1);
+		$scope.featureMapTableArray.splice(index,0,tempAtrr);
+		$scope.attrTableSelectedItem=[];
+		$scope.featureMapTableArray[index].selected=false;
+	
+	}
 
-
+	$scope.autoMoveTo=function(index){
+		if(index <= $scope.featureMapTableArray.length){
+			$scope.autoMove(index-1,'mapAttr');
+			$scope.moveTo=null;
+			$(".btn-group ").removeClass("open");
+		}
+	}
+  
 }); //End CreateModelController
+
 
 DatascienceModule.filter('propsFilter', function () {
   return function (items, props) {

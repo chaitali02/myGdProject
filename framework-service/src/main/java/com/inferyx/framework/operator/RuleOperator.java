@@ -27,7 +27,6 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.common.DagExecUtil;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.AttributeMap;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
@@ -48,6 +47,7 @@ import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
+
 @Component
 public class RuleOperator implements IParsable, IReferenceable {
 	
@@ -57,8 +57,6 @@ public class RuleOperator implements IParsable, IReferenceable {
 	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	RelationOperator relationOperator;
-	@Autowired
-	MetadataUtil daoRegister;
 	@Autowired
 	DatasetOperator datasetOperator;
 	@Autowired
@@ -117,10 +115,14 @@ public class RuleOperator implements IParsable, IReferenceable {
 		Relation relation = null;
 		usedRefKeySet.add(rule.getSource().getRef());
 		if (rule.getSource().getRef().getType() == MetaType.relation) {
-			relation = (Relation) daoRegister.getRefObject(rule.getSource().getRef()); 
+//			relation = (Relation) daoRegister.getRefObject(rule.getSource().getRef()); 
+			relation = (Relation) commonServiceImpl.getOneByUuidAndVersion(rule.getSource().getRef().getUuid(), rule.getSource().getRef().getVersion(), rule.getSource().getRef().getType().toString(), "N");
 			builder.append(relationOperator.generateSql(relation, refKeyMap, otherParams, null, usedRefKeySet, runMode));
 		} else if (rule.getSource().getRef().getType() == MetaType.datapod) {
-			Datapod datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(rule.getSource().getRef(), refKeyMap));
+//			Datapod datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(rule.getSource().getRef(), refKeyMap));
+			MetaIdentifier ref = TaskParser.populateRefVersion(rule.getSource().getRef(), refKeyMap);
+			Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
+			
 			String table = null;
 			if (otherParams == null	|| otherParams.get("datapod_".concat(datapod.getUuid())) == null) {
 				table = datastoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
@@ -130,10 +132,14 @@ public class RuleOperator implements IParsable, IReferenceable {
 			}
 			builder.append(String.format(table, datapod.getName())).append("  ").append(datapod.getName()).append(" ");
 		} else if (rule.getSource().getRef().getType() == MetaType.dataset) {
-			DataSet dataset = (DataSet) daoRegister.getRefObject(rule.getSource().getRef());
+//			DataSet dataset = (DataSet) daoRegister.getRefObject(rule.getSource().getRef());
+			DataSet dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(rule.getSource().getRef().getUuid(), rule.getSource().getRef().getVersion(), rule.getSource().getRef().getType().toString(), "N");
+			
 			builder.append("(").append(datasetOperator.generateSql(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode)).append(")  ").append(dataset.getName());
 		} else if (rule.getSource().getRef().getType() == MetaType.rule) {
-			Rule innerRule = (Rule) daoRegister.getRefObject(rule.getSource().getRef());
+//			Rule innerRule = (Rule) daoRegister.getRefObject(rule.getSource().getRef());
+			Rule innerRule = (Rule) commonServiceImpl.getOneByUuidAndVersion(rule.getSource().getRef().getUuid(), rule.getSource().getRef().getVersion(), rule.getSource().getRef().getType().toString(), "N");
+			
 			builder.append("(").append(generateSql(innerRule, refKeyMap, otherParams, usedRefKeySet, execParams, runMode)).append(")  ").append(innerRule.getName());
 		}
 		return builder.toString();

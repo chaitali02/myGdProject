@@ -25,7 +25,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IDataQualExecDao;
 import com.inferyx.framework.dao.IDataQualGroupExecDao;
 import com.inferyx.framework.domain.DataQual;
@@ -58,8 +57,6 @@ public class DataQualExecServiceImpl extends BaseRuleExecTemplate {
 	DataQualServiceImpl dataQualServiceImpl;	
 	@Autowired
 	DatapodServiceImpl datapodServiceImpl;	
-	@Autowired
-	MetadataUtil daoRegister;
 	
 	static final Logger logger = Logger.getLogger(DataQualExecServiceImpl.class);
 

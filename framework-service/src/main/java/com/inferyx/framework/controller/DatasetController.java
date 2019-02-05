@@ -13,6 +13,8 @@ package com.inferyx.framework.controller;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,4 +54,18 @@ public class DatasetController {
 	 	RunMode runMode = Helper.getExecutionMode(mode);		 
     	return datasetServiceImpl.getAttributeValues(datasetUuid, attributeID, runMode);   	
    }
+   
+	@RequestMapping(value = "/download", method = RequestMethod.GET)
+	public HttpServletResponse download(@RequestParam(value = "uuid") String datasetUUID,
+			@RequestParam(value = "version") String datasetVersion,
+			@RequestParam(value = "format", defaultValue = "excel") String format,
+			@RequestParam(value = "rows", defaultValue = "200") int rows,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode,
+			HttpServletResponse response) throws Exception {
+		RunMode runMode = Helper.getExecutionMode(mode);
+		response =  datasetServiceImpl.download(datasetUUID, datasetVersion, format, rows, runMode, response);	   	
+		return null;
+	}
 }

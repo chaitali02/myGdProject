@@ -10,7 +10,11 @@
  *******************************************************************************/
 package com.inferyx.framework.domain;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+
+import com.inferyx.framework.enums.EncodingType;
 
 /** 
  * @author Ganesh
@@ -48,7 +52,41 @@ public class PredictInput {
 	String targetTableName;
 	List<String> rowIdentifier;
 	String includeFeatures;
+	Map<String, EncodingType> encodingDetails;
+	LinkedHashMap<String, Object> imputationDetails;
 	
+	/**
+	 * @Ganesh
+	 *
+	 * @return the encodingDetails
+	 */
+	public Map<String, EncodingType> getEncodingDetails() {
+		return encodingDetails;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param encodingDetails the encodingDetails to set
+	 */
+	public void setEncodingDetails(Map<String, EncodingType> encodingDetails) {
+		this.encodingDetails = encodingDetails;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @return the imputationDetails
+	 */
+	public LinkedHashMap<String, Object> getImputationDetails() {
+		return imputationDetails;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param imputationDetails the imputationDetails to set
+	 */
+	public void setImputationDetails(LinkedHashMap<String, Object> imputationDetails) {
+		this.imputationDetails = imputationDetails;
+	}
 	/**
 	 * 
 	 * @ Ganesh

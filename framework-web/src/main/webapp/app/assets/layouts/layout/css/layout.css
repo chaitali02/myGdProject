@@ -2284,7 +2284,7 @@ Page Quick Sidebar
 .quick-nav {
   position: fixed;
   z-index: 10103;
-  bottom: 0%;
+  bottom: 5%;/*jiten*/
   right: 10px;
   margin-top: -230px;
   pointer-events: none; }

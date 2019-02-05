@@ -329,6 +329,64 @@ DataPipelineModule.directive('gridResultsDirective', function ($rootScope, $comp
         $scope.gridOptions.data = params.slice(offset, limit);
       }
 
+
+      $scope.downloadTestSet =function(){
+        CommonService.downloadTestSet($scope.downloadAction.uuid, $scope.downloadAction.version,"trainexec").then(function (response) { onSuccessDownloadTestSet(response.data) });
+        var onSuccessDownloadTestSet= function (response) {
+          headers = response.headers();
+          // console.log(typeof (data))
+          var filename = headers['filename'];
+          var contentType = headers['content-type'];
+          var linkElement = document.createElement('a');
+          try {
+              var blob = new Blob([response.data], {
+                  type: contentType
+              });
+              var url = window.URL.createObjectURL(blob);
+              linkElement.setAttribute('href', url);
+              linkElement.setAttribute("download", filename);
+              //LoadXML("showPMML",url);
+              var clickEvent = new MouseEvent(
+                  "click", {
+                      "view": window,
+                      "bubbles": true,
+                      "cancelable": false
+                  });
+              linkElement.dispatchEvent(clickEvent);
+          } catch (ex) {
+              // console.log(ex);
+          }
+        }
+    }
+
+    $scope.downloadTrainSet =function(){
+        CommonService.downloadTrainSet($scope.downloadAction.uuid, $scope.downloadAction.version,"trainexec").then(function (response) { onSuccessDownloadTrainSet(response.data) });
+        var onSuccessDownloadTrainSet= function (response) {
+          headers = response.headers();
+          // console.log(typeof (data))
+          var filename = headers['filename'];
+          var contentType = headers['content-type'];
+          var linkElement = document.createElement('a');
+          try {
+              var blob = new Blob([response.data], {
+                  type: contentType
+              });
+              var url = window.URL.createObjectURL(blob);
+              linkElement.setAttribute('href', url);
+              linkElement.setAttribute("download", filename);
+              //LoadXML("showPMML",url);
+              var clickEvent = new MouseEvent(
+                  "click", {
+                      "view": window,
+                      "bubbles": true,
+                      "cancelable": false
+                  });
+              linkElement.dispatchEvent(clickEvent);
+          } catch (ex) {
+              // console.log(ex);
+          }
+        }
+    }
       $scope.downloadTrainData = function (uuid) {
         var linkElement = document.createElement('a');
         try {
@@ -397,7 +455,10 @@ DataPipelineModule.directive('gridResultsDirective', function ($rootScope, $comp
           keyboard: false
         });
       }
-
+      $scope.$on("dowloadAction", function (evt, data) {
+        $scope.downloadAction = data;
+       
+      });
       window.downloadPiplineFile = function () {
         debugger
         var uuid = $scope.downloadDetail.uuid;
@@ -419,6 +480,10 @@ DataPipelineModule.directive('gridResultsDirective', function ($rootScope, $comp
           }
           else if ($scope.downloadDetail.type == "dataqual") {
             url = baseurl + "dataqual/download?action=view&dataQualExecUUID=" + uuid + "&dataQualExecVersion=" + version + "&mode=" + mode;
+            $scope.downloaddata(url, uuid);
+          } 
+          else if($scope.downloadDetail.type == "rule"){
+            url = baseurl + "rule/download?action=view&ruleExecUUID=" + uuid + "&ruleExecVersion=" + version + "&mode=" + mode;
             $scope.downloaddata(url, uuid);
           }
 
@@ -453,8 +518,16 @@ DataPipelineModule.directive('gridResultsDirective', function ($rootScope, $comp
               url: url,
             })
             .success(function (data, status, headers) {
-              if (data.customFlag == "N") {
+              if(data.customFlag == "N") {
+                if($scope.downloadAction.tab ==3){
+                  $scope.downloadTestSet();
+                }
+                else if($scope.downloadAction.tab ==4){
+                  $scope.downloadTrainSet();
+                }
+                else{
                 $scope.downloadTrainData(uuid);
+                }
                 return false;
               }
               else {
@@ -1995,7 +2068,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                ingest : {name:'ingest', label: 'Ingest'},
                ingestgroup : {name:'ingestgroup', label: 'IngestGroup',url:'ingest/getIngestExecByRGExec?'},
              }
-          
+             
              var resultparams = {id:ref.uuid,name:cell.attributes['model-data'].name,elementType:type,version:ref.version,type: apis[type].name ,typeLabel:apis[type].label,url:apis[type].url, ref :ref,parentStage:parentStage,taskId:taskId,operator:operator};
              var url=$location.absUrl().split("app")[0];
              execStates={state : dagMetaDataService.elementDefs[ref.type.toLowerCase()].detailState, params : {id :ref.uuid,version:ref.version || " ",name:ref.name,type:ref.type,mode:true, returnBack: true}};

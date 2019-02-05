@@ -45,11 +45,14 @@ import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.Role;
 import com.inferyx.framework.domain.RolePriv;
 import com.inferyx.framework.domain.Session;
 import com.inferyx.framework.domain.SessionContext;
+import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.User;
+import com.inferyx.framework.enums.ApplicationType;
 import com.inferyx.framework.register.GraphRegister;
 
 
@@ -97,14 +100,9 @@ public class SecurityServiceImpl  implements Serializable{
 		Application appDO = (Application) commonServiceImpl.getLatestByUuid(appUUID, MetaType.application.toString(),
 				"N");
 		Role roleDO = (Role) commonServiceImpl.getLatestByUuid(roleUUID, MetaType.role.toString(), "N");
-		MetaIdentifier appMeta = new MetaIdentifier(MetaType.application, appDO.getUuid(), appDO.getVersion());
-		MetaIdentifier roleMeta = new MetaIdentifier(MetaType.role, roleDO.getUuid(), roleDO.getVersion());
-		MetaIdentifierHolder app = new MetaIdentifierHolder();
-		MetaIdentifierHolder role = new MetaIdentifierHolder();
-		app.setRef(appMeta);
-		role.setRef(roleMeta);
-		ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder
-				.getRequestAttributes();
+		MetaIdentifierHolder app = new MetaIdentifierHolder(new MetaIdentifier(MetaType.application, appDO.getUuid(), appDO.getVersion()));
+		MetaIdentifierHolder role = new MetaIdentifierHolder(new MetaIdentifier(MetaType.role, roleDO.getUuid(), roleDO.getVersion()));
+		ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 		HttpSession session = requestAttributes.getRequest().getSession(false);
 		// logger.info("setAppRole: session: " + session.toString());
 		SessionContext sessionContext = (SessionContext) session.getAttribute("sessionContext");
@@ -116,8 +114,9 @@ public class SecurityServiceImpl  implements Serializable{
 			FrameworkThreadLocal.getSessionContext().set(sessionContext);
 			// session.setAttribute("mapRolePriv", map);
 			// logger.info("setAppRole: sessionContext: " + sessionContext.toString());
-		} else
-			logger.info("sessionContext: null");
+		} else {
+			logger.info("Null Session context.");
+		}
 		session.setAttribute("sessionContext", sessionContext);
 		// String roleType = roleDO.getName();
 		// if (sessionContext != null) {
@@ -209,14 +208,44 @@ public class SecurityServiceImpl  implements Serializable{
 				appInfo = sessionContext.getAppInfo();
 			} else {
 				logger.info("Null Session context. Unable to get appInfo.");
-				MetaIdentifier appMeta = new MetaIdentifier(MetaType.application,"d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd","1464977196");
-				appInfo.setRef(appMeta);
+				Exception excp = new Exception("Null Session context. Unable to get appInfo.", e);
+				throw e;
+				/*MetaIdentifier appMeta = new MetaIdentifier(MetaType.application,"d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd","1547482049");
+				appInfo.setRef(appMeta);*/
 			}
 			//e.printStackTrace();
 		}
 		return appInfo;
 	}
-
+	
+	public MetaIdentifierHolder getOrgInfo() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException, IOException {
+		SessionContext sessionContext = null;
+		try {
+			ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+			HttpSession session = requestAttributes.getRequest().getSession(false);
+			if(session == null)
+				sessionContext = FrameworkThreadLocal.getSessionContext().get();
+			else
+				sessionContext = (SessionContext) session.getAttribute("sessionContext");
+			
+			return sessionContext.getOrgInfo();	
+		} catch (Exception e) {
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.organization, null, null));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "No organization information available.\n"+e.toString(), dependsOn);
+			throw new RuntimeException("No organization information available.");	
+		}	
+	}	
+		
+	
+	
 	public MetaIdentifierHolder getRoleInfo() {
 		MetaIdentifierHolder roleInfo = new MetaIdentifierHolder();		
 		SessionContext sessionContext = null;
@@ -449,8 +478,11 @@ public class SecurityServiceImpl  implements Serializable{
 		return privInfo;
 	}
 	public String getAppRole(String userName) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException{
+		System.out.println("userName: "+userName);
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		User user = userServiceImpl.findUserByName(userName);
+		user=(User) commonServiceImpl.getLatestByUuid(user.getUuid(),MetaType.user.toString(),"N");
+		Group defaultGroup = (Group) commonServiceImpl.getLatestByUuidWithoutAppUuid(user.getDefaultGroup().getRef().getUuid(), user.getDefaultGroup().getRef().getType().toString());
 		if(user!= null) {
 			//List<AppRole> appRoleList = new ArrayList<>();
 			List<MetaIdentifierHolder> holderList = new ArrayList<>();
@@ -476,7 +508,7 @@ public class SecurityServiceImpl  implements Serializable{
 					}
 					holderList.add(group.getAppId());
 				}
-				return ow.writeValueAsString(resolveAppVsRole(rawList, holderList));
+				return ow.writeValueAsString(resolveAppVsRole(rawList, holderList,defaultGroup.getAppId()));
 			} else {
 				logger.info("No group informaion available, groupInfo is empty/null.");
 				throw new RuntimeException("No app role information available.");
@@ -503,16 +535,28 @@ public class SecurityServiceImpl  implements Serializable{
 		sessionContext.setPrivInfo(privInfo);
 	}
 	
-	public List<AppRole> resolveAppVsRole(ConcurrentHashMap<String, List<MetaIdentifierHolder>> rawList, List<MetaIdentifierHolder> aholderList){
+	public List<AppRole> resolveAppVsRole(ConcurrentHashMap<String, List<MetaIdentifierHolder>> rawList, List<MetaIdentifierHolder> aholderList, MetaIdentifierHolder defaultAppId) throws JsonProcessingException{
 		List<AppRole> resolvedAppRoleList = new ArrayList<>();
 		MetaIdentifierHolder appInfo = new MetaIdentifierHolder();
+		ApplicationType applicationType = null;
 		for(Entry<String, List<MetaIdentifierHolder>> entry : rawList.entrySet()) {
+			boolean isDefault = false;
 			for(MetaIdentifierHolder ref : aholderList) {
 				if(ref.getRef().getUuid().equalsIgnoreCase(entry.getKey())) {
 					appInfo = ref;
+					Application application=(Application)commonServiceImpl.getLatestByUuid(appInfo.getRef().getUuid(),appInfo.getRef().getType().toString(),"N");
+					applicationType=application.getApplicationType();
+					if(ref.getRef().getUuid().equalsIgnoreCase(defaultAppId.getRef().getUuid())) {
+						isDefault = true;
+					}
 				}
 			}
-			AppRole appRole = new AppRole(appInfo, entry.getValue());
+			AppRole appRole = null;
+			if(isDefault) {
+				appRole = new AppRole(appInfo, entry.getValue(), defaultAppId,applicationType);
+			} else {
+				appRole = new AppRole(appInfo, entry.getValue(), null,applicationType);
+			}			
 			resolvedAppRoleList.add(appRole);
 		}
 		return resolvedAppRoleList;
@@ -536,4 +580,6 @@ public class SecurityServiceImpl  implements Serializable{
 				roleInfoList = newList;
 		return roleInfoList;		
 	}
+
+	
 }

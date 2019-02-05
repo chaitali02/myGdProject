@@ -22,6 +22,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -58,7 +59,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IDataStoreDao;
 import com.inferyx.framework.dao.IDatapodDao;
 import com.inferyx.framework.dao.IDatasourceDao;
@@ -67,10 +67,13 @@ import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.CompareMetaData;
+import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.DatapodStatsHolder;
 import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.domain.Formula;
+import com.inferyx.framework.domain.Key;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.LoadExec;
 import com.inferyx.framework.domain.Message;
@@ -80,6 +83,8 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Profile;
 import com.inferyx.framework.domain.ProfileExec;
+import com.inferyx.framework.domain.Relation;
+import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.enums.Compare;
@@ -88,7 +93,11 @@ import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
+import com.inferyx.framework.operator.DatasetOperator;
+import com.inferyx.framework.operator.FormulaOperator;
 import com.inferyx.framework.operator.HistogramOperator;
+import com.inferyx.framework.operator.RelationOperator;
+import com.inferyx.framework.operator.RuleOperator;
 import com.inferyx.framework.register.GraphRegister;
 
 @Service
@@ -108,12 +117,8 @@ public class DatapodServiceImpl {
 	private static Datapod datapod;
 	@Autowired
 	private LoadServiceImpl loadServiceImpl;
-	/*@Autowired
-	private DagServiceImpl dagServiceImpl;*/
 	@Autowired
 	private DataStoreServiceImpl datastoreServiceImpl;
-	/*@Autowired
-	private HiveContext hiveContext;*/
 	@Autowired
 	UserServiceImpl userServiceImpl;
 	@Autowired
@@ -129,11 +134,10 @@ public class DatapodServiceImpl {
 	@Autowired
 	ExecutorFactory execFactory;
 	@Autowired
-	MetadataUtil commonActivity;
-	@Autowired
 	DataSourceFactory dataSourceFactory;
 	@Autowired
 	HDFSInfo hdfsInfo;
+	@Autowired
 	protected DataStoreServiceImpl dataStoreServiceImpl;
 	@Autowired
 	DataFrameService dataFrameService;
@@ -145,19 +149,16 @@ public class DatapodServiceImpl {
 	Engine engine;
 	@Autowired
 	private HistogramOperator histogramOperator;
-//	@Autowired
-//	NewGraph newGraph;
-	
-	/*@Autowired
-	private JavaSparkContext javaSparkContext;*/
-	
-	public DataStoreServiceImpl getDataStoreServiceImpl() {
-		return dataStoreServiceImpl;
-	}
-
-	public void setDataStoreServiceImpl(DataStoreServiceImpl dataStoreServiceImpl) {
-		this.dataStoreServiceImpl = dataStoreServiceImpl;
-	}
+	@Autowired
+	private IDatapodDao iDatapodDao;
+	@Autowired
+	private FormulaOperator formulaOperator;
+	@Autowired
+	private DatasetOperator datasetOperator;
+	@Autowired
+	private RuleOperator ruleOperator;
+	@Autowired
+	private RelationOperator relationOperator;
 	
 	public DatapodServiceImpl() {
 		// TODO Auto-generated constructor stub
@@ -354,6 +355,17 @@ public class DatapodServiceImpl {
 		return datapod.getAttribute(attrId).getName();
 	}*/
 
+	public String getAttributeName(Datapod datapod, String attributeId) {
+		List<Attribute> attributes = datapod.getAttributes();
+		for (Attribute attribute : attributes) {
+			if (attribute.getAttributeId() != null 
+				&& attribute.getAttributeId().equals(attributeId)) {
+				return attribute.getName();
+			}
+		}
+		return null;
+	}
+	
 	// This method returns the attributeName of the ref object
 	public String getAttributeName(String uuid, int attrId) throws JsonProcessingException {
 		String alias = null;
@@ -407,98 +419,39 @@ public class DatapodServiceImpl {
 
 	public MetaIdentifierHolder createAndLoad(String csvFileName, RunMode runMode) throws Exception {		
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		//String appUuid = "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb";
-		// Check if datapod exists
-		String fileName = Helper.getFileName(csvFileName);
-		fileName=fileName.toLowerCase();
-		Datapod dp = null;
-		Datapod dp1 = findOneByName(fileName);
-		// Create datapod and relation if it does not exist
-		if (dp == null) {
+		// Check datapod whether it exists
+		String fileName = Helper.getFileName(csvFileName).toLowerCase();
 		
-			/*DataFrame df = hiveContext.read().format("com.databricks.spark.csv").option("inferSchema", "true")
-					.option("header", "true").load(csvFileName);		
-			df.printSchema();
-			StructType st = df.schema();
-			Seq<StructField> seqFields = st.thisCollection();
-			Iterator<StructField> iter = st.iterator();
-			List<Attribute> attributes = new ArrayList<Attribute>();
-			int i = 0;			
-			while (iter.hasNext()) {
-				StructField sf = iter.next();
-				Attribute attr1 = new Attribute();
-				attr1.setAttributeId(i++);
-				attr1.setType(sf.dataType().typeName());
-				attr1.setName(sf.name());
-				attr1.setDesc(sf.name());
-				attr1.setDispName(sf.name());
-				attr1.setActive("Y");
-				attributes.add(attr1);
+		// Creating datapod	
+		Datapod dp = new Datapod();
+		
+		// Create datapod and relation if it does not exist
+		IExecutor exec = execFactory.getExecutor(ExecContext.spark.toString());
+		List<Attribute> attributes = exec.fetchAttributeList(csvFileName, null, true, false, appUuid);
+		logger.info("Attributes:" + attributes);
 
-			}
-			Attribute attr2 = new Attribute();
-			attr2.setAttributeId(i++);
-			attr2.setType("Integer");
-			attr2.setName("version");
-			attr2.setDesc("version");
-			attr2.setDispName("version");
-			attr2.setActive("Y");
-			attributes.add(attr2);*/
-			String parquetDir = null;
-
-			IExecutor exec = execFactory.getExecutor(ExecContext.spark.toString());
-			List<Attribute> attributes = exec.fetchAttributeList(csvFileName, parquetDir, true, false, appUuid);
-			/*List<Attribute> attributes = dataFrameService.getAttributeList(csvFileName, parquetDir, true, false);*/
-			logger.info("Attributes:" + attributes);
-
-			// Create datapod
-//			List<Datasource> datasourceList = iDatasourceDao.findDatasourceByType(appUuid, ExecContext.FILE.toString());
-			dp = new Datapod();
-			if(dp1 !=null) {
-				dp.setUuid(dp1.getUuid());
-			}
-			Datasource datasource = commonServiceImpl.getDatasourceByApp();
-//			for(Datasource datasource : datasourceList) {
-				MetaIdentifier datasourceRef = new MetaIdentifier(MetaType.datasource, datasource.getUuid(),
-						datasource.getVersion());
-				MetaIdentifierHolder mHolder = new MetaIdentifierHolder();
-				mHolder.setRef(datasourceRef);
-				dp.setDatasource(mHolder);
-				dp.setCache("Y");
-				dp.setName(fileName.toLowerCase());
-				dp.setAttributes(attributes);
-				
-				try {
-					dp = save(dp);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-//			}
-
-			/*
-			 * // Create relation Relation r = new Relation();
-			 * MetaIdentifierHolder mih = new MetaIdentifierHolder();
-			 * mih.setRef(new MetaIdentifier());
-			 * mih.getRef().setUuid(dp.getUuid());
-			 * mih.getRef().setType(MetaType.datapod);
-			 * mih.getRef().setVersion(dp.getVersion()); r.setDependsOn(mih); r
-			 * = relationServiceImpl.Save(r);
-			 */
+		Datapod tempDatapod = findOneByName(fileName);
+		if(tempDatapod !=null) {
+			dp.setUuid(tempDatapod.getUuid());
+		}
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		MetaIdentifier datasourceRef = new MetaIdentifier(MetaType.datasource, datasource.getUuid(),
+				datasource.getVersion());
+		MetaIdentifierHolder mHolder = new MetaIdentifierHolder();
+		mHolder.setRef(datasourceRef);
+		dp.setDatasource(mHolder);
+		dp.setCache("Y");
+		dp.setName(fileName.toLowerCase());
+		dp.setAttributes(attributes);
+		
+		try {
+			dp = save(dp);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 
 		/* Code for UploadExec*/	
-		//String uploadPath = hdfsInfo.getHdfsURL()+hdfsInfo.getSchemaPath() + "/upload/" + csvFileName;
-		String uploadPath = csvFileName;
-//		UploadExec uploadExec=new UploadExec();			       
-//		uploadExec.setBaseEntity();
-//		uploadExec.setLocation(uploadPath);
-//		uploadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.datapod,dp.getUuid(),dp.getVersion())));
-//		uploadExec.setFileName(fileName);
-//		commonServiceImpl.save(MetaType.uploadExec.toString(), uploadExec);
-		
-		// Load datapod using load object
-		//String fileName = Helper.getFileName(csvFileName);		
+		String uploadPath = csvFileName;		
 		Load load = new Load();
 		AttributeRefHolder loadSourceMIHolder = new AttributeRefHolder();
 		MetaIdentifier loadSourceMIdentifier = new MetaIdentifier();
@@ -526,9 +479,13 @@ public class DatapodServiceImpl {
 		//Create Load exec and datastore
 		LoadExec loadExec = null;
 		loadExec = loadServiceImpl.create(load.getUuid(), load.getVersion(), null, null, loadExec);
-		loadServiceImpl.executeSql(loadExec, null, fileName, new OrderKey(dp.getUuid(), dp.getVersion()), RunMode.BATCH, null);
-		
-		return new MetaIdentifierHolder(loadExec.getRef(MetaType.loadExec));
+		try {
+			loadServiceImpl.executeSql(loadExec, null, fileName, new OrderKey(dp.getUuid(), dp.getVersion()), RunMode.BATCH, null);
+			return new MetaIdentifierHolder(loadExec.getRef(MetaType.loadExec));
+		} catch (Exception e) {
+			iDatapodDao.delete(dp);
+			throw new RuntimeException(e);
+		}
 	}
 
 	// Generate excel file from datapod
@@ -1019,8 +976,10 @@ public class DatapodServiceImpl {
 			Pattern pattern = Pattern.compile("[ !@#$%&*()+=|<>?{}\\[\\]~-]");
 			Matcher match = pattern.matcher(csvFileName);
 			boolean isMatched = match.find();			
-			if (isMatched || csvFileName.contains(" ")) 
+			if (isMatched || csvFileName.contains(" ")) {
 				throw new Exception("CSV file name contains white space or special character");
+			}
+			
 			String directory = Helper.getPropertyValue("framework.file.upload.path");
 			String uploadPath = directory.endsWith("/") ? (directory + csvFileName) : (directory+"/"+csvFileName);
 		
@@ -1053,11 +1012,10 @@ public class DatapodServiceImpl {
 	
 			int count = 0;
 			for(int i=0; i<dpAttrs.size();i++) {
-				if(dpAttrs.get(i).getName().contentEquals("version")){	
-					if(!attributes.get(attributes.size()-1).getName().contentEquals("version")) 
-					{
-					dpAttrs.remove(dpAttrs.get(i));
-					count++;
+				if(dpAttrs.get(i).getName().contentEquals("version")) {	
+					if(!attributes.get(attributes.size()-1).getName().contentEquals("version")) {
+						dpAttrs.remove(dpAttrs.get(i));
+						count++;
 					}
 				}	
 				if(count>1) {
@@ -1065,8 +1023,7 @@ public class DatapodServiceImpl {
 				}
 			}
 			
-			if(attributes.size()==dpAttrs.size())
-			{
+			if(attributes.size()==dpAttrs.size()) {
 				for(Attribute dpAttr : dpAttrs) {					
 					if(attributeIterator.hasNext()) {
 						Attribute attribute  = attributeIterator.next();				
@@ -1079,20 +1036,17 @@ public class DatapodServiceImpl {
 							throw new Exception("CSV file column name contains <b>Numeric value</b>.");
 						}
 						if (!attribute.getName().equalsIgnoreCase(dpAttr.getName())) {
-							{
-								status = new Status(Status.Stage.Failed, new Date());
-								statusList.add(status);
-								uploadExec.setStatusList(statusList);
-								commonServiceImpl.save(MetaType.uploadExec.toString(), uploadExec);
-								logger.info("CSV Column not matched : " + attribute.getName());
-								throw new Exception("CSV Column not matched:<b>" + attribute.getName()
-										+ "</b> Position:<b>" + (attributeIterator.nextIndex() + "</b>"));
-							}
+							status = new Status(Status.Stage.Failed, new Date());
+							statusList.add(status);
+							uploadExec.setStatusList(statusList);
+							commonServiceImpl.save(MetaType.uploadExec.toString(), uploadExec);
+							logger.info("CSV Column not matched : " + attribute.getName());
+							throw new Exception("CSV Column not matched:<b>" + attribute.getName()
+									+ "</b> Position:<b>" + (attributeIterator.nextIndex() + "</b>"));
 						}
 					}	
 				}
-			}
-			else {
+			} else {
 				status = new Status(Status.Stage.Failed, new Date());
 				statusList.add(status);
 				uploadExec.setStatusList(statusList);
@@ -1140,7 +1094,6 @@ public class DatapodServiceImpl {
 			statusList.add(status);
 			uploadExec.setStatusList(statusList);
 			commonServiceImpl.save(MetaType.uploadExec.toString(), uploadExec);
-
 		} catch (IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException | NoSuchMethodException | SecurityException | NullPointerException
 				| ParseException | IllegalStateException | IOException e) {
@@ -1151,6 +1104,7 @@ public class DatapodServiceImpl {
 			commonServiceImpl.save(MetaType.uploadExec.toString(), uploadExec);
 			e.printStackTrace();
 		} catch (Exception e) {
+			e.printStackTrace();
 			status = new Status(Status.Stage.Failed, new Date());
 			statusList.add(status);
 			uploadExec.setStatusList(statusList);
@@ -1420,5 +1374,72 @@ public class DatapodServiceImpl {
 		String resultLimitValue = Helper.getPropertyValue("framework.histogram.result.size");
 		int resultLimit = Integer.parseInt(resultLimitValue);
 		return histogramOperator.getAttrHistogram(attrRefHolderList, numBuckets, limit, resultLimit, runMode);
+	}
+
+	public List<Map<String, Object>> getFormulaValues(String formulaUuid, String formulaVersion, RunMode runMode) throws Exception {
+		Formula formula = (Formula) commonServiceImpl.getOneByUuidAndVersion(formulaUuid, formulaVersion, MetaType.formula.toString());
+		Datasource formulaDs = commonServiceImpl.getDatasourceByObject(formula);
+		String formulaQuery = formulaOperator.generateSql(formula, null, null, null, formulaDs);
+		
+		MetaIdentifier dependsOn = formula.getDependsOn().getRef();
+		Object dependsOnObj = commonServiceImpl.getOneByUuidAndVersion(dependsOn.getUuid(), dependsOn.getVersion(), dependsOn.getType().toString(), "N");
+		String dependsOnSql = generateSqlByObject(dependsOnObj, runMode);
+		String dependsOnAliaseName = "";
+		if(dependsOnObj instanceof Datapod) {
+			dependsOnAliaseName = ((Datapod)dependsOnObj).getName();
+		} 
+		
+		StringBuilder builder = new StringBuilder("SELECT").append(" ");
+		builder.append("DISTINCT").append(" ").append(formulaQuery).append(" AS value ");
+		builder.append("FROM").append(" ").append("(");
+		builder.append(dependsOnSql).append(" ").append(dependsOnAliaseName);
+		builder.append(")").append(" ").append(dependsOn.getName());
+		
+		logger.info("SQL gnerated for formula values: "+builder.toString());
+		
+		String appUuid = commonServiceImpl.getApp().getUuid();
+		Datasource appDs = commonServiceImpl.getDatasourceByApp();
+		IExecutor exec = execFactory.getExecutor(appDs.getType());
+		return exec.executeAndFetchByDatasource(builder.toString(), formulaDs, appUuid);
+	}
+	
+	public String generateSqlByObject(Object object, RunMode runMode) throws Exception {
+		if(object instanceof Datapod) {
+			return generateSqlByDatapod((Datapod)object, runMode);
+		} else if(object instanceof DataSet) {
+			return datasetOperator.generateSql((DataSet)object, null, null, new HashSet<>(), null, runMode);
+		} else if(object instanceof Rule) {
+			return ruleOperator.generateSql((Rule) object, null, null, new HashSet<>(), null, runMode);
+		} else if(object instanceof Relation) {
+			MetaIdentifier dependsOn = ((Relation)object).getDependsOn().getRef();
+			Object relDependsOn = commonServiceImpl.getOneByUuidAndVersion(dependsOn.getUuid(), dependsOn.getVersion(), dependsOn.getType().toString(), "N");
+			String dependsOnSql = generateSqlByObject(relDependsOn, runMode);
+			String relSql = relationOperator.generateSql((Relation)object, null, null, null, new HashSet<>(), runMode);
+			if(relSql != null && !relSql.isEmpty()) {
+				return "SELECT * FROM "+relSql;
+			} 
+		}
+		
+		return null;
+	}
+	
+	public String generateSqlByDatapod(Datapod datapod, RunMode runMode) throws Exception {
+		String tableName = datastoreServiceImpl.getTableNameByDatapod(new Key(datapod.getUuid(), datapod.getVersion()), runMode);
+		StringBuilder builder = new StringBuilder("SELECT ");
+		
+		int i = 0;
+		for(Attribute attribute : datapod.getAttributes()) {
+			builder.append(attribute.getName()).append(" ");
+			builder.append(" AS ").append(attribute.getName());
+			if(i<(datapod.getAttributes().size()-1)) {
+				builder.append(", ");
+			}
+			i++;
+		}
+		
+		builder.append(" FROM ");
+		builder.append(tableName);
+		
+		return builder.toString();
 	}
 }
