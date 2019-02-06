@@ -19,24 +19,24 @@ import { LoginService } from './login/login.service';
 import { AppConfig } from './app.config';
 import { AppMetadata } from './app.metadata';
 import { AppHepler } from './app.helper';
-const APP_PROVIDERS = [ AppConfig, AppMetadata, AppHepler];
+import { TooltipModule } from 'primeng/primeng';
+const APP_PROVIDERS = [AppConfig, AppMetadata, AppHepler];
 
 @NgModule({
   declarations: [
     AppComponent,
-  LoginComponent
+    LoginComponent
   ],
- // entryComponents: [DropdownComponent],
+  // entryComponents: [DropdownComponent],
   imports: [
     routing,
     BrowserModule,
     FormsModule,
     HttpModule,
     BrowserAnimationsModule,
-    ProjectSharedModule.forRoot()
-
+    ProjectSharedModule.forRoot(),
+    TooltipModule
   ],
-    
 
   providers: [
     APP_PROVIDERS,
@@ -44,7 +44,7 @@ const APP_PROVIDERS = [ AppConfig, AppMetadata, AppHepler];
     LoginService,
     SharedService
   ],
-  bootstrap: [ AppComponent ]
+  bootstrap: [AppComponent]
 })
 
 export class AppModule { }

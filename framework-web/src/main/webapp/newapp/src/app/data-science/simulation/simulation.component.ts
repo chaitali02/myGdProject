@@ -16,7 +16,6 @@ import { ResponseOptions } from '@angular/http/src/base_response_options';
 import { Simulation } from '../../metadata/domain/domain.simulation';
 import { TypeaheadOptions } from 'ngx-bootstrap/typeahead/typeahead-options.class';
 import { Dependson } from '../../metadata/domain/domain.dependson';
-import { sourceUrl } from '@angular/compiler';
 import { KnowledgeGraphComponent } from '../../shared/components/knowledgeGraph/knowledgeGraph.component';
 @Component({
   selector: 'app-simulation',

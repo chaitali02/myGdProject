@@ -1,41 +1,44 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import {Router} from '@angular/router';
-import { Login } from './login';
-import { LoginService } from '../login/login.service';
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
-import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
+
+import { LoginService } from '../login/login.service';
+
+import { LoginStatus } from '../metadata/domain/domain.loginStatus';
 @Component({
   selector: 'app-login',
   styleUrls: [],
   templateUrl: './login.template.html'
 })
 export class LoginComponent {
- 
-  promiseLogin: Promise<Login>;
-  LoginStatus: Login;
-  error:string;
+  error: any;
+  loginResponse: LoginStatus;
   constructor(private http: Http, private _service: LoginService, public router: Router) {
-   
+    this.getLocalStorage();
   }
-  
-  
-  onSubmit(event,username,password) {
-    this.promiseLogin=this._service.getValidateUser(username,password);
-    //this.promiseLogin.then(this.getResult);
-    this.promiseLogin.then((res: Response)=>{
-      let loginStaus="status";
-      let result= JSON.stringify(res);   
-      if(res[loginStaus] == "true"){
-        localStorage.setItem('userDetail',result);
-        this.router.navigate(['app']);
-      }else{
-        this.error=res["message"];
-      }
-    });
-    //console.log('Test API - -- - - - ', this.promiseLogin);
-  
-  }
-  
-  
 
+  getLocalStorage(){debugger
+    let data = localStorage.getItem('userDetail');
+  }
+
+  onSubmit(event: any, username:any, password: any) {
+    this._service.getValidateUser(username, password).subscribe(
+      response => { this.onSuccessgetValidateUser(response) },
+      error => { console.log("Error::", error) }
+    )
+  }
+
+  onSuccessgetValidateUser(response: any) {
+    this.loginResponse = JSON.parse(response._body);
+    let result = JSON.stringify(this.loginResponse);
+    if (this.loginResponse.status == "true") {
+      // if(){
+      //   localStorage.setItem('userDetail', result);
+      // }
+      this.router.navigate(['app']);
+    }
+    else {
+      this.error = this.loginResponse.message;
+    }
+  }
 }

@@ -1,12 +1,8 @@
 import { Injectable, Inject } from '@angular/core';
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
-import { Router } from '@angular/router';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/toPromise';
-import {Observable} from 'rxjs/Observable';
+import { Observable, throwError } from 'rxjs';
+import { map, catchError } from "rxjs/operators";
 
-import { Hero } from './hero';
 @Injectable()
 export class MetaDataDataPodService {
   sessionId: string;
@@ -16,71 +12,61 @@ export class MetaDataDataPodService {
     this.sessionId = userDetail['sessionId'];
   }
 
-  private headers = new Headers({'sessionId': this.sessionId, 'Content-Type': 'application/json'});
-
+  private headers = new Headers({ 'sessionId': this.sessionId, 'Content-Type': 'application/json' });
+  private handleError<T>(error: any, result?: T) {
+    return throwError(error);
+  }
 
   getOneByUuidAndVersion(api_url): Observable<any> {
     return this.http
-      .get(api_url,{headers: this.headers})
-      .map((response: Response) => {
-        return <any>response.json();
-      })
-    // .catch(this.handleError);
+      .get(api_url, { headers: this.headers })
+      .pipe(
+        map(response => { return <any>response.json(); }),
+        catchError(error => this.handleError<string>(error, "Network Error!")));
   }
 
-  private getResult(res: Response){
-    let body = res.json();
-    return body;
-  }
 
-  private handleError(error: any): Promise<any> {
-    console.error('An error occurred', error); // for demo purposes only
-    return Promise.reject(error.message || error);
-  }
+
+
 
   getDatapodSample(api_url): Observable<any> {
     return this.http
-      .get(api_url,{headers: this.headers})
-      .map((response: Response) => {
-        return <any>response.json();
-      })
-    // .catch(this.handleError);
+      .get(api_url, { headers: this.headers })
+      .pipe(
+        map(response => { return <any>response.json(); }),
+        catchError(error => this.handleError<string>(error, "Network Error!")));
   }
 
   getAllVersionByUuid(api_url): Observable<any> {
     return this.http
-      .get(api_url,{headers: this.headers})
-      .map((response: Response) => {
-        return <any>response.json();
-      })
-    // .catch(this.handleError);
+      .get(api_url, { headers: this.headers })
+      .pipe(
+        map(response => { return <any>response.json(); }),
+        catchError(error => this.handleError<string>(error, "Network Error!")));
   }
 
   getDatasourceByType(api_url): Observable<any> {
     return this.http
-      .get(api_url,{headers: this.headers})
-      .map((response: Response) => {
-        return <any>response.json();
-      })
-    // .catch(this.handleError);
+      .get(api_url, { headers: this.headers })
+      .pipe(
+        map(response => { return <any>response.json(); }),
+        catchError(error => this.handleError<string>(error, "Network Error!")));
   }
 
   getAllLatest(api_url): Observable<any> {
     return this.http
-      .get(api_url,{headers: this.headers})
-      .map((response: Response) => {
-        return <any>response.json();
-      })
-    // .catch(this.handleError);
+      .get(api_url, { headers: this.headers })
+      .pipe(
+        map(response => { return <any>response.json(); }),
+        catchError(error => this.handleError<string>(error, "Network Error!")));
   }
 
   datapodSubmit(api_url, data): Observable<any> {
     return this.http
-      .post(api_url, JSON.stringify(data), {headers: this.headers})
-      .map((response: Response) => {
-        return <any>response.text();
-      })
-    // .catch(this.handleError);
+      .post(api_url, JSON.stringify(data), { headers: this.headers })
+      .pipe(
+        map(response => { return <any>response.text(); }),
+        catchError(error => this.handleError<string>(error, "Network Error!")));
   }
 
 }

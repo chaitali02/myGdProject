@@ -210,7 +210,7 @@ public class SecurityServiceImpl  implements Serializable{
 				logger.info("Null Session context. Unable to get appInfo.");
 				/*Exception excp = new Exception("Null Session context. Unable to get appInfo.", e);
 				throw e;*/
-				MetaIdentifier appMeta = new MetaIdentifier(MetaType.application,"d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd","1547482049");
+				MetaIdentifier appMeta = new MetaIdentifier(MetaType.application,"d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd","1548315769");
 				appInfo.setRef(appMeta);
 			}
 			//e.printStackTrace();

@@ -1,8 +1,7 @@
 
 import { routing } from './job-monitoring-details-routing.module'
 import { TagInputModule } from 'ngx-chips';
-import { UiSwitchModule } from 'ngx-toggle-switch/src';
-import { AgGridModule } from 'ag-grid-angular/main';
+// import { UiSwitchModule } from 'ngx-toggle-switch/src';
 import { FormsModule } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
 import { NgModule } from '@angular/core';
@@ -48,8 +47,7 @@ import { IngestGroupExecComponent } from './ingestGroupExec/ingestGroupExec.comp
         FormsModule,
         routing,
         ProjectSharedModule,
-        AgGridModule,
-        UiSwitchModule,
+        // UiSwitchModule,
         TagInputModule,
         MessagesModule,
         MessageModule,

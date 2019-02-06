@@ -1,46 +1,41 @@
 import { Injectable, Inject } from '@angular/core';
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
-import { Router } from '@angular/router';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/toPromise';
-import {Observable} from "rxjs/Observable";
-import {AppConfig} from '../../../app.config';
+import { Observable, throwError } from 'rxjs';
+import { map, catchError } from "rxjs/operators";
+
+import { AppConfig } from '../../../app.config';
 import { Sidebar } from './sidebar';
 
 @Injectable()
 export class SidebarService {
   baseUrl: any;
-  sessionId:string;
-  constructor(@Inject(Http) private http: Http,config: AppConfig) {
+  sessionId: string;
+  constructor(@Inject(Http) private http: Http, config: AppConfig) {
     this.baseUrl = config.getBaseUrl();
     let userDetail = JSON.parse(localStorage.getItem('userDetail'));
     this.sessionId = userDetail['sessionId'];
   }
-  private headers = new Headers({'sessionId': this.sessionId});
+  private headers = new Headers({ 'sessionId': this.sessionId });
+  private handleError<T>(error: any, result?: T) {
+    return throwError(error);
+  }
 
   getAll(): Observable<Sidebar[]> {
-    // this.headers.append("withCredentials","true");
-    let url = this.baseUrl+'/common/getAll?type=meta';
+    let url = this.baseUrl + '/common/getAll?type=meta';
     return this.http
-    .get(url, {headers: this.headers})
-    .map((response: Response) => {
-      return <Sidebar[]>response.json();
-  })
- // .catch(this.handleError);
+      .get(url, { headers: this.headers })
+      .pipe(
+        map(response => { return <any[]>response.json(); }),
+        catchError(error => this.handleError<string>(error, "Network Error!")));
   }
 
   getMetaStats(): Observable<any> {
-    let url = this.baseUrl+'/common/getMetaStats';
-    // this.headers.append("withCredentials","true");
+    let url = this.baseUrl + '/common/getMetaStats';
     return this.http
-      .get(url,{headers: this.headers})
-        .map((response: Response) => {
-        return <any>response.json();
-      })
-    //.catch(this.handleError);
+      .get(url, { headers: this.headers })
+      .pipe(
+        map(response => { return <any>response.json(); }),
+        catchError(error => this.handleError<string>(error, "Network Error!")));
   }
-  private handleError(error: Response) {
-    return Observable.throw(error.statusText);
-}
+
 }

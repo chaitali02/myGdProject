@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AgGridModule } from 'ag-grid-angular/main';
-import { UiSwitchModule } from 'ngx-toggle-switch/src';
+// import { UiSwitchModule } from 'ngx-toggle-switch/src';
 import { TagInputModule } from 'ngx-chips';
 import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown/angular2-multiselect-dropdown';
 import { CheckboxModule, CalendarModule } from 'primeng/primeng';
@@ -27,7 +26,7 @@ import { MetadataService } from '../metadata/services/metadata.service';
     imports: [
         CommonModule,
         FormsModule,
-        UiSwitchModule,
+        // UiSwitchModule,
         TagInputModule,
         AngularMultiSelectModule,
         CheckboxModule,

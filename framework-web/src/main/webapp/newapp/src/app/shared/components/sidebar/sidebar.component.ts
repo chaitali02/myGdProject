@@ -1,8 +1,7 @@
 import { debug } from 'util';
 import { Component, OnInit } from '@angular/core';
 import { SidebarService } from './sidebar.service';
-import 'rxjs/add/operator/toPromise';
-import 'rxjs/add/operator/catch';
+
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Sidebar } from './sidebar';
 @Component({

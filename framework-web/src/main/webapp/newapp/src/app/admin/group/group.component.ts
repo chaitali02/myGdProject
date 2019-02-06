@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, OnInit, group, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AppConfig } from '../../app.config';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { SelectItem } from 'primeng/primeng';
