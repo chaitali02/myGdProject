@@ -6,8 +6,9 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule , DatePipe} from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ProjectSharedModule } from '../shared/module/shared.module';
-import { MessagesModule, MessageModule } from 'primeng/primeng';
+import { MessagesModule, MessageModule, ChipsModule } from 'primeng/primeng';
 import { CheckboxModule, DataTableModule} from 'primeng/primeng';
+
 import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown/angular2-multiselect-dropdown';
 
 import { MetaDataDataPodService } from '../data-preparation/datapod/datapod.service';
@@ -66,6 +67,7 @@ import { ParamlistService } from '../metadata/services/paramlist.service';
         DialogModule,
         CalendarModule,
         MenuModule,
+        ChipsModule
 
     ],
     declarations :[

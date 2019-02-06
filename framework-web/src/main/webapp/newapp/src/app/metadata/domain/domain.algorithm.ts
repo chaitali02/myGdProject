@@ -1,17 +1,21 @@
+
 import { MetaIdentifierHolder } from './domain.metaIdentifierHolder';
-import {BaseEntity} from './domain.baseEntity';
+import { BaseEntity } from './domain.baseEntity';
 
-export class Algorithm extends BaseEntity{
+export class Algorithm extends BaseEntity {
 
-    private type_algo : MetaIdentifierHolder; // clustering, regression
-	private library : String; //sparkML, R, tensorflow
-	private trainName : String; //org.apache.spark.ml.classification.LogisticRegression;
-	private modelName : String; //org.apache.spark.ml.classification.LogisticRegressionModel;
-	private labelRequired : String;
-	private returnType : String; 
-	private paramList : MetaIdentifierHolder;
-		
-
+	type: String; // clustering, regression, classification
+	libraryType: String; //sparkML, R, tensorflow, H2O
+	trainClass: String; //e.g. org.apache.spark.ml.classification.LogisticRegression;
+	modelClass: String; //e.g. org.apache.spark.ml.classification.LogisticRegressionModel;
+	summaryMethods: Array<String>;
+	labelRequired: String;
+	returnType: String;
+	savePmml: String;
+	paramListWoH: MetaIdentifierHolder;
+	paramListWH: MetaIdentifierHolder;
+	customFlag: String = "N";
+	scriptName: String;
 }
 
 

@@ -11,13 +11,16 @@ export class SharedService {
   baseUrl: string;
   headers: Headers;
   constructor(@Inject(Http) private http: Http, config: AppConfig) {
+
     let userDetail = JSON.parse(localStorage.getItem('userDetail'));
     this.sessionId = userDetail['sessionId'];
     this.baseUrl = config.getBaseUrl();
   }
+  
   private handleError<T>(error: any, result?: T) {
     return throwError(error);
   }
+
   getCall(apiUrl: string): Observable<any> {
     this.headers = new Headers({ 'sessionId': this.sessionId });
     let url = this.baseUrl + apiUrl;
@@ -32,6 +35,7 @@ export class SharedService {
     return this.http.post(url, JSON.stringify(data), { headers: this.headers });
 
   }
+
   putCall(apiUrl: string, data: any): Observable<any> {
     this.headers = new Headers({ 'sessionId': this.sessionId });
     this.headers.append('Accept', '*/*')
@@ -40,7 +44,7 @@ export class SharedService {
     return this.http.put(url, JSON.stringify(data), { headers: this.headers });
 
   }
-  getGraphData(url) {
+  getGraphData(url: any) {
     return this.getCall(url)
       .pipe(
         map(response => { return <any[]>response.json(); }),

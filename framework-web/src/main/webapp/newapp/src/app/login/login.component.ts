@@ -14,7 +14,7 @@ export class LoginComponent {
   error: any;
   loginResponse: LoginStatus;
   constructor(private http: Http, private _service: LoginService, public router: Router) {
-    this.getLocalStorage();
+    //this.getLocalStorage();
   }
 
   getLocalStorage(){debugger
@@ -33,7 +33,7 @@ export class LoginComponent {
     let result = JSON.stringify(this.loginResponse);
     if (this.loginResponse.status == "true") {
       // if(){
-      //   localStorage.setItem('userDetail', result);
+         localStorage.setItem('userDetail', result);
       // }
       this.router.navigate(['app']);
     }

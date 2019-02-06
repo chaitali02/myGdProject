@@ -1,4 +1,4 @@
-export class LoginStatus{
+export class LoginStatus {
 	 userName : any;
 	 userUuid : any;
 	 sessionId : any;
