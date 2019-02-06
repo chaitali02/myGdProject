@@ -1,4 +1,4 @@
-import { Component, Input, OnInit,ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Router, Event as RouterEvent, ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
 import { Message } from 'primeng/components/common/api';
@@ -10,6 +10,7 @@ import { Version } from './../metadata/domain/version'
 import { DependsOn } from './dependsOn'
 import { AttributeHolder } from './../metadata/domain/domain.attributeHolder'
 import { KnowledgeGraphComponent } from '../shared/components/knowledgeGraph/knowledgeGraph.component';
+import { DataQuality } from '../metadata/domain/domain.dataQuality';
 @Component({
   selector: 'app-data-pipeli',
   templateUrl: './data-qualitydetail.template.html',
@@ -76,11 +77,20 @@ export class DataQualityDetailComponent {
   IsSelectDataType: any
   IsSelectSoureceAttr: any
   @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
+  isEditInprogess: boolean;
+  isEditError: boolean;
+  showForm: boolean;
+
   constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _dataQualityService: DataQualityService) {
-    this.dqdata = {};
+    this.dqdata = new DataQuality();
     this.showGraph = false
     this.isHomeEnable = false
     this.displayDialogBox = false;
+
+    this.isEditInprogess = false;
+    this.isEditError = false;
+    this.showForm = true;
+
     this.dialogAttributeName = {};
     this.selectRefIntegrity = {};
     this.operators = [
@@ -165,7 +175,6 @@ export class DataQualityDetailComponent {
       if (this.mode !== undefined) {
         this.getAllVersionByUuid();
         this.getOneByUuidAndVersion(this.id, this.version);
-        this.getAllLatest()
       }
       else {
         this.getAllLatest()
@@ -304,210 +313,126 @@ export class DataQualityDetailComponent {
     // this.lhsdatapodattributefilter.splice(0,1);
   }
   getOneByUuidAndVersion(id, version) {
+    this.isEditInprogess = true;
+    this.isEditError = false;
+    
     this._dataQualityService.getOneByUuidAndVersion(id, version, 'dq')
       .subscribe(
-      response => {
-        this.onSuccessgetOneByUuidAndVersion(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.onSuccessgetOneByUuidAndVersion(response)
+        },
+        error => {
+          console.log("Error :: " + error);
+          this.isEditError = true;
+        });
   }
   onSuccessgetOneByUuidAndVersion(response) {
-    this.breadcrumbDataFrom[2].caption = response.dqdata.name;
-    this.dqdata = response.dqdata;
-    this.dataqualitycompare = response.dqdata;
-    this.createdBy = response.dqdata.createdBy.ref.name
-    this.dqdata.published = response.dqdata["published"] == 'Y' ? true : false
-    this.dqdata.active = response.dqdata["active"] == 'Y' ? true : false
-    var tags = [];
-    if (response.dqdata.tags != null) {
-      for (var i = 0; i < response.dqdata.tags.length; i++) {
-        var tag = {};
-        tag['value'] = response.dqdata.tags[i];
-        tag['display'] = response.dqdata.tags[i];
-        tags[i] = tag
-      }//End For
-      this.tags = tags;
-    }//En
+    
+    this.breadcrumbDataFrom[2].caption = response.dataQuality.name;
+    this.dqdata = response.dataQuality;
+    //this.dataqualitycompare = this.dqdata;
+    //this.createdBy = this.dqdata.createdBy.ref.name
+    //this.dqdata.published = this.dqdata["published"] == 'Y' ? true : false
+    //this.dqdata.active = this.dqdata["active"] == 'Y' ? true : false
+    // var tags = [];
+    // if (this.dqdata.tags != null) {
+    //   for (var i = 0; i < this.dqdata.tags.length; i++) {
+    //     var tag = {};
+    //     tag['value'] = this.dqdata.tags[i];
+    //     tag['display'] = this.dqdata.tags[i];
+    //     tags[i] = tag
+    //   }//End For
+    //   this.tags = tags;
+    // }//En
 
     const version: Version = new Version();
-    this.uuid = response.uuid;
-    version.label = response.dqdata['version'];
-    version.uuid = response.dqdata['uuid'];
+    //this.uuid = response.uuid;
+    version.label = this.dqdata.version;
+    version.uuid = this.dqdata.uuid;
     this.selectedVersion = version
+    
     let dependOnTemp: DependsOn = new DependsOn();
-    dependOnTemp.label = response.dqdata["dependsOn"]["ref"]["name"];
-    dependOnTemp.uuid = response.dqdata["dependsOn"]["ref"]["uuid"];
+    dependOnTemp.label = this.dqdata.dependsOn.ref.name;
+    dependOnTemp.uuid = this.dqdata.dependsOn.ref.uuid;
     this.sourcedata = dependOnTemp;
-    if (response.dqdata["attribute"] != null) {
+    this.getAllLatest()
+    if (this.dqdata.attribute != null) {
       this.IsSelectSoureceAttr = true
       let selectattribute: AttributeHolder = new AttributeHolder();
-      selectattribute.label = response.dqdata["attribute"]["ref"]["name"] + "." + response.dqdata["attribute"]["attrName"];
-      selectattribute.u_Id = response.dqdata["attribute"]["ref"]["uuid"] + "_" + response.dqdata["attribute"]["attrId"]
-      selectattribute.uuid = response.dqdata["attribute"]["ref"]["uuid"];
-      selectattribute.attrId = response.dqdata["attribute"]["attrId"];
+      selectattribute.label = this.dqdata.attribute.ref.name + "." + this.dqdata.attribute.attrName;
+      selectattribute.u_Id = this.dqdata.attribute.ref.uuid + "_" + this.dqdata.attribute.attrId;
+      selectattribute.uuid = this.dqdata.attribute.ref.uuid;
+      selectattribute.attrId = this.dqdata.attribute.attrId;
       this.selectAttribute = selectattribute;
-    }
-    console.log(response.dqdata.filterInfo)
-    if (response.dqdata.filterInfo != null) {
-      let filterInfoArray = [];
-      for (let k = 0; k < response.dqdata.filterInfo.length; k++) {
-        let filterInfo = {};
-        let lhsFilter = {};
-        filterInfo["logicalOperator"] = response.dqdata.filterInfo[k].logicalOperator
-        filterInfo["lhsType"] = response.dqdata.filterInfo[k].operand[0].ref.type;
-        filterInfo["operator"] = response.dqdata.filterInfo[k].operator;
-        filterInfo["rhsType"] = response.dqdata.filterInfo[k].operand[1].ref.type;
 
-        if (response.dqdata.filterInfo[k].operand[0].ref.type == 'formula') {
-          this._commonService.getFormulaByType(this.sourcedata.uuid, this.source)
-            .subscribe(response => { this.onSuccessgetFormulaByLhsType(response) },
-            error => console.log("Error ::", error))
-
-          let lhsAttri1 = {}
-          lhsAttri1["uuid"] = response.dqdata.filterInfo[k].operand[0].ref.uuid;
-          lhsAttri1["label"] = response.dqdata.filterInfo[k].operand[0].ref.name;
-          filterInfo["lhsAttribute"] = lhsAttri1;
-        }
-
-        else if (response.dqdata.filterInfo[k].operand[0].ref.type == 'datapod') {
-          this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source)
-            .subscribe(response => { this.onSuccessgetAllAttributeBySource(response) },
-            error => console.log("Error ::", error))
-          let lhsAttri = {}
-          lhsAttri["uuid"] = response.dqdata.filterInfo[k].operand[0].ref.uuid;
-          lhsAttri["label"] = response.dqdata.filterInfo[k].operand[0].ref.name + "." + response.dqdata.filterInfo[k].operand[0].attributeName;
-          lhsAttri["attributeId"] = response.dqdata.filterInfo[k].operand[0].attributeId;
-          filterInfo["lhsAttribute"] = lhsAttri;
-        }
-
-        else if (response.dqdata.filterInfo[k].operand[0].ref.type == 'simple') {
-          let stringValue = response.dqdata.filterInfo[k].operand[0].value;
-          let onlyNumbers = /^[0-9]+$/;
-          let result = onlyNumbers.test(stringValue);
-          if (result == true) {
-            filterInfo["lhsType"] = 'integer';
-          } else {
-            filterInfo["lhsType"] = 'string';
-          }
-          filterInfo["lhsAttribute"] = response.dqdata.filterInfo[k].operand[0].value;
-        }
-
-        if (response.dqdata.filterInfo[k].operand[1].ref.type == 'formula') {
-          this._commonService.getFormulaByType(this.sourcedata.uuid, this.source)
-            .subscribe(response => { this.onSuccessgetFormulaByRhsType(response) },
-            error => console.log("Error ::", error))
-
-          filterInfo["rhsAttribute"] = response.dqdata.filterInfo[k].operand[1].ref.name;
-          let rhsAttri = {}
-          rhsAttri["uuid"] = response.dqdata.filterInfo[k].operand[1].ref.uuid;
-          rhsAttri["label"] = response.dqdata.filterInfo[k].operand[1].ref.name;
-          filterInfo["rhsAttribute"] = rhsAttri;
-        }
-
-        else if (response.dqdata.filterInfo[k].operand[1].ref.type == 'datapod') {
-          this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source)
-            .subscribe(response => { this.onSuccessgetAllAttributeBySource(response) },
-            error => console.log("Error ::", error))
-
-          let rhsAttri1 = {}
-          rhsAttri1["uuid"] = response.dqdata.filterInfo[k].operand[1].ref.uuid;
-          rhsAttri1["label"] = response.dqdata.filterInfo[k].operand[1].ref.name + "." + response.dqdata.filterInfo[k].operand[1].attributeName;
-          rhsAttri1["attributeId"] = response.dqdata.filterInfo[k].operand[1].attributeId;
-          filterInfo["rhsAttribute"] = rhsAttri1;
-        }
-
-        else if (response.dqdata.filterInfo[k].operand[1].ref.type == 'paramlist') {
-          this._commonService.getParamByApp("", "application")
-            .subscribe(response => { this.onSuccessgetParamByApp(response) },
-            error => console.log("Error ::", error))
-
-          let rhsAttri = {}
-          rhsAttri["uuid"] = response.dqdata.filterInfo[k].operand[1].ref.uuid;
-          rhsAttri["attributeId"] = response.dqdata.filterInfo[k].operand[1].attributeId;
-          rhsAttri["label"] = "app." + response.dqdata.filterInfo[k].operand[1].attributeName;
-          filterInfo["rhsAttribute"] = rhsAttri;
-        }
-        else if (response.dqdata.filterInfo[k].operand[1].ref.type == 'function') {
-          this._commonService.getFunctionByCriteria("", "N", "function")
-            .subscribe(response => { this.onSuccessgetFunctionByCriteria(response) },
-            error => console.log("Error ::", error))
-          let rhsAttri = {}
-          rhsAttri["uuid"] = response.dqdata.filterInfo[k].operand[1].ref.uuid;
-          rhsAttri["label"] = response.dqdata.filterInfo[k].operand[1].ref.name;
-          filterInfo["rhsAttribute"] = rhsAttri;
-        }
-        else if (response.dqdata.filterInfo[k].operand[1].ref.type == 'dataset') {
-          let rhsAttri = {}
-          rhsAttri["uuid"] = response.dqdata.filterInfo[k].operand[1].ref.uuid;
-          rhsAttri["attributeId"] = response.dqdata.filterInfo[k].operand[1].attributeId;
-          rhsAttri["label"] = response.dqdata.filterInfo[k].operand[1].attributeName;
-          filterInfo["rhsAttribute"] = rhsAttri;
-        }
-
-        else if (response.dqdata.filterInfo[k].operand[1].ref.type == 'simple') {
-          let stringValue = response.dqdata.filterInfo[k].operand[1].value;
-          let onlyNumbers = /^[0-9]+$/;
-          let result = onlyNumbers.test(stringValue);
-          if (result == true) {
-            filterInfo["rhsType"] = 'integer';
-          } else {
-            filterInfo["rhsType"] = 'string';
-          }
-          filterInfo["rhsAttribute"] = response.dqdata.filterInfo[k].operand[1].value;
-
-          let result2 = stringValue.includes("and")
-          if (result2 == true) {
-            filterInfo["rhsType"] = 'integer';
-
-            let betweenValArray = []
-            betweenValArray = stringValue.split("and");
-            filterInfo["rhsAttribute1"] = betweenValArray[0];
-            filterInfo["rhsAttribute2"] = betweenValArray[1];
-          }
-        }
-        filterInfoArray.push(filterInfo);
-        this.dqdata.filterTableArray = filterInfoArray
-      }
     }
 
-    this.dqdata.selectDataType = response["dqdata"]["dataTypeCheck"];
+    if (this.dqdata.isFormualExits == true) {
+      this._commonService.getFormulaByType(this.sourcedata.uuid, this.source)
+        .subscribe(response => { this.onSuccessgetFormulaByLhsType(response) },
+          error => console.log("Error ::", error))
+    }
+    else if (this.dqdata.isAttributeExits == true) {
+      this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source)
+        .subscribe(response => { this.onSuccessgetAllAttributeBySource(response) },
+          error => console.log("Error ::", error))
+    }
+    else if (this.dqdata.isSimpleExits == true) {
+    }
+    else if (this.dqdata.isParamlistExits == true) {
+      this._commonService.getParamByApp("", "application")
+        .subscribe(response => { this.onSuccessgetParamByApp(response) },
+          error => console.log("Error ::", error))
+    }
+    else if (this.dqdata.isFunctionExits == true) {
+      this._commonService.getFunctionByCriteria("", "N", "function")
+        .subscribe(response => { this.onSuccessgetFunctionByCriteria(response) },
+          error => console.log("Error ::", error))
+    }
+
+    this.filterTableArray = response.filterInfoIo;
+
+    // this.dqdata.selectDataType = response["dqdata"]["dataTypeCheck"];
 
     let valueCheck = [];
-    if (response.dqdata.valueCheck != null) {
-      for (var i = 0; i < response.dqdata.valueCheck.length; i++) {
+    if (this.dqdata.valueCheck != null) {
+      for (var i = 0; i < this.dqdata.valueCheck.length; i++) {
         var valueCheck1 = {};
-        valueCheck1['value'] = response.dqdata.valueCheck[i];
-        valueCheck1['display'] = response.dqdata.valueCheck[i];
+        valueCheck1['value'] = this.dqdata.valueCheck[i];
+        valueCheck1['display'] = this.dqdata.valueCheck[i];
         valueCheck[i] = valueCheck1
       }//End For
       this.valueCheck = valueCheck;
     }//En
 
-    this.dqdata.duplicateKeyCheck = response.dqdata["duplicateKeyCheck"] == "Y" ? true : false;
-    this.dqdata.nullCheck = response.dqdata["nullCheck"] == "Y" ? true : false;
-    this.dqdata.upperBound = response.dqdata.rangeCheck.upperBound;
-    this.dqdata.lowerBound = response.dqdata.rangeCheck.lowerBound;
-    this.dqdata.maxLength = response.dqdata.lengthCheck.maxLength;
-    this.dqdata.minLength = response.dqdata.lengthCheck.minLength;
-    if (response.dqdata.refIntegrityCheck.ref != null) {
+    this.dqdata.duplicateKeyCheck = this.dqdata["duplicateKeyCheck"] == "Y" ? true : false;
+    this.dqdata.nullCheck = this.dqdata["nullCheck"] == "Y" ? true : false;
+    this.dqdata.upperBound = this.dqdata.rangeCheck.upperBound;
+    this.dqdata.lowerBound = this.dqdata.rangeCheck.lowerBound;
+    this.dqdata.maxLength = this.dqdata.lengthCheck.maxLength;
+    this.dqdata.minLength = this.dqdata.lengthCheck.minLength;
+    if (this.dqdata.refIntegrityCheck.ref != null) {
       let selectrefIntegrity: DependsOn = new DependsOn();
-      selectrefIntegrity.label = response.dqdata.refIntegrityCheck.ref.name;
-      selectrefIntegrity.uuid = response.dqdata.refIntegrityCheck.ref.uuid;
+      selectrefIntegrity.label = this.dqdata.refIntegrityCheck.ref.name;
+      selectrefIntegrity.uuid = this.dqdata.refIntegrityCheck.ref.uuid;
       this.selectRefIntegrity = selectrefIntegrity
 
       let selectintegrityattribute: AttributeHolder = new AttributeHolder();
-      selectintegrityattribute.label = response.dqdata.refIntegrityCheck.ref.name;
-      selectintegrityattribute.u_Id = response.dqdata.refIntegrityCheck.ref.uuid + "_" + response.dqdata.refIntegrityCheck.attrId;
-      selectintegrityattribute.uuid = response.dqdata.refIntegrityCheck.ref.uuid
-      selectintegrityattribute.attrId = response.dqdata.refIntegrityCheck.attrId
+      selectintegrityattribute.label = this.dqdata.refIntegrityCheck.ref.name;
+      selectintegrityattribute.u_Id = this.dqdata.refIntegrityCheck.ref.uuid + "_" + this.dqdata.refIntegrityCheck.attrId;
+      selectintegrityattribute.uuid = this.dqdata.refIntegrityCheck.ref.uuid
+      selectintegrityattribute.attrId = this.dqdata.refIntegrityCheck.attrId
       this.selectIntegrityAttribute = selectintegrityattribute;
     }
+
+    this.isEditInprogess = false;
+    //this.showForm = false;
   }
   searchOption(index) {
     this.displayDialogBox = true;
     this._commonService.getAllLatest("dataset")
       .subscribe(response => { this.onSuccessgetAllLatestDialogBox(response) },
-      error => console.log("Error ::", error))
+        error => console.log("Error ::", error))
   }
 
   onSuccessgetAllLatestDialogBox(response) {
@@ -528,7 +453,7 @@ export class DataQualityDetailComponent {
   onChangeDialogAttribute() {
     this._commonService.getAttributesByDataset("dataset", this.dialogSelectName.uuid)
       .subscribe(response => { this.onSuccessgetAttributesByDatasetDialogBox(response) },
-      error => console.log("Error ::", error))
+        error => console.log("Error ::", error))
   }
 
   onSuccessgetAttributesByDatasetDialogBox(response) {
@@ -560,10 +485,10 @@ export class DataQualityDetailComponent {
   getAllVersionByUuid() {
     this._commonService.getAllVersionByUuid('dq', this.id)
       .subscribe(
-      response => {
-        this.OnSuccesgetAllVersionByUuid(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.OnSuccesgetAllVersionByUuid(response)
+        },
+        error => console.log("Error :: " + error));
   }
   OnSuccesgetAllVersionByUuid(response) {
     for (const i in response) {
@@ -612,13 +537,13 @@ export class DataQualityDetailComponent {
     if (this.dqdata.filterTableArray[index]["lhsType"] == 'formula') {
       this._commonService.getFormulaByType(this.sourcedata.uuid, this.source)
         .subscribe(response => { this.onSuccessgetFormulaByLhsType(response) },
-        error => console.log("Error ::", error))
+          error => console.log("Error ::", error))
     }
 
     else if (this.dqdata.filterTableArray[index]["lhsType"] == 'datapod') {
       this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source)
         .subscribe(response => { this.onSuccessgetAllAttributeBySource(response) },
-        error => console.log("Error ::", error))
+          error => console.log("Error ::", error))
     }
 
     else {
@@ -632,22 +557,22 @@ export class DataQualityDetailComponent {
     if (this.dqdata.filterTableArray[index]["rhsType"] == 'formula') {
       this._commonService.getFormulaByType(this.sourcedata.uuid, this.source)
         .subscribe(response => { this.onSuccessgetFormulaByRhsType(response) },
-        error => console.log("Error ::", error))
+          error => console.log("Error ::", error))
     }
     else if (this.dqdata.filterTableArray[index]["rhsType"] == 'datapod') {
       this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source)
         .subscribe(response => { this.onSuccessgetAllAttributeBySource(response) },
-        error => console.log("Error ::", error))
+          error => console.log("Error ::", error))
     }
     else if (this.dqdata.filterTableArray[index]["rhsType"] == 'function') {
       this._commonService.getFunctionByCriteria("", "N", "function")
         .subscribe(response => { this.onSuccessgetFunctionByCriteria(response) },
-        error => console.log("Error ::", error))
+          error => console.log("Error ::", error))
     }
     else if (this.dqdata.filterTableArray[index]["rhsType"] == 'paramlist') {
       this._commonService.getParamByApp("", "application")
         .subscribe(response => { this.onSuccessgetParamByApp(response) },
-        error => console.log("Error ::", error))
+          error => console.log("Error ::", error))
     }
     else if (this.dqdata.filterTableArray[index]["rhsType"] == 'dataset') {
       let rhsAttribute = {};
@@ -724,12 +649,12 @@ export class DataQualityDetailComponent {
       rhsAttribute["attributeId"] = "";
       this.dqdata.filterTableArray[index]["rhsAttribute"] = rhsAttribute
     }
-    else if(this.dqdata.filterTableArray[index].operator == 'IS'){
-			this.dqdata.filterTableArray[index].rhsType = 'string';
+    else if (this.dqdata.filterTableArray[index].operator == 'IS') {
+      this.dqdata.filterTableArray[index].rhsType = 'string';
     }
-    else{
-			this.dqdata.filterTableArray[index].rhsType = 'integer';
-		}
+    else {
+      this.dqdata.filterTableArray[index].rhsType = 'integer';
+    }
   }
   addRow() {
     if (this.dqdata.filterTableArray == null) {
@@ -850,14 +775,14 @@ export class DataQualityDetailComponent {
     }
 
     let filterInfoArray = [];
-    if(this.dqdata.filterTableArray != null){
+    if (this.dqdata.filterTableArray != null) {
       if (this.dqdata.filterTableArray.length > 0) {
-        for (let i = 0; i < this.dqdata.filterTableArray.length; i++) { 
+        for (let i = 0; i < this.dqdata.filterTableArray.length; i++) {
           let filterInfo = {};
           filterInfo["logicalOperator"] = this.dqdata.filterTableArray[i].logicalOperator;
           filterInfo["operator"] = this.dqdata.filterTableArray[i].operator;
           filterInfo["operand"] = [];
-  
+
           if (this.dqdata.filterTableArray[i].lhsType == 'integer' || this.dqdata.filterTableArray[i].lhsType == 'string') {
             let operatorObj = {};
             let ref = {}
@@ -893,7 +818,7 @@ export class DataQualityDetailComponent {
             operatorObj["value"] = this.dqdata.filterTableArray[i].rhsAttribute;
             operatorObj["attributeType"] = "string"
             filterInfo["operand"][1] = operatorObj;
-  
+
             if (this.dqdata.filterTableArray[i].rhsType == 'integer' && this.dqdata.filterTableArray[i].operator == 'BETWEEN') {
               let operatorObj = {};
               let ref = {}
@@ -954,7 +879,7 @@ export class DataQualityDetailComponent {
         console.log(JSON.stringify(filterInfoArray));
       }
     }
-    
+
     console.log(JSON.stringify(dqJson));
     this._commonService.submit("dq", dqJson).subscribe(
       response => { this.OnSuccessubmit(response) },
@@ -994,7 +919,7 @@ export class DataQualityDetailComponent {
     )
   }
 
-  showMessage(msg, msgtype, msgsumary){
+  showMessage(msg, msgtype, msgsumary) {
     this.isSubmit = "false";
     this.IsProgerssShow = "false";
     this.msgs = [];
@@ -1009,52 +934,52 @@ export class DataQualityDetailComponent {
     this.router.navigate(['app/dataQuality/dq', uuid, version, 'true']);
   }
 
-  showMainPage(){
+  showMainPage() {
     this.isHomeEnable = false;
     this.showGraph = false;
     setTimeout(() => {
-      this.d_KnowledgeGraphComponent.getGraphData(this.id,this.version);
-    }, 1000); 
+      this.d_KnowledgeGraphComponent.getGraphData(this.id, this.version);
+    }, 1000);
   }
 
-  showDagGraph(uuid,version){
+  showDagGraph(uuid, version) {
     this.isHomeEnable = true;
     this.showGraph = true;
   }
 
-  onAttrRowDown(index){
-		var rowTempIndex=this.dqdata.filterTableArray[index];
-    var rowTempIndexPlus=this.dqdata.filterTableArray[index+1];
-		this.dqdata.filterTableArray[index]=rowTempIndexPlus;
-    this.dqdata.filterTableArray[index+1]=rowTempIndex;
-    this.isSubmit=true
-	}
-	
-	onAttrRowUp(index){
-		var rowTempIndex=this.dqdata.filterTableArray[index];
-    var rowTempIndexMines=this.dqdata.filterTableArray[index-1];
-		this.dqdata.filterTableArray[index]=rowTempIndexMines;
-    this.dqdata.filterTableArray[index-1]=rowTempIndex;
-    this.isSubmit=true
+  onAttrRowDown(index) {
+    var rowTempIndex = this.dqdata.filterTableArray[index];
+    var rowTempIndexPlus = this.dqdata.filterTableArray[index + 1];
+    this.dqdata.filterTableArray[index] = rowTempIndexPlus;
+    this.dqdata.filterTableArray[index + 1] = rowTempIndex;
+    this.isSubmit = true
   }
-  dragStart(event,data){
+
+  onAttrRowUp(index) {
+    var rowTempIndex = this.dqdata.filterTableArray[index];
+    var rowTempIndexMines = this.dqdata.filterTableArray[index - 1];
+    this.dqdata.filterTableArray[index] = rowTempIndexMines;
+    this.dqdata.filterTableArray[index - 1] = rowTempIndex;
+    this.isSubmit = true
+  }
+  dragStart(event, data) {
     console.log(event)
     console.log(data)
-    this.dragIndex=data
+    this.dragIndex = data
   }
-  dragEnd(event){
+  dragEnd(event) {
     console.log(event)
   }
-  drop(event,data){
-    if(this.mode=='false'){
-      this.dropIndex=data
+  drop(event, data) {
+    if (this.mode == 'false') {
+      this.dropIndex = data
       // console.log(event)
       // console.log(data)
-      var item=this.dqdata.filterTableArray[this.dragIndex]
-      this.dqdata.filterTableArray.splice(this.dragIndex,1)
-      this.dqdata.filterTableArray.splice(this.dropIndex,0,item)
-      this.isSubmit=true
+      var item = this.dqdata.filterTableArray[this.dragIndex]
+      this.dqdata.filterTableArray.splice(this.dragIndex, 1)
+      this.dqdata.filterTableArray.splice(this.dropIndex, 0, item)
+      this.isSubmit = true
     }
-    
+
   }
 }

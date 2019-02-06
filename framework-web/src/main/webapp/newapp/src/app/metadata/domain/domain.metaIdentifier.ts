@@ -1,10 +1,8 @@
+export class MetaIdentifier {
 
-
-export class MetaIdentifier{
-
-   type : String;
-	uuid : String ;
-	version : String;
-	name : String;
+	public type: String;
+	public uuid: String;
+	public version: String;
+	public name: String;
 
 }
