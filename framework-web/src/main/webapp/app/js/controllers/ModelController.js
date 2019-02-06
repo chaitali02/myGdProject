@@ -4,7 +4,7 @@
 DatascienceModule = angular.module('DatascienceModule');
 
 DatascienceModule.controller('CreateModelController', function($state, $stateParams, $rootScope, $scope, $sessionStorage, $timeout, $filter, ModelService, $http, $location, $anchorScroll, privilegeSvc, CommonService, CommonFactory,CF_ENCODINGTYPE) {
-  $scope.featuureType=["integer","string","double"];
+  $scope.featuureType=["integer","string","double","vector"];
   $scope.mode = "false";
 
   if($stateParams.mode =='true'){
