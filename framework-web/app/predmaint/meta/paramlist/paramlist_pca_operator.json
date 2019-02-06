@@ -41,7 +41,7 @@
     "templateFlg" : "Y",
     "uuid" : "66b22a2e-a4d0-46c0-b74b-f6fae6e1d41a",
     "version" : "1549013239",
-    "name" : "paramlist_pca_2",
+    "name" : "paramlist_pca_operator",
     "createdBy" : {
         "ref" : {
             "type" : "user",

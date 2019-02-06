@@ -59,7 +59,6 @@ import org.apache.spark.ml.evaluation.RegressionEvaluator;
 import org.apache.spark.ml.feature.OneHotEncoder;
 import org.apache.spark.ml.feature.RFormula;
 import org.apache.spark.ml.feature.StringIndexer;
-import org.apache.spark.ml.feature.StringIndexerModel;
 import org.apache.spark.ml.feature.VectorAssembler;
 import org.apache.spark.ml.linalg.Vector;
 import org.apache.spark.ml.linalg.VectorUDT;
@@ -129,7 +128,6 @@ import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.Load;
-import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.ResultSetHolder;
@@ -2104,28 +2102,53 @@ public class SparkExecutor<T> implements IExecutor {
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
 		df.printSchema();
 		
+		trainResult.setTotalRecords(df.count());
+		trainResult.setNumFeatures(fieldArray.length);
+		
 		try {
-			Dataset<Row>[] splits = df.randomSplit(new double[] { trainPercent / 100, valPercent / 100 }, 12345);
-			Dataset<Row> trngDf = splits[0];
-			Dataset<Row> valDf = splits[1];
-			Dataset<Row> valDf2 = splits[1];
+			Dataset<Row> trngDf = null;
+			Dataset<Row> valDf = null;
+			Dataset<Row> valDf2 = null;
 			
-			registerTempTable(trngDf, "tempTrngDf");
-			trngDf = readTempTable(trainingDfSql, clientContext).getDataFrame();
-			registerTempTable(valDf, "tempValDf");
-			valDf = readTempTable(validationDfSql, clientContext).getDataFrame();
-			
-			//dropping temptables tempTrngDf and tempValDf
+
 			List<String> tempTableList = new ArrayList<>();
-			tempTableList.add("tempTrngDf");
-			tempTableList.add("tempValDf");
-			dropTempTable(tempTableList);
 			
-	    //saving training set 
-			if(saveTrainingSet.equalsIgnoreCase("Y")) {
-				//trngDf.write().mode(SaveMode.Append).parquet(trainingSetPath);
-				saveTrainDataset(trngDf,trainingSetPath, trainLocationDP, trainLocationDS ,trainLocationTableName, trainFilePathUrl);
+			if (trainName.contains("PCA")) {
+				valDf2 = df;
+				
+				registerTempTable(df, "tempTrngDf");
+				trngDf = readTempTable(trainingDfSql, clientContext).getDataFrame();
+				
+				//dropping temptables tempTrngDf and tempValDf
+				tempTableList.add("tempTrngDf");
+				
+				trainResult.setTrainingSet(trngDf.count());
+			} else {
+				Dataset<Row>[] splits = df.randomSplit(new double[] { trainPercent / 100, valPercent / 100 }, 12345);
+				trngDf = splits[0];
+				valDf = splits[1];
+				valDf2 = splits[1];
+
+				registerTempTable(trngDf, "tempTrngDf");
+				trngDf = readTempTable(trainingDfSql, clientContext).getDataFrame();
+				registerTempTable(valDf, "tempValDf");
+				valDf = readTempTable(validationDfSql, clientContext).getDataFrame();
+				
+				//dropping temptables tempTrngDf and tempValDf
+				tempTableList.add("tempTrngDf");
+				tempTableList.add("tempValDf");
+				
+				//saving training set 
+				if(saveTrainingSet.equalsIgnoreCase("Y")) {
+					//trngDf.write().mode(SaveMode.Append).parquet(trainingSetPath);
+					saveTrainDataset(trngDf, trainingSetPath, trainLocationDP, trainLocationDS ,trainLocationTableName, trainFilePathUrl);
+				}
+
+				trainResult.setTrainingSet(trngDf.count());
+				trainResult.setValidationSet(valDf.count());
 			}
+			
+			dropTempTable(tempTableList);
 			
 			List<PipelineStage> pipelineStagesTrng = new ArrayList<>();
 			if(encodingDetails != null && !encodingDetails.isEmpty()) {
@@ -2145,18 +2168,25 @@ public class SparkExecutor<T> implements IExecutor {
 
 				logger.info("Printing trained training and validation dataset schema");
 				trngDf.printSchema();
-				valDf.printSchema();				
+				
+				if(valDf != null) {
+					valDf.printSchema();
+				}
+				
 				trngDf.distinct().show();
 				fieldArray = encoderCols.toArray(new String[encoderCols.size()]);
 			}
 			
 			VectorAssembler vectorAssembler = new VectorAssembler();
-			vectorAssembler.setInputCols(fieldArray).setOutputCol("features");
+			if (trainName.contains("PCA")) {
+				vectorAssembler.setInputCols(fieldArray).setOutputCol("pcaInputFeatures");
+			} else {
+				vectorAssembler.setInputCols(fieldArray).setOutputCol("features");
+			}
 			for (String colname : vectorAssembler.getInputCols()) {
 				logger.info("Vecassembler input col : " + colname);
 			}
-			List<String> selectEncodedCols = new ArrayList<String>();
-					
+								
 			Method method = null;
 			if (trainName.contains("LinearRegression")
 					|| trainName.contains("LogisticRegression")
@@ -2170,63 +2200,61 @@ public class SparkExecutor<T> implements IExecutor {
 				
 				logger.info("Printing trained training and validation dataset schema 1");
 				trngDf.printSchema();
-				valDf.printSchema();
-//				trngDf.distinct().show();
-				/*if(encodingDetails != null && !encodingDetails.isEmpty()) {
-					for (String field : origFieldArray) {
-						if (encodingDetails.containsKey(field)) {
-							selectEncodedCols.add(field+"_vec");
-						}
-						logger.info(field);
-						selectEncodedCols.add(field);
-					}
-//					trainingDf = trngDf.withColumn("label", trngDf.col("label").cast("Double")).select("label", selectEncodedCols.toArray(new String[selectEncodedCols.size()]));
-//					validateDf = valDf.withColumn("label", valDf.col("label").cast("Double")).select("label", selectEncodedCols.toArray(new String[selectEncodedCols.size()]));
-					trainingDf = trngDf;
-					validateDf = valDf;
-				} else {
-//					trainingDf = trngDf.withColumn("label", trngDf.col("label").cast("Double")).select("label", vectorAssembler.getInputCols());
-//					validateDf = valDf.withColumn("label", valDf.col("label").cast("Double")).select("label", vectorAssembler.getInputCols());
-					trainingDf = trngDf;
-					validateDf = valDf;
-				}*/
-			} /*else {
-				trainingDf = trngDf;
-				validateDf = valDf;
-			}*/	
 
-			trainResult.setTotalRecords(df.count());
-			trainResult.setTrainingSet(trngDf.count());
-			trainResult.setValidationSet(valDf.count());
-			trainResult.setNumFeatures(fieldArray.length);
+				if(valDf != null) {
+					valDf.printSchema();
+				}
+			} else if (trainName.contains("PCA")) {
+				method = algoClass.getClass().getMethod("setInputCol", String.class);
+				method.invoke(algoClass, "pcaInputFeatures");
+
+				method = algoClass.getClass().getMethod("setOutputCol", String.class);
+				method.invoke(algoClass, "features");
+			}
 			
 			Set<String> encodingCols = null;
 			if(encodingDetails != null && !encodingDetails.isEmpty()) {
 				encodingCols = encodingDetails.keySet();
 			}
 			
-			trngDf = castUnEncodedCols(trngDf, encodingDetails, encodingCols);
-			
+			trngDf = castUnEncodedCols(trngDf, encodingDetails, encodingCols);			
 			trngDf = trngDf.na().fill(0.0,trngDf.columns());
 			
-			valDf = castUnEncodedCols(valDf, encodingDetails, encodingCols);
-			
-			valDf = valDf.na().fill(0.0,valDf.columns());
+			if(valDf != null) {
+				valDf = castUnEncodedCols(valDf, encodingDetails, encodingCols);				
+				valDf = valDf.na().fill(0.0,valDf.columns());
+			}
 			
 			logger.info("Printing trained training and validation dataset schema 3");
 			trngDf.printSchema();
-			valDf.printSchema();
-			
-			
+			if(valDf != null) {
+				valDf.printSchema();
+			}
+					
 			pipelineStagesTrng.add(vectorAssembler);
 			pipelineStagesTrng.add((PipelineStage) algoClass);
 //			Pipeline pipeline = new Pipeline().setStages(new PipelineStage[] {vectorAssembler, (PipelineStage) algoClass});
 			logger.info("Before train pipeline creation");
 			Pipeline pipeline = new Pipeline().setStages(pipelineStagesTrng.toArray(new PipelineStage[pipelineStagesTrng.size()]));
-			try {
-				StopWatch stopWatch = new StopWatch();
-				stopWatch.start();
-				PipelineModel trngModel = null;
+			
+			StopWatch stopWatch = new StopWatch();
+			stopWatch.start();
+			PipelineModel trngModel = null;
+			
+			Dataset<Row> trainedDataSet = null;
+			if (trainName.contains("PCA")) {
+				if (null != paramMap) {
+					trngModel = pipeline.fit(trngDf, paramMap);
+				} else {
+					trngModel = pipeline.fit(trngDf);
+				}
+				
+				trainedDataSet = trngModel.transform(trngDf);
+				testSetPath = trainingSetPath;
+				testLocationDP = trainLocationDP;
+				testLocationDs = trainLocationDS;
+				testLFilePathUrl = trainFilePathUrl;
+			} else {
 				logger.info("Before train pipeline fit");
 				if (null != paramMap) {
 					trngModel = pipeline.fit(trngDf, paramMap);
@@ -2234,33 +2262,25 @@ public class SparkExecutor<T> implements IExecutor {
 					trngModel = pipeline.fit(trngDf);
 				}
 				logger.info("After train pipeline fit");
-				Dataset<Row> trainedDataSet = trngModel.transform(valDf);
+				trainedDataSet = trngModel.transform(valDf);
 				
 				logger.info("Printing trained training and validation dataset schema 4");
 				trainedDataSet.printSchema();
 				valDf.printSchema();
 				
-				stopWatch.stop();
-				trainResult.setTimeTaken(stopWatch.getTotalTimeMillis()+" ms");
-				
-				if(trainOtherParam !=null) {
-					String cMTableName = trainOtherParam.get("confusionMatrixTableName");
-					sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, cMTableName);
-				}			
-				
-				sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");
-				
-//				if(encodingDetails == null || (encodingDetails != null && !encodingDetails.isEmpty())) {
-					saveTrainedTestDataset(trainedDataSet, valDf2, testSetPath, rowIdentifierCols, includeFeatures, origFieldArray, trainName, testLocationDP, testLocationDs, testLocationTableName, testLFilePathUrl);
-//				}
-				return trngModel;
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new RuntimeException(e);
-			} catch (Error e) {
-				e.printStackTrace();
-				throw new RuntimeException(e);
+			}
+			stopWatch.stop();
+			trainResult.setTimeTaken(stopWatch.getTotalTimeMillis()+" ms");
+			
+			if(trainOtherParam != null) {
+				String cMTableName = trainOtherParam.get("confusionMatrixTableName");
+				sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, cMTableName);
 			}			
+			
+			sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");			
+			saveTrainedTestDataset(trainedDataSet, valDf2, testSetPath, rowIdentifierCols, includeFeatures, origFieldArray, trainName, testLocationDP, testLocationDs, testLocationTableName, testLFilePathUrl);
+
+			return trngModel;			
 		} catch (IllegalAccessException 
 				| IllegalArgumentException
 				| SecurityException
@@ -2364,7 +2384,6 @@ public class SparkExecutor<T> implements IExecutor {
 		}		
 		logger.info("trainedDataSet show 0");
 		trainedDataSet.printSchema();
-		trainedDataSet.show();
 		
 		List<String> predDFCols = Arrays.asList(trainedDataSet.columns());
 		
@@ -2377,13 +2396,18 @@ public class SparkExecutor<T> implements IExecutor {
 				colNameList.add(cloName);
 			}
 		} 
-		colNameList.add("label");
+		if (!trainName.contains("PCA")) {
+			colNameList.add("label");
+		}
 		if(predDFCols.contains("prediction")) {
 			colNameList.add("prediction");
 		}
 		if (trainName.contains("LogisticRegression")
 				|| trainName.contains("GBTClassifier")) {
 			colNameList.add("probability");
+		}
+		if (trainName.contains("PCA")) {
+			colNameList.add("features");
 		}
 
 		logger.info("trainedDataset >>>>>>>>>>> ");
@@ -2393,6 +2417,7 @@ public class SparkExecutor<T> implements IExecutor {
 			logger.info("colName : " + colName);
 		}
 		trainedDataSet = trainedDataSet.select("rowNum", colNameList.toArray(new String[colNameList.size()]));
+		trainedDataSet.printSchema();
 		//creating column prediction_status
 		Dataset<Row> predictionStatusDF = null;
 		if(predDFCols.contains("prediction")) {
@@ -2426,7 +2451,9 @@ public class SparkExecutor<T> implements IExecutor {
 				}
 				
 				if(testLTableName != null && !testLTableName.isEmpty()) {
+					rsHolder.getDataFrame().printSchema();
 					rsHolder = applySchema(rsHolder, testLocationDP, null, testLTableName, false);
+					rsHolder.getDataFrame().printSchema();
 					joinedDF = rsHolder.getDataFrame();
 				}
 			}
@@ -2434,12 +2461,9 @@ public class SparkExecutor<T> implements IExecutor {
 			//write according to datasource
 			if(!testLocationDs.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
 				persistDataframe(rsHolder, testLocationDs, testLocationDP,SaveMode.Append.toString());
-			} else {
-				
+			} else {				
 				joinedDF.write().mode(SaveMode.Append).parquet(tLFilePathUrl);
 			}
-			
-			
 		}else {
 			joinedDF.write().mode(SaveMode.Append).parquet(defaultPath);
 		}
@@ -2828,41 +2852,60 @@ public class SparkExecutor<T> implements IExecutor {
 			, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql,
 			Map<String, EncodingType> encodingDetails, String saveTrainingSet, String trainingSetPath, Datapod testLocationDP, 
 			Datasource testLocationDs, String testLocationTableName, String testLFilePathUrl, Datapod trainLocationDP, 
-			Datasource trainLocationDS, String trainLocationTableName, String trainLocationFilePathUrl) throws IOException {
-		String []origFieldArray = fieldArray;
+			Datasource trainLocationDS, String trainLocationTableName, String trainLocationFilePathUrl
+			, Object algoclass) throws IOException {
+//		String []origFieldArray = fieldArray;
 		String assembledDFSQL = "SELECT * FROM " + tableName;
 		Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
-		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
-		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
+		
+		trainResult.setTotalRecords(df.count());
+		trainResult.setNumFeatures(fieldArray.length);
+		
 //		df.show(false);
 		df.printSchema();
 		try {
-			Dataset<Row>[] splits = df.randomSplit(new double[] { trainPercent / 100, valPercent / 100 }, 12345);
-			Dataset<Row> trngDf = splits[0];
-			Dataset<Row> valDf = splits[1];
-			Dataset<Row> valDf2 = splits[1];
-//			Dataset<Row> trainingDf = null;
-//			Dataset<Row> validateDf = null;
+			Dataset<Row> trngDf = null;
+			Dataset<Row> valDf = null;
+			Dataset<Row> valDf2 = null;
 			
-			registerTempTable(trngDf, "tempTrngDf");
-			trngDf = readTempTable(trainingDfSql, clientContext).getDataFrame();
-			registerTempTable(valDf, "tempValDf");
-			valDf = readTempTable(validationDfSql, clientContext).getDataFrame();
-			
-			//dropping temptables tempTrngDf and tempValDf
+
 			List<String> tempTableList = new ArrayList<>();
-			tempTableList.add("tempTrngDf");
-			tempTableList.add("tempValDf");
-			dropTempTable(tempTableList);
-						
-         //saving training set 
-//			if(saveTrainingSet.equalsIgnoreCase("Y")) {
-//				trngDf.write().mode(SaveMode.Append).parquet(trainingSetPath);
-//			}
-			if(saveTrainingSet.equalsIgnoreCase("Y")) {
-				//trngDf.write().mode(SaveMode.Append).parquet(trainingSetPath);
-				saveTrainDataset(trngDf,trainingSetPath, trainLocationDP, trainLocationDS ,trainLocationTableName, trainLocationFilePathUrl);
+					
+			if (trainName.contains("PCA")) {
+				valDf2 = df;
+
+				registerTempTable(df, "tempTrngDf");
+				trngDf = readTempTable(trainingDfSql, clientContext).getDataFrame();
+				
+				//dropping temptables tempTrngDf and tempValDf
+				tempTableList.add("tempTrngDf");
+				
+				trainResult.setTrainingSet(trngDf.count());
+			} else {
+				Dataset<Row>[] splits = df.randomSplit(new double[] { trainPercent / 100, valPercent / 100 }, 12345);
+				trngDf = splits[0];
+				valDf = splits[1];
+				valDf2 = splits[1];				
+
+				registerTempTable(trngDf, "tempTrngDf");
+				trngDf = readTempTable(trainingDfSql, clientContext).getDataFrame();
+				registerTempTable(valDf, "tempValDf");
+				valDf = readTempTable(validationDfSql, clientContext).getDataFrame();
+				
+				//dropping temptables tempTrngDf and tempValDf
+				tempTableList.add("tempTrngDf");
+				tempTableList.add("tempValDf");
+
+				if(saveTrainingSet.equalsIgnoreCase("Y")) {
+					//trngDf.write().mode(SaveMode.Append).parquet(trainingSetPath);
+					saveTrainDataset(trngDf,trainingSetPath, trainLocationDP, trainLocationDS ,trainLocationTableName, trainLocationFilePathUrl);
+				}
+
+				trainResult.setTrainingSet(trngDf.count());
+				trainResult.setValidationSet(valDf.count());
 			}
+			
+			dropTempTable(tempTableList);	
 			List<PipelineStage> pipelineStagesTrng = new ArrayList<>();
 			if(encodingDetails != null && !encodingDetails.isEmpty()) {
 				for(String colName : encodingDetails.keySet()) {
@@ -2870,9 +2913,6 @@ public class SparkExecutor<T> implements IExecutor {
 				}
 				
 				//fitting training dataframe
-				/*Pipeline pipelineTrng = new Pipeline().setStages(pipelineStagesTrng.toArray(new PipelineStage[pipelineStagesTrng.size()]));
-				PipelineModel trngModel = pipelineTrng.fit(trngDf);
-				trngDf = trngModel.transform(trngDf);*/
 				List<String> encoderCols = new ArrayList<>();
 				for(String col : encodingDetails.keySet()) {
 					encoderCols.add(col+"_vec");
@@ -2882,38 +2922,25 @@ public class SparkExecutor<T> implements IExecutor {
 						encoderCols.add(nonStrngCol);
 					}
 				}
-
-//				valDf = trngModel.transform(valDf);
-				
-				/*for(String colName : encodingDetails.keySet()) {
-					trngDf = trngDf.drop(colName);
-					trngDf = trngDf.withColumnRenamed(colName+"_vec", colName);
-					valDf = valDf.drop(colName);
-					valDf = valDf.withColumnRenamed(colName+"_vec", colName);
-				}*/
-				
-				/*for(String colName : valDf.columns()) {
-					if(colName.endsWith("_category_index")) {
-						trngDf = trngDf.drop(colName);
-						valDf = valDf.drop(colName);
-					}
-				}*/
 				
 				logger.info("Printing trained training and validation dataset schema");
 				trngDf.printSchema();
-				valDf.printSchema();				
+				if(valDf != null) {
+					valDf.printSchema();
+				}
 				
-				origFieldArray = fieldArray;
+//				origFieldArray = fieldArray;
 				fieldArray = encoderCols.toArray(new String[encoderCols.size()]);
 			}									
 			
 			VectorAssembler vectorAssembler = new VectorAssembler();
-			vectorAssembler.setInputCols(fieldArray).setOutputCol("features");
-			pipelineStagesTrng.add(vectorAssembler);
-			List<String> selectEncodedCols = new ArrayList<String>();
+			if (trainName.contains("PCA")) {
+				vectorAssembler.setInputCols(fieldArray).setOutputCol("pcaInputFeatures");
+			} else {
+				vectorAssembler.setInputCols(fieldArray).setOutputCol("features");
+			}
+//			List<String> selectEncodedCols = new ArrayList<String>();
 			
-			Class<?> dynamicClass = Class.forName(trainName);
-			Object obj = dynamicClass.newInstance();
 			Method method = null;
 			if (trainName.contains("LinearRegression")
 					|| trainName.contains("LogisticRegression")
@@ -2922,62 +2949,53 @@ public class SparkExecutor<T> implements IExecutor {
 					|| trainName.contains("AFTSurvivalRegression")
 					|| trainName.contains("DecisionTree")
 					|| trainName.contains("NaiveBayes")) {
-				method = dynamicClass.getMethod("setLabelCol", String.class);
-				method.invoke(obj, "label");
+				method = algoclass.getClass().getMethod("setLabelCol", String.class);
+				method.invoke(algoclass, "label");
 				
 				logger.info("Printing trained training and validation dataset schema 1");
 				trngDf.printSchema();
-				trngDf.printSchema();
-				/*if(encodingDetails != null && !encodingDetails.isEmpty()) {
-					for (String field : origFieldArray) {
-						if (encodingDetails.containsKey(field)) {
-							selectEncodedCols.add(field+"_vec");
-						}
-						logger.info(field);
-						selectEncodedCols.add(field);
-					}
-					trainingDf = trngDf.withColumn("label", trngDf.col("label").cast("Double")).select("label", selectEncodedCols.toArray(new String[selectEncodedCols.size()]));
-					validateDf = valDf.withColumn("label", valDf.col("label").cast("Double")).select("label", selectEncodedCols.toArray(new String[selectEncodedCols.size()]));
-				} else {
-					trainingDf = trngDf.withColumn("label", trngDf.col("label").cast("Double")).select("label", vectorAssembler.getInputCols());
-					validateDf = valDf.withColumn("label", valDf.col("label").cast("Double")).select("label", vectorAssembler.getInputCols());
-				}*/
-			} /*else {
-				trainingDf = trngDf;
-				validateDf = valDf;
-			}*/
+				if(valDf != null) {
+					valDf.printSchema();
+				}
+			} else if (trainName.contains("PCA")) {
+					method = algoclass.getClass().getMethod("setInputCol", String.class);
+					method.invoke(algoclass, "pcaInputFeatures");
+
+					method = algoclass.getClass().getMethod("setOutputCol", String.class);
+					method.invoke(algoclass, "features");
+
+//					method = algoclass.getClass().getMethod("setK", Integer.class);
+//					method.invoke(algoclass, 3);
+					
+			}
 
 			logger.info("Printing trained training and validation dataset schema 2");
 			trngDf.printSchema();
-			valDf.printSchema();
+			if(valDf != null) {
+				valDf.printSchema();
+			}
 			
-			trainResult.setTotalRecords(df.count());
-			trainResult.setTrainingSet(trngDf.count());
-			trainResult.setValidationSet(valDf.count());
-			trainResult.setNumFeatures(fieldArray.length);
-
 			Set<String> encodingCols = null;
 			if(encodingDetails != null && !encodingDetails.isEmpty()) {
 				encodingCols = encodingDetails.keySet();
 			}
 			
-			trngDf = castUnEncodedCols(trngDf, encodingDetails, encodingCols);
-						
+			trngDf = castUnEncodedCols(trngDf, encodingDetails, encodingCols);						
 			trngDf = trngDf.na().fill(0.0,trngDf.columns());
 			
-			valDf = castUnEncodedCols(valDf, encodingDetails, encodingCols);
-			
-			valDf = valDf.na().fill(0.0,valDf.columns());
+			if(valDf != null) {
+				valDf = castUnEncodedCols(valDf, encodingDetails, encodingCols);			
+				valDf = valDf.na().fill(0.0, valDf.columns());
+			}
 
 			logger.info("Printing trained training and validation dataset schema 3");
 			trngDf.printSchema();
-			valDf.printSchema();
-			
-			method = dynamicClass.getMethod("setFeaturesCol", String.class);
-			method.invoke(obj, "features");
-			
-			pipelineStagesTrng.add((PipelineStage) obj);
-			
+			if(valDf != null) {
+				valDf.printSchema();
+			}
+
+			pipelineStagesTrng.add(vectorAssembler);
+			pipelineStagesTrng.add((PipelineStage) algoclass);			
 			Pipeline pipeline = new Pipeline().setStages(pipelineStagesTrng.toArray(new PipelineStage[pipelineStagesTrng.size()]));
 //			Pipeline pipeline = new Pipeline().setStages(new PipelineStage[] {vectorAssembler, (PipelineStage) obj });
 			
@@ -2992,38 +3010,47 @@ public class SparkExecutor<T> implements IExecutor {
 			CrossValidator cv = new CrossValidator()
 					.setEstimator(pipeline)
 					.setEvaluator(getEvaluatorByTrainClass(trainName))
-					.setEstimatorParamMaps(getHyperParams(hyperParamList, obj))
+					.setEstimatorParamMaps(getHyperParams(hyperParamList, algoclass))
 					.setNumFolds(numFolds);
 			CrossValidatorModel cvModel = null;
 			StopWatch stopWatch = new StopWatch();
 			stopWatch.start();
-			try {
-				cvModel = cv.fit(trngDf);
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new RuntimeException("Training failed.");
-			} catch (Error e) {
-				e.printStackTrace();
-				throw new RuntimeException("Training failed.");
-			}
 			
-			Dataset<Row> trainedDataSet = cvModel.transform(valDf);
+			Dataset<Row> trainedDataSet = null;
+			if (trainName.contains("PCA")) {
+				if (null != paramMap) {
+					cvModel = cv.fit(trngDf, paramMap);
+				} else {
+					cvModel = cv.fit(trngDf);
+				}
+				
+				trainedDataSet = cvModel.transform(trngDf);
+				testSetPath = trainingSetPath;
+				testLocationDP = trainLocationDP;
+				testLocationDs = trainLocationDS;
+				testLFilePathUrl = trainLocationFilePathUrl;
+			} else {
+//				if (null != paramMap) {
+//					cvModel = cv.fit(trngDf, paramMap);
+//				} else {
+					cvModel = cv.fit(trngDf);
+//				}	
+			}		
+			trainedDataSet = cvModel.transform(valDf);
 			stopWatch.stop();
 			trainResult.setTimeTaken(stopWatch.getTotalTimeMillis()+" ms");
-			
+
+			IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+			SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
 			if(trainOtherParam !=null) {
 				String cMTableName=trainOtherParam.get("confusionMatrixTableName");
 				sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, cMTableName);
 			}
 			sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");
-//			if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
-				saveTrainedTestDataset(trainedDataSet, valDf2, testSetPath, rowIdentifierCols, includeFeatures, fieldArray, trainName,testLocationDP, testLocationDs, testLocationTableName, testLFilePathUrl);
-//			}
+			saveTrainedTestDataset(trainedDataSet, valDf2, testSetPath, rowIdentifierCols, includeFeatures, fieldArray, trainName,testLocationDP, testLocationDs, testLocationTableName, testLFilePathUrl);
 			return cvModel;
-		} catch (ClassNotFoundException
-				| IllegalAccessException 
+		} catch (IllegalAccessException 
 				| IllegalArgumentException 
-				| InstantiationException 
 				| SecurityException
 				| NoSuchMethodException
 				| InvocationTargetException e) {
@@ -4053,40 +4080,42 @@ public class SparkExecutor<T> implements IExecutor {
 		} 
 		
 	    //For Roc
-	    BinaryClassificationMetrics binaryClassificationMetrics = new BinaryClassificationMetrics(trainedDataSet.map((MapFunction<Row, Row>) row -> 
-		RowFactory.create(Double.parseDouble(""+row.get(row.fieldIndex("label"))), 
-				Double.parseDouble(""+row.get(row.fieldIndex("prediction")))), 
-				Encoders.kryo(Row.class)));
-	    
-	    
-		System.out.println("Roc: \n" + binaryClassificationMetrics.roc().toJavaRDD().collect());
-		System.out.println("Area Roc: \n" + binaryClassificationMetrics.areaUnderROC());
-		
-		double TP = trainedDataSet.select("label", "prediction").filter("label = prediction and prediction > 0").count();
-		double TN = trainedDataSet.select("label", "prediction").filter("label = prediction and prediction = 0").count();
-		double FP = trainedDataSet.select("label", "prediction").filter("label <> prediction and prediction > 0").count();
-		double FN = trainedDataSet.select("label", "prediction").filter("label <> prediction and prediction = 0").count();
-		
-//		double[] confMat = {TP, FN, FP, TN};
-		double[][] confusionMatrix = {{TP, FN}, {FP, TN}};
-		System.out.println("Confusion matrix: \n" + confusionMatrix);
-		summary.put("confusionMatrix", confusionMatrix);
-		
-		List<Object> rocList = new ArrayList<>();
-//		List<Map<String, Object>> rocList = new ArrayList<>();
-//		rocList = sparkExecHelper.getRoc(binaryClassificationMetrics.roc().toJavaRDD());
-		for(Tuple2<?, ?> tuple2 : binaryClassificationMetrics.roc().toJavaRDD().collect()) {
-			logger.info("("+tuple2._1()+","+tuple2._2()+")");
-			rocList.add("("+tuple2._1()+","+tuple2._2()+")");
+		BinaryClassificationMetrics binaryClassificationMetrics = null;
+		if(Arrays.asList(trainedDataSet.columns()).contains("prediction")) {
+		    binaryClassificationMetrics = new BinaryClassificationMetrics(trainedDataSet.map((MapFunction<Row, Row>) row -> 
+			RowFactory.create(Double.parseDouble(""+row.get(row.fieldIndex("label"))), 
+					Double.parseDouble(""+row.get(row.fieldIndex("prediction")))), 
+					Encoders.kryo(Row.class)));
+		    System.out.println("Roc: \n" + binaryClassificationMetrics.roc().toJavaRDD().collect());
+			System.out.println("Area Roc: \n" + binaryClassificationMetrics.areaUnderROC());
+			
+			double TP = trainedDataSet.select("label", "prediction").filter("label = prediction and prediction > 0").count();
+			double TN = trainedDataSet.select("label", "prediction").filter("label = prediction and prediction = 0").count();
+			double FP = trainedDataSet.select("label", "prediction").filter("label <> prediction and prediction > 0").count();
+			double FN = trainedDataSet.select("label", "prediction").filter("label <> prediction and prediction = 0").count();
+			
+//			double[] confMat = {TP, FN, FP, TN};
+			double[][] confusionMatrix = {{TP, FN}, {FP, TN}};
+			System.out.println("Confusion matrix: \n" + confusionMatrix);
+			summary.put("confusionMatrix", confusionMatrix);
+			
+			List<Object> rocList = new ArrayList<>();
+//			List<Map<String, Object>> rocList = new ArrayList<>();
+//			rocList = sparkExecHelper.getRoc(binaryClassificationMetrics.roc().toJavaRDD());
+			for(Tuple2<?, ?> tuple2 : binaryClassificationMetrics.roc().toJavaRDD().collect()) {
+				logger.info("("+tuple2._1()+","+tuple2._2()+")");
+				rocList.add("("+tuple2._1()+","+tuple2._2()+")");
+			}
+			if(!rocList.isEmpty()) {
+				summary.put("roc", rocList);
+			}
+			
+			// AUROC 
+			List<Double> auRoc = new ArrayList<>();
+			auRoc.add(binaryClassificationMetrics.areaUnderROC());
+			summary.put("auroc", auRoc);
 		}
-		if(!rocList.isEmpty()) {
-			summary.put("roc", rocList);
-		}
-		
-		// AUROC 
-		List<Double> auRoc = new ArrayList<>();
-		auRoc.add(binaryClassificationMetrics.areaUnderROC());
-		summary.put("auroc", auRoc);		
+				
 		// AUPRC
 	//	System.out.println("Area under precision-recall curve = " + binaryClassificationMetrics.areaUnderPR());
 		return summary ;

@@ -1,5 +1,5 @@
 {
-    "params" : [ 
+    "params" : [  
         {
             "paramId" : "0",
             "paramName" : "k",
@@ -17,7 +17,7 @@
     "templateFlg" : "Y",
     "uuid" : "d3c52f77-92b7-480a-af3a-46764a02d6f0",
     "version" : "1549029806",
-    "name" : "paramlist_pca_features",
+    "name" : "paramlist_pca_algorithm",
     "createdBy" : {
         "ref" : {
             "type" : "user",

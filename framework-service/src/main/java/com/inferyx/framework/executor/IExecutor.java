@@ -607,9 +607,15 @@ public interface IExecutor {
 	 * @return Object
 	 * @throws IOException
 	 */
-	Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName,
-			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam, TrainResult trainResult, String testSetPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql, Map<String, EncodingType> enodingDetails, String saveTrainingSet, String trainingSetPath, Datapod testLocationDP, Datasource testLocationDS, String testLocationTableName, String testLFilePathUrl, Datapod trainLocationDP, Datasource trainLocationDS, String trainLocationTableName, String trainLocationFilePathUrl)
-			throws IOException;
+	Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName
+			, double trainPercent, double valPercent, String tableName
+			, List<com.inferyx.framework.domain.Param> hyperParamList, String clientContext
+			, Map<String, String> trainOtherParam, TrainResult trainResult, String testSetPath
+			, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql
+			, Map<String, EncodingType> encodingDetails, String saveTrainingSet, String trainingSetPath, Datapod testLocationDP 
+			, Datasource testLocationDs, String testLocationTableName, String testLFilePathUrl, Datapod trainLocationDP
+			, Datasource trainLocationDS, String trainLocationTableName, String trainLocationFilePathUrl
+			, Object algoclass) throws IOException;
 	
 	/**
 	 * 

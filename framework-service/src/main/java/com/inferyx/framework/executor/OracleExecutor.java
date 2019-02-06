@@ -462,15 +462,6 @@ public class OracleExecutor implements IExecutor {
 	}
 
 	@Override
-	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName,
-			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext, Map<String, String> trainOtherParam, TrainResult trainResult, String testSetPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql, Map<String, EncodingType> enodingDetails, String saveTrainingSet, String trainingSetPath, Datapod testLocationDP, Datasource testLocationDS, String testLocationTableName, String testLFilePathUrl, Datapod trainLocationDP, Datasource trainLocationDS, String trainLocationTableName, String trainLocationFilePathUrl)
-			throws IOException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	@Override
 	public ResultSetHolder create(List<RowObj> rowObjList, List<Attribute> attributes, String tableName,
 			String clientContext) throws IOException {
 		// TODO Auto-generated method stub
@@ -759,6 +750,19 @@ public class OracleExecutor implements IExecutor {
 			String tempTableName) throws IOException {
 		// TODO Auto-generated method stub
 		return sparkExecutor.applyAttrImputeValuesToData(rsHolder, imputeAttributeNameWithValues, registerTempTable, tempTableName);
+	}
+
+	@Override
+	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName,
+			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext,
+			Map<String, String> trainOtherParam, TrainResult trainResult, String testSetPath,
+			List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql,
+			Map<String, EncodingType> encodingDetails, String saveTrainingSet, String trainingSetPath,
+			Datapod testLocationDP, Datasource testLocationDs, String testLocationTableName, String testLFilePathUrl,
+			Datapod trainLocationDP, Datasource trainLocationDS, String trainLocationTableName,
+			String trainLocationFilePathUrl, Object algoclass) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
