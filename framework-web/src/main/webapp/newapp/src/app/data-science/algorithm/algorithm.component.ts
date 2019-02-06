@@ -8,9 +8,7 @@ import { Version } from '../../shared/version';
 import { DependsOn } from '../dependsOn';
 import { AlgorithmService } from '../../metadata/services/algorithm.service';
 import { TagInputModule } from 'ngx-chips';
-import { Observable } from 'rxjs/Observable';
-import { filter, map } from 'rxjs/operators';
-import { of } from 'rxjs/observable/of';
+
 import { KnowledgeGraphComponent } from '../../shared/components/knowledgeGraph/knowledgeGraph.component'
 @Component({
   selector: 'app-algorithm',

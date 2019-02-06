@@ -3,8 +3,7 @@ import { CommonService } from './../metadata/services/common.service';
 import { NgModule } from '@angular/core';
 import { CommonModule , DatePipe} from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AgGridModule } from 'ag-grid-angular/main';
-import { UiSwitchModule } from 'ngx-toggle-switch/src';
+// import { UiSwitchModule } from 'ngx-toggle-switch/src';
 import { TagInputModule } from 'ngx-chips';
 // import { DatePickerModule } from 'angular-io-datepicker';
 // import { OverlayModule } from 'angular-io-overlay';
@@ -61,8 +60,7 @@ import { DataReconService } from '../metadata/services/dataRecon.services';
     imports: [
         CommonModule,
         FormsModule,
-        AgGridModule.withComponents(''),
-        UiSwitchModule,
+        // UiSwitchModule,
         TagInputModule,
         routing1,
         // DatePickerModule,

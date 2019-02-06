@@ -3365,12 +3365,18 @@ public class ModelServiceImpl {
 			for(FeatureAttrMap featureAttrMap : featureAttrMapList) {
 				if(featureAttrMap.getFeature().getFeatureId().equalsIgnoreCase(feature.getFeatureId())) {
 					String mappedAttr = getAttributeNameByObject(source, Integer.parseInt(featureAttrMap.getAttribute().getAttrId()));
+					if(imputationDetails.get(mappedAttr) !=null)
 					remappedImputationDetails.put(feature.getName(), imputationDetails.get(mappedAttr));								
 					break;
 				}
 			}
 		}
-		return remappedImputationDetails;
+		if(!remappedImputationDetails.isEmpty()) {
+			return remappedImputationDetails;
+		}else {
+			return null;
+		}
+		//return remappedImputationDetails;
 	}
 
 	public List<String> removeDuplicateColNames(String[] fieldArray, List<String> rowIdentifierCols ) {

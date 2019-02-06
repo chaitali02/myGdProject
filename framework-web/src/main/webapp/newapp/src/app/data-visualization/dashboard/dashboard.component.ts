@@ -2,9 +2,7 @@ import * as c3 from 'c3'
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import { forkJoin } from "rxjs/observable/forkJoin";
-import {GridOptions,GridApi} from "ag-grid/main";
+import { Observable,forkJoin } from 'rxjs/';
 
 import{CommonService}from '../../metadata/services/common.service';
 import{DashboardService} from '../../metadata/services/dashboard.service'
@@ -20,7 +18,6 @@ export class DashboardComponent{
     _dashbaordUuid: any;
     _dashbaordVersion: any;
     _dashbaordMode: any;
-    gridOptions: GridOptions;
     databoardData: any;
     dashboardName: any;
     sectionRows:any[];
@@ -104,18 +101,7 @@ export class DashboardComponent{
     }
 
     PrepareDataGrid=function (i,j) {
-        this.sectionRows[i].columns[j].vizpodDetails.gridOptions = <GridOptions>{
-            enableFilter: true,
-            enableSorting: true,
-            enableColResize: true,
-            suppressMenuHide: false,
-            headerHeight: 40,
-            rowSelection:'single',
-            context: {
-                componentParent: this
-            }
-        };
-        this.sectionRows[i].columns[j].vizpodDetails.gridOptions.rowHeight = 40;
+      
     }
 
     callGraph(){

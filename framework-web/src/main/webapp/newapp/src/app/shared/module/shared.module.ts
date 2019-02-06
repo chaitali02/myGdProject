@@ -9,7 +9,7 @@ import { D3Component } from '../../D3/d3.component';
 import { ModelComponent} from '../popUpModel/model.component';
 import { ParamlistComponent } from '../components/paramlist/paramlist.component';
 import { FormsModule } from '@angular/forms';
-import { UiSwitchModule } from 'ngx-toggle-switch/src';
+// import { UiSwitchModule } from 'ngx-toggle-switch/src';
 import { TagInputModule } from 'ngx-chips';
 import { DropdownModule } from 'primeng/components/dropdown/dropdown';
 import { ParamlistService } from '../../metadata/services/paramlist.service';
@@ -23,7 +23,9 @@ import {MultiSelectModule, DataTableModule} from 'primeng/primeng';
 
 
 @NgModule({
-    imports: [CommonModule,RouterModule,FormsModule, UiSwitchModule,TagInputModule,
+    imports: [CommonModule,RouterModule,FormsModule,
+         //UiSwitchModule,
+         TagInputModule,
         DropdownModule,
        // ShContextMenuModule,
         MultiSelectModule,

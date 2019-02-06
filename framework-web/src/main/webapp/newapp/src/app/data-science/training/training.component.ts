@@ -11,7 +11,6 @@ import { AttributeHolder } from '../../metadata/domain/domain.attributeHolder'
 import { ResponseOptions } from '@angular/http/src/base_response_options';
 import { DependOnExp } from '../../metadata/domain/domain.dependOnExp';
 import { Param } from '../../metadata/domain/domain.param';
-import { retryWhen } from 'rxjs/operators/retryWhen';
 import { KnowledgeGraphComponent } from '../../shared/components/knowledgeGraph/knowledgeGraph.component';
 @Component({
   selector: 'app-training  ',

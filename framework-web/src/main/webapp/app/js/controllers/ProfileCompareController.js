@@ -377,6 +377,7 @@ ProfileModule.controller('ProfileComapreAttributeController',function($state,$st
     }
 
     $scope.getChartColumn=function(datapoint,index,columns){
+    
         if(datapoint  && datapoint.length >0){
             var randomno = Math.floor((Math.random() *15) + 0);
             $scope.chartdata[index].isProgress=true;

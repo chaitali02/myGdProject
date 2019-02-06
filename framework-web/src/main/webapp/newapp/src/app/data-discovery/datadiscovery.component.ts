@@ -4,8 +4,7 @@ import {Router,ActivatedRoute} from '@angular/router';
 import {DatadiscoveryService} from './datadiscovery.service';
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { DataDiscovery } from './data-discovery';
-import 'rxjs/add/operator/toPromise';
-import 'rxjs/add/operator/catch';
+
 import { DatapodComponent} from '../data-preparation/datapod/datapod.component';
 import {FilterPipeDD} from './pipes/search-pipe';
 import {OrderBy} from './pipes/orderBy';

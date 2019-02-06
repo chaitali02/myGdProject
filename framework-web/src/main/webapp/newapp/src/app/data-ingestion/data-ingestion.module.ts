@@ -8,7 +8,7 @@ import { GrowlModule } from 'primeng/primeng';
 import { ResultModule } from '../shared/module/result.module';
 import { ProjectSharedModule } from '../shared/module/shared.module';
 import { CheckboxModule } from 'primeng/components/checkbox/checkbox';
-import { UiSwitchModule } from 'ngx-toggle-switch/src';
+// import { UiSwitchModule } from 'ngx-toggle-switch/src';
 import { TagInputModule } from 'ngx-chips';
 import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown/multiselect.component';
 import { DataIngestionService } from './../metadata/services/dataIngestion.service';
@@ -20,7 +20,7 @@ import { DataIngestionResultsComponent } from './data-ingestion-results/data-ing
     CommonModule,
     routing1,
     FormsModule,
-    UiSwitchModule,
+    // UiSwitchModule,
     TagInputModule,
     AngularMultiSelectModule,
     CheckboxModule,

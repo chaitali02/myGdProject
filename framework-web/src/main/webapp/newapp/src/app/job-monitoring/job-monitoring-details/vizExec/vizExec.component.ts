@@ -1,7 +1,6 @@
 import { NgModule, Component, ViewEncapsulation, Input, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { AppConfig } from '../../../app.config';
-import { GridOptions } from 'ag-grid/main';
 import { Message } from 'primeng/components/common/api';
 import { MessageService } from 'primeng/components/common/messageservice';
 import { CommonService } from '../../../metadata/services/common.service'

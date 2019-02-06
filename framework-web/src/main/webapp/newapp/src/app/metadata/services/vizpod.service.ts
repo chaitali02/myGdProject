@@ -1,24 +1,25 @@
 
-import { Observable } from 'rxjs/Observable';
 import { Inject, Injectable, Input } from '@angular/core';
 import { Http,Response } from '@angular/http';
+import { Observable, throwError } from 'rxjs';
+import { map, catchError } from "rxjs/operators";
 
 import { SharedService } from './../../shared/shared.service';
 import {CommonService} from './common.service';
 
-// import 'rxjs/add/operator/map';
-// import 'rxjs/add/operator/catch';
-// import 'rxjs/add/operator/promise';
 
 @Injectable()
 
 export class VizpodService{
     
   constructor(@Inject(Http) private http: Http,private _sharedService: SharedService,private _commonService:CommonService) { }
-  
+  private handleError<T>(error: any, result?: T) {
+    return throwError(error);
+  }
   getOneByUuidAndVersion(uuid,version,type):Observable<any> {
     return this._commonService.getOneByUuidAndVersion(uuid,version,type)
-    .map((response: Response) => {
+    .pipe(
+      map(response =>{
       let vizpodjson=response;
       let keyArray = [];
       for (let i = 0; i < response["keys"].length; i++) {
@@ -66,20 +67,17 @@ export class VizpodService{
       }
       vizpodjson["values"] = valueArray;
       return  <any>vizpodjson;
-    })
+    }), catchError(error => this.handleError<string>(error, "Network Error!")));
   }
 
   submit(data :any,type :any,upd_tag :any){
     let url ='common/submit?action=edit&type='+type+"&upd_tag="+upd_tag;
     return this._sharedService.postCall(url,data)
-    .map((response: Response) => {
-      return <any>response.text();
-})
-   .catch(this.handleError);
+    .pipe(
+      map(response => { return <any[]>response.json(); }),
+      catchError(error => this.handleError<string>(error, "Network Error!")));
 
   }
 
-  private handleError(error: Response) {
-    return Observable.throw(error.statusText);
-}
+  
 }

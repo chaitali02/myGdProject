@@ -3,8 +3,7 @@ import {Router,ActivatedRoute} from '@angular/router';
 import {metadataNavigatorService} from './metadataNavigator.service';
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { metadataNavigator } from './metadataNavigator';
-import 'rxjs/add/operator/toPromise';
-import 'rxjs/add/operator/catch';
+
 import {FilterMetaPipe} from './pipes/search-pipe';
 import {OrderByMeta} from './pipes/orderBy';
 import {AppMetadata} from '../app.metadata';

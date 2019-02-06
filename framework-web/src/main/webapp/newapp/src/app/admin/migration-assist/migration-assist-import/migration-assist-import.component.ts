@@ -5,7 +5,6 @@ import { CommonService } from '../../../metadata/services/common.service';
 import { CommonListService } from '../../../common-list/common-list.service';
 import { OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { Observable } from 'rxjs/Observable';
 import { MigrationAssistService } from '../../../metadata/services/migration-assist.services';
 import { AppMetadata } from '../../../app.metadata';
 import { KnowledgeGraphComponent } from '../../../shared/components/knowledgeGraph/knowledgeGraph.component';
