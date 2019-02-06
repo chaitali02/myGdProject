@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { routing } from './app.routes';
-import { AgGridModule } from 'ag-grid-angular/main';
+//import { AgGridModule } from 'ag-grid-angular/main';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import * as c3 from 'c3'
 

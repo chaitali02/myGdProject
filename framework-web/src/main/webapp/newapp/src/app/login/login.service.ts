@@ -1,9 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/toPromise';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { AppConfig } from '../app.config';
 
