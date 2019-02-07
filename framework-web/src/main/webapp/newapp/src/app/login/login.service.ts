@@ -1,11 +1,8 @@
 import { Injectable, Inject } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/toPromise';
-import { Observable } from 'rxjs/Observable';
 
 import { AppConfig } from '../app.config';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class LoginService {
@@ -23,5 +20,4 @@ export class LoginService {
   private handleError(error: Response) {
     return Observable.throw(error.statusText);
   }
-
 }

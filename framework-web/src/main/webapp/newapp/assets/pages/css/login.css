@@ -228,3 +228,7 @@ body{
     padding-top: 3px; }
   .login .checkbox {
     font-size: 13px; } }
+
+  .loginBtn{
+    display: block !important;
+  }
