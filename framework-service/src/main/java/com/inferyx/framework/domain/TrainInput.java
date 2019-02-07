@@ -42,30 +42,48 @@ public class TrainInput {
 	String sourceDsType;
 	String targetDsType;
 	String targetTableName;
-	String testSetPath;
+//	String testSetPath;
 	List<String> rowIdentifier;
 	String includeFeatures;
 	double trainPercent;
 	double testPercent;
 	Map<String, EncodingType> encodingDetails;
 	LinkedHashMap<String, Object> imputationDetails;
-	String saveTrainingSet;
+//	String saveTrainingSet;
+	java.util.Map<String, String> trainSetDetails;
+	java.util.Map<String, String> testSetDetails;
 	
 	/**
 	 * @Ganesh
 	 *
-	 * @return the saveTrainingSet
+	 * @return the trainSetDetails
 	 */
-	public String getSaveTrainingSet() {
-		return saveTrainingSet;
+	public java.util.Map<String, String> getTrainSetDetails() {
+		return trainSetDetails;
 	}
 	/**
 	 * @Ganesh
 	 *
-	 * @param saveTrainingSet the saveTrainingSet to set
+	 * @param trainSetDetails the trainSetDetails to set
 	 */
-	public void setSaveTrainingSet(String saveTrainingSet) {
-		this.saveTrainingSet = saveTrainingSet;
+	public void setTrainSetDetails(java.util.Map<String, String> trainSetDetails) {
+		this.trainSetDetails = trainSetDetails;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @return the testSetDetails
+	 */
+	public java.util.Map<String, String> getTestSetDetails() {
+		return testSetDetails;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param testSetDetails the testSetDetails to set
+	 */
+	public void setTestSetDetails(java.util.Map<String, String> testSetDetails) {
+		this.testSetDetails = testSetDetails;
 	}
 	/**
 	 * @Ganesh
@@ -170,24 +188,6 @@ public class TrainInput {
 	 */
 	public void setIncludeFeatures(String includeFeatures) {
 		this.includeFeatures = includeFeatures;
-	}
-	/**
-	 * 
-	 * @ Ganesh
-	 * 
-	 * @return the testSetPath
-	 */
-	public String getTestSetPath() {
-		return this.testSetPath;
-	}
-	/**
-	 * 
-	 * @ Ganesh
-	 * 
-	 * @param testSetPath the testSetPath to set
-	 */
-	public void setTestSetPath(String testSetPath) {
-		this.testSetPath = testSetPath;
 	}
 	/**
 	 * 
@@ -567,26 +567,24 @@ public class TrainInput {
 	public void setQuery(String query) {
 		this.query = query;
 	}
-	/*
-	 * 
-	 * @ Ganesh
+	/* 
+	 * @ Ganesh 
 	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "TrainInput [sourceFilePath=" + this.sourceFilePath + ", modelFilePath=" + this.modelFilePath
-				+ ", optimizationAlgo=" + this.optimizationAlgo + ", numInput=" + this.numInput + ", numOutputs="
-				+ this.numOutputs + ", activation=" + this.activation + ", tableName=" + this.tableName + ", operation="
-				+ this.operation + ", url=" + this.url + ", hostName=" + this.hostName + ", dbName=" + this.dbName
-				+ ", userName=" + this.userName + ", password=" + this.password + ", port=" + this.port + ", query="
-				+ this.query + ", otherParams=" + this.otherParams + ", sourceDsDetails=" + this.sourceDsDetails
-				+ ", targetDsDetails=" + this.targetDsDetails + ", sourceDsType=" + this.sourceDsType
-				+ ", targetDsType=" + this.targetDsType + ", targetTableName=" + this.targetTableName + ", testSetPath="
-				+ this.testSetPath + ", rowIdentifier=" + this.rowIdentifier + ", includeFeatures="
-				+ this.includeFeatures + ", trainPercent=" + this.trainPercent + ", testPercent=" + this.testPercent
-				+ "]";
+		return "TrainInput [sourceFilePath=" + sourceFilePath + ", modelFilePath=" + modelFilePath
+				+ ", optimizationAlgo=" + optimizationAlgo + ", numInput=" + numInput + ", numOutputs=" + numOutputs
+				+ ", activation=" + activation + ", tableName=" + tableName + ", operation=" + operation + ", url="
+				+ url + ", hostName=" + hostName + ", dbName=" + dbName + ", userName=" + userName + ", password="
+				+ password + ", port=" + port + ", query=" + query + ", otherParams=" + otherParams
+				+ ", sourceDsDetails=" + sourceDsDetails + ", targetDsDetails=" + targetDsDetails + ", sourceDsType="
+				+ sourceDsType + ", targetDsType=" + targetDsType + ", targetTableName=" + targetTableName
+				+ ", rowIdentifier=" + rowIdentifier + ", includeFeatures=" + includeFeatures + ", trainPercent="
+				+ trainPercent + ", testPercent=" + testPercent + ", encodingDetails=" + encodingDetails
+				+ ", imputationDetails=" + imputationDetails + ", trainSetDetails=" + trainSetDetails
+				+ ", testSetDetails=" + testSetDetails + "]";
 	}
-	
 	
 }

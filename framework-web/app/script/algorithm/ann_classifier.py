@@ -78,7 +78,6 @@ sourceDsDetails=None
 targetDsDetails=None
 targetTableName=""
 targetDriver=""
-testSetPath=""
 rowIdentifier=None
 includeFeatures=""
 sourceAttrDetails=None
@@ -92,12 +91,36 @@ outputResultPath=""
 numHiddenLayers=0
 encodingDetails=None
 imputationDetails=None
+
+trainSetDetails=None
 saveTrainingSet=None
+trainSetDsType=None
+trainSetTableName=None
+trainSetSavePath=None
+trainSetHostName=None
+trainSetDbName=None
+trainSetPort=None
+trainSetUserName=None
+trainSetPassword=None
+trainSetDriver=None
+trainSetUrl=None
+
+testSetDetails=None
+testSetDsType=None
+testSetTableName=None
+testSetSavePath=None
+testSetHostName=None
+testSetDbName=None
+testSetPort=None
+testSetUserName=None
+testSetPassword=None
+testSetDriver=None
+testSetUrl=None
 
 
 # Iteration over all arguments:
-plist = ["nEpochs", "seed", "iterations", "learningRate", "optimizationAlgo", "weightInit", "updater", "momentum", "numInput", "numOutputs", "numHidden", "numLayers", "layerNames", "activation", "lossFunction", "sourceFilePath", "modelFilePath", "targetPath", "sourceDsType", "tableName", "operation", "url", "hostName", "dbName", "userName", "password", "query", "special_space_replacer", "port", "otherParams", "sourceHostName", "sourceDbName", "sourcePort", "sourceUserName", "sourcePassword", "targetHostName", "targetDbName" , "targetPort", "targetUserName", "targetPassword", "targetDsType", "targetTableName", "targetDriver", "testSetPath", "includeFeatures", "rowIdentifier","sourceAttrDetails", "featureAttrDetails", "sourceQuery", "inputSourceFileName", "trainPercent", "testPercent",
-    "outputResultPath", "rowIdentifier", "numHiddenLayers", "encodingDetails", "imputationDetails", "saveTrainingSet"]
+plist = ["nEpochs", "seed", "iterations", "learningRate", "optimizationAlgo", "weightInit", "updater", "momentum", "numInput", "numOutputs", "numHidden", "numLayers", "layerNames", "activation", "lossFunction", "sourceFilePath", "modelFilePath", "targetPath", "sourceDsType", "tableName", "operation", "url", "hostName", "dbName", "userName", "password", "query", "special_space_replacer", "port", "otherParams", "sourceHostName", "sourceDbName", "sourcePort", "sourceUserName", "sourcePassword", "targetHostName", "targetDbName" , "targetPort", "targetUserName", "targetPassword", "targetDsType", "targetTableName", "targetDriver", "includeFeatures", "rowIdentifier","sourceAttrDetails", "featureAttrDetails", "sourceQuery", "inputSourceFileName", "trainPercent", "testPercent",
+    "outputResultPath", "rowIdentifier", "numHiddenLayers", "encodingDetails", "imputationDetails", "saveTrainingSet", "trainSetDetails", "testSetDetails"]
 
 i = 0
 for eachArg in sys.argv:
@@ -192,9 +215,6 @@ for value in input_config:
     
     if value == "targetTableName":
         targetTableName = input_config[value]
-
-    if value == "testSetPath":
-        testSetPath = input_config[value]
         
     if value == "includeFeatures":
         includeFeatures = input_config[value]
@@ -216,6 +236,12 @@ for value in input_config:
         
     if value == "saveTrainingSet":
         saveTrainingSet = input_config[value]
+        
+    if value == "trainSetDetails":
+        trainSetDetails = input_config[value]
+        
+    if value == "testSetDetails":
+        testSetDetails = input_config[value]
 
 if otherParams != None:
     for value in otherParams:
@@ -337,7 +363,6 @@ print("query: ", query)
 print("port: ", port)
 print("otherParams: ", otherParams)
 print("targetTableName: ", targetTableName)
-print("testSetPath: ", testSetPath)
 print("includeFeatures: ", includeFeatures)
 print("rowIdentifier: ", rowIdentifier)
 print("sourceAttrDetails: ", sourceAttrDetails)
@@ -363,7 +388,8 @@ print("targetPassword: ", targetPassword)
 
 print("encodingDetails: ", encodingDetails)
 print("imputationDetails: ", imputationDetails)
-print("saveTrainingSet: ", saveTrainingSet)
+print("trainSetDetails: ", trainSetDetails)
+print("testSetDetails: ", testSetDetails)
 print()
 print()
 
@@ -490,9 +516,34 @@ def getSparkDataType(other_datatype):
     
 
 #saving train test result
-def saveSparkDf(spark_df, testSetPath):
-    print("saving prediction result into path "+testSetPath+"...")
-    spark_df.write.save(testSetPath, format="parquet")
+def saveSparkDf(spark_df, datasetType, hostName, dbName, hostPort, dbUserName, dbPassword, driver, saveUrl, tableName, savePath):
+    if datasetType == "file":
+        spark_df.write.save(savePath, format="parquet")
+        
+    elif dsType == "hive" or dsType == "impala":
+        df.sparkSession().sql("SET "+"hive.exec.dynamic.partition=true");
+        df.sparkSession().sql("SET "+"hive.exec.dynamic.partition.mode=nonstrict");
+        
+        options = dict() 
+        options["driver"] = driver
+        options["user"] = dbUserName
+        options["password"] = dbPassword
+        df.write().mode("append").options(options).insertInto(tableName);
+        
+    else:
+        connProperties = dict()
+        connProperties["driver"] = driver
+        connProperties["user"] = dbUserName
+        connProperties["password"] = dbPassword
+        
+        df.write().mode("append").jdbc(saveUrl, tableName, connProperties);    
+#         df.write.format('jdbc').options(
+#           "url" = saveUrl,
+#           "driver" = driver,
+#           "dbtable" = tableName,
+#           "user" = dbUserName,
+#           "password" = dbPassword).mode('append').save()
+        
     
     
 def generatePredictStatus(spark_df: DataFrame):
@@ -576,13 +627,25 @@ def train():
     # Encoding categorical data
     dataset = getData(sourceFilePath, sourceDsType, sourceHostName, sourceDbName, sourcePort, sourceUserName, sourcePassword, query)
     
-    if saveTrainingSet == "Y":
+    print("trainSetDetails: ", trainSetDetails)
+    if trainSetDetails != None:
         X = dataset.iloc[:, 1:]
         X_train, X_test = train_test_split(X, test_size = testPercent, random_state = 0)
         schema = getSparkSchemaByDtypes(X_train.dtypes)
         spark_df = createSparkDfByPandasDfAndSparkSchema(X_train, schema)
-        saveSparkDf(spark_df, otherParams["trainSetPath"])
-        print("trainingset saved at: ", otherParams["trainSetPath"])
+        if trainSetDetails["trainSetDsType"] == "file":
+            saveSparkDf(spark_df, trainSetDetails["trainSetDsType"]
+                        , None, None, None, None, None, None, None, None
+                        , trainSetDetails["trainSetSavePath"])
+            print("trainingset saved at: ", trainSetDetails["trainSetSavePath"])
+        else :
+            saveSparkDf(spark_df, trainSetDetails["trainSetDsType"], trainSetDetails["trainSetHostName"]
+                        , trainSetDetails["trainSetDbName"], trainSetDetails["trainSetPort"]
+                        , trainSetDetails["trainSetUserName"], trainSetDetails["trainSetPassword"]
+                        , trainSetDetails["trainSetDriver"], trainSetDetails["trainSetUrl"]
+                        , trainSetDetails["trainSetTableName"], None)
+            print("trainingset saved into ", trainSetDetails["trainSetDsType"], " table ", trainSetDetails["trainSetTableName"])
+            
         spark_df = None
         schema = None
         X_train = None
@@ -737,8 +800,20 @@ def train():
     joined_df = joined_df.drop("rowNum")
         
     #saving converted dataframe
-    if testSetPath != None:
-        saveSparkDf(joined_df, testSetPath)
+    print("testSetDetails: ", testSetDetails)
+    if testSetDetails != None:
+        if testSetDetails["testSetDsType"] == "file":
+            saveSparkDf(joined_df, testSetDetails["testSetDsType"]
+                        , None, None, None, None, None, None, None, None
+                        , testSetDetails["testSetSavePath"])
+            print("testset saved at: ", testSetDetails["testSetSavePath"])
+        else :
+            saveSparkDf(joined_df, testSetDetails["testSetDsType"]
+                        , testSetDetails["testSetHostName"], testSetDetails["testSetDbName"], testSetDetails["testSetPort"]
+                        , testSetDetails["testSetUserName"], testSetDetails["testSetPassword"]
+                        , testSetDetails["testSetDriver"], testSetDetails["testSetUrl"]
+                        , testSetDetails["testSetTableName"], None)
+            print("testset saved into ", testSetDetails["testSetDsType"], " table ", testSetDetails["testSetTableName"])
     
     y_pred = (y_pred > 0.5)    
     print(y_pred)
@@ -877,3 +952,4 @@ elif operation == "predict":
         print("Successfull operation: "+"prediction")
     else:
         print("Unsuccessfull operation: "+"prediction")
+

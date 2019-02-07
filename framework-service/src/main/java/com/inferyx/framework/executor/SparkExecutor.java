@@ -2753,7 +2753,7 @@ public class SparkExecutor<T> implements IExecutor {
 
 		String targetTableName = null;
 		if(targetDp != null)
-			targetTableName = modelServiceImpl.getTableNameByMetaObject(targetDp);
+			targetTableName = modelServiceImpl.getTableNameByObject(targetDp);
 		sparkSession.sqlContext().registerDataFrameAsTable(predictedDf, "tempPredictResult");
 		ResultSetHolder rsHolder = new ResultSetHolder();
 		rsHolder.setType(ResultType.dataframe);
