@@ -1335,7 +1335,7 @@
     "saveTrainingSet" : "Y",
     "uuid" : "70f7f016-2d9e-4dad-9347-b8c3add8a109",
     "version" : "1549030469",
-    "name" : "RLU Prediction PCA",
+    "name" : "RLU Prediction - PCA",
     "createdBy" : {
         "ref" : {
             "type" : "user",

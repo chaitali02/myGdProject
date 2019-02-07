@@ -690,7 +690,7 @@
     "customFlag" : "N",
     "uuid" : "0a6284ba-367c-4770-adcc-630f12f181de",
     "version" : "1549030101",
-    "name" : "RLU Prediction PCA",
+    "name" : "RLU Prediction - PCA",
     "createdBy" : {
         "ref" : {
             "type" : "user",

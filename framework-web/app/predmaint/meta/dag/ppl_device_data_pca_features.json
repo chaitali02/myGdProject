@@ -1,0 +1,264 @@
+{
+  "uuid": "e1788303-4bf9-4264-8394-50c560868154",
+  "version": "1549571412",
+  "name": "ppl_device_data_pca_features",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Thu Feb 07 15:30:12 EST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+        "version": "1547482153",
+        "name": "Predictive Maintenance"
+      },
+      "value": null
+    }
+  ],
+  "xPos": 30,
+  "yPos": 250,
+  "templateFlg": "N",
+  "templateInfo": null,
+  "stages": [
+    {
+      "stageId": "stage_0",
+      "dependsOn": [],
+      "tasks": [
+        {
+          "taskId": "679ebdea-9f5e-476c-ba96-d2ec66eb7c85",
+          "dependsOn": [],
+          "name": "Principal Component Analysis",
+          "operators": [
+            {
+              "operatorId": null,
+              "dependsOn": [],
+              "operatorType": null,
+              "operatorInfo": [
+                {
+                  "ref": {
+                    "type": "operator",
+                    "uuid": "c9ae165b-db06-4f9e-8ba8-a77b01001f9h",
+                    "version": null,
+                    "name": "Principal Component Analysis"
+                  },
+                  "value": null
+                }
+              ],
+              "operatorParams": {
+                "EXEC_PARAMS": {
+                  "refKeyList": null,
+                  "paramInfo": null,
+                  "filterInfo": null,
+                  "stageInfo": null,
+                  "currParamSet": null,
+                  "paramListHolder": null,
+                  "paramListInfo": [
+                    {
+                      "ref": {
+                        "type": "paramlist",
+                        "uuid": "66b22a2e-a4d0-46c0-b74b-f6fae6e1d41a",
+                        "version": "1549013239",
+                        "name": null
+                      },
+                      "value": null,
+                      "paramId": "0",
+                      "paramName": "sourceDatapod",
+                      "paramType": "datapod",
+                      "paramDispName": null,
+                      "paramDesc": null,
+                      "paramValue": {
+                        "ref": {
+                          "type": "dataset",
+                          "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
+                          "version": null,
+                          "name": null
+                        },
+                        "value": null
+                      },
+                      "attributeInfo": null
+                    },
+                    {
+                      "ref": {
+                        "type": "paramlist",
+                        "uuid": "66b22a2e-a4d0-46c0-b74b-f6fae6e1d41a",
+                        "version": "1549013239",
+                        "name": null
+                      },
+                      "value": null,
+                      "paramId": "1",
+                      "paramName": "K",
+                      "paramType": "integer",
+                      "paramDispName": null,
+                      "paramDesc": null,
+                      "paramValue": {
+                        "ref": {
+                          "type": "simple",
+                          "uuid": null,
+                          "version": null,
+                          "name": null
+                        },
+                        "value": "3"
+                      },
+                      "attributeInfo": null
+                    },
+                    {
+                      "ref": {
+                        "type": "paramlist",
+                        "uuid": "66b22a2e-a4d0-46c0-b74b-f6fae6e1d41a",
+                        "version": "1549013239",
+                        "name": null
+                      },
+                      "value": null,
+                      "paramId": "2",
+                      "paramName": "inputColList",
+                      "paramType": "attributes",
+                      "paramDispName": null,
+                      "paramDesc": null,
+                      "paramValue": null,
+                      "attributeInfo": [
+                        {
+                          "ref": {
+                            "type": "dataset",
+                            "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
+                            "version": null,
+                            "name": "ds_device_data_base_features"
+                          },
+                          "value": null,
+                          "attrId": "2",
+                          "attrName": "warn_type1_total",
+                          "attrType": "string",
+                          "attrUnitType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "dataset",
+                            "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
+                            "version": null,
+                            "name": "ds_device_data_base_features"
+                          },
+                          "value": null,
+                          "attrId": "3",
+                          "attrName": "warn_type2_total",
+                          "attrType": "string",
+                          "attrUnitType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "dataset",
+                            "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
+                            "version": null,
+                            "name": "ds_device_data_base_features"
+                          },
+                          "value": null,
+                          "attrId": "13",
+                          "attrName": "problem_type_2_per_usage1",
+                          "attrType": "string",
+                          "attrUnitType": null
+                        }
+                      ]
+                    },
+                    {
+                      "ref": {
+                        "type": "paramlist",
+                        "uuid": "66b22a2e-a4d0-46c0-b74b-f6fae6e1d41a",
+                        "version": "1549013239",
+                        "name": null
+                      },
+                      "value": null,
+                      "paramId": "4",
+                      "paramName": "inputKeyNames",
+                      "paramType": "attributes",
+                      "paramDispName": null,
+                      "paramDesc": null,
+                      "paramValue": null,
+                      "attributeInfo": [
+                        {
+                          "ref": {
+                            "type": "dataset",
+                            "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
+                            "version": null,
+                            "name": "ds_device_data_base_features"
+                          },
+                          "value": null,
+                          "attrId": "0",
+                          "attrName": "deviceid",
+                          "attrType": "string",
+                          "attrUnitType": null
+                        },
+                        {
+                          "ref": {
+                            "type": "dataset",
+                            "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
+                            "version": null,
+                            "name": "ds_device_data_base_features"
+                          },
+                          "value": null,
+                          "attrId": "1",
+                          "attrName": "date",
+                          "attrType": "string",
+                          "attrUnitType": null
+                        }
+                      ]
+                    },
+                    {
+                      "ref": {
+                        "type": "paramlist",
+                        "uuid": "66b22a2e-a4d0-46c0-b74b-f6fae6e1d41a",
+                        "version": "1549013239",
+                        "name": null
+                      },
+                      "value": null,
+                      "paramId": "5",
+                      "paramName": "saveLocation",
+                      "paramType": "datapod",
+                      "paramDispName": null,
+                      "paramDesc": null,
+                      "paramValue": {
+                        "ref": {
+                          "type": "datapod",
+                          "uuid": "97c96749-3c7a-4e21-9269-9a3cefe8ef89",
+                          "version": null,
+                          "name": null
+                        },
+                        "value": null
+                      },
+                      "attributeInfo": null
+                    }
+                  ],
+                  "internalVarMap": null,
+                  "otherParams": null,
+                  "executionContext": null,
+                  "graphFilter": null
+                }
+              }
+            }
+          ],
+          "xPos": 510,
+          "yPos": 250,
+          "active": "Y",
+          "statusList": []
+        }
+      ],
+      "name": "new stage",
+      "xPos": 280,
+      "yPos": 250,
+      "active": "Y",
+      "statusList": []
+    }
+  ],
+  "statusList": [],
+  "paramList": null
+}

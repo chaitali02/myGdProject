@@ -30,11 +30,11 @@
         {
             "attributeId" : 2,
             "displaySeq" : 2,
-            "name" : "features",
-            "type" : "vector",
+            "name" : "pca_features",
+            "type" : "string",
             "key" : "",
             "partition" : "N",
-            "dispName" : "features",
+            "dispName" : "pca_features",
             "active" : "Y"
         }
     ],
