@@ -26,12 +26,11 @@
       <input class="form-control form-control-solid placeholder-no-fix" type="password" [(ngModel)]="password" pTooltip="Please fill in this field."
         tooltipPosition="bottom" name="password" autocomplete="off" placeholder="Password" required (keyup.enter)="onSubmit($event, username, password)" />
     </div>
-    
+
     <div class="form-group">
       <label class="rememberme check mt-checkbox mt-checkbox-outline">
-        <input type="checkbox" name="remember" [(ngModel)]=remember (change)="rememberMe(remember)" (keyup.enter)="onSubmit($event, username, password)" />Remember
-        my username
-        <span></span>
+        <input type="checkbox" name="remember" [(ngModel)]=remember (change)="rememberMe(remember)" (keyup.enter)="onSubmit($event, username, password)" />
+        Remember my username
       </label>
     </div>
 
