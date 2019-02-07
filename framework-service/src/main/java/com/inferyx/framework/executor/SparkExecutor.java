@@ -2305,14 +2305,20 @@ public class SparkExecutor<T> implements IExecutor {
 	 * @return
 	 */
 	public Dataset<Row> castUnEncodedCols(Dataset<Row> df, Map<String, EncodingType> encodingDetails, Set<String> encodingCols) {
+		Map<String, String> colTypeMap = new HashMap();
+		for (Tuple2<String, String> dtype : df.dtypes()) {
+			colTypeMap.put(dtype._1, dtype._2);
+		}
+		logger.info("ColTypeMap : " + colTypeMap);
 		for(String col : df.columns()) {
 			if(encodingCols != null 
 					&& !encodingCols.isEmpty() ) {
 				if(!encodingCols.contains(col)
-					&& !encodingDetails.keySet().contains(col)) {
+					&& !encodingDetails.keySet().contains(col) 
+					&& !colTypeMap.get(col).contains("Vector")) {
 					df = df.withColumn(col, df.col(col).cast(DataTypes.DoubleType));
 				}
-			} else {
+			} else if (!colTypeMap.get(col).contains("Vector")) {
 				df = df.withColumn(col, df.col(col).cast(DataTypes.DoubleType));
 			}
 		}
