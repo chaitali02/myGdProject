@@ -20,6 +20,8 @@ export class KnowledgeGraphComponent {
     treeOrignaldata: any;
     treeData: any;
     showTooltip: boolean;
+    isInprogess:boolean=false;
+    isError:boolean=false;
 
     angularThis = this
     treemap: any;
@@ -60,15 +62,21 @@ export class KnowledgeGraphComponent {
         //this.getGraphData()
 
     }
-    getGraphData(uuid, version) {
-        this.uuid=uuid
-        this.version=version
+    getGraphData(uuid:any, version:any) {
+        this.uuid=uuid;
+        this.version=version;
+        this.isInprogess=true;
+        this.isError=false;
         this._commonService.getGraphResults(version, this.degree, uuid)
             .subscribe(
             response => {
                 this.onSuccessgetGraphResults(response)
             },
-            error => console.log("Error :: " + error));
+            error => {
+                console.log("Error :: " + error);
+                this.isInprogess=false;
+                this.isError=true;
+            });
 
 
 
@@ -93,7 +101,8 @@ export class KnowledgeGraphComponent {
 
         // Collapse after the second level
         this.root.children.forEach((item) => this.collapse(item));
-
+        this.isInprogess=false;
+        this.isError=false;
         this.update(this.root, this.angularThis);
         
     }

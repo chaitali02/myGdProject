@@ -8,7 +8,7 @@ import { SelectItem } from 'primeng/primeng';
 import { AppConfig } from '../../app.config';
 import { DataPodResource } from './datapod-resource';
 import { AppMetadata } from '../../app.metadata';
-import { AppHepler } from '../../app.helper'; 
+import { AppHelper } from '../../app.helper'; 
 
 import { Version } from '../../shared/version'
 
@@ -106,7 +106,7 @@ export class DatapodComponent {
   isHomeEnable: boolean;
   @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
 
-  constructor(private _config: AppConfig,public metaconfig: AppMetadata, public apphelper: AppHepler, private http: Http, private _commonService: CommonService, private _datapodService: DatapodService, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _service: MetaDataDataPodService, private route: ActivatedRoute) {
+  constructor(private _config: AppConfig,public metaconfig: AppMetadata, public appHelper: AppHelper, private http: Http, private _commonService: CommonService, private _datapodService: DatapodService, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _service: MetaDataDataPodService, private route: ActivatedRoute) {
     this.baseUrl = config.getBaseUrl();
     this.isHomeEnable = false
     this.selectVersion = { "version": "" };
@@ -581,7 +581,7 @@ export class DatapodComponent {
         let count
         response[i]["status"] = {};
         response[i]["status"].value=this.metaconfig.getStatusDefs(status)['caption']
-      //  response[i]["status"].stage = this.apphelper.getStatus(status)["stage"];
+      //  response[i]["status"].stage = this.appHelper.getStatus(status)["stage"];
         response[i]["status"].color = this.metaconfig.getStatusDefs(status)['color'];
         if(response[i].status == "NOCHANGE"){
 					count=count+1;

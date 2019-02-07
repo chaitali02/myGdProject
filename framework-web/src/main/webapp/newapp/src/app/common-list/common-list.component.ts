@@ -15,7 +15,7 @@ import { saveAs } from 'file-saver/FileSaver';
 
 import { CommonList } from './common-list';
 import { AppMetadata } from '../app.metadata';
-import { AppHepler } from '../app.helper';
+import { AppHelper } from '../app.helper';
 import { CommonService } from "../metadata/services/common.service";
 import { DependsOn } from '../common-list/dependsOn';
 
@@ -179,7 +179,7 @@ export class CommonListComponent {
   ];
   types: { "value": string; "caption": string; }[];
 
-  constructor(private sanitizer: DomSanitizer, private http: Http, private _commonListService: CommonListService, private activatedRoute: ActivatedRoute, public router: Router, private fb: FormBuilder, public metaconfig: AppMetadata, public apphelper: AppHepler, private datePipe: DatePipe, private activeroute: ActivatedRoute, private _commonService: CommonService) {
+  constructor(private sanitizer: DomSanitizer, private http: Http, private _commonListService: CommonListService, private activatedRoute: ActivatedRoute, public router: Router, private fb: FormBuilder, public metaconfig: AppMetadata, public appHelper: AppHelper, private datePipe: DatePipe, private activeroute: ActivatedRoute, private _commonService: CommonService) {
 
     let temp;
     this.active = " ";
@@ -847,10 +847,10 @@ export class CommonListComponent {
       this.columnDefs.splice(6, 1);
       for (let i = 0; i < response.length; i++) {
         if (response[i]["status"] != null) {
-          response[i]["status"] = this.apphelper.sortByProperty(response[i]["status"], "createdOn");
+          response[i]["status"] = this.appHelper.sortByProperty(response[i]["status"], "createdOn");
           let status = response[i]["status"];
           response[i]["status"] = {};
-          response[i]["status"].stage = this.apphelper.getStatus(status)["stage"];
+          response[i]["status"].stage = this.appHelper.getStatus(status)["stage"];
           response[i]["status"].color = this.metaconfig.getStatusDefs(response[i]["status"].stage)['color'];
         }
       }

@@ -1,5 +1,5 @@
 export class DropDownIO {
 
     label:String;
-    value:{label:any,uuid:any}
+    value:any={label:"",uuid:""}
 }

@@ -5,9 +5,11 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { routing } from './app.routes';
-//import { AgGridModule } from 'ag-grid-angular/main';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import * as c3 from 'c3'
+import { TooltipModule } from 'primeng/primeng';
+import { UiSwitchModule } from 'ngx-ui-switch';
+import { NgBootstrapFormValidationModule } from 'ng-bootstrap-form-validation';
+
 
 import { ProjectSharedModule } from './shared/module/shared.module';
 
@@ -18,9 +20,9 @@ import { LoginService } from './login/login.service';
 
 import { AppConfig } from './app.config';
 import { AppMetadata } from './app.metadata';
-import { AppHepler } from './app.helper';
-import { TooltipModule } from 'primeng/primeng';
-const APP_PROVIDERS = [AppConfig, AppMetadata, AppHepler];
+import { AppHelper } from './app.helper';
+
+const APP_PROVIDERS = [AppConfig, AppMetadata, AppHelper];
 
 @NgModule({
   declarations: [
@@ -35,7 +37,18 @@ const APP_PROVIDERS = [AppConfig, AppMetadata, AppHepler];
     HttpModule,
     BrowserAnimationsModule,
     ProjectSharedModule.forRoot(),
-    TooltipModule
+    TooltipModule,
+    NgBootstrapFormValidationModule.forRoot(),
+
+    UiSwitchModule.forRoot({
+      size: 'small',
+      color: 'rgb(0, 189, 99)',
+      switchColor: '#80FFA2',
+      defaultBgColor: '#00ACFF',
+      defaultBoColor : '#476EFF',
+      checkedLabel: 'on',
+      uncheckedLabel: 'off'
+    })
   ],
 
   providers: [

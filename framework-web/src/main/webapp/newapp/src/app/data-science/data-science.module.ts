@@ -1,15 +1,16 @@
 
 import { routing1 } from './data-science-routing.module'
 import { TagInputModule } from 'ngx-chips';
-// import { UiSwitchModule } from 'ngx-toggle-switch/src';
 import { FormsModule } from '@angular/forms';
 import { CommonModule , DatePipe} from '@angular/common';
+
 import { NgModule } from '@angular/core';
 import { ProjectSharedModule } from '../shared/module/shared.module';
 import { MessagesModule, MessageModule, ChipsModule } from 'primeng/primeng';
 import { CheckboxModule, DataTableModule} from 'primeng/primeng';
-
+import { UiSwitchModule } from 'ngx-ui-switch';
 import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown/angular2-multiselect-dropdown';
+import { NgBootstrapFormValidationModule } from 'ng-bootstrap-form-validation';
 
 import { MetaDataDataPodService } from '../data-preparation/datapod/datapod.service';
 
@@ -21,6 +22,7 @@ import { MultiSelectModule } from 'primeng/components/multiselect/multiselect';
 import { DropdownModule } from 'primeng/components/dropdown/dropdown';
 import { GrowlModule } from 'primeng/components/growl/growl';
 import { ParamsetComponent } from './paramset/paramset.component';
+import { TooltipModule } from 'primeng/primeng';
 
 import { AlgorithmComponent } from './algorithm/algorithm.component';
 import { DataScienceComponent } from './data-science.component';
@@ -54,7 +56,6 @@ import { ParamlistService } from '../metadata/services/paramlist.service';
         FormsModule,
         routing1,
         ProjectSharedModule,
-        // UiSwitchModule,
         TagInputModule,
         MessagesModule,
         MessageModule,
@@ -67,7 +68,17 @@ import { ParamlistService } from '../metadata/services/paramlist.service';
         DialogModule,
         CalendarModule,
         MenuModule,
-        ChipsModule
+        ChipsModule,
+        TooltipModule,
+        NgBootstrapFormValidationModule,
+        UiSwitchModule.forRoot({
+            size: 'medium',
+            color: '#15C5D5',
+            switchColor: '#FFFFF',
+            defaultBoColor : '#ccc',
+            checkedLabel: 'Yes',
+            uncheckedLabel: 'No'
+          })
 
     ],
     declarations :[

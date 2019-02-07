@@ -8,7 +8,6 @@ import { map, catchError } from "rxjs/operators";
 import { SharedService } from '../../shared/shared.service';
 
 @Injectable()
-
 export class AlgorithmService {
   sessionId: string;
   baseUrl: string;
