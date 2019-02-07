@@ -1,9 +1,6 @@
-export class AttributeRefHolder{
+export class AttributeRefHolder {
 
-    private attrId : String;
-	private attrName : String;
-
-
-
+    attrId: String;
+    attrName: String;
 
 }

@@ -1,5 +1,5 @@
 import { debug } from 'util';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { SidebarService } from './sidebar.service';
 
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
@@ -7,6 +7,10 @@ import { Sidebar } from './sidebar';
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
+  encapsulation: ViewEncapsulation.None,
+  
+  styleUrls: ['./sidebar.component.css'],
+  
 })
 export class SidebarComponent {
   

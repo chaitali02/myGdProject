@@ -22,6 +22,12 @@
             ],
             "styles": [
             
+              "assets/global/plugins/font-awesome/css/font-awesome.min.css",
+              "assets/global/plugins/simple-line-icons/simple-line-icons.min.css",
+              "assets/global/plugins/bootstrap/css/bootstrap.min.css",
+              "assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css",
+              "assets/global/css/components-rounded.css",
+              "assets/global/css/plugins.min.css",
               "assets/pages/css/login.css",
               "assets/lib/css/projectx.css",
               "assets/global/plugins/angularjs/plugins/angular-notify/css/angular-notify-texture.css",
@@ -34,13 +40,7 @@
               "node_modules/primeng/resources/primeng.min.css",
               "node_modules/c3/c3.min.css",
               "node_modules/jointjs/css/layout.css",
-              "node_modules/primeicons/primeicons.css",
-              "assets/global/plugins/font-awesome/css/font-awesome.min.css",
-              "assets/global/plugins/simple-line-icons/simple-line-icons.min.css",
-              "assets/global/plugins/bootstrap/css/bootstrap.min.css",
-              "assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css",
-              "assets/global/css/components-rounded.css",
-              "assets/global/css/plugins.min.css",
+              "node_modules/primeicons/primeicons.css"
             ],
             "scripts": [
               "bower_components/jquery/dist/jquery.min.js",
@@ -115,7 +115,8 @@
               "assets/layouts/global/scripts/quick-nav.min.js",
               "assets/layouts/layout/scripts/demo.min.js",
               "bower_components/js-cookie/src/js.cookie.js",
-              "node_modules/jointjs/dist/joint.js"
+              "node_modules/jointjs/dist/joint.js",
+              
             ],
             "styles": [
               "assets/global/plugins/font-awesome/css/font-awesome.min.css",
@@ -135,7 +136,8 @@
               "node_modules/primeng/resources/themes/omega/theme.css",
               "node_modules/primeng/resources/primeng.min.css",
               "node_modules/c3/c3.min.css",
-              "node_modules/jointjs/css/layout.css"
+              "node_modules/jointjs/css/layout.css",
+              "node_modules/primeicons/primeicons.css"
             ],
             "assets": [
               "src/assets",

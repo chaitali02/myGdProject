@@ -137,6 +137,7 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 			$scope.algorithmData.modelClass="";
 		}
 	}
+	
 	$scope.getAllLatestParamListByTemplate=function(){
 		CommonService.getAllLatestParamListByTemplate('Y', "paramlist","model").then(function (response) { onSuccessGetAllLatestParamListByTemplate(response.data) });
 		var onSuccessGetAllLatestParamListByTemplate = function (response) {

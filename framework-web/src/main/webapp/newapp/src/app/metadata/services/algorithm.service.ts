@@ -20,10 +20,12 @@ export class AlgorithmService {
   }
 
   getExecuteModel(uuid: Number, version: String): Observable<any[]> {
+
     let url = '/model/train?action=execute&modelUUID=' + uuid + '&modelVersion=' + version;
     this.headers = new Headers({ 'sessionId': this.sessionId });
     this.headers.append('Accept', '*/*')
     this.headers.append('content-Type', "application/json");
+
     return this._sharedService.getCall(url)
       .pipe(
         map(response => { return <any[]>response.json(); }),

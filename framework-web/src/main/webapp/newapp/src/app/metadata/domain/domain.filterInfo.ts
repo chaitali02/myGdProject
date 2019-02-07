@@ -1,9 +1,10 @@
-import {SourceAttr} from './domain.sourceAttr';
+import { SourceAttr } from './domain.sourceAttr';
 
-export class FilterInfo{
-    private logicalOperator : String;
-	private operator : String ;
-	private operand : SourceAttr[]; 
+export class FilterInfo {
 
+	display_seq: String;
+	logicalOperator: String;
+	operator: String;
+	operand: Array<SourceAttr>;
 
 }

@@ -1224,3 +1224,13 @@ cursor: not-allowed !important;
 .checkClass{
   border-color: #e73d4a;
 }
+
+.pchip-height.ui-chips>ul.ui-inputtext{
+  height: 40px !important;
+  overflow-y:scroll !important;
+}
+.pchip-height.ui-chips>ul > li.ui-state-highlight {
+  border-color: #156090 !important;
+  background-color: #186ba0 !important;
+  color: #FFFFFF !important;
+}
