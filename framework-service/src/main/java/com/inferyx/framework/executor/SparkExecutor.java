@@ -2305,7 +2305,7 @@ public class SparkExecutor<T> implements IExecutor {
 	 * @return
 	 */
 	public Dataset<Row> castUnEncodedCols(Dataset<Row> df, Map<String, EncodingType> encodingDetails, Set<String> encodingCols) {
-		Map<String, String> colTypeMap = new HashMap();
+		Map<String, String> colTypeMap = new HashMap<>();
 		for (Tuple2<String, String> dtype : df.dtypes()) {
 			colTypeMap.put(dtype._1, dtype._2);
 		}
@@ -3024,11 +3024,11 @@ public class SparkExecutor<T> implements IExecutor {
 			
 			Dataset<Row> trainedDataSet = null;
 			if (trainName.contains("PCA")) {
-				if (null != paramMap) {
-					cvModel = cv.fit(trngDf, paramMap);
-				} else {
+//				if (null != paramMap) {
+//					cvModel = cv.fit(trngDf, paramMap);
+//				} else {
 					cvModel = cv.fit(trngDf);
-				}
+//				}
 				
 				trainedDataSet = cvModel.transform(trngDf);
 				testSetPath = trainingSetPath;
