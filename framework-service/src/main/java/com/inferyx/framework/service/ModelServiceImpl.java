@@ -3105,8 +3105,12 @@ public class ModelServiceImpl {
 							Datasource trainSetDpDs = (Datasource) commonServiceImpl.getOneByUuidAndVersion(trainSetDpDsMI.getUuid(), trainSetDpDsMI.getVersion(), trainSetDpDsMI.getType().toString(), "N");
 							
 							trainSetDetails.put("trainSetDsType", trainSetDpDs.getType().toLowerCase());
-							if(trainSetDpDs.getType().equalsIgnoreCase(MetaType.file.toString())) {
-								trainSetSavePath = "file://".concat(defaultDir).concat(defaultDir.endsWith("/") ? "train_set" : "/train_set");
+							if(trainSetDpDs.getType().equalsIgnoreCase(MetaType.file.toString())) {								
+								String trainPath = String.format("/%s/%s/%s", trainSetDp.getUuid(), trainSetDp.getVersion(), trainExec.getVersion());
+								String trainSetDefaultPath = hdfsInfo.getHdfsURL().concat(Helper.getPropertyValue("framework.schema.Path"));
+								trainSetDefaultPath = trainSetDefaultPath.endsWith("/") ? trainSetDefaultPath : trainSetDefaultPath.concat("/");
+								trainSetSavePath = String.format("%s%s",trainSetDefaultPath, trainPath);
+								
 								trainSetDetails.put("trainSetSavePath", trainSetSavePath);
 							} else {								
 								trainSetDetails.put("testSetTableName", getTableNameByDatapod(trainSetDp, trainSetDpDs));
@@ -3138,7 +3142,11 @@ public class ModelServiceImpl {
 						
 						testSetDetails.put("testSetDsType", testSetDpDs.getType().toLowerCase());
 						if(testSetDpDs.getType().equalsIgnoreCase(MetaType.file.toString())) {
-							testSetSavePath = "file://".concat(defaultDir).concat(defaultDir.endsWith("/") ? "test_set" : "/test_set");
+							String testPath = String.format("/%s/%s/%s", testSetDp.getUuid(), testSetDp.getVersion(), trainExec.getVersion());
+							String testSetDefaultPath = hdfsInfo.getHdfsURL().concat(Helper.getPropertyValue("framework.schema.Path"));
+							testSetDefaultPath = testSetDefaultPath.endsWith("/") ? testSetDefaultPath : testSetDefaultPath.concat("/");
+							testSetSavePath = String.format("%s%s",testSetDefaultPath, testPath);
+							
 							testSetDetails.put("testSetSavePath", testSetSavePath);
 						} else {
 							testSetDetails.put("testSetTableName", getTableNameByDatapod(testSetDp, testSetDpDs));
@@ -3799,7 +3807,7 @@ public class ModelServiceImpl {
 			trainedModel = getTrainedModelByTrainExec(algorithm.getModelClass(), trainExec);
 			trainedModelMap.put(key, trainedModel);
 		}
-		String[] fieldArray = getMappedAttrs(train.getFeatureAttrMap()); 
+//		String[] fieldArray = getMappedAttrs(train.getFeatureAttrMap()); 
 				//modelExecServiceImpl.getAttributeNames(predict);
 
 
@@ -3835,35 +3843,20 @@ public class ModelServiceImpl {
 		if(setType.equalsIgnoreCase("trainSet")) {
 			trainOrTestSetPath = defaultTrainPath.endsWith("/") ? defaultTrainPath.concat("train_set") : defaultTrainPath.concat("/").concat("train_set");
 			 if(train.getTrainLocation() !=null && train.getTrainLocation().getRef().getType().equals(MetaType.datapod)) {
-			    	Datapod datapod = (Datapod)commonServiceImpl.getOneByUuidAndVersion(train.getTrainLocation().getRef().getUuid()
-			    			, train.getTrainLocation().getRef().getVersion()
-			    			, train.getTrainLocation().getRef().getType().toString(), "N");
-			    	Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid()
-			    			, datapod.getDatasource().getRef().getVersion()
-			    			, datapod.getDatasource().getRef().getType().toString(), "N");
-			    	if(datasource.getType().equalsIgnoreCase(MetaType.file.toString())) {
-			    		return exec.fetchTrainOrTestSet(trainOrTestSetPath);
-			    	} else {
-			    		DataStore ds = dataStoreServiceImpl.findDataStoreByMeta(datapod.getUuid(), datapod.getVersion());
-				    	return dataStoreServiceImpl.getDatapodResults(ds.getUuid(), ds.getVersion(),null , 0 , 100 , null, 0, null, null, null, RunMode.BATCH);
-			    	}			    	
-			    }
+		    	Datapod datapod = (Datapod)commonServiceImpl.getOneByUuidAndVersion(train.getTrainLocation().getRef().getUuid()
+		    			, train.getTrainLocation().getRef().getVersion()
+		    			, train.getTrainLocation().getRef().getType().toString(), "N");
+	    		DataStore ds = dataStoreServiceImpl.findDataStoreByMeta(datapod.getUuid(), datapod.getVersion());
+		    	return dataStoreServiceImpl.getDatapodResults(ds.getUuid(), ds.getVersion(),null , 0 , 100 , null, 0, null, null, null, RunMode.BATCH);    	
+		    }
 		 } else if(setType.equalsIgnoreCase("testSet")) {
 			trainOrTestSetPath = defaultTrainPath.endsWith("/") ? defaultTrainPath.concat("test_set") : defaultTrainPath.concat("/").concat("test_set");
 		    if(train.getTestLocation() !=null && train.getTestLocation().getRef().getType().equals(MetaType.datapod)) {
 		    	Datapod datapod = (Datapod)commonServiceImpl.getOneByUuidAndVersion(train.getTestLocation().getRef().getUuid()
 		    			, train.getTestLocation().getRef().getVersion()
 		    			, train.getTestLocation().getRef().getType().toString(), "N");
-		    	Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid()
-		    			, datapod.getDatasource().getRef().getVersion()
-		    			, datapod.getDatasource().getRef().getType().toString(), "N");
-		    	
-		    	if(datasource.getType().equalsIgnoreCase(MetaType.file.toString())) {
-		    		return exec.fetchTrainOrTestSet(trainOrTestSetPath);
-		    	} else {
-		    		DataStore ds = dataStoreServiceImpl.findDataStoreByMeta(datapod.getUuid(), datapod.getVersion());
-			    	return dataStoreServiceImpl.getDatapodResults(ds.getUuid(), ds.getVersion(),null , 0 , 100 , null, 0, null, null, null, RunMode.BATCH);
-		    	}
+	    		DataStore ds = dataStoreServiceImpl.findDataStoreByMeta(datapod.getUuid(), datapod.getVersion());
+		    	return dataStoreServiceImpl.getDatapodResults(ds.getUuid(), ds.getVersion(),null , 0 , 100 , null, 0, null, null, null, RunMode.BATCH);
 		    }
 		}
 		return exec.fetchTrainOrTestSet(trainOrTestSetPath);		
