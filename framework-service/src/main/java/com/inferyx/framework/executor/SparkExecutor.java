@@ -2075,7 +2075,7 @@ public class SparkExecutor<T> implements IExecutor {
 		try {
 			String assembledDFSQL = "SELECT * FROM " + tableName;
 			Dataset<Row> df = executeSql(assembledDFSQL, clientContext).getDataFrame();
-			df.coalesce(1).write().option("header", "true").csv(saveFileName);
+			df.coalesce(1).write().format("com.databricks.spark.csv").option("header", "true").csv(saveFileName);
 			return true;
 		} catch(Exception e) {
 			e.printStackTrace();

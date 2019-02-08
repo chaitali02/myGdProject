@@ -2016,15 +2016,18 @@ public class ModelServiceImpl {
 						File saveFile = new File(saveFileName);
 						if(!saveFile.exists()) {
 							String mappedAttrSql = generateFeatureSQLByTempTable(predict.getFeatureAttrMap(), tableName, null, tableName);
-							exec.executeAndRegisterByDatasource(mappedAttrSql, tableName, appDatasource, appUuid);	
+							ResultSetHolder rsHolder = exec.executeAndRegisterByDatasource(mappedAttrSql, tableName, appDatasource, appUuid);	
 							
 							if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
 								String doubleCastSql = "SELECT * FROM " + tableName;
-								sparkExecutor.castDFCloumnsToDoubleType(null, doubleCastSql, sourceDS, tableName, true, appUuid);	
+								rsHolder = sparkExecutor.castDFCloumnsToDoubleType(null, doubleCastSql, sourceDS, tableName, true, appUuid);	
 							}
 							
-							exec.saveDataframeAsCSV(tableName, saveFileName, appUuid);
-							saveFileName = renameFileAndGetFilePathFromDir(saveFileName, "input_data", FileType.CSV.toString().toLowerCase());
+//							exec.saveDataframeAsCSV(tableName, saveFileName, appUuid);
+							sparkExecutor.registerAndPersistDataframe(rsHolder, null, SaveMode.APPEND.toString()
+									, "file://"+saveFileName, tableName
+									, "true", true);
+							saveFileName = renameFileAndGetFilePathFromDir(saveFileName, "input_data", FileType.PARQUET.toString().toLowerCase());
 							saveFileName = URI+saveFileName;
 							logger.info("Saved file name : " + saveFileName);
 						}						
@@ -2039,9 +2042,12 @@ public class ModelServiceImpl {
 							
 							File inputSourceFile = new File(inputSourceFileName);
 							if(!inputSourceFile.exists()) {
-								exec.executeAndRegisterByDatasource(sourceCustomQuery, tableName.concat("_sourceQuery"), sourceDS, appUuid);
-								exec.saveDataframeAsCSV(tableName.concat("_sourceQuery"), "file://"+inputSourceFileName, appUuid);
-								String inputSourceFilePath = renameFileAndGetFilePathFromDir(inputSourceFileName, "input_source_data", FileType.CSV.toString().toLowerCase());
+								ResultSetHolder rsHolder = exec.executeAndRegisterByDatasource(sourceCustomQuery, tableName.concat("_sourceQuery"), sourceDS, appUuid);
+//								exec.saveDataframeAsCSV(tableName.concat("_sourceQuery"), "file://"+inputSourceFileName, appUuid);
+								sparkExecutor.registerAndPersistDataframe(rsHolder, null, SaveMode.APPEND.toString()
+										, "file://"+inputSourceFileName, tableName.concat("_sourceQuery")
+										, "true", true);
+								String inputSourceFilePath = renameFileAndGetFilePathFromDir(inputSourceFileName, "input_source_data", FileType.PARQUET.toString().toLowerCase());
 								otherParams.put("inputSourceFileName", "file://"+inputSourceFilePath);
 							}		
 						}
@@ -3196,15 +3202,18 @@ public class ModelServiceImpl {
 						File trainInPathFile = new File(trainInputPath);
 						if(!trainInPathFile.exists()) {	
 							String mappedAttrSql = generateFeatureSQLByTempTable(train.getFeatureAttrMap(), tableName, label, tableName);
-							exec.executeAndRegisterByDatasource(mappedAttrSql, tableName, appDs, appUuid);	
+							ResultSetHolder rsHolder = exec.executeAndRegisterByDatasource(mappedAttrSql, tableName, appDs, appUuid);	
 													
 							if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
 								String doubleCastSql = "SELECT * FROM " + tableName;	
-								sparkExecutor.castDFCloumnsToDoubleType(null, doubleCastSql, sourceDS, tableName, true, appUuid);	
+								rsHolder = sparkExecutor.castDFCloumnsToDoubleType(null, doubleCastSql, sourceDS, tableName, true, appUuid);	
 							}
 																			
-							exec.saveDataframeAsCSV(tableName, "file://"+trainInputPath, appUuid);
-							trainInputPath = renameFileAndGetFilePathFromDir(trainInputPath, "input_data", FileType.CSV.toString().toLowerCase());
+//							exec.saveDataframeAsCSV(tableName, "file://"+trainInputPath, appUuid);
+							sparkExecutor.registerAndPersistDataframe(rsHolder, null, SaveMode.APPEND.toString()
+									, "file://"+trainInputPath, tableName
+									, "true", true);
+							trainInputPath = renameFileAndGetFilePathFromDir(trainInputPath, "input_data", FileType.PARQUET.toString().toLowerCase());
 						}		
 						
 						if(train.getRowIdentifier() != null 
@@ -3216,9 +3225,12 @@ public class ModelServiceImpl {
 							
 							File inputSourceFile = new File(inputSourceFileName);
 							if(!inputSourceFile.exists()) {
-								exec.executeAndRegisterByDatasource(sourceCustomQuery, tableName.concat("_sourceQuery"), sourceDS, appUuid);
-								exec.saveDataframeAsCSV(tableName.concat("_sourceQuery"), "file://"+inputSourceFileName, appUuid);
-								String inputSourceFilePath = renameFileAndGetFilePathFromDir(inputSourceFileName, "input_source_data", FileType.CSV.toString().toLowerCase());
+								ResultSetHolder rsHolder = exec.executeAndRegisterByDatasource(sourceCustomQuery, tableName.concat("_sourceQuery"), sourceDS, appUuid);
+//								exec.saveDataframeAsCSV(tableName.concat("_sourceQuery"), "file://"+inputSourceFileName, appUuid);
+								sparkExecutor.registerAndPersistDataframe(rsHolder, null, SaveMode.APPEND.toString()
+										, "file://"+inputSourceFileName, tableName.concat("_sourceQuery")
+										, "true", true);
+								String inputSourceFilePath = renameFileAndGetFilePathFromDir(inputSourceFileName, "input_source_data", FileType.PARQUET.toString().toLowerCase());
 								otherParams.put("inputSourceFileName", "file://"+inputSourceFilePath);
 							}		
 						}
