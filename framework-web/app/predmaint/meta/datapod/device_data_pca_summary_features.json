@@ -40,7 +40,7 @@
     ],
     "uuid" : "97c96749-3c7a-4e21-9269-9a3cefe8ef89",
     "version" : "1549013575",
-    "name" : "device_data_pca_features",
+    "name" : "device_data_pca_summary_features",
     "createdBy" : {
         "ref" : {
             "type" : "user",
