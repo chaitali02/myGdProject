@@ -883,7 +883,7 @@
         {
             "attrSourceId" : "86",
             "attrDisplaySeq" : "71",
-            "attrSourceName" : "features",
+            "attrSourceName" : "pca_features",
             "sourceAttr" : {
                 "attrId" : "2",
                 "attrType" : "vector",
