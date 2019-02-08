@@ -13,7 +13,7 @@
 import sys  
 import pandas as pd
 import tensorflow as tf
-import numpy as np
+import numpy as np, numpy
 from sklearn import preprocessing
 import os
 import json, codecs
@@ -27,6 +27,7 @@ import eli5
 from eli5.sklearn import PermutationImportance
 from keras.models import model_from_json
 from sklearn.model_selection import train_test_split
+from pyspark.sql import SQLContext
 
 
 print("Inside python script ")
@@ -117,6 +118,9 @@ testSetPassword=None
 testSetDriver=None
 testSetUrl=None
 
+
+#Creating spark session globaly
+sparkSession = SparkSession.builder.master('local').appName('spark_ann').getOrCreate()
 
 # Iteration over all arguments:
 plist = ["nEpochs", "seed", "iterations", "learningRate", "optimizationAlgo", "weightInit", "updater", "momentum", "numInput", "numOutputs", "numHidden", "numLayers", "layerNames", "activation", "lossFunction", "sourceFilePath", "modelFilePath", "targetPath", "sourceDsType", "tableName", "operation", "url", "hostName", "dbName", "userName", "password", "query", "special_space_replacer", "port", "otherParams", "sourceHostName", "sourceDbName", "sourcePort", "sourceUserName", "sourcePassword", "targetHostName", "targetDbName" , "targetPort", "targetUserName", "targetPassword", "targetDsType", "targetTableName", "targetDriver", "includeFeatures", "rowIdentifier","sourceAttrDetails", "featureAttrDetails", "sourceQuery", "inputSourceFileName", "trainPercent", "testPercent",
@@ -395,11 +399,17 @@ print()
 
 # Importing the dataset
 dataset = None
-def getData(csvPath, dsType, hostName, dbName, port, userName, password, sqlQuery):
+def getData(filePath, dsType, hostName, dbName, port, userName, password, sqlQuery):
     print("inside method getData()")
-    print("dsType : hostName : dbName : port : userName : password <<<<< >>>>> ", dsType, " : ", hostName, " : ", dbName, " : ", port, " : ", userName, " : ", password)
+    print("filePath : dsType : hostName : dbName : port : userName : password <<<<< >>>>> ", filePath, " : ", dsType, " : ", hostName, " : ", dbName, " : ", port, " : ", userName, " : ", password)
     if dsType == "file":
-        dataset = pd.read_csv(csvPath)
+#         dataset = pd.read_csv(filePath)
+#         dataset = pd.read_parquet(filePath)
+#         sparkSession = getSparkSession()
+        sc = sparkSession.sparkContext
+        sqlContext = SQLContext(sc)
+        spark_df = sqlContext.read.parquet(filePath)
+        dataset = spark_df.toPandas()
         return dataset
     
     elif dsType == "mysql":
@@ -435,7 +445,7 @@ def getData(csvPath, dsType, hostName, dbName, port, userName, password, sqlQuer
         connection = hive.Connection(host=hostName, port=port, auth='NONE', username=userName, database=dbName)
         print("connected to hive...")
         dataset = pd.read_sql(sqlQuery, con=connection)
-        sparkSession = getSparkSession()
+#         sparkSession = getSparkSession()
         
         # import pyhs2
         # conn = pyhs2.connect(host=hostName, port=port, authMechanism="PLAIN", user=userName, password=password, database=dbName)
@@ -474,7 +484,7 @@ def getData(csvPath, dsType, hostName, dbName, port, userName, password, sqlQuer
         #    cur.fetchall()
         
 def getSparkSession():
-    return SparkSession.builder.appName('spark_ann').getOrCreate()
+    return SparkSession.builder.master('local').appName('spark_ann').getOrCreate()
         
 def addIndexToSparkDf(spark_df: DataFrame):
     from pyspark.sql.window import Window
@@ -490,7 +500,7 @@ def joinSparkDfByIndex(dfLHS, dfRHS):
     return joined_df
 
 def createSparkDfByPandasDfAndSparkSchema(pd_df, schema):  
-    sparkSession = getSparkSession()
+#     sparkSession = getSparkSession()
     spark_df = sparkSession.createDataFrame(pd_df, schema)
     return spark_df
 
@@ -551,7 +561,7 @@ def generatePredictStatus(spark_df: DataFrame):
     from pyspark.sql.types import StructType, StructField, StringType
     
     schema = StructType([StructField("prediction_status", StringType(), True)])
-    sparkSession = getSparkSession()
+#     sparkSession = getSparkSession()
     mapped_row = spark_df.rdd.map(lambda x: Row(prepareStatus(x[1], x[2])))
     prediction_status_df = sparkSession.createDataFrame(mapped_row, schema)
     
@@ -952,4 +962,5 @@ elif operation == "predict":
         print("Successfull operation: "+"prediction")
     else:
         print("Unsuccessfull operation: "+"prediction")
+
 
