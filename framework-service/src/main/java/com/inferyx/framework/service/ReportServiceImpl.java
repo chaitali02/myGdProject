@@ -35,6 +35,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Engine;
+import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.WorkbookUtil;
 import com.inferyx.framework.domain.DagExec;
@@ -83,6 +84,8 @@ public class ReportServiceImpl {
 	private WorkbookUtil workbookUtil;
 	@Autowired
 	private SparkExecutor<?> sparkExecutor;
+	@Autowired
+	private HDFSInfo hdfsInfo;
 	
 	static final Logger logger = Logger.getLogger(ReportServiceImpl.class);
 	
@@ -173,47 +176,59 @@ public class ReportServiceImpl {
 			long countRows = -1L;
 			
 			reportExec = (ReportExec) commonServiceImpl.setMetaStatus(reportExec, MetaType.reportExec, Status.Stage.InProgress);
-			String filePath = getFileName(report, reportExec);
-			String tableName = null;
 			
 			if (StringUtils.isBlank(reportExec.getExec())) {
 				throw new RuntimeException("sql not generated");
 			}
 			
-			IExecutor exec = null;
-			Datasource datasource = commonServiceImpl.getDatasourceByApp();
-			ExecContext execContext = null;
-			String appUuid = null;
+			String appUuid = commonServiceImpl.getApp().getUuid();
 			
-			if (runMode == null || runMode.equals(RunMode.ONLINE)) {
-				execContext = (engine.getExecEngine().equalsIgnoreCase("livy-spark") || engine.getExecEngine().equalsIgnoreCase("livy_spark"))
-						? helper.getExecutorContext(engine.getExecEngine()) : helper.getExecutorContext(ExecContext.spark.toString());
-				appUuid = commonServiceImpl.getApp().getUuid();
-			} else {
-				execContext = helper.getExecutorContext(datasource.getType().toLowerCase());
-			}
-			exec = execFactory.getExecutor(execContext.toString());
-			
-			tableName = getTableName(report, reportExec, execContext);
-			appUuid = commonServiceImpl.getApp().getUuid();
+//			IExecutor exec = null;
+//			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+//			ExecContext execContext = null;
+//			
+//			if (runMode == null || runMode.equals(RunMode.ONLINE)) {
+//				execContext = (engine.getExecEngine().equalsIgnoreCase("livy-spark") || engine.getExecEngine().equalsIgnoreCase("livy_spark"))
+//						? helper.getExecutorContext(engine.getExecEngine()) : helper.getExecutorContext(ExecContext.spark.toString());
+//				appUuid = commonServiceImpl.getApp().getUuid();
+//			} else {
+//				execContext = helper.getExecutorContext(datasource.getType().toLowerCase());
+//			}
+//			exec = execFactory.getExecutor(execContext.toString());
+
 			ResultSetHolder rsHolder = null;
 			Datasource reportDS = commonServiceImpl.getDatasourceByObject(report);
-			if (runMode != null && runMode.equals(RunMode.BATCH)) {
-				if(execContext.equals(ExecContext.FILE)
-						|| execContext.equals(ExecContext.livy_spark)
-						|| execContext.equals(ExecContext.spark))
-					//exec.executeRegisterAndPersist(reportExec.getExec(), tableName, filePath, null, "overwrite", appUuid);
-					exec.executeAndRegister(reportExec.getExec(), tableName, appUuid);
-				else {
-					String sql = helper.buildInsertQuery(execContext.toString(), tableName, null, reportExec.getExec());
-					exec.executeSql(sql, appUuid);
-				}
-			} else {
-				rsHolder = sparkExecutor.executeAndRegisterByDatasource(reportExec.getExec(), tableName, reportDS, appUuid);
-				countRows = rsHolder.getCountRows();
-			}
+//			String tableName = getTableName(report, reportExec, execContext, reportDS);
+			String tableName = String.format("%s_%s_%s", report.getUuid().replace("-", "_"), report.getVersion(), reportExec.getVersion());
+					
+			String reportPath = String.format("%s/%s/%s", report.getUuid(), report.getVersion(), reportExec.getVersion());
+			String reportDefaultPath = hdfsInfo.getHdfsURL().concat(Helper.getPropertyValue("framework.report.Path"));
+			reportDefaultPath = reportDefaultPath.endsWith("/") ? reportDefaultPath : reportDefaultPath.concat("/");
+			String filePathUrl = String.format("%s%s", reportDefaultPath, reportPath);
 			
-			persistDatastore(reportExec, tableName, filePath, resultRef, new MetaIdentifier(MetaType.report, report.getUuid(), report.getVersion()), countRows, runMode);
+			rsHolder = sparkExecutor.executeSqlByDatasource(reportExec.getExec(), reportDS, appUuid);
+			sparkExecutor.registerAndPersistDataframe(rsHolder, null, com.inferyx.framework.enums.SaveMode.APPEND.toString(), filePathUrl, tableName, "true", true);
+			countRows = rsHolder.getCountRows();
+			
+//			appUuid = commonServiceImpl.getApp().getUuid();
+//			if (runMode != null && runMode.equals(RunMode.BATCH)) {
+//				if(execContext.equals(ExecContext.FILE)
+//						|| execContext.equals(ExecContext.livy_spark)
+//						|| execContext.equals(ExecContext.spark)) {
+//					rsHolder = sparkExecutor.executeSqlByDatasource(reportExec.getExec(), reportDS, appUuid);
+//					sparkExecutor.registerAndPersistDataframe(rsHolder, null, com.inferyx.framework.enums.SaveMode.APPEND.toString(), filePathUrl, tableName, "true", true);
+//					countRows = rsHolder.getCountRows();
+//				} else {
+//					String sql = helper.buildInsertQuery(execContext.toString(), tableName, null, reportExec.getExec());
+//					rsHolder = exec.executeSqlByDatasource(sql, reportDS, appUuid);
+//					countRows = rsHolder.getCountRows();
+//				}
+//			} else {
+//				rsHolder = sparkExecutor.executeAndRegisterByDatasource(reportExec.getExec(), tableName, reportDS, appUuid);
+//				countRows = rsHolder.getCountRows();
+//			}
+			
+			persistDatastore(reportExec, tableName, filePathUrl, resultRef, new MetaIdentifier(MetaType.report, report.getUuid(), report.getVersion()), countRows, runMode);
 
 			reportExec.setResult(resultRef);
 			reportExec = (ReportExec) commonServiceImpl.setMetaStatus(reportExec, MetaType.reportExec, Status.Stage.Completed);
@@ -264,7 +279,7 @@ public class ReportServiceImpl {
 		return String.format("/%s/%s/%s", report.getUuid(), report.getVersion(), reportExec.getVersion());
 	}
 	
-	protected String getTableName(Report report, ReportExec reportExec, ExecContext execContext) throws JsonProcessingException {
+	protected String getTableName(Report report, ReportExec reportExec, ExecContext execContext, Datasource reportDS) throws JsonProcessingException {
 		if (execContext == null || execContext.equals(ExecContext.spark) || execContext.equals(ExecContext.FILE) 
 				|| execContext.equals(ExecContext.livy_spark)) {
 			return String.format("%s_%s_%s", report.getUuid().replace("-", "_"), report.getVersion(), reportExec.getVersion());
