@@ -48,7 +48,7 @@ public class ReportController {
 			@RequestBody (required = false) ExecParams execParams,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
-			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
+			@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		ReportExec reportExec = reportServiceImpl.create(reportUuid, reportVersion, execParams, null, runMode);
 		reportExec = reportServiceImpl.parse(reportExec.getUuid(), reportExec.getVersion(), null, null, null, runMode);
