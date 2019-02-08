@@ -143,9 +143,11 @@ public class SparkPCAOperator implements IOperator, Serializable {
 							? 0 
 							: Integer.parseInt(numFeatures.getParamValue().getValue());
 		
-		/*String outputFeatureName = (StringUtils.isBlank(outputFeatureNameInfo.getAttributeInfo().get(0).getValue())) 
-									? null 
-									: (String) outputFeatureNameInfo.getAttributeInfo().get(0).getValue();*/
+		/*String outputFeatureNameAttr = outputFeaturesInfo.getAttributeInfo().get(0).getRef();
+		 Object outputFeatureCol = commonServiceImpl.getOneByUuidAndVersion(outputFeaturesInfo.getUuid(), outputFeaturesInfo.getVersion(), outputFeaturesInfo.getType().toString());
+		 List<String> outputFeatureAttrList = commonServiceImpl.getColumnNameList(outputFeatureCol, outputFeaturesInfo);
+		 String outputFeatureName = outputFeatureAttrList.get(0);
+		  */
 		String outputFeatureName = "features";
 
 		Object inputCols = commonServiceImpl.getOneByUuidAndVersion(inputColListId.getUuid(), inputColListId.getVersion(), inputColListId.getType().toString());
