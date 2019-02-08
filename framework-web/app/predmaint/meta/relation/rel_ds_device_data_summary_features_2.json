@@ -1,0 +1,168 @@
+{
+    "dependsOn" : {
+        "ref" : {
+            "type" : "datapod",
+            "uuid" : "b03c8ed2-d387-49e1-91f8-a98b6b808fb2"
+        }
+    },
+    "relationInfo" : [ 
+        {
+            "join" : {
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "b03c8ed2-d387-49e1-91f8-a98b6b808fb5"
+                }
+            },
+            "joinType" : "",
+            "joinKey" : [ 
+                {
+                    "logicalOperator" : "",
+                    "operator" : "=",
+                    "operand" : [ 
+                        {
+                            "ref" : {
+                                "type" : "datapod",
+                                "uuid" : "b03c8ed2-d387-49e1-91f8-a98b6b808fb2"
+                            },
+                            "attributeId" : 0,
+                            "attributeType" : "string"
+                        }, 
+                        {
+                            "ref" : {
+                                "type" : "datapod",
+                                "uuid" : "b03c8ed2-d387-49e1-91f8-a98b6b808fb5"
+                            },
+                            "attributeId" : 0,
+                            "attributeType" : "string"
+                        }
+                    ]
+                }
+            ]
+        }, 
+        {
+            "join" : {
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "b03c8ed2-d387-49e1-91f8-a98b6b808fb3"
+                }
+            },
+            "joinType" : "",
+            "joinKey" : [ 
+                {
+                    "logicalOperator" : "",
+                    "operator" : "=",
+                    "operand" : [ 
+                        {
+                            "ref" : {
+                                "type" : "datapod",
+                                "uuid" : "b03c8ed2-d387-49e1-91f8-a98b6b808fb2"
+                            },
+                            "attributeId" : 0,
+                            "attributeType" : "string"
+                        }, 
+                        {
+                            "ref" : {
+                                "type" : "datapod",
+                                "uuid" : "b03c8ed2-d387-49e1-91f8-a98b6b808fb3"
+                            },
+                            "attributeId" : 0,
+                            "attributeType" : "string"
+                        }
+                    ]
+                }
+            ]
+        }, 
+        {
+            "join" : {
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "b03c8ed2-d387-49e1-91f8-a98b6b808fb4"
+                }
+            },
+            "joinType" : "",
+            "joinKey" : [ 
+                {
+                    "logicalOperator" : "",
+                    "operator" : "=",
+                    "operand" : [ 
+                        {
+                            "ref" : {
+                                "type" : "datapod",
+                                "uuid" : "b03c8ed2-d387-49e1-91f8-a98b6b808fb2"
+                            },
+                            "attributeId" : 0,
+                            "attributeType" : "string"
+                        }, 
+                        {
+                            "ref" : {
+                                "type" : "datapod",
+                                "uuid" : "b03c8ed2-d387-49e1-91f8-a98b6b808fb4"
+                            },
+                            "attributeId" : 0,
+                            "attributeType" : "string"
+                        }
+                    ]
+                }
+            ]
+        }, 
+        {
+            "join" : {
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "b03c8ed2-d387-49e1-91f8-a98b6b808fb6"
+                }
+            },
+            "joinType" : "",
+            "joinKey" : [ 
+                {
+                    "logicalOperator" : "",
+                    "operator" : "=",
+                    "operand" : [ 
+                        {
+                            "ref" : {
+                                "type" : "datapod",
+                                "uuid" : "b03c8ed2-d387-49e1-91f8-a98b6b808fb2"
+                            },
+                            "attributeId" : 0,
+                            "attributeType" : "string"
+                        }, 
+                        {
+                            "ref" : {
+                                "type" : "datapod",
+                                "uuid" : "b03c8ed2-d387-49e1-91f8-a98b6b808fb6"
+                            },
+                            "attributeId" : 0,
+                            "attributeType" : "string"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "uuid" : "387470b1-4916-40bb-bc8b-3cd59f8c6fc8",
+    "version" : "1549633263",
+    "name" : "rel_ds_device_data_summary_features_2",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2019-02-08T13:41:03.000Z"),
+    "tags" : [],
+    "active" : "Y",
+    "locked" : "N",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+                "version" : "1547482153",
+                "name" : "Predictive Maintenance"
+            }
+        }
+    ]
+}
