@@ -11,7 +11,6 @@
 package com.inferyx.framework.security;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.List;
@@ -30,8 +29,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.filter.GenericFilterBean;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -76,7 +73,7 @@ public class UserActivityPrivilegeFilter extends GenericFilterBean {
 				String type = request.getParameter("type");
 				if (action != null) {
 					logger.info("Action: "+action+"   Type : "+type);
-					ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+//					ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 					MultiValueMap map = securityServiceImpl.getPrivInfo();//(MultiValueMap) servletRequestAttributes.getRequest().getSession(false).getAttribute("mapRolePriv");
 					authentication = SecurityContextHolder.getContext().getAuthentication();
 					if (authentication != null) {
