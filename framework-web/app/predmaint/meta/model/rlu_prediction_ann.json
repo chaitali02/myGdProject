@@ -16,7 +16,7 @@
             "desc" : "",
             "minVal" : 0,
             "maxVal" : 0,
-            "encodingType" : "ONEHOT",
+            "encodingType" : null,
             "imputeMethod" : {
                 "ref" : {
                     "type" : "function",
@@ -32,7 +32,7 @@
             "desc" : "",
             "minVal" : 0,
             "maxVal" : 0,
-            "encodingType" : "ONEHOT",
+            "encodingType" : null,
             "imputeMethod" : {
                 "ref" : {
                     "type" : "function",
@@ -112,7 +112,7 @@
             "desc" : "",
             "minVal" : 0,
             "maxVal" : 0,
-            "encodingType" : "ONEHOT",
+            "encodingType" : null,
             "imputeMethod" : {
                 "ref" : {
                     "type" : "function",
@@ -128,7 +128,7 @@
             "desc" : "",
             "minVal" : 0,
             "maxVal" : 0,
-            "encodingType" : "ONEHOT",
+            "encodingType" : null,
             "imputeMethod" : {
                 "ref" : {
                     "type" : "function",
@@ -144,7 +144,7 @@
             "desc" : "",
             "minVal" : 0,
             "maxVal" : 0,
-            "encodingType" : "ONEHOT",
+            "encodingType" : null,
             "imputeMethod" : {
                 "ref" : {
                     "type" : "function",
@@ -205,7 +205,7 @@
             "desc" : "",
             "minVal" : 0,
             "maxVal" : 0,
-            "encodingType" : "ONEHOT",
+            "encodingType" : null,
             "imputeMethod" : {
                 "ref" : {
                     "type" : "function",
@@ -221,7 +221,7 @@
             "desc" : "",
             "minVal" : 0,
             "maxVal" : 0,
-            "encodingType" : "ONEHOT",
+            "encodingType" : null,
             "imputeMethod" : {
                 "ref" : {
                     "type" : "function",
@@ -312,7 +312,7 @@
             "desc" : "",
             "minVal" : 0,
             "maxVal" : 0,
-            "encodingType" : "ONEHOT",
+            "encodingType" : null,
             "imputeMethod" : {
                 "ref" : {
                     "type" : "function",
@@ -328,7 +328,7 @@
             "desc" : "",
             "minVal" : 0,
             "maxVal" : 0,
-            "encodingType" : "ONEHOT",
+            "encodingType" : null,
             "imputeMethod" : {
                 "ref" : {
                     "type" : "function",
@@ -494,7 +494,7 @@
             "desc" : "",
             "minVal" : 0,
             "maxVal" : 0,
-            "encodingType" : "ONEHOT",
+            "encodingType" : null,
             "imputeMethod" : {
                 "ref" : {
                     "type" : "function",
@@ -615,7 +615,7 @@
             "desc" : "",
             "minVal" : 0,
             "maxVal" : 0,
-            "encodingType" : "ONEHOT",
+            "encodingType" : null,
             "imputeMethod" : {
                 "ref" : {
                     "type" : "function",
@@ -631,7 +631,7 @@
             "desc" : "",
             "minVal" : 0,
             "maxVal" : 0,
-            "encodingType" : "ONEHOT",
+            "encodingType" : null,
             "imputeMethod" : {
                 "ref" : {
                     "type" : "function",
@@ -647,7 +647,7 @@
             "desc" : "",
             "minVal" : 0,
             "maxVal" : 0,
-            "encodingType" : "ONEHOT",
+            "encodingType" : null,
             "imputeMethod" : {
                 "ref" : {
                     "type" : "function",
