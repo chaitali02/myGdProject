@@ -35,6 +35,12 @@
             "paramName" : "saveLocation",
             "paramType" : "datapod",
             "paramDispName" : "saveLocation"
+        }, 
+        {
+            "paramId" : "6",
+            "paramName" : "outputFeatureName",
+            "paramType" : "attributes",
+            "paramDispName" : "outputFeatureName"
         }
     ],
     "paramListType" : "model",

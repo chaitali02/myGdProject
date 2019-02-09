@@ -104,7 +104,7 @@ public class SparkPCAOperator implements IOperator, Serializable {
 //		ParamListHolder inputFeaturesInfo = paramSetServiceImpl.getParamByName(execParams, "inputFeatures");
 //		ParamListHolder outputFeaturesInfo = paramSetServiceImpl.getParamByName(execParams, "outputFeatures");
 		ParamListHolder inputColListInfo = paramSetServiceImpl.getParamByName(execParams, "inputColList");	// Input feature column list
-//		ParamListHolder outputFeatureNameInfo = paramSetServiceImpl.getParamByName(execParams, "outputFeatureName");	// Output Feature Name
+		ParamListHolder outputFeatureNameInfo = paramSetServiceImpl.getParamByName(execParams, "outputFeatureName");	// Output Feature Name
 		ParamListHolder inputKeyInfo = paramSetServiceImpl.getParamByName(execParams, "inputKeyNames");	// Input Key Names
 		ParamListHolder locationInfo = paramSetServiceImpl.getParamByName(execParams, "saveLocation");	// Location for datapod save
 		
@@ -143,12 +143,12 @@ public class SparkPCAOperator implements IOperator, Serializable {
 							? 0 
 							: Integer.parseInt(numFeatures.getParamValue().getValue());
 		
-		/*String outputFeatureNameAttr = outputFeaturesInfo.getAttributeInfo().get(0).getRef();
-		 Object outputFeatureCol = commonServiceImpl.getOneByUuidAndVersion(outputFeaturesInfo.getUuid(), outputFeaturesInfo.getVersion(), outputFeaturesInfo.getType().toString());
-		 List<String> outputFeatureAttrList = commonServiceImpl.getColumnNameList(outputFeatureCol, outputFeaturesInfo);
+		 MetaIdentifier outputFeatureNameAttr = outputFeatureNameInfo.getAttributeInfo().get(0).getRef();
+		 Object outputFeatureCol = commonServiceImpl.getOneByUuidAndVersion(outputFeatureNameAttr.getUuid(), outputFeatureNameAttr.getVersion(), outputFeatureNameAttr.getType().toString());
+		 List<String> outputFeatureAttrList = commonServiceImpl.getColumnNameList(outputFeatureCol, outputFeatureNameInfo);
 		 String outputFeatureName = outputFeatureAttrList.get(0);
-		  */
-		String outputFeatureName = "features";
+		  
+//		String outputFeatureName = "features";
 
 		Object inputCols = commonServiceImpl.getOneByUuidAndVersion(inputColListId.getUuid(), inputColListId.getVersion(), inputColListId.getType().toString());
 		List<String> featureAttrList = commonServiceImpl.getColumnNameList(inputCols, inputColListInfo);
