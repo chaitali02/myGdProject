@@ -843,18 +843,18 @@
       "paramListInfo": null,
       "encodingType": "ONEHOT",
       "imputeMethod": null
-    },
+    }, 
     {
-      "featureId": "68",
-      "featureDisplaySeq": "67",
-      "name": "pca_features",
-      "type": "vector",
-      "desc": "",
-      "minVal": 0,
-      "maxVal": 0,
-      "paramListInfo": null,
-      "encodingType": null,
-      "imputeMethod": null
+        "featureId" : "68",
+        "featureDisplaySeq" : "67",
+        "name" : "pca_features",
+        "type" : "vector",
+        "desc" : "",
+        "minVal" : 0,
+        "maxVal" : 0,
+        "paramListInfo" : null,
+        "encodingType" : null,
+        "imputeMethod" : null
     }
   ],
   "scriptName": null,
