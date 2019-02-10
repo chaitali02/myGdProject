@@ -147,18 +147,21 @@ public class DataSamplingOperator implements IOperator, Serializable {
 								: Float.parseFloat(percentOfSamplesInfo.getParamValue().getValue());
 		percentSamples /= 100;
 		
-		long srcDataCount = dataDf.count();
-		if (numSamples > -1) {
-			// Calculate percentSamples
-			percentSamples = srcDataCount/srcDataCount;
+		if (percentSamples < 0 && numSamples < 0) {
+			numSamples = 100;
 		}
 		
-		if (percentSamples < 0) {
-			throw new Exception("Data cannot be sampled as neither sample size nor sampling percent has been provided");
+		long srcDataCount = -1L;
+		if (numSamples > -1) {
+			// Calculate percentSamples
+			srcDataCount = dataDf.count();
+			logger.info("Data count : " + srcDataCount);
+			percentSamples = numSamples/srcDataCount;
 		}
 	
 		// Find destination Dataframe
 		Dataset<Row> destDf = dataDf.sample(Boolean.TRUE, percentSamples);
+		logger.info(" Sample count after retrieval : " + destDf.count());
 		/***************************************************************************/
 		/************************ Do data sampling - END ***************************/
 		/***************************************************************************/
