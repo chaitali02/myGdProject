@@ -26,7 +26,13 @@
       "uuid" : "5b534c5e-69a6-4cf2-b2f3-d9c578a55533"
     }
   },
-  "formulaInfo" : [ {
+   "formulaInfo" : [ 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : "NANIF("
+        },  {
     "ref" : {
       "type" : "function",
       "uuid" : "9e3e2fb2-02fb-11e7-93ae-92361f002671"
@@ -89,6 +95,13 @@
       "type" : "simple"
     },
     "value" : ")"
-  } ],
-  "formulaType" : "aggr"
+  } , 
+        {
+            "ref" : {
+                "type" : "simple"
+            },
+            "value" : " , 0 )"
+        }
+    ],
+    "formulaType" : "aggr"
 }
