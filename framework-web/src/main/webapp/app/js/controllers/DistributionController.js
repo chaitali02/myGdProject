@@ -68,12 +68,26 @@ DatascienceModule.controller('DistributionDetailController', function (CommonSer
 			return $filter('filter')($scope.lobTag, query);
 		});
 	};
-    $scope.getLovByType();
+	$scope.getLovByType();
+	
+	 
+	$scope.checkIsInrogess=function(){
+		if($scope.isEditInprogess || $scope.isEditVeiwError){
+		  return false;
+		}
+	
+	}
 	$scope.showPage = function () {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showForm = true
 		$scope.showGraphDiv = false
 	}
 	$scope.showHome=function(uuid, version,mode){
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('createdistribution', {
 			id: uuid,
@@ -85,6 +99,9 @@ DatascienceModule.controller('DistributionDetailController', function (CommonSer
 		if($scope.isPrivlage || $scope.distributionData.locked =="Y"){
 			return false;
 		}
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage();
 		$state.go('createdistribution', {
 			id: uuid,
@@ -93,6 +110,9 @@ DatascienceModule.controller('DistributionDetailController', function (CommonSer
 		});
 	}
 	$scope.showView = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		if(isEdit){
 			return false;
 		}
@@ -117,6 +137,9 @@ DatascienceModule.controller('DistributionDetailController', function (CommonSer
 	});
 
 	$scope.showGraph = function () {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showForm = false;
 		$scope.showGraphDiv = true;
 	}//End showGraph
@@ -142,7 +165,7 @@ DatascienceModule.controller('DistributionDetailController', function (CommonSer
 		CommonService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, "distribution")
 			.then(function (response){onSuccessGetLatestByUuid(response.data)},function(response){onError(response.data)});
 		var onSuccessGetLatestByUuid = function (response) {
-			$scope.isEditInprogess=false;
+		    $scope.isEditInprogess=false;
 			$scope.distributionData = response;;
 			var defaultversion = {};
 			defaultversion.version = response.version;

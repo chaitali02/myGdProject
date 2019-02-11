@@ -4105,12 +4105,15 @@ public class SparkExecutor<T> implements IExecutor {
 			System.out.println("Confusion matrix: \n" + confusionMatrix);
 			summary.put("confusionMatrix", confusionMatrix);
 			
-			List<Object> rocList = new ArrayList<>();
+			List<Map<String, Object>> rocList = new ArrayList<>();
 //			List<Map<String, Object>> rocList = new ArrayList<>();
 //			rocList = sparkExecHelper.getRoc(binaryClassificationMetrics.roc().toJavaRDD());
 			for(Tuple2<?, ?> tuple2 : binaryClassificationMetrics.roc().toJavaRDD().collect()) {
-				logger.info("("+tuple2._1()+","+tuple2._2()+")");
-				rocList.add("("+tuple2._1()+","+tuple2._2()+")");
+				logger.info("{\"specificity\":"+tuple2._1()+", \"sensitivity\":"+tuple2._2()+"}");
+				Map<String, Object> rocMap = new LinkedHashMap<>();
+				rocMap.put("specificity", tuple2._1());
+				rocMap.put("sensitivity", tuple2._2());
+				rocList.add(rocMap);
 			}
 			if(!rocList.isEmpty()) {
 				summary.put("roc", rocList);

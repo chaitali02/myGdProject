@@ -101,7 +101,12 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
   };
 
   $scope.getLovByType();
-
+  
+  $scope.checkIsInrogess=function(){
+    if($scope.isEditInprogess || $scope.isEditVeiwError){
+      return false;
+    }
+  }
   $scope.close = function () {
     if ($stateParams.returnBack == 'true' && $rootScope.previousState) {
       //revertback
@@ -195,18 +200,27 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
 
 
   $scope.showGraph = function (uuid, version) {
+    if($scope.checkIsInrogess () ==false){
+      return false;
+    }
     $scope.showForm = false;
     $scope.showGraphDiv = true;
   } //End showFunctionGraph
 
 
   $scope.showPage = function () {
+    if($scope.checkIsInrogess () ==false){
+      return false;
+    }
     $scope.showForm = true;
     $scope.showGraphDiv = false
   }
 
   $scope.showHome = function (uuid, version, mode) {
-    $scope.showPage()
+    $scope.showPage();
+    if($scope.checkIsInrogess () ==false){
+      return false;
+    }
     $state.go('createtrain', {
       id: uuid,
       version: version,
@@ -218,7 +232,10 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     if ($scope.isPrivlage || $scope.trainData.locked == "Y") {
       return false;
     }
-    $scope.showPage()
+    $scope.showPage();
+    if($scope.checkIsInrogess () ==false){
+      return false;
+    }
     $state.go('createtrain', {
       id: uuid,
       version: version,

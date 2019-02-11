@@ -48,26 +48,17 @@
 
                     <div class="actions">
                         <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top"
-                            tooltip  ng-hide="isAdd"  ng-class="(showForm==true)? 'currentpage':'notcurrentpage'" data-ng-click="showHome(trainData.uuid,trainData.version,mode)">
+                            tooltip  ng-hide="isAdd"  ng-class="(showForm==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'" data-ng-click="showHome(trainData.uuid,trainData.version,mode)">
                             <i class="fa fa-home icon-circle home-icon-circle"></i>
                         </a>
                         <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
-                            tooltip ng-class="(isEdit==true || isPrivlage || trainData.locked == 'Y')? 'currentpage':'notcurrentpage'"ng-hide="isAdd"
+                            tooltip ng-class="(isEdit==true || isPrivlage || trainData.locked == 'Y' ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"ng-hide="isAdd"
                             data-ng-click="enableEdit(trainData.uuid,trainData.version)">
                             <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
                         </a>
-                        <!-- <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
-                            tooltip ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd"
-                            data-ng-click="enableEdit(trainData.uuid,trainData.version)">
-                            <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
-                        </a>
-                        <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Show Details" data-toggle="tooltip" data-placement="top"
-                            tooltip ng-hide="isAdd" ng-class="(showForm==true || isEdit==true)? 'currentpage':'notcurrentpage'"
-                            data-ng-click="showview(trainData.uuid,trainData.version)">
-                            <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
-                        </a> -->
+                       
                         <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Knowledge Graph" tooltip data-toggle="tooltip"
-                            data-placement="top" ng-show="isDependencyShow" ng-class="showForm==false? 'currentpage':'notcurrentpage'"
+                            data-placement="top" ng-show="isDependencyShow" ng-class="(showForm==false || isEditInprogess ==true ||  isEditVeiwError ==true )? 'currentpage':'notcurrentpage'"
                             data-ng-click="showGraph(trainData.uuid,trainData.version)">
                             <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:#a0a0a0"></i>
                         </a>

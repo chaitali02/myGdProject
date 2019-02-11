@@ -3793,7 +3793,8 @@ public class CommonServiceImpl <T> {
 			String appUuid=null;
 			if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
 					&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
-					&& !type.equalsIgnoreCase(MetaType.application.toString()) && !type.equalsIgnoreCase(MetaType.meta.toString())) {
+					&& !type.equalsIgnoreCase(MetaType.application.toString()) && !type.equalsIgnoreCase(MetaType.meta.toString())
+					&& !type.equalsIgnoreCase(MetaType.algorithm.toString()) ) {
 					appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 								? securityServiceImpl.getAppInfo().getRef().getUuid() : null;							
 				}

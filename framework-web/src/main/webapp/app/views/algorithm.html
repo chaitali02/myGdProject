@@ -38,10 +38,10 @@
           </div>
           <div class="tools">
             <a href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top"
-              tooltip  ng-hide="isAdd"  ng-class="(showForm==true)? 'currentpage':'notcurrentpage'" style="height:16px;font-size:16px;" data-ng-click="showHome(algorithmData.uuid,algorithmData.version,mode)">
+              tooltip  ng-hide="isAdd"  ng-class="(showForm==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'" style="height:16px;font-size:16px;" data-ng-click="showHome(algorithmData.uuid,algorithmData.version,mode)">
               <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
-            <a title="Edit"ng-class="(isEdit==true || isPrivlage || algorithmData.locked == 'Y')? 'currentpage':'notcurrentpage'"
+            <a title="Edit"ng-class="(isEdit==true || isPrivlage || algorithmData.locked == 'Y' || isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
               data-toggle="tooltip" data-placement="top" tooltip ng-click="enableEdit(algorithmData.uuid,algorithmData.version)"
               ng-hide="isAdd" style="height:16px;">
               <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
@@ -55,11 +55,11 @@
               ng-click="showview(algorithmData.uuid,algorithmData.version)" ng-hide="isAdd" style="height:16px;">
               <span class="glyphicon glyphicon-file" style="color:white;"></span>
             </a> -->
-            <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="showalgorithm==false? 'currentpage':'notcurrentpage'"
+            <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="(showalgorithm==false ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
               data-ng-click="showGraph(algorithmData.uuid,algorithmData.version)" style="height:14px;">
               <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
             </a>
-            <a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip ng-class="showGraphDiv ==false? 'currentpage':'notcurrentpage'">
+            <a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showGraphDiv ==false ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'">
               <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
             </a>
             <a title="Close" data-toggle="tooltip" data-placement="top" tooltip data-ui-sref="algorithm" style="height:14px;">
