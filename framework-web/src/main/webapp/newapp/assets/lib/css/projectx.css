@@ -1046,7 +1046,7 @@ cursor: not-allowed !important;
     font-weight: 100 !important;
   }
   .ui-state-active {
-    border-bottom: 4px solid #9fe4ea !important;
+    /* border-bottom: 4px solid #9fe4ea !important; */
     color: #555 !important;
   }
   .ui-widget-header .ui-button, .ui-widget-content .ui-button, .ui-widget.ui-button, .ui-button{

@@ -101,99 +101,95 @@ export class DataQualityService {
           let dataQualityIO = new DataQualityIO();
           dataQualityIO.dataQuality = response;
           let filterInfoIOArray = [new FilterInfoIO];
-          if(response.filterInfo){
-          for (let k = 0; k < response.filterInfo.length; k++) {
-            let filterInfoIO = new FilterInfoIO();
-            filterInfoIO.logicalOperator = response.filterInfo[k].logicalOperator;
-            filterInfoIO.lhsType = response.filterInfo[k].operand[0].ref.type;
-            filterInfoIO.operator = response.filterInfo[k].operator;
-            filterInfoIO.rhsType = response.filterInfo[k].operand[1].ref.type;
-  
-            if (response.filterInfo[k].operand[0].ref.type == 'formula') {
-              filterInfoIO.lhsAttribute.uuid = response.filterInfo[k].operand[0].ref.uuid;
-              filterInfoIO.lhsAttribute.label = response.filterInfo[k].operand[0].ref.name;
-              dataQualityIO.isFormulaExits=true;
-            }
-  
-            else if (response.filterInfo[k].operand[0].ref.type == 'datapod') {
-              filterInfoIO.lhsAttribute.uuid = response.filterInfo[k].operand[0].ref.uuid;
-              filterInfoIO.lhsAttribute.label = response.filterInfo[k].operand[0].ref.name + "." + response.filterInfo[k].operand[0].attributeName;
-              filterInfoIO.lhsAttribute.attributeId = response.filterInfo[k].operand[0].attributeId;
-              dataQualityIO.isAttributeExits=true;
-            }
-  
-            else if (response.filterInfo[k].operand[0].ref.type == 'simple') {
-              dataQualityIO.isSimpleExits=true;
-  
-              let stringValue: String = response.filterInfo[k].operand[0].value;
-              let onlyNumbers = /^[0-9]+$/;
-              let result = onlyNumbers.test(stringValue.toString());
-              if (result == true) {
-                filterInfoIO.lhsType = 'integer';
+          if (response.filterInfo) {
+            for (let k = 0; k < response.filterInfo.length; k++) {
+              let filterInfoIO = new FilterInfoIO();
+              filterInfoIO.logicalOperator = response.filterInfo[k].logicalOperator;
+              filterInfoIO.lhsType = response.filterInfo[k].operand[0].ref.type;
+              filterInfoIO.operator = response.filterInfo[k].operator;
+              filterInfoIO.rhsType = response.filterInfo[k].operand[1].ref.type;
+
+              if (response.filterInfo[k].operand[0].ref.type == 'formula') {
+                filterInfoIO.lhsAttribute.uuid = response.filterInfo[k].operand[0].ref.uuid;
+                filterInfoIO.lhsAttribute.label = response.filterInfo[k].operand[0].ref.name;
+                dataQualityIO.isFormulaExits = true;
               }
-              else {
-                filterInfoIO.lhsType = 'string';
+
+              else if (response.filterInfo[k].operand[0].ref.type == 'datapod') {
+                filterInfoIO.lhsAttribute.uuid = response.filterInfo[k].operand[0].ref.uuid;
+                filterInfoIO.lhsAttribute.label = response.filterInfo[k].operand[0].ref.name + "." + response.filterInfo[k].operand[0].attributeName;
+                filterInfoIO.lhsAttribute.attributeId = response.filterInfo[k].operand[0].attributeId.toString();
+                dataQualityIO.isAttributeExits = true;
               }
-              filterInfoIO.lhsAttribute = response.filterInfo[k].operand[0].value;
-            }
-  
-  
-            if (response.filterInfo[k].operand[1].ref.type == 'formula') {
-              dataQualityIO.isFormulaExits=true;
-  
-              filterInfoIO.rhsAttribute = response.filterInfo[k].operand[1].ref.name;
-              filterInfoIO.rhsAttribute.uuid = response.filterInfo[k].operand[1].ref.uuid;
-              filterInfoIO.rhsAttribute.label = response.filterInfo[k].operand[1].ref.name;
-            }
-  
-            else if (response.filterInfo[k].operand[1].ref.type == 'datapod') {
-              dataQualityIO.isAttributeExits=true;
-              filterInfoIO.rhsAttribute.uuid = response.filterInfo[k].operand[1].ref.uuid;
-              filterInfoIO.rhsAttribute.label = response.filterInfo[k].operand[1].ref.name + "." + response.filterInfo[k].operand[1].attributeName;
-              filterInfoIO.rhsAttribute.attributeId = response.filterInfo[k].operand[1].attributeId;
-            }
-  
-            else if (response.filterInfo[k].operand[1].ref.type == 'paramlist') {
-              dataQualityIO.isParamlistExits=true;
-              filterInfoIO.rhsAttribute.uuid = response.filterInfo[k].operand[1].ref.uuid;
-              filterInfoIO.rhsAttribute.attributeId = response.filterInfo[k].operand[1].attributeId;
-              filterInfoIO.rhsAttribute.label = "app." + response.filterInfo[k].operand[1].attributeName;
-            }
-            else if (response.filterInfo[k].operand[1].ref.type == 'function') {
-              dataQualityIO.isFunctionExits=true;
-              filterInfoIO.rhsAttribute.uuid = response.filterInfo[k].operand[1].ref.uuid;
-              filterInfoIO.rhsAttribute.label = response.filterInfo[k].operand[1].ref.name;
-            }
-            else if (response.filterInfo[k].operand[1].ref.type == 'dataset') {
-              dataQualityIO.isDatasetExits=true;
-              filterInfoIO.rhsAttribute.uuid = response.filterInfo[k].operand[1].ref.uuid;
-              filterInfoIO.rhsAttribute.attributeId = response.filterInfo[k].operand[1].attributeId;
-              filterInfoIO.rhsAttribute.label = response.filterInfo[k].operand[1].attributeName;
-            }
-  
-            else if (response.filterInfo[k].operand[1].ref.type == 'simple') {
-              let stringValue = response.filterInfo[k].operand[1].value;
-              let onlyNumbers = /^[0-9]+$/;
-              let result = onlyNumbers.test(stringValue.toString());
-              if (result == true) {
-                filterInfoIO.rhsType = 'integer';
-              } else {
-                filterInfoIO.rhsType = 'string';
+
+              else if (response.filterInfo[k].operand[0].ref.type == 'simple') {
+                dataQualityIO.isSimpleExits = true;
+
+                let stringValue: String = response.filterInfo[k].operand[0].value;
+                let onlyNumbers = /^[0-9]+$/;
+                let result = onlyNumbers.test(stringValue.toString());
+                if (result == true) {
+                  filterInfoIO.lhsType = 'integer';
+                }
+                else {
+                  filterInfoIO.lhsType = 'string';
+                }
+                filterInfoIO.lhsAttribute = response.filterInfo[k].operand[0].value;
               }
-              filterInfoIO.rhsAttribute = response.filterInfo[k].operand[1].value;
-  
-              let result2 = stringValue.includes("and")
-              if (result2 == true) {
-                filterInfoIO.rhsType = 'integer';
-                let betweenValArray = []
-                betweenValArray = stringValue.split("and");
-                filterInfoIO.rhsAttribute1 = betweenValArray[0];
-                filterInfoIO.rhsAttribute2 = betweenValArray[1];
+
+
+              if (response.filterInfo[k].operand[1].ref.type == 'formula') {
+                dataQualityIO.isFormulaExits = true;
+                filterInfoIO.rhsAttribute = response.filterInfo[k].operand[1].ref.name;
+                filterInfoIO.rhsAttribute.uuid = response.filterInfo[k].operand[1].ref.uuid;
+                filterInfoIO.rhsAttribute.label = response.filterInfo[k].operand[1].ref.name;
               }
+              else if (response.filterInfo[k].operand[1].ref.type == 'datapod') {
+                dataQualityIO.isAttributeExits = true;
+                filterInfoIO.rhsAttribute.uuid = response.filterInfo[k].operand[1].ref.uuid;
+                filterInfoIO.rhsAttribute.label = response.filterInfo[k].operand[1].ref.name + "." + response.filterInfo[k].operand[1].attributeName;
+                filterInfoIO.rhsAttribute.attributeId = response.filterInfo[k].operand[1].attributeId.toString();
+              }
+              else if (response.filterInfo[k].operand[1].ref.type == 'paramlist') {
+                dataQualityIO.isParamlistExits = true;
+                filterInfoIO.rhsAttribute.uuid = response.filterInfo[k].operand[1].ref.uuid;
+                filterInfoIO.rhsAttribute.attributeId = response.filterInfo[k].operand[1].attributeId;
+                filterInfoIO.rhsAttribute.label = "app." + response.filterInfo[k].operand[1].attributeName;
+              }
+              else if (response.filterInfo[k].operand[1].ref.type == 'function') {
+                dataQualityIO.isFunctionExits = true;
+                filterInfoIO.rhsAttribute.uuid = response.filterInfo[k].operand[1].ref.uuid;
+                filterInfoIO.rhsAttribute.label = response.filterInfo[k].operand[1].ref.name;
+              }
+              else if (response.filterInfo[k].operand[1].ref.type == 'dataset') {
+                dataQualityIO.isDatasetExits = true;
+                filterInfoIO.rhsAttribute.uuid = response.filterInfo[k].operand[1].ref.uuid;
+                filterInfoIO.rhsAttribute.attributeId = response.filterInfo[k].operand[1].attributeId;
+                filterInfoIO.rhsAttribute.label = response.filterInfo[k].operand[1].attributeName;
+              }
+              else if (response.filterInfo[k].operand[1].ref.type == 'simple') {
+                let stringValue = response.filterInfo[k].operand[1].value;
+                let onlyNumbers = /^[0-9]+$/;
+                let result = onlyNumbers.test(stringValue.toString());
+                if (result == true) {
+                  filterInfoIO.rhsType = 'integer';
+                } else {
+                  filterInfoIO.rhsType = 'string';
+                }
+                filterInfoIO.rhsAttribute = response.filterInfo[k].operand[1].value;
+
+                let result2 = stringValue.includes("and")
+                if (result2 == true) {
+                  filterInfoIO.rhsType = 'integer';
+                  let betweenValArray = []
+                  betweenValArray = stringValue.split("and");
+                  filterInfoIO.rhsAttribute1 = betweenValArray[0];
+                  filterInfoIO.rhsAttribute2 = betweenValArray[1];
+                }
+              }
+              filterInfoIOArray[k] = filterInfoIO;
+              dataQualityIO.filterInfoIo = filterInfoIOArray;
             }
-            filterInfoIOArray[k] = filterInfoIO;
-            dataQualityIO.filterInfoIo = filterInfoIOArray;
-          }
           }
           console.log(dataQualityIO);
           return <any>dataQualityIO;
