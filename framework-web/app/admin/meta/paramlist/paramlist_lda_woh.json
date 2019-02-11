@@ -1,12 +1,11 @@
 {
 	"params": [
-		
 		{
-			"paramId": 1,
-			"paramName": "maxIter",
+			"paramId": 0,
+			"paramName": "k",
 			"paramType": "integer",
-    	    "paramDispName" : "Max Iter",
-    	    "paramDesc" : "",
+  		    "paramDispName" : "K",
+ 		    "paramDesc" : "",	
 			"paramValue": {
 				"ref" : {
 				    "type" : "simple"
@@ -15,23 +14,62 @@
 			    }
 		},
 		{
-			"paramId": 4,
-			"paramName": "tol",
+			"paramId": 1,
+			"paramName": "learningDecay",
 			"paramType": "double",
-    	    "paramDispName" : "Tol",
-    	    "paramDesc" : "",
+  		    "paramDispName" : "Learning Decay",
+ 		    "paramDesc" : "",	
 			"paramValue": {
 				"ref" : {
 				    "type" : "simple"
 				},
 				"value" : "10"
 			    }
+		},
+		{
+			"paramId": 2,
+			"paramName": "learningOffset",
+			"paramType": "double",
+  		    "paramDispName" : "Learning Offset",
+ 		    "paramDesc" : "",	
+			"paramValue": {
+				"ref" : {
+				    "type" : "simple"
+				},
+				"value" : "12"
+			    }
+		},
+		{
+			"paramId": 3,
+			"paramName": "maxIter",
+			"paramType": "integer",
+  		    "paramDispName" : "Max Iter",
+ 		    "paramDesc" : "",	
+			"paramValue": {
+				"ref" : {
+				    "type" : "simple"
+				},
+				"value" : "4"
+			    }
+		},
+		{
+			"paramId": 4,
+			"paramName": "seed",
+			"paramType": "long",
+  		    "paramDispName" : "Seed",
+ 		    "paramDesc" : "",	
+			"paramValue": {
+				"ref" : {
+				    "type" : "simple"
+				},
+				"value" : "1314"
+			    }
 		}
 	],
-	"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a83",
+	"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a85",
 	"version": "1495146809",
-	"name": "paramlist_aft-survival_regression_WoH",
-	"desc": "AFTSurvivalRegression Param List",
+	"name": "paramlist_lda_woh",
+	"desc": "LDA Param List",
 	"createdBy": {
 		"ref": {
 			"type": "user",
@@ -45,7 +83,7 @@
 	],
 	"active" : "Y",
   "locked" : "N",
-	"published": "N",
+	"published": "N",	
     "paramListType" : "model",
     "templateFlg" : "Y",
     "templateInfo" : null,

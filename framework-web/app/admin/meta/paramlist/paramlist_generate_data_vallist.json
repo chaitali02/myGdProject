@@ -1,7 +1,7 @@
 {
     "uuid" : "dae183bc-0f49-455a-8e25-ce6f015777f9",
     "version" : "1525519035",
-    "name" : "paramlist_generate_data_valList",
+    "name" : "paramlist_generate_data_vallist",
     "desc" : "Generate Data Value List Paramlist",
     "createdBy" : {
         "ref" : {
