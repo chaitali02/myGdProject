@@ -67,7 +67,7 @@
 		create-session="never" pattern="/*"
 		entry-point-ref="restAuthenticationEntryPoint">
 		<security:csrf disabled="true" />
-		<security:custom-filter ref="apiLogFilter"
+		<security:custom-filter ref="sessionValidateFilter"
 		after="FIRST"/>
 	</security:http>
 	
@@ -170,8 +170,8 @@
 		class="com.inferyx.framework.security.UserActivityPrivilegeFilter">
 	</beans:bean>
 	
-	 <beans:bean id="apiLogFilter"
-		class="com.inferyx.framework.security.ApiLogFilter">
+	 <beans:bean id="sessionValidateFilter"
+		class="com.inferyx.framework.security.SessionValidateFilter">
 	</beans:bean>
 	
 	<beans:bean

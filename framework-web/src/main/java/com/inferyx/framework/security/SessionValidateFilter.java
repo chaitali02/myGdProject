@@ -35,7 +35,7 @@ import com.inferyx.framework.service.MessageServiceImpl;
 import com.inferyx.framework.service.MessageStatus;
 import com.inferyx.framework.service.SessionServiceImpl;
 
-public class ApiLogFilter extends GenericFilterBean {
+public class SessionValidateFilter extends GenericFilterBean {
 	
 	@Autowired
 	LogServiceImpl logServiceImpl;
@@ -46,7 +46,7 @@ public class ApiLogFilter extends GenericFilterBean {
 	@Autowired
 	MessageServiceImpl messageServiceImpl;
 	
-	static final Logger logger = Logger.getLogger(ApiLogFilter.class);
+	static final Logger logger = Logger.getLogger(SessionValidateFilter.class);
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException { 
