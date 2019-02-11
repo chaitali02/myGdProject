@@ -4249,25 +4249,16 @@ public class ModelServiceImpl {
 	}
 
 	public Algorithm getAlgorithmByModel(String modelUuid, String modelVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		String appUuid = commonServiceImpl.getApp().getUuid();		
-		MatchOperation uuidFilter = match(new Criteria("uuid").is(modelUuid));
-		MatchOperation appFilter = match(new Criteria("appInfo.ref.uuid").is(appUuid));
-		MatchOperation activeFilter = match(new Criteria("active").is("Y"));
-		
-		GroupOperation groupBy = group("uuid").max("version").as("version");
-		SortOperation sortByVersion = sort(new Sort(Direction.DESC, "version"));
-		LimitOperation limitToOnlyFirstDoc = limit(1);
-		
-		Aggregation aggregation = newAggregation(uuidFilter, activeFilter, appFilter, groupBy, sortByVersion, limitToOnlyFirstDoc);		
-		
-		AggregationResults<Algorithm> aggregationResults = mongoTemplate.aggregate(aggregation, MetaType.algorithm.toString().toLowerCase(), Algorithm.class);
-		Algorithm algorithm = aggregationResults.getUniqueMappedResult();
-		
-		if(algorithm != null) {			
-			return (Algorithm) commonServiceImpl.getOneByUuidAndVersion(algorithm.getId()
-						, algorithm.getVersion()
-						, MetaType.algorithm.toString()
-						, "N");
+		Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(modelUuid
+				, modelVersion
+				, MetaType.model.toString()
+				, "N");			
+		MetaIdentifier dependsOnMI = model.getDependsOn().getRef();
+		if(dependsOnMI.getType().equals(MetaType.algorithm)) {
+			return (Algorithm) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid()
+					, dependsOnMI.getVersion()
+					, dependsOnMI.getType().toString()
+					, "N");
 		} else {
 			return null;
 		}
