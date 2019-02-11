@@ -2,23 +2,10 @@
 	"params": [
 		{
 			"paramId": 0,
-			"paramName": "k",
+			"paramName": "maxBins",
 			"paramType": "integer",
-            "paramDispName" : "K",
-            "paramDesc" : "",	
-			"paramValue": {
-				"ref" : {
-				    "type" : "simple"
-				},
-				"value" : "2"
-			    }
-		},
-		{
-			"paramId": 1,
-			"paramName": "maxIter",
-			"paramType": "integer",
-            "paramDispName" : "Max Iter",
-            "paramDesc" : "",	
+   	     	"paramDispName" : "Max Bins",
+            "paramDesc" : "",			
 			"paramValue": {
 				"ref" : {
 				    "type" : "simple"
@@ -27,11 +14,11 @@
 			    }
 		},
 		{
-			"paramId": 3,
-			"paramName": "seed",
-			"paramType": "long",
-            "paramDispName" : "Seed",
-            "paramDesc" : "",	
+			"paramId": 1,
+			"paramName": "maxDepth",
+			"paramType": "integer",
+   	     	"paramDispName" : "Max Depth",
+            "paramDesc" : "",		
 			"paramValue": {
 				"ref" : {
 				    "type" : "simple"
@@ -41,22 +28,22 @@
 		},
 		{
 			"paramId": 4,
-			"paramName": "tol",
-			"paramType": "double",
-            "paramDispName" : "Tol",
-            "paramDesc" : "",	
+			"paramName": "maxMemoryInMB",
+			"paramType": "integer",
+   	     	"paramDispName" : "Max MemoryInMB",
+            "paramDesc" : "",		
 			"paramValue": {
 				"ref" : {
 				    "type" : "simple"
 				},
-				"value" : "10"
+				"value" : "100"
 			    }
 		}
 	],
-	"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a79",
+	"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a84",
 	"version": "1495146809",
-	"name": "paramlist_kmeans_WoH",
-	"desc": "K-Means Param List",
+	"name": "paramlist_decision_tree_classifier_woh",
+	"desc": "DecisionTreeClassifier Param List",
 	"createdBy": {
 		"ref": {
 			"type": "user",
@@ -70,7 +57,7 @@
 	],
 	"active" : "Y",
   "locked" : "N",
-	"published": "N",	
+	"published": "N",
     "paramListType" : "model",
     "templateFlg" : "Y",
     "templateInfo" : null,

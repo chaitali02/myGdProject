@@ -1,7 +1,7 @@
 {
-  "uuid": "53b44d5b-6571-4c46-af08-549b1445d056",
-  "version": "1531146610",
-  "name": "paramlist_LDA_WH",
+  "uuid": "a82581f7-3818-40bb-a98d-3b518b755e0b",
+  "version": "1530887155",
+  "name": "paramlist_random_forest_wh",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -9,12 +9,12 @@
       "uuid": "d04716df-e96a-419f-9118-c81342b47f86"
     }
   },
-  "createdOn": "Mon Jul 09 20:00:10 IST 2018",
+    "createdOn" : ISODate("2018-06-11T12:47:30.806Z"),
   "tags": [],
   "active" : "Y",
   "locked" : "N",
   "published": "N",
-  	"appInfo" : [ 
+	"appInfo" : [ 
         {
             "ref" : {
                 "type" : "application",
@@ -62,61 +62,74 @@
   "params": [
     {
       "paramId": "0",
-      "paramName": "k",
+      "paramName": "numTrees",
       "paramType": "list",
-      "paramDispName" : "K",
+   	  "paramDispName" : "Num Trees",
       "paramDesc" : "",	
       "paramValue": {
         "ref": {
           "type": "simple"
         },
-        "value": "10, 15, 20"
+        "value": "15, 20, 30"
       }
     },
     {
       "paramId": "1",
-      "paramName": "learningDecay",
+      "paramName": "maxDepth",
       "paramType": "list",
-      "paramDispName" : "Learning Decay",
+   	  "paramDispName" : "Max Depth",
       "paramDesc" : "",	
       "paramValue": {
         "ref": {
           "type": "simple"
         },
-        "value": "0.5, 0.8, 1.0"
+        "value": "5, 8, 10"
       }
     },
     {
       "paramId": "2",
-      "paramName": "Learning Offset",
+      "paramName": "minInstancesPerNode",
       "paramType": "list",
-      "paramDispName" : "Tol",
+   	  "paramDispName" : "Min Instances PerNode",
       "paramDesc" : "",	
       "paramValue": {
         "ref": {
           "type": "simple"
         },
-        "value": "1024.0, 1500.0, 950.0"
+        "value": "1, 2, 3"
       }
     },
     {
       "paramId": "3",
-      "paramName": "seed",
+      "paramName": "maxBins",
       "paramType": "list",
-      "paramDispName" : "Seed",
+   	  "paramDispName" : "Max Bins",
       "paramDesc" : "",	
       "paramValue": {
         "ref": {
           "type": "simple"
         },
-        "value": "1435876747, 1000, 100000"
+        "value": "32, 35, 38"
       }
     },
     {
       "paramId": "4",
+      "paramName": "seed",
+      "paramType": "list",
+   	  "paramDispName" : "Seed",
+      "paramDesc" : "",	
+      "paramValue": {
+        "ref": {
+          "type": "simple"
+        },
+        "value": "159147643, 1000, 100000"
+      }
+    },
+    {
+      "paramId": "5",
       "paramName": "numFolds",
       "paramType": "integer",
-      "paramDispName" : "Num Folds",
+   	  "paramDispName" : "Num Folds",
       "paramDesc" : "",	
       "paramValue": {
         "ref": {

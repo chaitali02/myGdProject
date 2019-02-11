@@ -1,7 +1,7 @@
 {
-  "uuid": "67773bc7-6db5-4598-a288-c8d33d7e8c52",
-  "version": "1530964625",
-  "name": "KMeans_Clustering_WH",
+  "uuid": "60a4e9d8-1f96-431e-9560-d78c5963db07",
+  "version": "1530956592",
+  "name": "paramlist_decision_tree_classifier_wh",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -9,12 +9,12 @@
       "uuid": "d04716df-e96a-419f-9118-c81342b47f86"
     }
   },
-  "createdOn": "Sat Jul 07 17:27:05 IST 2018",
+  "createdOn": "Sat Jul 07 15:13:12 IST 2018",
   "tags": [],
   "active" : "Y",
   "locked" : "N",
   "published": "N",
- 	"appInfo" : [ 
+  	"appInfo" : [ 
         {
             "ref" : {
                 "type" : "application",
@@ -62,23 +62,23 @@
   "params": [
     {
       "paramId": "0",
-      "paramName": "kMeans",
+      "paramName": "minInfoGain",
       "paramType": "list",
-      "paramDispName" : "K Means",
-      "paramDesc" : "",	
+      "paramDispName" : "Min InfoGain",
+      "paramDesc" : "",
       "paramValue": {
         "ref": {
           "type": "simple"
         },
-        "value": "2, 5, 10"
+        "value": "0.0, 0.5, 1.0"
       }
     },
     {
       "paramId": "1",
-      "paramName": "initSteps",
+      "paramName": "maxDepth",
       "paramType": "list",
-      "paramDispName" : "Init Steps",
-      "paramDesc" : "",	
+      "paramDispName" : "Max Depth",
+      "paramDesc" : "",
       "paramValue": {
         "ref": {
           "type": "simple"
@@ -88,23 +88,49 @@
     },
     {
       "paramId": "2",
-      "paramName": "seed",
+      "paramName": "minInstancesPerNode",
       "paramType": "list",
-      "paramDispName" : "Seed",
-      "paramDesc" : "",	
+      "paramDispName" : "Min InstancesPerNode",
+      "paramDesc" : "",
       "paramValue": {
         "ref": {
           "type": "simple"
         },
-        "value": "-1689246527, -1000, 100000"
+        "value": "1, 2, 3"
       }
     },
     {
       "paramId": "3",
+      "paramName": "maxBins",
+      "paramType": "list",
+      "paramDispName" : "Max Bins",
+      "paramDesc" : "",
+      "paramValue": {
+        "ref": {
+          "type": "simple"
+        },
+        "value": "32, 35, 38"
+      }
+    },
+    {
+      "paramId": "4",
+      "paramName": "seed",
+      "paramType": "list",
+      "paramDispName" : "Seed",
+      "paramDesc" : "",
+      "paramValue": {
+        "ref": {
+          "type": "simple"
+        },
+        "value": "159147643, 1000, 100000"
+      }
+    },
+    {
+      "paramId": "5",
       "paramName": "numFolds",
       "paramType": "integer",
       "paramDispName" : "Num Folds",
-      "paramDesc" : "",	
+      "paramDesc" : "",
       "paramValue": {
         "ref": {
           "type": "simple"
