@@ -1459,3 +1459,7 @@ transition: right 1m
     margin-bottom: -200px;
     pointer-events: none;
    }
+
+   tags-input .tags .tag-item{
+    background: #e0e0e0 !important;
+   }
