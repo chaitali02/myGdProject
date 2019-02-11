@@ -1,24 +1,27 @@
-import {MetaIdentifierHolder} from './domain.metaIdentifierHolder';
-import {AttributeRefHolder} from './domain.attributeRefHolder';
+import { MetaIdentifierHolder } from './domain.metaIdentifierHolder';
+import { AttributeRefHolder } from './domain.attributeRefHolder';
 
-import {BaseEntity} from './domain.baseEntity';
+import { BaseEntity } from './domain.baseEntity';
+import { FilterInfo } from './domain.filterInfo';
 
-export class DataQuality extends BaseEntity{
+export class DataQuality extends BaseEntity {
 
-    private target : MetaIdentifierHolder ;	
-	private attribute : AttributeRefHolder ;	
-	private dependsOn : MetaIdentifierHolder ;	
-	private duplicateKeyCheck : String;
-	private nullCheck :String;
-	private valueCheck :String;
-	private rangeCheck : {};
-	private dataTypeCheck : String;
-	private dateFormatCheck : String;
-	private customFormatCheck : String;
-	private lengthCheck : {};
-	private refIntegrityCheck : AttributeRefHolder;	
-	//private String stdDevCheck;
-	private filterInfo : AttributeRefHolder;
-	private userInfo : MetaIdentifierHolder[];
-	
+	attribute: AttributeRefHolder;
+	private dependsOn: MetaIdentifierHolder;
+	private duplicateKeyCheck: String;
+	private nullCheck: String;
+	private valueCheck: String;
+	private rangeCheck: {};
+	private lengthCheck: {};
+	private refIntegrityCheck: AttributeRefHolder;
+
+	filterInfo: Array<FilterInfo>;
+
+	// private target : MetaIdentifierHolder ;		
+	// private dataTypeCheck : String;
+	// private dateFormatCheck : String;
+	// private customFormatCheck : String;
+	// //private String stdDevCheck;
+	// private userInfo : MetaIdentifierHolder[];
+
 }

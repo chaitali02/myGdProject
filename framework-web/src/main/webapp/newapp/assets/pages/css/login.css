@@ -15,12 +15,10 @@ body{
   padding: 15px;
   text-align: center; }
 
-
 .logo-default{
 	font-family:timeburnernormal;
 	font-size: 26px;
     color: white;
-
 }
 
 .login .content {
@@ -142,19 +140,15 @@ body{
 
 /* jitender */
 .block{
-
 	 display: block;
 }
 
 .login .content .form-actions .btn-default {
-
-
   font-weight: 600;
   padding: 10px 25px !important;
   color: #6c7a8d;
   background-color: #ffffff;
   border: none;
-
   }
 
 .login .content .form-actions .btn-default:hover {
@@ -169,8 +163,7 @@ body{
   /*jitender*/
   margin-bottom: 10px;
   color: darkgray;
-
-   }
+  }
 
 .login .content .check {
   color: #8290a3; }
@@ -190,7 +183,8 @@ body{
   -o-border-radius: 0 0 7px 7px;
   border-radius: 0 0 7px 7px; }
   .login .content .create-account > p {
-    margin: 0; }
+    margin: 0; 
+  }
 
 .login .content .create-account p a {
   font-weight: 600;
@@ -228,3 +222,7 @@ body{
     padding-top: 3px; }
   .login .checkbox {
     font-size: 13px; } }
+
+  .loginBtn{
+    display: block !important;
+  }

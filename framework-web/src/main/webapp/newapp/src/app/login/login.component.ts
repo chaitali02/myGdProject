@@ -1,10 +1,12 @@
-import { Component, ViewEncapsulation } from '@angular/core';
-import { Http, Headers, RequestOptions, Response } from '@angular/http';
+import { Component } from '@angular/core';
+import { Http } from '@angular/http';
 import { Router } from '@angular/router';
 
+import { CookieService } from 'ngx-cookie-service';
 import { LoginService } from '../login/login.service';
 
 import { LoginStatus } from '../metadata/domain/domain.loginStatus';
+
 @Component({
   selector: 'app-login',
   styleUrls: [],
@@ -13,15 +15,18 @@ import { LoginStatus } from '../metadata/domain/domain.loginStatus';
 export class LoginComponent {
   error: any;
   loginResponse: LoginStatus;
-  constructor(private http: Http, private _service: LoginService, public router: Router) {
-    //this.getLocalStorage();
+  remember: boolean;
+  username: any;
+
+  constructor(private http: Http, private _service: LoginService, public router: Router, private cookieService: CookieService) {
+    this.getLocalStorage();
   }
 
-  getLocalStorage(){debugger
-    let data = localStorage.getItem('userDetail');
+  getLocalStorage() {
+    this.username = this.cookieService.get('userName');
   }
 
-  onSubmit(event: any, username:any, password: any) {
+  onSubmit(event: any, username: any, password: any) {
     this._service.getValidateUser(username, password).subscribe(
       response => { this.onSuccessgetValidateUser(response) },
       error => { console.log("Error::", error) }
@@ -32,13 +37,20 @@ export class LoginComponent {
     this.loginResponse = JSON.parse(response._body);
     let result = JSON.stringify(this.loginResponse);
     if (this.loginResponse.status == "true") {
-      // if(){
-         localStorage.setItem('userDetail', result);
-      // }
+      localStorage.setItem('userDetail', result);
       this.router.navigate(['app']);
     }
     else {
       this.error = this.loginResponse.message;
+    }
+  }
+
+  rememberMe() {
+    if (this.remember == true) {
+      this.cookieService.set('userName', this.username);
+    }
+    else if (this.remember == false) {
+      this.cookieService.set('userName', '');
     }
   }
 }

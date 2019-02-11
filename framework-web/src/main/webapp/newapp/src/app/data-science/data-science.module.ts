@@ -10,7 +10,6 @@ import { MessagesModule, MessageModule, ChipsModule } from 'primeng/primeng';
 import { CheckboxModule, DataTableModule} from 'primeng/primeng';
 import { UiSwitchModule } from 'ngx-ui-switch';
 import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown/angular2-multiselect-dropdown';
-import { NgBootstrapFormValidationModule } from 'ng-bootstrap-form-validation';
 
 import { MetaDataDataPodService } from '../data-preparation/datapod/datapod.service';
 
@@ -70,7 +69,6 @@ import { ParamlistService } from '../metadata/services/paramlist.service';
         MenuModule,
         ChipsModule,
         TooltipModule,
-        NgBootstrapFormValidationModule,
         UiSwitchModule.forRoot({
             size: 'medium',
             color: '#15C5D5',

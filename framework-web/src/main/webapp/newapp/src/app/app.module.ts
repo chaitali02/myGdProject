@@ -6,10 +6,9 @@ import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { routing } from './app.routes';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { TooltipModule } from 'primeng/primeng';
 import { UiSwitchModule } from 'ngx-ui-switch';
-import { NgBootstrapFormValidationModule } from 'ng-bootstrap-form-validation';
-
+import { TooltipModule } from 'primeng/primeng';
+import { CookieService } from 'ngx-cookie-service';
 
 import { ProjectSharedModule } from './shared/module/shared.module';
 
@@ -22,7 +21,9 @@ import { AppConfig } from './app.config';
 import { AppMetadata } from './app.metadata';
 import { AppHelper } from './app.helper';
 
+
 const APP_PROVIDERS = [AppConfig, AppMetadata, AppHelper];
+
 
 @NgModule({
   declarations: [
@@ -38,7 +39,6 @@ const APP_PROVIDERS = [AppConfig, AppMetadata, AppHelper];
     BrowserAnimationsModule,
     ProjectSharedModule.forRoot(),
     TooltipModule,
-    NgBootstrapFormValidationModule.forRoot(),
 
     UiSwitchModule.forRoot({
       size: 'small',
@@ -55,7 +55,8 @@ const APP_PROVIDERS = [AppConfig, AppMetadata, AppHelper];
     APP_PROVIDERS,
     DatePipe,
     LoginService,
-    SharedService
+    SharedService,
+    CookieService
   ],
   bootstrap: [AppComponent]
 })

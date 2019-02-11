@@ -20,5 +20,4 @@ export class LoginService {
   private handleError(error: Response) {
     return Observable.throw(error.statusText);
   }
-
 }
