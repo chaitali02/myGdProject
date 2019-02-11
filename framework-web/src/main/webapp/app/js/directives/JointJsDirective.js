@@ -1822,7 +1822,10 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                  var item=element.childMenu[i]
                  if(dagMetaDataService.elementDefs[item].allowInChildMenu ==true){
                    var childitem={};
-                   childitem.title=dagMetaDataService.elementDefs[item].childIconCaption;
+                   if(typeof dagMetaDataService.elementDefs[item].OperatorType == "undefined")
+                    childitem.title=dagMetaDataService.elementDefs[item].childIconCaption;
+                  else 
+                   childitem.title=dagMetaDataService.elementDefs[item].OperatorType
                    childitem.id =dagMetaDataService.elementDefs[item].name + '-add';
                    childitem.type =dagMetaDataService.elementDefs[item].name;
                    childitem.menutype ="child";
@@ -2121,6 +2124,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
      }
 
      var dblClickFn = function(e,newCell,elemt) {
+
        $scope.isModelDisable=$scope.editMode==false?true:false
       //  if(!$scope.editMode || $scope.isTemplate){
       //    return;
@@ -2189,7 +2193,8 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         });
       }
       else if(elementType =="operator" && newCell){
-        var type =elemt.title
+        var type =elemt.title;
+        debugger
         CommonService.getOperatorByOperatorType(type.replace(/ /g,'')).then(function(response){
           if(!response || !response.data){
             $scope.operatorinfoMapInfo = [];
@@ -3241,7 +3246,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
 
      
       $scope.getExecParamList=function(data){
-      
+       
         $scope.attributeTypes=['datapod','dataset','rule'];
         CommonService.getParamListByType(data.type,data.uuid,data.version).then(function (response) {
           onSuccessGetExecuteModel(response.data)
@@ -3271,7 +3276,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                 paramList.paramName=paramListInfo[i].paramName;
                 paramList.ref=paramListInfo[i].ref;      
                 if(paramListInfo[i].paramValue && paramListInfo[i].paramValue.ref.type =='distribution' ||
-                paramListInfo[i].paramValue && paramListInfo[i].paramValue.ref.type =='datapod'){
+                paramListInfo[i].paramValue && paramListInfo[i].paramValue.ref.type =='datapod'|| paramListInfo[i].paramValue && paramListInfo[i].paramValue.ref.type =='dataset' || paramListInfo[i].paramValue && paramListInfo[i].paramValue.ref.type =='rule'){
                 var paramValue={}
                 var selectedParamValue={};
                 selectedParamValue.type=paramListInfo[i].paramValue.ref.type;
