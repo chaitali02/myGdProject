@@ -121,5 +121,16 @@ public class UDFRegister implements java.io.Serializable {
 			}
 		}, DataTypes.DoubleType);
 		
+		sparkSession.udf().register("nanif", new UDF2<Double, Double, Double>() {
+
+			@Override
+			public Double call(Double t1, Double t2) throws Exception {
+				if (t1 == null || t1.isNaN() || t1.isInfinite()) {
+					return t2;
+				}
+				return t1;
+			}
+		}, DataTypes.DoubleType);
+		
 	}
 }
