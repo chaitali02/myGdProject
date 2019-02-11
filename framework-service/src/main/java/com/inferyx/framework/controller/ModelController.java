@@ -37,6 +37,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.connector.RConnector;
+import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.DeployExec;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaType;
@@ -564,5 +565,14 @@ public class ModelController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
 		return modelServiceImpl.getTrainByTrainExec(trainExecUuid, trainExecVersion);
+	}
+	
+	@RequestMapping(value = "getAlgorithmByModel", method = RequestMethod.GET)
+	public Algorithm getAlgorithmByModel(
+			@RequestParam(value = "uuid") String modelUuid,
+			@RequestParam(value = "version", required = false) String modelVersion,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		return modelServiceImpl.getAlgorithmByModel(modelUuid, modelVersion);
 	}
 }

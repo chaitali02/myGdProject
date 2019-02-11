@@ -1,20 +1,25 @@
 {
-  "uuid": "a82581f7-3818-40bb-a98d-3b518b755e0b",
-  "version": "1530887155",
-  "name": "paramlist_Random_Forest_WH",
-  "desc": null,
+  "uuid": "2b6f8552-f5ce-428b-b7eb-32b05a589729",
+  "version": "1519980881",
+  "name": "paramlist_randomforest_classifier_woh",
+  "desc": "RandomForestClassifier Param LIst",
   "createdBy": {
     "ref": {
       "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86"
-    }
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196"
+    },
+    "value": null
   },
-    "createdOn" : ISODate("2018-06-11T12:47:30.806Z"),
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
   "tags": [],
   "active" : "Y",
   "locked" : "N",
   "published": "N",
-	"appInfo" : [ 
+  "paramListType" : "model",
+    "templateFlg" : "Y",
+    "templateInfo" : null,
+  	"appInfo" : [ 
         {
             "ref" : {
                 "type" : "application",
@@ -62,84 +67,43 @@
   "params": [
     {
       "paramId": "0",
-      "paramName": "numTrees",
-      "paramType": "list",
-   	  "paramDispName" : "Num Trees",
+      "paramName": "maxBins",
+      "paramType": "integer",
+   	  "paramDispName" : "Max Bins",
       "paramDesc" : "",	
       "paramValue": {
-        "ref": {
-          "type": "simple"
+        "ref" : {
+            "type" : "simple"
         },
-        "value": "15, 20, 30"
-      }
+	"value" : "10"
+    }
     },
     {
       "paramId": "1",
       "paramName": "maxDepth",
-      "paramType": "list",
+      "paramType": "integer",
    	  "paramDispName" : "Max Depth",
       "paramDesc" : "",	
       "paramValue": {
-        "ref": {
-          "type": "simple"
+        "ref" : {
+            "type" : "simple"
         },
-        "value": "5, 8, 10"
-      }
+	"value" : "10"
+    }
     },
-    {
-      "paramId": "2",
-      "paramName": "minInstancesPerNode",
-      "paramType": "list",
-   	  "paramDispName" : "Min Instances PerNode",
-      "paramDesc" : "",	
-      "paramValue": {
-        "ref": {
-          "type": "simple"
-        },
-        "value": "1, 2, 3"
-      }
-    },
-    {
-      "paramId": "3",
-      "paramName": "maxBins",
-      "paramType": "list",
-   	  "paramDispName" : "Max Bins",
-      "paramDesc" : "",	
-      "paramValue": {
-        "ref": {
-          "type": "simple"
-        },
-        "value": "32, 35, 38"
-      }
-    },
+    
     {
       "paramId": "4",
-      "paramName": "seed",
-      "paramType": "list",
-   	  "paramDispName" : "Seed",
-      "paramDesc" : "",	
-      "paramValue": {
-        "ref": {
-          "type": "simple"
-        },
-        "value": "159147643, 1000, 100000"
-      }
-    },
-    {
-      "paramId": "5",
-      "paramName": "numFolds",
+      "paramName": "maxMemoryInMB",
       "paramType": "integer",
-   	  "paramDispName" : "Num Folds",
+   	  "paramDispName" : "Max MemoryInMB",
       "paramDesc" : "",	
       "paramValue": {
-        "ref": {
-          "type": "simple"
+        "ref" : {
+            "type" : "simple"
         },
-        "value": "3"
-      }
+	"value" : "100"
     }
-  ],
-  "paramListType": "model",
-    "templateFlg" : "Y",
-    "templateInfo" : null
+    }
+  ]
 }

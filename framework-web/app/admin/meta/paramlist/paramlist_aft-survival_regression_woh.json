@@ -1,25 +1,55 @@
 {
-  "uuid": "daee0212-af6e-4b76-ae0b-73c78b0e9e38",
-  "version": "1520009572",
-  "name": "paramlist_linear_svm_classifier_WoH",
-  "desc": "LinearSupportVectorMachine Param List",
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196"
-    },
-    "value": null
-  },
+	"params": [
+		
+		{
+			"paramId": 1,
+			"paramName": "maxIter",
+			"paramType": "integer",
+    	    "paramDispName" : "Max Iter",
+    	    "paramDesc" : "",
+			"paramValue": {
+				"ref" : {
+				    "type" : "simple"
+				},
+				"value" : "10"
+			    }
+		},
+		{
+			"paramId": 4,
+			"paramName": "tol",
+			"paramType": "double",
+    	    "paramDispName" : "Tol",
+    	    "paramDesc" : "",
+			"paramValue": {
+				"ref" : {
+				    "type" : "simple"
+				},
+				"value" : "10"
+			    }
+		}
+	],
+	"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a83",
+	"version": "1495146809",
+	"name": "paramlist_aft-survival_regression_woh",
+	"desc": "AFTSurvivalRegression Param List",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+		}
+	},
 	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-  "tags": [],
-  "active" : "Y",
+	"tags": [
+		"DEV",
+		"0.1.0"
+	],
+	"active" : "Y",
   "locked" : "N",
-  "published": "N",
-  "paramListType" : "model",
+	"published": "N",
+    "paramListType" : "model",
     "templateFlg" : "Y",
     "templateInfo" : null,
- 	"appInfo" : [ 
+		"appInfo" : [ 
         {
             "ref" : {
                 "type" : "application",
@@ -63,33 +93,5 @@
  		"uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbyog"
             }
         }
-    ],
-  "params": [
-    {
-      "paramId": "0",
-      "paramName": "maxIter",
-      "paramType": "integer",
-  	  "paramDispName" : "Max Iter",
-      "paramDesc" : "",	
-      "paramValue": {
-        "ref" : {
-            "type" : "simple"
-        },
-	"value" : "10"
-    }
-    },
-    {
-      "paramId": "1",
-      "paramName": "regParam",
-      "paramType": "double",
-  	  "paramDispName" : "Reg Param",
-      "paramDesc" : "",	
-      "paramValue": {
-        "ref" : {
-            "type" : "simple"
-        },
-	"value" : "1.0"
-    }
-    }
-  ]
+    ]
 }

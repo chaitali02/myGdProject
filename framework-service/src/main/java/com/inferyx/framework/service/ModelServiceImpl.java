@@ -4247,4 +4247,20 @@ public class ModelServiceImpl {
 	public String getAttributeNameByObject(Object object, Integer attributeId) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {		
 		return (String) object.getClass().getMethod("getAttributeName", Integer.class).invoke(object, attributeId);
 	}
+
+	public Algorithm getAlgorithmByModel(String modelUuid, String modelVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(modelUuid
+				, modelVersion
+				, MetaType.model.toString()
+				, "N");			
+		MetaIdentifier dependsOnMI = model.getDependsOn().getRef();
+		if(dependsOnMI.getType().equals(MetaType.algorithm)) {
+			return (Algorithm) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid()
+					, dependsOnMI.getVersion()
+					, dependsOnMI.getType().toString()
+					, "N");
+		} else {
+			return null;
+		}
+	}
 }

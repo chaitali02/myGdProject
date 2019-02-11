@@ -135,10 +135,28 @@ DatascienceModule.factory('TrainFactory', function ($http, $location) {
             return response;
         })
   }
+
+  factory.findAlgorithmByModel = function (uuid,version,type) {
+    var url = $location.absUrl().split("app")[0]
+    return $http({
+      url: url + "model/getAlgorithmByModel?action=view&uuid=" + uuid + "&version=" + version+"&type="+type,
+      method: "GET"
+    }).then(function (response) { return response })
+  };
   return factory;
 })
 
 DatascienceModule.service("TrainService", function ($http, TrainFactory, $q, sortFactory) {
+  this.getAlgorithmByModel = function (uuid,version,type) {
+    var deferred = $q.defer();
+    TrainFactory.findAlgorithmByModel(uuid,version,type).then(function (response) { onSuccess(response.data) });
+    var onSuccess = function (response) {
+      deferred.resolve({
+        data: response
+      });
+    }
+    return deferred.promise;
+  }
   this.getFunctionByCategory = function (type, category) {
     var deferred = $q.defer();
     TrainFactory.findFunctionByCategory(type,category).then(function (response) { onSuccess(response.data) });

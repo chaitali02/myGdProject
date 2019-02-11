@@ -1,19 +1,24 @@
 {
-  "uuid": "45f293c8-ea4b-482c-838e-69ed4b19bc9a",
-  "version": "1530958619",
-  "name": "paramlist_Naive_Bayes_Classifier_WH",
-  "desc": null,
+  "uuid": "daee0212-af6e-4b76-ae0b-73c78b0e9e38",
+  "version": "1520009572",
+  "name": "paramlist_linear_svm_classifier_woh",
+  "desc": "LinearSupportVectorMachine Param List",
   "createdBy": {
     "ref": {
       "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86"
-    }
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196"
+    },
+    "value": null
   },
-  "createdOn": "Sat Jul 07 15:46:59 IST 2018",
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
   "tags": [],
   "active" : "Y",
   "locked" : "N",
   "published": "N",
+  "paramListType" : "model",
+    "templateFlg" : "Y",
+    "templateInfo" : null,
  	"appInfo" : [ 
         {
             "ref" : {
@@ -62,32 +67,29 @@
   "params": [
     {
       "paramId": "0",
-      "paramName": "smoothing",
-      "paramType": "list",
-   	  "paramDispName" : "Smoothing",
-       "paramDesc" : "",	
+      "paramName": "maxIter",
+      "paramType": "integer",
+  	  "paramDispName" : "Max Iter",
+      "paramDesc" : "",	
       "paramValue": {
-        "ref": {
-          "type": "simple"
+        "ref" : {
+            "type" : "simple"
         },
-        "value": "0.3, 1.0, 2.5"
-      }
+	"value" : "10"
+    }
     },
     {
       "paramId": "1",
-      "paramName": "numFolds",
-      "paramType": "integer",
-   	  "paramDispName" : "Num Folds",
-       "paramDesc" : "",	
+      "paramName": "regParam",
+      "paramType": "double",
+  	  "paramDispName" : "Reg Param",
+      "paramDesc" : "",	
       "paramValue": {
-        "ref": {
-          "type": "simple"
+        "ref" : {
+            "type" : "simple"
         },
-        "value": "3"
-      }
+	"value" : "1.0"
     }
-  ],
-  "paramListType": "model",
-    "templateFlg" : "Y",
-    "templateInfo" : null
+    }
+  ]
 }

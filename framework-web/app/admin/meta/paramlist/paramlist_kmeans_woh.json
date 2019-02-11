@@ -4,21 +4,21 @@
 			"paramId": 0,
 			"paramName": "k",
 			"paramType": "integer",
-  		    "paramDispName" : "K",
- 		    "paramDesc" : "",	
+            "paramDispName" : "K",
+            "paramDesc" : "",	
 			"paramValue": {
 				"ref" : {
 				    "type" : "simple"
 				},
-				"value" : "10"
+				"value" : "2"
 			    }
 		},
 		{
 			"paramId": 1,
-			"paramName": "learningDecay",
-			"paramType": "double",
-  		    "paramDispName" : "Learning Decay",
- 		    "paramDesc" : "",	
+			"paramName": "maxIter",
+			"paramType": "integer",
+            "paramDispName" : "Max Iter",
+            "paramDesc" : "",	
 			"paramValue": {
 				"ref" : {
 				    "type" : "simple"
@@ -27,49 +27,36 @@
 			    }
 		},
 		{
-			"paramId": 2,
-			"paramName": "learningOffset",
-			"paramType": "double",
-  		    "paramDispName" : "Learning Offset",
- 		    "paramDesc" : "",	
-			"paramValue": {
-				"ref" : {
-				    "type" : "simple"
-				},
-				"value" : "12"
-			    }
-		},
-		{
 			"paramId": 3,
-			"paramName": "maxIter",
-			"paramType": "integer",
-  		    "paramDispName" : "Max Iter",
- 		    "paramDesc" : "",	
+			"paramName": "seed",
+			"paramType": "long",
+            "paramDispName" : "Seed",
+            "paramDesc" : "",	
 			"paramValue": {
 				"ref" : {
 				    "type" : "simple"
 				},
-				"value" : "4"
+				"value" : "10"
 			    }
 		},
 		{
 			"paramId": 4,
-			"paramName": "seed",
-			"paramType": "long",
-  		    "paramDispName" : "Seed",
- 		    "paramDesc" : "",	
+			"paramName": "tol",
+			"paramType": "double",
+            "paramDispName" : "Tol",
+            "paramDesc" : "",	
 			"paramValue": {
 				"ref" : {
 				    "type" : "simple"
 				},
-				"value" : "1314"
+				"value" : "10"
 			    }
 		}
 	],
-	"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a85",
+	"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a79",
 	"version": "1495146809",
-	"name": "paramlist_lda_WoH",
-	"desc": "LDA Param List",
+	"name": "paramlist_kmeans_woh",
+	"desc": "K-Means Param List",
 	"createdBy": {
 		"ref": {
 			"type": "user",

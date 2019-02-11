@@ -2,50 +2,75 @@
     "params" : [ 
         {
             "paramId" : "0",
-            "paramName" : "maxBins",
-            "paramType" : "integer",
-   		    "paramDispName" : "Max Bins",
-     	    "paramDesc" : "",	
+            "paramName" : "minInfoGain",
+            "paramType" : "list",
+   		    "paramDispName" : "Min InfoGain",
+     	    "paramDesc" : "",		
             "paramValue" : {
                 "ref" : {
                     "type" : "simple"
                 },
-                "value" : "10"
+                "value" : "0.0, 0.5, 1.0"
             }
         }, 
         {
             "paramId" : "1",
             "paramName" : "maxDepth",
-            "paramType" : "integer",
+            "paramType" : "list",
    		    "paramDispName" : "Max Depth",
-     	    "paramDesc" : "",	
+     	    "paramDesc" : "",		
             "paramValue" : {
                 "ref" : {
                     "type" : "simple"
                 },
-                "value" : "10"
+                "value" : "5, 8, 10, 11"
+            }
+        }, 
+        {
+            "paramId" : "2",
+            "paramName" : "minInstancesPerNode",
+            "paramType" : "list",
+   		    "paramDispName" : "Min Instances PerNode",
+     	    "paramDesc" : "",		
+            "paramValue" : {
+                "ref" : {
+                    "type" : "simple"
+                },
+                "value" : "1, 2, 3"
+            }
+        }, 
+        {
+            "paramId" : "3",
+            "paramName" : "maxBins",
+            "paramType" : "list",
+   		    "paramDispName" : "Max Bins",
+     	    "paramDesc" : "",		
+            "paramValue" : {
+                "ref" : {
+                    "type" : "simple"
+                },
+                "value" : "32, 35, 38"
             }
         }, 
         {
             "paramId" : "4",
-            "paramName" : "maxMemoryInMB",
-            "paramType" : "integer",
-   		    "paramDispName" : "Max MemoryInMB",
-     	    "paramDesc" : "",	
+            "paramName" : "seed",
+            "paramType" : "list",
+   		    "paramDispName" : "Seed",
+     	    "paramDesc" : "",		
             "paramValue" : {
                 "ref" : {
                     "type" : "simple"
                 },
-                "value" : "100"
+                "value" : "159147643, 1000, 100000"
             }
         }
     ],
     "paramListType" : "model",
     "templateFlg" : "Y",
-    "uuid" : "7ffd848a-7dae-4b98-86ff-704cdebe3b52",
-    "version" : "1540544806",
-    "name" : "paramlist_Gradient_Boosted_Trees_WoH",
-    "desc" : "Gradient_Boosted_Trees Param List",
+    "uuid" : "880a284d-6d61-4ed8-8f37-b9c284b3e0e5",
+    "version" : "1540542913",
+    "name" : "paramlist_gradient_boosted_trees_wh",
     "createdBy" : {
         "ref" : {
             "type" : "user",
@@ -54,15 +79,12 @@
             "name" : "ypalrecha"
         }
     },
-    "createdOn" : ISODate("2018-10-26T09:06:46.000Z"),
-    "tags" : [ 
-        "DEV", 
-        "0.1.0"
-    ],
+    "createdOn" : ISODate("2018-10-26T08:35:13.000Z"),
+    "tags" : [],
     "active" : "Y",
   "locked" : "N",
     "published" : "N",
-   "appInfo" : [ 
+  "appInfo" : [ 
         {
             "ref" : {
                 "type" : "application",

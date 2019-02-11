@@ -248,17 +248,20 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
       $scope.sourceFilterTable = [];
     }
     var filertable = {};
-		filertable.islhsDatapod = false;
+	  filertable.islhsDatapod = true;
 		filertable.islhsFormula = false;
-		filertable.islhsSimple = true;
-		filertable.isrhsDatapod = false;
+		filertable.islhsSimple = false;
+		filertable.isrhsDatapod = true;
 		filertable.isrhsFormula = false;
-		filertable.isrhsSimple = true;
+		filertable.isrhsSimple = false;
+		filertable.lhsdatapodAttribute=$scope.sourceFilterAttribute[0];
+		filertable.rhsdatapodAttribute=$scope.sourceFilterAttribute[0];
+		
     filertable.lhsFilter = $scope.sourceFilterAttribute[0]
     filertable.logicalOperator=$scope.sourceFilterTable.length >0?$scope.logicalOperator[0]:"";
 		filertable.operator = $scope.operator[0].value
-		filertable.lhstype = $scope.lshType[0]
-    filertable.rhstype = $scope.rhsType[0]
+		filertable.lhstype = $scope.lshType[2]
+    filertable.rhstype = $scope.rhsType[2]
 		filertable.rhsTypes =returnRshType();
 		filertable.rhsTypes = $scope.disableRhsType(filertable.rhsTypes, ['dataset']);
 		filertable.rhsvalue;
@@ -270,17 +273,19 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
       $scope.targetFilterTable = [];
     }
     var filertable = {};
-    filertable.islhsDatapod = false;
+    filertable.islhsDatapod = true;
 		filertable.islhsFormula = false;
-		filertable.islhsSimple = true;
-		filertable.isrhsDatapod = false;
+		filertable.islhsSimple = false;
+		filertable.isrhsDatapod = true;
 		filertable.isrhsFormula = false;
-    filertable.isrhsSimple = true;
+		filertable.isrhsSimple = false;
     filertable.logicalOperator=$scope.targetFilterTable.length >0?$scope.logicalOperator[0]:"";
-		filertable.lhsFilter = $scope.targetFilterAttribute[0]
+    filertable.lhsFilter = $scope.targetFilterAttribute[0];
+    filertable.lhsdatapodAttribute=$scope.targetFilterAttribute[0];
+		filertable.rhsdatapodAttribute=$scope.targetFilterAttribute[0];
 		filertable.operator = $scope.operator[0].value
-		filertable.lhstype = $scope.lshType[0]
-    filertable.rhstype = $scope.rhsType[0];
+		filertable.lhstype = $scope.lshType[2]
+    filertable.rhstype = $scope.rhsType[2];
     filertable.rhsTypes =returnRshType();
 		filertable.rhsTypes = $scope.disableRhsType(filertable.rhsTypes, ['dataset']);
 		filertable.rhsvalue;

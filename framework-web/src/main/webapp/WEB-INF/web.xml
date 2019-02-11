@@ -85,11 +85,11 @@
     	<url-pattern>/metadata/**</url-pattern>
     </filter-mapping>
     <filter>
-    	<filter-name>apiLogFilter</filter-name>
-    	<filter-class>com.inferyx.framework.security.ApiLogFilter</filter-class>
+    	<filter-name>sessionValidateFilter</filter-name>
+    	<filter-class>com.inferyx.framework.security.SessionValidateFilter</filter-class>
     </filter>
     <filter-mapping>
-    	<filter-name>apiLogFilter</filter-name>
+    	<filter-name>sessionValidateFilter</filter-name>
     	<url-pattern>/*</url-pattern>
     </filter-mapping>
     

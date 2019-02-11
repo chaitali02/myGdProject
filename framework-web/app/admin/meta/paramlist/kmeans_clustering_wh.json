@@ -1,24 +1,19 @@
 {
-  "uuid": "e3dd3eaf-4420-49c0-a36c-46f76b455a1a",
-  "version": "1519980278",
-  "name": "paramlist_Naive_Bayes_Classifier_WoH",
-  "desc": "NaiveBayesClassifier  Param List",
+  "uuid": "67773bc7-6db5-4598-a288-c8d33d7e8c52",
+  "version": "1530964625",
+  "name": "kmeans_clustering_wh",
+  "desc": null,
   "createdBy": {
     "ref": {
       "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196"
-    },
-    "value": null
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+    }
   },
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+  "createdOn": "Sat Jul 07 17:27:05 IST 2018",
   "tags": [],
   "active" : "Y",
   "locked" : "N",
   "published": "N",
-  "paramListType" : "model",
-    "templateFlg" : "Y",
-    "templateInfo" : null,
  	"appInfo" : [ 
         {
             "ref" : {
@@ -65,19 +60,60 @@
         }
     ],
   "params": [
-    
+    {
+      "paramId": "0",
+      "paramName": "kMeans",
+      "paramType": "list",
+      "paramDispName" : "K Means",
+      "paramDesc" : "",	
+      "paramValue": {
+        "ref": {
+          "type": "simple"
+        },
+        "value": "2, 5, 10"
+      }
+    },
+    {
+      "paramId": "1",
+      "paramName": "initSteps",
+      "paramType": "list",
+      "paramDispName" : "Init Steps",
+      "paramDesc" : "",	
+      "paramValue": {
+        "ref": {
+          "type": "simple"
+        },
+        "value": "5, 8, 10"
+      }
+    },
+    {
+      "paramId": "2",
+      "paramName": "seed",
+      "paramType": "list",
+      "paramDispName" : "Seed",
+      "paramDesc" : "",	
+      "paramValue": {
+        "ref": {
+          "type": "simple"
+        },
+        "value": "-1689246527, -1000, 100000"
+      }
+    },
     {
       "paramId": "3",
-      "paramName": "smoothing",
-      "paramType": "double",
-   	  "paramDispName" : "Smoothing",
-       "paramDesc" : "",	
+      "paramName": "numFolds",
+      "paramType": "integer",
+      "paramDispName" : "Num Folds",
+      "paramDesc" : "",	
       "paramValue": {
-        "ref" : {
-            "type" : "simple"
+        "ref": {
+          "type": "simple"
         },
-	"value" : "1.0"
+        "value": "3"
+      }
     }
-    }
-  ]
+  ],
+  "paramListType": "model",
+    "templateFlg" : "Y",
+    "templateInfo" : null
 }

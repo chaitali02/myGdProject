@@ -1,67 +1,55 @@
 {
-	"params": [
-		{
-			"paramId": 0,
-			"paramName": "maxBins",
-			"paramType": "integer",
-   	     	"paramDispName" : "Max Bins",
-            "paramDesc" : "",			
-			"paramValue": {
-				"ref" : {
-				    "type" : "simple"
-				},
-				"value" : "10"
-			    }
-		},
-		{
-			"paramId": 1,
-			"paramName": "maxDepth",
-			"paramType": "integer",
-   	     	"paramDispName" : "Max Depth",
-            "paramDesc" : "",		
-			"paramValue": {
-				"ref" : {
-				    "type" : "simple"
-				},
-				"value" : "10"
-			    }
-		},
-		{
-			"paramId": 4,
-			"paramName": "maxMemoryInMB",
-			"paramType": "integer",
-   	     	"paramDispName" : "Max MemoryInMB",
-            "paramDesc" : "",		
-			"paramValue": {
-				"ref" : {
-				    "type" : "simple"
-				},
-				"value" : "100"
-			    }
-		}
-	],
-	"uuid": "7071d1fe-7566-4ca0-a263-e92ada008a84",
-	"version": "1495146809",
-	"name": "paramlist_decision_tree_classifier_WoH",
-	"desc": "DecisionTreeClassifier Param List",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
-		}
-	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-	"tags": [
-		"DEV",
-		"0.1.0"
-	],
-	"active" : "Y",
+   
+    "params" : [ 
+        {
+            "paramId" : "1",
+            "paramName" : "maxIter",
+            "paramType" : "integer",
+  		    "paramDispName" : "Max Iter",
+ 		    "paramDesc" : "",	
+            "paramValue" : {
+                "ref" : {
+                    "type" : "simple"
+                },
+                "value" : "10"
+            }
+        }, 
+        {
+            "paramId" : "4",
+            "paramName" : "tol",
+            "paramType" : "double",
+  		    "paramDispName" : "Tol",
+ 		    "paramDesc" : "",	
+            "paramValue" : {
+                "ref" : {
+                    "type" : "simple"
+                },
+                "value" : "10"
+            }
+        }
+    ],
+    "uuid" : "7071d1fe-7566-4ca0-a263-e92ada008a82",
+    "version" : "1495146809",
+    "name" : "paramlist_linear_regression_woh",
+    "desc" : "Linear Regression ParamList Template",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
+        }
+    },
+    "createdOn" : ISODate("2018-07-17T09:17:27.988Z"),
+    "tags" : [ 
+        "DEV", 
+        "0.1.0"
+    ],
+    "active" : "Y",
   "locked" : "N",
-	"published": "N",
+    "published" : "N",
     "paramListType" : "model",
     "templateFlg" : "Y",
     "templateInfo" : null,
-		"appInfo" : [ 
+   	"appInfo" : [ 
         {
             "ref" : {
                 "type" : "application",
