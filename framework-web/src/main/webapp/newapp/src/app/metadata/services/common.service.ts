@@ -7,6 +7,8 @@ import { map, catchError } from "rxjs/operators";
 
 import { SharedService } from '../../shared/shared.service';
 
+import { AttributeIO } from '../domainIO/domain.attributeIO';
+
 @Injectable()
 
 export class CommonService {
@@ -133,17 +135,17 @@ export class CommonService {
       url = 'metadata/getAttributesByRule?action=view&uuid=' + uuid + '&type=' + type;
     }
     return this._sharedService.getCall(url)
-    .pipe(
-      map(response => {
-        if (type == "relation") {
-          return this.modifyRelation(response.json());
-        }
-        else {
-          return <any[]>this.modifyResponse(response.json());
-        }
+      .pipe(
+        map(response => {
+          if (type == "relation") {
+            return this.modifyRelation(response.json());
+          }
+          else {
+            return <any[]>this.modifyResponse(response.json());
+          }
 
-      }),
-      catchError(error => this.handleError<string>(error, "Network Error!")));
+        }),
+        catchError(error => this.handleError<string>(error, "Network Error!")));
   }
   modifyRelation(response) {
     var attributes = [];
@@ -159,24 +161,46 @@ export class CommonService {
         attributes.push(attributedetail)
       }
     }
+    console.log("from commonService :" + attributes);
     return attributes;
   }
   modifyResponse(response) {
-    var attributes = [];
+    // var attributes = [];
+    // for (var j = 0; j < response.length; j++) {
+    //   var attributedetail = {};
+    //   attributedetail["uuid"] = response[j].ref.uuid;
+    //   attributedetail["datapodname"] = response[j].ref.name;
+    //   attributedetail["name"] = response[j].attrName;
+    //   attributedetail["attributeId"] = response[j].attrId;
+    //   attributedetail["dname"] = response[j].ref.name + "." + response[j].attrName;
+    //   attributedetail["id"] = response[j].ref.uuid + "_" + response[j].attrId;
+    //   attributedetail["attrType"] = response[j].attrType;
+    //   attributes.push(attributedetail)
+
+    // }
+    // return attributes;
+
+    let attributeIOArray = [new AttributeIO];
     for (var j = 0; j < response.length; j++) {
-      var attributedetail = {};
-      attributedetail["uuid"] = response[j].ref.uuid;
-      attributedetail["datapodname"] = response[j].ref.name;
-      attributedetail["name"] = response[j].attrName;
-      attributedetail["attributeId"] = response[j].attrId;
-      attributedetail["dname"] = response[j].ref.name + "." + response[j].attrName;
-      attributedetail["id"] = response[j].ref.uuid + "_" + response[j].attrId;
-      attributedetail["attrType"] = response[j].attrType;
+      let attributeIO = new AttributeIO();
+      attributeIO.id = response[j].ref.uuid + "_" + response[j].attrId;
+      attributeIO.uuid = response[j].ref.uuid;
+      attributeIO.datapodname = response[j].ref.name;
+      attributeIO.name = response[j].attrName;
+      attributeIO.dname = response[j].ref.name + "." + response[j].attrName;
+      attributeIO.attributeId = response[j].attrId;
+      attributeIO.attrType = response[j].attrType;
 
-      attributes.push(attributedetail)
-
+      attributeIO.label = response[j].ref.name + "." + response[j].attrName;
+      attributeIO.value = { label: "", value: "", u_Id: "", uuid: "", attrId: "" };
+      attributeIO.value.label = response[j].ref.name + "." + response[j].attrName;
+      attributeIO.value.value = response[j].ref.name;
+      attributeIO.value.u_Id = response[j].ref.uuid + "_" +response[j].attrId;
+      attributeIO.value.uuid = response[j].ref.uuid;
+      attributeIO.value.attrId = response[j].attrId;
+      attributeIOArray[j] = attributeIO;
     }
-    return attributes;
+    return attributeIOArray;
   }
 
   getGraphResults(version: String, degree: Number, uuid: Number): Observable<any[]> {
@@ -272,11 +296,11 @@ export class CommonService {
     }
     let data1 = data;
     return this._sharedService.postCall(url, data1)
-    .pipe(map(response => {
+      .pipe(map(response => {
         console.log(response);
         return <any>response["_body"];
       }),
-      catchError(error => this.handleError<string>(error, "Network Error!")));
+        catchError(error => this.handleError<string>(error, "Network Error!")));
 
   }
 
@@ -284,7 +308,7 @@ export class CommonService {
     let url = 'metadata/getNumRowsbyExec?action=view&execUuid=' + uuid + "&execVersion=" + version + "&type=" + type;
     return this._sharedService.getCall(url)
       .pipe(
-        map(response => { return <any[]>response.json()}),
+        map(response => { return <any[]>response.json() }),
         catchError(error => this.handleError<string>(error, "Network Error!")));
   }
   getParamListChilds(uuid, version, type): Observable<any> {
@@ -338,9 +362,9 @@ export class CommonService {
     }
     let body = null
     return this._sharedService.postCall(url, body)
-    .pipe(
-      map(response => { return <any[]>response.json(); }),
-      catchError(error => this.handleError<string>(error, "Network Error!")));
+      .pipe(
+        map(response => { return <any[]>response.json(); }),
+        catchError(error => this.handleError<string>(error, "Network Error!")));
   }
   getParamByParamList(uuid: Number, type: String): Observable<any[]> {
     let url = "metadata/getParamByParamList?action=view&uuid=" + uuid + "&type=" + type;

@@ -12,6 +12,7 @@ export class BaseEntity extends MetaIdentifierHolder{
   createdOn : Date;
   active : String="Y" ;
   published : String="N";
+  locked : String="N";
   tags : String[];
   appInfo :MetaIdentifierHolder[];
 

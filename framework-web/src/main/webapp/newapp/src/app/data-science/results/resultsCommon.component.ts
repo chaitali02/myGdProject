@@ -6,7 +6,8 @@ import { AppMetadata } from "../../app.metadata";
 import { CommonService } from "../../metadata/services/common.service";
 import { Component, ViewEncapsulation, ElementRef, Renderer, NgZone, ViewChild, Input, } from "@angular/core";
 import { CommonListService } from "../../common-list/common-list.service";
-import { AppHepler } from '../../app.helper';
+import {AppHelper} from '../../app.helper';
+
 @Component({
     selector: 'app-results',
     templateUrl: './resultsCommon.component.html'
@@ -89,7 +90,7 @@ export class ResultsComponent {
             "value": "Failed"
         }
     ];
-    constructor(public apphelper: AppHepler, private http: Http, public _sharedService: SharedService, public datePipe: DatePipe, public router: Router, public metaconfig: AppMetadata, private activatedRoute: ActivatedRoute, private _commonService: CommonService, private activeroute: ActivatedRoute, private _commonListService: CommonListService) {
+    constructor( private http: Http, public _sharedService: SharedService, public datePipe: DatePipe, public router: Router, public metaconfig: AppMetadata, private activatedRoute: ActivatedRoute, private _commonService: CommonService, private activeroute: ActivatedRoute, private _commonListService: CommonListService, public  appHelper:AppHelper) {
         this.rowStatus = {}
         this.isModel = "false"
         this.breadcrumbDataFrom = [{
@@ -220,10 +221,10 @@ export class ResultsComponent {
 
         for (let i = 0; i < response.length; i++) {
             if (response[i]["status"] != null) {
-                response[i]["status"] = this.apphelper.sortByProperty(response[i]["status"], "createdOn");
+                response[i]["status"] = this.appHelper.sortByProperty(response[i]["status"], "createdOn");
                 let status = response[i]["status"];
                 response[i]["status"] = {};
-                response[i]["status"].stage = this.apphelper.getStatus(status)["stage"];
+                response[i]["status"].stage = this.appHelper.getStatus(status)["stage"];
                 response[i]["status"].color = this.metaconfig.getStatusDefs(response[i]["status"].stage)['color'];
             }
         }

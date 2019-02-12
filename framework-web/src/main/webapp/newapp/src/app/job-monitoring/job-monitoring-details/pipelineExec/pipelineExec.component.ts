@@ -6,8 +6,8 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
 import { CommonService } from '../../../metadata/services/common.service';
 import { AppMetadata } from '../../../app.metadata';
 import { Version } from '../../../shared/version';
-import { AppHepler } from '../../../app.helper';
 import { KnowledgeGraphComponent } from '../../../shared/components/knowledgeGraph/knowledgeGraph.component';
+import {AppHelper} from '../../../app.helper';
 
 @Component({
   selector: 'app-pipelineExec',
@@ -46,7 +46,7 @@ export class PipelineExecComponent implements OnInit {
   ref: any;
   @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
 
-  constructor(private datePipe: DatePipe, public apphelper: AppHepler, private _location: Location, public statusDefs: AppMetadata, public metaconfig: AppMetadata, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
+  constructor(private datePipe: DatePipe, private _location: Location, public statusDefs: AppMetadata, public metaconfig: AppMetadata, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, public appHelper:AppHelper) {
     this.showResultModel = true;
     this.dagResultData = {};
     this.operatorInfo = {};
@@ -151,10 +151,10 @@ export class PipelineExecComponent implements OnInit {
     console.log(JSON.stringify(this.stages));
     for (let i = 0; i < this.stages.length; i++) {
       if (this.stages[i]["status"] != null) {
-        this.stages[i]["status"] = this.apphelper.sortByProperty(response[i]["status"], "createdOn");
+        this.stages[i]["status"] = this.appHelper.sortByProperty(response[i]["status"], "createdOn");
         let status = response[i]["status"];
         this.stages[i]["status"] = {};
-        this.stages[i]["status"].stage = this.apphelper.getStatus(status)["stage"];
+        this.stages[i]["status"].stage = this.appHelper.getStatus(status)["stage"];
         this.stages[i]["status"].color = this.metaconfig.getStatusDefs(response[i]["status"].stage)['color'];
       }
     }

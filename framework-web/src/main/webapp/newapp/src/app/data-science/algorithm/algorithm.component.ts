@@ -6,7 +6,6 @@ import { SelectItem } from 'primeng/primeng';
 import { TagInputModule } from 'ngx-chips';
 
 
-import { AppConfig } from './../../app.config';
 import { KnowledgeGraphComponent } from '../../shared/components/knowledgeGraph/knowledgeGraph.component'
 
 
@@ -14,10 +13,16 @@ import { AlgorithmService } from '../../metadata/services/algorithm.service';
 import { CommonService } from '../../metadata/services/common.service';
 
 import * as MetaTypeEnum from '../../metadata/enums/metaType';
+import { AppConfig } from './../../app.config';
+import {AppHelper} from '../../app.helper';
 import {DropDownIO} from '../../metadata/domainIO/domain.dropDownIO';
 import { Algorithm } from '../../metadata/domain/domain.algorithm';
 import { Version } from '../../shared/version';
 import { DependsOn } from '../dependsOn';
+import { BaseEntity } from '../../metadata/domain/domain.baseEntity';
+import { MetaIdentifierHolder } from '../../metadata/domain/domain.metaIdentifierHolder';
+import { MetaIdentifier } from '../../metadata/domain/domain.metaIdentifier';
+import { setCheckNoChangesMode } from '@angular/core/src/render3/state';
 
 @Component({
   selector: 'app-algorithm',
@@ -27,13 +32,20 @@ import { DependsOn } from '../dependsOn';
 
 
 export class AlgorithmComponent implements OnInit {
-  showGraph: boolean;
+  showDivGraph: boolean;
   isHomeEnable: boolean;
   isEditInprogess: boolean = false;
   isEditError: boolean = false;
   showForm: boolean = true;
   isSubmitEnable: boolean;
-
+  customFlag: boolean;
+  savePmml: boolean;
+  published: boolean;
+  active: boolean;
+  locked: boolean;
+  isEdit :boolean= false;
+	isversionEnable:boolean = false;
+	isAdd:boolean = false;
   summaryMethods: any[]
   allParamlist: any[];
   breadcrumbDataFrom: any;
@@ -54,13 +66,22 @@ export class AlgorithmComponent implements OnInit {
   labelRequired: any;
   metaType: any;
   @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
+  isGraphInprogess: boolean;
+  isGraphError: boolean;
+  isSubmitInprogess: boolean;
+  
 
   constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router,
-    private _commonService: CommonService, private _algorithmService: AlgorithmService, public config: AppConfig) {
+    private _commonService: CommonService, private _algorithmService: AlgorithmService, public config: AppConfig, public appHelper:AppHelper) {
     this.metaType = MetaTypeEnum.MetaType;
-    console.log(this.metaType)
-   // this.algorithm.active = "Y";
-   // this.algorithm.labelRequired = "Y";
+    this.isEditInprogess=false;
+
+    this.algorithm=new Algorithm();
+    this.active =true;
+    this.labelRequired =true;
+    this.customFlag = false;
+    this.locked=false;
+    this.published=false;
     this.isSubmitEnable = true;
 
     this.breadcrumbDataFrom = [
@@ -101,31 +122,60 @@ export class AlgorithmComponent implements OnInit {
       if (this.mode !== undefined) {
         this.getOneByUuidAndVersion(id, version);
         this.getAllVersionByUuid(id);
+      }else{
+        this.isSubmitEnable = true;
+        this.isEditInprogess=false;
+        this.isEditError=false;
+        this.algorithm=new Algorithm();
       }
+      this.setMode(this.mode);
       this.getAllLatestParamListByTemplate();
     });
   }
+  
+  setMode(mode:any){
+   if(mode =='true'){
+    this.isEdit = false;
+		this.isversionEnable = false;
+		this.isAdd = false;
+   }else if(mode =='false'){
+    this.isEdit = true;
+		this.isversionEnable = true;
+		this.isAdd = false;
+   }else{
+    this.isAdd=true;
+    this.isEdit =false;
 
+   }
+  }
   enableEdit(uuid: any, version: any) {
     this.router.navigate(['app/dataScience/algorithm', uuid, version, 'false']);
   }
 
   showMainPage() {
     this.isHomeEnable = false
-    this.showGraph = false;
+    this.showDivGraph = false;
+    this.showForm=true;
   }
 
-  showDagGraph(uuid: any, version: any) {
+  showGraph(uuid: any, version: any) {
     this.isHomeEnable = true;
-    this.showGraph = true;
+    this.showDivGraph = true;
+    this.showForm=false;
+    this.isGraphInprogess=true;
     setTimeout(() => {
       this.d_KnowledgeGraphComponent.getGraphData(uuid, version);
+      this.isGraphInprogess= this.d_KnowledgeGraphComponent.isInprogess;
+      this.isGraphError=this.d_KnowledgeGraphComponent.isError;
     }, 1000);
   }
 
+  onChangeName(){
+    this.breadcrumbDataFrom[2].caption = this.algorithm.name;
+  }
 
   onVersionChange() {
-    this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, 'algorithm')
+    this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, MetaTypeEnum.MetaType.ALGORITHM )
       .subscribe(
         response => {
           this.onSuccessgetOneByUuidAndVersion(response)
@@ -134,32 +184,15 @@ export class AlgorithmComponent implements OnInit {
       );
   }
 
-  onChangeActive(event: any) {
-    if (event === true) {
-      this.algorithm.active = 'Y';
-    }
-    else {
-      this.algorithm.active = 'N';
-    }
-  }
-
-  onChangePublished(event: any) {
-    if (event === true) {
-      this.algorithm.published = 'Y';
-    }
-    else {
-      this.algorithm.published = 'N';
+  onChangeCusFlg(event:any){
+    if(event == true){
+     this.algorithm.trainClass="";
+     this.algorithm.modelClass="";
+    }else{
+      this.algorithm.scriptName=null;
     }
   }
-
-  onChangeLabel(event: any) {
-    if (event === true) {
-      this.algorithm.published = 'Y';
-    }
-    else {
-      this.algorithm.published = 'N';
-    }
-  }
+  
 
   getAllLatestParamListByTemplate() {
     this._commonService.getAllLatestParamListByTemplate('Y', 'paramlist', 'model')
@@ -171,15 +204,13 @@ export class AlgorithmComponent implements OnInit {
       );
   }
 
-  onSuccessGetAllLatestParamListByTemplate(response) {
-    this.allParamlist = [];
+  onSuccessGetAllLatestParamListByTemplate(response:BaseEntity[]) {
+    this.allParamlist = [new DropDownIO];
     for (const i in response) {
-      let refParam = {};
-      refParam["label"] = response[i]['name'];
-      refParam["value"] = {}
-      refParam["value"]['name'] = response[i]['name'];
-      refParam["value"]['label'] = response[i]['name'];
-      refParam["value"]['uuid'] = response[i]['uuid'];
+      let refParam = new DropDownIO ();
+      refParam.label = response[i].name;
+      refParam.value.label= response[i].name;
+      refParam.value.uuid = response[i].uuid;
       this.allParamlist[i] = refParam;
     }
   }
@@ -203,16 +234,18 @@ export class AlgorithmComponent implements OnInit {
 
   onSuccessgetOneByUuidAndVersion(response: Algorithm) {
     this.algorithm = response;
-
     const version: Version = new Version();
     version.label = response.version;
     version.uuid = response.uuid;
     this.selectedVersion = version
 
 
-    this.algorithm.savePmml = response.savePmml == 'Y' ? (true).valueOf.toString() : false.valueOf.toString()
-    this.algorithm.published = response.published == 'Y' ? true.valueOf.toString() : false.valueOf.toString()
-    this.algorithm.active = response.active == 'Y' ? true.valueOf.toString() : false.valueOf.toString()
+    this.savePmml = this.appHelper.convertStringToBoolen(response.savePmml);
+    this.published = this.appHelper.convertStringToBoolen(response.published);
+    this.active = this.appHelper.convertStringToBoolen(response.active);
+    this.locked==this.appHelper.convertStringToBoolen(response.locked);
+    this.customFlag =this.appHelper.convertStringToBoolen(response.customFlag);  
+    this.labelRequired =this.appHelper.convertStringToBoolen(response.labelRequired)
 
     if (response.tags != null) {
       this.algorithm.tags =response.tags;
@@ -263,75 +296,81 @@ export class AlgorithmComponent implements OnInit {
   }
 
 
-  submitAlgorithm() {
+  submitAlgorithm(form) {
+    debugger;
     var upd_tag = 'N'
     this.isSubmitEnable = true;
-    let algoJson = {};
-    algoJson["uuid"] = this.algorithm.uuid;
-    algoJson["name"] = this.algorithm.name;
-    var tagArray = [];
-    // if (this.algorithm.tags != null) {
-    //   for (var counttag = 0; counttag < this.algorithm.tags.length; counttag++) {
-    //     tagArray[counttag] = this.algorithm.tags[counttag].value;
+    this.isSubmitInprogess=true;
+    let algoJson = new Algorithm();
+    algoJson.uuid =this.algorithm.uuid;
+    algoJson.name = this.algorithm.name;
+    algoJson.tags= this.algorithm.tags
+    algoJson.desc= this.algorithm.desc;
+    algoJson.savePmml = this.appHelper.convertBoolenToString(this.savePmml);
+    algoJson.active =this.appHelper.convertBoolenToString(this.active);
+    algoJson.published = this.appHelper.convertBoolenToString(this.published);
+    algoJson.locked = this.appHelper.convertBoolenToString(this.locked);
+    algoJson.customFlag = this.appHelper.convertBoolenToString(this.customFlag);
+    algoJson.labelRequired = this.appHelper.convertBoolenToString(this.labelRequired);
 
-    //   }
-    // }
-    algoJson['tags'] = tagArray
-    algoJson["summaryMethods"] = summaryMethods;
-    algoJson["desc"] = this.algorithm.desc;
-    algoJson["savePmml"] = this.algorithm.savePmml == "" + true ? 'Y' : "N"
-    algoJson["active"] = this.algorithm.active == "" + true ? 'Y' : "N"
-    algoJson["published"] = this.algorithm.published == "" + true ? 'Y' : "N"
-    algoJson["type"] = this.algorithm.type;
-    algoJson["libraryType"] = this.libraryType;
-    algoJson["trainClass"] = this.algorithm.trainClass;
-    algoJson["modelClass"] = this.algorithm.modelClass;
-    algoJson["labelRequired"] = this.labelRequired;
+    algoJson.type= this.algorithm.type;
+    algoJson.libraryType = this.libraryType;
 
-    let paramListWHParam = {};
-    let paramListWHParamRef = {};
+    if(this.customFlag){
+      algoJson.scriptName = this.algorithm.scriptName;
+      algoJson.trainClass =null;
+      algoJson.modelClass = null;
+     }
+    else{
+        algoJson.scriptName =null;
+        algoJson.trainClass = this.algorithm.trainClass;
+        algoJson.modelClass = this.algorithm.modelClass;
+    
+    }
+
+    let paramListWHParam = new MetaIdentifierHolder();
+    let paramListWHParamRef = new MetaIdentifier ();
+
     if (this.paramListWH != null) {
-      paramListWHParamRef["uuid"] = this.paramListWH.uuid;
-      paramListWHParamRef["type"] = "paramlist";
-      paramListWHParam["ref"] = paramListWHParamRef;
+      paramListWHParamRef.uuid = this.paramListWH.uuid;
+      paramListWHParamRef.type = MetaTypeEnum.MetaType.PARAMLIST;
+      paramListWHParam.ref = paramListWHParamRef;
+      algoJson.paramListWH = paramListWHParam;
+    }else{
+      algoJson.paramListWH = null;
     }
-    algoJson["paramListWH"] = paramListWHParam;
-
-    let paramListWOHParam = {};
-    let paramListWOHParamRef = {};
+    
+    let paramListWOHParam =new MetaIdentifierHolder();
+    let paramListWOHParamRef = new MetaIdentifier ();
     if (this.paramListWoH != null) {
-      paramListWOHParamRef["uuid"] = this.paramListWoH.uuid;
-      paramListWOHParamRef["type"] = "paramlist";
-      paramListWOHParam["ref"] = paramListWOHParamRef;
+      paramListWOHParamRef.uuid = this.paramListWoH.uuid;
+      paramListWOHParamRef.type= MetaTypeEnum.MetaType.PARAMLIST;;
+      paramListWOHParam.ref = paramListWOHParamRef;
+      algoJson.paramListWoH= paramListWOHParam;
     }
-    algoJson["paramListWoH"] = paramListWOHParam;
-
-    var summaryMethods = [];
-    if (this.summaryMethods != null) {
-      for (var counttag = 0; counttag < this.summaryMethods.length; counttag++) {
-        summaryMethods[counttag] = this.summaryMethods[counttag].value;
-
-      }
+    else{
+      algoJson.paramListWoH=null;
     }
-    algoJson["summaryMethods"] = summaryMethods;
+    algoJson.summaryMethods =this.summaryMethods;
     console.log(JSON.stringify(algoJson));
-    this._algorithmService.submit(algoJson, 'algorithm', upd_tag).subscribe(
-      response => { this.OnSuccessubmit(response) },
-      error => console.log('Error :: ' + error)
-    )
-
-
+    // this._algorithmService.submit(algoJson, MetaTypeEnum.MetaType.ALGORITHM, upd_tag).subscribe(
+    //   response => { this.OnSuccessubmit(response) },
+    //   error => {
+    //             console.log('Error :: ' + error);
+    //             this.isSubmitInprogess=false;
+    //            }
+    // )
   }
 
   OnSuccessubmit(response: any) {
     this.isSubmitEnable = true;
+    this.isSubmitInprogess=false;
     this.msgs = [];
     this.msgs.push({ severity: 'success', summary: 'Success Message', detail: 'Algorithm Submitted Successfully' });
     setTimeout(() => {
       this.goBack()
     }, 1000);
   }
-
 
   public goBack() {
     this.router.navigate(['app/list/algorithm']);

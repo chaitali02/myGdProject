@@ -1,5 +1,7 @@
 export enum MetaType{
     ACTIVITY="activity", 
-    ALGORITHM="algorithm"
+    ALGORITHM="algorithm",
+    PARAMLIST="paramlist",
+    
 }
 
