@@ -577,6 +577,7 @@ public class Helper {
 				case "matrix" : return OperatorType.matrix;
 				case "histogram" : return OperatorType.HISTOGRAM;
 				case "pca"       : return OperatorType.PCA;
+				case "datasampling" : return OperatorType.DATASAMPLING;
 				default : return null;
 			}
 		}

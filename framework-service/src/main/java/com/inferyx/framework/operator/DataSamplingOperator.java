@@ -15,6 +15,7 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SaveMode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Helper;
@@ -44,8 +45,14 @@ import com.inferyx.framework.service.ParamSetServiceImpl;
  * @author joy
  *
  */
+@Component
 public class DataSamplingOperator implements IOperator, Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 9151826149221877585L;
+	
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
@@ -58,8 +65,6 @@ public class DataSamplingOperator implements IOperator, Serializable {
 	private DatapodServiceImpl datapodServiceImpl;
 	@Autowired
 	private DatasetServiceImpl datasetServiceImpl;
-	@Autowired
-	private Helper helper;
 	@Autowired
 	private SparkExecutor<?> sparkExecutor;
 	
@@ -262,12 +267,6 @@ public class DataSamplingOperator implements IOperator, Serializable {
 		}
 		String execVersion = baseExec.getVersion();
 		String sourceTableName = null;
-		String destTableName = null;
-		
-		if (otherParams == null) {
-			otherParams = new HashMap<>();
-		}
-		
 		Datapod sourceData = null;
 		DataSet sourceDataset = null;
 		/*******************************************************************************/

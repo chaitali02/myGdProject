@@ -41,8 +41,6 @@ import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Operator;
 import com.inferyx.framework.domain.OperatorExec;
-import com.inferyx.framework.domain.Param;
-import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.OperatorType;
@@ -234,11 +232,11 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 			IExecutor exec = execFactory.getExecutor(datasource.getType());
 			String appUuid = commonServiceImpl.getApp().getUuid();
 
-			MetaIdentifierHolder paramListHolder = operator.getParamList();
-			ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(
-					paramListHolder.getRef().getUuid(), paramListHolder.getRef().getVersion(),
-					paramListHolder.getRef().getType().toString());
-			List<Param> params = paramList.getParams();
+//			MetaIdentifierHolder paramListHolder = operator.getParamList();
+//			ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(
+//					paramListHolder.getRef().getUuid(), paramListHolder.getRef().getVersion(),
+//					paramListHolder.getRef().getType().toString());
+//			List<Param> params = paramList.getParams();
 			if (execParams != null) {
 				List<ParamListHolder> paramListInfo = execParams.getParamListInfo();
 				for (ParamListHolder holder : paramListInfo) {
@@ -391,7 +389,7 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 				MetaType.operator.toString());
 		logger.info("Operator type in execute : " + operator.getOperatorType());
 		com.inferyx.framework.operator.IOperator newOperator = operatorFactory
-				.getOperator(helper.getOperatorType(operator.getOperatorType()));
+				.getOperator(Helper.getOperatorType(operator.getOperatorType()));
 		commonServiceImpl.setMetaStatus(operatorExec, MetaType.operatorExec, Status.Stage.InProgress);
 		synchronized (operatorExec) {
 			commonServiceImpl.save(MetaType.operatorExec.toString(), operatorExec);
@@ -414,7 +412,7 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 				MetaType.operator.toString());
 		logger.info("Operator type in execute : " + operator.getOperatorType());
 		com.inferyx.framework.operator.IOperator newOperator = operatorFactory
-				.getOperator(helper.getOperatorType(operator.getOperatorType()));
+				.getOperator(Helper.getOperatorType(operator.getOperatorType()));
 		return newOperator.parse(baseExec, execParams, runMode);
 	}
 	

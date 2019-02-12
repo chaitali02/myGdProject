@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.inferyx.framework.enums.OperatorType;
 import com.inferyx.framework.operator.HistogramOperator;
 import com.inferyx.framework.operator.CloneDataOperator;
+import com.inferyx.framework.operator.DataSamplingOperator;
 import com.inferyx.framework.operator.GenerateDataForAttrRef;
 import com.inferyx.framework.operator.GenerateDataForValList;
 import com.inferyx.framework.operator.GenerateDataOperator;
@@ -37,10 +38,11 @@ public class CustomOperatorFactory implements IOperatorFactory {
 	@Autowired
 	MatrixMultOperator matrixMultOperator;
 	@Autowired
-	HistogramOperator histogramOperator;
-	
+	HistogramOperator histogramOperator;	
 	@Autowired
 	SparkPCAOperator sparkPCAOperator;
+	@Autowired
+	private DataSamplingOperator dataSamplingOperator;
 
 	/**
 	 * 
@@ -64,6 +66,7 @@ public class CustomOperatorFactory implements IOperatorFactory {
 			case matrix : return matrixMultOperator;
 			case HISTOGRAM : return histogramOperator;
 			case PCA:		return sparkPCAOperator ;
+			case DATASAMPLING: return dataSamplingOperator;
 			default : throw new IllegalArgumentException("Invalid Operator Type");
 		}
 	}
