@@ -50,7 +50,7 @@ public class SessionValidateFilter extends GenericFilterBean {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException { 
-		if(Helper.getPropertyValue("framework.api.log").equalsIgnoreCase("true")) {
+		if(Helper.getPropertyValue("framework.session.validate").equalsIgnoreCase("true")) {
 			HttpServletRequest req = (HttpServletRequest) request;
 	    	HttpServletResponse res =(HttpServletResponse) response;
 	    	String requestedUrl = req.getRequestURL().toString();
