@@ -129,7 +129,7 @@
                     </div>
                 </div>
             </uib-tab>
-            <uib-tab index="1" heading="Feature Importance" select="go(1)">
+            <uib-tab index="1" heading="Feature Importance" select="go(1)" ng-disabled="isTabDisabled">
                 <div class="spinner centercontent" ng-if="isTrainResultProgess">
                     <div class="bounce1"></div>
                     <div class="bounce2"></div>
@@ -172,7 +172,7 @@
                     </div>
                 </div>
             </uib-tab>
-            <uib-tab index="2" heading="Performance" select="go(2)">
+            <uib-tab index="2" heading="Performance" select="go(2)" ng-disabled="isTabDisabled">
                 <div class="spinner centercontent" ng-if="isTrainResultProgess">
                     <div class="bounce1"></div>
                     <div class="bounce2"></div>
@@ -339,7 +339,7 @@
                     </div>
                 </div>
             </uib-tab>
-            <uib-tab index="3" heading="Test Result" select="go(3)">
+            <uib-tab index="3" heading="Test Result" select="go(3)" ng-disabled="isTabDisabled">
                 <div class="spinner centercontent" ng-if="isProgessTrainSet">
                     <div class="bounce1"></div>
                     <div class="bounce2"></div>

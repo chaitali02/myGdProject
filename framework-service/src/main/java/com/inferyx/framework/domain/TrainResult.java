@@ -41,6 +41,14 @@ public class TrainResult extends BaseEntity {
 	private long numFeatures;
 	private String algoType;
 	private List<Map<String, Object>> rocCurve;
+	private String trainClass;
+	
+	public String getTrainClass() {
+		return trainClass;
+	}
+	public void setTrainClass(String trainClass) {
+		this.trainClass = trainClass;
+	}
 	/**
 	 *
 	 * @Ganesh

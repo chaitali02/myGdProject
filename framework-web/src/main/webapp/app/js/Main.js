@@ -138,7 +138,7 @@ InferyxApp.config(['$httpProvider', '$ocLazyLoadProvider', 'KeepaliveProvider', 
                         notify.content = "Error Code" + rejection.status
                     } finally {
                     }
-                    $$rootScope.$emit('notify', notify);
+                    $rootScope.$emit('notify', notify);
                     $rootScope.$emit('CallFromAppRoleControllerLogout', {});
                 }else if(rejection.status == -1){
                     
