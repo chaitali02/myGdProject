@@ -19,7 +19,8 @@
   "locked" : "N",
     "published" : "N",
     "operatorType" : "CloneData",
-    "appInfo" : [ 
+   "publicFlag": "Y",
+  "appInfo" : [
         {
             "ref" : {
                 "type" : "application",

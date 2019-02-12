@@ -42,9 +42,20 @@ public class BaseEntity {
 	private String locked = "N";
 	private String published = "N";
 	private List<MetaIdentifierHolder> appInfo;
+	private String publicFlag = "Y";
+
 
 	static final Logger logger = Logger.getLogger(BaseEntity.class);
+
 	
+	public String getPublicFlag() {
+		return publicFlag;
+	}
+
+	public void setPublicFlag(String publicFlag) {
+		this.publicFlag = publicFlag;
+	}
+
 	public String getLocked() {
 		return this.locked;
 	}

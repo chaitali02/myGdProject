@@ -19,7 +19,8 @@
   "locked" : "N",
     "published" : "N",
     "operatorType" : "GenDataAttr",
-    "appInfo" : [ 
+   "publicFlag": "Y",
+  "appInfo" : [
         {
             "ref" : {
                 "type" : "application",

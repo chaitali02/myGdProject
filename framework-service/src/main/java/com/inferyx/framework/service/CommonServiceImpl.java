@@ -17,8 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.aggregation.SortOperation;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort;
-
-
+import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -224,16 +223,16 @@ import com.inferyx.framework.operator.RuleOperator;
 import com.inferyx.framework.register.GraphRegister;
 
 @Service
-public class CommonServiceImpl <T> {
+public class CommonServiceImpl<T> {
 
 	@Autowired
 	GraphRegister<?> registerGraph;
 	@Autowired
-    DatapodServiceImpl datapodServiceImpl;
+	DatapodServiceImpl datapodServiceImpl;
 	@Autowired
-    RelationServiceImpl relationServiceImpl;
+	RelationServiceImpl relationServiceImpl;
 	@Autowired
-	ApplicationServiceImpl applicationServiceImpl;	
+	ApplicationServiceImpl applicationServiceImpl;
 	@Autowired
 	RegisterService registerService;
 	@Autowired
@@ -241,7 +240,7 @@ public class CommonServiceImpl <T> {
 	@Autowired
 	UserServiceImpl userServiceImpl;
 	@Autowired
-	MetadataServiceImpl metadataServiceImpl;	
+	MetadataServiceImpl metadataServiceImpl;
 	@Autowired
 	IDatapodDao iDatapodDao;
 	@Autowired
@@ -254,8 +253,8 @@ public class CommonServiceImpl <T> {
 	ILoadDao iLoadDao;
 	@Autowired
 	IFunctionDao iFunctionDao;
-	@Autowired 
-	IMapDao iMapDao;	
+	@Autowired
+	IMapDao iMapDao;
 	@Autowired
 	IActivityDao iActivityDao;
 	@Autowired
@@ -334,8 +333,8 @@ public class CommonServiceImpl <T> {
 	IDatasourceDao iDatasourceDao;
 	@Autowired
 	IDataQualExecDao iDataQualExecDao;
-//	@Autowired
-//	MetadataUtil miUtil;
+	// @Autowired
+	// MetadataUtil miUtil;
 	@Autowired
 	GraphInfo graphFlag;
 	@Autowired
@@ -393,7 +392,7 @@ public class CommonServiceImpl <T> {
 	@Autowired
 	MessageServiceImpl messageServiceImpl;
 	@SuppressWarnings("rawtypes")
-	@Resource(name="taskThreadMap")
+	@Resource(name = "taskThreadMap")
 	ConcurrentHashMap taskThreadMap;
 	@Autowired
 	DataFrameService dataFrameService;
@@ -401,7 +400,7 @@ public class CommonServiceImpl <T> {
 	@Autowired
 	DownloadExec downloadExec;
 	@Autowired
-	UploadExec uploadExec;	
+	UploadExec uploadExec;
 	@Autowired
 	IDownloadDao iDownloadDao;
 	@Autowired
@@ -427,7 +426,7 @@ public class CommonServiceImpl <T> {
 	@Autowired
 	IReconGroupDao iReconGroupDao;
 	@Autowired
-	IReconGroupExecDao iReconGroupExecDao;	
+	IReconGroupExecDao iReconGroupExecDao;
 	@Autowired
 	ReconServiceImpl reconServiceImpl;
 	@Autowired
@@ -457,7 +456,7 @@ public class CommonServiceImpl <T> {
 	@Autowired
 	IGraphpodDao iGraphpodDao;
 	@Autowired
-	IGraphpodExecDao iGraphpodExecDao;	
+	IGraphpodExecDao iGraphpodExecDao;
 	@Autowired
 	DataStoreServiceImpl dataStoreServiceImpl;
 	@Autowired
@@ -474,16 +473,16 @@ public class CommonServiceImpl <T> {
 	IBatchExecDao iBatchExecDao;
 	@Autowired
 	IScheduleDao iScheduleDao;
-	@Autowired 
+	@Autowired
 	IIngestDao iIngestDao;
 	@Autowired
 	IIngestExecDao iIngestExecDao;
 	@Autowired
 	IIngestGroupDao iIngestGroupDao;
 	@Autowired
-	IIngestGroupExecDao iIngestGroupExecDao;	
+	IIngestGroupExecDao iIngestGroupExecDao;
 	@Autowired
-	IngestExecServiceImpl ingestExecServiceImpl;	
+	IngestExecServiceImpl ingestExecServiceImpl;
 	@Autowired
 	IngestGroupServiceImpl ingestGroupServiceImpl;
 	@Autowired
@@ -496,6 +495,7 @@ public class CommonServiceImpl <T> {
 	IOrganizationDao iOrganizationDao;
 	@Autowired
 	SessionHelper sessionHelper;
+
 	/**
 	 * @Ganesh
 	 *
@@ -508,12 +508,13 @@ public class CommonServiceImpl <T> {
 	/**
 	 * @Ganesh
 	 *
-	 * @param iProcessExecDao the iProcessExecDao to set
+	 * @param iProcessExecDao
+	 *            the iProcessExecDao to set
 	 */
 	public void setiOrganizationDao(IOrganizationDao iOrganizationDao) {
 		this.iOrganizationDao = iOrganizationDao;
 	}
-	
+
 	/**
 	 * @Ganesh
 	 *
@@ -526,14 +527,15 @@ public class CommonServiceImpl <T> {
 	/**
 	 * @Ganesh
 	 *
-	 * @param iProcessExecDao the iProcessExecDao to set
+	 * @param iProcessExecDao
+	 *            the iProcessExecDao to set
 	 */
 	public void setiProcessExecDao(IProcessExecDao iProcessExecDao) {
 		this.iProcessExecDao = iProcessExecDao;
 	}
 
 	/**
-	 * @Ganesh 
+	 * @Ganesh
 	 *
 	 * @return the iDeployExecDao
 	 */
@@ -542,9 +544,10 @@ public class CommonServiceImpl <T> {
 	}
 
 	/**
-	 * @Ganesh 
+	 * @Ganesh
 	 *
-	 * @param iDeployExecDao the iDeployExecDao to set
+	 * @param iDeployExecDao
+	 *            the iDeployExecDao to set
 	 */
 	public void setiDeployExecDao(IDeployExecDao iDeployExecDao) {
 		this.iDeployExecDao = iDeployExecDao;
@@ -564,7 +567,8 @@ public class CommonServiceImpl <T> {
 	 *
 	 * @Ganesh
 	 *
-	 * @param iTrainResultDao the iTrainResultDao to set
+	 * @param iTrainResultDao
+	 *            the iTrainResultDao to set
 	 */
 	public void setiTrainResultDao(ITrainResultDao iTrainResultDao) {
 		this.iTrainResultDao = iTrainResultDao;
@@ -600,7 +604,8 @@ public class CommonServiceImpl <T> {
 	 *
 	 * @Ganesh
 	 *
-	 * @param iIgestDao the iIngestDao to set
+	 * @param iIgestDao
+	 *            the iIngestDao to set
 	 */
 	public void setiIngestDao(IIngestDao iIngestDao) {
 		this.iIngestDao = iIngestDao;
@@ -620,7 +625,8 @@ public class CommonServiceImpl <T> {
 	 *
 	 * @Ganesh
 	 *
-	 * @param iIngestExecDao the iIngestExecDao to set
+	 * @param iIngestExecDao
+	 *            the iIngestExecDao to set
 	 */
 	public void setiIngestExecDao(IIngestExecDao iIngestExecDao) {
 		this.iIngestExecDao = iIngestExecDao;
@@ -665,7 +671,7 @@ public class CommonServiceImpl <T> {
 	public void setiReportDao(IReportDao iReportDao) {
 		this.iReportDao = iReportDao;
 	}
-	
+
 	public IGraphpodDao getiGraphpodDao() {
 		return this.iGraphpodDao;
 	}
@@ -718,7 +724,8 @@ public class CommonServiceImpl <T> {
 	/**
 	 * @Ganesh
 	 *
-	 * @param iOperatorDao the iOperatorDao to set
+	 * @param iOperatorDao
+	 *            the iOperatorDao to set
 	 */
 	public void setiOperatorDao(IOperatorDao iOperatorDao) {
 		this.iOperatorDao = iOperatorDao;
@@ -736,7 +743,8 @@ public class CommonServiceImpl <T> {
 	/**
 	 * @Ganesh
 	 *
-	 * @param iOperatorTypeDao the iOperatorTypeDao to set
+	 * @param iOperatorTypeDao
+	 *            the iOperatorTypeDao to set
 	 */
 	public void setiOperatorTypeDao(IOperatorTypeDao iOperatorTypeDao) {
 		this.iOperatorTypeDao = iOperatorTypeDao;
@@ -754,7 +762,8 @@ public class CommonServiceImpl <T> {
 	/**
 	 * @Ganesh
 	 *
-	 * @param iOperatorExecDao the iOperatorExecDao to set
+	 * @param iOperatorExecDao
+	 *            the iOperatorExecDao to set
 	 */
 	public void setiOperatorExecDao(IOperatorExecDao iOperatorExecDao) {
 		this.iOperatorExecDao = iOperatorExecDao;
@@ -780,7 +789,8 @@ public class CommonServiceImpl <T> {
 	/**
 	 * @Ganesh
 	 *
-	 * @param iDistributionDao the iDistributionDao to set
+	 * @param iDistributionDao
+	 *            the iDistributionDao to set
 	 */
 	public void setiDistributionDao(IDistributionDao iDistributionDao) {
 		this.iDistributionDao = iDistributionDao;
@@ -817,6 +827,7 @@ public class CommonServiceImpl <T> {
 	public void setReconGroupExecServiceImpl(ReconGroupExecServiceImpl reconGroupExecServiceImpl) {
 		this.reconGroupExecServiceImpl = reconGroupExecServiceImpl;
 	}
+
 	public IReconGroupDao getiReconGroupDao() {
 		return iReconGroupDao;
 	}
@@ -893,7 +904,8 @@ public class CommonServiceImpl <T> {
 	/**
 	 * @Ganesh
 	 *
-	 * @param iPredictDao the iPredictDao to set
+	 * @param iPredictDao
+	 *            the iPredictDao to set
 	 */
 	public void setiPredictDao(IPredictDao iPredictDAo) {
 		this.iPredictDao = iPredictDAo;
@@ -911,7 +923,8 @@ public class CommonServiceImpl <T> {
 	/**
 	 * @Ganesh
 	 *
-	 * @param iPredictExecDao the iPredictExecDao to set
+	 * @param iPredictExecDao
+	 *            the iPredictExecDao to set
 	 */
 	public void setiPredictExecDao(IPredictExecDao iPredictExecDao) {
 		this.iPredictExecDao = iPredictExecDao;
@@ -932,7 +945,6 @@ public class CommonServiceImpl <T> {
 	public void setUploadExec(UploadExec uploadExec) {
 		this.uploadExec = uploadExec;
 	}
-
 
 	public IDownloadDao getiDownloadDao() {
 		return iDownloadDao;
@@ -1021,14 +1033,14 @@ public class CommonServiceImpl <T> {
 	public void setGraphFlag(GraphInfo graphFlag) {
 		this.graphFlag = graphFlag;
 	}
-//
-//	public MetadataUtil getMiUtil() {
-//		return miUtil;
-//	}
-//
-//	public void setMiUtil(MetadataUtil miUtil) {
-//		this.miUtil = miUtil;
-//	}
+	//
+	// public MetadataUtil getMiUtil() {
+	// return miUtil;
+	// }
+	//
+	// public void setMiUtil(MetadataUtil miUtil) {
+	// this.miUtil = miUtil;
+	// }
 
 	public IDataQualExecDao getiDataQualExecDao() {
 		return iDataQualExecDao;
@@ -1109,6 +1121,7 @@ public class CommonServiceImpl <T> {
 	public void setiModelDao(IModelDao iModelDao) {
 		this.iModelDao = iModelDao;
 	}
+
 	public IDatapodDao getiDatapodDao() {
 		return iDatapodDao;
 	}
@@ -1124,7 +1137,7 @@ public class CommonServiceImpl <T> {
 	public void setiRuleDao(IRuleDao iRuleDao) {
 		this.iRuleDao = iRuleDao;
 	}
-	
+
 	public IMapDao getiMapDao() {
 		return iMapDao;
 	}
@@ -1132,7 +1145,7 @@ public class CommonServiceImpl <T> {
 	public void setiMapDao(IMapDao iMapDao) {
 		this.iMapDao = iMapDao;
 	}
-	
+
 	public IActivityDao getiActivityDao() {
 		return iActivityDao;
 	}
@@ -1508,7 +1521,7 @@ public class CommonServiceImpl <T> {
 	public void setProfileGroupExecServiceImpl(ProfileGroupExecServiceImpl profileGroupExecServiceImpl) {
 		this.profileGroupExecServiceImpl = profileGroupExecServiceImpl;
 	}
-	
+
 	public IngestExecServiceImpl getIngestExecServiceImpl() {
 		return ingestExecServiceImpl;
 	}
@@ -1517,12 +1530,10 @@ public class CommonServiceImpl <T> {
 		this.ingestExecServiceImpl = ingestExecServiceImpl;
 	}
 
-	
-
 	static final Logger logger = Logger.getLogger(CommonServiceImpl.class);
 	private static final String GET = "get";
 	private static final String SET = "set";
-	
+
 	public boolean csvToParquet(String csvFilePath, String parquetDir) throws Exception {
 		// Apply a schema to an RDD of JavaBeans and register it as a table.
 		// DataFrame schemaPeople = sqlContext.createDataFrame(people,
@@ -1530,29 +1541,28 @@ public class CommonServiceImpl <T> {
 		String appUuid = getApp().getUuid();
 		IExecutor exec = execFactory.getExecutor(ExecContext.spark.toString());
 		List<Attribute> attributes = exec.fetchAttributeList(csvFilePath, parquetDir, false, true, appUuid);
-		/*List<Attribute> attributes = dataFrameService.getAttributeList(csvFilePath, parquetDir, false, true);*/
-		/*DataFrame df = hiveContext.read().format("com.databricks.spark.csv").option("inferSchema", "true")
-				.option("header", "true").load(csvFilePath);
-		df.printSchema();
-		StructType st = df.schema();
-		Seq<StructField> seqFields = st.thisCollection();
-		Iterator<StructField>  iter= st.iterator();
-		List<Attribute> attributes = new ArrayList<Attribute>();
-		int i =0;
-		while(iter.hasNext()){
-			StructField sf = iter.next();
-			Attribute attr = new Attribute();
-			attr.setAttributeId(i++);
-			attr.setType(sf.dataType().typeName());
-			attr.setName(sf.name());
-			attr.setDesc(sf.name());
-			attributes.add(attr);
-		
-		}
-				
-		logger.info("Length of seq:"+seqFields.length());*/
-		logger.info("Attributes:"+attributes);
-		
+		/*
+		 * List<Attribute> attributes = dataFrameService.getAttributeList(csvFilePath,
+		 * parquetDir, false, true);
+		 */
+		/*
+		 * DataFrame df =
+		 * hiveContext.read().format("com.databricks.spark.csv").option("inferSchema",
+		 * "true") .option("header", "true").load(csvFilePath); df.printSchema();
+		 * StructType st = df.schema(); Seq<StructField> seqFields =
+		 * st.thisCollection(); Iterator<StructField> iter= st.iterator();
+		 * List<Attribute> attributes = new ArrayList<Attribute>(); int i =0;
+		 * while(iter.hasNext()){ StructField sf = iter.next(); Attribute attr = new
+		 * Attribute(); attr.setAttributeId(i++);
+		 * attr.setType(sf.dataType().typeName()); attr.setName(sf.name());
+		 * attr.setDesc(sf.name()); attributes.add(attr);
+		 * 
+		 * }
+		 * 
+		 * logger.info("Length of seq:"+seqFields.length());
+		 */
+		logger.info("Attributes:" + attributes);
+
 		Datapod dp = new Datapod();
 		dp.setName("stock_load");
 		dp.setCache("Y");
@@ -1563,7 +1573,7 @@ public class CommonServiceImpl <T> {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		Relation relation = new Relation();
 		MetaIdentifierHolder mih = new MetaIdentifierHolder();
 		mih.setRef(new MetaIdentifier());
@@ -1572,53 +1582,53 @@ public class CommonServiceImpl <T> {
 		mih.getRef().setVersion(dp.getVersion());
 		relation.setDependsOn(mih);
 		try {
-			//relation = relationServiceImpl.save(relation);
+			// relation = relationServiceImpl.save(relation);
 			save(MetaType.relation.toString(), relation);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}		
-		//df.write().parquet(parquetDir);
+		}
+		// df.write().parquet(parquetDir);
 		return true;
 	}
-	
+
 	public Datapod createDatapodFromCsv(String csvFilePath) throws Exception {
 
 		// Apply a schema to an RDD of JavaBeans and register it as a table.
 		// DataFrame schemaPeople = sqlContext.createDataFrame(people,
 		// String.class);
-		File f= new File(csvFilePath);
-		Datapod datapod= datapodServiceImpl.findOneByName(f.getName());
+		File f = new File(csvFilePath);
+		Datapod datapod = datapodServiceImpl.findOneByName(f.getName());
 		// If datapod is already present for this filename, then return here
-		if(datapod != null) return datapod;
+		if (datapod != null)
+			return datapod;
 		String parquetDir = null;
 		String appUuid = getApp().getUuid();
 		IExecutor exec = execFactory.getExecutor(ExecContext.spark.toString());
 		List<Attribute> attributes = exec.fetchAttributeList(csvFilePath, parquetDir, false, false, appUuid);
-		/*List<Attribute> attributes = dataFrameService.getAttributeList(csvFilePath, parquetDir, false, false);*/
-		
-		/*DataFrame df = hiveContext.read().format("com.databricks.spark.csv").option("inferSchema", "true")
-				.option("header", "true").load(csvFilePath);
-		df.printSchema();
-		StructType st = df.schema();
-		Seq<StructField> seqFields = st.thisCollection();
-		Iterator<StructField>  iter= st.iterator();
-		List<Attribute> attributes = new ArrayList<Attribute>();
-		int i =0;
-		while(iter.hasNext()){
-			StructField sf = iter.next();
-			Attribute attr = new Attribute();
-			attr.setAttributeId(i++);
-			attr.setType(sf.dataType().typeName());
-			attr.setName(sf.name());
-			attr.setDesc(sf.name());
-			attributes.add(attr);
-		
-		}*/
-				
-		//logger.info("Length of seq:"+seqFields.length());
-		logger.info("Attributes:"+attributes);
-		
+		/*
+		 * List<Attribute> attributes = dataFrameService.getAttributeList(csvFilePath,
+		 * parquetDir, false, false);
+		 */
+
+		/*
+		 * DataFrame df =
+		 * hiveContext.read().format("com.databricks.spark.csv").option("inferSchema",
+		 * "true") .option("header", "true").load(csvFilePath); df.printSchema();
+		 * StructType st = df.schema(); Seq<StructField> seqFields =
+		 * st.thisCollection(); Iterator<StructField> iter= st.iterator();
+		 * List<Attribute> attributes = new ArrayList<Attribute>(); int i =0;
+		 * while(iter.hasNext()){ StructField sf = iter.next(); Attribute attr = new
+		 * Attribute(); attr.setAttributeId(i++);
+		 * attr.setType(sf.dataType().typeName()); attr.setName(sf.name());
+		 * attr.setDesc(sf.name()); attributes.add(attr);
+		 * 
+		 * }
+		 */
+
+		// logger.info("Length of seq:"+seqFields.length());
+		logger.info("Attributes:" + attributes);
+
 		Datapod dp = new Datapod();
 		dp.setName(f.getName());
 		dp.setCache("Y");
@@ -1629,7 +1639,7 @@ public class CommonServiceImpl <T> {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		Relation relation = new Relation();
 		MetaIdentifierHolder mih = new MetaIdentifierHolder();
 		mih.setRef(new MetaIdentifier());
@@ -1638,7 +1648,7 @@ public class CommonServiceImpl <T> {
 		mih.getRef().setVersion(dp.getVersion());
 		relation.setDependsOn(mih);
 		try {
-			//relation = relationServiceImpl.save(relation);
+			// relation = relationServiceImpl.save(relation);
 			save(MetaType.relation.toString(), relation);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -1647,72 +1657,73 @@ public class CommonServiceImpl <T> {
 		return dp;
 	}
 
-	public List<BaseEntity> getAll(String type) throws JsonProcessingException{
+	public List<BaseEntity> getAll(String type) throws JsonProcessingException {
 		List<BaseEntity> newObjectList = new ArrayList<>();
-		try { 
+		try {
 			List<T> objectList = findAll(Helper.getMetaType(type));
-			for (Object obj : objectList){
+			for (Object obj : objectList) {
 				newObjectList.add((BaseEntity) resolveName(obj, Helper.getMetaType(type)));
 			}
 			return newObjectList;
-		} catch (NullPointerException | IllegalArgumentException | SecurityException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | ParseException e) {
+		} catch (NullPointerException | IllegalArgumentException | SecurityException | IllegalAccessException
+				| InvocationTargetException | NoSuchMethodException | ParseException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
-		  
 
-	
-	
 	@SuppressWarnings({ "unchecked" })
 	public List<T> findAll(MetaType type) {
-		String appUuid = null;						
-		if (!type.equals(MetaType.user) && !type.equals(MetaType.group)
-			&& !type.equals(MetaType.role) && !type.equals(MetaType.privilege)
-			&& !type.equals(MetaType.application) && !type.equals(MetaType.meta)) {
+		String appUuid = null;
+		if (!type.equals(MetaType.user) && !type.equals(MetaType.group) && !type.equals(MetaType.role)
+				&& !type.equals(MetaType.privilege) && !type.equals(MetaType.application)
+				&& !type.equals(MetaType.meta)) {
 			appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-						? securityServiceImpl.getAppInfo().getRef().getUuid() : null;							
+					? securityServiceImpl.getAppInfo().getRef().getUuid()
+					: null;
 		}
 		try {
-			Object iDao = this.getClass().getMethod(GET+Helper.getDaoClass(type)).invoke(this);
+			Object iDao = this.getClass().getMethod(GET + Helper.getDaoClass(type)).invoke(this);
 			if (appUuid == null) {
-				return (List<T>)(iDao).getClass().getMethod("findAll").invoke(iDao);
+				return (List<T>) (iDao).getClass().getMethod("findAll").invoke(iDao);
 			} else {
-				return (List<T>)(iDao).getClass().getMethod("findAll", String.class).invoke(iDao, appUuid);
+				return (List<T>) (iDao).getClass().getMethod("findAll", String.class).invoke(iDao, appUuid);
 			}
-		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			
+		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException e) {
+
 			e.printStackTrace();
 		}
 		return null;
 	}
-	
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List findAllLatest(MetaType type) {
 		List objectList = new ArrayList();
 		List finalObjectList = new ArrayList();
-		java.util.HashMap<String, BaseEntity> objectMap = new java.util.HashMap<>(); 
+		java.util.HashMap<String, BaseEntity> objectMap = new java.util.HashMap<>();
 		BaseEntity baseEntity = null;
-		String appUuid = null;	
-		if (!type.equals(MetaType.user) && !type.equals(MetaType.group)
-				&& !type.equals(MetaType.role) && !type.equals(MetaType.privilege)
-				&& !type.equals(MetaType.application)) {
-				appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-							? securityServiceImpl.getAppInfo().getRef().getUuid() : null;							
+		String appUuid = null;
+		if (!type.equals(MetaType.user) && !type.equals(MetaType.group) && !type.equals(MetaType.role)
+				&& !type.equals(MetaType.privilege) && !type.equals(MetaType.application)) {
+			appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
+					? securityServiceImpl.getAppInfo().getRef().getUuid()
+					: null;
 		}
 		try {
-			Object iDao = this.getClass().getMethod(GET+Helper.getDaoClass(type)).invoke(this);
+			Object iDao = this.getClass().getMethod(GET + Helper.getDaoClass(type)).invoke(this);
 			if (appUuid == null) {
-				objectList = (List)(iDao).getClass().getMethod("findAll").invoke(iDao);
+				objectList = (List) (iDao).getClass().getMethod("findAll").invoke(iDao);
 			} else {
-				objectList = (List)(iDao).getClass().getMethod("findAll", String.class).invoke(iDao, appUuid);
+				objectList = (List) (iDao).getClass().getMethod("findAll", String.class).invoke(iDao, appUuid);
 			}
-			//List<BaseEntity> baseEntityList = getBaseEntityList(objectList);
-			
+			// List<BaseEntity> baseEntityList = getBaseEntityList(objectList);
+
 			for (int i = 0; i < objectList.size(); i++) {
 				baseEntity = BaseEntity.class.cast(objectList.get(i));
 				if (objectMap.containsKey(baseEntity.getUuid())) {
-					if (Long.parseLong(baseEntity.getVersion()) > Long.parseLong(objectMap.get(baseEntity.getUuid()).getVersion())) {
+					if (Long.parseLong(baseEntity.getVersion()) > Long
+							.parseLong(objectMap.get(baseEntity.getUuid()).getVersion())) {
 						objectMap.put(baseEntity.getUuid(), baseEntity);
 					}
 				} else {
@@ -1721,17 +1732,20 @@ public class CommonServiceImpl <T> {
 			}
 			for (String uuid : objectMap.keySet()) {
 				finalObjectList.add(Helper.getDomainClass(type).cast(objectMap.get(uuid)));
-				//finalObjectList.add(objectMap.get(uuid));
+				// finalObjectList.add(objectMap.get(uuid));
 			}
 			return finalObjectList;
-		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 
-	public List<BaseEntity> getBaseEntityList(List<BaseEntity> objectList) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		
+	public List<BaseEntity> getBaseEntityList(List<BaseEntity> objectList)
+			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+
 		List<BaseEntity> baseEntityList = new ArrayList<>();
 
 		for (BaseEntity objDet : objectList) {
@@ -1747,31 +1761,38 @@ public class CommonServiceImpl <T> {
 			baseEntity.setActive(objDet.getActive());
 			baseEntity.setPublished(objDet.getPublished());
 			baseEntity.setAppInfo(objDet.getAppInfo());
-			baseEntityList.add(baseEntity);			
+			baseEntityList.add(baseEntity);
 		}
 		return baseEntityList;
 	}
-	
-	public List<BaseEntity> resolveBaseEntityList(List<BaseEntity> baseEntityList) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 
-		 if (baseEntityList == null)
-			 return null;
-		 
-		 List<BaseEntity> baseEntityListNew = new ArrayList<>();
-		 for (BaseEntity be : baseEntityList) {			 
-			 baseEntityListNew.add(metadataServiceImpl.resolveBaseEntity(be));			 
-		 }
-		 
-		 return baseEntityListNew;		 
-	 }
+	public List<BaseEntity> resolveBaseEntityList(List<BaseEntity> baseEntityList)
+			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 
-	public Object resolveName(Object object, MetaType type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ParseException, java.text.ParseException, NullPointerException, JsonProcessingException {
+		if (baseEntityList == null)
+			return null;
+
+		List<BaseEntity> baseEntityListNew = new ArrayList<>();
+		for (BaseEntity be : baseEntityList) {
+			baseEntityListNew.add(metadataServiceImpl.resolveBaseEntity(be));
+		}
+
+		return baseEntityListNew;
+	}
+
+	public Object resolveName(Object object, MetaType type)
+			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
+			SecurityException, ParseException, java.text.ParseException, NullPointerException, JsonProcessingException {
 		return resolveName(object, type, 4, 0);
 	}
-	
+
 	@SuppressWarnings("rawtypes")
-	public Object resolveName(Object object, MetaType type, int requiredDegree, int actualDegree) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ParseException, java.text.ParseException, NullPointerException, JsonProcessingException {
-//		logger.info("Resolving object " + object + " for type "+type+" with requiredDegree "+requiredDegree+" and actualDegree "+actualDegree);
+	public Object resolveName(Object object, MetaType type, int requiredDegree, int actualDegree)
+			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
+			SecurityException, ParseException, java.text.ParseException, NullPointerException, JsonProcessingException {
+		// logger.info("Resolving object " + object + " for type "+type+" with
+		// requiredDegree "+requiredDegree+" and actualDegree "+actualDegree);
 		String uuid = "";
 		String version = "";
 		if (object == null) {
@@ -1780,127 +1801,145 @@ public class CommonServiceImpl <T> {
 		if (actualDegree > requiredDegree) {
 			return null;
 		}
-		if(object != null) {
-			Method [] methodList = object.getClass().getMethods();
+		if (object != null) {
+			Method[] methodList = object.getClass().getMethods();
 			ArrayList listObj = null;
-			Class [] interfaces = null;
+			Class[] interfaces = null;
 			String name = null;
 			String attrId = null;
-//			if (object instanceof AttributeRefHolder) {
-////				object = object.getClass().getMethod(GET+"Ref").invoke(object);
-//				attrId = (String) object.getClass().getMethod(GET+"AttrId").invoke(object);
-//				if (StringUtils.isNotBlank(attrId)) {
-//					object.getClass().getMethod(SET+"AttrName", String.class).invoke(object, resolveAttributeName(attrId, object));					
-//				}
-//				else {
-//					Object refObject = object.getClass().getMethod(GET+"Ref").invoke(object);
-//					if (refObject != null) {
-//						type = (MetaType) refObject.getClass().getMethod(GET+"Type").invoke(refObject);
-//						name = getName((String)refObject.getClass().getMethod(GET+"Uuid").invoke(refObject), (String)refObject.getClass().getMethod(GET+"Version").invoke(refObject), type);
-////						logger.info("Name : " + name);
-//						if(name != null) {
-//							refObject.getClass().getMethod(SET+"Name", String.class).invoke(refObject, name);
-//							object.getClass().getMethod(SET+"AttrName", String.class).invoke(object, name);
-//							name = null;							
-//						}
-//					}
-//				}
-//				return object;
-//			}
+			// if (object instanceof AttributeRefHolder) {
+			//// object = object.getClass().getMethod(GET+"Ref").invoke(object);
+			// attrId = (String) object.getClass().getMethod(GET+"AttrId").invoke(object);
+			// if (StringUtils.isNotBlank(attrId)) {
+			// object.getClass().getMethod(SET+"AttrName", String.class).invoke(object,
+			// resolveAttributeName(attrId, object));
+			// }
+			// else {
+			// Object refObject = object.getClass().getMethod(GET+"Ref").invoke(object);
+			// if (refObject != null) {
+			// type = (MetaType)
+			// refObject.getClass().getMethod(GET+"Type").invoke(refObject);
+			// name =
+			// getName((String)refObject.getClass().getMethod(GET+"Uuid").invoke(refObject),
+			// (String)refObject.getClass().getMethod(GET+"Version").invoke(refObject),
+			// type);
+			//// logger.info("Name : " + name);
+			// if(name != null) {
+			// refObject.getClass().getMethod(SET+"Name", String.class).invoke(refObject,
+			// name);
+			// object.getClass().getMethod(SET+"AttrName", String.class).invoke(object,
+			// name);
+			// name = null;
+			// }
+			// }
+			// }
+			// return object;
+			// }
 			if (object instanceof AttributeRefHolder) {
-				Object attributeId = object.getClass().getMethod(GET+"AttrId").invoke(object);
-				if(attributeId != null) {
+				Object attributeId = object.getClass().getMethod(GET + "AttrId").invoke(object);
+				if (attributeId != null) {
 					attrId = attributeId.toString();
-					object.getClass().getMethod(SET+"AttrName", String.class).invoke(object, resolveAttributeName(attrId, object));
-									
+					object.getClass().getMethod(SET + "AttrName", String.class).invoke(object,
+							resolveAttributeName(attrId, object));
+
 				}
-				MetaIdentifier refObject = (MetaIdentifier) object.getClass().getMethod(GET+"Ref").invoke(object);
+				MetaIdentifier refObject = (MetaIdentifier) object.getClass().getMethod(GET + "Ref").invoke(object);
 				if (refObject != null) {
-					resolveName(refObject, null, requiredDegree, actualDegree+1);
-				}	
+					resolveName(refObject, null, requiredDegree, actualDegree + 1);
+				}
 				return object;
 			}
 			if (object instanceof SourceAttr) {
-				Object attributeId = object.getClass().getMethod(GET+"AttributeId").invoke(object);
-				if(attributeId != null) {
+				Object attributeId = object.getClass().getMethod(GET + "AttributeId").invoke(object);
+				if (attributeId != null) {
 					attrId = attributeId.toString();
-					object.getClass().getMethod(SET+"AttributeName", String.class).invoke(object, resolveAttributeName(attrId, object));
-									
+					object.getClass().getMethod(SET + "AttributeName", String.class).invoke(object,
+							resolveAttributeName(attrId, object));
+
 				}
-				MetaIdentifier refObject = (MetaIdentifier) object.getClass().getMethod(GET+"Ref").invoke(object);
+				MetaIdentifier refObject = (MetaIdentifier) object.getClass().getMethod(GET + "Ref").invoke(object);
 				if (refObject != null) {
-					resolveName(refObject, null, requiredDegree, actualDegree+1);
-				}	
+					resolveName(refObject, null, requiredDegree, actualDegree + 1);
+				}
 				return object;
 			}
 			if (object instanceof MetaIdentifierHolder) {
-				object = object.getClass().getMethod(GET+"Ref").invoke(object);
+				object = object.getClass().getMethod(GET + "Ref").invoke(object);
 				if (object == null) {
 					return object;
 				}
 				// Control shall move to next if condition - MetaIdentifier
 			}
 			if (object instanceof MetaIdentifier) {
-				type = (MetaType) object.getClass().getMethod(GET+"Type").invoke(object);
-				name = getName((String)object.getClass().getMethod(GET+"Uuid").invoke(object), (String)object.getClass().getMethod(GET+"Version").invoke(object), type);
-				if(name != null) {
-					object.getClass().getMethod(SET+"Name", String.class).invoke(object, name);
-					name = null;							
+				type = (MetaType) object.getClass().getMethod(GET + "Type").invoke(object);
+				name = getName((String) object.getClass().getMethod(GET + "Uuid").invoke(object),
+						(String) object.getClass().getMethod(GET + "Version").invoke(object), type);
+				if (name != null) {
+					object.getClass().getMethod(SET + "Name", String.class).invoke(object, name);
+					name = null;
 				}
 				return object;
-			}	
-			try{
+			}
+			try {
 				for (Method method : methodList) {
 					if (!method.getName().startsWith(GET) || method.getParameterCount() > 0) {
 						continue;
 					}
-//					logger.info("Checking method : " + method.getName());
-									
+					// logger.info("Checking method : " + method.getName());
+
 					if (method.getName().contains("Uuid")) {
-						//logger.info(" Inside resolveName : " + type);
-						name = getName((String)object.getClass().getMethod(GET+"Uuid").invoke(object), (String)object.getClass().getMethod(GET+"Version").invoke(object), type);
-						if(name != null) {
-							object.getClass().getMethod(SET+"Name", String.class).invoke(object, name);
-							name = null;							
+						// logger.info(" Inside resolveName : " + type);
+						name = getName((String) object.getClass().getMethod(GET + "Uuid").invoke(object),
+								(String) object.getClass().getMethod(GET + "Version").invoke(object), type);
+						if (name != null) {
+							object.getClass().getMethod(SET + "Name", String.class).invoke(object, name);
+							name = null;
 						}
 						continue;
 					}
 					if (method.getName().contains("UUID")) {
-						//logger.info(" Inside resolveName : " + type);
-						name = getName((String)object.getClass().getMethod(GET+"UUID").invoke(object), (String)object.getClass().getMethod(GET+"Version").invoke(object), type);
-						object.getClass().getMethod(SET+"Name", String.class).invoke(object, name);
+						// logger.info(" Inside resolveName : " + type);
+						name = getName((String) object.getClass().getMethod(GET + "UUID").invoke(object),
+								(String) object.getClass().getMethod(GET + "Version").invoke(object), type);
+						object.getClass().getMethod(SET + "Name", String.class).invoke(object, name);
 						name = null;
 						continue;
 					}
-					if ((method.getName().contains("AttrId") || method.getName().contains("AttributeId")) && method.getName().startsWith(GET))  {
-						//attrId = String.class.cast(method.invoke(object));
-						Object attributeId = method.invoke(object); 
-						if(attributeId != null)
+					if ((method.getName().contains("AttrId") || method.getName().contains("AttributeId"))
+							&& method.getName().startsWith(GET)) {
+						// attrId = String.class.cast(method.invoke(object));
+						Object attributeId = method.invoke(object);
+						if (attributeId != null)
 							attrId = attributeId.toString();
-						/*else
-							logger.info("resolveName method: attributeId is null for the Object " + type);*/
-						if(attributeId != null)
+						/*
+						 * else logger.info("resolveName method: attributeId is null for the Object " +
+						 * type);
+						 */
+						if (attributeId != null)
 							for (Method innerMethod : methodList) {
-								if (innerMethod.getName().startsWith(SET + "Attr") /*|| innerMethod.getName().startsWith(SET + "Attribute")*/ && innerMethod.getName().contains("Name")) {
+								if (innerMethod.getName().startsWith(SET + "Attr")
+										/* || innerMethod.getName().startsWith(SET + "Attribute") */ && innerMethod
+												.getName().contains("Name")) {
 									innerMethod.invoke(object, resolveAttributeName(attrId, object));
 								}
-							}	
-					}					
-					
-					if(object instanceof ParamSet) {
+							}
+					}
+
+					if (object instanceof ParamSet) {
 						ParamSet paramSet = (ParamSet) object;
 						List<ParamInfo> paramInfo = paramSet.getParamInfo();
 						List<ParamListHolder> paramSetVal = null;
 						List<ParamInfo> paramInfos = new ArrayList<>();
-						for(ParamInfo info : paramInfo) {
+						for (ParamInfo info : paramInfo) {
 							paramSetVal = info.getParamSetVal();
 							List<ParamListHolder> paramListHolders = new ArrayList<>();
-							for(ParamListHolder paramListHolder : paramSetVal) {
-								ParamList paramList = (ParamList) getLatestByUuid(paramListHolder.getRef().getUuid(), paramListHolder.getRef().getType().toString(), "N");
-								for(Param param : paramList.getParams()) 
-									if(paramListHolder.getParamId().equalsIgnoreCase(param.getParamId()))
+							for (ParamListHolder paramListHolder : paramSetVal) {
+								ParamList paramList = (ParamList) getLatestByUuid(paramListHolder.getRef().getUuid(),
+										paramListHolder.getRef().getType().toString(), "N");
+								for (Param param : paramList.getParams())
+									if (paramListHolder.getParamId().equalsIgnoreCase(param.getParamId()))
 										paramListHolder.setParamName(param.getParamName());
-									
+
 								paramListHolders.add(paramListHolder);
 							}
 							info.setParamSetVal(paramListHolders);
@@ -1909,66 +1948,75 @@ public class CommonServiceImpl <T> {
 						paramSet.setParamInfo(paramInfos);
 						object = paramSet;
 					}
-					/*if (method.getName().contains("ParamListInfo") && method.getName().startsWith(GET) && (object instanceof ExecParams))  {
-						System.out.println();
-						List<ParamListHolder> paramListInfo = (List<ParamListHolder>) method.invoke(object);
-						System.out.println();
-					}*/
-					if ((method.getName().contains("OperatorParams") || (object instanceof ExecParams)) && method.getName().startsWith(GET))  {
-						if(method.getName().contains("OperatorParams")){
+					/*
+					 * if (method.getName().contains("ParamListInfo") &&
+					 * method.getName().startsWith(GET) && (object instanceof ExecParams)) {
+					 * System.out.println(); List<ParamListHolder> paramListInfo =
+					 * (List<ParamListHolder>) method.invoke(object); System.out.println(); }
+					 */
+					if ((method.getName().contains("OperatorParams") || (object instanceof ExecParams))
+							&& method.getName().startsWith(GET)) {
+						if (method.getName().contains("OperatorParams")) {
 							@SuppressWarnings("unchecked")
 							HashMap<String, Object> operatorParams = (HashMap<String, Object>) method.invoke(object);
-							if(operatorParams != null) {
-								if(operatorParams.containsKey("EXEC_PARAMS")) {
+							if (operatorParams != null) {
+								if (operatorParams.containsKey("EXEC_PARAMS")) {
 									ObjectMapper mapper = new ObjectMapper();
-									ExecParams execParams = mapper.convertValue(operatorParams.get("EXEC_PARAMS"), ExecParams.class);
+									ExecParams execParams = mapper.convertValue(operatorParams.get("EXEC_PARAMS"),
+											ExecParams.class);
 									execParams = resolveExecParams(execParams);
 									operatorParams.put("EXEC_PARAMS", execParams);
 								}
 							}
-						} else if((object instanceof ExecParams)) {
-							object = resolveExecParams((ExecParams)object);
+						} else if ((object instanceof ExecParams)) {
+							object = resolveExecParams((ExecParams) object);
 						}
-						
+
 					}
-					
-					if ((method.getName().contains("FeatureAttrMap")) && object instanceof Train && method.getName().startsWith(GET))  {
+
+					if ((method.getName().contains("FeatureAttrMap")) && object instanceof Train
+							&& method.getName().startsWith(GET)) {
 						@SuppressWarnings("unchecked")
 						List<FeatureAttrMap> featureAttrMap = (List<FeatureAttrMap>) method.invoke(object);
 						object = resolveFeatureAttrMap(featureAttrMap, object);
 					}
-					 
-					if ((method.getName().contains("ParamListInfo")) && method.getReturnType().equals(ParamListHolder.class) && method.getName().startsWith(GET)){	
+
+					if ((method.getName().contains("ParamListInfo"))
+							&& method.getReturnType().equals(ParamListHolder.class)
+							&& method.getName().startsWith(GET)) {
 						ParamListHolder paramListHolder = (ParamListHolder) method.invoke(object);
-						if(paramListHolder != null) {
-							ParamList paramList = (ParamList) getLatestByUuid(paramListHolder.getRef().getUuid(), paramListHolder.getRef().getType().toString(), "N");
-							for(Param param : paramList.getParams()) {							
-								if(paramListHolder.getParamId().equalsIgnoreCase(param.getParamId()))
+						if (paramListHolder != null) {
+							ParamList paramList = (ParamList) getLatestByUuid(paramListHolder.getRef().getUuid(),
+									paramListHolder.getRef().getType().toString(), "N");
+							for (Param param : paramList.getParams()) {
+								if (paramListHolder.getParamId().equalsIgnoreCase(param.getParamId()))
 									paramListHolder.setParamName(param.getParamName());
 							}
-							object = object.getClass().getMethod(SET+"ParamListInfo", List.class).invoke(object, paramListHolder);								
-						}						
+							object = object.getClass().getMethod(SET + "ParamListInfo", List.class).invoke(object,
+									paramListHolder);
+						}
 					}
-					
+
 					if (method.getReturnType().isPrimitive()) {
 						continue;
 					}
 					Object invokedObj = method.invoke(object);
-					if (invokedObj == null /*|| invokedObj.getClass().isPrimitive()*/) {
+					if (invokedObj == null /* || invokedObj.getClass().isPrimitive() */) {
 						continue;
 					}
-//					logger.info("Class : " + invokedObj.getClass().getName());
-					if (invokedObj.getClass().getName().startsWith("[") || invokedObj.getClass().getName().equals("java.util.ArrayList")) {
+					// logger.info("Class : " + invokedObj.getClass().getName());
+					if (invokedObj.getClass().getName().startsWith("[")
+							|| invokedObj.getClass().getName().equals("java.util.ArrayList")) {
 						interfaces = invokedObj.getClass().getInterfaces();
 						if (interfaces == null || interfaces.length <= 0) {
 							continue;
 						}
 						for (Class<?> interface1 : interfaces) {
 							if (interface1.getName().equals("java.util.List")) {
-								listObj = (ArrayList)invokedObj;
+								listObj = (ArrayList) invokedObj;
 								for (Object arrayObj : listObj) {
 									if (arrayObj.getClass().getPackage().getName().contains("inferyx")) {
-										resolveName(arrayObj, null, requiredDegree, actualDegree+1);
+										resolveName(arrayObj, null, requiredDegree, actualDegree + 1);
 									}
 								}
 							} else {
@@ -1977,11 +2025,11 @@ public class CommonServiceImpl <T> {
 						}
 						continue;
 					}
-						if (!invokedObj.getClass().getPackage().getName().contains("inferyx")) {
+					if (!invokedObj.getClass().getPackage().getName().contains("inferyx")) {
 						continue;
 					}
-					
-					resolveName(invokedObj, type, requiredDegree, actualDegree+1);
+
+					resolveName(invokedObj, type, requiredDegree, actualDegree + 1);
 				}
 			} catch (NullPointerException | NoSuchMethodException e) {
 				e.printStackTrace();
@@ -1992,144 +2040,157 @@ public class CommonServiceImpl <T> {
 		}
 		return object;
 	}
-	
+
 	/**
 	 * @Ganesh
 	 *
 	 * @param operatorParams
 	 * @return
-	 * @throws JsonProcessingException 
+	 * @throws JsonProcessingException
 	 */
 	private ExecParams resolveExecParams(ExecParams execParams) throws JsonProcessingException {
-				List<ParamListHolder> paramListInfo= execParams.getParamListInfo();
-				List<ParamSetHolder> paramSetHolder= execParams.getParamInfo();
-				if(paramListInfo != null)
-					for(ParamListHolder holder : paramListInfo) {
-						MetaIdentifier ref = holder.getRef();
-						if(ref != null) {
-							ParamList paramList = (ParamList) getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
-							for(Param param : paramList.getParams())
-								if(param.getParamId().equalsIgnoreCase(holder.getParamId())) {
-									holder.setParamName(param.getParamName());
-									holder.setParamType(param.getParamType());
-								}
+		List<ParamListHolder> paramListInfo = execParams.getParamListInfo();
+		List<ParamSetHolder> paramSetHolder = execParams.getParamInfo();
+		if (paramListInfo != null)
+			for (ParamListHolder holder : paramListInfo) {
+				MetaIdentifier ref = holder.getRef();
+				if (ref != null) {
+					ParamList paramList = (ParamList) getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(),
+							ref.getType().toString(), "N");
+					for (Param param : paramList.getParams())
+						if (param.getParamId().equalsIgnoreCase(holder.getParamId())) {
+							holder.setParamName(param.getParamName());
+							holder.setParamType(param.getParamType());
 						}
-						List<AttributeRefHolder> attributeInfo = holder.getAttributeInfo();
-						if(attributeInfo != null) {
-							for(AttributeRefHolder attributeRefHolder : attributeInfo) {
-								MetaIdentifier attrRef = attributeRefHolder.getRef();
-								if(attrRef != null) {
-									Object attrRefObj = getOneByUuidAndVersion(attrRef.getUuid(), attrRef.getVersion(), attrRef.getType().toString(), "N");
-									if(attrRefObj instanceof Datapod) {
-										Datapod datapod = (Datapod) attrRefObj;
-										
-										for(Attribute attribute : datapod.getAttributes()) {
-											if(attribute.getAttributeId().equals(Integer.parseInt(""+attributeRefHolder.getAttrId()))) {
-												attributeRefHolder.setAttrName(attribute.getName());
-											}
-										}
-										attributeRefHolder.getRef().setName(datapod.getName());
-									} else if(attrRefObj instanceof DataSet) {
-										DataSet dataSet = (DataSet) attrRefObj;
-										
-										for(AttributeSource attributeSource : dataSet.getAttributeInfo()) {
-											if(attributeSource.getAttrSourceId().equalsIgnoreCase(""+attributeRefHolder.getAttrId())) {
-												attributeRefHolder.setAttrName(attributeSource.getAttrSourceName());
-											}
-										}
-										attributeRefHolder.getRef().setName(dataSet.getName());
-									} else if(attrRefObj instanceof Rule) {
-										Rule rule = (Rule) attrRefObj;
+				}
+				List<AttributeRefHolder> attributeInfo = holder.getAttributeInfo();
+				if (attributeInfo != null) {
+					for (AttributeRefHolder attributeRefHolder : attributeInfo) {
+						MetaIdentifier attrRef = attributeRefHolder.getRef();
+						if (attrRef != null) {
+							Object attrRefObj = getOneByUuidAndVersion(attrRef.getUuid(), attrRef.getVersion(),
+									attrRef.getType().toString(), "N");
+							if (attrRefObj instanceof Datapod) {
+								Datapod datapod = (Datapod) attrRefObj;
 
-										for(AttributeSource attributeSource : rule.getAttributeInfo()) {
-											if(attributeSource.getAttrSourceId().equalsIgnoreCase(""+attributeRefHolder.getAttrId())) {
-												attributeRefHolder.setAttrName(attributeSource.getAttrSourceName());
-											}
-										}
-										attributeRefHolder.getRef().setName(rule.getName());
+								for (Attribute attribute : datapod.getAttributes()) {
+									if (attribute.getAttributeId()
+											.equals(Integer.parseInt("" + attributeRefHolder.getAttrId()))) {
+										attributeRefHolder.setAttrName(attribute.getName());
 									}
-									
 								}
+								attributeRefHolder.getRef().setName(datapod.getName());
+							} else if (attrRefObj instanceof DataSet) {
+								DataSet dataSet = (DataSet) attrRefObj;
+
+								for (AttributeSource attributeSource : dataSet.getAttributeInfo()) {
+									if (attributeSource.getAttrSourceId()
+											.equalsIgnoreCase("" + attributeRefHolder.getAttrId())) {
+										attributeRefHolder.setAttrName(attributeSource.getAttrSourceName());
+									}
+								}
+								attributeRefHolder.getRef().setName(dataSet.getName());
+							} else if (attrRefObj instanceof Rule) {
+								Rule rule = (Rule) attrRefObj;
+
+								for (AttributeSource attributeSource : rule.getAttributeInfo()) {
+									if (attributeSource.getAttrSourceId()
+											.equalsIgnoreCase("" + attributeRefHolder.getAttrId())) {
+										attributeRefHolder.setAttrName(attributeSource.getAttrSourceName());
+									}
+								}
+								attributeRefHolder.getRef().setName(rule.getName());
 							}
-						}
-					}
-				if(paramSetHolder !=null) {
-					for(ParamSetHolder holder : paramSetHolder) {
-						MetaIdentifier ref = holder.getRef();
-						if(ref != null) {
-							ParamSet paramSet = (ParamSet) getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
-							ref.setName(paramSet.getName());
-							holder.setRef(ref);
+
 						}
 					}
 				}
+			}
+		if (paramSetHolder != null) {
+			for (ParamSetHolder holder : paramSetHolder) {
+				MetaIdentifier ref = holder.getRef();
+				if (ref != null) {
+					ParamSet paramSet = (ParamSet) getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(),
+							ref.getType().toString(), "N");
+					ref.setName(paramSet.getName());
+					holder.setRef(ref);
+				}
+			}
+		}
 		return execParams;
 	}
 
-	public T resolveName(String uuid, String type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ParseException, java.text.ParseException, NullPointerException, JsonProcessingException {
+	public T resolveName(String uuid, String type)
+			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
+			SecurityException, ParseException, java.text.ParseException, NullPointerException, JsonProcessingException {
 		return getAllByUuid(uuid, type);
 	}
-		
-	/*public String resolveName(String uuid, String version, MetaType type) throws ParseException, java.text.ParseException {
-		List<BaseEntity> baseEntityList = null;
-		baseEntityList = metadataServiceImpl.getBaseEntityByCriteria(type.toString(), null, null, null, null, null, null, uuid, version);
-		if (baseEntityList == null || baseEntityList.isEmpty()) {
-				return null;
-			}
-			//logger.info(" Inside resolveName : " + baseEntityList.get(0).getName());
-			return baseEntityList.get(0).getName();
-		}*/
 
-	public String getName(String uuid, String version, MetaType type) throws ParseException, java.text.ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
-		if(type == MetaType.simple 
-				|| type == MetaType.attribute 
-				|| type == null
-				|| uuid == null) {
+	/*
+	 * public String resolveName(String uuid, String version, MetaType type) throws
+	 * ParseException, java.text.ParseException { List<BaseEntity> baseEntityList =
+	 * null; baseEntityList =
+	 * metadataServiceImpl.getBaseEntityByCriteria(type.toString(), null, null,
+	 * null, null, null, null, uuid, version); if (baseEntityList == null ||
+	 * baseEntityList.isEmpty()) { return null; }
+	 * //logger.info(" Inside resolveName : " + baseEntityList.get(0).getName());
+	 * return baseEntityList.get(0).getName(); }
+	 */
+
+	public String getName(String uuid, String version, MetaType type)
+			throws ParseException, java.text.ParseException, IllegalAccessException, IllegalArgumentException,
+			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
+		if (type == MetaType.simple || type == MetaType.attribute || type == null || uuid == null) {
 			return null;
 		}
-		Object iDao = this.getClass().getMethod(GET+Helper.getDaoClass(type)).invoke(this);
+		Object iDao = this.getClass().getMethod(GET + Helper.getDaoClass(type)).invoke(this);
 		BaseEntity baseEntity = null;
 		if (version != null)
-			baseEntity = (BaseEntity) (iDao).getClass().getMethod("findOneByUuidAndVersion", String.class, String.class).invoke(iDao,uuid,version);
-		else{
-			baseEntity = (BaseEntity) (iDao).getClass().getMethod("findLatestByUuid", String.class, Sort.class).invoke(iDao,uuid,new Sort(Sort.Direction.DESC, "version"));
+			baseEntity = (BaseEntity) (iDao).getClass().getMethod("findOneByUuidAndVersion", String.class, String.class)
+					.invoke(iDao, uuid, version);
+		else {
+			baseEntity = (BaseEntity) (iDao).getClass().getMethod("findLatestByUuid", String.class, Sort.class)
+					.invoke(iDao, uuid, new Sort(Sort.Direction.DESC, "version"));
 		}
-		if(baseEntity != null)
+		if (baseEntity != null)
 			return baseEntity.getName();
-		else 
+		else
 			return null;
 	}
-	
+
 	public String resolveAttributeName(String attributeId, Object object) throws JsonProcessingException {
-		Method [] methodList = object.getClass().getMethods();
+		Method[] methodList = object.getClass().getMethods();
 		Object attrObj = null;
 		MetaType type = null;
 		String uuid = null;
 		String version = null;
 		Object invokedObj = null;
-		//String objName = null;
+		// String objName = null;
 		String attributeName = null;
-		try{
-//			logger.info("Inside resolveAttributeName - ");
+		try {
+			// logger.info("Inside resolveAttributeName - ");
 			if (object instanceof AttributeRefHolder || object instanceof SourceAttr) {
-				object = object.getClass().getMethod(GET+"Ref").invoke(object);
+				object = object.getClass().getMethod(GET + "Ref").invoke(object);
 				if (object == null) {
 					return null;
 				}
-				type = (MetaType) object.getClass().getMethod(GET+"Type").invoke(object);
-				uuid = (String) object.getClass().getMethod(GET+"Uuid").invoke(object);
-				version = (String) object.getClass().getMethod(GET+"Version").invoke(object);
-				//attrObj = Helper.getDomainClass(type).cast(miUtil.getRefObject(new MetaIdentifier(type, uuid, version)));
-				attrObj = getOneByUuidAndVersion(uuid, version, type.toString(), "N");								
+				type = (MetaType) object.getClass().getMethod(GET + "Type").invoke(object);
+				uuid = (String) object.getClass().getMethod(GET + "Uuid").invoke(object);
+				version = (String) object.getClass().getMethod(GET + "Version").invoke(object);
+				// attrObj = Helper.getDomainClass(type).cast(miUtil.getRefObject(new
+				// MetaIdentifier(type, uuid, version)));
+				attrObj = getOneByUuidAndVersion(uuid, version, type.toString(), "N");
 				if (type.equals(MetaType.datapod) || type.equals(MetaType.rule) || type.equals(MetaType.dataset)) {
-					//objName = String.class.cast(attrObj.getClass().getMethod("getName").invoke(attrObj));
-					attributeName = String.class.cast(attrObj.getClass().getMethod("getAttributeName", Integer.class).invoke(attrObj, Integer.parseInt(attributeId)));
+					// objName =
+					// String.class.cast(attrObj.getClass().getMethod("getName").invoke(attrObj));
+					attributeName = String.class.cast(attrObj.getClass().getMethod("getAttributeName", Integer.class)
+							.invoke(attrObj, Integer.parseInt(attributeId)));
 					return attributeName;
 				} else if (type.equals(MetaType.paramlist)) {
-					if(attrObj instanceof ParamList) {
+					if (attrObj instanceof ParamList) {
 						ParamList paramList = (ParamList) attrObj;
-						for(Param param : paramList.getParams()) {
-							if(param.getParamId().equalsIgnoreCase(attributeId))
+						for (Param param : paramList.getParams()) {
+							if (param.getParamId().equalsIgnoreCase(attributeId))
 								return param.getParamName();
 						}
 					}
@@ -2138,32 +2199,35 @@ public class CommonServiceImpl <T> {
 				}
 			}
 			logger.info("Not an instance of AttributeRefHolder or SourceAttr. Object is : " + object);
-			
+
 			for (Method method : methodList) {
 				if (!method.getName().startsWith(GET) || method.getParameterCount() > 0) {
 					continue;
 				}
-				
+
 				if (method.getName().contains("Uuid")) {
-					type = (MetaType) object.getClass().getMethod(GET+"Type").invoke(object);
-					if(type == null)
+					type = (MetaType) object.getClass().getMethod(GET + "Type").invoke(object);
+					if (type == null)
 						continue;
-					uuid = (String) object.getClass().getMethod(GET+"Uuid").invoke(object);
-					version = (String) object.getClass().getMethod(GET+"Version").invoke(object);
+					uuid = (String) object.getClass().getMethod(GET + "Uuid").invoke(object);
+					version = (String) object.getClass().getMethod(GET + "Version").invoke(object);
 					if (StringUtils.isBlank(uuid)) {
 						continue;
 					}
-					//logger.info("uuid : version : type : " + uuid + ":" + version + ":" + type);
-					//attrObj = Helper.getDomainClass(type).cast(miUtil.getRefObject(new MetaIdentifier(type, uuid, version)));
-					attrObj = getOneByUuidAndVersion(uuid, version, type.toString(), "N");	
+					// logger.info("uuid : version : type : " + uuid + ":" + version + ":" + type);
+					// attrObj = Helper.getDomainClass(type).cast(miUtil.getRefObject(new
+					// MetaIdentifier(type, uuid, version)));
+					attrObj = getOneByUuidAndVersion(uuid, version, type.toString(), "N");
 					if (type.equals(MetaType.datapod) || type.equals(MetaType.rule) || type.equals(MetaType.dataset)) {
-						attributeName = String.class.cast(attrObj.getClass().getMethod("getAttributeName", Integer.class).invoke(attrObj, Integer.parseInt(attributeId)));
+						attributeName = String.class
+								.cast(attrObj.getClass().getMethod("getAttributeName", Integer.class).invoke(attrObj,
+										Integer.parseInt(attributeId)));
 						return attributeName;
 					} else if (type.equals(MetaType.paramlist)) {
-						if(attrObj instanceof ParamList) {
+						if (attrObj instanceof ParamList) {
 							ParamList paramList = (ParamList) attrObj;
-							for(Param param : paramList.getParams()) {
-								if(param.getParamId().equalsIgnoreCase(attributeId))
+							for (Param param : paramList.getParams()) {
+								if (param.getParamId().equalsIgnoreCase(attributeId))
 									return param.getParamName();
 							}
 						}
@@ -2171,12 +2235,12 @@ public class CommonServiceImpl <T> {
 						return null;
 					}
 				}
-				
+
 				invokedObj = method.invoke(object);
 				if (invokedObj == null || invokedObj.getClass().isPrimitive()) {
 					continue;
 				}
-				
+
 				if (!invokedObj.getClass().getPackage().getName().contains("inferyx")) {
 					continue;
 				}
@@ -2185,45 +2249,50 @@ public class CommonServiceImpl <T> {
 					return attributeName;
 				}
 			}
-		}catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException | NullPointerException e) {
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+				| SecurityException | NullPointerException e) {
 			e.printStackTrace();
 		}
-		
+
 		return attributeName;
 	}
-		
 
-	@SuppressWarnings({ "unchecked"})
-	public List<BaseEntity> getAllVersionByUuid(String uuid, String type) throws JsonProcessingException, NullPointerException, ParseException {
-		//String result = "";
+	@SuppressWarnings({ "unchecked" })
+	public List<BaseEntity> getAllVersionByUuid(String uuid, String type)
+			throws JsonProcessingException, NullPointerException, ParseException {
+		// String result = "";
 		String appUuid = null;
 		if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
-			&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
-			&& !type.equalsIgnoreCase(MetaType.application.toString())) {
+				&& !type.equalsIgnoreCase(MetaType.role.toString())
+				&& !type.equalsIgnoreCase(MetaType.privilege.toString())
+				&& !type.equalsIgnoreCase(MetaType.application.toString())) {
 			appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-						? securityServiceImpl.getAppInfo().getRef().getUuid() : null;							
+					? securityServiceImpl.getAppInfo().getRef().getUuid()
+					: null;
 		}
 		List<BaseEntity> objectList = null;
 		MetaType metaType = Helper.getMetaType(type);
 		try {
-				Object iDao = this.getClass().getMethod(GET+Helper.getDaoClass(metaType)).invoke(this);
-				if (appUuid != null) {
-					objectList = (List<BaseEntity>)(iDao).getClass().getMethod("findAllVersion", String.class, String.class).invoke(iDao, appUuid, uuid);
-				} else
-					objectList = (List<BaseEntity>)(iDao).getClass().getMethod("findAllVersion", String.class).invoke(iDao, uuid);
-				
-				return getBaseEntityList(objectList);
+			Object iDao = this.getClass().getMethod(GET + Helper.getDaoClass(metaType)).invoke(this);
+			if (appUuid != null) {
+				objectList = (List<BaseEntity>) (iDao).getClass()
+						.getMethod("findAllVersion", String.class, String.class).invoke(iDao, appUuid, uuid);
+			} else
+				objectList = (List<BaseEntity>) (iDao).getClass().getMethod("findAllVersion", String.class).invoke(iDao,
+						uuid);
+
+			return getBaseEntityList(objectList);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
 				| SecurityException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
-	
+
 	public boolean isExists(MetaType type, String id) {
 		Object iDao = null;
 		try {
-			iDao = this.getClass().getMethod(GET+Helper.getDaoClass(type)).invoke(this);
+			iDao = this.getClass().getMethod(GET + Helper.getDaoClass(type)).invoke(this);
 			return Boolean.class.cast((iDao).getClass().getMethod("exists", String.class).invoke(iDao, id));
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
 				| SecurityException e) {
@@ -2231,40 +2300,50 @@ public class CommonServiceImpl <T> {
 		}
 		return false;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public List<BaseEntity> getAllLatest(String type, String active)  throws JsonProcessingException, ParseException {
+	public List<BaseEntity> getAllLatest(String type, String active) throws JsonProcessingException, ParseException {
 		MetaType metaType = Helper.getMetaType(type);
 		logger.info("Inside commonserviceImpl.getAllLatest : type : " + type + ":" + metaType);
 		List<BaseEntity> objectList = new ArrayList<>();
-		try {			
+		try {
 			Aggregation aggr = null;
 			if (active == "Y")
-				 aggr = newAggregation(match(Criteria.where("active").is("Y")),
-					match(Criteria.where("name").ne(null)), group("uuid").max("version").as("version"));
+				aggr = newAggregation(
+						match(Criteria.where("active").is("Y")), match(Criteria.where("_id").ne("1")
+								.orOperator(where("name").ne(null), where("publicFlag").is("Y"))),
+						group("uuid").max("version").as("version"));
 			else
-				 aggr = newAggregation(
-					match(Criteria.where("name").ne(null)), group("uuid").max("version").as("version"));
-				
+				aggr = newAggregation(match(
+						Criteria.where("_id").ne("1").orOperator(where("name").ne(null), where("publicFlag").is("Y"))),
+						group("uuid").max("version").as("version"));
 
 			String appUuid = null;
 			if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
-				&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
-				&& !type.equalsIgnoreCase(MetaType.application.toString())) {
-				appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-							? securityServiceImpl.getAppInfo().getRef().getUuid() : null;							
+					&& !type.equalsIgnoreCase(MetaType.role.toString())
+					&& !type.equalsIgnoreCase(MetaType.privilege.toString())
+					&& !type.equalsIgnoreCase(MetaType.application.toString())) {
+				appUuid = (securityServiceImpl.getAppInfo() != null
+						&& securityServiceImpl.getAppInfo().getRef() != null)
+								? securityServiceImpl.getAppInfo().getRef().getUuid()
+								: null;
 			}
 			@SuppressWarnings("rawtypes")
-			AggregationResults results = mongoTemplate.aggregate(aggr, type.toString().toLowerCase(), Helper.getDomainClass(metaType));
+			AggregationResults results = mongoTemplate.aggregate(aggr, type.toString().toLowerCase(),
+					Helper.getDomainClass(metaType));
 			List<T> metaList = results.getMappedResults();
-			Object iDao = this.getClass().getMethod(GET+Helper.getDaoClass(metaType)).invoke(this);
-				
+			Object iDao = this.getClass().getMethod(GET + Helper.getDaoClass(metaType)).invoke(this);
+
 			for (int i = 0; i < metaList.size(); i++) {
 				Object object = null;
-				if (appUuid != null) {
-					object = (iDao).getClass().getMethod("findOneByUuidAndVersion", String.class, String.class, String.class).invoke(iDao, appUuid, ((BaseEntity)metaList.get(i)).getId(), ((BaseEntity)metaList.get(i)).getVersion());
+				if (appUuid != null ) {
+					object = (iDao).getClass()
+							.getMethod("findOneByUuidAndVersion", String.class, String.class, String.class).invoke(iDao,
+									appUuid, ((BaseEntity) metaList.get(i)).getId(),
+									((BaseEntity) metaList.get(i)).getVersion());
 				} else {
-					object = (iDao).getClass().getMethod("findOneByUuidAndVersion", String.class, String.class).invoke(iDao, ((BaseEntity)metaList.get(i)).getId(), ((BaseEntity)metaList.get(i)).getVersion());
+					object = (iDao).getClass().getMethod("findOneByUuidAndVersion", String.class, String.class).invoke(
+							iDao, ((BaseEntity) metaList.get(i)).getId(), ((BaseEntity) metaList.get(i)).getVersion());
 				}
 				if (object != null) {
 					objectList.add((BaseEntity) Helper.getDomainClass(metaType).cast(object));
@@ -2279,22 +2358,26 @@ public class CommonServiceImpl <T> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public T getAllByUuid(String uuid, String type) throws JsonProcessingException{
+	public T getAllByUuid(String uuid, String type) throws JsonProcessingException {
 		String appUuid = null;
 		if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
-			&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
-			&& !type.equalsIgnoreCase(MetaType.application.toString())) {
+				&& !type.equalsIgnoreCase(MetaType.role.toString())
+				&& !type.equalsIgnoreCase(MetaType.privilege.toString())
+				&& !type.equalsIgnoreCase(MetaType.application.toString())) {
 			appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-						? securityServiceImpl.getAppInfo().getRef().getUuid() : null;							
+					? securityServiceImpl.getAppInfo().getRef().getUuid()
+					: null;
 		}
 		MetaType metaType = Helper.getMetaType(type);
 		Object object = null;
 		try {
-				Object iDao = this.getClass().getMethod(GET+Helper.getDaoClass(metaType)).invoke(this);
-				if (appUuid != null) {
-					object = (T)(iDao).getClass().getMethod("findAllByUuid", String.class, String.class).invoke(iDao, appUuid, uuid);
-				} else
-					object = (T)(iDao).getClass().getMethod("findLatestByUuid", String.class, Sort.class).invoke(iDao, uuid, new Sort(Sort.Direction.DESC, "version"));
+			Object iDao = this.getClass().getMethod(GET + Helper.getDaoClass(metaType)).invoke(this);
+			if (appUuid != null) {
+				object = (T) (iDao).getClass().getMethod("findAllByUuid", String.class, String.class).invoke(iDao,
+						appUuid, uuid);
+			} else
+				object = (T) (iDao).getClass().getMethod("findLatestByUuid", String.class, Sort.class).invoke(iDao,
+						uuid, new Sort(Sort.Direction.DESC, "version"));
 			return (T) resolveName(object, Helper.getMetaType(type));
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
 				| SecurityException | ParseException e) {
@@ -2302,101 +2385,112 @@ public class CommonServiceImpl <T> {
 		}
 		return null;
 	}
-	
+
 	public BaseEntity delete(String id, String type) {
 		String appUuid = null;
 		if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
-			&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
-			&& !type.equalsIgnoreCase(MetaType.application.toString())) {
+				&& !type.equalsIgnoreCase(MetaType.role.toString())
+				&& !type.equalsIgnoreCase(MetaType.privilege.toString())
+				&& !type.equalsIgnoreCase(MetaType.application.toString())) {
 			appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-						? securityServiceImpl.getAppInfo().getRef().getUuid() : null;							
+					? securityServiceImpl.getAppInfo().getRef().getUuid()
+					: null;
 		}
 		MetaType metaType = Helper.getMetaType(type);
 		Object iDao = null;
 		try {
-			iDao = this.getClass().getMethod(GET+Helper.getDaoClass(metaType)).invoke(this);//finds respective Dao type
+			iDao = this.getClass().getMethod(GET + Helper.getDaoClass(metaType)).invoke(this);// finds respective Dao
+																								// type
 			Object obj = null;
 			if (appUuid != null)
-				obj = Helper.getDomainClass(metaType).cast((iDao).getClass().getMethod("findOneById", String.class, String.class).invoke(iDao, appUuid, id));
+				obj = Helper.getDomainClass(metaType).cast((iDao).getClass()
+						.getMethod("findOneById", String.class, String.class).invoke(iDao, appUuid, id));
 			else
-				obj = Helper.getDomainClass(metaType).cast((iDao).getClass().getMethod("findOneById", String.class).invoke(iDao, id));
-			
+				obj = Helper.getDomainClass(metaType)
+						.cast((iDao).getClass().getMethod("findOneById", String.class).invoke(iDao, id));
+
 			Helper.getDomainClass(metaType).getMethod("setActive", String.class).invoke(obj, "N");
 			return (BaseEntity) resolveName(save(type, obj), Helper.getMetaType(type));
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-				| SecurityException  e) {
+				| SecurityException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
-		
+
 	public BaseEntity restore(String id, String type) {
 		String appUuid = null;
 		if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
-			&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
-			&& !type.equalsIgnoreCase(MetaType.application.toString())) {
+				&& !type.equalsIgnoreCase(MetaType.role.toString())
+				&& !type.equalsIgnoreCase(MetaType.privilege.toString())
+				&& !type.equalsIgnoreCase(MetaType.application.toString())) {
 			appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-						? securityServiceImpl.getAppInfo().getRef().getUuid() : null;							
+					? securityServiceImpl.getAppInfo().getRef().getUuid()
+					: null;
 		}
 		MetaType metaType = Helper.getMetaType(type);
 		Object iDao = null;
 		try {
-			iDao = this.getClass().getMethod(GET+Helper.getDaoClass(metaType)).invoke(this);//finds respective Dao type
+			iDao = this.getClass().getMethod(GET + Helper.getDaoClass(metaType)).invoke(this);// finds respective Dao
+																								// type
 			Object obj = null;
 			if (appUuid != null)
-				obj = Helper.getDomainClass(metaType).cast((iDao).getClass().getMethod("findOneById", String.class, String.class).invoke(iDao, appUuid, id));
+				obj = Helper.getDomainClass(metaType).cast((iDao).getClass()
+						.getMethod("findOneById", String.class, String.class).invoke(iDao, appUuid, id));
 			else
-				obj = Helper.getDomainClass(metaType).cast((iDao).getClass().getMethod("findOneById", String.class).invoke(iDao, id));
-			
+				obj = Helper.getDomainClass(metaType)
+						.cast((iDao).getClass().getMethod("findOneById", String.class).invoke(iDao, id));
+
 			Helper.getDomainClass(metaType).getMethod("setActive", String.class).invoke(obj, "Y");
 			return (BaseEntity) resolveName(save(type, obj), Helper.getMetaType(type));
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-				| SecurityException  e) {
+				| SecurityException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
-	
+
 	public T save(String type, Object object) throws JsonProcessingException, JSONException, ParseException {
 		return save(type, object, null);
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public T save(String type, Object object, MetaIdentifierHolder appInfo) throws JsonProcessingException, JSONException, ParseException {
+	public T save(String type, Object object, MetaIdentifierHolder appInfo)
+			throws JsonProcessingException, JSONException, ParseException {
 		ObjectMapper mapper = new ObjectMapper();
-		try{		
-			if(type.equalsIgnoreCase(MetaType.log.toString())){
-			Log log= mapper.convertValue(object, Log.class);
-			return (T) logServiceImpl.save(log);
+		try {
+			if (type.equalsIgnoreCase(MetaType.log.toString())) {
+				Log log = mapper.convertValue(object, Log.class);
+				return (T) logServiceImpl.save(log);
 			}
 			MetaType metaType = Helper.getMetaType(type);
-			MetaIdentifierHolder meta = null; 
+			MetaIdentifierHolder meta = null;
 			if (null == appInfo) {
-				meta = securityServiceImpl.getAppInfo(); 
+				meta = securityServiceImpl.getAppInfo();
 			} else {
 				meta = appInfo;
 			}
-			BaseEntity baseEntityLatest=null;
-			Map<String,Object> map=null;
-			String uuid =null;
+			BaseEntity baseEntityLatest = null;
+			Map<String, Object> map = null;
+			String uuid = null;
 			if (object instanceof Map) {
 				map = (Map<String, Object>) object;
 			}
-		
+
 			if (object instanceof Map && map.containsKey("uuid"))
 				uuid = (String) map.get("uuid");
-		
+
 			if (!(object instanceof Map))
 				uuid = object.getClass().getMethod("getUuid").invoke(object).toString();
-		
+
 			if (uuid != null)
 				baseEntityLatest = (BaseEntity) getLatestByUuid(uuid, metaType.toString());
 			List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
-		
+
 			if (uuid != null && baseEntityLatest == null) {
 				metaIdentifierHolderList.add(meta);
 			} else if (baseEntityLatest == null && object instanceof Map && !map.entrySet().contains("uuid")) {
@@ -2406,17 +2500,19 @@ public class CommonServiceImpl <T> {
 			}
 			BaseEntity objDet = null;
 
-			Object metaObj = mapper.convertValue(object,Helper.getDomainClass(metaType));
-			
-//			if (Helper.getDomainClass(metaType).getMethod("getAppInfo", List.class).invoke(metaObj) == null) {
-				Helper.getDomainClass(metaType).getMethod("setAppInfo", List.class).invoke(metaObj, metaIdentifierHolderList);
-//			}
+			Object metaObj = mapper.convertValue(object, Helper.getDomainClass(metaType));
+
+			// if (Helper.getDomainClass(metaType).getMethod("getAppInfo",
+			// List.class).invoke(metaObj) == null) {
+			Helper.getDomainClass(metaType).getMethod("setAppInfo", List.class).invoke(metaObj,
+					metaIdentifierHolderList);
+			// }
 			Helper.getDomainClass(metaType).getSuperclass().getMethod("setBaseEntity").invoke(metaObj);
-				
-			Object iDao = this.getClass().getMethod(GET+Helper.getDaoClass(metaType)).invoke(this);
-			objDet = (BaseEntity)(iDao.getClass().getMethod("save", Object.class).invoke(iDao, metaObj));
-			registerGraph.updateGraph((Object) objDet, metaType);			
-				
+
+			Object iDao = this.getClass().getMethod(GET + Helper.getDaoClass(metaType)).invoke(this);
+			objDet = (BaseEntity) (iDao.getClass().getMethod("save", Object.class).invoke(iDao, metaObj));
+			registerGraph.updateGraph((Object) objDet, metaType);
+
 			BaseEntity baseEntity = new BaseEntity();
 			baseEntity.setId(objDet.getId());
 			baseEntity.setUuid(objDet.getUuid());
@@ -2430,268 +2526,317 @@ public class CommonServiceImpl <T> {
 			baseEntity.setPublished(objDet.getPublished());
 			baseEntity.setAppInfo(objDet.getAppInfo());
 			return (T) baseEntity;
-		}catch (ParseException | NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | SecurityException | IOException | JSONException e) {
+		} catch (ParseException | NoSuchMethodException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException | SecurityException | IOException | JSONException e) {
 			e.printStackTrace();
-		}catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public BaseEntity saveAs(String uuid, String version, String type) throws JsonProcessingException {
 		String appUuid = null;
 		if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
-			&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
-			&& !type.equalsIgnoreCase(MetaType.application.toString())) {
+				&& !type.equalsIgnoreCase(MetaType.role.toString())
+				&& !type.equalsIgnoreCase(MetaType.privilege.toString())
+				&& !type.equalsIgnoreCase(MetaType.application.toString())) {
 			appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-						? securityServiceImpl.getAppInfo().getRef().getUuid() : null;							
+					? securityServiceImpl.getAppInfo().getRef().getUuid()
+					: null;
 		}
-		 MetaType metaType = Helper.getMetaType(type);		 
-		 try{
-			 Object iDao = this.getClass().getMethod(GET+Helper.getDaoClass(metaType)).invoke(this);
-			 T metaObj = null;
-			 if (appUuid != null)
-				 metaObj =   (T) Helper.getDomainClass(metaType).cast((iDao).getClass().getMethod("findOneByUuidAndVersion", String.class, String.class, String.class).invoke(iDao, appUuid, uuid, version));
+		MetaType metaType = Helper.getMetaType(type);
+		try {
+			Object iDao = this.getClass().getMethod(GET + Helper.getDaoClass(metaType)).invoke(this);
+			T metaObj = null;
+			if (appUuid != null)
+				metaObj = (T) Helper.getDomainClass(metaType)
+						.cast((iDao).getClass()
+								.getMethod("findOneByUuidAndVersion", String.class, String.class, String.class)
+								.invoke(iDao, appUuid, uuid, version));
 			else
-				metaObj =   (T) Helper.getDomainClass(metaType).cast((iDao).getClass().getMethod("findOneByUuidAndVersion", String.class, String.class).invoke(iDao, uuid, version));
-					
-			T metaObjNew = metaObj;			
+				metaObj = (T) Helper.getDomainClass(metaType).cast((iDao).getClass()
+						.getMethod("findOneByUuidAndVersion", String.class, String.class).invoke(iDao, uuid, version));
+
+			T metaObjNew = metaObj;
 			BaseEntity be = new BaseEntity();
 			be.setBaseEntity();
-			//String createdBy = securityServiceImpl.getuserInfo().getRef().getName();
-			Helper.getDomainClass(metaType).getMethod("setId", String.class).invoke(metaObjNew,be.getId());
-			Helper.getDomainClass(metaType).getMethod("setUuid", String.class).invoke(metaObjNew,be.getUuid());
-			Helper.getDomainClass(metaType).getMethod("setVersion", String.class).invoke(metaObjNew,be.getVersion());
-			Helper.getDomainClass(metaType).getMethod("setCreatedBy", MetaIdentifierHolder.class).invoke(metaObjNew,be.getCreatedBy());
-			Helper.getDomainClass(metaType).getMethod("setCreatedOn", String.class).invoke(metaObjNew,be.getCreatedOn());
-			Helper.getDomainClass(metaType).getMethod("setName", String.class).invoke(metaObjNew, (Helper.getDomainClass(metaType).getMethod("getName").invoke(metaObj)+"_copy"));
-			Helper.getDomainClass(metaType).getMethod("setActive", String.class).invoke(metaObjNew, Helper.getDomainClass(metaType).getMethod("getActive").invoke(metaObj));
-			Helper.getDomainClass(metaType).getMethod("setDesc", String.class).invoke(metaObjNew, Helper.getDomainClass(metaType).getMethod("getDesc").invoke(metaObj));
-			Helper.getDomainClass(metaType).getMethod("setTags", String[].class).invoke(metaObjNew, Helper.getDomainClass(metaType).getMethod("getTags").invoke(metaObj));
+			// String createdBy = securityServiceImpl.getuserInfo().getRef().getName();
+			Helper.getDomainClass(metaType).getMethod("setId", String.class).invoke(metaObjNew, be.getId());
+			Helper.getDomainClass(metaType).getMethod("setUuid", String.class).invoke(metaObjNew, be.getUuid());
+			Helper.getDomainClass(metaType).getMethod("setVersion", String.class).invoke(metaObjNew, be.getVersion());
+			Helper.getDomainClass(metaType).getMethod("setCreatedBy", MetaIdentifierHolder.class).invoke(metaObjNew,
+					be.getCreatedBy());
+			Helper.getDomainClass(metaType).getMethod("setCreatedOn", String.class).invoke(metaObjNew,
+					be.getCreatedOn());
+			Helper.getDomainClass(metaType).getMethod("setName", String.class).invoke(metaObjNew,
+					(Helper.getDomainClass(metaType).getMethod("getName").invoke(metaObj) + "_copy"));
+			Helper.getDomainClass(metaType).getMethod("setActive", String.class).invoke(metaObjNew,
+					Helper.getDomainClass(metaType).getMethod("getActive").invoke(metaObj));
+			Helper.getDomainClass(metaType).getMethod("setDesc", String.class).invoke(metaObjNew,
+					Helper.getDomainClass(metaType).getMethod("getDesc").invoke(metaObj));
+			Helper.getDomainClass(metaType).getMethod("setTags", String[].class).invoke(metaObjNew,
+					Helper.getDomainClass(metaType).getMethod("getTags").invoke(metaObj));
 
 			BaseEntity baseEntity = (BaseEntity) save(type, metaObjNew);
 			return (BaseEntity) resolveName(baseEntity, Helper.getMetaType(type));
-		 }
-		 catch(NullPointerException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException  e){
-		 e.printStackTrace();	
-		 } catch (Exception e) {
+		} catch (NullPointerException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+				| NoSuchMethodException | SecurityException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		 return null;
+		return null;
 	}
 
 	@SuppressWarnings("unchecked")
 	public T getOneById(String id, String type) throws JsonProcessingException {
 		String appUuid = null;
-		/*if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
-			&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
-			&& !type.equalsIgnoreCase(MetaType.application.toString())) {
-			appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-						? securityServiceImpl.getAppInfo().getRef().getUuid() : null;							
-		}*/
+		/*
+		 * if (!type.equalsIgnoreCase(MetaType.user.toString()) &&
+		 * !type.equalsIgnoreCase(MetaType.group.toString()) &&
+		 * !type.equalsIgnoreCase(MetaType.role.toString()) &&
+		 * !type.equalsIgnoreCase(MetaType.privilege.toString()) &&
+		 * !type.equalsIgnoreCase(MetaType.application.toString())) { appUuid =
+		 * (securityServiceImpl.getAppInfo() != null &&
+		 * securityServiceImpl.getAppInfo().getRef() != null) ?
+		 * securityServiceImpl.getAppInfo().getRef().getUuid() : null; }
+		 */
 		MetaType metaType = Helper.getMetaType(type);
 		Object iDao = null;
-		try{
+		try {
 			T object = null;
-			iDao = this.getClass().getMethod(GET+Helper.getDaoClass(metaType)).invoke(this);
-			if (appUuid != null) 
-				object = (T) iDao.getClass().getMethod("findOneById", String.class,String.class).invoke(iDao, appUuid,id);	
+			iDao = this.getClass().getMethod(GET + Helper.getDaoClass(metaType)).invoke(this);
+			if (appUuid != null)
+				object = (T) iDao.getClass().getMethod("findOneById", String.class, String.class).invoke(iDao, appUuid,
+						id);
 			else
-				object = (T) iDao.getClass().getMethod("findOneById", String.class).invoke(iDao,id);
-							
+				object = (T) iDao.getClass().getMethod("findOneById", String.class).invoke(iDao, id);
+
 			return (T) resolveName(object, Helper.getMetaType(type));
-		} catch (IllegalArgumentException | SecurityException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | ParseException e) {
-			
+		} catch (IllegalArgumentException | SecurityException | IllegalAccessException | InvocationTargetException
+				| NoSuchMethodException | ParseException e) {
+
 			e.printStackTrace();
 		}
 		return null;
 	}
 
-	
 	@SuppressWarnings({ "unchecked", "unused" })
 	public T getOneByUuidAndVersion(String uuid, String version, String type) throws JsonProcessingException {
 		String appUuid = null;
-		/*if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
-			&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
-			&& !type.equalsIgnoreCase(MetaType.application.toString())) {
-			appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-						? securityServiceImpl.getAppInfo().getRef().getUuid() : null;							
-		}*/
+		/*
+		 * if (!type.equalsIgnoreCase(MetaType.user.toString()) &&
+		 * !type.equalsIgnoreCase(MetaType.group.toString()) &&
+		 * !type.equalsIgnoreCase(MetaType.role.toString()) &&
+		 * !type.equalsIgnoreCase(MetaType.privilege.toString()) &&
+		 * !type.equalsIgnoreCase(MetaType.application.toString())) { appUuid =
+		 * (securityServiceImpl.getAppInfo() != null &&
+		 * securityServiceImpl.getAppInfo().getRef() != null) ?
+		 * securityServiceImpl.getAppInfo().getRef().getUuid() : null; }
+		 */
 		Object iDao = null;
 		MetaType metaType = Helper.getMetaType(type);
-		try{
+		try {
 			T object = null;
-			iDao = this.getClass().getMethod(GET+Helper.getDaoClass(metaType)).invoke(this);
-			if (appUuid != null){
-				if(StringUtils.isBlank(version))
-					object = (T) iDao.getClass().getMethod("findLatestByUuid", String.class,String.class,Sort.class).invoke(iDao,appUuid, uuid,new Sort(Sort.Direction.DESC, "version"));
+			iDao = this.getClass().getMethod(GET + Helper.getDaoClass(metaType)).invoke(this);
+			if (appUuid != null) {
+				if (StringUtils.isBlank(version))
+					object = (T) iDao.getClass().getMethod("findLatestByUuid", String.class, String.class, Sort.class)
+							.invoke(iDao, appUuid, uuid, new Sort(Sort.Direction.DESC, "version"));
 				else
-					object = (T) iDao.getClass().getMethod("findOneByUuidAndVersion", String.class, String.class, String.class).invoke(iDao, appUuid, uuid,version);
-			}else{
-				if(StringUtils.isBlank(version))
-					object = (T) iDao.getClass().getMethod("findLatestByUuid", String.class,Sort.class).invoke(iDao, uuid,new Sort(Sort.Direction.DESC, "version"));	
+					object = (T) iDao.getClass()
+							.getMethod("findOneByUuidAndVersion", String.class, String.class, String.class)
+							.invoke(iDao, appUuid, uuid, version);
+			} else {
+				if (StringUtils.isBlank(version))
+					object = (T) iDao.getClass().getMethod("findLatestByUuid", String.class, Sort.class).invoke(iDao,
+							uuid, new Sort(Sort.Direction.DESC, "version"));
 				else
-					object = (T) iDao.getClass().getMethod("findOneByUuidAndVersion", String.class,String.class).invoke(iDao, uuid,version);
+					object = (T) iDao.getClass().getMethod("findOneByUuidAndVersion", String.class, String.class)
+							.invoke(iDao, uuid, version);
 			}
-			//return (T) object;
+			// return (T) object;
 			return (T) resolveName(object, Helper.getMetaType(type));
-		} catch (IllegalArgumentException | SecurityException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | ParseException e) {
-			
+		} catch (IllegalArgumentException | SecurityException | IllegalAccessException | InvocationTargetException
+				| NoSuchMethodException | ParseException e) {
+
 			e.printStackTrace();
 		}
 		return null;
 	}
-	
+
 	@SuppressWarnings({ "unchecked", "unused" })
-	public T getOneByUuidAndVersion(String uuid, String version, String type, String resolveFlag) throws JsonProcessingException {
+	public T getOneByUuidAndVersion(String uuid, String version, String type, String resolveFlag)
+			throws JsonProcessingException {
 		String appUuid = null;
-		/*if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
-			&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
-			&& !type.equalsIgnoreCase(MetaType.application.toString())) {
-			appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-						? securityServiceImpl.getAppInfo().getRef().getUuid() : null;							
-		}*/
+		/*
+		 * if (!type.equalsIgnoreCase(MetaType.user.toString()) &&
+		 * !type.equalsIgnoreCase(MetaType.group.toString()) &&
+		 * !type.equalsIgnoreCase(MetaType.role.toString()) &&
+		 * !type.equalsIgnoreCase(MetaType.privilege.toString()) &&
+		 * !type.equalsIgnoreCase(MetaType.application.toString())) { appUuid =
+		 * (securityServiceImpl.getAppInfo() != null &&
+		 * securityServiceImpl.getAppInfo().getRef() != null) ?
+		 * securityServiceImpl.getAppInfo().getRef().getUuid() : null; }
+		 */
 		Object iDao = null;
 		MetaType metaType = Helper.getMetaType(type);
-		try{
+		try {
 			T object = null;
-			iDao = this.getClass().getMethod(GET+Helper.getDaoClass(metaType)).invoke(this);
-			if (appUuid != null){
-				if(StringUtils.isBlank(version))
-					object = (T) iDao.getClass().getMethod("findLatestByUuid", String.class,String.class,Sort.class).invoke(iDao,appUuid, uuid,new Sort(Sort.Direction.DESC, "version"));
+			iDao = this.getClass().getMethod(GET + Helper.getDaoClass(metaType)).invoke(this);
+			if (appUuid != null) {
+				if (StringUtils.isBlank(version))
+					object = (T) iDao.getClass().getMethod("findLatestByUuid", String.class, String.class, Sort.class)
+							.invoke(iDao, appUuid, uuid, new Sort(Sort.Direction.DESC, "version"));
 				else
-					object = (T) iDao.getClass().getMethod("findOneByUuidAndVersion", String.class, String.class, String.class).invoke(iDao, appUuid, uuid,version);
-			}else{
-				if(StringUtils.isBlank(version))
-					object = (T) iDao.getClass().getMethod("findLatestByUuid", String.class,Sort.class).invoke(iDao, uuid,new Sort(Sort.Direction.DESC, "version"));	
+					object = (T) iDao.getClass()
+							.getMethod("findOneByUuidAndVersion", String.class, String.class, String.class)
+							.invoke(iDao, appUuid, uuid, version);
+			} else {
+				if (StringUtils.isBlank(version))
+					object = (T) iDao.getClass().getMethod("findLatestByUuid", String.class, Sort.class).invoke(iDao,
+							uuid, new Sort(Sort.Direction.DESC, "version"));
 				else
-					object = (T) iDao.getClass().getMethod("findOneByUuidAndVersion", String.class,String.class).invoke(iDao, uuid,version);
+					object = (T) iDao.getClass().getMethod("findOneByUuidAndVersion", String.class, String.class)
+							.invoke(iDao, uuid, version);
 			}
-			//return (T) object;
+			// return (T) object;
 			if (resolveFlag.equalsIgnoreCase("Y")) {
 				return (T) resolveName(object, Helper.getMetaType(type));
 			} else {
 				return (T) object;
 			}
-		} catch (IllegalArgumentException | SecurityException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | ParseException e) {
-			
+		} catch (IllegalArgumentException | SecurityException | IllegalAccessException | InvocationTargetException
+				| NoSuchMethodException | ParseException e) {
+
 			e.printStackTrace();
 		}
 		return null;
 	}
-		
-		
-		@SuppressWarnings("unchecked")
-		public T getiDAO(MetaType type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
-			Object iDao = this.getClass().getMethod(GET + Helper.getDaoClass(MetaType.application)).invoke(this);
-			return (T) iDao;
-		}
-		
-		@SuppressWarnings("unchecked")
-		public T getLatestByUuid(String uuid, String type) throws JsonProcessingException {
-			try {
-				String appUuid = null;						
-				/*if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
-					&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
-					&& !type.equalsIgnoreCase(MetaType.application.toString())) {
-					appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-								? securityServiceImpl.getAppInfo().getRef().getUuid() : null;							
-				}*/
-				MetaType metaType = Helper.getMetaType(type);
-				Object object = null;
-				Object iDao = this.getClass().getMethod(GET + Helper.getDaoClass(metaType)).invoke(this);
-				if(appUuid == null) 
-					object = (T) Helper.getDomainClass(metaType).cast(iDao.getClass().getMethod("findLatestByUuid",String.class,Sort.class ).invoke(iDao, uuid,new Sort(Sort.Direction.DESC, "version")));	
-				else 			    
-					object = (T) Helper.getDomainClass(metaType).cast(iDao.getClass().getMethod("findLatestByUuid", String.class,String.class,Sort.class).invoke(iDao, appUuid,uuid, new Sort(Sort.Direction.DESC, "version")));
-				
-				return (T) resolveName(object, Helper.getMetaType(type));
-			} catch (IllegalAccessException 
-							| IllegalArgumentException 
-							| InvocationTargetException
-							| NoSuchMethodException 
-							| SecurityException 
-							| ParseException e) {
-				e.printStackTrace();
-			}
-			return null;
-		}		
 
-		@SuppressWarnings("unchecked")
-		public T getLatestByUuid(String uuid, String type, String resolveFlag) throws JsonProcessingException {
-			try {
-				String appUuid = null;
-				/*if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
-					&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
-					&& !type.equalsIgnoreCase(MetaType.application.toString()))
-				{
-					appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-								? securityServiceImpl.getAppInfo().getRef().getUuid() : null;							
-				}*/
+	@SuppressWarnings("unchecked")
+	public T getiDAO(MetaType type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException {
+		Object iDao = this.getClass().getMethod(GET + Helper.getDaoClass(MetaType.application)).invoke(this);
+		return (T) iDao;
+	}
 
-				MetaType metaType = Helper.getMetaType(type);
-				Object object = null;
-				Object iDao = this.getClass().getMethod(GET + Helper.getDaoClass(metaType)).invoke(this);
-				if(appUuid == null) 
-					object = (T) Helper.getDomainClass(metaType).cast(iDao.getClass().getMethod("findLatestByUuid",String.class,Sort.class ).invoke(iDao, uuid,new Sort(Sort.Direction.DESC, "version")));	
-				else 			    
-					object = (T) Helper.getDomainClass(metaType).cast(iDao.getClass().getMethod("findLatestByUuid", String.class,String.class,Sort.class).invoke(iDao, appUuid,uuid, new Sort(Sort.Direction.DESC, "version")));
-				
-				if (resolveFlag.equalsIgnoreCase("Y"))
-					return (T) resolveName(object, Helper.getMetaType(type));
-				else
-					return (T) object;
-
-			} catch (IllegalAccessException 
-							| IllegalArgumentException 
-							| InvocationTargetException
-							| NoSuchMethodException 
-							| SecurityException 
-							| ParseException e) {
-				e.printStackTrace();
-			}
-			return null;
-		}		
-		
-		@SuppressWarnings("unchecked")
-		public T getAsOf(String uuid, String asOf, String type) throws JsonProcessingException {
+	@SuppressWarnings("unchecked")
+	public T getLatestByUuid(String uuid, String type) throws JsonProcessingException {
+		try {
 			String appUuid = null;
-			if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
-				&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
-				&& !type.equalsIgnoreCase(MetaType.application.toString())) {
-				appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-							? securityServiceImpl.getAppInfo().getRef().getUuid() : null;							
-			}
+			/*
+			 * if (!type.equalsIgnoreCase(MetaType.user.toString()) &&
+			 * !type.equalsIgnoreCase(MetaType.group.toString()) &&
+			 * !type.equalsIgnoreCase(MetaType.role.toString()) &&
+			 * !type.equalsIgnoreCase(MetaType.privilege.toString()) &&
+			 * !type.equalsIgnoreCase(MetaType.application.toString())) { appUuid =
+			 * (securityServiceImpl.getAppInfo() != null &&
+			 * securityServiceImpl.getAppInfo().getRef() != null) ?
+			 * securityServiceImpl.getAppInfo().getRef().getUuid() : null; }
+			 */
 			MetaType metaType = Helper.getMetaType(type);
-			try{
+			Object object = null;
+			Object iDao = this.getClass().getMethod(GET + Helper.getDaoClass(metaType)).invoke(this);
+			if (appUuid == null)
+				object = (T) Helper.getDomainClass(metaType)
+						.cast(iDao.getClass().getMethod("findLatestByUuid", String.class, Sort.class).invoke(iDao, uuid,
+								new Sort(Sort.Direction.DESC, "version")));
+			else
+				object = (T) Helper.getDomainClass(metaType)
+						.cast(iDao.getClass().getMethod("findLatestByUuid", String.class, String.class, Sort.class)
+								.invoke(iDao, appUuid, uuid, new Sort(Sort.Direction.DESC, "version")));
+
+			return (T) resolveName(object, Helper.getMetaType(type));
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+				| SecurityException | ParseException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	public T getLatestByUuid(String uuid, String type, String resolveFlag) throws JsonProcessingException {
+		try {
+			String appUuid = null;
+			/*
+			 * if (!type.equalsIgnoreCase(MetaType.user.toString()) &&
+			 * !type.equalsIgnoreCase(MetaType.group.toString()) &&
+			 * !type.equalsIgnoreCase(MetaType.role.toString()) &&
+			 * !type.equalsIgnoreCase(MetaType.privilege.toString()) &&
+			 * !type.equalsIgnoreCase(MetaType.application.toString())) { appUuid =
+			 * (securityServiceImpl.getAppInfo() != null &&
+			 * securityServiceImpl.getAppInfo().getRef() != null) ?
+			 * securityServiceImpl.getAppInfo().getRef().getUuid() : null; }
+			 */
+
+			MetaType metaType = Helper.getMetaType(type);
+			Object object = null;
+			Object iDao = this.getClass().getMethod(GET + Helper.getDaoClass(metaType)).invoke(this);
+			if (appUuid == null)
+				object = (T) Helper.getDomainClass(metaType)
+						.cast(iDao.getClass().getMethod("findLatestByUuid", String.class, Sort.class).invoke(iDao, uuid,
+								new Sort(Sort.Direction.DESC, "version")));
+			else
+				object = (T) Helper.getDomainClass(metaType)
+						.cast(iDao.getClass().getMethod("findLatestByUuid", String.class, String.class, Sort.class)
+								.invoke(iDao, appUuid, uuid, new Sort(Sort.Direction.DESC, "version")));
+
+			if (resolveFlag.equalsIgnoreCase("Y"))
+				return (T) resolveName(object, Helper.getMetaType(type));
+			else
+				return (T) object;
+
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+				| SecurityException | ParseException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	public T getAsOf(String uuid, String asOf, String type) throws JsonProcessingException {
+		String appUuid = null;
+		if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
+				&& !type.equalsIgnoreCase(MetaType.role.toString())
+				&& !type.equalsIgnoreCase(MetaType.privilege.toString())
+				&& !type.equalsIgnoreCase(MetaType.application.toString())) {
+			appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
+					? securityServiceImpl.getAppInfo().getRef().getUuid()
+					: null;
+		}
+		MetaType metaType = Helper.getMetaType(type);
+		try {
 			T object = null;
 			Object iDao = this.getClass().getMethod(GET + Helper.getDaoClass(metaType)).invoke(this);
 			if (appUuid != null) {
-				object = (T) Helper.getDomainClass(metaType).cast((iDao).getClass().getMethod("findAsOf", String.class, String.class, String.class, Sort.class).invoke(iDao, appUuid, uuid, asOf, new Sort(Sort.Direction.DESC, "version")));
+				object = (T) Helper.getDomainClass(metaType)
+						.cast((iDao).getClass()
+								.getMethod("findAsOf", String.class, String.class, String.class, Sort.class)
+								.invoke(iDao, appUuid, uuid, asOf, new Sort(Sort.Direction.DESC, "version")));
 			} else
-				object = (T) Helper.getDomainClass(metaType).cast((iDao).getClass().getMethod("findAsOf", String.class, String.class, Sort.class).invoke(iDao, uuid, asOf, new Sort(Sort.Direction.DESC, "version")));
-		
+				object = (T) Helper.getDomainClass(metaType)
+						.cast((iDao).getClass().getMethod("findAsOf", String.class, String.class, Sort.class)
+								.invoke(iDao, uuid, asOf, new Sort(Sort.Direction.DESC, "version")));
+
 			return (T) resolveName(object, Helper.getMetaType(type));
-			}
-			catch(NullPointerException 
-					| IllegalArgumentException   
-					| SecurityException 
-					| IllegalAccessException 
-					| InvocationTargetException 
-					| NoSuchMethodException 
-					| ParseException  e){
+		} catch (NullPointerException | IllegalArgumentException | SecurityException | IllegalAccessException
+				| InvocationTargetException | NoSuchMethodException | ParseException e) {
 			e.printStackTrace();
-			}
-			return null;
-			}
-	
+		}
+		return null;
+	}
+
 	@SuppressWarnings("unchecked")
-	public List<BaseEntity> getList(String type) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public List<BaseEntity> getList(String type)
+			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		List<? extends BaseEntity> objectList = (List<? extends BaseEntity>) findAll(Helper.getMetaType(type));
 		List<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
-		
-		for(BaseEntity baseObject : objectList){
+
+		for (BaseEntity baseObject : objectList) {
 			BaseEntity baseEntity = new BaseEntity();
 			String id = baseObject.getId();
 			String uuid = baseObject.getUuid();
@@ -2716,96 +2861,121 @@ public class CommonServiceImpl <T> {
 			baseEntity.setAppInfo(appInfo);
 			baseEntityList.add(baseEntity);
 		}
-		
+
 		return resolveBaseEntityList(baseEntityList);
 	}
-	
-	public List<MetaStatsHolder> getMetaStats(String type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ParseException, JsonProcessingException {
+
+	public List<MetaStatsHolder> getMetaStats(String type)
+			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
+			SecurityException, ParseException, JsonProcessingException {
 		String appUuid = null;
-//		if ((type != null)&&(!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
-//			&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
-//			&& !type.equalsIgnoreCase(MetaType.application.toString()))) {
-			appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-						? securityServiceImpl.getAppInfo().getRef().getUuid() : null;							
-//		}
+		// if ((type != null)&&(!type.equalsIgnoreCase(MetaType.user.toString()) &&
+		// !type.equalsIgnoreCase(MetaType.group.toString())
+		// && !type.equalsIgnoreCase(MetaType.role.toString()) &&
+		// !type.equalsIgnoreCase(MetaType.privilege.toString())
+		// && !type.equalsIgnoreCase(MetaType.application.toString()))) {
+		appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
+				? securityServiceImpl.getAppInfo().getRef().getUuid()
+				: null;
+		// }
 		List<MetaStatsHolder> countHolder = new ArrayList<>();
 		List<MetaType> metaTypes = MetaType.getMetaList();
-		if(type == null){
-			for(MetaType mType : metaTypes){
-//				logger.info("MetaType: "+mType+"\n");
+		if (type == null) {
+			for (MetaType mType : metaTypes) {
+				// logger.info("MetaType: "+mType+"\n");
 				long count = 0;
-				Object iDao = this.getClass().getMethod(GET+Helper.getDaoClass(Helper.getMetaType(mType.toString().toLowerCase()))).invoke(this);
+				Object iDao = this.getClass()
+						.getMethod(GET + Helper.getDaoClass(Helper.getMetaType(mType.toString().toLowerCase())))
+						.invoke(this);
 				if (appUuid == null) {
-					//count = (long) iDao.getClass().getMethod("count").invoke(iDao);
-					count = metadataServiceImpl.getBaseEntityByCriteria(mType.toString(), null, null, null, null, null, null, null, null, null).size();
-           
+					// count = (long) iDao.getClass().getMethod("count").invoke(iDao);
+					count = metadataServiceImpl.getBaseEntityByCriteria(mType.toString(), null, null, null, null, null,
+							null, null, null, null).size();
+
 				}
-				
-				else{
-					/*Query query = new Query();
-					query.addCriteria(Criteria.where("appInfo.ref.uuid").is(appUuid));    
-					count = mongoTemplate.count(query, Helper.getDomainClass(Helper.getMetaType(mType.toString().toLowerCase())));*/
-				
-					count = metadataServiceImpl.getBaseEntityByCriteria(mType.toString(), null, null, null, null, null, null, null, null, null).size();
-					//count = getAllLatest(mType.toString(), "Y").size();
+
+				else {
+					/*
+					 * Query query = new Query();
+					 * query.addCriteria(Criteria.where("appInfo.ref.uuid").is(appUuid)); count =
+					 * mongoTemplate.count(query,
+					 * Helper.getDomainClass(Helper.getMetaType(mType.toString().toLowerCase())));
+					 */
+
+					count = metadataServiceImpl.getBaseEntityByCriteria(mType.toString(), null, null, null, null, null,
+							null, null, null, null).size();
+					// count = getAllLatest(mType.toString(), "Y").size();
 				}
-				if(count > 0){
-					Object metaObj = iDao.getClass().getMethod("findLatest", Sort.class).invoke(iDao, new Sort(Sort.Direction.DESC, "version"));
+				if (count > 0) {
+					Object metaObj = iDao.getClass().getMethod("findLatest", Sort.class).invoke(iDao,
+							new Sort(Sort.Direction.DESC, "version"));
 					Object metaobjNew = metadataServiceImpl.resolveBaseEntity((BaseEntity) metaObj);
 					Object createdBy = metaobjNew.getClass().getMethod("getCreatedBy").invoke(metaobjNew);
 					Object ref = createdBy.getClass().getMethod("getRef").invoke(createdBy);
 					String nameLastUpdatedBy = (String) ref.getClass().getMethod("getName").invoke(ref);
 					String lastUpdatedOn = (String) metaobjNew.getClass().getMethod("getCreatedOn").invoke(metaobjNew);
-					countHolder.add(new MetaStatsHolder(mType.toString().toLowerCase(), Long.toString(count), nameLastUpdatedBy, lastUpdatedOn));
-					if(mType.toString().equalsIgnoreCase(MetaType.paramlist.toString())){
-						count= metadataServiceImpl.getParamList(MetaType.rule.toString(), MetaType.paramlist.toString(), null, null, null, null, null, null, null, null, null).size();
-						countHolder.add(new MetaStatsHolder("paramlistrule", Long.toString(count), nameLastUpdatedBy, lastUpdatedOn));
-						count= metadataServiceImpl.getParamList(MetaType.model.toString(), MetaType.paramlist.toString(), null, null, null, null, null, null, null, null, null).size();
-						countHolder.add(new MetaStatsHolder("paramlistmodel", Long.toString(count), nameLastUpdatedBy, lastUpdatedOn));
-						count= metadataServiceImpl.getParamList(MetaType.dag.toString(), MetaType.paramlist.toString(), null, null, null, null, null, null, null, null, null).size();
-						countHolder.add(new MetaStatsHolder("paramlistdag", Long.toString(count), nameLastUpdatedBy, lastUpdatedOn));
-			
-					}	
-				}				
+					countHolder.add(new MetaStatsHolder(mType.toString().toLowerCase(), Long.toString(count),
+							nameLastUpdatedBy, lastUpdatedOn));
+					if (mType.toString().equalsIgnoreCase(MetaType.paramlist.toString())) {
+						count = metadataServiceImpl.getParamList(MetaType.rule.toString(),
+								MetaType.paramlist.toString(), null, null, null, null, null, null, null, null, null)
+								.size();
+						countHolder.add(new MetaStatsHolder("paramlistrule", Long.toString(count), nameLastUpdatedBy,
+								lastUpdatedOn));
+						count = metadataServiceImpl.getParamList(MetaType.model.toString(),
+								MetaType.paramlist.toString(), null, null, null, null, null, null, null, null, null)
+								.size();
+						countHolder.add(new MetaStatsHolder("paramlistmodel", Long.toString(count), nameLastUpdatedBy,
+								lastUpdatedOn));
+						count = metadataServiceImpl.getParamList(MetaType.dag.toString(), MetaType.paramlist.toString(),
+								null, null, null, null, null, null, null, null, null).size();
+						countHolder.add(new MetaStatsHolder("paramlistdag", Long.toString(count), nameLastUpdatedBy,
+								lastUpdatedOn));
+
+					}
+				}
 			}
-		}else{
+		} else {
 			MetaType metaType = Helper.getMetaType(type);
 			long count = 0;
 			Object iDao = this.getClass().getMethod(GET + Helper.getDaoClass(metaType)).invoke(this);
 			if (appUuid == null) {
 				count = (long) iDao.getClass().getMethod("count").invoke(iDao);
-			}else{
-				/*Query query = new Query();
-				query.addCriteria(Criteria.where("appInfo.ref.uuid").is(appUuid)); 
-				count = mongoTemplate.count(query, Helper.getDomainClass(metaType));*/
-				count = metadataServiceImpl.getBaseEntityByCriteria(type, null, null, null, null, null, null, null, null, null).size();
+			} else {
+				/*
+				 * Query query = new Query();
+				 * query.addCriteria(Criteria.where("appInfo.ref.uuid").is(appUuid)); count =
+				 * mongoTemplate.count(query, Helper.getDomainClass(metaType));
+				 */
+				count = metadataServiceImpl
+						.getBaseEntityByCriteria(type, null, null, null, null, null, null, null, null, null).size();
 			}
 			countHolder.add(new MetaStatsHolder(type, Long.toString(count), null, null));
 		}
-		return countHolder;	 
+		return countHolder;
 	}
-	
-	private List<Status> setNotStartedStatus (List<Status> statusList) {
-		if (Helper.getLatestStatus(statusList) != null 
-				&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.InProgress, new Date())) 
-						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Completed, new Date())) 
+
+	private List<Status> setNotStartedStatus(List<Status> statusList) {
+		if (Helper.getLatestStatus(statusList) != null
+				&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.InProgress, new Date()))
+						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Completed, new Date()))
 						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.OnHold, new Date())))) {
 			logger.info("Latest Status is not in InProgress/Completed/OnHold. Exiting... ");
 			return statusList;
 		}
-		
+
 		if (statusList == null || statusList.isEmpty()) {
 			statusList = new ArrayList<Status>();
 			statusList.add(new Status(Status.Stage.NotStarted, new Date()));
-		} else if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Resume, new Date())) 
-					|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Failed, new Date()))
-					||Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Killed, new Date()))) {
-				statusList.add(new Status(Status.Stage.InProgress, new Date()));
+		} else if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Resume, new Date()))
+				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Failed, new Date()))
+				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Killed, new Date()))) {
+			statusList.add(new Status(Status.Stage.InProgress, new Date()));
 		}
 		return statusList;
 	}
-	
-	private List<Status> setOnHoldStatus (List<Status> statusList) {
+
+	private List<Status> setOnHoldStatus(List<Status> statusList) {
 		if (!Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.NotStarted, new Date()))) {
 			logger.info("Latest Status is not in NotStarted. Exiting...");
 			return statusList;
@@ -2814,7 +2984,7 @@ public class CommonServiceImpl <T> {
 		return statusList;
 	}
 
-	private List<Status> setResumeStatus (List<Status> statusList) {
+	private List<Status> setResumeStatus(List<Status> statusList) {
 		if (!Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.OnHold, new Date()))) {
 			logger.info("Latest Status is not in OnHold. Exiting...");
 			return statusList;
@@ -2822,28 +2992,28 @@ public class CommonServiceImpl <T> {
 		statusList.add(new Status(Status.Stage.Resume, new Date()));
 		return statusList;
 	}
-	
-	private List<Status> setInProgressStatus (List<Status> statusList) {
-		if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Resume, new Date())) 
-					|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Failed, new Date())) 
-					|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.NotStarted, new Date())) 
-					|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Killed, new Date())) 
-					) {
-				statusList.add(new Status(Status.Stage.InProgress, new Date()));
-			}
-		else {
+
+	private List<Status> setInProgressStatus(List<Status> statusList) {
+		if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Resume, new Date()))
+				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Failed, new Date()))
+				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.NotStarted, new Date()))
+				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Killed, new Date()))) {
+			statusList.add(new Status(Status.Stage.InProgress, new Date()));
+		} else {
 			logger.info("Latest Status is not in Resume/Failed/NotStarted/Completed. Exiting...");
 		}
 		return statusList;
 	}
-	
-	private List<Status> setFailedStatus (List<Status> statusList) {
-		/*if (!Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.InProgress, new Date()))) {
-			logger.info("Latest Status is not in InProgress. Exiting...");
-			return statusList;
-		}*/
-		if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Completed, new Date())) || 
-				Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Killed, new Date()))) {
+
+	private List<Status> setFailedStatus(List<Status> statusList) {
+		/*
+		 * if (!Helper.getLatestStatus(statusList).equals(new
+		 * Status(Status.Stage.InProgress, new Date()))) {
+		 * logger.info("Latest Status is not in InProgress. Exiting..."); return
+		 * statusList; }
+		 */
+		if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Completed, new Date()))
+				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Killed, new Date()))) {
 			logger.info("Latest Status is in Completed or killed. Exiting...");
 			return statusList;
 		} else if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Terminating, new Date()))) {
@@ -2852,32 +3022,32 @@ public class CommonServiceImpl <T> {
 		}
 		Status failedStatus = new Status(Status.Stage.Failed, new Date());
 		if (Helper.getLatestStatus(statusList).equals(failedStatus)) {
-			statusList.remove(statusList.size()-1);
+			statusList.remove(statusList.size() - 1);
 		}
 		statusList.add(failedStatus);
 		return statusList;
 	}
-	
-	private List<Status> setCompletedStatus (List<Status> statusList) {
+
+	private List<Status> setCompletedStatus(List<Status> statusList) {
 		if (!Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.InProgress, new Date()))
-			&& !Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Terminating, new Date()))) {
+				&& !Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Terminating, new Date()))) {
 			logger.info("Latest Status is not in InProgress. Exiting...");
 			return statusList;
 		}
 		statusList.add(new Status(Status.Stage.Completed, new Date()));
 		return statusList;
 	}
-	
-	private List<Status> setTerminatingStatus (List<Status> statusList) {
-		if (!Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.InProgress, new Date()))){
+
+	private List<Status> setTerminatingStatus(List<Status> statusList) {
+		if (!Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.InProgress, new Date()))) {
 			logger.info("Latest Status is not in InProgress. Exiting...");
 			return statusList;
 		}
 		statusList.add(new Status(Status.Stage.Terminating, new Date()));
 		return statusList;
 	}
-	
-	private List<Status> setKilledStatus (List<Status> statusList) {
+
+	private List<Status> setKilledStatus(List<Status> statusList) {
 		if (!Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Terminating, new Date()))) {
 			logger.info("Latest Status is not in Terminating. Exiting...");
 			return statusList;
@@ -2887,53 +3057,62 @@ public class CommonServiceImpl <T> {
 	}
 	/**
 	 * Sets status of Meta Exec objects
+	 * 
 	 * @param uuid
 	 * @param version
 	 * @param type
 	 * @param status
 	 * @return
 	 */
-//	public List<Status> setMetaStatus (String uuid, String version, MetaType metaType, Status.Stage stage) {
-//		Object object = null;
-//		Object iDao = null;
-//		List<Status> statusList = null;
-//		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-//				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-//		try {
-//			// Get the object
-//			iDao = this.getClass().getMethod(GET + Helper.getDaoClass(metaType)).invoke(this);
-//			if (appUuid != null) {
-//				object = (iDao).getClass().getMethod("findOneByUuidAndVersion", String.class, String.class, String.class).invoke(iDao, appUuid, uuid, version);
-//			} else {
-//				object = (iDao).getClass().getMethod("findOneByUuidAndVersion", String.class, String.class).invoke(iDao, uuid, version);
-//			}
-//			statusList = (List<Status>) Helper.getDomainClass(metaType).getMethod(GET+"Status").invoke(object);
-//		} catch(NullPointerException  | NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | SecurityException e){
-//			e.printStackTrace();
-//		}
-//		
-//		switch (stage) {
-//			case NotStarted:
-//				statusList = setNotStartedStatus(statusList);
-//				break;
-//			case InProgress:
-//				statusList = setInProgressStatus(statusList);
-//				break;
-//			case Failed:
-//				statusList = setFailedStatus(statusList);
-//				break;
-//			case Completed:
-//				statusList = setCompletedStatus(statusList);
-//				break;
-//			default:
-//				break;
-//		}
-//		return statusList;
-//	}
-	
-	
+	// public List<Status> setMetaStatus (String uuid, String version, MetaType
+	// metaType, Status.Stage stage) {
+	// Object object = null;
+	// Object iDao = null;
+	// List<Status> statusList = null;
+	// String appUuid = (securityServiceImpl.getAppInfo() != null &&
+	// securityServiceImpl.getAppInfo().getRef() != null)
+	// ? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
+	// try {
+	// // Get the object
+	// iDao = this.getClass().getMethod(GET +
+	// Helper.getDaoClass(metaType)).invoke(this);
+	// if (appUuid != null) {
+	// object = (iDao).getClass().getMethod("findOneByUuidAndVersion", String.class,
+	// String.class, String.class).invoke(iDao, appUuid, uuid, version);
+	// } else {
+	// object = (iDao).getClass().getMethod("findOneByUuidAndVersion", String.class,
+	// String.class).invoke(iDao, uuid, version);
+	// }
+	// statusList = (List<Status>)
+	// Helper.getDomainClass(metaType).getMethod(GET+"Status").invoke(object);
+	// } catch(NullPointerException | NoSuchMethodException | IllegalAccessException
+	// | IllegalArgumentException | InvocationTargetException | SecurityException
+	// e){
+	// e.printStackTrace();
+	// }
+	//
+	// switch (stage) {
+	// case NotStarted:
+	// statusList = setNotStartedStatus(statusList);
+	// break;
+	// case InProgress:
+	// statusList = setInProgressStatus(statusList);
+	// break;
+	// case Failed:
+	// statusList = setFailedStatus(statusList);
+	// break;
+	// case Completed:
+	// statusList = setCompletedStatus(statusList);
+	// break;
+	// default:
+	// break;
+	// }
+	// return statusList;
+	// }
+
 	/**
 	 * Set Meta Status for stage
+	 * 
 	 * @param dagExec
 	 * @param retObj
 	 * @param stage
@@ -2942,21 +3121,26 @@ public class CommonServiceImpl <T> {
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	public Object setMetaStatusForStage (DagExec dagExec, Object retObj, Status.Stage stage, String stageId) throws Exception {
+	public Object setMetaStatusForStage(DagExec dagExec, Object retObj, Status.Stage stage, String stageId)
+			throws Exception {
 		String uuid = dagExec.getUuid();
 		String version = dagExec.getVersion();
 		Object metaObj = null;
 		Object iDao = null;
 		List<Status> statusList = null;
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
+				? securityServiceImpl.getAppInfo().getRef().getUuid()
+				: null;
 		try {
 			// Get the object
 			iDao = this.getClass().getMethod(GET + Helper.getDaoClass(MetaType.dagExec)).invoke(this);
 			if (appUuid != null) {
-				dagExec = (DagExec) (iDao).getClass().getMethod("findOneByUuidAndVersion", String.class, String.class, String.class).invoke(iDao, appUuid, uuid, version);
+				dagExec = (DagExec) (iDao).getClass()
+						.getMethod("findOneByUuidAndVersion", String.class, String.class, String.class)
+						.invoke(iDao, appUuid, uuid, version);
 			} else {
-				dagExec = (DagExec) (iDao).getClass().getMethod("findOneByUuidAndVersion", String.class, String.class).invoke(iDao, uuid, version);
+				dagExec = (DagExec) (iDao).getClass().getMethod("findOneByUuidAndVersion", String.class, String.class)
+						.invoke(iDao, uuid, version);
 			}
 			if (dagExec == null) {
 				return null;
@@ -2965,11 +3149,12 @@ public class CommonServiceImpl <T> {
 			if (metaObj == null) {
 				metaObj = retObj;
 			}
-			statusList = (List<Status>) StageExec.class.getMethod(GET+"StatusList").invoke(metaObj);
-		} catch(NullPointerException  | NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | SecurityException e){
+			statusList = (List<Status>) StageExec.class.getMethod(GET + "StatusList").invoke(metaObj);
+		} catch (NullPointerException | NoSuchMethodException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException | SecurityException e) {
 			e.printStackTrace();
 		}
-		
+
 		switch (stage) {
 		case NotStarted:
 			statusList = setNotStartedStatus(statusList);
@@ -2989,12 +3174,12 @@ public class CommonServiceImpl <T> {
 		case Completed:
 			statusList = setCompletedStatus(statusList);
 			break;
-		case Terminating : 
+		case Terminating:
 			logger.info("Going to set terminating status for stage ");
 			logger.info(Helper.getLatestStatus(statusList).getStage().toString());
 			statusList = setTerminatingStatus(statusList);
 			break;
-		case Killed : 
+		case Killed:
 			statusList = setKilledStatus(statusList);
 			break;
 		case STARTED:
@@ -3007,30 +3192,34 @@ public class CommonServiceImpl <T> {
 			break;
 		}
 
-		//Save the status in mongo
+		// Save the status in mongo
 		StageExec.class.getMethod("setStatusList", List.class).invoke(retObj, statusList);
 		dagExecServiceImpl.setStageExec(dagExec, (StageExec) retObj);
 		save(MetaType.dagExec.toString(), dagExec);
 		return retObj;
 	}
 
-
 	@SuppressWarnings("unchecked")
-	public Object setMetaStatusForTask (DagExec dagExec, Object retObj, Status.Stage stage, String stageId, String taskId) throws Exception {
+	public Object setMetaStatusForTask(DagExec dagExec, Object retObj, Status.Stage stage, String stageId,
+			String taskId) throws Exception {
 		String uuid = dagExec.getUuid();
 		String version = dagExec.getVersion();
 		Object metaObj = null;
 		Object iDao = null;
 		List<Status> statusList = null;
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
+				? securityServiceImpl.getAppInfo().getRef().getUuid()
+				: null;
 		try {
 			// Get the object
 			iDao = this.getClass().getMethod(GET + Helper.getDaoClass(MetaType.dagExec)).invoke(this);
 			if (appUuid != null) {
-				dagExec = (DagExec) (iDao).getClass().getMethod("findOneByUuidAndVersion", String.class, String.class, String.class).invoke(iDao, appUuid, uuid, version);
+				dagExec = (DagExec) (iDao).getClass()
+						.getMethod("findOneByUuidAndVersion", String.class, String.class, String.class)
+						.invoke(iDao, appUuid, uuid, version);
 			} else {
-				dagExec = (DagExec) (iDao).getClass().getMethod("findOneByUuidAndVersion", String.class, String.class).invoke(iDao, uuid, version);
+				dagExec = (DagExec) (iDao).getClass().getMethod("findOneByUuidAndVersion", String.class, String.class)
+						.invoke(iDao, uuid, version);
 			}
 			if (dagExec == null) {
 				return null;
@@ -3039,11 +3228,12 @@ public class CommonServiceImpl <T> {
 			if (metaObj == null) {
 				metaObj = retObj;
 			}
-			statusList = (List<Status>) TaskExec.class.getMethod(GET+"StatusList").invoke(metaObj);
-		} catch(NullPointerException  | NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | SecurityException e){
+			statusList = (List<Status>) TaskExec.class.getMethod(GET + "StatusList").invoke(metaObj);
+		} catch (NullPointerException | NoSuchMethodException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException | SecurityException e) {
 			e.printStackTrace();
 		}
-		
+
 		switch (stage) {
 		case NotStarted:
 			statusList = setNotStartedStatus(statusList);
@@ -3063,10 +3253,10 @@ public class CommonServiceImpl <T> {
 		case Completed:
 			statusList = setCompletedStatus(statusList);
 			break;
-		case Terminating : 
+		case Terminating:
 			statusList = setTerminatingStatus(statusList);
 			break;
-		case Killed : 
+		case Killed:
 			logger.info("Going to kill task : " + taskId + " : before setKilledStatus");
 			statusList = setKilledStatus(statusList);
 			break;
@@ -3080,81 +3270,83 @@ public class CommonServiceImpl <T> {
 			break;
 		}
 
-		//Save the status in mongo
+		// Save the status in mongo
 		TaskExec.class.getMethod("setStatusList", List.class).invoke(retObj, statusList);
 		dagExecServiceImpl.setTaskExec(dagExec, (TaskExec) retObj);
 		save(MetaType.dagExec.toString(), dagExec);
 		return retObj;
 	}
 
-	
-	
 	@SuppressWarnings("unchecked")
-	public Object setMetaStatus (Object retObj, MetaType metaType, Status.Stage stage) throws Exception {
-		String uuid = (String) Helper.getDomainClass(metaType).getMethod(GET+"Uuid").invoke(retObj);
-		String version = (String) Helper.getDomainClass(metaType).getMethod(GET+"Version").invoke(retObj);		
+	public Object setMetaStatus(Object retObj, MetaType metaType, Status.Stage stage) throws Exception {
+		String uuid = (String) Helper.getDomainClass(metaType).getMethod(GET + "Uuid").invoke(retObj);
+		String version = (String) Helper.getDomainClass(metaType).getMethod(GET + "Version").invoke(retObj);
 		Object metaObj = null;
 		Object iDao = null;
 		List<Status> statusList = null;
 		String appUuid = null;
-		if (!metaType.equals(MetaType.user) && !metaType.equals(MetaType.group)
-			&& !metaType.equals(MetaType.role) && !metaType.equals(MetaType.privilege)
-			&& !metaType.equals(MetaType.application)) {
+		if (!metaType.equals(MetaType.user) && !metaType.equals(MetaType.group) && !metaType.equals(MetaType.role)
+				&& !metaType.equals(MetaType.privilege) && !metaType.equals(MetaType.application)) {
 			appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-						? securityServiceImpl.getAppInfo().getRef().getUuid() : null;							
+					? securityServiceImpl.getAppInfo().getRef().getUuid()
+					: null;
 		}
 		try {
 			// Get the object
 			iDao = this.getClass().getMethod(GET + Helper.getDaoClass(metaType)).invoke(this);
 			if (appUuid != null) {
-				metaObj = (iDao).getClass().getMethod("findOneByUuidAndVersion", String.class, String.class, String.class).invoke(iDao, appUuid, uuid, version);
+				metaObj = (iDao).getClass()
+						.getMethod("findOneByUuidAndVersion", String.class, String.class, String.class)
+						.invoke(iDao, appUuid, uuid, version);
 			} else {
-				metaObj = (iDao).getClass().getMethod("findOneByUuidAndVersion", String.class, String.class).invoke(iDao, uuid, version);
+				metaObj = (iDao).getClass().getMethod("findOneByUuidAndVersion", String.class, String.class)
+						.invoke(iDao, uuid, version);
 			}
 			if (metaObj == null) {
 				metaObj = retObj;
 			}
-			statusList = (List<Status>) Helper.getDomainClass(metaType).getMethod(GET+"StatusList").invoke(metaObj);
-		} catch(NullPointerException  | NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | SecurityException e){
-			e.printStackTrace();			
-		}
-		
-		switch (stage) {
-			case NotStarted:
-				statusList = setNotStartedStatus(statusList);
-				break;
-			case OnHold:
-				statusList = setOnHoldStatus(statusList);
-				break;
-			case Resume:
-				statusList = setResumeStatus(statusList);
-				break;
-			case InProgress:
-				statusList = setInProgressStatus(statusList);
-				break;
-			case Failed:
-				statusList = setFailedStatus(statusList);
-				break;
-			case Completed:
-				statusList = setCompletedStatus(statusList);
-				break;
-			case Terminating : 
-				statusList = setTerminatingStatus(statusList);
-				break;
-			case Killed : 
-				statusList = setKilledStatus(statusList);
-				break;
-			case STARTED:
-				statusList = setStartedStatus(statusList);
-				break;
-			case STOPPED:
-				statusList = setStoppedStatus(statusList);
-				break;
-			default:
-				break;
+			statusList = (List<Status>) Helper.getDomainClass(metaType).getMethod(GET + "StatusList").invoke(metaObj);
+		} catch (NullPointerException | NoSuchMethodException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException | SecurityException e) {
+			e.printStackTrace();
 		}
 
-		//Save the status in mongo
+		switch (stage) {
+		case NotStarted:
+			statusList = setNotStartedStatus(statusList);
+			break;
+		case OnHold:
+			statusList = setOnHoldStatus(statusList);
+			break;
+		case Resume:
+			statusList = setResumeStatus(statusList);
+			break;
+		case InProgress:
+			statusList = setInProgressStatus(statusList);
+			break;
+		case Failed:
+			statusList = setFailedStatus(statusList);
+			break;
+		case Completed:
+			statusList = setCompletedStatus(statusList);
+			break;
+		case Terminating:
+			statusList = setTerminatingStatus(statusList);
+			break;
+		case Killed:
+			statusList = setKilledStatus(statusList);
+			break;
+		case STARTED:
+			statusList = setStartedStatus(statusList);
+			break;
+		case STOPPED:
+			statusList = setStoppedStatus(statusList);
+			break;
+		default:
+			break;
+		}
+
+		// Save the status in mongo
 		Helper.getDomainClass(metaType).getMethod("setStatusList", List.class).invoke(retObj, statusList);
 		save(metaType.toString(), retObj);
 		return retObj;
@@ -3170,65 +3362,58 @@ public class CommonServiceImpl <T> {
 		return statusList;
 	}
 
-	public void onHold (MetaType type, String uuid, String version) {
+	public void onHold(MetaType type, String uuid, String version) {
 		Object service = null;
 		try {
 			service = this.getClass().getMethod(GET + Helper.getServiceClass(type)).invoke(this);
-			(service).getClass().getMethod("onHold", String.class, String.class).invoke(service,uuid,version);
+			(service).getClass().getMethod("onHold", String.class, String.class).invoke(service, uuid, version);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void resume (MetaType type, String uuid, String version) {
+	public void resume(MetaType type, String uuid, String version) {
 		Object service = null;
 		try {
 			service = this.getClass().getMethod(GET + Helper.getServiceClass(type)).invoke(this);
-			(service).getClass().getMethod("resume", String.class, String.class).invoke(service,uuid,version);
+			(service).getClass().getMethod("resume", String.class, String.class).invoke(service, uuid, version);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void kill (MetaType type, String uuid, String version) {
+	public void kill(MetaType type, String uuid, String version) {
 		Object service = null;
 		try {
 			service = this.getClass().getMethod(GET + Helper.getServiceClass(type)).invoke(this);
-			(service).getClass().getMethod("kill", String.class, String.class).invoke(service,uuid,version);
+			(service).getClass().getMethod("kill", String.class, String.class).invoke(service, uuid, version);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public void setStatus(String type, String uuid, String version, String status) throws JsonProcessingException, Exception {
+
+	public void setStatus(String type, String uuid, String version, String status)
+			throws JsonProcessingException, Exception {
 		if (!StringUtils.isBlank(status)) {
-			if(status.toLowerCase().equalsIgnoreCase(Status.Stage.OnHold.toString().toLowerCase())){
-				onHold(Helper.getMetaType(type),uuid,version);
-			}
-			else if(status.toLowerCase().equalsIgnoreCase(Status.Stage.Resume.toString().toLowerCase())){
-				resume(Helper.getMetaType(type),uuid,version);
-			}
-			else if(status.toLowerCase().equalsIgnoreCase(Status.Stage.Killed.toString().toLowerCase())){
-				kill(Helper.getMetaType(type),uuid,version);
+			if (status.toLowerCase().equalsIgnoreCase(Status.Stage.OnHold.toString().toLowerCase())) {
+				onHold(Helper.getMetaType(type), uuid, version);
+			} else if (status.toLowerCase().equalsIgnoreCase(Status.Stage.Resume.toString().toLowerCase())) {
+				resume(Helper.getMetaType(type), uuid, version);
+			} else if (status.toLowerCase().equalsIgnoreCase(Status.Stage.Killed.toString().toLowerCase())) {
+				kill(Helper.getMetaType(type), uuid, version);
 			}
 		}
 	}
-	
-	/*public String invalidateSession() {
-		String message = null;
-		try{
-			SessionCounter.invalidateSessions();
-			message = "Session(s) destroyed successfully.";
-		}catch (NullPointerException e) {
-			e.printStackTrace();
-			return "Can not destroy session(s).";
-		}catch (Exception e) {
-			e.printStackTrace();
-			return "Can not destroy session(s).";
-		}
-		return message;
-	}*/
-	
+
+	/*
+	 * public String invalidateSession() { String message = null; try{
+	 * SessionCounter.invalidateSessions(); message =
+	 * "Session(s) destroyed successfully."; }catch (NullPointerException e) {
+	 * e.printStackTrace(); return "Can not destroy session(s)."; }catch (Exception
+	 * e) { e.printStackTrace(); return "Can not destroy session(s)."; } return
+	 * message; }
+	 */
+
 	public boolean nonBlockingCompleteTaskThread(List<FutureTask<String>> taskList) {
 		String outputThreadName = null;
 		boolean isComplete = true;
@@ -3238,20 +3423,21 @@ public class CommonServiceImpl <T> {
 				continue;
 			}
 			try {
-            	outputThreadName = futureTask.get();
-                logger.info("Thread " + outputThreadName + " completed ");
-                taskThreadMap.remove(outputThreadName);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
+				outputThreadName = futureTask.get();
+				logger.info("Thread " + outputThreadName + " completed ");
+				taskThreadMap.remove(outputThreadName);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				e.printStackTrace();
+			}
 		}
 		return isComplete;
 	}
-	
+
 	/**
 	 * Collect result and clear map
+	 * 
 	 * @param taskList
 	 */
 	public void completeTaskThread(List<FutureTask<TaskHolder>> taskList) {
@@ -3261,23 +3447,24 @@ public class CommonServiceImpl <T> {
 			try {
 				taskHolder = futureTask.get();
 				outputThreadName = taskHolder.getName();
-                logger.info("Thread " + outputThreadName + " completed ");
-                taskThreadMap.remove(outputThreadName);
-            } catch (InterruptedException | CancellationException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+				logger.info("Thread " + outputThreadName + " completed ");
+				taskThreadMap.remove(outputThreadName);
+			} catch (InterruptedException | CancellationException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public List<Status> getAllStatusForExec(MetaIdentifier ref) {
 		Object iDao = null;
 		Object metaObj = null;
 		List<Status> statusList = null;
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
+				? securityServiceImpl.getAppInfo().getRef().getUuid()
+				: null;
 		if (ref == null || StringUtils.isBlank(ref.getUuid()) || ref.getType() == null) {
 			logger.info(" Inside getAllStatusForExec. ref is null or does not have uuid or type. Aborting ... ");
 			return null;
@@ -3291,12 +3478,15 @@ public class CommonServiceImpl <T> {
 		try {
 			iDao = this.getClass().getMethod(GET + Helper.getDaoClass(ref.getType())).invoke(this);
 			if (appUuid != null) {
-				metaObj = (iDao).getClass().getMethod("findOneByUuidAndVersion", String.class, String.class, String.class).invoke(iDao, appUuid, uuid, version);
+				metaObj = (iDao).getClass()
+						.getMethod("findOneByUuidAndVersion", String.class, String.class, String.class)
+						.invoke(iDao, appUuid, uuid, version);
 			} else {
-				metaObj = (iDao).getClass().getMethod("findOneByUuidAndVersion", String.class, String.class).invoke(iDao, uuid, version);
+				metaObj = (iDao).getClass().getMethod("findOneByUuidAndVersion", String.class, String.class)
+						.invoke(iDao, uuid, version);
 			}
 			// Get status list from metaObj
-			statusList = (List<Status>) Helper.getDomainClass(ref.getType()).getMethod(GET+"Status").invoke(metaObj);
+			statusList = (List<Status>) Helper.getDomainClass(ref.getType()).getMethod(GET + "Status").invoke(metaObj);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
 				| SecurityException | NullPointerException e) {
 			logger.error("Exception in getAllStatusForExec ");
@@ -3304,7 +3494,7 @@ public class CommonServiceImpl <T> {
 		}
 		return statusList;
 	}
-	
+
 	/**
 	 * 
 	 * @param baseRuleGroupExec
@@ -3315,167 +3505,216 @@ public class CommonServiceImpl <T> {
 	 * @throws IllegalArgumentException
 	 * @throws InvocationTargetException
 	 */
-	public Status getGroupStatus(BaseRuleGroupExec baseRuleGroupExec,MetaType groupExecType, MetaType ruleExecType) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+	public Status getGroupStatus(BaseRuleGroupExec baseRuleGroupExec, MetaType groupExecType, MetaType ruleExecType)
+			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		Status defaultStatus = new Status(Status.Stage.InProgress, new Date());
-		List<MetaIdentifierHolder> metaIdentifierHolderList=null;
+		List<MetaIdentifierHolder> metaIdentifierHolderList = null;
 		BaseRuleExec baseRuleExec = null;
-		ConcurrentHashMap<Status.Stage,Integer> stausMap=new ConcurrentHashMap<Status.Stage,Integer>();
-		stausMap.put(defaultStatus.getStage(),Integer.valueOf(0));
-		
-			metaIdentifierHolderList=baseRuleGroupExec.getExecList();
-			for(MetaIdentifierHolder baseRuleExecHolder : baseRuleGroupExec.getExecList()) {
-				try {
-					baseRuleExec = (BaseRuleExec) getOneByUuidAndVersion(baseRuleExecHolder.getRef().getUuid(),baseRuleExecHolder.getRef().getVersion(), ruleExecType.toString());
-				} catch (JsonProcessingException e) {
-					e.printStackTrace();
-				}
-				Helper.getLatestStatus(baseRuleExec.getStatusList()).getStage();
-				if(stausMap.containsKey(Helper.getLatestStatus(baseRuleExec.getStatusList()).getStage())){ 
-					stausMap.put(Helper.getLatestStatus(baseRuleExec.getStatusList()).getStage(),stausMap.get(Helper.getLatestStatus(baseRuleExec.getStatusList()).getStage())+1);
-				}
-				 else{
-					 stausMap.putIfAbsent(Helper.getLatestStatus(baseRuleExec.getStatusList()).getStage(),1);
-				 }
+		ConcurrentHashMap<Status.Stage, Integer> stausMap = new ConcurrentHashMap<Status.Stage, Integer>();
+		stausMap.put(defaultStatus.getStage(), Integer.valueOf(0));
+
+		metaIdentifierHolderList = baseRuleGroupExec.getExecList();
+		for (MetaIdentifierHolder baseRuleExecHolder : baseRuleGroupExec.getExecList()) {
+			try {
+				baseRuleExec = (BaseRuleExec) getOneByUuidAndVersion(baseRuleExecHolder.getRef().getUuid(),
+						baseRuleExecHolder.getRef().getVersion(), ruleExecType.toString());
+			} catch (JsonProcessingException e) {
+				e.printStackTrace();
 			}
-			
-		if(stausMap.containsKey(com.inferyx.framework.domain.Status.Stage.InProgress) && (stausMap.get(com.inferyx.framework.domain.Status.Stage.InProgress) >=1)){ 
-			defaultStatus.setStage(Status.Stage.InProgress);
+			Helper.getLatestStatus(baseRuleExec.getStatusList()).getStage();
+			if (stausMap.containsKey(Helper.getLatestStatus(baseRuleExec.getStatusList()).getStage())) {
+				stausMap.put(Helper.getLatestStatus(baseRuleExec.getStatusList()).getStage(),
+						stausMap.get(Helper.getLatestStatus(baseRuleExec.getStatusList()).getStage()) + 1);
+			} else {
+				stausMap.putIfAbsent(Helper.getLatestStatus(baseRuleExec.getStatusList()).getStage(), 1);
+			}
 		}
-		else if(stausMap.containsKey(com.inferyx.framework.domain.Status.Stage.Failed) && (stausMap.get(com.inferyx.framework.domain.Status.Stage.Failed) >=1) && !(stausMap.get(com.inferyx.framework.domain.Status.Stage.InProgress) >0)){
+
+		if (stausMap.containsKey(com.inferyx.framework.domain.Status.Stage.InProgress)
+				&& (stausMap.get(com.inferyx.framework.domain.Status.Stage.InProgress) >= 1)) {
+			defaultStatus.setStage(Status.Stage.InProgress);
+		} else if (stausMap.containsKey(com.inferyx.framework.domain.Status.Stage.Failed)
+				&& (stausMap.get(com.inferyx.framework.domain.Status.Stage.Failed) >= 1)
+				&& !(stausMap.get(com.inferyx.framework.domain.Status.Stage.InProgress) > 0)) {
 			defaultStatus.setStage(Status.Stage.Failed);
-		}
-		else if(stausMap.containsKey(com.inferyx.framework.domain.Status.Stage.Killed) && (stausMap.get(com.inferyx.framework.domain.Status.Stage.Killed) >=1) && !(stausMap.get(com.inferyx.framework.domain.Status.Stage.InProgress) >0) && !stausMap.containsKey(com.inferyx.framework.domain.Status.Stage.Failed)){
+		} else if (stausMap.containsKey(com.inferyx.framework.domain.Status.Stage.Killed)
+				&& (stausMap.get(com.inferyx.framework.domain.Status.Stage.Killed) >= 1)
+				&& !(stausMap.get(com.inferyx.framework.domain.Status.Stage.InProgress) > 0)
+				&& !stausMap.containsKey(com.inferyx.framework.domain.Status.Stage.Failed)) {
 			defaultStatus.setStage(Status.Stage.Killed);
-		}
-		else if(stausMap.containsKey(com.inferyx.framework.domain.Status.Stage.Resume) && (stausMap.get(com.inferyx.framework.domain.Status.Stage.Resume) >=1) && !stausMap.containsKey(com.inferyx.framework.domain.Status.Stage.Killed) && !(stausMap.get(com.inferyx.framework.domain.Status.Stage.InProgress) >0) && !stausMap.containsKey(com.inferyx.framework.domain.Status.Stage.Failed)){
+		} else if (stausMap.containsKey(com.inferyx.framework.domain.Status.Stage.Resume)
+				&& (stausMap.get(com.inferyx.framework.domain.Status.Stage.Resume) >= 1)
+				&& !stausMap.containsKey(com.inferyx.framework.domain.Status.Stage.Killed)
+				&& !(stausMap.get(com.inferyx.framework.domain.Status.Stage.InProgress) > 0)
+				&& !stausMap.containsKey(com.inferyx.framework.domain.Status.Stage.Failed)) {
 			defaultStatus.setStage(Status.Stage.InProgress);
-		}
-		else if(stausMap.containsKey(com.inferyx.framework.domain.Status.Stage.Completed) && (metaIdentifierHolderList.size()== stausMap.get(com.inferyx.framework.domain.Status.Stage.Completed))){ 
+		} else if (stausMap.containsKey(com.inferyx.framework.domain.Status.Stage.Completed)
+				&& (metaIdentifierHolderList.size() == stausMap
+						.get(com.inferyx.framework.domain.Status.Stage.Completed))) {
 			defaultStatus.setStage(Status.Stage.Completed);
 		}
 
-		logger.info("mapStatus: "+stausMap.toString());
-		logger.info("FinalStatus: "+defaultStatus.getStage().toString());
+		logger.info("mapStatus: " + stausMap.toString());
+		logger.info("FinalStatus: " + defaultStatus.getStage().toString());
 		return defaultStatus;
- 
-      }
 
-	
+	}
+
 	@SuppressWarnings("unchecked")
-	public T getLatestByUuidWithoutAppUuid(String uuid, String type) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public T getLatestByUuidWithoutAppUuid(String uuid, String type)
+			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		MetaType metaType = Helper.getMetaType(type);
 		Object iDao = this.getClass().getMethod(GET + Helper.getDaoClass(metaType)).invoke(this);
-		Object object = (T) Helper.getDomainClass(metaType).cast(iDao.getClass().getMethod("findLatestByUuid",String.class,Sort.class ).invoke(iDao, uuid,new Sort(Sort.Direction.DESC, "version")));	
+		Object object = (T) Helper.getDomainClass(metaType)
+				.cast(iDao.getClass().getMethod("findLatestByUuid", String.class, Sort.class).invoke(iDao, uuid,
+						new Sort(Sort.Direction.DESC, "version")));
 		return (T) resolveName(object, Helper.getMetaType(type));
-		//return (T) object;
+		// return (T) object;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public T getOneByUuidAndVersionWithoutAppUuid(String uuid, String version, String type) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public T getOneByUuidAndVersionWithoutAppUuid(String uuid, String version, String type)
+			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		MetaType metaType = Helper.getMetaType(type);
 		T object = null;
-		Object iDao = this.getClass().getMethod(GET+Helper.getDaoClass(metaType)).invoke(this);
-		if(StringUtils.isBlank(version))
-			object = (T) iDao.getClass().getMethod("findLatestByUuid", String.class,Sort.class).invoke(iDao, uuid,new Sort(Sort.Direction.DESC, "version"));	
+		Object iDao = this.getClass().getMethod(GET + Helper.getDaoClass(metaType)).invoke(this);
+		if (StringUtils.isBlank(version))
+			object = (T) iDao.getClass().getMethod("findLatestByUuid", String.class, Sort.class).invoke(iDao, uuid,
+					new Sort(Sort.Direction.DESC, "version"));
 		else
-			object = (T) iDao.getClass().getMethod("findOneByUuidAndVersion", String.class,String.class).invoke(iDao, uuid,version);
+			object = (T) iDao.getClass().getMethod("findOneByUuidAndVersion", String.class, String.class).invoke(iDao,
+					uuid, version);
 		return (T) resolveName(object, Helper.getMetaType(type));
-	}	
-	
-	public BaseEntity published(String id, String type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JsonProcessingException, ParseException, JSONException {
+	}
+
+	public BaseEntity published(String id, String type)
+			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
+			SecurityException, NullPointerException, JsonProcessingException, ParseException, JSONException {
 		String appUuid = null;
 		if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
-			&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
-			&& !type.equalsIgnoreCase(MetaType.application.toString())) {
+				&& !type.equalsIgnoreCase(MetaType.role.toString())
+				&& !type.equalsIgnoreCase(MetaType.privilege.toString())
+				&& !type.equalsIgnoreCase(MetaType.application.toString())) {
 			appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-						? securityServiceImpl.getAppInfo().getRef().getUuid() : null;							
+					? securityServiceImpl.getAppInfo().getRef().getUuid()
+					: null;
 		}
 		MetaType metaType = Helper.getMetaType(type);
-		Object iDao = this.getClass().getMethod(GET+Helper.getDaoClass(metaType)).invoke(this);//finds respective Dao type
+		Object iDao = this.getClass().getMethod(GET + Helper.getDaoClass(metaType)).invoke(this);// finds respective Dao
+																									// type
 		Object obj = null;
 		if (appUuid != null)
-			obj = Helper.getDomainClass(metaType).cast((iDao).getClass().getMethod("findOneById", String.class, String.class).invoke(iDao, appUuid, id));
+			obj = Helper.getDomainClass(metaType).cast(
+					(iDao).getClass().getMethod("findOneById", String.class, String.class).invoke(iDao, appUuid, id));
 		else
-			obj = Helper.getDomainClass(metaType).cast((iDao).getClass().getMethod("findOneById", String.class).invoke(iDao, id));
+			obj = Helper.getDomainClass(metaType)
+					.cast((iDao).getClass().getMethod("findOneById", String.class).invoke(iDao, id));
 		Helper.getDomainClass(metaType).getMethod("setPublished", String.class).invoke(obj, "Y");
 		return (BaseEntity) resolveName(save(type, obj), Helper.getMetaType(type));
 	}
-	
-	public BaseEntity unPublished(String id, String type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JsonProcessingException, ParseException, JSONException {
+
+	public BaseEntity unPublished(String id, String type)
+			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
+			SecurityException, NullPointerException, JsonProcessingException, ParseException, JSONException {
 		String appUuid = null;
 		if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
-			&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
-			&& !type.equalsIgnoreCase(MetaType.application.toString())) {
+				&& !type.equalsIgnoreCase(MetaType.role.toString())
+				&& !type.equalsIgnoreCase(MetaType.privilege.toString())
+				&& !type.equalsIgnoreCase(MetaType.application.toString())) {
 			appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-						? securityServiceImpl.getAppInfo().getRef().getUuid() : null;							
+					? securityServiceImpl.getAppInfo().getRef().getUuid()
+					: null;
 		}
 		MetaType metaType = Helper.getMetaType(type);
-		Object iDao = this.getClass().getMethod(GET+Helper.getDaoClass(metaType)).invoke(this);//finds respective Dao type
+		Object iDao = this.getClass().getMethod(GET + Helper.getDaoClass(metaType)).invoke(this);// finds respective Dao
+																									// type
 		Object obj = null;
 		if (appUuid != null)
-			obj = Helper.getDomainClass(metaType).cast((iDao).getClass().getMethod("findOneById", String.class, String.class).invoke(iDao, appUuid, id));
+			obj = Helper.getDomainClass(metaType).cast(
+					(iDao).getClass().getMethod("findOneById", String.class, String.class).invoke(iDao, appUuid, id));
 		else
-			obj = Helper.getDomainClass(metaType).cast((iDao).getClass().getMethod("findOneById", String.class).invoke(iDao, id));
+			obj = Helper.getDomainClass(metaType)
+					.cast((iDao).getClass().getMethod("findOneById", String.class).invoke(iDao, id));
 		MetaIdentifierHolder createdBy = (MetaIdentifierHolder) obj.getClass().getMethod("getCreatedBy").invoke(obj);
-		if(isCurrentUser(createdBy))
+		if (isCurrentUser(createdBy))
 			Helper.getDomainClass(metaType).getMethod("setPublished", String.class).invoke(obj, "N");
 		else
 			return null;
 		return (BaseEntity) resolveName(save(type, obj), Helper.getMetaType(type));
 	}
-	
-	public BaseEntity locked(String id, String type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JsonProcessingException, ParseException, JSONException {
+
+	public BaseEntity locked(String id, String type)
+			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
+			SecurityException, NullPointerException, JsonProcessingException, ParseException, JSONException {
 		String appUuid = null;
 		if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
-			&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
-			&& !type.equalsIgnoreCase(MetaType.application.toString())) {
+				&& !type.equalsIgnoreCase(MetaType.role.toString())
+				&& !type.equalsIgnoreCase(MetaType.privilege.toString())
+				&& !type.equalsIgnoreCase(MetaType.application.toString())) {
 			appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-						? securityServiceImpl.getAppInfo().getRef().getUuid() : null;							
+					? securityServiceImpl.getAppInfo().getRef().getUuid()
+					: null;
 		}
 		MetaType metaType = Helper.getMetaType(type);
-		Object iDao = this.getClass().getMethod(GET+Helper.getDaoClass(metaType)).invoke(this);//finds respective Dao type
+		Object iDao = this.getClass().getMethod(GET + Helper.getDaoClass(metaType)).invoke(this);// finds respective Dao
+																									// type
 		Object obj = null;
 		if (appUuid != null)
-			obj = Helper.getDomainClass(metaType).cast((iDao).getClass().getMethod("findOneById", String.class, String.class).invoke(iDao, appUuid, id));
+			obj = Helper.getDomainClass(metaType).cast(
+					(iDao).getClass().getMethod("findOneById", String.class, String.class).invoke(iDao, appUuid, id));
 		else
-			obj = Helper.getDomainClass(metaType).cast((iDao).getClass().getMethod("findOneById", String.class).invoke(iDao, id));
+			obj = Helper.getDomainClass(metaType)
+					.cast((iDao).getClass().getMethod("findOneById", String.class).invoke(iDao, id));
 		Helper.getDomainClass(metaType).getMethod("setLocked", String.class).invoke(obj, "Y");
 		return (BaseEntity) resolveName(save(type, obj), Helper.getMetaType(type));
 	}
-	public BaseEntity unLocked(String id, String type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JsonProcessingException, ParseException, JSONException {
+
+	public BaseEntity unLocked(String id, String type)
+			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
+			SecurityException, NullPointerException, JsonProcessingException, ParseException, JSONException {
 		String appUuid = null;
 		if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
-			&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
-			&& !type.equalsIgnoreCase(MetaType.application.toString())) {
+				&& !type.equalsIgnoreCase(MetaType.role.toString())
+				&& !type.equalsIgnoreCase(MetaType.privilege.toString())
+				&& !type.equalsIgnoreCase(MetaType.application.toString())) {
 			appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-						? securityServiceImpl.getAppInfo().getRef().getUuid() : null;							
+					? securityServiceImpl.getAppInfo().getRef().getUuid()
+					: null;
 		}
 		MetaType metaType = Helper.getMetaType(type);
-		Object iDao = this.getClass().getMethod(GET+Helper.getDaoClass(metaType)).invoke(this);//finds respective Dao type
+		Object iDao = this.getClass().getMethod(GET + Helper.getDaoClass(metaType)).invoke(this);// finds respective Dao
+																									// type
 		Object obj = null;
 		if (appUuid != null)
-			obj = Helper.getDomainClass(metaType).cast((iDao).getClass().getMethod("findOneById", String.class, String.class).invoke(iDao, appUuid, id));
+			obj = Helper.getDomainClass(metaType).cast(
+					(iDao).getClass().getMethod("findOneById", String.class, String.class).invoke(iDao, appUuid, id));
 		else
-			obj = Helper.getDomainClass(metaType).cast((iDao).getClass().getMethod("findOneById", String.class).invoke(iDao, id));
+			obj = Helper.getDomainClass(metaType)
+					.cast((iDao).getClass().getMethod("findOneById", String.class).invoke(iDao, id));
 		MetaIdentifierHolder createdBy = (MetaIdentifierHolder) obj.getClass().getMethod("getCreatedBy").invoke(obj);
-		//if(isCurrentUser(createdBy))
-			Helper.getDomainClass(metaType).getMethod("setLocked", String.class).invoke(obj, "N");
-	//else
-			//return null;
+		// if(isCurrentUser(createdBy))
+		Helper.getDomainClass(metaType).getMethod("setLocked", String.class).invoke(obj, "N");
+		// else
+		// return null;
 		return (BaseEntity) resolveName(save(type, obj), Helper.getMetaType(type));
 	}
-	public boolean isCurrentUser(MetaIdentifierHolder createdBy) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+
+	public boolean isCurrentUser(MetaIdentifierHolder createdBy)
+			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		User currentUser = metadataServiceImpl.getCurrentUser();
-		if(currentUser != null && currentUser.getUuid().equalsIgnoreCase(createdBy.getRef().getUuid())) {
+		if (currentUser != null && currentUser.getUuid().equalsIgnoreCase(createdBy.getRef().getUuid())) {
 			return true;
-		}else
+		} else
 			return false;
 	}
-	
+
 	/**
 	 * 
 	 * @return
-	 * @throws JsonProcessingException 
+	 * @throws JsonProcessingException
 	 */
 	public Datasource getDatasourceByDatapod(Datapod datapod) throws JsonProcessingException {
 		Datasource datasource = null;
@@ -3483,7 +3722,8 @@ public class CommonServiceImpl <T> {
 			logger.error("no datasource configured with this datapod. So aborting ... ");
 			return null;
 		}
-		datasource = (Datasource) getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid(), datapod.getDatasource().getRef().getVersion(), datapod.getDatasource().getRef().getType().toString());
+		datasource = (Datasource) getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid(),
+				datapod.getDatasource().getRef().getVersion(), datapod.getDatasource().getRef().getType().toString());
 		return datasource;
 	}
 
@@ -3499,21 +3739,27 @@ public class CommonServiceImpl <T> {
 	 * @throws NullPointerException
 	 * @throws ParseException
 	 */
-	public Datasource getDatasourceByApp() throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public Datasource getDatasourceByApp()
+			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Datasource datasource = null;
 		MetaIdentifierHolder holder = securityServiceImpl.getAppInfo();
-		Application application = (Application) getOneByUuidAndVersionWithoutAppUuid(holder.getRef().getUuid(), holder.getRef().getVersion(), MetaType.application.toString());
+		Application application = (Application) getOneByUuidAndVersionWithoutAppUuid(holder.getRef().getUuid(),
+				holder.getRef().getVersion(), MetaType.application.toString());
 		holder = application.getDataSource();
-		datasource = (Datasource) getOneByUuidAndVersionWithoutAppUuid(holder.getRef().getUuid(), holder.getRef().getVersion(), MetaType.datasource.toString());
+		datasource = (Datasource) getOneByUuidAndVersionWithoutAppUuid(holder.getRef().getUuid(),
+				holder.getRef().getVersion(), MetaType.datasource.toString());
 		return datasource;
 	}
-	
-	public Application getApp() throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+
+	public Application getApp() throws JsonProcessingException, IllegalAccessException, IllegalArgumentException,
+			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		MetaIdentifierHolder holder = securityServiceImpl.getAppInfo();
-		Application application = (Application) getOneByUuidAndVersionWithoutAppUuid(holder.getRef().getUuid(), holder.getRef().getVersion(), "application");
+		Application application = (Application) getOneByUuidAndVersionWithoutAppUuid(holder.getRef().getUuid(),
+				holder.getRef().getVersion(), "application");
 		return application;
 	}
-	
+
 	/**
 	 * 
 	 * @return
@@ -3526,442 +3772,485 @@ public class CommonServiceImpl <T> {
 	 * @throws NullPointerException
 	 * @throws ParseException
 	 */
-	public String[] getAllDSSessionParams() throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public String[] getAllDSSessionParams()
+			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Datasource datasource_2 = getDatasourceByApp();
 		String sessionParameters = datasource_2.getSessionParameters();
-		if(sessionParameters != null && !StringUtils.isBlank(sessionParameters)) {
+		if (sessionParameters != null && !StringUtils.isBlank(sessionParameters)) {
 			return sessionParameters.split(",");
 		}
 		return null;
 	}
-	
-	public String getSessionParametresPropertyValue(String property, String defaultValue) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+
+	public String getSessionParametresPropertyValue(String property, String defaultValue)
+			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Datasource datasource_2 = getDatasourceByApp();
 		String sessionParameters = datasource_2.getSessionParameters();
 		String partitionPropVal = defaultValue;
-		if(sessionParameters != null && !StringUtils.isBlank(sessionParameters)) {
+		if (sessionParameters != null && !StringUtils.isBlank(sessionParameters)) {
 			String[] splits = sessionParameters.split(",");
-			for(String split : splits) {
-				if(split.contains(property)) {
-					partitionPropVal = split.substring(split.indexOf("=")+1);
-					logger.info("partitionPropVal: "+partitionPropVal);
-				}							
+			for (String split : splits) {
+				if (split.contains(property)) {
+					partitionPropVal = split.substring(split.indexOf("=") + 1);
+					logger.info("partitionPropVal: " + partitionPropVal);
+				}
 			}
 		}
 		return partitionPropVal;
 	}
-	public Object getLatest(String type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JsonProcessingException {
+
+	public Object getLatest(String type)
+			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
+			SecurityException, NullPointerException, ParseException, JsonProcessingException {
 		String appUuid = null;
 		if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
-			&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
-			&& !type.equalsIgnoreCase(MetaType.application.toString())) {
+				&& !type.equalsIgnoreCase(MetaType.role.toString())
+				&& !type.equalsIgnoreCase(MetaType.privilege.toString())
+				&& !type.equalsIgnoreCase(MetaType.application.toString())) {
 			appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-						? securityServiceImpl.getAppInfo().getRef().getUuid() : null;							
+					? securityServiceImpl.getAppInfo().getRef().getUuid()
+					: null;
 		}
 		MetaType metaType = Helper.getMetaType(type);
-		Object iDao = this.getClass().getMethod(GET+Helper.getDaoClass(Helper.getMetaType(metaType.toString().toLowerCase()))).invoke(this);//finds respective Dao type
+		Object iDao = this.getClass()
+				.getMethod(GET + Helper.getDaoClass(Helper.getMetaType(metaType.toString().toLowerCase())))
+				.invoke(this);// finds respective Dao type
 		Object obj = null;
 		if (appUuid != null)
-			obj = Helper.getDomainClass(metaType).cast((iDao).getClass().getMethod("findLatest", String.class, Sort.class).invoke(iDao, appUuid, new Sort(Sort.Direction.DESC, "version")));
+			obj = Helper.getDomainClass(metaType)
+					.cast((iDao).getClass().getMethod("findLatest", String.class, Sort.class).invoke(iDao, appUuid,
+							new Sort(Sort.Direction.DESC, "version")));
 		else
-			obj = Helper.getDomainClass(metaType).cast((iDao).getClass().getMethod("findLatest", Sort.class).invoke(iDao, new Sort(Sort.Direction.DESC, "version")));
-		return  resolveName(obj, metaType);
+			obj = Helper.getDomainClass(metaType).cast((iDao).getClass().getMethod("findLatest", Sort.class)
+					.invoke(iDao, new Sort(Sort.Direction.DESC, "version")));
+		return resolveName(obj, metaType);
 	}
 
-	public String upload(MultipartFile file, String extension, String fileType, String fileName, String metaType) throws FileNotFoundException, IOException, JSONException, ParseException {
+	public String upload(MultipartFile file, String extension, String fileType, String fileName, String metaType)
+			throws FileNotFoundException, IOException, JSONException, ParseException {
 		String uploadFileName = file.getOriginalFilename();
 		FileType type = Helper.getFileType(fileType);
 		String fileLocation = null;
 		String directoryLocation = Helper.getFileDirectoryByFileType(type);
 		String metaUuid = null;
 		String metaVersion = null;
-		if(fileName == null) {
+		if (fileName == null) {
 			fileName = Helper.getFileCustomNameByFileType(type, extension);
 			String splits[] = fileName.split("_");
 			metaUuid = splits[0];
 			metaVersion = splits[1].substring(0, splits[1].lastIndexOf("."));
-		} 
-		
-		fileLocation = directoryLocation+"/" + fileName;
-		
+		}
+
+		fileLocation = directoryLocation + "/" + fileName;
+
 		File scriptFile = new File(fileLocation);
 		file.transferTo(scriptFile);
-		if(metaType==null)
-		{
-			metaType="model";
+		if (metaType == null) {
+			metaType = "model";
 		}
-		UploadExec uploadExec=new UploadExec();
+		UploadExec uploadExec = new UploadExec();
 		uploadExec.setFileName(uploadFileName);
 		uploadExec.setBaseEntity();
 		uploadExec.setLocation(fileLocation);
-		uploadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(Helper.getMetaType(metaType), metaUuid, metaVersion)));
+		uploadExec.setDependsOn(
+				new MetaIdentifierHolder(new MetaIdentifier(Helper.getMetaType(metaType), metaUuid, metaVersion)));
 		save(MetaType.uploadExec.toString(), uploadExec);
 		return fileName;
 	}
-	
-	public Object getDomainFromDomainExec(String execType, String execUuid, String execVersion) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+
+	public Object getDomainFromDomainExec(String execType, String execUuid, String execVersion)
+			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException {
 		Object domainObject = null;
 		Object domainExecObj = getOneByUuidAndVersion(execUuid, execVersion, execType);
-		MetaIdentifierHolder dependsOn = (MetaIdentifierHolder) domainExecObj.getClass().getMethod("getDependsOn").invoke(domainExecObj);
-		domainObject = getOneByUuidAndVersion(dependsOn.getRef().getUuid(), dependsOn.getRef().getVersion(), dependsOn.getRef().getType().toString());
+		MetaIdentifierHolder dependsOn = (MetaIdentifierHolder) domainExecObj.getClass().getMethod("getDependsOn")
+				.invoke(domainExecObj);
+		domainObject = getOneByUuidAndVersion(dependsOn.getRef().getUuid(), dependsOn.getRef().getVersion(),
+				dependsOn.getRef().getType().toString());
 		return domainObject;
 	}
 
-	 public HttpServletResponse download(String fileType, String fileName, HttpServletResponse response) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException {
+	public HttpServletResponse download(String fileType, String fileName, HttpServletResponse response)
+			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException {
 		try {
-			FileType type = Helper.getFileType(fileType);			
-        	
-            String directoryLocation = Helper.getFileDirectoryByFileType(type);
-            String filePath = directoryLocation+"/" + fileName;
-            File file = new File(filePath);
-            if (file.exists()) {
-            	logger.info("File found.");
-                String mimeType = null;//context.getMimeType(file.getPath());
- 
-                if (mimeType == null) {
-                    mimeType = "application/octet-stream";
-                }
- 
-                response.setContentType(mimeType);
-                response.setContentLength((int) file.length());
-                response.setContentType("application/xml charset=utf-16");
+			FileType type = Helper.getFileType(fileType);
+
+			String directoryLocation = Helper.getFileDirectoryByFileType(type);
+			String filePath = directoryLocation + "/" + fileName;
+			File file = new File(filePath);
+			if (file.exists()) {
+				logger.info("File found.");
+				String mimeType = null;// context.getMimeType(file.getPath());
+
+				if (mimeType == null) {
+					mimeType = "application/octet-stream";
+				}
+
+				response.setContentType(mimeType);
+				response.setContentLength((int) file.length());
+				response.setContentType("application/xml charset=utf-16");
 				response.setHeader("Content-disposition", "attachment");
-				response.setHeader("filename",fileName);
-                ServletOutputStream os = response.getOutputStream();
-                FileInputStream fis = new FileInputStream(file);
-                Long fileSize = file.length();
-                byte[] buffer = new byte[fileSize.intValue()];
-                int b = -1;
- 
-                while ((b = fis.read(buffer)) != -1) {
-                    os.write(buffer, 0, b);
-                }
- 
-                fis.close();
-                os.close();
-            } else {
-            	logger.info("Requested " + fileName + " file not found!!");
-            	response.setStatus(300);
-            	throw new FileNotFoundException("Requested " + fileName + " file not found!!");
-            }
-        } catch (IOException e) {
-        	logger.error(e.getMessage());
-        	e.printStackTrace();
+				response.setHeader("filename", fileName);
+				ServletOutputStream os = response.getOutputStream();
+				FileInputStream fis = new FileInputStream(file);
+				Long fileSize = file.length();
+				byte[] buffer = new byte[fileSize.intValue()];
+				int b = -1;
+
+				while ((b = fis.read(buffer)) != -1) {
+					os.write(buffer, 0, b);
+				}
+
+				fis.close();
+				os.close();
+			} else {
+				logger.info("Requested " + fileName + " file not found!!");
+				response.setStatus(300);
+				throw new FileNotFoundException("Requested " + fileName + " file not found!!");
+			}
+		} catch (IOException e) {
+			logger.error(e.getMessage());
+			e.printStackTrace();
 			String message = null;
 			try {
 				message = e.getMessage();
-			}catch (Exception e2) {
+			} catch (Exception e2) {
 				// TODO: handle exception
 			}
-			sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Requested " + fileName + " file not found!!", null);
+			sendResponse("404", MessageStatus.FAIL.toString(),
+					(message != null) ? message : "Requested " + fileName + " file not found!!", null);
 			throw new IOException((message != null) ? message : "Requested " + fileName + " file not found!!");
-        }
-	return response;
-	}
-	 
-
-		public HttpServletResponse download(String uuid, String version, String format, int offset,
-				int limit, HttpServletResponse response, int rowLimit, String sortBy, String order, String requestId,
-				RunMode runMode, List<Map<String, Object>> results,MetaType metaType, MetaIdentifierHolder dependsOn) throws Exception {
-			
-			String downloadPath = Helper.getPropertyValue("framework.file.download.path");
-	       DownloadExec downloadExec=new DownloadExec();
-	       
-	       downloadExec.setBaseEntity();
-	       downloadExec.setLocation(downloadPath + "/" + downloadExec.getUuid() + "_" + downloadExec.getVersion() + ".xls");
-	       downloadExec.setDependsOn(dependsOn);
-			try {
-				FileOutputStream fileOut = null;
-				HSSFWorkbook workbook = WorkbookUtil.getWorkbook(results);
-				downloadPath = Helper.getPropertyValue("framework.file.download.path");
-				//response.addHeader("Content-Disposition", "attachment; filename=" + uuid + ".xls");
-				response.setContentType("application/xml charset=utf-16");
-				response.setHeader("Content-disposition", "attachment");
-				response.setHeader("filename", "" + uuid+"_"+version + ".xls");
-				ServletOutputStream os = response.getOutputStream();
-				workbook.write(os);
-
-				fileOut = new FileOutputStream(downloadPath + "/" + downloadExec.getUuid() + "_" + downloadExec.getVersion() + ".xls");
-				workbook.write(fileOut);
-				os.write(workbook.getBytes());
-				save(metaType.toString(), downloadExec);
-				
-				fileOut.close();
-
-			} catch (IOException e1) {
-				e1.printStackTrace();
-				logger.info("exception caught while download file");
-				response.setStatus(300);
-	        	throw new FileNotFoundException();
-			}
-			return response;			
 		}
-		
-		
-		/*public String upload(MultipartFile file, String extension, String fileType, String fileName,String uuid,String version,MetaType metaType) throws FileNotFoundException, IOException {
-			String uploadFileName = file.getOriginalFilename();
-			FileType type = Helper.getFileType(fileType);
-			String fileLocation = null;
-			String directoryLocation = Helper.getFileDirectoryByFileType(type);
-			if(fileName == null) {
-				fileName = Helper.getFileCustomNameByFileType(type, extension);
-			} 
-			 
-			fileLocation = directoryLocation+"/" + fileName;
-			UploadExec uploadExec=new UploadExec();
-			uploadExec.setFileName(uploadFileName);
-			uploadExec.setBaseEntity();
-			uploadExec.setLocation(fileLocation+"/"+uploadExec.getUuid()+"_"+uploadExec.getVersion()+"");
-			uploadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(metaType,uuid,version)));
-			File scriptFile = new File(fileLocation);
-			file.transferTo(scriptFile);
-			return fileName;
-		}*/
-		
-		@SuppressWarnings({ "rawtypes", "unchecked" })
-		public List<T> findAllLatestWithoutAppUuid(MetaType type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
-			List objectList = new ArrayList();
-			List<T> finalObjectList = new ArrayList<>();
-			java.util.HashMap<String, BaseEntity> objectMap = new java.util.HashMap<>(); 
-			BaseEntity baseEntity = null;
-			Object iDao = this.getClass().getMethod(GET+Helper.getDaoClass(type)).invoke(this);
-			objectList = (List)(iDao).getClass().getMethod("findAll").invoke(iDao);
-			
-			for (int i = 0; i < objectList.size(); i++) {
-				baseEntity = BaseEntity.class.cast(objectList.get(i));
-				if (objectMap.containsKey(baseEntity.getUuid())) {
-					if (Long.parseLong(baseEntity.getVersion()) > Long.parseLong(objectMap.get(baseEntity.getUuid()).getVersion())) {
-						objectMap.put(baseEntity.getUuid(), baseEntity);
-					}
-				} else {
+		return response;
+	}
+
+	public HttpServletResponse download(String uuid, String version, String format, int offset, int limit,
+			HttpServletResponse response, int rowLimit, String sortBy, String order, String requestId, RunMode runMode,
+			List<Map<String, Object>> results, MetaType metaType, MetaIdentifierHolder dependsOn) throws Exception {
+
+		String downloadPath = Helper.getPropertyValue("framework.file.download.path");
+		DownloadExec downloadExec = new DownloadExec();
+
+		downloadExec.setBaseEntity();
+		downloadExec
+				.setLocation(downloadPath + "/" + downloadExec.getUuid() + "_" + downloadExec.getVersion() + ".xls");
+		downloadExec.setDependsOn(dependsOn);
+		try {
+			FileOutputStream fileOut = null;
+			HSSFWorkbook workbook = WorkbookUtil.getWorkbook(results);
+			downloadPath = Helper.getPropertyValue("framework.file.download.path");
+			// response.addHeader("Content-Disposition", "attachment; filename=" + uuid +
+			// ".xls");
+			response.setContentType("application/xml charset=utf-16");
+			response.setHeader("Content-disposition", "attachment");
+			response.setHeader("filename", "" + uuid + "_" + version + ".xls");
+			ServletOutputStream os = response.getOutputStream();
+			workbook.write(os);
+
+			fileOut = new FileOutputStream(
+					downloadPath + "/" + downloadExec.getUuid() + "_" + downloadExec.getVersion() + ".xls");
+			workbook.write(fileOut);
+			os.write(workbook.getBytes());
+			save(metaType.toString(), downloadExec);
+
+			fileOut.close();
+
+		} catch (IOException e1) {
+			e1.printStackTrace();
+			logger.info("exception caught while download file");
+			response.setStatus(300);
+			throw new FileNotFoundException();
+		}
+		return response;
+	}
+
+	/*
+	 * public String upload(MultipartFile file, String extension, String fileType,
+	 * String fileName,String uuid,String version,MetaType metaType) throws
+	 * FileNotFoundException, IOException { String uploadFileName =
+	 * file.getOriginalFilename(); FileType type = Helper.getFileType(fileType);
+	 * String fileLocation = null; String directoryLocation =
+	 * Helper.getFileDirectoryByFileType(type); if(fileName == null) { fileName =
+	 * Helper.getFileCustomNameByFileType(type, extension); }
+	 * 
+	 * fileLocation = directoryLocation+"/" + fileName; UploadExec uploadExec=new
+	 * UploadExec(); uploadExec.setFileName(uploadFileName);
+	 * uploadExec.setBaseEntity();
+	 * uploadExec.setLocation(fileLocation+"/"+uploadExec.getUuid()+"_"+uploadExec.
+	 * getVersion()+""); uploadExec.setDependsOn(new MetaIdentifierHolder(new
+	 * MetaIdentifier(metaType,uuid,version))); File scriptFile = new
+	 * File(fileLocation); file.transferTo(scriptFile); return fileName; }
+	 */
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public List<T> findAllLatestWithoutAppUuid(MetaType type) throws IllegalAccessException, IllegalArgumentException,
+			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
+		List objectList = new ArrayList();
+		List<T> finalObjectList = new ArrayList<>();
+		java.util.HashMap<String, BaseEntity> objectMap = new java.util.HashMap<>();
+		BaseEntity baseEntity = null;
+		Object iDao = this.getClass().getMethod(GET + Helper.getDaoClass(type)).invoke(this);
+		objectList = (List) (iDao).getClass().getMethod("findAll").invoke(iDao);
+
+		for (int i = 0; i < objectList.size(); i++) {
+			baseEntity = BaseEntity.class.cast(objectList.get(i));
+			if (objectMap.containsKey(baseEntity.getUuid())) {
+				if (Long.parseLong(baseEntity.getVersion()) > Long
+						.parseLong(objectMap.get(baseEntity.getUuid()).getVersion())) {
 					objectMap.put(baseEntity.getUuid(), baseEntity);
 				}
+			} else {
+				objectMap.put(baseEntity.getUuid(), baseEntity);
 			}
-			for (String uuid : objectMap.keySet()) {
-				finalObjectList.add((T) Helper.getDomainClass(type).cast(objectMap.get(uuid)));
-			}
-			return finalObjectList;
 		}
-		
-		@SuppressWarnings("unchecked")
-		public List<T> getAllLatestCompleteObjects(String type, String active)  throws JsonProcessingException, ParseException {
-			MetaType metaType = Helper.getMetaType(type);
-			List<T> objectList = new ArrayList<>();
-			try {			
-				Aggregation aggr = null;
-				if (active == "Y")
-					 aggr = newAggregation(match(Criteria.where("active").is("Y")),
-						match(Criteria.where("name").ne(null)), group("uuid").max("version").as("version"));
-				else
-					 aggr = newAggregation(
-						match(Criteria.where("name").ne(null)), group("uuid").max("version").as("version"));
-					
+		for (String uuid : objectMap.keySet()) {
+			finalObjectList.add((T) Helper.getDomainClass(type).cast(objectMap.get(uuid)));
+		}
+		return finalObjectList;
+	}
 
-				String appUuid = null;
-				if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
-					&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
-					&& !type.equalsIgnoreCase(MetaType.application.toString())) {
-					appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-								? securityServiceImpl.getAppInfo().getRef().getUuid() : null;							
-				}
-				@SuppressWarnings("rawtypes")
-				AggregationResults results = mongoTemplate.aggregate(aggr, type.toString().toLowerCase(), Helper.getDomainClass(metaType));
-				List<T> metaList = results.getMappedResults();
-				Object iDao = this.getClass().getMethod(GET+Helper.getDaoClass(metaType)).invoke(this);
-					
-				for (int i = 0; i < metaList.size(); i++) {
-					Object object = null;
-					if (appUuid != null) {
-						object = (iDao).getClass().getMethod("findOneByUuidAndVersion", String.class, String.class, String.class).invoke(iDao, appUuid, ((BaseEntity)metaList.get(i)).getId(), ((BaseEntity)metaList.get(i)).getVersion());
-					} else {
-						object = (iDao).getClass().getMethod("findOneByUuidAndVersion", String.class, String.class).invoke(iDao, ((BaseEntity)metaList.get(i)).getId(), ((BaseEntity)metaList.get(i)).getVersion());
-					}
-					if (object != null) {
-						objectList.add((T) Helper.getDomainClass(metaType).cast(object));
-					}
-				}
-				return objectList;
-			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-					| SecurityException | NullPointerException e) {
-				e.printStackTrace();
-			}
-			return null;
-		}
-		
-		public String findAppId(String type)
-		{
-			String appUuid=null;
+	@SuppressWarnings("unchecked")
+	public List<T> getAllLatestCompleteObjects(String type, String active)
+			throws JsonProcessingException, ParseException {
+		MetaType metaType = Helper.getMetaType(type);
+		List<T> objectList = new ArrayList<>();
+		try {
+			Aggregation aggr = null;
+			if (active == "Y")
+				aggr = newAggregation(match(Criteria.where("active").is("Y")), match(Criteria.where("name").ne(null)),
+						group("uuid").max("version").as("version"));
+			else
+				aggr = newAggregation(match(Criteria.where("name").ne(null)),
+						group("uuid").max("version").as("version"));
+
+			String appUuid = null;
 			if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
-					&& !type.equalsIgnoreCase(MetaType.role.toString()) && !type.equalsIgnoreCase(MetaType.privilege.toString())
-					&& !type.equalsIgnoreCase(MetaType.application.toString()) && !type.equalsIgnoreCase(MetaType.meta.toString())
-					&& !type.equalsIgnoreCase(MetaType.algorithm.toString()) ) {
-					appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-								? securityServiceImpl.getAppInfo().getRef().getUuid() : null;							
-				}
-			return appUuid;
-			
-		}
-
-		public Map<String, List<Object>> getAllByMetaList(String[] type) {
-			//List<Object> metaList = new ArrayList<>();
-			Map<String, List<Object>> metaList = new HashMap<>();
-			for(String meta : type) {
-				@SuppressWarnings("unchecked")
-				List<Object> metaObjectList = (List<Object>) findAll(Helper.getMetaType(meta));
-				metaList.put(meta, metaObjectList);
+					&& !type.equalsIgnoreCase(MetaType.role.toString())
+					&& !type.equalsIgnoreCase(MetaType.privilege.toString())
+					&& !type.equalsIgnoreCase(MetaType.application.toString())) {
+				appUuid = (securityServiceImpl.getAppInfo() != null
+						&& securityServiceImpl.getAppInfo().getRef() != null)
+								? securityServiceImpl.getAppInfo().getRef().getUuid()
+								: null;
 			}
-			return metaList;
+			@SuppressWarnings("rawtypes")
+			AggregationResults results = mongoTemplate.aggregate(aggr, type.toString().toLowerCase(),
+					Helper.getDomainClass(metaType));
+			List<T> metaList = results.getMappedResults();
+			Object iDao = this.getClass().getMethod(GET + Helper.getDaoClass(metaType)).invoke(this);
+
+			for (int i = 0; i < metaList.size(); i++) {
+				Object object = null;
+				if (appUuid != null) {
+					object = (iDao).getClass()
+							.getMethod("findOneByUuidAndVersion", String.class, String.class, String.class).invoke(iDao,
+									appUuid, ((BaseEntity) metaList.get(i)).getId(),
+									((BaseEntity) metaList.get(i)).getVersion());
+				} else {
+					object = (iDao).getClass().getMethod("findOneByUuidAndVersion", String.class, String.class).invoke(
+							iDao, ((BaseEntity) metaList.get(i)).getId(), ((BaseEntity) metaList.get(i)).getVersion());
+				}
+				if (object != null) {
+					objectList.add((T) Helper.getDomainClass(metaType).cast(object));
+				}
+			}
+			return objectList;
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+				| SecurityException | NullPointerException e) {
+			e.printStackTrace();
 		}
-		
-		public HttpServletResponse sendResponse(String code, String status, String msg, MetaIdentifierHolder dependsOn) throws JSONException, ParseException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
-			ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-			if(requestAttributes != null) {
-				HttpServletResponse response = requestAttributes.getResponse();
-				if(response != null) {
-						Message message = new Message(code, status, msg, dependsOn);
-						Message savedMessage = messageServiceImpl.save(message);
-						
-						ObjectMapper mapper = new ObjectMapper();
-						String messageJson = mapper.writeValueAsString(savedMessage);
-						response.setContentType("application/json");
-						response.setStatus(Integer.parseInt(code));
-						response.getOutputStream().write(messageJson.getBytes());
-						response.getOutputStream().close();
-						return response;
-				}else
-					logger.info("HttpServletResponse response is \""+null+"\"");
-			}else
-				logger.info("ServletRequestAttributes requestAttributes is \""+null+"\"");
+		return null;
+	}
+
+	public String findAppId(String type) {
+		String appUuid = null;
+		if (!type.equalsIgnoreCase(MetaType.user.toString()) && !type.equalsIgnoreCase(MetaType.group.toString())
+				&& !type.equalsIgnoreCase(MetaType.role.toString())
+				&& !type.equalsIgnoreCase(MetaType.privilege.toString())
+				&& !type.equalsIgnoreCase(MetaType.application.toString())
+				&& !type.equalsIgnoreCase(MetaType.meta.toString())
+				&& !type.equalsIgnoreCase(MetaType.algorithm.toString())) {
+			appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
+					? securityServiceImpl.getAppInfo().getRef().getUuid()
+					: null;
+		}
+		return appUuid;
+
+	}
+
+	public Map<String, List<Object>> getAllByMetaList(String[] type) {
+		// List<Object> metaList = new ArrayList<>();
+		Map<String, List<Object>> metaList = new HashMap<>();
+		for (String meta : type) {
+			@SuppressWarnings("unchecked")
+			List<Object> metaObjectList = (List<Object>) findAll(Helper.getMetaType(meta));
+			metaList.put(meta, metaObjectList);
+		}
+		return metaList;
+	}
+
+	public HttpServletResponse sendResponse(String code, String status, String msg, MetaIdentifierHolder dependsOn)
+			throws JSONException, ParseException, IOException, IllegalAccessException, IllegalArgumentException,
+			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
+		ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder
+				.getRequestAttributes();
+		if (requestAttributes != null) {
+			HttpServletResponse response = requestAttributes.getResponse();
+			if (response != null) {
+				Message message = new Message(code, status, msg, dependsOn);
+				Message savedMessage = messageServiceImpl.save(message);
+
+				ObjectMapper mapper = new ObjectMapper();
+				String messageJson = mapper.writeValueAsString(savedMessage);
+				response.setContentType("application/json");
+				response.setStatus(Integer.parseInt(code));
+				response.getOutputStream().write(messageJson.getBytes());
+				response.getOutputStream().close();
+				return response;
+			} else
+				logger.info("HttpServletResponse response is \"" + null + "\"");
+		} else
+			logger.info("ServletRequestAttributes requestAttributes is \"" + null + "\"");
+		return null;
+	}
+
+	/**
+	 * 
+	 * @param operator
+	 * @return
+	 */
+	public ExecParams getExecParams(TaskOperator operator) {
+		if (operator == null || operator.getOperatorParams() == null
+				|| !operator.getOperatorParams().containsKey(ConstantsUtil.EXEC_PARAMS)
+				|| operator.getOperatorParams().get(ConstantsUtil.EXEC_PARAMS) == null) {
 			return null;
 		}
+		logger.info("ExecParams : " + operator.getOperatorParams().get(ConstantsUtil.EXEC_PARAMS));
+		ObjectMapper mapper = new ObjectMapper();
+		ExecParams execParams = mapper.convertValue(operator.getOperatorParams().get(ConstantsUtil.EXEC_PARAMS),
+				ExecParams.class);
+		// return (ExecParams)
+		// operator.getOperatorParams().get(ConstantsUtil.EXEC_PARAMS);
+		return execParams;
+	}
 
-		/**
-		 * 
-		 * @param operator
-		 * @return
-		 */
-		public ExecParams getExecParams (TaskOperator operator) {
-			if (operator == null 
-					|| operator.getOperatorParams() == null 
-					|| !operator.getOperatorParams().containsKey(ConstantsUtil.EXEC_PARAMS)
-					|| operator.getOperatorParams().get(ConstantsUtil.EXEC_PARAMS) == null) {
-				return null;
-			}
-			logger.info("ExecParams : " + operator.getOperatorParams().get(ConstantsUtil.EXEC_PARAMS));
-			ObjectMapper mapper = new ObjectMapper();
-			ExecParams execParams = mapper.convertValue(operator.getOperatorParams().get(ConstantsUtil.EXEC_PARAMS), ExecParams.class);
-//			return (ExecParams) operator.getOperatorParams().get(ConstantsUtil.EXEC_PARAMS);
-			return execParams;
-		}
-		
-		private Object resolveFeatureAttrMap(List<FeatureAttrMap> featureAttrMapList, Object object) throws JsonProcessingException {
-			if(featureAttrMapList != null && !featureAttrMapList.isEmpty() && object != null) {
-				try {
-					for(FeatureAttrMap featureAttrMap : featureAttrMapList) {
-						FeatureRefHolder featureHolder = featureAttrMap.getFeature(); 
-						AttributeRefHolder attributeHolder = featureAttrMap.getAttribute();
-						
-						MetaIdentifier featureIdentifier = featureHolder.getRef();
-						MetaIdentifier attributeIdentifier = attributeHolder.getRef();
-						Model model = (Model) getOneByUuidAndVersion(featureIdentifier.getUuid(), featureIdentifier.getVersion(), featureIdentifier.getType().toString(), "N");
-						Object source = getOneByUuidAndVersion(attributeIdentifier.getUuid(), attributeIdentifier.getVersion(), attributeIdentifier.getType().toString(), "N");
-						
-						for(Feature feature : model.getFeatures()) {
-							if(featureAttrMap.getFeature().getFeatureId().equalsIgnoreCase(feature.getFeatureId())) {
-								featureHolder.setFeatureName(feature.getName());
-								//featureHolder.setFeatureDefaultValue(feature.getDefaultValue());
-								featureAttrMap.setFeature(featureHolder);
+	private Object resolveFeatureAttrMap(List<FeatureAttrMap> featureAttrMapList, Object object)
+			throws JsonProcessingException {
+		if (featureAttrMapList != null && !featureAttrMapList.isEmpty() && object != null) {
+			try {
+				for (FeatureAttrMap featureAttrMap : featureAttrMapList) {
+					FeatureRefHolder featureHolder = featureAttrMap.getFeature();
+					AttributeRefHolder attributeHolder = featureAttrMap.getAttribute();
+
+					MetaIdentifier featureIdentifier = featureHolder.getRef();
+					MetaIdentifier attributeIdentifier = attributeHolder.getRef();
+					Model model = (Model) getOneByUuidAndVersion(featureIdentifier.getUuid(),
+							featureIdentifier.getVersion(), featureIdentifier.getType().toString(), "N");
+					Object source = getOneByUuidAndVersion(attributeIdentifier.getUuid(),
+							attributeIdentifier.getVersion(), attributeIdentifier.getType().toString(), "N");
+
+					for (Feature feature : model.getFeatures()) {
+						if (featureAttrMap.getFeature().getFeatureId().equalsIgnoreCase(feature.getFeatureId())) {
+							featureHolder.setFeatureName(feature.getName());
+							// featureHolder.setFeatureDefaultValue(feature.getDefaultValue());
+							featureAttrMap.setFeature(featureHolder);
+						}
+					}
+					if (source instanceof Datapod)
+						for (Attribute attribute : ((Datapod) source).getAttributes()) {
+							if (featureAttrMap.getAttribute().getAttrId()
+									.equalsIgnoreCase(attribute.getAttributeId() + "")) {
+								attributeHolder.setAttrName(attribute.getName());
+								featureAttrMap.setAttribute(attributeHolder);
 							}
 						}
-						if(source instanceof Datapod)
-							for(Attribute attribute : ((Datapod)source).getAttributes()) {
-								if(featureAttrMap.getAttribute().getAttrId().equalsIgnoreCase(attribute.getAttributeId()+"")) {
-									attributeHolder.setAttrName(attribute.getName());
-									featureAttrMap.setAttribute(attributeHolder);
-								}
+					else if (source instanceof DataSet)
+						for (AttributeSource attributeSource : ((DataSet) source).getAttributeInfo()) {
+							if (featureAttrMap.getAttribute().getAttrId()
+									.equalsIgnoreCase(attributeSource.getAttrSourceId())) {
+								attributeHolder.setAttrName(attributeSource.getAttrSourceName());
+								featureAttrMap.setAttribute(attributeHolder);
 							}
-						else if(source instanceof DataSet)
-							for(AttributeSource attributeSource : ((DataSet)source).getAttributeInfo()) {
-								if(featureAttrMap.getAttribute().getAttrId().equalsIgnoreCase(attributeSource.getAttrSourceId())) {
-									attributeHolder.setAttrName(attributeSource.getAttrSourceName());
-									featureAttrMap.setAttribute(attributeHolder);
-								}
+						}
+					else if (source instanceof Rule)
+						for (AttributeSource attributeSource : ((Rule) source).getAttributeInfo()) {
+							if (featureAttrMap.getAttribute().getAttrId()
+									.equalsIgnoreCase(attributeSource.getAttrSourceId())) {
+								attributeHolder.setAttrName(attributeSource.getAttrSourceName());
+								featureAttrMap.setAttribute(attributeHolder);
 							}
-						else if(source instanceof Rule)
-							for(AttributeSource attributeSource : ((Rule)source).getAttributeInfo()) {
-								if(featureAttrMap.getAttribute().getAttrId().equalsIgnoreCase(attributeSource.getAttrSourceId())) {
-									attributeHolder.setAttrName(attributeSource.getAttrSourceName());
-									featureAttrMap.setAttribute(attributeHolder);
-								}
-							}
-					}
-					Train train = (Train) object;
-					train.setFeatureAttrMap(featureAttrMapList);
-					object = train;
-					return object;				
-				} catch (Exception e) {
-					e.printStackTrace();
+						}
 				}
+				Train train = (Train) object;
+				train.setFeatureAttrMap(featureAttrMapList);
+				object = train;
+				return object;
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-			
-			return object;
 		}
-		
 
-		
-		public String resolveLabel(AttributeRefHolder labelInfo) throws JsonProcessingException {
-			String attributeName = null;
-			Object source = getOneByUuidAndVersion(labelInfo.getRef().getUuid(), labelInfo.getRef().getVersion(), labelInfo.getRef().getType().toString());
-			if(source instanceof Datapod) {
-				Datapod datapod = (Datapod) source;
-				attributeName = datapod.getAttributeName(Integer.parseInt(labelInfo.getAttrId()));
-			} else if(source instanceof DataSet) {
-				DataSet dataset = (DataSet) source;
-				attributeName = dataset.getAttributeName(Integer.parseInt(labelInfo.getAttrId()));
-			} else if(source instanceof Rule) {
-				Rule rule = (Rule) source;
-				attributeName = rule.getAttributeName(Integer.parseInt(labelInfo.getAttrId()));
-			}		
-			return attributeName;
+		return object;
+	}
+
+	public String resolveLabel(AttributeRefHolder labelInfo) throws JsonProcessingException {
+		String attributeName = null;
+		Object source = getOneByUuidAndVersion(labelInfo.getRef().getUuid(), labelInfo.getRef().getVersion(),
+				labelInfo.getRef().getType().toString());
+		if (source instanceof Datapod) {
+			Datapod datapod = (Datapod) source;
+			attributeName = datapod.getAttributeName(Integer.parseInt(labelInfo.getAttrId()));
+		} else if (source instanceof DataSet) {
+			DataSet dataset = (DataSet) source;
+			attributeName = dataset.getAttributeName(Integer.parseInt(labelInfo.getAttrId()));
+		} else if (source instanceof Rule) {
+			Rule rule = (Rule) source;
+			attributeName = rule.getAttributeName(Integer.parseInt(labelInfo.getAttrId()));
 		}
-		@SuppressWarnings("unchecked")
-		public List<BaseEntity> getResolveNameByUuidandType(String uuid,String type)  {
-			Query query = new Query();
-			query.fields().include("uuid");
-			query.fields().include("name");
-			query.fields().include("version");
-			query.fields().include("type");
-			
-			query.addCriteria(Criteria.where("uuid").is(uuid));
-			List<BaseEntity> obj=new ArrayList<>();
-			if (Helper.getDomainClass(Helper.getMetaType(type)) != null) {
-				obj = (List<BaseEntity>) mongoTemplate.find(query, Helper.getDomainClass(Helper.getMetaType(type)));
-			}
-			//String name=obj.getName();
-			
-			return obj;
-			
+		return attributeName;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<BaseEntity> getResolveNameByUuidandType(String uuid, String type) {
+		Query query = new Query();
+		query.fields().include("uuid");
+		query.fields().include("name");
+		query.fields().include("version");
+		query.fields().include("type");
+
+		query.addCriteria(Criteria.where("uuid").is(uuid));
+		List<BaseEntity> obj = new ArrayList<>();
+		if (Helper.getDomainClass(Helper.getMetaType(type)) != null) {
+			obj = (List<BaseEntity>) mongoTemplate.find(query, Helper.getDomainClass(Helper.getMetaType(type)));
 		}
-		
-	public boolean uploadCommentFile(List<MultipartFile> multiPartFile, String filename, String fileType,String uuid)
+		// String name=obj.getName();
+
+		return obj;
+
+	}
+
+	public boolean uploadCommentFile(List<MultipartFile> multiPartFile, String filename, String fileType, String uuid)
 			throws FileNotFoundException, IOException, JSONException, ParseException {
 
 		String directoryPath = Helper.getPropertyValue("framework.file.comment.upload.path");
 		if (null != multiPartFile && multiPartFile.size() > 0) {
 			for (MultipartFile multipartFile : multiPartFile) {
-				
+
 				UploadExec uploadExec = new UploadExec();
-				
+
 				uploadExec.setBaseEntity();
-				
+
 				String fileName = multipartFile.getOriginalFilename();
 				String fileExtention = fileName.substring(fileName.lastIndexOf("."));
 				String filename1 = fileName.substring(0, fileName.lastIndexOf("."));
 				String location = directoryPath + "/" + uploadExec.getUuid() + fileExtention;
 				File dest = new File(location);
 				multipartFile.transferTo(dest);
-//				String contenetType = multipartFile.getContentType();
-				
+				// String contenetType = multipartFile.getContentType();
+
 				uploadExec.setName(filename1);
 				uploadExec.setLocation(location);
 				uploadExec.setFileName(fileName);
@@ -3977,10 +4266,11 @@ public class CommonServiceImpl <T> {
 		}
 		return true;
 	}
-	
-	
+
 	@SuppressWarnings("unchecked")
-	public HttpServletResponse download(String fileType, String fileName, HttpServletResponse response,String uuid) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException {
+	public HttpServletResponse download(String fileType, String fileName, HttpServletResponse response, String uuid)
+			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException {
 		try {
 			List<UploadExec> uploadExec = new ArrayList<UploadExec>();
 			Query query = new Query();
@@ -3989,61 +4279,61 @@ public class CommonServiceImpl <T> {
 			query.fields().include("location");
 			query.fields().include("fileName");
 			query.addCriteria(Criteria.where("uuid").is(uuid));
-	
+
 			uploadExec = (List<UploadExec>) mongoTemplate.find(query, Helper.getDomainClass(MetaType.uploadExec));
-			
-		//fileName=uploadExec.get(0).getFileName();
-            String filePath = uploadExec.get(0).getLocation();
-            String FileName =uploadExec.get(0).getFileName();
+
+			// fileName=uploadExec.get(0).getFileName();
+			String filePath = uploadExec.get(0).getLocation();
+			String FileName = uploadExec.get(0).getFileName();
 			String fileExtention = FileName.substring(FileName.lastIndexOf("."));
-			//String filename1 = FileName.substring(0, fileName.lastIndexOf("."));
-            File file = new File(filePath);
-            
-            if (file.exists()) {
-            	logger.info("File found.");
-                 String mimeType = null;//context.getMimeType(file.getPath());
-                 mimeType= new MimetypesFileTypeMap().getContentType(file);
-                if (mimeType == null) {
-                    mimeType = "application/octet-stream";
-                }
- 
-                response.setContentType(mimeType);
-                response.setContentLength((int) file.length());
-             //   response.setContentType("application/xml charset=utf-16");
+			// String filename1 = FileName.substring(0, fileName.lastIndexOf("."));
+			File file = new File(filePath);
+
+			if (file.exists()) {
+				logger.info("File found.");
+				String mimeType = null;// context.getMimeType(file.getPath());
+				mimeType = new MimetypesFileTypeMap().getContentType(file);
+				if (mimeType == null) {
+					mimeType = "application/octet-stream";
+				}
+
+				response.setContentType(mimeType);
+				response.setContentLength((int) file.length());
+				// response.setContentType("application/xml charset=utf-16");
 				response.setHeader("Content-disposition", "attachment");
-				response.setHeader("filename",fileName+fileExtention);
-                ServletOutputStream os = response.getOutputStream();
-                FileInputStream fis = new FileInputStream(file);
-                Long fileSize = file.length();
-                byte[] buffer = new byte[fileSize.intValue()];
-                int b = -1;
- 
-                while ((b = fis.read(buffer)) != -1) {
-                    os.write(buffer, 0, b);
-                }
- 
-                fis.close();
-                os.close();
-            } else {
-            	logger.info("Requested " + fileName + " file not found!!");
-            	response.setStatus(300);
-            	throw new FileNotFoundException("Requested " + fileName + " file not found!!");
-            }
-        } catch (IOException e) {
-        	logger.error(e.getMessage());
-        	e.printStackTrace();
+				response.setHeader("filename", fileName + fileExtention);
+				ServletOutputStream os = response.getOutputStream();
+				FileInputStream fis = new FileInputStream(file);
+				Long fileSize = file.length();
+				byte[] buffer = new byte[fileSize.intValue()];
+				int b = -1;
+
+				while ((b = fis.read(buffer)) != -1) {
+					os.write(buffer, 0, b);
+				}
+
+				fis.close();
+				os.close();
+			} else {
+				logger.info("Requested " + fileName + " file not found!!");
+				response.setStatus(300);
+				throw new FileNotFoundException("Requested " + fileName + " file not found!!");
+			}
+		} catch (IOException e) {
+			logger.error(e.getMessage());
+			e.printStackTrace();
 			String message = null;
 			try {
 				message = e.getMessage();
-			}catch (Exception e2) {
+			} catch (Exception e2) {
 				// TODO: handle exception
 			}
-			sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Requested " + fileName + " file not found!!", null);
+			sendResponse("404", MessageStatus.FAIL.toString(),
+					(message != null) ? message : "Requested " + fileName + " file not found!!", null);
 			throw new IOException((message != null) ? message : "Requested " + fileName + " file not found!!");
-        }
-	return response;
+		}
+		return response;
 	}
-
 
 	/**
 	 * 
@@ -4061,7 +4351,7 @@ public class CommonServiceImpl <T> {
 		baseExec.setName(ref.getName());
 		return object;
 	}
-	
+
 	/**
 	 * 
 	 * @param metaType
@@ -4073,29 +4363,32 @@ public class CommonServiceImpl <T> {
 	 * @throws InvocationTargetException
 	 * @throws NoSuchMethodException
 	 * @throws SecurityException
-	 * @throws InterruptedException 
+	 * @throws InterruptedException
 	 */
-	public T createAndSetOperator(MetaType metaType, MetaIdentifier ref, TaskExec taskExec, int i) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, InterruptedException {
+	public T createAndSetOperator(MetaType metaType, MetaIdentifier ref, TaskExec taskExec, int i)
+			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
+			SecurityException, InterruptedException {
 		synchronized (taskExec) {
 			Thread.sleep(2000);
-			T execObject = (T)createExec(metaType, ref);
-			MetaIdentifier metaExecIdentifier = new MetaIdentifier(metaType, String.class.cast(execObject.getClass().getMethod("getUuid", null).invoke(execObject, null)),
+			T execObject = (T) createExec(metaType, ref);
+			MetaIdentifier metaExecIdentifier = new MetaIdentifier(metaType,
+					String.class.cast(execObject.getClass().getMethod("getUuid", null).invoke(execObject, null)),
 					String.class.cast(execObject.getClass().getMethod("getVersion", null).invoke(execObject, null)));
-			
+
 			List<MetaIdentifierHolder> operatorInfo = taskExec.getOperators().get(0).getOperatorInfo();
 			MetaIdentifierHolder operatorInfoHolder = new MetaIdentifierHolder(metaExecIdentifier);
 			operatorInfoHolder.setValue(taskExec.getOperators().get(0).getOperatorInfo().get(i).getValue());
-			
+
 			List<MetaIdentifierHolder> tempOperatorInfo = new ArrayList<>();
 			int j = 0;
-			for(MetaIdentifierHolder operatorInfoHolder2 : operatorInfo) {
-				if(j == i) {
+			for (MetaIdentifierHolder operatorInfoHolder2 : operatorInfo) {
+				if (j == i) {
 					tempOperatorInfo.add(operatorInfoHolder);
 				} else {
 					tempOperatorInfo.add(operatorInfoHolder2);
 				}
 				j++;
-			}	
+			}
 			TaskOperator taskOperator = new TaskOperator();
 			taskOperator.setDependsOn(taskExec.getOperators().get(0).getDependsOn());
 			taskOperator.setOperatorId(taskExec.getOperators().get(0).getOperatorId());
@@ -4107,16 +4400,19 @@ public class CommonServiceImpl <T> {
 			taskExec.setOperators(taskOperators);
 			return execObject;
 		}
-		
+
 	}
 
 	public List<MetaIdentifierHolder> uploadGenric(List<MultipartFile> multiPartFile, String extension, String fileType,
-			String type, String uuid,String version, String action, String dataSourceUuid)
-			throws FileNotFoundException, IOException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
-	     String directoryPathByDataSource = null;
-		if(dataSourceUuid != null) {
-		Datasource datasource=(Datasource) getOneByUuidAndVersion(dataSourceUuid, null, MetaType.datasource.toString());
-           directoryPathByDataSource=datasource.getPath();
+			String type, String uuid, String version, String action, String dataSourceUuid)
+			throws FileNotFoundException, IOException, JSONException, ParseException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException,
+			NullPointerException {
+		String directoryPathByDataSource = null;
+		if (dataSourceUuid != null) {
+			Datasource datasource = (Datasource) getOneByUuidAndVersion(dataSourceUuid, null,
+					MetaType.datasource.toString());
+			directoryPathByDataSource = datasource.getPath();
 		}
 		List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
 		if (null != multiPartFile && multiPartFile.size() > 0) {
@@ -4156,21 +4452,23 @@ public class CommonServiceImpl <T> {
 				if (fileType != null && fileType.equalsIgnoreCase("csv") && uuid == null) {
 					location = directoryPath + "/" + originalFileName;
 				} else {
-					
+
 					location = directoryPathByDataSource + "/" + originalFileName;
 				}
 				File dest = new File(location);
-				if(dest.exists()) {
-				   // status = new Status(Status.Stage.Failed, new Date());
-					//statusList.add(status);
-					///uploadExec.setStatusList(statusList);
-					//save(MetaType.uploadExec.toString(), uploadExec);
-					String message="File already exists.";
+				if (dest.exists()) {
+					// status = new Status(Status.Stage.Failed, new Date());
+					// statusList.add(status);
+					/// uploadExec.setStatusList(statusList);
+					// save(MetaType.uploadExec.toString(), uploadExec);
+					String message = "File already exists.";
 					logger.info(message);
-					sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Requested " + originalFileName + " file not found!!", null);
-					throw new IOException((message != null) ? message : "Requested " + originalFileName + " file not found!!");
-		     
-				}else {
+					sendResponse("404", MessageStatus.FAIL.toString(),
+							(message != null) ? message : "Requested " + originalFileName + " file not found!!", null);
+					throw new IOException(
+							(message != null) ? message : "Requested " + originalFileName + " file not found!!");
+
+				} else {
 					status = new Status(Status.Stage.InProgress, new Date());
 					statusList.add(status);
 					uploadExec.setStatusList(statusList);
@@ -4186,35 +4484,36 @@ public class CommonServiceImpl <T> {
 				uploadExec.setStatusList(statusList);
 				if (fileType != null && fileType.equalsIgnoreCase(FileType.ZIP.toString())
 						&& type.equalsIgnoreCase(MetaType.Import.toString())) {
-//					ObjectMapper mapper = new ObjectMapper();
-																/*
-																 * uploadExec.setDependsOn(new MetaIdentifierHolder(new
-																 * MetaIdentifier(
-																 * Helper.getMetaType(MetaType.Import.toString()),
-																 * metaUuid, metaVersion, originalFileName)));
-																 * mapper.writeValueAsString(importServiceImpl.
-																 * uploadFile(multipartFile, originalFileName));
-																 */
+					// ObjectMapper mapper = new ObjectMapper();
+					/*
+					 * uploadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(
+					 * Helper.getMetaType(MetaType.Import.toString()), metaUuid, metaVersion,
+					 * originalFileName))); mapper.writeValueAsString(importServiceImpl.
+					 * uploadFile(multipartFile, originalFileName));
+					 */
 					MetaIdentifierHolder metaIdentifierHolder2 = new MetaIdentifierHolder();
 					metaIdentifierHolder2.setRef(new MetaIdentifier(Helper.getMetaType(MetaType.uploadExec.toString()),
 							uploadExec.getUuid(), uploadExec.getVersion(), filename1));
 					metaIdentifierHolderList.add(metaIdentifierHolder2);
 				}
 				if (type != null && type.equalsIgnoreCase("comment")) {
-					uploadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(
-							Helper.getMetaType(MetaType.comment.toString()), uuid, version, null)));
+					uploadExec.setDependsOn(new MetaIdentifierHolder(
+							new MetaIdentifier(Helper.getMetaType(MetaType.comment.toString()), uuid, version, null)));
 					save(MetaType.uploadExec.toString(), uploadExec);
 					MetaIdentifierHolder metaIdentifierHolder2 = new MetaIdentifierHolder();
 					metaIdentifierHolder2.setRef(new MetaIdentifier(Helper.getMetaType(MetaType.uploadExec.toString()),
 							uploadExec.getUuid(), uploadExec.getVersion(), filename1));
 					metaIdentifierHolderList.add(metaIdentifierHolder2);
 				} else if (fileType != null && fileType.equalsIgnoreCase("script")) {
-					uploadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(
-							Helper.getMetaType(MetaType.model.toString()), uuid, version, null)));
+					uploadExec.setDependsOn(new MetaIdentifierHolder(
+							new MetaIdentifier(Helper.getMetaType(MetaType.model.toString()), uuid, version, null)));
 					save(MetaType.uploadExec.toString(), uploadExec);
 					MetaIdentifierHolder metaIdentifierHolder2 = new MetaIdentifierHolder();
-/*					metaIdentifierHolder2.setRef(new MetaIdentifier(Helper.getMetaType(MetaType.model.toString()),
-							metaUuid, metaVersion, filename1));*/
+					/*
+					 * metaIdentifierHolder2.setRef(new
+					 * MetaIdentifier(Helper.getMetaType(MetaType.model.toString()), metaUuid,
+					 * metaVersion, filename1));
+					 */
 					metaIdentifierHolder2.setRef(new MetaIdentifier(Helper.getMetaType(MetaType.uploadExec.toString()),
 							uploadExec.getUuid(), uploadExec.getVersion(), filename1));
 					metaIdentifierHolderList.add(metaIdentifierHolder2);
@@ -4232,10 +4531,12 @@ public class CommonServiceImpl <T> {
 		return (List<MetaIdentifierHolder>) metaIdentifierHolderList;
 
 	}
-	
-	
+
 	@SuppressWarnings("unchecked")
-	public HttpServletResponse genricDownload(String fileType, String fileName, HttpServletResponse response,String uuid) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException {
+	public HttpServletResponse genricDownload(String fileType, String fileName, HttpServletResponse response,
+			String uuid)
+			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException {
 		try {
 			List<UploadExec> uploadExec = new ArrayList<UploadExec>();
 			Query query = new Query();
@@ -4244,75 +4545,76 @@ public class CommonServiceImpl <T> {
 			query.fields().include("location");
 			query.fields().include("fileName");
 			query.addCriteria(Criteria.where("uuid").is(uuid));
-	
+
 			uploadExec = (List<UploadExec>) mongoTemplate.find(query, Helper.getDomainClass(MetaType.uploadExec));
-			
-		//fileName=uploadExec.get(0).getFileName();
-            String filePath = uploadExec.get(0).getLocation();
-//            String FileName =uploadExec.get(0).getFileName();
-//			String fileExtention = FileName.substring(FileName.lastIndexOf("."));
-			//String filename1 = FileName.substring(0, fileName.lastIndexOf("."));
-            File file = new File(filePath);
-            
-            if (file.exists()) {
-            	logger.info("File found.");
-                 String mimeType = null;//context.getMimeType(file.getPath());
-                 mimeType= new MimetypesFileTypeMap().getContentType(file);
-                if (mimeType == null) {
-                    mimeType = "application/octet-stream";
-                }
- 
-                response.setContentType(mimeType);
-                response.setContentLength((int) file.length());
-             //   response.setContentType("application/xml charset=utf-16");
+
+			// fileName=uploadExec.get(0).getFileName();
+			String filePath = uploadExec.get(0).getLocation();
+			// String FileName =uploadExec.get(0).getFileName();
+			// String fileExtention = FileName.substring(FileName.lastIndexOf("."));
+			// String filename1 = FileName.substring(0, fileName.lastIndexOf("."));
+			File file = new File(filePath);
+
+			if (file.exists()) {
+				logger.info("File found.");
+				String mimeType = null;// context.getMimeType(file.getPath());
+				mimeType = new MimetypesFileTypeMap().getContentType(file);
+				if (mimeType == null) {
+					mimeType = "application/octet-stream";
+				}
+
+				response.setContentType(mimeType);
+				response.setContentLength((int) file.length());
+				// response.setContentType("application/xml charset=utf-16");
 				response.setHeader("Content-disposition", "attachment");
-				response.setHeader("filename",fileName);
-                ServletOutputStream os = response.getOutputStream();
-                FileInputStream fis = new FileInputStream(file);
-                Long fileSize = file.length();
-                byte[] buffer = new byte[fileSize.intValue()];
-                int b = -1;
- 
-                while ((b = fis.read(buffer)) != -1) {
-                    os.write(buffer, 0, b);
-                }
- 
-                fis.close();
-                os.close();
-            } else {
-            	logger.info("Requested " + fileName + " file not found!!");
-            	response.setStatus(300);
-            	throw new FileNotFoundException("Requested " + fileName + " file not found!!");
-            }
-        } catch (IOException e) {
-        	logger.error(e.getMessage());
-        	e.printStackTrace();
+				response.setHeader("filename", fileName);
+				ServletOutputStream os = response.getOutputStream();
+				FileInputStream fis = new FileInputStream(file);
+				Long fileSize = file.length();
+				byte[] buffer = new byte[fileSize.intValue()];
+				int b = -1;
+
+				while ((b = fis.read(buffer)) != -1) {
+					os.write(buffer, 0, b);
+				}
+
+				fis.close();
+				os.close();
+			} else {
+				logger.info("Requested " + fileName + " file not found!!");
+				response.setStatus(300);
+				throw new FileNotFoundException("Requested " + fileName + " file not found!!");
+			}
+		} catch (IOException e) {
+			logger.error(e.getMessage());
+			e.printStackTrace();
 			String message = null;
 			try {
 				message = e.getMessage();
-			}catch (Exception e2) {
+			} catch (Exception e2) {
 				// TODO: handle exception
 			}
-			sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Requested " + fileName + " file not found!!", null);
+			sendResponse("404", MessageStatus.FAIL.toString(),
+					(message != null) ? message : "Requested " + fileName + " file not found!!", null);
 			throw new IOException((message != null) ? message : "Requested " + fileName + " file not found!!");
-        }
-	return response;
+		}
+		return response;
 	}
-	
+
 	public void updateLovForTag(BaseEntity baseEntity) {
 		List<Lov> lovs = metadataServiceImpl.getLovByType("TAG");
 		List<String> arrayOne = new ArrayList<>(Arrays.asList(baseEntity.getTags()));
-	//	Set<String> arrayOne1 = (Set<String>) new ArrayList(Arrays.asList(baseEntity.getTags()));
-		
-		
+		// Set<String> arrayOne1 = (Set<String>) new
+		// ArrayList(Arrays.asList(baseEntity.getTags()));
+
 		Set<String> hs = new HashSet<>();
-		
+
 		List<String> arrayTwo = new ArrayList<String>();
 		for (Lov lov : lovs) {
 			arrayTwo.addAll(lov.getValue());
 			if (!arrayOne.equals(lov.getValue())) {
 				boolean boolAddAll = arrayOne.addAll(arrayTwo);
-//				System.out.println(boolAddAll);
+				// System.out.println(boolAddAll);
 				hs.addAll(arrayOne);
 				arrayOne.clear();
 				arrayOne.addAll(hs);
@@ -4335,7 +4637,7 @@ public class CommonServiceImpl <T> {
 		}
 
 	}
-	
+
 	/**
 	 * Utility to populate refkeys given the data structure and a ref object
 	 * 
@@ -4362,7 +4664,7 @@ public class CommonServiceImpl <T> {
 		return ref;
 
 	}
-	
+
 	/**
 	 * 
 	 * @param datapod
@@ -4373,19 +4675,21 @@ public class CommonServiceImpl <T> {
 	 * @return
 	 * @throws Exception
 	 */
-	protected String getTableName(Datapod datapod, 
-			HashMap<String, String> otherParams, BaseExec baseExec, RunMode runMode) throws Exception {
+	protected String getTableName(Datapod datapod, HashMap<String, String> otherParams, BaseExec baseExec,
+			RunMode runMode) throws Exception {
 		if (otherParams != null && otherParams.containsKey("datapodUuid_" + datapod.getUuid() + "_tableName")) {
 			return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");
 		} else {
 			try {
-				return dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
-			} catch(Exception e) {
-				return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(), baseExec.getVersion());
+				return dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()),
+						runMode);
+			} catch (Exception e) {
+				return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(),
+						baseExec.getVersion());
 			}
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @param sourceData
@@ -4395,49 +4699,68 @@ public class CommonServiceImpl <T> {
 	 */
 	public String getTableNameBySource(Object sourceData, RunMode runMode) throws Exception {
 		String sourceTableName = null;
-		if(sourceData instanceof Datapod) {
+		if (sourceData instanceof Datapod) {
 			Datapod datapod = (Datapod) sourceData;
-			sourceTableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
-		} else if(sourceData instanceof DataSet) {
+			sourceTableName = dataStoreServiceImpl
+					.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+		} else if (sourceData instanceof DataSet) {
 			DataSet dataSet = (DataSet) sourceData;
 			MetaIdentifierHolder dependsOn = dataSet.getDependsOn();
-			if(dependsOn.getRef().getType().equals(MetaType.datapod)) {
-				Datapod datapod = (Datapod) getOneByUuidAndVersion(dependsOn.getRef().getUuid(), dependsOn.getRef().getVersion(), dependsOn.getRef().getType().toString(), "N");
-				sourceTableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
-			} else if(dependsOn.getRef().getType().equals(MetaType.relation)) {
+			if (dependsOn.getRef().getType().equals(MetaType.datapod)) {
+				Datapod datapod = (Datapod) getOneByUuidAndVersion(dependsOn.getRef().getUuid(),
+						dependsOn.getRef().getVersion(), dependsOn.getRef().getType().toString(), "N");
+				sourceTableName = dataStoreServiceImpl
+						.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+			} else if (dependsOn.getRef().getType().equals(MetaType.relation)) {
 				Relation relation = (Relation) sourceData;
-				Datapod datapod = (Datapod) getOneByUuidAndVersion(relation.getDependsOn().getRef().getUuid(), relation.getDependsOn().getRef().getVersion(), relation.getDependsOn().getRef().getType().toString(), "N");
-				sourceTableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+				Datapod datapod = (Datapod) getOneByUuidAndVersion(relation.getDependsOn().getRef().getUuid(),
+						relation.getDependsOn().getRef().getVersion(),
+						relation.getDependsOn().getRef().getType().toString(), "N");
+				sourceTableName = dataStoreServiceImpl
+						.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
 			}
-		} else if(sourceData instanceof Rule) {
+		} else if (sourceData instanceof Rule) {
 			Rule rule = (Rule) sourceData;
 			MetaIdentifierHolder sourceHolder = rule.getSource();
-			if(sourceHolder.getRef().getType().equals(MetaType.datapod)) {
-				Datapod datapod = (Datapod) getOneByUuidAndVersion(sourceHolder.getRef().getUuid(), sourceHolder.getRef().getVersion(), sourceHolder.getRef().getType().toString(), "N");
-				sourceTableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
-			} else if(sourceHolder.getRef().getType().equals(MetaType.dataset)) {
-				DataSet dataSet = (DataSet) getOneByUuidAndVersion(sourceHolder.getRef().getUuid(), sourceHolder.getRef().getVersion(), sourceHolder.getRef().getType().toString(), "N");
+			if (sourceHolder.getRef().getType().equals(MetaType.datapod)) {
+				Datapod datapod = (Datapod) getOneByUuidAndVersion(sourceHolder.getRef().getUuid(),
+						sourceHolder.getRef().getVersion(), sourceHolder.getRef().getType().toString(), "N");
+				sourceTableName = dataStoreServiceImpl
+						.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+			} else if (sourceHolder.getRef().getType().equals(MetaType.dataset)) {
+				DataSet dataSet = (DataSet) getOneByUuidAndVersion(sourceHolder.getRef().getUuid(),
+						sourceHolder.getRef().getVersion(), sourceHolder.getRef().getType().toString(), "N");
 				MetaIdentifierHolder dependsOn = dataSet.getDependsOn();
-				if(dependsOn.getRef().getType().equals(MetaType.datapod)) {
-					Datapod datapod = (Datapod) getOneByUuidAndVersion(dependsOn.getRef().getUuid(), dependsOn.getRef().getVersion(), dependsOn.getRef().getType().toString(), "N");
-					sourceTableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
-				} else if(dependsOn.getRef().getType().equals(MetaType.relation)) {
+				if (dependsOn.getRef().getType().equals(MetaType.datapod)) {
+					Datapod datapod = (Datapod) getOneByUuidAndVersion(dependsOn.getRef().getUuid(),
+							dependsOn.getRef().getVersion(), dependsOn.getRef().getType().toString(), "N");
+					sourceTableName = dataStoreServiceImpl
+							.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+				} else if (dependsOn.getRef().getType().equals(MetaType.relation)) {
 					Relation relation = (Relation) sourceData;
-					Datapod datapod = (Datapod) getOneByUuidAndVersion(relation.getDependsOn().getRef().getUuid(), relation.getDependsOn().getRef().getVersion(), relation.getDependsOn().getRef().getType().toString(), "N");
-					sourceTableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+					Datapod datapod = (Datapod) getOneByUuidAndVersion(relation.getDependsOn().getRef().getUuid(),
+							relation.getDependsOn().getRef().getVersion(),
+							relation.getDependsOn().getRef().getType().toString(), "N");
+					sourceTableName = dataStoreServiceImpl
+							.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
 				}
-			} else if(sourceHolder.getRef().getType().equals(MetaType.relation)) {
-				Relation relation = (Relation) getOneByUuidAndVersion(sourceHolder.getRef().getUuid(), sourceHolder.getRef().getVersion(), sourceHolder.getRef().getType().toString(), "N");
-				Datapod datapod = (Datapod) getOneByUuidAndVersion(relation.getDependsOn().getRef().getUuid(), relation.getDependsOn().getRef().getVersion(), relation.getDependsOn().getRef().getType().toString(), "N");
-				sourceTableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
-			} else if(sourceHolder.getRef().getType().equals(MetaType.rule)) {
-				Rule rule2 = (Rule) getOneByUuidAndVersion(sourceHolder.getRef().getUuid(), sourceHolder.getRef().getVersion(), sourceHolder.getRef().getType().toString(), "N");
+			} else if (sourceHolder.getRef().getType().equals(MetaType.relation)) {
+				Relation relation = (Relation) getOneByUuidAndVersion(sourceHolder.getRef().getUuid(),
+						sourceHolder.getRef().getVersion(), sourceHolder.getRef().getType().toString(), "N");
+				Datapod datapod = (Datapod) getOneByUuidAndVersion(relation.getDependsOn().getRef().getUuid(),
+						relation.getDependsOn().getRef().getVersion(),
+						relation.getDependsOn().getRef().getType().toString(), "N");
+				sourceTableName = dataStoreServiceImpl
+						.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+			} else if (sourceHolder.getRef().getType().equals(MetaType.rule)) {
+				Rule rule2 = (Rule) getOneByUuidAndVersion(sourceHolder.getRef().getUuid(),
+						sourceHolder.getRef().getVersion(), sourceHolder.getRef().getType().toString(), "N");
 				sourceTableName = getTableNameBySource(rule2, runMode);
 			}
 		}
 		return sourceTableName;
 	}
-	
+
 	/**
 	 * 
 	 * @param object
@@ -4449,22 +4772,27 @@ public class CommonServiceImpl <T> {
 	 */
 	public String getSource(Object object, BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		if (object == null) {
-			throw new Exception ("No source chosen");
+			throw new Exception("No source chosen");
 		} else if (object instanceof Datapod) {
-			return getTableName(((Datapod)object), execParams.getOtherParams(), baseExec, runMode);
+			return getTableName(((Datapod) object), execParams.getOtherParams(), baseExec, runMode);
 		} else if (object instanceof DataSet) {
-			return "(" + datasetOperator.generateSql(((DataSet)object), DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
-											execParams.getOtherParams(), new HashSet<>(), execParams, runMode) + ")";
+			return "(" + datasetOperator.generateSql(((DataSet) object),
+					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
+					new HashSet<>(), execParams, runMode) + ")";
 		} else if (object instanceof Rule) {
-			return "(" + ruleOperator.generateSql(((Rule)object), DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
-					execParams.getOtherParams(), null, execParams, runMode) + ")";
+			return "(" + ruleOperator.generateSql(((Rule) object),
+					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(), null,
+					execParams, runMode) + ")";
 		} else {
-			throw new Exception ("Wrong choice of source");
+			throw new Exception("Wrong choice of source");
 		}
-		
+
 	}
 
-	public List<ParamList> getAllLatestParamListByTemplate(String templateFlg, String parentPLUuid, String parentVersion, MetaType paramListType) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public List<ParamList> getAllLatestParamListByTemplate(String templateFlg, String parentPLUuid,
+			String parentVersion, MetaType paramListType)
+			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Query query = new Query();
 		query.fields().include("uuid");
 		query.fields().include("version");
@@ -4480,29 +4808,31 @@ public class CommonServiceImpl <T> {
 		query.fields().include("templateInfo");
 		query.fields().include("params");
 		query.fields().include("paramListType");
-		
-		if(parentPLUuid != null)
+
+		if (parentPLUuid != null)
 			query.addCriteria(Criteria.where("templateInfo.ref.uuid").is(parentPLUuid));
-		if(templateFlg != null)
+		if (templateFlg != null)
 			query.addCriteria(Criteria.where("templateFlg").is(templateFlg));
-		if(paramListType != null)
+		if (paramListType != null)
 			query.addCriteria(Criteria.where("paramListType").is(paramListType));
-		query.addCriteria(Criteria.where("appInfo.ref.uuid").is(getApp().getUuid()));
-		
+		query.addCriteria(Criteria.where("_id").ne("1").orOperator(where("appInfo.ref.uuid").is(getApp().getUuid()),
+				where("publicFlag").is("Y")));
+
 		List<ParamList> paramLists = mongoTemplate.find(query, ParamList.class);
-		
+
 		List<ParamList> latestParamList = new ArrayList<>();
 		Set<String> uuidSet = new HashSet<>();
-		for(ParamList paramList : paramLists) {
-			if(!uuidSet.contains(paramList.getUuid())) {
-				ParamList latestPL = (ParamList) getLatestByUuid(paramList.getUuid(), MetaType.paramlist.toString(), "N");
+		for (ParamList paramList : paramLists) {
+			if (!uuidSet.contains(paramList.getUuid())) {
+				ParamList latestPL = (ParamList) getLatestByUuid(paramList.getUuid(), MetaType.paramlist.toString(),
+						"N");
 				latestParamList.add(latestPL);
 				uuidSet.add(paramList.getUuid());
 			}
 		}
 		return latestParamList;
 	}
-	
+
 	/**
 	 * 
 	 * @return
@@ -4516,11 +4846,14 @@ public class CommonServiceImpl <T> {
 			return null;
 		}
 		List<ParamListHolder> paramHolderList = null;
-		Application application = (Application) getOneByUuidAndVersion(appInfo.getRef().getUuid(), appInfo.getRef().getVersion(), appInfo.getRef().getType().toString());
+		Application application = (Application) getOneByUuidAndVersion(appInfo.getRef().getUuid(),
+				appInfo.getRef().getVersion(), appInfo.getRef().getType().toString());
 		if (application.getParamList() == null || application.getParamList().getRef() == null) {
 			return null;
 		}
-		ParamList paramList = (ParamList) getOneByUuidAndVersion(application.getParamList().getRef().getUuid(), application.getParamList().getRef().getVersion(), application.getParamList().getRef().getType().toString());
+		ParamList paramList = (ParamList) getOneByUuidAndVersion(application.getParamList().getRef().getUuid(),
+				application.getParamList().getRef().getVersion(),
+				application.getParamList().getRef().getType().toString());
 		ParamListHolder paramListHolder = null;
 		if (paramList != null && paramList.getParams() != null && !paramList.getParams().isEmpty()) {
 			paramHolderList = new ArrayList<>();
@@ -4536,7 +4869,7 @@ public class CommonServiceImpl <T> {
 		}
 		return paramHolderList;
 	}
-	
+
 	/**
 	 * 
 	 * @param fieldArray
@@ -4554,209 +4887,230 @@ public class CommonServiceImpl <T> {
 		for (String field : fieldArray) {
 			sb.append(ConstantsUtil.COMMA).append(field);
 		}
-		sb.append(ConstantsUtil.FROM)
-			.append(tableName);
+		sb.append(ConstantsUtil.FROM).append(tableName);
 		return sb.toString();
 	}
-	
+
 	public Datasource getDatasourceByObject(Object object) throws JsonProcessingException {
-		if(object instanceof Datapod) {
-			return getDatasourceByDatapod((Datapod)object);
-		} else if(object instanceof DataSet) {
+		if (object instanceof Datapod) {
+			return getDatasourceByDatapod((Datapod) object);
+		} else if (object instanceof DataSet) {
 			DataSet dataSet = (DataSet) object;
 			MetaIdentifier dataSetDependsOn = dataSet.getDependsOn().getRef();
-			Object dependsOnObj = getOneByUuidAndVersion(dataSetDependsOn.getUuid(), dataSetDependsOn.getVersion(), dataSetDependsOn.getType().toString());
+			Object dependsOnObj = getOneByUuidAndVersion(dataSetDependsOn.getUuid(), dataSetDependsOn.getVersion(),
+					dataSetDependsOn.getType().toString());
 			return getDatasourceByObject(dependsOnObj);
-		} else if(object instanceof Rule) {
+		} else if (object instanceof Rule) {
 			Rule rule = (Rule) object;
 			MetaIdentifier ruleDependsOn = rule.getSource().getRef();
-			Object dependsOnObj = getOneByUuidAndVersion(ruleDependsOn.getUuid(), ruleDependsOn.getVersion(), ruleDependsOn.getType().toString());
+			Object dependsOnObj = getOneByUuidAndVersion(ruleDependsOn.getUuid(), ruleDependsOn.getVersion(),
+					ruleDependsOn.getType().toString());
 			return getDatasourceByObject(dependsOnObj);
-		} else if(object instanceof Relation) {
+		} else if (object instanceof Relation) {
 			Relation relation = (Relation) object;
 			MetaIdentifier relationDependsOn = relation.getDependsOn().getRef();
-			Object dependsOnObj = getOneByUuidAndVersion(relationDependsOn.getUuid(), relationDependsOn.getVersion(), relationDependsOn.getType().toString());
-			return getDatasourceByObject(dependsOnObj);		
-		} else if(object instanceof Profile) {
+			Object dependsOnObj = getOneByUuidAndVersion(relationDependsOn.getUuid(), relationDependsOn.getVersion(),
+					relationDependsOn.getType().toString());
+			return getDatasourceByObject(dependsOnObj);
+		} else if (object instanceof Profile) {
 			Profile profile = (Profile) object;
 			MetaIdentifier profileDependsOn = profile.getDependsOn().getRef();
-			Object dependsOnObj = getOneByUuidAndVersion(profileDependsOn.getUuid(), profileDependsOn.getVersion(), profileDependsOn.getType().toString());
-			return getDatasourceByObject(dependsOnObj);		
-		}  else if(object instanceof DataQual) {
+			Object dependsOnObj = getOneByUuidAndVersion(profileDependsOn.getUuid(), profileDependsOn.getVersion(),
+					profileDependsOn.getType().toString());
+			return getDatasourceByObject(dependsOnObj);
+		} else if (object instanceof DataQual) {
 			DataQual dataQual = (DataQual) object;
 			MetaIdentifier dataQualDependsOn = dataQual.getDependsOn().getRef();
-			Object dependsOnObj = getOneByUuidAndVersion(dataQualDependsOn.getUuid(), dataQualDependsOn.getVersion(), dataQualDependsOn.getType().toString());
-			return getDatasourceByObject(dependsOnObj);		
-		} else if(object instanceof Recon) {
+			Object dependsOnObj = getOneByUuidAndVersion(dataQualDependsOn.getUuid(), dataQualDependsOn.getVersion(),
+					dataQualDependsOn.getType().toString());
+			return getDatasourceByObject(dependsOnObj);
+		} else if (object instanceof Recon) {
 			Recon recon = (Recon) object;
 			MetaIdentifier reconDependsOn = recon.getSourceAttr().getRef();
-			Object dependsOnObj = getOneByUuidAndVersion(reconDependsOn.getUuid(), reconDependsOn.getVersion(), reconDependsOn.getType().toString());
-			return getDatasourceByObject(dependsOnObj);		
-		} else if(object instanceof com.inferyx.framework.domain.Map) {
+			Object dependsOnObj = getOneByUuidAndVersion(reconDependsOn.getUuid(), reconDependsOn.getVersion(),
+					reconDependsOn.getType().toString());
+			return getDatasourceByObject(dependsOnObj);
+		} else if (object instanceof com.inferyx.framework.domain.Map) {
 			com.inferyx.framework.domain.Map map = (com.inferyx.framework.domain.Map) object;
 			MetaIdentifier mapSource = map.getSource().getRef();
-			Object sourceObj = getOneByUuidAndVersion(mapSource.getUuid(), mapSource.getVersion(), mapSource.getType().toString());
-			return getDatasourceByObject(sourceObj);	
-		} else if(object instanceof Train) {
+			Object sourceObj = getOneByUuidAndVersion(mapSource.getUuid(), mapSource.getVersion(),
+					mapSource.getType().toString());
+			return getDatasourceByObject(sourceObj);
+		} else if (object instanceof Train) {
 			Train train = (Train) object;
 			MetaIdentifier trainSource = train.getSource().getRef();
-			Object sourceObj = getOneByUuidAndVersion(trainSource.getUuid(), trainSource.getVersion(), trainSource.getType().toString());
-			return getDatasourceByObject(sourceObj);	
-		} else if(object instanceof Predict) {
+			Object sourceObj = getOneByUuidAndVersion(trainSource.getUuid(), trainSource.getVersion(),
+					trainSource.getType().toString());
+			return getDatasourceByObject(sourceObj);
+		} else if (object instanceof Predict) {
 			Predict predict = (Predict) object;
 			MetaIdentifier predictSource = predict.getSource().getRef();
-			Object sourceObj = getOneByUuidAndVersion(predictSource.getUuid(), predictSource.getVersion(), predictSource.getType().toString());
-			return getDatasourceByObject(sourceObj);	
-		} else if(object instanceof Formula) {
+			Object sourceObj = getOneByUuidAndVersion(predictSource.getUuid(), predictSource.getVersion(),
+					predictSource.getType().toString());
+			return getDatasourceByObject(sourceObj);
+		} else if (object instanceof Formula) {
 			Formula formula = (Formula) object;
 			MetaIdentifier formulaDependsOn = formula.getDependsOn().getRef();
-			Object dependsOnObj = getOneByUuidAndVersion(formulaDependsOn.getUuid(), formulaDependsOn.getVersion(), formulaDependsOn.getType().toString());
-			return getDatasourceByObject(dependsOnObj);	
-		} else if(object instanceof Ingest) {
+			Object dependsOnObj = getOneByUuidAndVersion(formulaDependsOn.getUuid(), formulaDependsOn.getVersion(),
+					formulaDependsOn.getType().toString());
+			return getDatasourceByObject(dependsOnObj);
+		} else if (object instanceof Ingest) {
 			Ingest ingest = (Ingest) object;
 			MetaIdentifier ingestSourceMI = ingest.getSourceDatasource().getRef();
-			return (Datasource) getOneByUuidAndVersion(ingestSourceMI.getUuid(), ingestSourceMI.getVersion(), ingestSourceMI.getType().toString());	
-		} else if(object instanceof Report) {
+			return (Datasource) getOneByUuidAndVersion(ingestSourceMI.getUuid(), ingestSourceMI.getVersion(),
+					ingestSourceMI.getType().toString());
+		} else if (object instanceof Report) {
 			Report report = (Report) object;
 			MetaIdentifier reportDependsOn = report.getDependsOn().getRef();
-			Object dependsOnObj = getOneByUuidAndVersion(reportDependsOn.getUuid(), reportDependsOn.getVersion(), reportDependsOn.getType().toString());
-			return getDatasourceByObject(dependsOnObj);	
-		} else if(object instanceof Vizpod) {
+			Object dependsOnObj = getOneByUuidAndVersion(reportDependsOn.getUuid(), reportDependsOn.getVersion(),
+					reportDependsOn.getType().toString());
+			return getDatasourceByObject(dependsOnObj);
+		} else if (object instanceof Vizpod) {
 			Vizpod vizpod = (Vizpod) object;
 			MetaIdentifier vizpodSource = vizpod.getSource().getRef();
-			Object sourceObj = getOneByUuidAndVersion(vizpodSource.getUuid(), vizpodSource.getVersion(), vizpodSource.getType().toString());
-			return getDatasourceByObject(sourceObj);	
-		} else if(object instanceof DataStore) {
+			Object sourceObj = getOneByUuidAndVersion(vizpodSource.getUuid(), vizpodSource.getVersion(),
+					vizpodSource.getType().toString());
+			return getDatasourceByObject(sourceObj);
+		} else if (object instanceof DataStore) {
 			DataStore dataStore = (DataStore) object;
 			MetaIdentifier dataStoreDependsOn = dataStore.getMetaId().getRef();
-			Object dependsOnObj = getOneByUuidAndVersion(dataStoreDependsOn.getUuid(), dataStoreDependsOn.getVersion(), dataStoreDependsOn.getType().toString());
-			return getDatasourceByObject(dependsOnObj);	
+			Object dependsOnObj = getOneByUuidAndVersion(dataStoreDependsOn.getUuid(), dataStoreDependsOn.getVersion(),
+					dataStoreDependsOn.getType().toString());
+			return getDatasourceByObject(dependsOnObj);
 		}
-		
+
 		return null;
 	}
-	
+
 	public List<String> getColListByObject(Object object) throws JsonProcessingException {
-		if(object instanceof Datapod) {
-			return getColListByDatapod((Datapod)object);
-		} else if(object instanceof DataSet) {
+		if (object instanceof Datapod) {
+			return getColListByDatapod((Datapod) object);
+		} else if (object instanceof DataSet) {
 			DataSet dataSet = (DataSet) object;
 			MetaIdentifier dataSetDependsOn = dataSet.getDependsOn().getRef();
-			Object dependsOnObj = getOneByUuidAndVersion(dataSetDependsOn.getUuid(), dataSetDependsOn.getVersion(), dataSetDependsOn.getType().toString());
+			Object dependsOnObj = getOneByUuidAndVersion(dataSetDependsOn.getUuid(), dataSetDependsOn.getVersion(),
+					dataSetDependsOn.getType().toString());
 			return getColListByObject(dependsOnObj);
-		} else if(object instanceof Rule) {
+		} else if (object instanceof Rule) {
 			Rule rule = (Rule) object;
 			MetaIdentifier ruleDependsOn = rule.getSource().getRef();
-			Object dependsOnObj = getOneByUuidAndVersion(ruleDependsOn.getUuid(), ruleDependsOn.getVersion(), ruleDependsOn.getType().toString());
+			Object dependsOnObj = getOneByUuidAndVersion(ruleDependsOn.getUuid(), ruleDependsOn.getVersion(),
+					ruleDependsOn.getType().toString());
 			return getColListByObject(dependsOnObj);
-		} 
-		
+		}
+
 		return null;
 	}
-	
+
 	public List<String> getColListByDatapod(Datapod datapod) {
 		List<String> datapodCloList = new ArrayList<>();
 		List<Attribute> attributeList = datapod.getAttributes();
-		for(Attribute attribute : attributeList) {
+		for (Attribute attribute : attributeList) {
 			datapodCloList.add(attribute.getName());
 		}
 		return datapodCloList;
 	}
-	
+
 	public Datapod getDatapodByObject(Object object) throws JsonProcessingException {
-		if(object instanceof Datapod) {
-			return (Datapod)object;
-		} else if(object instanceof DataSet) {
+		if (object instanceof Datapod) {
+			return (Datapod) object;
+		} else if (object instanceof DataSet) {
 			DataSet dataSet = (DataSet) object;
 			MetaIdentifier dataSetDependsOn = dataSet.getDependsOn().getRef();
-			Object dependsOnObj = getOneByUuidAndVersion(dataSetDependsOn.getUuid(), dataSetDependsOn.getVersion(), dataSetDependsOn.getType().toString(), "N");
+			Object dependsOnObj = getOneByUuidAndVersion(dataSetDependsOn.getUuid(), dataSetDependsOn.getVersion(),
+					dataSetDependsOn.getType().toString(), "N");
 			return getDatapodByObject(dependsOnObj);
-		} else if(object instanceof Rule) {
+		} else if (object instanceof Rule) {
 			Rule rule = (Rule) object;
 			MetaIdentifier ruleDependsOn = rule.getSource().getRef();
-			Object dependsOnObj = getOneByUuidAndVersion(ruleDependsOn.getUuid(), ruleDependsOn.getVersion(), ruleDependsOn.getType().toString(), "N");
+			Object dependsOnObj = getOneByUuidAndVersion(ruleDependsOn.getUuid(), ruleDependsOn.getVersion(),
+					ruleDependsOn.getType().toString(), "N");
 			return getDatapodByObject(dependsOnObj);
-		} else if(object instanceof Profile) {
+		} else if (object instanceof Profile) {
 			Profile profile = (Profile) object;
 			MetaIdentifier profileDependsOn = profile.getDependsOn().getRef();
-			Object dependsOnObj = getOneByUuidAndVersion(profileDependsOn.getUuid(), profileDependsOn.getVersion(), profileDependsOn.getType().toString());
-			return getDatapodByObject(dependsOnObj);	
-		} else if(object instanceof Relation) {
+			Object dependsOnObj = getOneByUuidAndVersion(profileDependsOn.getUuid(), profileDependsOn.getVersion(),
+					profileDependsOn.getType().toString());
+			return getDatapodByObject(dependsOnObj);
+		} else if (object instanceof Relation) {
 			Relation relation = (Relation) object;
 			MetaIdentifier relationDependsOn = relation.getDependsOn().getRef();
-			Object dependsOnObj = getOneByUuidAndVersion(relationDependsOn.getUuid(), relationDependsOn.getVersion(), relationDependsOn.getType().toString());
-			return getDatapodByObject(dependsOnObj);	
+			Object dependsOnObj = getOneByUuidAndVersion(relationDependsOn.getUuid(), relationDependsOn.getVersion(),
+					relationDependsOn.getType().toString());
+			return getDatapodByObject(dependsOnObj);
 		}
-		
+
 		return null;
 	}
 
 	public List<User> getUserByApp() throws JsonProcessingException {
-		
+
 		String appId = "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb";
 		List<User> userList = new ArrayList<>();
-		
+
 		MatchOperation filter = match(new Criteria("appInfo.ref.uuid").is(appId));
-		GroupOperation groupByUuid = group("uuid").max("version").as("version"); 
+		GroupOperation groupByUuid = group("uuid").max("version").as("version");
 		SortOperation sortByVersion = sort(new Sort(Direction.DESC, "version"));
 		Aggregation userAggr = newAggregation(filter, groupByUuid, sortByVersion);
-		AggregationResults<User> userAggrResults = mongoTemplate.aggregate(userAggr, MetaType.user.toString().toLowerCase(), User.class);
+		AggregationResults<User> userAggrResults = mongoTemplate.aggregate(userAggr,
+				MetaType.user.toString().toLowerCase(), User.class);
 		List<User> sortedUserList = userAggrResults.getMappedResults();
-		for(User user : sortedUserList) {
-			User userTemp=(User) getLatestByUuid(user.getId(), MetaType.user.toString(),"N");
-				userList.add(userTemp);
-				
-			
+		for (User user : sortedUserList) {
+			User userTemp = (User) getLatestByUuid(user.getId(), MetaType.user.toString(), "N");
+			userList.add(userTemp);
+
 		}
-			return userList;
-		}
+		return userList;
+	}
 
 	public List<Application> getAppByOrg(String orgUuid) throws JsonProcessingException {
-		
+
 		List<Application> latestApplicationList = new ArrayList<>();
 		MatchOperation filter = match(new Criteria("orgInfo.ref.uuid").is(orgUuid));
 		GroupOperation groupByUuid = group("uuid").max("version").as("version");
 		SortOperation sortByVersion = sort(new Sort(Direction.DESC, "version"));
 		Aggregation appAggr = newAggregation(filter, groupByUuid, sortByVersion);
-		AggregationResults<Application> applicationAggrResults = mongoTemplate.aggregate(appAggr, MetaType.application.toString().toLowerCase(), Application.class);
+		AggregationResults<Application> applicationAggrResults = mongoTemplate.aggregate(appAggr,
+				MetaType.application.toString().toLowerCase(), Application.class);
 		List<Application> sortedApplicationList = applicationAggrResults.getMappedResults();
-		for(Application application : sortedApplicationList) {
-			Application appTemp=(Application)getLatestByUuid(application.getId(), MetaType.application.toString(),"N");
-			if(appTemp.getOrgInfo().getRef().getUuid().equals(orgUuid)) {
+		for (Application application : sortedApplicationList) {
+			Application appTemp = (Application) getLatestByUuid(application.getId(), MetaType.application.toString(),
+					"N");
+			if (appTemp.getOrgInfo().getRef().getUuid().equals(orgUuid)) {
 				latestApplicationList.add(appTemp);
-			}	
-		}	
+			}
+		}
 		return latestApplicationList;
-	}	
-	
-public List<String> getColumnNameList(Object source, ParamListHolder holder ){
-		
+	}
+
+	public List<String> getColumnNameList(Object source, ParamListHolder holder) {
+
 		List<String> columns = new ArrayList<>();
 		List<AttributeRefHolder> attributeInfo = holder.getAttributeInfo();
-		if(source instanceof Datapod) {
+		if (source instanceof Datapod) {
 			Datapod datapod = (Datapod) source;
-			
-			for(Attribute attribute : datapod.getAttributes()) {
-				for(AttributeRefHolder attributeRefHolder : attributeInfo)
-					if(attribute.getAttributeId().equals(Integer.parseInt(""+attributeRefHolder.getAttrId()))) {
+
+			for (Attribute attribute : datapod.getAttributes()) {
+				for (AttributeRefHolder attributeRefHolder : attributeInfo)
+					if (attribute.getAttributeId().equals(Integer.parseInt("" + attributeRefHolder.getAttrId()))) {
 						columns.add(attribute.getName());
 					}
 			}
-		} else if(source instanceof DataSet) {
+		} else if (source instanceof DataSet) {
 			DataSet dataSet = (DataSet) source;
-			
-			for(AttributeSource attributeSource : dataSet.getAttributeInfo()) {
-				for(AttributeRefHolder attributeRefHolder : attributeInfo)
-					if(attributeSource.getAttrSourceId().equalsIgnoreCase(""+attributeRefHolder.getAttrId())) {
+
+			for (AttributeSource attributeSource : dataSet.getAttributeInfo()) {
+				for (AttributeRefHolder attributeRefHolder : attributeInfo)
+					if (attributeSource.getAttrSourceId().equalsIgnoreCase("" + attributeRefHolder.getAttrId())) {
 						columns.add(attributeSource.getAttrSourceName());
 					}
 			}
-		} else if(source instanceof Rule) {
+		} else if (source instanceof Rule) {
 			Rule rule = (Rule) source;
 
-			for(AttributeSource attributeSource : rule.getAttributeInfo()) {
-				for(AttributeRefHolder attributeRefHolder : attributeInfo)
-					if(attributeSource.getAttrSourceId().equalsIgnoreCase(""+attributeRefHolder.getAttrId())) {
+			for (AttributeSource attributeSource : rule.getAttributeInfo()) {
+				for (AttributeRefHolder attributeRefHolder : attributeInfo)
+					if (attributeSource.getAttrSourceId().equalsIgnoreCase("" + attributeRefHolder.getAttrId())) {
 						columns.add(attributeSource.getAttrSourceName());
 					}
 			}

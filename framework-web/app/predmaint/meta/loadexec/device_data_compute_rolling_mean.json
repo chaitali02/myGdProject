@@ -1,0 +1,56 @@
+{
+    "statusList" : [ 
+        {
+            "stage" : "NotStarted",
+            "createdOn" : ISODate("2019-02-12T06:22:28.945Z")
+        }, 
+        {
+            "stage" : "InProgress",
+            "createdOn" : ISODate("2019-02-12T06:22:28.946Z")
+        }, 
+        {
+            "stage" : "Completed",
+            "createdOn" : ISODate("2019-02-12T06:25:42.552Z")
+        }
+    ],
+    "dependsOn" : {
+        "ref" : {
+            "type" : "load",
+            "uuid" : "b3f01f99-a04d-46e9-9edf-4a7e93a42c96",
+            "version" : "1549952548"
+        }
+    },
+    "result" : {
+        "ref" : {
+            "type" : "datastore",
+            "uuid" : "371a6ce5-e1c8-4ec9-91d4-699b787614f0",
+            "version" : "1549952742"
+        }
+    },
+    "refKeyList" : [],
+    "uuid" : "c41363f7-9bcc-47a7-84bd-050a418f26eb",
+    "version" : "1549952548",
+    "name" : "device_data_compute_rolling_mean",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2019-02-12T06:22:28.000Z"),
+    "active" : "Y",
+    "locked" : "N",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+                "version" : "1547482153",
+                "name" : "Predictive Maintenance"
+            }
+        }
+    ]
+}

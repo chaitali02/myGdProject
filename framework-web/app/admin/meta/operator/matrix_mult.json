@@ -16,7 +16,8 @@
   "locked" : "N",
     "published" : "N",
     "operatorType" : "matrix",
-    "appInfo" : [ 
+   "publicFlag": "Y",
+  "appInfo" : [
         {
             "ref" : {
                 "type" : "application",
