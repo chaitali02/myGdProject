@@ -258,6 +258,8 @@ DatascienceModule.controller('DistributionDetailController', function (CommonSer
 		distributionJson.active = $scope.distributionData.active;
 		distributionJson.locked = $scope.distributionData.locked;
 		distributionJson.published = $scope.distributionData.published;
+		distributionJson.publicFlag = $scope.distributionData.publicFlag;
+
 		distributionJson.library = $scope.selectedLibrary;
 		distributionJson.className = $scope.distributionData.className;
 		distributionJson.methodName = $scope.distributionData.methodName;

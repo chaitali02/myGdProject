@@ -196,7 +196,7 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
         var onSuccessGetTrainResultByTrainExec = function (response) {
           $scope.modelresult = response;
           $scope.isTrainResultProgess = false;
-          if($scope.modelresult.algoType =="SPARK" &&$scope.modelresult.trainClass.indexOf("PCA") !=-1){
+          if($scope.modelresult.algoType == "SPARK" && $scope.modelresult.trainClass.indexOf("PCA") !=-1){
             $scope.isTabDisabled=true;
           }
           $scope.calculateFeatureImportanceNonZero(response);
