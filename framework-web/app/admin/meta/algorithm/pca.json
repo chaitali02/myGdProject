@@ -41,11 +41,10 @@
     "published" : "N",
     "publicFlag" : "Y",
     "appInfo" : [ 
-        {
+      {
             "ref" : {
                 "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
-                "version" : "1547482153"
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
             }
         }
     ]
