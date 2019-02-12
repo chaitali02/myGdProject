@@ -141,14 +141,24 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		}
 		$state.go(state); 
 	}
-
+    $scope.checkIsInrogess=function(){
+		if($scope.isEditInprogess || $scope.isEditVeiwError){
+		  return false;
+		}
+	}
 	$scope.showPage = function () {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showForm = true;
 		$scope.showgraph = false
 		$scope.graphDataStatus = false;
 		$scope.showGraphDiv = false
 	}
 	$scope.showHome=function(uuid, version,mode){
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage();
 		$state.go('createparamlist'+$stateParams.parantType, {
 			id: uuid,
@@ -160,6 +170,9 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		if($scope.isPrivlage || $scope.paramlistData.locked =="Y"){
 			return false;
 		}
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage();
 		$state.go('createparamlist'+$stateParams.parantType, {
 			id: uuid,
@@ -168,6 +181,9 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		});
 	}
 	$scope.showview = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage();
 		$state.go('createparamlist'+$stateParams.parantType, {
 			id: uuid,
@@ -282,6 +298,9 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 	}
 
 	$scope.showGraph = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showForm = false;
 		$scope.showGraphDiv = true;
 	}//End showGraph
@@ -450,6 +469,7 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		paramlistJson.active = $scope.paramlistData.active;
 		paramlistJson.locked = $scope.paramlistData.locked;
 		paramlistJson.published = $scope.paramlistData.published;
+		paramlistJson.publicFlag = $scope.paramlistData.publicFlag;
 		paramlistJson.templateFlg = $scope.paramlistData.templateFlg;
 		var templateInfo={};
 		if($scope.paramlistData.templateFlg =='N'){

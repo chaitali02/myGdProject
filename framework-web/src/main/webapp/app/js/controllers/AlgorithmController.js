@@ -299,6 +299,7 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 		algorithmJson.scriptName = $scope.algorithmData.scriptName;
 		algorithmJson.savePmml = $scope.algorithmData.savePmml;
 		algorithmJson.published = $scope.algorithmData.published;
+		algorithmJson.publicFlag = $scope.algorithmData.publicFlag;
 		algorithmJson.type = $scope.selecttype;
 		algorithmJson.libraryType = $scope.selectlibrary;
 		algorithmJson.trainClass = $scope.algorithmData.trainClass;

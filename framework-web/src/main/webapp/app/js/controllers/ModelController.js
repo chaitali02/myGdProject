@@ -710,6 +710,8 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
     modelJson.active = $scope.modeldata.active;
     modelJson.locked = $scope.modeldata.locked;
     modelJson.published=$scope.modeldata.published;
+    modelJson.publicFlag=$scope.modeldata.publicFlag;
+
    // modelJson.trainPercent=70//$scope.modeldata.trainPercent
     //modelJson.valPercent=30//$scope.modeldata.valPercent
     
