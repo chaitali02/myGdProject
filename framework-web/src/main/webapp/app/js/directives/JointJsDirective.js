@@ -1824,8 +1824,10 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                    var childitem={};
                    if(typeof dagMetaDataService.elementDefs[item].OperatorType == "undefined")
                     childitem.title=dagMetaDataService.elementDefs[item].childIconCaption;
-                  else 
-                   childitem.title=dagMetaDataService.elementDefs[item].OperatorType
+                  else{ 
+                   childitem.title=dagMetaDataService.elementDefs[item].childIconCaption;
+                   childitem.OperatorType=dagMetaDataService.elementDefs[item].OperatorType;
+                  } 
                    childitem.id =dagMetaDataService.elementDefs[item].name + '-add';
                    childitem.type =dagMetaDataService.elementDefs[item].name;
                    childitem.menutype ="child";
@@ -2193,9 +2195,9 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         });
       }
       else if(elementType =="operator" && newCell){
-        var type =elemt.title;
-        debugger
-        CommonService.getOperatorByOperatorType(type.replace(/ /g,'')).then(function(response){
+        var type =elemt.OperatorType;
+        // .replace(/ /g,'')
+        CommonService.getOperatorByOperatorType(type).then(function(response){
           if(!response || !response.data){
             $scope.operatorinfoMapInfo = [];
             return

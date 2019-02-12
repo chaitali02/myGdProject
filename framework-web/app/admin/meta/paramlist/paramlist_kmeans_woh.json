@@ -74,7 +74,8 @@
     "paramListType" : "model",
     "templateFlg" : "Y",
     "templateInfo" : null,
-		"appInfo" : [ 
+		"publicFlag": "Y",
+  "appInfo" : [ 
         {
             "ref" : {
                 "type" : "application",

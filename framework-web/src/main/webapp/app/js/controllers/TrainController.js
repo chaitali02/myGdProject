@@ -973,6 +973,10 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     $('#responsive').modal('hide');
   }
 
+  $scope.onCloseRunImediatly=function(){
+    $scope.selectedRunImmediately="NO";
+  }
+
   $scope.trainExecute = function (data) {
     if ($scope.selectParamType == "paramlist") {
       if ($scope.paramlistdata) {

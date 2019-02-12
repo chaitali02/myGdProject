@@ -760,7 +760,8 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 			if (!modelType.equalsIgnoreCase(ExecContext.R.toString())
 					&& !modelType.equalsIgnoreCase(ExecContext.PYTHON.toString())) {
 				Algorithm algorithm = (Algorithm) commonServiceImpl.getOneByUuidAndVersion(algorithmUUID, algorithmVersion, MetaType.algorithm.toString(), "N");
-
+				
+				trainResult.setTrainClass(algorithm.getTrainClass());
 				trainResult.setAlgorithm(algorithm.getName());
 				trainResult.setAlgoType(model.getType());
 
@@ -827,7 +828,8 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 				String trainLocationTableName = null;
 				String trainLocationPath=null;
 				String trainLPathFilePathUrl=null;
-				if(train.getTestLocation().getRef().getType().equals(MetaType.datapod)) {
+				
+				if(train.getTestLocation() != null && train.getTestLocation().getRef().getType().equals(MetaType.datapod)) {
 					testLocationDP=(Datapod) commonServiceImpl.getOneByUuidAndVersion(train.getTestLocation().getRef().getUuid(),null, train.getTestLocation().getRef().getType().toString());
 					testLocationDS = commonServiceImpl.getDatasourceByObject(testLocationDP);
 					String tLPath = String.format("/%s/%s/%s", testLocationDP.getUuid(), testLocationDP.getVersion(), trainExec.getVersion());
@@ -848,7 +850,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 						}
 					}
 				}
-				if(train.getTrainLocation().getRef().getType().equals(MetaType.datapod)) {
+				if(train.getTrainLocation() != null && train.getTrainLocation().getRef().getType().equals(MetaType.datapod)) {
 					trainLocationDP=(Datapod) commonServiceImpl.getOneByUuidAndVersion(train.getTrainLocation().getRef().getUuid(),null, train.getTrainLocation().getRef().getType().toString());
 					trainLocationDS = commonServiceImpl.getDatasourceByObject(trainLocationDP);
 					String tLPath = String.format("/%s/%s/%s", trainLocationDP.getUuid(), trainLocationDP.getVersion(), trainExec.getVersion());
