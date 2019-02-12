@@ -142,6 +142,6 @@ public class UDFRegister implements java.io.Serializable {
 				}
 				return t1.toString();
 			}
-		}, DataTypes.DoubleType);
+		}, DataTypes.StringType);
 	}
 }
