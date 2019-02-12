@@ -102,13 +102,15 @@ InferyxApp.config(['$httpProvider', '$ocLazyLoadProvider', 'KeepaliveProvider', 
               },
         
             'responseError': function (rejection) {
+               
+                            
                 if (rejection.status == 500) {
                     notify.type = 'error',
                     notify.title = 'Some Error Occured',
                     notify.content = "Please check log or contact administrator"//"Dashboard Deleted Successfully"
                     $rootScope.$emit('notify', notify);
                 }
-                else if (rejection.status != 200 && rejection.status != 500 && rejection.status != 419) {
+                else if (rejection.status != 200 && rejection.status != 500 && rejection.status != 419 && rejection.status != -1 ) {
                     notify.type = 'info';
                     notify.title = 'Info';
                     try {
@@ -127,6 +129,7 @@ InferyxApp.config(['$httpProvider', '$ocLazyLoadProvider', 'KeepaliveProvider', 
                     $rootScope.$emit('notify', notify);
                 }
                 else if (rejection.status == 419) {
+                    console.log(rejection.status);       
                     notify.type = 'info';
                     notify.title = 'Info';
                     try {
@@ -135,8 +138,16 @@ InferyxApp.config(['$httpProvider', '$ocLazyLoadProvider', 'KeepaliveProvider', 
                         notify.content = "Error Code" + rejection.status
                     } finally {
                     }
+                    $$rootScope.$emit('notify', notify);
+                    $rootScope.$emit('CallFromAppRoleControllerLogout', {});
+                }else if(rejection.status == -1){
+                    
+                    notify.type = 'error',
+                    notify.title = 'Some Error Occured',
+                    notify.content = "Please contact administrator"
                     $rootScope.$emit('notify', notify);
                     $rootScope.$emit('CallFromAppRoleControllerLogout', {});
+
                 }
                 return $q.reject(rejection);
             }
@@ -809,10 +820,14 @@ InferyxApp.controller('LogoutController', function ($scope, $rootScope, $cookieS
 
 
     });
-    $rootScope.$on("CallFromAppRoleControllerLogout", function () {
-
+    var customeEventListener =$rootScope.$on("CallFromAppRoleControllerLogout", function () {
         $scope.logout();
     });
+
+    $scope.$on('$destroy', function() {
+        customeEventListener();
+    });
+
     $scope.logout = function () {
         LogoutService.securitylogoutSession($.cookie("sessionId")).then(function (response) { onSecuritySuccess(response) }, function (response) { onError(response) })
         var onSecuritySuccess = function (response) {
