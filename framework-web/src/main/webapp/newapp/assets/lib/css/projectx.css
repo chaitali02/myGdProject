@@ -1234,3 +1234,15 @@ cursor: not-allowed !important;
   background-color: #186ba0 !important;
   color: #FFFFFF !important;
 }
+
+.ui-inputtext{
+  color: #555 !important;
+}
+
+.has-error{
+  color: #e73d4a !important;
+}
+.has-error {
+  border-color: #e73d4a !important;
+
+}

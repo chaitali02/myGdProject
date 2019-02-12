@@ -6,7 +6,6 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
 import { CommonService } from '../../../metadata/services/common.service';
 import { AppMetadata } from '../../../app.metadata';
 import { Version } from '../../../shared/version';
-import { AppHepler } from '../../../app.helper';
 import { KnowledgeGraphComponent } from '../../../shared/components/knowledgeGraph/knowledgeGraph.component';
 
 @Component({
@@ -48,7 +47,7 @@ export class BatchExecComponent implements OnInit {
   showExec: boolean = false;
   @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
 
-  constructor(private datePipe: DatePipe, public apphelper: AppHepler, private _location: Location, public statusDefs: AppMetadata, public metaconfig: AppMetadata, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
+  constructor(private datePipe: DatePipe, private _location: Location, public statusDefs: AppMetadata, public metaconfig: AppMetadata, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService) {
     this.showResultModel = true;
     this.batchResultData = {};
     this.isHomeEnable = false;

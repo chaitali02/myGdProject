@@ -1,10 +1,12 @@
-import { Component, ViewEncapsulation } from '@angular/core';
-import { Http, Headers, RequestOptions, Response } from '@angular/http';
+import { Component } from '@angular/core';
+import { Http } from '@angular/http';
 import { Router } from '@angular/router';
 
+import { CookieService } from 'ngx-cookie-service';
 import { LoginService } from '../login/login.service';
 
 import { LoginStatus } from '../metadata/domain/domain.loginStatus';
+
 @Component({
   selector: 'app-login',
   styleUrls: [],
@@ -16,14 +18,12 @@ export class LoginComponent {
   remember: boolean;
   username: any;
 
-  constructor(private http: Http, private _service: LoginService, public router: Router) {
-    this.remember = false;
+  constructor(private http: Http, private _service: LoginService, public router: Router, private cookieService: CookieService) {
     this.getLocalStorage();
   }
 
   getLocalStorage() {
-    this.username = localStorage.getItem('userName');
-    console.log("stating user name:" + this.username)
+    this.username = this.cookieService.get('userName');
   }
 
   onSubmit(event: any, username: any, password: any) {
@@ -37,8 +37,7 @@ export class LoginComponent {
     this.loginResponse = JSON.parse(response._body);
     let result = JSON.stringify(this.loginResponse);
     if (this.loginResponse.status == "true") {
-      localStorage.setItem('userDetail',result)
-     // let userDetail = JSON.parse(localStorage.getItem('userDetail'));
+      localStorage.setItem('userDetail', result);
       this.router.navigate(['app']);
     }
     else {
@@ -48,12 +47,10 @@ export class LoginComponent {
 
   rememberMe() {
     if (this.remember == true) {
-     // let result = JSON.stringify(this.loginResponse);
-      localStorage.setItem('userName', this.username);
-      console.log("stating user name:" + this.username)
+      this.cookieService.set('userName', this.username);
     }
-    else  if (this.remember == false){
-      localStorage.setItem('userName', '');
+    else if (this.remember == false) {
+      this.cookieService.set('userName', '');
     }
   }
 }

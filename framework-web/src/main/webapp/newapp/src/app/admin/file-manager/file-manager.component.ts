@@ -4,12 +4,12 @@ import { AppMetadata } from '../../app.metadata';
 import { DatePipe } from '@angular/common';
 import { CommonService } from '../../metadata/services/common.service';
 import { CommonListService } from '../../common-list/common-list.service';
-import { AppHepler } from '../../app.helper';
 import { FileManagerService } from '../../metadata/services/fileManager.service';
 import { AppConfig } from '../../app.config';
 import { ResponseContentType, Http, Headers } from '@angular/http';
 import { saveAs } from 'file-saver/FileSaver';
 import { Location } from '@angular/common';
+import {AppHelper} from '../../app.helper';
 
 @Component({
   selector: 'app-file-manager',
@@ -44,7 +44,7 @@ export class FileManagerComponent implements OnInit {
   uploadfileName: any;
   dataSourceArray: any;
   breadcrumbDataFrom: any[];
-  constructor(private _location: Location, private activatedRoute: ActivatedRoute, private http: Http, private config: AppConfig, public router: Router, public metaconfig: AppMetadata, public apphelper: AppHepler, private datePipe: DatePipe, private activeroute: ActivatedRoute, private _commonService: CommonService, private _commonListService: CommonListService, private _fileManagerService: FileManagerService) {
+  constructor(private _location: Location, private activatedRoute: ActivatedRoute, private http: Http, private config: AppConfig, public router: Router, public metaconfig: AppMetadata, private datePipe: DatePipe, private activeroute: ActivatedRoute, private _commonService: CommonService, private _commonListService: CommonListService, private _fileManagerService: FileManagerService,public appHelper:AppHelper) {
     this.breadcrumbDataFrom = [{
       "caption": "Admin",
       "routeurl": "/app/admin/fileManager"
@@ -212,10 +212,10 @@ export class FileManagerComponent implements OnInit {
     ]
     for (let i = 0; i < response.length; i++) {
       if (response[i]["status"] != null) {
-        response[i]["status"] = this.apphelper.sortByProperty(response[i]["status"], "createdOn");
+        response[i]["status"] = this.appHelper.sortByProperty(response[i]["status"], "createdOn");
         let status = response[i]["status"];
         response[i]["status"] = {};
-        response[i]["status"].stage = this.apphelper.getStatus(status)["stage"];
+        response[i]["status"].stage = this.appHelper.getStatus(status)["stage"];
         response[i]["status"].color = this.metaconfig.getStatusDefs(response[i]["status"].stage)['color'];
       }
     }

@@ -1,3 +1,5 @@
+import { FilterInfoIO } from './../metadata/domainIO/domain.filterInfoIO';
+import { FilterInfo } from './../metadata/domain/domain.filterInfo';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Router, Event as RouterEvent, ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
@@ -14,6 +16,7 @@ import { DataQuality } from '../metadata/domain/domain.dataQuality';
 import { DropDownIO } from '../metadata/domainIO/domain.dropDownIO';
 import { BaseEntity } from '../metadata/domain/domain.baseEntity';
 import { AttributeIO } from '../metadata/domainIO/domain.attributeIO';
+import { AppHelper } from '../app.helper';
 @Component({
   selector: 'app-data-pipeli',
   templateUrl: './data-qualitydetail.template.html',
@@ -85,8 +88,12 @@ export class DataQualityDetailComponent {
   showForm: boolean;
   fitlerAttrTableSelectedItem: any[] = [];
   allname: Array<DropDownIO>;
+  published: boolean;
+  active: boolean;
+  locked: boolean;
 
-  constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _dataQualityService: DataQualityService) {
+  constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router,
+    private _commonService: CommonService, private _dataQualityService: DataQualityService, public appHelper: AppHelper) {
     this.dqdata = new DataQuality();
     this.showGraph = false
     this.isHomeEnable = false
@@ -158,7 +165,10 @@ export class DataQualityDetailComponent {
     this.selectdatefromate = "";
     this.dataqualitycompare = null;
     this.filterTableArray = null;
-    this.dqdata["active"] = true
+    //this.dqdata["active"] = true;
+    this.active = true;
+    this.locked = false;
+    this.published = false;
     this.sourcedata = { 'uuid': "", "label": "" }
     this.breadcrumbDataFrom = [{
       "caption": "Data Quality",
@@ -319,7 +329,15 @@ export class DataQualityDetailComponent {
     const version: Version = new Version();
     version.label = this.dqdata.version;
     version.uuid = this.dqdata.uuid;
-    this.selectedVersion = version
+    this.selectedVersion = version;
+
+    // if (response.tags != null) {
+    //   this.dqdata.tags =response.tags;
+    // }//End If
+
+    this.active == this.appHelper.convertStringToBoolen(this.dqdata.active);
+    this.locked == this.appHelper.convertStringToBoolen(this.dqdata.locked);
+    this.published == this.appHelper.convertStringToBoolen(this.dqdata.published);
 
     let dependOnTemp: DependsOn = new DependsOn();
     dependOnTemp.label = this.dqdata.dependsOn.ref.name;
@@ -360,19 +378,19 @@ export class DataQualityDetailComponent {
 
     this.filterTableArray = response.filterInfoIo;
 
-    let valueCheck = [];
-    if (this.dqdata.valueCheck != null) {
-      for (var i = 0; i < this.dqdata.valueCheck.length; i++) {
-        var valueCheck1 = {};
-        valueCheck1['value'] = this.dqdata.valueCheck[i];
-        valueCheck1['display'] = this.dqdata.valueCheck[i];
-        valueCheck[i] = valueCheck1
-      }//End For
-      this.valueCheck = valueCheck;
-    }//En
+    // let valueCheck = [];
+    // if (this.dqdata.valueCheck != null) {
+    //   for (var i = 0; i < this.dqdata.valueCheck.length; i++) {
+    //     var valueCheck1 = {};
+    //     valueCheck1['value'] = this.dqdata.valueCheck[i];
+    //     valueCheck1['display'] = this.dqdata.valueCheck[i];
+    //     valueCheck[i] = valueCheck1
+    //   }//End For
+    //   this.valueCheck = valueCheck;
+    // }
 
-    this.dqdata.duplicateKeyCheck = this.dqdata["duplicateKeyCheck"] == "Y" ? true : false;
-    this.dqdata.nullCheck = this.dqdata["nullCheck"] == "Y" ? true : false;
+    this.dqdata.duplicateKeyCheck = this.appHelper.convertStringToBoolen(this.dqdata.duplicateKeyCheck);
+    this.dqdata.nullCheck = this.appHelper.convertStringToBoolen(this.dqdata.nullCheck);
     this.dqdata.upperBound = this.dqdata.rangeCheck.upperBound;
     this.dqdata.lowerBound = this.dqdata.rangeCheck.lowerBound;
     this.dqdata.selectDataType = this.dqdata.dataTypeCheck;
@@ -395,7 +413,6 @@ export class DataQualityDetailComponent {
     this.isEditInprogess = false;
     //this.showForm = false;
   }
-
 
   searchOption(index) {
     this.displayDialogBox = true;
@@ -514,7 +531,7 @@ export class DataQualityDetailComponent {
   }
 
   onChangeLhsType(index) {
-    debugger
+
     this.filterTableArray[index].lhsAttribute = null;
 
     if (this.filterTableArray[index].lhsType == 'formula') {
@@ -687,7 +704,7 @@ export class DataQualityDetailComponent {
   }
 
   onChangeOperator(index) {
-    debugger
+
     this.filterTableArray[index].rhsAttribute = null;
     if (this.filterTableArray[index].operator == 'EXISTS' || this.filterTableArray[index].operator == 'NOT EXISTS') {
       this.filterTableArray[index].rhsType = 'dataset';
@@ -719,6 +736,7 @@ export class DataQualityDetailComponent {
     this.filterTableArray.splice(this.filterTableArray.length, 0, filertable);
   }
   removeRow() {
+
     let newDataList = [];
     this.selectedAllFitlerRow = false;
     this.fitlerAttrTableSelectedItem = [];
@@ -739,7 +757,7 @@ export class DataQualityDetailComponent {
     else {
       this.selectedAllFitlerRow = false;
     }
-    this.dqdata.filterTableArray.forEach(filter => {
+    this.filterTableArray.forEach(filter => {
       filter.selected = this.selectedAllFitlerRow;
     });
   }
@@ -766,7 +784,8 @@ export class DataQualityDetailComponent {
     }
     dqJson['valueCheck'] = valueCheckArr;
 
-    dqJson["active"] = this.dqdata.active == true ? 'Y' : "N"
+    dqJson["active"] = this.dqdata.active == true ? 'Y' : "N";
+    dqJson["locked"] = this.appHelper.convertBoolenToString(this.locked);
     dqJson["published"] = this.dqdata.published == true ? 'Y' : "N"
     let dependsOn = {};
     let ref = {};
@@ -996,21 +1015,42 @@ export class DataQualityDetailComponent {
     this.showGraph = true;
   }
 
-  onAttrRowDown(index) {
-    var rowTempIndex = this.dqdata.filterTableArray[index];
-    var rowTempIndexPlus = this.dqdata.filterTableArray[index + 1];
-    this.dqdata.filterTableArray[index] = rowTempIndexPlus;
-    this.dqdata.filterTableArray[index + 1] = rowTempIndex;
+  onAttrRowDown() {
+    //this.shiftingRow(this.filterTableArray.length);
+    for (let i = 0; this.filterTableArray.length; i++) {
+      if (this.filterTableArray[i].selected) {
+        this.filterTableArray.splice(this.filterTableArray.length, 0, this.filterTableArray[i]);
+        if (i > 1) {
+          this.filterTableArray.splice(i, 1);
+        }
+        break;
+      }
+    }
+    // var rowTempIndex = this.dqdata.filterTableArray[index];
+    // var rowTempIndexPlus = this.dqdata.filterTableArray[index + 1];
+    // this.dqdata.filterTableArray[index] = rowTempIndexPlus;
+    // this.dqdata.filterTableArray[index + 1] = rowTempIndex;
+    // this.isSubmit = true
+  }
+
+  onAttrRowUp() {
+    //this.shiftingRow(0);
+    for (let i = 0; this.filterTableArray.length; i++) {
+      if (this.filterTableArray[i].selected) {
+        this.filterTableArray.splice(0, 0, this.filterTableArray[i]);
+        if (i > 1) {
+          this.filterTableArray.splice(i+1, 1);
+        }
+        break;
+      }
+    }
+    // var rowTempIndex = this.filterTableArray[index];
+    // var rowTempIndexMines = this.filterTableArray[0];
+    // this.filterTableArray[index] = rowTempIndexMines;
+    // this.filterTableArray[0] = rowTempIndex;
     this.isSubmit = true
   }
 
-  onAttrRowUp(index) {
-    var rowTempIndex = this.dqdata.filterTableArray[index];
-    var rowTempIndexMines = this.dqdata.filterTableArray[index - 1];
-    this.dqdata.filterTableArray[index] = rowTempIndexMines;
-    this.dqdata.filterTableArray[index - 1] = rowTempIndex;
-    this.isSubmit = true
-  }
   dragStart(event, data) {
     console.log(event)
     console.log(data)
@@ -1031,10 +1071,8 @@ export class DataQualityDetailComponent {
     }
   }
 
-
-
-  //this.fitlerAttrTableSelectedItem=[];
   onChangeFilterAttRow = function (index, status) {
+    this.fitlerAttrTableSelectedItem = [];
     if (status == true) {
       this.fitlerAttrTableSelectedItem.push(index);
     }
@@ -1045,11 +1083,13 @@ export class DataQualityDetailComponent {
       }
     }
   }
+
   autoMove = function (index, type) {
+
     if (type == "mapAttr") {
     }
     else {
-      var tempAtrr = this.filterTableArray[this.fitlerAttrTableSelectedItem[0]];
+      var tempAtrr = this.fitlerAttrTableSelectedItem[0];
       this.filterTableArray.splice(this.fitlerAttrTableSelectedItem[0], 1);
       this.filterTableArray.splice(index, 0, tempAtrr);
       this.fitlerAttrTableSelectedItem = [];
@@ -1063,18 +1103,28 @@ export class DataQualityDetailComponent {
     }
   }
 
-  autoMoveTo = function (index, type) {
-    if (type == "mapAttr") {
-    }
-    else {
-      if (index <= this.filterTableArray.length) {
-        this.autoMove(index - 1, 'filterAttr');
-        this.moveTo = null;
-        //	$(".actions").removeClass("open");
+  autoMoveTo(index) {
+    
+    // if (type == "mapAttr") {
+    // }
+    // else {
+    //   if (index <= this.filterTableArray.length) {
+    //     this.autoMove(index - 1, 'filterAttr');
+    //     this.moveTo = null;
+    //     //	$(".actions").removeClass("open");
+    //   }
+    // }
+    for (let i = 0; this.filterTableArray.length; i++) {
+      if (this.filterTableArray[i].selected) {
+        this.filterTableArray.splice(0, 0, this.filterTableArray[i]);
+        if (i > 1) {
+          this.filterTableArray.splice(index, 1);
+        }
+        break;
       }
     }
-  }
 
+  }
 
 
 }

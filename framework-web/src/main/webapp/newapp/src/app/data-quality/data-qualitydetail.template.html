@@ -3,7 +3,7 @@
 <br>
 <div class="row">
   <div class="col-md-12">
-    <div class="portlet light bordered" id="form_wizard_1">{{isEditInprogess|json}}
+    <div class="portlet light bordered" id="form_wizard_1">
       <div class="portlet-title" style="margin-bottom:0px;">
         <div class="caption">
           <i class=" icon-layers "></i>
@@ -153,7 +153,8 @@
                       <div class="form-group taginput">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
                         <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="locations!=''">
-                          <tag-input [(ngModel)]="tags" name="tags" [disable]="mode == 'true'" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden;padding-left:5px; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;"></tag-input>
+                          <!-- <tag-input [(ngModel)]="tags" name="tags" [disable]="mode == 'true'" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden;padding-left:5px; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;"></tag-input> -->
+                          <p-chips [(ngModel)]="dqdata.tags" styleClass="pchip-height" [disabled]="mode == 'true'" name="tags"></p-chips>
                         </div>
                       </div>
                       <div class="form-group">
@@ -167,18 +168,25 @@
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <div class="btn-group">
-                            <!-- <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="dqdata.active" name="active"
-                            [checked]="active" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch> -->
+                            <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="active" name="active"
+                              [checked]="active" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
                           </div>
                         </div>
                       </div>
-
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Lock</label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <div class="btn-group">
+                            <ui-switch [(ngModel)]="locked" name="locked" [disabled]="mode == 'true' || mode == 'false'"></ui-switch>
+                          </div>
+                        </div>
+                      </div>
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <div class="btn-group">
-                            <!-- <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="dqdata.published "
-                            name="published" [checked]="published" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch> -->
+                            <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="published" name="published"
+                              [checked]="published" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
                           </div>
                         </div>
                       </div>
@@ -244,39 +252,37 @@
                                   (click)="removeRow()" [disabled]="mode == 'true'"></button>
                                 <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right"
                                   (click)="addRow()" [disabled]="mode == 'true'"></button>
-
-
-
-
                                 <div class="actions pull-right" style="position:relative;padding-right: 5px;">
-                                  <a class="btn green-haze btn-outline btn-circle auto-map btn-sm" ng-disabled="fitlerAttrTableSelectedItem.length ==1 && filterTableArray.length >1 ?false:true"
+
+                                  <!-- [attr.disabled]="(i == 0 || mode == 'true') ?'disabled' : null" -->
+                                  <!-- ng-disabled="fitlerAttrTableSelectedItem.length ==1 && filterTableArray.length >1 ?false:true" -->
+                                  <a class="btn green-haze btn-outline btn-circle auto-map btn-sm" [attr.disabled] = "disabled"
                                     href="javascript:;" data-toggle="dropdown" tooltip-placement="left" uib-tooltip="Move"
                                     data-hover="dropdown" data-close-others="true" aria-expanded="false">
                                     <span class="fa fa-arrows" aria-hidden="true" style="margin-right: 5px;"></span>
                                     <i class="fa fa-angle-down"></i>
                                   </a>
                                   <ul class="dropdown-menu pull-right" style="z-index:10000;top:28px;right:45px;position:absolute">
-                                    <li (click)="autoMove(0,'filterAttr')">
+                                    <li (click)="onAttrRowUp()">
                                       <a href="javascript:;" ng-disabled="fitlerAttrTableSelectedItem[0]==0?true:false">Top</a>
                                     </li>
                                     <li class="divider" style="margin: 0px;"> </li>
-                                    <li (click)="autoMove(filterTableArray.length-1,'filterAttr')">
+                                    <li (click)="onAttrRowDown()">
                                       <a href="javascript:;" ng-disabled="fitlerAttrTableSelectedItem[0]==filterTableArray.length-1 ? true:false">Bottom</a>
                                     </li>
+
                                     <li class="divider" style="margin: 0px;"> </li>
                                     <li>
                                       <div class="form-group" style="margin: 1%;">
-                                        <input type="number" class="form-control" *ngIf="fitlerAttrTableSelectedItem.length == 1"
+                                        <!-- *ngIf="fitlerAttrTableSelectedItem.length == 1" -->
+                                        <input type="number" class="form-control" 
                                           [(ngModel)]="moveTo" min="0" max="{{filterTableArray.length}}" name="moveto"
                                           style="border:0" placeholder="Move To" ng-model-options="{debounce:3000}"
-                                          (change)="autoMoveTo(moveTo,'filterAttr')" focus-me="true" required />
+                                          (change)="autoMoveTo(moveTo)" focus-me="true" required />
                                       </div>
                                     </li>
                                   </ul>
                                 </div>
-
-
-
                               </div>
                             </div>
                           </div>
@@ -512,17 +518,18 @@
                           </div>
                         </div>
                       </div>
-                      
+
 
                       <div class="row">
                         <label class="control-label col-md-3"></label>
                         <div class="col-md-4">
-                          <a href="javascript:;" class="btn default button-previous" style="margin: 0% 3% 0% 0%;" (click)="countBack()">
+                          <a href="javascript:;" class="btn default button-previous" style="margin: 0% 3% 0% 0%;"
+                            (click)="countBack()">
                             <i class="fa fa-angle-left"></i> Back </a>
                           <button type="submit" class="btn btn-outline green button-next"> Continue
                             <i class="fa fa-angle-right"></i>
                           </button>
-  
+
                         </div>
                       </div>
                     </form>
@@ -549,8 +556,9 @@
                       <div class="form-group taginput">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Value Check</label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <tag-input [(ngModel)]="valueCheck" name="valueCheck" [disable]="mode == 'true'" theme='bootstrap'
-                            style=" max-height: 40px;overflow-x: hidden;padding-left:5px; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;"></tag-input>
+                          <!-- <tag-input [(ngModel)]="valueCheck" name="valueCheck" [disable]="mode == 'true'" theme='bootstrap'
+                            style=" max-height: 40px;overflow-x: hidden;padding-left:5px; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;"></tag-input> -->
+                          <p-chips [(ngModel)]="dqdata.valueCheck" styleClass="pchip-height" [disabled]="mode == 'true'" name="tags"></p-chips>
                         </div>
                       </div>
 
@@ -632,7 +640,8 @@
                       <div class="row">
                         <label class="control-label col-md-3"></label>
                         <div class="col-md-4" style="padding-top: 2%;">
-                          <a href="javascript:;" class="btn default button-previous" style="margin: 0% 3% 0% 0%;" (click)="countBack()">
+                          <a href="javascript:;" class="btn default button-previous" style="margin: 0% 3% 0% 0%;"
+                            (click)="countBack()">
                             <i class="fa fa-angle-left"></i> Back
                           </a>
                           <button type="submit" class="btn btn-outline green "> Continue
