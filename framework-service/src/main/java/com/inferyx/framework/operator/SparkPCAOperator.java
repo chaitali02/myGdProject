@@ -256,7 +256,7 @@ public class SparkPCAOperator implements IOperator, Serializable {
 		}
 		String execVersion = baseExec.getVersion();
 		String sourceTableName = null;
-		String destTableName = null;
+//		String destTableName = null;
 		
 		if (otherParams == null) {
 			otherParams = new HashMap<>();
