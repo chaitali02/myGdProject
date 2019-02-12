@@ -1234,3 +1234,79 @@ cursor: not-allowed !important;
   background-color: #186ba0 !important;
   color: #FFFFFF !important;
 }
+
+/* .welcomeDialog .ui-dialog.ui-widget .ui-dialog-content{
+  background-color: #000;
+  color: #32c5d2;
+  padding : 0px;
+}
+.welcomeDialog .ui-dialog-titlebar{
+display: none !important;
+}
+.welcomeDialog1{
+  background-color: #000;
+  color: #32c5d2;
+}
+
+ui-widget-header {
+  background: #f6f7f9 0 0 repeat-x;
+  background: linear-gradient(to bottom, #212121 0%, #212121 100%);
+} */
+
+/* .ui-dialog-titlebar .ui-widget-header {
+ 
+} */
+
+.welcomeDialog .ui-dialog-titlebar{
+  display: none !important;
+}
+
+.welcomeDialog .ui-dialog .ui-dialog-content {
+  padding : 0px !important
+}
+
+/* The Modal (background) */
+/* .modal1{ */
+  /* display: none; Hidden by default */
+  /* position: fixed; Stay in place */
+  /* z-index: 1; Sit on top */
+  /* left: 0; */
+  /* top: 0; */
+  /* width: 100%; Full width */
+  /* height: 100%; Full height */
+  /* overflow: auto; Enable scroll if needed */
+  /* background-color: rgb(0,0,0); Fallback color */
+  /* background-color: rgb(70, 85, 104) */
+/* } */
+
+.modal-content1 {
+  /* background-color: #323d4b;; */
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 15px;
+  width : 510px; /* Could be more or less, depending on screen size */
+}
+
+.lockClass1{
+  text-align: center; 
+  background-color: #323d4b;
+  font-size: 22px;
+  height: 60px; 
+  padding-top : 3%;
+}
+.lockClass2{
+  background-color:#3a4554 !important;
+  font-size: 22px;
+  padding-top : 3%; 
+  min-height: 220px;
+  height:auto;
+  padding-left: 45px;
+  padding-right: 45px;
+}
+.lockClass3{
+  text-align: center;
+  background-color: #323d4b;
+  font-size: 22px; 
+  color: #337ab7;
+  padding-top: 6px;
+  padding-bottom: 12px;
+}
