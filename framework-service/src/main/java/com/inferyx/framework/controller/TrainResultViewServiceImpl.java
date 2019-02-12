@@ -122,6 +122,7 @@ public class TrainResultViewServiceImpl {
 		trainResultView.setAlgoType(trainResult.getAlgoType());
 		trainResultView.setParamList(metadataServiceImpl.getParamByParamList(trainResult.getParamList().getRef().getUuid()));
 		trainResultView.setRocCurve(trainResult.getRocCurve());
+		trainResultView.setTrainClass(trainResult.getTrainClass());
 		
 		MetaIdentifier trainResultDependsOnMI = trainResult.getDependsOn().getRef();
 		TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(trainResultDependsOnMI.getUuid(), trainResultDependsOnMI.getVersion(), trainResultDependsOnMI.getType().toString(), "N");
