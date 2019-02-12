@@ -119,6 +119,7 @@ import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.CompareMetaData;
+import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -2277,9 +2278,12 @@ public class SparkExecutor<T> implements IExecutor {
 				sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, cMTableName);
 			}			
 			
-			sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");			
-			saveTrainedTestDataset(trainedDataSet, valDf2, testSetPath, rowIdentifierCols, includeFeatures, origFieldArray, trainName, testLocationDP, testLocationDs, testLocationTableName, testLFilePathUrl);
-
+			sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");
+			if (trainName.contains("PCA")) {
+				savePCAResult(trainedDataSet, valDf2, rowIdentifierCols, trainLocationDP, trainLocationDS, trainLocationTableName, trainFilePathUrl);
+			} else {
+				saveTrainedTestDataset(trainedDataSet, valDf2, testSetPath, rowIdentifierCols, includeFeatures, origFieldArray, trainName, testLocationDP, testLocationDs, testLocationTableName, testLFilePathUrl);
+			}
 			return trngModel;			
 		} catch (IllegalAccessException 
 				| IllegalArgumentException
@@ -2297,6 +2301,25 @@ public class SparkExecutor<T> implements IExecutor {
 		}
 	}
 
+	public void savePCAResult(Dataset<Row> df, Dataset<Row> keyAttrDf, List<String> colList, Datapod datapod, Datasource datasource, String tableName, String filePathUrl) {
+		if(colList != null && !colList.isEmpty()) {
+			keyAttrDf = keyAttrDf.withColumn("rowNum", functions.row_number().over(Window.orderBy(keyAttrDf.columns()[keyAttrDf.columns().length-1])));
+			keyAttrDf = keyAttrDf.select("rowNum", colList.toArray(new String[colList.size()]));
+		}	
+		
+		df = df.withColumn("rowNum", functions.row_number().over(Window.orderBy(df.columns()[df.columns().length-1]))).select("rowNum", "features");
+		
+		Dataset<Row> joinedDf = null;
+		if(colList != null && !colList.isEmpty()) {
+			joinedDf = keyAttrDf.join(df, "rowNum");
+		} else {
+			joinedDf = df;
+		}
+		
+		joinedDf.drop("rowNum");		
+		joinedDf.write().mode(SaveMode.Append).parquet(filePathUrl);
+	}
+	
 	/**
 	 * 
 	 * @param df

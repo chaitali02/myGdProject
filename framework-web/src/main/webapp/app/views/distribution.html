@@ -180,6 +180,17 @@
                   </div>
                 </div>
                 <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Public</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="btn-group" ng-init="distributionData.publicFlag='N'">
+                      <label class="btn btn-default" ng-model="distributionData.publicFlag" uib-btn-radio="'Y'" ng-disabled="mode!=' '? true:false"
+                        uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-model="distributionData.publicFlag" uib-btn-radio="'N'" ng-disabled="mode!=' '? true:false"
+                        uncheckable>No</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
                   <label class="col-md-3 control-label">Library
                     <span class="required" aria-required="true"> * </span>
                   </label>

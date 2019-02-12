@@ -10,6 +10,7 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
       $scope.$watch('data', function (newValue, oldValue) {
         $scope.$emit("dowloadAction",{ uuid: $scope.data.uuid, version: $scope.data.version,tab:0});
       $scope.isTrainResultProgess = false;
+      $scope.isTabDisabled=false;
       $scope.activeTabIndex=0;
       $scope.filteredRows;
       $scope.gridOptions = {
@@ -195,6 +196,9 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
         var onSuccessGetTrainResultByTrainExec = function (response) {
           $scope.modelresult = response;
           $scope.isTrainResultProgess = false;
+          if($scope.modelresult.algoType == "SPARK" && $scope.modelresult.trainClass.indexOf("PCA") !=-1){
+            $scope.isTabDisabled=true;
+          }
           $scope.calculateFeatureImportanceNonZero(response);
           $scope.featureImportanceArr = $.map($scope.modelresult.featureImportance, function (el, e) {
             var obj = {};
@@ -239,15 +243,18 @@ InferyxApp.directive('trainResult', function ( $filter,$timeout, $rootScope, Com
             return arr.reduce(function(a, b){ return a + b; }, 0);
           };
 
-          // vertical sums      
-          $scope.modelresult.confusionMatrix.map(function(row, i1) {
-            y.push((sum($scope.modelresult.confusionMatrix.map(function(row) { return row[i1]; }))));
-          });
-          function getSum(total, num) {
-            return total + num;
-          } 
-          y.push(y.reduce(getSum));
-          $scope.modelresult.confusionMatrix.push(y)
+          // vertical sums  
+          if($scope.modelresult.confusionMatrix){ 
+            $scope.modelresult.confusionMatrix.map(function(row, i1) {
+              y.push((sum($scope.modelresult.confusionMatrix.map(function(row) { return row[i1]; }))));
+            });
+          
+            function getSum(total, num) {
+              return total + num;
+            } 
+            y.push(y.reduce(getSum));
+            $scope.modelresult.confusionMatrix.push(y)
+          }
         } //End onSuccessGetModelResult
       }
       $scope.getClassAcutalTrue=function(data,matrixArr,index){
@@ -420,7 +427,6 @@ InferyxApp.directive('barChartHorizontal', function ($compile, $rootScope, sortF
       $scope.$watch('data', function (newValue, oldValue) {
         $scope.chartcolor = ['#C28CC8']
         var title=$scope.title;
-        debugger
         // var featureImportanceArr = $.map($scope.data.featureImportance, function (el, e) {
         //   var obj = {};
         //   var val = parseFloat(el.toFixed(2)*100);

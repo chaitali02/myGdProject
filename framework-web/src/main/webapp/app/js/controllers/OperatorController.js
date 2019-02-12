@@ -69,13 +69,23 @@ DatascienceModule.controller('OperatorDetailController', function (CommonService
 		});
 	};
     $scope.getLovByType();
-	
+	$scope.checkIsInrogess=function(){
+		if($scope.isEditInprogess || $scope.isEditVeiwError){
+		  return false;
+		}
+	}
 	$scope.showPage = function () {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showForm = true
 		$scope.showGraphDiv = false
 	}
 
 	$scope.showHome=function(uuid, version,mode){
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('createoperator', {
 			id: uuid,
@@ -87,6 +97,9 @@ DatascienceModule.controller('OperatorDetailController', function (CommonService
 		if($scope.isPrivlage || $scope.OperatorData.locked =="Y"){
 			return false;
 		}
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage();
 		$state.go('createoperator', {
 			id: uuid,
@@ -95,6 +108,9 @@ DatascienceModule.controller('OperatorDetailController', function (CommonService
 		});
 	}
 	$scope.showView = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		if(!$scope.isEdit){
 			$scope.showPage()
 			$state.go('createoperator', {
@@ -118,6 +134,9 @@ DatascienceModule.controller('OperatorDetailController', function (CommonService
 	});
 
 	$scope.showGraph = function () {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showForm = false;
 		$scope.showGraphDiv = true;
 	}//End showGraph
@@ -234,7 +253,8 @@ DatascienceModule.controller('OperatorDetailController', function (CommonService
 		OperatorJson.active = $scope.OperatorData.active;
 		OperatorJson.locked = $scope.OperatorData.locked;
 		OperatorJson.published = $scope.OperatorData.published;
-		OperatorJson.operatorType=$scope.selectedOperatorType;
+		OperatorJson.publicFlag = $scope.OperatorData.publicFlag;
+  		OperatorJson.operatorType=$scope.selectedOperatorType;
 		var tagArray = [];
 		if ($scope.tags != null) {
 			for (var countTag = 0; countTag < $scope.tags.length; countTag++) {

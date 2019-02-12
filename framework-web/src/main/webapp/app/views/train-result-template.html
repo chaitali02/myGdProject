@@ -129,7 +129,7 @@
                     </div>
                 </div>
             </uib-tab>
-            <uib-tab index="1" heading="Feature Importance" select="go(1)">
+            <uib-tab index="1" heading="Feature Importance" select="go(1)" ng-disabled="isTabDisabled">
                 <div class="spinner centercontent" ng-if="isTrainResultProgess">
                     <div class="bounce1"></div>
                     <div class="bounce2"></div>
@@ -172,7 +172,7 @@
                     </div>
                 </div>
             </uib-tab>
-            <uib-tab index="2" heading="Performance" select="go(2)">
+            <uib-tab index="2" heading="Performance" select="go(2)" ng-disabled="isTabDisabled">
                 <div class="spinner centercontent" ng-if="isTrainResultProgess">
                     <div class="bounce1"></div>
                     <div class="bounce2"></div>
@@ -237,6 +237,7 @@
                             </div>
                             <div class="col-md-6" ng-if="!isTrainResultProgess && modelresult.rocCurve !=null ">
                                 <roc-curve-chart id="roc" data="modelresult"></roc-curve-chart>
+                                <div style="text-align:center;padding-left: 47px;">ROC Curve</div>
                             </div>
                             <div class="centercontent" style="height:300px;">
                                 <h3 ng-if="modelresult.rocCurve ==null && isTrainResultProgess ==false" style="font-size:14px;color:blue;">ROC Curve Not Available</h3>
@@ -338,7 +339,7 @@
                     </div>
                 </div>
             </uib-tab>
-            <uib-tab index="3" heading="Test Result" select="go(3)">
+            <uib-tab index="3" heading="Test Result" select="go(3)" ng-disabled="isTabDisabled">
                 <div class="spinner centercontent" ng-if="isProgessTrainSet">
                     <div class="bounce1"></div>
                     <div class="bounce2"></div>
