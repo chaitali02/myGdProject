@@ -317,17 +317,19 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 			$scope.filterTableArray = [];
 		}
 		var filertable = {};
-		filertable.islhsDatapod = false;
+		filertable.islhsDatapod = true;
 		filertable.islhsFormula = false;
-		filertable.islhsSimple = true;
-		filertable.isrhsDatapod = false;
+		filertable.islhsSimple = false;
+		filertable.isrhsDatapod = true;
 		filertable.isrhsFormula = false;
-		filertable.isrhsSimple = true;
-		filertable.logicalOperator = $scope.filterTableArray.length != 0 ? $scope.logicalOperator[0] : "";
-		filertable.lhsFilter = $scope.lhsdatapodattributefilter[0];
-		filertable.operator = $scope.operator[0].value;
-		filertable.lhstype = $scope.lhsType[0];
-		filertable.rhstype = $scope.rhsType[0];
+		filertable.isrhsSimple = false;
+		filertable.lhsdatapodAttribute=$scope.lhsdatapodattributefilter[0];
+		filertable.rhsdatapodAttribute=$scope.lhsdatapodattributefilter[0];
+		
+		filertable.logicalOperator = $scope.filterTableArray.length == 0 ? "" : $scope.logicalOperator[0]
+		filertable.operator = $scope.operator[0].value
+		filertable.lhstype = $scope.lhsType[2]
+		filertable.rhstype = $scope.rhsType[2];
 		filertable.rhsTypes = returnRshType()
 		filertable.rhsTypes = $scope.disableRhsType(filertable.rhsTypes, ['dataset']);
 		filertable.rhsvalue;

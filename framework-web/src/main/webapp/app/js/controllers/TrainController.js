@@ -101,7 +101,12 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
   };
 
   $scope.getLovByType();
-
+  
+  $scope.checkIsInrogess=function(){
+    if($scope.isEditInprogess || $scope.isEditVeiwError){
+      return false;
+    }
+  }
   $scope.close = function () {
     if ($stateParams.returnBack == 'true' && $rootScope.previousState) {
       //revertback
@@ -195,18 +200,27 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
 
 
   $scope.showGraph = function (uuid, version) {
+    if($scope.checkIsInrogess () ==false){
+      return false;
+    }
     $scope.showForm = false;
     $scope.showGraphDiv = true;
   } //End showFunctionGraph
 
 
   $scope.showPage = function () {
+    if($scope.checkIsInrogess () ==false){
+      return false;
+    }
     $scope.showForm = true;
     $scope.showGraphDiv = false
   }
 
   $scope.showHome = function (uuid, version, mode) {
-    $scope.showPage()
+    $scope.showPage();
+    if($scope.checkIsInrogess () ==false){
+      return false;
+    }
     $state.go('createtrain', {
       id: uuid,
       version: version,
@@ -218,7 +232,10 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     if ($scope.isPrivlage || $scope.trainData.locked == "Y") {
       return false;
     }
-    $scope.showPage()
+    $scope.showPage();
+    if($scope.checkIsInrogess () ==false){
+      return false;
+    }
     $state.go('createtrain', {
       id: uuid,
       version: version,
@@ -264,6 +281,19 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
         $scope.getAllAttribute();
       }
     }
+  }
+
+  $scope.getAlgorithmByModel=function(uuid,version){
+    $scope.isAlogoritnmPCA=false
+    TrainService.getAlgorithmByModel(uuid,"",'algorithm').then(function (response) { onGetAlgorithmByModel(response.data) });
+    var onGetAlgorithmByModel = function (response) {
+      $scope.alorithmData = response;
+      if(response !=null && response.trainClass.indexOf("PCA") !=-1){
+        $scope.isAlogoritnmPCA=true;
+      }else{
+        $scope.isAlogoritnmPCA=false;
+      }
+    } 
   }
 
   // $scope.getAllAttributeBySource=function(){
@@ -325,6 +355,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     $scope.selectParamType = null;
     TrainService.getOneByUuidandVersion($scope.selectModel.uuid, $scope.selectModel.version, "model").then(function (response) { onSuccessGetLatestByUuid(response.data) });
     var onSuccessGetLatestByUuid = function (response) {
+      $scope.getAlgorithmByModel($scope.selectModel.uuid ,$scope.selectModel.version| "");
       $scope.modelData = response;
       if (defaultValue) {
         $scope.selectedRunImmediately = "NO";
@@ -685,8 +716,8 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     TrainJson.locked = $scope.trainData.locked;
     TrainJson.published = $scope.trainData.published;
     TrainJson.published = $scope.trainData.published;
-    TrainJson.valPercent = $scope.trainData.valPercent;
-    TrainJson.trainPercent = $scope.trainData.trainPercent;
+    
+    
     TrainJson.useHyperParams = $scope.trainData.useHyperParams;
     //TrainJson.featureImportance=$scope.trainData.featureImportance;
   //  TrainJson.encodingType =$scope.selectEncodingType;
@@ -704,11 +735,19 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
 
     var testLocation={};
     var testLocationRef={};
-    testLocationRef.type=$scope.selectedTestSaveType;
-    if($scope.selectedTestSaveType =="datapod")
-      testLocationRef.uuid=$scope.selectedTestLocation.uuid;
-    testLocation.ref=testLocationRef;
-    TrainJson.testLocation=testLocation;
+    if($scope.isAlogoritnmPCA !=true){
+      testLocationRef.type=$scope.selectedTestSaveType;
+      if($scope.selectedTestSaveType =="datapod")
+        testLocationRef.uuid=$scope.selectedTestLocation.uuid;
+      testLocation.ref=testLocationRef;
+      TrainJson.testLocation=testLocation;
+      TrainJson.valPercent = $scope.trainData.valPercent;
+      TrainJson.trainPercent = $scope.trainData.trainPercent;
+    }else{
+      TrainJson.testLocation=null;
+      TrainJson.valPercent =null;
+      TrainJson.trainPercent =null;
+    }
 
 
     var tagArray = [];

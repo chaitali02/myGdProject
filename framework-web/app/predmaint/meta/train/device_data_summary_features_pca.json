@@ -1,6 +1,6 @@
 {
   "uuid": "70f7f016-2d9e-4dad-9347-b8c3add8a109",
-  "version": "1549807120",
+  "version": "1549917114",
   "name": "Device Data Summary Features - PCA",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Sun Feb 10 08:58:40 EST 2019",
+  "createdOn": "Mon Feb 11 15:31:54 EST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -18898,8 +18898,8 @@
       }
     }
   ],
-  "trainPercent": 80,
-  "valPercent": 20,
+  "trainPercent": 0,
+  "valPercent": 0,
   "labelInfo": {
     "ref": {
       "type": "dataset",
@@ -18947,20 +18947,12 @@
   "saveTrainingSet": "Y",
   "trainLocation": {
     "ref": {
-      "type": "file",
-      "uuid": null,
+      "type": "datapod",
+      "uuid": "97c96749-3c7a-4e21-9269-9a3cefe8ef89",
       "version": null,
-      "name": null
+      "name": "device_data_pca_summary_features"
     },
     "value": null
   },
-  "testLocation": {
-    "ref": {
-      "type": "file",
-      "uuid": null,
-      "version": null,
-      "name": null
-    },
-    "value": null
-  }
+  "testLocation": null
 }

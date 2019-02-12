@@ -1044,7 +1044,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 							trainResult.setF1Score((double) summary.get("f1Score"));
 							trainResult.setPrecision((double) summary.get("precision"));
 							trainResult.setRocAUC((List<Double>)summary.get("auroc"));
-//							trainResult.setRocCurve((List<Map<String, Object>>)summary.get("roc"));
+							trainResult.setRocCurve((List<Map<String, Object>>)summary.get("roc"));
 							
 							writeSummaryToFile(summary, defaultDir, fileName);
 						}
@@ -1083,7 +1083,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 							trainResult.setRocAUC((List<Double>)summary.get("auroc"));
 						}
 //						trainResult.setRocAUC((summary.get("roc") == null)?null:(List<Double>) summary.get("roc"));
-//						trainResult.setRocCurve((List<Map<String, Object>>)summary.get("roc"));
+      					trainResult.setRocCurve((List<Map<String, Object>>)summary.get("roc"));
 						
 						writeSummaryToFile(summary, defaultDir, fileName);
 					} else {

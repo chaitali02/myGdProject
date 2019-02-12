@@ -5,7 +5,6 @@ package com.inferyx.framework.operator;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -21,6 +20,7 @@ import org.apache.spark.sql.Column;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SaveMode;
+import org.apache.spark.sql.types.DataTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.inferyx.framework.common.DagExecUtil;
@@ -31,7 +31,6 @@ import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
-import com.inferyx.framework.domain.Key;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -47,6 +46,8 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 import com.inferyx.framework.service.DatapodServiceImpl;
 import com.inferyx.framework.service.DatasetServiceImpl;
 import com.inferyx.framework.service.ParamSetServiceImpl;
+
+import scala.Tuple2;
 
 /**
  * @author joy
@@ -168,6 +169,8 @@ public class SparkPCAOperator implements IOperator, Serializable {
 		
 		Pipeline pipeline = new Pipeline().setStages(pipelineStagesTrng.toArray(new PipelineStage[pipelineStagesTrng.size()]));
 		Dataset<Row> trngDf = exec.executeSql(" SELECT * FROM " + sourceTableSql).getDataFrame();
+		// Cast features to double except Vector fields
+		trngDf = castFeatures(trngDf, featureAttrList);
 		Dataset<Row> destDf = pipeline.fit(trngDf).transform(trngDf);
 		List<Column> colList = new ArrayList<>();
 		
@@ -212,6 +215,34 @@ public class SparkPCAOperator implements IOperator, Serializable {
 		commonServiceImpl.save(MetaType.operatorExec.toString(), metaExec);
 		
 		return null;
+	}
+	
+	/**
+	 * 
+	 * @param df
+	 * @param featureAttrList
+	 * @return
+	 */
+	private Dataset<Row> castFeatures(Dataset<Row> df, List<String> featureAttrList) {
+		if (df == null 
+				|| featureAttrList == null 
+				|| featureAttrList.isEmpty()) {
+			return df;
+		}	// End if
+		
+		Map<String, String> colTypeMap = new HashMap<>();
+		for (Tuple2<String, String> dtype : df.dtypes()) {
+			colTypeMap.put(dtype._1, dtype._2);
+		}	// End for
+		logger.info("ColTypeMap : " + colTypeMap);
+		
+		for (String featureName : featureAttrList) {
+			if (!colTypeMap.get(featureName).contains("Vector")) {
+				df = df.withColumn(featureName, df.col(featureName).cast(DataTypes.DoubleType));
+			}
+		}	// End for
+		
+		return df;
 	}
 
 	public void persistDatastore() {

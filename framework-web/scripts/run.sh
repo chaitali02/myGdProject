@@ -9,6 +9,7 @@
 ./install_application.sh localhost append ../app/predmaint/meta
 ./install_application.sh localhost append ../app/sanctions/meta
 ./update_createdOn.sh localhost
+./create_indexes.sh localhost
 rm -r /user/hive/warehouse/framework/*
 mkdir -p /user/hive/warehouse/framework/data/
 cp -r ../app/*/data/parquet/* /user/hive/warehouse/framework/data/

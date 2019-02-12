@@ -1442,13 +1442,13 @@ transition: right 1m
   }
 
   .actual-true{
-    background-color:#71F354;
+    background-color:#36c6d3;
     color:white;
   }
 
   .actual-false{
     color:white;
-    background-color:#DF0000;
+    background-color:#ed6b75;
   }
 
   #disabler {
@@ -1458,4 +1458,8 @@ transition: right 1m
     opacity: 0.5;
     margin-bottom: -200px;
     pointer-events: none;
+   }
+
+   tags-input .tags .tag-item{
+    background: #e0e0e0 !important;
    }

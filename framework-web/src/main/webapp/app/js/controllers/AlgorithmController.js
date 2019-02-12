@@ -88,19 +88,34 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 		});
 	};
     $scope.getLovByType();
-
+     
+  $scope.checkIsInrogess=function(){
+    if($scope.isEditInprogess || $scope.isEditVeiwError){
+      return false;
+    }
+  }
 	$scope.showGraph = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showForm = false;
 		$scope.showGraphDiv = true;
 	}//End showGraph
 
 	$scope.showPage = function () {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showForm = true;
 		$scope.showGraphDiv = false
 	}
 
     $scope.showHome=function(uuid, version,mode){
-		$scope.showPage()
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
+		$scope.showPage();
+		
 		$state.go('createalgorithm', {
 			id: uuid,
 			version: version,
@@ -109,6 +124,9 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 	}
 	$scope.enableEdit = function (uuid, version) {
 		if($scope.isPrivlage || $scope.algorithmData.locked =="Y"){
+			return false;
+		}
+		if($scope.checkIsInrogess () ==false){
 			return false;
 		}
 		$scope.showPage()
@@ -120,6 +138,9 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 	}
 
 	$scope.showview = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		if(!$scope.isEdit){
 			$scope.showPage()
 			$state.go('createalgorithm', {
