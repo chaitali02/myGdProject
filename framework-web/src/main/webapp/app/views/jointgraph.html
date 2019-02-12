@@ -427,7 +427,7 @@
                               </div>
                               <div ng-if="['attribute','attributes','datapod','rule','dataset'].indexOf(listHolder.selectedParamValueType) !=-1">
                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                  <select class="form-control" name="paramValue{{$index}}" ng-disabled="isModelDisable" data-ng-model="listHolder.selectedParamValueType" ng-change="onChangeParamValueType(listHolder.selectedParamValueType,$index)"
+                                  <select class="form-control" name="paramValue{{$index}}" ng-disabled="(isModelDisable==true || listHolder.paramName=='saveLocation')?true:false" data-ng-model="listHolder.selectedParamValueType" ng-change="onChangeParamValueType(listHolder.selectedParamValueType,$index)"
                                     ng-options="r  for r in attributeTypes " required disable-validation-message="">
                                   </select>
                                 </span>

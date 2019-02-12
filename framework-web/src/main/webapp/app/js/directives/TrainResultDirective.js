@@ -420,7 +420,6 @@ InferyxApp.directive('barChartHorizontal', function ($compile, $rootScope, sortF
       $scope.$watch('data', function (newValue, oldValue) {
         $scope.chartcolor = ['#C28CC8']
         var title=$scope.title;
-        debugger
         // var featureImportanceArr = $.map($scope.data.featureImportance, function (el, e) {
         //   var obj = {};
         //   var val = parseFloat(el.toFixed(2)*100);
