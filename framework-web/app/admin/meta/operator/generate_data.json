@@ -19,7 +19,8 @@
   "locked" : "N",
     "published" : "N",
     "operatorType" : "GenerateData",
-    "appInfo" : [ 
+   "publicFlag": "Y",
+  "appInfo" : [
         {
             "ref" : {
                 "type" : "application",

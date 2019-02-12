@@ -14,9 +14,10 @@
   "tags": [],
   "active" : "Y",
   "locked" : "N",
-  "published": "N",
+  "pubRlished": "N",
   "operatorType" : "Histogram",
-    "appInfo" : [ 
+   "publicFlag": "Y",
+  "appInfo" : [
         {
             "ref" : {
                 "type" : "application",

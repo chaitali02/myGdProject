@@ -13,7 +13,8 @@
 	"active" : "Y",
   "locked" : "N",
 	"published": "N",
-		"appInfo": [
+		"publicFlag" : "Y",
+    "appInfo": [
 			{
             "ref" : {
                 "type" : "application",

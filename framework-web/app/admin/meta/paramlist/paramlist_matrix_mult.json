@@ -17,7 +17,8 @@
   "locked" : "N",
     "published" : "N",
     "paramListType" : "model",
-    "appInfo" : [ 
+    "publicFlag": "Y",
+  "appInfo" : [ 
         {
             "ref" : {
                 "type" : "application",
