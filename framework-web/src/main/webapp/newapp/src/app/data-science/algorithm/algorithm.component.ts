@@ -240,12 +240,12 @@ export class AlgorithmComponent implements OnInit {
     this.selectedVersion = version
 
 
-    this.savePmml = this.appHelper.convertStringToBoolen(response.savePmml);
-    this.published = this.appHelper.convertStringToBoolen(response.published);
-    this.active = this.appHelper.convertStringToBoolen(response.active);
-    this.locked==this.appHelper.convertStringToBoolen(response.locked);
-    this.customFlag =this.appHelper.convertStringToBoolen(response.customFlag);  
-    this.labelRequired =this.appHelper.convertStringToBoolen(response.labelRequired)
+    this.savePmml = this.appHelper.convertStringToBoolean(response.savePmml);
+    this.published = this.appHelper.convertStringToBoolean(response.published);
+    this.active = this.appHelper.convertStringToBoolean(response.active);
+    this.locked==this.appHelper.convertStringToBoolean(response.locked);
+    this.customFlag =this.appHelper.convertStringToBoolean(response.customFlag);  
+    this.labelRequired =this.appHelper.convertStringToBoolean(response.labelRequired)
 
     if (response.tags != null) {
       this.algorithm.tags =response.tags;
@@ -306,12 +306,12 @@ export class AlgorithmComponent implements OnInit {
     algoJson.name = this.algorithm.name;
     algoJson.tags= this.algorithm.tags
     algoJson.desc= this.algorithm.desc;
-    algoJson.savePmml = this.appHelper.convertBoolenToString(this.savePmml);
-    algoJson.active =this.appHelper.convertBoolenToString(this.active);
-    algoJson.published = this.appHelper.convertBoolenToString(this.published);
-    algoJson.locked = this.appHelper.convertBoolenToString(this.locked);
-    algoJson.customFlag = this.appHelper.convertBoolenToString(this.customFlag);
-    algoJson.labelRequired = this.appHelper.convertBoolenToString(this.labelRequired);
+    algoJson.savePmml = this.appHelper.convertBooleanToString(this.savePmml);
+    algoJson.active =this.appHelper.convertBooleanToString(this.active);
+    algoJson.published = this.appHelper.convertBooleanToString(this.published);
+    algoJson.locked = this.appHelper.convertBooleanToString(this.locked);
+    algoJson.customFlag = this.appHelper.convertBooleanToString(this.customFlag);
+    algoJson.labelRequired = this.appHelper.convertBooleanToString(this.labelRequired);
 
     algoJson.type= this.algorithm.type;
     algoJson.libraryType = this.libraryType;

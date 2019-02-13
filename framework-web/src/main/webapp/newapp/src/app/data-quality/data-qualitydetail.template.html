@@ -131,7 +131,7 @@
                       <div class="form-group" *ngIf="mode">
                         <label class="col-md-3 control-label">Version </label>
                         <div class="col-md-6">
-                          <p-dropdown [options]="VersionList" [(ngModel)]="selectedVersion" name="selectedVersion"
+                          <p-dropdown [options]="versionList" [(ngModel)]="selectedVersion" name="selectedVersion"
                             [style]="{'width':'100%','padding':'3px'}" [filter]="true" [disabled]="mode == 'false'"
                             (onChange)="onVersionChange()">
                           </p-dropdown>
@@ -254,11 +254,11 @@
                                   (click)="addRow()" [disabled]="mode == 'true'"></button>
                                 <div class="actions pull-right" style="position:relative;padding-right: 5px;">
 
-                                  <!-- [attr.disabled]="(i == 0 || mode == 'true') ?'disabled' : null" -->
+                                  <!-- [attr.disabled]="(i == 0 || mode == 'true') ?'disabled' : null" -->{{moveToEnable|json}}
                                   <!-- ng-disabled="fitlerAttrTableSelectedItem.length ==1 && filterTableArray.length >1 ?false:true" -->
-                                  <a class="btn green-haze btn-outline btn-circle auto-map btn-sm" [attr.disabled] = "disabled"
-                                    href="javascript:;" data-toggle="dropdown" tooltip-placement="left" uib-tooltip="Move"
-                                    data-hover="dropdown" data-close-others="true" aria-expanded="false">
+                                  <a class="btn green-haze btn-outline btn-circle auto-map btn-sm" href="javascript:;"
+                                    data-toggle="dropdown" tooltip-placement="left" uib-tooltip="Move" data-hover="dropdown"
+                                    data-close-others="true" aria-expanded="false" [attr.disabled]="(moveToEnable == false) ?'disabled' : null">
                                     <span class="fa fa-arrows" aria-hidden="true" style="margin-right: 5px;"></span>
                                     <i class="fa fa-angle-down"></i>
                                   </a>
@@ -274,11 +274,9 @@
                                     <li class="divider" style="margin: 0px;"> </li>
                                     <li>
                                       <div class="form-group" style="margin: 1%;">
-                                        <!-- *ngIf="fitlerAttrTableSelectedItem.length == 1" -->
-                                        <input type="number" class="form-control" 
-                                          [(ngModel)]="moveTo" min="0" max="{{filterTableArray.length}}" name="moveto"
-                                          style="border:0" placeholder="Move To" ng-model-options="{debounce:3000}"
-                                          (change)="autoMoveTo(moveTo)" focus-me="true" required />
+                                        <input type="number" class="form-control" [(ngModel)]="moveTo" min="0" max="{{filterTableArray.length}}"
+                                          name="moveto" style="border:0" placeholder="Move To" (ngModelChange)="updateArray(moveTo)"
+                                          focus-me="true" required />
                                       </div>
                                     </li>
                                   </ul>
@@ -290,19 +288,19 @@
                         <div class="portlet-body form">
 
                           <div class="form-body" style="padding: 1% 0% 0% 0%; ">
-                            <table class=" row-border hover table  table-striped table-bordered">
+                            <table class=" row-border hover table  table-striped table-bordered" style="table-layout: fixed;">
                               <thead>
                                 <tr>
                                   <th style="width:5%;text-align: center; Vertical-align: middle;">
                                     <input [disabled]="mode == 'true'" style="width: 16px;height:16px;" type="checkbox"
                                       [(ngModel)]="checkAll" name="checkAll" (click)="checkAllFilterRow()" />
                                   </th>
-                                  <th style="text-align: center; Vertical-align: middle;width:5%;">Logical Operator</th>
-                                  <th style="text-align: center;width:10%;">LHS Type</th>
-                                  <th style="text-align: center;width:20%;">LHS Attribute</th>
-                                  <th style="text-align: center;width:15%;">Operator</th>
-                                  <th style="text-align: center;width:13%;">RHS Type</th>
-                                  <th style="text-align: center;width:20%;">RHS Attribute</th>
+                                  <th style="text-align: center; Vertical-align: middle;width:15%;">Logical Operator</th>
+                                  <th style="text-align: center;width:13%;">LHS Type</th>
+                                  <th style="text-align: center;width:19%;">LHS Attribute</th>
+                                  <th style="text-align: center;width:14%;">Operator</th>
+                                  <th style="text-align: center;width:15%;">RHS Type</th>
+                                  <th style="text-align: center;width:19%;">RHS Attribute</th>
                                   <!-- <th style="text-align: center;width:12%;">Move</th> -->
                                 </tr>
                               </thead>
@@ -311,7 +309,7 @@
 
                                   <td style="text-align:center;Vertical-align:middle;">
                                     <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="data.selected"
-                                      name="selected" [disabled]="mode == 'true'" />
+                                      name="selected" [disabled]="mode == 'true'" (change)="checkSelected(i)" />
                                   </td>
                                   <td>
                                     <p-dropdown [options]="logicalOperators" [(ngModel)]="data.logicalOperator" name="logicalOperator+{{i}}"
@@ -321,8 +319,8 @@
                                   </td>
                                   <td>
                                     <p-dropdown [options]="lhsTypeArray" [(ngModel)]="data.lhsType" name="lhsType+{{i}}"
-                                      [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
-                                      (onChange)="onChangeLhsType(i)" placeholder="--Select--">
+                                      [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'"
+                                      [autoWidth]="false" [filter]="true" (onChange)="onChangeLhsType(i)" placeholder="--Select--">
                                     </p-dropdown>
                                   </td>
                                   <td>
@@ -336,14 +334,14 @@
                                       placeholder="-enter string-">
                                     <div *ngIf="data.lhsType == 'formula'">
                                       <p-dropdown [options]="lhsFormulaArray" [(ngModel)]="data.lhsAttribute" name="lhsAttribute+{{i}}"
-                                        [style]="{'width':'200px','padding':'3px'}" [disabled]="mode == 'true'"
+                                        [style]="{'width':'100%','padding':'3px'}" [autoWidth]="false" [disabled]="mode == 'true'"
                                         [filter]="true" placeholder="--Select--">
                                       </p-dropdown>
                                     </div>
                                     <div *ngIf="data.lhsType == 'datapod'">
                                       <p-dropdown [options]="attributesArray" [(ngModel)]="data.lhsAttribute" name="lhsAttribute+{{i}}"
-                                        [style]="{'width':'200px','padding':'3px'}" [disabled]="mode == 'true'"
-                                        [filter]="true" placeholder="--Select--" datakey="label">
+                                        [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'"
+                                        [autoWidth]="false" [filter]="true" placeholder="--Select--" datakey="label">
                                       </p-dropdown>
                                     </div>
                                   </td>
@@ -424,14 +422,14 @@
                                     </div>
                                     <div *ngIf="data.rhsType == 'formula'">
                                       <p-dropdown [options]="rhsFormulaArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}"
-                                        [style]="{'width':'200px','padding':'3px'}" [disabled]="mode == 'true'"
-                                        [filter]="true" placeholder="--Select--">
+                                        [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
+                                        placeholder="--Select--">
                                       </p-dropdown>
                                     </div>
                                     <div *ngIf="data.rhsType == 'datapod'">
                                       <p-dropdown [options]="attributesArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}"
-                                        [style]="{'width':'200px','padding':'3px'}" [disabled]="mode == 'true'"
-                                        [filter]="true" placeholder="--Select--" datakey="attributeId">
+                                        [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
+                                        placeholder="--Select--" datakey="attributeId">
                                       </p-dropdown>
                                     </div>
                                     <div *ngIf="data.rhsType == 'dataset'">
@@ -442,21 +440,21 @@
                                     </div>
                                     <div *ngIf="data.rhsType == 'function'">
                                       <p-dropdown [options]="functionArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}"
-                                        [style]="{'width':'200px','padding':'3px'}" [disabled]="mode == 'true'"
-                                        [filter]="true" placeholder="--Select--" dataKey="uuid">
+                                        [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
+                                        placeholder="--Select--" dataKey="uuid">
                                       </p-dropdown>
                                     </div>
                                     <div *ngIf="data.rhsType == 'paramlist'">
                                       <p-dropdown [options]="paramlistArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}"
-                                        [style]="{'width':'200px','padding':'3px'}" [disabled]="mode == 'true'"
-                                        [filter]="true" placeholder="--Select--" dataKey="uuid">
+                                        [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
+                                        placeholder="--Select--" dataKey="uuid">
                                       </p-dropdown>
                                     </div>
 
                                     <div *ngIf="data.rhsType == 'string' && data.operator == 'IS'">
                                       <p-dropdown [options]="isNullArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}"
-                                        [style]="{'width':'200px','padding':'3px'}" [disabled]="mode == 'true'"
-                                        [filter]="true" placeholder="--Select--">
+                                        [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
+                                        placeholder="--Select--">
                                       </p-dropdown>
                                     </div>
 
@@ -468,7 +466,7 @@
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Select</label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
                                           <p-dropdown [options]="dialogAttriArray" [(ngModel)]="dialogSelectName" name="dialogSelectName+{{i}}"
-                                            [style]="{'width':'200px','padding':'3px'}" [disabled]="mode == 'true'"
+                                            [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'"
                                             [filter]="true" placeholder="--Select--" (onChange)="onChangeDialogAttribute() "
                                             dataKey="uuid">
                                           </p-dropdown>
@@ -480,7 +478,7 @@
                                           <label class="control-label col-md-3 col-sm-3 col-xs-12">Name</label>
                                           <div class="col-md-6 col-sm-6 col-xs-12">
                                             <p-dropdown [options]="dialogAttriNameArray" [(ngModel)]="dialogAttributeName"
-                                              name="dialogAttributeName+{{i}}" [style]="{'width':'200px','padding':'3px'}"
+                                              name="dialogAttributeName+{{i}}" [style]="{'width':'100%','padding':'3px'}"
                                               [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--"
                                               dataKey="uuid">
                                             </p-dropdown>
@@ -558,7 +556,8 @@
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <!-- <tag-input [(ngModel)]="valueCheck" name="valueCheck" [disable]="mode == 'true'" theme='bootstrap'
                             style=" max-height: 40px;overflow-x: hidden;padding-left:5px; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;"></tag-input> -->
-                          <p-chips [(ngModel)]="dqdata.valueCheck" styleClass="pchip-height" [disabled]="mode == 'true'" name="tags"></p-chips>
+                          <p-chips [(ngModel)]="dqdata.valueCheck" styleClass="pchip-height" [disabled]="mode == 'true'"
+                            name="tags"></p-chips>
                         </div>
                       </div>
 
@@ -669,7 +668,7 @@
                           <i class="fa fa-angle-left"></i> Back
                         </a>
                         <button type="submit" class="btn green" [disabled]="mode == 'true' || isSubmit == 'true'"
-                          (click)="dagSubmit()">Submit</button>
+                          (click)="submitDq()">Submit</button>
                         <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" *ngIf="isSubmit=='true'">
                           <div class="bounce1"></div>
                           <div class="bounce2"></div>

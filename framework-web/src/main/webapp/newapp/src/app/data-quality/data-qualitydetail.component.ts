@@ -1,6 +1,6 @@
 import { FilterInfoIO } from './../metadata/domainIO/domain.filterInfoIO';
 import { FilterInfo } from './../metadata/domain/domain.filterInfo';
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, HostListener } from '@angular/core';
 import { Router, Event as RouterEvent, ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
 import { Message } from 'primeng/components/common/api';
@@ -17,6 +17,13 @@ import { DropDownIO } from '../metadata/domainIO/domain.dropDownIO';
 import { BaseEntity } from '../metadata/domain/domain.baseEntity';
 import { AttributeIO } from '../metadata/domainIO/domain.attributeIO';
 import { AppHelper } from '../app.helper';
+import { MetaIdentifierHolder } from '../metadata/domain/domain.metaIdentifierHolder';
+import { MetaIdentifier } from '../metadata/domain/domain.metaIdentifier';
+import { AttributeRefHolder } from '../metadata/domain/domain.attributeRefHolder';
+import * as MetaTypeEnum from '../metadata/enums/metaType';
+import { SourceAttr } from '../metadata/domain/domain.sourceAttr';
+import { Subject, fromEvent } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 @Component({
   selector: 'app-data-pipeli',
   templateUrl: './data-qualitydetail.template.html',
@@ -51,6 +58,7 @@ export class DataQualityDetailComponent {
   selectDataType: any;
   selectedAllFitlerRow: boolean;
   //lhsdatapodattributefilter: any[];
+  customInput: Subject<string> = new Subject();
   operators: any;
   logicalOperators: any;
   filterTableArray: any;
@@ -68,7 +76,7 @@ export class DataQualityDetailComponent {
   source: string;
   sources: string[];
   selectedVersion: Version;
-  VersionList: SelectItem[] = [];
+  versionList: SelectItem[] = [];
   msgs: any[];
   tags: any;
   createdBy: any;
@@ -91,9 +99,13 @@ export class DataQualityDetailComponent {
   published: boolean;
   active: boolean;
   locked: boolean;
+  metaType: any;
+  moveTo: number;
+  moveToEnable: boolean;
 
   constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router,
     private _commonService: CommonService, private _dataQualityService: DataQualityService, public appHelper: AppHelper) {
+    this.metaType = MetaTypeEnum.MetaType;
     this.dqdata = new DataQuality();
     this.showGraph = false
     this.isHomeEnable = false
@@ -195,6 +207,7 @@ export class DataQualityDetailComponent {
         this.getAllLatest()
       }
     });
+    this.moveToEnable = false;
   }
 
   public goBack() {
@@ -242,13 +255,13 @@ export class DataQualityDetailComponent {
       response => {
         let temp = [];
         for (const n in response) {
-          let allname = {};
-          allname["label"] = response[n]['dname'];
-          allname["value"] = {};
-          allname["value"]["label"] = response[n]['dname'];
-          allname["value"]["u_Id"] = response[n]['id'];
-          allname["value"]["uuid"] = response[n]['uuid'];
-          allname["value"]["attrId"] = response[n]['attributeId'];
+          let allname = new AttributeIO();
+          allname.label = response[n].dname;
+          allname.value = {};
+          allname.value.label = response[n].dname;
+          allname.value.u_Id = response[n].id;
+          allname.value.uuid = response[n].uuid;
+          allname.value.attrId = response[n].attributeId;
           temp[n] = allname
           //count=count+1;
         }
@@ -312,7 +325,7 @@ export class DataQualityDetailComponent {
     this.isEditInprogess = true;
     this.isEditError = false;
 
-    this._dataQualityService.getOneByUuidAndVersion(id, version, 'dq')
+    this._dataQualityService.getOneByUuidAndVersion(id, version, MetaTypeEnum.MetaType.DQ)
       .subscribe(
         response => {
           this.onSuccessgetOneByUuidAndVersion(response)
@@ -335,9 +348,9 @@ export class DataQualityDetailComponent {
     //   this.dqdata.tags =response.tags;
     // }//End If
 
-    this.active == this.appHelper.convertStringToBoolen(this.dqdata.active);
-    this.locked == this.appHelper.convertStringToBoolen(this.dqdata.locked);
-    this.published == this.appHelper.convertStringToBoolen(this.dqdata.published);
+    this.active == this.appHelper.convertStringToBoolean(this.dqdata.active);
+    this.locked == this.appHelper.convertStringToBoolean(this.dqdata.locked);
+    this.published == this.appHelper.convertStringToBoolean(this.dqdata.published);
 
     let dependOnTemp: DependsOn = new DependsOn();
     dependOnTemp.label = this.dqdata.dependsOn.ref.name;
@@ -378,19 +391,8 @@ export class DataQualityDetailComponent {
 
     this.filterTableArray = response.filterInfoIo;
 
-    // let valueCheck = [];
-    // if (this.dqdata.valueCheck != null) {
-    //   for (var i = 0; i < this.dqdata.valueCheck.length; i++) {
-    //     var valueCheck1 = {};
-    //     valueCheck1['value'] = this.dqdata.valueCheck[i];
-    //     valueCheck1['display'] = this.dqdata.valueCheck[i];
-    //     valueCheck[i] = valueCheck1
-    //   }//End For
-    //   this.valueCheck = valueCheck;
-    // }
-
-    this.dqdata.duplicateKeyCheck = this.appHelper.convertStringToBoolen(this.dqdata.duplicateKeyCheck);
-    this.dqdata.nullCheck = this.appHelper.convertStringToBoolen(this.dqdata.nullCheck);
+    this.dqdata.duplicateKeyCheck = this.appHelper.convertStringToBoolean(this.dqdata.duplicateKeyCheck);
+    this.dqdata.nullCheck = this.appHelper.convertStringToBoolean(this.dqdata.nullCheck);
     this.dqdata.upperBound = this.dqdata.rangeCheck.upperBound;
     this.dqdata.lowerBound = this.dqdata.rangeCheck.lowerBound;
     this.dqdata.selectDataType = this.dqdata.dataTypeCheck;
@@ -409,7 +411,6 @@ export class DataQualityDetailComponent {
       selectintegrityattribute.attrId = this.dqdata.refIntegrityCheck.attrId
       this.selectIntegrityAttribute = selectintegrityattribute;
     }
-
     this.isEditInprogess = false;
     //this.showForm = false;
   }
@@ -469,7 +470,7 @@ export class DataQualityDetailComponent {
   }
 
   getAllVersionByUuid() {
-    this._commonService.getAllVersionByUuid('dq', this.id)
+    this._commonService.getAllVersionByUuid(MetaTypeEnum.MetaType.DQ, this.id)
       .subscribe(
         response => {
           this.OnSuccesgetAllVersionByUuid(response)
@@ -478,43 +479,19 @@ export class DataQualityDetailComponent {
   }
   OnSuccesgetAllVersionByUuid(response) {
     for (const i in response) {
-      let ver = {};
-      ver["label"] = response[i]['version'];
-      ver["value"] = {};
-      ver["value"]["label"] = response[i]['version'];
-      ver["value"]["uuid"] = response[i]['uuid'];
-      this.VersionList[i] = ver;
+      let ver = new DropDownIO();
+      ver.label = response[i].version;
+      ver.value = { label: "", uuid: "" };
+      ver.value.label = response[i].version;
+      ver.value.uuid = response[i].uuid;
+      this.versionList[i] = ver;
     }
-    // var VersionList = [new DropDownIO]
-    // for (const i in response) {
-    //   let verObj = new DropDownIO();
-    //   verObj.label = response[i].version;
-    //   verObj.value.label = response[i].version;
-    //   verObj.value.uuid = response[i].uuid;
-    //   this.VersionList[i] = verObj;
-    // }
-    // // this.VersionList = VersionList
-
   }
   onVersionChange() {
     this.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label);
   }
 
-
-
   onSuccessgetAllAttributeBySource(response: AttributeIO[]) {
-    // this.dialogAttriArray = [];
-    // let temp = [];
-    // for (const i in response) {
-    // let dialogAttriObj = {};
-    // dialogAttriObj["label"] = response[i].name;
-    // dialogAttriObj["value"] = {};
-    // dialogAttriObj["value"]["label"] = response[i].name;
-    // dialogAttriObj["value"]["uuid"] = response[i].uuid;
-    // temp[i] = dialogAttriObj;
-    // }
-    // this.dialogAttriArray = temp
-    // console.log(JSON.stringify(this.dialogAttriArray));
     this.attributesArray = [new AttributeIO()]
     let temp1 = [];
     for (const i in response) {
@@ -534,20 +511,14 @@ export class DataQualityDetailComponent {
 
     this.filterTableArray[index].lhsAttribute = null;
 
-    if (this.filterTableArray[index].lhsType == 'formula') {
-
+    if (this.filterTableArray[index].lhsType == MetaTypeEnum.MetaType.FORMULA) {
       this.getFormulaByType("lhsType");
-      // this._commonService.getFormulaByType(this.sourcedata.uuid, this.source)
-      //   .subscribe(response => { this.onSuccessgetFormulaByLhsType(response) },
-      //     error => console.log("Error ::", error))
     }
-
-    else if (this.filterTableArray[index].lhsType == 'datapod') {
+    else if (this.filterTableArray[index].lhsType == MetaTypeEnum.MetaType.DATAPOD) {
       this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source)
         .subscribe(response => { this.onSuccessgetAllAttributeBySource(response) },
           error => console.log("Error ::", error))
     }
-
     else {
       this.filterTableArray[index].lhsAttribute = null;
     }
@@ -556,29 +527,26 @@ export class DataQualityDetailComponent {
   onChangeRhsType(index) {
     this.filterTableArray[index].rhsAttribute = null;
 
-    if (this.filterTableArray[index].rhsType == 'formula') {
+    if (this.filterTableArray[index].rhsType == MetaTypeEnum.MetaType.FORMULA) {
       this.getFormulaByType("rhsType");
-
     }
-    else if (this.filterTableArray[index].rhsType == 'datapod') {
+    else if (this.filterTableArray[index].rhsType == MetaTypeEnum.MetaType.DATAPOD) {
       this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source)
         .subscribe(response => { this.onSuccessgetAllAttributeBySource(response) },
           error => console.log("Error ::", error))
     }
-    else if (this.filterTableArray[index].rhsType == 'function') {
+    else if (this.filterTableArray[index].rhsType == MetaTypeEnum.MetaType.FUNCTION) {
       this.getFunctionByCriteria();
-
     }
-    else if (this.filterTableArray[index].rhsType == 'paramlist') {
+    else if (this.filterTableArray[index].rhsType == MetaTypeEnum.MetaType.PARAMLIST) {
       this.getParamByApp();
     }
-    else if (this.filterTableArray[index].rhsType == 'dataset') {
+    else if (this.filterTableArray[index].rhsType == MetaTypeEnum.MetaType.DATASET) {
       let rhsAttribute = new AttributeIO();
       rhsAttribute.label = "-Select-";
       rhsAttribute.uuid = "";
       rhsAttribute.attributeId = "";
       this.filterTableArray[index].rhsAttribute = rhsAttribute;
-
     }
     else {
       this.filterTableArray[index].rhsAttribute = null;
@@ -591,18 +559,6 @@ export class DataQualityDetailComponent {
         error => console.log("Error ::", error))
   }
   onSuccessgetFunctionByCriteria(response: AttributeIO[]) {
-
-    // let temp = [];
-    // for (const i in response) {
-    //   let attributeObj = {};
-    //   attributeObj["label"] = response[i].name;
-    //   attributeObj["value"] = {};
-    //   attributeObj["value"]["uuid"] = response[i].uuid;
-    //   attributeObj["value"]["label"] = response[i].name;
-    //   temp[i] = attributeObj
-    // }
-    // this.functionArray = temp;
-    // 
     let functionArray = [new DropDownIO]
     for (const i in response) {
       let attribute = new DropDownIO();
@@ -621,17 +577,6 @@ export class DataQualityDetailComponent {
         error => console.log("Error ::", error))
   }
   onSuccessgetParamByApp(response) {
-    // let temp = [];
-    // for (const i in response) {
-    //   let attributeObj = {};
-    //   attributeObj["label"] = "app." + response[i].paramName;
-    //   attributeObj["value"] = {};
-    //   attributeObj["value"]["uuid"] = response[i].ref.uuid;
-    //   attributeObj["value"]["attributeId"] = response[i].paramId;
-    //   attributeObj["value"]["label"] = "app." + response[i].paramName;
-    //   temp[i] = attributeObj
-    // }
-    // this.paramlistArray = temp;
     let paramlistArray = [new AttributeIO]
     for (const i in response) {
       let attribute = new AttributeIO();
@@ -658,17 +603,6 @@ export class DataQualityDetailComponent {
     }
   }
   onSuccessgetFormulaByRhsType(response) {
-    // this.rhsFormulaArray = [];
-    // let rhsFormulaObj = {};
-    // let temp = [];
-    // for (const i in response) {
-    //   rhsFormulaObj["label"] = response[i].name;
-    //   rhsFormulaObj["value"] = {};
-    //   rhsFormulaObj["value"]["label"] = response[i].name;
-    //   rhsFormulaObj["value"]["uuid"] = response[i].uuid;
-    //   temp[i] = rhsFormulaObj;
-    // }
-    // this.rhsFormulaArray = temp
     this.rhsFormulaArray = [];
     let rhsFormula = new DropDownIO();
     let RhsFormulaArray = [new DropDownIO]
@@ -682,15 +616,6 @@ export class DataQualityDetailComponent {
     this.rhsFormulaArray = RhsFormulaArray;
   }
   onSuccessgetFormulaByLhsType(response) {
-    // this.lhsFormulaArray = []
-    // for (const i in response) {
-    //   let formulaObj = {};
-    //   formulaObj["label"] = response[i].name;
-    //   formulaObj["value"] = {};
-    //   formulaObj["value"]["uuid"] = response[i].uuid;
-    //   formulaObj["value"]["label"] = response[i].name;
-    //   this.lhsFormulaArray[i] = formulaObj;
-    // }
     this.lhsFormulaArray = []
     for (const i in response) {
       let formulaObj = new DropDownIO();
@@ -698,16 +623,14 @@ export class DataQualityDetailComponent {
       formulaObj.value = { label: "", uuid: "" };
       formulaObj.value.label = response[i].version;
       formulaObj.value.uuid = response[i].uuid;
-      //VersionList[i] = verObj;
       this.lhsFormulaArray[i] = formulaObj;
     }
   }
 
   onChangeOperator(index) {
-
     this.filterTableArray[index].rhsAttribute = null;
     if (this.filterTableArray[index].operator == 'EXISTS' || this.filterTableArray[index].operator == 'NOT EXISTS') {
-      this.filterTableArray[index].rhsType = 'dataset';
+      this.filterTableArray[index].rhsType = MetaTypeEnum.MetaType.DATASET;
       let rhsAttribute = new AttributeIO();
       rhsAttribute.label = "-Select-";
       rhsAttribute.uuid = "";
@@ -736,7 +659,6 @@ export class DataQualityDetailComponent {
     this.filterTableArray.splice(this.filterTableArray.length, 0, filertable);
   }
   removeRow() {
-
     let newDataList = [];
     this.selectedAllFitlerRow = false;
     this.fitlerAttrTableSelectedItem = [];
@@ -762,19 +684,19 @@ export class DataQualityDetailComponent {
     });
   }
 
-  dagSubmit() {
+  submitDq() {
     this.isSubmit = "true"
-    let dqJson = {};
-    dqJson["uuid"] = this.dqdata.uuid;
-    dqJson["name"] = this.dqdata.name;
-    dqJson["desc"] = this.dqdata.desc;
+    let dqJson = new DataQuality();
+    dqJson.uuid = this.dqdata.uuid;
+    dqJson.name = this.dqdata.name;
+    dqJson.desc = this.dqdata.desc;
     var tagArray = [];
     if (this.tags != null) {
       for (var counttag = 0; counttag < this.tags.length; counttag++) {
         tagArray[counttag] = this.tags[counttag].value;
       }
     }
-    dqJson['tags'] = tagArray;
+    dqJson.tags = tagArray;
 
     var valueCheckArr = [];
     if (this.valueCheck != null) {
@@ -782,31 +704,34 @@ export class DataQualityDetailComponent {
         valueCheckArr[counttag] = this.valueCheck[counttag].value;
       }
     }
-    dqJson['valueCheck'] = valueCheckArr;
+    dqJson.valueCheck = valueCheckArr;
 
-    dqJson["active"] = this.dqdata.active == true ? 'Y' : "N";
-    dqJson["locked"] = this.appHelper.convertBoolenToString(this.locked);
-    dqJson["published"] = this.dqdata.published == true ? 'Y' : "N"
-    let dependsOn = {};
-    let ref = {};
-    ref["type"] = this.source
-    ref["uuid"] = this.sourcedata.uuid;
-    dependsOn["ref"] = ref;
-    dqJson["dependsOn"] = dependsOn;
+    dqJson.active = this.appHelper.convertBooleanToString(this.dqdata.active);
+    dqJson.locked = this.appHelper.convertBooleanToString(this.locked);
+    dqJson.published = this.appHelper.convertBooleanToString(this.dqdata.published);
+
+    let dependsOn = new MetaIdentifierHolder();
+    let ref = new MetaIdentifier();
+    ref.type = this.source;
+    ref.uuid = this.sourcedata.uuid;
+    dependsOn.ref = ref;
+    dqJson.dependsOn = dependsOn;
+
     if (this.selectAttribute != null) {
-      let attributeref = {};
-      let attribute = {};
-      attributeref["type"] = "datapod";
-      attributeref["uuid"] = this.selectAttribute.uuid;
-      attribute["ref"] = attributeref;
-      attribute["attrId"] = this.selectAttribute.attrId;
-      dqJson["attribute"] = attribute;
+      let attributeref = new MetaIdentifierHolder();
+      let attribute = new AttributeRefHolder();
+      attributeref.type = MetaTypeEnum.MetaType.DATAPOD;
+      attributeref.uuid = this.selectAttribute.uuid;
+      attribute.ref = attributeref;
+      attribute.attrId = this.selectAttribute.attrId;
+      dqJson.attribute = attribute;
     }
     else {
-      dqJson["attribute"] = null;
+      dqJson.attribute = null;
     }
-    dqJson["duplicateKeyCheck"] = this.dqdata.duplicateKeyCheck == true ? 'Y' : 'N';
-    dqJson["nullCheck"] = this.dqdata.nullCheck == true ? 'Y' : 'N';
+
+    dqJson.duplicateKeyCheck = this.appHelper.convertBooleanToString(this.dqdata.duplicateKeyCheck);
+    dqJson.nullCheck = this.appHelper.convertBooleanToString(this.dqdata.nullCheck);
     var tagArrayvaluecheck = [];
     if (this.valueCheck && this.valueCheck.length > 0) {
       for (var counttag = 0; counttag < this.valueCheck.length; counttag++) {
@@ -814,140 +739,136 @@ export class DataQualityDetailComponent {
       }
     }
 
-    var rangeCheck = {};
+    var rangeCheck = { lowerBound: "", upperBound: "" };
     if (typeof this.dqdata.lowerBound != "undefined" && typeof this.dqdata.upperBound != "undefined") {
-      rangeCheck["lowerBound"] = this.dqdata.lowerBound;
-      rangeCheck["upperBound"] = this.dqdata.upperBound;
+      rangeCheck.lowerBound = this.dqdata.lowerBound;
+      rangeCheck.upperBound = this.dqdata.upperBound;
     }
-    dqJson["rangeCheck"] = rangeCheck;
-    dqJson["dataTypeCheck"] = this.dqdata.selectDataType;
-    dqJson["dateFormatCheck"] = this.selectdatefromate;
-    dqJson["customFormatCheck"] = this.dqdata.customFormatCheck
-    var lengthCheck = {}
-    if (typeof this.dqdata.minLength != "undefined" && typeof this.dqdata.minLength != "undefined") {
-      lengthCheck["minLength"] = this.dqdata.minLength;
-      lengthCheck["maxLength"] = this.dqdata.maxLength;
+    dqJson.rangeCheck = rangeCheck;
 
+    dqJson.dataTypeCheck = this.dqdata.selectDataType;
+    dqJson.dateFormatCheck = this.selectdatefromate;
+    dqJson.customFormatCheck = this.dqdata.customFormatCheck
+
+    var lengthCheck = { minLength: "", maxLength: "" }
+    if (typeof this.dqdata.minLength != "undefined" && typeof this.dqdata.minLength != "undefined") {
+      lengthCheck.minLength = this.dqdata.minLength.toString();
+      lengthCheck.maxLength = this.dqdata.maxLength.toString();
     }
-    dqJson["lengthCheck"] = lengthCheck
-    let refIntegrityCheck = {};
-    let refInte = {};
+    dqJson.lengthCheck = lengthCheck;
+
+    let refIntegrityCheck = new AttributeRefHolder();
     if (typeof this.selectRefIntegrity != "undefined" && typeof this.selectIntegrityAttribute != "undefined") {
-      ref["type"] = "datapod";
-      ref["uuid"] = this.selectRefIntegrity.uuid;
-      refIntegrityCheck["ref"] = ref;
-      refIntegrityCheck["attrId"] = this.selectIntegrityAttribute.attrId;
-      dqJson["refIntegrityCheck"] = refIntegrityCheck;
+      ref.type = MetaTypeEnum.MetaType.DATAPOD;
+      ref.uuid = this.selectRefIntegrity.uuid;
+      refIntegrityCheck.ref = ref;
+      refIntegrityCheck.attrId = this.selectIntegrityAttribute.attrId;
+      dqJson.refIntegrityCheck = refIntegrityCheck;
     } else {
-      dqJson["refIntegrityCheck"] = {};
+      dqJson.refIntegrityCheck = new AttributeRefHolder();
     }
 
     let filterInfoArray = [];
-    if (this.dqdata.filterTableArray != null) {
-      if (this.dqdata.filterTableArray.length > 0) {
-        for (let i = 0; i < this.dqdata.filterTableArray.length; i++) {
-          let filterInfo = {};
-          filterInfo["logicalOperator"] = this.dqdata.filterTableArray[i].logicalOperator;
-          filterInfo["operator"] = this.dqdata.filterTableArray[i].operator;
-          filterInfo["operand"] = [];
+    if (this.filterTableArray != null) {
+      if (this.filterTableArray.length > 0) {
+        for (let i = 0; i < this.filterTableArray.length; i++) {
+          let filterInfo = new FilterInfo();
+          filterInfo.logicalOperator = this.filterTableArray[i].logicalOperator;
+          filterInfo.operator = this.filterTableArray[i].operator;
+          filterInfo.operand = [];
 
-          if (this.dqdata.filterTableArray[i].lhsType == 'integer' || this.dqdata.filterTableArray[i].lhsType == 'string') {
-            let operatorObj = {};
-            let ref = {}
-            ref["type"] = "simple";
-            operatorObj["ref"] = ref;
-            operatorObj["value"] = this.dqdata.filterTableArray[i].lhsAttribute;
-            operatorObj["attributeType"] = "string"
-            filterInfo["operand"][0] = operatorObj;
+          if (this.filterTableArray[i].lhsType == 'integer' || this.filterTableArray[i].lhsType == 'string') {
+            let operatorObj = new SourceAttr();
+            let ref = new MetaIdentifier();
+            ref.type = MetaTypeEnum.MetaType.SIMPLE;
+            operatorObj.ref = ref;
+            operatorObj.value = this.filterTableArray[i].lhsAttribute;
+            operatorObj.attributeType = "string"
+            filterInfo.operand[0] = operatorObj;
           }
-          else if (this.dqdata.filterTableArray[i].lhsType == 'formula') {
-            let operatorObj = {};
-            let ref = {}
-            ref["type"] = "formula";
-            ref["uuid"] = this.dqdata.filterTableArray[i].lhsAttribute.uuid;
-            operatorObj["ref"] = ref;
-            // operatorObj["attributeId"] = this.dataset.filterTableArray[i].lhsAttribute;
-            filterInfo["operand"][0] = operatorObj;
+          else if (this.filterTableArray[i].lhsType == MetaTypeEnum.MetaType.FORMULA) {
+            let operatorObj = new SourceAttr();
+            let ref = new MetaIdentifier();
+            ref.type = MetaTypeEnum.MetaType.FORMULA;
+            ref.uuid = this.filterTableArray[i].lhsAttribute.uuid;
+            operatorObj.ref = ref;
+            filterInfo.operand[0] = operatorObj;
           }
-          else if (this.dqdata.filterTableArray[i].lhsType == 'datapod') {
-            let operatorObj = {};
-            let ref = {}
-            ref["type"] = "datapod";
-            ref["uuid"] = this.dqdata.filterTableArray[i].lhsAttribute.uuid;
-            operatorObj["ref"] = ref;
-            operatorObj["attributeId"] = this.dqdata.filterTableArray[i].lhsAttribute.attributeId;
-            filterInfo["operand"][0] = operatorObj;
+          else if (this.filterTableArray[i].lhsType == MetaTypeEnum.MetaType.DATAPOD) {
+            let operatorObj = new SourceAttr();
+            let ref = new MetaIdentifier();
+            ref.type = MetaTypeEnum.MetaType.DATAPOD;
+            ref.uuid = this.filterTableArray[i].lhsAttribute.uuid;
+            operatorObj.ref = ref;
+            operatorObj.attributeId = this.filterTableArray[i].lhsAttribute.attributeId;
+            filterInfo.operand[0] = operatorObj;
           }
-          if (this.dqdata.filterTableArray[i].rhsType == 'integer' || this.dqdata.filterTableArray[i].rhsType == 'string') {
-            let operatorObj = {};
-            let ref = {}
-            ref["type"] = "simple";
-            operatorObj["ref"] = ref;
-            operatorObj["value"] = this.dqdata.filterTableArray[i].rhsAttribute;
-            operatorObj["attributeType"] = "string"
-            filterInfo["operand"][1] = operatorObj;
-
-            if (this.dqdata.filterTableArray[i].rhsType == 'integer' && this.dqdata.filterTableArray[i].operator == 'BETWEEN') {
-              let operatorObj = {};
-              let ref = {}
-              ref["type"] = "simple";
-              operatorObj["ref"] = ref;
-              operatorObj["value"] = this.dqdata.filterTableArray[i].rhsAttribute1 + "and" + this.dqdata.filterTableArray[i].rhsAttribute2;
-              filterInfo["operand"][1] = operatorObj;
+          if (this.filterTableArray[i].rhsType == 'integer' || this.filterTableArray[i].rhsType == 'string') {
+            let operatorObj = new SourceAttr();
+            let ref = new MetaIdentifier();
+            ref.type = MetaTypeEnum.MetaType.SIMPLE;
+            operatorObj.ref = ref;
+            operatorObj.value = this.filterTableArray[i].rhsAttribute;
+            operatorObj.attributeType = "string"
+            filterInfo.operand[1] = operatorObj;
+            if (this.filterTableArray[i].rhsType == 'integer' && this.filterTableArray[i].operator == 'BETWEEN') {
+              let operatorObj = new SourceAttr();
+              let ref = new MetaIdentifier();
+              ref.type = MetaTypeEnum.MetaType.SIMPLE;
+              operatorObj.ref = ref;
+              operatorObj.value = this.filterTableArray[i].rhsAttribute1 + "and" + this.filterTableArray[i].rhsAttribute2;
+              filterInfo.operand[1] = operatorObj;
             }
           }
-          else if (this.dqdata.filterTableArray[i].rhsType == 'formula') {
-            let operatorObj = {};
-            let ref = {}
-            ref["type"] = "formula";
-            ref["uuid"] = this.dqdata.filterTableArray[i].rhsAttribute.uuid;
-            operatorObj["ref"] = ref;
-            //operatorObj["attributeId"] = this.dataset.filterTableArray[i].rhsAttribute;
-            filterInfo["operand"][1] = operatorObj;
+          else if (this.filterTableArray[i].rhsType == MetaTypeEnum.MetaType.FORMULA) {
+            let operatorObj = new SourceAttr();
+            let ref = new MetaIdentifier();
+            ref.type = MetaTypeEnum.MetaType.FORMULA;
+            ref.uuid = this.filterTableArray[i].rhsAttribute.uuid;
+            operatorObj.ref = ref;
+            filterInfo.operand[1] = operatorObj;
           }
-          else if (this.dqdata.filterTableArray[i].rhsType == 'function') {
-            let operatorObj = {};
-            let ref = {}
-            ref["type"] = "function";
-            ref["uuid"] = this.dqdata.filterTableArray[i].rhsAttribute.uuid;
-            operatorObj["ref"] = ref;
-            //operatorObj["attributeId"] = this.dataset.filterTableArray[i].rhsAttribute;
-            filterInfo["operand"][1] = operatorObj;
+          else if (this.filterTableArray[i].rhsType == MetaTypeEnum.MetaType.FUNCTION) {
+            let operatorObj = new SourceAttr();
+            let ref = new MetaIdentifier();
+            ref.type = MetaTypeEnum.MetaType.FUNCTION;
+            ref.uuid = this.filterTableArray[i].rhsAttribute.uuid;
+            operatorObj.ref = ref;
+            filterInfo.operand[1] = operatorObj;
           }
-          else if (this.dqdata.filterTableArray[i].rhsType == 'paramlist') {
-            let operatorObj = {};
-            let ref = {}
-            ref["type"] = "paramlist";
-            ref["uuid"] = this.dqdata.filterTableArray[i].rhsAttribute.uuid;
-            operatorObj["ref"] = ref;
-            operatorObj["attributeId"] = this.dqdata.filterTableArray[i].rhsAttribute.attributeId;
-            filterInfo["operand"][1] = operatorObj;
+          else if (this.filterTableArray[i].rhsType == MetaTypeEnum.MetaType.PARAMLIST) {
+            let operatorObj = new SourceAttr();
+            let ref = new MetaIdentifier();
+            ref.type = MetaTypeEnum.MetaType.PARAMLIST;
+            ref.uuid = this.filterTableArray[i].rhsAttribute.uuid;
+            operatorObj.ref = ref;
+            operatorObj.attributeId = this.filterTableArray[i].rhsAttribute.attributeId;
+            filterInfo.operand[1] = operatorObj;
           }
-          else if (this.dqdata.filterTableArray[i].rhsType == 'dataset') {
-            let operatorObj = {};
-            let ref = {}
-            ref["type"] = "dataset";
-            ref["uuid"] = this.dqdata.filterTableArray[i].rhsAttribute.uuid;
-            operatorObj["ref"] = ref;
-            operatorObj["attributeId"] = this.dqdata.filterTableArray[i].rhsAttribute.attributeId;
-            filterInfo["operand"][1] = operatorObj;
+          else if (this.filterTableArray[i].rhsType == MetaTypeEnum.MetaType.DATASET) {
+            let operatorObj = new SourceAttr();
+            let ref = new MetaIdentifier();
+            ref.type = MetaTypeEnum.MetaType.DATASET;
+            ref.uuid = this.filterTableArray[i].rhsAttribute.uuid;
+            operatorObj.ref = ref;
+            operatorObj.attributeId = this.filterTableArray[i].rhsAttribute.attributeId;
+            filterInfo.operand[1] = operatorObj;
           }
-          else if (this.dqdata.filterTableArray[i].rhsType == 'datapod') {
-            let operatorObj = {};
-            let ref = {}
-            ref["type"] = "datapod";
-            ref["uuid"] = this.dqdata.filterTableArray[i].rhsAttribute.uuid;
-            operatorObj["ref"] = ref;
-            operatorObj["attributeId"] = this.dqdata.filterTableArray[i].rhsAttribute.attributeId;
-            filterInfo["operand"][1] = operatorObj;
+          else if (this.filterTableArray[i].rhsType == MetaTypeEnum.MetaType.DATAPOD) {
+            let operatorObj = new SourceAttr();
+            let ref = new MetaIdentifier();
+            ref.type = MetaTypeEnum.MetaType.DATAPOD;
+            ref.uuid = this.filterTableArray[i].rhsAttribute.uuid;
+            operatorObj.ref = ref;
+            operatorObj.attributeId = this.filterTableArray[i].rhsAttribute.attributeId;
+            filterInfo.operand[1] = operatorObj;
           }
           filterInfoArray[i] = filterInfo;
         }
-        dqJson["filterInfo"] = filterInfoArray;
+        dqJson.filterInfo = filterInfoArray;
         console.log(JSON.stringify(filterInfoArray));
       }
     }
-
     console.log(JSON.stringify(dqJson));
     this._commonService.submit("dq", dqJson).subscribe(
       response => { this.OnSuccessubmit(response) },
@@ -1016,38 +937,32 @@ export class DataQualityDetailComponent {
   }
 
   onAttrRowDown() {
-    //this.shiftingRow(this.filterTableArray.length);
-    for (let i = 0; this.filterTableArray.length; i++) {
+    for (let i = 0; i < this.filterTableArray.length; i++) {
       if (this.filterTableArray[i].selected) {
         this.filterTableArray.splice(this.filterTableArray.length, 0, this.filterTableArray[i]);
+        this.filterTableArray[i].selected = false;
         if (i > 1) {
           this.filterTableArray.splice(i, 1);
         }
         break;
       }
     }
-    // var rowTempIndex = this.dqdata.filterTableArray[index];
-    // var rowTempIndexPlus = this.dqdata.filterTableArray[index + 1];
-    // this.dqdata.filterTableArray[index] = rowTempIndexPlus;
-    // this.dqdata.filterTableArray[index + 1] = rowTempIndex;
-    // this.isSubmit = true
+    this.isSubmit = true
   }
 
   onAttrRowUp() {
-    //this.shiftingRow(0);
-    for (let i = 0; this.filterTableArray.length; i++) {
+    for (let i = 0; i < this.filterTableArray.length; i++) {
       if (this.filterTableArray[i].selected) {
         this.filterTableArray.splice(0, 0, this.filterTableArray[i]);
+        this.filterTableArray[0].logicalOperator = ""
+        this.filterTableArray[1].logicalOperator = this.logicalOperators[1].label;
         if (i > 1) {
-          this.filterTableArray.splice(i+1, 1);
+          this.filterTableArray.splice(i + 1, 1);
+          this.filterTableArray[i].selected = false;
         }
         break;
       }
     }
-    // var rowTempIndex = this.filterTableArray[index];
-    // var rowTempIndexMines = this.filterTableArray[0];
-    // this.filterTableArray[index] = rowTempIndexMines;
-    // this.filterTableArray[0] = rowTempIndex;
     this.isSubmit = true
   }
 
@@ -1085,7 +1000,6 @@ export class DataQualityDetailComponent {
   }
 
   autoMove = function (index, type) {
-
     if (type == "mapAttr") {
     }
     else {
@@ -1103,28 +1017,52 @@ export class DataQualityDetailComponent {
     }
   }
 
-  autoMoveTo(index) {
-    
-    // if (type == "mapAttr") {
-    // }
-    // else {
-    //   if (index <= this.filterTableArray.length) {
-    //     this.autoMove(index - 1, 'filterAttr');
-    //     this.moveTo = null;
-    //     //	$(".actions").removeClass("open");
-    //   }
-    // }
-    for (let i = 0; this.filterTableArray.length; i++) {
+  updateArray(new_index) {
+    console.log("updateArray callll : ");
+    for (let i = 0; i < this.filterTableArray.length; i++) {
       if (this.filterTableArray[i].selected) {
-        this.filterTableArray.splice(0, 0, this.filterTableArray[i]);
-        if (i > 1) {
-          this.filterTableArray.splice(index, 1);
-        }
+        let old_index = i;
+        this.array_move(this.filterTableArray, old_index, new_index);
+        this.filterTableArray[0].logicalOperator = "";
+        this.filterTableArray[1].logicalOperator = this.logicalOperators[1].label;
+        this.filterTableArray[i].selected = false;
+        this.moveTo = 0;
         break;
       }
     }
+  }
+  array_move(arr, old_index, new_index) {
+    while (old_index < 0) {
+      old_index += arr.length;
+    }
+    while (new_index < 0) {
+      new_index += arr.length;
+    }
+    if (new_index >= arr.length) {
+      var k = new_index - arr.length + 1;
+      while (k--) {
+        arr.push(undefined);
+      }
+    }
+    arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+    return arr;
+  }
+
+  checkSelected(index) {
+    let count = 0;
+    for (let i = 0; i < this.filterTableArray.length; i++) {
+      if (this.filterTableArray[i].selected == true) {
+        this.moveToEnable = true;
+        count++;
+      }
+      else {
+        this.moveToEnable = false;
+      }
+    }
+    this.moveToEnable = (count == 1) ? true : false;
 
   }
+
 
 
 }

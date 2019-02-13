@@ -19,10 +19,10 @@ export class AppHelper {
         return statusArray[statusArray.length - 1];
     }
 
-    convertStringToBoolen(value: String) {
+    convertStringToBoolean(value: String) {
         return value == 'Y' ? true : false;
     }
-    convertBoolenToString(value: boolean) {
+    convertBooleanToString(value: boolean) {
         return value == true ? 'Y' : 'N'
     }
 }
