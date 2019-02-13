@@ -8,8 +8,10 @@
       tooltip-placement="right" tooltip-append-to-body="true" uib-tooltip="{{col.colDef.attrType}}" style="font-size:11px;"></i></div>
     <div style ="margin-right:3px;margin-left:3px;display:inline-block;"class="ui-grid-header-cell-label" ui-grid-one-bind-id-grid="col.uid + '-header-text'" ng-click="grid.appScope.text(col)">{{ col.name CUSTOM_FILTERS }}</div>
     <div style="display:inline-block;" class="ui-grid-header-cell-label" ui-grid-one-bind-id-grid="col.uid + '-header-text'" ng-click="grid.appScope.text(col)">
-        <i class="fa fa-bar-chart" style="color:#3EBBAE;font-size:15px;" aria-hidden="true" tooltip-placement="left" tooltip-append-to-body="true"
+       <a ng-disabled="col.colDef.attrType=='vector'?true:false"> 
+      <i class="fa fa-bar-chart" style="color:#3EBBAE;font-size:15px;" ng-disabled="true" aria-hidden="true" tooltip-placement="left" tooltip-append-to-body="true"
       uib-tooltip="Histogram" ng-click="grid.appScope.calculateHistrogram(col)"></i>
+      </a>
     
     </div>
    
