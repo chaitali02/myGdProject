@@ -17,10 +17,28 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection="dashboard")
 public class Dashboard extends BaseEntity {
 
-	private List<Section> sectionInfo;
-	
+	private List<Section> sectionInfo;	
 	private MetaIdentifierHolder dependsOn;
 	private List<AttributeRefHolder> filterInfo;
+	private String saveOnRefresh = "N";
+	
+	/**
+	 * @Ganesh
+	 *
+	 * @return the saveOnRefresh
+	 */
+	public String getSaveOnRefresh() {
+		return saveOnRefresh;
+	}
+	
+	/**
+	 * @Ganesh
+	 *
+	 * @param saveOnRefresh the saveOnRefresh to set
+	 */
+	public void setSaveOnRefresh(String saveOnRefresh) {
+		this.saveOnRefresh = saveOnRefresh;
+	}
 
 	public MetaIdentifierHolder getDependsOn() {
 		return dependsOn;
@@ -45,10 +63,15 @@ public class Dashboard extends BaseEntity {
 	public void setSectionInfo(List<Section> sectionInfo) {
 		this.sectionInfo = sectionInfo;
 	}
-
+	
+	/* 
+	 * @Ganesh
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
-		return "Dashboard [filterInfo=" + filterInfo + "]";
+		return "Dashboard [sectionInfo=" + sectionInfo + ", dependsOn=" + dependsOn + ", filterInfo=" + filterInfo
+				+ ", saveOnRefresh=" + saveOnRefresh + "]";
 	}
-	
 }
