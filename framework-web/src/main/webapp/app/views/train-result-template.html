@@ -100,7 +100,8 @@
                             <tr>
                                 <td style="width:40%">Test Set</td>
                                 <td style="width:60%">
-                                    <b>{{modelresult.validationSet}} rows</b>
+                                    <b ng-if="!isTabDisabled">{{modelresult.validationSet}} rows</b>
+                                    <b ng-if="isTabDisabled">-NA-</b>
                                 </td>
                             </tr>
                             <tr>
