@@ -10,62 +10,60 @@
  *******************************************************************************/
 package com.inferyx.framework.domain;
 
-import java.util.List;
-import java.util.Map;
- 
+/********************** UNUSED **********************/
 public class VizpodDetailsHolder {
-	
-	private List<Map<String, Object>> vizpodDetailsDataList;
-	
-	
-	private VizExec vizExec;
-	
-	public VizpodDetailsHolder() {
-	}
-
-	
-	public VizpodDetailsHolder(List<Map<String, Object>> vizpodDetailsDataList) {
-		this.vizpodDetailsDataList = vizpodDetailsDataList;
-	}
-	
-	
-	public VizpodDetailsHolder(VizExec vizExec) {
-		this.vizExec = vizExec;
-	}
-	
-	
-	public VizpodDetailsHolder(List<Map<String, Object>> vizpodDetailsDataList, VizExec vizExec) {
-		this.vizExec = vizExec;
-		this.vizpodDetailsDataList = vizpodDetailsDataList;
-	}
-	
-	public List<Map<String, Object>> getVizpodDetailsDataList() {
-		return vizpodDetailsDataList;
-	}
-	
-	public void setGetAttributeDetailsDataList(List<Map<String, Object>> vizpodDetailsDataList) {
-		this.vizpodDetailsDataList = vizpodDetailsDataList;
-	}
-/*	public List<Map<String, Object>> attributeDetailsDataList() {
-		return attributeDetailsDataList;
-	}*/
-
-	
-
-	
-	
-	public VizExec getVizExec() {
-		return vizExec;
-	}
-	
-
-	public void setVizExec(VizExec vizExec) {
-		this.vizExec = vizExec;
-	}
-	
-	
-	
-	
-
-	
+//	
+//	private List<Map<String, Object>> vizpodDetailsDataList;
+//	
+//	
+//	private VizExec vizExec;
+//	
+//	public VizpodDetailsHolder() {
+//	}
+//
+//	
+//	public VizpodDetailsHolder(List<Map<String, Object>> vizpodDetailsDataList) {
+//		this.vizpodDetailsDataList = vizpodDetailsDataList;
+//	}
+//	
+//	
+//	public VizpodDetailsHolder(VizExec vizExec) {
+//		this.vizExec = vizExec;
+//	}
+//	
+//	
+//	public VizpodDetailsHolder(List<Map<String, Object>> vizpodDetailsDataList, VizExec vizExec) {
+//		this.vizExec = vizExec;
+//		this.vizpodDetailsDataList = vizpodDetailsDataList;
+//	}
+//	
+//	public List<Map<String, Object>> getVizpodDetailsDataList() {
+//		return vizpodDetailsDataList;
+//	}
+//	
+//	public void setGetAttributeDetailsDataList(List<Map<String, Object>> vizpodDetailsDataList) {
+//		this.vizpodDetailsDataList = vizpodDetailsDataList;
+//	}
+///*	public List<Map<String, Object>> attributeDetailsDataList() {
+//		return attributeDetailsDataList;
+//	}*/
+//
+//	
+//
+//	
+//	
+//	public VizExec getVizExec() {
+//		return vizExec;
+//	}
+//	
+//
+//	public void setVizExec(VizExec vizExec) {
+//		this.vizExec = vizExec;
+//	}
+//	
+//	
+//	
+//	
+//
+//	
 }
