@@ -71,6 +71,7 @@ import com.inferyx.framework.domain.Condition;
 import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.Dashboard;
+import com.inferyx.framework.domain.DashboardExec;
 import com.inferyx.framework.domain.DataQual;
 import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataQualGroup;
@@ -155,6 +156,7 @@ import com.inferyx.framework.enums.OperatorType;
 import com.inferyx.framework.enums.ParamDataType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
+import com.inferyx.framework.service.DashboardServiceImpl;
 
 @Component
 public class Helper {
@@ -333,6 +335,7 @@ public class Helper {
 				case deployExec : return "iDeployExecDao";
 				case processExec : return "iProcessExecDao";
 				case organization : return "iOrganizationDao";
+				case dashboardExec : return "iDashboardExecDao";
 				default:
 					return null;
 			}
@@ -370,6 +373,7 @@ public class Helper {
 		case trainresult : return "TrainResultServiceImpl";
 		case deployExec : return "DeployServiceImpl";
 		case processExec : return "ProcessServiceImpl";
+		case dashboardExec : return " DashboardServiceImpl";
 		default: return null;
 		}
 	}
@@ -463,6 +467,7 @@ public class Helper {
 		case deployExec : return DeployExec.class;
 		case processExec : return ProcessExec.class;
 		case organization : return Organization.class;
+		case dashboardExec : return DashboardExec.class;
 		default: return null;
 		}
 	}
@@ -561,6 +566,7 @@ public class Helper {
 				case "deployexec" : return MetaType.deployExec;
 				case "processexec" : return MetaType.processExec;
 				case "organization" : return MetaType.organization;
+				case "dashboardexec" : return MetaType.dashboardExec;
 				default : return null;
 			}
 		}

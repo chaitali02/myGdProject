@@ -10,28 +10,34 @@
  *******************************************************************************/
 package com.inferyx.framework.domain;
 
+import java.util.List;
+
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "vizexec")
-public class VizExec extends BaseExec {	
-	private String sql;
+/**
+ * @author Ganesh
+ *
+ */
+@Document(collection = "dashboardexec")
+public class DashboardExec extends BaseExec {
+	private List<MetaIdentifierHolder> vizExecInfo;
 
 	/**
 	 * @Ganesh
 	 *
-	 * @return the sql
+	 * @return the vizExecInfo
 	 */
-	public String getSql() {
-		return sql;
+	public List<MetaIdentifierHolder> getVizExecInfo() {
+		return vizExecInfo;
 	}
 
 	/**
 	 * @Ganesh
 	 *
-	 * @param sql the sql to set
+	 * @param vizExecInfo the vizExecInfo to set
 	 */
-	public void setSql(String sql) {
-		this.sql = sql;
+	public void setVizExecInfo(List<MetaIdentifierHolder> vizExecInfo) {
+		this.vizExecInfo = vizExecInfo;
 	}
-		
+	
 }

@@ -45,7 +45,6 @@ import javax.activation.MimetypesFileTypeMap;
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -60,7 +59,6 @@ import org.springframework.data.mongodb.core.aggregation.MatchOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
@@ -72,7 +70,6 @@ import com.inferyx.framework.common.CustomLogger;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.GraphInfo;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.common.SessionHelper;
 import com.inferyx.framework.common.WorkbookUtil;
 import com.inferyx.framework.dao.IActivityDao;
@@ -86,6 +83,7 @@ import com.inferyx.framework.dao.IConditionDao;
 import com.inferyx.framework.dao.IDagDao;
 import com.inferyx.framework.dao.IDagExecDao;
 import com.inferyx.framework.dao.IDashboardDao;
+import com.inferyx.framework.dao.IDashboardExecDao;
 import com.inferyx.framework.dao.IDataQualDao;
 import com.inferyx.framework.dao.IDataQualExecDao;
 import com.inferyx.framework.dao.IDataQualGroupDao;
@@ -495,6 +493,26 @@ public class CommonServiceImpl<T> {
 	IOrganizationDao iOrganizationDao;
 	@Autowired
 	SessionHelper sessionHelper;
+	@Autowired
+	private IDashboardExecDao iDashboardExecDao;
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the iDashboardExecDao
+	 */
+	public IDashboardExecDao getiDashboardExecDao() {
+		return iDashboardExecDao;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param iDashboardExecDao the iDashboardExecDao to set
+	 */
+	public void setiDashboardExecDao(IDashboardExecDao iDashboardExecDao) {
+		this.iDashboardExecDao = iDashboardExecDao;
+	}
 
 	/**
 	 * @Ganesh

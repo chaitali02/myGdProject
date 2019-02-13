@@ -10,16 +10,12 @@
  *******************************************************************************/
 package com.inferyx.framework.controller;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,10 +24,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.inferyx.framework.domain.VizpodDetailsHolder;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.ExecParams;
-import com.inferyx.framework.domain.VizpodResultHolder;
+import com.inferyx.framework.domain.VizExec;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.service.DagExecServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
@@ -92,13 +87,15 @@ public class VizpodController {
 			@RequestParam(value="order", required=false) String order, 
 			@RequestParam(value="requestId", required=false) String requestId,
 			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action) throws IOException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
+			@RequestParam(value = "action", required = false) String action) throws Exception {
 		RunMode runMode = RunMode.BATCH;
-		VizpodResultHolder resultHolder = vizpodServiceImpl.getVizpodResults(vizpodUUID, vizpodVersion, execParams, rows, offset, limit, sortBy, order, requestId, runMode);
-		if (resultHolder == null) {
-			return null;	
-		}
-		return resultHolder.getVizpodResultDataList();
+		VizExec vizExec = vizpodServiceImpl.create(vizpodUUID, vizpodVersion, null, execParams, runMode);
+//		VizpodResultHolder resultHolder = vizpodServiceImpl.getVizpodResults(vizpodUUID, vizpodVersion, execParams, vizExec, rows, offset, limit, sortBy, order, requestId, runMode);
+//		if (resultHolder == null) {
+//			return null;	
+//		}
+//		return resultHolder.getVizpodResultDataList();
+		return vizpodServiceImpl.getVizpodResults(vizpodUUID, vizpodVersion, execParams, vizExec, rows, offset, limit, sortBy, order, requestId, runMode);
 	}
 	
 
@@ -113,13 +110,16 @@ public class VizpodController {
 			@RequestParam(value="order", required=false) String order, 
 			@RequestParam(value="requestId", required=false) String requestId,
 			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action) throws IOException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
+			@RequestParam(value = "action", required = false) String action) throws Exception {
 		RunMode runMode = RunMode.BATCH;
-		VizpodDetailsHolder resultHolder = vizpodServiceImpl.getVizpodDetails(vizpodUUID, vizpodVersion, execParams, rows, offset, limit, sortBy, order, requestId, runMode);
-		if (resultHolder.getVizpodDetailsDataList() == null) {
-			return null;
-		}
-		return resultHolder.getVizpodDetailsDataList();
+		VizExec vizExec = vizpodServiceImpl.create(vizpodUUID, vizpodVersion, null, execParams, runMode);
+//		VizpodDetailsHolder resultHolder = vizpodServiceImpl.getVizpodDetails(vizpodUUID, vizpodVersion, execParams, vizExec, rows, offset, limit, sortBy, order, requestId, runMode);
+//		if (resultHolder.getVizpodDetailsDataList() == null) {
+//			return null;
+//		}
+//		return resultHolder.getVizpodDetailsDataList();
+		
+		return vizpodServiceImpl.getVizpodDetails(vizpodUUID, vizpodVersion, execParams, vizExec, rows, offset, limit, sortBy, order, requestId, runMode);
 	}
 	
 	

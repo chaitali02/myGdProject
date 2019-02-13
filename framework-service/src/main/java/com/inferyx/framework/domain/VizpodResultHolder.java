@@ -10,46 +10,39 @@
  *******************************************************************************/
 package com.inferyx.framework.domain;
 
-import java.util.List;
-import java.util.Map;
- 
+/********************** UNUSED **********************/
 public class VizpodResultHolder {
 	
-	private List<Map<String, Object>> vizpodResultDataList;
-	
-	private VizExec vizExec;
-	
-	public VizpodResultHolder() {
-	}
-	
-	public VizpodResultHolder(List<Map<String, Object>> vizpodResultDataList) {
-		this.vizpodResultDataList = vizpodResultDataList;
-	}
-
-	public VizpodResultHolder(VizExec vizExec) {
-		this.vizExec = vizExec;
-	}
-	
-	public VizpodResultHolder(List<Map<String, Object>> vizpodResultDataList, VizExec vizExec) {
-		this.vizExec = vizExec;
-		this.vizpodResultDataList = vizpodResultDataList;
-	}
-	
-	public List<Map<String, Object>> getVizpodResultDataList() {
-		return vizpodResultDataList;
-	}
-	public void setVizpodResultDataList(List<Map<String, Object>> vizpodResultDataList) {
-		this.vizpodResultDataList = vizpodResultDataList;
-	}
-	public VizExec getVizpodExec() {
-		return vizExec;
-	}
-	public void setVizpodExec(VizExec vizExec) {
-		this.vizExec = vizExec;
-	}
-
-	
-	
-	
-	
+//	private List<Map<String, Object>> vizpodResultDataList;
+//	
+//	private VizExec vizExec;
+//	
+//	public VizpodResultHolder() {
+//	}
+//	
+//	public VizpodResultHolder(List<Map<String, Object>> vizpodResultDataList) {
+//		this.vizpodResultDataList = vizpodResultDataList;
+//	}
+//
+//	public VizpodResultHolder(VizExec vizExec) {
+//		this.vizExec = vizExec;
+//	}
+//	
+//	public VizpodResultHolder(List<Map<String, Object>> vizpodResultDataList, VizExec vizExec) {
+//		this.vizExec = vizExec;
+//		this.vizpodResultDataList = vizpodResultDataList;
+//	}
+//	
+//	public List<Map<String, Object>> getVizpodResultDataList() {
+//		return vizpodResultDataList;
+//	}
+//	public void setVizpodResultDataList(List<Map<String, Object>> vizpodResultDataList) {
+//		this.vizpodResultDataList = vizpodResultDataList;
+//	}
+//	public VizExec getVizpodExec() {
+//		return vizExec;
+//	}
+//	public void setVizpodExec(VizExec vizExec) {
+//		this.vizExec = vizExec;
+//	}	
 }
