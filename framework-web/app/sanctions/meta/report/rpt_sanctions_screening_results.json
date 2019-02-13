@@ -33,6 +33,7 @@
   "headerAlign": "center",
   "footer": "Sanctions Screening Report",
   "footerAlign": "center",
+  "saveOnRefresh" : "Y",
   "filterInfo": [
     {
       "ref": {

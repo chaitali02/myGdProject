@@ -26,6 +26,24 @@ public class Report extends BaseEntity {
 	private List<AttributeRefHolder> filterInfo;
 	private MetaIdentifierHolder dependsOn; 
 	private List<AttributeSource> attributeInfo = new ArrayList<AttributeSource>();
+	private String saveOnRefresh = "N";
+	
+	/**
+	 * @Ganesh
+	 *
+	 * @return the saveOnRefresh
+	 */
+	public String getSaveOnRefresh() {
+		return saveOnRefresh;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param saveOnRefresh the saveOnRefresh to set
+	 */
+	public void setSaveOnRefresh(String saveOnRefresh) {
+		this.saveOnRefresh = saveOnRefresh;
+	}
 	/**
 	 * @Ganesh
 	 *

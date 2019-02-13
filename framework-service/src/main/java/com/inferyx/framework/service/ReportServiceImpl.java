@@ -34,7 +34,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.WorkbookUtil;
@@ -55,9 +54,7 @@ import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
-import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.SparkExecutor;
-import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.ReportOperator;
 
 /**
@@ -70,12 +67,6 @@ public class ReportServiceImpl {
 	private CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	private ReportOperator reportOperator;
-	@Autowired
-	private Engine engine;
-	@Autowired
-	private Helper helper;
-	@Autowired
-	private ExecutorFactory execFactory;
 	@Autowired
 	private DataStoreServiceImpl dataStoreServiceImpl;
 	@Autowired
@@ -196,7 +187,6 @@ public class ReportServiceImpl {
 //			}
 //			exec = execFactory.getExecutor(execContext.toString());
 
-			ResultSetHolder rsHolder = null;
 			Datasource reportDS = commonServiceImpl.getDatasourceByObject(report);
 //			String tableName = getTableName(report, reportExec, execContext, reportDS);
 			String tableName = String.format("%s_%s_%s", report.getUuid().replace("-", "_"), report.getVersion(), reportExec.getVersion());
@@ -205,28 +195,16 @@ public class ReportServiceImpl {
 			String reportDefaultPath = hdfsInfo.getHdfsURL().concat(Helper.getPropertyValue("framework.report.Path"));
 			reportDefaultPath = reportDefaultPath.endsWith("/") ? reportDefaultPath : reportDefaultPath.concat("/");
 			String filePathUrl = String.format("%s%s", reportDefaultPath, reportPath);
-			
-			rsHolder = sparkExecutor.executeSqlByDatasource(reportExec.getExec(), reportDS, appUuid);
-			sparkExecutor.registerAndPersistDataframe(rsHolder, null, com.inferyx.framework.enums.SaveMode.APPEND.toString(), filePathUrl, tableName, "true", true);
-			countRows = rsHolder.getCountRows();
-			
-//			appUuid = commonServiceImpl.getApp().getUuid();
-//			if (runMode != null && runMode.equals(RunMode.BATCH)) {
-//				if(execContext.equals(ExecContext.FILE)
-//						|| execContext.equals(ExecContext.livy_spark)
-//						|| execContext.equals(ExecContext.spark)) {
-//					rsHolder = sparkExecutor.executeSqlByDatasource(reportExec.getExec(), reportDS, appUuid);
-//					sparkExecutor.registerAndPersistDataframe(rsHolder, null, com.inferyx.framework.enums.SaveMode.APPEND.toString(), filePathUrl, tableName, "true", true);
-//					countRows = rsHolder.getCountRows();
-//				} else {
-//					String sql = helper.buildInsertQuery(execContext.toString(), tableName, null, reportExec.getExec());
-//					rsHolder = exec.executeSqlByDatasource(sql, reportDS, appUuid);
-//					countRows = rsHolder.getCountRows();
-//				}
-//			} else {
-//				rsHolder = sparkExecutor.executeAndRegisterByDatasource(reportExec.getExec(), tableName, reportDS, appUuid);
-//				countRows = rsHolder.getCountRows();
-//			}
+
+			ResultSetHolder rsHolder = null;
+			if(report.getSaveOnRefresh().equalsIgnoreCase("Y")) {
+				rsHolder = sparkExecutor.executeSqlByDatasource(reportExec.getExec(), reportDS, appUuid);
+				sparkExecutor.registerAndPersistDataframe(rsHolder, null, com.inferyx.framework.enums.SaveMode.APPEND.toString(), filePathUrl, tableName, "true", true);
+				countRows = rsHolder.getCountRows();
+			} else {
+				rsHolder = sparkExecutor.executeAndRegisterByDatasource(reportExec.getExec(), tableName, reportDS, appUuid);
+				countRows = rsHolder.getCountRows();
+			}
 			
 			persistDatastore(reportExec, tableName, filePathUrl, resultRef, new MetaIdentifier(MetaType.report, report.getUuid(), report.getVersion()), countRows, runMode);
 
