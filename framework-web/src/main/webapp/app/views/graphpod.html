@@ -15,7 +15,7 @@
         <i class="fa fa-circle"></i>
       </li>
       <li>
-        <span>{{graphpodData.name | strReplace:'_':' '|capitalize}}</span>
+        <span>{{graphpodData.name}}</span>
       </li>
     </ul>
     <div class="page-toolbar">
@@ -37,14 +37,14 @@
         <div class="portlet box green">
           <div class="portlet-title">
             <div class="caption">
-              <i class="fa fa-gift"></i>{{graphpodData.name | strReplace:'_':' '|capitalize}}
+              <i class="fa fa-gift"></i>{{graphpodData.name}}
             </div>
             <div class="tools">
               <a  href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top"
-              tooltip  ng-hide="isAdd"  ng-class="(showForm==true)? 'currentpage':'notcurrentpage'" style="height:16px;font-size:16px;" data-ng-click="showHome(graphpodData.uuid,graphpodData.version,mode)">
+              tooltip  ng-hide="isAdd"  ng-class="(showForm==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'" style="height:16px;font-size:16px;" data-ng-click="showHome(graphpodData.uuid,graphpodData.version,mode)">
               <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
               </a>
-              <a title="Edit" ng-class="(isEdit==true || isPrivlage || graphpodData.locked == 'Y')? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
+              <a title="Edit" ng-class="(isEdit==true || isPrivlage || graphpodData.locked == 'Y' ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
                 data-placement="top" tooltip ng-click="enableEdit(graphpodData.uuid,graphpodData.version)" ng-hide="isAdd"
                 style="height:16px;">
                 <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
@@ -58,11 +58,11 @@
                 ng-click="showView(graphpodData.uuid,graphpodData.version)" ng-hide="isAdd" style="height:16px;">
                 <span class="glyphicon glyphicon-file" style="color:white;"></span>
               </a> -->
-              <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="showForm==false? 'currentpage':'notcurrentpage'"
+              <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="(showForm==false ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
                 data-ng-click="showGraph(graphpodData.uuid,graphpodData.version)" style="height:14px;">
                 <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
               </a>
-              <a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip ng-class="showForm==true? 'currentpage':'notcurrentpage'">
+              <a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showForm==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'">
                 <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
               </a>
               <a title="Close" data-toggle="tooltip" data-placement="top" tooltip ng-click="close()" style="height:14px;">
@@ -178,6 +178,17 @@
                       uncheckable>Yes</label>
                     <label class="btn btn-default" ng-model="graphpodData.published" uib-btn-radio="'N'" ng-disabled="mode!=' '? true:false"
                       uncheckable>No</label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Public</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="btn-group" ng-init="graphpodData.publicFlag='N'">
+                    <label class="btn btn-default" ng-model="graphpodData.publicFlag" uib-btn-radio="'Y'"
+                      ng-disabled="{{mode}}" uncheckable>Yes</label>
+                    <label class="btn btn-default" ng-model="graphpodData.publicFlag" uib-btn-radio="'N'"
+                      ng-disabled="{{mode}}" uncheckable>No</label>
                   </div>
                 </div>
               </div>

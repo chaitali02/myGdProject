@@ -132,8 +132,15 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 		});
 	};
 	$scope.getLovByType();
-
+	$scope.checkIsInrogess=function(){
+		if($scope.isEditInprogess || $scope.isEditVeiwError){
+		return false;
+		}
+    }
 	$scope.showVizpodPage = function () {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showvizpod = true;
 		$scope.showgraph = false
 		$scope.showgraphdiv = false;
@@ -141,6 +148,9 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 
 	}//End showVizpodPage
 	$scope.showHome=function(uuid, version,mode){
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showVizpodPage()
 		$state.go('dvvizpod', {
 			id: uuid,
@@ -152,6 +162,9 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 		if($scope.isPrivlage || $scope.vizpoddata.locked =="Y"){
 			return false;
 		}
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showVizpodPage()
 		$state.go('dvvizpod', {
 			id: uuid,
@@ -161,6 +174,9 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 	}
 
 	$scope.showview = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showVizpodPage()
 		$state.go('dvvizpod', {
 			id: uuid,
@@ -325,6 +341,9 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 	})
 
 	$scope.showVizpodGraph = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showvizpod = false;
 		$scope.showgraph = false
 		$scope.showgraphdiv = true;
@@ -336,6 +355,9 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 		if($scope.isDataInpogress){
 			return false;
 		};
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showvizpod = false;
 		$scope.showgraph = false
 		$scope.showgraphdiv = false
@@ -609,7 +631,7 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 		vizpodjson.active = $scope.vizpoddata.active;
 		vizpodjson.locked = $scope.vizpoddata.locked;
 		vizpodjson.published = $scope.vizpoddata.published;
-
+		vizpodjson.publicFlag = $scope.vizpoddata.publicFlag;
 		var sourece = {};
 		var ref = {};
 		ref.uuid = $scope.allSource.defaultoption.uuid;
@@ -792,7 +814,9 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 	$scope.downloadFile = function (data) {
 		if($scope.isDownloadDatapod)
 		  return false;
-		  
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.download.uuid = data.uuid;
 		$scope.download.version = data.version;
 		$scope.download.type="vizpod";

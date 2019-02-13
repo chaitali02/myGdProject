@@ -15,11 +15,12 @@
         <i class="fa fa-circle"></i>
       </li>
       <li>
-        <span>{{algorithmData.name | strReplace:'_':' '|capitalize}}</span>
+        <span>{{algorithmData.name}}</span>
       </li>
     </ul>
     <div class="page-toolbar">
-      <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+      <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom"
+        data-original-title="Change dashboard date range">
         <i class="icon-calendar"></i>&nbsp;
         <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
       </div>
@@ -27,21 +28,23 @@
   </div><!-- END PAGE HEADER-->
   <br>
   <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
-  <div  options="dirOptions" type="'algorithm'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="algorithmData" comment-panel-directive></div>
+  <div options="dirOptions" type="'algorithm'" on-close="onPanelClose" mode="mode" current-user="userDetail"
+    comment-data="algorithmData" comment-panel-directive></div>
 
   <div class="row">
     <div class="col-md-12">
       <div class="portlet box green">
         <div class="portlet-title">
           <div class="caption">
-            <i class="fa fa-gift"></i>{{algorithmData.name | strReplace:'_':' '|capitalize}}
+            <i class="fa fa-gift"></i>{{algorithmData.name}}
           </div>
           <div class="tools">
-            <a href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top"
-              tooltip  ng-hide="isAdd"  ng-class="(showForm==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'" style="height:16px;font-size:16px;" data-ng-click="showHome(algorithmData.uuid,algorithmData.version,mode)">
+            <a href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top" tooltip ng-hide="isAdd"
+              ng-class="(showForm==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
+              style="height:16px;font-size:16px;" data-ng-click="showHome(algorithmData.uuid,algorithmData.version,mode)">
               <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
-            <a title="Edit"ng-class="(isEdit==true || isPrivlage || algorithmData.locked == 'Y' || isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
+            <a title="Edit" ng-class="(isEdit==true || isPrivlage || algorithmData.locked == 'Y' || isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
               data-toggle="tooltip" data-placement="top" tooltip ng-click="enableEdit(algorithmData.uuid,algorithmData.version)"
               ng-hide="isAdd" style="height:16px;">
               <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
@@ -55,11 +58,13 @@
               ng-click="showview(algorithmData.uuid,algorithmData.version)" ng-hide="isAdd" style="height:16px;">
               <span class="glyphicon glyphicon-file" style="color:white;"></span>
             </a> -->
-            <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="(showalgorithm==false ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
+            <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow"
+              ng-class="(showalgorithm==false ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
               data-ng-click="showGraph(algorithmData.uuid,algorithmData.version)" style="height:14px;">
               <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
             </a>
-            <a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showGraphDiv ==false ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'">
+            <a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip
+              ng-class="(showGraphDiv ==false ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'">
               <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
             </a>
             <a title="Close" data-toggle="tooltip" data-placement="top" tooltip data-ui-sref="algorithm" style="height:14px;">
@@ -75,7 +80,8 @@
               <div class="bounce2"></div>
               <div class="bounce3"></div>
             </div>
-            <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="algorithmData.uuid" version="algorithm.defaultVersion.version">
+            <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="algorithmData.uuid"
+              version="algorithm.defaultVersion.version">
             </div>
           </div>
 
@@ -91,23 +97,25 @@
               </div>
             </div>
             <div ng-show="!isEditInprogess && !isEditVeiwError">
-              <form class="form-horizontal" novalidate="novalidate" name="myform" ng-submit="submitAlgorithm()" prevent-enter-submit>
+              <form class="form-horizontal" novalidate="novalidate" name="myform" ng-submit="submitAlgorithm()"
+                prevent-enter-submit>
                 <div class="form-group" ng-show="algorithmData.uuid">
                   <label class="col-md-3 control-label">UUID</label>
                   <div class="col-md-6">
                     <input type="text" class="form-control" data-ng-disabled="true" ng-model="algorithmData.uuid">
                   </div>
                 </div>
-                
+
                 <div class="form-group">
                   <label class="col-md-3 control-label">Name
                     <span class="required" aria-required="true"> * </span>
                   </label>
                   <div class="col-md-6">
-                    <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="algorithmData.name" required="">
+                    <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="algorithmData.name"
+                      required="">
                   </div>
                 </div>
-                
+
                 <div class="form-group" ng-show="algorithmData.uuid">
                   <label class="col-md-3 control-label">Version</label>
                   <div class="col-md-6">
@@ -116,7 +124,7 @@
                     </select>
                   </div>
                 </div>
-                
+
                 <div class="form-group" ng-show="algorithmData.uuid">
                   <label class="col-md-3 control-label">CreatedBy</label>
                   <div class="col-md-6">
@@ -134,18 +142,20 @@
                 <div class="form-group taginput">
                   <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
-                    <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
-                      <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" 
-                          max-results-to-show="10">
+                    <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0"
+                      add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
+                      <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true"
+                        max-results-to-show="10">
                       </auto-complete>
-                  </tags-input>
+                    </tags-input>
                   </div>
                 </div>
 
                 <div class="form-group">
                   <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
                   <div class="col-md-6">
-                    <textarea class="form-control noresize" ng-disabled="{{mode}}" ng-model="algorithmData.desc" rows="2" style="resize:none;"></textarea>
+                    <textarea class="form-control noresize" ng-disabled="{{mode}}" ng-model="algorithmData.desc" rows="2"
+                      style="resize:none;"></textarea>
                   </div>
                 </div>
 
@@ -153,29 +163,25 @@
                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
                     <div class="btn-group" ng-init="algorithmData.active='Y'">
-                      <label class="btn btn-default" ng-model="algorithmData.active" uib-btn-radio="'Y'" ng-disabled="mode!=' '? true:false" uncheckable>Yes</label>
-                      <label class="btn btn-default" ng-model="algorithmData.active" uib-btn-radio="'N'" ng-disabled="mode!=' '? true:false" uncheckable>No</label>
+                      <label class="btn btn-default" ng-model="algorithmData.active" uib-btn-radio="'Y'" ng-disabled="mode!=' '? true:false"
+                        uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-model="algorithmData.active" uib-btn-radio="'N'" ng-disabled="mode!=' '? true:false"
+                        uncheckable>No</label>
                     </div>
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
-                    <div class="btn-group" >
-                      <label class="btn btn-default" ng-model="algorithmData.locked" uib-btn-radio="'Y'" ng-disabled="mode!=' '? true:false" uncheckable>Yes</label>
-                      <label class="btn btn-default" ng-model="algorithmData.locked" uib-btn-radio="'N'" ng-disabled="mode!=' '? true:false" uncheckable>No</label>
+                    <div class="btn-group">
+                      <label class="btn btn-default" ng-model="algorithmData.locked" uib-btn-radio="'Y'" ng-disabled="mode!=' '? true:false"
+                        uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-model="algorithmData.locked" uib-btn-radio="'N'" ng-disabled="mode!=' '? true:false"
+                        uncheckable>No</label>
                     </div>
                   </div>
                 </div>
-                <div class="form-group">
-                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Save PMML</label>
-                    <div class="col-md-6 col-sm-6 col-xs-12">
-                      <div class="btn-group" ng-init="algorithmData.savePmml='N'">
-                        <label class="btn btn-default" ng-model="algorithmData.savePmml" uib-btn-radio="'Y'" ng-disabled="mode!=' '? true:false" uncheckable>Yes</label>
-                        <label class="btn btn-default" ng-model="algorithmData.savePmml" uib-btn-radio="'N'" ng-disabled="mode!=' '? true:false" uncheckable>No</label>
-                      </div>
-                    </div>
-                </div>
+
 
                 <div class="form-group">
                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
@@ -192,30 +198,42 @@
                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Public</label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
                     <div class="btn-group" ng-init="algorithmData.publicFlag='N'">
-                      <label class="btn btn-default" ng-model="algorithmData.publicFlag" uib-btn-radio="'Y'" ng-disabled="mode!=' '? true:false"
+                      <label class="btn btn-default" ng-model="algorithmData.publicFlag" uib-btn-radio="'Y'"
+                        ng-disabled="{{mode}}" uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-model="algorithmData.publicFlag" uib-btn-radio="'N'"
+                        ng-disabled="{{mode}}" uncheckable>No</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Save PMML</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="btn-group" ng-init="algorithmData.savePmml='N'">
+                      <label class="btn btn-default" ng-model="algorithmData.savePmml" uib-btn-radio="'Y'" ng-disabled="mode!=' '? true:false"
                         uncheckable>Yes</label>
-                      <label class="btn btn-default" ng-model="algorithmData.publicFlag" uib-btn-radio="'N'" ng-disabled="mode!=' '? true:false"
+                      <label class="btn btn-default" ng-model="algorithmData.savePmml" uib-btn-radio="'N'" ng-disabled="mode!=' '? true:false"
                         uncheckable>No</label>
                     </div>
                   </div>
                 </div>
-                
                 <div class="form-group">
                   <label class="col-md-3 control-label">Type
                     <span class="required" aria-required="true"> * </span>
                   </label>
                   <div class="col-md-6">
-                    <select class="form-control" ng-disabled="{{mode}}" data-ng-model="selecttype" ng-options="r for r in types" required="">
+                    <select class="form-control" ng-disabled="{{mode}}" data-ng-model="selecttype" ng-options="r for r in types"
+                      required="">
                     </select>
                   </div>
                 </div>
-                
+
                 <div class="form-group">
                   <label class="col-md-3 control-label">Library
                     <span class="required" aria-required="true"> * </span>
                   </label>
                   <div class="col-md-6">
-                    <select class="form-control" ng-disabled="{{mode}}" data-ng-model="selectlibrary" ng-options="r for r in librarytypes" required="">
+                    <select class="form-control" ng-disabled="{{mode}}" data-ng-model="selectlibrary" ng-options="r for r in librarytypes"
+                      required="">
                     </select>
 
                   </div>
@@ -224,33 +242,36 @@
                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Custom Flag</label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
                     <div class="btn-group">
-                      <label class="btn btn-default" ng-model="algorithmData.customFlag" ng-change="onChangeCusFlg()" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable >Yes</label>
-                      <label class="btn btn-default" ng-model="algorithmData.customFlag" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable ng-change="onChangeCusFlg()">No</label>
+                      <label class="btn btn-default" ng-model="algorithmData.customFlag" ng-change="onChangeCusFlg()"
+                        uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-model="algorithmData.customFlag" uib-btn-radio="'N'"
+                        ng-disabled="{{mode}}" uncheckable ng-change="onChangeCusFlg()">No</label>
                     </div>
                   </div>
                 </div>
                 <div class="form-group" ng-if="algorithmData.customFlag =='Y'">
-                    <label class="col-md-3 control-label">Script Path
-                      <span class="required" aria-required="true"> * </span>
-                    </label>
-                    <div class="col-md-6">
-                      <input type="text" class="form-control"  ng-disabled="{{mode}}" ng-model="algorithmData.scriptName" required>
-                    </div>
+                  <label class="col-md-3 control-label">Script Path
+                    <span class="required" aria-required="true"> * </span>
+                  </label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="algorithmData.scriptName"
+                      required>
+                  </div>
                 </div>
                 <div class="form-group" ng-if="algorithmData.customFlag =='N'">
                   <label class="col-md-3 control-label">Script Path
                     <span aria-required="true"> * </span>
                   </label>
                   <div class="col-md-6">
-                    <input type="text" class="form-control"  ng-disabled="true" ng-model="algorithmData.scriptName" >
+                    <input type="text" class="form-control" ng-disabled="true" ng-model="algorithmData.scriptName">
                   </div>
-              </div>
+                </div>
                 <div class="form-group" ng-if="algorithmData.customFlag =='Y'">
                   <label class="col-md-3 control-label">Train Class
                     <span aria-required="true"> * </span>
                   </label>
                   <div class="col-md-6">
-                    <input type="text" class="form-control" ng-disabled="true"  ng-model="algorithmData.trainClass" >
+                    <input type="text" class="form-control" ng-disabled="true" ng-model="algorithmData.trainClass">
                   </div>
                 </div>
                 <div class="form-group" ng-if="algorithmData.customFlag =='N'">
@@ -258,12 +279,13 @@
                     <span class="required" aria-required="true"> * </span>
                   </label>
                   <div class="col-md-6">
-                    <input type="text" class="form-control" ng-disabled="{{mode}}"  ng-model="algorithmData.trainClass" required>
+                    <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="algorithmData.trainClass"
+                      required>
                   </div>
                 </div>
-                
+
                 <div class="form-group" ng-if="algorithmData.customFlag =='Y'">
-                  <label class="col-md-3 control-label">Model Class 
+                  <label class="col-md-3 control-label">Model Class
                     <span aria-required="true"> * </span>
                   </label>
                   <div class="col-md-6">
@@ -271,28 +293,32 @@
                   </div>
                 </div>
                 <div class="form-group" ng-if="algorithmData.customFlag =='N'">
-                  <label class="col-md-3 control-label">Model Class 
+                  <label class="col-md-3 control-label">Model Class
                     <span class="required" aria-required="true"> * </span>
                   </label>
                   <div class="col-md-6">
-                    <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="algorithmData.modelClass" required>
+                    <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="algorithmData.modelClass"
+                      required>
                   </div>
                 </div>
-                
+
                 <div class="form-group">
                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Label Required</label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
                     <div class="btn-group" ng-init="algorithmData.labelRequired='Y'">
-                      <label class="btn btn-default" ng-model="algorithmData.labelRequired" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
-                      <label class="btn btn-default" ng-model="algorithmData.labelRequired" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
+                      <label class="btn btn-default" ng-model="algorithmData.labelRequired" uib-btn-radio="'Y'"
+                        ng-disabled="{{mode}}" uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-model="algorithmData.labelRequired" uib-btn-radio="'N'"
+                        ng-disabled="{{mode}}" uncheckable>No</label>
                     </div>
                   </div>
                 </div>
                 <div class="form-group taginput">
                   <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Summary Methods</label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
-                    <tags-input  style="height:65px;"  name="summaryMethods" ng-model="summaryMethods" ng-disabled="{{mode}}" min-length="0" required> </tags-input>
-                    <input type="hidden" name="summaryMethods" ng-model="summaryMethods" required/>
+                    <tags-input style="height:65px;" name="summaryMethods" ng-model="summaryMethods" ng-disabled="{{mode}}"
+                      min-length="0" required> </tags-input>
+                    <input type="hidden" name="summaryMethods" ng-model="summaryMethods" required />
                   </div>
                 </div>
                 <!-- <div class="form-group">
@@ -305,21 +331,24 @@
                   </div>
                 </div> -->
                 <div class="form-group">
-                    <label class="col-md-3 control-label">Default Param List
-                      <span class="required" aria-required="true"> * </span>
-                    </label>
-                    <div class="col-md-6">
-                      <select class="form-control"  select2 name="paramlistWoH" ng-disabled="{{mode}}" data-ng-model="selectParamlistWithoutHyper" ng-options="r as r.name for r in allParamList | orderBy:'name' track by r.uuid ">
-                      </select>
-                      <input type="hidden" name="paramlistWoH" data-ng-model="selectParamlistWithoutHyper.uuid" ng-required="true">
-                    </div>
+                  <label class="col-md-3 control-label">Default Param List
+                    <span class="required" aria-required="true"> * </span>
+                  </label>
+                  <div class="col-md-6">
+                    <select class="form-control" select2 name="paramlistWoH" ng-disabled="{{mode}}" data-ng-model="selectParamlistWithoutHyper"
+                      ng-options="r as r.name for r in allParamList | orderBy:'name' track by r.uuid ">
+                    </select>
+                    <input type="hidden" name="paramlistWoH" data-ng-model="selectParamlistWithoutHyper.uuid"
+                      ng-required="true">
+                  </div>
                 </div>
                 <div class="form-group">
                   <label class="col-md-3 control-label">Param List (Hyper Param)
                     <span class="required" aria-required="true"> * </span>
                   </label>
                   <div class="col-md-6">
-                    <select class="form-control"  select2 name="paramlistWH" ng-disabled="{{mode}}" data-ng-model="selectParamlistWithHyper" ng-options="r as r.name for r in allParamList | orderBy:'name' track by r.uuid ">
+                    <select class="form-control" select2 name="paramlistWH" ng-disabled="{{mode}}" data-ng-model="selectParamlistWithHyper"
+                      ng-options="r as r.name for r in allParamList | orderBy:'name' track by r.uuid ">
                     </select>
                     <input type="hidden" name="paramlistWH" data-ng-model="selectParamlistWithHyper.uuid" ng-required="true">
                   </div>

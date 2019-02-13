@@ -130,12 +130,23 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 		$scope.continueCount = $scope.continueCount - 1;
 		$scope.isSubmitShow = false;
 	}
+	$scope.checkIsInrogess=function(){
+		if($scope.isEditInprogess || $scope.isEditVeiwError){
+		return false;
+		}
+    }
 	$scope.showProfilePage = function () {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showForm = true;
 		$scope.showGraphDiv = false;
 	}
 
 	$scope.showHome = function (uuid, version, mode) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showProfilePage();
 		$state.go('createprofile', {
 			id: uuid,
@@ -148,6 +159,9 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 		if ($scope.isPrivlage || $scope.profileDetail.locked == "Y") {
 			return false;
 		}
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showProfilePage()
 		$state.go('createprofile', {
 			id: uuid,
@@ -157,6 +171,9 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 	}
 
 	$scope.showview = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		if (!$scope.isEdit) {
 			$scope.showProfilePage()
 			$state.go('createprofile', {
@@ -179,6 +196,9 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 	}
 
 	$scope.showProfileGraph = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showForm = false;
 		$scope.showGraphDiv = true;
 	}
@@ -672,6 +692,8 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 		profileJson.active = $scope.profileDetail.active;
 		profileJson.locked = $scope.profileDetail.locked;
 		profileJson.published = $scope.profileDetail.published;
+		profileJson.publicFlag = $scope.profileDetail.publicFlag;
+
 		var tagArray = [];
 		if ($scope.tags != null) {
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
@@ -957,7 +979,15 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 	$scope.$on('$destroy', function () {
 		$scope.isDestoryState = true;
 	});
+	$scope.checkIsInrogess=function(){
+		if($scope.isEditInprogess || $scope.isEditVeiwError){
+		return false;
+		}
+    }
 	$scope.showProfileGroupePage = function () {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showProfileGroup = true;
 		$scope.showgraphdiv = false;
 		$scope.graphDataStatus = false;
@@ -966,6 +996,9 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 	}
 
 	$scope.showHome = function (uuid, version, mode) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showProfileGroupePage();
 		$state.go('createprofilegroup', {
 			id: uuid,
@@ -977,6 +1010,9 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 		if ($scope.isPrivlage || $scope.profileGroupDetail.locked == "Y") {
 			return false;
 		}
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showProfileGroupePage()
 		$state.go('createprofilegroup', {
 			id: uuid,
@@ -985,12 +1021,25 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 		});
 	}
 	$scope.showview = function (uuid, version) {
-		$scope.showProfileGroupePage()
+        if($scope.checkIsInrogess () ==false){
+			return false;
+		}
+  		$scope.showProfileGroupePage()
 		$state.go('createprofilegroup', {
 			id: uuid,
 			version: version,
 			mode: 'true'
 		});
+	}
+
+	$scope.showProfileGroupGraph = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
+		$scope.showProfileGroup = false;
+		$scope.showgraphdiv = true;
+		$scope.graphDataStatus = true;
+		$scope.showProfileGroupForm = false;
 	}
 	$scope.close = function () {
 		if ($stateParams.returnBack == 'true' && $rootScope.previousState) {
@@ -1027,12 +1076,6 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 		$scope.profileall = porfileArray;
 	}
 
-	$scope.showProfileGroupGraph = function (uuid, version) {
-		$scope.showProfileGroup = false;
-		$scope.showgraphdiv = true;
-		$scope.graphDataStatus = true;
-		$scope.showProfileGroupForm = false;
-	}
 
 
 
@@ -1146,6 +1189,8 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 		profileGroupJson.active = $scope.profileGroupDetail.active;
 		profileGroupJson.locked = $scope.profileGroupDetail.locked;
 		profileGroupJson.published = $scope.profileGroupDetail.published;
+		profileGroupJson.publicFlag = $scope.profileGroupDetail.publicFlag;
+
 		var tagArray = [];
 		if ($scope.tags != null) {
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {

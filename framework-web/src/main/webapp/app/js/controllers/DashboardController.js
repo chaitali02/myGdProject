@@ -241,7 +241,16 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 		$scope.privileges = privilegeSvc.privileges['dashboard'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
+
+	$scope.checkIsInrogess=function(){
+		if($scope.isEditInprogess || $scope.isEditVeiwError){
+		return false;
+		}
+    }
 	$scope.showDashboardPage = function () {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showdashboard = true;
 		$scope.showgraph = false
 		$scope.graphDataStatus = false;
@@ -249,6 +258,9 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 	}//End showDashboardPage
 
 	$scope.showHome=function(uuid, version,mode){
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showDashboardPage()
 		$state.go('metaListdashboard', {
 			id: uuid,
@@ -260,6 +272,9 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 		if($scope.isPrivlage || $scope.dashboarddata.locked =="Y"){
 			return false;
 		}
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showDashboardPage()
 		$state.go('metaListdashboard', {
 			id: uuid,
@@ -268,6 +283,9 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 		});
 	}
 	$scope.showview = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showDashboardPage()
 		$state.go('metaListdashboard', {
 			id: uuid,
@@ -299,6 +317,9 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 	};
 
 	$scope.showDashboardGraph = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showdashboard = false;
 		$scope.showgraph = false
 		$scope.graphDataStatus = true
@@ -533,9 +554,8 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 		dashboardjson.desc = $scope.dashboarddata.desc
 		dashboardjson.active = $scope.dashboarddata.active;
 		dashboardjson.locked = $scope.dashboarddata.locked;
-
-		
 		dashboardjson.published = $scope.dashboarddata.published;
+		dashboardjson.publicFlag = $scope.dashboarddata.publicFlag;
 		var tagArray = [];
 		if ($scope.tags != null) {
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {

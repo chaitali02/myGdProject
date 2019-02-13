@@ -40,11 +40,11 @@
 
           <div class="actions">
             <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top"
-              tooltip ng-hide="isAdd"  ng-class="(showRule==true)? 'currentpage':'notcurrentpage'" data-ng-click="showHome(dataqualitydata.uuid,dataqualitydata.version,mode)">
+              tooltip ng-hide="isAdd"  ng-class="(showRule==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'" data-ng-click="showHome(dataqualitydata.uuid,dataqualitydata.version,mode)">
               <i class="fa fa-home icon-circle home-icon-circle"></i>
             </a>
              <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
-              tooltip ng-class="(isEdit==true || isPrivlage || dataqualitydata.locked == 'Y')? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="enableEdit(dataqualitydata.uuid,dataqualitydata.version)">
+              tooltip ng-class="(isEdit==true || isPrivlage || dataqualitydata.locked == 'Y' ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="enableEdit(dataqualitydata.uuid,dataqualitydata.version)">
               <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
             </a>
             <!-- <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
@@ -56,11 +56,11 @@
               <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
             </a> -->
             <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Knowledge Graph" ng-show="isDependencyShow"
-              ng-class="showRule==false? 'currentpage':'notcurrentpage'" data-toggle="tooltip" data-placement="top" tooltip
+              ng-class="(showRule==false ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'" data-toggle="tooltip" data-placement="top" tooltip
               data-ng-click="showRuleGraph(dataqualitydata.uuid,dataqualitydata.version)">
               <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:#a0a0a0;"></i>
             </a>
-            <a href="javascript:;" ng-class="showRule==true? 'currentpage':'notcurrentpage'" class="reload btn btn-circle btn-icon-only btn-default"
+            <a href="javascript:;" ng-class="(showRule==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'" class="reload btn btn-circle btn-icon-only btn-default"
               ng-click="broadcastRefreshData()" data-original-title="" title="">
               <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
             </a>
@@ -219,6 +219,17 @@
                         <div class="btn-group" ng-init="dataqualitydata.published='N'">
                           <label class="btn btn-default" ng-model="dataqualitydata.published" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
                           <label class="btn btn-default" ng-model="dataqualitydata.published" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Public</label>
+                      <div class="col-md-6 col-sm-6 col-xs-12">
+                        <div class="btn-group" ng-init="dataqualitydata.publicFlag='N'">
+                          <label class="btn btn-default" ng-model="dataqualitydata.publicFlag" uib-btn-radio="'Y'"
+                            ng-disabled="{{mode}}" uncheckable>Yes</label>
+                          <label class="btn btn-default" ng-model="dataqualitydata.publicFlag" uib-btn-radio="'N'"
+                            ng-disabled="{{mode}}" uncheckable>No</label>
                         </div>
                       </div>
                     </div>

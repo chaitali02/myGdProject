@@ -89,11 +89,11 @@ DatascienceModule.controller('CreateAlgorithmController', function (CommonServic
 	};
     $scope.getLovByType();
      
-  $scope.checkIsInrogess=function(){
-    if($scope.isEditInprogess || $scope.isEditVeiwError){
-      return false;
+    $scope.checkIsInrogess=function(){
+		if($scope.isEditInprogess || $scope.isEditVeiwError){
+		return false;
+		}
     }
-  }
 	$scope.showGraph = function (uuid, version) {
 		if($scope.checkIsInrogess () ==false){
 			return false;

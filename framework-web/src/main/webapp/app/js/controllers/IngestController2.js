@@ -99,13 +99,24 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
         });
     };
 
-    $scope.getLovByType();
+	$scope.getLovByType();
+	$scope.checkIsInrogess=function(){
+		if($scope.isEditInprogess || $scope.isEditVeiwError){
+		return false;
+		}
+    }
     $scope.showPage = function () {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showForm = true;
 		$scope.showGraphDiv = false
 	}
 
 	$scope.showHome=function(uuid, version,mode){
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage();
 		$state.go('ingestruledetail2', {
 			id: uuid,
@@ -117,6 +128,9 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 		if($scope.isPrivlage || $scope.ingestData.locked =="Y"){
 			return false;
 		}
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('ingestruledetail2', {
 			id: uuid,
@@ -126,6 +140,9 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 	}
 	$scope.showView = function (uuid, version) {
 		//if (!$scope.isEdit) {
+			if($scope.checkIsInrogess () ==false){
+				return false;
+			}
 			$scope.showPage()
 			$state.go('ingestruledetail2', {
 				id: uuid,
@@ -135,6 +152,9 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 		//}
 	}
 	$scope.showGraph = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showForm = false;
 		$scope.showGraphDiv = true;
 		$scope.isShowSimpleData = false
@@ -1492,6 +1512,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 		ingestJson.active = $scope.ingestData.active;
 		ingestJson.locked = $scope.ingestData.locked;
 		ingestJson.published = $scope.ingestData.published;
+		ingestJson.publicFlag = $scope.ingestData.publicFlag;
 		ingestJson.runParams = $scope.ingestData.runParams;
 		ingestJson.sourceHeader = $scope.ingestData.sourceHeader;
 		ingestJson.targetHeader = $scope.ingestData.targetHeader;

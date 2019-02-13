@@ -136,18 +136,31 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
      $scope.allFunction=response
     }
   }
- 
+  $scope.checkIsInrogess=function(){
+		if($scope.isEditInprogess || $scope.isEditVeiwError){
+		return false;
+		}
+  }
   $scope.showGraph = function(uuid, version) {
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
     $scope.showFrom = false;
     $scope.showGraphDiv = true;
   } //End showFunctionGraph
 
 
   $scope.showPage = function() {
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
     $scope.showFrom = true;
     $scope.showGraphDiv = false
   }
   $scope.showHome=function(uuid, version,mode){
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('createpredict', {
 			id: uuid,
@@ -158,7 +171,10 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
   $scope.enableEdit=function (uuid,version) {
     if($scope.isPrivlage || $scope.predictData.locked =="Y"){
       return false;
-    }  
+    }
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
     $scope.showPage()
     $state.go('createpredict', {
       id: uuid,
@@ -168,6 +184,9 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
   }
 
   $scope.showview=function (uuid,version) {
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
     if(!$scope.isEdit){
       $scope.showPage()
       $state.go('createpredict', {
@@ -638,7 +657,8 @@ DatascienceModule.controller('CreatePredictController', function($state, $stateP
     predictJson.desc = $scope.predictData.desc
     predictJson.active = $scope.predictData.active;
     predictJson.locked = $scope.predictData.locked;
-    predictJson.published=$scope.predictData.published; 
+    predictJson.published=$scope.predictData.published;
+    predictJson.publicFlag=$scope.predictData.publicFlag;  
     predictJson.includeFeatures=$scope.predictData.includeFeatures;
   //  predictJson.encodingType =$scope.selectEncodingType;
     var tagArray = [];

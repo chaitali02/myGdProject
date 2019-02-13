@@ -725,7 +725,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     TrainJson.active = $scope.trainData.active;
     TrainJson.locked = $scope.trainData.locked;
     TrainJson.published = $scope.trainData.published;
-    TrainJson.published = $scope.trainData.published;
+    TrainJson.publicFlag = $scope.trainData.publicFlag;
     
     
     TrainJson.useHyperParams = $scope.trainData.useHyperParams;

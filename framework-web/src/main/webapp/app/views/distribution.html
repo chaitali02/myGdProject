@@ -15,7 +15,7 @@
         <i class="fa fa-circle"></i>
       </li>
       <li>
-        <span>{{distributionData.name | strReplace:'_':' '|capitalize}}</span>
+        <span>{{distributionData.name}}</span>
       </li>
     </ul>
     <div class="page-toolbar">
@@ -34,7 +34,7 @@
       <div class="portlet box green">
         <div class="portlet-title">
           <div class="caption">
-            <i class="fa fa-gift"></i>{{distributionData.name | strReplace:'_':' '|capitalize}}
+            <i class="fa fa-gift"></i>{{distributionData.name}}
           </div>
           <div class="tools">
             <a href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top"
@@ -183,9 +183,9 @@
                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Public</label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
                     <div class="btn-group" ng-init="distributionData.publicFlag='N'">
-                      <label class="btn btn-default" ng-model="distributionData.publicFlag" uib-btn-radio="'Y'" ng-disabled="mode!=' '? true:false"
+                      <label class="btn btn-default" ng-model="distributionData.publicFlag" uib-btn-radio="'Y'" ng-disabled="{{mode}}"
                         uncheckable>Yes</label>
-                      <label class="btn btn-default" ng-model="distributionData.publicFlag" uib-btn-radio="'N'" ng-disabled="mode!=' '? true:false"
+                      <label class="btn btn-default" ng-model="distributionData.publicFlag" uib-btn-radio="'N'" ng-disabled="{{mode}}"
                         uncheckable>No</label>
                     </div>
                   </div>

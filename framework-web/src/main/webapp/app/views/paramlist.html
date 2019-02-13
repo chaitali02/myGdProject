@@ -185,9 +185,9 @@
                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Public</label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
                     <div class="btn-group" ng-init="paramlistData.publicFlag='N'">
-                      <label class="btn btn-default" ng-model="paramlistData.publicFlag" uib-btn-radio="'Y'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+                      <label class="btn btn-default" ng-model="paramlistData.publicFlag" uib-btn-radio="'Y'" ng-disabled="{{mode}}"
                         uncheckable>Yes</label>
-                      <label class="btn btn-default" ng-model="paramlistData.publicFlag" uib-btn-radio="'N'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
+                      <label class="btn btn-default" ng-model="paramlistData.publicFlag" uib-btn-radio="'N'" ng-disabled="{{mode}}"
                         uncheckable>No</label>
                     </div>
                   </div>

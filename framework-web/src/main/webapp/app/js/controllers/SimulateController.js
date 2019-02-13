@@ -118,17 +118,31 @@ DatascienceModule.controller('CreateSimulateController', function ($state, $stat
     $scope.isSubmitShow = false;
   }
 
+  $scope.checkIsInrogess=function(){
+		if($scope.isEditInprogess || $scope.isEditVeiwError){
+		return false;
+		}
+  }
   $scope.showGraph = function (uuid, version) {
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
     $scope.showForm = false;
     $scope.showGraphDiv = true;
   } //End showFunctionGraph
 
 
   $scope.showPage = function () {
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
     $scope.showForm = true;
     $scope.showGraphDiv = false
   }
   $scope.showHome=function(uuid, version,mode){
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('createsimulate', {
 			id: uuid,
@@ -140,6 +154,9 @@ DatascienceModule.controller('CreateSimulateController', function ($state, $stat
     if($scope.isPrivlage || $scope.simulateData.locked =="Y"){
       return false;
     }
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
     $scope.showPage()
     $state.go('createsimulate', {
       id: uuid,
@@ -149,6 +166,9 @@ DatascienceModule.controller('CreateSimulateController', function ($state, $stat
   }
 
   $scope.showview = function (uuid, version) {
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
     if (!$scope.isEdit) {
       $scope.showPage()
       $state.go('createsimulate', {
@@ -482,6 +502,7 @@ DatascienceModule.controller('CreateSimulateController', function ($state, $stat
     SimulateJson.active = $scope.simulateData.active;
     SimulateJson.locked = $scope.simulateData.locked;
     SimulateJson.published = $scope.simulateData.published;
+    SimulateJson.publicFlag = $scope.simulateData.publicFlag;
     SimulateJson.numIterations = $scope.simulateData.numIterations;
     SimulateJson.type=$scope.selectSimulationType;
     var tagArray = [];

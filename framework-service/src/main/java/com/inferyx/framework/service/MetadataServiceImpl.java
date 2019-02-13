@@ -803,11 +803,12 @@ public class MetadataServiceImpl {
 		metaObjectList = ruleExecResults.getMappedResults();
 
 		List<BaseEntity> baseEntityList = new ArrayList<>();
-
+        System.out.println(metaObjectList);
+        
 		for (Object metaObject : metaObjectList) {
 			BaseEntity baseEntity = new BaseEntity();
 			BaseEntity baseEntityTmp_2 = (BaseEntity) metaObject;
-			BaseEntity baseEntityTmp = (BaseEntity) commonServiceImpl.getLatestByUuid(baseEntityTmp_2.getId(), type, "N");
+			BaseEntity baseEntityTmp = (BaseEntity) commonServiceImpl.getOneByUuidAndVersion(baseEntityTmp_2.getId(), baseEntityTmp_2.getVersion(), type, "N");
 			baseEntityTmp = resolveBaseEntity(baseEntityTmp);
 			baseEntity.setId(baseEntityTmp.getId());
 			baseEntity.setUuid(baseEntityTmp.getUuid());

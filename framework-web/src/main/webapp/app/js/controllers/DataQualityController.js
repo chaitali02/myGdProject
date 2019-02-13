@@ -98,7 +98,15 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
   $scope.$on('$destroy', function () {
     $scope.isDestoryState = true;
   });  
+  $scope.checkIsInrogess=function(){
+		if($scope.isEditInprogess || $scope.isEditVeiwError){
+		return false;
+		}
+  }
   $scope.showRulePage = function () {
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
     $scope.showgraph = false;
     $scope.showRule = true;
     $scope.showRuleForm = true
@@ -106,6 +114,9 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     $scope.showgraphdiv = false
   }
   $scope.showHome=function(uuid, version,mode){
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showRulePage();
 		$state.go('createdataquality', {
 			id: uuid,
@@ -117,6 +128,9 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     if($scope.isPrivlage || $scope.dataqualitydata.locked =="Y"){
       return false; 
     } 
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
     $scope.showRulePage()
     $state.go('createdataquality', {
       id: uuid,
@@ -126,6 +140,9 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
   }
 
   $scope.showview = function (uuid, version) {
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
     if (!$scope.isEdit) {
       $scope.showRulePage()
       $state.go('createdataquality', {
@@ -166,6 +183,9 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
   }
 
   $scope.showRuleGraph = function (uuid, version) {
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
     $scope.showRule = false;
     $scope.showRuleForm = false
     $scope.graphDataStatus = true
@@ -820,6 +840,8 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     dataqualityjosn.active = $scope.dataqualitydata.active;
     dataqualityjosn.locked = $scope.dataqualitydata.locked;
     dataqualityjosn.published = $scope.dataqualitydata.published
+    dataqualityjosn.publicFlag = $scope.dataqualitydata.publicFlag;
+
     var attributeref = {}
     var attribute = {};
     var ref = {};
@@ -1146,13 +1168,24 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
   $scope.$on('$destroy', function () {
     $scope.isDestoryState = true;
   });  
+  $scope.checkIsInrogess=function(){
+		if($scope.isEditInprogess || $scope.isEditVeiwError){
+		return false;
+		}
+  }
   $scope.showRulGroupePage = function () {
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
     $scope.showRuleGroup = true;
     $scope.showgraphdiv = false;
     $scope.graphDataStatus = false;
     $scope.showRuleGroupForm = true;
   }
   $scope.showHome=function(uuid, version,mode){
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showRulGroupePage();
 		$state.go('createdataqualitygroup', {
 			id: uuid,
@@ -1164,6 +1197,9 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
     if($scope.isPrivlage || $scope.dqruleGroupDetail.locked =="Y"){
       return false; 
     } 
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
     $scope.showRulGroupePage()
     $state.go('createdataqualitygroup', {
       id: uuid,
@@ -1173,6 +1209,9 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
   }
 
   $scope.showview = function (uuid, version) {
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
     if (!$scope.isEdit) {
       $scope.showRulGroupePage()
       $state.go('createdataqualitygroup', {
@@ -1214,6 +1253,9 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
   }
 
   $scope.showRuleGroupGraph = function (uuid, version) {
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
     $scope.showRuleGroup = false;
     $scope.showgraphdiv = true;
     $scope.graphDataStatus = true;
@@ -1338,6 +1380,8 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
     dqruleGroupJson.active = $scope.dqruleGroupDetail.active;
     dqruleGroupJson.locked = $scope.dqruleGroupDetail.locked;
     dqruleGroupJson.published = $scope.dqruleGroupDetail.published;
+    dqruleGroupJson.publicFlag = $scope.dqruleGroupDetail.publicFlag;
+
     var tagArray = [];
     if ($scope.tags != null) {
       for (var counttag = 0; counttag < $scope.tags.length; counttag++) {

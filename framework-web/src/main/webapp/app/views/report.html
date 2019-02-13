@@ -117,16 +117,16 @@
                         </div>
                         <div class="tools">
                             <a  href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top"
-                                tooltip  ng-hide="isAdd"  ng-class="(showForm==true)? 'currentpage':'notcurrentpage'" style="height:16px;font-size:16px;" data-ng-click="showHome(report.uuid,report.version,mode)">
+                                tooltip  ng-hide="isAdd"  ng-class="(showForm==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'" style="height:16px;font-size:16px;" data-ng-click="showHome(report.uuid,report.version,mode)">
                                 <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
                             </a>
-                            <a title="Edit" ng-class="(isEdit==true || isPrivlage || report.locked == 'Y')? 'currentpage':'notcurrentpage'" 
+                            <a title="Edit" ng-class="(isEdit==true || isPrivlage || report.locked == 'Y' ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'" 
                                 data-toggle="tooltip" data-placement="top" tooltip ng-click="enableEdit(report.uuid,report.version)"
                                 ng-hide="isAdd" style="height:16px;">
                                 <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
                             </a>
                             <a title="Run Report" data-toggle="tooltip" data-placement="top" tooltip data-ng-click="showSampleTable(report)" style="height:16px;"
-                                ng-hide="isAdd" ng-class="isShowSimpleData==true? 'currentpage':'notcurrentpage'">
+                                ng-hide="isAdd" ng-class="(isShowSimpleData==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'">
                                 <i class="fa fa-play" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
                             </a>
                             <!-- <div class="tools">
@@ -135,7 +135,7 @@
                                 <i class="fa fa-table" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
                             </a> -->
 
-                            <a ng-click="downloadFile(reportExec)" tooltip-placement="top" uib-tooltip="Download" ng-class="(gridOptions.data !=null && isShowSimpleData==true)? 'notcurrentpage':'currentpage'">
+                            <a ng-click="downloadFile(reportExec)" tooltip-placement="top" uib-tooltip="Download" ng-class="((gridOptions.data !=null && isShowSimpleData==true )|| (isEditInprogess ==true || isEditVeiwError ==true))? 'notcurrentpage':'currentpage'">
                                 <i class="fa fa-download" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
                             </a>
                             <!-- <a title="Edit" ng-disabled="isPrivlage" ng-class="(showForm==true && isShowSimpleData==false && isEdit==true)? 'currentpage':'notcurrentpage'"
@@ -149,12 +149,12 @@
                                 <span class="glyphicon glyphicon-file" style="color:white;"></span>
                             </a> -->
 
-                            <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="(showForm==false && isShowSimpleData==false)? 'currentpage':'notcurrentpage'"
+                            <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="(showForm==false && isShowSimpleData==false ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
                                 data-ng-click="showGraph(report.uuid,report.version)" style="height:14px;">
                                 <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
                             </a>
 
-                            <a title="Refresh" ng-class="(showForm==true && isShowSimpleData==false)? 'currentpage':'notcurrentpage'" ng-click="isShowSimpleData ? showSampleTable(report) : broadcastRefreshData()"
+                            <a title="Refresh" ng-class="(showForm==true && isShowSimpleData==false ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'" ng-click="isShowSimpleData ? showSampleTable(report) : broadcastRefreshData()"
                                 data-toggle="tooltip" data-placement="top" tooltip>
                                 <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
                             </a>
@@ -375,6 +375,17 @@
                                                 <label class="btn btn-default" ng-model="report.published" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
                                                 <label class="btn btn-default" ng-model="report.published" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
                                             </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Public</label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                          <div class="btn-group" ng-init="report.publicFlag='N'">
+                                            <label class="btn btn-default" ng-model="report.publicFlag" uib-btn-radio="'Y'"
+                                              ng-disabled="{{mode}}" uncheckable>Yes</label>
+                                            <label class="btn btn-default" ng-model="report.publicFlag" uib-btn-radio="'N'"
+                                              ng-disabled="{{mode}}" uncheckable>No</label>
+                                          </div>
                                         </div>
                                     </div>
                                     <div class="form-group">

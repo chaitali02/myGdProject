@@ -1,6 +1,6 @@
 <div data-ng-controller="CreateTrainController">
     <div class="row">
-        <div class="col-md-12">      
+        <div class="col-md-12">
             <div class="page-bar">
                 <ul class="page-breadcrumb">
                     <li>
@@ -21,7 +21,8 @@
                     </li>
                 </ul>
                 <div class="page-toolbar">
-                    <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+                    <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body"
+                        data-placement="bottom" data-original-title="Change dashboard date range">
                         <i class="icon-calendar"></i>&nbsp;
                         <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
                     </div>
@@ -29,13 +30,13 @@
             </div>
             <!-- END PAGE HEADER-->
             <br>
-           
+
             <!-- <div class="comment-panel-parent" style="top:7.3%;left:15%;" >
                 
             </div> -->
             <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
-            <div options="dirOptions" type="'train'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="trainData"
-                comment-panel-directive></div>
+            <div options="dirOptions" type="'train'" on-close="onPanelClose" mode="mode" current-user="userDetail"
+                comment-data="trainData" comment-panel-directive></div>
 
             <div class="portlet light bordered" id="form_wizard_1">
                 <div class="portlet-title" style="margin-bottom:0px;">
@@ -47,28 +48,29 @@
                     </div>
 
                     <div class="actions">
-                        <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top"
-                            tooltip  ng-hide="isAdd"  ng-class="(showForm==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'" data-ng-click="showHome(trainData.uuid,trainData.version,mode)">
+                        <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Main"
+                            data-toggle="tooltip" data-placement="top" tooltip ng-hide="isAdd" ng-class="(showForm==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
+                            data-ng-click="showHome(trainData.uuid,trainData.version,mode)">
                             <i class="fa fa-home icon-circle home-icon-circle"></i>
                         </a>
-                        <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
-                            tooltip ng-class="(isEdit==true || isPrivlage || trainData.locked == 'Y' ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"ng-hide="isAdd"
-                            data-ng-click="enableEdit(trainData.uuid,trainData.version)">
+                        <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit"
+                            data-toggle="tooltip" data-placement="top" tooltip ng-class="(isEdit==true || isPrivlage || trainData.locked == 'Y' ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
+                            ng-hide="isAdd" data-ng-click="enableEdit(trainData.uuid,trainData.version)">
                             <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
                         </a>
-                       
-                        <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Knowledge Graph" tooltip data-toggle="tooltip"
-                            data-placement="top" ng-show="isDependencyShow" ng-class="(showForm==false || isEditInprogess ==true ||  isEditVeiwError ==true )? 'currentpage':'notcurrentpage'"
+
+                        <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Knowledge Graph"
+                            tooltip data-toggle="tooltip" data-placement="top" ng-show="isDependencyShow" ng-class="(showForm==false || isEditInprogess ==true ||  isEditVeiwError ==true )? 'currentpage':'notcurrentpage'"
                             data-ng-click="showGraph(trainData.uuid,trainData.version)">
                             <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:#a0a0a0"></i>
                         </a>
 
-                        <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default" ng-click="broadcastRefreshData()" data-original-title=""
-                            title="" ng-class="showGraphDiv ==false? 'currentpage':'notcurrentpage'">
+                        <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default" ng-click="broadcastRefreshData()"
+                            data-original-title="" title="" ng-class="(showGraphDiv ==false || isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'">
                             <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
                         </a>
-                        <a class="btn btn-circle btn-icon-only btn-default " ng-click="close()" title="Close" data-toggle="tooltip" data-placement="top"
-                            tooltip>
+                        <a class="btn btn-circle btn-icon-only btn-default " ng-click="close()" title="Close"
+                            data-toggle="tooltip" data-placement="top" tooltip>
                             <i class="fa fa-times" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
                         </a>
                     </div>
@@ -82,12 +84,13 @@
                             <div class="bounce2"></div>
                             <div class="bounce3"></div>
                         </div>
-                        <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="trainData.uuid" version="Train.defaultVersion.version">
+                        <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="trainData.uuid"
+                            version="Train.defaultVersion.version">
                         </div>
                     </div>
 
                     <div class="form-wizard" ng-show="showForm">
-                        <div  class="centercontent" style="min-height:500px;" ng-if="isEditVeiwError" >
+                        <div class="centercontent" style="min-height:500px;" ng-if="isEditVeiwError">
                             <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
                         </div>
                         <div class="centercontent" style="min-height:500px;" ng-if="isEditInprogess">
@@ -131,12 +134,13 @@
 
                                 <!--Start Tab1-->
                                 <div class="tab-pane" id="tab1" ng-class="{'active' : continueCount == 1}">
-                                    <form class="form-horizontal" type="form" name="myform1" id="submit_form1" ng-submit="countContinue()" novalidate="novalidate"
-                                        prevent-enter-submit>
+                                    <form class="form-horizontal" type="form" name="myform1" id="submit_form1"
+                                        ng-submit="countContinue()" novalidate="novalidate" prevent-enter-submit>
                                         <div class="form-group" ng-show="trainData.uuid">
                                             <label class="col-md-3 control-label">UUID</label>
                                             <div class="col-md-6">
-                                                <input type="text" class="form-control" data-ng-disabled="true" ng-model="trainData.uuid">
+                                                <input type="text" class="form-control" data-ng-disabled="true"
+                                                    ng-model="trainData.uuid">
                                             </div>
                                         </div>
 
@@ -145,14 +149,16 @@
                                                 <span class="required" aria-required="true"> * </span>
                                             </label>
                                             <div class="col-md-6">
-                                                <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="trainData.name" required>
+                                                <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="trainData.name"
+                                                    required>
                                             </div>
                                         </div>
 
                                         <div class="form-group" ng-show="trainData.uuid">
                                             <label class="col-md-3 control-label">Version</label>
                                             <div class="col-md-6">
-                                                <select class="form-control" select2 name="version" ng-disabled="{{isversionEnable}}" ng-change="selectVersion(Train.defaultVersion.uuid,Train.defaultVersion.version)"
+                                                <select class="form-control" select2 name="version" ng-disabled="{{isversionEnable}}"
+                                                    ng-change="selectVersion(Train.defaultVersion.uuid,Train.defaultVersion.version)"
                                                     data-ng-model="Train.defaultVersion.version" ng-options="c.version as c.version for c in Train.versions">
                                                 </select>
                                             </div>
@@ -168,7 +174,8 @@
                                         <div class="form-group" ng-show="trainData.uuid">
                                             <label class="col-md-3 control-label">CreatedOn</label>
                                             <div class="col-md-6">
-                                                <input type="text" ng-model="trainData.createdOn" ng-disabled="true" class="form-control">
+                                                <input type="text" ng-model="trainData.createdOn" ng-disabled="true"
+                                                    class="form-control">
                                             </div>
                                         </div>
 
@@ -176,9 +183,12 @@
                                             <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
                                             <div class="col-md-6 col-sm-6 col-xs-12">
                                                 <!-- <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0"> </tags-input> -->
-                                                <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false"
-                                                    add-on-enter="true" add-on-space="true">
-                                                    <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" max-results-to-show="10">
+                                                <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}"
+                                                    min-length="0" add-from-autocomplete-only="false" add-on-enter="true"
+                                                    add-on-space="true">
+                                                    <auto-complete source="loadTag($query)" min-length="0"
+                                                        debounce-delay="0" highlight-matched-text="true"
+                                                        max-results-to-show="10">
                                                     </auto-complete>
                                                 </tags-input>
                                             </div>
@@ -187,7 +197,8 @@
                                         <div class="form-group">
                                             <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
                                             <div class="col-md-6">
-                                                <textarea class="form-control noresize" ng-disabled="{{mode}}" ng-model="trainData.desc" rows="2" style="resize:none;"></textarea>
+                                                <textarea class="form-control noresize" ng-disabled="{{mode}}" ng-model="trainData.desc"
+                                                    rows="2" style="resize:none;"></textarea>
                                             </div>
                                         </div>
 
@@ -195,17 +206,21 @@
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
                                             <div class="col-md-6 col-sm-6 col-xs-12">
                                                 <div class="btn-group" ng-init="trainData.active='Y'">
-                                                    <label class="btn btn-default" ng-model="trainData.active" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
-                                                    <label class="btn btn-default" ng-model="trainData.active" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
+                                                    <label class="btn btn-default" ng-model="trainData.active"
+                                                        uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
+                                                    <label class="btn btn-default" ng-model="trainData.active"
+                                                        uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
                                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                                <div class="btn-group" >
-                                                    <label class="btn btn-default" ng-model="trainData.locked" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
-                                                    <label class="btn btn-default" ng-model="trainData.locked" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
+                                                <div class="btn-group">
+                                                    <label class="btn btn-default" ng-model="trainData.locked"
+                                                        uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
+                                                    <label class="btn btn-default" ng-model="trainData.locked"
+                                                        uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -214,8 +229,21 @@
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
                                             <div class="col-md-6 col-sm-6 col-xs-12">
                                                 <div class="btn-group" ng-init="trainData.published='N'">
-                                                    <label class="btn btn-default" ng-model="trainData.published" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
-                                                    <label class="btn btn-default" ng-model="trainData.published" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
+                                                    <label class="btn btn-default" ng-model="trainData.published"
+                                                        uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
+                                                    <label class="btn btn-default" ng-model="trainData.published"
+                                                        uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Public</label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <div class="btn-group" ng-init="trainData.publicFlag='N'">
+                                                    <label class="btn btn-default" ng-model="trainData.publicFlag"
+                                                        uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
+                                                    <label class="btn btn-default" ng-model="trainData.publicFlag"
+                                                        uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -223,8 +251,10 @@
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12">Hyper Params</label>
                                             <div class="col-md-6 col-sm-6 col-xs-12">
                                                 <div class="btn-group" ng-init="trainData.useHyperParams='N'">
-                                                    <label class="btn btn-default" ng-model="trainData.useHyperParams" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
-                                                    <label class="btn btn-default" ng-model="trainData.useHyperParams" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
+                                                    <label class="btn btn-default" ng-model="trainData.useHyperParams"
+                                                        uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
+                                                    <label class="btn btn-default" ng-model="trainData.useHyperParams"
+                                                        uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -232,7 +262,8 @@
                                         <div class="row">
                                             <label class="control-label col-md-3"></label>
                                             <div class="col-md-4">
-                                                <button type="submit" class="btn btn-outline green button-next"> Continue
+                                                <button type="submit" class="btn btn-outline green button-next">
+                                                    Continue
                                                     <i class="fa fa-angle-right"></i>
                                                 </button>
                                             </div>
@@ -243,27 +274,29 @@
 
                                 <!--Start Tab2-->
                                 <div class="tab-pane" id="tab2" ng-class="{'active' : continueCount == 2}">
-                                    <form class="form-horizontal" name="myform2" id="submit_form2" ng-submit="countContinue()" novalidate="novalidate">
+                                    <form class="form-horizontal" name="myform2" id="submit_form2" ng-submit="countContinue()"
+                                        novalidate="novalidate">
                                         <div class="form-group">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12 col-lg-3">Model</label>
                                             <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
-                                              
-                                                <select select2 class="form-control" ng-disabled="{{mode}}" ng-change="onChangeModel(true,selectModel)" data-ng-model="selectModel" ng-options="r as r.name for r in allModel track by r.uuid"
-                                                    >
+
+                                                <select select2 class="form-control" ng-disabled="{{mode}}" ng-change="onChangeModel(true,selectModel)"
+                                                    data-ng-model="selectModel" ng-options="r as r.name for r in allModel track by r.uuid">
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12">Source</label>
                                             <div class="col-md-2 col-sm-2 col-xs-12">
-                                                <select class="form-control" ng-disabled="{{mode}}" data-ng-model="selectSourceType" ng-options="r for r in sourceTypes"
-                                                    ng-change="onChangeSourceType()">
+                                                <select class="form-control" ng-disabled="{{mode}}" data-ng-model="selectSourceType"
+                                                    ng-options="r for r in sourceTypes" ng-change="onChangeSourceType()">
                                                 </select>
                                             </div>
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.4%;float:left;margin-left:-1%;">Name
                                             </label>
                                             <div class="col-md-3 col-sm-3 col-xs-12">
-                                                <select class="form-control" select2 ng-disabled="{{mode}}" ng-change="onChangeSource(selectSource)" data-ng-model="selectSource" ng-options="r as r.name for r in allSource | orderBy:'name' track by r.uuid ">
+                                                <select class="form-control" select2 ng-disabled="{{mode}}" ng-change="onChangeSource(selectSource)"
+                                                    data-ng-model="selectSource" ng-options="r as r.name for r in allSource | orderBy:'name' track by r.uuid ">
                                                 </select>
                                             </div>
                                         </div>
@@ -273,20 +306,24 @@
                                             </label>
                                             <div class="col-md-6">
 
-                                                <select class="form-control" select2 name="version" ng-disabled="{{mode}} || isLabelDisable" data-ng-model="selectLabel"
-                                                    ng-options="r as r.dname for r in allsourceLabel track by r.uuid + r.attributeId">
+                                                <select class="form-control" select2 name="version" ng-disabled="{{mode}} || isLabelDisable"
+                                                    data-ng-model="selectLabel" ng-options="r as r.dname for r in allsourceLabel track by r.uuid + r.attributeId">
                                                 </select>
-                                                <input type="hidden" name="selectLabel" ng-model="selectLabel.uuid" required>
+                                                <input type="hidden" name="selectLabel" ng-model="selectLabel.uuid"
+                                                    required>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Row Identifier</label>
+                                            <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Row
+                                                Identifier</label>
                                             <div class="col-md-6">
-                                                
-                                                <tags-input class="tag-scroll" ng-model="rowIdentifierTags" ng-disabled="{{mode}}" display-property="name" key-property="id"
-                                                 add-from-autocomplete-only="true" ng-focus="onTagFocuse()">
-                                                    <auto-complete source="loadAttribute($query)" min-length="1" debounce-delay="0" highlight-matched-text="true" load-on-focus="true"
-                                                     load-on-empty="true">
+
+                                                <tags-input class="tag-scroll" ng-model="rowIdentifierTags" ng-disabled="{{mode}}"
+                                                    display-property="name" key-property="id"
+                                                    add-from-autocomplete-only="true" ng-focus="onTagFocuse()">
+                                                    <auto-complete source="loadAttribute($query)" min-length="1"
+                                                        debounce-delay="0" highlight-matched-text="true" load-on-focus="true"
+                                                        load-on-empty="true">
                                                     </auto-complete>
                                                 </tags-input>
                                             </div>
@@ -296,22 +333,24 @@
                                             <div class="col-md-1">
                                                 <div class="mt-checkbox-list" style="margin-top:-7px">
                                                     <label class="mt-checkbox mt-checkbox-outline">
-                                                        <input ng-disabled="{{mode}}" type="checkbox" ng-model="trainData.includeFeatures" ng-true-value="'Y'" ng-false-value="'N'">
+                                                        <input ng-disabled="{{mode}}" type="checkbox" ng-model="trainData.includeFeatures"
+                                                            ng-true-value="'Y'" ng-false-value="'N'">
                                                         <span ng-disabled="{{mode}}"></span>
                                                     </label>
                                                 </div>
                                             </div>
-                                            <label class="control-label col-md-2 col-sm-2 col-xs-12" >Save Training Set</label>
+                                            <label class="control-label col-md-2 col-sm-2 col-xs-12">Save Training Set</label>
                                             <div class="col-md-1">
                                                 <div class="mt-checkbox-list" style="margin-top:-7px">
                                                     <label class="mt-checkbox mt-checkbox-outline">
-                                                        <input ng-disabled="{{mode}}" type="checkbox" ng-model="trainData.saveTrainingSet" ng-true-value="'Y'" ng-false-value="'N'">
+                                                        <input ng-disabled="{{mode}}" type="checkbox" ng-model="trainData.saveTrainingSet"
+                                                            ng-true-value="'Y'" ng-false-value="'N'">
                                                         <span ng-disabled="{{mode}}"></span>
                                                     </label>
                                                 </div>
                                             </div>
                                         </div>
-                                         <!-- <div class="form-group">
+                                        <!-- <div class="form-group">
                                             <label class="col-md-3 control-label">Include Features
                                             </label>
                                             <div class="col-md-9">
@@ -356,8 +395,10 @@
                                                             <span class="fa fa-map-signs" aria-hidden="true" style="color:#a0a0a0;"></span>
                                                         </a> -->
                                                         <div class="btn-group">
-                                                            <a class="btn green-haze btn-outline btn-circle auto-map btn-sm" ng-disabled="attrTableSelectedItem.length ==1 && featureMapTableArray.length >1 ?false:true"
-                                                                href="javascript:;" data-toggle="dropdown" tooltip-placement="left" uib-tooltip="Move" data-hover="dropdown"
+                                                            <a class="btn green-haze btn-outline btn-circle auto-map btn-sm"
+                                                                ng-disabled="attrTableSelectedItem.length ==1 && featureMapTableArray.length >1 ?false:true"
+                                                                href="javascript:;" data-toggle="dropdown"
+                                                                tooltip-placement="left" uib-tooltip="Move" data-hover="dropdown"
                                                                 data-close-others="true" aria-expanded="false">
                                                                 <span class="fa fa-arrows" aria-hidden="true"></span>
                                                                 <i class="fa fa-angle-down"></i>
@@ -373,15 +414,23 @@
                                                                 <li class="divider" style="margin: 0px;"> </li>
                                                                 <li>
                                                                     <div class="form-group" style="margin: 1%;">
-                                                                    <input type="number" class="form-control" ng-if="attrTableSelectedItem.length == 1" ng-model="moveTo" min="0" max="{{featureMapTableArray.length}}"
-                                                                        name="moveto" style="border:0" placeholder="Move To" ng-model-options="{debounce:3000}" ng-change="autoMoveTo(moveTo)"
-                                                                        focus-me="true" required />
+                                                                        <input type="number" class="form-control" ng-if="attrTableSelectedItem.length == 1"
+                                                                            ng-model="moveTo" min="0" max="{{featureMapTableArray.length}}"
+                                                                            name="moveto" style="border:0" placeholder="Move To"
+                                                                            ng-model-options="{debounce:3000}"
+                                                                            ng-change="autoMoveTo(moveTo)" focus-me="true"
+                                                                            required />
                                                                     </div>
                                                                 </li>
                                                             </ul>
                                                         </div>
                                                         <div class="btn-group">
-                                                            <a class="btn green-haze btn-outline btn-circle auto-map btn-sm" ng-disabled="{{mode}}" href="javascript:;" data-toggle="dropdown" tooltip-placement="left" uib-tooltip="Auto Map" data-hover="dropdown" data-close-others="true" aria-expanded="false">  <span class="fa fa-map-signs" aria-hidden="true"></span>
+                                                            <a class="btn green-haze btn-outline btn-circle auto-map btn-sm"
+                                                                ng-disabled="{{mode}}" href="javascript:;" data-toggle="dropdown"
+                                                                tooltip-placement="left" uib-tooltip="Auto Map"
+                                                                data-hover="dropdown" data-close-others="true"
+                                                                aria-expanded="false"> <span class="fa fa-map-signs"
+                                                                    aria-hidden="true"></span>
                                                                 <i class="fa fa-angle-down"></i>
                                                             </a>
                                                             <ul class="dropdown-menu pull-right">
@@ -389,16 +438,16 @@
                                                                     <a href="javascript:;">By Name</a>
                                                                 </li>
                                                                 <li class="divider" style="margin: 0px;"> </li>
-                                                                <li  ng-click="autoMapFeature('By Order')">
+                                                                <li ng-click="autoMapFeature('By Order')">
                                                                     <a href="javascript:;">By Order</a>
                                                                 </li>
-                                                                <li  ng-click="autoReset()">
+                                                                <li ng-click="autoReset()">
                                                                     <a href="javascript:;">Reset</a>
                                                                 </li>
-                                                              
+
                                                             </ul>
                                                         </div>
-                                                       
+
                                                     </div>
                                                 </div>
                                                 <div class="portlet-body">
@@ -429,14 +478,19 @@
                                                             </div>
                                                         </div>
                                                     </div> -->
-                                                    
+
                                                     <div class="row" style="overflow-y: auto;overflow-x: hidden;max-height: 330px;">
                                                         <div class="col-md-12">
                                                             <div class="">
-                                                                <table class=" row-border hover table  table-striped table-bordered" style="table-layout:fixed;">
+                                                                <table class=" row-border hover table  table-striped table-bordered"
+                                                                    style="table-layout:fixed;">
                                                                     <thead>
                                                                         <tr>
-                                                                            <th style="text-align: center; Vertical-align:middle;width:2%;"><input style="width: 16px;height:16px;" type="checkbox" ng-model="slectAllRow" ng-click="selectAllRow()" ng-disabled="true" /></th>
+                                                                            <th style="text-align: center; Vertical-align:middle;width:2%;"><input
+                                                                                    style="width: 16px;height:16px;"
+                                                                                    type="checkbox" ng-model="slectAllRow"
+                                                                                    ng-click="selectAllRow()"
+                                                                                    ng-disabled="true" /></th>
                                                                             <th style="width:5%; text-align:center">ID</th>
                                                                             <th style="width:18%;text-align: center">Features</th>
                                                                             <th style="width:18%;text-align: center">Attributes</th>
@@ -447,51 +501,72 @@
 
                                                                         </tr>
                                                                     </thead>
-                                                                    <tbody ng-repeat="data in featureMapTableArray" drag-drop draggable="{{isDragable}}" after-drop="ondrop">
+                                                                    <tbody ng-repeat="data in featureMapTableArray"
+                                                                        drag-drop draggable="{{isDragable}}" after-drop="ondrop">
                                                                         <tr>
                                                                             <td style="text-align: center; Vertical-align: middle;width:2%;">
-                                                                                <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected" ng-change="onChangeAttrRow($index,data.selected)"/>
+                                                                                <input ng-disabled="{{mode}}" style="width: 16px;height:16px;"
+                                                                                    type="checkbox" ng-model="data.selected"
+                                                                                    ng-change="onChangeAttrRow($index,data.selected)" />
                                                                             </td>
                                                                             <td>
                                                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                                    <input type="text" class="form-control" ng-value="$index+1" ng-disabled="true">
+                                                                                    <input type="text" class="form-control"
+                                                                                        ng-value="$index+1" ng-disabled="true">
                                                                                 </span>
                                                                             </td>
                                                                             <td>
                                                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                                    <input type="text" class="form-control" ng-model="data.sourceFeature.featureName" title="{{data.sourceFeature.dname}}" ng-disabled="true">
+                                                                                    <input type="text" class="form-control"
+                                                                                        ng-model="data.sourceFeature.featureName"
+                                                                                        title="{{data.sourceFeature.dname}}"
+                                                                                        ng-disabled="true">
                                                                                 </span>
                                                                             </td>
                                                                             <td>
                                                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                                     <div ng-if="!data.isOnDropDown">
                                                                                         <div class="col-md-11" style="padding: 0px;">
-                                                                                            <input type="text" class="form-control" ng-model="data.targetFeature.name" required disable-validation-message=""
-                                                                                                ng-disabled="false" readonly ng-dblclick="data.isOnDropDown=!data.isOnDropDown"
-                                                                                            />
+                                                                                            <input type="text" class="form-control"
+                                                                                                ng-model="data.targetFeature.name"
+                                                                                                required
+                                                                                                disable-validation-message=""
+                                                                                                ng-disabled="false"
+                                                                                                readonly ng-dblclick="data.isOnDropDown=!data.isOnDropDown" />
                                                                                         </div>
                                                                                         <div class="col-md-1" style="padding:7px 0px 0px 9px;">
                                                                                             <a ng-disabled="{{mode}}">
-                                                                                                <span class="fa fa-pencil" ng-click="data.isOnDropDown=!data.isOnDropDown" tooltip-placement="left"
+                                                                                                <span class="fa fa-pencil"
+                                                                                                    ng-click="data.isOnDropDown=!data.isOnDropDown"
+                                                                                                    tooltip-placement="left"
                                                                                                     uib-tooltip="Edit"></span>
                                                                                             </a>
                                                                                         </div>
                                                                                     </div>
-                                                                                
+
                                                                                     <div style="width:100%;" ng-if="data.isOnDropDown">
-                                                                                        <ui-select required disable-validation-message="" ng-model="data.targetFeature" append-to-body="true" theme="" ng-disabled="{{mode}}" on-select="onChangeSourceAttribute(data.sourceAttributeType.text,$index)">
+                                                                                        <ui-select required
+                                                                                            disable-validation-message=""
+                                                                                            ng-model="data.targetFeature"
+                                                                                            append-to-body="true" theme=""
+                                                                                            ng-disabled="{{mode}}"
+                                                                                            on-select="onChangeSourceAttribute(data.sourceAttributeType.text,$index)">
                                                                                             <ui-select-match>
-                                                                                                <span title="{{data.targetFeature.dname}}" style="font-family: 'Open Sans', sans-serif;color:#555"  >{{data.targetFeature.name}}</span>
+                                                                                                <span title="{{data.targetFeature.dname}}"
+                                                                                                    style="font-family: 'Open Sans', sans-serif;color:#555">{{data.targetFeature.name}}</span>
                                                                                             </ui-select-match>
                                                                                             <!-- ui-disable-choice="x.attrType=='string'" -->
-                                                                                            <ui-select-choices repeat="x in allTargetAttribute | propsFilter: {name: $select.search, attrType: $select.search} track by x.id" position='up' >
+                                                                                            <ui-select-choices repeat="x in allTargetAttribute | propsFilter: {name: $select.search, attrType: $select.search} track by x.id"
+                                                                                                position='up'>
                                                                                                 <!-- <span class="{{x.iconclass}}"></span> -->
                                                                                                 <div class="{{x.attrType=='string'?'fa-downcase-string':['float','decimal','double'].indexOf(x.attrType) !=-1?'fa-downcase-decimal':'fa-downcase-integer'}}"></div>
-                                                                                                <span  style="font-family: 'Open Sans', sans-serif;padding:6px;"  title="{{x.dname}}"  ng-bind-html="x.name | highlight: $select.search"></span>
-                                                                                            
+                                                                                                <span style="font-family: 'Open Sans', sans-serif;padding:6px;"
+                                                                                                    title="{{x.dname}}"
+                                                                                                    ng-bind-html="x.name | highlight: $select.search"></span>
+
                                                                                             </ui-select-choices>
                                                                                         </ui-select>
-                                                                                    <!-- <select select2 ng-model="data.targetFeature" ng-options=" x as x.dname disable when  x.attrType =='string' for x in allTargetAttribute track by x.id" ng-change="onChangeSourceAttribute(data.sourceAttributeType.text,$index)"
+                                                                                        <!-- <select select2 ng-model="data.targetFeature" ng-options=" x as x.dname disable when  x.attrType =='string' for x in allTargetAttribute track by x.id" ng-change="onChangeSourceAttribute(data.sourceAttributeType.text,$index)"
                                                                                         ng-disabled="{{mode}}" class="form-control"></select> -->
                                                                                     </div>
                                                                                 </span>
@@ -504,7 +579,7 @@
                                                                                     </select>
                                                                                 </span>
                                                                             </td> -->
-                                                                            
+
                                                                             <!-- <td> 
                                                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                                     <select  ng-model="data.imputeMethod.imputeType" ng-options=" x for x in imputeTypes "
@@ -556,7 +631,8 @@
                                                 <a href="javascript:;" class="btn default button-previous" ng-click="countBack()">
                                                     <i class="fa fa-angle-left"></i> Back
                                                 </a>
-                                                <button type="submit" class="btn btn-outline green button-next"> Continue
+                                                <button type="submit" class="btn btn-outline green button-next">
+                                                    Continue
                                                     <i class="fa fa-angle-right"></i>
                                                 </button>
                                             </div>
@@ -567,7 +643,8 @@
 
                                 <!-- Start Tab3 -->
                                 <div class="tab-pane" id="tab3" ng-class="{'active' : continueCount == 3}">
-                                    <form class="form-horizontal" name="myform3" id="submit_form3" ng-submit="submitModel()" novalidate="novalidate">
+                                    <form class="form-horizontal" name="myform3" id="submit_form3" ng-submit="submitModel()"
+                                        novalidate="novalidate">
                                         <!-- <div class="form-group">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12">Save Results</label>
                                                 <div class="col-md-2 col-sm-2 col-xs-12">
@@ -583,34 +660,40 @@
                                         <div class="form-group">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12">Save Train Result</label>
                                             <div class="col-md-2 col-sm-2 col-xs-12">
-                                                <select class="form-control" ng-disabled="{{mode}}" data-ng-model="selectedTrainSaveType" ng-options="r for r in saveTypes"
-                                                    ng-change="onChangeTrainType()">
+                                                <select class="form-control" ng-disabled="{{mode}}" data-ng-model="selectedTrainSaveType"
+                                                    ng-options="r for r in saveTypes" ng-change="onChangeTrainType()">
                                                 </select>
                                             </div>
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.4%;float:left;margin-left:-1%;">Name</label>
                                             <div class="col-md-3 col-sm-3 col-xs-12">
-                                                <select class="form-control" select2 ng-disabled="{{mode}} || isTrainSaveDisabled" data-ng-model="selectedTrainLocation" ng-options="r as r.name for r in allTrainLocation  track by r.uuid " ng-required="!isTrainSaveDisabled">
+                                                <select class="form-control" select2 ng-disabled="{{mode}} || isTrainSaveDisabled"
+                                                    data-ng-model="selectedTrainLocation" ng-options="r as r.name for r in allTrainLocation  track by r.uuid "
+                                                    ng-required="!isTrainSaveDisabled">
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="form-group" ng-if="isAlogoritnmPCA==false">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12">Save Test Result</label>
                                             <div class="col-md-2 col-sm-2 col-xs-12">
-                                                <select class="form-control" ng-disabled="{{mode}}" data-ng-model="selectedTestSaveType" ng-options="r for r in saveTypes" ng-change="onChangeTestType()">
+                                                <select class="form-control" ng-disabled="{{mode}}" data-ng-model="selectedTestSaveType"
+                                                    ng-options="r for r in saveTypes" ng-change="onChangeTestType()">
                                                 </select>
                                             </div>
-                                            
+
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width:9.4%;float:left;margin-left:-1%;">Name</label>
                                             <div class="col-md-3 col-sm-3 col-xs-12">
-                                                <select class="form-control" select2 ng-disabled="{{mode}} || isTestSaveDisabled" data-ng-model="selectedTestLocation" ng-options="r as r.name for r in allTestLocation  track by r.uuid " ng-required="!isTestSaveDisabled">
+                                                <select class="form-control" select2 ng-disabled="{{mode}} || isTestSaveDisabled"
+                                                    data-ng-model="selectedTestLocation" ng-options="r as r.name for r in allTestLocation  track by r.uuid "
+                                                    ng-required="!isTestSaveDisabled">
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="form-group" ng-if="isAlogoritnmPCA==false">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12">Train Percent</label>
                                             <div class="col-md-2 col-sm-2 col-xs-12" style="width:95px;">
-                                                <input type="number" limit-to="2" class="form-control" ng-disabled="{{mode}}" ng-model="trainData.trainPercent" name="trainPercent"
-                                                    min="1" max="99" ng-change="onChageTrainPercent()" style="width:64px;" required>
+                                                <input type="number" limit-to="2" class="form-control" ng-disabled="{{mode}}"
+                                                    ng-model="trainData.trainPercent" name="trainPercent" min="1" max="99"
+                                                    ng-change="onChageTrainPercent()" style="width:64px;" required>
                                             </div>
                                             <!-- <label class="control-label col-md-4 col-sm-4 col-xs-12" style="width:11%;float:left;margin-left:-1%;">Validation Percent</label>
                                             <div class="col-md-3 col-sm-3 col-xs-12">
@@ -620,13 +703,14 @@
                                         <div class="form-group" ng-if="isAlogoritnmPCA==false">
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12">Validation Percent</label>
                                             <div class="col-md-2 col-sm-2 col-xs-12" style="width:95px;">
-                                                <input type="number" limit-to="2" class="form-control" ng-disabled="{{mode}}" ng-model="trainData.valPercent" name="valPercent"
-                                                    min="1" max="99" maxlength="2" ng-change="onChageValPercent();" style="width:64px;"
+                                                <input type="number" limit-to="2" class="form-control" ng-disabled="{{mode}}"
+                                                    ng-model="trainData.valPercent" name="valPercent" min="1" max="99"
+                                                    maxlength="2" ng-change="onChageValPercent();" style="width:64px;"
                                                     required>
                                             </div>
 
                                         </div>
-                                          <!-- <div class="form-group">
+                                        <!-- <div class="form-group">
                                             <label class="col-md-3 control-label">Feature Importance
                                             </label>
                                             <div class="col-md-9">
@@ -645,22 +729,25 @@
                                             <div class="col-md-9">
                                                 <div class="mt-checkbox-list" style="margin-top:-7px">
                                                     <label class="mt-checkbox mt-checkbox-outline">
-                                                        <input ng-disabled="iSSubmitEnable || {{mode}}" type="checkbox" ng-model="selectedRunImmediately" ng-true-value="'YES'" ng-false-value="'NO'"
-                                                            ng-change="onChangeRunImmediately()">
+                                                        <input ng-disabled="iSSubmitEnable || {{mode}}" type="checkbox"
+                                                            ng-model="selectedRunImmediately" ng-true-value="'YES'"
+                                                            ng-false-value="'NO'" ng-change="onChangeRunImmediately()">
                                                         <span ng-disabled="{{mode}}"></span>
                                                     </label>
                                                 </div>
                                             </div>
                                         </div>
-                                     
+
                                         <div class="row">
                                             <label class="control-label col-md-3"></label>
                                             <div class="col-md-4">
                                                 <a href="javascript:;" class="btn default button-previous" ng-click="countBack()">
                                                     <i class="fa fa-angle-left"></i> Back
                                                 </a>
-                                                <button type="submit" class="btn green" ng-disabled="iSSubmitEnable || {{mode}}" ng-show="isSubmitShow">Submit</button>
-                                                <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
+                                                <button type="submit" class="btn green" ng-disabled="iSSubmitEnable || {{mode}}"
+                                                    ng-show="isSubmitShow">Submit</button>
+                                                <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;"
+                                                    ng-if="dataLoading">
                                                     <div class="bounce1"></div>
                                                     <div class="bounce2"></div>
                                                     <div class="bounce3"></div>
@@ -668,63 +755,86 @@
                                             </div>
                                         </div>
                                     </form>
-                                    <div id="responsive" class="modal fade bs-modal-lg in" tabindex="-1" aria-hidden="true" style="display: none;">
+                                    <div id="responsive" class="modal fade bs-modal-lg in" tabindex="-1" aria-hidden="true"
+                                        style="display: none;">
                                         <div class="modal-dialog">
                                             <div class="modal-content" style="resize: both;overflow: auto;">
                                                 <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                        aria-hidden="true"></button>
                                                     <h4 class="modal-title">Run Params</h4>
                                                 </div>
-                                                <form class="form-horizontal" name="responsive" ng-submit="executeWithExecParams()" novalidate="novalidate">
+                                                <form class="form-horizontal" name="responsive" ng-submit="executeWithExecParams()"
+                                                    novalidate="novalidate">
                                                     <div class="modal-body">
                                                         <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 300px;">
-                                                            <div class="scroller" style="height: 300px; overflow-y: auto; width: auto;" data-always-visible="1" data-rail-visible1="1"
+                                                            <div class="scroller" style="height: 300px; overflow-y: auto; width: auto;"
+                                                                data-always-visible="1" data-rail-visible1="1"
                                                                 data-initialized="1">
                                                                 <div class="row">
                                                                     <div class="col-md-12">
                                                                         <br>
                                                                         <div class="form-group">
-                                                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="select">Type
+                                                                            <label class="control-label col-md-3 col-sm-3 col-xs-12"
+                                                                                for="select">Type
                                                                             </label>
                                                                             <div class="col-md-6">
-                                                                                <select class="form-control" name="ParamType" select2 ng-change="onChangeParamType()" data-ng-model="selectParamType" ng-options="r  for r in paramTypes">
+                                                                                <select class="form-control" name="ParamType"
+                                                                                    select2 ng-change="onChangeParamType()"
+                                                                                    data-ng-model="selectParamType"
+                                                                                    ng-options="r  for r in paramTypes">
                                                                                     <option value="">-Select-</option>
                                                                                 </select>
-                                                                                <input type="hidden" name="ParamType" ng-model="selectParamType" required>
+                                                                                <input type="hidden" name="ParamType"
+                                                                                    ng-model="selectParamType" required>
                                                                             </div>
                                                                         </div>
                                                                         <div class="form-group" ng-show="selectParamType =='paramset'">
-                                                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="select">Name
+                                                                            <label class="control-label col-md-3 col-sm-3 col-xs-12"
+                                                                                for="select">Name
                                                                             </label>
                                                                             <div class="col-md-6">
-                                                                                <select class="form-control" name="paramsetdata" select2 ng-change="onSelectparamSet()" data-ng-model="paramsetdata" ng-options="r as r.name for r in allparamset | orderBy:'name'">
-                                                                                    <option value="" style="color:red;">USE DEFAULT VALUE</option>
+                                                                                <select class="form-control" name="paramsetdata"
+                                                                                    select2 ng-change="onSelectparamSet()"
+                                                                                    data-ng-model="paramsetdata"
+                                                                                    ng-options="r as r.name for r in allparamset | orderBy:'name'">
+                                                                                    <option value="" style="color:red;">USE
+                                                                                        DEFAULT VALUE</option>
                                                                                 </select>
 
                                                                             </div>
                                                                         </div>
 
                                                                         <div class="form-group" ng-if="selectParamType =='paramlist'">
-                                                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="select">Name
+                                                                            <label class="control-label col-md-3 col-sm-3 col-xs-12"
+                                                                                for="select">Name
                                                                             </label>
                                                                             <div class="col-md-6">
                                                                                 <div>
-                                                                                    <select class="form-control" name="paramlistdata" select2 ng-change="onChangeParamList()" data-ng-model="$parent.paramlistdata"
+                                                                                    <select class="form-control" name="paramlistdata"
+                                                                                        select2 ng-change="onChangeParamList()"
+                                                                                        data-ng-model="$parent.paramlistdata"
                                                                                         ng-options="r as r.name for r in allParamList">
                                                                                         <option value="">-Select-</option>
                                                                                     </select>
-                                                                                    <input type="hidden" name="paramlistdata" ng-model="$parent.paramlistdata" ng-required="isParamListRquired">
+                                                                                    <input type="hidden" name="paramlistdata"
+                                                                                        ng-model="$parent.paramlistdata"
+                                                                                        ng-required="isParamListRquired">
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                         <div class="form-group" ng-if="selectParamType== null">
-                                                                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="select">Name
+                                                                            <label class="control-label col-md-3 col-sm-3 col-xs-12"
+                                                                                for="select">Name
                                                                             </label>
                                                                             <div class="col-md-6">
-                                                                                <select class="form-control" select2 name="paramlistdata1" data-ng-model="paramlistdata1" ng-options="r as r.name for r in allParamList">
+                                                                                <select class="form-control" select2
+                                                                                    name="paramlistdata1" data-ng-model="paramlistdata1"
+                                                                                    ng-options="r as r.name for r in allParamList">
                                                                                     <option value="">-Select-</option>
                                                                                 </select>
-                                                                                <input type="hidden" name="paramlistdata1" ng-model="paramlistdata1" required>
+                                                                                <input type="hidden" name="paramlistdata1"
+                                                                                    ng-model="paramlistdata1" required>
                                                                             </div>
                                                                         </div>
                                                                         <br>
@@ -735,38 +845,63 @@
                                                                                         <th style="width:10%;text-align:center">ID</th>
                                                                                         <th class="text-center">Name</th>
                                                                                         <th class="text-center" style="width:20%;">Type</th>
-                                                                                        <th class="text-center">Default Value</th>
+                                                                                        <th class="text-center">Default
+                                                                                            Value</th>
                                                                                     </tr>
                                                                                 </thead>
                                                                                 <tbody>
                                                                                     <tr ng-repeat="tabledata in selectParamList.paramInfo">
                                                                                         <td>
-                                                                                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                                                <input type="text" ng-model="$index" ng-disabled="true" class="form-control">
+                                                                                            <span class="form-group"
+                                                                                                style="margin-left:0px;margin-right: 0px;">
+                                                                                                <input type="text"
+                                                                                                    ng-model="$index"
+                                                                                                    ng-disabled="true"
+                                                                                                    class="form-control">
                                                                                             </span>
                                                                                         </td>
                                                                                         <td>
-                                                                                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                                                <input type="text" ng-model="tabledata.paramName" title="{{tabledata.paramName}}" ng-disabled="true" class="form-control">
+                                                                                            <span class="form-group"
+                                                                                                style="margin-left:0px;margin-right: 0px;">
+                                                                                                <input type="text"
+                                                                                                    ng-model="tabledata.paramName"
+                                                                                                    title="{{tabledata.paramName}}"
+                                                                                                    ng-disabled="true"
+                                                                                                    class="form-control">
                                                                                             </span>
                                                                                         </td>
                                                                                         <td>
-                                                                                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                                                <input type="text" ng-model="tabledata.paramType" title="{{tabledata.paramType}}" ng-disabled="true" class="form-control">
+                                                                                            <span class="form-group"
+                                                                                                style="margin-left:0px;margin-right: 0px;">
+                                                                                                <input type="text"
+                                                                                                    ng-model="tabledata.paramType"
+                                                                                                    title="{{tabledata.paramType}}"
+                                                                                                    ng-disabled="true"
+                                                                                                    class="form-control">
                                                                                             </span>
                                                                                         </td>
                                                                                         <td>
-                                                                                            <div ng-if="tabledata.paramValueType =='distribution'" ng-init="getAllLatest('distribution',$index)">
-                                                                                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                                                    <input name="tabledata{{$index}}" type="text" ng-model="tabledata.selectedParamValue.name" />
+                                                                                            <div ng-if="tabledata.paramValueType =='distribution'"
+                                                                                                ng-init="getAllLatest('distribution',$index)">
+                                                                                                <span class="form-group"
+                                                                                                    style="margin-left:0px;margin-right: 0px;">
+                                                                                                    <input name="tabledata{{$index}}"
+                                                                                                        type="text"
+                                                                                                        ng-model="tabledata.selectedParamValue.name" />
                                                                                                 </span>
                                                                                             </div>
                                                                                             <div ng-if="tabledata.paramValueType =='simple'">
-                                                                                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                                                    <input type="text" ng-model="tabledata.paramValue" title="{{tabledata.paramValue}}" ng-disabled="true" class="form-control">
+                                                                                                <span class="form-group"
+                                                                                                    style="margin-left:0px;margin-right: 0px;">
+                                                                                                    <input type="text"
+                                                                                                        ng-model="tabledata.paramValue"
+                                                                                                        title="{{tabledata.paramValue}}"
+                                                                                                        ng-disabled="true"
+                                                                                                        class="form-control">
                                                                                                 </span>
                                                                                             </div>
-                                                                                            <div class="text-center" ng-if="['simple','distribution'].indexOf(tabledata.paramValueType) == -1">
+                                                                                            <div class="text-center"
+                                                                                                ng-if="['simple','distribution'].indexOf(tabledata.paramValueType) == -1">
                                                                                                 NA
                                                                                             </div>
                                                                                         </td>
@@ -779,32 +914,51 @@
                                                                                 <thead>
                                                                                     <tr>
                                                                                         <th style="text-align:center;Vertical-align: middle;width:5%;">
-                                                                                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                                                <input style="width:16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="$parent.selectallattribute" ng-change="selectAllRow()"
-                                                                                                />
+                                                                                            <span class="form-group"
+                                                                                                style="margin-left:0px;margin-right: 0px;">
+                                                                                                <input style="width:16px;height:16px;"
+                                                                                                    type="checkbox"
+                                                                                                    ng-disabled="{{mode}}"
+                                                                                                    ng-model="$parent.selectallattribute"
+                                                                                                    ng-change="selectAllRow()" />
                                                                                             </span>
                                                                                         </th>
-                                                                                        <th class="text-center"> ID </th>
-                                                                                        <th class="text-center" ng-repeat="tablecol in paramtablecol"> {{tablecol.paramName}} </th>
+                                                                                        <th class="text-center"> ID
+                                                                                        </th>
+                                                                                        <th class="text-center"
+                                                                                            ng-repeat="tablecol in paramtablecol">
+                                                                                            {{tablecol.paramName}} </th>
                                                                                     </tr>
                                                                                 </thead>
                                                                                 <tbody>
                                                                                     <tr ng-repeat="tabledata in paramtable">
                                                                                         <td style="text-align:center;Vertical-align:middle;width:5%;">
-                                                                                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                                                <input style="width:16px;height:16px;" class="form-control" type="checkbox" ng-model="tabledata.selected" />
+                                                                                            <span class="form-group"
+                                                                                                style="margin-left:0px;margin-right: 0px;">
+                                                                                                <input style="width:16px;height:16px;"
+                                                                                                    class="form-control"
+                                                                                                    type="checkbox"
+                                                                                                    ng-model="tabledata.selected" />
                                                                                             </span>
                                                                                         </td>
                                                                                         <td>
-                                                                                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                                                <input style="width:50px" type="text" ng-model="tabledata.paramSetId" ng-disabled="true" class="form-control">
+                                                                                            <span class="form-group"
+                                                                                                style="margin-left:0px;margin-right: 0px;">
+                                                                                                <input style="width:50px"
+                                                                                                    type="text"
+                                                                                                    ng-model="tabledata.paramSetId"
+                                                                                                    ng-disabled="true"
+                                                                                                    class="form-control">
                                                                                             </span>
                                                                                         </td>
                                                                                         <td ng-repeat="tablecol in tabledata.paramSetVal">
-                                                                                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                                                <input style="width:{{paramtablecol.length}} < 3?0:{{paramtablecol[$index].paramName.split('').length + 100}}px" type="text"
+                                                                                            <span class="form-group"
+                                                                                                style="margin-left:0px;margin-right: 0px;">
+                                                                                                <input style="width:{{paramtablecol.length}} < 3?0:{{paramtablecol[$index].paramName.split('').length + 100}}px"
+                                                                                                    type="text"
                                                                                                     ng-model="tablecol.value"
-                                                                                                    ng-disabled="true" class="form-control">
+                                                                                                    ng-disabled="true"
+                                                                                                    class="form-control">
                                                                                             </span>
                                                                                         </td>
                                                                                     </tr>
@@ -817,7 +971,8 @@
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <button type="button" data-dismiss="modal" class="btn dark btn-outline" data-ng-click="onCloseRunImediatly()">Close</button>
+                                                        <button type="button" data-dismiss="modal" class="btn dark btn-outline"
+                                                            data-ng-click="onCloseRunImediatly()">Close</button>
                                                         <input type="submit" class="btn green" value="Submit" />
                                                     </div>
                                                 </form>

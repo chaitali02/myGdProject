@@ -75,9 +75,18 @@ DatascienceModule.controller('CreateParamSetController', function ($state, $stat
 			return $filter('filter')($scope.lobTag, query);
 		});
 	};
-    $scope.getLovByType();
-
+	$scope.getLovByType();
+	
+    $scope.checkIsInrogess=function(){
+		if($scope.isEditInprogess || $scope.isEditVeiwError){
+		return false;
+		}
+	}
+	
 	$scope.showGraph = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showFrom = false;
 		$scope.showGraphDiv = true;
 
@@ -85,10 +94,16 @@ DatascienceModule.controller('CreateParamSetController', function ($state, $stat
 
 
 	$scope.showPage = function () {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showFrom = true;
 		$scope.showGraphDiv = false
 	}
 	$scope.showHome=function(uuid, version,mode){
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('createparamset', {
 			id: uuid,
@@ -97,7 +112,11 @@ DatascienceModule.controller('CreateParamSetController', function ($state, $stat
 		});
 	}
 	$scope.enableEdit = function (uuid, version) {
+
 		if($scope.isPrivlage || $scope.paramsetdata.locked =="Y"){
+			return false;
+		}
+		if($scope.checkIsInrogess () ==false){
 			return false;
 		}
 		$scope.showPage()
@@ -108,6 +127,9 @@ DatascienceModule.controller('CreateParamSetController', function ($state, $stat
 		});
 	}
 	$scope.showview = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		if (!$scope.isEdit) {
 			$scope.showPage()
 			$state.go('createparamset', {
@@ -298,6 +320,8 @@ DatascienceModule.controller('CreateParamSetController', function ($state, $stat
 		paramsetJson.active = $scope.paramsetdata.active;
 		paramsetJson.locked = $scope.paramsetdata.locked;
 		paramsetJson.published = $scope.paramsetdata.published;
+		paramsetJson.publicFlag = $scope.paramsetdata.publicFlag;
+
 		var tagArray = [];
 		if ($scope.tags != null) {
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {

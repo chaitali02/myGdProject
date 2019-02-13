@@ -1209,17 +1209,32 @@ DataIngestionModule.controller('DetailRuleGroupController', function ($state, $t
 			$state.go($scope.statedetail.name, $scope.statedetail.params)
 		}
 	}
+
+	$scope.checkIsInrogess=function(){
+		if($scope.isEditInprogess || $scope.isEditVeiwError){
+		return false;
+		}
+    }
 	$scope.showPage = function () {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showForm = true;
 		$scope.showGraphDiv = false;
 
 	}
 
 	$scope.showGraph = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showForm = false;
 		$scope.showGraphDiv = true;
 	}
     $scope.showHome=function(uuid, version,mode){
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage();
 		$state.go('ingestrulegroupdetail', {
 			id: uuid,
@@ -1231,6 +1246,9 @@ DataIngestionModule.controller('DetailRuleGroupController', function ($state, $t
 		if($scope.isPrivlage || $scope.ruleGroupDetail.locked =="Y"){
 			return false;
 		}
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('ingestrulegroupdetail', {
 			id: uuid,
@@ -1240,6 +1258,9 @@ DataIngestionModule.controller('DetailRuleGroupController', function ($state, $t
 	}
 
 	$scope.showview = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		if (!$scope.isEdit) {
 			$scope.showPage()
 			$state.go('ingestrulegroupdetail', {
@@ -1369,6 +1390,7 @@ DataIngestionModule.controller('DetailRuleGroupController', function ($state, $t
 		ruleGroupJson.active = $scope.ruleGroupDetail.active;
 		ruleGroupJson.locked = $scope.ruleGroupDetail.locked;
 		ruleGroupJson.published = $scope.ruleGroupDetail.published;
+		ruleGroupJson.publicFlag = $scope.ruleGroupDetail.publicFlag;
 		var tagArray = [];
 		if ($scope.tags != null) {
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {

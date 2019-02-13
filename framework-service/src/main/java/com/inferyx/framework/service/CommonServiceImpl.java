@@ -2493,9 +2493,20 @@ public class CommonServiceImpl<T> {
 
 			if (uuid != null && baseEntityLatest == null) {
 				metaIdentifierHolderList.add(meta);
-			} else if (baseEntityLatest == null && object instanceof Map && !map.entrySet().contains("uuid")) {
+			} else if (baseEntityLatest == null && object instanceof Map && !map.containsKey("uuid")) {
 				metaIdentifierHolderList.add(meta);
 			} else {
+				boolean isExist=false;
+				if(baseEntityLatest.getAppInfo() !=null) {
+					for(MetaIdentifierHolder MIAppInfo:baseEntityLatest.getAppInfo()) {
+						if(MIAppInfo.getRef().getUuid().equalsIgnoreCase(meta.getRef().getUuid())) {
+							isExist=true;
+							break;
+						}
+					}
+				}
+				if(!isExist)
+					metaIdentifierHolderList.add(meta);
 				metaIdentifierHolderList.addAll(baseEntityLatest.getAppInfo());
 			}
 			BaseEntity objDet = null;

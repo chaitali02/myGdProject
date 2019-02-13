@@ -428,15 +428,26 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 	// 	{ "text": "dataset", "caption": "dataset", "disabled": false },
 	// 	{ "text": "paramlist", "caption": "paramlist", "disabled": false },
 	//   { "text": "function", "caption": "function", "disabled": false }]
-
+	
+	$scope.checkIsInrogess=function(){
+		if($scope.isEditInprogess || $scope.isEditVeiwError){
+		return false;
+		}
+    }
 	/*Start showPage*/
 	$scope.showPage = function () {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.isShowSimpleData = false
 		$scope.showForm = true;
 		$scope.showGraphDiv = false
 	}/*End showPage*/
 
 	$scope.showHome=function(uuid, version,mode){
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		var state = dagMetaDataService.elementDefs[CF_META_TYPES.report].detailState
 		$state.go(state, {
@@ -449,12 +460,18 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		if($scope.isPrivlage || $scope.report.locked =="Y"){
 			return false;
 		}
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		var state = dagMetaDataService.elementDefs[CF_META_TYPES.report].detailState
 		setTimeout(function () { $state.go(state, { 'id': uuid, 'version': version, 'mode': 'false' }); }, 100);
 	}
 
 	$scope.showView = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		if (!$scope.isEdit) {
 			$scope.showPage()
 			var state = dagMetaDataService.elementDefs[CF_META_TYPES.report].detailState
@@ -543,6 +560,9 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 	});
 
 	$scope.showGraph = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showForm = false;
 		$scope.showGraphDiv = true;
 		$scope.isShowSimpleData = false
@@ -750,6 +770,9 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 	}
 
 	$scope.getSample = function (data) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		ReportSerivce.getReportSample(data).then(function (response) { onSuccessGetSample(response.data) }, function (response) { onError(response.data) })
 		var onSuccessGetSample = function (response) {
 			$scope.gridOptions.columnDefs = [];
@@ -789,6 +812,9 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		}
 	}
 	$scope.reportExecute = function (data, filterData) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.spinner = true;
 		ReportSerivce.reportExecute(data.uuid, data.version, filterData).then(function (response) { onSuccessReportExecute(response.data) }, function (response) { onError(response.data) })
 		var onSuccessReportExecute = function (response) {
@@ -805,6 +831,9 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 	}
 
 	$scope.showSampleTable = function (data) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.isShowSimpleData = true
 		$scope.isDataInpogress = true
 		$scope.isDataError = false;
@@ -1526,6 +1555,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		reportJson.active = $scope.report.active;
 		reportJson.locked = $scope.report.locked;
 		reportJson.published = $scope.report.published;
+		reportJson.publicFlag = $scope.report.publicFlag;
 		reportJson.title = $scope.report.title;
 		reportJson.header = $scope.report.header;
 		reportJson.footer = $scope.report.footer;

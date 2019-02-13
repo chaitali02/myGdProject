@@ -65,12 +65,22 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 		$scope.privileges = privilegeSvc.privileges[CF_META_TYPES.graphpod] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
-	
+	$scope.checkIsInrogess=function(){
+		if($scope.isEditInprogess || $scope.isEditVeiwError){
+		return false;
+		}
+    }
 	$scope.showPage = function () {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showForm = true
 		$scope.showGraphDiv = false
 	}
 	$scope.showHome=function(uuid, version,mode){
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('creaetgraphpod', {
 			id: uuid,
@@ -82,6 +92,9 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 		if($scope.isPrivlage || $scope.graphpodData.locked =="Y"){
 			return false;
 		}
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage();
 		$state.go('creaetgraphpod', {
 			id: uuid,
@@ -90,6 +103,9 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 		});
 	}
 	$scope.showView = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		if(!$scope.isEdit){
 			$scope.showPage()
 			$state.go('creaetgraphpod', {
@@ -112,6 +128,9 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 	});
 
 	$scope.showGraph = function () {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showForm = false;
 		$scope.showGraphDiv = true;
 	}//End showGraph
@@ -529,6 +548,8 @@ GraphAnalysisModule.controller('GraphpodDetailController',function($state,$state
 		graphpodJson.active = $scope.graphpodData.active;
 		graphpodJson.locked = $scope.graphpodData.locked;
 		graphpodJson.published = $scope.graphpodData.published;
+		graphpodJson.publicFlag = $scope.graphpodData.publicFlag;
+
 		var tagArray = [];
 		if ($scope.tags != null) {
 			for (var countTag = 0; countTag < $scope.tags.length; countTag++) {

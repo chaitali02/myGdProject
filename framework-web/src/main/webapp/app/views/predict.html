@@ -43,7 +43,7 @@
 
                     <div class="actions">
                         <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top"
-                            tooltip ng-hide="isAdd" ng-class="(showFrom==true)? 'currentpage':'notcurrentpage'" data-ng-click="showHome(predictData.uuid,predictData.version,mode)">
+                            tooltip ng-hide="isAdd" ng-class="(showFrom==true || isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'" data-ng-click="showHome(predictData.uuid,predictData.version,mode)">
                             <i class="fa fa-home icon-circle home-icon-circle"></i>
                         </a>
                         <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
@@ -51,21 +51,15 @@
                             ng-hide="isAdd" data-ng-click="enableEdit(predictData.uuid,predictData.version)">
                             <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
                         </a>
-                        <!-- <a  class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showFrom==true && isEdit==true)? 'currentpage':'notcurrentpage'"
-                        ng-hide="isAdd" data-ng-click="enableEdit(predictData.uuid,predictData.version)">
-                        <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
-                    </a>
-                    <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Show Details" data-toggle="tooltip" data-placement="top" tooltip   ng-hide="isAdd" ng-class="(showFrom==true || isEdit==true)? 'currentpage':'notcurrentpage'" data-ng-click="showview(predictData.uuid,predictData.version)">
-                        <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
-                    </a> -->
+                      
                         <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Knowledge Graph" data-toggle="tooltip" tooltip
-                            data-placement="top" ng-show="isDependencyShow" ng-class="showFrom==false? 'currentpage':'notcurrentpage'"
+                            data-placement="top" ng-show="isDependencyShow" ng-class="(showFrom==false||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
                             data-ng-click="showGraph(predictData.uuid,predictData.version)">
                             <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:#a0a0a0"></i>
                         </a>
                         <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default " ng-click="broadcastRefreshData()" data-original-title=""
                             title="">
-                            <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0" ng-class="showGraphDiv ==false? 'currentpage':'notcurrentpage'"></i>
+                            <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0" ng-class="(showGraphDiv ==false ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"></i>
                         </a>
                         <a class="btn btn-circle btn-icon-only btn-default " ng-click="close()" title="Close" data-toggle="tooltip" data-placement="top"
                             tooltip>
@@ -217,7 +211,17 @@
                                                 </div>
                                             </div>
                                         </div>
-
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12">Public</label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                              <div class="btn-group" ng-init="predictData.publicFlag='N'">
+                                                <label class="btn btn-default" ng-model="predictData.publicFlag" uib-btn-radio="'Y'"
+                                                  ng-disabled="{{mode}}" uncheckable>Yes</label>
+                                                <label class="btn btn-default" ng-model="predictData.publicFlag" uib-btn-radio="'N'"
+                                                  ng-disabled="{{mode}}" uncheckable>No</label>
+                                              </div>
+                                            </div>
+                                          </div>
                                         <div class="row">
                                             <label class="control-label col-md-3"></label>
                                             <div class="col-md-4">

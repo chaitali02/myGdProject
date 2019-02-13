@@ -103,12 +103,23 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
       $state.go($scope.statedetail.name, $scope.statedetail.params)
     }
   }
+  $scope.checkIsInrogess=function(){
+		if($scope.isEditInprogess || $scope.isEditVeiwError){
+		return false;
+		}
+  }
   $scope.showPage = function() {
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
     $scope.showForm = true;
     $scope.showGraphDiv = false;
   
   }
   $scope.showHome=function(uuid, version,mode){
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go(dagMetaDataService.elementDefs[CF_META_TYPES.batch].detailState, {
 			id: uuid,
@@ -117,6 +128,9 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
 		});
 	}
   $scope.showGraph = function(uuid, version) {
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
     $scope.showForm = false;
     $scope.showGraphDiv = true;
   }
@@ -125,6 +139,9 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
     if($scope.isPrivlage || $scope.batchDetail.locked =="Y"){
       return false;
     }
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
     $scope.showPage()
     $state.go(dagMetaDataService.elementDefs[CF_META_TYPES.batch].detailState, {
       id: uuid,
@@ -134,6 +151,9 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
   }
 
   $scope.showview=function (uuid,version) {
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
     if(!$scope.isEdit){
       $scope.showPage()
       $state.go(dagMetaDataService.elementDefs['batch'].detailState, {
@@ -542,6 +562,7 @@ BatchModule.controller('DetailBatchController', function($state, $timeout, $filt
     batchJson.active = $scope.batchDetail.active;
     batchJson.locked = $scope.batchDetail.locked;
     batchJson.published = $scope.batchDetail.published;
+    batchJson.publicFlag = $scope.batchDetail.publicFlag;
     batchJson.inParallel= $scope.batchDetail.inParallel;
     if($scope.isAdd ==true){
       batchJson.batchChg="Y";

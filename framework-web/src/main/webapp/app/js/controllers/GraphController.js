@@ -110,14 +110,26 @@ angular.module('InferyxApp')
       $scope.$on('$destroy', function () {
         $scope.isDestoryState = true;
       }); 
+      
+      $scope.checkIsInrogess=function(){
+        if($scope.isEditInprogess || $scope.isEditVeiwError){
+        return false;
+        }
+      }
 
       $scope.showDagPage = function () {
+        if($scope.checkIsInrogess () ==false){
+          return false;
+        }
         $scope.showdag = true;
         $scope.showgraphdiv = false;
         $scope.showdagflow = false;
       }/*End showDatapodPage*/
       
       $scope.showHome=function(uuid, version,mode){
+        if($scope.checkIsInrogess () ==false){
+          return false;
+        }
         $scope.showDagPage();
         $state.go('createwf', {
           id: uuid,
@@ -128,7 +140,10 @@ angular.module('InferyxApp')
       $scope.enableEdit = function (uuid, version) {
         if($scope.isPrivlage || $scope.dagdata.locked =="Y"){
           return false;
-		    }  
+        } 
+        if($scope.checkIsInrogess () ==false){
+          return false;
+        } 
         $scope.showDagPage()
         $state.go('createwf', {
           id: uuid,
@@ -138,6 +153,9 @@ angular.module('InferyxApp')
       }
 
       $scope.showview = function (uuid, version) {
+        if($scope.checkIsInrogess () ==false){
+          return false;
+        }
         if (!$scope.isEdit) {
           $scope.showDagPage()
           $state.go('createwf', {
@@ -169,6 +187,9 @@ angular.module('InferyxApp')
       }
 
       $scope.showDagGraph = function (uuid, version) {
+        if($scope.checkIsInrogess () ==false){
+          return false;
+        }
         $scope.showdag = false;
         $scope.showgraphdiv = true;
         $scope.showdagflow = false;
@@ -373,6 +394,8 @@ angular.module('InferyxApp')
         dagJson.active = $scope.dagdata.active;
         dagJson.locked = $scope.dagdata.locked;
         dagJson.published = $scope.dagdata.published;
+        dagJson.publicFlag = $scope.dagdata.publicFlag;
+
         dagJson.desc = $scope.dagdata.desc;
         dagJson.stages = inArrayFormat[0].stages;
         dagJson.xPos = inArrayFormat[0].xPos;

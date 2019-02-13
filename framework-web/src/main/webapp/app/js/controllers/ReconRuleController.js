@@ -96,13 +96,23 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
       $scope.isSubmitShow = false;
     }
   }
-
+  $scope.checkIsInrogess=function(){
+		if($scope.isEditInprogess || $scope.isEditVeiwError){
+		return false;
+		}
+  }
   $scope.showPage = function() {
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
     $scope.showForm = true
     $scope.showGraphDiv = false
   }
 
   $scope.showHome=function(uuid, version,mode){
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage();
 		$state.go('createreconerule', {
 			id: uuid,
@@ -112,6 +122,9 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
 	}
   
   $scope.showGraph = function(uuid, version) {
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
     $scope.showForm = false
     $scope.showGraphDiv = true;
   };
@@ -119,6 +132,9 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
     if($scope.isPrivlage || $scope.reconruledata.locked =="Y"){
       return false;
     }
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
     $scope.showPage()
     $state.go('createreconerule', {
       id: uuid,
@@ -127,6 +143,9 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
     });
   }
   $scope.showview=function (uuid,version) {
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
     if(!$scope.isEdit){
       $scope.showPage()
       var name=dagMetaDataService.elementDefs['recon'].listState
@@ -883,6 +902,7 @@ ReconModule.controller('DetailRuleController', function($state,$stateParams, $ro
     jsonObj.active = $scope.reconruledata.active;
     jsonObj.locked = $scope.reconruledata.locked;
     jsonObj.published = $scope.reconruledata.published;
+    jsonObj.publicFlag = $scope.reconruledata.publicFlag;
     jsonObj.sourceDistinct=$scope.reconruledata.sourceDistinct;
     jsonObj.targetDistinct=$scope.reconruledata.targetDistinct;
     var tagArray = [];
@@ -1337,12 +1357,23 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
       $state.go($scope.statedetail.name, $scope.statedetail.params)
     }
   }
+  $scope.checkIsInrogess=function(){
+		if($scope.isEditInprogess || $scope.isEditVeiwError){
+		return false;
+		}
+  }
   $scope.showPage = function() {
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
     $scope.showForm = true;
     $scope.showGraphDiv = false;
   }
   
   $scope.showHome=function(uuid, version,mode){
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage();
 		$state.go('createreconerulegroup', {
 			id: uuid,
@@ -1352,6 +1383,9 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
 	}
    
   $scope.showGraph = function(uuid, version) {
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
     $scope.showForm = false;
     $scope.showGraphDiv = true;
   }
@@ -1360,6 +1394,9 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
     if($scope.isPrivlage || $scope.ruleGroupDetail.locked =="Y"){
       return false;
     }
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
     $scope.showPage()
     $state.go('createreconerulegroup', {
       id: uuid,
@@ -1369,6 +1406,9 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
   }
 
   $scope.showview=function (uuid,version) {
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
     if(!$scope.isEdit){
       $scope.showPage()
       $state.go('createreconerulegroup', {
@@ -1497,6 +1537,8 @@ ReconModule.controller('DetailRuleGroupController', function($state, $timeout, $
     ruleGroupJson.active = $scope.ruleGroupDetail.active;
     ruleGroupJson.locked = $scope.ruleGroupDetail.locked;
     ruleGroupJson.published = $scope.ruleGroupDetail.published;
+    ruleGroupJson.publicFlag = $scope.ruleGroupDetail.publicFlag;
+
     var tagArray = [];
     if ($scope.tags != null) {
       for (var counttag = 0; counttag < $scope.tags.length; counttag++) {

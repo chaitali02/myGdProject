@@ -16,7 +16,7 @@
         <i class="fa fa-circle"></i>
       </li>
       <li>
-        <span>{{dashboarddata.name | strReplace:'_':' '|capitalize}}</span>
+        <span>{{dashboarddata.name}}</span>
       </li>
     </ul>
     <div class="page-toolbar">
@@ -36,15 +36,15 @@
       <div class="portlet box green">
         <div class="portlet-title">
           <div class="caption">
-            <i class="fa fa-gift"></i>{{dashboarddata.name | strReplace:'_':' '|capitalize}}
+            <i class="fa fa-gift"></i>{{dashboarddata.name}}
           </div>
 
           <div class="tools">
-            <a href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top" tooltip ng-hide="isAdd" ng-class="(showdashboard==true)? 'currentpage':'notcurrentpage'"
+            <a href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top" tooltip ng-hide="isAdd" ng-class="(showdashboard==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
               style="height:16px;font-size:16px;" data-ng-click="showHome(dashboarddata.uuid,dashboarddata.version,mode)">
               <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
-            <a title="Edit" ng-class="(isEdit==true || isPrivlage || dashboarddata.locked == 'Y')? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
+            <a title="Edit" ng-class="(isEdit==true || isPrivlage || dashboarddata.locked == 'Y' ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
               data-placement="top" tooltip ng-click="enableEdit(dashboarddata.uuid,dashboarddata.version)" ng-hide="isAdd"
               style="height:16px;">
               <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
@@ -58,7 +58,7 @@
               ng-click="showview(dashboarddata.uuid,dashboarddata.version)" ng-hide="isAdd" style="height:16px;">
               <span class="glyphicon glyphicon-file" style="color:white;"></span>
             </a> -->
-            <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showdashboard==false)? 'currentpage':'notcurrentpage'"
+            <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showdashboard==false ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
               data-ng-click="showDashboardGraph(dashboarddata.uuid,dashboarddata.version)" style="height:14px;" ng-hide="isAdd">
               <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
             </a>
@@ -222,6 +222,17 @@
                         uncheckable>Yes</label>
                       <label class="btn btn-default" ng-model="dashboarddata.published" uib-btn-radio="'N'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
                         uncheckable>No</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Public</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="btn-group" ng-init="dashboarddata.publicFlag='N'">
+                      <label class="btn btn-default" ng-model="dashboarddata.publicFlag" uib-btn-radio="'Y'"
+                        ng-disabled="{{mode}}" uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-model="dashboarddata.publicFlag" uib-btn-radio="'N'"
+                        ng-disabled="{{mode}}" uncheckable>No</label>
                     </div>
                   </div>
                 </div>

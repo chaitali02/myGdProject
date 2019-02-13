@@ -15,7 +15,7 @@
 				<i class="fa fa-circle"></i>
 			</li>
 			<li>
-				<span>{{vizpoddata.name | strReplace:'_':' '|capitalize}}</span>
+				<span>{{vizpoddata.name}}</span>
 			</li>
 		</ul>
 		<div class="page-toolbar">
@@ -39,14 +39,14 @@
 			<div class="portlet box green">
 				<div class="portlet-title">
 					<div class="caption">
-						<i class="fa fa-gift"></i> {{vizpoddata.name | strReplace:'_':' '|capitalize}}
+						<i class="fa fa-gift"></i> {{vizpoddata.name}}
 					</div>
 					<div class="tools">
-						<a href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top" tooltip ng-hide="isAdd" ng-class="(showvizpod==true)? 'currentpage':'notcurrentpage'"
+						<a href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top" tooltip ng-hide="isAdd" ng-class="(showvizpod==true || isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
 						 style="height:16px;font-size:16px;" data-ng-click="showHome(vizpoddata.uuid,vizpoddata.version,mode)">
 							<i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
 						</a>
-						<a title="Edit" ng-class="(isEdit==true || isPrivlage || vizpoddata.locked == 'Y')? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
+						<a title="Edit" ng-class="(isEdit==true || isPrivlage || vizpoddata.locked == 'Y' ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
 						 data-placement="top" tooltip ng-click="enableEdit(vizpoddata.uuid,vizpoddata.version)" ng-hide="isAdd" style="height:16px;">
 							<i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
 						</a>
@@ -58,15 +58,15 @@
 						 ng-click="showview(vizpoddata.uuid,vizpoddata.version)" ng-hide="isAdd" style="height:16px;">
 							<span class="glyphicon glyphicon-file" style="color:white;"></span>
 						</a> -->
-						<a title="Sample Records" data-toggle="tooltip" data-placement="top" tooltip ng-class="isShowSimpleData==true? 'currentpage':'notcurrentpage'"
+						<a title="Sample Records" data-toggle="tooltip" data-placement="top" tooltip ng-class="(isShowSimpleData==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
 						 ng-hide="isAdd" data-ng-click="isShowSimpleData ==false?showSampleTable(vizpoddata):''" style="height:16px;">
 							<i class="fa fa-table" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
 						</a>
-						<a ng-click="downloadFile(vizpoddata)" tooltip-placement="top" uib-tooltip="Download" ng-hide="isAdd" ng-class="isDownloadDatapod==true? 'currentpage':'notcurrentpage'"
+						<a ng-click="downloadFile(vizpoddata)" tooltip-placement="top" uib-tooltip="Download" ng-hide="isAdd" ng-class="(isDownloadDatapod==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
 						 ng-disabled="isDownloadDatapod">
 							<i class="fa fa-download" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
 						</a>
-						<a title="Knowledge Graph" ng-class="showvizpod==false? 'currentpage':'notcurrentpage'" ng-show="isDependencyShow" data-toggle="tooltip"
+						<a title="Knowledge Graph" ng-class="(showvizpod==false ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'" ng-show="isDependencyShow" data-toggle="tooltip"
 						 data-placement="top" tooltip data-ng-click="showVizpodGraph(vizpoddata.uuid,vizpoddata.version)">
 							<i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
 						</a>
@@ -291,7 +291,18 @@
 												<label class="btn btn-default" ng-model="vizpoddata.published" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
 											</div>
 										</div>
-									</div>
+									</div> 
+									<div class="form-group">
+										<label class="control-label col-md-3 col-sm-3 col-xs-12">Public</label>
+										<div class="col-md-6 col-sm-6 col-xs-12">
+										  <div class="btn-group" ng-init="vizpoddata.publicFlag='N'">
+											<label class="btn btn-default" ng-model="vizpoddata.publicFlag" uib-btn-radio="'Y'"
+											  ng-disabled="{{mode}}" uncheckable>Yes</label>
+											<label class="btn btn-default" ng-model="vizpoddata.publicFlag" uib-btn-radio="'N'"
+											  ng-disabled="{{mode}}" uncheckable>No</label>
+										  </div>
+										</div>
+									  </div>
 									
 									<div class="form-group">
 										<label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Attribute</label>
