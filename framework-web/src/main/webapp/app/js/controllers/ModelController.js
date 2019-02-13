@@ -288,8 +288,10 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
   }
 
   $scope.onChangeFeatureType=function(index){
-    if($scope.featureTableArray[index].type=="string"){
+    if($scope.featureTableArray[index].type=="string" || $scope.featureTableArray[index].type=="vector"){
       $scope.featureTableArray[index].isMinMaxDiabled=true;
+      $scope.featureTableArray[index].minVal="";
+      $scope.featureTableArray[index].maxVal="";
     }else{
       $scope.featureTableArray[index].isMinMaxDiabled=false;
     }
@@ -548,10 +550,10 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
           featureObj.type=$scope.modeldata.features[i].type;
           featureObj.desc=$scope.modeldata.features[i].desc;
           featureObj.encodingType=$scope.modeldata.features[i].encodingType;
-          featureObj.minVal=$scope.modeldata.features[i].type =="string"?"":$scope.modeldata.features[i].minVal
-          featureObj.maxVal=$scope.modeldata.features[i].type =="string"?"":$scope.modeldata.features[i].maxVal
+          featureObj.minVal=($scope.modeldata.features[i].type =="string" || $scope.modeldata.features[i].type =="vector")?"":$scope.modeldata.features[i].minVal
+          featureObj.maxVal=($scope.modeldata.features[i].type =="string" || $scope.modeldata.features[i].type =="vector")?"":$scope.modeldata.features[i].maxVal
           featureObj.defaultValue=$scope.modeldata.features[i].defaultValue;
-          featureObj.isMinMaxDiabled=$scope.modeldata.features[i].type=="string"?true:false;
+          featureObj.isMinMaxDiabled=($scope.modeldata.features[i].type=="string" || $scope.modeldata.features[i].type=="vector")?true:false;
           if(response.features[i].imputeMethod !=null){
             if(response.features[i].imputeMethod.ref.type =="simple"){
               imputeMethod.imputeType="custom";
@@ -657,10 +659,10 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
           featureObj.type=$scope.modeldata.features[i].type;
           featureObj.desc=$scope.modeldata.features[i].desc;
           featureObj.encodingType= $scope.modeldata.features[i].encodingType;
-          featureObj.minVal=$scope.modeldata.features[i].type =="string"?"":$scope.modeldata.features[i].minVal
-          featureObj.maxVal=$scope.modeldata.features[i].type =="string"?"":$scope.modeldata.features[i].maxVal
+          featureObj.minVal=($scope.modeldata.features[i].type =="string" || $scope.modeldata.features[i].type =="vector")?"":$scope.modeldata.features[i].minVal
+          featureObj.maxVal=($scope.modeldata.features[i].type =="string" || $scope.modeldata.features[i].type =="vector")?"":$scope.modeldata.features[i].maxVal
           featureObj.defaultValue=$scope.modeldata.features[i].defaultValue;
-          featureObj.isMinMaxDiabled=$scope.modeldata.features[i].type =="string"?true:false;
+          featureObj.isMinMaxDiabled=($scope.modeldata.features[i].type =="string" ||$scope.modeldata.features[i].type =="vector")?true:false;
           if(response.features[i].imputeMethod !=null){
             if(response.features[i].imputeMethod.ref.type =="simple"){
               imputeMethod.imputeType="custom";
