@@ -803,7 +803,7 @@ public class MetadataServiceImpl {
 		metaObjectList = ruleExecResults.getMappedResults();
 
 		List<BaseEntity> baseEntityList = new ArrayList<>();
-        System.out.println(metaObjectList);
+       // System.out.println(metaObjectList);
         
 		for (Object metaObject : metaObjectList) {
 			BaseEntity baseEntity = new BaseEntity();
