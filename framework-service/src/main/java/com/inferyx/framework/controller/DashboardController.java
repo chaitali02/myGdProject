@@ -23,9 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.Dashboard;
-import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DashboardServiceImpl;
 import com.inferyx.framework.service.DashboardViewServiceImpl;
