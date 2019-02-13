@@ -21,10 +21,7 @@ import { AppConfig } from './app.config';
 import { AppMetadata } from './app.metadata';
 import { AppHelper } from './app.helper';
 
-
 const APP_PROVIDERS = [AppConfig, AppMetadata, AppHelper];
-
-
 @NgModule({
   declarations: [
     AppComponent,
