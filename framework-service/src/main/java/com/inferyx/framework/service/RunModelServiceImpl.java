@@ -885,14 +885,16 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 						dataStoreServiceImpl.create(testLPathFilePathUrl, trainName,
 							new MetaIdentifier(MetaType.datapod, testLocationDP.getUuid(), testLocationDP.getVersion()),
 							new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion()),
-							trainExec.getAppInfo(), trainExec.getCreatedBy(), SaveMode.Append.toString(), null);
+							trainExec.getAppInfo(), trainExec.getCreatedBy(), SaveMode.Append.toString(), null,
+							trainResult.getValidationSet(), null, null);
 					 }
 					if(trainLocationDP !=null && train.getSaveTrainingSet().equalsIgnoreCase("Y")) {
 						dataStoreServiceImpl.setRunMode(RunMode.BATCH);
 						dataStoreServiceImpl.create(trainLPathFilePathUrl, trainName,
 							new MetaIdentifier(MetaType.datapod, trainLocationDP.getUuid(),trainLocationDP.getVersion()),
 							new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion()),
-							trainExec.getAppInfo(), trainExec.getCreatedBy(), SaveMode.Append.toString(), null);
+							trainExec.getAppInfo(), trainExec.getCreatedBy(), SaveMode.Append.toString(), null,
+							trainResult.getTrainingSet(), null, null);
 					 }
 				} else if (!model.getType().equalsIgnoreCase(ExecContext.DL4J.toString())) {		
 					//With hypertuning
@@ -917,7 +919,8 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 										dataStoreServiceImpl.create(testLPathFilePathUrl, trainName,
 										new MetaIdentifier(MetaType.datapod, testLocationDP.getUuid(), testLocationDP.getVersion()),
 										new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion()),
-										trainExec.getAppInfo(), trainExec.getCreatedBy(), SaveMode.Append.toString(), null);
+										trainExec.getAppInfo(), trainExec.getCreatedBy(), SaveMode.Append.toString(), null,
+										trainResult.getValidationSet(), null, null);
 									}
 									
 									if(trainLocationDP !=null &&  train.getSaveTrainingSet().equalsIgnoreCase("Y")) {
@@ -925,7 +928,8 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 										dataStoreServiceImpl.create(trainLPathFilePathUrl, trainName,
 											new MetaIdentifier(MetaType.datapod, trainLocationDP.getUuid(),trainLocationDP.getVersion()),
 											new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion()),
-											trainExec.getAppInfo(), trainExec.getCreatedBy(), SaveMode.Append.toString(), null);
+											trainExec.getAppInfo(), trainExec.getCreatedBy(), SaveMode.Append.toString(), null,
+											trainResult.getTrainingSet(), null, null);
 									 }
 								}
 							}
@@ -943,19 +947,21 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 										, testLocationDP, testLocationDS, testLocationTableName, testLPathFilePathUrl
 										, trainLocationDP, trainLocationDS, trainLocationTableName
 										, trainLPathFilePathUrl, algoclass);
-								if(testLocationDP !=null) {
+								if(testLocationDP != null) {
 									dataStoreServiceImpl.setRunMode(RunMode.BATCH);
 									dataStoreServiceImpl.create(testLPathFilePathUrl, trainName,
 									new MetaIdentifier(MetaType.datapod, testLocationDP.getUuid(), testLocationDP.getVersion()),
 									new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion()),
-									trainExec.getAppInfo(), trainExec.getCreatedBy(), SaveMode.Append.toString(), null);
+									trainExec.getAppInfo(), trainExec.getCreatedBy(), SaveMode.Append.toString(), null,
+									trainResult.getValidationSet(), null, null);
 								}
-								if(trainLocationDP !=null &&  train.getSaveTrainingSet().equalsIgnoreCase("Y")) {
+								if(trainLocationDP != null &&  train.getSaveTrainingSet().equalsIgnoreCase("Y")) {
 									dataStoreServiceImpl.setRunMode(RunMode.BATCH);
 									dataStoreServiceImpl.create(trainLPathFilePathUrl, trainName,
 										new MetaIdentifier(MetaType.datapod, trainLocationDP.getUuid(),trainLocationDP.getVersion()),
 										new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion()),
-										trainExec.getAppInfo(), trainExec.getCreatedBy(), SaveMode.Append.toString(), null);
+										trainExec.getAppInfo(), trainExec.getCreatedBy(), SaveMode.Append.toString(), null,
+										trainResult.getTrainingSet(), null, null);
 								 }
 							}
 							
