@@ -1,18 +1,18 @@
 {
   "uuid": "4c5ae226-d161-4eb8-b66b-44a20a32af02",
-  "version": "1547439420",
+  "version": "1550092746",
   "name": "RLU Prediction - DTC",
   "desc": null,
   "createdBy": {
     "ref": {
       "type": "user",
       "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1547227046",
+      "version": "1464977196",
       "name": "ypalrecha"
     },
     "value": null
   },
-  "createdOn": "Sun Jan 13 23:17:00 EST 2019",
+  "createdOn": "Wed Feb 13 16:19:06 EST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -28,6 +28,7 @@
       "value": null
     }
   ],
+  "publicFlag": "N",
   "type": "SPARK",
   "dependsOn": {
     "ref": {
@@ -847,7 +848,19 @@
     {
       "featureId": "68",
       "featureDisplaySeq": "67",
-      "name": "pca_features",
+      "name": "warning_features",
+      "type": "vector",
+      "desc": "",
+      "minVal": 0,
+      "maxVal": 0,
+      "paramListInfo": null,
+      "encodingType": null,
+      "imputeMethod": null
+    },
+    {
+      "featureId": "69",
+      "featureDisplaySeq": "68",
+      "name": "summary_features",
       "type": "vector",
       "desc": "",
       "minVal": 0,
@@ -857,6 +870,6 @@
       "imputeMethod": null
     }
   ],
-   "scriptName": null,
+  "scriptName": null,
   "customFlag": "N"
 }

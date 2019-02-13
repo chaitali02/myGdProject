@@ -1,12 +1,45 @@
 {
-    "type" : "PYTHON",
-    "dependsOn" : {
-        "ref" : {
-            "type" : "algorithm",
-            "uuid" : "1f91c98a-faf6-42c0-ac16-d7309d041bd9"
-        }
+  "uuid": "b6571479-c9a4-45aa-996a-33384d086f0e",
+  "version": "1550092801",
+  "name": "RLU Prediction - ANN",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
     },
-    "label" : "problem_reported",
+    "value": null
+  },
+  "createdOn": "Wed Feb 13 16:20:01 EST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+        "version": null,
+        "name": "Predictive Maintenance"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "type": "PYTHON",
+  "dependsOn": {
+    "ref": {
+      "type": "algorithm",
+      "uuid": "1f91c98a-faf6-42c0-ac16-d7309d041bd9",
+      "version": null,
+      "name": "Artificial Neural Net - Classfication"
+    },
+    "value": null
+  },
+  "label": "problem_reported",
   "features": [
     {
       "featureId": "1",
@@ -815,7 +848,19 @@
     {
       "featureId": "68",
       "featureDisplaySeq": "67",
-      "name": "pca_features",
+      "name": "warning_features",
+      "type": "vector",
+      "desc": "",
+      "minVal": 0,
+      "maxVal": 0,
+      "paramListInfo": null,
+      "encodingType": null,
+      "imputeMethod": null
+    },
+    {
+      "featureId": "69",
+      "featureDisplaySeq": "68",
+      "name": "summary_features",
       "type": "vector",
       "desc": "",
       "minVal": 0,
@@ -825,27 +870,6 @@
       "imputeMethod": null
     }
   ],
-     "customFlag" : "N",
-    "uuid" : "b6571479-c9a4-45aa-996a-33384d086f0e",
-    "version" : "1548942679",
-    "name" : "RLU Prediction - ANN",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
-        }
-    },
-    "createdOn" : ISODate("2019-01-31T13:51:19.000Z"),
-    "tags" : [],
-    "active" : "Y",
-    "locked" : "N",
-    "published" : "N",
-    "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz"
-            }
-        }
-    ]
+  "scriptName": null,
+  "customFlag": "N"
 }

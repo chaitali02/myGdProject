@@ -1,6 +1,6 @@
 {
   "uuid": "0ed9fb89-a7db-4c78-a5ab-3b2729f04201",
-  "version": "1549571940",
+  "version": "1550092310",
   "name": "RLU Prediction - GBT",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Thu Feb 07 15:39:00 EST 2019",
+  "createdOn": "Wed Feb 13 16:11:50 EST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -28,6 +28,7 @@
       "value": null
     }
   ],
+  "publicFlag": "N",
   "type": "SPARK",
   "dependsOn": {
     "ref": {
@@ -843,18 +844,30 @@
       "paramListInfo": null,
       "encodingType": "ONEHOT",
       "imputeMethod": null
-    }, 
+    },
     {
-        "featureId" : "68",
-        "featureDisplaySeq" : "67",
-        "name" : "pca_features",
-        "type" : "vector",
-        "desc" : "",
-        "minVal" : 0,
-        "maxVal" : 0,
-        "paramListInfo" : null,
-        "encodingType" : null,
-        "imputeMethod" : null
+      "featureId": "68",
+      "featureDisplaySeq": "67",
+      "name": "warning_features",
+      "type": "vector",
+      "desc": "",
+      "minVal": 0,
+      "maxVal": 0,
+      "paramListInfo": null,
+      "encodingType": null,
+      "imputeMethod": null
+    },
+    {
+      "featureId": "69",
+      "featureDisplaySeq": "68",
+      "name": "summary_features",
+      "type": "vector",
+      "desc": "",
+      "minVal": 0,
+      "maxVal": 0,
+      "paramListInfo": null,
+      "encodingType": null,
+      "imputeMethod": null
     }
   ],
   "scriptName": null,

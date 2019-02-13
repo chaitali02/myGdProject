@@ -1,0 +1,114 @@
+{
+  "uuid": "011ee127-99a5-4db7-9a34-a4c2f31231b3",
+  "version": "1550094958",
+  "name": "viz_device_problem_state",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Wed Feb 13 16:55:58 EST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+        "version": "1547482153",
+        "name": "Predictive Maintenance"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "title": null,
+  "source": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+      "version": null,
+      "name": "device_data_final_features"
+    },
+    "value": null
+  },
+  "type": "area-chart",
+  "limit": 0,
+  "keys": [
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 24,
+      "function": null,
+      "value": null,
+      "attributeName": "problem_type_1"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 25,
+      "function": null,
+      "value": null,
+      "attributeName": "problem_type_2"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 26,
+      "function": null,
+      "value": null,
+      "attributeName": "problem_type_3"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 27,
+      "function": null,
+      "value": null,
+      "attributeName": "problem_type_4"
+    }
+  ],
+  "dimension": [],
+  "detailAttr": [],
+  "filterInfo": [],
+  "groups": [],
+  "values": [
+    {
+      "ref": {
+        "type": "formula",
+        "uuid": "29acb8f8-5d89-43d3-bb58-ec287f01c542",
+        "version": null,
+        "name": "fm_device_count"
+      },
+      "attributeId": null,
+      "function": null,
+      "value": null,
+      "attributeName": null
+    }
+  ],
+  "sortBy": [],
+  "sortOrder": null
+}

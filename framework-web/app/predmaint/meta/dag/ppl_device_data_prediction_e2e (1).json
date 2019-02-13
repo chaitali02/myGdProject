@@ -1,0 +1,328 @@
+{
+  "uuid": "dc0ff083-4e61-492c-b1d0-4050f6be9c99",
+  "version": "1550096193",
+  "name": "ppl_device_data_prediction_e2e",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Wed Feb 13 17:16:33 EST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+        "version": "1547482153",
+        "name": "Predictive Maintenance"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "xPos": 40,
+  "yPos": 360,
+  "templateFlg": "N",
+  "templateInfo": null,
+  "stages": [
+    {
+      "stageId": "a0016ae6-8fe3-4d84-9688-4bfa92447a01",
+      "dependsOn": [
+        "57726638-ab13-43b2-a634-491f775ee7de"
+      ],
+      "tasks": [
+        {
+          "taskId": "f8df2c9b-158a-4657-85d8-0cc0a12d048b",
+          "dependsOn": [],
+          "name": "RLU Prediction - GBT",
+          "operators": [
+            {
+              "operatorId": null,
+              "dependsOn": [],
+              "operatorType": null,
+              "operatorInfo": [
+                {
+                  "ref": {
+                    "type": "train",
+                    "uuid": "7f019a46-2d40-4b91-b7be-3ce93f6c65b0",
+                    "version": null,
+                    "name": "RLU Prediction - GBT"
+                  },
+                  "value": null
+                }
+              ],
+              "operatorParams": {
+                "EXEC_PARAMS": {
+                  "refKeyList": null,
+                  "paramInfo": null,
+                  "filterInfo": null,
+                  "stageInfo": null,
+                  "currParamSet": null,
+                  "paramListHolder": null,
+                  "paramListInfo": [
+                    {
+                      "ref": {
+                        "type": "paramlist",
+                        "uuid": "7ffd848a-7dae-4b98-86ff-704cdebe3b52",
+                        "version": null,
+                        "name": null
+                      },
+                      "value": null,
+                      "paramId": null,
+                      "paramName": null,
+                      "paramType": null,
+                      "paramDispName": null,
+                      "paramDesc": null,
+                      "paramValue": null,
+                      "attributeInfo": null
+                    }
+                  ],
+                  "internalVarMap": null,
+                  "otherParams": null,
+                  "executionContext": null,
+                  "graphFilter": null
+                }
+              }
+            }
+          ],
+          "xPos": 1670,
+          "yPos": 550,
+          "active": "Y",
+          "statusList": []
+        },
+        {
+          "taskId": "25de3f6d-cd46-478e-baa7-ae5d49687c11",
+          "dependsOn": [],
+          "name": "RLU Prediction - DTC",
+          "operators": [
+            {
+              "operatorId": null,
+              "dependsOn": [],
+              "operatorType": null,
+              "operatorInfo": [
+                {
+                  "ref": {
+                    "type": "train",
+                    "uuid": "0fe1b1d3-ac2b-4009-b410-3ced654bd520",
+                    "version": null,
+                    "name": "RLU Prediction - DTC"
+                  },
+                  "value": null
+                }
+              ],
+              "operatorParams": {
+                "EXEC_PARAMS": {
+                  "refKeyList": null,
+                  "paramInfo": null,
+                  "filterInfo": null,
+                  "stageInfo": null,
+                  "currParamSet": null,
+                  "paramListHolder": null,
+                  "paramListInfo": [
+                    {
+                      "ref": {
+                        "type": "paramlist",
+                        "uuid": "7071d1fe-7566-4ca0-a263-e92ada008a84",
+                        "version": null,
+                        "name": null
+                      },
+                      "value": null,
+                      "paramId": null,
+                      "paramName": null,
+                      "paramType": null,
+                      "paramDispName": null,
+                      "paramDesc": null,
+                      "paramValue": null,
+                      "attributeInfo": null
+                    }
+                  ],
+                  "internalVarMap": null,
+                  "otherParams": null,
+                  "executionContext": null,
+                  "graphFilter": null
+                }
+              }
+            }
+          ],
+          "xPos": 1680,
+          "yPos": 720,
+          "active": "Y",
+          "statusList": []
+        },
+        {
+          "taskId": "994b640f-f70b-402b-bf57-0e3f9042bc08",
+          "dependsOn": [],
+          "name": "RLU Prediction - LR",
+          "operators": [
+            {
+              "operatorId": null,
+              "dependsOn": [],
+              "operatorType": null,
+              "operatorInfo": [
+                {
+                  "ref": {
+                    "type": "train",
+                    "uuid": "7069a9b4-e489-4901-bfde-20985716b09e",
+                    "version": null,
+                    "name": "RLU Prediction - LR"
+                  },
+                  "value": null
+                }
+              ],
+              "operatorParams": {
+                "EXEC_PARAMS": {
+                  "refKeyList": null,
+                  "paramInfo": null,
+                  "filterInfo": null,
+                  "stageInfo": null,
+                  "currParamSet": null,
+                  "paramListHolder": null,
+                  "paramListInfo": [
+                    {
+                      "ref": {
+                        "type": "paramlist",
+                        "uuid": "7071d1fe-7566-4ca0-a263-e92ada008a80",
+                        "version": null,
+                        "name": null
+                      },
+                      "value": null,
+                      "paramId": null,
+                      "paramName": null,
+                      "paramType": null,
+                      "paramDispName": null,
+                      "paramDesc": null,
+                      "paramValue": null,
+                      "attributeInfo": null
+                    }
+                  ],
+                  "internalVarMap": null,
+                  "otherParams": null,
+                  "executionContext": null,
+                  "graphFilter": null
+                }
+              }
+            }
+          ],
+          "xPos": 1520,
+          "yPos": 470,
+          "active": "Y",
+          "statusList": []
+        },
+        {
+          "taskId": "cc6fd822-34cf-478b-a8f6-4bcf02fb37ed",
+          "dependsOn": [],
+          "name": "RLU Prediction - ANN",
+          "operators": [
+            {
+              "operatorId": null,
+              "dependsOn": [],
+              "operatorType": null,
+              "operatorInfo": [
+                {
+                  "ref": {
+                    "type": "train",
+                    "uuid": "eb905ce3-87e5-4c2e-b339-10a317658b08",
+                    "version": null,
+                    "name": "RLU Prediction - ANN"
+                  },
+                  "value": null
+                }
+              ],
+              "operatorParams": {
+                "EXEC_PARAMS": {
+                  "refKeyList": null,
+                  "paramInfo": null,
+                  "filterInfo": null,
+                  "stageInfo": null,
+                  "currParamSet": null,
+                  "paramListHolder": null,
+                  "paramListInfo": [
+                    {
+                      "ref": {
+                        "type": "paramlist",
+                        "uuid": "a9884a61-3b96-48b0-930a-bc6afcddfce8",
+                        "version": null,
+                        "name": null
+                      },
+                      "value": null,
+                      "paramId": null,
+                      "paramName": null,
+                      "paramType": null,
+                      "paramDispName": null,
+                      "paramDesc": null,
+                      "paramValue": null,
+                      "attributeInfo": null
+                    }
+                  ],
+                  "internalVarMap": null,
+                  "otherParams": null,
+                  "executionContext": null,
+                  "graphFilter": null
+                }
+              }
+            }
+          ],
+          "xPos": 1520,
+          "yPos": 820,
+          "active": "Y",
+          "statusList": []
+        }
+      ],
+      "name": "Model Training",
+      "xPos": 1370,
+      "yPos": 640,
+      "active": "Y",
+      "statusList": []
+    },
+    {
+      "stageId": "60b968f7-9a29-4e57-bc4f-828fc6a19708",
+      "dependsOn": [],
+      "tasks": [
+        {
+          "taskId": "84147f56-5dd2-40ad-810d-aa04d50a8ba1",
+          "dependsOn": [],
+          "name": "ingest_device_data",
+          "operators": [
+            {
+              "operatorId": null,
+              "dependsOn": [],
+              "operatorType": null,
+              "operatorInfo": [
+                {
+                  "ref": {
+                    "type": "ingest",
+                    "uuid": "c494341a-852a-43c0-8e37-97a17f508f48",
+                    "version": null,
+                    "name": "ingest_device_data"
+                  },
+                  "value": null
+                }
+              ],
+              "operatorParams": {}
+            }
+          ],
+          "xPos": 360,
+          "yPos": 240,
+          "active": "Y",
+          "statusList": []
+        }
+      ],
+      "name": "Ingest Data",
+      "xPos": 240,
+      "yPos": 360,
+      "active": "Y",
+      "statusList": []
+    }
+  ],
+  "statusList": [],
+  "paramList": null
+}
