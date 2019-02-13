@@ -2139,14 +2139,14 @@ public class SparkExecutor<T> implements IExecutor {
 				tempTableList.add("tempTrngDf");
 				tempTableList.add("tempValDf");
 				
-				//saving training set 
-				if(saveTrainingSet.equalsIgnoreCase("Y")) {
-					//trngDf.write().mode(SaveMode.Append).parquet(trainingSetPath);
-					saveTrainDataset(trngDf, trainingSetPath, trainLocationDP, trainLocationDS ,trainLocationTableName, trainFilePathUrl);
-				}
 
 				trainResult.setTrainingSet(trngDf.count());
 				trainResult.setValidationSet(valDf.count());
+			}
+			//saving training set 
+			if(saveTrainingSet.equalsIgnoreCase("Y")) {
+				//trngDf.write().mode(SaveMode.Append).parquet(trainingSetPath);
+				saveTrainDataset(trngDf, trainingSetPath, trainLocationDP, trainLocationDS ,trainLocationTableName, trainFilePathUrl);
 			}
 			
 			dropTempTable(tempTableList);
