@@ -1,0 +1,1363 @@
+{
+    "type" : "SPARK",
+    "dependsOn" : {
+        "ref" : {
+            "type" : "algorithm",
+            "uuid" : "ab2c5458-3f52-4a42-adec-74a4df817843",
+            "name" : "PCA"
+        }
+    },
+    "label" : "problem_reported",
+    "features" : [ 
+        {
+            "featureId" : "1",
+            "featureDisplaySeq" : "0",
+            "name" : "warning_1_2",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "2",
+            "featureDisplaySeq" : "1",
+            "name" : "warning_1_3",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "3",
+            "featureDisplaySeq" : "2",
+            "name" : "warning_1_4",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "4",
+            "featureDisplaySeq" : "3",
+            "name" : "warning_1_5",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "5",
+            "featureDisplaySeq" : "4",
+            "name" : "warning_1_6",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "6",
+            "featureDisplaySeq" : "5",
+            "name" : "warning_1_7",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "7",
+            "featureDisplaySeq" : "6",
+            "name" : "warning_1_8",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "8",
+            "featureDisplaySeq" : "7",
+            "name" : "warning_1_9",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "9",
+            "featureDisplaySeq" : "8",
+            "name" : "warning_1_10",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "10",
+            "featureDisplaySeq" : "9",
+            "name" : "warning_1_11",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "11",
+            "featureDisplaySeq" : "10",
+            "name" : "warning_1_12",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "12",
+            "featureDisplaySeq" : "11",
+            "name" : "warning_1_13",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "13",
+            "featureDisplaySeq" : "12",
+            "name" : "warning_1_14",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "14",
+            "featureDisplaySeq" : "13",
+            "name" : "warning_1_15",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "15",
+            "featureDisplaySeq" : "14",
+            "name" : "warning_1_16",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "16",
+            "featureDisplaySeq" : "15",
+            "name" : "warning_1_17",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "17",
+            "featureDisplaySeq" : "16",
+            "name" : "warning_1_18",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "18",
+            "featureDisplaySeq" : "17",
+            "name" : "warning_1_19",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "19",
+            "featureDisplaySeq" : "18",
+            "name" : "warning_1_20",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "20",
+            "featureDisplaySeq" : "19",
+            "name" : "warning_1_21",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "21",
+            "featureDisplaySeq" : "20",
+            "name" : "warning_1_22",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "22",
+            "featureDisplaySeq" : "21",
+            "name" : "warning_1_23",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "23",
+            "featureDisplaySeq" : "22",
+            "name" : "warning_1_24",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "24",
+            "featureDisplaySeq" : "23",
+            "name" : "warning_1_25",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "25",
+            "featureDisplaySeq" : "24",
+            "name" : "warning_1_26",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "26",
+            "featureDisplaySeq" : "25",
+            "name" : "warning_1_27",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "27",
+            "featureDisplaySeq" : "26",
+            "name" : "warning_1_28",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "28",
+            "featureDisplaySeq" : "27",
+            "name" : "warning_1_29",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "29",
+            "featureDisplaySeq" : "28",
+            "name" : "warning_1_30",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "30",
+            "featureDisplaySeq" : "29",
+            "name" : "warning_1_31",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "31",
+            "featureDisplaySeq" : "30",
+            "name" : "warning_1_32",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "32",
+            "featureDisplaySeq" : "31",
+            "name" : "warning_1_33",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "33",
+            "featureDisplaySeq" : "32",
+            "name" : "warning_1_36",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "34",
+            "featureDisplaySeq" : "33",
+            "name" : "warning_1_37",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "35",
+            "featureDisplaySeq" : "34",
+            "name" : "warning_1_38",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "36",
+            "featureDisplaySeq" : "35",
+            "name" : "warning_1_39",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "37",
+            "featureDisplaySeq" : "36",
+            "name" : "warning_1_40",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "38",
+            "featureDisplaySeq" : "37",
+            "name" : "warning_1_41",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "39",
+            "featureDisplaySeq" : "38",
+            "name" : "warning_1_42",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "40",
+            "featureDisplaySeq" : "39",
+            "name" : "warning_1_43",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "41",
+            "featureDisplaySeq" : "40",
+            "name" : "warning_1_44",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "42",
+            "featureDisplaySeq" : "41",
+            "name" : "warning_1_45",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "43",
+            "featureDisplaySeq" : "42",
+            "name" : "warning_1_46",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "44",
+            "featureDisplaySeq" : "43",
+            "name" : "warning_2_1",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "45",
+            "featureDisplaySeq" : "44",
+            "name" : "warning_2_2",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "46",
+            "featureDisplaySeq" : "45",
+            "name" : "warning_2_3",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "47",
+            "featureDisplaySeq" : "46",
+            "name" : "warning_2_4",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "48",
+            "featureDisplaySeq" : "47",
+            "name" : "warning_2_5",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "49",
+            "featureDisplaySeq" : "48",
+            "name" : "warning_2_6",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "50",
+            "featureDisplaySeq" : "49",
+            "name" : "warning_2_7",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "51",
+            "featureDisplaySeq" : "50",
+            "name" : "warning_2_8",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "52",
+            "featureDisplaySeq" : "51",
+            "name" : "warning_2_9",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "53",
+            "featureDisplaySeq" : "52",
+            "name" : "warning_2_10",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "54",
+            "featureDisplaySeq" : "53",
+            "name" : "warning_2_11",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "55",
+            "featureDisplaySeq" : "54",
+            "name" : "warning_2_12",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "56",
+            "featureDisplaySeq" : "55",
+            "name" : "warning_2_13",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "57",
+            "featureDisplaySeq" : "56",
+            "name" : "warning_2_14",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "58",
+            "featureDisplaySeq" : "57",
+            "name" : "warning_2_15",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "59",
+            "featureDisplaySeq" : "58",
+            "name" : "warning_2_16",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "60",
+            "featureDisplaySeq" : "59",
+            "name" : "warning_2_17",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "61",
+            "featureDisplaySeq" : "60",
+            "name" : "warning_2_18",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "62",
+            "featureDisplaySeq" : "61",
+            "name" : "warning_2_19",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "63",
+            "featureDisplaySeq" : "62",
+            "name" : "warning_2_20",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "64",
+            "featureDisplaySeq" : "63",
+            "name" : "warning_2_21",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "65",
+            "featureDisplaySeq" : "64",
+            "name" : "warning_2_22",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "66",
+            "featureDisplaySeq" : "65",
+            "name" : "warning_2_23",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "67",
+            "featureDisplaySeq" : "66",
+            "name" : "warning_2_24",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "68",
+            "featureDisplaySeq" : "67",
+            "name" : "warning_2_25",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "69",
+            "featureDisplaySeq" : "68",
+            "name" : "warning_2_26",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "70",
+            "featureDisplaySeq" : "69",
+            "name" : "warning_2_27",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "71",
+            "featureDisplaySeq" : "70",
+            "name" : "warning_2_28",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "72",
+            "featureDisplaySeq" : "71",
+            "name" : "warning_2_29",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "73",
+            "featureDisplaySeq" : "72",
+            "name" : "warning_2_30",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "74",
+            "featureDisplaySeq" : "73",
+            "name" : "warning_2_31",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "75",
+            "featureDisplaySeq" : "74",
+            "name" : "warning_2_32",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "76",
+            "featureDisplaySeq" : "75",
+            "name" : "warning_2_33",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "77",
+            "featureDisplaySeq" : "76",
+            "name" : "warning_2_34",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "78",
+            "featureDisplaySeq" : "77",
+            "name" : "warning_2_35",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "79",
+            "featureDisplaySeq" : "78",
+            "name" : "warning_2_36",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "80",
+            "featureDisplaySeq" : "79",
+            "name" : "warning_2_37",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "81",
+            "featureDisplaySeq" : "80",
+            "name" : "warning_2_38",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "82",
+            "featureDisplaySeq" : "81",
+            "name" : "warning_2_39",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "83",
+            "featureDisplaySeq" : "82",
+            "name" : "warning_2_40",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "84",
+            "featureDisplaySeq" : "83",
+            "name" : "warning_2_41",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "85",
+            "featureDisplaySeq" : "84",
+            "name" : "warning_2_42",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "86",
+            "featureDisplaySeq" : "85",
+            "name" : "warning_2_43",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "87",
+            "featureDisplaySeq" : "86",
+            "name" : "warning_2_44",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "88",
+            "featureDisplaySeq" : "87",
+            "name" : "warning_2_45",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "89",
+            "featureDisplaySeq" : "88",
+            "name" : "warning_2_46",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "90",
+            "featureDisplaySeq" : "89",
+            "name" : "warning_2_47",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "91",
+            "featureDisplaySeq" : "90",
+            "name" : "warning_2_48",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "92",
+            "featureDisplaySeq" : "91",
+            "name" : "warning_2_49",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "93",
+            "featureDisplaySeq" : "92",
+            "name" : "warning_2_50",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "94",
+            "featureDisplaySeq" : "93",
+            "name" : "warning_2_51",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "95",
+            "featureDisplaySeq" : "94",
+            "name" : "warning_2_52",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "96",
+            "featureDisplaySeq" : "95",
+            "name" : "warning_2_53",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "97",
+            "featureDisplaySeq" : "96",
+            "name" : "warning_2_54",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "98",
+            "featureDisplaySeq" : "97",
+            "name" : "warning_2_55",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "99",
+            "featureDisplaySeq" : "98",
+            "name" : "warning_2_56",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "100",
+            "featureDisplaySeq" : "99",
+            "name" : "warning_2_57",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "101",
+            "featureDisplaySeq" : "100",
+            "name" : "warning_2_58",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "102",
+            "featureDisplaySeq" : "101",
+            "name" : "warning_2_59",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "103",
+            "featureDisplaySeq" : "102",
+            "name" : "warning_2_60",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "104",
+            "featureDisplaySeq" : "103",
+            "name" : "warning_2_61",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "105",
+            "featureDisplaySeq" : "104",
+            "name" : "warning_2_62",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "106",
+            "featureDisplaySeq" : "105",
+            "name" : "warning_2_63",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "107",
+            "featureDisplaySeq" : "106",
+            "name" : "warning_2_64",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "108",
+            "featureDisplaySeq" : "107",
+            "name" : "warning_2_65",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "109",
+            "featureDisplaySeq" : "108",
+            "name" : "warning_2_66",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "110",
+            "featureDisplaySeq" : "109",
+            "name" : "warning_2_67",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "111",
+            "featureDisplaySeq" : "110",
+            "name" : "warning_2_68",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "112",
+            "featureDisplaySeq" : "111",
+            "name" : "warning_2_69",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "113",
+            "featureDisplaySeq" : "112",
+            "name" : "warning_2_70",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "114",
+            "featureDisplaySeq" : "113",
+            "name" : "warning_2_71",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "115",
+            "featureDisplaySeq" : "114",
+            "name" : "warning_2_72",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "116",
+            "featureDisplaySeq" : "115",
+            "name" : "warning_2_73",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "117",
+            "featureDisplaySeq" : "116",
+            "name" : "warning_2_74",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "118",
+            "featureDisplaySeq" : "117",
+            "name" : "warning_2_75",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "119",
+            "featureDisplaySeq" : "118",
+            "name" : "warning_2_76",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "120",
+            "featureDisplaySeq" : "119",
+            "name" : "warning_2_77",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "121",
+            "featureDisplaySeq" : "120",
+            "name" : "warning_2_78",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "122",
+            "featureDisplaySeq" : "121",
+            "name" : "warning_2_79",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "123",
+            "featureDisplaySeq" : "122",
+            "name" : "warning_2_80",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "124",
+            "featureDisplaySeq" : "123",
+            "name" : "warning_2_81",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "125",
+            "featureDisplaySeq" : "124",
+            "name" : "warning_2_82",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "126",
+            "featureDisplaySeq" : "125",
+            "name" : "warning_2_83",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "127",
+            "featureDisplaySeq" : "126",
+            "name" : "warning_2_84",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "128",
+            "featureDisplaySeq" : "127",
+            "name" : "warning_2_88",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "129",
+            "featureDisplaySeq" : "128",
+            "name" : "warning_2_89",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "130",
+            "featureDisplaySeq" : "129",
+            "name" : "warning_2_90",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "131",
+            "featureDisplaySeq" : "130",
+            "name" : "warning_2_91",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "132",
+            "featureDisplaySeq" : "131",
+            "name" : "warning_2_92",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "133",
+            "featureDisplaySeq" : "132",
+            "name" : "warning_2_93",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "134",
+            "featureDisplaySeq" : "133",
+            "name" : "warning_2_94",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "135",
+            "featureDisplaySeq" : "134",
+            "name" : "warning_2_95",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "136",
+            "featureDisplaySeq" : "135",
+            "name" : "warning_2_96",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "137",
+            "featureDisplaySeq" : "136",
+            "name" : "warning_2_97",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "138",
+            "featureDisplaySeq" : "137",
+            "name" : "warning_2_98",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "139",
+            "featureDisplaySeq" : "138",
+            "name" : "warning_2_99",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "140",
+            "featureDisplaySeq" : "139",
+            "name" : "warning_2_100",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "141",
+            "featureDisplaySeq" : "140",
+            "name" : "warning_2_101",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "142",
+            "featureDisplaySeq" : "141",
+            "name" : "warning_2_102",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "143",
+            "featureDisplaySeq" : "142",
+            "name" : "warning_2_103",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "144",
+            "featureDisplaySeq" : "143",
+            "name" : "warning_2_104",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "145",
+            "featureDisplaySeq" : "144",
+            "name" : "warning_2_105",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "146",
+            "featureDisplaySeq" : "145",
+            "name" : "warning_2_106",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }, 
+        {
+            "featureId" : "147",
+            "featureDisplaySeq" : "146",
+            "name" : "warning_2_107",
+            "type" : "integer",
+            "desc" : "",
+            "minVal" : 0,
+            "maxVal" : 0
+        }
+    ],
+    "customFlag" : "N",
+    "uuid" : "e50ace06-a3f5-41bc-8b32-8b8c3fb8a529",
+    "version" : "1550037406",
+    "name" : "Device Data Warning Features - PCA",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
+    },
+    "createdOn" : ISODate("2019-02-13T05:56:46.000Z"),
+    "tags" : [],
+    "active" : "Y",
+    "locked" : "N",
+    "published" : "N",
+    "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz",
+                "version" : "1547482153"
+            }
+        }
+    ],
+    "publicFlag" : "N"
+}

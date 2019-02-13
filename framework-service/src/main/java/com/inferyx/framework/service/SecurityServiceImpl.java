@@ -45,12 +45,10 @@ import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.Role;
 import com.inferyx.framework.domain.RolePriv;
 import com.inferyx.framework.domain.Session;
 import com.inferyx.framework.domain.SessionContext;
-import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.enums.ApplicationType;
 import com.inferyx.framework.register.GraphRegister;
@@ -208,7 +206,7 @@ public class SecurityServiceImpl  implements Serializable{
 				appInfo = sessionContext.getAppInfo();
 			} else {
 				logger.info("Null Session context. Unable to get appInfo.");
-				Exception excp = new Exception("Null Session context. Unable to get appInfo.", e);
+//				Exception excp = new Exception("Null Session context. Unable to get appInfo.", e);
 				throw e;
 				/*MetaIdentifier appMeta = new MetaIdentifier(MetaType.application,"d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd","1547482049");
 				appInfo.setRef(appMeta);*/
@@ -477,13 +475,13 @@ public class SecurityServiceImpl  implements Serializable{
 		//logger.info(map.entrySet());
 		return privInfo;
 	}
+	@SuppressWarnings("unused")
 	public String getAppRole(String userName) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException{
-		System.out.println("userName: "+userName);
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		User user = userServiceImpl.findUserByName(userName);
-		user=(User) commonServiceImpl.getLatestByUuid(user.getUuid(),MetaType.user.toString(),"N");
+		user = (User) commonServiceImpl.getLatestByUuid(user.getUuid(),MetaType.user.toString(), "N");
 		Group defaultGroup = (Group) commonServiceImpl.getLatestByUuidWithoutAppUuid(user.getDefaultGroup().getRef().getUuid(), user.getDefaultGroup().getRef().getType().toString());
-		if(user!= null) {
+		if(user != null) {
 			//List<AppRole> appRoleList = new ArrayList<>();
 			List<MetaIdentifierHolder> holderList = new ArrayList<>();
 			List<MetaIdentifierHolder> groupInfoList = user.getGroupInfo();
@@ -513,7 +511,7 @@ public class SecurityServiceImpl  implements Serializable{
 				logger.info("No group informaion available, groupInfo is empty/null.");
 				throw new RuntimeException("No app role information available.");
 			}
-		}else {
+		} else {
 			logger.info("User object null."); 
 			throw new RuntimeException("No app role information available.");
 		}

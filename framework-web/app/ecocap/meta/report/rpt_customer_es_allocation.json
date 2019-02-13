@@ -33,6 +33,7 @@
   "headerAlign": "center",
   "footer": "Economic Capital",
   "footerAlign": "left",
+  "saveOnRefresh" : "Y",
   "filterInfo": [
     {
       "ref": {
