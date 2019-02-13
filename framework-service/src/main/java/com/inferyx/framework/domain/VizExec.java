@@ -10,49 +10,28 @@
  *******************************************************************************/
 package com.inferyx.framework.domain;
 
-import java.util.List;
-
 import org.springframework.data.mongodb.core.mapping.Document;
 
-
 @Document(collection = "vizexec")
-public class VizExec extends BaseEntity {
-	List<MetaIdentifier> refKeyList;
-	MetaIdentifierHolder dependsOn;
-	//	private Key vizpod;
-	private ExecParams execParams;	
+public class VizExec extends BaseExec {	
 	private String sql;
-	
-	public List<MetaIdentifier> getRefKeyList() {
-		return refKeyList;
-	}
 
-	public void setRefKeyList(List<MetaIdentifier> refKeyList) {
-		this.refKeyList = refKeyList;
-	}
-
-	public MetaIdentifierHolder getDependsOn() {
-		return dependsOn;
-	}
-
-	public void setDependsOn(MetaIdentifierHolder dependsOn) {
-		this.dependsOn = dependsOn;
-	}
-	
-	public ExecParams getExecParams() {
-		return execParams;
-	}
-
-	public void setExecParams(ExecParams execParams) {
-		this.execParams = execParams;
-	}
-
+	/**
+	 * @Ganesh
+	 *
+	 * @return the sql
+	 */
 	public String getSql() {
 		return sql;
 	}
 
+	/**
+	 * @Ganesh
+	 *
+	 * @param sql the sql to set
+	 */
 	public void setSql(String sql) {
 		this.sql = sql;
 	}
-	
+		
 }
