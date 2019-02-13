@@ -1,6 +1,6 @@
 {
-  "uuid": "e79afdda-b4f2-4d07-8238-7c5f6f6ce984",
-  "version": "1548923927",
+  "uuid": "387470b1-4916-40bb-bc8b-3cd59f8c6fc8",
+  "version": "1549636216",
   "name": "rel_ds_device_data_summary_features",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Thu Jan 31 14:08:47 IST 2019",
+  "createdOn": "Fri Feb 08 09:30:16 EST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -30,10 +30,10 @@
   ],
   "dependsOn": {
     "ref": {
-      "type": "dataset",
-      "uuid": "6d245885-46fa-4af8-a778-821257c5371c",
+      "type": "datapod",
+      "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb2",
       "version": null,
-      "name": "ds_device_data_compute_rolling_diff"
+      "name": "device_data_compute_rolling_mean"
     },
     "value": null
   },
@@ -41,10 +41,10 @@
     {
       "join": {
         "ref": {
-          "type": "dataset",
-          "uuid": "6d245885-46fa-4af8-a778-821257c5371d",
+          "type": "datapod",
+          "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb5",
           "version": null,
-          "name": "ds_device_data_compute_rolling_max"
+          "name": "device_data_compute_rolling_min"
         },
         "value": null
       },
@@ -57,10 +57,10 @@
           "operand": [
             {
               "ref": {
-                "type": "dataset",
-                "uuid": "6d245885-46fa-4af8-a778-821257c5371c",
+                "type": "datapod",
+                "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb2",
                 "version": null,
-                "name": "ds_device_data_compute_rolling_diff"
+                "name": "device_data_compute_rolling_mean"
               },
               "attributeId": 0,
               "value": null,
@@ -69,10 +69,10 @@
             },
             {
               "ref": {
-                "type": "dataset",
-                "uuid": "6d245885-46fa-4af8-a778-821257c5371d",
+                "type": "datapod",
+                "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb5",
                 "version": null,
-                "name": "ds_device_data_compute_rolling_max"
+                "name": "device_data_compute_rolling_min"
               },
               "attributeId": 0,
               "value": null,
@@ -88,10 +88,10 @@
           "operand": [
             {
               "ref": {
-                "type": "dataset",
-                "uuid": "6d245885-46fa-4af8-a778-821257c5371c",
+                "type": "datapod",
+                "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb2",
                 "version": null,
-                "name": "ds_device_data_compute_rolling_diff"
+                "name": "device_data_compute_rolling_mean"
               },
               "attributeId": 1,
               "value": null,
@@ -100,10 +100,10 @@
             },
             {
               "ref": {
-                "type": "dataset",
-                "uuid": "6d245885-46fa-4af8-a778-821257c5371d",
+                "type": "datapod",
+                "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb5",
                 "version": null,
-                "name": "ds_device_data_compute_rolling_max"
+                "name": "device_data_compute_rolling_min"
               },
               "attributeId": 1,
               "value": null,
@@ -118,10 +118,10 @@
     {
       "join": {
         "ref": {
-          "type": "dataset",
-          "uuid": "6d245885-46fa-4af8-a778-821257c5371b",
+          "type": "datapod",
+          "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb3",
           "version": null,
-          "name": "ds_device_data_compute_rolling_mean"
+          "name": "device_data_compute_rolling_max"
         },
         "value": null
       },
@@ -134,10 +134,10 @@
           "operand": [
             {
               "ref": {
-                "type": "dataset",
-                "uuid": "6d245885-46fa-4af8-a778-821257c5371c",
+                "type": "datapod",
+                "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb2",
                 "version": null,
-                "name": "ds_device_data_compute_rolling_diff"
+                "name": "device_data_compute_rolling_mean"
               },
               "attributeId": 0,
               "value": null,
@@ -146,10 +146,10 @@
             },
             {
               "ref": {
-                "type": "dataset",
-                "uuid": "6d245885-46fa-4af8-a778-821257c5371b",
+                "type": "datapod",
+                "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb3",
                 "version": null,
-                "name": "ds_device_data_compute_rolling_mean"
+                "name": "device_data_compute_rolling_max"
               },
               "attributeId": 0,
               "value": null,
@@ -165,10 +165,10 @@
           "operand": [
             {
               "ref": {
-                "type": "dataset",
-                "uuid": "6d245885-46fa-4af8-a778-821257c5371c",
+                "type": "datapod",
+                "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb2",
                 "version": null,
-                "name": "ds_device_data_compute_rolling_diff"
+                "name": "device_data_compute_rolling_mean"
               },
               "attributeId": 1,
               "value": null,
@@ -177,10 +177,10 @@
             },
             {
               "ref": {
-                "type": "dataset",
-                "uuid": "6d245885-46fa-4af8-a778-821257c5371b",
+                "type": "datapod",
+                "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb3",
                 "version": null,
-                "name": "ds_device_data_compute_rolling_mean"
+                "name": "device_data_compute_rolling_max"
               },
               "attributeId": 1,
               "value": null,
@@ -195,10 +195,10 @@
     {
       "join": {
         "ref": {
-          "type": "dataset",
-          "uuid": "6d245885-46fa-4af8-a778-821257c5371e",
+          "type": "datapod",
+          "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb4",
           "version": null,
-          "name": "ds_device_data_compute_rolling_min"
+          "name": "device_data_compute_rolling_diff"
         },
         "value": null
       },
@@ -211,10 +211,10 @@
           "operand": [
             {
               "ref": {
-                "type": "dataset",
-                "uuid": "6d245885-46fa-4af8-a778-821257c5371c",
+                "type": "datapod",
+                "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb2",
                 "version": null,
-                "name": "ds_device_data_compute_rolling_diff"
+                "name": "device_data_compute_rolling_mean"
               },
               "attributeId": 0,
               "value": null,
@@ -223,10 +223,10 @@
             },
             {
               "ref": {
-                "type": "dataset",
-                "uuid": "6d245885-46fa-4af8-a778-821257c5371e",
+                "type": "datapod",
+                "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb4",
                 "version": null,
-                "name": "ds_device_data_compute_rolling_min"
+                "name": "device_data_compute_rolling_diff"
               },
               "attributeId": 0,
               "value": null,
@@ -242,10 +242,10 @@
           "operand": [
             {
               "ref": {
-                "type": "dataset",
-                "uuid": "6d245885-46fa-4af8-a778-821257c5371c",
+                "type": "datapod",
+                "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb2",
                 "version": null,
-                "name": "ds_device_data_compute_rolling_diff"
+                "name": "device_data_compute_rolling_mean"
               },
               "attributeId": 1,
               "value": null,
@@ -254,10 +254,10 @@
             },
             {
               "ref": {
-                "type": "dataset",
-                "uuid": "6d245885-46fa-4af8-a778-821257c5371e",
+                "type": "datapod",
+                "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb4",
                 "version": null,
-                "name": "ds_device_data_compute_rolling_min"
+                "name": "device_data_compute_rolling_diff"
               },
               "attributeId": 1,
               "value": null,
@@ -272,10 +272,10 @@
     {
       "join": {
         "ref": {
-          "type": "dataset",
-          "uuid": "6d245885-46fa-4af8-a778-821257c5371f",
+          "type": "datapod",
+          "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb6",
           "version": null,
-          "name": "ds_device_data_compute_rolling_std"
+          "name": "device_data_compute_rolling_std"
         },
         "value": null
       },
@@ -288,10 +288,10 @@
           "operand": [
             {
               "ref": {
-                "type": "dataset",
-                "uuid": "6d245885-46fa-4af8-a778-821257c5371c",
+                "type": "datapod",
+                "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb2",
                 "version": null,
-                "name": "ds_device_data_compute_rolling_diff"
+                "name": "device_data_compute_rolling_mean"
               },
               "attributeId": 0,
               "value": null,
@@ -300,10 +300,10 @@
             },
             {
               "ref": {
-                "type": "dataset",
-                "uuid": "6d245885-46fa-4af8-a778-821257c5371f",
+                "type": "datapod",
+                "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb6",
                 "version": null,
-                "name": "ds_device_data_compute_rolling_std"
+                "name": "device_data_compute_rolling_std"
               },
               "attributeId": 0,
               "value": null,
@@ -319,10 +319,10 @@
           "operand": [
             {
               "ref": {
-                "type": "dataset",
-                "uuid": "6d245885-46fa-4af8-a778-821257c5371c",
+                "type": "datapod",
+                "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb2",
                 "version": null,
-                "name": "ds_device_data_compute_rolling_diff"
+                "name": "device_data_compute_rolling_mean"
               },
               "attributeId": 1,
               "value": null,
@@ -331,10 +331,10 @@
             },
             {
               "ref": {
-                "type": "dataset",
-                "uuid": "6d245885-46fa-4af8-a778-821257c5371f",
+                "type": "datapod",
+                "uuid": "b03c8ed2-d387-49e1-91f8-a98b6b808fb6",
                 "version": null,
-                "name": "ds_device_data_compute_rolling_std"
+                "name": "device_data_compute_rolling_std"
               },
               "attributeId": 1,
               "value": null,
