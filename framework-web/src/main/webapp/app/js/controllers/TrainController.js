@@ -121,7 +121,9 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
   });
 
   $scope.autoReset=function(){
-    var featureMapTableArray=[]
+    var featureMapTableArray=[];
+    $scope.featureMapTableArray=[];
+    $scope.originalFeatureMapTableArray=[];
     for(var i=0;i < $scope.modelData.features.length;i++){
       var featureMap = {};
       var sourceFeature = {};
@@ -130,6 +132,12 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
       featureMap.featureMapId = i;
       featureMap.id = i;
       featureMap.index = i;
+      if($scope.modelData.features.length > CF_GRID.framework_autopopulate_grid){
+        featureMap.isOnDropDown=false;
+      }	
+      else{
+        featureMap.isOnDropDown=true;
+      }
       sourceFeature.uuid = $scope.modelData.uuid;
       sourceFeature.type = "model";
       sourceFeature.featureId = $scope.modelData.features[i].featureId;
@@ -147,7 +155,9 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
       featureMap.imputeMethod=imputeMethod;
       $scope.originalFeatureMapTableArray[i] = featureMap;
       $scope.featureMapTableArray[i] = featureMap
-    }
+    };
+    if( $scope.featureMapTableArray >CF_GRID.framework_autopopulate_grid)
+      $scope.autoMapFeature("By Name");
   }
 
   $scope.autoMapFeature = function (type) {
