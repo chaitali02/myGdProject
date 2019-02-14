@@ -5,7 +5,7 @@
     "stages" : [ 
         {
             "stageId" : "a0016ae6-8fe3-4d84-9688-4bfa92447a01",
-            "dependsOn" : [],
+            "dependsOn" : ["60b968f7-9a29-4e57-bc4f-828fc6a19708"],
             "tasks" : [ 
                 {
                     "taskId" : "f8df2c9b-158a-4657-85d8-0cc0a12d048b",

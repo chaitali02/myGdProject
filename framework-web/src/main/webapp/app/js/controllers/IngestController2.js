@@ -235,6 +235,18 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 									}
 								}
 							}
+						}
+						if($scope.allSourceDatasource && $scope.allSourceDatasource.length >0 && $scope.allTargetDatasource.length==0){
+							for(var i=0;i<$scope.allSourceDatasource.length;i++){
+								if($scope.allSourceDatasource[i].type == 'FILE'){
+									if($scope.allSourceDatasource)
+										$scope.allTargetDatasource.push($scope.allSourceDatasource[i]);
+									else{
+										$scope.allSourceDatasource=[];
+										$scope.allTargetDatasource.push($scope.allSourceDatasource[i]);
+									}
+								}
+							}
 						}	
 					}
 				//},100);
