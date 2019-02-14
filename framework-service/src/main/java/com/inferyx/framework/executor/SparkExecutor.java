@@ -17,8 +17,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -119,7 +121,6 @@ import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.CompareMetaData;
-import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -2238,6 +2239,8 @@ public class SparkExecutor<T> implements IExecutor {
 			logger.info("Before train pipeline creation");
 			Pipeline pipeline = new Pipeline().setStages(pipelineStagesTrng.toArray(new PipelineStage[pipelineStagesTrng.size()]));
 			
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+			trainResult.setStartTime(simpleDateFormat.parse((new Date()).toString()));
 			StopWatch stopWatch = new StopWatch();
 			stopWatch.start();
 			PipelineModel trngModel = null;
@@ -2272,6 +2275,7 @@ public class SparkExecutor<T> implements IExecutor {
 			}
 			stopWatch.stop();
 			trainResult.setTimeTaken(stopWatch.getTotalTimeMillis()+" ms");
+			trainResult.setEndTime(simpleDateFormat.parse((new Date()).toString()));
 			
 			if(trainOtherParam != null) {
 				String cMTableName = trainOtherParam.get("confusionMatrixTableName");
