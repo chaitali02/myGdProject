@@ -4258,4 +4258,13 @@ public class SparkExecutor<T> implements IExecutor {
 		rsHolder.setDataFrame(df);
 		return rsHolder;
 	}
+	
+	public ResultSetHolder corelationMatrix(ResultSetHolder rsHolder) throws IOException {
+		Dataset<Row> df = rsHolder.getDataFrame();	
+
+		
+		
+		rsHolder.setDataFrame(df);
+		return rsHolder;
+	}
 }

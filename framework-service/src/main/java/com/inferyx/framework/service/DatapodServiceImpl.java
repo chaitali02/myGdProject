@@ -1442,4 +1442,32 @@ public class DatapodServiceImpl {
 		
 		return builder.toString();
 	}
+	public String generateSqlByDatapod(Datapod datapod, RunMode runMode, List<AttributeRefHolder> listAttributes)
+			throws Exception {
+		String tableName = datastoreServiceImpl.getTableNameByDatapod(new Key(datapod.getUuid(), datapod.getVersion()),
+				runMode);
+		StringBuilder builder = new StringBuilder("SELECT ");
+
+		int i = 0;
+		for (Attribute attribute : datapod.getAttributes()) {
+			for (AttributeRefHolder attributeRefHolder : listAttributes) {
+
+				if (attributeRefHolder.getAttrId().equalsIgnoreCase(attribute.getAttributeId().toString())) {
+					builder.append(attribute.getName()).append(" ");
+					builder.append(" AS ").append(attribute.getName());
+					if (i < (datapod.getAttributes().size() - 1)) {
+						builder.append(", ");
+					}
+					i++;
+				}
+
+			}
+		}//need to remove ,
+		builder.setLength(builder.length() - 2);
+		builder.append(" FROM ");
+		builder.append(tableName);
+
+		return builder.toString();
+
+	}
 }

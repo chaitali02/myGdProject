@@ -87,6 +87,7 @@ import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
+import com.inferyx.framework.domain.Corelation;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
@@ -4262,5 +4263,23 @@ public class ModelServiceImpl {
 		} else {
 			return null;
 		}
+	}
+	
+	public String calCorealtionMatrix(Object metaObject) throws Exception {
+		ObjectMapper mapper = new ObjectMapper();
+		Corelation corelation = mapper.convertValue(metaObject, Corelation.class);
+		MetaIdentifierHolder metaIdentifierHolder = corelation.getSource();
+		String sql = null;
+		if (metaIdentifierHolder.getRef().getType().equals(MetaType.datapod)) {
+			Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+					metaIdentifierHolder.getRef().getUuid(), metaIdentifierHolder.getRef().getVersion(),
+					MetaType.datapod.toString());
+
+			sql = datapodServiceImpl.generateSqlByDatapod(datapod, RunMode.BATCH, corelation.getListAttributes());
+		}
+		ResultSetHolder resultSetHolder = sparkExecutor.executeSql(sql);
+		sparkExecutor.corelationMatrix(resultSetHolder);
+		return null;
+
 	}
 }

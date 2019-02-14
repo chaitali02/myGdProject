@@ -575,4 +575,17 @@ public class ModelController {
 			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		return modelServiceImpl.getAlgorithmByModel(modelUuid, modelVersion);
 	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/calCorealtionMatrix", method = RequestMethod.POST)
+	public String calCorealtionMatrix(@RequestBody Object metaObject) 		
+			throws Exception {
+	
+			ObjectMapper mapper = new ObjectMapper();
+			java.util.Map<String, Object>  operator = mapper.convertValue(metaObject, java.util.Map.class);
+			 
+			modelServiceImpl.calCorealtionMatrix(operator);
+			return null;
+	}
+	
 }
