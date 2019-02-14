@@ -1218,7 +1218,7 @@ public class SparkExecutor<T> implements IExecutor {
 				attributes.add(attr1);
 			}
 		}
-		if (flag) {
+		/*if (flag) {
 			Attribute attr2 = new Attribute();
 			attr2.setAttributeId(i++);
 			attr2.setType("Integer");
@@ -1228,7 +1228,7 @@ public class SparkExecutor<T> implements IExecutor {
 			attr2.setActive("Y");
 			attr2.setLength(null);
 			attributes.add(attr2);
-		}
+		}*/
 		if (writeToParquet) {
 			df.write().parquet(parquetDir);
 
