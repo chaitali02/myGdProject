@@ -641,8 +641,9 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 				}
 				
 				colAliaseNames = getMappedAttrAliaseName(ingest.getAttributeMap(), true);
-				
+				logger.info("IngestionType : " + ingestionType);
 	//			if(sourceDp != null) {
+				
 					if(ingestionType.equals(IngestionType.FILETOFILE)) {
 						String tableName = null;
 						tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
@@ -1437,6 +1438,38 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 		}
 		
 		return ingestExec;
+	}
+	
+	/**
+	 * 
+	 * @param ingestionType
+	 * @param ingest
+	 * @param incrColName
+	 * @param incrLastValue
+	 * @param areAllAttrs
+	 * @return
+	 * @throws Exception
+	 */
+	private String getIngestionQuery (IngestionType ingestionType, 
+										Ingest ingest, 
+										String incrColName, 
+										String incrLastValue, 
+										Boolean areAllAttrs) throws Exception {
+		if(ingestionType.equals(IngestionType.FILETOFILE)) {
+			String tableName = null;
+			tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
+			return ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), null, runMode);
+		} else if(sourceDataSet != null) {
+			String tableName = sourceDS.getDbname().concat(".").concat(sourceDataSet.getName());					
+			return ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), null, runMode);
+		} else if(!areAllAttrs && sourceDp != null) {
+			String tableName = sourceDS.getDbname().concat(".").concat(sourceDp.getName());					
+			return ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), null, runMode);
+		} else if(!areAllAttrs && targetDp != null) {
+			String tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());					
+			return ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), null, runMode);
+		}
+		return null;
 	}
 	
 	/**
