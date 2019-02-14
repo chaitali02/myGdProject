@@ -53,6 +53,7 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
   $scope.model = {};
   $scope.model.versions = [];
   $scope.isshowmodel = false;
+  $scope.isAlgorithmPCA=false;
   //$scope.SourceTypes = ["datapod", "dataset"];
   $scope.imputeTypes=["custom","function"];
   $scope.dependsOnType= ["algorithm", "formula"];
@@ -377,7 +378,10 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
        $scope.isParamListShow=true;
        $scope.getParamListByFormula();
       }else{
+        $scope.isAlgorithmPCA=false;
         $scope.isParamListShow=false;
+        if($scope.selectedDependsOn !=null)
+          $scope.isAlgorithmPCA=$scope.selectedDependsOn.trainClass.indexOf("PCA") !=-1?true:false;
       }
     }
 
@@ -431,7 +435,15 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
     }
   }
   }*/
-  
+  $scope.getOneByUuidAndVersionAlgorithm=function(data){
+    ModelService.getOneByUuidandVersion(data.uuid,"","algorithm")
+    .then(function(response) {onSuccessGetLatestByUuid(response.data)}, function(response) {onError(response.data)});
+    var onSuccessGetLatestByUuid = function(response) {
+      $scope.selectedDependsOn=response;
+      $scope.isAlgorithmPCA=$scope.selectedDependsOn.trainClass.indexOf("PCA") !=-1?true:false;
+
+    }
+  }
   $scope.getFunctionByCategory=function(){
     ModelService.getFunctionByCategory("function","aggregate").then(function(response) { onSuccessGetFunctionByCategory(response.data)});
     var onSuccessGetFunctionByCategory = function(response) {
@@ -534,6 +546,7 @@ DatascienceModule.controller('CreateModelController', function($state, $statePar
         selectedDependsOn.uuid = $scope.modeldata.dependsOn.ref.uuid;
         selectedDependsOn.name = $scope.modeldata.dependsOn.ref.name;
         $scope.selectedDependsOn = selectedDependsOn;
+        $scope.getOneByUuidAndVersionAlgorithm(selectedDependsOn);
         if($scope.selectedDependsOnType =="formula"){
           $scope.getParamListByFormula();
           $scope.isParamListShow=true

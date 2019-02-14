@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.inferyx.framework.domain;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -39,7 +40,40 @@ public class TrainResultView extends BaseEntity {
 	private String algoType;
 	private List<Map<String, Object>> rocCurve;
 	private String trainClass;
-	
+	private Date startTime;
+	private Date endTime;
+	/**
+	 * @Ganesh
+	 *
+	 * @return the startTime
+	 */
+	public Date getStartTime() {
+		return startTime;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param startTime the startTime to set
+	 */
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @return the endTime
+	 */
+	public Date getEndTime() {
+		return endTime;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param endTime the endTime to set
+	 */
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
 	public String getTrainClass() {
 		return trainClass;
 	}

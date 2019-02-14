@@ -545,11 +545,13 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
       //  $scope.onChangeSourceType();
       $scope.getAllLetestSource();
       $scope.getAllAttribute();
-      var selectLabel = {};
-      $scope.selectLabel = null
-      selectLabel.uuid = response.labelInfo.ref.uuid;
-      selectLabel.attributeId = response.labelInfo.attrId;
-      $scope.selectLabel = selectLabel;
+      if(response.labelInfo !=null){
+        var selectLabel = {};
+        $scope.selectLabel = null
+        selectLabel.uuid = response.labelInfo.ref.uuid;
+        selectLabel.attributeId = response.labelInfo.attrId;
+        $scope.selectLabel = selectLabel
+      };
       //$scope.selectEncodingType=response.encodingType;    
       var rowIdentifierTags = [];
       if (response.rowIdentifier != null) {
@@ -783,6 +785,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     sourceref.uuid = $scope.selectSource.uuid;
     source.ref = sourceref;
     TrainJson.source = source;
+    if($scope.selectLabel){
     var labelInfo = {};
     var ref = {};
     ref.type = $scope.selectSourceType
@@ -790,6 +793,9 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     labelInfo.ref = ref;
     labelInfo.attrId = $scope.selectLabel.attributeId
     TrainJson.labelInfo = labelInfo;
+    }else{
+      TrainJson.labelInfo =null;
+    }
    
     var rowIdentifierTags = [];
     if ($scope.rowIdentifierTags != null) {
