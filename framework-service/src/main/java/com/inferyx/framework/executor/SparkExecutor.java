@@ -3867,7 +3867,7 @@ public class SparkExecutor<T> implements IExecutor {
 		return rsHolder;
 	}
 	
-	public ResultSetHolder writeFileByFormat(ResultSetHolder rsHolder, Datapod datapod, String targetPath, String fileName, String tableName, String saveMode, String fileFormat, String header) throws IOException {
+	public ResultSetHolder writeFileByFormat(ResultSetHolder rsHolder, Datapod datapod, String targetPath, String tableName, String saveMode, String fileFormat, String header) throws IOException {
 
 		logger.info("inside method writeFileByFormat");
 		Dataset<Row> df = rsHolder.getDataFrame();

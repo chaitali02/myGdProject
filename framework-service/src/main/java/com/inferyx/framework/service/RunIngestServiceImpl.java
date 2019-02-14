@@ -608,7 +608,7 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 						
 						//writing to target				
 						rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, tempDirLocation,
-																	targetFileName, tableName, saveMode, ingest.getTargetFormat(), null);
+																	tableName, saveMode, ingest.getTargetFormat(), null);
 						
 						if(!ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
 							try {
@@ -766,7 +766,7 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 //						rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
 
 						//writing to target				
-						rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, ingest.getTargetDetail().getValue(), tableName, ingest.getSaveMode().toString(), ingest.getTargetFormat(), null);
+						rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, tableName, ingest.getSaveMode().toString(), ingest.getTargetFormat(), null);
 						countRows = rsHolder.getCountRows();
 //						targetFilePathUrl = null;
 					} else if(targetDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
@@ -877,7 +877,7 @@ public class RunIngestServiceImpl<T, K> implements Callable<TaskHolder> {
 						
 						rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, 
 								ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString()) ? targetFilePathUrl : tempDirLocation
-										, targetFileName, tableName, saveMode, ingest.getTargetFormat(), null);
+										, tableName, saveMode, ingest.getTargetFormat(), null);
 						
 						if(!ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
 							try {
