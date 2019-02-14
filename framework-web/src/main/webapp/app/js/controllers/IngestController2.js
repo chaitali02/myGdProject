@@ -847,6 +847,8 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 				$scope.ingest.versions[i] = ingetversion;
 			}
 		}
+		if($stateParams.version =="")
+			$stateParams.version="";
 		IngestRuleService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'ingest')
 			.then(function (response) { onSuccess(response.data) },function(response) {onError(response.data)});
 		var onSuccess = function (response) {
