@@ -1,6 +1,6 @@
 {
   "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
-  "version": "1547069377",
+  "version": "1550163020",
   "name": "ds_device_data_categorical_features",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Wed Jan 09 16:29:37 EST 2019",
+  "createdOn": "Thu Feb 14 11:50:20 EST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -28,6 +28,7 @@
       "value": null
     }
   ],
+  "publicFlag": "N",
   "dependsOn": {
     "ref": {
       "type": "dataset",
@@ -48,7 +49,7 @@
           "type": "dataset",
           "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
           "version": null,
-          "name": null
+          "name": "ds_device_data_base_features"
         },
         "value": null,
         "attrId": "0",
@@ -66,7 +67,7 @@
           "type": "dataset",
           "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
           "version": null,
-          "name": null
+          "name": "ds_device_data_base_features"
         },
         "value": null,
         "attrId": "1",
@@ -84,7 +85,7 @@
           "type": "dataset",
           "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
           "version": null,
-          "name": null
+          "name": "ds_device_data_base_features"
         },
         "value": null,
         "attrId": "4",
@@ -102,7 +103,7 @@
           "type": "dataset",
           "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
           "version": null,
-          "name": null
+          "name": "ds_device_data_base_features"
         },
         "value": null,
         "attrId": "5",
@@ -120,7 +121,7 @@
           "type": "dataset",
           "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
           "version": null,
-          "name": null
+          "name": "ds_device_data_base_features"
         },
         "value": null,
         "attrId": "6",
@@ -138,7 +139,7 @@
           "type": "dataset",
           "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
           "version": null,
-          "name": null
+          "name": "ds_device_data_base_features"
         },
         "value": null,
         "attrId": "7",
@@ -160,7 +161,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": "fm_problem_type_1_category",
+        "attrName": null,
         "attrType": null,
         "attrUnitType": null
       }
@@ -178,7 +179,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": "fm_problem_type_2_category",
+        "attrName": null,
         "attrType": null,
         "attrUnitType": null
       }
@@ -196,7 +197,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": "fm_problem_type_3_category",
+        "attrName": null,
         "attrType": null,
         "attrUnitType": null
       }
@@ -214,7 +215,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": "fm_problem_type_4_category",
+        "attrName": null,
         "attrType": null,
         "attrUnitType": null
       }
@@ -232,7 +233,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": "fm_problem_type_1_per_usage1_category",
+        "attrName": null,
         "attrType": null,
         "attrUnitType": null
       }
@@ -250,7 +251,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": "fm_problem_type_2_per_usage1_category",
+        "attrName": null,
         "attrType": null,
         "attrUnitType": null
       }
@@ -268,7 +269,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": "fm_problem_type_3_per_usage1_category",
+        "attrName": null,
         "attrType": null,
         "attrUnitType": null
       }
@@ -286,7 +287,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": "fm_problem_type_4_per_usage1_category",
+        "attrName": null,
         "attrType": null,
         "attrUnitType": null
       }
@@ -304,7 +305,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": "fm_problem_type_1_per_usage2_category",
+        "attrName": null,
         "attrType": null,
         "attrUnitType": null
       }
@@ -322,7 +323,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": "fm_problem_type_2_per_usage2_category",
+        "attrName": null,
         "attrType": null,
         "attrUnitType": null
       }
@@ -340,7 +341,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": "fm_problem_type_3_per_usage2_category",
+        "attrName": null,
         "attrType": null,
         "attrUnitType": null
       }
@@ -358,7 +359,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": "fm_problem_type_4_per_usage2_category",
+        "attrName": null,
         "attrType": null,
         "attrUnitType": null
       }
@@ -376,7 +377,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": "fm_fault_code_type_1_count_category",
+        "attrName": null,
         "attrType": null,
         "attrUnitType": null
       }
@@ -394,7 +395,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": "fm_fault_code_type_2_count_category",
+        "attrName": null,
         "attrType": null,
         "attrUnitType": null
       }
@@ -412,7 +413,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": "fm_fault_code_type_3_count_category",
+        "attrName": null,
         "attrType": null,
         "attrUnitType": null
       }
@@ -430,7 +431,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": "fm_fault_code_type_4_count_category",
+        "attrName": null,
         "attrType": null,
         "attrUnitType": null
       }
@@ -448,7 +449,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": "fm_fault_code_type_1_count_per_usage1_category",
+        "attrName": null,
         "attrType": null,
         "attrUnitType": null
       }
@@ -466,7 +467,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": "fm_fault_code_type_2_count_per_usage1_category",
+        "attrName": null,
         "attrType": null,
         "attrUnitType": null
       }
@@ -484,7 +485,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": "fm_fault_code_type_3_count_per_usage1_category",
+        "attrName": null,
         "attrType": null,
         "attrUnitType": null
       }
@@ -502,7 +503,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": "fm_fault_code_type_4_count_per_usage1_category",
+        "attrName": null,
         "attrType": null,
         "attrUnitType": null
       }
@@ -520,7 +521,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": "fm_fault_code_type_1_count_per_usage2_category",
+        "attrName": null,
         "attrType": null,
         "attrUnitType": null
       }
@@ -538,7 +539,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": "fm_fault_code_type_2_count_per_usage2_category",
+        "attrName": null,
         "attrType": null,
         "attrUnitType": null
       }
@@ -556,7 +557,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": "fm_fault_code_type_3_count_per_usage2_category",
+        "attrName": null,
         "attrType": null,
         "attrUnitType": null
       }
@@ -574,7 +575,7 @@
         },
         "value": null,
         "attrId": null,
-        "attrName": "fm_fault_code_type_4_count_per_usage2_category",
+        "attrName": null,
         "attrType": null,
         "attrUnitType": null
       }
@@ -588,10 +589,10 @@
           "type": "dataset",
           "uuid": "5b534c5e-69a6-4cf2-b2f3-d9c578a55533",
           "version": null,
-          "name": null
+          "name": "ds_device_data_base_features"
         },
         "value": null,
-        "attrId": "33",
+        "attrId": "47",
         "attrName": "version",
         "attrType": "Integer",
         "attrUnitType": null
