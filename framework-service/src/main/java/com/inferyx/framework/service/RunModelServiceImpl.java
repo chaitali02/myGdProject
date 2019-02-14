@@ -812,8 +812,15 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 //				String sql = "SELECT * FROM " + (tableName+"_train_source_data");
 //				exec.renameDfColumnName(sql, (tableName+"_train_mapped_data"), mappingList, appUuid);
 				
-				String tempTrngDfSql = modelServiceImpl.generateFeatureSQLByTempTable(train.getFeatureAttrMap(), "tempTrngDf", label, tableName.concat("_tempTrngDf"));
-				String tempValDfSql = modelServiceImpl.generateFeatureSQLByTempTable(train.getFeatureAttrMap(), "tempValDf", label, tableName.concat("_tempValDf"));
+				String tempTrngDfSql = null;
+				String tempValDfSql = null;
+				if(algorithm.getTrainClass().contains("PCA")) {
+					tempTrngDfSql = modelServiceImpl.generateFeatureSQLByTempTable(train.getFeatureAttrMap(), "tempTrngDf", null, tableName.concat("_tempTrngDf"));
+					tempValDfSql = modelServiceImpl.generateFeatureSQLByTempTable(train.getFeatureAttrMap(), "tempValDf", null, tableName.concat("_tempValDf"));
+				} else {
+					tempTrngDfSql = modelServiceImpl.generateFeatureSQLByTempTable(train.getFeatureAttrMap(), "tempTrngDf", label, tableName.concat("_tempTrngDf"));
+					tempValDfSql = modelServiceImpl.generateFeatureSQLByTempTable(train.getFeatureAttrMap(), "tempValDf", label, tableName.concat("_tempValDf"));
+				}
 				
 				List<String> rowIdentifierCols = modelServiceImpl.getRowIdentifierCols(train.getRowIdentifier());
 				
@@ -873,7 +880,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 				if(train.getUseHyperParams().equalsIgnoreCase("N") && !model.getType().equalsIgnoreCase(ExecContext.DL4J.toString())) {
 					//Without hypertuning
 					trndModel = exec.train(paramMap, fieldArray, label, algorithm.getTrainClass(), train.getTrainPercent()
-							, train.getValPercent(), (tableName+"_train_source_data"), tempTrngDfSql
+							, train.getValPercent(), (tableName+"_train_source_data"), appUuid
 							, algoclass, trainOtherParam, trainResult, testSetPath
 							, rowIdentifierCols, train.getIncludeFeatures(), tempTrngDfSql
 							, tempValDfSql, encodingDetails, train.getSaveTrainingSet() 
