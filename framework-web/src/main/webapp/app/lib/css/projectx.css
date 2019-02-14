@@ -1463,3 +1463,8 @@ transition: right 1m
    tags-input .tags .tag-item{
     background: #e0e0e0 !important;
    }
+
+
+   .gray{
+    color:#888
+   }

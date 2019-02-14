@@ -769,7 +769,7 @@
                                                         </div>
                                                         <div  style="float:right;" ng-if="selectedSourceType =='FILE' || selectedTargetType =='FILE' ">
                                                             <label>Auto Map</label>
-                                                            <select class="form-control input-inline" data-ng-model="$parent.selectedAutoMode" ng-options="r  for r in allAutoMapFile"
+                                                            <select class="form-control input-inline" data-ng-model="$parent.selectedAutoMode" ng-options="r  disable when r == 'From Source' && selectedSourceType=='FILE'   for r in allAutoMapFile"
                                                                 ng-disabled="{{mode}}||(selectedSourceType =='FILE' && selectedTargetType =='FILE' )" ng-change="onChangeAutoMode()">
                                                                 <option value="">-select-</option>
                                                             </select>

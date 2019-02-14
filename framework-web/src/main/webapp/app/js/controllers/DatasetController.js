@@ -1717,7 +1717,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 				console.log(ex);
 			}
 		}).error(function (data) {
-			$scope.isDownloadDatapod=false;
+			$scope.isDownloadDataset=false;
 			console.log(data);
 			$('#downloadSample').modal("hide");
 		});
