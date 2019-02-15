@@ -161,11 +161,28 @@ public class AttributeMapOperator {
 						//.concat(attrMap.getSourceAttr().get(0).getAttributeId().toString());
 			} 
 			
-			if(attrMap.getSourceAttr().getRef().getType().equals(MetaType.attribute)
-					|| ((attrMap.getSourceAttr().getRef().getType().equals(MetaType.function)
-					|| attrMap.getSourceAttr().getRef().getType().equals(MetaType.formula)) 
-							&& mapSource.getRef().getType().equals(MetaType.simple))) {
+			if(attrMap.getSourceAttr().getRef().getType().equals(MetaType.function) 
+					&& mapSource.getRef().getType().equals(MetaType.simple)) {
 				//special handling for ingest 
+				Function function = (Function) commonServiceImpl.getOneByUuidAndVersion(attrMap.getSourceAttr().getRef().getUuid()
+						, attrMap.getSourceAttr().getRef().getVersion()
+						, attrMap.getSourceAttr().getRef().getType().toString()
+						, "N");
+				Datasource fileDatasource = new Datasource();
+				fileDatasource.setType(MetaType.file.toString());
+				return builder.append(functionOperator.generateSql(function, refKeyMap, otherParams, fileDatasource)).append(" as ").append(alias).append(" ").toString();
+			} else if(attrMap.getSourceAttr().getRef().getType().equals(MetaType.formula) 
+					&& mapSource.getRef().getType().equals(MetaType.simple)) {
+				//special handling for ingest 
+				Formula formula = (Formula) commonServiceImpl.getOneByUuidAndVersion(attrMap.getSourceAttr().getRef().getUuid()
+						, attrMap.getSourceAttr().getRef().getVersion()
+						, attrMap.getSourceAttr().getRef().getType().toString()
+						, "N");
+				Datasource fileDatasource = new Datasource();
+				fileDatasource.setType(MetaType.file.toString());
+				return builder.append(formulaOperator.generateSql(formula, refKeyMap, otherParams, execParams, fileDatasource)).append(" as ").append(alias).append(" ").toString();
+			} else if(attrMap.getSourceAttr().getRef().getType().equals(MetaType.attribute)) {
+				//special handling for ingest 				
 				return builder.append(attrMap.getSourceAttr().getValue()).append(" as ").append(alias).append(" ").toString();
 			} else if (attrMap.getSourceAttr().getRef().getType().equals(MetaType.simple)) {
 				return builder.append("\'").append(attrMap.getSourceAttr().getValue()).append("\'").append(" as ").append(alias).append(" ").toString();			

@@ -848,6 +848,7 @@ public class IngestServiceImpl extends RuleTemplate {
 			} else if(attrRefHolder.getRef().getType().equals(MetaType.datapod)) {
 				MetaIdentifier sourceDpMI = attrRefHolder.getRef();
 				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceDpMI.getUuid(), sourceDpMI.getVersion(), sourceDpMI.getType().toString());
+//				datapod.getAttributeName(Integer.parseInt(attrRefHolder.getAttrId()));
 				for(Attribute attribute : datapod.getAttributes()) {
 					if(attrRefHolder.getAttrId().equalsIgnoreCase(attribute.getAttributeId().toString())) {
 						return attribute.getName();

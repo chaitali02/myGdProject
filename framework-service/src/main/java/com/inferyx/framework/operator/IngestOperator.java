@@ -69,7 +69,7 @@ public class IngestOperator {
 			HashMap<String, String> otherParams, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		MetaIdentifierHolder ingestSource = new MetaIdentifierHolder(ingest.getRef(MetaType.ingest));
 		String query = attributeMapOperator.selectGroupBy(ingest.getAttributeMap(), refKeyMap, otherParams, execParams, ingestSource);
-		logger.info(query);
+		logger.info("group by: "+query);
 		return query;
 	}
 

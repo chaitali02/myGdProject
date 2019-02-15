@@ -173,7 +173,7 @@ public class FunctionOperator {
 					}
 				}
 				break;
-			}else {
+			} else {
 				if(datasource.getType().equalsIgnoreCase(MetaType.file.toString()) && fun.getName().contains("rand"))
 					functionName = fun.getName();
 			}
