@@ -1,6 +1,6 @@
 {
   "uuid": "07144e18-9ada-4499-ab2d-710305ceb952",
-  "version": "1547066363",
+  "version": "1550238942",
   "name": "map_device_data_categorical_features",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Wed Jan 09 15:39:23 EST 2019",
+  "createdOn": "Fri Feb 15 08:55:42 EST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -28,12 +28,13 @@
       "value": null
     }
   ],
+  "publicFlag": "N",
   "target": {
     "ref": {
       "type": "datapod",
-      "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+      "uuid": "4b6689af-aeaf-4287-8833-c029cce587e8",
       "version": null,
-      "name": null
+      "name": "device_data_categorical_features"
     },
     "value": null
   },
@@ -54,7 +55,7 @@
           "type": "dataset",
           "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
           "version": null,
-          "name": null
+          "name": "ds_device_data_categorical_features"
         },
         "value": null,
         "attrId": "0",
@@ -65,13 +66,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "uuid": "4b6689af-aeaf-4287-8833-c029cce587e8",
           "version": null,
-          "name": null
+          "name": "device_data_categorical_features"
         },
         "value": null,
         "attrId": "0",
-        "attrName": null,
+        "attrName": "deviceid",
         "attrType": null,
         "attrUnitType": null
       }
@@ -83,7 +84,7 @@
           "type": "dataset",
           "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
           "version": null,
-          "name": null
+          "name": "ds_device_data_categorical_features"
         },
         "value": null,
         "attrId": "1",
@@ -94,13 +95,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "uuid": "4b6689af-aeaf-4287-8833-c029cce587e8",
           "version": null,
-          "name": null
+          "name": "device_data_categorical_features"
         },
         "value": null,
         "attrId": "1",
-        "attrName": null,
+        "attrName": "date",
         "attrType": null,
         "attrUnitType": null
       }
@@ -112,24 +113,24 @@
           "type": "dataset",
           "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
           "version": null,
-          "name": null
+          "name": "ds_device_data_categorical_features"
         },
         "value": null,
-        "attrId": "2",
-        "attrName": null,
+        "attrId": "4",
+        "attrName": "cat1",
         "attrType": null,
         "attrUnitType": null
       },
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "uuid": "4b6689af-aeaf-4287-8833-c029cce587e8",
           "version": null,
-          "name": null
+          "name": "device_data_categorical_features"
         },
         "value": null,
         "attrId": "2",
-        "attrName": null,
+        "attrName": "cat1",
         "attrType": null,
         "attrUnitType": null
       }
@@ -141,24 +142,24 @@
           "type": "dataset",
           "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
           "version": null,
-          "name": null
+          "name": "ds_device_data_categorical_features"
         },
         "value": null,
-        "attrId": "3",
-        "attrName": null,
+        "attrId": "5",
+        "attrName": "cat2",
         "attrType": null,
         "attrUnitType": null
       },
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "uuid": "4b6689af-aeaf-4287-8833-c029cce587e8",
           "version": null,
-          "name": null
+          "name": "device_data_categorical_features"
         },
         "value": null,
         "attrId": "3",
-        "attrName": null,
+        "attrName": "cat2",
         "attrType": null,
         "attrUnitType": null
       }
@@ -170,24 +171,24 @@
           "type": "dataset",
           "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
           "version": null,
-          "name": null
+          "name": "ds_device_data_categorical_features"
         },
         "value": null,
-        "attrId": "4",
-        "attrName": "cat1",
+        "attrId": "6",
+        "attrName": "cat3",
         "attrType": null,
         "attrUnitType": null
       },
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "uuid": "4b6689af-aeaf-4287-8833-c029cce587e8",
           "version": null,
-          "name": null
+          "name": "device_data_categorical_features"
         },
         "value": null,
         "attrId": "4",
-        "attrName": null,
+        "attrName": "cat3",
         "attrType": null,
         "attrUnitType": null
       }
@@ -199,24 +200,24 @@
           "type": "dataset",
           "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
           "version": null,
-          "name": null
+          "name": "ds_device_data_categorical_features"
         },
         "value": null,
-        "attrId": "5",
-        "attrName": "cat2",
+        "attrId": "7",
+        "attrName": "cat4",
         "attrType": null,
         "attrUnitType": null
       },
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "uuid": "4b6689af-aeaf-4287-8833-c029cce587e8",
           "version": null,
-          "name": null
+          "name": "device_data_categorical_features"
         },
         "value": null,
         "attrId": "5",
-        "attrName": null,
+        "attrName": "cat4",
         "attrType": null,
         "attrUnitType": null
       }
@@ -228,24 +229,24 @@
           "type": "dataset",
           "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
           "version": null,
-          "name": null
+          "name": "ds_device_data_categorical_features"
         },
         "value": null,
-        "attrId": "6",
-        "attrName": "cat3",
+        "attrId": "44",
+        "attrName": "fault_code_type_1_count_category",
         "attrType": null,
         "attrUnitType": null
       },
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "uuid": "4b6689af-aeaf-4287-8833-c029cce587e8",
           "version": null,
-          "name": null
+          "name": "device_data_categorical_features"
         },
         "value": null,
         "attrId": "6",
-        "attrName": null,
+        "attrName": "fault_code_type_1_count_category",
         "attrType": null,
         "attrUnitType": null
       }
@@ -257,24 +258,24 @@
           "type": "dataset",
           "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
           "version": null,
-          "name": null
+          "name": "ds_device_data_categorical_features"
         },
         "value": null,
-        "attrId": "7",
-        "attrName": "cat4",
+        "attrId": "48",
+        "attrName": "fault_code_type_1_count_per_usage1_category",
         "attrType": null,
         "attrUnitType": null
       },
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "uuid": "4b6689af-aeaf-4287-8833-c029cce587e8",
           "version": null,
-          "name": null
+          "name": "device_data_categorical_features"
         },
         "value": null,
         "attrId": "7",
-        "attrName": null,
+        "attrName": "fault_code_type_1_count_per_usage1_category",
         "attrType": null,
         "attrUnitType": null
       }
@@ -286,24 +287,24 @@
           "type": "dataset",
           "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
           "version": null,
-          "name": null
+          "name": "ds_device_data_categorical_features"
         },
         "value": null,
-        "attrId": "8",
-        "attrName": null,
+        "attrId": "52",
+        "attrName": "fault_code_type_1_count_per_usage2_category",
         "attrType": null,
         "attrUnitType": null
       },
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "uuid": "4b6689af-aeaf-4287-8833-c029cce587e8",
           "version": null,
-          "name": null
+          "name": "device_data_categorical_features"
         },
         "value": null,
         "attrId": "8",
-        "attrName": null,
+        "attrName": "fault_code_type_1_count_per_usage2_category",
         "attrType": null,
         "attrUnitType": null
       }
@@ -315,24 +316,24 @@
           "type": "dataset",
           "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
           "version": null,
-          "name": null
+          "name": "ds_device_data_categorical_features"
         },
         "value": null,
-        "attrId": "44",
-        "attrName": "fault_code_type_1_count_category",
+        "attrId": "45",
+        "attrName": "fault_code_type_2_count_category",
         "attrType": null,
         "attrUnitType": null
       },
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "uuid": "4b6689af-aeaf-4287-8833-c029cce587e8",
           "version": null,
-          "name": null
+          "name": "device_data_categorical_features"
         },
         "value": null,
         "attrId": "9",
-        "attrName": null,
+        "attrName": "fault_code_type_2_count_category",
         "attrType": null,
         "attrUnitType": null
       }
@@ -344,24 +345,24 @@
           "type": "dataset",
           "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
           "version": null,
-          "name": null
+          "name": "ds_device_data_categorical_features"
         },
         "value": null,
-        "attrId": "16",
-        "attrName": null,
+        "attrId": "49",
+        "attrName": "fault_code_type_2_count_per_usage1_category",
         "attrType": null,
         "attrUnitType": null
       },
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "uuid": "4b6689af-aeaf-4287-8833-c029cce587e8",
           "version": null,
-          "name": null
+          "name": "device_data_categorical_features"
         },
         "value": null,
         "attrId": "10",
-        "attrName": null,
+        "attrName": "fault_code_type_2_count_per_usage1_category",
         "attrType": null,
         "attrUnitType": null
       }
@@ -373,24 +374,24 @@
           "type": "dataset",
           "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
           "version": null,
-          "name": null
+          "name": "ds_device_data_categorical_features"
         },
         "value": null,
-        "attrId": "48",
-        "attrName": "fault_code_type_1_count_per_usage1_category",
+        "attrId": "53",
+        "attrName": "fault_code_type_2_count_per_usage2_category",
         "attrType": null,
         "attrUnitType": null
       },
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "uuid": "4b6689af-aeaf-4287-8833-c029cce587e8",
           "version": null,
-          "name": null
+          "name": "device_data_categorical_features"
         },
         "value": null,
         "attrId": "11",
-        "attrName": null,
+        "attrName": "fault_code_type_2_count_per_usage2_category",
         "attrType": null,
         "attrUnitType": null
       }
@@ -402,24 +403,24 @@
           "type": "dataset",
           "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
           "version": null,
-          "name": null
+          "name": "ds_device_data_categorical_features"
         },
         "value": null,
-        "attrId": "24",
-        "attrName": null,
+        "attrId": "46",
+        "attrName": "fault_code_type_3_count_category",
         "attrType": null,
         "attrUnitType": null
       },
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "uuid": "4b6689af-aeaf-4287-8833-c029cce587e8",
           "version": null,
-          "name": null
+          "name": "device_data_categorical_features"
         },
         "value": null,
         "attrId": "12",
-        "attrName": null,
+        "attrName": "fault_code_type_3_count_category",
         "attrType": null,
         "attrUnitType": null
       }
@@ -431,24 +432,24 @@
           "type": "dataset",
           "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
           "version": null,
-          "name": null
+          "name": "ds_device_data_categorical_features"
         },
         "value": null,
-        "attrId": "52",
-        "attrName": "fault_code_type_1_count_per_usage2_category",
+        "attrId": "50",
+        "attrName": "fault_code_type_3_count_per_usage1_category",
         "attrType": null,
         "attrUnitType": null
       },
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "uuid": "4b6689af-aeaf-4287-8833-c029cce587e8",
           "version": null,
-          "name": null
+          "name": "device_data_categorical_features"
         },
         "value": null,
         "attrId": "13",
-        "attrName": null,
+        "attrName": "fault_code_type_3_count_per_usage1_category",
         "attrType": null,
         "attrUnitType": null
       }
@@ -460,24 +461,24 @@
           "type": "dataset",
           "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
           "version": null,
-          "name": null
+          "name": "ds_device_data_categorical_features"
         },
         "value": null,
-        "attrId": "9",
-        "attrName": null,
+        "attrId": "54",
+        "attrName": "fault_code_type_3_count_per_usage2_category",
         "attrType": null,
         "attrUnitType": null
       },
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "uuid": "4b6689af-aeaf-4287-8833-c029cce587e8",
           "version": null,
-          "name": null
+          "name": "device_data_categorical_features"
         },
         "value": null,
         "attrId": "14",
-        "attrName": null,
+        "attrName": "fault_code_type_3_count_per_usage2_category",
         "attrType": null,
         "attrUnitType": null
       }
@@ -489,24 +490,24 @@
           "type": "dataset",
           "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
           "version": null,
-          "name": null
+          "name": "ds_device_data_categorical_features"
         },
         "value": null,
-        "attrId": "45",
-        "attrName": "fault_code_type_2_count_category",
+        "attrId": "47",
+        "attrName": "fault_code_type_4_count_category",
         "attrType": null,
         "attrUnitType": null
       },
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "uuid": "4b6689af-aeaf-4287-8833-c029cce587e8",
           "version": null,
-          "name": null
+          "name": "device_data_categorical_features"
         },
         "value": null,
         "attrId": "15",
-        "attrName": null,
+        "attrName": "fault_code_type_4_count_category",
         "attrType": null,
         "attrUnitType": null
       }
@@ -518,24 +519,24 @@
           "type": "dataset",
           "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
           "version": null,
-          "name": null
+          "name": "ds_device_data_categorical_features"
         },
         "value": null,
-        "attrId": "17",
-        "attrName": null,
+        "attrId": "51",
+        "attrName": "fault_code_type_4_count_per_usage1_category",
         "attrType": null,
         "attrUnitType": null
       },
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "uuid": "4b6689af-aeaf-4287-8833-c029cce587e8",
           "version": null,
-          "name": null
+          "name": "device_data_categorical_features"
         },
         "value": null,
         "attrId": "16",
-        "attrName": null,
+        "attrName": "fault_code_type_4_count_per_usage1_category",
         "attrType": null,
         "attrUnitType": null
       }
@@ -547,24 +548,24 @@
           "type": "dataset",
           "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
           "version": null,
-          "name": null
+          "name": "ds_device_data_categorical_features"
         },
         "value": null,
-        "attrId": "49",
-        "attrName": "fault_code_type_2_count_per_usage1_category",
+        "attrId": "55",
+        "attrName": "fault_code_type_4_count_per_usage2_category",
         "attrType": null,
         "attrUnitType": null
       },
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "uuid": "4b6689af-aeaf-4287-8833-c029cce587e8",
           "version": null,
-          "name": null
+          "name": "device_data_categorical_features"
         },
         "value": null,
         "attrId": "17",
-        "attrName": null,
+        "attrName": "fault_code_type_4_count_per_usage2_category",
         "attrType": null,
         "attrUnitType": null
       }
@@ -576,24 +577,24 @@
           "type": "dataset",
           "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
           "version": null,
-          "name": null
+          "name": "ds_device_data_categorical_features"
         },
         "value": null,
-        "attrId": "25",
-        "attrName": null,
+        "attrId": "32",
+        "attrName": "problem_type_1_category",
         "attrType": null,
         "attrUnitType": null
       },
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "uuid": "4b6689af-aeaf-4287-8833-c029cce587e8",
           "version": null,
-          "name": null
+          "name": "device_data_categorical_features"
         },
         "value": null,
         "attrId": "18",
-        "attrName": null,
+        "attrName": "problem_type_1_category",
         "attrType": null,
         "attrUnitType": null
       }
@@ -605,24 +606,24 @@
           "type": "dataset",
           "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
           "version": null,
-          "name": null
+          "name": "ds_device_data_categorical_features"
         },
         "value": null,
-        "attrId": "53",
-        "attrName": "fault_code_type_2_count_per_usage2_category",
+        "attrId": "36",
+        "attrName": "problem_type_1_per_usage1_category",
         "attrType": null,
         "attrUnitType": null
       },
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "uuid": "4b6689af-aeaf-4287-8833-c029cce587e8",
           "version": null,
-          "name": null
+          "name": "device_data_categorical_features"
         },
         "value": null,
         "attrId": "19",
-        "attrName": null,
+        "attrName": "problem_type_1_per_usage1_category",
         "attrType": null,
         "attrUnitType": null
       }
@@ -634,24 +635,24 @@
           "type": "dataset",
           "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
           "version": null,
-          "name": null
+          "name": "ds_device_data_categorical_features"
         },
         "value": null,
-        "attrId": "10",
-        "attrName": null,
+        "attrId": "40",
+        "attrName": "problem_type_1_per_usage2_category",
         "attrType": null,
         "attrUnitType": null
       },
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "uuid": "4b6689af-aeaf-4287-8833-c029cce587e8",
           "version": null,
-          "name": null
+          "name": "device_data_categorical_features"
         },
         "value": null,
         "attrId": "20",
-        "attrName": null,
+        "attrName": "problem_type_1_per_usage2_category",
         "attrType": null,
         "attrUnitType": null
       }
@@ -663,24 +664,24 @@
           "type": "dataset",
           "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
           "version": null,
-          "name": null
+          "name": "ds_device_data_categorical_features"
         },
         "value": null,
-        "attrId": "46",
-        "attrName": "fault_code_type_3_count_category",
+        "attrId": "33",
+        "attrName": "problem_type_2_category",
         "attrType": null,
         "attrUnitType": null
       },
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "uuid": "4b6689af-aeaf-4287-8833-c029cce587e8",
           "version": null,
-          "name": null
+          "name": "device_data_categorical_features"
         },
         "value": null,
         "attrId": "21",
-        "attrName": null,
+        "attrName": "problem_type_2_category",
         "attrType": null,
         "attrUnitType": null
       }
@@ -692,24 +693,24 @@
           "type": "dataset",
           "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
           "version": null,
-          "name": null
+          "name": "ds_device_data_categorical_features"
         },
         "value": null,
-        "attrId": "18",
-        "attrName": null,
+        "attrId": "37",
+        "attrName": "problem_type_2_per_usage1_category",
         "attrType": null,
         "attrUnitType": null
       },
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "uuid": "4b6689af-aeaf-4287-8833-c029cce587e8",
           "version": null,
-          "name": null
+          "name": "device_data_categorical_features"
         },
         "value": null,
         "attrId": "22",
-        "attrName": null,
+        "attrName": "problem_type_2_per_usage1_category",
         "attrType": null,
         "attrUnitType": null
       }
@@ -721,24 +722,24 @@
           "type": "dataset",
           "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
           "version": null,
-          "name": null
+          "name": "ds_device_data_categorical_features"
         },
         "value": null,
-        "attrId": "50",
-        "attrName": "fault_code_type_3_count_per_usage1_category",
+        "attrId": "41",
+        "attrName": "problem_type_2_per_usage2_category",
         "attrType": null,
         "attrUnitType": null
       },
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "uuid": "4b6689af-aeaf-4287-8833-c029cce587e8",
           "version": null,
-          "name": null
+          "name": "device_data_categorical_features"
         },
         "value": null,
-        "attrId": "23",
-        "attrName": null,
+        "attrId": "24",
+        "attrName": "problem_type_2_per_usage2_category",
         "attrType": null,
         "attrUnitType": null
       }
@@ -750,24 +751,24 @@
           "type": "dataset",
           "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
           "version": null,
-          "name": null
+          "name": "ds_device_data_categorical_features"
         },
         "value": null,
-        "attrId": "26",
-        "attrName": null,
+        "attrId": "34",
+        "attrName": "problem_type_3_category",
         "attrType": null,
         "attrUnitType": null
       },
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "uuid": "4b6689af-aeaf-4287-8833-c029cce587e8",
           "version": null,
-          "name": null
+          "name": "device_data_categorical_features"
         },
         "value": null,
-        "attrId": "24",
-        "attrName": null,
+        "attrId": "25",
+        "attrName": "problem_type_3_category",
         "attrType": null,
         "attrUnitType": null
       }
@@ -779,24 +780,24 @@
           "type": "dataset",
           "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
           "version": null,
-          "name": null
+          "name": "ds_device_data_categorical_features"
         },
         "value": null,
-        "attrId": "54",
-        "attrName": "fault_code_type_3_count_per_usage2_category",
+        "attrId": "38",
+        "attrName": "problem_type_3_per_usage1_category",
         "attrType": null,
         "attrUnitType": null
       },
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "uuid": "4b6689af-aeaf-4287-8833-c029cce587e8",
           "version": null,
-          "name": null
+          "name": "device_data_categorical_features"
         },
         "value": null,
-        "attrId": "25",
-        "attrName": null,
+        "attrId": "26",
+        "attrName": "problem_type_3_per_usage1_category",
         "attrType": null,
         "attrUnitType": null
       }
@@ -808,24 +809,24 @@
           "type": "dataset",
           "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
           "version": null,
-          "name": null
+          "name": "ds_device_data_categorical_features"
         },
         "value": null,
-        "attrId": "11",
-        "attrName": null,
+        "attrId": "42",
+        "attrName": "problem_type_3_per_usage2_category",
         "attrType": null,
         "attrUnitType": null
       },
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "uuid": "4b6689af-aeaf-4287-8833-c029cce587e8",
           "version": null,
-          "name": null
+          "name": "device_data_categorical_features"
         },
         "value": null,
-        "attrId": "26",
-        "attrName": null,
+        "attrId": "27",
+        "attrName": "problem_type_3_per_usage2_category",
         "attrType": null,
         "attrUnitType": null
       }
@@ -837,24 +838,24 @@
           "type": "dataset",
           "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
           "version": null,
-          "name": null
+          "name": "ds_device_data_categorical_features"
         },
         "value": null,
-        "attrId": "47",
-        "attrName": "fault_code_type_4_count_category",
+        "attrId": "35",
+        "attrName": "problem_type_4_category",
         "attrType": null,
         "attrUnitType": null
       },
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "uuid": "4b6689af-aeaf-4287-8833-c029cce587e8",
           "version": null,
-          "name": null
+          "name": "device_data_categorical_features"
         },
         "value": null,
-        "attrId": "27",
-        "attrName": null,
+        "attrId": "28",
+        "attrName": "problem_type_4_category",
         "attrType": null,
         "attrUnitType": null
       }
@@ -866,24 +867,24 @@
           "type": "dataset",
           "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
           "version": null,
-          "name": null
+          "name": "ds_device_data_categorical_features"
         },
         "value": null,
-        "attrId": "19",
-        "attrName": null,
+        "attrId": "39",
+        "attrName": "problem_type_4_per_usage1_category",
         "attrType": null,
         "attrUnitType": null
       },
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "uuid": "4b6689af-aeaf-4287-8833-c029cce587e8",
           "version": null,
-          "name": null
+          "name": "device_data_categorical_features"
         },
         "value": null,
-        "attrId": "28",
-        "attrName": null,
+        "attrId": "29",
+        "attrName": "problem_type_4_per_usage1_category",
         "attrType": null,
         "attrUnitType": null
       }
@@ -895,24 +896,24 @@
           "type": "dataset",
           "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
           "version": null,
-          "name": null
+          "name": "ds_device_data_categorical_features"
         },
         "value": null,
-        "attrId": "51",
-        "attrName": "fault_code_type_4_count_per_usage1_category",
+        "attrId": "43",
+        "attrName": "problem_type_4_per_usage2_category",
         "attrType": null,
         "attrUnitType": null
       },
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "uuid": "4b6689af-aeaf-4287-8833-c029cce587e8",
           "version": null,
-          "name": null
+          "name": "device_data_categorical_features"
         },
         "value": null,
-        "attrId": "29",
-        "attrName": null,
+        "attrId": "30",
+        "attrName": "problem_type_4_per_usage2_category",
         "attrType": null,
         "attrUnitType": null
       }
@@ -924,761 +925,7 @@
           "type": "dataset",
           "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
           "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "27",
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "30",
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "31",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "55",
-        "attrName": "fault_code_type_4_count_per_usage2_category",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "31",
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "32",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "28",
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "32",
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "33",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "32",
-        "attrName": "problem_type_1_category",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "33",
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "34",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "12",
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "34",
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "35",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "36",
-        "attrName": "problem_type_1_per_usage1_category",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "35",
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "36",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "20",
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "36",
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "37",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "40",
-        "attrName": "problem_type_1_per_usage2_category",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "37",
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "38",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "29",
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "38",
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "39",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "33",
-        "attrName": "problem_type_2_category",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "39",
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "40",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "13",
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "40",
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "41",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "37",
-        "attrName": "problem_type_2_per_usage1_category",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "41",
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "42",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "21",
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "42",
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "43",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "41",
-        "attrName": "problem_type_2_per_usage2_category",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "43",
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "44",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "30",
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "44",
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "45",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "34",
-        "attrName": "problem_type_3_category",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "45",
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "46",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "14",
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "46",
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "47",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "38",
-        "attrName": "problem_type_3_per_usage1_category",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "47",
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "48",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "22",
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "48",
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "49",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "42",
-        "attrName": "problem_type_3_per_usage2_category",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "49",
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "50",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "31",
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "50",
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "51",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "35",
-        "attrName": "problem_type_4_category",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "51",
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "52",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "15",
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "52",
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "53",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "39",
-        "attrName": "problem_type_4_per_usage1_category",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "53",
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "54",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "23",
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "54",
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "55",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "43",
-        "attrName": "problem_type_4_per_usage2_category",
-        "attrType": null,
-        "attrUnitType": null
-      },
-      "targetAttr": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
-          "version": null,
-          "name": null
-        },
-        "value": null,
-        "attrId": "55",
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null
-      }
-    },
-    {
-      "attrMapId": "56",
-      "sourceAttr": {
-        "ref": {
-          "type": "dataset",
-          "uuid": "5c630b73-2e9d-407a-9974-a9bde69d55d6",
-          "version": null,
-          "name": null
+          "name": "ds_device_data_categorical_features"
         },
         "value": null,
         "attrId": "57",
@@ -1689,13 +936,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "1c153d11-2a61-4874-85d5-ce4c3e7019eb",
+          "uuid": "4b6689af-aeaf-4287-8833-c029cce587e8",
           "version": null,
-          "name": null
+          "name": "device_data_categorical_features"
         },
         "value": null,
-        "attrId": "56",
-        "attrName": null,
+        "attrId": "31",
+        "attrName": "version",
         "attrType": null,
         "attrUnitType": null
       }
