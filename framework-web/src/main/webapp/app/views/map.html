@@ -270,10 +270,9 @@
 
 									</div>
 									<br/>
-
 									<div class="row" style="overflow-y: auto;overflow-x: hidden;max-height:400px;">
 										<div class="col-md-12">
-											<table class=" row-border hover table  table-striped table-bordered">
+											<table class=" row-border hover table  table-striped table-bordered" style="table-layout:fixed;">
 												<thead>
 													<tr>
 														<th style="width:7%;" class="text-center">ID</th>
@@ -294,7 +293,7 @@
 															<span class="form-group" style="margin-left:0px;margin-right: 0px;">
 																<select ng-model="mapTableArray[$index].sourceAttributeType" ng-options=" x as x.caption for x in sourceAttributeTypes track by x.text"
 																 ng-change="onChangeSourceAttribute(mapTableArray[$index].sourceAttributeType.text,$index)" ng-disabled="{{mode}}"
-																 class="form-control"></select>
+																 class="form-control" required disable-validation-message=""></select>
 															</span>
 														</td>
 														<td>
@@ -302,7 +301,7 @@
 																<input type="text" class="form-control" ng-model="mapTableArray[$index].sourcesimple" ng-show="mapTableArray[$index].isSourceAtributeSimple"
 																 ng-disabled="{{mode}}">
 															</span>
-															<div ng-show="mapTableArray[$index].isSourceAtributeDatapod">
+															<div ng-if="mapTableArray[$index].isSourceAtributeDatapod">
 																<span class="form-group" style="margin-left:0px;margin-right: 0px;">
 																	<div ng-if="!mapTableArray[$index].isOnDropDown">
 																		<div class="col-md-11" style="padding: 0px;">
@@ -319,11 +318,11 @@
 																	</div>
 																	<div ng-if="mapTableArray[$index].isOnDropDown">
 																		<select select2 class="form-control" ng-disabled="{{mode}}" ng-model="mapTableArray[$index].sourceattribute" ng-change="onChangeAttribute($index)"
-																		 ng-options="r as r.dname for r in allMapSourceAttribute track by r.uuid+r.attributeId"></select>
+																		 ng-options="r as r.dname for r in allMapSourceAttribute track by r.uuid+r.attributeId"  required  disable-validation-message=""></select>
 																	</div>
 																</span>
 															</div>
-															<div ng-show="mapTableArray[$index].isSourceAtributeFormula">
+															<div ng-if="mapTableArray[$index].isSourceAtributeFormula">
 																<span class="form-group" style="margin-left:0px;margin-right: 0px;">
 																	<div ng-if="!mapTableArray[$index].isOnDropDown">
 																		<div class="col-md-11" style="padding: 0px;">
@@ -341,13 +340,13 @@
 																	<div ng-if="mapTableArray[$index].isOnDropDown">
 																		<select select2 ng-model="mapTableArray[$index].sourceformula" ng-disabled="{{mode}}" class="form-control"
 																		ng-change="onChangeFormula($index)"ng-options="c as  c.name for c in allMapLodeFormula track by c.uuid"
-																		 style="font-family: 'FontAwesome', Helvetica;">
+																		 style="font-family: 'FontAwesome', Helvetica;"  required  disable-validation-message="">
 																			<!-- <option value="">Create New &#xf067;</option> -->
 																		</select>
 																	</div>
 																</span>
 															</div>
-															<div ng-show="mapTableArray[$index].isSourceAtributeExpression">
+															<div ng-if="mapTableArray[$index].isSourceAtributeExpression">
 																<span class="form-group" style="margin-left:0px;margin-right: 0px;">
 																	<div ng-if="!mapTableArray[$index].isOnDropDown">
 																		<div class="col-md-11" style="padding: 0px;">
@@ -363,11 +362,11 @@
 																		</div>
 																	</div>
 																	<div ng-if="mapTableArray[$index].isOnDropDown">
-																		<select select2 ng-model="mapTableArray[$index].sourceexpression" ng-disabled="{{mode}}" class="form-control" ng-change="onChangeExpression($index)" ng-options="c as  c.name for c in allMapLodeExpression track by c.uuid"></select>
+																		<select select2 ng-model="mapTableArray[$index].sourceexpression" ng-disabled="{{mode}}" class="form-control" ng-change="onChangeExpression($index)" ng-options="c as  c.name for c in allMapLodeExpression track by c.uuid"  required  disable-validation-message=""></select>
 																	</div>
 																</span>
 															</div>
-															<div ng-show="mapTableArray[$index].isSourceAtributeFunction">
+															<div ng-if="mapTableArray[$index].isSourceAtributeFunction">
 																<span class="form-group" style="margin-left:0px;margin-right:0px;">
 																	<div ng-if="!mapTableArray[$index].isOnDropDown">
 																		<div class="col-md-11" style="padding: 0px;">
@@ -384,7 +383,7 @@
 																	</div>
 																	<div ng-if="mapTableArray[$index].isOnDropDown">
 																		<select select2 ng-model="mapTableArray[$index].sourcefunction" ng-change="onChangeFunction($index)" ng-disabled="{{mode}}"
-																		 class="form-control" ng-options="c as  c.name for c in ruleLodeFunction | orderBy: 'name' track by c.uuid"></select>
+																		 class="form-control" ng-options="c as  c.name for c in ruleLodeFunction | orderBy: 'name' track by c.uuid"  required  disable-validation-message=""></select>
 																	</div>
 																</span>
 															</div>

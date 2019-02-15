@@ -211,7 +211,13 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 				}
 			}
 			if (TargetType == "TABLE") {
-				$scope.allTargetDatasource = response;
+				if($scope.allSourceDatasource && $scope.allSourceDatasource.length ==0)
+					$scope.allTargetDatasource = response;
+				else
+				if($scope.allTargetDatasource== null){
+					$scope.allTargetDatasource=[];
+				}
+				$scope.allTargetDatasource=$scope.allTargetDatasource.concat(response);
 				//setTimeout(function(){
 					if($scope.selectedSourceType == 'FILE' && $scope.selectedTargetType == 'TABLE'){
 						if($scope.allTargetDatasource && $scope.allTargetDatasource.length >0){
@@ -225,29 +231,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 									}
 								}
 							}
-							for(var i=0;i<$scope.allSourceDatasource.length;i++){
-								if($scope.allSourceDatasource[i].type == 'FILE'){
-									if($scope.allSourceDatasource)
-										$scope.allTargetDatasource.push($scope.allSourceDatasource[i]);
-									else{
-										$scope.allSourceDatasource=[];
-										$scope.allTargetDatasource.push($scope.allSourceDatasource[i]);
-									}
-								}
-							}
 						}
-						if($scope.allSourceDatasource && $scope.allSourceDatasource.length >0 && $scope.allTargetDatasource.length==0){
-							for(var i=0;i<$scope.allSourceDatasource.length;i++){
-								if($scope.allSourceDatasource[i].type == 'FILE'){
-									if($scope.allSourceDatasource)
-										$scope.allTargetDatasource.push($scope.allSourceDatasource[i]);
-									else{
-										$scope.allSourceDatasource=[];
-										$scope.allTargetDatasource.push($scope.allSourceDatasource[i]);
-									}
-								}
-							}
-						}	
 					}
 				//},100);
 			
@@ -294,12 +278,32 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 	$scope.getDatasourceForFile = function (sourceType, TargetType) {
 		IngestRuleService.getDatasourceForFile("datasource").then(function (response) { onSuccessGetDatasourceForFile(response.data) }, function (response) { onError(response.data) });
 		var onSuccessGetDatasourceForFile = function (response) {
+			debugger
 			if (sourceType == "FILE") {
 				$scope.allSourceDatasource = response;
 			}
 			if (TargetType == "FILE") {
 				$scope.allTargetDatasource = response;
 			}
+
+			if (TargetType == "TABLE") {
+				if($scope.allSourceDatasource && $scope.allSourceDatasource.length >0){
+					for(var i=0;i<$scope.allSourceDatasource.length;i++){
+						if($scope.allSourceDatasource[i].type == 'FILE'){
+							if($scope.allTargetDatasource)
+								$scope.allTargetDatasource.push($scope.allSourceDatasource[i]);
+							else{
+								$scope.allTargetDatasource=[];
+								$scope.allTargetDatasource.push($scope.allSourceDatasource[i]);
+							}
+						}
+					}
+			    }
+			}
+
+
+           
+
             
 		}
 	}
