@@ -17,13 +17,18 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.Dashboard;
+import com.inferyx.framework.domain.DashboardExec;
+import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DashboardServiceImpl;
 import com.inferyx.framework.service.DashboardViewServiceImpl;
@@ -52,4 +57,16 @@ public class DashboardController {
     	List<Dashboard> dashboardList = dashboardServiceImpl.findAll();
     	return dashboardViewServiceImpl.getDashboardViews(dashboardList);
    }
+	
+	@RequestMapping(value = "/execute", method = RequestMethod.POST)
+	public DashboardExec execute(@RequestParam(value = "uuid") String dashboardUuid,
+			@RequestParam(value = "version", required = false) String dashboardVersion,
+			@RequestBody(required = false) ExecParams execParams,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action, 
+			@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception {
+		RunMode runMode = Helper.getExecutionMode(mode);
+		DashboardExec dashboardExec = dashboardServiceImpl.create(dashboardUuid, dashboardVersion, null, execParams, runMode);
+		return dashboardServiceImpl.execute(dashboardUuid, dashboardVersion, dashboardExec, execParams, runMode);
+	}
 }

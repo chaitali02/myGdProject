@@ -3208,7 +3208,6 @@ public class ModelServiceImpl {
 								String doubleCastSql = "SELECT * FROM " + tableName;	
 								rsHolder = sparkExecutor.castDFCloumnsToDoubleType(null, doubleCastSql, sourceDS, tableName, true, appUuid);	
 							}
-																			
 //							exec.saveDataframeAsCSV(tableName, "file://"+trainInputPath, appUuid);
 							sparkExecutor.registerAndPersistDataframe(rsHolder, null, SaveMode.APPEND.toString()
 									, "file://"+trainInputPath, tableName
@@ -3280,11 +3279,14 @@ public class ModelServiceImpl {
 					trainResult.setNumFeatures(fieldArray.length);
 					
 					logger.info("Object TrainInput: "+trainInput.toString());
+					SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+					trainResult.setStartTime(simpleDateFormat.parse((new Date()).toString()));
 					StopWatch stopWatch = new StopWatch();
 					stopWatch.start();
 					List<String> scriptPrintedMsgs = executeScript(model.getType(), scriptName, trainExec.getUuid(), trainExec.getVersion(), argList);
 					stopWatch.stop();
 					trainResult.setTimeTaken(stopWatch.getTotalTimeMillis()+" ms");
+					trainResult.setEndTime(simpleDateFormat.parse((new Date()).toString()));					
 					
 					if(inputSourceFileName != null && !inputSourceFileName.isEmpty()) {
 						deleteFileOrDirIfExists(inputSourceFileName);

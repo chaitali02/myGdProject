@@ -779,10 +779,10 @@ public class VizpodServiceImpl {
 	public VizExec create(String vizpodUuid, String vizpodVersion, VizExec vizExec, ExecParams execParams, RunMode runMode) throws Exception {
 		if(vizExec == null) {
 			vizExec = new VizExec();
-			vizExec.setExecParams(execParams);
-			vizExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.vizpod, vizpodUuid, vizpodVersion)));
-			Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
 			Vizpod vizpod = (Vizpod) commonServiceImpl.getOneByUuidAndVersion(vizpodUuid, vizpodVersion, MetaType.vizpod.toString(), "N");
+			vizExec.setExecParams(execParams);
+			vizExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.vizpod, vizpodUuid, vizpod.getVersion())));
+			Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
 			vizExec.setSql(vizpodParser.toSql(vizpod, "", usedRefKeySet, true, runMode, false));
 			logger.info(vizExec.getSql());
 			vizExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
@@ -1297,5 +1297,13 @@ public class VizpodServiceImpl {
 		return response;
 
 	}
+
+		/**
+		 * @return
+		 */
+		public VizExec execute() {
+			// TODO Auto-generated method stub
+			return null;
+		}
 
 }
