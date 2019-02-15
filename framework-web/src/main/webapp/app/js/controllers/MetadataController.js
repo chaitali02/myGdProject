@@ -56,8 +56,8 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	$scope.download.maxrow=CF_DOWNLOAD.framework_download_maxrow;
 	$scope.download.limit_to=CF_DOWNLOAD.limit_to;
 	$scope.sample={};
-	$scope.sample.maxrow=CF_SAMPLE.framework_sample_maxrow;
-	$scope.sample.rows=CF_SAMPLE.framework_sample_minrows;
+	$scope.sample.maxrow=CF_SAMPLE.framework_sample_maxrows;
+	$scope.sample.rows=CF_SAMPLE.framework_sample_maxrows;//CF_SAMPLE.framework_sample_minrows;
 	$scope.sample.limit_to=CF_SAMPLE.limit_to;
 	$scope.isAttributeEnable = false;
 	
@@ -616,7 +616,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		$scope.isDatastoreResult=true;
 		MetadataDatapodSerivce.getResultByDatastore(data.uuid,data.version,$scope.sample.rows).then(function (response) { onSuccessGetResultByDatastore(response.data) }, function (response) { onError(response.data) })
 		var onSuccessGetResultByDatastore = function (response) {
-			$scope.sample.rows=CF_SAMPLE.framework_sample_minrows;
+			$scope.sample.rows=CF_SAMPLE.framework_sample_maxrows;//CF_SAMPLE.framework_sample_minrows;
 			$scope.isEnableDSRB(data);
 		    $scope.gridOptions.columnDefs = [];
 			$scope.isDataInpogress = false;
@@ -765,7 +765,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	//	$('#SampleModel').modal("hide");
 		MetadataDatapodSerivce.getDatapodSample(data,$scope.sample.rows).then(function (response) { onSuccessGetDatasourceByType(response.data) }, function (response) { onError(response.data) })
 		var onSuccessGetDatasourceByType = function (response) {
-			$scope.sample.rows=CF_SAMPLE.framework_sample_minrows;	
+			$scope.sample.rows=CF_SAMPLE.framework_sample_maxrows//CF_SAMPLE.framework_sample_minrows;	
 			$scope.gridOptions.columnDefs = [];
 			$scope.isDataInpogress = false;
 			$scope.tableclass = "";

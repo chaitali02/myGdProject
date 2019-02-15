@@ -2,7 +2,7 @@
 DatavisualizationModule = angular.module('DatavisualizationModule');
 
 /*code for vizpod */
-DatavisualizationModule.controller('MetadataVizpodController', function ($filter, $timeout, $state, $rootScope, $scope, $stateParams, $sessionStorage, $q, $location, $http, VizpodSerivce, privilegeSvc, CommonService,CF_DOWNLOAD,dagMetaDataService) {
+DatavisualizationModule.controller('MetadataVizpodController', function ($filter, $timeout, $state, $rootScope, $scope, $stateParams, $sessionStorage, $q, $location, $http, VizpodSerivce, privilegeSvc, CommonService,CF_DOWNLOAD,dagMetaDataService,CF_SAMPLE) {
 
 
 	if ($stateParams.mode == 'true') {
@@ -62,6 +62,10 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 	$scope.download.selectFormate=CF_DOWNLOAD.formate[0];
 	$scope.download.maxrow=CF_DOWNLOAD.framework_download_maxrow;
 	$scope.download.limit_to=CF_DOWNLOAD.limit_to;
+	$scope.sample={};
+	$scope.sample.maxrow=CF_SAMPLE.framework_sample_maxrows;
+	$scope.sample.rows=CF_SAMPLE.framework_sample_maxrows;//CF_SAMPLE.framework_sample_minrows;
+
 	$scope.gridOptions = dagMetaDataService.gridOptionsDefault;
 	$scope.pagination = {
 		currentPage: 1,
