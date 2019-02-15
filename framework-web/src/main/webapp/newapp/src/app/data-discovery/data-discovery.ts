@@ -1,5 +1,5 @@
 export class DataDiscovery {
-  constructor(private title:string, private uuid:string, private type:string, private version:string, private dataSource:string, private numRows:number, private lastUpdatedOn:any) {
+  constructor(private title:string, private uuid:string, private type:string, private version:string, private dataSource:string, private numRows:number, private lastUpdatedOn:any , private classColor:any) {
     this.setTitle(title);
     this.setUuid(uuid);
     this.setType(type);
@@ -7,6 +7,7 @@ export class DataDiscovery {
     this.setDataSource(dataSource);
     this.setnumRows(numRows);
     this.setlastUpdatedOn(lastUpdatedOn);
+    this.setclassColor(classColor);
   }
 
   setTitle(title:string){
@@ -37,6 +38,10 @@ export class DataDiscovery {
     this.lastUpdatedOn = lastUpdatedOn;
   }
 
+  setclassColor(classColor:any){
+    this.classColor = classColor;
+  }
+
   getTitle(){
     return this.title;
   }
@@ -63,5 +68,9 @@ export class DataDiscovery {
 
   getlastUpdatedOn() {
     return this.lastUpdatedOn;
+  }
+
+  getclassColor(){
+    return this.classColor;
   }
 }

@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation, ElementRef, Renderer, NgZone, ViewChild, Input, } from "@angular/core";
 import { Router } from '@angular/router';
 import { HeaderService } from './header.service';
+import { onErrorResumeNext } from 'rxjs/operators';
 declare var jQuery: any;
 interface FileReaderEventTarget extends EventTarget {
   result: string
@@ -26,16 +27,22 @@ export class HeaderComponent {
   userName: String;
   imagePath: string;
   ShowAvtarModel: String;
-
+  lockScreenVisible: boolean;
+  dummyArg: any;
+  isErrorShow: boolean;
+  password : any;
   constructor(public router: Router, private _headerService: HeaderService) {
+    this.dummyArg = 1;
     this.ShowAvtarModel = 'false'
     let userDetail = JSON.parse(localStorage.getItem('userDetail'));
     this.userName = userDetail["userName"];
     this.uuid = userDetail["userUuid"];
     this.imagePath = "http://localhost:8080/app/avatars/" + this.uuid;
+    this.lockScreenVisible = false;
+    this.isErrorShow = false;
+    this.password = "";
   }
-
-  logOut() {debugger
+  logOut() {
     this._headerService.logoutSession().subscribe(
       response => {
         this.router.navigate(['']);
@@ -47,6 +54,12 @@ export class HeaderComponent {
         console.log("Error :: " + error)
       }
     )
+  }
+  lockScreen() {
+    this.lockScreenVisible = true;
+  }
+  notYpalrecha() {
+    this.logOut();
   }
   uploadAvatar() {
     this.ShowAvtarModel = 'true'
@@ -79,9 +92,8 @@ export class HeaderComponent {
     this._headerService.uploadImage(fd)
       .subscribe(
         response => {
-          // alert("hii")
           jQuery(this.AvtarModel.nativeElement).modal('hide');
-          setTimeout(() => {    //<<<---    using ()=> syntax
+          setTimeout(() => {
             this.call()
           }, 10000);
         })
@@ -94,5 +106,22 @@ export class HeaderComponent {
   }
   close() {
     jQuery(this.AvtarModel.nativeElement).modal('hide');
+  }
+
+  passwordSubmit($event : any, username : any, password: any) {
+    this._headerService.unlock(this.userName,this.password).subscribe(
+      response => { this.onSuccessunlock(response) },
+      error => { console.log("Error :: " + error) }
+    )
+  }
+
+  onSuccessunlock(response: any) {
+    if (response == true) {
+      this.lockScreenVisible = false;
+    }
+    else {
+      this.isErrorShow = true;
+    }
+    this.password = "";
   }
 }

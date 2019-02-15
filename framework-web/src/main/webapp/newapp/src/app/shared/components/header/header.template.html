@@ -1,7 +1,10 @@
 <!-- BEGIN HEADER INNER -->
 <style>
-  a:hover{text-decoration:none;}
-  .modal{
+  a:hover {
+    text-decoration: none;
+  }
+
+  .modal {
     position: fixed;
     display: -webkit-flex;
     display: flex;
@@ -10,23 +13,22 @@
     -webkit-justify-content: center;
     justify-content: center;
     overflow-y: hidden !important;
-}
-
+  }
 </style>
 
 <div class="page-header-inner">
   <!-- BEGIN LOGO -->
-
-  <div class="page-logo" >
-
-    <a style="">
-      <!-- <img src="{{settings.layoutPath}}/img/logo.png" alt="logo" class="logo-default" /> --><div class="text-center logo-default
-          " style="margin-top: 11px;font-size: 20px;color:white;font-family:timeburnernormal;">INFER<span style="color:#007DC9;font-family:timeburnerbold;">YX</span></div></a>
+  <div class="page-logo">
+    <a>
+      <!-- <img src="{{settings.layoutPath}}/img/logo.png" alt="logo" class="logo-default" /> -->
+      <div class="text-center logo-default
+          " style="margin-top: 11px;font-size: 20px;color:white;font-family:timeburnernormal;">INFER
+        <span style="color:#007DC9;font-family:timeburnerbold;">YX</span>
+      </div>
+    </a>
     <div class="menu-toggler sidebar-toggler">
       <span></span>
-
       <!-- DOC: Remove the above "hide" to enable the sidebar toggler button on header -->
-
     </div>
   </div>
   <!-- END LOGO -->
@@ -36,10 +38,10 @@
     <div class="input-group">
       <input type="text" class="form-control" placeholder="Search..." name="query">
       <span class="input-group-btn">
-                <a href="javascript:;" class="btn submit">
-                    <i class="icon-magnifier"></i>
-                </a>
-            </span>
+        <a href="javascript:;" class="btn submit">
+          <i class="icon-magnifier"></i>
+        </a>
+      </span>
     </div>
   </form>
   <!-- END HEADER SEARCH BOX -->
@@ -52,7 +54,6 @@
 
   <div class="top-menu">
     <ul class="nav navbar-nav pull-right">
-
       <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
       <li class="dropdown dropdown-language hide">
         <a href="#" class="dropdown-toggle" dropdown-menu-hover data-toggle="dropdown" data-close-others="true">
@@ -94,12 +95,11 @@
           <li>
             <a (click)="uploadAvatar()">
               <!-- <i class="icon-user"></i> -->
-              <img alt="" width="15px" height="15px" class="img-circle" [src]="imagePath"/>
-              Change Avatar</a>
+              <img alt="" width="15px" height="15px" class="img-circle" [src]="imagePath" /> Change Avatar</a>
           </li>
-          <li class="divider"> </li>
+          <li class="divider"></li>
           <li>
-            <a href="#">
+            <a (click)="lockScreen()">
               <i class="icon-lock"></i> Lock Screen </a>
           </li>
           <li>
@@ -108,13 +108,11 @@
           </li>
         </ul>
       </li>
-
     </ul>
   </div>
   <!-- END TOP NAVIGATION MENU -->
   <div class="top-menu" style="float:left">
     <ul class="nav navbar-nav pull-right">
-
       <li class=" sidebar-toggler" style="
 			    color:white;
 			    padding: 15px 7px 0px 10px;
@@ -124,8 +122,8 @@
 			    text-align: center;
 			    cursor: pointer;">
         <span style="display: table-cell;vertical-align: middle;">Application : </span>
-        <span style="display: table-cell;vertical-align: middle;padding-left:5px;"> Data Warehouse </span></li>
-
+        <span style="display: table-cell;vertical-align: middle;padding-left:5px;"> Data Warehouse </span>
+      </li>
     </ul>
   </div>
   <div class="model">
@@ -134,23 +132,24 @@
         <div class="modal-content" style="width:50%;margin:0 auto;">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-         </button>
+            </button>
             <h4 class="modal-title">Change Avtar</h4>
           </div>
           <div class="modal-body">
             <div id="avatar-preview-wrapper">
-             
-              <img width="200px" height="200px" id="avatar-preview" [src]="imagePath" alt="your image"/>
+              <img width="200px" height="200px" id="avatar-preview" [src]="imagePath" alt="your image" />
               <!-- <image-upload 
               [url]="'http://localhost:8080/metadata/uploadProfileImage'">
             </image-upload> -->
-            <div class="input-group" id="avatar-change-btn">
-              <label class="input-group-btn" style="width:auto">
+              <div class="input-group" id="avatar-change-btn">
+                <label class="input-group-btn" style="width:auto">
                   <span class="btn btn-outline">
-                      Change &hellip; <input id="avatar" (change)="readURL($event);" type="file" [(ngModel)]="file" accept="image/jpeg,image/x-png" style="display:none">
+                    Change &hellip;
+                    <input id="avatar" (change)="readURL($event);" type="file" [(ngModel)]="file" accept="image/jpeg,image/x-png"
+                      style="display:none">
                   </span>
-              </label>
-          </div>
+                </label>
+              </div>
             </div>
           </div>
           <div class="modal-footer">
@@ -162,7 +161,94 @@
       </div>
       <!-- /.modal-dialog -->
     </div>
+  </div>
+</div>
+<!-- END HEADER INNER -->
+
+<!-- <p-dialog class="dialogBox"> -->
+<div class="modal fade" id="myModal" role="dialog" style="display:none;">
+  <div class="modal-dialog">
+    <div class="modal-header font-green">Welcome {{username}}</div>
+    <div class="modal-body content content_custom">
+      <form class="login-form" name="form" role="form" ng-submit="close()">
+        <div class="col-md-12">
+          <div class="col-md-4 lock-avatar-block">{{"img"}}
+            <!-- <img ng-src="avatars/{{setUseruuid}}?{{dummyArg}}" class="lock-avatar" alt="No Avatar" onerror="this.src='avatars/default.png';"
+            / style="margin-top:20px;"> -->
+          </div>
+          <div class="col-md-8">
+            <div class="form-group">
+              <label class="control-label" style="margin-top: 0;color: #dbe2ea;font-size: 14px;font-weight: 400;display: inline-block;">App
+                <span class="required" aria-required="true"> * </span>
+              </label>
+              <!-- <select class="form-control model-select " ng-model="selectedApp" ng-options="app.appId.ref.name for app in AppData | orderBy:'appId.ref.name' track by app.appId.ref.uuid"
+              ng-change="getselectApp()">
+            </select> -->
+            </div>
+            <div class="form-group">
+              <label class="control-label" style="margin-top: 0;color: #dbe2ea;font-size: 14px;font-weight: 400;display: inline-block;">Role
+                <span class="required" aria-required="true"> * </span>
+              </label>
+              <!-- <select class="form-control model-select" ng-model="selectedRole" ng-options="app.ref.name for app in RoleData | orderBy:'ref.name' track by app.ref.uuid"
+              ng-change="getselectRole()">
+            </select> -->
+            </div>
+            <div class="form-actions" style="margin-top:30px;">
+              <a class="btn btn-primary" style="margin-right:10px;" ng-click="cancelLogut()">Cancel</a>
+              <button type="button" class="btn green uppercase " ng-click="ok($event)">Submit</button>
+            </div>
+          </div>
+        </div>
+      </form>
     </div>
+    <!-- </p-dialog> -->
+  </div>
 </div>
 
-<!-- END HEADER INNER -->
+<!-- LockScreen Modal -->
+<div class="modal" style="background-color: rgb(70, 85, 104)" *ngIf="lockScreenVisible">
+  <div class="modal-content1">
+    <div class="logo-default" style="text-align: center; padding-bottom : 1%">
+      <img src="assets/img/logo.png" alt="logo" class="logo-default" style="height:45px;margin-top:1px">
+    </div>
+    <div class="lockClass1">
+      <div class=" font-green"> Locked</div>
+    </div>
+    <div class="lockClass2">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-4 lock-avatar-block" style="text-align: center; ">
+            <img src="assets/img/{{uuid}}" class="lock-avatar">
+          </div>
+          <div class="col-md-8">
+            <div class="form-group">
+              <h4 style="margin-top: 0;color: #dbe2ea;font-size: 18px;font-weight: 400;display: inline-block; text-align: left;">{{userName}}</h4>
+            </div>
+            <div class="form-group">
+              <label class="control-label visible-ie8 visible-ie9">Password</label>
+              <input class="form-control form-control-solid placeholder-no-fix" type="password" [(ngModel)]="password"
+                placeholder="Password" name="password" (keyup.enter)="passwordSubmit($event, username, password)"/>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn green uppercase" style="margin-left: 0px; margin-top:15px" (click)="passwordSubmit($event, username, password)">Submit</button>
+            </div>
+            <br>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="lockClass3">
+      <a (click)="notYpalrecha()">
+        <span style="font-weight: 400;padding-left: 2px; font-size: 14px;">Not ypalrecha?</span>
+      </a>
+    </div>
+    <div *ngIf="isErrorShow" class="alert alert-danger" style="margin: 0 auto;margin-top: 20px;">
+      <button class="close" data-close="alert"></button>
+      <span>{{"Invalid Login"}}</span>
+    </div>
+    <div class="copyright" style="margin: 0 auto;text-align: center; padding-top:3%;color:#7a8ca5"> 2017
+      &copy; Copyright
+      <a target="_blank" href="http://inferyx.com">Inferyx, Inc</a>
+    </div>
+  </div>
+</div>

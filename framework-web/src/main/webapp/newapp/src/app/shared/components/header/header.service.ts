@@ -4,17 +4,13 @@ import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from "rxjs/operators";
 
-
-
 import { SharedService } from '../../shared.service';
 import { AppConfig } from '../../../app.config';
-
 
 @Injectable()
 export class HeaderService {
   baseUrl: any;
   sessionId: string;
-
 
   constructor(@Inject(Http) private http: Http, config: AppConfig, private _sharedService: SharedService) {
     this.baseUrl = config.getBaseUrl();
@@ -24,7 +20,7 @@ export class HeaderService {
 
   private headers = new Headers({ 'sessionId': this.sessionId });
 
-  private handleError<T>(error: any, result?: T) {
+  private handleError<T>(error: any, result?: T) { 
     return throwError(error);
   }
 
@@ -43,8 +39,11 @@ export class HeaderService {
       .post(url, body, { headers: this.headers })
   }
   
-  // private handleError(error: Response) {
-  //   return Observable.throw(error.statusText);
-  // }
-
+  unlock(username : any,password : any){
+   let url = "/security/unlock?username="+username+"&password="+password;
+   return this._sharedService.getCall(url)
+   .pipe(
+          map(response => { return <any[]>response.json(); }),
+          catchError(error => this.handleError<string>(error, "Network Error!")));
+  }
 }
