@@ -1291,8 +1291,20 @@ cursor: not-allowed !important;
   border-color: #e73d4a !important;
 }
 
-/* dq move row button */
+/* dq moveRow button */
 .btn.btn-outline.green-haze {
   border-color: #a0a0a0;
   color: #a0a0a0;
+}
+
+/* viewPage Icon margin */
+.leftMargin{
+  margin-left: 4px;
+}
+
+
+.dq-dialogbox .ui-dialog-titlebar{
+  background: white;
+  font-weight: lighter;
+  border-bottom: 1px solid #e5e5e5 !important;
 }

@@ -216,7 +216,6 @@ export class DataQualityDetailComponent {
     this.txtQueryChanged
       .pipe(debounceTime(3000), distinctUntilChanged())
       .subscribe(index => {
-        console.log("new Calll......");
         this.filterTableArray[index].selected = "";
         this.checkSelected(false);
       });
@@ -357,10 +356,6 @@ export class DataQualityDetailComponent {
     version.uuid = this.dqdata.uuid;
     this.selectedVersion = version;
 
-    // if (response.tags != null) {
-    //   this.dqdata.tags =response.tags;
-    // }//End If
-
     this.active == this.appHelper.convertStringToBoolean(this.dqdata.active);
     this.locked == this.appHelper.convertStringToBoolean(this.dqdata.locked);
     this.published == this.appHelper.convertStringToBoolean(this.dqdata.published);
@@ -380,7 +375,6 @@ export class DataQualityDetailComponent {
       this.selectAttribute = selectattribute;
     }
 
-    console.log(response.isFunctionExits);
     if (response.isFormualExits == true) {
       this.getFormulaByType("lhsType");
     }
@@ -429,7 +423,6 @@ export class DataQualityDetailComponent {
   }
 
   searchOption(index) {
-    console.log("Index: "+index);
     this.rowIndex = index;
     this.displayDialogBox = true;
     this._commonService.getAllLatest(MetaTypeEnum.MetaType.DATASET)
@@ -449,7 +442,6 @@ export class DataQualityDetailComponent {
       temp[i] = dialogAttriObj;
     }
     this.dialogAttriArray = temp
-    console.log(JSON.stringify(this.dialogAttriArray));
   }
 
   onChangeDialogAttribute() {
@@ -519,7 +511,6 @@ export class DataQualityDetailComponent {
       temp1[i] = attributeIO;
       this.attributesArray = temp1;
     }
-    console.log(JSON.stringify(this.attributesArray));
   }
 
   onChangeLhsType(index) {
@@ -569,7 +560,7 @@ export class DataQualityDetailComponent {
   }
 
   getFunctionByCriteria() {
-    this._commonService.getFunctionByCriteria("", "N", "function")
+    this._commonService.getFunctionByCriteria("", "N", MetaTypeEnum.MetaType.FUNCTION)
       .subscribe(response => { this.onSuccessgetFunctionByCriteria(response) },
         error => console.log("Error ::", error))
   }
@@ -587,7 +578,7 @@ export class DataQualityDetailComponent {
   }
 
   getParamByApp() {
-    this._commonService.getParamByApp("", "application")
+    this._commonService.getParamByApp("", MetaTypeEnum.MetaType.APPLICATION)
       .subscribe(response => { this.onSuccessgetParamByApp(response) },
         error => console.log("Error ::", error))
   }
@@ -876,18 +867,16 @@ export class DataQualityDetailComponent {
           filterInfoArray[i] = filterInfo;
         }
         dqJson.filterInfo = filterInfoArray;
-        console.log(JSON.stringify(filterInfoArray));
       }
     }
-    console.log(JSON.stringify(dqJson));
-    this._commonService.submit("dq", dqJson).subscribe(
+    this._commonService.submit(MetaTypeEnum.MetaType.DQ, dqJson).subscribe(
       response => { this.OnSuccessubmit(response) },
       error => console.log('Error :: ' + error)
     )
   }
   OnSuccessubmit(response) {
     if (this.checkboxModelexecution == true) {
-      this._commonService.getOneById("dq", response).subscribe(
+      this._commonService.getOneById(MetaTypeEnum.MetaType.DQ, response).subscribe(
         response => {
           this.OnSucessGetOneById(response);
           this.goBack()
@@ -907,7 +896,7 @@ export class DataQualityDetailComponent {
   }
 
   OnSucessGetOneById(response) {
-    this._commonService.execute(response.uuid, response.version, "dq", "execute").subscribe(
+    this._commonService.execute(response.uuid, response.version, MetaTypeEnum.MetaType.DQ, "execute").subscribe(
       response => {
         this.showMessage('DQ Save and Submit Successfully', 'success', 'Success Message')
         setTimeout(() => {
@@ -977,12 +966,12 @@ export class DataQualityDetailComponent {
   // }
 
   dragStart(event, data) {
-    console.log(event)
-    console.log(data)
+    // console.log(event)
+    // console.log(data)
     this.dragIndex = data
   }
   dragEnd(event) {
-    console.log(event)
+    // console.log(event)
   }
   drop(event, data) {
     if (this.mode == 'false') {
@@ -1069,11 +1058,9 @@ export class DataQualityDetailComponent {
     arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
     return arr;
   }
-
   checkSelected(flag) {
     if (flag == true) {
       this.count.push(flag);
-      //this.moveTo = index;
     }
     else
       this.count.pop();

@@ -13,27 +13,28 @@
         </div>
 
         <div class="actions">
-          <a class="btn btn-circle btn-icon-only btn-default " title="Main" data-placement="top" tooltip [ngClass]="isHomeEnable==true ? 'notcurrentpage':'currentpage'"
-            data- (click)="showMainPage(dqdata.uuid,dqdata.version)">
+          <a class="btn btn-circle btn-icon-only btn-default currentpage leftMargin" title="Main" data-placement="top" tooltip [ngClass]="isHomeEnable==true ? 'notcurrentpage':'currentpage'"
+            data- (click)="showMainPage(dqdata.uuid,dqdata.version)"> 
             <i class="fa fa-home" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
           </a>
 
-          <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Edit" data-toggle="tooltip"
+          <a class="btn btn-circle btn-icon-only btn-default leftMargin" href="javascript:;" title="Edit" data-toggle="tooltip"
             data-placement="top" tooltip [ngClass]="mode == 'true' && showGraph == false? 'notcurrentpage':'currentpage'"
             data-(click)="enableEdit(dqdata.uuid,dqdata.version)">
             <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
           </a>
 
-          <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Show Dependencies"
-            data-placement="top" tooltip [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'" data- (click)="showDagGraph(dqdata.uuid,dqdata.version)">
+          <a class="btn btn-circle btn-icon-only btn-default leftMargin" href="javascript:;" title="Show Dependencies"
+            data-placement="top" tooltip [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'" 
+            data- (click)="showDagGraph(dqdata.uuid,dqdata.version)">
             <i class="fa fa-sitemap" style="margin:2px auto;color:#a0a0a0;"></i>
           </a>
 
-          <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default " disabled="true" (click)="broadcastRefreshData()"
+          <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default leftMargin" disabled="true" (click)="broadcastRefreshData()"
             data-original-title="" title="Refresh">
             <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
           </a>
-          <a class="btn btn-circle btn-icon-only btn-default" (click)="goBack()" title="Close">
+          <a class="btn btn-circle btn-icon-only btn-default leftMargin" (click)="goBack()" title="Close">
             <i class="fa fa-times" style="margin: 2px auto;color:#a0a0a0;"></i>
           </a>
         </div>
@@ -455,9 +456,9 @@
                                       </p-dropdown>
                                     </div>
 
-                                    <p-dialog header="Search Attribute" [(visible)]="displayDialogBox" [modal]="true"
-                                      [responsive]="true" [width]="400" [resizable]="true" 
-                                      [contentStyle]="{'overflow':'visible'}" [style]="{'border-radius': '6px','box-shadow': '0 5px 15px rgba(0,0,0,.5)'}">
+                                    <p-dialog class="dq-dialogbox" header="Search Attribute" [(visible)]="displayDialogBox" [modal]="true" 
+                                      [responsive]="true" [width]="430" [resizable]="true" [contentStyle]="{'overflow':'visible'}"
+                                      [style]="{'border-radius': '6px','box-shadow': '0 5px 15px rgba(0,0,0,.5)'}">
 
                                       <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Select</label>
@@ -469,24 +470,24 @@
                                           </p-dropdown>
                                         </div>
                                       </div>
-                                        <div class="form-group">
-                                          <label class="control-label col-md-3 col-sm-3 col-xs-12">Name</label>
-                                          <div class="col-md-6 col-sm-6 col-xs-12">
-                                            <p-dropdown [options]="dialogAttriNameArray" [(ngModel)]="dialogAttributeName"
-                                              name="dialogAttributeName+{{i}}" [style]="{'width':'235px','padding':'3px'}"
-                                              [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--"
-                                              dataKey="uuid">
-                                            </p-dropdown>
-                                          </div>
+                                      <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Name</label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                          <p-dropdown [options]="dialogAttriNameArray" [(ngModel)]="dialogAttributeName"
+                                            name="dialogAttributeName+{{i}}" [style]="{'width':'235px','padding':'3px'}"
+                                            [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--"
+                                            dataKey="uuid">
+                                          </p-dropdown>
                                         </div>
+                                      </div>
                                       <p-footer>
-                                        <!-- <div style="padding-top: 10px;"> -->
                                         <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-6" style="padding: 0px 0px 13px 0px;">
-                                          <a class="btn btn-primary" (click)="cancelDialogBox()">Cancel</a>
-                                          <input type="button" class="btn btn-success" value="Submit" name="submit"
+                                          <!-- <a class="btn btn-primary" (click)="cancelDialogBox()">Close</a> -->
+                                          <input type="button" class="btn dark btn-outline" value="Close" name="close" style="border-radius: 4px;"
+                                          (click)="cancelDialogBox()">
+                                          <input type="button" class="btn btn-success" value="Submit" name="submit" style="border-radius: 4px;"
                                             (click)="submitDialogBox(rowIndex)">
                                         </div>
-                                        <!-- </div> -->
                                       </p-footer>
                                     </p-dialog>
                                   </td>
@@ -521,7 +522,6 @@
                           <button type="submit" class="btn btn-outline green button-next"> Continue
                             <i class="fa fa-angle-right"></i>
                           </button>
-
                         </div>
                       </div>
                     </form>
