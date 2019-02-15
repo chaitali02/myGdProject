@@ -595,6 +595,7 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 				attributemap.sourceAttr = sourceAttr;
 			}
 			else if ($scope.mapTableArray[i].sourceAttributeType.text == "datapod") {
+				console.log($scope.mapTableArray[i].sourceattribute)
 				sourceref.uuid = $scope.mapTableArray[i].sourceattribute.uuid;
 				// if ($scope.sourcetype == "relation") {
 				// 	sourceref.type = "datapod";
