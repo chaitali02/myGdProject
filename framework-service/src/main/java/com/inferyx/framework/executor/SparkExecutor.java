@@ -3839,19 +3839,25 @@ public class SparkExecutor<T> implements IExecutor {
 //		df.show(true);
 //		df.printSchema();
 		String[] dfColumns = df.columns();
-		if(datapod != null && df.columns().length != datapod.getAttributes().size())
-			throw new RuntimeException("Datapod '" + datapod.getName() + "' column size(" + datapod.getAttributes().size() + ") does not match with column size("+ df.columns().length +") of dataframe");
+		/*if(datapod != null && df.columns().length != datapod.getAttributes().size())
+			throw new RuntimeException("Datapod '" + datapod.getName() + "' column size(" + datapod.getAttributes().size() + ") does not match with column size("+ df.columns().length +") of dataframe");*/
 
 		int i = 0;
 		if(datapod != null) {
 			List<Attribute> attributes = datapod.getAttributes();
 			for(Attribute attribute : attributes){
+				if ((dfColumns.length - 1) < i) {
+					break;
+				}
 				df = df.withColumnRenamed(dfColumns[i], attribute.getName());
 				df = df.withColumn(attribute.getName(), df.col(attribute.getName()).cast((DataType)getDataType(attribute.getType())));
 				i++;
 			} 
 		} else {
 			for(String colName : targetColList){
+				if ((dfColumns.length - 1) < i) {
+					break;
+				}
 				df = df.withColumnRenamed(dfColumns[i], colName);
 				i++;
 			}

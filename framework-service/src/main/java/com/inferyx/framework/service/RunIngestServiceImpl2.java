@@ -607,7 +607,11 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 				commonServiceImpl.save(MetaType.ingestExec.toString(), ingestExec);
 			}	
 
-			Map<String, String> resolvedAttrMap = null; 
+			Map<String, String> resolvedAttrMap = null;
+			HashMap<String, String> otherParams = null;
+			if(execParams != null) {
+				otherParams = execParams.getOtherParams();
+			}
 			String[] mappedAttrs = null; 
 			boolean areAllAttrs = false;
 			String query = null;
@@ -656,10 +660,6 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 					} else if(!areAllAttrs && targetDp != null) {
 						tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());					
 //						query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), execParams, runMode);
-					}
-					HashMap<String, String> otherParams = null;
-					if(execParams != null) {
-						otherParams = execParams.getOtherParams();
 					}
 					query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, otherParams, new HashSet<>(), execParams, runMode);
 //				} else {
@@ -848,6 +848,8 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						sqoopExecutor.execute(sqoopInput, inputParams);
 					} else if(targetDS.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
 						//this is export block from local file to local Table(i.e file)
+
+						logger.info("Query : " + query);
 						
 						tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
 						
@@ -889,7 +891,8 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						
 						//reading from source
 						ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, location, Helper.getDelimetrByFormat(ingest.getSourceFormat()), sourceHeader, appUuid, true);
-						
+						query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, otherParams, new HashSet<>(), execParams, runMode);
+//						rsHolder = sparkExecutor.executeSql(query);
 						//adding version column to data
 //						rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
 											
@@ -907,6 +910,11 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 							String[] targetCols = resolvedTargetAttrMap.keySet().toArray(new String[resolvedTargetAttrMap.keySet().size()]);
 							rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, targetCols, tableName, false);
 						}					
+						
+						/*query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, otherParams, new HashSet<>(), execParams, runMode);
+						logger.info("Before query : " + query);
+						rsHolder = sparkExecutor.executeSql(query);
+						logger.info("After query " );*/
 						
 						String saveMode = null;
 						if(ingest.getSaveMode() != null) {
