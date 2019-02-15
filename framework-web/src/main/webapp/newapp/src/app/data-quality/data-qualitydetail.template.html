@@ -253,9 +253,6 @@
                                 <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right"
                                   (click)="addRow()" [disabled]="mode == 'true'"></button>
                                 <div class="actions pull-right" style="position:relative;padding-right: 5px;">
-
-                                  <!-- [attr.disabled]="(i == 0 || mode == 'true') ?'disabled' : null" -->{{moveToEnable|json}}
-                                  <!-- ng-disabled="fitlerAttrTableSelectedItem.length ==1 && filterTableArray.length >1 ?false:true" -->
                                   <a class="btn green-haze btn-outline btn-circle auto-map btn-sm" href="javascript:;"
                                     data-toggle="dropdown" tooltip-placement="left" uib-tooltip="Move" data-hover="dropdown"
                                     data-close-others="true" aria-expanded="false" [attr.disabled]="(moveToEnable == false) ?'disabled' : null">
@@ -263,19 +260,18 @@
                                     <i class="fa fa-angle-down"></i>
                                   </a>
                                   <ul class="dropdown-menu pull-right" style="z-index:10000;top:28px;right:45px;position:absolute">
-                                    <li (click)="onAttrRowUp()">
+                                    <li (click)="updateArray(0, '')">
                                       <a href="javascript:;" ng-disabled="fitlerAttrTableSelectedItem[0]==0?true:false">Top</a>
                                     </li>
                                     <li class="divider" style="margin: 0px;"> </li>
-                                    <li (click)="onAttrRowDown()">
+                                    <li (click)="updateArray(filterTableArray.length-1, '')">
                                       <a href="javascript:;" ng-disabled="fitlerAttrTableSelectedItem[0]==filterTableArray.length-1 ? true:false">Bottom</a>
                                     </li>
-
                                     <li class="divider" style="margin: 0px;"> </li>
                                     <li>
                                       <div class="form-group" style="margin: 1%;">
                                         <input type="number" class="form-control" [(ngModel)]="moveTo" min="0" max="{{filterTableArray.length}}"
-                                          name="moveto" style="border:0" placeholder="Move To" (ngModelChange)="updateArray(moveTo)"
+                                          name="moveto" style="border:0" placeholder="Move To" (ngModelChange)="updateArray(moveTo, 'range',$event)"
                                           focus-me="true" required />
                                       </div>
                                     </li>
@@ -286,7 +282,6 @@
                           </div>
                         </div>
                         <div class="portlet-body form">
-
                           <div class="form-body" style="padding: 1% 0% 0% 0%; ">
                             <table class=" row-border hover table  table-striped table-bordered" style="table-layout: fixed;">
                               <thead>
@@ -309,7 +304,7 @@
 
                                   <td style="text-align:center;Vertical-align:middle;">
                                     <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="data.selected"
-                                      name="selected" [disabled]="mode == 'true'" (change)="checkSelected(i)" />
+                                      name="selected" [disabled]="mode == 'true'" (change)="checkSelected(data.selected)" />
                                   </td>
                                   <td>
                                     <p-dropdown [options]="logicalOperators" [(ngModel)]="data.logicalOperator" name="logicalOperator+{{i}}"
@@ -433,10 +428,12 @@
                                       </p-dropdown>
                                     </div>
                                     <div *ngIf="data.rhsType == 'dataset'">
-                                      <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute.label"
-                                        name="rhsAttribute+{{i}}" [disabled]="'true'" style="width:80%;display: inline-block">
-                                      <i class="fa fa-search" (click)="searchOption(i)" style="width:10%;display:inline-block"
-                                        pTooltip="Search"></i>
+                                      <div *ngIf="data.rhsAttribute != null">
+                                        <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute.label"
+                                          name="rhsAttribute+{{i}}" [disabled]="'true'" style="width:80%;display: inline-block">
+                                        <i class="fa fa-search" (click)="searchOption(i)" style="width:10%;display:inline-block;padding-left: 7%;"
+                                          pTooltip="Search"></i>
+                                      </div>
                                     </div>
                                     <div *ngIf="data.rhsType == 'function'">
                                       <p-dropdown [options]="functionArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}"
@@ -459,40 +456,49 @@
                                     </div>
 
                                     <p-dialog header="Search Attribute" [(visible)]="displayDialogBox" [modal]="true"
-                                      [responsive]="true" [width]="400" [resizable]="true" [baseZIndex]="1000"
-                                      [contentStyle]="{'height':'200px'}">
+                                      [responsive]="true" [width]="400" [resizable]="true" 
+                                      [contentStyle]="{'overflow':'visible'}" [style]="{'border-radius': '6px','box-shadow': '0 5px 15px rgba(0,0,0,.5)'}">
 
                                       <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Select</label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
                                           <p-dropdown [options]="dialogAttriArray" [(ngModel)]="dialogSelectName" name="dialogSelectName+{{i}}"
-                                            [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'"
+                                            [style]="{'width':'235px','padding':'3px'}" [disabled]="mode == 'true'"
                                             [filter]="true" placeholder="--Select--" (onChange)="onChangeDialogAttribute() "
                                             dataKey="uuid">
                                           </p-dropdown>
                                         </div>
                                       </div>
 
-                                      <div>
+                                      <!-- <div class="form-group" style="padding-top : 10px">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Format</label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                          <p-dropdown [options]="dialogAttriArray" [(ngModel)]="dialogSelectName" name="dialogSelectName+{{i}}"
+                                            [style]="{'width':'250px','padding':'3px', 'z-index': '999'}" [filter]="true">
+                                          </p-dropdown>
+                                        </div>
+                                      </div> -->
+
+                                      <!-- <div> -->
                                         <div class="form-group">
                                           <label class="control-label col-md-3 col-sm-3 col-xs-12">Name</label>
                                           <div class="col-md-6 col-sm-6 col-xs-12">
                                             <p-dropdown [options]="dialogAttriNameArray" [(ngModel)]="dialogAttributeName"
-                                              name="dialogAttributeName+{{i}}" [style]="{'width':'100%','padding':'3px'}"
+                                              name="dialogAttributeName+{{i}}" [style]="{'width':'235px','padding':'3px'}"
                                               [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--"
                                               dataKey="uuid">
                                             </p-dropdown>
                                           </div>
                                         </div>
-                                      </div>
+                                      <!-- </div> -->
                                       <p-footer>
-                                        <div style="padding-top: 10px;">
-                                          <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
-                                            <a class="btn btn-primary" (click)="cancelDialogBox()">Cancel</a>
-                                            <input type="button" class="btn btn-success" value="Submit" name="submit"
-                                              (click)="submitDialogBox(i)">
-                                          </div>
+                                        <!-- <div style="padding-top: 10px;"> -->
+                                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-6" style="padding: 0px 0px 13px 0px;">
+                                          <a class="btn btn-primary" (click)="cancelDialogBox()">Cancel</a>
+                                          <input type="button" class="btn btn-success" value="Submit" name="submit"
+                                            (click)="submitDialogBox(rowIndex)">
                                         </div>
+                                        <!-- </div> -->
                                       </p-footer>
                                     </p-dialog>
                                   </td>
