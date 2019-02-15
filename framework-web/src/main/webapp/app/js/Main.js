@@ -167,12 +167,12 @@ InferyxApp.config(['$httpProvider', '$ocLazyLoadProvider', 'KeepaliveProvider', 
 }]);
 
 
-InferyxApp.run(['Idle', '$sessionStorage', '$rootScope', '$http', '$cookieStore', 'validator', '$timeout', '$filter', 'commentService','defaultErrorMessageResolver','$window', function (Idle, $sessionStorage, $rootScope, $http, $cookieStore, validator, $timeout, $filter, commentService,defaultErrorMessageResolver,$window) {
+InferyxApp.run(['Idle', '$sessionStorage', '$rootScope', '$http', '$cookieStore', 'validator', '$timeout', '$filter', 'commentService','defaultErrorMessageResolver','$window','CF_DOWNLOAD', function (Idle, $sessionStorage, $rootScope, $http, $cookieStore, validator, $timeout, $filter, commentService,defaultErrorMessageResolver,$window,CF_DOWNLOAD) {
     Idle.watch();
     validator.setValidElementStyling(false);
     validator.setInvalidElementStyling(true);
     defaultErrorMessageResolver.getErrorMessages().then(function (errorMessages) {
-        errorMessages['maxLimitDownload'] = 'Max rows exceeded the limit (100000)';
+        errorMessages['maxLimitDownload'] = 'Max rows exceeded the limit ('+CF_DOWNLOAD.framework_download_maxrow+')';
         errorMessages['parttenFileName'] = 'invalid charater';
       });
     if (localStorage.userdetail) {
