@@ -18,6 +18,8 @@ import org.springframework.data.mongodb.repository.Query;
 
 import com.inferyx.framework.domain.Dimension;
 import com.inferyx.framework.domain.Edge;
+import com.inferyx.framework.domain.GraphMetaIdentifier;
+import com.inferyx.framework.domain.GraphMetaIdentifierHolder;
 import com.inferyx.framework.domain.Vertex;
 
 public interface IEdgeDao extends MongoRepository<Edge, String> {
@@ -118,4 +120,8 @@ public interface IEdgeDao extends MongoRepository<Edge, String> {
 	
 	@Query(value="{'dst' : ?0}")
 	public List<Edge> findAllByDst(String uuid);
+	
+	@Query(value="{'srcInfo.ref.uuid' : ?0}")
+	public boolean findEdgeByRef(String uuid);
+	
 }
