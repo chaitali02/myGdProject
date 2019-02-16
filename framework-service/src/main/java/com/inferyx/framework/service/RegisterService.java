@@ -4591,8 +4591,7 @@ public class RegisterService {
 	}
 
 	public boolean isRefreshed(GraphMetaIdentifierHolder graphMetaIdentifier) {
-		Boolean flag=mongoGraphServiceImpl.isRefreshed(graphMetaIdentifier);
-		return flag;
+		return mongoGraphServiceImpl.isRefreshed(graphMetaIdentifier);
 	}
 	
 	

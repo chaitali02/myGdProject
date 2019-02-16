@@ -460,9 +460,9 @@ public class MongoGraphServiceImpl {
 		return result;
 	}
 	
-	public boolean isRefreshed(GraphMetaIdentifierHolder graphMetaIdentifier) {
-		String uuid=graphMetaIdentifier.getRef().getUuid();
-		return iEdgeDao.findEdgeByRef(uuid) ;
+	public boolean isRefreshed(GraphMetaIdentifierHolder graphMetaIdentifier) {		
+		List<Edge> edges =iEdgeDao.findEdgeByRef(graphMetaIdentifier.getRef().getUuid(),graphMetaIdentifier.getRef().getUuid()); 		
+		return !edges.isEmpty();
 	}
 
 	

@@ -121,7 +121,7 @@ public interface IEdgeDao extends MongoRepository<Edge, String> {
 	@Query(value="{'dst' : ?0}")
 	public List<Edge> findAllByDst(String uuid);
 	
-	@Query(value="{'srcInfo.ref.uuid' : ?0}")
-	public boolean findEdgeByRef(String uuid);
+	@Query(value="{'srcInfo.ref.uuid' : ?0},{'dstInfo.ref.uuid' : ?0}")
+	public List<Edge> findEdgeByRef(String src,String dst);
 	
 }
