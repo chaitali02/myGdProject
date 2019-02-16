@@ -157,9 +157,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 					logger.info("Status is not Terminating. So cannot proceed to kill ");
 					return "Status is not Terminating. So cannot proceed to kill ";
 				}
-				for (Stage stage : dagExec.getStages()) {
-					killStage(uuid, version, stage.getStageId());
-				}
+				
 				futureTask = (FutureTask<String>) taskThreadMap.get("Dag_" + uuid);
 				if (futureTask != null && !futureTask.isDone()) {
 					logger.info("Going to kill Dag ###################### " + "Dag_" + uuid);
@@ -174,6 +172,9 @@ import com.inferyx.framework.factory.ExecutorFactory;
 				while(! (futureTask == null || futureTask.isCancelled() || futureTask.isDone())) {
 					logger.info("Sleeping thread Dag : " + "Dag_" + uuid);
 					Thread.sleep(1000);
+				}
+				for (Stage stage : dagExec.getStages()) {
+					killStage(uuid, version, stage.getStageId());
 				}
 				synchronized (dagExec.getUuid()) {
 //					dagExec = (DagExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.dagExec, uuid, version));
@@ -195,6 +196,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 			DagExec dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString(), "N");
 			if (!taskThreadMap.containsKey("Stage_" + uuid + "_" + stageId)) {
 				status = "Thread is not running";
+				logger.info(" Stage " + stageId + " is not running. Kill nevertheless. ");
 				// Try to set status as killed nevertheless
 				int count=0;
 				for (Stage stage : dagExec.getStages()) {
@@ -209,6 +211,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 									logger.info("Status is not Terminating. So cannot proceed to kill ");
 									break;
 								}
+								logger.info("Stage set to terminating");
 								for (Task task : stage.getTasks()) {
 									killTask(uuid, version, stageId, task.getTaskId());
 								}
@@ -240,9 +243,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 							logger.info("Status is not Terminating. So cannot proceed to kill ");
 							break;
 						}
-						for (Task task : stage.getTasks()) {
-							killTask(uuid, version, stageId, task.getTaskId());
-						}
+						
 					
 						futureTask = (FutureTask<String>) taskThreadMap.get("Stage_" + uuid + "_" + stageId);
 						if (futureTask != null && !futureTask.isDone()) {
@@ -258,6 +259,15 @@ import com.inferyx.framework.factory.ExecutorFactory;
 							status = "StageThread is not alive. It might have completed its execution already";
 						}
 						taskThreadMap.remove("Stage_" + uuid + "_" + stageId);
+						
+						for (Task task : stage.getTasks()) {
+							try {
+								killTask(uuid, version, stageId, task.getTaskId());
+							} catch (Exception e) {
+								logger.error("Exception while killing task : " + task.getTaskId());						
+								e.printStackTrace();
+							}
+						}
 						
 						synchronized (dagExec.getUuid()) {
 //							dagExec = (DagExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.dagExec, uuid, version));
@@ -285,13 +295,19 @@ import com.inferyx.framework.factory.ExecutorFactory;
 		
 			TaskExec taskExec = dagExecServiceImpl.getTaskExec(dagExec, stageId, taskId);
 			if (!taskThreadMap.containsKey("Task_" + uuid + "_" + taskId)) {
+				logger.info("TaskId " + taskId + " is not running. Kill nevertheless. ");
 				status = "Thread is not running";
 				// Try to set status as killed nevertheless
 				synchronized (uuid) {
 					try {
 						taskExec = (TaskExec) commonServiceImpl.setMetaStatusForTask(dagExec, taskExec, Status.Stage.Terminating, stageId, taskId);
 						for(MetaIdentifierHolder operatorInfo : taskExec.getOperators().get(0).getOperatorInfo()) {
-							commonServiceImpl.kill(operatorInfo.getRef().getType(), operatorInfo.getRef().getUuid(), operatorInfo.getRef().getVersion());
+							try {
+								commonServiceImpl.kill(operatorInfo.getRef().getType(), operatorInfo.getRef().getUuid(), operatorInfo.getRef().getVersion());
+							} catch (Exception e) {
+								logger.error("Exception while setting terminating/kill status");
+								e.printStackTrace();
+							}
 						}
 //						dagExec = (DagExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.dagExec, uuid, version));
 						dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString(), "N");
@@ -314,20 +330,24 @@ import com.inferyx.framework.factory.ExecutorFactory;
 					}
 					if (futureTask != null && !futureTask.isDone()) {
 					futureTask.cancel(true);
-					for(MetaIdentifierHolder operatorInfo : taskExec.getOperators().get(0).getOperatorInfo()) {
-						commonServiceImpl.kill(operatorInfo.getRef().getType(), operatorInfo.getRef().getUuid(), operatorInfo.getRef().getVersion());
-					}
+					
 					logger.info("Kill Signal sent to Task Thread");
 					status = "Kill Signal sent to Task Thread";
 					while(! (futureTask == null || futureTask.isCancelled() || futureTask.isDone())) {
 						logger.info("Sleeping thread Task : " + "Task_" + uuid + "_" + taskId);
 						Thread.sleep(1000);
 					}
+					taskThreadMap.remove("Task_" + uuid + "_" + taskId);
+					// Kill operators
+					for(MetaIdentifierHolder operatorInfo : taskExec.getOperators().get(0).getOperatorInfo()) {
+						commonServiceImpl.kill(operatorInfo.getRef().getType(), operatorInfo.getRef().getUuid(), operatorInfo.getRef().getVersion());
+					}
 				} else {
 					logger.info("TaskThread is not alive. It might have completed its execution already");
 					status = "TaskThread is not alive. It might have completed its execution already";
-				}
 					taskThreadMap.remove("Task_" + uuid + "_" + taskId);
+				}
+					
 
 					synchronized (uuid) {
 					logger.info("Going to kill task : " + taskId);

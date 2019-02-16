@@ -72,7 +72,9 @@ public class TrainExecServiceImpl {
 			}
 			@SuppressWarnings("unchecked")
 			FutureTask<TaskHolder> futureTask = (FutureTask<TaskHolder>) taskThreadMap.get(execType+"_"+baseExec.getUuid()+"_"+baseExec.getVersion());
+			if (futureTask != null) {
 				futureTask.cancel(true);
+			}
 			synchronized (baseExec.getUuid()) {
 				commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.Killed);
 			}
