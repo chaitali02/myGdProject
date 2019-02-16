@@ -29,6 +29,8 @@ from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, r
 
 from eli5.sklearn import PermutationImportance
 
+from pandas.core.frame import DataFrame as PD_DataFrame
+
 os.environ["PYSPARK_PYTHON"]=sys.argv[1]
 os.environ["PYSPARK_DRIVER_PYTHON"]="python3"
 
@@ -94,6 +96,9 @@ outputResultPath=""
 numHiddenLayers=0
 encodingDetails=None
 imputationDetails=None
+modelSchema=None
+sourceSchema=None
+inputColList=None
 
 trainSetDetails=None
 saveTrainingSet=None
@@ -126,7 +131,8 @@ sparkSession = SparkSession.builder.master('local').appName('spark_ann').getOrCr
 
 # Iteration over all arguments:
 plist = ["nEpochs", "seed", "iterations", "learningRate", "optimizationAlgo", "weightInit", "updater", "momentum", "numInput", "numOutputs", "numHidden", "numLayers", "layerNames", "activation", "lossFunction", "sourceFilePath", "modelFilePath", "targetPath", "sourceDsType", "tableName", "operation", "url", "hostName", "dbName", "userName", "password", "query", "special_space_replacer", "port", "otherParams", "sourceHostName", "sourceDbName", "sourcePort", "sourceUserName", "sourcePassword", "targetHostName", "targetDbName" , "targetPort", "targetUserName", "targetPassword", "targetDsType", "targetTableName", "targetDriver", "includeFeatures", "rowIdentifier","sourceAttrDetails", "featureAttrDetails", "sourceQuery", "inputSourceFileName", "trainPercent", "testPercent",
-    "outputResultPath", "rowIdentifier", "numHiddenLayers", "encodingDetails", "imputationDetails", "saveTrainingSet", "trainSetDetails", "testSetDetails"]
+    "outputResultPath", "rowIdentifier", "numHiddenLayers", "encodingDetails", "imputationDetails", "saveTrainingSet", "trainSetDetails", "testSetDetails",
+    "modelSchema", "sourceSchema", "inputColList"]
 
 i = 0
 for eachArg in sys.argv:
@@ -298,6 +304,15 @@ if otherParams != None:
     
         if value == "numHiddenLayers":
             numHiddenLayers = int(otherParams[value])
+    
+        if value == "modelSchema":
+            modelSchema = otherParams[value]
+    
+        if value == "sourceSchema":
+            sourceSchema = otherParams[value]
+    
+        if value == "inputColList":
+            inputColList = otherParams[value]
 
 if sourceDsDetails != None:
     for value in sourceDsDetails:
@@ -400,7 +415,7 @@ print()
 print()
 
 # Importing the dataset
-dataset = None
+dataset = PD_DataFrame
 def getData(filePath, dsType, hostName, dbName, port, userName, password, sqlQuery):
     print("inside method getData()")
     print("filePath : dsType : hostName : dbName : port : userName : password <<<<< >>>>> ", filePath, " : ", dsType, " : ", hostName, " : ", dbName, " : ", port, " : ", userName, " : ", password)
@@ -516,6 +531,8 @@ def getSparkDataType(other_datatype):
         return StringType()
     elif(other_datatype.__contains__("object")):
         return StringType()
+    elif(other_datatype.__contains__("vector")):
+        return StringType()
     
 
 #saving train test result
@@ -616,10 +633,43 @@ def imputeData(imputationDataset, imputationDetailsList):
             
     return  imputationDataset       
     
+    
+    
 #train operation
 def train():
     # Encoding categorical data
     dataset = getData(sourceFilePath, sourceDsType, sourceHostName, sourceDbName, sourcePort, sourceUserName, sourcePassword, query)
+    print("inputColList: ", inputColList)
+#     print("model schema: ", modelSchema)    
+#     for val in modelSchema:
+#         coldataType = modelSchema[val]
+#         print("column:", val, "data type: ", coldataType)
+#         if coldataType == "int" or coldataType == "integer":
+#             dataset[val] = dataset[val].astype(dtype='int', copy=True, errors='ignore')  
+#             
+#         elif  coldataType == "float" or coldataType == "double":
+#             tempDataset = dataset[val].astype(dtype='float64', copy=True, errors='ignore')  
+#             
+#         elif  coldataType == "str" or coldataType == "string":
+#             dataset[val] = dataset[val].to_string()  
+#             
+#         elif  coldataType == "vector":
+#             dataset[val] = pd.Series(dataset[val], index=dataset.index)   
+#         
+#         print("dataset[",val,"].dtypes", dataset[val].dtypes)
+#         print("")
+#     
+# #     catenc = pd.factorize(dataset["label"])
+# #     dataset = dataset.drop("label", axis = 1)
+# #     dataset["label"] = catenc[0]
+#     
+#     df = pd.DataFrame(np.random.randn(len(dataset), 1), columns=['label'], index=range(len(dataset)))
+#     dataset = dataset.drop("label", axis = 1) 
+#     dataset["label"] = df["label"]
+#     
+#     print("dataset.dtypes")
+#     print(dataset.dtypes)
+#     print("")
     
     print("trainSetDetails: ", trainSetDetails)
     if trainSetDetails != None:
@@ -659,6 +709,8 @@ def train():
     print("total_size: ", len(dataset))    
     output_result["total_size"]=len(dataset)
     
+    dataset = dataset[inputColList]
+        
     labelencoder_X_1 = LabelEncoder()
     dataset.iloc[0] = labelencoder_X_1.fit_transform(dataset.iloc[0])
     print('label encoding done')

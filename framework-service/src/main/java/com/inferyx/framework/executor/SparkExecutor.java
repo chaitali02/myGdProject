@@ -2305,6 +2305,48 @@ public class SparkExecutor<T> implements IExecutor {
 		}
 	}
 
+	public StructType createSchemaByModel(Model model) {
+		List<StructField> fieldList = new ArrayList<>();		
+		for(Feature feature : model.getFeatures()) {
+			fieldList.add(new StructField(feature.getName(), (DataType)getDataType(feature.getType()), true, Metadata.empty()));
+		}
+		return new StructType(fieldList.toArray(new StructField[fieldList.size()]));
+	}
+	
+	public StructType createSchemaByDatapod(Datapod datapod) {
+		List<StructField> fieldList = new ArrayList<>();		
+		for(Attribute attribute : datapod.getAttributes()) {
+			fieldList.add(new StructField(attribute.getName(), (DataType)getDataType(attribute.getType()), true, Metadata.empty()));
+		}
+		return new StructType(fieldList.toArray(new StructField[fieldList.size()]));
+	}
+	
+	public ResultSetHolder applyModelSchema(ResultSetHolder rsHolder, String sql, Model model, String tempTableName, boolean registerTempTable, String clientContext) throws IOException {
+		Dataset<Row> df = null;
+		if(sql != null && !sql.isEmpty()) {
+			rsHolder = readTempTable(sql, clientContext);
+			df = rsHolder.getDataFrame();
+		} 
+
+		df = rsHolder.getDataFrame();
+		
+		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+		ConnectionHolder conHolder = connector.getConnection();
+		SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
+		
+		for(Feature feature : model.getFeatures()) {
+			df = df.withColumn(feature.getName(), df.col(feature.getName()).cast((DataType)getDataType(feature.getType())));
+		}
+		
+		//df = sparkSession.createDataFrame(rsHolder.getDataFrame().collectAsList(), createSchemaByModel(model));
+		rsHolder.setDataFrame(df);
+		
+		if(registerTempTable) {
+			sparkSession.sqlContext().registerDataFrameAsTable(df, tempTableName);
+		}
+		return rsHolder;
+	}
+	
 	public void savePCAResult(Dataset<Row> df, Dataset<Row> keyAttrDf, List<String> colList, Datapod datapod, Datasource datasource, String tableName, String filePathUrl) {
 		if(colList != null && !colList.isEmpty()) {
 			keyAttrDf = keyAttrDf.withColumn("rowNum", functions.row_number().over(Window.orderBy(keyAttrDf.columns()[keyAttrDf.columns().length-1])));
