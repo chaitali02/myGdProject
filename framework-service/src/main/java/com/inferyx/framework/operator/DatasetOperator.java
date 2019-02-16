@@ -153,6 +153,7 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 //				} else {
 //					sourceAttr.setAttrId(sourceAttribute.getAttrSourceId());
 //				}
+				sourceAttr.setFunction(sourceAttribute.getFunction());
 				sourceAttr.setAttrId(sourceAttribute.getSourceAttr().getAttrId());
 				sourceAttr.setValue(sourceAttribute.getSourceAttr().getValue());
 				sourceAttr.setAttrName(sourceAttribute.getAttrSourceName());
