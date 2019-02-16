@@ -953,7 +953,7 @@ public class IngestServiceImpl extends RuleTemplate {
 	public void onHold (String uuid, String version, MetaType execType) {
 		BaseExec baseExec = null;
 		try {
-			baseExec = (BaseRuleExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, execType.toString());
+			baseExec = (BaseExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, execType.toString());
 		} catch (JsonProcessingException e2) {
 			e2.printStackTrace();
 		}
