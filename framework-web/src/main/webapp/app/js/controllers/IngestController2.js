@@ -188,7 +188,21 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
     $scope.countBack = function () {
         $scope.continueCount = $scope.continueCount - 1;
         $scope.isSubmitShow = false;
-    }
+	}
+	
+
+	// $scope.getOneByUuidAndVersionDatasource=function(data,type){
+	// 	CommonService.getOneByUuidAndVersion(data.uuid,"", 'datasource')
+	// 	.then(function (response) { onSuccess(response.data) },function(response) {onError(response.data)});
+	// 	var onSuccess = function (response) {
+	// 		if(type="source"){
+	// 			$scope.selectedTargetDatasource=response;
+	// 		}
+	// 		if(type=="target"){
+	// 			$scope.selectedTargetDatasource=response;
+	// 		}
+	// 	}
+	// }
     
     $scope.getDatasourceForTable = function (sourceType, TargetType) {
 		IngestRuleService.getDatasourceForTable("datasource").then(function (response) { onSuccessGetDatasourceForTable(response.data) }, function (response) { onError(response.data) });

@@ -29,7 +29,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.GraphMetaIdentifier;
+import com.inferyx.framework.domain.GraphMetaIdentifierHolder;
 import com.inferyx.framework.domain.GraphpodResult;
+import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.register.GraphRegister;
 import com.inferyx.framework.service.GraphServiceImpl;
@@ -143,6 +146,16 @@ public class GraphController {
 		return graphServiceImpl.execute(baseExec, execParams, runMode);
 	}
   
+  
+	@RequestMapping(value = "/isReferred", method = RequestMethod.POST)
+	public @ResponseBody boolean isReferred(
+			@RequestBody  GraphMetaIdentifierHolder graphMetaIdentifierHolder ,
+			@RequestParam(value = "type", required = false) String type)
+			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {
+		return registerService.isRefreshed(graphMetaIdentifierHolder);
+
+	}
 }
 
 

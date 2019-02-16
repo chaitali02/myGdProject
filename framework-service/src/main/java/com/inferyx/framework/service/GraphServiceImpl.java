@@ -2048,4 +2048,13 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 	 * GraphFrame - END
 	 **********************************/
 
+	
+	public boolean isRefreshed()  {
+		
+		
+		return true;
+	}
+
+	
+
 }

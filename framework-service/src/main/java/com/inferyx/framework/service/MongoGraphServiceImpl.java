@@ -34,6 +34,7 @@ import com.inferyx.framework.dao.IVertexDao;
 import com.inferyx.framework.domain.Edge;
 import com.inferyx.framework.domain.GraphMetaIdentifier;
 import com.inferyx.framework.domain.GraphMetaIdentifierHolder;
+import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.NodeDetail;
 import com.inferyx.framework.domain.NodeDetails;
@@ -458,4 +459,11 @@ public class MongoGraphServiceImpl {
 		}
 		return result;
 	}
+	
+	public boolean isRefreshed(GraphMetaIdentifierHolder graphMetaIdentifier) {		
+		List<Edge> edges =iEdgeDao.findEdgeByRef(graphMetaIdentifier.getRef().getUuid(),graphMetaIdentifier.getRef().getUuid()); 		
+		return !edges.isEmpty();
+	}
+
+	
 }

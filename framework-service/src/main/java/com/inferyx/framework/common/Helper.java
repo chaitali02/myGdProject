@@ -367,7 +367,9 @@ public class Helper {
 		case ingest : return "IngestServiceImpl";
 		case ingestExec : return "IngestExecServiceImpl";
 		case ingestgroup : return "IngestGroupServiceImpl";
+		case train : return "TrainServiceImpl";
 		case trainExec : return "ModelExecServiceImpl";
+		case predict : return "PredictServiceImpl";
 		case predictExec : return "ModelExecServiceImpl";
 		case simulateExec : return "ModelExecServiceImpl";
 		case trainresult : return "TrainResultServiceImpl";
