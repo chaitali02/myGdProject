@@ -456,7 +456,6 @@ public class SparkExecutor<T> implements IExecutor {
 		df.createOrReplaceGlobalTempView(tableName);
 		registerTempTable(df, tableName);
 		logger.info("temp table registered: " + tableName);
-		df.show(false);
 		return resHolder;
 	}
 	
@@ -1740,14 +1739,13 @@ public class SparkExecutor<T> implements IExecutor {
 		Dataset<Row> df = executeSql(sql, clientContext).getDataFrame();
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
-		df.show(false);
+		
 		VectorAssembler va = new VectorAssembler();
 		
 
 		va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
 		Dataset<Row> transformedDf = va.transform(df).select("features");
 				
-		transformedDf.show(false);
 		sparkSession.sqlContext().registerDataFrameAsTable(transformedDf, tableName);
 		return va;
 	}
@@ -1958,13 +1956,12 @@ public class SparkExecutor<T> implements IExecutor {
 //		df = df.na().fill(0.0, df.columns());
 		logger.info("After executeSql");
 		df.printSchema();
-		df.show();
+		
 		//performing prediction
 		@SuppressWarnings("unchecked")
 		Dataset<Row> predictionDf = (Dataset<Row>) trainedModel.getClass().getMethod("transform", Dataset.class).invoke(trainedModel, df);
 		logger.info("After obtaining predictionDf");
 		predictionDf.printSchema();
-		predictionDf.show();
 		logger.info("Going to register temp table");
 		
 		//registring temp table
@@ -2054,7 +2051,6 @@ public class SparkExecutor<T> implements IExecutor {
 			}
 
 			df.printSchema();
-			df.show();
 //			}
 			/*Tuple2<String, String>[] tuple2 = df.dtypes();
 			for(Tuple2<String, String> tuple22 : tuple2) {
@@ -2085,10 +2081,44 @@ public class SparkExecutor<T> implements IExecutor {
 		}
 	}
 	
+	public ResultSetHolder mapFieldsTypeByFeatures(String tableName, Dataset<Row> df, Datasource datasource, List<String> vectorFields, boolean registerTempTable, String tempTableName, String clientContext) throws IOException {		
+		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
+//		String sql = "SELECT * FROM " + tableName;
+//		Dataset<Row> df = executeSqlByDatasource(sql, datasource, clientContext).getDataFrame();
+		
+		
+			String []fieldNames = df.schema().fieldNames();
+			StructField []fields = df.schema().fields();
+			StructField []newFields = new StructField[fields.length];
+		
+		
+			for (int i = 0; i < fieldNames.length; i++) {
+				if (vectorFields.contains(fieldNames[i])) {
+					newFields[i] = new StructField(fieldNames[i],
+							(VectorUDT)getDataType("vector"), true,
+							Metadata.empty());
+				} else {
+					newFields[i] = fields[i];
+				}
+			}
+			
+			df = sparkExecHelper.parseVectorFeatures(df, newFields, vectorFields);
+			ResultSetHolder rsHolder = new ResultSetHolder();
+			rsHolder.setDataFrame(df);
+			rsHolder.setType(ResultType.dataframe);
+			rsHolder.setCountRows(df.count());
+			rsHolder.setTableName(tempTableName);
+			if(registerTempTable) {
+				sparkSession.sqlContext().registerDataFrameAsTable(df, tempTableName);
+			}
+		return rsHolder;
+	}
+	
 	@Override
 	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName
 			, double trainPercent, double valPercent, String tableName, String clientContext
-			, Object algoClass, Map<String, String> trainOtherParam, TrainResult trainResult
+			, Object algoClass, Map<String, Object> trainOtherParam, TrainResult trainResult
 			, String testSetPath, List<String> rowIdentifierCols, String includeFeatures
 			, String trainingDfSql, String validationDfSql, Map<String, EncodingType> encodingDetails,
 			String saveTrainingSet, String trainingSetPath, Datapod testLocationDP, Datasource testLocationDs, 
@@ -2120,6 +2150,8 @@ public class SparkExecutor<T> implements IExecutor {
 				
 				registerTempTable(df, "tempTrngDf");
 				trngDf = readTempTable(trainingDfSql, clientContext).getDataFrame();
+				trngDf = mapFieldsTypeByFeatures("tempTrngDf", trngDf, trainLocationDS, (List<String>) trainOtherParam.get("vectorFields"), true, "", clientContext).getDataFrame();
+				trngDf = applyModelSchema(null, "SELECT * FROM "+"tempTrngDf", (Model) trainOtherParam.get("model"), null, false, clientContext).getDataFrame();
 				
 				//dropping temptables tempTrngDf and tempValDf
 				tempTableList.add("tempTrngDf");
@@ -2133,8 +2165,15 @@ public class SparkExecutor<T> implements IExecutor {
 
 				registerTempTable(trngDf, "tempTrngDf");
 				trngDf = readTempTable(trainingDfSql, clientContext).getDataFrame();
+				trngDf.printSchema();
+				trngDf = mapFieldsTypeByFeatures("tempTrngDf", trngDf, (Datasource) trainOtherParam.get("sourceDs"), (List<String>) trainOtherParam.get("vectorFields"), true, "tempTrngDf", clientContext).getDataFrame();
+				trngDf = applyModelSchema(null, "SELECT * FROM "+"tempTrngDf", (Model) trainOtherParam.get("model"), null, false, clientContext).getDataFrame();
+
+				trngDf.printSchema();
 				registerTempTable(valDf, "tempValDf");
 				valDf = readTempTable(validationDfSql, clientContext).getDataFrame();
+				valDf = mapFieldsTypeByFeatures("tempValDf", valDf, (Datasource) trainOtherParam.get("sourceDs"), (List<String>) trainOtherParam.get("vectorFields"), true, "tempValDf", clientContext).getDataFrame();
+				valDf = applyModelSchema(null, "SELECT * FROM "+"tempValDf", (Model) trainOtherParam.get("model"), null, false, clientContext).getDataFrame();
 				
 				//dropping temptables tempTrngDf and tempValDf
 				tempTableList.add("tempTrngDf");
@@ -2175,7 +2214,6 @@ public class SparkExecutor<T> implements IExecutor {
 					valDf.printSchema();
 				}
 				
-				trngDf.distinct().show();
 				fieldArray = encoderCols.toArray(new String[encoderCols.size()]);
 			}
 			
@@ -2219,7 +2257,7 @@ public class SparkExecutor<T> implements IExecutor {
 				encodingCols = encodingDetails.keySet();
 			}
 			
-			trngDf = castUnEncodedCols(trngDf, encodingDetails, encodingCols);			
+			trngDf = castUnEncodedCols(trngDf, encodingDetails, encodingCols);	
 			trngDf = trngDf.na().fill(0.0,trngDf.columns());
 			
 			if(valDf != null) {
@@ -2278,7 +2316,7 @@ public class SparkExecutor<T> implements IExecutor {
 			trainResult.setEndTime(simpleDateFormat.parse((new Date()).toString()));
 			
 			if(trainOtherParam != null) {
-				String cMTableName = trainOtherParam.get("confusionMatrixTableName");
+				String cMTableName = (String) trainOtherParam.get("confusionMatrixTableName");
 				sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, cMTableName);
 			}			
 			
@@ -2423,7 +2461,6 @@ public class SparkExecutor<T> implements IExecutor {
 			ResultSetHolder rsHolder = new ResultSetHolder();
 			rsHolder.setDataFrame(trainedDataSet);
 			rsHolder.setTableName(trainLTableName);
-			trainedDataSet.show(true);
 			
 			//check whether the number of attributes of datapod and dataframe
 			//are equal if not then throw exception
@@ -2492,7 +2529,6 @@ public class SparkExecutor<T> implements IExecutor {
 
 		logger.info("trainedDataset >>>>>>>>>>> ");
 		trainedDataSet.printSchema();
-		trainedDataSet.show();
 		for (String colName : colNameList) {
 			logger.info("colName : " + colName);
 		}
@@ -2517,7 +2553,6 @@ public class SparkExecutor<T> implements IExecutor {
 		
 		joinedDF = joinedDF.drop("rowNum");
 		joinedDF.printSchema();
-		joinedDF.show();
 		if(testLocationDP != null) {
 			ResultSetHolder rsHolder = new ResultSetHolder();
 			rsHolder.setDataFrame(joinedDF);
@@ -2655,7 +2690,6 @@ public class SparkExecutor<T> implements IExecutor {
 		logger.info("Inside savePMML");
 		String sql = "SELECT * FROM " + trainedDSName;
 		Dataset<Row> trainedDataSet = executeSql(sql, clientContext).getDataFrame();
-		trainedDataSet.show(false);
 		trainedDataSet.printSchema();
 		PMML pmml = null;
 		if(trngModel instanceof CrossValidatorModel) {
@@ -2861,7 +2895,6 @@ public class SparkExecutor<T> implements IExecutor {
 //		df.show(false);
 		rsHolder.setDataFrame(df);
 		rsHolder.setTableName(targetTableName);
-		df.show(false);
 //		String schema = createTableSchema(df.schema().fields(), datasource, tableName);
 //		createTable(schema, datasource);
 		rsHolder = persistDataframe(rsHolder, datasource, datapod, "append");
@@ -2928,7 +2961,7 @@ public class SparkExecutor<T> implements IExecutor {
 	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName
 			, double trainPercent, double valPercent, String tableName
 			, List<com.inferyx.framework.domain.Param> hyperParamList, String clientContext
-			, Map<String, String> trainOtherParam, TrainResult trainResult, String testSetPath
+			, Map<String, Object> trainOtherParam, TrainResult trainResult, String testSetPath
 			, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql,
 			Map<String, EncodingType> encodingDetails, String saveTrainingSet, String trainingSetPath, Datapod testLocationDP, 
 			Datasource testLocationDs, String testLocationTableName, String testLFilePathUrl, Datapod trainLocationDP, 
@@ -2956,7 +2989,9 @@ public class SparkExecutor<T> implements IExecutor {
 
 				registerTempTable(df, "tempTrngDf");
 				trngDf = readTempTable(trainingDfSql, clientContext).getDataFrame();
-				
+				trngDf = mapFieldsTypeByFeatures("tempTrngDf", trngDf, (Datasource) trainOtherParam.get("sourceDs"), (List<String>) trainOtherParam.get("vectorFields"), true, "tempTrngDf", clientContext).getDataFrame();
+				trngDf = applyModelSchema(null, "SELECT * FROM "+"tempTrngDf", (Model) trainOtherParam.get("model"), null, false, clientContext).getDataFrame();
+								
 				//dropping temptables tempTrngDf and tempValDf
 				tempTableList.add("tempTrngDf");
 				
@@ -2969,9 +3004,14 @@ public class SparkExecutor<T> implements IExecutor {
 
 				registerTempTable(trngDf, "tempTrngDf");
 				trngDf = readTempTable(trainingDfSql, clientContext).getDataFrame();
+				trngDf = mapFieldsTypeByFeatures("tempTrngDf", trngDf, (Datasource) trainOtherParam.get("sourceDs"), (List<String>) trainOtherParam.get("vectorFields"), true, "tempTrngDf", clientContext).getDataFrame();
+				trngDf = applyModelSchema(null, "SELECT * FROM "+"tempTrngDf", (Model) trainOtherParam.get("model"), null, false, clientContext).getDataFrame();
+				
 				registerTempTable(valDf, "tempValDf");
 				valDf = readTempTable(validationDfSql, clientContext).getDataFrame();
-				
+				valDf = mapFieldsTypeByFeatures("tempValDf", valDf, (Datasource) trainOtherParam.get("sourceDs"), (List<String>) trainOtherParam.get("vectorFields"), true, "tempValDf", clientContext).getDataFrame();
+				valDf = applyModelSchema(null, "SELECT * FROM "+"tempValDf", (Model) trainOtherParam.get("model"), null, false, clientContext).getDataFrame();
+								
 				//dropping temptables tempTrngDf and tempValDf
 				tempTableList.add("tempTrngDf");
 				tempTableList.add("tempValDf");
@@ -3123,7 +3163,7 @@ public class SparkExecutor<T> implements IExecutor {
 			IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 			SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
 			if(trainOtherParam !=null) {
-				String cMTableName=trainOtherParam.get("confusionMatrixTableName");
+				String cMTableName = (String) trainOtherParam.get("confusionMatrixTableName");
 				sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, cMTableName);
 			}
 			sparkSession.sqlContext().registerDataFrameAsTable(trainedDataSet, "trainedDataSet");
@@ -4144,7 +4184,7 @@ public class SparkExecutor<T> implements IExecutor {
 		trainedDataSet.printSchema();
 		
 //		trainedDataSet = trainedDataSet.na().fill(0.0,trainedDataSet.columns());
-		trainedDataSet.show(false);
+		
 		List<String> predDFCols = Arrays.asList(trainedDataSet.columns());
 		if(predDFCols.contains("prediction")) {
 			MulticlassMetrics metrics = new MulticlassMetrics(trainedDataSet.map((MapFunction<Row, Row>) row -> 
@@ -4252,7 +4292,7 @@ public class SparkExecutor<T> implements IExecutor {
 	@Override
 	public PipelineModel trainDL(ExecParams execParams, String[] fieldArray, String label, String trainName,
 			double trainPercent, double valPercent, String tableName, String clientContext, Object algoClass,
-			Map<String, String> trainOtherParam) throws IOException {
+			Map<String, Object> trainOtherParam) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
