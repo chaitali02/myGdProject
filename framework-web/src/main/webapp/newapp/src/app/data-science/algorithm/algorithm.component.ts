@@ -209,6 +209,7 @@ export class AlgorithmComponent implements OnInit {
     for (const i in response) {
       let refParam = new DropDownIO ();
       refParam.label = response[i].name;
+      refParam.value = {label: "", uuid: ""}
       refParam.value.label= response[i].name;
       refParam.value.uuid = response[i].uuid;
       this.allParamlist[i] = refParam;
@@ -288,6 +289,7 @@ export class AlgorithmComponent implements OnInit {
     for (const i in response) {
       let verObj = new DropDownIO();
       verObj.label= response[i].version;
+      verObj.value = {label: "", uuid: ""}
       verObj.value.label= response[i].version;
       verObj.value.uuid = response[i].uuid;
       VersionList[i] = verObj;

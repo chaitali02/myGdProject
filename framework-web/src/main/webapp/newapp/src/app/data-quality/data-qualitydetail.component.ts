@@ -31,7 +31,6 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 export class DataQualityDetailComponent {
   dropIndex: any;
   dragIndex: any;
-  showGraph: boolean;
   isHomeEnable: boolean;
   attributesArray: Array<AttributeIO>;
   attributesArrayRhs: any;
@@ -68,7 +67,7 @@ export class DataQualityDetailComponent {
   datefromate: string[];
   datatype: any;
   selectAttribute: any;
-  allAttribute: any[];
+  allAttribute: any[] = [];
   dropdownSettings: { singleSelection: boolean; text: string; selectAllText: string; unSelectAllText: string; enableSearchFilter: boolean; classes: string; maxHeight: number; disabled: boolean; };
   dropdownList: any[];
   allNames: any[];
@@ -91,9 +90,9 @@ export class DataQualityDetailComponent {
   IsSelectDataType: any
   IsSelectSoureceAttr: any
   @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
-  isEditInprogess: boolean;
-  isEditError: boolean;
-  showForm: boolean;
+  isEditInprogess: boolean = false;
+  isEditError: boolean = false;
+  showForm: boolean = true;
   fitlerAttrTableSelectedItem: any[] = [];
   allname: Array<DropDownIO>;
   published: boolean;
@@ -105,18 +104,22 @@ export class DataQualityDetailComponent {
   count: any[];
   txtQueryChanged: Subject<string> = new Subject<string>();
   rowIndex: any;
+  showDivGraph: boolean;
+  isGraphInprogess: boolean;
+  isGraphError: boolean;
+  isEdit: boolean = false;
+  isAdd: boolean;
+  isversionEnable: boolean;
 
   constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router,
     private _commonService: CommonService, private _dataQualityService: DataQualityService, public appHelper: AppHelper) {
     this.metaType = MetaTypeEnum.MetaType;
     this.dqdata = new DataQuality();
-    this.showGraph = false
     this.isHomeEnable = false
     this.displayDialogBox = false;
 
     this.isEditInprogess = false;
     this.isEditError = false;
-    this.showForm = true;
 
     this.dialogAttributeName = {};
     this.selectRefIntegrity = {};
@@ -220,7 +223,50 @@ export class DataQualityDetailComponent {
         this.checkSelected(false);
       });
   }
+  ngOnInit() {
+    this.setMode(this.mode);
+  }
+  setMode(mode: any) {
+    if (mode == 'true') {
+      this.isEdit = false;
+      this.isversionEnable = false;
+      this.isAdd = false;
+    } else if (mode == 'false') {
+      this.isEdit = true;
+      this.isversionEnable = true;
+      this.isAdd = false;
+    } else {
+      this.isAdd = true;
+      this.isEdit = false;
+    }
+  }
 
+  enableEdit(uuid, version) {
+    this.router.navigate(['app/dataQuality/dq', uuid, version, 'false']);
+  }
+
+  showMainPage(uuid, version) {
+    this.isHomeEnable = false
+    this.showDivGraph = false;
+    this.showForm = true;
+  }
+
+  showGraph(uuid, version) {
+    this.isHomeEnable = true;
+    this.showDivGraph = true;
+    this.showForm = false;
+    this.isGraphInprogess = true;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(uuid, version);
+      this.isGraphInprogess = this.d_KnowledgeGraphComponent.isInprogess;
+      this.isGraphError = this.d_KnowledgeGraphComponent.isError;
+    }, 1000);
+  }
+  
+  onChangeName(){
+    this.breadcrumbDataFrom[2].caption = this.dqdata.name;
+  }
+  
   public goBack() {
     //this._location.back();
     this.router.navigate(['app/list/dq']);
@@ -230,15 +276,16 @@ export class DataQualityDetailComponent {
     this.filterTableArray = [];
     this.getAllAttributeBySource();
   }
-  OnselectType = function () {
+  OnselectType() {
     if (this.dqdata.selectDataType == "Date") {
       this.IsSelectDataType = true;
     }
     else {
+      this.selectdatefromate = "";
       this.IsSelectDataType = false;
     }
   }
-  onSourceAttributeChagne = function () {
+  onSourceAttributeChagne() {
     if (this.selectAttribute != null) {
       this.IsSelectSoureceAttr = true
       this.dqdata.nullCheck = true;
@@ -246,21 +293,28 @@ export class DataQualityDetailComponent {
       this.allIntegrityAttribute = this.allAttribute;
     }
     else {
-      this.IsSelectSoureceAttr = false
-      this.dqdata.nullCheck = false;
-      this.dqdata.valueCheck = ""
-      this.dqdata.lowerBound = "";
-      this.dqdata.upperBound = "";
-      this.selectDataType = {};
-      this.selectdatefromate = "";
-      this.dqdata.minLength = ""
-      this.dqdata.maxLength = "";
-      this.allRefIntegrity = [];
-      this.selectRefIntegrity = "";
-      this.allIntegrityAttribute = [];
-      this.selectIntegrityAttribute = "";
+      this.disableFields();
+    }
+    if(this.selectAttribute.label == '-Select-'){
+      this.disableFields();
     }
   }
+  disableFields(){
+    this.IsSelectSoureceAttr = false
+    this.dqdata.nullCheck = false;
+    this.dqdata.valueCheck = ""
+    this.dqdata.lowerBound = "";
+    this.dqdata.upperBound = "";
+    this.selectDataType = {};
+    this.selectdatefromate = "";
+    this.dqdata.minLength = ""
+    this.dqdata.maxLength = "";
+    this.allRefIntegrity = [];
+    this.selectRefIntegrity = "";
+    this.allIntegrityAttribute = [];
+    this.selectIntegrityAttribute = "";
+  }
+
   changeRefIntegrity() {
     this.allIntegrityAttribute = []
     this._commonService.getAllAttributeBySource(this.selectRefIntegrity.uuid, this.source).subscribe(
@@ -282,12 +336,12 @@ export class DataQualityDetailComponent {
       error => console.log('Error :: ' + error)
     )
   }
-  countContinue = function () {
+  countContinue() {
     this.continueCount = this.continueCount + 1;
     this.progressbarWidth = 25 * this.continueCount + "%";
   }
 
-  countBack = function () {
+  countBack() {
     this.continueCount = this.continueCount - 1;
     this.progressbarWidth = 25 * this.continueCount + "%";
   }
@@ -330,7 +384,19 @@ export class DataQualityDetailComponent {
     )
   }
   OnSuccesgetAllAttributeBySource(response: AttributeIO[]) {
-    this.allAttribute = response;
+    let firstObj = new AttributeIO();
+    firstObj.label = "-Select-"
+    firstObj.value = {label:"-Select-", value: ""}
+    this.allAttribute.push(firstObj);
+
+    for (const i in response) {
+      let name = new AttributeIO();
+      name.label = response[i].name;
+      name.value = { label: "",value: ""};
+      name.value.label = response[i].name;
+      name.value.uuid = response[i].uuid;
+      this.allAttribute.push(name);
+    }
   }
 
   getOneByUuidAndVersion(id, version) {
@@ -419,10 +485,9 @@ export class DataQualityDetailComponent {
       this.selectIntegrityAttribute = selectintegrityattribute;
     }
     this.isEditInprogess = false;
-    //this.showForm = false;
   }
 
-  searchOption(index) {
+  searchOption(index) {debugger
     this.rowIndex = index;
     this.displayDialogBox = true;
     this._commonService.getAllLatest(MetaTypeEnum.MetaType.DATASET)
@@ -914,26 +979,12 @@ export class DataQualityDetailComponent {
     this.msgs.push({ severity: msgtype, summary: msgsumary, detail: msg });
   }
 
-  enableEdit(uuid, version) {
-    this.router.navigate(['app/dataQuality/dq', uuid, version, 'false']);
-  }
 
   showview(uuid, version) {
     this.router.navigate(['app/dataQuality/dq', uuid, version, 'true']);
   }
 
-  showMainPage() {
-    this.isHomeEnable = false;
-    this.showGraph = false;
-    setTimeout(() => {
-      this.d_KnowledgeGraphComponent.getGraphData(this.id, this.version);
-    }, 1000);
-  }
-
-  showDagGraph(uuid, version) {
-    this.isHomeEnable = true;
-    this.showGraph = true;
-  }
+  
 
   // onAttrRowDown() {
   //   for (let i = 0; i < this.filterTableArray.length; i++) {

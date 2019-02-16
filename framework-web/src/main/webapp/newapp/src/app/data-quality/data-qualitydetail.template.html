@@ -13,34 +13,34 @@
         </div>
 
         <div class="actions">
-          <a class="btn btn-circle btn-icon-only btn-default currentpage leftMargin" title="Main" data-placement="top" tooltip [ngClass]="isHomeEnable==true ? 'notcurrentpage':'currentpage'"
-            data- (click)="showMainPage(dqdata.uuid,dqdata.version)"> 
+          <a class="btn btn-circle btn-icon-only btn-default currentpage left-margin" title="Main" data-placement="top"
+            tooltip [ngClass]="showForm==true ? 'currentpage':'notcurrentpage'" data- (click)="showMainPage(dqdata.uuid,dqdata.version)">
             <i class="fa fa-home" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
           </a>
-
-          <a class="btn btn-circle btn-icon-only btn-default leftMargin" href="javascript:;" title="Edit" data-toggle="tooltip"
-            data-placement="top" tooltip [ngClass]="mode == 'true' && showGraph == false? 'notcurrentpage':'currentpage'"
-            data-(click)="enableEdit(dqdata.uuid,dqdata.version)">
+          
+          <a class="btn btn-circle btn-icon-only btn-default left-margin" href="javascript:;" title="Edit" data-toggle="tooltip"
+            data-placement="top" tooltip [ngClass]="isEdit == true? 'currentpage':'notcurrentpage'" data-(click)="enableEdit(dqdata.uuid,dqdata.version)">
             <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
           </a>
-
-          <a class="btn btn-circle btn-icon-only btn-default leftMargin" href="javascript:;" title="Show Dependencies"
-            data-placement="top" tooltip [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'" 
-            data- (click)="showDagGraph(dqdata.uuid,dqdata.version)">
+          
+          <a class="btn btn-circle btn-icon-only btn-default left-margin" href="javascript:;" title="Show Dependencies"
+            data-placement="top" tooltip [ngClass]="showForm==false ? 'currentpage':'notcurrentpage'" 
+            data- (click)="showGraph(dqdata.uuid,selectedVersion.label)">
             <i class="fa fa-sitemap" style="margin:2px auto;color:#a0a0a0;"></i>
           </a>
 
-          <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default leftMargin" disabled="true" (click)="broadcastRefreshData()"
-            data-original-title="" title="Refresh">
+          <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default left-margin" disabled="true"
+            (click)="showGraph(dqdata.uuid,selectedVersion.label)" data-original-title="" title="Refresh">
             <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
           </a>
-          <a class="btn btn-circle btn-icon-only btn-default leftMargin" (click)="goBack()" title="Close">
+
+          <a class="btn btn-circle btn-icon-only btn-default left-margin" (click)="goBack()" title="Close">
             <i class="fa fa-times" style="margin: 2px auto;color:#a0a0a0;"></i>
           </a>
         </div>
       </div>
 
-      <div class="form-body graph-body" *ngIf="showGraph" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=');">
+      <div class="form-body graph-body" *ngIf="showDivGraph" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=');">
 
         <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
         <div class="spinner" id="graphloader">
@@ -111,22 +111,29 @@
                 </div>
                 <div class="tab-content">
                   <div class="tab-pane" id="tab1" [ngClass]="{'active' : continueCount == 1}">
-                    <form class="form-horizontal" name="myform" novalidate="novalidate">
+                    <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="myNewForm.form.valid"
+                    #myNewForm="ngForm">
+                        
                       <div class="form-group" *ngIf="mode">
                         <label class="col-md-3 control-label">UUID</label>
                         <div class="col-md-6">
                           <input type="text" class="form-control" [(ngModel)]="dqdata.uuid" name="uuid" placeholder=""
-                            [disabled]="true">
+                            [disabled]="true" required>
                         </div>
                       </div>
 
                       <div class="form-group">
-                        <label class="col-md-3 control-label">Name
+                        <label class="col-md-3 control-label" [ngClass]="{'has-error': (name.invalid && (name.dirty || name.touched))}">Name
                           <span class="required" aria-required="true"> * </span>
                         </label>
                         <div class="col-md-6">
-                          <input type="text" class="form-control" [(ngModel)]="dqdata.name" name="name" placeholder=""
-                            [disabled]="mode == 'true'">
+                          <input type="text" class="form-control" [(ngModel)]="dqdata.name" name="name" (ngModelChange)="onChangeName($event)"
+                            [disabled]="mode == 'true'" #name="ngModel" required placeholder="" [ngClass]="{'has-error':(name.invalid && (name.dirty || name.touched))}">
+                          <div *ngIf="(name.invalid && (name.dirty || name.touched))">
+                              <div class="help-block has-error error-msg">
+                                  This field is required
+                              </div>
+                          </div>
                         </div>
                       </div>
                       <div class="form-group" *ngIf="mode">
@@ -194,7 +201,7 @@
                       <div class="row">
                         <label class="control-label col-md-3"></label>
                         <div class="col-md-4" style="padding-top: 2%;">
-                          <button type="submit" class="btn btn-outline green " (click)="countContinue()"> Continue
+                          <button type="submit" class="btn btn-outline green " (click)="countContinue()" [disabled]="dqdata.name==''"> Continue
                             <i class="fa fa-angle-right"></i>
                           </button>
                         </div>
@@ -206,7 +213,7 @@
                   <!--Start Tab2-->
                   <div class="tab-pane" id="tab2" [ngClass]="{'active' : continueCount == 2}">
 
-                    <form class="form-horizontal" name="myform2" id="submit_form2" (submit)="countContinue()"
+                    <form class="form-horizontal" name="myform1" id="submit_form1" (submit)="countContinue()"
                       novalidate="novalidate">
                       <div class="form-group">
                         <label class="col-md-3 control-label">Source Type
@@ -456,9 +463,9 @@
                                       </p-dropdown>
                                     </div>
 
-                                    <p-dialog class="dq-dialogbox" header="Search Attribute" [(visible)]="displayDialogBox" [modal]="true" 
-                                      [responsive]="true" [width]="430" [resizable]="true" [contentStyle]="{'overflow':'visible'}"
-                                      [style]="{'border-radius': '6px','box-shadow': '0 5px 15px rgba(0,0,0,.5)'}">
+                                    <p-dialog class="dq-dialogbox" header="Search Attribute" [(visible)]="displayDialogBox"
+                                      [modal]="true" [responsive]="true" [width]="430" [resizable]="true"
+                                      [contentStyle]="{'overflow':'visible'}" [style]="{'border-radius': '6px','box-shadow': '0 5px 15px rgba(0,0,0,.5)'}">
 
                                       <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Select</label>
@@ -483,10 +490,10 @@
                                       <p-footer>
                                         <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-6" style="padding: 0px 0px 13px 0px;">
                                           <!-- <a class="btn btn-primary" (click)="cancelDialogBox()">Close</a> -->
-                                          <input type="button" class="btn dark btn-outline" value="Close" name="close" style="border-radius: 4px;"
-                                          (click)="cancelDialogBox()">
-                                          <input type="button" class="btn btn-success" value="Submit" name="submit" style="border-radius: 4px;"
-                                            (click)="submitDialogBox(rowIndex)">
+                                          <input type="button" class="btn dark btn-outline" value="Close" name="close"
+                                            style="border-radius: 4px;" (click)="cancelDialogBox()">
+                                          <input type="button" class="btn btn-success" value="Submit" name="submit"
+                                            style="border-radius: 4px;" (click)="submitDialogBox(rowIndex)">
                                         </div>
                                       </p-footer>
                                     </p-dialog>
