@@ -1556,6 +1556,9 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		reportJson.locked = $scope.report.locked;
 		reportJson.published = $scope.report.published;
 		reportJson.publicFlag = $scope.report.publicFlag;
+		reportJson.saveOnRefresh = $scope.report.saveOnRefresh;
+
+		
 		reportJson.title = $scope.report.title;
 		reportJson.header = $scope.report.header;
 		reportJson.footer = $scope.report.footer;

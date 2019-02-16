@@ -1004,7 +1004,7 @@ public class DatapodServiceImpl {
 			IExecutor exec = execFactory.getExecutor(ExecContext.spark.toString());
 			
 			List<Attribute> attributes = exec.fetchAttributeList(uploadPath, parquetDir, true, false, appUuid);
-			attributes.remove(attributes.size()-1);
+			//attributes.remove(attributes.size()-1);
 			ListIterator<Attribute> attributeIterator = attributes.listIterator();
 			
 			List<Attribute> dpAttrs = datapod.getAttributes();
