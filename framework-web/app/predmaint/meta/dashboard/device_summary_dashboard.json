@@ -1,6 +1,6 @@
 {
   "uuid": "e5191f74-4d6b-43e0-b4c8-3a1715b073f8",
-  "version": "1550094851",
+  "version": "1550346350",
   "name": "Device Summary Dashboard",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Wed Feb 13 16:54:11 EST 2019",
+  "createdOn": "Sat Feb 16 14:45:50 EST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -47,36 +47,6 @@
     },
     {
       "sectionId": null,
-      "name": "Device Problem State",
-      "vizpodInfo": {
-        "ref": {
-          "type": "vizpod",
-          "uuid": "011ee127-99a5-4db7-9a34-a4c2f31231b3",
-          "version": null,
-          "name": "viz_device_problem_state"
-        },
-        "value": null
-      },
-      "rowNo": 1,
-      "colNo": 2
-    },
-    {
-      "sectionId": null,
-      "name": "Device Warning State",
-      "vizpodInfo": {
-        "ref": {
-          "type": "vizpod",
-          "uuid": "ca06cb36-d16d-48f0-b7ac-86b73a8b30a6",
-          "version": null,
-          "name": "viz_device_warning_state"
-        },
-        "value": null
-      },
-      "rowNo": 2,
-      "colNo": 1
-    },
-    {
-      "sectionId": null,
       "name": "Device Problem Reported",
       "vizpodInfo": {
         "ref": {
@@ -87,8 +57,53 @@
         },
         "value": null
       },
+      "rowNo": 1,
+      "colNo": 2
+    },
+    {
+      "sectionId": null,
+      "name": "Device Problem State",
+      "vizpodInfo": {
+        "ref": {
+          "type": "vizpod",
+          "uuid": "011ee127-99a5-4db7-9a34-a4c2f31231b3",
+          "version": null,
+          "name": "viz_device_problem_state"
+        },
+        "value": null
+      },
+      "rowNo": 2,
+      "colNo": 1
+    },
+    {
+      "sectionId": null,
+      "name": "Device Warning State",
+      "vizpodInfo": {
+        "ref": {
+          "type": "vizpod",
+          "uuid": "4d8e3de8-8108-404c-8570-1b0510de310f",
+          "version": null,
+          "name": "viz_device_warning_state"
+        },
+        "value": null
+      },
       "rowNo": 2,
       "colNo": 2
+    },
+    {
+      "sectionId": null,
+      "name": "Device Faulty State",
+      "vizpodInfo": {
+        "ref": {
+          "type": "vizpod",
+          "uuid": "ca06cb36-d16d-48f0-b7ac-86b73a8b30a6",
+          "version": null,
+          "name": "viz_device_faulty_state"
+        },
+        "value": null
+      },
+      "rowNo": 2,
+      "colNo": 3
     }
   ],
   "dependsOn": {

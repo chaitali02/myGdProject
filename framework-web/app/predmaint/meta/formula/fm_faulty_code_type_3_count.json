@@ -1,7 +1,7 @@
 {
-  "uuid": "a809d544-97c7-498e-9789-3d60199987a0",
-  "version": "1550346729",
-  "name": "viz_device_problem_reported",
+  "uuid": "6a5b5d49-2e4c-4c0b-9409-02d48da8fdec",
+  "version": "1550347178",
+  "name": "fm_faulty_code_type_3_count",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Sat Feb 16 14:52:09 EST 2019",
+  "createdOn": "Sat Feb 16 14:59:38 EST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -29,8 +29,7 @@
     }
   ],
   "publicFlag": "N",
-  "title": null,
-  "source": {
+  "dependsOn": {
     "ref": {
       "type": "datapod",
       "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
@@ -39,9 +38,31 @@
     },
     "value": null
   },
-  "type": "bar-chart",
-  "limit": 0,
-  "keys": [
+  "formulaInfo": [
+    {
+      "ref": {
+        "type": "function",
+        "uuid": "9e3e314c-02fb-11e7-93ae-92361f002671",
+        "version": null,
+        "name": "sum(col)"
+      },
+      "attributeId": null,
+      "value": null,
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "(",
+      "attributeName": null,
+      "attributeType": null
+    },
     {
       "ref": {
         "type": "datapod",
@@ -49,30 +70,23 @@
         "version": null,
         "name": "device_data_final_features"
       },
-      "attributeId": 1,
-      "function": null,
+      "attributeId": 6,
       "value": null,
-      "attributeName": "date"
-    }
-  ],
-  "dimension": [],
-  "detailAttr": [],
-  "filterInfo": [],
-  "groups": [],
-  "values": [
+      "attributeName": "fault_code_type_3_count",
+      "attributeType": null
+    },
     {
       "ref": {
-        "type": "formula",
-        "uuid": "ae2c1aab-4355-4224-9f48-73d314ff5742",
+        "type": "simple",
+        "uuid": null,
         "version": null,
-        "name": "fm_problem_report_count"
+        "name": null
       },
       "attributeId": null,
-      "function": null,
-      "value": null,
-      "attributeName": null
+      "value": ")",
+      "attributeName": null,
+      "attributeType": null
     }
   ],
-  "sortBy": [],
-  "sortOrder": null
+  "formulaType": "aggr"
 }
