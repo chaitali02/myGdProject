@@ -298,7 +298,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     TrainService.getAlgorithmByModel(uuid,"",'algorithm').then(function (response) { onGetAlgorithmByModel(response.data) });
     var onGetAlgorithmByModel = function (response) {
       $scope.alorithmData = response;
-      if(response !=null && response.trainClass.indexOf("PCA") !=-1){
+      if(response !=null && response.trainClass !=null && response.trainClass.indexOf("PCA") !=-1){
         $scope.isAlogoritnmPCA=true;
       }else{
         $scope.isAlogoritnmPCA=false;
@@ -785,6 +785,7 @@ DatascienceModule.controller('CreateTrainController', function ($state, $statePa
     sourceref.uuid = $scope.selectSource.uuid;
     source.ref = sourceref;
     TrainJson.source = source;
+    
     if($scope.selectLabel){
     var labelInfo = {};
     var ref = {};

@@ -306,7 +306,7 @@
                                             <div class="col-md-6">
 
                                                 <select class="form-control" select2 name="version" ng-disabled="{{mode}} || isLabelDisable"
-                                                    data-ng-model="selectLabel" ng-options="r as r.dname for r in allsourceLabel track by r.uuid + r.attributeId">
+                                                    data-ng-model="$parent.selectLabel" ng-options="r as r.dname for r in allsourceLabel track by r.uuid + r.attributeId">
                                                 </select>
                                                 <input type="hidden" name="selectLabel" ng-model="selectLabel.uuid"
                                                     required>

@@ -75,7 +75,9 @@ public class BaseRuleExecTemplate {
 			}
 			@SuppressWarnings("unchecked")
 			FutureTask<TaskHolder> futureTask = (FutureTask<TaskHolder>) taskThreadMap.get(execType+"_"+baseRuleExec.getUuid()+"_"+baseRuleExec.getVersion());
+			if (futureTask != null) {
 				futureTask.cancel(true);
+			}
 			synchronized (baseRuleExec.getUuid()) {
 				commonServiceImpl.setMetaStatus(baseRuleExec, execType, Status.Stage.Killed);
 			}

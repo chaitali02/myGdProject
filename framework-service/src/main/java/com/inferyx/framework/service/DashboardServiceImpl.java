@@ -15,7 +15,9 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.matc
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.apache.spark.api.java.JavaSparkContext;
@@ -27,14 +29,21 @@ import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.dao.IDashboardDao;
 import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.Dashboard;
+import com.inferyx.framework.domain.DashboardExec;
 import com.inferyx.framework.domain.Datapod;
+import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.Section;
+import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.User;
+import com.inferyx.framework.domain.VizExec;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.register.GraphRegister;
 
 @Service
@@ -64,6 +73,10 @@ public class DashboardServiceImpl {
     ApplicationServiceImpl applicationServiceImpl; 
     @Autowired
     RelationServiceImpl relationServiceImpl;
+    @Autowired
+    private CommonServiceImpl<?> commonServiceImpl;
+    @Autowired
+    private VizpodServiceImpl vizpodServiceImpl;
     
 	/********************** UNUSED **********************/
     /*public Dashboard findLatest() {
@@ -83,6 +96,54 @@ public class DashboardServiceImpl {
 		Dashboard dshboard=iDashboardDao.save(dashboard);
 		registerGraph.updateGraph((Object) dshboard, MetaType.dashboard);
 		return dshboard;
+	}
+
+	/**
+	 * @param dashboardUuid
+	 * @param dashboardVersion
+	 * @param dashboardExec
+	 * @param execParams
+	 * @param runMode
+	 * @return DashboardExec
+	 * @throws Exception 
+	 */
+	public DashboardExec create(String dashboardUuid, String dashboardVersion, DashboardExec dashboardExec,
+			ExecParams execParams, RunMode runMode) throws Exception {
+		if(dashboardExec == null) {
+			dashboardExec = new DashboardExec();
+			Dashboard dashboard = (Dashboard) commonServiceImpl.getOneByUuidAndVersion(dashboardUuid, dashboardVersion, MetaType.dashboard.toString(), "N");
+			dashboardExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.dashboard, dashboardUuid, dashboard.getVersion())));
+			dashboardExec.setExecParams(execParams);
+			Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
+			dashboardExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
+			
+			List<MetaIdentifierHolder> vizExecInfo = new ArrayList<>();
+			for(Section section : dashboard.getSectionInfo()) {
+				MetaIdentifier vizInfoMI = section.getVizpodInfo().getRef();
+				VizExec vizExec = vizpodServiceImpl.create(vizInfoMI.getUuid(), vizInfoMI.getVersion(), null, execParams, runMode);
+				vizExecInfo.add(new MetaIdentifierHolder(new MetaIdentifier(MetaType.vizExec, vizExec.getUuid(), vizExec.getVersion())));
+			}
+			
+			dashboardExec.setVizExecInfo(vizExecInfo);
+			dashboardExec.setBaseEntity();
+			dashboardExec = (DashboardExec) commonServiceImpl.setMetaStatus(dashboardExec, MetaType.dashboardExec, Status.Stage.NotStarted);
+		}
+		return dashboardExec;
+	}
+
+	/**
+	 * @param dashboardUuid
+	 * @param dashboardVersion
+	 * @param dashboardExec
+	 * @param execParams
+	 * @param runMode
+	 * @return DashboardExec
+	 */
+	public DashboardExec execute(String dashboardUuid, String dashboardVersion, DashboardExec dashboardExec,
+			ExecParams execParams, RunMode runMode) {
+		
+		VizExec vizExec = vizpodServiceImpl.execute();
+		return dashboardExec;
 	}
 
 	/********************** UNUSED **********************/

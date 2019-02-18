@@ -387,7 +387,7 @@ public class DL4JExecutor implements IExecutor {
 	@Override
 	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName,
 			double trainPercent, double valPercent, String tableName, String clientContext, Object algoClass,
-			Map<String, String> trainOtherParam, TrainResult trainResult, String testSetPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql, Map<String, EncodingType> encodingDetails, String saveTrainingSet, String trainingSetPath, Datapod testLocationDP, Datasource testLocationDS, String testLocationTableName, String testLFilePathUrl, Datapod trainLocationDP, Datasource trainLocationDS, String trainLocationTableName, String trainFilePathUrl) throws IOException {
+			Map<String, Object> trainOtherParam, TrainResult trainResult, String testSetPath, List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql, Map<String, EncodingType> encodingDetails, String saveTrainingSet, String trainingSetPath, Datapod testLocationDP, Datasource testLocationDS, String testLocationTableName, String testLFilePathUrl, Datapod trainLocationDP, Datasource trainLocationDS, String trainLocationTableName, String trainFilePathUrl) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -692,7 +692,7 @@ public class DL4JExecutor implements IExecutor {
 	@Override
 	public PipelineModel trainDL(ExecParams execParams, String[] fieldArray, String label, String trainName,
 			double trainPercent, double valPercent, String tableName, String clientContext, Object algoClass,
-			Map<String, String> trainOtherParam) throws IOException {
+			Map<String, Object> trainOtherParam) throws IOException {
 		
 		int batchSize = 50;
 
@@ -928,7 +928,7 @@ public class DL4JExecutor implements IExecutor {
 	@Override
 	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName,
 			double trainPercent, double valPercent, String tableName, List<Param> hyperParamList, String clientContext,
-			Map<String, String> trainOtherParam, TrainResult trainResult, String testSetPath,
+			Map<String, Object> trainOtherParam, TrainResult trainResult, String testSetPath,
 			List<String> rowIdentifierCols, String includeFeatures, String trainingDfSql, String validationDfSql,
 			Map<String, EncodingType> encodingDetails, String saveTrainingSet, String trainingSetPath,
 			Datapod testLocationDP, Datasource testLocationDs, String testLocationTableName, String testLFilePathUrl,

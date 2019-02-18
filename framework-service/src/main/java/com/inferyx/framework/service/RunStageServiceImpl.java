@@ -1034,7 +1034,7 @@ public class RunStageServiceImpl implements Callable<String> {
 					
 				//}
 				//dagExec = dagExecServiceImpl.findOneByUuidAndVersion(dagExecUUID, dagExecVer);
-				dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(dagExecUUID, dagExecVer, MetaType.dagExec.toString());
+				dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(dagExecUUID, dagExecVer, MetaType.dagExec.toString(), "N");
 				stageExec = DagExecUtil.getStageExecFromDagExec(dagExec, stageId);
 				Status.Stage latestStatus = Helper.getLatestStatus(stageExec.getStatusList()).getStage();
 				RunStatusHolder statusHolder = new RunStatusHolder(Boolean.TRUE, 

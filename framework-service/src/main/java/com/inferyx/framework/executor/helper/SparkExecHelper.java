@@ -12,6 +12,9 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.Function;
+import org.apache.spark.ml.linalg.VectorUDT;
+import org.apache.spark.ml.linalg.Vectors;
+import org.apache.spark.mllib.linalg.DenseVector;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.RowFactory;
@@ -66,7 +69,7 @@ public class SparkExecHelper implements Serializable {
 
 			@Override
 			public Row call(Row v1) throws Exception {
-				logger.info("Inside call : feature index : v1 length " + v1.fieldIndex("features") + " : " +v1.length());
+//				logger.info("Inside call : feature index : v1 length " + v1.fieldIndex("features") + " : " +v1.length());
 //				int featuresPos = v1.fieldIndex("features");
 				List<Object> values = new ArrayList<>();
 				for (int i = 0; i < v1.length(); i++) {
@@ -83,6 +86,52 @@ public class SparkExecHelper implements Serializable {
 		}), new StructType(newFields));
 	}
 
+	public Dataset<Row> parseVectorFeatures(Dataset<Row> df, StructField []newFields, List<String> vectorFields) {
+		List<Integer> vectorFieldPos = new ArrayList<>();
+		// Get respective field indices
+		JavaRDD<Row> rowRdd = df.javaRDD();
+		Row row = rowRdd.first();
+		if (row == null || row.length() <= 0) {
+			return df;
+		}
+		for (String vectorField : vectorFields) {
+			vectorFieldPos.add(row.fieldIndex(vectorField));
+		}
+		// All positions of vector collected. Let's proceed
+		
+		return df.sparkSession().createDataFrame(df.javaRDD().map(new Function<Row, Row>() {
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Row call(Row v1) throws Exception {
+				List<Object> values = new ArrayList<>();
+				for (int i = 0; i < v1.length(); i++) {
+					if (vectorFieldPos.contains(i) && v1.get(i) != null) {
+						String tempStr = v1.get(i).toString().startsWith("[") ? v1.get(i).toString().substring(1) : v1.get(i).toString();
+						tempStr = tempStr.endsWith("]") ? tempStr.substring(0, tempStr.length()-2) : tempStr;
+						String[] colData = tempStr.split(",");
+						double[] data = new double[colData.length];
+						int j = 0;
+						for(String val : colData) {
+							val = val.replaceAll("[^0-9]","");
+							data[j] = Double.parseDouble(val.trim());
+							j++;
+						}
+						values.add(Vectors.dense(data));
+					} else {
+						values.add(v1.get(i));
+					}
+				}
+				
+				return RowFactory.create(values.toArray());
+			}
+		}), new StructType(newFields));
+	}
+	
 	public Dataset<Row> getPredictionCompareStatus(Dataset<Row> trainedDataSet) {
 		StructField[] structFields = new StructField[] {new StructField("rowNum", DataTypes.IntegerType, true, Metadata.empty())
 				, new StructField("prediction_status", DataTypes.StringType, true, Metadata.empty())};
