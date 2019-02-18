@@ -19,6 +19,15 @@ public class AttributeRefHolder extends MetaIdentifierHolder {
 	private String attrName;
 	private String attrType;
 	private String attrUnitType;
+	private String function;
+
+	public String getFunction() {
+		return function;
+	}
+
+	public void setFunction(String function) {
+		this.function = function;
+	}
 
 	/**
 	 *

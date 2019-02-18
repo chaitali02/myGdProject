@@ -5146,4 +5146,53 @@ public class CommonServiceImpl<T> {
 		}
 		return columns;
 	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public List findAllLatest(MetaType type, String attrDesc) {
+		List objectList = new ArrayList();
+		List finalObjectList = new ArrayList();
+		java.util.HashMap<String, BaseEntity> objectMap = new java.util.HashMap<>();
+		BaseEntity baseEntity = null;
+		String appUuid = null;
+		if (!type.equals(MetaType.user) && !type.equals(MetaType.group) && !type.equals(MetaType.role)
+				&& !type.equals(MetaType.privilege) && !type.equals(MetaType.application)) {
+			appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
+					? securityServiceImpl.getAppInfo().getRef().getUuid()
+					: null;
+		}
+		try {
+			Object iDao = this.getClass().getMethod(GET + Helper.getDaoClass(type)).invoke(this);
+			if (appUuid == null && attrDesc == null) {
+				objectList = (List) (iDao).getClass().getMethod("findAll").invoke(iDao);
+			} else if (attrDesc == null) {
+				objectList = (List) (iDao).getClass().getMethod("findAll", String.class).invoke(iDao, appUuid);
+			} else {
+				objectList = (List) (iDao).getClass().getMethod("findAll", String.class, String.class).invoke(iDao,
+						appUuid, attrDesc);
+			}
+			// List<BaseEntity> baseEntityList = getBaseEntityList(objectList);
+
+			for (int i = 0; i < objectList.size(); i++) {
+				baseEntity = BaseEntity.class.cast(objectList.get(i));
+				if (objectMap.containsKey(baseEntity.getUuid())) {
+					if (Long.parseLong(baseEntity.getVersion()) > Long
+							.parseLong(objectMap.get(baseEntity.getUuid()).getVersion())) {
+						objectMap.put(baseEntity.getUuid(), baseEntity);
+					}
+				} else {
+					objectMap.put(baseEntity.getUuid(), baseEntity);
+				}
+			}
+			for (String uuid : objectMap.keySet()) {
+				finalObjectList.add(Helper.getDomainClass(type).cast(objectMap.get(uuid)));
+				// finalObjectList.add(objectMap.get(uuid));
+			}
+			return finalObjectList;
+		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 }

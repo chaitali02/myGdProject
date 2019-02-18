@@ -1012,7 +1012,7 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
             
          d3.selectAll('#showgrouppaper .joint-element .body')
            .on('contextmenu', function(){
-             
+             debugger
              d3.event.preventDefault();
              d3.event.stopPropagation();
              var vm = this;
@@ -1886,7 +1886,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
              //   }
          // },
          defaultLink : function(cellView, magnet) {
-           console.log(cellView)
+          // console.log(cellView)
            return new joint.dia.Link(angular.merge({},dagMetaDataService.getDefaultLink(),{
              attrs: { '.connection': { 'source-id':cellView.model.id  }}
            }));
@@ -1954,6 +1954,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          $('#paper svg').addClass('view-mode');
          d3.selectAll('.joint-element .body')
          .on('contextmenu', function(){
+           
            d3.event.preventDefault();
            d3.event.stopPropagation();
            var vm = this;
@@ -1985,13 +1986,14 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
              if(iconMenuItems.length == 0){
                return;
              }
+  
              iconMenu.resetItems(iconMenuItems);
              var apis = {
                dag : {name:'dag', label: 'dag'},
                stage : {name:'stage', label: 'stage'},
              }
              var resultparams = {id:id,name:type,elementType:type,type: apis[type].name,typeLabel:apis[type].label};
-             iconMenu(localPoint.x, localPoint.y, JSON.stringify(state),JSON.stringify(resultparams));
+             iconMenu(localPoint.x, localPoint.y, JSON.stringify(state),null,JSON.stringify(resultparams));
              return;
            }//End If
            console.log(cell);
@@ -2879,6 +2881,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
           };
 
           function menu(x, y, url,execUrl,resultParams) {
+            //debugger
             d3.select('.context-menu').remove();
             scaleItems();
             // Draw the menu
