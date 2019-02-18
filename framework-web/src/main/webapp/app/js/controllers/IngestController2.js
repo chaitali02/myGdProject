@@ -292,7 +292,6 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 	$scope.getDatasourceForFile = function (sourceType, TargetType) {
 		IngestRuleService.getDatasourceForFile("datasource").then(function (response) { onSuccessGetDatasourceForFile(response.data) }, function (response) { onError(response.data) });
 		var onSuccessGetDatasourceForFile = function (response) {
-			debugger
 			if (sourceType == "FILE") {
 				$scope.allSourceDatasource = response;
 			}
@@ -486,7 +485,12 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 				$scope.selectedTargetFormate = null;
 			}
 			else{
-				$scope.isTargetFormateDisable=false;
+				if($scope.selectedTargetType=="TABLE")
+					$scope.isTargetFormateDisable=true;
+				else{
+					$scope.isTargetFormateDisable=false;
+				}
+
 			    $scope.selectedTargetFormate = null;
 			}
 		}
