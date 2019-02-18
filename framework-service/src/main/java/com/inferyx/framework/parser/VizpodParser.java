@@ -217,7 +217,9 @@ public class VizpodParser {
 						logger.info("datapodName : " + datapodName);
 						finalBuilder.append(datapodName + "." + keyAttrName).append(comma);
 					}
-					finalBuilder.replace(finalBuilder.length() - 1, finalBuilder.length(), "");
+					if(finalBuilder.toString().endsWith(",")) {
+						finalBuilder.replace(finalBuilder.length() - 1, finalBuilder.length(), "");
+					}
 				}
 				
 				// Having
@@ -234,7 +236,7 @@ public class VizpodParser {
 				finalBuilder.append(orderByBuilder).append(" ");
 			}
 			
-			result = finalBuilder.length() > 0 ? finalBuilder.substring(0, finalBuilder.length() - 1) : "";
+			result = finalBuilder.length() > 0 ? (finalBuilder.toString().endsWith(",") ? finalBuilder.substring(0, finalBuilder.length() - 1) : finalBuilder.toString()) : "";
 			logger.info(String.format("Final Vizpod filter %s", result));
 
 		} else if ((MetaType.relation).equals(vizpod.getSource().getRef().getType())) {
