@@ -218,7 +218,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 //								 dagExec = (DagExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.dagExec, uuid, version));
 								 dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString(), "N");
 								 stage=dagExec.getStages().get(count);
-								 count++;
+//								 count++; -- Commented this portion to fix status bug where Completed stage goes into Killed.
 								 stageExec = DagExecUtil.convertToStageExec(stage);
 								commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.Killed, stageId);
 							} catch (Exception e) {
@@ -227,6 +227,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 							}
 						}
 					}
+					count++;					
 				}	// End for
 				return status;
 			}
