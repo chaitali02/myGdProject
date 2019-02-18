@@ -415,16 +415,32 @@ print()
 print()
 
 # Importing the dataset
-dataset = PD_DataFrame
+# def getData(filePath, dsType, hostName, dbName, port, userName, password, db_driver, db_url, sqlQuery):
+#     print("inside method getData()")
+#     print("filePath : dsType : hostName : dbName : port : userName : password <<<<< >>>>> ", filePath, " : ", dsType, " : ", hostName, " : ", dbName, " : ", port, " : ", userName, " : ", password)
+#     sqlContext = SQLContext(sparkSession.sparkContext)
+#     if dsType == "file":
+# #         dataset = pd.read_csv(filePath)
+# #         dataset = pd.read_parquet(filePath)
+#         spark_df = sqlContext.read.parquet(filePath)
+#         return spark_df.toPandas()         
+#     
+#     elif dsType == "hive":
+#         sparkSession.sql("SET hive.exec.dynamic.partition=true")
+#         sparkSession.sql("SET hive.exec.dynamic.partition.mode=nonstrict")
+#         return sparkSession.sql(sqlQuery)         
+#     
+#     else:
+#         return sqlContext.read.format("jdbc").option(driver = db_driver).option(url = db_url).option(user = userName).option(password = password).option(dbtable =  "(", sql ,") as mysql_table").load()
+            
 def getData(filePath, dsType, hostName, dbName, port, userName, password, sqlQuery):
     print("inside method getData()")
     print("filePath : dsType : hostName : dbName : port : userName : password <<<<< >>>>> ", filePath, " : ", dsType, " : ", hostName, " : ", dbName, " : ", port, " : ", userName, " : ", password)
     if dsType == "file":
 #         dataset = pd.read_csv(filePath)
 #         dataset = pd.read_parquet(filePath)
-#         sparkSession = getSparkSession()
-        sc = sparkSession.sparkContext
-        sqlContext = SQLContext(sc)
+#         sc = sparkSession.sparkContext
+        sqlContext = SQLContext(sparkSession.sparkContext)
         spark_df = sqlContext.read.parquet(filePath)
         dataset = spark_df.toPandas()
         return dataset
