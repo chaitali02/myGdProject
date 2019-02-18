@@ -4267,28 +4267,56 @@ public class SparkExecutor<T> implements IExecutor {
 		int s=a.length;
 		df.head(2);
 		df.show();
+		
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		ConnectionHolder conHolder = connector.getConnection();
 		SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
-		List<Row> data = Arrays.asList(
-				  RowFactory.create(Vectors.sparse(a.length, new int[]{0, a.length-1}, new double[]{1.0, -2.0})),
-				  RowFactory.create(Vectors.dense(4.0, 5.0, 0.0)),
-				  RowFactory.create(Vectors.dense(6.0, 7.0, 0.0)),
-				  RowFactory.create(Vectors.sparse(a.length, new int[]{0, a.length-1}, new double[]{9.0, 1.0}))
-				);
+		
+		List<Row> dynamicList=createRowListdense(df.collectAsList());
+		List<Row> list = Arrays.asList(
+				RowFactory.create(Vectors.sparse(a.length, new int[] { 0, a.length - 1 }, new double[] { 1.0, -2.0 })),
+				RowFactory.create(Vectors.dense(4.0, 5.0, 0.0)), RowFactory.create(Vectors.dense(4.0, 5.0, 0.0)),
+				RowFactory.create(Vectors.dense(4.0, 5.0, 0.0)), RowFactory.create(Vectors.dense(6.0, 7.0, 0.0)),
+				RowFactory.create(Vectors.sparse(a.length, new int[] { 0, a.length - 1 }, new double[] { 9.0, 1.0 }))
+		);
+		
+		
+		List<Row> data = (List<Row>) dynamicList;
 
 				StructType schema = new StructType(new StructField[]{
 				  new StructField("features", new VectorUDT(), false, Metadata.empty()),
 				});
-
+			
 			Dataset<Row> df1 = sparkSession.createDataFrame(data, schema);
 				Row r1 = Correlation.corr(df1, "features").head();
-				System.out.println("Pearson correlation matrix:\n" + r1.get(1).toString());
+				Row r2 = Correlation.corr(df1, "features","spearman").head();
+				System.out.println("spearman correlation matrix:\n" + r2.get(0).toString());
+
+				System.out.println("Pearson correlation matrix:\n" + r1.get(0).toString());
+				
 				df1.printSchema();
 				df1.show();
 				df.show();
 		rsHolder.setDataFrame(df1);
 		
 		return rsHolder;
+	}
+	
+	private List<Row> createRowListdense(List<Row> rowObjList) {
+		List<Row> rowList = new ArrayList<>();
+		if (rowObjList == null || rowObjList.isEmpty()) {
+			return null;
+		}
+		int count=0;
+		for (Row rowObj : rowObjList) {
+			//Object[] d=rowObj.getRowData();
+			System.out.println(rowObj);
+			rowObj.schema();
+			System.out.println((double)((Object)rowObj.getDouble(count)));
+			double r = (double)((Object)rowObj.getDouble(count));
+
+			rowList.add(RowFactory.create(Vectors.dense((double)((Object)rowObj.getDouble(count)))));
+		}
+		return rowList;
 	}
 }
