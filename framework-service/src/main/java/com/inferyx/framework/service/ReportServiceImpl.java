@@ -359,4 +359,11 @@ public class ReportServiceImpl {
 		}
 		return response;
 	}
+	
+	public Report getReportByReportExec(String reportExecUuid) throws JsonProcessingException {
+		Report report =null;
+		ReportExec reportExec = (ReportExec) commonServiceImpl.getOneByUuidAndVersion(reportExecUuid,null, MetaType.reportExec.toString(), "N");
+		report=(Report) commonServiceImpl.getOneByUuidAndVersion(reportExec.getDependsOn().getRef().getUuid(),reportExec.getDependsOn().getRef().getVersion(), MetaType.report.toString(), "Y");
+		return report;
+	}
 }
