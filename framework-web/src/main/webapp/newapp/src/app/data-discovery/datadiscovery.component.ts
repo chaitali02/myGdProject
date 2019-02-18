@@ -1,14 +1,15 @@
 import { NgModule, Component, ViewEncapsulation } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
-import { DatadiscoveryService } from './datadiscovery.service';
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
-import { DataDiscovery } from './data-discovery';
 
-import { DatapodComponent } from '../data-preparation/datapod/datapod.component';
+import { AppMetadata } from '../app.metadata';
 import { FilterPipeDD } from './pipes/search-pipe';
 import { OrderBy } from './pipes/orderBy';
-import { AppMetadata } from '../app.metadata';
+
+import { DatadiscoveryService } from './datadiscovery.service';
+
+import { DataDiscovery } from './data-discovery';
 
 @Component({
   selector: 'app-login',
@@ -27,8 +28,12 @@ export class DataDiscoveryComponent {
   routerUrl: any;
   searchText: any;
   smallnumPages = 0;
-  colorclassarray:any[]
+  colorclassarray: any[];
+  isEditInprogess : boolean;
+  isEditError : boolean;
   constructor(private http: Http, private _service: DatadiscoveryService, private datePipe: DatePipe, public metaconfig: AppMetadata, public router: Router, private route: ActivatedRoute) {
+    this.isEditInprogess = false;
+    this.isEditError = false;
     this.currentPage = 1;
     this.breadcrumbDataFrom = [{
       "caption": "Data Discovery",
@@ -45,32 +50,29 @@ export class DataDiscoveryComponent {
     ];
   }
   ngOnInit() {
-    const data1 = this._service.getDatapodStats().subscribe(
+    this.isEditInprogess = true;
+    this._service.getDatapodStats().subscribe(
       response => { this.OnSuccesAllMeta(response) },
-      error => console.log('Error :: ' + error)
+      error => {console.log('Error :: ' + error)
+      this.isEditError = false;}
     )
   }
-  OnSuccesAllMeta(response) {
+  OnSuccesAllMeta(response: any) {
     const data = response;
-    // console.log(response.length())
-    // this.totalItems = response.length();
-
     let count = 0;
     for (const item in data) {
       if (data[item].lastUpdatedOn != null) {
-        let date =response[item].lastUpdatedOn.split(" ");
-        date.splice(date.length-2,1);
-        data[item].lastUpdatedOn = new Date(date.toString().replace(/,/g," "));
+        let date = response[item].lastUpdatedOn.split(" ");
+        date.splice(date.length - 2, 1);
+        data[item].lastUpdatedOn = new Date(date.toString().replace(/,/g, " "));
       }
       else {
         data[item].lastUpdatedOn = '';
       }
-      if(data[item].numRows == null){
+      if (data[item].numRows == null) {
         data[item].numRows = 0;
       }
-      // var randomno = Math.floor((Math.random() * 4) + 0);
       var randomno = Math.floor(Math.random() * Math.floor(4));
-      console.log(randomno);
       data[item].classColor = this.colorclassarray[randomno];
 
       this.locations_temp.push(new DataDiscovery(
@@ -81,18 +83,14 @@ export class DataDiscoveryComponent {
         data[item].dataSource,
         data[item].numRows,
         data[item].lastUpdatedOn,
-        data[item].classColor 
-        //this.datePipe.transform(new Date(data[item].lastUpdatedOn),"MM dd yyyy")        
-        //new Date(null)
+        data[item].classColor
       ));
       count++;
     }
     this.totalItems = count;
-    //console.log(count);
     this.getResults(this.locations_temp);
-    //console.log('locations', JSON.stringify(this.locations));
   }
-  getResults(data) {
+  getResults(data: any) {
     if (this.totalItems > 0) {
       let to = (((this.currentPage - 1) * (10)) + 1);
     }
@@ -107,8 +105,9 @@ export class DataDiscoveryComponent {
     var limit = (10 * this.currentPage);
     var offset = ((this.currentPage - 1) * 10)
     this.locations = data.slice(offset, limit);
+    this.isEditInprogess = false;
   }
-  onShowDetail(event, datadiscovry) {
+  onShowDetail(event: Event, datadiscovry: any) {
     this.routerUrl = this.metaconfig.getMetadataDefs('datapod')['detailState']
     this.router.navigate(['./dataPreparation/datapod', datadiscovry.uuid, datadiscovry.version, 'true'], { relativeTo: this.route });
   }
@@ -124,7 +123,7 @@ export class DataDiscoveryComponent {
     console.log('Number items per page: ' + event.itemsPerPage);
   }
 
-  refersh() {
+  refersh() {debugger
     this._service.getDatapodStats().subscribe(
       response => { this.OnSuccesAllMeta(response) },
       error => console.log('Error :: ' + error)

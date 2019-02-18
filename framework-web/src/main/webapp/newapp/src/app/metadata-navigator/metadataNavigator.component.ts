@@ -1,88 +1,114 @@
 import { NgModule, Component, ViewEncapsulation } from '@angular/core';
-import {Router,ActivatedRoute} from '@angular/router';
-import {metadataNavigatorService} from './metadataNavigator.service';
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
-import { metadataNavigator } from './metadataNavigator';
-
-import {FilterMetaPipe} from './pipes/search-pipe';
-import {OrderByMeta} from './pipes/orderBy';
-import {AppMetadata} from '../app.metadata';
+import { Router, ActivatedRoute } from '@angular/router';
 import { DatePipe } from '@angular/common';
+
+import { AppMetadata } from '../app.metadata';
+
+import { metadataNavigatorService } from './metadataNavigator.service';
+import { MetadataNavigator } from '../metadata/domain/metadataNavigator';
+
+import { MetadataIO } from './../../app/metadata/domainIO/domain.metadataIO';
+
+import { FilterMetaPipe } from './pipes/search-pipe';
+import { OrderByMeta } from './pipes/orderBy';
 
 @Component({
   selector: 'app-login',
-  styleUrls: [],
   templateUrl: './metadataNavigator.template.html',
   providers: [DatePipe]
 })
 export class metadataNavigatorComponent {
   optiondata: { 'caption': string; name: string; };
   allMetaCount: any[];
-
-  locations: Array<metadataNavigator>;
-  optionsort:any;
-  breadcrumbDataFrom:any;
-  routerUrl:any;
-  searchText:any;
-  constructor(private http: Http, private datePipe: DatePipe, private _service: metadataNavigatorService,public metaconfig: AppMetadata, public router: Router,private route: ActivatedRoute) {
-    this.breadcrumbDataFrom=[{
-      "caption":"Metadata Navigator",
-      "routeurl":null
-    }
+  locations: Array<MetadataNavigator>;
+  optionsort: any;
+  breadcrumbDataFrom: any;
+  metadata: MetadataNavigator;
+  routerUrl: any;
+  searchText: any;
+  metajson: any;
+  isEditInprogess: any;
+  c: any;
+  constructor(private http: Http, private datePipe: DatePipe, private _service: metadataNavigatorService, public metaconfig: AppMetadata, public router: Router, private route: ActivatedRoute) {
+    this.breadcrumbDataFrom = [
+      {
+        "caption": "Metadata Navigator",
+        "routeurl": null
+      }
     ]
-
+    this.isEditInprogess = false;
+    this.metadata = new MetadataNavigator();
   }
   ngOnInit() {
-
-    this.optiondata={'caption':'Name A-Z',name:'caption'};
+    this.optiondata = { 'caption': 'Name A-Z', name: 'caption' };
     this.optionsort = [
-      {'caption': 'Name A-Z', name: 'caption'},
-      {'caption': 'Name Z-A', name: '-caption'},
-      {'caption': 'Date Asc', name: 'lastUpdatedOn'},
-      {'caption': 'Date Desc', name: '-lastUpdatedOn'},
+      { 'caption': 'Name A-Z', name: 'caption' },
+      { 'caption': 'Name Z-A', name: '-caption' },
+      { 'caption': 'Date Asc', name: 'lastUpdatedOn' },
+      { 'caption': 'Date Desc', name: '-lastUpdatedOn' },
     ];
-
-    this._service.getMetaStats()
-    .subscribe(
-      response =>{
+    this.c = { 'caption': '', name: '' },
+    this.c.caption = "Name A-Z";
+    this.isEditInprogess= true
+    this._service.getMetaStats().subscribe(
+      response => {
         this.OnSuccesAllMeta(response)
-    },
+      },
       error => console.log("Error :: " + error)
     )
   }
-  OnSuccesAllMeta(response) {
-    const data = response;
+
+  OnSuccesAllMeta(response : MetadataNavigator) {
+    this.metadata = response;
     let colorclassarray = ["blue-sharp", "green-sharp", "purple-soft", "red-haze"]
     let metaarray = []
-    let count=0;
-    for (let i = 0; i < response.length; i++) {
+    let count = 0;
+    for(const i in response){
       let patt = new RegExp("exec");
       let res = patt.exec(response[i].type);
-      if (res == null && response[i].type!='condition'&&response[i].type!='appconfig' && response[i].type!='dimension'&& response[i].type!='message' && response[i].type!='log' && response[i].type!='measure') {
-            let metajson = {};
-            metajson["type"] = response[i].type;
-            metajson["count"] = response[i].count;
-            metajson["lastUpdatedBy"] = response[i].lastUpdatedBy;
-            if(response[i].lastUpdatedOn!=null){
-              //let date=new Date(response[i].lastUpdatedOn.split("IST")[0])
-             // metajson["lastUpdatedOn"] = this.datePipe.transform(date, 'MM-dd-yyyy');
-             metajson["lastUpdatedOn"] = new Date(response[i].lastUpdatedOn.split("IST")[0]);
-            }
-            else{
-              metajson["lastUpdatedOn"] = response[i].lastUpdatedOn;
-            }
-            let randomno = Math.floor((Math.random() * 4) + 0);
-            metajson["class"] = colorclassarray[randomno];
+      if (res == null && response[i].type != 'paramlistmodel' && response[i].type != 'paramlistdag' && response[i].type != 'condition' &&
+        response[i].type != 'paramlistrule' && response[i].type != 'organization' && response[i].type != 'lov' &&
+        response[i].type != 'appconfig' && response[i].type != 'dimension' && response[i].type != 'message' && response[i].type != 'log' && response[i].type != 'measure') {
 
-            metajson["caption"] = this.metaconfig.getMetadataDefs(response[i].type)['caption'];
-            metajson["icon"] = this.metaconfig.getMetadataDefs(response[i].type)['class']
-            metaarray[count] = metajson;
-            count=count+1;
+        if (response[i].lastUpdatedOn != null) {
+          let date = response[i].lastUpdatedOn.split(" ");
+          date.splice(date.length - 2, 1);
+          this.metadata[i].lastUpdatedOn = new Date(date.toString().replace(/,/g, " "));
+        }
+        else {
+          this.metadata[i].lastUpdatedOn = response[i].lastUpdatedOn;
+        }
 
+        //for color
+        let randomno = Math.floor((Math.random() * 4) + 0);
+        this.metadata[i].colorClass = colorclassarray[randomno];
+        
+        //fetch icon & caption from app.metatdata.ts
+        let type = response[i].type;
+
+              let metaType = new MetadataIO();
+              console.log(JSON.stringify(this.metaconfig.getMetadataDefs(response[i].type)));
+              metaType = this.metaconfig.getMetadataDefs(response[i].type);
+
+        this.metadata[i].caption = metaType.caption;
+        this.metadata[i].icon= metaType.class;//contains icon name
+        metaarray[count] = this.metadata[i];
+        count = count + 1;
       }
-   
+    }
+    this.allMetaCount = metaarray;
+    console.log(this.allMetaCount)
+    this.isEditInprogess= false
   }
-  this.allMetaCount = metaarray;
-  console.log(this.allMetaCount)
-}
+
+  refersh() {
+    this.allMetaCount = [];
+    this._service.getMetaStats().subscribe(
+      response => {
+        this.OnSuccesAllMeta(response)
+      },
+      error => console.log("Error :: " + error)
+    )
+  }
 }
