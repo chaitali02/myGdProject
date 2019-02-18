@@ -104,7 +104,7 @@ public interface IDatapodDao extends MongoRepository<Datapod, String> {
 	@Query(value = "{'_id' : ?0}")
 	public Datapod save(String id);	
 	
-	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,$or : [{'name' : ?1} ,{'desc' : ?1 },{'attributes':{$elemMatch:{'name':?1}}}]}")
+	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,$or : [ {'name' : {$regex : ?1}}, {'desc' : {$regex : ?1}}, {'attributes':{$elemMatch:{'name':{$regex : ?1}}}, {'attributes':{$elemMatch:{'desc':{$regex : ?1}}} }]}")
 	public List<Datapod> findAll(String appUuid,String searchStr);
 
 
