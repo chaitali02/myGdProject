@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
@@ -203,17 +204,20 @@ public class VizpodParser {
 				// Include only non-aggregate formulae in group by clause 
 				if (!vizpod.getValues().isEmpty()) {
 					for (AttributeDetails attrDet : vizpod.getValues()) {
-//						Object object = daoRegister.getRefObject(attrDet.getRef());
-						Object object = commonServiceImpl.getOneByUuidAndVersion(attrDet.getRef().getUuid(), attrDet.getRef().getVersion(), attrDet.getRef().getType().toString(), "N");
-						if ((object instanceof Formula) && (((Formula)object).getFormulaType() == FormulaType.aggr)) {
+						// Object object = daoRegister.getRefObject(attrDet.getRef());
+						Object object = commonServiceImpl.getOneByUuidAndVersion(attrDet.getRef().getUuid(),
+								attrDet.getRef().getVersion(), attrDet.getRef().getType().toString(), "N");
+						if ((object instanceof Formula) && (((Formula) object).getFormulaType() == FormulaType.aggr)) {
 							continue;
 						}
 						String keyAttrName = datapodServiceImpl.getAttributeName(attrDet.getRef().getUuid(),
 								attrDet.getAttributeId());
-						String datapodName = ((Datapod) commonServiceImpl.getLatestByUuid(attrDet.getRef().getUuid(), MetaType.datapod.toString(), "N")).getName();
+						String datapodName = ((Datapod) commonServiceImpl.getLatestByUuid(attrDet.getRef().getUuid(),
+								MetaType.datapod.toString(), "N")).getName();
 						logger.info("datapodName : " + datapodName);
 						finalBuilder.append(datapodName + "." + keyAttrName).append(comma);
 					}
+					finalBuilder.replace(finalBuilder.length() - 1, finalBuilder.length(), "");
 				}
 				
 				// Having
@@ -353,6 +357,7 @@ public class VizpodParser {
 						groupByBuilder.append(datapodName + "." + keyAttrName).append(comma);
 						
 					}
+					groupByBuilder.replace(groupByBuilder.length()-2, groupByBuilder.length(), "");
 				}
 			}
 			
@@ -412,10 +417,16 @@ public class VizpodParser {
 			for (AttributeDetails attrDet : attrDetList) {
 				for(AttributeSource attributeSource : dataSet.getAttributeInfo()) {
 					if(attributeSource.getAttrSourceId().equalsIgnoreCase(attrDet.getAttributeId()+"")) {
-						attributeInfo.add(attributeSource);
+						if(attrDet.getFunction()==null) {
+							attributeInfo.add(attributeSource);
+						}else {
+							attributeSource.setFunction(attrDet.getFunction());
+							attributeInfo.add(attributeSource);
+						}
+						
 					} 
 				}
-				
+			
 //				if(attrDet.getRef().getType() == MetaType.formula)	{
 //					Formula formula = (Formula) commonServiceImpl.getLatestByUuid(attrDet.getRef().getUuid(), MetaType.formula.toString());
 //					Datasource vizDS = commonServiceImpl.getDatasourceByObject(vizpod);
@@ -485,21 +496,22 @@ public class VizpodParser {
 		return result;
 	}
 	
-	private StringBuilder generateOderBy(List<AttributeDetails> sortBy, String sortOrder) {
+	private StringBuilder generateOderBy(List<AttributeDetails> sortBy, String sortOrder)
+			throws JsonProcessingException {
 		StringBuilder orderByBuilder = new StringBuilder();
-		if(sortBy != null && !sortBy.isEmpty()) {
+		if (sortBy != null && !sortBy.isEmpty()) {
 			orderByBuilder.append(" ORDER BY ");
 			int i = 0;
-			for(AttributeDetails attributeDetails : sortBy) {
+			for (AttributeDetails attributeDetails : sortBy) {
 				orderByBuilder.append(attributeDetails.getAttributeName());
-				if(i<sortBy.size()-1) {
+				if (i < sortBy.size() - 1) {
 					orderByBuilder.append(", ");
 				}
 				i++;
 			}
 			orderByBuilder.append(" ").append(sortOrder);
 		}
-		
+
 		return orderByBuilder;
 	}
 

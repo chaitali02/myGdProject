@@ -63,6 +63,7 @@ public interface IDatapodDao extends MongoRepository<Datapod, String> {
 	@Query(value = "{'uuid':?0}")
 	public Datapod findAllByUuid(String uuid);
 
+	
 	/*
 	 * @Query(
 	 * value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'targetDatapod.name' : ?1}"
@@ -102,6 +103,10 @@ public interface IDatapodDao extends MongoRepository<Datapod, String> {
 	
 	@Query(value = "{'_id' : ?0}")
 	public Datapod save(String id);	
+	
+	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,$or : [{'name' : ?1} ,{'desc' : ?1 }]}")
+	public List<Datapod> findAll(String appUuid,String attrDesc);
+
 
 //	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'_id' : ?1}")
 //	public Datapod count(String appUuid);

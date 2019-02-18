@@ -15,6 +15,8 @@ public class AttributeSource {
 	private String attrSourceId;
 	private String attrDisplaySeq;
 	private String attrSourceName;
+	private String function;
+	
 	private AttributeRefHolder sourceAttr;
 	
 	public String getAttrDisplaySeq() {
@@ -41,7 +43,12 @@ public class AttributeSource {
 	public void setAttrSourceName(String attrSourceName) {
 		this.attrSourceName = attrSourceName;
 	}
-	
+	public String getFunction() {
+		return function;
+	}
+	public void setFunction(String function) {
+		this.function = function;
+	}
 	
 	
 
