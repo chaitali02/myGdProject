@@ -10,73 +10,71 @@ export class AppMetadata {
   constructor() {
     this.obj = {};
     this.obj.metadataDefs = {
-
       'dag': {
         name: 'dag',
         caption: 'Pipeline',
         execType: 'dagexec',
         metaType: 'dag',
         color: '#EB54C3',
+        icon: '',
         iconPath: 'assets/img/dag.svg',
+        iconCaption:'',
         allowInMenu: false,
         listState: '',
         detailState: 'dag',
+        resultState: '',
         moduleState: 'dataPipeline',
         moduleCaption: 'Data Pipeline',
         class: 'fa fa-random'
       },
-      'stage': {
-        name: 'stage',
-        caption: 'Stage',
-        color: 'blue',
-        icon: 'stage.svg',
-        execType: '',
-        metaType: '',
-        iconPath: 'assets/img/stage.svg',
-        allowInMenu: true,
-      },
       'dq': {
         name: 'dataqual',
         caption: "Data Quality",
-        color: 'orange',
-        icon: 'dq.svg',
         execType: 'dqexec',
         metaType: 'dq',
+        color: 'orange',
+        icon: 'dq.svg',
         iconPath: 'assets/img/dq.svg',
+        iconCaption: '',
         allowInMenu: true,
         listState: 'viewdataquality',
         detailState: 'dq',
+        resultState: '',
         moduleState: 'dataQuality',
         moduleCaption: 'Data Quality',
         class: 'fa fa-rss'
       },
       'dqgroup': {
         name: 'dqgroup',
-        caption: " Data Quality Group",
-        color: 'orange',
-        icon: 'dq.svg',
-        execType: 'dqgroupExec',
+        caption: "Data Quality Group",       
+        execType: 'dqgroupexec',
         metaType: 'dqgroup',
+        color: 'orange',
+        icon: 'dqgroup.svg',
         iconPath: 'assets/img/dq.svg',
+        iconCaption: '',
         allowInMenu: true,
         listState: 'viewdataqualitygroup',
         detailState: 'dqgroup',
+        resultState: '',
         moduleState: 'dataQuality',
         moduleCaption: 'Data Quality',
-        state: 'createdataqualitygroup',
         class: 'fa fa-rss'
       },
       'map': {
         name: 'map',
         caption: "Map",
-        color: '#f75b8f',
-        icon: 'map.svg',
         execType: 'mapExec',
         metaType: 'map',
+        color: '#f75b8f',
+        icon: 'map.svg',
         iconPath: 'assets/img/map.svg',
+        iconCaption: '',
         allowInMenu: true,
+        listState: '',
         state: 'metaListmap',
         detailState: 'map',
+        resultState: '',
         moduleState: 'dataPreparation',
         moduleCaption: 'Data Preparation',
         class: 'fa fa-link'
@@ -84,14 +82,17 @@ export class AppMetadata {
       'load': {
         name: 'load',
         caption: 'Load',
-        color: '#933f5b',
-        icon: 'load.svg',
         execType: 'loadExec',
         metaType: 'load',
+        color: '#933f5b',
+        icon: 'load.svg',
         iconPath: 'assets/img/load.svg',
+        iconCaption: '',
         allowInMenu: true,
         state: 'metaListload',
+        listState: '',
         detailState: 'load',
+        resultState: '',
         moduleState: 'dataPreparation',
         moduleCaption: 'Data Preparation',
         class: 'fa fa-link'
@@ -99,14 +100,17 @@ export class AppMetadata {
       'profile': {
         name: 'profile',
         caption: 'Profile',
-        color: '#00A8F0',
-        icon: 'profile.svg',
         execType: 'profileExec',
         metaType: 'profile',
+        color: '#00A8F0',
+        icon: 'profile.svg',
         iconPath: 'assets/img/profile.svg',
+        iconCaption: '',
         allowInMenu: true,
         state: 'createprofile',
+        listState: '',
         detailState: 'profile',
+        resultState: '',
         moduleState: 'dataProfiling',
         moduleCaption: 'Data Profiling',
         class: 'fa fa-users'
@@ -114,14 +118,16 @@ export class AppMetadata {
       'profilegroup': {
         name: 'profilegroup',
         caption: 'Profile Group',
-        color: '#00A8F0',
-        icon: 'profilegroup.svg',
         execType: 'profilegroupExec',
         metaType: 'profilegroup',
+        color: '#00A8F0',
+        icon: 'profilegroup.svg',
         iconPath: 'assets/img/profilegroup.svg',
         allowInMenu: true,
         state: 'createprofilegroup',
         detailState: 'profilegroup',
+        listState: '',
+        resultState: '',
         moduleCaption: 'Data Profiling',
         moduleState: 'dataProfiling',
         class: 'fa fa-users'
@@ -129,14 +135,16 @@ export class AppMetadata {
       'model': {
         name: 'model',
         caption: 'Model',
-        color: '#4132C7',
-        icon: 'model.svg',
         execType: 'modelExec',
         metaType: 'model',
+        color: '#4132C7',
+        icon: 'model.svg',
         iconPath: 'assets/img/model.svg',
         allowInMenu: true,
-        state: 'createmodel',
+        //state: 'createmodel',
         detailState: 'model',
+        listState: '',
+        resultState: '',
         moduleState: 'dataScience',
         moduleCaption: 'Data Science',
         class: 'fa fa-flask'
@@ -144,43 +152,46 @@ export class AppMetadata {
       'rulegroup': {
         name: 'rulegroup',
         caption: 'Rule Group',
-        color: '#2489D1',
-        icon: 'rulegroup.svg',
         execType: 'rulegroupExec',
         metaType: 'rulegroup',
+        color: '#2489D1',
+        icon: 'rulegroup.svg',
         iconPath: 'assets/img/rulegroup.svg',
         allowInMenu: false,
         listState: 'rulesgroup',
         detailState: 'rulegroup',
+        resultState: '',
+        //state: 'createrulesgroup',
         moduleState: 'businessRules',
-        state: 'createrulesgroup',
         moduleCaption: 'Businness Rule',
         class: 'fa fa-cogs'
       },
       'rule': {
         name: 'rule',
         caption: 'Rule',
-        color: '#2489D1',
-        icon: 'rule.svg',
         execType: 'ruleExec',
         metaType: 'rule',
+        color: '#2489D1',
+        icon: 'rule.svg',
         iconPath: 'assets/img/rule.svg',
+        iconCaption: '',
         allowInMenu: false,
         listState: 'viewrule',
         detailState: 'rule',
         moduleState: 'businessRules',
         moduleCaption: 'Businness Rule',
-        state: 'createrules',
+        resultState: '',
+        //state: 'createrules',
         class: 'fa fa-cogs'
       },
       'recon': {
         name: 'recon',
         caption: 'Rule',
-        color: '#2489D1',
-        icon: 'rule.svg',
         iconCaption: 'Recon',
         execType: 'reconExec',
         metaType: 'recon',
+        color: '#2489D1',
+        icon: 'rule.svg',
         iconPath: 'assets/img/recon.svg',
         iconPathInactive: 'assets/img/reconinactive.svg',
         allowInMenu: true,
@@ -214,6 +225,16 @@ export class AppMetadata {
         allowInChildMenu: false,
         class: 'fa fa-compress'
       },
+
+
+
+
+
+
+
+
+
+
       'reconexec': {
         name: 'recon',
         caption: 'Recon',
@@ -788,7 +809,8 @@ export class AppMetadata {
         moduleState: 'dataVisualization',
         moduleCaption: 'Data Visualization',
         graphState: 'dashboard',
-        detailState: 'dashboarddetail'
+        detailState: 'dashboarddetail',
+        class: 'fa fa-desktop'
       },
       'vizpod': {
         name: 'vizpod',
@@ -801,7 +823,7 @@ export class AppMetadata {
         detailState: 'vizpod',
         moduleState: 'dataVisualization',
         moduleCaption: 'Data Visualization',
-        class: 'fa fa-line-chart'
+        class: 'fa fa-desktop'
       },
       'formulainfo': {
         name: 'formulainfo',
@@ -856,6 +878,7 @@ export class AppMetadata {
         moduleCaption: 'Data Science',
         childMenu: [],
         allowInChildMenu: false,
+        class: 'fa fa-flask'
       },
       'paramlist': {
         name: 'paramlist',
@@ -1110,6 +1133,7 @@ export class AppMetadata {
         moduleState: 'dataScience',
         moduleCaption: 'Data Science',
         //  detailState: 'createoperator'
+        class: 'fa fa-flask'
       },
       'operatorexec': {
         name: 'operatorexec',
@@ -1451,6 +1475,7 @@ export class AppMetadata {
         moduleCaption: 'Data Science',
         childMenu: [],
         allowInChildMenu: true,
+        class: 'fa fa-flask'
       },
       'predictexec': {
         name: 'predictexec',
@@ -1467,7 +1492,6 @@ export class AppMetadata {
         moduleCaption: 'Data Science',
         childMenu: [],
         class: 'fa fa-flask'
-
       },
       'predictExec': {
         name: 'predict',
@@ -1499,6 +1523,7 @@ export class AppMetadata {
         moduleCaption: 'Data Science ',
         childMenu: [],
         allowInChildMenu: true,
+        class: 'fa fa-flask'
       },
       'simulateexec': {
         name: 'simulateexec',
@@ -1548,6 +1573,7 @@ export class AppMetadata {
         moduleCaption: 'Data Science',
         childMenu: [],
         allowInChildMenu: true,
+        class: 'fa fa-flask'
       },
       'trainexec': {
         name: 'trainexec',
@@ -1594,6 +1620,7 @@ export class AppMetadata {
         resultState: '',
         childMenu: [],
         allowInChildMenu: false,
+        class: 'fa fa-flask'
       },
       'appconfig': {
         name: 'appconfig',
@@ -1748,7 +1775,7 @@ export class AppMetadata {
       },
       'batch': {
         name: 'batch',
-        caption: 'batch',
+        caption: 'Batch',
         color: '#00A8F0',
         icon: 'batch.svg',
         execType: 'batchExec',
@@ -1853,7 +1880,7 @@ export class AppMetadata {
         moduleCaption: 'Data Visualization',
         childMenu: [],
         allowInChildMenu: false,
-        class: 'fa fa-tasks'
+        class: 'fa fa-desktop'
       },
       'reportexec': {
         name: 'reportexec',
@@ -1888,6 +1915,118 @@ export class AppMetadata {
         moduleCaption: 'Job Monitoring',
         childMenu: [],
         allowInChildMenu: false,
+        class: 'fa fa-flask'
+      },
+      'stage': {
+        name: 'stage',
+        caption: 'Stage',
+        color: 'blue',
+        icon: 'stage.svg',
+        execType: '',
+        metaType: '',
+        iconPath: 'assets/img/stage.svg',
+        allowInMenu: true,
+      },
+      paramlistrule:{
+        name: '',
+        caption: 'Paramlistmodel',
+        execType: '',
+        metaType: '',
+        color: '',
+        iconCaption: '',
+        allowInMenu: false,
+        listState: '',
+        detailState: '',
+        moduleState: '',
+        resultState: '',
+        moduleCaption: '',
+        childMenu: [],
+        allowInChildMenu: '',
+        class: 'fa fa-flask'
+      },
+      paramlistmodel:{
+        name: '',
+        caption: 'Paramlistmodel',
+        execType: '',
+        metaType: '',
+        color: '',
+        iconCaption: '',
+        allowInMenu: false,
+        listState: '',
+        detailState: '',
+        moduleState: '',
+        resultState: '',
+        moduleCaption: '',
+        childMenu: [],
+        allowInChildMenu: '',
+        class: 'fa fa-flask'
+      },
+      paramlistdag:{
+        name: '',
+        caption: 'Paramlistdag',
+        execType: '',
+        metaType: '',
+        color: '',
+        iconCaption: '',
+        allowInMenu: false,
+        listState: '',
+        detailState: '',
+        moduleState: '',
+        resultState: '',
+        moduleCaption: '',
+        childMenu: [],
+        allowInChildMenu: '',
+        class: 'fa fa-flask'
+      },
+      lov:{
+        name: '',
+        caption: 'Lov',
+        execType: '',
+        metaType: '',
+        color: '',
+        iconCaption: '',
+        allowInMenu: false,
+        listState: '',
+        detailState: '',
+        moduleState: '',
+        resultState: '',
+        moduleCaption: '',
+        childMenu: [],
+        allowInChildMenu: '',
+        class: 'fa fa-flask'
+      },
+      organization:{
+        name: '',
+        caption: 'Organization',
+        execType: '',
+        metaType: '',
+        color: '',
+        iconCaption: '',
+        allowInMenu: false,
+        listState: '',
+        detailState: '',
+        moduleState: '',
+        resultState: '',
+        moduleCaption: '',
+        childMenu: [],
+        allowInChildMenu: '',
+        class: 'fa fa-wrench'
+      },
+      schedule:{
+        name: '',
+        caption: 'Schedule',
+        execType: '',
+        metaType: '',
+        color: '',
+        iconCaption: '',
+        allowInMenu: false,
+        listState: '',
+        detailState: '',
+        moduleState: '',
+        resultState: '',
+        moduleCaption: '',
+        childMenu: [],
+        allowInChildMenu: '',
         class: 'fa fa-flask'
       },
     }
@@ -2275,7 +2414,7 @@ export class AppMetadata {
   getObj(): Object {
     return this.obj;
   }
-  getMetadataDefs(type): Object {
+  getMetadataDefs(type):any {
     return this.obj.metadataDefs[type];
   }
 
@@ -2331,5 +2470,4 @@ export class AppMetadata {
     }
     return to;
   };
-
 }

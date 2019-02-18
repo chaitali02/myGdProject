@@ -79,7 +79,6 @@ import { DataReconService } from '../metadata/services/dataRecon.services';
         CalendarModule,
         DialogModule,
         MultiSelectModule
-                
     ],
     declarations: [
         LayoutComponent,

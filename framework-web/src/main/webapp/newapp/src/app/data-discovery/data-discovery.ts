@@ -1,4 +1,14 @@
 export class DataDiscovery {
+
+
+  // count: String;
+  // lastUpdatedBy: String;
+  // lastUpdatedOn: String;
+  // type: String;
+  // colorClass: String;//for color
+  // icon: String;
+  // caption: String;
+
   constructor(private title:string, private uuid:string, private type:string, private version:string, private dataSource:string, private numRows:number, private lastUpdatedOn:any , private classColor:any) {
     this.setTitle(title);
     this.setUuid(uuid);

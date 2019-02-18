@@ -6,10 +6,18 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class FilterPipeDD implements PipeTransform {
     transform(items: any[], term): any {
-        //console.log('term', term);
-      
         return term 
-            ? items.filter(item => item.title.indexOf(term) !== -1)
+            ? items.filter(item => {
+                if (item.title.indexOf(term) !== -1) {
+                    return true;
+                }
+                if (item.title.toLowerCase().indexOf(term) !== -1) {
+                    return true;
+                }
+                if (item.title.toUpperCase().indexOf(term) !== -1) {
+                    return true;
+                }
+            })
             : items;
     }
 }
