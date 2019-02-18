@@ -1998,6 +1998,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       listState : 'jobmonitoringlist',
       joblistState : 'jobmonitoringlist',
       detailState :'jobexecutorlistreportexec',
+      resultState:'resultxecresult',
       childMenu:[],
       allowInChildMenu : false,
     },

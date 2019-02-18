@@ -504,7 +504,9 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, SharedPrope
             { "name": "dashboard", "type": "dashboard", "uuid": "null", "caption": "Dashboard" },
             { "name": "vizpodlist", "type": "vizpod", "uuid": "null", "caption": "Vizpod" },
             { "name": "reportlist", "type": "report", "uuid": "null", "caption": "Report" },
-        ]
+            { "name": "reportexeclist", "type": "reportExec", "uuid": "null", "caption": "Results","typeCount": "reportexec", }
+
+        ]  
     }
     $scope.Ingestdata = {
         "caption": "Data Ingestion",
@@ -1211,7 +1213,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
                         insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
                         files: [
                             'js/controllers/ReportController.js',
-                            // 'js/services/ReportServices.js'
+                             'js/services/ReportService.js'
                         ]
                     });
                 }]
@@ -1235,7 +1237,31 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
                 }]
             }
         })
-
+        .state('reportexeclist', {
+            url: "/Report/ResultList",
+            templateUrl: "views/common-list.html",
+            data: { pageTitle: ' Data Visualization' },
+            params: { type: 'reportexec', isExec: true }
+        })
+        
+        .state('resultxecresult', {
+            url: "/ReportResult?id&mode&returnBack&version",
+            templateUrl: "views/report-result.html",
+            data: { pageTitle: 'Data Visualization' },
+            //controller: "BlankController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'InferyxApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            'js/controllers/ReportController.js',
+                            'js/services/ReportService.js'
+                        ]
+                    });
+                }]
+            }
+        })
         // admin
         .state('admin', {
             url: "/Admin?type&returnBack",
@@ -2390,7 +2416,8 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
             data: { pageTitle: ' Batch Scheduler' },
             params: { type: 'batchexec', isExec: true }
         })
-
+       
+        
       
         .state('batchdetail', {
             url: "/BatchDetail?id&mode&returnBack&version",
