@@ -8,7 +8,7 @@ import { CommonModule , DatePipe} from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ProjectSharedModule } from '../shared/module/shared.module';
 import { MessagesModule, MessageModule, TabViewModule, GrowlModule} from 'primeng/primeng';
-import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown/angular2-multiselect-dropdown';
+import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown';
 
 import { MetaDataDataPodService } from '../data-preparation/datapod/datapod.service';
 import { ActivityComponent } from './activity/activity.component';

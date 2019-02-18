@@ -8,7 +8,7 @@ import { NgModule } from '@angular/core';
 import { ProjectSharedModule } from '../../shared/module/shared.module';
 import { MessagesModule, MessageModule } from 'primeng/primeng';
 import { CheckboxModule } from 'primeng/primeng';
-import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown/angular2-multiselect-dropdown';
+import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown';
 
 import { CommonService } from '../../metadata/services/common.service';
 

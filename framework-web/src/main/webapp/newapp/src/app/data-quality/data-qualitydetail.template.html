@@ -232,7 +232,7 @@
                         </label>
                         <div class="col-md-6">
                           <p-dropdown [options]="allNames" [(ngModel)]="sourcedata" name="sourcedata" dataKey="uuid"
-                            [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}" [filter]="true"
+                            [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}" 
                             (onChange)="changeType()" placeholder="-Select-">
                           </p-dropdown>
                         </div>
@@ -317,13 +317,13 @@
                                   <td>
                                     <p-dropdown [options]="logicalOperators" [(ngModel)]="data.logicalOperator" name="logicalOperator+{{i}}"
                                       [style]="{'width':'100%','padding':'3px'}" [disabled]="i === 0 || mode == 'true'"
-                                      [filter]="true" placeholder="--Select--">
+                                      [filter]="false" placeholder="--Select--">
                                     </p-dropdown>
                                   </td>
                                   <td>
                                     <p-dropdown [options]="lhsTypeArray" [(ngModel)]="data.lhsType" name="lhsType+{{i}}"
                                       [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'"
-                                      [autoWidth]="false" [filter]="true" (onChange)="onChangeLhsType(i)" placeholder="--Select--">
+                                      [autoWidth]="false" [filter]="false" (onChange)="onChangeLhsType(i)" placeholder="--Select--">
                                     </p-dropdown>
                                   </td>
                                   <td>
@@ -350,7 +350,7 @@
                                   </td>
                                   <td>
                                     <p-dropdown [options]="operators" [(ngModel)]="data.operator" name="operator+{{i}}"
-                                      [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
+                                      [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="false"
                                       placeholder="--Select--" (onChange)="onChangeOperator(i)">
                                     </p-dropdown>
                                   </td>
@@ -585,7 +585,7 @@
                         </select> -->
                           <p-dropdown [options]="datatype" [(ngModel)]="dqdata.selectDataType" name="selectDataType+{{i}}"
                             [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true' || !IsSelectSoureceAttr"
-                            [filter]="true" placeholder="--Select--" (onChange)="OnselectType()">
+                            [filter]="false" placeholder="--Select--" (onChange)="OnselectType()">
                           </p-dropdown>
                         </div>
                       </div>

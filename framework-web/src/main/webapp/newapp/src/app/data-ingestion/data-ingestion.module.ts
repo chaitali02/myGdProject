@@ -1,3 +1,4 @@
+import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DataIngestionComponent } from './data-ingestion.component';
@@ -10,7 +11,6 @@ import { ProjectSharedModule } from '../shared/module/shared.module';
 import { CheckboxModule } from 'primeng/components/checkbox/checkbox';
 // import { UiSwitchModule } from 'ngx-toggle-switch/src';
 import { TagInputModule } from 'ngx-chips';
-import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown/multiselect.component';
 import { DataIngestionService } from './../metadata/services/dataIngestion.service';
 import { DialogModule } from 'primeng/components/dialog/dialog';
 import { DataIngestionRuleGroupComponent } from './data-ingestion-rule-group/data-ingestion-rule-group.component';
@@ -22,7 +22,6 @@ import { DataIngestionResultsComponent } from './data-ingestion-results/data-ing
     FormsModule,
     // UiSwitchModule,
     TagInputModule,
-    AngularMultiSelectModule,
     CheckboxModule,
     routing1,
     GrowlModule,
@@ -30,7 +29,7 @@ import { DataIngestionResultsComponent } from './data-ingestion-results/data-ing
     ProjectSharedModule,
     DialogModule,
     CheckboxModule,
-    AngularMultiSelectModule,
+    AngularMultiSelectModule
   ],
   declarations: [
     DataIngestionComponent,

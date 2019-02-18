@@ -19,8 +19,4 @@ export class DataQuality extends BaseEntity {
 	refIntegrityCheck: AttributeRefHolder;
 	filterInfo: Array<FilterInfo>;
 
-	// private target : MetaIdentifierHolder ;	
-	// //private String stdDevCheck;
-	// private userInfo : MetaIdentifierHolder[];
-
 }

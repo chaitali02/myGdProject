@@ -262,11 +262,11 @@ export class DataQualityDetailComponent {
       this.isGraphError = this.d_KnowledgeGraphComponent.isError;
     }, 1000);
   }
-  
-  onChangeName(){
+
+  onChangeName() {
     this.breadcrumbDataFrom[2].caption = this.dqdata.name;
   }
-  
+
   public goBack() {
     //this._location.back();
     this.router.navigate(['app/list/dq']);
@@ -295,11 +295,11 @@ export class DataQualityDetailComponent {
     else {
       this.disableFields();
     }
-    if(this.selectAttribute.label == '-Select-'){
+    if (this.selectAttribute.label == '-Select-') {
       this.disableFields();
     }
   }
-  disableFields(){
+  disableFields() {
     this.IsSelectSoureceAttr = false
     this.dqdata.nullCheck = false;
     this.dqdata.valueCheck = ""
@@ -348,11 +348,11 @@ export class DataQualityDetailComponent {
 
   getAllLatest() {
     this._commonService.getAllLatest(this.source).subscribe(
-      response => { this.OnSuccesgetAllLatest(response) },
+      response => { this.onSuccesgetAllLatest(response) },
       error => console.log('Error :: ' + error)
     )
   }
-  OnSuccesgetAllLatest(response1: BaseEntity[]) {
+  onSuccesgetAllLatest(response1: BaseEntity[]) {    
     if (this.mode == undefined) {
       let dependOnTemp: DependsOn = new DependsOn();
       dependOnTemp.label = response1[0].name;
@@ -363,6 +363,7 @@ export class DataQualityDetailComponent {
     var allname = [new DropDownIO]
     for (const i in response1) {
       let name = new DropDownIO();
+      response1.sort((a,b)=>a.name.localeCompare(b.name.toString()));
       name.label = response1[i].name;
       name.value = { label: "", uuid: "" };
       name.value.label = response1[i].name;
@@ -386,13 +387,13 @@ export class DataQualityDetailComponent {
   OnSuccesgetAllAttributeBySource(response: AttributeIO[]) {
     let firstObj = new AttributeIO();
     firstObj.label = "-Select-"
-    firstObj.value = {label:"-Select-", value: ""}
+    firstObj.value = { label: "-Select-", value: "" }
     this.allAttribute.push(firstObj);
 
     for (const i in response) {
       let name = new AttributeIO();
       name.label = response[i].name;
-      name.value = { label: "",value: ""};
+      name.value = { label: "", value: "" };
       name.value.label = response[i].name;
       name.value.uuid = response[i].uuid;
       this.allAttribute.push(name);
@@ -487,7 +488,32 @@ export class DataQualityDetailComponent {
     this.isEditInprogess = false;
   }
 
-  searchOption(index) {debugger
+  searchOption(index) {
+    if (this.filterTableArray) {
+      let values = this.filterTableArray[index].rhsAttribute;
+      this.dialogAttriArray = [];
+      let temp = [];
+      for (const i in this.filterTableArray) {
+        let dialogAttriObj = new DropDownIO();
+        dialogAttriObj.label = this.filterTableArray[i].name;
+        dialogAttriObj.value = { label: "", uuid: "" };
+        dialogAttriObj.value.label = this.filterTableArray[i].name;
+        dialogAttriObj.value.uuid = this.filterTableArray[i].uuid;
+        temp[i] = dialogAttriObj;
+      }
+      this.dialogAttriArray = temp;
+
+      this.dialogAttriNameArray = [];
+      for (const i in this.filterTableArray) {
+        let dialogAttriNameObj = new AttributeIO();
+        dialogAttriNameObj.label = this.filterTableArray[i].attrName;
+        dialogAttriNameObj.value = { label: "", attributeId: "", uuid: "" };
+        dialogAttriNameObj.value.label = this.filterTableArray[i].attrName;
+        dialogAttriNameObj.value.attributeId = this.filterTableArray[i].attrId;
+        dialogAttriNameObj.value.uuid = this.filterTableArray[i].ref.uuid;
+        this.dialogAttriNameArray[i] = dialogAttriNameObj;
+      }
+    }
     this.rowIndex = index;
     this.displayDialogBox = true;
     this._commonService.getAllLatest(MetaTypeEnum.MetaType.DATASET)
@@ -984,7 +1010,7 @@ export class DataQualityDetailComponent {
     this.router.navigate(['app/dataQuality/dq', uuid, version, 'true']);
   }
 
-  
+
 
   // onAttrRowDown() {
   //   for (let i = 0; i < this.filterTableArray.length; i++) {

@@ -11,7 +11,7 @@ import { TagInputModule } from 'ngx-chips';
 // import { DndListModule } from 'ngx-drag-and-drop-lists';
 import {DndModule} from 'ng2-dnd';
 
-import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown/angular2-multiselect-dropdown';
+import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown';
 
 import { ProjectSharedModule } from '../shared/module/shared.module';
 

@@ -9,7 +9,7 @@ import { ProjectSharedModule } from '../shared/module/shared.module';
 import { MessagesModule, MessageModule, ChipsModule } from 'primeng/primeng';
 import { CheckboxModule, DataTableModule} from 'primeng/primeng';
 import { UiSwitchModule } from 'ngx-ui-switch';
-import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown/angular2-multiselect-dropdown';
+import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown';
 
 import { MetaDataDataPodService } from '../data-preparation/datapod/datapod.service';
 

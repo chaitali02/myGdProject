@@ -19,13 +19,15 @@
               <i class="fa fa-home" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
             </a>
 
-            <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
-              tooltip [ngClass]="mode == 'true' && showGraph == false? 'notcurrentpage':'currentpage'" data-(click)="enableEdit(uuid,version)">
+            <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Edit" data-toggle="tooltip"
+              data-placement="top" tooltip [ngClass]="mode == 'true' && showGraph == false? 'notcurrentpage':'currentpage'"
+              data-(click)="enableEdit(uuid,version)">
               <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
             </a>
 
-            <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Show Dependencies" data-placement="top" tooltip
-              [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'" data- (click)="showDagGraph(uuid,version)">
+            <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Show Dependencies"
+              data-placement="top" tooltip [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'" data-
+              (click)="showDagGraph(uuid,version)">
               <i class="fa fa-sitemap" style="margin:2px auto;color:#a0a0a0;"></i>
             </a>
 
@@ -40,13 +42,29 @@
           </div>
         </div>
 
-        <div class="portlet-body form" *ngIf="!showGraph">
-          <div class="form-body" style="padding-top:50px;">
-            <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="submit()" #myNewForm="ngForm">
+
+        <div class="form-body" style="padding-top:50px;" *ngIf="!showGraph">
+
+          <div class="centercontent" style="min-height:500px;" *ngIf="isEditError">
+            <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
+          </div>
+
+          <div class="centercontent" style="min-height:500px;" *ngIf="isEditInprogess">
+            <div class="spinner" id="graphloader">
+              <div class="bounce1"></div>
+              <div class="bounce2"></div>
+              <div class="bounce3"></div>
+            </div>
+          </div>
+
+          <div class="portlet-body form" *ngIf="!isEditInprogess && !isEditError">
+
+            <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="submitDqGroup()" #myNewForm="ngForm">
               <div class="form-group" *ngIf="mode">
                 <label class="col-md-3 control-label">UUID</label>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="datadqgroup.uuid" name="uuid" placeholder="" [disabled]="true">
+                  <input type="text" class="form-control" [(ngModel)]="dqgroupdata.uuid" name="uuid" placeholder=""
+                    [disabled]="true">
                 </div>
               </div>
 
@@ -55,13 +73,14 @@
                   <span class="required" aria-required="true"> * </span>
                 </label>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="datadqgroup.name" name="name" placeholder="" [disabled]="mode == 'true'">
+                  <input type="text" class="form-control" [(ngModel)]="dqgroupdata.name" name="name" placeholder=""
+                    [disabled]="mode == 'true'">
                 </div>
               </div>
               <div class="form-group" *ngIf="mode">
                 <label class="col-md-3 control-label">Version </label>
                 <div class="col-md-6">
-                  <p-dropdown [options]="VersionList" [(ngModel)]="selectedVersion" name="selectedVersion" [style]="{'width':'100%','padding':'3px'}"
+                  <p-dropdown [options]="versionList" [(ngModel)]="selectedVersion" name="selectedVersion" [style]="{'width':'100%','padding':'3px'}"
                     [filter]="true" [disabled]="mode == 'false'" (onChange)="onVersionChange()">
                   </p-dropdown>
                 </div>
@@ -69,35 +88,62 @@
               <div class="form-group" *ngIf="mode">
                 <label class="col-md-3 control-label">CreatedBy</label>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" [disabled]="true" [(ngModel)]="createdBy" name="createdBy">
+                  <input type="text" class="form-control" [disabled]="true" [(ngModel)]="dqgroupdata.createdBy.ref.name" name="createdBy">
                 </div>
               </div>
 
               <div class="form-group" *ngIf="mode">
                 <label class="col-md-3 control-label">CreatedOn</label>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" [disabled]="true" [(ngModel)]="datadqgroup.createdOn" name="createdOn">
+                  <input type="text" class="form-control" [disabled]="true" [(ngModel)]="dqgroupdata.createdOn" name="createdOn">
                 </div>
               </div>
 
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                  <tag-input [(ngModel)]="datadqgroup.tags" name="tags" [disable]="mode == 'true'" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px; padding-left:5px"></tag-input>
+                  <!-- <tag-input [(ngModel)]="dqgroupdata.tags" name="tags" [disable]="mode == 'true'" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px; padding-left:5px"></tag-input> -->
+                  <p-chips [(ngModel)]="dqgroupdata.tags" styleClass="pchip-height" [disabled]="mode == 'true'" name="tags"></p-chips>
                 </div>
               </div>
 
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
                 <div class="col-md-6">
-                  <textarea [disabled]="mode == 'true'" [(ngModel)]="datadqgroup.desc" name="desc" class="form-control noresize " rows="2"
-                    style="resize:none;"></textarea>
+                  <textarea [disabled]="mode == 'true'" [(ngModel)]="dqgroupdata.desc" name="desc" class="form-control noresize "
+                    rows="2" style="resize:none;"></textarea>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="btn-group">
+                    <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="active" name="active"
+                      [checked]="active" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Lock</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="btn-group">
+                    <ui-switch [(ngModel)]="locked" name="locked" [disabled]="mode == 'true' || mode == 'false'"></ui-switch>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="btn-group">
+                    <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="published" name="published"
+                      [checked]="published" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                  </div>
                 </div>
               </div>
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Run In Parallel ?</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                  <p-checkbox [(ngModel)]="datadqgroup.inParallel" name="inParallel" binary="true"></p-checkbox>
+                  <p-checkbox [(ngModel)]="dqgroupdata.inParallel" name="inParallel" binary="true"></p-checkbox>
                 </div>
               </div>
               <div class="form-group">
@@ -106,19 +152,20 @@
                 </label>
                 <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="dropdownList">
 
-                  <angular2-multiselect [data]="dropdownList" [(ngModel)]="selectedItems" [settings]="dropdownSettings" name="attributeInfo">
+                  <angular2-multiselect [data]="dropdownList" [(ngModel)]="selectedItems" [settings]="dropdownSettings"
+                    name="attributeInfo">
                   </angular2-multiselect>
                 </div>
                 <div class="col-md-1">
-                  <span *ngIf="mode != 'true'" class="glyphicon glyphicon-erase" title="Clear All" data-toggle="tooltip" data-placement="top"
-                    tooltip aria-hidden="true" (click)=" clear()" style="top:3px;left:-24px;cursor: pointer;"></span>
+                  <span *ngIf="mode != 'true'" class="glyphicon glyphicon-erase" title="Clear All" data-toggle="tooltip"
+                    data-placement="top" tooltip aria-hidden="true" (click)=" clear()" style="top:3px;left:-24px;cursor: pointer;"></span>
                 </div>
               </div>
               <!-- <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
                   <div class="btn-group">
-                    <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="datadqgroup.active" name="active" [checked]="active"
+                    <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="dqgroupdata.active" name="active" [checked]="active"
                       color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
                   </div>
                 </div>
@@ -128,7 +175,7 @@
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
                   <div class="btn-group">
-                    <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="datadqgroup.published " name="published" [checked]="published"
+                    <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="dqgroupdata.published " name="published" [checked]="published"
                       color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
                   </div>
                 </div>
@@ -136,7 +183,8 @@
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Run Immediately ?</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                  <p-checkbox [(ngModel)]="checkboxModelexecution" [disabled]="mode == 'true' " name="checkboxModelexecution" binary="true"></p-checkbox>
+                  <p-checkbox [(ngModel)]="checkboxModelexecution" [disabled]="mode == 'true' " name="checkboxModelexecution"
+                    binary="true"></p-checkbox>
                 </div>
               </div>
               <div class="form-group" style="padding-top: 10px;">
@@ -161,8 +209,8 @@
             <div class="bounce2"></div>
             <div class="bounce3"></div>
           </div>
-          <div class="show-graph-body" id="graphWrapper" >
-            <knowledge-graph ></knowledge-graph>
+          <div class="show-graph-body" id="graphWrapper">
+            <knowledge-graph></knowledge-graph>
           </div>
         </div>
       </div>
