@@ -118,11 +118,11 @@ public class DatapodController {
 		return datapodServiceImpl.getDatapodStats();
 	}
 	
-	@RequestMapping(value = "/getDatapodStatsByAttrDesc", method = RequestMethod.GET)
-	public @ResponseBody List<DatapodStatsHolder> getDatapodStatsByParam(@RequestParam(value="attrDesc") String attrDesc,
+	@RequestMapping(value = "/getDatapodStats", method = RequestMethod.GET,params= {"searchStr"})
+	public @ResponseBody List<DatapodStatsHolder> getDatapodStats(@RequestParam(value="searchStr") String searchStr,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws Exception {
-		return datapodServiceImpl.getDatapodStatsByAttrDesc(attrDesc);
+		return datapodServiceImpl.getDatapodStats(searchStr);
 	}
 	
 	@RequestMapping(value = "/getDatapodStats2", method = RequestMethod.GET)

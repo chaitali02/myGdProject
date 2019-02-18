@@ -10,7 +10,8 @@
             </li>
         </ul>
         <div class="page-toolbar">
-            <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+            <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body"
+                data-placement="bottom" data-original-title="Change dashboard date range">
                 <i class="icon-calendar"></i>&nbsp;
                 <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
             </div>
@@ -27,25 +28,35 @@
                     <div class="row">
                         <label class="col-md-1" style="margin-top:6px;">Search:</label>
                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                            <input type="text" class="form-control" ng-model="searchmeta" ng-change="refreshData(searchmeta)">
+                            <input type="text" class="form-control" ng-model="searchmeta" ng-change="refreshData(searchmeta)"
+                                ng-model-options="{debounce:2000}">
                         </div>
-                        <a style="float:right;" class="reload btn btn-circle btn-icon-only btn-default" ng-click="refersh()"  tooltip-placement="top" uib-tooltip="Refersh" >
+                        <a style="float:right;" class="reload btn btn-circle btn-icon-only btn-default" ng-click="refersh()"
+                            tooltip-placement="top" uib-tooltip="Refersh">
                             <i class="fa fa-refresh icon-circle" aria-hidden="true"></i>
                         </a>
                         <div class="col-lg-2 col-md-2 col-sm-2" style="float:right;">
-                            <select class="form-control" ng-change="orderByParm()" data-ng-model="optiondata" ng-options="r as r.caption for r in optionsort track by r.caption">
+                            <select class="form-control" ng-change="orderByParm()" data-ng-model="optiondata"
+                                ng-options="r as r.caption for r in optionsort track by r.caption">
                             </select>
                         </div>
                         <label class="col-md-1" style="margin-top:6px;float:right">Sort By:</label>
-                        
+
                     </div>
                 </div>
 
                 <div class="portlet-body">
                     <div class="row">
                         <!-- <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12" ng-repeat="datadiscovry in allMetaCount |filter:{name: searchmeta} | orderBy:optiondata.name"> -->
-                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12" ng-repeat="datadiscovry in allMetaCount">
-
+                        <div class="spinner text-center" ng-if="isMetaInprogess">
+                            <div class="bounce1"></div>
+                            <div class="bounce2"></div>
+                            <div class="bounce3"></div>
+                        </div>
+                        <div class="grey" ng-if="allMetaCount.length==0 && !isMetaInprogess">
+                            <h3>No records found</h3>
+                        </div>
+                        <div ng-if ="!isMetaInprogess" class="col-lg-3 col-md-4 col-sm-6 col-xs-12" ng-repeat="datadiscovry in allMetaCount">
                             <div class="cardshadow" style="height:152px;">
                                 <a ng-click="onShowDetail(datadiscovry)">
                                     <div class="dashboard-stat2" style="height:150px;">
@@ -53,10 +64,13 @@
                                             <div class="number">
                                                 <!--text-transform: capitalize;-->
                                                 <h3 style="text-align:left!important;" class="font-{{datadiscovry.class}}">
-                                                    <span title="{{datadiscovry.title}}" data-counter="counterup" data-value="7800" style="font-size:22px;">{{datadiscovry.name}}</span>
+                                                    <span title="{{datadiscovry.title}}" data-counter="counterup"
+                                                        data-value="7800" style="font-size:22px;">{{datadiscovry.name}}</span>
                                                     <small class="{{datadiscovry.class}}"></small>
                                                 </h3>
-                                                <small title="{{datadiscovry.numRows | number}}" data-toggle="tooltip" data-placement="top" tooltip>{{datadiscovry.numRows | isoCurrencyWithK1:2:""}}
+                                                <small title="{{datadiscovry.numRows | number}}" data-toggle="tooltip"
+                                                    data-placement="top" tooltip>{{datadiscovry.numRows |
+                                                    isoCurrencyWithK1:2:""}}
                                                     <span style="text-transform:lowercase;">records</span>
                                                 </small>
                                             </div>
@@ -70,12 +84,15 @@
                                                 </span>
                                             </div>
                                             <div class="status" style="padding-top:5px;">
-                                                <div class="status-title" style="text-transform:capitalize;padding-right:4px;">Data source: </div>
+                                                <div class="status-title" style="text-transform:capitalize;padding-right:4px;">Data
+                                                    source: </div>
                                                 <div title="" class="status-number" style="float:left;text-transform: lowercase;">{{datadiscovry.dataSource}}</div>
                                             </div>
                                             <div class="status" style="padding-top:15px;">
-                                                <span class="status-title" style="text-transform:capitalize;padding-right: 4px;">Last Updated On:</span>
-                                                <div title="Last Update On" class="status-number" style="float:left;">{{datadiscovry.lastUpdatedOn | date :'MM-dd-yyyy'}}</div>
+                                                <span class="status-title" style="text-transform:capitalize;padding-right: 4px;">Last
+                                                    Updated On:</span>
+                                                <div title="Last Update On" class="status-number" style="float:left;">{{datadiscovry.lastUpdatedOn
+                                                    | date :'MM-dd-yyyy'}}</div>
                                             </div>
 
                                         </div>
@@ -84,36 +101,15 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <!-- <div class="col-md-6" style="margin-top:17px">
-                          Showing {{pagination.to}} to {{pagination.from}} of {{pagination.totalItems}} records
-                        </div> -->
+                    <div class="row" ng-if ="!isMetaInprogess">
                         <div class="col-md-12">
-                            <ul uib-pagination items-per-page="pagination.pageSize" total-items="pagination.totalItems" ng-model="pagination.currentPage"
-                                ng-change="onPageChanged()" style="float:right;overflow:hidden;z-index:1;" max-size="pagination.maxSize"
-                                class="pagination-md" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
-                                last-text="&raquo;">
+                            <ul uib-pagination items-per-page="pagination.pageSize" total-items="pagination.totalItems"
+                                ng-model="pagination.currentPage" ng-change="onPageChanged()" style="float:right;overflow:hidden;z-index:1;"
+                                max-size="pagination.maxSize" class="pagination-md" boundary-links="true" previous-text="&lsaquo;"
+                                next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;">
                             </ul>
                         </div>
                     </div>
-                    <!-- <div class="row">
-                        <div class="right" style="float:right;margin-right: 15px">
-                           
-                            <ul class="pagination" ng-if="vm.pager.pages.length" class="pagination">
-                                <li ng-class="{disabled:vm.pager.currentPage === 1}">
-                                    <a ng-click="vm.setPage(vm.pager.currentPage - 1)">
-                                    </a>
-                                </li>
-                                <li ng-repeat="page in vm.pager.pages" ng-class="{active:vm.pager.currentPage === page}">
-                                    <a ng-click="vm.setPage(page)">{{page}}</a>
-                                </li>
-                                <li ng-class="{disabled:vm.pager.currentPage === vm.pager.totalPages}">
-                                    <a ng-click="vm.setPage(vm.pager.currentPage + 1)">></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div> -->
-
                 </div>
             </div>
         </div>

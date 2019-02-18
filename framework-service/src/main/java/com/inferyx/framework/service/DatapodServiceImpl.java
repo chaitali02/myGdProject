@@ -835,10 +835,10 @@ public class DatapodServiceImpl {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<DatapodStatsHolder> getDatapodStatsByAttrDesc(String attrDesc) throws JsonProcessingException {
+	public List<DatapodStatsHolder> getDatapodStats(String searchStr) throws JsonProcessingException {
 
 		List<DatapodStatsHolder> result = new ArrayList<DatapodStatsHolder>();
-		List<Datapod> datapodList = commonServiceImpl.findAllLatest(MetaType.datapod, attrDesc);
+		List<Datapod> datapodList = commonServiceImpl.findAllLatest(MetaType.datapod, searchStr);
 		List<Datasource> dsList = commonServiceImpl.findAllLatest(MetaType.datasource);
 
 		Map<String, String> dsMap = new HashMap<String, String>();

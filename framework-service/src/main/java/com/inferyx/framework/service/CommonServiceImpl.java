@@ -5148,7 +5148,7 @@ public class CommonServiceImpl<T> {
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public List findAllLatest(MetaType type, String attrDesc) {
+	public List findAllLatest(MetaType type, String searchStr) {
 		List objectList = new ArrayList();
 		List finalObjectList = new ArrayList();
 		java.util.HashMap<String, BaseEntity> objectMap = new java.util.HashMap<>();
@@ -5162,13 +5162,13 @@ public class CommonServiceImpl<T> {
 		}
 		try {
 			Object iDao = this.getClass().getMethod(GET + Helper.getDaoClass(type)).invoke(this);
-			if (appUuid == null && attrDesc == null) {
+			if (appUuid == null && searchStr == null) {
 				objectList = (List) (iDao).getClass().getMethod("findAll").invoke(iDao);
-			} else if (attrDesc == null) {
+			} else if (searchStr.isEmpty()) {
 				objectList = (List) (iDao).getClass().getMethod("findAll", String.class).invoke(iDao, appUuid);
 			} else {
 				objectList = (List) (iDao).getClass().getMethod("findAll", String.class, String.class).invoke(iDao,
-						appUuid, attrDesc);
+						appUuid, searchStr);
 			}
 			// List<BaseEntity> baseEntityList = getBaseEntityList(objectList);
 

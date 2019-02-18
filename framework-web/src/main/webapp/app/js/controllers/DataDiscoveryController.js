@@ -4,20 +4,20 @@
 DatadiscoveryModule = angular.module('DatadiscoveryModule');
 
 
-DatadiscoveryModule.controller('DataDiscoveryController', function ($state,$filter,dagMetaDataService, PagerService, $stateParams, $rootScope, $scope, $sessionStorage, DataDiscoveryService) {
+DatadiscoveryModule.controller('DataDiscoveryController', function ($state, $filter, dagMetaDataService, PagerService, $stateParams, $rootScope, $scope, $sessionStorage, DataDiscoveryService) {
     $scope.optionsort = [
-        { "caption": "Name A-Z", name: "name" ,"isAsc":true },
-        { "caption": "Name Z-A", name: "-name","isAsc":false  },
-        { "caption": "Date Asc", name: "lastUpdatedOn" ,"isAsc":true},
-        { "caption": "Date Desc", name: "-lastUpdatedOn", "isAsc":false },
+        { "caption": "Name A-Z", name: "name", "isAsc": true },
+        { "caption": "Name Z-A", name: "-name", "isAsc": false },
+        { "caption": "Date Asc", name: "lastUpdatedOn", "isAsc": true },
+        { "caption": "Date Desc", name: "-lastUpdatedOn", "isAsc": false },
     ]
 
     $scope.optiondata = { "caption": "Name A-Z", name: "named" };
-    $scope.pagination={
-        currentPage:1,
-        pageSize:10,
-        paginationPageSizes:[10, 25, 50, 75, 100],
-        maxSize:5,
+    $scope.pagination = {
+        currentPage: 1,
+        pageSize: 10,
+        paginationPageSizes: [10, 25, 50, 75, 100],
+        maxSize: 5,
     }
 
     $scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
@@ -28,10 +28,12 @@ DatadiscoveryModule.controller('DataDiscoveryController', function ($state,$filt
 
 
     var vm = this;
-    
-    $scope.refreshData = function(searchtext) {
-        var data = $filter('filter')($scope.originalData,searchtext, undefined);
-        $scope.allMetaCount=$scope.getResults($scope.pagination,data);
+
+    $scope.refreshData = function (searchtext) {
+        //var data = $filter('filter')($scope.originalData,searchtext, undefined);
+        // $scope.allMetaCount=$scope.getResults($scope.pagination,data);
+        $scope.metaDetail(searchtext);
+
     };
 
     $scope.onShowDetail = function (data) {
@@ -49,100 +51,85 @@ DatadiscoveryModule.controller('DataDiscoveryController', function ($state,$filt
         $state.go(stageName, stageparam);
     };
 
-    $scope.refersh=function(){
-        $scope.metaDetail();
+    $scope.refersh = function () {
+        $scope.metaDetail("");
     }
 
-    $scope.metaDetail=function(){
-        DataDiscoveryService.getDatapodStats().then(function (response) { onSuccessGetDatapodStats(response.data) });
+    $scope.metaDetail = function (data) {
+        $scope.isMetaInprogess = true;
+        DataDiscoveryService.getDatapodStats("datapod", data).then(function (response) { onSuccessGetDatapodStats(response.data) });
         var onSuccessGetDatapodStats = function (response) {
+            $scope.isMetaInprogess =false;
             $scope.allMetaCount = response;
-            $scope.originalData=response;
-            $scope.allMetaCount=$scope.getResults($scope.pagination,response);
-            // vm.pager = {};
-            // vm.setPage = setPage;
-            // if (response.length > 0) {
-            //     // initialize to page 1
-            //     vm.setPage(1);
-            // }
-    
-            // function setPage(page) {
-            //     if (page < 1 || page > vm.pager.totalPages) {
-            //         return;
-            //     }
-            //     // get pager object from service
-            //     vm.pager = PagerService.GetPager(response.length, page);
-            //     // get page of items
-            //     $scope.allMetaCount = response.slice(vm.pager.startIndex, vm.pager.endIndex + 1);
-            // }
-    
+            $scope.originalData = response;
+            $scope.allMetaCount = $scope.getResults($scope.pagination, response);
         }//End onSuccessGetDatapodStats
     }
-    
-    $scope.metaDetail();
-   
-    $scope.onPageChanged = function(){
-        $scope.allMetaCount=$scope.getResults($scope.pagination,$scope.originalData);    
+
+    $scope.metaDetail("");
+
+    $scope.onPageChanged = function () {
+        $scope.allMetaCount = $scope.getResults($scope.pagination, $scope.originalData);
     };
-    $scope.getResults = function(pagination,params) {
-        pagination.totalItems=params.length;
-        if(pagination.totalItems >0){
-          pagination.to = (((pagination.currentPage - 1) * (pagination.pageSize))+1);
+    $scope.getResults = function (pagination, params) {
+        pagination.totalItems = params.length;
+        if (pagination.totalItems > 0) {
+            pagination.to = (((pagination.currentPage - 1) * (pagination.pageSize)) + 1);
         }
-        else{
-          pagination.to=0;
+        else {
+            pagination.to = 0;
         }
-        if(pagination.totalItems < (pagination.pageSize*pagination.currentPage)) {
+        if (pagination.totalItems < (pagination.pageSize * pagination.currentPage)) {
             pagination.from = pagination.totalItems;
         } else {
-          pagination.from = ((pagination.currentPage) * pagination.pageSize);
+            pagination.from = ((pagination.currentPage) * pagination.pageSize);
         }
-        var limit = (pagination.pageSize* pagination.currentPage);
+        var limit = (pagination.pageSize * pagination.currentPage);
         var offset = ((pagination.currentPage - 1) * pagination.pageSize)
-        return params.slice(offset,limit);
+        return params.slice(offset, limit);
     }
-    $scope.orderByParm=function(){
-        $scope.allMetaCount=$filter('orderBy')($scope.allMetaCount,$scope.optiondata.name);
-       //  $scope.allMetaCount=$scope.getResults($scope.pagination,$scope.allMetaCount); 
+    $scope.orderByParm = function () {
+        $scope.allMetaCount = $filter('orderBy')($scope.allMetaCount, $scope.optiondata.name);
+        //  $scope.allMetaCount=$scope.getResults($scope.pagination,$scope.allMetaCount); 
     }
     function sortArrOfObjectsByParam(arrToSort /* array */, strObjParamToSortBy /* string */, sortAscending /* bool(optional, defaults to true) */) {
         if (sortAscending == undefined) sortAscending = true; // default to true
 
         if (sortAscending) {
-          arrToSort.sort(function (a, b) {
-            return a[strObjParamToSortBy] > b[strObjParamToSortBy];
-          });
+            arrToSort.sort(function (a, b) {
+                return a[strObjParamToSortBy] > b[strObjParamToSortBy];
+            });
         } else {
-          arrToSort.sort(function (a, b) {
-            return a[strObjParamToSortBy] < b[strObjParamToSortBy];
-          });
+            arrToSort.sort(function (a, b) {
+                return a[strObjParamToSortBy] < b[strObjParamToSortBy];
+            });
         }
-      }
+    }
 
 });
 DatadiscoveryModule.filter('isoCurrencyWithK1', ["$filter", "iso4217", function ($filter, iso4217) {
-	return function (amount, fraction) {
+    return function (amount, fraction) {
         return Math.abs(Number(amount)) >= 1.0e+18
-        ? (Math.abs(Number(amount)) / 1.0e+18).toFixed(fraction) + "Qui"
-       // fifteen Zeroes for Millions 
-       : Math.abs(Number(amount)) >= 1.0e+15
-        ? (Math.abs(Number(amount)) / 1.0e+15).toFixed(fraction) + "Qua"
-       // twelve Zeroes for Millions 
-       : Math.abs(Number(amount)) >= 1.0e+12
-        ? (Math.abs(Number(amount)) / 1.0e+12).toFixed(fraction) + "T"
-       // Nine Zeroes for Millions 
-       : Math.abs(Number(amount)) >= 1.0e+9
-       ? (Math.abs(Number(amount)) / 1.0e+9).toFixed(fraction) + "B"
-       // Six Zeroes for Millions 
-       : Math.abs(Number(amount)) >= 1.0e+6
-   
-       ?  ((Math.abs(Number(amount)) / 1.0e+6)) %1==0 ?(Math.abs(Number(amount)) / 1.0e+6) +"M" :(Math.abs(Number(amount)) / 1.0e+6).toFixed(fraction) + "M"
-       // Three Zeroes for Thousands
-       : Math.abs(Number(amount)) >= 1.0e+3
-   
-       ? ((Math.abs(Number(amount)) / 1.0e+3)) %1 ==0 ? (Math.abs(Number(amount)) / 1.0e+3)+ "K" :(Math.abs(Number(amount)) / 1.0e+3).toFixed(fraction) + "K"
-   
-       : Math.abs(Number(amount));
+            ? (Math.abs(Number(amount)) / 1.0e+18).toFixed(fraction) + "Qui"
+            // fifteen Zeroes for Millions 
+            : Math.abs(Number(amount)) >= 1.0e+15
+                ? (Math.abs(Number(amount)) / 1.0e+15).toFixed(fraction) + "Qua"
+                // twelve Zeroes for Millions 
+                : Math.abs(Number(amount)) >= 1.0e+12
+                    ? (Math.abs(Number(amount)) / 1.0e+12).toFixed(fraction) + "T"
+                    // Nine Zeroes for Millions 
+                    : Math.abs(Number(amount)) >= 1.0e+9
+                        ? (Math.abs(Number(amount)) / 1.0e+9).toFixed(fraction) + "B"
+                        // Six Zeroes for Millions 
+                        : Math.abs(Number(amount)) >= 1.0e+6
+
+                            ? ((Math.abs(Number(amount)) / 1.0e+6)) % 1 == 0 ? (Math.abs(Number(amount)) / 1.0e+6) + "M" : (Math.abs(Number(amount)) / 1.0e+6).toFixed(fraction) + "M"
+                            // Three Zeroes for Thousands
+                            : Math.abs(Number(amount)) >= 1.0e+3
+
+                                ? ((Math.abs(Number(amount)) / 1.0e+3)) % 1 == 0 ? (Math.abs(Number(amount)) / 1.0e+3) + "K" : (Math.abs(Number(amount)) / 1.0e+3).toFixed(fraction) + "K"
+
+                                : Math.abs(Number(amount));
     }
 }])
 
