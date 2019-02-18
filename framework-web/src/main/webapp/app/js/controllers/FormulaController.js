@@ -69,12 +69,24 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 			return $filter('filter')($scope.lobTag, query);
 		});
 	};
-    $scope.getLovByType();
+	$scope.getLovByType();
+	$scope.checkIsInrogess=function(){
+		if($scope.isEditInprogess || $scope.isEditVeiwError){
+		return false;
+		}
+	}
+	
 	$scope.showPage = function () {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showFrom = true;
 		$scope.showGraphDiv = false
 	}
 	$scope.showHome=function(uuid, version,mode){
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('metaListformula', {
 			id: uuid,
@@ -85,7 +97,10 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 	$scope.enableEdit = function (uuid, version) {
 		if($scope.isPrivlage || $scope.formuladata.locked =="Y"){
 			return false;
-		  }
+		}
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('metaListformula', {
 			id: uuid,
@@ -233,6 +248,9 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 	$scope.formulainfoarray = [];
 	
 	$scope.showGraph = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showFrom = false;
 		$scope.showGraphDiv = true;
 
@@ -657,8 +675,10 @@ MetadataModule.controller('MetadataFormulaController', function ($state,$timeout
 		$scope.myform.$dirty = false;
 		var formulaJson = {};
 		formulaJson.formulaType = "simple"
-		formulaJson.uuid = $scope.formuladata.uuid
-		formulaJson.name = $scope.formuladata.name
+		formulaJson.uuid = $scope.formuladata.uuid;
+		formulaJson.name = $scope.formuladata.name;
+		formulaJson.publicFlag = $scope.formuladata.publicFlag;
+
 		var tagArray = [];
 		if ($scope.tags != null) {
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {

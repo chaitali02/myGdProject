@@ -40,11 +40,11 @@
                     </div>
 
                     <div class="tools">
-                        <a href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top" tooltip ng-hide="isAdd" ng-class="(showForm==true)? 'currentpage':'notcurrentpage'"
+                        <a href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top" tooltip ng-hide="isAdd" ng-class="(showForm==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
                             style="height:16px;font-size:16px;" data-ng-click="showHome(expressiondata.uuid,expressiondata.version,mode)">
                             <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
                         </a>
-                        <a title="Edit" ng-class="(isEdit==true || isPrivlage || expressiondata.locked == 'Y')? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
+                        <a title="Edit" ng-class="(isEdit==true || isPrivlage || expressiondata.locked == 'Y' ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
                             data-placement="top" tooltip ng-click="enableEdit(expressiondata.uuid,expressiondata.version)" ng-hide="isAdd"
                             style="height:16px;">
                             <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
@@ -58,11 +58,11 @@
                             ng-click="showView(expressiondata.uuid,expressiondata.version)" ng-hide="isAdd" style="height:16px;">
                             <span class="glyphicon glyphicon-file" style="color:white;"></span>
                         </a> -->
-                        <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="(showForm==false)? 'currentpage':'notcurrentpage'"
+                        <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="(showForm==false ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
                             data-ng-click="showGraph(expressiondata.uuid,expressiondata.version)" style="height:14px;">
                             <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
                         </a>
-                        <a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showForm==true)? 'currentpage':'notcurrentpage'">
+                        <a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showForm==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'">
                             <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
                         </a>
                         <a title="Close" data-toggle="tooltip" data-placement="top" tooltip data-ui-sref="metadata({type:'expression'})" style="height:14px;">
@@ -205,7 +205,17 @@
                                         </div>
                                     </div>
                                 </div>
-
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Public</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                      <div class="btn-group" ng-init="expressiondata.publicFlag='N'">
+                                        <label class="btn btn-default" ng-model="expressiondata.publicFlag" uib-btn-radio="'Y'"
+                                          ng-disabled="{{mode}}" uncheckable>Yes</label>
+                                        <label class="btn btn-default" ng-model="expressiondata.publicFlag" uib-btn-radio="'N'"
+                                          ng-disabled="{{mode}}" uncheckable>No</label>
+                                      </div>
+                                    </div>
+                                </div>
                                 <div class="form-group" style="padding-top: 10px;">
                                     <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                                         <a ui-sref="metadata({type:'expression'})" class="btn btn-primary">Cancel</a>

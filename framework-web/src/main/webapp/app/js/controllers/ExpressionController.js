@@ -85,17 +85,28 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 		});
 	};
     $scope.getLovByType();
-
+    $scope.checkIsInrogess=function(){
+		if($scope.isEditInprogess || $scope.isEditVeiwError){
+		return false;
+		}
+	}
+	
 	$scope.showPage = function () {
 		$scope.showForm = true;
 		$scope.showGraphDiv = false
 	}
 
 	$scope.showGraph = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showForm = false;
 		$scope.showGraphDiv = true
 	}
 	$scope.showHome=function(uuid, version,mode){
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('metaListexpression', {
 			id: uuid,
@@ -106,7 +117,10 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 	$scope.enableEdit = function (uuid, version) {
 		if($scope.isPrivlage || $scope.expressiondata.locked =="Y"){
 			return false;
-		  }
+		}
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('metaListexpression', {
 			id: uuid,
@@ -115,6 +129,9 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 		});
 	}
 	$scope.showView = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		if(!$scope.isEdit){
 			$scope.showPage()
 			$state.go('metaListexpression', {
@@ -484,6 +501,7 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 		expressionjson.locked = $scope.expressiondata.locked;
 		expressionjson.desc = $scope.expressiondata.desc;
 		expressionjson.published = $scope.expressiondata.published;
+		expressionjson.publicFlag = $scope.expressiondata.publicFlag;
 
 		var tagArray = [];
 		if ($scope.tags != null) {

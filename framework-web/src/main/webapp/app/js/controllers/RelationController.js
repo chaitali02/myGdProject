@@ -116,14 +116,24 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 		});
 	};
 	$scope.getLovByType();
-	
+	$scope.checkIsInrogess=function(){
+		if($scope.isEditInprogess || $scope.isEditVeiwError){
+		return false;
+		}
+    }
 	$scope.showPage = function () {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showFrom = true;
 		$scope.showGraphDiv = false;
 		$scope.isShowSimpleData =false;
 	}
 
 	$scope.showHome=function(uuid, version,mode){
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('metaListrelation', {
 			id: uuid,
@@ -135,6 +145,9 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 		if($scope.isPrivlage || $scope.relationdata.locked =="Y"){
 			return false;
 		}
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('metaListrelation', {
 			id: uuid,
@@ -143,6 +156,9 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 		});
 	}
 	$scope.showView = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		if (!$scope.isEdit) {
 			$scope.showPage()
 			$state.go('metaListrelation', {
@@ -170,6 +186,9 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 	}
 
 	$scope.showGraph = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showFrom = false;
 		$scope.showGraphDiv = true;
 		$scope.isShowSimpleData =false;
@@ -186,6 +205,9 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 
 	
 	$scope.showSampleTable = function (data) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.isShowSimpleData = true
 		$scope.isDataInpogress = true
 		$scope.isDataError = false;

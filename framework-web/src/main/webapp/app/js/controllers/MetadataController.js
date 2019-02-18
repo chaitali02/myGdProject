@@ -114,9 +114,16 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		exporterPdfDefaultStyle: { fontSize: 9 },
 		exporterPdfTableHeaderStyle: { fontSize: 10, bold: true, italics: true, color: 'red' },
 	}
-
+    $scope.checkIsInrogess=function(){
+		if($scope.isEditInprogess || $scope.isEditVeiwError){
+		return false;
+		}
+    }
 	/*Start showPage*/
 	$scope.showPage = function () {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showFrom = true;
 		$scope.isShowSimpleData = false
 		$scope.isShowDatastore=false;
@@ -126,6 +133,9 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	}/*End showPage*/
 
 	$scope.showGraph = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showFrom = false;
 		$scope.isShowDatastore=false;
 		$scope.isShowSimpleData = false;
@@ -135,6 +145,9 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 
 	}/*End ShowGraph*/
     $scope.showHome=function(uuid, version,mode){
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('metaListdatapod', {
 			id: uuid,
@@ -146,6 +159,9 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		if($scope.isPrivlage || $scope.datapoddata.locked =="Y"){
           return false;
 		}
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('metaListdatapod', {
 			id: uuid,
@@ -155,6 +171,9 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	}
 
 	$scope.showview = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		if (!$scope.isEdit) {
 			$scope.showPage()
 			$state.go('metaListdatapod', {
@@ -183,7 +202,6 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	};
 	
 	$scope.getGridStyleHistogram = function () {
-		
 		var style = {
 			'margin-top': '10px',
 			'margin-bottom': '10px',
@@ -288,7 +306,6 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	  });
 	  
 	$scope.getGridStyleCompareMetaData = function () {
-		
 		var style = {
 			'margin-top': '10px',
 			'margin-bottom': '10px',
@@ -579,6 +596,9 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	}
 
 	$scope.onSelectDataStore=function(data,index){
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.isDisabledDSRB();
 		$scope.sample.data=null;
 		$scope.datastoreDetail=data
@@ -588,6 +608,9 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	}
 
 	$scope.showDatastrores=function(data){
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showFrom = false;
 		$scope.isShowSimpleData = false;
 		$scope.showGraphDiv = false;
@@ -751,6 +774,9 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		if($scope.isDataInpogress){
 			return false;
 		};
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.isDataError = false;
 		$scope.isShowSimpleData = true
 		$scope.isDataInpogress = true
@@ -855,6 +881,9 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
     $scope.showCompareMetaData=function(data){
 		if($scope.isShowCompareMetaData){
 			return false
+		}
+		if($scope.checkIsInrogess () ==false){
+			return false;
 		}
 		$scope.gridOptionsCompareMetaData.superColDefs[0].displayName=$scope.selectSourceType.charAt(0).toUpperCase() + $scope.selectSourceType.slice(1);;
 		$scope.isShowCompareMetaData=true;
@@ -1075,6 +1104,8 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		datapodJson.locked = $scope.datapoddata.locked;
 		datapodJson.published = $scope.datapoddata.published;
 		datapodJson.cache = $scope.datapoddata.cache;
+		datapodJson.publicFlag = $scope.datapoddata.publicFlag;
+
 		var datasource = {};
 		var ref = {};
 		ref.type = "datasource";
@@ -1210,6 +1241,9 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	$scope.downloadFile = function (data) {
 		if($scope.isDownloadDatapod)
 		  return false;
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.download.uuid = data.uuid;
 		$scope.download.version = data.version;
 		$scope.download.type="datapod";
