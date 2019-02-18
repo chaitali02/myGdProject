@@ -781,6 +781,9 @@ public class VizpodServiceImpl {
 			vizExec = new VizExec();
 			vizExec.setExecParams(execParams);
 			Vizpod vizpod = (Vizpod) commonServiceImpl.getOneByUuidAndVersion(vizpodUuid, vizpodVersion, MetaType.vizpod.toString(), "Y");
+			if(execParams!=null  && execParams.getFilterInfo().size()>0) {
+				vizpod.setFilterInfo(execParams.getFilterInfo());
+			}
 			vizExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.vizpod, vizpodUuid, vizpod.getVersion())));
 			Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
 			vizExec.setSql(vizpodParser.toSql(vizpod, "", usedRefKeySet, true, runMode, false));

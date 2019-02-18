@@ -58,18 +58,7 @@
   "detailAttr": [],
   "filterInfo": [],
   "groups": [
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "04afa6cf-0021-4ca1-a492-966bb528d060",
-        "version": null,
-        "name": "rule_alert_summary"
-      },
-      "attributeId": 1,
-      "function": null,
-      "value": null,
-      "attributeName": "focus_type"
-    }
+    
   ],
   "values": [
     {
