@@ -66,7 +66,11 @@ AdminModule.controller('AdminGroupController', function (CommonService, $state, 
 		$scope.privileges = privilegeSvc.privileges['group'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
-
+	$scope.checkIsInrogess=function(){
+		if($scope.isEditInprogess || $scope.isEditVeiwError){
+		return false;
+		}
+    }
 	/*Start showPage*/
 	$scope.showPage = function () {
 		$scope.showFrom = true;
@@ -74,6 +78,9 @@ AdminModule.controller('AdminGroupController', function (CommonService, $state, 
 	}/*End showPage*/
 
 	$scope.showHome=function(uuid, version,mode){
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('adminListgroup', {
 			id: uuid,
@@ -85,6 +92,9 @@ AdminModule.controller('AdminGroupController', function (CommonService, $state, 
 		if($scope.isPrivlage || $scope.groupdata.locked =="Y"){
 			return false;
 		}
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('adminListgroup', {
 			id: uuid,
@@ -94,6 +104,9 @@ AdminModule.controller('AdminGroupController', function (CommonService, $state, 
 	}
 
 	$scope.showView = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		if(!$scope.isEdit){
 			$scope.showPage()
 			$state.go('adminListgroup', {
@@ -126,6 +139,9 @@ AdminModule.controller('AdminGroupController', function (CommonService, $state, 
 	}
 
 	$scope.showGraph = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showFrom = false;
 		$scope.showGraphDiv = true;
 
@@ -280,6 +296,8 @@ AdminModule.controller('AdminGroupController', function (CommonService, $state, 
 		groupJson.active = $scope.groupdata.active;
 		groupJson.locked = $scope.groupdata.locked;
 		groupJson.published = $scope.groupdata.published;
+		groupJson.publicFlag = $scope.groupdata.publicFlag;
+
 		var Appid = {};
 		var refAppid = {};
 		refAppid.uuid = $scope.appId.uuid;

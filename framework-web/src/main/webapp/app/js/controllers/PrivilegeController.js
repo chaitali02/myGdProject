@@ -71,14 +71,24 @@ AdminModule.controller('AdminPrivilegeController', function (CommonService, $sta
 		$scope.privileges = privilegeSvc.privileges['privilege'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
-	
+	$scope.checkIsInrogess=function(){
+		if($scope.isEditInprogess || $scope.isEditVeiwError){
+		return false;
+		}
+    }
 	/*Start showPage*/
 	$scope.showPage = function () {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showFrom = true;
 		$scope.showGraphDiv = false
 	}/*End showPage*/
 
 	$scope.showHome=function(uuid, version,mode){
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('adminListprivilege', {
 			id: uuid,
@@ -91,7 +101,10 @@ AdminModule.controller('AdminPrivilegeController', function (CommonService, $sta
 		if($scope.isPrivlage || $scope.privilegedata.locked =="Y"){
 			return false;
 		}
-		$scope.showPage()
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
+		$scope.showPage();
 		$state.go('adminListprivilege', {
 			id: uuid,
 			version: version,
@@ -99,6 +112,9 @@ AdminModule.controller('AdminPrivilegeController', function (CommonService, $sta
 		});
 	}
 	$scope.showView = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		if(!$scope.isEdit){
 			$scope.showPage()
 			$state.go('adminListprivilege', {
@@ -133,6 +149,9 @@ AdminModule.controller('AdminPrivilegeController', function (CommonService, $sta
 	}
 
 	$scope.showGraph = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showFrom = false;
 		$scope.showGraphDiv = true;
 	}/*End ShowDatapodGraph*/
@@ -257,6 +276,8 @@ AdminModule.controller('AdminPrivilegeController', function (CommonService, $sta
 		privilegeJson.locked = $scope.privilegedata.locked;
 		privilegeJson.published = $scope.privilegedata.published;
 		privilegeJson.privType = $scope.selectprivilegeType;
+		privilegeJson.publicFlag = $scope.privilegedata.publicFlag;
+
 		var defaultoption = {};
 		var metaref = {};
 		defaultoption.uuid = $scope.allmeta.defaultoption.uuid;

@@ -68,15 +68,25 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 		$scope.privileges = privilegeSvc.privileges['user'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
-
+    $scope.checkIsInrogess=function(){
+		if($scope.isEditInprogess || $scope.isEditVeiwError){
+		return false;
+		}
+    }
 	/*Start showPage*/
 	$scope.showPage = function () {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showForm = true;
 		$scope.showGraphDiv = false
 	}/*End showPage*/
 	
 	
 	$scope.showHome=function(uuid, version,mode){
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('adminListuser', {
 			id: uuid,
@@ -89,6 +99,9 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 		if($scope.isPrivlage || $scope.userdata.locked =="Y"){
 			return false;
 		}
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('adminListuser', {
 			id: uuid,
@@ -97,6 +110,9 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 		});
 	}
 	$scope.showView = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		if(!isEdit){
 			$scope.showPage()
 			$state.go('adminListuser', {
@@ -218,6 +234,9 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 
 	/*start showGraph*/
 	$scope.showGraph = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showForm = false;
 		$scope.showGraphDiv = true;
 
@@ -395,6 +414,8 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 		userJson.active = $scope.userdata.active;
 		userJson.locked = $scope.userdata.locked;
 		userJson.published = $scope.userdata.published;
+		userJson.publicFlag = $scope.userdata.publicFlag;
+
 		userJson.password = $scope.userdata.password;
 		userJson.firstName = $scope.userdata.firstName;
 		userJson.middleName = $scope.userdata.middleName;
