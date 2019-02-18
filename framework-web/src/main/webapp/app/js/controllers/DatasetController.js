@@ -94,8 +94,17 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		{ "text": "dataset", "caption": "dataset", "disabled": false },
 		{ "text": "paramlist", "caption": "paramlist", "disabled": false },
 		{ "text": "function", "caption": "function", "disabled": false }];
+	 
+	$scope.checkIsInrogess=function(){
+		if($scope.isEditInprogess || $scope.isEditVeiwError){
+		return false;
+		}
+	}
 
 	$scope.showPage = function () {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.isShowSimpleData = false
 		$scope.showForm = true;
 		$scope.showGraphDiv = false
@@ -105,7 +114,10 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 	$scope.enableEdit = function (uuid, version) {
 		if($scope.isPrivlage || $scope.dataset.locked =="Y"){
 			return false;
-		  }
+		}
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('metaListdataset', {
 			id: uuid,
@@ -114,6 +126,9 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		});
 	}
 	$scope.showView = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		if (!$scope.isEdit) {
 			$scope.showPage()
 			$state.go('metaListdataset', {
@@ -124,6 +139,9 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		}
 	}
 	$scope.showHome=function(uuid, version,mode){
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage();
 		$state.go('metaListdataset', {
 			id: uuid,
@@ -269,6 +287,9 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 	});
 
 	$scope.showGraph = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showForm = false;
 		$scope.showGraphDiv = true;
 		$scope.isShowSimpleData = false
@@ -495,7 +516,7 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			MetadataDatasetSerivce.getDatasetDataByOneUuidandVersion($stateParams.id, $stateParams.version, 'dataset')
 				.then(function (response) { onSuccessResult(response.data) },function(response) {onError(response.data)});
 			var onSuccessResult = function (response) {
-				$scope.isEditInprogess=false;
+			    $scope.isEditInprogess=false;
 				$scope.dataset = response.dataset;
 				$scope.selectSourceType = response.dataset.dependsOn.ref.type
 				$scope.datasetCompare = response.dataset;
@@ -1423,7 +1444,8 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 		dataSetJson.published = $scope.dataset.published;
 		dataSetJson.limit = $scope.dataset.limit;
 		dataSetJson.locked = $scope.dataset.locked;
-		
+		dataSetJson.publicFlag = $scope.dataset.publicFlag;
+
 
 		var tagArray = [];
 		if ($scope.tags != null) {
@@ -1675,6 +1697,9 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 	$scope.downloadFile = function (data) {
 		if($scope.isDownloadDataset)
 		  return false;
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.download.uuid = data.uuid;
 		$scope.download.version = data.version;
 		$scope.download.type="dataset";

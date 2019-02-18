@@ -54,7 +54,7 @@
                             <div class="bounce3"></div>
                         </div>
                         <div class="grey" ng-if="allMetaCount.length==0 && !isMetaInprogess">
-                            <h3>No records found</h3>
+                            <h3 class="grey"  style="font-size:14px;">No record found</h3>
                         </div>
                         <div ng-if ="!isMetaInprogess" class="col-lg-3 col-md-4 col-sm-6 col-xs-12" ng-repeat="datadiscovry in allMetaCount">
                             <div class="cardshadow" style="height:152px;">
@@ -101,7 +101,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row" ng-if ="!isMetaInprogess">
+                    <div class="row" ng-if ="!isMetaInprogess && allMetaCount.length > 0">
                         <div class="col-md-12">
                             <ul uib-pagination items-per-page="pagination.pageSize" total-items="pagination.totalItems"
                                 ng-model="pagination.currentPage" ng-change="onPageChanged()" style="float:right;overflow:hidden;z-index:1;"

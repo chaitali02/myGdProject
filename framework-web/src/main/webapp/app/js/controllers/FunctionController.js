@@ -78,18 +78,32 @@ MetadataModule.controller('MetadataFunctionController', function ($state, $scope
 			return $filter('filter')($scope.lobTag, query);
 		});
 	};
-    $scope.getLovByType();
+	$scope.getLovByType();
+	$scope.checkIsInrogess=function(){
+		if($scope.isEditInprogess || $scope.isEditVeiwError){
+		return false;
+		}
+    }
 	$scope.showPage = function () {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showForm = true;
 		$scope.showGraphDiv = false
 	}
    
 	$scope.showGraph = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showForm = false;
 		$scope.showGraphDiv = true;
 	}
 
 	$scope.showHome=function(uuid, version,mode){
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('metaListfunction', {
 			id: uuid,
@@ -101,7 +115,10 @@ MetadataModule.controller('MetadataFunctionController', function ($state, $scope
 	$scope.enableEdit = function (uuid, version) {
 		if($scope.isPrivlage || $scope.functiondata.locked =="Y"){
 			return false;
-		  }
+		}
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('metaListfunction', {
 			id: uuid,
@@ -110,6 +127,9 @@ MetadataModule.controller('MetadataFunctionController', function ($state, $scope
 		});
 	}
 	$scope.showview = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		if(!$scope.isEdit){
 			$scope.showPage()
 			$state.go('metaListfunction', {
@@ -342,6 +362,8 @@ MetadataModule.controller('MetadataFunctionController', function ($state, $scope
 		functionJson.locked = $scope.functiondata.locked;
 		functionJson.published = $scope.functiondata.published;
 		functionJson.functionInfo = $scope.functiondata.functionInfo;
+		functionJson.publicFlag = $scope.functiondata.publicFlag;
+
 		functionJson.category = $scope.selectCatogory.toUpperCase();
 	// 	functionJson.funcType = $scope.selectFunctionType;
 		functionJson.inputReq = $scope.functiondata.inputReq;
