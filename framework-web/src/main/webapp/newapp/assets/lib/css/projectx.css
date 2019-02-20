@@ -1294,9 +1294,13 @@ cursor: not-allowed !important;
   margin-left: 4px;
 }
 
-
 .dq-dialogbox .ui-dialog-titlebar{
   background: white;
   font-weight: lighter;
   border-bottom: 1px solid #e5e5e5 !important;
+}
+
+.btn-margin{
+    margin: 0% 0% 0% 1%;
+    border-radius: 3px !important;
 }

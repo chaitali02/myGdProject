@@ -24,7 +24,6 @@ import { AttributeRefHolder } from '../metadata/domain/domain.attributeRefHolder
   styleUrls: []
 })
 export class DataQualityGroupDetailComponent {
-  showGraph: boolean;
   isHomeEnable: boolean;
   checkboxModelexecution: boolean;
   breadcrumbDataFrom: { "caption": string; "routeurl": string; }[];
@@ -45,14 +44,18 @@ export class DataQualityGroupDetailComponent {
   routerUrl: any;
   dqgroupdata: any;
   @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
-  isEditInprogess: boolean;
-  isEditError: boolean;
+  isEditInprogess: boolean = false;
+  isEditError: boolean = false;
+  isEdit: boolean = false;
+  isversionEnable: boolean;
+  isAdd: boolean;
+  showForm: boolean = true;
+  showDivGraph: boolean;
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router, public metaconfig: AppMetadata, private _commonService: CommonService, private _location: Location,
     private _dataQualityService: DataQualityService, public appHelper: AppHelper) {
     this.dqgroupdata = new DataQualityGroup();
     this.isHomeEnable = false;
-    this.showGraph = false;
     this.dqgroupdata["active"] = true
     this.isSubmitEnable = true;
     this.IsProgerssShow = "false";
@@ -81,7 +84,7 @@ export class DataQualityGroupDetailComponent {
       }
     ],
 
-      this.isEditInprogess = false;
+    this.isEditInprogess = false;
     this.isEditError = false;
   }
 
@@ -100,7 +103,63 @@ export class DataQualityGroupDetailComponent {
         this.getAllLatest();
       }
     });
+
+    this.setMode(this.mode);
   }
+  
+  setMode(mode: any) {
+    if (mode == 'true') {
+      this.isEdit = false;
+      this.isversionEnable = false;
+      this.isAdd = false;
+    } else if (mode == 'false') {
+      this.isEdit = true;
+      this.isversionEnable = true;
+      this.isAdd = false;
+    } else {
+      this.isAdd = true;
+      this.isEdit = false;
+    }
+  }
+
+  enableEdit(uuid, version) {
+    this.router.navigate(['app/dataQuality/dqgroup', uuid, version, 'false']);
+    this.dropdownSettings = {
+      singleSelection: false,
+      text: "Select Attrubutes",
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      enableSearchFilter: true,
+      classes: "myclass custom-class",
+      maxHeight: 110,
+      disabled: true
+    };
+  }
+
+  showMainPage(uuid, version) {
+    this.isHomeEnable = false;
+    this.showDivGraph = false;
+    this.showForm = true;
+  }
+
+  showGraph(uuid, version) {
+    this.isHomeEnable = true;
+    this.showDivGraph = false;
+    this.showForm = false;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id, this.version);
+    }, 1000);
+  }
+
+  public goBack() {
+    //this._location.back();
+    this.router.navigate(['app/list/dqgroup']);
+  }
+
+  clear() {
+    this.selectedItems = []
+  }
+  
   getAllLatest() {
     this._commonService.getAllLatest(MetaTypeEnum.MetaType.DQ).subscribe(
       response => { this.OnSuccesgetAllLatest(response) },
@@ -121,7 +180,6 @@ export class DataQualityGroupDetailComponent {
   getOneByUuidAndVersion(id, version) {
     this.isEditInprogess = true;
     this.isEditError = false;
-
     this._commonService.getOneByUuidAndVersion(id, version, MetaTypeEnum.MetaType.DQGROUP)
       .subscribe(
         response => {
@@ -182,10 +240,6 @@ export class DataQualityGroupDetailComponent {
         },
         error => console.log("Error :: " + error));
   }
-  public goBack() {
-    //this._location.back();
-    this.router.navigate(['app/list/dqgroup']);
-  }
 
   submitDqGroup() {
     this.isSubmitEnable = true;
@@ -195,12 +249,6 @@ export class DataQualityGroupDetailComponent {
     dqgroupJson.name = this.dqgroupdata.name;
     dqgroupJson.desc = this.dqgroupdata.desc;
     dqgroupJson.tags = this.dqgroupdata.tags;
-    // var tagArray = [];
-    // if (this.dqgroupdata.tags != null) {
-    //   for (var counttag = 0; counttag < this.dqgroupdata.tags.length; counttag++) {
-    //     tagArray[counttag] = this.dqgroupdata.tags[counttag].value;
-    //   }
-    // }
 
     dqgroupJson.active = this.appHelper.convertBooleanToString(this.dqgroupdata.active);
     dqgroupJson.locked = this.appHelper.convertBooleanToString(this.dqgroupdata.locked);
@@ -263,35 +311,5 @@ export class DataQualityGroupDetailComponent {
     this.msgs.push({ severity: msgtype, summary: msgsumary, detail: msg });
   }
 
-  enableEdit(uuid, version) {
-    this.router.navigate(['app/dataQuality/dqgroup', uuid, version, 'false']);
-    this.dropdownSettings = {
-      singleSelection: false,
-      text: "Select Attrubutes",
-      selectAllText: 'Select All',
-      unSelectAllText: 'UnSelect All',
-      enableSearchFilter: true,
-      classes: "myclass custom-class",
-      maxHeight: 110,
-      disabled: true
-    };
-  }
-
-  clear() {
-    this.selectedItems = []
-  }
-
-  showMainPage(uuid, version) {
-    this.isHomeEnable = false;
-    this.showGraph = false;
-
-  }
-
-  showDagGraph(uuid, version) {
-    this.isHomeEnable = true;
-    this.showGraph = true;
-    setTimeout(() => {
-      this.d_KnowledgeGraphComponent.getGraphData(this.id, this.version);
-    }, 1000);
-  }
+  
 }

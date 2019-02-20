@@ -277,7 +277,7 @@
                                     </li>
                                     <li class="divider" style="margin: 0px;"> </li>
                                     <li>
-                                      <div class="form-group" style="margin: 1%;">
+                                      <div class="form-group" style="margin: 1%;" *ngIf="filterTableArray">
                                         <input type="number" class="form-control" [(ngModel)]="moveTo" min="0" max="{{filterTableArray.length}}"
                                           name="moveto" style="border:0" placeholder="Move To" (ngModelChange)="updateArray(moveTo, 'range',$event)"
                                           focus-me="true" required />

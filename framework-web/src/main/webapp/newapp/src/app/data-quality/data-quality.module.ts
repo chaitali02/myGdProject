@@ -42,8 +42,8 @@ import { MetadataService } from '../metadata/services/metadata.service';
             color: '#15C5D5',
             switchColor: '#FFFFF',
             defaultBoColor : '#ccc',
-            checkedLabel: 'Yes',
-            uncheckedLabel: 'No'
+           // checkedLabel: 'Yes',
+            //uncheckedLabel: 'No'
           })
     ],
     declarations: [
