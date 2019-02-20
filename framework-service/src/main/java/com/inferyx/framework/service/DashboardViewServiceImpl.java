@@ -25,6 +25,8 @@ import com.inferyx.framework.dao.IDashboardDao;
 import com.inferyx.framework.dao.IVizpodDao;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.Dashboard;
+import com.inferyx.framework.domain.DashboardExec;
+import com.inferyx.framework.domain.DashboardExecView;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.MetaIdentifier;
@@ -33,6 +35,7 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Section;
 import com.inferyx.framework.domain.SectionView;
+import com.inferyx.framework.domain.VizExec;
 import com.inferyx.framework.domain.Vizpod;
 import com.inferyx.framework.view.metadata.DashboardView;
 
@@ -282,18 +285,18 @@ public class DashboardViewServiceImpl {
 			dashboard = idashboardDao.findOneByUuidAndVersion(appUuid, uuid, version);
 		}*/
 		Dashboard dashboard = (Dashboard) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dashboard.toString());
-		Dashboard resolvedDashboard = (Dashboard) commonServiceImpl.resolveName(dashboard, MetaType.dashboard);
-		dashboardView.setUuid(resolvedDashboard.getUuid());
-		dashboardView.setVersion(resolvedDashboard.getVersion());
-		dashboardView.setName(resolvedDashboard.getName());
-		dashboardView.setDesc(resolvedDashboard.getDesc());
-		dashboardView.setAppInfo(resolvedDashboard.getAppInfo());
-		dashboardView.setCreatedBy(resolvedDashboard.getCreatedBy());
-		dashboardView.setTags(resolvedDashboard.getTags());
-		dashboardView.setActive(resolvedDashboard.getActive());
-		dashboardView.setCreatedOn(resolvedDashboard.getCreatedOn());
+//		Dashboard resolvedDashboard = (Dashboard) commonServiceImpl.resolveName(dashboard, MetaType.dashboard);
+		dashboardView.setUuid(dashboard.getUuid());
+		dashboardView.setVersion(dashboard.getVersion());
+		dashboardView.setName(dashboard.getName());
+		dashboardView.setDesc(dashboard.getDesc());
+		dashboardView.setAppInfo(dashboard.getAppInfo());
+		dashboardView.setCreatedBy(dashboard.getCreatedBy());
+		dashboardView.setTags(dashboard.getTags());
+		dashboardView.setActive(dashboard.getActive());
+		dashboardView.setCreatedOn(dashboard.getCreatedOn());
 
-		List<Section> sectionInfo = resolvedDashboard.getSectionInfo();
+		List<Section> sectionInfo = dashboard.getSectionInfo();
 		List<SectionView> sectionViewInfo = new ArrayList<>();
 		for (Section section : sectionInfo) {
 			SectionView sectionView = new SectionView();
@@ -302,21 +305,14 @@ public class DashboardViewServiceImpl {
 			sectionView.setRowNo(section.getRowNo());
 			sectionView.setColNo(section.getColNo());
 			MetaIdentifierHolder vizpodInfo = section.getVizpodInfo();
-			Vizpod vizpod = null;
-			if (StringUtils.isBlank(vizpodInfo.getRef().getVersion())) {
-				//vizpod = iVizpodDao.findLatestByUuid(vizpodInfo.getRef().getUuid(), new Sort(Sort.Direction.DESC, "version"));
-				vizpod = (Vizpod) commonServiceImpl.getLatestByUuid(vizpodInfo.getRef().getUuid(), MetaType.vizpod.toString());
-			} else {
-				//vizpod = iVizpodDao.findOneByUuidAndVersion(vizpodInfo.getRef().getUuid(), vizpodInfo.getRef().getVersion());
-				vizpod =  (Vizpod) commonServiceImpl.getOneByUuidAndVersion(vizpodInfo.getRef().getUuid(), vizpodInfo.getRef().getVersion(), MetaType.vizpod.toString());
-			}
-			vizpod = vizpodServiceImpl.resolveName(vizpod);
+			Vizpod vizpod = (Vizpod) commonServiceImpl.getOneByUuidAndVersion(vizpodInfo.getRef().getUuid(), vizpodInfo.getRef().getVersion(), MetaType.vizpod.toString());
+//			vizpod = vizpodServiceImpl.resolveName(vizpod);
 			sectionView.setVizpodInfo(vizpod);
 			sectionViewInfo.add(sectionView);
 		}
 		dashboardView.setSectionInfo(sectionViewInfo);
 
-		MetaIdentifierHolder dependsOn = resolvedDashboard.getDependsOn();
+		MetaIdentifierHolder dependsOn = dashboard.getDependsOn();
 
 		// List<MetaIdentifierHolder> filterInfo = resolvedDashboard.getFilterInfo();
 
@@ -338,9 +334,68 @@ public class DashboardViewServiceImpl {
 		 */
 
 		// dashboardView.setFilter(resolvedFilter);
-		dashboardView.setFilterInfo(resolvedDashboard.getFilterInfo());
+		dashboardView.setFilterInfo(dashboard.getFilterInfo());
 		dashboardView.setDependsOn(dependsOn);
 		return dashboardView;
+	}
+
+	/**
+	 * @param uuid
+	 * @param version
+	 * @return DashboardExecView
+	 * @throws JsonProcessingException 
+	 */
+	public DashboardExecView findOneExecByUuidAndVersion(String execUuid, String execVersion) throws JsonProcessingException {
+		DashboardExec dashboardExec = (DashboardExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.dashboardExec.toString(), "N");
+		MetaIdentifier dependsOnMI = dashboardExec.getDependsOn().getRef();
+		Dashboard dashboard = (Dashboard) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(), dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
+		
+		DashboardExecView dashboardExecView = new DashboardExecView();
+
+		//setting base entity
+		dashboardExecView.setUuid(dashboardExec.getUuid());
+		dashboardExecView.setVersion(dashboardExec.getVersion());
+		dashboardExecView.setName(dashboardExec.getName());
+		dashboardExecView.setDesc(dashboardExec.getDesc());
+		dashboardExecView.setCreatedBy(dashboardExec.getCreatedBy());
+		dashboardExecView.setCreatedOn(dashboardExec.getCreatedOn());
+		dashboardExecView.setTags(dashboardExec.getTags());
+		dashboardExecView.setActive(dashboardExec.getActive());
+		dashboardExecView.setLocked(dashboardExec.getLocked());
+		dashboardExecView.setPublished(dashboardExec.getPublished());
+		dashboardExecView.setAppInfo(dashboardExec.getAppInfo());
+		dashboardExecView.setPublicFlag(dashboardExec.getPublicFlag());
+		
+		//setting specific properties
+		List<SectionView> sectionViewInfo = new ArrayList<>();
+		for(Section section : dashboard.getSectionInfo()) {
+			MetaIdentifier vizpodMI = section.getVizpodInfo().getRef();
+			for(MetaIdentifierHolder vizExecHolder : dashboardExec.getVizExecInfo()) {
+				MetaIdentifier vizExecMI = vizExecHolder.getRef();
+				Vizpod vizpod = (Vizpod) commonServiceImpl.getOneByUuidAndVersion(vizpodMI.getUuid(), vizpodMI.getVersion(), vizpodMI.getType().toString(), "N");
+				if(vizpod.getUuid().equalsIgnoreCase(vizpodMI.getUuid())) {
+					try {
+						VizExec vizExec = (VizExec) commonServiceImpl.getOneByUuidAndVersion(vizExecMI.getUuid(), vizExecMI.getVersion(), vizExecMI.getType().toString(), "N");
+						
+						SectionView sectionView = new SectionView();
+						sectionView.setVizpodInfo(vizpod);
+						sectionView.setVizExecInfo(vizExec);
+						sectionView.setColNo(section.getColNo());
+						sectionView.setName(section.getName());
+						sectionView.setRowNo(section.getRowNo());
+						sectionView.setSectionId(section.getSectionId());
+						sectionViewInfo.add(sectionView);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					break;
+				}
+			}
+		}
+		dashboardExecView.setSectionViewInfo(sectionViewInfo);
+		dashboardExecView.setDependsOn(dashboardExec.getDependsOn());
+		dashboardExecView.setFilterInfo(dashboard.getFilterInfo());
+		return dashboardExecView;
 	}
 
 }

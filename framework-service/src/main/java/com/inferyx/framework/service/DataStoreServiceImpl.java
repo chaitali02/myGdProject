@@ -677,7 +677,9 @@ public class DataStoreServiceImpl {
 			} else {
 				tableName = String.format("%s_%s_%s", list[list.length-3].replaceAll("-", "_"), list[list.length-2], list[list.length-1]);
 			}
-		}	
+		} else if (metaType == MetaType.vizpod) {
+			tableName = Helper.genTableName(dataStore.getLocation());
+		}
 		return tableName;
 	}
 
@@ -1693,24 +1695,7 @@ public class DataStoreServiceImpl {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder
-					.getRequestAttributes();
-			if (requestAttributes != null) {
-				HttpServletResponse response = requestAttributes.getResponse();
-				if (response != null) {
-					response.setContentType("application/json");
-					Message message = new Message("404", MessageStatus.FAIL.toString(), "Table not found.");
-					Message savedMessage = messageServiceImpl.save(message);
-					ObjectMapper mapper = new ObjectMapper();
-					String messageJson = mapper.writeValueAsString(savedMessage);
-					response.setContentType("application/json");
-					response.setStatus(404);
-					response.getOutputStream().write(messageJson.getBytes());
-					response.getOutputStream().close();
-				} else
-					logger.info("HttpServletResponse response is \"" + null + "\"");
-			} else
-				logger.info("ServletRequestAttributes requestAttributes is \"" + null + "\"");
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Failed to fetch data.", new MetaIdentifierHolder(new MetaIdentifier(MetaType.datastore, datastoreUuid, datastoreVersion)));
 		}
 		
 		return data;

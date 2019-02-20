@@ -76,7 +76,6 @@ import com.inferyx.framework.domain.Filter;
 import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.GraphExec;
-import com.inferyx.framework.domain.GraphMetaIdentifier;
 import com.inferyx.framework.domain.GraphMetaIdentifierHolder;
 import com.inferyx.framework.domain.Group;
 import com.inferyx.framework.domain.IngestExec;
@@ -86,7 +85,6 @@ import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.LoadExec;
 import com.inferyx.framework.domain.MapExec;
 import com.inferyx.framework.domain.MetaIdentifier;
-import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaStatsHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
@@ -1738,6 +1736,9 @@ public class RegisterService {
 				break;
 			case "dashboardview":
 				result = ow.writeValueAsString(dashboardViewServiceImpl.findOneByUuidAndVersion(uuid, version));
+				break;
+			case "dashboardexecview":
+				result = ow.writeValueAsString(dashboardViewServiceImpl.findOneExecByUuidAndVersion(uuid, version));
 				break;
 			/*case "application":
 				Application application = applicationServiceImpl.findOneByUuidAndVersion(uuid, version);

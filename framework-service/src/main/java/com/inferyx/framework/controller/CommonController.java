@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.inferyx.framework.controller;
 
-
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
@@ -88,11 +86,13 @@ public class CommonController<T> {
 				|| type.equalsIgnoreCase(MetaType.reportview.toString()) 
 				|| type.equalsIgnoreCase(MetaType.batchview.toString())
 				|| type.equalsIgnoreCase(MetaType.ingestview.toString())
-				|| type.equalsIgnoreCase(MetaType.applicationview.toString()))
-			if(StringUtils.isBlank(version))
+				|| type.equalsIgnoreCase(MetaType.applicationview.toString())
+				|| type.equalsIgnoreCase(MetaType.dashboardExecView.toString()))
+			if(StringUtils.isBlank(version)) {
 				return (T) registerService.getLatestByUuid(uuid, type);
-			else
+			} else {
 				return (T) registerService.getOneByUuidAndVersion(uuid, version, type);
+			}
 		else {
 			T object = (T) commonServiceImpl.getOneByUuidAndVersion(uuid, version, type);
 			return objectWriter.writeValueAsString(object);

@@ -15,9 +15,26 @@ public class SectionView {
 	private String sectionId;
 	private String name;
 	private Vizpod vizpodInfo;
+	private VizExec vizExecInfo;
 	private Integer rowNo;
     private Integer colNo;
 	 
+	/**
+	 * @Ganesh
+	 *
+	 * @return the vizExecInfo
+	 */
+	public VizExec getVizExecInfo() {
+		return vizExecInfo;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param vizExecInfo the vizExecInfo to set
+	 */
+	public void setVizExecInfo(VizExec vizExecInfo) {
+		this.vizExecInfo = vizExecInfo;
+	}
 	public String getSectionId() {
 		return sectionId;
 	}
