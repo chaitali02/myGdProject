@@ -372,7 +372,7 @@ public class DashboardViewServiceImpl {
 			MetaIdentifier vizpodMI = section.getVizpodInfo().getRef();
 			for(MetaIdentifierHolder vizExecHolder : dashboardExec.getVizExecInfo()) {
 				MetaIdentifier vizExecMI = vizExecHolder.getRef();
-				Vizpod vizpod = (Vizpod) commonServiceImpl.getOneByUuidAndVersion(vizpodMI.getUuid(), vizpodMI.getVersion(), vizpodMI.getType().toString(), "N");
+				Vizpod vizpod = (Vizpod) commonServiceImpl.getOneByUuidAndVersion(vizpodMI.getUuid(), vizpodMI.getVersion(), vizpodMI.getType().toString(), "Y");
 				if(vizpod.getUuid().equalsIgnoreCase(vizpodMI.getUuid())) {
 					try {
 						VizExec vizExec = (VizExec) commonServiceImpl.getOneByUuidAndVersion(vizExecMI.getUuid(), vizExecMI.getVersion(), vizExecMI.getType().toString(), "N");
