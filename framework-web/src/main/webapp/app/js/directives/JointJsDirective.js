@@ -460,7 +460,6 @@ DataPipelineModule.directive('gridResultsDirective', function ($rootScope, $comp
        
       });
       window.downloadPiplineFile = function () {
-        debugger
         var uuid = $scope.downloadDetail.uuid;
         var version = $scope.downloadDetail.version;
         var baseurl = $location.absUrl().split("app")[0];
@@ -1012,7 +1011,6 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
             
          d3.selectAll('#showgrouppaper .joint-element .body')
            .on('contextmenu', function(){
-             debugger
              d3.event.preventDefault();
              d3.event.stopPropagation();
              var vm = this;
@@ -1325,7 +1323,7 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
            } //End Link
          };
   });
-DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,graphService,dagValidationSvc,$location,$http,dagMetaDataService,CommonService,MetadataDagSerivce,$timeout,$filter) {
+DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,graphService,dagValidationSvc,$location,$http,dagMetaDataService,CommonService,MetadataDagSerivce,$timeout,$filter, $q) {
   return {
     restrict: 'AE',
     scope : {
@@ -2069,6 +2067,8 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                simulate : {name:'simulate', label: 'Simulate'},
                operator : {name:'operator', label: 'Operator'},
                rule : {name:'rule', label: 'Rule'},
+               report : { name:'report', label: 'Report'},
+               dashboard : { name:'dashboard', label: 'Dashboard'},
                rulegroup : {name:'rulegroup', label: 'RuleGroup',url:'rule/getRuleExecByRGExec?'},
                recon : {name:'recon', label: 'Recon'},
                recongroup : {name:'recongroup', label: 'ReconGroup',url:'recon/getReconExecByRGExec?'},
@@ -2128,7 +2128,6 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
      }
 
      var dblClickFn = function(e,newCell,elemt) {
-
        $scope.isModelDisable=$scope.editMode==false?true:false
       //  if(!$scope.editMode || $scope.isTemplate){
       //    return;
@@ -2262,6 +2261,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         var type = $scope.popupModel.modelData.operators[0].operatorInfo[0].ref.type;
         var typeParamListArray=["simulate","operator","operatorexec","simulateexec"];
         var typeParamSetArray=["train","rule","ruleexec",'trainexec'];
+        var typeParamsArray=["report","dashboard","reportexec",'dashboardexec'];
         if(typeParamSetArray.indexOf(type.toLowerCase()) !=-1 && ($scope.paramsetdata ||  $scope.popupModel.selectedType)){
           $scope.isExecParamSet=false;
           $scope.isTabelShow=false;
@@ -2315,6 +2315,28 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
             objDetail.version="";
             objDetail.type=type;
             $scope.getExecParamList(objDetail,$scope.popupModel);
+          }
+        }
+        else if(typeParamsArray.indexOf(type.toLowerCase()) != -1 && ($scope.popupModel.modelData.operators[0].operatorParams !=null)){
+          $scope.isExecParams=true;
+          var temp = $scope.popupModel.selectedType.split('|');
+          $scope.popupModel.modelData.operators[0].operatorInfo[0].ref.uuid = temp[0];
+          $scope.popupModel.modelData.operators[0].operatorInfo[0].ref.name = temp[1];
+          if(type.toLowerCase().indexOf("exec") !=-1){
+            var url=$location.absUrl().split("app")[0];
+            $http.get(url+'metadata/getMetaIdByExecId?action=view&execUuid='+$scope.popupModel.modelData.operators[0].operatorInfo[0].ref.uuid+'&execVersion='+$scope.popupModel.modelData.operators[0].operatorInfo[0].ref.version+'&type='+$scope.popupModel.modelData.operators[0].operatorInfo[0].ref.type).then(function (res) {
+              var objDetail={}
+              objDetail.uuid=res.data.uuid;
+              objDetail.version="";
+              objDetail.type=res.data.type;
+              $scope.getOneByUuidAndVersionReport(objDetail,$scope.popupModel);   
+            });
+          }else{
+            var objDetail={}
+            objDetail.uuid=temp[0];
+            objDetail.version="";
+            objDetail.type=type;
+            $scope.getOneByUuidAndVersionReport(objDetail,$scope.popupModel);   
           }
         }
       };
@@ -3003,11 +3025,23 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
       if($scope.execMode){
       }
       var iconMenu = iconContextMenu().items(iconMenuItems);
-      
 
+      $scope.getOneByUuidAndVersionReport=function(objDetail){
+        CommonService.getOneByUuidAndVersion(objDetail.uuid, objDetail.version,objDetail.type)
+          .then(function (response) {onSuccessGetOneByUuidAndVersion(response.data)});
+        var onSuccessGetOneByUuidAndVersion = function (response) {
+          if(response.filterInfo && response.filterInfo.length >0){
+            $scope.getExecParams(response,$scope.popupModel);
+          }
+        }
+      }
+      
       $scope.onChangeOperatorInfo=function(defaultValue){
        // $scope.popupModel.modelData.operators[0].operatorParams=null;
        $scope.paramListHolder=null;
+       $scope.isExecParamList=false;
+       $scope.isExecParams=false;
+       $scope.isExecParamSet=false;
         var temp = $scope.popupModel.selectedType.split('|');
         $scope.popupModel.modelData.operators[0].operatorInfo[0].ref.uuid = temp[0];
         $scope.popupModel.modelData.operators[0].operatorInfo[0].ref.name = temp[1];
@@ -3022,12 +3056,11 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         objDetail.type=type;
         var typeParamSetArray=["train","rule"];
         var typeParamListArray=["simulate","operator"];
-        debugger
+        var typeParamArray=['dashboard','report'];
         if(typeParamSetArray.indexOf(type) != -1){
           $scope.getExecParamsSet(objDetail,$scope.popupModel);
           $scope.isExecParamSet=true;
         }
-      
         if(typeParamListArray.indexOf(type) != -1){
           if(defaultValue){
             $scope.popupModel.modelData.operators[0].operatorParams=null;
@@ -3035,9 +3068,74 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
           $scope.getExecParamList(objDetail,$scope.popupModel);
           $scope.isExecParamList=true
         }
-
-        
+        if(typeParamArray.indexOf(type) !=-1){
+          $scope.getOneByUuidAndVersionReport(objDetail,$scope.popupModel)
+          $scope.isExecParams=true;
+        } 
       }
+
+      $scope.getExecParams = function (data,popupModel) {
+        $scope.filterAttribureIdValues = []
+        $scope.selectedAttributeValue = []
+        var attrArray=[];
+        if (data.filterInfo && data.filterInfo.length > 0) {
+          var filterAttribureIdValue = [];
+          for(var n = 0; n < data.filterInfo.length; n++) {
+            var filterattributeidvalepromise = CommonService.getAttributeValues(data.filterInfo[n].ref.uuid, data.filterInfo[n].attrId, data.filterInfo[n].ref.type);
+            filterAttribureIdValue.push(filterattributeidvalepromise);
+          }//End For Loop
+          $q.all(filterAttribureIdValue).then(function (result) {
+            for (var i = 0; i < result.length; i++) {
+              var filterAttribureIdvalueJSON = {};
+              var defaultvalue = {}
+              defaultvalue.id = null;
+              defaultvalue.value = "-select-"
+              filterAttribureIdvalueJSON.datapoduuid = data.filterInfo[i].ref.uuid;
+              filterAttribureIdvalueJSON.type = data.filterInfo[i].ref.type;
+              var tempId;
+              if(data.filterInfo[i].ref.type !="formula"){
+                filterAttribureIdvalueJSON.datapodattrId = data.filterInfo[i].attrId;
+                filterAttribureIdvalueJSON.attrName =data.filterInfo[i].attrName;
+                filterAttribureIdvalueJSON.dname = data.filterInfo[i].ref.name + "." + data.filterInfo[i].attrName;
+                tempId=data.filterInfo[i].ref.uuid+"_"+data.filterInfo[i].attrId;
+                }
+              else{
+                filterAttribureIdvalueJSON.attrName =data.filterInfo[i].ref.name;
+                filterAttribureIdvalueJSON.dname = "formula"+"." +data.filterInfo[i].ref.name;
+                tempId=data.filterInfo[i].ref.uuid;
+              }
+              attrArray.push(tempId);
+              filterAttribureIdvalueJSON.name = data.filterInfo[i].ref.name
+              filterAttribureIdvalueJSON.values = result[i].data
+              filterAttribureIdvalueJSON.values.splice(0, 0, defaultvalue)
+              $scope.selectedAttributeValue[i] = defaultvalue
+              $scope.filterAttribureIdValues[i] = filterAttribureIdvalueJSON;
+
+            }
+            if($scope.popupModel.modelData.operators[0].operatorParams !=null){
+              var filterInfo=$scope.popupModel.modelData.operators[0].operatorParams.EXEC_PARAMS.filterInfo
+              for(var i=0;i<filterInfo.length;i++){ 
+                var tempId;
+                tempId=filterInfo[i].ref.uuid;
+                if(filterInfo[i].ref.type !="formula"){
+                  tempId=filterInfo[i].ref.uuid+"_"+filterInfo[i].attrId
+                }
+                if(attrArray.indexOf(tempId) !=-1){
+                  $scope.selectedAttributeValue[attrArray.indexOf(tempId)].value=filterInfo[i].value;  
+                }
+              }
+            }
+          }, function (response) {
+            $('#attrFilter').modal("hide");
+            $scope.isDataInpogress = true;
+            $scope.isDataError = true;
+            $scope.msgclass = "errorMsg";
+            $scope.datamessage = "Some Error Occurred";
+            $scope.spinner = false;
+          });//End $q.all
+        }//End If
+      }//End getFilterValue
+
       $scope.getExecParamsSet = function (data) {
         CommonService.getParamSetByType(data.type,data.uuid,data.version).then(function (response) {
           onSuccessGetExecuteModel(response.data)
@@ -3057,6 +3155,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
           }
         }
       }
+
       $scope.getParamListByTrainORRule=function(data){
         $scope.paramlistdata=null;
         CommonService.getParamListByTrainORRule(data.uuid,data.version,data.type).then(function (response){ onSuccesGetParamListByTrain(response.data)});
@@ -3075,6 +3174,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
           }
         }
       }
+
       $scope.onChangeParamType=function(){
         $scope.allparamset=null;
         $scope.allParamList=null;
@@ -3094,6 +3194,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
           $scope.getExecParamsSet(objDetail);
         }
       }
+
       $scope.onChangeParamList=function(){
         $scope.isParamLsitTable=false;
         CommonService.getParamByParamList($scope.paramlistdata.uuid,"paramlist").then(function (response){ onSuccesGetParamListByTrain(response.data)});
@@ -3123,6 +3224,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
           $scope.selectParamList.paramInfo=paramArray;
         }
       }
+
       $scope.getExecParamsSetAndParamList = function (data) {
         $scope.paramtablecol = null
         $scope.paramtable = null;
@@ -3143,7 +3245,6 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
       $scope.onSelectparamSet = function (selectedParamInfo) {
         var paramSetjson = {};
         var paramInfoArray = [];
-     
         var selectedParamIdArray=[];
         if(selectedParamInfo !=null){
           for(var i=0;i<selectedParamInfo.length;i++){
@@ -3249,9 +3350,8 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         $scope.popupModel.modelData.operators[0].operatorParams=execParams;
       }
 
-     
+      
       $scope.getExecParamList=function(data){
-       
         $scope.attributeTypes=['datapod','dataset','rule'];
         CommonService.getParamListByType(data.type,data.uuid,data.version).then(function (response) {
           onSuccessGetExecuteModel(response.data)
@@ -3443,7 +3543,41 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
           return $filter('filter')($scope.paramListHolder[index].allAttributeinto, query);
         });
        };
-       
+      
+      $scope.executeWithExecFilterInfo=function(){
+        $scope.isExecParamList=false;    
+        $scope.isExecParamSet=false;
+        $scope.isExecParams=false;
+        var cell = $scope.graph.getCell($scope.popupModel.id);
+        cell.attr('text', { text: $scope.popupModel.modelData.name});
+        $('#responsive').modal('hide');
+        var execParams={};
+        var count = 0;
+        $scope.filterListarray = [];
+		    for (var i = 0; i < $scope.selectedAttributeValue.length; i++){
+			    var filterList = {};
+		  	  var ref = {};
+			    if ($scope.selectedAttributeValue[i].value != "-select-") {
+				    ref.type = $scope.filterAttribureIdValues[i].type;
+				    ref.uuid = $scope.filterAttribureIdValues[i].datapoduuid
+				    filterList.ref = ref;
+				    if($scope.filterAttribureIdValues[i].type !="formual"){
+					    filterList.attrId = $scope.filterAttribureIdValues[i].datapodattrId;
+				    }
+				    filterList.value = $scope.selectedAttributeValue[i].value;
+				    $scope.filterListarray[count] = filterList;
+				    count = count + 1;
+			    }
+        }
+        if($scope.filterListarray.length > 0) {
+          execParams.EXEC_PARAMS={};
+          execParams.EXEC_PARAMS.filterInfo = $scope.filterListarray;
+        } else {
+          execParams= null;
+        }
+        $scope.popupModel.modelData.operators[0].operatorParams=execParams;
+      }
+
       $scope.executeWithExecParamList=function(){
         $scope.isExecParamList=false;    
         $scope.isExecParamSet=false;

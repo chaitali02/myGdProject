@@ -422,7 +422,7 @@ AdminModule.controller('AdminUserController', function (CommonService, $state, $
 		userJson.lastName = $scope.userdata.lastName;
 		userJson.emailId = $scope.userdata.emailId;
         
-		var tagArray = [];
+		var tagArray = []; 
 		if ($scope.tags != null) {
 			for (var c = 0; c < $scope.tags.length; c++) {
 				tagArray[c] = $scope.tags[c].text;

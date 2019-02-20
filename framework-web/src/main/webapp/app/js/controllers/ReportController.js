@@ -1,6 +1,6 @@
 
 DatavisualizationModule = angular.module('DatavisualizationModule')
-DatavisualizationModule.controller('ReportListController', function ($filter, $rootScope, $scope, $sessionStorage, $state, CommonService, dagMetaDataService, FileSaver, Blob, privilegeSvc, ReportSerivce ,CF_META_TYPES) {
+DatavisualizationModule.controller('ReportListController', function ($filter, $rootScope, $scope, $sessionStorage, $state, $q, CommonService, dagMetaDataService, FileSaver, Blob, privilegeSvc, ReportSerivce ,CF_META_TYPES) {
 
 	$scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
 		$sessionStorage.fromStateName = fromState.name
@@ -140,11 +140,7 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $r
 	}
 
 	$scope.createCopy = function (data) {
-		var uuid = data.uuid;
-		var version = data.version;
-		$scope.obj = {};
-		$scope.obj.uuid = uuid;
-		$scope.obj.version = version;
+		$scope.obj = data;
 		$scope.msg = "Clone"
 		$('#confModal').modal({
 			backdrop: 'static',
@@ -152,11 +148,7 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $r
 		});
 	}
 	$scope.export = function (data) {
-		var uuid = data.uuid;
-		var version = data.version;
-		$scope.obj = {};
-		$scope.obj.uuid = uuid;
-		$scope.obj.version = version;
+		$scope.obj = data;
 		$scope.msg = "Export"
 		$('#confModal').modal({
 			backdrop: 'static',
@@ -165,8 +157,6 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $r
 	}
 
 	$scope.deleteOrRestore = function (data, action) {
-		var uuid = data.uuid;
-		var version = data.version;
 		$scope.obj = data;
 		$scope.msg = action;
 		$('#confModal').modal({
@@ -176,8 +166,6 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $r
 	}
 
 	$scope.publishOrUnpublish = function (data, action) {
-		var uuid = data.uuid;
-		var version = data.version;
 		$scope.obj = data;
 		$scope.msg = action;
 		$('#confModal').modal({
@@ -187,8 +175,6 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $r
 	}
 
 	$scope.lockOrUnLock = function (data, action) {
-		var uuid = data.uuid;
-		var version = data.version;
 		$scope.obj = data;
 		$scope.msg = action;
 		$('#confModal').modal({
@@ -198,8 +184,6 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $r
 	}
 
     $scope.execute=function(data,action){
-		var uuid = data.uuid;
-		var version = data.version;
 		$scope.obj = data;
 		$scope.msg = action;
 		$('#confModal').modal({
@@ -207,9 +191,122 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $r
 			keyboard: false
 		});
 	}
+    
+	$scope.getOneByUuidAndVersionReport=function(data){
+		CommonService.getOneByUuidAndVersion(data.uuid, data.version, CF_META_TYPES.report)
+			.then(function (response) { onSuccessGetOneByUuidAndVersion(response.data)});
+		var onSuccessGetOneByUuidAndVersion = function (response) {
+			$scope.reportData=response;
+			if($scope.reportData.filterInfo && $scope.reportData.filterInfo.length >0){
+				$scope.openFilterPopup($scope.reportData);
+			}else{
+				$scope.reportExecute(null);
+			}
+		}
+	}
 
+	$scope.applyFilter = function (index) {
+		console.log(JSON.stringify($scope.selectedAttributeValue));
+		$scope.isShowSimpleData = true
+		$scope.isDataInpogress = true
+		$scope.isDataError = false;
+		$scope.tableclass = "centercontent";
+		$scope.showForm = false;
+		$scope.showGraphDiv = false;
+		var count = 0;
+		$scope.filterListarray = [];
+		$scope.filterTag = [];
+		for (var i = 0; i < $scope.selectedAttributeValue.length; i++) {
+			var filterList = {};
+			var ref = {};
+			var filterTag = {};
+			if ($scope.selectedAttributeValue[i].value != "-select-") {
+				ref.type = $scope.filterAttribureIdValues[i].type;
+				ref.uuid = $scope.filterAttribureIdValues[i].datapoduuid
+				filterList.ref = ref;
+				if($scope.filterAttribureIdValues[i].type !="formual"){
+					filterList.attrId = $scope.filterAttribureIdValues[i].datapodattrId;
+					filterTag.text = $scope.filterAttribureIdValues[i].attrName + " - " + $scope.selectedAttributeValue[i].value;
+				  }
+				  else{
+					filterTag.text = $scope.filterAttribureIdValues[i].name + " - " + $scope.selectedAttributeValue[i].value;
+				  }
+				filterTag.index = i;
+				filterTag.value = $scope.selectedAttributeValue[i].value;
+				filterList.value = $scope.selectedAttributeValue[i].value;
+				$scope.filterListarray[count] = filterList;
+				$scope.filterTag[count] = filterTag;
+				count = count + 1;
+			}
+		}
+		console.log(JSON.stringify($scope.filterListarray));
+		if ($scope.filterListarray.length > 0) {
+			$scope.vizpodbody = {};
+			$scope.vizpodbody.filterInfo = $scope.filterListarray;
+		} else {
+			$scope.vizpodbody = null;
+		}
+		$('#attrFilter').modal("hide");
+		$scope.reportExecute($scope.vizpodbody);
+	}
+
+	$scope.openFilterPopup = function (data) {
+		$('#attrFilter').modal({
+			backdrop: 'static',
+			keyboard: false
+		});
+		if ($scope.filterAttribureIdValues == null) {
+			$scope.getFilterValue(data);
+		}
+		
+	}
+
+	$scope.getFilterValue = function (data) {
+		$scope.filterAttribureIdValues = []
+		$scope.selectedAttributeValue = []
+		if (data.filterInfo && data.filterInfo.length > 0) {
+			var filterAttribureIdValue = [];
+			for(var n = 0; n < data.filterInfo.length; n++) {
+				var filterattributeidvalepromise = ReportSerivce.getAttributeValues(data.filterInfo[n].ref.uuid, data.filterInfo[n].attrId, data.filterInfo[n].ref.type);
+				filterAttribureIdValue.push(filterattributeidvalepromise);
+			}//End For Loop
+			$q.all(filterAttribureIdValue).then(function (result) {
+				for (var i = 0; i < result.length; i++) {
+					var filterAttribureIdvalueJSON = {};
+					var defaultvalue = {}
+					defaultvalue.id = null;
+					defaultvalue.value = "-select-"
+					filterAttribureIdvalueJSON.vizpoduuid =
+					filterAttribureIdvalueJSON.vizpodversion = data.filterInfo[i].ref.uuid;
+					filterAttribureIdvalueJSON.datapoduuid = data.filterInfo[i].ref.uuid;
+					filterAttribureIdvalueJSON.type = data.filterInfo[i].ref.type;
+					if(data.filterInfo[i].ref.type !="formula"){
+						filterAttribureIdvalueJSON.datapodattrId = data.filterInfo[i].attrId;
+						filterAttribureIdvalueJSON.attrName =data.filterInfo[i].attrName;
+						filterAttribureIdvalueJSON.dname = data.filterInfo[i].ref.name + "." + data.filterInfo[i].attrName;
+					  }
+					  else{
+						filterAttribureIdvalueJSON.attrName =data.filterInfo[i].ref.name;
+						filterAttribureIdvalueJSON.dname = "formula"+"." +data.filterInfo[i].ref.name;
+					  }
+					filterAttribureIdvalueJSON.name = data.filterInfo[i].ref.name
+					filterAttribureIdvalueJSON.values = result[i].data
+					filterAttribureIdvalueJSON.values.splice(0, 0, defaultvalue)
+					$scope.selectedAttributeValue[i] = defaultvalue
+					$scope.filterAttribureIdValues[i] = filterAttribureIdvalueJSON
+				}
+			}, function (response) {
+				$('#attrFilter').modal("hide");
+				$scope.isDataInpogress = true;
+				$scope.isDataError = true;
+				$scope.msgclass = "errorMsg";
+				$scope.datamessage = "Some Error Occurred";
+				$scope.spinner = false;
+			});//End $q.all
+		}//End If
+	}//End getFilterValue
+   
 	$scope.submitOk = function (action) {
-		debugger
 		if (action == "Clone") {
 			$scope.okClone();
 		}
@@ -236,10 +333,9 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $r
 			$scope.OkExecute();
 		}
 	}
-	
-	$scope.OkExecute=function(){
-		$('#confModal').modal('hide');
-		ReportSerivce.reportExecute($scope.obj.uuid, $scope.obj.version,null).then(function (response) { onSuccessReportExecute(response.data) }, function (response) { onError(response.data) })
+
+	$scope.reportExecute=function(data){
+		ReportSerivce.reportExecute($scope.obj.uuid, $scope.obj.version,data).then(function (response) { onSuccessReportExecute(response.data) }, function (response) { onError(response.data) })
 		var onSuccessReportExecute = function (response) {
 			$scope.reportExec = response;
 			$scope.message = "Report Execute Successfully"
@@ -250,6 +346,12 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $r
 		}
 	}
 
+	$scope.OkExecute=function(){
+	    $('#confModal').modal('hide');
+		$scope.getOneByUuidAndVersionReport($scope.obj);
+		
+	}
+
 	$scope.okClone = function () {
 		$('#confModal').modal('hide');
 		CommonService.getSaveAS($scope.obj.uuid, $scope.obj.version, CF_META_TYPES.report).then(function (response) { onSuccessSaveAs(response.data) });
@@ -257,8 +359,8 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $r
 			$scope.originalData.splice(0, 0, response);
 			$scope.message = "Report Cloned Successfully"
 			notify.type = 'success',
-				notify.title = 'Success',
-				notify.content = $scope.message
+			notify.title = 'Success',
+			notify.content = $scope.message
 			$scope.$emit('notify', notify);
 		}
 	}
@@ -277,8 +379,8 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $r
 			FileSaver.saveAs(data, response.name + '.json');
 			$scope.message = "Report Downloaded Successfully";
 			notify.type = 'success',
-				notify.title = 'Success',
-				notify.content = $scope.message
+			notify.title = 'Success',
+			notify.content = $scope.message
 			$scope.$emit('notify', notify);
 		}
 	}
@@ -599,7 +701,6 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 	
 	$scope.openFilterPopup = function () {
 		if ($scope.filterAttribureIdValues == null) {
-
 			$scope.getFilterValue($scope.report);
 		}
 		$('#attrFilter').modal({
@@ -1874,6 +1975,7 @@ DatavisualizationModule.controller('ReportResultController', function ($q, dagMe
     $scope.close = function () {
         $state.go('reportexeclist');
 	}
+
     $scope.getReportByReportExec=function(){
 		ReportSerivce.getReportByReportExec($stateParams.id,"report").then(function (response) { onSuccessGetReportByReportExec(response.data) }, function (response) { onError(response.data) })
 		var onSuccessGetReportByReportExec = function (response) {
@@ -1887,15 +1989,33 @@ DatavisualizationModule.controller('ReportResultController', function ($q, dagMe
     $scope.refreshData = function (searchtext) {
 		$scope.gridOptions.data = $filter('filter')($scope.originalData, searchtext, undefined);
 	}
-	$scope.openFilterPopup = function () {
-		if ($scope.filterAttribureIdValues == null) {
-			$scope.getReportByReportExec();
+	// $scope.openFilterPopup = function () {
+	// 	if ($scope.filterAttribureIdValues == null) {
+	// 		$scope.getReportByReportExec();	
+	// 	}
+	// 	$('#attrFilter').modal({
+	// 		backdrop: 'static',
+	// 		keyboard: false
+	// 	});
+	// }
+	$scope.getOneByUuidAndVersionReportExec=function(data){
+		CommonService.getOneByUuidAndVersion(data.uuid, data.version, CF_META_TYPES.reportexec)
+			.then(function (response) { onSuccessGetOneByUuidAndVersion(response.data)});
+		var onSuccessGetOneByUuidAndVersion = function (response) {
+			$scope.reportExecData=response;
+			$scope.filterTag=[];
+			if(response && response.execParams && response.execParams.filterInfo.length >0){
+				for(var i=0;i<response.execParams.filterInfo.length;i++){
+					var filterTag={};
+					filterTag.text=response.execParams.filterInfo[i].attrName+ " - "+ response.execParams.filterInfo[i].value;
+					$scope.filterTag[i]=filterTag;
+				}
+
+
+			}
+			$scope.getSample({uuid: $stateParams.id, version: $stateParams.version });
 			
 		}
-		$('#attrFilter').modal({
-			backdrop: 'static',
-			keyboard: false
-		});
 	}
 
 	$scope.getSample = function (data) {
@@ -1934,12 +2054,12 @@ DatavisualizationModule.controller('ReportResultController', function ($q, dagMe
 		}
 	}
 
-	$scope.getSample({uuid: $stateParams.id, version: $stateParams.version });
+	$scope.getOneByUuidAndVersionReportExec({uuid: $stateParams.id, version: $stateParams.version });
+
 	$scope.refreshResult=function(){
 		$scope.getSample({uuid: $stateParams.id, version: $stateParams.version });
-
 	}
-	$scope.getFilterValue = function (data) {
+	/*$scope.getFilterValue = function (data) {
 		$scope.filterAttribureIdValues = []
 		$scope.selectedAttributeValue = []
 		if (data.filterInfo && data.filterInfo.length > 0) {
@@ -2042,7 +2162,7 @@ DatavisualizationModule.controller('ReportResultController', function ($q, dagMe
 			$scope.applyFilter();
 		}, 100);
 
-	}
+	}*/
 
 	$scope.downloadFile = function (data) {
 		if ($scope.gridOptions.data.length > 0 && $scope.isShowSimpleData == true && !$scope.isGraphShow) {
