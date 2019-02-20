@@ -89,6 +89,8 @@ export class DataDiscoveryComponent {
     }
     this.totalItems = count;
     this.getResults(this.locations_temp);
+
+
   }
   getResults(data: any) {
     if (this.totalItems > 0) {
@@ -106,7 +108,22 @@ export class DataDiscoveryComponent {
     var offset = ((this.currentPage - 1) * 10)
     this.locations = data.slice(offset, limit);
     this.isEditInprogess = false;
+
+    // setTimeout(() => {
+    //   this.goBack()
+
+    // }, 1000);
+
+    // const arr=[10,12,15,21];
+    // for(var i=0;i<arr.length;i++){
+    //   setTimeout(function(i_local){
+    //     return function(){
+    //       console.log("the index of this number = "+i_local)
+    //     }
+    //   }(i),3000)
+    // }
   }
+
   onShowDetail(event: Event, datadiscovry: any) {
     this.routerUrl = this.metaconfig.getMetadataDefs('datapod')['detailState']
     this.router.navigate(['./dataPreparation/datapod', datadiscovry.uuid, datadiscovry.version, 'true'], { relativeTo: this.route });
