@@ -49,13 +49,23 @@ AdminModule.controller('AdminActivityController', function ($state, $stateParams
 		$scope.privileges = privilegeSvc.privileges['activty'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
-
+	$scope.checkIsInrogess=function(){
+		if($scope.isEditInprogess || $scope.isEditVeiwError){
+		return false;
+		}
+    }
 	/*Start showPage*/
 	$scope.showPage = function () {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showForm = true;
 		$scope.showGraphDiv = false
 	}/*End showPage*/
 	$scope.showHome=function(uuid, version,mode){
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('adminListactivity', {
 			id: uuid,
@@ -67,6 +77,9 @@ AdminModule.controller('AdminActivityController', function ($state, $stateParams
 		if($scope.isPrivlage || $scope.activitydata.locked =="Y"){
 			return false;
 		}
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('adminListactivity', {
 			id: uuid,
@@ -75,6 +88,9 @@ AdminModule.controller('AdminActivityController', function ($state, $stateParams
 		});
 	}
 	$scope.showView = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		if(!$scope.isEdit){
 			$scope.showPage()
 			$state.go('adminListactivity', {
@@ -85,6 +101,9 @@ AdminModule.controller('AdminActivityController', function ($state, $stateParams
 	    }
 	}
 	$scope.showGraph = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showForm = false;
 		$scope.showGraphDiv = true;
 	}/*End ShowGraph*/

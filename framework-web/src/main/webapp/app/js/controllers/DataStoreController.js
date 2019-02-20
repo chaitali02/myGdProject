@@ -71,12 +71,23 @@ AdminModule.controller('MetadataDatastoreController', function (CommonService, $
 		$scope.privileges = privilegeSvc.privileges['datastore'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
+	$scope.checkIsInrogess=function(){
+		if($scope.isEditInprogess || $scope.isEditVeiwError){
+		return false;
+		}
+    }
 	$scope.showPage = function () {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showForm = true;
 		$scope.showGraphDiv = false
 	}
 
 	$scope.showHome = function (uuid, version, mode) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('adminListdatastore', {
 			id: uuid,
@@ -89,7 +100,10 @@ AdminModule.controller('MetadataDatastoreController', function (CommonService, $
 		if ($scope.isPrivlage || $scope.datastoredata.locked == "Y") {
 			return false;
 		}
-		$scope.showPage()
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
+		$scope.showPage();
 		$state.go('adminListdatastore', {
 			id: uuid,
 			version: version,
@@ -97,6 +111,9 @@ AdminModule.controller('MetadataDatastoreController', function (CommonService, $
 		});
 	}
 	$scope.showView = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		if (!$scope.isEdit) {
 			$scope.showPage()
 			$state.go('adminListdatastore', {
@@ -128,6 +145,9 @@ AdminModule.controller('MetadataDatastoreController', function (CommonService, $
 	}
 
 	$scope.showGraph = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showForm = false;
 		$scope.showGraphDiv = true;
 
@@ -296,6 +316,8 @@ AdminModule.controller('MetadataDatastoreController', function (CommonService, $
 		datastroreJson.locked = $scope.datastoredata.locked;
 		datastroreJson.published = $scope.datastoredata.published;
 		datastroreJson.location = $scope.datastoredata.location;
+		datastroreJson.publicFlag = $scope.datastoredata.publicFlag;
+
 		var tagArray = [];
 		if ($scope.tags != null) {
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {

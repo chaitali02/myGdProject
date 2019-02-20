@@ -48,14 +48,24 @@ AdminModule.controller('AdminSessionController', function ($state, $stateParams,
 		$scope.privileges = privilegeSvc.privileges['session'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
-	
+	$scope.checkIsInrogess=function(){
+		if($scope.isEditInprogess || $scope.isEditVeiwError){
+		return false;
+		}
+    }
 	/*Start showPage*/
 	$scope.showPage = function () {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showFrom = true;
 		$scope.showGraphDiv = false
 	}/*End showPage*/
 
 	$scope.showHome=function(uuid, version,mode){
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('adminListsession', {
 			id: uuid,
@@ -68,6 +78,9 @@ AdminModule.controller('AdminSessionController', function ($state, $stateParams,
 		if($scope.isPrivlage || $scope.sessiondata.locked =="Y"){
 			return false;
 		}
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('adminListsession', {
 			id: uuid,
@@ -77,6 +90,9 @@ AdminModule.controller('AdminSessionController', function ($state, $stateParams,
 	}
 	
 	$scope.showView = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		if(!$scope.isEdit){
 			$scope.showPage()
 			$state.go('adminListsession', {
@@ -96,6 +112,9 @@ AdminModule.controller('AdminSessionController', function ($state, $stateParams,
 		}
 	}
 	$scope.showGraph = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showFrom = false;
 		$scope.showGraphDiv = true;
 

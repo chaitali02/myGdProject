@@ -88,19 +88,32 @@ AdminModule.controller('OrganizationDetailController', function ($state, $stateP
 			return $filter('filter')($scope.lobTag, query);
 		});
 	};
-
+	$scope.checkIsInrogess=function(){
+		if($scope.isEditInprogess || $scope.isEditVeiwError){
+		return false;
+		}
+    }
 	$scope.showPage = function () {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showForm = true;
 		$scope.showGraphDiv = false
 	}
 
 	$scope.showGraph = function () {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showForm = false;
 		$scope.showGraphDiv = true;
 
 	}/*End ShowGraph*/
 
 	$scope.showHome = function (uuid, version, mode) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('organizationdetail', {
 			id: uuid,
@@ -113,6 +126,9 @@ AdminModule.controller('OrganizationDetailController', function ($state, $stateP
 		if ($scope.isPrivlage || $scope.organizationData.locked == "Y") {
 			return false;
 		}
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('organizationdetail', {
 			id: uuid,
@@ -122,6 +138,9 @@ AdminModule.controller('OrganizationDetailController', function ($state, $stateP
 	}
 
 	$scope.showView = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('organizationdetail', {
 			id: uuid,
@@ -345,6 +364,8 @@ AdminModule.controller('OrganizationDetailController', function ($state, $stateP
 		orgJson.active = $scope.organizationData.active;
 		orgJson.locked = $scope.organizationData.locked;
 		orgJson.published = $scope.organizationData.published;
+		orgJson.publicFlag = $scope.organizationData.publicFlag;
+
 		var tagArray = [];
 		var upd_tag = "N";
 		debugger

@@ -180,10 +180,9 @@ DatavisualizationModule.factory('ReportFactory', function ($http, $location) {
 			method: 'GET',
 			url: url,
 
-		}).
-			then(function (response, status, headers) {
+		}).then(function (response, status, headers) {
 				return response;
-			})
+		})
 	}
 	return factory;
 });

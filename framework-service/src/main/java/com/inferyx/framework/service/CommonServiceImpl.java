@@ -2985,6 +2985,8 @@ public class CommonServiceImpl<T> {
 	}
 
 	private List<Status> setNotStartedStatus(List<Status> statusList) {
+		// TODO : Condition needs to be revisited. These should go to NotStarted status. But care needs to be taken to understand 
+		// the trigger points. Ideally, the trigger point should only be start
 		if (Helper.getLatestStatus(statusList) != null
 				&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.InProgress, new Date()))
 						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Completed, new Date()))
@@ -3000,6 +3002,34 @@ public class CommonServiceImpl<T> {
 				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Failed, new Date()))
 				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Killed, new Date()))) {
 			statusList.add(new Status(Status.Stage.InProgress, new Date()));
+		}
+		return statusList;
+	}
+	
+	/**
+	 * 
+	 * @param statusList
+	 * @return
+	 */
+	private List<Status> setReadyStatus(List<Status> statusList) {
+		if (Helper.getLatestStatus(statusList) != null
+				&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.InProgress, new Date()))
+						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Completed, new Date()))
+						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.OnHold, new Date())))) {
+			logger.info("Latest Status is not in InProgress/Completed/OnHold. Cannot go to ready status. Exiting... ");
+			return statusList;
+		}
+
+		if (statusList == null || statusList.isEmpty()) {
+			statusList = new ArrayList<Status>();
+			logger.info("No status in statusList. Cannot go to ready status. Exiting... ");
+			return statusList;
+		} 
+		if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.NotStarted, new Date())) 
+				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Resume, new Date()))
+				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Failed, new Date()))
+				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Killed, new Date()))) {
+			statusList.add(new Status(Status.Stage.Ready, new Date()));
 		}
 		return statusList;
 	}
@@ -3343,6 +3373,9 @@ public class CommonServiceImpl<T> {
 		switch (stage) {
 		case NotStarted:
 			statusList = setNotStartedStatus(statusList);
+			break;
+		case Ready:
+			statusList = setReadyStatus(statusList);
 			break;
 		case OnHold:
 			statusList = setOnHoldStatus(statusList);
