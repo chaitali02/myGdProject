@@ -8,6 +8,16 @@ import { CommonService } from './../metadata/services/common.service';
 import { DataQualityService } from '../metadata/services/dataQuality.services';
 import { Version } from './../metadata/domain/version'
 import { KnowledgeGraphComponent } from '../shared/components/knowledgeGraph/knowledgeGraph.component';
+import * as MetaTypeEnum from '../metadata/enums/metaType';
+import { AppHelper } from '../app.helper';
+import { MultiSelectIO } from '../metadata/domainIO/domain.multiselectIO';
+import { DropDownIO } from '../metadata/domainIO/domain.dropDownIO';
+import { DataQualityGroup } from '../metadata/domain/domain.dataQualityGroup';
+import { BaseEntity } from '../metadata/domain/domain.baseEntity';
+import { MetaIdentifierHolder } from '../metadata/domain/domain.metaIdentifierHolder';
+import { MetaIdentifier } from '../metadata/domain/domain.metaIdentifier';
+import { AttributeRefHolder } from '../metadata/domain/domain.attributeRefHolder';
+
 @Component({
   selector: 'app-qualityGroup',
   templateUrl: './data-qualitygroupdetail.template.html',
@@ -25,7 +35,7 @@ export class DataQualityGroupDetailComponent {
   selectedItems: any
   dropdownList: any;
   selectedVersion: Version;
-  VersionList: SelectItem[] = [];
+  versionList: SelectItem[] = [];
   allNames: SelectItem[] = [];
   createdBy: any;
   mode: any;
@@ -33,13 +43,17 @@ export class DataQualityGroupDetailComponent {
   uuid: any;
   id: any;
   routerUrl: any;
-  datadqgroup: any;
+  dqgroupdata: any;
   @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
-  constructor(private activatedRoute: ActivatedRoute, private router: Router, public metaconfig: AppMetadata, private _commonService: CommonService, private _location: Location, private _dataQualityService: DataQualityService) {
-    this.datadqgroup = {};
+  isEditInprogess: boolean;
+  isEditError: boolean;
+
+  constructor(private activatedRoute: ActivatedRoute, private router: Router, public metaconfig: AppMetadata, private _commonService: CommonService, private _location: Location,
+    private _dataQualityService: DataQualityService, public appHelper: AppHelper) {
+    this.dqgroupdata = new DataQualityGroup();
     this.isHomeEnable = false;
     this.showGraph = false;
-    this.datadqgroup["active"] = true
+    this.dqgroupdata["active"] = true
     this.isSubmitEnable = true;
     this.IsProgerssShow = "false";
     this.dropdownSettings = {
@@ -52,19 +66,23 @@ export class DataQualityGroupDetailComponent {
       maxHeight: 110,
       disabled: false
     };
-    this.breadcrumbDataFrom = [{
-      "caption": "Data Quality  ",
-      "routeurl": "/app/list/dqgroup"
-    },
-    {
-      "caption": "Data Quality Group ",
-      "routeurl": "/app/list/dqgroup"
-    },
-    {
-      "caption": "",
-      "routeurl": null
-    }
-    ]
+    this.breadcrumbDataFrom = [
+      {
+        "caption": "Data Quality  ",
+        "routeurl": "/app/list/dqgroup"
+      },
+      {
+        "caption": "Data Quality Group ",
+        "routeurl": "/app/list/dqgroup"
+      },
+      {
+        "caption": "",
+        "routeurl": null
+      }
+    ],
+
+      this.isEditInprogess = false;
+    this.isEditError = false;
   }
 
   ngOnInit() {
@@ -74,7 +92,7 @@ export class DataQualityGroupDetailComponent {
       this.mode = params['mode'];
       if (this.mode !== undefined) {
         this.getAllVersionByUuid();
-        this.getOneByUuidAndVersion(this.id, this.version);       
+        this.getOneByUuidAndVersion(this.id, this.version);
         this.getAllLatest();
         this.dropdownSettings.disabled = this.mode == "false" ? false : true
       }
@@ -84,132 +102,134 @@ export class DataQualityGroupDetailComponent {
     });
   }
   getAllLatest() {
-    this._commonService.getAllLatest("dq").subscribe(
+    this._commonService.getAllLatest(MetaTypeEnum.MetaType.DQ).subscribe(
       response => { this.OnSuccesgetAllLatest(response) },
       error => console.log('Error :: ' + error)
     )
   }
-  OnSuccesgetAllLatest(response) {
+  OnSuccesgetAllLatest(response: BaseEntity[]) {
     let temp = []
     for (const n in response) {
-      let allname = {};
-      allname["id"] = response[n]['uuid'];
-      allname["itemName"] = response[n]['name'];
-      allname["uuid"] = response[n]['uuid'];
+      let allname = new MultiSelectIO();
+      allname.id = response[n].uuid.toString();
+      allname.itemName = response[n].name.toString();
+      allname.uuid = response[n].uuid.toString();
       temp[n] = allname;
     }
     this.dropdownList = temp
   }
   getOneByUuidAndVersion(id, version) {
-    this._commonService.getOneByUuidAndVersion(id, version, 'dqgroup')
+    this.isEditInprogess = true;
+    this.isEditError = false;
+
+    this._commonService.getOneByUuidAndVersion(id, version, MetaTypeEnum.MetaType.DQGROUP)
       .subscribe(
-      response => {
-        this.onSuccessgetOneByUuidAndVersion(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.onSuccessgetOneByUuidAndVersion(response)
+        },
+        error => {
+          console.log("Error :: " + error);
+          this.isEditError = true;
+        });
   }
   onSuccessgetOneByUuidAndVersion(response) {
     this.breadcrumbDataFrom[2].caption = response.name;
-    this.datadqgroup = response;
-    this.createdBy = response.createdBy.ref.name
-    var tags = [];
-    if (response.tags != null) {
-      for (var i = 0; i < response.tags.length; i++) {
-        var tag = {};
-        tag['value'] = response.tags[i];
-        tag['display'] = response.tags[i];
-        tags[i] = tag
-      }//End For
-      this.datadqgroup.tags = tags;
-    }//End If
-    this.datadqgroup.published = response["published"] == 'Y' ? true : false
-    this.datadqgroup.active = response["active"] == 'Y' ? true : false
+    this.dqgroupdata = response;
+    this.dqgroupdata.active == this.appHelper.convertStringToBoolean(this.dqgroupdata.active);
+    this.dqgroupdata.locked == this.appHelper.convertStringToBoolean(this.dqgroupdata.locked);
+    this.dqgroupdata.published == this.appHelper.convertStringToBoolean(this.dqgroupdata.published);
+
     const version: Version = new Version();
-    this.uuid = response.uuid;
-    version.label = response['version'];
-    version.uuid = response['uuid'];
-    this.selectedVersion = version
+    version.label = this.dqgroupdata.version;
+    version.uuid = this.dqgroupdata.uuid;
+    this.selectedVersion = version;
+
     let tmp = [];
-    for (let i = 0; i < response.ruleInfo.length; i++) {
-      let ruleinfo = {};
-      ruleinfo["id"] = response.ruleInfo[i]["ref"]["uuid"];
-      ruleinfo["itemName"] = response.ruleInfo[i]["ref"]["name"];
-      ruleinfo["uuid"] = response.ruleInfo[i]["ref"]["uuid"];
+    for (let i = 0; i < this.dqgroupdata.ruleInfo.length; i++) {
+      let ruleinfo = new MultiSelectIO();
+      ruleinfo.id = this.dqgroupdata.ruleInfo[i].ref.uuid;
+      ruleinfo.itemName = this.dqgroupdata.ruleInfo[i].ref.name;
+      ruleinfo.uuid = this.dqgroupdata.ruleInfo[i].ref.uuid;
       tmp[i] = ruleinfo;
     }
     this.selectedItems = tmp;
+    this.isEditInprogess = false;
   }
 
   getAllVersionByUuid() {
-    this._commonService.getAllVersionByUuid('dqgroup', this.id)
+    this._commonService.getAllVersionByUuid(MetaTypeEnum.MetaType.DQGROUP, this.id)
       .subscribe(
-      response => {
-        this.OnSuccesgetAllVersionByUuid(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.onSuccesgetAllVersionByUuid(response)
+        },
+        error => console.log("Error :: " + error));
   }
-  OnSuccesgetAllVersionByUuid(response) {
+  onSuccesgetAllVersionByUuid(response) {
     for (const i in response) {
-      let ver = {};
-      ver["label"] = response[i]['version'];
-      ver["value"] = {};
-      ver["value"]["label"] = response[i]['version'];
-      ver["value"]["uuid"] = response[i]['uuid'];
-      this.VersionList[i] = ver;
+      let ver = new DropDownIO();
+      ver.label = response[i].version;
+      ver.value = { label: "", uuid: "" };
+      ver.value.label = response[i].version;
+      ver.value.uuid = response[i].uuid;
+      this.versionList[i] = ver;
     }
   }
   onVersionChange() {
-    this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, 'dqgroup')
+    this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, MetaTypeEnum.MetaType.DQGROUP)
       .subscribe(
-      response => {//console.log(response)},
-        this.onSuccessgetOneByUuidAndVersion(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {//console.log(response)},
+          this.onSuccessgetOneByUuidAndVersion(response)
+        },
+        error => console.log("Error :: " + error));
   }
   public goBack() {
     //this._location.back();
     this.router.navigate(['app/list/dqgroup']);
   }
 
-  submit() {
+  submitDqGroup() {
     this.isSubmitEnable = true;
     this.IsProgerssShow = "true";
-    let dqgroupJson = {}
-    dqgroupJson["uuid"] = this.datadqgroup.uuid
-    dqgroupJson["name"] = this.datadqgroup.name
-    dqgroupJson["desc"] = this.datadqgroup.desc
-    var tagArray = [];
-    if (this.datadqgroup.tags != null) {
-      for (var counttag = 0; counttag < this.datadqgroup.tags.length; counttag++) {
-        tagArray[counttag] = this.datadqgroup.tags[counttag].value;
-      }
-    }
-    dqgroupJson['tags'] = tagArray;
-    dqgroupJson["active"] = this.datadqgroup.active == true ? 'Y' : "N"
-    dqgroupJson["published"] = this.datadqgroup.published == true ? 'Y' : "N"
-    let ruleInfo = [];
+    let dqgroupJson = new DataQualityGroup();
+    dqgroupJson.uuid = this.dqgroupdata.uuid;
+    dqgroupJson.name = this.dqgroupdata.name;
+    dqgroupJson.desc = this.dqgroupdata.desc;
+    dqgroupJson.tags = this.dqgroupdata.tags;
+    // var tagArray = [];
+    // if (this.dqgroupdata.tags != null) {
+    //   for (var counttag = 0; counttag < this.dqgroupdata.tags.length; counttag++) {
+    //     tagArray[counttag] = this.dqgroupdata.tags[counttag].value;
+    //   }
+    // }
+
+    dqgroupJson.active = this.appHelper.convertBooleanToString(this.dqgroupdata.active);
+    dqgroupJson.locked = this.appHelper.convertBooleanToString(this.dqgroupdata.locked);
+    dqgroupJson.published = this.appHelper.convertBooleanToString(this.dqgroupdata.published);
+
+    let ruleInfo = [new MetaIdentifierHolder];
     for (let i = 0; i < this.selectedItems.length; i++) {
-      let rules = {}
-      let ref = {};
-      ref["uuid"] = this.selectedItems[i]["uuid"];
-      ref["type"] = "dq";
-      rules["ref"] = ref;
+      let rules = new AttributeRefHolder();
+      let ref = new MetaIdentifier();
+      ref.uuid = this.selectedItems[i].uuid;
+      ref.type = MetaTypeEnum.MetaType.DQ;
+      rules.ref = ref;
       ruleInfo[i] = rules;
     }
-    dqgroupJson["ruleInfo"] = ruleInfo;
-    dqgroupJson["inParallel"] = this.datadqgroup.inParallel
+    dqgroupJson.ruleInfo = ruleInfo;
+
+    dqgroupJson.inParallel = this.dqgroupdata.inParallel
     console.log(dqgroupJson);
-    this._commonService.submit("dqgroup", dqgroupJson).subscribe(
-      response => { this.OnSuccessubmit(response) },
+    this._commonService.submit(MetaTypeEnum.MetaType.DQGROUP, dqgroupJson).subscribe(
+      response => { this.onSuccessubmit(response) },
       error => console.log('Error :: ' + error)
     )
   }
-  OnSuccessubmit(response) {
+  onSuccessubmit(response) {
     if (this.checkboxModelexecution == true) {
-      this._commonService.getOneById("dqgroup", response).subscribe(
+      this._commonService.getOneById(MetaTypeEnum.MetaType.DQGROUP, response).subscribe(
         response => {
-          this.OnSucessGetOneById(response);
-          this.goBack()
+          this.onSucessGetOneById(response);
+          // this.goBack()
         },
         error => console.log('Error :: ' + error)
       )
@@ -224,9 +244,10 @@ export class DataQualityGroupDetailComponent {
       }, 1000);
     }
   }
-  OnSucessGetOneById(response) {
-    this._commonService.execute(response.uuid, response.version, "dqgroup", "execute").subscribe(
+  onSucessGetOneById(response) {
+    this._commonService.execute(response.uuid, response.version, MetaTypeEnum.MetaType.DQGROUP, "execute").subscribe(
       response => {
+        this.IsProgerssShow = "false";
         this.showMassage('DQ Group Save and Submit Successfully', 'success', 'Success Message')
         setTimeout(() => {
           this.goBack()
@@ -259,18 +280,18 @@ export class DataQualityGroupDetailComponent {
   clear() {
     this.selectedItems = []
   }
-  
-  showMainPage(uuid,version){
+
+  showMainPage(uuid, version) {
     this.isHomeEnable = false;
-   this.showGraph = false;
+    this.showGraph = false;
 
   }
 
-  showDagGraph(uuid,version){
+  showDagGraph(uuid, version) {
     this.isHomeEnable = true;
     this.showGraph = true;
     setTimeout(() => {
-      this.d_KnowledgeGraphComponent.getGraphData(this.id,this.version);
-    }, 1000);  
+      this.d_KnowledgeGraphComponent.getGraphData(this.id, this.version);
+    }, 1000);
   }
 }

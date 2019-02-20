@@ -30,6 +30,7 @@
               "assets/global/css/plugins.min.css",
               "assets/pages/css/login.css",
               "assets/lib/css/projectx.css",
+              "assets/lib/css/framework-primeng.css",
               "assets/global/plugins/angularjs/plugins/angular-notify/css/angular-notify-texture.css",
               "assets/layouts/layout/css/layout.css",
               "assets/layouts/layout/css/themes/darkblue.min.css",
@@ -41,8 +42,8 @@
               "node_modules/c3/c3.min.css",
               "node_modules/jointjs/css/layout.css",
               "node_modules/primeicons/primeicons.css",
-              "node_modules/ngx-ui-switch/ui-switch.component.css"
-              
+              "node_modules/ngx-ui-switch/ui-switch.component.css",
+              "node_modules/angular2-multiselect-dropdown/themes/default.theme.css"              
             ],
             "scripts": [
               "bower_components/jquery/dist/jquery.min.js",
@@ -118,7 +119,7 @@
               "assets/layouts/layout/scripts/demo.min.js",
               "bower_components/js-cookie/src/js.cookie.js",
               "node_modules/jointjs/dist/joint.js",
-              
+              "node_modules/angular2-multiselect-dropdown/themes/default.theme.css"              
             ],
             "styles": [
               "assets/global/plugins/font-awesome/css/font-awesome.min.css",
@@ -129,6 +130,7 @@
               "assets/global/css/plugins.min.css",
               "assets/pages/css/login.css",
               "assets/lib/css/projectx.css",
+              "assets/lib/css/framework-primeng.css",
               "assets/global/plugins/angularjs/plugins/angular-notify/css/angular-notify-texture.css",
               "assets/layouts/layout/css/layout.css",
               "assets/layouts/layout/css/themes/darkblue.min.css",
