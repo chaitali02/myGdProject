@@ -49,6 +49,7 @@ import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Expression;
+import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
@@ -1421,10 +1422,9 @@ public class VizpodServiceImpl {
 		 * @throws JSONException 
 		 * @returnList<Map<String, Object>>
 		 */
-		public List<Map<String, Object>> getVizpodResults(String vizExecUuid, String vizExecVersion,
+		public List<Map<String, Object>> getVizpodResults(String vizExecUuid, String vizExecVersion, String saveOnRefresh,
 				int rows, int offset, int limit, String sortBy, String order, String requestId,
 				RunMode runMode) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException, IOException {
-//			List<Map<String, Object>> data = null;
 			VizExec vizExec = (VizExec) commonServiceImpl.getOneByUuidAndVersion(vizExecUuid, vizExecVersion, MetaType.vizExec.toString());
 			MetaIdentifier vizpodMI = vizExec.getDependsOn().getRef();
 			Vizpod vizpod = (Vizpod) commonServiceImpl.getOneByUuidAndVersion(vizpodMI.getUuid(), vizpodMI.getVersion(), vizpodMI.getType().toString());
@@ -1433,87 +1433,19 @@ public class VizpodServiceImpl {
 				limit = vizpod.getLimit();
 			}
 			
-//			List<String> orderList = new ArrayList<>();
-//			List<String> sortList = new ArrayList<>();
-//			if(StringUtils.isNotBlank(order)) {	
-//			 orderList = Arrays.asList(order.split("\\s*,\\s*"));
-//			}
-//			if(StringUtils.isNotBlank(sortBy)) {
-//			 sortList = Arrays.asList(sortBy.split("\\s*,\\s*"));
-//			}
-//			
-//			StringBuilder orderBy = new StringBuilder();
-//			boolean requestIdExistFlag = false;
-//			if(execParams != null && execParams.getFilterInfo() != null){
-//				for (AttributeRefHolder filterInfo : execParams.getFilterInfo()) {
-//					vizpod.getFilterInfo().add(filterInfo);
-//				}
-//			}
-//			
-//			Datasource datasource = commonServiceImpl.getDatasourceByApp();
-//			Datasource vizpodSourceDS =  commonServiceImpl.getDatasourceByObject(vizpod);
-//			String appUuid = commonServiceImpl.getApp().getUuid();
-
 			limit = offset + limit;
 			offset = offset + 1;
+			dataStoreServiceImpl.setRunMode(runMode);
 			DataStore datastore = dataStoreServiceImpl.getDatastore(vizExec.getResult().getRef().getUuid(),
-					vizExec.getResult().getRef().getVersion());
-//			String tabName = dataStoreServiceImpl.getTableNameByDatastore(datastore.getUuid(), datastore.getVersion(), runMode);
-			
+					vizExec.getResult().getRef().getVersion());	
+			String tableName = dataStoreServiceImpl.getTableNameByDatastore(datastore.getUuid(), datastore.getVersion(), runMode);
+			if(saveOnRefresh.equalsIgnoreCase("Y")) {
+				String appUuid = commonServiceImpl.getApp().getUuid();
+				List<String> filePathList = new ArrayList<>();
+				filePathList.add(datastore.getLocation());
+				sparkExecutor.readAndRegisterFile(tableName, filePathList, FileType.PARQUET.toString(), null, appUuid, true);
+			}
 			return dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order);
-			
-//			IExecutor exec = execFactory.getExecutor(datasource.getType());
-//			if (StringUtils.isNotBlank(sortBy) || StringUtils.isNotBlank(order) ) {
-//				for (int i = 0; i < sortList.size(); i++) {
-//					orderBy.append(sortList.get(i)).append(" ").append(orderList.get(i));
-//				}
-//				if (requestId != null) {
-//					for (Map.Entry<String, String> entry : requestMap.entrySet()) {
-//						String id = entry.getKey();
-//						if (id.equals(requestId)) {
-//							requestIdExistFlag = true;
-//						}
-//					}
-//					if (requestIdExistFlag) {
-//						tabName = requestMap.get(requestId);
-//						if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
-//								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
-//							data = exec.executeAndFetchByDatasource("SELECT * FROM " + tabName + " WHERE rownum >= " + offset + " AND rownum <= " + limit, vizpodSourceDS, appUuid);
-//						} else if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
-//							data = exec.executeAndFetchByDatasource("SELECT * FROM " + tabName + " WHERE rownum <= " + limit, vizpodSourceDS, appUuid);
-//						} else {
-//							data = exec.executeAndFetchByDatasource("SELECT * FROM " + tabName + " LIMIT " + limit, vizpodSourceDS, appUuid);
-//						}
-//					} else {
-//						if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
-//								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
-//							data = exec.executeAndFetchByDatasource("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM (SELECT * FROM "
-//										+ tabName + " tn ORDER BY " + orderBy.toString() + ") AS tab) AS tab1", vizpodSourceDS, appUuid);
-//						}
-//						tabName = requestId.replace("-", "_");
-//						requestMap.put(requestId, tabName);
-//						if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
-//								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
-//							data = exec.executeAndFetchByDatasource("SELECT * FROM " + tabName + " WHERE rownum >= " + offset + " AND rownum <= " + limit, vizpodSourceDS, appUuid);
-//						} else if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
-//							data = exec.executeAndFetchByDatasource("SELECT * FROM " + tabName + " WHERE rownum <= " + limit, vizpodSourceDS, appUuid);
-//						} else {
-//							data = exec.executeAndFetchByDatasource("SELECT * FROM " + tabName + " LIMIT " + limit, vizpodSourceDS, appUuid);
-//						}
-//					}
-//				}
-//			} else {
-//				if(vizpodSourceDS.getType().toUpperCase().contains(ExecContext.spark.toString())
-//						|| vizpodSourceDS.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
-//						data = exec.executeAndFetchByDatasource("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM " + tabName
-//					+ " tn ) AS tab WHERE rownum >= " + offset + " AND rownum <= " + limit, vizpodSourceDS, null);
-//				} else if(vizpodSourceDS.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
-//						data = exec.executeAndFetchByDatasource("SELECT * FROM "+ tabName + " vizpod WHERE rownum <= " + limit, vizpodSourceDS, appUuid);
-//				} else {
-//					data = exec.executeAndFetchByDatasource("SELECT * FROM "+ tabName + " vizpod LIMIT " + limit, vizpodSourceDS, appUuid);
-//				}
-//			}
-//			return data;
 		}
 
 }

@@ -124,6 +124,7 @@ public class VizpodController {
 	@RequestMapping(value = "/getVizpodResults", method = RequestMethod.GET)
 	public List<Map<String, Object>> getVizpodResults2(@RequestParam(value = "uuid") String vizExecUuid,
 			@RequestParam(value = "version") String vizExecVersion,
+			@RequestParam(value = "saveOnRefresh") String saveOnRefresh,
 			@RequestParam(value ="rows",defaultValue="1000") int rows,
 			@RequestParam(value="offset", defaultValue="0") int offset, 
 			@RequestParam(value="limit", defaultValue="200") int limit,
@@ -134,7 +135,7 @@ public class VizpodController {
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "runMode", required = false, defaultValue = "BATCH") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
-		return vizpodServiceImpl.getVizpodResults(vizExecUuid, vizExecVersion, rows, offset, limit, sortBy, order, requestId, runMode);	
+		return vizpodServiceImpl.getVizpodResults(vizExecUuid, vizExecVersion, saveOnRefresh, rows, offset, limit, sortBy, order, requestId, runMode);	
 	}
 
 //@RequestMapping(value = "/getVizpodResults/{VizpodUUID}/{VizpodVersion}/{VizpodExecUUID}", method = RequestMethod.POST)
