@@ -29,6 +29,8 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.xml.bind.JAXBException;
@@ -489,8 +491,10 @@ public class SparkExecutor<T> implements IExecutor {
 		if(registerTempTable) {
 			registerTempTable(df, tableName);
 		}
+		
 		return rsHolder;
 	}
+	
 	
 	@Override
 	public ResultSetHolder replaceNullValByDoubleValFromDF(ResultSetHolder rsHolder, String sql, Datasource datasource, String tableName, boolean registerTempTable, String clientContext) throws IOException {
@@ -4261,62 +4265,122 @@ public class SparkExecutor<T> implements IExecutor {
 		return rsHolder;
 	}
 	
-	public ResultSetHolder corelationMatrix(ResultSetHolder rsHolder) throws IOException {
-		Dataset<Row> df = rsHolder.getDataFrame();	
-		String[] a=df.columns();
-		int s=a.length;
-		df.head(2);
-		df.show();
-		
+	@SuppressWarnings("null")
+	public List<Map<String, Object>> corelationMatrix(ResultSetHolder rsHolder) throws IOException {
+
+		Dataset<Row> df = castDFCloumnsToDoubleType(rsHolder);
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		ConnectionHolder conHolder = connector.getConnection();
 		SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
-		
-		List<Row> dynamicList=createRowListdense(df.collectAsList());
-		List<Row> list = Arrays.asList(
-				RowFactory.create(Vectors.sparse(a.length, new int[] { 0, a.length - 1 }, new double[] { 1.0, -2.0 })),
-				RowFactory.create(Vectors.dense(4.0, 5.0, 0.0)), RowFactory.create(Vectors.dense(4.0, 5.0, 0.0)),
-				RowFactory.create(Vectors.dense(4.0, 5.0, 0.0)), RowFactory.create(Vectors.dense(6.0, 7.0, 0.0)),
-				RowFactory.create(Vectors.sparse(a.length, new int[] { 0, a.length - 1 }, new double[] { 9.0, 1.0 }))
-		);
-		
-		
-		List<Row> data = (List<Row>) dynamicList;
 
-				StructType schema = new StructType(new StructField[]{
-				  new StructField("features", new VectorUDT(), false, Metadata.empty()),
-				});
-			
-			Dataset<Row> df1 = sparkSession.createDataFrame(data, schema);
-				Row r1 = Correlation.corr(df1, "features").head();
-				Row r2 = Correlation.corr(df1, "features","spearman").head();
-				System.out.println("spearman correlation matrix:\n" + r2.get(0).toString());
+		List<Row> dynamicList = createRowListdense(df.collectAsList(), df.columns().length);
+		/*
+		 * List<Row> list = Arrays.asList( RowFactory.create(Vectors.sparse(3, new int[]
+		 * { 0,2 }, new double[] { 0.0, 1.0 })), RowFactory.create(Vectors.dense(4.0,
+		 * 5.0, 0.0)), RowFactory.create(Vectors.dense(5.0, 5.0, 0.0)),
+		 * RowFactory.create(Vectors.dense(6.0, 5.0, 0.0)),
+		 * RowFactory.create(Vectors.dense(7.0, 7.0, 0.0)),
+		 * RowFactory.create(Vectors.sparse(3, new int[] { 0, 2 }, new double[] { 0.0,
+		 * 1.0 })) );
+		 * 
+		 * 
+		 * 
+		 */
+		StructType schema = new StructType(
+				new StructField[] { new StructField("features", new VectorUDT(), false, Metadata.empty()), });
 
-				System.out.println("Pearson correlation matrix:\n" + r1.get(0).toString());
-				
-				df1.printSchema();
-				df1.show();
-				df.show();
-		rsHolder.setDataFrame(df1);
-		
-		return rsHolder;
+		Dataset<Row> df1 = sparkSession.createDataFrame(dynamicList, schema);
+		Row r1 = Correlation.corr(df1, "features").head();
+		Row r2 = Correlation.corr(df1, "features", "spearman").head();
+		System.out.println("spearman correlation matrix:\n" + r2.get(0).toString());
+		List<Row> dynamic = new ArrayList<Row>();
+		dynamic.add(r1);
+		System.out.println("Pearson correlation matrix:\n" + r1.get(0).toString());
+		Dataset<Row> corelationMdf = sparkSession.createDataFrame(dynamic, r1.schema());
+     	return ConvertDfToSample(corelationMdf);
 	}
 	
-	private List<Row> createRowListdense(List<Row> rowObjList) {
+	private List<Row> createRowListdense(List<Row> rowObjList, int a) {
 		List<Row> rowList = new ArrayList<>();
 		if (rowObjList == null || rowObjList.isEmpty()) {
 			return null;
 		}
-		int count=0;
-		for (Row rowObj : rowObjList) {
-			//Object[] d=rowObj.getRowData();
-			System.out.println(rowObj);
-			rowObj.schema();
-			System.out.println((double)((Object)rowObj.getDouble(count)));
-			double r = (double)((Object)rowObj.getDouble(count));
+		int count = 0;
+		rowList.add(RowFactory.create(Vectors.sparse(a, new int[] { 0, a - 1 }, new double[] { 1.0, -2.0 })));
 
-			rowList.add(RowFactory.create(Vectors.dense((double)((Object)rowObj.getDouble(count)))));
+		double value;
+
+		for (Row rowObj : rowObjList) {
+			/*
+			 * //Object[] d=rowObj.getRowData();
+			 * 
+			 * double[] rr = ((Vector) rowObj).toArray(); for (double node : rr ){
+			 * System.out.println(node); //rowObj.getDouble(arg0) } rowObj.schema();
+			 * 
+			 * System.out.println((double)((Object)rowObj.getDouble(count))); double r =
+			 * (double)((Object)rowObj.getDouble(count));
+			 */
+			double[] doubleArray = new double[rowObjList.get(0).size()];
+			int count2 = 0;
+			for (int i = 0; i < rowObj.size(); i++) {
+				value = rowObj.getDouble(count2);
+				doubleArray[i] = value;
+				count2++;
+			}
+
+			rowList.add(RowFactory.create(Vectors.dense(doubleArray)));
+			count++;
 		}
+		rowList.add(RowFactory.create(Vectors.sparse(a, new int[] { 0, a - 1 }, new double[] { 9.0, 1.0 })));
+
 		return rowList;
+	}	
+	
+	public Dataset<Row> castDFCloumnsToDoubleType(ResultSetHolder rsHolder) throws IOException {
+		if(rsHolder == null || rsHolder.getDataFrame() == null) {
+			return null;
+		} 
+		Dataset<Row> df = rsHolder.getDataFrame();
+		
+		for(String colName : df.columns()) {
+			df = df.withColumn(colName, df.col(colName).cast(DataTypes.DoubleType));
+		}
+		return df;
+	}
+	
+	
+	public List<Map<String, Object>> ConvertDfToSample(Dataset<Row> df) throws IOException {
+		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+		ConnectionHolder conHolder = connector.getConnection();
+		List<Map<String, Object>> data = new ArrayList<>();
+		Object obj = conHolder.getStmtObject();
+		if (obj instanceof SparkSession) {
+			SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
+			Row[] rows = (Row[]) df.head(Integer.parseInt("" + df.count()));
+			String[] columns = df.columns();
+			for (Row row : rows) {
+				Map<String, Object> object = new LinkedHashMap<String, Object>(columns.length);
+				for (String column : columns) {
+					//object.put(column, row.getAs(column));
+					object.put(column, (row.getAs(column) == null ? "" :
+						(row.getAs(column) instanceof Vector) ? Arrays.toString((double[])((Vector)row.getAs(column)).toArray()) : row.getAs(column)));
+				}
+				data.add(object);
+			}
+			/*
+			 * ServletRequestAttributes requestAttributes = (ServletRequestAttributes)
+			 * RequestContextHolder .getRequestAttributes(); if (requestAttributes != null)
+			 * { HttpServletRequest request = requestAttributes.getRequest(); if (request !=
+			 * null) { HttpSession session = request.getSession(); if (session != null) {
+			 * ResultSetHolder rsHolder = new ResultSetHolder();
+			 * rsHolder.setDataFrame(dfSorted); rsHolder.setType(ResultType.dataframe);
+			 * session.setAttribute("rsHolder", rsHolder); } else
+			 * logger.info("HttpSession is \"" + null + "\""); } else
+			 * logger.info("HttpServletResponse is \"" + null + "\""); } else
+			 * logger.info("ServletRequestAttributes requestAttributes is \"" + null +
+			 * "\"");
+			 */
+		} // if SparkSession
+		return data;
 	}
 }

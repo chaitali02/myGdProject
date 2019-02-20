@@ -44,6 +44,7 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.PredictExec;
+import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.SimulateExec;
 import com.inferyx.framework.domain.Train;
@@ -578,14 +579,13 @@ public class ModelController {
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/calCorealtionMatrix", method = RequestMethod.POST)
-	public String calCorealtionMatrix(@RequestBody Object metaObject) 		
-			throws Exception {
-	
-			ObjectMapper mapper = new ObjectMapper();
-			java.util.Map<String, Object>  operator = mapper.convertValue(metaObject, java.util.Map.class);
-			 
-			modelServiceImpl.calCorealtionMatrix(operator);
-			return null;
+	public List<Map<String, Object>> calCorealtionMatrix(@RequestBody Object metaObject) throws Exception {
+
+		ObjectMapper mapper = new ObjectMapper();
+		java.util.Map<String, Object> operator = mapper.convertValue(metaObject, java.util.Map.class);
+		List<Map<String, Object>> data = modelServiceImpl.calCorealtionMatrix(operator);
+		return data;
+
 	}
 	
 }

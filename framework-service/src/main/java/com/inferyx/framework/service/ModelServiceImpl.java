@@ -4265,7 +4265,7 @@ public class ModelServiceImpl {
 		}
 	}
 	
-	public String calCorealtionMatrix(Object metaObject) throws Exception {
+	public List<Map<String, Object>> calCorealtionMatrix(Object metaObject) throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
 		Corelation corelation = mapper.convertValue(metaObject, Corelation.class);
 		MetaIdentifierHolder metaIdentifierHolder = corelation.getSource();
@@ -4278,8 +4278,6 @@ public class ModelServiceImpl {
 			sql = datapodServiceImpl.generateSqlByDatapod(datapod, RunMode.BATCH, corelation.getListAttributes());
 		}
 		ResultSetHolder resultSetHolder = sparkExecutor.executeSql(sql);
-		sparkExecutor.corelationMatrix(resultSetHolder);
-		return null;
-
+		return sparkExecutor.corelationMatrix(resultSetHolder);
 	}
 }
