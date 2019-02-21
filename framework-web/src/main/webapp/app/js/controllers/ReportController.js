@@ -338,7 +338,7 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $r
 		ReportSerivce.reportExecute($scope.obj.uuid, $scope.obj.version,data).then(function (response) { onSuccessReportExecute(response.data) }, function (response) { onError(response.data) })
 		var onSuccessReportExecute = function (response) {
 			$scope.reportExec = response;
-			$scope.message = "Report Execute Successfully"
+			$scope.message = "Report Submitted Successfully"
 			notify.type = 'success',
 			notify.title = 'Success',
 			notify.content = $scope.message
@@ -507,7 +507,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		$scope.isDragable = "true";
 	}
 	$scope.userDetail = {}
-	$scope.alignType = ["left", "right", "center"]
+	$scope.alignType = ["LEFT", "RIGHT", "CENTER"]
 	$scope.userDetail.uuid = $rootScope.setUseruuid;
 	$scope.userDetail.name = $rootScope.setUserName;
 	$scope.mode = "false";
@@ -2004,7 +2004,7 @@ DatavisualizationModule.controller('ReportResultController', function ($q, dagMe
 		var onSuccessGetOneByUuidAndVersion = function (response) {
 			$scope.reportExecData=response;
 			$scope.filterTag=[];
-			if(response && response.execParams && response.execParams.filterInfo.length >0){
+			if(response && response.execParams && response.execParams.filterInfo != null && response.execParams.filterInfo.length >0){
 				for(var i=0;i<response.execParams.filterInfo.length;i++){
 					var filterTag={};
 					filterTag.text=response.execParams.filterInfo[i].attrName+ " - "+ response.execParams.filterInfo[i].value;

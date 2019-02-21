@@ -346,7 +346,7 @@ public class DashboardViewServiceImpl {
 	 * @throws JsonProcessingException 
 	 */
 	public DashboardExecView findOneExecByUuidAndVersion(String execUuid, String execVersion) throws JsonProcessingException {
-		DashboardExec dashboardExec = (DashboardExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.dashboardExec.toString(), "N");
+		DashboardExec dashboardExec = (DashboardExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.dashboardExec.toString(), "Y");
 		MetaIdentifier dependsOnMI = dashboardExec.getDependsOn().getRef();
 		Dashboard dashboard = (Dashboard) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(), dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
 		
@@ -395,7 +395,9 @@ public class DashboardViewServiceImpl {
 		dashboardExecView.setSectionViewInfo(sectionViewInfo);
 		dashboardExecView.setDependsOn(dashboardExec.getDependsOn());
 		dashboardExecView.setDashboard(dashboard);
-		dashboardExecView.setFilterInfo(dashboard.getFilterInfo());
+		if(dashboardExec.getExecParams() !=null && dashboardExec.getExecParams().getFilterInfo() !=null && !dashboardExec.getExecParams().getFilterInfo().isEmpty()) {
+			dashboardExecView.setFilterInfo(dashboardExec.getExecParams().getFilterInfo());
+		}
 		return dashboardExecView;
 	}
 
