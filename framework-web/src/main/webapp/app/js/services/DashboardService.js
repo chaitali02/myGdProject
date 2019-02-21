@@ -120,23 +120,31 @@ MetadataModule.factory('MetadataDahsboardFactory', function ($http, $location) {
         }).then(function(response, status, headers) {
           return response;
         })
-      }
+	}
+	
+	  
 	return factory;
 });
 
 MetadataModule.service('MetadataDahsboardSerivce', function ($q, sortFactory, MetadataDahsboardFactory) {
+	
+
 	this.getFormulaByType = function(uuid,type) {
         var deferred = $q.defer();
         MetadataDahsboardFactory.findFormulaByType(uuid,type).then(function(response) {
-          onSuccess(response.data)
-        });
+          onSuccess(response.data)},function(response){onError(response)});
         var onSuccess = function(response) {
           deferred.resolve({
             data: response
           })
-        }
+		}
+		var onError = function (response) {
+			deferred.reject({
+			  data: response
+			})
+		}
         return deferred.promise;
-      }
+    }
 	this.getAllAttributeBySource = function (uuid, type) {
 		var deferred = $q.defer();
 		if (type == "relation") {

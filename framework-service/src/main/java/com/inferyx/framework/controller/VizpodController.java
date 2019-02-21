@@ -159,8 +159,9 @@ public class VizpodController {
 //}
 
 	@RequestMapping(value = "/download", method = RequestMethod.GET)
-	public HttpServletResponse download(@RequestParam(value = "vizpodUUID") String vizpodUUID,
-			@RequestParam(value = "vizpodVersion") String vizpodVersion,
+	public HttpServletResponse download(@RequestParam(value = "uuid") String vizExecUuid,
+			@RequestParam(value = "version") String vizExecVersion,
+			@RequestParam(value = "saveOnRefresh") String saveOnRefresh,
 			@RequestParam(value = "format", defaultValue = "excel") String format,
 			@RequestBody(required = false) ExecParams execParams,
 			@RequestParam(value = "rows", defaultValue = "200") int rows,
@@ -169,7 +170,7 @@ public class VizpodController {
 			@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode,
 			HttpServletResponse response) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
-		vizpodServiceImpl.download(vizpodUUID, vizpodVersion, format, execParams, null, 0, rows, response, rows, null,
+		vizpodServiceImpl.download(vizExecUuid, vizExecVersion, saveOnRefresh, format, execParams, null, 0, rows, response, rows, null,
 				null, null, runMode);
 		return null;
 	}

@@ -556,6 +556,8 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 		dashboardjson.locked = $scope.dashboarddata.locked;
 		dashboardjson.published = $scope.dashboarddata.published;
 		dashboardjson.publicFlag = $scope.dashboarddata.publicFlag;
+		dashboardjson.saveOnRefresh = $scope.dashboarddata.saveOnRefresh;
+
 		var tagArray = [];
 		if ($scope.tags != null) {
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
