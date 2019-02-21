@@ -1243,10 +1243,19 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
         vizpodResuts.rowNo = $scope.dashboardExecData.sectionViewInfo[i].rowNo - 1;
         vizpodResuts.colNo = $scope.dashboardExecData.sectionViewInfo[i].colNo - 1;
         vizpodResuts.type = $scope.dashboardExecData.sectionViewInfo[i].vizpodInfo.type;
-        var vizpodresultpromise = DahsboardSerivce.getVizpodResults($scope.dashboardExecData.sectionViewInfo[i].vizExecInfo.uuid, $scope.dashboardExecData.sectionViewInfo[i].vizExecInfo.version, $scope.dashboarddata.saveOnRefresh, vizpodResuts);
-
-        $scope.vizpodtrack.push(vizpodResuts);
-        $scope.vizpodResutsArray.push(vizpodresultpromise);
+        if($scope.dashboardExecData.sectionViewInfo[i].vizExecInfo !=null){
+	        var vizpodresultpromise = DahsboardSerivce.getVizpodResults($scope.dashboardExecData.sectionViewInfo[i].vizExecInfo.uuid, $scope.dashboardExecData.sectionViewInfo[i].vizExecInfo.version, $scope.dashboarddata.saveOnRefresh, vizpodResuts);
+	        $scope.vizpodtrack.push(vizpodResuts);
+	        $scope.vizpodResutsArray.push(vizpodresultpromise);
+        }
+        else{
+        	   // console.log(result)
+            $scope.sectionRows[ vizpodResuts.rowNo].columns[vizpodResuts.colNo].isDataError = true;
+            $scope.sectionRows[ vizpodResuts.rowNo].columns[vizpodResuts.colNo].isInprogess = false;
+            $scope.sectionRows[ vizpodResuts.rowNo].columns[vizpodResuts.colNo].vizpodDetails.datapoints = [];
+            $scope.sectionRows[ vizpodResuts.rowNo].columns[vizpodResuts.colNo].errormsg = "Some Error Occurred";
+            //$scope.inprogressdata = false;
+        }
       }
       else {
         console.log("network Graph");

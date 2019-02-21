@@ -370,27 +370,29 @@ public class DashboardViewServiceImpl {
 		List<SectionView> sectionViewInfo = new ArrayList<>();
 		for(Section section : dashboard.getSectionInfo()) {
 			MetaIdentifier vizpodMI = section.getVizpodInfo().getRef();
+			Vizpod vizpod = (Vizpod) commonServiceImpl.getOneByUuidAndVersion(vizpodMI.getUuid(), vizpodMI.getVersion(), vizpodMI.getType().toString(), "Y");
+
+			SectionView sectionView = new SectionView();
+			sectionView.setVizpodInfo(vizpod);
 			for(MetaIdentifierHolder vizExecHolder : dashboardExec.getVizExecInfo()) {
 				MetaIdentifier vizExecMI = vizExecHolder.getRef();
 				VizExec vizExec = (VizExec) commonServiceImpl.getOneByUuidAndVersion(vizExecMI.getUuid(), vizExecMI.getVersion(), vizExecMI.getType().toString(), "N");
 				MetaIdentifier vizExecDependsOnMI = vizExec.getDependsOn().getRef();
-				Vizpod vizpod = (Vizpod) commonServiceImpl.getOneByUuidAndVersion(vizExecDependsOnMI.getUuid(), vizExecDependsOnMI.getVersion(), vizExecDependsOnMI.getType().toString(), "Y");
-				if(vizpod.getUuid().equalsIgnoreCase(vizpodMI.getUuid())) {
+				if(vizExecDependsOnMI.getUuid().equalsIgnoreCase(vizpodMI.getUuid())) {
 					try {					
-						SectionView sectionView = new SectionView();
-						sectionView.setVizpodInfo(vizpod);
 						sectionView.setVizExecInfo(vizExec);
-						sectionView.setColNo(section.getColNo());
-						sectionView.setName(section.getName());
-						sectionView.setRowNo(section.getRowNo());
-						sectionView.setSectionId(section.getSectionId());
-						sectionViewInfo.add(sectionView);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
 					break;
 				}
 			}
+
+			sectionView.setColNo(section.getColNo());
+			sectionView.setName(section.getName());
+			sectionView.setRowNo(section.getRowNo());
+			sectionView.setSectionId(section.getSectionId());
+			sectionViewInfo.add(sectionView);
 		}
 		dashboardExecView.setSectionViewInfo(sectionViewInfo);
 		dashboardExecView.setDependsOn(dashboardExec.getDependsOn());

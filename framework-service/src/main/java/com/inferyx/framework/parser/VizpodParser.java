@@ -151,8 +151,15 @@ public class VizpodParser {
 			finalBuilder.append(selectedColumninStr);
 
 			if (StringUtils.isBlank(tableName) && vizpod.getSource().getRef().getType() == MetaType.datapod) {
-				DataStore dataStore = dataStoreServiceImpl.findDataStoreByDatapod(vizpod.getSource().getRef().getUuid()).get(0);
-				tableName = dataStoreServiceImpl.getTableNameByDatastore(dataStore.getUuid(), dataStore.getVersion(), runMode);
+				List<DataStore> listDataStore = dataStoreServiceImpl
+						.findDataStoreByDatapod(vizpod.getSource().getRef().getUuid());
+				if (listDataStore != null && !listDataStore.isEmpty()) {
+					DataStore dataStore = listDataStore.get(0);
+					tableName = dataStoreServiceImpl.getTableNameByDatastore(dataStore.getUuid(),
+							dataStore.getVersion(), runMode);
+				} else {
+					throw new RuntimeException("No datastore available for datapod " + vizpod.getSource().getRef().getName());
+				}
 			}
 
 			Datapod datapod = (Datapod) commonServiceImpl.getLatestByUuid(vizpod.getSource().getRef().getUuid(), MetaType.datapod.toString(), "N");
