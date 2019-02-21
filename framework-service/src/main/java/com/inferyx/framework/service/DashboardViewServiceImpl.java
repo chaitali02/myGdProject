@@ -372,11 +372,11 @@ public class DashboardViewServiceImpl {
 			MetaIdentifier vizpodMI = section.getVizpodInfo().getRef();
 			for(MetaIdentifierHolder vizExecHolder : dashboardExec.getVizExecInfo()) {
 				MetaIdentifier vizExecMI = vizExecHolder.getRef();
-				Vizpod vizpod = (Vizpod) commonServiceImpl.getOneByUuidAndVersion(vizpodMI.getUuid(), vizpodMI.getVersion(), vizpodMI.getType().toString(), "Y");
+				VizExec vizExec = (VizExec) commonServiceImpl.getOneByUuidAndVersion(vizExecMI.getUuid(), vizExecMI.getVersion(), vizExecMI.getType().toString(), "N");
+				MetaIdentifier vizExecDependsOnMI = vizExec.getDependsOn().getRef();
+				Vizpod vizpod = (Vizpod) commonServiceImpl.getOneByUuidAndVersion(vizExecDependsOnMI.getUuid(), vizExecDependsOnMI.getVersion(), vizExecDependsOnMI.getType().toString(), "Y");
 				if(vizpod.getUuid().equalsIgnoreCase(vizpodMI.getUuid())) {
-					try {
-						VizExec vizExec = (VizExec) commonServiceImpl.getOneByUuidAndVersion(vizExecMI.getUuid(), vizExecMI.getVersion(), vizExecMI.getType().toString(), "N");
-						
+					try {					
 						SectionView sectionView = new SectionView();
 						sectionView.setVizpodInfo(vizpod);
 						sectionView.setVizExecInfo(vizExec);
@@ -394,6 +394,7 @@ public class DashboardViewServiceImpl {
 		}
 		dashboardExecView.setSectionViewInfo(sectionViewInfo);
 		dashboardExecView.setDependsOn(dashboardExec.getDependsOn());
+		dashboardExecView.setDashboard(dashboard);
 		dashboardExecView.setFilterInfo(dashboard.getFilterInfo());
 		return dashboardExecView;
 	}

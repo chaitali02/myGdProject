@@ -20,6 +20,24 @@ public class DashboardExecView extends BaseEntity {
 	private List<SectionView> sectionViewInfo;
 	private List<AttributeRefHolder> filterInfo;
 	private MetaIdentifierHolder dependsOn;
+	private Dashboard dashboard;
+	
+	/**
+	 * @Ganesh
+	 *
+	 * @return the dashboard
+	 */
+	public Dashboard getDashboard() {
+		return dashboard;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param dashboard the dashboard to set
+	 */
+	public void setDashboard(Dashboard dashboard) {
+		this.dashboard = dashboard;
+	}
 	/**
 	 * @Ganesh
 	 *
