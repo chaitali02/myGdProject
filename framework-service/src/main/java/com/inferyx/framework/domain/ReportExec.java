@@ -13,6 +13,6 @@ package com.inferyx.framework.domain;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection="reportExec")
-public class ReportExec extends BaseExec {
+public class ReportExec extends BaseRuleExec {
 	
 }

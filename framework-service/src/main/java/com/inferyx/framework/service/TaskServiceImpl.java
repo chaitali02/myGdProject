@@ -28,6 +28,8 @@ import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DagExec;
+import com.inferyx.framework.domain.Dashboard;
+import com.inferyx.framework.domain.DashboardExec;
 import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataQualGroupExec;
 import com.inferyx.framework.domain.Datapod;
@@ -53,6 +55,8 @@ import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.ProfileGroupExec;
 import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.ReconGroupExec;
+import com.inferyx.framework.domain.Report;
+import com.inferyx.framework.domain.ReportExec;
 import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.RuleGroupExec;
 import com.inferyx.framework.domain.SessionContext;
@@ -129,9 +133,47 @@ public class TaskServiceImpl implements Callable<String> {
 	private IngestServiceImpl ingestServiceImpl;
 	private IngestExecServiceImpl ingestExecServiceImpl;
 	private IngestGroupServiceImpl ingestGroupServiceImpl;
+	private ReportServiceImpl reportServiceImpl;
+	private DashboardServiceImpl dashboardServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(TaskServiceImpl.class);
 	
+	/**
+	 * @Ganesh
+	 *
+	 * @return the reportServiceImpl
+	 */
+	public ReportServiceImpl getReportServiceImpl() {
+		return reportServiceImpl;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param reportServiceImpl the reportServiceImpl to set
+	 */
+	public void setReportServiceImpl(ReportServiceImpl reportServiceImpl) {
+		this.reportServiceImpl = reportServiceImpl;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the dashboardServiceImpl
+	 */
+	public DashboardServiceImpl getDashboardServiceImpl() {
+		return dashboardServiceImpl;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param dashboardServiceImpl the dashboardServiceImpl to set
+	 */
+	public void setDashboardServiceImpl(DashboardServiceImpl dashboardServiceImpl) {
+		this.dashboardServiceImpl = dashboardServiceImpl;
+	}
+
 	/**
 	 *
 	 * @Ganesh
@@ -857,7 +899,7 @@ public class TaskServiceImpl implements Callable<String> {
 				throw e;
 			}
 		} else if (operatorInfo.get(0).getRef()!=null && operatorInfo.get(0).getRef().getType().equals(MetaType.ingest)) {
-			logger.info("Going to reconServiceImpl.execute");
+			logger.info("Going to ingestServiceImpl.execute");
 			try {
 				IngestExec ingestExec = (IngestExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getVersion(), MetaType.ingestExec.toString());
 				Ingest ingest = (Ingest) commonServiceImpl.getLatestByUuid(ingestExec.getDependsOn().getRef().getUuid(), MetaType.ingest.toString());
@@ -882,7 +924,35 @@ public class TaskServiceImpl implements Callable<String> {
 				e.printStackTrace();
 				throw e;
 			}
-		}   // End else
+		} else if (operatorInfo.get(0).getRef()!=null && operatorInfo.get(0).getRef().getType().equals(MetaType.report)) {
+			logger.info("Going to reportServiceImpl.execute");
+			try {
+				ReportExec reportExec = (ReportExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getVersion(), MetaType.reportExec.toString());
+				Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(reportExec.getDependsOn().getRef().getUuid(), reportExec.getDependsOn().getRef().getVersion(), reportExec.getDependsOn().getRef().getType().toString());
+				reportExec = reportServiceImpl.execute(report.getUuid(), report.getVersion(), execParams, reportExec, runMode);
+				
+				if (Helper.getLatestStatus(reportExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
+					throw new Exception("Report rule execution failed.");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw e;
+			}
+		}  else if (operatorInfo.get(0).getRef()!=null && operatorInfo.get(0).getRef().getType().equals(MetaType.dashboard)) {
+			logger.info("Going to dashboardServiceImpl.execute");
+			try {
+				DashboardExec dashboardExec = (DashboardExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getVersion(), MetaType.dashboardExec.toString());
+				Dashboard dashboard = (Dashboard) commonServiceImpl.getOneByUuidAndVersion(dashboardExec.getDependsOn().getRef().getUuid(), dashboardExec.getDependsOn().getRef().getVersion(), dashboardExec.getDependsOn().getRef().getType().toString());
+				dashboardExec = dashboardServiceImpl.execute(dashboard.getUuid(), dashboard.getVersion(), dashboardExec, execParams, runMode);
+				
+				if (Helper.getLatestStatus(dashboardExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
+					throw new Exception("Dashboard execution failed.");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw e;
+			}
+		} // End else
 		return datapodTableName;
 	}// End executeTask
 	

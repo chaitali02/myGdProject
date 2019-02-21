@@ -102,24 +102,26 @@ public class DashboardServiceImpl {
 			ExecParams execParams, RunMode runMode) throws Exception {
 		if(dashboardExec == null) {
 			dashboardExec = new DashboardExec();
-			Dashboard dashboard = (Dashboard) commonServiceImpl.getOneByUuidAndVersion(dashboardUuid, dashboardVersion, MetaType.dashboard.toString(), "N");
-			dashboardExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.dashboard, dashboardUuid, dashboard.getVersion())));
-			dashboardExec.setExecParams(execParams);
-			Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
-			dashboardExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
-			
-			List<MetaIdentifierHolder> vizExecInfo = new ArrayList<>();
-			for(Section section : dashboard.getSectionInfo()) {
-				MetaIdentifier vizInfoMI = section.getVizpodInfo().getRef();
-				VizExec vizExec = vizpodServiceImpl.create(vizInfoMI.getUuid(), vizInfoMI.getVersion(), null, execParams, runMode);
-				vizExecInfo.add(new MetaIdentifierHolder(new MetaIdentifier(MetaType.vizExec, vizExec.getUuid(), vizExec.getVersion())));
-			}
-			
-			dashboardExec.setVizExecInfo(vizExecInfo);
-			dashboardExec.setName(dashboard.getName());
 			dashboardExec.setBaseEntity();
-			dashboardExec = (DashboardExec) commonServiceImpl.setMetaStatus(dashboardExec, MetaType.dashboardExec, Status.Stage.NotStarted);
 		}
+		
+		Dashboard dashboard = (Dashboard) commonServiceImpl.getOneByUuidAndVersion(dashboardUuid, dashboardVersion, MetaType.dashboard.toString(), "N");
+		dashboardExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.dashboard, dashboardUuid, dashboard.getVersion())));
+		dashboardExec.setExecParams(execParams);
+		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
+		dashboardExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
+		
+		List<MetaIdentifierHolder> vizExecInfo = new ArrayList<>();
+		for(Section section : dashboard.getSectionInfo()) {
+			MetaIdentifier vizInfoMI = section.getVizpodInfo().getRef();
+			VizExec vizExec = vizpodServiceImpl.create(vizInfoMI.getUuid(), vizInfoMI.getVersion(), null, execParams, runMode);
+			vizExecInfo.add(new MetaIdentifierHolder(new MetaIdentifier(MetaType.vizExec, vizExec.getUuid(), vizExec.getVersion())));
+		}
+		
+		dashboardExec.setVizExecInfo(vizExecInfo);
+		dashboardExec.setName(dashboard.getName());
+		dashboardExec = (DashboardExec) commonServiceImpl.setMetaStatus(dashboardExec, MetaType.dashboardExec, Status.Stage.NotStarted);
+	
 		return dashboardExec;
 	}
 

@@ -121,7 +121,45 @@ public class RunStageServiceImpl implements Callable<String> {
 	private IngestServiceImpl ingestServiceImpl;
 	private IngestExecServiceImpl ingestExecServiceImpl;
 	private IngestGroupServiceImpl ingestGroupServiceImpl;
+	private ReportServiceImpl reportServiceImpl;
+	private DashboardServiceImpl dashboardServiceImpl;
 	
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the reportServiceImpl
+	 */
+	public ReportServiceImpl getReportServiceImpl() {
+		return reportServiceImpl;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param reportServiceImpl the reportServiceImpl to set
+	 */
+	public void setReportServiceImpl(ReportServiceImpl reportServiceImpl) {
+		this.reportServiceImpl = reportServiceImpl;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the dashboardServiceImpl
+	 */
+	public DashboardServiceImpl getDashboardServiceImpl() {
+		return dashboardServiceImpl;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param dashboardServiceImpl the dashboardServiceImpl to set
+	 */
+	public void setDashboardServiceImpl(DashboardServiceImpl dashboardServiceImpl) {
+		this.dashboardServiceImpl = dashboardServiceImpl;
+	}
 
 	/**
 	 *
@@ -772,7 +810,9 @@ public class RunStageServiceImpl implements Callable<String> {
 								/*|| operationInfoHolder.getRef().getType().equals(MetaType.operatortype)*/
 								|| operationInfoHolder.getRef().getType().equals(MetaType.operator))
 								|| operationInfoHolder.getRef().getType().equals(MetaType.ingest)
-								|| operationInfoHolder.getRef().getType().equals(MetaType.ingestgroup)) {
+								|| operationInfoHolder.getRef().getType().equals(MetaType.ingestgroup)
+								|| operationInfoHolder.getRef().getType().equals(MetaType.report)
+								|| operationInfoHolder.getRef().getType().equals(MetaType.dashboard)) {
 						continue;
 						}
 					}
@@ -937,7 +977,9 @@ public class RunStageServiceImpl implements Callable<String> {
 									/*|| operationInfoHolder.getRef().getType().equals(MetaType.operatortype)*/
 									|| operationInfoHolder.getRef().getType().equals(MetaType.operator))
 									|| operationInfoHolder.getRef().getType().equals(MetaType.ingest)
-									|| operationInfoHolder.getRef().getType().equals(MetaType.ingestgroup)) {
+									|| operationInfoHolder.getRef().getType().equals(MetaType.ingestgroup)
+									|| operationInfoHolder.getRef().getType().equals(MetaType.report)
+									|| operationInfoHolder.getRef().getType().equals(MetaType.dashboard)) {
 							continue;
 							}
 						}
@@ -1284,6 +1326,8 @@ public class RunStageServiceImpl implements Callable<String> {
 		indivTaskExe.setIngestServiceImpl(ingestServiceImpl);
 		indivTaskExe.setIngestExecServiceImpl(ingestExecServiceImpl);
 		indivTaskExe.setIngestGroupServiceImpl(ingestGroupServiceImpl);
+		indivTaskExe.setReportServiceImpl(reportServiceImpl);
+		indivTaskExe.setDashboardServiceImpl(dashboardServiceImpl);
 		taskExecutor.execute(futureTask);
 		logger.info("Thread watch : DagExec : " + dagExec.getUuid() + " StageExec : " + stageId + " taskExec : " + indvTask.getTaskId() + " started >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
 		taskList.add(futureTask);
