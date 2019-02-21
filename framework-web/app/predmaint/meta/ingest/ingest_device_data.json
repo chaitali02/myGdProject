@@ -1,6 +1,6 @@
 {
   "uuid": "c494341a-852a-43c0-8e37-97a17f508f48",
-  "version": "1550089298",
+  "version": "1550239867",
   "name": "ingest_device_data",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Wed Feb 13 15:21:38 EST 2019",
+  "createdOn": "Fri Feb 15 09:11:07 EST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -5095,6 +5095,6 @@
     }
   ],
   "splitBy": null,
-  "sourceHeader": "N",
+  "sourceHeader": "Y",
   "targetHeader": "N"
 }

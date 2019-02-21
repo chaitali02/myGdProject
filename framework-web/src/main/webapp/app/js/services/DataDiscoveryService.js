@@ -4,10 +4,10 @@
 	DatadiscoveryModule = angular.module('DatadiscoveryModule');
 	DatadiscoveryModule.factory('DataDiscoveryFactory', function($http, $location) {
 	  var factory = {};
-	  factory.findDatapodStats = function(uuid, type) {
+	  factory.findDatapodStats = function(type,searchStr) {
 	    var url = $location.absUrl().split("app")[0]
 	    return $http({
-	      url: url + "datapod/getDatapodStats?action=view",
+	      url: url + "datapod/getDatapodStats?action=view&searchStr="+searchStr,
 	      method: "GET",
 	    }).then(function(response) {
 	      return response
@@ -23,9 +23,9 @@
 
 	DatadiscoveryModule.service('DataDiscoveryService', function($q, DataDiscoveryFactory, sortFactory) {
 
-	  this.getDatapodStats = function() {
+	  this.getDatapodStats = function(type, searchStr) {
 	    var deferred = $q.defer();
-	    DataDiscoveryFactory.findDatapodStats().then(function(response) {
+	    DataDiscoveryFactory.findDatapodStats(type, searchStr).then(function(response) {
 	      onSuccess(response.data)
 	    });
 	    var onSuccess = function(response) {

@@ -109,13 +109,23 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		});
 	};
 	$scope.getLovByType();
-
+	$scope.checkIsInrogess=function(){
+		if($scope.isEditInprogess || $scope.isEditVeiwError){
+		return false;
+		}
+    }
 	$scope.showPage = function () {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showForm = true;
 		$scope.showGraphDiv = false
 	}
 
 	$scope.showHome=function(uuid, version,mode){
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('adminListapplication', {
 			id: uuid,
@@ -127,6 +137,9 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		if($scope.isPrivlage || $scope.applicationdata.locked =="Y"){
 			return false;
 		}
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('adminListapplication', {
 			id: uuid,
@@ -135,6 +148,9 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		});
 	}
 	$scope.showView = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('adminListapplication', {
 			id: uuid,
@@ -199,6 +215,10 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 				$scope.applicationTypes=$scope.disabledApplicatoinType($scope.applicationTypes,['DEFAULT','SYSADMIN']);
                 
 			}
+			else if($scope.applicationdata.applicationType =="APPADMIN"){
+				$scope.applicationTypes=$scope.disabledApplicatoinType($scope.applicationTypes,['SYSADMIN']);
+
+			}
 			else{
 				$scope.selectOrgInfo={};
 				$scope.selectOrgInfo.uuid=$scope.applicationOrgDetail.orgInfo.ref.uuid;
@@ -219,6 +239,9 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 	}
 	
 	$scope.showGraph = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showForm = false;
 		$scope.showGraphDiv = true;
 	}//End showGraph
@@ -513,6 +536,8 @@ AdminModule.controller('MetadataApplicationController', function ($state, $scope
 		applicationJson.active = $scope.applicationdata.active;
 		applicationJson.locked = $scope.applicationdata.locked;
 		applicationJson.published = $scope.applicationdata.published;
+		applicationJson.publicFlag = $scope.applicationdata.publicFlag;
+
 		applicationJson.deployPort = $scope.applicationdata.deployPort;
 		applicationJson.applicationType= $scope.applicationdata.applicationType;
 		var tagArray = [];

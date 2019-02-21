@@ -367,8 +367,10 @@ public class Helper {
 		case ingest : return "IngestServiceImpl";
 		case ingestExec : return "IngestExecServiceImpl";
 		case ingestgroup : return "IngestGroupServiceImpl";
-		case trainExec : return "ModelExecServiceImpl";
-		case predictExec : return "ModelExecServiceImpl";
+		case train : return "TrainServiceImpl";
+		case trainExec : return "TrainExecServiceImpl";
+		case predict : return "PredictServiceImpl";
+		case predictExec : return "PredictExecServiceImpl";
 		case simulateExec : return "ModelExecServiceImpl";
 		case trainresult : return "TrainResultServiceImpl";
 		case deployExec : return "DeployServiceImpl";
@@ -939,6 +941,7 @@ public class Helper {
 		case batch : return MetaType.batchExec;
 		case ingest : return MetaType.ingestExec;
 		case ingestgroup : return MetaType.ingestgroupExec;
+		case dashboard : return MetaType.dashboardExec;
 		default : return null;
 		}
 	}
@@ -970,6 +973,7 @@ public class Helper {
 		case batchExec : return MetaType.batch;
 		case ingestExec : return MetaType.ingest;
 		case ingestgroupExec : return MetaType.ingestgroup;
+		case dashboardExec : return MetaType.dashboard;
 		default : return null;
 		}
 	}
@@ -1034,6 +1038,8 @@ public class Helper {
 		case graphExec : return new GraphExec();
 		case ingestExec : return new IngestExec();
 		case ingestgroupExec : return new IngestGroupExec();
+		case reportExec : return new ReportExec();
+		case dashboardExec : return new DashboardExec();
 		default : return null;
 		}
 	}

@@ -65,6 +65,9 @@ import com.inferyx.framework.operator.IngestOperator;
  *
  */
 public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
+	
+	public static Logger logger = Logger.getLogger(RunIngestServiceImpl.class); 
+	
 	private CommonServiceImpl<?> commonServiceImpl;
 	private SparkExecutor<?> sparkExecutor;
 	private Helper helper;
@@ -88,6 +91,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 	private DataSet sourceDataSet;
 	private IngestOperator ingestOperator;
 	private DatasetOperator datasetOperator;
+
 	
 	/**
 	 *
@@ -128,30 +132,6 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 	public void setIngestOperator(IngestOperator ingestOperator) {
 		this.ingestOperator = ingestOperator;
 	}
-
-
-
-	public static Logger logger = Logger.getLogger(RunIngestServiceImpl.class); 
-
-//	/**
-//	 *
-//	 * @Ganesh
-//	 *
-//	 * @return the fileName
-//	 */
-//	public String getFileName() {
-//		return fileName;
-//	}
-//
-//	/**
-//	 *
-//	 * @Ganesh
-//	 *
-//	 * @param fileName the fileName to set
-//	 */
-//	public void setFileName(String fileName) {
-//		this.fileName = fileName;
-//	}
 
 	/**
 	 *
@@ -607,7 +587,11 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 				commonServiceImpl.save(MetaType.ingestExec.toString(), ingestExec);
 			}	
 
-			Map<String, String> resolvedAttrMap = null; 
+			Map<String, String> resolvedAttrMap = null;
+			HashMap<String, String> otherParams = null;
+			if(execParams != null) {
+				otherParams = execParams.getOtherParams();
+			}
 			String[] mappedAttrs = null; 
 			boolean areAllAttrs = false;
 			String query = null;
@@ -643,21 +627,21 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 				colAliaseNames = getMappedAttrAliaseName(ingest.getAttributeMap(), true);
 				logger.info("IngestionType : " + ingestionType);
 	//			if(sourceDp != null) {
-				
+				String tableName = null;
 					if(ingestionType.equals(IngestionType.FILETOFILE)) {
-						String tableName = null;
 						tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
-						query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), null, runMode);
+//						query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), null, runMode);
 					} else if(sourceDataSet != null) {
-						String tableName = sourceDS.getDbname().concat(".").concat(sourceDataSet.getName());					
-						query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), null, runMode);
+						tableName = sourceDS.getDbname().concat(".").concat(sourceDataSet.getName());					
+//						query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), null, runMode);
 					} else if(!areAllAttrs && sourceDp != null) {
-						String tableName = sourceDS.getDbname().concat(".").concat(sourceDp.getName());					
-						query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), null, runMode);
+						tableName = sourceDS.getDbname().concat(".").concat(sourceDp.getName());					
+//						query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), null, runMode);
 					} else if(!areAllAttrs && targetDp != null) {
-							String tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());					
-							query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), null, runMode);
+						tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());					
+//						query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, null, new HashSet<>(), execParams, runMode);
 					}
+					query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, otherParams, new HashSet<>(), execParams, runMode);
 //				} else {
 //					query = datasetOperator.generateSql(sourceDataSet, null, null, new HashSet<>(), null, runMode);
 //				}
@@ -717,7 +701,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 					//map schema to source mappedAttrs	
 					if(colAliaseNames != null) {
 						if(sourceHeader.equalsIgnoreCase("false")) {
-							rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, colAliaseNames.toArray(new String[colAliaseNames.size()]), tableName, true);
+							rsHolder = sparkExecutor.applyIngestDatapodSchema(rsHolder, targetDp, colAliaseNames.toArray(new String[colAliaseNames.size()]), tableName, true);
 						}
 						rsHolder = sparkExecutor.mapSchema(rsHolder, query, colAliaseNames, tableName, false);
 					} 
@@ -742,7 +726,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 					
 					//writing to target				
 					rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, tempDirLocation,
-																targetFileName, tableName, saveMode, ingest.getTargetFormat(), targetHeader);
+																tableName, saveMode, ingest.getTargetFormat(), targetHeader);
 					
 					if(!ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
 						try {
@@ -801,7 +785,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						//map schema to source mappedAttrs	
 						if(colAliaseNames != null) {
 							if(sourceHeader.equalsIgnoreCase("false")) {
-								rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, colAliaseNames.toArray(new String[colAliaseNames.size()]), tableName, true);
+								rsHolder = sparkExecutor.applyIngestDatapodSchema(rsHolder, targetDp, colAliaseNames.toArray(new String[colAliaseNames.size()]), tableName, true);
 							}
 							rsHolder = sparkExecutor.mapSchema(rsHolder, query, colAliaseNames, tableName, false);
 						} 
@@ -844,53 +828,55 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						sqoopExecutor.execute(sqoopInput, inputParams);
 					} else if(targetDS.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
 						//this is export block from local file to local Table(i.e file)
+
+						logger.info("Query : " + query);
 						
 						tableName = String.format("%s_%s_%s", ingest.getUuid().replaceAll("-", "_"), ingest.getVersion(), ingestExec.getVersion());
 						
-						String targetFileName = ingestServiceImpl.generateFileName(targetDp.getName(), ingest.getTargetExtn(), ingest.getTargetFormat());
-						String targetExtension = ingest.getTargetExtn();
+//						String targetFileName = ingestServiceImpl.generateFileName(targetDp.getName(), ingest.getTargetExtn(), ingest.getTargetFormat());
+//						String targetExtension = ingest.getTargetExtn();
+//						
+//						if(targetExtension != null) {
+//							targetExtension = targetExtension.startsWith(".") ? targetExtension.substring(1) : targetExtension;
+//						} else {
+//							targetExtension = ingest.getTargetFormat();
+//						}
+//						
+//						if(targetExtension.equalsIgnoreCase(FileType.PARQUET.toString())) {
+//							targetFilePathUrl = targetDS.getPath();
+//							if(targetFileName.endsWith("."+FileType.PARQUET)) {
+//								targetFileName = targetFileName.replace("."+FileType.PARQUET, "");
+//							} else if(targetFileName.endsWith("."+FileType.PARQUET.toString().toLowerCase())) {
+//								targetFileName = targetFileName.replace("."+FileType.PARQUET.toString().toLowerCase(), "");
+//							}
+//							targetFilePathUrl = String.format("%s%s/%s/%s/%s", targetFilePathUrl, targetFileName, targetDp.getUuid(), targetDp.getVersion(), ingestExec.getVersion());
+//						} else {
+//							if (targetExtension.toLowerCase().equalsIgnoreCase(FileType.CSV.toString())) {
+//								targetFileName = targetFileName.toLowerCase().endsWith("."+FileType.CSV.toString().toLowerCase()) ? targetFileName : targetFileName.concat("."+FileType.CSV.toString().toLowerCase());
+//							} else if (targetExtension.toLowerCase().equalsIgnoreCase(FileType.TSV.toString())) {
+//								targetFileName = targetFileName.toLowerCase().endsWith("."+FileType.TSV.toString().toLowerCase()) ? targetFileName : targetFileName.concat("."+FileType.TSV.toString().toLowerCase());
+//							}
+//							else if (targetExtension.toLowerCase().equalsIgnoreCase(FileType.PSV.toString())) {
+//								targetFileName = targetFileName.toLowerCase().endsWith("."+FileType.PSV.toString().toLowerCase()) ? targetFileName : targetFileName.concat("."+FileType.PSV.toString().toLowerCase());
+//							} else {
+//								logger.info("Invalid target format type : "+ingest.getTargetExtn().toString());						
+//							}
+//							targetFilePathUrl = targetDS.getPath().concat(targetFileName);
+//						}		
 						
-						if(targetExtension != null) {
-							targetExtension = targetExtension.startsWith(".") ? targetExtension.substring(1) : targetExtension;
-						} else {
-							targetExtension = ingest.getTargetFormat();
-						}
-						
-						if(targetExtension.equalsIgnoreCase(FileType.PARQUET.toString())) {
-							targetFilePathUrl = targetDS.getPath();
-							if(targetFileName.endsWith("."+FileType.PARQUET)) {
-								targetFileName = targetFileName.replace("."+FileType.PARQUET, "");
-							} else if(targetFileName.endsWith("."+FileType.PARQUET.toString().toLowerCase())) {
-								targetFileName = targetFileName.replace("."+FileType.PARQUET.toString().toLowerCase(), "");
-							}
-							targetFilePathUrl = String.format("%s%s/%s/%s/%s", targetFilePathUrl, targetFileName, ingest.getUuid(), ingest.getVersion(), ingestExec.getVersion());
-						} else {
-							if (targetExtension.toLowerCase().equalsIgnoreCase(FileType.CSV.toString())) {
-								targetFileName = targetFileName.toLowerCase().endsWith("."+FileType.CSV.toString().toLowerCase()) ? targetFileName : targetFileName.concat("."+FileType.CSV.toString().toLowerCase());
-							} else if (targetExtension.toLowerCase().equalsIgnoreCase(FileType.TSV.toString())) {
-								targetFileName = targetFileName.toLowerCase().endsWith("."+FileType.TSV.toString().toLowerCase()) ? targetFileName : targetFileName.concat("."+FileType.TSV.toString().toLowerCase());
-							}
-							else if (targetExtension.toLowerCase().equalsIgnoreCase(FileType.PSV.toString())) {
-								targetFileName = targetFileName.toLowerCase().endsWith("."+FileType.PSV.toString().toLowerCase()) ? targetFileName : targetFileName.concat("."+FileType.PSV.toString().toLowerCase());
-							} else {
-								logger.info("Invalid target format type : "+ingest.getTargetExtn().toString());						
-							}
-							targetFilePathUrl = targetDS.getPath().concat(targetFileName);
-						}		
+						targetFilePathUrl = String.format("%s%s/%s/%s", targetFilePathUrl, targetDp.getUuid(), targetDp.getVersion(), ingestExec.getVersion());
 						
 						String sourceHeader = ingestServiceImpl.resolveHeader(ingest.getSourceHeader());
 						String targetHeader = ingestServiceImpl.resolveHeader(ingest.getTargetHeader()); 
 						
 						//reading from source
 						ResultSetHolder rsHolder = sparkExecutor.readAndRegisterFile(tableName, location, Helper.getDelimetrByFormat(ingest.getSourceFormat()), sourceHeader, appUuid, true);
-						
-						//adding version column to data
-//						rsHolder = sparkExecutor.addVersionColToDf(rsHolder, tableName, ingestExec.getVersion());
-											
+//						query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, otherParams, new HashSet<>(), execParams, runMode);
+															
 						//map schema to source mappedAttrs	
 						if(colAliaseNames != null) {
 							if(sourceHeader.equalsIgnoreCase("false")) {
-								rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, colAliaseNames.toArray(new String[colAliaseNames.size()]), tableName, true);
+								rsHolder = sparkExecutor.applyIngestDatapodSchema(rsHolder, targetDp, colAliaseNames.toArray(new String[colAliaseNames.size()]), tableName, true);
 							}
 							rsHolder = sparkExecutor.mapSchema(rsHolder, query, colAliaseNames, tableName, false);
 						} 
@@ -902,49 +888,54 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 							rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, targetCols, tableName, false);
 						}					
 						
+						/*query = ingestOperator.generateSQL(ingest, tableName, incrColName, incrLastValue, null, otherParams, new HashSet<>(), execParams, runMode);
+						logger.info("Before query : " + query);
+						rsHolder = sparkExecutor.executeSql(query);
+						logger.info("After query " );*/
+						
 						String saveMode = null;
 						if(ingest.getSaveMode() != null) {
 							saveMode = ingest.getSaveMode().toString();
 						} else {
 							saveMode = SaveMode.OVERWRITE.toString();
 						}
-						
-						String tempDirPath = Helper.getPropertyValue("framework.temp.path");
-						String tempDirLocation = tempDirPath.endsWith("/") ? "file://"+tempDirPath+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/" : "file://"+tempDirPath.concat("/")+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/";
-						logger.info("temporary location: "+tempDirLocation);
-						
-						//writing to target				
-						rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, tempDirLocation,
-																	targetFileName, tableName, saveMode, ingest.getTargetFormat(), targetHeader);
-						
-						if(!ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
-							try {
-								tempDirLocation = tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/" : tempDirPath.concat("/")+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/";
-								String srcFilePath = ingestServiceImpl.getFileNameFromDir(tempDirLocation, ingest.getTargetExtn(), ingest.getTargetFormat());
-								ingestServiceImpl.moveFileTOFileOrDir(srcFilePath, targetFilePathUrl, false);
-							} catch (Exception e) {
-//									e.printStackTrace();
-							} finally {
-								String dirPathToBeDeleted = tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid() : tempDirPath.concat("/")+ingestExec.getUuid();
-								ingestServiceImpl.deleteFileOrDirectory(dirPathToBeDeleted, true);
-							}						
-						} else {
-							try {
-								String targetDirName = ingest.getTargetDetail().getValue();
-								String targetDirPath = targetDS.getPath();
-								targetDirPath = targetDirPath.endsWith("/") ? (targetDirPath + targetDirName + "/") : (targetDirPath + "/" + targetDirName + "/");
-					
-								ingestServiceImpl.deleteFileOrDirectory(targetDirPath, true);
-								tempDirLocation = tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/" : tempDirPath.concat("/")+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/";
-								String srcFilePath = ingestServiceImpl.getFileNameFromDir(tempDirLocation, ingest.getTargetExtn(), ingest.getTargetFormat());
-								ingestServiceImpl.moveFileTOFileOrDir(srcFilePath, targetFilePathUrl, true);
-							} catch (Exception e) {
-								// TODO: handle exception
-							} finally {
-								String dirPathToBeDeleted = tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid() : tempDirPath.concat("/")+ingestExec.getUuid();
-								ingestServiceImpl.deleteFileOrDirectory(dirPathToBeDeleted, true);
-							}
-						}
+						sparkExecutor.registerAndPersistDataframe(rsHolder, targetDp, saveMode, targetFilePathUrl, tableName, targetHeader, false);
+//						String tempDirPath = Helper.getPropertyValue("framework.temp.path");
+//						String tempDirLocation = tempDirPath.endsWith("/") ? "file://"+tempDirPath+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/" : "file://"+tempDirPath.concat("/")+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/";
+//						logger.info("temporary location: "+tempDirLocation);
+//						
+//						//writing to target				
+//						rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, tempDirLocation,
+//																	tableName, saveMode, ingest.getTargetFormat(), targetHeader);
+//						
+//						if(!ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
+//							try {
+//								tempDirLocation = tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/" : tempDirPath.concat("/")+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/";
+//								String srcFilePath = ingestServiceImpl.getFileNameFromDir(tempDirLocation, ingest.getTargetExtn(), ingest.getTargetFormat());
+//								ingestServiceImpl.moveFileTOFileOrDir(srcFilePath, targetFilePathUrl, false);
+//							} catch (Exception e) {
+////									e.printStackTrace();
+//							} finally {
+//								String dirPathToBeDeleted = tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid() : tempDirPath.concat("/")+ingestExec.getUuid();
+//								ingestServiceImpl.deleteFileOrDirectory(dirPathToBeDeleted, true);
+//							}						
+//						} else {
+//							try {
+//								String targetDirName = ingest.getTargetDetail().getValue();
+//								String targetDirPath = targetDS.getPath();
+//								targetDirPath = targetDirPath.endsWith("/") ? (targetDirPath + targetDirName + "/") : (targetDirPath + "/" + targetDirName + "/");
+//					
+//								ingestServiceImpl.deleteFileOrDirectory(targetDirPath, true);
+//								tempDirLocation = tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/" : tempDirPath.concat("/")+ingestExec.getUuid()+"/"+ingestExec.getVersion()+"/";
+//								String srcFilePath = ingestServiceImpl.getFileNameFromDir(tempDirLocation, ingest.getTargetExtn(), ingest.getTargetFormat());
+//								ingestServiceImpl.moveFileTOFileOrDir(srcFilePath, targetFilePathUrl, true);
+//							} catch (Exception e) {
+//								// TODO: handle exception
+//							} finally {
+//								String dirPathToBeDeleted = tempDirPath.endsWith("/") ? tempDirPath+ingestExec.getUuid() : tempDirPath.concat("/")+ingestExec.getUuid();
+//								ingestServiceImpl.deleteFileOrDirectory(dirPathToBeDeleted, true);
+//							}
+//						}
 						countRows = rsHolder.getCountRows();
 					} else {
 						//this is export block from local file to Table
@@ -969,7 +960,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 							//map schema to source mappedAttrs	
 							if(colAliaseNames != null) {
 								if(sourceHeader.equalsIgnoreCase("false")) {
-									rsHolder = sparkExecutor.applySchema(rsHolder, targetDp, colAliaseNames.toArray(new String[colAliaseNames.size()]), tableName, true);
+									rsHolder = sparkExecutor.applyIngestDatapodSchema(rsHolder, targetDp, colAliaseNames.toArray(new String[colAliaseNames.size()]), tableName, true);
 								}
 								rsHolder = sparkExecutor.mapSchema(rsHolder, query, colAliaseNames, tableName, false);
 							} 
@@ -1019,7 +1010,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 						String targetHeader = ingestServiceImpl.resolveHeader(ingest.getTargetHeader());
 						
 						//writing to target				
-						rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, ingest.getTargetDetail().getValue(), tableName, ingest.getSaveMode().toString(), ingest.getTargetFormat(), targetHeader);
+						rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, targetFilePathUrl, tableName, ingest.getSaveMode().toString(), ingest.getTargetFormat(), targetHeader);
 						countRows = rsHolder.getCountRows();
 //						targetFilePathUrl = null;
 					} else if(targetDS.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
@@ -1160,7 +1151,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 //										, targetFileName, tableName, saveMode, ingest.getTargetFormat(), targetHeader);
 						
 						rsHolder = sparkExecutor.writeFileByFormat(rsHolder, targetDp, tempDirLocation,
-														targetFileName, tableName, saveMode, ingest.getTargetFormat(), targetHeader);
+														tableName, saveMode, ingest.getTargetFormat(), targetHeader);
 						
 						if(!ingest.getTargetFormat().equalsIgnoreCase(FileType.PARQUET.toString())) {
 							try {

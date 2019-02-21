@@ -142,6 +142,13 @@ DatavisualizationModule.factory('ReportFactory', function ($http, $location) {
 			method: "GET",
 		}).then(function (response) { return response })
 	}
+    factory.findReportByReportExec = function (uuid,type) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			url: url + "report/getReportByReportExec?action=view&uuid=" + uuid+"&type="+type,
+			method: "GET",
+		}).then(function (response) { return response })
+	}
 
 	factory.findExecute = function (uuid, version, data) {
 		var url = $location.absUrl().split("app")[0]
@@ -173,15 +180,25 @@ DatavisualizationModule.factory('ReportFactory', function ($http, $location) {
 			method: 'GET',
 			url: url,
 
-		}).
-			then(function (response, status, headers) {
+		}).then(function (response, status, headers) {
 				return response;
-			})
+		})
 	}
 	return factory;
 });
 
 DatavisualizationModule.service('ReportSerivce', function ($http, $q, sortFactory, ReportFactory) {
+	this.getReportByReportExec = function (uuid, type) {
+		var deferred = $q.defer();
+		ReportFactory.findReportByReportExec(uuid,type).then(function (response) { onSuccess(response.data) });
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			})
+		}
+		return deferred.promise;
+	};
+	
 	this.getAttributeValues = function (uuid, attributeId, type) {
 		var deferred = $q.defer();
 

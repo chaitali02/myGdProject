@@ -695,6 +695,17 @@ InferyxApp.directive('rocCurveChart', function ($compile, $rootScope, sortFactor
                 .attr("y", 40 )
                 .style("text-anchor", "middle")
                 .text(" 1-Specificity ( False Positive Rate )")
+
+          svg.append("g")
+                .attr("class", "x axis1")
+                .attr("transform", "translate(0," + height + ")")
+                .call(xAxis)
+                .append("text")            
+                  .attr("x", width / 2)
+                  .attr("font-weight","bold")
+                  .attr("y", 70 )
+                  .style("text-anchor", "middle")
+                  .text("ROC Curve")
                   
           var xAxisG = svg.select("g.x.axis");
                     

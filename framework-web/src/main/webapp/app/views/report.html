@@ -125,19 +125,19 @@
                                 ng-hide="isAdd" style="height:16px;">
                                 <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
                             </a>
-                            <a title="Run Report" data-toggle="tooltip" data-placement="top" tooltip data-ng-click="showSampleTable(report)" style="height:16px;"
+                            <!-- <a title="Run Report" data-toggle="tooltip" data-placement="top" tooltip data-ng-click="showSampleTable(report)" style="height:16px;"
                                 ng-hide="isAdd" ng-class="(isShowSimpleData==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'">
                                 <i class="fa fa-play" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
-                            </a>
+                            </a> -->
                             <!-- <div class="tools">
                                 <a title="Sample Records" data-toggle="tooltip" data-placement="top" tooltip data-ng-click="showSampleTable(report)" style="height:16px;"
                                 ng-hide="isAdd" ng-class="isShowSimpleData==true? 'currentpage':'notcurrentpage'">
                                 <i class="fa fa-table" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
                             </a> -->
 
-                            <a ng-click="downloadFile(reportExec)" tooltip-placement="top" uib-tooltip="Download" ng-class="((gridOptions.data !=null && isShowSimpleData==true )|| (isEditInprogess ==true || isEditVeiwError ==true))? 'notcurrentpage':'currentpage'">
+                            <!-- <a ng-click="downloadFile(reportExec)" tooltip-placement="top" uib-tooltip="Download" ng-class="((gridOptions.data !=null && isShowSimpleData==true )|| (isEditInprogess ==true || isEditVeiwError ==true))? 'notcurrentpage':'currentpage'">
                                 <i class="fa fa-download" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
-                            </a>
+                            </a> -->
                             <!-- <a title="Edit" ng-disabled="isPrivlage" ng-class="(showForm==true && isShowSimpleData==false && isEdit==true)? 'currentpage':'notcurrentpage'"
                                 data-toggle="tooltip" data-placement="top" tooltip ng-click="enableEdit(report.uuid,report.version)"
                                 ng-hide="isAdd" style="height:16px;">
@@ -439,6 +439,17 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
+                                        <label class="col-md-3 control-label"> Save On Refresh</label>
+                                        <div class="col-md-9">
+                                            <div class="mt-checkbox-list" style="margin-top:-7px">
+                                                <label class="mt-checkbox mt-checkbox-outline">
+                                                    <input ng-disabled="{{mode}}" type="checkbox" ng-model="report.saveOnRefresh" ng-true-value="'Y'" ng-false-value="'N'">
+                                                    <span ng-disabled="{{mode}}"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Filter</label>
                                         <div class="col-md-6">
                                             <tags-input class="tag-scroll" ng-model="filterAttributeTags" ng-disabled="{{mode}}" display-property="dname" key-property="id"
@@ -608,7 +619,7 @@
             </form>
             </div>
         </div>
-        <div id="attrFilter" class="modal fade bs-modal-lg in" aria-hidden="true" style="display: none;">
+        <div id="attrFilter" class="modal fade bs-modal-lg in   " tabindex="-1" aria-hidden="true" style="display: none;">
             <div class="modal-dialog" style="width:40%;">
                 <div class="modal-content">
                     <div class="modal-header">

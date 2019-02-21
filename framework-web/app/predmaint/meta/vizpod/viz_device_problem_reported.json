@@ -1,6 +1,6 @@
 {
   "uuid": "a809d544-97c7-498e-9789-3d60199987a0",
-  "version": "1550094790",
+  "version": "1550346729",
   "name": "viz_device_problem_reported",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Wed Feb 13 16:53:10 EST 2019",
+  "createdOn": "Sat Feb 16 14:52:09 EST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -49,10 +49,10 @@
         "version": null,
         "name": "device_data_final_features"
       },
-      "attributeId": 28,
+      "attributeId": 1,
       "function": null,
       "value": null,
-      "attributeName": "problemreported"
+      "attributeName": "date"
     }
   ],
   "dimension": [],
@@ -63,9 +63,9 @@
     {
       "ref": {
         "type": "formula",
-        "uuid": "29acb8f8-5d89-43d3-bb58-ec287f01c542",
+        "uuid": "ae2c1aab-4355-4224-9f48-73d314ff5742",
         "version": null,
-        "name": "fm_device_count"
+        "name": "fm_problem_report_count"
       },
       "attributeId": null,
       "function": null,

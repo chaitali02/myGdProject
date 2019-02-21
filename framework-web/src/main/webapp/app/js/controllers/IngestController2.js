@@ -188,7 +188,21 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
     $scope.countBack = function () {
         $scope.continueCount = $scope.continueCount - 1;
         $scope.isSubmitShow = false;
-    }
+	}
+	
+
+	// $scope.getOneByUuidAndVersionDatasource=function(data,type){
+	// 	CommonService.getOneByUuidAndVersion(data.uuid,"", 'datasource')
+	// 	.then(function (response) { onSuccess(response.data) },function(response) {onError(response.data)});
+	// 	var onSuccess = function (response) {
+	// 		if(type="source"){
+	// 			$scope.selectedTargetDatasource=response;
+	// 		}
+	// 		if(type=="target"){
+	// 			$scope.selectedTargetDatasource=response;
+	// 		}
+	// 	}
+	// }
     
     $scope.getDatasourceForTable = function (sourceType, TargetType) {
 		IngestRuleService.getDatasourceForTable("datasource").then(function (response) { onSuccessGetDatasourceForTable(response.data) }, function (response) { onError(response.data) });
@@ -211,7 +225,13 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 				}
 			}
 			if (TargetType == "TABLE") {
-				$scope.allTargetDatasource = response;
+				if($scope.allSourceDatasource && $scope.allSourceDatasource.length ==0)
+					$scope.allTargetDatasource = response;
+				else
+				if($scope.allTargetDatasource== null){
+					$scope.allTargetDatasource=[];
+				}
+				$scope.allTargetDatasource=$scope.allTargetDatasource.concat(response);
 				//setTimeout(function(){
 					if($scope.selectedSourceType == 'FILE' && $scope.selectedTargetType == 'TABLE'){
 						if($scope.allTargetDatasource && $scope.allTargetDatasource.length >0){
@@ -225,17 +245,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 									}
 								}
 							}
-							for(var i=0;i<$scope.allSourceDatasource.length;i++){
-								if($scope.allSourceDatasource[i].type == 'FILE'){
-									if($scope.allSourceDatasource)
-										$scope.allTargetDatasource.push($scope.allSourceDatasource[i]);
-									else{
-										$scope.allSourceDatasource=[];
-										$scope.allTargetDatasource.push($scope.allSourceDatasource[i]);
-									}
-								}
-							}
-						}	
+						}
 					}
 				//},100);
 			
@@ -288,6 +298,25 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 			if (TargetType == "FILE") {
 				$scope.allTargetDatasource = response;
 			}
+
+			if (TargetType == "TABLE") {
+				if($scope.allSourceDatasource && $scope.allSourceDatasource.length >0){
+					for(var i=0;i<$scope.allSourceDatasource.length;i++){
+						if($scope.allSourceDatasource[i].type == 'FILE'){
+							if($scope.allTargetDatasource)
+								$scope.allTargetDatasource.push($scope.allSourceDatasource[i]);
+							else{
+								$scope.allTargetDatasource=[];
+								$scope.allTargetDatasource.push($scope.allSourceDatasource[i]);
+							}
+						}
+					}
+			    }
+			}
+
+
+           
+
             
 		}
 	}
@@ -456,7 +485,12 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 				$scope.selectedTargetFormate = null;
 			}
 			else{
-				$scope.isTargetFormateDisable=false;
+				if($scope.selectedTargetType=="TABLE")
+					$scope.isTargetFormateDisable=true;
+				else{
+					$scope.isTargetFormateDisable=false;
+				}
+
 			    $scope.selectedTargetFormate = null;
 			}
 		}
@@ -847,6 +881,8 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 				$scope.ingest.versions[i] = ingetversion;
 			}
 		}
+		if($stateParams.version =="")
+			$stateParams.version="";
 		IngestRuleService.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'ingest')
 			.then(function (response) { onSuccess(response.data) },function(response) {onError(response.data)});
 		var onSuccess = function (response) {

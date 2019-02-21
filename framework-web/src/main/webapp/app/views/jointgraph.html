@@ -211,7 +211,7 @@
           </div>
         </div>
       </div>
-      <form class="form-horizontal" name="myform3" id="submit_formParamList" ng-submit="isExecParamList ==true ? executeWithExecParamList():executeWithExecParams()"
+      <form class="form-horizontal" name="myform3" id="submit_formParamList" ng-submit="isExecParamList ==true ? executeWithExecParamList():isExecParamSet==true?executeWithExecParams():executeWithExecFilterInfo()"
         novalidate="novalidate">
         <div class="modal-body">
           <div class="slimScrollDiv" style="position: relative; overflow-y: auto !important; width:auto;padding:10px;">
@@ -223,7 +223,7 @@
                   <div class="form-group row">
                     <label class="control-label col-md-3 col-sm-3 col-xs-12" for="example-text-input" class="col-md-3">Name</label>
                     <div class="col-md-6">
-                      <input class="form-control" ng-disabled="isModelDisable"  type="text" value="" id="namepop" ng-model="popupModel.modelData.name" style="text-transform: capitalize">
+                      <input class="form-control" ng-disabled="isModelDisable"  type="text" value="" id="namepop" ng-model="popupModel.modelData.name" >
                     </div>
                   </div>
 
@@ -524,6 +524,29 @@
                       </table>
                     </div>
                   </div>
+                  <div ng-show="isExecParams==true">
+                    <div class="col-md-12">
+                        <div class="form-body centercontent" ng-show="filterAttribureIdValues.length == 0">
+                            <div class="spinner">
+                                <div class="bounce1"></div>
+                                <div class="bounce2"></div>
+                                <div class="bounce3"></div>
+                            </div>
+                        </div>
+                        <div class="" style="margin-top:15px;">
+                            <div class="form-group" ng-repeat="data in filterAttribureIdValues">
+                                <label class="col-md-3 control-label" title="{{data.dname}}">{{data.attrName}}</label>
+                                <div class="col-md-6">
+                                    <select ng-disabled="inprogressdata" title="{{dname}}"
+                                        class="form-control" select2 ng-model="selectedAttributeValue[$index]"
+                                        ng-change="onChange()" ng-options="c as c.value for c in data.values  track by c.value">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+
                 </div>
               </div>
             </div>
@@ -568,7 +591,7 @@
                   <div class="form-group row">
                     <label class="control-label col-md-3 col-sm-3 col-xs-12" for="example-text-input" class="col-md-3">Name</label>
                     <div class="col-md-6">
-                      <input class="form-control" ng-disabled="isModelDisable"  type="text" value="" id="nameStage" ng-model="popupModel.modelData.name" style="text-transform: capitalize">
+                      <input class="form-control" ng-disabled="isModelDisable"  type="text" value="" id="nameStage" ng-model="popupModel.modelData.name">
                     </div>
                   </div>
                 </div>

@@ -143,7 +143,10 @@ public class AttributeMapOperator {
 		String alias = null;
 		try {
 			if (attrMap.getTargetAttr() != null && attrMap.getTargetAttr().getRef() != null) { // Set attribute alias as corrs. target attribute
-				if(attrMap.getTargetAttr().getRef().getType().equals(MetaType.attribute)) {
+				if(attrMap.getTargetAttr().getRef().getType().equals(MetaType.attribute)
+						|| ((attrMap.getTargetAttr().getRef().getType().equals(MetaType.function)
+						|| attrMap.getTargetAttr().getRef().getType().equals(MetaType.formula)) 
+								&& mapSource.getRef().getType().equals(MetaType.simple))) {
 					//special handling for ingest 
 					alias = attrMap.getTargetAttr().getValue();
 				} else {
@@ -158,12 +161,32 @@ public class AttributeMapOperator {
 						//.concat(attrMap.getSourceAttr().get(0).getAttributeId().toString());
 			} 
 			
-			if(attrMap.getSourceAttr().getRef().getType().equals(MetaType.attribute)) {
+			if(attrMap.getSourceAttr().getRef().getType().equals(MetaType.function) 
+					&& mapSource.getRef().getType().equals(MetaType.simple)) {
 				//special handling for ingest 
+				Function function = (Function) commonServiceImpl.getOneByUuidAndVersion(attrMap.getSourceAttr().getRef().getUuid()
+						, attrMap.getSourceAttr().getRef().getVersion()
+						, attrMap.getSourceAttr().getRef().getType().toString()
+						, "N");
+				Datasource fileDatasource = new Datasource();
+				fileDatasource.setType(MetaType.file.toString());
+				return builder.append(functionOperator.generateSql(function, refKeyMap, otherParams, fileDatasource)).append(" as ").append(alias).append(" ").toString();
+			} else if(attrMap.getSourceAttr().getRef().getType().equals(MetaType.formula) 
+					&& mapSource.getRef().getType().equals(MetaType.simple)) {
+				//special handling for ingest 
+				Formula formula = (Formula) commonServiceImpl.getOneByUuidAndVersion(attrMap.getSourceAttr().getRef().getUuid()
+						, attrMap.getSourceAttr().getRef().getVersion()
+						, attrMap.getSourceAttr().getRef().getType().toString()
+						, "N");
+				Datasource fileDatasource = new Datasource();
+				fileDatasource.setType(MetaType.file.toString());
+				return builder.append(formulaOperator.generateSql(formula, refKeyMap, otherParams, execParams, fileDatasource)).append(" as ").append(alias).append(" ").toString();
+			} else if(attrMap.getSourceAttr().getRef().getType().equals(MetaType.attribute)) {
+				//special handling for ingest 				
 				return builder.append(attrMap.getSourceAttr().getValue()).append(" as ").append(alias).append(" ").toString();
-			} else if (attrMap.getSourceAttr().getRef().getType() == MetaType.simple) {
+			} else if (attrMap.getSourceAttr().getRef().getType().equals(MetaType.simple)) {
 				return builder.append("\'").append(attrMap.getSourceAttr().getValue()).append("\'").append(" as ").append(alias).append(" ").toString();			
-			} else if (attrMap.getSourceAttr().getRef().getType() == MetaType.paramlist) {
+			} else if (attrMap.getSourceAttr().getRef().getType().equals(MetaType.paramlist)) {
 				String value = metadataServiceImpl.getParamValue(execParams, Integer.parseInt(attrMap.getSourceAttr().getAttrId()), attrMap.getSourceAttr().getRef());
 //				boolean isNumber = Helper.isNumber(value);			
 //				if(!isNumber) {
@@ -225,23 +248,23 @@ public class AttributeMapOperator {
 		Object mapSourceObj = commonServiceImpl.getOneByUuidAndVersion(mapSource.getRef().getUuid(), mapSource.getRef().getVersion(), mapSource.getRef().getType().toString(),"N");
 		Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(mapSourceObj);
 		try {
-			if ((mapSource.getRef().getType() == MetaType.relation || mapSource.getRef().getType() == MetaType.datapod)  
+			if ((mapSource.getRef().getType().equals(MetaType.relation) || mapSource.getRef().getType().equals(MetaType.datapod))  
 					&& object instanceof Datapod) {
 				Datapod datapod = (Datapod) object;
 				return builder.append(datapod.sql(Integer.parseInt(sourceAttr.getAttrId()))).append(" ").toString();
-			} else if ((mapSource.getRef().getType() == MetaType.relation || mapSource.getRef().getType() == MetaType.dataset)  
+			} else if ((mapSource.getRef().getType().equals(MetaType.relation) || mapSource.getRef().getType().equals(MetaType.dataset))  
 					&& (object instanceof DataSet)) {
 				DataSet dataset = (DataSet) object;
 				return builder.append(datasetServiceImpl.getAttributeSql(dataset, sourceAttr.getAttrId())).append(" ").toString();
 			}
-			if (mapSource.getRef().getType() == MetaType.dataset && (object instanceof DataSet)) {
+			if (mapSource.getRef().getType().equals(MetaType.dataset) && (object instanceof DataSet)) {
 //				DataSet dataset = (DataSet) daoRegister.getRefObject(TaskParser.populateRefVersion(mapSource.getRef(), refKeyMap));
 				MetaIdentifier mapSourceRef = TaskParser.populateRefVersion(mapSource.getRef(), refKeyMap);
 				DataSet dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(mapSourceRef.getUuid(), mapSourceRef.getVersion(), mapSourceRef.getType().toString(),"N");
 				return builder.append(datasetServiceImpl.getAttributeSql(dataset, sourceAttr.getAttrId())).append(" ").toString();
 				
 			}
-			if (mapSource.getRef().getType() == MetaType.rule && (object instanceof Rule)) {
+			if (mapSource.getRef().getType().equals(MetaType.rule) && (object instanceof Rule)) {
 //				Rule rule = (Rule) daoRegister.getRefObject(TaskParser.populateRefVersion(mapSource.getRef(), refKeyMap));
 				MetaIdentifier mapSourceRef = TaskParser.populateRefVersion(mapSource.getRef(), refKeyMap);
 				Rule rule = (Rule) commonServiceImpl.getOneByUuidAndVersion(mapSourceRef.getUuid(), mapSourceRef.getVersion(), mapSourceRef.getType().toString(),"N");

@@ -90,16 +90,21 @@ public class VizpodController {
 			@RequestParam(value = "action", required = false) String action) throws Exception {
 		RunMode runMode = RunMode.BATCH;
 		VizExec vizExec = vizpodServiceImpl.create(vizpodUUID, vizpodVersion, null, execParams, runMode);
-//		VizpodResultHolder resultHolder = vizpodServiceImpl.getVizpodResults(vizpodUUID, vizpodVersion, execParams, vizExec, rows, offset, limit, sortBy, order, requestId, runMode);
-//		if (resultHolder == null) {
-//			return null;	
-//		}
-//		return resultHolder.getVizpodResultDataList();
 		return vizpodServiceImpl.getVizpodResults(vizpodUUID, vizpodVersion, execParams, vizExec, rows, offset, limit, sortBy, order, requestId, runMode);
 	}
 	
+	@RequestMapping(value = "/execute", method = RequestMethod.POST)
+	public VizExec execute(@RequestParam(value = "uuid") String vizpodUuid,
+			@RequestParam(value = "version") String vizpodVersion,
+			@RequestParam(value = "saveOnRefresh", defaultValue = "N") String saveOnRefresh,
+			@RequestBody(required = false) ExecParams execParams, 
+			@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception {
+		RunMode runMode = Helper.getExecutionMode(mode);
+		VizExec vizExec = vizpodServiceImpl.create(vizpodUuid, vizpodVersion, null, execParams, runMode);
+		return vizpodServiceImpl.execute(vizpodUuid, vizpodVersion, execParams, vizExec, saveOnRefresh, runMode);
+	}
 
-@RequestMapping(value = "/getVizpodDetails/{VizpodUUID}/{VizpodVersion}", method = RequestMethod.POST)
+	@RequestMapping(value = "/getVizpodDetails/{VizpodUUID}/{VizpodVersion}", method = RequestMethod.POST)
 	public List<Map<String, Object>> getVizpodDetails(@PathVariable(value = "VizpodUUID") String vizpodUUID,
 			@PathVariable(value = "VizpodVersion") String vizpodVersion,
 			@RequestBody(required = false) ExecParams execParams, 
@@ -112,18 +117,26 @@ public class VizpodController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws Exception {
 		RunMode runMode = RunMode.BATCH;
-		VizExec vizExec = vizpodServiceImpl.create(vizpodUUID, vizpodVersion, null, execParams, runMode);
-//		VizpodDetailsHolder resultHolder = vizpodServiceImpl.getVizpodDetails(vizpodUUID, vizpodVersion, execParams, vizExec, rows, offset, limit, sortBy, order, requestId, runMode);
-//		if (resultHolder.getVizpodDetailsDataList() == null) {
-//			return null;
-//		}
-//		return resultHolder.getVizpodDetailsDataList();
-		
+		VizExec vizExec = vizpodServiceImpl.create(vizpodUUID, vizpodVersion, null, execParams, runMode);		
 		return vizpodServiceImpl.getVizpodDetails(vizpodUUID, vizpodVersion, execParams, vizExec, rows, offset, limit, sortBy, order, requestId, runMode);
 	}
 	
-	
-
+	@RequestMapping(value = "/getVizpodResults", method = RequestMethod.GET)
+	public List<Map<String, Object>> getVizpodResults2(@RequestParam(value = "uuid") String vizExecUuid,
+			@RequestParam(value = "version") String vizExecVersion,
+			@RequestParam(value = "saveOnRefresh") String saveOnRefresh,
+			@RequestParam(value ="rows",defaultValue="1000") int rows,
+			@RequestParam(value="offset", defaultValue="0") int offset, 
+			@RequestParam(value="limit", defaultValue="200") int limit,
+			@RequestParam(value="sortBy", required=false) String sortBy,
+			@RequestParam(value="order", required=false) String order, 
+			@RequestParam(value="requestId", required=false) String requestId,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "runMode", required = false, defaultValue = "BATCH") String mode) throws Exception {
+		RunMode runMode = Helper.getExecutionMode(mode);
+		return vizpodServiceImpl.getVizpodResults(vizExecUuid, vizExecVersion, saveOnRefresh, rows, offset, limit, sortBy, order, requestId, runMode);	
+	}
 
 //@RequestMapping(value = "/getVizpodResults/{VizpodUUID}/{VizpodVersion}/{VizpodExecUUID}", method = RequestMethod.POST)
 //public VizpodResultHolder getVizpodResults(@PathVariable(value = "VizpodUUID") String vizpodUUID,
@@ -146,8 +159,9 @@ public class VizpodController {
 //}
 
 	@RequestMapping(value = "/download", method = RequestMethod.GET)
-	public HttpServletResponse download(@RequestParam(value = "vizpodUUID") String vizpodUUID,
-			@RequestParam(value = "vizpodVersion") String vizpodVersion,
+	public HttpServletResponse download(@RequestParam(value = "uuid") String vizExecUuid,
+			@RequestParam(value = "version") String vizExecVersion,
+			@RequestParam(value = "saveOnRefresh") String saveOnRefresh,
 			@RequestParam(value = "format", defaultValue = "excel") String format,
 			@RequestBody(required = false) ExecParams execParams,
 			@RequestParam(value = "rows", defaultValue = "200") int rows,
@@ -156,7 +170,7 @@ public class VizpodController {
 			@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode,
 			HttpServletResponse response) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
-		vizpodServiceImpl.download(vizpodUUID, vizpodVersion, format, execParams, null, 0, rows, response, rows, null,
+		vizpodServiceImpl.download(vizExecUuid, vizExecVersion, saveOnRefresh, format, execParams, null, 0, rows, response, rows, null,
 				null, null, runMode);
 		return null;
 	}

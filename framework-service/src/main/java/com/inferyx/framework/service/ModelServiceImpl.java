@@ -3193,7 +3193,17 @@ public class ModelServiceImpl {
 					LinkedHashMap<String, Object> imputationDetails = imputeOperator.resolveAttributeImputeValue(train.getFeatureAttrMap(), source, model, execParams, runMode, tableName);					
 					LinkedHashMap<String, Object> remappedImputationDetails = remapSourceImpueValToFeature(source, train.getFeatureAttrMap(), model.getFeatures(), imputationDetails);
 					trainInput.setImputationDetails(remappedImputationDetails);
-			
+					
+					List<String> inputColList = new ArrayList<>();
+					inputColList.add("label");
+					Map<String, String> modelSchema = new HashMap<>();
+					for(Feature feature : model.getFeatures()) {
+						modelSchema.put(feature.getName(), feature.getType());
+						inputColList.add(feature.getName());
+					}
+					otherParams.put("modelSchema", modelSchema);
+					otherParams.put("inputColList", inputColList);
+					
 					String inputSourceFileName = null;					
 					if(sourceDsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
 						sourceDsType = MetaType.file.toString().toLowerCase();
@@ -3204,12 +3214,13 @@ public class ModelServiceImpl {
 						if(!trainInPathFile.exists()) {	
 							String mappedAttrSql = generateFeatureSQLByTempTable(train.getFeatureAttrMap(), tableName, label, tableName);
 							ResultSetHolder rsHolder = exec.executeAndRegisterByDatasource(mappedAttrSql, tableName, appDs, appUuid);	
-													
-							if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
-								String doubleCastSql = "SELECT * FROM " + tableName;	
-								rsHolder = sparkExecutor.castDFCloumnsToDoubleType(null, doubleCastSql, sourceDS, tableName, true, appUuid);	
-							}
-																			
+//							rsHolder.getDataFrame().printSchema();
+//							rsHolder = sparkExecutor.applyModelSchema(rsHolder, null, model, tableName, true, appUuid);
+//							rsHolder.getDataFrame().printSchema();
+//							if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
+//								String doubleCastSql = "SELECT * FROM " + tableName;	
+//								rsHolder = sparkExecutor.castDFCloumnsToDoubleType(null, doubleCastSql, sourceDS, tableName, true, appUuid);	
+//							}
 //							exec.saveDataframeAsCSV(tableName, "file://"+trainInputPath, appUuid);
 							sparkExecutor.registerAndPersistDataframe(rsHolder, null, SaveMode.APPEND.toString()
 									, "file://"+trainInputPath, tableName
@@ -3281,11 +3292,14 @@ public class ModelServiceImpl {
 					trainResult.setNumFeatures(fieldArray.length);
 					
 					logger.info("Object TrainInput: "+trainInput.toString());
+					SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+					trainResult.setStartTime(simpleDateFormat.parse((new Date()).toString()));
 					StopWatch stopWatch = new StopWatch();
 					stopWatch.start();
 					List<String> scriptPrintedMsgs = executeScript(model.getType(), scriptName, trainExec.getUuid(), trainExec.getVersion(), argList);
 					stopWatch.stop();
 					trainResult.setTimeTaken(stopWatch.getTotalTimeMillis()+" ms");
+					trainResult.setEndTime(simpleDateFormat.parse((new Date()).toString()));					
 					
 					if(inputSourceFileName != null && !inputSourceFileName.isEmpty()) {
 						deleteFileOrDirIfExists(inputSourceFileName);

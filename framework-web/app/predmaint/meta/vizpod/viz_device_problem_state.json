@@ -1,6 +1,6 @@
 {
   "uuid": "011ee127-99a5-4db7-9a34-a4c2f31231b3",
-  "version": "1550094958",
+  "version": "1550347082",
   "name": "viz_device_problem_state",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Wed Feb 13 16:55:58 EST 2019",
+  "createdOn": "Sat Feb 16 14:58:02 EST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -49,46 +49,10 @@
         "version": null,
         "name": "device_data_final_features"
       },
-      "attributeId": 24,
+      "attributeId": 1,
       "function": null,
       "value": null,
-      "attributeName": "problem_type_1"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-        "version": null,
-        "name": "device_data_final_features"
-      },
-      "attributeId": 25,
-      "function": null,
-      "value": null,
-      "attributeName": "problem_type_2"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-        "version": null,
-        "name": "device_data_final_features"
-      },
-      "attributeId": 26,
-      "function": null,
-      "value": null,
-      "attributeName": "problem_type_3"
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
-        "version": null,
-        "name": "device_data_final_features"
-      },
-      "attributeId": 27,
-      "function": null,
-      "value": null,
-      "attributeName": "problem_type_4"
+      "attributeName": "date"
     }
   ],
   "dimension": [],
@@ -99,9 +63,45 @@
     {
       "ref": {
         "type": "formula",
-        "uuid": "29acb8f8-5d89-43d3-bb58-ec287f01c542",
+        "uuid": "0cd7cd98-9a1d-49f5-a11d-93316c8549d6",
         "version": null,
-        "name": "fm_device_count"
+        "name": "fm_problem_type_1_count"
+      },
+      "attributeId": null,
+      "function": null,
+      "value": null,
+      "attributeName": null
+    },
+    {
+      "ref": {
+        "type": "formula",
+        "uuid": "5162bc06-4b76-4699-8880-e9ae26064062",
+        "version": null,
+        "name": "fm_problem_type_2_count"
+      },
+      "attributeId": null,
+      "function": null,
+      "value": null,
+      "attributeName": null
+    },
+    {
+      "ref": {
+        "type": "formula",
+        "uuid": "678a5b68-11b3-4187-8d9a-56abb69eb892",
+        "version": null,
+        "name": "fm_problem_type_3_count"
+      },
+      "attributeId": null,
+      "function": null,
+      "value": null,
+      "attributeName": null
+    },
+    {
+      "ref": {
+        "type": "formula",
+        "uuid": "487a80bb-14aa-4aeb-b950-00be3d8bf4f1",
+        "version": null,
+        "name": "fm_problem_type_4_count"
       },
       "attributeId": null,
       "function": null,

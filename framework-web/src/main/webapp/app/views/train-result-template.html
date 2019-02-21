@@ -105,6 +105,18 @@
                                 </td>
                             </tr>
                             <tr>
+                                <td style="width:40%">Start Time</td>
+                                <td style="width:60%">
+                                    <b>{{modelresult.startTime | date:'MMM dd HH:mm:ss yyyy'}}</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width:40%">End Time</td>
+                                <td style="width:60%">
+                                    <b>{{modelresult.endTime | date:'MMM dd HH:mm:ss yyyy'}}</b>
+                                </td>
+                            </tr>
+                            <tr>
                                 <td style="width:40%">Time Taken</td>
                                 <td style="width:60%">
                                     <b>{{modelresult.timeTaken}}</b>
@@ -236,9 +248,8 @@
                                     </tr>
                                 </table>
                             </div>
-                            <div class="col-md-6" ng-if="!isTrainResultProgess && modelresult.rocCurve !=null ">
+                            <div class="col-md-6 col-sm-6 col-lg-6" ng-if="!isTrainResultProgess && modelresult.rocCurve !=null ">
                                 <roc-curve-chart id="roc" data="modelresult"></roc-curve-chart>
-                                <div style="text-align:center;padding-left: 47px;">ROC Curve</div>
                             </div>
                             <div class="centercontent" style="height:300px;">
                                 <h3 ng-if="modelresult.rocCurve ==null && isTrainResultProgess ==false" style="font-size:14px;color:blue;">ROC Curve Not Available</h3>

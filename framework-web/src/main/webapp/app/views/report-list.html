@@ -1,4 +1,8 @@
-<!-- BEGIN PAGE HEADER-->
+<style>
+    .select2-container--open {
+          z-index: 10060;
+        }
+      </style>
 <div ng-controller="ReportListController">
     <div class="page-bar">
         <ul class="page-breadcrumb">
@@ -15,7 +19,8 @@
             </li>
         </ul>
         <div class="page-toolbar">
-            <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+            <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body"
+                data-placement="bottom" data-original-title="Change dashboard date range">
                 <i class="icon-calendar"></i>&nbsp;
                 <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
             </div>
@@ -31,17 +36,81 @@
             <div class="portlet box green">
                 <div class="portlet-title">
                     <div class="caption">
-                      <i class="fa fa-cogs"></i>
-                      <span style="text-transform: capitalize">Report</span>
+                        <i class="fa fa-cogs"></i>
+                        <span style="text-transform: capitalize">Report</span>
                     </div>
                     <div class="actions">
-                      <a ng-disabled="privileges.indexOf('Add') == -1" ng-click="addMode()" class="btn btn-default btn-sm">
-                        <i class="fa fa-plus"></i> Add </a>
+                        <a ng-disabled="privileges.indexOf('Add') == -1" ng-click="addMode()" class="btn btn-default btn-sm">
+                            <i class="fa fa-plus"></i> Add </a>
                     </div>
                     <div class="tools">
                     </div>
-                  </div>
+                </div>
                 <div class="portlet-body">
+                    <div class="modal fade in" id="confModal" tabindex="-1" role="basic" aria-hidden="true" style="display:none;padding-right:15px;">
+                        <div class="modal-dialog">
+                            <div class="modal-content rulemodel">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                                    <h4 class="modal-title" style="overflow: hidden;white-space:nowrap;max-width:230px;margin-bottom:-4px;
+                                    text-overflow:ellipsis;">{{obj.name}}</h4>
+                                </div>
+                                <div class="modal-body">{{msg}}
+
+                                    <span style="text-transform: capitalize">Report</span> ?</div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn green" ng-click="submitOk(msg)">Ok</button>
+                                </div>
+                            </div>
+                            <!--/.modal-content -->
+                        </div>
+                        <!--/.modal-dialog -->
+                    </div>
+
+                    <div id="attrFilter" class="modal fade  in" tabindex="-1" role="basic" aria-hidden="true" style="display:none;padding-right:15px;">
+                        <div class="modal-dialog" style="width:40%;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                                    <!-- <h4 class="modal-title">Filter</h4> -->
+                                    <h4 class="modal-title">Run Params</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="slimScrollDiv" style="margin-top:10px;">
+                                        <div class="scroller" data-always-visible="1" data-rail-visible1="1"
+                                            data-initialized="1" style="overflow-y: scroll;max-height: 300px;">
+                                            <form class="form-horizontal" novalidate="novalidate" name="myformFilter">
+
+                                                <div class="form-body centercontent" ng-show="filterAttribureIdValues.length == 0">
+                                                    <div class="spinner">
+                                                        <div class="bounce1"></div>
+                                                        <div class="bounce2"></div>
+                                                        <div class="bounce3"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="" style="margin-top:15px;">
+                                                    <div class="form-group" ng-repeat="data in filterAttribureIdValues">
+                                                        <label class="col-md-4 control-label" title="{{data.dname}}">{{data.attrName}}</label>
+                                                        <div class="col-md-6">
+                                                            <select ng-disabled="inprogressdata" title="{{dname}}"
+                                                                class="form-control" select2 ng-model="selectedAttributeValue[$index]"
+                                                                ng-change="onChange()" ng-options="c as c.value for c in data.values  track by c.value">
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" data-dismiss="modal" class="btn dark btn-outline" ng-click="CancleFitler()">Close</button>
+                                    <button type="button" class="btn green" ng-click="applyFilter()">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-md-6 col-sm-6">
                             <div class="dataTables_length" id="sample_1_length">
@@ -50,8 +119,8 @@
                         <div class="col-md-6 col-sm-6">
                             <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
                                 <label>Search:</label>
-                                <input type="search" class="form-control input-sm input-small   input-inline" ng-change="refreshData(searchtext)" ng-model="searchtext"
-                                    aria-controls="datastoredatatable">
+                                <input type="search" class="form-control input-sm input-small   input-inline" ng-change="refreshData(searchtext)"
+                                    ng-model="searchtext" aria-controls="datastoredatatable">
                             </div>
                         </div>
                     </div>
@@ -65,25 +134,6 @@
         </div>
     </div>
 
-
-    <div class="modal fade in" id="confModal" tabindex="-1" role="basic" aria-hidden="true" style="display:none;padding-right:15px;">
-        <div class="modal-dialog">
-            <div class="modal-content rulemodel">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                    <h4 class="modal-title">Confirm</h4>
-                </div>
-                <div class="modal-body">{{msg}}
-                    <span style="text-transform: capitalize">Report</span> ?</div>
-                <div class="modal-footer">
-                    <button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn green" ng-click="submitOk(msg)">Ok</button>
-                </div>
-            </div>
-            <!--/.modal-content -->
-        </div>
-        <!--/.modal-dialog -->
-    </div>
     <br>
     <br>
     <br>

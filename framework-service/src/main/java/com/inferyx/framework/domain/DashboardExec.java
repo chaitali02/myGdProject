@@ -19,7 +19,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
  *
  */
 @Document(collection = "dashboardexec")
-public class DashboardExec extends BaseExec {
+public class DashboardExec extends BaseRuleExec {
 	private List<MetaIdentifierHolder> vizExecInfo;
 
 	/**

@@ -63,27 +63,27 @@
             <i class="fa fa-gift"></i>{{isShowDatastore == true ?'Data Store':isShowCompareMetaData ==true?'Compare Metadata':datapoddata.name}}
           </div>
           <div class="tools">
-            <a href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top" tooltip ng-hide="isAdd" ng-class="(showFrom==true)? 'currentpage':'notcurrentpage'"
+            <a href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top" tooltip ng-hide="isAdd" ng-class="(showFrom==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
               style="height:16px;font-size:16px;" data-ng-click="showHome(datapoddata.uuid,datapoddata.version,mode)">
               <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
-            <a title="Edit" ng-class="(isEdit==true || isPrivlage || datapoddata.locked == 'Y')? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
+            <a title="Edit" ng-class="(isEdit==true || isPrivlage || datapoddata.locked == 'Y' ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
               data-placement="top" tooltip ng-click="enableEdit(datapoddata.uuid,datapoddata.version)" ng-hide="isAdd" style="height:16px;">
               <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
-            <a title="Meta Compare" data-toggle="tooltip" data-placement="top" tooltip ng-class="isShowCompareMetaData==true? 'currentpage':'notcurrentpage'"
+            <a title="Meta Compare" data-toggle="tooltip" data-placement="top" tooltip ng-class="(isShowCompareMetaData==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
               ng-hide="isAdd" data-ng-click="showCompareMetaData(datapoddata)" style="height:16px;">
               <i class="fa fa-clone" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
-            <a title="Sample Records" data-toggle="tooltip" data-placement="top" tooltip ng-class="isShowSimpleData==true? 'currentpage':'notcurrentpage'"
+            <a title="Sample Records" data-toggle="tooltip" data-placement="top" tooltip ng-class="(isShowSimpleData==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
               ng-hide="isAdd" data-ng-click="isShowSimpleData ==false?showSampleTable(datapoddata):''" style="height:16px;">
               <i class="fa fa-table" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
-            <a title="Data Store" data-toggle="tooltip" data-placement="top" tooltip ng-class="isShowDatastore==true? 'currentpage':'notcurrentpage'"
+            <a title="Data Store" data-toggle="tooltip" data-placement="top" tooltip ng-class="(isShowDatastore==true||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
               ng-hide="isAdd" data-ng-click="showDatastrores(datapoddata)" style="height:16px;">
               <i class="fa fa-database" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
-            <a ng-click="downloadFile(datapoddata)" tooltip-placement="top" uib-tooltip="Download" ng-hide="isAdd" ng-class="isDownloadDatapod==true? 'currentpage':'notcurrentpage'"
+            <a ng-click="downloadFile(datapoddata)" tooltip-placement="top" uib-tooltip="Download" ng-hide="isAdd" ng-class="(isDownloadDatapod==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
               ng-disabled="isDownloadDatapod">
               <i class="fa fa-download" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
@@ -97,7 +97,7 @@
               <span class="glyphicon glyphicon-file" style="color:white;"></span>
             </a> -->
 
-            <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="showGraphDiv? 'currentpage':'notcurrentpage'"
+            <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="(showGraphDiv ||isEditInprogess ==true || isEditVeiwError ==true) ? 'currentpage':'notcurrentpage'"
               data-ng-click="showGraph(datapoddata.uuid,datapoddata.version)" style="height:14px;">
               <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
             </a>
@@ -202,6 +202,12 @@
                     ng-change="pageChanged()" style="float:right;overflow:hidden;z-index:1;" max-size="pagination.maxSize"
                     class="pagination-md" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
                     last-text="&raquo;"></ul>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6"></div>
+                <div class="col-md-6" >
+                  <div class="grey"style="float:right;font-style: italic;">Note : Showing max {{sample.rows}} rows</div>
                 </div>
               </div>
             </div>
@@ -350,7 +356,7 @@
                     </div>
                   </div>
                 </div>
-
+                 
                 <div class="form-group">
                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Cache</label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
@@ -360,7 +366,17 @@
                     </div>
                   </div>
                 </div>
-
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Public</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="btn-group" ng-init="datapoddata.publicFlag='N'">
+                      <label class="btn btn-default" ng-model="datapoddata.publicFlag" uib-btn-radio="'Y'"
+                        ng-disabled="{{mode}}" uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-model="datapoddata.publicFlag" uib-btn-radio="'N'"
+                        ng-disabled="{{mode}}" uncheckable>No</label>
+                    </div>
+                  </div>
+                </div>
                 <div class="form-group" style="padding-top: 10px;">
                   <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                     <a ui-sref="metadata({type:'datapod'})" class="btn btn-primary">Cancel</a>
@@ -578,6 +594,12 @@
                     ng-change="pageChanged()" style="float:right;overflow:hidden;z-index:1;" max-size="pagination.maxSize"
                     class="pagination-md" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
                     last-text="&raquo;"></ul>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6"></div>
+                <div class="col-md-6" >
+                  <div class="grey"style="float:right;font-style: italic;">Note : Showing max {{sample.rows}} rows</div>
                 </div>
               </div>
             </div>

@@ -76,6 +76,7 @@ import com.inferyx.framework.domain.Filter;
 import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.GraphExec;
+import com.inferyx.framework.domain.GraphMetaIdentifierHolder;
 import com.inferyx.framework.domain.Group;
 import com.inferyx.framework.domain.IngestExec;
 import com.inferyx.framework.domain.IngestGroupExec;
@@ -239,6 +240,10 @@ public class RegisterService {
 	private ApplicationViewServiceImpl applicationViewServiceImpl;
 	@Autowired
 	private ImpalaRegister impalaRegister;
+	@Autowired
+	private ReportServiceImpl reportServiceImpl;
+	@Autowired
+	private DashboardServiceImpl dashboardServiceImpl;
 	
 	List<String> createDet = new ArrayList<String>();
 	List<String> datapodResult = new ArrayList<String>();
@@ -1735,6 +1740,9 @@ public class RegisterService {
 				break;
 			case "dashboardview":
 				result = ow.writeValueAsString(dashboardViewServiceImpl.findOneByUuidAndVersion(uuid, version));
+				break;
+			case "dashboardexecview":
+				result = ow.writeValueAsString(dashboardViewServiceImpl.findOneExecByUuidAndVersion(uuid, version));
 				break;
 			/*case "application":
 				Application application = applicationServiceImpl.findOneByUuidAndVersion(uuid, version);
@@ -4057,6 +4065,12 @@ public class RegisterService {
 			case "ingestgroupexec":
 				result = ow.writeValueAsString(ingestGroupServiceImpl.getMetaIdByExecId(execUuid, execVersion));
 				break;
+			case "reportexec":
+				result = ow.writeValueAsString(reportServiceImpl.getMetaIdByExecId(execUuid, execVersion, type));
+				break;
+			case "dashboardexec":
+				result = ow.writeValueAsString(dashboardServiceImpl.getMetaIdByExecId(execUuid, execVersion, type));
+				break;
 			}
 		}
 		return result;
@@ -4543,6 +4557,12 @@ public class RegisterService {
 			case "loadexec":
 				result = ow.writeValueAsString(loadExecServiceImpl.getNumRowsbyExec(execUuid, execVersion));
 				break;
+			case "reportexec":
+				result = ow.writeValueAsString(reportServiceImpl.getNumRowsbyExec(execUuid, execVersion, type));
+				break;
+			case "dashboardexec":
+				result = ow.writeValueAsString(dashboardServiceImpl.getNumRowsbyExec(execUuid, execVersion, type));
+				break;
 			}
 		}
 		return result;
@@ -4586,6 +4606,12 @@ public class RegisterService {
 		
 		return ruleExecObjList;
 	}
+
+	public boolean isRefreshed(GraphMetaIdentifierHolder graphMetaIdentifier) {
+		return mongoGraphServiceImpl.isRefreshed(graphMetaIdentifier);
+	}
+	
+	
 
 	
 }

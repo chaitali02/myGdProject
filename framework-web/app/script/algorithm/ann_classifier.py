@@ -10,25 +10,29 @@
 ###############################################################################
 
 # Module sys has to be imported:
-import sys  
-import pandas as pd
-import tensorflow as tf
-import numpy as np, numpy
-from sklearn import preprocessing
-import os
-import json, codecs
+import sys, os, json, codecs, tensorflow as tf, pandas as pd, numpy as np, eli5, keras, sklearn
+
 from pyspark.sql.dataframe import DataFrame
 from pyspark.sql.catalog import Function
+from pyspark.sql.window import Window
+from pyspark.sql.functions import row_number    
+from pyspark.sql import SparkSession, SQLContext, Row
+from pyspark.sql.types import StructType, StructField, DoubleType, IntegerType, StringType, FloatType
+
+from keras.wrappers.scikit_learn import KerasClassifier, KerasRegressor
+from keras.models import model_from_json, Sequential
+from keras.layers import Dense
+    
+from sklearn.preprocessing import LabelEncoder, StandardScaler
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score, roc_auc_score, f1_score
+
+from eli5.sklearn import PermutationImportance
+
+from pandas.core.frame import DataFrame as PD_DataFrame
+
 os.environ["PYSPARK_PYTHON"]=sys.argv[1]
 os.environ["PYSPARK_DRIVER_PYTHON"]="python3"
-from pyspark.sql import SparkSession
-from keras.wrappers.scikit_learn import KerasClassifier, KerasRegressor
-import eli5
-from eli5.sklearn import PermutationImportance
-from keras.models import model_from_json
-from sklearn.model_selection import train_test_split
-from pyspark.sql import SQLContext
-
 
 print("Inside python script ")
 
@@ -92,6 +96,9 @@ outputResultPath=""
 numHiddenLayers=0
 encodingDetails=None
 imputationDetails=None
+modelSchema=None
+sourceSchema=None
+inputColList=None
 
 trainSetDetails=None
 saveTrainingSet=None
@@ -124,7 +131,8 @@ sparkSession = SparkSession.builder.master('local').appName('spark_ann').getOrCr
 
 # Iteration over all arguments:
 plist = ["nEpochs", "seed", "iterations", "learningRate", "optimizationAlgo", "weightInit", "updater", "momentum", "numInput", "numOutputs", "numHidden", "numLayers", "layerNames", "activation", "lossFunction", "sourceFilePath", "modelFilePath", "targetPath", "sourceDsType", "tableName", "operation", "url", "hostName", "dbName", "userName", "password", "query", "special_space_replacer", "port", "otherParams", "sourceHostName", "sourceDbName", "sourcePort", "sourceUserName", "sourcePassword", "targetHostName", "targetDbName" , "targetPort", "targetUserName", "targetPassword", "targetDsType", "targetTableName", "targetDriver", "includeFeatures", "rowIdentifier","sourceAttrDetails", "featureAttrDetails", "sourceQuery", "inputSourceFileName", "trainPercent", "testPercent",
-    "outputResultPath", "rowIdentifier", "numHiddenLayers", "encodingDetails", "imputationDetails", "saveTrainingSet", "trainSetDetails", "testSetDetails"]
+    "outputResultPath", "rowIdentifier", "numHiddenLayers", "encodingDetails", "imputationDetails", "saveTrainingSet", "trainSetDetails", "testSetDetails",
+    "modelSchema", "sourceSchema", "inputColList"]
 
 i = 0
 for eachArg in sys.argv:
@@ -296,6 +304,15 @@ if otherParams != None:
     
         if value == "numHiddenLayers":
             numHiddenLayers = int(otherParams[value])
+    
+        if value == "modelSchema":
+            modelSchema = otherParams[value]
+    
+        if value == "sourceSchema":
+            sourceSchema = otherParams[value]
+    
+        if value == "inputColList":
+            inputColList = otherParams[value]
 
 if sourceDsDetails != None:
     for value in sourceDsDetails:
@@ -398,16 +415,32 @@ print()
 print()
 
 # Importing the dataset
-dataset = None
+# def getData(filePath, dsType, hostName, dbName, port, userName, password, db_driver, db_url, sqlQuery):
+#     print("inside method getData()")
+#     print("filePath : dsType : hostName : dbName : port : userName : password <<<<< >>>>> ", filePath, " : ", dsType, " : ", hostName, " : ", dbName, " : ", port, " : ", userName, " : ", password)
+#     sqlContext = SQLContext(sparkSession.sparkContext)
+#     if dsType == "file":
+# #         dataset = pd.read_csv(filePath)
+# #         dataset = pd.read_parquet(filePath)
+#         spark_df = sqlContext.read.parquet(filePath)
+#         return spark_df.toPandas()         
+#     
+#     elif dsType == "hive":
+#         sparkSession.sql("SET hive.exec.dynamic.partition=true")
+#         sparkSession.sql("SET hive.exec.dynamic.partition.mode=nonstrict")
+#         return sparkSession.sql(sqlQuery)         
+#     
+#     else:
+#         return sqlContext.read.format("jdbc").option(driver = db_driver).option(url = db_url).option(user = userName).option(password = password).option(dbtable =  "(", sql ,") as mysql_table").load()
+            
 def getData(filePath, dsType, hostName, dbName, port, userName, password, sqlQuery):
     print("inside method getData()")
     print("filePath : dsType : hostName : dbName : port : userName : password <<<<< >>>>> ", filePath, " : ", dsType, " : ", hostName, " : ", dbName, " : ", port, " : ", userName, " : ", password)
     if dsType == "file":
 #         dataset = pd.read_csv(filePath)
 #         dataset = pd.read_parquet(filePath)
-#         sparkSession = getSparkSession()
-        sc = sparkSession.sparkContext
-        sqlContext = SQLContext(sc)
+#         sc = sparkSession.sparkContext
+        sqlContext = SQLContext(sparkSession.sparkContext)
         spark_df = sqlContext.read.parquet(filePath)
         dataset = spark_df.toPandas()
         return dataset
@@ -487,11 +520,7 @@ def getSparkSession():
     return SparkSession.builder.master('local').appName('spark_ann').getOrCreate()
         
 def addIndexToSparkDf(spark_df: DataFrame):
-    from pyspark.sql.window import Window
-    from pyspark.sql.functions import row_number
-#     
-    w = Window().orderBy(spark_df.columns[len(spark_df.columns)-1])
-    
+    w = Window().orderBy(spark_df.columns[len(spark_df.columns)-1])    
     indexed_spark_df =  spark_df.withColumn("rowNum", row_number().over(w))  
     return indexed_spark_df
 
@@ -500,19 +529,14 @@ def joinSparkDfByIndex(dfLHS, dfRHS):
     return joined_df
 
 def createSparkDfByPandasDfAndSparkSchema(pd_df, schema):  
-#     sparkSession = getSparkSession()
     spark_df = sparkSession.createDataFrame(pd_df, schema)
     return spark_df
 
-def getSparkSchemaByDtypes(pd_dtypes):
-    from pyspark.sql.types import StructType
-    from pyspark.sql.types import StructField
-    
+def getSparkSchemaByDtypes(pd_dtypes):    
     fields = [StructField(field_name, getSparkDataType(pd_dtypes.get_value(field_name).name), True) for field_name in pd_dtypes.keys()]
     return StructType(fields)
 
 def getSparkDataType(other_datatype):
-    from pyspark.sql.types import DoubleType, IntegerType, StringType, FloatType
     if(other_datatype.__contains__("int")):
         return IntegerType()
     elif(other_datatype.__contains__("double")):
@@ -522,6 +546,8 @@ def getSparkDataType(other_datatype):
     elif(other_datatype.__contains__("string")):
         return StringType()
     elif(other_datatype.__contains__("object")):
+        return StringType()
+    elif(other_datatype.__contains__("vector")):
         return StringType()
     
 
@@ -556,15 +582,10 @@ def saveSparkDf(spark_df, datasetType, hostName, dbName, hostPort, dbUserName, d
         
     
     
-def generatePredictStatus(spark_df: DataFrame):
-    from pyspark.sql import Row
-    from pyspark.sql.types import StructType, StructField, StringType
-    
+def generatePredictStatus(spark_df: DataFrame):    
     schema = StructType([StructField("prediction_status", StringType(), True)])
-#     sparkSession = getSparkSession()
     mapped_row = spark_df.rdd.map(lambda x: Row(prepareStatus(x[1], x[2])))
-    prediction_status_df = sparkSession.createDataFrame(mapped_row, schema)
-    
+    prediction_status_df = sparkSession.createDataFrame(mapped_row, schema)    
     return prediction_status_df
 
 def prepareStatus(label_val, prediction_val):
@@ -581,11 +602,7 @@ def prepareStatus(label_val, prediction_val):
     else:
         return "false"
     
-def model():
-    import keras
-    from keras.models import Sequential
-    from keras.layers import Dense
-    
+def model():    
     print("preparing model...")
     
     # Initialising the ANN
@@ -632,10 +649,43 @@ def imputeData(imputationDataset, imputationDetailsList):
             
     return  imputationDataset       
     
+    
+    
 #train operation
 def train():
     # Encoding categorical data
     dataset = getData(sourceFilePath, sourceDsType, sourceHostName, sourceDbName, sourcePort, sourceUserName, sourcePassword, query)
+    print("inputColList: ", inputColList)
+#     print("model schema: ", modelSchema)    
+#     for val in modelSchema:
+#         coldataType = modelSchema[val]
+#         print("column:", val, "data type: ", coldataType)
+#         if coldataType == "int" or coldataType == "integer":
+#             dataset[val] = dataset[val].astype(dtype='int', copy=True, errors='ignore')  
+#             
+#         elif  coldataType == "float" or coldataType == "double":
+#             tempDataset = dataset[val].astype(dtype='float64', copy=True, errors='ignore')  
+#             
+#         elif  coldataType == "str" or coldataType == "string":
+#             dataset[val] = dataset[val].to_string()  
+#             
+#         elif  coldataType == "vector":
+#             dataset[val] = pd.Series(dataset[val], index=dataset.index)   
+#         
+#         print("dataset[",val,"].dtypes", dataset[val].dtypes)
+#         print("")
+#     
+# #     catenc = pd.factorize(dataset["label"])
+# #     dataset = dataset.drop("label", axis = 1)
+# #     dataset["label"] = catenc[0]
+#     
+#     df = pd.DataFrame(np.random.randn(len(dataset), 1), columns=['label'], index=range(len(dataset)))
+#     dataset = dataset.drop("label", axis = 1) 
+#     dataset["label"] = df["label"]
+#     
+#     print("dataset.dtypes")
+#     print(dataset.dtypes)
+#     print("")
     
     print("trainSetDetails: ", trainSetDetails)
     if trainSetDetails != None:
@@ -675,7 +725,8 @@ def train():
     print("total_size: ", len(dataset))    
     output_result["total_size"]=len(dataset)
     
-    from sklearn.preprocessing import LabelEncoder
+    dataset = dataset[inputColList]
+        
     labelencoder_X_1 = LabelEncoder()
     dataset.iloc[0] = labelencoder_X_1.fit_transform(dataset.iloc[0])
     print('label encoding done')
@@ -688,8 +739,11 @@ def train():
     # Splitting the dataset into the Training set and Test set
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = testPercent, random_state = 0)
     
+    pd_X_test = None
+    if includeFeatures == "Y":
+        pd_X_test = pd.DataFrame(X_test)
+    
     # Feature Scaling
-    from sklearn.preprocessing import StandardScaler
     sc = StandardScaler()
     X_train = sc.fit_transform(X_train)
     X_test = sc.transform(X_test)
@@ -699,14 +753,7 @@ def train():
     
     output_result["train_size"]=len(X_train)
     output_result["test_size"]=len(X_test)
-        
-    print("Importing the Keras libraries and packages")
-    # Importing the Keras libraries and packages
-#     import keras
-#     from keras.models import Sequential
-#     from keras.layers import Dense
-#     from keras.models import model_from_json
-#     
+  
 #     # Initialising the ANN
 #     classifier = Sequential()
 #     
@@ -763,7 +810,6 @@ def train():
     
     #creating prediction dataframe
     pred_pd_df = pd.DataFrame(y_pred)
-    from pyspark.sql.types import StructType, StructField, DoubleType
     spark_pred_df = createSparkDfByPandasDfAndSparkSchema(pred_pd_df, StructType([StructField("prediction", DoubleType(), True)]))
     spark_pred_df = addIndexToSparkDf(spark_pred_df)
     
@@ -786,7 +832,7 @@ def train():
     if includeFeatures == "Y":
         feature_schema = getSparkSchemaByDtypes(dataset.iloc[:, 1:].dtypes)
     
-        pd_X_test = pd.DataFrame(X_test)
+#         pd_X_test = pd.DataFrame(X_test)
         spark_X_test_df = createSparkDfByPandasDfAndSparkSchema(pd_X_test, feature_schema)
         spark_X_test_df = addIndexToSparkDf(spark_X_test_df)
         joined_df = joinSparkDfByIndex(spark_X_test_df, test_result_spark_df)
@@ -829,7 +875,6 @@ def train():
     print(y_pred)
     
     # Making the Confusion Matrix
-    from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score, roc_auc_score, f1_score
     cm = confusion_matrix(y_test, y_pred)
     accuracy = accuracy_score(y_test, y_pred)
     precision = precision_score(y_test, y_pred)
@@ -861,7 +906,6 @@ def train():
 #prediction operation
 def predict():
     # Importing the dataset
-    #    dataset = pd.read_csv(sourceFilePath)
     dataset2 = getData(sourceFilePath, sourceDsType, sourceHostName, sourceDbName, sourcePort, sourceUserName, sourcePassword, query)
     
     if imputationDetails != None:
@@ -877,10 +921,7 @@ def predict():
     
     print("predict dataset size: ", len(dataset2))
     
-    # Feature Scaling
-    from sklearn.preprocessing import StandardScaler
-    from keras.models import model_from_json
-    
+    # Feature Scaling    
     sc = StandardScaler()
     feature_dataset = sc.fit_transform(dataset2)
     
@@ -903,11 +944,7 @@ def predict():
     #converting predicted dataframe to panda dataframe
     pred_pd_df = pd.DataFrame(result_pred)
     
-    #saving converted dataframe
-    from pyspark.sql.types import DoubleType
-    from pyspark.sql.types import StructType
-    from pyspark.sql.types import StructField
-   
+    #saving converted dataframe   
     print("prediction result:")  
     spark_pred_df = createSparkDfByPandasDfAndSparkSchema(pred_pd_df, StructType([StructField("prediction", DoubleType(), True)]))  
     spark_pred_df = addIndexToSparkDf(spark_pred_df)
@@ -962,5 +999,7 @@ elif operation == "predict":
         print("Successfull operation: "+"prediction")
     else:
         print("Unsuccessfull operation: "+"prediction")
+
+
 
 

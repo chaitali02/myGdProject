@@ -66,13 +66,24 @@ AdminModule.controller('AdminRoleController', function (CommonService, $state, $
 		$scope.privileges = privilegeSvc.privileges['role'] || [];
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
+	$scope.checkIsInrogess=function(){
+		if($scope.isEditInprogess || $scope.isEditVeiwError){
+		return false;
+		}
+    }
 	/*Start showPage*/
 	$scope.showPage = function () {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showFrom = true;
 		$scope.showGraphDiv = false
 	}/*End showPage*/
 
 	$scope.showHome=function(uuid, version,mode){
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('adminListrole', {
 			id: uuid,
@@ -85,6 +96,9 @@ AdminModule.controller('AdminRoleController', function (CommonService, $state, $
 		if($scope.isPrivlage || $scope.roledata.locked =="Y"){
 			return false;
 		}
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('adminListrole', {
 			id: uuid,
@@ -93,6 +107,9 @@ AdminModule.controller('AdminRoleController', function (CommonService, $state, $
 		});
 	}
 	$scope.showView = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		if (!$scope.isEdit) {
 			$scope.showPage()
 			$state.go('adminListrole', {
@@ -134,6 +151,9 @@ AdminModule.controller('AdminRoleController', function (CommonService, $state, $
 	}
 
 	$scope.showGraph = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showFrom = false;
 		$scope.showGraphDiv = true;
 	}/*End showgraph*/
@@ -277,7 +297,9 @@ AdminModule.controller('AdminRoleController', function (CommonService, $state, $
 		roleJson.desc = $scope.roledata.desc;
 		roleJson.active = $scope.roledata.active;
 		roleJson.locked = $scope.roledata.locked;
-		roleJson.published = $scope.roledata.published
+		roleJson.published = $scope.roledata.published;
+		roleJson.publicFlag = $scope.roledata.publicFlag;
+
 		var tagArray = [];
 		if ($scope.tags != null) {
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {

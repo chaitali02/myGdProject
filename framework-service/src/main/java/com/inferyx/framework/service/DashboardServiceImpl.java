@@ -10,31 +10,31 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
-
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.apache.spark.api.java.JavaSparkContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.AggregationResults;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.dao.IDashboardDao;
-import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.Dashboard;
-import com.inferyx.framework.domain.Datapod;
+import com.inferyx.framework.domain.DashboardExec;
+import com.inferyx.framework.domain.DataStore;
+import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.ExecStatsHolder;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.User;
+import com.inferyx.framework.domain.Section;
+import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.domain.VizExec;
+import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.register.GraphRegister;
 
 @Service
@@ -64,6 +64,10 @@ public class DashboardServiceImpl {
     ApplicationServiceImpl applicationServiceImpl; 
     @Autowired
     RelationServiceImpl relationServiceImpl;
+    @Autowired
+    private CommonServiceImpl<?> commonServiceImpl;
+    @Autowired
+    private VizpodServiceImpl vizpodServiceImpl;
     
 	/********************** UNUSED **********************/
     /*public Dashboard findLatest() {
@@ -83,6 +87,134 @@ public class DashboardServiceImpl {
 		Dashboard dshboard=iDashboardDao.save(dashboard);
 		registerGraph.updateGraph((Object) dshboard, MetaType.dashboard);
 		return dshboard;
+	}
+
+	/**
+	 * @param dashboardUuid
+	 * @param dashboardVersion
+	 * @param dashboardExec
+	 * @param execParams
+	 * @param runMode
+	 * @return DashboardExec
+	 * @throws Exception 
+	 */
+	public DashboardExec create(String dashboardUuid, String dashboardVersion, DashboardExec dashboardExec,
+			ExecParams execParams, RunMode runMode) throws Exception {
+		if(dashboardExec == null) {
+			dashboardExec = new DashboardExec();
+			dashboardExec.setBaseEntity();
+		}
+		
+		Dashboard dashboard = (Dashboard) commonServiceImpl.getOneByUuidAndVersion(dashboardUuid, dashboardVersion, MetaType.dashboard.toString(), "N");
+		dashboardExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.dashboard, dashboardUuid, dashboard.getVersion())));
+		dashboardExec.setExecParams(execParams);
+		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
+		dashboardExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
+		
+		List<MetaIdentifierHolder> vizExecInfo = new ArrayList<>();
+		for(Section section : dashboard.getSectionInfo()) {
+			try {
+				MetaIdentifier vizInfoMI = section.getVizpodInfo().getRef();
+				VizExec vizExec = vizpodServiceImpl.create(vizInfoMI.getUuid(), vizInfoMI.getVersion(), null, execParams, runMode);
+				vizExecInfo.add(new MetaIdentifierHolder(new MetaIdentifier(MetaType.vizExec, vizExec.getUuid(), vizExec.getVersion())));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
+		dashboardExec.setVizExecInfo(vizExecInfo);
+		dashboardExec.setName(dashboard.getName());
+		dashboardExec = (DashboardExec) commonServiceImpl.setMetaStatus(dashboardExec, MetaType.dashboardExec, Status.Stage.NotStarted);
+	
+		return dashboardExec;
+	}
+
+	/**
+	 * @param dashboardUuid
+	 * @param dashboardVersion
+	 * @param dashboardExec
+	 * @param execParams
+	 * @param runMode
+	 * @return DashboardExec
+	 * @throws Exception 
+	 */
+	public DashboardExec execute(String dashboardUuid, String dashboardVersion, DashboardExec dashboardExec,
+			ExecParams execParams, RunMode runMode) throws Exception {
+		try {
+			dashboardExec = (DashboardExec) commonServiceImpl.setMetaStatus(dashboardExec, MetaType.dashboardExec, Status.Stage.InProgress);
+			
+			Dashboard dashboard = (Dashboard) commonServiceImpl.getOneByUuidAndVersion(dashboardUuid, dashboardVersion, MetaType.dashboard.toString(), "N");
+			
+			for(MetaIdentifierHolder vixExecInfo : dashboardExec.getVizExecInfo()) {
+				try {
+					MetaIdentifier vizExecMI = vixExecInfo.getRef();
+					VizExec vizExec = (VizExec) commonServiceImpl.getOneByUuidAndVersion(vizExecMI.getUuid(), vizExecMI.getVersion(), vizExecMI.getType().toString(), "N");
+					MetaIdentifier vizMI = vizExec.getDependsOn().getRef();
+					vizExec = vizpodServiceImpl.execute(vizMI.getUuid(), vizMI.getVersion(), execParams, vizExec, dashboard.getSaveOnRefresh(), runMode);	
+				} catch (Exception e) {
+					logger.info("vizExec execution failed <<<< :: >>>> execUuid: "+vixExecInfo.getRef().getUuid()+" :::: execVersion: "+vixExecInfo.getRef().getVersion());
+					e.printStackTrace();
+				}
+			}
+			
+			dashboardExec = (DashboardExec) commonServiceImpl.setMetaStatus(dashboardExec, MetaType.dashboardExec, Status.Stage.Completed);
+		} catch (Exception e) {
+			e.printStackTrace();
+			dashboardExec = (DashboardExec) commonServiceImpl.setMetaStatus(dashboardExec, MetaType.dashboardExec, Status.Stage.Failed);
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder(new MetaIdentifier(MetaType.dashboardExec, dashboardExec.getUuid(), dashboardExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Dashboard execution failed.", dependsOn);
+			throw new RuntimeException((message != null) ? message : "Dashboard execution failed.");	
+		}
+		return dashboardExec;
+	}
+
+	/**
+	 * @param execUuid
+	 * @param execVersion
+	 * @return ExecStatsHolder
+	 * @throws JsonProcessingException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
+	 */
+	public ExecStatsHolder getNumRowsbyExec(String execUuid, String execVersion, String type) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+		Object exec = commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, type);
+		MetaIdentifierHolder resultHolder = (MetaIdentifierHolder) exec.getClass().getMethod("getResult").invoke(exec);
+		com.inferyx.framework.domain.DataStore dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(resultHolder.getRef().getUuid(), resultHolder.getRef().getVersion(), MetaType.datastore.toString(), "N");
+		MetaIdentifier mi = new MetaIdentifier(MetaType.datastore, resultHolder.getRef().getUuid(), resultHolder.getRef().getVersion());
+		ExecStatsHolder execHolder = new ExecStatsHolder();
+		execHolder.setRef(mi);
+		execHolder.setNumRows(dataStore.getNumRows());
+		execHolder.setPersistMode(dataStore.getPersistMode());
+		execHolder.setRunMode(dataStore.getRunMode());
+		return execHolder;
+	}
+
+	/**
+	 * @param execUuid
+	 * @param execVersion
+	 * @param type
+	 * @return MetaIdentifier
+	 * @throws JsonProcessingException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
+	 */
+	public MetaIdentifier getMetaIdByExecId(String execUuid, String execVersion, String type) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+		Object exec = commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, type);
+		MetaIdentifierHolder miHolder = (MetaIdentifierHolder) exec.getClass().getMethod("getDependsOn").invoke(exec);
+		return miHolder.getRef();
 	}
 
 	/********************** UNUSED **********************/

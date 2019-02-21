@@ -419,6 +419,57 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       childMenu:[],
       allowInChildMenu : true,
     },
+    'dashboard':{
+      name : 'dashboard',
+      caption : 'Dashboard',
+      execType:'',
+      metaType:'dashboard',
+      iconPath : 'assets/layouts/layout/img/dashboard.svg',
+      iconPathInactive:'assets/layouts/layout/img/dashboardinactive.svg',
+      parentIconCaption:'Data Visualization',
+      childIconCaption:'Dashboard',
+      allowInMenu : false,
+      listState : 'dashboard',
+      detailState:'showdashboard',
+      childMenu:['dashboard','report'],
+      allowInChildMenu : false,
+    },
+    'ingest':{
+      name : 'ingest',
+      caption:'Rule',
+      execType:'ingestExec',
+      metaType:'ingest',
+      color : '#fff8dc',
+      iconPath : 'assets/layouts/layout/img/ingest.svg',
+      parentIconCaption:'Data Ingestion',
+      childIconCaption:'Rule',
+      allowInMenu : false,
+      listState : 'ingestrulelist2',
+      joblistState : '',
+      state:'ingestruledetail2',
+      detailState :'ingestruledetail2',
+      childMenu:['ingest2','ingestgroup'],
+      allowInChildMenu : false,
+    },
+    'ingest2':{
+      name : 'ingest',
+      caption:'Rule',
+      color : '#fff8dc',
+      icon : 'ingest.svg',
+      parentIconCaption:' Data Ingestion',
+      childIconCaption:'Rule',
+      execType:'ingestExec',
+      metaType:'ingest',
+      iconPath : 'assets/layouts/layout/img/ingest.svg',
+      iconPathInactive:'assets/layouts/layout/img/ingestinactive.svg',
+      allowInMenu : true,
+      listState : 'ingestrulelist2',
+      joblistState : '',
+      state: 'ingestruledetail2',
+      detailState: 'ingestruledetail2',
+      childMenu:['ingest2','ingestgroup'],
+      allowInChildMenu :true,
+    },
     'profile':{
       name : 'profile',
       caption:'Profile',
@@ -968,19 +1019,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       childMenu:[],
       allowInChildMenu : false,
     },
-    'dashboard':{
-      name : 'dashboard',
-      caption : 'Dashboard',
-      execType:'',
-      metaType:'dashboard',
-      color : '#75E108',
-      parentIconCaption:'',
-      allowInMenu : false,
-      listState : 'dashboard',
-      detailState:'showdashboard',
-      childMenu:[],
-      allowInChildMenu : false,
-    },
+   
     'vizpod':{
       name : 'vizpod',
       caption : 'Vizpod',
@@ -1942,13 +1981,16 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       execType:'reportExec',
       metaType:'report',
       color : '#fff8dc',
-      parentIconCaption:'',
+      iconPath : 'assets/layouts/layout/img/report.svg',
+      iconPathInactive:'assets/layouts/layout/img/reportinactive.svg',
+      parentIconCaption:'Data Visualization',
+      childIconCaption:'Report',
       allowInMenu : false,
       listState : 'reportlist',
       joblistState : '',
       detailState :'reportdetail',
       childMenu:[],
-      allowInChildMenu : false,
+      allowInChildMenu : true,
 
     },
     'reportexec':{
@@ -1962,6 +2004,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       listState : 'jobmonitoringlist',
       joblistState : 'jobmonitoringlist',
       detailState :'jobexecutorlistreportexec',
+      resultState:'resultxecresult',
       childMenu:[],
       allowInChildMenu : false,
     },
@@ -1995,40 +2038,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       childMenu:[],
       allowInChildMenu : false,
     },
-    'ingest':{
-      name : 'ingest',
-      caption:'Rule',
-      execType:'ingestExec',
-      metaType:'ingest',
-      color : '#fff8dc',
-      iconPath : 'assets/layouts/layout/img/ingest.svg',
-      parentIconCaption:'Data Ingestion',
-      childIconCaption:'Rule',
-      allowInMenu : true,
-      listState : 'ingestrulelist',
-      joblistState : '',
-      state:'ingestruledetail',
-      detailState :'ingestruledetail',
-      childMenu:["ingest",'ingestgroup'],
-      allowInChildMenu : true,
-    },
-    'ingest2':{
-      name : 'ingest',
-      caption:'Rule',
-      execType:'ingestExec',
-      metaType:'ingest',
-      color : '#fff8dc',
-      iconPath : 'assets/layouts/layout/img/ingest.svg',
-      parentIconCaption:'Data Ingestion',
-      childIconCaption:'Rule',
-      allowInMenu : false,
-      listState : 'ingestrulelist2',
-      joblistState : '',
-      state:'ingestruledetail2',
-      detailState :'ingestruledetail2',
-      childMenu:[],
-      allowInChildMenu : false,
-    },
+ 
     'ingestexec':{
       name : 'ingest',
       caption:'Ingest Exec',
@@ -2167,8 +2177,8 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       },
   };
 
-  var validElementTypes = ['dag','stage','dq','dqgroup','map','load','profile','profilegroup','model','rule','rulegroup','train','predict','simulate','recon','recongroup','operatortype','operator',,'ingest','ingestgroup'];
-  obj.validTaskTypes = ['dq','dqgroup','map','load','profile','profilegroup','model','rule','rulegroup','train','predict','simulate','recon','recongroup','operatortype','operator',,'ingest','ingestgroup'];
+  var validElementTypes = ['dag','stage','dq','dqgroup','map','load','profile','profilegroup','model','rule','rulegroup','train','predict','simulate','recon','recongroup','operatortype','operator',,'ingest','ingestgroup','report','dashboard'];
+  obj.validTaskTypes = ['dq','dqgroup','map','load','profile','profilegroup','model','rule','rulegroup','train','predict','simulate','recon','recongroup','operatortype','operator',,'ingest','ingestgroup','report','dashboard'];
   var defaultElement = {
     markup: '<g class="rotatable"><g class="scalable"><image class="body"/></g><image class="remove"/><g class="status"><image class="statusImg"><title class="statusTitle">Status</title></image></g><text class="label" /> <title /><g class="inPorts"/><g class="outPorts"/></g>',
     size: { width: 50, height: 50 },
@@ -2398,6 +2408,24 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
         }
       }
     }),
+    'report' : angular.merge({},defaultElement,{
+      elementType:'report',
+      attrs: {
+        '.body': {
+          elementType : 'report',
+          "xlink:href": obj.elementDefs['report'].iconPath
+        }
+      }
+    }),
+    'dashboard' : angular.merge({},defaultElement,{
+      elementType:'dashboard',
+      attrs: {
+        '.body': {
+          elementType : 'dashboard',
+          "xlink:href": obj.elementDefs['dashboard'].iconPath
+        }
+      }
+    }),
    
     'stageInactive' : angular.merge({},defaultElement,{
       elementType:'stage',
@@ -2504,6 +2532,24 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
         '.body': {
           elementType : 'recongroup',
           "xlink:href": obj.elementDefs['recongroup'].iconPathInactive
+        }
+      }
+    }),
+    'reportInactive' : angular.merge({},defaultElement,{
+      elementType:'report',
+      attrs: {
+        '.body': {
+          elementType : 'report',
+          "xlink:href": obj.elementDefs['report'].iconPathInactive
+        }
+      }
+    }),
+    'dashboardInactive' : angular.merge({},defaultElement,{
+      elementType:'dashboard',
+      attrs: {
+        '.body': {
+          elementType : 'dashboard',
+          "xlink:href": obj.elementDefs['dashboard'].iconPathInactive
         }
       }
     }),

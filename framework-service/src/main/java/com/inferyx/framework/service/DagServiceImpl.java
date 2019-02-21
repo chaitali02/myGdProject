@@ -41,6 +41,7 @@ import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DagExec;
+import com.inferyx.framework.domain.DashboardExec;
 import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataQualGroupExec;
 import com.inferyx.framework.domain.ExecParams;
@@ -64,6 +65,7 @@ import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.ProfileGroupExec;
 import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.ReconGroupExec;
+import com.inferyx.framework.domain.ReportExec;
 import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.RuleGroupExec;
 import com.inferyx.framework.domain.Simulate;
@@ -144,6 +146,10 @@ public class DagServiceImpl {
 	private IngestServiceImpl ingestServiceImpl;
 	@Autowired
 	private IngestGroupServiceImpl ingestGroupServiceImpl;
+	@Autowired
+	private ReportServiceImpl reportServiceImpl;
+	@Autowired
+	private DashboardServiceImpl dashboardServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(DagServiceImpl.class);
 	ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
@@ -951,7 +957,15 @@ public class DagServiceImpl {
 						.equals(MetaType.recongroup)) {
 					ReconGroupExec reconGroupExec = new ReconGroupExec();
 					reconGroupExec.setBaseEntity();
-				}
+				} else if (indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType()
+						.equals(MetaType.report)) {
+					ReportExec reportExec = new ReportExec();
+					reportExec.setBaseEntity();
+				}  else if (indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType()
+						.equals(MetaType.dashboard)) {
+					DashboardExec dashboardExec = new DashboardExec();
+					dashboardExec.setBaseEntity();
+				} 
 			}
 			execParams.setRefKeyList(DagExecUtil.convertRefKeyMapToList(refKeys));
 		}
@@ -1163,7 +1177,12 @@ public class DagServiceImpl {
 						} else if (ref.getType().equals(MetaType.ingestgroup)) {
 							baseExec = ingestGroupServiceImpl.create(ref.getUuid(), ref.getVersion(), execParams, datapodList, (IngestGroupExec)baseExec, dagExec);
 							baseExec = ingestGroupServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, datapodList, dagExec, RunMode.BATCH);
-						}
+						} else if (ref.getType().equals(MetaType.report)) {
+							baseExec = reportServiceImpl.create(ref.getUuid(), ref.getVersion(), execParams, (ReportExec) baseExec, RunMode.BATCH);
+							baseExec = reportServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, dagExec, runMode);
+						}  else if (ref.getType().equals(MetaType.dashboard)) {
+							baseExec = dashboardServiceImpl.create(ref.getUuid(), ref.getVersion(), (DashboardExec) baseExec, execParams, RunMode.BATCH);
+						} 
 						taskExecParams.setOtherParams((HashMap<String, String>)Helper.mergeMap(otherParams, taskExecParams.getOtherParams()));
 						// If conditions with parse goes here - END	
 						logger.info(" otherParams : " + otherParams);

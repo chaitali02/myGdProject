@@ -80,11 +80,22 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 		});
 	};
 	$scope.getLovByType();
+	$scope.checkIsInrogess=function(){
+		if($scope.isEditInprogess || $scope.isEditVeiwError){
+		return false;
+		}
+    }
 	$scope.showPage = function () {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showFrom = true;
 		$scope.showGraphDiv = false
 	}
 	$scope.showHome = function (uuid, version, mode) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('metaListmap', {
 			id: uuid,
@@ -96,6 +107,9 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 		if ($scope.isPrivlage || $scope.mapdata.locked == "Y") {
 			return false;
 		}
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		$scope.showPage()
 		$state.go('metaListmap', {
 			id: uuid,
@@ -104,6 +118,9 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 		});
 	}
 	$scope.showView = function (uuid, version) {
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
 		if (!$scope.isEdit) {
 			$scope.showPage()
 			$state.go('metaListmap', {
@@ -560,6 +577,7 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 		mapJson.active = $scope.mapdata.active;
 		mapJson.locked = $scope.mapdata.locked;
 		mapJson.published = $scope.mapdata.published;
+		mapJson.publicFlag = $scope.mapdata.publicFlag;
 
 		var sourece = {};
 		var sourceref = {};
@@ -595,6 +613,7 @@ MetadataModule.controller('MetadataMapController', function ($rootScope, $state,
 				attributemap.sourceAttr = sourceAttr;
 			}
 			else if ($scope.mapTableArray[i].sourceAttributeType.text == "datapod") {
+				console.log($scope.mapTableArray[i].sourceattribute)
 				sourceref.uuid = $scope.mapTableArray[i].sourceattribute.uuid;
 				// if ($scope.sourcetype == "relation") {
 				// 	sourceref.type = "datapod";

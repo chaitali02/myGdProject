@@ -396,7 +396,6 @@
                                             <label class="control-label col-md-3 col-sm-3 col-xs-12" style="width: 9.5%;margin-left:-13px; padding-right: 0px;">Format
 
                                             </label>
-
                                             <div class="col-md-2 col-sm-2 col-xs-12">
                                                 <select title="Type" class="form-control" data-ng-disabled="isTargetFormateDisable || {{mode}}" data-ng-model="selectedTargetFormate"
                                                     data-ng-options="r for r in targetFormate" ng-change="onChangeTargetFormate()">
@@ -769,7 +768,7 @@
                                                         </div>
                                                         <div  style="float:right;" ng-if="selectedSourceType =='FILE' || selectedTargetType =='FILE' ">
                                                             <label>Auto Map</label>
-                                                            <select class="form-control input-inline" data-ng-model="$parent.selectedAutoMode" ng-options="r  for r in allAutoMapFile"
+                                                            <select class="form-control input-inline" data-ng-model="$parent.selectedAutoMode" ng-options="r  disable when r == 'From Source' && selectedSourceType=='FILE'   for r in allAutoMapFile"
                                                                 ng-disabled="{{mode}}||(selectedSourceType =='FILE' && selectedTargetType =='FILE' )" ng-change="onChangeAutoMode()">
                                                                 <option value="">-select-</option>
                                                             </select>

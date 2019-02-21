@@ -24,10 +24,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.ReportExec;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.service.ReportServiceImpl;
@@ -82,4 +85,11 @@ public class ReportController {
 					null, runMode);
 		    return null;
 	   }
+	
+	@RequestMapping(value = "/getReportByReportExec", method = RequestMethod.GET)
+	public @ResponseBody Report getRuleExecByRule(@RequestParam("uuid") String reportExecUuid,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
+		return reportServiceImpl.getReportByReportExec(reportExecUuid);
+	}
 }

@@ -1169,6 +1169,33 @@
     }
     return deferred.promise;
   }
+
+  this.getAttributeValues = function(uuid, attributeId, type) {
+    var deferred = $q.defer();
+    var url
+    if (type == "datapod") {
+			url ="datapod/getAttributeValues1?action=view&datapodUUID=" + uuid + "&attributeId=" + attributeId;
+		}
+		else if(type == "formula"){
+			url ="datapod/getFormulaValues?action=view&uuid=" + uuid+"&type="+type
+		}
+		else {
+			url ="dataset/getAttributeValues?action=view&uuid=" + uuid + "&attributeId=" + attributeId;
+		}
+    CommonFactory.httpGet(url).then(function(response){onSuccess(response.data)},function(response){onError(response.data)});
+    var onSuccess = function(response) {
+      deferred.resolve({
+        data: response
+      });
+
+    }
+    var onError = function (response) {
+      deferred.reject({
+        data: response
+      })
+    }
+    return deferred.promise;
+  }
   
    
   });

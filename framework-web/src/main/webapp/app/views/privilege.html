@@ -40,11 +40,11 @@
           </div>
 
           <div class="tools">
-            <a href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top" tooltip ng-hide="isAdd" ng-class="(showFrom==true)? 'currentpage':'notcurrentpage'"
+            <a href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top" tooltip ng-hide="isAdd" ng-class="(showFrom==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
               style="height:16px;font-size:16px;" data-ng-click="showHome(privilegedata.uuid,privilegedata.version,mode)">
               <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
-            <a title="Edit" ng-class="(isEdit==true || isPrivlage || privilegedata.locked == 'Y')? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
+            <a title="Edit" ng-class="(isEdit==true || isPrivlage || privilegedata.locked == 'Y' ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
               data-placement="top" tooltip ng-click="enableEdit(privilegedata.uuid,privilegedata.version)" ng-hide="isAdd"
               style="height:16px;">
               <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
@@ -58,11 +58,11 @@
               ng-click="showView(privilegedata.uuid,privilegedata.version)" ng-hide="isAdd" style="height:16px;">
               <span class="glyphicon glyphicon-file" style="color:white;"></span>
             </a> -->
-            <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" ng-show="isDependencyShow" tooltip ng-class="showFrom==false? 'currentpage':'notcurrentpage'"
+            <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" ng-show="isDependencyShow" tooltip ng-class="(showFrom==false ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
               data-ng-click="showGraph(privilegedata.uuid,privilegedata.version)" style="height:14px;">
               <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
             </a>
-            <a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip ng-class="showFrom==true? 'currentpage':'notcurrentpage'">
+            <a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showFrom==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'">
               <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
             </a>
             <a title="Close" data-toggle="tooltip" data-placement="top" tooltip data-ui-sref="admin({type:'privilege'})" style="height:14px;">
@@ -185,6 +185,17 @@
                         uncheckable>Yes</label>
                       <label class="btn btn-default" ng-model="privilegedata.published" uib-btn-radio="'N'" ng-disabled="(mode=='true' || mode=='false') ? true:false"
                         uncheckable>No</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Public</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="btn-group" ng-init="privilegedata.publicFlag='N'">
+                      <label class="btn btn-default" ng-model="privilegedata.publicFlag" uib-btn-radio="'Y'"
+                        ng-disabled="{{mode}}" uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-model="privilegedata.publicFlag" uib-btn-radio="'N'"
+                        ng-disabled="{{mode}}" uncheckable>No</label>
                     </div>
                   </div>
                 </div>

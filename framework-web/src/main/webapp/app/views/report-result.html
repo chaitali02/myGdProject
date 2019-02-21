@@ -1,0 +1,229 @@
+<div class="row" ng-controller="ReportResultController">
+    <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+    <div class="col-md-12">
+
+        <div class="page-bar">
+            <ul class="page-breadcrumb">
+                <li>
+                    <a ui-sref="home">Home</a>
+                    <i class="fa fa-circle"></i>
+                </li>
+                <li>
+                    <span>{{$state.current.data.pageTitle}}</span>
+                    <i class="fa fa-circle"></i>
+                </li>
+                <li>
+                    <span>Report Results</span>
+                    <i class="fa fa-circle"></i>
+                </li>
+                <li>
+                    <span>{{name}}</span>
+                </li>
+            </ul>
+            <div class="page-toolbar">
+                <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body"
+                    data-placement="bottom" data-original-title="Change dashboard date range">
+
+                    <i class="icon-calendar"></i>&nbsp;
+                    <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
+                </div>
+            </div>
+        </div>
+        <br>
+
+        <div class="portlet box green">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-cogs"></i>Report Result
+                </div>
+                <div class="tools">
+                    <a title="Main" data-toggle="tooltip" data-placement="top" class="currentpage" tooltip style="height:16px;font-size:16px;"
+                        ng-class="(!isGraphShow==true && !isShowPMML ==true)? 'currentpage':'notcurrentpage'" ng-click="showResultPage()">
+                        <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+                    </a>
+
+                    <a title="Download" ng-click="downloadFile(reportExec)" data-toggle="tooltip" data-placement="top"
+                        tooltip ng-disabled="isDownlodInprogess" style="pointer-events:auto;" ng-class="(isDownlodInprogess==true || isGraphShow==true)? 'currentpage':'notcurrentpage'">
+                        <i class="fa fa-download" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                    </a>
+
+                    <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip data-ng-click="showGraph()"
+                        ng-class="isGraphShow==true? 'currentpage':'notcurrentpage'">
+                        <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
+                    </a>
+                    <a title="Refresh" ng-click="isGraphShow ?broadcastRefreshData():refreshResult()" data-toggle="tooltip"
+                        data-placement="top" tooltip>
+                        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                    </a>
+                    <a title="Close" data-toggle="tooltip" data-placement="top" tooltip href="javascript:;" ng-click="close()">
+                        <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
+                    </a>
+                    <!--<a href="javascript:;" class="collapse" data-original-title="" title=""> </a> -->
+                </div>
+            </div>
+            <div class="portlet-body" style="min-height:100px;">
+                <div ng-if="isGraphShow" class="form-body graph-body">
+                    <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
+                    <div class="spinner text-center" id="graphloader">
+                        <div class="bounce1"></div>
+                        <div class="bounce2"></div>
+                        <div class="bounce3"></div>
+                    </div>
+                    <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="reportExec.uuid"
+                        version="reportExec.version">
+                    </div>
+                </div>
+                <div ng-if="!isGraphShow">
+                    <div class="form-body" ng-show="isShowSimpleData">
+                        <div class="col-md-12 col-sm-12" style="padding:0px;padding-bottom: 20px;">
+                            <div class="col-md-12 col-sm-12" style="border-bottom:1px solid darkgray;padding:0px;">
+                                <div class="col-md-11 col-sm-11" style="padding:0px;padding-bottom:15px;">
+                                    <div class="chip" ng-repeat=" filterdata in filterTag">
+                                        {{filterdata.text}}
+                                        <!-- <span class="chipclosebtn" ng-click="onChipsRemove($index,filterdata.index)">&times;</span> -->
+                                    </div>
+                                </div>
+                                <div class="col-md-1 col-sm-1" style="margin-top:4px;cursor:pointer;padding:0px;text-align:right;">
+                                    <a aria-disabled="true" class="currentpage">
+                                    <span class="caption-subject font-dark bold" ng-click="openFilterPopup()"
+                                        tooltip-placement="left"  style="font-size:16px;color: #666 !important;">
+                                        <i class="fa fa-filter" style="font-size:17px;padding-right: 2px"></i>Filter
+                                    </span>
+                                    </a>
+                                </div>
+                                <br>
+                            </div>
+                            <br>
+                        </div>
+                        <div class="row">
+                            <div class=" form-body col-md-12 col-sm-12 {{tableclass}}">
+                                <div class="spinner text-center" ng-show="isDataInpogress">
+                                    <div class="bounce1"></div>
+                                    <div class="bounce2"></div>
+                                    <div class="bounce3"></div>
+                                </div>
+                                <div ng-show="isDataError">
+                                    <h3 style="font-size:14px;color:red;">{{datamessage}}</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-show="!isDataInpogress && !isDataError">
+                            <div class="row">
+                                <div class="col-md-6 col-sm-6">
+                                    <div class="form-group">
+                                        <div class="col-md-10 col-sm-10">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-6">
+                                    <div class="form-group">
+                                        <div class="col-md-12 col-sm-12">
+                                            <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;margin-right: -4px;">
+                                                <label>Search:</label>
+                                                <input type="search" class="form-control input-sm input-small input-inline"
+                                                    ng-change="refreshData()" ng-model="searchtext" aria-controls="datastoredatatable">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div ui-grid="gridOptions" class="grid" ui-grid-resize-columns ui-grid-auto-resize
+                                ui-grid-exporter ng-style="getGridStyle()">
+                                <div class="nodatawatermark_results" ng-show="!gridOptions.data.length">No data
+                                    available</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div id="attrFilter" class="modal fade bs-modal-lg in" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog" style="width:40%;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                        <h4 class="modal-title">Filter</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="slimScrollDiv" style="margin-top:10px;">
+                            <div class="scroller" data-always-visible="1" data-rail-visible1="1" data-initialized="1"
+                                style="overflow-y: scroll;max-height: 300px;">
+                                <form class="form-horizontal" novalidate="novalidate" name="myformFilter">
+                                    <div ng-if="report.filterInfo.length ==0"><h3 style="font-size:14px;color:blue;">Select Filter</h3></div>
+                                    <div class="form-body centercontent" ng-show="report.filterInfo.length >0 && filterAttribureIdValues.length == 0">
+                                        <div class="spinner">
+                                            <div class="bounce1"></div>
+                                            <div class="bounce2"></div>
+                                            <div class="bounce3"></div>
+                                        </div>
+                                    </div>
+                                    <div class="" style="margin-top: 15px;">
+                                        <div class="form-group" ng-repeat="data in filterAttribureIdValues">
+                                            <label class="col-md-4 control-label" title="{{data.dname}}">{{data.attrName}}</label>
+                                            <div class="col-md-6">
+                                                <select ng-disabled="inprogressdata" title="{{dname}}" class="form-control"
+                                                    select2 ng-model="selectedAttributeValue[$index]" ng-change="onChange()"
+                                                    ng-options="c as c.value for c in data.values  track by c.value">
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal" class="btn dark btn-outline" ng-click="CancleFitler()">Close</button>
+                        <button type="button" class="btn green" ng-click="applyFilter()">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="downloadSample" class="modal fade bs-modal-lg in" style="display: none;">
+            <div class="modal-dialog" style="width:40%">
+                <div class="modal-content" style="resize: both;overflow: auto;">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                        <h4 class="modal-title">Download</h4>
+                    </div>
+                    <form class="form-horizontal" name="myform3" ng-submit="submitDownload()" novalidate="novalidate">
+                        <div class="modal-body" style="padding-top:0px">
+                            <div class="slimScrollDiv" style="position: relative; overflow-y: auto !important; width:auto;padding:10px;">
+                                <div class="scroller" style="max-height:150px;min-height:110px; overflow-y: auto !important; width: auto;margin-top:30px"
+                                    data-always-visible="1" data-rail-visible1="1" data-initialized="1">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">Rows</label>
+                                                <div class="col-md-8">
+                                                    <input type="number" min="1" class="form-control" ng-model="download.rows"
+                                                        max="{{download.maxrow}}" required max-err-type="maxLimitDownload">
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">Format</label>
+                                                <div class="col-md-8">
+                                                    <select class="form-control" data-ng-model="download.selectFormate"
+                                                        ng-options="r for r in download.formates" required>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!--End Model Body-->
+                        <div class="modal-footer">
+                            <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                            <button type="submit" class="btn green">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

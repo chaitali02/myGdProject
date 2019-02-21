@@ -834,6 +834,40 @@ public class DatapodServiceImpl {
 			return result;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<DatapodStatsHolder> getDatapodStats(String searchStr) throws JsonProcessingException {
+
+		List<DatapodStatsHolder> result = new ArrayList<DatapodStatsHolder>();
+		List<Datapod> datapodList = commonServiceImpl.findAllLatest(MetaType.datapod, searchStr);
+		List<Datasource> dsList = commonServiceImpl.findAllLatest(MetaType.datasource);
+
+		Map<String, String> dsMap = new HashMap<String, String>();
+		for (Datasource dsrc : dsList) {
+			dsMap.put(dsrc.getUuid(), dsrc.getName());
+		}
+
+		for (Datapod dp : datapodList) {
+
+			DatapodStatsHolder dsh = new DatapodStatsHolder();
+			MetaIdentifier mi = new MetaIdentifier();
+			mi.setType(MetaType.datapod);
+			mi.setUuid(dp.getUuid());
+			mi.setVersion(dp.getVersion());
+			mi.setName(dp.getName());
+			dsh.setRef(mi);
+			dsh.setDataSource(dsMap.get(dp.getDatasource().getRef().getUuid()));
+
+			DataStore ds = datastoreServiceImpl.findLatestByMeta(dp.getUuid(), dp.getVersion());
+			if (ds != null) {
+				dsh.setNumRows(ds.getNumRows());
+				dsh.setLastUpdatedOn(ds.getCreatedOn());
+			}
+			result.add(dsh);
+
+		}
+		return result;
+	}
+	
 
 	@SuppressWarnings("unchecked")
 	public List<DatapodStatsHolder> getDatapodStats2()
@@ -1004,7 +1038,7 @@ public class DatapodServiceImpl {
 			IExecutor exec = execFactory.getExecutor(ExecContext.spark.toString());
 			
 			List<Attribute> attributes = exec.fetchAttributeList(uploadPath, parquetDir, true, false, appUuid);
-			attributes.remove(attributes.size()-1);
+			//attributes.remove(attributes.size()-1);
 			ListIterator<Attribute> attributeIterator = attributes.listIterator();
 			
 			List<Attribute> dpAttrs = datapod.getAttributes();

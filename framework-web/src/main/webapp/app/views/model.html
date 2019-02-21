@@ -336,7 +336,7 @@
                           </select>
                         </div>
                       </div>
-                      <div class="form-group">
+                      <div class="form-group" ng-if="!isAlgorithmPCA">
                         <label class="col-md-3 control-label">Label
                         </label>
                         <div class="col-md-6">
@@ -439,8 +439,9 @@
                                     </td>
                                     <td>
                                       <span class="form-group" style="margin-left:0px;margin-right: 0px;" ng-class="{ 'has-error' : myform2['featureName'+$index].$invalid}">
-                                        <input type="text" class="form-control" ng-model="data.name" title="{{data.name}}" ng-disabled="{{mode}}" focus-me="true" ng-change="onChangeFeatureName($index)" required disable-validation-message="" name="featureName{{$index}}" >
+                                        <input type="text" class="form-control" ng-model="data.name" title="{{data.name}}" ng-disabled="{{mode}}"  ng-change="onChangeFeatureName($index)" required disable-validation-message="" name="featureName{{$index}}" >
                                       </span>
+                                      <!-- focus-me="true" -->
                                     </td>
                                     <td><span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                         <select class="form-control" ng-disabled="{{mode}}" data-ng-model="data.type" ng-options="r for r in featuureType"

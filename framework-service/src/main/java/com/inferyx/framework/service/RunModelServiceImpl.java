@@ -740,7 +740,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 			
 			IExecutor exec = null;
 			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
-			Map<String,String> trainOtherParam = new HashMap<>();
+			Map<String, Object> trainOtherParam = new HashMap<>();
 			List<Status> statusList = trainExec.getStatusList();
 			trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.InProgress);
 //			if (model.getType().equalsIgnoreCase(ExecContext.R.toString())
@@ -774,13 +774,24 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 				
 				Map<String, EncodingType> encodingDetails = getEncodingDetailsByFeatureAttrMap(train.getFeatureAttrMap(), model.getFeatures());
 				
+				List<String> vectorFields = new ArrayList<>();
+				for(Feature feature : model.getFeatures()) {
+					if(feature.getType().equalsIgnoreCase("vector")) {
+						vectorFields.add(feature.getName());
+					}
+				}				
+				trainOtherParam.put("vectorFields", vectorFields);
+				
 				trainOtherParam.put("confusionMatrixTableName", trainName+"confusionMatrix");
 				exec = execFactory.getExecutor(datasource.getType());
 
 				Object source = (Object) commonServiceImpl.getOneByUuidAndVersion(train.getSource().getRef().getUuid(),
 						train.getSource().getRef().getVersion(), train.getSource().getRef().getType().toString());
 				
-				String label = commonServiceImpl.resolveLabel(train.getLabelInfo());
+				String label = null;
+				if(train.getLabelInfo() != null) {
+					label = commonServiceImpl.resolveLabel(train.getLabelInfo());
+				}
 //				String sql = modelServiceImpl.generateSQLBySource(source, execParams);
 //				exec.executeAndRegister(sql, (tableName+"_train_data"), appUuid);
 
@@ -802,6 +813,8 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 				long rowCount = sourceRsHolder.getCountRows();
 				
 //				trainResult.setTotalRecords(rowCount);
+				trainOtherParam.put("sourceDs", trainSrcDatasource);
+				trainOtherParam.put("model", model);
 				
 				//Object va = exec.assembleDF(fieldArray, (tableName+"_train_data"), algorithm.getTrainName(), model.getLabel(), appUuid);
 				Map<String, String> mappingList = new LinkedHashMap<>();
@@ -1043,7 +1056,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 						
 						String fileName = tableName+".result";
 //						if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
-							summary = exec.calculateConfusionMatrixAndRoc(summary,trainOtherParam.get("confusionMatrixTableName"),appUuid);
+							summary = exec.calculateConfusionMatrixAndRoc(summary, (String) trainOtherParam.get("confusionMatrixTableName"),appUuid);
 //						}
 						
 //						trainResult.setFeatureImportance(exec.featureImportance(trndModel, null));
@@ -1072,7 +1085,7 @@ public class RunModelServiceImpl implements Callable<TaskHolder> {
 //						trainResult.setFeatureImportance(exec.featureImportance(trndModel, null));
 
 //						if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
-							summary = exec.calculateConfusionMatrixAndRoc(summary,trainOtherParam.get("confusionMatrixTableName"),appUuid);
+							summary = exec.calculateConfusionMatrixAndRoc(summary,(String) trainOtherParam.get("confusionMatrixTableName"),appUuid);
 //						}
 						double[] featureimportancesArr = (double[])summary.get("featureimportances");	
 						if(featureimportancesArr != null) {
