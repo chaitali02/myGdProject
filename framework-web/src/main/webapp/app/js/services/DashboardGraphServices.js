@@ -27,16 +27,26 @@ DatavisualizationModule.factory('DahsboardFactory', function ($http, $location) 
 				return response;
 			})
 	}
-	factory.findVizpodResultsWithData = function (uuid, version, data) {
+	// factory.findVizpodResultsWithData = function (uuid, version, data) {
+	// 	var url = $location.absUrl().split("app")[0]
+	// 	return $http({
+	// 		method: 'POST',
+	// 		url: url + "vizpod/getVizpodResults/" + uuid + "/" + version + "?action=view&requestId=''",
+	// 		headers: {
+	// 			'Accept': '*/*',
+	// 			'content-Type': "application/json",
+	// 		},
+	// 		data: JSON.stringify(data),
+	// 	}).
+	// 		then(function (response, status, headers) {
+	// 			return response;
+	// 		})
+	// }
+	factory.findVizpodResultsWithData = function (uuid, version,saveOnRefresh) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
-			method: 'POST',
-			url: url + "vizpod/getVizpodResults/" + uuid + "/" + version + "?action=view&requestId=''",
-			headers: {
-				'Accept': '*/*',
-				'content-Type': "application/json",
-			},
-			data: JSON.stringify(data),
+			method: 'GET',
+			url: url + "vizpod/getVizpodResults?uuid=" + uuid + "&version=" + version + "&action=view&saveOnRefresh="+saveOnRefresh,
 		}).
 			then(function (response, status, headers) {
 				return response;
@@ -186,11 +196,52 @@ DatavisualizationModule.factory('DahsboardFactory', function ($http, $location) 
 				return response;
 			})
 	}
+	factory.executeDashboard = function(uuid,type,data) {
+        var url = $location.absUrl().split("app")[0]
+        return $http({
+          method: 'POST',
+		  url: url + "dashboard/execute?action=view&uuid="+uuid+"&type="+type,
+		  data:JSON.stringify(data),
+		  headers: {
+			'Accept': '*/*',
+			'content-Type': "application/json",
+		},
+        }).then(function(response, status, headers) {
+          return response;
+        })
+      }
+	  
 	return factory;
 });
 
 DatavisualizationModule.service('DahsboardSerivce', function ($q, sortFactory, DahsboardFactory) {
-
+	
+	this.getOneByUuidAndVersion = function (uuid, version, type) {
+		var deferred = $q.defer();
+		DahsboardFactory.findOneByUuidAndVersion(uuid, version, type).then(function (response) { onSuccess(response.data) });
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			})
+		}
+		return deferred.promise;
+	}
+	this.executeDashboard = function (uuid, type, data) {
+		var deferred = $q.defer();
+		DahsboardFactory.executeDashboard(uuid, type, data).then(function (response) { onSuccess(response.data)},function (response) { onError(response.data) });
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			})
+		}
+		var onError = function (response) {
+			deferred.reject({
+				data: response,
+		    });
+	    }
+		return deferred.promise;
+	};
+	
 	this.getAttributeValues = function (uuid, attributeId, type) {
 		var deferred = $q.defer();
 
@@ -202,24 +253,9 @@ DatavisualizationModule.service('DahsboardSerivce', function ($q, sortFactory, D
 		}
 		return deferred.promise;
 	};
-	this.getVizpodResults = function (uuid, version, data,vizpodResuts) {
+	this.getVizpodResults = function (uuid, version, saveOnRefresh, vizpodResuts) {
 		var deferred = $q.defer();
-		//  if(data == null){
-		//    DahsboardFactory.findVizpodResults(uuid,version).then(function(response){onSuccess(response.data)},function(response){onError(response.data)});
-		//    var onSuccess=function(response){
-		//       deferred.resolve({
-		//                   data:response
-		//               })
-		//     }
-		//     var onError=function(response){
-		//         deferred.reject({
-		// 	        data:response
-		//         });
-		//       }
-		//
-		//  }
-		// else{
-		DahsboardFactory.findVizpodResultsWithData(uuid, version, data).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		DahsboardFactory.findVizpodResultsWithData(uuid, version, saveOnRefresh).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			deferred.resolve({
 				success: true,
@@ -447,7 +483,6 @@ DatavisualizationModule.service('DahsboardSerivce', function ($q, sortFactory, D
 		var deferred = $q.defer();
 		DahsboardFactory.findAllLatest(type).then(function (response) { onSuccess(response.data) });
 		var onSuccess = function (response) {
-
 			deferred.resolve({
 				data: response
 			})

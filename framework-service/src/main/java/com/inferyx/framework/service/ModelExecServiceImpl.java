@@ -39,7 +39,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.Algorithm;
 import com.inferyx.framework.domain.BaseExec;
-import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;

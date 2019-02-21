@@ -346,7 +346,7 @@ public class DashboardViewServiceImpl {
 	 * @throws JsonProcessingException 
 	 */
 	public DashboardExecView findOneExecByUuidAndVersion(String execUuid, String execVersion) throws JsonProcessingException {
-		DashboardExec dashboardExec = (DashboardExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.dashboardExec.toString(), "N");
+		DashboardExec dashboardExec = (DashboardExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.dashboardExec.toString(), "Y");
 		MetaIdentifier dependsOnMI = dashboardExec.getDependsOn().getRef();
 		Dashboard dashboard = (Dashboard) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(), dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
 		
@@ -370,31 +370,36 @@ public class DashboardViewServiceImpl {
 		List<SectionView> sectionViewInfo = new ArrayList<>();
 		for(Section section : dashboard.getSectionInfo()) {
 			MetaIdentifier vizpodMI = section.getVizpodInfo().getRef();
+			Vizpod vizpod = (Vizpod) commonServiceImpl.getOneByUuidAndVersion(vizpodMI.getUuid(), vizpodMI.getVersion(), vizpodMI.getType().toString(), "Y");
+
+			SectionView sectionView = new SectionView();
+			sectionView.setVizpodInfo(vizpod);
 			for(MetaIdentifierHolder vizExecHolder : dashboardExec.getVizExecInfo()) {
 				MetaIdentifier vizExecMI = vizExecHolder.getRef();
-				Vizpod vizpod = (Vizpod) commonServiceImpl.getOneByUuidAndVersion(vizpodMI.getUuid(), vizpodMI.getVersion(), vizpodMI.getType().toString(), "Y");
-				if(vizpod.getUuid().equalsIgnoreCase(vizpodMI.getUuid())) {
-					try {
-						VizExec vizExec = (VizExec) commonServiceImpl.getOneByUuidAndVersion(vizExecMI.getUuid(), vizExecMI.getVersion(), vizExecMI.getType().toString(), "N");
-						
-						SectionView sectionView = new SectionView();
-						sectionView.setVizpodInfo(vizpod);
+				VizExec vizExec = (VizExec) commonServiceImpl.getOneByUuidAndVersion(vizExecMI.getUuid(), vizExecMI.getVersion(), vizExecMI.getType().toString(), "N");
+				MetaIdentifier vizExecDependsOnMI = vizExec.getDependsOn().getRef();
+				if(vizExecDependsOnMI.getUuid().equalsIgnoreCase(vizpodMI.getUuid())) {
+					try {					
 						sectionView.setVizExecInfo(vizExec);
-						sectionView.setColNo(section.getColNo());
-						sectionView.setName(section.getName());
-						sectionView.setRowNo(section.getRowNo());
-						sectionView.setSectionId(section.getSectionId());
-						sectionViewInfo.add(sectionView);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
 					break;
 				}
 			}
+
+			sectionView.setColNo(section.getColNo());
+			sectionView.setName(section.getName());
+			sectionView.setRowNo(section.getRowNo());
+			sectionView.setSectionId(section.getSectionId());
+			sectionViewInfo.add(sectionView);
 		}
 		dashboardExecView.setSectionViewInfo(sectionViewInfo);
 		dashboardExecView.setDependsOn(dashboardExec.getDependsOn());
-		dashboardExecView.setFilterInfo(dashboard.getFilterInfo());
+		dashboardExecView.setDashboard(dashboard);
+		if(dashboardExec.getExecParams() !=null && dashboardExec.getExecParams().getFilterInfo() !=null && !dashboardExec.getExecParams().getFilterInfo().isEmpty()) {
+			dashboardExecView.setFilterInfo(dashboardExec.getExecParams().getFilterInfo());
+		}
 		return dashboardExecView;
 	}
 

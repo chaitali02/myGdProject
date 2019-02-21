@@ -1307,7 +1307,7 @@ public class VizpodServiceImpl {
 		
 		
 		
-	public HttpServletResponse download(String uuid, String version, String format, ExecParams execParams, String download, int offset,
+	public HttpServletResponse download(String execUuid, String execVersion, String saveOnRefresh, String format, ExecParams execParams, String download, int offset,
 			int limit, HttpServletResponse response, int rowLimit, String sortBy, String order, String requestId,
 			RunMode runMode) throws Exception {
 
@@ -1318,8 +1318,8 @@ public class VizpodServiceImpl {
 			throw new RuntimeException("Requested rows exceeded the limit of "+maxRows);
 		}
 		
-		List<Map<String, Object>> results = getVizpodResults(uuid, version, execParams, null, rowLimit, offset, limit, sortBy, order, requestId, runMode);
-		response = commonServiceImpl.download(uuid, version, format, offset, limit, response, rowLimit, sortBy, order, requestId, runMode, results,MetaType.downloadExec,new MetaIdentifierHolder(new MetaIdentifier(MetaType.vizpod,uuid,version)));
+		List<Map<String, Object>> results = getVizpodResults(execUuid, execVersion, saveOnRefresh, rowLimit, offset, limit, sortBy, order, requestId, runMode);
+		response = commonServiceImpl.download(execUuid, execVersion, format, offset, limit, response, rowLimit, sortBy, order, requestId, runMode, results,MetaType.downloadExec,new MetaIdentifierHolder(new MetaIdentifier(MetaType.vizpod,execUuid,execVersion)));
 		return response;
 
 	}

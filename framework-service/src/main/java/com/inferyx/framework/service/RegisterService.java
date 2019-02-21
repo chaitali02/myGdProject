@@ -240,6 +240,10 @@ public class RegisterService {
 	private ApplicationViewServiceImpl applicationViewServiceImpl;
 	@Autowired
 	private ImpalaRegister impalaRegister;
+	@Autowired
+	private ReportServiceImpl reportServiceImpl;
+	@Autowired
+	private DashboardServiceImpl dashboardServiceImpl;
 	
 	List<String> createDet = new ArrayList<String>();
 	List<String> datapodResult = new ArrayList<String>();
@@ -4061,6 +4065,12 @@ public class RegisterService {
 			case "ingestgroupexec":
 				result = ow.writeValueAsString(ingestGroupServiceImpl.getMetaIdByExecId(execUuid, execVersion));
 				break;
+			case "reportexec":
+				result = ow.writeValueAsString(reportServiceImpl.getMetaIdByExecId(execUuid, execVersion, type));
+				break;
+			case "dashboardexec":
+				result = ow.writeValueAsString(dashboardServiceImpl.getMetaIdByExecId(execUuid, execVersion, type));
+				break;
 			}
 		}
 		return result;
@@ -4546,6 +4556,12 @@ public class RegisterService {
 				break;
 			case "loadexec":
 				result = ow.writeValueAsString(loadExecServiceImpl.getNumRowsbyExec(execUuid, execVersion));
+				break;
+			case "reportexec":
+				result = ow.writeValueAsString(reportServiceImpl.getNumRowsbyExec(execUuid, execVersion, type));
+				break;
+			case "dashboardexec":
+				result = ow.writeValueAsString(dashboardServiceImpl.getNumRowsbyExec(execUuid, execVersion, type));
 				break;
 			}
 		}

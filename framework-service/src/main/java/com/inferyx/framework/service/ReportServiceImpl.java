@@ -44,6 +44,7 @@ import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.DownloadExec;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.ExecStatsHolder;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -365,5 +366,47 @@ public class ReportServiceImpl {
 		ReportExec reportExec = (ReportExec) commonServiceImpl.getOneByUuidAndVersion(reportExecUuid,null, MetaType.reportExec.toString(), "N");
 		report=(Report) commonServiceImpl.getOneByUuidAndVersion(reportExec.getDependsOn().getRef().getUuid(),reportExec.getDependsOn().getRef().getVersion(), MetaType.report.toString(), "Y");
 		return report;
+	}
+
+	/**
+	 * @param execUuid
+	 * @param execVersion
+	 * @return ExecStatsHolder
+	 * @throws JsonProcessingException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
+	 */
+	public ExecStatsHolder getNumRowsbyExec(String execUuid, String execVersion, String type) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+		Object exec = commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, type);
+		MetaIdentifierHolder resultHolder = (MetaIdentifierHolder) exec.getClass().getMethod("getResult").invoke(exec);
+		com.inferyx.framework.domain.DataStore dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(resultHolder.getRef().getUuid(), resultHolder.getRef().getVersion(), MetaType.datastore.toString(), "N");
+		MetaIdentifier mi = new MetaIdentifier(MetaType.datastore, resultHolder.getRef().getUuid(), resultHolder.getRef().getVersion());
+		ExecStatsHolder execHolder = new ExecStatsHolder();
+		execHolder.setRef(mi);
+		execHolder.setNumRows(dataStore.getNumRows());
+		execHolder.setPersistMode(dataStore.getPersistMode());
+		execHolder.setRunMode(dataStore.getRunMode());
+		return execHolder;
+	}
+
+	/**
+	 * @param execUuid
+	 * @param execVersion
+	 * @param type
+	 * @return MetaIdentifier
+	 * @throws JsonProcessingException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
+	 */
+	public MetaIdentifier getMetaIdByExecId(String execUuid, String execVersion, String type) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+		Object exec = commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, type);
+		MetaIdentifierHolder miHolder = (MetaIdentifierHolder) exec.getClass().getMethod("getDependsOn").invoke(exec);
+		return miHolder.getRef();
 	}
 }
