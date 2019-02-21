@@ -44,6 +44,7 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.PredictExec;
+import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.SimulateExec;
 import com.inferyx.framework.domain.Train;
@@ -575,4 +576,16 @@ public class ModelController {
 			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		return modelServiceImpl.getAlgorithmByModel(modelUuid, modelVersion);
 	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/calCorealtionMatrix", method = RequestMethod.POST)
+	public List<Map<String, Object>> calCorealtionMatrix(@RequestBody Object metaObject) throws Exception {
+
+		ObjectMapper mapper = new ObjectMapper();
+		java.util.Map<String, Object> operator = mapper.convertValue(metaObject, java.util.Map.class);
+		List<Map<String, Object>> data = modelServiceImpl.calCorealtionMatrix(operator);
+		return data;
+
+	}
+	
 }
