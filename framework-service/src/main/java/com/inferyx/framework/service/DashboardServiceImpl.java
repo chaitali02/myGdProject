@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -20,10 +21,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.dao.IDashboardDao;
 import com.inferyx.framework.domain.Dashboard;
 import com.inferyx.framework.domain.DashboardExec;
+import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.ExecStatsHolder;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -162,6 +166,48 @@ public class DashboardServiceImpl {
 			throw new RuntimeException((message != null) ? message : "Dashboard execution failed.");	
 		}
 		return dashboardExec;
+	}
+
+	/**
+	 * @param execUuid
+	 * @param execVersion
+	 * @return ExecStatsHolder
+	 * @throws JsonProcessingException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
+	 */
+	public ExecStatsHolder getNumRowsbyExec(String execUuid, String execVersion, String type) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+		Object exec = commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, type);
+		MetaIdentifierHolder resultHolder = (MetaIdentifierHolder) exec.getClass().getMethod("getResult").invoke(exec);
+		com.inferyx.framework.domain.DataStore dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(resultHolder.getRef().getUuid(), resultHolder.getRef().getVersion(), MetaType.datastore.toString(), "N");
+		MetaIdentifier mi = new MetaIdentifier(MetaType.datastore, resultHolder.getRef().getUuid(), resultHolder.getRef().getVersion());
+		ExecStatsHolder execHolder = new ExecStatsHolder();
+		execHolder.setRef(mi);
+		execHolder.setNumRows(dataStore.getNumRows());
+		execHolder.setPersistMode(dataStore.getPersistMode());
+		execHolder.setRunMode(dataStore.getRunMode());
+		return execHolder;
+	}
+
+	/**
+	 * @param execUuid
+	 * @param execVersion
+	 * @param type
+	 * @return MetaIdentifier
+	 * @throws JsonProcessingException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
+	 */
+	public MetaIdentifier getMetaIdByExecId(String execUuid, String execVersion, String type) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+		Object exec = commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, type);
+		MetaIdentifierHolder miHolder = (MetaIdentifierHolder) exec.getClass().getMethod("getDependsOn").invoke(exec);
+		return miHolder.getRef();
 	}
 
 	/********************** UNUSED **********************/
