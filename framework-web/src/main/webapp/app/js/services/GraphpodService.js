@@ -186,7 +186,7 @@ GraphAnalysisModule.service("GraphpodService", function ($http, GraphpodFactory,
 
           var highlightInfo={};
           var propertyId={};
-          if(response.nodeInfo[i].highlightInfo){
+          if(response.nodeInfo[i].highlightInfo !=null){
             highlightInfo.selectType=response.nodeInfo[i].highlightInfo.type;
             propertyId.uuid=response.nodeInfo[i].highlightInfo.propertyId.ref.uuid;
             propertyId.type=response.nodeInfo[i].highlightInfo.propertyId.ref.type;
@@ -206,7 +206,7 @@ GraphAnalysisModule.service("GraphpodService", function ($http, GraphpodFactory,
           }
           var nodeBackgroundInfo={};
           var NBPropertyId={};
-          if(response.nodeInfo[i].nodeBackgroundInfo){
+          if(response.nodeInfo[i].nodeBackgroundInfo !=null){
             nodeBackgroundInfo.selectType=response.nodeInfo[i].nodeBackgroundInfo.type;
             NBPropertyId.uuid=response.nodeInfo[i].nodeBackgroundInfo.propertyId.ref.uuid;
             NBPropertyId.type=response.nodeInfo[i].nodeBackgroundInfo.propertyId.ref.type;

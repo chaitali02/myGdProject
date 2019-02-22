@@ -61,6 +61,7 @@ import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DagStatusHolder;
 import com.inferyx.framework.domain.Dashboard;
+import com.inferyx.framework.domain.DashboardExec;
 import com.inferyx.framework.domain.DataQual;
 import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataQualGroup;
@@ -4259,6 +4260,14 @@ public class RegisterService {
 		if (deployExec != null) {
 			countHolder.add(addToCount(MetaType.deployExec.toString(), deployExecCount,
 					deployExec.getCreatedBy().getRef().getName(), deployExec.getCreatedOn()));
+		}
+		
+		int dashboardExecCount = commonServiceImpl.findAllLatest(MetaType.dashboardExec).size();
+		DashboardExec dashboardExec = (DashboardExec) commonServiceImpl.getLatest(MetaType.dashboardExec.toString());
+		
+		if (dashboardExec != null) {
+			countHolder.add(addToCount(MetaType.dashboardExec.toString(), dashboardExecCount,
+					dashboardExec.getCreatedBy().getRef().getName(), dashboardExec.getCreatedOn()));
 		}
 		
 		return countHolder;

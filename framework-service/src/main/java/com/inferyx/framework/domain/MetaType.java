@@ -45,7 +45,7 @@ public enum MetaType {
 				MetaType.graphpod, MetaType.report, MetaType.reportExec, MetaType.batch, MetaType.batchExec,
 				MetaType.schedule, MetaType.ingest, MetaType.ingestExec, MetaType.ingestgroup, MetaType.ingestgroupExec,
 				MetaType.trainresult, MetaType.deployExec, MetaType.processExec,MetaType.organization,
-				MetaType.dashboardExec);
+				MetaType.dashboardExec, MetaType.graphExec ,MetaType.reportExec);
 	}
 
 	public static List<MetaType> getMetaExecList() {

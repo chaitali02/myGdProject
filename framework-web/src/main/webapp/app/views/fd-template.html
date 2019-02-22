@@ -17,9 +17,9 @@
 
 <div class="row">
     <div class="col-md-12">
-        <div class="form-body centercontent" ng-if="isFilterSelect" style="color:blue;min-height:500px;">Please Select Filter</div>
+        <div class="form-body centercontent grey" ng-if="isFilterSelect" style="min-height:500px;">Please Select Filter</div>
         <div class="form-body centercontent" ng-if="isError" style="color:red;">Some Error Occurred</div>
-        <div class="form-body centercontent" ng-if="noRecordFound" style="color:blue;">No Record Found</div>
+        <div class="form-body centercontent grey" ng-if="noRecordFound">No Record Found</div>
         <div class="spinner centercontent" style="min-height:300px;" ng-show="isGraphInProgess">
             <div class="bounce1"></div>
             <div class="bounce2"></div>

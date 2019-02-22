@@ -101,7 +101,6 @@ public class GraphOperator implements IOperator {
 					execParams));
 			sb.append(" AS id, ");
 			
-			
 			// Fetch id nodeBackgroundInfo 
 			if(graphNode.getNodeBackgroundInfo() != null) {
 			AttributeRefHolder nbpropID = graphNode.getNodeBackgroundInfo().getPropertyId();

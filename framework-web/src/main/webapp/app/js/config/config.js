@@ -162,7 +162,7 @@ InferyxApp.constant("CF_GRAPHPOD",{
         {"caption":"Numerical","value":"numerical"}],
     nodeHighlightColor:["#b71c1c","#004D40","#FF9800","#BF360C","#0D47A1","#263238","#000000"],
     nodeBackGroundColor:["#ef9a9a","#B39DDB","#80DEEA","#BCAAA4","#B0BEC5"],
-    edgeHighlightColor:["#b71c1c","#004D40","#FF9800","#BF360C","#0D47A1","#263238","#000000"],
+    edgeHighlightColor:["#CCD1D1","#A9DFBF","#F5B7B1"]//["#b71c1c","#004D40","#FF9800","#BF360C","#0D47A1","#263238","#000000"],
   
 });
 
