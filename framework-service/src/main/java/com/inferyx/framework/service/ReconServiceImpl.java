@@ -132,6 +132,9 @@ public class ReconServiceImpl extends RuleTemplate {
 		Recon recon = null;
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
 		ReconExec reconExec = (ReconExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.reconExec.toString());
+		synchronized (execUuid) {
+			commonServiceImpl.setMetaStatus(reconExec, MetaType.reconExec, Status.Stage.Initialized);
+		}
 		recon = (Recon) commonServiceImpl.getOneByUuidAndVersion(reconExec.getDependsOn().getRef().getUuid(), reconExec.getDependsOn().getRef().getVersion(), MetaType.recon.toString());
 		try {
 			reconExec.setExec(reconOperator.generateSql(recon, reconExec, datapodList, dagExec, refKeyMap, otherParams, usedRefKeySet, runMode));
@@ -150,6 +153,9 @@ public class ReconServiceImpl extends RuleTemplate {
 			commonServiceImpl.setMetaStatus(reconExec, MetaType.reconExec, Status.Stage.Failed);
 			e.printStackTrace();
 			throw new Exception("ReconExec not created.");
+		}
+		synchronized (execUuid) {
+			commonServiceImpl.setMetaStatus(reconExec, MetaType.reconExec, Status.Stage.Ready);
 		}
 		return reconExec;
 	}
