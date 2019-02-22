@@ -366,7 +366,7 @@ public class FormulaServiceImpl {
 		 */
 		Aggregation formulaAggr = newAggregation(match(Criteria.where("dependsOn.ref.uuid").is(uuid)),
 				group("uuid").max("version").as("version"));
-		AggregationResults<Formula> formulaResults = mongoTemplate.aggregate(formulaAggr, "formula", Formula.class);
+		AggregationResults<Formula> formulaResults = mongoTemplate.aggregate(formulaAggr, MetaType.formula.toString().toLowerCase(), Formula.class);
 		List<Formula> formulaList = formulaResults.getMappedResults();
 
 		// Fetch formula details for each id
@@ -472,7 +472,7 @@ public class FormulaServiceImpl {
 			Criteria criteria2 = criteria.andOperator(criteriaList.toArray(new Criteria[criteriaList.size()]));
 			Aggregation formulaAggr = newAggregation(match(criteria2),
 					group("uuid").max("version").as("version"));
-			AggregationResults<Formula> formulaResults = mongoTemplate.aggregate(formulaAggr, "formula", Formula.class);
+			AggregationResults<Formula> formulaResults = mongoTemplate.aggregate(formulaAggr, MetaType.formula.toString().toLowerCase(), Formula.class);
 			formulaList.addAll(formulaResults.getMappedResults());
 		} else {
 			for (String type : formulaType) {	
@@ -482,7 +482,7 @@ public class FormulaServiceImpl {
 				Aggregation formulatype = newAggregation(
 						match(criteria2),
 						group("uuid").max("version").as("version"));
-				AggregationResults<Formula> formulaResults = mongoTemplate.aggregate(formulatype, "formula",
+				AggregationResults<Formula> formulaResults = mongoTemplate.aggregate(formulatype, MetaType.formula.toString().toLowerCase(),
 						Formula.class);
 				formulaList.addAll(formulaResults.getMappedResults());
 			}

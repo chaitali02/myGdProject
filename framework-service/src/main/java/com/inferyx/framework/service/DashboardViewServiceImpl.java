@@ -369,15 +369,17 @@ public class DashboardViewServiceImpl {
 		//setting specific properties
 		List<SectionView> sectionViewInfo = new ArrayList<>();
 		for(Section section : dashboard.getSectionInfo()) {
-			MetaIdentifier vizpodMI = section.getVizpodInfo().getRef();
-			Vizpod vizpod = (Vizpod) commonServiceImpl.getOneByUuidAndVersion(vizpodMI.getUuid(), vizpodMI.getVersion(), vizpodMI.getType().toString(), "Y");
+			MetaIdentifier vizpodMI = section.getVizpodInfo().getRef();			
 
 			SectionView sectionView = new SectionView();
-			sectionView.setVizpodInfo(vizpod);
 			for(MetaIdentifierHolder vizExecHolder : dashboardExec.getVizExecInfo()) {
 				MetaIdentifier vizExecMI = vizExecHolder.getRef();
 				VizExec vizExec = (VizExec) commonServiceImpl.getOneByUuidAndVersion(vizExecMI.getUuid(), vizExecMI.getVersion(), vizExecMI.getType().toString(), "N");
+				
 				MetaIdentifier vizExecDependsOnMI = vizExec.getDependsOn().getRef();
+				Vizpod vizpod = (Vizpod) commonServiceImpl.getOneByUuidAndVersion(vizExecDependsOnMI.getUuid(), vizExecDependsOnMI.getVersion(), vizExecDependsOnMI.getType().toString(), "Y");
+				
+				sectionView.setVizpodInfo(vizpod);
 				if(vizExecDependsOnMI.getUuid().equalsIgnoreCase(vizpodMI.getUuid())) {
 					try {					
 						sectionView.setVizExecInfo(vizExec);

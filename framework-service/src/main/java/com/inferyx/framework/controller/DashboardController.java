@@ -69,4 +69,13 @@ public class DashboardController {
 		DashboardExec dashboardExec = dashboardServiceImpl.create(dashboardUuid, dashboardVersion, null, execParams, runMode);
 		return dashboardServiceImpl.execute(dashboardUuid, dashboardVersion, dashboardExec, execParams, runMode);
 	}
+	
+	@RequestMapping(value = "/getDasboardExecBySave", method = RequestMethod.GET)
+	public List<DashboardExec> getDasboardExecBySave(@RequestParam(value = "uuid") String dashboardUuid,
+			@RequestParam(value = "version", required = false) String dashboardVersion,
+			@RequestParam(value = "saveOnRefresh", required = false) String saveonRefresh,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		return dashboardServiceImpl.getDasboardExecBySave(dashboardUuid, dashboardVersion, saveonRefresh);
+	}
 }
