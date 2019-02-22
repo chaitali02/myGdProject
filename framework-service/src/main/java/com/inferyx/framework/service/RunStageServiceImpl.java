@@ -775,9 +775,8 @@ public class RunStageServiceImpl implements Callable<String> {
 					continue;
 				}*/
 				
-				if (!taskStatus.equals(Status.Stage.NotStarted)
-						&& !taskStatus.equals(Status.Stage.InProgress)
-						&& !taskStatus.equals(Status.Stage.Resume)) {
+				if (!taskStatus.equals(Status.Stage.Ready)) {
+					logger.info("Task status for task id " + indvTaskExec.getTaskId() + " is not Ready. So going to next task for execution. ");
 					continue;
 				}
 				
@@ -869,7 +868,8 @@ public class RunStageServiceImpl implements Callable<String> {
 							|| taskStatus.equals(Status.Stage.OnHold)) {
 						continue;
 					}*/
-					if (!taskStatus.equals(Status.Stage.NotStarted)
+					if (!taskStatus.equals(Status.Stage.Initialized) 
+							&& !taskStatus.equals(Status.Stage.Ready)
 							&& !taskStatus.equals(Status.Stage.InProgress)
 							&& !taskStatus.equals(Status.Stage.Resume)) {
 						continue;
@@ -878,7 +878,10 @@ public class RunStageServiceImpl implements Callable<String> {
 					// If not checkdependency status then continue after setting allDependenciesAddressed to false
 					dependencyStatus = dagExecServiceImpl.checkTaskDepStatus(dag,dagExecUUID,dagExecVer,stageId,indvTaskExec.getTaskId());
 					logger.info("Task dependencyStatus : " + indvTaskExec.getTaskId() + " : " + dependencyStatus);
-					if (StringUtils.isBlank(dependencyStatus) || dependencyStatus.equalsIgnoreCase(Status.Stage.NotStarted.toString())) {
+					if (StringUtils.isBlank(dependencyStatus) 
+							|| dependencyStatus.equalsIgnoreCase(Status.Stage.NotStarted.toString())
+							|| dependencyStatus.equalsIgnoreCase(Status.Stage.Initialized.toString()) 
+							|| dependencyStatus.equalsIgnoreCase(Status.Stage.Ready.toString())) {
 						checkDependencyStatus = false;
 					} else if (dependencyStatus.equalsIgnoreCase(Status.Stage.Killed.toString())) {
 						checkDependencyKilled = true;
@@ -1250,8 +1253,8 @@ public class RunStageServiceImpl implements Callable<String> {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void setTaskAndSubmit(TaskExec indvTaskExec, OrderKey datapodKey, Task indvTask, List<MetaIdentifierHolder> operationInfoHolderList, List<FutureTask> taskList, RunMode runMode) throws JsonProcessingException {
 		TaskServiceImpl indivTaskExe = new TaskServiceImpl();
-		if (!dagExecServiceImpl.getStageStatus(dagExecUUID, dagExecVer, stageId).equals(Status.Stage.OnHold) 
-				&& !dagExecServiceImpl.getTaskStatus(dagExecUUID, dagExecVer, stageId, indvTaskExec.getTaskId()).equals(Status.Stage.OnHold)) {
+		if (dagExecServiceImpl.getStageStatus(dagExecUUID, dagExecVer, stageId).equals(Status.Stage.Ready) 
+				&& dagExecServiceImpl.getTaskStatus(dagExecUUID, dagExecVer, stageId, indvTaskExec.getTaskId()).equals(Status.Stage.Ready)) {
 
 			//Set Task to InProgress
 			synchronized (dagExecUUID) {

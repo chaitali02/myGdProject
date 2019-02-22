@@ -439,8 +439,11 @@ public class DataQualServiceImpl  extends RuleTemplate{
 		}
 
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
-		DataQualExec dataQualExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.dqExec.toString());
-		DataQual dataQual = (DataQual) commonServiceImpl.getOneByUuidAndVersion(dataQualExec.getDependsOn().getRef().getUuid(), dataQualExec.getDependsOn().getRef().getVersion(), MetaType.dq.toString());
+		DataQualExec dataQualExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.dqExec.toString(), "N");
+		synchronized (execUuid) {
+			commonServiceImpl.setMetaStatus(dataQualExec, MetaType.dqExec, Status.Stage.Initialized);
+		}
+		DataQual dataQual = (DataQual) commonServiceImpl.getOneByUuidAndVersion(dataQualExec.getDependsOn().getRef().getUuid(), dataQualExec.getDependsOn().getRef().getVersion(), MetaType.dq.toString(), "N");
 		try{
 			dataQualExec.setExec(dqOperator.generateSql(dataQual, datapodList, dataQualExec, dagExec, usedRefKeySet, otherParams, runMode));
 			dataQualExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
@@ -466,6 +469,9 @@ public class DataQualServiceImpl  extends RuleTemplate{
 			dependsOn.setRef(new MetaIdentifier(MetaType.dqExec, dataQualExec.getUuid(), dataQualExec.getVersion()));
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Failed data quality parsing.", dependsOn);
 			throw new Exception((message != null) ? message : "Failed data quality parsing.");
+		}
+		synchronized (execUuid) {
+			commonServiceImpl.setMetaStatus(dataQualExec, MetaType.dqExec, Status.Stage.Ready);
 		}
 		return dataQualExec;
 	}
