@@ -87,6 +87,7 @@ public class GraphOperator implements IOperator {
 		StringBuilder sb = new StringBuilder();
 		StringBuilder sb2 = new StringBuilder();
 		int count = 0;
+		String propertyIdKey = null;
 		for (GraphNode graphNode : nodeList) {
 			if (count > 0) {
 				sb.append(" UNION ALL ");
@@ -99,11 +100,17 @@ public class GraphOperator implements IOperator {
 					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
 					execParams));
 			sb.append(" AS id, ");
+			
+			
+			// Fetch id nodeBackgroundInfo 
+			if(graphNode.getNodeBackgroundInfo() != null) {
 			AttributeRefHolder nbpropID = graphNode.getNodeBackgroundInfo().getPropertyId();
 			sb.append(attributeMapOperator.sourceAttrSql(nbpropID, nbpropID,
 					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
 					execParams));
 			sb.append(" AS nBPropertyId, ");
+			
+			}
 			
 			sb.append(count + " AS nodeIndex, ");
 
@@ -148,6 +155,7 @@ public class GraphOperator implements IOperator {
 	          System.out.println(setAttrRefHolder);*/
 
 			// added propertyId into sb2
+			if( graphNode.getNodeBackgroundInfo() != null) {
 			AttributeRefHolder propertyIdRefHolder = graphNode.getNodeBackgroundInfo().getPropertyId();
 			sb2.append("'''\"");
 			sb2.append(attributeMapOperator.sourceAttrAlias(propertyIdRefHolder, propertyIdRefHolder,
@@ -158,14 +166,16 @@ public class GraphOperator implements IOperator {
 			sb2.append(attributeMapOperator.sourceAttrSql(propertyIdRefHolder, propertyIdRefHolder,
 					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
 					execParams));
-
+			
 			sb2.append(", ");
-			String propertyIdKey = attributeMapOperator.sourceAttrAlias(propertyIdRefHolder,
+			
+			 propertyIdKey = attributeMapOperator.sourceAttrAlias(propertyIdRefHolder,
 					propertyIdRefHolder, DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()),
 					execParams.getOtherParams());
+			}
 			Boolean status = true;
 			Boolean flag = true;
-
+			
 			sb.append("concat('{', ");
 			for (AttributeRefHolder propHolder : graphNode.getNodeProperties()) {
 
@@ -201,7 +211,7 @@ public class GraphOperator implements IOperator {
 					sb.append("',' ");
 					status = false;
 				}
-				if (propertyIdKey.equalsIgnoreCase(attributeMapOperator.sourceAttrAlias(propHolder,
+				if (propertyIdKey!=null &&propertyIdKey.equalsIgnoreCase(attributeMapOperator.sourceAttrAlias(propHolder,
 						propHolder, DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()),
 						execParams.getOtherParams()))) {
 					flag = false;
