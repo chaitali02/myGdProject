@@ -1,0 +1,78 @@
+{
+  "uuid": "2ee77a92-296d-45d4-8179-aaa98e05f37d",
+  "version": "1550866701",
+  "name": "viz_customers_by_month",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Fri Feb 22 15:18:21 EST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+        "version": "1548315745",
+        "name": "Anti Money Laundering"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "title": null,
+  "source": {
+    "ref": {
+      "type": "dataset",
+      "uuid": "5d0e4480-eaeb-44e4-943b-25f76114f67a",
+      "version": null,
+      "name": "ds_customers_by_month"
+    },
+    "value": null
+  },
+  "type": "bar-chart",
+  "limit": 0,
+  "keys": [
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "5d0e4480-eaeb-44e4-943b-25f76114f67a",
+        "version": null,
+        "name": "ds_customers_by_month"
+      },
+      "attributeId": 0,
+      "function": null,
+      "value": null,
+      "attributeName": "customer_onboarding_month"
+    }
+  ],
+  "dimension": [],
+  "detailAttr": [],
+  "filterInfo": [],
+  "groups": [],
+  "values": [
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "5d0e4480-eaeb-44e4-943b-25f76114f67a",
+        "version": null,
+        "name": "ds_customers_by_month"
+      },
+      "attributeId": 1,
+      "function": null,
+      "value": null,
+      "attributeName": "customer_count"
+    }
+  ],
+  "sortBy": [],
+  "sortOrder": null
+}
