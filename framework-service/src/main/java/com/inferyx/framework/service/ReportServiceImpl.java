@@ -197,16 +197,12 @@ public class ReportServiceImpl {
 			reportDefaultPath = reportDefaultPath.endsWith("/") ? reportDefaultPath : reportDefaultPath.concat("/");
 			String filePathUrl = String.format("%s%s", reportDefaultPath, reportPath);
 
-			ResultSetHolder rsHolder = null;
+			ResultSetHolder rsHolder = sparkExecutor.executeAndRegisterByDatasource(reportExec.getExec(), tableName, reportDS, appUuid);
 			if(report.getSaveOnRefresh().equalsIgnoreCase("Y")) {
-				rsHolder = sparkExecutor.executeSqlByDatasource(reportExec.getExec(), reportDS, appUuid);
-				sparkExecutor.registerAndPersistDataframe(rsHolder, null, com.inferyx.framework.enums.SaveMode.APPEND.toString(), filePathUrl, tableName, "true", true);
-				countRows = rsHolder.getCountRows();
-			} else {
-				rsHolder = sparkExecutor.executeAndRegisterByDatasource(reportExec.getExec(), tableName, reportDS, appUuid);
-				countRows = rsHolder.getCountRows();
+				sparkExecutor.registerAndPersistDataframe(rsHolder, null, com.inferyx.framework.enums.SaveMode.APPEND.toString(), filePathUrl, tableName, "true", false);
 			}
 			
+			countRows = rsHolder.getCountRows();
 			persistDatastore(reportExec, tableName, filePathUrl, resultRef, new MetaIdentifier(MetaType.report, report.getUuid(), report.getVersion()), countRows, runMode);
 
 			reportExec.setResult(resultRef);
