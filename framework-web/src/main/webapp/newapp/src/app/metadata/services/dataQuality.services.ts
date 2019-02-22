@@ -8,6 +8,7 @@ import { CommonService } from './common.service';
 
 import { DataQualityIO } from '../domainIO/domain.dataQualityIO';
 import { FilterInfoIO } from '../domainIO/domain.filterInfoIO';
+import * as MetaTypeEnum from '../../metadata/enums/metaType';
 
 
 
@@ -109,20 +110,20 @@ export class DataQualityService {
               filterInfoIO.operator = response.filterInfo[k].operator;
               filterInfoIO.rhsType = response.filterInfo[k].operand[1].ref.type;
 
-              if (response.filterInfo[k].operand[0].ref.type == 'formula') {
+              if (response.filterInfo[k].operand[0].ref.type == MetaTypeEnum.MetaType.FORMULA) {
                 filterInfoIO.lhsAttribute.uuid = response.filterInfo[k].operand[0].ref.uuid;
                 filterInfoIO.lhsAttribute.label = response.filterInfo[k].operand[0].ref.name;
                 dataQualityIO.isFormulaExits = true;
               }
 
-              else if (response.filterInfo[k].operand[0].ref.type == 'datapod') {
+              else if (response.filterInfo[k].operand[0].ref.type == MetaTypeEnum.MetaType.DATAPOD) {
                 filterInfoIO.lhsAttribute.uuid = response.filterInfo[k].operand[0].ref.uuid;
                 filterInfoIO.lhsAttribute.label = response.filterInfo[k].operand[0].ref.name + "." + response.filterInfo[k].operand[0].attributeName;
                 filterInfoIO.lhsAttribute.attributeId = response.filterInfo[k].operand[0].attributeId.toString();
                 dataQualityIO.isAttributeExits = true;
               }
 
-              else if (response.filterInfo[k].operand[0].ref.type == 'simple') {
+              else if (response.filterInfo[k].operand[0].ref.type == MetaTypeEnum.MetaType.SIMPLE) {
                 dataQualityIO.isSimpleExits = true;
 
                 let stringValue: String = response.filterInfo[k].operand[0].value;
@@ -138,36 +139,36 @@ export class DataQualityService {
               }
 
 
-              if (response.filterInfo[k].operand[1].ref.type == 'formula') {
+              if (response.filterInfo[k].operand[1].ref.type == MetaTypeEnum.MetaType.FORMULA) {
                 dataQualityIO.isFormulaExits = true;
                 filterInfoIO.rhsAttribute = response.filterInfo[k].operand[1].ref.name;
                 filterInfoIO.rhsAttribute.uuid = response.filterInfo[k].operand[1].ref.uuid;
                 filterInfoIO.rhsAttribute.label = response.filterInfo[k].operand[1].ref.name;
               }
-              else if (response.filterInfo[k].operand[1].ref.type == 'datapod') {
+              else if (response.filterInfo[k].operand[1].ref.type == MetaTypeEnum.MetaType.DATAPOD) {
                 dataQualityIO.isAttributeExits = true;
                 filterInfoIO.rhsAttribute.uuid = response.filterInfo[k].operand[1].ref.uuid;
                 filterInfoIO.rhsAttribute.label = response.filterInfo[k].operand[1].ref.name + "." + response.filterInfo[k].operand[1].attributeName;
                 filterInfoIO.rhsAttribute.attributeId = response.filterInfo[k].operand[1].attributeId.toString();
               }
-              else if (response.filterInfo[k].operand[1].ref.type == 'paramlist') {
+              else if (response.filterInfo[k].operand[1].ref.type == MetaTypeEnum.MetaType.PARAMLIST) {
                 dataQualityIO.isParamlistExits = true;
                 filterInfoIO.rhsAttribute.uuid = response.filterInfo[k].operand[1].ref.uuid;
                 filterInfoIO.rhsAttribute.attributeId = response.filterInfo[k].operand[1].attributeId;
                 filterInfoIO.rhsAttribute.label = "app." + response.filterInfo[k].operand[1].attributeName;
               }
-              else if (response.filterInfo[k].operand[1].ref.type == 'function') {
+              else if (response.filterInfo[k].operand[1].ref.type == MetaTypeEnum.MetaType.FUNCTION) {
                 dataQualityIO.isFunctionExits = true;
                 filterInfoIO.rhsAttribute.uuid = response.filterInfo[k].operand[1].ref.uuid;
                 filterInfoIO.rhsAttribute.label = response.filterInfo[k].operand[1].ref.name;
               }
-              else if (response.filterInfo[k].operand[1].ref.type == 'dataset') {
+              else if (response.filterInfo[k].operand[1].ref.type == MetaTypeEnum.MetaType.DATASET) {
                 dataQualityIO.isDatasetExits = true;
                 filterInfoIO.rhsAttribute.uuid = response.filterInfo[k].operand[1].ref.uuid;
                 filterInfoIO.rhsAttribute.attributeId = response.filterInfo[k].operand[1].attributeId;
                 filterInfoIO.rhsAttribute.label = response.filterInfo[k].operand[1].attributeName;
               }
-              else if (response.filterInfo[k].operand[1].ref.type == 'simple') {
+              else if (response.filterInfo[k].operand[1].ref.type == MetaTypeEnum.MetaType.SIMPLE) {
                 let stringValue = response.filterInfo[k].operand[1].value;
                 let onlyNumbers = /^[0-9]+$/;
                 let result = onlyNumbers.test(stringValue.toString());

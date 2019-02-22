@@ -3,6 +3,6 @@ import { MetaIdentifierHolder } from './domain.metaIdentifierHolder';
 
 export class BaseRuleGroup extends BaseEntity{
 
-	private ruleInfo : MetaIdentifierHolder[];
-	private inParallel : String;
+	ruleInfo : MetaIdentifierHolder[];
+	inParallel : String;
 }

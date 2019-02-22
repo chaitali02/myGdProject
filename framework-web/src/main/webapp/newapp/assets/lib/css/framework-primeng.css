@@ -1,27 +1,41 @@
+/* --- p-dialogbox start--- */
+.dialog-titlebar .ui-dialog-titlebar{
+  background: white ;
+  font-weight: lighter;
+  border-bottom: 1px solid #e5e5e5 !important;
+}
+/* --- p-dialogbox end --- */
+
 /* --- p-dropdown start --- */
 .ui-dropdown .ui-dropdown-trigger {
-    border-left: 0!important;
+  border-left: 0!important;
+}
+.ui-dropdown .ui-dropdown-trigger .ui-dropdown-trigger-icon{
+  left: 20% !important;
 }
 /* --- pdropdown end --- */
 
 /* --- p-chips start --- */
 .pchip-height.ui-chips>ul.ui-inputtext{
-    height: 40px !important;
-    overflow-y:scroll !important;
-  }
-  .pchip-height.ui-chips>ul > li.ui-state-highlight {
-    border: 1px solid #acacac;
-    background-color: #e0e0e0 !important;
-    color: #585858 !important;
-    height: 80%;
-    margin-top: 0.8%;
-    margin-right: 0.9%;
-    padding: 1% 0% 0% 2%;
-    font-size: inherit;
-  }
+  height: 40px !important;
+  overflow-y:scroll !important;
+}
+.pchip-height.ui-chips>ul > li.ui-state-highlight {
+  border: 1px solid #acacac;
+  background-color: #e0e0e0 !important;
+  color: #585858 !important;
+  height: 80%;
+  margin-top: 0.8%;
+  margin-right: 0.9%;
+  padding: 1% 0% 0% 2%;
+  font-size: inherit;
+}
+.ui-chips>.ui-state-disabled .ui-chips-token-label {
+  margin-right: 10px !important;
+}
 /* --- p-chips end --- */
 
-/* -- angular2-multiselect down-arrow start -- */
+/* --- angular2-multiselect start --- */
 .selected-list .c-angle-down, .selected-list .c-angle-up{
   display: none;
 }
@@ -43,4 +57,28 @@
 .selected-list .c-list .c-token .c-remove svg{
   fill : #585858 !important;
 }
-/* -- angular2-multiselect down-arrow end -- */
+/* --- angular2-multiselect end --- */
+
+/* --- p-calender start --- */
+.dateTimeField input{
+  width: 75%;
+  /* height: 30px; */
+  border: 1px solid #ccc;
+  /* border-right: none; */
+}
+.ui-inputtext:focus{
+  box-shadow: none !important;
+}
+/* .ui-widget-header .ui-button, .ui-widget-content .ui-button, .ui-widget.ui-button, .ui-button{
+  border: 1px solid #ccc !important;
+  border-left: none !important;
+  width: 40px !important;
+  height: 30px !important;
+  border-radius: 3px;
+  color: #32c5d2 !important;
+} */
+ /* .ui-widget-header .ui-button :hover, .ui-widget-content :hover .ui-button :hover, .ui-widget.ui-button :hover, .ui-button :hover {
+  background: #eee !important;
+  color: #666 !important;
+} */
+/* --- p-calender end --- */

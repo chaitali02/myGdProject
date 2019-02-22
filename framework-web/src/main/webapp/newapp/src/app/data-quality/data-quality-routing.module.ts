@@ -6,7 +6,7 @@ import { DataQualityComponent } from './data-quality.component';
 import { DataQualityResultComponent } from './data-qualityresult.component'
 import { DataQualityDetailComponent } from './data-qualitydetail.component'
 import { DataQualityGroupDetailComponent } from './data-qualitygroupdetail.components'
-import { CompareResultComponent } from './compareresult/compareresult.component';
+// import { CompareResultComponent } from './compareresult/compareresult.component';
 
 const routes: Routes = [{
   path: '',

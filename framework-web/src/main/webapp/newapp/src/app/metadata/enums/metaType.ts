@@ -7,6 +7,7 @@ export enum MetaType {
     DAGEXEC = "dagExec",
     DASHBOARD = "dashboard",
     DQ = "dq",
+    DATAQUAL = "dataqual",
     DQEXEC = "dqExec",
     DQGROUP = "dqgroup",
     DQGROUPEXEC = "dqgroupExec",

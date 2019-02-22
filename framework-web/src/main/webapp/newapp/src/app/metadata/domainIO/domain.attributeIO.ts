@@ -7,6 +7,7 @@ export class AttributeIO {
     dname: String;
     attributeId: String;
     attrType: String;
+    version?: String;
 
     label?: String;
     value?: { 
@@ -16,6 +17,7 @@ export class AttributeIO {
         u_Id?: String,
         attrId?: String,
         attributeId?:String;
+        version?: String;
     };
 
 }

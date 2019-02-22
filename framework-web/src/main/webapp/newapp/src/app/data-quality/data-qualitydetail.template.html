@@ -174,7 +174,7 @@
                       </div>
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
+                        <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0.7% 0% 0% 1.5%;">
                           <div class="btn-group">
                             <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="active" name="active"
                               [checked]="active" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
@@ -183,7 +183,7 @@
                       </div>
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Lock</label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
+                        <div class="col-md-6 col-sm-6 col-xs-12"  style="padding: 0.7% 0% 0% 1.5%;">
                           <div class="btn-group">
                             <ui-switch [(ngModel)]="locked" name="locked" [disabled]="mode == 'true' || mode == 'false'"></ui-switch>
                           </div>
@@ -191,7 +191,7 @@
                       </div>
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
+                        <div class="col-md-6 col-sm-6 col-xs-12"  style="padding: 0.7% 0% 0% 1.5%;">
                           <div class="btn-group">
                             <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="published" name="published"
                               [checked]="published" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
@@ -220,6 +220,7 @@
                           <span class="required" aria-required="true"> * </span>
                         </label>
                         <div class="col-md-6">
+                            <!-- #source1="ngModel" required [ngClass]="{'has-error':myNewForm.submitted || (source1.invalid && (source.dirty || source1.touched))}"  -->
                           <select class="form-control" [(ngModel)]="source" name="source" [disabled]="mode == 'true'"
                             placeholder="-Select-">
                             <option *ngFor="let app of sources" [ngValue]="app">{{app}} </option>
@@ -232,7 +233,7 @@
                         </label>
                         <div class="col-md-6">
                           <p-dropdown [options]="allNames" [(ngModel)]="sourcedata" name="sourcedata" dataKey="uuid"
-                            [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}" 
+                            [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}" [filter]="true"
                             (onChange)="changeType()" placeholder="-Select-">
                           </p-dropdown>
                         </div>
@@ -463,7 +464,7 @@
                                       </p-dropdown>
                                     </div>
 
-                                    <p-dialog class="dq-dialogbox" header="Search Attribute" [(visible)]="displayDialogBox"
+                                    <p-dialog class="dialog-titlebar" header="Search Attribute" [(visible)]="displayDialogBox"
                                       [modal]="true" [responsive]="true" [width]="430" [resizable]="true"
                                       [contentStyle]="{'overflow':'visible'}" [style]="{'border-radius': '6px','box-shadow': '0 5px 15px rgba(0,0,0,.5)'}">
 

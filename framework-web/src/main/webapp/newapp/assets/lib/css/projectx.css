@@ -1289,18 +1289,24 @@ cursor: not-allowed !important;
   color: #a0a0a0;
 }
 
-/* viewPage Icon margin */
+/* view three-Page Icon margin */
 .left-margin{
   margin-left: 4px;
-}
-
-.dq-dialogbox .ui-dialog-titlebar{
-  background: white;
-  font-weight: lighter;
-  border-bottom: 1px solid #e5e5e5 !important;
+} 
+/* view single-Page Icon margin */
+.left-marginpage{
+  margin: 0px 5px 0px 0px;
 }
 
 .btn-margin{
-    margin: 0% 0% 0% 1%;
-    border-radius: 3px !important;
+  margin: 0% 0% 0% 1%;
+  border-radius: 3px !important;
+}
+
+/* -- ui-switch width -- */
+.switch {
+  width: 40px !important;
+}
+.switch.checked {
+  width: 40px !important;
 }

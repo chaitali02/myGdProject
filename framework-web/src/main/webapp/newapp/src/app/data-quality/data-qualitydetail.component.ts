@@ -9,7 +9,7 @@ import { MessageService } from 'primeng/components/common/messageservice';
 import { CommonService } from '../metadata/services/common.service';
 import { DataQualityService } from '../metadata/services/dataQuality.services';
 import { Version } from './../metadata/domain/version'
-import { DependsOn } from './dependsOn'
+import { DependsOnIO } from '../metadata/domainIO/domain.dependsOnIO'
 import { AttributeHolder } from './../metadata/domain/domain.attributeHolder'
 import { KnowledgeGraphComponent } from '../shared/components/knowledgeGraph/knowledgeGraph.component';
 import { DataQuality } from '../metadata/domain/domain.dataQuality';
@@ -24,6 +24,7 @@ import * as MetaTypeEnum from '../metadata/enums/metaType';
 import { SourceAttr } from '../metadata/domain/domain.sourceAttr';
 import { Subject, fromEvent } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { RoutesParam } from '../metadata/domain/domain.routeParams';
 @Component({
   selector: 'app-data-pipeli',
   templateUrl: './data-qualitydetail.template.html',
@@ -71,7 +72,7 @@ export class DataQualityDetailComponent {
   dropdownSettings: { singleSelection: boolean; text: string; selectAllText: string; unSelectAllText: string; enableSearchFilter: boolean; classes: string; maxHeight: number; disabled: boolean; };
   dropdownList: any[];
   allNames: any[];
-  sourcedata: DependsOn;
+  sourcedata: DependsOnIO;
   source: string;
   sources: string[];
   selectedVersion: Version;
@@ -202,9 +203,10 @@ export class DataQualityDetailComponent {
     }
     ]
     this.activatedRoute.params.subscribe((params: Params) => {
-      this.id = params['id'];
-      this.version = params['version'];
-      this.mode = params['mode'];
+      let param = <RoutesParam>params;    
+      this.id = params.id;
+      this.version = params.version;
+      this.mode = params.mode;
       if (this.mode !== undefined) {
         this.getAllVersionByUuid();
         this.getOneByUuidAndVersion(this.id, this.version);
@@ -354,23 +356,24 @@ export class DataQualityDetailComponent {
   }
   onSuccesgetAllLatest(response1: BaseEntity[]) {    
     if (this.mode == undefined) {
-      let dependOnTemp: DependsOn = new DependsOn();
+      let dependOnTemp: DependsOnIO = new DependsOnIO();
       dependOnTemp.label = response1[0].name;
       dependOnTemp.uuid = response1[0].uuid;
       this.sourcedata = dependOnTemp
     }
 
-    var allname = [new DropDownIO]
+    var allname = []
+    allname = [new DropDownIO];
     for (const i in response1) {
       let name = new DropDownIO();
-      response1.sort((a,b)=>a.name.localeCompare(b.name.toString()));
+      // response1.sort((a,b)=>a.name.localeCompare(b.name.toString()));
       name.label = response1[i].name;
       name.value = { label: "", uuid: "" };
       name.value.label = response1[i].name;
       name.value.uuid = response1[i].uuid;
       allname[i] = name;
     }
-    this.allNames = allname
+    this.allNames = allname;
 
     this.getAllAttributeBySource();
     if (this.mode != undefined && this.IsSelectSoureceAttr) {
@@ -385,6 +388,7 @@ export class DataQualityDetailComponent {
     )
   }
   OnSuccesgetAllAttributeBySource(response: AttributeIO[]) {
+    this.allAttribute = [];
     let firstObj = new AttributeIO();
     firstObj.label = "-Select-"
     firstObj.value = { label: "-Select-", value: "" }
@@ -427,7 +431,7 @@ export class DataQualityDetailComponent {
     this.locked == this.appHelper.convertStringToBoolean(this.dqdata.locked);
     this.published == this.appHelper.convertStringToBoolean(this.dqdata.published);
 
-    let dependOnTemp: DependsOn = new DependsOn();
+    let dependOnTemp: DependsOnIO = new DependsOnIO();
     dependOnTemp.label = this.dqdata.dependsOn.ref.name;
     dependOnTemp.uuid = this.dqdata.dependsOn.ref.uuid;
     this.sourcedata = dependOnTemp;
@@ -473,7 +477,7 @@ export class DataQualityDetailComponent {
     this.dqdata.maxLength = this.dqdata.lengthCheck.maxLength;
     this.dqdata.minLength = this.dqdata.lengthCheck.minLength;
     if (this.dqdata.refIntegrityCheck.ref != null) {
-      let selectrefIntegrity: DependsOn = new DependsOn();
+      let selectrefIntegrity: DependsOnIO = new DependsOnIO();
       selectrefIntegrity.label = this.dqdata.refIntegrityCheck.ref.name;
       selectrefIntegrity.uuid = this.dqdata.refIntegrityCheck.ref.uuid;
       this.selectRefIntegrity = selectrefIntegrity

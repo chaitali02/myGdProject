@@ -1,3 +1,4 @@
+import { DropDownIO } from './../metadata/domainIO/domain.dropDownIO';
 import { MetadataService } from './../metadata/services/metadata.service';
 import { DataQualityService } from './../metadata/services/dataQuality.services';
 import { Component, Input, OnInit, ViewChild, AfterViewInit } from '@angular/core';
@@ -9,6 +10,11 @@ import { Http } from '@angular/http';
 import { AppConfig } from '../app.config';
 import { RuleService } from '../metadata/services/rule.service';
 import { DataReconService } from '../metadata/services/dataRecon.services';
+import * as MetaTypeEnum from '../metadata/enums/metaType';
+import { RoutesParam } from '../metadata/domain/domain.routeParams';
+import { AttributeIO } from '../metadata/domainIO/domain.attributeIO';
+import { CompareResult } from '../metadata/domain/domain.compareResult';
+import { RuleGroup } from '../metadata/domain/domain.ruleGroup';
 
 @Component({
   selector: 'app-compareresult',
@@ -24,7 +30,7 @@ export class CompareResultComponent {
   allNameDq: any[];
   allsource: any[];
   alltarget: any[];
-  searchForm: any;
+  searchForm: any = {};
   selectedTarget: any;
   colsSourcedata: any;
   colsSource: any;
@@ -67,17 +73,15 @@ export class CompareResultComponent {
   //for recon
   allNameRecon: any[];
 
-
   constructor(private _config: AppConfig, private http: Http, private _location: Location, private _activatedRoute: ActivatedRoute, private router: Router, public appMetadata: AppMetadata,
     private _commonService: CommonService, private _dataQualityService: DataQualityService, private _metadataService: MetadataService, private _ruleService: RuleService, private _reconService: DataReconService, private datePipe: DatePipe) {
 
     this._activatedRoute.params.subscribe((params: Params) => {
-      this.type = (params['type']).toLowerCase();
+      let param = <RoutesParam>params;
+      this.type = (param.type).toLowerCase();
       this.populateBreadCrumb();
       this.isSubmitDisable = true;
     });
-
-
 
     // for dq
     this.searchForm = {};
@@ -104,7 +108,7 @@ export class CompareResultComponent {
   }
 
   populateBreadCrumb(): any {
-    if (this.type == 'dq') {
+    if (this.type == MetaTypeEnum.MetaType.DQ) {
       this.breadcrumbDataFrom = [
         {
           "caption": "Data Quality",
@@ -116,9 +120,9 @@ export class CompareResultComponent {
         }
       ];
       this.searchForm.selectedTypeRadio = this.type;
-      this.getAllLatest(this.type);
+      this.getAllLatest(MetaTypeEnum.MetaType.DQ);
     }
-    else if (this.type == 'rule') {
+    else if (this.type == MetaTypeEnum.MetaType.RULE) {
       this.breadcrumbDataFrom = [
         {
           "caption": "Business Rules",
@@ -129,10 +133,10 @@ export class CompareResultComponent {
           "routeurl": "/app/list/rule"
         }
       ];
-      this.getAllLatest(this.type);
-      this.getAllLatest(this.type + "group");
+      this.getAllLatest(MetaTypeEnum.MetaType.RULE);
+      this.getAllLatest(MetaTypeEnum.MetaType.RULEGROUP);
     }
-    else if (this.type == 'recon') {
+    else if (this.type == MetaTypeEnum.MetaType.RECON) {
       this.breadcrumbDataFrom = [
         {
           "caption": "Data Reconcilliation",
@@ -143,7 +147,7 @@ export class CompareResultComponent {
           "routeurl": "/app/list/recon"
         }
       ];
-      this.getAllLatest(this.type);
+      this.getAllLatest(MetaTypeEnum.MetaType.RECON);
     }
   }
 
@@ -179,56 +183,89 @@ export class CompareResultComponent {
       error => console.log("Error :: " + error));
   }
 
-  onSuccessgetAllLatest(response: any[], type: String): any {
-    if (type == 'dq' || type == 'datapod') {
+  onSuccessgetAllLatest(response: AttributeIO[], type: String): any {
+    debugger
+    if (type == MetaTypeEnum.MetaType.DQ || type == MetaTypeEnum.MetaType.DATAPOD) {
       this.allNameDq = [];
-      for (const i in response) {
-        let ver = {};
-        ver["label"] = response[i]['name'];
-        ver["value"] = {};
-        ver["value"]["label"] = response[i]['name'];
-        ver["value"]["uuid"] = response[i]['uuid'];
-        this.allNameDq[i] = ver;
-      }
+      this.allNameDq = this.fillArrayName(response);
+      // for (const i in response) {
+      //   let ver = new DropDownIO();
+      //   ver.label = response[i].name;
+      //   ver.value = {label: String, uuid: String, version: String};
+      //   ver.value.label = response[i].name;
+      //   ver.value.uuid = response[i].uuid;
+      //   ver.value.version = response[i].version;
+      //   this.allNameDq[i] = ver;
+      // }
     }
 
-    else if (type == 'rulegroup') {
+    else if (type == MetaTypeEnum.MetaType.RULEGROUP) {
       this.allNameRuleGroup = [];
-      for (const i in response) {
-        let ver = {};
-        ver["label"] = response[i]['name'];
-        ver["value"] = {};
-        ver["value"]["label"] = response[i]['name'];
-        ver["value"]["uuid"] = response[i]['uuid'];
-        ver["value"]["version"] = response[i]['version'];
-        this.allNameRuleGroup[i] = ver;
-      }
+      this.allNameRuleGroup = this.fillArrayName(response);
+      // for (const i in response) {
+      //   let ver = new DropDownIO();
+      //   ver.label = response[i].name;
+      //   ver.value = {label: String, uuid: String, version: String};
+      //   ver.value.label = response[i].name;
+      //   ver.value.uuid = response[i].uuid;
+      //   ver.value.version = response[i].version;
+      //   this.allNameRuleGroup[i] = ver;
+      // }
     }
-    else if (type == 'rule') {
+    else if (type == MetaTypeEnum.MetaType.RULE) {
       this.allNameRule = [];
-      for (const i in response) {
-        let ver = {};
-        ver["label"] = response[i]['name'];
-        ver["value"] = {};
-        ver["value"]["label"] = response[i]['name'];
-        ver["value"]["uuid"] = response[i]['uuid'];
-        this.allNameRule[i] = ver;
-      }
+      this.allNameRule = this.fillArrayName(response);
+      // for (const i in response) {
+      //   let ver = new DropDownIO();
+      //   ver.label = response[i].name;
+      //   ver.value = {label: String, uuid: String, version: String};
+      //   ver.value.label = response[i].name;
+      //   ver.value.uuid = response[i].uuid;
+      //   ver.value.version = response[i].version;
+      //   this.allNameRule[i] = ver;
+      // }
     }
-    else if (type == 'recon') {
+    else if (type == MetaTypeEnum.MetaType.RECON) {
       this.allNameRecon = [];
-      for (const i in response) {
-        let ver = {};
-        ver["label"] = response[i]['name'];
-        ver["value"] = {};
-        ver["value"]["label"] = response[i]['name'];
-        ver["value"]["uuid"] = response[i]['uuid'];
-        this.allNameRecon[i] = ver;
-      }
+      this.allNameRecon = this.fillArrayName(response);
+      // for (const i in response) {
+      //   let ver = new DropDownIO();
+      //   ver.label = response[i].name;
+      //   ver.value = {label: String, uuid: String, version: String};
+      //   ver.value.label = response[i].name;
+      //   ver.value.uuid = response[i].uuid;
+      //   ver.value.version = response[i].version;
+      //   this.allNameRecon[i] = ver;
+      // }
     }
-
   }
-
+  fillArrayName(response) {
+    debugger
+    let mainArray = [];
+    for (const i in response) {
+      let ver = new DropDownIO();
+      ver.label = response[i].name;
+      ver.value = { label: String, uuid: String, version: String };
+      ver.value.label = response[i].name;
+      ver.value.uuid = response[i].uuid;
+      ver.value.version = response[i].version;
+      mainArray[i] = ver;
+    }
+    return mainArray;
+  }
+  fillArrayCreatedOn(response) {
+    let mainArray = [];
+    for (const i in response) {
+      let ver = new DropDownIO();
+      ver.label = response[i].createdOn;
+      ver.value = { label: String, uuid: String, version: "" };
+      ver.value.label = response[i].createdOn;
+      ver.value.uuid = response[i].uuid;
+      ver.value.version = response[i].version;
+      mainArray[i] = ver;
+    }
+    return mainArray;
+  }
   submitSearchCriteria() {
     this.isInProgress = true;
     this.alltarget = [];
@@ -257,92 +294,96 @@ export class CompareResultComponent {
       endDate = '';
     }
 
-    if (this.searchForm.selectedTypeRadio == 'dq') {
+    if (this.type == MetaTypeEnum.MetaType.DQ) {
       this._dataQualityService.getDataQualExecByDataqual1(this.searchForm.selectedName.uuid, startDate, endDate).subscribe(
         response => { this.onSuccessgetDataQualExec(response) },
         error => console.log("Error :: " + error));
     }
-    else if (this.searchForm.selectedTypeRadio == 'datapod') {
+    else if (this.type == MetaTypeEnum.MetaType.DATAPOD) {
       this._dataQualityService.getdqExecByDatapod(this.searchForm.selectedName.uuid, startDate, endDate).subscribe(
         response => { this.onSuccessgetDataQualExec(response) },
         error => console.log("Error :: " + error));
     }
-    else if (this.type == 'rule') {
+    else if (this.type == MetaTypeEnum.MetaType.RULE) {
       this._ruleService.getRuleExecByRule(this.searchForm.selectedRuleName.uuid, startDate, endDate).subscribe(
         response => { this.onSuccessgetRuleExecByRule(response) },
         error => console.log("Error :: " + error));
     }
-    else if (this.type == 'recon') {
+    else if (this.type == MetaTypeEnum.MetaType.RECON) {
       this._reconService.getReconExecByRecon(this.searchForm.selectedReconName.uuid, startDate, endDate).subscribe(
         response => { this.onSuccessgetReconExecByRecon(response) },
         error => console.log("Error :: " + error));
     }
 
   }
-  onSuccessgetReconExecByRecon(response: any[]): any {
+  onSuccessgetReconExecByRecon(response: CompareResult[]): any {
+    debugger
     this.isInProgress = false;
     this.alltargetTemp = response;
     this.allsource = [];
-    for (const i in response) {
-      let ver = {};
-      ver["label"] = response[i]['createdOn'];
-      ver["value"] = {};
-      ver["value"]["label"] = response[i]['createdOn'];
-      ver["value"]["uuid"] = response[i]['uuid'];
-      ver["value"]["version"] = response[i]['version'];
-      this.allsource[i] = ver;
-    }
+    this.allsource = this.fillArrayCreatedOn(response);
+    // for (const i in response) {
+    //   let ver = new DropDownIO();
+    //   ver.label = response[i].createdOn;
+    //   ver.value = { label: String, uuid: String, version: "" };
+    //   ver.value.label = response[i].createdOn;
+    //   ver.value.uuid = response[i].uuid;
+    //   ver.value.version = response[i].version;
+    //   this.allsource[i] = ver;
+    // }
     this.alltarget = [];
   }
 
-  onSuccessgetDataQualExec(response: any[]): any {
+  onSuccessgetDataQualExec(response: CompareResult[]): any {
+    debugger
     this.isInProgress = false;
     this.alltargetTemp = response;
     this.allsource = [];
-    for (const i in response) {
-      let ver = {};
-      ver["label"] = response[i]['createdOn'];
-      ver["value"] = {};
-      ver["value"]["label"] = response[i]['createdOn'];
-      ver["value"]["uuid"] = response[i]['uuid'];
-      ver["value"]["version"] = response[i]['version'];
-      this.allsource[i] = ver;
-    }
+    this.allsource = this.fillArrayCreatedOn(response);
+    // for (const i in response) {
+    //   let ver = new DropDownIO();
+    //   ver.label = response[i].createdOn;
+    //   ver.value = {label: String, uuid: String, version:""};
+    //   ver.value.label = response[i].createdOn;
+    //   ver.value.uuid = response[i].uuid;
+    //   ver.value.version = response[i].version;
+    //   this.allsource[i] = ver;
+    // }
     this.alltarget = [];
   }
 
   onChangeSource(selectedSource: any) {
-
+    debugger
     this.sourceShowProgress = true;
     this.isSourceTableShow = false;
     this.selectedTarget = ''
     this.isTargetTableShow = false;
     this.isTargetDataError = false;
-
+    this.alltarget = [];
     for (const i in this.alltargetTemp) {
-      if (this.alltargetTemp[i]['uuid'] !== selectedSource.uuid) {
-        let ver = {};
-        ver["label"] = this.alltargetTemp[i]['createdOn'];
-        ver["value"] = {};
-        ver["value"]["label"] = this.alltargetTemp[i]['createdOn'];
-        ver["value"]["uuid"] = this.alltargetTemp[i]['uuid'];
-        ver["value"]["version"] = this.alltargetTemp[i]['version'];
+      if (this.alltargetTemp[i].uuid !== selectedSource.uuid) {
+        let ver = new DropDownIO();
+        ver.label = this.alltargetTemp[i].createdOn;
+        ver.value = { label: String, uuid: String, version: "" };
+        ver.value.label = this.alltargetTemp[i].createdOn;
+        ver.value.uuid = this.alltargetTemp[i].uuid;
+        ver.value.version = this.alltargetTemp[i].version;
         this.alltarget.push(ver);
       }
     }
 
-    if (this.type == "rule") {
-      this._metadataService.getNumRowsbyExec(selectedSource.uuid, selectedSource.version, "ruleexec").subscribe(
+    if (this.type == MetaTypeEnum.MetaType.RULE) {
+      this._metadataService.getNumRowsbyExec(selectedSource.uuid, selectedSource.version, MetaTypeEnum.MetaType.RULEEXEC).subscribe(
         response => { this.onSuccessgetNumRowsbyExec(response, selectedSource, "source") },
         error => console.log("Error :: " + error));
     }
-    else if (this.type == "dq") {
-      this._metadataService.getNumRowsbyExec(selectedSource.uuid, selectedSource.version, "dqexec").subscribe(
+    else if (this.type == MetaTypeEnum.MetaType.DQ) {
+      this._metadataService.getNumRowsbyExec(selectedSource.uuid, selectedSource.version, MetaTypeEnum.MetaType.DQEXEC).subscribe(
         response => { this.onSuccessgetNumRowsbyExec(response, selectedSource, "source") },
         error => console.log("Error :: " + error));
     }
-    else if (this.type == "recon") {
-      this._metadataService.getNumRowsbyExec(selectedSource.uuid, selectedSource.version, "reconexec").subscribe(
+    else if (this.type == MetaTypeEnum.MetaType.RECON) {
+      this._metadataService.getNumRowsbyExec(selectedSource.uuid, selectedSource.version, MetaTypeEnum.MetaType.RECONEXEC).subscribe(
         response => { this.onSuccessgetNumRowsbyExec(response, selectedSource, "source") },
         error => console.log("Error :: " + error));
     }
@@ -353,18 +394,18 @@ export class CompareResultComponent {
     this.isTargetTableShow = false;
     this.isTargetDataError = false;
 
-    if (this.type == "rule") {
-      this._metadataService.getNumRowsbyExec(selectedTarget.uuid, selectedTarget.version, "ruleexec").subscribe(
+    if (this.type == MetaTypeEnum.MetaType.RULE) {
+      this._metadataService.getNumRowsbyExec(selectedTarget.uuid, selectedTarget.version, MetaTypeEnum.MetaType.RULEEXEC).subscribe(
         response => { this.onSuccessgetNumRowsbyExec(response, selectedTarget, "target") },
         error => console.log("Error :: " + error));
     }
-    else if (this.type == "dq") {
-      this._metadataService.getNumRowsbyExec(selectedTarget.uuid, selectedTarget.version, "dqexec").subscribe(
+    else if (this.type == MetaTypeEnum.MetaType.DQ) {
+      this._metadataService.getNumRowsbyExec(selectedTarget.uuid, selectedTarget.version, MetaTypeEnum.MetaType.DQEXEC).subscribe(
         response => { this.onSuccessgetNumRowsbyExec(response, selectedTarget, "target") },
         error => console.log("Error :: " + error));
     }
-    else if (this.type == "recon") {
-      this._metadataService.getNumRowsbyExec(selectedTarget.uuid, selectedTarget.version, "reconexec").subscribe(
+    else if (this.type == MetaTypeEnum.MetaType.RECON) {
+      this._metadataService.getNumRowsbyExec(selectedTarget.uuid, selectedTarget.version, MetaTypeEnum.MetaType.RECONEXEC).subscribe(
         response => { this.onSuccessgetNumRowsbyExec(response, selectedTarget, "target") },
         error => console.log("Error :: " + error));
     }
@@ -372,27 +413,8 @@ export class CompareResultComponent {
 
   onSuccessgetNumRowsbyExec(response: any, selectedSourceTarget: any, compareType: String): any {
 
-    if (this.type == "rule") {
+    if (this.type == MetaTypeEnum.MetaType.RULE) {
       this._ruleService.getResults(selectedSourceTarget.version, selectedSourceTarget.uuid, 0, 100).subscribe(
-        response => { this.onSuccessGetSummary(response, compareType) },
-        error => {
-          {
-            if (compareType == 'source') {
-              this.sourceShowProgress = false;
-              this.isSourceDataError = true;
-              this.sourceDataMessage = 'No data available';
-            }
-            else if (compareType == 'target') {
-              this.targetShowProgress = false;
-              this.isTargetDataError = true;
-              this.targetDataMessage = 'No data available';
-            }
-            console.log("Error :: " + error)
-          }
-        });
-    }
-    else if (this.type == "dq") {
-      this._dataQualityService.getSummary(selectedSourceTarget.uuid, selectedSourceTarget.version, "dqexec", response.runMode).subscribe(
         response => { this.onSuccessGetSummary(response, compareType) },
         error => {
           if (compareType == 'source') {
@@ -408,8 +430,25 @@ export class CompareResultComponent {
           console.log("Error :: " + error)
         });
     }
-    else if (this.type == "recon") {
-      this._reconService.getResults(selectedSourceTarget.uuid, selectedSourceTarget.version, "reconexec", response.runMode).subscribe(
+    else if (this.type == MetaTypeEnum.MetaType.DQ) {
+      this._dataQualityService.getSummary(selectedSourceTarget.uuid, selectedSourceTarget.version, MetaTypeEnum.MetaType.DQEXEC, response.runMode).subscribe(
+        response => { this.onSuccessGetSummary(response, compareType) },
+        error => {
+          if (compareType == 'source') {
+            this.sourceShowProgress = false;
+            this.isSourceDataError = true;
+            this.sourceDataMessage = 'No data available';
+          }
+          else if (compareType == 'target') {
+            this.targetShowProgress = false;
+            this.isTargetDataError = true;
+            this.targetDataMessage = 'No data available';
+          }
+          console.log("Error :: " + error)
+        });
+    }
+    else if (this.type == MetaTypeEnum.MetaType.RECON) {
+      this._reconService.getResults(selectedSourceTarget.uuid, selectedSourceTarget.version, MetaTypeEnum.MetaType.RECONEXEC, response.runMode).subscribe(
         response => { this.onSuccessGetSummary(response, compareType) },
         error => {
           if (compareType == 'source') {
@@ -467,35 +506,39 @@ export class CompareResultComponent {
 
   onChangeRuleGroup(selectedRuleName) {
     this.allNameRule = [];
-    this._commonService.getOneByUuidAndVersion(selectedRuleName.uuid, selectedRuleName.version, "rulegroup").subscribe(
+    this._commonService.getOneByUuidAndVersion(selectedRuleName.uuid, selectedRuleName.version, MetaTypeEnum.MetaType.RULEGROUP).subscribe(
       response => { this.onSuccessgetOneByUuidAndVersion(response) },
       error => console.log("Error :: " + error));
   }
-  onSuccessgetOneByUuidAndVersion(response: any): any {
+  onSuccessgetOneByUuidAndVersion(response: RuleGroup): any {
+    debugger
     this.allNameRule = [];
-    for (const i in response.ruleInfo) {
-      let ver = {};
-      ver["label"] = response.ruleInfo[i].ref.name;
-      ver["value"] = {};
-      ver["value"]["label"] = response.ruleInfo[i].ref['name'];
-      ver["value"]["uuid"] = response.ruleInfo[i].ref['uuid'];
-      this.allNameRule[i] = ver;
-    }
+    this.allNameRule = this.fillArrayName(response);
+    // for (const i in response.ruleInfo) {
+    //   let ver = new DropDownIO();
+    //   ver.label = response.ruleInfo[i].ref.name;
+    //   ver.value = { label: String, uuid: String, version: "" };
+    //   ver.value.label = response.ruleInfo[i].ref.name;
+    //   ver.value.uuid = response.ruleInfo[i].ref.uuid;
+    //   this.allNameRule[i] = ver;
+    // }
   }
 
-  onSuccessgetRuleExecByRule(response: any[]): any {
+  onSuccessgetRuleExecByRule(response: CompareResult[]): any {
+    debugger
     this.isInProgress = false;
     this.alltargetTemp = response;
     this.allsource = [];
-    for (const i in response) {
-      let ver = {};
-      ver["label"] = response[i]['createdOn'];
-      ver["value"] = {};
-      ver["value"]["label"] = response[i]['createdOn'];
-      ver["value"]["uuid"] = response[i]['uuid'];
-      ver["value"]["version"] = response[i]['version'];
-      this.allsource[i] = ver;
-    }
+    this.allsource = this.fillArrayCreatedOn(response);
+    // for (const i in response) {
+    //   let ver = new DropDownIO();
+    //   ver.label = response[i].createdOn;
+    //   ver.value = { label: String, uuid: String, version: "" };
+    //   ver.value.label = response[i].createdOn;
+    //   ver.value.uuid = response[i].uuid;
+    //   ver.value.version = response[i].version;
+    //   this.allsource[i] = ver;
+    // }
     this.alltarget = [];
   }
 
@@ -504,18 +547,18 @@ export class CompareResultComponent {
     this.searchForm.type = this.types[0].value;
     this.allsource = [];
 
-    if (this.type == 'dq') {
+    if (this.type == MetaTypeEnum.MetaType.DQ) {
       this.allNameDq = [];
-      this.getAllLatest(this.searchForm.type);
+      this.getAllLatest(MetaTypeEnum.MetaType.DQ);
     }
-    else if (this.type == 'rule') {
+    else if (this.type == MetaTypeEnum.MetaType.RULE) {
       this.searchForm.selectedRuleName = '';
-      this.getAllLatest(this.type);
-      this.getAllLatest(this.type + "group");
+      this.getAllLatest(MetaTypeEnum.MetaType.RULE);
+      this.getAllLatest(MetaTypeEnum.MetaType.RULEGROUP);
     }
-    else if (this.type == 'recon') {
+    else if (this.type == MetaTypeEnum.MetaType.RECON) {
       this.searchForm.selectedReconName = [];
-      this.getAllLatest(this.type);
+      this.getAllLatest(MetaTypeEnum.MetaType.RECON);
     }
 
     this.isSubmitDisable = true;

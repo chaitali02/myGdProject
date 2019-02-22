@@ -20,8 +20,9 @@ import { DataQualityService } from '../metadata/services/dataQuality.services';
 import { JointjsService } from '../shared/components/jointjs/jointjsservice'
 import { routing1 } from './data-quality-routing.module'
 import { DialogModule } from 'primeng/components/dialog/dialog';
-import { CompareResultComponent } from './compareresult/compareresult.component';
+// import { CompareResultComponent } from './compareresult/compareresult.component';
 import { MetadataService } from '../metadata/services/metadata.service';
+// import { CompareResultComponent } from '../compareresult/compareresult.component';
 
 @NgModule({
     imports: [
@@ -38,7 +39,7 @@ import { MetadataService } from '../metadata/services/metadata.service';
         CalendarModule,
         ChipsModule,
         UiSwitchModule.forRoot({
-            size: 'medium',
+            size: 'small',
             color: '#15C5D5',
             switchColor: '#FFFFF',
             defaultBoColor : '#ccc',
@@ -51,7 +52,7 @@ import { MetadataService } from '../metadata/services/metadata.service';
         DataQualityResultComponent,
         DataQualityDetailComponent,
         DataQualityGroupDetailComponent,
-        CompareResultComponent
+        // CompareResultComponent
     ],
     providers: [
         CommonService,

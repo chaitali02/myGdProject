@@ -1,4 +1,4 @@
-export class DependsOn {
+export class DependsOnIO {
     uuid: any;
     label: any;
   }
