@@ -99,12 +99,13 @@ public class GraphOperator implements IOperator {
 					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
 					execParams));
 			sb.append(" AS id, ");
-			AttributeRefHolder nbpropID = graphNode.getNodeBackgroundInfo().getPropertyId();
-			sb.append(attributeMapOperator.sourceAttrSql(nbpropID, nbpropID,
-					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
-					execParams));
-			sb.append(" AS nBPropertyId, ");
-			
+			if(graphNode.getNodeBackgroundInfo() !=null) {
+				AttributeRefHolder nbpropID = graphNode.getNodeBackgroundInfo().getPropertyId();
+				sb.append(attributeMapOperator.sourceAttrSql(nbpropID, nbpropID,
+						DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
+						execParams));
+				sb.append(" AS nBPropertyId, ");
+			}
 			sb.append(count + " AS nodeIndex, ");
 
 			AttributeRefHolder nodeNameRefHolder = graphNode.getNodeName();

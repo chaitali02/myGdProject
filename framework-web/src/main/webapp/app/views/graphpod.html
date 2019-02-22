@@ -666,7 +666,7 @@
                                 </div>
                               </span>
                             <span class="form-group" style="margin-left:0px;margin-right:0px;">
-<!--                               
+                            <!--                               
                               <div>
                                 <input type="color" class="form-control" ng-disabled="{{mode}}" name="propertyValue{{$index}}" ng-model="tabledata.propertyValue" required disable-validation-message="" style="height:36px;padding: 0px;">
                               </div> -->
@@ -680,7 +680,8 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+              <button type="button" data-dismiss="modal" class="btn dark btn-outline" data-ng-click="cancelHiighlightInfo()">Reset</button>
+            <!-- <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button> -->
             <input type="submit" class="btn btn-success" value="Submit" name="submit" ng-disabled="{{mode}}">
           </div>
       </form>
