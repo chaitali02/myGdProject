@@ -570,6 +570,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
 
   });
   $scope.convertSectionInfo = function (sectionInfo) {
+    $scope.sectionRows=[];
     if (!sectionInfo[0].rowNo) {
       var row = 0;
       angular.forEach(sectionInfo, function (val, key) {
@@ -1508,7 +1509,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
   }
 
   $scope.getAllLatestDashboardExec = function () {
-    DahsboardSerivce.getAllLatest("dashboardexec").then(function (response) { onSuccessGetAllLatest(response.data) });
+    DahsboardSerivce.getDasboardExecBySave($stateParams.id,"dashboard","Y").then(function (response) { onSuccessGetAllLatest(response.data) });
     var onSuccessGetAllLatest = function (response) {
       $scope.allExecDetail = response;
       if(response && response.length ==0){
