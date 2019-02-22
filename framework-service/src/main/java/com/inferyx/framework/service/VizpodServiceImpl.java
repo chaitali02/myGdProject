@@ -808,13 +808,22 @@ public class VizpodServiceImpl {
 			
 			vizExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.vizpod, vizpodUuid, vizpod.getVersion())));
 			Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
-			vizExec.setSql(vizpodParser.toSql(vizpod, "", usedRefKeySet, true, runMode, false));
-			logger.info(vizExec.getSql());
-			vizExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
-			vizExec.setName(vizpod.getName());
-			vizExec.setBaseEntity();
-			vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.NotStarted);
+			
+			try {
+				vizExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
+				vizExec.setName(vizpod.getName());
+				vizExec.setBaseEntity();
+				
+				vizExec.setSql(vizpodParser.toSql(vizpod, "", usedRefKeySet, true, runMode, false));
+				logger.info(vizExec.getSql());
+			} catch (Exception e) {
+				e.printStackTrace();
+				vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.NotStarted);
+				vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.Failed);
+			}
 		}
+
+		vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.NotStarted);
 		return vizExec;
 	}
 	

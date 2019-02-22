@@ -10,8 +10,14 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
+
 import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -19,9 +25,15 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.aggregation.GroupOperation;
+import org.springframework.data.mongodb.core.aggregation.MatchOperation;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.dao.IDashboardDao;
 import com.inferyx.framework.domain.Dashboard;
 import com.inferyx.framework.domain.DashboardExec;
@@ -150,8 +162,12 @@ public class DashboardServiceImpl {
 				try {
 					MetaIdentifier vizExecMI = vixExecInfo.getRef();
 					VizExec vizExec = (VizExec) commonServiceImpl.getOneByUuidAndVersion(vizExecMI.getUuid(), vizExecMI.getVersion(), vizExecMI.getType().toString(), "N");
-					MetaIdentifier vizMI = vizExec.getDependsOn().getRef();
-					vizExec = vizpodServiceImpl.execute(vizMI.getUuid(), vizMI.getVersion(), execParams, vizExec, dashboard.getSaveOnRefresh(), runMode);	
+					if(vizExec.getStatusList() != null 
+							&& !vizExec.getStatusList().isEmpty()
+							&& !Helper.getLatestStatus(vizExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
+						MetaIdentifier vizMI = vizExec.getDependsOn().getRef();
+						vizExec = vizpodServiceImpl.execute(vizMI.getUuid(), vizMI.getVersion(), execParams, vizExec, dashboard.getSaveOnRefresh(), runMode);
+					}	
 				} catch (Exception e) {
 					logger.info("vizExec execution failed <<<< :: >>>> execUuid: "+vixExecInfo.getRef().getUuid()+" :::: execVersion: "+vixExecInfo.getRef().getVersion());
 					e.printStackTrace();
@@ -215,6 +231,59 @@ public class DashboardServiceImpl {
 		Object exec = commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, type);
 		MetaIdentifierHolder miHolder = (MetaIdentifierHolder) exec.getClass().getMethod("getDependsOn").invoke(exec);
 		return miHolder.getRef();
+	}
+
+	/**
+	 * @param dashboardUuid
+	 * @param dashboardVersion
+	 * @param saveonRefresh
+	 * @return
+	 * @throws ParseException 
+	 * @throws NullPointerException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
+	 * @throws JsonProcessingException 
+	 */
+	public List<DashboardExec> getDasboardExecBySave(String dashboardUuid, String dashboardVersion, String saveonRefresh) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		MatchOperation uuidFilter = match(new Criteria("dependsOn.ref.uuid").is(dashboardUuid)
+				.andOperator(Criteria.where("appInfo.ref.uuid").is(commonServiceImpl.getApp().getUuid()), Criteria.where("statusList.stage").in(Status.Stage.Completed.toString())));
+		
+		MatchOperation versionFilter = null;
+		if(dashboardVersion != null && !dashboardVersion.isEmpty()) {
+			versionFilter = match(new Criteria("dependsOn.ref.version").is(dashboardVersion));
+		}
+
+		GroupOperation groupByUuid = group("uuid").max("version").as("version");
+		
+		Aggregation aggregation = null;
+		if(dashboardVersion != null && !dashboardVersion.isEmpty()) {
+			aggregation = newAggregation(uuidFilter, versionFilter, groupByUuid);
+		} else {
+			aggregation = newAggregation(uuidFilter, groupByUuid);
+		}
+		AggregationResults<DashboardExec> aggregationResults = mongoTemplate.aggregate(aggregation, MetaType.dashboardExec.toString().toLowerCase(), DashboardExec.class);
+		List<DashboardExec> dashExecList = aggregationResults.getMappedResults();
+		
+		List<DashboardExec> dashExecListBySave = new ArrayList<>();
+		for(DashboardExec dashboardExec : dashExecList) {
+			DashboardExec resolvedDashExec = (DashboardExec) commonServiceImpl.getOneByUuidAndVersion(dashboardExec.getId(), dashboardExec.getVersion(), MetaType.dashboardExec.toString(), "N");
+			if(resolvedDashExec != null) {					
+				if(saveonRefresh != null && !saveonRefresh.isEmpty()) {
+					MetaIdentifier dependsOnMI = resolvedDashExec.getDependsOn().getRef();
+					Dashboard dashboard = (Dashboard) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(), dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
+					if(saveonRefresh.equalsIgnoreCase(dashboard.getSaveOnRefresh())) {
+						dashExecListBySave.add(resolvedDashExec);
+					}
+				} else {
+					dashExecListBySave.add(resolvedDashExec);
+				}
+			}			
+		}
+		
+		return dashExecListBySave;
 	}
 
 	/********************** UNUSED **********************/
