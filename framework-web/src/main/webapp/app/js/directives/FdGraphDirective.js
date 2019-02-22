@@ -299,21 +299,23 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                             .attr('stroke',function(d){
                                 try{ 
                                     var result=null;
+                                    if(scope.graphpodData.edgeInfo[d.edgeIndex].highlightInfo !=null){
                                     var tempPInfo=scope.graphpodData.edgeInfo[d.edgeIndex].highlightInfo.propertyInfo;
-                                    var tempType=scope.graphpodData.edgeInfo[d.edgeIndex].highlightInfo.type;
-                                    for(var i=0;i<tempPInfo.length;i++){
-                                        if(tempType =='numerical'){
-                                            if(d.eHPropertyId <= tempPInfo[i].propertyName){
-                                                result =tempPInfo[i].propertyValue;
-                                                break;
-                                            }
-                                        }
-                                        else{
-                                            if(d.eHPropertyId == tempPInfo[i].propertyName){
-                                                result =tempPInfo[i].propertyValue;
-                                                break;
-                                            }                                
-                                        }
+	                                    var tempType=scope.graphpodData.edgeInfo[d.edgeIndex].highlightInfo.type;
+	                                    for(var i=0;i<tempPInfo.length;i++){
+	                                        if(tempType =='numerical'){
+	                                            if(d.eHPropertyId <= tempPInfo[i].propertyName){
+	                                                result =tempPInfo[i].propertyValue;
+	                                                break;
+	                                            }
+	                                        }
+	                                        else{
+	                                            if(d.eHPropertyId == tempPInfo[i].propertyName){
+	                                                result =tempPInfo[i].propertyValue;
+	                                                break;
+	                                            }                                
+	                                        }
+	                                    }
                                     }
                                     if(result !=null){
                                         return result;
@@ -379,20 +381,22 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                                 ///console.log(JSON.parse(d.nodeProperties));
                                 //var nodeProperties=JSON.parse(d.nodeProperties);
                                 //console.log(nodeProperties[scope.graphpodData.nodeInfo[d.nodeIndex].highlightInfo.propertyId.attrName])
-                                var tempPInfo=scope.graphpodData.nodeInfo[d.nodeIndex].highlightInfo.propertyInfo;
-                                var tempType=scope.graphpodData.nodeInfo[d.nodeIndex].highlightInfo.type;
-                                for(var i=0;i<tempPInfo.length;i++){
-                                    if(tempType =='numerical'){
-                                        if(d.nHPropertyId <= tempPInfo[i].propertyName){
-                                            result =tempPInfo[i].propertyValue;
-                                            break;
-                                        }         
-                                    }else{
-                                        if(d.nHPropertyId == tempPInfo[i].propertyName){
-                                            result =tempPInfo[i].propertyValue;
-                                            break;
-                                        }                                       
-                                    }
+                                if(scope.graphpodData.nodeInfo[d.nodeIndex].highlightInfo !=null){
+	                                var tempPInfo=scope.graphpodData.nodeInfo[d.nodeIndex].highlightInfo.propertyInfo;
+	                                var tempType=scope.graphpodData.nodeInfo[d.nodeIndex].highlightInfo.type;
+	                                for(var i=0;i<tempPInfo.length;i++){
+	                                    if(tempType =='numerical'){
+	                                        if(d.nHPropertyId <= tempPInfo[i].propertyName){
+	                                            result =tempPInfo[i].propertyValue;
+	                                            break;
+	                                        }         
+	                                    }else{
+	                                        if(d.nHPropertyId == tempPInfo[i].propertyName){
+	                                            result =tempPInfo[i].propertyValue;
+	                                            break;
+	                                        }                                       
+	                                    }
+	                                }
                                 }
                                 if(result !=null){
                                     return result;
@@ -406,21 +410,23 @@ InferyxApp.directive('fdGraphDirective', function ($timeout,$rootScope,CommonSer
                                 try{ 
                                     //return CF_GRAPHPOD.nodeIconMap[d.nodeIcon].color
                                     var result=null;
-                                    var tempPInfo=scope.graphpodData.nodeInfo[d.nodeIndex].nodeBackgroundInfo.propertyInfo;
-                                    var tempType=scope.graphpodData.nodeInfo[d.nodeIndex].nodeBackgroundInfo.type;
-                                    for(var i=0;i<tempPInfo.length;i++){
-                                        if(tempType =='numerical'){
-                                            if(d.nBPropertyId <= tempPInfo[i].propertyName){
-                                                result =tempPInfo[i].propertyValue;
-                                                break;
-                                            }      
-                                        }else{
-                                            if(d.nBPropertyId == tempPInfo[i].propertyName){
-                                                result =tempPInfo[i].propertyValue;
-                                                break;
-                                            }                                
-                                        }
-                                    }   
+                                    if(scope.graphpodData.nodeInfo[d.nodeIndex].nodeBackgroundInfo !=null){
+	                                    var tempPInfo=scope.graphpodData.nodeInfo[d.nodeIndex].nodeBackgroundInfo.propertyInfo;
+	                                    var tempType=scope.graphpodData.nodeInfo[d.nodeIndex].nodeBackgroundInfo.type;
+	                                    for(var i=0;i<tempPInfo.length;i++){
+	                                        if(tempType =='numerical'){
+	                                            if(d.nBPropertyId <= tempPInfo[i].propertyName){
+	                                                result =tempPInfo[i].propertyValue;
+	                                                break;
+	                                            }      
+	                                        }else{
+	                                            if(d.nBPropertyId == tempPInfo[i].propertyName){
+	                                                result =tempPInfo[i].propertyValue;
+	                                                break;
+	                                            }                                
+	                                        }
+	                                    } 
+                                    }  
                                     if(result !=null){
                                         return result;
                                     }

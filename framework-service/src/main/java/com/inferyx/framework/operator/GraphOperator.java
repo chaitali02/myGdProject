@@ -3,6 +3,8 @@
  */
 package com.inferyx.framework.operator;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +27,7 @@ import com.inferyx.framework.domain.Graphpod;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Property;
+import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
@@ -59,6 +62,9 @@ public class GraphOperator implements IOperator {
 	 */
 	@Override
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		//commonServiceImpl.setMetaStatus(baseExec, MetaType.graphExec.toString(),null);
+		commonServiceImpl.setMetaStatus(baseExec, MetaType.graphExec,
+				Status.Stage.Initialized);
 		// Fetch graphPod - START
 		Graphpod graphPod = (Graphpod) commonServiceImpl.getOneByUuidAndVersion(baseExec.getDependsOn().getRef().getUuid(), baseExec.getDependsOn().getRef().getVersion(), MetaType.graphpod.toString());
 		// Fetch graphPod - END
@@ -70,6 +76,8 @@ public class GraphOperator implements IOperator {
 		baseExec.setExec(nodeSql.concat("|||").concat(edgeSql));
 		logger.info(" Sqls : " + baseExec.getExec());
 		commonServiceImpl.save(MetaType.graphExec.toString(), baseExec);
+		commonServiceImpl.setMetaStatus(baseExec, MetaType.graphExec,
+				Status.Stage.Ready);
 		return baseExec;
 	}
 
@@ -185,12 +193,12 @@ public class GraphOperator implements IOperator {
 							DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()),
 							execParams.getOtherParams()));
 					sb.append("\"'':\"', ");
-
+					sb.append("NVL( ");
 					sb.append(attributeMapOperator.sourceAttrSql(propHolder, propHolder,
 							DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
 							execParams));
 					// sb.append(" AS ");
-
+					sb.append(", \'\') ");
 					sb.append(", ");
 					sb.append("'\",' ");
 					status = true;
@@ -200,12 +208,12 @@ public class GraphOperator implements IOperator {
 							DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()),
 							execParams.getOtherParams()));
 					sb.append("\"'':', ");
-
+					sb.append("NVL( ");
 					sb.append(attributeMapOperator.sourceAttrSql(propHolder, propHolder,
 							DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
 							execParams));
 					// sb.append(" AS ");
-
+					sb.append(", 0) ");
 					sb.append(", ");
 					sb.append("',' ");
 					status = false;
@@ -231,6 +239,8 @@ public class GraphOperator implements IOperator {
 
 			sb.append(" AS nodeProperties ,'");
 	
+			
+			if( graphNode.getHighlightInfo()!=null) {
 			// added type
 			sb.append(graphNode.getHighlightInfo().getType());
 			sb.append("' AS type, ");
@@ -242,7 +252,9 @@ public class GraphOperator implements IOperator {
 					execParams));
 			sb.append(" AS nHPropertyId");
 			
-			
+			}else {
+				sb.delete(sb.length() - 2, sb.length());
+			}
 			
 
 			sb.append(ConstantsUtil.FROM);
@@ -295,6 +307,7 @@ public class GraphOperator implements IOperator {
 			return null;
 		}
 		String edgeSql = null;
+		String propertyIdKey = null;
 		StringBuilder sb = new StringBuilder();
 		StringBuilder sb3 = new StringBuilder();
 
@@ -336,6 +349,7 @@ public class GraphOperator implements IOperator {
 			sb.append("' AS edgeSource, ");
 			
 			// added propertyId into sb2
+			if(graphEdge.getHighlightInfo()!=null) {
 			AttributeRefHolder hIpropIdRefHolder = graphEdge.getHighlightInfo().getPropertyId();
 			sb3.append("\"");
 			sb3.append(attributeMapOperator.sourceAttrAlias(hIpropIdRefHolder, hIpropIdRefHolder,
@@ -349,10 +363,11 @@ public class GraphOperator implements IOperator {
 					execParams));
 			
 			sb3.append(", ");
-			String propertyIdKey=attributeMapOperator.sourceAttrAlias(hIpropIdRefHolder, hIpropIdRefHolder,
+			
+			 propertyIdKey=attributeMapOperator.sourceAttrAlias(hIpropIdRefHolder, hIpropIdRefHolder,
 					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()),
 					execParams.getOtherParams());
-
+			}
 			Boolean flag = true;
 			Boolean status = true;
 			sb.append("concat('{', ");
@@ -365,12 +380,12 @@ public class GraphOperator implements IOperator {
 						DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
 						execParams.getOtherParams()));
 				sb.append("\"'':\"', ");
-				
+				sb.append("NVL( ");
 				sb.append(attributeMapOperator.sourceAttrSql(propHolder, propHolder, 
 						DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
 						execParams.getOtherParams(), execParams));
 //				sb.append(" AS ");
-				
+				sb.append(", \'\') ");
 				sb.append(", ");
 				sb.append("'\",' ");
 				status=true;
@@ -381,17 +396,17 @@ public class GraphOperator implements IOperator {
 							DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
 							execParams.getOtherParams()));
 					sb.append("\"'':', ");
-					
+					sb.append("NVL( ");
 					sb.append(attributeMapOperator.sourceAttrSql(propHolder, propHolder, 
 							DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), 
 							execParams.getOtherParams(), execParams));
 //					sb.append(" AS ");
-					
+					sb.append(", 0) ");
 					sb.append(", ");
 					sb.append("',' ");
 					status=false;
 				}	
-				if( propertyIdKey.equalsIgnoreCase(attributeMapOperator.sourceAttrAlias(propHolder, propHolder,
+				if(propertyIdKey!=null&& propertyIdKey.equalsIgnoreCase(attributeMapOperator.sourceAttrAlias(propHolder, propHolder,
 						DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()),
 						execParams.getOtherParams()))) {
 					flag=false;
@@ -409,6 +424,8 @@ public class GraphOperator implements IOperator {
 			}
 			sb.append(" AS edgeProperties, ");
 			//remove
+			
+			if(graphEdge.getHighlightInfo()!=null) {
 			AttributeRefHolder propertyIdRefHolder = graphEdge.getHighlightInfo().getPropertyId();
 			sb.append(attributeMapOperator.sourceAttrSql(propertyIdRefHolder, propertyIdRefHolder,
 					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
@@ -433,7 +450,10 @@ public class GraphOperator implements IOperator {
 			sb.append("'}')");
 			sb.append(" AS propertyInfo ");
 
-			
+			}else {
+				sb.delete(sb.length() - 2, sb.length());
+
+			}
 			
 			sb.append(ConstantsUtil.FROM);
 			Object source = commonServiceImpl.getOneByUuidAndVersion(graphEdge.getEdgeSource().getRef().getUuid(), graphEdge.getEdgeSource().getRef().getVersion(), graphEdge.getEdgeSource().getRef().getType().toString());
