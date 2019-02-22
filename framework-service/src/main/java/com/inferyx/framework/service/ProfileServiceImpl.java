@@ -537,6 +537,9 @@ public class ProfileServiceImpl extends RuleTemplate {
 			StringBuilder sbProfileSelect = new StringBuilder();
 			profileExec = (ProfileExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
 					MetaType.profileExec.toString());
+			synchronized (execUuid) {
+				commonServiceImpl.setMetaStatus(profileExec, MetaType.profileExec, Status.Stage.Initialized);
+			}
 			profile = (Profile) commonServiceImpl.getOneByUuidAndVersion(profileExec.getDependsOn().getRef().getUuid(),
 					profileExec.getDependsOn().getRef().getVersion(), MetaType.profile.toString());
 //			Datasource datasource = commonServiceImpl.getDatasourceByObject(profile);
@@ -578,6 +581,9 @@ public class ProfileServiceImpl extends RuleTemplate {
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Profile.", dependsOn);
 			throw new Exception((message != null) ? message : "Can not parse Profile.");
 		}	
+		synchronized (execUuid) {
+			commonServiceImpl.setMetaStatus(profileExec, MetaType.profileExec, Status.Stage.Ready);
+		}
 		return profileExec;
 	}
 

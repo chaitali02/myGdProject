@@ -362,6 +362,9 @@ public abstract class RuleGroupTemplate implements IExecutable, IParsable {
 								DagExec dagExec, 
 								RunMode runMode) throws Exception {
 		BaseRuleGroupExec baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, groupExecType.toString());
+		synchronized (execUuid) {
+			commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType, Status.Stage.Initialized);
+		}
 		BaseRuleExec ruleExec = null;
 		RuleTemplate baseRuleService = serviceFactory.getRuleService(ruleType);
 		if (baseGroupExec == null) {
@@ -377,6 +380,9 @@ public abstract class RuleGroupTemplate implements IExecutable, IParsable {
 		for (MetaIdentifierHolder ruleExecMeta : ruleExecList) {
 			ruleExec = (BaseRuleExec) commonServiceImpl.getOneByUuidAndVersion(ruleExecMeta.getRef().getUuid(), ruleExecMeta.getRef().getVersion(), ruleExecType.toString());
 			ruleExec = baseRuleService.parse(ruleExec.getUuid(), ruleExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);
+		}
+		synchronized (execUuid) {
+			commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType, Status.Stage.Ready);
 		}
 		return baseGroupExec;
 	}

@@ -187,12 +187,17 @@ public class RunDagServiceImpl implements Callable<String> {
 			if (Helper.getLatestStatus(dagExec.getStatusList()).getStage().equals(Status.Stage.NotStarted)) {
 				// Parse to create SQL
 				logger.info(" Before parse ");
+				synchronized (dagExec.getUuid()) {
+					commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.Initialized);
+				}
 				dagExec = dagServiceImpl.parseDagExec(dag, dagExec);
 				logger.info(" After parse ");
 				//dagExecServiceImpl.save(dagExec);
 				commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
+				synchronized (dagExec.getUuid()) {
+					commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.Ready);
+				}
 			}
-			
 			synchronized (dagExec.getUuid()) {
 				commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.InProgress);
 			}

@@ -644,7 +644,9 @@ public class Helper {
 			statusHolder.setCompleted(Boolean.FALSE);
 		} else if (latestStatus.equals(Status.Stage.InProgress) 
 					|| latestStatus.equals(Status.Stage.NotStarted) 
-					|| latestStatus.equals(Status.Stage.Terminating)) {
+					|| latestStatus.equals(Status.Stage.Terminating) 
+					|| latestStatus.equals(Status.Stage.Initialized) 
+					|| latestStatus.equals(Status.Stage.Ready)) {
 			statusHolder.setCompleted(Boolean.FALSE);
 		}
 	}	
