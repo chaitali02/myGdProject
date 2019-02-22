@@ -998,7 +998,7 @@ public class DagServiceImpl {
 		if (execParams.getParamListInfo() != null && !execParams.getParamListInfo().isEmpty()) {
 			List<ParamListHolder> paramListHolders = new ArrayList<>();
 			for (ParamListHolder paramListHolder : execParams.getParamListInfo()) {
-				ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(paramListHolder.getRef().getUuid(), paramListHolder.getRef().getVersion(), MetaType.paramlist.toString());
+				ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(paramListHolder.getRef().getUuid(), paramListHolder.getRef().getVersion(), MetaType.paramlist.toString(), "N");
 				for (Param param : paramList.getParams()) {
 					ParamListHolder newParamListHolder = new ParamListHolder();
 					newParamListHolder.setParamId(param.getParamId());
@@ -1047,6 +1047,10 @@ public class DagServiceImpl {
 		// Dag dag = (Dag) daoRegister.getRefObject(dagRef);
 		// Get the dag - END
 		for (StageExec indvDagExecStg : dagExecStgs) {
+			
+			synchronized (dagExec.getUuid()) {
+				commonServiceImpl.setMetaStatusForStage(dagExec, indvDagExecStg, Status.Stage.NotStarted, indvDagExecStg.getStageId());
+			}
 
 			List<TaskExec> dagExecTasks = DagExecUtil.castToTaskExecList(indvDagExecStg.getTasks());
 			Stage stage = DagExecUtil.getStageFromDag(dag, indvDagExecStg.getStageId());
@@ -1055,12 +1059,20 @@ public class DagServiceImpl {
 				continue; // If inactive stage then move to next stage (don't
 							// consider inactive stage)
 			}
+			synchronized (dagExec.getUuid()) {
+				commonServiceImpl.setMetaStatusForStage(dagExec, indvDagExecStg, Status.Stage.Initialized, indvDagExecStg.getStageId());
+			}
 			for (TaskExec indvExecTask : dagExecTasks) {
 				ExecParams taskExecParams = createChildParams(execParams);
 				otherParams = taskExecParams.getOtherParams();
 				Task indvTask = DagExecUtil.getTaskFromStage(stage, indvExecTask.getTaskId());
 				logger.info("Parsing task : " + indvTask.getTaskId() + ":" + indvTask.getName() + ":" + indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType());
 				logger.info(" OtherParams : " + otherParams);
+				
+				
+				synchronized (dagExec.getUuid()) {
+					commonServiceImpl.setMetaStatusForTask(dagExec, indvExecTask, Status.Stage.Initialized, indvDagExecStg.getStageId(), indvExecTask.getTaskId());
+				}
 				
 				List<TaskOperator> operatorList = new ArrayList<>();
 				TaskOperator operator = new TaskOperator();
@@ -1237,13 +1249,19 @@ public class DagServiceImpl {
 				//operatorList.add(operator);
 				//indvExecTask.setOperators(operatorList);
 				// Set Stage and Task status
-				List<Status> statusList = new ArrayList<Status>();
+				/*List<Status> statusList = new ArrayList<Status>();
 				Status status = new Status(Status.Stage.NotStarted, new Date());
 				statusList.add(status);
-				indvExecTask.setStatusList(statusList);
+				indvExecTask.setStatusList(statusList);*/
 				execParams = includeInParentParams(execParams, taskExecParams);
+				synchronized (dagExec.getUuid()) {
+					commonServiceImpl.setMetaStatusForTask(dagExec, indvExecTask, Status.Stage.Ready, indvDagExecStg.getStageId(), indvExecTask.getTaskId());
+				}
 			}
 			indvDagExecStg.setTasks(DagExecUtil.convertToTaskList(dagExecTasks));
+			synchronized (dagExec.getUuid()) {
+				commonServiceImpl.setMetaStatusForStage(dagExec, indvDagExecStg, Status.Stage.Ready, indvDagExecStg.getStageId());
+			}
 		}
 		dagExec.setStages(DagExecUtil.convertToStageList(dagExecStgs));
 		return dagExec;
@@ -1429,18 +1447,30 @@ public class DagServiceImpl {
 	
 	public DagExec prepareDagExec(String uuid, String version, ExecParams execParams, String metaType)throws Exception{
 		DagExec dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, metaType);
-		for(int i=0;i<dagExec.getStages().size();i++){
-			if(Helper.getLatestStatus(dagExec.getStages().get(i).getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))
-					||Helper.getLatestStatus(dagExec.getStages().get(i).getStatusList()).equals(new Status(Status.Stage.Killed, new Date()))){
-				for(int j=0;j<dagExec.getStages().get(i).getTasks().size();j++){
-					if(Helper.getLatestStatus(dagExec.getStages().get(i).getTasks().get(j).getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))
-							||Helper.getLatestStatus(dagExec.getStages().get(i).getTasks().get(j).getStatusList()).equals(new Status(Status.Stage.Killed, new Date()))){
-						TaskExec taskExec = dagExecServiceImpl.getTaskExec(dagExec,dagExec.getStages().get(i).getStageId(), dagExec.getStages().get(i).getTasks().get(j).getTaskId());
-						commonServiceImpl.setMetaStatusForTask(dagExec, taskExec, Status.Stage.NotStarted,dagExec.getStages().get(i).getStageId(), dagExec.getStages().get(i).getTasks().get(j).getTaskId());
-					}	
-				}
+		logger.info("Before starting to set status to ready ");
+		synchronized (dagExec.getUuid()) {
+			commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.Ready);
+			for(int i=0;i<dagExec.getStages().size();i++){
+				StageExec stageExec = dagExecServiceImpl.getStageExec(dagExec,dagExec.getStages().get(i).getStageId());
+				/*if(Helper.getLatestStatus(dagExec.getStages().get(i).getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))
+						||Helper.getLatestStatus(dagExec.getStages().get(i).getStatusList()).equals(new Status(Status.Stage.Killed, new Date()))){*/
+					commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.Ready, stageExec.getStageId());
+					for(int j=0;j<dagExec.getStages().get(i).getTasks().size();j++){
+						if(Helper.getLatestStatus(dagExec.getStages().get(i).getTasks().get(j).getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))
+								||Helper.getLatestStatus(dagExec.getStages().get(i).getTasks().get(j).getStatusList()).equals(new Status(Status.Stage.Killed, new Date()))){
+							TaskExec taskExec = dagExecServiceImpl.getTaskExec(dagExec,dagExec.getStages().get(i).getStageId(), dagExec.getStages().get(i).getTasks().get(j).getTaskId());
+							commonServiceImpl.setMetaStatusForTask(dagExec, taskExec, Status.Stage.Ready,dagExec.getStages().get(i).getStageId(), dagExec.getStages().get(i).getTasks().get(j).getTaskId());
+							for (TaskOperator taskOperator : taskExec.getOperators()) {
+								MetaIdentifier meta = taskOperator.getOperatorInfo().get(0).getRef();
+								BaseExec baseExec = (BaseExec) commonServiceImpl.getOneByUuidAndVersion(meta.getUuid(), meta.getVersion(), meta.getType().toString(), "N");
+								commonServiceImpl.setMetaStatus(baseExec, meta.getType(), Status.Stage.Ready);
+							}
+						}	
+					}
+	//			}
 			}
 		}
+		logger.info("After setting status to ready ");
 		return dagExec;
 	}
 	

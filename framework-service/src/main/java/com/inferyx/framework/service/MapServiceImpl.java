@@ -713,6 +713,7 @@ public class MapServiceImpl implements IParsable, IExecutable {
 			DagExec dagExec, List<String> datapodList, 
 			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 
 			ExecParams execParams, RunMode runMode) throws Exception {
+		logger.info("Inside MapServiceImpl.generateSql");
 		try {
 			if (otherParams == null) {
 				otherParams = new HashMap<>();
@@ -727,11 +728,11 @@ public class MapServiceImpl implements IParsable, IExecutable {
 
 			if (StringUtils.isBlank(version)) {
 				//map = iMapDao.findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version"));
-				map = (Map) commonServiceImpl.getLatestByUuid(uuid, MetaType.map.toString());
+				map = (Map) commonServiceImpl.getLatestByUuid(uuid, MetaType.map.toString(), "N");
 				version = map.getVersion();
 			} else {
 				//map = iMapDao.findOneByUuidAndVersion(uuid, version);
-				map = (Map) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.map.toString());
+				map = (Map) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.map.toString(), "N");
 			}
 			// Create mapExec
 			if (mapExec == null) {
@@ -751,9 +752,17 @@ public class MapServiceImpl implements IParsable, IExecutable {
 			List<Status> statusList = new ArrayList<>();		
 			statusList.add(status);
 			//mapExec.setName(map.getName());
-			mapExec.setStatusList(statusList);		
+			mapExec.setStatusList(statusList);
+			commonServiceImpl.save(MetaType.mapExec.toString(), mapExec);
 			try {
+				logger.info("Before generateSql from MapServiceImpl");
+				synchronized (mapExec.getUuid()) {
+					commonServiceImpl.setMetaStatus(mapExec, MetaType.mapExec, Status.Stage.Initialized);
+				}
 				mapExec.setExec(mapOperator.generateSql(map, refKeyMap, otherParams, execParams, usedRefKeySet, runMode));
+				synchronized (mapExec.getUuid()) {
+					commonServiceImpl.setMetaStatus(mapExec, MetaType.mapExec, Status.Stage.Ready);
+				}
 				// Fetch target datapod
 				OrderKey datapodKey = map.getTarget().getRef().getKey();
 				// Set target version
@@ -774,7 +783,7 @@ public class MapServiceImpl implements IParsable, IExecutable {
 //					Datasource datasource = commonServiceImpl.getDatasourceByApp();
 					Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodKey.getUUID(), 
 																					datapodKey.getVersion(), 
-																					MetaType.datapod.toString());
+																					MetaType.datapod.toString(), "N");
 					Datasource datasource = commonServiceImpl.getDatasourceByDatapod(targetDatapod);
 					if (/*!engine.getExecEngine().equalsIgnoreCase("livy-spark")
 							&& !datasource.getType().equalsIgnoreCase(ExecContext.spark.toString()) 
@@ -1021,108 +1030,4 @@ public class MapServiceImpl implements IParsable, IExecutable {
 		
 	}
 	
-	/**
-	 * Sends kill message to kill an ingest rule. 
-	 * First, it sets the status to terminating in case the status is In Progress.
-	 * Then, it tries to kill the thread. 
-	 * Then, it sets the status to Killed if the latest status is Terminating, whether or not it was able to kill the thread.
-	 * Even if it was not able to kill a thread (because the thread completed or cancelled in between), if the status was Terminating, the status shall change to Killed. 
-	 * @param uuid
-	 * @param version
-	 * @param execType
-	 */
-	public void kill (String uuid, String version, MetaType execType) {
-		BaseExec baseExec = null;
-		try {
-			baseExec = (BaseExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, execType.toString());
-		} catch (JsonProcessingException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
-		if (baseExec == null) {
-			logger.info("IngestExec not found. Exiting...");
-			return;
-		}
-		if (!Helper.getLatestStatus(baseExec.getStatusList()).equals(new Status(Status.Stage.InProgress, new Date()))) {
-			logger.info("Latest Status is not in InProgress. Exiting...");
-		}
-		try {
-			synchronized (baseExec.getUuid()) {
-				commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.Terminating);
-			}
-			@SuppressWarnings("unchecked")
-			FutureTask<TaskHolder> futureTask = (FutureTask<TaskHolder>) taskThreadMap.get(execType+"_"+baseExec.getUuid()+"_"+baseExec.getVersion());
-				futureTask.cancel(true);
-			synchronized (baseExec.getUuid()) {
-				commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.Killed);
-			}
-		} catch (Exception e) {
-			logger.info("Failed to kill. uuid : " + uuid + " version : " + version);
-			try {
-				synchronized (baseExec.getUuid()) {
-					commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.Killed);
-				}
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
-			taskThreadMap.remove(execType+"_"+baseExec.getUuid()+"_"+baseExec.getVersion());
-			e.printStackTrace();
-		}
-	}
-	
-	/**
-	 * Set status of BaseExec to Resume if status is OnHold
-	 * @param uuid
-	 * @param version
-	 * @param execType
-	 */
-	public void resume (String uuid, String version, MetaType execType) {
-		BaseExec baseExec = null;
-		try {
-			baseExec = (BaseExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, execType.toString());
-		} catch (JsonProcessingException e2) {
-			e2.printStackTrace();
-		}
-		if (baseExec == null) {
-			logger.info("BaseExec not found. Exiting...");
-			return;
-		}
-		// Pre conditions for Resume shall be determined by the setMetaStatus
-		try {
-			synchronized (baseExec.getUuid()) {
-				commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.Resume);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	/**
-	 * Set status of BaseExec to OnHold if status is Killed, notStarted, or Resume 
-	 * @param uuid
-	 * @param version
-	 * @param execType
-	 */
-	public void onHold (String uuid, String version, MetaType execType) {
-		BaseExec baseExec = null;
-		try {
-			baseExec = (BaseRuleExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, execType.toString());
-		} catch (JsonProcessingException e2) {
-			e2.printStackTrace();
-		}
-		if (baseExec == null) {
-			logger.info("BaseExec not found. Exiting...");
-			return;
-		}
-		// Pre conditions for OnHold shall be determined by the setMetaStatus
-		try {
-			synchronized (baseExec.getUuid()) {
-				commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.OnHold);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-
 }

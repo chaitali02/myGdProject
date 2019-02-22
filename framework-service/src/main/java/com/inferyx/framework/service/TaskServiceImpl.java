@@ -23,6 +23,7 @@ import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.BaseExec;
@@ -1011,16 +1012,18 @@ public class TaskServiceImpl implements Callable<String> {
 		//DagExec dagExec = dagExecServiceImpl.findOneByUuidAndVersion(dagExecUUID, dagExecVer);
 	    DagExec dagExec = null;
 		try {
-			dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(dagExecUUID, dagExecVer, MetaType.dagExec.toString());
+			dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(dagExecUUID, dagExecVer, MetaType.dagExec.toString(), "N");
 		} catch (JsonProcessingException e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
 		TaskExec taskExec = dagExecServiceImpl.getTaskExec(dagExec, stageId, taskId);
+		logger.info("Task Id : " + taskId + " killthread : " + killThread + " stageStatus : " + dagExecServiceImpl.getStageStatus(dagExecUUID, dagExecVer, stageId) 
+					+ " task Status : " + dagExecServiceImpl.getTaskStatus(dagExecUUID, dagExecVer, stageId, taskId));
 		//Start the task execution
 		if (!killThread 
-				&& !dagExecServiceImpl.getStageStatus(dagExecUUID, dagExecVer, stageId).equals(Status.Stage.OnHold) 
-				&& !dagExecServiceImpl.getTaskStatus(dagExecUUID, dagExecVer, stageId, taskId).equals(Status.Stage.OnHold)) {
+				&& dagExecServiceImpl.getStageStatus(dagExecUUID, dagExecVer, stageId).equals(Status.Stage.InProgress) 
+				&& dagExecServiceImpl.getTaskStatus(dagExecUUID, dagExecVer, stageId, taskId).equals(Status.Stage.Ready)) {
 
 			//Set Task to InProgress
 			synchronized (dagExecUUID) {
@@ -1051,7 +1054,7 @@ public class TaskServiceImpl implements Callable<String> {
 			}else{
 				try {
 					FrameworkThreadLocal.getSessionContext().set(sessionContext);
-					datapodTableName = executeTask();
+					datapodTableName = executeTask();	// This is the actual task execution call
 				} catch (Exception e) {
 					logger.info("Task failed : " + taskId);
 					e.printStackTrace();
@@ -1077,7 +1080,7 @@ public class TaskServiceImpl implements Callable<String> {
 				synchronized (dagExecUUID) {
 					if (taskStatus != com.inferyx.framework.domain.Status.Stage.Failed) {
 						try {
-							Object execObj=commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getVersion(), taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getType().toString());
+							Object execObj=commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getVersion(), taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getType().toString(), "N");
 							@SuppressWarnings("unchecked")
 							List<com.inferyx.framework.domain.Status> status = (List<Status>) execObj.getClass().getMethod("getStatusList").invoke(execObj);
 							logger.info(Helper.getLatestStatus(status).getStage());
@@ -1107,14 +1110,26 @@ public class TaskServiceImpl implements Callable<String> {
 					try {
 						Thread.sleep(10000);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
-				if (dagExecServiceImpl.getStageStatus(dagExecUUID, dagExecVer, stageId).equals(Status.Stage.Resume) 
-				|| dagExecServiceImpl.getTaskStatus(dagExecUUID, dagExecVer, stageId, taskId).equals(Status.Stage.Resume)) {
-					FrameworkThreadLocal.getSessionContext().set(sessionContext);
-					call();
+				try {
+					if (dagExecServiceImpl.getStageStatus(dagExecUUID, dagExecVer, stageId).equals(Status.Stage.Resume)) {
+						synchronized (dagExecUUID) {
+							commonServiceImpl.setMetaStatusForStage(dagExec, DagExecUtil.getStageExecFromDagExec(dagExec,  stageId), Status.Stage.Ready, stageId);
+						}
+						call();
+					}
+					if (dagExecServiceImpl.getTaskStatus(dagExecUUID, dagExecVer, stageId, taskId).equals(Status.Stage.Resume)) {
+						FrameworkThreadLocal.getSessionContext().set(sessionContext);
+						synchronized (dagExecUUID) {
+							commonServiceImpl.setMetaStatusForTask(dagExec, taskExec, Status.Stage.Ready, stageId, taskId);
+						}
+						call();
+					}
+				} catch (Exception e) {
+					logger.error("Exception while setting stage/task to ready and calling task for Resume status. ");
+					e.printStackTrace();
 				}
 			logger.info("This is not valid for Execution");
 		}

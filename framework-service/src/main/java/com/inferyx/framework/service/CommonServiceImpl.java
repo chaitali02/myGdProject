@@ -2987,21 +2987,11 @@ public class CommonServiceImpl<T> {
 	private List<Status> setNotStartedStatus(List<Status> statusList) {
 		// TODO : Condition needs to be revisited. These should go to NotStarted status. But care needs to be taken to understand 
 		// the trigger points. Ideally, the trigger point should only be start
-		if (Helper.getLatestStatus(statusList) != null
-				&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.InProgress, new Date()))
-						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Completed, new Date()))
-						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.OnHold, new Date())))) {
-			logger.info("Latest Status is not in InProgress/Completed/OnHold. Exiting... ");
-			return statusList;
-		}
-
 		if (statusList == null || statusList.isEmpty()) {
+			logger.info("StatusList is empty. Can go to NotStarted status ");
 			statusList = new ArrayList<Status>();
 			statusList.add(new Status(Status.Stage.NotStarted, new Date()));
-		} else if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Resume, new Date()))
-				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Failed, new Date()))
-				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Killed, new Date()))) {
-			statusList.add(new Status(Status.Stage.InProgress, new Date()));
+			return statusList;
 		}
 		return statusList;
 	}
@@ -3011,26 +3001,19 @@ public class CommonServiceImpl<T> {
 	 * @param statusList
 	 * @return
 	 */
-	private List<Status> setReadyStatus(List<Status> statusList) {
+	private List<Status> setInProgressStatus(List<Status> statusList) {
 		if (Helper.getLatestStatus(statusList) != null
-				&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.InProgress, new Date()))
-						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Completed, new Date()))
-						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.OnHold, new Date())))) {
-			logger.info("Latest Status is not in InProgress/Completed/OnHold. Cannot go to ready status. Exiting... ");
+				&& !(Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Ready, new Date())))) {
+			logger.info("Latest Status is not in Ready. Cannot go to InProgress status. Exiting... ");
 			return statusList;
 		}
 
 		if (statusList == null || statusList.isEmpty()) {
 			statusList = new ArrayList<Status>();
-			logger.info("No status in statusList. Cannot go to ready status. Exiting... ");
+			logger.info("No status in statusList. Cannot go to InProgress status. Exiting... ");
 			return statusList;
 		} 
-		if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.NotStarted, new Date())) 
-				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Resume, new Date()))
-				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Failed, new Date()))
-				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Killed, new Date()))) {
-			statusList.add(new Status(Status.Stage.Ready, new Date()));
-		}
+		statusList.add(new Status(Status.Stage.InProgress, new Date()));
 		return statusList;
 	}
 
@@ -3051,15 +3034,33 @@ public class CommonServiceImpl<T> {
 		statusList.add(new Status(Status.Stage.Resume, new Date()));
 		return statusList;
 	}
+	
+	private List<Status> setInitializedStatus(List<Status> statusList) {
+		if (statusList == null || statusList.isEmpty()) {
+			logger.info("Nothing in statusList. Cannot go to Initialized status ... ");
+			return null;
+		}
+		if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.NotStarted, new Date()))) {
+			statusList.add(new Status(Status.Stage.Initialized, new Date()));
+		} else {
+			logger.info("Latest Status is not in NotStarted. Cannot go to initialized status. Exiting...");
+		}
+		return statusList;
+	}
 
-	private List<Status> setInProgressStatus(List<Status> statusList) {
+
+	private List<Status> setReadyStatus(List<Status> statusList) {
+		if (statusList == null || statusList.isEmpty()) {
+			logger.info("Nothing in statusList. Cannot go to Ready status ... ");
+			return null;
+		}
 		if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Resume, new Date()))
 				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Failed, new Date()))
-				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.NotStarted, new Date()))
-				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Killed, new Date()))) {
-			statusList.add(new Status(Status.Stage.InProgress, new Date()));
+				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Killed, new Date())) 
+				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Initialized, new Date()))) {
+			statusList.add(new Status(Status.Stage.Ready, new Date()));
 		} else {
-			logger.info("Latest Status is not in Resume/Failed/NotStarted/Completed. Exiting...");
+			logger.info("Latest Status is not in Resume/Failed/Killed/Initialized. Cannot go to ready status. Exiting...");
 		}
 		return statusList;
 	}
@@ -3218,6 +3219,12 @@ public class CommonServiceImpl<T> {
 		case NotStarted:
 			statusList = setNotStartedStatus(statusList);
 			break;
+		case Initialized:
+			statusList = setInitializedStatus(statusList);
+			break;
+		case Ready:
+			statusList = setReadyStatus(statusList);
+			break;
 		case OnHold:
 			statusList = setOnHoldStatus(statusList);
 			break;
@@ -3277,7 +3284,7 @@ public class CommonServiceImpl<T> {
 						.getMethod("findOneByUuidAndVersion", String.class, String.class, String.class)
 						.invoke(iDao, appUuid, uuid, version);
 			} else {
-				dagExec = (DagExec) (iDao).getClass().getMethod("findOneByUuidAndVersion", String.class, String.class)
+				dagExec = (DagExec) (iDao).getClass().getMethod("findOneByUuidAndVersion", String.class)
 						.invoke(iDao, uuid, version);
 			}
 			if (dagExec == null) {
@@ -3296,6 +3303,12 @@ public class CommonServiceImpl<T> {
 		switch (stage) {
 		case NotStarted:
 			statusList = setNotStartedStatus(statusList);
+			break;
+		case Initialized:
+			statusList = setInitializedStatus(statusList);
+			break;
+		case Ready:
+			statusList = setReadyStatus(statusList);
 			break;
 		case OnHold:
 			statusList = setOnHoldStatus(statusList);
@@ -3373,6 +3386,9 @@ public class CommonServiceImpl<T> {
 		switch (stage) {
 		case NotStarted:
 			statusList = setNotStartedStatus(statusList);
+			break;
+		case Initialized:
+			statusList = setInitializedStatus(statusList);
 			break;
 		case Ready:
 			statusList = setReadyStatus(statusList);

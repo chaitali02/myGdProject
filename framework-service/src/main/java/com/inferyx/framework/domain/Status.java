@@ -15,7 +15,8 @@ import java.util.Date;
 public class Status implements Comparable<Status>{
 
   public enum Stage {
-		NotStarted("Not Started"), 
+		NotStarted("Not Started"),
+		Initialized("Initialized"),
 		Ready("Ready"),
 		InProgress("In Progress"),
 		Completed("Completed"), 

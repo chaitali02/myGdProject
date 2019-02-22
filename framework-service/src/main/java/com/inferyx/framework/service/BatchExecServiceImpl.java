@@ -398,21 +398,20 @@ import com.inferyx.framework.factory.ExecutorFactory;
 			do {
 				for (int i=0; i<dagExecStgs.size(); i++) {
 					StageExec stageExec = dagExecStgs.get(i);
+					Stage stage = DagExecUtil.getStageFromDag(dag, stageExec.getStageId());
 					status = Helper.getLatestStatus(stageExec.getStatusList());
-					if (status != null && status.equals(new Status(Status.Stage.OnHold, new Date()))) {
+					StageExec indvStg = stageExec;
+					/*if (status != null && status.equals(new Status(Status.Stage.OnHold, new Date()))) {
 						logger.info("StageExec is set to OnHold status. So continuing with next stage. ");
 						continue;
 					}
-					StageExec indvStg = stageExec;
-					Stage stage = DagExecUtil.getStageFromDag(dag, stageExec.getStageId());
 					if (indvStg != null && indvStg.getStatusList() != null && indvStg.getStatusList().contains(Status.Stage.Inactive)) {
 						continue;	// If inactive stage then move to next stage (don't consider inactive stage)
+					}*/
+					if (!status.equals(new Status(Status.Stage.Ready, new Date()))) {
+						logger.info("StageExec is not set to ready status. So continuing with next stage. ");
+						continue;
 					}
-						if (status.equals(new Status(Status.Stage.InProgress, new Date())) 
-								|| status.equals(new Status(Status.Stage.Completed, new Date()))
-								|| status.equals(new Status(Status.Stage.OnHold, new Date()))) {
-							continue;
-						}
 	
 						// Check if stage has any dependents
 						if (stageExec.getDependsOn() != null 
