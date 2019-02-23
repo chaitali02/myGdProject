@@ -116,6 +116,10 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 			$state.go('viewprofile');
 		}
 	}
+    $scope.formChange=function(){
+		$scope.myform1.$dirty=true;
+		$scope.myform12.$dirty=true;
+	}
 
 	$scope.countContinue = function () {
 		$scope.continueCount = $scope.continueCount + 1;

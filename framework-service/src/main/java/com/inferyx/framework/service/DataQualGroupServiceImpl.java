@@ -28,6 +28,7 @@ import com.inferyx.framework.domain.DataQualGroupExec;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.register.GraphRegister;
 
@@ -269,11 +270,15 @@ public class DataQualGroupServiceImpl extends RuleGroupTemplate {
 		return (DataQualGroupExec) super.create(dataQualGroupUUID, dataQualGroupVersion, MetaType.dqgroup, MetaType.dqgroupExec, MetaType.dq, MetaType.dqExec, execParams, datapodList, dataQualGroupExec, dagExec); 
 	}
 	
-	public DataQualGroupExec parse(MetaIdentifier dqGroupExec, Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec, RunMode runMode) {
+	public DataQualGroupExec parse(MetaIdentifier dqGroupExec, Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec, RunMode runMode) throws Exception {
+		DataQualGroupExec dataQualGroupExec=null;
 		try {
+			dataQualGroupExec=(DataQualGroupExec) commonServiceImpl.getOneByUuidAndVersion(dqGroupExec.getUuid(), dqGroupExec.getVersion(), MetaType.dqgroupExec.toString());
 			return (DataQualGroupExec) super.parse(dqGroupExec.getUuid(), dqGroupExec.getVersion(), MetaType.dqgroup, MetaType.dqgroupExec, MetaType.dq, MetaType.dqExec, refKeyMap, datapodList, dagExec, runMode);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+				commonServiceImpl.setMetaStatus(dataQualGroupExec, MetaType.dqgroupExec, Status.Stage.Failed);
+
 			e.printStackTrace();
 		}
 		return null;

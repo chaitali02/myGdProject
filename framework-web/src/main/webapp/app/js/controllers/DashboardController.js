@@ -65,7 +65,7 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 	
 	$scope.addSectionRow = function (i) {
 		$scope.sectionRows.splice(i + 1, 0, {
-			columns: []
+			columns: [{"edit":true}]
 		});
 	}
 

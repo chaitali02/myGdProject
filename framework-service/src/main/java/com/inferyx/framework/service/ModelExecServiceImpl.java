@@ -913,6 +913,9 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 	public void restartTrain(String type, String uuid, String version, ExecParams execParams, RunMode runMode)
 			throws Exception {
 		TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.trainExec.toString());
+		synchronized (trainExec.getUuid()) {
+			trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.Ready);
+		}
 		try {
 			Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainExec.getDependsOn().getRef().getUuid(), trainExec.getDependsOn().getRef().getVersion(), trainExec.getDependsOn().getRef().getType().toString());
 			Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), train.getDependsOn().getRef().getType().toString());
@@ -981,6 +984,9 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 	public void restartPredict(String type, String uuid, String version, ExecParams execParams, RunMode runMode)
 			throws Exception {
 		PredictExec predictExec = (PredictExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.predictExec.toString());
+		synchronized (predictExec.getUuid()) {
+			predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.Ready);
+		}
 		try {
 			Predict predict = (Predict) commonServiceImpl.getOneByUuidAndVersion(predictExec.getDependsOn().getRef().getUuid(), predictExec.getDependsOn().getRef().getVersion(), predictExec.getDependsOn().getRef().getType().toString());
 			modelServiceImpl.predict(predict, execParams, predictExec, runMode);

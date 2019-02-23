@@ -541,9 +541,9 @@
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;" ng-class="{ 'has-error' : myform['sourceName'+$index].$invalid}">
+                                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;" >
                                                         <input type="text" class="form-control" ng-model="data.name" name="sourceName{{$index}}" required disable-validation-message=""
-                                                            title="{{data.name}}" ng-change="onChangeSourceName($index)" ng-disabled="{{mode}}">
+                                                            title="{{data.name}}" ng-change="onChangeSourceName($index)" ng-disabled="{{mode}}"ng-pattern="/^([a-zA-Z0-9][a-zA-Z0-9_]*[a-zA-Z0-9]$)/">
                                                     </span>
                                                 </td>
                                                 <td>

@@ -1640,13 +1640,13 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 			logger.info(" Nothing to create exec upon. Aborting ... ");
 			return null;
 		}
-		statusList = graphExec.getStatusList();
-		if (Helper.getLatestStatus(statusList) != null
+		statusList = graphExec.getStatusList();		
+		if ( Helper.getLatestStatus(statusList) != null 
 				&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.InProgress, new Date()))
 						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Completed, new Date()))
 						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Terminating, new Date()))
-						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.OnHold, new Date()))) 
-						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Ready, new Date()))) {
+						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.OnHold, new Date())) 
+						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Ready, new Date())))) {
 			logger.info(
 					" This process is In Progress or has been completed previously or is Terminating or is On Hold. Hence it cannot be rerun. ");
 			logger.info(" If status is in Ready state then no need to start and parse again. ");

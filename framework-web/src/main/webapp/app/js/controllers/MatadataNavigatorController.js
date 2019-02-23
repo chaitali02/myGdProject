@@ -38,7 +38,7 @@
     CommonService.getMetaStats().then(function(response) {onSuccess(response.data)});
     var onSuccess = function(response) {
       var colorclassarray = ["blue-sharp", "green-sharp", "purple-soft", "red-haze"]
-      var noMetaType=['message','paramlistrule','paramlistmodel','operatortype','lov','comment','graphExec','paramlistdag'];
+      var noMetaType=['message','paramlistrule','paramlistmodel','operatortype','lov','comment','graphExec','paramlistdag','schedule','trainresult'];
       var metaarray = []
       for (var i = 0; i < response.length; i++) {
         var metajson = {};
@@ -330,6 +330,22 @@
               metajson.icon='fa fa-tasks';
               metajson.state="batchlist"
               break
+            case "ingest":
+                metajson.caption="Ingest"
+                metajson.icon='fa fa-random';
+                metajson.state="ingestrulelist2"	
+                break
+            case "ingestgroup":
+                metajson.caption="Ingest Group"
+                metajson.icon='fa fa-random';
+                metajson.state="ingestrulegrouplist"
+                break
+            case "organization":
+                metajson.caption="Organization"
+                metajson.icon='fa fa-wrench';
+                metajson.state = "admin";
+                metajson.param={type:'organization'}
+                break
             default:
               console.log(response[i].type)
                  

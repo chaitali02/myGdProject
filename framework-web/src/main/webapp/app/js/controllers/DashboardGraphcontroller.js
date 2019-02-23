@@ -32,6 +32,7 @@ DatavisualizationModule.controller('DashboradMenuController2', function ($filter
     $scope.privileges = privilegeSvc.privileges["dashboard"] || [];
 
   });
+
   $scope.pagination = {
     currentPage: 1,
     pageSize: 10,
@@ -117,6 +118,15 @@ DatavisualizationModule.controller('DashboradMenuController2', function ($filter
     $scope.filteredRows = $scope.gridApi.core.getVisibleRows($scope.gridApi.grid);
   };
 
+  $scope.updateStats = function () {
+    CommonService.getMetaStats("dashboard").then(function (response) {
+      if (response.data && response.data.length && response.data.length > 0) {
+        $rootScope.metaStats["dashboard"] = response.data[0];
+      }
+    });
+  }
+  $scope.updateStats();
+  
   $scope.refreshData = function (searchtext) {
     $scope.gridOptions.data = $filter('filter')($scope.originalData, searchtext, undefined);
   }
@@ -447,6 +457,9 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
   var count = 0;
   $scope.showdashboard = true;
   $scope.showgraph = false
+  $scope.isDashboardInprogess=false 
+  $scope.isDashboardError=false;
+  $scope.inprogressdata=true;
   $scope.showgraphdiv = false
   $scope.graphDataStatus = false
   $scope.showtooltip = 'top'
@@ -528,7 +541,13 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
       $scope.showmap = true;
     }, 100);
   });
-
+  
+  $scope.checkIsInrogess=function(){
+		if($scope.inprogressdata || $scope.isDashboardInprogess || $scope.isDashboardError){
+		return false;
+		}
+  }
+  
   $scope.Preparedatagrid = function (i, j) {
     $scope.sectionRows[i].columns[j].filteredRows = [];
     $scope.sectionRows[i].columns[j].gridOptions = {
@@ -607,6 +626,9 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
     return (count < 3 ? 12 / (count || 1) : '4')
   }
   $scope.showDashboardGraph = function (uuid, version) {
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
     $scope.showdashboard = false;
     $scope.showgraph = false
     $scope.graphDataStatus = true
@@ -616,6 +638,9 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
 
 
   $scope.showDashboardPage = function () {
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
     $scope.showdashboard = true;
     $scope.showgraph = false
     $scope.graphDataStatus = false;
@@ -672,11 +697,17 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
   }
 
   $scope.onClickChart = function (parentIndex, index) {
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
     $scope.sectionRows[parentIndex].columns[index].isDataGridShow = false;
     $scope.sectionRows[parentIndex].columns[index].isChartShow = true;
   }
 
   $scope.onClickGrid = function (parentIndex, index) {
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
     $scope.sectionRows[parentIndex].columns[index].isChartShow = false;
     $scope.sectionRows[parentIndex].columns[index].isDataGridShow = true;
 
@@ -692,6 +723,9 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
 
 
   $scope.refreshDashboard = function (length) {
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
     $scope.callGraph();
     $scope.isApplyFilter = true;
     $scope.selectedAttributeValue = []
@@ -728,7 +762,9 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
     if (lock == 'Y' || $scope.isPrivlageDashboard) {
       return false;
     }
-
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
     $state.go('metaListdashboard', {
       id: uuid,
       mode: 'false'
@@ -739,13 +775,16 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
     if (lock == 'Y' || $scope.isPrivlageVizpod) {
       return false;
     }
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
     $state.go('dvvizpod', {
       id: uuid,
       version: version,
       mode: 'false'
     });
   }
-
+  
   $scope.onFilterChange = function (index) {
     // console.log(JSON.stringify($scope.filterAttribureIdValues[index].dname))
     // console.log(JSON.stringify($scope.selectedAttributeValue))
@@ -783,6 +822,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
   }
 
   $scope.onChipsRemove = function (index, filterIndex) {
+
     $scope.filterTag.splice(index, 1);
     $scope.selectedAttributeValue[filterIndex] = null;
     var noSelect = { "id": null, "value": "-select-" }
@@ -792,7 +832,6 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
     }, 100);
 
   }
-  
   $scope.getFilterValue = function (data) {
     $scope.filterAttribureIdValues = []
     $scope.selectedAttributeValue = [];
@@ -971,7 +1010,6 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
   }
 
   $scope.filterSearchVizpodDetail = function (s) {
-
     $scope.gridOptions.data = $filter('filter')($scope.orignalData, s, undefined);
     //$scope.getResults(data)
   }
@@ -1184,6 +1222,9 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
     }
   }
   $scope.refreshVizpod = function (rowNo, colNo) {
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
     var parentIndex = rowNo - 1;
     var index = colNo - 1;
     $scope.sectionRows[parentIndex].columns[index].isDataGridShow = false;
@@ -1429,6 +1470,9 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
   }
 
   $scope.reRunDashboard=function(){
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
     $scope.filterTag=[];
     $scope.executeDashboard(null);  
   }
@@ -1476,6 +1520,9 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
 
 
   $scope.downloadFile = function (data) {
+    if($scope.checkIsInrogess () ==false){
+			return false;
+		}
     $scope.download.data = data;
     $('#downloadSample').modal({
       backdrop: 'static',
