@@ -531,10 +531,15 @@
                                             <tr>
                                                 <td style="text-align: center; Vertical-align: middle;width:5%;">
                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                        <input style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected" ng-disabled="{{mode}}" />
+                                                    </span>
+                                                </td>
+                                                <!-- <td style="text-align: center; Vertical-align: middle;width:5%;">
+                                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                         <input class="form-control" ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="data.selected"
                                                         />
                                                     </span>
-                                                </td>
+                                                </td> -->
                                                 <td>
                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                         <input type="text" class="form-control"  ng-value="$index+1" ng-disabled="true">

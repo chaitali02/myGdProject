@@ -1494,12 +1494,17 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
       
     }
 
-    window.showResult = function(params,url){
-       if(["dashboard","report"].indexOf(params.elementType) !=-1 && url !=null){
+    window.showResult = function(params,url,execUrl){
+       if(["dashboard"].indexOf(params.elementType) !=-1 && url !=null){
          url.state=dagMetaDataService.elementDefs[params.elementType.toLowerCase()].resultState
         window.navigateTo(JSON.stringify(url));
         return false;
        }
+       if(["report"].indexOf(params.elementType) !=-1 && execUrl !=null){
+        execUrl.state=dagMetaDataService.elementDefs[params.elementType.toLowerCase()].resultState
+        window.navigateTo(JSON.stringify(execUrl));
+        return false;
+      }
        $scope.lastParams = params;
        $scope.isExecParamsetTable=false;
        App.scrollTop();
@@ -2928,7 +2933,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
               .attr('y', function(d, i){ return y + (i * height); })
               .attr('onclick', function(d){
                 if(d.type == 'results'){
-                  return 'showResult('+resultParams+','+url+')'
+                  return 'showResult('+resultParams+','+url+','+execUrl+')'
                 }
                 else if(d.type =='logs'){
                   return 'showLogs('+execUrl+')'
@@ -2955,7 +2960,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
               .text(function(d){ return d.title; })
               .attr('onclick', function(d){
                 if(d.type == 'results'){
-                  return 'showResult('+resultParams+','+url+')'
+                  return 'showResult('+resultParams+','+url+','+execUrl+')'
                 }
                 else if(d.type =='logs'){
                   return 'showLogs('+execUrl+')'

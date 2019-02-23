@@ -15,7 +15,7 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 	$scope.sectionRows = [];
 	if ($stateParams.action == 'add' || !$stateParams.id) {
 		$scope.sectionRows = [{
-			columns: [{ edit: true }]
+			columns: [{ edit: true ,rowNo:1,colNo:1}]
 		}]
 	}
 	var privileges = [];
@@ -64,8 +64,9 @@ MetadataModule.controller('MetadataDashboardController2', function ($state, $sco
 	}
 	
 	$scope.addSectionRow = function (i) {
+		debugger
 		$scope.sectionRows.splice(i + 1, 0, {
-			columns: [{"edit":true}]
+			columns: [{"edit":true,rowNo:$scope.sectionRows.length+1,colNo:1}]
 		});
 	}
 
