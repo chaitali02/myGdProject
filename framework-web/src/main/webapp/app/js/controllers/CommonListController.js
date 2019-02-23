@@ -316,7 +316,6 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
 
    $scope.okRestart=function(){
     var api = false;
-    
     switch ($scope.newType) {
       case 'dqexec':
         api = 'dataqual';
@@ -356,6 +355,9 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
         break;
       case 'mapexec':
         api = 'map';
+        break;
+      case 'graphexec':
+        api = 'graphpod';
         break;
     }
     if (!api) {
