@@ -37,6 +37,7 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.domain.Status.Stage;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.enums.RunMode;
@@ -90,6 +91,9 @@ public class BatchServiceImpl {
 			batchExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 	
 			batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.NotStarted);
+			batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.Initialized);
+			batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.Ready);
+
 		} catch (Exception e) {
 			logger.error(e);
 			batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.Failed);
@@ -303,6 +307,9 @@ public class BatchServiceImpl {
 	
 	public BatchExec submitRestart(String execUuid, String execVersion, RunMode runMode) throws Exception {
 		BatchExec batchExec = (BatchExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.batchExec.toString());
+		synchronized (batchExec.getUuid()) {
+			batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.Ready);
+		}
 		RunBatchServiceImpl runBatchServiceImpl = new RunBatchServiceImpl();
 		runBatchServiceImpl.setBatchExec(batchExec);
 		runBatchServiceImpl.setDagExecServiceImpl(dagExecServiceImpl);

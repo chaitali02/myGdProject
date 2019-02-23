@@ -810,7 +810,7 @@ BatchModule.controller('ResultBatchController', function( $location,$http,uiGrid
       '    <button class="btn green btn-xs btn-outline dropdown-toggle" uib-dropdown-toggle>Action',
       '    <i class="fa fa-angle-down"></i></button>',
       '    <ul uib-dropdown-menu class="dropdown-menu-grid">',
-      '       <li><a ng-disabled="row.entity.type.toLowerCase().indexOf(\'batchexec\')!=-1?[\'Completed\',\'In Progress\'].indexOf(row.entity.status)==-1:row.entity.type.toLowerCase().indexOf(\'trainexec\')!=-1?[\'Completed\'].indexOf(row.entity.status)==-1:row.entity.type.toLowerCase().indexOf(\'dagexec\')!=-1?[\'Completed\',\'Not Started\',\'Terminating\',\'Failed\',\'In Progress\',\'Killed\'].indexOf(row.entity.status)==-1:row.entity.type.toLowerCase().indexOf(\'group\')==-1?[\'Completed\',\'Killed\'].indexOf(row.entity.status)==-1:[\'Completed\',\'In Progress\',\'Killed\',\'Failed\',\'Terminating\'].indexOf(row.entity.status)==-1"  ng-click="grid.appScope.action(row.entity)"><i class="fa fa-eye" aria-hidden="true"></i> View </a></li>',
+      '       <li><a ng-disabled="row.entity.type.toLowerCase().indexOf(\'batchexec\')!=-1?[\'Completed\',\'In Progress\'].indexOf(row.entity.status)==-1:row.entity.type.toLowerCase().indexOf(\'trainexec\')!=-1?[\'Completed\'].indexOf(row.entity.status)==-1:row.entity.type.toLowerCase().indexOf(\'dagexec\')!=-1?[\'Completed\',\'Not Started\',\'Terminating\',\'Failed\',\'In Progress\',\'Killed\',\'Initialized\',\'Ready\'].indexOf(row.entity.status)==-1:row.entity.type.toLowerCase().indexOf(\'group\')==-1?[\'Completed\',\'Killed\'].indexOf(row.entity.status)==-1:[\'Completed\',\'In Progress\',\'Killed\',\'Failed\',\'Terminating\'].indexOf(row.entity.status)==-1"  ng-click="grid.appScope.action(row.entity)"><i class="fa fa-eye" aria-hidden="true"></i> View </a></li>',
       '       <li><a ng-disabled="[\'In Progress\',\'Resume\'].indexOf(row.entity.status)==-1 || grid.appScope.privileges.indexOf(\'Execute\') == -1"  ng-click="grid.appScope.setStatus(row.entity,\'Killed\')"><i class="fa fa-times" aria-hidden="true"></i> Kill </a></li>',
       '       <li><a ng-disabled="[\'Killed\',\'Failed\'].indexOf(row.entity.status)==-1 || grid.appScope.privileges.indexOf(\'Execute\') == -1"  ng-click="grid.appScope.restartExec(row.entity)"><i class="fa fa-repeat" aria-hidden="true"></i> Restart </a></li>',
       '    </ul>',
@@ -918,7 +918,7 @@ BatchModule.controller('ResultBatchController', function( $location,$http,uiGrid
   $scope.setStatus = function (row, status) {
     $scope.obj=row
     $scope.msg = "Killed"
-    $scope.type= dagMetaDataService.elementDefs[data.type.toLowerCase().split("exec")[0]].caption
+    $scope.type= dagMetaDataService.elementDefs[row.type.toLowerCase().split("exec")[0]].caption
     $scope.obj.setStatus=status
     $('#confModal').modal({
       backdrop: 'static',
