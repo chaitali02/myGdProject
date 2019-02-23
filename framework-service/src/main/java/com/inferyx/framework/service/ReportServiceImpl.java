@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -37,6 +38,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.WorkbookUtil;
+import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
@@ -98,6 +100,11 @@ public class ReportServiceImpl {
 			if (statusList == null) {
 				statusList = new ArrayList<Status>();
 			}
+			if (Helper.getLatestStatus(statusList) != null
+					&& Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Ready, new Date()))) {
+				logger.info(" If status is in Ready state then no need to start and parse again. ");
+				return reportExec;
+			}
 			reportExec.setName(report.getName());
 			reportExec.setAppInfo(report.getAppInfo());	
 			
@@ -136,8 +143,14 @@ public class ReportServiceImpl {
 			if(execParams != null) {
 				otherParams = execParams.getOtherParams();
 			}
-			report = (Report) commonServiceImpl.getLatestByUuid(reportExec.getDependsOn().getRef().getUuid(), MetaType.report.toString());
+			report = (Report) commonServiceImpl.getLatestByUuid(reportExec.getDependsOn().getRef().getUuid(), MetaType.report.toString(), "N");
+			synchronized (execUuid) {
+				reportExec = (ReportExec) commonServiceImpl.setMetaStatus(reportExec, MetaType.reportExec, Status.Stage.Initialized);
+			}
 			reportExec.setExec(reportOperator.generateSql(report, refKeyMap, otherParams, usedRefKeySet, reportExec.getExecParams(), runMode));
+			synchronized (execUuid) {
+				reportExec = (ReportExec) commonServiceImpl.setMetaStatus(reportExec, MetaType.reportExec, Status.Stage.Ready);
+			}
 			reportExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 			logger.info("sql_generated: " + reportExec.getExec());
 			commonServiceImpl.save(MetaType.reportExec.toString(), reportExec);

@@ -280,6 +280,13 @@ public abstract class RuleGroupTemplate implements IExecutable, IParsable {
 		}
 		
 		List<Status> statusList = baseGroupExec.getStatusList();
+		
+		if (Helper.getLatestStatus(statusList) != null
+				&& Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Ready, new Date()))) {
+			logger.info(" If status is in Ready state then no need to start and parse again. ");
+			return baseGroupExec;
+		}
+		
 		if (Helper.getLatestStatus(statusList) != null 
 				&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.InProgress, new Date())) 
 						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Completed, new Date())) 

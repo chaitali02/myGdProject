@@ -42,6 +42,7 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Operator;
 import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.ParamListHolder;
+import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.OperatorType;
 import com.inferyx.framework.enums.RunMode;
@@ -128,9 +129,11 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 				&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.InProgress, new Date()))
 						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Completed, new Date()))
 						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Terminating, new Date()))
-						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.OnHold, new Date())))) {
+						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.OnHold, new Date()))) 
+						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Ready, new Date()))) {
 			logger.info(
 					" This process is In Progress or has been completed previously or is Terminating or is On Hold. Hence it cannot be rerun. ");
+			logger.info("If the process is in ready status then it should directly go to execution");
 			return operatorExec;
 		}
 		logger.info(" Set not started status");
@@ -141,7 +144,7 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 		logger.info(" After Set not started status");
 		Operator operator = (Operator) commonServiceImpl.getOneByUuidAndVersion(
 				operatorExec.getDependsOn().getRef().getUuid(), operatorExec.getDependsOn().getRef().getVersion(),
-				MetaType.operator.toString());
+				MetaType.operator.toString(), "N");
 		logger.info(" After operator fetch");
 		com.inferyx.framework.operator.IOperator newOperator = operatorFactory
 				.getOperator(Helper.getOperatorType(operator.getOperatorType()));
@@ -413,7 +416,21 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 		logger.info("Operator type in execute : " + operator.getOperatorType());
 		com.inferyx.framework.operator.IOperator newOperator = operatorFactory
 				.getOperator(Helper.getOperatorType(operator.getOperatorType()));
-		return newOperator.parse(baseExec, execParams, runMode);
+		List<Status> statusList = baseExec.getStatusList();
+		if (Helper.getLatestStatus(statusList) != null
+				&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Ready, new Date())))) {
+			logger.info(" Custom operator is in ready state. No need to parse again ");
+			return baseExec;
+		}
+		
+		synchronized (baseExec.getUuid()) {
+			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.operatorExec, Status.Stage.Initialized);
+		}
+		baseExec = newOperator.parse(baseExec, execParams, runMode);
+		synchronized (baseExec.getUuid()) {
+			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.operatorExec, Status.Stage.Ready);
+		}
+		return baseExec;
 	}
 	
 	public HttpServletResponse download(String uuid, String version, String format, int offset,

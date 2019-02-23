@@ -1645,9 +1645,11 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 				&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.InProgress, new Date()))
 						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Completed, new Date()))
 						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Terminating, new Date()))
-						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.OnHold, new Date())))) {
+						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.OnHold, new Date()))) 
+						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Ready, new Date()))) {
 			logger.info(
 					" This process is In Progress or has been completed previously or is Terminating or is On Hold. Hence it cannot be rerun. ");
+			logger.info(" If status is in Ready state then no need to start and parse again. ");
 			return graphExec;
 		}
 		logger.info(" Set not started status");
@@ -1697,7 +1699,14 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 
 	@Override
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
-		return graphOperator.parse(baseExec, execParams, runMode);
+		synchronized (baseExec.getUuid()) {
+			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.graphExec, Status.Stage.Initialized);
+		}
+		baseExec = graphOperator.parse(baseExec, execParams, runMode);
+		synchronized (baseExec.getUuid()) {
+			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.graphExec, Status.Stage.Ready);
+		}
+		return baseExec;
 	}
 
 	/**
