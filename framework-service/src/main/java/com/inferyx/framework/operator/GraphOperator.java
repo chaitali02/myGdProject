@@ -226,7 +226,7 @@ public class GraphOperator implements IOperator {
 					flag = false;
 				}
 			}
-			if (flag == true) {
+			if (flag == true && graphNode.getNodeBackgroundInfo() != null) {
 				// sb.delete(sb.length() - 5, sb.length());
 				sb.append(sb2);
 			} else {
