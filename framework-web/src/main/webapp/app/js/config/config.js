@@ -160,8 +160,8 @@ InferyxApp.constant("CF_GRAPHPOD",{
     nodeHighlightType:[
         {"caption":"Category","value":"category"},
         {"caption":"Numerical","value":"numerical"}],
-    nodeHighlightColor:["#b71c1c","#004D40","#FF9800","#BF360C","#0D47A1","#263238","#000000"],
-    nodeBackGroundColor:["#ef9a9a","#B39DDB","#80DEEA","#BCAAA4","#B0BEC5"],
+    nodeHighlightColor:["#B71C1C","#004D40","#FF9800","#BF360C","#0D47A1","#263238","#000000"],
+    nodeBackGroundColor:["#Af9A9A","#B39DDB","#80DEEA","#BCAAA4","#B0BEC5"],
     edgeHighlightColor:["#CCD1D1","#A9DFBF","#F5B7B1"]//["#b71c1c","#004D40","#FF9800","#BF360C","#0D47A1","#263238","#000000"],
   
 });
