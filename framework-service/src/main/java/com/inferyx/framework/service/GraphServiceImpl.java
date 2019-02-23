@@ -32,6 +32,7 @@ import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.RowFactory;
+import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -64,6 +65,7 @@ import com.inferyx.framework.domain.GraphMetaIdentifier;
 import com.inferyx.framework.domain.GraphMetaIdentifierHolder;
 import com.inferyx.framework.domain.Graphpod;
 import com.inferyx.framework.domain.GraphpodResult;
+import com.inferyx.framework.domain.Highlight;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -1643,9 +1645,11 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 				&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.InProgress, new Date()))
 						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Completed, new Date()))
 						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Terminating, new Date()))
-						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.OnHold, new Date())))) {
+						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.OnHold, new Date()))) 
+						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Ready, new Date()))) {
 			logger.info(
 					" This process is In Progress or has been completed previously or is Terminating or is On Hold. Hence it cannot be rerun. ");
+			logger.info(" If status is in Ready state then no need to start and parse again. ");
 			return graphExec;
 		}
 		logger.info(" Set not started status");
@@ -1695,7 +1699,14 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 
 	@Override
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
-		return graphOperator.parse(baseExec, execParams, runMode);
+		synchronized (baseExec.getUuid()) {
+			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.graphExec, Status.Stage.Initialized);
+		}
+		baseExec = graphOperator.parse(baseExec, execParams, runMode);
+		synchronized (baseExec.getUuid()) {
+			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.graphExec, Status.Stage.Ready);
+		}
+		return baseExec;
 	}
 
 	/**
@@ -1921,31 +1932,73 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		}
 		if (otherEdgeSourceList.isEmpty() != true)
 			restSource = "(  edgeSource IN (" + sourceName + ") ) OR";
-
+		StructField[] structFields=motifs.schema().fields();
+	for(StructField field:structFields) {
+		System.out.println(field);
+	}
+	Dataset<Row> edge_dataset = null ;
+	
 		// sourceName.append(" ( edgeSource = '"+source1+"' and" );
-		Dataset<Row> edge_dataset = motifs.select("relationwithChild.src", "relationwithChild.dst",
+	if(graphpod.getEdgeInfo().get(0).getHighlightInfo()!=null ) {
+		 edge_dataset = motifs.select("relationwithChild.src", "relationwithChild.dst",
 				"relationwithChild.edgeName", "relationwithChild.edgeType", "relationwithChild.edgeProperties",
 				"relationwithChild.edgeIndex", "relationwithChild.eHpropertyId", "relationwithChild.edgeSource")
 				.distinct();
 		edge_dataset.show(false);
-
+	}else {
+		edge_dataset = motifs.select("relationwithChild.src", "relationwithChild.dst",
+				"relationwithChild.edgeName", "relationwithChild.edgeType", "relationwithChild.edgeProperties",
+				"relationwithChild.edgeIndex", "relationwithChild.edgeSource")
+				.distinct();
+		edge_dataset.show(false);
+	}
 		if (edgefilter.length() > 0 && restSource != null)
 			edge_dataset = edge_dataset.filter(restSource + "(" + edgefilter.toString() + ")");
 		else if (edgefilter.length() > 0)
 			edge_dataset = edge_dataset.filter("(" + edgefilter.toString() + ")");
 
 		edge_dataset.show(false);
-		@SuppressWarnings("deprecation")
-		Dataset<Row> node_dataset = motifs
+		Dataset<Row> node_dataset = null;
+		if(graphpod.getNodeInfo().get(0).getHighlightInfo()!=null && graphpod.getNodeInfo().get(0).getNodeBackgroundInfo()!=null  ) {
+			node_dataset = motifs
 				.select("Object.id", "Object.nodeName", "Object.nodeType", "Object.nodeIcon", "Object.nodeProperties",
 						"Object.nBPropertyId", "Object.nHpropertyId", "Object.type", "Object.nodeIndex","Object.nodeSize")
 				.union(motifs.select("Child.id", "Child.nodeName", "Child.nodeType", "Child.nodeIcon",
 						"Child.nodeProperties", "Child.nBPropertyId", "Child.nHpropertyId", "Child.type",
 						"Child.nodeIndex","Child.nodeSize"))
 				.distinct();
-
+		}else if(graphpod.getNodeInfo().get(0).getHighlightInfo()!=null && graphpod.getNodeInfo().get(0).getNodeBackgroundInfo()==null)
+		{
+			node_dataset = motifs
+					.select("Object.id", "Object.nodeName", "Object.nodeType", "Object.nodeIcon", "Object.nodeProperties",
+						 "Object.nHpropertyId", "Object.type", "Object.nodeIndex","Object.nodeSize")
+					.union(motifs.select("Child.id", "Child.nodeName", "Child.nodeType", "Child.nodeIcon",
+							"Child.nodeProperties", "Child.type",
+							"Child.nodeIndex","Child.nodeSize"))
+					.distinct();
+		}else if(graphpod.getNodeInfo().get(0).getHighlightInfo()==null && graphpod.getNodeInfo().get(0).getNodeBackgroundInfo()!=null)
+		{
+			node_dataset = motifs
+					.select("Object.id", "Object.nodeName", "Object.nodeType", "Object.nodeIcon", "Object.nodeProperties",
+							"Object.nBPropertyId", "Object.nodeIndex","Object.nodeSize")
+					.union(motifs.select("Child.id", "Child.nodeName", "Child.nodeType", "Child.nodeIcon",
+							"Child.nodeProperties", "Child.nBPropertyId",
+							"Child.nodeIndex","Child.nodeSize"))
+					.distinct();
+		}else {
+			
+			
+			node_dataset = motifs
+					.select("Object.id", "Object.nodeName", "Object.nodeType", "Object.nodeIcon", "Object.nodeProperties",
+							 "Object.nodeIndex","Object.nodeSize")
+					.union(motifs.select("Child.id", "Child.nodeName", "Child.nodeType", "Child.nodeIcon",
+							"Child.nodeProperties",
+							"Child.nodeIndex","Child.nodeSize"))
+					.distinct();
+		}
 		System.out.println("############   Nodefilter  Filter  String   #####" + nodefilter.toString());
 		node_dataset.show(false);
+		
 		if (nodefilter.length() > 0)
 			node_dataset = node_dataset.filter(nodefilter.toString());
 

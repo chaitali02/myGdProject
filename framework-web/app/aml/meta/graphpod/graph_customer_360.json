@@ -1,3008 +1,1846 @@
 {
-  "id": "5c6f74320bf803e3f5895614",
-  "uuid": "e5e1aee8-86a3-11e8-adc0-fa7ae01bbebc",
-  "version": "1550808114",
-  "name": "graph_customer_360",
-  "desc": "",
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
+
+    "nodeInfo" : [ 
+        {
+            "nodeId" : {
+                "attrId" : "0",
+                "attrType" : "integer",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "838251a0-bc55-42c2-96eb-327527512933"
+                }
+            },
+            "nodeType" : "bank",
+            "nodeIcon" : "bank",
+            "nodeName" : {
+                "attrId" : "2",
+                "attrType" : "string",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "838251a0-bc55-42c2-96eb-327527512933"
+                }
+            },
+            "nodeSize" : {
+                "attrId" : "0",
+                "attrType" : "integer",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "838251a0-bc55-42c2-96eb-327527512933"
+                }
+            },
+            "nodeSource" : {
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "838251a0-bc55-42c2-96eb-327527512933"
+                }
+            },
+            "nodeProperties" : [ 
+                {
+                    "attrId" : "0",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "838251a0-bc55-42c2-96eb-327527512933"
+                    }
+                }, 
+                {
+                    "attrId" : "1",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "838251a0-bc55-42c2-96eb-327527512933"
+                    }
+                }, 
+                {
+                    "attrId" : "2",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "838251a0-bc55-42c2-96eb-327527512933"
+                    }
+                }, 
+                {
+                    "attrId" : "3",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "838251a0-bc55-42c2-96eb-327527512933"
+                    }
+                }, 
+                {
+                    "attrId" : "4",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "838251a0-bc55-42c2-96eb-327527512933"
+                    }
+                }, 
+                {
+                    "attrId" : "5",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "838251a0-bc55-42c2-96eb-327527512933"
+                    }
+                }, 
+                {
+                    "attrId" : "6",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "838251a0-bc55-42c2-96eb-327527512933"
+                    }
+                }, 
+                {
+                    "attrId" : "7",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "838251a0-bc55-42c2-96eb-327527512933"
+                    }
+                }
+            ],
+            "nodeBackgroundInfo" : {
+                "type" : "category",
+                "propertyId" : {
+                    "attrId" : "0",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "838251a0-bc55-42c2-96eb-327527512933"
+                    }
+                },
+                "propertyInfo" : [ 
+                    {
+                        "propertyName" : "101",
+                        "propertyValue" : "#B0BEC5"
+                    }
+                ]
+            },
+            "highlightInfo" : {
+                "type" : "category",
+                "propertyId" : {
+                    "attrId" : "0",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "838251a0-bc55-42c2-96eb-327527512933"
+                    }
+                },
+                "propertyInfo" : [ 
+                    {
+                        "propertyName" : "101",
+                        "propertyValue" : "#FF9800"
+                    }
+                ]
+            }
+        }, 
+        {
+            "nodeId" : {
+                "attrId" : "0",
+                "attrType" : "integer",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                }
+            },
+            "nodeType" : "branch",
+            "nodeIcon" : "office",
+            "nodeName" : {
+                "attrId" : "4",
+                "attrType" : "string",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                }
+            },
+            "nodeSize" : {
+                "attrId" : "0",
+                "attrType" : "integer",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                }
+            },
+            "nodeSource" : {
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                }
+            },
+            "nodeProperties" : [ 
+                {
+                    "attrId" : "0",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                    }
+                }, 
+                {
+                    "attrId" : "1",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                    }
+                }, 
+                {
+                    "attrId" : "2",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                    }
+                }, 
+                {
+                    "attrId" : "3",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                    }
+                }, 
+                {
+                    "attrId" : "4",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                    }
+                }, 
+                {
+                    "attrId" : "5",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                    }
+                }, 
+                {
+                    "attrId" : "6",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                    }
+                }, 
+                {
+                    "attrId" : "7",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                    }
+                }, 
+                {
+                    "attrId" : "8",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                    }
+                }, 
+                {
+                    "attrId" : "9",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                    }
+                }, 
+                {
+                    "attrId" : "10",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                    }
+                }
+            ],
+            "nodeBackgroundInfo" : {
+                "type" : "category",
+                "propertyId" : {
+                    "attrId" : "1",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                    }
+                },
+                "propertyInfo" : [ 
+                    {
+                        "propertyName" : "101",
+                        "propertyValue" : "#80DEEA"
+                    }, 
+                    {
+                        "propertyName" : "103",
+                        "propertyValue" : "#B0BEC5"
+                    }, 
+                    {
+                        "propertyName" : "102",
+                        "propertyValue" : "#d0daf3"
+                    }
+                ]
+            },
+            "highlightInfo" : {
+                "type" : "category",
+                "propertyId" : {
+                    "attrId" : "1",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                    }
+                },
+                "propertyInfo" : [ 
+                    {
+                        "propertyName" : "101",
+                        "propertyValue" : "#004D40"
+                    }
+                ]
+            }
+        }, 
+        {
+            "nodeId" : {
+                "attrId" : "0",
+                "attrType" : "integer",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                }
+            },
+            "nodeType" : "customer",
+            "nodeIcon" : "user",
+            "nodeName" : {
+                "attrId" : "4",
+                "attrType" : "string",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                }
+            },
+            "nodeSize" : {
+                "attrId" : "10",
+                "attrType" : "integer",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                }
+            },
+            "nodeSource" : {
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                }
+            },
+            "nodeProperties" : [ 
+                {
+                    "attrId" : "0",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "1",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "2",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "3",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "4",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "6",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "7",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "8",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "9",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "10",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "11",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "12",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }
+            ],
+            "nodeBackgroundInfo" : {
+                "type" : "category",
+                "propertyId" : {
+                    "attrId" : "3",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                },
+                "propertyInfo" : [ 
+                    {
+                        "propertyName" : "Mr",
+                        "propertyValue" : "#ef9a9a"
+                    }, 
+                    {
+                        "propertyName" : "Ms",
+                        "propertyValue" : "#80DEEA"
+                    }, 
+                    {
+                        "propertyName" : "Mrs",
+                        "propertyValue" : "#B0BEC5"
+                    }
+                ]
+            },
+            "highlightInfo" : {
+                "type" : "category",
+                "propertyId" : {
+                    "attrId" : "3",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                },
+                "propertyInfo" : [ 
+                    {
+                        "propertyName" : "Mr",
+                        "propertyValue" : "#FF9800"
+                    }, 
+                    {
+                        "propertyName" : "Ms",
+                        "propertyValue" : "#004D40"
+                    }, 
+                    {
+                        "propertyName" : "Mrs",
+                        "propertyValue" : "#b71c1c"
+                    }
+                ]
+            }
+        }, 
+        {
+            "nodeId" : {
+                "attrId" : "12",
+                "attrType" : "string",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                }
+            },
+            "nodeType" : "account",
+            "nodeIcon" : "bank",
+            "nodeName" : {
+                "attrId" : "12",
+                "attrType" : "string",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                }
+            },
+            "nodeSize" : {
+                "attrId" : "14",
+                "attrType" : "integer",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                }
+            },
+            "nodeSource" : {
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                }
+            },
+            "nodeProperties" : [ 
+                {
+                    "attrId" : "0",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "1",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "2",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "3",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "4",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "5",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "6",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "7",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "8",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "9",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "10",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "11",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "12",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "13",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "14",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "17",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "18",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "19",
+                    "attrType" : "double",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "20",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "21",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }
+            ],
+            "nodeBackgroundInfo" : {
+                "type" : "category",
+                "propertyId" : {
+                    "attrId" : "18",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                },
+                "propertyInfo" : [ 
+                    {
+                        "propertyName" : "Compound",
+                        "propertyValue" : "#ef9a9a"
+                    }, 
+                    {
+                        "propertyName" : "Simple",
+                        "propertyValue" : "#B39DDB"
+                    }
+                ]
+            },
+            "highlightInfo" : {
+                "type" : "category",
+                "propertyId" : {
+                    "attrId" : "6",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                },
+                "propertyInfo" : [ 
+                    {
+                        "propertyName" : "American",
+                        "propertyValue" : "#0D47A1"
+                    }, 
+                    {
+                        "propertyName" : "Canadian",
+                        "propertyValue" : "#FF9800"
+                    }, 
+                    {
+                        "propertyName" : "British",
+                        "propertyValue" : "#BF360C"
+                    }, 
+                    {
+                        "propertyName" : "German",
+                        "propertyValue" : "#000000"
+                    }
+                ]
+            }
+        }, 
+        {
+            "nodeId" : {
+                "attrId" : "0",
+                "attrType" : "integer",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
+                }
+            },
+            "nodeType" : "address",
+            "nodeIcon" : "home",
+            "nodeName" : {
+                "attrId" : "4",
+                "attrType" : "string",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
+                }
+            },
+            "nodeSize" : {
+                "attrId" : "0",
+                "attrType" : "integer",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
+                }
+            },
+            "nodeSource" : {
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
+                }
+            },
+            "nodeProperties" : [ 
+                {
+                    "attrId" : "0",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
+                    }
+                }, 
+                {
+                    "attrId" : "1",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
+                    }
+                }, 
+                {
+                    "attrId" : "4",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
+                    }
+                }, 
+                {
+                    "attrId" : "5",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
+                    }
+                }, 
+                {
+                    "attrId" : "6",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
+                    }
+                }, 
+                {
+                    "attrId" : "7",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
+                    }
+                }, 
+                {
+                    "attrId" : "8",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
+                    }
+                }, 
+                {
+                    "attrId" : "9",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
+                    }
+                }, 
+                {
+                    "attrId" : "10",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
+                    }
+                }, 
+                {
+                    "attrId" : "11",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
+                    }
+                }, 
+                {
+                    "attrId" : "12",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
+                    }
+                }
+            ],
+            "nodeBackgroundInfo" : {
+                "type" : "category",
+                "propertyId" : {
+                    "attrId" : "0",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
+                    }
+                },
+                "propertyInfo" : [ 
+                    {
+                        "propertyName" : "101",
+                        "propertyValue" : "#B39DDB"
+                    }
+                ]
+            },
+            "highlightInfo" : {
+                "type" : "category",
+                "propertyId" : {
+                    "attrId" : "0",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
+                    }
+                },
+                "propertyInfo" : [ 
+                    {
+                        "propertyName" : "101",
+                        "propertyValue" : "#000000"
+                    }
+                ]
+            }
+        }
+    ],
+    "edgeInfo" : [ 
+        {
+            "edgeId" : "0",
+            "edgeType" : "bank",
+            "edgeName" : "bank_branch",
+            "edgeSource" : {
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                }
+            },
+            "edgeProperties" : [ 
+                {
+                    "attrId" : "0",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                    }
+                }, 
+                {
+                    "attrId" : "1",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                    }
+                }, 
+                {
+                    "attrId" : "2",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                    }
+                }, 
+                {
+                    "attrId" : "3",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                    }
+                }, 
+                {
+                    "attrId" : "4",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                    }
+                }, 
+                {
+                    "attrId" : "5",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                    }
+                }, 
+                {
+                    "attrId" : "6",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                    }
+                }, 
+                {
+                    "attrId" : "7",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                    }
+                }, 
+                {
+                    "attrId" : "8",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                    }
+                }, 
+                {
+                    "attrId" : "9",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                    }
+                }, 
+                {
+                    "attrId" : "10",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                    }
+                }
+            ],
+            "sourceNodeId" : {
+                "attrId" : "2",
+                "attrType" : "integer",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                }
+            },
+            "sourceNodeType" : "customer",
+            "targetNodeId" : {
+                "attrId" : "0",
+                "attrType" : "integer",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                }
+            },
+            "targetNodeType" : "account",
+            "highlightInfo" : {
+                "type" : "numerical",
+                "propertyId" : {
+                    "attrId" : "0",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                    }
+                },
+                "propertyInfo" : [ 
+                    {
+                        "propertyName" : "1",
+                        "propertyValue" : "#FF9800"
+                    }
+                ]
+            }
+        }, 
+        {
+            "edgeId" : "1",
+            "edgeType" : "branch",
+            "edgeName" : "branch_cust",
+            "edgeSource" : {
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                }
+            },
+            "edgeProperties" : [ 
+                {
+                    "attrId" : "0",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "1",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "2",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "3",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "4",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "6",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "7",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "8",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "9",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "10",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "11",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "12",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }
+            ],
+            "sourceNodeId" : {
+                "attrId" : "2",
+                "attrType" : "integer",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                }
+            },
+            "targetNodeId" : {
+                "attrId" : "0",
+                "attrType" : "integer",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                }
+            },
+            "highlightInfo" : {
+                "type" : "category",
+                "propertyId" : {
+                    "attrId" : "0",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                },
+                "propertyInfo" : [ 
+                    {
+                        "propertyName" : "1",
+                        "propertyValue" : "#263238"
+                    }
+                ]
+            }
+        }, 
+        {
+            "edgeId" : "2",
+            "edgeType" : "customer",
+            "edgeName" : "cust_acct",
+            "edgeSource" : {
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                }
+            },
+            "edgeProperties" : [ 
+                {
+                    "attrId" : "0",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "1",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "2",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "3",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "4",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "5",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "6",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "7",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "8",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "9",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "10",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "11",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "12",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "13",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "14",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "15",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "16",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "17",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "18",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "19",
+                    "attrType" : "double",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "20",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }, 
+                {
+                    "attrId" : "21",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                }
+            ],
+            "sourceNodeId" : {
+                "attrId" : "4",
+                "attrType" : "integer",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                }
+            },
+            "targetNodeId" : {
+                "attrId" : "12",
+                "attrType" : "string",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                }
+            },
+            "highlightInfo" : {
+                "type" : "category",
+                "propertyId" : {
+                    "attrId" : "0",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
+                    }
+                },
+                "propertyInfo" : [ 
+                    {
+                        "propertyName" : "1",
+                        "propertyValue" : "#004D40"
+                    }
+                ]
+            }
+        }, 
+        {
+            "edgeId" : "3",
+            "edgeType" : "address",
+            "edgeName" : "cust_addr",
+            "edgeSource" : {
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                }
+            },
+            "edgeProperties" : [ 
+                {
+                    "attrId" : "0",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "1",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "2",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "3",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "4",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "6",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "7",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "8",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "9",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "10",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "11",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }, 
+                {
+                    "attrId" : "12",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                }
+            ],
+            "sourceNodeId" : {
+                "attrId" : "0",
+                "attrType" : "integer",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                }
+            },
+            "targetNodeId" : {
+                "attrId" : "1",
+                "attrType" : "integer",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                }
+            },
+            "highlightInfo" : {
+                "type" : "category",
+                "propertyId" : {
+                    "attrId" : "0",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "1b905436-3237-4dac-8093-8ceab5403752"
+                    }
+                },
+                "propertyInfo" : [ 
+                    {
+                        "propertyName" : "1",
+                        "propertyValue" : "#0D47A1"
+                    }
+                ]
+            }
+        }, 
+        {
+            "edgeId" : "4",
+            "edgeType" : "address",
+            "edgeName" : "branch_addr",
+            "edgeSource" : {
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                }
+            },
+            "edgeProperties" : [ 
+                {
+                    "attrId" : "0",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                    }
+                }, 
+                {
+                    "attrId" : "1",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                    }
+                }, 
+                {
+                    "attrId" : "2",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                    }
+                }, 
+                {
+                    "attrId" : "3",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                    }
+                }, 
+                {
+                    "attrId" : "4",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                    }
+                }, 
+                {
+                    "attrId" : "5",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                    }
+                }, 
+                {
+                    "attrId" : "6",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                    }
+                }, 
+                {
+                    "attrId" : "7",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                    }
+                }, 
+                {
+                    "attrId" : "8",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                    }
+                }, 
+                {
+                    "attrId" : "9",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                    }
+                }, 
+                {
+                    "attrId" : "10",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                    }
+                }
+            ],
+            "sourceNodeId" : {
+                "attrId" : "0",
+                "attrType" : "integer",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                }
+            },
+            "targetNodeId" : {
+                "attrId" : "3",
+                "attrType" : "integer",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                }
+            },
+            "highlightInfo" : {
+                "type" : "category",
+                "propertyId" : {
+                    "attrId" : "0",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "7dcfe5de-f97b-4d11-98cb-f4b65d89837e"
+                    }
+                },
+                "propertyInfo" : [ 
+                    {
+                        "propertyName" : "1",
+                        "propertyValue" : "#61595e"
+                    }
+                ]
+            }
+        }, 
+        {
+            "edgeId" : "5",
+            "edgeType" : "transaction",
+            "edgeName" : "acct_acct",
+            "edgeSource" : {
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
+                }
+            },
+            "edgeProperties" : [ 
+                {
+                    "attrId" : "0",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
+                    }
+                }, 
+                {
+                    "attrId" : "1",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
+                    }
+                }, 
+                {
+                    "attrId" : "2",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
+                    }
+                }, 
+                {
+                    "attrId" : "3",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
+                    }
+                }, 
+                {
+                    "attrId" : "4",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
+                    }
+                }, 
+                {
+                    "attrId" : "5",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
+                    }
+                }, 
+                {
+                    "attrId" : "6",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
+                    }
+                }, 
+                {
+                    "attrId" : "7",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
+                    }
+                }, 
+                {
+                    "attrId" : "8",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
+                    }
+                }, 
+                {
+                    "attrId" : "9",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
+                    }
+                }, 
+                {
+                    "attrId" : "10",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
+                    }
+                }, 
+                {
+                    "attrId" : "11",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
+                    }
+                }, 
+                {
+                    "attrId" : "12",
+                    "attrType" : "integer",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
+                    }
+                }
+            ],
+            "sourceNodeId" : {
+                "attrId" : "4",
+                "attrType" : "string",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
+                }
+            },
+            "targetNodeId" : {
+                "attrId" : "5",
+                "attrType" : "string",
+                "ref" : {
+                    "type" : "datapod",
+                    "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
+                }
+            },
+            "highlightInfo" : {
+                "type" : "category",
+                "propertyId" : {
+                    "attrId" : "0",
+                    "attrType" : "string",
+                    "ref" : {
+                        "type" : "datapod",
+                        "uuid" : "49fc0656-109d-46a2-a826-c09e92895035"
+                    }
+                },
+                "propertyInfo" : [ 
+                    {
+                        "propertyName" : "1",
+                        "propertyValue" : "#61595e"
+                    }
+                ]
+            }
+        }
+    ],
+    "uuid" : "e5e1aee8-86a3-11e8-adc0-fa7ae01bbebc",
+    "version" : "1550847709",
+    "name" : "graph_customer_360",
+    "desc" : "",
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+            "version" : "1464977196",
+            "name" : "ypalrecha"
+        }
     },
-    "value": null
-  },
-  "createdOn": "Thu Feb 21 23:01:54 EST 2019",
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-        "version": "1464977196",
-        "name": null
-      },
-      "value": null
-    }
-  ],
-  "publicFlag": "N",
-  "nodeInfo": [
-    {
-      "nodeId": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "838251a0-bc55-42c2-96eb-327527512933",
-          "version": null,
-          "name": "bank"
-        },
-        "value": null,
-        "attrId": "0",
-        "attrName": "bank_id",
-        "attrType": "integer",
-        "attrUnitType": null,
-        "function": null
-      },
-      "nodeType": "bank",
-      "nodeIcon": "bank",
-      "nodeName": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "838251a0-bc55-42c2-96eb-327527512933",
-          "version": null,
-          "name": "bank"
-        },
-        "value": null,
-        "attrId": "2",
-        "attrName": "bank_name",
-        "attrType": "string",
-        "attrUnitType": null,
-        "function": null
-      },
-      "nodeSize": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "838251a0-bc55-42c2-96eb-327527512933",
-          "version": null,
-          "name": "bank"
-        },
-        "value": null,
-        "attrId": "0",
-        "attrName": "bank_id",
-        "attrType": "integer",
-        "attrUnitType": null,
-        "function": null
-      },
-      "nodeSource": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "838251a0-bc55-42c2-96eb-327527512933",
-          "version": null,
-          "name": "bank"
-        },
-        "value": null
-      },
-      "nodeProperties": [
+    "createdOn" : ISODate("2019-02-22T15:01:49.000Z"),
+    "tags" : [],
+    "active" : "Y",
+    "locked" : "N",
+    "published" : "N",
+    "appInfo" : [ 
         {
-          "ref": {
-            "type": "datapod",
-            "uuid": "838251a0-bc55-42c2-96eb-327527512933",
-            "version": null,
-            "name": "bank"
-          },
-          "value": null,
-          "attrId": "0",
-          "attrName": "bank_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "838251a0-bc55-42c2-96eb-327527512933",
-            "version": null,
-            "name": "bank"
-          },
-          "value": null,
-          "attrId": "1",
-          "attrName": "bank_code",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "838251a0-bc55-42c2-96eb-327527512933",
-            "version": null,
-            "name": "bank"
-          },
-          "value": null,
-          "attrId": "2",
-          "attrName": "bank_name",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "838251a0-bc55-42c2-96eb-327527512933",
-            "version": null,
-            "name": "bank"
-          },
-          "value": null,
-          "attrId": "3",
-          "attrName": "bank_account_number",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "838251a0-bc55-42c2-96eb-327527512933",
-            "version": null,
-            "name": "bank"
-          },
-          "value": null,
-          "attrId": "4",
-          "attrName": "bank_currency_code",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "838251a0-bc55-42c2-96eb-327527512933",
-            "version": null,
-            "name": "bank"
-          },
-          "value": null,
-          "attrId": "5",
-          "attrName": "bank_check_digits",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "838251a0-bc55-42c2-96eb-327527512933",
-            "version": null,
-            "name": "bank"
-          },
-          "value": null,
-          "attrId": "6",
-          "attrName": "load_date",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "838251a0-bc55-42c2-96eb-327527512933",
-            "version": null,
-            "name": "bank"
-          },
-          "value": null,
-          "attrId": "7",
-          "attrName": "load_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+                "version" : "1464977196"
+            }
         }
-      ],
-      "nodeBackgroundInfo": {
-        "type": "category",
-        "propertyId": {
-          "ref": {
-            "type": "datapod",
-            "uuid": "838251a0-bc55-42c2-96eb-327527512933",
-            "version": null,
-            "name": "bank"
-          },
-          "value": null,
-          "attrId": "0",
-          "attrName": "bank_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        "propertyInfo": [
-          {
-            "propertyName": "101",
-            "propertyValue": "#B0BEC5"
-          }
-        ]
-      },
-      "highlightInfo": {
-        "type": "category",
-        "propertyId": {
-          "ref": {
-            "type": "datapod",
-            "uuid": "838251a0-bc55-42c2-96eb-327527512933",
-            "version": null,
-            "name": "bank"
-          },
-          "value": null,
-          "attrId": "0",
-          "attrName": "bank_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        "propertyInfo": [
-          {
-            "propertyName": "101",
-            "propertyValue": "#FF9800"
-          }
-        ]
-      }
-    },
-    {
-      "nodeId": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-          "version": null,
-          "name": "branch"
-        },
-        "value": null,
-        "attrId": "0",
-        "attrName": "branch_id",
-        "attrType": "integer",
-        "attrUnitType": null,
-        "function": null
-      },
-      "nodeType": "branch",
-      "nodeIcon": "office",
-      "nodeName": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-          "version": null,
-          "name": "branch"
-        },
-        "value": null,
-        "attrId": "4",
-        "attrName": "branch_name",
-        "attrType": "string",
-        "attrUnitType": null,
-        "function": null
-      },
-      "nodeSize": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-          "version": null,
-          "name": "branch"
-        },
-        "value": null,
-        "attrId": "0",
-        "attrName": "branch_id",
-        "attrType": "integer",
-        "attrUnitType": null,
-        "function": null
-      },
-      "nodeSource": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-          "version": null,
-          "name": "branch"
-        },
-        "value": null
-      },
-      "nodeProperties": [
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-            "version": null,
-            "name": "branch"
-          },
-          "value": null,
-          "attrId": "0",
-          "attrName": "branch_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-            "version": null,
-            "name": "branch"
-          },
-          "value": null,
-          "attrId": "1",
-          "attrName": "branch_type_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-            "version": null,
-            "name": "branch"
-          },
-          "value": null,
-          "attrId": "2",
-          "attrName": "bank_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-            "version": null,
-            "name": "branch"
-          },
-          "value": null,
-          "attrId": "3",
-          "attrName": "address_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-            "version": null,
-            "name": "branch"
-          },
-          "value": null,
-          "attrId": "4",
-          "attrName": "branch_name",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-            "version": null,
-            "name": "branch"
-          },
-          "value": null,
-          "attrId": "5",
-          "attrName": "branch_desc",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-            "version": null,
-            "name": "branch"
-          },
-          "value": null,
-          "attrId": "6",
-          "attrName": "branch_contact_name",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-            "version": null,
-            "name": "branch"
-          },
-          "value": null,
-          "attrId": "7",
-          "attrName": "branch_contact_phone",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-            "version": null,
-            "name": "branch"
-          },
-          "value": null,
-          "attrId": "8",
-          "attrName": "branch_contact_email",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-            "version": null,
-            "name": "branch"
-          },
-          "value": null,
-          "attrId": "9",
-          "attrName": "load_date",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-            "version": null,
-            "name": "branch"
-          },
-          "value": null,
-          "attrId": "10",
-          "attrName": "load_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        }
-      ],
-      "nodeBackgroundInfo": {
-        "type": "category",
-        "propertyId": {
-          "ref": {
-            "type": "datapod",
-            "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-            "version": null,
-            "name": "branch"
-          },
-          "value": null,
-          "attrId": "1",
-          "attrName": "branch_type_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        "propertyInfo": [
-          {
-            "propertyName": "101",
-            "propertyValue": "#80DEEA"
-          },
-          {
-            "propertyName": "103",
-            "propertyValue": "#B0BEC5"
-          },
-          {
-            "propertyName": "102",
-            "propertyValue": "#d0daf3"
-          }
-        ]
-      },
-      "highlightInfo": {
-        "type": "category",
-        "propertyId": {
-          "ref": {
-            "type": "datapod",
-            "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-            "version": null,
-            "name": "branch"
-          },
-          "value": null,
-          "attrId": "1",
-          "attrName": "branch_type_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        "propertyInfo": [
-          {
-            "propertyName": "101",
-            "propertyValue": "#004D40"
-          }
-        ]
-      }
-    },
-    {
-      "nodeId": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-          "version": null,
-          "name": "customer"
-        },
-        "value": null,
-        "attrId": "0",
-        "attrName": "customer_id",
-        "attrType": "integer",
-        "attrUnitType": null,
-        "function": null
-      },
-      "nodeType": "customer",
-      "nodeIcon": "user",
-      "nodeName": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-          "version": null,
-          "name": "customer"
-        },
-        "value": null,
-        "attrId": "4",
-        "attrName": "first_name",
-        "attrType": "string",
-        "attrUnitType": null,
-        "function": null
-      },
-      "nodeSize": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-          "version": null,
-          "name": "customer"
-        },
-        "value": null,
-        "attrId": "10",
-        "attrName": "commute_distance_miles",
-        "attrType": "integer",
-        "attrUnitType": null,
-        "function": null
-      },
-      "nodeSource": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-          "version": null,
-          "name": "customer"
-        },
-        "value": null
-      },
-      "nodeProperties": [
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "0",
-          "attrName": "customer_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "1",
-          "attrName": "address_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "2",
-          "attrName": "branch_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "3",
-          "attrName": "title",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "4",
-          "attrName": "first_name",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "6",
-          "attrName": "last_name",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "7",
-          "attrName": "ssn",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "8",
-          "attrName": "phone",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "9",
-          "attrName": "date_first_purchase",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "10",
-          "attrName": "commute_distance_miles",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "11",
-          "attrName": "load_date",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "12",
-          "attrName": "load_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        }
-      ],
-      "nodeBackgroundInfo": {
-        "type": "category",
-        "propertyId": {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "3",
-          "attrName": "title",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        "propertyInfo": [
-          {
-            "propertyName": "Mr",
-            "propertyValue": "#ef9a9a"
-          },
-          {
-            "propertyName": "Ms",
-            "propertyValue": "#80DEEA"
-          },
-          {
-            "propertyName": "Mrs",
-            "propertyValue": "#B0BEC5"
-          }
-        ]
-      },
-      "highlightInfo": {
-        "type": "category",
-        "propertyId": {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "3",
-          "attrName": "title",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        "propertyInfo": [
-          {
-            "propertyName": "Mr",
-            "propertyValue": "#FF9800"
-          },
-          {
-            "propertyName": "Ms",
-            "propertyValue": "#004D40"
-          },
-          {
-            "propertyName": "Mrs",
-            "propertyValue": "#b71c1c"
-          }
-        ]
-      }
-    },
-    {
-      "nodeId": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-          "version": null,
-          "name": "account"
-        },
-        "value": null,
-        "attrId": "12",
-        "attrName": "account_number",
-        "attrType": "string",
-        "attrUnitType": null,
-        "function": null
-      },
-      "nodeType": "account",
-      "nodeIcon": "bank",
-      "nodeName": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-          "version": null,
-          "name": "account"
-        },
-        "value": null,
-        "attrId": "12",
-        "attrName": "account_number",
-        "attrType": "string",
-        "attrUnitType": null,
-        "function": null
-      },
-      "nodeSize": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-          "version": null,
-          "name": "account"
-        },
-        "value": null,
-        "attrId": "14",
-        "attrName": "current_balance",
-        "attrType": "integer",
-        "attrUnitType": null,
-        "function": null
-      },
-      "nodeSource": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-          "version": null,
-          "name": "account"
-        },
-        "value": null
-      },
-      "nodeProperties": [
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "0",
-          "attrName": "account_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "1",
-          "attrName": "account_type_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "2",
-          "attrName": "account_status_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "3",
-          "attrName": "product_type_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "4",
-          "attrName": "customer_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "5",
-          "attrName": "pin_number",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "6",
-          "attrName": "nationality",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "7",
-          "attrName": "primary_iden_doc",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "8",
-          "attrName": "primary_iden_doc_id",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "9",
-          "attrName": "secondary_iden_doc",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "10",
-          "attrName": "secondary_iden_doc_id",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "11",
-          "attrName": "account_open_date",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "12",
-          "attrName": "account_number",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "13",
-          "attrName": "opening_balance",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "14",
-          "attrName": "current_balance",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "17",
-          "attrName": "currency_code",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "18",
-          "attrName": "interest_type",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "19",
-          "attrName": "interest_rate",
-          "attrType": "double",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "20",
-          "attrName": "load_date",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "21",
-          "attrName": "load_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        }
-      ],
-      "nodeBackgroundInfo": {
-        "type": "category",
-        "propertyId": {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "18",
-          "attrName": "interest_type",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        "propertyInfo": [
-          {
-            "propertyName": "Compound",
-            "propertyValue": "#ef9a9a"
-          },
-          {
-            "propertyName": "Simple",
-            "propertyValue": "#B39DDB"
-          }
-        ]
-      },
-      "highlightInfo": {
-        "type": "category",
-        "propertyId": {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "6",
-          "attrName": "nationality",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        "propertyInfo": [
-          {
-            "propertyName": "American",
-            "propertyValue": "#0D47A1"
-          },
-          {
-            "propertyName": "Canadian",
-            "propertyValue": "#FF9800"
-          },
-          {
-            "propertyName": "British",
-            "propertyValue": "#BF360C"
-          },
-          {
-            "propertyName": "German",
-            "propertyValue": "#000000"
-          }
-        ]
-      }
-    },
-    {
-      "nodeId": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-          "version": null,
-          "name": "address"
-        },
-        "value": null,
-        "attrId": "0",
-        "attrName": "address_id",
-        "attrType": "integer",
-        "attrUnitType": null,
-        "function": null
-      },
-      "nodeType": "address",
-      "nodeIcon": "home",
-      "nodeName": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-          "version": null,
-          "name": "address"
-        },
-        "value": null,
-        "attrId": "4",
-        "attrName": "city",
-        "attrType": "string",
-        "attrUnitType": null,
-        "function": null
-      },
-      "nodeSize": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-          "version": null,
-          "name": "address"
-        },
-        "value": null,
-        "attrId": "0",
-        "attrName": "address_id",
-        "attrType": "integer",
-        "attrUnitType": null,
-        "function": null
-      },
-      "nodeSource": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-          "version": null,
-          "name": "address"
-        },
-        "value": null
-      },
-      "nodeProperties": [
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-            "version": null,
-            "name": "address"
-          },
-          "value": null,
-          "attrId": "0",
-          "attrName": "address_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-            "version": null,
-            "name": "address"
-          },
-          "value": null,
-          "attrId": "1",
-          "attrName": "address_line1",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-            "version": null,
-            "name": "address"
-          },
-          "value": null,
-          "attrId": "4",
-          "attrName": "city",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-            "version": null,
-            "name": "address"
-          },
-          "value": null,
-          "attrId": "5",
-          "attrName": "county",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-            "version": null,
-            "name": "address"
-          },
-          "value": null,
-          "attrId": "6",
-          "attrName": "state",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-            "version": null,
-            "name": "address"
-          },
-          "value": null,
-          "attrId": "7",
-          "attrName": "zipcode",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-            "version": null,
-            "name": "address"
-          },
-          "value": null,
-          "attrId": "8",
-          "attrName": "country",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-            "version": null,
-            "name": "address"
-          },
-          "value": null,
-          "attrId": "9",
-          "attrName": "latitude",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-            "version": null,
-            "name": "address"
-          },
-          "value": null,
-          "attrId": "10",
-          "attrName": "longitude",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-            "version": null,
-            "name": "address"
-          },
-          "value": null,
-          "attrId": "11",
-          "attrName": "load_date",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-            "version": null,
-            "name": "address"
-          },
-          "value": null,
-          "attrId": "12",
-          "attrName": "load_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        }
-      ],
-      "nodeBackgroundInfo": {
-        "type": "category",
-        "propertyId": {
-          "ref": {
-            "type": "datapod",
-            "uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-            "version": null,
-            "name": "address"
-          },
-          "value": null,
-          "attrId": "0",
-          "attrName": "address_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        "propertyInfo": [
-          {
-            "propertyName": "101",
-            "propertyValue": "#B39DDB"
-          }
-        ]
-      },
-      "highlightInfo": {
-        "type": "category",
-        "propertyId": {
-          "ref": {
-            "type": "datapod",
-            "uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
-            "version": null,
-            "name": "address"
-          },
-          "value": null,
-          "attrId": "0",
-          "attrName": "address_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        "propertyInfo": [
-          {
-            "propertyName": "101",
-            "propertyValue": "#000000"
-          }
-        ]
-      }
-    }
-  ],
-  "edgeInfo": [
-    {
-      "edgeId": "0",
-      "edgeType": "bank",
-      "edgeName": "bank_branch",
-      "edgeSource": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-          "version": null,
-          "name": "branch"
-        },
-        "value": null
-      },
-      "edgeProperties": [
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-            "version": null,
-            "name": "branch"
-          },
-          "value": null,
-          "attrId": "0",
-          "attrName": "branch_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-            "version": null,
-            "name": "branch"
-          },
-          "value": null,
-          "attrId": "1",
-          "attrName": "branch_type_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-            "version": null,
-            "name": "branch"
-          },
-          "value": null,
-          "attrId": "2",
-          "attrName": "bank_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-            "version": null,
-            "name": "branch"
-          },
-          "value": null,
-          "attrId": "3",
-          "attrName": "address_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-            "version": null,
-            "name": "branch"
-          },
-          "value": null,
-          "attrId": "4",
-          "attrName": "branch_name",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-            "version": null,
-            "name": "branch"
-          },
-          "value": null,
-          "attrId": "5",
-          "attrName": "branch_desc",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-            "version": null,
-            "name": "branch"
-          },
-          "value": null,
-          "attrId": "6",
-          "attrName": "branch_contact_name",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-            "version": null,
-            "name": "branch"
-          },
-          "value": null,
-          "attrId": "7",
-          "attrName": "branch_contact_phone",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-            "version": null,
-            "name": "branch"
-          },
-          "value": null,
-          "attrId": "8",
-          "attrName": "branch_contact_email",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-            "version": null,
-            "name": "branch"
-          },
-          "value": null,
-          "attrId": "9",
-          "attrName": "load_date",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-            "version": null,
-            "name": "branch"
-          },
-          "value": null,
-          "attrId": "10",
-          "attrName": "load_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        }
-      ],
-      "sourceNodeId": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-          "version": null,
-          "name": "branch"
-        },
-        "value": null,
-        "attrId": "2",
-        "attrName": "bank_id",
-        "attrType": "integer",
-        "attrUnitType": null,
-        "function": null
-      },
-      "sourceNodeType": "customer",
-      "targetNodeId": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-          "version": null,
-          "name": "branch"
-        },
-        "value": null,
-        "attrId": "0",
-        "attrName": "branch_id",
-        "attrType": "integer",
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetNodeType": "account",
-      "highlightInfo": {
-        "type": "numerical",
-        "propertyId": {
-          "ref": {
-            "type": "datapod",
-            "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-            "version": null,
-            "name": "branch"
-          },
-          "value": null,
-          "attrId": "0",
-          "attrName": "branch_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        "propertyInfo": [
-          {
-            "propertyName": "1",
-            "propertyValue": "#FF9800"
-          }
-        ]
-      }
-    },
-    {
-      "edgeId": "1",
-      "edgeType": "branch",
-      "edgeName": "branch_cust",
-      "edgeSource": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-          "version": null,
-          "name": "customer"
-        },
-        "value": null
-      },
-      "edgeProperties": [
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "0",
-          "attrName": "customer_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "1",
-          "attrName": "address_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "2",
-          "attrName": "branch_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "3",
-          "attrName": "title",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "4",
-          "attrName": "first_name",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "6",
-          "attrName": "last_name",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "7",
-          "attrName": "ssn",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "8",
-          "attrName": "phone",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "9",
-          "attrName": "date_first_purchase",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "10",
-          "attrName": "commute_distance_miles",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "11",
-          "attrName": "load_date",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "12",
-          "attrName": "load_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        }
-      ],
-      "sourceNodeId": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-          "version": null,
-          "name": "customer"
-        },
-        "value": null,
-        "attrId": "2",
-        "attrName": "branch_id",
-        "attrType": "integer",
-        "attrUnitType": null,
-        "function": null
-      },
-      "sourceNodeType": null,
-      "targetNodeId": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-          "version": null,
-          "name": "customer"
-        },
-        "value": null,
-        "attrId": "0",
-        "attrName": "customer_id",
-        "attrType": "integer",
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetNodeType": null,
-      "highlightInfo": {
-        "type": "category",
-        "propertyId": {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "0",
-          "attrName": "customer_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        "propertyInfo": [
-          {
-            "propertyName": "1",
-            "propertyValue": "#263238"
-          }
-        ]
-      }
-    },
-    {
-      "edgeId": "2",
-      "edgeType": "customer",
-      "edgeName": "cust_acct",
-      "edgeSource": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-          "version": null,
-          "name": "account"
-        },
-        "value": null
-      },
-      "edgeProperties": [
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "0",
-          "attrName": "account_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "1",
-          "attrName": "account_type_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "2",
-          "attrName": "account_status_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "3",
-          "attrName": "product_type_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "4",
-          "attrName": "customer_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "5",
-          "attrName": "pin_number",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "6",
-          "attrName": "nationality",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "7",
-          "attrName": "primary_iden_doc",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "8",
-          "attrName": "primary_iden_doc_id",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "9",
-          "attrName": "secondary_iden_doc",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "10",
-          "attrName": "secondary_iden_doc_id",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "11",
-          "attrName": "account_open_date",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "12",
-          "attrName": "account_number",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "13",
-          "attrName": "opening_balance",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "14",
-          "attrName": "current_balance",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "15",
-          "attrName": "overdue_balance",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "16",
-          "attrName": "overdue_date",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "17",
-          "attrName": "currency_code",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "18",
-          "attrName": "interest_type",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "19",
-          "attrName": "interest_rate",
-          "attrType": "double",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "20",
-          "attrName": "load_date",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "21",
-          "attrName": "load_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        }
-      ],
-      "sourceNodeId": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-          "version": null,
-          "name": "account"
-        },
-        "value": null,
-        "attrId": "4",
-        "attrName": "customer_id",
-        "attrType": "integer",
-        "attrUnitType": null,
-        "function": null
-      },
-      "sourceNodeType": null,
-      "targetNodeId": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-          "version": null,
-          "name": "account"
-        },
-        "value": null,
-        "attrId": "0",
-        "attrName": "account_id",
-        "attrType": "integer",
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetNodeType": null,
-      "highlightInfo": {
-        "type": "category",
-        "propertyId": {
-          "ref": {
-            "type": "datapod",
-            "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f",
-            "version": null,
-            "name": "account"
-          },
-          "value": null,
-          "attrId": "0",
-          "attrName": "account_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        "propertyInfo": [
-          {
-            "propertyName": "1",
-            "propertyValue": "#004D40"
-          }
-        ]
-      }
-    },
-    {
-      "edgeId": "3",
-      "edgeType": "address",
-      "edgeName": "cust_addr",
-      "edgeSource": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-          "version": null,
-          "name": "customer"
-        },
-        "value": null
-      },
-      "edgeProperties": [
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "0",
-          "attrName": "customer_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "1",
-          "attrName": "address_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "2",
-          "attrName": "branch_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "3",
-          "attrName": "title",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "4",
-          "attrName": "first_name",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "6",
-          "attrName": "last_name",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "7",
-          "attrName": "ssn",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "8",
-          "attrName": "phone",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "9",
-          "attrName": "date_first_purchase",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "10",
-          "attrName": "commute_distance_miles",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "11",
-          "attrName": "load_date",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "12",
-          "attrName": "load_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        }
-      ],
-      "sourceNodeId": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-          "version": null,
-          "name": "customer"
-        },
-        "value": null,
-        "attrId": "0",
-        "attrName": "customer_id",
-        "attrType": "integer",
-        "attrUnitType": null,
-        "function": null
-      },
-      "sourceNodeType": null,
-      "targetNodeId": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-          "version": null,
-          "name": "customer"
-        },
-        "value": null,
-        "attrId": "1",
-        "attrName": "address_id",
-        "attrType": "integer",
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetNodeType": null,
-      "highlightInfo": {
-        "type": "category",
-        "propertyId": {
-          "ref": {
-            "type": "datapod",
-            "uuid": "1b905436-3237-4dac-8093-8ceab5403752",
-            "version": null,
-            "name": "customer"
-          },
-          "value": null,
-          "attrId": "0",
-          "attrName": "customer_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        "propertyInfo": [
-          {
-            "propertyName": "1",
-            "propertyValue": "#0D47A1"
-          }
-        ]
-      }
-    },
-    {
-      "edgeId": "4",
-      "edgeType": "address",
-      "edgeName": "branch_addr",
-      "edgeSource": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-          "version": null,
-          "name": "branch"
-        },
-        "value": null
-      },
-      "edgeProperties": [
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-            "version": null,
-            "name": "branch"
-          },
-          "value": null,
-          "attrId": "0",
-          "attrName": "branch_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-            "version": null,
-            "name": "branch"
-          },
-          "value": null,
-          "attrId": "1",
-          "attrName": "branch_type_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-            "version": null,
-            "name": "branch"
-          },
-          "value": null,
-          "attrId": "2",
-          "attrName": "bank_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-            "version": null,
-            "name": "branch"
-          },
-          "value": null,
-          "attrId": "3",
-          "attrName": "address_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-            "version": null,
-            "name": "branch"
-          },
-          "value": null,
-          "attrId": "4",
-          "attrName": "branch_name",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-            "version": null,
-            "name": "branch"
-          },
-          "value": null,
-          "attrId": "5",
-          "attrName": "branch_desc",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-            "version": null,
-            "name": "branch"
-          },
-          "value": null,
-          "attrId": "6",
-          "attrName": "branch_contact_name",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-            "version": null,
-            "name": "branch"
-          },
-          "value": null,
-          "attrId": "7",
-          "attrName": "branch_contact_phone",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-            "version": null,
-            "name": "branch"
-          },
-          "value": null,
-          "attrId": "8",
-          "attrName": "branch_contact_email",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-            "version": null,
-            "name": "branch"
-          },
-          "value": null,
-          "attrId": "9",
-          "attrName": "load_date",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-            "version": null,
-            "name": "branch"
-          },
-          "value": null,
-          "attrId": "10",
-          "attrName": "load_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        }
-      ],
-      "sourceNodeId": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-          "version": null,
-          "name": "branch"
-        },
-        "value": null,
-        "attrId": "0",
-        "attrName": "branch_id",
-        "attrType": "integer",
-        "attrUnitType": null,
-        "function": null
-      },
-      "sourceNodeType": null,
-      "targetNodeId": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-          "version": null,
-          "name": "branch"
-        },
-        "value": null,
-        "attrId": "3",
-        "attrName": "address_id",
-        "attrType": "integer",
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetNodeType": null,
-      "highlightInfo": {
-        "type": "category",
-        "propertyId": {
-          "ref": {
-            "type": "datapod",
-            "uuid": "7dcfe5de-f97b-4d11-98cb-f4b65d89837e",
-            "version": null,
-            "name": "branch"
-          },
-          "value": null,
-          "attrId": "0",
-          "attrName": "branch_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        "propertyInfo": [
-          {
-            "propertyName": "1",
-            "propertyValue": "#61595e"
-          }
-        ]
-      }
-    },
-    {
-      "edgeId": "5",
-      "edgeType": "transaction",
-      "edgeName": "acct_acct",
-      "edgeSource": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "49fc0656-109d-46a2-a826-c09e92895035",
-          "version": null,
-          "name": "transaction"
-        },
-        "value": null
-      },
-      "edgeProperties": [
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "49fc0656-109d-46a2-a826-c09e92895035",
-            "version": null,
-            "name": "transaction"
-          },
-          "value": null,
-          "attrId": "0",
-          "attrName": "transaction_id",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "49fc0656-109d-46a2-a826-c09e92895035",
-            "version": null,
-            "name": "transaction"
-          },
-          "value": null,
-          "attrId": "1",
-          "attrName": "transaction_type_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "49fc0656-109d-46a2-a826-c09e92895035",
-            "version": null,
-            "name": "transaction"
-          },
-          "value": null,
-          "attrId": "2",
-          "attrName": "account_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "49fc0656-109d-46a2-a826-c09e92895035",
-            "version": null,
-            "name": "transaction"
-          },
-          "value": null,
-          "attrId": "3",
-          "attrName": "transaction_date",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "49fc0656-109d-46a2-a826-c09e92895035",
-            "version": null,
-            "name": "transaction"
-          },
-          "value": null,
-          "attrId": "4",
-          "attrName": "from_account",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "49fc0656-109d-46a2-a826-c09e92895035",
-            "version": null,
-            "name": "transaction"
-          },
-          "value": null,
-          "attrId": "5",
-          "attrName": "to_account",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "49fc0656-109d-46a2-a826-c09e92895035",
-            "version": null,
-            "name": "transaction"
-          },
-          "value": null,
-          "attrId": "6",
-          "attrName": "amount_base_curr",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "49fc0656-109d-46a2-a826-c09e92895035",
-            "version": null,
-            "name": "transaction"
-          },
-          "value": null,
-          "attrId": "7",
-          "attrName": "amount_usd",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "49fc0656-109d-46a2-a826-c09e92895035",
-            "version": null,
-            "name": "transaction"
-          },
-          "value": null,
-          "attrId": "8",
-          "attrName": "currency_code",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "49fc0656-109d-46a2-a826-c09e92895035",
-            "version": null,
-            "name": "transaction"
-          },
-          "value": null,
-          "attrId": "9",
-          "attrName": "currency_rate",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "49fc0656-109d-46a2-a826-c09e92895035",
-            "version": null,
-            "name": "transaction"
-          },
-          "value": null,
-          "attrId": "10",
-          "attrName": "notes",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "49fc0656-109d-46a2-a826-c09e92895035",
-            "version": null,
-            "name": "transaction"
-          },
-          "value": null,
-          "attrId": "11",
-          "attrName": "load_date",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        {
-          "ref": {
-            "type": "datapod",
-            "uuid": "49fc0656-109d-46a2-a826-c09e92895035",
-            "version": null,
-            "name": "transaction"
-          },
-          "value": null,
-          "attrId": "12",
-          "attrName": "load_id",
-          "attrType": "integer",
-          "attrUnitType": null,
-          "function": null
-        }
-      ],
-      "sourceNodeId": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "49fc0656-109d-46a2-a826-c09e92895035",
-          "version": null,
-          "name": "transaction"
-        },
-        "value": null,
-        "attrId": "4",
-        "attrName": "from_account",
-        "attrType": "string",
-        "attrUnitType": null,
-        "function": null
-      },
-      "sourceNodeType": null,
-      "targetNodeId": {
-        "ref": {
-          "type": "datapod",
-          "uuid": "49fc0656-109d-46a2-a826-c09e92895035",
-          "version": null,
-          "name": "transaction"
-        },
-        "value": null,
-        "attrId": "5",
-        "attrName": "to_account",
-        "attrType": "string",
-        "attrUnitType": null,
-        "function": null
-      },
-      "targetNodeType": null,
-      "highlightInfo": {
-        "type": "category",
-        "propertyId": {
-          "ref": {
-            "type": "datapod",
-            "uuid": "49fc0656-109d-46a2-a826-c09e92895035",
-            "version": null,
-            "name": "transaction"
-          },
-          "value": null,
-          "attrId": "0",
-          "attrName": "transaction_id",
-          "attrType": "string",
-          "attrUnitType": null,
-          "function": null
-        },
-        "propertyInfo": [
-          {
-            "propertyName": "1",
-            "propertyValue": "#61595e"
-          }
-        ]
-      }
-    }
-  ]
+    ],
+    "publicFlag" : "N"
 }

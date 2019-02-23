@@ -134,7 +134,7 @@ public class GraphController {
 		
 	}
   
-  @RequestMapping(value="/resgisterGraph",method=RequestMethod.POST)
+  @RequestMapping(value="/registerGraph",method=RequestMethod.POST)
   public @ResponseBody String  registerGraph(@RequestParam("uuid") String uuid,
 			@RequestParam("version") String version,
 			@RequestParam(value = "type", required = false) String type,

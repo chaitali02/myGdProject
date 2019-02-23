@@ -138,7 +138,13 @@ public class DashboardServiceImpl {
 		
 		dashboardExec.setVizExecInfo(vizExecInfo);
 		dashboardExec.setName(dashboard.getName());
-		dashboardExec = (DashboardExec) commonServiceImpl.setMetaStatus(dashboardExec, MetaType.dashboardExec, Status.Stage.NotStarted);
+		if (Helper.getLatestStatus(dashboardExec.getStatusList()) == null) {
+			synchronized (dashboardExec.getUuid()) {
+				dashboardExec = (DashboardExec) commonServiceImpl.setMetaStatus(dashboardExec, MetaType.dashboardExec, Status.Stage.NotStarted);
+				dashboardExec = (DashboardExec) commonServiceImpl.setMetaStatus(dashboardExec, MetaType.dashboardExec, Status.Stage.Initialized);
+				dashboardExec = (DashboardExec) commonServiceImpl.setMetaStatus(dashboardExec, MetaType.dashboardExec, Status.Stage.Ready);
+			}
+		}
 	
 		return dashboardExec;
 	}

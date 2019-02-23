@@ -1,0 +1,106 @@
+{
+  "uuid": "63c722f9-c61b-4df5-b5f5-35e5992c50fc",
+  "version": "1550867720",
+  "name": "ds_cust_acct_by_trans_types",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Fri Feb 22 15:35:20 EST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+        "version": "1548315745",
+        "name": "Anti Money Laundering"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "dependsOn": {
+    "ref": {
+      "type": "dataset",
+      "uuid": "5d3299b1-64f3-48ec-8d82-1c52a5f8b0db",
+      "version": null,
+      "name": "ds_fact_transaction_report"
+    },
+    "value": null
+  },
+  "filterInfo": null,
+  "attributeInfo": [
+    {
+      "attrSourceId": "0",
+      "attrDisplaySeq": "0",
+      "attrSourceName": "transaction_type_code",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "5d3299b1-64f3-48ec-8d82-1c52a5f8b0db",
+          "version": null,
+          "name": "ds_fact_transaction_report"
+        },
+        "value": null,
+        "attrId": "20",
+        "attrName": "transaction_type_code",
+        "attrType": "string",
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrSourceId": "1",
+      "attrDisplaySeq": "1",
+      "attrSourceName": "customers_by_trans_type_count",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "bd068ea9-ec7f-4361-8e57-b1d3a549892b",
+          "version": null,
+          "name": "fm_customers_by_trans_type_count"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrSourceId": "2",
+      "attrDisplaySeq": "2",
+      "attrSourceName": "accounts_by_trans_type_count",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "4e6011b1-045e-4731-9d5e-8dfe48fa2ccc",
+          "version": null,
+          "name": "fm_accounts_by_trans_type_count"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null,
+        "function": null
+      }
+    }
+  ],
+  "groupBy": null,
+  "limit": -1
+}

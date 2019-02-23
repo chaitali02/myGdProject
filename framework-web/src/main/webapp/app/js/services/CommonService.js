@@ -555,7 +555,7 @@
       }
       if(type =="graphpod"){
         url="";
-        url="graph/resgisterGraph?uuid="+uuid+"&version="+version+"&type="+type
+        url="graph/registerGraph?uuid="+uuid+"&version="+version+"&type="+type
       }
       url += '&action=execute'
       var deferred = $q.defer();

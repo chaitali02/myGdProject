@@ -1494,7 +1494,12 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
       
     }
 
-    window.showResult = function(params){
+    window.showResult = function(params,url){
+       if(["dashboard","report"].indexOf(params.elementType) !=-1 && url !=null){
+         url.state=dagMetaDataService.elementDefs[params.elementType.toLowerCase()].resultState
+        window.navigateTo(JSON.stringify(url));
+        return false;
+       }
        $scope.lastParams = params;
        $scope.isExecParamsetTable=false;
        App.scrollTop();
@@ -2075,7 +2080,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                ingest : {name:'ingest', label: 'Ingest'},
                ingestgroup : {name:'ingestgroup', label: 'IngestGroup',url:'ingest/getIngestExecByRGExec?'},
              }
-             
+ 
              var resultparams = {id:ref.uuid,name:cell.attributes['model-data'].name,elementType:type,version:ref.version,type: apis[type].name ,typeLabel:apis[type].label,url:apis[type].url, ref :ref,parentStage:parentStage,taskId:taskId,operator:operator};
              var url=$location.absUrl().split("app")[0];
              execStates={state : dagMetaDataService.elementDefs[ref.type.toLowerCase()].detailState, params : {id :ref.uuid,version:ref.version || " ",name:ref.name,type:ref.type,mode:true, returnBack: true}};
@@ -2923,7 +2928,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
               .attr('y', function(d, i){ return y + (i * height); })
               .attr('onclick', function(d){
                 if(d.type == 'results'){
-                  return 'showResult('+resultParams+')'
+                  return 'showResult('+resultParams+','+url+')'
                 }
                 else if(d.type =='logs'){
                   return 'showLogs('+execUrl+')'
@@ -2950,7 +2955,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
               .text(function(d){ return d.title; })
               .attr('onclick', function(d){
                 if(d.type == 'results'){
-                  return 'showResult('+resultParams+')'
+                  return 'showResult('+resultParams+','+url+')'
                 }
                 else if(d.type =='logs'){
                   return 'showLogs('+execUrl+')'

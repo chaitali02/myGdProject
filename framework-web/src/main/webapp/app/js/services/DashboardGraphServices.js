@@ -209,13 +209,33 @@ DatavisualizationModule.factory('DahsboardFactory', function ($http, $location) 
         }).then(function(response, status, headers) {
           return response;
         })
-      }
+	  }
+	  factory.findDasboardExecBySave = function (uuid, type, saveOnRefresh) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			method: 'GET',
+			url: url + "dashboard/getDasboardExecBySave?action=view&uuid=" + uuid + "&type=" + type+"&saveOnRefresh="+saveOnRefresh,
+		}).
+			then(function (response, status, headers) {
+				return response;
+			})
+	}
 	  
 	return factory;
 });
 
 DatavisualizationModule.service('DahsboardSerivce', function ($q, sortFactory, DahsboardFactory) {
 	
+	this.getDasboardExecBySave = function (uuid, type, saveOnRefresh) {
+		var deferred = $q.defer();
+		DahsboardFactory.findDasboardExecBySave(uuid, type, saveOnRefresh).then(function (response) { onSuccess(response.data) });
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			})
+		}
+		return deferred.promise;
+	}
 	this.getOneByUuidAndVersion = function (uuid, version, type) {
 		var deferred = $q.defer();
 		DahsboardFactory.findOneByUuidAndVersion(uuid, version, type).then(function (response) { onSuccess(response.data) });

@@ -1,0 +1,78 @@
+{
+  "uuid": "cc70b683-3f87-44b7-9a94-27805a0bc69b",
+  "version": "1550867124",
+  "name": "viz_accounts_by_age",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Fri Feb 22 15:25:24 EST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+        "version": "1548315745",
+        "name": "Anti Money Laundering"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "title": null,
+  "source": {
+    "ref": {
+      "type": "dataset",
+      "uuid": "36a5c769-5c55-4b73-bb20-3ddb08e05869",
+      "version": null,
+      "name": "ds_accounts_by_age"
+    },
+    "value": null
+  },
+  "type": "bar-chart",
+  "limit": 0,
+  "keys": [
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "36a5c769-5c55-4b73-bb20-3ddb08e05869",
+        "version": null,
+        "name": "ds_accounts_by_age"
+      },
+      "attributeId": 0,
+      "function": null,
+      "value": null,
+      "attributeName": "account_by_age_bucket"
+    }
+  ],
+  "dimension": [],
+  "detailAttr": [],
+  "filterInfo": [],
+  "groups": [],
+  "values": [
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "36a5c769-5c55-4b73-bb20-3ddb08e05869",
+        "version": null,
+        "name": "ds_accounts_by_age"
+      },
+      "attributeId": 1,
+      "function": null,
+      "value": null,
+      "attributeName": "account_count"
+    }
+  ],
+  "sortBy": [],
+  "sortOrder": null
+}

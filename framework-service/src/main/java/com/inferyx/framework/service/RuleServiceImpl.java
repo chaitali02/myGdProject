@@ -773,6 +773,9 @@ public class RuleServiceImpl extends RuleTemplate {
 		// List<Status> statusList = null;
 		RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
 				MetaType.ruleExec.toString());
+		synchronized (execUuid) {
+			commonServiceImpl.setMetaStatus(ruleExec, MetaType.ruleExec, Status.Stage.Initialized);
+		}
 		// rule = iRuleDao.findLatestByUuid(ruleExec.getDependsOn().getRef().getUuid(),
 		// new Sort(Sort.Direction.DESC, "version"));
 		rule = (Rule) commonServiceImpl.getLatestByUuid(ruleExec.getDependsOn().getRef().getUuid(),
@@ -785,6 +788,9 @@ public class RuleServiceImpl extends RuleTemplate {
 		}
 		ruleExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 		logger.info("sql_generated: " + ruleExec.getExec());
+		synchronized (execUuid) {
+			commonServiceImpl.setMetaStatus(ruleExec, MetaType.ruleExec, Status.Stage.Ready);
+		}
 		synchronized (ruleExec.getUuid()) {
 //			RuleExec ruleExec1 = (RuleExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.ruleExec, ruleExec.getUuid(), ruleExec.getVersion()));
 			RuleExec ruleExec1 = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(ruleExec.getUuid(), ruleExec.getVersion(), MetaType.ruleExec.toString(), "N");
@@ -794,6 +800,7 @@ public class RuleServiceImpl extends RuleTemplate {
 			commonServiceImpl.save(MetaType.ruleExec.toString(), ruleExec1);
 			ruleExec1 = null;
 		}
+		
 		return ruleExec;
 	}
 

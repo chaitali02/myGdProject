@@ -1149,12 +1149,12 @@ public class DagServiceImpl {
 						} else if (ref.getType().equals(MetaType.load)) {
 							baseExec = loadServiceImpl.create(ref.getUuid(), ref.getVersion(), taskExecParams, null, (LoadExec)baseExec);
 						} else if (ref.getType().equals(MetaType.train)) {
-							Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
-							Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), train.getDependsOn().getRef().getType().toString());
+							Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
+							Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), train.getDependsOn().getRef().getType().toString(), "N");
 							baseExec = modelServiceImpl.create(train, model, taskExecParams, null,
 									(TrainExec)baseExec);
 						}  else if (ref.getType().equals(MetaType.predict)) {
-							Predict predict = (Predict) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
+							Predict predict = (Predict) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 							baseExec = modelServiceImpl.create(predict, taskExecParams, null, (PredictExec) baseExec);
 						} else if (ref.getType().equals(MetaType.simulate)) {
 							Simulate simulate = (Simulate) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString());
