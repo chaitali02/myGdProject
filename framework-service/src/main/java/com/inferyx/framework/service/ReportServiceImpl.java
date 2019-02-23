@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.FutureTask;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -32,12 +33,16 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.spark.sql.SaveMode;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
+import com.inferyx.framework.common.SessionHelper;
 import com.inferyx.framework.common.WorkbookUtil;
+import com.inferyx.framework.domain.BaseExec;
+import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
@@ -64,7 +69,7 @@ import com.inferyx.framework.operator.ReportOperator;
  *
  */
 @Service
-public class ReportServiceImpl {
+public class ReportServiceImpl extends RuleTemplate {
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
@@ -79,6 +84,8 @@ public class ReportServiceImpl {
 	private SparkExecutor<?> sparkExecutor;
 	@Autowired
 	private HDFSInfo hdfsInfo;
+	@Autowired
+	private SessionHelper sessionHelper;
 	
 	static final Logger logger = Logger.getLogger(ReportServiceImpl.class);
 	
@@ -177,55 +184,21 @@ public class ReportServiceImpl {
 			reportExec = (ReportExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.reportExec.toString());
 			MetaIdentifier dependsOnMI = reportExec.getDependsOn().getRef();
 			Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(), dependsOnMI.getVersion(), dependsOnMI.getType().toString());
-			
-			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
-			long countRows = -1L;
-			
-			reportExec = (ReportExec) commonServiceImpl.setMetaStatus(reportExec, MetaType.reportExec, Status.Stage.InProgress);
-			
-			if (StringUtils.isBlank(reportExec.getExec())) {
-				throw new RuntimeException("sql not generated");
-			}
-			
+
 			String appUuid = commonServiceImpl.getApp().getUuid();
-
-			Datasource reportDS = commonServiceImpl.getDatasourceByObject(report);
-//			String tableName = getTableName(report, reportExec, execContext, reportDS);
-			String tableName = String.format("%s_%s_%s", report.getUuid().replace("-", "_"), report.getVersion(), reportExec.getVersion());
-					
-			String reportPath = String.format("%s/%s/%s", report.getUuid(), report.getVersion(), reportExec.getVersion());
-			String reportDefaultPath = hdfsInfo.getHdfsURL().concat(Helper.getPropertyValue("framework.report.Path"));
-			reportDefaultPath = reportDefaultPath.endsWith("/") ? reportDefaultPath : reportDefaultPath.concat("/");
-			String filePathUrl = String.format("%s%s", reportDefaultPath, reportPath);
-
-			ResultSetHolder rsHolder = sparkExecutor.executeAndRegisterByDatasource(reportExec.getExec(), tableName, reportDS, appUuid);
-			if(report.getSaveOnRefresh().equalsIgnoreCase("Y")) {
-				sparkExecutor.registerAndPersistDataframe(rsHolder, null, com.inferyx.framework.enums.SaveMode.APPEND.toString(), filePathUrl, tableName, "true", false);
-			}
 			
-			countRows = rsHolder.getCountRows();
-			persistDatastore(reportExec, tableName, filePathUrl, resultRef, new MetaIdentifier(MetaType.report, report.getUuid(), report.getVersion()), countRows, runMode);
-
-			reportExec.setResult(resultRef);
-			reportExec = (ReportExec) commonServiceImpl.setMetaStatus(reportExec, MetaType.reportExec, Status.Stage.Completed);
-		} catch (IOException e) { 
-			e.printStackTrace();
-			// Set status to Failed
-			try {
-				reportExec = (ReportExec) commonServiceImpl.setMetaStatus(reportExec, MetaType.reportExec, Status.Stage.Failed);
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}			
-			String message = null;
-			try {
-				message = e.getMessage();
-			}catch (Exception e2) {
-				// TODO: handle exception
-			}
-			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
-			dependsOn.setRef(new MetaIdentifier(MetaType.reportExec, reportExec.getUuid(), reportExec.getVersion()));
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Report execution failed.", dependsOn);
-			throw new RuntimeException((message != null) ? message : "Report execution failed.");
+			RunReportServiceImpl runReportServiceImpl = new RunReportServiceImpl();
+			runReportServiceImpl.setReportExec(reportExec);
+			runReportServiceImpl.setReport(report);
+			runReportServiceImpl.setCommonServiceImpl(commonServiceImpl);
+			runReportServiceImpl.setReportServiceImpl(this);
+			runReportServiceImpl.setSparkExecutor(sparkExecutor);
+			runReportServiceImpl.setRunMode(runMode);
+			runReportServiceImpl.setAppUuid(appUuid);
+			runReportServiceImpl.setHdfsInfo(hdfsInfo);
+			runReportServiceImpl.setSessionContext(sessionHelper.getSessionContext());
+			runReportServiceImpl.setName(MetaType.reportExec+"_"+reportExec.getUuid()+"_"+reportExec.getVersion());
+			runReportServiceImpl.call();
 		} catch (Exception e) { 
 			e.printStackTrace();
 			// Set status to Failed
@@ -244,9 +217,7 @@ public class ReportServiceImpl {
 			dependsOn.setRef(new MetaIdentifier(MetaType.reportExec, reportExec.getUuid(), reportExec.getVersion()));
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Report execution failed.", dependsOn);
 			throw new RuntimeException((message != null) ? message : "Report execution failed.");
-		}
-		
-		
+		}		
 		
 		return reportExec;
 	}
@@ -405,5 +376,43 @@ public class ReportServiceImpl {
 		Object exec = commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, type);
 		MetaIdentifierHolder miHolder = (MetaIdentifierHolder) exec.getClass().getMethod("getDependsOn").invoke(exec);
 		return miHolder.getRef();
+	}
+
+	@Override
+	public String execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		execute(baseExec.getUuid(), baseExec.getVersion(), execParams, runMode);
+		return null;
+	}
+
+	@Override
+	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		synchronized (baseExec.getUuid()) {
+			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.reportExec, Status.Stage.Initialized);
+		}
+		synchronized (baseExec.getUuid()) {
+			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.reportExec, Status.Stage.Ready);
+		}
+		return baseExec;
+	}
+
+	@Override
+	public BaseRuleExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap,
+			HashMap<String, String> otherParams, List<String> datapodList, DagExec dagExec, RunMode runMode)
+			throws Exception {
+		BaseRuleExec baseRuleExec = (BaseRuleExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.reportExec.toString(), "N");
+		synchronized (execUuid) {
+			baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, MetaType.reportExec, Status.Stage.Initialized);
+		}
+		synchronized (execUuid) {
+			baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, MetaType.reportExec, Status.Stage.Ready);
+		}
+		return baseRuleExec;
+	}
+
+	@Override
+	public BaseRuleExec execute(ThreadPoolTaskExecutor metaExecutor, BaseRuleExec baseRuleExec,
+			MetaIdentifier datapodKey, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode)
+			throws Exception {
+		return execute(baseRuleExec.getUuid(), baseRuleExec.getVersion(), execParams, runMode);
 	}
 }

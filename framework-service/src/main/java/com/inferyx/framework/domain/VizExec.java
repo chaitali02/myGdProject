@@ -13,7 +13,7 @@ package com.inferyx.framework.domain;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "vizexec")
-public class VizExec extends BaseExec {	
+public class VizExec extends BaseRuleExec {	
 	private String sql;
 
 	/**

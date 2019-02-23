@@ -46,8 +46,6 @@ public class IngestController {
 	@Autowired
 	private IngestGroupServiceImpl ingestGroupServiceImpl;
 	@Autowired
-	private CommonServiceImpl<?> commonServiceImpl;
-	@Autowired
 	private IngestExecServiceImpl ingestExecServiceImpl;
 	
 	@RequestMapping(value = "execute", method = RequestMethod.POST)
@@ -59,6 +57,7 @@ public class IngestController {
 			@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		IngestExec ingestExec = ingestServiceImpl.create(ingestUuid, ingestVersion, execParams, null, runMode);
+		ingestExec = (IngestExec) ingestServiceImpl.parse(ingestExec, execParams, runMode);
 		return ingestServiceImpl.execute(ingestUuid, ingestVersion, ingestExec, execParams, type, runMode);
 	}
 	@RequestMapping(value = "/getIngestExecByRGExec", method = RequestMethod.GET)
