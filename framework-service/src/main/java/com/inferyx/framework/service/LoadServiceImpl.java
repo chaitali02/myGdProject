@@ -42,6 +42,7 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
+import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
@@ -512,10 +513,20 @@ public class LoadServiceImpl {
 				return loadExec;
 			}
 
+			if (Helper.getLatestStatus(statusList) != null 
+					&& Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Ready, new Date()))) {
+				logger.info("loadExec is in ready state. Run directly. Don't set it to NotStarted state again. ");
+				return loadExec;
+			}
+			
+			synchronized (loadExec.getUuid()) {
+				loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.NotStarted);
+				loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.Initialized);
+				loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.Ready);
+			}
 			// loadExec.setExec(dqOperator.generateSql(dataQual, datapodList, dataQualExec,
 			// dagExec, usedRefKeySet));
 			// loadExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
-			loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.NotStarted);
 		} catch (Exception e) {
 			logger.error(e);
 			loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.Failed);

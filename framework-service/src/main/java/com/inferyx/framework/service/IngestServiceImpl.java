@@ -131,6 +131,7 @@ public class IngestServiceImpl extends RuleTemplate {
 	public IngestExec create(String ingestUuid, String ingestVersion, ExecParams execParams, IngestExec ingestExec, RunMode runMode) throws Exception {
 		try {
 			Ingest ingest = (Ingest) commonServiceImpl.getOneByUuidAndVersion(ingestUuid, ingestVersion, MetaType.ingest.toString());
+			
 			if(ingestExec == null) {
 				MetaIdentifierHolder dependsOn = new MetaIdentifierHolder(new MetaIdentifier(MetaType.ingest, ingestUuid, ingestVersion));
 				ingestExec = new IngestExec();
@@ -138,19 +139,25 @@ public class IngestServiceImpl extends RuleTemplate {
 				ingestExec.setBaseEntity();
 			}
 			
-			ingestExec.setExecParams(execParams);
-			
-			Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
 			List<Status> statusList = ingestExec.getStatusList();
 			if (statusList == null) {
 				statusList = new ArrayList<Status>();
 			}
+			if (Helper.getLatestStatus(statusList) != null
+					&& Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Ready, new Date()))) {
+				logger.info(" If status is in Ready state then no need to start and parse again. ");
+				return ingestExec;
+			}
+			ingestExec.setExecParams(execParams);
+			
+			Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
 			ingestExec.setName(ingest.getName());
 			ingestExec.setAppInfo(ingest.getAppInfo());	
 			
 			commonServiceImpl.save(MetaType.ingestExec.toString(), ingestExec);
 			
 			ingestExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
+			
 	
 			ingestExec = (IngestExec) commonServiceImpl.setMetaStatus(ingestExec, MetaType.ingestExec, Status.Stage.NotStarted);
 		} catch (Exception e) {
@@ -655,14 +662,27 @@ public class IngestServiceImpl extends RuleTemplate {
 
 	@Override
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		synchronized (baseExec.getUuid()) {
+			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.ingestExec, Status.Stage.Initialized);
+		}
+		synchronized (baseExec.getUuid()) {
+			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.ingestExec, Status.Stage.Ready);
+		}
 		return baseExec; 
 	}
 
 	@Override
 	public BaseRuleExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap,
 			HashMap<String, String> otherParams, List<String> datapodList, DagExec dagExec, RunMode runMode)
-			throws Exception {		
-		return (BaseRuleExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.ingestExec.toString());
+			throws Exception {	
+		BaseRuleExec baseRuleExec = (BaseRuleExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.ingestExec.toString(), "N");
+		synchronized (execUuid) {
+			baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, MetaType.ingestExec, Status.Stage.Initialized);
+		}
+		synchronized (execUuid) {
+			baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, MetaType.ingestExec, Status.Stage.Ready);
+		}
+		return baseRuleExec;
 	}
 
 	@Override

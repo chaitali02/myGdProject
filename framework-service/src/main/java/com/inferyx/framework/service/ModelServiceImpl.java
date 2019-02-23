@@ -1326,8 +1326,17 @@ public class ModelServiceImpl {
 				logger.info(" This process is In Progress or has been completed previously or is On Hold. Hence it cannot be rerun. ");
 				return predictExec;
 			}
-
-			predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.NotStarted);
+			if (Helper.getLatestStatus(statusList) != null 
+					&& Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Ready, new Date()))) {
+				logger.info("predictExec is in ready state. Run directly. Don't set it to NotStarted state again. ");
+				return predictExec;
+			}
+			
+			synchronized (predictExec.getUuid()) {
+				predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.NotStarted);
+				predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.Initialized);
+				predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.Ready);
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1374,7 +1383,18 @@ public class ModelServiceImpl {
 				logger.info(" This process is In Progress or has been completed previously or is On Hold. Hence it cannot be rerun. ");
 				return simulateExec;
 			}
-			simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.NotStarted);			
+			
+			if (Helper.getLatestStatus(statusList) != null 
+					&& Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Ready, new Date()))) {
+				logger.info("simulateExec is in ready state. Run directly. Don't set it to NotStarted state again. ");
+				return simulateExec;
+			}
+			
+			synchronized (simulateExec.getUuid()) {
+				simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.NotStarted);
+				simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.Initialized);
+				simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.Ready);
+			}
 		} catch (Exception e) {
 			logger.error(e);	
 			simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.Failed);
@@ -1456,10 +1476,19 @@ public class ModelServiceImpl {
 				return trainExec;
 			}
 			
+			if (Helper.getLatestStatus(statusList) != null 
+					&& Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Ready, new Date()))) {
+				logger.info("trainExec is in ready state. Run directly. Don't set it to NotStarted state again. ");
+				return trainExec;
+			}
+			
 			//modelExec.setExec(dqOperator.generateSql(dataQual, datapodList, dataQualExec, dagExec, usedRefKeySet));
 			trainExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
-
-			trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.NotStarted);
+			synchronized (trainExec.getUuid()) {
+				trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.NotStarted);
+				trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.Initialized);
+				trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.Ready);
+			}
 //			if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
 //				customLogger.writeLog(this.getClass(),
 //						trainExec.getStatusList().size()>0 ? "Latest status: "+trainExec.getStatusList().get(trainExec.getStatusList().size()-1).getStage() : "Status list is empty", 
