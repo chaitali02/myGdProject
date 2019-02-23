@@ -1194,6 +1194,7 @@ public class DagServiceImpl {
 							baseExec = reportServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, dagExec, runMode);
 						}  else if (ref.getType().equals(MetaType.dashboard)) {
 							baseExec = dashboardServiceImpl.create(ref.getUuid(), ref.getVersion(), (DashboardExec) baseExec, execParams, RunMode.BATCH);
+							baseExec = dashboardServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), execParams, refKeyMap, otherParams, datapodList, dagExec, runMode);
 						} 
 						taskExecParams.setOtherParams((HashMap<String, String>)Helper.mergeMap(otherParams, taskExecParams.getOtherParams()));
 						// If conditions with parse goes here - END	

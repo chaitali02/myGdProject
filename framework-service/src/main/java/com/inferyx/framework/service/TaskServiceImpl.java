@@ -29,7 +29,6 @@ import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DagExec;
-import com.inferyx.framework.domain.Dashboard;
 import com.inferyx.framework.domain.DashboardExec;
 import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataQualGroupExec;
@@ -56,7 +55,6 @@ import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.ProfileGroupExec;
 import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.ReconGroupExec;
-import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.ReportExec;
 import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.RuleGroupExec;
@@ -929,8 +927,7 @@ public class TaskServiceImpl implements Callable<String> {
 			logger.info("Going to reportServiceImpl.execute");
 			try {
 				ReportExec reportExec = (ReportExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getVersion(), MetaType.reportExec.toString());
-				Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(reportExec.getDependsOn().getRef().getUuid(), reportExec.getDependsOn().getRef().getVersion(), reportExec.getDependsOn().getRef().getType().toString());
-				reportExec = reportServiceImpl.execute(report.getUuid(), report.getVersion(), execParams, reportExec, runMode);
+				reportExec = reportServiceImpl.execute(reportExec.getUuid(), reportExec.getVersion(), execParams, runMode);
 				
 				if (Helper.getLatestStatus(reportExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
 					throw new Exception("Report rule execution failed.");
@@ -943,8 +940,7 @@ public class TaskServiceImpl implements Callable<String> {
 			logger.info("Going to dashboardServiceImpl.execute");
 			try {
 				DashboardExec dashboardExec = (DashboardExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getVersion(), MetaType.dashboardExec.toString());
-				Dashboard dashboard = (Dashboard) commonServiceImpl.getOneByUuidAndVersion(dashboardExec.getDependsOn().getRef().getUuid(), dashboardExec.getDependsOn().getRef().getVersion(), dashboardExec.getDependsOn().getRef().getType().toString());
-				dashboardExec = dashboardServiceImpl.execute(dashboard.getUuid(), dashboard.getVersion(), dashboardExec, execParams, runMode);
+				dashboardExec = dashboardServiceImpl.execute(dashboardExec.getUuid(), dashboardExec.getVersion(), execParams, runMode);
 				
 				if (Helper.getLatestStatus(dashboardExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
 					throw new Exception("Dashboard execution failed.");
