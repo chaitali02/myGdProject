@@ -728,11 +728,13 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
     if (lock == 'Y' || $scope.isPrivlageDashboard) {
       return false;
     }
+
     $state.go('metaListdashboard', {
       id: uuid,
       mode: 'false'
     });
   }
+
   $scope.onClickEditVizpod = function (uuid, version, lock) {
     if (lock == 'Y' || $scope.isPrivlageVizpod) {
       return false;
@@ -743,6 +745,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
       mode: 'false'
     });
   }
+
   $scope.onFilterChange = function (index) {
     // console.log(JSON.stringify($scope.filterAttribureIdValues[index].dname))
     // console.log(JSON.stringify($scope.selectedAttributeValue))
@@ -780,7 +783,6 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
   }
 
   $scope.onChipsRemove = function (index, filterIndex) {
-
     $scope.filterTag.splice(index, 1);
     $scope.selectedAttributeValue[filterIndex] = null;
     var noSelect = { "id": null, "value": "-select-" }
@@ -790,6 +792,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
     }, 100);
 
   }
+  
   $scope.getFilterValue = function (data) {
     $scope.filterAttribureIdValues = []
     $scope.selectedAttributeValue = [];
