@@ -51,6 +51,7 @@ import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.DownloadExec;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.ExecStatsHolder;
+import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -267,6 +268,17 @@ public class ReportServiceImpl extends RuleTemplate {
 			throw new RuntimeException("Number of rows "+rows+" exceeded. Max row allow "+maxRows);
 		}
 		
+		MetaIdentifier dependsOnMI = reportExec.getDependsOn().getRef();
+		Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(), dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
+		
+		String tableName = dataStoreServiceImpl.getTableNameByDatastore(datastore.getUuid(), datastore.getVersion(), runMode);
+		
+		if(report.getSaveOnRefresh().equalsIgnoreCase("Y")) {
+			String appUuid = commonServiceImpl.getApp().getUuid();
+			List<String> filePathList = new ArrayList<>();
+			filePathList.add(datastore.getLocation());
+			sparkExecutor.readAndRegisterFile(tableName, filePathList, FileType.PARQUET.toString(), null, appUuid, true);
+		}
 		return dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, rows, null, null);
 	}
 	
