@@ -1391,17 +1391,20 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
 
 
   $scope.getOneByUuidAndVersionDashboardExec = function (data) {
-    DahsboardSerivce.getOneByUuidAndVersion(data.uuid, data.version, "dashboardexecview").then(function (response) { onSuccessLatestByUuid(response.data) });
-    var onSuccessLatestByUuid = function (response) {
-     // console.log(response);
-      $scope.dashboardExecData = response;
-      $scope.convertSectionInfo(response.sectionViewInfo)
-      $scope.preparColumnData();
-      $scope.getVizpodResut(null);
-      $scope.filterTag = [];
-      $scope.populateFilers();
-     
+    
+    if(data !=null){
+      DahsboardSerivce.getOneByUuidAndVersion(data.uuid, data.version, "dashboardexecview").then(function (response) { onSuccessLatestByUuid(response.data) });
+      var onSuccessLatestByUuid = function (response) {
+      // console.log(response);
+        $scope.dashboardExecData = response;
+        $scope.convertSectionInfo(response.sectionViewInfo)
+        $scope.preparColumnData();
+        $scope.getVizpodResut(null);
+        $scope.filterTag = [];
+        $scope.populateFilers();
+      
 
+      }
     }
   }
   $scope.getLatestByUuidDashboard = function () {
@@ -1474,7 +1477,8 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
 			return false;
 		}
     $scope.filterTag=[];
-    $scope.executeDashboard(null);  
+    //$scope.executeDashboard(null); 
+    $scope.getAllLatestDashboardExec(); 
   }
 
   $scope.submitDownload = function () {
