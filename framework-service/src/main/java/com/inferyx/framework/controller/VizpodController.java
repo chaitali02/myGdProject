@@ -90,6 +90,7 @@ public class VizpodController {
 			@RequestParam(value = "action", required = false) String action) throws Exception {
 		RunMode runMode = RunMode.BATCH;
 		VizExec vizExec = vizpodServiceImpl.create(vizpodUUID, vizpodVersion, null, execParams, runMode);
+		vizExec = vizpodServiceImpl.parse(vizExec.getUuid(), vizExec.getVersion(), execParams, null, null, null, null, runMode);
 		return vizpodServiceImpl.getVizpodResults(vizpodUUID, vizpodVersion, execParams, vizExec, rows, offset, limit, sortBy, order, requestId, runMode);
 	}
 	
@@ -101,7 +102,8 @@ public class VizpodController {
 			@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		VizExec vizExec = vizpodServiceImpl.create(vizpodUuid, vizpodVersion, null, execParams, runMode);
-		return vizpodServiceImpl.execute(vizpodUuid, vizpodVersion, execParams, vizExec, saveOnRefresh, runMode);
+		vizExec = vizpodServiceImpl.parse(vizExec.getUuid(), vizExec.getVersion(), execParams, null, null, null, null, runMode);
+		return vizpodServiceImpl.execute(vizExec.getUuid(), vizExec.getVersion(), execParams, saveOnRefresh, runMode);
 	}
 
 	@RequestMapping(value = "/getVizpodDetails/{VizpodUUID}/{VizpodVersion}", method = RequestMethod.POST)
@@ -117,7 +119,8 @@ public class VizpodController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws Exception {
 		RunMode runMode = RunMode.BATCH;
-		VizExec vizExec = vizpodServiceImpl.create(vizpodUUID, vizpodVersion, null, execParams, runMode);		
+		VizExec vizExec = vizpodServiceImpl.create(vizpodUUID, vizpodVersion, null, execParams, runMode);	
+		vizExec = vizpodServiceImpl.parse(vizExec.getUuid(), vizExec.getVersion(), execParams, null, null, null, null, runMode);	
 		return vizpodServiceImpl.getVizpodDetails(vizpodUUID, vizpodVersion, execParams, vizExec, rows, offset, limit, sortBy, order, requestId, runMode);
 	}
 	

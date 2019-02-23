@@ -128,6 +128,7 @@ public class DashboardServiceImpl {
 			try {
 				MetaIdentifier vizInfoMI = section.getVizpodInfo().getRef();
 				VizExec vizExec = vizpodServiceImpl.create(vizInfoMI.getUuid(), vizInfoMI.getVersion(), null, execParams, runMode);
+				vizExec = vizpodServiceImpl.parse(vizExec.getUuid(), vizExec.getVersion(), execParams, null, null, null, null, runMode);
 				vizExecInfo.add(new MetaIdentifierHolder(new MetaIdentifier(MetaType.vizExec, vizExec.getUuid(), vizExec.getVersion())));
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -166,7 +167,7 @@ public class DashboardServiceImpl {
 							&& !vizExec.getStatusList().isEmpty()
 							&& !Helper.getLatestStatus(vizExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
 						MetaIdentifier vizMI = vizExec.getDependsOn().getRef();
-						vizExec = vizpodServiceImpl.execute(vizMI.getUuid(), vizMI.getVersion(), execParams, vizExec, dashboard.getSaveOnRefresh(), runMode);
+						vizExec = vizpodServiceImpl.execute(vizExec.getUuid(), vizExec.getVersion(), execParams, dashboard.getSaveOnRefresh(), runMode);
 					}	
 				} catch (Exception e) {
 					logger.info("vizExec execution failed <<<< :: >>>> execUuid: "+vixExecInfo.getRef().getUuid()+" :::: execVersion: "+vixExecInfo.getRef().getVersion());

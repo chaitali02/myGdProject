@@ -44,6 +44,7 @@ import com.inferyx.framework.dao.IVizpodDao;
 import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
+import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -789,41 +790,84 @@ public class VizpodServiceImpl {
 			datastoreVersion, execParams, null, rowLimit, offset, limit, sortBy, order, requestId);
 	}*/
 	
+	/**
+	 * @param vizpodUuid
+	 * @param vizpodVersion
+	 * @param vizExec
+	 * @param execParams
+	 * @param runMode
+	 * @return VizExec
+	 * @throws Exception 
+	 */
 	public VizExec create(String vizpodUuid, String vizpodVersion, VizExec vizExec, ExecParams execParams, RunMode runMode) throws Exception {
 		if(vizExec == null) {
 			vizExec = new VizExec();
 			vizExec.setExecParams(execParams);
 			Vizpod vizpod = (Vizpod) commonServiceImpl.getOneByUuidAndVersion(vizpodUuid, vizpodVersion, MetaType.vizpod.toString(), "Y");
-			
-			List<AttributeRefHolder> filterInfo = vizpod.getFilterInfo();			
-			if(execParams!=null && execParams.getFilterInfo() != null){
-				if(filterInfo == null) {
-					filterInfo = new ArrayList<>();
-				}
-				for (AttributeRefHolder attributeRefHolder : execParams.getFilterInfo()) {
-					filterInfo.add(attributeRefHolder);
-				}
-				vizpod.setFilterInfo(filterInfo);
-			}
-			
 			vizExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.vizpod, vizpodUuid, vizpod.getVersion())));
-			Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
-			
-			try {
-				vizExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
-				vizExec.setName(vizpod.getName());
-				vizExec.setBaseEntity();
-				
-				vizExec.setSql(vizpodParser.toSql(vizpod, "", usedRefKeySet, true, runMode, false));
-				logger.info(vizExec.getSql());
-			} catch (Exception e) {
-				e.printStackTrace();
-				vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.NotStarted);
-				vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.Failed);
-			}
+			vizExec.setName(vizpod.getName());
+			vizExec.setAppInfo(vizpod.getAppInfo());
+			vizExec.setBaseEntity();
 		}
 
 		vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.NotStarted);
+		return vizExec;
+	}
+	
+	/**
+	 * @param execUuid
+	 * @param execVersion
+	 * @param vizExec
+	 * @param execParams
+	 * @param refKeyMap
+	 * @param otherParams
+	 * @param datapodList
+	 * @param dagExec
+	 * @param runMode
+	 * @return VizExec
+	 * @throws Exception 
+	 */
+	public VizExec parse(String execUuid, String execVersion, ExecParams execParams, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 
+			List<String> datapodList, DagExec dagExec, RunMode runMode) throws Exception {
+		logger.info("Inside vizpodServiceImpl.parse");
+		if (datapodList != null) {
+			logger.info(" Size of datapodList : " + datapodList.size());
+		}
+
+		VizExec vizExec = (VizExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.vizExec.toString(), "N");
+
+		vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.Initialized);
+		
+		MetaIdentifier vizpodMI = vizExec.getDependsOn().getRef();
+		Vizpod vizpod = (Vizpod) commonServiceImpl.getOneByUuidAndVersion(vizpodMI.getUuid(), vizpodMI.getVersion(), MetaType.vizpod.toString(), "Y");
+		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
+		List<AttributeRefHolder> filterInfo = vizpod.getFilterInfo();			
+		if (execParams != null && execParams.getFilterInfo() != null) {
+			if (filterInfo == null) {
+				filterInfo = new ArrayList<>();
+			}
+
+			for (AttributeRefHolder attributeRefHolder : execParams.getFilterInfo()) {
+				filterInfo.add(attributeRefHolder);
+			}
+
+			vizpod.setFilterInfo(filterInfo);
+		}
+
+		vizExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
+		
+		try {
+			vizExec.setSql(vizpodParser.toSql(vizpod, null, usedRefKeySet, true, runMode, false));
+			logger.info(vizExec.getSql());
+
+			vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.Ready);
+		} catch (Exception e) {
+			e.printStackTrace();
+			vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.Ready);
+			vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.Failed);
+			throw new RuntimeException("Failed to parse vizExec");
+		}
+		
 		return vizExec;
 	}
 	
@@ -861,6 +905,7 @@ public class VizpodServiceImpl {
 			/**** Get sql and update in vizpodexec - START ****/
 			if (vizExec == null) {
 				vizExec = create(vizpodUUID, vizpodVersion, vizExec, execParams, runMode);
+				vizExec = parse(vizExec.getUuid(), vizExec.getVersion(), execParams, null, null, null, null, runMode);
 			}
 			/**** Get sql and update in vizpodexec - END ****/
 
@@ -976,6 +1021,7 @@ public class VizpodServiceImpl {
 			/**** Get sql and update in vizpodexec - START ****/
 			if (vizExec == null) {
 				vizExec = create(vizpodUUID, vizpodVersion, vizExec, execParams, runMode);
+				vizExec = parse(vizExec.getUuid(), vizExec.getVersion(), execParams, null, null, null, null, runMode);
 			}
 			/**** Get sql and update in vizpodexec - END ****/
 			vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.InProgress);
@@ -1342,12 +1388,16 @@ public class VizpodServiceImpl {
 		 * @return VizExec
 		 * @throws Exception 
 		 */
-		public VizExec execute(String vizpodUuid, String vizpodVersion, ExecParams execParams, VizExec vizExec,
+		public VizExec execute(String execUuid, String execVersion, ExecParams execParams,
 				String saveOnRefresh, RunMode runMode) throws Exception {
-			try {				
+			VizExec vizExec = null;
+			try {		
+				vizExec = (VizExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.vizExec.toString(), "N");
+				
 				vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.InProgress);
 				
-				Vizpod vizpod = (Vizpod) commonServiceImpl.getOneByUuidAndVersion(vizpodUuid, vizpodVersion, MetaType.vizpod.toString(), "Y");
+				MetaIdentifier vizpodMI = vizExec.getDependsOn().getRef();
+				Vizpod vizpod = (Vizpod) commonServiceImpl.getOneByUuidAndVersion(vizpodMI.getUuid(), vizpodMI.getVersion(), vizpodMI.getType().toString(), "Y");
 				
 				String tableName = String.format("%s_%s_%s", vizpod.getUuid().replaceAll("-", "_"), vizpod.getVersion(), vizExec.getVersion());
 				String defautlDir = String.format("%s%s", hdfsInfo.getHdfsURL(), Helper.getPropertyValue("framework.dashboard.Path"));
