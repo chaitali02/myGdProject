@@ -38,7 +38,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.WorkbookUtil;
-import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
@@ -172,10 +171,12 @@ public class ReportServiceImpl {
 		return reportExec;
 	}
 	
-	public ReportExec execute(String reportUuid, String reportVersion, ExecParams execParams, ReportExec reportExec, RunMode runMode) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException, IOException {
-		
+	public ReportExec execute(String execUuid, String execVersion, ExecParams execParams, RunMode runMode) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException, IOException {
+		ReportExec reportExec = null;
 		try {
-			Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(reportUuid, reportVersion, MetaType.report.toString());
+			reportExec = (ReportExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.reportExec.toString());
+			MetaIdentifier dependsOnMI = reportExec.getDependsOn().getRef();
+			Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(), dependsOnMI.getVersion(), dependsOnMI.getType().toString());
 			
 			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 			long countRows = -1L;
@@ -187,19 +188,6 @@ public class ReportServiceImpl {
 			}
 			
 			String appUuid = commonServiceImpl.getApp().getUuid();
-			
-//			IExecutor exec = null;
-//			Datasource datasource = commonServiceImpl.getDatasourceByApp();
-//			ExecContext execContext = null;
-//			
-//			if (runMode == null || runMode.equals(RunMode.ONLINE)) {
-//				execContext = (engine.getExecEngine().equalsIgnoreCase("livy-spark") || engine.getExecEngine().equalsIgnoreCase("livy_spark"))
-//						? helper.getExecutorContext(engine.getExecEngine()) : helper.getExecutorContext(ExecContext.spark.toString());
-//				appUuid = commonServiceImpl.getApp().getUuid();
-//			} else {
-//				execContext = helper.getExecutorContext(datasource.getType().toLowerCase());
-//			}
-//			exec = execFactory.getExecutor(execContext.toString());
 
 			Datasource reportDS = commonServiceImpl.getDatasourceByObject(report);
 //			String tableName = getTableName(report, reportExec, execContext, reportDS);

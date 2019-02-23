@@ -67,7 +67,8 @@ public class DashboardController {
 			@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		DashboardExec dashboardExec = dashboardServiceImpl.create(dashboardUuid, dashboardVersion, null, execParams, runMode);
-		return dashboardServiceImpl.execute(dashboardUuid, dashboardVersion, dashboardExec, execParams, runMode);
+		dashboardExec = dashboardServiceImpl.parse(dashboardExec.getUuid(), dashboardExec.getVersion(), execParams, null, null, null, null, runMode);
+		return dashboardServiceImpl.execute(dashboardExec.getUuid(), dashboardExec.getVersion(), execParams, runMode);
 	}
 	
 	@RequestMapping(value = "/getDasboardExecBySave", method = RequestMethod.GET)

@@ -55,7 +55,7 @@ public class ReportController {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		ReportExec reportExec = reportServiceImpl.create(reportUuid, reportVersion, execParams, null, runMode);
 		reportExec = reportServiceImpl.parse(reportExec.getUuid(), reportExec.getVersion(), null, null, null, runMode);
-		return reportServiceImpl.execute(reportUuid, reportVersion, execParams, reportExec, runMode);
+		return reportServiceImpl.execute(reportExec.getUuid(), reportExec.getVersion(), execParams, runMode);
 	}
 	
 	@RequestMapping(value = "/getReportSample", method = RequestMethod.GET)

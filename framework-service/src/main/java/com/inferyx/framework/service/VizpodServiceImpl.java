@@ -865,7 +865,7 @@ public class VizpodServiceImpl {
 			e.printStackTrace();
 			vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.Ready);
 			vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.Failed);
-			throw new RuntimeException("Failed to parse vizExec");
+			throw new RuntimeException("Failed to parse vizExec.");
 		}
 		
 		return vizExec;

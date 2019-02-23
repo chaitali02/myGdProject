@@ -18,8 +18,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -35,6 +37,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.dao.IDashboardDao;
+import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.Dashboard;
 import com.inferyx.framework.domain.DashboardExec;
 import com.inferyx.framework.domain.DataStore;
@@ -119,9 +122,21 @@ public class DashboardServiceImpl {
 		
 		Dashboard dashboard = (Dashboard) commonServiceImpl.getOneByUuidAndVersion(dashboardUuid, dashboardVersion, MetaType.dashboard.toString(), "N");
 		dashboardExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.dashboard, dashboardUuid, dashboard.getVersion())));
+		dashboardExec.setName(dashboard.getName());
+		dashboardExec.setAppInfo(dashboard.getAppInfo());
 		dashboardExec.setExecParams(execParams);
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
 		dashboardExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
+		dashboardExec = (DashboardExec) commonServiceImpl.setMetaStatus(dashboardExec, MetaType.dashboardExec, Status.Stage.NotStarted);
+		return dashboardExec;
+	}
+
+	public DashboardExec parse(String execUuid, String execVersion, ExecParams execParams, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 
+			List<String> datapodList, DagExec dagExec, RunMode runMode) throws Exception {
+
+		DashboardExec dashboardExec = (DashboardExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.dashboardExec.toString(), "N");
+		MetaIdentifier dependsOnMI = dashboardExec.getDependsOn().getRef();
+		Dashboard dashboard = (Dashboard) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(), dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
 		
 		List<MetaIdentifierHolder> vizExecInfo = new ArrayList<>();
 		for(Section section : dashboard.getSectionInfo()) {
@@ -134,21 +149,16 @@ public class DashboardServiceImpl {
 				e.printStackTrace();
 			}
 			
+		}		
+		dashboardExec.setVizExecInfo(vizExecInfo);
+		synchronized (dashboardExec.getUuid()) {
+			dashboardExec = (DashboardExec) commonServiceImpl.setMetaStatus(dashboardExec, MetaType.dashboardExec, Status.Stage.Initialized);
+			dashboardExec = (DashboardExec) commonServiceImpl.setMetaStatus(dashboardExec, MetaType.dashboardExec, Status.Stage.Ready);
 		}
 		
-		dashboardExec.setVizExecInfo(vizExecInfo);
-		dashboardExec.setName(dashboard.getName());
-		if (Helper.getLatestStatus(dashboardExec.getStatusList()) == null) {
-			synchronized (dashboardExec.getUuid()) {
-				dashboardExec = (DashboardExec) commonServiceImpl.setMetaStatus(dashboardExec, MetaType.dashboardExec, Status.Stage.NotStarted);
-				dashboardExec = (DashboardExec) commonServiceImpl.setMetaStatus(dashboardExec, MetaType.dashboardExec, Status.Stage.Initialized);
-				dashboardExec = (DashboardExec) commonServiceImpl.setMetaStatus(dashboardExec, MetaType.dashboardExec, Status.Stage.Ready);
-			}
-		}
-	
 		return dashboardExec;
 	}
-
+	
 	/**
 	 * @param dashboardUuid
 	 * @param dashboardVersion
@@ -158,12 +168,14 @@ public class DashboardServiceImpl {
 	 * @return DashboardExec
 	 * @throws Exception 
 	 */
-	public DashboardExec execute(String dashboardUuid, String dashboardVersion, DashboardExec dashboardExec,
+	public DashboardExec execute(String execUuid, String execVersion,
 			ExecParams execParams, RunMode runMode) throws Exception {
+		DashboardExec dashboardExec = null;
 		try {
+			dashboardExec = (DashboardExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.dashboardExec.toString(), "N");
 			dashboardExec = (DashboardExec) commonServiceImpl.setMetaStatus(dashboardExec, MetaType.dashboardExec, Status.Stage.InProgress);
-			
-			Dashboard dashboard = (Dashboard) commonServiceImpl.getOneByUuidAndVersion(dashboardUuid, dashboardVersion, MetaType.dashboard.toString(), "N");
+			MetaIdentifier dependsOnMI = dashboardExec.getDependsOn().getRef();
+			Dashboard dashboard = (Dashboard) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(), dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
 			
 			for(MetaIdentifierHolder vixExecInfo : dashboardExec.getVizExecInfo()) {
 				try {
@@ -172,7 +184,6 @@ public class DashboardServiceImpl {
 					if(vizExec.getStatusList() != null 
 							&& !vizExec.getStatusList().isEmpty()
 							&& !Helper.getLatestStatus(vizExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
-						MetaIdentifier vizMI = vizExec.getDependsOn().getRef();
 						vizExec = vizpodServiceImpl.execute(vizExec.getUuid(), vizExec.getVersion(), execParams, dashboard.getSaveOnRefresh(), runMode);
 					}	
 				} catch (Exception e) {
