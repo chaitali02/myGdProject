@@ -17,12 +17,12 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.newA
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.FutureTask;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +32,14 @@ import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.aggregation.GroupOperation;
 import org.springframework.data.mongodb.core.aggregation.MatchOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.common.Helper;
+import com.inferyx.framework.common.SessionHelper;
 import com.inferyx.framework.dao.IDashboardDao;
+import com.inferyx.framework.domain.BaseExec;
+import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.Dashboard;
 import com.inferyx.framework.domain.DashboardExec;
@@ -53,7 +56,7 @@ import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.register.GraphRegister;
 
 @Service
-public class DashboardServiceImpl {
+public class DashboardServiceImpl extends RuleTemplate {
 	
 	static final Logger logger = Logger.getLogger(DashboardServiceImpl.class);
 	
@@ -83,6 +86,8 @@ public class DashboardServiceImpl {
     private CommonServiceImpl<?> commonServiceImpl;
     @Autowired
     private VizpodServiceImpl vizpodServiceImpl;
+	@Autowired
+	private SessionHelper sessionHelper;
     
 	/********************** UNUSED **********************/
     /*public Dashboard findLatest() {
@@ -173,26 +178,19 @@ public class DashboardServiceImpl {
 		DashboardExec dashboardExec = null;
 		try {
 			dashboardExec = (DashboardExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.dashboardExec.toString(), "N");
-			dashboardExec = (DashboardExec) commonServiceImpl.setMetaStatus(dashboardExec, MetaType.dashboardExec, Status.Stage.InProgress);
 			MetaIdentifier dependsOnMI = dashboardExec.getDependsOn().getRef();
 			Dashboard dashboard = (Dashboard) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(), dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
 			
-			for(MetaIdentifierHolder vixExecInfo : dashboardExec.getVizExecInfo()) {
-				try {
-					MetaIdentifier vizExecMI = vixExecInfo.getRef();
-					VizExec vizExec = (VizExec) commonServiceImpl.getOneByUuidAndVersion(vizExecMI.getUuid(), vizExecMI.getVersion(), vizExecMI.getType().toString(), "N");
-					if(vizExec.getStatusList() != null 
-							&& !vizExec.getStatusList().isEmpty()
-							&& !Helper.getLatestStatus(vizExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
-						vizExec = vizpodServiceImpl.execute(vizExec.getUuid(), vizExec.getVersion(), execParams, dashboard.getSaveOnRefresh(), runMode);
-					}	
-				} catch (Exception e) {
-					logger.info("vizExec execution failed <<<< :: >>>> execUuid: "+vixExecInfo.getRef().getUuid()+" :::: execVersion: "+vixExecInfo.getRef().getVersion());
-					e.printStackTrace();
-				}
-			}
-			
-			dashboardExec = (DashboardExec) commonServiceImpl.setMetaStatus(dashboardExec, MetaType.dashboardExec, Status.Stage.Completed);
+			RunDashboardServiceImpl runDashboardServiceImpl = new RunDashboardServiceImpl();
+			runDashboardServiceImpl.setDashboardExec(dashboardExec);
+			runDashboardServiceImpl.setDashboard(dashboard);
+			runDashboardServiceImpl.setCommonServiceImpl(commonServiceImpl);
+			runDashboardServiceImpl.setVizpodServiceImpl(vizpodServiceImpl);
+			runDashboardServiceImpl.setRunMode(runMode);
+			runDashboardServiceImpl.setExecParams(execParams);
+			runDashboardServiceImpl.setSessionContext(sessionHelper.getSessionContext());
+			runDashboardServiceImpl.setName(MetaType.dashboardExec+"_"+dashboardExec.getUuid()+"_"+dashboardExec.getVersion());
+			runDashboardServiceImpl.call();
 		} catch (Exception e) {
 			e.printStackTrace();
 			dashboardExec = (DashboardExec) commonServiceImpl.setMetaStatus(dashboardExec, MetaType.dashboardExec, Status.Stage.Failed);
@@ -302,6 +300,44 @@ public class DashboardServiceImpl {
 		}
 		
 		return dashExecListBySave;
+	}
+
+	@Override
+	public String execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		execute(baseExec.getUuid(), baseExec.getVersion(), execParams, runMode);
+		return null;
+	}
+
+	@Override
+	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+		synchronized (baseExec.getUuid()) {
+			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.dashboardExec, Status.Stage.Initialized);
+		}
+		synchronized (baseExec.getUuid()) {
+			baseExec = (DashboardExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.dashboardExec, Status.Stage.Ready);
+		}
+		return baseExec;
+	}
+
+	@Override
+	public BaseRuleExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap,
+			HashMap<String, String> otherParams, List<String> datapodList, DagExec dagExec, RunMode runMode)
+			throws Exception {
+		BaseRuleExec baseRuleExec = (BaseRuleExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.dashboardExec.toString(), "N");
+		synchronized (execUuid) {
+			baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, MetaType.dashboardExec, Status.Stage.Initialized);
+		}
+		synchronized (execUuid) {
+			baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, MetaType.dashboardExec, Status.Stage.Ready);
+		}
+		return baseRuleExec;
+	}
+
+	@Override
+	public BaseRuleExec execute(ThreadPoolTaskExecutor metaExecutor, BaseRuleExec baseRuleExec,
+			MetaIdentifier datapodKey, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode)
+			throws Exception {
+		return execute(baseRuleExec.getUuid(), baseRuleExec.getVersion(), execParams, runMode);
 	}
 
 	/********************** UNUSED **********************/

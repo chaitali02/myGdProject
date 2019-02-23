@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.FutureTask;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -35,16 +36,21 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
+import com.inferyx.framework.common.SessionHelper;
 import com.inferyx.framework.dao.IVizpodDao;
 import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
+import com.inferyx.framework.domain.BaseExec;
+import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.DagExec;
+import com.inferyx.framework.domain.DashboardExec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -56,15 +62,12 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Relation;
-import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.domain.VizExec;
 import com.inferyx.framework.domain.Vizpod;
 import com.inferyx.framework.domain.Vizpod.AttributeDetails;
-import com.inferyx.framework.enums.PersistMode;
 import com.inferyx.framework.enums.RunMode;
-import com.inferyx.framework.enums.SaveMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.SparkExecutor;
@@ -73,12 +76,10 @@ import com.inferyx.framework.parser.VizpodParser;
 import com.inferyx.framework.register.GraphRegister;
 
 @Service
-public class VizpodServiceImpl {
+public class VizpodServiceImpl extends RuleTemplate {
 
 	@Autowired
 	GraphRegister<?> registerGraph;
-	/*@Autowired
-	HiveContext hiveContext;*/
 	@Autowired
 	IVizpodDao iVizpodDao;
 	@Autowired
@@ -103,6 +104,8 @@ public class VizpodServiceImpl {
 	private HDFSInfo hdfsInfo;
 	@Autowired 
 	private SparkExecutor<?> sparkExecutor;
+	@Autowired
+	private SessionHelper sessionHelper;
 	
 	Map<String, String> requestMap = new HashMap<String, String>();
 		
@@ -1379,86 +1382,58 @@ public class VizpodServiceImpl {
 
 	}
 
-		/**
-		 * @param vizpodUuid
-		 * @param vizpodVersion
-		 * @param execParams
-		 * @param vizExec
-		 * @param runMode
-		 * @return VizExec
-		 * @throws Exception 
-		 */
-		public VizExec execute(String execUuid, String execVersion, ExecParams execParams,
-				String saveOnRefresh, RunMode runMode) throws Exception {
-			VizExec vizExec = null;
-			try {		
-				vizExec = (VizExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.vizExec.toString(), "N");
-				
-				vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.InProgress);
-				
-				MetaIdentifier vizpodMI = vizExec.getDependsOn().getRef();
-				Vizpod vizpod = (Vizpod) commonServiceImpl.getOneByUuidAndVersion(vizpodMI.getUuid(), vizpodMI.getVersion(), vizpodMI.getType().toString(), "Y");
-				
-				String tableName = String.format("%s_%s_%s", vizpod.getUuid().replaceAll("-", "_"), vizpod.getVersion(), vizExec.getVersion());
-				String defautlDir = String.format("%s%s", hdfsInfo.getHdfsURL(), Helper.getPropertyValue("framework.dashboard.Path"));
-				defautlDir = defautlDir.endsWith("/") ? defautlDir : defautlDir.concat("/");
-				String filePath = String.format("%s/%s/%s", vizpod.getUuid(), vizpod.getVersion(), vizExec.getVersion());
-				String filePathUrl = defautlDir.concat(filePath);
-				
-				long count = -1L;
-				
-				String persistMode = null;
-				if(saveOnRefresh != null && saveOnRefresh.equalsIgnoreCase("Y")) {
-					persistMode = PersistMode.DISK_AND_MEMORY_ONLY.toString();
-				} else {
-					persistMode = PersistMode.MEMORY_ONLY.toString();
-				}
-				
-				MetaIdentifier vizpodSourceMI = vizpod.getSource().getRef();
-				Object sourceObj = commonServiceImpl.getOneByUuidAndVersion(vizpodSourceMI.getUuid(), vizpodSourceMI.getVersion(), vizpodSourceMI.getType().toString(), "N");
-				Datasource vizpodDs = commonServiceImpl.getDatasourceByObject(sourceObj);
-
-				String appUuid = commonServiceImpl.getApp().getUuid();
-				Datasource appDs = commonServiceImpl.getDatasourceByApp();
-				IExecutor exec = execFactory.getExecutor(appDs.getType());
-				ResultSetHolder rsHolder = exec.executeAndRegisterByDatasource(vizExec.getSql(), tableName, vizpodDs, appUuid);
-				if(saveOnRefresh != null && saveOnRefresh.equalsIgnoreCase("Y")) {
-					rsHolder = sparkExecutor.registerAndPersistDataframe(rsHolder, null, SaveMode.APPEND.toString(), filePathUrl, null, "true", false);
-				} 
-				
-				count = rsHolder.getCountRows();
-				
-				MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
-				dataStoreServiceImpl.setRunMode(runMode);
-				dataStoreServiceImpl.create(filePathUrl, vizExec.getName()
-						, new MetaIdentifier(MetaType.vizpod, vizpod.getUuid(), vizpod.getVersion())
-						, new MetaIdentifier(MetaType.vizExec, vizExec.getUuid(), vizExec.getVersion())
-						, vizExec.getAppInfo()
-						, vizExec.getCreatedBy()
-						, SaveMode.APPEND.toString()
-						, resultRef
-						, count
-						, persistMode
-						, "Vizpod exec for vizpod "+vizpod.getName());
-				vizExec.setResult(resultRef);
-				vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.Completed);
-			} catch (Exception e) {
-				e.printStackTrace();
-				vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.Failed);
-				String message = null;
-				try {
-					message = e.getMessage();
-				}catch (Exception e2) {
-					// TODO: handle exception
-				}
-				MetaIdentifierHolder dependsOn = new MetaIdentifierHolder(new MetaIdentifier(MetaType.vizExec, vizExec.getUuid(), vizExec.getVersion()));
-				commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Vizpod execution failed.", dependsOn);
-				throw new RuntimeException((message != null) ? message : "Vizpod execution failed.");	
-			}
+	/**
+	 * @param vizpodUuid
+	 * @param vizpodVersion
+	 * @param execParams
+	 * @param vizExec
+	 * @param runMode
+	 * @return VizExec
+	 * @throws Exception 
+	 */
+	public VizExec execute(String execUuid, String execVersion, ExecParams execParams,
+			String saveOnRefresh, RunMode runMode) throws Exception {
+		VizExec vizExec = null;
+		try {		
+			vizExec = (VizExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.vizExec.toString(), "N");			
+			MetaIdentifier vizpodMI = vizExec.getDependsOn().getRef();
+			Vizpod vizpod = (Vizpod) commonServiceImpl.getOneByUuidAndVersion(vizpodMI.getUuid(), vizpodMI.getVersion(), vizpodMI.getType().toString(), "Y");
 			
-			return vizExec;
+			String appUuid = commonServiceImpl.getApp().getUuid();
+			
+			RunVizpodServiceImpl runVizpodServiceImpl = new RunVizpodServiceImpl();
+			runVizpodServiceImpl.setVizExec(vizExec);
+			runVizpodServiceImpl.setVizpod(vizpod);
+			runVizpodServiceImpl.setRunMode(runMode);
+			runVizpodServiceImpl.setCommonServiceImpl(commonServiceImpl);
+			runVizpodServiceImpl.setVizpodServiceImpl(this);
+			runVizpodServiceImpl.setSparkExecutor(sparkExecutor);
+			runVizpodServiceImpl.setDataStoreServiceImpl(dataStoreServiceImpl);
+			runVizpodServiceImpl.setHdfsInfo(hdfsInfo);
+			runVizpodServiceImpl.setExecFactory(execFactory);
+			runVizpodServiceImpl.setSaveOnRefresh(saveOnRefresh);
+			runVizpodServiceImpl.setAppUuid(appUuid);
+			runVizpodServiceImpl.setName(MetaType.vizExec+"_"+vizExec.getUuid()+"_"+vizExec.getVersion());
+			runVizpodServiceImpl.setSessionContext(sessionHelper.getSessionContext());
+			runVizpodServiceImpl.setAppDs(commonServiceImpl.getDatasourceByApp());
+			runVizpodServiceImpl.call();
+		} catch (Exception e) {
+			e.printStackTrace();
+			vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.Failed);
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder(new MetaIdentifier(MetaType.vizExec, vizExec.getUuid(), vizExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Vizpod execution failed.", dependsOn);
+			throw new RuntimeException((message != null) ? message : "Vizpod execution failed.");	
 		}
-
+		
+		return vizExec;
+	}
+	
 		/**
 		 * @param vizExecUuid
 		 * @param vizExecVersion
@@ -1505,6 +1480,45 @@ public class VizpodServiceImpl {
 				sparkExecutor.readAndRegisterFile(tableName, filePathList, FileType.PARQUET.toString(), null, appUuid, true);
 			}
 			return dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order);
+		}
+
+		
+		@Override
+		public String execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+			execute(baseExec.getUuid(), baseExec.getVersion(), execParams, baseExec.getExecParams().getOtherParams().get("saveOnRefresh"), runMode);
+			return null;
+		}
+		
+		@Override
+		public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
+			synchronized (baseExec.getUuid()) {
+				baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.vizExec, Status.Stage.Initialized);
+			}
+			synchronized (baseExec.getUuid()) {
+				baseExec = (DashboardExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.vizExec, Status.Stage.Ready);
+			}			
+			return baseExec;
+		}
+		
+		@Override
+		public BaseRuleExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap,
+				HashMap<String, String> otherParams, List<String> datapodList, DagExec dagExec, RunMode runMode)
+				throws Exception {
+			BaseRuleExec baseRuleExec = (BaseRuleExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.vizExec.toString(), "N");
+			synchronized (execUuid) {
+				baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, MetaType.vizExec, Status.Stage.Initialized);
+			}
+			synchronized (execUuid) {
+				baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, MetaType.vizExec, Status.Stage.Ready);
+			}
+			return baseRuleExec;
+		}
+
+		@Override
+		public BaseRuleExec execute(ThreadPoolTaskExecutor metaExecutor, BaseRuleExec baseRuleExec,
+				MetaIdentifier datapodKey, List<FutureTask<TaskHolder>> taskList, ExecParams execParams,
+				RunMode runMode) throws Exception {
+			return execute(baseRuleExec.getUuid(), baseRuleExec.getVersion(), execParams, baseRuleExec.getExecParams().getOtherParams().get("saveOnRefresh"), runMode);
 		}
 
 }
