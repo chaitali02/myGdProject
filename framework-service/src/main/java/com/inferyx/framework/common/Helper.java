@@ -599,6 +599,35 @@ public class Helper {
 		return statusList.get(statusList.size()-1);
 	}
 	
+	/**
+	 * Returns whether status is present in statusList
+	 * @param status
+	 * @param statusList
+	 * @return
+	 */
+	public static Boolean isStatusPresent (Status status, List<Status> statusList) {
+		if (statusList == null || statusList.isEmpty()) {
+			return Boolean.FALSE;
+		}
+		if (statusList.contains(status)) {
+			return Boolean.TRUE;
+		}
+		return Boolean.FALSE;
+	}
+	
+	/**
+	 * 
+	 * @param stage1
+	 * @param stage2
+	 * @return
+	 */
+	public static Status.Stage getPriorStatus (Status.Stage stage1, Status.Stage stage2) {
+		if (stage1.ordinal() < stage2.ordinal()) {
+			return stage1;
+		}
+		return stage2;
+	}
+	
 	public static MetaIdentifier getMetaIdentifier (BaseEntity baseEntity, MetaType type) {
 		if (baseEntity == null) {
 			return null;
