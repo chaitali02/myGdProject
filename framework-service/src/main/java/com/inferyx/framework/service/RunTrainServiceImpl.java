@@ -65,9 +65,9 @@ import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.ImputeOperator;
 
-public class RunModelServiceImpl implements Callable<TaskHolder> {
+public class RunTrainServiceImpl implements Callable<TaskHolder> {
 
-	private static final Logger logger = Logger.getLogger(RunModelServiceImpl.class);
+	private static final Logger logger = Logger.getLogger(RunTrainServiceImpl.class);
 	private HDFSInfo hdfsInfo;
 
 	private String algorithmUUID;
