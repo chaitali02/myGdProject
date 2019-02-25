@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.FutureTask;
 
 import javax.annotation.Resource;
 
@@ -73,6 +74,8 @@ import com.inferyx.framework.domain.NodeDetails;
 import com.inferyx.framework.domain.Property;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Session;
+import com.inferyx.framework.domain.Simulate;
+import com.inferyx.framework.domain.SimulateExec;
 import com.inferyx.framework.domain.SourceAttr;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Vertex;
@@ -87,7 +90,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 
 @Service
-public class GraphServiceImpl implements IParsable, IExecutable {
+public class GraphServiceImpl extends BaseRuleExecTemplate implements IParsable, IExecutable {
 
 	@Autowired
 	private MetadataServiceImpl metadataServiceImpl;
@@ -2107,7 +2110,62 @@ public class GraphServiceImpl implements IParsable, IExecutable {
 		
 		return true;
 	}
-
+	
+	
+	public void setStatus (String type, String uuid, String version,String status){
+		if(status.toLowerCase().equalsIgnoreCase(Status.Stage.OnHold.toString().toLowerCase())){
+			super.onHold(uuid, version, Helper.getMetaType(type));
+		}
+		else if(status.toLowerCase().equalsIgnoreCase(Status.Stage.Resume.toString().toLowerCase())){
+			super.resume(uuid,version, Helper.getMetaType(type));
+		}
+		else if(status.toLowerCase().equalsIgnoreCase(Status.Stage.Killed.toString().toLowerCase())){
+		      kill(uuid, version,Helper.getMetaType(type));
+		}
+		
+	}
+	
+	public void kill (String uuid, String version, MetaType execType) {
+		BaseExec baseExec = null;
+		try {
+			baseExec = (BaseExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, execType.toString());
+		} catch (JsonProcessingException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		if (baseExec == null) {
+			logger.info("GraphExec not found. Exiting...");
+			return;
+		}
+		if (!Helper.getLatestStatus(baseExec.getStatusList()).equals(new Status(Status.Stage.InProgress, new Date()))) {
+			logger.info("Latest Status is not in InProgress. Exiting...");
+		}
+		try {
+			synchronized (baseExec.getUuid()) {
+				commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.Terminating);
+			}
+			@SuppressWarnings("unchecked")
+			FutureTask<TaskHolder> futureTask = (FutureTask<TaskHolder>) taskThreadMap.get(execType+"_"+baseExec.getUuid()+"_"+baseExec.getVersion());
+				futureTask.cancel(true);
+			synchronized (baseExec.getUuid()) {
+				commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.Killed);
+			}
+		} catch (Exception e) {
+			logger.info("Failed to kill. uuid : " + uuid + " version : " + version);
+			try {
+				synchronized (baseExec.getUuid()) {
+					commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.Killed);
+				}
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+			taskThreadMap.remove(execType+"_"+baseExec.getUuid()+"_"+baseExec.getVersion());
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
 	
 
 }

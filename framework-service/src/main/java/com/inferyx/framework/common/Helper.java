@@ -376,6 +376,7 @@ public class Helper {
 		case deployExec : return "DeployServiceImpl";
 		case processExec : return "ProcessServiceImpl";
 		case dashboardExec : return " DashboardServiceImpl";
+		case graphExec : return " GraphServiceImpl";
 		default: return null;
 		}
 	}

@@ -27,12 +27,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.ExecParams;
-import com.inferyx.framework.domain.GraphMetaIdentifier;
 import com.inferyx.framework.domain.GraphMetaIdentifierHolder;
 import com.inferyx.framework.domain.GraphpodResult;
-import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.register.GraphRegister;
 import com.inferyx.framework.service.GraphServiceImpl;
@@ -52,6 +51,8 @@ public class GraphController {
 	@Autowired
 	GraphServiceImpl graphServiceImpl;
 	
+	
+
 	public GraphRegister<?> getGraphRegister() {
 		return graphRegister;
 	}
@@ -156,6 +157,35 @@ public class GraphController {
 		return registerService.isRefreshed(graphMetaIdentifierHolder);
 
 	}
+	
+	
+	@RequestMapping(value="/setStatus", method= RequestMethod.PUT)
+	public boolean setStatus(@RequestParam("uuid") String uuid, 
+			@RequestParam("version") String version,
+			@RequestParam("status") String status,
+			@RequestParam("type") String type,
+			@RequestParam(value = "action", required = false) String action) throws Exception {
+		try {
+			graphServiceImpl.setStatus(type,uuid,version,status);			
+		}catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
+	/*@RequestMapping(value = "/restart",  method = RequestMethod.GET)
+	public void restartTrain(@RequestParam(value = "uuid") String trainExecUuid,
+						  @RequestParam(value = "version") String trainExecVersion,
+							@RequestBody(required = false) ExecParams execParams,
+						  @RequestParam(value = "type", required = false) String type,
+						  @RequestParam(value = "action", required = false) String action,
+							@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
+		RunMode runMode = Helper.getExecutionMode(mode);
+		graphServiceImpl.restartTrain(type, trainExecUuid, trainExecVersion, execParams, runMode);
+	}
+*/
+	
 }
 
 

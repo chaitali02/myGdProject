@@ -1547,6 +1547,14 @@ public class CommonServiceImpl<T> {
 	public void setIngestExecServiceImpl(IngestExecServiceImpl ingestExecServiceImpl) {
 		this.ingestExecServiceImpl = ingestExecServiceImpl;
 	}
+	
+	public GraphServiceImpl getGraphServiceImpl() {
+		return graphServiceImpl;
+	}
+
+	public void setGraphServiceImpl(GraphServiceImpl graphServiceImpl) {
+		this.graphServiceImpl = graphServiceImpl;
+	}
 
 	static final Logger logger = Logger.getLogger(CommonServiceImpl.class);
 	private static final String GET = "get";
