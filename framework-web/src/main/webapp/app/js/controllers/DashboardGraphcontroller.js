@@ -1191,20 +1191,20 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
     return data;
   }
 
-  function ConvertTwoDisit(data, propName) {
-    // if(isNaN(data[0][propName])){
-    if (data.length > 0 && data[0][propName].indexOf("-") != -1) {
-      for (var i = 0; i < data.length; i++) {
-        a = data[i][propName].split('-')[0];
-        b = data[i][propName].split('-')[1]
-        data[i][propName] = parseFloat(a).toFixed(2) + " - " + parseFloat(b).toFixed(2);
-        // console.log(data[i][propName])
-      }
-    }
-    // }
-    //console.log(data)
-    return data;
-  }
+  // function ConvertTwoDisit(data, propName) {
+  //   // if(isNaN(data[0][propName])){
+  //   if (data.length > 0 && data[0][propName].indexOf("-") != -1) {
+  //     for (var i = 0; i < data.length; i++) {
+  //       a = data[i][propName].split('-')[0];
+  //       b = data[i][propName].split('-')[1]
+  //       data[i][propName] = parseFloat(a).toFixed(2) + " - " + parseFloat(b).toFixed(2);
+  //       // console.log(data[i][propName])
+  //     }
+  //   }
+  //   // }
+  //   //console.log(data)
+  //   return data;
+  // }
   var reA = /[^a-zA-Z]/g;
   var reN = /[^0-9]/g;
   function sortAlphaNum(propName) {
@@ -1249,7 +1249,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
         } else {
           if (isNaN(result.data[0][$scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].attributeName])) {
             if ($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.type == "bar-chart") {
-              ConvertTwoDisit(result.data, $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].attributeName);
+             // ConvertTwoDisit(result.data, $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].attributeName);
               result.data.sort(sortAlphaNum($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].attributeName))
             }
 
@@ -1324,7 +1324,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
             } else {
               if (isNaN(result.data[0][$scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].attributeName])) {
                 if ($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.type == "bar-chart") {
-                  ConvertTwoDisit(result.data, $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].attributeName);
+               //   ConvertTwoDisit(result.data, $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].attributeName);
                   result.data.sort(sortAlphaNum($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].attributeName))
                 }
 

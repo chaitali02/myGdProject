@@ -394,8 +394,13 @@ DatavisualizationModule.service('VizpodSerivce', function ($q, sortFactory, Vizp
         valuejson.name = response.values[i].ref.name;
         valuejson.type = response.values[i].ref.type;
         valuejson.uuid = response.values[i].ref.uuid;
-        if (response.values[i].ref.type == "datapod") {
+        valuejson.function = response.values[i].function;
+        debugger
+        if(response.values[i].ref.type != "formula"){
           valuejson.dname = response.values[i].ref.name + "." + response.values[i].attributeName;
+          if(response.values[i].function !=null){
+            valuejson.dname =response.values[i].function+"("+response.values[i].ref.name + "." + response.values[i].attributeName+")";
+          }
           valuejson.attributeId = response.values[i].attributeId;
           valuejson.attributeName = response.values[i].attributeName;
         } else {
@@ -521,8 +526,12 @@ DatavisualizationModule.service('VizpodSerivce', function ($q, sortFactory, Vizp
         valuejson.name = response.values[i].ref.name;
         valuejson.type = response.values[i].ref.type;
         valuejson.uuid = response.values[i].ref.uuid;
+        valuejson.function = response.values[i].function;
         if (response.values[i].ref.type == "datapod" || response.values[i].ref.type == "dataset") {
           valuejson.dname = response.values[i].ref.name + "." + response.values[i].attributeName;
+          if(response.values[i].function !=null){
+            valuejson.dname = response.values[i].function+"("+response.values[i].ref.name + "." + response.values[i].attributeName+")";
+          }
           valuejson.attributeId = response.values[i].attributeId;
           valuejson.attributeName = response.values[i].attributeName;
         } else {

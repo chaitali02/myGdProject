@@ -40,6 +40,7 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 	$scope.userDetail = {}
 	$scope.userDetail.uuid = $rootScope.setUseruuid;
 	$scope.userDetail.name = $rootScope.setUserName;
+	$scope.popoverIsOpen=false;
 	$scope.tags = null;
 	$scope.mode = "false"
 	$scope.vizpoddata;
@@ -136,6 +137,39 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 		});
 	};
 	$scope.getLovByType();
+    $scope.popOverSetFalse=function(){
+		for(var i=0;i< $scope.valuelist.length;i++){
+			$scope.valuelist[i].popoverIsOpen=false;
+		}
+	}
+
+	$scope.onClickPopoverOpen=function(index){
+		if($scope.valuelist && $scope.valuelist.length >0){
+			$scope.popOverSetFalse();
+            if($scope.valuelist[index].type !="formula" && $scope.mode =="false"){
+				if(!$scope.valuelist[index].popoverIsOpen){
+					$scope.valuelist[index].popoverIsOpen=false;
+				}
+				$scope.valuelist[index].popoverIsOpen=!$scope.valuelist[index].popoverIsOpen;
+		    }
+			else{
+				$scope.valuelist[index].popoverIsOpen=false;
+			}
+	    }
+	}
+
+	$scope.applyFunctionOnValue=function(index,fun){
+		$scope.myform.$dirty = true;
+		if(fun !="None"){
+			$scope.valuelist[index].dname=fun+"("+$scope.valuelist[index].name+"."+$scope.valuelist[index].attributeName+")";
+			$scope.valuelist[index].function=fun;
+			$scope.valuelist[index].popoverIsOpen=false;
+		}else{
+			$scope.valuelist[index].dname=$scope.valuelist[index].name+"."+$scope.valuelist[index].attributeName;
+		    $scope.valuelist[index].popoverIsOpen=false;
+		}
+	}
+
 	$scope.checkIsInrogess=function(){
 		if($scope.isEditInprogess || $scope.isEditVeiwError){
 		return false;
@@ -324,10 +358,19 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 	}//End beforeDropValue
 
 	$scope.onDropValue = function (event, ui, index) {
-		var data = ui.draggable.scope().item
+		var data ={}; 
+		data.attributeId=ui.draggable.scope().item.attributeId;
+		data.attributeName=ui.draggable.scope().item.attributeName;
+		data.class=ui.draggable.scope().item.class;
+		data.dname=ui.draggable.scope().item.dname;
+		data.id=ui.draggable.scope().item.id;
+		data.index=ui.draggable.scope().item.index;
+		data.name=ui.draggable.scope().item.name;
+		data.type=ui.draggable.scope().item.type;
+		data.uuid=ui.draggable.scope().item.uuid;
 		var index = ui.draggable.scope().item.index;
 		$scope.myform.$dirty = true;
-	    $scope.allSourceAttribute.splice(index, 0, ui.draggable.scope().item);
+	    $scope.allSourceAttribute.splice(index, 0,data);
 		//$scope.allSourceAttribute[index].class='tagit-choice-select-dd'
 	}//End onDropValue
 
@@ -686,6 +729,11 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 			var ref = {}
 			ref.uuid = $scope.valuelist[i].uuid
 			ref.type = $scope.valuelist[i].type;
+			if($scope.valuelist[i].function !=null){
+				valuejson.function=	$scope.valuelist[i].function
+			}else{
+				valuejson.function=null;
+			}
 			valuejson.ref = ref;
 			if ($scope.valuelist[i].type == "datapod" || $scope.valuelist[i].type == "dataset" ) {
 				valuejson.attributeId = $scope.valuelist[i].attributeId;
@@ -829,7 +877,7 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 			keyboard: false
 		});
 	};
-
+   
     $scope.submitDownload =function(){
 		$scope.isDownloadDatapod=true;
 		$('#downloadSample').modal("hide");

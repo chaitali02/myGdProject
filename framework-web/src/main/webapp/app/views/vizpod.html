@@ -363,20 +363,34 @@
 												</div>
 
 												<div class="col-xs-4">
-													<label for="name">Value
+													<label for="name">Value 
 														<span class="required" aria-required="true"> * </span>
 													</label>
 													<ul class="tagitdd" style="height:150px;" data-drop="true" ng-model='valuelist' ng-class="({{mode}} ==true)?'disabled-ul':'default'"
 													 jqyoui-droppable="{multiple:true,'onDrop':'onDropValue($index)','beforeDrop':'beforeDropValue'}">
 														<li title="{{item.dname}}" class="tagit-choice-dd tagit-choice-editable-dd" ng-repeat="item in valuelist" style="background-color:#e6ff99"
-														 required="">
+														
+														 required="" popover-placement="bottom-left" uib-popover-template="'functionPopoverTemplate.html'" popover-is-open="item.popoverIsOpen" popover-enable="item.popoverIsOpen" ng-click="onClickPopoverOpen($index)"  popover-trigger="'click'" >
 															<span class="tagit-label">{{item.dname}}</span>
+															
 															<a class="tagit-close-dd">
 																<span class="text-icon" ng-click="removeValue($index)">×</span>
 																<span class="ui-icon ui-icon-close"></span>
 															</a>
+															<script type="text/ng-template" id="functionPopoverTemplate.html">
+																<div style="height:100px;">
+																	<ul class="list-group">
+																		<li class="list-group-item" style="padding:5px 15px;" ng-class="{active:item.function=='None'}"ng-click="applyFunctionOnValue($index,'None')">None</li>
+																		<li class="list-group-item" style="padding:5px 15px;" ng-class="{active:item.function=='Max'}"ng-click="applyFunctionOnValue($index,'Max')">Max</li>
+																		<li class="list-group-item" style="padding:5px 15px;" ng-class="{active:item.function=='Min'}" ng-click="applyFunctionOnValue($index,'Min')">Min</li>
+																		<li class="list-group-item" style="padding:5px 15px;" ng-class="{active:item.function=='Count'}"ng-click="applyFunctionOnValue($index ,'Count')">Count</li>
+																		<li class="list-group-item" style="padding:5px 15px;" ng-class="{active:item.function=='Avg'}" ng-click="applyFunctionOnValue($index,'Avg')">AVG</li>
+																	</ul>
+																</div>
+															</script>
 														</li>
 													</ul>
+													
 												</div>
 											</div>
 										</div>
