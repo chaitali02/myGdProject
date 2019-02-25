@@ -33,6 +33,7 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.ReportExec;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.service.NotificationServiceImpl;
 import com.inferyx.framework.service.ReportServiceImpl;
 
 /**
@@ -43,7 +44,9 @@ import com.inferyx.framework.service.ReportServiceImpl;
 @RequestMapping(value="/report")
 public class ReportController {
 	@Autowired
-	ReportServiceImpl reportServiceImpl;
+	private ReportServiceImpl reportServiceImpl;
+	@Autowired
+	private NotificationServiceImpl notificationServiceImpl;
 	
 	@RequestMapping(value = "/execute", method = RequestMethod.POST)
 	public ReportExec execute(@RequestParam("uuid") String reportUuid, 
@@ -91,5 +94,13 @@ public class ReportController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
 		return reportServiceImpl.getReportByReportExec(reportExecUuid);
+	}
+	
+	@RequestMapping(value = "/sendEMail", method = RequestMethod.GET)
+	public boolean sendEMail(@RequestParam("uuid") String reportUuid,
+			@RequestParam(value = "version", required = false) String reportVersion,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
+		return notificationServiceImpl.prepareAndSenEMail(reportUuid, reportVersion);
 	}
 }
