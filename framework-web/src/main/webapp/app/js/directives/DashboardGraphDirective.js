@@ -14,7 +14,12 @@ DatavisualizationModule.directive('bubbleChart', function ($compile, $rootScope,
     link: function ($scope, element, attrs) {
       $scope.$watch('data', function (newValue, oldValue) {
         $scope.chartcolor = ["#d98880", "#f1948a", "#c39bd3", "#bb8fce", "#7fb3d5", "#85c1e9", "#76d7c4", "#73c6b6", "#7dcea0", "#82e0aa", "#f7dc6f", "#f8c471", "#f0b27a", "#e59866"] //["#E6B0AA","#D7BDE2","#F5B7B1","#D2B4DE","#A9CCE3","#AED6F1","#A9CCE3","#A3E4D7","#A2D9CE","#A9DFBF","#ABEBC6","#F9E79F","#FAD7A0","#F5CBA7","#EDBB99"]
-        var keyname = $scope.column.keys[0].attributeName
+        var keyname ;
+        if($scope.column.keys[0].ref.type !="formula"){
+          keyname = $scope.column.keys[0].attributeName;
+        }else{
+          keyname = $scope.column.keys[0].ref.name;
+        }
         var columnname;
         if ($scope.column.values[0].ref.type == "formula") {
           columnname = $scope.column.values[0].ref.name
@@ -30,7 +35,12 @@ DatavisualizationModule.directive('bubbleChart', function ($compile, $rootScope,
         data.self = $scope;
         data.json = $scope.data;
         data.type = "scatter";
-        key.x = $scope.column.keys[0].attributeName;
+        key.x;
+        if($scope.column.keys[0].ref.type !="formula"){
+          key.x= $scope.column.keys[0].attributeName;
+        }else{
+          key.x= $scope.column.keys[0].ref.name;
+        }
         value[0] = columnname //$scope.column.values[0].attributeName;
         key.value = value;
         data.keys = key;
@@ -120,8 +130,18 @@ DatavisualizationModule.directive('heatMap', function ($compile, $rootScope, sor
     link: function ($scope, element, attrs) {
       $scope.$watch('data', function (newValue, oldValue) {
         $scope.chartcolor = ["#d98880", "#f1948a", "#c39bd3", "#bb8fce", "#7fb3d5", "#85c1e9", "#76d7c4", "#73c6b6", "#7dcea0", "#82e0aa", "#f7dc6f", "#f8c471", "#f0b27a", "#e59866"] //["#E6B0AA","#D7BDE2","#F5B7B1","#D2B4DE","#A9CCE3","#AED6F1","#A9CCE3","#A3E4D7","#A2D9CE","#A9DFBF","#ABEBC6","#F9E79F","#FAD7A0","#F5CBA7","#EDBB99"]
-        var keynameY = $scope.column.keys[1].attributeName;
-        var keynameX = $scope.column.keys[0].attributeName
+        var keynameY;
+        if($scope.column.keys[1].ref.type !='formula'){
+          keynameY = $scope.column.keys[1].attributeName;
+        }else{
+          keynameY = $scope.column.keys[1].ref.name;
+        }
+        var keynameX;
+        if($scope.column.keys[0].ref.type !='formula'){ 
+          keynameX= $scope.column.keys[0].attributeName;
+        }else{
+          keynameX= $scope.column.keys[0].ref.name;
+        }
         var columnname;
         $scope.valueColName;
         if ($scope.column.values[0].ref.type == "formula") {
@@ -326,7 +346,12 @@ DatavisualizationModule.directive('worldMap', function ($compile, $filter, $root
 
       var mapRender = function () {
 
-        var keyname = $scope.column.keys[0].attributeName
+        var keyname ;
+        if($scope.column.keys[0].ref.type !='formula'){
+          keyname= $scope.column.keys[0].attributeName;
+        }else{
+          keyname= $scope.column.keys[0].ref.name;
+        }
         var columnname = [];
         for (var i = 0; i < $scope.column.values.length; i++) {
           if ($scope.column.values[i].ref.type == "formula") {
@@ -864,7 +889,12 @@ DatavisualizationModule.directive('multiSeriesChart', function ($compile, $rootS
       $scope.$watch('data', function (newValue, oldValue) {
         $scope.chartcolor = ["#73c6b6", "#f8c471", "#d98880", "#7dcea0", "#f1948a", "#c39bd3", "#bb8fce", "#7fb3d5", "#85c1e9", "#76d7c4", "#82e0aa", "#f7dc6f", "#f0b27a", "#e59866"];
         var data =$scope.data;
-        var keyPro = $scope.column.keys[0].attributeName;
+        var keyPro ;
+        if($scope.column.keys[0].ref.type !='formula'){
+          keyPro= $scope.column.keys[0].attributeName;
+        }else{
+          keyPro= $scope.column.keys[0].ref.name;
+        }
         var valuePro ="";
         var groupPro =$scope.column.groups[0].attributeName;
         if($scope.column.values[0].ref.type == "formula") {

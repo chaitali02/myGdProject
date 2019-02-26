@@ -125,12 +125,12 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 			return null;
 		}
 		statusList = operatorExec.getStatusList();
-		if (Helper.getLatestStatus(statusList) != null
+		if (Helper.getLatestStatus(statusList) != null && statusList.size() >0
 				&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.InProgress, new Date()))
 						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Completed, new Date()))
 						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Terminating, new Date()))
-						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.OnHold, new Date()))) 
-						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Ready, new Date()))) {
+						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.OnHold, new Date())) 
+						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Ready, new Date())))) {
 			logger.info(
 					" This process is In Progress or has been completed previously or is Terminating or is On Hold. Hence it cannot be rerun. ");
 			logger.info("If the process is in ready status then it should directly go to execution");
@@ -426,6 +426,7 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 		synchronized (baseExec.getUuid()) {
 			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.operatorExec, Status.Stage.Initialized);
 		}
+		
 		baseExec = newOperator.parse(baseExec, execParams, runMode);
 		synchronized (baseExec.getUuid()) {
 			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.operatorExec, Status.Stage.Ready);
