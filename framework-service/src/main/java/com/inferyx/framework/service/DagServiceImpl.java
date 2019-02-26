@@ -1480,17 +1480,21 @@ public class DagServiceImpl {
 								}
 							} // End for operator
 							logger.info(" Setting task to " + operatorLeastSigStatus.getStage());
-							commonServiceImpl.setMetaStatusForTask(dagExec, taskExec, operatorLeastSigStatus.getStage(),dagExec.getStages().get(i).getStageId(), dagExec.getStages().get(i).getTasks().get(j).getTaskId());
+							taskExec = (TaskExec) commonServiceImpl.setMetaStatusForTask(dagExec, taskExec, operatorLeastSigStatus.getStage(),dagExec.getStages().get(i).getStageId(), dagExec.getStages().get(i).getTasks().get(j).getTaskId());
+							dagExec.getStages().get(i).getTasks().remove(j);
+							dagExec.getStages().get(i).getTasks().add(j, taskExec); 
 							taskLeastSigStatus = new Status(helper.getPriorStatus(taskLeastSigStatus.getStage(), operatorLeastSigStatus.getStage()), new Date());
 						}	
 					} // End tasks
 					logger.info(" Setting stage to " + taskLeastSigStatus.getStage());
-					commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, taskLeastSigStatus.getStage(), stageExec.getStageId());
+					stageExec = (StageExec) commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, taskLeastSigStatus.getStage(), stageExec.getStageId());
+					dagExec.getStages().remove(i);
+					dagExec.getStages().add(i, stageExec);
 					stageLeastSigStatus = new Status(helper.getPriorStatus(stageLeastSigStatus.getStage(), taskLeastSigStatus.getStage()), new Date());
 				}
 			} // End stages
 				logger.info(" Setting dag to " + stageLeastSigStatus.getStage());
-				commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, stageLeastSigStatus.getStage());
+				dagExec = (DagExec) commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, stageLeastSigStatus.getStage());
 			}
 		}
 		logger.info("After setting status to ready or Not Started ");
