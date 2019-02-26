@@ -21,7 +21,58 @@ public class EMailInfo {
 	private List<String> emailBCC;
 	private List<String> emailCC;
 	private List<String> emailAttachment;
+	private String notifOnSuccess = "Y";
+	private String notifyOnFailure = "Y";
+	private String sendAttachment = "Y";
 	
+	/**
+	 * @Ganesh
+	 *
+	 * @return the notifOnSuccess
+	 */
+	public String getNotifOnSuccess() {
+		return notifOnSuccess;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param notifOnSuccess the notifOnSuccess to set
+	 */
+	public void setNotifOnSuccess(String notifOnSuccess) {
+		this.notifOnSuccess = notifOnSuccess;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @return the notifyOnFailure
+	 */
+	public String getNotifyOnFailure() {
+		return notifyOnFailure;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param notifyOnFailure the notifyOnFailure to set
+	 */
+	public void setNotifyOnFailure(String notifyOnFailure) {
+		this.notifyOnFailure = notifyOnFailure;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @return the sendAttachment
+	 */
+	public String getSendAttachment() {
+		return sendAttachment;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param sendAttachment the sendAttachment to set
+	 */
+	public void setSendAttachment(String sendAttachment) {
+		this.sendAttachment = sendAttachment;
+	}
 	/**
 	 * @Ganesh
 	 *
