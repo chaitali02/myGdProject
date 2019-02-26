@@ -900,7 +900,11 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
         $scope.sectionRows[i].columns[j].isChartDataGrid = true;
         $scope.sectionRows[i].columns[j].isChartShow = true;
         $scope.sectionRows[i].columns[j].isDataGridShow = false;
-        datax.id = $scope.sectionRows[i].columns[j].vizpodInfo.keys[0].attributeName//x value
+        if($scope.sectionRows[i].columns[j].vizpodInfo.keys[0] !='formual'){
+          datax.id = $scope.sectionRows[i].columns[j].vizpodInfo.keys[0].attributeName;//x value
+        }else{
+          datax.id = $scope.sectionRows[i].columns[j].vizpodInfo.keys[0].ref.name;
+        }
         $scope.sectionRows[i].columns[j].vizpodDetails.datax = datax;
         var datacolumnsarray = [];
         var columnName = []
@@ -1113,9 +1117,11 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
     if (data.dataobj.value != "") {
       ref.uuid = data.vizpod.vizpodInfo.keys[0].ref.uuid;
       ref.version = null;
-      ref.type = data.vizpod.vizpodInfo.keys[0].ref.type
+      ref.type = data.vizpod.vizpodInfo.keys[0].ref.type;
       filterInfo.ref = ref;
-      filterInfo.attrId = data.vizpod.vizpodInfo.keys[0].attributeId;
+      if(data.vizpod.vizpodInfo.keys[0].ref.type !="formual"){
+        filterInfo.attrId = data.vizpod.vizpodInfo.keys[0].attributeId;
+      }
       if (data.vizpod.vizpodInfo.type == "world-map" || data.vizpod.vizpodInfo.type == "usa-map") {
         filterInfo.value = data.dataobj.x;
       } else if (["world-map", "usa-map", "pie-chart", "donut-chart"].indexOf(data.vizpod.vizpodInfo.type) == -1) {
@@ -1247,10 +1253,16 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
         if ($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.type == "bar-line-chart") {
           $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodDetails.datapoints = $scope.convertResultTwoDisit(result.data, $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodDetails.columnNameY2);
         } else {
-          if (isNaN(result.data[0][$scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].attributeName])) {
+          var propName;
+          if($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].ref.type !="formula"){
+            propName=$scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].attributeName;
+          }else{
+            propName=$scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].ref.name;
+          }
+          if (isNaN(result.data[0][propName])) {
             if ($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.type == "bar-chart") {
              // ConvertTwoDisit(result.data, $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].attributeName);
-              result.data.sort(sortAlphaNum($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].attributeName))
+              result.data.sort(sortAlphaNum(propName))
             }
 
           }
@@ -1322,10 +1334,16 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
             if ($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.type == "bar-line-chart") {
               $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodDetails.datapoints = $scope.convertResultTwoDisit(result.data, $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodDetails.columnNameY2);
             } else {
-              if (isNaN(result.data[0][$scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].attributeName])) {
+              var propName;
+              if($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].ref.type !="formula"){
+                propName=$scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].attributeName;
+              }else{
+                propName=$scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].ref.name;
+              }
+              if (isNaN(result.data[0][propName])) {
                 if ($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.type == "bar-chart") {
                //   ConvertTwoDisit(result.data, $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].attributeName);
-                  result.data.sort(sortAlphaNum($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].attributeName))
+                  result.data.sort(sortAlphaNum(propName))
                 }
 
               }
@@ -1353,7 +1371,13 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
 
   $scope.preparColumnDataFromResult = function (rowNo, colNo) {
     if ($scope.sectionRows[rowNo].columns[colNo].vizpodInfo.type == 'pie-chart' || $scope.sectionRows[rowNo].columns[colNo].vizpodInfo.type == 'donut-chart') {
-      var columnname = $scope.sectionRows[rowNo].columns[colNo].vizpodInfo.keys[0].attributeName
+      var columnname;
+      if($scope.sectionRows[rowNo].columns[colNo].vizpodInfo.keys[0].ref.type !="formula"){
+        columnname= $scope.sectionRows[rowNo].columns[colNo].vizpodInfo.keys[0].attributeName;
+      }else{
+        columnname= $scope.sectionRows[rowNo].columns[colNo].vizpodInfo.keys[0].ref.name;
+      }
+      
       if ($scope.sectionRows[rowNo].columns[colNo].vizpodInfo.values[0].ref.type == "datapod" || $scope.sectionRows[rowNo].columns[colNo].vizpodInfo.values[0].ref.type == "dataset") {
         columnnamevalue = $scope.sectionRows[rowNo].columns[colNo].vizpodInfo.values[0].attributeName
       }

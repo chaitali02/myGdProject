@@ -306,7 +306,7 @@ InferyxApp.factory('sortFactory', function () {
 	return{
 	  	sortByProperty : function (property,orderBy) {
         	return function (x, y) {
-				console.log(orderBy)
+				//console.log(orderBy)
 				if(orderBy =='desc')
              		return ((x[property] === y[property]) ? 0 : ((x[property] < y[property]) ? 1 : -1));
 				else 

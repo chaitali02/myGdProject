@@ -502,8 +502,13 @@ DatavisualizationModule.service('VizpodSerivce', function ($q, sortFactory, Vizp
         keyjson.name = response.keys[i].ref.name;
         keyjson.type = response.keys[i].ref.type;
         keyjson.uuid = response.keys[i].ref.uuid;
-        keyjson.attributeId = response.keys[i].attributeId;
-        keyjson.attributeName = response.keys[i].attributeName;
+        if(response.keys[i].ref.type !='formula'){
+          keyjson.attributeId = response.keys[i].attributeId;
+          keyjson.attributeName = response.keys[i].attributeName;
+          keyjson.dname =response.keys[i].ref.name+"."+response.keys[i].attributeName;
+        }else{
+          keyjson.dname =response.keys[i].ref.name;
+        }
         keyArray[i] = keyjson;
       }
       vizpodjosn.keys = keyArray;
