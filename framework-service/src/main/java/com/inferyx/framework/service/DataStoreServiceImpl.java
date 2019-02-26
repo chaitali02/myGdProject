@@ -294,31 +294,66 @@ public class DataStoreServiceImpl {
 		return dataStore;
 	}
 */
-	public DataStore findDataStoreByMeta(String uuid, String version) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public DataStore findDataStoreByMeta(String uuid, String version)
+			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		Query query =new Query();
+		Query query = new Query();
 		query.fields().include("uuid");
 		query.fields().include("version");
 
-		if(appUuid != null && version != null)
-			query.addCriteria(Criteria.where("metaId.ref.uuid").is(uuid).andOperator(Criteria.where("metaId.ref.version").is(version)));
-		else if(appUuid != null)
+		if (appUuid != null && version != null)
+			query.addCriteria(Criteria.where("metaId.ref.uuid").is(uuid)
+					.andOperator(Criteria.where("metaId.ref.version").is(version)));
+		else if (appUuid != null)
 			query.addCriteria(Criteria.where("appInfo.ref.uuid").is(appUuid));
-		
+
 		query.with(new Sort(Sort.Direction.DESC, "version"));
 		query.addCriteria(Criteria.where("active").is("Y"));
-		
+
 		List<DataStore> datastoreList = mongoTemplate.find(query, DataStore.class);
 		DataStore dataStore = null;
 		try {
-			if(!datastoreList.isEmpty())
-				dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(datastoreList.get(0).getUuid(), datastoreList.get(0).getVersion(), MetaType.datastore.toString());
+			if (!datastoreList.isEmpty()) {
+				dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(datastoreList.get(0).getUuid(),
+						datastoreList.get(0).getVersion(), MetaType.datastore.toString());
+			} else {
+
+				Aggregation dataStoreAggr;
+				AggregationResults<DataStore> datastoreResults;
+				// check for uuid,version
+				dataStoreAggr = newAggregation(match(Criteria.where("metaId.ref.uuid").is(uuid)),
+						match(Criteria.where("metaId.ref.version").is(version)));
+				datastoreResults = mongoTemplate.aggregate(dataStoreAggr, "datastore", DataStore.class);
+
+				// if uuid,version not matched then check for uuid with latest version
+				if (datastoreResults.getMappedResults() != null) {
+					dataStoreAggr = newAggregation(match(Criteria.where("metaId.ref.uuid").is(uuid)),
+							group("uuid").max("version").as("version"));
+
+					datastoreResults = mongoTemplate.aggregate(dataStoreAggr, "datastore", DataStore.class);
+				}
+
+				datastoreList = datastoreResults.getMappedResults();
+				/*
+				 * try { ds = (DataStore)
+				 * commonServiceImpl.getOneByUuidAndVersion(datastoreList.get(0).getId(),
+				 * datastoreList.get(0).getVersion(), MetaType.datastore.toString()); } catch
+				 * (JsonProcessingException e) { // TODO Auto-generated catch block
+				 * e.printStackTrace(); } return ds;
+				 * 
+				 */
+
+				dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(datastoreList.get(0).getUuid(),
+						datastoreList.get(0).getVersion(), MetaType.datastore.toString());
+
+			}
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return dataStore;
-		//return iDataStoreDao.findDataStoreByMeta(appUuid, uuid, version);
+		// return iDataStoreDao.findDataStoreByMeta(appUuid, uuid, version);
 	}
 
 	public List<DataStore> findAllLatest() {

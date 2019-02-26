@@ -427,7 +427,7 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.operatorExec, Status.Stage.Initialized);
 		}
 		
-		baseExec = newOperator.parse(baseExec, execParams, runMode);
+	//	baseExec = newOperator.parse(baseExec, execParams, runMode);
 		synchronized (baseExec.getUuid()) {
 			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.operatorExec, Status.Stage.Ready);
 		}

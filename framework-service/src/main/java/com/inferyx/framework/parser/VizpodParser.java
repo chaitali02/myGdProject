@@ -573,6 +573,9 @@ public class VizpodParser {
 			String innerSql = datasetOperator.generateSql(dataSet, null, null, usedRefKeySet, null, runMode);
 
 			dataSet.setAttributeInfo(attributeInfo);
+			
+			String outerSql = datasetOperator.generateSql(dataSet, null, null, usedRefKeySet, null, runMode);
+
 			StringBuilder queryBuilder = new StringBuilder();
 			selectBuilder = new StringBuilder(generateSelectForDataSet(dataSet,vizpod));
 
@@ -603,7 +606,7 @@ public class VizpodParser {
 					whereBuilder = new StringBuilder(whereBuilder.toString().replace(matcher.group(), ""));
 			}
 			// }
-			groupByBuilder = new StringBuilder(generateGroupByForDataSet(dataSet));
+			groupByBuilder = new StringBuilder(generateGroupByForDataSet(dataSet,vizpod));
 			// groupByBuilder = new StringBuilder(datasetOperator.generateGroupBy(dataSet,
 			// null, null, null));
 			havingBuilder = new StringBuilder(
@@ -697,12 +700,21 @@ public class VizpodParser {
 
 			} else {
 				if (attributeSource.getSourceAttr().getRef().getType().equals(MetaType.formula)) {
-					Formula formula = (Formula) commonServiceImpl.getLatestByUuid(
-							attributeSource.getSourceAttr().getRef().getUuid(), MetaType.formula.toString());
-					Datasource vizDS = commonServiceImpl.getDatasourceByObject(vizpod);
-					String FormulaSql = formulaOperator.generateSql(formula, null, null, null, vizDS);
+                      //for formula 
+					if (attributeSource.getAttrSourceId() != null) {
+						selectBuilder.append(datasetName).append(".")
+						.append(dataSet.getAttributeName(Integer.parseInt(attributeSource.getAttrSourceId())))
+						.append(" AS ")
+						.append(dataSet.getAttributeName(Integer.parseInt(attributeSource.getAttrSourceId())));
+					} else {
 
-					selectBuilder.append(formula.getName());
+						Formula formula = (Formula) commonServiceImpl.getLatestByUuid(
+								attributeSource.getSourceAttr().getRef().getUuid(), MetaType.formula.toString());
+						Datasource vizDS = commonServiceImpl.getDatasourceByObject(vizpod);
+						String FormulaSql = formulaOperator.generateSql(formula, null, null, null, vizDS);
+
+						selectBuilder.append(FormulaSql).append(" as ").append(formula.getName());
+					}
 
 				} else {
 
@@ -721,7 +733,7 @@ public class VizpodParser {
 
 	}
 
-	public StringBuilder generateGroupByForDataSet(DataSet dataSet)
+	public StringBuilder generateGroupByForDataSet(DataSet dataSet,Vizpod vizpod)
 			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		StringBuilder groupByBuilder = new StringBuilder();
@@ -733,13 +745,36 @@ public class VizpodParser {
 				isAnyFunction = true;
 			} else {
 				if (attributeSource.getSourceAttr().getRef().getType().equals(MetaType.formula)) {
-					Formula formula = (Formula) commonServiceImpl.getLatestByUuid(
-							attributeSource.getSourceAttr().getRef().getUuid(), MetaType.formula.toString());
-					groupByBuilder.append(formula.getName() ).append(", ");
+
+					if (attributeSource.getAttrSourceId() != null) {
+
+						groupByBuilder
+								.append(dataSet.getAttributeName(Integer.parseInt(attributeSource.getAttrSourceId())))
+								.append(", ");
+					} else {
+
+						Object object = commonServiceImpl.getOneByUuidAndVersion(
+								attributeSource.getSourceAttr().getRef().getUuid(),
+								attributeSource.getSourceAttr().getRef().getVersion(),
+								attributeSource.getSourceAttr().getRef().getType().toString(), "N");
+						if ((object instanceof Formula) && (((Formula) object).getFormulaType() == FormulaType.aggr)) {
+							continue;
+						} else {
+
+							Formula formula = (Formula) commonServiceImpl.getLatestByUuid(
+									attributeSource.getSourceAttr().getRef().getUuid(), MetaType.formula.toString());
+							/*
+							 * Datasource vizDS = commonServiceImpl.getDatasourceByObject(vizpod); String
+							 * FormulaSql = formulaOperator.generateSql(formula, null, null, null, vizDS);
+							 */
+
+							groupByBuilder.append(formula.getName()).append(", ");
+						}
+					}
 
 				} else {
-				groupByBuilder.append(dataSet.getAttributeName(Integer.parseInt(attributeSource.getAttrSourceId())))
-						.append(", ");
+					groupByBuilder.append(dataSet.getAttributeName(Integer.parseInt(attributeSource.getAttrSourceId())))
+							.append(", ");
 				}
 			}
 		}
