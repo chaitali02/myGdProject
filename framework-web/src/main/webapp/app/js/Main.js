@@ -504,6 +504,7 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, SharedPrope
             { "name": "dashboard", "type": "dashboard", "uuid": "null", "caption": "Dashboard" },
             { "name": "vizpodlist", "type": "vizpod", "uuid": "null", "caption": "Vizpod" },
             { "name": "reportlist", "type": "report", "uuid": "null", "caption": "Report" },
+            { "name": "reportlist2", "type": "report2", "uuid": "null", "caption": "Report2" },
             { "name": "reportexeclist", "type": "reportExec", "uuid": "null", "caption": "Results","typeCount": "reportexec", }
 
         ]  
@@ -1206,6 +1207,26 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
             templateUrl: "views/report-list.html",
             data: { pageTitle: 'Data Visualization' },
             //controller: "BlankController",
+            params: { type: 'report' },
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'InferyxApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            'js/controllers/ReportController.js',
+                             'js/services/ReportService.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        .state('reportlist2', {
+            url: "/reportList2",
+            templateUrl: "views/report-list.html",
+            data: { pageTitle: 'Data Visualization' },
+            //controller: "BlankController",
+            params: { type: 'report2' },
             resolve: {
                 deps: ['$ocLazyLoad', function ($ocLazyLoad) {
                     return $ocLazyLoad.load({
@@ -1222,6 +1243,24 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
         .state('reportdetail', {
             url: "/Report?id&mode&returnBack&version",
             templateUrl: "views/report.html",
+            data: { pageTitle: 'Data Visualization' },
+            //controller: "BlankController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'InferyxApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            'js/controllers/ReportController.js',
+                            'js/services/ReportService.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        .state('reportdetail2', {
+            url: "/Report2?id&mode&returnBack&version",
+            templateUrl: "views/report2.html",
             data: { pageTitle: 'Data Visualization' },
             //controller: "BlankController",
             resolve: {

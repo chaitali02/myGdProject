@@ -795,7 +795,7 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 					sourceparamlist.type = response.attributeInfo[n].sourceAttr.ref.type;
 					sourceparamlist.attributeId = response.attributeInfo[n].sourceAttr.attrId;
 					sourceparamlist.attrType = response.attributeInfo[n].sourceAttr.attrType
-					sourceparamlist.name = "";
+					sourceparamlist.name = response.attributeInfo[n].sourceAttr.ref.name;
 					var obj = {}
 					obj.text = "paramlist"
 					obj.caption = "paramlist";
