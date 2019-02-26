@@ -432,6 +432,11 @@ public class VizpodParser {
 			// append Group by
 			if (vizpod.getKeys().size() > 0) {
 				for (AttributeDetails attrDet : vizpod.getKeys()) {
+					Object object = commonServiceImpl.getOneByUuidAndVersion(attrDet.getRef().getUuid(),
+							attrDet.getRef().getVersion(), attrDet.getRef().getType().toString(), "N");
+					if ((object instanceof Formula) && (((Formula) object).getFormulaType() == FormulaType.aggr)) {
+						continue;
+					}
 					String keyAttrName = datapodServiceImpl.getAttributeName(attrDet.getRef().getUuid(),
 							attrDet.getAttributeId());
 					String datapodName = ((Datapod) commonServiceImpl.getLatestByUuid(attrDet.getRef().getUuid(),
@@ -443,6 +448,7 @@ public class VizpodParser {
 
 			if (vizpod.getGroups().size() > 0) {
 				for (AttributeDetails attrDet : vizpod.getGroups()) {
+					
 					String keyAttrName = datapodServiceImpl.getAttributeName(attrDet.getRef().getUuid(),
 							attrDet.getAttributeId());
 					String datapodName = ((Datapod) commonServiceImpl.getLatestByUuid(attrDet.getRef().getUuid(),
@@ -690,10 +696,21 @@ public class VizpodParser {
 						.append(dataSet.getAttributeName(Integer.parseInt(attributeSource.getAttrSourceId())));
 
 			} else {
-				selectBuilder.append(datasetName).append(".")
-						.append(dataSet.getAttributeName(Integer.parseInt(attributeSource.getAttrSourceId())))
-						.append(" AS ")
-						.append(dataSet.getAttributeName(Integer.parseInt(attributeSource.getAttrSourceId())));
+				if (attributeSource.getSourceAttr().getRef().getType().equals(MetaType.formula)) {
+					Formula formula = (Formula) commonServiceImpl.getLatestByUuid(
+							attributeSource.getSourceAttr().getRef().getUuid(), MetaType.formula.toString());
+					Datasource vizDS = commonServiceImpl.getDatasourceByObject(vizpod);
+					String FormulaSql = formulaOperator.generateSql(formula, null, null, null, vizDS);
+
+					selectBuilder.append(formula.getName());
+
+				} else {
+
+					selectBuilder.append(datasetName).append(".")
+							.append(dataSet.getAttributeName(Integer.parseInt(attributeSource.getAttrSourceId())))
+							.append(" AS ")
+							.append(dataSet.getAttributeName(Integer.parseInt(attributeSource.getAttrSourceId())));
+				}
 			}
         if (i < dataSet.getAttributeInfo().size() - 1) {
 			selectBuilder.append(", ");
@@ -715,8 +732,15 @@ public class VizpodParser {
 			if (attributeSource.getFunction() != null) {
 				isAnyFunction = true;
 			} else {
+				if (attributeSource.getSourceAttr().getRef().getType().equals(MetaType.formula)) {
+					Formula formula = (Formula) commonServiceImpl.getLatestByUuid(
+							attributeSource.getSourceAttr().getRef().getUuid(), MetaType.formula.toString());
+					groupByBuilder.append(formula.getName() ).append(", ");
+
+				} else {
 				groupByBuilder.append(dataSet.getAttributeName(Integer.parseInt(attributeSource.getAttrSourceId())))
 						.append(", ");
+				}
 			}
 		}
 		if (isAnyFunction) {

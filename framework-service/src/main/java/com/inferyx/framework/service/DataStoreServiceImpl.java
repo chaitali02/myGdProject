@@ -1732,34 +1732,33 @@ public class DataStoreServiceImpl {
 	}
 	
 	public DataStore findLatestDataStoreByMeta(String uuid, String version) {
-		{
 
-			Aggregation dataStoreAggr;
-			AggregationResults<DataStore> datastoreResults;
-			DataStore ds = null;
+		Aggregation dataStoreAggr;
+		AggregationResults<DataStore> datastoreResults;
+		DataStore ds = null;
 
-			// check for uuid,version
+		// check for uuid,version
+		dataStoreAggr = newAggregation(match(Criteria.where("metaId.ref.uuid").is(uuid)),
+				match(Criteria.where("metaId.ref.version").is(version)));
+		datastoreResults = mongoTemplate.aggregate(dataStoreAggr, "datastore", DataStore.class);
+
+		// if uuid,version not matched then check for uuid with latest version
+		if (datastoreResults.getMappedResults() != null) {
 			dataStoreAggr = newAggregation(match(Criteria.where("metaId.ref.uuid").is(uuid)),
-					match(Criteria.where("metaId.ref.version").is(version)));
+					group("uuid").max("version").as("version"));
+
 			datastoreResults = mongoTemplate.aggregate(dataStoreAggr, "datastore", DataStore.class);
-
-			// if uuid,version not matched then check for uuid with latest version
-			if (datastoreResults.getMappedResults() != null) {
-				dataStoreAggr = newAggregation(match(Criteria.where("metaId.ref.uuid").is(uuid)),
-						group("uuid").max("version").as("version"));
-
-				datastoreResults = mongoTemplate.aggregate(dataStoreAggr, "datastore", DataStore.class);
-			}
-
-			List<DataStore> datastoreList = datastoreResults.getMappedResults();
-			try {
-				ds = (DataStore) commonServiceImpl.getOneByUuidAndVersion(datastoreList.get(0).getId(),
-						datastoreList.get(0).getVersion(), MetaType.datastore.toString());
-			} catch (JsonProcessingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return ds;
 		}
+
+		List<DataStore> datastoreList = datastoreResults.getMappedResults();
+		try {
+			ds = (DataStore) commonServiceImpl.getOneByUuidAndVersion(datastoreList.get(0).getId(),
+					datastoreList.get(0).getVersion(), MetaType.datastore.toString());
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return ds;
+
 	}
 }
