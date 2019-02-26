@@ -29,13 +29,11 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.domain.EMailInfo;
 import com.inferyx.framework.domain.Notification;
-import com.inferyx.framework.domain.Report;
+import com.inferyx.framework.domain.SenderInfo;
 
 /**
  * @author Ganesh
@@ -45,15 +43,12 @@ import com.inferyx.framework.domain.Report;
 public class NotificationServiceImpl {
 
 	static final Logger logger = Logger.getLogger(NotificationServiceImpl.class);
-	
-	@Autowired
-	private CommonServiceImpl<?> commonServiceImpl;
-	
-	public boolean sendEMail(Notification notification) {
+		
+	public boolean sendNotification(Notification notification) {
 		logger.info("inside sendEMail method.");
 		
-		//expecting eMailInfo property is already set
-		EMailInfo eMailInfo = notification.geteMailInfo();
+		//expecting senderInfo property is already set
+		SenderInfo senderInfo = notification.getSenderInfo();
 		
 		Properties senderProps = new Properties();
 		senderProps.put("mail.smtp.host", notification.getHost());
@@ -72,10 +67,10 @@ public class NotificationServiceImpl {
 			message.setFrom(new InternetAddress(notification.getFrom())); 
 			
 			//setting TO e-mail id's
-			if (eMailInfo.getEmailTo() != null && !eMailInfo.getEmailTo().isEmpty()) {
-				InternetAddress[] toAddress = new InternetAddress[eMailInfo.getEmailTo().size()];
-				for (int i = 0; i < eMailInfo.getEmailTo().size(); i++) {
-					toAddress[i] = new InternetAddress(eMailInfo.getEmailTo().get(i));
+			if (senderInfo.getEmailTo() != null && !senderInfo.getEmailTo().isEmpty()) {
+				InternetAddress[] toAddress = new InternetAddress[senderInfo.getEmailTo().size()];
+				for (int i = 0; i < senderInfo.getEmailTo().size(); i++) {
+					toAddress[i] = new InternetAddress(senderInfo.getEmailTo().get(i));
 				}
 				message.addRecipients(Message.RecipientType.TO, toAddress);
 			} else {
@@ -83,19 +78,19 @@ public class NotificationServiceImpl {
 			}
 			
 			//setting BCC e-mail id's
-			if (eMailInfo.getEmailBCC() != null && !eMailInfo.getEmailBCC().isEmpty()) {
-				InternetAddress[] bccAddress = new InternetAddress[eMailInfo.getEmailBCC().size()];
-				for (int i = 0; i < eMailInfo.getEmailBCC().size(); i++) {
-					bccAddress[i] = new InternetAddress(eMailInfo.getEmailBCC().get(i));
+			if (senderInfo.getEmailBCC() != null && !senderInfo.getEmailBCC().isEmpty()) {
+				InternetAddress[] bccAddress = new InternetAddress[senderInfo.getEmailBCC().size()];
+				for (int i = 0; i < senderInfo.getEmailBCC().size(); i++) {
+					bccAddress[i] = new InternetAddress(senderInfo.getEmailBCC().get(i));
 				}
 				message.addRecipients(Message.RecipientType.BCC, bccAddress);
 			}
 
 			//setting CC e-mail id's
-			if (eMailInfo.getEmailCC() != null && !eMailInfo.getEmailCC().isEmpty()) {
-				InternetAddress[] ccAddress = new InternetAddress[eMailInfo.getEmailCC().size()];
-				for (int i = 0; i < eMailInfo.getEmailCC().size(); i++) {
-					ccAddress[i] = new InternetAddress(eMailInfo.getEmailCC().get(i));
+			if (senderInfo.getEmailCC() != null && !senderInfo.getEmailCC().isEmpty()) {
+				InternetAddress[] ccAddress = new InternetAddress[senderInfo.getEmailCC().size()];
+				for (int i = 0; i < senderInfo.getEmailCC().size(); i++) {
+					ccAddress[i] = new InternetAddress(senderInfo.getEmailCC().get(i));
 				}
 				message.addRecipients(Message.RecipientType.CC, ccAddress);
 			}
@@ -111,8 +106,8 @@ public class NotificationServiceImpl {
 	        multipart.addBodyPart(messageBodyPart);
 
 	        // Part two is attachment
-	        if(eMailInfo.getEmailAttachment() != null && !eMailInfo.getEmailAttachment().isEmpty()) {
-	        	for(String filePath : eMailInfo.getEmailAttachment()) {
+	        if(senderInfo.getEmailAttachment() != null && !senderInfo.getEmailAttachment().isEmpty()) {
+	        	for(String filePath : senderInfo.getEmailAttachment()) {
 			        BodyPart attachmentBodyPart = new MimeBodyPart();
 			        DataSource source = new FileDataSource(filePath);
 			        attachmentBodyPart.setDataHandler(new DataHandler(source));
@@ -127,39 +122,32 @@ public class NotificationServiceImpl {
 		    //send the message 
 	        Transport.send(message);  
 			
-		    logger.info("e-Mail sent successfully to "+eMailInfo.getEmailTo()+" ....");  
+		    logger.info("e-Mail sent successfully to "+senderInfo.getEmailTo()+" ....");  
 		} catch (MessagingException e) {
 			e.printStackTrace();
-			throw new RuntimeException("Failed !\n"+"Can not send e-Mail to "+eMailInfo.getEmailTo());
+			throw new RuntimeException("Failed !\n"+"Can not send e-Mail to "+senderInfo.getEmailTo());
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RuntimeException("Failed !\n"+"Can not send e-Mail to "+eMailInfo.getEmailTo());
+			throw new RuntimeException("Failed !\n"+"Can not send e-Mail to "+senderInfo.getEmailTo());
 		}
 		
 		return true;
 	}
 	
-	public boolean prepareAndSenEMail(String uuid, String version, String type) {
+	public boolean prepareAndSendNotification(Notification notification) {
 		logger.info("inside prepareAndSenEMail method.");
 		try {
-			Object object = (Report) commonServiceImpl.getOneByUuidAndVersion(uuid, version, type, "N");
-			
-			if(object != null) {				
-				Notification notification = (Notification) object.getClass().getMethod("getNotification").invoke(object);
-				if(notification != null) {
-					notification.setFrom(Helper.getPropertyValue("framework.email.from"));
-					notification.setPassword(Helper.getPropertyValue("frameowrk.email.password"));
-					notification.setHost(Helper.getPropertyValue("framework.email.host"));
-					notification.setPort(Helper.getPropertyValue("framework.email.port"));
-					notification.setSubect(Helper.getPropertyValue("framework.email.subject"));
-					notification.setMessage(Helper.getPropertyValue("framework.email.message"));
-					return sendEMail(notification);
-				} else {
-					throw new RuntimeException("No credentials avilable to send mail.");
-				}
+			if(notification != null && notification.getSenderInfo() != null) {
+				notification.setFrom(Helper.getPropertyValue("framework.email.from"));
+				notification.setPassword(Helper.getPropertyValue("frameowrk.email.password"));
+				notification.setHost(Helper.getPropertyValue("framework.email.host"));
+				notification.setPort(Helper.getPropertyValue("framework.email.port"));
+				notification.setSubect(Helper.getPropertyValue("framework.email.subject"));
+//				notification.setMessage(Helper.getPropertyValue("framework.email.message"));
+				return sendNotification(notification);
 			} else {
 				throw new RuntimeException("No credentials avilable to send mail.");
-			}
+			}			
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;

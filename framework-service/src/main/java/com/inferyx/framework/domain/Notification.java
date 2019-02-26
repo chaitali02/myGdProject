@@ -23,7 +23,7 @@ public class Notification {
 	private String password;
 	private String host;
 	private String port;
-	private EMailInfo eMailInfo;
+	private SenderInfo senderInfo;
 	private Map<String, Object> otherFromDetails;
 	
 	/**
@@ -127,16 +127,16 @@ public class Notification {
 	 *
 	 * @return the eMailInfo
 	 */
-	public EMailInfo geteMailInfo() {
-		return eMailInfo;
+	public SenderInfo getSenderInfo() {
+		return senderInfo;
 	}
 	/**
 	 * @Ganesh
 	 *
-	 * @param eMailInfo the eMailInfo to set
+	 * @param senderInfo the senderInfo to set
 	 */
-	public void seteMailInfo(EMailInfo eMailInfo) {
-		this.eMailInfo = eMailInfo;
+	public void setSenderInfo(SenderInfo senderInfo) {
+		this.senderInfo = senderInfo;
 	}
 	/**
 	 * @Ganesh

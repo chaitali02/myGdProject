@@ -27,23 +27,23 @@ public class Report extends BaseEntity {
 	private MetaIdentifierHolder dependsOn; 
 	private List<AttributeSource> attributeInfo = new ArrayList<AttributeSource>();
 	private String saveOnRefresh = "N";
-	private Notification notification;
+	private SenderInfo senderInfo;
 	
 	/**
 	 * @Ganesh
 	 *
-	 * @return the notification
+	 * @return the senderInfo
 	 */
-	public Notification getNotification() {
-		return notification;
+	public SenderInfo getSenderInfo() {
+		return senderInfo;
 	}
 	/**
 	 * @Ganesh
 	 *
-	 * @param notification the notification to set
+	 * @param senderInfo the senderInfo to set
 	 */
-	public void setNotification(Notification notification) {
-		this.notification = notification;
+	public void setSenderInfo(SenderInfo senderInfo) {
+		this.senderInfo = senderInfo;
 	}
 	/**
 	 * @Ganesh

@@ -16,7 +16,7 @@ import java.util.List;
  * @author Ganesh
  *
  */
-public class EMailInfo {
+public class SenderInfo {
 	private List<String> emailTo;
 	private List<String> emailBCC;
 	private List<String> emailCC;

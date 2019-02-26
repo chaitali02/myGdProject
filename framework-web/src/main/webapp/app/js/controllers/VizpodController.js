@@ -160,7 +160,7 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 
 	$scope.applyFunctionOnValue=function(index,fun){
 		$scope.myform.$dirty = true;
-		if(fun !="None"){
+		if(fun !="NONE"){
 			$scope.valuelist[index].dname=fun+"("+$scope.valuelist[index].name+"."+$scope.valuelist[index].attributeName+")";
 			$scope.valuelist[index].function=fun;
 			$scope.valuelist[index].popoverIsOpen=false;

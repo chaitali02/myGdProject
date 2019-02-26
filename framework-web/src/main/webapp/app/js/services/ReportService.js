@@ -187,7 +187,7 @@ DatavisualizationModule.factory('ReportFactory', function ($http, $location) {
 	return factory;
 });
 
-DatavisualizationModule.service('ReportSerivce', function ($http, $q, sortFactory, ReportFactory) {
+DatavisualizationModule.service('ReportSerivce', function ($q, sortFactory, ReportFactory, CF_GRID) {
 	this.getReportByReportExec = function (uuid, type) {
 		var deferred = $q.defer();
 		ReportFactory.findReportByReportExec(uuid,type).then(function (response) { onSuccess(response.data) });
@@ -506,7 +506,11 @@ DatavisualizationModule.service('ReportSerivce', function ($http, $q, sortFactor
 			var sourceAttributesArray = [];
 			for (var n = 0; n < response.attributeInfo.length; n++) {
 				var attributeInfo = {};
-				attributeInfo.name = response.attributeInfo[n].attrSourceName
+				attributeInfo.name = response.attributeInfo[n].attrSourceName;
+				if(response.attributeInfo.length >CF_GRID.framework_autopopulate_grid)
+					attributeInfo.isOnDropDown=false;
+				else
+					attributeInfo.isOnDropDown=true;
 				if (response.attributeInfo[n].sourceAttr.ref.type == "simple") {
 					var obj = {}
 					obj.text = "string"
@@ -527,7 +531,7 @@ DatavisualizationModule.service('ReportSerivce', function ($http, $q, sortFactor
 					sourcedatapod.type = response.attributeInfo[n].sourceAttr.ref.type;
 					sourcedatapod.attributeId = response.attributeInfo[n].sourceAttr.attrId;
 					sourcedatapod.attrType = response.attributeInfo[n].sourceAttr.attrType
-					sourcedatapod.name = "";
+					sourcedatapod.name = response.attributeInfo[n].sourceAttr.attrName;
 					var obj = {}
 					obj.text = "datapod"
 					obj.caption = "attribute"
@@ -546,7 +550,7 @@ DatavisualizationModule.service('ReportSerivce', function ($http, $q, sortFactor
 					sourceparamlist.type = response.attributeInfo[n].sourceAttr.ref.type;
 					sourceparamlist.attributeId = response.attributeInfo[n].sourceAttr.attrId;
 					sourceparamlist.attrType = response.attributeInfo[n].sourceAttr.attrType
-					sourceparamlist.name = "";
+					sourceparamlist.name = response.attributeInfo[n].sourceAttr.ref.name;
 					var obj = {}
 					obj.text = "paramlist"
 					obj.caption = "paramlist"
