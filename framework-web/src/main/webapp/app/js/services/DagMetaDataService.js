@@ -2009,8 +2009,27 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       state :'reportdetail',
       childMenu:[],
       allowInChildMenu : true,
-
     },
+    'report2':{
+      name : 'report',
+      caption:'Report',
+      execType:'reportExec',
+      metaType:'report',
+      color : '#fff8dc',
+      iconPath : 'assets/layouts/layout/img/report.svg',
+      iconPathInactive:'assets/layouts/layout/img/reportinactive.svg',
+      parentIconCaption:'Data Visualization',
+      childIconCaption:'Report',
+      allowInMenu : false,
+      listState : 'reportlist2',
+      joblistState : '',
+      detailState :'reportdetail2',
+      resultState:'resultxecresult',
+      state :'reportdetail',
+      childMenu:[],
+      allowInChildMenu : true,
+    },
+    
     'dashboardexec':{
       name : 'dashboard',
       caption:'Dashboard Exec',

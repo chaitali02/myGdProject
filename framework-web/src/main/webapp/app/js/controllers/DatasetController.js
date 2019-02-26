@@ -1116,7 +1116,6 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			attributeinfo.isSourceAtributeParamList = false;
 			attributeinfo.isSourceName=true;
 			$scope.attributeTableArray.push(attributeinfo);
-			var scope=$scope;
 			setTimeout(function(index){
 				var result=$scope.onChangeSourceName1(index,dupArray);
 				if(result.length >0 ){
