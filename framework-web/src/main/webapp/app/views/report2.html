@@ -504,6 +504,7 @@
                                                                 </td>
                                                                 <td>
                                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                        
                                                                         <select ng-change="selectrhsType(tabledata.rhstype.text,$index)"
                                                                             ng-model="tabledata.rhstype" ng-options="x as x.caption disable when x.disabled for x in tabledata.rhsTypes | orderBy : 'caption' track by x.text+x.caption"
                                                                             ng-disabled=" {{mode}}" class="form-control">
@@ -614,7 +615,17 @@
                                                                             </select>
                                                                         </span>
                                                                     </div>
-
+                                                                    <div ng-if="tabledata.isrhsDataset">
+                                                                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                            <div class="col-md-11" style="padding: 0px;">
+                                                                            <input type="text" ng-disabled="true" class="form-control" ng-model="tabledata.rhsdataset.name" title="{{tabledata.rhsdataset.dname}}"
+                                                                                required disable-validation-message="">
+                                                                            </div>
+                                                                            <div class="col-md-1" style="padding:7px 0px 0px 5px;">
+                                                                            <span class="fa fa-search" tooltip-placement="left" uib-tooltip="Search" ng-click="SearchAttribute($index,tabledata.rhstype.text,'rhsdataset')"></span>
+                                                                            </div>
+                                                                        </span>
+                                                                    </div>
                                                                     <div ng-if="tabledata.isrhsFunction">
                                                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                             <select select2 class="form-control" name="rhsformula_{{$index}}"
