@@ -27,7 +27,6 @@ import java.util.concurrent.FutureTask;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.spark.sql.SaveMode;
@@ -55,10 +54,10 @@ import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.Notification;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.ReportExec;
-import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
@@ -87,6 +86,8 @@ public class ReportServiceImpl extends RuleTemplate {
 	private HDFSInfo hdfsInfo;
 	@Autowired
 	private SessionHelper sessionHelper;
+	@Autowired
+	private NotificationServiceImpl notificationServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(ReportServiceImpl.class);
 	
@@ -180,12 +181,12 @@ public class ReportServiceImpl extends RuleTemplate {
 	}
 	
 	public ReportExec execute(String execUuid, String execVersion, ExecParams execParams, RunMode runMode) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException, IOException {
-		ReportExec reportExec = null;
-		try {
-			reportExec = (ReportExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.reportExec.toString());
-			MetaIdentifier dependsOnMI = reportExec.getDependsOn().getRef();
-			Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(), dependsOnMI.getVersion(), dependsOnMI.getType().toString());
+		boolean isSuccessful = true;
+		ReportExec reportExec =  (ReportExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.reportExec.toString());
+		MetaIdentifier dependsOnMI = reportExec.getDependsOn().getRef();
+		Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(), dependsOnMI.getVersion(), dependsOnMI.getType().toString());
 
+		try {			
 			String appUuid = commonServiceImpl.getApp().getUuid();
 			
 			RunReportServiceImpl runReportServiceImpl = new RunReportServiceImpl();
@@ -202,6 +203,7 @@ public class ReportServiceImpl extends RuleTemplate {
 			runReportServiceImpl.call();
 		} catch (Exception e) { 
 			e.printStackTrace();
+			isSuccessful = false;
 			// Set status to Failed
 			try {
 				reportExec = (ReportExec) commonServiceImpl.setMetaStatus(reportExec, MetaType.reportExec, Status.Stage.Failed);
@@ -218,7 +220,32 @@ public class ReportServiceImpl extends RuleTemplate {
 			dependsOn.setRef(new MetaIdentifier(MetaType.reportExec, reportExec.getUuid(), reportExec.getVersion()));
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Report execution failed.", dependsOn);
 			throw new RuntimeException((message != null) ? message : "Report execution failed.");
-		}		
+		} finally {
+			if(report.getSenderInfo() != null) {
+				Notification notification = new Notification();
+				
+				if(isSuccessful && report.getSenderInfo().getNotifOnSuccess().equalsIgnoreCase("Y")) {
+					logger.info("sending success notification...");
+					notification.setMessage("SUCCESS: "+MetaType.report+" \""+report.getName()+"\" executed successfully." );
+//					try {
+//						download(reportExec.getUuid(), reportExec.getVersion(), "excel", 0, 200, null, 200, null, null,
+//								null, runMode);
+//					} catch (Exception e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//						throw new RuntimeException(e);
+//					}
+
+					notification.setSenderInfo(report.getSenderInfo());
+					notificationServiceImpl.prepareAndSendNotification(notification);
+				} else if(!isSuccessful && report.getSenderInfo().getNotifyOnFailure().equalsIgnoreCase("Y")) {
+					logger.info("sending fail notification...");
+					notification.setSenderInfo(report.getSenderInfo());
+					notification.setMessage("FAILED: "+MetaType.report+" \""+report.getName()+"\" execution failed." );
+					notificationServiceImpl.prepareAndSendNotification(notification);
+				}
+			}
+		}	
 		
 		return reportExec;
 	}
@@ -307,37 +334,39 @@ public class ReportServiceImpl extends RuleTemplate {
 		}
 		
 		List<Map<String, Object>> data = datastoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, rowLimit, null, null);		
+		Workbook workbook = workbookUtil.getWorkbookForReport(data, reportExec);
 
-	    DownloadExec downloadExec = new DownloadExec();
+		DownloadExec downloadExec = new DownloadExec();
 		
 	    String downloadPath = Helper.getPropertyValue("framework.file.download.path");
 	    String filename = downloadExec.getUuid() + "_" + downloadExec.getVersion() + ".xls";
 	    String fileLocation = downloadPath + "/" + filename;
-	    
+
+		FileOutputStream fileOut = new FileOutputStream(fileLocation);
+		workbook.write(fileOut);		
+		fileOut.close();
+		
 		downloadExec.setBaseEntity();
 		downloadExec.setLocation(fileLocation);
 		downloadExec.setDependsOn(datastore.getMetaId());
-		try {
-			FileOutputStream fileOut = null;
-			Workbook workbook = workbookUtil.getWorkbookForReport(data, reportExec);
-			response.setContentType("application/pdf");
-			response.setHeader("Content-disposition", "attachment");
-			response.setHeader("filename", "" + reportExecUuid+"_"+reportExecUuid + ".xls");
-			ServletOutputStream os = response.getOutputStream();
-			workbook.write(os);
+		if(response != null) {
+			try {
+				response.setContentType("application/pdf");
+				response.setHeader("Content-disposition", "attachment");
+				response.setHeader("filename", "" + reportExecUuid+"_"+reportExecUuid + ".xls");
+				ServletOutputStream os = response.getOutputStream();
+				workbook.write(os);
 
-			fileOut = new FileOutputStream(fileLocation);
-			workbook.write(fileOut);
-			workbook.write(os);
-			commonServiceImpl.save(MetaType.downloadExec.toString(), downloadExec);			
-			fileOut.close();
+				commonServiceImpl.save(MetaType.downloadExec.toString(), downloadExec);	
 
-		} catch (IOException e) {
-			e.printStackTrace();
-			logger.error("Can not download file.");
-			response.setStatus(300);
-        	throw new FileNotFoundException("Can not download file.");
+			} catch (IOException e) {
+				e.printStackTrace();
+				logger.error("Can not download file.");
+				response.setStatus(300);
+	        	throw new FileNotFoundException("Can not download file.");
+			}
 		}
+		
 		return response;
 	}
 	
