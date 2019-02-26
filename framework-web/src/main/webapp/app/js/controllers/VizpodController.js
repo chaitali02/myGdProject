@@ -127,7 +127,7 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 	$scope.getLovByType = function () {
 		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
 		var onSuccessGetLovByType = function (response) {
-			console.log(response)
+			//console.log(response)
 			$scope.lobTag = response[0].value
 		}
 	}
@@ -268,13 +268,25 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 		var data = ui.draggable.scope().item
 		var type = ui.draggable.scope().item.type
 		var isEnable = ($scope.mode == 'true');
-		if ($scope.indexOfByMultiplaValue($scope.grouplist, data) == -1 && $scope.indexOfByMultiplaValue($scope.keylist, data) == -1 && isEnable == false && type == "datapod" || type == "dataset") {
-			deferred.resolve();
+		if (type == "formula") {
+			if ($scope.indexOfBySingleValue($scope.keylist, data) == -1 && isEnable == false) {
+				deferred.resolve();
+			}
+			else {
+				deferred.reject();
+			}
 		}
 		else {
-			deferred.reject();
+			if ($scope.indexOfByMultiplaValue($scope.grouplist, data) == -1 && $scope.indexOfByMultiplaValue($scope.keylist, data) == -1 && isEnable == false && type == "datapod" || type == "dataset") {
+				deferred.resolve();
+			}
+			else {
+				deferred.reject();
+			}
+			
 		}
 		return deferred.promise;
+		
 	}//End beforeDropKey
 
 	$scope.onDropKey = function (event, ui, index) {
@@ -706,7 +718,9 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 			ref.uuid = $scope.keylist[i].uuid
 			ref.type = $scope.keylist[i].type;
 			keyjson.ref = ref;
-			keyjson.attributeId = $scope.keylist[i].attributeId;
+			if($scope.keylist[i].type !='formula'){
+				keyjson.attributeId = $scope.keylist[i].attributeId;
+			}
 			keyarray[i] = keyjson
 		}
 		vizpodjson.keys = keyarray;

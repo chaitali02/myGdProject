@@ -337,9 +337,9 @@
 													</label>
 													<ul class="tagitdd" ng-class="({{mode}} ==true)?'disabled-ul':'default'" style="height:150px;" data-drop="true" ng-model='keylist'
 													 ng-disabled="{{mode}}" jqyoui-droppable="{multiple:true,'onDrop':'onDropKey($index)','onOver':'onOverCallBackKey()','beforeDrop':'beforeDropKey'}">
-														<li ng-disabled="{{mode}}" title="{{item.name}}.{{item.attributeName}}" class="tagit-choice-dd tagit-choice-editable-dd"
+														<li ng-disabled="{{mode}}" title="{{item.dname}}" class="tagit-choice-dd tagit-choice-editable-dd"
 														 ng-repeat="item in keylist" style="background-color:#99ddff" required="">
-															<span class="tagit-label">{{item.attributeName}}</span>
+															<span class="tagit-label">{{item.dname}}</span>
 															<a class="tagit-close-dd">
 																<span class="text-icon" ng-click="removekey($index)">×</span>
 																<span class="ui-icon ui-icon-close"></span>
