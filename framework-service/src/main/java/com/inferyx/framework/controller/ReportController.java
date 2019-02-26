@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.ReportExec;
 import com.inferyx.framework.enums.RunMode;
@@ -101,6 +102,6 @@ public class ReportController {
 			@RequestParam(value = "version", required = false) String reportVersion,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
-		return notificationServiceImpl.prepareAndSenEMail(reportUuid, reportVersion);
+		return notificationServiceImpl.prepareAndSenEMail(reportUuid, reportVersion, MetaType.report.toString());
 	}
 }
