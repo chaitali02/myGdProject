@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.inferyx.framework.domain;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,109 +17,30 @@ import java.util.Map;
  *
  */
 public class Notification {
-	List<String> emailTo;
-	List<String> emailBCC;
-	List<String> emailCC;
-	String emailSubect;
-	List<String> emailAttachment;
-	Map<String, Object> emailFromDetails;
-	String message;
+	private String subect;
+	private String message;
+	private String from;
+	private String password;
+	private String host;
+	private String port;
+	private EMailInfo eMailInfo;
+	private Map<String, Object> otherFromDetails;
 	
 	/**
 	 * @Ganesh
 	 *
-	 * @return the emailTo
+	 * @return the subect
 	 */
-	public List<String> getEmailTo() {
-		return emailTo;
+	public String getSubect() {
+		return subect;
 	}
 	/**
 	 * @Ganesh
 	 *
-	 * @param emailTo the emailTo to set
+	 * @param subect the subect to set
 	 */
-	public void setEmailTo(List<String> emailTo) {
-		this.emailTo = emailTo;
-	}
-	/**
-	 * @Ganesh
-	 *
-	 * @return the emailBCC
-	 */
-	public List<String> getEmailBCC() {
-		return emailBCC;
-	}
-	/**
-	 * @Ganesh
-	 *
-	 * @param emailBCC the emailBCC to set
-	 */
-	public void setEmailBCC(List<String> emailBCC) {
-		this.emailBCC = emailBCC;
-	}
-	/**
-	 * @Ganesh
-	 *
-	 * @return the emailCC
-	 */
-	public List<String> getEmailCC() {
-		return emailCC;
-	}
-	/**
-	 * @Ganesh
-	 *
-	 * @param emailCC the emailCC to set
-	 */
-	public void setEmailCC(List<String> emailCC) {
-		this.emailCC = emailCC;
-	}
-	/**
-	 * @Ganesh
-	 *
-	 * @return the emailSubect
-	 */
-	public String getEmailSubect() {
-		return emailSubect;
-	}
-	/**
-	 * @Ganesh
-	 *
-	 * @param emailSubect the emailSubect to set
-	 */
-	public void setEmailSubect(String emailSubect) {
-		this.emailSubect = emailSubect;
-	}
-	/**
-	 * @Ganesh
-	 *
-	 * @return the emailAttachment
-	 */
-	public List<String> getEmailAttachment() {
-		return emailAttachment;
-	}
-	/**
-	 * @Ganesh
-	 *
-	 * @param emailAttachment the emailAttachment to set
-	 */
-	public void setEmailAttachment(List<String> emailAttachment) {
-		this.emailAttachment = emailAttachment;
-	}
-	/**
-	 * @Ganesh
-	 *
-	 * @return the emailFromDetails
-	 */
-	public Map<String, Object> getEmailFromDetails() {
-		return emailFromDetails;
-	}
-	/**
-	 * @Ganesh
-	 *
-	 * @param emailFromDetails the emailFromDetails to set
-	 */
-	public void setEmailFromDetails(Map<String, Object> emailFromDetails) {
-		this.emailFromDetails = emailFromDetails;
+	public void setSubect(String subect) {
+		this.subect = subect;
 	}
 	/**
 	 * @Ganesh
@@ -138,15 +58,100 @@ public class Notification {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
+	/**
+	 * @Ganesh
+	 *
+	 * @return the from
 	 */
-	@Override
-	public String toString() {
-		return "Notification [emailTo=" + emailTo + ", emailBCC=" + emailBCC + ", emailCC=" + emailCC + ", emailSubect="
-				+ emailSubect + ", emailAttachment=" + emailAttachment + ", emailFromDetails=" + emailFromDetails
-				+ ", message=" + message + "]";
+	public String getFrom() {
+		return from;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param from the from to set
+	 */
+	public void setFrom(String from) {
+		this.from = from;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @return the password
+	 */
+	public String getPassword() {
+		return password;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param password the password to set
+	 */
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @return the host
+	 */
+	public String getHost() {
+		return host;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param host the host to set
+	 */
+	public void setHost(String host) {
+		this.host = host;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @return the port
+	 */
+	public String getPort() {
+		return port;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param port the port to set
+	 */
+	public void setPort(String port) {
+		this.port = port;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @return the eMailInfo
+	 */
+	public EMailInfo geteMailInfo() {
+		return eMailInfo;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param eMailInfo the eMailInfo to set
+	 */
+	public void seteMailInfo(EMailInfo eMailInfo) {
+		this.eMailInfo = eMailInfo;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @return the otherFromDetails
+	 */
+	public Map<String, Object> getOtherFromDetails() {
+		return otherFromDetails;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param otherFromDetails the otherFromDetails to set
+	 */
+	public void setOtherFromDetails(Map<String, Object> otherFromDetails) {
+		this.otherFromDetails = otherFromDetails;
 	}	
-	
-	
 }

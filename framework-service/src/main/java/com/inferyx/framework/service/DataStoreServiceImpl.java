@@ -15,6 +15,7 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.limi
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -686,6 +687,10 @@ public class DataStoreServiceImpl {
 	public List<Map<String, Object>> getDatapodSample(String datapodUUID, String datapodVersion, int rows, RunMode runMode) throws Exception {
 		setRunMode(runMode);
 		DataStore ds = findDataStoreByMeta(datapodUUID, datapodVersion);
+		if(ds==null)
+		{
+			ds = findLatestDataStoreByMeta(datapodUUID, datapodVersion);
+		}
 		if (ds == null) {
 			logger.error("Datastore is not available for this datapod");			
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
@@ -1724,5 +1729,37 @@ public class DataStoreServiceImpl {
 	
 		return response;
 
+	}
+	
+	public DataStore findLatestDataStoreByMeta(String uuid, String version) {
+		{
+
+			Aggregation dataStoreAggr;
+			AggregationResults<DataStore> datastoreResults;
+			DataStore ds = null;
+
+			// check for uuid,version
+			dataStoreAggr = newAggregation(match(Criteria.where("metaId.ref.uuid").is(uuid)),
+					match(Criteria.where("metaId.ref.version").is(version)));
+			datastoreResults = mongoTemplate.aggregate(dataStoreAggr, "datastore", DataStore.class);
+
+			// if uuid,version not matched then check for uuid with latest version
+			if (datastoreResults.getMappedResults() != null) {
+				dataStoreAggr = newAggregation(match(Criteria.where("metaId.ref.uuid").is(uuid)),
+						group("uuid").max("version").as("version"));
+
+				datastoreResults = mongoTemplate.aggregate(dataStoreAggr, "datastore", DataStore.class);
+			}
+
+			List<DataStore> datastoreList = datastoreResults.getMappedResults();
+			try {
+				ds = (DataStore) commonServiceImpl.getOneByUuidAndVersion(datastoreList.get(0).getId(),
+						datastoreList.get(0).getVersion(), MetaType.datastore.toString());
+			} catch (JsonProcessingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return ds;
+		}
 	}
 }

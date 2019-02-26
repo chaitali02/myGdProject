@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.activation.DataHandler;
@@ -35,7 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.EMailInfo;
 import com.inferyx.framework.domain.Notification;
 import com.inferyx.framework.domain.Report;
 
@@ -54,41 +52,30 @@ public class NotificationServiceImpl {
 	public boolean sendEMail(Notification notification) {
 		logger.info("inside sendEMail method.");
 		
-		Map<String, Object> emailFromDetails = notification.getEmailFromDetails();
+		//expecting eMailInfo property is already set
+		EMailInfo eMailInfo = notification.geteMailInfo();
 		
 		Properties senderProps = new Properties();
-		senderProps.put("mail.smtp.host", emailFromDetails.get("host").toString());
-		senderProps.put("mail.smtp.port", emailFromDetails.get("port").toString());  
-		senderProps.put("mail.smtp.auth", "true");
-//		senderProps.put("mail.smtp.connectiontimeout", 5000); 
-//		senderProps.put("mail.smtp.socketFactory.port", emailFromDetails.get("port").toString());   
-//		senderProps.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");  
-//		senderProps.put("mail.smtp.auth.mechanisms", "PLAIN");
-	
-	//test properties for GMail
-//		senderProps.put("mail.smtp.host", "smtp.gmail.com");    
-//        senderProps.put("mail.smtp.socketFactory.port", "465");    
-//        senderProps.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");    
-//        senderProps.put("mail.smtp.auth", "true");    
-//        senderProps.put("mail.smtp.port", "465");  
+		senderProps.put("mail.smtp.host", notification.getHost());
+		senderProps.put("mail.smtp.port", notification.getPort());  
+		senderProps.put("mail.smtp.auth", "true"); 
+		senderProps.put("mail.smtp.starttls.enable", "true");
 		
 		Session session = Session.getDefaultInstance(senderProps, new Authenticator() {
 			 protected PasswordAuthentication getPasswordAuthentication() {  
-				 return new PasswordAuthentication(emailFromDetails.get("user").toString(), emailFromDetails.get("password").toString());  
+				 return new PasswordAuthentication(notification.getFrom(), notification.getPassword());  
 			} 
 		});
 		
 		try {
-			
-
 			MimeMessage message = new MimeMessage(session);  
-			message.setFrom(new InternetAddress(emailFromDetails.get("user").toString())); 
+			message.setFrom(new InternetAddress(notification.getFrom())); 
 			
 			//setting TO e-mail id's
-			if (notification.getEmailTo() != null && !notification.getEmailTo().isEmpty()) {
-				InternetAddress[] toAddress = new InternetAddress[notification.getEmailTo().size()];
-				for (int i = 0; i < notification.getEmailTo().size(); i++) {
-					toAddress[i] = new InternetAddress(notification.getEmailTo().get(i));
+			if (eMailInfo.getEmailTo() != null && !eMailInfo.getEmailTo().isEmpty()) {
+				InternetAddress[] toAddress = new InternetAddress[eMailInfo.getEmailTo().size()];
+				for (int i = 0; i < eMailInfo.getEmailTo().size(); i++) {
+					toAddress[i] = new InternetAddress(eMailInfo.getEmailTo().get(i));
 				}
 				message.addRecipients(Message.RecipientType.TO, toAddress);
 			} else {
@@ -96,25 +83,24 @@ public class NotificationServiceImpl {
 			}
 			
 			//setting BCC e-mail id's
-			if (notification.getEmailBCC() != null && !notification.getEmailBCC().isEmpty()) {
-				InternetAddress[] bccAddress = new InternetAddress[notification.getEmailBCC().size()];
-				for (int i = 0; i < notification.getEmailBCC().size(); i++) {
-					bccAddress[i] = new InternetAddress(notification.getEmailBCC().get(i));
+			if (eMailInfo.getEmailBCC() != null && !eMailInfo.getEmailBCC().isEmpty()) {
+				InternetAddress[] bccAddress = new InternetAddress[eMailInfo.getEmailBCC().size()];
+				for (int i = 0; i < eMailInfo.getEmailBCC().size(); i++) {
+					bccAddress[i] = new InternetAddress(eMailInfo.getEmailBCC().get(i));
 				}
 				message.addRecipients(Message.RecipientType.BCC, bccAddress);
 			}
 
 			//setting CC e-mail id's
-			if (notification.getEmailCC() != null && !notification.getEmailCC().isEmpty()) {
-				InternetAddress[] ccAddress = new InternetAddress[notification.getEmailCC().size()];
-				for (int i = 0; i < notification.getEmailCC().size(); i++) {
-					ccAddress[i] = new InternetAddress(notification.getEmailCC().get(i));
+			if (eMailInfo.getEmailCC() != null && !eMailInfo.getEmailCC().isEmpty()) {
+				InternetAddress[] ccAddress = new InternetAddress[eMailInfo.getEmailCC().size()];
+				for (int i = 0; i < eMailInfo.getEmailCC().size(); i++) {
+					ccAddress[i] = new InternetAddress(eMailInfo.getEmailCC().get(i));
 				}
 				message.addRecipients(Message.RecipientType.CC, ccAddress);
 			}
 			
-			message.setSubject(notification.getEmailSubect());
-//			message.setText(notification.getMessage());	     
+			message.setSubject(notification.getSubect()); 
 
 	        // Create a multipar message
 	        Multipart multipart = new MimeMultipart();
@@ -125,8 +111,8 @@ public class NotificationServiceImpl {
 	        multipart.addBodyPart(messageBodyPart);
 
 	        // Part two is attachment
-	        if(notification.getEmailAttachment() != null && !notification.getEmailAttachment().isEmpty()) {
-	        	for(String filePath : notification.getEmailAttachment()) {
+	        if(eMailInfo.getEmailAttachment() != null && !eMailInfo.getEmailAttachment().isEmpty()) {
+	        	for(String filePath : eMailInfo.getEmailAttachment()) {
 			        BodyPart attachmentBodyPart = new MimeBodyPart();
 			        DataSource source = new FileDataSource(filePath);
 			        attachmentBodyPart.setDataHandler(new DataHandler(source));
@@ -141,37 +127,36 @@ public class NotificationServiceImpl {
 		    //send the message 
 	        Transport.send(message);  
 			
-		    logger.info("message sent successfully...");  
+		    logger.info("e-Mail sent successfully to "+eMailInfo.getEmailTo()+" ....");  
 		} catch (MessagingException e) {
 			e.printStackTrace();
-			throw new RuntimeException("Failed !\n"+"Can not send e-Mail to "+notification.getEmailTo());
+			throw new RuntimeException("Failed !\n"+"Can not send e-Mail to "+eMailInfo.getEmailTo());
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RuntimeException("Failed !\n"+"Can not send e-Mail to "+notification.getEmailTo());
+			throw new RuntimeException("Failed !\n"+"Can not send e-Mail to "+eMailInfo.getEmailTo());
 		}
 		
 		return true;
 	}
 	
-	public boolean prepareAndSenEMail(String reportUuid, String reportVersion) {
+	public boolean prepareAndSenEMail(String uuid, String version, String type) {
 		logger.info("inside prepareAndSenEMail method.");
 		try {
-			Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(reportUuid, reportVersion, MetaType.report.toString(), "N");
-			if(report != null && report.getNotification() != null) {
-				Notification notification = report.getNotification();
-				
-				Map<String, Object> emailFromDetails = notification.getEmailFromDetails();
-				if(emailFromDetails == null || (emailFromDetails != null && !emailFromDetails.isEmpty())) {
-					emailFromDetails = new HashMap<>();
+			Object object = (Report) commonServiceImpl.getOneByUuidAndVersion(uuid, version, type, "N");
+			
+			if(object != null) {				
+				Notification notification = (Notification) object.getClass().getMethod("getNotification").invoke(object);
+				if(notification != null) {
+					notification.setFrom(Helper.getPropertyValue("framework.email.from"));
+					notification.setPassword(Helper.getPropertyValue("frameowrk.email.password"));
+					notification.setHost(Helper.getPropertyValue("framework.email.host"));
+					notification.setPort(Helper.getPropertyValue("framework.email.port"));
+					notification.setSubect(Helper.getPropertyValue("framework.email.subject"));
+					notification.setMessage(Helper.getPropertyValue("framework.email.message"));
+					return sendEMail(notification);
+				} else {
+					throw new RuntimeException("No credentials avilable to send mail.");
 				}
-				emailFromDetails.put("host", Helper.getPropertyValue("framework.email.host"));
-				emailFromDetails.put("port", Helper.getPropertyValue("framework.email.port"));
-				emailFromDetails.put("user", Helper.getPropertyValue("framework.email.from"));
-				emailFromDetails.put("password", Helper.getPropertyValue("frameowrk.email.password"));
-				
-				notification.setEmailSubect(Helper.getPropertyValue("framework.email.subject"));
-				notification.setEmailFromDetails(emailFromDetails);
-				return sendEMail(notification);
 			} else {
 				throw new RuntimeException("No credentials avilable to send mail.");
 			}
