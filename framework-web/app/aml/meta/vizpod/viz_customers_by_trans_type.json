@@ -1,6 +1,6 @@
 {
   "uuid": "40405e96-3a88-4b89-b6d1-965e1b15dec1",
-  "version": "1550867998",
+  "version": "1551217755",
   "name": "viz_customers_by_trans_type",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Fri Feb 22 15:39:58 EST 2019",
+  "createdOn": "Tue Feb 26 16:49:15 EST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -32,10 +32,10 @@
   "title": null,
   "source": {
     "ref": {
-      "type": "dataset",
-      "uuid": "63c722f9-c61b-4df5-b5f5-35e5992c50fc",
+      "type": "relation",
+      "uuid": "37d53ff8-eb7f-4536-9383-239aeae1f451",
       "version": null,
-      "name": "ds_cust_acct_by_trans_types"
+      "name": "rel_fact_transaction_report"
     },
     "value": null
   },
@@ -44,12 +44,12 @@
   "keys": [
     {
       "ref": {
-        "type": "dataset",
-        "uuid": "63c722f9-c61b-4df5-b5f5-35e5992c50fc",
+        "type": "datapod",
+        "uuid": "0c9b5122-ced3-404d-a22b-ff1105e1f9ac",
         "version": null,
-        "name": "ds_cust_acct_by_trans_types"
+        "name": "dim_transaction_type"
       },
-      "attributeId": 0,
+      "attributeId": 2,
       "function": null,
       "value": null,
       "attributeName": "transaction_type_code"
@@ -62,15 +62,15 @@
   "values": [
     {
       "ref": {
-        "type": "dataset",
-        "uuid": "63c722f9-c61b-4df5-b5f5-35e5992c50fc",
+        "type": "datapod",
+        "uuid": "14bebb86-6137-4109-ad45-0eea53066768",
         "version": null,
-        "name": "ds_cust_acct_by_trans_types"
+        "name": "fact_transaction"
       },
-      "attributeId": 1,
-      "function": null,
+      "attributeId": 6,
+      "function": "COUNT",
       "value": null,
-      "attributeName": "customers_by_trans_type_count"
+      "attributeName": "customer_id"
     }
   ],
   "sortBy": [],

@@ -1,6 +1,6 @@
 {
   "uuid": "eb0410b8-83d0-4b04-851b-2022c7baa5c9",
-  "version": "1550868723",
+  "version": "1551217075",
   "name": "viz_accounts_by_country",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Fri Feb 22 15:52:03 EST 2019",
+  "createdOn": "Tue Feb 26 16:37:55 EST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -62,15 +62,15 @@
   "values": [
     {
       "ref": {
-        "type": "formula",
-        "uuid": "0a5f4e2d-ae2c-449f-9bd7-d968e5314080",
+        "type": "datapod",
+        "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
         "version": null,
-        "name": "fm_accounts_by_country"
+        "name": "dim_account"
       },
-      "attributeId": null,
-      "function": null,
+      "attributeId": 0,
+      "function": "COUNT",
       "value": null,
-      "attributeName": null
+      "attributeName": "account_id"
     }
   ],
   "sortBy": [],

@@ -1,6 +1,6 @@
 {
   "uuid": "cc70b683-3f87-44b7-9a94-27805a0bc69b",
-  "version": "1550867124",
+  "version": "1551217820",
   "name": "viz_accounts_by_age",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Fri Feb 22 15:25:24 EST 2019",
+  "createdOn": "Tue Feb 26 16:50:20 EST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -32,10 +32,10 @@
   "title": null,
   "source": {
     "ref": {
-      "type": "dataset",
-      "uuid": "36a5c769-5c55-4b73-bb20-3ddb08e05869",
+      "type": "datapod",
+      "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
       "version": null,
-      "name": "ds_accounts_by_age"
+      "name": "dim_account"
     },
     "value": null
   },
@@ -44,15 +44,15 @@
   "keys": [
     {
       "ref": {
-        "type": "dataset",
-        "uuid": "36a5c769-5c55-4b73-bb20-3ddb08e05869",
+        "type": "formula",
+        "uuid": "9decfa52-ab8c-43e0-8251-5c053773679c",
         "version": null,
-        "name": "ds_accounts_by_age"
+        "name": "fm_account_by_age_bucket"
       },
-      "attributeId": 0,
+      "attributeId": null,
       "function": null,
       "value": null,
-      "attributeName": "account_by_age_bucket"
+      "attributeName": null
     }
   ],
   "dimension": [],
@@ -62,15 +62,15 @@
   "values": [
     {
       "ref": {
-        "type": "dataset",
-        "uuid": "36a5c769-5c55-4b73-bb20-3ddb08e05869",
+        "type": "datapod",
+        "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
         "version": null,
-        "name": "ds_accounts_by_age"
+        "name": "dim_account"
       },
-      "attributeId": 1,
-      "function": null,
+      "attributeId": 0,
+      "function": "COUNT",
       "value": null,
-      "attributeName": "account_count"
+      "attributeName": "account_id"
     }
   ],
   "sortBy": [],

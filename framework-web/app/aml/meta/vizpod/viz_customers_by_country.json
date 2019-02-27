@@ -1,6 +1,6 @@
 {
   "uuid": "26a8ca94-a4de-42b0-b8b0-20d2633c8d47",
-  "version": "1550868479",
+  "version": "1551217092",
   "name": "viz_customers_by_country",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Fri Feb 22 15:47:59 EST 2019",
+  "createdOn": "Tue Feb 26 16:38:12 EST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -62,15 +62,15 @@
   "values": [
     {
       "ref": {
-        "type": "formula",
-        "uuid": "5b0d51a9-6540-4e5f-88fb-4fe6bf8a6215",
+        "type": "datapod",
+        "uuid": "57f76265-e1f5-41b8-afa4-cd06197bf849",
         "version": null,
-        "name": "fm_customers_by_country"
+        "name": "dim_customer"
       },
-      "attributeId": null,
-      "function": null,
+      "attributeId": 0,
+      "function": "COUNT",
       "value": null,
-      "attributeName": null
+      "attributeName": "customer_id"
     }
   ],
   "sortBy": [],
