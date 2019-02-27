@@ -56,5 +56,21 @@
 			}
 		}
 	],
-	"name": "ppl_populate_fact_transaction"
+	"name": "ppl_populate_fact_transaction",
+"senderInfo" : {
+        "emailTo" : [ 
+            "jkumar@gtpltech.com"
+        ],
+        "emailBCC" : [ 
+            "ypalrecha@inferyx.com"
+        ],
+        "emailCC" : [ 
+            "vkatkar@gtpltech.com", 
+            "gsonawane@gtpltech.com"
+        ],
+        "emailAttachment" : null,
+        "notifOnSuccess" : "Y",
+        "notifyOnFailure" : "Y",
+        "sendAttachment" : "Y"
+    }
 }
