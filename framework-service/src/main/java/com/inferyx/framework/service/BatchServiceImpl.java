@@ -42,7 +42,6 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Notification;
 import com.inferyx.framework.domain.SenderInfo;
 import com.inferyx.framework.domain.Status;
-import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.domain.Status.Stage;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.enums.RunMode;
