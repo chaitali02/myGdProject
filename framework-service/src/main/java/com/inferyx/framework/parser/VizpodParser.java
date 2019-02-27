@@ -299,8 +299,6 @@ public class VizpodParser {
 //						}
 					}
 					
-					outerGroupByBuilder.replace(outerGroupByBuilder.lastIndexOf(","),outerGroupByBuilder.length(),"");
-					
 				}
 
 				if (!vizpod.getGroups().isEmpty()) {
@@ -320,28 +318,39 @@ public class VizpodParser {
 				if (!vizpod.getValues().isEmpty()) {
 					for (AttributeDetails attrDet : vizpod.getValues()) {
 						// Object object = daoRegister.getRefObject(attrDet.getRef());
-						Object object = commonServiceImpl.getOneByUuidAndVersion(attrDet.getRef().getUuid(),
-								attrDet.getRef().getVersion(), attrDet.getRef().getType().toString(), "N");
-						if ((object instanceof Formula) && (((Formula) object).getFormulaType() == FormulaType.aggr)) {
-							continue;
-						}
 						if (StringUtils.isNotBlank(attrDet.getFunction())) {
 							continue;
 						}
-						String keyAttrName = datapodServiceImpl.getAttributeName(attrDet.getRef().getUuid(),
-								attrDet.getAttributeId());
-						String datapodName = ((Datapod) commonServiceImpl.getLatestByUuid(attrDet.getRef().getUuid(),
-								MetaType.datapod.toString(), "N")).getName();
-						logger.info("datapodName : " + datapodName);
-						// finalBuilder.append(datapodName + "." + keyAttrName).append(comma);
-						outerGroupByBuilder.append(datapodName + "." + keyAttrName).append(comma);
+						if (attrDet.getRef().getType().equals(MetaType.formula)) {
+
+							Formula formula = (Formula) commonServiceImpl.getLatestByUuid(attrDet.getRef().getUuid(),
+									MetaType.formula.toString());
+							if (formula.getFormulaType() == FormulaType.aggr) {
+								continue;
+							} else {
+								outerGroupByBuilder.append(formula.getName()).append(", ");
+							}
+						} else {
+							String keyAttrName = datapodServiceImpl.getAttributeName(attrDet.getRef().getUuid(),
+									attrDet.getAttributeId());
+							String datapodName = ((Datapod) commonServiceImpl
+									.getLatestByUuid(attrDet.getRef().getUuid(), MetaType.datapod.toString(), "N"))
+											.getName();
+							logger.info("datapodName : " + datapodName);
+							// finalBuilder.append(datapodName + "." + keyAttrName).append(comma);
+							outerGroupByBuilder.append(datapodName + "." + keyAttrName).append(", ");
+						}
 					}
-					if (outerGroupByBuilder.toString().endsWith(",")) {
+					if (outerGroupByBuilder.toString().endsWith(", ")){
+						outerGroupByBuilder.replace(outerGroupByBuilder.lastIndexOf(","),outerGroupByBuilder.length(),"");
+						}
+						
+					/*if (outerGroupByBuilder.toString().endsWith(",")) {
 						// finalBuilder.replace(finalBuilder.length() - 1, finalBuilder.length(), "");
 						if (flaghasFuncInVal)
 							outerGroupByBuilder.replace(outerGroupByBuilder.length() - 1, outerGroupByBuilder.length(),
 									"");
-					}
+					}*/
 				}
 
 				// Having

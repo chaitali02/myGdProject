@@ -41,7 +41,6 @@ import org.codehaus.jettison.json.JSONObject;
 import org.graphframes.GraphFrame;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.index.CompoundIndexDefinition;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -66,7 +65,6 @@ import com.inferyx.framework.domain.GraphMetaIdentifier;
 import com.inferyx.framework.domain.GraphMetaIdentifierHolder;
 import com.inferyx.framework.domain.Graphpod;
 import com.inferyx.framework.domain.GraphpodResult;
-import com.inferyx.framework.domain.Highlight;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -74,8 +72,6 @@ import com.inferyx.framework.domain.NodeDetails;
 import com.inferyx.framework.domain.Property;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Session;
-import com.inferyx.framework.domain.Simulate;
-import com.inferyx.framework.domain.SimulateExec;
 import com.inferyx.framework.domain.SourceAttr;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Vertex;
@@ -85,10 +81,6 @@ import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.GraphOperator;
 import com.inferyx.framework.operator.IExecutable;
 import com.inferyx.framework.operator.IParsable;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-
 @Service
 public class GraphServiceImpl extends BaseRuleExecTemplate implements IParsable, IExecutable {
 
@@ -2146,7 +2138,8 @@ public class GraphServiceImpl extends BaseRuleExecTemplate implements IParsable,
 			}
 			@SuppressWarnings("unchecked")
 			FutureTask<TaskHolder> futureTask = (FutureTask<TaskHolder>) taskThreadMap.get(execType+"_"+baseExec.getUuid()+"_"+baseExec.getVersion());
-				futureTask.cancel(true);
+			if(futureTask!=null)	
+			futureTask.cancel(true);
 			synchronized (baseExec.getUuid()) {
 				commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.Killed);
 			}
@@ -2165,7 +2158,51 @@ public class GraphServiceImpl extends BaseRuleExecTemplate implements IParsable,
 	}
 	
 	
-	
+	public void restart(String type, String uuid, String version, ExecParams execParams, RunMode runMode)
+			throws Exception {
+		BaseExec baseExec = null;
+		try {
+			baseExec = (BaseExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.graphExec.toString());
+		} catch (JsonProcessingException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}	synchronized (baseExec.getUuid()) {
+			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.graphExec, Status.Stage.Ready);
+		}
+		try {
+			// baseExec = (GraphPod) commonServiceImpl.getOneByUuidAndVersion(baseExec.getDependsOn().getRef().getUuid(), baseExec.getDependsOn().getRef().getVersion(), baseExec.getDependsOn().getRef().getType().toString());
+			 execute(baseExec, execParams, runMode);
+		} catch (Exception e) {
+			synchronized (baseExec.getUuid()) {
+				try {
+					commonServiceImpl.setMetaStatus(baseExec, MetaType.graphExec, Status.Stage.Failed);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+					String message = null;
+					try {
+						message = e1.getMessage();
+					}catch (Exception e2) {
+						// TODO: handle exception
+					}
+					MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+					dependsOn.setRef(new MetaIdentifier(MetaType.graphExec, uuid, version));
+					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "GraphExec restart operation failed.", dependsOn);
+					throw new Exception((message != null) ? message : "GraphExec restart operation failed.");
+				}
+			}
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.graphExec, uuid, version));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "GraphExec restart operation failed.", dependsOn);
+			throw new Exception((message != null) ? message : "GraphExec restart operation failed.");
+		}
+	}
 	
 
 }
