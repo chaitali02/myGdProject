@@ -23,6 +23,7 @@ import com.inferyx.framework.domain.FrameworkThreadLocal;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.SenderInfo;
 import com.inferyx.framework.domain.SessionContext;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
@@ -270,24 +271,51 @@ public class RunBatchServiceImpl implements Callable<String> {
 	}
 
 	public BatchExec execute() throws Exception {
-//		frameworkThreadServiceImpl.setSession("ypalrecha");
-		Batch batch = (Batch) commonServiceImpl.getOneByUuidAndVersion(batchUuid, batchVersion, MetaType.batch.toString());
-		List<MetaIdentifierHolder> execList = new ArrayList<>();
-		synchronized (batchExec.getUuid()) {
-			for(MetaIdentifierHolder metaMI : batch.getPipelineInfo()) {
-				switch(metaMI.getRef().getType()) {
-					case dag : execList.add(dagServiceImpl.submitDag(metaMI.getRef().getUuid(), metaMI.getRef().getVersion(), execParams, type, runMode));
+		boolean isSuccessful = true;
+		Batch batch = (Batch) commonServiceImpl.getOneByUuidAndVersion(batchUuid, batchVersion, MetaType.batch.toString(), "N");
+		try {
+			List<MetaIdentifierHolder> execList = new ArrayList<>();
+			synchronized (batchExec.getUuid()) {
+				for(MetaIdentifierHolder metaMI : batch.getPipelineInfo()) {
+					switch(metaMI.getRef().getType()) {
+						case dag : execList.add(dagServiceImpl.submitDag(metaMI.getRef().getUuid(), metaMI.getRef().getVersion(), execParams, type, runMode));
+							break;
+					default:
 						break;
-				default:
-					break;
-				}				
+					}				
+				}
+			}
+			
+			batchExec.setExecList(execList);
+			commonServiceImpl.save(MetaType.batchExec.toString(), batchExec);
+			Thread.sleep(5000);
+			batchExec = batchServiceImpl.checkBatchStatus(batchExec);
+		} catch (Exception e) {
+			e.printStackTrace();
+			isSuccessful = false;
+			String message = null;
+			try {
+				message = e.getMessage();
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.batchExec, batchExec.getUuid(), batchExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Batch execution failed.", dependsOn);
+			throw new Exception((message != null) ? message : "Batch execution failed.");
+		} finally {
+			SenderInfo senderInfo = batch.getSenderInfo();
+			if(senderInfo != null) {				
+				if(isSuccessful && senderInfo.getNotifOnSuccess().equalsIgnoreCase("Y")) {
+					synchronized (batchExec.getUuid()) {
+						batchServiceImpl.sendSuccessNotification(senderInfo, batch, batchExec);
+					}
+				} else if(!isSuccessful && senderInfo.getNotifyOnFailure().equalsIgnoreCase("Y")) {
+					batchServiceImpl.sendFailureNotification(senderInfo, batch, batchExec);
+				}
 			}
 		}
 		
-		batchExec.setExecList(execList);
-		commonServiceImpl.save(MetaType.batchExec.toString(), batchExec);
-		Thread.sleep(5000);
-		batchExec = batchServiceImpl.checkBatchStatus(batchExec);
 		return batchExec;
 	}
 	

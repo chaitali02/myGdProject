@@ -20,8 +20,25 @@ public class Batch extends BaseEntity {
 //	private List<Schedule> scheduleInfo;
 	private List<MetaIdentifierHolder> pipelineInfo;
 	private String inParallel;
+	private SenderInfo senderInfo;
 	
-//	/**
+	/**
+	 * @Ganesh
+	 *
+	 * @return the senderInfo
+	 */
+	public SenderInfo getSenderInfo() {
+		return senderInfo;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param senderInfo the senderInfo to set
+	 */
+	public void setSenderInfo(SenderInfo senderInfo) {
+		this.senderInfo = senderInfo;
+	}
+	//	/**
 //	 * @Ganesh
 //	 *
 //	 * @return the scheduleInfo

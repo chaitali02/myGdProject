@@ -10,7 +10,10 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,6 +48,7 @@ import com.inferyx.framework.domain.DashboardExec;
 import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataQualGroupExec;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.IngestExec;
 import com.inferyx.framework.domain.IngestGroupExec;
 import com.inferyx.framework.domain.LoadExec;
@@ -54,6 +58,7 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
+import com.inferyx.framework.domain.Notification;
 import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.ParamList;
@@ -68,6 +73,7 @@ import com.inferyx.framework.domain.ReconGroupExec;
 import com.inferyx.framework.domain.ReportExec;
 import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.RuleGroupExec;
+import com.inferyx.framework.domain.SenderInfo;
 import com.inferyx.framework.domain.Simulate;
 import com.inferyx.framework.domain.SimulateExec;
 import com.inferyx.framework.domain.Stage;
@@ -150,6 +156,8 @@ public class DagServiceImpl {
 	private ReportServiceImpl reportServiceImpl;
 	@Autowired
 	private DashboardServiceImpl dashboardServiceImpl;
+	@Autowired
+	private NotificationServiceImpl notificationServiceImpl; 
 	
 	static final Logger logger = Logger.getLogger(DagServiceImpl.class);
 	ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
@@ -1602,6 +1610,59 @@ public class DagServiceImpl {
 			}
 		}
 		return childParamHolderList;
+	}
+
+	/**
+	 * @param senderInfo
+	 * @param dag
+	 * @param dagExec
+	 * @throws IOException 
+	 * @throws FileNotFoundException 
+	 */
+	public boolean sendSuccessNotification(SenderInfo senderInfo, Dag dag, DagExec dagExec)
+			throws FileNotFoundException, IOException {
+		logger.info("sending success notification...");
+		Notification notification = new Notification();
+
+		String subject = Helper.getPropertyValue("framework.email.subject");
+		subject = MessageFormat.format(subject, "SUCCESS", "Dag", dag.getName(), "completed");
+		notification.setSubject(subject);
+
+		String resultUrl = Helper.getPropertyValue("framework.url.dag.result");
+		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.app.domain.name"),
+				dagExec.getUuid(), dagExec.getVersion(), MetaType.dagExec.toString().toLowerCase());
+
+		String message = Helper.getPropertyValue("framework.email.message");
+		message = MessageFormat.format(message, resultUrl);
+		notification.setMessage(message);
+		notification.setSenderInfo(senderInfo);
+		return notificationServiceImpl.prepareAndSendNotification(notification);
+	}
+
+	/**
+	 * @param senderInfo
+	 * @param dag
+	 * @throws IOException 
+	 * @throws FileNotFoundException 
+	 */
+	public boolean sendFailureNotification(SenderInfo senderInfo, Dag dag, DagExec dagExec) throws FileNotFoundException, IOException {
+		logger.info("sending fail notification...");
+		Notification notification = new Notification();
+		
+		String subject = Helper.getPropertyValue("framework.email.subject");
+		subject = MessageFormat.format(subject, "FAILURE", "Dag", dag.getName(), "failed");
+		notification.setSubject(subject);
+		
+		String resultUrl = Helper.getPropertyValue("framework.url.dag.result");
+		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.app.domain.name"),
+				dagExec.getUuid(), dagExec.getVersion(), MetaType.dagExec.toString().toLowerCase());
+		
+		String message = Helper.getPropertyValue("framework.email.message");
+		message = MessageFormat.format(message, resultUrl);
+		notification.setMessage(message);
+		
+		notification.setSenderInfo(senderInfo);
+		return notificationServiceImpl.prepareAndSendNotification(notification);
 	}
 	
 }

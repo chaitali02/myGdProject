@@ -24,6 +24,7 @@ import com.inferyx.framework.domain.FrameworkThreadLocal;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.SenderInfo;
 import com.inferyx.framework.domain.SessionContext;
 import com.inferyx.framework.domain.StageExec;
 import com.inferyx.framework.domain.Status;
@@ -176,6 +177,7 @@ public class RunDagServiceImpl implements Callable<String> {
 	
 	@SuppressWarnings("finally")
 	public String parseAndExecute() throws Exception {
+		boolean isSuccessful = true;
 		try {
 			logger.info(" Inside RunDagServiceImpl.parseAndExecute ");
 			logger.info("Thread watch : DagExec : " + dagExec.getUuid() + " RunDagServiceImpl status RUN >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
@@ -243,19 +245,32 @@ public class RunDagServiceImpl implements Callable<String> {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			isSuccessful = false;
 			String message = null;
 			try {
 				message = e.getMessage();
-			}catch (Exception e2) {
+			} catch (Exception e2) {
 				// TODO: handle exception
 			}
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 			dependsOn.setRef(new MetaIdentifier(MetaType.dagExec, dagExec.getUuid(), dagExec.getVersion()));
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Pipeline execution failed.", dependsOn);
 			throw new Exception((message != null) ? message : "Pipeline execution failed.");
-		}finally {			
+		} finally {			
 			taskThreadMap.remove("Dag_"+dagExec.getUuid());
 			logger.info("Thread watch : DagExec : " + dagExec.getUuid() + " RunDagServiceImpl complete >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
+			
+			SenderInfo senderInfo = dag.getSenderInfo();
+			if(senderInfo != null) {				
+				if(isSuccessful && senderInfo.getNotifOnSuccess().equalsIgnoreCase("Y")) {
+					synchronized(dagExec.getUuid()) {
+						dagServiceImpl.sendSuccessNotification(senderInfo, dag, dagExec);
+					}
+				} else if(!isSuccessful && senderInfo.getNotifyOnFailure().equalsIgnoreCase("Y")) {
+					dagServiceImpl.sendFailureNotification(senderInfo, dag, dagExec);
+				}
+			}
+			
 			return "Dag_"+dagExec.getUuid();
 		}
 	}

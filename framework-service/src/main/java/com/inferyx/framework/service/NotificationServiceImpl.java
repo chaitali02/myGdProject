@@ -95,7 +95,7 @@ public class NotificationServiceImpl {
 				message.addRecipients(Message.RecipientType.CC, ccAddress);
 			}
 			
-			message.setSubject(notification.getSubect()); 
+			message.setSubject(notification.getSubject()); 
 
 	        // Create a multipar message
 	        Multipart multipart = new MimeMultipart();
@@ -107,11 +107,11 @@ public class NotificationServiceImpl {
 
 	        // Part two is attachment
 	        if(senderInfo.getEmailAttachment() != null && !senderInfo.getEmailAttachment().isEmpty()) {
-	        	for(String filePath : senderInfo.getEmailAttachment()) {
+	        	for(String fileName : senderInfo.getEmailAttachment().keySet()) {
 			        BodyPart attachmentBodyPart = new MimeBodyPart();
-			        DataSource source = new FileDataSource(filePath);
+			        DataSource source = new FileDataSource(senderInfo.getEmailAttachment().get(fileName));
 			        attachmentBodyPart.setDataHandler(new DataHandler(source));
-			        attachmentBodyPart.setFileName(filePath);
+			        attachmentBodyPart.setFileName(fileName);
 			        multipart.addBodyPart(attachmentBodyPart);
 	        	}
 	        }
@@ -142,7 +142,7 @@ public class NotificationServiceImpl {
 				notification.setPassword(Helper.getPropertyValue("frameowrk.email.password"));
 				notification.setHost(Helper.getPropertyValue("framework.email.host"));
 				notification.setPort(Helper.getPropertyValue("framework.email.port"));
-				notification.setSubect(Helper.getPropertyValue("framework.email.subject"));
+//				notification.setSubject(Helper.getPropertyValue("framework.email.subject"));
 //				notification.setMessage(Helper.getPropertyValue("framework.email.message"));
 				return sendNotification(notification);
 			} else {

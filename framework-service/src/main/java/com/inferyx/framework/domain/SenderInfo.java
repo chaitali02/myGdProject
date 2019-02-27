@@ -11,6 +11,7 @@
 package com.inferyx.framework.domain;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Ganesh
@@ -20,7 +21,7 @@ public class SenderInfo {
 	private List<String> emailTo;
 	private List<String> emailBCC;
 	private List<String> emailCC;
-	private List<String> emailAttachment;
+	private Map<String, String> emailAttachment;
 	private String notifOnSuccess = "Y";
 	private String notifyOnFailure = "Y";
 	private String sendAttachment = "Y";
@@ -126,7 +127,7 @@ public class SenderInfo {
 	 *
 	 * @return the emailAttachment
 	 */
-	public List<String> getEmailAttachment() {
+	public Map<String, String> getEmailAttachment() {
 		return emailAttachment;
 	}
 	/**
@@ -134,7 +135,7 @@ public class SenderInfo {
 	 *
 	 * @param emailAttachment the emailAttachment to set
 	 */
-	public void setEmailAttachment(List<String> emailAttachment) {
+	public void setEmailAttachment(Map<String, String> emailAttachment) {
 		this.emailAttachment = emailAttachment;
 	}
 }

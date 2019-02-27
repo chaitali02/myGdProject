@@ -17,7 +17,7 @@ import java.util.Map;
  *
  */
 public class Notification {
-	private String subect;
+	private String subject;
 	private String message;
 	private String from;
 	private String password;
@@ -29,18 +29,18 @@ public class Notification {
 	/**
 	 * @Ganesh
 	 *
-	 * @return the subect
+	 * @return the subject
 	 */
-	public String getSubect() {
-		return subect;
+	public String getSubject() {
+		return subject;
 	}
 	/**
 	 * @Ganesh
 	 *
-	 * @param subect the subect to set
+	 * @param subject the subject to set
 	 */
-	public void setSubect(String subect) {
-		this.subect = subect;
+	public void setSubject(String subject) {
+		this.subject = subject;
 	}
 	/**
 	 * @Ganesh

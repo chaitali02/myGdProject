@@ -10,6 +10,9 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -36,6 +39,8 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.Notification;
+import com.inferyx.framework.domain.SenderInfo;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.domain.Status.Stage;
@@ -63,12 +68,14 @@ public class BatchServiceImpl {
 	private SessionHelper sessionHelper;
 	@Autowired
 	private FrameworkThreadServiceImpl frameworkThreadServiceImpl;
+	@Autowired
+	private NotificationServiceImpl notificationServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(BatchServiceImpl.class);
 	
 	public BatchExec create(String batchUuid, String batchVersion, ExecParams execParams, BatchExec batchExec, RunMode runMode) throws Exception {
 		try {
-			Batch batch = (Batch) commonServiceImpl.getOneByUuidAndVersion(batchUuid, batchVersion, MetaType.batch.toString());
+			Batch batch = (Batch) commonServiceImpl.getOneByUuidAndVersion(batchUuid, batchVersion, MetaType.batch.toString(), "N");
 			if(batchExec == null) {
 				MetaIdentifierHolder dependsOn = new MetaIdentifierHolder(new MetaIdentifier(MetaType.batch, batchUuid, batchVersion));
 				batchExec = new BatchExec();
@@ -425,5 +432,62 @@ public class BatchServiceImpl {
 			}			
 		}
 		return batchExec;
+	}
+
+
+
+	/**
+	 * @param senderInfo
+	 * @param batch
+	 * @param batchExec
+	 * @throws IOException 
+	 * @throws FileNotFoundException 
+	 */
+	public boolean sendSuccessNotification(SenderInfo senderInfo, Batch batch, BatchExec batchExec) throws FileNotFoundException, IOException {
+		logger.info("sending success notification...");
+		Notification notification = new Notification();
+
+		String subject = Helper.getPropertyValue("framework.email.subject");
+		subject = MessageFormat.format(subject, "SUCCESS", "Batch", batch.getName(), "completed");
+		notification.setSubject(subject);
+
+		String resultUrl = Helper.getPropertyValue("framework.url.batch.result");
+		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.app.domain.name"),
+				batchExec.getUuid(), batchExec.getVersion(), batch.getName());
+
+		String message = Helper.getPropertyValue("framework.email.message");
+		message = MessageFormat.format(message, resultUrl);
+		notification.setMessage(message);
+		notification.setSenderInfo(senderInfo);
+		return notificationServiceImpl.prepareAndSendNotification(notification);
+	}
+
+
+
+	/**
+	 * @param senderInfo
+	 * @param batch
+	 * @param batchExec
+	 * @throws IOException 
+	 * @throws FileNotFoundException 
+	 */
+	public boolean sendFailureNotification(SenderInfo senderInfo, Batch batch, BatchExec batchExec) throws FileNotFoundException, IOException {
+		logger.info("sending fail notification...");
+		Notification notification = new Notification();
+		
+		String subject = Helper.getPropertyValue("framework.email.subject");
+		subject = MessageFormat.format(subject, "FAILURE", "Batch", batch.getName(), "failed");
+		notification.setSubject(subject);
+		
+		String resultUrl = Helper.getPropertyValue("framework.url.batch.result");
+		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.app.domain.name"),
+				batchExec.getUuid(), batchExec.getVersion(), batch.getName());
+		
+		String message = Helper.getPropertyValue("framework.email.message");
+		message = MessageFormat.format(message, resultUrl);
+		notification.setMessage(message);
+		
+		notification.setSenderInfo(senderInfo);
+		return notificationServiceImpl.prepareAndSendNotification(notification);
 	}
 }

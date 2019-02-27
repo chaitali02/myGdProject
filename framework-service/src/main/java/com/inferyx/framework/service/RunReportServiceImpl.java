@@ -25,6 +25,7 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.ReportExec;
 import com.inferyx.framework.domain.ResultSetHolder;
+import com.inferyx.framework.domain.SenderInfo;
 import com.inferyx.framework.domain.SessionContext;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
@@ -48,7 +49,7 @@ public class RunReportServiceImpl implements Callable<TaskHolder> {
 	private SparkExecutor<?> sparkExecutor;
 	private RunMode runMode;
 	private ReportServiceImpl reportServiceImpl;
-	
+
 	/**
 	 * @Ganesh
 	 *
@@ -250,6 +251,8 @@ public class RunReportServiceImpl implements Callable<TaskHolder> {
 	}
 	
 	public ReportExec execute() throws Exception {
+		boolean isSuccessful = true;
+		String tableName = null;
 		try {
 			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 			long countRows = -1L;
@@ -262,7 +265,7 @@ public class RunReportServiceImpl implements Callable<TaskHolder> {
 
 			Datasource reportDS = commonServiceImpl.getDatasourceByObject(report);
 //			String tableName = getTableName(report, reportExec, execContext, reportDS);
-			String tableName = String.format("%s_%s_%s", report.getUuid().replace("-", "_"), report.getVersion(), reportExec.getVersion());
+			tableName = String.format("%s_%s_%s", report.getUuid().replace("-", "_"), report.getVersion(), reportExec.getVersion());
 					
 			String reportPath = String.format("%s/%s/%s", report.getUuid(), report.getVersion(), reportExec.getVersion());
 			String reportDefaultPath = hdfsInfo.getHdfsURL().concat(Helper.getPropertyValue("framework.report.Path"));
@@ -281,6 +284,7 @@ public class RunReportServiceImpl implements Callable<TaskHolder> {
 			reportExec = (ReportExec) commonServiceImpl.setMetaStatus(reportExec, MetaType.reportExec, Status.Stage.Completed);
 		} catch (Exception e) { 
 			e.printStackTrace();
+			isSuccessful = false;
 			// Set status to Failed
 			try {
 				reportExec = (ReportExec) commonServiceImpl.setMetaStatus(reportExec, MetaType.reportExec, Status.Stage.Failed);
@@ -297,7 +301,19 @@ public class RunReportServiceImpl implements Callable<TaskHolder> {
 			dependsOn.setRef(new MetaIdentifier(MetaType.reportExec, reportExec.getUuid(), reportExec.getVersion()));
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Report execution failed.", dependsOn);
 			throw new RuntimeException((message != null) ? message : "Report execution failed.");
+		} finally {
+			SenderInfo senderInfo = report.getSenderInfo();
+			if(senderInfo != null) {				
+				if(isSuccessful && senderInfo.getNotifOnSuccess().equalsIgnoreCase("Y")) {
+					synchronized (reportExec.getUuid()) {
+						reportServiceImpl.sendSuccessNotification(senderInfo, tableName, report, reportExec);
+					}
+				} else if(!isSuccessful && senderInfo.getNotifyOnFailure().equalsIgnoreCase("Y")) {
+					reportServiceImpl.sendFailureNotification(senderInfo, report, reportExec);
+				}
+			}
 		}
+		
 		return reportExec;
-	}
+	}	
 }

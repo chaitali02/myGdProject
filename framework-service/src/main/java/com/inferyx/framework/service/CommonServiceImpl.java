@@ -46,6 +46,7 @@ import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -5252,4 +5253,20 @@ public class CommonServiceImpl<T> {
 		return null;
 	}
 
+	public String renameFileAndGetFilePathFromDir(String directory, String fileName, String fileExt) throws IOException {
+		File folder = new File(directory);
+		for (File file : folder.listFiles()) {
+			String dirFileName = file.getName();
+			if(fileExt != null) {
+				fileExt = fileExt.startsWith(".") ? fileExt : ".".concat(fileExt);
+			} 
+			
+			if (file.isFile() && dirFileName.toLowerCase().endsWith(fileExt)) {
+				String pathName = directory.endsWith("/") ? directory.concat(fileName).concat(fileExt) : directory.concat("/").concat(fileName).concat(fileExt);
+				FileUtils.moveFile(file, new File(pathName));
+				return pathName;
+			}
+		}
+		return null;
+	}
 }

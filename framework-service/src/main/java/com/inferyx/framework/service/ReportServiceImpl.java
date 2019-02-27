@@ -14,6 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -58,6 +59,7 @@ import com.inferyx.framework.domain.Notification;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.ReportExec;
+import com.inferyx.framework.domain.SenderInfo;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
@@ -181,12 +183,12 @@ public class ReportServiceImpl extends RuleTemplate {
 	}
 	
 	public ReportExec execute(String execUuid, String execVersion, ExecParams execParams, RunMode runMode) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException, IOException {
-		boolean isSuccessful = true;
-		ReportExec reportExec =  (ReportExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.reportExec.toString());
-		MetaIdentifier dependsOnMI = reportExec.getDependsOn().getRef();
-		Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(), dependsOnMI.getVersion(), dependsOnMI.getType().toString());
-
+		ReportExec reportExec =  null;
 		try {			
+			reportExec = (ReportExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.reportExec.toString());
+			MetaIdentifier dependsOnMI = reportExec.getDependsOn().getRef();
+			Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(), dependsOnMI.getVersion(), dependsOnMI.getType().toString());
+
 			String appUuid = commonServiceImpl.getApp().getUuid();
 			
 			RunReportServiceImpl runReportServiceImpl = new RunReportServiceImpl();
@@ -203,7 +205,6 @@ public class ReportServiceImpl extends RuleTemplate {
 			runReportServiceImpl.call();
 		} catch (Exception e) { 
 			e.printStackTrace();
-			isSuccessful = false;
 			// Set status to Failed
 			try {
 				reportExec = (ReportExec) commonServiceImpl.setMetaStatus(reportExec, MetaType.reportExec, Status.Stage.Failed);
@@ -220,32 +221,7 @@ public class ReportServiceImpl extends RuleTemplate {
 			dependsOn.setRef(new MetaIdentifier(MetaType.reportExec, reportExec.getUuid(), reportExec.getVersion()));
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Report execution failed.", dependsOn);
 			throw new RuntimeException((message != null) ? message : "Report execution failed.");
-		} finally {
-			if(report.getSenderInfo() != null) {
-				Notification notification = new Notification();
-				
-				if(isSuccessful && report.getSenderInfo().getNotifOnSuccess().equalsIgnoreCase("Y")) {
-					logger.info("sending success notification...");
-					notification.setMessage("SUCCESS: "+MetaType.report+" \""+report.getName()+"\" executed successfully." );
-//					try {
-//						download(reportExec.getUuid(), reportExec.getVersion(), "excel", 0, 200, null, 200, null, null,
-//								null, runMode);
-//					} catch (Exception e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//						throw new RuntimeException(e);
-//					}
-
-					notification.setSenderInfo(report.getSenderInfo());
-					notificationServiceImpl.prepareAndSendNotification(notification);
-				} else if(!isSuccessful && report.getSenderInfo().getNotifyOnFailure().equalsIgnoreCase("Y")) {
-					logger.info("sending fail notification...");
-					notification.setSenderInfo(report.getSenderInfo());
-					notification.setMessage("FAILED: "+MetaType.report+" \""+report.getName()+"\" execution failed." );
-					notificationServiceImpl.prepareAndSendNotification(notification);
-				}
-			}
-		}	
+		} 	
 		
 		return reportExec;
 	}
@@ -455,5 +431,70 @@ public class ReportServiceImpl extends RuleTemplate {
 			MetaIdentifier datapodKey, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode)
 			throws Exception {
 		return execute(baseRuleExec.getUuid(), baseRuleExec.getVersion(), execParams, runMode);
+	}
+	
+	public boolean sendSuccessNotification(SenderInfo senderInfo, String tempTableName, Report report,
+			ReportExec reportExec) throws IOException, IllegalAccessException, IllegalArgumentException,
+			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		logger.info("sending success notification...");
+		Notification notification = new Notification();
+		String appUuid = commonServiceImpl.getApp().getUuid();
+
+		String subject = Helper.getPropertyValue("framework.email.subject");
+		subject = MessageFormat.format(subject, "SUCCESS", "Report", report.getName(), "completed");
+		notification.setSubject(subject);
+
+		String resultUrl = Helper.getPropertyValue("framework.url.report.result.success");
+		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.app.domain.name"),
+				reportExec.getUuid(), reportExec.getVersion());
+
+		String message = Helper.getPropertyValue("framework.email.message");
+		message = MessageFormat.format(message, resultUrl);
+		notification.setMessage(message);
+
+		if (senderInfo.getSendAttachment().equalsIgnoreCase("Y")) {
+			String reportDefaultPath = Helper.getPropertyValue("framework.report.Path");
+			reportDefaultPath = reportDefaultPath.endsWith("/") ? reportDefaultPath : reportDefaultPath.concat("/");
+			reportDefaultPath = reportDefaultPath.concat(report.getName()).concat("/");
+			String reportPath = String.format("%s/%s/%s", report.getUuid(), report.getVersion(),
+					reportExec.getVersion());
+			reportDefaultPath = reportDefaultPath.concat(reportPath);
+
+			String csvFilePathUrl = hdfsInfo.getHdfsURL().concat(reportDefaultPath);
+			sparkExecutor.saveDataframeAsCSV(tempTableName, csvFilePathUrl, appUuid);
+
+			String reportFileName = String.format("%s_%s_%s", report.getUuid().replaceAll("-", "_"),
+					report.getVersion(), reportExec.getVersion());
+
+			reportDefaultPath = commonServiceImpl.renameFileAndGetFilePathFromDir(reportDefaultPath, reportFileName,
+					FileType.CSV.toString().toLowerCase());
+
+			Map<String, String> emailAttachment = new HashMap<>();
+			emailAttachment.put(reportFileName.concat(".").concat(FileType.CSV.toString().toLowerCase()),
+					reportDefaultPath);
+			senderInfo.setEmailAttachment(emailAttachment);
+		}
+		notification.setSenderInfo(senderInfo);
+		return notificationServiceImpl.prepareAndSendNotification(notification);
+	}
+	
+	public boolean sendFailureNotification(SenderInfo senderInfo, Report report, ReportExec reportExec)
+			throws FileNotFoundException, IOException {
+		logger.info("sending fail notification...");
+		Notification notification = new Notification();
+
+		String subject = Helper.getPropertyValue("framework.email.subject");
+		subject = MessageFormat.format(subject, "FAILURE", "Report", report.getName(), "failed");
+		notification.setSubject(subject);
+
+		String resultUrl = Helper.getPropertyValue("framework.url.report.result.failure");
+		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.app.domain.name"));
+
+		String message = Helper.getPropertyValue("framework.email.message");
+		message = MessageFormat.format(message, resultUrl);
+		notification.setMessage(message);
+
+		notification.setSenderInfo(senderInfo);
+		return notificationServiceImpl.prepareAndSendNotification(notification);
 	}
 }
