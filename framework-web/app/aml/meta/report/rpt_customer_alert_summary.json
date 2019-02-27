@@ -34,36 +34,7 @@
   "headerAlign": "CENTER",
   "footer": "Customer Alert Summary",
   "footerAlign": "CENTER",
-  "filterInfo": [
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "3c9fb2a0-68e9-4df9-a56b-7f7928b2465a",
-        "version": null,
-        "name": "customer_alert_summary"
-      },
-      "value": null,
-      "attrId": "0",
-      "attrName": "customer_id",
-      "attrType": null,
-      "attrUnitType": null,
-      "function": null
-    },
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "3c9fb2a0-68e9-4df9-a56b-7f7928b2465a",
-        "version": null,
-        "name": "customer_alert_summary"
-      },
-      "value": null,
-      "attrId": "3",
-      "attrName": "business_date",
-      "attrType": null,
-      "attrUnitType": null,
-      "function": null
-    }
-  ],
+  "filterInfo":null,
   "dependsOn": {
     "ref": {
       "type": "datapod",

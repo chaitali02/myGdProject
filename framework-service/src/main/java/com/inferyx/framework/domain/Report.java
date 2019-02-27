@@ -23,11 +23,13 @@ public class Report extends BaseEntity {
 	private String headerAlign; 
 	private String footer; 
 	private String footerAlign;
-	private List<AttributeRefHolder> filterInfo;
+	private List<FilterInfo> filterInfo;
 	private MetaIdentifierHolder dependsOn; 
 	private List<AttributeSource> attributeInfo = new ArrayList<AttributeSource>();
 	private String saveOnRefresh = "N";
 	private SenderInfo senderInfo;
+	private MetaIdentifierHolder paramList;
+
 	
 	/**
 	 * @Ganesh
@@ -146,7 +148,7 @@ public class Report extends BaseEntity {
 	 *
 	 * @return the filterInfo
 	 */
-	public List<AttributeRefHolder> getFilterInfo() {
+	public List<FilterInfo> getFilterInfo() {
 		return filterInfo;
 	}
 	/**
@@ -154,7 +156,7 @@ public class Report extends BaseEntity {
 	 *
 	 * @param filterInfo the filterInfo to set
 	 */
-	public void setFilterInfo(List<AttributeRefHolder> filterInfo) {
+	public void setFilterInfo(List<FilterInfo> filterInfo) {
 		this.filterInfo = filterInfo;
 	}
 	/**
@@ -188,5 +190,12 @@ public class Report extends BaseEntity {
 	 */
 	public void setAttributeInfo(List<AttributeSource> attributeInfo) {
 		this.attributeInfo = attributeInfo;
+	}
+	
+	public MetaIdentifierHolder getParamList() {
+		return paramList;
+	}
+	public void setParamList(MetaIdentifierHolder paramList) {
+		this.paramList = paramList;
 	}
 }

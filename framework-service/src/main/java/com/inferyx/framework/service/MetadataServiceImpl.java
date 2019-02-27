@@ -101,6 +101,7 @@ import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.ProfileGroupExec;
 import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.ReconGroupExec;
+import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.ReportExec;
 import com.inferyx.framework.domain.Role;
 import com.inferyx.framework.domain.Rule;
@@ -1815,6 +1816,22 @@ public class MetadataServiceImpl {
 		List<ParamListHolder> plHolderList = new ArrayList<>();
 		if(rule.getParamList() != null) {
 			MetaIdentifier plMI = rule.getParamList().getRef();
+			ParamListHolder plHolder = new ParamListHolder();
+			plHolder.setRef(plMI);
+			plHolderList.add(plHolder);
+			ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(plMI.getUuid(), plMI.getVersion(), plMI.getType().toString());
+			if(paramList.getTemplateFlg().equalsIgnoreCase("Y")) {
+				List<ParamList> childs = commonServiceImpl.getAllLatestParamListByTemplate(null, paramList.getUuid(), paramList.getVersion(), paramListType);
+				plHolderList.addAll(persistPLTemplateChilds(childs));
+			}
+		}
+		return plHolderList;
+	}
+	public List<ParamListHolder> getParamListByReport(String ruleUuid, String ruleVersion, MetaType paramListType) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(ruleUuid, ruleVersion, MetaType.report.toString());
+		List<ParamListHolder> plHolderList = new ArrayList<>();
+		if(report.getParamList() != null) {
+			MetaIdentifier plMI = report.getParamList().getRef();
 			ParamListHolder plHolder = new ParamListHolder();
 			plHolder.setRef(plMI);
 			plHolderList.add(plHolder);

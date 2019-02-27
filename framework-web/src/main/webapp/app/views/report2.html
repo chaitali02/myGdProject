@@ -63,8 +63,8 @@
                             ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip>
                             <i class="fa fa-refresh icon-circle" aria-hidden="true"></i>
                         </a>
-                        <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" ng-click="genericClose($event,'report2')" title="Close" data-toggle="tooltip"
-                            data-placement="top" tooltip>
+                        <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" ng-click="genericClose($event,'report2')"
+                            title="Close" data-toggle="tooltip" data-placement="top" tooltip>
                             <i class="fa fa-times icon-circle"></i>
                         </a>
                     </div>
@@ -293,66 +293,82 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                                <label class="col-md-3 control-label">Title
-                                                    <span class="required" aria-required="true"> * </span>
-                                                </label>
-                                                <div class="col-md-6">
-                                                    <input type="text" class="form-control" name="title" ng-class="" ng-disabled="{{mode}}" ng-model="report.title" placeholder=""
-                                                        disabled="disabled" required="">
+                                            <label class="col-md-3 control-label">Parameter List
+                                            </label>
+                                            <div class="col-md-6">
+
+                                                <select class="form-control" select2 name="version" ng-disabled="{{mode}}"
+                                                    ng-change="onChangeParamListOFRule()" data-ng-model="allparamlist.defaultoption"
+                                                    ng-options="r as r.name for r in allparamlist.options | orderBy:'name' track by r.uuid ">
+                                                    <option value="">-Select-</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">Title
+                                                <span class="required" aria-required="true"> * </span>
+                                            </label>
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" name="title" ng-class=""
+                                                    ng-disabled="{{mode}}" ng-model="report.title" placeholder=""
+                                                    disabled="disabled" required="">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">Header
+                                                <span class="required" aria-required="true"> * </span>
+                                            </label>
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" name="header" ng-class=""
+                                                    ng-disabled="{{mode}}" ng-model="report.header" placeholder=""
+                                                    disabled="disabled" required="">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">Header Align
+                                                <span class="required" aria-required="true"> * </span>
+                                            </label>
+                                            <div class="col-md-6">
+                                                <select class="form-control" ng-disabled="{{mode}}" data-ng-model="report.headerAlign"
+                                                    ng-options="r for r in alignType" required>
+                                                </select>
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">Footer
+                                                <span class="required" aria-required="true"> * </span>
+                                            </label>
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" name="footer" ng-class=""
+                                                    ng-disabled="{{mode}}" ng-model="report.footer" placeholder=""
+                                                    disabled="disabled" required="">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">Footer Align
+                                                <span class="required" aria-required="true"> * </span>
+                                            </label>
+                                            <div class="col-md-6">
+                                                <select class="form-control" ng-disabled="{{mode}}" data-ng-model="report.footerAlign"
+                                                    ng-options="r for r in alignType" required>
+                                                </select>
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label"> Save On Refresh</label>
+                                            <div class="col-md-9">
+                                                <div class="mt-checkbox-list" style="margin-top:-7px">
+                                                    <label class="mt-checkbox mt-checkbox-outline">
+                                                        <input ng-disabled="{{mode}}" type="checkbox" ng-model="report.saveOnRefresh"
+                                                            ng-true-value="'Y'" ng-false-value="'N'">
+                                                        <span ng-disabled="{{mode}}"></span>
+                                                    </label>
                                                 </div>
                                             </div>
-        
-                                            <div class="form-group">
-                                                <label class="col-md-3 control-label">Header
-                                                    <span class="required" aria-required="true"> * </span>
-                                                </label>
-                                                <div class="col-md-6">
-                                                    <input type="text" class="form-control" name="header" ng-class="" ng-disabled="{{mode}}" ng-model="report.header" placeholder=""
-                                                        disabled="disabled" required="">
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-md-3 control-label">Header Align
-                                                    <span class="required" aria-required="true"> * </span>
-                                                </label>
-                                                <div class="col-md-6">
-                                                    <select class="form-control" ng-disabled="{{mode}}" data-ng-model="report.headerAlign" ng-options="r for r in alignType"
-                                                        required>
-                                                    </select>
-        
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-md-3 control-label">Footer
-                                                    <span class="required" aria-required="true"> * </span>
-                                                </label>
-                                                <div class="col-md-6">
-                                                    <input type="text" class="form-control" name="footer" ng-class="" ng-disabled="{{mode}}" ng-model="report.footer" placeholder=""
-                                                        disabled="disabled" required="">
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-md-3 control-label">Footer Align
-                                                    <span class="required" aria-required="true"> * </span>
-                                                </label>
-                                                <div class="col-md-6">
-                                                    <select class="form-control" ng-disabled="{{mode}}" data-ng-model="report.footerAlign" ng-options="r for r in alignType"
-                                                        required>
-                                                    </select>
-        
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-md-3 control-label"> Save On Refresh</label>
-                                                <div class="col-md-9">
-                                                    <div class="mt-checkbox-list" style="margin-top:-7px">
-                                                        <label class="mt-checkbox mt-checkbox-outline">
-                                                            <input ng-disabled="{{mode}}" type="checkbox" ng-model="report.saveOnRefresh" ng-true-value="'Y'" ng-false-value="'N'">
-                                                            <span ng-disabled="{{mode}}"></span>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                        </div>
                                         <div class="portlet light bordered" data-ng-show="showForm">
                                             <div class="portlet-title">
                                                 <div class="caption">
@@ -504,7 +520,7 @@
                                                                 </td>
                                                                 <td>
                                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                        
+
                                                                         <select ng-change="selectrhsType(tabledata.rhstype.text,$index)"
                                                                             ng-model="tabledata.rhstype" ng-options="x as x.caption disable when x.disabled for x in tabledata.rhsTypes | orderBy : 'caption' track by x.text+x.caption"
                                                                             ng-disabled=" {{mode}}" class="form-control">
@@ -618,11 +634,15 @@
                                                                     <div ng-if="tabledata.isrhsDataset">
                                                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                             <div class="col-md-11" style="padding: 0px;">
-                                                                            <input type="text" ng-disabled="true" class="form-control" ng-model="tabledata.rhsdataset.name" title="{{tabledata.rhsdataset.dname}}"
-                                                                                required disable-validation-message="">
+                                                                                <input type="text" ng-disabled="true"
+                                                                                    class="form-control" ng-model="tabledata.rhsdataset.name"
+                                                                                    title="{{tabledata.rhsdataset.dname}}"
+                                                                                    required disable-validation-message="">
                                                                             </div>
                                                                             <div class="col-md-1" style="padding:7px 0px 0px 5px;">
-                                                                            <span class="fa fa-search" tooltip-placement="left" uib-tooltip="Search" ng-click="SearchAttribute($index,tabledata.rhstype.text,'rhsdataset')"></span>
+                                                                                <span class="fa fa-search"
+                                                                                    tooltip-placement="left"
+                                                                                    uib-tooltip="Search" ng-click="SearchAttribute($index,tabledata.rhstype.text,'rhsdataset')"></span>
                                                                             </div>
                                                                         </span>
                                                                     </div>
@@ -1043,25 +1063,76 @@
                                             <label class="control-label col-md-2 col-sm-2 col-xs-12"></label>
                                             <div class="col-md-7 col-sm-7 col-xs-12">
                                                 <fieldset form="form1" style="border:1px solid #c2cad8;padding:9px;margin-left:4%;">
-                                                        <legend style="width:auto;border:none;padding:0px 5px 0px 5px;margin-bottom:2px;">Email</legend>
-                                                        <div class="form-group">
-                                                                <label class="control-label col-md-2 col-sm-2 col-xs-3">To</label>
-                                                                <div class="col-md-10 col-sm-10 col-xs-12">
-                                                                    <tags-input data-ng-model="tagsTo" class="tag-scroll-height" min-length="0"></tags-input>
+                                                    <legend style="width:auto;border:none;padding:0px 5px 0px 5px;margin-bottom:2px;">Send
+                                                        Notification</legend>
+
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-2 col-sm-2 col-xs-3">To</label>
+                                                        <div class="col-md-10 col-sm-10 col-xs-12">
+                                                            <tags-input data-ng-model="tagsTo" class="tag-scroll-height"
+                                                                min-length="0" ng-disabled="{{mode}}" name="tagsTo"></tags-input>
+                                                            <input type="hidden" name="tagsTo" data-ng-model="tagsTo"
+                                                                required>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-2 col-sm-2 col-xs-3">CC</label>
+                                                        <div class="col-md-10 col-sm-10 col-xs-12">
+                                                            <tags-input data-ng-model="tagsCC" class="tag-scroll-height"
+                                                                min-length="0" ng-disabled="{{mode}}"></tags-input>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-2 col-sm-2 col-xs-2">Bcc</label>
+                                                        <div class="col-md-10 col-sm-10 col-xs-10">
+                                                            <tags-input data-ng-model="tagsBcc" class="tag-scroll-height"
+                                                                min-length="0" ng-disabled="{{mode}}"></tags-input>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-3 col-sm-3 col-xs-3">As
+                                                            Attachment</label>
+                                                        <div class="col-md-9 col-sm-9 col-xs-12">
+                                                            <div class="col-md-1 col-sm-1 col-xs-1" style="padding-left:0px">
+                                                                <div class="mt-checkbox-list" style="margin-top:-7px">
+                                                                    <label class="mt-checkbox mt-checkbox-outline">
+                                                                        <input type="checkbox" ng-model="report.senderInfo.sendAttachment"
+                                                                            ng-true-value="'Y'" ng-false-value="'N'"
+                                                                            class="ng-pristine ng-untouched ng-valid ng-not-empty"
+                                                                            ng-disabled="{{mode}}">
+                                                                        <span ng-disabled="{{mode}}"></span>
+                                                                    </label>
                                                                 </div>
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label class="control-label col-md-2 col-sm-2 col-xs-3">CC</label>
-                                                            <div class="col-md-10 col-sm-10 col-xs-12">
-                                                                <tags-input data-ng-model="tagsCC" class="tag-scroll-height" min-length="0"></tags-input>
+                                                            </div>
+                                                            <label class="control-label col-md-4 col-sm-4 col-xs-4"
+                                                                style="padding-left:0px;">On Success</label>
+                                                            <div class="col-md-1 col-sm-1 col-xs-1" style="padding-left:0px">
+                                                                <div class="mt-checkbox-list" style="margin-top:-7px">
+                                                                    <label class="mt-checkbox mt-checkbox-outline">
+                                                                        <input type="checkbox" ng-model="report.senderInfo.notifOnSuccess"
+                                                                            ng-true-value="'Y'" ng-false-value="'N'"
+                                                                            class="ng-pristine ng-untouched ng-valid ng-not-empty"
+                                                                            ng-disabled="{{mode}}">
+                                                                        <span ng-disabled="{{mode}}"></span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <label class="control-label col-md-4 col-sm-4 col-xs-4">On
+                                                                Failure</label>
+                                                            <div class="col-md-2 col-sm-2 col-xs-2" style="padding-left:0px">
+                                                                <div class="mt-checkbox-list" style="margin-top:-7px">
+                                                                    <label class="mt-checkbox mt-checkbox-outline">
+                                                                        <input type="checkbox" ng-model="report.senderInfo.notifyOnFailure"
+                                                                            ng-true-value="'Y'" ng-false-value="'N'"
+                                                                            class="ng-pristine ng-untouched ng-valid ng-not-empty"
+                                                                            ng-disabled="{{mode}}">
+                                                                        <span ng-disabled="{{mode}}"></span>
+                                                                    </label>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                        <div class="form-group">
-                                                            <label class="control-label col-md-2 col-sm-2 col-xs-3">Bcc</label>
-                                                            <div class="col-md-10 col-sm-10 col-xs-12">
-                                                                <tags-input data-ng-model="tagsBcc" class="tag-scroll-height" min-length="0"></tags-input>
-                                                            </div>
-                                                        </div>
+                                                    </div>
                                                 </fieldset>
                                             </div>
                                         </div>
@@ -1083,11 +1154,14 @@
                                     </form>
                                 </div><!-- End Tab4 -->
 
-                            </div><!--End tab-content-->
-                        </div><!--End form-body-->
+                            </div>
+                            <!--End tab-content-->
+                        </div>
+                        <!--End form-body-->
                     </div>
                 </div>
-            </div><!--End form-wizard-->
+            </div>
+            <!--End form-wizard-->
         </div>
     </div>
 
@@ -1128,6 +1202,200 @@
             </div>
         </div>
     </div>
+
+    <div id="responsive" class="modal fade bs-modal-lg in   " tabindex="-1" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content" style="resize: both;overflow: auto;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">Run Params</h4>
+                </div>
+                <form class="form-horizontal" name="responsive" ng-submit="executeWithExecParams()" novalidate="novalidate">
+                    <div class="modal-body">
+                        <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 300px;">
+                            <div class="scroller" style="height: 300px; overflow-y: auto; width: auto;"
+                                data-always-visible="1" data-rail-visible1="1" data-initialized="1">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <br>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="select">Type
+                                                </label>
+                                                <div class="col-md-6">
+                                                    <select class="form-control" name="ParamType" select2 ng-change="onChangeParamType()"
+                                                        data-ng-model="selectParamType" ng-options="r.text  as r.caption disable when ['dag'].indexOf(select) !=-1  && r.text =='paramset' ?true:false for r in paramTypes">
+                                                        <option value="">-Select-</option>
+                                                    </select>
+                                                    <input type="hidden" name="ParamType" ng-model="selectParamType"
+                                                        required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" ng-show="selectParamType =='paramset'">
+                                            <div class="row">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="select">Name
+                                                </label>
+                                                <div class="col-md-6">
+                                                    <select class="form-control" name="paramsetdata" select2 ng-change="onSelectparamSet()"
+                                                        data-ng-model="paramsetdata" ng-options="r as r.name for r in allparamset | orderBy:'name'">
+                                                        <option value="" style="color:red;">USE DEFAULT VALUE</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-3" ng-if="isPramsetInProgess" style="margin-top:4px;">
+                                                    <i class="glyphicon glyphicon-refresh spinning" style="margin:5px 0px 0px -23px;"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group" ng-if="selectParamType =='paramlist'">
+                                            <div class="row">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="select">Name
+                                                </label>
+                                                <div class="col-md-6">
+                                                    <div>
+                                                        <select class="form-control" name="paramlistdata" ng-disabled="allParamList.length >0?false:true"
+                                                            select2 ng-change="onChangeParamList()" data-ng-model="$parent.paramlistdata"
+                                                            ng-options="r as r.name for r in allParamList">
+                                                            <option value="">-Select-</option>
+                                                        </select>
+
+                                                        <input type="hidden" name="paramlistdata" ng-model="$parent.paramlistdata"
+                                                            ng-required="isParamListRquired">
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="col-md-3" ng-if="isPramlistInProgess" style="margin-top:4px;">
+                                                    <i class="glyphicon glyphicon-refresh spinning" style="margin:5px 0px 0px -23px;"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" ng-if="selectParamType== null">
+                                            <div class="row">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="select">Name
+                                                </label>
+                                                <div class="col-md-6">
+                                                    <select class="form-control" select2 name="paramlistdata1"
+                                                        data-ng-model="paramlistdata1" ng-options="r as r.name for r in allParamList">
+                                                        <option value="">-Select-</option>
+                                                    </select>
+                                                    <input type="hidden" name="paramlistdata1" ng-model="paramlistdata1"
+                                                        required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div ng-if="isParamLsitTable">
+                                            <table class=" row-border hover table  table-striped table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width:10%;text-align:center">ID</th>
+                                                        <th class="text-center">Name</th>
+                                                        <th class="text-center" style="width:20%;">Type</th>
+                                                        <th class="text-center">Default Value</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr ng-repeat="tabledata in selectParamList.paramInfo">
+                                                        <td>
+                                                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                <input type="text" ng-model="$index" ng-disabled="true"
+                                                                    class="form-control">
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                <input type="text" ng-model="tabledata.paramName" title="{{tabledata.paramName}}"
+                                                                    ng-disabled="true" class="form-control">
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                <input type="text" ng-model="tabledata.paramType" title="{{tabledata.paramType}}"
+                                                                    ng-disabled="true" class="form-control">
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <div ng-if="tabledata.paramValueType =='distribution'"
+                                                                ng-init="getAllLatest('distribution',$index)">
+                                                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                    <input name="tabledata{{$index}}" type="text"
+                                                                        ng-model="tabledata.selectedParamValue.name" />
+                                                                </span>
+                                                            </div>
+                                                            <div ng-if="tabledata.paramValueType =='simple'">
+                                                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                    <input type="text" ng-model="tabledata.paramValue"
+                                                                        title="{{tabledata.paramValue}}" ng-disabled="true"
+                                                                        class="form-control">
+                                                                </span>
+                                                            </div>
+                                                            <div class="text-center" ng-if="['simple','distribution'].indexOf(tabledata.paramValueType) == -1">
+                                                                NA
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div ng-if="isTabelShow" style="overflow-x: auto;">
+                                            <table class=" row-border hover table  table-striped table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="text-align:center;Vertical-align: middle;width:5%;">
+                                                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                <input style="width:16px;height:16px;" type="checkbox"
+                                                                    ng-disabled="{{mode}}" ng-model="$parent.selectallattribute"
+                                                                    ng-change="selectAllRow()" />
+                                                            </span>
+                                                        </th>
+                                                        <th class="text-center"> ID </th>
+                                                        <th class="text-center" ng-repeat="tablecol in paramtablecol">
+                                                            {{tablecol.paramName}} </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr ng-repeat="tabledata in paramtable">
+                                                        <td style="text-align:center;Vertical-align:middle;width:5%;">
+                                                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                <input style="width:16px;height:16px;" class="form-control"
+                                                                    type="checkbox" ng-model="tabledata.selected" />
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                <input style="width:50px" type="text" ng-model="tabledata.paramSetId"
+                                                                    ng-disabled="true" class="form-control">
+                                                            </span>
+                                                        </td>
+                                                        <td ng-repeat="tablecol in tabledata.paramSetVal">
+                                                            <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                <input style="width:{{paramtablecol.length}} < 3?0:{{paramtablecol[$index].paramName.split('').length + 100}}px"
+                                                                    type="text" ng-model="tablecol.value" ng-disabled="true"
+                                                                    class="form-control">
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+                        <input type="submit" class="btn green" value="Submit" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
 </div>
 
 <br>

@@ -1550,15 +1550,15 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          $scope.msgtype="Task"
        }
        if(status == 'Killed'){
-         $scope.executionmsg =$scope.msgtype+" killed successfully"
+         $scope.executionmsg =$scope.msgtype+" Killed Successfully"
          notify.content=$scope.executionmsg
        }
        if(status =='OnHold'){
-         $scope.executionmsg =$scope.msgtype+" paused successfully"
+         $scope.executionmsg =$scope.msgtype+" Paused Successfully"
          notify.content=$scope.executionmsg
        }
        if(status =='Resume'){
-         $scope.executionmsg =$scope.msgtype+" resumed successfully"
+         $scope.executionmsg =$scope.msgtype+" Resumed Successfully"
          notify.content=$scope.executionmsg
        }
        $rootScope.$emit('notify', notify);
@@ -2271,7 +2271,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         var type = $scope.popupModel.modelData.operators[0].operatorInfo[0].ref.type;
         var typeParamListArray=["simulate","operator","operatorexec","simulateexec"];
         var typeParamSetArray=["train","rule","ruleexec",'trainexec'];
-        var typeParamsArray=["report","dashboard","reportexec",'dashboardexec'];
+        var typeParamsArray=["dashboard",'dashboardexec'];
         if(typeParamSetArray.indexOf(type.toLowerCase()) !=-1 && ($scope.paramsetdata ||  $scope.popupModel.selectedType)){
           $scope.isExecParamSet=false;
           $scope.isTabelShow=false;

@@ -34,20 +34,7 @@
   "footer": "Economic Capital",
   "footerAlign": "left",
   "saveOnRefresh" : "Y",
-  "filterInfo": [
-    {
-      "ref": {
-        "type": "datapod",
-        "uuid": "e5430fca-1df7-42ee-8732-a21b49878662",
-        "version": null,
-        "name": "customer_es_allocation"
-      },
-      "value": null,
-      "attrId": "3",
-      "attrName": "reporting_date",
-      "attrType": null
-    }
-  ],
+  "filterInfo": null,
   "dependsOn": {
     "ref": {
       "type": "datapod",

@@ -1502,7 +1502,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
 		}
     $scope.filterTag=[];
     //$scope.executeDashboard(null); 
-    $scope.getAllLatestDashboardExec(); 
+    $scope.getAllLatestDashboardExec("reRun"); 
   }
 
   $scope.submitDownload = function () {
@@ -1586,20 +1586,24 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
 
   }
 
-  $scope.getAllLatestDashboardExec = function () {
+  $scope.getAllLatestDashboardExec = function (action) {
     DahsboardSerivce.getDasboardExecBySave($stateParams.id,"dashboard","Y").then(function (response) { onSuccessGetAllLatest(response.data) });
     var onSuccessGetAllLatest = function (response) {
       $scope.allExecDetail = response;
       if(response && response.length ==0){
         $scope.executeDashboard(null);  
-      }else{
-        $scope.selectedDExec = response[0];
+      }else if(action !=null && action=='reRun'){
+        $scope.executeDashboard(null);
+      }
+      else{
+        let len=response.length-1;
+        $scope.selectedDExec = response[len];
         $scope.getOneByUuidAndVersionDashboardExec($scope.selectedDExec);
       }
     }
   }
 
   $scope.callGraph();
-  $scope.getAllLatestDashboardExec();
+  $scope.getAllLatestDashboardExec(null);
   
 })//End ShowDashboradController
