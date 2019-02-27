@@ -14,6 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -169,9 +170,14 @@ public class ReportOperator implements IOperator {
 
 	private String generateFilter(Report report, Map<String, MetaIdentifier> refKeyMap,
 			HashMap<String, String> otherParams, Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
-		if ( execParams !=null && execParams.getFilterInfo() != null && !execParams.getFilterInfo().isEmpty()) {
+		/*if ( execParams !=null && execParams.getFilterInfo() != null && !execParams.getFilterInfo().isEmpty()) {
 			Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(report);
 			String filter = filterOperator2.generateSql(execParams.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, runMode, mapSourceDS);
+			return filter;
+		}*/
+		if (report !=null && report.getFilterInfo() != null && !report.getFilterInfo().isEmpty()) {
+			Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(report);
+			String filter = filterOperator2.generateSql(report.getFilterInfo(), refKeyMap, report.getDependsOn(), otherParams, usedRefKeySet, execParams, false, false, runMode, mapSourceDS);
 			return filter;
 		}
 		return ConstantsUtil.BLANK;
@@ -189,11 +195,16 @@ public class ReportOperator implements IOperator {
 			String filterStr = filterOperator.generateSql(report.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, true, true, runMode);
 			return StringUtils.isBlank(filterStr)?ConstantsUtil.BLANK : ConstantsUtil.HAVING_1_1.concat(filterStr);
 		}*/
-		if (execParams !=null && execParams.getFilterInfo() != null && !execParams.getFilterInfo().isEmpty()) {
+		if (report !=null && report.getFilterInfo() != null && !report.getFilterInfo().isEmpty()) {
+			Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(report);
+			String filterStr =filterOperator2.generateSql(report.getFilterInfo(), refKeyMap, report.getDependsOn(), otherParams, usedRefKeySet, execParams, true, true, runMode, mapSourceDS);
+			return StringUtils.isBlank(filterStr)?ConstantsUtil.BLANK : ConstantsUtil.HAVING_1_1.concat(filterStr);
+	    }
+		/*if (execParams !=null && execParams.getFilterInfo() != null && !execParams.getFilterInfo().isEmpty()) {
 			Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(report);
 			String filterStr = filterOperator2.generateSql(execParams.getFilterInfo(), refKeyMap, otherParams, usedRefKeySet, execParams, true, true, runMode,mapSourceDS);
 			return StringUtils.isBlank(filterStr)?ConstantsUtil.BLANK : ConstantsUtil.HAVING_1_1.concat(filterStr);
-	    }
+	    }*/
 		return ConstantsUtil.BLANK;
 	}
 }
