@@ -1,19 +1,30 @@
 <div class="row" *ngIf="IsTableShow == true;else falsyTemplate ">
-    <div class="col-md-12" *ngIf="cols !=null">       
+    <div class="col-md-12" *ngIf="cols !=null">
         <!-- <div style="float:right;" *ngIf="cols >0">
             <p-multiSelect [options]="columnOptions" [(ngModel)]="cols" [style]="{'width':'23px','height':'40px'}"></p-multiSelect>
         </div> -->
-        <div class="row" >
-            <div class="col-md-12 col-sm-12">
+        <div class="row">
+            <!-- <div class="col-md-12 col-sm-12">
                 <div class="col-md-3 col-md-offset-9" style="padding:4px 25px;border-bottom: 0 none">
                     <i class="fa fa-search" style="margin-top: 2%;"></i>
                     <input #gbs type="text" style="float:right;" pInputText placeholder="Search">
                   </div>
+            </div> -->
+            <div class="col-md-6 col-sm-6"></div>
+            <div class="col-md-6 col-sm-6">
+                <div style="float:right;">
+                    <label>Search:</label>
+                    <input #gbs type="search" style=" margin-left: 4px" class="form-control input-sm input-small input-inline"
+                        pInputText>
+                </div>
             </div>
-          </div>
-          <br>
-        <p-dataTable [value]="colsdata" [paginator]="true" [rows]="10" [pageLinks]="3" #dt [globalFilter]="gbs"  exportFilename="data"    selectionMode="multiple" [metaKeySelection]="false" scrollable="true" resizableColumns="true" scrollHeight="440px" sortMode="multiple" >
-            <p-column *ngFor="let col of cols" [field]="col.field" [header]="col.header" [style]="{'width':col.colwidth}" [sortable]="true"></p-column>
+        </div>
+        <br>
+        <p-dataTable [value]="colsdata" [paginator]="true" [rows]="10" [pageLinks]="3" #dt [globalFilter]="gbs"
+            exportFilename="data" selectionMode="multiple" [metaKeySelection]="false" scrollable="true"
+            resizableColumns="true" scrollHeight="440px" sortMode="multiple">
+            <p-column *ngFor="let col of cols" [field]="col.field" [header]="col.header" [style]="{'width':col.colwidth}"
+                [sortable]="true"></p-column>
         </p-dataTable>
     </div>
 </div>
@@ -24,7 +35,7 @@
         <div class="bounce3"></div>
     </div>
 </ng-template>
-<div class ="centercontent" *ngIf="IsError">
-   <span style="font-size:14px;color:red;">Some error occur</span>
+<div class="centercontent" *ngIf="IsError">
+    <span style="font-size:14px;color:red;">Some error occur</span>
 
 </div>

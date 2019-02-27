@@ -22,6 +22,7 @@ export class AttributeIO {
         attrName?: String;
         type?: String;
         datapodname?: String;
+        version?: String;
     };
 
 }

@@ -1,3 +1,4 @@
+import { MetadataIO } from './../metadata/domainIO/domain.metadataIO';
 
 import { Component, Input, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { Router, Event as RouterEvent, ActivatedRoute, Params } from '@angular/router';
@@ -13,7 +14,8 @@ import { ResponseContentType } from '@angular/http';
 import { saveAs } from 'file-saver';
 import { AppConfig } from '../app.config';
 import { KnowledgeGraphComponent } from '../shared/components/knowledgeGraph/knowledgeGraph.component';
-//import { KnowledgeGraphComponent } from '../shared/components/knowledgeGraph/knowledgeGraph.component';
+import { RoutesParam } from '../metadata/domain/domain.routeParams';
+import { GraphParamIO } from '../metadata/domainIO/domain.graphParamIO';
 
 @Component({
   selector: 'app-dataqualityresult',
@@ -40,12 +42,14 @@ export class DataQualityResultComponent {
   _mode: any;
   istableShow: boolean;
   isgraphShow: boolean;
-  params: any
+  graphParams: any
+  index:0;
 
   @ViewChild(JointjsGroupComponent) d_JointjsGroupComponent: JointjsGroupComponent;
   @ViewChild(TableRenderComponent) d_tableRenderComponent: TableRenderComponent;
   @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
   constructor(private _config: AppConfig, private http: Http, private _location: Location, private _activatedRoute: ActivatedRoute, private router: Router, public appMetadata: AppMetadata, private _commonService: CommonService) {
+    
     this.baseUrl = _config.getBaseUrl();
     this.showKnowledgeGraph = false;
     this.numRows = 100;
@@ -68,41 +72,45 @@ export class DataQualityResultComponent {
       }
     ]
     this.downloadFormatArray = [
-      { "value": "excel", "label": "excel" }]
-    this.params = {
+      { "value": "excel", "label": "excel" }
+    ];
+    this.graphParams = {
       "typeLabel": "RuleGroup",
       "url": "dataqual/getdqExecBydqGroupExec?",
       "ref": {}
-    }
+    };
     this._activatedRoute.params.subscribe((params: Params) => {
-      this._uuid = params['id'];
-      this._version = params['version'];
-      this._mode = params['mode'];
-      this._type = params['type'];
+      let param = <RoutesParam>params;
+      this._uuid = param.id;
+      this._version = param.version;
+      this._mode = param.mode;
+      this._type = param.type;
       this.getOneByUuidAndVersion(this._uuid, this._version, this._type)
     });
+
+    this.graphParams = new GraphParamIO();
   }
 
   getOneByUuidAndVersion(id, version, type) {
     this._commonService.getOneByUuidAndVersion(id, version, type)
       .subscribe(
-      response => {
-        this.onSuccessgetOneByUuidAndVersion(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.onSuccessgetOneByUuidAndVersion(response)
+        },
+        error => console.log("Error :: " + error));
   }
 
   onSuccessgetOneByUuidAndVersion(response) {
     this.breadcrumbDataFrom[2].caption = response.name;
-    this.params["id"] = this._uuid;
-    this.params["uuid"] = this._uuid;
-    this.params["name"] = response.name;
-    this.params["elementType"] = this._type;
-    this.params["version"] = this._version;
-    this.params.ref["id"] = this._uuid;
-    this.params.ref["name"] = response.name;
-    this.params.ref["type"] = this._type;
-    this.params.ref["version"] = this._version;
+    this.graphParams.id = this._uuid;
+    this.graphParams.uuid = this._uuid;
+    this.graphParams.name = response.name;
+    this.graphParams.elementType = this._type;
+    this.graphParams.version = this._version;
+    this.graphParams.ref.id = this._uuid;
+    this.graphParams.ref.name = response.name;
+    this.graphParams.ref.type = this._type;
+    this.graphParams.ref.version = this._version;
     if (this._type.slice(-4) == 'Exec' || this._type.slice(-4) == 'exec') {
       if (this._type.slice(-9) == 'groupExec' || this._type.slice(-9) == 'groupexec') {
         this.isgraphShow = true;
@@ -114,12 +122,12 @@ export class DataQualityResultComponent {
     }
     if (this.istableShow == true) {
       setTimeout(() => {
-        this.params["type"] = this.appMetadata.getMetadataDefs(this._type.toLowerCase())['name']
-        this.d_tableRenderComponent.renderTable(this.params);
+        this.graphParams.type = this.appMetadata.getMetadataDefs(this._type.toLowerCase()).name;
+        this.d_tableRenderComponent.renderTable(this.graphParams);
       }, 1000);
     }
     else {
-      this.params["type"] = this._type;
+      this.graphParams.type = this._type;
       this.isgraphShow = true;
     }
   }
@@ -169,19 +177,15 @@ export class DataQualityResultComponent {
   showMainPage() {
     this.isHomeEnable = false;
     this.showKnowledgeGraph = false;
-    // this.istableShow = true;
-    // this.isResultTable = true;
     setTimeout(() => {
-      this.params["type"] = this.appMetadata.getMetadataDefs(this._type.toLowerCase())['name']
-      this.d_tableRenderComponent.renderTable(this.params);
+      this.graphParams.type = this.appMetadata.getMetadataDefs(this._type.toLowerCase()).name;
+      this.d_tableRenderComponent.renderTable(this.graphParams);
     }, 1000);
   }
 
   showDagGraph(uuid, version) {
     this.isHomeEnable = true;
     this.showKnowledgeGraph = true;
-    // this.istableShow = false;
-    // this.isResultTable = false;
     setTimeout(() => {
       this.d_KnowledgeGraphComponent.getGraphData(this._uuid, this._version);
     }, 1000);
@@ -190,7 +194,7 @@ export class DataQualityResultComponent {
   cancelDialogBox() {
     this.displayDialogBox = false;
   }
-  
+
   downloadShow(param: any) {
     this.isResultTable = true;
     console.log(param)

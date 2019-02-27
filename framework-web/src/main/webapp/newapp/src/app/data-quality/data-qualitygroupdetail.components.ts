@@ -17,6 +17,7 @@ import { BaseEntity } from '../metadata/domain/domain.baseEntity';
 import { MetaIdentifierHolder } from '../metadata/domain/domain.metaIdentifierHolder';
 import { MetaIdentifier } from '../metadata/domain/domain.metaIdentifier';
 import { AttributeRefHolder } from '../metadata/domain/domain.attributeRefHolder';
+import { RoutesParam } from '../metadata/domain/domain.routeParams';
 
 @Component({
   selector: 'app-qualityGroup',
@@ -51,6 +52,9 @@ export class DataQualityGroupDetailComponent {
   isAdd: boolean;
   showForm: boolean = true;
   showDivGraph: boolean;
+  published: boolean;
+  locked: boolean;
+  active: boolean;
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router, public metaconfig: AppMetadata, private _commonService: CommonService, private _location: Location,
     private _dataQualityService: DataQualityService, public appHelper: AppHelper) {
@@ -84,15 +88,19 @@ export class DataQualityGroupDetailComponent {
       }
     ],
 
-    this.isEditInprogess = false;
+      this.isEditInprogess = false;
     this.isEditError = false;
+    this.active = true;
+    this.locked = false;
+    this.published = false;
   }
 
   ngOnInit() {
     this.activatedRoute.params.subscribe((params: Params) => {
-      this.id = params['id'];
-      this.version = params['version'];
-      this.mode = params['mode'];
+      let param = <RoutesParam>params;
+      this.id = param.id;
+      this.version = param.version;
+      this.mode = param.mode;
       if (this.mode !== undefined) {
         this.getAllVersionByUuid();
         this.getOneByUuidAndVersion(this.id, this.version);
@@ -106,7 +114,7 @@ export class DataQualityGroupDetailComponent {
 
     this.setMode(this.mode);
   }
-  
+
   setMode(mode: any) {
     if (mode == 'true') {
       this.isEdit = false;
@@ -151,6 +159,9 @@ export class DataQualityGroupDetailComponent {
     }, 1000);
   }
 
+  onChangeName() {
+    this.breadcrumbDataFrom[2].caption = this.dqgroupdata.name;
+  }
   public goBack() {
     //this._location.back();
     this.router.navigate(['app/list/dqgroup']);
@@ -159,7 +170,7 @@ export class DataQualityGroupDetailComponent {
   clear() {
     this.selectedItems = []
   }
-  
+
   getAllLatest() {
     this._commonService.getAllLatest(MetaTypeEnum.MetaType.DQ).subscribe(
       response => { this.OnSuccesgetAllLatest(response) },
@@ -193,9 +204,9 @@ export class DataQualityGroupDetailComponent {
   onSuccessgetOneByUuidAndVersion(response) {
     this.breadcrumbDataFrom[2].caption = response.name;
     this.dqgroupdata = response;
-    this.dqgroupdata.active == this.appHelper.convertStringToBoolean(this.dqgroupdata.active);
-    this.dqgroupdata.locked == this.appHelper.convertStringToBoolean(this.dqgroupdata.locked);
-    this.dqgroupdata.published == this.appHelper.convertStringToBoolean(this.dqgroupdata.published);
+    this.active == this.appHelper.convertStringToBoolean(this.dqgroupdata.active);
+    this.locked == this.appHelper.convertStringToBoolean(this.dqgroupdata.locked);
+    this.published == this.appHelper.convertStringToBoolean(this.dqgroupdata.published);
 
     const version: Version = new Version();
     version.label = this.dqgroupdata.version;
@@ -311,5 +322,5 @@ export class DataQualityGroupDetailComponent {
     this.msgs.push({ severity: msgtype, summary: msgsumary, detail: msg });
   }
 
-  
+
 }

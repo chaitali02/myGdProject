@@ -23,6 +23,7 @@ import { BaseEntity } from '../../metadata/domain/domain.baseEntity';
 import { MetaIdentifierHolder } from '../../metadata/domain/domain.metaIdentifierHolder';
 import { MetaIdentifier } from '../../metadata/domain/domain.metaIdentifier';
 import { setCheckNoChangesMode } from '@angular/core/src/render3/state';
+import { RoutesParam } from '../../metadata/domain/domain.routeParams';
 
 @Component({
   selector: 'app-algorithm',
@@ -115,9 +116,10 @@ export class AlgorithmComponent implements OnInit {
 
   ngOnInit() {
     this.activatedRoute.params.subscribe((params: Params) => {
-      let id = params['id'];
-      let version = params['version'];
-      this.mode = params['mode'];
+      let param = <RoutesParam>params;    
+      let id = param.id;
+      let version = param.version;
+      this.mode = param.mode;
       this.summaryMethods = []
       if (this.mode !== undefined) {
         this.getOneByUuidAndVersion(id, version);
