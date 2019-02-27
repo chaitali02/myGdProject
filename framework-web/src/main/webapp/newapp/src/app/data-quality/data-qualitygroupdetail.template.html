@@ -69,8 +69,8 @@
           </div>
 
           <div class="portlet-body form" *ngIf="!isEditInprogess && !isEditError">
-
-            <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="submitDqGroup()" #myNewForm="ngForm">
+            <form class="form-horizontal" name="myNewForm" novalidate="novalidate" (ngSubmit)="myNewForm.form.valid && submitDqGroup()"
+              #myNewForm="ngForm">
               <div class="form-group" *ngIf="mode">
                 <label class="col-md-3 control-label">UUID</label>
                 <div class="col-md-6">
@@ -80,13 +80,14 @@
               </div>
 
               <div class="form-group">
-                <label class="col-md-3 control-label">Name
+                <label class="col-md-3 control-label" [ngClass]="{'has-error': myNewForm.submitted && (myNewForm.form.controls['name']?.invalid)}">Name
                   <span class="required" aria-required="true"> * </span>
                 </label>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="dqgroupdata.name" name="name" placeholder="" (ngModelChange)="onChangeName($event)"
-                    [disabled]="mode == 'true'" #name="ngModel" required [ngClass]="{'has-error':myNewForm.submitted || (name.invalid && (name.dirty || name.touched))}">
-                  <div *ngIf="myNewForm.submitted || (name.invalid && (name.dirty || name.touched))">
+                  <input type="text" class="form-control" [(ngModel)]="dqgroupdata.name" name="name" placeholder=""
+                    (ngModelChange)="onChangeName($event)" [disabled]="mode == 'true'" #name="ngModel" required
+                    [ngClass]="{'has-error':myNewForm.submitted && (myNewForm.form.controls['name']?.invalid)}">
+                  <div *ngIf="myNewForm.submitted && (myNewForm.form.controls['name']?.invalid)">
                     <div class="help-block has-error error-msg">
                       This field is required
                     </div>
@@ -158,45 +159,30 @@
                 </div>
               </div>
               <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12" >Run In Parallel ?</label>
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Run In Parallel ?</label>
                 <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0.3% 0% 0% 1.5%;">
                   <p-checkbox [(ngModel)]="dqgroupdata.inParallel" name="inParallel" binary="true"></p-checkbox>
                 </div>
               </div>
-              <div class="form-group">
+              <div class="form-group" [ngClass]="{'has-error':myNewForm.submitted && (myNewForm.form.controls['attributeInfo']?.invalid)}">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">DQ Rule
                   <span class="required" aria-required="true"> * </span>
                 </label>
-                <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="dropdownList">
-
+                <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="dropdownList" [ngClass]="{'has-error':myNewForm.submitted && (myNewForm.form.controls['attributeInfo']?.invalid)}">
                   <angular2-multiselect [data]="dropdownList" [(ngModel)]="selectedItems" [settings]="dropdownSettings"
-                    name="attributeInfo" #name="ngModel" required [ngClass]="{'has-error':myNewForm.submitted || (name.invalid && (name.dirty || name.touched))}">
+                    name="attributeInfo" #attributeInfo="ngModel" required>
                   </angular2-multiselect>
+                  <div *ngIf="myNewForm.submitted && (myNewForm.form.controls['attributeInfo']?.invalid)">
+                    <div class="help-block has-error error-msg">
+                      This field is required
+                    </div>
+                  </div>
                 </div>
                 <div class="col-md-1">
                   <span *ngIf="mode != 'true'" class="glyphicon glyphicon-erase" title="Clear All" data-toggle="tooltip"
-                    data-placement="top" tooltip aria-hidden="true" (click)=" clear()" style="top:3px;left:-24px;cursor: pointer;"></span>
+                    data-placement="top" tooltip aria-hidden="true" (click)="clear()" style="top:3px;left:-24px;cursor: pointer;"></span>
                 </div>
               </div>
-              <!-- <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <div class="btn-group">
-                    <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="dqgroupdata.active" name="active" [checked]="active"
-                      color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
-                  </div>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <div class="btn-group">
-                    <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="dqgroupdata.published " name="published" [checked]="published"
-                      color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
-                  </div>
-                </div>
-              </div> -->
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Run Immediately ?</label>
                 <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0.3% 0% 0% 1.5%;">
@@ -207,7 +193,7 @@
               <div class="form-group" style="padding-top: 10px;">
                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                   <a class="btn btn-primary" (click)="goBack()">Cancel</a>
-                  <input type="submit" class="btn btn-success btn-margin" value="Submit" name="submit" [disabled]="(!iSSubmitEnable == false|| mode == false || myNewForm.form.dirty == true)?false:true">
+                  <input type="submit" class="btn btn-success btn-margin" value="Submit" name="submit" [disabled]="(mode == false || myNewForm.form.dirty == true)?false:true">
                   <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" *ngIf="IsProgerssShow=='true'">
                     <div class="bounce1"></div>
                     <div class="bounce2"></div>

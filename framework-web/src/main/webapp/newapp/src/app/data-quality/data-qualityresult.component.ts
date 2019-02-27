@@ -43,11 +43,13 @@ export class DataQualityResultComponent {
   istableShow: boolean;
   isgraphShow: boolean;
   graphParams: any
+  index:0;
 
   @ViewChild(JointjsGroupComponent) d_JointjsGroupComponent: JointjsGroupComponent;
   @ViewChild(TableRenderComponent) d_tableRenderComponent: TableRenderComponent;
   @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
   constructor(private _config: AppConfig, private http: Http, private _location: Location, private _activatedRoute: ActivatedRoute, private router: Router, public appMetadata: AppMetadata, private _commonService: CommonService) {
+    
     this.baseUrl = _config.getBaseUrl();
     this.showKnowledgeGraph = false;
     this.numRows = 100;

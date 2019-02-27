@@ -88,7 +88,7 @@ export class DataQualityGroupDetailComponent {
       }
     ],
 
-    this.isEditInprogess = false;
+      this.isEditInprogess = false;
     this.isEditError = false;
     this.active = true;
     this.locked = false;
@@ -97,7 +97,7 @@ export class DataQualityGroupDetailComponent {
 
   ngOnInit() {
     this.activatedRoute.params.subscribe((params: Params) => {
-      let param = <RoutesParam>params;    
+      let param = <RoutesParam>params;
       this.id = param.id;
       this.version = param.version;
       this.mode = param.mode;
@@ -114,7 +114,7 @@ export class DataQualityGroupDetailComponent {
 
     this.setMode(this.mode);
   }
-  
+
   setMode(mode: any) {
     if (mode == 'true') {
       this.isEdit = false;
@@ -159,7 +159,7 @@ export class DataQualityGroupDetailComponent {
     }, 1000);
   }
 
-  onChangeName(){
+  onChangeName() {
     this.breadcrumbDataFrom[2].caption = this.dqgroupdata.name;
   }
   public goBack() {
@@ -170,7 +170,7 @@ export class DataQualityGroupDetailComponent {
   clear() {
     this.selectedItems = []
   }
-  
+
   getAllLatest() {
     this._commonService.getAllLatest(MetaTypeEnum.MetaType.DQ).subscribe(
       response => { this.OnSuccesgetAllLatest(response) },
@@ -322,5 +322,5 @@ export class DataQualityGroupDetailComponent {
     this.msgs.push({ severity: msgtype, summary: msgsumary, detail: msg });
   }
 
-  
+
 }
