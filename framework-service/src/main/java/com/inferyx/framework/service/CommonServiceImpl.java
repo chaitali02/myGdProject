@@ -2968,6 +2968,11 @@ public class CommonServiceImpl<T> {
 								null, null, null, null, null, null, null, null, null).size();
 						countHolder.add(new MetaStatsHolder("paramlistdag", Long.toString(count), nameLastUpdatedBy,
 								lastUpdatedOn));
+						count = metadataServiceImpl.getParamList(MetaType.report.toString(), MetaType.paramlist.toString(),
+								null, null, null, null, null, null, null, null, null).size();
+						countHolder.add(new MetaStatsHolder("paramlistreport", Long.toString(count), nameLastUpdatedBy,
+								lastUpdatedOn));
+
 
 					}
 				}

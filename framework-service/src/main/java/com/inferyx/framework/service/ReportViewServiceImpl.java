@@ -68,7 +68,7 @@ public class ReportViewServiceImpl {
 		reportView.setCreatedOn(resolvedReport.getCreatedOn());
 		reportView.setPublished(resolvedReport.getPublished());
 		MetaIdentifierHolder dependsOn = resolvedReport.getDependsOn();
-		List<AttributeRefHolder> filterInfo = resolvedReport.getFilterInfo();
+		List<AttributeRefHolder> filterInfo = null;//resolvedReport.getFilterInfo();
 		Filter resolvedFilter = null;
 		if(filterInfo != null)		{
 			for (int i = 0; i < filterInfo.size(); i++) {
@@ -127,7 +127,7 @@ public class ReportViewServiceImpl {
 		reportView.setCreatedOn(resolvedReport.getCreatedOn());
 		reportView.setPublished(resolvedReport.getPublished());
 		MetaIdentifierHolder dependsOn = resolvedReport.getDependsOn();
-		List<AttributeRefHolder> filterInfo = resolvedReport.getFilterInfo();
+		List<AttributeRefHolder> filterInfo = null;//resolvedReport.getFilterInfo();
 		Filter resolvedFilter = null;
 		if(filterInfo != null) {
 		for (int i = 0; i < filterInfo.size(); i++) {
@@ -207,7 +207,7 @@ public class ReportViewServiceImpl {
 		reportView.setFooter(resolvedReport.getFooter());
 		reportView.setFooterAlign(resolvedReport.getFooterAlign());
 		MetaIdentifierHolder dependsOn = resolvedReport.getDependsOn();
-		List<AttributeRefHolder> filterInfo = resolvedReport.getFilterInfo();
+		List<AttributeRefHolder> filterInfo = null; //resolvedReport.getFilterInfo();
 		Filter resolvedFilter = null;
 		if(filterInfo != null)		{
 			for (int i = 0; i < filterInfo.size(); i++) {
@@ -333,7 +333,7 @@ public class ReportViewServiceImpl {
 			MetaIdentifier filterMeta = new MetaIdentifier(MetaType.filter, filter.getUuid(), null);
 			filterInfo.setRef(filterMeta);
 			filterList.add(filterInfo);
-			report.setFilterInfo(filterList);
+			//report.setFilterInfo(filterList);
 		}
 		report.setPublished(reportView.getPublished());
 		return save(report);

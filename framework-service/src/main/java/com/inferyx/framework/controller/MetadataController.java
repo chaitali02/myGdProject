@@ -908,6 +908,21 @@ public class MetadataController {
 			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {		
 		return metadataServiceImpl.getParamList(collectionType,type,name, userName, startDate, endDate, tags, active, null, null, published);
 	}
+	@RequestMapping(value = "/getParamListByReport", method = RequestMethod.GET)
+	public @ResponseBody List<BaseEntity> getParamListByReport(
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "name", required = false) String name,
+			@RequestParam(value = "userName", required = false) String userName,
+			@RequestParam(value = "startDate", required = false) String startDate,
+			@RequestParam(value = "endDate", required = false) String endDate,
+			@RequestParam(value = "tags", required = false) String tags,
+			@RequestParam(value = "active", required = false) String active,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "published", required = false) String published,
+			@RequestParam(value = "collectionType", required = false,defaultValue="report") String collectionType)
+			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {		
+		return metadataServiceImpl.getParamList(collectionType,type,name, userName, startDate, endDate, tags, active, null, null, published);
+	}
 	
 	@RequestMapping(value = "/getParamListByRule", method = RequestMethod.GET, params = {"uuid", "version"})
 	public @ResponseBody List<ParamListHolder> getParamListByRule(
@@ -916,6 +931,15 @@ public class MetadataController {
 			@RequestParam(value = "paramListType", required = false) MetaType paramListType,
 			@RequestParam(value = "type", required = false) String type) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {		
 		return metadataServiceImpl.getParamListByRule(ruleUuid, ruleVersion, null);
+	}
+	
+	@RequestMapping(value = "/getParamListByReport", method = RequestMethod.GET, params = {"uuid", "version"})
+	public @ResponseBody List<ParamListHolder> getParamListByReport(
+			@RequestParam(value = "uuid", required = false) String ruleUuid,
+			@RequestParam(value = "version", required = false) String ruleVersion,
+			@RequestParam(value = "paramListType", required = false) MetaType paramListType,
+			@RequestParam(value = "type", required = false) String type) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {		
+		return metadataServiceImpl.getParamListByReport(ruleUuid, ruleVersion, null);
 	}
 		
 	@RequestMapping(value = "/getParamListByModel", method = RequestMethod.GET)
