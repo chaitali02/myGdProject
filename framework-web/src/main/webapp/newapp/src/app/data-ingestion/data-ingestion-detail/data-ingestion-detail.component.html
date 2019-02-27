@@ -13,26 +13,26 @@
         </div>
 
         <div class="actions">
-          <a class="btn btn-circle btn-icon-only btn-default " title="Main" data-placement="top" tooltip [ngClass]="isHomeEnable==true ? 'notcurrentpage':'currentpage'"
+          <a class="btn btn-circle btn-icon-only btn-default left-margin" title="Main" data-placement="top" tooltip [ngClass]="isHomeEnable==true ? 'notcurrentpage':'currentpage'"
             data- (click)="showMainPage(ingestData.uuid,ingestData.version)">
             <i class="fa fa-home" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
           </a>
 
-          <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
+          <a class="btn btn-circle btn-icon-only btn-default left-margin" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
             tooltip [ngClass]="mode == 'true' && showGraph == false? 'notcurrentpage':'currentpage'" data-(click)="enableEdit(ingestData.uuid,ingestData.version)">
             <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
           </a>
 
-          <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Show Dependencies" data-placement="top" tooltip
+          <a class="btn btn-circle btn-icon-only btn-default left-margin" href="javascript:;" title="Show Dependencies" data-placement="top" tooltip
             [ngClass]= "isHomeEnable==false? 'notcurrentpage':'currentpage'" data- (click)="showDagGraph(ingestData.uuid,ingestData.version)">
             <i class="fa fa-sitemap" style="margin:2px auto;color:#a0a0a0;"></i>
           </a>
 
-          <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default " disabled="true" (click)="broadcastRefreshData()"
+          <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default left-margin" disabled="true" (click)="broadcastRefreshData()"
             data-original-title="" title="Refresh">
             <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
           </a>
-          <a class="btn btn-circle btn-icon-only btn-default" (click)="goBack()" title="Close">
+          <a class="btn btn-circle btn-icon-only btn-default left-margin" (click)="goBack()" title="Close">
             <i class="fa fa-times" style="margin: 2px auto;color:#a0a0a0;"></i>
           </a>
         </div>
@@ -120,7 +120,7 @@
                     <div class="form-group taginput">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
                       <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="locations!=''">
-                        <tag-input [(ngModel)]="tags" name="tags" [disable]="mode == 'true'" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden;padding-left:5px; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;"></tag-input>
+                        <tag-input [(ngModel)]="ingestData.tags" name="tags" [disable]="mode == 'true'" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden;padding-left:5px; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;"></tag-input>
                       </div>
                     </div>
                     <div class="form-group">
@@ -129,11 +129,11 @@
                         <textarea [disabled]="mode == 'true'" [(ngModel)]="ingestData.desc" name="desc" class="form-control noresize " rows="2" style="resize:none;"></textarea>
                       </div>
                     </div>
-                    <!-- <div class="form-group">
+                    <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
                         <div class="btn-group">
-                          <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="ingestData.active" name="active" [checked]="active"
+                          <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="active" name="active" [checked]="active"
                             color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
                         </div>
                       </div>
@@ -143,7 +143,7 @@
                       <label class="control-label col-md-3 col-sm-3 col-xs-12 col-lg-3">Locked</label>
                       <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
                         <div class="btn-group">
-                          <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="ingestData.locked " name="locked" [checked]="locked"
+                          <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="locked " name="locked" [checked]="locked"
                             color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
                         </div>
                       </div>
@@ -153,11 +153,11 @@
                       <label class="control-label col-md-3 col-sm-3 col-xs-12 col-lg-3">Published</label>
                       <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
                         <div class="btn-group">
-                          <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="ingestData.published " name="published" [checked]="published"
+                          <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="published " name="published" [checked]="published"
                             color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
                         </div>
                       </div>
-                    </div> -->
+                    </div>
 
                     <div class="form-group">
                       <label class="col-md-3 control-label">Type
@@ -221,8 +221,8 @@
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Source Header</label>
                       <div class="col-md-2 col-sm-3 col-xs-6">
                         <div class="btn-group">
-                          <!-- <ui-switch [disabled]="mode == 'true'"   [(ngModel)]="ingestData.sourceHeader " name="sourceHeader" [checked]="sourceHeader"
-                            color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch> -->
+                          <ui-switch [disabled]="mode == 'true'"   [(ngModel)]="ingestData.sourceHeader " name="sourceHeader" [checked]="sourceHeader"
+                            color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
                         </div>
                       </div>
 
@@ -320,8 +320,8 @@
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Target Header</label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
                         <div class="btn-group">
-                          <!-- <ui-switch [disabled]="mode == 'true'" [(ngModel)]="ingestData.targetHeader" name="targetHeader" [checked]="targetHeader"
-                            color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch> -->
+                          <ui-switch [disabled]="mode == 'true'" [(ngModel)]="targetHeader" name="targetHeader" [checked]="targetHeader"
+                            color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
                         </div>
                       </div>
                     </div>

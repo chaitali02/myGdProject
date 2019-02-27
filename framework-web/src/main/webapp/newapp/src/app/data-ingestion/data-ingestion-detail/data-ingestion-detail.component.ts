@@ -3,9 +3,26 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
 import { CommonService } from '../../metadata/services/common.service';
 import { Location } from '@angular/common';
 import { Version } from '../../metadata/domain/version';
-import { SelectItem } from 'primeng/primeng';
 import { DataIngestionService } from '../../metadata/services/dataIngestion.service';
-import { KnowledgeGraphComponent } from '../../shared/components/knowledgeGraph/knowledgeGraph.component'
+import { KnowledgeGraphComponent } from '../../shared/components/knowledgeGraph/knowledgeGraph.component';
+import { AttributeIO } from '../../metadata/domainIO/domain.attributeIO';
+//import { IngestRule } from '../../metadata/domain/domain.ingestRule';
+import { AppHelper } from '../../app.helper';
+import { DataIngestRuleIO } from '../../metadata/domainIO/domain.dataIngestRuleIO';
+import * as MetaTypeEnum from '../../metadata/enums/metaType';
+import { IngestRule } from '../../metadata/domain/domain.ingestRule';
+import { BaseEntity } from '../../metadata/domain/domain.baseEntity';
+import { DropDownIO } from '../../metadata/domainIO/domain.dropDownIO';
+import { Datasource } from '../../metadata/domain/domain.datasource';
+import { Datapod } from '../../metadata/domain/domain.datapod';
+import { MetaIdentifierHolder } from '../../metadata/domain/domain.metaIdentifierHolder';
+import { AttributeMapIO } from '../../metadata/domainIO/domain.attributeMapIO';
+import { Formula } from '../../metadata/domain/domain.formula';
+import { MetaIdentifier } from '../../metadata/domain/domain.metaIdentifier';
+import { FilterInfo } from '../../metadata/domain/domain.filterInfo';
+import { FilterInfoIO } from '../../metadata/domainIO/domain.filterInfoIO';
+import { Function } from '../../metadata/domain/domain.function';
+import { ParamListHolder } from '../../metadata/domain/domain.paramListHolder';
 @Component({
   selector: 'app-data-ingestion-detail',
   templateUrl: './data-ingestion-detail.component.html'
@@ -37,14 +54,14 @@ export class DataIngestionDetailComponent implements OnInit {
   attributeSourceTypeArray: { value: string; label: string; }[];
   paramlistArray: any[];
   functionArray: any[];
-  selectedAllFitlerRow: boolean;
+  selectedAllFilterRow: boolean;
   FormulaArray: any[];
   attributesArray: any[];
   operators: { 'value': string; 'label': string; }[];
   logicalOperators: { 'value': string; 'label': string; }[];
   rhsTypeArray: { value: string; label: string; }[];
   lhsTypeArray: { 'value': string; 'label': string; }[];
-  filterTableArray: any;
+  filterTableArray: Array<FilterInfoIO>;
   runParams: any;
   saveModeArrayFile: { "value": string; "label": string; }[];
   saveModeArrayTable: { "value": string; "label": string; }[];
@@ -71,7 +88,7 @@ export class DataIngestionDetailComponent implements OnInit {
   sourceDs: any;
   isTargetFormatDisable: boolean;
   isSourceFormatDisable: boolean;
-  allTargetDatasource: any[];
+  allTargetDatasource: any;
   allSourceDatasource: any[];
   selectedRuleType: any;
   selectedTargetType: any;
@@ -87,10 +104,16 @@ export class DataIngestionDetailComponent implements OnInit {
   id: any;
   uuid: any;
   selectedVersion: Version;
-  VersionList: SelectItem[] = [];
-  breadcrumbDataFrom: { "caption": string; "routeurl": string; }[];
+  VersionList: Array<DropDownIO>;
+  breadcrumbDataFrom: { "caption": String; "routeurl": String; }[];
   @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
-  constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _dataInjectService: DataIngestionService) {
+  published: any;
+  active: any;
+  locked: any;
+  targetHeader: any;
+  metaType: any;
+  constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _dataInjectService: DataIngestionService, private appHelper: AppHelper) {
+    this.metaType = MetaTypeEnum.MetaType;
     this.isSubmit = "false"
     this.ingestData = {};
     this.showGraph = false;
@@ -99,7 +122,6 @@ export class DataIngestionDetailComponent implements OnInit {
     this.sourceDs = {};
     this.targetDs = {};
     this.sourceTypeName = {};
-    this.filterTableArray = [];
     this.allSourceAttribute = []
     this.displayDialogBox = false;
     this.dialogAttributeName = {};
@@ -216,8 +238,8 @@ export class DataIngestionDetailComponent implements OnInit {
     });
   }
 
-  onChangeAttributeTableType(index) {
-    this.attributeTableArray[index]["sourceAttribute"] = null;
+  onChangeAttributeTableType(index: any) {
+    this.attributeTableArray[index].sourceAttribute = null;
   }
 
   countContinue = function () {
@@ -231,20 +253,22 @@ export class DataIngestionDetailComponent implements OnInit {
   }
 
   getAllVersionByUuid() {
-    this._commonService.getAllVersionByUuid('ingest', this.id)
+    this._commonService.getAllVersionByUuid(MetaTypeEnum.MetaType.INGEST, this.id)
       .subscribe(
-      response => {
-        this.OnSuccesgetAllVersionByUuid(response)
-      },
-      error => console.log("Error :: " + error));
+        response => {
+          this.OnSuccesgetAllVersionByUuid(response)
+        },
+        error => console.log("Error :: " + error));
   }
-  OnSuccesgetAllVersionByUuid(response) {
+
+  OnSuccesgetAllVersionByUuid(response: BaseEntity[]) {
     for (const i in response) {
-      let ver = {};
-      ver["label"] = response[i]['version'];
-      ver["value"] = {};
-      ver["value"]["label"] = response[i]['version'];
-      ver["value"]["uuid"] = response[i]['uuid'];
+      this.VersionList = [new DropDownIO];
+      let ver = new DropDownIO();
+      ver.label = response[i].version;
+      ver.value = { 'label': '', 'uuid': '' }
+      ver.value.label = response[i].version;
+      ver.value.uuid = response[i].uuid;
       this.VersionList[i] = ver;
     }
   }
@@ -253,8 +277,8 @@ export class DataIngestionDetailComponent implements OnInit {
     this.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label);
   }
 
-  getOneByUuidAndVersion(id, version) {
-    this._dataInjectService.getOneByUuidAndVersion(id, version, "ingest").subscribe(
+  getOneByUuidAndVersion(id: any, version: any) {
+    this._dataInjectService.getOneByUuidAndVersion(id, version, MetaTypeEnum.MetaType.INGEST).subscribe(
       response => {
         this.onSuccessgetOneByUuidAndVersion(response)
       },
@@ -262,8 +286,8 @@ export class DataIngestionDetailComponent implements OnInit {
     )
   }
 
-  getDatasourceForFile(sourceType, TargetType) {
-    this._dataInjectService.getDatasourceForFile("datasource").subscribe(
+  getDatasourceForFile(sourceType: any, TargetType: any) {
+    this._dataInjectService.getDatasourceForFile(MetaTypeEnum.MetaType.DATASOURCE).subscribe(
       response => {
         this.onSuccessgetDatasourceForFile(response)
       },
@@ -271,30 +295,31 @@ export class DataIngestionDetailComponent implements OnInit {
     )
   }
 
-  onSuccessgetDatasourceForFile(response) {
+  onSuccessgetDatasourceForFile(response: Datasource[]) {
     if (this.selectedSourceType == "FILE") {
-      let temp = [];
+      let temp = [new DropDownIO];
       for (const i in response) {
-        let obj = {};
-        obj["label"] = response[i]['name'];
-        obj["value"] = {};
-        obj["value"]["label"] = response[i]['name'];
-        obj["value"]["uuid"] = response[i]['uuid'];
-        obj["value"]["version"] = response[i]['version'];
+        let obj = new DropDownIO;
+        obj.label = response[i].name;
+        obj.value = { 'label': '', 'uuid': '' }
+        obj.value.label = response[i].name;
+        obj.value.uuid = response[i].uuid;
+        obj.value.version = response[i].version;
         temp[i] = obj;
       }
       this.allSourceDatasource = temp;
       console.log(JSON.stringify(this.allSourceDatasource));
     }
     if (this.selectedTargetType == "FILE") {
-      let temp = [];
+      this.allTargetDatasource = [new DropDownIO];
+      let temp = [new DropDownIO];
       for (const i in response) {
-        let obj = {};
-        obj["label"] = response[i]['name'];
-        obj["value"] = {};
-        obj["value"]["label"] = response[i]['name'];
-        obj["value"]["uuid"] = response[i]['uuid'];
-        obj["value"]["version"] = response[i]['version'];
+        let obj = new DropDownIO;
+        obj.label = response[i].name;
+        obj.value = { 'label': '', 'uuid': '' };
+        obj.value.label = response[i].name;
+        obj.value.uuid = response[i].uuid;
+        obj.value.version = response[i].version;
         temp[i] = obj;
       }
       this.allTargetDatasource = temp;
@@ -303,22 +328,22 @@ export class DataIngestionDetailComponent implements OnInit {
   }
 
   getDatasourceForTable() {
-    this._dataInjectService.getDatasourceForTable("datasource").subscribe(
+    this._dataInjectService.getDatasourceForTable(MetaTypeEnum.MetaType.DATASOURCE).subscribe(
       response => { this.onSuccessgetDatasourceForTable(response) },
       error => console.log("Error::", +error)
     )
   }
 
-  onSuccessgetDatasourceForTable(response) {
+  onSuccessgetDatasourceForTable(response: Datasource[]) {
     if (this.selectedSourceType == "TABLE") {
-      let temp = [];
+      let temp = [new DropDownIO];
       for (const i in response) {
-        let obj = {};
-        obj["label"] = response[i]['name'];
-        obj["value"] = {};
-        obj["value"]["label"] = response[i]['name'];
-        obj["value"]["uuid"] = response[i]['uuid'];
-        obj["value"]["version"] = response[i]['version'];
+        let obj = new DropDownIO;
+        obj.label = response[i].name;
+        obj.value = { 'label': '', 'uuid': '' }
+        obj.value.label = response[i].name;
+        obj.value.uuid = response[i].uuid;
+        obj.value.version = response[i].version;
         temp[i] = obj;
       }
       this.allSourceDatasource = temp;
@@ -339,13 +364,13 @@ export class DataIngestionDetailComponent implements OnInit {
       }
     }
     if (this.selectedTargetType == "TABLE") {
-      let temp = [];
+      let temp = [new DropDownIO];
       for (const i in response) {
-        let obj = {};
-        obj["label"] = response[i]['name'];
-        obj["value"] = {};
-        obj["value"]["label"] = response[i]['name'];
-        obj["value"]["uuid"] = response[i]['uuid'];
+        let obj = new DropDownIO;
+        obj.label = response[i].name;
+        obj.value = { 'label': '', 'uuid': '' }
+        obj.value.label = response[i].name;
+        obj.value.uuid = response[i].uuid;
         temp[i] = obj;
       }
       this.allTargetDatasource = temp;
@@ -371,26 +396,26 @@ export class DataIngestionDetailComponent implements OnInit {
           if (response[i].type == 'HIVE') {
 
             if (this.allTargetDatasource) {
-              let temp = [];
+              let temp = [new DropDownIO];
               for (const j in response) {
-                let obj = {};
-                obj["label"] = response[j]['name'];
-                obj["value"] = {};
-                obj["value"]["label"] = response[j]['name'];
-                obj["value"]["uuid"] = response[j]['uuid'];
+                let obj = new DropDownIO;
+                obj.label = response[i].name;
+                obj.value = { 'label': '', 'uuid': '' }
+                obj.value.label = response[i].name;
+                obj.value.uuid = response[i].uuid;
                 temp[j] = obj;
               }
               this.allTargetDatasource.push(temp[i])
             }
             else {
               this.allTargetDatasource = [];
-              let temp = [];
+              let temp = [new DropDownIO];
               for (const j in response) {
-                let obj = {};
-                obj["label"] = response[j]['name'];
-                obj["value"] = {};
-                obj["value"]["label"] = response[j]['name'];
-                obj["value"]["uuid"] = response[j]['uuid'];
+                let obj = new DropDownIO;
+                obj.label = response[i].name;
+                obj.value = { 'label': '', 'uuid': '' }
+                obj.value.label = response[i].name;
+                obj.value.uuid = response[i].uuid;
                 temp[j] = obj;
               }
               this.allTargetDatasource.push(temp[i])
@@ -402,34 +427,35 @@ export class DataIngestionDetailComponent implements OnInit {
   }
 
   getDatasourceForStream() {
-    this._dataInjectService.getDatasourceForStream("datasource").subscribe(
+    this._dataInjectService.getDatasourceForStream(MetaTypeEnum.MetaType.DATASOURCE).subscribe(
       response => { this.onSuccessgetDatasourceForStream(response) },
       error => console.log("Error::", +error)
     )
   }
 
-  onSuccessgetDatasourceForStream(response) {
+  onSuccessgetDatasourceForStream(response: Datasource[]) {
     if (this.selectedSourceType == "STREAM") {
-      let temp = [];
+
+      let temp = [new DropDownIO];
       for (const i in response) {
-        let obj = {};
-        obj["label"] = response[i]['name'];
-        obj["value"] = {};
-        obj["value"]["label"] = response[i]['name'];
-        obj["value"]["uuid"] = response[i]['uuid'];
-        obj["value"]["version"] = response[i]['version'];
+        let obj = new DropDownIO;
+        obj.label = response[i].name;
+        obj.value = { 'label': '', 'uuid': '' }
+        obj.value.label = response[i].name;
+        obj.value.uuid = response[i].uuid;
+        obj.value.version = response[i].version;
         temp[i] = obj;
       }
       this.allSourceDatasource = temp;
     }
     if (this.selectedTargetType == "STREAM") {
-      let temp = [];
+      let temp = [new DropDownIO];
       for (const i in response) {
-        let obj = {};
-        obj["label"] = response[i]['name'];
-        obj["value"] = {};
-        obj["value"]["label"] = response[i]['name'];
-        obj["value"]["uuid"] = response[i]['uuid'];
+        let obj = new DropDownIO;
+        obj.label = response[i].name;
+        obj.value = { 'label': '', 'uuid': '' }
+        obj.value.label = response[i].name;
+        obj.value.uuid = response[i].uuid;
         temp[i] = obj;
       }
       this.allTargetDatasource = temp;
@@ -445,7 +471,7 @@ export class DataIngestionDetailComponent implements OnInit {
     this.attributeTableArray = [];
     this.selectedTargetFormat = null;
     this.selectedSourceFormat = null;
-    this.ingestData["ingestChg"] = "Y";
+    this.ingestData.ingestChg = "Y";
     this.selectedSourceType = this.selectedRuleType.split("-")[0];
     this.selectedTargetType = this.selectedRuleType.split("-")[1];
     this.isSourceFormatDisable = "this.selectedSourceType == 'FILE'" ? false : true;
@@ -492,40 +518,40 @@ export class DataIngestionDetailComponent implements OnInit {
 
   onChangeSourceType() {
     if (this.sourceType == "datapod") {
-      this._dataInjectService.getDatapodByDatasource("datasource", this.sourceDs.uuid).subscribe(
+      this._dataInjectService.getDatapodByDatasource(MetaTypeEnum.MetaType.DATASOURCE, this.sourceDs.uuid).subscribe(
         response => { this.onSuccessgetDatapodByDatasource(response) },
         error => console.log("Error::", +error)
       )
     }
     if (this.sourceType == "dataset") {
-      this._commonService.getAllLatest("dataset").subscribe(
+      this._commonService.getAllLatest(MetaTypeEnum.MetaType.DATASET).subscribe(
         response => { this.onSuccessgetAllLatest(response) },
         error => console.log("Error::", +error)
       )
     }
   }
 
-  onSuccessgetDatapodByDatasource(response) {
-    let temp = [];
+  onSuccessgetDatapodByDatasource(response: Datapod[]) {
+    let temp = [new DropDownIO];
     for (const i in response) {
-      let obj = {};
-      obj["label"] = response[i]['name'];
-      obj["value"] = {};
-      obj["value"]["label"] = response[i]['name'];
-      obj["value"]["uuid"] = response[i]['uuid'];
+      let obj = new DropDownIO;
+      obj.label = response[i].name;
+      obj.value = { 'label': '', 'uuid': '' };
+      obj.value.label = response[i].name;
+      obj.value.uuid = response[i].uuid;
       temp[i] = obj;
     }
     this.sourceTypeNameArray = temp;
   }
 
-  onSuccessgetAllLatest(response) {
-    let temp = [];
+  onSuccessgetAllLatest(response: BaseEntity[]) {
+    let temp = [new DropDownIO];
     for (const i in response) {
-      let obj = {};
-      obj["label"] = response[i]['name'];
-      obj["value"] = {};
-      obj["value"]["label"] = response[i]['name'];
-      obj["value"]["uuid"] = response[i]['uuid'];
+      let obj = new DropDownIO;
+      obj.label = response[i].name;
+      obj.value = { 'label': '', 'uuid': '' };
+      obj.value.label = response[i].name;
+      obj.value.uuid = response[i].uuid;
       temp[i] = obj;
     }
     this.sourceTypeNameArray = temp;
@@ -564,117 +590,118 @@ export class DataIngestionDetailComponent implements OnInit {
       )
     }
   }
-  onSuccessgetAttributesByDatapod(response) {
+  onSuccessgetAttributesByDatapod(response: MetaIdentifierHolder[]) {
+    //this.attributeTableArray = [];
     let temp = [];
     for (const i in response) {
-      let obj = {};
-      obj["label"] = response[i]['ref']['name'] + "." + response[i]['attrName'];
-      obj["value"] = {};
-      obj["value"]["attributeId"] = response[i]['attrId'];
-      obj["value"]["attrName"] = response[i]['attrName'];
+      let obj = new AttributeIO();
+      obj.label = response[i].ref.name + "." + response[i].attrName;
+      obj.value = {};
+      obj.value.attributeId = response[i].attrId;
+      obj.value.attrName = response[i].attrName;
       //  obj["value"]["type"] = response[i]['ref']['type'];
-      obj["value"]["uuid"] = response[i]['ref']['uuid'];
+      obj.value.uuid = response[i].ref.uuid;
       //  obj["value"]["datapodname"] = response[i]['ref']['name'];
-      obj["value"]["label"] = response[i]['ref']['name'] + "." + response[i]['attrName'];
+      obj.value.label = response[i].ref.name + "." + response[i].attrName;
 
       temp[i] = obj;
     }
     this.allSourceAttribute = temp;
 
-    if(this.attributeTableArray.length == 0  && this.selectedSourceType == "TABLE" && this.selectedTargetType == "FILE"){
-      for(let i =0;i<this.allSourceAttribute.length;i++){
+    if (this.attributeTableArray.length == 0 && this.selectedSourceType == "TABLE" && this.selectedTargetType == "FILE") {
+      for (let i = 0; i < this.allSourceAttribute.length; i++) {
 
-        var attributemapjson = {};
+        // var attributemapjson = {};
+
+        var attributemapjson = new AttributeMapIO
         var obj = {}
-        attributemapjson["attrMapId"] = i;
-        attributemapjson["sourceType"] = "datapod";
+        attributemapjson.attrMapId = i;
+        attributemapjson.sourceType = "datapod";
 
-        var sourceattribute = {}
-        sourceattribute["attributeId"] = this.allSourceAttribute[i].value.attributeId;
-        sourceattribute["attrName"] = this.allSourceAttribute[i].value.attrName;
-        sourceattribute["uuid"] = this.allSourceAttribute[i].value.uuid;
-        sourceattribute["label"] = this.allSourceAttribute[i].value.label;
-        attributemapjson["sourceAttribute"] = sourceattribute;
+        var sourceattribute = new AttributeIO
+        sourceattribute.attributeId = this.allSourceAttribute[i].value.attributeId;
+        sourceattribute.attrName = this.allSourceAttribute[i].value.attrName;
+        sourceattribute.uuid = this.allSourceAttribute[i].value.uuid;
+        sourceattribute.label = this.allSourceAttribute[i].value.label;
+        attributemapjson.sourceAttribute = sourceattribute;
 
-        attributemapjson["targetAttribute"] = "";
-
+        attributemapjson.targetAttribute = null;
+        attributemapjson.IsTargetAttributeSimple = 'true';
         this.attributeTableArray[i] = attributemapjson;
-        this.attributeTableArray[i]["IsTargetAttributeSimple"] = 'true';
       }
       this.attributeTableArray = this.attributeTableArray;
     }
   }
 
-  onSuccessgetAttributesByDataset(response) {
+  onSuccessgetAttributesByDataset(response: MetaIdentifierHolder[]) {
     let temp = [];
     for (const i in response) {
-      let obj = {};
-      obj["label"] = response[i]['ref']['name'] + "." + response[i]['attrName'];
-      obj["value"] = {};
-      obj["value"]["label"] = response[i]['ref']['name'] + "." + response[i]['attrName'];
-      obj["value"]["attributeId"] = response[i]['attrId'];
+      let obj = new AttributeIO();
+      obj.label = response[i].ref.name + "." + response[i].attrName;
+      obj.value = {};
+      obj.value.label = response[i].ref.name + "." + response[i].attrName;
+      obj.value.attributeId = response[i].attrId;
       // obj["value"]["type"] = response[i]['ref']['type'];
-      obj["value"]["uuid"] = response[i]['ref']['uuid'];
-      obj["value"]["attrName"] = response[i]['attrName'];
+      obj.value.uuid = response[i].ref.uuid;
+      obj.value.attrName = response[i].attrName;
       //  obj["value"]["dname"] = response[i]['ref']['name'] + "." + response[i]['attrName'];
       temp[i] = obj;
     }
     this.allSourceAttribute = temp;
 
-    if(this.attributeTableArray.length == 0  && this.selectedSourceType == "TABLE" && this.selectedTargetType == "FILE"){
-      for(let i =0;i<this.allSourceAttribute.length;i++){
+    if (this.attributeTableArray.length == 0 && this.selectedSourceType == "TABLE" && this.selectedTargetType == "FILE") {
+      for (let i = 0; i < this.allSourceAttribute.length; i++) {
 
-        var attributemapjson = {};
+        var attributemapjson = new AttributeMapIO;
         var obj = {}
-        attributemapjson["attrMapId"] = i;
-        attributemapjson["sourceType"] = "datapod";
+        attributemapjson.attrMapId = i;
+        attributemapjson.sourceType = "datapod";
 
-        var sourceattribute = {}
-        sourceattribute["attributeId"] = this.allSourceAttribute[i].value.attributeId;
-        sourceattribute["attrName"] = this.allSourceAttribute[i].value.attrName;
-        sourceattribute["uuid"] = this.allSourceAttribute[i].value.uuid;
-        sourceattribute["label"] = this.allSourceAttribute[i].value.label;
-        attributemapjson["sourceAttribute"] = sourceattribute;
+        var sourceattribute = new AttributeIO;
+        sourceattribute.attributeId = this.allSourceAttribute[i].value.attributeId;
+        sourceattribute.attrName = this.allSourceAttribute[i].value.attrName;
+        sourceattribute.uuid = this.allSourceAttribute[i].value.uuid;
+        sourceattribute.label = this.allSourceAttribute[i].value.label;
+        attributemapjson.sourceAttribute = sourceattribute;
 
-        attributemapjson["targetAttribute"] = "";
-
+        attributemapjson.targetAttribute = null;
+        attributemapjson.IsTargetAttributeSimple = 'true';
         this.attributeTableArray[i] = attributemapjson;
-        this.attributeTableArray[i]["IsTargetAttributeSimple"] = 'true';
       }
       this.attributeTableArray = this.attributeTableArray;
     }
   }
 
-  onSuccessgetAttributesByDatapod1(response) {
+  onSuccessgetAttributesByDatapod1(response: MetaIdentifierHolder[]) {
     let temp = [];
     for (const i in response) {
-      let obj = {};
-      obj["label"] = response[i]['attrName'];
-      obj["value"] = {};
-      obj["value"]["label"] = response[i]['attrName'];
-      obj["value"]["attributeId"] = response[i]['attrId'];
+      let obj = new AttributeIO
+      obj.label = response[i].attrName;
+      obj.value = {};
+      obj.value.label = response[i].attrName;
+      obj.value.attributeId = response[i].attrId;
       // obj["value"]["attrName"] = response[i]['attrName'];
-      obj["value"]["type"] = response[i]['ref']['type'];
-      obj["value"]["uuid"] = response[i]['ref']['uuid'];
-      obj["value"]["datapodname"] = response[i]['ref']['name'];
+      obj.value.type = response[i].ref.type;
+      obj.value.uuid = response[i].ref.uuid;
+      obj.value.datapodname = response[i].ref.name;
       // obj["value"]["dname"] = response[i]['ref']['name'] + "." + response[i]['attrName'];
       temp[i] = obj;
     }
     this.allSourceAttributeForIncrmSplitBy = temp;
   }
 
-  onSuccessgetAttributesByDataset1(response) {
+  onSuccessgetAttributesByDataset1(response: MetaIdentifierHolder[]) {
     let temp = [];
     for (const i in response) {
-      let obj = {};
-      obj["label"] = response[i]['attrName'];
-      obj["value"] = {};
-      obj["value"]["label"] = response[i]['attrName'];
-      obj["value"]["attributeId"] = response[i]['attrId'];
-
-      obj["value"]["type"] = response[i]['ref']['type'];
-      obj["value"]["uuid"] = response[i]['ref']['uuid'];
-      obj["value"]["datapodname"] = response[i]['ref']['name'];
+      let obj = new AttributeIO
+      obj.label = response[i].attrName;
+      obj.value = {};
+      obj.value.label = response[i].attrName;
+      obj.value.attributeId = response[i].attrId;
+      // obj["value"]["attrName"] = response[i]['attrName'];
+      obj.value.type = response[i].ref.type;
+      obj.value.uuid = response[i].ref.uuid;
+      obj.value.datapodname = response[i].ref.name;
       // obj["value"]["dname"] = response[i]['ref']['name'] + "." + response[i]['attrName'];
       temp[i] = obj;
     }
@@ -690,59 +717,59 @@ export class DataIngestionDetailComponent implements OnInit {
     }
   }
 
-  onSuccessgetTopicList(response) {
+  onSuccessgetTopicList(response: any) {
     let temp = [];
     for (const i in response) {
-      let obj = {};
-      obj["value"] = response[i]
-      obj["label"] = response[i]
+      let obj = new AttributeIO
+      obj.value = response[i]
+      obj.label = response[i]
       temp[i] = obj;
     }
     this.streamSourceNameArray = temp;
   }
 
   onChangeTargetDs() {
-    this._dataInjectService.getDatapodByDatasource("datasource", this.targetDs.uuid).subscribe(
+    this._dataInjectService.getDatapodByDatasource(MetaTypeEnum.MetaType.DATASOURCE, this.targetDs.uuid).subscribe(
       response => { this.onSuccessgetDatapodByDatasourceTarget(response) },
       error => console.log("Error::", +error)
     )
   }
 
-  onSuccessgetDatapodByDatasourceTarget(response) {
+  onSuccessgetDatapodByDatasourceTarget(response: Datapod[]) {
     let temp = [];
     for (const i in response) {
-      let obj = {};
-      obj["label"] = response[i]['name'];
-      obj["value"] = {}
-      obj["value"]["label"] = response[i]['name'];
-      obj["value"]["uuid"] = response[i]['uuid'];
+      let obj = new AttributeIO
+      obj.label = response[i].name;
+      obj.value = { 'label': '', 'uuid': '' }
+      obj.value.label = response[i].name;
+      obj.value.uuid = response[i].uuid;
       temp[i] = obj;
     }
     this.targetNameArray = temp;
   }
 
-  onSuccessgetFormulaByType(response) {
-    let FormulaObj = {};
+  onSuccessgetFormulaByType(response: Formula[]) {
+    let FormulaObj = new AttributeIO;
     let temp = [];
     for (const i in response) {
-      FormulaObj["label"] = response[i].name;
-      FormulaObj["value"] = {};
-      FormulaObj["value"]["label"] = response[i].name;
-      FormulaObj["value"]["uuid"] = response[i].uuid;
+      FormulaObj.label = response[i].name;
+      FormulaObj.value = {};
+      FormulaObj.value.label = response[i].name;
+      FormulaObj.value.uuid = response[i].uuid;
       temp[i] = FormulaObj;
     }
     this.FormulaArray = temp
   }
-
-  onSuccessgetAllAttributeBySource(response) {
+  //---------------------------------------------------------------------------------
+  onSuccessgetAllAttributeBySource(response: AttributeIO[]) {
     let temp1 = [];
     for (const i in response) {
-      let attributeObj = {};
-      attributeObj["label"] = response[i].dname;
-      attributeObj["value"] = {};
-      attributeObj["value"]["uuid"] = response[i].uuid;
-      attributeObj["value"]["label"] = response[i].dname;
-      attributeObj["value"]["attributeId"] = response[i].attributeId;
+      let attributeObj = new AttributeIO;
+      attributeObj.label = response[i].dname;
+      attributeObj.value = { 'label': '', 'uuid': '', 'attributeId': '' };
+      attributeObj.value.uuid = response[i].uuid;
+      attributeObj.value.label = response[i].dname;
+      attributeObj.value.attributeId = response[i].attributeId;
       temp1[i] = attributeObj
       this.attributesArray = temp1;
     }
@@ -750,21 +777,21 @@ export class DataIngestionDetailComponent implements OnInit {
 
   addRow() {
     if (this.filterTableArray == null) {
-      this.filterTableArray = [];
+      // this.filterTableArray = [];
     }
     var len = this.filterTableArray.length + 1
-    var filertable = {};
-    filertable["logicalOperator"] = ""
-    filertable["lhsType"] = "integer"
-    filertable["lhsAttribute"] = ""
-    filertable["operator"] = ""
-    filertable["rhsType"] = "integer"
-    filertable["rhsAttribute"] = ""
+    var filertable = new FilterInfoIO;
+    filertable.logicalOperator = ""
+    filertable.lhsType = "integer"
+    filertable.lhsAttribute = null
+    filertable.operator = ""
+    filertable.rhsType = "integer"
+    filertable.rhsAttribute = null
     this.filterTableArray.splice(this.filterTableArray.length, 0, filertable);
   }
   removeRow() {
-    let newDataList = [];
-    this.selectedAllFitlerRow = false;
+    let newDataList = [new FilterInfoIO];
+    this.selectedAllFilterRow = false;
     this.filterTableArray.forEach(selected => {
       if (!selected.selected) {
         newDataList.push(selected);
@@ -776,33 +803,33 @@ export class DataIngestionDetailComponent implements OnInit {
     this.filterTableArray = newDataList;
   }
   checkAllFilterRow() {
-    if (!this.selectedAllFitlerRow) {
-      this.selectedAllFitlerRow = true;
+    if (!this.selectedAllFilterRow) {
+      this.selectedAllFilterRow = true;
     }
     else {
-      this.selectedAllFitlerRow = false;
+      this.selectedAllFilterRow = false;
     }
     this.filterTableArray.forEach(filter => {
-      filter.selected = this.selectedAllFitlerRow;
+      filter.selected = this.selectedAllFilterRow;
     });
   }
 
   addAttributeRow() {
     if (this.attributeTableArray == null) {
-      this.attributeTableArray = [];
+      this.attributeTableArray = [new AttributeMapIO];
     }
     var len = this.attributeTableArray.length + 1
-    var attributetable = {};
-    attributetable["attrMapId"] = len - 1;
-    attributetable["sourceType"] = "string";
-    attributetable["sourceAttribute"] = ""
-    attributetable["targetAttribute"] = ""
+    var attributetable = new AttributeMapIO();
+    attributetable.attrMapId = len - 1;
+    attributetable.sourceType = "string";
+    attributetable.sourceAttribute = null
+    attributetable.targetAttribute = null
+    attributetable.IsTargetAttributeSimple = "true"
     this.attributeTableArray.splice(this.attributeTableArray.length, 0, attributetable);
-    this.attributeTableArray[len - 1]["IsTargetAttributeSimple"] = "true"
   }
   removeAttributeRow() {
     let newDataList = [];
-    this.selectedAllFitlerRow = false;
+    this.selectedAllFilterRow = false;
     this.attributeTableArray.forEach(selected => {
       if (!selected.selected) {
         newDataList.push(selected);
@@ -822,128 +849,127 @@ export class DataIngestionDetailComponent implements OnInit {
     });
   }
 
-  onChangeRhsType(index) {
-    this.filterTableArray[index]["rhsAttribute"] == null;
+  onChangeRhsType(index: any) {
+    this.filterTableArray[index].rhsAttribute == null;
 
-    if (this.filterTableArray[index]["rhsType"] == 'formula') {
+    if (this.filterTableArray[index].rhsType = 'formula') {
       if (this.selectedSourceType == 'TABLE') {
         this._commonService.getFormulaByType(this.sourceTypeName.uuid, this.sourceType)
           .subscribe(response => { this.onSuccessgetFormulaByType(response) },
-          error => console.log("Error ::", error))
+            error => console.log("Error ::", error))
       }
     }
-    else if (this.filterTableArray[index]["rhsType"] == 'datapod') {
+    else if (this.filterTableArray[index].rhsType == 'datapod') {
       if (this.selectedSourceType == 'TABLE') {
         this._commonService.getAllAttributeBySource(this.sourceTypeName.uuid, this.sourceType)
           .subscribe(response => { this.onSuccessgetAllAttributeBySource(response) },
-          error => console.log("Error ::", error))
+            error => console.log("Error ::", error))
       }
     }
-    else if (this.filterTableArray[index]["rhsType"] == 'function') {
+    else if (this.filterTableArray[index].rhsType == 'function') {
       this._dataInjectService.getFunctionByCriteria("", "N", "function")
         .subscribe(response => { this.onSuccessgetFunctionByCriteria(response) },
-        error => console.log("Error ::", error))
+          error => console.log("Error ::", error))
     }
-    else if (this.filterTableArray[index]["rhsType"] == 'paramlist') {
+    else if (this.filterTableArray[index].rhsType == 'paramlist') {
       this._dataInjectService.getParamByApp("", "application")
         .subscribe(response => { this.onSuccessgetParamByApp(response) },
-        error => console.log("Error ::", error))
+          error => console.log("Error ::", error))
     }
-    else if (this.filterTableArray[index]["rhsType"] == 'dataset') {
-      let rhsAttribute = {};
-      rhsAttribute["label"] = "-Select-";
-      rhsAttribute["uuid"] = "";
-      rhsAttribute["attributeId"] = "";
-      this.filterTableArray[index]["rhsAttribute"] = rhsAttribute
+    else if (this.filterTableArray[index].rhsType == 'dataset') {
+      let rhsAttribute = new AttributeIO();
+      rhsAttribute.label = "-Select-";
+      rhsAttribute.uuid = "";
+      rhsAttribute.attributeId = "";
+      this.filterTableArray[index].rhsAttribute = rhsAttribute;
     }
     else {
-      this.filterTableArray[index]["rhsAttribute"] = null;
+      this.filterTableArray[index].rhsAttribute = null;
     }
   }
 
-  onChangeLhsType(index) {
-    this.filterTableArray[index]["lhsAttribute"] == null;
-    if (this.filterTableArray[index]["lhsType"] == 'formula') {
+  onChangeLhsType(index: any) {
+    this.filterTableArray[index].lhsAttribute == null;
+    if (this.filterTableArray[index].lhsType == 'formula') {
       if (this.selectedSourceType == 'TABLE') {
         this._commonService.getFormulaByType(this.sourceTypeName.uuid, this.sourceType)
           .subscribe(response => { this.onSuccessgetFormulaByType(response) },
-          error => console.log("Error ::", error))
+            error => console.log("Error ::", error))
       }
     }
-
-    else if (this.filterTableArray[index]["lhsType"] == 'datapod') {
+    else if (this.filterTableArray[index].lhsType == 'datapod') {
       if (this.selectedSourceType == 'TABLE') {
         this._commonService.getAllAttributeBySource(this.sourceTypeName.uuid, this.sourceType)
           .subscribe(response => { this.onSuccessgetAllAttributeBySource(response) },
-          error => console.log("Error ::", error))
+            error => console.log("Error ::", error))
       }
     }
     else {
-      this.filterTableArray[index]["lhsAttribute"] = null;
+      this.filterTableArray[index].lhsAttribute = null;
     }
   }
-  onSuccessgetFunctionByCriteria(response) {
+  onSuccessgetFunctionByCriteria(response: Function[]) {
     let temp = [];
     for (const i in response) {
-      let attributeObj = {};
-      attributeObj["label"] = response[i].name;
-      attributeObj["value"] = {};
-      attributeObj["value"]["uuid"] = response[i].uuid;
-      attributeObj["value"]["label"] = response[i].name;
+      let attributeObj = new DropDownIO
+      attributeObj.label = response[i].name;
+      attributeObj.value = { 'uuid': '', 'label': '' };
+      attributeObj.value.uuid = response[i].uuid;
+      attributeObj.value.label = response[i].name;
       temp[i] = attributeObj
     }
     this.functionArray = temp;
   }
-  onSuccessgetParamByApp(response) {
+  onSuccessgetParamByApp(response: ParamListHolder[]) {
     let temp = [];
     for (const i in response) {
-      let attributeObj = {};
-      attributeObj["label"] = "app." + response[i].paramName;
-      attributeObj["value"] = {};
-      attributeObj["value"]["uuid"] = response[i].ref.uuid;
-      attributeObj["value"]["attributeId"] = response[i].paramId;
-      attributeObj["value"]["label"] = "app." + response[i].paramName;
+      let attributeObj = new AttributeIO();
+      attributeObj.label = "app." + response[i].paramName;
+      attributeObj.value = {};
+      attributeObj.value.uuid = response[i].ref.uuid;
+      attributeObj.value.attributeId = response[i].paramId;
+      attributeObj.value.label = "app." + response[i].paramName;
       temp[i] = attributeObj
     }
     this.paramlistArray = temp;
   }
 
-  onSuccessgetAttributesByDatapodTarget(response) {
+  onSuccessgetAttributesByDatapodTarget(response: MetaIdentifierHolder[]) {
     let temp = [];
     for (const i in response) {
-      let obj = {};
-      obj["label"] = response[i]['ref']['name'] + "." + response[i]['attrName'];
-      obj["value"] = {};
-      obj["value"]["uuid"] = response[i]['ref']['uuid'];
-      obj["value"]["label"] = response[i]['ref']['name'] + "." + response[i]['attrName'];
-      obj["value"]["type"] = response[i]['ref']['type'];
-      obj["value"]["attributeId"] = response[i]['attrId'];
-      obj["value"]["attrName"] = response[i]['attrName'];
+      let obj = new AttributeIO;
+      obj.label = response[i].ref.name + "." + response[i].attrName;
+      obj.value = {};
+      obj.value.uuid = response[i].ref.uuid;
+      obj.value.label = response[i].ref.name + "." + response[i].attrName;
+      obj.value.type = response[i].ref.type;
+      obj.value.attributeId = response[i].attrId;
+      obj.value.attrName = response[i].attrName;
       temp[i] = obj;
     }
     this.allSourceAttributeTarget = temp;
   }
 
   onChangeTargetNameTable() {
-    this._dataInjectService.getAttributesByDatapod("datapod", this.targetNameForTable.uuid).subscribe(
+    this._dataInjectService.getAttributesByDatapod(MetaTypeEnum.MetaType.DATAPOD, this.targetNameForTable.uuid).subscribe(
       response => {
         this.onSuccessgetAttributesByDatapodTable(response),
-          error => console.log("Error ::,+error")
+          error => console.log("Error ::", +error)
       }
     )
   }
 
-  onSuccessgetAttributesByDatapodTable(response) {
+  onSuccessgetAttributesByDatapodTable(response: MetaIdentifierHolder[]) {
     let temp = [];
     for (const i in response) {
-      let obj = {};
-      obj["label"] = response[i]['ref']['name'] + "." + response[i]['attrName'];
-      obj["value"] = {};
-      obj["value"]["uuid"] = response[i]['ref']['uuid'];
-      obj["value"]["label"] = response[i]['ref']['name'] + "." + response[i]['attrName'];
-      obj["value"]["type"] = response[i]['ref']['type'];
-      obj["value"]["attributeId"] = response[i]['attrId'];
-      obj["value"]["attrName"] = response[i]['attrName'];
+      let obj = new AttributeIO();
+      obj.label = response[i].ref.name + "." + response[i].attrName;
+      obj.value = {};
+      obj.value.uuid = response[i].ref.uuid;
+      obj.value.label = response[i].ref.name + "." + response[i].attrName;
+      obj.value.type = response[i].ref.type;
+      obj.value.attributeId = response[i].attrId;
+      obj.value.attrName = response[i].attrName;
       temp[i] = obj;
     }
     this.allSourceAttributeTarget = temp;
@@ -951,79 +977,79 @@ export class DataIngestionDetailComponent implements OnInit {
     this.allTableSourceAttribute = this.allSourceAttribute;
 
     if (this.attributeTableArray.length == 0 && this.selectedSourceType != "STREAM") {
-      this.attributeTableArray = [];
+      // this.attributeTableArray = [];
       //this.attributeTableArray = this.allSourceAttributeTarget;
       for (var i = 0; i < this.allSourceAttributeTarget.length; i++) {
-        var attributemapjson = {};
+        var attributemapjson = new AttributeMapIO();
         var obj = {};
-        attributemapjson["attrMapId"] = i;
-        attributemapjson["sourceType"] = "datapod";
-        attributemapjson["sourceAttribute"] = "";
+        attributemapjson.attrMapId = i;
+        attributemapjson.sourceType = "datapod";
+        attributemapjson.sourceAttribute = null;
 
-        var targetattribute = {}
-        targetattribute["uuid"] = this.allSourceAttributeTarget[i].value.uuid;
-        targetattribute["label"] = this.allSourceAttributeTarget[i].value.label;
-        targetattribute["type"] = this.allSourceAttributeTarget[i].value.type;
-        targetattribute["attrName"] = this.allSourceAttributeTarget[i].value.attrName;
-        targetattribute["attributeId"] = this.allSourceAttributeTarget[i].value.attributeId;
-        attributemapjson["targetAttribute"] = targetattribute;
+        let targetattribute = new AttributeIO();
+        targetattribute.uuid = this.allSourceAttributeTarget[i].value.uuid;
+        targetattribute.label = this.allSourceAttributeTarget[i].value.label;
+        targetattribute.type = this.allSourceAttributeTarget[i].value.type;
+        targetattribute.attrName = this.allSourceAttributeTarget[i].value.attrName;
+        targetattribute.attributeId = this.allSourceAttributeTarget[i].value.attributeId;
+        attributemapjson.targetAttribute = targetattribute;
+
+        attributemapjson.IsTargetAttributeSimple = "false";
 
         this.attributeTableArray[i] = attributemapjson;
-        this.attributeTableArray[i]["IsTargetAttributeSimple"] = 'false';
       }
       this.attributeTableArray = this.attributeTableArray;
     }
   }
 
-  onChangeOperator(index){
+  onChangeOperator(index: any) {
     this.filterTableArray[index].rhsAttribute = null;
     if (this.filterTableArray[index].operator == 'EXISTS' || this.filterTableArray[index].operator == 'NOT EXISTS') {
       this.filterTableArray[index].rhsType = 'dataset';
-      let rhsAttribute = {};
-      rhsAttribute["label"] = "-Select-";
-      rhsAttribute["uuid"] = "";
-      rhsAttribute["attributeId"] = "";
-      this.filterTableArray[index]["rhsAttribute"] = rhsAttribute
+      let rhsAttribute = new AttributeIO();
+      rhsAttribute.label = "-Select-";
+      rhsAttribute.uuid = "";
+      rhsAttribute.attributeId = "";
+      this.filterTableArray[index].rhsAttribute = rhsAttribute
     }
-    else if(this.filterTableArray[index].operator == 'IS'){
-			this.filterTableArray[index].rhsType = 'string';
+    else if (this.filterTableArray[index].operator == 'IS') {
+      this.filterTableArray[index].rhsType = 'string';
     }
-    else{
-			this.filterTableArray[index].rhsType = 'integer';
+    else {
+      this.filterTableArray[index].rhsType = 'integer';
     }
   }
-  
+
   onChangeAutoMode() {
     if (this.attributeTableArray != null) {
-      let temp = this.attributeTableArray;
+      let temp: Array<AttributeMapIO> = this.attributeTableArray;
       this.attributeTableArray = [];
       if (this.selectedSourceType == "TABLE" && this.selectedTargetType == "TABLE" && this.selectedAutoMode == "ByOrder") {
         if (this.allSourceAttributeTarget) {
           for (var i = 0; i < this.allSourceAttributeTarget.length; i++) {
-            var mapInfo = {};
-            mapInfo["attrMapId"] = i;
-            mapInfo["sourceType"] = "datapod";
+            let mapInfo = new AttributeMapIO();
+            mapInfo.attrMapId = i;
+            mapInfo.sourceType = "datapod";
 
-            let sourceObj = {};
+            let sourceObj = new AttributeIO();
             if (this.allSourceAttribute.length > i) {
-              sourceObj["attributeId"] = this.allSourceAttribute[i]["value"]["attributeId"];
-              sourceObj["attrName"] = this.allSourceAttribute[i]["value"]["attrName"];
-              sourceObj["uuid"] = this.allSourceAttribute[i]["value"]["uuid"];
-              sourceObj["label"] = this.sourceTypeName["label"] + "." + this.allSourceAttribute[i]["value"]["attrName"];
+              mapInfo.sourceAttribute = new AttributeIO();
+              mapInfo.sourceAttribute.attributeId = this.allSourceAttribute[i].value.attributeId;
+              mapInfo.sourceAttribute.attrName = this.allSourceAttribute[i].value.attrName;
+              mapInfo.sourceAttribute.uuid = this.allSourceAttribute[i].value.uuid;
+              mapInfo.sourceAttribute.label = this.sourceTypeName.label + "." + this.allSourceAttribute[i].value.attrName;
             }
             else {
-              sourceObj = {};
+              mapInfo.sourceAttribute = null;
             }
-            mapInfo["sourceAttribute"] = sourceObj;
+            mapInfo.targetAttribute = new AttributeIO();
+            mapInfo.targetAttribute.uuid = temp[i].targetAttribute.uuid;
+            mapInfo.targetAttribute.label = temp[i].targetAttribute.label;
+            mapInfo.targetAttribute.type = temp[i].targetAttribute.type;
+            mapInfo.targetAttribute.attrName = temp[i].targetAttribute.attrName;
+            mapInfo.targetAttribute.attributeId = temp[i].targetAttribute.attributeId;
 
-            let obj = {};
-            obj["uuid"] = temp[i]["targetAttribute"]["uuid"];
-            obj["label"] = temp[i]["targetAttribute"]["label"];
-            obj["type"] = temp[i]["targetAttribute"]["type"];
-            obj["attrName"] = temp[i]["targetAttribute"]["attrName"];
-            obj["attributeId"] = temp[i]["targetAttribute"]["attributeId"];
-            mapInfo["targetAttribute"] = obj;
-            mapInfo["IsTargetAttributeSimple"] = "false";
+            mapInfo.IsTargetAttributeSimple = "false";
             this.attributeTableArray[i] = mapInfo;
           }
           console.log(JSON.stringify(this.attributeTableArray));
@@ -1032,33 +1058,32 @@ export class DataIngestionDetailComponent implements OnInit {
 
       else if (this.selectedSourceType == "TABLE" && this.selectedTargetType == "TABLE" && this.selectedAutoMode == "ByName") {
         for (var i = 0; i < this.allSourceAttributeTarget.length; i++) {
-          var mapInfo = {};
-          mapInfo["attrMapId"] = i;
-          mapInfo["sourceType"] = "datapod";
+          let mapInfo = new AttributeMapIO();
+          mapInfo.attrMapId = i;
+          mapInfo.sourceType = "datapod";
 
-          let obj = {};
-          obj["uuid"] = temp[i]["targetAttribute"]["uuid"];
-          obj["label"] = temp[i]["targetAttribute"]["label"];
-          obj["type"] = temp[i]["targetAttribute"]["type"];
-          obj["attrName"] = temp[i]["targetAttribute"]["attrName"];
-          obj["attributeId"] = temp[i]["targetAttribute"]["attributeId"];
-          mapInfo["targetAttribute"] = obj;
-          mapInfo["IsTargetAttributeSimple"] = "false";
+          mapInfo.targetAttribute = new AttributeIO();
+          mapInfo.targetAttribute.uuid = temp[i].targetAttribute.uuid;
+          mapInfo.targetAttribute.label = temp[i].targetAttribute.label;
+          mapInfo.targetAttribute.type = temp[i].targetAttribute.type;
+          mapInfo.targetAttribute.attrName = temp[i].targetAttribute.attrName;
+          mapInfo.targetAttribute.attributeId = temp[i].targetAttribute.attributeId;
 
-          let sourceObj = {};
+          mapInfo.IsTargetAttributeSimple = "false";
+
           for (let j = 0; j < this.allSourceAttribute.length; j++) {
-            if (this.allSourceAttribute[j]["value"]["attrName"] == temp[i]["targetAttribute"]["attrName"]) {
-              sourceObj["attributeId"] = this.allSourceAttribute[j]["value"]["attributeId"];
-              sourceObj["attrName"] = this.allSourceAttribute[j]["value"]["attrName"];
-              sourceObj["uuid"] = this.allSourceAttribute[j]["value"]["uuid"];
-              sourceObj["label"] = this.sourceTypeName["label"] + "." + this.allSourceAttribute[j]["value"]["attrName"];
+            if (this.allSourceAttribute[j].value.attrName == temp[i].targetAttribute.attrName) {
+              mapInfo.sourceAttribute = new AttributeIO();
+              mapInfo.sourceAttribute.attributeId = this.allSourceAttribute[j].value.attributeId;
+              mapInfo.sourceAttribute.attrName = this.allSourceAttribute[j].value.attrName;
+              mapInfo.sourceAttribute.uuid = this.allSourceAttribute[j].value.uuid;
+              mapInfo.sourceAttribute.label = this.sourceTypeName.label + "." + this.allSourceAttribute[j].value.attrName;
               break;
             }
             else {
-              sourceObj = {};
+              mapInfo.sourceAttribute = null;
             }
           }
-          mapInfo["sourceAttribute"] = sourceObj;
           this.attributeTableArray[i] = mapInfo;
         }
         console.log(JSON.stringify(this.attributeTableArray));
@@ -1066,281 +1091,282 @@ export class DataIngestionDetailComponent implements OnInit {
 
       else if (this.selectedSourceType == "FILE" && this.selectedTargetType == "TABLE" && this.selectedAutoMode == "FromTarget") {
         for (var i = 0; i < this.allSourceAttributeTarget.length; i++) {
-          var mapInfo = {};
-          mapInfo["attrMapId"] = i;
-          mapInfo["sourceType"] = "datapod";
-          mapInfo["sourceAttribute"] = temp[i]["targetAttribute"]["attrName"];
-          let obj = {};
-          obj["uuid"] = temp[i]["targetAttribute"]["uuid"];
-          obj["label"] = temp[i]["targetAttribute"]["label"];
-          obj["type"] = temp[i]["targetAttribute"]["type"];
-          obj["attrName"] = temp[i]["targetAttribute"]["attrName"];
-          obj["attributeId"] = temp[i]["targetAttribute"]["attributeId"];
-          mapInfo["targetAttribute"] = obj;
-          mapInfo["IsTargetAttributeSimple"] = "false";
+          var mapInfo = new AttributeMapIO();
+          mapInfo.attrMapId = i;
+          mapInfo.sourceType = "datapod";
+          mapInfo.sourceAttribute =  temp[i].targetAttribute.attrName;
+          // let obj = {};
+          // obj["uuid"] = temp[i]["targetAttribute"]["uuid"];
+          // obj["label"] = temp[i]["targetAttribute"]["label"];
+          // obj["type"] = temp[i]["targetAttribute"]["type"];
+          // obj["attrName"] = temp[i]["targetAttribute"]["attrName"];
+          // obj["attributeId"] = temp[i]["targetAttribute"]["attributeId"];
+
+          mapInfo.targetAttribute.uuid = temp[i].targetAttribute.uuid;
+          mapInfo.targetAttribute.label = temp[i].targetAttribute.label;
+          mapInfo.targetAttribute.type = temp[i].targetAttribute.type;
+          mapInfo.targetAttribute.attrName = temp[i].targetAttribute.attrName;
+          mapInfo.targetAttribute.attributeId = temp[i].targetAttribute.attributeId;
+
+         // mapInfo["targetAttribute"] = obj;
+          mapInfo.IsTargetAttributeSimple = "false";
 
           this.attributeTableArray[i] = mapInfo;
         }
       }
       else if (this.selectedSourceType == "TABLE" && this.selectedTargetType == "FILE" && this.selectedAutoMode == "FromSource") {
         for (var i = 0; i < this.allSourceAttribute.length; i++) {
-          var mapInfo = {};
-          mapInfo["attrMapId"] = i;
-          mapInfo["sourceType"] = "datapod";
-          let obj = {}
-          obj["attributeId"] = temp[i]["sourceAttribute"]["attributeId"];
-          obj["attrName"] = temp[i]["sourceAttribute"]["attrName"];
-          obj["uuid"] = temp[i]["sourceAttribute"]["uuid"];
-          obj["label"] = temp[i]["sourceAttribute"]["label"];
-          mapInfo["sourceAttribute"] = obj;
+          var mapInfo = new AttributeMapIO();
+          mapInfo.attrMapId = i;
+          mapInfo.sourceType = "datapod";
 
-          mapInfo["targetAttribute"] = temp[i]["sourceAttribute"]["attrName"];
-          mapInfo["IsTargetAttributeSimple"] = "true";
+          mapInfo.sourceAttribute = new AttributeIO();
+          mapInfo.sourceAttribute.uuid = temp[i].sourceAttribute.uuid;
+          mapInfo.sourceAttribute.label = temp[i].sourceAttribute.label;
+          mapInfo.sourceAttribute.attrName = temp[i].sourceAttribute.attrName;
+          mapInfo.sourceAttribute.attributeId = temp[i].sourceAttribute.attributeId;
+
+          mapInfo.targetAttribute = temp[i].sourceAttribute.attrName;
+          mapInfo.IsTargetAttributeSimple = "true";
 
           this.attributeTableArray[i] = mapInfo;
         }
       }
       else if (this.selectedSourceType == "FILE" && this.selectedTargetType == "FILE" && this.selectedAutoMode == "FromSource") {
         for (var i = 0; i < temp.length; i++) {
-          var mapInfo = {};
-          mapInfo["attrMapId"] = i;
-          mapInfo["sourceType"] = temp[i]["sourceType"];
-          if(temp[i]["sourceType"]=='string' || temp[i]["sourceType"]=='datapod'){
-            mapInfo["sourceAttribute"] = temp[i]["sourceAttribute"];
-            mapInfo["targetAttribute"] = temp[i]["sourceAttribute"];
-          } else{
-            let obj = {}
-            //obj["attributeId"] = temp[i]["sourceAttribute"]["attributeId"];
-           // obj["attrName"] = temp[i]["sourceAttribute"]["attrName"];
-            obj["uuid"] = temp[i]["sourceAttribute"]["uuid"];
-            obj["label"] = temp[i]["sourceAttribute"]["label"];
-            mapInfo["sourceAttribute"] = obj;
-            
-            mapInfo["targetAttribute"] = temp[i]["sourceAttribute"].label;
+          var mapInfo = new AttributeMapIO();
+          mapInfo.attrMapId = i;
+          mapInfo.sourceType = temp[i].sourceType;
+
+          if (temp[i].sourceType == 'string' || temp[i].sourceType == 'datapod') {
+            mapInfo.sourceAttribute = temp[i].sourceAttribute;
+            mapInfo.targetAttribute = temp[i].sourceAttribute;
+          } else {
+            let sourceAttribute = new AttributeIO();
+            sourceAttribute.uuid = temp[i].sourceAttribute.uuid;
+            sourceAttribute.label = temp[i].sourceAttribute.label;
+            mapInfo.sourceAttribute = sourceAttribute;
+
+            mapInfo.targetAttribute = temp[i].sourceAttribute.label;
           }
-         
-          mapInfo["IsTargetAttributeSimple"] = "true";
+          mapInfo.IsTargetAttributeSimple = "true";
           this.attributeTableArray[i] = mapInfo;
         }
       }
       else if (this.selectedSourceType == "FILE" && this.selectedTargetType == "FILE" && this.selectedAutoMode == "FromTarget") {
         for (var i = 0; i < temp.length; i++) {
-          var mapInfo = {};
-          mapInfo["attrMapId"] = i;
-          mapInfo["sourceType"] = "datapod";
-          mapInfo["sourceAttribute"] = temp[i]["targetAttribute"];
-          mapInfo["targetAttribute"] = temp[i]["targetAttribute"];
-          mapInfo["IsTargetAttributeSimple"] = "true";
+          var mapInfo =new AttributeMapIO();
+          mapInfo.attrMapId = i;
+          mapInfo.sourceType = "datapod";
+          mapInfo.sourceAttribute = temp[i].targetAttribute;
+          mapInfo.targetAttribute = temp[i].targetAttribute;
+          mapInfo.IsTargetAttributeSimple = "true";
           this.attributeTableArray[i] = mapInfo;
         }
       }
       else if (this.selectedSourceType == "STREAM" && this.selectedTargetType == "FILE" && this.selectedAutoMode == "FromSource") {
         for (var i = 0; i < temp.length; i++) {
-          var mapInfo = {};
-          mapInfo["attrMapId"] = i;
-          mapInfo["sourceType"] = "datapod";
-          mapInfo["sourceAttribute"] = temp[i]["sourceAttribute"];
-          mapInfo["targetAttribute"] = temp[i]["sourceAttribute"];
-          mapInfo["IsTargetAttributeSimple"] = "true";
+          var mapInfo =new AttributeMapIO();
+          mapInfo.attrMapId = i;
+          mapInfo.sourceType = "datapod";
+          mapInfo.sourceAttribute = temp[i].sourceAttribute;
+          mapInfo.targetAttribute = temp[i].sourceAttribute;
+          mapInfo.IsTargetAttributeSimple = "true";
           this.attributeTableArray[i] = mapInfo;
         }
       }
     }
   }
 
-  searchOption(index){
+  searchOption(index : any) {
     this.displayDialogBox = true;
-    this._commonService.getAllLatest("dataset")
-    .subscribe(response => {this.onSuccessgetAllLatestDialogBox(response)},
-    error => console.log("Error ::", error))
+    this._commonService.getAllLatest(MetaTypeEnum.MetaType.DATASET)
+      .subscribe(response => { this.onSuccessgetAllLatestDialogBox(response) },
+        error => console.log("Error ::", error))
   }
 
-  onSuccessgetAllLatestDialogBox(response){
-    this.dialogAttriArray =  [];
+  onSuccessgetAllLatestDialogBox(response: BaseEntity[]) {
+    this.dialogAttriArray = [];
     let temp = [];
-    for(const i in response){
-      let dialogAttriObj = {};
-      dialogAttriObj["label"] = response[i].name;
-      dialogAttriObj["value"] = {};
-      dialogAttriObj["value"]["label"] = response[i].name;
-      dialogAttriObj["value"]["uuid"] = response[i].uuid;
+    for (const i in response) {
+      let dialogAttriObj = new AttributeIO()
+      dialogAttriObj.label = response[i].name;
+      dialogAttriObj.value = {};
+      dialogAttriObj.value.label = response[i].name;
+      dialogAttriObj.value.uuid = response[i].uuid;
       temp[i] = dialogAttriObj;
     }
     this.dialogAttriArray = temp
     console.log(JSON.stringify(this.dialogAttriArray));
   }
-  
-  onChangeDialogAttribute(){
-    this._commonService.getAttributesByDataset("dataset",this.dialogSelectName.uuid)
-    .subscribe(response => {this.onSuccessgetAttributesByDatasetDialogBox(response)},
-    error => console.log("Error ::", error))
+
+  onChangeDialogAttribute() {
+    this._commonService.getAttributesByDataset(MetaTypeEnum.MetaType.DATASET, this.dialogSelectName.uuid)
+      .subscribe(response => { this.onSuccessgetAttributesByDatasetDialogBox(response) },
+        error => console.log("Error ::", error))
   }
 
-  onSuccessgetAttributesByDatasetDialogBox(response){
-    this.dialogAttriNameArray =  [];
-    for(const i in response){
-      let dialogAttriNameObj = {};
-      dialogAttriNameObj["label"] = response[i].attrName;
-      dialogAttriNameObj["value"] = {};
-      dialogAttriNameObj["value"]["label"] = response[i].attrName;
-      dialogAttriNameObj["value"]["attributeId"] = response[i].attrId;
-      dialogAttriNameObj["value"]["uuid"] = response[i].ref.uuid;
+  onSuccessgetAttributesByDatasetDialogBox(response: MetaIdentifierHolder[]) {
+    this.dialogAttriNameArray = [];
+    for (const i in response) {
+      let dialogAttriNameObj = new AttributeIO();
+      dialogAttriNameObj.label = response[i].attrName;
+      dialogAttriNameObj.value = {};
+      dialogAttriNameObj.value.label = response[i].attrName;
+      dialogAttriNameObj.value.attributeId = response[i].attrId;
+      dialogAttriNameObj.value.uuid = response[i].ref.uuid;
       this.dialogAttriNameArray[i] = dialogAttriNameObj;
     }
   }
 
-  submitDialogBox(index){
+  submitDialogBox(index : any) {
     this.displayDialogBox = false;
-    let rhsattribute = {}
-    rhsattribute["label"] = this.dialogAttributeName.label;
-    rhsattribute["uuid"] = this.dialogAttributeName.uuid;
-    rhsattribute["attributeId"] = this.dialogAttributeName.attributeId;
+    let rhsattribute = new AttributeIO()
+    rhsattribute.label = this.dialogAttributeName.label;
+    rhsattribute.uuid = this.dialogAttributeName.uuid;
+    rhsattribute.attributeId = this.dialogAttributeName.attributeId;
     this.filterTableArray[index].rhsAttribute = rhsattribute;
   }
 
-  cancelDialogBox(){
+  cancelDialogBox() {
     this.displayDialogBox = false;
   }
 
-  onSuccessgetOneByUuidAndVersion(response) {
-    this.breadcrumbDataFrom[2].caption = response.name;
-    this.ingestData = response;
-    this.createdBy = response.createdBy.ref.name;
+  onSuccessgetOneByUuidAndVersion(response: DataIngestRuleIO) {
+    this.ingestData = response.ingestRule;
+    this.breadcrumbDataFrom[2].caption = response.ingestRule.name;
+    this.createdBy = response.ingestRule.createdBy.ref.name;
     const version: Version = new Version();
-    version.label = response['version'];
-    version.uuid = response['uuid'];
+    version.label = response.ingestRule.version
+    version.uuid = response.ingestRule.uuid;
     this.selectedVersion = version;
-    if (response.tags != null) {
-      let temp = []
-      for (var i = 0; i < response.tags.length; i++) {
-        var tag = {};
-        tag['value'] = response.tags[i];
-        tag['display'] = response.tags[i];
-        temp[i] = tag
-      }
-      this.tags = temp;
+
+    if (response.ingestRule.tags != null) {
+      this.ingestData.tags = response.ingestRule.tags;
     }
-    this.ingestData.locked = response["locked"] == 'Y' ? true : false;
-    this.ingestData.published = response["published"] == 'Y' ? true : false;
-    this.ingestData.active = response["active"] == 'Y' ? true : false;
-    this.selectedRuleType = response.type;
+
+    this.published = this.appHelper.convertStringToBoolean(response.ingestRule.published);
+    this.active = this.appHelper.convertStringToBoolean(response.ingestRule.active);
+    this.locked = this.appHelper.convertStringToBoolean(response.ingestRule.locked);
+
+    this.selectedRuleType = response.ingestRule.type;
     this.onChangeRuleType();
 
-    let sourceObj = {};
-    sourceObj["uuid"] = response.sourceDatasource.ref.uuid;
-    sourceObj["label"] = response.sourceDatasource.ref.name;
-    sourceObj["version"] = response.sourceDatasource.ref.version;
+    let sourceObj = new AttributeIO;
+    sourceObj.uuid = response.ingestRule.sourceDatasource.ref.uuid;
+    sourceObj.label = response.ingestRule.sourceDatasource.ref.name;
+    sourceObj.version = response.ingestRule.sourceDatasource.ref.version;
     this.sourceDs = sourceObj;
     if (this.sourceDs.label == 'Stream') {
       this._dataInjectService.getTopicList(this.sourceDs.uuid, this.sourceDs.version).subscribe(
         response => { this.onSuccessgetTopicList(response) },
         error => console.log("Error::", +error))
     }
-    if (response.sourceFormat != null) {
-      this.selectedSourceFormat = response.sourceFormat
+    if (response.ingestRule.sourceFormat != null) {
+      this.selectedSourceFormat = response.ingestRule.sourceFormat
     }
     //if(response.sourceDetail.value != null){
-    this.sourceName = response.sourceDetail.value;
+    this.sourceName = response.ingestRule.sourceDetail.value;
     //}
-    if (response.sourceExtn != null) {
-      this.sourceExtn = response.sourceExtn.toLowerCase();
+    if (response.ingestRule.sourceExtn != null) {
+      this.sourceExtn = response.ingestRule.sourceExtn.toLowerCase();
     }
     else
       this.sourceExtn = null;
-    this.ingestData.sourceHeader = response["sourceHeader"] == 'Y' ? true : false;
+    this.ingestData.sourceHeader = this.appHelper.convertStringToBoolean(response.ingestRule.sourceHeader);
+    this.sourceType = response.ingestRule.sourceDetail.ref.type;
 
-    this.sourceType = response.sourceDetail.ref.type;
-
-    let sourceTypeNameObj = {};
-    sourceTypeNameObj["uuid"] = response.sourceDetail.ref.uuid;
-    sourceTypeNameObj["label"] = response.sourceDetail.ref.name;
+    let sourceTypeNameObj = new AttributeIO;
+    sourceTypeNameObj.uuid = response.ingestRule.sourceDetail.ref.uuid;
+    sourceTypeNameObj.label = response.ingestRule.sourceDetail.ref.name;
     this.sourceTypeName = sourceTypeNameObj
     this.onChangeSourceType();
 
     this.getAllAttributeBySource1();
 
-    if (response.incrAttr != null) {
-      let incrementKeyObj = {};
+    if (response.ingestRule.incrAttr != null) {
+      let incrementKeyObj = new AttributeIO;
 
-      incrementKeyObj["attributeId"] = response.incrAttr.attrId;
-      incrementKeyObj["label"] = response.incrAttr.attrName;
-      incrementKeyObj["type"] = response.incrAttr.ref.type
-      incrementKeyObj["uuid"] = response.incrAttr.ref.uuid;
-      incrementKeyObj["datapodname"] = response.incrAttr.ref.name;
+      incrementKeyObj.attributeId = response.ingestRule.incrAttr.attrId;
+      incrementKeyObj.label = response.ingestRule.incrAttr.attrName;
+      incrementKeyObj.type = response.ingestRule.incrAttr.ref.type;
+      incrementKeyObj.uuid = response.ingestRule.incrAttr.ref.uuid;
+      incrementKeyObj.datapodname = response.ingestRule.incrAttr.ref.name;
       // incrementKeyObj["dname"] = response.incrAttr.ref.name + "." + response.incrAttr.attrName;
       this.incrementKey = incrementKeyObj;
     }
     this.getAllAttributeBySource();
-    if (response.splitBy != null) {
-      let splitByObj = {};
-      splitByObj["attributeId"] = response.splitBy.attrId;
-      splitByObj["attrName"] = response.splitBy.attrName;
-      splitByObj["type"] = response.splitBy.ref.type;
-      splitByObj["uuid"] = response.splitBy.ref.uuid;
-      splitByObj["datapodname"] = response.splitBy.ref.name;
-      splitByObj["dname"] = response.splitBy.ref.name + "." + response.splitBy.attrName;
+    if (response.ingestRule.splitBy != null) {
+      let splitByObj = new AttributeIO;
+      splitByObj.attributeId = response.ingestRule.splitBy.attrId;
+      splitByObj.attrName = response.ingestRule.splitBy.attrName;
+      splitByObj.type = response.ingestRule.splitBy.ref.type;
+      splitByObj.uuid = response.ingestRule.splitBy.ref.uuid;
+      splitByObj.datapodname = response.ingestRule.splitBy.ref.name;
+      splitByObj.dname = response.ingestRule.splitBy.ref.name + "." + response.ingestRule.splitBy.attrName;
       this.splitBy = splitByObj;
     }
 
-    let targetObj = {};
-    targetObj["uuid"] = response.targetDatasource.ref.uuid;
-    targetObj["label"] = response.targetDatasource.ref.name;
+    let targetObj = new AttributeIO;
+    targetObj.uuid = response.ingestRule.targetDatasource.ref.uuid;
+    targetObj.label = response.ingestRule.targetDatasource.ref.name;
     this.targetDs = targetObj;
 
-    if (response.targetFormat != null) {
-      this.selectedTargetFormat = response.targetFormat
+    if (response.ingestRule.targetFormat != null) {
+      this.selectedTargetFormat = response.ingestRule.targetFormat
     }
-    this.targetName = response.targetDetail.value;
+    this.targetName = response.ingestRule.targetDetail.value;
 
-    let targetNameObj = {}
-    targetNameObj["uuid"] = response.targetDetail.ref.uuid;
-    targetNameObj["label"] = response.targetDetail.ref.name;
+    let targetNameObj = new AttributeIO;
+    targetNameObj.uuid = response.ingestRule.targetDetail.ref.uuid;
+    targetNameObj.label = response.ingestRule.targetDetail.ref.name;
     this.targetNameForTable = targetNameObj;
     this.onChangeTargetDs();
 
-    if (response.targetExtn != null) {
-      this.targetExtn = response.targetExtn.toLowerCase();
+    if (response.ingestRule.targetExtn != null) {
+      this.targetExtn = response.ingestRule.targetExtn.toLowerCase();
     }
     else
       this.targetExtn = null;
-    this.ingestData.targetHeader = response["targetHeader"] == 'Y' ? true : false;
+    this.targetHeader = this.appHelper.convertStringToBoolean(response.ingestRule.targetHeader);
 
-    this.saveMode = response.saveMode;
+    this.saveMode = response.ingestRule.saveMode;
 
-    this.runParams = response.runParams;
+    this.runParams = response.ingestRule.runParams;
 
     if (this.sourceTypeName != null && this.sourceType != null) {
       this._commonService.getFormulaByType(this.sourceTypeName.uuid, this.sourceType)
         .subscribe(response => { this.onSuccessgetFormulaByType(response) },
-        error => console.log("Error ::", error))
+          error => console.log("Error ::", error))
 
       if (this.selectedSourceType == 'TABLE') {
         this._commonService.getAllAttributeBySource(this.sourceTypeName.uuid, this.sourceType)
           .subscribe(response => { this.onSuccessgetAllAttributeBySource(response) },
-          error => console.log("Error ::", error))
+            error => console.log("Error ::", error))
       }
     }
-    this._dataInjectService.getFunctionByCriteria("", "N", "function")
-      .subscribe(response => { this.onSuccessgetFunctionByCriteria(response) },
-      error => console.log("Error ::", error))
+    if (response.filterInfo != null) {
+      this._dataInjectService.getFunctionByCriteria("", "N", "function")
+        .subscribe(response => { this.onSuccessgetFunctionByCriteria(response) },
+          error => console.log("Error ::", error))
 
-    this._dataInjectService.getParamByApp("", "application")
-      .subscribe(response => { this.onSuccessgetParamByApp(response) },
-      error => console.log("Error ::", error))
+      this._dataInjectService.getParamByApp("", "application")
+        .subscribe(response => { this.onSuccessgetParamByApp(response) },
+          error => console.log("Error ::", error))
+    }
 
-    this.filterTableArray = response.filterTableArray
+    this.filterTableArray = response.filterInfo
+    if (response.attributeMap != null) {
+      this._dataInjectService.getAttributesByDatapod(this.sourceType, this.sourceTypeName.uuid)
+        .subscribe(response => { this.onSuccessgetAttributesByDatapod(response) },
+          error => console.log("Error::", +error))
 
-    this._dataInjectService.getAttributesByDatapod(this.sourceType, this.sourceTypeName.uuid).subscribe(
-      response => {
-        this.onSuccessgetAttributesByDatapod(response)
-      },
-      error => console.log("Error::", +error))
-
-    this._dataInjectService.getAttributesByDatapod("datapod", this.targetNameForTable.uuid).subscribe(
-      response => { this.onSuccessgetAttributesByDatapodTarget(response) },
-      error => console.log("Error::", +error))
-
-    this.attributeTableArray = response.attributeTableArray;
+      this._dataInjectService.getAttributesByDatapod(MetaTypeEnum.MetaType.DATAPOD, this.targetNameForTable.uuid)
+        .subscribe(response => { this.onSuccessgetAttributesByDatapodTarget(response) },
+          error => console.log("Error::", +error))
+    }
+    this.attributeTableArray = response.attributeMap;
+    console.log(JSON.stringify(this.attributeTableArray))
   }
 
   ingestSubmit() {
@@ -1355,6 +1381,7 @@ export class DataIngestionDetailComponent implements OnInit {
         tagArray[counttag] = this.tags[counttag].value;
       }
     }
+    //write different code for tags,active,published,locked,targetHeader
     ingestJson['tags'] = tagArray
     ingestJson["active"] = this.ingestData.active == true ? 'Y' : "N"
     ingestJson["published"] = this.ingestData.published == true ? 'Y' : "N"
@@ -1562,11 +1589,11 @@ export class DataIngestionDetailComponent implements OnInit {
     ingestJson["filterInfo"] = filterInfoArray;
 
     let attributeTableArray = [];
-    if(this.attributeTableArray != null){
+    if (this.attributeTableArray != null) {
       for (let i = 0; i < this.attributeTableArray.length; i++) {
         let attributeInfo = {};
         attributeInfo["attrMapId"] = this.attributeTableArray[i].attrMapId;
-  
+
         let sourceAttrObj = {};
         let refObj = {};
         if (this.attributeTableArray[i].sourceType == 'string') {
@@ -1596,7 +1623,7 @@ export class DataIngestionDetailComponent implements OnInit {
           sourceAttrObj["ref"] = refObj;
         }
         attributeInfo["sourceAttr"] = sourceAttrObj;
-  
+
         let targetAttr = {};
         let targetref = {};
         if (this.selectedTargetType != "FILE") {
@@ -1614,7 +1641,7 @@ export class DataIngestionDetailComponent implements OnInit {
         attributeTableArray[i] = attributeInfo;
       }
     }
-    
+
     ingestJson["attributeMap"] = attributeTableArray;
 
     console.log(JSON.stringify(ingestJson));
@@ -1627,7 +1654,7 @@ export class DataIngestionDetailComponent implements OnInit {
   OnSuccessubmit(response) {
     if (this.checkboxModelexecution == true) {
       this._commonService.getOneById("ingest", response).subscribe(
-        response => { this.onSuccessgetOneById(response);},
+        response => { this.onSuccessgetOneById(response); },
         error => console.log('Error :: ' + error))
     }
     else {
@@ -1668,54 +1695,54 @@ export class DataIngestionDetailComponent implements OnInit {
     this.router.navigate(['app/dataIngestion/ingest', uuid, version, 'true']);
   }
 
-  showMainPage(){
+  showMainPage() {
     this.isHomeEnable = false
-   // this._location.back();
-   this.showGraph = false;
+    // this._location.back();
+    this.showGraph = false;
   }
 
-  showDagGraph(uuid,version){
+  showDagGraph(uuid, version) {
     this.isHomeEnable = true;
     this.showGraph = true;
     setTimeout(() => {
-      this.d_KnowledgeGraphComponent.getGraphData(this.id,this.version);
+      this.d_KnowledgeGraphComponent.getGraphData(this.id, this.version);
     }, 1000);
   }
 
-  onAttrRowDown(index){
-		var rowTempIndex=this.filterTableArray[index];
-    var rowTempIndexPlus=this.filterTableArray[index+1];
-		this.filterTableArray[index]=rowTempIndexPlus;
-    this.filterTableArray[index+1]=rowTempIndex;
-    this.isSubmit="true"
+  onAttrRowDown(index) {
+    var rowTempIndex = this.filterTableArray[index];
+    var rowTempIndexPlus = this.filterTableArray[index + 1];
+    this.filterTableArray[index] = rowTempIndexPlus;
+    this.filterTableArray[index + 1] = rowTempIndex;
+    this.isSubmit = "true"
 
-	}
-	
-	onAttrRowUp(index){
-		var rowTempIndex=this.filterTableArray[index];
-    var rowTempIndexMines=this.filterTableArray[index-1];
-		this.filterTableArray[index]=rowTempIndexMines;
-    this.filterTableArray[index-1]=rowTempIndex;
-    this.isSubmit="true"
   }
-  dragStart(event,data){
+
+  onAttrRowUp(index) {
+    var rowTempIndex = this.filterTableArray[index];
+    var rowTempIndexMines = this.filterTableArray[index - 1];
+    this.filterTableArray[index] = rowTempIndexMines;
+    this.filterTableArray[index - 1] = rowTempIndex;
+    this.isSubmit = "true"
+  }
+  dragStart(event, data) {
     console.log(event)
     console.log(data)
-    this.dragIndex=data
+    this.dragIndex = data
   }
-  dragEnd(event){
+  dragEnd(event) {
     console.log(event)
   }
-  drop(event,data){
-    if(this.mode=='false'){
-      this.dropIndex=data
+  drop(event, data) {
+    if (this.mode == 'false') {
+      this.dropIndex = data
       // console.log(event)
       // console.log(data)
-      var item=this.filterTableArray[this.dragIndex]
-      this.filterTableArray.splice(this.dragIndex,1)
-      this.filterTableArray.splice(this.dropIndex,0,item)
-      this.isSubmit="true"
+      var item = this.filterTableArray[this.dragIndex]
+      this.filterTableArray.splice(this.dragIndex, 1)
+      this.filterTableArray.splice(this.dropIndex, 0, item)
+      this.isSubmit = "true"
     }
-    
+
   }
 }

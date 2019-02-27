@@ -24,6 +24,7 @@ import * as MetaTypeEnum from '../metadata/enums/metaType';
 import { SourceAttr } from '../metadata/domain/domain.sourceAttr';
 import { Subject, fromEvent } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { DataQualityIO } from '../metadata/domainIO/domain.dataQualityIO';
 @Component({
   selector: 'app-data-pipeli',
   templateUrl: './data-qualitydetail.template.html',
@@ -49,7 +50,7 @@ export class DataQualityDetailComponent {
   lhsFormulaArray: any[];
   IsProgerssShow: string;
   checkboxModelexecution: boolean;
-  breadcrumbDataFrom: { "caption": string; "routeurl": string; }[];
+  breadcrumbDataFrom: { "caption": String; "routeurl": String; }[];
   dataqualitycompare: any;
   valueCheck: any;
   allRefIntegrity: any[];
@@ -414,7 +415,8 @@ export class DataQualityDetailComponent {
           this.isEditError = true;
         });
   }
-  onSuccessgetOneByUuidAndVersion(response) {
+  onSuccessgetOneByUuidAndVersion(response:DataQualityIO) {
+
     this.breadcrumbDataFrom[2].caption = response.dataQuality.name;
     this.dqdata = response.dataQuality;
 
@@ -442,10 +444,10 @@ export class DataQualityDetailComponent {
       this.selectAttribute = selectattribute;
     }
 
-    if (response.isFormualExits == true) {
+    if (response.isFormulaExits == true) {
       this.getFormulaByType("lhsType");
     }
-    if (response.isFormualExits == true) {
+    if (response.isFormulaExits == true) {
       this.getFormulaByType("rhsType");
     }
     if (response.isAttributeExits == true) {

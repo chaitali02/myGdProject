@@ -3,8 +3,13 @@ import { Http, Response } from "@angular/http";
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from "rxjs/operators";
 
+import { DataIngestRuleIO } from '../domainIO/domain.dataIngestRuleIO';
 import { CommonService } from "./common.service";
 import { SharedService } from "../../shared/shared.service";
+import { DataQualityIO } from '../domainIO/domain.dataQualityIO';
+import { FilterInfoIO } from '../domainIO/domain.filterInfoIO';
+import { AttributeMapIO } from '../domainIO/domain.attributeMapIO';
+import { AttributeIO } from '../domainIO/domain.attributeIO';
 
 @Injectable()
 
@@ -12,7 +17,9 @@ export class DataIngestionService {
 	sessionId: string;
 	baseUrl: string;
 	headers: Headers;
-	constructor(@Inject(Http) private http: Http, private _sharedService: SharedService, private _commonService: CommonService) { }
+	constructor(@Inject(Http) private http: Http, private _sharedService: SharedService, private _commonService: CommonService) {
+	
+	 }
 	private handleError<T>(error: any, result?: T) {
 		return throwError(error);
 	}
@@ -89,174 +96,186 @@ export class DataIngestionService {
 				catchError(error => this.handleError<string>(error, "Network Error!")));
 	}
 
-	getOneByUuidAndVersion(uuid: any, version: any, type: String): Observable<any[]> {
+	getOneByUuidAndVersion(uuid: any, version: any, type: String)  {
 		return this._commonService.getOneByUuidAndVersion(uuid, version, type)
 			.pipe(
-				map(response => {
-					if (response["filterInfo"] != null) {
-						let filterInfoArray = [];
-						for (let k = 0; k < response["filterInfo"].length; k++) {
-							let filterInfo = {};
-							filterInfo["logicalOperator"] = response["filterInfo"][k].logicalOperator
-							filterInfo["lhsType"] = response["filterInfo"][k].operand[0].ref.type;
-							filterInfo["operator"] = response["filterInfo"][k].operator;
-							filterInfo["rhsType"] = response["filterInfo"][k].operand[1].ref.type;
+				map(response=> {
 
-							if (response["filterInfo"][k].operand[0].ref.type == 'formula') {
-								let lhsAttri1 = {}
-								lhsAttri1["uuid"] = response["filterInfo"][k].operand[0].ref.uuid;
-								lhsAttri1["label"] = response["filterInfo"][k].operand[0].ref.name;
-								filterInfo["lhsAttribute"] = lhsAttri1;
-							}
-							else if (response["filterInfo"][k].operand[0].ref.type == 'datapod') {
-								let lhsAttri = {}
-								lhsAttri["uuid"] = response["filterInfo"][k].operand[0].ref.uuid;
-								lhsAttri["label"] = response["filterInfo"][k].operand[0].ref.name + "." + response["filterInfo"][k].operand[0].attributeName;
-								lhsAttri["attributeId"] = response["filterInfo"][k].operand[0].attributeId;
-								filterInfo["lhsAttribute"] = lhsAttri;
-							}
-							else if (response["filterInfo"][k].operand[0].ref.type == 'attribute') {
-								filterInfo["lhsType"] = 'datapod';
-								filterInfo["lhsAttribute"] = response["filterInfo"][k].operand[0].value;
-							}
+					let dataIngestIO = new DataIngestRuleIO();
+					dataIngestIO.ingestRule = response;
 
-							else if (response["filterInfo"][k].operand[0].ref.type == 'simple') {
-								let stringValue = response["filterInfo"][k].operand[0].value;
+					if (response.filterInfo != null) {
+						let filterInfoArray = [new FilterInfoIO];
+						for (let k = 0; k < response.filterInfo.length; k++) {
+							let filterInfoIO = new FilterInfoIO();
+							filterInfoIO.logicalOperator = response.filterInfo[k].logicalOperator
+							filterInfoIO.lhsType = response.filterInfo[k].operand[0].ref.type;
+							filterInfoIO.operator= response.filterInfo[k].operator;
+							filterInfoIO.rhsType = response.filterInfo[k].operand[1].ref.type;
+
+							if (response.filterInfo[k].operand[0].ref.type == 'formula') {
+								let lhsAttribute = new AttributeIO()
+								lhsAttribute.uuid  = response.filterInfo[k].operand[0].ref.uuid;
+								lhsAttribute.label  = response.filterInfo[k].operand[0].ref.name;
+								filterInfoIO.lhsAttribute = lhsAttribute;
+							}
+							else if (response.filterInfo[k].operand[0].ref.type == 'datapod') {
+								let lhsAttribute = new AttributeIO();
+								lhsAttribute.uuid = response.filterInfo[k].operand[0].ref.uuid;
+								lhsAttribute.label = response.filterInfo[k].operand[0].ref.name + "." + response.filterInfo[k].operand[0].attributeName;
+								lhsAttribute.attributeId = response.filterInfo[k].operand[0].attributeId;
+								filterInfoIO.lhsAttribute = lhsAttribute;
+							}
+							else if (response.filterInfo[k].operand[0].ref.type == 'attribute') {
+								filterInfoIO.lhsType = 'datapod';
+								filterInfoIO.lhsAttribute = response.filterInfo[k].operand[0].value;
+							}
+							else if (response.filterInfo[k].operand[0].ref.type == 'simple') {
+								let stringValue = response.filterInfo[k].operand[0].value;
 								let onlyNumbers = /^[0-9]+$/;
 								let result = onlyNumbers.test(stringValue);
 								if (result == true) {
-									filterInfo["lhsType"] = 'integer';
+									filterInfoIO.lhsType = 'integer';
 								} else {
-									filterInfo["lhsType"] = 'string';
+									filterInfoIO.lhsType = 'string';
 								}
-								filterInfo["lhsAttribute"] = response["filterInfo"][k].operand[0].value;
+								filterInfoIO.lhsAttribute = response.filterInfo[k].operand[0].value;
 							}
 
-							if (response["filterInfo"][k].operand[1].ref.type == 'formula') {
-								let rhsAttri = {}
-								rhsAttri["uuid"] = response["filterInfo"][k].operand[1].ref.uuid;
-								rhsAttri["label"] = response["filterInfo"][k].operand[1].ref.name;
-								filterInfo["rhsAttribute"] = rhsAttri;
+							if (response.filterInfo[k].operand[1].ref.type == 'formula') {
+								let rhsAttribute = new AttributeIO();
+								rhsAttribute.uuid = response.filterInfo[k].operand[1].ref.uuid;
+								rhsAttribute.label = response.filterInfo[k].operand[1].ref.name;
+								filterInfoIO.rhsAttribute = rhsAttribute;
 							}
-							else if (response["filterInfo"][k].operand[1].ref.type == 'function') {
-								let rhsAttri = {}
-								rhsAttri["uuid"] = response["filterInfo"][k].operand[1].ref.uuid;
-								rhsAttri["label"] = response["filterInfo"][k].operand[1].ref.name;
-								filterInfo["rhsAttribute"] = rhsAttri;
+							else if (response.filterInfo[k].operand[1].ref.type == 'function') {
+								let rhsAttribute = new AttributeIO();
+								rhsAttribute.uuid  = response.filterInfo[k].operand[1].ref.uuid;
+								rhsAttribute.label  = response.filterInfo[k].operand[1].ref.name;
+								filterInfoIO.rhsAttribute = rhsAttribute;
 							}
-							else if (response["filterInfo"][k].operand[1].ref.type == 'paramlist') {
-								let rhsAttri = {}
-								rhsAttri["uuid"] = response["filterInfo"][k].operand[1].ref.uuid;
-								rhsAttri["attributeId"] = response["filterInfo"][k].operand[1].attributeId;
-								rhsAttri["label"] = "app." + response["filterInfo"][k].operand[1].attributeName;
-								filterInfo["rhsAttribute"] = rhsAttri;
+							else if (response.filterInfo[k].operand[1].ref.type == 'paramlist') {
+								let rhsAttribute = new AttributeIO();
+								rhsAttribute.uuid = response.filterInfo[k].operand[1].ref.uuid;
+								rhsAttribute.attributeId = response.filterInfo[k].operand[1].attributeId;
+								rhsAttribute.label= "app." + response.filterInfo[k].operand[1].attributeName;
+								filterInfoIO.rhsAttribute = rhsAttribute;
 							}
-							else if (response["filterInfo"][k].operand[1].ref.type == 'dataset') {
-								let rhsAttri = {}
-								rhsAttri["uuid"] = response["filterInfo"][k].operand[1].ref.uuid;
-								rhsAttri["attributeId"] = response["filterInfo"][k].operand[1].attributeId;
-								rhsAttri["label"] = response["filterInfo"][k].operand[1].attributeName;
-								filterInfo["rhsAttribute"] = rhsAttri;
+							else if (response.filterInfo[k].operand[1].ref.type == 'dataset') {
+								let rhsAttribute = new AttributeIO();
+								rhsAttribute.uuid= response.filterInfo[k].operand[1].ref.uuid;
+								rhsAttribute.attributeId = response.filterInfo[k].operand[1].attributeId;
+								rhsAttribute.label= response.filterInfo[k].operand[1].attributeName;
+								filterInfoIO.rhsAttribute = rhsAttribute;
 							}
-							else if (response["filterInfo"][k].operand[1].ref.type == 'datapod') {
-								let rhsAttri1 = {}
-								rhsAttri1["uuid"] = response["filterInfo"][k].operand[1].ref.uuid;
-								rhsAttri1["label"] = response["filterInfo"][k].operand[1].ref.name + "." + response["filterInfo"][k].operand[1].attributeName;
-								rhsAttri1["attributeId"] = response["filterInfo"][k].operand[1].attributeId;
-								filterInfo["rhsAttribute"] = rhsAttri1;
+							else if (response.filterInfo[k].operand[1].ref.type == 'datapod') {
+								let rhsAttribute = new AttributeIO();
+								rhsAttribute.uuid = response.filterInfo[k].operand[1].ref.uuid;
+								rhsAttribute.label = response.filterInfo[k].operand[1].ref.name + "." + response.filterInfo[k].operand[1].attributeName;
+								rhsAttribute.attributeId = response.filterInfo[k].operand[1].attributeId;
+								filterInfoIO.rhsAttribute = rhsAttribute;
 							}
-							else if (response["filterInfo"][k].operand[1].ref.type == 'attribute') {
-								filterInfo["rhsType"] = 'datapod';
-								filterInfo["rhsAttribute"] = response["filterInfo"][k].operand[1].value;
+							else if (response.filterInfo[k].operand[1].ref.type == 'attribute') {
+								filterInfoIO.rhsType = 'datapod';
+								filterInfoIO.rhsAttribute = response.filterInfo[k].operand[1].value;
 							}
-							else if (response["filterInfo"][k].operand[1].ref.type == 'simple') {
-								let stringValue = response["filterInfo"][k].operand[1].value;
+							else if (response.filterInfo[k].operand[1].ref.type == 'simple') {
+								let stringValue = response.filterInfo[k].operand[1].value;
 								let onlyNumbers = /^[0-9]+$/;
 								let result = onlyNumbers.test(stringValue);
 								if (result == true) {
-									filterInfo["rhsType"] = 'integer';
+									filterInfoIO.rhsType = 'integer';
 								} else {
-									filterInfo["rhsType"] = 'string';
+									filterInfoIO.rhsType = 'string';
 								}
-								filterInfo["rhsAttribute"] = response["filterInfo"][k].operand[1].value;
+								filterInfoIO.rhsAttribute = response.filterInfo[k].operand[1].value;
 
 								let result2 = stringValue.includes("and")
 								if (result2 == true) {
-									filterInfo["rhsType"] = 'integer';
+									filterInfoIO.rhsType = 'integer';
 									let betweenValArray = []
 									betweenValArray = stringValue.split("and");
-									filterInfo["rhsAttribute1"] = betweenValArray[0];
-									filterInfo["rhsAttribute2"] = betweenValArray[1];
+									filterInfoIO.rhsAttribute1 = betweenValArray[0];
+									filterInfoIO.rhsAttribute2 = betweenValArray[1];
 								}
 							}
-							filterInfoArray.push(filterInfo);
+							filterInfoArray[k] = filterInfoIO;
 							console.log(filterInfoArray)
-							response["filterTableArray"] = filterInfoArray
+							dataIngestIO.filterInfo= filterInfoArray; 
 						}
+					}else{
+						dataIngestIO.filterInfo=[];
 					}
+					
+					if (response.attributeMap != null) {
+						let attributeTableArray = [new AttributeMapIO];
+						for (let i = 0; i < response.attributeMap.length; i++) {
+							let attributeInfo = new AttributeMapIO();
+							attributeInfo.attrMapId = response.attributeMap[i].attrMapId;
+							attributeInfo.sourceType = response.attributeMap[i].sourceAttr.ref.type
 
-					if (response["attributeMap"] != null) {
-						let attributeTableArray = [];
-						for (let i = 0; i < response["attributeMap"].length; i++) {
-							let attributeInfo = {};
-							attributeInfo["attrMapId"] = response["attributeMap"][i].attrMapId;
-							attributeInfo["sourceType"] = response["attributeMap"][i].sourceAttr.ref.type
-
-							if (response["attributeMap"][i].sourceAttr.ref.type == "datapod" ||
-								response["attributeMap"][i].sourceAttr.ref.type == "dataset" ||
-								response["attributeMap"][i].sourceAttr.ref.type == "rule") {
-								let sourceAttribute = {};
-								sourceAttribute["attributeId"] = response["attributeMap"][i].attrMapId;
-								sourceAttribute["attrName"] = response["attributeMap"][i].sourceAttr.attrName;
-								sourceAttribute["uuid"] = response["attributeMap"][i].sourceAttr.ref.uuid;
-								sourceAttribute["label"] = response["attributeMap"][i].sourceAttr.ref.name + "." + response["attributeMap"][i].sourceAttr.attrName;
-								attributeInfo["sourceAttribute"] = sourceAttribute;
-							}
-
-							else if (response["attributeMap"][i].sourceAttr.ref.type == "simple") {
-								attributeInfo["sourceAttribute"] = response["attributeMap"][i]["sourceAttr"].value;
-								attributeInfo["sourceType"] = "string";
-							}
-							else if (response["attributeMap"][i].sourceAttr.ref.type == "attribute") {
-								attributeInfo["sourceAttribute"] = response["attributeMap"][i]["sourceAttr"].value;
-								attributeInfo["sourceType"] = "datapod";
+							if (response.attributeMap[i].sourceAttr.ref.type == "datapod" ||
+								response.attributeMap[i].sourceAttr.ref.type == "dataset" ||
+								response.attributeMap[i].sourceAttr.ref.type == "rule") {
+								let sourceAttribute = new AttributeIO();
+								let a = response.attributeMap[i].attrMapId;
+								sourceAttribute.attributeId = a;
+								sourceAttribute.attrName = response.attributeMap[i].sourceAttr.attrName;
+								sourceAttribute.uuid = response.attributeMap[i].sourceAttr.ref.uuid;
+								sourceAttribute.label = response.attributeMap[i].sourceAttr.ref.name + "." + response.attributeMap[i].sourceAttr.attrName;
+								attributeInfo.sourceAttribute = sourceAttribute;
 							}
 
-							if (response["attributeMap"][i].sourceAttr.ref.type == "formula") {
-								let sourceAttribute = {};
-								sourceAttribute["uuid"] = response["attributeMap"][i].sourceAttr.ref.uuid;
-								sourceAttribute["label"] = response["attributeMap"][i].sourceAttr.ref.name;
-								attributeInfo["sourceAttribute"] = sourceAttribute;
+							else if (response.attributeMap[i].sourceAttr.ref.type == "simple") {
+								
+								attributeInfo.sourceAttribute = response.attributeMap[i].sourceAttr.value;
+								attributeInfo.sourceType = "string";
+							} 
+							else if (response.attributeMap[i].sourceAttr.ref.type == "attribute") {
+								attributeInfo.sourceAttribute = response.attributeMap[i].sourceAttr.value;
+								attributeInfo.sourceType = "datapod";
 							}
-							if (response["attributeMap"][i].sourceAttr.ref.type == "function") {
-								let sourceAttribute = {};
-								sourceAttribute["uuid"] = response["attributeMap"][i].sourceAttr.ref.uuid;
-								sourceAttribute["label"] = response["attributeMap"][i].sourceAttr.ref.name;
-								attributeInfo["sourceAttribute"] = sourceAttribute;
+
+							if (response.attributeMap[i].sourceAttr.ref.type == "formula") {
+								let sourceAttribute = new AttributeIO();
+								sourceAttribute.uuid = response.attributeMap[i].sourceAttr.ref.uuid;
+								sourceAttribute.label = response.attributeMap[i].sourceAttr.ref.name;
+								attributeInfo.sourceAttribute = sourceAttribute;
 							}
-							if (response["attributeMap"][i].targetAttr.ref.type != "simple" && response["attributeMap"][i].targetAttr.ref.type != "attribute") {
-								let targetAttribute = {};
-								targetAttribute["uuid"] = response["attributeMap"][i].targetAttr.ref.uuid;
+							if (response.attributeMap[i].sourceAttr.ref.type == "function") {
+								let sourceAttribute = new AttributeIO();
+								sourceAttribute.uuid = response.attributeMap[i].sourceAttr.ref.uuid;
+								sourceAttribute.label = response.attributeMap[i].sourceAttr.ref.name;
+								attributeInfo.sourceAttribute = sourceAttribute;
+							}
+							if (response.attributeMap[i].targetAttr.ref.type != "simple" && response.attributeMap[i].targetAttr.ref.type != "attribute") {
+								let targetAttribute = new AttributeIO();
+								targetAttribute.uuid = response.attributeMap[i].targetAttr.ref.uuid;
 								//targetAttribute["name"] = response["attributeMap"][i].targetAttr.ref.name;
-								targetAttribute["label"] = response["attributeMap"][i].targetAttr.ref.name + "." + response["attributeMap"][i].targetAttr.attrName;
-								targetAttribute["type"] = response["attributeMap"][i].targetAttr.ref.type;
-								targetAttribute["attributeId"] = response["attributeMap"][i].targetAttr.attrId;
-								targetAttribute["attrName"] = response["attributeMap"][i].targetAttr.attrName;
-								attributeInfo["IsTargetAttributeSimple"] = "false";
-								attributeInfo["targetAttribute"] = targetAttribute;
-								//attributeInfo["targetAttribute"] = [];
+								targetAttribute.label = response.attributeMap[i].targetAttr.ref.name + "." + response.attributeMap[i].targetAttr.attrName;
+								targetAttribute.type = response.attributeMap[i].targetAttr.ref.type;
+								targetAttribute.attributeId = response.attributeMap[i].targetAttr.attrId;
+								targetAttribute.attrName = response.attributeMap[i].targetAttr.attrName;
+								attributeInfo.targetAttribute = targetAttribute;
+								attributeInfo.IsTargetAttributeSimple = "false";
+								
 							}
 							else {
-								let targetAttribute = response["attributeMap"][i].targetAttr.value;
-								attributeInfo["IsTargetAttributeSimple"] = "true";
-								attributeInfo["targetAttribute"] = targetAttribute;
-								//attributeInfo["targetAttribute"] = [];
+								let targetAttribute = response.attributeMap[i].targetAttr.value;
+								attributeInfo.IsTargetAttributeSimple = "true";
+								attributeInfo.targetAttribute = targetAttribute;
 							}
 							attributeTableArray[i] = attributeInfo;
 						}
-						response["attributeTableArray"] = attributeTableArray;
+						//response.attributeMap = attributeTableArray;
+						
+						//dataIngestIO.attributeMap= attributeTableArray;  
+						dataIngestIO.attributeMap =attributeTableArray;
+					}else {
+						dataIngestIO.attributeMap=[];
 					}
-					return <any>response;
+					console.log(JSON.stringify(dataIngestIO));
+					return <any>dataIngestIO;
 				}), catchError(error => this.handleError<string>(error, "Network Error!")))
 
 	}

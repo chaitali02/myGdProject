@@ -9,18 +9,17 @@ import { GrowlModule } from 'primeng/primeng';
 import { ResultModule } from '../shared/module/result.module';
 import { ProjectSharedModule } from '../shared/module/shared.module';
 import { CheckboxModule } from 'primeng/components/checkbox/checkbox';
-// import { UiSwitchModule } from 'ngx-toggle-switch/src';
 import { TagInputModule } from 'ngx-chips';
 import { DataIngestionService } from './../metadata/services/dataIngestion.service';
 import { DialogModule } from 'primeng/components/dialog/dialog';
 import { DataIngestionRuleGroupComponent } from './data-ingestion-rule-group/data-ingestion-rule-group.component';
 import { DataIngestionResultsComponent } from './data-ingestion-results/data-ingestion-results.component';
+import { UiSwitchModule } from 'ngx-ui-switch';
 @NgModule({
   imports: [
     CommonModule,
     routing1,
     FormsModule,
-    // UiSwitchModule,
     TagInputModule,
     CheckboxModule,
     routing1,
@@ -29,7 +28,15 @@ import { DataIngestionResultsComponent } from './data-ingestion-results/data-ing
     ProjectSharedModule,
     DialogModule,
     CheckboxModule,
-    AngularMultiSelectModule
+    AngularMultiSelectModule,
+    UiSwitchModule.forRoot({
+      size: 'small',
+      color: '#15C5D5',
+      switchColor: '#FFFFF',
+      defaultBoColor : '#ccc',
+     // checkedLabel: 'Yes',
+      //uncheckedLabel: 'No'
+    })
   ],
   declarations: [
     DataIngestionComponent,

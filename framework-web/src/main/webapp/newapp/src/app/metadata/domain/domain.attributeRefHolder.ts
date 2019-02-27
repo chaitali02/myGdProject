@@ -4,4 +4,7 @@ export class AttributeRefHolder extends MetaIdentifierHolder{
 
     attrId: String;
     attrName: String;
+    attrType: String;
+    attrUnitType: String;
+
 }
