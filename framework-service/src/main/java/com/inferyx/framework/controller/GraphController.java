@@ -160,7 +160,7 @@ public class GraphController {
 	
 	
 	@RequestMapping(value="/setStatus", method= RequestMethod.PUT)
-	public boolean setStatus(@RequestParam("uuid") String uuid, 
+	public void setStatus(@RequestParam("uuid") String uuid, 
 			@RequestParam("version") String version,
 			@RequestParam("status") String status,
 			@RequestParam("type") String type,
@@ -169,22 +169,22 @@ public class GraphController {
 			graphServiceImpl.setStatus(type,uuid,version,status);			
 		}catch (Exception e) {
 			e.printStackTrace();
-			return false;
+			
 		}
-		return true;
+	
 	}
 	
-	/*@RequestMapping(value = "/restart",  method = RequestMethod.GET)
-	public void restartTrain(@RequestParam(value = "uuid") String trainExecUuid,
-						  @RequestParam(value = "version") String trainExecVersion,
+	@RequestMapping(value = "/restart",  method = RequestMethod.GET)
+	public void restartTrain(@RequestParam(value = "uuid") String uuid,
+						  @RequestParam(value = "version") String version,
 							@RequestBody(required = false) ExecParams execParams,
 						  @RequestParam(value = "type", required = false) String type,
 						  @RequestParam(value = "action", required = false) String action,
 							@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
-		graphServiceImpl.restartTrain(type, trainExecUuid, trainExecVersion, execParams, runMode);
+		graphServiceImpl.restart(type, uuid, version, execParams, runMode);
 	}
-*/
+
 	
 }
 

@@ -1,6 +1,6 @@
 {
   "uuid": "82f6fc18-b2ef-4bb4-b3e7-1963a44477af",
-  "version": "1550866875",
+  "version": "1551213337",
   "name": "viz_accounts_by_month",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Fri Feb 22 15:21:15 EST 2019",
+  "createdOn": "Tue Feb 26 15:35:37 EST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -32,10 +32,10 @@
   "title": null,
   "source": {
     "ref": {
-      "type": "dataset",
-      "uuid": "acb667ff-b031-43ef-91c0-5db30ecd912e",
+      "type": "datapod",
+      "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
       "version": null,
-      "name": "ds_accounts_by_month"
+      "name": "dim_account"
     },
     "value": null
   },
@@ -44,15 +44,15 @@
   "keys": [
     {
       "ref": {
-        "type": "dataset",
-        "uuid": "acb667ff-b031-43ef-91c0-5db30ecd912e",
+        "type": "formula",
+        "uuid": "9101aa0b-f5c0-468d-a3a8-9410fffd209b",
         "version": null,
-        "name": "ds_accounts_by_month"
+        "name": "fm_account_onboarding_month"
       },
-      "attributeId": 0,
+      "attributeId": null,
       "function": null,
       "value": null,
-      "attributeName": "account_onboarding_month"
+      "attributeName": null
     }
   ],
   "dimension": [],
@@ -62,15 +62,15 @@
   "values": [
     {
       "ref": {
-        "type": "dataset",
-        "uuid": "acb667ff-b031-43ef-91c0-5db30ecd912e",
+        "type": "datapod",
+        "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
         "version": null,
-        "name": "ds_accounts_by_month"
+        "name": "dim_account"
       },
-      "attributeId": 1,
-      "function": null,
+      "attributeId": 0,
+      "function": "COUNT",
       "value": null,
-      "attributeName": "account_count"
+      "attributeName": "account_id"
     }
   ],
   "sortBy": [],

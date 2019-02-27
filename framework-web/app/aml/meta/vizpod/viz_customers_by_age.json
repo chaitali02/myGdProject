@@ -1,6 +1,6 @@
 {
   "uuid": "35730cf3-1234-4d18-afd5-e58a8d96b4ce",
-  "version": "1550867090",
+  "version": "1551217884",
   "name": "viz_customers_by_age",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Fri Feb 22 15:24:50 EST 2019",
+  "createdOn": "Tue Feb 26 16:51:24 EST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -32,10 +32,10 @@
   "title": null,
   "source": {
     "ref": {
-      "type": "dataset",
-      "uuid": "a13647fd-552f-49fb-bef0-c5b8a53c2a12",
+      "type": "datapod",
+      "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
       "version": null,
-      "name": "ds_customers_by_age"
+      "name": "dim_account"
     },
     "value": null
   },
@@ -44,15 +44,15 @@
   "keys": [
     {
       "ref": {
-        "type": "dataset",
-        "uuid": "a13647fd-552f-49fb-bef0-c5b8a53c2a12",
+        "type": "formula",
+        "uuid": "0a0898e4-50b0-4b71-95f5-6f0b67c57eb5",
         "version": null,
-        "name": "ds_customers_by_age"
+        "name": "fm_customers_by_age_bucket"
       },
-      "attributeId": 0,
+      "attributeId": null,
       "function": null,
       "value": null,
-      "attributeName": "customer_opening_age_bucket"
+      "attributeName": null
     }
   ],
   "dimension": [],
@@ -62,15 +62,15 @@
   "values": [
     {
       "ref": {
-        "type": "dataset",
-        "uuid": "a13647fd-552f-49fb-bef0-c5b8a53c2a12",
+        "type": "datapod",
+        "uuid": "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98",
         "version": null,
-        "name": "ds_customers_by_age"
+        "name": "dim_account"
       },
-      "attributeId": 1,
-      "function": null,
+      "attributeId": 20,
+      "function": "COUNT",
       "value": null,
-      "attributeName": "customer_count"
+      "attributeName": "customer_id"
     }
   ],
   "sortBy": [],

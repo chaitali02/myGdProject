@@ -296,6 +296,11 @@ public class RunBaseGroupService implements Callable<TaskHolder> {
 						logger.info("Executing ruleExec : " + ruleExecHolder.getRef().getUuid() + ":" + ruleExecHolder.getRef().getName());
 						BaseRule baseRule = (BaseRule) commonServiceImpl.getLatestByUuid(baseRuleExec.getDependsOn().getRef().getUuid(), ruleType.toString());
 						logger.info("Executing rule : " + baseRule.getUuid() + ":" + baseRule.getName());
+						Status latestStatus = Helper.getLatestStatus(baseRuleExec.getStatusList()); 
+						if (latestStatus != null && latestStatus.equals(Status.Stage.Completed)) {
+							logger.info("This rule has already completed. So no need to submit again. Go to next rule ... ");
+							continue;
+						}
 		
 						if (baseGroup.getInParallel() != null && baseGroup.getInParallel().equalsIgnoreCase("true")) {
 							baseRuleExec = baseRuleService.execute(metaExecutor, baseRuleExec, null, taskList, null, runMode);
@@ -351,11 +356,15 @@ public class RunBaseGroupService implements Callable<TaskHolder> {
 			        }
 					
 				//}
-				baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.getOneByUuidAndVersion(baseGroupExec.getUuid(), baseGroupExec.getVersion(), groupExecType.toString());
+				baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.getOneByUuidAndVersion(baseGroupExec.getUuid(), baseGroupExec.getVersion(), groupExecType.toString(), "N");
 				Status.Stage latestStatus = Helper.getLatestStatus(baseGroupExec.getStatusList()).getStage();
 				Status status=commonServiceImpl.getGroupStatus(baseGroupExec,groupExecType, execType);
 				logger.info(" Latest status and status in basegroupService.waitAndComplete : " + latestStatus + ":" + status.getStage());
 				synchronized (baseGroupExec.getUuid()) {
+					 if(status.getStage().equals(Status.Stage.Completed)){
+						 baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType,Status.Stage.Completed);
+						 return true;
+					 }
 					 if(status.getStage().equals(Status.Stage.Killed)){
 						 baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType,Status.Stage.Terminating);
 						 baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType,Status.Stage.Killed);

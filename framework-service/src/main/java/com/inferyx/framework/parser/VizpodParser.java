@@ -124,13 +124,35 @@ public class VizpodParser {
 
 			if (vizpod.getKeys().size() > 0) {
 				for (AttributeDetails attrDet : vizpod.getKeys()) {
-					String keyAttrName = datapodServiceImpl.getAttributeName(attrDet.getRef().getUuid(),
-							attrDet.getAttributeId());
-					outerSelectBuilder.append(keyAttrName).append(" as ").append(keyAttrName).append(" ");
-					outerSelectBuilder.append(comma);
-					// selectBuilder.append(keyAttrName).append(" as ").append(keyAttrName).append("
-					// ");
-					// selectBuilder.append(comma);
+
+					if (attrDet.getRef().getType() == MetaType.datapod) {
+						String keyAttrName = datapodServiceImpl.getAttributeName(attrDet.getRef().getUuid(),
+								attrDet.getAttributeId());
+						outerSelectBuilder.append(keyAttrName).append(" as ").append(keyAttrName).append(" ");
+						outerSelectBuilder.append(comma);
+						// selectBuilder.append(keyAttrName).append(" as ").append(keyAttrName).append("
+						// ");
+						// selectBuilder.append(comma);
+					}	
+					else if (attrDet.getRef().getType() == MetaType.formula) {
+						Formula formula = (Formula) commonServiceImpl.getLatestByUuid(attrDet.getRef().getUuid(),
+								MetaType.formula.toString());
+						Datasource vizDS = commonServiceImpl.getDatasourceByObject(vizpod);
+						String FormulaSql = formulaOperator.generateSql(formula, null, null, null, vizDS);
+						if (StringUtils.isNotBlank(attrDet.getFunction())) {
+
+							outerSelectBuilder.append(attrDet.getFunction()).append("(").append(datapod.getName())
+									.append(".").append(formula.getName()).append(")")
+									.append(" as " + formula.getName() + " ");
+							flaghasFuncInVal = true;
+						} else {
+
+							outerSelectBuilder.append(FormulaSql).append(" as " + formula.getName() + " ");
+						}
+						outerSelectBuilder.append(comma);
+						// selectBuilder.append(FormulaSql).append(" as " + formula.getName() + " ");
+						flaghasFuncInVal = formulaOperator.isGroupBy(formula, null, null);
+					}
 				}
 			}
 			if (vizpod.getGroups().size() > 0) {
@@ -252,15 +274,31 @@ public class VizpodParser {
 				}
 				if (!vizpod.getKeys().isEmpty()) {
 					for (AttributeDetails attrDet : vizpod.getKeys()) {
-						String keyAttrName = datapodServiceImpl.getAttributeName(attrDet.getRef().getUuid(),
-								attrDet.getAttributeId());
-						// finalBuilder.append(keyAttrName);
-						// finalBuilder.append(comma);
-						if (flaghasFuncInVal) {
-							outerGroupByBuilder.append(keyAttrName);
-							outerGroupByBuilder.append(comma);
+
+						if (attrDet.getRef().getType().equals(MetaType.formula)) {
+		
+								Formula formula = (Formula) commonServiceImpl.getLatestByUuid(
+										attrDet.getRef().getUuid(), MetaType.formula.toString());
+								if (formula.getFormulaType() == FormulaType.aggr) {
+									continue;
+								} else {		
+									outerGroupByBuilder.append(formula.getName()).append(", ");
+								}
+						} else {
+							outerGroupByBuilder.append(attrDet.getAttributeName())
+									.append(", ");
 						}
+						
+//						String keyAttrName = datapodServiceImpl.getAttributeName(attrDet.getRef().getUuid(),
+//								attrDet.getAttributeId());
+//						// finalBuilder.append(keyAttrName);
+//						// finalBuilder.append(comma);
+//						if (flaghasFuncInVal) {
+//							outerGroupByBuilder.append(keyAttrName);
+//							outerGroupByBuilder.append(comma);
+//						}
 					}
+					
 				}
 
 				if (!vizpod.getGroups().isEmpty()) {
@@ -280,28 +318,39 @@ public class VizpodParser {
 				if (!vizpod.getValues().isEmpty()) {
 					for (AttributeDetails attrDet : vizpod.getValues()) {
 						// Object object = daoRegister.getRefObject(attrDet.getRef());
-						Object object = commonServiceImpl.getOneByUuidAndVersion(attrDet.getRef().getUuid(),
-								attrDet.getRef().getVersion(), attrDet.getRef().getType().toString(), "N");
-						if ((object instanceof Formula) && (((Formula) object).getFormulaType() == FormulaType.aggr)) {
-							continue;
-						}
 						if (StringUtils.isNotBlank(attrDet.getFunction())) {
 							continue;
 						}
-						String keyAttrName = datapodServiceImpl.getAttributeName(attrDet.getRef().getUuid(),
-								attrDet.getAttributeId());
-						String datapodName = ((Datapod) commonServiceImpl.getLatestByUuid(attrDet.getRef().getUuid(),
-								MetaType.datapod.toString(), "N")).getName();
-						logger.info("datapodName : " + datapodName);
-						// finalBuilder.append(datapodName + "." + keyAttrName).append(comma);
-						outerGroupByBuilder.append(datapodName + "." + keyAttrName).append(comma);
+						if (attrDet.getRef().getType().equals(MetaType.formula)) {
+
+							Formula formula = (Formula) commonServiceImpl.getLatestByUuid(attrDet.getRef().getUuid(),
+									MetaType.formula.toString());
+							if (formula.getFormulaType() == FormulaType.aggr) {
+								continue;
+							} else {
+								outerGroupByBuilder.append(formula.getName()).append(", ");
+							}
+						} else {
+							String keyAttrName = datapodServiceImpl.getAttributeName(attrDet.getRef().getUuid(),
+									attrDet.getAttributeId());
+							String datapodName = ((Datapod) commonServiceImpl
+									.getLatestByUuid(attrDet.getRef().getUuid(), MetaType.datapod.toString(), "N"))
+											.getName();
+							logger.info("datapodName : " + datapodName);
+							// finalBuilder.append(datapodName + "." + keyAttrName).append(comma);
+							outerGroupByBuilder.append(datapodName + "." + keyAttrName).append(", ");
+						}
 					}
-					if (outerGroupByBuilder.toString().endsWith(",")) {
+					if (outerGroupByBuilder.toString().endsWith(", ")){
+						outerGroupByBuilder.replace(outerGroupByBuilder.lastIndexOf(","),outerGroupByBuilder.length(),"");
+						}
+						
+					/*if (outerGroupByBuilder.toString().endsWith(",")) {
 						// finalBuilder.replace(finalBuilder.length() - 1, finalBuilder.length(), "");
 						if (flaghasFuncInVal)
 							outerGroupByBuilder.replace(outerGroupByBuilder.length() - 1, outerGroupByBuilder.length(),
 									"");
-					}
+					}*/
 				}
 
 				// Having
@@ -432,17 +481,26 @@ public class VizpodParser {
 			// append Group by
 			if (vizpod.getKeys().size() > 0) {
 				for (AttributeDetails attrDet : vizpod.getKeys()) {
-					String keyAttrName = datapodServiceImpl.getAttributeName(attrDet.getRef().getUuid(),
-							attrDet.getAttributeId());
-					String datapodName = ((Datapod) commonServiceImpl.getLatestByUuid(attrDet.getRef().getUuid(),
-							MetaType.datapod.toString())).getName();
-					logger.info("datapodName : " + datapodName);
-					groupByBuilder.append(datapodName + "." + keyAttrName).append(comma);
+					
+					if (attrDet.getFunction() == null) {
+						Object object = commonServiceImpl.getOneByUuidAndVersion(attrDet.getRef().getUuid(),
+								attrDet.getRef().getVersion(), attrDet.getRef().getType().toString(), "N");
+						if ((object instanceof Formula) && (((Formula) object).getFormulaType() == FormulaType.aggr)) {
+							continue;
+						}
+						String keyAttrName = datapodServiceImpl.getAttributeName(attrDet.getRef().getUuid(),
+								attrDet.getAttributeId());
+						String datapodName = ((Datapod) commonServiceImpl.getLatestByUuid(attrDet.getRef().getUuid(),
+								MetaType.datapod.toString())).getName();
+						logger.info("datapodName : " + datapodName);
+						groupByBuilder.append(datapodName + "." + keyAttrName).append(comma);
+					}
 				}
 			}
 
 			if (vizpod.getGroups().size() > 0) {
 				for (AttributeDetails attrDet : vizpod.getGroups()) {
+					
 					String keyAttrName = datapodServiceImpl.getAttributeName(attrDet.getRef().getUuid(),
 							attrDet.getAttributeId());
 					String datapodName = ((Datapod) commonServiceImpl.getLatestByUuid(attrDet.getRef().getUuid(),
@@ -472,17 +530,20 @@ public class VizpodParser {
 			if (vizpod.getValues().size() > 0 && flag == false) {
 				for (AttributeDetails attrDet : vizpod.getValues()) {
 					// Object object = daoRegister.getRefObject(attrDet.getRef());
-					Object object = commonServiceImpl.getOneByUuidAndVersion(attrDet.getRef().getUuid(),
-							attrDet.getRef().getVersion(), attrDet.getRef().getType().toString(), "N");
-					if ((object instanceof Formula) && (((Formula) object).getFormulaType() == FormulaType.aggr)) {
-						continue;
+
+					if (attrDet.getFunction() == null) {
+						Object object = commonServiceImpl.getOneByUuidAndVersion(attrDet.getRef().getUuid(),
+								attrDet.getRef().getVersion(), attrDet.getRef().getType().toString(), "N");
+						if ((object instanceof Formula) && (((Formula) object).getFormulaType() == FormulaType.aggr)) {
+							continue;
+						}
+						String keyAttrName = datapodServiceImpl.getAttributeName(attrDet.getRef().getUuid(),
+								attrDet.getAttributeId());
+						String datapodName = ((Datapod) commonServiceImpl.getLatestByUuid(attrDet.getRef().getUuid(),
+								MetaType.datapod.toString(), "N")).getName();
+						logger.info("datapodName : " + datapodName);
+						groupByBuilder.append(datapodName + "." + keyAttrName).append(comma);
 					}
-					String keyAttrName = datapodServiceImpl.getAttributeName(attrDet.getRef().getUuid(),
-							attrDet.getAttributeId());
-					String datapodName = ((Datapod) commonServiceImpl.getLatestByUuid(attrDet.getRef().getUuid(),
-							MetaType.datapod.toString(), "N")).getName();
-					logger.info("datapodName : " + datapodName);
-					groupByBuilder.append(datapodName + "." + keyAttrName).append(comma);
 				}
 			}
 
@@ -567,6 +628,9 @@ public class VizpodParser {
 			String innerSql = datasetOperator.generateSql(dataSet, null, null, usedRefKeySet, null, runMode);
 
 			dataSet.setAttributeInfo(attributeInfo);
+			
+			String outerSql = datasetOperator.generateSql(dataSet, null, null, usedRefKeySet, null, runMode);
+
 			StringBuilder queryBuilder = new StringBuilder();
 			selectBuilder = new StringBuilder(generateSelectForDataSet(dataSet,vizpod));
 
@@ -597,7 +661,7 @@ public class VizpodParser {
 					whereBuilder = new StringBuilder(whereBuilder.toString().replace(matcher.group(), ""));
 			}
 			// }
-			groupByBuilder = new StringBuilder(generateGroupByForDataSet(dataSet));
+			groupByBuilder = new StringBuilder(generateGroupByForDataSet(dataSet,vizpod));
 			// groupByBuilder = new StringBuilder(datasetOperator.generateGroupBy(dataSet,
 			// null, null, null));
 			havingBuilder = new StringBuilder(
@@ -690,10 +754,30 @@ public class VizpodParser {
 						.append(dataSet.getAttributeName(Integer.parseInt(attributeSource.getAttrSourceId())));
 
 			} else {
-				selectBuilder.append(datasetName).append(".")
+				if (attributeSource.getSourceAttr().getRef().getType().equals(MetaType.formula)) {
+                      //for formula 
+					if (attributeSource.getAttrSourceId() != null) {
+						selectBuilder.append(datasetName).append(".")
 						.append(dataSet.getAttributeName(Integer.parseInt(attributeSource.getAttrSourceId())))
 						.append(" AS ")
 						.append(dataSet.getAttributeName(Integer.parseInt(attributeSource.getAttrSourceId())));
+					} else {
+
+						Formula formula = (Formula) commonServiceImpl.getLatestByUuid(
+								attributeSource.getSourceAttr().getRef().getUuid(), MetaType.formula.toString());
+						Datasource vizDS = commonServiceImpl.getDatasourceByObject(vizpod);
+						String FormulaSql = formulaOperator.generateSql(formula, null, null, null, vizDS);
+
+						selectBuilder.append(FormulaSql).append(" as ").append(formula.getName());
+					}
+
+				} else {
+
+					selectBuilder.append(datasetName).append(".")
+							.append(dataSet.getAttributeName(Integer.parseInt(attributeSource.getAttrSourceId())))
+							.append(" AS ")
+							.append(dataSet.getAttributeName(Integer.parseInt(attributeSource.getAttrSourceId())));
+				}
 			}
         if (i < dataSet.getAttributeInfo().size() - 1) {
 			selectBuilder.append(", ");
@@ -704,7 +788,7 @@ public class VizpodParser {
 
 	}
 
-	public StringBuilder generateGroupByForDataSet(DataSet dataSet)
+	public StringBuilder generateGroupByForDataSet(DataSet dataSet,Vizpod vizpod)
 			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		StringBuilder groupByBuilder = new StringBuilder();
@@ -715,8 +799,38 @@ public class VizpodParser {
 			if (attributeSource.getFunction() != null) {
 				isAnyFunction = true;
 			} else {
-				groupByBuilder.append(dataSet.getAttributeName(Integer.parseInt(attributeSource.getAttrSourceId())))
-						.append(", ");
+				if (attributeSource.getSourceAttr().getRef().getType().equals(MetaType.formula)) {
+
+					if (attributeSource.getAttrSourceId() != null) {
+
+						groupByBuilder
+								.append(dataSet.getAttributeName(Integer.parseInt(attributeSource.getAttrSourceId())))
+								.append(", ");
+					} else {
+
+						Object object = commonServiceImpl.getOneByUuidAndVersion(
+								attributeSource.getSourceAttr().getRef().getUuid(),
+								attributeSource.getSourceAttr().getRef().getVersion(),
+								attributeSource.getSourceAttr().getRef().getType().toString(), "N");
+						if ((object instanceof Formula) && (((Formula) object).getFormulaType() == FormulaType.aggr)) {
+							continue;
+						} else {
+
+							Formula formula = (Formula) commonServiceImpl.getLatestByUuid(
+									attributeSource.getSourceAttr().getRef().getUuid(), MetaType.formula.toString());
+							/*
+							 * Datasource vizDS = commonServiceImpl.getDatasourceByObject(vizpod); String
+							 * FormulaSql = formulaOperator.generateSql(formula, null, null, null, vizDS);
+							 */
+
+							groupByBuilder.append(formula.getName()).append(", ");
+						}
+					}
+
+				} else {
+					groupByBuilder.append(dataSet.getAttributeName(Integer.parseInt(attributeSource.getAttrSourceId())))
+							.append(", ");
+				}
 			}
 		}
 		if (isAnyFunction) {

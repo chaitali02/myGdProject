@@ -3387,6 +3387,7 @@ public class CommonServiceImpl<T> {
 				metaObj = retObj;
 			}
 			statusList = (List<Status>) Helper.getDomainClass(metaType).getMethod(GET + "StatusList").invoke(metaObj);
+			logger.info(" Inside setMetaStatus. Current status of : " + metaType.toString() + " is : " + ((helper.getLatestStatus(statusList) == null)?null:helper.getLatestStatus(statusList).getStage().toString()));
 		} catch (NullPointerException | NoSuchMethodException | IllegalAccessException | IllegalArgumentException
 				| InvocationTargetException | SecurityException e) {
 			e.printStackTrace();
