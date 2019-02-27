@@ -34,34 +34,7 @@
   "footer": "Sanctions Screening Report",
   "footerAlign": "center",
   "saveOnRefresh" : "Y",
-  "filterInfo": [
-    {
-      "ref": {
-        "type": "dataset",
-        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
-        "version": null,
-        "name": "ds_sanctions_screening_matches"
-      },
-      "value": null,
-      "attrId": "5",
-      "attrName": "transaction_country",
-      "attrType": null,
-      "attrUnitType": null
-    },
-    {
-      "ref": {
-        "type": "dataset",
-        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
-        "version": null,
-        "name": "ds_sanctions_screening_matches"
-      },
-      "value": null,
-      "attrId": "4",
-      "attrName": "transaction_date",
-      "attrType": null,
-      "attrUnitType": null
-    }
-  ],
+  "filterInfo":null,
   "dependsOn": {
     "ref": {
       "type": "dataset",
