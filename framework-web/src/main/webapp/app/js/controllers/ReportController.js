@@ -209,7 +209,6 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 			$scope.reportData = response;
 			$scope.exeDetail = response;
 			$scope.select = "report"
-			debugger
 			// if ($scope.reportData.filterInfo && $scope.reportData.filterInfo.length > 0) {
 			// 	$scope.openFilterPopup($scope.reportData);
 			// } else {
@@ -248,11 +247,15 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 			var paramArray = [];
 			for (var i = 0; i < response.length; i++) {
 				var paramInfo = {}
+				var ref={};
+				ref.uuid=$scope.paramlistdata.uuid;
+				ref.type="paramlist";
+				paramInfo.ref=ref;
 				paramInfo.paramId = response[i].paramId;
 				paramInfo.paramName = response[i].paramName;
 				paramInfo.paramType = response[i].paramType.toLowerCase();
 				if (response[i].paramValue != null && response[i].paramValue.ref.type == "simple") {
-					paramInfo.paramValue = response[i].paramValue.value;
+					paramInfo.paramValue = response[i].paramValue.value.replace(/["']/g, "");
 					paramInfo.paramValueType = "simple"
 				} else if (response[i].paramValue != null) {
 					var paramValue = {};
@@ -301,6 +304,7 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 
 	$scope.executeWithExecParams = function () {
 		if($scope.selectParamType =="paramlist"){
+			console.log($scope.selectParamList.paramInfo)
 		  if($scope.paramlistdata){
 			var execParams = {};
 			var paramListInfo =[];
@@ -309,7 +313,26 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 			paramInfoRef.uuid=$scope.paramlistdata.uuid;
 			paramInfoRef.type="paramlist";
 			paramInfo.ref=paramInfoRef;
-			paramListInfo[0]=paramInfo;
+			//paramListInfo[0]=paramInfo;
+			for(var i=0;i<$scope.selectParamList.paramInfo.length;i++){
+				var paramListObj={};
+				var ref={};
+				ref.uuid=$scope.selectParamList.paramInfo[i].ref.uuid;
+				ref.type=$scope.selectParamList.paramInfo[i].ref.type;
+				paramListObj.ref=ref;
+				paramListObj.paramId=$scope.selectParamList.paramInfo[i].paramId;
+				paramListObj.paramName=$scope.selectParamList.paramInfo[i].paramName;
+				paramListObj.paramType=$scope.selectParamList.paramInfo[i].paramType;
+				paramListObj.paramValue={};
+				var refParamValue={};
+				refParamValue.type=$scope.selectParamList.paramInfo[i].paramValueType;
+				paramListObj.paramValue.ref=refParamValue;
+				paramListObj.paramValue.value=$scope.selectParamList.paramInfo[i].paramValue.replace(/["']/g, "")
+;
+				//paramListObj.paramValueType=$scope.selectParamList.paramInfo[i].paramValueType;
+				paramListInfo[i]=paramListObj;
+
+			}
 			execParams.paramListInfo=paramListInfo;
 		  }else{
 			execParams=null;
@@ -346,7 +369,7 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 		}
 		$('#responsive').modal('hide');
 	
-		$scope.executionmsg = $scope.caption + " Submited Successfully"
+		$scope.executionmsg ="Report Submited Successfully"
 		notify.type = 'success',
 		notify.title = 'Success',
 		notify.content = $scope.executionmsg
@@ -492,6 +515,9 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 				notify.title = 'Success',
 				notify.content = $scope.message
 			$scope.$emit('notify', notify);
+		}
+		var onError=function(response){
+
 		}
 	}
 
