@@ -399,7 +399,7 @@ public class VizpodParser {
 					logger.info("datapodName : " + datapodName);
 					if (attrDet.getFunction() != null && !attrDet.getFunction().isEmpty()) {
 						selectBuilder.append(attrDet.getFunction() + "(" + datapodName + "." + keyAttrName + ")");
-						keyAttrName = attrDet.getFunction() + "_" + keyAttrName;
+					//	keyAttrName = attrDet.getFunction() + "_" + keyAttrName;
 					} else {
 						selectBuilder.append(datapodName + "." + keyAttrName);
 					}
