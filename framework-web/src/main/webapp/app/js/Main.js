@@ -505,6 +505,7 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, SharedPrope
             { "name": "vizpodlist", "type": "vizpod", "uuid": "null", "caption": "Vizpod" },
             { "name": "reportlist", "type": "report", "uuid": "null", "caption": "Report" },
             { "name": "reportlist2", "type": "report2", "uuid": "null", "caption": "Report2" },
+            { "name": "paramlistreport", "type": "paramlistreport", "typeCount": "paramlistreport", "uuid": "null", "caption": "Parameter List" },
             { "name": "reportexeclist", "type": "reportExec", "uuid": "null", "caption": "Results","typeCount": "reportexec", }
 
         ]  
@@ -1221,6 +1222,12 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
                 }]
             }
         })
+        // .state('reportlist2', {
+        //     url: "/reportList2",
+        //     templateUrl: "views/common-list.html",
+        //     data: { pageTitle: 'Data Visualization' },
+        //     params: { type: 'report' }
+        // })
         .state('reportlist2', {
             url: "/reportList2",
             templateUrl: "views/report-list.html",
@@ -1240,6 +1247,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
                 }]
             }
         })
+
         .state('reportdetail', {
             url: "/Report?id&mode&returnBack&version",
             templateUrl: "views/report.html",
@@ -1640,6 +1648,13 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
             params: { type: 'paramlist', parantType: 'rule' }
 
         })
+        .state('paramlistreport', {
+            url: "/DataVisualization/ParamList",
+            templateUrl: "views/common-list.html",
+            data: { pageTitle: 'Data Visualization' },
+            params: { type: 'paramlist', parantType: 'report' }
+
+        })
         .state('paramlistdag', {
             url: "/Data Pipeline/ParamList",
             templateUrl: "views/common-list.html",
@@ -1671,6 +1686,25 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
             templateUrl: "views/paramlist.html",
             data: { pageTitle: 'Business Rules' },
             params: { type: 'paramlist', parantType: 'rule' },
+            controller: "",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'DataPod',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            'js/controllers/ParamlistController.js',
+                            'js/services/ParamlistService.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        .state('createparamlistreport', {
+            url: "/DataVisualization/CreateParamListRule?id&mode&returnBack&version",
+            templateUrl: "views/paramlist.html",
+            data: { pageTitle: 'Data Visualization' },
+            params: { type: 'paramlist', parantType: 'report' },
             controller: "",
             resolve: {
                 deps: ['$ocLazyLoad', function ($ocLazyLoad) {

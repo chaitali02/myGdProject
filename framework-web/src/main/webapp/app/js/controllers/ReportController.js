@@ -22,7 +22,7 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 		content: '',
 		timeout: 3000 //time in ms
 	};
-
+	$scope.paramTypes = [{ "text": "paramlist", "caption": "paramlist", "disabled": false }, { "text": "paramset", "caption": "paramset", "disabled": false }];
 	$scope.privileges = [];
 	$scope.privileges = privilegeSvc.privileges[CF_META_TYPES.report] || [];
 
@@ -193,21 +193,167 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 			backdrop: 'static',
 			keyboard: false
 		});
+		$scope.paramTypes=[];
+		$scope.isParamLsitTable=null;
 	}
 
 	$scope.getOneByUuidAndVersionReport = function (data) {
+		setTimeout(function () {
+			$scope.paramTypes = [{ "text": "paramlist", "caption": "paramlist", "disabled": false }, { "text": "paramset", "caption": "paramset", "disabled": false }];
+			;
+		}, 100);
+		
 		CommonService.getOneByUuidAndVersion(data.uuid, data.version, CF_META_TYPES.report)
 			.then(function (response) { onSuccessGetOneByUuidAndVersion(response.data) });
 		var onSuccessGetOneByUuidAndVersion = function (response) {
 			$scope.reportData = response;
-			if ($scope.reportData.filterInfo && $scope.reportData.filterInfo.length > 0) {
-				$scope.openFilterPopup($scope.reportData);
-			} else {
+			$scope.exeDetail = response;
+			$scope.select = "report"
+			debugger
+			// if ($scope.reportData.filterInfo && $scope.reportData.filterInfo.length > 0) {
+			// 	$scope.openFilterPopup($scope.reportData);
+			// } else {
+			//}
+			if (response.paramList != null) {
+				$('#responsive').modal({
+					backdrop: 'static',
+					keyboard: false
+				});
+			}
+			else {
 				$scope.reportExecute(null);
 			}
 		}
 	}
+	$scope.onChangeParamType = function () {
+		$scope.allparamset = null;
+		$scope.allParamList = null;
+		$scope.isParamLsitTable = false;
+		$scope.selectParamList = null;
+		if ($scope.selectParamType == "paramlist") {
+			$scope.paramlistdata = null;
+			$scope.getParamListByTrainORRule();
+		}
+		else if ($scope.selectParamType == "paramset") {
+			$scope.getExecParamsSet();
+		}
 
+	}
+	$scope.onChangeParamList = function () {
+		$scope.isParamLsitTable = false;
+		CommonService.getParamByParamList($scope.paramlistdata.uuid, "paramlist").then(function (response) { onSuccesGetParamListByTrain(response.data) });
+		var onSuccesGetParamListByTrain = function (response) {
+			$scope.isParamLsitTable = true;
+			$scope.selectParamList = response;
+			var paramArray = [];
+			for (var i = 0; i < response.length; i++) {
+				var paramInfo = {}
+				paramInfo.paramId = response[i].paramId;
+				paramInfo.paramName = response[i].paramName;
+				paramInfo.paramType = response[i].paramType.toLowerCase();
+				if (response[i].paramValue != null && response[i].paramValue.ref.type == "simple") {
+					paramInfo.paramValue = response[i].paramValue.value;
+					paramInfo.paramValueType = "simple"
+				} else if (response[i].paramValue != null) {
+					var paramValue = {};
+					paramValue.uuid = response[i].paramValue.ref.uuid;
+					paramValue.type = response[i].paramValue.ref.type;
+					paramInfo.paramValue = paramValue;
+					paramInfo.paramValueType = response[i].paramValue.ref.type;
+				} else {
+
+				}
+				paramArray[i] = paramInfo;
+			}
+			$scope.selectParamList.paramInfo = paramArray;
+		}
+	}
+
+	$scope.getParamListByTrainORRule = function () {
+		$scope.paramlistdata = null;
+		$scope.isPramlistInProgess = true;
+		CommonService.getParamListByTrainORRule($scope.exeDetail.uuid, $scope.exeDetail.version, $scope.select).then(function (response) { onSuccesGetParamListByTrain(response.data) });
+		var onSuccesGetParamListByTrain = function (response) {
+			$scope.allParamList = response;
+			$scope.isPramlistInProgess = false;
+			if (response.length == 0) {
+				$scope.isParamListRquired = false;
+			}
+		}
+	}
+	$scope.getExecParamsSet = function () {
+		$scope.paramtablecol = null
+		$scope.paramtable = null;
+		$scope.isTabelShow = false;
+		$scope.isPramsetInProgess = true;
+		CommonService.getParamSetByType($scope.select, $scope.exeDetail.uuid, $scope.exeDetail.version).then(function (response) {
+			onSuccessGetExecuteModel(response.data)
+		});
+		var onSuccessGetExecuteModel = function (response) {
+			$('#responsive').modal({
+				backdrop: 'static',
+				keyboard: false
+			});
+			$scope.isPramsetInProgess = false;
+			$scope.allparamset = response;
+		}
+	}
+
+	$scope.executeWithExecParams = function () {
+		if($scope.selectParamType =="paramlist"){
+		  if($scope.paramlistdata){
+			var execParams = {};
+			var paramListInfo =[];
+			var paramInfo={};
+			var paramInfoRef={};
+			paramInfoRef.uuid=$scope.paramlistdata.uuid;
+			paramInfoRef.type="paramlist";
+			paramInfo.ref=paramInfoRef;
+			paramListInfo[0]=paramInfo;
+			execParams.paramListInfo=paramListInfo;
+		  }else{
+			execParams=null;
+		  }
+		  $scope.paramlistdata=null;
+		  $scope.selectParamType=null;
+		}else{
+		  $scope.newDataList = [];
+		  $scope.selectallattribute = false;
+		  angular.forEach($scope.paramtable, function (selected) {
+			if (selected.selected) {
+			  $scope.newDataList.push(selected);
+			}
+		  });
+		  var paramInfoArray = [];
+		  if ($scope.newDataList.length > 0) {
+			var execParams = {}
+			var ref = {}
+			ref.uuid = $scope.paramsetdata.uuid;
+			ref.type = "paramset";
+			ref.version = $scope.paramsetdata.version;
+			for (var i = 0; i < $scope.newDataList.length; i++) {
+			  var paraminfo = {};
+			  paraminfo.paramSetId = $scope.newDataList[i].paramSetId;
+			  paraminfo.ref = ref;
+			  paramInfoArray[i] = paraminfo;
+			}
+		  }
+		  if (paramInfoArray.length > 0) {
+			execParams.paramInfo = paramInfoArray;
+		  } else {
+			execParams = null
+		  }
+		}
+		$('#responsive').modal('hide');
+	
+		$scope.executionmsg = $scope.caption + " Submited Successfully"
+		notify.type = 'success',
+		notify.title = 'Success',
+		notify.content = $scope.executionmsg
+		$scope.$emit('notify', notify);
+		console.log(JSON.stringify(execParams));
+		$scope.reportExecute(execParams);
+	}
 	$scope.applyFilter = function (index) {
 		console.log(JSON.stringify($scope.selectedAttributeValue));
 		$scope.isShowSimpleData = true
@@ -1964,8 +2110,8 @@ DatavisualizationModule.controller('Report2DetailController', function (dagMetaD
 	else {
 		$scope.isAdd = true;
 		$scope.isDragable = "true";
-		$scope.isEditInprogess=false;
-		$scope.isEditVeiwError=false;
+		$scope.isEditInprogess = false;
+		$scope.isEditVeiwError = false;
 
 	}
 	$scope.userDetail = {}
@@ -1975,10 +2121,10 @@ DatavisualizationModule.controller('Report2DetailController', function (dagMetaD
 	$scope.mode = "false";
 	$scope.dataLoading = false;
 	$scope.iSSubmitEnable = false;
-	$scope.continueCount=1;
+	$scope.continueCount = 1;
 	$scope.reportVersion = {};
 	$scope.reportVersion.versions = [];
-	$scope.repor={};
+	$scope.repor = {};
 	$scope.showForm = true;
 	$scope.data = null;
 	$scope.showgraph = false
@@ -1986,8 +2132,8 @@ DatavisualizationModule.controller('Report2DetailController', function (dagMetaD
 	$scope.graphDataStatus = false;
 	$scope.logicalOperator = ["AND", "OR"];
 	$scope.SourceTypes = ["datapod", "relation", 'dataset'];
-    $scope.spacialOperator = ['<', '>', '<=', '>=', '=', 'LIKE', 'NOT LIKE', 'RLIKE'];
-	$scope.rhsNA=['NULL',"NOT NULL"];
+	$scope.spacialOperator = ['<', '>', '<=', '>=', '=', 'LIKE', 'NOT LIKE', 'RLIKE'];
+	$scope.rhsNA = ['NULL', "NOT NULL"];
 	$scope.operator = CF_FILTER.operator;
 	$scope.isSubmitEnable = true;
 	$scope.attributeTableArray = null;
@@ -2005,7 +2151,7 @@ DatavisualizationModule.controller('Report2DetailController', function (dagMetaD
 		{ "text": "datapod", "caption": "attribute" },
 		{ "text": "formula", "caption": "formula" }];
 
-    var notify = {
+	var notify = {
 		type: 'success',
 		title: 'Success',
 		content: '',
@@ -2019,7 +2165,7 @@ DatavisualizationModule.controller('Report2DetailController', function (dagMetaD
 		{ "text": "function", "caption": "function" },
 		{ "text": "paramlist", "caption": "paramlist" }
 	];
-	
+
 	$scope.checkIsInrogess = function () {
 		if ($scope.isEditInprogess || $scope.isEditVeiwError) {
 			return false;
@@ -2095,77 +2241,77 @@ DatavisualizationModule.controller('Report2DetailController', function (dagMetaD
 	};
 	$scope.getLovByType();
 	$scope.countContinue = function () {
-	    if($scope.continueCount == 3){
-			if($scope.isDuplication ==true){
+		if ($scope.continueCount == 3) {
+			if ($scope.isDuplication == true) {
 				return true;
 			}
 		}
 		$scope.continueCount = $scope.continueCount + 1;
-        if ($scope.continueCount >= 4) {
-            $scope.isSubmitShow = true;
-        } else {
-            $scope.isSubmitShow = false;
-        }
-    }
-
-    $scope.countBack = function () {
-        $scope.continueCount = $scope.continueCount - 1;
-        $scope.isSubmitShow = false;
+		if ($scope.continueCount >= 4) {
+			$scope.isSubmitShow = true;
+		} else {
+			$scope.isSubmitShow = false;
+		}
 	}
 
-	$scope.onChangeSourceName1 = function (index,dupArray) {
+	$scope.countBack = function () {
+		$scope.continueCount = $scope.continueCount - 1;
+		$scope.isSubmitShow = false;
+	}
+
+	$scope.onChangeSourceName1 = function (index, dupArray) {
 		$scope.attributeTableArray[index].isSourceName = true;
 		if ($scope.attributeTableArray[index].name) {
-			var result = isDublication($scope.attributeTableArray, "name", index, "sourceName" + index,dupArray);
+			var result = isDublication($scope.attributeTableArray, "name", index, "sourceName" + index, dupArray);
 		}
 		return dupArray
 	}
 
-	$scope.autoPopulate=function(){
-		$scope.isAutoMapInprogess=true;
-		$scope.attributeTableArray=[];
-		$scope.attrTableSelectedItem=[];
-		var dupArray=[];
-		$timeout(function(){
-		for(var i=0;i<$scope.sourcedatapodattribute.length;i++){
-			var attributeinfo = {};
-			attributeinfo.id =i;
-			if($scope.sourcedatapodattribute.length >CF_GRID.framework_autopopulate_grid)
-				attributeinfo.isOnDropDown=false;
-			else
-				attributeinfo.isOnDropDown=true;
-			attributeinfo.sourcedatapod=$scope.sourcedatapodattribute[i];
-			attributeinfo.name=$scope.sourcedatapodattribute[i].name;
-			attributeinfo.sourceAttributeType = $scope.sourceAttributeTypes[1];
-			attributeinfo.isSourceAtributeSimple = false;
-			attributeinfo.isSourceAtributeDatapod = true;
-			attributeinfo.isSourceAtributeFormula = false;
-			attributeinfo.isSourceAtributeExpression = false;
-			attributeinfo.isSourceAtributeFunction = false;
-			attributeinfo.isSourceAtributeParamList = false;
-			attributeinfo.isSourceName=true;
-			$scope.attributeTableArray.push(attributeinfo);
-			setTimeout(function(index){
-				var result=$scope.onChangeSourceName1(index,dupArray);
-				if(result.length >0 ){
-					$scope.isDuplication = true;
-				}else {
-					$scope.isDuplication = false;
-				}
-			},10,(i));
+	$scope.autoPopulate = function () {
+		$scope.isAutoMapInprogess = true;
+		$scope.attributeTableArray = [];
+		$scope.attrTableSelectedItem = [];
+		var dupArray = [];
+		$timeout(function () {
+			for (var i = 0; i < $scope.sourcedatapodattribute.length; i++) {
+				var attributeinfo = {};
+				attributeinfo.id = i;
+				if ($scope.sourcedatapodattribute.length > CF_GRID.framework_autopopulate_grid)
+					attributeinfo.isOnDropDown = false;
+				else
+					attributeinfo.isOnDropDown = true;
+				attributeinfo.sourcedatapod = $scope.sourcedatapodattribute[i];
+				attributeinfo.name = $scope.sourcedatapodattribute[i].name;
+				attributeinfo.sourceAttributeType = $scope.sourceAttributeTypes[1];
+				attributeinfo.isSourceAtributeSimple = false;
+				attributeinfo.isSourceAtributeDatapod = true;
+				attributeinfo.isSourceAtributeFormula = false;
+				attributeinfo.isSourceAtributeExpression = false;
+				attributeinfo.isSourceAtributeFunction = false;
+				attributeinfo.isSourceAtributeParamList = false;
+				attributeinfo.isSourceName = true;
+				$scope.attributeTableArray.push(attributeinfo);
+				setTimeout(function (index) {
+					var result = $scope.onChangeSourceName1(index, dupArray);
+					if (result.length > 0) {
+						$scope.isDuplication = true;
+					} else {
+						$scope.isDuplication = false;
+					}
+				}, 10, (i));
 
-		}
-		if(i== $scope.attributeTableArray.length)
-			$scope.isAutoMapInprogess=false;
-		},40);
+			}
+			if (i == $scope.attributeTableArray.length)
+				$scope.isAutoMapInprogess = false;
+		}, 40);
 	}
-	
+
 	$scope.ondrop = function (e) {
 		//console.log(e);
 		$scope.myform.$dirty = true;
 	}
 
-	$scope.getFunctionByCriteria=function(){
+	$scope.getFunctionByCriteria = function () {
 		CommonService.getFunctionByCriteria("", "N", "function").then(function (response) { onSuccessFuntion(response.data) });
 		var onSuccessFuntion = function (response) {
 			$scope.allSourceFunction = response;
@@ -2173,7 +2319,7 @@ DatavisualizationModule.controller('Report2DetailController', function (dagMetaD
 		}
 	}
 
-	$scope.getExpressionByType=function(){
+	$scope.getExpressionByType = function () {
 		ReportSerivce.getExpressionByType($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessExpression(response.data) });
 		var onSuccessExpression = function (response) {
 			$scope.allExpress = response
@@ -2184,11 +2330,11 @@ DatavisualizationModule.controller('Report2DetailController', function (dagMetaD
 		var onSuccessFormula = function (response) {
 			$scope.allSourceFormula = response;;
 			$scope.allFilterormula = response;
-			
+
 		}//End onSuccessGetFormulaByType
 	}
 
-	$scope.getAllAttributeBySource=function(){
+	$scope.getAllAttributeBySource = function () {
 		ReportSerivce.getAllAttributeBySource($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessGetDatapodByRelation(response.data) })
 		var onSuccessGetDatapodByRelation = function (response) {
 			$scope.sourcedatapodattribute = response;
@@ -2196,29 +2342,29 @@ DatavisualizationModule.controller('Report2DetailController', function (dagMetaD
 			$scope.allattribute = response;
 		}
 	}
-	$scope.getAllLatest=function(type, defaultvalue){
+	$scope.getAllLatest = function (type, defaultvalue) {
 		ReportSerivce.getAllLatest(type).then(function (response) { onSuccess(response.data) });
 		var onSuccess = function (response) {
 			$scope.allSource = response;
-			if(defaultvalue !=null){
+			if (defaultvalue != null) {
 				var defaultoption = {};
 				defaultoption.type = defaultvalue.ref.type
 				defaultoption.uuid = defaultvalue.ref.uuid
 				$scope.allSource.defaultoption = defaultoption;
-		    }
+			}
 			$scope.getAllAttributeBySource();
 			$scope.getFormulaByType();
 			$scope.getExpressionByType();
 		}
 	}
 	$scope.selectType = function () {
-		$scope.getAllLatest($scope.selectSourceType,null);
+		$scope.getAllLatest($scope.selectSourceType, null);
 	}
 
 	$scope.selectOption = function () {
 		$scope.getAllAttributeBySource();
 	}
-    
+
 	$scope.getParamByApp = function () {
 		CommonService.getParamByApp($rootScope.appUuidd || "", "application").
 			then(function (response) { onSuccessGetParamByApp(response.data) });
@@ -2239,7 +2385,58 @@ DatavisualizationModule.controller('Report2DetailController', function (dagMetaD
 				$scope.allparamlistParams = paramsArray;
 			}
 		}
+		$scope.getOneByUuidParamList();
 	}
+
+	$scope.onChangeParamListOFRule = function () {
+		setTimeout(function () { $scope.paramTypes = ["paramlist", "paramset"]; }, 1);
+		$scope.getParamByApp();
+	}
+
+	$scope.getOneByUuidParamList = function () {
+		if ($scope.allparamlist && $scope.allparamlist.defaultoption != null) {
+			ReportSerivce.getLatestByUuid($scope.allparamlist.defaultoption.uuid, "paramlist").
+				then(function (response) { onSuccessParamList(response.data) });
+			var onSuccessParamList = function (response) {
+				var paramsArray = [];
+				for (var i = 0; i < response.params.length; i++) {
+					var paramsjson = {};
+					paramsjson.uuid = response.uuid;
+					paramsjson.name = response.name + "." + response.params[i].paramName;
+					paramsjson.attributeId = response.params[i].paramId;
+					paramsjson.attrType = response.params[i].paramType;
+					paramsjson.paramName = response.params[i].paramName;
+					paramsjson.caption = "report." + paramsjson.paramName;
+					paramsArray[i] = paramsjson;
+				}
+				$scope.reportParamListParam = paramsArray
+				if ($scope.allparamlistParams && $scope.allparamlistParams.length > 0)
+					$scope.allparamlistParams = $scope.allparamlistParams.concat($scope.reportParamListParam);
+			}
+		}
+	}
+
+	$scope.getAllLatestParamListByTemplate = function () {
+		CommonService.getAllLatestParamListByTemplate('Y', "paramlist", "report").then(function (response) {
+			onSuccessGetAllLatestParamListByTemplate(response.data)
+		});
+		var onSuccessGetAllLatestParamListByTemplate = function (response) {
+			$scope.allparamlist = {};
+			$scope.allparamlist.options = response;
+			if ($scope.report.paramList != null) {
+				var defaultoption = {};
+				defaultoption.uuid = $scope.report.paramList.ref.uuid;
+				defaultoption.name = $scope.report.paramList.ref.name;
+				$scope.allparamlist.defaultoption = defaultoption;
+				$scope.getOneByUuidParamList();
+
+			} else {
+				$scope.allparamlist.defaultoption = null;
+			}
+		}
+	}
+	$scope.getAllLatestParamListByTemplate();
+
 	if (typeof $stateParams.id != "undefined") {
 		$scope.showactive = "true"
 		$scope.mode = $stateParams.mode;
@@ -2265,11 +2462,25 @@ DatavisualizationModule.controller('Report2DetailController', function (dagMetaD
 			defaultversion.version = response.report.version;
 			defaultversion.uuid = response.report.uuid;
 			$scope.reportVersion.defaultVersion = defaultversion;
-			$scope.tags = response.tags
+
+			$scope.tags = response.tags;
+			if (response.report.senderInfo != null) {
+				$scope.tagsTo = response.report.senderInfo.emailTo;
+				$scope.tagsCC = response.report.senderInfo.emailCC;
+				$scope.tagsBcc = response.report.senderInfo.emailBCC;
+			}
+			if ($scope.report.paramList != null) {
+				var defaultoption = {};
+				defaultoption.uuid = $scope.report.paramList.ref.uuid;
+				defaultoption.name = $scope.report.paramList.ref.name;
+				$scope.allparamlist.defaultoption = defaultoption;
+			}
 			$scope.getParamByApp();
-		    $scope.getAllLatest($scope.selectSourceType, response.report.dependsOn);			
+
+			$scope.getAllLatest($scope.selectSourceType, response.report.dependsOn);
 			$scope.getFunctionByCriteria();
 			$scope.attributeTableArray = response.sourceAttributes;
+			$scope.filterTableArray = response.filterInfo;
 		}//End onSuccessResult
 		var onError = function () {
 			$scope.isEditInprogess = false;
@@ -2279,6 +2490,49 @@ DatavisualizationModule.controller('Report2DetailController', function (dagMetaD
 	else {
 		$scope.report = {};
 		$scope.report.locked = "N";
+		$scope.report.senderInfo = {};
+		$scope.report.senderInfo.sendAttachment = "Y";
+		$scope.report.senderInfo.notifOnSuccess = "Y";
+		$scope.report.senderInfo.notifyOnFailure = "Y";
+
+	}
+
+	$scope.selectVersion = function () {
+		$scope.allSource = null;
+		$scope.selectSourceType = null;
+		$scope.myform1.$dirty = false;
+		$scope.myform2.$dirty = false;
+		$scope.myform3.$dirty = false;
+		$scope.isEditInprogess = true;
+		$scope.isEditVeiwError = false;
+		ReportSerivce.getOneByUuidAndVersion($scope.reportVersion.defaultVersion.uuid, $scope.reportVersion.defaultVersion.version, CF_META_TYPES.report)
+			.then(function (response) { onSuccessResult(response.data) }, function (response) { onError(response.data) });
+		var onSuccessResult = function (response) {
+			$scope.isEditInprogess = false;
+			$scope.report = response.report;
+			$scope.selectSourceType = response.report.dependsOn.ref.type
+			var defaultversion = {};
+			defaultversion.version = response.report.version;
+			defaultversion.uuid = response.report.uuid;
+			$scope.reportVersion.defaultVersion = defaultversion;
+
+			$scope.tags = response.tags;
+			if (response.report.senderInfo != null) {
+				$scope.tagsTo = response.report.senderInfo.emailTo;
+				$scope.tagsCC = response.report.senderInfo.emailCC;
+				$scope.tagsBcc = response.report.senderInfo.emailBCC;
+			}
+
+			$scope.getParamByApp();
+			$scope.getAllLatest($scope.selectSourceType, response.report.dependsOn);
+			$scope.getFunctionByCriteria();
+			$scope.attributeTableArray = response.sourceAttributes;
+			$scope.filterTableArray = response.filterInfo;
+		}//End onSuccessResult
+		var onError = function () {
+			$scope.isEditInprogess = false;
+			$scope.isEditVeiwError = true;
+		};
 	}
 
 	$scope.SearchAttribute = function (index, type, propertyType) {
@@ -2358,23 +2612,23 @@ DatavisualizationModule.controller('Report2DetailController', function (dagMetaD
 	}
 
 	$scope.onChangeOperator = function (index) {
-		
-		$scope.filterTableArray[index].isRhsNA=false;
+
+		$scope.filterTableArray[index].isRhsNA = false;
 		if ($scope.filterTableArray[index].operator == 'BETWEEN') {
 			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[1];
 			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['attribute', 'formula', 'dataset', 'function', 'paramlist'])
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
-		} 
+		}
 		else if (['IN', 'NOT IN'].indexOf($scope.filterTableArray[index].operator) != -1) {
 			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, []);
 			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[4];
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
-		} 
+		}
 		else if (['EXISTS', 'NOT EXISTS'].indexOf($scope.filterTableArray[index].operator) != -1) {
-			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['attribute', 'formula', 'function', 'paramlist','string','integer']);
+			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['attribute', 'formula', 'function', 'paramlist', 'string', 'integer']);
 			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[4];
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
-		} 
+		}
 
 		else if (['<', '>', "<=", '>='].indexOf($scope.filterTableArray[index].operator) != -1) {
 			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['dataset']);
@@ -2382,8 +2636,8 @@ DatavisualizationModule.controller('Report2DetailController', function (dagMetaD
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
 		}
 		else if (['IS'].indexOf($scope.filterTableArray[index].operator) != -1) {
-			$scope.filterTableArray[index].isRhsNA=true;
-			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['attribute', 'formula', 'dataset', 'function', 'paramlist','integer']);
+			$scope.filterTableArray[index].isRhsNA = true;
+			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['attribute', 'formula', 'dataset', 'function', 'paramlist', 'integer']);
 			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[0];
 			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
 		}
@@ -2405,8 +2659,8 @@ DatavisualizationModule.controller('Report2DetailController', function (dagMetaD
 			filter.selected = $scope.selectedAllFitlerRow;
 		});
 	}
-	
-	function returnRshType(){
+
+	function returnRshType() {
 		var rTypes = [
 			{ "text": "string", "caption": "string", "disabled": false },
 			{ "text": "string", "caption": "integer", "disabled": false },
@@ -2415,7 +2669,7 @@ DatavisualizationModule.controller('Report2DetailController', function (dagMetaD
 			{ "text": "dataset", "caption": "dataset", "disabled": false },
 			{ "text": "paramlist", "caption": "paramlist", "disabled": false },
 			{ "text": "function", "caption": "function", "disabled": false }]
-	    return rTypes;
+		return rTypes;
 	}
 	$scope.addRowFilter = function () {
 		if ($scope.filterTableArray == null) {
@@ -2429,15 +2683,15 @@ DatavisualizationModule.controller('Report2DetailController', function (dagMetaD
 		filertable.isrhsFormula = false;
 		filertable.isrhsSimple = false;
 		filertable.lhsFilter = $scope.lhsdatapodattributefilter[0];
-		filertable.lhsdatapodAttribute=$scope.lhsdatapodattributefilter[0];
-		filertable.rhsdatapodAttribute=$scope.lhsdatapodattributefilter[0];
-		
+		filertable.lhsdatapodAttribute = $scope.lhsdatapodattributefilter[0];
+		filertable.rhsdatapodAttribute = $scope.lhsdatapodattributefilter[0];
+
 		filertable.logicalOperator = $scope.filterTableArray.length == 0 ? "" : $scope.logicalOperator[0]
 		filertable.operator = $scope.operator[0].value
 		filertable.lhstype = $scope.lhsType[2]
-		filertable.rhstype =returnRshType()[2];
-		filertable.rhsTypes=returnRshType();
-		
+		filertable.rhstype = returnRshType()[2];
+		filertable.rhsTypes = returnRshType();
+
 		filertable.rhsTypes = $scope.disableRhsType(filertable.rhsTypes, ['dataset']);
 		filertable.rhsvalue;
 		filertable.lhsvalue;
@@ -2450,7 +2704,7 @@ DatavisualizationModule.controller('Report2DetailController', function (dagMetaD
 			if (!selected.selected) {
 				newDataList.push(selected);
 			}
-			$scope.fitlerAttrTableSelectedItem=[];
+			$scope.fitlerAttrTableSelectedItem = [];
 		});
 
 		if (newDataList.length > 0) {
@@ -2458,51 +2712,51 @@ DatavisualizationModule.controller('Report2DetailController', function (dagMetaD
 		}
 		$scope.filterTableArray = newDataList;
 	}
-	
-	$scope.fitlerAttrTableSelectedItem=[];
-	$scope.onChangeFilterAttRow=function(index,status){
-		if(status ==true){
+
+	$scope.fitlerAttrTableSelectedItem = [];
+	$scope.onChangeFilterAttRow = function (index, status) {
+		if (status == true) {
 			$scope.fitlerAttrTableSelectedItem.push(index);
 		}
-		else{
-			let tempIndex=$scope.fitlerAttrTableSelectedItem.indexOf(index);
+		else {
+			let tempIndex = $scope.fitlerAttrTableSelectedItem.indexOf(index);
 
-			if(tempIndex !=-1){
+			if (tempIndex != -1) {
 				$scope.fitlerAttrTableSelectedItem.splice(tempIndex, 1);
 
 			}
-		}	
+		}
 	}
-	$scope.onAttrFilterRowDown=function(index){	
-		var rowTempIndex=$scope.filterTableArray[index];
-        var rowTempIndexPlus=$scope.filterTableArray[index+1];
-		$scope.filterTableArray[index]=rowTempIndexPlus;
-		$scope.filterTableArray[index+1]=rowTempIndex;
-		if(index ==0){
-			$scope.filterTableArray[index+1].logicalOperator=$scope.filterTableArray[index].logicalOperator;
-			$scope.filterTableArray[index].logicalOperator=""
+	$scope.onAttrFilterRowDown = function (index) {
+		var rowTempIndex = $scope.filterTableArray[index];
+		var rowTempIndexPlus = $scope.filterTableArray[index + 1];
+		$scope.filterTableArray[index] = rowTempIndexPlus;
+		$scope.filterTableArray[index + 1] = rowTempIndex;
+		if (index == 0) {
+			$scope.filterTableArray[index + 1].logicalOperator = $scope.filterTableArray[index].logicalOperator;
+			$scope.filterTableArray[index].logicalOperator = ""
 		}
 	}
 
-	$scope.onAttrFilterRowUp=function(index){
-		var rowTempIndex=$scope.filterTableArray[index];
-        var rowTempIndexMines=$scope.filterTableArray[index-1];
-		$scope.filterTableArray[index]=rowTempIndexMines;
-		$scope.filterTableArray[index-1]=rowTempIndex;
-		if(index ==1){
-			$scope.filterTableArray[index].logicalOperator=$scope.filterTableArray[index-1].logicalOperator;
-			$scope.filterTableArray[index-1].logicalOperator=""
+	$scope.onAttrFilterRowUp = function (index) {
+		var rowTempIndex = $scope.filterTableArray[index];
+		var rowTempIndexMines = $scope.filterTableArray[index - 1];
+		$scope.filterTableArray[index] = rowTempIndexMines;
+		$scope.filterTableArray[index - 1] = rowTempIndex;
+		if (index == 1) {
+			$scope.filterTableArray[index].logicalOperator = $scope.filterTableArray[index - 1].logicalOperator;
+			$scope.filterTableArray[index - 1].logicalOperator = ""
 		}
-	}  
-	
-	$scope.onFilterDrop=function(index){
-		if(index.targetIndex== 0){
-			$scope.filterTableArray[index.sourceIndex].logicalOperator=$scope.filterTableArray[index.targetIndex].logicalOperator;
-			$scope.filterTableArray[index.targetIndex].logicalOperator=""
+	}
+
+	$scope.onFilterDrop = function (index) {
+		if (index.targetIndex == 0) {
+			$scope.filterTableArray[index.sourceIndex].logicalOperator = $scope.filterTableArray[index.targetIndex].logicalOperator;
+			$scope.filterTableArray[index.targetIndex].logicalOperator = ""
 		}
-		if(index.sourceIndex == 0){
-			$scope.filterTableArray[index.targetIndex].logicalOperator=$scope.filterTableArray[index.sourceIndex].logicalOperator;
-			$scope.filterTableArray[index.sourceIndex].logicalOperator=""
+		if (index.sourceIndex == 0) {
+			$scope.filterTableArray[index.targetIndex].logicalOperator = $scope.filterTableArray[index.sourceIndex].logicalOperator;
+			$scope.filterTableArray[index.sourceIndex].logicalOperator = ""
 		}
 	}
 
@@ -2524,9 +2778,9 @@ DatavisualizationModule.controller('Report2DetailController', function (dagMetaD
 			$scope.filterTableArray[index].islhsFormula = true;
 			$scope.filterTableArray[index].islhsSimple = false;
 			$scope.filterTableArray[index].islhsDatapod = false;
-			if(typeof $stateParams.id == "undefined") {
-				$scope.getFormulaByType ();
-		    }
+			if (typeof $stateParams.id == "undefined") {
+				$scope.getFormulaByType();
+			}
 		}
 	}
 
@@ -2560,10 +2814,10 @@ DatavisualizationModule.controller('Report2DetailController', function (dagMetaD
 			$scope.filterTableArray[index].isrhsDataset = false;
 			$scope.filterTableArray[index].isrhsParamlist = false;
 			$scope.filterTableArray[index].isrhsFunction = false;
-			if(typeof $stateParams.id == "undefined") {
-				$scope.getFormulaByType ();
+			if (typeof $stateParams.id == "undefined") {
+				$scope.getFormulaByType();
 			}
-			
+
 		}
 		else if (type == "function") {
 
@@ -2658,7 +2912,7 @@ DatavisualizationModule.controller('Report2DetailController', function (dagMetaD
 			$scope.attributeTableArray[index].isSourceAtributeExpression = false;
 			$scope.attributeTableArray[index].isSourceAtributeFunction = false;
 			$scope.attributeTableArray[index].isSourceAtributeParamList = false;
-			$scope.getFormulaByType ();
+			$scope.getFormulaByType();
 		}
 		else if (type == "expression") {
 
@@ -2693,37 +2947,37 @@ DatavisualizationModule.controller('Report2DetailController', function (dagMetaD
 
 	}
 
-	function isDublication (arr, field, index, name,darray) {
+	function isDublication(arr, field, index, name, darray) {
 		var res = [];
-		for(var i = 0; i < arr.length;i++){
+		for (var i = 0; i < arr.length; i++) {
 			if (arr[i][field] == arr[index][field] && i != index) {
-			    $scope.myform3[name].$invalid = true;
+				$scope.myform3[name].$invalid = true;
 				darray.push(i);
 				break
 			}
 			else {
-				$scope.myform3[name].$invalid = false;	
+				$scope.myform3[name].$invalid = false;
 			}
 		}
-		
+
 		return darray;
 	}
 
-	
+
 	$scope.onChangeSourceName = function (index) {
 		$scope.attributeTableArray[index].isSourceName = true;
-		var dupArray=[];
-		for(var i=0;i<$scope.attributeTableArray.length;i++){
-			setTimeout(function(index){
+		var dupArray = [];
+		for (var i = 0; i < $scope.attributeTableArray.length; i++) {
+			setTimeout(function (index) {
 				if ($scope.attributeTableArray[index].name) {
-					var res = isDublication($scope.attributeTableArray, "name", index, "sourceName" +index, dupArray);
-					if(res.length >0 ){
+					var res = isDublication($scope.attributeTableArray, "name", index, "sourceName" + index, dupArray);
+					if (res.length > 0) {
 						$scope.isDuplication = true;
-					}else {
+					} else {
 						$scope.isDuplication = false;
 					}
 				}
-			},10,(i));
+			}, 10, (i));
 		}
 	}
 
@@ -2732,188 +2986,188 @@ DatavisualizationModule.controller('Report2DetailController', function (dagMetaD
 			$scope.attributeTableArray[index].name = data.name
 			//	console.log($filter('unique')($scope.attributeTableArray,"name"));
 		}
-		var dupArray=[];
-		setTimeout(function(){
-			if($scope.attributeTableArray.length > CF_GRID.framework_autopopulate_grid){
-				$scope.attributeTableArray[index].isOnDropDown=false;
-			}	
-			else{
-				$scope.attributeTableArray[index].isOnDropDown=true;
+		var dupArray = [];
+		setTimeout(function () {
+			if ($scope.attributeTableArray.length > CF_GRID.framework_autopopulate_grid) {
+				$scope.attributeTableArray[index].isOnDropDown = false;
 			}
-		},10);
-		for(var i=0;i<$scope.attributeTableArray.length;i++){
-			setTimeout(function(index){
+			else {
+				$scope.attributeTableArray[index].isOnDropDown = true;
+			}
+		}, 10);
+		for (var i = 0; i < $scope.attributeTableArray.length; i++) {
+			setTimeout(function (index) {
 				if ($scope.attributeTableArray[index].name) {
-					var res =isDublication($scope.attributeTableArray, "name", index, "sourceName" +index, dupArray);
-					if(res.length >0 ){
+					var res = isDublication($scope.attributeTableArray, "name", index, "sourceName" + index, dupArray);
+					if (res.length > 0) {
 						$scope.isDuplication = true;
-					}else {
+					} else {
 						$scope.isDuplication = false;
 					}
 				}
-			},10,(i));
+			}, 10, (i));
 		}
 	}
 
 	$scope.onChangeFormula = function (data, index) {
 		if (!$scope.attributeTableArray[index].isSourceName)
 			$scope.attributeTableArray[index].name = data.name;
-		var dupArray=[];
-		setTimeout(function(){
-			if($scope.attributeTableArray.length > CF_GRID.framework_autopopulate_grid){
-				$scope.attributeTableArray[index].isOnDropDown=false;
-			}	
-			else{
-				$scope.attributeTableArray[index].isOnDropDown=true;
+		var dupArray = [];
+		setTimeout(function () {
+			if ($scope.attributeTableArray.length > CF_GRID.framework_autopopulate_grid) {
+				$scope.attributeTableArray[index].isOnDropDown = false;
 			}
-		},10);
-		for(var i=0;i<$scope.attributeTableArray.length;i++){
-			setTimeout(function(index){
+			else {
+				$scope.attributeTableArray[index].isOnDropDown = true;
+			}
+		}, 10);
+		for (var i = 0; i < $scope.attributeTableArray.length; i++) {
+			setTimeout(function (index) {
 				if ($scope.attributeTableArray[index].name) {
-					var res =isDublication($scope.attributeTableArray, "name", index, "sourceName" +index, dupArray);
-					if(res.length >0 ){
+					var res = isDublication($scope.attributeTableArray, "name", index, "sourceName" + index, dupArray);
+					if (res.length > 0) {
 						$scope.isDuplication = true;
-					}else {
+					} else {
 						$scope.isDuplication = false;
 					}
 				}
-			},10,(i));
+			}, 10, (i));
 		}
 	}
 
 	$scope.onChangeExpression = function (data, index) {
 		if (!$scope.attributeTableArray[index].isSourceName)
 			$scope.attributeTableArray[index].name = data.name;
-		setTimeout(function(){
-			if($scope.attributeTableArray.length > CF_GRID.framework_autopopulate_grid){
-				$scope.attributeTableArray[index].isOnDropDown=false;
-			}	
-			else{
-				$scope.attributeTableArray[index].isOnDropDown=true;
+		setTimeout(function () {
+			if ($scope.attributeTableArray.length > CF_GRID.framework_autopopulate_grid) {
+				$scope.attributeTableArray[index].isOnDropDown = false;
 			}
-		},10);	
-		var dupArray=[];
-		for(var i=0;i<$scope.attributeTableArray.length;i++){
-			setTimeout(function(index){
+			else {
+				$scope.attributeTableArray[index].isOnDropDown = true;
+			}
+		}, 10);
+		var dupArray = [];
+		for (var i = 0; i < $scope.attributeTableArray.length; i++) {
+			setTimeout(function (index) {
 				if ($scope.attributeTableArray[index].name) {
-					var res = isDublication($scope.attributeTableArray, "name", index, "sourceName" +index, dupArray);
-					if(res.length >0 ){
+					var res = isDublication($scope.attributeTableArray, "name", index, "sourceName" + index, dupArray);
+					if (res.length > 0) {
 						$scope.isDuplication = true;
-					}else {
+					} else {
 						$scope.isDuplication = false;
 					}
 				}
-			},10,(i));
+			}, 10, (i));
 		}
 	}
 	$scope.onChangeParamlist = function (data, index) {
 		if (!$scope.attributeTableArray[index].isSourceName)
 			$scope.attributeTableArray[index].name = data.paramName;
-		var dupArray=[];
-		setTimeout(function(){
-			if($scope.attributeTableArray.length > CF_GRID.framework_autopopulate_grid){
-				$scope.attributeTableArray[index].isOnDropDown=false;
-			}	
-			else{
-				$scope.attributeTableArray[index].isOnDropDown=true;
+		var dupArray = [];
+		setTimeout(function () {
+			if ($scope.attributeTableArray.length > CF_GRID.framework_autopopulate_grid) {
+				$scope.attributeTableArray[index].isOnDropDown = false;
 			}
-		},10);
-		for(var i=0;i<$scope.attributeTableArray.length;i++){
-			setTimeout(function(index){
+			else {
+				$scope.attributeTableArray[index].isOnDropDown = true;
+			}
+		}, 10);
+		for (var i = 0; i < $scope.attributeTableArray.length; i++) {
+			setTimeout(function (index) {
 				if ($scope.attributeTableArray[index].name) {
-					var res = isDublication($scope.attributeTableArray, "name", index, "sourceName" +index, dupArray);
-					if(res.length >0 ){
+					var res = isDublication($scope.attributeTableArray, "name", index, "sourceName" + index, dupArray);
+					if (res.length > 0) {
 						$scope.isDuplication = true;
-					}else {
+					} else {
 						$scope.isDuplication = false;
 					}
 				}
-			},10,(i));
-		}
-	}
-	
-	$scope.ngChangeFunction=function(){
-		if (!$scope.attributeTableArray[index].isSourceName)
-		$scope.attributeTableArray[index].name = data.paramName;
-		var dupArray=[];
-		setTimeout(function(){
-			if($scope.attributeTableArray.length > CF_GRID.framework_autopopulate_grid){
-				$scope.attributeTableArray[index].isOnDropDown=false;
-			}	
-			else{
-				$scope.attributeTableArray[index].isOnDropDown=true;
-			}
-		},10);
-		for(var i=0;i<$scope.attributeTableArray.length;i++){
-			setTimeout(function(index){
-				if ($scope.attributeTableArray[index].name) {
-					var res = isDublication($scope.attributeTableArray, "name", index, "sourceName" +index, dupArray);
-					if(res.length >0 ){
-						$scope.isDuplication = true;
-					}else {
-						$scope.isDuplication = false;
-					}
-				}
-			},10,(i));
+			}, 10, (i));
 		}
 	}
 
-	$scope.attrTableSelectedItem=[];
-	$scope.onChangeAttRow=function(index,status){
-		if(status ==true){
+	$scope.ngChangeFunction = function () {
+		if (!$scope.attributeTableArray[index].isSourceName)
+			$scope.attributeTableArray[index].name = data.paramName;
+		var dupArray = [];
+		setTimeout(function () {
+			if ($scope.attributeTableArray.length > CF_GRID.framework_autopopulate_grid) {
+				$scope.attributeTableArray[index].isOnDropDown = false;
+			}
+			else {
+				$scope.attributeTableArray[index].isOnDropDown = true;
+			}
+		}, 10);
+		for (var i = 0; i < $scope.attributeTableArray.length; i++) {
+			setTimeout(function (index) {
+				if ($scope.attributeTableArray[index].name) {
+					var res = isDublication($scope.attributeTableArray, "name", index, "sourceName" + index, dupArray);
+					if (res.length > 0) {
+						$scope.isDuplication = true;
+					} else {
+						$scope.isDuplication = false;
+					}
+				}
+			}, 10, (i));
+		}
+	}
+
+	$scope.attrTableSelectedItem = [];
+	$scope.onChangeAttRow = function (index, status) {
+		if (status == true) {
 			$scope.attrTableSelectedItem.push(index);
 		}
-		else{
-			let tempIndex=$scope.attrTableSelectedItem.indexOf(index);
+		else {
+			let tempIndex = $scope.attrTableSelectedItem.indexOf(index);
 
-			if(tempIndex !=-1){
+			if (tempIndex != -1) {
 				$scope.attrTableSelectedItem.splice(tempIndex, 1);
 
 			}
-		}	
-	}
-	$scope.autoMove=function(index,type){
-		if(type=="mapAttr"){
-			var tempAtrr=$scope.attributeTableArray[$scope.attrTableSelectedItem[0]];
-			$scope.attributeTableArray.splice($scope.attrTableSelectedItem[0],1);
-			$scope.attributeTableArray.splice(index,0,tempAtrr);
-			$scope.attrTableSelectedItem=[];
-			$scope.attributeTableArray[index].selected=false;
 		}
-		else{
-			var tempAtrr=$scope.filterTableArray[$scope.fitlerAttrTableSelectedItem[0]];
-			$scope.filterTableArray.splice($scope.fitlerAttrTableSelectedItem[0],1);
-			$scope.filterTableArray.splice(index,0,tempAtrr);
-			$scope.fitlerAttrTableSelectedItem=[];
-			$scope.filterTableArray[index].selected=false;
-			$scope.filterTableArray[0].logicalOperator="";
-			if($scope.filterTableArray[index].logicalOperator =="" && index !=0){
-				$scope.filterTableArray[index].logicalOperator=$scope.logicalOperator[0];
-			}else if($scope.filterTableArray[index].logicalOperator =="" && index ==0){
-				$scope.filterTableArray[index+1].logicalOperator=$scope.logicalOperator[0];
+	}
+	$scope.autoMove = function (index, type) {
+		if (type == "mapAttr") {
+			var tempAtrr = $scope.attributeTableArray[$scope.attrTableSelectedItem[0]];
+			$scope.attributeTableArray.splice($scope.attrTableSelectedItem[0], 1);
+			$scope.attributeTableArray.splice(index, 0, tempAtrr);
+			$scope.attrTableSelectedItem = [];
+			$scope.attributeTableArray[index].selected = false;
+		}
+		else {
+			var tempAtrr = $scope.filterTableArray[$scope.fitlerAttrTableSelectedItem[0]];
+			$scope.filterTableArray.splice($scope.fitlerAttrTableSelectedItem[0], 1);
+			$scope.filterTableArray.splice(index, 0, tempAtrr);
+			$scope.fitlerAttrTableSelectedItem = [];
+			$scope.filterTableArray[index].selected = false;
+			$scope.filterTableArray[0].logicalOperator = "";
+			if ($scope.filterTableArray[index].logicalOperator == "" && index != 0) {
+				$scope.filterTableArray[index].logicalOperator = $scope.logicalOperator[0];
+			} else if ($scope.filterTableArray[index].logicalOperator == "" && index == 0) {
+				$scope.filterTableArray[index + 1].logicalOperator = $scope.logicalOperator[0];
 			}
 		}
 	}
 
-	$scope.autoMoveTo=function(index,type){
-		if(type =="mapAttr"){
-			if(index <= $scope.attributeTableArray.length){
-				$scope.autoMove(index-1,'mapAttr');
-				$scope.moveTo=null;
+	$scope.autoMoveTo = function (index, type) {
+		if (type == "mapAttr") {
+			if (index <= $scope.attributeTableArray.length) {
+				$scope.autoMove(index - 1, 'mapAttr');
+				$scope.moveTo = null;
 				$(".actions").removeClass("open");
 			}
 		}
-		else{
-			if(index <= $scope.filterTableArray.length){
-				$scope.autoMove(index-1,'filterAttr');
-				$scope.moveTo=null;
+		else {
+			if (index <= $scope.filterTableArray.length) {
+				$scope.autoMove(index - 1, 'filterAttr');
+				$scope.moveTo = null;
 				$(".actions").removeClass("open");
 			}
 		}
 	}
 
 
-    
+
 	$scope.submit = function () {
 		var upd_tag = "N"
 		$scope.isshowmodel = true;
@@ -2922,6 +3176,7 @@ DatavisualizationModule.controller('Report2DetailController', function (dagMetaD
 		$scope.myform1.$dirty = false;
 		$scope.myform2.$dirty = false;
 		$scope.myform3.$dirty = false;
+
 		var reportJson = {}
 		reportJson.uuid = $scope.report.uuid
 		reportJson.name = $scope.report.name;
@@ -2931,7 +3186,6 @@ DatavisualizationModule.controller('Report2DetailController', function (dagMetaD
 		reportJson.published = $scope.report.published;
 		reportJson.publicFlag = $scope.report.publicFlag;
 		reportJson.saveOnRefresh = $scope.report.saveOnRefresh;
-
 
 		reportJson.title = $scope.report.title;
 		reportJson.header = $scope.report.header;
@@ -2958,8 +3212,111 @@ DatavisualizationModule.controller('Report2DetailController', function (dagMetaD
 		dependsOn.ref = ref;
 		reportJson.dependsOn = dependsOn;
 
+		if ($scope.allparamlist && $scope.allparamlist.defaultoption != null) {
+			var paramlist = {};
+			var ref = {};
+			ref.type = "paramlist";
+			ref.uuid = $scope.allparamlist.defaultoption.uuid;
+			paramlist.ref = ref;
+			reportJson.paramList = paramlist;
+		}
+		else {
+			reportJson.paramList = null;
+		}
+
+		//filterInfo
 		var filterInfoArray = [];
-		reportJson.filterInfo = filterInfoArray;
+		if ($scope.filterTableArray && $scope.filterTableArray.length > 0) {
+			for (var i = 0; i < $scope.filterTableArray.length; i++) {
+				var filterInfo = {};
+				var operand = []
+				var lhsoperand = {}
+				var lhsref = {}
+				var rhsoperand = {}
+				var rhsref = {};
+				filterInfo.display_seq = i;
+				if (typeof $scope.filterTableArray[i].logicalOperator == "undefined") {
+					filterInfo.logicalOperator = ""
+				}
+				else {
+					filterInfo.logicalOperator = $scope.filterTableArray[i].logicalOperator
+				}
+				filterInfo.operator = $scope.filterTableArray[i].operator;
+				if ($scope.filterTableArray[i].lhstype.text == "string") {
+
+					lhsref.type = "simple";
+					lhsoperand.ref = lhsref;
+					lhsoperand.attributeType = $scope.filterTableArray[i].lhstype.caption;
+					lhsoperand.value = $scope.filterTableArray[i].lhsvalue;
+
+				}
+				else if ($scope.filterTableArray[i].lhstype.text == "datapod") {
+
+					lhsref.type = $scope.filterTableArray[i].lhsdatapodAttribute.type;
+					lhsref.uuid = $scope.filterTableArray[i].lhsdatapodAttribute.uuid;
+					lhsoperand.ref = lhsref;
+					lhsoperand.attributeId = $scope.filterTableArray[i].lhsdatapodAttribute.attributeId;
+				}
+				else if ($scope.filterTableArray[i].lhstype.text == "formula") {
+
+					lhsref.type = "formula";
+					lhsref.uuid = $scope.filterTableArray[i].lhsformula.uuid;
+					lhsoperand.ref = lhsref;
+				}
+				operand[0] = lhsoperand;
+				if ($scope.filterTableArray[i].rhstype.text == "string") {
+
+					rhsref.type = "simple";
+					rhsoperand.ref = rhsref;
+					rhsoperand.attributeType = $scope.filterTableArray[i].rhstype.caption;
+					rhsoperand.value = $scope.filterTableArray[i].rhsvalue;
+					if ($scope.filterTableArray[i].operator == 'BETWEEN') {
+						rhsoperand.value = $scope.filterTableArray[i].rhsvalue1 + "and" + $scope.filterTableArray[i].rhsvalue2;
+					}
+				}
+				else if ($scope.filterTableArray[i].rhstype.text == "datapod") {
+
+					rhsref.type = $scope.filterTableArray[i].rhsdatapodAttribute.type;
+					rhsref.uuid = $scope.filterTableArray[i].rhsdatapodAttribute.uuid;
+
+					rhsoperand.ref = rhsref;
+					rhsoperand.attributeId = $scope.filterTableArray[i].rhsdatapodAttribute.attributeId;
+				}
+				else if ($scope.filterTableArray[i].rhstype.text == "formula") {
+
+					rhsref.type = "formula";
+					rhsref.uuid = $scope.filterTableArray[i].rhsformula.uuid;
+					rhsoperand.ref = rhsref;
+				}
+				else if ($scope.filterTableArray[i].rhstype.text == "function") {
+					rhsref.type = "function";
+					rhsref.uuid = $scope.filterTableArray[i].rhsfunction.uuid;
+					rhsoperand.ref = rhsref;
+				}
+				else if ($scope.filterTableArray[i].rhstype.text == "dataset") {
+					rhsref.type = "dataset";
+					rhsref.uuid = $scope.filterTableArray[i].rhsdataset.uuid;
+					rhsoperand.ref = rhsref;
+					rhsoperand.attributeId = $scope.filterTableArray[i].rhsdataset.attributeId;
+				}
+				else if ($scope.filterTableArray[i].rhstype.text == "paramlist") {
+
+					rhsref.type = "paramlist";
+					rhsref.uuid = $scope.filterTableArray[i].rhsparamlist.uuid;
+					rhsoperand.ref = rhsref;
+					rhsoperand.attributeId = $scope.filterTableArray[i].rhsparamlist.attributeId;
+				}
+				operand[1] = rhsoperand;
+				filterInfo.operand = operand;
+				filterInfoArray[i] = filterInfo;
+
+			}//End FilterInfo
+
+			reportJson.filterInfo = filterInfoArray;
+		}
+		else {
+			reportJson.filterInfo = null;
+		}
 
 		var sourceAttributesArray = [];
 		for (var l = 0; l < $scope.attributeTableArray.length; l++) {
@@ -2983,7 +3340,7 @@ DatavisualizationModule.controller('Report2DetailController', function (dagMetaD
 				sourceAttr.attrType = $scope.attributeTableArray[l].sourcedatapod.attrType;
 				attributeinfo.sourceAttr = sourceAttr;
 			}
-			
+
 			else if ($scope.attributeTableArray[l].sourceAttributeType.text == "paramlist") {
 				ref.type = "paramlist";
 				ref.uuid = $scope.attributeTableArray[l].sourceparamlist.uuid;
@@ -2991,7 +3348,7 @@ DatavisualizationModule.controller('Report2DetailController', function (dagMetaD
 				sourceAttr.attrId = $scope.attributeTableArray[l].sourceparamlist.attributeId;
 				attributeinfo.sourceAttr = sourceAttr;
 			}
-			
+
 			else if ($scope.attributeTableArray[l].sourceAttributeType.text == "expression") {
 				ref.type = "expression";
 				ref.uuid = $scope.attributeTableArray[l].sourceexpression.uuid;
@@ -3005,7 +3362,7 @@ DatavisualizationModule.controller('Report2DetailController', function (dagMetaD
 				sourceAttr.ref = ref;
 				attributeinfo.sourceAttr = sourceAttr;
 			}
-			
+
 			else if ($scope.attributeTableArray[l].sourceAttributeType.text == "function") {
 				ref.type = "function";
 				ref.uuid = $scope.attributeTableArray[l].sourcefunction.uuid;
@@ -3015,29 +3372,54 @@ DatavisualizationModule.controller('Report2DetailController', function (dagMetaD
 			sourceAttributesArray[l] = attributeinfo
 		}
 		reportJson.attributeInfo = sourceAttributesArray;
-
+		var senderInfo = {};
+		var tagArrayTo = [];
+		if ($scope.tagsTo != null) {
+			for (let counttag = 0; counttag < $scope.tagsTo.length; counttag++) {
+				tagArrayTo[counttag] = $scope.tagsTo[counttag].text;
+			}
+		}
+		senderInfo.emailTo = tagArrayTo;
+		var tagArrayCC = [];
+		if ($scope.tagsCC != null) {
+			for (let counttag = 0; counttag < $scope.tagsCC.length; counttag++) {
+				tagArrayCC[counttag] = $scope.tagsCC[counttag].text;
+			}
+		}
+		senderInfo.emailBCC = tagArrayCC;
+		var tagArrayBcc = [];
+		if ($scope.tagsBcc != null) {
+			for (let counttag = 0; counttag < $scope.tagsBcc.length; counttag++) {
+				tagArrayBcc[counttag] = $scope.tagsBcc[counttag].text;
+			}
+		}
+		senderInfo.emailCC = tagArrayBcc;
+		senderInfo.sendAttachment = $scope.report.sendAttachment;
+		senderInfo.notifOnSuccess = $scope.report.notifOnSuccess;
+		senderInfo.notifyOnFailure = $scope.report.notifOnSuccess;
+		reportJson.senderInfo = senderInfo;
 		console.log(JSON.stringify(reportJson))
-		
+
 		ReportSerivce.submit(reportJson, 'report', upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			$scope.dataLoading = false;
 			$scope.iSSubmitEnable = false;
 			notify.type = 'success',
-			notify.title = 'Success',
-			notify.content = 'Report Saved Successfully'
+				notify.title = 'Success',
+				notify.content = 'Report Saved Successfully'
 			$scope.$emit('notify', notify);
 			$scope.close();
 		}
 		var onError = function (response) {
 			notify.type = 'error',
-			notify.title = 'Error',
-			notify.content = "Some Error Occurred"
+				notify.title = 'Error',
+				notify.content = "Some Error Occurred"
 			$scope.$emit('notify', notify);
 		}
 
 		return false;
 	}
-	
+
 	$scope.close = function () {
 		var hidemode = "yes";
 		if (hidemode == 'yes') {

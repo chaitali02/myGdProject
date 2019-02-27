@@ -479,6 +479,19 @@
       }
       return deferred.promise;
     } /*End getParamListByModel*/
+    this.getParamListByReport = function(type, name, userName, startDate, endDate, tags, active, published) {
+      var deferred = $q.defer();
+      var url = "metadata/getParamListByReport?action=view&type=" + type + "&name=" + name + "&userName=" + userName + "&startDate=" + startDate + "&endDate=" + endDate + "&tags=" + tags + "&published=" + published + "&active=" + active;
+      CommonFactory.httpGet(url).then(function(response) {
+        OnSuccess(response.data)
+      });
+      var OnSuccess = function(response) {
+        deferred.resolve({
+          data: response
+        });
+      }
+      return deferred.promise;
+    } /*End getParamListByModel*/
 
     /*Start getAll*/
     this.getAll = function(type) {
@@ -1050,6 +1063,9 @@
     url ="metadata/getParamListByRule?action=view&uuid=" +uuid+"&version="+version+"&type=" + type;
     else if(type=="dag")
     url ="metadata/getParamListByDag?action=view&uuid=" +uuid+"&version="+version+"&type=" + type;
+    else if(type=="report")
+    url ="metadata/getParamListByReport?action=view&uuid=" +uuid+"&version="+version+"&type=" + type;
+    
     CommonFactory.httpGet(url).then(function(response) {
       onSuccess(response.data)
     });
