@@ -159,7 +159,9 @@ export class DataIngestionDetailComponent implements OnInit {
       .pipe(debounceTime(3000), distinctUntilChanged())
       .subscribe(index => {
         this.filterTableArray[index].selected = "";
-        this.checkSelected(false,null);
+        //this.checkSelected(false,null);
+       
+
       });
 
     this.ruleTypes = [
