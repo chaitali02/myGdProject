@@ -5,11 +5,13 @@ export class AttributeIO {
     datapodname: String;
     name: String;
     dname: String;
-    attributeId: String;
+    attributeId?: String;
     attrType: String;
-    version?: String;
-
+    version: String
     label?: String;
+    type: String;
+    attrName: String;
+    
     value?: { 
         label?: String,
         value?: String,
@@ -17,6 +19,9 @@ export class AttributeIO {
         u_Id?: String,
         attrId?: String,
         attributeId?:String;
+        attrName?: String;
+        type?: String;
+        datapodname?: String;
         version?: String;
     };
 

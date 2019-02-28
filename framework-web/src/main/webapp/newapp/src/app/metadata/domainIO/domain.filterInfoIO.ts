@@ -1,3 +1,4 @@
+import { AttributeIO } from './domain.attributeIO';
 
 export class FilterInfoIO {
 
@@ -5,16 +6,12 @@ export class FilterInfoIO {
 	logicalOperator: String;
 	operator: String;
 	rhsType: String
-	rhsAttribute: any = { uuid: "", label: "" };
-	lhsAttribute: any = { uuid: "", label: "" };
+	// rhsAttribute: { uuid: String, label: String, attributeId: String };
+	// lhsAttribute: { uuid: String, label: String, attributeId: String };
+	rhsAttribute: AttributeIO;
+	lhsAttribute: AttributeIO;
 	rhsAttribute1: String;
 	rhsAttribute2: String;
-
-
-
-	// display_seq: String;
-	// logicalOperator: String;
-	// operator: String;
-	// operand: Array<SourceAttr>;
+	selected?: any;
 
 }
