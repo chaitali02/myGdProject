@@ -504,7 +504,7 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, SharedPrope
             { "name": "dashboard", "type": "dashboard", "uuid": "null", "caption": "Dashboard" },
             { "name": "vizpodlist", "type": "vizpod", "uuid": "null", "caption": "Vizpod" },
             { "name": "reportlist", "type": "report", "uuid": "null", "caption": "Report" },
-            { "name": "reportlist2", "type": "report2", "uuid": "null", "caption": "Report2" },
+            // { "name": "reportlist2", "type": "report2", "uuid": "null", "caption": "Report2" },
             { "name": "paramlistreport", "type": "paramlistreport", "typeCount": "paramlistreport", "uuid": "null", "caption": "Parameter List" },
             { "name": "reportexeclist", "type": "reportexec", "uuid": "null", "caption": "Results","typeCount": "reportexec", }
 
@@ -1222,31 +1222,26 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
                 }]
             }
         })
+       
         // .state('reportlist2', {
         //     url: "/reportList2",
-        //     templateUrl: "views/common-list.html",
+        //     templateUrl: "views/report-list.html",
         //     data: { pageTitle: 'Data Visualization' },
-        //     params: { type: 'report' }
+        //     //controller: "BlankController",
+        //     params: { type: 'report2' },
+        //     resolve: {
+        //         deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+        //             return $ocLazyLoad.load({
+        //                 name: 'InferyxApp',
+        //                 insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+        //                 files: [
+        //                     'js/controllers/ReportController.js',
+        //                      'js/services/ReportService.js'
+        //                 ]
+        //             });
+        //         }]
+        //     }
         // })
-        .state('reportlist2', {
-            url: "/reportList2",
-            templateUrl: "views/report-list.html",
-            data: { pageTitle: 'Data Visualization' },
-            //controller: "BlankController",
-            params: { type: 'report2' },
-            resolve: {
-                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
-                    return $ocLazyLoad.load({
-                        name: 'InferyxApp',
-                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
-                        files: [
-                            'js/controllers/ReportController.js',
-                             'js/services/ReportService.js'
-                        ]
-                    });
-                }]
-            }
-        })
 
         .state('reportdetail', {
             url: "/Report?id&mode&returnBack&version",
@@ -1266,24 +1261,24 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
                 }]
             }
         })
-        .state('reportdetail2', {
-            url: "/Report2?id&mode&returnBack&version",
-            templateUrl: "views/report2.html",
-            data: { pageTitle: 'Data Visualization' },
-            //controller: "BlankController",
-            resolve: {
-                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
-                    return $ocLazyLoad.load({
-                        name: 'InferyxApp',
-                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
-                        files: [
-                            'js/controllers/ReportController.js',
-                            'js/services/ReportService.js'
-                        ]
-                    });
-                }]
-            }
-        })
+        // .state('reportdetail2', {
+        //     url: "/Report2?id&mode&returnBack&version",
+        //     templateUrl: "views/report2.html",
+        //     data: { pageTitle: 'Data Visualization' },
+        //     //controller: "BlankController",
+        //     resolve: {
+        //         deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+        //             return $ocLazyLoad.load({
+        //                 name: 'InferyxApp',
+        //                 insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+        //                 files: [
+        //                     'js/controllers/ReportController.js',
+        //                     'js/services/ReportService.js'
+        //                 ]
+        //             });
+        //         }]
+        //     }
+        // })
         .state('reportexeclist', {
             url: "/Report/ResultList",
             templateUrl: "views/common-list.html",
