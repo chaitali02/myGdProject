@@ -218,10 +218,10 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 			}
 			else {
 				$scope.message = "Report Submitted Successfully"
-			    notify.type = 'success',
-				notify.title = 'Success',
-				notify.content = $scope.message
-			    $scope.$emit('notify', notify);
+				notify.type = 'success',
+					notify.title = 'Success',
+					notify.content = $scope.message
+				$scope.$emit('notify', notify);
 				$scope.reportExecute(null);
 			}
 		}
@@ -374,8 +374,8 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 
 		$scope.executionmsg = "Report Submited Successfully"
 		notify.type = 'success',
-		notify.title = 'Success',
-		notify.content = $scope.executionmsg
+			notify.title = 'Success',
+			notify.content = $scope.executionmsg
 		$scope.$emit('notify', notify);
 		console.log(JSON.stringify(execParams));
 		$scope.reportExecute(execParams);
@@ -646,6 +646,8 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 
 DatavisualizationModule.controller('ReportDetailController', function ($q, dagMetaDataService, $location, $http, $rootScope, $state, $scope, $stateParams, $cookieStore, $timeout, $filter, ReportSerivce, $sessionStorage, privilegeSvc, CommonService, CF_FILTER, CF_META_TYPES, CF_DOWNLOAD) {
 	$rootScope.isCommentVeiwPrivlage = true;
+	$scope.paramTypes = ["paramlist", "paramset"];
+
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
 		$scope.isversionEnable = false;
@@ -1039,7 +1041,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 				$scope.tagsCC = response.report.senderInfo.emailCC;
 				$scope.tagsBcc = response.report.senderInfo.emailBCC;
 			}
-			if ($scope.report.paramList != null) {
+			if ($scope.report.paramList != null && $scope.allparamlist !=null) {
 				var defaultoption = {};
 				defaultoption.uuid = $scope.report.paramList.ref.uuid;
 				defaultoption.name = $scope.report.paramList.ref.name;
@@ -1060,7 +1062,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 	else {
 		$scope.report = {};
 		$scope.report.locked = "N";
-		$scope.report.lmit=-1;
+		$scope.report.lmit = -1;
 		$scope.report.senderInfo = {};
 		$scope.report.senderInfo.sendAttachment = "Y";
 		$scope.report.senderInfo.notifOnSuccess = "Y";
@@ -1754,7 +1756,8 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		$scope.iSSubmitEnable = false;
 		$scope.myform1.$dirty = false;
 		$scope.myform2.$dirty = false;
-		$scope.myform3.$dirty = false;
+ 		$scope.myform3.$dirty = false;
+		$scope.myform4.$dirty = false;
 
 		var reportJson = {}
 		reportJson.uuid = $scope.report.uuid
@@ -1981,19 +1984,34 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 
 		ReportSerivce.submit(reportJson, 'report', upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
-			$scope.dataLoading = false;
-			$scope.iSSubmitEnable = false;
-			notify.type = 'success',
+			if ($scope.checkboxModelexecution == "YES" && $scope.allparamlist.defaultoption != null) {
+				$scope.ruleId = response.data;
+				$scope.showParamlistPopup();
+			} //End if
+			else if ($scope.checkboxModelexecution == "YES" && $scope.allparamlist.defaultoption == null) {
+				ReportSerivce.getOneById(response.data, "report").then(function (response) {
+					onSuccessGetOneById(response.data)
+				});
+				var onSuccessGetOneById = function (result) {
+					$scope.reportExecute(result);
+				}
+			}
+			else {
+				$scope.dataLoading = false;
+				notify.type = 'success',
 				notify.title = 'Success',
 				notify.content = 'Report Saved Successfully'
-			$scope.$emit('notify', notify);
-			$scope.close();
+				$scope.$emit('notify', notify);
+				$scope.close();
+			}
 		}
 		var onError = function (response) {
 			notify.type = 'error',
-				notify.title = 'Error',
-				notify.content = "Some Error Occurred"
+			notify.title = 'Error',
+			notify.content = "Some Error Occurred"
 			$scope.$emit('notify', notify);
+			$scope.iSSubmitEnable = false;
+
 		}
 
 		return false;
@@ -2005,6 +2023,195 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 			setTimeout(function () { $state.go('reportlist'); }, 2000);
 		}
 	}
+
+	$scope.changeCheckboxExecution = function () {
+		$scope.allparamset = null;
+		$scope.allParamList = null;
+		$scope.isParamLsitTable = false;
+		$scope.selectParamList = null;
+		$scope.paramTypes = null;
+		$scope.selectParamType = null;
+	}
+
+	$scope.reportExecute = function (modeldetail) {
+		if ($scope.selectParamType == "paramlist") {
+			if ($scope.paramlistdata) {
+				var execParams = {};
+				var paramListInfo = [];
+				var paramInfo = {};
+				var paramInfoRef = {};
+				paramInfoRef.uuid = $scope.paramlistdata.uuid;
+				paramInfoRef.type = "paramlist";
+				paramInfo.ref = paramInfoRef;
+				//paramListInfo[0] = paramInfo;
+				for (var i = 0; i < $scope.selectParamList.paramInfo.length; i++) {
+					var paramListObj = {};
+					var ref = {};
+					ref.uuid = $scope.paramlistdata.uuid;
+					ref.type = "paramlist";
+					paramListObj.ref = ref;
+					paramListObj.paramId = $scope.selectParamList.paramInfo[i].paramId;
+					paramListObj.paramName = $scope.selectParamList.paramInfo[i].paramName;
+					paramListObj.paramType = $scope.selectParamList.paramInfo[i].paramType;
+					paramListObj.paramValue = {};
+					var refParamValue = {};
+					refParamValue.type = $scope.selectParamList.paramInfo[i].paramValueType;
+					paramListObj.paramValue.ref = refParamValue;
+					paramListObj.paramValue.value = $scope.selectParamList.paramInfo[i].paramValue.replace(/["']/g, "");
+					paramListInfo[i] = paramListObj;
+
+				}
+				execParams.paramListInfo = paramListInfo;
+			} else {
+				execParams = null;
+			}
+			$scope.paramlistdata = null;
+			$scope.selectParamType = null;
+		}
+		else {
+			$scope.newDataList = [];
+			$scope.selectallattribute = false;
+			angular.forEach($scope.paramtable, function (selected) {
+				if (selected.selected) {
+					$scope.newDataList.push(selected);
+				}
+			});
+			var paramInfoArray = [];
+			if ($scope.newDataList.length > 0) {
+				var execParams = {}
+				var ref = {}
+				ref.uuid = $scope.paramsetdata.uuid;
+				ref.version = $scope.paramsetdata.version;
+				for (var i = 0; i < $scope.newDataList.length; i++) {
+					var paraminfo = {};
+					paraminfo.paramSetId = $scope.newDataList[i].paramSetId;
+					paraminfo.ref = ref;
+					paramInfoArray[i] = paraminfo;
+				}
+			}
+			if (paramInfoArray.length > 0) {
+				execParams.paramInfo = paramInfoArray;
+			} else {
+				execParams = null
+			}
+		}
+		ReportSerivce.reportExecute(modeldetail.uuid, modeldetail.version, execParams)
+		.then(function (response) {onSuccessGetReportExecute(response.data)}, function (response) {onError(response.data)});
+		var onSuccessGetReportExecute = function (response) {
+			$scope.dataLoading = false;
+			$scope.saveMessage = "Report Saved and Submitted Successfully";
+			notify.type = 'success',
+			notify.title = 'Success',
+			notify.content = $scope.saveMessage
+			$scope.$emit('notify', notify);
+			$scope.close();
+		}
+		var onError=function(response){
+			$scope.dataLoading = false;
+			$scope.iSSubmitEnable = false;
+			$scope.close();
+		}
+	}
+
+	$scope.showParamlistPopup = function () {
+		setTimeout(function () { $scope.paramTypes = ["paramlist", "paramset"]; }, 1);
+		if ($scope.checkboxModelexecution == "YES" && $scope.allparamlist.defaultoption != null) {
+			$('#responsive').modal({
+				backdrop: 'static',
+				keyboard: false
+			});
+		} else {
+			$scope.isShowExecutionparam = false;
+			$scope.allparamset = null;
+			$scope.dataLoading = false;
+		}
+	}
+
+	$scope.closeParalistPopup = function () {
+		$scope.dataLoading = false;
+		$scope.checkboxModelexecution = "NO";
+		$scope.isSubmitDisabled = false;
+		$('#responsive').modal('hide');
+	}
+
+	$scope.executeWithExecParams = function () {
+		$('#responsive').modal('hide');
+		ReportSerivce.getOneById($scope.ruleId, "report").then(function (response) {
+			onSuccessGetOneById(response.data)
+		});
+		var onSuccessGetOneById = function (result) {
+			$scope.reportExecute(result);
+		}
+	}
+
+	$scope.getParamSetByParamList = function () {
+		ReportService.getParamSetByParamList($scope.allparamlist.defaultoption.uuid, "").then(function (response) { onSuccessGetParamSetByParmLsit(response.data) });
+		var onSuccessGetParamSetByParmLsit = function (response) {
+			$scope.allparamset = response
+			$scope.isShowExecutionparam = true;
+		}
+	}
+
+	$scope.getParamListChilds = function () {
+		CommonService.getParamListChilds($scope.allparamlist.defaultoption.uuid, "", "paramlist").then(function (response) { onSuccessGetParamListChilds(response.data) });
+		var onSuccessGetParamListChilds = function (response) {
+			var defaultoption = {};
+			defaultoption.uuid = $scope.allparamlist.defaultoption.uuid;
+			defaultoption.name = $scope.allparamlist.defaultoption.name;
+			if (response.length > 0) {
+				$scope.allParamList = response;
+				$scope.allParamList.splice(0, 0, defaultoption);
+			} else {
+				$scope.allParamList = [];
+				$scope.allParamList[0] = defaultoption;
+			}
+		}
+	}
+
+	$scope.onChangeParamType = function () {
+		$scope.allparamset = null;
+		$scope.allParamList = null;
+		$scope.isParamLsitTable = false;
+		$scope.selectParamList = null;
+		if ($scope.selectParamType == "paramlist") {
+			$scope.paramlistdata = null;
+			$scope.getParamListChilds();
+		}
+		else if ($scope.selectParamType == "paramset") {
+			$scope.getParamSetByParamList();
+		}
+	}
+
+	$scope.onChangeParamList=function(){
+		$scope.isParamLsitTable=false;
+		CommonService.getParamByParamList($scope.paramlistdata.uuid,"paramlist").then(function (response){ onSuccesGetParamListByTrain(response.data)});
+		var onSuccesGetParamListByTrain = function (response) {
+		  $scope.isParamLsitTable=true;
+		  $scope.selectParamList=response;
+		  var paramArray=[];
+		  for(var i=0;i<response.length;i++){
+			var paramInfo={}
+			  paramInfo.paramId=response[i].paramId; 
+			  paramInfo.paramName=response[i].paramName;
+			  paramInfo.paramType=response[i].paramType.toLowerCase();
+			  if(response[i].paramValue !=null && response[i].paramValue.ref.type == "simple"){
+				paramInfo.paramValue=response[i].paramValue.value.replace(/["']/g, "");;
+				paramInfo.paramValueType="simple"
+			}else if(response[i].paramValue !=null){
+			  var paramValue={};
+			  paramValue.uuid=response[i].paramValue.ref.uuid;
+			  paramValue.type=response[i].paramValue.ref.type;
+			  paramInfo.paramValue=paramValue;
+			  paramInfo.paramValueType=response[i].paramValue.ref.type;
+			}else{
+			  
+			}
+			paramArray[i]=paramInfo;
+		  }
+		  $scope.selectParamList.paramInfo=paramArray;
+		}
+	  }
+	
 
 });
 
@@ -2093,8 +2300,8 @@ DatavisualizationModule.controller('ReportResultController', function ($q, dagMe
 			if (response && response.execParams && response.execParams.paramListInfo != null && response.execParams.paramListInfo.length > 0) {
 				for (var i = 0; i < response.execParams.paramListInfo.length; i++) {
 					var filterTag = {};
-					if(response.execParams.paramListInfo[i].paramValue.ref.type =="simple")
-					filterTag.text = response.execParams.paramListInfo[i].paramName + " - " + response.execParams.paramListInfo[i].paramValue.value;
+					if (response.execParams.paramListInfo[i].paramValue.ref.type == "simple")
+						filterTag.text = response.execParams.paramListInfo[i].paramName + " - " + response.execParams.paramListInfo[i].paramValue.value;
 					$scope.filterTag[i] = filterTag;
 				}
 

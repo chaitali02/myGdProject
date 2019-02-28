@@ -95,7 +95,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
     'Ready':{
       name : 'Ready',
       caption:'Ready',
-      color :'#F1C40F',//'#f57f36',
+      color :'#659be0',//'#f57f36',
       iconPath : 'assets/layouts/layout/img/new_status/Ready.svg',
     },
     'active':{
@@ -2245,7 +2245,9 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
   var validElementTypes = ['dag','stage','dq','dqgroup','map','load','profile','profilegroup','model','rule','rulegroup','train','predict','simulate','recon','recongroup','operatortype','operator',,'ingest','ingestgroup','report','dashboard'];
   obj.validTaskTypes = ['dq','dqgroup','map','load','profile','profilegroup','model','rule','rulegroup','train','predict','simulate','recon','recongroup','operatortype','operator',,'ingest','ingestgroup','report','dashboard'];
   var defaultElement = {
-    markup: '<g class="rotatable"><g class="scalable"><image class="body"/></g><image class="remove"/><g class="status"><image class="statusImg"><title class="statusTitle">Status</title></image></g><text class="label" /> <title /><g class="inPorts"/><g class="outPorts"/></g>',
+    // markup: '<g class="rotatable"><g class="scalable"><image class="body"/></g><image class="remove"/><g class="status"><rect class="rectstatus" x="82" y="-25" height="22px" width="65px" rx="10" ry="10" fill="white"></rect><text class="statusText"/><image class="statusImg"><title class="statusTitle">Status</title></image></g><text class="label" /> <title /><g class="inPorts"/><g class="outPorts"/></g>',
+    markup: '<g class="rotatable"><g class="scalable"><image class="body"/></g><image class="remove"/><g class="status"><rect class="rectstatus" x="55" y="-25" height="22px" width="65px" rx="10" ry="10" fill="white"></rect><text class="statusText"/></g><text class="label" /> <title /><g class="inPorts"/><g class="outPorts"/></g>',
+
     size: { width: 50, height: 50 },
     inPorts : ['in'],
     outPorts: ['out'],
@@ -2280,12 +2282,17 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
           x:"55", y:"-20",height:"25px", width:"25px",
           "xlink:href": ""
       },
+     
       '.remove': {
           x:"55", y:"-20",height:"25px", width:"25px",
           "xlink:href": "assets/layouts/layout/img/delete.png"
       },
       magnet:true,
-      text: { text: 'Default Element',y: '60px', 'font-size': 10, style: { 'text-shadow': '1px 1px 1px lightgray' } }
+      text: { text: 'Default Element',y: '60px', 'font-size': 10, style: { 'text-shadow': '1px 1px 1px lightgray' } },
+      '.statusText': {
+        x:"70", y:"-10",height:"25px", width:"25px",'font-size': 15,
+        fill:"white"
+      },
     }
   };
 

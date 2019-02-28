@@ -1776,7 +1776,11 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
            $scope.$parent.allowReExecution = false;
          var dagid = "dag_0";
          $(".status[element-id=" + dagid + "] .statusImg").attr("xlink:href","assets/layouts/layout/img/new_status/"+statusDag+".svg");
+         $(".status[element-id=" + dagid + "] .rectstatus").attr("fill",dagMetaDataService.statusDefs[statusDag].color);
+         
          $(".status[element-id=" + dagid + "] .statusTitle").text(statusDag);
+         $(".status[element-id=" + dagid + "] .statusText").text(statusDag.substring(0,3) + "..");
+         
          $(".status[element-id=" + dagid + "]").attr("statusList",JSON.stringify(data.status));
          angular.forEach(data.status,function (status) {
            $(".status[element-id=" + dagid + "]").attr(status.stage,status.createdOn);
@@ -1785,7 +1789,11 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
            var statusStage = stage.status.length == 0 ? 'InProgress' : latestStatus(stage.status).stage;
            var stageid = stage.stageId.length > 3 ? stage.stageId : 'stage_'+stage.stageId;
            $(".status[element-id=" + stageid + "] .statusImg").attr("xlink:href","assets/layouts/layout/img/new_status/"+statusStage+".svg");
+           $(".status[element-id=" + stageid + "] .rectstatus").attr("fill",dagMetaDataService.statusDefs[statusStage].color);
+
            $(".status[element-id=" + stageid + "] .statusTitle").text(statusStage);
+           $(".status[element-id=" + stageid + "] .statusText").text(statusStage.substring(0,3) + "..");
+
            $(".status[element-id=" + stageid + "]").attr("statusList",JSON.stringify(stage.status));
            angular.forEach(stage.status,function (status) {
              $(".status[element-id=" + stageid + "]").attr(status.stage,status.createdOn);
@@ -1793,8 +1801,11 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
            angular.forEach(stage.tasks,function (task) {
              var statusTask = task.status.length == 0 ? 'InProgress' : latestStatus(task.status).stage;
              var taskid = task.taskId.length > 3 ? task.taskId : stageid +'_' +'task_'+task.taskId;
-             $(".status[element-id=" + taskid + "] .statusImg").attr("xlink:href","assets/layouts/layout/img/new_status/"+statusTask+".svg");
+             $(".status[element-id=" + taskid + "] .statusImg").attr("xlink:href","assets/layouts/layout/img/new_status/"+statusTask+".svg");         
+             $(".status[element-id=" + taskid + "] .rectstatus").attr("fill",dagMetaDataService.statusDefs[statusTask].color);
+
              $(".status[element-id=" + taskid + "] .statusTitle").text(statusTask);
+             $(".status[element-id=" + taskid + "] .statusText").text(statusTask.substring(0,3) + "..");
              $(".status[element-id=" + taskid + "]").attr("statusList",JSON.stringify(task.status));
              angular.forEach(task.status,function (status) {
                $(".status[element-id=" + taskid + "]").attr(status.stage,status.createdOn);
