@@ -177,7 +177,6 @@ public class RunDagServiceImpl implements Callable<String> {
 	
 	@SuppressWarnings("finally")
 	public String parseAndExecute() throws Exception {
-		boolean isSuccessful = true;
 		try {
 			logger.info(" Inside RunDagServiceImpl.parseAndExecute ");
 			logger.info("Thread watch : DagExec : " + dagExec.getUuid() + " RunDagServiceImpl status RUN >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
@@ -245,7 +244,6 @@ public class RunDagServiceImpl implements Callable<String> {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			isSuccessful = false;
 			String message = null;
 			try {
 				message = e.getMessage();
@@ -261,12 +259,13 @@ public class RunDagServiceImpl implements Callable<String> {
 			logger.info("Thread watch : DagExec : " + dagExec.getUuid() + " RunDagServiceImpl complete >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
 			
 			SenderInfo senderInfo = dag.getSenderInfo();
-			if(senderInfo != null) {				
-				if(isSuccessful && senderInfo.getNotifOnSuccess().equalsIgnoreCase("Y")) {
+			if(senderInfo != null) {	
+				Status latestStatus = Helper.getLatestStatus(dagExec.getStatusList());
+				if(latestStatus.getStage().equals(Status.Stage.Completed) && senderInfo.getNotifOnSuccess().equalsIgnoreCase("Y")) {
 					synchronized(dagExec.getUuid()) {
 						dagServiceImpl.sendSuccessNotification(senderInfo, dag, dagExec);
 					}
-				} else if(!isSuccessful && senderInfo.getNotifyOnFailure().equalsIgnoreCase("Y")) {
+				} else if(latestStatus.getStage().equals(Status.Stage.Failed) && senderInfo.getNotifyOnFailure().equalsIgnoreCase("Y")) {
 					dagServiceImpl.sendFailureNotification(senderInfo, dag, dagExec);
 				}
 			}

@@ -16,6 +16,7 @@ import java.util.concurrent.Callable;
 
 import org.apache.log4j.Logger;
 
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.Batch;
 import com.inferyx.framework.domain.BatchExec;
 import com.inferyx.framework.domain.ExecParams;
@@ -271,7 +272,6 @@ public class RunBatchServiceImpl implements Callable<String> {
 	}
 
 	public BatchExec execute() throws Exception {
-		boolean isSuccessful = true;
 		Batch batch = (Batch) commonServiceImpl.getOneByUuidAndVersion(batchUuid, batchVersion, MetaType.batch.toString(), "N");
 		try {
 			List<MetaIdentifierHolder> execList = new ArrayList<>();
@@ -292,7 +292,6 @@ public class RunBatchServiceImpl implements Callable<String> {
 			batchExec = batchServiceImpl.checkBatchStatus(batchExec);
 		} catch (Exception e) {
 			e.printStackTrace();
-			isSuccessful = false;
 			String message = null;
 			try {
 				message = e.getMessage();
@@ -305,12 +304,13 @@ public class RunBatchServiceImpl implements Callable<String> {
 			throw new Exception((message != null) ? message : "Batch execution failed.");
 		} finally {
 			SenderInfo senderInfo = batch.getSenderInfo();
-			if(senderInfo != null) {				
-				if(isSuccessful && senderInfo.getNotifOnSuccess().equalsIgnoreCase("Y")) {
+			if(senderInfo != null) {
+				Status latestStatus = Helper.getLatestStatus(batchExec.getStatusList());
+				if(latestStatus.getStage().equals(Status.Stage.Completed) && senderInfo.getNotifOnSuccess().equalsIgnoreCase("Y")) {
 					synchronized (batchExec.getUuid()) {
 						batchServiceImpl.sendSuccessNotification(senderInfo, batch, batchExec);
 					}
-				} else if(!isSuccessful && senderInfo.getNotifyOnFailure().equalsIgnoreCase("Y")) {
+				} else if(latestStatus.getStage().equals(Status.Stage.Failed) && senderInfo.getNotifyOnFailure().equalsIgnoreCase("Y")) {
 					batchServiceImpl.sendFailureNotification(senderInfo, batch, batchExec);
 				}
 			}

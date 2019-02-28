@@ -450,10 +450,13 @@ public class BatchServiceImpl {
 		subject = MessageFormat.format(subject, "SUCCESS", "Batch", batch.getName(), "completed");
 		notification.setSubject(subject);
 
+		String roleUuid = sessionHelper.getSessionContext().getRoleInfo().getRef().getUuid();
+		String appUuid = sessionHelper.getSessionContext().getAppInfo().getRef().getUuid();
+		
 		String resultUrl = Helper.getPropertyValue("framework.url.batch.result");
 		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.webserver.host"),
 				Helper.getPropertyValue("framework.webserver.port"), batchExec.getUuid(), batchExec.getVersion(),
-				batch.getName());
+				batch.getName(), roleUuid, appUuid);
 
 		String message = Helper.getPropertyValue("framework.email.body");
 		message = MessageFormat.format(message, resultUrl);
@@ -478,11 +481,14 @@ public class BatchServiceImpl {
 		String subject = Helper.getPropertyValue("framework.email.subject");
 		subject = MessageFormat.format(subject, "FAILURE", "Batch", batch.getName(), "failed");
 		notification.setSubject(subject);
+
+		String roleUuid = sessionHelper.getSessionContext().getRoleInfo().getRef().getUuid();
+		String appUuid = sessionHelper.getSessionContext().getAppInfo().getRef().getUuid();
 		
 		String resultUrl = Helper.getPropertyValue("framework.url.batch.result");
 		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.webserver.host"),
 				Helper.getPropertyValue("framework.webserver.port"), batchExec.getUuid(), batchExec.getVersion(),
-				batch.getName());
+				batch.getName(), roleUuid, appUuid);
 		
 		String message = Helper.getPropertyValue("framework.email.body");
 		message = MessageFormat.format(message, resultUrl);
