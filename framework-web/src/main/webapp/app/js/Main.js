@@ -506,7 +506,7 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, SharedPrope
             { "name": "reportlist", "type": "report", "uuid": "null", "caption": "Report" },
             { "name": "reportlist2", "type": "report2", "uuid": "null", "caption": "Report2" },
             { "name": "paramlistreport", "type": "paramlistreport", "typeCount": "paramlistreport", "uuid": "null", "caption": "Parameter List" },
-            { "name": "reportexeclist", "type": "reportExec", "uuid": "null", "caption": "Results","typeCount": "reportexec", }
+            { "name": "reportexeclist", "type": "reportexec", "uuid": "null", "caption": "Results","typeCount": "reportexec", }
 
         ]  
     }
