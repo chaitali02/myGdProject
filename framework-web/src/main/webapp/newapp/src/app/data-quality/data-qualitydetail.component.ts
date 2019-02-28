@@ -1,7 +1,7 @@
 import { DependsOn } from './../data-preparation/load/dependsOn';
 import { FilterInfoIO } from './../metadata/domainIO/domain.filterInfoIO';
 import { FilterInfo } from './../metadata/domain/domain.filterInfo';
-import { Component, Input, OnInit, ViewChild, HostListener } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, HostListener, OnDestroy } from '@angular/core';
 import { Router, Event as RouterEvent, ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
 import { Message } from 'primeng/components/common/api';
@@ -31,7 +31,7 @@ import { RoutesParam } from '../metadata/domain/domain.routeParams';
   selector: 'app-data-pipeli',
   templateUrl: './data-qualitydetail.template.html',
 })
-export class DataQualityDetailComponent {
+export class DataQualityDetailComponent implements OnInit, OnDestroy{
   dropIndex: any;
   dragIndex: any;
   isHomeEnable: boolean;
@@ -226,9 +226,10 @@ export class DataQualityDetailComponent {
     this.txtQueryChanged
       .pipe(debounceTime(3000), distinctUntilChanged())
       .subscribe(index => {
-        this.filterTableArray[index].selected = "";
+        console.log(parseInt(index) - 1);
+        this.filterTableArray[parseInt(index) - 1].selected = "";
         this.moveTo = null;
-        // this.checkSelected(false);
+        this.checkSelected(false);
         this.invalideRowNo0 = false;
         this.invalideRowNo1 = false;
       });
@@ -236,6 +237,7 @@ export class DataQualityDetailComponent {
       .pipe(debounceTime(3000), distinctUntilChanged())
       .subscribe(index => {
         this.moveTo = null;
+        this.checkSelected(false);
         this.invalideRowNo0 = false;
         this.invalideRowNo1 = false;
       });
@@ -244,7 +246,7 @@ export class DataQualityDetailComponent {
     this.invalideRowNo1 = false;
   }
   ngOnInit() {
-    this.setMode(this.mode);
+    this.setMode(this.mode);    
   }
   setMode(mode: any) {
     if (mode == 'true') {
@@ -409,15 +411,17 @@ export class DataQualityDetailComponent {
     this.allAttribute = [];
     let firstObj = new AttributeIO();
     firstObj.label = "-Select-"
-    firstObj.value = { label: "-Select-", value: "" }
+    firstObj.value = { label: "-Select-", u_Id: "", uuid: "", attrId: "" }
     this.allAttribute.push(firstObj);
 
     for (const i in response) {
       let name = new AttributeIO();
       name.label = response[i].name;
-      name.value = { label: "", value: "" };
+      name.value = { label: "", u_Id: "", uuid: "", attrId: "" };
       name.value.label = response[i].name;
+      name.value.u_Id = response[i].uuid + "_" + response[i].attributeId;
       name.value.uuid = response[i].uuid;
+      name.value.attrId = response[i].attributeId;
       this.allAttribute.push(name);
     }
   }
@@ -436,8 +440,7 @@ export class DataQualityDetailComponent {
           this.isEditError = true;
         });
   }
-  onSuccessgetOneByUuidAndVersion(response:DataQualityIO) {
-
+  onSuccessgetOneByUuidAndVersion(response: DataQualityIO) {
     this.breadcrumbDataFrom[2].caption = response.dataQuality.name;
     this.dqdata = response.dataQuality;
 
@@ -454,7 +457,7 @@ export class DataQualityDetailComponent {
     dependOnTemp.label = this.dqdata.dependsOn.ref.name;
     dependOnTemp.uuid = this.dqdata.dependsOn.ref.uuid;
     this.sourcedata = dependOnTemp;
-    this.getAllLatest()
+    this.getAllLatest();
     if (this.dqdata.attribute != null) {
       this.IsSelectSoureceAttr = true
       let selectattribute: AttributeHolder = new AttributeHolder();
@@ -462,6 +465,7 @@ export class DataQualityDetailComponent {
       selectattribute.u_Id = this.dqdata.attribute.ref.uuid + "_" + this.dqdata.attribute.attrId;
       selectattribute.uuid = this.dqdata.attribute.ref.uuid;
       selectattribute.attrId = this.dqdata.attribute.attrId;
+
       this.selectAttribute = selectattribute;
     }
 
@@ -1137,6 +1141,19 @@ export class DataQualityDetailComponent {
   }
 
   updateArray(new_index, range, event) {
+
+    // if (new_index < 0) {
+    //   this.invalideRowNo0 = true;
+    //   this.txtQueryChanged1.next(event);
+    //   // this.filterTableArray[i].selected = "";
+    // }
+    // else if (new_index >= this.filterTableArray.length) {
+    //   this.invalideRowNo1 = true;
+    //   this.txtQueryChanged1.next(event);
+    //   // this.filterTableArray[i].selected = "";
+    // }
+    // else if (new_index == null) { }
+    // else
     for (let i = 0; i < this.filterTableArray.length; i++) {
       if (this.filterTableArray[i].selected) {
 
@@ -1150,34 +1167,77 @@ export class DataQualityDetailComponent {
           this.txtQueryChanged1.next(event);
           // this.filterTableArray[i].selected = "";
         }
-        else if(new_index == null){}
+        else if (new_index == null) { }
         else {
           let old_index = i;
-          this.array_move(this.filterTableArray, old_index, new_index);
-
+          this.array_move(this.filterTableArray, old_index, new_index);debugger
           if (range) {
             this.txtQueryChanged.next(event);
+            if (new_index == 0 || new_index == 1) {
+              this.first(new_index, "");
+              // this.filterTableArray[0].logicalOperator = "";
+              // if (!this.filterTableArray[1].logicalOperator) {
+              //   this.filterTableArray[1].logicalOperator = this.logicalOperators[1].label;
+              // }
+              // this.filterTableArray[new_index].selected = "";
+            }
+            if (new_index == this.filterTableArray.length - 1) {
+              this.last(new_index, "");
+              // this.filterTableArray[0].logicalOperator = "";
+              // if (this.filterTableArray[new_index].logicalOperator == "") {
+              //   this.filterTableArray[new_index].logicalOperator = this.logicalOperators[1].label;
+              // }
+              // this.filterTableArray[new_index].selected = "";
+              // this.checkSelected(false);
+            }
           }
           else if (new_index == 0 || new_index == 1) {
-            this.filterTableArray[0].logicalOperator = "";
-            if (!this.filterTableArray[1].logicalOperator) {
-              this.filterTableArray[1].logicalOperator = this.logicalOperators[1].label;
-            }
-            this.filterTableArray[new_index].selected = "";
-            this.checkSelected(false);
+            this.first(new_index, range);
+            // this.filterTableArray[0].logicalOperator = "";
+            // if (!this.filterTableArray[1].logicalOperator) {
+            //   this.filterTableArray[1].logicalOperator = this.logicalOperators[1].label;
+            // }
+            // this.filterTableArray[new_index].selected = "";
+            // this.checkSelected(false);
           }
           else if (new_index == this.filterTableArray.length - 1) {
-            this.filterTableArray[0].logicalOperator = "";
-            this.filterTableArray[new_index].logicalOperator = this.logicalOperators[1].label;
-            this.filterTableArray[i].selected = "";
-            this.checkSelected(false);
+            this.last(new_index, range);
+            // this.filterTableArray[0].logicalOperator = "";
+            // if (this.filterTableArray[new_index].logicalOperator == "") {
+            //   this.filterTableArray[new_index].logicalOperator = this.logicalOperators[1].label;
+            // }
+            // this.filterTableArray[new_index].selected = "";
+            // this.checkSelected(false);
           }
           break;
         }
       }
     }
   }
+
+  first(new_index, range) {
+    this.filterTableArray[0].logicalOperator = "";
+    if (!this.filterTableArray[1].logicalOperator) {
+      this.filterTableArray[1].logicalOperator = this.logicalOperators[1].label;
+    }
+    if (range) {
+      this.filterTableArray[new_index].selected = "";
+    }
+    this.checkSelected(false);
+  }
+  last(new_index, range) {
+    this.filterTableArray[0].logicalOperator = "";
+    if (this.filterTableArray[new_index].logicalOperator == "") {
+      this.filterTableArray[new_index].logicalOperator = this.logicalOperators[1].label;
+    }
+    if (range) {
+      this.filterTableArray[new_index].selected = "";
+    }
+    this.checkSelected(false);
+  }
+
   array_move(arr, old_index, new_index) {
+
     while (old_index < 0) {
       old_index += arr.length;
     }
@@ -1193,6 +1253,7 @@ export class DataQualityDetailComponent {
     arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
     return arr;
   }
+
   checkSelected(flag) {
     if (flag == true) {
       this.count.push(flag);
@@ -1202,6 +1263,12 @@ export class DataQualityDetailComponent {
       this.count.pop();
 
     this.moveToEnable = (this.count.length == 1) ? true : false;
+
+  }
+
+  ngOnDestroy() {
+    this.txtQueryChanged.unsubscribe();
+    this.txtQueryChanged1.unsubscribe();
   }
 
 }

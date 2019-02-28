@@ -257,7 +257,7 @@
 
                           <div class="actions">
                             <div class="btn-group btn-group-devided" data-toggle="buttons">
-                              <div class="x_title">{{filterTableArray|json}}
+                              <div class="x_title">
                                 <!-- <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right"
                                   (click)="removeRow()" [disabled]="mode == 'true'"></button>
                                 <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right"
@@ -281,7 +281,7 @@
                                     <li>
                                       <div class="form-group" style="margin: 1%;" *ngIf="filterTableArray">
                                         <input type="number" class="form-control" [(ngModel)]="moveTo" min="0" max="{{filterTableArray.length}}"
-                                          name="moveto" style="border:0" placeholder="Move To" (ngModelChange)="updateArray(moveTo, 'range',$event)"
+                                          name="moveto" style="border:0" placeholder="Move To" (ngModelChange)="updateArray(moveTo-1, 'range', $event)"
                                           focus-me="true" />
                                       </div>
                                     </li>
@@ -470,8 +470,9 @@
                                       <div *ngIf="data.rhsAttribute != null">
                                         <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute.label"
                                           name="rhsAttribute+{{i}}" [disabled]="'true'" style="width:80%;display: inline-block"
-                                          [disabled]="mode == 'true'" #rhsAttribute="ngModel" required placeholder=""
-                                          [ngClass]="{'has-error':myNewForm2.submitted || (rhsAttribute.invalid && (rhsAttribute.dirty || rhsAttribute.touched))}">
+                                          [disabled]="mode == 'true'" placeholder="" >
+                                          <!-- #rhsAttribute="ngModel" required 
+                                          [ngClass]="{'has-error':myNewForm2.submitted || (rhsAttribute.invalid && (rhsAttribute.dirty || rhsAttribute.touched))}" -->
                                         <i class="fa fa-search" (click)="searchOption(data.rhsAttribute, i)" style="width:10%;display:inline-block;padding-left: 7%;"
                                           pTooltip="Search"></i>
                                       </div>

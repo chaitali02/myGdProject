@@ -9,6 +9,7 @@ import { CommonService } from './common.service';
 import { DataQualityIO } from '../domainIO/domain.dataQualityIO';
 import { FilterInfoIO } from '../domainIO/domain.filterInfoIO';
 import * as MetaTypeEnum from '../../metadata/enums/metaType';
+import { AttributeIO } from '../domainIO/domain.attributeIO';
 
 
 
@@ -111,15 +112,19 @@ export class DataQualityService {
               filterInfoIO.rhsType = response.filterInfo[k].operand[1].ref.type;
 
               if (response.filterInfo[k].operand[0].ref.type == MetaTypeEnum.MetaType.FORMULA) {
-                filterInfoIO.lhsAttribute.uuid = response.filterInfo[k].operand[0].ref.uuid;
-                filterInfoIO.lhsAttribute.label = response.filterInfo[k].operand[0].ref.name;
+                let lhsAttribute = new AttributeIO();
+                lhsAttribute.uuid = response.filterInfo[k].operand[0].ref.uuid;
+                lhsAttribute.label = response.filterInfo[k].operand[0].ref.name;
+                filterInfoIO.lhsAttribute = lhsAttribute;
                 dataQualityIO.isFormulaExits = true;
               }
 
               else if (response.filterInfo[k].operand[0].ref.type == MetaTypeEnum.MetaType.DATAPOD) {
-                filterInfoIO.lhsAttribute.uuid = response.filterInfo[k].operand[0].ref.uuid;
-                filterInfoIO.lhsAttribute.label = response.filterInfo[k].operand[0].ref.name + "." + response.filterInfo[k].operand[0].attributeName;
-                filterInfoIO.lhsAttribute.attributeId = response.filterInfo[k].operand[0].attributeId.toString();
+                let lhsAttribute = new AttributeIO();
+                lhsAttribute.uuid = response.filterInfo[k].operand[0].ref.uuid;
+                lhsAttribute.label = response.filterInfo[k].operand[0].ref.name + "." + response.filterInfo[k].operand[0].attributeName;
+                lhsAttribute.attributeId = response.filterInfo[k].operand[0].attributeId.toString();
+                filterInfoIO.lhsAttribute = lhsAttribute;
                 dataQualityIO.isAttributeExits = true;
               }
 
@@ -141,32 +146,42 @@ export class DataQualityService {
 
               if (response.filterInfo[k].operand[1].ref.type == MetaTypeEnum.MetaType.FORMULA) {
                 dataQualityIO.isFormulaExits = true;
-                filterInfoIO.rhsAttribute = response.filterInfo[k].operand[1].ref.name;
-                filterInfoIO.rhsAttribute.uuid = response.filterInfo[k].operand[1].ref.uuid;
-                filterInfoIO.rhsAttribute.label = response.filterInfo[k].operand[1].ref.name;
+                let rhsAttribute = new AttributeIO();
+                rhsAttribute = response.filterInfo[k].operand[1].ref.name;
+                rhsAttribute.uuid = response.filterInfo[k].operand[1].ref.uuid;
+                rhsAttribute.label = response.filterInfo[k].operand[1].ref.name;
+                filterInfoIO.rhsAttribute = rhsAttribute;
               }
               else if (response.filterInfo[k].operand[1].ref.type == MetaTypeEnum.MetaType.DATAPOD) {
                 dataQualityIO.isAttributeExits = true;
-                filterInfoIO.rhsAttribute.uuid = response.filterInfo[k].operand[1].ref.uuid;
-                filterInfoIO.rhsAttribute.label = response.filterInfo[k].operand[1].ref.name + "." + response.filterInfo[k].operand[1].attributeName;
-                filterInfoIO.rhsAttribute.attributeId = response.filterInfo[k].operand[1].attributeId.toString();
+                let rhsAttribute = new AttributeIO();
+                rhsAttribute.uuid = response.filterInfo[k].operand[1].ref.uuid;
+                rhsAttribute.label = response.filterInfo[k].operand[1].ref.name + "." + response.filterInfo[k].operand[1].attributeName;
+                rhsAttribute.attributeId = response.filterInfo[k].operand[1].attributeId.toString();
+                filterInfoIO.rhsAttribute = rhsAttribute;
               }
               else if (response.filterInfo[k].operand[1].ref.type == MetaTypeEnum.MetaType.PARAMLIST) {
                 dataQualityIO.isParamlistExits = true;
-                filterInfoIO.rhsAttribute.uuid = response.filterInfo[k].operand[1].ref.uuid;
-                filterInfoIO.rhsAttribute.attributeId = response.filterInfo[k].operand[1].attributeId;
-                filterInfoIO.rhsAttribute.label = "app." + response.filterInfo[k].operand[1].attributeName;
+                let rhsAttribute = new AttributeIO();
+                rhsAttribute.uuid = response.filterInfo[k].operand[1].ref.uuid;
+                rhsAttribute.attributeId = response.filterInfo[k].operand[1].attributeId;
+                rhsAttribute.label = "app." + response.filterInfo[k].operand[1].attributeName;
+                filterInfoIO.rhsAttribute = rhsAttribute;
               }
               else if (response.filterInfo[k].operand[1].ref.type == MetaTypeEnum.MetaType.FUNCTION) {
                 dataQualityIO.isFunctionExits = true;
-                filterInfoIO.rhsAttribute.uuid = response.filterInfo[k].operand[1].ref.uuid;
-                filterInfoIO.rhsAttribute.label = response.filterInfo[k].operand[1].ref.name;
+                let rhsAttribute = new AttributeIO();
+                rhsAttribute.uuid = response.filterInfo[k].operand[1].ref.uuid;
+                rhsAttribute.label = response.filterInfo[k].operand[1].ref.name;
+                filterInfoIO.rhsAttribute = rhsAttribute;
               }
               else if (response.filterInfo[k].operand[1].ref.type == MetaTypeEnum.MetaType.DATASET) {
                 dataQualityIO.isDatasetExits = true;
-                filterInfoIO.rhsAttribute.uuid = response.filterInfo[k].operand[1].ref.uuid;
-                filterInfoIO.rhsAttribute.attributeId = response.filterInfo[k].operand[1].attributeId;
-                filterInfoIO.rhsAttribute.label = response.filterInfo[k].operand[1].attributeName;
+                let rhsAttribute = new AttributeIO();
+                rhsAttribute.uuid = response.filterInfo[k].operand[1].ref.uuid;
+                rhsAttribute.attributeId = response.filterInfo[k].operand[1].attributeId;
+                rhsAttribute.label = response.filterInfo[k].operand[1].attributeName;
+                filterInfoIO.rhsAttribute = rhsAttribute;
               }
               else if (response.filterInfo[k].operand[1].ref.type == MetaTypeEnum.MetaType.SIMPLE) {
                 let stringValue = response.filterInfo[k].operand[1].value;
