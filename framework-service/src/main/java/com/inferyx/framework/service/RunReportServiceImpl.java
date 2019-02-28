@@ -306,7 +306,7 @@ public class RunReportServiceImpl implements Callable<TaskHolder> {
 			if(senderInfo != null) {				
 				if(isSuccessful && senderInfo.getNotifOnSuccess().equalsIgnoreCase("Y")) {
 					synchronized (reportExec.getUuid()) {
-						reportServiceImpl.sendSuccessNotification(senderInfo, tableName, report, reportExec);
+						reportServiceImpl.sendSuccessNotification(senderInfo, tableName, report, reportExec, runMode);
 					}
 				} else if(!isSuccessful && senderInfo.getNotifyOnFailure().equalsIgnoreCase("Y")) {
 					reportServiceImpl.sendFailureNotification(senderInfo, report, reportExec);

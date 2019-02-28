@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -30,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.spark.sql.SaveMode;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -288,53 +290,70 @@ public class ReportServiceImpl extends RuleTemplate {
 	public HttpServletResponse download(String reportExecUuid, String reportExecVersion, String format, int offset,
 			int limit, HttpServletResponse response, int rowLimit, String sortBy, String order, String requestId,
 			RunMode runMode) throws Exception {
-		
-		datastoreServiceImpl.setRunMode(runMode);		
+
 		ReportExec reportExec = (ReportExec) commonServiceImpl.getOneByUuidAndVersion(reportExecUuid, reportExecVersion,
-				MetaType.reportExec.toString());
-		DataStore datastore = dataStoreServiceImpl.getDatastore(reportExec.getResult().getRef().getUuid(),
-				reportExec.getResult().getRef().getVersion());
-		if (datastore == null) {
-			logger.error("Datastore is not available.");
-			throw new Exception("Datastore is not available.");
+				MetaType.reportExec.toString(), "N");
+		MetaIdentifier dependsOnMI = reportExec.getDependsOn().getRef();
+		if(dependsOnMI.getVersion() == null) {
+			Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(), dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
+			dependsOnMI.setVersion(report.getVersion());
 		}
 		
-		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
-		if (rowLimit > maxRows) {
-			logger.error("Requested rows exceeded the limit of " + maxRows);
-			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
-			dependsOn.setRef(new MetaIdentifier(MetaType.reportExec, reportExec.getUuid(), reportExec.getVersion()));
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
-					"Requested rows exceeded the limit of " + maxRows, dependsOn);
-			throw new RuntimeException("Requested rows exceeded the limit of " + maxRows);
+		Workbook workbook = null;
+		
+		String defaultDownloadPath = Helper.getPropertyValue("framework.file.download.path"); 
+		defaultDownloadPath = defaultDownloadPath.endsWith("/") ? defaultDownloadPath : defaultDownloadPath.concat("/");
+		String reportFileName = String.format("%s_%s_%s.%s", dependsOnMI.getUuid().replaceAll("-", "_"), dependsOnMI.getVersion(), reportExec.getVersion(), "xls");
+		String filePathUrl = defaultDownloadPath.concat(reportFileName);		
+		
+		File file = new File(filePathUrl);
+		if(file.exists()) {
+			 workbook = WorkbookFactory.create(file);
+		} else {
+			DataStore datastore = dataStoreServiceImpl.getDatastore(reportExec.getResult().getRef().getUuid(),
+					reportExec.getResult().getRef().getVersion());
+			if (datastore == null) {
+				logger.error("Datastore is not available.");
+				throw new Exception("Datastore is not available.");
+			}
+			
+			int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
+			if (rowLimit > maxRows) {
+				logger.error("Requested rows exceeded the limit of " + maxRows);
+				MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+				dependsOn.setRef(new MetaIdentifier(MetaType.reportExec, reportExec.getUuid(), reportExec.getVersion()));
+				commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
+						"Requested rows exceeded the limit of " + maxRows, dependsOn);
+				throw new RuntimeException("Requested rows exceeded the limit of " + maxRows);
+			}
+
+			datastoreServiceImpl.setRunMode(runMode);
+			List<Map<String, Object>> data = datastoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, rowLimit, null, null);		
+			workbook = workbookUtil.getWorkbookForReport(data, reportExec);
+			
+			DownloadExec downloadExec = new DownloadExec();
+			downloadExec.setBaseEntity();
+			downloadExec.setLocation(filePathUrl);
+			downloadExec.setDependsOn(datastore.getMetaId());
+			
+//		    String downloadPath = Helper.getPropertyValue("framework.file.download.path");
+//		    String filename = downloadExec.getUuid() + "_" + downloadExec.getVersion() + ".xls";
+//		    String fileLocation = downloadPath + "/" + filename;
+
+			FileOutputStream fileOut = new FileOutputStream(filePathUrl);
+			workbook.write(fileOut);		
+			fileOut.close();
+
+			commonServiceImpl.save(MetaType.downloadExec.toString(), downloadExec);	
 		}
 		
-		List<Map<String, Object>> data = datastoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, rowLimit, null, null);		
-		Workbook workbook = workbookUtil.getWorkbookForReport(data, reportExec);
-
-		DownloadExec downloadExec = new DownloadExec();
-		
-	    String downloadPath = Helper.getPropertyValue("framework.file.download.path");
-	    String filename = downloadExec.getUuid() + "_" + downloadExec.getVersion() + ".xls";
-	    String fileLocation = downloadPath + "/" + filename;
-
-		FileOutputStream fileOut = new FileOutputStream(fileLocation);
-		workbook.write(fileOut);		
-		fileOut.close();
-		
-		downloadExec.setBaseEntity();
-		downloadExec.setLocation(fileLocation);
-		downloadExec.setDependsOn(datastore.getMetaId());
 		if(response != null) {
 			try {
 				response.setContentType("application/pdf");
 				response.setHeader("Content-disposition", "attachment");
-				response.setHeader("filename", "" + reportExecUuid+"_"+reportExecUuid + ".xls");
-				ServletOutputStream os = response.getOutputStream();
-				workbook.write(os);
-
-				commonServiceImpl.save(MetaType.downloadExec.toString(), downloadExec);	
-
+				response.setHeader("filename", reportFileName);
+				ServletOutputStream servletOutputStream = response.getOutputStream();
+				workbook.write(servletOutputStream);
 			} catch (IOException e) {
 				e.printStackTrace();
 				logger.error("Can not download file.");
@@ -434,11 +453,9 @@ public class ReportServiceImpl extends RuleTemplate {
 	}
 	
 	public boolean sendSuccessNotification(SenderInfo senderInfo, String tempTableName, Report report,
-			ReportExec reportExec) throws IOException, IllegalAccessException, IllegalArgumentException,
-			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			ReportExec reportExec, RunMode runMode) throws Exception {
 		logger.info("sending success notification...");
 		Notification notification = new Notification();
-		String appUuid = commonServiceImpl.getApp().getUuid();
 
 		String subject = Helper.getPropertyValue("framework.email.subject");
 		subject = MessageFormat.format(subject, "SUCCESS", "Report", report.getName(), "completed");
@@ -452,26 +469,17 @@ public class ReportServiceImpl extends RuleTemplate {
 		message = MessageFormat.format(message, resultUrl);
 		notification.setMessage(message);
 
-		if (senderInfo.getSendAttachment().equalsIgnoreCase("Y")) {
-			String reportDefaultPath = Helper.getPropertyValue("framework.report.Path");
-			reportDefaultPath = reportDefaultPath.endsWith("/") ? reportDefaultPath : reportDefaultPath.concat("/");
-			reportDefaultPath = reportDefaultPath.concat(report.getName()).concat("/");
-			String reportPath = String.format("%s/%s/%s", report.getUuid(), report.getVersion(),
-					reportExec.getVersion());
-			reportDefaultPath = reportDefaultPath.concat(reportPath);
+		if (senderInfo.getSendAttachment().equalsIgnoreCase("Y")) {			
+			download(reportExec.getUuid(), reportExec.getVersion(), "excel", 0, 200, null, 200, null, null, null,
+					runMode);
 
-			String csvFilePathUrl = hdfsInfo.getHdfsURL().concat(reportDefaultPath);
-			sparkExecutor.saveDataframeAsCSV(tempTableName, csvFilePathUrl, appUuid);
-
-			String reportFileName = String.format("%s_%s_%s", report.getUuid().replaceAll("-", "_"),
-					report.getVersion(), reportExec.getVersion());
-
-			reportDefaultPath = commonServiceImpl.renameFileAndGetFilePathFromDir(reportDefaultPath, reportFileName,
-					FileType.CSV.toString().toLowerCase());
+			String defaultDownloadPath = Helper.getPropertyValue("framework.file.download.path"); 
+			defaultDownloadPath = defaultDownloadPath.endsWith("/") ? defaultDownloadPath : defaultDownloadPath.concat("/");
+			String reportFileName = String.format("%s_%s_%s.%s", report.getUuid().replaceAll("-", "_"), report.getVersion(), reportExec.getVersion(), "xls");
+			String filePathUrl = defaultDownloadPath.concat(reportFileName);	
 
 			Map<String, String> emailAttachment = new HashMap<>();
-			emailAttachment.put(reportFileName.concat(".").concat(FileType.CSV.toString().toLowerCase()),
-					reportDefaultPath);
+			emailAttachment.put(reportFileName, filePathUrl);
 			senderInfo.setEmailAttachment(emailAttachment);
 		}
 		notification.setSenderInfo(senderInfo);
