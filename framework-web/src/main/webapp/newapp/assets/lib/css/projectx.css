@@ -1310,3 +1310,12 @@ cursor: not-allowed !important;
 .switch.checked {
   width: 40px !important;
 }
+
+/* -- new automap -- */
+.btn.btn-outline.green-haze:hover, .btn.btn-outline.green-haze:active,
+ .btn.btn-outline.green-haze:active:hover, .btn.btn-outline.green-haze:active:focus,
+ .btn.btn-outline.green-haze:focus, .btn.btn-outline.green-haze.active{
+  border-color: #a0a0a0;
+  color: #ffffff;
+  background-color: #a0a0a0;
+}
