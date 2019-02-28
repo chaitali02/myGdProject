@@ -900,7 +900,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
         $scope.sectionRows[i].columns[j].isChartDataGrid = true;
         $scope.sectionRows[i].columns[j].isChartShow = true;
         $scope.sectionRows[i].columns[j].isDataGridShow = false;
-        if($scope.sectionRows[i].columns[j].vizpodInfo.keys[0] !='formual'){
+        if($scope.sectionRows[i].columns[j].vizpodInfo.keys[0].ref.type !='formula'){
           datax.id = $scope.sectionRows[i].columns[j].vizpodInfo.keys[0].attributeName;//x value
         }else{
           datax.id = $scope.sectionRows[i].columns[j].vizpodInfo.keys[0].ref.name;
