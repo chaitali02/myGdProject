@@ -251,7 +251,6 @@ public class RunReportServiceImpl implements Callable<TaskHolder> {
 	}
 	
 	public ReportExec execute() throws Exception {
-		boolean isSuccessful = true;
 		String tableName = null;
 		try {
 			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
@@ -284,7 +283,6 @@ public class RunReportServiceImpl implements Callable<TaskHolder> {
 			reportExec = (ReportExec) commonServiceImpl.setMetaStatus(reportExec, MetaType.reportExec, Status.Stage.Completed);
 		} catch (Exception e) { 
 			e.printStackTrace();
-			isSuccessful = false;
 			// Set status to Failed
 			try {
 				reportExec = (ReportExec) commonServiceImpl.setMetaStatus(reportExec, MetaType.reportExec, Status.Stage.Failed);
@@ -303,12 +301,13 @@ public class RunReportServiceImpl implements Callable<TaskHolder> {
 			throw new RuntimeException((message != null) ? message : "Report execution failed.");
 		} finally {
 			SenderInfo senderInfo = report.getSenderInfo();
-			if(senderInfo != null) {				
-				if(isSuccessful && senderInfo.getNotifOnSuccess().equalsIgnoreCase("Y")) {
+			if(senderInfo != null) {
+				Status latestStatus = Helper.getLatestStatus(reportExec.getStatusList());
+				if(latestStatus.getStage().equals(Status.Stage.Completed) && senderInfo.getNotifOnSuccess().equalsIgnoreCase("Y")) {
 					synchronized (reportExec.getUuid()) {
-						reportServiceImpl.sendSuccessNotification(senderInfo, tableName, report, reportExec);
+						reportServiceImpl.sendSuccessNotification(senderInfo, tableName, report, reportExec, runMode);
 					}
-				} else if(!isSuccessful && senderInfo.getNotifyOnFailure().equalsIgnoreCase("Y")) {
+				} else if(latestStatus.getStage().equals(Status.Stage.Failed) && senderInfo.getNotifyOnFailure().equalsIgnoreCase("Y")) {
 					reportServiceImpl.sendFailureNotification(senderInfo, report, reportExec);
 				}
 			}

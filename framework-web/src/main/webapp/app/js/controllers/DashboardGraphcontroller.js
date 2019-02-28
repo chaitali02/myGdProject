@@ -746,6 +746,12 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
   }
 
   $scope.openFilterPopup = function () {
+    if($scope.checkIsInrogess () ==false){
+			return false;
+    }
+    if($scope.dashboarddata.filterInfo !=null && $scope.dashboarddata.filterInfo.length ==0){
+      return false
+    }
     if ($scope.filterAttribureIdValues == null) {
       $scope.getFilterValue($scope.dashboarddata);
     }
