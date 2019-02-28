@@ -48,7 +48,6 @@ import com.inferyx.framework.domain.DashboardExec;
 import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataQualGroupExec;
 import com.inferyx.framework.domain.ExecParams;
-import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.IngestExec;
 import com.inferyx.framework.domain.IngestGroupExec;
 import com.inferyx.framework.domain.LoadExec;
@@ -1480,7 +1479,7 @@ public class DagServiceImpl {
 							for (TaskOperator taskOperator : taskExec.getOperators()) {
 								MetaIdentifier meta = taskOperator.getOperatorInfo().get(0).getRef();
 								BaseExec baseExec = (BaseExec) commonServiceImpl.getOneByUuidAndVersion(meta.getUuid(), meta.getVersion(), meta.getType().toString(), "N");
-								if (helper.isStatusPresent(new Status(Status.Stage.Ready, new Date()), baseExec.getStatusList())) {
+								if (Helper.isStatusPresent(new Status(Status.Stage.Ready, new Date()), baseExec.getStatusList())) {
 									commonServiceImpl.setMetaStatus(baseExec, meta.getType(), Status.Stage.Ready);
 								} else {
 									commonServiceImpl.setMetaStatus(baseExec, meta.getType(), Status.Stage.NotStarted);
@@ -1491,14 +1490,14 @@ public class DagServiceImpl {
 							taskExec = (TaskExec) commonServiceImpl.setMetaStatusForTask(dagExec, taskExec, operatorLeastSigStatus.getStage(),dagExec.getStages().get(i).getStageId(), dagExec.getStages().get(i).getTasks().get(j).getTaskId());
 							dagExec.getStages().get(i).getTasks().remove(j);
 							dagExec.getStages().get(i).getTasks().add(j, taskExec); 
-							taskLeastSigStatus = new Status(helper.getPriorStatus(taskLeastSigStatus.getStage(), operatorLeastSigStatus.getStage()), new Date());
+							taskLeastSigStatus = new Status(Helper.getPriorStatus(taskLeastSigStatus.getStage(), operatorLeastSigStatus.getStage()), new Date());
 						}	
 					} // End tasks
 					logger.info(" Setting stage to " + taskLeastSigStatus.getStage());
 					stageExec = (StageExec) commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, taskLeastSigStatus.getStage(), stageExec.getStageId());
 					dagExec.getStages().remove(i);
 					dagExec.getStages().add(i, stageExec);
-					stageLeastSigStatus = new Status(helper.getPriorStatus(stageLeastSigStatus.getStage(), taskLeastSigStatus.getStage()), new Date());
+					stageLeastSigStatus = new Status(Helper.getPriorStatus(stageLeastSigStatus.getStage(), taskLeastSigStatus.getStage()), new Date());
 				}
 			} // End stages
 				logger.info(" Setting dag to " + stageLeastSigStatus.getStage());
@@ -1628,10 +1627,13 @@ public class DagServiceImpl {
 		subject = MessageFormat.format(subject, "SUCCESS", "Dag", dag.getName(), "completed");
 		notification.setSubject(subject);
 
+		String roleUuid = sessionHelper.getSessionContext().getRoleInfo().getRef().getUuid();
+		String appUuid = sessionHelper.getSessionContext().getAppInfo().getRef().getUuid();
+		
 		String resultUrl = Helper.getPropertyValue("framework.url.dag.result");
 		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.webserver.host"),
 				Helper.getPropertyValue("framework.webserver.port"), dagExec.getUuid(), dagExec.getVersion(),
-				MetaType.dagExec.toString().toLowerCase());
+				MetaType.dagExec.toString().toLowerCase(), roleUuid, appUuid);
 
 		String message = Helper.getPropertyValue("framework.email.body");
 		message = MessageFormat.format(message, resultUrl);
@@ -1653,11 +1655,14 @@ public class DagServiceImpl {
 		String subject = Helper.getPropertyValue("framework.email.subject");
 		subject = MessageFormat.format(subject, "FAILURE", "Dag", dag.getName(), "failed");
 		notification.setSubject(subject);
+
+		String roleUuid = sessionHelper.getSessionContext().getRoleInfo().getRef().getUuid();
+		String appUuid = sessionHelper.getSessionContext().getAppInfo().getRef().getUuid();
 		
 		String resultUrl = Helper.getPropertyValue("framework.url.dag.result");
 		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.webserver.host"),
 				Helper.getPropertyValue("framework.webserver.port"), dagExec.getUuid(), dagExec.getVersion(),
-				MetaType.dagExec.toString().toLowerCase());
+				MetaType.dagExec.toString().toLowerCase(), roleUuid, appUuid);
 
 		String message = Helper.getPropertyValue("framework.email.body");
 		message = MessageFormat.format(message, resultUrl);

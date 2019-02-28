@@ -461,9 +461,12 @@ public class ReportServiceImpl extends RuleTemplate {
 		subject = MessageFormat.format(subject, "SUCCESS", "Report", report.getName(), "completed");
 		notification.setSubject(subject);
 
+		String roleUuid = sessionHelper.getSessionContext().getRoleInfo().getRef().getUuid();
+		String appUuid = sessionHelper.getSessionContext().getAppInfo().getRef().getUuid();
+		
 		String resultUrl = Helper.getPropertyValue("framework.url.report.result.success");
 		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.webserver.host"),
-				Helper.getPropertyValue("framework.webserver.port"), reportExec.getUuid(), reportExec.getVersion());
+				Helper.getPropertyValue("framework.webserver.port"), reportExec.getUuid(), reportExec.getVersion(), roleUuid, appUuid);
 
 		String message = Helper.getPropertyValue("framework.email.body");
 		message = MessageFormat.format(message, resultUrl);
@@ -495,9 +498,12 @@ public class ReportServiceImpl extends RuleTemplate {
 		subject = MessageFormat.format(subject, "FAILURE", "Report", report.getName(), "failed");
 		notification.setSubject(subject);
 
+		String roleUuid = sessionHelper.getSessionContext().getRoleInfo().getRef().getUuid();
+		String appUuid = sessionHelper.getSessionContext().getAppInfo().getRef().getUuid();
+		
 		String resultUrl = Helper.getPropertyValue("framework.url.report.result.failure");
 		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.webserver.host"),
-				Helper.getPropertyValue("framework.webserver.port"));
+				Helper.getPropertyValue("framework.webserver.port"), roleUuid, appUuid);
 
 		String message = Helper.getPropertyValue("framework.email.body");
 		message = MessageFormat.format(message, resultUrl);
