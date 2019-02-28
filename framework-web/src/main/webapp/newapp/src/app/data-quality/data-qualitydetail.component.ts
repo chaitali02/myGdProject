@@ -25,11 +25,8 @@ import * as MetaTypeEnum from '../metadata/enums/metaType';
 import { SourceAttr } from '../metadata/domain/domain.sourceAttr';
 import { Subject, fromEvent } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-<<<<<<< HEAD
 import { DataQualityIO } from '../metadata/domainIO/domain.dataQualityIO';
-=======
 import { RoutesParam } from '../metadata/domain/domain.routeParams';
->>>>>>> 18f4a32fa3942bf4a709062e1b2ed6d8c36cb1c3
 @Component({
   selector: 'app-data-pipeli',
   templateUrl: './data-qualitydetail.template.html',
@@ -511,7 +508,6 @@ export class DataQualityDetailComponent {
   }
 
   onSuccessgetAllLatestDialogBox(response, data) {
-    debugger
     this.dialogAttriArray = [];
     let temp = [];
     for (const i in response) {
@@ -548,7 +544,7 @@ export class DataQualityDetailComponent {
   }
 
   onSuccessgetAttributesByDatasetDialogBox(response, data) {
-    debugger
+
     this.dialogAttriNameArray = [];
     for (const i in response) {
       let dialogAttriNameObj = new AttributeIO();

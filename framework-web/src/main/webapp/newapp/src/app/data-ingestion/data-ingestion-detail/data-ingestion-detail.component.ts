@@ -23,6 +23,8 @@ import { FilterInfo } from '../../metadata/domain/domain.filterInfo';
 import { FilterInfoIO } from '../../metadata/domainIO/domain.filterInfoIO';
 import { Function } from '../../metadata/domain/domain.function';
 import { ParamListHolder } from '../../metadata/domain/domain.paramListHolder';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 @Component({
   selector: 'app-data-ingestion-detail',
   templateUrl: './data-ingestion-detail.component.html'
@@ -112,6 +114,13 @@ export class DataIngestionDetailComponent implements OnInit {
   locked: any;
   targetHeader: any;
   metaType: any;
+  moveToEnable: boolean;
+  count: any[];
+  txtQueryChanged: Subject<string> = new Subject<string>();
+  topDisabled: boolean;
+  bottomDisabled: boolean;
+  invalideRowNo0: boolean =false;
+  invalideRowNo1: boolean =false;
   constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _dataInjectService: DataIngestionService, private appHelper: AppHelper) {
     this.metaType = MetaTypeEnum.MetaType;
     this.isSubmit = "false"
@@ -127,6 +136,8 @@ export class DataIngestionDetailComponent implements OnInit {
     this.dialogAttributeName = {};
     this.continueCount = 1;
     this.progressbarWidth = 25 * this.continueCount + "%";
+    this.topDisabled = false;
+    this.bottomDisabled = false;
     this.breadcrumbDataFrom = [{
       "caption": "Data Ingestion",
       "routeurl": "/app/list/ingest"
@@ -140,6 +151,16 @@ export class DataIngestionDetailComponent implements OnInit {
       "routeurl": null
     }
     ];
+
+    this.moveToEnable = false;
+    this.count = [];
+
+    this.txtQueryChanged
+      .pipe(debounceTime(3000), distinctUntilChanged())
+      .subscribe(index => {
+        this.filterTableArray[index].selected = "";
+        this.checkSelected(false,null);
+      });
 
     this.ruleTypes = [
       { "value": "FILE-FILE", "label": "File - File" },
@@ -168,12 +189,12 @@ export class DataIngestionDetailComponent implements OnInit {
       { "value": "", "label": "-Select-" }
     ]
     this.operators = [
+      { 'value': '=', 'label': 'EQUAL TO(=)' },
+      { 'value': '!=', 'label': 'NOT EQUAL(!=)' },
       { 'value': '<', 'label': 'LESS THAN(<)' },
       { 'value': '>', 'label': 'GREATER THAN(>)' },
       { 'value': '<=', 'label': 'LESS OR  EQUAL(<=)' },
       { 'value': '>=', 'label': 'GREATER OR EQUAL(>=)' },
-      { 'value': '=', 'label': 'EQUAL TO(=)' },
-      { 'value': '!=', 'label': 'NOT EQUAL(!=)' },
       { 'value': 'BETWEEN', 'label': 'BETWEEN' },
       { 'value': 'LIKE', 'label': 'LIKE' },
       { 'value': 'NOT LIKE', 'label': 'NOT LIKE' },
@@ -610,7 +631,6 @@ export class DataIngestionDetailComponent implements OnInit {
 
     if (this.attributeTableArray.length == 0 && this.selectedSourceType == "TABLE" && this.selectedTargetType == "FILE") {
       for (let i = 0; i < this.allSourceAttribute.length; i++) {
-
         // var attributemapjson = {};
 
         var attributemapjson = new AttributeMapIO
@@ -776,16 +796,19 @@ export class DataIngestionDetailComponent implements OnInit {
   }
 
   addRow() {
-    if (this.filterTableArray == null) {
-      // this.filterTableArray = [];
-    }
-    var len = this.filterTableArray.length + 1
     var filertable = new FilterInfoIO;
-    filertable.logicalOperator = ""
-    filertable.lhsType = "integer"
+    if (this.filterTableArray == null || this.filterTableArray.length == 0) {
+      this.filterTableArray = [];
+      filertable.logicalOperator = '';
+    }
+    else{
+      filertable.logicalOperator = this.logicalOperators[1].label;
+    }
+    var len = this.filterTableArray.length + 1;
+    filertable.lhsType = "string"
     filertable.lhsAttribute = null
-    filertable.operator = ""
-    filertable.rhsType = "integer"
+    filertable.operator = this.operators[0].label;
+    filertable.rhsType = "string"
     filertable.rhsAttribute = null
     this.filterTableArray.splice(this.filterTableArray.length, 0, filertable);
   }
@@ -852,7 +875,7 @@ export class DataIngestionDetailComponent implements OnInit {
   onChangeRhsType(index: any) {
     this.filterTableArray[index].rhsAttribute == null;
 
-    if (this.filterTableArray[index].rhsType = 'formula') {
+    if (this.filterTableArray[index].rhsType == 'formula') {
       if (this.selectedSourceType == 'TABLE') {
         this._commonService.getFormulaByType(this.sourceTypeName.uuid, this.sourceType)
           .subscribe(response => { this.onSuccessgetFormulaByType(response) },
@@ -1004,7 +1027,8 @@ export class DataIngestionDetailComponent implements OnInit {
 
   onChangeOperator(index: any) {
     this.filterTableArray[index].rhsAttribute = null;
-    if (this.filterTableArray[index].operator == 'EXISTS' || this.filterTableArray[index].operator == 'NOT EXISTS') {
+    if (this.filterTableArray[index].operator == 'EXISTS' || this.filterTableArray[index].operator == 'NOT EXISTS' ||
+    this.filterTableArray[index].operator == 'IN' || this.filterTableArray[index].operator == 'NOT IN') {
       this.filterTableArray[index].rhsType = 'dataset';
       let rhsAttribute = new AttributeIO();
       rhsAttribute.label = "-Select-";
@@ -1094,21 +1118,14 @@ export class DataIngestionDetailComponent implements OnInit {
           var mapInfo = new AttributeMapIO();
           mapInfo.attrMapId = i;
           mapInfo.sourceType = "datapod";
-          mapInfo.sourceAttribute =  temp[i].targetAttribute.attrName;
-          // let obj = {};
-          // obj["uuid"] = temp[i]["targetAttribute"]["uuid"];
-          // obj["label"] = temp[i]["targetAttribute"]["label"];
-          // obj["type"] = temp[i]["targetAttribute"]["type"];
-          // obj["attrName"] = temp[i]["targetAttribute"]["attrName"];
-          // obj["attributeId"] = temp[i]["targetAttribute"]["attributeId"];
 
+          mapInfo.sourceAttribute = temp[i].targetAttribute.attrName;
           mapInfo.targetAttribute.uuid = temp[i].targetAttribute.uuid;
           mapInfo.targetAttribute.label = temp[i].targetAttribute.label;
           mapInfo.targetAttribute.type = temp[i].targetAttribute.type;
           mapInfo.targetAttribute.attrName = temp[i].targetAttribute.attrName;
           mapInfo.targetAttribute.attributeId = temp[i].targetAttribute.attributeId;
 
-         // mapInfo["targetAttribute"] = obj;
           mapInfo.IsTargetAttributeSimple = "false";
 
           this.attributeTableArray[i] = mapInfo;
@@ -1155,7 +1172,7 @@ export class DataIngestionDetailComponent implements OnInit {
       }
       else if (this.selectedSourceType == "FILE" && this.selectedTargetType == "FILE" && this.selectedAutoMode == "FromTarget") {
         for (var i = 0; i < temp.length; i++) {
-          var mapInfo =new AttributeMapIO();
+          var mapInfo = new AttributeMapIO();
           mapInfo.attrMapId = i;
           mapInfo.sourceType = "datapod";
           mapInfo.sourceAttribute = temp[i].targetAttribute;
@@ -1166,7 +1183,7 @@ export class DataIngestionDetailComponent implements OnInit {
       }
       else if (this.selectedSourceType == "STREAM" && this.selectedTargetType == "FILE" && this.selectedAutoMode == "FromSource") {
         for (var i = 0; i < temp.length; i++) {
-          var mapInfo =new AttributeMapIO();
+          var mapInfo = new AttributeMapIO();
           mapInfo.attrMapId = i;
           mapInfo.sourceType = "datapod";
           mapInfo.sourceAttribute = temp[i].sourceAttribute;
@@ -1178,7 +1195,7 @@ export class DataIngestionDetailComponent implements OnInit {
     }
   }
 
-  searchOption(index : any) {
+  searchOption(index: any) {
     this.displayDialogBox = true;
     this._commonService.getAllLatest(MetaTypeEnum.MetaType.DATASET)
       .subscribe(response => { this.onSuccessgetAllLatestDialogBox(response) },
@@ -1219,7 +1236,7 @@ export class DataIngestionDetailComponent implements OnInit {
     }
   }
 
-  submitDialogBox(index : any) {
+  submitDialogBox(index: any) {
     this.displayDialogBox = false;
     let rhsattribute = new AttributeIO()
     rhsattribute.label = this.dialogAttributeName.label;
@@ -1368,7 +1385,7 @@ export class DataIngestionDetailComponent implements OnInit {
     this.attributeTableArray = response.attributeMap;
     console.log(JSON.stringify(this.attributeTableArray))
   }
-
+  //--------------------------------------------------------------------------------------------------------------------------
   ingestSubmit() {
     this.isSubmit = "true"
     let ingestJson = {}
@@ -1744,5 +1761,73 @@ export class DataIngestionDetailComponent implements OnInit {
       this.isSubmit = "true"
     }
 
+  }
+
+  updateArray(new_index, range, event) {
+    for (let i = 0; i < this.filterTableArray.length; i++) {
+      if (this.filterTableArray[i].selected) {
+        let old_index = i;
+        this.array_move(this.filterTableArray, old_index, new_index);
+        if (range) {
+          this.txtQueryChanged.next(event);
+        }
+        else if (new_index == 0 || new_index == 1) {
+          this.filterTableArray[0].logicalOperator = "";
+          if (!this.filterTableArray[1].logicalOperator) {
+            this.filterTableArray[1].logicalOperator = this.logicalOperators[1].label;
+          }
+          this.filterTableArray[new_index].selected = "";
+          this.checkSelected(false,old_index);
+        }
+        else if (new_index == this.filterTableArray.length - 1) {
+          this.filterTableArray[0].logicalOperator = "";
+          this.filterTableArray[new_index].logicalOperator = this.logicalOperators[1].label;
+          this.filterTableArray[i].selected = "";
+          this.checkSelected(false,old_index);
+        }
+        break;
+      }
+    }
+  }
+  array_move(arr, old_index, new_index) {
+    while (old_index < 0) {
+      old_index += arr.length;
+    }
+    while (new_index < 0) {
+      new_index += arr.length;
+    }
+    if (new_index >= arr.length) {
+      var k = new_index - arr.length + 1;
+      while (k--) {
+        arr.push(undefined);
+      }
+    }
+    arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+    return arr;
+  }
+  checkSelected(flag:any,index:any) {debugger
+    if (flag == true) {
+      this.count.push(flag);
+    }
+    else{
+      this.count.pop();
+    }
+    this.moveToEnable = (this.count.length == 1) ? true : false;
+
+    if(index != null){
+      if(index == 0 && flag == true ){
+        this.topDisabled = true;
+      }
+      else{
+        this.topDisabled = false;
+      }
+
+      if(index == (this.filterTableArray.length - 1) && flag == true){
+        this.bottomDisabled = true;
+      }
+      else{
+        this.bottomDisabled = false;
+      }
+    }
   }
 }

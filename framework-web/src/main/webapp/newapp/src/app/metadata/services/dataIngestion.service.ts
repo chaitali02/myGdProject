@@ -100,7 +100,6 @@ export class DataIngestionService {
 		return this._commonService.getOneByUuidAndVersion(uuid, version, type)
 			.pipe(
 				map(response=> {
-
 					let dataIngestIO = new DataIngestRuleIO();
 					dataIngestIO.ingestRule = response;
 

@@ -271,7 +271,7 @@
                                   </a>
                                   <ul class="dropdown-menu pull-right" style="z-index:10000;top:28px;right:45px;position:absolute">
                                     <li (click)="updateArray(0, '')">
-                                      <a href="javascript:;" ng-disabled="fitlerAttrTableSelectedItem[0]==0?true:false">Top</a>
+                                      <a href="javascript:;" [attr.disabled]="fitlerAttrTableSelectedItem[0]==0?true:null">Top</a>
                                     </li>
                                     <li class="divider" style="margin: 0px;"> </li>
                                     <li (click)="updateArray(filterTableArray.length-1, '')">
