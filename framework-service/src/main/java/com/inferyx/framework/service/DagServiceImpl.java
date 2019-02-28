@@ -1629,10 +1629,11 @@ public class DagServiceImpl {
 		notification.setSubject(subject);
 
 		String resultUrl = Helper.getPropertyValue("framework.url.dag.result");
-		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.app.domain.name"),
-				dagExec.getUuid(), dagExec.getVersion(), MetaType.dagExec.toString().toLowerCase());
+		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.webserver.host"),
+				Helper.getPropertyValue("framework.webserver.port"), dagExec.getUuid(), dagExec.getVersion(),
+				MetaType.dagExec.toString().toLowerCase());
 
-		String message = Helper.getPropertyValue("framework.email.message");
+		String message = Helper.getPropertyValue("framework.email.body");
 		message = MessageFormat.format(message, resultUrl);
 		notification.setMessage(message);
 		notification.setSenderInfo(senderInfo);
@@ -1654,10 +1655,11 @@ public class DagServiceImpl {
 		notification.setSubject(subject);
 		
 		String resultUrl = Helper.getPropertyValue("framework.url.dag.result");
-		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.app.domain.name"),
-				dagExec.getUuid(), dagExec.getVersion(), MetaType.dagExec.toString().toLowerCase());
-		
-		String message = Helper.getPropertyValue("framework.email.message");
+		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.webserver.host"),
+				Helper.getPropertyValue("framework.webserver.port"), dagExec.getUuid(), dagExec.getVersion(),
+				MetaType.dagExec.toString().toLowerCase());
+
+		String message = Helper.getPropertyValue("framework.email.body");
 		message = MessageFormat.format(message, resultUrl);
 		notification.setMessage(message);
 		
