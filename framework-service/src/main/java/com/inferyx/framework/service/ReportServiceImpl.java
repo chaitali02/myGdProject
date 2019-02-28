@@ -445,10 +445,10 @@ public class ReportServiceImpl extends RuleTemplate {
 		notification.setSubject(subject);
 
 		String resultUrl = Helper.getPropertyValue("framework.url.report.result.success");
-		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.app.domain.name"),
-				reportExec.getUuid(), reportExec.getVersion());
+		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.webserver.host"),
+				Helper.getPropertyValue("framework.webserver.port"), reportExec.getUuid(), reportExec.getVersion());
 
-		String message = Helper.getPropertyValue("framework.email.message");
+		String message = Helper.getPropertyValue("framework.email.body");
 		message = MessageFormat.format(message, resultUrl);
 		notification.setMessage(message);
 
@@ -488,9 +488,10 @@ public class ReportServiceImpl extends RuleTemplate {
 		notification.setSubject(subject);
 
 		String resultUrl = Helper.getPropertyValue("framework.url.report.result.failure");
-		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.app.domain.name"));
+		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.webserver.host"),
+				Helper.getPropertyValue("framework.webserver.port"));
 
-		String message = Helper.getPropertyValue("framework.email.message");
+		String message = Helper.getPropertyValue("framework.email.body");
 		message = MessageFormat.format(message, resultUrl);
 		notification.setMessage(message);
 

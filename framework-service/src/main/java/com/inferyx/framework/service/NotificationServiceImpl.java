@@ -143,7 +143,7 @@ public class NotificationServiceImpl {
 				notification.setHost(Helper.getPropertyValue("framework.email.host"));
 				notification.setPort(Helper.getPropertyValue("framework.email.port"));
 //				notification.setSubject(Helper.getPropertyValue("framework.email.subject"));
-//				notification.setMessage(Helper.getPropertyValue("framework.email.message"));
+//				notification.setMessage(Helper.getPropertyValue("framework.email.body"));
 				return sendNotification(notification);
 			} else {
 				throw new RuntimeException("No credentials avilable to send mail.");
