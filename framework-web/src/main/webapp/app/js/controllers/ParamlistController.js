@@ -132,6 +132,12 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 		});
 	};
     $scope.getLovByType();
+	$scope.ValidationKeyPress=function(e){
+		if((e.which <47)|| (e.which > 57)) {
+			 e.preventDefault();
+		 }
+	 }
+
 	$scope.close=function(){
 		$scope.parantType=$stateParams.parantType;
 		$scope.type=$stateParams.type;
