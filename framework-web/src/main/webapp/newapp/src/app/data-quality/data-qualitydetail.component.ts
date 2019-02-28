@@ -25,11 +25,8 @@ import * as MetaTypeEnum from '../metadata/enums/metaType';
 import { SourceAttr } from '../metadata/domain/domain.sourceAttr';
 import { Subject, fromEvent } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-<<<<<<< HEAD
 import { DataQualityIO } from '../metadata/domainIO/domain.dataQualityIO';
-=======
 import { RoutesParam } from '../metadata/domain/domain.routeParams';
->>>>>>> 18f4a32fa3942bf4a709062e1b2ed6d8c36cb1c3
 @Component({
   selector: 'app-data-pipeli',
   templateUrl: './data-qualitydetail.template.html',
@@ -791,10 +788,10 @@ export class DataQualityDetailComponent {
       filertable.logicalOperator = this.logicalOperators[1].label;
     }
     filertable.lhsType = "string"
-    filertable.lhsAttribute = "";
+    filertable.lhsAttribute = null;
     filertable.operator = this.operators[0].label;
     filertable.rhsType = "string"
-    filertable.rhsAttribute = ""
+    filertable.rhsAttribute = null;
     this.filterTableArray.splice(this.filterTableArray.length, 0, filertable);
     this.count = [];
     this.checkSelected(false);
