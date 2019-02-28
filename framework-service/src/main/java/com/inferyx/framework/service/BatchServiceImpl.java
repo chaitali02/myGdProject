@@ -451,10 +451,11 @@ public class BatchServiceImpl {
 		notification.setSubject(subject);
 
 		String resultUrl = Helper.getPropertyValue("framework.url.batch.result");
-		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.app.domain.name"),
-				batchExec.getUuid(), batchExec.getVersion(), batch.getName());
+		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.webserver.host"),
+				Helper.getPropertyValue("framework.webserver.port"), batchExec.getUuid(), batchExec.getVersion(),
+				batch.getName());
 
-		String message = Helper.getPropertyValue("framework.email.message");
+		String message = Helper.getPropertyValue("framework.email.body");
 		message = MessageFormat.format(message, resultUrl);
 		notification.setMessage(message);
 		notification.setSenderInfo(senderInfo);
@@ -479,10 +480,11 @@ public class BatchServiceImpl {
 		notification.setSubject(subject);
 		
 		String resultUrl = Helper.getPropertyValue("framework.url.batch.result");
-		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.app.domain.name"),
-				batchExec.getUuid(), batchExec.getVersion(), batch.getName());
+		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.webserver.host"),
+				Helper.getPropertyValue("framework.webserver.port"), batchExec.getUuid(), batchExec.getVersion(),
+				batch.getName());
 		
-		String message = Helper.getPropertyValue("framework.email.message");
+		String message = Helper.getPropertyValue("framework.email.body");
 		message = MessageFormat.format(message, resultUrl);
 		notification.setMessage(message);
 		
