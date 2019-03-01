@@ -754,8 +754,10 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
              $(".status[element-id=" + taskid + "] .statusImg").attr("xlink:href","assets/layouts/layout/img/new_status/"+statusTask+".svg");
              $(".status[element-id=" + taskid + "] .statusTitle").text(statusTask);
              $(".status[element-id=" + taskid + "] .rectstatus").attr("fill",dagMetaDataService.statusDefs[statusTask].color);
-             $(".status[element-id=" + taskid + "] .statusText").text(statusTask.substring(0,3) + "..");
-      
+             $(".status[element-id=" + taskid + "] .statusText").text(statusTask)//.substring(0,3) + "..");
+             if(statusTask !=null){
+              $(".status[element-id=" + taskid + "] .rectstatus").attr("width",dagMetaDataService.statusDefs[statusTask].jointWidth);
+             }
 
              angular.forEach(task.status,function (status) {
                $(".status[element-id=" + taskid + "]").attr(status.stage,status.createdOn);

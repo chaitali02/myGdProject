@@ -56,7 +56,7 @@ DatavisualizationModule.factory('DahsboardFactory', function ($http, $location) 
 		var url = $location.absUrl().split("app")[0]
 		return $http({
 			method: 'POST',
-			url: url + "vizpod/getVizpodDetails/" + uuid + "/" + version + "?action=view&requestId=''",
+			url: url + "vizpod/getVizpodResultDetails?uuid="+ uuid+ "&version=" + version + "&action=view",
 			headers: {
 				'Accept': '*/*',
 				'content-Type': "application/json",

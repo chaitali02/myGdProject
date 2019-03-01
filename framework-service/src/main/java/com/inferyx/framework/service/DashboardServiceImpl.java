@@ -145,15 +145,18 @@ public class DashboardServiceImpl extends RuleTemplate {
 		
 		List<MetaIdentifierHolder> vizExecInfo = new ArrayList<>();
 		for(Section section : dashboard.getSectionInfo()) {
+
+			VizExec vizExec = null;
 			try {
 				MetaIdentifier vizInfoMI = section.getVizpodInfo().getRef();
-				VizExec vizExec = vizpodServiceImpl.create(vizInfoMI.getUuid(), vizInfoMI.getVersion(), null, execParams, runMode);
+				vizExec = vizpodServiceImpl.create(vizInfoMI.getUuid(), vizInfoMI.getVersion(), null, execParams, runMode);
 				vizExec = vizpodServiceImpl.parse(vizExec.getUuid(), vizExec.getVersion(), execParams, null, null, null, null, runMode);
-				vizExecInfo.add(new MetaIdentifierHolder(new MetaIdentifier(MetaType.vizExec, vizExec.getUuid(), vizExec.getVersion())));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
+			if(vizExec != null) {
+				vizExecInfo.add(new MetaIdentifierHolder(new MetaIdentifier(MetaType.vizExec, vizExec.getUuid(), vizExec.getVersion())));
+			}
 		}		
 		dashboardExec.setVizExecInfo(vizExecInfo);
 		synchronized (dashboardExec.getUuid()) {
