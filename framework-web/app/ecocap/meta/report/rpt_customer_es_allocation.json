@@ -28,11 +28,12 @@
       "value": null
     }
   ],
+  "limit":-1,
   "title": "Customer ES Allocation",
   "header": "Customer ES Allocation",
-  "headerAlign": "center",
+  "headerAlign": "CENTER",
   "footer": "Economic Capital",
-  "footerAlign": "left",
+  "footerAlign": "LEFT",
   "saveOnRefresh" : "Y",
   "filterInfo": null,
   "dependsOn": {
@@ -109,5 +110,21 @@
         "attrType": "string"
       }
     }
-  ]
+  ],
+  "senderInfo" : {
+        "emailTo" : [ 
+            "jkumar@gtpltech.com"
+        ],
+        "emailBCC" : [ 
+            "ypalrecha@inferyx.com"
+        ],
+        "emailCC" : [ 
+            "vkatkar@gtpltech.com", 
+            "gsonawane@gtpltech.com"
+        ],
+        "emailAttachment" : null,
+        "notifOnSuccess" : "Y",
+        "notifyOnFailure" : "Y",
+        "sendAttachment" : "Y"
+    }
 }

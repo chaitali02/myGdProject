@@ -100,7 +100,7 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
     	opened: false
     };
 	$scope.dateOptions = {
-		dateDisabled: disabled,
+		//dateDisabled: disabled,
 		formatYear: 'yy',
 	//	maxDate: new Date(2020, 5, 22),
 	//	minDate: new Date(),
@@ -534,7 +534,7 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 					var paramRef={}	 
 					paramRef.type="simple";
 					paramValue.ref=paramRef;
-					paramValue.value="'"+$filter('date')($scope.paramtable[i].paramValue, "MM/dd/yyyy")+"'";
+					paramValue.value=$filter('date')($scope.paramtable[i].paramValue, "MM/dd/yyyy");
 					paraminfo.paramValue=paramValue
 					paramInfoArray[i] = paraminfo; 
 

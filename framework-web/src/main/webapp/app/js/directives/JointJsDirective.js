@@ -753,6 +753,12 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
                
              $(".status[element-id=" + taskid + "] .statusImg").attr("xlink:href","assets/layouts/layout/img/new_status/"+statusTask+".svg");
              $(".status[element-id=" + taskid + "] .statusTitle").text(statusTask);
+             $(".status[element-id=" + taskid + "] .rectstatus").attr("fill",dagMetaDataService.statusDefs[statusTask].color);
+             $(".status[element-id=" + taskid + "] .statusText").text(statusTask)//.substring(0,3) + "..");
+             if(statusTask !=null){
+              $(".status[element-id=" + taskid + "] .rectstatus").attr("width",dagMetaDataService.statusDefs[statusTask].jointWidth);
+             }
+
              angular.forEach(task.status,function (status) {
                $(".status[element-id=" + taskid + "]").attr(status.stage,status.createdOn);
              });
@@ -1779,7 +1785,10 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          $(".status[element-id=" + dagid + "] .rectstatus").attr("fill",dagMetaDataService.statusDefs[statusDag].color);
          
          $(".status[element-id=" + dagid + "] .statusTitle").text(statusDag);
-         $(".status[element-id=" + dagid + "] .statusText").text(statusDag.substring(0,3) + "..");
+         $(".status[element-id=" + dagid + "] .statusText").text(statusDag)//substring(0,3) + "..");
+         if(statusDag !=null){
+          $(".status[element-id=" + dagid + "] .rectstatus").attr("width",dagMetaDataService.statusDefs[statusDag].jointWidth);
+         }
          
          $(".status[element-id=" + dagid + "]").attr("statusList",JSON.stringify(data.status));
          angular.forEach(data.status,function (status) {
@@ -1792,7 +1801,10 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
            $(".status[element-id=" + stageid + "] .rectstatus").attr("fill",dagMetaDataService.statusDefs[statusStage].color);
 
            $(".status[element-id=" + stageid + "] .statusTitle").text(statusStage);
-           $(".status[element-id=" + stageid + "] .statusText").text(statusStage.substring(0,3) + "..");
+           $(".status[element-id=" + stageid + "] .statusText").text(statusStage)//.substring(0,3) + "..");
+           if(statusStage !=null){
+            $(".status[element-id=" + stageid + "] .rectstatus").attr("width",dagMetaDataService.statusDefs[statusStage].jointWidth);
+           }
 
            $(".status[element-id=" + stageid + "]").attr("statusList",JSON.stringify(stage.status));
            angular.forEach(stage.status,function (status) {
@@ -1805,7 +1817,11 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
              $(".status[element-id=" + taskid + "] .rectstatus").attr("fill",dagMetaDataService.statusDefs[statusTask].color);
 
              $(".status[element-id=" + taskid + "] .statusTitle").text(statusTask);
-             $(".status[element-id=" + taskid + "] .statusText").text(statusTask.substring(0,3) + "..");
+             $(".status[element-id=" + taskid + "] .statusText").text(statusTask)//.substring(0,3) + "..");
+             if(statusTask !=null){
+              $(".status[element-id=" + taskid + "] .rectstatus").attr("width",dagMetaDataService.statusDefs[statusTask].jointWidth);
+             }
+
              $(".status[element-id=" + taskid + "]").attr("statusList",JSON.stringify(task.status));
              angular.forEach(task.status,function (status) {
                $(".status[element-id=" + taskid + "]").attr(status.stage,status.createdOn);
@@ -2281,8 +2297,8 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         });
         var type = $scope.popupModel.modelData.operators[0].operatorInfo[0].ref.type;
         var typeParamListArray=["simulate","operator","operatorexec","simulateexec"];
-        var typeParamSetArray=["train","rule","ruleexec",'trainexec'];
-        var typeParamsArray=["dashboard",'dashboardexec'];
+        var typeParamSetArray=["train","rule","ruleexec",'trainexec','report','reportexec'];
+        var typeParamsArray=[]//["dashboard",'dashboardexec'];
         if(typeParamSetArray.indexOf(type.toLowerCase()) !=-1 && ($scope.paramsetdata ||  $scope.popupModel.selectedType)){
           $scope.isExecParamSet=false;
           $scope.isTabelShow=false;
@@ -3075,9 +3091,9 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         objDetail.version="";
         var type = $scope.popupModel.modelData.operators[0].operatorInfo[0].ref.type;
         objDetail.type=type;
-        var typeParamSetArray=["train","rule"];
+        var typeParamSetArray=["train","rule",'report'];
         var typeParamListArray=["simulate","operator"];
-        var typeParamArray=['dashboard','report'];
+        var typeParamArray=[];//['dashboard'];
         if(typeParamSetArray.indexOf(type) != -1){
           $scope.getExecParamsSet(objDetail,$scope.popupModel);
           $scope.isExecParamSet=true;

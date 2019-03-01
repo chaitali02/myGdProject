@@ -644,7 +644,7 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 
 });//End ReportListController
 
-DatavisualizationModule.controller('ReportDetailController', function ($q, dagMetaDataService, $location, $http, $rootScope, $state, $scope, $stateParams, $cookieStore, $timeout, $filter, ReportSerivce, $sessionStorage, privilegeSvc, CommonService, CF_FILTER, CF_META_TYPES, CF_DOWNLOAD) {
+DatavisualizationModule.controller('ReportDetailController', function ($q, dagMetaDataService, $location, $http, $rootScope, $state, $scope, $stateParams, $cookieStore, $timeout, $filter, ReportSerivce, $sessionStorage, privilegeSvc, CommonService, CF_FILTER, CF_META_TYPES, CF_GRID) {
 	$rootScope.isCommentVeiwPrivlage = true;
 	$scope.paramTypes = ["paramlist", "paramset"];
 
@@ -711,7 +711,8 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 	$scope.attributeTableArray = null;
 	$scope.isDependencyShow = false;
 	$scope.privileges = [];
-	$scope.privileges = privilegeSvc.privileges[CF_META_TYPES.report] || [];
+	$scope.privileges = privilegeSvc.privileges['report'] || [];
+	console.log($scope.privileges.indexOf('Edit'))
 	$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	$scope.$on('privilegesUpdated', function (e, data) {
 		$scope.privileges = privilegeSvc.privileges[CF_META_TYPES.report] || [];
@@ -759,7 +760,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 			return false;
 		}
 		$scope.showPage()
-		var state = dagMetaDataService.elementDefs["report2"].detailState
+		var state = dagMetaDataService.elementDefs["report"].detailState
 		$state.go(state, {
 			id: uuid,
 			version: version,
@@ -776,6 +777,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 	}/*End ShowGraph*/
 
 	$scope.enableEdit = function (uuid, version) {
+		debugger
 		if ($scope.isPrivlage || $scope.report.locked == "Y") {
 			return false;
 		}
@@ -783,7 +785,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 			return false;
 		}
 		$scope.showPage()
-		var state = dagMetaDataService.elementDefs["report2"].detailState
+		var state = dagMetaDataService.elementDefs["report"].detailState
 		setTimeout(function () { $state.go(state, { 'id': uuid, 'version': version, 'mode': 'false' }); }, 100);
 	}
 
@@ -793,7 +795,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		}
 		if (!$scope.isEdit) {
 			$scope.showPage()
-			var state = dagMetaDataService.elementDefs["report2"].detailState
+			var state = dagMetaDataService.elementDefs["report"].detailState
 			setTimeout(function () { $state.go(state, { 'id': uuid, 'version': version, 'mode': 'false' }); }, 100);
 		}
 	}
@@ -1062,7 +1064,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 	else {
 		$scope.report = {};
 		$scope.report.locked = "N";
-		$scope.report.lmit = -1;
+		$scope.report.limit = -1;
 		$scope.report.senderInfo = {};
 		$scope.report.senderInfo.sendAttachment = "Y";
 		$scope.report.senderInfo.notifOnSuccess = "Y";
@@ -1248,6 +1250,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		if ($scope.filterTableArray == null) {
 			$scope.filterTableArray = [];
 		}
+		$scope.myform2.$dirty=true;
 		var filertable = {};
 		filertable.islhsDatapod = true;
 		filertable.islhsFormula = false;
@@ -1436,6 +1439,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		if ($scope.attributeTableArray == null) {
 			$scope.attributeTableArray = [];
 		}
+		$scope.myform3.$dirty=true;
 		var len = $scope.attributeTableArray.length + 1
 		var attributeinfo = {};
 		attributeinfo.name = "attribute" + len;
@@ -1476,6 +1480,8 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 			$scope.attributeTableArray[index].isSourceAtributeExpression = false;
 			$scope.attributeTableArray[index].isSourceAtributeFunction = false;
 			$scope.attributeTableArray[index].isSourceAtributeParamList = false;
+			$scope.attributeTableArray[index].isOnDropDown=true;
+
 		}
 		else if (type == "formula") {
 
@@ -1485,6 +1491,8 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 			$scope.attributeTableArray[index].isSourceAtributeExpression = false;
 			$scope.attributeTableArray[index].isSourceAtributeFunction = false;
 			$scope.attributeTableArray[index].isSourceAtributeParamList = false;
+			$scope.attributeTableArray[index].isOnDropDown=true;
+
 			$scope.getFormulaByType();
 		}
 		else if (type == "expression") {
@@ -1495,6 +1503,8 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 			$scope.attributeTableArray[index].isSourceAtributeExpression = true;
 			$scope.attributeTableArray[index].isSourceAtributeFunction = false;
 			$scope.attributeTableArray[index].isSourceAtributeParamList = false;
+			$scope.attributeTableArray[index].isOnDropDown=true;
+
 			$scope.getExpressionByType();
 
 		}
@@ -1505,6 +1515,8 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 			$scope.attributeTableArray[index].isSourceAtributeExpression = false;
 			$scope.attributeTableArray[index].isSourceAtributeFunction = true;
 			$scope.attributeTableArray[index].isSourceAtributeParamList = false;
+			$scope.attributeTableArray[index].isOnDropDown=true;
+
 			$scope.getFunctionByCriteria();
 		}
 		else if (type == "paramlist") {
@@ -1514,6 +1526,8 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 			$scope.attributeTableArray[index].isSourceAtributeExpression = false;
 			$scope.attributeTableArray[index].isSourceAtributeFunction = false;
 			$scope.attributeTableArray[index].isSourceAtributeParamList = true;
+			$scope.attributeTableArray[index].isOnDropDown=true;
+
 			$scope.getParamByApp();
 		}
 
@@ -1774,6 +1788,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		reportJson.footer = $scope.report.footer;
 		reportJson.headerAlign = $scope.report.headerAlign;
 		reportJson.footerAlign = $scope.report.footerAlign;
+		reportJson.limit = $scope.report.limit;
 
 		var tagArray = [];
 		if ($scope.tags != null) {
@@ -1976,9 +1991,10 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 			}
 		}
 		senderInfo.emailCC = tagArrayBcc;
-		senderInfo.sendAttachment = $scope.report.sendAttachment;
-		senderInfo.notifOnSuccess = $scope.report.notifOnSuccess;
-		senderInfo.notifyOnFailure = $scope.report.notifOnSuccess;
+		senderInfo.sendAttachment = $scope.report.senderInfo.sendAttachment;
+		senderInfo.notifOnSuccess = $scope.report.senderInfo.notifOnSuccess;
+		senderInfo.notifyOnFailure = $scope.report.senderInfo.notifOnSuccess;
+		
 		reportJson.senderInfo = senderInfo;
 		console.log(JSON.stringify(reportJson))
 
