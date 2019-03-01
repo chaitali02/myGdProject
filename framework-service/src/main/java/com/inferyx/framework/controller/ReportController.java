@@ -81,8 +81,8 @@ public class ReportController {
 				@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode,
 				HttpServletResponse response) throws Exception {
 		    RunMode runMode = Helper.getExecutionMode(mode);
-		    reportServiceImpl.download(reportExecUuid, reportExecVersion, format, 0, rows, response, rows, null, null,
-					null, runMode);
+		    reportServiceImpl.download(reportExecUuid, reportExecVersion, format, 0, rows, response, null, null,
+					null, runMode, false);
 		    return null;
 	   }
 	

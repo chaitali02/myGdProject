@@ -29,8 +29,24 @@ public class Report extends BaseEntity {
 	private String saveOnRefresh = "N";
 	private SenderInfo senderInfo;
 	private MetaIdentifierHolder paramList;
-
+	private int limit;
 	
+	/**
+	 * @Ganesh
+	 *
+	 * @return the limit
+	 */
+	public int getLimit() {
+		return limit;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param limit the limit to set
+	 */
+	public void setLimit(int limit) {
+		this.limit = limit;
+	}
 	/**
 	 * @Ganesh
 	 *

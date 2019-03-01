@@ -288,8 +288,8 @@ public class ReportServiceImpl extends RuleTemplate {
 	}
 	
 	public HttpServletResponse download(String reportExecUuid, String reportExecVersion, String format, int offset,
-			int limit, HttpServletResponse response, int rowLimit, String sortBy, String order, String requestId,
-			RunMode runMode) throws Exception {
+			int limit, HttpServletResponse response, String sortBy, String order, String requestId,
+			RunMode runMode, boolean skipLimitCheck) throws Exception {
 
 		ReportExec reportExec = (ReportExec) commonServiceImpl.getOneByUuidAndVersion(reportExecUuid, reportExecVersion,
 				MetaType.reportExec.toString(), "N");
@@ -318,7 +318,7 @@ public class ReportServiceImpl extends RuleTemplate {
 			}
 			
 			int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
-			if (rowLimit > maxRows) {
+			if (!skipLimitCheck && limit > maxRows) {
 				logger.error("Requested rows exceeded the limit of " + maxRows);
 				MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 				dependsOn.setRef(new MetaIdentifier(MetaType.reportExec, reportExec.getUuid(), reportExec.getVersion()));
@@ -328,7 +328,8 @@ public class ReportServiceImpl extends RuleTemplate {
 			}
 
 			datastoreServiceImpl.setRunMode(runMode);
-			List<Map<String, Object>> data = datastoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, rowLimit, null, null);		
+			List<Map<String, Object>> data = datastoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, limit, null, null);		
+			
 			workbook = workbookUtil.getWorkbookForReport(data, reportExec);
 			
 			DownloadExec downloadExec = new DownloadExec();
@@ -473,8 +474,8 @@ public class ReportServiceImpl extends RuleTemplate {
 		notification.setMessage(message);
 
 		if (senderInfo.getSendAttachment().equalsIgnoreCase("Y")) {			
-			download(reportExec.getUuid(), reportExec.getVersion(), "excel", 0, 200, null, 200, null, null, null,
-					runMode);
+			download(reportExec.getUuid(), reportExec.getVersion(), "excel", 0, report.getLimit(), null, null, null, null,
+					runMode, true);
 
 			String defaultDownloadPath = Helper.getPropertyValue("framework.file.download.path"); 
 			defaultDownloadPath = defaultDownloadPath.endsWith("/") ? defaultDownloadPath : defaultDownloadPath.concat("/");
@@ -482,7 +483,7 @@ public class ReportServiceImpl extends RuleTemplate {
 			String filePathUrl = defaultDownloadPath.concat(reportFileName);	
 
 			Map<String, String> emailAttachment = new HashMap<>();
-			emailAttachment.put(reportFileName, filePathUrl);
+			emailAttachment.put(report.getName().concat("_").concat(reportExec.getVersion().concat(".xls")), filePathUrl);
 			senderInfo.setEmailAttachment(emailAttachment);
 		}
 		notification.setSenderInfo(senderInfo);
