@@ -232,14 +232,14 @@ public class VizpodDetailParser {
 				whereBuilder.append(filterOperator2.generateSql(vizpod.getFilterInfo(), null, null, usedRefKeySet,
 						false, false, runMode, datasource));
 
-				if (allowColNameInFltr) {
+				/*if (allowColNameInFltr) {
 					Pattern pattern = Pattern.compile("(\\b(\\w+)\\.)(?=([^\"']*[\"'][^\"']*[\"'])*[^\"']*$)");
 					Matcher matcher = pattern.matcher(whereBuilder);
 					while (matcher.find()) {
 						if (!NumberUtils.isCreatable(matcher.group()))
 							whereBuilder = new StringBuilder(whereBuilder.toString().replace(matcher.group(), ""));
 					}
-				}
+				}*/
 			}
 			whereBuilder.append(blankSpace);
 
