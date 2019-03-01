@@ -64,6 +64,7 @@ import com.inferyx.framework.domain.BatchExec;
 import com.inferyx.framework.domain.CommentView;
 import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DagExec;
+import com.inferyx.framework.domain.DashboardExec;
 import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataQualGroupExec;
 import com.inferyx.framework.domain.DataStore;
@@ -106,6 +107,7 @@ import com.inferyx.framework.domain.ReportExec;
 import com.inferyx.framework.domain.Role;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.User;
+import com.inferyx.framework.domain.VizExec;
 import com.inferyx.framework.enums.ApplicationType;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.domain.RuleExec;
@@ -467,11 +469,11 @@ public class MetadataServiceImpl {
 				execObject = (DataQualGroupExec) metaObject;
 				execStatus = (List<Status>) execObject.getStatusList();
 			}
-			/*else if(type.equalsIgnoreCase(MetaType.vizexec.toString())){
+			else if(type.equalsIgnoreCase(MetaType.vizExec.toString())){
 				VizExec execObject = new VizExec();
 				execObject = (VizExec) metaObject;
-				execStatus = (List<Status>) execObject.getStatus();	
-			}*/
+				execStatus = (List<Status>) execObject.getStatusList();	
+			}
 			else if(type.equalsIgnoreCase(MetaType.loadExec.toString())){
 				LoadExec execObject = new LoadExec();
 				execObject = (LoadExec) metaObject;
@@ -553,6 +555,11 @@ public class MetadataServiceImpl {
 			else if(type.equalsIgnoreCase(MetaType.processExec.toString())){
 				ProcessExec execObject = new ProcessExec();
 				execObject = (ProcessExec) metaObject;
+				execStatus = (List<Status>) execObject.getStatusList();	
+			} 
+			else if(type.equalsIgnoreCase(MetaType.dashboardExec.toString())){
+				DashboardExec execObject = new DashboardExec();
+				execObject = (DashboardExec) metaObject;
 				execStatus = (List<Status>) execObject.getStatusList();	
 			} 
 				
