@@ -54,7 +54,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       caption:'Killed',
       color :'#dc3545',//'#ed6b75',
       iconPath : 'assets/layouts/layout/img/new_status/Killed.svg',
-      jointWidth:"53px"
+      jointWidth:"50px"
 
     },
     'Failed':{
