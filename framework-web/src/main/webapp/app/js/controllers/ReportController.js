@@ -1248,6 +1248,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		if ($scope.filterTableArray == null) {
 			$scope.filterTableArray = [];
 		}
+		$scope.myform2.$dirty=true;
 		var filertable = {};
 		filertable.islhsDatapod = true;
 		filertable.islhsFormula = false;
@@ -1436,6 +1437,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		if ($scope.attributeTableArray == null) {
 			$scope.attributeTableArray = [];
 		}
+		$scope.myform3.$dirty=true;
 		var len = $scope.attributeTableArray.length + 1
 		var attributeinfo = {};
 		attributeinfo.name = "attribute" + len;
