@@ -1989,9 +1989,10 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 			}
 		}
 		senderInfo.emailCC = tagArrayBcc;
-		senderInfo.sendAttachment = $scope.report.sendAttachment;
-		senderInfo.notifOnSuccess = $scope.report.notifOnSuccess;
-		senderInfo.notifyOnFailure = $scope.report.notifOnSuccess;
+		senderInfo.sendAttachment = $scope.report.senderInfo.sendAttachment;
+		senderInfo.notifOnSuccess = $scope.report.senderInfo.notifOnSuccess;
+		senderInfo.notifyOnFailure = $scope.report.senderInfo.notifOnSuccess;
+		
 		reportJson.senderInfo = senderInfo;
 		console.log(JSON.stringify(reportJson))
 
