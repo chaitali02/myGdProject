@@ -267,20 +267,13 @@ public class WorkbookUtil {
 		StringBuilder reportParameters = new StringBuilder("");
 		if (report.getParamList() != null && reportExec.getExecParams() != null
 				&& reportExec.getExecParams().getParamListInfo() != null
-				&& !reportExec.getExecParams().getParamListInfo().isEmpty()
-				&& report.getFilterInfo() != null) {
-	
-			for(FilterInfo filterInfo : report.getFilterInfo()) {
-				if(filterInfo.getOperand().get(1).getRef().getType().equals(MetaType.paramlist)) {					
+				&& !reportExec.getExecParams().getParamListInfo().isEmpty()) {
+					
 					for(ParamListHolder paramListHolder : reportExec.getExecParams().getParamListInfo()) {
-						if(paramListHolder.getParamId().equalsIgnoreCase(filterInfo.getOperand().get(1).getAttributeId().toString())) {
-							String paramName = paramListHolder.getParamName();
-							String paramValue = paramListHolder.getParamValue().getValue();
-							reportParameters.append(paramName).append(": ").append(paramValue).append(", ");
-						}
+						String paramName = paramListHolder.getParamName();
+						String paramValue = paramListHolder.getParamValue().getValue();
+						reportParameters.append(paramName).append(": ").append(paramValue).append(", ");
 					}
-				}
-			}
 			
 			if(reportParameters.length() > 0) {
 				reportParameters = new StringBuilder(reportParameters.substring(0, reportParameters.toString().lastIndexOf(",")));
