@@ -28,11 +28,12 @@
       "value": null
     }
   ],
+  "limit":-1,
   "title": "Sanctions Screening Report",
   "header": "Sanctions Screening Report",
-  "headerAlign": "center",
+  "headerAlign": "CENTER",
   "footer": "Sanctions Screening Report",
-  "footerAlign": "center",
+  "footerAlign": "CENTER",
   "saveOnRefresh" : "Y",
   "filterInfo":null,
   "dependsOn": {
