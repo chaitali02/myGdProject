@@ -72,6 +72,7 @@ import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
+import com.inferyx.framework.parser.VizpodDetailParser;
 import com.inferyx.framework.parser.VizpodParser;
 import com.inferyx.framework.register.GraphRegister;
 
@@ -106,6 +107,8 @@ public class VizpodServiceImpl extends RuleTemplate {
 	private SparkExecutor<?> sparkExecutor;
 	@Autowired
 	private SessionHelper sessionHelper;
+	@Autowired
+	private VizpodDetailParser vizpodDetailParser;
 	
 	Map<String, String> requestMap = new HashMap<String, String>();
 		
@@ -1521,4 +1524,37 @@ public class VizpodServiceImpl extends RuleTemplate {
 			return execute(baseRuleExec.getUuid(), baseRuleExec.getVersion(), execParams, baseRuleExec.getExecParams().getOtherParams().get("saveOnRefresh"), runMode);
 		}
 
+
+	public List<Map<String, Object>> getVizpodResultDetails(String vizpodUuid, String vizpodVersion,
+			ExecParams execParams, Object vizExec, int rows, int offset, int limit, String sortBy, String order,
+			String requestId, RunMode runMode) throws Exception {
+		List<Map<String, Object>> data = null;
+		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
+		
+		Vizpod vizpod = (Vizpod) commonServiceImpl.getOneByUuidAndVersion(vizpodUuid, vizpodVersion,
+				MetaType.vizpod.toString(), "Y");
+		if (execParams != null && execParams.getFilterInfo() != null) {
+			vizpod.setFilterInfo(execParams.getFilterInfo());
+		}
+		String sql = vizpodDetailParser.toSql(vizpod, null, usedRefKeySet, true, runMode, false);
+
+		logger.info(sql);
+
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		IExecutor exec = execFactory.getExecutor(datasource.getType());
+		limit = offset + limit;
+		offset = offset + 1;
+
+		if (datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
+				|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
+			data = exec.executeAndFetch("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM (" + sql
+					+ ") tn ) AS tab WHERE rownum >= " + offset + " AND rownum <= " + limit, null);
+		} else if (datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
+			data = exec.executeAndFetch("SELECT * FROM (" + sql + ") vizpod WHERE rownum <= " + limit, null);
+		} else {
+			data = exec.executeAndFetch("SELECT * FROM (" + sql + ") vizpod LIMIT " + limit, null);
+		}
+		return data;
+	}
+		
 }
