@@ -1051,7 +1051,7 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
                  pt.x = d3.event.clientX; pt.y = d3.event.clientY;
                  var localPoint = pt.matrixTransform(svg.getScreenCTM().inverse());
                  var state;
-                    
+                    debugger
                  if(isExec || isGroupExec){
                    var iconMenuItems = [{title:'Show Details', type : 'element'}];
                 
@@ -1062,6 +1062,7 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
                        iconMenuItems.push({title:'Show Logs', type : 'logs'});
                      }
                      else if(status && (status=='NotStarted' || status=='Resume')){
+                       debugger
                        iconMenuItems.push({title:'On Hold', type : 'onhold'});
                        iconMenuItems.push({title:'Show Logs', type : 'logs'});
                      }
@@ -1989,7 +1990,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          $('#paper svg').addClass('view-mode');
          d3.selectAll('.joint-element .body')
          .on('contextmenu', function(){
-           
+           debugger
            d3.event.preventDefault();
            d3.event.stopPropagation();
            var vm = this;
@@ -2037,6 +2038,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
            if( taskDetail &&  taskDetail.taskId == taskId){
              return false;
            } 
+           debugger
            var ref = cell.attributes['model-data'].operators[0].operatorInfo[0].ref;
            var type = ref.type;
            var operator=cell.attributes['model-data'].operators;
@@ -2056,9 +2058,11 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
            var localPoint = pt.matrixTransform(svg.getScreenCTM().inverse());
            var state;
            var  execStates;
+           
            if(isExec || isGroupExec){
              var iconMenuItems = [{title:'Show Details', type : 'element'}];
              if($scope.execMode){
+               
                var status = $(".status[element-id=" + taskId + "] .statusTitle")[0].innerHTML;
                if(status && (status=='Completed') ||(status== 'Failed')|| (status== 'InProgress')){
                  if(isExec && (status=='Completed')){
