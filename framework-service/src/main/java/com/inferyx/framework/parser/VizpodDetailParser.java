@@ -265,6 +265,7 @@ public class VizpodDetailParser {
 			// : ConstantsUtil.HAVING_1_1.concat(havingBuilder.toString());
 			/// result += orderByBuilder.length() > 0 ? orderByBuilder.toString() : "";
 			result += limitBuilder.length() > 0 ? limitBuilder.substring(0, limitBuilder.length() - 1) : "";
+			
 			logger.info(String.format("Final Vizpod filter %s", result));
 		} else if ((MetaType.dataset).equals(vizpod.getSource().getRef().getType())) {
 			DataSet dataSet = (DataSet) commonServiceImpl.getOneByUuidAndVersion(vizpod.getSource().getRef().getUuid(),
@@ -295,19 +296,19 @@ public class VizpodDetailParser {
 			 * query the custom code is written
 			 *******/
 			dataSet.setAttributeInfo(attributeInfo);
-			result = datasetOperator.generateSql(dataSet, null, null, usedRefKeySet, null, runMode);
+			String innersql = datasetOperator.generateSql(dataSet, null, null, usedRefKeySet, null, runMode);
 			outerSelectBuilder = generateSelectForDataSet(dataSet, vizpod);
 			whereBuilder.append(datasetOperator.generateWhere());
 			Datasource datasource = commonServiceImpl.getDatasourceByObject(vizpod);
 
 			whereBuilder.append(" ").append(filterOperator2.generateSql(vizpod.getFilterInfo(), null, null,
 					usedRefKeySet, false, false, runMode, datasource));
-			finalResultBuilder = outerSelectBuilder.append(" FROM (").append(result).append(" )").append(" as ")
-					.append(tableName).append(whereBuilder);
-
+			result = outerSelectBuilder.append(" FROM (").append(innersql).append(" )").append(" as ")
+					.append(tableName).append(whereBuilder).toString();
+         
 		}
 
-		return finalResultBuilder.toString();
+		return result;
 	}
 
 	private StringBuilder generateOderBy(List<AttributeDetails> sortBy, String sortOrder)
