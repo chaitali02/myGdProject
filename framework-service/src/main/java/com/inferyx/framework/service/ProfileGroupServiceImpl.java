@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.dao.IProfileGroupDao;
 import com.inferyx.framework.dao.IProfileGroupExecDao;
@@ -29,6 +31,7 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.ProfileGroupExec;
+import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.register.GraphRegister;
 
@@ -391,6 +394,23 @@ public class ProfileGroupServiceImpl extends RuleGroupTemplate {
 		profileGroupExec = (ProfileGroupExec) parse(profileGroupExec.getUuid(), profileGroupExec.getVersion(), null, null, null, runMode);
 		execute(profileGroupExec.getDependsOn().getRef().getUuid(), profileGroupExec.getDependsOn().getRef().getVersion(),null, profileGroupExec, runMode);
 	}
+	
+	/**
+	 * 
+	 * @param baseExec
+	 * @return
+	 * @throws Exception
+	 */
+	public Status restart(BaseExec baseExec) throws Exception {
+		try {
+			return super.restart(baseExec.getUuid(), baseExec.getVersion(), MetaType.profilegroupExec, MetaType.profileExec);
+		} catch (JsonProcessingException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+				| NoSuchMethodException | SecurityException | NullPointerException e) {
+			e.printStackTrace();
+			throw new Exception(e);
+		}
+	}
+
 
 	/**
 	 * Override Executable.execute()

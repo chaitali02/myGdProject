@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +25,7 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.ProfileGroupExec;
 import com.inferyx.framework.domain.ReconGroupExec;
+import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
 
 /**
@@ -46,6 +48,22 @@ public class ReconGroupServiceImpl extends RuleGroupTemplate {
 		ReconGroupExec reconGroupExec = (ReconGroupExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.recongroupExec.toString());
 		reconGroupExec = parse(reconGroupExec.getRef(MetaType.recongroupExec), null, null, null, runMode);
 		execute(reconGroupExec.getDependsOn().getRef().getUuid(),reconGroupExec.getDependsOn().getRef().getVersion(),null,reconGroupExec, runMode);
+	}
+	
+	/**
+	 * 
+	 * @param baseExec
+	 * @return
+	 * @throws Exception
+	 */
+	public Status restart(BaseExec baseExec) throws Exception {
+		try {
+			return super.restart(baseExec.getUuid(), baseExec.getVersion(), MetaType.recongroupExec, MetaType.reconExec);
+		} catch (JsonProcessingException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+				| NoSuchMethodException | SecurityException | NullPointerException e) {
+			e.printStackTrace();
+			throw new Exception(e);
+		}
 	}
 	
 	public ReconGroupExec parse(MetaIdentifier reconGroupExec, Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec, RunMode runMode) {

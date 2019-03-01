@@ -262,6 +262,22 @@ public class ReconServiceImpl extends RuleTemplate {
 		return data;
 	}
 
+	/**
+	 * 
+	 * @param baseExec
+	 * @return
+	 * @throws Exception
+	 */
+	public Status restart(BaseExec baseExec) throws Exception {
+		try {
+			return super.restart(baseExec.getUuid(), baseExec.getVersion(), MetaType.reconExec);
+		} catch (JsonProcessingException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+				| NoSuchMethodException | SecurityException | NullPointerException e) {
+			e.printStackTrace();
+			throw new Exception(e);
+		}
+	}
+
 	public void restart(String type, String uuid, String version, ExecParams  execParams, RunMode runMode) throws Exception {
 		ReconExec reconExec = (ReconExec) commonServiceImpl.getOneByUuidAndVersion(uuid,version, MetaType.reconExec.toString());
 		try {

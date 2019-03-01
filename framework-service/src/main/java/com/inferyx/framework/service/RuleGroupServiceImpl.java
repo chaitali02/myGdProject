@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -32,6 +33,7 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.RuleGroupExec;
+import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.register.GraphRegister;
 
@@ -304,6 +306,22 @@ public class RuleGroupServiceImpl extends RuleGroupTemplate {
 		ruleGroupExec = parse(ruleGroupExec.getUuid(), ruleGroupExec.getVersion(), null, null, null, runMode);
 		execute(ruleGroupExec.getDependsOn().getRef().getUuid(), ruleGroupExec.getDependsOn().getRef().getVersion(), null,ruleGroupExec, runMode);
 		
+	}
+	
+	/**
+	 * 
+	 * @param baseExec
+	 * @return
+	 * @throws Exception
+	 */
+	public Status restart(BaseExec baseExec) throws Exception {
+		try {
+			return super.restart(baseExec.getUuid(), baseExec.getVersion(), MetaType.rulegroupExec, MetaType.ruleExec);
+		} catch (JsonProcessingException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+				| NoSuchMethodException | SecurityException | NullPointerException e) {
+			e.printStackTrace();
+			throw new Exception(e);
+		}
 	}
 
 	public RuleGroupExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec, RunMode runMode)
