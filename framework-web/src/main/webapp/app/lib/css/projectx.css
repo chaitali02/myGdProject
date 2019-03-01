@@ -928,6 +928,11 @@ vertical-align: middle;
 .tag-scroll-height{
  height: 33px;
  }
+
+ .tag-scroll-height-report{
+  height: 63px;
+  }
+
   
 .node {
     cursor: pointer;
@@ -1461,7 +1466,11 @@ transition: right 1m
    }
 
    tags-input .tags .tag-item{
-    background: #e0e0e0 !important;
+    background: #36a3f7 !important;/*#e0e0e0 !important;*/
+    color: white;
+   }
+   tags-input .tags .tag-item .remove-button{
+     color: white;
    }
 
 

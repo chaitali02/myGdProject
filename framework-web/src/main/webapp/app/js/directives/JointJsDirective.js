@@ -753,6 +753,10 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
                
              $(".status[element-id=" + taskid + "] .statusImg").attr("xlink:href","assets/layouts/layout/img/new_status/"+statusTask+".svg");
              $(".status[element-id=" + taskid + "] .statusTitle").text(statusTask);
+             $(".status[element-id=" + taskid + "] .rectstatus").attr("fill",dagMetaDataService.statusDefs[statusTask].color);
+             $(".status[element-id=" + taskid + "] .statusText").text(statusTask.substring(0,3) + "..");
+      
+
              angular.forEach(task.status,function (status) {
                $(".status[element-id=" + taskid + "]").attr(status.stage,status.createdOn);
              });
@@ -2281,7 +2285,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         });
         var type = $scope.popupModel.modelData.operators[0].operatorInfo[0].ref.type;
         var typeParamListArray=["simulate","operator","operatorexec","simulateexec"];
-        var typeParamSetArray=["train","rule","ruleexec",'trainexec'];
+        var typeParamSetArray=["train","rule","ruleexec",'trainexec','report','reportexec'];
         var typeParamsArray=["dashboard",'dashboardexec'];
         if(typeParamSetArray.indexOf(type.toLowerCase()) !=-1 && ($scope.paramsetdata ||  $scope.popupModel.selectedType)){
           $scope.isExecParamSet=false;
@@ -3075,9 +3079,9 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         objDetail.version="";
         var type = $scope.popupModel.modelData.operators[0].operatorInfo[0].ref.type;
         objDetail.type=type;
-        var typeParamSetArray=["train","rule"];
+        var typeParamSetArray=["train","rule",'report'];
         var typeParamListArray=["simulate","operator"];
-        var typeParamArray=['dashboard','report'];
+        var typeParamArray=['dashboard'];
         if(typeParamSetArray.indexOf(type) != -1){
           $scope.getExecParamsSet(objDetail,$scope.popupModel);
           $scope.isExecParamSet=true;

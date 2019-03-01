@@ -12,11 +12,11 @@
                             <i class="fa fa-circle"></i>
                         </li>
                         <li>
-                            <a ng-click="genericClose($event,'report2')">Report</a>
+                            <a ng-click="genericClose($event,'report')">Report</a>
                             <i class="fa fa-circle"></i>
                         </li>
                         <li>
-                            <a ng-click="genericClose($event,'report2')">{{report.name}}</a>
+                            <a ng-click="genericClose($event,'report')">{{report.name}}</a>
                         </li>
                     </ul>
                     <div class="page-toolbar">
@@ -63,7 +63,7 @@
                                 ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip>
                                 <i class="fa fa-refresh icon-circle" aria-hidden="true"></i>
                             </a>
-                            <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" ng-click="genericClose($event,'report2')"
+                            <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" ng-click="genericClose($event,'report')"
                                 title="Close" data-toggle="tooltip" data-placement="top" tooltip>
                                 <i class="fa fa-times icon-circle"></i>
                             </a>
@@ -426,15 +426,12 @@
                                                                                 ng-click="checkAllFilterRow()" />
                                                                         </span>
                                                                     </th>
-                                                                    <th style="width:15%;text-align:center;">Logical
-                                                                        Operator</th>
+                                                                    <th style="width:15%;text-align:center;">Logical Operator</th>
                                                                     <th style="width:13%;text-align:center;"> LHS Type</th>
-                                                                    <th style="width:180px;text-align:center;">LHS
-                                                                        Attribute</th>
+                                                                    <th style="width:180px;text-align:center;">LHS Attribute</th>
                                                                     <th style="width:15%;text-align:center;">Operator</th>
                                                                     <th style="width:13%;text-align:center;">RHS Type</th>
-                                                                    <th style="width:180px;text-align:center;">RHS
-                                                                        Attribute</th>
+                                                                    <th style="width:180px;text-align:center;">RHS Attribute</th>
                                                                 </tr>
                                                             </thead>
 
@@ -674,10 +671,11 @@
                                                                             </span>
                                                                         </div>
                                                                         <div ng-if="tabledata.isrhsParamlist">
+                                                                            
                                                                             <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                                 <select select2 class="form-control"
                                                                                     data-ng-model="tabledata.rhsparamlist"
-                                                                                    ng-options="r as r.caption for r in allparamlistParams track by r.uuid+attributeId"
+                                                                                    ng-options="r as r.caption for r in allparamlistParams track by r.uuid+r.attributeId"
                                                                                     ng-disabled="{{mode}}" required
                                                                                     disable-validation-message="" ng-change="onChangeRhsParamList()"></select>
                                                                             </span>
@@ -1073,7 +1071,7 @@
                                                         <div class="form-group">
                                                             <label class="control-label col-md-2 col-sm-2 col-xs-3">To</label>
                                                             <div class="col-md-10 col-sm-10 col-xs-12">
-                                                                <tags-input data-ng-model="tagsTo" class="tag-scroll-height"
+                                                                <tags-input data-ng-model="tagsTo" class="tag-scroll-height-report"
                                                                     min-length="0" ng-disabled="{{mode}}" name="tagsTo"
                                                                     allowed-tags-pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"></tags-input>
                                                                 <input type="hidden" name="tagsTo" data-ng-model="tagsTo"
@@ -1084,7 +1082,7 @@
                                                         <div class="form-group">
                                                             <label class="control-label col-md-2 col-sm-2 col-xs-3">Cc</label>
                                                             <div class="col-md-10 col-sm-10 col-xs-12">
-                                                                <tags-input data-ng-model="tagsCC" class="tag-scroll-height"
+                                                                <tags-input data-ng-model="tagsCC" class="tag-scroll-height-report"
                                                                     min-length="0" ng-disabled="{{mode}}"
                                                                     allowed-tags-pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"></tags-input>
                                                             </div>
@@ -1092,7 +1090,7 @@
                                                         <div class="form-group">
                                                             <label class="control-label col-md-2 col-sm-2 col-xs-2">Bcc</label>
                                                             <div class="col-md-10 col-sm-10 col-xs-10">
-                                                                <tags-input data-ng-model="tagsBcc" class="tag-scroll-height"
+                                                                <tags-input data-ng-model="tagsBcc" class="tag-scroll-height-report" 
                                                                     min-length="0" ng-disabled="{{mode}}"
                                                                     allowed-tags-pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"></tags-input>
                                                             </div>

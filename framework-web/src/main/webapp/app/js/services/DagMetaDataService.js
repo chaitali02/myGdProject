@@ -29,31 +29,31 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
     'NotStarted':{
       name : 'NotStarted',
       caption:'Not Started',
-      color :'#659be0',//'#006df0',
+      color :'#6c757d',//'#659be0',
       iconPath : 'assets/layouts/layout/img/new_status/NotStarted.svg',
     },
     'Not Started':{
       name : 'NotStarted',
       caption:'Not Started',
-      color :'#659be0',//'#006df0',
+      color :'#6c757d',//'#659be0',
       iconPath : 'assets/layouts/layout/img/new_status/NotStarted.svg',
     },
     'Completed':{
       name : 'Completed',
       caption:'Completed',
-      color :'#36c6d3',//'#91dc5a',
+      color :'#34bfa3',//'#36c6d3',
       iconPath : 'assets/layouts/layout/img/new_status/Completed.svg',
     },
     'Killed':{
       name : 'Killed',
       caption:'Killed',
-      color :'#ed6b75',//'#d80027',
+      color :'#dc3545',//'#ed6b75',
       iconPath : 'assets/layouts/layout/img/new_status/Killed.svg',
     },
     'Failed':{
       name : 'Failed',
       caption:'Failed',
-      color :'#ed6b75',//'#d80029',
+      color :'#dc3545',//'#ed6b75',
       iconPath : 'assets/layouts/layout/img/new_status/Failed.svg',
     },
     'Resume':{
@@ -65,37 +65,37 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
     'Terminating':{
       name : 'Terminating',
       caption:'Terminating',
-      color :'#FFCCCC',//'#d80027',
+      color : '#f4516c',//'#FFCCCC',
       iconPath : 'assets/layouts/layout/img/new_status/Terminating.svg',
     },
     'OnHold':{
       name : 'OnHold',
       caption:'OnHold',
-      color :'#ffda44',
+      color :'#36a3f7',//'#ffda44',
       iconPath : 'assets/layouts/layout/img/new_status/OnHold.svg',
     },
     'In Progress':{
       name : 'InProgress',
       caption:'In Progress',
-      color :'#F1C40F',//'#f57f36',
+      color :'#ffc107',//'#F1C40F',
       iconPath : 'assets/layouts/layout/img/new_status/InProgress.svg',
     },
     'InProgress':{
       name : 'InProgress',
       caption:'In Progress',
-      color :'#F1C40F',//'#f57f36',
+      color :'#ffc107',//'#F1C40F',
       iconPath : 'assets/layouts/layout/img/new_status/InProgress.svg',
     },
     'Initialized':{
       name : 'Initialized',
       caption:'Initialized',
-      color :'#F1C40F',//'#f57f36',
+      color :'#ffc107',//'#F1C40F',
       iconPath : 'assets/layouts/layout/img/new_status/Initialized.svg',
     },
     'Ready':{
       name : 'Ready',
       caption:'Ready',
-      color :'#659be0',//'#f57f36',
+      color :'#36a3f7',//'#659be0',
       iconPath : 'assets/layouts/layout/img/new_status/Ready.svg',
     },
     'active':{
@@ -2246,7 +2246,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
   obj.validTaskTypes = ['dq','dqgroup','map','load','profile','profilegroup','model','rule','rulegroup','train','predict','simulate','recon','recongroup','operatortype','operator',,'ingest','ingestgroup','report','dashboard'];
   var defaultElement = {
     // markup: '<g class="rotatable"><g class="scalable"><image class="body"/></g><image class="remove"/><g class="status"><rect class="rectstatus" x="82" y="-25" height="22px" width="65px" rx="10" ry="10" fill="white"></rect><text class="statusText"/><image class="statusImg"><title class="statusTitle">Status</title></image></g><text class="label" /> <title /><g class="inPorts"/><g class="outPorts"/></g>',
-    markup: '<g class="rotatable"><g class="scalable"><image class="body"/></g><image class="remove"/><g class="status"><rect class="rectstatus" x="55" y="-25" height="22px" width="65px" rx="10" ry="10" fill="white"></rect><text class="statusText"/></g><text class="label" /> <title /><g class="inPorts"/><g class="outPorts"/></g>',
+    markup: '<g class="rotatable"><g class="scalable"><image class="body"/></g><image class="remove"/><g class="status"><rect class="rectstatus" x="55" y="-25" height="22px" width="65px" rx="10" ry="10" fill="white"></rect><text class="statusText"/><title class="statusTitle">Status</title></g><text class="label" /> <title /><g class="inPorts"/><g class="outPorts"/></g>',
 
     size: { width: 50, height: 50 },
     inPorts : ['in'],
