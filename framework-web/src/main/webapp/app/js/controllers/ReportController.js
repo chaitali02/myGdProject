@@ -711,7 +711,8 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 	$scope.attributeTableArray = null;
 	$scope.isDependencyShow = false;
 	$scope.privileges = [];
-	$scope.privileges = privilegeSvc.privileges[CF_META_TYPES.report] || [];
+	$scope.privileges = privilegeSvc.privileges['report'] || [];
+	console.log($scope.privileges.indexOf('Edit'))
 	$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	$scope.$on('privilegesUpdated', function (e, data) {
 		$scope.privileges = privilegeSvc.privileges[CF_META_TYPES.report] || [];
@@ -759,7 +760,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 			return false;
 		}
 		$scope.showPage()
-		var state = dagMetaDataService.elementDefs["report2"].detailState
+		var state = dagMetaDataService.elementDefs["report"].detailState
 		$state.go(state, {
 			id: uuid,
 			version: version,
@@ -776,6 +777,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 	}/*End ShowGraph*/
 
 	$scope.enableEdit = function (uuid, version) {
+		debugger
 		if ($scope.isPrivlage || $scope.report.locked == "Y") {
 			return false;
 		}
@@ -783,7 +785,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 			return false;
 		}
 		$scope.showPage()
-		var state = dagMetaDataService.elementDefs["report2"].detailState
+		var state = dagMetaDataService.elementDefs["report"].detailState
 		setTimeout(function () { $state.go(state, { 'id': uuid, 'version': version, 'mode': 'false' }); }, 100);
 	}
 
@@ -793,7 +795,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		}
 		if (!$scope.isEdit) {
 			$scope.showPage()
-			var state = dagMetaDataService.elementDefs["report2"].detailState
+			var state = dagMetaDataService.elementDefs["report"].detailState
 			setTimeout(function () { $state.go(state, { 'id': uuid, 'version': version, 'mode': 'false' }); }, 100);
 		}
 	}
