@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -43,6 +44,7 @@ import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.SessionHelper;
 import com.inferyx.framework.common.WorkbookUtil;
+import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.DagExec;
@@ -330,6 +332,24 @@ public class ReportServiceImpl extends RuleTemplate {
 			datastoreServiceImpl.setRunMode(runMode);
 			List<Map<String, Object>> data = datastoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, limit, null, null);		
 			
+			if(data == null || (data != null && data.isEmpty())) {
+				data = new ArrayList<>();
+				MetaIdentifier dependsOnMi = reportExec.getDependsOn().getRef();
+				Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(dependsOnMi.getUuid(), dependsOnMi.getVersion(), dependsOnMi.getType().toString(), "N");
+
+				Map<String,Object> dataMap = new LinkedHashMap<>();
+				int i = 0;
+				for(AttributeSource attributeSource : report.getAttributeInfo()) {
+					if(i == 0) {
+						dataMap.put(attributeSource.getAttrSourceName(), "no data available.");
+					} else {
+						dataMap.put(attributeSource.getAttrSourceName(), "");
+					}
+					data.add(dataMap);
+					i++;
+				}
+			}
+			
 			workbook = workbookUtil.getWorkbookForReport(data, reportExec);
 			
 			DownloadExec downloadExec = new DownloadExec();
@@ -337,15 +357,15 @@ public class ReportServiceImpl extends RuleTemplate {
 			downloadExec.setLocation(filePathUrl);
 			downloadExec.setDependsOn(datastore.getMetaId());
 			
-//		    String downloadPath = Helper.getPropertyValue("framework.file.download.path");
-//		    String filename = downloadExec.getUuid() + "_" + downloadExec.getVersion() + ".xls";
-//		    String fileLocation = downloadPath + "/" + filename;
+//			    String downloadPath = Helper.getPropertyValue("framework.file.download.path");
+//			    String filename = downloadExec.getUuid() + "_" + downloadExec.getVersion() + ".xls";
+//			    String fileLocation = downloadPath + "/" + filename;
 
 			FileOutputStream fileOut = new FileOutputStream(filePathUrl);
 			workbook.write(fileOut);		
 			fileOut.close();
 
-			commonServiceImpl.save(MetaType.downloadExec.toString(), downloadExec);	
+			commonServiceImpl.save(MetaType.downloadExec.toString(), downloadExec);
 		}
 		
 		if(response != null) {
@@ -474,17 +494,21 @@ public class ReportServiceImpl extends RuleTemplate {
 		notification.setMessage(message);
 
 		if (senderInfo.getSendAttachment().equalsIgnoreCase("Y")) {			
-			download(reportExec.getUuid(), reportExec.getVersion(), "excel", 0, report.getLimit(), null, null, null, null,
-					runMode, true);
+			try {
+				download(reportExec.getUuid(), reportExec.getVersion(), "excel", 0, report.getLimit(), null, null, null, null,
+						runMode, true);
 
-			String defaultDownloadPath = Helper.getPropertyValue("framework.file.download.path"); 
-			defaultDownloadPath = defaultDownloadPath.endsWith("/") ? defaultDownloadPath : defaultDownloadPath.concat("/");
-			String reportFileName = String.format("%s_%s_%s.%s", report.getUuid().replaceAll("-", "_"), report.getVersion(), reportExec.getVersion(), "xls");
-			String filePathUrl = defaultDownloadPath.concat(reportFileName);	
+				String defaultDownloadPath = Helper.getPropertyValue("framework.file.download.path"); 
+				defaultDownloadPath = defaultDownloadPath.endsWith("/") ? defaultDownloadPath : defaultDownloadPath.concat("/");
+				String reportFileName = String.format("%s_%s_%s.%s", report.getUuid().replaceAll("-", "_"), report.getVersion(), reportExec.getVersion(), "xls");
+				String filePathUrl = defaultDownloadPath.concat(reportFileName);	
 
-			Map<String, String> emailAttachment = new HashMap<>();
-			emailAttachment.put(report.getName().concat("_").concat(reportExec.getVersion().concat(".xls")), filePathUrl);
-			senderInfo.setEmailAttachment(emailAttachment);
+				Map<String, String> emailAttachment = new HashMap<>();
+				emailAttachment.put(report.getName().concat("_").concat(reportExec.getVersion().concat(".xls")), filePathUrl);
+				senderInfo.setEmailAttachment(emailAttachment);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		notification.setSenderInfo(senderInfo);
 		return notificationServiceImpl.prepareAndSendNotification(notification);
