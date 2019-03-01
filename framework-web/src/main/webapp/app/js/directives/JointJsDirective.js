@@ -1783,7 +1783,10 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          $(".status[element-id=" + dagid + "] .rectstatus").attr("fill",dagMetaDataService.statusDefs[statusDag].color);
          
          $(".status[element-id=" + dagid + "] .statusTitle").text(statusDag);
-         $(".status[element-id=" + dagid + "] .statusText").text(statusDag.substring(0,3) + "..");
+         $(".status[element-id=" + dagid + "] .statusText").text(statusDag)//substring(0,3) + "..");
+         if(statusDag !=null){
+          $(".status[element-id=" + dagid + "] .rectstatus").attr("width",dagMetaDataService.statusDefs[statusDag].jointWidth);
+         }
          
          $(".status[element-id=" + dagid + "]").attr("statusList",JSON.stringify(data.status));
          angular.forEach(data.status,function (status) {
@@ -1796,7 +1799,10 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
            $(".status[element-id=" + stageid + "] .rectstatus").attr("fill",dagMetaDataService.statusDefs[statusStage].color);
 
            $(".status[element-id=" + stageid + "] .statusTitle").text(statusStage);
-           $(".status[element-id=" + stageid + "] .statusText").text(statusStage.substring(0,3) + "..");
+           $(".status[element-id=" + stageid + "] .statusText").text(statusStage)//.substring(0,3) + "..");
+           if(statusStage !=null){
+            $(".status[element-id=" + stageid + "] .rectstatus").attr("width",dagMetaDataService.statusDefs[statusStage].jointWidth);
+           }
 
            $(".status[element-id=" + stageid + "]").attr("statusList",JSON.stringify(stage.status));
            angular.forEach(stage.status,function (status) {
@@ -1809,7 +1815,11 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
              $(".status[element-id=" + taskid + "] .rectstatus").attr("fill",dagMetaDataService.statusDefs[statusTask].color);
 
              $(".status[element-id=" + taskid + "] .statusTitle").text(statusTask);
-             $(".status[element-id=" + taskid + "] .statusText").text(statusTask.substring(0,3) + "..");
+             $(".status[element-id=" + taskid + "] .statusText").text(statusTask)//.substring(0,3) + "..");
+             if(statusTask !=null){
+              $(".status[element-id=" + taskid + "] .rectstatus").attr("width",dagMetaDataService.statusDefs[statusTask].jointWidth);
+             }
+
              $(".status[element-id=" + taskid + "]").attr("statusList",JSON.stringify(task.status));
              angular.forEach(task.status,function (status) {
                $(".status[element-id=" + taskid + "]").attr(status.stage,status.createdOn);
