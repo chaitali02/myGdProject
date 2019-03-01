@@ -2298,7 +2298,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         var type = $scope.popupModel.modelData.operators[0].operatorInfo[0].ref.type;
         var typeParamListArray=["simulate","operator","operatorexec","simulateexec"];
         var typeParamSetArray=["train","rule","ruleexec",'trainexec','report','reportexec'];
-        var typeParamsArray=["dashboard",'dashboardexec'];
+        var typeParamsArray=[]//["dashboard",'dashboardexec'];
         if(typeParamSetArray.indexOf(type.toLowerCase()) !=-1 && ($scope.paramsetdata ||  $scope.popupModel.selectedType)){
           $scope.isExecParamSet=false;
           $scope.isTabelShow=false;
@@ -3093,7 +3093,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         objDetail.type=type;
         var typeParamSetArray=["train","rule",'report'];
         var typeParamListArray=["simulate","operator"];
-        var typeParamArray=['dashboard'];
+        var typeParamArray=[];//['dashboard'];
         if(typeParamSetArray.indexOf(type) != -1){
           $scope.getExecParamsSet(objDetail,$scope.popupModel);
           $scope.isExecParamSet=true;
