@@ -983,7 +983,7 @@ public class Helper {
 	 * @param type
 	 * @return MetaType
 	 */
-	public MetaType getMetaTypeByExecType (MetaType type) {
+	public static MetaType getMetaTypeByExecType (MetaType type) {
 		if(type == null)
 			return null;
 		switch(type) {

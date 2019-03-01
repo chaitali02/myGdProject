@@ -33,8 +33,10 @@ import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.SessionHelper;
+import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRule;
 import com.inferyx.framework.domain.BaseRuleExec;
+import com.inferyx.framework.domain.BaseRuleGroupExec;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
@@ -256,6 +258,33 @@ public abstract class RuleTemplate implements IExecutable, IParsable {
 			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		return commonServiceImpl.getDatasourceByApp();
+	}
+	
+	/**
+	 * 
+	 * @param baseRuleExecUUID
+	 * @param baseRuleExecVersion
+	 * @param ruleExecType
+	 * @return
+	 * @throws Exception
+	 */
+	public Status restart (String baseRuleExecUUID, String baseRuleExecVersion, MetaType ruleExecType) throws Exception {
+		Status operatorLeastSigStatus = null;
+		BaseRuleExec baseRuleExec = (BaseRuleExec) commonServiceImpl.getOneByUuidAndVersion(baseRuleExecUUID, baseRuleExecVersion, ruleExecType.toString(), "N");
+		operatorLeastSigStatus = helper.getLatestStatus(baseRuleExec.getStatusList());
+		if(Helper.getLatestStatus(baseRuleExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))
+				||Helper.getLatestStatus(baseRuleExec.getStatusList()).equals(new Status(Status.Stage.Killed, new Date()))){
+			operatorLeastSigStatus = new Status(Status.Stage.Ready, new Date());
+			logger.info("RuleExec " + baseRuleExecUUID + " failed/killed. So proceeding ... ");
+			if (Helper.isStatusPresent(new Status(Status.Stage.Ready, new Date()), baseRuleExec.getStatusList())) {
+				commonServiceImpl.setMetaStatus(baseRuleExec, ruleExecType, Status.Stage.Ready);
+			} else {
+				commonServiceImpl.setMetaStatus(baseRuleExec, ruleExecType, Status.Stage.NotStarted);
+				operatorLeastSigStatus = new Status(Status.Stage.NotStarted, new Date());
+			}
+		}
+		logger.info("Status of baseruleexec " + baseRuleExecUUID + " = " + operatorLeastSigStatus.getStage().toString());
+		return operatorLeastSigStatus;
 	}
 
 }
