@@ -11,6 +11,8 @@
 package com.inferyx.framework.service;
 
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -19,10 +21,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.DagExecUtil;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.dao.IDataQualGroupDao;
 import com.inferyx.framework.dao.IDataQualGroupExecDao;
 import com.inferyx.framework.domain.BaseExec;
+import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataQualGroupExec;
 import com.inferyx.framework.domain.ExecParams;
@@ -356,7 +361,22 @@ public class DataQualGroupServiceImpl extends RuleGroupTemplate {
 		//dataQualGroupExec = create(dataQualGroupExec.getDependsOn().getRef().getUuid(),dataQualGroupExec.getDependsOn().getRef().getVersion(), null, null, dataQualGroupExec, null);
 		dataQualGroupExec = parse(dataQualGroupExec.getRef(MetaType.dqgroupExec), null, null, null, runMode);
 		execute(dataQualGroupExec.getDependsOn().getRef().getUuid(),dataQualGroupExec.getDependsOn().getRef().getVersion(),null,dataQualGroupExec, runMode);
-		
+	}
+	
+	/**
+	 * 
+	 * @param baseExec
+	 * @return
+	 * @throws Exception
+	 */
+	public Status restart(BaseExec baseExec) throws Exception {
+		try {
+			return super.restart(baseExec.getUuid(), baseExec.getVersion(), MetaType.dqgroupExec, MetaType.dqExec);
+		} catch (JsonProcessingException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+				| NoSuchMethodException | SecurityException | NullPointerException e) {
+			e.printStackTrace();
+			throw new Exception(e);
+		}
 	}
 
 	/**
@@ -376,5 +396,7 @@ public class DataQualGroupServiceImpl extends RuleGroupTemplate {
 		return parse(baseExec.getUuid(), baseExec.getVersion(), MetaType.dqgroup, MetaType.dqgroupExec, MetaType.dq, MetaType.dqExec, 
 				DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), null, null, runMode);
 	}
+	
+	
 	
 }

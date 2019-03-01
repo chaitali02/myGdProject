@@ -124,6 +124,8 @@ public class VizpodController {
 		return vizpodServiceImpl.getVizpodDetails(vizpodUUID, vizpodVersion, execParams, vizExec, rows, offset, limit, sortBy, order, requestId, runMode);
 	}
 	
+	
+	
 	@RequestMapping(value = "/getVizpodResults", method = RequestMethod.GET)
 	public List<Map<String, Object>> getVizpodResults2(@RequestParam(value = "uuid") String vizExecUuid,
 			@RequestParam(value = "version") String vizExecVersion,
@@ -140,6 +142,9 @@ public class VizpodController {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		return vizpodServiceImpl.getVizpodResults(vizExecUuid, vizExecVersion, saveOnRefresh, rows, offset, limit, sortBy, order, requestId, runMode);	
 	}
+	
+	
+	
 
 //@RequestMapping(value = "/getVizpodResults/{VizpodUUID}/{VizpodVersion}/{VizpodExecUUID}", method = RequestMethod.POST)
 //public VizpodResultHolder getVizpodResults(@PathVariable(value = "VizpodUUID") String vizpodUUID,
@@ -177,5 +182,24 @@ public class VizpodController {
 				null, null, runMode);
 		return null;
 	}
- 
+	
+	
+
+	@RequestMapping(value = "/getVizpodResultDetails", method = RequestMethod.POST)
+	public List<Map<String, Object>> getVizpodResultDetails(@RequestParam(value = "uuid") String vizpodUuid,
+			@RequestParam(value = "version") String vizpodVersion, @RequestBody(required = false) ExecParams execParams,
+			@RequestParam(value = "rows", defaultValue = "1000") int rows,
+			@RequestParam(value = "offset", defaultValue = "0") int offset,
+			@RequestParam(value = "limit", defaultValue = "300") int limit,
+			@RequestParam(value = "sortBy", required = false) String sortBy,
+			@RequestParam(value = "order", required = false) String order,
+			@RequestParam(value = "requestId", required = false) String requestId,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws Exception {
+		RunMode runMode = RunMode.BATCH;
+
+		return vizpodServiceImpl.getVizpodResultDetails(vizpodUuid, vizpodVersion, execParams, null, rows, offset,
+				limit, sortBy, order, requestId, runMode);
+	}
+
 }

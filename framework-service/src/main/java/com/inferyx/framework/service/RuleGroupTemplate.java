@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -24,9 +25,11 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.SessionHelper;
+import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.BaseRuleGroup;
 import com.inferyx.framework.domain.BaseRuleGroupExec;
@@ -49,6 +52,9 @@ import com.inferyx.framework.operator.IParsable;
  *
  */
 public abstract class RuleGroupTemplate implements IExecutable, IParsable {
+	
+	private static final String GET = "get";
+	private static final String SET = "set";
 	
 	@Autowired
 	protected CommonServiceImpl<?> commonServiceImpl;
@@ -410,7 +416,7 @@ public abstract class RuleGroupTemplate implements IExecutable, IParsable {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes", "static-access" })
 	public MetaIdentifier execute(String baseGroupUUID, String baseGroupVersion, MetaType groupType, MetaType groupExecType, MetaType ruleType, MetaType ruleExecType, ExecParams execParams, BaseRuleGroupExec baseGroupExec, RunMode runMode) throws Exception {
-		BaseRuleGroup baseGroup = (BaseRuleGroup) commonServiceImpl.getOneByUuidAndVersion(baseGroupExec.getDependsOn().getRef().getUuid(), baseGroupExec.getDependsOn().getRef().getVersion(), groupType.toString());
+		BaseRuleGroup baseGroup = (BaseRuleGroup) commonServiceImpl.getOneByUuidAndVersion(baseGroupExec.getDependsOn().getRef().getUuid(), baseGroupExec.getDependsOn().getRef().getVersion(), groupType.toString(), "N");
 		List<FutureTask> taskList = new ArrayList<FutureTask>();
 		RuleTemplate baseRuleService = serviceFactory.getRuleService(ruleType);
 		baseGroup.setInParallel("false");
@@ -470,5 +476,36 @@ public abstract class RuleGroupTemplate implements IExecutable, IParsable {
 		logger.info("Removing group " + baseGroupExec.getUuid() + ":" + groupExecType + " from taskThreadMap ");
 		taskThreadMap.remove(groupExecType+"_"+baseGroupExec.getUuid()+"_"+baseGroupExec.getVersion());
 		return baseGroupExec.getRef(groupExecType);
+	}
+	
+	public Status restart (String baseGroupExecUUID, String baseGroupExecVersion, MetaType groupExecType, MetaType ruleExecType) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
+		Status operatorLeastSigStatus = null;
+		BaseRuleGroupExec baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.getOneByUuidAndVersion(baseGroupExecUUID, baseGroupExecVersion, groupExecType.toString(), "N");
+		operatorLeastSigStatus = Helper.getLatestStatus(baseGroupExec.getStatusList());
+		if(Helper.getLatestStatus(baseGroupExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))
+				||Helper.getLatestStatus(baseGroupExec.getStatusList()).equals(new Status(Status.Stage.Killed, new Date()))){
+			logger.info("BaseGroupExec " + baseGroupExecUUID + " failed/killed. So proceeding ... ");
+			operatorLeastSigStatus = new Status(Status.Stage.Ready, new Date());
+			for (MetaIdentifierHolder ruleExecRefHolder : baseGroupExec.getExecList()) {
+				logger.info("Checking restart of ruleexec " + ruleExecRefHolder.getRef().getUuid());
+				BaseRuleExec baseRuleExec = (BaseRuleExec) commonServiceImpl.getOneByUuidAndVersion(ruleExecRefHolder.getRef().getUuid(), ruleExecRefHolder.getRef().getVersion(), ruleExecType.toString(), "N");
+				Object obj = (CommonServiceImpl.class.getMethod(GET + Helper.getServiceClass(Helper.getMetaTypeByExecType(ruleExecType))).invoke(commonServiceImpl));
+				Status status = (Status) obj.getClass().getMethod("restart", BaseExec.class).invoke(obj, baseRuleExec);
+				operatorLeastSigStatus = new Status(Helper.getPriorStatus(operatorLeastSigStatus.getStage(), status.getStage()), new Date());
+			}
+		}
+		logger.info("Status of basegroupexec " + baseGroupExecUUID + " = " + operatorLeastSigStatus.getStage().toString());
+		try {
+			commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType, operatorLeastSigStatus.getStage());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		/*if (Helper.isStatusPresent(new Status(Status.Stage.Ready, new Date()), baseGroupExec.getStatusList())) {
+			commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType, Status.Stage.Ready);
+		} else {
+			commonServiceImpl.setMetaStatus(baseExec, meta.getType(), Status.Stage.NotStarted);
+			operatorLeastSigStatus = new Status(Status.Stage.NotStarted, new Date());
+		}*/
+		return operatorLeastSigStatus;
 	}
 }

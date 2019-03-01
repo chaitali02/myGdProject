@@ -89,6 +89,9 @@ import com.inferyx.framework.register.GraphRegister;
 
 @Service
 public class DagServiceImpl {
+	
+	private static final String GET = "get";
+	private static final String SET = "set";
 
 	@Autowired
 	GraphRegister<?> registerGraph;
@@ -1479,25 +1482,32 @@ public class DagServiceImpl {
 							for (TaskOperator taskOperator : taskExec.getOperators()) {
 								MetaIdentifier meta = taskOperator.getOperatorInfo().get(0).getRef();
 								BaseExec baseExec = (BaseExec) commonServiceImpl.getOneByUuidAndVersion(meta.getUuid(), meta.getVersion(), meta.getType().toString(), "N");
-								if (Helper.isStatusPresent(new Status(Status.Stage.Ready, new Date()), baseExec.getStatusList())) {
-									commonServiceImpl.setMetaStatus(baseExec, meta.getType(), Status.Stage.Ready);
+								if (meta.getType().toString().contains("group")) {
+									Object obj = (CommonServiceImpl.class.getMethod(GET + Helper.getServiceClass(Helper.getMetaTypeByExecType(meta.getType())))
+												.invoke(commonServiceImpl));
+									Status restartStatus = (Status) obj.getClass().getMethod("restart", BaseExec.class).invoke(obj, baseExec);
+									operatorLeastSigStatus = new Status(helper.getPriorStatus((restartStatus==null)?null:restartStatus.getStage(), operatorLeastSigStatus.getStage()), new Date());
 								} else {
-									commonServiceImpl.setMetaStatus(baseExec, meta.getType(), Status.Stage.NotStarted);
-									operatorLeastSigStatus = new Status(Status.Stage.NotStarted, new Date());
+									if (helper.isStatusPresent(new Status(Status.Stage.Ready, new Date()), baseExec.getStatusList())) {
+										commonServiceImpl.setMetaStatus(baseExec, meta.getType(), Status.Stage.Ready);
+									} else {
+										commonServiceImpl.setMetaStatus(baseExec, meta.getType(), Status.Stage.NotStarted);
+										operatorLeastSigStatus = new Status(Status.Stage.NotStarted, new Date());
+									}
 								}
 							} // End for operator
 							logger.info(" Setting task to " + operatorLeastSigStatus.getStage());
 							taskExec = (TaskExec) commonServiceImpl.setMetaStatusForTask(dagExec, taskExec, operatorLeastSigStatus.getStage(),dagExec.getStages().get(i).getStageId(), dagExec.getStages().get(i).getTasks().get(j).getTaskId());
 							dagExec.getStages().get(i).getTasks().remove(j);
 							dagExec.getStages().get(i).getTasks().add(j, taskExec); 
-							taskLeastSigStatus = new Status(Helper.getPriorStatus(taskLeastSigStatus.getStage(), operatorLeastSigStatus.getStage()), new Date());
+							taskLeastSigStatus = new Status(helper.getPriorStatus(taskLeastSigStatus.getStage(), operatorLeastSigStatus.getStage()), new Date());
 						}	
 					} // End tasks
 					logger.info(" Setting stage to " + taskLeastSigStatus.getStage());
 					stageExec = (StageExec) commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, taskLeastSigStatus.getStage(), stageExec.getStageId());
 					dagExec.getStages().remove(i);
 					dagExec.getStages().add(i, stageExec);
-					stageLeastSigStatus = new Status(Helper.getPriorStatus(stageLeastSigStatus.getStage(), taskLeastSigStatus.getStage()), new Date());
+					stageLeastSigStatus = new Status(helper.getPriorStatus(stageLeastSigStatus.getStage(), taskLeastSigStatus.getStage()), new Date());
 				}
 			} // End stages
 				logger.info(" Setting dag to " + stageLeastSigStatus.getStage());
