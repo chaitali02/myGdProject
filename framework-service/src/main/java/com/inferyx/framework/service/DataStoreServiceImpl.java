@@ -1630,27 +1630,35 @@ public class DataStoreServiceImpl {
 			boolean requestIdExistFlag = false;
 			String tableName = getTableNameByDatastore(dataStore.getUuid(),
 					dataStore.getVersion(), runMode); 
-			
+
+			String rowLimit = " ";
+			if(limit > 0) {
+				rowLimit = " LIMIT " + limit;
+			}
 			Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(dataStore);
 			MetaType metaType = dataStore.getMetaId().getRef().getType();
 			if(runMode.equals(RunMode.ONLINE) && (metaType.equals(MetaType.rule)
 					||  metaType.equals(MetaType.datapod) || metaType.equals(MetaType.report))) {
-				data = sparkExecutor.executeAndFetchFromTempTable("SELECT * FROM " + tableName + " LIMIT " + limit, appUuid);
+				
+				data = sparkExecutor.executeAndFetchFromTempTable("SELECT * FROM " + tableName + rowLimit, appUuid);
 			} else if (requestId == null|| requestId.equals("null") || requestId.isEmpty()) {
 				if (datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
 						|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())
 						|| datasource.getType().toUpperCase().contains(ExecContext.HIVE.toString())
 						|| datasource.getType().toUpperCase().contains(ExecContext.IMPALA.toString())) {
-					 data = exec.executeAndFetchByDatasource("SELECT * FROM " + tableName + " LIMIT " + limit, mapSourceDS, appUuid);
+					 data = exec.executeAndFetchByDatasource("SELECT * FROM " + tableName + rowLimit, mapSourceDS, appUuid);
 				} else {
 					if (datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
-						if (runMode.equals(RunMode.ONLINE)) {
-							data = exec.executeAndFetchByDatasource("SELECT * FROM " + tableName + " LIMIT " + limit, mapSourceDS, appUuid);
+						if (runMode.equals(RunMode.ONLINE)) {							
+							data = exec.executeAndFetchByDatasource("SELECT * FROM " + tableName + rowLimit, mapSourceDS, appUuid);
 						} else {
-							data = exec.executeAndFetchByDatasource("SELECT * FROM " + tableName + " WHERE rownum< " + limit, mapSourceDS, appUuid);
+							if(limit > 0) {
+								rowLimit = " WHERE rownum< " + limit;
+							}
+							data = exec.executeAndFetchByDatasource("SELECT * FROM " + tableName + rowLimit, mapSourceDS, appUuid);
 						}
 					} else {
-						data = exec.executeAndFetchByDatasource("SELECT * FROM " + tableName + " LIMIT " + limit, mapSourceDS, appUuid);
+						data = exec.executeAndFetchByDatasource("SELECT * FROM " + tableName + rowLimit, mapSourceDS, appUuid);
 					}
 				}
 			} else {
@@ -1673,7 +1681,7 @@ public class DataStoreServiceImpl {
 						} else {
 							if(runMode.equals(RunMode.ONLINE) && (metaType.equals(MetaType.rule)
 									||  metaType.equals(MetaType.datapod) || metaType.equals(MetaType.report))) {
-								data = sparkExecutor.executeAndFetchFromTempTable("SELECT * FROM " + tableName + " LIMIT " + limit, appUuid);
+								data = sparkExecutor.executeAndFetchFromTempTable("SELECT * FROM " + tableName + rowLimit, appUuid);
 							} else if (datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
 									|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())
 									|| datasource.getType().toUpperCase().contains(ExecContext.HIVE.toString())
@@ -1682,16 +1690,20 @@ public class DataStoreServiceImpl {
 //										"SELECT * FROM (SELECT Row_Number() Over(ORDER BY "+ orderBy.toString()+") AS rownum, * FROM (SELECT * FROM "
 //												+ tableName +") AS tab) AS tab1",
 //												appUuid);
-								data = exec.executeAndFetchByDatasource("SELECT * FROM " + tableName + " LIMIT " + limit, mapSourceDS,appUuid);
+								data = exec.executeAndFetchByDatasource("SELECT * FROM " + tableName + rowLimit, mapSourceDS,appUuid);
 							} else {
 								if (datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
-									if (runMode.equals(RunMode.ONLINE))
-										data = exec.executeAndFetchByDatasource("SELECT * FROM " + tableName + " LIMIT " + limit, mapSourceDS, appUuid);
-									else
+									if (runMode.equals(RunMode.ONLINE)) {
+										data = exec.executeAndFetchByDatasource("SELECT * FROM " + tableName + rowLimit, mapSourceDS, appUuid);
+									} else {
+										if(limit > 0) {
+											rowLimit = " WHERE rownum< " + limit;
+										}
 										data = exec.executeAndFetchByDatasource(
-												"SELECT * FROM " + tableName + " WHERE  rownum<" + limit, mapSourceDS, appUuid);
+												"SELECT * FROM " + tableName + rowLimit, mapSourceDS, appUuid);
+									}
 								else {
-									data = exec.executeAndFetchByDatasource("SELECT * FROM " + tableName + " LIMIT " + limit, mapSourceDS, appUuid);
+									data = exec.executeAndFetchByDatasource("SELECT * FROM " + tableName + rowLimit, mapSourceDS, appUuid);
 								}
 							}
 
@@ -1703,17 +1715,24 @@ public class DataStoreServiceImpl {
 							|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())
 							|| datasource.getType().toUpperCase().contains(ExecContext.HIVE.toString())
 							|| datasource.getType().toUpperCase().contains(ExecContext.IMPALA.toString())) {
+						if(limit > 0) {
+							rowLimit = " AND rownum <= " + limit;
+						}
 						data = exec.executeAndFetchByDatasource("SELECT * FROM " + tableName + " WHERE rownum >= " + offset
-								+ " AND rownum <= " + limit, mapSourceDS, appUuid);
+								+ rowLimit, mapSourceDS, appUuid);
 					} else {
 						if (datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
-							if (runMode.equals(RunMode.ONLINE))
-								data = exec.executeAndFetchByDatasource("SELECT * FROM " + tableName + " LIMIT " + limit, mapSourceDS, appUuid);
-							else
+							if (runMode.equals(RunMode.ONLINE)) {
+								data = exec.executeAndFetchByDatasource("SELECT * FROM " + tableName + rowLimit, mapSourceDS, appUuid);
+							} else {
+								if(limit > 0) {
+									rowLimit = " WHERE rownum< " + limit;
+								}
 								data = exec.executeAndFetchByDatasource(
-										"SELECT * FROM " + tableName + " WHERE  rownum<" + limit, mapSourceDS, appUuid);
+										"SELECT * FROM " + tableName + rowLimit, mapSourceDS, appUuid);
+							}
 						else {
-							data = exec.executeAndFetchByDatasource("SELECT * FROM " + tableName + " LIMIT " + limit, mapSourceDS, appUuid);
+							data = exec.executeAndFetchByDatasource("SELECT * FROM " + tableName + rowLimit, mapSourceDS, appUuid);
 						}
 					}
 				}
