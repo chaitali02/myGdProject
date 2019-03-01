@@ -29,6 +29,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.spark.sql.SaveMode;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.layers.ActivationLayer;
@@ -650,6 +651,16 @@ public class Helper {
 		property.load(stream);
 		//logger.info(property.getProperty(key));
 		return  property.entrySet();
+	}
+	
+	public static short getStylesheetAlignment(String alignment) {
+		switch (alignment.toLowerCase()) {
+		case "center":	return CellStyle.ALIGN_CENTER;
+		case "right":	return CellStyle.ALIGN_RIGHT;
+		case "left":	return CellStyle.ALIGN_LEFT;
+
+		default: return CellStyle.ALIGN_CENTER;
+		}
 	}
 	
 	public static void updateRunStatus (Status.Stage latestStatus, RunStatusHolder statusHolder) {

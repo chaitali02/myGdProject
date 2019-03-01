@@ -17,7 +17,7 @@ public class FilterInfo {
 	private String  display_seq;
 	private String logicalOperator;
 	private String operator;
-	private List<SourceAttr> operand = new ArrayList<>(0); 
+	private List<SourceAttr> operand = new ArrayList<>(); 
 	//private MetaIdentifierHolder notMet;
 	//private MetaIdentifierHolder met;
 	
