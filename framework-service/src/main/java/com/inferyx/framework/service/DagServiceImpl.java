@@ -26,6 +26,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -350,9 +351,9 @@ public class DagServiceImpl {
 			return null;
 		}
 		if (dagRef.getVersion() == null) {
-			dag = (Dag) commonServiceImpl.getLatestByUuid(dagRef.getUuid(), MetaType.dag.toString());
+			dag = (Dag) commonServiceImpl.getLatestByUuid(dagRef.getUuid(), MetaType.dag.toString(), "N");
 		} else {
-			dag = (Dag) commonServiceImpl.getOneByUuidAndVersion(dagRef.getUuid(), dagRef.getVersion(), MetaType.dag.toString());
+			dag = (Dag) commonServiceImpl.getOneByUuidAndVersion(dagRef.getUuid(), dagRef.getVersion(), MetaType.dag.toString(), "N");
 		}
 		return submitDag(dag, null, execParams, runMode);
 	}
@@ -816,6 +817,7 @@ public class DagServiceImpl {
 				inputRefKeys.put(inputRefKey.getUuid(), inputRefKey);
 			}
 		}
+		
 		// Iterate the task and set it
 		for (Task indvTask : dagTasks) {
 			TaskExec taskExec = null;
@@ -884,7 +886,7 @@ public class DagServiceImpl {
 						.getOperators().get(0).getOperatorInfo().get(0).getRef().getType().equals(MetaType.mapiter)) {
 					mapRef = indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef();
 					MetaIdentifier mapIdentifier = commonServiceImpl.populateRefKeys(refKeys, mapRef, inputRefKeys);
-					Map map = (Map) commonServiceImpl.getOneByUuidAndVersion(mapIdentifier.getUuid(), mapIdentifier.getVersion(), mapIdentifier.getType().toString());
+					Map map = (Map) commonServiceImpl.getOneByUuidAndVersion(mapIdentifier.getUuid(), mapIdentifier.getVersion(), mapIdentifier.getType().toString(), "N");
 
 					// Setting the Version for Map Object
 					sourceRef = map.getSource().getRef();
@@ -924,7 +926,7 @@ public class DagServiceImpl {
 					secondaryDagRef = indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef();
 					commonServiceImpl.populateRefKeys(refKeys, secondaryDagRef, inputRefKeys); // PopuPopulatelate
 																				// refKeys
-				} else if (indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType().equals(MetaType.dq)) {// MetaType
+				} /*else if (indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType().equals(MetaType.dq)) {// MetaType
 
 					DataQualExec dataqualExec = new DataQualExec();
 					dataqualExec.setBaseEntity();
@@ -932,21 +934,11 @@ public class DagServiceImpl {
 
 					RuleExec ruleExec = new RuleExec();
 					ruleExec.setBaseEntity();
-					/*
-					 * execIdentifier = new MetaIdentifier(MetaType.ruleExec, ruleExec.getUuid(),
-					 * ruleExec.getVersion());
-					 * taskExec.getOperators().get(0).getOperatorInfo().setRef(execIdentifier);
-					 */
 				} else if (indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType()
 						.equals(MetaType.rulegroup)) {// MetaType
 
 					RuleGroupExec ruleGroupExec = new RuleGroupExec();
 					ruleGroupExec.setBaseEntity();
-					/*
-					 * execIdentifier = new MetaIdentifier(MetaType.rulegroupExec,
-					 * ruleGroupExec.getUuid(), ruleGroupExec.getVersion());
-					 * taskExec.getOperators().get(0).getOperatorInfo().setRef(execIdentifier);
-					 */
 				} else if (indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType()
 						.equals(MetaType.train)) {
 					TrainExec trainExec = new TrainExec();
@@ -975,7 +967,18 @@ public class DagServiceImpl {
 						.equals(MetaType.dashboard)) {
 					DashboardExec dashboardExec = new DashboardExec();
 					dashboardExec.setBaseEntity();
-				} 
+				} */
+			}
+			try {
+				BaseExec baseExec = (BaseExec) commonServiceImpl.createAndSetOperator(helper.getExecType(indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType()), 
+											indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef(), 
+											taskExec, 
+											0);
+				commonServiceImpl.save(helper.getExecType(indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType()).toString(), baseExec);
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+					| NoSuchMethodException | SecurityException | InterruptedException | JSONException | ParseException e) {
+				logger.error(indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef() + " could not be created ");
+				e.printStackTrace();
 			}
 			execParams.setRefKeyList(DagExecUtil.convertRefKeyMapToList(refKeys));
 		}
@@ -1127,7 +1130,9 @@ public class DagServiceImpl {
 					java.util.Map<String, MetaIdentifier> refKeyMap = DagExecUtil
 							.convertRefKeyListToMap(taskExecParams.getRefKeyList());
 					
-					BaseExec baseExec = (BaseExec) commonServiceImpl.createAndSetOperator(helper.getExecType(ref.getType()), ref, indvExecTask, i);
+//					BaseExec baseExec = (BaseExec) commonServiceImpl.createAndSetOperator(helper.getExecType(ref.getType()), ref, indvExecTask, i);
+					MetaIdentifier execRef = indvExecTask.getOperators().get(0).getOperatorInfo().get(i).getRef();
+					BaseExec baseExec = (BaseExec) commonServiceImpl.getOneByUuidAndVersion(execRef.getUuid(), execRef.getVersion(), execRef.getType().toString(), "N"); 
 					baseExec.setExecParams(taskExecParams);
 
 					try {
