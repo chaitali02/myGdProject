@@ -209,7 +209,7 @@ public class RunDagServiceImpl implements Callable<String> {
 			
 			
 			//dagExec = dagExecServiceImpl.findOneByUuidAndVersion(dagExec.getUuid(), dagExec.getVersion());
-			dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(dagExec.getUuid(), dagExec.getVersion(), MetaType.dagExec.toString());
+			dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(dagExec.getUuid(), dagExec.getVersion(), MetaType.dagExec.toString(), "N");
 			List<StageExec> dagExecStgs = DagExecUtil.castToStageExecList(dagExec.getStages());
 			boolean setCompletedStatus = true;
 			

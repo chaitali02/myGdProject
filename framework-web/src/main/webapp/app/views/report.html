@@ -987,7 +987,7 @@
                                                                                                 ng-disabled="{{mode}}"
                                                                                                 class="form-control"
                                                                                                 ng-options="c as  c.name for c in allFunction track by c.uuid"
-                                                                                                ng-change="ngChangeFunction($index)"></select>
+                                                                                                ng-change="ngChangeFunction(data.sourcefunction,$index)"></select>
                                                                                         </div>
                                                                                     </span>
                                                                                 </div>

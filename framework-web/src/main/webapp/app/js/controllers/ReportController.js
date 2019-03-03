@@ -1681,7 +1681,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		}
 	}
 
-	$scope.ngChangeFunction = function () {
+	$scope.ngChangeFunction = function (data,index) {
 		if (!$scope.attributeTableArray[index].isSourceName)
 			$scope.attributeTableArray[index].name = data.paramName;
 		var dupArray = [];

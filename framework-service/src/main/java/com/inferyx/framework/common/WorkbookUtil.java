@@ -22,6 +22,7 @@ import java.util.Set;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFPalette;
 import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -349,7 +350,13 @@ public class WorkbookUtil {
 		columnHeaderFont.setColor(HSSFColor.WHITE.index);
 		CellStyle columnHeaderStyle = workBook.createCellStyle();
 		columnHeaderStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		columnHeaderStyle.setFillForegroundColor(HSSFColor.ROYAL_BLUE.index);
+		
+		HSSFPalette palette = ((HSSFWorkbook)workBook).getCustomPalette(); 
+		short colorIndex = 45; 
+		palette.setColorAtIndex(colorIndex, (byte)63, (byte)137, (byte)201); 
+		columnHeaderStyle.setFillForegroundColor(getCustomColor(workBook, (byte)63, (byte)137, (byte)201));  
+		
+//		columnHeaderStyle.setFillForegroundColor(HSSFColor.ROYAL_BLUE.index);
 		columnHeaderStyle.setFillBackgroundColor(HSSFColor.RED.index);
 		columnHeaderStyle.setFont(columnHeaderFont);
 		columnHeaderStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
@@ -435,5 +442,12 @@ public class WorkbookUtil {
 		footerCell.setCellValue(new HSSFRichTextString(report.getFooter()));
 		
 		return workBook;
+	}
+	
+	public short getCustomColor(Workbook workBook, byte R, byte G, byte B) {
+		HSSFPalette palette = ((HSSFWorkbook)workBook).getCustomPalette(); 
+		short colorIndex = 45; 
+		palette.setColorAtIndex(colorIndex, R, G, B); 
+		return colorIndex;
 	}
 }
