@@ -13,7 +13,6 @@ package com.inferyx.framework.common;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,12 +38,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.domain.AttributeRefHolder;
-import com.inferyx.framework.domain.ExecParams;
-import com.inferyx.framework.domain.FilterInfo;
-import com.inferyx.framework.domain.MetaIdentifier;
-import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.ReportExec;
@@ -171,6 +164,7 @@ public class WorkbookUtil {
 			return workBook;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public Workbook getWorkbookForReport(List<Map<String, Object>> resultList, ReportExec reportExec) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(reportExec.getDependsOn().getRef().getUuid(), reportExec.getDependsOn().getRef().getVersion(), reportExec.getDependsOn().getRef().getType().toString());
 		Workbook workBook = new HSSFWorkbook();
