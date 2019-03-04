@@ -295,18 +295,21 @@ public class ReportServiceImpl extends RuleTemplate {
 
 		ReportExec reportExec = (ReportExec) commonServiceImpl.getOneByUuidAndVersion(reportExecUuid, reportExecVersion,
 				MetaType.reportExec.toString(), "N");
+		
 		MetaIdentifier dependsOnMI = reportExec.getDependsOn().getRef();
-		if(dependsOnMI.getVersion() == null) {
-			Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(), dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
-			dependsOnMI.setVersion(report.getVersion());
-		}
+		Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(),
+				dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
 		
 		Workbook workbook = null;
 		
-		String defaultDownloadPath = Helper.getPropertyValue("framework.file.download.path"); 
+		String defaultDownloadPath = Helper.getPropertyValue("framework.report.Path"); 
 		defaultDownloadPath = defaultDownloadPath.endsWith("/") ? defaultDownloadPath : defaultDownloadPath.concat("/");
-		String reportFileName = String.format("%s_%s_%s.%s", dependsOnMI.getUuid().replaceAll("-", "_"), dependsOnMI.getVersion(), reportExec.getVersion(), "xls");
-		String filePathUrl = defaultDownloadPath.concat(reportFileName);		
+		String reportFilePath = String.format("%s/%s/%s/%s/", report.getUuid(), report.getVersion(), reportExec.getVersion(), "doc");
+		
+		new File(defaultDownloadPath.concat(reportFilePath)).mkdir();
+		
+		String reportFileName = String.format("%s_%s.%s", report.getName(), reportExec.getVersion(), "xls");
+		String filePathUrl = defaultDownloadPath.concat(reportFilePath).concat(reportFileName);		
 		
 		File file = new File(filePathUrl);
 		if(file.exists()) {
@@ -334,9 +337,7 @@ public class ReportServiceImpl extends RuleTemplate {
 			
 			if(data == null || (data != null && data.isEmpty())) {
 				data = new ArrayList<>();
-				MetaIdentifier dependsOnMi = reportExec.getDependsOn().getRef();
-				Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(dependsOnMi.getUuid(), dependsOnMi.getVersion(), dependsOnMi.getType().toString(), "N");
-
+				
 				Map<String,Object> dataMap = new LinkedHashMap<>();
 				int i = 0;
 				for(AttributeSource attributeSource : report.getAttributeInfo()) {
@@ -370,9 +371,9 @@ public class ReportServiceImpl extends RuleTemplate {
 		
 		if(response != null) {
 			try {
-				response.setContentType("application/pdf");
+				response.setContentType("application/xml");
 				response.setHeader("Content-disposition", "attachment");
-				response.setHeader("filename", reportFileName);
+				response.setHeader("filename", report.getName().concat("_").concat(reportExec.getVersion()).concat(".xls"));
 				ServletOutputStream servletOutputStream = response.getOutputStream();
 				workbook.write(servletOutputStream);
 			} catch (IOException e) {
@@ -498,16 +499,18 @@ public class ReportServiceImpl extends RuleTemplate {
 				download(reportExec.getUuid(), reportExec.getVersion(), "excel", 0, report.getLimit(), null, null, null, null,
 						runMode, true);
 
-				String defaultDownloadPath = Helper.getPropertyValue("framework.file.download.path"); 
+				String defaultDownloadPath = Helper.getPropertyValue("framework.report.Path"); 
 				defaultDownloadPath = defaultDownloadPath.endsWith("/") ? defaultDownloadPath : defaultDownloadPath.concat("/");
-				String reportFileName = String.format("%s_%s_%s.%s", report.getUuid().replaceAll("-", "_"), report.getVersion(), reportExec.getVersion(), "xls");
-				String filePathUrl = defaultDownloadPath.concat(reportFileName);	
+				String reportFilePath = String.format("%s/%s/%s/%s/", report.getUuid(), report.getVersion(), reportExec.getVersion(), "doc");
+				String reportFileName = String.format("%s_%s.%s", report.getName(), reportExec.getVersion(), "xls");
+				String filePathUrl = defaultDownloadPath.concat(reportFilePath).concat(reportFileName);		
 
 				Map<String, String> emailAttachment = new HashMap<>();
 				emailAttachment.put(report.getName().concat("_").concat(reportExec.getVersion().concat(".xls")), filePathUrl);
 				senderInfo.setEmailAttachment(emailAttachment);
 			} catch (Exception e) {
 				e.printStackTrace();
+				return false;
 			}
 		}
 		notification.setSenderInfo(senderInfo);
