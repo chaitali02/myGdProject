@@ -203,7 +203,7 @@ public class WorkbookUtil {
 	/******* adding Report name *******/
 		short cellRowNum = 6; 
 		Font reportNameFont = workBook.createFont();
-		reportNameFont.setBold(true);
+		reportNameFont.setBold(false);
 		reportNameFont.setColor(HSSFColor.WHITE.index);
 		CellStyle reportNameCellStyle = workBook.createCellStyle();
 		reportNameCellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
@@ -227,7 +227,7 @@ public class WorkbookUtil {
 		
 	/******* adding Report discription *******/	
 		Font reportDescFont = workBook.createFont();
-		reportDescFont.setBold(true);
+		reportDescFont.setBold(false);
 		reportDescFont.setColor(HSSFColor.WHITE.index);
 		CellStyle reportDescCellStyle = workBook.createCellStyle();
 		reportDescCellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
@@ -257,7 +257,7 @@ public class WorkbookUtil {
 			hssfSheet.addMergedRegion(new CellRangeAddress(cellRowNum, cellRowNum, 1, 1));
 		}
 		Font filterHeaderFont = workBook.createFont();
-		filterHeaderFont.setBold(true);
+		filterHeaderFont.setBold(false);
 		filterHeaderFont.setColor(HSSFColor.WHITE.index);
 		CellStyle filterHeaderStyle = workBook.createCellStyle();
 		filterHeaderStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
@@ -285,7 +285,7 @@ public class WorkbookUtil {
 		Row filter = hssfSheet.createRow(cellRowNum);
 		Cell lhsAttrCell = filter.createCell(0);
 		lhsAttrCell.setCellStyle(filterHeaderStyle);
-		lhsAttrCell.setCellValue("Report parameters: ");
+		lhsAttrCell.setCellValue("Report Parameters: ");
 		Cell rhsAttrCell = filter.createCell(1);
 		rhsAttrCell.setCellValue(reportParameters.toString());
 		
@@ -293,7 +293,7 @@ public class WorkbookUtil {
 		
 	/******* adding Report generation date *******/
 		Font reportGenDateFont = workBook.createFont();
-		reportGenDateFont.setBold(true);
+		reportGenDateFont.setBold(false);
 		reportGenDateFont.setColor(HSSFColor.WHITE.index);
 		CellStyle reportGenDateCellStyle = workBook.createCellStyle();
 		reportGenDateCellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
@@ -326,7 +326,7 @@ public class WorkbookUtil {
 			hssfSheet.addMergedRegion(new CellRangeAddress(headerRowNum, headerRowNum, 0, 1));
 		}
 		Font headerFont = workBook.createFont();
-		headerFont.setBold(true);
+		headerFont.setBold(false);
 		headerFont.setColor(HSSFColor.WHITE.index);
 		CellStyle headerCellStyle = workBook.createCellStyle();
 		headerCellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
@@ -346,7 +346,7 @@ public class WorkbookUtil {
 		
 	/******* adding columns *******/
 		Font columnHeaderFont = workBook.createFont();
-		columnHeaderFont.setBold(true);
+		columnHeaderFont.setBold(false);
 		columnHeaderFont.setColor(HSSFColor.WHITE.index);
 		CellStyle columnHeaderStyle = workBook.createCellStyle();
 		columnHeaderStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
@@ -427,7 +427,7 @@ public class WorkbookUtil {
 		}
 		
 		Font footerFont = workBook.createFont();
-		footerFont.setBold(true);
+		footerFont.setBold(false);
 //		footerFont.setFontHeight((short)8);
 //		footerFont.setFontHeightInPoints((short) 10);
 		
