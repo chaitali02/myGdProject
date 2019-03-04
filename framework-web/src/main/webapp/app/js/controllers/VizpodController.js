@@ -512,7 +512,14 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 			$scope.getExpressionByType() // Call Function
 		}//End onSuccessGetAllAttributeBySourcet
 	}//End onChangeSource
+	$scope.addAll = function () {
+		$scope.filterAttributeTags = $scope.allSourceAttribute;
+		$scope.myform.$dirty=true;
+	}
 
+	$scope.clearAllDetailAttr=function(){
+		$scope.filterAttributeTags=[];
+	}
 	$scope.checkValue = function () {
 		if ($scope.keylist.length > 0 && $scope.valuelist.length > 0) {
 			$scope.myform.$dirty = true

@@ -273,15 +273,21 @@
 									</div>
 
 									<div class="form-group">
-											<label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Detail Attribute</label>
-											<div class="col-md-6">
-												<tags-input class="tag-scroll" ng-model="filterAttributeTags" ng-disabled="{{mode}}" display-property="dname" key-property="id"
-												 add-from-autocomplete-only="true" ng-focus="onTagFocuse()">
-													<auto-complete source="loadAttrAndFormula($query)" min-length="1" debounce-delay="0" highlight-matched-text="true" load-on-focus="true"
-													 load-on-empty="true">
-													</auto-complete>
-												</tags-input>
-											</div>
+										<label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Detail Attribute</label>
+										<div class="col-md-6">
+											<tags-input class="tag-scroll" ng-model="filterAttributeTags" ng-disabled="{{mode}}" display-property="dname" key-property="id"
+												add-from-autocomplete-only="true" ng-focus="onTagFocuse()">
+												<auto-complete source="loadAttrAndFormula($query)" min-length="1" debounce-delay="0" highlight-matched-text="true" load-on-focus="true"
+													load-on-empty="true">
+												</auto-complete>
+											</tags-input>
+										</div>
+										<div class="col-md-1" style="left:-19px">
+											<span ng-hide="{{mode}}" class="glyphicon glyphicon-erase" title="Clear All" data-toggle="tooltip" data-placement="top" tooltip
+											aria-hidden="true" ng-click=" clearAllDetailAttr()" style="top:3px;left:-3px;cursor: pointer;"></span>
+											<span ng-hide="{{mode}}" class="fa fa-list-alt" title="Select All" data-toggle="tooltip" data-placement="top" tooltip aria-hidden="true"
+												ng-click="addAll()" style="top:3px;left:-24px;cursor: pointer;"></span>
+										</div>
 									</div>
 									<div class="form-group">
 										<label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>

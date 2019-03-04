@@ -534,7 +534,7 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 					var paramRef={}	 
 					paramRef.type="simple";
 					paramValue.ref=paramRef;
-					paramValue.value=$filter('date')($scope.paramtable[i].paramValue, "MM/dd/yyyy");
+					paramValue.value=$filter('date')($scope.paramtable[i].paramValue, "yyyy-MM-dd");
 					paraminfo.paramValue=paramValue
 					paramInfoArray[i] = paraminfo; 
 
