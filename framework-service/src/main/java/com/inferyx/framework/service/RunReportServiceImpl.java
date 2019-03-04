@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
+import java.io.File;
 import java.util.concurrent.Callable;
 
 import org.apache.commons.lang3.StringUtils;
@@ -18,6 +19,7 @@ import org.apache.log4j.Logger;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.FrameworkThreadLocal;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
@@ -252,6 +254,7 @@ public class RunReportServiceImpl implements Callable<TaskHolder> {
 	
 	public ReportExec execute() throws Exception {
 		String tableName = null;
+		SenderInfo senderInfo = report.getSenderInfo();
 		try {
 			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 			long countRows = -1L;
@@ -267,22 +270,52 @@ public class RunReportServiceImpl implements Callable<TaskHolder> {
 			tableName = String.format("%s_%s_%s", report.getUuid().replace("-", "_"), report.getVersion(), reportExec.getVersion());
 					
 			String reportPath = String.format("%s/%s/%s", report.getUuid(), report.getVersion(), reportExec.getVersion());
-			String reportDefaultPath = hdfsInfo.getHdfsURL().concat(Helper.getPropertyValue("framework.report.Path"));
+			String reportDefaultPath = Helper.getPropertyValue("framework.report.Path");
 			reportDefaultPath = reportDefaultPath.endsWith("/") ? reportDefaultPath : reportDefaultPath.concat("/");
 			String filePathUrl = String.format("%s%s", reportDefaultPath, reportPath);
 
 			ResultSetHolder rsHolder = sparkExecutor.executeAndRegisterByDatasource(reportExec.getExec(), tableName, reportDS, appUuid);
 			if(report.getSaveOnRefresh().equalsIgnoreCase("Y")) {
-				sparkExecutor.registerAndPersistDataframe(rsHolder, null, com.inferyx.framework.enums.SaveMode.APPEND.toString(), filePathUrl, tableName, "true", false);
+				sparkExecutor.registerAndPersistDataframe(rsHolder, null, com.inferyx.framework.enums.SaveMode.APPEND.toString(), hdfsInfo.getHdfsURL().concat(filePathUrl), tableName, "true", false);
+				
+				//getting file size
+				String srcFilePath = commonServiceImpl.getFileNameFromDir(filePathUrl, FileType.PARQUET.toString(), FileType.PARQUET.toString());
+				File reportFile = new File(srcFilePath);
+				if(reportFile.exists()) {
+					reportExec.setSizeMB((reportFile.length()/(1024.0 * 1024.0))+" MB");
+				}
 			}
 			
 			countRows = rsHolder.getCountRows();
+			reportExec.setNumRows(countRows);
+			
 			reportServiceImpl.persistDatastore(reportExec, tableName, filePathUrl, resultRef, new MetaIdentifier(MetaType.report, report.getUuid(), report.getVersion()), countRows, runMode);
 
 			reportExec.setResult(resultRef);
+			commonServiceImpl.save(MetaType.reportExec.toString(), reportExec);
+			
+			//sending report execution status through email
+			if(senderInfo != null) {
+				synchronized (reportExec.getUuid()) {
+					if(!reportServiceImpl.sendSuccessNotification(senderInfo, report, reportExec, runMode)) {
+						throw new RuntimeException("Can not send email notification.");
+					}
+				}
+			}
 			reportExec = (ReportExec) commonServiceImpl.setMetaStatus(reportExec, MetaType.reportExec, Status.Stage.Completed);
 		} catch (Exception e) { 
 			e.printStackTrace();
+			
+			//sending report execution status through email 
+			try {
+				if(senderInfo != null) {
+					reportServiceImpl.sendFailureNotification(senderInfo, report, reportExec);
+				}
+			} catch (Exception exc) {
+				// TODO: handle exception
+				exc.printStackTrace();
+			}
+			
 			// Set status to Failed
 			try {
 				reportExec = (ReportExec) commonServiceImpl.setMetaStatus(reportExec, MetaType.reportExec, Status.Stage.Failed);
@@ -299,18 +332,6 @@ public class RunReportServiceImpl implements Callable<TaskHolder> {
 			dependsOn.setRef(new MetaIdentifier(MetaType.reportExec, reportExec.getUuid(), reportExec.getVersion()));
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Report execution failed.", dependsOn);
 			throw new RuntimeException((message != null) ? message : "Report execution failed.");
-		} finally {
-			SenderInfo senderInfo = report.getSenderInfo();
-			if(senderInfo != null) {
-				Status latestStatus = Helper.getLatestStatus(reportExec.getStatusList());
-				if(latestStatus.getStage().equals(Status.Stage.Completed) && senderInfo.getNotifOnSuccess().equalsIgnoreCase("Y")) {
-					synchronized (reportExec.getUuid()) {
-						reportServiceImpl.sendSuccessNotification(senderInfo, tableName, report, reportExec, runMode);
-					}
-				} else if(latestStatus.getStage().equals(Status.Stage.Failed) && senderInfo.getNotifyOnFailure().equalsIgnoreCase("Y")) {
-					reportServiceImpl.sendFailureNotification(senderInfo, report, reportExec);
-				}
-			}
 		}
 		
 		return reportExec;
