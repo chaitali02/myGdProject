@@ -1067,7 +1067,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		$scope.report.limit = -1;
 		$scope.report.senderInfo = {};
 		$scope.report.senderInfo.sendAttachment = "Y";
-		$scope.report.senderInfo.notifOnSuccess = "Y";
+		$scope.report.senderInfo.notifyOnSuccess = "Y";
 		$scope.report.senderInfo.notifyOnFailure = "Y";
 
 	}
@@ -1992,8 +1992,8 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		}
 		senderInfo.emailCC = tagArrayBcc;
 		senderInfo.sendAttachment = $scope.report.senderInfo.sendAttachment;
-		senderInfo.notifOnSuccess = $scope.report.senderInfo.notifOnSuccess;
-		senderInfo.notifyOnFailure = $scope.report.senderInfo.notifOnSuccess;
+		senderInfo.notifyOnSuccess = $scope.report.senderInfo.notifyOnSuccess;
+		senderInfo.notifyOnFailure = $scope.report.senderInfo.notifyOnSuccess;
 		
 		reportJson.senderInfo = senderInfo;
 		console.log(JSON.stringify(reportJson))
