@@ -355,10 +355,15 @@ DatavisualizationModule.service('VizpodSerivce', function ($q, sortFactory, Vizp
       for (var i = 0; i < response.detailAttr.length; i++) {
         var attrinfo = {};
         attrinfo.uuid = response.detailAttr[i].ref.uuid;
-        attrinfo.dname = response.detailAttr[i].ref.name + "." + response.detailAttr[i].attributeName;
-        attrinfo.attributeId = response.detailAttr[i].attrId;
-        attrinfo.id = response.detailAttr[i].ref.uuid + "_" + response.detailAttr[i].attributeId
-
+        attrinfo.type = response.detailAttr[i].ref.type;
+        if(response.detailAttr[i].ref.type !="formula"){
+          attrinfo.dname = response.detailAttr[i].ref.name + "." + response.detailAttr[i].attributeName;
+          attrinfo.attributeId = response.detailAttr[i].attrId;
+          attrinfo.id = response.detailAttr[i].ref.uuid + "_" + response.detailAttr[i].attributeId
+        }else{
+          attrinfo.dname = response.detailAttr[i].ref.name;
+          attrinfo.id = response.detailAttr[i].ref.uuid;
+        }
         detailAttrInfoArray[i] = attrinfo;
       }
       vizpodjosn.detailAttr = detailAttrInfoArray
@@ -468,9 +473,14 @@ DatavisualizationModule.service('VizpodSerivce', function ($q, sortFactory, Vizp
           var attrinfo = {};
           attrinfo.uuid = response.detailAttr[i].ref.uuid;
           attrinfo.type = response.detailAttr[i].ref.type;
-          attrinfo.dname = response.detailAttr[i].ref.name + "." + response.detailAttr[i].attributeName;
-          attrinfo.attributeId = response.detailAttr[i].attributeId;
-          attrinfo.id = response.detailAttr[i].ref.uuid + "_" + response.detailAttr[i].attributeId
+          if(response.detailAttr[i].ref.type !="formula"){
+            attrinfo.dname = response.detailAttr[i].ref.name + "." + response.detailAttr[i].attributeName;
+            attrinfo.attributeId = response.detailAttr[i].attrId;
+            attrinfo.id = response.detailAttr[i].ref.uuid + "_" + response.detailAttr[i].attributeId
+          }else{
+            attrinfo.dname = response.detailAttr[i].ref.name;
+            attrinfo.id = response.detailAttr[i].ref.uuid;
+          }
 
           detailAttrInfoArray[i] = attrinfo;
         }

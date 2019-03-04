@@ -706,7 +706,9 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 				ref.type = $scope.filterAttributeTags[i].type;
 				ref.uuid = $scope.filterAttributeTags[i].uuid;
 				attributeInfo.ref = ref;
-				attributeInfo.attributeId = $scope.filterAttributeTags[i].attributeId
+				if($scope.filterAttributeTags[i].type !='formual'){
+					attributeInfo.attributeId = $scope.filterAttributeTags[i].attributeId;
+				}
 				attributeInfoArray[i] = attributeInfo;
 			}
 		}
