@@ -2567,7 +2567,7 @@
                 });
             })
             .on('contextmenu', function (d) {
-              
+                debugger
               var index = d.index;
                 if ($$.hasArcType() || !$$.toggleShape) { return; }
                 if ($$.cancelClick) {
@@ -2685,7 +2685,7 @@
                 }
             })
             .on('contextmenu', function () {
-                
+                debugger
                 var targetsToShow = $$.filterTargetsToShow($$.data.targets);
                 var mouse, closest;
                 if ($$.hasArcType(targetsToShow)) { return; }
@@ -4275,7 +4275,7 @@
                 }
             })
             .on('contextmenu', function (id) {
-                
+                debugger
                 if (config.legend_item_contextmenu) {
                     config.legend_item_contextmenu.call($$, id);
                 } else {
@@ -5204,6 +5204,7 @@
                 }
             } : null)
             .on('contextmenu', config.interaction_enabled ? function (d, i) {
+                debugger
                 //enchance by jitener
                 var updated = $$.updateAngle(d), arcData;
                 if (updated) {

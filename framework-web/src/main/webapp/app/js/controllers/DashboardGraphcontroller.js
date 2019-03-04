@@ -1030,6 +1030,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
     }, 100);
   }
   $scope.selectData = function (data) {
+    debugger
     var menu = [{
       title: 'Show Detail',
       action: $scope.actionEvent,
@@ -1116,6 +1117,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
 
 
   $scope.actionEvent = function (d, i, data) {
+    debugger
     var filterinfoArray = []
     var vizpodbody = {}
     var filterInfo = {};
@@ -1133,7 +1135,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
       } else if (["world-map", "usa-map", "pie-chart", "donut-chart"].indexOf(data.vizpod.vizpodInfo.type) == -1) {
         filterInfo.value = data.vizpod.vizpodDetails.datapoints[data.dataobj.x][data.vizpod.vizpodDetails.datax.id];
         filterInfo.value = filterInfo.value.replace(/0 -/g, ' -');
-        filterInfo.value = filterInfo.value.replace(/0$/g, '');
+        //filterInfo.value = filterInfo.value.replace(/0$/g, '');
       } else if (["pie-chart", "donut-chart"].indexOf(data.vizpod.vizpodInfo.type) != -1) {
         filterInfo.value = data.dataobj.id
       }

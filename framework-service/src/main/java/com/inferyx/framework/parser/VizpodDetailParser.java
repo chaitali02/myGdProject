@@ -115,7 +115,7 @@ public class VizpodDetailParser {
 			}
 
 			finalBuilder.append(selectBuilder);
-			finalBuilder.deleteCharAt(finalBuilder.lastIndexOf(","));
+				finalBuilder.deleteCharAt(finalBuilder.lastIndexOf(","));
 
 			if (StringUtils.isBlank(tableName) && vizpod.getSource().getRef().getType() == MetaType.datapod) {
 				List<DataStore> listDataStore = dataStoreServiceImpl
@@ -295,17 +295,18 @@ public class VizpodDetailParser {
 			 * following commented code also works but to remove table name from filter
 			 * query the custom code is written
 			 *******/
-			dataSet.setAttributeInfo(attributeInfo);
+			
 			String innersql = datasetOperator.generateSql(dataSet, null, null, usedRefKeySet, null, runMode);
+			dataSet.setAttributeInfo(attributeInfo);
 			outerSelectBuilder = generateSelectForDataSet(dataSet, vizpod);
 			whereBuilder.append(datasetOperator.generateWhere());
 			Datasource datasource = commonServiceImpl.getDatasourceByObject(vizpod);
 
 			whereBuilder.append(" ").append(filterOperator2.generateSql(vizpod.getFilterInfo(), null, null,
 					usedRefKeySet, false, false, runMode, datasource));
-			result = outerSelectBuilder.append(" FROM (").append(innersql).append(" )").append(" as ")
-					.append(tableName).append(whereBuilder).toString();
-         
+			result = outerSelectBuilder.append(" FROM (").append(innersql).append(" )").append(" as ").append(tableName)
+					.append(whereBuilder).toString();
+
 		}
 
 		return result;
