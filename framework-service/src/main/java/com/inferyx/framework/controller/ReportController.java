@@ -32,6 +32,7 @@ import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.ReportExec;
+import com.inferyx.framework.domain.SenderInfo;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.service.ReportServiceImpl;
 
@@ -91,5 +92,16 @@ public class ReportController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
 		return reportServiceImpl.getReportByReportExec(reportExecUuid);
+	}
+	
+	@RequestMapping(value = "/reSendEMail", method = RequestMethod.POST)
+	public boolean reSendEMail(@RequestParam(value = "uuid") String reportExecUuid,
+			@RequestParam(value = "version", required = false) String reportExecVersion,
+			@RequestBody(required = true) SenderInfo senderInfo,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException, IOException {
+		RunMode runMode = Helper.getExecutionMode(mode);
+		return reportServiceImpl.reSendNotification(reportExecUuid, reportExecVersion, senderInfo, runMode);
 	}
 }

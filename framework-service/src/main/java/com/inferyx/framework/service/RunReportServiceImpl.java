@@ -297,7 +297,7 @@ public class RunReportServiceImpl implements Callable<TaskHolder> {
 			//sending report execution status through email
 			if(senderInfo != null) {
 				synchronized (reportExec.getUuid()) {
-					if(!reportServiceImpl.sendSuccessNotification(senderInfo, tableName, report, reportExec, runMode)) {
+					if(!reportServiceImpl.sendSuccessNotification(senderInfo, report, reportExec, runMode)) {
 						throw new RuntimeException("Can not send email notification.");
 					}
 				}

@@ -306,7 +306,7 @@ public class RunBatchServiceImpl implements Callable<String> {
 			SenderInfo senderInfo = batch.getSenderInfo();
 			if(senderInfo != null) {
 				Status latestStatus = Helper.getLatestStatus(batchExec.getStatusList());
-				if(latestStatus.getStage().equals(Status.Stage.Completed) && senderInfo.getNotifOnSuccess().equalsIgnoreCase("Y")) {
+				if(latestStatus.getStage().equals(Status.Stage.Completed) && senderInfo.getNotifyOnSuccess().equalsIgnoreCase("Y")) {
 					synchronized (batchExec.getUuid()) {
 						batchServiceImpl.sendSuccessNotification(senderInfo, batch, batchExec);
 					}

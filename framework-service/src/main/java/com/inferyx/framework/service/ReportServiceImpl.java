@@ -306,14 +306,16 @@ public class ReportServiceImpl extends RuleTemplate {
 		defaultDownloadPath = defaultDownloadPath.endsWith("/") ? defaultDownloadPath : defaultDownloadPath.concat("/");
 		String reportFilePath = String.format("%s/%s/%s/%s/", report.getUuid(), report.getVersion(), reportExec.getVersion(), "doc");
 		
-		new File(defaultDownloadPath.concat(reportFilePath)).mkdir();
-		
+		File reportDocDir = new File(defaultDownloadPath.concat(reportFilePath));
+		if(!reportDocDir.exists()) {
+			reportDocDir.mkdir();
+		}
 		String reportFileName = String.format("%s_%s.%s", report.getName(), reportExec.getVersion(), "xls");
 		String filePathUrl = defaultDownloadPath.concat(reportFilePath).concat(reportFileName);		
 		
-		File file = new File(filePathUrl);
-		if(file.exists()) {
-			 workbook = WorkbookFactory.create(file);
+		File reportFile = new File(filePathUrl);
+		if(reportFile.exists()) {
+			 workbook = WorkbookFactory.create(reportFile);
 		} else {
 			DataStore datastore = dataStoreServiceImpl.getDatastore(reportExec.getResult().getRef().getUuid(),
 					reportExec.getResult().getRef().getVersion());
@@ -474,7 +476,7 @@ public class ReportServiceImpl extends RuleTemplate {
 		return execute(baseRuleExec.getUuid(), baseRuleExec.getVersion(), execParams, runMode);
 	}
 	
-	public boolean sendSuccessNotification(SenderInfo senderInfo, String tempTableName, Report report,
+	public boolean sendSuccessNotification(SenderInfo senderInfo, Report report,
 			ReportExec reportExec, RunMode runMode) throws Exception {
 		logger.info("sending success notification...");
 		Notification notification = new Notification();
@@ -539,5 +541,60 @@ public class ReportServiceImpl extends RuleTemplate {
 
 		notification.setSenderInfo(senderInfo);
 		return notificationServiceImpl.prepareAndSendNotification(notification);
+	}
+
+	/**
+	 * @param reportExecUuid
+	 * @param reportExecVersion
+	 * @param senderInfos
+	 * @param runMode
+	 * @return
+	 * @throws IOException 
+	 * @throws ParseException 
+	 * @throws JSONException 
+	 * @throws NullPointerException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
+	 */
+	public boolean reSendNotification(String reportExecUuid, String reportExecVersion, SenderInfo senderInfo,
+			RunMode runMode) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException, IOException {
+		ReportExec reportExec = null;
+		try {
+			logger.info("resending notification...");
+			reportExec = (ReportExec) commonServiceImpl.getOneByUuidAndVersion(reportExecUuid, reportExecVersion,
+					MetaType.reportExec.toString(), "N");
+
+			MetaIdentifier dependsOnMI = reportExec.getDependsOn().getRef();
+			Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(),
+					dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
+			
+			Status status = Helper.getLatestStatus(reportExec.getStatusList());
+			if(status.getStage().equals(Status.Stage.Completed)) {				
+				String defaultDownloadPath = Helper.getPropertyValue("framework.report.Path"); 
+				defaultDownloadPath = defaultDownloadPath.endsWith("/") ? defaultDownloadPath : defaultDownloadPath.concat("/");
+				String reportFilePath = String.format("%s/%s/%s/%s/", report.getUuid(), report.getVersion(), reportExec.getVersion(), "doc");
+				String reportFileName = String.format("%s_%s.%s", report.getName(), reportExec.getVersion(), "xls");
+				String filePathUrl = defaultDownloadPath.concat(reportFilePath).concat(reportFileName);		
+				
+				if(new File(filePathUrl).exists()) {
+					return sendSuccessNotification(senderInfo, report, reportExec, runMode);
+				} else {
+					throw new RuntimeException("Excel file is unavailable.");
+				}				
+			} else if(status.getStage().equals(Status.Stage.Failed)) {
+				return sendFailureNotification(senderInfo, report, reportExec);
+			} else {
+				throw new RuntimeException("Report execution status is not "+Status.Stage.Completed+", latest status is "+status.getStage());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder(
+					new MetaIdentifier(MetaType.reportExec, reportExecUuid, reportExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), e.getMessage(), dependsOn);
+			throw new RuntimeException(e.getMessage());
+		}
 	}
 }
