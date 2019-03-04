@@ -174,7 +174,10 @@ public class WorkbookUtil {
 	public Workbook getWorkbookForReport(List<Map<String, Object>> resultList, ReportExec reportExec) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(reportExec.getDependsOn().getRef().getUuid(), reportExec.getDependsOn().getRef().getVersion(), reportExec.getDependsOn().getRef().getType().toString());
 		Workbook workBook = new HSSFWorkbook();
-		Sheet hssfSheet = workBook.createSheet("report");
+		HSSFPalette palette = ((HSSFWorkbook)workBook).getCustomPalette();
+		short colorIndex = 45;		
+		palette.setColorAtIndex(colorIndex, (byte)63, (byte)137, (byte)201); 		
+		Sheet hssfSheet = workBook.createSheet("Main");
 		if (report.getAttributeInfo().size() > 1) {
 			hssfSheet.addMergedRegion(new CellRangeAddress(1, 3, 0, report.getAttributeInfo().size() - 1));
 		} else {
@@ -189,7 +192,7 @@ public class WorkbookUtil {
 		titleHeaderFont.setFontHeightInPoints((short)20);
 		CellStyle titleHeaderStyle = workBook.createCellStyle();
 		titleHeaderStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		titleHeaderStyle.setFillForegroundColor(HSSFColor.LIGHT_BLUE.index);
+		titleHeaderStyle.setFillForegroundColor(getCustomColor(workBook, (byte)63, (byte)137, (byte)201));  
 		titleHeaderStyle.setFillBackgroundColor(HSSFColor.RED.index);
 		titleHeaderStyle.setFont(titleHeaderFont);
 		titleHeaderStyle.setAlignment(CellStyle.ALIGN_CENTER);
@@ -203,11 +206,11 @@ public class WorkbookUtil {
 	/******* adding Report name *******/
 		short cellRowNum = 6; 
 		Font reportNameFont = workBook.createFont();
-		reportNameFont.setBold(true);
+		reportNameFont.setBold(false);
 		reportNameFont.setColor(HSSFColor.WHITE.index);
 		CellStyle reportNameCellStyle = workBook.createCellStyle();
 		reportNameCellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		reportNameCellStyle.setFillForegroundColor(HSSFColor.LIGHT_BLUE.index);
+		reportNameCellStyle.setFillForegroundColor(getCustomColor(workBook, (byte)63, (byte)137, (byte)201));  
 		reportNameCellStyle.setFillBackgroundColor(HSSFColor.RED.index);
 		reportNameCellStyle.setFont(reportNameFont);
 		reportNameCellStyle.setAlignment(CellStyle.ALIGN_LEFT);
@@ -225,13 +228,13 @@ public class WorkbookUtil {
 		
 		cellRowNum++;
 		
-	/******* adding Report discription *******/	
+	/******* adding Report description *******/	
 		Font reportDescFont = workBook.createFont();
-		reportDescFont.setBold(true);
+		reportDescFont.setBold(false);
 		reportDescFont.setColor(HSSFColor.WHITE.index);
 		CellStyle reportDescCellStyle = workBook.createCellStyle();
 		reportDescCellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		reportDescCellStyle.setFillForegroundColor(HSSFColor.LIGHT_BLUE.index);
+		reportDescCellStyle.setFillForegroundColor(getCustomColor(workBook, (byte)63, (byte)137, (byte)201));  
 		reportDescCellStyle.setFillBackgroundColor(HSSFColor.RED.index);
 		reportDescCellStyle.setFont(reportDescFont);
 		reportDescCellStyle.setAlignment(CellStyle.ALIGN_LEFT);
@@ -249,21 +252,21 @@ public class WorkbookUtil {
 		
 		cellRowNum++;	
 		
-	 /******* adding filter *******/	
+	 /******* adding params *******/	
 
 		if (report.getAttributeInfo().size() > 1) {
 			hssfSheet.addMergedRegion(new CellRangeAddress(cellRowNum, cellRowNum, 1, report.getAttributeInfo().size() - 1));
 		} else { 
 			hssfSheet.addMergedRegion(new CellRangeAddress(cellRowNum, cellRowNum, 1, 1));
 		}
-		Font filterHeaderFont = workBook.createFont();
-		filterHeaderFont.setBold(true);
-		filterHeaderFont.setColor(HSSFColor.WHITE.index);
-		CellStyle filterHeaderStyle = workBook.createCellStyle();
-		filterHeaderStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		filterHeaderStyle.setFillForegroundColor(HSSFColor.LIGHT_BLUE.index);
-		filterHeaderStyle.setFillBackgroundColor(HSSFColor.RED.index);
-		filterHeaderStyle.setFont(filterHeaderFont);
+		Font paramsHeaderFont = workBook.createFont();
+		paramsHeaderFont.setBold(false);
+		paramsHeaderFont.setColor(HSSFColor.WHITE.index);
+		CellStyle paramsHeaderStyle = workBook.createCellStyle();
+		paramsHeaderStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		paramsHeaderStyle.setFillForegroundColor(getCustomColor(workBook, (byte)63, (byte)137, (byte)201));  
+		paramsHeaderStyle.setFillBackgroundColor(HSSFColor.RED.index);
+		paramsHeaderStyle.setFont(paramsHeaderFont);
 
 		StringBuilder reportParameters = new StringBuilder("");
 		if (report.getParamList() != null && reportExec.getExecParams() != null
@@ -284,8 +287,8 @@ public class WorkbookUtil {
 
 		Row filter = hssfSheet.createRow(cellRowNum);
 		Cell lhsAttrCell = filter.createCell(0);
-		lhsAttrCell.setCellStyle(filterHeaderStyle);
-		lhsAttrCell.setCellValue("Report parameters: ");
+		lhsAttrCell.setCellStyle(paramsHeaderStyle);
+		lhsAttrCell.setCellValue("Report Parameters: ");
 		Cell rhsAttrCell = filter.createCell(1);
 		rhsAttrCell.setCellValue(reportParameters.toString());
 		
@@ -293,11 +296,12 @@ public class WorkbookUtil {
 		
 	/******* adding Report generation date *******/
 		Font reportGenDateFont = workBook.createFont();
-		reportGenDateFont.setBold(true);
+		reportGenDateFont.setBold(false);
 		reportGenDateFont.setColor(HSSFColor.WHITE.index);
 		CellStyle reportGenDateCellStyle = workBook.createCellStyle();
 		reportGenDateCellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		reportGenDateCellStyle.setFillForegroundColor(HSSFColor.LIGHT_BLUE.index);
+		reportGenDateCellStyle.setFillForegroundColor(getCustomColor(workBook, (byte)63, (byte)137, (byte)201));  
+//		reportGenDateCellStyle.setFillForegroundColor(HSSFColor.LIGHT_BLUE.index);
 		reportGenDateCellStyle.setFillBackgroundColor(HSSFColor.RED.index);
 		reportGenDateCellStyle.setFont(reportGenDateFont);
 		reportGenDateCellStyle.setAlignment(CellStyle.ALIGN_LEFT);
@@ -311,7 +315,7 @@ public class WorkbookUtil {
 		reportGenDateCellKey.setCellStyle(reportGenDateCellStyle);
 		reportGenDateCellKey.setCellValue(new HSSFRichTextString("Report Generation Date"));
 		Cell reportGenDateCellVal = reportGenDateRow.createCell(1);
-		reportGenDateCellVal.setCellValue(new HSSFRichTextString(report.getCreatedOn()));
+		reportGenDateCellVal.setCellValue(new HSSFRichTextString(reportExec.getCreatedOn()));
 		
 		//cellRowNum++;
 		
@@ -326,7 +330,7 @@ public class WorkbookUtil {
 			hssfSheet.addMergedRegion(new CellRangeAddress(headerRowNum, headerRowNum, 0, 1));
 		}
 		Font headerFont = workBook.createFont();
-		headerFont.setBold(true);
+		headerFont.setBold(false);
 		headerFont.setColor(HSSFColor.WHITE.index);
 		CellStyle headerCellStyle = workBook.createCellStyle();
 		headerCellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
@@ -346,14 +350,10 @@ public class WorkbookUtil {
 		
 	/******* adding columns *******/
 		Font columnHeaderFont = workBook.createFont();
-		columnHeaderFont.setBold(true);
+		columnHeaderFont.setBold(false);
 		columnHeaderFont.setColor(HSSFColor.WHITE.index);
 		CellStyle columnHeaderStyle = workBook.createCellStyle();
 		columnHeaderStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		
-		HSSFPalette palette = ((HSSFWorkbook)workBook).getCustomPalette(); 
-		short colorIndex = 45; 
-		palette.setColorAtIndex(colorIndex, (byte)63, (byte)137, (byte)201); 
 		columnHeaderStyle.setFillForegroundColor(getCustomColor(workBook, (byte)63, (byte)137, (byte)201));  
 		
 //		columnHeaderStyle.setFillForegroundColor(HSSFColor.ROYAL_BLUE.index);
