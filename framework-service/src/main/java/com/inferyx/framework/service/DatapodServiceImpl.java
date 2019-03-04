@@ -354,8 +354,8 @@ public class DatapodServiceImpl {
 	/*public String getAttributeName(Datapod datapod, int attrId) {
 		return datapod.getAttribute(attrId).getName();
 	}*/
-
-	public String getAttributeName(Datapod datapod, String attributeId) {
+// Comment by Vaibhav due to dosent have any refran..
+/*	public String getAttributeName(Datapod datapod, String attributeId) {
 		List<Attribute> attributes = datapod.getAttributes();
 		for (Attribute attribute : attributes) {
 			if (attribute.getAttributeId() != null 
@@ -364,7 +364,7 @@ public class DatapodServiceImpl {
 			}
 		}
 		return null;
-	}
+	}*/
 	
 	// This method returns the attributeName of the ref object
 	public String getAttributeName(String uuid, int attrId) throws JsonProcessingException {
