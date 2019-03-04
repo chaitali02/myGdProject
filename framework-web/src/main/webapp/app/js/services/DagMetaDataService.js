@@ -1,7 +1,10 @@
 InferyxApp=angular.module('InferyxApp');
 InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConstants){
   var obj = {};
+   if(typeof localStorage.userdetail != "undefined")
    $rootScope.loginUser = JSON.parse(localStorage.userdetail).name;
+   else 
+   $rootScope.loginUser="";
    obj.compareMetaDataStatusDefs={
     'NOCHANGE':{
       name : 'NoChange',

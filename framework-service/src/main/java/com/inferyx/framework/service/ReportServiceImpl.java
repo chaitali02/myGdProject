@@ -295,22 +295,27 @@ public class ReportServiceImpl extends RuleTemplate {
 
 		ReportExec reportExec = (ReportExec) commonServiceImpl.getOneByUuidAndVersion(reportExecUuid, reportExecVersion,
 				MetaType.reportExec.toString(), "N");
+		
 		MetaIdentifier dependsOnMI = reportExec.getDependsOn().getRef();
-		if(dependsOnMI.getVersion() == null) {
-			Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(), dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
-			dependsOnMI.setVersion(report.getVersion());
-		}
+		Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(),
+				dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
 		
 		Workbook workbook = null;
 		
-		String defaultDownloadPath = Helper.getPropertyValue("framework.file.download.path"); 
+		String defaultDownloadPath = Helper.getPropertyValue("framework.report.Path"); 
 		defaultDownloadPath = defaultDownloadPath.endsWith("/") ? defaultDownloadPath : defaultDownloadPath.concat("/");
-		String reportFileName = String.format("%s_%s_%s.%s", dependsOnMI.getUuid().replaceAll("-", "_"), dependsOnMI.getVersion(), reportExec.getVersion(), "xls");
-		String filePathUrl = defaultDownloadPath.concat(reportFileName);		
+		String reportFilePath = String.format("%s/%s/%s/%s/", report.getUuid(), report.getVersion(), reportExec.getVersion(), "doc");
 		
-		File file = new File(filePathUrl);
-		if(file.exists()) {
-			 workbook = WorkbookFactory.create(file);
+		File reportDocDir = new File(defaultDownloadPath.concat(reportFilePath));
+		if(!reportDocDir.exists()) {
+			reportDocDir.mkdir();
+		}
+		String reportFileName = String.format("%s_%s.%s", report.getName(), reportExec.getVersion(), "xls");
+		String filePathUrl = defaultDownloadPath.concat(reportFilePath).concat(reportFileName);		
+		
+		File reportFile = new File(filePathUrl);
+		if(reportFile.exists()) {
+			 workbook = WorkbookFactory.create(reportFile);
 		} else {
 			DataStore datastore = dataStoreServiceImpl.getDatastore(reportExec.getResult().getRef().getUuid(),
 					reportExec.getResult().getRef().getVersion());
@@ -334,9 +339,7 @@ public class ReportServiceImpl extends RuleTemplate {
 			
 			if(data == null || (data != null && data.isEmpty())) {
 				data = new ArrayList<>();
-				MetaIdentifier dependsOnMi = reportExec.getDependsOn().getRef();
-				Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(dependsOnMi.getUuid(), dependsOnMi.getVersion(), dependsOnMi.getType().toString(), "N");
-
+				
 				Map<String,Object> dataMap = new LinkedHashMap<>();
 				int i = 0;
 				for(AttributeSource attributeSource : report.getAttributeInfo()) {
@@ -370,9 +373,9 @@ public class ReportServiceImpl extends RuleTemplate {
 		
 		if(response != null) {
 			try {
-				response.setContentType("application/pdf");
+				response.setContentType("application/xml");
 				response.setHeader("Content-disposition", "attachment");
-				response.setHeader("filename", reportFileName);
+				response.setHeader("filename", report.getName().concat("_").concat(reportExec.getVersion()).concat(".xls"));
 				ServletOutputStream servletOutputStream = response.getOutputStream();
 				workbook.write(servletOutputStream);
 			} catch (IOException e) {
@@ -473,7 +476,7 @@ public class ReportServiceImpl extends RuleTemplate {
 		return execute(baseRuleExec.getUuid(), baseRuleExec.getVersion(), execParams, runMode);
 	}
 	
-	public boolean sendSuccessNotification(SenderInfo senderInfo, String tempTableName, Report report,
+	public boolean sendSuccessNotification(SenderInfo senderInfo, Report report,
 			ReportExec reportExec, RunMode runMode) throws Exception {
 		logger.info("sending success notification...");
 		Notification notification = new Notification();
@@ -498,16 +501,18 @@ public class ReportServiceImpl extends RuleTemplate {
 				download(reportExec.getUuid(), reportExec.getVersion(), "excel", 0, report.getLimit(), null, null, null, null,
 						runMode, true);
 
-				String defaultDownloadPath = Helper.getPropertyValue("framework.file.download.path"); 
+				String defaultDownloadPath = Helper.getPropertyValue("framework.report.Path"); 
 				defaultDownloadPath = defaultDownloadPath.endsWith("/") ? defaultDownloadPath : defaultDownloadPath.concat("/");
-				String reportFileName = String.format("%s_%s_%s.%s", report.getUuid().replaceAll("-", "_"), report.getVersion(), reportExec.getVersion(), "xls");
-				String filePathUrl = defaultDownloadPath.concat(reportFileName);	
+				String reportFilePath = String.format("%s/%s/%s/%s/", report.getUuid(), report.getVersion(), reportExec.getVersion(), "doc");
+				String reportFileName = String.format("%s_%s.%s", report.getName(), reportExec.getVersion(), "xls");
+				String filePathUrl = defaultDownloadPath.concat(reportFilePath).concat(reportFileName);		
 
 				Map<String, String> emailAttachment = new HashMap<>();
 				emailAttachment.put(report.getName().concat("_").concat(reportExec.getVersion().concat(".xls")), filePathUrl);
 				senderInfo.setEmailAttachment(emailAttachment);
 			} catch (Exception e) {
 				e.printStackTrace();
+				return false;
 			}
 		}
 		notification.setSenderInfo(senderInfo);
@@ -536,5 +541,60 @@ public class ReportServiceImpl extends RuleTemplate {
 
 		notification.setSenderInfo(senderInfo);
 		return notificationServiceImpl.prepareAndSendNotification(notification);
+	}
+
+	/**
+	 * @param reportExecUuid
+	 * @param reportExecVersion
+	 * @param senderInfos
+	 * @param runMode
+	 * @return
+	 * @throws IOException 
+	 * @throws ParseException 
+	 * @throws JSONException 
+	 * @throws NullPointerException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
+	 */
+	public boolean reSendNotification(String reportExecUuid, String reportExecVersion, SenderInfo senderInfo,
+			RunMode runMode) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException, IOException {
+		ReportExec reportExec = null;
+		try {
+			logger.info("resending notification...");
+			reportExec = (ReportExec) commonServiceImpl.getOneByUuidAndVersion(reportExecUuid, reportExecVersion,
+					MetaType.reportExec.toString(), "N");
+
+			MetaIdentifier dependsOnMI = reportExec.getDependsOn().getRef();
+			Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(),
+					dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
+			
+			Status status = Helper.getLatestStatus(reportExec.getStatusList());
+			if(status.getStage().equals(Status.Stage.Completed)) {				
+				String defaultDownloadPath = Helper.getPropertyValue("framework.report.Path"); 
+				defaultDownloadPath = defaultDownloadPath.endsWith("/") ? defaultDownloadPath : defaultDownloadPath.concat("/");
+				String reportFilePath = String.format("%s/%s/%s/%s/", report.getUuid(), report.getVersion(), reportExec.getVersion(), "doc");
+				String reportFileName = String.format("%s_%s.%s", report.getName(), reportExec.getVersion(), "xls");
+				String filePathUrl = defaultDownloadPath.concat(reportFilePath).concat(reportFileName);		
+				
+				if(new File(filePathUrl).exists()) {
+					return sendSuccessNotification(senderInfo, report, reportExec, runMode);
+				} else {
+					throw new RuntimeException("Excel file is unavailable.");
+				}				
+			} else if(status.getStage().equals(Status.Stage.Failed)) {
+				return sendFailureNotification(senderInfo, report, reportExec);
+			} else {
+				throw new RuntimeException("Report execution status is not "+Status.Stage.Completed+", latest status is "+status.getStage());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder(
+					new MetaIdentifier(MetaType.reportExec, reportExecUuid, reportExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), e.getMessage(), dependsOn);
+			throw new RuntimeException(e.getMessage());
+		}
 	}
 }

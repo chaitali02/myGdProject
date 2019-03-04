@@ -410,7 +410,7 @@
                             <div class="col-md-12" style="margin-top:0px;margin-bottom:-20px;padding-left: 0px;padding-right: 0px;">
 
                               <p class="input-group">
-                                <input type="text" class="form-control" uib-datepicker-popup="MM/dd/yyyy" ng-keypress="ValidationKeyPress($event)" ng-model="tabledata.paramValue"
+                                <input type="text" class="form-control" title="{{tabledata.paramValue|date: 'yyyy-MM-dd'}}"  uib-datepicker-popup="yyyy-MM-dd" ng-keypress="ValidationKeyPress($event)" ng-model="tabledata.paramValue"
                                   is-open="popup2.opened" ng-disabled="!isEdit" datepicker-options="dateOptions"
                                   ng-required="true" close-text="Close" />
                                 <span class="input-group-btn">

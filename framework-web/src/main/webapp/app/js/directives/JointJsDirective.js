@@ -1062,15 +1062,25 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
                        iconMenuItems.push({title:'Show Logs', type : 'logs'});
                      }
                      else if(status && (status=='NotStarted' || status=='Resume')){
-                       debugger
+                       
                        iconMenuItems.push({title:'On Hold', type : 'onhold'});
                        iconMenuItems.push({title:'Show Logs', type : 'logs'});
                      }
                      else if(status && status=='InProgress'){
-                       iconMenuItems.push({title:'Kill', type : 'killexecution'});
+                      iconMenuItems.splice(0,0,{title:'Kill', type : 'killexecution'});
                          iconMenuItems.push({title:'Show Logs', type : 'logs'});
                      }
-                       
+                    else if(status && status=='Killed'){
+                        iconMenuItems.push({title:'Show Logs', type : 'logs'});
+                    }
+                    else if(status && status=='Failed'){
+                      iconMenuItems.push({title:'Show Logs', type : 'logs'});
+                  }
+                    else if(status && status=='InProgress'){
+                      iconMenuItems.splice(0,0,{title:'Kill', type : 'killexecution'});
+                        iconMenuItems.push({title:'Show Logs', type : 'logs'});
+                    }
+                     
                      else if(status && status=='OnHold'){
                        iconMenuItems.push({title:'Resume', type : 'resume'});
                      }
@@ -2086,8 +2096,12 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                 iconMenuItems.push({title:'Show Logs', type : 'logs'});
                 
                }
+               if(status && status=='Killed'){
+                iconMenuItems.push({title:'Show Logs', type : 'logs'});
+                
+               }
                if(status && status=='InProgress'){
-                 iconMenuItems.push({title:'Kill', type : 'killexecution'});
+                 iconMenuItems.splice(0,0,{title:'Kill', type : 'killexecution'});
                  iconMenuItems.push({title:'Show Logs', type : 'logs'});
                }
               //  if(isGroupExec){

@@ -789,14 +789,14 @@ public class RuleServiceImpl extends RuleTemplate {
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
 		// List<Status> statusList = null;
 		RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
-				MetaType.ruleExec.toString());
+				MetaType.ruleExec.toString(), "N");
 		synchronized (execUuid) {
 			commonServiceImpl.setMetaStatus(ruleExec, MetaType.ruleExec, Status.Stage.Initialized);
 		}
 		// rule = iRuleDao.findLatestByUuid(ruleExec.getDependsOn().getRef().getUuid(),
 		// new Sort(Sort.Direction.DESC, "version"));
 		rule = (Rule) commonServiceImpl.getLatestByUuid(ruleExec.getDependsOn().getRef().getUuid(),
-				MetaType.rule.toString());
+				MetaType.rule.toString(), "N");
 		ruleExec.setExec(ruleOperator.generateSql(rule, refKeyMap, otherParams, usedRefKeySet, ruleExec.getExecParams(), runMode));
 		if(rule.getParamList() != null) {
 			MetaIdentifier mi = rule.getParamList().getRef();

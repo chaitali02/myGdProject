@@ -4775,6 +4775,8 @@
                 $$.config.data_onmouseout(arcData, this);
             }
         } : null).on('click', config.interaction_enabled ? function (d, i) {
+            debugger
+
             var updated = $$.updateAngle(d),
                 arcData;
             if (updated) {
@@ -4785,6 +4787,7 @@
                 $$.config.data_onclick.call($$.api, arcData, this);
             }
         } : null).on('contextmenu', config.interaction_enabled ? function (d, i) {
+        debugger
             var updated = $$.updateAngle(d),
                 arcData;
             if (updated) {
@@ -5185,7 +5188,7 @@
             data_onmouseout: function data_onmouseout() {},
             data_onselected: function data_onselected() {},
             data_onunselected: function data_onunselected() {},
-            data_contextmenu:function(){},
+            data_contextmenu:function data_contextmenu(){},
 
             data_url: undefined,
             data_headers: undefined,
@@ -7112,6 +7115,7 @@
                 }
             });
         }).on('click', function (d) {
+            debugger
             var index = d.index;
             if ($$.hasArcType() || !$$.toggleShape) {
                 return;
@@ -7131,18 +7135,23 @@
             });
         })
         .on('contextmenu', function (d) {
+            debugger
+             //jitender custome changes for area chart
             var index = d.index;
             if ($$.hasArcType() || !$$.toggleShape) {
                 return;
             }
-            if ($$.cancelClick) {
-                $$.cancelClick = false;
-                return;
-            }
+              //jitender custome changes for area chart
+            // if ($$.cancelClick) {
+            //     $$.cancelClick = false;
+            //     return;
+            // }
             if ($$.isStepType(d) && config.line_step_type === 'step-after' && d3.mouse(this)[0] < $$.x($$.getXValue(d.id, index))) {
                 index -= 1;
             }
             $$.main.selectAll('.' + CLASS.shape + '-' + index).each(function (d) {
+                //jitender custome changes for area chart
+                config.data_selection_grouped=true;
                 if (config.data_selection_grouped || $$.isWithinShape(this, d)) {
                     $$.toggleShape(this, d, index);
                     $$.config.data_contextmenu.call($$.api, d, this);
@@ -7233,6 +7242,8 @@
                 }
             }
         }).on('click', function () {
+            debugger
+
             var targetsToShow = $$.filterTargetsToShow($$.data.targets);
             var mouse, closest;
             if ($$.hasArcType(targetsToShow)) {
@@ -7255,6 +7266,7 @@
             }
         })
         .on('contextmenu', function () {
+            debugger
             var targetsToShow = $$.filterTargetsToShow($$.data.targets);
             var mouse, closest;
             if ($$.hasArcType(targetsToShow)) {
@@ -7574,6 +7586,8 @@
         }).style('visibility', function (id) {
             return $$.isLegendToShow(id) ? 'visible' : 'hidden';
         }).style('cursor', 'pointer').on('click', function (id) {
+            debugger
+
             if (config.legend_item_onclick) {
                 config.legend_item_onclick.call($$, id);
             } else {
@@ -7586,6 +7600,7 @@
                 }
             }
         }).on('contextmenu', function (id) {
+            debugger
             if (config.legend_item_contextmenu) {
                 config.legend_item_contextmenu.call($$, id);
             } else {

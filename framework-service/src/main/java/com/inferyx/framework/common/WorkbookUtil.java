@@ -13,7 +13,6 @@ package com.inferyx.framework.common;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,12 +38,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.domain.AttributeRefHolder;
-import com.inferyx.framework.domain.ExecParams;
-import com.inferyx.framework.domain.FilterInfo;
-import com.inferyx.framework.domain.MetaIdentifier;
-import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.ReportExec;
@@ -171,6 +164,7 @@ public class WorkbookUtil {
 			return workBook;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public Workbook getWorkbookForReport(List<Map<String, Object>> resultList, ReportExec reportExec) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(reportExec.getDependsOn().getRef().getUuid(), reportExec.getDependsOn().getRef().getVersion(), reportExec.getDependsOn().getRef().getType().toString());
 		Workbook workBook = new HSSFWorkbook();
@@ -259,6 +253,7 @@ public class WorkbookUtil {
 		} else { 
 			hssfSheet.addMergedRegion(new CellRangeAddress(cellRowNum, cellRowNum, 1, 1));
 		}
+<<<<<<< HEAD
 		Font paramsHeaderFont = workBook.createFont();
 		paramsHeaderFont.setBold(false);
 		paramsHeaderFont.setColor(HSSFColor.WHITE.index);
@@ -267,6 +262,16 @@ public class WorkbookUtil {
 		paramsHeaderStyle.setFillForegroundColor(getCustomColor(workBook, (byte)63, (byte)137, (byte)201));  
 		paramsHeaderStyle.setFillBackgroundColor(HSSFColor.RED.index);
 		paramsHeaderStyle.setFont(paramsHeaderFont);
+=======
+		Font filterHeaderFont = workBook.createFont();
+		filterHeaderFont.setBold(false);
+		filterHeaderFont.setColor(HSSFColor.WHITE.index);
+		CellStyle filterHeaderStyle = workBook.createCellStyle();
+		filterHeaderStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		filterHeaderStyle.setFillForegroundColor(HSSFColor.LIGHT_BLUE.index);
+		filterHeaderStyle.setFillBackgroundColor(HSSFColor.RED.index);
+		filterHeaderStyle.setFont(filterHeaderFont);
+>>>>>>> branch 'master' of https://github.com/gridedge/inferyx.git
 
 		StringBuilder reportParameters = new StringBuilder("");
 		if (report.getParamList() != null && reportExec.getExecParams() != null
@@ -287,7 +292,11 @@ public class WorkbookUtil {
 
 		Row filter = hssfSheet.createRow(cellRowNum);
 		Cell lhsAttrCell = filter.createCell(0);
+<<<<<<< HEAD
 		lhsAttrCell.setCellStyle(paramsHeaderStyle);
+=======
+		lhsAttrCell.setCellStyle(filterHeaderStyle);
+>>>>>>> branch 'master' of https://github.com/gridedge/inferyx.git
 		lhsAttrCell.setCellValue("Report Parameters: ");
 		Cell rhsAttrCell = filter.createCell(1);
 		rhsAttrCell.setCellValue(reportParameters.toString());
@@ -427,7 +436,7 @@ public class WorkbookUtil {
 		}
 		
 		Font footerFont = workBook.createFont();
-		footerFont.setBold(true);
+		footerFont.setBold(false);
 //		footerFont.setFontHeight((short)8);
 //		footerFont.setFontHeightInPoints((short) 10);
 		

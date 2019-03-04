@@ -354,7 +354,7 @@ public abstract class RuleGroupTemplate implements IExecutable, IParsable {
 		}
 		// Populate ruleExecList
 		synchronized (baseGroupExec.getUuid()) {
-			BaseRuleGroupExec ruleGroupExec1 = (BaseRuleGroupExec) commonServiceImpl.getOneByUuidAndVersion(ruleGroupExecMeta.getUuid(), ruleGroupExecMeta.getVersion(), ruleGroupExecMeta.getType().toString());
+			BaseRuleGroupExec ruleGroupExec1 = (BaseRuleGroupExec) commonServiceImpl.getOneByUuidAndVersion(ruleGroupExecMeta.getUuid(), ruleGroupExecMeta.getVersion(), ruleGroupExecMeta.getType().toString(), "N");
 			if (ruleGroupExec1 == null) {
 				ruleGroupExec1 = baseGroupExec;
 			}

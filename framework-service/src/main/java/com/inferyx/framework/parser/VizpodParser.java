@@ -156,13 +156,34 @@ public class VizpodParser {
 			}
 			if (vizpod.getGroups().size() > 0) {
 				for (AttributeDetails attrDet : vizpod.getGroups()) {
-					String groupAttrName = datapodServiceImpl.getAttributeName(attrDet.getRef().getUuid(),
-							attrDet.getAttributeId());
-					outerSelectBuilder.append(groupAttrName).append(" as ").append(groupAttrName).append(" ");
-					outerSelectBuilder.append(comma);
-					// selectBuilder.append(groupAttrName).append(" as
-					// ").append(groupAttrName).append(" ");
-					// selectBuilder.append(comma);
+					if (attrDet.getRef().getType() == MetaType.datapod) {
+						String keyAttrName = datapodServiceImpl.getAttributeName(attrDet.getRef().getUuid(),
+								attrDet.getAttributeId());
+						outerSelectBuilder.append(keyAttrName).append(" as ").append(keyAttrName).append(" ");
+						outerSelectBuilder.append(comma);
+						flaghasFuncInVal = true;
+						// selectBuilder.append(keyAttrName).append(" as ").append(keyAttrName).append("
+						// ");
+						// selectBuilder.append(comma);
+					} else if (attrDet.getRef().getType() == MetaType.formula) {
+						Formula formula = (Formula) commonServiceImpl.getLatestByUuid(attrDet.getRef().getUuid(),
+								MetaType.formula.toString());
+						Datasource vizDS = commonServiceImpl.getDatasourceByObject(vizpod);
+						String FormulaSql = formulaOperator.generateSql(formula, null, null, null, vizDS);
+						if (StringUtils.isNotBlank(attrDet.getFunction())) {
+
+							outerSelectBuilder.append(attrDet.getFunction()).append("(").append(datapod.getName())
+									.append(".").append(formula.getName()).append(")")
+									.append(" as " + formula.getName() + " ");
+							flaghasFuncInVal = true;
+						} else {
+
+							outerSelectBuilder.append(FormulaSql).append(" as " + formula.getName() + " ");
+						}
+						outerSelectBuilder.append(comma);
+						// selectBuilder.append(FormulaSql).append(" as " + formula.getName() + " ");
+						flaghasFuncInVal = formulaOperator.isGroupBy(formula, null, null);
+					}
 				}
 			}
 
@@ -308,7 +329,7 @@ public class VizpodParser {
 						// finalBuilder.append(comma);
 						if (flaghasFuncInVal) {
 							outerGroupByBuilder.append(groupAttrName);
-							outerGroupByBuilder.append(comma);
+							outerGroupByBuilder.append(", ");
 						}
 					}
 				}

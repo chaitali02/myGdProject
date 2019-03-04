@@ -358,18 +358,33 @@ InferyxApp.controller('TabController', function ($timeout, $state, $scope, $root
 
 
 
-InferyxApp.controller('lhscontroller', function ($scope, $rootScope, SharedProperties, $state, $window, $cookieStore, LhsService) {
+InferyxApp.controller('lhscontroller', function ($scope, $rootScope, $window, $state,$stateParams, LhsService, $timeout) {
     $rootScope.metaStats = {};
     $scope.deInitTabs = function () {
         var param = {};
         param.index = null;
         $rootScope.$broadcast('onDeInitTabs', param);
     }
-
-    if (typeof localStorage.userdetail == "undefined") {
-        $window.location.href = 'login.html';
-        return false;
-    }
+    
+    $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+        if (typeof localStorage.userdetail == "undefined") {
+            localStorage.test="";
+            if($stateParams.redirect == "true"){
+              console.log("jit"+$state.current.name);
+               var link={}
+               link.state=$state.current.name;
+               link.params=$stateParams;
+               localStorage.link=JSON.stringify(link);
+            }
+            setTimeout(function(){
+                $window.location.href = 'login.html';
+            },100)
+            
+            return false;
+       }
+     });
+  
+   
 
     if (!$rootScope.$$listenerCount['CallFromAppRoleController']) {
         $rootScope.$on("CallFromAppRoleController", function () {
@@ -605,6 +620,7 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, SharedPrope
 });
 
 InferyxApp.controller('AppRoleController', function ($scope,$sessionStorage,$rootScope, $cookieStore, AppRoleService, $cookieStore, $window, $state, privilegeSvc, LhsService, $stateParams) {
+   
     $rootScope.reOpen=localStorage.reOpen;
     console.log($scope.selectedApp)
     
@@ -620,9 +636,12 @@ InferyxApp.controller('AppRoleController', function ($scope,$sessionStorage,$roo
     $scope.selectedRole;
     $scope.selectAppStatus = false;
     $scope.selectRoleStatus = false;
-    $rootScope.setUserName = JSON.parse(localStorage.userdetail).name
-    $rootScope.setUseruuid = JSON.parse(localStorage.userdetail).userUUID
-    $scope.username = JSON.parse(localStorage.userdetail).userName;
+    if(typeof localStorage.userdetail != "undefined"){
+        $rootScope.setUserName = JSON.parse(localStorage.userdetail).name
+        $rootScope.setUseruuid = JSON.parse(localStorage.userdetail).userUUID
+        $scope.username = JSON.parse(localStorage.userdetail).userName;
+    }
+    
     $rootScope.appUuid = localStorage.appUuid; 
     $rootScope.isSubmit = false;
     AppRoleService.getLatestByUuid($rootScope.setUseruuid, "user").then(function (response) { onSuccessGetLatestByUuid(response.data) });
@@ -635,18 +654,28 @@ InferyxApp.controller('AppRoleController', function ($scope,$sessionStorage,$roo
     AppRoleService.getAppRole($rootScope.setUserName).then(function (response) { onAppSuccess(response.data) })
     var onAppSuccess = function (response) {
         $scope.AppData = response
-       
             $scope.RoleData = response[0].roleInfo;
             $scope.selectedRole = response[0].roleInfo[0]
             $scope.selectedApp = response[0];
-            
             for(var i=0;i<response.length;i++){
-                if(response[i].defaultAppId !=null){
+                if(response[i].defaultAppId !=null && typeof localStorage.link == "undefined"){
                     console.log("Y"+response[i].appId.ref.uuid)
                     $scope.selectedApp = response[i];
                     $scope.selectedRole = $scope.selectedApp.roleInfo[0];
                     $scope.RoleData = response[i].roleInfo;
                     break;
+                }else{
+                    if(typeof localStorage.link != "undefined"){
+                        var link=JSON.parse(localStorage.link);
+                        if(response[i].appId.ref.uuid == link.params.appId){
+                            $scope.selectedApp =response[i];
+                            $scope.selectedRole = $scope.selectedApp.roleInfo[0];
+                            $scope.RoleData = response[i].roleInfo;
+                            console.log(localStorage.link);
+                            $scope.ok();
+                            break;
+                        }
+                    }
                 }
             }
             
@@ -695,16 +724,21 @@ InferyxApp.controller('AppRoleController', function ($scope,$sessionStorage,$roo
         }
     }
     $scope.open = function () {
-        if (!localStorage.isAppRoleExists) {
+        if (!localStorage.isAppRoleExists && typeof localStorage.userdetail != "undefined" && typeof localStorage.link == "undefined") {
             $('#myModal').modal({
                 backdrop: 'static',
                 keyboard: false
             });
         }
+        else{
+            
+
+        }
+
     };
 
     $scope.ok = function (event) {
-        event.preventDefault();
+        //event.preventDefault();
         $('#myModal').modal('hide');
         $rootScope.isWelcomenOpen=true;
         if ($scope.selectedApp != null) {
@@ -735,11 +769,17 @@ InferyxApp.controller('AppRoleController', function ($scope,$sessionStorage,$roo
         $state.go('datadiscovery',{}, {reload: true});
         console.log($state.current)
         if($state.current.url !=''){
-        $state.transitionTo('datadiscovery',{}, {
-            reload: true,
-            inherit: false,
-            notify: true
-        });
+            $state.transitionTo('datadiscovery',{}, {
+                reload: true,
+                inherit: false,
+                notify: true
+            });
+        }else{
+            if(typeof localStorage.link != "undefined"){
+                var link=JSON.parse(localStorage.link);
+                $state.go(link.state,link.params);
+                localStorage.removeItem('link');
+           }
         }
     };
 
@@ -1287,7 +1327,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
         })
         
         .state('resultxecresult', {
-            url: "/ReportResult?id&mode&returnBack&version",
+            url: "/ReportResult?id&mode&returnBack&version&appId&roleId&redirect",
             templateUrl: "views/report-result.html",
             data: { pageTitle: 'Data Visualization' },
             //controller: "BlankController",
@@ -3696,7 +3736,7 @@ InferyxApp.factory('privilegeSvc', function ($http, $location, $rootScope) {
 })
 
 /* Init global settings and run the app */
-InferyxApp.run(["$rootScope", "settings", "$state", "privilegeSvc", function ($rootScope, settings, $state, privilegeSvc) {
+InferyxApp.run(["$rootScope", "settings", "$state", "privilegeSvc", "$timeout", function ($rootScope, settings, $state, privilegeSvc,  $timeout) {
     $rootScope.$state = $state; // state to be accessed from view
     $rootScope.$settings = settings; // state to be accessed from view
     privilegeSvc.getUpdated();

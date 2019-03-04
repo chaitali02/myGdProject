@@ -166,7 +166,9 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 			$scope.valuelist[index].popoverIsOpen=false;
 		}else{
 			$scope.valuelist[index].dname=$scope.valuelist[index].name+"."+$scope.valuelist[index].attributeName;
-		    $scope.valuelist[index].popoverIsOpen=false;
+			$scope.valuelist[index].popoverIsOpen=false;
+			$scope.valuelist[index].function=null;
+
 		}
 	}
 
@@ -512,7 +514,14 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 			$scope.getExpressionByType() // Call Function
 		}//End onSuccessGetAllAttributeBySourcet
 	}//End onChangeSource
+	$scope.addAll = function () {
+		$scope.filterAttributeTags = $scope.allSourceAttribute;
+		$scope.myform.$dirty=true;
+	}
 
+	$scope.clearAllDetailAttr=function(){
+		$scope.filterAttributeTags=[];
+	}
 	$scope.checkValue = function () {
 		if ($scope.keylist.length > 0 && $scope.valuelist.length > 0) {
 			$scope.myform.$dirty = true
@@ -706,7 +715,9 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 				ref.type = $scope.filterAttributeTags[i].type;
 				ref.uuid = $scope.filterAttributeTags[i].uuid;
 				attributeInfo.ref = ref;
-				attributeInfo.attributeId = $scope.filterAttributeTags[i].attributeId
+				if($scope.filterAttributeTags[i].type !='formual'){
+					attributeInfo.attributeId = $scope.filterAttributeTags[i].attributeId;
+				}
 				attributeInfoArray[i] = attributeInfo;
 			}
 		}

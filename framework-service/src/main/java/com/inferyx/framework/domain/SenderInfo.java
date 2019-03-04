@@ -22,25 +22,25 @@ public class SenderInfo {
 	private List<String> emailBCC;
 	private List<String> emailCC;
 	private Map<String, String> emailAttachment;
-	private String notifOnSuccess = "Y";
+	private String notifyOnSuccess = "Y";
 	private String notifyOnFailure = "Y";
 	private String sendAttachment = "Y";
 	
 	/**
 	 * @Ganesh
 	 *
-	 * @return the notifOnSuccess
+	 * @return the notifyOnSuccess
 	 */
-	public String getNotifOnSuccess() {
-		return notifOnSuccess;
+	public String getNotifyOnSuccess() {
+		return notifyOnSuccess;
 	}
 	/**
 	 * @Ganesh
 	 *
-	 * @param notifOnSuccess the notifOnSuccess to set
+	 * @param notifyOnSuccess the notifyOnSuccess to set
 	 */
-	public void setNotifOnSuccess(String notifOnSuccess) {
-		this.notifOnSuccess = notifOnSuccess;
+	public void setNotifyOnSuccess(String notifyOnSuccess) {
+		this.notifyOnSuccess = notifyOnSuccess;
 	}
 	/**
 	 * @Ganesh

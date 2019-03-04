@@ -209,7 +209,7 @@ public class RunDagServiceImpl implements Callable<String> {
 			
 			
 			//dagExec = dagExecServiceImpl.findOneByUuidAndVersion(dagExec.getUuid(), dagExec.getVersion());
-			dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(dagExec.getUuid(), dagExec.getVersion(), MetaType.dagExec.toString());
+			dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(dagExec.getUuid(), dagExec.getVersion(), MetaType.dagExec.toString(), "N");
 			List<StageExec> dagExecStgs = DagExecUtil.castToStageExecList(dagExec.getStages());
 			boolean setCompletedStatus = true;
 			
@@ -261,7 +261,7 @@ public class RunDagServiceImpl implements Callable<String> {
 			SenderInfo senderInfo = dag.getSenderInfo();
 			if(senderInfo != null) {	
 				Status latestStatus = Helper.getLatestStatus(dagExec.getStatusList());
-				if(latestStatus.getStage().equals(Status.Stage.Completed) && senderInfo.getNotifOnSuccess().equalsIgnoreCase("Y")) {
+				if(latestStatus.getStage().equals(Status.Stage.Completed) && senderInfo.getNotifyOnSuccess().equalsIgnoreCase("Y")) {
 					synchronized(dagExec.getUuid()) {
 						dagServiceImpl.sendSuccessNotification(senderInfo, dag, dagExec);
 					}

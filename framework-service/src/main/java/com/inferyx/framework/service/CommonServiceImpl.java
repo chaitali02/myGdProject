@@ -4462,7 +4462,7 @@ public class CommonServiceImpl<T> {
 			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
 			SecurityException, InterruptedException {
 		synchronized (taskExec) {
-			Thread.sleep(2000);
+			Thread.sleep(1001);
 			T execObject = (T) createExec(metaType, ref);
 			MetaIdentifier metaExecIdentifier = new MetaIdentifier(metaType,
 					String.class.cast(execObject.getClass().getMethod("getUuid", null).invoke(execObject, null)),
@@ -5276,5 +5276,29 @@ public class CommonServiceImpl<T> {
 		return null;
 	}
 	
-	
+	public String getFileNameFromDir(String directory, String fileExt, String fileFormat) {
+		File folder = new File(directory);
+		for (File file : folder.listFiles()) {
+			String dirFileName = file.getName();
+			if(fileExt != null) {
+				fileExt = fileExt.startsWith(".") ? fileExt.substring(1) : fileExt;
+			} else {
+				fileExt = fileFormat;
+			}
+			
+			if(fileFormat.equalsIgnoreCase(FileType.PARQUET.toString())) {
+				fileExt = FileType.PARQUET.toString().toLowerCase();
+			} else {
+				//assigning file extension to csv b'coz as of now we are using this method
+				//to get files from the directory where sqpark have saved the csv files
+				//and spark saves csv files with extension .csv for for all type csv delimetres
+				fileExt = FileType.CSV.toString().toLowerCase();				
+			}
+			
+			if (file.isFile() && dirFileName.toLowerCase().endsWith("."+fileExt)) {
+				return file.getAbsolutePath();
+			}
+		}
+		return null;
+	}
 }
