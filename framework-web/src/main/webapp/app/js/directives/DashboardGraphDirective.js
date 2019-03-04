@@ -957,6 +957,13 @@ DatavisualizationModule.directive('multiSeriesChart', function ($compile, $rootS
           }
         prepareChartData();
         chartData.xs=prepareXs(chartData.columns,chartData.columns2);
+        chartData.contextmenu = function () {
+          var data = {}
+          data.vizpod = $scope.objdetail
+          data.dataobj = arguments[0]
+          console.log(arguments[0]);
+          $scope.onRightClick(data);
+        };
         if(chartData.columns.length >0){
           chartData.columns=chartData.columns.concat(chartData.columns2);
           delete chartData.columns2;

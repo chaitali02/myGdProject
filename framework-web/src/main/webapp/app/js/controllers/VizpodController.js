@@ -166,7 +166,9 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 			$scope.valuelist[index].popoverIsOpen=false;
 		}else{
 			$scope.valuelist[index].dname=$scope.valuelist[index].name+"."+$scope.valuelist[index].attributeName;
-		    $scope.valuelist[index].popoverIsOpen=false;
+			$scope.valuelist[index].popoverIsOpen=false;
+			$scope.valuelist[index].function=null;
+
 		}
 	}
 
