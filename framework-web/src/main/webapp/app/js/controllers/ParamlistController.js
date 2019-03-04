@@ -72,18 +72,18 @@ DatascienceModule.controller('CreateParamListController', function (CommonServic
 	$scope.isTemplageInfoRequired=false;
 	$scope.typeSimple = ["string", "double", "integer", "list","decimal"];
 	$scope.type = [
-		{"name":"string","caption":"string"},
-		{"name":"double","caption":"double"},
-	 	{"name":"date","caption":"date"}, 
-		{"name":"integer","caption":"integer"},
-		{"name":"decimal","caption":"decimal"},
-		{"name":"attribute","caption":"attribute"},
-		{"name":"attributes","caption":"attribute[s]"},
-		{"name":"distribution","caption":"distribution"},
-		{"name":"datapod","caption":"datapod"},
-		{"name":"function","caption":"function"},
-		{"name":"list","caption":"list"},
-		{"name":"array","caption":"array"}];
+		{"name":"string","caption":"STRING"},
+		{"name":"double","caption":"DOUBLE"},
+	 	{"name":"date","caption":"DATE"}, 
+		{"name":"integer","caption":"INTEGER"},
+		{"name":"decimal","caption":"DECIMAL"},
+		{"name":"attribute","caption":"ATTRIBUTE"},
+		{"name":"attributes","caption":"ATTRIBUTE[S]"},
+		{"name":"distribution","caption":"DISTRIBUTION"},
+		{"name":"datapod","caption":"DATEPOD"},
+		{"name":"function","caption":"FUNCTION"},
+		{"name":"list","caption":"LIST"},
+		{"name":"array","caption":"ARRAY"}];
 	$scope.isDependencyShow = false;
 	$scope.isTableDisable=false;
 	$scope.privileges = [];
