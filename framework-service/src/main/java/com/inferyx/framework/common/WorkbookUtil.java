@@ -253,7 +253,6 @@ public class WorkbookUtil {
 		} else { 
 			hssfSheet.addMergedRegion(new CellRangeAddress(cellRowNum, cellRowNum, 1, 1));
 		}
-<<<<<<< HEAD
 		Font paramsHeaderFont = workBook.createFont();
 		paramsHeaderFont.setBold(false);
 		paramsHeaderFont.setColor(HSSFColor.WHITE.index);
@@ -262,16 +261,6 @@ public class WorkbookUtil {
 		paramsHeaderStyle.setFillForegroundColor(getCustomColor(workBook, (byte)63, (byte)137, (byte)201));  
 		paramsHeaderStyle.setFillBackgroundColor(HSSFColor.RED.index);
 		paramsHeaderStyle.setFont(paramsHeaderFont);
-=======
-		Font filterHeaderFont = workBook.createFont();
-		filterHeaderFont.setBold(false);
-		filterHeaderFont.setColor(HSSFColor.WHITE.index);
-		CellStyle filterHeaderStyle = workBook.createCellStyle();
-		filterHeaderStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		filterHeaderStyle.setFillForegroundColor(HSSFColor.LIGHT_BLUE.index);
-		filterHeaderStyle.setFillBackgroundColor(HSSFColor.RED.index);
-		filterHeaderStyle.setFont(filterHeaderFont);
->>>>>>> branch 'master' of https://github.com/gridedge/inferyx.git
 
 		StringBuilder reportParameters = new StringBuilder("");
 		if (report.getParamList() != null && reportExec.getExecParams() != null
@@ -292,11 +281,7 @@ public class WorkbookUtil {
 
 		Row filter = hssfSheet.createRow(cellRowNum);
 		Cell lhsAttrCell = filter.createCell(0);
-<<<<<<< HEAD
 		lhsAttrCell.setCellStyle(paramsHeaderStyle);
-=======
-		lhsAttrCell.setCellStyle(filterHeaderStyle);
->>>>>>> branch 'master' of https://github.com/gridedge/inferyx.git
 		lhsAttrCell.setCellValue("Report Parameters: ");
 		Cell rhsAttrCell = filter.createCell(1);
 		rhsAttrCell.setCellValue(reportParameters.toString());
