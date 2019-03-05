@@ -2239,6 +2239,7 @@ DatavisualizationModule.controller('ReportResultController', function ($q, dagMe
 	$scope.download = {};
 	$scope.download.rows = CF_DOWNLOAD.framework_download_minrows;
 	$scope.download.formates = CF_DOWNLOAD.formate;
+	$scope.download.formates[1]="PDF";
 	$scope.download.selectFormate = CF_DOWNLOAD.formate[0];
 	$scope.download.maxrow = CF_DOWNLOAD.framework_download_maxrow;
 	$scope.download.limit_to = CF_DOWNLOAD.limit_to;
@@ -2388,7 +2389,7 @@ DatavisualizationModule.controller('ReportResultController', function ($q, dagMe
 		$scope.isDownlodInprogess = true;
 		$http({
 			method: 'GET',
-			url: url + "report/download?action=view&uuid=" + uuid + "&version=" + version + "&rows=" + $scope.download.rows,
+			url: url + "report/download?action=view&uuid=" + uuid + "&version=" + version + "&rows=" + $scope.download.rows+"&format="+$scope.download.selectFormate,
 			responseType: 'arraybuffer'
 		}).success(function (data, status, headers) {
 			headers = headers();

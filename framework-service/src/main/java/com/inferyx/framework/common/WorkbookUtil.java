@@ -46,7 +46,7 @@ import com.inferyx.framework.service.CommonServiceImpl;
 @Component
 public class WorkbookUtil {
 	@Autowired
-	CommonServiceImpl<?> commonServiceImpl; 
+	private CommonServiceImpl<?> commonServiceImpl; 
 
 	public static HSSFWorkbook getWorkbook(Map<String, LinkedHashMap<String, String>> resultMap) {
 		HSSFWorkbook wb = new HSSFWorkbook();
@@ -282,7 +282,7 @@ public class WorkbookUtil {
 		Row filter = hssfSheet.createRow(cellRowNum);
 		Cell lhsAttrCell = filter.createCell(0);
 		lhsAttrCell.setCellStyle(paramsHeaderStyle);
-		lhsAttrCell.setCellValue("Report Parameters: ");
+		lhsAttrCell.setCellValue("Report Parameters");
 		Cell rhsAttrCell = filter.createCell(1);
 		rhsAttrCell.setCellValue(reportParameters.toString());
 		
@@ -373,12 +373,11 @@ public class WorkbookUtil {
 	/******* adding rows *******/
 //		Font columnFont = workBook.createFont();
 		CellStyle columnStyle = workBook.createCellStyle();
-	
-		columnStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		columnStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		columnStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		columnStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		
+		columnStyle.setAlignment(CellStyle.ALIGN_CENTER);
+//		columnStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+//		columnStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+//		columnStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+//		columnStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
 
 		int lastRowNum = columnRowNum+1;
 		if(resultList.get(0).get(new ArrayList<>(resultList.get(0).keySet()).get(0)).equals("no data available.")) {
@@ -389,7 +388,7 @@ public class WorkbookUtil {
 			}
 			Row noDataRow = hssfSheet.createRow(lastRowNum);
 			Cell noDataCell = noDataRow.createCell(0);
-//			noDataCell.setCellStyle(headerCellStyle);
+			noDataCell.setCellStyle(columnStyle);
 			noDataCell.setCellValue("no data available.");
 		} else {
 			for (int i = 0; i < resultList.size(); i++) {

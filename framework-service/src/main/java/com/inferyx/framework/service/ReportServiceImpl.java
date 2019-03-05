@@ -31,6 +31,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.spark.sql.SaveMode;
@@ -42,6 +43,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
+import com.inferyx.framework.common.PDFUtil;
 import com.inferyx.framework.common.SessionHelper;
 import com.inferyx.framework.common.WorkbookUtil;
 import com.inferyx.framework.domain.AttributeSource;
@@ -94,6 +96,8 @@ public class ReportServiceImpl extends RuleTemplate {
 	private SessionHelper sessionHelper;
 	@Autowired
 	private NotificationServiceImpl notificationServiceImpl;
+	@Autowired
+	private PDFUtil pdfUtil;
 	
 	static final Logger logger = Logger.getLogger(ReportServiceImpl.class);
 	
@@ -300,8 +304,6 @@ public class ReportServiceImpl extends RuleTemplate {
 		Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(),
 				dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
 		
-		Workbook workbook = null;
-		
 		String defaultDownloadPath = Helper.getPropertyValue("framework.report.Path"); 
 		defaultDownloadPath = defaultDownloadPath.endsWith("/") ? defaultDownloadPath : defaultDownloadPath.concat("/");
 		String reportFilePath = String.format("%s/%s/%s/%s/", report.getUuid(), report.getVersion(), reportExec.getVersion(), "doc");
@@ -310,12 +312,25 @@ public class ReportServiceImpl extends RuleTemplate {
 		if(!reportDocDir.exists()) {
 			reportDocDir.mkdir();
 		}
-		String reportFileName = String.format("%s_%s.%s", report.getName(), reportExec.getVersion(), "xls");
+		String reportFileName = null;
+		if(format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
+			reportFileName = String.format("%s_%s.%s", report.getName(), reportExec.getVersion(), FileType.PDF.toString().toLowerCase());
+		} else {
+			reportFileName = String.format("%s_%s.%s", report.getName(), reportExec.getVersion(), FileType.XLS.toString().toLowerCase());
+		}
+		
 		String filePathUrl = defaultDownloadPath.concat(reportFilePath).concat(reportFileName);		
+
+		Workbook workbook = null;
+		PDDocument doc = null;
 		
 		File reportFile = new File(filePathUrl);
 		if(reportFile.exists()) {
-			 workbook = WorkbookFactory.create(reportFile);
+			if(format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
+				doc = PDDocument.load(reportFile);
+			} else {
+				 workbook = WorkbookFactory.create(reportFile);
+			}
 		} else {
 			DataStore datastore = dataStoreServiceImpl.getDatastore(reportExec.getResult().getRef().getUuid(),
 					reportExec.getResult().getRef().getVersion());
@@ -336,7 +351,8 @@ public class ReportServiceImpl extends RuleTemplate {
 
 			datastoreServiceImpl.setRunMode(runMode);
 			List<Map<String, Object>> data = datastoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, limit, null, null);		
-			
+			data = null;
+			//checking whether data is available or not
 			if(data == null || (data != null && data.isEmpty())) {
 				data = new ArrayList<>();
 				
@@ -348,36 +364,52 @@ public class ReportServiceImpl extends RuleTemplate {
 					} else {
 						dataMap.put(attributeSource.getAttrSourceName(), "");
 					}
-					data.add(dataMap);
 					i++;
 				}
+
+				data.add(dataMap);
 			}
 			
-			workbook = workbookUtil.getWorkbookForReport(data, reportExec);
+			//writting as per provided format
+			if(format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
+//				data.addAll(data);
+//				data.addAll(data);
+				doc = pdfUtil.getPDFDocForReport(data, reportExec);
+				FileOutputStream fileOutPDF = new FileOutputStream(new File(filePathUrl));
+				doc.save(fileOutPDF);
+				fileOutPDF.close();
+			} else {
+				FileOutputStream fileOut = new FileOutputStream(filePathUrl);
+				workbook = workbookUtil.getWorkbookForReport(data, reportExec);
+				workbook.write(fileOut);		
+				fileOut.close();
+			}
 			
 			DownloadExec downloadExec = new DownloadExec();
 			downloadExec.setBaseEntity();
 			downloadExec.setLocation(filePathUrl);
 			downloadExec.setDependsOn(datastore.getMetaId());
-			
-//			    String downloadPath = Helper.getPropertyValue("framework.file.download.path");
-//			    String filename = downloadExec.getUuid() + "_" + downloadExec.getVersion() + ".xls";
-//			    String fileLocation = downloadPath + "/" + filename;
-
-			FileOutputStream fileOut = new FileOutputStream(filePathUrl);
-			workbook.write(fileOut);		
-			fileOut.close();
-
 			commonServiceImpl.save(MetaType.downloadExec.toString(), downloadExec);
 		}
 		
 		if(response != null) {
 			try {
-				response.setContentType("application/xml");
-				response.setHeader("Content-disposition", "attachment");
-				response.setHeader("filename", report.getName().concat("_").concat(reportExec.getVersion()).concat(".xls"));
 				ServletOutputStream servletOutputStream = response.getOutputStream();
-				workbook.write(servletOutputStream);
+				if(format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
+					response.setContentType("application/pdf");
+					response.setHeader("Content-disposition", "attachment");
+					response.setHeader("filename", report.getName().concat("_").concat(reportExec.getVersion())
+							.concat(".").concat(FileType.PDF.toString().toLowerCase()));
+					doc.save(servletOutputStream);
+					doc.close();
+				} else {
+					response.setContentType("application/xml");
+					response.setHeader("Content-disposition", "attachment");
+					response.setHeader("filename", report.getName().concat("_").concat(reportExec.getVersion())
+							.concat(".").concat(FileType.XLS.toString().toLowerCase()));
+					workbook.write(servletOutputStream);
+					workbook.close();
+				}				
 			} catch (IOException e) {
 				e.printStackTrace();
 				logger.error("Can not download file.");
