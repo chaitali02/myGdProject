@@ -63,7 +63,7 @@ public class BaseGroupExecTemplate {
 		BaseRuleExecTemplate baseRuleExecService = serviceFactory.getRuleExecService(ruleExecType);
 		BaseRuleGroupExec baseGroupExec = null;
 		try {
-			baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, groupExecType.toString());
+			baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, groupExecType.toString(), "N");
 		} catch (JsonProcessingException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -73,13 +73,14 @@ public class BaseGroupExecTemplate {
 			return;
 		}
 		
-		if (!Helper.getLatestStatus(baseGroupExec.getStatusList()).equals(new Status(Status.Stage.InProgress, new Date()))) {
-			logger.info("Latest Status is not in InProgress. Exiting...");
-			return;			
-		}
 		try {
+			logger.info("Before kill - Group - " + baseGroupExec.getUuid());
 			synchronized (baseGroupExec.getUuid()) {
-				commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType, Status.Stage.Terminating);
+				baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType, Status.Stage.Terminating);
+				if (!Helper.getLatestStatus(baseGroupExec.getStatusList()).equals(new Status(Status.Stage.Terminating, new Date()))) {
+					logger.info("Latest Status is not in Terminating. Exiting...");
+					return;			
+				}
 			}
 			
 			FutureTask futureTask = (FutureTask) taskThreadMap.get(groupExecType+"_"+baseGroupExec.getUuid()+"_"+baseGroupExec.getVersion());
@@ -95,7 +96,7 @@ public class BaseGroupExecTemplate {
 			while (!killComplete) {
 				killComplete = true;
 				for (MetaIdentifierHolder ruleExecHolder : baseGroupExec.getExecList()) {
-					baseRuleExec = (BaseRuleExec) commonServiceImpl.getOneByUuidAndVersion(ruleExecHolder.getRef().getUuid(), ruleExecHolder.getRef().getVersion(), ruleExecType.toString());
+					baseRuleExec = (BaseRuleExec) commonServiceImpl.getOneByUuidAndVersion(ruleExecHolder.getRef().getUuid(), ruleExecHolder.getRef().getVersion(), ruleExecType.toString(), "N");
 					if (baseRuleExec == null) {
 						continue;
 					}
@@ -104,7 +105,7 @@ public class BaseGroupExecTemplate {
 				logger.info("Check whether all rules were processed ");
 				// Check whether kill is complete
 				for (MetaIdentifierHolder ruleExecHolder : baseGroupExec.getExecList()) {
-					baseRuleExec = (BaseRuleExec) commonServiceImpl.getOneByUuidAndVersion(ruleExecHolder.getRef().getUuid(), ruleExecHolder.getRef().getVersion(), ruleExecType.toString());
+					baseRuleExec = (BaseRuleExec) commonServiceImpl.getOneByUuidAndVersion(ruleExecHolder.getRef().getUuid(), ruleExecHolder.getRef().getVersion(), ruleExecType.toString(), "N");
 					if (baseRuleExec == null) {
 						continue;
 					}

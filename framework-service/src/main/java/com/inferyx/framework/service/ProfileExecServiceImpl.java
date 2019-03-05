@@ -543,7 +543,7 @@ public class ProfileExecServiceImpl extends BaseRuleExecTemplate {
 		//ProfileExec profileExec = iProfileExecDao.findOneByUuidAndVersion(appUuid, execUuid, execVersion);
 		ProfileExec profileExec = (ProfileExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.profileExec.toString());
 		//com.inferyx.framework.domain.DataStore dataStore=dataStoreServiceImpl.findOneByUuidAndVersion(profileExec.getResult().getRef().getUuid(), profileExec.getResult().getRef().getVersion());
-		com.inferyx.framework.domain.DataStore dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(profileExec.getResult().getRef().getUuid(), profileExec.getResult().getRef().getVersion(), MetaType.datastore.toString());
+		com.inferyx.framework.domain.DataStore dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(profileExec.getResult().getRef().getUuid(), profileExec.getResult().getRef().getVersion(), MetaType.datastore.toString(), "N");
 		MetaIdentifier mi = new MetaIdentifier();
 		ExecStatsHolder execHolder=new ExecStatsHolder();
 		mi.setType(MetaType.datastore);
