@@ -671,44 +671,44 @@ public class Helper {
 												Boolean.FALSE, 
 												Boolean.FALSE);
 		}
-		if (latestStatus.equals(Status.Stage.InProgress)) {
+		if (latestStatus.equals(Status.Stage.RUNNING)) {
 			statusHolder.setCompleted(Boolean.FALSE);
-		} else if (latestStatus.equals(Status.Stage.Failed)) {
+		} else if (latestStatus.equals(Status.Stage.FAILED)) {
 			statusHolder.setFailed(Boolean.TRUE);
-		} else if (latestStatus.equals(Status.Stage.Killed)) {
+		} else if (latestStatus.equals(Status.Stage.KILLED)) {
 			statusHolder.setKilled(Boolean.TRUE);
-		} else if (latestStatus.equals(Status.Stage.Resume)) {
+		} else if (latestStatus.equals(Status.Stage.RESUME)) {
 			statusHolder.setResume(Boolean.TRUE);
 			statusHolder.setCompleted(Boolean.FALSE);
-		} else if (latestStatus.equals(Status.Stage.OnHold)) {
-			statusHolder.setOnHold(Boolean.TRUE);
+		} else if (latestStatus.equals(Status.Stage.PAUSE)) {
+			statusHolder.setPause(Boolean.TRUE);
 			statusHolder.setCompleted(Boolean.FALSE);
-		} else if (latestStatus.equals(Status.Stage.InProgress) 
-					|| latestStatus.equals(Status.Stage.NotStarted) 
-					|| latestStatus.equals(Status.Stage.Terminating) 
-					|| latestStatus.equals(Status.Stage.Initialized) 
-					|| latestStatus.equals(Status.Stage.Ready)) {
+		} else if (latestStatus.equals(Status.Stage.RUNNING) 
+					|| latestStatus.equals(Status.Stage.PENDING) 
+					|| latestStatus.equals(Status.Stage.TERMINATING) 
+					|| latestStatus.equals(Status.Stage.INITIALIZING) 
+					|| latestStatus.equals(Status.Stage.READY)) {
 			statusHolder.setCompleted(Boolean.FALSE);
 		}
 	}	
 	public static Status.Stage getStatus(String stage){
 		if(stage !=null && !StringUtils.isBlank(stage)) {
 			switch(stage.toLowerCase()) {
-				case "onhold": return Status.Stage.OnHold;
-				case "killed": return Status.Stage.Killed;
-				case "inprogress": return Status.Stage.InProgress;
-				case "failed": return Status.Stage.Failed;
-				case "completed": return Status.Stage.Completed;
-				case "notstarted": return Status.Stage.NotStarted;
+				case "pause": return Status.Stage.PAUSE;
+				case "killed": return Status.Stage.KILLED;
+				case "running": return Status.Stage.RUNNING;
+				case "failed": return Status.Stage.FAILED;
+				case "completed": return Status.Stage.COMPLETED;
+				case "pending": return Status.Stage.PENDING;
 				case "active": return Status.Stage.active;
 				case "expired": return Status.Stage.expired;
 				case "inactive": return Status.Stage.Inactive;
 				case "login": return Status.Stage.login;
 				case "logout": return Status.Stage.logout;
 				case "Offhold": return Status.Stage.OffHold;
-				case "resume": return Status.Stage.Resume;
+				case "Resume": return Status.Stage.RESUME;
 				case "suspend": return Status.Stage.Suspend;
-				case "terminating": return Status.Stage.Terminating;
+				case "terminating": return Status.Stage.TERMINATING;
 				default : return null;
 			}
 		}else

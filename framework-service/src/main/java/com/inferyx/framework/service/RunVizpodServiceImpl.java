@@ -322,7 +322,7 @@ public class RunVizpodServiceImpl implements Callable<TaskHolder> {
 				// TODO: handle exception
 			}
 			
-			throw new RuntimeException((message != null) ? message : "Vizpod execution failed.");
+			throw new RuntimeException((message != null) ? message : "Vizpod execution FAILED.");
 		}
 		TaskHolder taskHolder = new TaskHolder(name, new MetaIdentifier(MetaType.vizExec, vizExec.getUuid(), vizExec.getVersion()));
 		return taskHolder;
@@ -331,7 +331,7 @@ public class RunVizpodServiceImpl implements Callable<TaskHolder> {
 	public VizExec execute() throws Exception {
 		try {		
 			logger.info("executing vizpod.");			
-			vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.InProgress);
+			vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.RUNNING);
 			
 			String tableName = String.format("%s_%s_%s", vizpod.getUuid().replaceAll("-", "_"), vizpod.getVersion(), vizExec.getVersion());
 			String defautlDir = String.format("%s%s", hdfsInfo.getHdfsURL(), Helper.getPropertyValue("framework.dashboard.Path"));
@@ -374,10 +374,10 @@ public class RunVizpodServiceImpl implements Callable<TaskHolder> {
 					, persistMode
 					, "Vizpod exec for vizpod "+vizpod.getName());
 			vizExec.setResult(resultRef);
-			vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.Completed);
+			vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.COMPLETED);
 		} catch (Exception e) {
 			e.printStackTrace();
-			vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.Failed);
+			vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.FAILED);
 			String message = null;
 			try {
 				message = e.getMessage();
@@ -385,8 +385,8 @@ public class RunVizpodServiceImpl implements Callable<TaskHolder> {
 				// TODO: handle exception
 			}
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder(new MetaIdentifier(MetaType.vizExec, vizExec.getUuid(), vizExec.getVersion()));
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Vizpod execution failed.", dependsOn);
-			throw new RuntimeException((message != null) ? message : "Vizpod execution failed.");	
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Vizpod execution FAILED.", dependsOn);
+			throw new RuntimeException((message != null) ? message : "Vizpod execution FAILED.");	
 		}
 		
 		return vizExec;

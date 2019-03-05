@@ -12,93 +12,93 @@ package com.inferyx.framework.domain;
 
 public class RunStatusHolder {
 	
-	private Boolean completed = true;
-	private Boolean killed = false;
-	private Boolean failed = false;
-	private Boolean onHold = false;
-	private Boolean resume = false;
+	private Boolean COMPLETED = true;
+	private Boolean KILLED = false;
+	private Boolean FAILED = false;
+	private Boolean PAUSE = false;
+	private Boolean RESUME = false;
 	
 	public RunStatusHolder() {
 		super();
 	}
 
-	public RunStatusHolder(Boolean completed, Boolean killed, Boolean failed, Boolean onHold, Boolean resume) {
+	public RunStatusHolder(Boolean COMPLETED, Boolean KILLED, Boolean FAILED, Boolean PAUSE, Boolean RESUME) {
 		super();
-		this.completed = completed;
-		this.killed = killed;
-		this.failed = failed;
-		this.onHold = onHold;
-		this.resume = resume;
+		this.COMPLETED = COMPLETED;
+		this.KILLED = KILLED;
+		this.FAILED = FAILED;
+		this.PAUSE = PAUSE;
+		this.RESUME = RESUME;
 	}
 
 	/**
-	 * @return the completed
+	 * @return the COMPLETED
 	 */
-	public Boolean getCompleted() {
-		return completed;
+	public Boolean getCOMPLETED() {
+		return COMPLETED;
 	}
 
 	/**
-	 * @param completed the completed to set
+	 * @param COMPLETED the COMPLETED to set
 	 */
-	public void setCompleted(Boolean completed) {
-		this.completed = completed;
+	public void setCompleted(Boolean COMPLETED) {
+		this.COMPLETED = COMPLETED;
 	}
 
 	/**
-	 * @return the killed
+	 * @return the KILLED
 	 */
-	public Boolean getKilled() {
-		return killed;
+	public Boolean getKILLED() {
+		return KILLED;
 	}
 
 	/**
-	 * @param killed the killed to set
+	 * @param KILLED the KILLED to set
 	 */
-	public void setKilled(Boolean killed) {
-		this.killed = killed;
+	public void setKilled(Boolean KILLED) {
+		this.KILLED = KILLED;
 	}
 
 	/**
-	 * @return the failed
+	 * @return the FAILED
 	 */
-	public Boolean getFailed() {
-		return failed;
+	public Boolean getFAILED() {
+		return FAILED;
 	}
 
 	/**
-	 * @param failed the failed to set
+	 * @param FAILED the FAILED to set
 	 */
-	public void setFailed(Boolean failed) {
-		this.failed = failed;
+	public void setFailed(Boolean FAILED) {
+		this.FAILED = FAILED;
 	}
 
 	/**
-	 * @return the onHold
+	 * @return the PAUSE
 	 */
-	public Boolean getOnHold() {
-		return onHold;
+	public Boolean getPAUSE() {
+		return PAUSE;
 	}
 
 	/**
-	 * @param onHold the onHold to set
+	 * @param PAUSE the PAUSE to set
 	 */
-	public void setOnHold(Boolean onHold) {
-		this.onHold = onHold;
+	public void setPause(Boolean PAUSE) {
+		this.PAUSE = PAUSE;
 	}
 
 	/**
-	 * @return the resume
+	 * @return the RESUME
 	 */
-	public Boolean getResume() {
-		return resume;
+	public Boolean getRESUME() {
+		return RESUME;
 	}
 
 	/**
-	 * @param resume the resume to set
+	 * @param RESUME the RESUME to set
 	 */
-	public void setResume(Boolean resume) {
-		this.resume = resume;
+	public void setResume(Boolean RESUME) {
+		this.RESUME = RESUME;
 	}
 
 }

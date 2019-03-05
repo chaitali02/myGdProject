@@ -15,23 +15,23 @@ import java.util.Date;
 public class Status implements Comparable<Status>{
 
   public enum Stage {
-		NotStarted("Not Started"),
-		Initialized("Initialized"),
-		Ready("Ready"),
-		InProgress("In Progress"),
-		Completed("Completed"), 
-		Failed("Failed"), 
+		PENDING("PENDING"),
+		INITIALIZING("INITIALIZING"),
+		READY("READY"),
+		RUNNING("RUNNING"),
+		COMPLETED("COMPLETED"), 
+		FAILED("FAILED"), 
 		Suspend("Suspend"),
-		Killed("Killed"),
+		KILLED("KILLED"),
 		login("login"),
 		logout("logout"),
 		expired("expired"),
 		active("active"), 
 		Inactive("inactive"),
-		OnHold("OnHold"),
+		PAUSE("PAUSE"),
 		OffHold("OffHold"),
-		Resume("Resume"),
-		Terminating ("Terminating"),
+		RESUME("RESUME"),
+		TERMINATING("TERMINATING"),
 		STARTED("started"),
 		STOPPED("stopped");
 	  

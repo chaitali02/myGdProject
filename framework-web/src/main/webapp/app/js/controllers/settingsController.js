@@ -215,20 +215,20 @@ AdminModule.controller('settingsController', function (cacheService,$scope,$stat
     $scope.searchForm.startdate = null;
     $scope.searchForm.enddate = null;
     $scope.allStatus = [{
-        "caption": "Not Started",
-        "name": "NotStarted"
+        "caption": "PENDING",
+        "name": "PENDING"
     },
     {
-        "caption": "In Progress",
-        "name": "InProgress"
+        "caption": "RUNNING",
+        "name": "RUNNING"
     },
     {
-        "caption": "Completed",
-        "name": "Completed"
+        "caption": "COMPLETED",
+        "name": "COMPLETED"
     },
     {
-        "caption": "Failed",
-        "name": "Failed"
+        "caption": "FAILED",
+        "name": "FAILED"
     }
     ];
     $scope.getAllLatest();

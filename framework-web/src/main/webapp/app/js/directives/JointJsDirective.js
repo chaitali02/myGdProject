@@ -736,10 +736,10 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
          
          function updateGroupGraphStatus(data){
            angular.forEach(data,function (task) {
-             var statusTask = task.statusList.length == 0 ? 'InProgress' : latestStatus(task.statusList).stage;
+             var statusTask = task.statusList.length == 0 ? 'RUNNING' : latestStatus(task.statusList).stage;
              var taskid = task.metaRef.ref.uuid;
              if(taskid == $scope.GroupExecUuid){
-               if(['Failed','Killed'].indexOf(statusTask) !=-1){
+               if(['FAILED','KILLED'].indexOf(statusTask) !=-1){
                  $rootScope.allowReGroupExecution = true;
                }
                else{
@@ -747,7 +747,7 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
                }
              }
              
-             if(taskid == $scope.GroupExecUuid && ['Completed','Failed','Killed'].indexOf(statusTask)>-1){
+             if(taskid == $scope.GroupExecUuid && ['COMPLETED','FAILED','KILLED'].indexOf(statusTask)>-1){
                stopStatusUpdate();
              }
                
@@ -845,8 +845,8 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
            }
            $("#"+divid).show();
            var status = jointElement.find('.status');
-           var startTime = status.attr("inprogress");
-           var endTime = status.attr("completed");
+           var startTime = status.attr("RUNNING");
+           var endTime = status.attr("COMPLETED");
            $scope.popoverData = {};
            $scope.popoverData.startTime = startTime || '-';
            $scope.popoverData.endTime = endTime || '-';
@@ -1051,38 +1051,40 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
                  pt.x = d3.event.clientX; pt.y = d3.event.clientY;
                  var localPoint = pt.matrixTransform(svg.getScreenCTM().inverse());
                  var state;
-                    debugger
                  if(isExec || isGroupExec){
                    var iconMenuItems = [{title:'Show Details', type : 'element'}];
                 
                    if($scope.execMode || true){
                      var status = $(".status[element-id=" + taskId + "] .statusTitle")[0].innerHTML;
-                     if(status && (status=='Completed') && isGroupExec!=true && type !='ingest' ){
+                     if(status && (status=='COMPLETED') && isGroupExec!=true && type !='ingest' ){
                        iconMenuItems.push({title:'Show Results', type : 'results'});
                        iconMenuItems.push({title:'Show Logs', type : 'logs'});
                      }
-                     else if(status && (status=='NotStarted' || status=='Resume')){
+                     else if(status && (status=='PENDING' || status=='RESUME')){
                        
-                       iconMenuItems.push({title:'On Hold', type : 'onhold'});
+                       iconMenuItems.push({title:'Pause', type : 'PAUSE'});
                        iconMenuItems.push({title:'Show Logs', type : 'logs'});
                      }
-                     else if(status && status=='InProgress'){
+                     else if(status && status=='RUNNING'){
                       iconMenuItems.splice(0,0,{title:'Kill', type : 'killexecution'});
                          iconMenuItems.push({title:'Show Logs', type : 'logs'});
                      }
-                    else if(status && status=='Killed'){
+                    else if(status && status=='KILLED'){
                         iconMenuItems.push({title:'Show Logs', type : 'logs'});
                     }
-                    else if(status && status=='Failed'){
+                    else if(status && status=='FAILED'){
                       iconMenuItems.push({title:'Show Logs', type : 'logs'});
                   }
-                    else if(status && status=='InProgress'){
+                    else if(status && status=='RUNNING'){
                       iconMenuItems.splice(0,0,{title:'Kill', type : 'killexecution'});
                         iconMenuItems.push({title:'Show Logs', type : 'logs'});
                     }
+                    else if(status && status=='INITIALIZING'){
+                      iconMenuItems.splice(0,0,{title:'Kill', type : 'killexecution'});
+                    }
                      
-                     else if(status && status=='OnHold'){
-                       iconMenuItems.push({title:'Resume', type : 'resume'});
+                     else if(status && status=='PAUSE'){
+                       iconMenuItems.push({title:'Resume', type : 'RESUME'});
                      }
                    }
                    iconMenu.resetItems(iconMenuItems);
@@ -1197,14 +1199,14 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
                  else if(d.type =='logs'){
                   return 'showLogs('+execUrl+')'
                 }
-                 else if(d.type == 'onhold'){
-                   return 'setSubTaskStatus('+resultParams+',"OnHold")'
+                 else if(d.type == 'PAUSE'){
+                   return 'setSubTaskStatus('+resultParams+',"PAUSE")'
                  }
-                 else if(d.type == 'resume'){
-                   return 'setSubTaskStatus('+resultParams+',"Resume")'
+                 else if(d.type == 'RESUME'){
+                   return 'setSubTaskStatus('+resultParams+',"RESUME")'
                  }
                  else if(d.type == 'killexecution'){
-                   return 'setSubTaskStatus('+resultParams+',"Killed")'
+                   return 'setSubTaskStatus('+resultParams+',"KILLED")'
                  }
                  else
                    return "navigateTo('"+url+"');"
@@ -1222,14 +1224,14 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
                    else if(d.type =='logs'){
                     return 'showLogs('+execUrl+')'
                   }
-                   else if(d.type == 'onhold'){
-                     return 'setSubTaskStatus('+resultParams+',"OnHold")'
+                   else if(d.type == 'PAUSE'){
+                     return 'setSubTaskStatus('+resultParams+',"PAUSE")'
                    }
-                   else if(d.type == 'resume'){
-                     return 'setSubTaskStatus('+resultParams+',"Resume")'
+                   else if(d.type == 'RESUME'){
+                     return 'setSubTaskStatus('+resultParams+',"RESUME")'
                    }
                    else if(d.type == 'killexecution'){
-                     return 'setSubTaskStatus('+resultParams+',"Killed")'
+                     return 'setSubTaskStatus('+resultParams+',"KILLED")'
                    }
                    else
                      return "navigateTo('"+url+"');"
@@ -1286,7 +1288,7 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
                  }//end  scaleItems 
                return menu;
              }
-             var iconMenuItems = [{title:'Show Details', type : 'element'},{title:'Show Results', type : 'results'},{title:'On Hold', type : 'onhold'},{title:'Resume', type : 'resume'},{title:'Kill', type : 'killexecution'}];
+             var iconMenuItems = [{title:'Show Details', type : 'element'},{title:'Show Results', type : 'results'},{title:'Pause', type : 'PAUSE'},{title:'Resume', type : 'RESUME'},{title:'Kill', type : 'killexecution'}];
              var iconMenu = iconContextMenu().items(iconMenuItems);
              window.setSubTaskStatus = function (row,status) {
                $scope.setStatus(row,status);
@@ -1566,15 +1568,15 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
        else{
          $scope.msgtype="Task"
        }
-       if(status == 'Killed'){
+       if(status == 'KILLED'){
          $scope.executionmsg =$scope.msgtype+" Killed Successfully"
          notify.content=$scope.executionmsg
        }
-       if(status =='OnHold'){
+       if(status =='PAUSE'){
          $scope.executionmsg =$scope.msgtype+" Paused Successfully"
          notify.content=$scope.executionmsg
        }
-       if(status =='Resume'){
+       if(status =='RESUME'){
          $scope.executionmsg =$scope.msgtype+" Resumed Successfully"
          notify.content=$scope.executionmsg
        }
@@ -1583,7 +1585,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
        if(params.type == 'dag'){
          $http.put(url+'dag/setStatus?uuid='+$scope.uuid+'&version='+$scope.version+'&status='+status).then(function (response) {
            console.log(response);
-           if(status == 'Killed')
+           if(status == 'KILLED')
              $scope.$parent.allowReExecution = true;
            });
          }
@@ -1622,13 +1624,13 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          console.log(params);
          var url=$location.absUrl().split("app")[0];
          if(params.type == 'dag'){
-           $http.put(url+'dag/setDAGOnHold?uuid='+$scope.uuid+'&version='+$scope.version).then(function (response) {
+           $http.put(url+'dag/setDAGPAUSE?uuid='+$scope.uuid+'&version='+$scope.version).then(function (response) {
              console.log(response);
            });
          }
          else if(params.type == 'stage'){
            var stageId = params.id;
-           $http.put(url+'dag/setStageOnHold?uuid='+$scope.uuid+'&version='+$scope.version+'&stageId='+stageId).then(function (response) {
+           $http.put(url+'dag/setStagePAUSE?uuid='+$scope.uuid+'&version='+$scope.version+'&stageId='+stageId).then(function (response) {
              console.log(response);
            });
          }
@@ -1641,24 +1643,24 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
            else {
              var taskId = params.taskId;
            }
-           $http.put(url+'dag/setTaskOnHold?uuid='+$scope.uuid+'&version='+$scope.version+'&stageId='+stageId+'&taskId='+taskId).then(function (response) {
+           $http.put(url+'dag/setTaskPAUSE?uuid='+$scope.uuid+'&version='+$scope.version+'&stageId='+stageId+'&taskId='+taskId).then(function (response) {
              console.log(response);
            });
          }
        }
          
-       window.resumeExecution = function(params){
+       window.RESUMEExecution = function(params){
          $scope.lastParams = params;
          console.log(params);
          var url=$location.absUrl().split("app")[0];
          if(params.type == 'dag'){
-           $http.put(url+'dag/setDAGResume?uuid='+$scope.uuid+'&version='+$scope.version).then(function (response) {
+           $http.put(url+'dag/setDAGRESUME?uuid='+$scope.uuid+'&version='+$scope.version).then(function (response) {
              console.log(response);
            });
          }
          else if(params.type == 'stage'){
            var stageId = params.id;
-           $http.put(url+'dag/setStageResume?uuid='+$scope.uuid+'&version='+$scope.version+'&stageId='+stageId).then(function (response) {
+           $http.put(url+'dag/setStageRESUME?uuid='+$scope.uuid+'&version='+$scope.version+'&stageId='+stageId).then(function (response) {
              console.log(response);
            });
          }
@@ -1672,7 +1674,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
              var taskId = params.taskId;
            }
 
-           $http.put(url+'dag/setTaskResume?uuid='+$scope.uuid+'&version='+$scope.version+'&stageId='+stageId+'&taskId='+taskId).then(function (response) {
+           $http.put(url+'dag/setTaskRESUME?uuid='+$scope.uuid+'&version='+$scope.version+'&stageId='+stageId+'&taskId='+taskId).then(function (response) {
              console.log(response);
            });
          }
@@ -1764,7 +1766,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          
        $scope.$on('removeGraph',function (e,data) {
          if($scope.graph){
-           $scope.graphReady = false;
+           $scope.graphREADY = false;
            $scope.graph.clear();
          }
        });
@@ -1785,9 +1787,9 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
        }
          
        function updateGraphStatus(data){
-         var statusDag = data.status.length == 0 ? 'InProgress' : latestStatus(data.status).stage;
+         var statusDag = data.status.length == 0 ? 'RUNNING' : latestStatus(data.status).stage;
          $scope.$parent.allowReExecution = false;
-         if(['Killed','Failed'].indexOf(statusDag) > -1)
+         if(['KILLED','FAILED'].indexOf(statusDag) > -1)
            $scope.$parent.allowReExecution = true;
          else
            $scope.$parent.allowReExecution = false;
@@ -1806,12 +1808,13 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
            $(".status[element-id=" + dagid + "]").attr(status.stage,status.createdOn);
          });
          angular.forEach(data.stages,function (stage) {
-           var statusStage = stage.status.length == 0 ? 'InProgress' : latestStatus(stage.status).stage;
+           var statusStage = stage.status.length == 0 ? 'RUNNING' : latestStatus(stage.status).stage;
            var stageid = stage.stageId.length > 3 ? stage.stageId : 'stage_'+stage.stageId;
            $(".status[element-id=" + stageid + "] .statusImg").attr("xlink:href","assets/layouts/layout/img/new_status/"+statusStage+".svg");
            $(".status[element-id=" + stageid + "] .rectstatus").attr("fill",dagMetaDataService.statusDefs[statusStage].color);
 
            $(".status[element-id=" + stageid + "] .statusTitle").text(statusStage);
+           console.log(statusStage)
            $(".status[element-id=" + stageid + "] .statusText").text(statusStage)//.substring(0,3) + "..");
            if(statusStage !=null){
             $(".status[element-id=" + stageid + "] .rectstatus").attr("width",dagMetaDataService.statusDefs[statusStage].jointWidth);
@@ -1822,7 +1825,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
              $(".status[element-id=" + stageid + "]").attr(status.stage,status.createdOn);
            });
            angular.forEach(stage.tasks,function (task) {
-             var statusTask = task.status.length == 0 ? 'InProgress' : latestStatus(task.status).stage;
+             var statusTask = task.status.length == 0 ? 'RUNNING' : latestStatus(task.status).stage;
              var taskid = task.taskId.length > 3 ? task.taskId : stageid +'_' +'task_'+task.taskId;
              $(".status[element-id=" + taskid + "] .statusImg").attr("xlink:href","assets/layouts/layout/img/new_status/"+statusTask+".svg");         
              $(".status[element-id=" + taskid + "] .rectstatus").attr("fill",dagMetaDataService.statusDefs[statusTask].color);
@@ -1968,14 +1971,14 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
        $scope.graph.addCells(links);
        $scope.zoomSize = 7;
        $scope.$broadcast('rzSliderForceRender');
-       if(!$scope.graphReady){
+       if(!$scope.graphREADY){
          setTimeout(function () {
            $scope.$broadcast('registerJqueryEvents');
          }, 100);
              //to resolve the Jquery conflicts with JointJS
        }
            
-       $scope.graphReady = true;
+       $scope.graphREADY = true;
 
        rightClick();
        // d3.selectAll('#paper')
@@ -2018,14 +2021,17 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
              var iconMenuItems = [];
              if($scope.execMode){
                var status = $(".status[element-id=" + id + "] .statusTitle")[0].innerHTML;
-               if(status && ( status=='Resume')){
-                 iconMenuItems.push({title:'On Hold', type : 'onhold'});
+               if(status && ( status=='RESUME')){
+                 iconMenuItems.push({title:'Pause', type : 'PAUSE'});
                }
-               else if(status && status=='InProgress'){
+               else if(status && status=='RUNNING'){
                  iconMenuItems.push({title:'Kill', type : 'killexecution'});
                }
-               else if(status && status=='OnHold'){
-                 iconMenuItems.push({title:'Resume', type : 'resume'});
+               else if(status && status=='INITIALIZING'){
+                iconMenuItems.push({title:'Kill', type : 'killexecution'});
+              }
+               else if(status && status=='PAUSE'){
+                 iconMenuItems.push({title:'Resume', type : 'RESUME'});
                }
              }
              
@@ -2048,7 +2054,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
            if( taskDetail &&  taskDetail.taskId == taskId){
              return false;
            } 
-           debugger
+
            var ref = cell.attributes['model-data'].operators[0].operatorInfo[0].ref;
            var type = ref.type;
            var operator=cell.attributes['model-data'].operators;
@@ -2074,35 +2080,38 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
              if($scope.execMode){
                
                var status = $(".status[element-id=" + taskId + "] .statusTitle")[0].innerHTML;
-               if(status && (status=='Completed') ||(status== 'Failed')|| (status== 'InProgress')){
-                 if(isExec && (status=='Completed')){
+               if(status && (status=='COMPLETED') ||(status== 'FAILED')|| (status== 'RUNNING')){
+                 if(isExec && (status=='COMPLETED')){
                    iconMenuItems.push({title:'Show Results', type : 'results'});
                    iconMenuItems.push({title:'Show Logs', type : 'logs'});
                  }
                  if(isGroupExec){
                    iconMenuItems.push({title:'Show Results', type : 'results'});
-                   if(status=='Completed')
+                   if(status=='COMPLETED')
                     iconMenuItems.push({title:'Show Logs', type : 'logs'});
                  }
                }
-               else if(status && (status=='NotStarted' || status=='Resume')){
-                 iconMenuItems.push({title:'On Hold', type : 'onhold'});
+               else if(status && (status=='PENDING' || status=='RESUME')){
+                 iconMenuItems.push({title:'Pause', type : 'PAUSE'});
                }
-               else if(status && status=='OnHold'){
-                 iconMenuItems.push({title:'Resume', type : 'resume'});
+               else if(status && status=='PAUSE'){
+                 iconMenuItems.push({title:'Resume', type : 'RESUME'});
                }
                
-               if(status && status=='Failed'){
+               if(status && status=='FAILED'){
                 iconMenuItems.push({title:'Show Logs', type : 'logs'});
                 
                }
-               if(status && status=='Killed'){
+               if(status && status=='KILLED'){
                 iconMenuItems.push({title:'Show Logs', type : 'logs'});
                 
                }
-               if(status && status=='InProgress'){
+               if(status && status=='RUNNING'){
                  iconMenuItems.splice(0,0,{title:'Kill', type : 'killexecution'});
                  iconMenuItems.push({title:'Show Logs', type : 'logs'});
+               }
+               if(status && status=='INITIALIZING'){
+                iconMenuItems.splice(0,0,{title:'Kill', type : 'killexecution'});
                }
               //  if(isGroupExec){
               //   iconMenuItems.push({title:'Show Logs', type : 'logs'});
@@ -2692,11 +2701,11 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          }
          $("#"+divid).show();
          var status = jointElement.find('.status');
-         var startTime = status.attr("inprogress");
+         var startTime = status.attr("RUNNING");
          var statusList=status.attr("statusList");
          if(statusList && statusList.length >0)
-         startTime=getStatsListObject(JSON.parse(statusList),"InProgress");
-         var endTime = status.attr("completed");
+         startTime=getStatsListObject(JSON.parse(statusList),"RUNNING");
+         var endTime = status.attr("COMPLETED");
          $scope.popoverData = {};
          $scope.popoverData.startTime = startTime || '-';
          $scope.popoverData.endTime = endTime || '-';
@@ -2986,14 +2995,14 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                 else if(d.type == 'element'){
                   return "navigateTo('"+url+"');"
                 }
-                else if(d.type == 'onhold'){
-                  return 'setStatus('+resultParams+',"OnHold")'
+                else if(d.type == 'PAUSE'){
+                  return 'setStatus('+resultParams+',"PAUSE")'
                 }
-                else if(d.type == 'resume'){
-                  return 'setStatus('+resultParams+',"Resume")'
+                else if(d.type == 'RESUME'){
+                  return 'setStatus('+resultParams+',"RESUME")'
                 }
                 else if(d.type == 'killexecution'){
-                  return 'setStatus('+resultParams+',"Killed")'
+                  return 'setStatus('+resultParams+',"KILLED")'
                 }
               })
               .attr('width', width+50)
@@ -3013,14 +3022,14 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                 else if(d.type == 'element'){
                   return "navigateTo('"+url+"');"
                 }
-                else if(d.type == 'onhold'){
-                  return 'setStatus('+resultParams+',"OnHold")'
+                else if(d.type == 'PAUSE'){
+                  return 'setStatus('+resultParams+',"PAUSE")'
                 }
-                else if(d.type == 'resume'){
-                  return 'setStatus('+resultParams+',"Resume")'
+                else if(d.type == 'RESUME'){
+                  return 'setStatus('+resultParams+',"RESUME")'
                 }
                 else if(d.type == 'killexecution'){
-                  return 'setStatus('+resultParams+',"Killed")'
+                  return 'setStatus('+resultParams+',"KILLED")'
                 }
               })
               .attr('x', x+25)

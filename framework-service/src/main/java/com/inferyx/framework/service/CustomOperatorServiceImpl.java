@@ -126,22 +126,22 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 		}
 		statusList = operatorExec.getStatusList();
 		if (Helper.getLatestStatus(statusList) != null && statusList.size() >0
-				&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.InProgress, new Date()))
-						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Completed, new Date()))
-						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Terminating, new Date()))
-						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.OnHold, new Date())) 
-						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Ready, new Date())))) {
+				&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.RUNNING, new Date()))
+						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.COMPLETED, new Date()))
+						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.TERMINATING, new Date()))
+						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.PAUSE, new Date())) 
+						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.READY, new Date())))) {
 			logger.info(
-					" This process is In Progress or has been completed previously or is Terminating or is On Hold. Hence it cannot be rerun. ");
-			logger.info("If the process is in ready status then it should directly go to execution");
+					" This process is RUNNING or has been COMPLETED previously or is TERMINATING or is On Hold. Hence it cannot be rerun. ");
+			logger.info("If the process is in READY status then it should directly go to execution");
 			return operatorExec;
 		}
-		logger.info(" Set not started status");
+		logger.info(" Set PENDING status");
 		synchronized (operatorExec.getUuid()) {
 			operatorExec = (OperatorExec) commonServiceImpl.setMetaStatus(operatorExec, MetaType.operatorExec,
-					Status.Stage.NotStarted);
+					Status.Stage.PENDING);
 		}
-		logger.info(" After Set not started status");
+		logger.info(" After Set PENDING status");
 		Operator operator = (Operator) commonServiceImpl.getOneByUuidAndVersion(
 				operatorExec.getDependsOn().getRef().getUuid(), operatorExec.getDependsOn().getRef().getVersion(),
 				MetaType.operator.toString(), "N");
@@ -150,7 +150,7 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 				.getOperator(Helper.getOperatorType(operator.getOperatorType()));
 		logger.info(" Before customCreate");
 		Map<String, String> otherParams = newOperator.customCreate(operatorExec, execParams, runMode);
-		logger.info(" After Set not started status");
+		logger.info(" After Set PENDING status");
 		return operatorExec;
 	}
 
@@ -218,7 +218,7 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 		Object result = null;
 		try {
 			operatorExec = (OperatorExec) commonServiceImpl.setMetaStatus(operatorExec, MetaType.operatorExec,
-					Status.Stage.InProgress);
+					Status.Stage.RUNNING);
 
 			String operatorName = String.format("%s_%s_%s", operator.getUuid().replace("-", "_"), operator.getVersion(),
 					operatorExec.getVersion());
@@ -270,11 +270,11 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 			if (result != null) {
 				isSuccess = true;
 				operatorExec = (OperatorExec) commonServiceImpl.setMetaStatus(operatorExec, MetaType.operatorExec,
-						Status.Stage.Completed);
+						Status.Stage.COMPLETED);
 			} else {
 				isSuccess = false;
 				operatorExec = (OperatorExec) commonServiceImpl.setMetaStatus(operatorExec, MetaType.operatorExec,
-						Status.Stage.Failed);
+						Status.Stage.FAILED);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -285,12 +285,12 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 				// TODO: handle exception
 			}
 			operatorExec = (OperatorExec) commonServiceImpl.setMetaStatus(operatorExec, MetaType.operatorExec,
-					Status.Stage.Failed);
+					Status.Stage.FAILED);
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 			dependsOn.setRef(new MetaIdentifier(MetaType.operatorExec, operatorExec.getUuid(), operatorExec.getVersion()));
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
-					(message != null) ? message : "Operator execution failed.", dependsOn);
-			throw new RuntimeException((message != null) ? message : "Operator execution failed.");
+					(message != null) ? message : "Operator execution FAILED.", dependsOn);
+			throw new RuntimeException((message != null) ? message : "Operator execution FAILED.");
 		}
 		return isSuccess;
 	}
@@ -325,19 +325,19 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 				statusList = new ArrayList<Status>();
 
 			if (Helper.getLatestStatus(statusList) != null && (Helper.getLatestStatus(statusList)
-					.equals(new Status(Status.Stage.InProgress, new Date()))
-					|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Completed, new Date()))
-					|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.OnHold, new Date())))) {
+					.equals(new Status(Status.Stage.RUNNING, new Date()))
+					|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.COMPLETED, new Date()))
+					|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.PAUSE, new Date())))) {
 				logger.info(
-						" This process is In Progress or has been completed previously or is On Hold. Hence it cannot be rerun. ");
+						" This process is RUNNING or has been COMPLETED previously or is On Hold. Hence it cannot be rerun. ");
 				return operatorExec;
 			}
 			operatorExec = (OperatorExec) commonServiceImpl.setMetaStatus(operatorExec, MetaType.operatorExec,
-					Status.Stage.NotStarted);
+					Status.Stage.PENDING);
 		} catch (Exception e) {
 			logger.error(e);
 			operatorExec = (OperatorExec) commonServiceImpl.setMetaStatus(operatorExec, MetaType.operatorExec,
-					Status.Stage.Failed);
+					Status.Stage.FAILED);
 			e.printStackTrace();
 			String message = null;
 			try {
@@ -393,14 +393,14 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 		logger.info("Operator type in execute : " + operator.getOperatorType());
 		com.inferyx.framework.operator.IOperator newOperator = operatorFactory
 				.getOperator(Helper.getOperatorType(operator.getOperatorType()));
-		commonServiceImpl.setMetaStatus(operatorExec, MetaType.operatorExec, Status.Stage.InProgress);
+		commonServiceImpl.setMetaStatus(operatorExec, MetaType.operatorExec, Status.Stage.RUNNING);
 		synchronized (operatorExec) {
 			commonServiceImpl.save(MetaType.operatorExec.toString(), operatorExec);
 		}
 		newOperator.execute(operatorExec, execParams, runMode);
 		operatorExec = (OperatorExec) commonServiceImpl.getOneByUuidAndVersion(baseExec.getUuid(),
 				baseExec.getVersion(), MetaType.operatorExec.toString());
-		commonServiceImpl.setMetaStatus(operatorExec, MetaType.operatorExec, Status.Stage.Completed);
+		commonServiceImpl.setMetaStatus(operatorExec, MetaType.operatorExec, Status.Stage.COMPLETED);
 		synchronized (operatorExec) {
 			commonServiceImpl.save(MetaType.operatorExec.toString(), operatorExec);
 		}
@@ -418,18 +418,18 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 				.getOperator(Helper.getOperatorType(operator.getOperatorType()));
 		List<Status> statusList = baseExec.getStatusList();
 		if (Helper.getLatestStatus(statusList) != null
-				&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Ready, new Date())))) {
-			logger.info(" Custom operator is in ready state. No need to parse again ");
+				&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.READY, new Date())))) {
+			logger.info(" Custom operator is in READY state. No need to parse again ");
 			return baseExec;
 		}
 		
 		synchronized (baseExec.getUuid()) {
-			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.operatorExec, Status.Stage.Initialized);
+			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.operatorExec, Status.Stage.INITIALIZING);
 		}
 		
 	//	baseExec = newOperator.parse(baseExec, execParams, runMode);
 		synchronized (baseExec.getUuid()) {
-			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.operatorExec, Status.Stage.Ready);
+			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.operatorExec, Status.Stage.READY);
 		}
 		return baseExec;
 	}

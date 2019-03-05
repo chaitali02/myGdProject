@@ -153,14 +153,14 @@ DataPipelineModule.controller('WorkflowResultController', function ($location, $
     var Fn = function () {
       MetadataDagSerivce.getStatusByDagExec(uuid).then(function (response) { onSuccessGetStatusByDagExec(response.data) });
       var onSuccessGetStatusByDagExec = function (response) {
-        if (latestStatus(response.status).stage == 'Failed') {
+        if (latestStatus(response.status).stage == 'FAILED') {
           $scope.allowReExecution = true;
         }
-        if (['Completed', 'Failed', 'Killed'].indexOf(latestStatus(response.status).stage) > -1) {
+        if (['COMPLETED', 'FAILED', 'KILLED'].indexOf(latestStatus(response.status).stage) > -1) {
           stopStatusUpdate();
         }
         console.log(response);
-        if (['InProgress'].indexOf(latestStatus(response.status).stage) > -1) {
+        if (['RUNNING'].indexOf(latestStatus(response.status).stage) > -1) {
           if (count == 0) { count = count + 1 };
         }
         if (count == 1) {

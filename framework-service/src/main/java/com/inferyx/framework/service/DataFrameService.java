@@ -66,8 +66,8 @@ public class DataFrameService {
 	 * MetaIdentifier(MetaType.datasource, datasourceUUID, datasourceVersion));
 	 * Datasource datasource_2 = commonServiceImpl.getDatasourceByApp(); IConnector
 	 * conn = connFactory.getConnector(datasource_2.getType().toLowerCase());
-	 * ConnectionHolder conHolder = conn.getConnection(); Object obj =
-	 * conHolder.getStmtObject(); if(obj instanceof HiveStatement || obj instanceof
+	 * ConnectionHolder cPAUSEer = conn.getConnection(); Object obj =
+	 * cPAUSEer.getStmtObject(); if(obj instanceof HiveStatement || obj instanceof
 	 * HiveContext){ DataFrameHolder dataFrameHolder = iReader.read(datapod,
 	 * datastore, hdfsInfo,obj, datasource); Dataset<Row> df =
 	 * dataFrameHolder.getDataframe(); return df; } return null; }
@@ -88,9 +88,9 @@ public class DataFrameService {
 	 * MetaIdentifier(MetaType.datasource, datasourceUUID, datasourceVersion));
 	 * Datasource datasource_2 = commonServiceImpl.getDatasourceByApp(); IConnector
 	 * conn = connFactory.getConnector(datasource_2.getType().toLowerCase());
-	 * ConnectionHolder conHolder = conn.getConnection();
+	 * ConnectionHolder cPAUSEer = conn.getConnection();
 	 * 
-	 * Object obj = conHolder.getStmtObject(); if(obj instanceof HiveContext) {
+	 * Object obj = cPAUSEer.getStmtObject(); if(obj instanceof HiveContext) {
 	 * DataFrameHolder dataFrameHolder = iReader.read(datapod, datastore,
 	 * hdfsInfo,obj, datasource); Dataset<Row> df = dataFrameHolder.getDataframe();
 	 * return df; } return null; }
@@ -225,8 +225,8 @@ public class DataFrameService {
 	/********************** UNUSED **********************/
 	/*public void registerDatapod(IConnector conn, String tableName, Datapod dp, Datasource ds,
 			DataStore dataStoreDetails, IReader iReader, ExecContext execContext) throws IOException {
-		ConnectionHolder conHolder = conn.getConnection();
-		Object obj = conHolder.getStmtObject();
+		ConnectionHolder cPAUSEer = conn.getConnection();
+		Object obj = cPAUSEer.getStmtObject();
 		if (obj instanceof HiveContext && !execContext.equals(ExecContext.livy_spark)) {
 			DataFrameHolder dataFrameHolder = iReader.read(dp, dataStoreDetails, hdfsInfo, obj, ds);
 			Dataset<Row> df = dataFrameHolder.getDataframe();
@@ -244,7 +244,7 @@ public class DataFrameService {
 			if (!tableFound) {
 				df.persist(StorageLevel.MEMORY_AND_DISK());
 				// df.cache();
-				HiveContext hiveContext = (HiveContext) conHolder.getStmtObject();
+				HiveContext hiveContext = (HiveContext) cPAUSEer.getStmtObject();
 				hiveContext.registerDataFrameAsTable(df, tableName);
 				// hiveContext.registerDataFrameAsTable(df, tableName);
 				logger.info("datapodRegister: Registering datapod " + tableName);

@@ -255,13 +255,13 @@ public class DagExecServiceImpl {
 	public void checkTaskAndKillStage(String uuid, String version, String stageId) {
 		DagExec dagExec = null;
 		Status taskStatus = null;
-		boolean isTaskKilled = false;
-		boolean isTaskFailed = false;
-		boolean isTaskCompleted = false;
-		boolean isTaskNotCompleted = true;
+		boolean isTaskKILLED = false;
+		boolean isTaskFAILED = false;
+		boolean isTaskCOMPLETED = false;
+		boolean isTaskNotCOMPLETED = true;
 		StageExec stageExec = null;
 		try {
-			while (isTaskNotCompleted) {
+			while (isTaskNotCOMPLETED) {
 				//dagExec = findOneByUuidAndVersion(uuid, version);
 				dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString());
 				Thread.sleep(5000);
@@ -277,36 +277,36 @@ public class DagExecServiceImpl {
 					logger.info("No tasks in stage. Aborting ... ");
 					return;
 				}
-				isTaskNotCompleted = false;
+				isTaskNotCOMPLETED = false;
 				for (TaskExec taskExec : taskExecList) {
 					// Check task status
 					taskStatus = Helper.getLatestStatus(taskExec.getStatusList());
 					if (taskStatus == null) {
 						logger.info("No status in task. Continuing with next ... ");
 					}
-					if (taskStatus.getStage().equals(Status.Stage.Killed)) {
-						isTaskKilled = true;
-					} else if (taskStatus.getStage().equals(Status.Stage.Failed)) {
-						isTaskFailed = true;
-					} else if (taskStatus.getStage().equals(Status.Stage.Completed)) {
-						isTaskCompleted = true;
-					} else if (!taskStatus.getStage().equals(Status.Stage.NotStarted)) {
-						isTaskNotCompleted = true;
+					if (taskStatus.getStage().equals(Status.Stage.KILLED)) {
+						isTaskKILLED = true;
+					} else if (taskStatus.getStage().equals(Status.Stage.FAILED)) {
+						isTaskFAILED = true;
+					} else if (taskStatus.getStage().equals(Status.Stage.COMPLETED)) {
+						isTaskCOMPLETED = true;
+					} else if (!taskStatus.getStage().equals(Status.Stage.PENDING)) {
+						isTaskNotCOMPLETED = true;
 					}
 				}
 			}
-			if (isTaskKilled) {
+			if (isTaskKILLED) {
 //				synchronized (uuid) {
-					commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.Terminating, stageExec.getStageId());
-					commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.Killed, stageExec.getStageId());
+					commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.TERMINATING, stageExec.getStageId());
+					commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.KILLED, stageExec.getStageId());
 	//			}
-			} else if (isTaskFailed) {
+			} else if (isTaskFAILED) {
 		//		synchronized (uuid) {
-					commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.Failed, stageExec.getStageId());
+					commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.FAILED, stageExec.getStageId());
 			//	}
-			} else if (isTaskCompleted) {
+			} else if (isTaskCOMPLETED) {
 				//synchronized (uuid) {
-					commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.Completed, stageExec.getStageId());
+					commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.COMPLETED, stageExec.getStageId());
 				//}
 			}
 		} catch (Exception e) {
@@ -317,12 +317,12 @@ public class DagExecServiceImpl {
 	public void checkStageAndKillDag(String uuid, String version) {
 		DagExec dagExec = null;
 		Status stageStatus = null;
-		boolean isStageKilled = false;
-		boolean isStageFailed = false;
-		boolean isStageCompleted = false;
-		boolean isStageNotCompleted = true;
+		boolean isStageKILLED = false;
+		boolean isStageFAILED = false;
+		boolean isStageCOMPLETED = false;
+		boolean isStageNotCOMPLETED = true;
 		try {
-			while (isStageNotCompleted) {
+			while (isStageNotCOMPLETED) {
 				//dagExec = findOneByUuidAndVersion(uuid, version);
 				dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString());
 				Thread.sleep(10000);
@@ -332,37 +332,37 @@ public class DagExecServiceImpl {
 					logger.info("No stages in Dag. Aborting ... ");
 					return;
 				}
-				isStageNotCompleted = false;
+				isStageNotCOMPLETED = false;
 				for (StageExec stageExec : dagExecStgs) {
 					// Check stage status
 					stageStatus = Helper.getLatestStatus(stageExec.getStatusList());
 					if (stageStatus == null) {
 						logger.info("No status in stage. Continuing with next ... ");
 					}
-					if (stageStatus.getStage().equals(Status.Stage.Killed)) {
-						isStageKilled = true;
-					} else if (stageStatus.getStage().equals(Status.Stage.Failed)) {
-						isStageFailed = true;
-					} else if (stageStatus.getStage().equals(Status.Stage.Completed)) {
-						isStageCompleted = true;
-					}  else if (!stageStatus.getStage().equals(Status.Stage.NotStarted)){
-						isStageNotCompleted = true;
+					if (stageStatus.getStage().equals(Status.Stage.KILLED)) {
+						isStageKILLED = true;
+					} else if (stageStatus.getStage().equals(Status.Stage.FAILED)) {
+						isStageFAILED = true;
+					} else if (stageStatus.getStage().equals(Status.Stage.COMPLETED)) {
+						isStageCOMPLETED = true;
+					}  else if (!stageStatus.getStage().equals(Status.Stage.PENDING)){
+						isStageNotCOMPLETED = true;
 					}
 				}
 			}
 		
-			if (isStageKilled) {
+			if (isStageKILLED) {
 			//	synchronized (uuid) {
-					commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.Terminating);
-					commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.Killed);
+					commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.TERMINATING);
+					commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.KILLED);
 			//	}
-			} else if (isStageFailed) {
+			} else if (isStageFAILED) {
 			//	synchronized (uuid) {
-					commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.Failed);
+					commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.FAILED);
 			//	}
-			} else if (isStageCompleted) {
+			} else if (isStageCOMPLETED) {
 			//	synchronized (uuid) {
-					commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.Completed);
+					commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.COMPLETED);
 			//	}
 			}
 		} catch (Exception e) {
@@ -377,32 +377,32 @@ public class DagExecServiceImpl {
 //			logger.info("RuleExec not found. Exiting...");
 //			return;
 //		}
-//		if (!Helper.getLatestStatus(dagExec.getStatusList()).equals(new Status(Status.Stage.InProgress, new Date()))) {
-//			logger.info("Latest Status is not in InProgress. Exiting...");
+//		if (!Helper.getLatestStatus(dagExec.getStatusList()).equals(new Status(Status.Stage.RUNNING, new Date()))) {
+//			logger.info("Latest Status is not in RUNNING. Exiting...");
 //		}
 //		try {
-//			commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.Terminating);
+//			commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.TERMINATING);
 //			FutureTask futureTask = (FutureTask) taskThreadMap.get("Rule_" + dagExec.getUuid());
 //			futureTask.cancel(true);
 //			taskThreadMap.remove("Rule_" + dagExec.getUuid());
-//			commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.Killed);
+//			commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.KILLED);
 //		} catch (Exception e) {
-//			logger.info("Failed to kill. uuid : " + uuid + " version : " + version);			
+//			logger.info("FAILED to kill. uuid : " + uuid + " version : " + version);			
 //			e.printStackTrace();
 //		}
 //	}
 	
-	public BaseEntity setTaskOnHold(String uuid, String version, String stageId, String taskId) throws JsonProcessingException, JSONException, ParseException {
+	public BaseEntity setTaskPause(String uuid, String version, String stageId, String taskId) throws JsonProcessingException, JSONException, ParseException {
 
 		DagExec dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString());
 		for(int i=0;i<dagExec.getStages().size();i++){
 			if(dagExec.getStages().get(i).getStageId().equals(stageId)){
 				for(int j=0;j<dagExec.getStages().get(i).getTasks().size();j++){
 					if(dagExec.getStages().get(i).getTasks().get(j).getTaskId().equals(taskId)){
-						Status onHoldStatus = new Status(Status.Stage.OnHold, new Date());
+						Status PAUSEStatus = new Status(Status.Stage.PAUSE, new Date());
 						List<Status> statusList =dagExec.getStages().get(i).getTasks().get(j).getStatusList();
-						statusList.remove(onHoldStatus);
-						statusList.add(onHoldStatus);
+						statusList.remove(PAUSEStatus);
+						statusList.add(PAUSEStatus);
 						dagExec.getStages().get(i).getTasks().get(j).setStatusList(statusList);
 					}
 				}
@@ -416,15 +416,15 @@ public class DagExecServiceImpl {
 		for(int i=0;i<dagExec.getStages().size();i++){
 			if(dagExec.getStages().get(i).getStageId().equals(stageId)){
 				int lastStatus = dagExec.getStages().get(i).getStatusList().size() - 1;
-				if(dagExec.getStages().get(i).getStatusList().get(lastStatus).getStage().equals(Status.Stage.OnHold)) {
-					logger.info("Stage is OnHold, can-not start the task.");
+				if(dagExec.getStages().get(i).getStatusList().get(lastStatus).getStage().equals(Status.Stage.PAUSE)) {
+					logger.info("Stage is PAUSE, can-not start the task.");
 				}else {
 					for(int j=0;j<dagExec.getStages().get(i).getTasks().size();j++){
 						if(dagExec.getStages().get(i).getTasks().get(j).getTaskId().equals(taskId)){
-							Status onResumeStatus = new Status(Status.Stage.Resume, new Date());
+							Status onRESUMEStatus = new Status(Status.Stage.RESUME, new Date());
 							List<Status> statusList =dagExec.getStages().get(i).getTasks().get(j).getStatusList();
-							statusList.remove(onResumeStatus);
-							statusList.add(onResumeStatus);
+							statusList.remove(onRESUMEStatus);
+							statusList.add(onRESUMEStatus);
 							dagExec.getStages().get(i).getTasks().get(j).setStatusList(statusList);
 						}
 					}
@@ -498,7 +498,7 @@ public class DagExecServiceImpl {
 		return result;
 	}
 	*/
-	public void setStageKilled(String uuid, String version, String stageId) throws JsonProcessingException, JSONException, ParseException {
+	public void setStageKILLED(String uuid, String version, String stageId) throws JsonProcessingException, JSONException, ParseException {
 		//DagExec dagexec  = iDagExec.findOneByUuidAndVersion(appUuid, uuid, version);
 		DagExec dagexec  = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString());
 
@@ -508,18 +508,18 @@ public class DagExecServiceImpl {
 		for (StageExec stageExec : stageExecList) {
 			if (stageExec.getStageId().equals(stageId)) {
 				List<Status> stageStatusList = stageExec.getStatusList();
-				if (!Helper.getLatestStatus(stageStatusList).getStage().equals(Status.Stage.InProgress)) {
+				if (!Helper.getLatestStatus(stageStatusList).getStage().equals(Status.Stage.RUNNING)) {
 					break;
 				}
 				com.inferyx.framework.domain.Status status = new Status(
-						com.inferyx.framework.domain.Status.Stage.Terminating, date);
+						com.inferyx.framework.domain.Status.Stage.TERMINATING, date);
 				
 				for (TaskExec taskExec : DagExecUtil.castToTaskExecList(stageExec.getTasks())) {
-					setTaskKilled(uuid, version, stageId, taskExec.getTaskId());
+					setTaskKILLED(uuid, version, stageId, taskExec.getTaskId());
 				}
-				if (!Helper.getLatestStatus(stageStatusList).getStage().equals(Status.Stage.Completed)) {
+				if (!Helper.getLatestStatus(stageStatusList).getStage().equals(Status.Stage.COMPLETED)) {
 					status = new Status(
-							com.inferyx.framework.domain.Status.Stage.Killed, date);
+							com.inferyx.framework.domain.Status.Stage.KILLED, date);
 					stageStatusList.add(status);
 					stageExec.setStatusList(stageStatusList);
 				}
@@ -527,42 +527,42 @@ public class DagExecServiceImpl {
 		}
 	}
 	
-	public void setTaskKilled(String Uuid, String version, String stageId, String taskId) throws JsonProcessingException, JSONException, ParseException {
+	public void setTaskKILLED(String Uuid, String version, String stageId, String taskId) throws JsonProcessingException, JSONException, ParseException {
 		DagExec dagexec  = (DagExec) commonServiceImpl.getOneByUuidAndVersion(Uuid, version, MetaType.dagExec.toString());
 
 		List<StageExec> stageExecList = DagExecUtil.castToStageExecList(dagexec.getStages());
 		Date date = new Date();
 		List<Status> statusList = dagexec.getStatusList();
 
-		boolean isTaskkilled = false;
+		boolean isTaskKILLED = false;
 		
-		if (!Helper.getLatestStatus(statusList).getStage().equals(Status.Stage.InProgress)) {
+		if (!Helper.getLatestStatus(statusList).getStage().equals(Status.Stage.RUNNING)) {
 			return;
 		}
 		
 		logger.info("Before adding terminated status to DAG list");
 		statusList.add(new Status(
-									com.inferyx.framework.domain.Status.Stage.Terminating, date));
+									com.inferyx.framework.domain.Status.Stage.TERMINATING, date));
 
 		for (StageExec stageExec : stageExecList) {
 			if (stageExec.getStageId().equals(stageId)) {
 				List<Status> stageStatusList = stageExec.getStatusList();
 				//Collections.sort(stageStatusList);
-				if (!Helper.getLatestStatus(stageStatusList).getStage().equals(Status.Stage.InProgress)) {
+				if (!Helper.getLatestStatus(stageStatusList).getStage().equals(Status.Stage.RUNNING)) {
 					break;
 				}
 				com.inferyx.framework.domain.Status status = new Status(
-						com.inferyx.framework.domain.Status.Stage.Terminating, date);
+						com.inferyx.framework.domain.Status.Stage.TERMINATING, date);
 				stageStatusList.add(status);
 				List<TaskExec> taskExecList = DagExecUtil.castToTaskExecList(stageExec.getTasks());
 				for (TaskExec taskExec : taskExecList) {
 					if (taskExec.getTaskId().equals(taskId)) {
 						List<Status> taskStatusList = taskExec.getStatusList();
 						//Collections.sort(taskStatusList);
-						if (Helper.getLatestStatus(taskStatusList).equals(new Status(Status.Stage.InProgress, new Date()))) {
-							isTaskkilled = true;
+						if (Helper.getLatestStatus(taskStatusList).equals(new Status(Status.Stage.RUNNING, new Date()))) {
+							isTaskKILLED = true;
 							status = new Status(
-									com.inferyx.framework.domain.Status.Stage.Terminating, date);
+									com.inferyx.framework.domain.Status.Stage.TERMINATING, date);
 							taskStatusList.add(status);
 							logger.info("Starting to kill operator");
 							for(MetaIdentifierHolder operatorInfo : taskExec.getOperators().get(0).getOperatorInfo()) {
@@ -570,18 +570,18 @@ public class DagExecServiceImpl {
 														, operatorInfo.getRef().getUuid()
 														, operatorInfo.getRef().getVersion());
 							}
-							logger.info("After operator is killed");
+							logger.info("After operator is KILLED");
 							status = new Status(
-									com.inferyx.framework.domain.Status.Stage.Killed, new Date());
+									com.inferyx.framework.domain.Status.Stage.KILLED, new Date());
 							taskStatusList.add(status);
 							taskExec.setStatusList(taskStatusList);
 						}
 					}
 				}
 				stageExec.setTasks(DagExecUtil.convertToTaskList(taskExecList));
-				if (!Helper.getLatestStatus(stageStatusList).getStage().equals(Status.Stage.Completed)) {
+				if (!Helper.getLatestStatus(stageStatusList).getStage().equals(Status.Stage.COMPLETED)) {
 					status = new Status(
-							com.inferyx.framework.domain.Status.Stage.Killed, date);
+							com.inferyx.framework.domain.Status.Stage.KILLED, date);
 					stageStatusList.add(status);
 					stageExec.setStatusList(stageStatusList);
 				}
@@ -589,11 +589,11 @@ public class DagExecServiceImpl {
 			}
 		}
 		dagexec.setStages(DagExecUtil.convertToStageList(stageExecList));
-		if (isTaskkilled) {
+		if (isTaskKILLED) {
 			//Collections.sort(statusList);
-			if (!Helper.getLatestStatus(statusList).getStage().equals(Status.Stage.Completed)) {
+			if (!Helper.getLatestStatus(statusList).getStage().equals(Status.Stage.COMPLETED)) {
 				com.inferyx.framework.domain.Status status = new Status(
-						com.inferyx.framework.domain.Status.Stage.Killed, date);
+						com.inferyx.framework.domain.Status.Stage.KILLED, date);
 				statusList.add(status);
 				dagexec.setStatusList(statusList);
 			}
@@ -710,7 +710,7 @@ public class DagExecServiceImpl {
 	}
 
 	
-	public void setTaskInProgress(String Uuid, String version, String stageId, String taskId) throws JsonProcessingException, JSONException, ParseException {
+	public void setTaskRUNNING(String Uuid, String version, String stageId, String taskId) throws JsonProcessingException, JSONException, ParseException {
 		DagExec dagexec  = (DagExec) commonServiceImpl.getOneByUuidAndVersion(Uuid, version, MetaType.dagExec.toString());
 
 		List<StageExec> stageExecList = DagExecUtil.castToStageExecList(dagexec.getStages());
@@ -718,11 +718,11 @@ public class DagExecServiceImpl {
 		List<Status> statusList = dagexec.getStatusList();
 
 		// Collections.sort(statusList);
-		if (statusList.get(0).getStage().equals(Status.Stage.NotStarted) && 
+		if (statusList.get(0).getStage().equals(Status.Stage.PENDING) && 
 				!Helper.getLatestStatus(statusList).equals(new Status(
-					com.inferyx.framework.domain.Status.Stage.InProgress, date))) {
+					com.inferyx.framework.domain.Status.Stage.RUNNING, date))) {
 			com.inferyx.framework.domain.Status status = new Status(
-					com.inferyx.framework.domain.Status.Stage.InProgress, date);
+					com.inferyx.framework.domain.Status.Stage.RUNNING, date);
 			statusList.add(status);
 			dagexec.setStatusList(statusList);
 		}
@@ -731,11 +731,11 @@ public class DagExecServiceImpl {
 			if (stageExec.getStageId().equals(stageId)) {
 				List<Status> stageStatusList = stageExec.getStatusList();
 				// Collections.sort(stageStatusList);
-				if (stageStatusList.get(0).getStage().equals(Status.Stage.NotStarted) && 
+				if (stageStatusList.get(0).getStage().equals(Status.Stage.PENDING) && 
 						!Helper.getLatestStatus(stageStatusList).equals(new Status(
-								com.inferyx.framework.domain.Status.Stage.InProgress, date))) {
+								com.inferyx.framework.domain.Status.Stage.RUNNING, date))) {
 					com.inferyx.framework.domain.Status status = new Status(
-							com.inferyx.framework.domain.Status.Stage.InProgress, date);
+							com.inferyx.framework.domain.Status.Stage.RUNNING, date);
 					stageStatusList.add(status);
 					stageExec.setStatusList(stageStatusList);
 				}
@@ -744,10 +744,10 @@ public class DagExecServiceImpl {
 					if (taskExec.getTaskId().equals(taskId)) {
 						List<Status> taskStatusList = taskExec.getStatusList();
 					//	Collections.sort(taskStatusList);
-						if (taskStatusList.get(0).getStage().equals(Status.Stage.NotStarted)) {
+						if (taskStatusList.get(0).getStage().equals(Status.Stage.PENDING)) {
 
 							com.inferyx.framework.domain.Status status = new Status(
-									com.inferyx.framework.domain.Status.Stage.InProgress, date);
+									com.inferyx.framework.domain.Status.Stage.RUNNING, date);
 							taskStatusList.add(status);
 							taskExec.setStatusList(taskStatusList);
 						}
@@ -805,7 +805,7 @@ public class DagExecServiceImpl {
 							for(MetaIdentifierHolder operatorInfo : indvTaskExec.getOperators().get(0).getOperatorInfo()) {
 								List<Status> tempOperatorStatusList = commonServiceImpl.getAllStatusForExec(operatorInfo.getRef());
 								Status operatorStatus = Helper.getLatestStatus(tempOperatorStatusList);
-								if(operatorStatus.getStage().equals(Status.Stage.Killed)) {
+								if(operatorStatus.getStage().equals(Status.Stage.KILLED)) {
 									operatorStatusList.addAll(tempOperatorStatusList);
 									break;
 								} else {
@@ -814,24 +814,24 @@ public class DagExecServiceImpl {
 							}
 							Status operatorStatus = Helper.getLatestStatus(operatorStatusList);
 							com.inferyx.framework.domain.Status status = null;
-							if (operatorStatus.getStage().equals(Status.Stage.Killed)) {
-								status = new Status(com.inferyx.framework.domain.Status.Stage.Killed, new Date());
+							if (operatorStatus.getStage().equals(Status.Stage.KILLED)) {
+								status = new Status(com.inferyx.framework.domain.Status.Stage.KILLED, new Date());
 							} else {
-								status = new Status(com.inferyx.framework.domain.Status.Stage.Completed, new Date());
+								status = new Status(com.inferyx.framework.domain.Status.Stage.COMPLETED, new Date());
 							}
 							/*com.inferyx.framework.domain.Status status = new Status(
-									com.inferyx.framework.domain.Status.Stage.Completed, new Date());*/
+									com.inferyx.framework.domain.Status.Stage.COMPLETED, new Date());*/
 							taskStatusList.add(status);
 							indvTaskExec.setStatusList(taskStatusList);
 						}
-						boolean istaskCompleted = false;						
+						boolean istaskCOMPLETED = false;						
 						// Loop all tasks status list
-						if (Helper.getLatestStatus(taskStatusList).getStage().equals(com.inferyx.framework.domain.Status.Stage.Completed)) {
-							istaskCompleted = true;
+						if (Helper.getLatestStatus(taskStatusList).getStage().equals(com.inferyx.framework.domain.Status.Stage.COMPLETED)) {
+							istaskCOMPLETED = true;
 						} else {
-							istaskCompleted = false;
+							istaskCOMPLETED = false;
 						}
-						if (!istaskCompleted) {
+						if (!istaskCOMPLETED) {
 							checkAllTaskStatus = false;
 						}
 						stageExec.setTasks(DagExecUtil.convertToTaskList(dagTaskExecs));
@@ -839,7 +839,7 @@ public class DagExecServiceImpl {
 					if (checkAllTaskStatus) {
 						List<Status> stageStatusList = stageExec.getStatusList();
 						com.inferyx.framework.domain.Status status = new Status(
-								com.inferyx.framework.domain.Status.Stage.Completed, new Date());
+								com.inferyx.framework.domain.Status.Stage.COMPLETED, new Date());
 						stageStatusList.add(status);
 						stageExec.setStatusList(stageStatusList);
 					} else if (!checkAllTaskStatus) {
@@ -849,7 +849,7 @@ public class DagExecServiceImpl {
 				} else {
 					// Set checkAllStageStatus flag for current stage
 					List<Status> stageStatusList2 = stageExec.getStatusList();
-					if (!checkStatusCompleted(stageStatusList2)) {
+					if (!checkStatusCOMPLETED(stageStatusList2)) {
 						checkAllStageStatus = false;
 					}
 				}
@@ -860,7 +860,7 @@ public class DagExecServiceImpl {
 			if (checkAllStageStatus) {
 				List<Status> dagExecStatusList = dagexec.getStatusList();
 				com.inferyx.framework.domain.Status status = new Status(
-						com.inferyx.framework.domain.Status.Stage.Completed, new Date());
+						com.inferyx.framework.domain.Status.Stage.COMPLETED, new Date());
 				dagExecStatusList.add(status);
 				dagexec.setStatusList(dagExecStatusList);
 			}
@@ -873,11 +873,11 @@ public class DagExecServiceImpl {
 		DagExec dagexec = iDagExec.findOneByUuidAndVersion(uuid, version);
 		boolean allTasksComplete = true;
 		@SuppressWarnings("unused")
-		boolean taskFailed = false;
+		boolean taskFAILED = false;
 		@SuppressWarnings("unused")
-		boolean taskKilled = false;
+		boolean taskKILLED = false;
 		@SuppressWarnings("unused")
-		boolean taskOnHold = false;
+		boolean taskPAUSE = false;
 		List<Status> stageStatusList = null;
 		List<Status> taskStatusList = null;
 		Status taskStatus = null;
@@ -889,28 +889,28 @@ public class DagExecServiceImpl {
 		for (TaskExec taskExec : DagExecUtil.castToTaskExecList(stageExec.getTasks())){
 			taskStatusList = taskExec.getStatusList();
 			taskStatus = Helper.getLatestStatus(taskStatusList); 
-			if (taskStatus.getStage().equals(Status.Stage.Failed)) {
-				setStatus(stageStatusList, new Status (Status.Stage.Failed, new Date()));
-				taskFailed = true;
+			if (taskStatus.getStage().equals(Status.Stage.FAILED)) {
+				setStatus(stageStatusList, new Status (Status.Stage.FAILED, new Date()));
+				taskFAILED = true;
 				
 				allTasksComplete = false;
 				break;
 			}
-			if (taskStatus.getStage().equals(Status.Stage.Killed)) {
-				setStatus(stageStatusList, new Status (Status.Stage.Killed, new Date()));
-				taskKilled = true;
+			if (taskStatus.getStage().equals(Status.Stage.KILLED)) {
+				setStatus(stageStatusList, new Status (Status.Stage.KILLED, new Date()));
+				taskKILLED = true;
 				allTasksComplete = false;
 				break;
 			}
-			if (taskStatus.getStage().equals(Status.Stage.OnHold)) {
-				setStatus(stageStatusList, new Status (Status.Stage.OnHold, new Date()));
-				taskOnHold = true;
+			if (taskStatus.getStage().equals(Status.Stage.PAUSE)) {
+				setStatus(stageStatusList, new Status (Status.Stage.PAUSE, new Date()));
+				taskPAUSE = true;
 				allTasksComplete = false;
 				break;
 			}
 		}
 		if (allTasksComplete) {
-			setStatus(stageStatusList, new Status (Status.Stage.Completed, new Date()));
+			setStatus(stageStatusList, new Status (Status.Stage.COMPLETED, new Date()));
 		}		
 		DagExecUtil.replaceInStageList(dagexec.getStages(), stageExec);
 		setDagStatus(dagexec);
@@ -920,10 +920,10 @@ public class DagExecServiceImpl {
 	
 	public void setDagStatus(DagExec dagexec) {		
 		boolean allStagesComplete = true;
-		boolean stageFailed = false;
-		boolean stageKilled = false;
+		boolean stageFAILED = false;
+		boolean stageKILLED = false;
 		@SuppressWarnings("unused")
-		boolean stageOnHold = false;
+		boolean stagePAUSE = false;
 		List<Status> stageStatusList = null;
 		List<Status> dagStatusList = null;
 		Status stageStatus = null;
@@ -938,35 +938,35 @@ public class DagExecServiceImpl {
 		for (StageExec stageExec : stageExecList) {
 			stageStatusList = stageExec.getStatusList();
 			stageStatus = Helper.getLatestStatus(stageStatusList);
-			if (stageStatus.getStage().equals(Status.Stage.Failed)) {
-				setStatus(dagStatusList, new Status (Status.Stage.Failed, new Date()));
-				stageFailed = true;
+			if (stageStatus.getStage().equals(Status.Stage.FAILED)) {
+				setStatus(dagStatusList, new Status (Status.Stage.FAILED, new Date()));
+				stageFAILED = true;
 				allStagesComplete = false;
 				break;
 			}
-			if (stageStatus.getStage().equals(Status.Stage.Killed)) {
-				setStatus(dagStatusList, new Status (Status.Stage.Killed, new Date()));
-				stageKilled = true;
+			if (stageStatus.getStage().equals(Status.Stage.KILLED)) {
+				setStatus(dagStatusList, new Status (Status.Stage.KILLED, new Date()));
+				stageKILLED = true;
 				allStagesComplete = false;
 				break;
 			}
-			if (stageStatus.getStage().equals(Status.Stage.OnHold)) {
-				stageOnHold = true;
+			if (stageStatus.getStage().equals(Status.Stage.PAUSE)) {
+				stagePAUSE = true;
 				allStagesComplete = false;
 				break;
 			}
-			if (!stageStatus.getStage().equals(Status.Stage.Completed)) {
+			if (!stageStatus.getStage().equals(Status.Stage.COMPLETED)) {
 				allStagesComplete = false;
 				break;
 			}
 		}
 		
 		if (allStagesComplete) {
-			setStatus(dagStatusList, new Status (Status.Stage.Completed, new Date()));
-		} else if (stageFailed) {
-			setStatus(dagStatusList, new Status (Status.Stage.Failed, new Date()));
-		} else if (stageKilled) {
-			setStatus(dagStatusList, new Status (Status.Stage.Killed, new Date()));
+			setStatus(dagStatusList, new Status (Status.Stage.COMPLETED, new Date()));
+		} else if (stageFAILED) {
+			setStatus(dagStatusList, new Status (Status.Stage.FAILED, new Date()));
+		} else if (stageKILLED) {
+			setStatus(dagStatusList, new Status (Status.Stage.KILLED, new Date()));
 		}
 	}
 	
@@ -1016,28 +1016,28 @@ public class DagExecServiceImpl {
 							taskExec.setStatusList(taskStatusList);
 							logger.info("Task status : " + taskExec.getTaskId() + " : " + taskStatus.getStage().toString());
 						}
-						boolean istaskCompleted = false;
-						boolean istaskFailed = false;
+						boolean istaskCOMPLETED = false;
+						boolean istaskFAILED = false;
 
 						// Loop all tasks status list
 						for (Status taskStatus : taskStatusList) {
-							if (taskStatus.getStage().equals(com.inferyx.framework.domain.Status.Stage.Completed)) {
-								istaskCompleted = true;
+							if (taskStatus.getStage().equals(com.inferyx.framework.domain.Status.Stage.COMPLETED)) {
+								istaskCOMPLETED = true;
 								break;
 							} else {
-								istaskCompleted = false;
+								istaskCOMPLETED = false;
 							}
 
-							if (taskStatus.getStage().equals(com.inferyx.framework.domain.Status.Stage.Failed)) {
-								istaskFailed = true;
+							if (taskStatus.getStage().equals(com.inferyx.framework.domain.Status.Stage.FAILED)) {
+								istaskFAILED = true;
 								break;
 							} else {
-								istaskFailed = false;
+								istaskFAILED = false;
 							}
 							
 						}
 						
-						if (!istaskCompleted && !istaskFailed) {
+						if (!istaskCOMPLETED && !istaskFAILED) {
 							checkAllTaskStatus = false;
 						}
 						stageExec.setTasks(DagExecUtil.convertToTaskList(taskExecList));
@@ -1054,7 +1054,7 @@ public class DagExecServiceImpl {
 				} else {
 					// Set checkAllStageStatus flag for current stage
 					List<Status> stageStatusList = stageExec.getStatusList();
-					if (!checkStatusCompleted(stageStatusList) || !checkStatusFailed(stageStatusList) || !checkStatusOnHold(stageStatusList)) {
+					if (!checkStatusCOMPLETED(stageStatusList) || !checkStatusFAILED(stageStatusList) || !checkStatusPAUSE(stageStatusList)) {
 						checkAllStageStatus = false;
 					}
 				}
@@ -1073,36 +1073,36 @@ public class DagExecServiceImpl {
 		}
 	}	
 	
-	public boolean checkStatusCompleted(List<Status> statusList) {
-		if (Helper.getLatestStatus(statusList).getStage().equals(Status.Stage.Completed)) {
+	public boolean checkStatusCOMPLETED(List<Status> statusList) {
+		if (Helper.getLatestStatus(statusList).getStage().equals(Status.Stage.COMPLETED)) {
 			return true;
 		}
 		return false;
 	}
 	
-	public boolean checkStatusKilled(List<Status> statusList) {
-		if (Helper.getLatestStatus(statusList).getStage().equals(Status.Stage.Killed)) {
+	public boolean checkStatusKILLED(List<Status> statusList) {
+		if (Helper.getLatestStatus(statusList).getStage().equals(Status.Stage.KILLED)) {
 			return true;
 		}
 		return false;
 	}
 
-	public boolean checkStatusFailed(List<Status> statusList) {
-		if (Helper.getLatestStatus(statusList).getStage().equals(Status.Stage.Failed)) {
+	public boolean checkStatusFAILED(List<Status> statusList) {
+		if (Helper.getLatestStatus(statusList).getStage().equals(Status.Stage.FAILED)) {
 			return true;
 		}
 		return false;
 	}
 	
-	public boolean checkStatusResume(List<Status> statusList) {
-		if (Helper.getLatestStatus(statusList).getStage().equals(Status.Stage.Resume)) {
+	public boolean checkStatusRESUME(List<Status> statusList) {
+		if (Helper.getLatestStatus(statusList).getStage().equals(Status.Stage.RESUME)) {
 			return true;
 		}
 		return false;
 	}
 	
-	public boolean checkStatusOnHold(List<Status> statusList) {
-		if (Helper.getLatestStatus(statusList).getStage().equals(Status.Stage.OnHold)) {
+	public boolean checkStatusPAUSE(List<Status> statusList) {
+		if (Helper.getLatestStatus(statusList).getStage().equals(Status.Stage.PAUSE)) {
 			return true;
 		}
 		return false;
@@ -1155,7 +1155,7 @@ public class DagExecServiceImpl {
 	}
 	
 	public String checkTaskDepStatus(Dag dag, String Uuid, String version, String stageId, String taskId) throws JsonProcessingException {
-		boolean isDependencyCompleted = false;
+		boolean isDependencyCOMPLETED = false;
 //		Status.Stage latestStatus = null;
 		
 		//DagExec dagexec = iDagExec.findOneByUuidAndVersion(uuid, version);
@@ -1163,38 +1163,38 @@ public class DagExecServiceImpl {
 		TaskExec depTaskExec = getTaskExec(dagexec, stageId, taskId);
 		List<String> depTaskIds = depTaskExec.getDependsOn();
 		if (depTaskIds == null || depTaskIds.isEmpty()) {
-			return Status.Stage.Completed.toString();
+			return Status.Stage.COMPLETED.toString();
 		}
 		StageExec stageExec = getStageExec(dagexec, stageId);
 		List<TaskExec> taskExecList = DagExecUtil.castToTaskExecList(stageExec.getTasks());
 		for (TaskExec taskExec : taskExecList) {
 			if (depTaskIds.contains(taskExec.getTaskId())) {
 //				latestStatus = Helper.getLatestStatus(taskExec.getStatusList()).getStage();
-				if (checkStatusCompleted(taskExec.getStatusList())) {
-					isDependencyCompleted = true;
-				} else if (checkStatusKilled(taskExec.getStatusList()) || checkStatusKilled(stageExec.getStatusList()) || checkStatusKilled(dagexec.getStatusList())) {
-					return Status.Stage.Killed.toString();
-				} else if (checkStatusFailed(taskExec.getStatusList()) || checkStatusFailed(stageExec.getStatusList()) || checkStatusFailed(dagexec.getStatusList())) {
-					return Status.Stage.Failed.toString();
-				} else if (checkStatusOnHold(taskExec.getStatusList()) || checkStatusOnHold(stageExec.getStatusList()) || checkStatusOnHold(dagexec.getStatusList())) {
-					return Status.Stage.OnHold.toString();
-				}  else if (checkStatusResume(taskExec.getStatusList()) || checkStatusResume(stageExec.getStatusList()) || checkStatusResume(dagexec.getStatusList())) {
-					return Status.Stage.Resume.toString();
+				if (checkStatusCOMPLETED(taskExec.getStatusList())) {
+					isDependencyCOMPLETED = true;
+				} else if (checkStatusKILLED(taskExec.getStatusList()) || checkStatusKILLED(stageExec.getStatusList()) || checkStatusKILLED(dagexec.getStatusList())) {
+					return Status.Stage.KILLED.toString();
+				} else if (checkStatusFAILED(taskExec.getStatusList()) || checkStatusFAILED(stageExec.getStatusList()) || checkStatusFAILED(dagexec.getStatusList())) {
+					return Status.Stage.FAILED.toString();
+				} else if (checkStatusPAUSE(taskExec.getStatusList()) || checkStatusPAUSE(stageExec.getStatusList()) || checkStatusPAUSE(dagexec.getStatusList())) {
+					return Status.Stage.PAUSE.toString();
+				}  else if (checkStatusRESUME(taskExec.getStatusList()) || checkStatusRESUME(stageExec.getStatusList()) || checkStatusRESUME(dagexec.getStatusList())) {
+					return Status.Stage.RESUME.toString();
 				} else {
 					// Task not complete. return false
-					return Status.Stage.NotStarted.toString();
+					return Status.Stage.PENDING.toString();
 				}
 			}
 		}		
-		if (isDependencyCompleted) {
-			return Status.Stage.Completed.toString();
+		if (isDependencyCOMPLETED) {
+			return Status.Stage.COMPLETED.toString();
 		}
-		return Status.Stage.Completed.toString();
+		return Status.Stage.COMPLETED.toString();
 	}
 	
 	/*public String checkTaskDepStatus(Dag dag, String Uuid, String version, String stageId, String taskId) {
 		DagExec dagexec;
-		boolean isDependencyCompleted = false;
+		boolean isDependencyCOMPLETED = false;
 		
 		if (securityServiceImpl.getAppInfo() != null) {
 			String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
@@ -1213,14 +1213,14 @@ public class DagExecServiceImpl {
 		for (StageExec stageExec : listStageExecs) {
 			List<Status> statusList = stageExec.getStatusList();
 			Stage stage = DagExecUtil.getStageFromDag(dag, stageExec.getStageId());
-			if (checkStatusCompleted(statusList)) {
-				stageStatus.put(stageExec.getStageId().toString(), "Completed");
-			} else if (checkStatusKilled(statusList)) {
-				stageStatus.put(stageExec.getStageId().toString(), "Killed");
-			}  else if (checkStatusFailed(statusList)) {
-				stageStatus.put(stageExec.getStageId().toString(), "Failed");
+			if (checkStatusCOMPLETED(statusList)) {
+				stageStatus.put(stageExec.getStageId().toString(), "COMPLETED");
+			} else if (checkStatusKILLED(statusList)) {
+				stageStatus.put(stageExec.getStageId().toString(), "KILLED");
+			}  else if (checkStatusFAILED(statusList)) {
+				stageStatus.put(stageExec.getStageId().toString(), "FAILED");
 			} else {
-				stageStatus.put(stageExec.getStageId().toString(), "NotCompleted");
+				stageStatus.put(stageExec.getStageId().toString(), "NotCOMPLETED");
 			}
 
 			if (stageExec.getStageId().equals(stageId)) {
@@ -1231,14 +1231,14 @@ public class DagExecServiceImpl {
 			for (TaskExec taskExec : taskExecList) {
 				List<Status> taskStatusList = taskExec.getStatusList();
 				String taskKey = stageExec.getStageId() + "_" + taskExec.getTaskId();
-				if (checkStatusCompleted(taskStatusList)) {
-					taskStatus.put(taskKey, "Completed");
-				} else if (checkStatusKilled(taskStatusList)) {
-					taskStatus.put(taskKey, "Killed");
-				}  else if (checkStatusFailed(taskStatusList)) {
-					taskStatus.put(taskKey, "Failed");
+				if (checkStatusCOMPLETED(taskStatusList)) {
+					taskStatus.put(taskKey, "COMPLETED");
+				} else if (checkStatusKILLED(taskStatusList)) {
+					taskStatus.put(taskKey, "KILLED");
+				}  else if (checkStatusFAILED(taskStatusList)) {
+					taskStatus.put(taskKey, "FAILED");
 				} else {
-					taskStatus.put(taskKey, "NotCompleted");
+					taskStatus.put(taskKey, "NotCOMPLETED");
 				}
 				if (stageExec.getStageId().equals(stageId)
 						&& taskExec.getTaskId().equals(taskId)) {
@@ -1251,44 +1251,44 @@ public class DagExecServiceImpl {
 
 		if (stageDependsOn.size() == 0 && taskDependsOn.size() == 0) {
 			// There is no dependency, so execute this stage task
-			return "Completed";
+			return "COMPLETED";
 		}
 
 		for (String stageDepId : stageDependsOn) {
 			String value = (String) stageStatus.get(stageDepId.toString());
-			if (value.equalsIgnoreCase("Completed")) {
-				isDependencyCompleted = true;
-			} else if (value.equalsIgnoreCase("Killed")) {
-				return "Killed";
-			} else if (value.equalsIgnoreCase("Failed")) {
-				return "Failed";
+			if (value.equalsIgnoreCase("COMPLETED")) {
+				isDependencyCOMPLETED = true;
+			} else if (value.equalsIgnoreCase("KILLED")) {
+				return "KILLED";
+			} else if (value.equalsIgnoreCase("FAILED")) {
+				return "FAILED";
 			} else {
 				// Stage not complete. return false
-				return "NotCompleted";
+				return "NotCOMPLETED";
 			}
 		}
 		for (String taskDepId : taskDependsOn) {
 			String value = (String) taskStatus.get(stageId + "_" + taskDepId);
-			if (value.equalsIgnoreCase("Completed")) {
-				isDependencyCompleted = true;
-			} else if (value.equalsIgnoreCase("Killed")) {
-				return "Killed";
-			} else if (value.equalsIgnoreCase("Failed")) {
-				return "Failed";
+			if (value.equalsIgnoreCase("COMPLETED")) {
+				isDependencyCOMPLETED = true;
+			} else if (value.equalsIgnoreCase("KILLED")) {
+				return "KILLED";
+			} else if (value.equalsIgnoreCase("FAILED")) {
+				return "FAILED";
 			} else {
 				// Task not complete. return false
-				return "NotCompleted";
+				return "NotCOMPLETED";
 			}
 		}
-		if (isDependencyCompleted) {
-			return "Completed";
+		if (isDependencyCOMPLETED) {
+			return "COMPLETED";
 		} else {
-			return "NotCompleted";
+			return "NotCOMPLETED";
 		}
 	}
 */	
 	public String checkStageDepStatus(Dag dag, String Uuid, String version, String stageId) throws JsonProcessingException {
-		boolean isDependencyCompleted = false;
+		boolean isDependencyCOMPLETED = false;
 		//DagExec dagexec = iDagExec.findOneByUuidAndVersion(uuid, version);
 		DagExec dagexec  = (DagExec) commonServiceImpl.getOneByUuidAndVersion(Uuid, version, MetaType.dagExec.toString());
 		// Dag dag = (Dag) daoRegister.getRefObject(dagexec.getDag());
@@ -1300,14 +1300,14 @@ public class DagExecServiceImpl {
 		for (StageExec stageExec : listStageExecs) {
 			List<Status> statusList = stageExec.getStatusList();
 			Stage stage = DagExecUtil.getStageFromDag(dag, stageExec.getStageId());
-			if (checkStatusCompleted(statusList)) {
-				stageStatus.put(stageExec.getStageId().toString(), Status.Stage.Completed.toString());
-			} else if (checkStatusKilled(statusList)) {
-				stageStatus.put(stageExec.getStageId().toString(), Status.Stage.Killed.toString());
-			}  else if (checkStatusFailed(statusList)) {
-				stageStatus.put(stageExec.getStageId().toString(), Status.Stage.Failed.toString());
+			if (checkStatusCOMPLETED(statusList)) {
+				stageStatus.put(stageExec.getStageId().toString(), Status.Stage.COMPLETED.toString());
+			} else if (checkStatusKILLED(statusList)) {
+				stageStatus.put(stageExec.getStageId().toString(), Status.Stage.KILLED.toString());
+			}  else if (checkStatusFAILED(statusList)) {
+				stageStatus.put(stageExec.getStageId().toString(), Status.Stage.FAILED.toString());
 			} else {
-				stageStatus.put(stageExec.getStageId().toString(), Status.Stage.NotStarted.toString());
+				stageStatus.put(stageExec.getStageId().toString(), Status.Stage.PENDING.toString());
 			}
 
 			if (stageExec.getStageId().equals(stageId)) {
@@ -1318,33 +1318,33 @@ public class DagExecServiceImpl {
 		
 		if (stageDependsOn == null || stageDependsOn.size() == 0) {
 			// There is no dependency, so execute this stage 
-			return Status.Stage.Completed.toString();
+			return Status.Stage.COMPLETED.toString();
 		}
 		
 		for (String stageDepId : stageDependsOn) {
 			String value = (String) stageStatus.get(stageDepId.toString());
-			if (value.equalsIgnoreCase(Status.Stage.Completed.toString())) {
-				isDependencyCompleted = true;
-			} else if (value.equalsIgnoreCase(Status.Stage.Killed.toString())) {
-				return Status.Stage.Killed.toString();
-			} else if (value.equalsIgnoreCase(Status.Stage.Failed.toString())) {
-				return Status.Stage.Failed.toString();
+			if (value.equalsIgnoreCase(Status.Stage.COMPLETED.toString())) {
+				isDependencyCOMPLETED = true;
+			} else if (value.equalsIgnoreCase(Status.Stage.KILLED.toString())) {
+				return Status.Stage.KILLED.toString();
+			} else if (value.equalsIgnoreCase(Status.Stage.FAILED.toString())) {
+				return Status.Stage.FAILED.toString();
 			} else {
 				// Stage not complete. return false
-				return Status.Stage.NotStarted.toString();
+				return Status.Stage.PENDING.toString();
 			}
 		}
 		
-		if (isDependencyCompleted) {
-			return Status.Stage.Completed.toString();
+		if (isDependencyCOMPLETED) {
+			return Status.Stage.COMPLETED.toString();
 		} else {
-			return Status.Stage.NotStarted.toString();
+			return Status.Stage.PENDING.toString();
 		}
 
 	}
 	
 /*	public boolean checkTaskDepStatus(Dag dag, String Uuid, String version, String stageId, String taskId) {
-		boolean isDependencyCompleted = false;
+		boolean isDependencyCOMPLETED = false;
 		DagExec dagexec;
 
 		if (securityServiceImpl.getAppInfo() != null) {
@@ -1365,10 +1365,10 @@ public class DagExecServiceImpl {
 		for (StageExec stageExec : listStageExecs) {
 			List<Status> statusList = stageExec.getStatusList();
 			Stage stage = DagExecUtil.getStageFromDag(dag, stageExec.getStageId());
-			if (checkStatusCompleted(statusList)) {
-				stageStatus.put(stageExec.getStageId().toString(), "Completed");
+			if (checkStatusCOMPLETED(statusList)) {
+				stageStatus.put(stageExec.getStageId().toString(), "COMPLETED");
 			} else {
-				stageStatus.put(stageExec.getStageId().toString(), "NotCompleted");
+				stageStatus.put(stageExec.getStageId().toString(), "NotCOMPLETED");
 			}
 
 			if (stageExec.getStageId().equals(stageId)) {
@@ -1379,10 +1379,10 @@ public class DagExecServiceImpl {
 			for (TaskExec taskExec : taskExecList) {
 				List<Status> taskStatusList = taskExec.getStatusList();
 				String taskKey = stageExec.getStageId() + "_" + taskExec.getTaskId();
-				if (checkStatusCompleted(taskStatusList)) {
-					taskStatus.put(taskKey, "Completed");
+				if (checkStatusCOMPLETED(taskStatusList)) {
+					taskStatus.put(taskKey, "COMPLETED");
 				} else {
-					taskStatus.put(taskKey, "NotCompleted");
+					taskStatus.put(taskKey, "NotCOMPLETED");
 				}
 				if (stageExec.getStageId().equals(stageId)
 						&& taskExec.getTaskId().equals(taskId)) {
@@ -1400,8 +1400,8 @@ public class DagExecServiceImpl {
 
 		for (String stageDepId : stageDependsOn) {
 			String value = (String) stageStatus.get(stageDepId.toString());
-			if (value.equalsIgnoreCase("Completed")) {
-				isDependencyCompleted = true;
+			if (value.equalsIgnoreCase("COMPLETED")) {
+				isDependencyCOMPLETED = true;
 			} else {
 				// Stage not complete. return false
 				return false;
@@ -1409,15 +1409,15 @@ public class DagExecServiceImpl {
 		}
 		for (String taskDepId : taskDependsOn) {
 			String value = (String) taskStatus.get(stageId + "_" + taskDepId);
-			if (value.equalsIgnoreCase("Completed")) {
-				isDependencyCompleted = true;
+			if (value.equalsIgnoreCase("COMPLETED")) {
+				isDependencyCOMPLETED = true;
 			} else {
 				// Task not complete. return false
 				return false;
 			}
 		}
 
-		return isDependencyCompleted;
+		return isDependencyCOMPLETED;
 	}
 */
 	public List<DagExec> findDagExecStatus(String uuid, String version) {
@@ -1839,29 +1839,29 @@ public class DagExecServiceImpl {
 		return dagStatusHolder;
 	}
 
-	public DagExec setStageOnHold(String uuid, String version, String stageId) throws Exception {
+	public DagExec setStagePause(String uuid, String version, String stageId) throws Exception {
 
 		DagExec dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString());		
 		for(int i=0;i<dagExec.getStages().size();i++){
 			if(dagExec.getStages().get(i).getStageId().equals(stageId)){
-				Status stageOnHoldStatus = new Status(Status.Stage.OnHold, new Date());
+				Status stagePAUSEStatus = new Status(Status.Stage.PAUSE, new Date());
 				List<Status> stageStatusList = dagExec.getStages().get(i).getStatusList();
-				stageStatusList.remove(stageOnHoldStatus);
-				stageStatusList.add(stageOnHoldStatus);
+				stageStatusList.remove(stagePAUSEStatus);
+				stageStatusList.add(stagePAUSEStatus);
 				dagExec.getStages().get(i).setStatusList(stageStatusList);
 				for(int j=0;j<dagExec.getStages().get(i).getTasks().size();j++){
 					int lastStatus = dagExec.getStages().get(i).getTasks().get(j).getStatusList().size() - 1;
-					if(dagExec.getStages().get(i).getTasks().get(j).getStatusList().get(lastStatus).getStage().equals(Status.Stage.NotStarted)) {
-						logger.info("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");//raise code 
+					if(dagExec.getStages().get(i).getTasks().get(j).getStatusList().get(lastStatus).getStage().equals(Status.Stage.PENDING)) {
+						logger.info("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) PENDING.");//raise code 
 						MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 						dependsOn.setRef(new MetaIdentifier(MetaType.dagExec, dagExec.getUuid(), dagExec.getVersion()));
-						commonServiceImpl.sendResponse("400", MessageStatus.WARNING.toString(), "Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.", dependsOn);
-						throw new Exception("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");
+						commonServiceImpl.sendResponse("400", MessageStatus.WARNING.toString(), "Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) PENDING.", dependsOn);
+						throw new Exception("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) PENDING.");
 					}else{
-						Status taskOnHoldStatus = new Status(Status.Stage.OnHold, new Date());
+						Status taskPAUSEStatus = new Status(Status.Stage.PAUSE, new Date());
 						List<Status> taskStatusList =dagExec.getStages().get(i).getTasks().get(j).getStatusList();
-						taskStatusList.remove(taskOnHoldStatus);
-						taskStatusList.add(taskOnHoldStatus);
+						taskStatusList.remove(taskPAUSEStatus);
+						taskStatusList.add(taskPAUSEStatus);
 						dagExec.getStages().get(i).getTasks().get(j).setStatusList(taskStatusList);
 					}
 						
@@ -1871,29 +1871,29 @@ public class DagExecServiceImpl {
 		return (DagExec) commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
 	}
 	
-	public DagExec setStageFailed(String uuid, String version, String stageId) throws JsonProcessingException, JSONException, ParseException {
+	public DagExec setStageFAILED(String uuid, String version, String stageId) throws JsonProcessingException, JSONException, ParseException {
 		
 		List<Status> dagStatusList = null;
-		Status failedStatus = new Status(Status.Stage.Failed, new Date());
+		Status FAILEDStatus = new Status(Status.Stage.FAILED, new Date());
 		DagExec dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString());
 		for(int i=0;i<dagExec.getStages().size();i++){
 			if(dagExec.getStages().get(i).getStageId().equals(stageId)){
 				List<Status> stageStatusList = dagExec.getStages().get(i).getStatusList();
-				if (!Helper.getLatestStatus(stageStatusList).getStage().equals(Status.Stage.NotStarted) 
-						&& !Helper.getLatestStatus(stageStatusList).getStage().equals(Status.Stage.InProgress)) {
+				if (!Helper.getLatestStatus(stageStatusList).getStage().equals(Status.Stage.PENDING) 
+						&& !Helper.getLatestStatus(stageStatusList).getStage().equals(Status.Stage.RUNNING)) {
 					logger.info("Stage can't fail ");
 					continue;
 				}
 					
-				if (Helper.getLatestStatus(stageStatusList).getStage().equals(Status.Stage.Failed)) {
+				if (Helper.getLatestStatus(stageStatusList).getStage().equals(Status.Stage.FAILED)) {
 					stageStatusList.remove(stageStatusList.size()-1);
 				}
-				stageStatusList.add(failedStatus);
+				stageStatusList.add(FAILEDStatus);
 				dagStatusList = dagExec.getStatusList();
-				if (Helper.getLatestStatus(dagStatusList).getStage().equals(Status.Stage.Failed)) {
+				if (Helper.getLatestStatus(dagStatusList).getStage().equals(Status.Stage.FAILED)) {
 					dagStatusList.remove(dagStatusList.size()-1);
 				}
-				dagStatusList.add(failedStatus);
+				dagStatusList.add(FAILEDStatus);
 			}
 		}		
 		return (DagExec) commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
@@ -1903,30 +1903,30 @@ public class DagExecServiceImpl {
 
 		DagExec dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString());
 		int lastDagStatus = dagExec.getStatusList().size() - 1;
-		if(dagExec.getStatusList().get(lastDagStatus).getStage().equals(Status.Stage.OnHold)) {
+		if(dagExec.getStatusList().get(lastDagStatus).getStage().equals(Status.Stage.PAUSE)) {
 			
 		} else {
 			for(int i=0;i<dagExec.getStages().size();i++){
 				if(dagExec.getStages().get(i).getStageId().equals(stageId)){
-					Status stageOnHoldStatus = new Status(Status.Stage.Resume, new Date());
+					Status stagePAUSEStatus = new Status(Status.Stage.RESUME, new Date());
 					List<Status> stageStatusList = dagExec.getStages().get(i).getStatusList();
-					stageStatusList.remove(stageOnHoldStatus);
-					stageStatusList.add(stageOnHoldStatus);
+					stageStatusList.remove(stagePAUSEStatus);
+					stageStatusList.add(stagePAUSEStatus);
 					dagExec.getStages().get(i).setStatusList(stageStatusList);
 					
 					for(int j=0;j<dagExec.getStages().get(i).getTasks().size();j++){
 						int lastStatus = dagExec.getStages().get(i).getTasks().get(j).getStatusList().size() - 1;
-						if(dagExec.getStages().get(i).getTasks().get(j).getStatusList().get(lastStatus).getStage().equals(Status.Stage.NotStarted)) {
-							logger.info("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");
+						if(dagExec.getStages().get(i).getTasks().get(j).getStatusList().get(lastStatus).getStage().equals(Status.Stage.PENDING)) {
+							logger.info("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) PENDING.");
 							MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 							dependsOn.setRef(new MetaIdentifier(MetaType.dagExec, dagExec.getUuid(), dagExec.getVersion()));
-							commonServiceImpl.sendResponse("400", MessageStatus.WARNING.toString(), "Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.", dependsOn);
-							throw new Exception("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");
+							commonServiceImpl.sendResponse("400", MessageStatus.WARNING.toString(), "Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) PENDING.", dependsOn);
+							throw new Exception("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) PENDING.");
 						}else{
-							Status taskOnHoldStatus = new Status(Status.Stage.Resume, new Date());
+							Status taskPAUSEStatus = new Status(Status.Stage.RESUME, new Date());
 							List<Status> taskStatusList =dagExec.getStages().get(i).getTasks().get(j).getStatusList();
-							taskStatusList.remove(taskOnHoldStatus);
-							taskStatusList.add(taskOnHoldStatus);
+							taskStatusList.remove(taskPAUSEStatus);
+							taskStatusList.add(taskPAUSEStatus);
 							dagExec.getStages().get(i).getTasks().get(j).setStatusList(taskStatusList);
 						}
 							
@@ -1941,39 +1941,39 @@ public class DagExecServiceImpl {
 	public String setStatusList(String uuid, String version, String stageId, String taskId, String status) throws JsonProcessingException, Exception {
 		if (!StringUtils.isBlank(status)) {
 			if (!StringUtils.isBlank(taskId) && !StringUtils.isBlank(stageId)) {
-				if(status.equalsIgnoreCase(Status.Stage.Resume.toString())){
+				if(status.equalsIgnoreCase(Status.Stage.RESUME.toString())){
 					return objectWriter.writeValueAsString(setTaskResume(uuid, version, stageId, taskId));
 				}
-				if(status.equalsIgnoreCase(Status.Stage.OnHold.toString())){
-					return objectWriter.writeValueAsString(setTaskOnHold(uuid, version, stageId, taskId));
+				if(status.equalsIgnoreCase(Status.Stage.PAUSE.toString())){
+					return objectWriter.writeValueAsString(setTaskPause(uuid, version, stageId, taskId));
 				}
-				if(status.equalsIgnoreCase(Status.Stage.Killed.toString())) {
+				if(status.equalsIgnoreCase(Status.Stage.KILLED.toString())) {
 					return objectWriter.writeValueAsString(kill(uuid, version, stageId, taskId));
 				}
 			} else {
 				logger.info("can not perform the "+status.toUpperCase()+" operation.");
 			}
 			if (!StringUtils.isBlank(stageId) && StringUtils.isBlank(taskId)) {
-				if(status.equalsIgnoreCase(Status.Stage.Resume.toString())){
+				if(status.equalsIgnoreCase(Status.Stage.RESUME.toString())){
 					return objectWriter.writeValueAsString(setStageResume(uuid, version, stageId));
 				}
-				if(status.equalsIgnoreCase(Status.Stage.OnHold.toString())){
-					return objectWriter.writeValueAsString(setStageOnHold(uuid, version, stageId));
+				if(status.equalsIgnoreCase(Status.Stage.PAUSE.toString())){
+					return objectWriter.writeValueAsString(setStagePause(uuid, version, stageId));
 				}
-				if(status.equalsIgnoreCase(Status.Stage.Killed.toString())){
+				if(status.equalsIgnoreCase(Status.Stage.KILLED.toString())){
 					return objectWriter.writeValueAsString(kill(uuid, version, stageId, null));
 				}
 			} else {
 				logger.info("can not perform the "+status.toUpperCase()+" operation.");
 			}
 			if (StringUtils.isBlank(stageId) && StringUtils.isBlank(taskId)) {
-				if(status.equalsIgnoreCase(Status.Stage.Resume.toString())){
+				if(status.equalsIgnoreCase(Status.Stage.RESUME.toString())){
 					return objectWriter.writeValueAsString(setDAGResume(uuid, version));
 				}
-				if(status.equalsIgnoreCase(Status.Stage.OnHold.toString())){
-					return objectWriter.writeValueAsString(setDAGOnHold(uuid, version));
+				if(status.equalsIgnoreCase(Status.Stage.PAUSE.toString())){
+					return objectWriter.writeValueAsString(setDAGPause(uuid, version));
 				}
-				if(status.equalsIgnoreCase(Status.Stage.Killed.toString())) {
+				if(status.equalsIgnoreCase(Status.Stage.KILLED.toString())) {
 					return objectWriter.writeValueAsString(kill(uuid, version, null, null));
 				}
 			} else {
@@ -1988,30 +1988,30 @@ public class DagExecServiceImpl {
 	public DagExec setDAGResume(String uuid, String version) throws Exception {
 
 		DagExec dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString());
-			Status stageStatus = new Status(Status.Stage.Resume, new Date());
+			Status stageStatus = new Status(Status.Stage.RESUME, new Date());
 			List<Status> dagStatusList = dagExec.getStatusList();
 			dagStatusList.remove(stageStatus);
 			dagStatusList.add(stageStatus);
 		for (int i = 0; i < dagExec.getStages().size(); i++) {
-				Status stageOnHoldStatus = new Status(Status.Stage.Resume, new Date());
+				Status stagePAUSEStatus = new Status(Status.Stage.RESUME, new Date());
 				List<Status> stageStatusList = dagExec.getStages().get(i).getStatusList();
-				stageStatusList.remove(stageOnHoldStatus);
-				stageStatusList.add(stageOnHoldStatus);
+				stageStatusList.remove(stagePAUSEStatus);
+				stageStatusList.add(stagePAUSEStatus);
 				dagExec.getStages().get(i).setStatusList(stageStatusList);
 				for (int j = 0; j < dagExec.getStages().get(i).getTasks().size(); j++) {
 					int lastDag = dagExec.getStages().get(i).getTasks().get(j).getStatusList().size() - 1;
 					if (dagExec.getStages().get(i).getTasks().get(j).getStatusList().get(lastDag).getStage()
-							.equals(Status.Stage.NotStarted)) {
-						logger.info("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");//raise code 
+							.equals(Status.Stage.PENDING)) {
+						logger.info("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) PENDING.");//raise code 
 						MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 						dependsOn.setRef(new MetaIdentifier(MetaType.dagExec, dagExec.getUuid(), dagExec.getVersion()));
-						commonServiceImpl.sendResponse("400", MessageStatus.WARNING.toString(), "Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.", dependsOn);
-						throw new Exception("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");
+						commonServiceImpl.sendResponse("400", MessageStatus.WARNING.toString(), "Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) PENDING.", dependsOn);
+						throw new Exception("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) PENDING.");
 					} else {
-						Status taskOnHoldStatus = new Status(Status.Stage.Resume, new Date());
+						Status taskPAUSEStatus = new Status(Status.Stage.RESUME, new Date());
 						List<Status> taskStatusList = dagExec.getStages().get(i).getTasks().get(j).getStatusList();
-						taskStatusList.remove(taskOnHoldStatus);
-						taskStatusList.add(taskOnHoldStatus);
+						taskStatusList.remove(taskPAUSEStatus);
+						taskStatusList.add(taskPAUSEStatus);
 						dagExec.getStages().get(i).getTasks().get(j).setStatusList(taskStatusList);
 					}
 
@@ -2020,34 +2020,34 @@ public class DagExecServiceImpl {
 		return (DagExec) commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
 	}
 	
-	public DagExec setDAGOnHold(String uuid, String version) throws Exception {
+	public DagExec setDAGPause(String uuid, String version) throws Exception {
 
 		DagExec dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString());
-		Status stageStatus = new Status(Status.Stage.Resume, new Date());
+		Status stageStatus = new Status(Status.Stage.RESUME, new Date());
 		List<Status> dagStatusList = dagExec.getStatusList();
 		dagStatusList.remove(stageStatus);
 		dagStatusList.add(stageStatus);
 		for (int i = 0; i < dagExec.getStages().size(); i++) {
 			
-				Status stageOnHoldStatus = new Status(Status.Stage.OnHold, new Date());
+				Status stagePAUSEStatus = new Status(Status.Stage.PAUSE, new Date());
 				List<Status> stageStatusList = dagExec.getStages().get(i).getStatusList();
-				stageStatusList.remove(stageOnHoldStatus);
-				stageStatusList.add(stageOnHoldStatus);
+				stageStatusList.remove(stagePAUSEStatus);
+				stageStatusList.add(stagePAUSEStatus);
 				dagExec.getStages().get(i).setStatusList(stageStatusList);
 				for (int j = 0; j < dagExec.getStages().get(i).getTasks().size(); j++) {
 					int lastDag = dagExec.getStages().get(i).getTasks().get(j).getStatusList().size() - 1;
 					if (dagExec.getStages().get(i).getTasks().get(j).getStatusList().get(lastDag).getStage()
-							.equals(Status.Stage.NotStarted)) {
-						logger.info("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");//raise code 
+							.equals(Status.Stage.PENDING)) {
+						logger.info("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) PENDING.");//raise code 
 						MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 						dependsOn.setRef(new MetaIdentifier(MetaType.dagExec, dagExec.getUuid(), dagExec.getVersion()));
-						commonServiceImpl.sendResponse("400", MessageStatus.WARNING.toString(), "Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.", dependsOn);
-						throw new Exception("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) not started.");
+						commonServiceImpl.sendResponse("400", MessageStatus.WARNING.toString(), "Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) PENDING.", dependsOn);
+						throw new Exception("Stage "+ dagExec.getStages().get(i).getStageId() +" task(s) PENDING.");
 					} else {
-						Status taskOnHoldStatus = new Status(Status.Stage.OnHold, new Date());
+						Status taskPAUSEStatus = new Status(Status.Stage.PAUSE, new Date());
 						List<Status> taskStatusList = dagExec.getStages().get(i).getTasks().get(j).getStatusList();
-						taskStatusList.remove(taskOnHoldStatus);
-						taskStatusList.add(taskOnHoldStatus);
+						taskStatusList.remove(taskPAUSEStatus);
+						taskStatusList.add(taskPAUSEStatus);
 						dagExec.getStages().get(i).getTasks().get(j).setStatusList(taskStatusList);
 					}
 				}

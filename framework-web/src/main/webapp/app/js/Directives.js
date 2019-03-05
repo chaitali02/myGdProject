@@ -860,7 +860,7 @@ InferyxApp.directive('searchCriteriaMonitoring', function (cacheService, CommonS
       }
       $scope.refreshMonitoring = function () {
         $scope.searchForm.active = " "
-        $scope.searchForm.status = "InProgress"
+        $scope.searchForm.status = "RUNNING"
         $scope.searchForm.app = {}
         $scope.searchForm.app.uuid = "";
         $scope.searchForm.type = "";
@@ -874,24 +874,24 @@ InferyxApp.directive('searchCriteriaMonitoring', function (cacheService, CommonS
             "name": " "
           },
           {
-            "caption": "Not Started",
-            "name": "NotStarted"
+            "caption": "PENDING",
+            "name": "PENDING"
           },
           {
-            "caption": "In Progress",
-            "name": "InProgress"
+            "caption": "RUNNING",
+            "name": "RUNNING"
           },
           {
-            "caption": "Completed",
-            "name": "Completed"
+            "caption": "COMPLETED",
+            "name": "COMPLETED"
           },
           {
-            "caption": "Killed",
-            "name": "Killed"
+            "caption": "KILLED",
+            "name": "KILLED"
           },
           {
-            "caption": "Failed",
-            "name": "Failed"
+            "caption": "FAILED",
+            "name": "FAILED"
           }
         ];
         $scope.allActive = [
@@ -1204,24 +1204,24 @@ InferyxApp.directive('searchCriteria', function (cacheService, CommonService, $f
         $scope.showEndErrorMessage = false;
         $scope.showStartErrorMessage = false;
         $scope.allStatus = [{
-          "caption": "Not Started",
-          "name": "NotStarted"
+          "caption": "PENDING",
+          "name": "PENDING"
         },
         {
-          "caption": "In Progress",
-          "name": "InProgress"
+          "caption": "RUNNING",
+          "name": "RUNNING"
         },
         {
-          "caption": "Completed",
-          "name": "Completed"
+          "caption": "COMPLETED",
+          "name": "COMPLETED"
         },
         {
-          "caption": "Killed",
-          "name": "Killed"
+          "caption": "KILLED",
+          "name": "KILLED"
         },
         {
-          "caption": "Failed",
-          "name": "Failed"
+          "caption": "FAILED",
+          "name": "FAILED"
         }
         ];
 

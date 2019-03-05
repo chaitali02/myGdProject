@@ -23,7 +23,7 @@ public class ExecUtil {
 			statusList = new ArrayList<>();
 		}
 		
-		if (statusList.contains(Status.Stage.Failed)) {
+		if (statusList.contains(Status.Stage.FAILED)) {
 			return statusList;
 		}
 		statusList.add(new Status(status, new Date()));

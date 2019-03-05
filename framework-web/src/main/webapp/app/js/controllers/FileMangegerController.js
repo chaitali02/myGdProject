@@ -150,24 +150,24 @@ AdminModule.controller("FileManagerController", function (uiGridConstants, $stat
 
     // ];
     $scope.allStatus = [{
-      "caption": "Not Started",
-      "name": "NotStarted"
+      "caption": "PENDING",
+      "name": "PENDING"
     },
     {
-      "caption": "In Progress",
-      "name": "InProgress"
+      "caption": "RUNNING",
+      "name": "RUNNING"
     },
     {
-      "caption": "Completed",
-      "name": "Completed"
+      "caption": "COMPLETED",
+      "name": "COMPLETED"
     },
     {
-      "caption": "Killed",
-      "name": "Killed"
+      "caption": "KILLED",
+      "name": "KILLED"
     },
     {
-      "caption": "Failed",
-      "name": "Failed"
+      "caption": "FAILED",
+      "name": "FAILED"
     }
     ];
     //$scope.getAllLatest();

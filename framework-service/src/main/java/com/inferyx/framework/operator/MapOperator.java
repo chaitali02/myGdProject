@@ -179,16 +179,16 @@ public class MapOperator implements IParsable {
 		baseExec.setName(map.getName());
 		baseExec.setAppInfo(map.getAppInfo());
 		try {
-			Status status = new Status(Status.Stage.NotStarted, new Date());
+			Status status = new Status(Status.Stage.PENDING, new Date());
 			List<Status> statusList = new ArrayList<>();		
 			statusList.add(status);
 			baseExec.setStatusList(statusList);		
 			try {
 				baseExec.setExec(generateSql(map, DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(), execParams, usedRefKeySet, runMode));
 			} catch (Exception e) {
-				Status failedStatus = new Status(Status.Stage.Failed, new Date());
-				statusList.remove(failedStatus);
-				statusList.add(failedStatus);
+				Status FAILEDStatus = new Status(Status.Stage.FAILED, new Date());
+				statusList.remove(FAILEDStatus);
+				statusList.add(FAILEDStatus);
 			}
 			baseExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 		} catch (Exception e) {

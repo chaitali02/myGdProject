@@ -144,8 +144,8 @@ public class IngestServiceImpl extends RuleTemplate {
 				statusList = new ArrayList<Status>();
 			}
 			if (Helper.getLatestStatus(statusList) != null
-					&& Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Ready, new Date()))) {
-				logger.info(" If status is in Ready state then no need to start and parse again. ");
+					&& Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.READY, new Date()))) {
+				logger.info(" If status is in READY state then no need to start and parse again. ");
 				return ingestExec;
 			}
 			ingestExec.setExecParams(execParams);
@@ -159,10 +159,10 @@ public class IngestServiceImpl extends RuleTemplate {
 			ingestExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 			
 	
-			ingestExec = (IngestExec) commonServiceImpl.setMetaStatus(ingestExec, MetaType.ingestExec, Status.Stage.NotStarted);
+			ingestExec = (IngestExec) commonServiceImpl.setMetaStatus(ingestExec, MetaType.ingestExec, Status.Stage.PENDING);
 		} catch (Exception e) {
 			logger.error(e);
-			ingestExec = (IngestExec) commonServiceImpl.setMetaStatus(ingestExec, MetaType.ingestExec, Status.Stage.Failed);
+			ingestExec = (IngestExec) commonServiceImpl.setMetaStatus(ingestExec, MetaType.ingestExec, Status.Stage.FAILED);
 			e.printStackTrace();
 			String message = null;
 			try {
@@ -181,7 +181,7 @@ public class IngestServiceImpl extends RuleTemplate {
 	public IngestExec execute(String ingestUuid, String ingestVersion, IngestExec ingestExec, ExecParams execParams, String type, RunMode runMode) throws Exception {
 		try {
 			Ingest ingest = (Ingest) commonServiceImpl.getOneByUuidAndVersion(ingestUuid, ingestVersion, MetaType.ingest.toString());
-			ingestExec = (IngestExec) commonServiceImpl.setMetaStatus(ingestExec, MetaType.ingestExec, Status.Stage.InProgress);
+			ingestExec = (IngestExec) commonServiceImpl.setMetaStatus(ingestExec, MetaType.ingestExec, Status.Stage.RUNNING);
 			String appUuid = commonServiceImpl.getApp().getUuid();
 			MetaIdentifier sourceDSMI = ingest.getSourceDatasource().getRef();
 			Datasource sourceDS = (Datasource) commonServiceImpl.getLatestByUuid(sourceDSMI.getUuid(), sourceDSMI.getType().toString());
@@ -236,7 +236,7 @@ public class IngestServiceImpl extends RuleTemplate {
 //				runIngestServiceImpl.setSparkStreamingExecutor(sparkStreamingExecutor);
 //				
 //				if(sourceDS.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
-//					//check whether target file already exist (when save mode is null)
+//					//check whether target file alReady exist (when save mode is null)
 //					if(targetDS.getType().equalsIgnoreCase(ExecContext.FILE.toString())
 //							&& ingest.getSaveMode() == null) {
 //						String targetFileOrDirName = generateFileName(ingest.getTargetDetail().getValue(), ingest.getTargetExtn(), ingest.getTargetFormat());
@@ -249,7 +249,7 @@ public class IngestServiceImpl extends RuleTemplate {
 //						
 //						for(String fileName : targetFileOrDirList) {
 //							if(fileName.equalsIgnoreCase(targetFileOrDirName)) {
-//								throw new RuntimeException("Target file or directory \'"+targetFileOrDirName+"\' already exists.");								
+//								throw new RuntimeException("Target file or directory \'"+targetFileOrDirName+"\' alReady exists.");								
 //							}
 //						}
 //					}
@@ -299,7 +299,7 @@ public class IngestServiceImpl extends RuleTemplate {
 				runIngestServiceImpl2.setDatasetOperator(datasetOperator);
 				
 				if(sourceDS.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
-					//check whether target file already exist (when save mode is null)
+					//check whether target file alReady exist (when save mode is null)
 					if(targetDS.getType().equalsIgnoreCase(ExecContext.FILE.toString())
 							&& ingest.getSaveMode() == null) {
 						String targetFileOrDirName = generateFileName(ingest.getTargetDetail().getValue(), ingest.getTargetExtn(), ingest.getTargetFormat());
@@ -312,7 +312,7 @@ public class IngestServiceImpl extends RuleTemplate {
 						
 						for(String fileName : targetFileOrDirList) {
 							if(fileName.equalsIgnoreCase(targetFileOrDirName)) {
-								throw new RuntimeException("Target file or directory \'"+targetFileOrDirName+"\' already exists.");								
+								throw new RuntimeException("Target file or directory \'"+targetFileOrDirName+"\' alReady exists.");								
 							}
 						}
 					}
@@ -354,17 +354,17 @@ public class IngestServiceImpl extends RuleTemplate {
 			}
 
 			if(message != null && message.toLowerCase().contains("No change in incremental param hence skipping execution.")) {
-				ingestExec = (IngestExec) commonServiceImpl.setMetaStatus(ingestExec, MetaType.ingestExec, Status.Stage.Completed);
+				ingestExec = (IngestExec) commonServiceImpl.setMetaStatus(ingestExec, MetaType.ingestExec, Status.Stage.COMPLETED);
 				MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 				dependsOn.setRef(new MetaIdentifier(MetaType.ingestExec, ingestExec.getUuid(), ingestExec.getVersion()));
 				commonServiceImpl.sendResponse("300", MessageStatus.SUCCESS.toString(), "No change in incremental param hence skipping execution.", dependsOn);
 				throw new RuntimeException("No change in incremental param hence skipping execution.");
 			} else {
-				ingestExec = (IngestExec) commonServiceImpl.setMetaStatus(ingestExec, MetaType.ingestExec, Status.Stage.Failed);
+				ingestExec = (IngestExec) commonServiceImpl.setMetaStatus(ingestExec, MetaType.ingestExec, Status.Stage.FAILED);
 				MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 				dependsOn.setRef(new MetaIdentifier(MetaType.ingestExec, ingestExec.getUuid(), ingestExec.getVersion()));
-				commonServiceImpl.sendResponse("500", MessageStatus.FAIL.toString(), (message != null) ? message : "Ingest execution failed.", dependsOn);
-				throw new RuntimeException((message != null) ? message : "Ingest execution failed.");				
+				commonServiceImpl.sendResponse("500", MessageStatus.FAIL.toString(), (message != null) ? message : "Ingest execution FAILED.", dependsOn);
+				throw new RuntimeException((message != null) ? message : "Ingest execution FAILED.");				
 			}
 		}
 		
@@ -596,7 +596,7 @@ public class IngestServiceImpl extends RuleTemplate {
 		if(ingestVersion != null && !ingestVersion.isEmpty()) {
 			//dependsOnFilter = match(new Criteria("dependsOn.ref.uuid").is(ingestUuid).andOperator(new Criteria("dependsOn.ref.version").is(ingestVersion)));
 		    dependsOnFilter = match(new Criteria("dependsOn.ref.uuid").is(ingestUuid));
-		    dependsOnFilter2 = match(new Criteria("statusList.stage").in(Status.Stage.Completed.toString()));
+		    dependsOnFilter2 = match(new Criteria("statusList.stage").in(Status.Stage.COMPLETED.toString()));
 		} else {
 			dependsOnFilter = match(new Criteria("dependsOn.ref.uuid").is(ingestUuid));
 		}
@@ -663,10 +663,10 @@ public class IngestServiceImpl extends RuleTemplate {
 	@Override
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		synchronized (baseExec.getUuid()) {
-			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.ingestExec, Status.Stage.Initialized);
+			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.ingestExec, Status.Stage.INITIALIZING);
 		}
 		synchronized (baseExec.getUuid()) {
-			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.ingestExec, Status.Stage.Ready);
+			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.ingestExec, Status.Stage.READY);
 		}
 		return baseExec; 
 	}
@@ -677,10 +677,10 @@ public class IngestServiceImpl extends RuleTemplate {
 			throws Exception {	
 		BaseRuleExec baseRuleExec = (BaseRuleExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.ingestExec.toString(), "N");
 		synchronized (execUuid) {
-			baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, MetaType.ingestExec, Status.Stage.Initialized);
+			baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, MetaType.ingestExec, Status.Stage.INITIALIZING);
 		}
 		synchronized (execUuid) {
-			baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, MetaType.ingestExec, Status.Stage.Ready);
+			baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, MetaType.ingestExec, Status.Stage.READY);
 		}
 		return baseRuleExec;
 	}
@@ -705,7 +705,7 @@ public class IngestServiceImpl extends RuleTemplate {
 		} catch (Exception e) {
 			synchronized (ingestExec.getUuid()) {
 				try {
-					commonServiceImpl.setMetaStatus(ingestExec, MetaType.ingestExec, Status.Stage.Failed);
+					commonServiceImpl.setMetaStatus(ingestExec, MetaType.ingestExec, Status.Stage.FAILED);
 				} catch (Exception e1) {
 					e1.printStackTrace();
 					String message = null;
@@ -754,8 +754,8 @@ public class IngestServiceImpl extends RuleTemplate {
 				// TODO: handle exception
 			}
 			if(message != null 
-					&& message.contains("Destination '"+targetLocation+"' already exists")) {
-				message = "Destination '"+targetLocation+"' already exists.";
+					&& message.contains("Destination '"+targetLocation+"' alReady exists")) {
+				message = "Destination '"+targetLocation+"' alReady exists.";
 				deleteFileOrDirectory(targetLocation, false);
 				FileUtils.moveFile(new File(srcLocation), new File(targetLocation));
 			} else {
@@ -890,10 +890,10 @@ public class IngestServiceImpl extends RuleTemplate {
 	
 	/**
 	 * Sends kill message to kill an ingest rule. 
-	 * First, it sets the status to terminating in case the status is In Progress.
+	 * First, it sets the status to TERMINATING in case the status is RUNNING.
 	 * Then, it tries to kill the thread. 
-	 * Then, it sets the status to Killed if the latest status is Terminating, whether or not it was able to kill the thread.
-	 * Even if it was not able to kill a thread (because the thread completed or cancelled in between), if the status was Terminating, the status shall change to Killed. 
+	 * Then, it sets the status to KILLED if the latest status is TERMINATING, whether or not it was able to kill the thread.
+	 * Even if it was not able to kill a thread (because the thread COMPLETED or cancelled in between), if the status was TERMINATING, the status shall change to KILLED. 
 	 * @param uuid
 	 * @param version
 	 * @param execType
@@ -910,24 +910,24 @@ public class IngestServiceImpl extends RuleTemplate {
 			logger.info("IngestExec not found. Exiting...");
 			return;
 		}
-		if (!Helper.getLatestStatus(baseExec.getStatusList()).equals(new Status(Status.Stage.InProgress, new Date()))) {
-			logger.info("Latest Status is not in InProgress. Exiting...");
+		if (!Helper.getLatestStatus(baseExec.getStatusList()).equals(new Status(Status.Stage.RUNNING, new Date()))) {
+			logger.info("Latest Status is not in RUNNING. Exiting...");
 		}
 		try {
 			synchronized (baseExec.getUuid()) {
-				commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.Terminating);
+				commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.TERMINATING);
 			}
 			@SuppressWarnings("unchecked")
 			FutureTask<TaskHolder> futureTask = (FutureTask<TaskHolder>) taskThreadMap.get(execType+"_"+baseExec.getUuid()+"_"+baseExec.getVersion());
 				futureTask.cancel(true);
 			synchronized (baseExec.getUuid()) {
-				commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.Killed);
+				commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.KILLED);
 			}
 		} catch (Exception e) {
-			logger.info("Failed to kill. uuid : " + uuid + " version : " + version);
+			logger.info("FAILED to kill. uuid : " + uuid + " version : " + version);
 			try {
 				synchronized (baseExec.getUuid()) {
-					commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.Killed);
+					commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.KILLED);
 				}
 			} catch (Exception e1) {
 				e1.printStackTrace();
@@ -938,12 +938,12 @@ public class IngestServiceImpl extends RuleTemplate {
 	}
 	
 	/**
-	 * Set status of BaseExec to Resume if status is OnHold
+	 * Set status of BaseExec to RESUME if status is PAUSE
 	 * @param uuid
 	 * @param version
 	 * @param execType
 	 */
-	public void resume (String uuid, String version, MetaType execType) {
+	public void RESUME (String uuid, String version, MetaType execType) {
 		BaseExec baseExec = null;
 		try {
 			baseExec = (BaseExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, execType.toString());
@@ -954,10 +954,10 @@ public class IngestServiceImpl extends RuleTemplate {
 			logger.info("BaseExec not found. Exiting...");
 			return;
 		}
-		// Pre conditions for Resume shall be determined by the setMetaStatus
+		// Pre conditions for RESUME shall be determined by the setMetaStatus
 		try {
 			synchronized (baseExec.getUuid()) {
-				commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.Resume);
+				commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.RESUME);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -965,12 +965,12 @@ public class IngestServiceImpl extends RuleTemplate {
 	}
 	
 	/**
-	 * Set status of BaseExec to OnHold if status is Killed, notStarted, or Resume 
+	 * Set status of BaseExec to PAUSE if status is KILLED, PENDING, or RESUME 
 	 * @param uuid
 	 * @param version
 	 * @param execType
 	 */
-	public void onHold (String uuid, String version, MetaType execType) {
+	public void PAUSE (String uuid, String version, MetaType execType) {
 		BaseExec baseExec = null;
 		try {
 			baseExec = (BaseExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, execType.toString());
@@ -981,10 +981,10 @@ public class IngestServiceImpl extends RuleTemplate {
 			logger.info("BaseExec not found. Exiting...");
 			return;
 		}
-		// Pre conditions for OnHold shall be determined by the setMetaStatus
+		// Pre conditions for PAUSE shall be determined by the setMetaStatus
 		try {
 			synchronized (baseExec.getUuid()) {
-				commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.OnHold);
+				commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.PAUSE);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -73,14 +73,14 @@ public class DataQualExecOperator2 implements IOperator {
 			dataQualExec1 = null;
 		}
 		}catch(Exception e){
-			commonServiceImpl.setMetaStatus(dataQualExec, MetaType.dqExec, Status.Stage.Failed);
+			commonServiceImpl.setMetaStatus(dataQualExec, MetaType.dqExec, Status.Stage.FAILED);
 			e.printStackTrace();
 			String message = null;
 			message = e.getMessage();
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 			dependsOn.setRef(new MetaIdentifier(MetaType.dqExec, dataQualExec.getUuid(), dataQualExec.getVersion()));
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Failed data quality parsing.", dependsOn);
-			throw new Exception((message != null) ? message : "Failed data quality parsing.");
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "FAILED data quality parsing.", dependsOn);
+			throw new Exception((message != null) ? message : "FAILED data quality parsing.");
 		}
 		return dataQualExec;
 	}

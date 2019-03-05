@@ -132,7 +132,7 @@ public class DashboardServiceImpl extends RuleTemplate {
 		dashboardExec.setExecParams(execParams);
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
 		dashboardExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
-		dashboardExec = (DashboardExec) commonServiceImpl.setMetaStatus(dashboardExec, MetaType.dashboardExec, Status.Stage.NotStarted);
+		dashboardExec = (DashboardExec) commonServiceImpl.setMetaStatus(dashboardExec, MetaType.dashboardExec, Status.Stage.PENDING);
 		return dashboardExec;
 	}
 
@@ -160,8 +160,8 @@ public class DashboardServiceImpl extends RuleTemplate {
 		}		
 		dashboardExec.setVizExecInfo(vizExecInfo);
 		synchronized (dashboardExec.getUuid()) {
-			dashboardExec = (DashboardExec) commonServiceImpl.setMetaStatus(dashboardExec, MetaType.dashboardExec, Status.Stage.Initialized);
-			dashboardExec = (DashboardExec) commonServiceImpl.setMetaStatus(dashboardExec, MetaType.dashboardExec, Status.Stage.Ready);
+			dashboardExec = (DashboardExec) commonServiceImpl.setMetaStatus(dashboardExec, MetaType.dashboardExec, Status.Stage.INITIALIZING);
+			dashboardExec = (DashboardExec) commonServiceImpl.setMetaStatus(dashboardExec, MetaType.dashboardExec, Status.Stage.READY);
 		}
 		
 		return dashboardExec;
@@ -196,7 +196,7 @@ public class DashboardServiceImpl extends RuleTemplate {
 			runDashboardServiceImpl.call();
 		} catch (Exception e) {
 			e.printStackTrace();
-			dashboardExec = (DashboardExec) commonServiceImpl.setMetaStatus(dashboardExec, MetaType.dashboardExec, Status.Stage.Failed);
+			dashboardExec = (DashboardExec) commonServiceImpl.setMetaStatus(dashboardExec, MetaType.dashboardExec, Status.Stage.FAILED);
 			String message = null;
 			try {
 				message = e.getMessage();
@@ -204,8 +204,8 @@ public class DashboardServiceImpl extends RuleTemplate {
 				// TODO: handle exception
 			}
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder(new MetaIdentifier(MetaType.dashboardExec, dashboardExec.getUuid(), dashboardExec.getVersion()));
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Dashboard execution failed.", dependsOn);
-			throw new RuntimeException((message != null) ? message : "Dashboard execution failed.");	
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Dashboard execution FAILED.", dependsOn);
+			throw new RuntimeException((message != null) ? message : "Dashboard execution FAILED.");	
 		}
 		return dashboardExec;
 	}
@@ -268,7 +268,7 @@ public class DashboardServiceImpl extends RuleTemplate {
 	 */
 	public List<DashboardExec> getDasboardExecBySave(String dashboardUuid, String dashboardVersion, String saveonRefresh) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		MatchOperation uuidFilter = match(new Criteria("dependsOn.ref.uuid").is(dashboardUuid)
-				.andOperator(Criteria.where("appInfo.ref.uuid").is(commonServiceImpl.getApp().getUuid()), Criteria.where("statusList.stage").in(Status.Stage.Completed.toString())));
+				.andOperator(Criteria.where("appInfo.ref.uuid").is(commonServiceImpl.getApp().getUuid()), Criteria.where("statusList.stage").in(Status.Stage.COMPLETED.toString())));
 		
 		MatchOperation versionFilter = null;
 		if(dashboardVersion != null && !dashboardVersion.isEmpty()) {
@@ -314,10 +314,10 @@ public class DashboardServiceImpl extends RuleTemplate {
 	@Override
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		synchronized (baseExec.getUuid()) {
-			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.dashboardExec, Status.Stage.Initialized);
+			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.dashboardExec, Status.Stage.INITIALIZING);
 		}
 		synchronized (baseExec.getUuid()) {
-			baseExec = (DashboardExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.dashboardExec, Status.Stage.Ready);
+			baseExec = (DashboardExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.dashboardExec, Status.Stage.READY);
 		}
 		return baseExec;
 	}
@@ -328,10 +328,10 @@ public class DashboardServiceImpl extends RuleTemplate {
 			throws Exception {
 		BaseRuleExec baseRuleExec = (BaseRuleExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.dashboardExec.toString(), "N");
 		synchronized (execUuid) {
-			baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, MetaType.dashboardExec, Status.Stage.Initialized);
+			baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, MetaType.dashboardExec, Status.Stage.INITIALIZING);
 		}
 		synchronized (execUuid) {
-			baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, MetaType.dashboardExec, Status.Stage.Ready);
+			baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, MetaType.dashboardExec, Status.Stage.READY);
 		}
 		return baseRuleExec;
 	}

@@ -2412,7 +2412,7 @@ public class RegisterService {
 					attrRefDetails.addAll(getAttributeRefHolderByRef(refMI));
 					refCheck.add(refMI.getUuid());
 				} else {
-					logger.info("attribute ref already present >>>>> "+"uuid: "+refMI.getUuid()+" :: type: "+refMI.getType());
+					logger.info("attribute ref alReady present >>>>> "+"uuid: "+refMI.getUuid()+" :: type: "+refMI.getType());
 				}
 			}
 		}
@@ -3519,8 +3519,8 @@ public class RegisterService {
 			Map<String, String> tablesWithPath = new Hashtable<>();
 			try {				
 				IConnector connector = connectionFactory.getConnector(datasource.getType());
-				ConnectionHolder connectionHolder = connector.getConnectionByDatasource(datasource);
-				Connection con = ((Statement) connectionHolder.getStmtObject()).getConnection();
+				ConnectionHolder connectiPAUSEer = connector.getConnectionByDatasource(datasource);
+				Connection con = ((Statement) connectiPAUSEer.getStmtObject()).getConnection();
 				DatabaseMetaData dbMetaData = con.getMetaData();
 				ResultSet rs = dbMetaData.getTables(null, null, "%", null);
 				while(rs.next()) {
@@ -3562,8 +3562,8 @@ public class RegisterService {
 //			List<String> tables = new ArrayList<String>();
 //			try {
 //				IConnector connector = connectionFactory.getConnector(ExecContext.MYSQL.toString());
-//				ConnectionHolder connectionHolder = connector.getConnection();
-//				Connection con = ((Statement) connectionHolder.getStmtObject()).getConnection();
+//				ConnectionHolder connectiPAUSEer = connector.getConnection();
+//				Connection con = ((Statement) connectiPAUSEer.getStmtObject()).getConnection();
 //				DatabaseMetaData dbMetaData = con.getMetaData();
 //				ResultSet rs = dbMetaData.getTables(null, null, "%", null);
 //				
@@ -3583,8 +3583,8 @@ public class RegisterService {
 //			List<String> tables = new ArrayList<String>();
 //			try {			
 //				IConnector connector = connectionFactory.getConnector(ExecContext.ORACLE.toString());
-//				ConnectionHolder connectionHolder = connector.getConnection();
-//				Connection con = ((Statement) connectionHolder.getStmtObject()).getConnection();
+//				ConnectionHolder connectiPAUSEer = connector.getConnection();
+//				Connection con = ((Statement) connectiPAUSEer.getStmtObject()).getConnection();
 //				DatabaseMetaData dbMetaData = con.getMetaData();
 //				ResultSet rs = dbMetaData.getTables(null, null, "%", null);
 //
@@ -3605,8 +3605,8 @@ public class RegisterService {
 //			List<String> tables = new ArrayList<String>();
 //			try {
 //				IConnector connector = connectionFactory.getConnector(ExecContext.MYSQL.toString());
-//				ConnectionHolder connectionHolder = connector.getConnection();
-//				Connection con = ((Statement) connectionHolder.getStmtObject()).getConnection();
+//				ConnectionHolder connectiPAUSEer = connector.getConnection();
+//				Connection con = ((Statement) connectiPAUSEer.getStmtObject()).getConnection();
 //				DatabaseMetaData dbMetaData = con.getMetaData();
 //				ResultSet rs = dbMetaData.getTables(null, null, "%", null);
 //				
@@ -4604,7 +4604,7 @@ public class RegisterService {
 			query.addCriteria(Criteria.where("createdOn").gt(simpleDateFormat.parse(startDate))
 						.lte(simpleDateFormat.parse(endDate)));
 			
-			query.addCriteria(Criteria.where("statusList.stage").in(Status.Stage.Completed.toString()));
+			query.addCriteria(Criteria.where("statusList.stage").in(Status.Stage.COMPLETED.toString()));
 			query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(ruleUuid));
 		} catch (ParseException e) {
 			e.printStackTrace();

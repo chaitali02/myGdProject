@@ -417,7 +417,7 @@ public class RunPredictServiceImpl implements Callable<TaskHolder> {
 				// TODO: handle exception
 			}
 			
-			throw new RuntimeException((message != null) ? message : "Predict execution failed.");
+			throw new RuntimeException((message != null) ? message : "Predict execution FAILED.");
 		}
 		TaskHolder taskHolder = new TaskHolder(name, new MetaIdentifier(MetaType.predictExec, predictExec.getUuid(), predictExec.getVersion()));
 		return taskHolder;
@@ -425,7 +425,7 @@ public class RunPredictServiceImpl implements Callable<TaskHolder> {
 	
 	public PredictExec execute() throws Exception {
 		try {
-			predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.InProgress);
+			predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.RUNNING);
 			
 			MetaIdentifierHolder sourceHolder = predict.getSource();
 			MetaIdentifierHolder targetHolder = predict.getTarget();
@@ -831,9 +831,9 @@ public class RunPredictServiceImpl implements Callable<TaskHolder> {
 			commonServiceImpl.save(MetaType.predictExec.toString(), predictExec);
 			logger.info("After saving predictExec");
 			if (result != null) {
-				predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.Completed);
+				predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.COMPLETED);
 			}else {
-				predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.Failed);
+				predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.FAILED);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -843,11 +843,11 @@ public class RunPredictServiceImpl implements Callable<TaskHolder> {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.Failed);
+			predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.FAILED);
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 			dependsOn.setRef(new MetaIdentifier(MetaType.predictExec, predictExec.getUuid(), predictExec.getVersion()));
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Predict execution failed.", dependsOn);
-			throw new RuntimeException((message != null) ? message : "Predict execution failed.");
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Predict execution FAILED.", dependsOn);
+			throw new RuntimeException((message != null) ? message : "Predict execution FAILED.");
 		}
 		
 		return predictExec;

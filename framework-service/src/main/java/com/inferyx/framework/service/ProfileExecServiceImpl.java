@@ -391,7 +391,7 @@ public class ProfileExecServiceImpl extends BaseRuleExecTemplate {
 			else if (endDate != null && !endDate.isEmpty())
 				query.addCriteria(Criteria.where("createdOn").lte(simpleDateFormat.parse(endDate)));
 			
-			query.addCriteria(Criteria.where("statusList.stage").in("Completed"));
+			query.addCriteria(Criteria.where("statusList.stage").in("COMPLETED"));
 			query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(profileUuid));
 			query.addCriteria(Criteria.where("appInfo.ref.uuid").is(commonServiceImpl.getApp().getUuid()));
 			query.addCriteria(Criteria.where("active").is("Y"));
@@ -502,7 +502,7 @@ public class ProfileExecServiceImpl extends BaseRuleExecTemplate {
 		return mi;
 	}
     
-	public void onHold (String uuid, String version) throws JsonProcessingException {
+	public void PAUSE (String uuid, String version) throws JsonProcessingException {
 	MetaIdentifier profileExecMI = new MetaIdentifier(MetaType.profileExec, uuid, version);
 //	ProfileExec profileExec = (ProfileExec) daoRegister.getRefObject(profileExecMI);
 	ProfileExec profileExec = (ProfileExec) commonServiceImpl.getOneByUuidAndVersion(profileExecMI.getUuid(), profileExecMI.getVersion(), profileExecMI.getType().toString(), "N");
@@ -510,17 +510,17 @@ public class ProfileExecServiceImpl extends BaseRuleExecTemplate {
 		logger.info("ProfileExec not found. Exiting...");
 		return;
 	}
-	if (!Helper.getLatestStatus(profileExec.getStatusList()).equals(new Status(Status.Stage.NotStarted, new Date()))) {
-		logger.info("Latest Status is not in NotStarted. Exiting...");
+	if (!Helper.getLatestStatus(profileExec.getStatusList()).equals(new Status(Status.Stage.PENDING, new Date()))) {
+		logger.info("Latest Status is not in PENDING. Exiting...");
 	}
 	try {
-		commonServiceImpl.setMetaStatus(profileExec, MetaType.profileExec, Status.Stage.OnHold);
+		commonServiceImpl.setMetaStatus(profileExec, MetaType.profileExec, Status.Stage.PAUSE);
 	} catch (Exception e) {
 		e.printStackTrace();
 	}
 }
 	
-	public void resume (String uuid, String version) throws JsonProcessingException {
+	public void RESUME (String uuid, String version) throws JsonProcessingException {
 		MetaIdentifier profileExecMI = new MetaIdentifier(MetaType.profileExec, uuid, version);
 //		ProfileExec profileExec = (ProfileExec) daoRegister.getRefObject(profileExecMI);
 		ProfileExec profileExec = (ProfileExec) commonServiceImpl.getOneByUuidAndVersion(profileExecMI.getUuid(), profileExecMI.getVersion(), profileExecMI.getType().toString(), "N");
@@ -528,11 +528,11 @@ public class ProfileExecServiceImpl extends BaseRuleExecTemplate {
 			logger.info("ProfileExec not found. Exiting...");
 			return;
 		}
-		if (!Helper.getLatestStatus(profileExec.getStatusList()).equals(new Status(Status.Stage.OnHold, new Date()))) {
-			logger.info("Latest Status is not in OnHold. Exiting...");
+		if (!Helper.getLatestStatus(profileExec.getStatusList()).equals(new Status(Status.Stage.PAUSE, new Date()))) {
+			logger.info("Latest Status is not in PAUSE. Exiting...");
 		}
 		try {
-			commonServiceImpl.setMetaStatus(profileExec, MetaType.profileExec, Status.Stage.Resume);
+			commonServiceImpl.setMetaStatus(profileExec, MetaType.profileExec, Status.Stage.RESUME);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -557,7 +557,7 @@ public class ProfileExecServiceImpl extends BaseRuleExecTemplate {
 	}
 	
 	/**
-	 * Kill meta thread if In Progress
+	 * Kill meta thread if RUNNING
 	 * @param uuid
 	 * @param version
 	 */

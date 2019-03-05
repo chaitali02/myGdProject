@@ -38,38 +38,38 @@ public class StateMachineBuilderServiceImpl {
 	    
 	    builder.configureStates()
 	    		.withStates()
-	    		.initial(Stages.NotStarted)
-	    		.state(Stages.InProgress)
-	    		.state(Stages.Completed)
-	    		.state(Stages.Failed)
-	    		.state(Stages.Terminating)
-	    		.state(Stages.Killed)
-	    		.state(Stages.OnHold)
-	    		.state(Stages.Resume);
+	    		.initial(Stages.PENDING)
+	    		.state(Stages.RUNNING)
+	    		.state(Stages.COMPLETED)
+	    		.state(Stages.FAILED)
+	    		.state(Stages.TERMINATING)
+	    		.state(Stages.KILLED)
+	    		.state(Stages.PAUSE)
+	    		.state(Stages.RESUME);
 	    builder.configureTransitions()
-	    		.withExternal().source(Stages.NotStarted).event(Events.PROGRESS).target(Stages.InProgress)
+	    		.withExternal().source(Stages.PENDING).event(Events.PROGRESS).target(Stages.RUNNING)
 	    		.and()
-	    		.withExternal().source(Stages.NotStarted).event(Events.FAILED).target(Stages.Failed)
+	    		.withExternal().source(Stages.PENDING).event(Events.FAILED).target(Stages.FAILED)
 	    		.and()
-	    		.withExternal().source(Stages.NotStarted).event(Events.TERMINATE).target(Stages.Terminating)
+	    		.withExternal().source(Stages.PENDING).event(Events.TERMINATE).target(Stages.TERMINATING)
 	    		.and()
-	    		.withExternal().source(Stages.NotStarted).event(Events.ONHOLD).target(Stages.OnHold)
+	    		.withExternal().source(Stages.PENDING).event(Events.PAUSE).target(Stages.PAUSE)
 	    		.and()
-	    		.withExternal().source(Stages.InProgress).event(Events.SUCCEED).target(Stages.Completed)
+	    		.withExternal().source(Stages.RUNNING).event(Events.SUCCEED).target(Stages.COMPLETED)
 	    		.and()
-	    		.withExternal().source(Stages.InProgress).event(Events.FAILED).target(Stages.Failed)
+	    		.withExternal().source(Stages.RUNNING).event(Events.FAILED).target(Stages.FAILED)
 	    		.and()
-	    		.withExternal().source(Stages.InProgress).event(Events.TERMINATE).target(Stages.Terminating)
+	    		.withExternal().source(Stages.RUNNING).event(Events.TERMINATE).target(Stages.TERMINATING)
 	    		/*.and()
-	    		.withExternal().source(Stages.Failed).event(Events.RESTART).target(Stages.NotStarted)*/
+	    		.withExternal().source(Stages.FAILED).event(Events.RESTART).target(Stages.PENDING)*/
 	    		.and()
-	    		.withExternal().source(Stages.Terminating).event(Events.KILL).target(Stages.Killed)
+	    		.withExternal().source(Stages.TERMINATING).event(Events.KILL).target(Stages.KILLED)
 	    		/*.and()
-	    		.withExternal().source(Stages.Killed).event(Events.RESTART).target(Stages.NotStarted)*/
+	    		.withExternal().source(Stages.KILLED).event(Events.RESTART).target(Stages.PENDING)*/
 	    		.and()
-	    		.withExternal().source(Stages.OnHold).event(Events.RESUME).target(Stages.Resume)
+	    		.withExternal().source(Stages.PAUSE).event(Events.RESUME).target(Stages.RESUME)
 	    		.and()
-	    		.withExternal().source(Stages.Resume).event(Events.RESUME_NS).target(Stages.NotStarted);
+	    		.withExternal().source(Stages.RESUME).event(Events.RESUME_NS).target(Stages.PENDING);
 	    return builder.build();
 	}
 

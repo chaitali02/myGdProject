@@ -65,7 +65,7 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
         cellClass: 'text-center',
         headerCellClass: 'text-center',
         // cellTemplate:'<div class="ui-grid-cell-contents text-center" ><i style="margin:3px auto;" ng-show="row.entity.status ==\'Registering\'" class="glyphicon glyphicon-refresh spinning" aria-hidden="true"></i><span ng-show="row.entity.status !=\'Registering\'">{{row.entity.status  }}</span> <span><i  ng-if="row.entity.isSuccessShow || row.entity.isErrorShow"style="color:{{row.entity.status==\'Not Registered\'?\'#DF0000\':\'#71F354\'}};font-size:14px;" class="{{row.entity.status!=\'Not Registered\' ? \'icon-check\' :  \'icon-close\'}}" aria-hidden="true"></i></span></div>'
-        cellTemplate:'<div class="ui-grid-cell-contents text-center" ><span ng-show="row.entity.status ==\'Registering\'"> In Progess <i style="margin:3px auto;"  class="glyphicon glyphicon-refresh spinning" aria-hidden="true"></i></span><span ng-show="row.entity.status !=\'Registering\'">{{row.entity.status }} </span> <img  ng-if="row.entity.isSuccessShow || row.entity.isErrorShow" ng-src="{{row.entity.status!=\'Failed\' ? \'assets/layouts/layout/img/new_status/Completed.svg\' :  \'assets/layouts/layout/img/new_status/Killed.svg\'}}"  width="20" height="20"></div>'
+        cellTemplate:'<div class="ui-grid-cell-contents text-center" ><span ng-show="row.entity.status ==\'Registering\'"> In Progess <i style="margin:3px auto;"  class="glyphicon glyphicon-refresh spinning" aria-hidden="true"></i></span><span ng-show="row.entity.status !=\'Registering\'">{{row.entity.status }} </span> <img  ng-if="row.entity.isSuccessShow || row.entity.isErrorShow" ng-src="{{row.entity.status!=\'FAILED\' ? \'assets/layouts/layout/img/new_status/COMPLETED.svg\' :  \'assets/layouts/layout/img/new_status/KILLED.svg\'}}"  width="20" height="20"></div>'
 
       },
       {
@@ -313,7 +313,7 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
       for (var i = 0; i < selectRegisterSoucre.length; i++) {
         if(!$scope.searchtext){
           var id = selectRegisterSoucre[i].id - 1
-          $scope.gridOptions.data[id].status = "Failed";
+          $scope.gridOptions.data[id].status = "FAILED";
           $scope.gridOptions.data[id].selected= false;
           $scope.gridOptions.data[id].isDisabled=false;
           $scope.gridOptions.data[id].isSuccessShow=false;
@@ -322,7 +322,7 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
         else{
           var index=$scope.getGridOptionsDataIndex(selectRegisterSoucre[i].id)
           if(index!=-1){
-            $scope.gridOptions.data[index].status ="Failed";
+            $scope.gridOptions.data[index].status ="FAILED";
             $scope.gridOptions.data[index].selected= false;
             $scope.gridOptions.data[index].isDisabled=false;
             $scope.gridOptions.data[id].isSuccessShow=false;

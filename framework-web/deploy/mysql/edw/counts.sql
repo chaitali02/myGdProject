@@ -20,6 +20,8 @@ select 'customer' as tabname, count(*) as cnt from customer
 union
 select 'dim_date' as tabname, count(*) as cnt from dim_date
 union
+select 'dim_state' as tabname, count(*) as cnt from dim_state
+union
 select 'product_type' as tabname, count(*) as cnt from product_type
 union
 select 'transaction' as tabname, count(*) as cnt from transaction

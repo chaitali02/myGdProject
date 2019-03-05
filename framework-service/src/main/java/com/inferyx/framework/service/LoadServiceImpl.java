@@ -237,12 +237,12 @@ public class LoadServiceImpl {
 	public void executeSql(LoadExec loadExec, String dagExecVer, String targetTableName, OrderKey datapodKey, RunMode runMode, String desc)
 			throws JsonProcessingException, JSONException, ParseException {
 		List<Status> statusList = new ArrayList<>();
-		Status status = new Status(Status.Stage.NotStarted, new Date());
+		Status status = new Status(Status.Stage.PENDING, new Date());
 		statusList.add(status);
 		Datapod datapod=null;
 		try {
 			loadExec.setBaseEntity();
-			status = new Status(Status.Stage.InProgress, new Date());
+			status = new Status(Status.Stage.RUNNING, new Date());
 			statusList.add(status);
 			loadExec.setStatusList(statusList);
 			commonServiceImpl.save(MetaType.loadExec.toString(), loadExec);
@@ -297,7 +297,7 @@ public class LoadServiceImpl {
 					load.getCreatedBy(), SaveMode.Overwrite.toString(), resultRef, count,
 					Helper.getPersistModeFromRunMode(runMode.toString()), desc);				
 
-			status = new Status(Status.Stage.Completed, new Date());
+			status = new Status(Status.Stage.COMPLETED, new Date());
 			statusList.add(status);
 			loadExec.setStatusList(statusList);
 			loadExec.setResult(resultRef);
@@ -305,7 +305,7 @@ public class LoadServiceImpl {
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e);
-			status = new Status(Status.Stage.Failed, new Date());
+			status = new Status(Status.Stage.FAILED, new Date());
 			statusList.add(status);
 			loadExec.setStatusList(statusList);
 			commonServiceImpl.save(MetaType.loadExec.toString(), loadExec);
@@ -505,32 +505,32 @@ public class LoadServiceImpl {
 			commonServiceImpl.save(MetaType.loadExec.toString(), loadExec);
 
 			if (Helper.getLatestStatus(statusList) != null && (Helper.getLatestStatus(statusList)
-					.equals(new Status(Status.Stage.InProgress, new Date()))
-					|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Completed, new Date()))
-					|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.OnHold, new Date())))) {
+					.equals(new Status(Status.Stage.RUNNING, new Date()))
+					|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.COMPLETED, new Date()))
+					|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.PAUSE, new Date())))) {
 				logger.info(
-						" This process is In Progress or has been completed previously or is On Hold. Hence it cannot be rerun. ");
+						" This process is RUNNING or has been COMPLETED previously or is On Hold. Hence it cannot be rerun. ");
 				return loadExec;
 			}
 
 			if (Helper.getLatestStatus(statusList) != null 
-					&& Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Ready, new Date()))) {
-				logger.info("loadExec is in ready state. Run directly. Don't set it to NotStarted state again. ");
+					&& Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.READY, new Date()))) {
+				logger.info("loadExec is in READY state. Run directly. Don't set it to PENDING state again. ");
 				return loadExec;
 			}
 			
 			synchronized (loadExec.getUuid()) {
-				loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.NotStarted);
-				loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.Initialized);
-				loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.Ready);
+				loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.PENDING);
+				loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.INITIALIZING);
+				loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.READY);
 			}
 			// loadExec.setExec(dqOperator.generateSql(dataQual, datapodList, dataQualExec,
 			// dagExec, usedRefKeySet));
 			// loadExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 		} catch (Exception e) {
 			logger.error(e);
-			loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.Failed);
-			throw new Exception("Load creation failed");
+			loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.FAILED);
+			throw new Exception("Load creation FAILED");
 		}
 		return loadExec;
 	}
@@ -575,11 +575,11 @@ public class LoadServiceImpl {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.Failed);
+			loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.FAILED);
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 			dependsOn.setRef(new MetaIdentifier(MetaType.loadExec, loadExec.getUuid(), loadExec.getVersion()));
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Load execution failed.", dependsOn);
-			throw new RuntimeException((message != null) ? message : "Load execution failed.");
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Load execution FAILED.", dependsOn);
+			throw new RuntimeException((message != null) ? message : "Load execution FAILED.");
 		}
 	}
 }

@@ -292,7 +292,7 @@ public class DataQualExecServiceImpl extends BaseRuleExecTemplate {
 			else if (endDate != null && !endDate.isEmpty())
 				query.addCriteria(Criteria.where("createdOn").lte(simpleDateFormat.parse(endDate)));
 			
-			query.addCriteria(Criteria.where("statusList.stage").in(Status.Stage.Completed.toString()));
+			query.addCriteria(Criteria.where("statusList.stage").in(Status.Stage.COMPLETED.toString()));
 			query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(dataqualUuid));
 		    query.addCriteria(Criteria.where("appInfo.ref.uuid").is(commonServiceImpl.getApp().getUuid()));
 			query.addCriteria(Criteria.where("active").is("Y"));
@@ -495,12 +495,12 @@ public class DataQualExecServiceImpl extends BaseRuleExecTemplate {
 	 * @param uuid
 	 * @param version
 	 */
-	public void onHold (String uuid, String version) {
-		onHold(uuid, version, MetaType.dqExec);
+	public void PAUSE (String uuid, String version) {
+		PAUSE(uuid, version, MetaType.dqExec);
 	}
 	
  	/**
-	 * Kill meta thread if In Progress
+	 * Kill meta thread if RUNNING
 	 * @param uuid
 	 * @param version
 	 */
@@ -509,12 +509,12 @@ public class DataQualExecServiceImpl extends BaseRuleExecTemplate {
 	}
 	
 	/**
-	 * Resume DQ Execution
+	 * RESUME DQ Execution
 	 * @param uuid
 	 * @param version
 	 */
-	public void resume (String uuid, String version) {
-		super.resume(uuid, version, MetaType.dqExec);
+	public void RESUME (String uuid, String version) {
+		super.RESUME(uuid, version, MetaType.dqExec);
 	}
 
 	

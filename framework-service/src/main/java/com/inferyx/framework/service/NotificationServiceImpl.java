@@ -47,7 +47,7 @@ public class NotificationServiceImpl {
 	public boolean sendNotification(Notification notification) {
 		logger.info("inside sendEMail method.");
 		
-		//expecting senderInfo property is already set
+		//expecting senderInfo property is alReady set
 		SenderInfo senderInfo = notification.getSenderInfo();
 		
 		Properties senderProps = new Properties();
@@ -125,10 +125,10 @@ public class NotificationServiceImpl {
 		    logger.info("e-Mail sent successfully to "+senderInfo.getEmailTo()+" ....");  
 		} catch (MessagingException e) {
 			e.printStackTrace();
-			throw new RuntimeException("Failed !\n"+"Can not send e-Mail to "+senderInfo.getEmailTo());
+			throw new RuntimeException("FAILED !\n"+"Can not send e-Mail to "+senderInfo.getEmailTo());
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RuntimeException("Failed !\n"+"Can not send e-Mail to "+senderInfo.getEmailTo());
+			throw new RuntimeException("FAILED !\n"+"Can not send e-Mail to "+senderInfo.getEmailTo());
 		}
 		
 		return true;

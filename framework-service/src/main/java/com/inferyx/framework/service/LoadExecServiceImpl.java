@@ -260,7 +260,7 @@ public class LoadExecServiceImpl  extends BaseRuleExecTemplate {
 	}	
 	
 	/**
-	 * Kill meta thread if In Progress
+	 * Kill meta thread if RUNNING
 	 * @param uuid
 	 * @param version
 	 */

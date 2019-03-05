@@ -1,10 +1,10 @@
 package com.inferyx.framework.domain2;
 
 public enum Stages {
-	NotStarted("Not Started"), InProgress("In Progress"), Completed("Completed"), Failed("Failed"), Suspend(
-			"Suspend"), Killed("Killed"), login("login"), logout("logout"), expired("expired"), active(
-					"active"), Inactive("inactive"), OnHold(
-							"OnHold"), OffHold("OffHold"), Resume("Resume"), Terminating("Terminating");
+	PENDING("PENDING"), RUNNING("RUNNING"), COMPLETED("COMPLETED"), FAILED("FAILED"), Suspend(
+			"Suspend"), KILLED("KILLED"), login("login"), logout("logout"), expired("expired"), active(
+					"active"), Inactive("inactive"), PAUSE(
+							"PAUSE"), OffHold("OffHold"), RESUME("RESUME"), TERMINATING("TERMINATING");
 	private String displayName;
 
 	public String displayName() {

@@ -43,10 +43,10 @@ public class TrainExecServiceImpl {
 	
 	/**
 	 * Sends kill message to kill an train rule. 
-	 * First, it sets the status to terminating in case the status is In Progress.
+	 * First, it sets the status to TERMINATING in case the status is RUNNING.
 	 * Then, it tries to kill the thread. 
-	 * Then, it sets the status to Killed if the latest status is Terminating, whether or not it was able to kill the thread.
-	 * Even if it was not able to kill a thread (because the thread completed or cancelled in between), if the status was Terminating, the status shall change to Killed. 
+	 * Then, it sets the status to KILLED if the latest status is TERMINATING, whether or not it was able to kill the thread.
+	 * Even if it was not able to kill a thread (because the thread COMPLETED or cancelled in between), if the status was TERMINATING, the status shall change to KILLED. 
 	 * @param uuid
 	 * @param version
 	 * @param execType
@@ -66,9 +66,9 @@ public class TrainExecServiceImpl {
 		try {
 			logger.info("Before kill - train - " + baseExec.getUuid());
 			synchronized (baseExec.getUuid()) {
-				baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.Terminating);
-				if (!Helper.getLatestStatus(baseExec.getStatusList()).equals(new Status(Status.Stage.Terminating, new Date()))) {
-					logger.info("Latest Status is not in Terminating. Exiting...");
+				baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.TERMINATING);
+				if (!Helper.getLatestStatus(baseExec.getStatusList()).equals(new Status(Status.Stage.TERMINATING, new Date()))) {
+					logger.info("Latest Status is not in TERMINATING. Exiting...");
 					return;
 				}
 			}
@@ -78,13 +78,13 @@ public class TrainExecServiceImpl {
 				futureTask.cancel(true);
 			}
 			synchronized (baseExec.getUuid()) {
-				commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.Killed);
+				commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.KILLED);
 			}
 		} catch (Exception e) {
-			logger.info("Failed to kill. uuid : " + uuid + " version : " + version);
+			logger.info("FAILED to kill. uuid : " + uuid + " version : " + version);
 			try {
 				synchronized (baseExec.getUuid()) {
-					commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.Killed);
+					commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.KILLED);
 				}
 			} catch (Exception e1) {
 				e1.printStackTrace();
@@ -95,12 +95,12 @@ public class TrainExecServiceImpl {
 	}
 	
 	/**
-	 * Set status of BaseExec to Resume if status is OnHold
+	 * Set status of BaseExec to RESUME if status is PAUSE
 	 * @param uuid
 	 * @param version
 	 * @param execType
 	 */
-	public void resume (String uuid, String version, MetaType execType) {
+	public void RESUME (String uuid, String version, MetaType execType) {
 		BaseExec baseExec = null;
 		try {
 			baseExec = (BaseExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, execType.toString(), "N");
@@ -111,10 +111,10 @@ public class TrainExecServiceImpl {
 			logger.info("BaseExec not found. Exiting...");
 			return;
 		}
-		// Pre conditions for Resume shall be determined by the setMetaStatus
+		// Pre conditions for RESUME shall be determined by the setMetaStatus
 		try {
 			synchronized (baseExec.getUuid()) {
-				commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.Resume);
+				commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.RESUME);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -122,12 +122,12 @@ public class TrainExecServiceImpl {
 	}
 	
 	/**
-	 * Set status of BaseExec to OnHold if status is Killed, notStarted, or Resume 
+	 * Set status of BaseExec to PAUSE if status is KILLED, PENDING, or RESUME 
 	 * @param uuid
 	 * @param version
 	 * @param execType
 	 */
-	public void onHold (String uuid, String version, MetaType execType) {
+	public void PAUSE (String uuid, String version, MetaType execType) {
 		BaseExec baseExec = null;
 		try {
 			baseExec = (BaseRuleExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, execType.toString(), "N");
@@ -138,10 +138,10 @@ public class TrainExecServiceImpl {
 			logger.info("BaseExec not found. Exiting...");
 			return;
 		}
-		// Pre conditions for OnHold shall be determined by the setMetaStatus
+		// Pre conditions for PAUSE shall be determined by the setMetaStatus
 		try {
 			synchronized (baseExec.getUuid()) {
-				commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.OnHold);
+				commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.PAUSE);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

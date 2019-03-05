@@ -1637,22 +1637,22 @@ public class GraphServiceImpl extends BaseRuleExecTemplate implements IParsable,
 		}
 		statusList = graphExec.getStatusList();		
 		if ( Helper.getLatestStatus(statusList) != null 
-				&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.InProgress, new Date()))
-						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Completed, new Date()))
-						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Terminating, new Date()))
-						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.OnHold, new Date())) 
-						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Ready, new Date())))) {
+				&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.RUNNING, new Date()))
+						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.COMPLETED, new Date()))
+						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.TERMINATING, new Date()))
+						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.PAUSE, new Date())) 
+						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.READY, new Date())))) {
 			logger.info(
-					" This process is In Progress or has been completed previously or is Terminating or is On Hold. Hence it cannot be rerun. ");
-			logger.info(" If status is in Ready state then no need to start and parse again. ");
+					" This process is RUNNING or has been COMPLETED previously or is TERMINATING or is On Hold. Hence it cannot be rerun. ");
+			logger.info(" If status is in READY state then no need to start and parse again. ");
 			return graphExec;
 		}
-		logger.info(" Set not started status");
+		logger.info(" Set PENDING status");
 		synchronized (graphExec.getUuid()) {
 			graphExec = (GraphExec) commonServiceImpl.setMetaStatus(graphExec, MetaType.graphExec,
-					Status.Stage.NotStarted);
+					Status.Stage.PENDING);
 		}
-		logger.info(" After Set not started status");
+		logger.info(" After Set PENDING status");
 		return graphExec;
 	}
 
@@ -1661,7 +1661,7 @@ public class GraphServiceImpl extends BaseRuleExecTemplate implements IParsable,
 		// Get the exec
 		try {
 			baseExec = (GraphExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.graphExec,
-					Status.Stage.InProgress);
+					Status.Stage.RUNNING);
 
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			IExecutor exec = execFactory.getExecutor(datasource.getType());
@@ -1673,7 +1673,7 @@ public class GraphServiceImpl extends BaseRuleExecTemplate implements IParsable,
 					new MetaIdentifier(MetaType.graphExec, baseExec.getUuid(), baseExec.getVersion())));
 			dataStoreServiceImpl.save(ds);
 			baseExec = (GraphExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.graphExec,
-					Status.Stage.Completed);
+					Status.Stage.COMPLETED);
 			return graphExecKey;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1683,11 +1683,11 @@ public class GraphServiceImpl extends BaseRuleExecTemplate implements IParsable,
 			} catch (Exception e2) {
 				// TODO: handle exception
 			}
-			baseExec = (GraphExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.graphExec, Status.Stage.Failed);
+			baseExec = (GraphExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.graphExec, Status.Stage.FAILED);
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 			dependsOn.setRef(new MetaIdentifier(MetaType.graphExec, baseExec.getDependsOn().getRef().getUuid(), baseExec.getDependsOn().getRef().getVersion()));
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
-					(message != null) ? message : "Graphpod execution failed." ,dependsOn);
+					(message != null) ? message : "Graphpod execution FAILED." ,dependsOn);
 			throw new RuntimeException(e);
 		}
 	}
@@ -1695,11 +1695,11 @@ public class GraphServiceImpl extends BaseRuleExecTemplate implements IParsable,
 	@Override
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		synchronized (baseExec.getUuid()) {
-			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.graphExec, Status.Stage.Initialized);
+			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.graphExec, Status.Stage.INITIALIZING);
 		}
 		baseExec = graphOperator.parse(baseExec, execParams, runMode);
 		synchronized (baseExec.getUuid()) {
-			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.graphExec, Status.Stage.Ready);
+			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.graphExec, Status.Stage.READY);
 		}
 		return baseExec;
 	}
@@ -2105,13 +2105,13 @@ public class GraphServiceImpl extends BaseRuleExecTemplate implements IParsable,
 	
 	
 	public void setStatus (String type, String uuid, String version,String status){
-		if(status.toLowerCase().equalsIgnoreCase(Status.Stage.OnHold.toString().toLowerCase())){
-			super.onHold(uuid, version, Helper.getMetaType(type));
+		if(status.toLowerCase().equalsIgnoreCase(Status.Stage.PAUSE.toString().toLowerCase())){
+			super.PAUSE(uuid, version, Helper.getMetaType(type));
 		}
-		else if(status.toLowerCase().equalsIgnoreCase(Status.Stage.Resume.toString().toLowerCase())){
-			super.resume(uuid,version, Helper.getMetaType(type));
+		else if(status.toLowerCase().equalsIgnoreCase(Status.Stage.RESUME.toString().toLowerCase())){
+			super.RESUME(uuid,version, Helper.getMetaType(type));
 		}
-		else if(status.toLowerCase().equalsIgnoreCase(Status.Stage.Killed.toString().toLowerCase())){
+		else if(status.toLowerCase().equalsIgnoreCase(Status.Stage.KILLED.toString().toLowerCase())){
 		      kill(uuid, version,Helper.getMetaType(type));
 		}
 		
@@ -2129,25 +2129,25 @@ public class GraphServiceImpl extends BaseRuleExecTemplate implements IParsable,
 			logger.info("GraphExec not found. Exiting...");
 			return;
 		}
-		if (!Helper.getLatestStatus(baseExec.getStatusList()).equals(new Status(Status.Stage.InProgress, new Date()))) {
-			logger.info("Latest Status is not in InProgress. Exiting...");
+		if (!Helper.getLatestStatus(baseExec.getStatusList()).equals(new Status(Status.Stage.RUNNING, new Date()))) {
+			logger.info("Latest Status is not in RUNNING. Exiting...");
 		}
 		try {
 			synchronized (baseExec.getUuid()) {
-				commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.Terminating);
+				commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.TERMINATING);
 			}
 			@SuppressWarnings("unchecked")
 			FutureTask<TaskHolder> futureTask = (FutureTask<TaskHolder>) taskThreadMap.get(execType+"_"+baseExec.getUuid()+"_"+baseExec.getVersion());
 			if(futureTask!=null)	
 			futureTask.cancel(true);
 			synchronized (baseExec.getUuid()) {
-				commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.Killed);
+				commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.KILLED);
 			}
 		} catch (Exception e) {
-			logger.info("Failed to kill. uuid : " + uuid + " version : " + version);
+			logger.info("FAILED to kill. uuid : " + uuid + " version : " + version);
 			try {
 				synchronized (baseExec.getUuid()) {
-					commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.Killed);
+					commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.KILLED);
 				}
 			} catch (Exception e1) {
 				e1.printStackTrace();
@@ -2167,7 +2167,7 @@ public class GraphServiceImpl extends BaseRuleExecTemplate implements IParsable,
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}	synchronized (baseExec.getUuid()) {
-			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.graphExec, Status.Stage.Ready);
+			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.graphExec, Status.Stage.READY);
 		}
 		try {
 			// baseExec = (GraphPod) commonServiceImpl.getOneByUuidAndVersion(baseExec.getDependsOn().getRef().getUuid(), baseExec.getDependsOn().getRef().getVersion(), baseExec.getDependsOn().getRef().getType().toString());
@@ -2175,7 +2175,7 @@ public class GraphServiceImpl extends BaseRuleExecTemplate implements IParsable,
 		} catch (Exception e) {
 			synchronized (baseExec.getUuid()) {
 				try {
-					commonServiceImpl.setMetaStatus(baseExec, MetaType.graphExec, Status.Stage.Failed);
+					commonServiceImpl.setMetaStatus(baseExec, MetaType.graphExec, Status.Stage.FAILED);
 				} catch (Exception e1) {
 					e1.printStackTrace();
 					String message = null;
@@ -2186,8 +2186,8 @@ public class GraphServiceImpl extends BaseRuleExecTemplate implements IParsable,
 					}
 					MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 					dependsOn.setRef(new MetaIdentifier(MetaType.graphExec, uuid, version));
-					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "GraphExec restart operation failed.", dependsOn);
-					throw new Exception((message != null) ? message : "GraphExec restart operation failed.");
+					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "GraphExec restart operation FAILED.", dependsOn);
+					throw new Exception((message != null) ? message : "GraphExec restart operation FAILED.");
 				}
 			}
 			e.printStackTrace();
@@ -2199,8 +2199,8 @@ public class GraphServiceImpl extends BaseRuleExecTemplate implements IParsable,
 			}
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 			dependsOn.setRef(new MetaIdentifier(MetaType.graphExec, uuid, version));
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "GraphExec restart operation failed.", dependsOn);
-			throw new Exception((message != null) ? message : "GraphExec restart operation failed.");
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "GraphExec restart operation FAILED.", dependsOn);
+			throw new Exception((message != null) ? message : "GraphExec restart operation FAILED.");
 		}
 	}
 	

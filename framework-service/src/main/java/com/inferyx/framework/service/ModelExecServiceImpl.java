@@ -510,7 +510,7 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 	 * 
 	 * try { if(modelUuid != null && !StringUtils.isBlank(modelUuid))
 	 * query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(modelUuid));
-	 * query.addCriteria(Criteria.where("statusList.stage").is("Completed"));
+	 * query.addCriteria(Criteria.where("statusList.stage").is("COMPLETED"));
 	 * query.addCriteria(Criteria.where("appInfo.ref.uuid").is(commonServiceImpl.
 	 * getApp().getUuid())); query.addCriteria(Criteria.where("active").is("Y"));
 	 * query.with(new Sort(Sort.Direction.DESC, "version")); } catch
@@ -594,7 +594,7 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 
 			try {
 				query2.addCriteria(Criteria.where("dependsOn.ref.uuid").is(trainList.get(0).getUuid()));
-				query2.addCriteria(Criteria.where("statusList.stage").is("Completed"));
+				query2.addCriteria(Criteria.where("statusList.stage").is("COMPLETED"));
 				query2.addCriteria(Criteria.where("appInfo.ref.uuid").is(commonServiceImpl.getApp().getUuid()));
 				query2.addCriteria(Criteria.where("active").is("Y"));
 				query2.with(new Sort(Sort.Direction.DESC, "version"));
@@ -831,7 +831,7 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 
 		try {
 			query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(train.getUuid()));
-			query.addCriteria(Criteria.where("statusList.stage").is("Completed"));
+			query.addCriteria(Criteria.where("statusList.stage").is("COMPLETED"));
 			query.addCriteria(Criteria.where("appInfo.ref.uuid").is(commonServiceImpl.getApp().getUuid()));
 			query.addCriteria(Criteria.where("active").is("Y"));
 			query.with(new Sort(Sort.Direction.DESC, "version"));
@@ -850,7 +850,7 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 	}
 	
 	/**
-	 * Kill meta thread if In Progress
+	 * Kill meta thread if RUNNING
 	 * @param uuid
 	 * @param version
 	 */
@@ -859,13 +859,13 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 	}
 	
 	public void setStatus (String type, String uuid, String version,String status){
-		if(status.toLowerCase().equalsIgnoreCase(Status.Stage.OnHold.toString().toLowerCase())){
-			super.onHold(uuid, version, Helper.getMetaType(type));
+		if(status.toLowerCase().equalsIgnoreCase(Status.Stage.PAUSE.toString().toLowerCase())){
+			super.PAUSE(uuid, version, Helper.getMetaType(type));
 		}
-		else if(status.toLowerCase().equalsIgnoreCase(Status.Stage.Resume.toString().toLowerCase())){
-			super.resume(uuid,version, Helper.getMetaType(type));
+		else if(status.toLowerCase().equalsIgnoreCase(Status.Stage.RESUME.toString().toLowerCase())){
+			super.RESUME(uuid,version, Helper.getMetaType(type));
 		}
-		else if(status.toLowerCase().equalsIgnoreCase(Status.Stage.Killed.toString().toLowerCase())){
+		else if(status.toLowerCase().equalsIgnoreCase(Status.Stage.KILLED.toString().toLowerCase())){
 		      kill(uuid, version,Helper.getMetaType(type));
 		}
 		
@@ -883,24 +883,24 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 			logger.info("RuleExec not found. Exiting...");
 			return;
 		}
-		if (!Helper.getLatestStatus(baseExec.getStatusList()).equals(new Status(Status.Stage.InProgress, new Date()))) {
-			logger.info("Latest Status is not in InProgress. Exiting...");
+		if (!Helper.getLatestStatus(baseExec.getStatusList()).equals(new Status(Status.Stage.RUNNING, new Date()))) {
+			logger.info("Latest Status is not in RUNNING. Exiting...");
 		}
 		try {
 			synchronized (baseExec.getUuid()) {
-				commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.Terminating);
+				commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.TERMINATING);
 			}
 			@SuppressWarnings("unchecked")
 			FutureTask<TaskHolder> futureTask = (FutureTask<TaskHolder>) taskThreadMap.get(execType+"_"+baseExec.getUuid()+"_"+baseExec.getVersion());
 				futureTask.cancel(true);
 			synchronized (baseExec.getUuid()) {
-				commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.Killed);
+				commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.KILLED);
 			}
 		} catch (Exception e) {
-			logger.info("Failed to kill. uuid : " + uuid + " version : " + version);
+			logger.info("FAILED to kill. uuid : " + uuid + " version : " + version);
 			try {
 				synchronized (baseExec.getUuid()) {
-					commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.Killed);
+					commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.KILLED);
 				}
 			} catch (Exception e1) {
 				e1.printStackTrace();
@@ -914,7 +914,7 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 			throws Exception {
 		TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.trainExec.toString());
 		synchronized (trainExec.getUuid()) {
-			trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.Ready);
+			trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.READY);
 		}
 		try {
 			Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(trainExec.getDependsOn().getRef().getUuid(), trainExec.getDependsOn().getRef().getVersion(), trainExec.getDependsOn().getRef().getType().toString());
@@ -952,7 +952,7 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 		} catch (Exception e) {
 			synchronized (trainExec.getUuid()) {
 				try {
-					commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.Failed);
+					commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.FAILED);
 				} catch (Exception e1) {
 					e1.printStackTrace();
 					String message = null;
@@ -985,7 +985,7 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 			throws Exception {
 		PredictExec predictExec = (PredictExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.predictExec.toString());
 		synchronized (predictExec.getUuid()) {
-			predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.Ready);
+			predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.READY);
 		}
 		try {
 			Predict predict = (Predict) commonServiceImpl.getOneByUuidAndVersion(predictExec.getDependsOn().getRef().getUuid(), predictExec.getDependsOn().getRef().getVersion(), predictExec.getDependsOn().getRef().getType().toString());
@@ -993,7 +993,7 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 		} catch (Exception e) {
 			synchronized (predictExec.getUuid()) {
 				try {
-					commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.Failed);
+					commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.FAILED);
 				} catch (Exception e1) {
 					e1.printStackTrace();
 					String message = null;
@@ -1004,8 +1004,8 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 					}
 					MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 					dependsOn.setRef(new MetaIdentifier(MetaType.predictExec, uuid, version));
-					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Predict restart operation failed.", dependsOn);
-					throw new Exception((message != null) ? message : "Predict restart operation failed.");
+					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Predict restart operation FAILED.", dependsOn);
+					throw new Exception((message != null) ? message : "Predict restart operation FAILED.");
 				}
 			}
 			e.printStackTrace();
@@ -1017,8 +1017,8 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 			}
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 			dependsOn.setRef(new MetaIdentifier(MetaType.predictExec, uuid, version));
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Predict restart operation failed.", dependsOn);
-			throw new Exception((message != null) ? message : "Predict restart operation failed.");
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Predict restart operation FAILED.", dependsOn);
+			throw new Exception((message != null) ? message : "Predict restart operation FAILED.");
 		}
 	}
 	
@@ -1031,7 +1031,7 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 		} catch (Exception e) {
 			synchronized (simulateExec.getUuid()) {
 				try {
-					commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.Failed);
+					commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.FAILED);
 				} catch (Exception e1) {
 					e1.printStackTrace();
 					String message = null;
@@ -1042,8 +1042,8 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 					}
 					MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 					dependsOn.setRef(new MetaIdentifier(MetaType.simulateExec, uuid, version));
-					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Simulate restart operation failed.", dependsOn);
-					throw new Exception((message != null) ? message : "Simulate restart operation failed.");
+					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Simulate restart operation FAILED.", dependsOn);
+					throw new Exception((message != null) ? message : "Simulate restart operation FAILED.");
 				}
 			}
 			e.printStackTrace();
@@ -1055,8 +1055,8 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 			}
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 			dependsOn.setRef(new MetaIdentifier(MetaType.simulateExec, uuid, version));
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Simulate restart operation failed.", dependsOn);
-			throw new Exception((message != null) ? message : "Simulate restart operation failed.");
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Simulate restart operation FAILED.", dependsOn);
+			throw new Exception((message != null) ? message : "Simulate restart operation FAILED.");
 		}
 	}
 	

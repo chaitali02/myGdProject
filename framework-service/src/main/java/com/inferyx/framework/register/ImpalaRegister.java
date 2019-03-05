@@ -172,8 +172,8 @@ public class ImpalaRegister extends DataSourceRegister {
 					load.setName(datapod.getName());
 					commonServiceImpl.save(MetaType.load.toString(), load);
 					LoadExec loadExec = loadServiceImpl.create(load.getUuid(), load.getVersion(), null, null, null);
-					loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.InProgress);
-					loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.Completed);
+					loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.RUNNING);
+					loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.COMPLETED);
 					
 					dataStoreServiceImpl.save(datastore);
 					dpList.add(datapod);

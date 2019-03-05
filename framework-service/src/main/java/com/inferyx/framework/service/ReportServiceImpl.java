@@ -119,8 +119,8 @@ public class ReportServiceImpl extends RuleTemplate {
 				statusList = new ArrayList<Status>();
 			}
 			if (Helper.getLatestStatus(statusList) != null
-					&& Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Ready, new Date()))) {
-				logger.info(" If status is in Ready state then no need to start and parse again. ");
+					&& Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.READY, new Date()))) {
+				logger.info(" If status is in READY state then no need to start and parse again. ");
 				return reportExec;
 			}
 			reportExec.setName(report.getName());
@@ -130,10 +130,10 @@ public class ReportServiceImpl extends RuleTemplate {
 			
 			reportExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 
-			reportExec = (ReportExec) commonServiceImpl.setMetaStatus(reportExec, MetaType.reportExec, Status.Stage.NotStarted);
+			reportExec = (ReportExec) commonServiceImpl.setMetaStatus(reportExec, MetaType.reportExec, Status.Stage.PENDING);
 		} catch (Exception e) {
 			logger.error(e);
-			reportExec = (ReportExec) commonServiceImpl.setMetaStatus(reportExec, MetaType.reportExec, Status.Stage.Failed);
+			reportExec = (ReportExec) commonServiceImpl.setMetaStatus(reportExec, MetaType.reportExec, Status.Stage.FAILED);
 			e.printStackTrace();
 			String message = null;
 			try {
@@ -163,18 +163,18 @@ public class ReportServiceImpl extends RuleTemplate {
 			}
 			report = (Report) commonServiceImpl.getLatestByUuid(reportExec.getDependsOn().getRef().getUuid(), MetaType.report.toString(), "N");
 			synchronized (execUuid) {
-				reportExec = (ReportExec) commonServiceImpl.setMetaStatus(reportExec, MetaType.reportExec, Status.Stage.Initialized);
+				reportExec = (ReportExec) commonServiceImpl.setMetaStatus(reportExec, MetaType.reportExec, Status.Stage.INITIALIZING);
 			}
 			reportExec.setExec(reportOperator.generateSql(report, refKeyMap, otherParams, usedRefKeySet, reportExec.getExecParams(), runMode));
 			synchronized (execUuid) {
-				reportExec = (ReportExec) commonServiceImpl.setMetaStatus(reportExec, MetaType.reportExec, Status.Stage.Ready);
+				reportExec = (ReportExec) commonServiceImpl.setMetaStatus(reportExec, MetaType.reportExec, Status.Stage.READY);
 			}
 			reportExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 			logger.info("sql_generated: " + reportExec.getExec());
 			commonServiceImpl.save(MetaType.reportExec.toString(), reportExec);
 		} catch (Exception e) {
 			logger.error(e);
-			reportExec = (ReportExec) commonServiceImpl.setMetaStatus(reportExec, MetaType.reportExec, Status.Stage.Failed);
+			reportExec = (ReportExec) commonServiceImpl.setMetaStatus(reportExec, MetaType.reportExec, Status.Stage.FAILED);
 			e.printStackTrace();
 			String message = null;
 			try {
@@ -213,9 +213,9 @@ public class ReportServiceImpl extends RuleTemplate {
 			runReportServiceImpl.call();
 		} catch (Exception e) { 
 			e.printStackTrace();
-			// Set status to Failed
+			// Set status to FAILED
 			try {
-				reportExec = (ReportExec) commonServiceImpl.setMetaStatus(reportExec, MetaType.reportExec, Status.Stage.Failed);
+				reportExec = (ReportExec) commonServiceImpl.setMetaStatus(reportExec, MetaType.reportExec, Status.Stage.FAILED);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}			
@@ -227,8 +227,8 @@ public class ReportServiceImpl extends RuleTemplate {
 			}
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 			dependsOn.setRef(new MetaIdentifier(MetaType.reportExec, reportExec.getUuid(), reportExec.getVersion()));
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Report execution failed.", dependsOn);
-			throw new RuntimeException((message != null) ? message : "Report execution failed.");
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Report execution FAILED.", dependsOn);
+			throw new RuntimeException((message != null) ? message : "Report execution FAILED.");
 		} 	
 		
 		return reportExec;
@@ -479,10 +479,10 @@ public class ReportServiceImpl extends RuleTemplate {
 	@Override
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		synchronized (baseExec.getUuid()) {
-			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.reportExec, Status.Stage.Initialized);
+			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.reportExec, Status.Stage.INITIALIZING);
 		}
 		synchronized (baseExec.getUuid()) {
-			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.reportExec, Status.Stage.Ready);
+			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.reportExec, Status.Stage.READY);
 		}
 		return baseExec;
 	}
@@ -493,10 +493,10 @@ public class ReportServiceImpl extends RuleTemplate {
 			throws Exception {
 		BaseRuleExec baseRuleExec = (BaseRuleExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.reportExec.toString(), "N");
 		synchronized (execUuid) {
-			baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, MetaType.reportExec, Status.Stage.Initialized);
+			baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, MetaType.reportExec, Status.Stage.INITIALIZING);
 		}
 		synchronized (execUuid) {
-			baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, MetaType.reportExec, Status.Stage.Ready);
+			baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, MetaType.reportExec, Status.Stage.READY);
 		}
 		return baseRuleExec;
 	}
@@ -514,7 +514,7 @@ public class ReportServiceImpl extends RuleTemplate {
 		Notification notification = new Notification();
 
 		String subject = Helper.getPropertyValue("framework.email.subject");
-		subject = MessageFormat.format(subject, "SUCCESS", "Report", report.getName(), "completed");
+		subject = MessageFormat.format(subject, "SUCCESS", "Report", report.getName(), "COMPLETED");
 		notification.setSubject(subject);
 
 		String roleUuid = sessionHelper.getSessionContext().getRoleInfo().getRef().getUuid();
@@ -557,7 +557,7 @@ public class ReportServiceImpl extends RuleTemplate {
 		Notification notification = new Notification();
 
 		String subject = Helper.getPropertyValue("framework.email.subject");
-		subject = MessageFormat.format(subject, "FAILURE", "Report", report.getName(), "failed");
+		subject = MessageFormat.format(subject, "FAILURE", "Report", report.getName(), "FAILED");
 		notification.setSubject(subject);
 
 		String roleUuid = sessionHelper.getSessionContext().getRoleInfo().getRef().getUuid();
@@ -604,7 +604,7 @@ public class ReportServiceImpl extends RuleTemplate {
 					dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
 			
 			Status status = Helper.getLatestStatus(reportExec.getStatusList());
-			if(status.getStage().equals(Status.Stage.Completed)) {				
+			if(status.getStage().equals(Status.Stage.COMPLETED)) {				
 				String defaultDownloadPath = Helper.getPropertyValue("framework.report.Path"); 
 				defaultDownloadPath = defaultDownloadPath.endsWith("/") ? defaultDownloadPath : defaultDownloadPath.concat("/");
 				String reportFilePath = String.format("%s/%s/%s/%s/", report.getUuid(), report.getVersion(), reportExec.getVersion(), "doc");
@@ -616,10 +616,10 @@ public class ReportServiceImpl extends RuleTemplate {
 				} else {
 					throw new RuntimeException("Excel file is unavailable.");
 				}				
-			} else if(status.getStage().equals(Status.Stage.Failed)) {
+			} else if(status.getStage().equals(Status.Stage.FAILED)) {
 				return sendFailureNotification(senderInfo, report, reportExec);
 			} else {
-				throw new RuntimeException("Report execution status is not "+Status.Stage.Completed+", latest status is "+status.getStage());
+				throw new RuntimeException("Report execution status is not "+Status.Stage.COMPLETED+", latest status is "+status.getStage());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

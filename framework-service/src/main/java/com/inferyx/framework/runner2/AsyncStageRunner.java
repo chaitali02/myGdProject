@@ -75,12 +75,12 @@ public class AsyncStageRunner {
 		List<TaskExec> depTaskExecs = new ArrayList<>();
 		
 		try {
-			logger.info("Setting status to In Progress for stage : " + stageExec.getStageId());
+			logger.info("Setting status to RUNNING for stage : " + stageExec.getStageId());
 			synchronized (dagExec.getUuid()) {
-				commonServiceImpl.setMetaStatusForStage (dagExec, stageExec, Status.Stage.InProgress, stageExec.getStageId());
+				commonServiceImpl.setMetaStatusForStage (dagExec, stageExec, Status.Stage.RUNNING, stageExec.getStageId());
 			}
 		} catch (Exception e1) {
-			logger.error("Stage Exec in progress status could not be set ");
+			logger.error("Stage Exec RUNNING status could not be set ");
 			e1.printStackTrace();
 		}
 		
@@ -94,11 +94,11 @@ public class AsyncStageRunner {
 				//Fetch from mongo instead of udta panchi.
 				com.inferyx.framework.domain.Status.Stage taskStatus = dagExecServiceImpl.getTaskStatus(dagExec.getUuid(), dagExec.getVersion(), stageId, indvTaskExec.getTaskId());			
 				
-				if (taskStatus.equals(Status.Stage.Completed)
-						|| taskStatus.equals(Status.Stage.Terminating)
-						|| taskStatus.equals(Status.Stage.Killed) 
-						|| taskStatus.equals(Status.Stage.OnHold)
-						|| taskStatus.equals(Status.Stage.Failed)) {
+				if (taskStatus.equals(Status.Stage.COMPLETED)
+						|| taskStatus.equals(Status.Stage.TERMINATING)
+						|| taskStatus.equals(Status.Stage.KILLED) 
+						|| taskStatus.equals(Status.Stage.PAUSE)
+						|| taskStatus.equals(Status.Stage.FAILED)) {
 					continue;	//  Go to next task
 				}
 				
@@ -159,10 +159,10 @@ public class AsyncStageRunner {
 					}
 	
 					boolean checkDependencyStatus = false;
-					boolean checkDependencyFailed = false;
-					boolean checkDependencyKilled = false;
-					boolean checkDependencyResume = false;
-					boolean checkDependencyOnHold = false;
+					boolean checkDependencyFAILED = false;
+					boolean checkDependencyKILLED = false;
+					boolean checkDependencyRESUME = false;
+					boolean checkDependencyPAUSE = false;
 					String dependencyStatus = null;
 					OrderKey datapodKey = null;
 					
@@ -170,43 +170,43 @@ public class AsyncStageRunner {
 					
 					//Fetch from mongo instead of udta panchi.				
 					com.inferyx.framework.domain.Status.Stage taskStatus = dagExecServiceImpl.getTaskStatus(dagExec.getUuid(), dagExec.getVersion(), stageId, indvTaskExec.getTaskId());			
-					if (!taskStatus.equals(Status.Stage.NotStarted)
-							&& !taskStatus.equals(Status.Stage.InProgress)
-							&& !taskStatus.equals(Status.Stage.Resume)) {
+					if (!taskStatus.equals(Status.Stage.PENDING)
+							&& !taskStatus.equals(Status.Stage.RUNNING)
+							&& !taskStatus.equals(Status.Stage.RESUME)) {
 						continue;
 					}
 					
 					// If not checkdependency status then continue after setting allDependenciesAddressed to false
 					dependencyStatus = dagExecServiceImpl.checkTaskDepStatus(dag,dagExec.getUuid(),dagExec.getVersion(),stageId,indvTaskExec.getTaskId());
 					logger.info("Task dependencyStatus : " + indvTaskExec.getTaskId() + " : " + dependencyStatus);
-					if (StringUtils.isBlank(dependencyStatus) || dependencyStatus.equalsIgnoreCase(Status.Stage.NotStarted.toString())) {
+					if (StringUtils.isBlank(dependencyStatus) || dependencyStatus.equalsIgnoreCase(Status.Stage.PENDING.toString())) {
 						checkDependencyStatus = false;
-					} else if (dependencyStatus.equalsIgnoreCase(Status.Stage.Killed.toString())) {
-						checkDependencyKilled = true;
+					} else if (dependencyStatus.equalsIgnoreCase(Status.Stage.KILLED.toString())) {
+						checkDependencyKILLED = true;
 						checkDependencyStatus = true;
 						break;
-					} else if (dependencyStatus.equalsIgnoreCase(Status.Stage.Failed.toString())) {
-						checkDependencyFailed = true;
+					} else if (dependencyStatus.equalsIgnoreCase(Status.Stage.FAILED.toString())) {
+						checkDependencyFAILED = true;
 						checkDependencyStatus = true;
 						break;
-					} else if (dependencyStatus.equalsIgnoreCase(Status.Stage.OnHold.toString())) {
-						checkDependencyOnHold = true;
+					} else if (dependencyStatus.equalsIgnoreCase(Status.Stage.PAUSE.toString())) {
+						checkDependencyPAUSE = true;
 						checkDependencyStatus = true;
 						break;
-					} else if (dependencyStatus.equalsIgnoreCase(Status.Stage.Resume.toString())) {
-						checkDependencyResume = true;
+					} else if (dependencyStatus.equalsIgnoreCase(Status.Stage.RESUME.toString())) {
+						checkDependencyRESUME = true;
 						checkDependencyStatus = true;
 						break;
 					} else {
 						checkDependencyStatus = true;
 					}
-					logger.info(" checkDependencyStatus : checkDependencyKilled : checkDependencyFailed : checkDependencyOnHold : checkDependencyResume : " 
-								+ checkDependencyStatus + ":" + checkDependencyKilled + ":" + checkDependencyFailed + ":" + checkDependencyOnHold + ":" + checkDependencyResume);
-					if (checkDependencyKilled) {
+					logger.info(" checkDependencyStatus : checkDependencyKILLED : checkDependencyFAILED : checkDependencyPAUSE : checkDependencyRESUME : " 
+								+ checkDependencyStatus + ":" + checkDependencyKILLED + ":" + checkDependencyFAILED + ":" + checkDependencyPAUSE + ":" + checkDependencyRESUME);
+					if (checkDependencyKILLED) {
 						synchronized (dagExecUUID) {
 							try {
-								logger.info("Setting status to Killed for stage : " + stageId);
-								commonServiceImpl.setMetaStatusForTask(dagExec, indvTaskExec, Status.Stage.Killed, stageId, indvTaskExec.getTaskId());
+								logger.info("Setting status to KILLED for stage : " + stageId);
+								commonServiceImpl.setMetaStatusForTask(dagExec, indvTaskExec, Status.Stage.KILLED, stageId, indvTaskExec.getTaskId());
 								continue;
 							} catch (Exception e) {
 								// TODO Auto-generated catch block
@@ -215,11 +215,11 @@ public class AsyncStageRunner {
 						}
 					}
 					
-					if (checkDependencyFailed) {
+					if (checkDependencyFAILED) {
 						synchronized (dagExecUUID) {
 							try {
-								logger.info("Setting status to Failed for stage : " + stageId);
-								commonServiceImpl.setMetaStatusForTask(dagExec, indvTaskExec, Status.Stage.Failed, stageId, indvTaskExec.getTaskId());
+								logger.info("Setting status to FAILED for stage : " + stageId);
+								commonServiceImpl.setMetaStatusForTask(dagExec, indvTaskExec, Status.Stage.FAILED, stageId, indvTaskExec.getTaskId());
 								continue;
 							} catch (Exception e) {
 								// TODO Auto-generated catch block
@@ -228,11 +228,11 @@ public class AsyncStageRunner {
 						}
 					}
 					
-					if (checkDependencyOnHold) {
+					if (checkDependencyPAUSE) {
 						synchronized (dagExecUUID) {
 							try {
-								logger.info("Setting status to OnHold for stage : " + stageId);
-								commonServiceImpl.setMetaStatusForTask(dagExec, indvTaskExec, Status.Stage.Resume, stageId, indvTaskExec.getTaskId());
+								logger.info("Setting status to PAUSE for stage : " + stageId);
+								commonServiceImpl.setMetaStatusForTask(dagExec, indvTaskExec, Status.Stage.RESUME, stageId, indvTaskExec.getTaskId());
 								continue;
 							} catch (Exception e) {
 								// TODO Auto-generated catch block
@@ -241,11 +241,11 @@ public class AsyncStageRunner {
 						}
 					}
 					
-					if (checkDependencyResume) {
+					if (checkDependencyRESUME) {
 						synchronized (dagExecUUID) {
 							try {
-								logger.info("Setting status to Resume for stage : " + stageId);
-								commonServiceImpl.setMetaStatusForTask(dagExec, indvTaskExec, Status.Stage.Resume, stageId, indvTaskExec.getTaskId());
+								logger.info("Setting status to RESUME for stage : " + stageId);
+								commonServiceImpl.setMetaStatusForTask(dagExec, indvTaskExec, Status.Stage.RESUME, stageId, indvTaskExec.getTaskId());
 								continue;
 							} catch (Exception e) {
 								// TODO Auto-generated catch block

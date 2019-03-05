@@ -288,21 +288,21 @@ public abstract class RuleGroupTemplate implements IExecutable, IParsable {
 		List<Status> statusList = baseGroupExec.getStatusList();
 		
 		if (Helper.getLatestStatus(statusList) != null
-				&& Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Ready, new Date()))) {
-			logger.info(" If status is in Ready state then no need to start and parse again. ");
+				&& Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.READY, new Date()))) {
+			logger.info(" If status is in READY state then no need to start and parse again. ");
 			return baseGroupExec;
 		}
 		
 		if (Helper.getLatestStatus(statusList) != null 
-				&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.InProgress, new Date())) 
-						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Completed, new Date())) 
-						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.OnHold, new Date())))) {
-			logger.info(" This process is In Progress or has been completed previously or is On Hold. Hence it cannot be rerun. ");
+				&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.RUNNING, new Date())) 
+						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.COMPLETED, new Date())) 
+						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.PAUSE, new Date())))) {
+			logger.info(" This process is RUNNING or has been COMPLETED previously or is On Hold. Hence it cannot be rerun. ");
 			return baseGroupExec;
 		}
 		
 		synchronized (baseGroupExec.getUuid()) {
-			baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType, Status.Stage.NotStarted);
+			baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType, Status.Stage.PENDING);
 		}
 		
 		BaseRuleExec baseRuleExec = null;
@@ -336,7 +336,7 @@ public abstract class RuleGroupTemplate implements IExecutable, IParsable {
 				baseRuleExec = baseRuleService.create(ruleMeta.getRef().getUuid(), ruleMeta.getRef().getVersion(), ruleType, ruleExecType, baseRuleExec, refKeyMap, datapodList, dagExec);
 			} catch (Exception e) {
 				synchronized (baseGroupExec.getUuid()) {
-					baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType, Status.Stage.Failed);
+					baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType, Status.Stage.FAILED);
 				}
 				e.printStackTrace();
 //				throw new RuntimeException();
@@ -344,10 +344,10 @@ public abstract class RuleGroupTemplate implements IExecutable, IParsable {
 		} // After adding all ruleexecs
 		
 		for (BaseRuleExec ruleExec2 : ruleExecList) {
-			Status failedStatus = new Status(Status.Stage.Failed, new Date());
-			if (ruleExec2.getStatusList() != null && Helper.getLatestStatus(ruleExec2.getStatusList()).equals(failedStatus)) {
+			Status FAILEDStatus = new Status(Status.Stage.FAILED, new Date());
+			if (ruleExec2.getStatusList() != null && Helper.getLatestStatus(ruleExec2.getStatusList()).equals(FAILEDStatus)) {
 				synchronized (baseGroupExec.getUuid()) {
-					baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType, Status.Stage.Failed);
+					baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType, Status.Stage.FAILED);
 				}
 				throw new RuntimeException();
 			}
@@ -376,7 +376,7 @@ public abstract class RuleGroupTemplate implements IExecutable, IParsable {
 								RunMode runMode) throws Exception {
 		BaseRuleGroupExec baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, groupExecType.toString());
 		synchronized (execUuid) {
-			commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType, Status.Stage.Initialized);
+			commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType, Status.Stage.INITIALIZING);
 		}
 		BaseRuleExec ruleExec = null;
 		RuleTemplate baseRuleService = serviceFactory.getRuleService(ruleType);
@@ -395,7 +395,7 @@ public abstract class RuleGroupTemplate implements IExecutable, IParsable {
 			ruleExec = baseRuleService.parse(ruleExec.getUuid(), ruleExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);
 		}
 		synchronized (execUuid) {
-			commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType, Status.Stage.Ready);
+			commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType, Status.Stage.READY);
 		}
 		return baseGroupExec;
 	}
@@ -425,7 +425,7 @@ public abstract class RuleGroupTemplate implements IExecutable, IParsable {
 		List<Status> statusList = baseGroupExec.getStatusList();
 		String outputThreadName = null;*/
 		synchronized (baseGroupExec.getUuid()) {
-			baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType, Status.Stage.InProgress);
+			baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType, Status.Stage.RUNNING);
 		}
 
 		
@@ -482,10 +482,10 @@ public abstract class RuleGroupTemplate implements IExecutable, IParsable {
 		Status operatorLeastSigStatus = null;
 		BaseRuleGroupExec baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.getOneByUuidAndVersion(baseGroupExecUUID, baseGroupExecVersion, groupExecType.toString(), "N");
 		operatorLeastSigStatus = Helper.getLatestStatus(baseGroupExec.getStatusList());
-		if(Helper.getLatestStatus(baseGroupExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))
-				||Helper.getLatestStatus(baseGroupExec.getStatusList()).equals(new Status(Status.Stage.Killed, new Date()))){
-			logger.info("BaseGroupExec " + baseGroupExecUUID + " failed/killed. So proceeding ... ");
-			operatorLeastSigStatus = new Status(Status.Stage.Ready, new Date());
+		if(Helper.getLatestStatus(baseGroupExec.getStatusList()).equals(new Status(Status.Stage.FAILED, new Date()))
+				||Helper.getLatestStatus(baseGroupExec.getStatusList()).equals(new Status(Status.Stage.KILLED, new Date()))){
+			logger.info("BaseGroupExec " + baseGroupExecUUID + " FAILED/KILLED. So proceeding ... ");
+			operatorLeastSigStatus = new Status(Status.Stage.READY, new Date());
 			for (MetaIdentifierHolder ruleExecRefHolder : baseGroupExec.getExecList()) {
 				logger.info("Checking restart of ruleexec " + ruleExecRefHolder.getRef().getUuid());
 				BaseRuleExec baseRuleExec = (BaseRuleExec) commonServiceImpl.getOneByUuidAndVersion(ruleExecRefHolder.getRef().getUuid(), ruleExecRefHolder.getRef().getVersion(), ruleExecType.toString(), "N");
@@ -500,11 +500,11 @@ public abstract class RuleGroupTemplate implements IExecutable, IParsable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		/*if (Helper.isStatusPresent(new Status(Status.Stage.Ready, new Date()), baseGroupExec.getStatusList())) {
-			commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType, Status.Stage.Ready);
+		/*if (Helper.isStatusPresent(new Status(Status.Stage.READY, new Date()), baseGroupExec.getStatusList())) {
+			commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType, Status.Stage.READY);
 		} else {
-			commonServiceImpl.setMetaStatus(baseExec, meta.getType(), Status.Stage.NotStarted);
-			operatorLeastSigStatus = new Status(Status.Stage.NotStarted, new Date());
+			commonServiceImpl.setMetaStatus(baseExec, meta.getType(), Status.Stage.PENDING);
+			operatorLeastSigStatus = new Status(Status.Stage.PENDING, new Date());
 		}*/
 		return operatorLeastSigStatus;
 	}

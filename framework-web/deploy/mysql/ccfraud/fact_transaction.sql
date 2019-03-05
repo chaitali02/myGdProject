@@ -1,0 +1,21 @@
+drop table if exists fact_transaction;
+create table fact_transaction(	
+	transaction_id varchar(50) default 0 not null,
+	src_transaction_id varchar(50),
+	transaction_type_id varchar(50),
+	trans_date_id varchar(50),
+	bank_id varchar(50),
+	branch_id varchar(50),
+	customer_id varchar(50),
+	address_id varchar(50),
+	account_id varchar(50),
+	from_account varchar(50),
+	to_account varchar(50),
+	amount_base_curr integer(10),
+	amount_usd integer(10),
+	currency_code varchar(10),
+	currency_rate integer(10),
+	notes varchar(200),
+	load_date varchar(10),
+	load_id integer(50), 
+constraint transaction_id_pk  primary key(transaction_id));
