@@ -30,3 +30,4 @@ cd /home/inferyx/scripts
 nohup mongod &
 ./run.sh
 pkill -f "tomcat" ; /opt/tomcat/bin/startup.sh ; tail -100f /opt/tomcat/logs/catalina.out
+sudo apt-get install mysql-server
