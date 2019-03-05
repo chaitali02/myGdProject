@@ -39,7 +39,7 @@ public class SqoopExamples {
     int res;
     res = new ImportTool().run(sqoopOptions);
     if (res != 0) {
-      throw new RuntimeException("Sqoop API Failed - return code : "+Integer.toString(res));
+      throw new RuntimeException("Sqoop API FAILED - return code : "+Integer.toString(res));
     }
     return res;
   }

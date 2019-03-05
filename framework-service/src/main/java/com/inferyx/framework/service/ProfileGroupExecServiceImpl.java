@@ -338,11 +338,11 @@ public class ProfileGroupExecServiceImpl extends BaseGroupExecTemplate {
 			return;
 		}
 		
-		if (!Helper.getLatestStatus(profileGroupExec.getStatus()).equals(new Status(Status.Stage.InProgress, new Date()))) {
-			logger.info(" Status is not in progress. So aborting ... ");
+		if (!Helper.getLatestStatus(profileGroupExec.getStatus()).equals(new Status(Status.Stage.RUNNING, new Date()))) {
+			logger.info(" Status is not RUNNING. So aborting ... ");
 		}
 		try {
-			commonServiceImpl.setMetaStatus(profileGroupExec, MetaType.profilegroupExec, Status.Stage.Terminating);
+			commonServiceImpl.setMetaStatus(profileGroupExec, MetaType.profilegroupExec, Status.Stage.TERMINATING);
 			for (MetaIdentifierHolder profileExecHolder : profileGroupExec.getProfileExecList()) {
 				ProfileExec profileExec = (ProfileExec) daoRegister.getRefObject(profileExecHolder.getRef());
 				if (profileExec == null) {
@@ -350,7 +350,7 @@ public class ProfileGroupExecServiceImpl extends BaseGroupExecTemplate {
 				}
 				profileExecServiceImpl.kill (profileExec.getUuid(), profileExec.getVersion());
 			}
-			commonServiceImpl.setMetaStatus(profileGroupExec, MetaType.profilegroupExec, Status.Stage.Killed);
+			commonServiceImpl.setMetaStatus(profileGroupExec, MetaType.profilegroupExec, Status.Stage.KILLED);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

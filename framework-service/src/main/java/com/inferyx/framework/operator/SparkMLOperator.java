@@ -314,9 +314,9 @@ public class SparkMLOperator implements IModelOperator {
 //
 //				df.createOrReplaceGlobalTempView("tempPredictResult");
 //				IConnector connector = connectionFactory.getConnector(datasource.getType().toLowerCase());
-//				ConnectionHolder conHolder = connector.getConnection();
-//				if (conHolder.getStmtObject() instanceof SparkSession) {
-//					SparkSession sparkSession = (SparkSession) conHolder.getStmtObject();
+//				ConnectionHolder cPAUSEer = connector.getConnection();
+//				if (cPAUSEer.getStmtObject() instanceof SparkSession) {
+//					SparkSession sparkSession = (SparkSession) cPAUSEer.getStmtObject();
 //					predictionDf.persist(StorageLevel.MEMORY_AND_DISK());
 //					sparkSession.sqlContext().registerDataFrameAsTable(predictionDf, "tempPredictResult");
 //				}

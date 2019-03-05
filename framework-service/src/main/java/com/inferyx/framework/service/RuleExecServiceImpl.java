@@ -334,17 +334,17 @@ public class RuleExecServiceImpl extends BaseRuleExecTemplate {
 	 * @param uuid
 	 * @param version
 	 */
-	public void onHold (String uuid, String version) {
-		onHold(uuid, version, MetaType.ruleExec);
+	public void PAUSE (String uuid, String version) {
+		PAUSE(uuid, version, MetaType.ruleExec);
 	}
 	
 	/**
-	 * Resume Rule Execution
+	 * RESUME Rule Execution
 	 * @param uuid
 	 * @param version
 	 */
-	public void resume (String uuid, String version) {
-		super.resume(uuid, version, MetaType.ruleExec);
+	public void RESUME (String uuid, String version) {
+		super.RESUME(uuid, version, MetaType.ruleExec);
 	}
 
 	

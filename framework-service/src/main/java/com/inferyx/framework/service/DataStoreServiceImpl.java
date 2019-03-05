@@ -476,8 +476,8 @@ public class DataStoreServiceImpl {
 			Datasource datasource = (Datasource) commonActivity.getRefObject(new MetaIdentifier(MetaType.datasource, datasourceUUID, datasourceVersion));
 			Datasource datasource_2 = commonServiceImpl.getDatasourceByApp();
 			IConnector conn = connFactory.getConnector(datasource_2.getType().toLowerCase());
-			ConnectionHolder conHolder = conn.getConnection();
-			Object obj = conHolder.getConObject();
+			ConnectionHolder cPAUSEer = conn.getConnection();
+			Object obj = cPAUSEer.getConObject();
 			if(obj instanceof HiveContext)
 			{
 				DataFrameHolder dataFrameHolder = iReader.read(datapod, datastore, hdfsInfo,obj, datasource);
@@ -522,9 +522,9 @@ public class DataStoreServiceImpl {
 			Datasource datasource = (Datasource) commonActivity.getRefObject(new MetaIdentifier(MetaType.datasource, datasourceUUID, datasourceVersion));
 			Datasource datasource_2 = commonServiceImpl.getDatasourceByApp();
 			IConnector conn = connFactory.getConnector(datasource_2.getType().toLowerCase());
-			ConnectionHolder conHolder = conn.getConnection();
+			ConnectionHolder cPAUSEer = conn.getConnection();
 			
-			Object obj = conHolder.getConObject();
+			Object obj = cPAUSEer.getConObject();
 			if(obj instanceof HiveContext)
 			{
 				DataFrameHolder dataFrameHolder = iReader.read(datapod, datastore, hdfsInfo,obj, datasource);
@@ -1739,7 +1739,7 @@ public class DataStoreServiceImpl {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Failed to fetch data.", new MetaIdentifierHolder(new MetaIdentifier(MetaType.datastore, datastoreUuid, datastoreVersion)));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "FAILED to fetch data.", new MetaIdentifierHolder(new MetaIdentifier(MetaType.datastore, datastoreUuid, datastoreVersion)));
 		}
 		
 		return data;

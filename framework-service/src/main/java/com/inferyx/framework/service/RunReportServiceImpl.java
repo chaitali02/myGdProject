@@ -246,7 +246,7 @@ public class RunReportServiceImpl implements Callable<TaskHolder> {
 				// TODO: handle exception
 			}
 			
-			throw new RuntimeException((message != null) ? message : "Report execution failed.");
+			throw new RuntimeException((message != null) ? message : "Report execution FAILED.");
 		}
 		TaskHolder taskHolder = new TaskHolder(name, new MetaIdentifier(MetaType.vizExec, reportExec.getUuid(), reportExec.getVersion()));
 		return taskHolder;
@@ -259,7 +259,7 @@ public class RunReportServiceImpl implements Callable<TaskHolder> {
 			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 			long countRows = -1L;
 			
-			reportExec = (ReportExec) commonServiceImpl.setMetaStatus(reportExec, MetaType.reportExec, Status.Stage.InProgress);
+			reportExec = (ReportExec) commonServiceImpl.setMetaStatus(reportExec, MetaType.reportExec, Status.Stage.RUNNING);
 			
 			if (StringUtils.isBlank(reportExec.getExec())) {
 				throw new RuntimeException("sql not generated");
@@ -302,7 +302,7 @@ public class RunReportServiceImpl implements Callable<TaskHolder> {
 					}
 				}
 			}
-			reportExec = (ReportExec) commonServiceImpl.setMetaStatus(reportExec, MetaType.reportExec, Status.Stage.Completed);
+			reportExec = (ReportExec) commonServiceImpl.setMetaStatus(reportExec, MetaType.reportExec, Status.Stage.COMPLETED);
 		} catch (Exception e) { 
 			e.printStackTrace();
 			
@@ -316,9 +316,9 @@ public class RunReportServiceImpl implements Callable<TaskHolder> {
 				exc.printStackTrace();
 			}
 			
-			// Set status to Failed
+			// Set status to FAILED
 			try {
-				reportExec = (ReportExec) commonServiceImpl.setMetaStatus(reportExec, MetaType.reportExec, Status.Stage.Failed);
+				reportExec = (ReportExec) commonServiceImpl.setMetaStatus(reportExec, MetaType.reportExec, Status.Stage.FAILED);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}			
@@ -330,8 +330,8 @@ public class RunReportServiceImpl implements Callable<TaskHolder> {
 			}
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 			dependsOn.setRef(new MetaIdentifier(MetaType.reportExec, reportExec.getUuid(), reportExec.getVersion()));
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Report execution failed.", dependsOn);
-			throw new RuntimeException((message != null) ? message : "Report execution failed.");
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Report execution FAILED.", dependsOn);
+			throw new RuntimeException((message != null) ? message : "Report execution FAILED.");
 		}
 		
 		return reportExec;

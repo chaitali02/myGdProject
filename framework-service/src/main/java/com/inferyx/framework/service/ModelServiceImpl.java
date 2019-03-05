@@ -683,13 +683,13 @@ public class ModelServiceImpl {
 			commonServiceImpl.save(MetaType.modelExec.toString(), modelExec);
 			
 			if (Helper.getLatestStatus(statusList) != null 
-					&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.InProgress, new Date())) 
-							|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Completed, new Date())) 
-							|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.OnHold, new Date())))) {
-				logger.info(" This process is In Progress or has been completed previously or is On Hold. Hence it cannot be rerun. ");
+					&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.RUNNING, new Date())) 
+							|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.COMPLETED, new Date())) 
+							|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.PAUSE, new Date())))) {
+				logger.info(" This process is RUNNING or has been COMPLETED previously or is On Hold. Hence it cannot be rerun. ");
 				if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
 					customLogger.writeLog(this.getClass(),
-							"This process is In Progress or has been completed previously or is On Hold. Hence it cannot be rerun.", 
+							"This process is RUNNING or has been COMPLETED previously or is On Hold. Hence it cannot be rerun.", 
 							logPath,
 							Thread.currentThread().getStackTrace()[1].getLineNumber());
 				}
@@ -699,7 +699,7 @@ public class ModelServiceImpl {
 			//modelExec.setExec(dqOperator.generateSql(dataQual, datapodList, dataQualExec, dagExec, usedRefKeySet));
 			modelExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 
-			modelExec = (ModelExec) commonServiceImpl.setMetaStatus(modelExec, MetaType.modelExec, Status.Stage.NotStarted);
+			modelExec = (ModelExec) commonServiceImpl.setMetaStatus(modelExec, MetaType.modelExec, Status.Stage.PENDING);
 			if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
 				customLogger.writeLog(this.getClass(),
 						modelExec.getStatusList().size()>0 ? "Latest status: "+modelExec.getStatusList().get(modelExec.getStatusList().size()-1).getStage() : "Status list is empty", 
@@ -715,11 +715,11 @@ public class ModelServiceImpl {
 			
 			}
 			
-			modelExec = (ModelExec) commonServiceImpl.setMetaStatus(modelExec, MetaType.modelExec, Status.Stage.Failed);
+			modelExec = (ModelExec) commonServiceImpl.setMetaStatus(modelExec, MetaType.modelExec, Status.Stage.FAILED);
 			if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-				customLogger.writeLog(this.getClass(), modelExec.getStatusList().size()>0 ? "Model creation failed, status: "+modelExec.getStatusList().get(modelExec.getStatusList().size()-1).getStage() : "Status list is empty", logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
+				customLogger.writeLog(this.getClass(), modelExec.getStatusList().size()>0 ? "Model creation FAILED, status: "+modelExec.getStatusList().get(modelExec.getStatusList().size()-1).getStage() : "Status list is empty", logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
 			}
-			throw new Exception("Model creation failed");
+			throw new Exception("Model creation FAILED");
 		}		
 		return modelExec;
 	}*/
@@ -978,7 +978,7 @@ public class ModelServiceImpl {
 
 		boolean isSuccess = false;
 		try {
-			predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.InProgress);
+			predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.RUNNING);
 			
 			Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(predict.getDependsOn().getRef().getUuid(),
 					predict.getDependsOn().getRef().getVersion(), MetaType.model.toString());
@@ -1012,10 +1012,10 @@ public class ModelServiceImpl {
 			commonServiceImpl.save(MetaType.predictExec.toString(), predictExec);
 			if (result != null) {
 				isSuccess = true;
-				predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.Completed);
+				predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.COMPLETED);
 			}else {
 				isSuccess = false;
-				predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.Failed);
+				predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.FAILED);
 			}
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -1025,8 +1025,8 @@ public class ModelServiceImpl {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Predict execution failed.");
-			throw new RuntimeException((message != null) ? message : "Predict execution failed.");
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Predict execution FAILED.");
+			throw new RuntimeException((message != null) ? message : "Predict execution FAILED.");
 		}
 		return isSuccess;
 	}*/
@@ -1036,7 +1036,7 @@ public class ModelServiceImpl {
 		execParams = (ExecParams) commonServiceImpl.resolveName(execParams, null);
 		Distribution distribution = (Distribution) commonServiceImpl.getOneByUuidAndVersion(simulate.getDistributionTypeInfo().getRef().getUuid(), simulate.getDistributionTypeInfo().getRef().getVersion(), simulate.getDistributionTypeInfo().getRef().getType().toString());
 		try {
-			simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.InProgress);
+			simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.RUNNING);
 			Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(simulate.getDependsOn().getRef().getUuid(),
 					simulate.getDependsOn().getRef().getVersion(), MetaType.model.toString());
 	
@@ -1299,10 +1299,10 @@ public class ModelServiceImpl {
 //			commonServiceImpl.save(MetaType.simulateExec.toString(), simulateExec);
 //			if (result != null) {
 //				isSuccess = true;
-//				simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.Completed);
+//				simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.COMPLETED);
 //			}else {
 //				isSuccess = false;
-//				simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.Failed);
+//				simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.FAILED);
 //			}
 			isSuccess = true;
 		} catch (Exception e) {
@@ -1315,11 +1315,11 @@ public class ModelServiceImpl {
 			}
 
 			isSuccess = false;
-			simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.Failed);
+			simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.FAILED);
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 			dependsOn.setRef(new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()));
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Simulate execution failed.", dependsOn);
-			throw new RuntimeException((message != null) ? message : "Simulate execution failed.");
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Simulate execution FAILED.", dependsOn);
+			throw new RuntimeException((message != null) ? message : "Simulate execution FAILED.");
 		}
 
 		return isSuccess;
@@ -1345,28 +1345,28 @@ public class ModelServiceImpl {
 				statusList = new ArrayList<Status>();
 			
 			if (Helper.getLatestStatus(statusList) != null 
-					&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.InProgress, new Date())) 
-							|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Completed, new Date())) 
-							|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.OnHold, new Date())))) {
-				logger.info(" This process is In Progress or has been completed previously or is On Hold. Hence it cannot be rerun. ");
+					&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.RUNNING, new Date())) 
+							|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.COMPLETED, new Date())) 
+							|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.PAUSE, new Date())))) {
+				logger.info(" This process is RUNNING or has been COMPLETED previously or is On Hold. Hence it cannot be rerun. ");
 				return predictExec;
 			}
 			if (Helper.getLatestStatus(statusList) != null 
-					&& Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Ready, new Date()))) {
-				logger.info("predictExec is in ready state. Run directly. Don't set it to NotStarted state again. ");
+					&& Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.READY, new Date()))) {
+				logger.info("predictExec is in READY state. Run directly. Don't set it to PENDING state again. ");
 				return predictExec;
 			}
 			
 			synchronized (predictExec.getUuid()) {
-				predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.NotStarted);
-				predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.Initialized);
-				predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.Ready);
+				predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.PENDING);
+				predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.INITIALIZING);
+				predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.READY);
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e);				
-			predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.Failed);
+			predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.FAILED);
 			String message = null;
 			try {
 				message = e.getMessage();
@@ -1402,27 +1402,27 @@ public class ModelServiceImpl {
 				statusList = new ArrayList<Status>();
 			
 			if (Helper.getLatestStatus(statusList) != null 
-					&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.InProgress, new Date())) 
-							|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Completed, new Date())) 
-							|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.OnHold, new Date())))) {
-				logger.info(" This process is In Progress or has been completed previously or is On Hold. Hence it cannot be rerun. ");
+					&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.RUNNING, new Date())) 
+							|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.COMPLETED, new Date())) 
+							|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.PAUSE, new Date())))) {
+				logger.info(" This process is RUNNING or has been COMPLETED previously or is On Hold. Hence it cannot be rerun. ");
 				return simulateExec;
 			}
 			
 			if (Helper.getLatestStatus(statusList) != null 
-					&& Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Ready, new Date()))) {
-				logger.info("simulateExec is in ready state. Run directly. Don't set it to NotStarted state again. ");
+					&& Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.READY, new Date()))) {
+				logger.info("simulateExec is in READY state. Run directly. Don't set it to PENDING state again. ");
 				return simulateExec;
 			}
 			
 			synchronized (simulateExec.getUuid()) {
-				simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.NotStarted);
-				simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.Initialized);
-				simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.Ready);
+				simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.PENDING);
+				simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.INITIALIZING);
+				simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.READY);
 			}
 		} catch (Exception e) {
 			logger.error(e);	
-			simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.Failed);
+			simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.FAILED);
 			e.printStackTrace();
 			String message = null;
 			try {
@@ -1488,13 +1488,13 @@ public class ModelServiceImpl {
 			commonServiceImpl.save(MetaType.trainExec.toString(), trainExec);
 			
 			if (Helper.getLatestStatus(statusList) != null 
-					&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.InProgress, new Date())) 
-							|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Completed, new Date())) 
-							|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.OnHold, new Date())))) {
-				logger.info(" This process is In Progress or has been completed previously or is On Hold. Hence it cannot be rerun. ");
+					&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.RUNNING, new Date())) 
+							|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.COMPLETED, new Date())) 
+							|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.PAUSE, new Date())))) {
+				logger.info(" This process is RUNNING or has been COMPLETED previously or is On Hold. Hence it cannot be rerun. ");
 //				if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
 //					customLogger.writeLog(this.getClass(),
-//							"This process is In Progress or has been completed previously or is On Hold. Hence it cannot be rerun.", 
+//							"This process is RUNNING or has been COMPLETED previously or is On Hold. Hence it cannot be rerun.", 
 //							logPath,
 //							Thread.currentThread().getStackTrace()[1].getLineNumber());
 //				}
@@ -1502,17 +1502,17 @@ public class ModelServiceImpl {
 			}
 			
 			if (Helper.getLatestStatus(statusList) != null 
-					&& Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Ready, new Date()))) {
-				logger.info("trainExec is in ready state. Run directly. Don't set it to NotStarted state again. ");
+					&& Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.READY, new Date()))) {
+				logger.info("trainExec is in READY state. Run directly. Don't set it to PENDING state again. ");
 				return trainExec;
 			}
 			
 			//modelExec.setExec(dqOperator.generateSql(dataQual, datapodList, dataQualExec, dagExec, usedRefKeySet));
 			trainExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 			synchronized (trainExec.getUuid()) {
-				trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.NotStarted);
-				trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.Initialized);
-				trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.Ready);
+				trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.PENDING);
+				trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.INITIALIZING);
+				trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.READY);
 			}
 //			if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
 //				customLogger.writeLog(this.getClass(),
@@ -1530,9 +1530,9 @@ public class ModelServiceImpl {
 //			
 //			}
 			
-			trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.Failed);
+			trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.FAILED);
 //			if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-//				customLogger.writeLog(this.getClass(), trainExec.getStatusList().size()>0 ? "Train exec creation failed, status: "+trainExec.getStatusList().get(trainExec.getStatusList().size()-1).getStage() : "Status list is empty", logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
+//				customLogger.writeLog(this.getClass(), trainExec.getStatusList().size()>0 ? "Train exec creation FAILED, status: "+trainExec.getStatusList().get(trainExec.getStatusList().size()-1).getStage() : "Status list is empty", logPath, Thread.currentThread().getStackTrace()[1].getLineNumber());
 //			}
 			e.printStackTrace();
 			String message = null;
@@ -1678,7 +1678,7 @@ public class ModelServiceImpl {
 				return true;
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 //				e.printStackTrace();
-				logger.info("Model already exists on path '"+path+"', overriding the olde model...");
+				logger.info("Model alReady exists on path '"+path+"', overriding the olde model...");
 				String expMessage = e.getCause().getMessage();
 				if (expMessage.contains("use write().overwrite().save(path) for Java")) {
 					try {
@@ -1939,7 +1939,7 @@ public class ModelServiceImpl {
 		logger.info("Inside predict");
 		boolean isSuccess = false;
 		try {
-			predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.InProgress);
+			predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.RUNNING);
 			
 			MetaIdentifierHolder modelHolder = predict.getDependsOn();
 //			MetaIdentifierHolder sourceHolder = predict.getSource();
@@ -2377,10 +2377,10 @@ public class ModelServiceImpl {
 //			logger.info("After saving predictExec");
 //			if (result != null) {
 //				isSuccess = true;
-//				predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.Completed);
+//				predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.COMPLETED);
 //			}else {
 //				isSuccess = false;
-//				predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.Failed);
+//				predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.FAILED);
 //			}
 			isSuccess = true;
 		} catch (Exception e) {
@@ -2391,11 +2391,11 @@ public class ModelServiceImpl {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.Failed);
+			predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.FAILED);
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 			dependsOn.setRef(new MetaIdentifier(MetaType.predictExec, predictExec.getUuid(), predictExec.getVersion()));
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Predict execution failed.", dependsOn);
-			throw new RuntimeException((message != null) ? message : "Predict execution failed.");
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Predict execution FAILED.", dependsOn);
+			throw new RuntimeException((message != null) ? message : "Predict execution FAILED.");
 		}
 		return isSuccess;
 	}
@@ -2598,7 +2598,7 @@ public class ModelServiceImpl {
 //	public boolean predict2(Predict predict, ExecParams execParams, PredictExec predictExec, RunMode runMode) throws Exception {
 //		boolean isSuccess = false;
 //		try {
-//			predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.InProgress);
+//			predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.RUNNING);
 //			
 //			MetaIdentifierHolder modelHolder = predict.getDependsOn();
 //			MetaIdentifierHolder sourceHolder = predict.getSource();
@@ -2712,10 +2712,10 @@ public class ModelServiceImpl {
 //			commonServiceImpl.save(MetaType.predictExec.toString(), predictExec);
 //			if (result != null) {
 //				isSuccess = true;
-//				predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.Completed);
+//				predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.COMPLETED);
 //			}else {
 //				isSuccess = false;
-//				predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.Failed);
+//				predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.FAILED);
 //			}
 //		} catch (Exception e) {
 //			e.printStackTrace();
@@ -2725,11 +2725,11 @@ public class ModelServiceImpl {
 //			}catch (Exception e2) {
 //				// TODO: handle exception
 //			}
-//			predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.Failed);
+//			predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.FAILED);
 //			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 //			dependsOn.setRef(new MetaIdentifier(MetaType.predictExec, predictExec.getUuid(), predictExec.getVersion()));
-//			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Predict execution failed.", dependsOn);
-//			throw new RuntimeException((message != null) ? message : "Predict execution failed.");
+//			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Predict execution FAILED.", dependsOn);
+//			throw new RuntimeException((message != null) ? message : "Predict execution FAILED.");
 //		}
 //		return isSuccess;
 //	}
@@ -2794,7 +2794,7 @@ public class ModelServiceImpl {
 //		execParams = (ExecParams) commonServiceImpl.resolveName(execParams, null);
 //		Distribution distribution = (Distribution) commonServiceImpl.getOneByUuidAndVersion(simulate.getDistributionTypeInfo().getRef().getUuid(), simulate.getDistributionTypeInfo().getRef().getVersion(), simulate.getDistributionTypeInfo().getRef().getType().toString());
 //		try {
-//			simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.InProgress);
+//			simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.RUNNING);
 //			Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(simulate.getDependsOn().getRef().getUuid(),
 //					simulate.getDependsOn().getRef().getVersion(), MetaType.model.toString());
 //	
@@ -3038,10 +3038,10 @@ public class ModelServiceImpl {
 //			commonServiceImpl.save(MetaType.simulateExec.toString(), simulateExec);
 //			if (result != null) {
 //				isSuccess = true;
-//				simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.Completed);
+//				simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.COMPLETED);
 //			}else {
 //				isSuccess = false;
-//				simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.Failed);
+//				simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.FAILED);
 //			}
 //		} catch (Exception e) {
 //			e.printStackTrace();
@@ -3052,11 +3052,11 @@ public class ModelServiceImpl {
 //				// TODO: handle exception
 //			}
 //
-//			simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.Failed);
+//			simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.FAILED);
 //			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 //			dependsOn.setRef(new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()));
-//			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Simulate execution failed.", dependsOn);
-//			throw new RuntimeException((message != null) ? message : "Simulate execution failed.");
+//			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Simulate execution FAILED.", dependsOn);
+//			throw new RuntimeException((message != null) ? message : "Simulate execution FAILED.");
 //		}		
 //
 //		return isSuccess;
@@ -3076,7 +3076,7 @@ public class ModelServiceImpl {
 				if(trainExec == null) {
 					trainExec = create(train, model, execParams, null, trainExec);
 				}
-				trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.InProgress);
+				trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.RUNNING);
 				
 				TrainResult trainResult = new TrainResult();
 				trainResult.setName(train.getName());
@@ -3480,7 +3480,7 @@ public class ModelServiceImpl {
 							new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion()),
 							trainExec.getAppInfo(), trainExec.getCreatedBy(), SaveMode.APPEND.toString(), resultRef);
 					trainExec.setResult(resultRef);
-					trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, result ? Status.Stage.Completed : Status.Stage.Failed);
+					trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, result ? Status.Stage.COMPLETED : Status.Stage.FAILED);
 					return result;
 				}
 				List<String> scriptPrintedMsgs =  executeScript(model.getType(), model.getScriptName(), trainExec.getUuid(), trainExec.getVersion(), argList);
@@ -3489,7 +3489,7 @@ public class ModelServiceImpl {
 				} else {
 					result = false;
 				}
-				trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, result ? Status.Stage.Completed : Status.Stage.Failed);
+				trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, result ? Status.Stage.COMPLETED : Status.Stage.FAILED);
 				return result;
 			} else {				
 				if (model.getDependsOn().getRef().getVersion() != null) {
@@ -3523,7 +3523,7 @@ public class ModelServiceImpl {
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
-			trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.Failed);
+			trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.FAILED);
 			String message = null;
 			try {
 				message = e.getMessage();
@@ -3531,8 +3531,8 @@ public class ModelServiceImpl {
 				// TODO: handle exception
 			}
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder(new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion()));
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Train execution failed.", dependsOn);
-			throw new RuntimeException((message != null) ? message : "Train execution failed.");			 		
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Train execution FAILED.", dependsOn);
+			throw new RuntimeException((message != null) ? message : "Train execution FAILED.");			 		
 		}
 	}
 	
@@ -3999,7 +3999,7 @@ public class ModelServiceImpl {
 					dataRangeFilter = match(new Criteria("createdOn").lte(simpleDateFormat.parse(endDate)));
 				}
 				
-				MatchOperation statusFilter = match(new Criteria("statusList.stage").is(Status.Stage.Completed.toString()));
+				MatchOperation statusFilter = match(new Criteria("statusList.stage").is(Status.Stage.COMPLETED.toString()));
 				
 				GroupOperation groupBy = group("uuid").max("version").as("version");
 				
@@ -4064,16 +4064,16 @@ public class ModelServiceImpl {
 					dataRangeFilter = match(new Criteria("createdOn").lte(simpleDateFormat.parse(endDate)));
 				}
 				
-//				MatchOperation statusFilter = match(new Criteria("statusList.stage").is(Status.Stage.Completed.toString()));
+//				MatchOperation statusFilter = match(new Criteria("statusList.stage").is(Status.Stage.COMPLETED.toString()));
 				MatchOperation statusFilter = null;
 				if(status != null) {
 					statusFilter = match(new Criteria("statusList.stage").is(status));
 				} else {
-					statusFilter = match(new Criteria("statusList.stage").in(Status.Stage.Completed.toString(),
-							Status.Stage.Failed.toString(),
-							Status.Stage.InProgress.toString(),
-							Status.Stage.NotStarted.toString(),
-							Status.Stage.Killed.toString()));
+					statusFilter = match(new Criteria("statusList.stage").in(Status.Stage.COMPLETED.toString(),
+							Status.Stage.FAILED.toString(),
+							Status.Stage.RUNNING.toString(),
+							Status.Stage.PENDING.toString(),
+							Status.Stage.KILLED.toString()));
 				}
 				
 				GroupOperation groupBy = group("uuid").max("version").as("version");
@@ -4122,11 +4122,11 @@ public class ModelServiceImpl {
 		if(status != null && !status.isEmpty()) {
 			statusFilter = match(new Criteria("statusList.stage").is(status));
 		} else {
-			statusFilter = match(new Criteria("statusList.stage").in(Status.Stage.Completed.toString(),
-					Status.Stage.Failed.toString(),
-					Status.Stage.InProgress.toString(),
-					Status.Stage.NotStarted.toString(),
-					Status.Stage.Killed.toString()));
+			statusFilter = match(new Criteria("statusList.stage").in(Status.Stage.COMPLETED.toString(),
+					Status.Stage.FAILED.toString(),
+					Status.Stage.RUNNING.toString(),
+					Status.Stage.PENDING.toString(),
+					Status.Stage.KILLED.toString()));
 		}
 		
 		GroupOperation groupBy = group("uuid").max("version").as("version");
@@ -4204,11 +4204,11 @@ public class ModelServiceImpl {
 			dataRangeFilter = match(new Criteria("createdOn").lte(simpleDateFormat.parse(endDate)));
 		}
 		
-		MatchOperation statusFilter = match(new Criteria("statusList.stage").is(Status.Stage.Completed.toString()));
+		MatchOperation statusFilter = match(new Criteria("statusList.stage").is(Status.Stage.COMPLETED.toString()));
 //		if(status != null && !status.isEmpty()) {
 //			statusFilter = match(new Criteria("statusList.stage").is(status));
 //		} else {
-//			statusFilter = match(new Criteria("statusList.stage").is(Status.Stage.Completed.toString()));
+//			statusFilter = match(new Criteria("statusList.stage").is(Status.Stage.COMPLETED.toString()));
 //		}
 		
 		GroupOperation groupBy = group("uuid").max("version").as("version");

@@ -245,7 +245,7 @@ public class RuleGroupExecServiceImpl extends BaseGroupExecTemplate {
 		return mi;
 	}
 
-//	public void onHold (String uuid, String version) {
+//	public void PAUSE (String uuid, String version) {
 //		MetaIdentifier ruleGroupExecIdentifier = new MetaIdentifier(MetaType.rulegroupExec, uuid, version);
 //		RuleGroupExec ruleGroupExec = (RuleGroupExec) daoRegister.getRefObject(ruleGroupExecIdentifier);
 //		if (ruleGroupExec == null) {
@@ -253,8 +253,8 @@ public class RuleGroupExecServiceImpl extends BaseGroupExecTemplate {
 //			return;
 //		}
 //		
-//		if (!Helper.getLatestStatus(ruleGroupExec.getStatus()).equals(new Status(Status.Stage.NotStarted, new Date()))) {
-//			logger.info("Latest Status is not in NotStarted. Exiting...");
+//		if (!Helper.getLatestStatus(ruleGroupExec.getStatus()).equals(new Status(Status.Stage.PENDING, new Date()))) {
+//			logger.info("Latest Status is not in PENDING. Exiting...");
 //			return;
 //		}
 //		try {
@@ -263,15 +263,15 @@ public class RuleGroupExecServiceImpl extends BaseGroupExecTemplate {
 //				if (ruleExec == null) {
 //					continue;
 //				}
-//				ruleExecServiceImpl.onHold (ruleExec.getUuid(), ruleExec.getVersion());
+//				ruleExecServiceImpl.PAUSE (ruleExec.getUuid(), ruleExec.getVersion());
 //			}
-//			commonServiceImpl.setMetaStatus(ruleGroupExec, MetaType.rulegroupExec, Status.Stage.OnHold);
+//			commonServiceImpl.setMetaStatus(ruleGroupExec, MetaType.rulegroupExec, Status.Stage.PAUSE);
 //		} catch (Exception e) {
 //			e.printStackTrace();
 //		}
 //	}
 
-//	public void resume (String uuid, String version) {
+//	public void RESUME (String uuid, String version) {
 //		MetaIdentifier ruleGroupExecIdentifier = new MetaIdentifier(MetaType.rulegroupExec, uuid, version);
 //		RuleGroupExec ruleGroupExec = (RuleGroupExec) daoRegister.getRefObject(ruleGroupExecIdentifier);
 //		if (ruleGroupExec == null) {
@@ -279,8 +279,8 @@ public class RuleGroupExecServiceImpl extends BaseGroupExecTemplate {
 //			return;
 //		}
 //				
-//		if (!Helper.getLatestStatus(ruleGroupExec.getStatus()).equals(new Status(Status.Stage.OnHold, new Date()))) {
-//			logger.info("Latest Status is not in OnHold. Exiting...");
+//		if (!Helper.getLatestStatus(ruleGroupExec.getStatus()).equals(new Status(Status.Stage.PAUSE, new Date()))) {
+//			logger.info("Latest Status is not in PAUSE. Exiting...");
 //			return;
 //		}
 //
@@ -290,9 +290,9 @@ public class RuleGroupExecServiceImpl extends BaseGroupExecTemplate {
 //				if (ruleExec == null) {
 //					continue;
 //				}
-//				ruleExecServiceImpl.resume (ruleExec.getUuid(), ruleExec.getVersion());
+//				ruleExecServiceImpl.RESUME (ruleExec.getUuid(), ruleExec.getVersion());
 //			}
-//			commonServiceImpl.setMetaStatus(ruleGroupExec, MetaType.rulegroupExec, Status.Stage.Resume);
+//			commonServiceImpl.setMetaStatus(ruleGroupExec, MetaType.rulegroupExec, Status.Stage.RESUME);
 //		} catch (Exception e) {
 //			e.printStackTrace();
 //		}
@@ -312,13 +312,13 @@ public class RuleGroupExecServiceImpl extends BaseGroupExecTemplate {
 			return;
 		}
 		
-		if (!Helper.getLatestStatus(ruleGroupExec.getStatusList()).equals(new Status(Status.Stage.InProgress, new Date()))) {
-			logger.info("Latest Status is not in InProgress. Exiting...");
+		if (!Helper.getLatestStatus(ruleGroupExec.getStatusList()).equals(new Status(Status.Stage.RUNNING, new Date()))) {
+			logger.info("Latest Status is not in RUNNING. Exiting...");
 			return;			
 		}
 		try {
 			synchronized (ruleGroupExec.getUuid()) {
-				commonServiceImpl.setMetaStatus(ruleGroupExec, MetaType.rulegroupExec, Status.Stage.Terminating);
+				commonServiceImpl.setMetaStatus(ruleGroupExec, MetaType.rulegroupExec, Status.Stage.TERMINATING);
 			}
 			
 			FutureTask futureTask = (FutureTask) taskThreadMap.get(MetaType.rulegroupExec+"_"+ruleGroupExec.getUuid()+"_"+ruleGroupExec.getVersion());
@@ -349,17 +349,17 @@ public class RuleGroupExecServiceImpl extends BaseGroupExecTemplate {
 					}
 					List<Status> statusList = ruleExec.getStatus();
 					Status latestStatus = Helper.getLatestStatus(statusList);
-					if (!latestStatus.getStage().equals(Status.Stage.Completed) 
-							&& !latestStatus.getStage().equals(Status.Stage.Killed) 
-							&& !latestStatus.getStage().equals(Status.Stage.Failed) 
-							&& !latestStatus.getStage().equals(Status.Stage.NotStarted)) {
+					if (!latestStatus.getStage().equals(Status.Stage.COMPLETED) 
+							&& !latestStatus.getStage().equals(Status.Stage.KILLED) 
+							&& !latestStatus.getStage().equals(Status.Stage.FAILED) 
+							&& !latestStatus.getStage().equals(Status.Stage.PENDING)) {
 						killComplete = false;
 						Thread.sleep(5000);
 						break;
 					}
 				}
 			}	// While Not killComplete
-			logger.info("Rules kill completed >>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
+			logger.info("Rules kill COMPLETED >>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
 			
 			ruleGroupExec = findOneByUuidAndVersion(ruleGroupExec.getUuid(), ruleGroupExec.getVersion());
 			Status.Stage latestStatus = Helper.getLatestStatus(ruleGroupExec.getStatusList()).getStage();
@@ -371,7 +371,7 @@ public class RuleGroupExecServiceImpl extends BaseGroupExecTemplate {
 			 }
 			}
 			synchronized (ruleGroupExec.getUuid()) {
-				commonServiceImpl.setMetaStatus(ruleGroupExec, MetaType.rulegroupExec, Status.Stage.Killed);
+				commonServiceImpl.setMetaStatus(ruleGroupExec, MetaType.rulegroupExec, Status.Stage.KILLED);
 			}
 		} catch (Exception e) {
 			logger.error("Exception while killing rule group >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");

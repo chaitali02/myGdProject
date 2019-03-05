@@ -68,12 +68,12 @@ public class DashboardViewServiceImpl {
 			dashboard.setUuid(dashboardView.getUuid());
 		}
 
-		MetaIdentifierHolder relationHolder = dashboardView.getDependsOn();
+		MetaIdentifierHolder relatiPAUSEer = dashboardView.getDependsOn();
 		dashboard.setTags(dashboardView.getTags());
 		dashboard.setDesc(dashboardView.getDesc());
 		dashboard.setFilterInfo(dashboardView.getFilterInfo());
 		dashboard.setName(dashboardView.getName());
-		dashboard.setDependsOn(relationHolder);
+		dashboard.setDependsOn(relatiPAUSEer);
 		List<SectionView> sectionViewInfo = dashboardView.getSectionInfo();
 		List<Section> sectionInfo = new ArrayList<>();
 		for (SectionView sectionView : sectionViewInfo) {

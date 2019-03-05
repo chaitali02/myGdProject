@@ -299,7 +299,7 @@ public class MapExecServiceImpl {
 	}
 	
 	/**
-	 * Kill meta thread if In Progress
+	 * Kill meta thread if RUNNING
 	 * @param uuid
 	 * @param version
 	 * @throws JsonProcessingException 
@@ -314,9 +314,9 @@ public class MapExecServiceImpl {
 		}
 		
 		try {
-			mapExec = (MapExec) commonServiceImpl.setMetaStatus(mapExec, MetaType.mapExec, Status.Stage.Terminating);
-			if (!Helper.getLatestStatus(mapExec.getStatusList()).equals(new Status(Status.Stage.Terminating, new Date()))) {
-				logger.info(" Status is not terminating. So aborting ... ");
+			mapExec = (MapExec) commonServiceImpl.setMetaStatus(mapExec, MetaType.mapExec, Status.Stage.TERMINATING);
+			if (!Helper.getLatestStatus(mapExec.getStatusList()).equals(new Status(Status.Stage.TERMINATING, new Date()))) {
+				logger.info(" Status is not TERMINATING. So aborting ... ");
 				return;
 			}
 			FutureTask futureTask = (FutureTask) taskThreadMap.get("Map_" + mapExec.getUuid());
@@ -324,7 +324,7 @@ public class MapExecServiceImpl {
 				futureTask.cancel(true);
 			}
 			taskThreadMap.remove("Map_" + mapExec.getUuid());
-			commonServiceImpl.setMetaStatus(mapExec, MetaType.mapExec, Status.Stage.Killed);
+			commonServiceImpl.setMetaStatus(mapExec, MetaType.mapExec, Status.Stage.KILLED);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

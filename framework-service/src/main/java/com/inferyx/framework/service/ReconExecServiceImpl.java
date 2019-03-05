@@ -33,7 +33,7 @@ import com.inferyx.framework.domain.User;
 @Service
 public class ReconExecServiceImpl extends BaseRuleExecTemplate {	
 	/**
-	 * Kill meta thread if In Progress
+	 * Kill meta thread if RUNNING
 	 * @param uuid
 	 * @param version
 	 */

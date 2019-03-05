@@ -816,7 +816,7 @@ public class VizpodServiceImpl extends RuleTemplate {
 			vizExec.setBaseEntity();
 		}
 
-		vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.NotStarted);
+		vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.PENDING);
 		return vizExec;
 	}
 	
@@ -842,7 +842,7 @@ public class VizpodServiceImpl extends RuleTemplate {
 
 		VizExec vizExec = (VizExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.vizExec.toString(), "N");
 
-		vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.Initialized);
+		vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.INITIALIZING);
 		
 		MetaIdentifier vizpodMI = vizExec.getDependsOn().getRef();
 		Vizpod vizpod = (Vizpod) commonServiceImpl.getOneByUuidAndVersion(vizpodMI.getUuid(), vizpodMI.getVersion(), MetaType.vizpod.toString(), "Y");
@@ -866,12 +866,12 @@ public class VizpodServiceImpl extends RuleTemplate {
 			vizExec.setSql(vizpodParser.toSql(vizpod, null, usedRefKeySet, true, runMode, false));
 			logger.info(vizExec.getSql());
 
-			vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.Ready);
+			vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.READY);
 		} catch (Exception e) {
 			e.printStackTrace();
-			vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.Ready);
-			vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.Failed);
-			throw new RuntimeException("Failed to parse vizExec.");
+			vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.READY);
+			vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.FAILED);
+			throw new RuntimeException("FAILED to parse vizExec.");
 		}
 		
 		return vizExec;
@@ -915,7 +915,7 @@ public class VizpodServiceImpl extends RuleTemplate {
 			}
 			/**** Get sql and update in vizpodexec - END ****/
 
-			vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.InProgress);
+			vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.RUNNING);
 			
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			Datasource vizpodSourceDS =  commonServiceImpl.getDatasourceByObject(vizpod);
@@ -983,7 +983,7 @@ public class VizpodServiceImpl extends RuleTemplate {
 //			vizExec.setBaseEntity();
 //			commonServiceImpl.save(MetaType.vizExec.toString(), vizExec);
 //			/**** Get sql and update in vizpodexec - END ****/
-			vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.Completed);
+			vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.COMPLETED);
 		} catch (Exception e) {
 			e.printStackTrace();
 			String message = null;
@@ -1003,7 +1003,7 @@ public class VizpodServiceImpl extends RuleTemplate {
 				message="Some error occurred";
 			}
 
-			vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.Failed);
+			vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.FAILED);
 			commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Table or View does not exists.", dependsOn);
 			throw new RuntimeException((message != null) ? message : "Table or View does not exists.");			 		
 		} finally {
@@ -1030,7 +1030,7 @@ public class VizpodServiceImpl extends RuleTemplate {
 				vizExec = parse(vizExec.getUuid(), vizExec.getVersion(), execParams, null, null, null, null, runMode);
 			}
 			/**** Get sql and update in vizpodexec - END ****/
-			vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.InProgress);
+			vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.RUNNING);
 					
 			List<String> orderList = new ArrayList<>();
 			List<String> sortList = new ArrayList<>();
@@ -1168,7 +1168,7 @@ public class VizpodServiceImpl extends RuleTemplate {
 //			// commonServiceImpl.save(MetaType.vizExec.toString(), vizExec);
 //			/**** Get sql and update in vizpodexec - END ****/
 			
-			vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.Completed);
+			vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.COMPLETED);
 		} catch (Exception e) {
 			e.printStackTrace();
 			String message = null;
@@ -1186,7 +1186,7 @@ public class VizpodServiceImpl extends RuleTemplate {
 				message="Some error occurred";
 			}
 
-			vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.Failed);
+			vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.FAILED);
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder(new MetaIdentifier(MetaType.vizExec, vizExec.getUuid(), vizExec.getVersion()));
 			commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Table or View does not exists.", dependsOn);
 			throw new RuntimeException((message != null) ? message : "Table or View does not exists.");			 		
@@ -1422,7 +1422,7 @@ public class VizpodServiceImpl extends RuleTemplate {
 			runVizpodServiceImpl.call();
 		} catch (Exception e) {
 			e.printStackTrace();
-			vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.Failed);
+			vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.FAILED);
 			String message = null;
 			try {
 				message = e.getMessage();
@@ -1430,8 +1430,8 @@ public class VizpodServiceImpl extends RuleTemplate {
 				// TODO: handle exception
 			}
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder(new MetaIdentifier(MetaType.vizExec, vizExec.getUuid(), vizExec.getVersion()));
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Vizpod execution failed.", dependsOn);
-			throw new RuntimeException((message != null) ? message : "Vizpod execution failed.");	
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Vizpod execution FAILED.", dependsOn);
+			throw new RuntimeException((message != null) ? message : "Vizpod execution FAILED.");	
 		}
 		
 		return vizExec;
@@ -1495,10 +1495,10 @@ public class VizpodServiceImpl extends RuleTemplate {
 		@Override
 		public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 			synchronized (baseExec.getUuid()) {
-				baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.vizExec, Status.Stage.Initialized);
+				baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.vizExec, Status.Stage.INITIALIZING);
 			}
 			synchronized (baseExec.getUuid()) {
-				baseExec = (DashboardExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.vizExec, Status.Stage.Ready);
+				baseExec = (DashboardExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.vizExec, Status.Stage.READY);
 			}			
 			return baseExec;
 		}
@@ -1509,10 +1509,10 @@ public class VizpodServiceImpl extends RuleTemplate {
 				throws Exception {
 			BaseRuleExec baseRuleExec = (BaseRuleExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.vizExec.toString(), "N");
 			synchronized (execUuid) {
-				baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, MetaType.vizExec, Status.Stage.Initialized);
+				baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, MetaType.vizExec, Status.Stage.INITIALIZING);
 			}
 			synchronized (execUuid) {
-				baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, MetaType.vizExec, Status.Stage.Ready);
+				baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, MetaType.vizExec, Status.Stage.READY);
 			}
 			return baseRuleExec;
 		}

@@ -1,15 +1,15 @@
 {
     "statusList" : [ 
         {
-            "stage" : "NotStarted",
+            "stage" : "PENDING",
             "createdOn" : ISODate("2019-02-12T06:22:36.542Z")
         }, 
         {
-            "stage" : "InProgress",
+            "stage" : "RUNNING",
             "createdOn" : ISODate("2019-02-12T06:22:36.543Z")
         }, 
         {
-            "stage" : "Completed",
+            "stage" : "COMPLETED",
             "createdOn" : ISODate("2019-02-12T06:25:48.473Z")
         }
     ],

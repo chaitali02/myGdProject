@@ -55,11 +55,11 @@ public class ExecListenerAdapter {
 		dagExecListener.put(dagExec.getUuid()+"_"+dagExec.getVersion(), dagExec);
 	}
 	
-	public void dagCompleted(DagExec dagExec) {
+	public void dagCOMPLETED(DagExec dagExec) {
 		dagExecListener.remove(dagExec.getUuid()+"_"+dagExec.getVersion());
 	}
 	
-	public void dagFailed(DagExec dagExec) {
+	public void dagFAILED(DagExec dagExec) {
 		dagExecListener.remove(dagExec.getUuid()+"_"+dagExec.getVersion());
 		// Find baseExecs and remove them
 	}
@@ -71,7 +71,7 @@ public class ExecListenerAdapter {
 		}
 	}
 	
-	public void dagKilled() {
+	public void dagKILLED() {
 		
 	}
 

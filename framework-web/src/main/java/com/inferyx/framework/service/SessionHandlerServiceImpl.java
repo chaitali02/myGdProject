@@ -55,7 +55,7 @@ public class SessionHandlerServiceImpl {
 					session.invalidate();
 					logger.info("Session invalidated......."); return true;
 				}else
-					logger.info("Session already invalidated......."); return false; 
+					logger.info("Session alReady invalidated......."); return false; 
 			}else
 				logger.info("Unable to update Session object, aborting invalidated operation......."); return false;
 		}else
@@ -72,7 +72,7 @@ public class SessionHandlerServiceImpl {
 				commonServiceImpl.save(MetaType.session.toString(), session);	
 				return true;
 			}else
-				logger.info("Session already invalidated......."); return false;
+				logger.info("Session alReady invalidated......."); return false;
 		}else
 			logger.info("Meta type \"Session\" instance is null......."); return false;
 	}

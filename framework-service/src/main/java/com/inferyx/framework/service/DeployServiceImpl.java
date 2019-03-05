@@ -98,10 +98,10 @@ public class DeployServiceImpl {
 				processStatus = getProcessStatus(trainExecUuid, trainExecVersion);
 				logger.info("Process status : " + processStatus);
 			} catch (Exception e) {
-				//Process has not started.
-				logger.info("Process has not started.");
+				//Process has PENDING.
+				logger.info("Process has PENDING.");
 				if(e.toString().contains("Connection refused")) {
-					throw new RuntimeException("Process has not started.");
+					throw new RuntimeException("Process has PENDING.");
 				} else {
 					throw new RuntimeException("Some error occured.");
 				}
@@ -123,7 +123,7 @@ public class DeployServiceImpl {
 			logger.info(" Deploy status : " + deployStatus);
 			
 			if(!deployStatus && processStatus.equalsIgnoreCase("ALIVE")) {
-				deployExec = (DeployExec) commonServiceImpl.setMetaStatus(deployExec, MetaType.deployExec, Status.Stage.InProgress);
+				deployExec = (DeployExec) commonServiceImpl.setMetaStatus(deployExec, MetaType.deployExec, Status.Stage.RUNNING);
 				//deploy code
 				Application application = commonServiceImpl.getApp();
 				MetaIdentifierHolder userInfo = securityServiceImpl.getuserInfo();
@@ -161,10 +161,10 @@ public class DeployServiceImpl {
 				}*/
 				response = restTemplate.postForObject(deployURL, null, boolean.class, parameters);
 				if(response) {
-					deployExec = (DeployExec) commonServiceImpl.setMetaStatus(deployExec, MetaType.deployExec, Status.Stage.Completed);
+					deployExec = (DeployExec) commonServiceImpl.setMetaStatus(deployExec, MetaType.deployExec, Status.Stage.COMPLETED);
 					
 				} else {
-					deployExec = (DeployExec) commonServiceImpl.setMetaStatus(deployExec, MetaType.deployExec, Status.Stage.Failed);
+					deployExec = (DeployExec) commonServiceImpl.setMetaStatus(deployExec, MetaType.deployExec, Status.Stage.FAILED);
 				}
 				System.out.println("response: "+response);
 			} 
@@ -181,7 +181,7 @@ public class DeployServiceImpl {
 			
 			deployExec.setActive("N");
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder(new MetaIdentifier(MetaType.deployExec, deployExec.getUuid(), deployExec.getVersion()));
-			deployExec = (DeployExec) commonServiceImpl.setMetaStatus(deployExec, MetaType.deployExec, Status.Stage.Failed);
+			deployExec = (DeployExec) commonServiceImpl.setMetaStatus(deployExec, MetaType.deployExec, Status.Stage.FAILED);
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Some error occured, can not deploy.", dependsOn);
 			throw new RuntimeException((message != null) ? message : "Some error occured, can not deploy.");
 		}
@@ -203,7 +203,7 @@ public class DeployServiceImpl {
 				
 		deployExec.setUrl(url);
 		deployExec.setBaseEntity();
-		deployExec = (DeployExec) commonServiceImpl.setMetaStatus(deployExec, MetaType.deployExec, Status.Stage.NotStarted);
+		deployExec = (DeployExec) commonServiceImpl.setMetaStatus(deployExec, MetaType.deployExec, Status.Stage.PENDING);
 		return deployExec;
 	}
 	
@@ -299,8 +299,8 @@ public class DeployServiceImpl {
 	public String startProcess(String trainExecUuid, String trainExecVersion) throws Exception {
 		ProcessExec processExec = new ProcessExec();
 		processExec.setBaseEntity();
-		commonServiceImpl.setMetaStatus(processExec, MetaType.processExec, Status.Stage.NotStarted);
-		commonServiceImpl.setMetaStatus(processExec, MetaType.processExec, Status.Stage.InProgress);
+		commonServiceImpl.setMetaStatus(processExec, MetaType.processExec, Status.Stage.PENDING);
+		commonServiceImpl.setMetaStatus(processExec, MetaType.processExec, Status.Stage.RUNNING);
 		try {
 			Application application = commonServiceImpl.getApp();
 			
@@ -372,7 +372,7 @@ public class DeployServiceImpl {
 			logger.info("Process started successfully.");
 			return "Process started successfully.";	 
 		} catch (Exception e) {
-			commonServiceImpl.setMetaStatus(processExec, MetaType.processExec, Status.Stage.Failed);
+			commonServiceImpl.setMetaStatus(processExec, MetaType.processExec, Status.Stage.FAILED);
 			throw new RuntimeException(e);
 		}		
 	}

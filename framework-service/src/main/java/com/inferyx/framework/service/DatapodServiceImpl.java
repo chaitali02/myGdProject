@@ -931,7 +931,7 @@ public class DatapodServiceImpl {
 					
 					query2.addCriteria(Criteria.where("appInfo.ref.uuid").is(commonServiceImpl.getApp().getUuid()));
 					query2.addCriteria(Criteria.where("active").is("Y")); 
-					query2.addCriteria(Criteria.where("statusList.stage").in(Status.Stage.Completed.toString()));
+					query2.addCriteria(Criteria.where("statusList.stage").in(Status.Stage.COMPLETED.toString()));
 					query2.addCriteria(Criteria.where("dependsOn.ref.uuid").is(profileObjectList.get(0).getUuid()));
 					//query2.addCriteria(Criteria.where("dependsOn.ref.version").is(profileObjectList.get(0).getVersion()));
 					query2.with(new Sort(Sort.Direction.DESC, "version"));
@@ -1001,7 +1001,7 @@ public class DatapodServiceImpl {
 	public void upload(MultipartFile csvFile, String datapodUuid, String desc) throws JsonProcessingException, JSONException, ParseException {		
 		String csvFileName = csvFile.getOriginalFilename();
 		UploadExec uploadExec=new UploadExec();	
-		Status status = new Status(Status.Stage.NotStarted, new Date());
+		Status status = new Status(Status.Stage.PENDING, new Date());
 		List<Status> statusList = new ArrayList<>();
 		statusList.add(status);
 		uploadExec.setStatusList(statusList);
@@ -1063,14 +1063,14 @@ public class DatapodServiceImpl {
 						Attribute attribute  = attributeIterator.next();				
 						
 						if (Character.isDigit(attribute.getName().charAt(0))) {
-							status = new Status(Status.Stage.Failed, new Date());
+							status = new Status(Status.Stage.FAILED, new Date());
 							statusList.add(status);
 							uploadExec.setStatusList(statusList);
 							commonServiceImpl.save(MetaType.uploadExec.toString(), uploadExec);
 							throw new Exception("CSV file column name contains <b>Numeric value</b>.");
 						}
 						if (!attribute.getName().equalsIgnoreCase(dpAttr.getName())) {
-							status = new Status(Status.Stage.Failed, new Date());
+							status = new Status(Status.Stage.FAILED, new Date());
 							statusList.add(status);
 							uploadExec.setStatusList(statusList);
 							commonServiceImpl.save(MetaType.uploadExec.toString(), uploadExec);
@@ -1081,7 +1081,7 @@ public class DatapodServiceImpl {
 					}	
 				}
 			} else {
-				status = new Status(Status.Stage.Failed, new Date());
+				status = new Status(Status.Stage.FAILED, new Date());
 				statusList.add(status);
 				uploadExec.setStatusList(statusList);
 				commonServiceImpl.save(MetaType.uploadExec.toString(), uploadExec);
@@ -1119,12 +1119,12 @@ public class DatapodServiceImpl {
 			//Create Load exec and datastore
 			LoadExec loadExec = null;
 			loadExec = loadServiceImpl.create(load.getUuid(), load.getVersion(), null, null, loadExec);
-			status = new Status(Status.Stage.InProgress, new Date());
+			status = new Status(Status.Stage.RUNNING, new Date());
 			statusList.add(status);
 			uploadExec.setStatusList(statusList);
 			loadServiceImpl.executeSql(loadExec, null, fileName, new OrderKey(datapod.getUuid(), datapod.getVersion()),
 					RunMode.BATCH, desc);
-			status = new Status(Status.Stage.Completed, new Date());
+			status = new Status(Status.Stage.COMPLETED, new Date());
 			statusList.add(status);
 			uploadExec.setStatusList(statusList);
 			commonServiceImpl.save(MetaType.uploadExec.toString(), uploadExec);
@@ -1132,14 +1132,14 @@ public class DatapodServiceImpl {
 				| InvocationTargetException | NoSuchMethodException | SecurityException | NullPointerException
 				| ParseException | IllegalStateException | IOException e) {
 			// TODO Auto-generated catch block
-			status = new Status(Status.Stage.Failed, new Date());
+			status = new Status(Status.Stage.FAILED, new Date());
 			statusList.add(status);
 			uploadExec.setStatusList(statusList);
 			commonServiceImpl.save(MetaType.uploadExec.toString(), uploadExec);
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
-			status = new Status(Status.Stage.Failed, new Date());
+			status = new Status(Status.Stage.FAILED, new Date());
 			statusList.add(status);
 			uploadExec.setStatusList(statusList);
 			commonServiceImpl.save(MetaType.uploadExec.toString(), uploadExec);

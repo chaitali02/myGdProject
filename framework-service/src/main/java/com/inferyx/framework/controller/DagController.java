@@ -177,20 +177,20 @@ public class DagController {
 		return dagExecServiceImpl.fetchAllTaskThread();
 	}
 	
-	@RequestMapping(value="/setTaskOnHold",method= RequestMethod.PUT)
-	public String setTaskOnHold(@RequestParam("uuid") String uuid, 
+	@RequestMapping(value="/setTaskPause",method= RequestMethod.PUT)
+	public String setTaskPAUSE(@RequestParam("uuid") String uuid, 
 			@RequestParam("version") String version,
 			@RequestParam("stageId") String stageId,
 			@RequestParam("taskId")String taskId) throws Exception{
 		String ret;
 		synchronized (uuid) {
-			ret = objectWriter.writeValueAsString(dagExecServiceImpl.setTaskOnHold(uuid, version, stageId, taskId));
+			ret = objectWriter.writeValueAsString(dagExecServiceImpl.setTaskPause(uuid, version, stageId, taskId));
 		}
 		return ret;
 	}
 	
 	@RequestMapping(value="/setTaskResume",method= RequestMethod.PUT)
-	public String setTaskResume(@RequestParam("uuid") String uuid, 
+	public String setTaskRESUME(@RequestParam("uuid") String uuid, 
 			@RequestParam("version") String version,
 			@RequestParam("stageId") String stageId,
 			@RequestParam("taskId")String taskId) throws JsonProcessingException, JSONException, ParseException{
@@ -201,29 +201,29 @@ public class DagController {
 		return ret;
 	}
     
-	@RequestMapping(value="/setStageOnHold",method= RequestMethod.PUT)
-	public String setStageOnHold(@RequestParam("uuid") String uuid, 
+	@RequestMapping(value="/setStagePause",method= RequestMethod.PUT)
+	public String setStagePAUSE(@RequestParam("uuid") String uuid, 
 			@RequestParam("version") String version,
 			@RequestParam("stageId") String stageId) throws Exception{
-		return objectWriter.writeValueAsString(dagExecServiceImpl.setStageOnHold(uuid, version, stageId));
+		return objectWriter.writeValueAsString(dagExecServiceImpl.setStagePause(uuid, version, stageId));
 	}
 	
 	@RequestMapping(value="/setStageResume",method= RequestMethod.PUT)
-	public String setStageResume(@RequestParam("uuid") String uuid, 
+	public String setStageRESUME(@RequestParam("uuid") String uuid, 
 			@RequestParam("version") String version,
 			@RequestParam("stageId") String stageId) throws Exception{
 		return objectWriter.writeValueAsString(dagExecServiceImpl.setStageResume(uuid, version, stageId));
 	}
 	
-	@RequestMapping(value="/setDAGOnHold",method= RequestMethod.PUT)
-	public String setDAGOnHold(@RequestParam("uuid") String uuid, 
+	@RequestMapping(value="/setDAGPause",method= RequestMethod.PUT)
+	public String setDAGPAUSE(@RequestParam("uuid") String uuid, 
 			@RequestParam("version") String version,
 			@RequestParam("stageId") String stageId) throws Exception{
-		return objectWriter.writeValueAsString(dagExecServiceImpl.setDAGOnHold(uuid, version));
+		return objectWriter.writeValueAsString(dagExecServiceImpl.setDAGPause(uuid, version));
 	}
 	
 	@RequestMapping(value="/setDAGResume",method= RequestMethod.PUT)
-	public String setDAGResume(@RequestParam("uuid") String uuid, 
+	public String setDAGRESUME(@RequestParam("uuid") String uuid, 
 			@RequestParam("version") String version,
 			@RequestParam("stageId") String stageId) throws Exception{
 		

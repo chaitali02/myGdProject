@@ -76,9 +76,9 @@ public class BaseGroupExecTemplate {
 		try {
 			logger.info("Before kill - Group - " + baseGroupExec.getUuid());
 			synchronized (baseGroupExec.getUuid()) {
-				baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType, Status.Stage.Terminating);
-				if (!Helper.getLatestStatus(baseGroupExec.getStatusList()).equals(new Status(Status.Stage.Terminating, new Date()))) {
-					logger.info("Latest Status is not in Terminating. Exiting...");
+				baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType, Status.Stage.TERMINATING);
+				if (!Helper.getLatestStatus(baseGroupExec.getStatusList()).equals(new Status(Status.Stage.TERMINATING, new Date()))) {
+					logger.info("Latest Status is not in TERMINATING. Exiting...");
 					return;			
 				}
 			}
@@ -111,17 +111,17 @@ public class BaseGroupExecTemplate {
 					}
 					List<Status> statusList = baseRuleExec.getStatusList();
 					Status latestStatus = Helper.getLatestStatus(statusList);
-					if (!latestStatus.getStage().equals(Status.Stage.Completed) 
-							&& !latestStatus.getStage().equals(Status.Stage.Killed) 
-							&& !latestStatus.getStage().equals(Status.Stage.Failed) 
-							&& !latestStatus.getStage().equals(Status.Stage.NotStarted)) {
+					if (!latestStatus.getStage().equals(Status.Stage.COMPLETED) 
+							&& !latestStatus.getStage().equals(Status.Stage.KILLED) 
+							&& !latestStatus.getStage().equals(Status.Stage.FAILED) 
+							&& !latestStatus.getStage().equals(Status.Stage.PENDING)) {
 						killComplete = false;
 						Thread.sleep(5000);
 						break;
 					}
 				}
 			}	// While Not killComplete
-			logger.info("Rules kill completed >>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
+			logger.info("Rules kill COMPLETED >>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
 			
 			baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.getOneByUuidAndVersion(baseGroupExec.getUuid(), baseGroupExec.getVersion(), groupExecType.toString());
 			Status.Stage latestStatus = Helper.getLatestStatus(baseGroupExec.getStatusList()).getStage();
@@ -132,7 +132,7 @@ public class BaseGroupExecTemplate {
 				}
 			}
 			/*synchronized (ruleGroupExec.getUuid()) {
-				commonServiceImpl.setMetaStatus(ruleGroupExec, MetaType.rulegroupExec, Status.Stage.Killed);
+				commonServiceImpl.setMetaStatus(ruleGroupExec, MetaType.rulegroupExec, Status.Stage.KILLED);
 			}*/
 		} catch (Exception e) {
 			logger.error("Exception while killing rule group >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");

@@ -92,7 +92,7 @@ public class SessionCounter implements HttpSessionListener{
 				logger.info("Session invalidated.......");
 				return true;
 			}else
-				logger.info("Session already invalidated......."); return false;			
+				logger.info("Session alReady invalidated......."); return false;			
 		}catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();

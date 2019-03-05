@@ -113,14 +113,14 @@ public class RunStateServiceImpl {
 		}
 		StateMachine<Stages, Events> stateMachine = stateMachineMap.get(reference);
 		stateMachine.sendEvent(Events.PROGRESS);
-		if (stateMachine.getState().getId().equals(Stages.InProgress)) {
-			setStatus(baseEntity, type, exec, Status.Stage.InProgress);
+		if (stateMachine.getState().getId().equals(Stages.RUNNING)) {
+			setStatus(baseEntity, type, exec, Status.Stage.RUNNING);
 		} else if (exec == null){
-			throw new IllegalStateException(String.format("Invalid status In Progress at this state!! for %s ", baseEntity.getName()));
+			throw new IllegalStateException(String.format("Invalid status RUNNING at this state!! for %s ", baseEntity.getName()));
 		} else if (exec instanceof StageExec) {
-			throw new IllegalStateException(String.format("Invalid status In Progress at this state!! for %s ", ((StageExec)exec).getName()));
+			throw new IllegalStateException(String.format("Invalid status RUNNING at this state!! for %s ", ((StageExec)exec).getName()));
 		} else if (exec instanceof TaskExec) {
-			throw new IllegalStateException(String.format("Invalid status In Progress at this state!! for %s ", ((TaskExec)exec).getName()));
+			throw new IllegalStateException(String.format("Invalid status RUNNING at this state!! for %s ", ((TaskExec)exec).getName()));
 		}
 	}
 

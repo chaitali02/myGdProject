@@ -748,7 +748,7 @@ public class MapServiceImpl implements IParsable, IExecutable {
 			parseDPNames(map, datapodList, refKeyMap, otherParams, mapExec, runMode);
 			/***** This part is very important and populates otherParams based on the resolved table Names (Shall continue staying in MapServiceImpl) - END ******/
 			
-			Status status = new Status(Status.Stage.NotStarted, new Date());
+			Status status = new Status(Status.Stage.PENDING, new Date());
 			List<Status> statusList = new ArrayList<>();		
 			statusList.add(status);
 			//mapExec.setName(map.getName());
@@ -757,11 +757,11 @@ public class MapServiceImpl implements IParsable, IExecutable {
 			try {
 				logger.info("Before generateSql from MapServiceImpl");
 				synchronized (mapExec.getUuid()) {
-					commonServiceImpl.setMetaStatus(mapExec, MetaType.mapExec, Status.Stage.Initialized);
+					commonServiceImpl.setMetaStatus(mapExec, MetaType.mapExec, Status.Stage.INITIALIZING);
 				}
 				mapExec.setExec(mapOperator.generateSql(map, refKeyMap, otherParams, execParams, usedRefKeySet, runMode));
 				synchronized (mapExec.getUuid()) {
-					commonServiceImpl.setMetaStatus(mapExec, MetaType.mapExec, Status.Stage.Ready);
+					commonServiceImpl.setMetaStatus(mapExec, MetaType.mapExec, Status.Stage.READY);
 				}
 				// Fetch target datapod
 				OrderKey datapodKey = map.getTarget().getRef().getKey();
@@ -797,12 +797,12 @@ public class MapServiceImpl implements IParsable, IExecutable {
 				logger.info("Target table in map " + mapExec.getName() + " : " + mapTableName);
 			} catch (Exception e) {
 				e.printStackTrace();
-				Status failedStatus = new Status(Status.Stage.Failed, new Date());
+				Status FAILEDStatus = new Status(Status.Stage.FAILED, new Date());
 				if (statusList == null) {
 					statusList = new ArrayList<>();
 				}
-				statusList.remove(failedStatus);
-				statusList.add(failedStatus);
+				statusList.remove(FAILEDStatus);
+				statusList.add(FAILEDStatus);
 			}
 			mapExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 		} catch (Exception e) {
@@ -891,9 +891,9 @@ public class MapServiceImpl implements IParsable, IExecutable {
 		}
 //		Map map = (Map) daoRegister.getRefObject(mapExec.getDependsOn().getRef());
 		Map map = (Map) commonServiceImpl.getOneByUuidAndVersion(mapExec.getDependsOn().getRef().getUuid(), mapExec.getDependsOn().getRef().getVersion(), mapExec.getDependsOn().getRef().getType().toString());
-		MetaIdentifierHolder dependsOnHolder = new MetaIdentifierHolder(new MetaIdentifier(MetaType.map, map.getUuid(), map.getVersion()));
+		MetaIdentifierHolder dependsPAUSEer = new MetaIdentifierHolder(new MetaIdentifier(MetaType.map, map.getUuid(), map.getVersion()));
 		if (mapExec.getDependsOn() == null) {
-			mapExec.setDependsOn(dependsOnHolder);
+			mapExec.setDependsOn(dependsPAUSEer);
 		}
 		mapExec.setAppInfo(map.getAppInfo());
 		try {
@@ -926,7 +926,7 @@ public class MapServiceImpl implements IParsable, IExecutable {
 		runMapServiceImpl.setSecurityServiceImpl(securityServiceImpl);
 		runMapServiceImpl.setSessionContext(sessionHelper.getSessionContext());
 		//MetaIdentifier dependsOn = new MetaIdentifier(MetaType.map, map.getUuid(), map.getVersion());
-		//Status status = new Status(Status.Stage.NotStarted, new Date());
+		//Status status = new Status(Status.Stage.PENDING, new Date());
 		//statusList.add(status);
 		//mapExec.setName(map.getName());
 		//mapExec.setStatus(statusList);

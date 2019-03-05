@@ -29,99 +29,99 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
    
   }
   obj.statusDefs={
-    'NotStarted':{
-      name : 'NotStarted',
-      caption:'Not Started',
+    'PENDING':{
+      name : 'PENDING',
+      caption:'PENDING',
       color :'#6c757d',//'#659be0',
-      iconPath : 'assets/layouts/layout/img/new_status/NotStarted.svg',
-      jointWidth:"90px"
+      iconPath : 'assets/layouts/layout/img/new_status/PENDING.svg',
+      jointWidth:"80px"
     },
-    'Not Started':{
-      name : 'NotStarted',
-      caption:'Not Started',
+    'PENDING':{
+      name : 'PENDING',
+      caption:'PENDING',
       color :'#6c757d',//'#659be0',
-      iconPath : 'assets/layouts/layout/img/new_status/NotStarted.svg',
-      jointWidth:"90px"
-
-    },
-    'Completed':{
-      name : 'Completed',
-      caption:'Completed',
-      color :'#34bfa3',//'#36c6d3',
-      iconPath : 'assets/layouts/layout/img/new_status/Completed.svg',
-      jointWidth:"90px"
-
-    },
-    'Killed':{
-      name : 'Killed',
-      caption:'Killed',
-      color :'#dc3545',//'#ed6b75',
-      iconPath : 'assets/layouts/layout/img/new_status/Killed.svg',
-      jointWidth:"50px"
-
-    },
-    'Failed':{
-      name : 'Failed',
-      caption:'Failed',
-      color :'#dc3545',//'#ed6b75',
-      iconPath : 'assets/layouts/layout/img/new_status/Failed.svg',
-      jointWidth:"53px"
-
-    },
-    'Resume':{
-      name : 'Resume',
-      caption:'Resume',
-      color :'#006df0',
-      iconPath : 'assets/layouts/layout/img/new_status/Resume.svg',
-      jointWidth:"68px"
-
-    },
-    'Terminating':{
-      name : 'Terminating',
-      caption:'Terminating',
-      color : '#f4516c',//'#FFCCCC',
-      iconPath : 'assets/layouts/layout/img/new_status/Terminating.svg',
-      jointWidth:"98px"
-
-    },
-    'OnHold':{
-      name : 'OnHold',
-      caption:'OnHold',
-      color :'#36a3f7',//'#ffda44',
-      iconPath : 'assets/layouts/layout/img/new_status/OnHold.svg',
-      jointWidth:"68px"
-
-    },
-    'In Progress':{
-      name : 'InProgress',
-      caption:'In Progress',
-      color :'#ffc107',//'#F1C40F',
-      iconPath : 'assets/layouts/layout/img/new_status/InProgress.svg',
-      jointWidth:"85px"
-
-    },
-    'InProgress':{
-      name : 'InProgress',
-      caption:'In Progress',
-      color :'#ffc107',//'#F1C40F',
-      iconPath : 'assets/layouts/layout/img/new_status/InProgress.svg',
-      jointWidth:"85px"
-
-    },
-    'Initialized':{
-      name : 'Initialized',
-      caption:'Initialized',
-      color :'#ffc107',//'#F1C40F',
-      iconPath : 'assets/layouts/layout/img/new_status/Initialized.svg',
+      iconPath : 'assets/layouts/layout/img/new_status/PENDING.svg',
       jointWidth:"80px"
 
     },
-    'Ready':{
-      name : 'Ready',
-      caption:'Ready',
+    'COMPLETED':{
+      name : 'COMPLETED',
+      caption:'COMPLETED',
+      color :'#34bfa3',//'#36c6d3',
+      iconPath : 'assets/layouts/layout/img/new_status/COMPLETED.svg',
+      jointWidth:"98px"
+
+    },
+    'KILLED':{
+      name : 'KILLED',
+      caption:'KILLED',
+      color :'#dc3545',//'#ed6b75',
+      iconPath : 'assets/layouts/layout/img/new_status/KILLED.svg',
+      jointWidth:"58px"
+
+    },
+    'FAILED':{
+      name : 'FAILED',
+      caption:'FAILED',
+      color :'#dc3545',//'#ed6b75',
+      iconPath : 'assets/layouts/layout/img/new_status/FAILED.svg',
+      jointWidth:"58px"
+
+    },
+    'RESUME':{
+      name : 'RESUME',
+      caption:'RESUME',
+      color :'#006df0',
+      iconPath : 'assets/layouts/layout/img/new_status/RESUME.svg',
+      jointWidth:"68px"
+
+    },
+    'TERMINATING':{
+      name : 'TERMINATING',
+      caption:'TERMINATING',
+      color : '#f4516c',//'#FFCCCC',
+      iconPath : 'assets/layouts/layout/img/new_status/TERMINATING.svg',
+      jointWidth:"110px"
+
+    },
+    'PAUSE':{
+      name : 'PAUSE',
+      caption:'PAUSE',
+      color :'#36a3f7',//'#ffda44',
+      iconPath : 'assets/layouts/layout/img/new_status/PAUSE.svg',
+      jointWidth:"68px"
+
+    },
+    'RUNNING':{
+      name : 'RUNNING',
+      caption:'RUNNING',
+      color :'#ffc107',//'#F1C40F',
+      iconPath : 'assets/layouts/layout/img/new_status/RUNNING.svg',
+      jointWidth:"80px"
+
+    },
+    'RUNNING':{
+      name : 'RUNNING',
+      caption:'RUNNING',
+      color :'#ffc107',//'#F1C40F',
+      iconPath : 'assets/layouts/layout/img/new_status/RUNNING.svg',
+      jointWidth:"80px"
+
+    },
+    'INITIALIZING':{
+      name : 'INITIALIZING',
+      caption:'INITIALIZING',
+      color :'#ffc107',//'#F1C40F',
+      iconPath : 'assets/layouts/layout/img/new_status/INITIALIZING.svg',
+      jointWidth:"95px"
+
+    },
+    'READY':{
+      name : 'READY',
+      caption:'READY',
       color :'#36a3f7',//'#659be0',
-      iconPath : 'assets/layouts/layout/img/new_status/Ready.svg',
-      jointWidth:"55px"
+      iconPath : 'assets/layouts/layout/img/new_status/READY.svg',
+      jointWidth:"58px"
 
     },
     'active':{
@@ -145,7 +145,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
     enableGridMenu: true,
     rowHeight: 40,
     exporterSuppressCtiolumns: [ 'action' ],
-    exporterMenuPdf: true,
+    exporterMenuPdf: false,
     exporterPdfOrientation: 'landscape',
     exporterPdfPageSize: 'A4',
     exporterPdfDefaultStyle: {fontSize: 9},
@@ -340,7 +340,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       headerCellClass: 'text-center',
       maxWidth: 100,
       //cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><img title="{{row.entity.status}}" ng-src=\"{{grid.appScope.path[row.entity.status].iconPath}}\" border=\"0\" width=\"15\">'
-      cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div class="label-sm label-success" style=" width: 88%;font-size: 13px;padding: 2px;color: white;margin: 0 auto;font-weight: 300;background-color:{{grid.appScope.path[row.entity.status].color}} !important" ng-style="">{{row.entity.status}}</div></div>'
+      cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div class="label-sm label-success" style=" width: 97%;font-size: 13px;padding: 2px;color: white;margin: 0 auto;font-weight: 300;background-color:{{grid.appScope.path[row.entity.status].color}} !important" ng-style="">{{row.entity.status}}</div></div>'
 
 
     }
@@ -353,8 +353,8 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       headerCellClass: 'text-center',
       maxWidth: 100,
       // cellTemplate: [
-      //   // '<div class="ui-grid-cell-contents"><input type="radio" name="execbutton" ng-disabled="[\'Completed\',\'In Progress\'].indexOf(row.entity.status)==-1" ng-click="grid.appScope.getExec(row.entity)"></div>',
-      //   '<div class="ui-grid-cell-contents"> <a class="btn btn-xs btn-primary"  ng-disabled="[\'Completed\',\'InProgress\'].indexOf(row.entity.status)==-1"  ng-click="grid.appScope.getExec(row.entity)">View</a></div>',
+      //   // '<div class="ui-grid-cell-contents"><input type="radio" name="execbutton" ng-disabled="[\'COMPLETED\',\'RUNNING\'].indexOf(row.entity.status)==-1" ng-click="grid.appScope.getExec(row.entity)"></div>',
+      //   '<div class="ui-grid-cell-contents"> <a class="btn btn-xs btn-primary"  ng-disabled="[\'COMPLETED\',\'RUNNING\'].indexOf(row.entity.status)==-1"  ng-click="grid.appScope.getExec(row.entity)">View</a></div>',
       // ].join(''),
       cellTemplate: [
         '<div class="ui-grid-cell-contents">',
@@ -362,13 +362,13 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
         '    <button class="btn green btn-xs btn-outline dropdown-toggle" uib-dropdown-toggle>Action',
         '    <i class="fa fa-angle-down"></i></button>',
         '    <ul uib-dropdown-menu class="dropdown-menu-grid">',
-        '       <li><a  ng-show ="grid.appScope.newType.indexOf(\'ingestExec\') != -1?false:true" ng-disabled="grid.appScope.newType.indexOf(\'batchexec\')!=-1?[\'Completed\',\'Not Started\',\'Terminating\',\'Failed\',\'In Progress\',\'Killed\',\'Initialized\',\'Ready\'].indexOf(row.entity.status)==-1:grid.appScope.newType.indexOf(\'train\')!=-1?[\'Completed\'].indexOf(row.entity.status)==-1:grid.appScope.newType.indexOf(\'dagexec\')!=-1?[\'Completed\',\'Not Started\',\'Terminating\',\'Failed\',\'In Progress\',\'Killed\',\'Initialized\',\'Ready\'].indexOf(row.entity.status)==-1:grid.appScope.newType.indexOf(\'group\')==-1?[\'Completed\',\'Killed\'].indexOf(row.entity.status)==-1:[\'Completed\',\'In Progress\',\'Killed\',\'Failed\',\'Terminating\',\'Initialized\',\'Ready\'].indexOf(row.entity.status)==-1"  ng-click="grid.appScope.getExec(row.entity)"><i class="fa fa-eye" aria-hidden="true"></i> View </a></li>',
+        '       <li><a  ng-show ="grid.appScope.newType.indexOf(\'ingestExec\') != -1?false:true" ng-disabled="grid.appScope.newType.indexOf(\'batchexec\')!=-1?[\'COMPLETED\',\'PENDING\',\'TERMINATING\',\'FAILED\',\'RUNNING\',\'KILLED\',\'INITIALIZING\',\'READY\'].indexOf(row.entity.status)==-1:grid.appScope.newType.indexOf(\'train\')!=-1?[\'COMPLETED\'].indexOf(row.entity.status)==-1:grid.appScope.newType.indexOf(\'dagexec\')!=-1?[\'COMPLETED\',\'PENDING\',\'TERMINATING\',\'FAILED\',\'RUNNING\',\'KILLED\',\'INITIALIZING\',\'READY\'].indexOf(row.entity.status)==-1:grid.appScope.newType.indexOf(\'group\')==-1?[\'COMPLETED\'].indexOf(row.entity.status)==-1:[\'COMPLETED\',\'RUNNING\',\'KILLED\',\'FAILED\',\'TERMINATING\',\'INITIALIZING\',\'READY\'].indexOf(row.entity.status)==-1"  ng-click="grid.appScope.getExec(row.entity)"><i class="fa fa-eye" aria-hidden="true"></i> View </a></li>',
         '       <li><a  ng-show="grid.appScope.newType.indexOf(\'ingestExec\') != -1?true:false" ng-disabled="true"  ng-click="grid.appScope.getExec(row.entity)"><i class="fa fa-eye" aria-hidden="true"></i> View </a></li>',
-        //'      <li><a ng-disabled="grid.appScope.newType.indexOf(\'dagexec\')!=-1?[\'Completed\',\'Not Started\',\'Terminating\',\'Failed\',\'In Progress\',\'Killed\'].indexOf(row.entity.status)==-1:grid.appScope.newType.indexOf(\'group\')==-1?[\'Completed\',\'Killed\'].indexOf(row.entity.status)==-1:[\'Completed\',\'In Progress\',\'Killed\',\'Failed\',\'Terminating\'].indexOf(row.entity.status)==-1"  ng-click="grid.appScope.getExec(row.entity)"><i class="fa fa-eye" aria-hidden="true"></i> View </a></li>',
-   //   '        <li><a ng-disabled="[\'Not Started\'].indexOf(row.entity.status)==-1 || grid.appScope.privileges.indexOf(\'Execute\') == -1"  ng-click="grid.appScope.setStatus(row.entity,\'OnHold\')"><i class="fa fa-pause" aria-hidden="true"></i> On Hold </a></li>',
-   //   '        <li><a ng-disabled="[\'OnHold\'].indexOf(row.entity.status)==-1 || grid.appScope.privileges.indexOf(\'Execute\') == -1"  ng-click="grid.appScope.setStatus(row.entity,\'Resume\')"><i class="fa fa-repeat" aria-hidden="true"></i> Resume </a></li>',
-        '       <li><a ng-disabled="[\'In Progress\',\'Resume\'].indexOf(row.entity.status)==-1"  ng-click="grid.appScope.setStatus(row.entity,\'Killed\')"><i class="fa fa-times" aria-hidden="true"></i> Kill </a></li>',
-        '       <li><a ng-disabled="[\'Killed\',\'Failed\'].indexOf(row.entity.status)==-1"  ng-click="grid.appScope.restartExec(row.entity)"><i class="fa fa-repeat" aria-hidden="true"></i> Restart </a></li>',
+        //'      <li><a ng-disabled="grid.appScope.newType.indexOf(\'dagexec\')!=-1?[\'COMPLETED\',\'PENDING\',\'TERMINATING\',\'FAILED\',\'RUNNING\',\'KILLED\'].indexOf(row.entity.status)==-1:grid.appScope.newType.indexOf(\'group\')==-1?[\'COMPLETED\',\'KILLED\'].indexOf(row.entity.status)==-1:[\'COMPLETED\',\'RUNNING\',\'KILLED\',\'FAILED\',\'TERMINATING\'].indexOf(row.entity.status)==-1"  ng-click="grid.appScope.getExec(row.entity)"><i class="fa fa-eye" aria-hidden="true"></i> View </a></li>',
+   //   '        <li><a ng-disabled="[\'PENDING\'].indexOf(row.entity.status)==-1 || grid.appScope.privileges.indexOf(\'Execute\') == -1"  ng-click="grid.appScope.setStatus(row.entity,\'PAUSE\')"><i class="fa fa-pause" aria-hidden="true"></i> On Hold </a></li>',
+   //   '        <li><a ng-disabled="[\'PAUSE\'].indexOf(row.entity.status)==-1 || grid.appScope.privileges.indexOf(\'Execute\') == -1"  ng-click="grid.appScope.setStatus(row.entity,\'RESUME\')"><i class="fa fa-repeat" aria-hidden="true"></i> RESUME </a></li>',
+        '       <li><a ng-disabled="[\'RUNNING\',\'RESUME\',\'INITIALIZING\'].indexOf(row.entity.status)==-1"  ng-click="grid.appScope.setStatus(row.entity,\'Killed\')"><i class="fa fa-times" aria-hidden="true"></i> Kill </a></li>',
+        '       <li><a ng-disabled="[\'KILLED\',\'FAILED\'].indexOf(row.entity.status)==-1"  ng-click="grid.appScope.restartExec(row.entity)"><i class="fa fa-repeat" aria-hidden="true"></i> Restart </a></li>',
         '    </ul>',
         '  </div>',
         '</div>'
@@ -376,8 +376,8 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
     }
   )
   //grid.appScope.privileges.indexOf(\'Execute\') == -1 || 
-  //ng-disabled="{{['Completed','In Progress'].indexOf(row.entity.status)==-1}}"
-  // ng-disabled="grid.appScope.newType.indexOf(\'dagexec\')!=-1?[\'Completed\',\'Not Started\',\'Terminating\',\'Failed\',\'In Progress\',\'Killed\'].indexOf(row.entity.status)==-1:grid.appScope.newType.indexOf(\'group\')==-1?[\'Completed\',\'Killed\'].indexOf(row.entity.status)==-1:[\'Completed\',\'In Progress\',\'Killed\',\'Failed\',\'Terminating\'].indexOf(row.entity.status)==-1"
+  //ng-disabled="{{['COMPLETED','RUNNING'].indexOf(row.entity.status)==-1}}"
+  // ng-disabled="grid.appScope.newType.indexOf(\'dagexec\')!=-1?[\'COMPLETED\',\'PENDING\',\'TERMINATING\',\'FAILED\',\'RUNNING\',\'KILLED\'].indexOf(row.entity.status)==-1:grid.appScope.newType.indexOf(\'group\')==-1?[\'COMPLETED\',\'KILLED\'].indexOf(row.entity.status)==-1:[\'COMPLETED\',\'RUNNING\',\'KILLED\',\'FAILED\',\'TERMINATING\'].indexOf(row.entity.status)==-1"
   obj.gridOptionsJobExec = angular.copy(obj.gridOptionsDefault);
   obj.gridOptionsJobExec.columnDefs.push(
     {
@@ -2314,7 +2314,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
           "xlink:href": "assets/layouts/layout/img/delete.png"
       },
       magnet:true,
-      text: { text: 'Default Element',y: '60px', 'font-size': 10, style: { 'text-shadow': '1px 1px 1px lightgray' } },
+      ".label": { text: 'Default Element',y: '60px', 'font-size': 10, style: { 'text-shadow': '1px 1px 1px lightgray' } },
       '.statusText': {
         x:"55", y:"-10",height:"25px", width:"25px",'font-size': 15,
         fill:"white"

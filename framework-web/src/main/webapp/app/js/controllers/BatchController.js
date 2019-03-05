@@ -810,9 +810,9 @@ BatchModule.controller('ResultBatchController', function( $location,$http,uiGrid
       '    <button class="btn green btn-xs btn-outline dropdown-toggle" uib-dropdown-toggle>Action',
       '    <i class="fa fa-angle-down"></i></button>',
       '    <ul uib-dropdown-menu class="dropdown-menu-grid">',
-      '       <li><a ng-disabled="row.entity.type.toLowerCase().indexOf(\'batchexec\')!=-1?[\'Completed\',\'In Progress\'].indexOf(row.entity.status)==-1:row.entity.type.toLowerCase().indexOf(\'trainexec\')!=-1?[\'Completed\'].indexOf(row.entity.status)==-1:row.entity.type.toLowerCase().indexOf(\'dagexec\')!=-1?[\'Completed\',\'Not Started\',\'Terminating\',\'Failed\',\'In Progress\',\'Killed\',\'Initialized\',\'Ready\'].indexOf(row.entity.status)==-1:row.entity.type.toLowerCase().indexOf(\'group\')==-1?[\'Completed\',\'Killed\'].indexOf(row.entity.status)==-1:[\'Completed\',\'In Progress\',\'Killed\',\'Failed\',\'Terminating\'].indexOf(row.entity.status)==-1"  ng-click="grid.appScope.action(row.entity)"><i class="fa fa-eye" aria-hidden="true"></i> View </a></li>',
-      '       <li><a ng-disabled="[\'In Progress\',\'Resume\'].indexOf(row.entity.status)==-1 || grid.appScope.privileges.indexOf(\'Execute\') == -1"  ng-click="grid.appScope.setStatus(row.entity,\'Killed\')"><i class="fa fa-times" aria-hidden="true"></i> Kill </a></li>',
-      '       <li><a ng-disabled="[\'Killed\',\'Failed\'].indexOf(row.entity.status)==-1 || grid.appScope.privileges.indexOf(\'Execute\') == -1"  ng-click="grid.appScope.restartExec(row.entity)"><i class="fa fa-repeat" aria-hidden="true"></i> Restart </a></li>',
+      '       <li><a ng-disabled="row.entity.type.toLowerCase().indexOf(\'batchexec\')!=-1?[\'COMPLETED\',\'RUNNING\'].indexOf(row.entity.status)==-1:row.entity.type.toLowerCase().indexOf(\'trainexec\')!=-1?[\'COMPLETED\'].indexOf(row.entity.status)==-1:row.entity.type.toLowerCase().indexOf(\'dagexec\')!=-1?[\'COMPLETED\',\'PENDING\',\'TERMINATING\',\'FAILED\',\'RUNNING\',\'KILLED\',\'INITIALIZING\',\'READY\'].indexOf(row.entity.status)==-1:row.entity.type.toLowerCase().indexOf(\'group\')==-1?[\'COMPLETED\',\'KILLED\'].indexOf(row.entity.status)==-1:[\'COMPLETED\',\'RUNNING\',\'KILLED\',\'FAILED\',\'TERMINATING\'].indexOf(row.entity.status)==-1"  ng-click="grid.appScope.action(row.entity)"><i class="fa fa-eye" aria-hidden="true"></i> View </a></li>',
+      '       <li><a ng-disabled="[\'RUNNING\',\'RESUME\'].indexOf(row.entity.status)==-1 || grid.appScope.privileges.indexOf(\'Execute\') == -1"  ng-click="grid.appScope.setStatus(row.entity,\'KILLED\')"><i class="fa fa-times" aria-hidden="true"></i> Kill </a></li>',
+      '       <li><a ng-disabled="[\'KILLED\',\'FAILED\'].indexOf(row.entity.status)==-1 || grid.appScope.privileges.indexOf(\'Execute\') == -1"  ng-click="grid.appScope.restartExec(row.entity)"><i class="fa fa-repeat" aria-hidden="true"></i> Restart </a></li>',
       '    </ul>',
       '  </div>',
       '</div>'
@@ -966,7 +966,7 @@ BatchModule.controller('ResultBatchController', function( $location,$http,uiGrid
     $('#confModal').modal('hide');
     notify.type = 'success',
     notify.title = 'Success',
-    notify.content ="Pipeline Killed Successfully"
+    notify.content ="Pipeline KILLED Successfully"
     $scope.$emit('notify', notify);
 
     var url = $location.absUrl().split("app")[0];

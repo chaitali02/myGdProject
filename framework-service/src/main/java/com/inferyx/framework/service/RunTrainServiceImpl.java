@@ -518,7 +518,7 @@ public class RunTrainServiceImpl implements Callable<TaskHolder> {
 			FrameworkThreadLocal.getSessionContext().set(sessionContext);
 			execute();
 			modelExec = (ModelExec) commonServiceImpl.setMetaStatus(modelExec, MetaType.modelExec,
-					Status.Stage.Completed);
+					Status.Stage.COMPLETED);
 			if (model.getType().equalsIgnoreCase(ExecContext.R.toString())
 					|| model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
 				customLogger.writeLog(this.getClass(),
@@ -538,7 +538,7 @@ public class RunTrainServiceImpl implements Callable<TaskHolder> {
 							Thread.currentThread().getStackTrace()[1].getLineNumber());
 				}
 				modelExec = (ModelExec) commonServiceImpl.setMetaStatus(modelExec, MetaType.modelExec,
-						Status.Stage.Failed);
+						Status.Stage.FAILED);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 
@@ -556,7 +556,7 @@ public class RunTrainServiceImpl implements Callable<TaskHolder> {
 	public void execute() throws Exception {
 		MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 		List<Status> statusList = modelExec.getStatusList();
-		modelExec = (ModelExec) commonServiceImpl.setMetaStatus(modelExec, MetaType.modelExec, Status.Stage.InProgress);
+		modelExec = (ModelExec) commonServiceImpl.setMetaStatus(modelExec, MetaType.modelExec, Status.Stage.RUNNING);
 		if (model.getType().equalsIgnoreCase(ExecContext.R.toString())
 				|| model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
 			customLogger.writeLog(this.getClass(), modelExec.getStatusList().size() > 0
@@ -648,7 +648,7 @@ public class RunTrainServiceImpl implements Callable<TaskHolder> {
 		}
 
 		if (!isSuccess) {
-			modelExec = (ModelExec) commonServiceImpl.setMetaStatus(modelExec, MetaType.modelExec, Status.Stage.Failed);
+			modelExec = (ModelExec) commonServiceImpl.setMetaStatus(modelExec, MetaType.modelExec, Status.Stage.FAILED);
 			if (model.getType().equalsIgnoreCase(ExecContext.R.toString())
 					|| model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
 				customLogger.writeLog(this.getClass(),
@@ -686,7 +686,7 @@ public class RunTrainServiceImpl implements Callable<TaskHolder> {
 			FrameworkThreadLocal.getSessionContext().set(sessionContext);
 			execute();
 			trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec,
-					Status.Stage.Completed);
+					Status.Stage.COMPLETED);
 //			if (model.getType().equalsIgnoreCase(ExecContext.R.toString())
 //					|| model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
 //				customLogger.writeLog(this.getClass(),
@@ -706,7 +706,7 @@ public class RunTrainServiceImpl implements Callable<TaskHolder> {
 //							Thread.currentThread().getStackTrace()[1].getLineNumber());
 //				}
 				trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec,
-						Status.Stage.Failed);
+						Status.Stage.FAILED);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 
@@ -742,7 +742,7 @@ public class RunTrainServiceImpl implements Callable<TaskHolder> {
 			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 			Map<String, Object> trainOtherParam = new HashMap<>();
 			List<Status> statusList = trainExec.getStatusList();
-			trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.InProgress);
+			trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.RUNNING);
 //			if (model.getType().equalsIgnoreCase(ExecContext.R.toString())
 //					|| model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
 //				customLogger.writeLog(this.getClass(), trainExec.getStatusList().size() > 0
@@ -1160,7 +1160,7 @@ public class RunTrainServiceImpl implements Callable<TaskHolder> {
 //			sparkExecutor.dropTempTable(tempTableList);
 			
 			if (!isSuccess) {
-				trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.Failed);
+				trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.FAILED);
 //				if (model.getType().equalsIgnoreCase(ExecContext.R.toString())
 //						|| model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
 //					customLogger.writeLog(this.getClass(),
@@ -1179,11 +1179,11 @@ public class RunTrainServiceImpl implements Callable<TaskHolder> {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.Failed);
+			trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.FAILED);
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 			dependsOn.setRef(new MetaIdentifier(MetaType.trainExec, trainExec.getUuid(), trainExec.getVersion()));
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Train execution failed.", dependsOn);
-			throw new RuntimeException((message != null) ? message : "Train execution failed.");			 		
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Train execution FAILED.", dependsOn);
+			throw new RuntimeException((message != null) ? message : "Train execution FAILED.");			 		
 		}		
 	}
 	

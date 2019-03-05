@@ -524,23 +524,23 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 	 * @throws Exception
 	 */
 	public TaskHolder execute() throws Exception {
-		// Set status to In Progress
+		// Set status to RUNNING
 		MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 		long countRows = -1L;
 		FrameworkThreadLocal.getSessionContext().set(sessionContext);
 		List<Status> ruleExecStatusList = baseRuleExec.getStatusList();
 		if (Helper.getLatestStatus(ruleExecStatusList) != null 
-				&& (Helper.getLatestStatus(ruleExecStatusList).equals(new Status(Status.Stage.InProgress, new Date())) 
-						|| Helper.getLatestStatus(ruleExecStatusList).equals(new Status(Status.Stage.Completed, new Date()))
-						|| Helper.getLatestStatus(ruleExecStatusList).equals(new Status(Status.Stage.OnHold, new Date())))) {
-			logger.info(" This process is In Progress or has been completed previously or is OnHold. Hence it cannot be rerun. ");
+				&& (Helper.getLatestStatus(ruleExecStatusList).equals(new Status(Status.Stage.RUNNING, new Date())) 
+						|| Helper.getLatestStatus(ruleExecStatusList).equals(new Status(Status.Stage.COMPLETED, new Date()))
+						|| Helper.getLatestStatus(ruleExecStatusList).equals(new Status(Status.Stage.PAUSE, new Date())))) {
+			logger.info(" This process is RUNNING or has been COMPLETED previously or is PAUSE. Hence it cannot be rerun. ");
 			return null;
 		}
-		// Set in progress status and save
+		// Set RUNNING status and save
 
 		try {
 			synchronized (baseRuleExec.getUuid()) {
-				baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, ruleExecType, Status.Stage.InProgress);
+				baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, ruleExecType, Status.Stage.RUNNING);
 			}
 		} catch (Exception e1) {
 			e1.printStackTrace();
@@ -616,16 +616,16 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 			persistDatastore(tableName, filePath, resultRef, datapodKey, countRows, runMode);
 
 			baseRuleExec.setResult(resultRef);
-			// Set status to completed
+			// Set status to COMPLETED
 			synchronized (baseRuleExec.getUuid()) {
-				baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, ruleExecType, Status.Stage.Completed);
+				baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, ruleExecType, Status.Stage.COMPLETED);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			// Set status to Failed
+			// Set status to FAILED
 			try {
 				synchronized (baseRuleExec.getUuid()) {
-					baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, ruleExecType, Status.Stage.Failed);
+					baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, ruleExecType, Status.Stage.FAILED);
 				}
 			} catch (Exception e1) {
 				e1.printStackTrace();
@@ -638,8 +638,8 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 			}
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 			dependsOn.setRef(new MetaIdentifier(ruleExecType, baseRuleExec.getUuid(), baseRuleExec.getVersion()));
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Execution failed.", dependsOn);
-			throw new java.lang.Exception((message != null) ? message : "Execution failed.");
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Execution FAILED.", dependsOn);
+			throw new java.lang.Exception((message != null) ? message : "Execution FAILED.");
 		} 
 		TaskHolder taskHolder = new TaskHolder(name, new MetaIdentifier(ruleExecType, baseRuleExec.getUuid(), baseRuleExec.getVersion())); 
 		return taskHolder;

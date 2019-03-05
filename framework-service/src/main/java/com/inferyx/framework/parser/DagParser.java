@@ -92,7 +92,7 @@ public class DagParser {
 				stageExec.setStatusList(DagExecUtil.createInitialInactiveStatus(stageExec.getStatusList()));
 				continue;
 			} else {
-				// Set stage status to Not Started
+				// Set stage status to PENDING
 				stageExec.setStatusList(DagExecUtil.createInitialStatus(stageExec.getStatusList()));
 			}
 
@@ -164,7 +164,7 @@ public class DagParser {
 			/*TaskRef taskRef = new TaskRef(dagRef,indvTask.getDependsOn(), indvTask.getTaskId(), indvStg.getStageId(), indvTask.getName());
 			taskExec.setTask(taskRef);*/
 
-			// Set Tasks status to Not Started
+			// Set Tasks status to PENDING
 			taskExec.setStatusList(DagExecUtil.createInitialStatus(taskExec.getStatusList()));
 
 			// Below code need reformatting, the setting should be done
@@ -291,7 +291,7 @@ public class DagParser {
 
 				// Set Stage and Task status
 				List<Status> statusList = new ArrayList<Status>();
-				Status status = new Status(Status.Stage.NotStarted, new Date());
+				Status status = new Status(Status.Stage.PENDING, new Date());
 				statusList.add(status);
 				indvExecTask.setStatusList(statusList);
 

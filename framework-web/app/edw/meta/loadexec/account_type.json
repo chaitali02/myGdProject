@@ -1,19 +1,19 @@
 {
 	"statusList": [
 		{
-			"stage": "NotStarted",
+			"stage": "PENDING",
 			"createdOn": {
 				"$date": "2017-03-24T21:53:31.338Z"
 			}
 		},
 		{
-			"stage": "InProgress",
+			"stage": "RUNNING",
 			"createdOn": {
 				"$date": "2017-03-24T21:53:31.339Z"
 			}
 		},
 		{
-			"stage": "Completed",
+			"stage": "COMPLETED",
 			"createdOn": {
 				"$date": "2017-03-24T21:53:32.348Z"
 			}

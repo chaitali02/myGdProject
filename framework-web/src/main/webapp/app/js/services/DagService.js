@@ -157,12 +157,12 @@ MetadataModule.service('MetadataDagSerivce', function ($q, sortFactory, Metadata
 
 					else if (columnname == "status") {
 						if (response[i].status != null) {
-							if (response[i].status[len].stage == "InProgress") {
+							if (response[i].status[len].stage == "RUNNING") {
 
-								rowData[j] = "In Progress";
+								rowData[j] = "RUNNING";
 							}
-							else if (response[i].status[len].stage == "NotStarted") {
-								rowData[j] = "Not Started";
+							else if (response[i].status[len].stage == "PENDING") {
+								rowData[j] = "PENDING";
 							}
 							else {
 								rowData[j] = response[i].status[len].stage;

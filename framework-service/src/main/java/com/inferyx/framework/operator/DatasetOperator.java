@@ -136,7 +136,7 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 			}
 			sql = sql.concat(generateLimit(dataset));
 			logger.info("SQL Generated: "+sql);
-			logger.info("Completed SQL Generation");
+			logger.info("COMPLETED SQL Generation");
 			return sql;
 		}
 

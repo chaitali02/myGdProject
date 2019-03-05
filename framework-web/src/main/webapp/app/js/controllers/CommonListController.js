@@ -251,7 +251,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     $scope.$emit('notify', notify);
 
     var url = $location.absUrl().split("app")[0];
-    $http.put(url + '' + api + '/setStatus?uuid=' + $scope.selectDetail.uuid + '&version=' + $scope.selectDetail.version + '&type=' + $scope.newType + '&status=' + $scope.selectDetail.setStatus).then(function (response) {
+    $http.put(url + '' + api + '/setStatus?uuid=' + $scope.selectDetail.uuid + '&version=' + $scope.selectDetail.version + '&type=' + $scope.newType + '&status=' + $scope.selectDetail.setStatus.toUpperCase()).then(function (response) {
       console.log(response);
     });
   }

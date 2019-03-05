@@ -120,10 +120,10 @@ public class PrivilegeProcessingFilter extends GenericFilterBean {
 			// resp.addHeader("view", action.toString());
 			// chain.doFilter(request, response);
 
-		} catch (AuthenticationException failed) {
+		} catch (AuthenticationException FAILED) {
 			SecurityContextHolder.clearContext();
 			logger.error("Authentication Exception");
-			failed.printStackTrace();
+			FAILED.printStackTrace();
 			return;
 		} catch (NoPrivilegeExeception e) {
 			e.printStackTrace();

@@ -240,7 +240,7 @@ DatavisualizationModule.controller('ShowDashboradController',function($window,$t
   $scope.graphDataStatus=false
   $scope.showtooltip='top'
   $scope.showtooltiptitle="Maximize";
-  $scope.inprogressarray=[];
+  $scope.RUNNINGarray=[];
   $scope.chartcolor=["#d98880","#f1948a","#c39bd3","#bb8fce","#7fb3d5","#85c1e9","#76d7c4","#73c6b6","#7dcea0","#82e0aa","#f7dc6f","#f8c471","#f0b27a","#e59866"]//["#E6B0AA","#D7BDE2","#F5B7B1","#D2B4DE","#A9CCE3","#AED6F1","#A9CCE3","#A3E4D7","#A2D9CE","#A9DFBF","#ABEBC6","#F9E79F","#FAD7A0","#F5CBA7","#EDBB99"]
   $scope.vizpodbody={};
   $scope.filterListarray=[];
@@ -494,22 +494,22 @@ DatavisualizationModule.controller('ShowDashboradController',function($window,$t
     $scope.isDataError=false;
     $scope.vizpodResutsArray=[];
      $scope.isUserNotification=true;
-     $scope.inprogressdata=true
+     $scope.RUNNINGdata=true
     for(var i=0;i<$scope.dashboarddata.vizpod.length;i++){
       var vizpodresultpromise=DahsboardSerivce.getVizpodResults($scope.dashboarddata.vizpod[i].uuid,$scope.dashboarddata.vizpod[i].version,data);
       $scope.vizpodResutsArray.push(vizpodresultpromise);
     }
     $q.all($scope.vizpodResutsArray).then(function(result){
       for(var i=0;i<result.length;i++){
-        //$scope.inprogressarray[i]=false;
-        $scope.inprogressdata=false
+        //$scope.RUNNINGarray[i]=false;
+        $scope.RUNNINGdata=false
         $scope.isUserNotification=false;
         $scope.datapoints[i]=result[i].data;
       }
       $scope.preparColumnDataFromResult();
     },function(response){
 
-       $scope.inprogressdata=false;
+       $scope.RUNNINGdata=false;
        $scope.isDataError=true;
        $scope.datamessage="Some Error Occurred";
 
@@ -641,7 +641,7 @@ DatavisualizationModule.controller('ShowDashboradController2',function($window,$
   $scope.graphDataStatus=false
   $scope.showtooltip='top'
   $scope.showtooltiptitle="Maximize";
-  $scope.inprogressarray=[];
+  $scope.RUNNINGarray=[];
   $scope.chartcolor=["#d98880","#f1948a","#c39bd3","#bb8fce","#7fb3d5","#85c1e9","#76d7c4","#73c6b6","#7dcea0","#82e0aa","#f7dc6f","#f8c471","#f0b27a","#e59866"]//["#E6B0AA","#D7BDE2","#F5B7B1","#D2B4DE","#A9CCE3","#AED6F1","#A9CCE3","#A3E4D7","#A2D9CE","#A9DFBF","#ABEBC6","#F9E79F","#FAD7A0","#F5CBA7","#EDBB99"]
   $scope.vizpodbody={};
   $scope.filterListarray=[];
@@ -895,22 +895,22 @@ DatavisualizationModule.controller('ShowDashboradController2',function($window,$
     $scope.isDataError=false;
     $scope.vizpodResutsArray=[];
      $scope.isUserNotification=true;
-     $scope.inprogressdata=true
+     $scope.RUNNINGdata=true
     for(var i=0;i<$scope.dashboarddata.vizpod.length;i++){
       var vizpodresultpromise=DahsboardSerivce.getVizpodResults($scope.dashboarddata.vizpod[i].uuid,$scope.dashboarddata.vizpod[i].version,data);
       $scope.vizpodResutsArray.push(vizpodresultpromise);
     }
     $q.all($scope.vizpodResutsArray).then(function(result){
       for(var i=0;i<result.length;i++){
-        //$scope.inprogressarray[i]=false;
-        $scope.inprogressdata=false
+        //$scope.RUNNINGarray[i]=false;
+        $scope.RUNNINGdata=false
         $scope.isUserNotification=false;
         $scope.datapoints[i]=result[i].data;
       }
       $scope.preparColumnDataFromResult();
     },function(response){
 
-       $scope.inprogressdata=false;
+       $scope.RUNNINGdata=false;
        $scope.isDataError=true;
        $scope.datamessage="Some Error Occurred";
 

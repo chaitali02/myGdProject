@@ -37,24 +37,24 @@ DatascienceModule.controller('ModelDeployController', function (CommonService, $
     };
     $scope.addDataStatusAndActive=function(){
         $scope.allStatus = [{
-            "caption": "Not Started",
-            "name": "NotStarted"
+            "caption": "PENDING",
+            "name": "PENDING"
         },
         {
-            "caption": "In Progress",
-            "name": "InProgress"
+            "caption": "RUNNING",
+            "name": "RUNNING"
         },
         {
-            "caption": "Completed",
-            "name": "Completed"
+            "caption": "COMPLETED",
+            "name": "COMPLETED"
         },
         {
-            "caption": "Killed",
-            "name": "Killed"
+            "caption": "KILLED",
+            "name": "KILLED"
         },
         {
-            "caption": "Failed",
-            "name": "Failed"
+            "caption": "FAILED",
+            "name": "FAILED"
         }
         ];
         $scope.allActive = [ {
@@ -170,7 +170,7 @@ DatascienceModule.controller('ModelDeployController', function (CommonService, $
             maxWidth: 110,
             cellClass: 'text-center',
             headerCellClass: 'text-center',
-            cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div>{{row.entity.deployExec == null ||  row.entity.deployExec.active == \'N\' || row.entity.dStatus !=\'Completed\' ?\'Not Deployed\':\'Deployed\'}}</div></div>'
+            cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div>{{row.entity.deployExec == null ||  row.entity.deployExec.active == \'N\' || row.entity.dStatus !=\'COMPLETED\' ?\'Not Deployed\':\'Deployed\'}}</div></div>'
         },
         
         {
@@ -206,8 +206,8 @@ DatascienceModule.controller('ModelDeployController', function (CommonService, $
               '    <ul uib-dropdown-menu class="dropdown-menu-grid">',
              // '       <li><a ng-disabled="grid.appScope.privileges.indexOf(\'Deploy\') == -1"  ng-if="row.entity.deployExec ==null" ng-click="grid.appScope.setState(row.entity,\'Deploy\')"><i class="fa fa-plus-square-o" aria-hidden="true"></i>Deploy</a></li>',
              /// '       <li><a ng-disabled="grid.appScope.privileges.indexOf(\'Undeploy\') == -1" ng-if="row.entity.deployExec !=null" ng-click="grid.appScope.setState(row.entity,\'Undeploy\')"><i class="fa fa-minus-square-o" aria-hidden="true"></i>Undeploy</a></li>',
-              '       <li><a ng-disabled="grid.appScope.privileges.indexOf(\'Deploy\') == -1"  ng-if="(row.entity.deployExec ==null || row.entity.deployExec.active ==\'N\' ) || row.entity.dStatus !=\'Completed\'" ng-click="grid.appScope.setState(row.entity,\'Deploy\')"><img src="assets/layouts/layout/img/deploy.svg" width="16" height="16"> Deploy</a></li>',
-              '       <li><a ng-disabled="grid.appScope.privileges.indexOf(\'Undeploy\') == -1" ng-if="row.entity.deployExec !=null && row.entity.deployExec.active ==\'Y\'  &&  row.entity.dStatus ==\'Completed\' " ng-click="grid.appScope.setState(row.entity,\'Undeploy\')"><img src="assets/layouts/layout/img/deploy.svg" width="16" height="16" style="transform: rotate(180deg)"> Undeploy</a></li>',                       
+              '       <li><a ng-disabled="grid.appScope.privileges.indexOf(\'Deploy\') == -1"  ng-if="(row.entity.deployExec ==null || row.entity.deployExec.active ==\'N\' ) || row.entity.dStatus !=\'COMPLETED\'" ng-click="grid.appScope.setState(row.entity,\'Deploy\')"><img src="assets/layouts/layout/img/deploy.svg" width="16" height="16"> Deploy</a></li>',
+              '       <li><a ng-disabled="grid.appScope.privileges.indexOf(\'Undeploy\') == -1" ng-if="row.entity.deployExec !=null && row.entity.deployExec.active ==\'Y\'  &&  row.entity.dStatus ==\'COMPLETED\' " ng-click="grid.appScope.setState(row.entity,\'Undeploy\')"><img src="assets/layouts/layout/img/deploy.svg" width="16" height="16" style="transform: rotate(180deg)"> Undeploy</a></li>',                       
               '    </ul>',
               '  </div>',
               '</div>'
