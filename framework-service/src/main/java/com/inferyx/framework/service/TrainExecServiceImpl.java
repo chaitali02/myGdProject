@@ -63,12 +63,14 @@ public class TrainExecServiceImpl {
 			logger.info("TrainExec not found. Exiting...");
 			return;
 		}
-		if (!Helper.getLatestStatus(baseExec.getStatusList()).equals(new Status(Status.Stage.InProgress, new Date()))) {
-			logger.info("Latest Status is not in InProgress. Exiting...");
-		}
 		try {
+			logger.info("Before kill - train - " + baseExec.getUuid());
 			synchronized (baseExec.getUuid()) {
-				commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.Terminating);
+				baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, execType, Status.Stage.Terminating);
+				if (!Helper.getLatestStatus(baseExec.getStatusList()).equals(new Status(Status.Stage.Terminating, new Date()))) {
+					logger.info("Latest Status is not in Terminating. Exiting...");
+					return;
+				}
 			}
 			@SuppressWarnings("unchecked")
 			FutureTask<TaskHolder> futureTask = (FutureTask<TaskHolder>) taskThreadMap.get(execType+"_"+baseExec.getUuid()+"_"+baseExec.getVersion());

@@ -3113,8 +3113,9 @@ public class CommonServiceImpl<T> {
 	}
 
 	private List<Status> setTerminatingStatus(List<Status> statusList) {
-		if (!Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.InProgress, new Date()))) {
-			logger.info("Latest Status is not in InProgress. Exiting...");
+		if (!Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.InProgress, new Date())) 
+				|| !Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Initialized, new Date()))) {
+			logger.info("Latest Status is not in InProgress or Initialized. Exiting...");
 			return statusList;
 		}
 		statusList.add(new Status(Status.Stage.Terminating, new Date()));

@@ -307,16 +307,18 @@ public class MapExecServiceImpl {
 	public void kill (String uuid, String version) throws JsonProcessingException {
 		MetaIdentifier mapExecMI = new MetaIdentifier(MetaType.mapExec, uuid, version);
 //		MapExec mapExec = (MapExec) daoRegister.getRefObject(mapExecMI);
-		MapExec mapExec = (MapExec) commonServiceImpl.getOneByUuidAndVersion(mapExecMI.getUuid(), mapExecMI.getVersion(), mapExecMI.getType().toString());
+		MapExec mapExec = (MapExec) commonServiceImpl.getOneByUuidAndVersion(mapExecMI.getUuid(), mapExecMI.getVersion(), mapExecMI.getType().toString(), "N");
 		if (mapExec == null) {
 			logger.info("Nothing to kill. Aborting ... ");
 			return;
 		}
-		if (!Helper.getLatestStatus(mapExec.getStatusList()).equals(new Status(Status.Stage.InProgress, new Date()))) {
-			logger.info(" Status is not in progress. So aborting ... ");
-		}
+		
 		try {
-			commonServiceImpl.setMetaStatus(mapExec, MetaType.mapExec, Status.Stage.Terminating);
+			mapExec = (MapExec) commonServiceImpl.setMetaStatus(mapExec, MetaType.mapExec, Status.Stage.Terminating);
+			if (!Helper.getLatestStatus(mapExec.getStatusList()).equals(new Status(Status.Stage.Terminating, new Date()))) {
+				logger.info(" Status is not terminating. So aborting ... ");
+				return;
+			}
 			FutureTask futureTask = (FutureTask) taskThreadMap.get("Map_" + mapExec.getUuid());
 			if (futureTask != null && !futureTask.isDone()) {
 				futureTask.cancel(true);

@@ -57,7 +57,7 @@ public class BaseRuleExecTemplate {
 	public void kill (String uuid, String version, MetaType execType) {
 		BaseRuleExec baseRuleExec = null;
 		try {
-			baseRuleExec = (BaseRuleExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, execType.toString());
+			baseRuleExec = (BaseRuleExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, execType.toString(), "N");
 		} catch (JsonProcessingException e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
@@ -66,12 +66,15 @@ public class BaseRuleExecTemplate {
 			logger.info("RuleExec not found. Exiting...");
 			return;
 		}
-		if (!Helper.getLatestStatus(baseRuleExec.getStatusList()).equals(new Status(Status.Stage.InProgress, new Date()))) {
-			logger.info("Latest Status is not in InProgress. Exiting...");
-		}
+		
 		try {
+			logger.info("Before kill - Rule - " + baseRuleExec.getUuid());
 			synchronized (baseRuleExec.getUuid()) {
-				commonServiceImpl.setMetaStatus(baseRuleExec, execType, Status.Stage.Terminating);
+				baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, execType, Status.Stage.Terminating);
+				if (!Helper.getLatestStatus(baseRuleExec.getStatusList()).equals(new Status(Status.Stage.Terminating, new Date()))) {
+					logger.info("Latest Status is not in Terminating. Exiting...");
+					return;
+				}
 			}
 			@SuppressWarnings("unchecked")
 			FutureTask<TaskHolder> futureTask = (FutureTask<TaskHolder>) taskThreadMap.get(execType+"_"+baseRuleExec.getUuid()+"_"+baseRuleExec.getVersion());
