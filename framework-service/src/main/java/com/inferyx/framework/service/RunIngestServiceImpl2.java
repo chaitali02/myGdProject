@@ -553,7 +553,7 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 				message = "No change in incremental param hence skipping execution.";
 			}
 			
-			throw new RuntimeException((message != null) ? message : "Ingest execution failed.");
+			throw new RuntimeException((message != null) ? message : "Ingest execution FAILED.");
 		}
 		TaskHolder taskHolder = new TaskHolder(name, new MetaIdentifier(MetaType.ingestExec, ingestExec.getUuid(), ingestExec.getVersion()));
 		return taskHolder;
@@ -1407,11 +1407,11 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 				ingestServiceImpl.persistDatastore(tableName, targetFilePathUrl, resultRef, datapodKey, ingestExec, countRows, runMode);
 				
 				ingestExec.setResult(resultRef);
-				ingestExec = (IngestExec) commonServiceImpl.setMetaStatus(ingestExec, MetaType.ingestExec, Status.Stage.Completed);
+				ingestExec = (IngestExec) commonServiceImpl.setMetaStatus(ingestExec, MetaType.ingestExec, Status.Stage.COMPLETED);
 			}			
 		} catch (Exception e) {
 			e.printStackTrace();
-//			ingestExec = (IngestExec) commonServiceImpl.setMetaStatus(ingestExec, MetaType.ingestExec, Status.Stage.Failed);
+//			ingestExec = (IngestExec) commonServiceImpl.setMetaStatus(ingestExec, MetaType.ingestExec, Status.Stage.FAILED);
 			String message = null;
 			try {
 				message = e.getMessage();
@@ -1424,8 +1424,8 @@ public class RunIngestServiceImpl2<T, K> implements Callable<TaskHolder> {
 //			} else if(message != null && message.toLowerCase().contains("No change in incremental param hence skipping execution.")) {
 //				message = "No change in incremental param hence skipping execution.";
 //			}
-//			commonServiceImpl.sendResponse("500", MessageStatus.FAIL.toString(), (message != null) ? message : "Ingest execution failed.");
-			throw new RuntimeException((message != null) ? message : "Ingest execution failed.");
+//			commonServiceImpl.sendResponse("500", MessageStatus.FAIL.toString(), (message != null) ? message : "Ingest execution FAILED.");
+			throw new RuntimeException((message != null) ? message : "Ingest execution FAILED.");
 		}
 		
 		return ingestExec;

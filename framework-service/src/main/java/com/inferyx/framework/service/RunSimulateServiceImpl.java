@@ -428,7 +428,7 @@ public class RunSimulateServiceImpl implements Callable<TaskHolder> {
 				// TODO: handle exception
 			}
 			
-			throw new RuntimeException((message != null) ? message : "Simulate execution failed.");
+			throw new RuntimeException((message != null) ? message : "Simulate execution FAILED.");
 		}
 		TaskHolder taskHolder = new TaskHolder(name, new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()));
 		return taskHolder;
@@ -437,7 +437,7 @@ public class RunSimulateServiceImpl implements Callable<TaskHolder> {
 	public SimulateExec execute() throws Exception {
 		try {
 			simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec,
-					Status.Stage.InProgress);
+					Status.Stage.RUNNING);
 
 			MetaIdentifierHolder targetHolder = simulate.getTarget();
 			Datapod targetDp = null;
@@ -697,10 +697,10 @@ public class RunSimulateServiceImpl implements Callable<TaskHolder> {
 			commonServiceImpl.save(MetaType.simulateExec.toString(), simulateExec);
 			if (result != null) {
 				simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec,
-						Status.Stage.Completed);
+						Status.Stage.COMPLETED);
 			} else {
 				simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec,
-						Status.Stage.Failed);
+						Status.Stage.FAILED);
 			}
 
 			return simulateExec;
@@ -714,13 +714,13 @@ public class RunSimulateServiceImpl implements Callable<TaskHolder> {
 			}
 
 			simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec,
-					Status.Stage.Failed);
+					Status.Stage.FAILED);
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 			dependsOn.setRef(
 					new MetaIdentifier(MetaType.simulateExec, simulateExec.getUuid(), simulateExec.getVersion()));
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
-					(message != null) ? message : "Simulate execution failed.", dependsOn);
-			throw new RuntimeException((message != null) ? message : "Simulate execution failed.");
+					(message != null) ? message : "Simulate execution FAILED.", dependsOn);
+			throw new RuntimeException((message != null) ? message : "Simulate execution FAILED.");
 		}
 	}
 }

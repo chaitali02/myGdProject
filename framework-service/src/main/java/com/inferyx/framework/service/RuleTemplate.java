@@ -96,14 +96,14 @@ public abstract class RuleTemplate implements IExecutable, IParsable {
 	}
 	
 	/**
-	 * Creates exec if it is not already present. 
+	 * Creates exec if it is not alReady present. 
 	 * 
 	 * 1. Checks whether uuid, type, execType, and corresponding baseRule is present
 	 * 2. If any of the above is not present then returns null, aborts
-	 * 3. If exec is not already present then created and saves exec
-	 * 4. Checks whether its status is InProgress, Completed, Terminating or OnHold. 
+	 * 3. If exec is not alReady present then created and saves exec
+	 * 4. Checks whether its status is RUNNING, COMPLETED, TERMINATING or PAUSE. 
 	 * 5. If status is one of #1 then control returns without doing anything
-	 * 6. Else status is set to not started
+	 * 6. Else status is set to PENDING
 	 * Note - Setting of status happens in a synchronized block with the exec uuid as key 
 	 * and data is fetched from mongo and then set after adding status based on some prerequisites 
 	 * checked in commonServiceImpl.setMetaStatus   
@@ -145,16 +145,16 @@ public abstract class RuleTemplate implements IExecutable, IParsable {
 		}
 		statusList = inputBaseRuleExec.getStatusList();
 		if (Helper.getLatestStatus(statusList) != null 
-				&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.InProgress, new Date())) 
-						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Completed, new Date())) 
-						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Terminating, new Date()))
-						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.OnHold, new Date())))) {
-			logger.info(" This process is In Progress or has been completed previously or is Terminating or is On Hold. Hence it cannot be rerun. ");
+				&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.RUNNING, new Date())) 
+						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.COMPLETED, new Date())) 
+						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.TERMINATING, new Date()))
+						|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.PAUSE, new Date())))) {
+			logger.info(" This process is RUNNING or has been COMPLETED previously or is TERMINATING or is On Hold. Hence it cannot be rerun. ");
 			return inputBaseRuleExec;
 		}
 		
 		synchronized (inputBaseRuleExec.getUuid()) {
-			inputBaseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(inputBaseRuleExec, execType, Status.Stage.NotStarted);
+			inputBaseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(inputBaseRuleExec, execType, Status.Stage.PENDING);
 		}
 		return inputBaseRuleExec;
 	}
@@ -205,9 +205,9 @@ public abstract class RuleTemplate implements IExecutable, IParsable {
 			return null;
 		}
 		/*synchronized (baseRuleExec.getUuid()) {
-			baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, execType, Status.Stage.InProgress);
+			baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, execType, Status.Stage.RUNNING);
 		}*/
-		logger.info(" After status set to InProgress for baseRuleExec : " + baseRuleExec.getUuid());
+		logger.info(" After status set to RUNNING for baseRuleExec : " + baseRuleExec.getUuid());
 		
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();	// Check and remove
 
@@ -272,15 +272,15 @@ public abstract class RuleTemplate implements IExecutable, IParsable {
 		Status operatorLeastSigStatus = null;
 		BaseRuleExec baseRuleExec = (BaseRuleExec) commonServiceImpl.getOneByUuidAndVersion(baseRuleExecUUID, baseRuleExecVersion, ruleExecType.toString(), "N");
 		operatorLeastSigStatus = helper.getLatestStatus(baseRuleExec.getStatusList());
-		if(Helper.getLatestStatus(baseRuleExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))
-				||Helper.getLatestStatus(baseRuleExec.getStatusList()).equals(new Status(Status.Stage.Killed, new Date()))){
-			operatorLeastSigStatus = new Status(Status.Stage.Ready, new Date());
-			logger.info("RuleExec " + baseRuleExecUUID + " failed/killed. So proceeding ... ");
-			if (Helper.isStatusPresent(new Status(Status.Stage.Ready, new Date()), baseRuleExec.getStatusList())) {
-				commonServiceImpl.setMetaStatus(baseRuleExec, ruleExecType, Status.Stage.Ready);
+		if(Helper.getLatestStatus(baseRuleExec.getStatusList()).equals(new Status(Status.Stage.FAILED, new Date()))
+				||Helper.getLatestStatus(baseRuleExec.getStatusList()).equals(new Status(Status.Stage.KILLED, new Date()))){
+			operatorLeastSigStatus = new Status(Status.Stage.READY, new Date());
+			logger.info("RuleExec " + baseRuleExecUUID + " FAILED/KILLED. So proceeding ... ");
+			if (Helper.isStatusPresent(new Status(Status.Stage.READY, new Date()), baseRuleExec.getStatusList())) {
+				commonServiceImpl.setMetaStatus(baseRuleExec, ruleExecType, Status.Stage.READY);
 			} else {
-				commonServiceImpl.setMetaStatus(baseRuleExec, ruleExecType, Status.Stage.NotStarted);
-				operatorLeastSigStatus = new Status(Status.Stage.NotStarted, new Date());
+				commonServiceImpl.setMetaStatus(baseRuleExec, ruleExecType, Status.Stage.PENDING);
+				operatorLeastSigStatus = new Status(Status.Stage.PENDING, new Date());
 			}
 		}
 		logger.info("Status of baseruleexec " + baseRuleExecUUID + " = " + operatorLeastSigStatus.getStage().toString());

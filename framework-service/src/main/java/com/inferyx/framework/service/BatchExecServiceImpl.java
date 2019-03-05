@@ -155,11 +155,11 @@ import com.inferyx.framework.factory.ExecutorFactory;
 			
 			try {
 				synchronized (dagExec.getUuid()) {
-					commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.Terminating);
+					commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.TERMINATING);
 				}
-				if (!Helper.getLatestStatus(dagExec.getStatusList()).getStage().equals(Status.Stage.Terminating)) {
-					logger.info("Status is not Terminating. So cannot proceed to kill ");
-					return "Status is not Terminating. So cannot proceed to kill ";
+				if (!Helper.getLatestStatus(dagExec.getStatusList()).getStage().equals(Status.Stage.TERMINATING)) {
+					logger.info("Status is not TERMINATING. So cannot proceed to kill ");
+					return "Status is not TERMINATING. So cannot proceed to kill ";
 				}
 				
 				futureTask = (FutureTask<String>) taskThreadMap.get("Dag_" + uuid);
@@ -170,8 +170,8 @@ import com.inferyx.framework.factory.ExecutorFactory;
 					status = "Kill Signal sent to Stage Thread";
 					taskThreadMap.remove("Dag_" + uuid);
 				} else {
-					logger.info("DagThread is not alive. It might have completed its execution already");
-					status = "DagThread is not alive. It might have completed its execution already";
+					logger.info("DagThread is not alive. It might have COMPLETED its execution alReady");
+					status = "DagThread is not alive. It might have COMPLETED its execution alReady";
 				}
 				while(! (futureTask == null || futureTask.isCancelled() || futureTask.isDone())) {
 					logger.info("Sleeping thread Dag : " + "Dag_" + uuid);
@@ -183,13 +183,13 @@ import com.inferyx.framework.factory.ExecutorFactory;
 				synchronized (dagExec.getUuid()) {
 //					dagExec = (DagExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.dagExec, uuid, version));
 					dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString(), "N");
-					commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.Killed);
+					commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.KILLED);
 				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			return "Not killed.";
+			return "Not KILLED.";
 		}
 	
 		public String killStage (String uuid, String version, String stageId) throws JsonProcessingException {
@@ -201,7 +201,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 			if (!taskThreadMap.containsKey("Stage_" + uuid + "_" + stageId)) {
 				status = "Thread is not running";
 				logger.info(" Stage " + stageId + " is not running. Kill nevertheless. ");
-				// Try to set status as killed nevertheless
+				// Try to set status as KILLED nevertheless
 				int count=0;
 				for (Stage stage : dagExec.getStages()) {
 					
@@ -209,24 +209,24 @@ import com.inferyx.framework.factory.ExecutorFactory;
 						stageExec = DagExecUtil.convertToStageExec(stage);
 						synchronized (uuid) {
 							try {
-								stageExec = (StageExec) commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.Terminating, stageId);
-								if (!Helper.getLatestStatus(stageExec.getStatusList()).getStage().equals(Status.Stage.Terminating)) {
+								stageExec = (StageExec) commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.TERMINATING, stageId);
+								if (!Helper.getLatestStatus(stageExec.getStatusList()).getStage().equals(Status.Stage.TERMINATING)) {
 									logger.info("Stage status : " + Helper.getLatestStatus(stageExec.getStatusList()).getStage());
-									logger.info("Status is not Terminating. So cannot proceed to kill ");
+									logger.info("Status is not TERMINATING. So cannot proceed to kill ");
 									break;
 								}
-								logger.info("Stage set to terminating");
+								logger.info("Stage set to TERMINATING");
 								for (Task task : stage.getTasks()) {
 									killTask(uuid, version, stageId, task.getTaskId());
 								}
 //								 dagExec = (DagExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.dagExec, uuid, version));
 								 dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString(), "N");
 								 stage=dagExec.getStages().get(count);
-//								 count++; -- Commented this portion to fix status bug where Completed stage goes into Killed.
+//								 count++; -- Commented this portion to fix status bug where COMPLETED stage goes into KILLED.
 								 stageExec = DagExecUtil.convertToStageExec(stage);
-								commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.Killed, stageId);
+								commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.KILLED, stageId);
 							} catch (Exception e) {
-								logger.error("Exception while setting terminating/kill status");
+								logger.error("Exception while setting TERMINATING/kill status");
 								e.printStackTrace();
 							}
 						}
@@ -241,11 +241,11 @@ import com.inferyx.framework.factory.ExecutorFactory;
 					logger.info("Going to kill stage ###################### " + "Stage_" + uuid + "_" + stageId);
 					try {
 						synchronized (dagExec.getUuid()) {
-							stageExec = (StageExec)commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.Terminating, stageId);
+							stageExec = (StageExec)commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.TERMINATING, stageId);
 						}
-						if (!Helper.getLatestStatus(stageExec.getStatusList()).getStage().equals(Status.Stage.Terminating)) {
+						if (!Helper.getLatestStatus(stageExec.getStatusList()).getStage().equals(Status.Stage.TERMINATING)) {
 							logger.info("Stage status : " + Helper.getLatestStatus(stageExec.getStatusList()).getStage());
-							logger.info("Status is not Terminating. So cannot proceed to kill ");
+							logger.info("Status is not TERMINATING. So cannot proceed to kill ");
 							break;
 						}
 						
@@ -260,8 +260,8 @@ import com.inferyx.framework.factory.ExecutorFactory;
 								Thread.sleep(1000);
 							}
 						} else {
-							logger.info("StageThread is not alive. It might have completed its execution already");
-							status = "StageThread is not alive. It might have completed its execution already";
+							logger.info("StageThread is not alive. It might have COMPLETED its execution alReady");
+							status = "StageThread is not alive. It might have COMPLETED its execution alReady";
 						}
 						taskThreadMap.remove("Stage_" + uuid + "_" + stageId);
 						
@@ -278,11 +278,11 @@ import com.inferyx.framework.factory.ExecutorFactory;
 //							dagExec = (DagExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.dagExec, uuid, version));
 							dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString(), "N");
 							stageExec = dagExecServiceImpl.getStageExec(dagExec, stageId);
-							logger.info("Going to set status killed for stage");
-							commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.Killed, stageId);
+							logger.info("Going to set status KILLED for stage");
+							commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.KILLED, stageId);
 						}
 					} catch (Exception e) {
-						logger.error("Stage couldn't be killed : " + stageId);						
+						logger.error("Stage couldn't be KILLED : " + stageId);						
 						e.printStackTrace();
 					}
 					break;
@@ -302,15 +302,15 @@ import com.inferyx.framework.factory.ExecutorFactory;
 			if (!taskThreadMap.containsKey("Task_" + uuid + "_" + taskId)) {
 				logger.info("TaskId " + taskId + " is not running. Kill nevertheless. ");
 				status = "Thread is not running";
-				// Try to set status as killed nevertheless
+				// Try to set status as KILLED nevertheless
 				synchronized (uuid) {
 					try {
-						taskExec = (TaskExec) commonServiceImpl.setMetaStatusForTask(dagExec, taskExec, Status.Stage.Terminating, stageId, taskId);
+						taskExec = (TaskExec) commonServiceImpl.setMetaStatusForTask(dagExec, taskExec, Status.Stage.TERMINATING, stageId, taskId);
 						for(MetaIdentifierHolder operatorInfo : taskExec.getOperators().get(0).getOperatorInfo()) {
 							try {
 								commonServiceImpl.kill(operatorInfo.getRef().getType(), operatorInfo.getRef().getUuid(), operatorInfo.getRef().getVersion());
 							} catch (Exception e) {
-								logger.error("Exception while setting terminating/kill status");
+								logger.error("Exception while setting TERMINATING/kill status");
 								e.printStackTrace();
 							}
 						}
@@ -318,9 +318,9 @@ import com.inferyx.framework.factory.ExecutorFactory;
 						dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString(), "N");
 						taskExec = dagExecServiceImpl.getTaskExec(dagExec, stageId, taskId);
 						logger.info("Going to kill task : " + taskId + " : after getting taskExec");
-						commonServiceImpl.setMetaStatusForTask(dagExec, taskExec, Status.Stage.Killed, stageId, taskId);
+						commonServiceImpl.setMetaStatusForTask(dagExec, taskExec, Status.Stage.KILLED, stageId, taskId);
 					} catch (Exception e) {
-						logger.error("Exception while setting terminating/kill status");
+						logger.error("Exception while setting TERMINATING/kill status");
 						e.printStackTrace();
 					}
 				}
@@ -331,7 +331,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 				futureTask = (FutureTask<String>) taskThreadMap.get("Task_" + uuid + "_" + taskId);
 					logger.info("Going to kill task ###################### " + "Task_" + uuid + "_" + taskId);
 					synchronized (uuid) {
-						taskExec = (TaskExec) commonServiceImpl.setMetaStatusForTask(dagExec, taskExec, Status.Stage.Terminating, stageId, taskId);
+						taskExec = (TaskExec) commonServiceImpl.setMetaStatusForTask(dagExec, taskExec, Status.Stage.TERMINATING, stageId, taskId);
 					}
 					if (futureTask != null && !futureTask.isDone()) {
 					futureTask.cancel(true);
@@ -348,8 +348,8 @@ import com.inferyx.framework.factory.ExecutorFactory;
 						commonServiceImpl.kill(operatorInfo.getRef().getType(), operatorInfo.getRef().getUuid(), operatorInfo.getRef().getVersion());
 					}
 				} else {
-					logger.info("TaskThread is not alive. It might have completed its execution already");
-					status = "TaskThread is not alive. It might have completed its execution already";
+					logger.info("TaskThread is not alive. It might have COMPLETED its execution alReady");
+					status = "TaskThread is not alive. It might have COMPLETED its execution alReady";
 					taskThreadMap.remove("Task_" + uuid + "_" + taskId);
 				}
 					
@@ -360,10 +360,10 @@ import com.inferyx.framework.factory.ExecutorFactory;
 					dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString(), "N");
 					taskExec = dagExecServiceImpl.getTaskExec(dagExec, stageId, taskId);
 					logger.info("Going to kill task : " + taskId + " : after getting taskExec");
-					commonServiceImpl.setMetaStatusForTask(dagExec, taskExec, Status.Stage.Killed, stageId, taskId);
+					commonServiceImpl.setMetaStatusForTask(dagExec, taskExec, Status.Stage.KILLED, stageId, taskId);
 				}
 			} catch (Exception e) {
-				logger.error("Task couldn't be killed : " + taskId);
+				logger.error("Task couldn't be KILLED : " + taskId);
 				e.printStackTrace();
 			}
 
@@ -388,8 +388,8 @@ import com.inferyx.framework.factory.ExecutorFactory;
 			final DagExec dagExecFinal = dagExec;
 			Status status = Helper.getLatestStatus(dagExec.getStatusList());
 		
-			if (status != null && status.equals(new Status(Status.Stage.OnHold, new Date()))) {
-				logger.info("DagExec is set to OnHold status. So aborting. ");
+			if (status != null && status.equals(new Status(Status.Stage.PAUSE, new Date()))) {
+				logger.info("DagExec is set to PAUSE status. So aborting. ");
 				return dagExec;
 			}
 
@@ -401,15 +401,15 @@ import com.inferyx.framework.factory.ExecutorFactory;
 					Stage stage = DagExecUtil.getStageFromDag(dag, stageExec.getStageId());
 					status = Helper.getLatestStatus(stageExec.getStatusList());
 					StageExec indvStg = stageExec;
-					/*if (status != null && status.equals(new Status(Status.Stage.OnHold, new Date()))) {
-						logger.info("StageExec is set to OnHold status. So continuing with next stage. ");
+					/*if (status != null && status.equals(new Status(Status.Stage.PAUSE, new Date()))) {
+						logger.info("StageExec is set to PAUSE status. So continuing with next stage. ");
 						continue;
 					}
 					if (indvStg != null && indvStg.getStatusList() != null && indvStg.getStatusList().contains(Status.Stage.Inactive)) {
 						continue;	// If inactive stage then move to next stage (don't consider inactive stage)
 					}*/
-					if (!status.equals(new Status(Status.Stage.Ready, new Date()))) {
-						logger.info("StageExec is not set to ready status. So continuing with next stage. ");
+					if (!status.equals(new Status(Status.Stage.READY, new Date()))) {
+						logger.info("StageExec is not set to READY status. So continuing with next stage. ");
 						continue;
 					}
 	
@@ -441,8 +441,8 @@ import com.inferyx.framework.factory.ExecutorFactory;
 					for  (StageExec stageExec : depStageExecs) {
 						try {
 						boolean checkDependencyStatus = false;
-						boolean checkDependencyFailed = false;
-						boolean checkDependencyKilled = false;
+						boolean checkDependencyFAILED = false;
+						boolean checkDependencyKILLED = false;
 						String dependencyStatus = null;
 						OrderKey datapodKey = null;
 	
@@ -450,22 +450,22 @@ import com.inferyx.framework.factory.ExecutorFactory;
 						
 						//Fetch from mongo instead of udta panchi.				
 						com.inferyx.framework.domain.Status.Stage stageStatus = dagExecServiceImpl.getStageStatus(dagExec.getUuid(), dagExec.getVersion(), stageExec.getStageId());			
-						if (stageStatus.equals(Status.Stage.InProgress) 
-								|| stageStatus.equals(Status.Stage.Completed)
-								|| stageStatus.equals(Status.Stage.OnHold)) {
+						if (stageStatus.equals(Status.Stage.RUNNING) 
+								|| stageStatus.equals(Status.Stage.COMPLETED)
+								|| stageStatus.equals(Status.Stage.PAUSE)) {
 							continue;
 						}
 						
 						// If not checkdependency status then continue after setting allDependenciesAddressed to false
 						dependencyStatus = dagExecServiceImpl.checkStageDepStatus(dag,dagExec.getUuid(),dagExec.getVersion(),stage.getStageId());
 						logger.info("Stage dependencyStatus : " + stageExec.getStageId() + " : " + dependencyStatus);
-						if (StringUtils.isBlank(dependencyStatus) || dependencyStatus.equalsIgnoreCase(Status.Stage.NotStarted.toString())) {
+						if (StringUtils.isBlank(dependencyStatus) || dependencyStatus.equalsIgnoreCase(Status.Stage.PENDING.toString())) {
 							checkDependencyStatus = false;
-						} else if (dependencyStatus.equalsIgnoreCase(Status.Stage.Killed.toString())) {
-							checkDependencyKilled = true;
+						} else if (dependencyStatus.equalsIgnoreCase(Status.Stage.KILLED.toString())) {
+							checkDependencyKILLED = true;
 							break;
-						} else if (dependencyStatus.equalsIgnoreCase(Status.Stage.Failed.toString())) {
-							checkDependencyFailed = true;
+						} else if (dependencyStatus.equalsIgnoreCase(Status.Stage.FAILED.toString())) {
+							checkDependencyFAILED = true;
 							break;
 						} else {
 							checkDependencyStatus = true;
@@ -476,9 +476,9 @@ import com.inferyx.framework.factory.ExecutorFactory;
 							continue;
 						}
 					
-						if (checkDependencyFailed) {
+						if (checkDependencyFAILED) {
 							synchronized (dagExec.getUuid()) {
-								commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.Failed, stageExec.getStageId());
+								commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.FAILED, stageExec.getStageId());
 								continue;
 							}
 						}
@@ -488,7 +488,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 						} catch (Exception e) {
 							e.printStackTrace();
 							synchronized (dagExec.getUuid()) {
-								commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.Failed, stageExec.getStageId());
+								commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.FAILED, stageExec.getStageId());
 							}
 						}
 					}	// For all stageExec
@@ -504,7 +504,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 			for (FutureTask<String> futureTask : taskList) {
 			    try {
 			    	outputThreadName = futureTask.get();
-			        logger.info("Thread " + outputThreadName + " completed ");
+			        logger.info("Thread " + outputThreadName + " COMPLETED ");
 			        taskThreadMap.remove(outputThreadName);
 			    } catch (InterruptedException e) {
 			        e.printStackTrace();
@@ -534,7 +534,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 						for (FutureTask<String> futureTask : taskList) {
 				            try {
 				            	outputThreadName = futureTask.get();
-				                logger.info("Thread " + outputThreadName + " completed ");
+				                logger.info("Thread " + outputThreadName + " COMPLETED ");
 				                taskThreadMap.remove(outputThreadName);
 				            } catch (InterruptedException e) {
 				                e.printStackTrace();
@@ -556,21 +556,21 @@ import com.inferyx.framework.factory.ExecutorFactory;
 																		Boolean.FALSE);
 					// Update run status for Dag
 					Helper.updateRunStatus(latestStatus, statusHolder);
-					logger.info(" StatusHolder of dagExec : " + statusHolder.getCompleted() + ":" + statusHolder.getKilled() + ":" + statusHolder.getFailed() 
-								+ ":" + statusHolder.getOnHold() + ":" + statusHolder.getResume());
-					if (statusHolder.getCompleted() && statusHolder.getKilled()) {
+					logger.info(" StatusHolder of dagExec : " + statusHolder.getCOMPLETED() + ":" + statusHolder.getKILLED() + ":" + statusHolder.getFAILED() 
+								+ ":" + statusHolder.getPAUSE() + ":" + statusHolder.getRESUME());
+					if (statusHolder.getCOMPLETED() && statusHolder.getKILLED()) {
 						synchronized (dagExecUUID) {
-							commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.Killed);
+							commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.KILLED);
 						}
 						return true;
-					} else if (statusHolder.getCompleted() && statusHolder.getFailed()) {
+					} else if (statusHolder.getCOMPLETED() && statusHolder.getFAILED()) {
 						synchronized (dagExecUUID) {
-							commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.Failed);
+							commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.FAILED);
 						}
 						return true;
-					} else if (statusHolder.getCompleted()) {
+					} else if (statusHolder.getCOMPLETED()) {
 						synchronized (dagExecUUID) {
-							commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.Completed);
+							commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.COMPLETED);
 						}
 						return true;
 					} 
@@ -587,28 +587,28 @@ import com.inferyx.framework.factory.ExecutorFactory;
 						Helper.updateRunStatus(latestStatus, statusHolder);
 					}// End for
 					
-					logger.info(" StatusHolder of stageExec : " + statusHolder.getCompleted() + ":" + statusHolder.getKilled() + ":" + statusHolder.getFailed() 
-					+ ":" + statusHolder.getOnHold() + ":" + statusHolder.getResume());
+					logger.info(" StatusHolder of stageExec : " + statusHolder.getCOMPLETED() + ":" + statusHolder.getKILLED() + ":" + statusHolder.getFAILED() 
+					+ ":" + statusHolder.getPAUSE() + ":" + statusHolder.getRESUME());
 					
-					if (statusHolder.getCompleted() && statusHolder.getKilled()) {
+					if (statusHolder.getCOMPLETED() && statusHolder.getKILLED()) {
 						synchronized (dagExecUUID) {
-							commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.Killed);
+							commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.KILLED);
 						}
 						return true;
-					} else if (statusHolder.getCompleted() && statusHolder.getFailed()) {
+					} else if (statusHolder.getCOMPLETED() && statusHolder.getFAILED()) {
 						synchronized (dagExecUUID) {
-							commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.Failed);
+							commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.FAILED);
 						}
 						return true;
-					} else if (statusHolder.getCompleted()) {
+					} else if (statusHolder.getCOMPLETED()) {
 						synchronized (dagExecUUID) {
-							commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.Completed);
+							commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.COMPLETED);
 						}
 						return true;
 					} 
 			} catch (Exception e) {
 				synchronized (dagExecUUID) {
-					commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.Failed);
+					commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.FAILED);
 				}
 				e.printStackTrace();
 				return true;

@@ -153,8 +153,8 @@ public class ImportServiceImpl {
 													baseEntity.setId(null);
 													Object savedObject = commonServiceImpl.save(metaType.toString().toLowerCase(), (Object)baseEntity);
 												} else{
-													logger.info("Object \""+uuid+"\" not saved, already present in collection.");
-													sendResponse("422", MessageStatus.FAIL.toString(), "Already present.");
+													logger.info("Object \""+uuid+"\" not saved, alReady present in collection.");
+													sendResponse("422", MessageStatus.FAIL.toString(), "AlREADY present.");
 												}
 										} else {
 											boolean isPresent = checkDependency(uuid, version, metaType);
@@ -162,8 +162,8 @@ public class ImportServiceImpl {
 												baseEntity.setId(null);
 												Object savedObject = commonServiceImpl.save(metaType.toString().toLowerCase(), (Object)baseEntity);
 												}else{
-													logger.info("Object \""+uuid+"\" not saved, already present in collection.");
-													sendResponse("422", MessageStatus.FAIL.toString(), "Already present.");
+													logger.info("Object \""+uuid+"\" not saved, alReady present in collection.");
+													sendResponse("422", MessageStatus.FAIL.toString(), "AlREADY present.");
 												}
 										}
 									}
@@ -173,7 +173,7 @@ public class ImportServiceImpl {
 										baseEntity.setId(null);
 										Object savedObject = commonServiceImpl.save(metaType.toString().toLowerCase(), (Object)baseEntity);
 									}else
-										logger.info("Object \""+uuid+"\" not saved, already present in collection.");
+										logger.info("Object \""+uuid+"\" not saved, alReady present in collection.");
 								}
 							}else {
 								logger.info("Corrupted file, aborting the operation.");
@@ -237,7 +237,7 @@ public class ImportServiceImpl {
 											logger.info("Type: "+metaType.toString()+"\tSaved object: "+savedObject.toString());
 									}
 								}else
-									logger.info("Object \""+uuid+"\" not saved, already present in collection.");
+									logger.info("Object \""+uuid+"\" not saved, alReady present in collection.");
 							}else {
 								logger.info("No json file available of the object \""+uuid+" \" inside "/*+ imprt.getName()*/+".zip file.");
 								//int defaultLevel = Integer.parseInt(Helper.getPropertyValue("framework.dependency.level"));
@@ -269,7 +269,7 @@ public class ImportServiceImpl {
 								}else
 									logger.info("Object unavailable in file.");
 							}else
-								logger.info("Object \""+uuid+"\" not saved, already present in collection.");	
+								logger.info("Object \""+uuid+"\" not saved, alReady present in collection.");	
 						}						
 					}
 			for(int i=1; i<=level; i++)
@@ -297,7 +297,7 @@ public class ImportServiceImpl {
 							}else
 								logger.info("Object unavailable in file.");
 						}else
-							logger.info("Object \""+uuid+"\" not saved, already present in collection.");
+							logger.info("Object \""+uuid+"\" not saved, alReady present in collection.");
 					}							
 				}else {
 					//logger.info("object class: "+object.getClass().getName()+"\tCompare:  "+object.getClass().getName().equalsIgnoreCase("com.inferyx.framework.domain.MetaIdentifierHolder"));																												    
@@ -525,10 +525,10 @@ public class ImportServiceImpl {
 												ImportIdentifierHolder importHolder = getImportIdentifierHolder(uuid, version, metaType, ""+result);
 												validateInfo.add(importHolder);
 										}else {
-											logger.info("Object \""+uuid+"\" already present in collection.");
+											logger.info("Object \""+uuid+"\" alReady present in collection.");
 											ImportIdentifierHolder importHolder = getImportIdentifierHolder(uuid, version, metaType, "false");
 											validateInfo.add(importHolder);
-											//sendResponse("422", MessageStatus.FAIL.toString(), "Already present.");
+											//sendResponse("422", MessageStatus.FAIL.toString(), "AlREADY present.");
 										}
 										
 									}else {
@@ -538,10 +538,10 @@ public class ImportServiceImpl {
 											ImportIdentifierHolder importHolder = getImportIdentifierHolder(uuid, version, metaType, "true");
 											validateInfo.add(importHolder);
 										}else {
-											logger.info("Object \""+uuid+"\" already present in collection.");
+											logger.info("Object \""+uuid+"\" alReady present in collection.");
 											ImportIdentifierHolder importHolder = getImportIdentifierHolder(uuid, version, metaType, "false");
 											validateInfo.add(importHolder);	
-											//sendResponse("422", MessageStatus.FAIL.toString(), "Already present.");
+											//sendResponse("422", MessageStatus.FAIL.toString(), "AlREADY present.");
 										}																
 									}					
 								}
@@ -552,10 +552,10 @@ public class ImportServiceImpl {
 									ImportIdentifierHolder importHolder = getImportIdentifierHolder(uuid, version, metaType, "true");
 									validateInfo.add(importHolder);
 								}else {
-									logger.info("Object \""+uuid+"\" already present in collection.");
+									logger.info("Object \""+uuid+"\" alReady present in collection.");
 									ImportIdentifierHolder importHolder = getImportIdentifierHolder(uuid, version, metaType, "false");
 									validateInfo.add(importHolder);	
-									//sendResponse("422", MessageStatus.FAIL.toString(), "Already present.");
+									//sendResponse("422", MessageStatus.FAIL.toString(), "AlREADY present.");
 								}							
 							}							
 						}else {

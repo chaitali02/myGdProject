@@ -1215,8 +1215,8 @@ public class GraphRegister<T> {
 			
 			processExec.setProcessType(ProcessType.BUILDING_GRAPH_ENGINE);
 			processExec.setBaseEntity();			
-			commonServiceImpl.setMetaStatus(processExec, MetaType.processExec, Status.Stage.NotStarted);
-			commonServiceImpl.setMetaStatus(processExec, MetaType.processExec, Status.Stage.InProgress);
+			commonServiceImpl.setMetaStatus(processExec, MetaType.processExec, Status.Stage.PENDING);
+			commonServiceImpl.setMetaStatus(processExec, MetaType.processExec, Status.Stage.RUNNING);
 			processExec.setStartTime(startDate);
 			
 			//java.util.Map<String, Object> objectMap = new HashMap<String, Object>();
@@ -1272,9 +1272,9 @@ public class GraphRegister<T> {
 
 			Date stopTime = formatter.parse((new Date()).toString());
 			processExec.setStopTime(stopTime);
-			commonServiceImpl.setMetaStatus(processExec, MetaType.processExec, Status.Stage.Completed);
+			commonServiceImpl.setMetaStatus(processExec, MetaType.processExec, Status.Stage.COMPLETED);
 		}  catch (Exception e) {
-			commonServiceImpl.setMetaStatus(processExec, MetaType.processExec, Status.Stage.Failed);
+			commonServiceImpl.setMetaStatus(processExec, MetaType.processExec, Status.Stage.FAILED);
 			throw new RuntimeException(e);
 		}	
 	}

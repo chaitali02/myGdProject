@@ -62,10 +62,10 @@ SystemMonitoringModule.service("SystemMonitoringService",function($q,$http,$loca
         result.type = response[i].type;
         result.appInfo = response[i].appInfo;
         if(response[i].status && response[i].status.length >0){
-          if (response[i].status[len].stage == "NotStarted") {
-            result.status = "Not Started"
-          } else if (response[i].status[len].stage == "InProgress") {
-            result.status = "In Progress"
+          if (response[i].status[len].stage == "PENDING") {
+            result.status = "PENDING"
+          } else if (response[i].status[len].stage == "RUNNING") {
+            result.status = "RUNNING"
           } else {
             result.status = response[i].status[len].stage;
           }

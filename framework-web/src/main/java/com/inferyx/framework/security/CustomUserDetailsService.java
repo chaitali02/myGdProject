@@ -55,8 +55,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 			boolean status = true;
 			if (session != null && !session.getStatusList().isEmpty()) {
 				for (Status s : session.getStatusList()) {
-					if ((Status.Stage.expired).equals(s.getStage()) || (Status.Stage.Killed).equals(s.getStage())
-							|| (Status.Stage.NotStarted).equals(s.getStage()))
+					if ((Status.Stage.expired).equals(s.getStage()) || (Status.Stage.KILLED).equals(s.getStage())
+							|| (Status.Stage.PENDING).equals(s.getStage()))
 						status = false;
 				}
 			}

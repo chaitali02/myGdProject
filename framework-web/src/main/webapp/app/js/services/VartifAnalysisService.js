@@ -128,10 +128,10 @@ DatascienceModule.service("VartifAnalysisService", function ($http, VartifAnalys
                 }
                 
                 if(response[i].statusList !=null && response[i].statusList.length > 0){
-                    if (response[i].statusList[len].stage == "NotStarted") {
-                        resultInfo.tStatus = "Not Started"
-                    } else if (response[i].statusList[len].stage == "InProgress") {
-                      result.tStatus = "In Progress"
+                    if (response[i].statusList[len].stage == "PENDING") {
+                        resultInfo.tStatus = "PENDING"
+                    } else if (response[i].statusList[len].stage == "RUNNING") {
+                      result.tStatus = "RUNNING"
                     } else {
                         resultInfo.tStatus = response[i].statusList[len].stage;
                     }
@@ -146,13 +146,13 @@ DatascienceModule.service("VartifAnalysisService", function ($http, VartifAnalys
                 
                 if(response[i].deployExec !=null && response[i].deployExec.statusList !=null && response[i].deployExec.statusList.length > 0){
                     
-                    if (response[i].deployExec.statusList[len].stage == "NotStarted") {
-                        resultInfo.dStatus = "Not Started"
-                    } else if (response[i].deployExec.statusList[len].stage == "InProgress") {
-                      result.dStatus = "In Progress"
+                    if (response[i].deployExec.statusList[len].stage == "PENDING") {
+                        resultInfo.dStatus = "PENDING"
+                    } else if (response[i].deployExec.statusList[len].stage == "RUNNING") {
+                      result.dStatus = "RUNNING"
                     } else {
                         resultInfo.dStatus =response[i].deployExec.statusList[len].stage;
-                        if(response[i].deployExec.statusList[len].stage == "Completed")
+                        if(response[i].deployExec.statusList[len].stage == "COMPLETED")
                             resultInfo.lastDeployedDate=$filter('date')(response[i].deployExec.statusList[len].createdOn, "EEE MMM dd  hh:mm:ss yyyy");
                         else 
                         resultInfo.lastDeployedDate="-NA-";
@@ -162,7 +162,7 @@ DatascienceModule.service("VartifAnalysisService", function ($http, VartifAnalys
                     resultInfo.dStatus="-NA-";
                     resultInfo.lastDeployedDate="-NA-";
                 }
-                if(response[i].deployExec !=null && response[i].deployExec.active == "Y" && resultInfo.isModelDeployExist !="Y" &&  response[i].deployExec.statusList[len].stage == "Completed"){
+                if(response[i].deployExec !=null && response[i].deployExec.active == "Y" && resultInfo.isModelDeployExist !="Y" &&  response[i].deployExec.statusList[len].stage == "COMPLETED"){
                     resultInfo.isModelDeployExist="Y"; 
                     isModelDeployExist ="Y"; 
                 }

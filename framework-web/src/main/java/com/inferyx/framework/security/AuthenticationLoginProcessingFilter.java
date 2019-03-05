@@ -76,10 +76,10 @@ public class AuthenticationLoginProcessingFilter extends GenericFilterBean {
 			SecurityContextHolder.clearContext();
 
 			if (debug) {
-				this.logger.debug("Authentication request for failed: ");
+				this.logger.debug("Authentication request for FAILED: ");
 			}
 			logger.error("Authentication Exception");
-			//failed.printStackTrace();
+			//FAILED.printStackTrace();
 			HttpServletResponse resp = (HttpServletResponse) response;
 			resp.addHeader("sessionId", "");
 			resp.addHeader("status", "false");
@@ -176,14 +176,14 @@ public class AuthenticationLoginProcessingFilter extends GenericFilterBean {
 
 			//logger.info("Response object sessionId: "+resp.getHeader("sessionId"));
 
-		} catch (AuthenticationException failed) {
+		} catch (AuthenticationException FAILED) {
 			SecurityContextHolder.clearContext();
 
 			if (debug) {
-				this.logger.debug("Authentication request for failed: " + failed);
+				this.logger.debug("Authentication request for FAILED: " + FAILED);
 			}
 			logger.error("Authentication Exception");
-			failed.printStackTrace();
+			FAILED.printStackTrace();
 			HttpServletResponse resp = (HttpServletResponse) response;
 			resp.addHeader("sessionId", "");
 			resp.addHeader("status", "false");

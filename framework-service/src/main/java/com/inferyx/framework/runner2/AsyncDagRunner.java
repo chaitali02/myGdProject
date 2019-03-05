@@ -72,7 +72,7 @@ public class AsyncDagRunner {
 			FrameworkThreadLocal.getSessionContext().set(sessionContext);
 			//Check if parsing has happ or not. If not then parse.
 //			dagServiceImpl2.setRunMode(runMode);	// MARK IT - DONT SET RUNMODE HERE
-			if (Helper.getLatestStatus(dagExec.getStatusList()).getStage().equals(Status.Stage.NotStarted)) {
+			if (Helper.getLatestStatus(dagExec.getStatusList()).getStage().equals(Status.Stage.PENDING)) {
 				// Parse to create SQL
 				dagExec = dagServiceImpl2.parseDagExec(dag, dagExec);
 				//dagExecServiceImpl.save(dagExec);
@@ -80,7 +80,7 @@ public class AsyncDagRunner {
 			}
 			
 			synchronized (dagExec.getUuid()) {
-				commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.InProgress);
+				commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.RUNNING);
 			}
 
 			// Execute the object
@@ -92,35 +92,35 @@ public class AsyncDagRunner {
 			//dagExec = dagExecServiceImpl.findOneByUuidAndVersion(dagExec.getUuid(), dagExec.getVersion());
 			dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(dagExec.getUuid(), dagExec.getVersion(), MetaType.dagExec.toString());
 			List<StageExec> dagExecStgs = DagExecUtil.castToStageExecList(dagExec.getStages());
-			boolean setCompletedStatus = true;
+			boolean setCOMPLETEDStatus = true;
 			
 			
 			for (StageExec stageExec : dagExecStgs) {
 				Status latestStatus = Helper.getLatestStatus(stageExec.getStatusList());
 				logger.info("After dag exec latestStatus : " + latestStatus.getStage().toString() + " for stage exec : " + stageExec.getStageId());
-				if (latestStatus.getStage().equals(Status.Stage.Failed)) {
+				if (latestStatus.getStage().equals(Status.Stage.FAILED)) {
 					synchronized (dagExec.getUuid()) {
-						commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.Failed);
+						commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.FAILED);
 					}
-					setCompletedStatus = false;
+					setCOMPLETEDStatus = false;
 					break;
-				} else if (latestStatus.getStage().equals(Status.Stage.Killed)) {
+				} else if (latestStatus.getStage().equals(Status.Stage.KILLED)) {
 					synchronized (dagExec.getUuid()) {
-						commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.Terminating);
-						commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.Killed);
+						commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.TERMINATING);
+						commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.KILLED);
 					}
-					setCompletedStatus = false;
+					setCOMPLETEDStatus = false;
 					break;
-				} else if (!latestStatus.getStage().equals(Status.Stage.Completed)) {
-					setCompletedStatus = false;
+				} else if (!latestStatus.getStage().equals(Status.Stage.COMPLETED)) {
+					setCOMPLETEDStatus = false;
 					break;
 				}
 			}
 			
-			if (setCompletedStatus) {
-				logger.info("DagExec completed");
+			if (setCOMPLETEDStatus) {
+				logger.info("DagExec COMPLETED");
 				synchronized (dagExec.getUuid()) {
-					commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.Completed);
+					commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.COMPLETED);
 				}
 			}
 		} catch (Exception e) {
@@ -134,8 +134,8 @@ public class AsyncDagRunner {
 			
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 			dependsOn.setRef(new MetaIdentifier(MetaType.dagExec, dagExec.getUuid(), dagExec.getVersion()));
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Pipeline execution failed.", dependsOn);
-			throw new Exception((message != null) ? message : "Pipeline execution failed.");
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Pipeline execution FAILED.", dependsOn);
+			throw new Exception((message != null) ? message : "Pipeline execution FAILED.");
 		}finally {			
 			taskThreadMap.remove("Dag_"+dagExec.getUuid());
 			logger.info("Thread watch : DagExec : " + dagExec.getUuid() + " RunDagServiceImpl complete >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");

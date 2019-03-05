@@ -255,7 +255,7 @@ public class RunBatchServiceImpl implements Callable<String> {
 			batchExec = execute();
 		} catch (Exception e) {
 			logger.error(e);
-			batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.Failed);
+			batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.FAILED);
 			e.printStackTrace();
 			String message = null;
 			try {
@@ -300,17 +300,17 @@ public class RunBatchServiceImpl implements Callable<String> {
 			}
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 			dependsOn.setRef(new MetaIdentifier(MetaType.batchExec, batchExec.getUuid(), batchExec.getVersion()));
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Batch execution failed.", dependsOn);
-			throw new Exception((message != null) ? message : "Batch execution failed.");
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Batch execution FAILED.", dependsOn);
+			throw new Exception((message != null) ? message : "Batch execution FAILED.");
 		} finally {
 			SenderInfo senderInfo = batch.getSenderInfo();
 			if(senderInfo != null) {
 				Status latestStatus = Helper.getLatestStatus(batchExec.getStatusList());
-				if(latestStatus.getStage().equals(Status.Stage.Completed) && senderInfo.getNotifyOnSuccess().equalsIgnoreCase("Y")) {
+				if(latestStatus.getStage().equals(Status.Stage.COMPLETED) && senderInfo.getNotifyOnSuccess().equalsIgnoreCase("Y")) {
 					synchronized (batchExec.getUuid()) {
 						batchServiceImpl.sendSuccessNotification(senderInfo, batch, batchExec);
 					}
-				} else if(latestStatus.getStage().equals(Status.Stage.Failed) && senderInfo.getNotifyOnFailure().equalsIgnoreCase("Y")) {
+				} else if(latestStatus.getStage().equals(Status.Stage.FAILED) && senderInfo.getNotifyOnFailure().equalsIgnoreCase("Y")) {
 					batchServiceImpl.sendFailureNotification(senderInfo, batch, batchExec);
 				}
 			}

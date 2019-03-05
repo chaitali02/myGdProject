@@ -515,7 +515,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 		} catch (Exception e) {
 			synchronized (profileExec.getUuid()) {
 				try {
-					commonServiceImpl.setMetaStatus(profileExec, MetaType.profileExec, Status.Stage.Failed);
+					commonServiceImpl.setMetaStatus(profileExec, MetaType.profileExec, Status.Stage.FAILED);
 				} catch (Exception e1) {
 					e1.printStackTrace();
 					String message = null;
@@ -556,7 +556,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 			profileExec = (ProfileExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
 					MetaType.profileExec.toString());
 			synchronized (execUuid) {
-				commonServiceImpl.setMetaStatus(profileExec, MetaType.profileExec, Status.Stage.Initialized);
+				commonServiceImpl.setMetaStatus(profileExec, MetaType.profileExec, Status.Stage.INITIALIZING);
 			}
 			profile = (Profile) commonServiceImpl.getOneByUuidAndVersion(profileExec.getDependsOn().getRef().getUuid(),
 					profileExec.getDependsOn().getRef().getVersion(), MetaType.profile.toString());
@@ -586,7 +586,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 		} catch (Exception e) {
 			e.printStackTrace();
 			synchronized (profileExec.getUuid()) {
-				commonServiceImpl.setMetaStatus(profileExec, MetaType.profileExec, Status.Stage.Failed);
+				commonServiceImpl.setMetaStatus(profileExec, MetaType.profileExec, Status.Stage.FAILED);
 			}
 			String message = null;
 			try {
@@ -600,7 +600,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 			throw new Exception((message != null) ? message : "Can not parse Profile.");
 		}	
 		synchronized (execUuid) {
-			commonServiceImpl.setMetaStatus(profileExec, MetaType.profileExec, Status.Stage.Ready);
+			commonServiceImpl.setMetaStatus(profileExec, MetaType.profileExec, Status.Stage.READY);
 		}
 		return profileExec;
 	}
@@ -627,8 +627,8 @@ public class ProfileServiceImpl extends RuleTemplate {
 			}
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 			dependsOn.setRef(new MetaIdentifier(MetaType.profileExec, baseRuleExec.getUuid(), baseRuleExec.getVersion()));
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Profile execution failed.", dependsOn);
-			throw new Exception((message != null) ? message : "Profile execution failed.");
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Profile execution FAILED.", dependsOn);
+			throw new Exception((message != null) ? message : "Profile execution FAILED.");
 		}
 	}
 
@@ -746,7 +746,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 					e.printStackTrace();
 				}
 
-				query2.addCriteria(Criteria.where("statusList.stage").in(Status.Stage.Completed.toString()));
+				query2.addCriteria(Criteria.where("statusList.stage").in(Status.Stage.COMPLETED.toString()));
 				query2.addCriteria(Criteria.where("dependsOn.ref.uuid").is(profile.getUuid()));
 			} catch (NullPointerException e) {
 				e.printStackTrace();

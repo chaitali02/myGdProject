@@ -86,34 +86,34 @@ public class SystemServiceImpl {
 			return activeSessionList;
 	}
 	public List<BaseEntityStatus> getActiveJobByCriteria(String type, String appUuid, String userName, String startDate, String endDate, String tags, String active, String status, String role) throws ParseException, JsonGenerationException, JsonMappingException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException{
-		//logger.info("status : "+status+"   Status.Stage.InProgress: "+Status.Stage.InProgress+"    Helper.getStatus(status): "+Helper.getStatus(status));
+		//logger.info("status : "+status+"   Status.Stage.RUNNING: "+Status.Stage.RUNNING+"    Helper.getStatus(status): "+Helper.getStatus(status));
 		if(type != null && !StringUtils.isBlank(type)) {
-			List<BaseEntityStatus> inProgressExecList = metadataServiceImpl.getBaseEntityStatusByCriteria(role, appUuid, type, null, userName, startDate, endDate, tags, active, status);
+			List<BaseEntityStatus> RUNNINGExecList = metadataServiceImpl.getBaseEntityStatusByCriteria(role, appUuid, type, null, userName, startDate, endDate, tags, active, status);
 			if(status != null && !StringUtils.isBlank(status))
-				return getBaseEntityLatestStatusList(inProgressExecList, Helper.getStatus(status));
+				return getBaseEntityLatestStatusList(RUNNINGExecList, Helper.getStatus(status));
 			else
-				return inProgressExecList;
+				return RUNNINGExecList;
 		}else {
 			List<MetaType> metaExecList = MetaType.getMetaExecList();
-			List<BaseEntityStatus> xinProgressExecList = new ArrayList<>();
+			List<BaseEntityStatus> xRUNNINGExecList = new ArrayList<>();
 			for(MetaType metaType : metaExecList) {
-				List<BaseEntityStatus> inProgressExecList = metadataServiceImpl.getBaseEntityStatusByCriteria(role, appUuid, metaType.toString().toLowerCase(), null, userName, startDate, endDate, tags, active, status);
+				List<BaseEntityStatus> RUNNINGExecList = metadataServiceImpl.getBaseEntityStatusByCriteria(role, appUuid, metaType.toString().toLowerCase(), null, userName, startDate, endDate, tags, active, status);
 				if(status != null && !StringUtils.isBlank(status)) {
-					List<BaseEntityStatus> newInprogressExecList = getBaseEntityLatestStatusList(inProgressExecList, Helper.getStatus(status));
-					for(BaseEntityStatus baseEntityStatus : newInprogressExecList) {
-						xinProgressExecList.add(baseEntityStatus);
+					List<BaseEntityStatus> newRUNNINGExecList = getBaseEntityLatestStatusList(RUNNINGExecList, Helper.getStatus(status));
+					for(BaseEntityStatus baseEntityStatus : newRUNNINGExecList) {
+						xRUNNINGExecList.add(baseEntityStatus);
 					}
 				}else 
-					for(BaseEntityStatus baseEntityStatus : inProgressExecList) {
-						xinProgressExecList.add(baseEntityStatus);
+					for(BaseEntityStatus baseEntityStatus : RUNNINGExecList) {
+						xRUNNINGExecList.add(baseEntityStatus);
 					}				
 			}
-			return xinProgressExecList;
+			return xRUNNINGExecList;
 		}
 	}	
 	public List<BaseEntityStatus> getBaseEntityLatestStatusList(List<BaseEntityStatus> baseEntityStatusList, Status.Stage status) throws JsonGenerationException, JsonMappingException, IOException{
 		if(baseEntityStatusList != null && !baseEntityStatusList.isEmpty()) {
-			List<BaseEntityStatus> newInProgressExecList = new ArrayList<>();
+			List<BaseEntityStatus> newRUNNINGExecList = new ArrayList<>();
 			for(BaseEntityStatus baseEntityStatus : baseEntityStatusList) {
 				Status latestStatus = Helper.getLatestStatus(baseEntityStatus.getStatus());
 				if(latestStatus != null)
@@ -121,12 +121,12 @@ public class SystemServiceImpl {
 						List<Status> statusList = new ArrayList<>();
 						statusList.add(latestStatus);
 						baseEntityStatus.setStatus(statusList);
-						newInProgressExecList.add(baseEntityStatus);
+						newRUNNINGExecList.add(baseEntityStatus);
 					}			
 			}
-			//logger.info(new ObjectMapper().writeValueAsString(inProgressExecList));
-			//logger.info(new ObjectMapper().writeValueAsString(newInProgressExecList));
-			return newInProgressExecList;
+			//logger.info(new ObjectMapper().writeValueAsString(RUNNINGExecList));
+			//logger.info(new ObjectMapper().writeValueAsString(newRUNNINGExecList));
+			return newRUNNINGExecList;
 		}else
 			return new ArrayList<>();
 	}
@@ -141,7 +141,7 @@ public class SystemServiceImpl {
 					session.invalidate();
 					logger.info("Session invalidated......."); return true;
 				}else
-					logger.info("Session already invalidated......."); return false; 
+					logger.info("Session alReady invalidated......."); return false; 
 			}else
 				logger.info("Unable to update Session object, aborting invalidated operation......."); return false;
 		}else
@@ -158,7 +158,7 @@ public class SystemServiceImpl {
 				commonServiceImpl.save(MetaType.session.toString(), session);	
 				return true;
 			}else
-				logger.info("Session already invalidated......."); return false;
+				logger.info("Session alReady invalidated......."); return false;
 		}else
 			logger.info("Meta type \"Session\" instance is null......."); return false;
 	}

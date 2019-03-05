@@ -150,7 +150,7 @@ public class ExportServiceImpl implements Serializable {
 				try {
 					zos.putNextEntry(new ZipEntry(file.getName()));					
 				}catch (Exception e) {
-					logger.info("\""+uuid+".json\"" + " already present in file.");
+					logger.info("\""+uuid+".json\"" + " alReady present in file.");
 					continue;
 				}
 				FileInputStream metaFis = new FileInputStream(file);

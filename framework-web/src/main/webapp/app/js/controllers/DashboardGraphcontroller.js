@@ -464,7 +464,6 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
   $scope.graphDataStatus = false
   $scope.showtooltip = 'top'
   $scope.showtooltiptitle = "Maximize";
-  $scope.inprogressarray = [];
   $scope.chartcolor = ["#73c6b6", "#f8c471", "#d98880", "#7dcea0", "#f1948a", "#c39bd3", "#bb8fce", "#7fb3d5", "#85c1e9", "#76d7c4", "#82e0aa", "#f7dc6f", "#f0b27a", "#e59866"]//["#E6B0AA","#D7BDE2","#F5B7B1","#D2B4DE","#A9CCE3","#AED6F1","#A9CCE3","#A3E4D7","#A2D9CE","#A9DFBF","#ABEBC6","#F9E79F","#FAD7A0","#F5CBA7","#EDBB99"]
   $scope.vizpodbody = {};
   $scope.filterListarray = [];

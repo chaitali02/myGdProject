@@ -1626,7 +1626,7 @@ public class CommonServiceImpl<T> {
 		// String.class);
 		File f = new File(csvFilePath);
 		Datapod datapod = datapodServiceImpl.findOneByName(f.getName());
-		// If datapod is already present for this filename, then return here
+		// If datapod is alReady present for this filename, then return here
 		if (datapod != null)
 			return datapod;
 		String parquetDir = null;
@@ -2998,13 +2998,13 @@ public class CommonServiceImpl<T> {
 		return countHolder;
 	}
 
-	private List<Status> setNotStartedStatus(List<Status> statusList) {
-		// TODO : Condition needs to be revisited. These should go to NotStarted status. But care needs to be taken to understand 
+	private List<Status> setPendingStatus(List<Status> statusList) {
+		// TODO : Condition needs to be revisited. These should go to PENDING status. But care needs to be taken to understand 
 		// the trigger points. Ideally, the trigger point should only be start
 		if (statusList == null || statusList.isEmpty()) {
-			logger.info("StatusList is empty. Can go to NotStarted status ");
+			logger.info("StatusList is empty. Can go to PENDING status ");
 			statusList = new ArrayList<Status>();
-			statusList.add(new Status(Status.Stage.NotStarted, new Date()));
+			statusList.add(new Status(Status.Stage.PENDING, new Date()));
 			return statusList;
 		}
 		return statusList;
@@ -3015,49 +3015,49 @@ public class CommonServiceImpl<T> {
 	 * @param statusList
 	 * @return
 	 */
-	private List<Status> setInProgressStatus(List<Status> statusList) {
+	private List<Status> setRunningStatus(List<Status> statusList) {
 		if (Helper.getLatestStatus(statusList) != null
-				&& !(Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Ready, new Date())))) {
-			logger.info("Latest Status is not in Ready. Cannot go to InProgress status. Exiting... ");
+				&& !(Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.READY, new Date())))) {
+			logger.info("Latest Status is not in READY. Cannot go to RUNNING status. Exiting... ");
 			return statusList;
 		}
 
 		if (statusList == null || statusList.isEmpty()) {
 			statusList = new ArrayList<Status>();
-			logger.info("No status in statusList. Cannot go to InProgress status. Exiting... ");
+			logger.info("No status in statusList. Cannot go to RUNNING status. Exiting... ");
 			return statusList;
 		} 
-		statusList.add(new Status(Status.Stage.InProgress, new Date()));
+		statusList.add(new Status(Status.Stage.RUNNING, new Date()));
 		return statusList;
 	}
 
-	private List<Status> setOnHoldStatus(List<Status> statusList) {
-		if (!Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.NotStarted, new Date()))) {
-			logger.info("Latest Status is not in NotStarted. Exiting...");
+	private List<Status> setPauseStatus(List<Status> statusList) {
+		if (!Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.PENDING, new Date()))) {
+			logger.info("Latest Status is not in PENDING. Exiting...");
 			return statusList;
 		}
-		statusList.add(new Status(Status.Stage.OnHold, new Date()));
+		statusList.add(new Status(Status.Stage.PAUSE, new Date()));
 		return statusList;
 	}
 
 	private List<Status> setResumeStatus(List<Status> statusList) {
-		if (!Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.OnHold, new Date()))) {
-			logger.info("Latest Status is not in OnHold. Exiting...");
+		if (!Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.PAUSE, new Date()))) {
+			logger.info("Latest Status is not in PAUSE. Exiting...");
 			return statusList;
 		}
-		statusList.add(new Status(Status.Stage.Resume, new Date()));
+		statusList.add(new Status(Status.Stage.RESUME, new Date()));
 		return statusList;
 	}
 	
-	private List<Status> setInitializedStatus(List<Status> statusList) {
+	private List<Status> setInitializingStatus(List<Status> statusList) {
 		if (statusList == null || statusList.isEmpty()) {
-			logger.info("Nothing in statusList. Cannot go to Initialized status ... ");
+			logger.info("Nothing in statusList. Cannot go to INITIALIZING status ... ");
 			return null;
 		}
-		if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.NotStarted, new Date()))) {
-			statusList.add(new Status(Status.Stage.Initialized, new Date()));
+		if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.PENDING, new Date()))) {
+			statusList.add(new Status(Status.Stage.INITIALIZING, new Date()));
 		} else {
-			logger.info("Latest Status is not in NotStarted. Cannot go to initialized status. Exiting...");
+			logger.info("Latest Status is not in PENDING. Cannot go to INITIALIZING status. Exiting...");
 		}
 		return statusList;
 	}
@@ -3065,16 +3065,16 @@ public class CommonServiceImpl<T> {
 
 	private List<Status> setReadyStatus(List<Status> statusList) {
 		if (statusList == null || statusList.isEmpty()) {
-			logger.info("Nothing in statusList. Cannot go to Ready status ... ");
+			logger.info("Nothing in statusList. Cannot go to READY status ... ");
 			return null;
 		}
-		if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Resume, new Date()))
-				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Failed, new Date()))
-				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Killed, new Date())) 
-				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Initialized, new Date()))) {
-			statusList.add(new Status(Status.Stage.Ready, new Date()));
+		if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.RESUME, new Date()))
+				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.FAILED, new Date()))
+				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.KILLED, new Date())) 
+				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.INITIALIZING, new Date()))) {
+			statusList.add(new Status(Status.Stage.READY, new Date()));
 		} else {
-			logger.info("Latest Status is not in Resume/Failed/Killed/Initialized. Cannot go to ready status. Exiting...");
+			logger.info("Latest Status is not in RESUME/FAILED/KILLED/INITIALIZING. Cannot go to READY status. Exiting...");
 		}
 		return statusList;
 	}
@@ -3082,52 +3082,52 @@ public class CommonServiceImpl<T> {
 	private List<Status> setFailedStatus(List<Status> statusList) {
 		/*
 		 * if (!Helper.getLatestStatus(statusList).equals(new
-		 * Status(Status.Stage.InProgress, new Date()))) {
-		 * logger.info("Latest Status is not in InProgress. Exiting..."); return
+		 * Status(Status.Stage.RUNNING, new Date()))) {
+		 * logger.info("Latest Status is not in RUNNING. Exiting..."); return
 		 * statusList; }
 		 */
-		if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Completed, new Date()))
-				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Killed, new Date()))) {
-			logger.info("Latest Status is in Completed or killed. Exiting...");
+		if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.COMPLETED, new Date()))
+				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.KILLED, new Date()))) {
+			logger.info("Latest Status is in COMPLETED or KILLED. Exiting...");
 			return statusList;
-		} else if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Terminating, new Date()))) {
-			statusList.add(new Status(Status.Stage.Killed, new Date()));
+		} else if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.TERMINATING, new Date()))) {
+			statusList.add(new Status(Status.Stage.KILLED, new Date()));
 			return statusList;
 		}
-		Status failedStatus = new Status(Status.Stage.Failed, new Date());
-		if (Helper.getLatestStatus(statusList).equals(failedStatus)) {
+		Status FAILEDStatus = new Status(Status.Stage.FAILED, new Date());
+		if (Helper.getLatestStatus(statusList).equals(FAILEDStatus)) {
 			statusList.remove(statusList.size() - 1);
 		}
-		statusList.add(failedStatus);
+		statusList.add(FAILEDStatus);
 		return statusList;
 	}
 
 	private List<Status> setCompletedStatus(List<Status> statusList) {
-		if (!Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.InProgress, new Date()))
-				&& !Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Terminating, new Date()))) {
-			logger.info("Latest Status is not in InProgress. Exiting...");
+		if (!Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.RUNNING, new Date()))
+				&& !Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.TERMINATING, new Date()))) {
+			logger.info("Latest Status is not in RUNNING. Exiting...");
 			return statusList;
 		}
-		statusList.add(new Status(Status.Stage.Completed, new Date()));
+		statusList.add(new Status(Status.Stage.COMPLETED, new Date()));
 		return statusList;
 	}
 
 	private List<Status> setTerminatingStatus(List<Status> statusList) {
-		if (!Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.InProgress, new Date())) 
-				|| !Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Initialized, new Date()))) {
-			logger.info("Latest Status is not in InProgress or Initialized. Exiting...");
+		if (!Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.RUNNING, new Date())) 
+				&& !Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.INITIALIZING, new Date()))) {
+			logger.info("Latest Status is not in RUNNING or INITIALIZING. Exiting...");
 			return statusList;
 		}
-		statusList.add(new Status(Status.Stage.Terminating, new Date()));
+		statusList.add(new Status(Status.Stage.TERMINATING, new Date()));
 		return statusList;
 	}
 
 	private List<Status> setKilledStatus(List<Status> statusList) {
-		if (!Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Terminating, new Date()))) {
-			logger.info("Latest Status is not in Terminating. Exiting...");
+		if (!Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.TERMINATING, new Date()))) {
+			logger.info("Latest Status is not in TERMINATING. Exiting...");
 			return statusList;
 		}
-		statusList.add(new Status(Status.Stage.Killed, new Date()));
+		statusList.add(new Status(Status.Stage.KILLED, new Date()));
 		return statusList;
 	}
 	/**
@@ -3167,17 +3167,17 @@ public class CommonServiceImpl<T> {
 	// }
 	//
 	// switch (stage) {
-	// case NotStarted:
-	// statusList = setNotStartedStatus(statusList);
+	// case PENDING:
+	// statusList = setPENDINGStatus(statusList);
 	// break;
-	// case InProgress:
-	// statusList = setInProgressStatus(statusList);
+	// case RUNNING:
+	// statusList = setRUNNINGStatus(statusList);
 	// break;
-	// case Failed:
+	// case FAILED:
 	// statusList = setFailedStatus(statusList);
 	// break;
-	// case Completed:
-	// statusList = setCompletedStatus(statusList);
+	// case COMPLETED:
+	// statusList = setCOMPLETEDStatus(statusList);
 	// break;
 	// default:
 	// break;
@@ -3231,36 +3231,36 @@ public class CommonServiceImpl<T> {
 		}
 
 		switch (stage) {
-		case NotStarted:
-			statusList = setNotStartedStatus(statusList);
+		case PENDING:
+			statusList = setPendingStatus(statusList);
 			break;
-		case Initialized:
-			statusList = setInitializedStatus(statusList);
+		case INITIALIZING:
+			statusList = setInitializingStatus(statusList);
 			break;
-		case Ready:
+		case READY:
 			statusList = setReadyStatus(statusList);
 			break;
-		case OnHold:
-			statusList = setOnHoldStatus(statusList);
+		case PAUSE:
+			statusList = setPauseStatus(statusList);
 			break;
-		case Resume:
+		case RESUME:
 			statusList = setResumeStatus(statusList);
 			break;
-		case InProgress:
-			statusList = setInProgressStatus(statusList);
+		case RUNNING:
+			statusList = setRunningStatus(statusList);
 			break;
-		case Failed:
+		case FAILED:
 			statusList = setFailedStatus(statusList);
 			break;
-		case Completed:
+		case COMPLETED:
 			statusList = setCompletedStatus(statusList);
 			break;
-		case Terminating:
-			logger.info("Going to set terminating status for stage ");
+		case TERMINATING:
+			logger.info("Going to set TERMINATING status for stage ");
 			logger.info(Helper.getLatestStatus(statusList).getStage().toString());
 			statusList = setTerminatingStatus(statusList);
 			break;
-		case Killed:
+		case KILLED:
 			statusList = setKilledStatus(statusList);
 			break;
 		case STARTED:
@@ -3316,35 +3316,35 @@ public class CommonServiceImpl<T> {
 		}
 
 		switch (stage) {
-		case NotStarted:
-			statusList = setNotStartedStatus(statusList);
+		case PENDING:
+			statusList = setPendingStatus(statusList);
 			break;
-		case Initialized:
-			statusList = setInitializedStatus(statusList);
+		case INITIALIZING:
+			statusList = setInitializingStatus(statusList);
 			break;
-		case Ready:
+		case READY:
 			statusList = setReadyStatus(statusList);
 			break;
-		case OnHold:
-			statusList = setOnHoldStatus(statusList);
+		case PAUSE:
+			statusList = setPauseStatus(statusList);
 			break;
-		case Resume:
+		case RESUME:
 			statusList = setResumeStatus(statusList);
 			break;
-		case InProgress:
-			statusList = setInProgressStatus(statusList);
+		case RUNNING:
+			statusList = setRunningStatus(statusList);
 			break;
-		case Failed:
+		case FAILED:
 			statusList = setFailedStatus(statusList);
 			break;
-		case Completed:
+		case COMPLETED:
 			statusList = setCompletedStatus(statusList);
 			break;
-		case Terminating:
+		case TERMINATING:
 			statusList = setTerminatingStatus(statusList);
 			break;
-		case Killed:
-			logger.info("Going to kill task : " + taskId + " : before setKilledStatus");
+		case KILLED:
+			logger.info("Going to kill task : " + taskId + " : before setKILLEDStatus");
 			statusList = setKilledStatus(statusList);
 			break;
 		case STARTED:
@@ -3400,34 +3400,34 @@ public class CommonServiceImpl<T> {
 		}
 
 		switch (stage) {
-		case NotStarted:
-			statusList = setNotStartedStatus(statusList);
+		case PENDING:
+			statusList = setPendingStatus(statusList);
 			break;
-		case Initialized:
-			statusList = setInitializedStatus(statusList);
+		case INITIALIZING:
+			statusList = setInitializingStatus(statusList);
 			break;
-		case Ready:
+		case READY:
 			statusList = setReadyStatus(statusList);
 			break;
-		case OnHold:
-			statusList = setOnHoldStatus(statusList);
+		case PAUSE:
+			statusList = setPauseStatus(statusList);
 			break;
-		case Resume:
+		case RESUME:
 			statusList = setResumeStatus(statusList);
 			break;
-		case InProgress:
-			statusList = setInProgressStatus(statusList);
+		case RUNNING:
+			statusList = setRunningStatus(statusList);
 			break;
-		case Failed:
+		case FAILED:
 			statusList = setFailedStatus(statusList);
 			break;
-		case Completed:
+		case COMPLETED:
 			statusList = setCompletedStatus(statusList);
 			break;
-		case Terminating:
+		case TERMINATING:
 			statusList = setTerminatingStatus(statusList);
 			break;
-		case Killed:
+		case KILLED:
 			statusList = setKilledStatus(statusList);
 			break;
 		case STARTED:
@@ -3456,21 +3456,21 @@ public class CommonServiceImpl<T> {
 		return statusList;
 	}
 
-	public void onHold(MetaType type, String uuid, String version) {
+	public void PAUSE(MetaType type, String uuid, String version) {
 		Object service = null;
 		try {
 			service = this.getClass().getMethod(GET + Helper.getServiceClass(type)).invoke(this);
-			(service).getClass().getMethod("onHold", String.class, String.class).invoke(service, uuid, version);
+			(service).getClass().getMethod("PAUSE", String.class, String.class).invoke(service, uuid, version);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void resume(MetaType type, String uuid, String version) {
+	public void RESUME(MetaType type, String uuid, String version) {
 		Object service = null;
 		try {
 			service = this.getClass().getMethod(GET + Helper.getServiceClass(type)).invoke(this);
-			(service).getClass().getMethod("resume", String.class, String.class).invoke(service, uuid, version);
+			(service).getClass().getMethod("RESUME", String.class, String.class).invoke(service, uuid, version);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -3489,11 +3489,11 @@ public class CommonServiceImpl<T> {
 	public void setStatus(String type, String uuid, String version, String status)
 			throws JsonProcessingException, Exception {
 		if (!StringUtils.isBlank(status)) {
-			if (status.toLowerCase().equalsIgnoreCase(Status.Stage.OnHold.toString().toLowerCase())) {
-				onHold(Helper.getMetaType(type), uuid, version);
-			} else if (status.toLowerCase().equalsIgnoreCase(Status.Stage.Resume.toString().toLowerCase())) {
-				resume(Helper.getMetaType(type), uuid, version);
-			} else if (status.toLowerCase().equalsIgnoreCase(Status.Stage.Killed.toString().toLowerCase())) {
+			if (status.toLowerCase().equalsIgnoreCase(Status.Stage.PAUSE.toString().toLowerCase())) {
+				PAUSE(Helper.getMetaType(type), uuid, version);
+			} else if (status.toLowerCase().equalsIgnoreCase(Status.Stage.RESUME.toString().toLowerCase())) {
+				RESUME(Helper.getMetaType(type), uuid, version);
+			} else if (status.toLowerCase().equalsIgnoreCase(Status.Stage.KILLED.toString().toLowerCase())) {
 				kill(Helper.getMetaType(type), uuid, version);
 			}
 		}
@@ -3518,7 +3518,7 @@ public class CommonServiceImpl<T> {
 			}
 			try {
 				outputThreadName = futureTask.get();
-				logger.info("Thread " + outputThreadName + " completed ");
+				logger.info("Thread " + outputThreadName + " COMPLETED ");
 				taskThreadMap.remove(outputThreadName);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
@@ -3541,7 +3541,7 @@ public class CommonServiceImpl<T> {
 			try {
 				taskHolder = futureTask.get();
 				outputThreadName = taskHolder.getName();
-				logger.info("Thread " + outputThreadName + " completed ");
+				logger.info("Thread " + outputThreadName + " COMPLETED ");
 				taskThreadMap.remove(outputThreadName);
 			} catch (InterruptedException | CancellationException e) {
 				e.printStackTrace();
@@ -3601,7 +3601,7 @@ public class CommonServiceImpl<T> {
 	 */
 	public Status getGroupStatus(BaseRuleGroupExec baseRuleGroupExec, MetaType groupExecType, MetaType ruleExecType)
 			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		Status defaultStatus = new Status(Status.Stage.InProgress, new Date());
+		Status defaultStatus = new Status(Status.Stage.RUNNING, new Date());
 		List<MetaIdentifierHolder> metaIdentifierHolderList = null;
 		BaseRuleExec baseRuleExec = null;
 		ConcurrentHashMap<Status.Stage, Integer> stausMap = new ConcurrentHashMap<Status.Stage, Integer>();
@@ -3624,28 +3624,28 @@ public class CommonServiceImpl<T> {
 			}
 		}
 
-		if (stausMap.containsKey(com.inferyx.framework.domain.Status.Stage.InProgress)
-				&& (stausMap.get(com.inferyx.framework.domain.Status.Stage.InProgress) >= 1)) {
-			defaultStatus.setStage(Status.Stage.InProgress);
-		} else if (stausMap.containsKey(com.inferyx.framework.domain.Status.Stage.Failed)
-				&& (stausMap.get(com.inferyx.framework.domain.Status.Stage.Failed) >= 1)
-				&& !(stausMap.get(com.inferyx.framework.domain.Status.Stage.InProgress) > 0)) {
-			defaultStatus.setStage(Status.Stage.Failed);
-		} else if (stausMap.containsKey(com.inferyx.framework.domain.Status.Stage.Killed)
-				&& (stausMap.get(com.inferyx.framework.domain.Status.Stage.Killed) >= 1)
-				&& !(stausMap.get(com.inferyx.framework.domain.Status.Stage.InProgress) > 0)
-				&& !stausMap.containsKey(com.inferyx.framework.domain.Status.Stage.Failed)) {
-			defaultStatus.setStage(Status.Stage.Killed);
-		} else if (stausMap.containsKey(com.inferyx.framework.domain.Status.Stage.Resume)
-				&& (stausMap.get(com.inferyx.framework.domain.Status.Stage.Resume) >= 1)
-				&& !stausMap.containsKey(com.inferyx.framework.domain.Status.Stage.Killed)
-				&& !(stausMap.get(com.inferyx.framework.domain.Status.Stage.InProgress) > 0)
-				&& !stausMap.containsKey(com.inferyx.framework.domain.Status.Stage.Failed)) {
-			defaultStatus.setStage(Status.Stage.InProgress);
-		} else if (stausMap.containsKey(com.inferyx.framework.domain.Status.Stage.Completed)
+		if (stausMap.containsKey(com.inferyx.framework.domain.Status.Stage.RUNNING)
+				&& (stausMap.get(com.inferyx.framework.domain.Status.Stage.RUNNING) >= 1)) {
+			defaultStatus.setStage(Status.Stage.RUNNING);
+		} else if (stausMap.containsKey(com.inferyx.framework.domain.Status.Stage.FAILED)
+				&& (stausMap.get(com.inferyx.framework.domain.Status.Stage.FAILED) >= 1)
+				&& !(stausMap.get(com.inferyx.framework.domain.Status.Stage.RUNNING) > 0)) {
+			defaultStatus.setStage(Status.Stage.FAILED);
+		} else if (stausMap.containsKey(com.inferyx.framework.domain.Status.Stage.KILLED)
+				&& (stausMap.get(com.inferyx.framework.domain.Status.Stage.KILLED) >= 1)
+				&& !(stausMap.get(com.inferyx.framework.domain.Status.Stage.RUNNING) > 0)
+				&& !stausMap.containsKey(com.inferyx.framework.domain.Status.Stage.FAILED)) {
+			defaultStatus.setStage(Status.Stage.KILLED);
+		} else if (stausMap.containsKey(com.inferyx.framework.domain.Status.Stage.RESUME)
+				&& (stausMap.get(com.inferyx.framework.domain.Status.Stage.RESUME) >= 1)
+				&& !stausMap.containsKey(com.inferyx.framework.domain.Status.Stage.KILLED)
+				&& !(stausMap.get(com.inferyx.framework.domain.Status.Stage.RUNNING) > 0)
+				&& !stausMap.containsKey(com.inferyx.framework.domain.Status.Stage.FAILED)) {
+			defaultStatus.setStage(Status.Stage.RUNNING);
+		} else if (stausMap.containsKey(com.inferyx.framework.domain.Status.Stage.COMPLETED)
 				&& (metaIdentifierHolderList.size() == stausMap
-						.get(com.inferyx.framework.domain.Status.Stage.Completed))) {
-			defaultStatus.setStage(Status.Stage.Completed);
+						.get(com.inferyx.framework.domain.Status.Stage.COMPLETED))) {
+			defaultStatus.setStage(Status.Stage.COMPLETED);
 		}
 
 		logger.info("mapStatus: " + stausMap.toString());
@@ -4513,7 +4513,7 @@ public class CommonServiceImpl<T> {
 			for (MultipartFile multipartFile : multiPartFile) {
 				UploadExec uploadExec = new UploadExec();
 				uploadExec.setBaseEntity();
-				Status status = new Status(Status.Stage.NotStarted, new Date());
+				Status status = new Status(Status.Stage.PENDING, new Date());
 				List<Status> statusList = new ArrayList<>();
 				statusList.add(status);
 				uploadExec.setStatusList(statusList);
@@ -4551,11 +4551,11 @@ public class CommonServiceImpl<T> {
 				}
 				File dest = new File(location);
 				if (dest.exists()) {
-					// status = new Status(Status.Stage.Failed, new Date());
+					// status = new Status(Status.Stage.FAILED, new Date());
 					// statusList.add(status);
 					/// uploadExec.setStatusList(statusList);
 					// save(MetaType.uploadExec.toString(), uploadExec);
-					String message = "File already exists.";
+					String message = "File alReady exists.";
 					logger.info(message);
 					sendResponse("404", MessageStatus.FAIL.toString(),
 							(message != null) ? message : "Requested " + originalFileName + " file not found!!", null);
@@ -4563,7 +4563,7 @@ public class CommonServiceImpl<T> {
 							(message != null) ? message : "Requested " + originalFileName + " file not found!!");
 
 				} else {
-					status = new Status(Status.Stage.InProgress, new Date());
+					status = new Status(Status.Stage.RUNNING, new Date());
 					statusList.add(status);
 					uploadExec.setStatusList(statusList);
 					multipartFile.transferTo(dest);
@@ -4573,7 +4573,7 @@ public class CommonServiceImpl<T> {
 				uploadExec.setName(filename1);
 				uploadExec.setLocation(location);
 				uploadExec.setFileName(originalFileName);
-				status = new Status(Status.Stage.Completed, new Date());
+				status = new Status(Status.Stage.COMPLETED, new Date());
 				statusList.add(status);
 				uploadExec.setStatusList(statusList);
 				if (fileType != null && fileType.equalsIgnoreCase(FileType.ZIP.toString())

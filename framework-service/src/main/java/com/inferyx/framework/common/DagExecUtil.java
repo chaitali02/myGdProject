@@ -42,7 +42,7 @@ public class DagExecUtil {
 		if (statusList == null) {
 			statusList = new ArrayList<Status>();
 		}
-		Status status = new Status(Status.Stage.NotStarted, new Date());
+		Status status = new Status(Status.Stage.PENDING, new Date());
 		statusList.add(status);
 		return statusList;
 	}

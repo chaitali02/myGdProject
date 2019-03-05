@@ -62,7 +62,7 @@ public class GraphOperator implements IOperator {
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		//commonServiceImpl.setMetaStatus(baseExec, MetaType.graphExec.toString(),null);
 		commonServiceImpl.setMetaStatus(baseExec, MetaType.graphExec,
-				Status.Stage.Initialized);
+				Status.Stage.INITIALIZING);
 		// Fetch graphPod - START
 		Graphpod graphPod = (Graphpod) commonServiceImpl.getOneByUuidAndVersion(baseExec.getDependsOn().getRef().getUuid(), baseExec.getDependsOn().getRef().getVersion(), MetaType.graphpod.toString());
 		// Fetch graphPod - END
@@ -75,7 +75,7 @@ public class GraphOperator implements IOperator {
 		logger.info(" Sqls : " + baseExec.getExec());
 		commonServiceImpl.save(MetaType.graphExec.toString(), baseExec);
 		commonServiceImpl.setMetaStatus(baseExec, MetaType.graphExec,
-				Status.Stage.Ready);
+				Status.Stage.READY);
 		return baseExec;
 	}
 

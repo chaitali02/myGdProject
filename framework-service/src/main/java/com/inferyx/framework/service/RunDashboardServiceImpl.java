@@ -206,7 +206,7 @@ public class RunDashboardServiceImpl implements Callable<TaskHolder> {
 				// TODO: handle exception
 			}
 			
-			throw new RuntimeException((message != null) ? message : "Dashboard execution failed.");
+			throw new RuntimeException((message != null) ? message : "Dashboard execution FAILED.");
 		}
 		TaskHolder taskHolder = new TaskHolder(name, new MetaIdentifier(MetaType.dashboardExec, dashboardExec.getUuid(), dashboardExec.getVersion()));
 		return taskHolder;
@@ -215,7 +215,7 @@ public class RunDashboardServiceImpl implements Callable<TaskHolder> {
 	public DashboardExec execute() throws Exception {
 		try {
 			logger.info("executing dashboard.");
-			dashboardExec = (DashboardExec) commonServiceImpl.setMetaStatus(dashboardExec, MetaType.dashboardExec, Status.Stage.InProgress);
+			dashboardExec = (DashboardExec) commonServiceImpl.setMetaStatus(dashboardExec, MetaType.dashboardExec, Status.Stage.RUNNING);
 			
 			for(MetaIdentifierHolder vixExecInfo : dashboardExec.getVizExecInfo()) {
 				try {
@@ -223,7 +223,7 @@ public class RunDashboardServiceImpl implements Callable<TaskHolder> {
 					VizExec vizExec = (VizExec) commonServiceImpl.getOneByUuidAndVersion(vizExecMI.getUuid(), vizExecMI.getVersion(), vizExecMI.getType().toString(), "N");
 					if(vizExec.getStatusList() != null 
 							&& !vizExec.getStatusList().isEmpty()
-							&& !Helper.getLatestStatus(vizExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
+							&& !Helper.getLatestStatus(vizExec.getStatusList()).equals(new Status(Status.Stage.FAILED, new Date()))) {
 						ExecParams vixExecParams = vizExec.getExecParams();
 						if(vixExecParams == null) {
 							vixExecParams = new ExecParams();
@@ -241,15 +241,15 @@ public class RunDashboardServiceImpl implements Callable<TaskHolder> {
 						vizExec = vizpodServiceImpl.execute(vizExec.getUuid(), vizExec.getVersion(), execParams, dashboard.getSaveOnRefresh(), runMode);
 					}	
 				} catch (Exception e) {
-					logger.info("vizExec execution failed <<<< :: >>>> execUuid: "+vixExecInfo.getRef().getUuid()+" :::: execVersion: "+vixExecInfo.getRef().getVersion());
+					logger.info("vizExec execution FAILED <<<< :: >>>> execUuid: "+vixExecInfo.getRef().getUuid()+" :::: execVersion: "+vixExecInfo.getRef().getVersion());
 					e.printStackTrace();
 				}
 			}
 			
-			dashboardExec = (DashboardExec) commonServiceImpl.setMetaStatus(dashboardExec, MetaType.dashboardExec, Status.Stage.Completed);
+			dashboardExec = (DashboardExec) commonServiceImpl.setMetaStatus(dashboardExec, MetaType.dashboardExec, Status.Stage.COMPLETED);
 		} catch (Exception e) {
 			e.printStackTrace();
-			dashboardExec = (DashboardExec) commonServiceImpl.setMetaStatus(dashboardExec, MetaType.dashboardExec, Status.Stage.Failed);
+			dashboardExec = (DashboardExec) commonServiceImpl.setMetaStatus(dashboardExec, MetaType.dashboardExec, Status.Stage.FAILED);
 			String message = null;
 			try {
 				message = e.getMessage();
@@ -257,8 +257,8 @@ public class RunDashboardServiceImpl implements Callable<TaskHolder> {
 				// TODO: handle exception
 			}
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder(new MetaIdentifier(MetaType.dashboardExec, dashboardExec.getUuid(), dashboardExec.getVersion()));
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Dashboard execution failed.", dependsOn);
-			throw new RuntimeException((message != null) ? message : "Dashboard execution failed.");	
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Dashboard execution FAILED.", dependsOn);
+			throw new RuntimeException((message != null) ? message : "Dashboard execution FAILED.");	
 		}
 		return dashboardExec;
 	}

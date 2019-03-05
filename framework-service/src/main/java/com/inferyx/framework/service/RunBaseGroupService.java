@@ -297,8 +297,8 @@ public class RunBaseGroupService implements Callable<TaskHolder> {
 						BaseRule baseRule = (BaseRule) commonServiceImpl.getLatestByUuid(baseRuleExec.getDependsOn().getRef().getUuid(), ruleType.toString());
 						logger.info("Executing rule : " + baseRule.getUuid() + ":" + baseRule.getName());
 						Status latestStatus = Helper.getLatestStatus(baseRuleExec.getStatusList()); 
-						if (latestStatus != null && latestStatus.equals(Status.Stage.Completed)) {
-							logger.info("This rule has already completed. So no need to submit again. Go to next rule ... ");
+						if (latestStatus != null && latestStatus.equals(Status.Stage.COMPLETED)) {
+							logger.info("This rule has alReady COMPLETED. So no need to submit again. Go to next rule ... ");
 							continue;
 						}
 		
@@ -309,7 +309,7 @@ public class RunBaseGroupService implements Callable<TaskHolder> {
 						}
 					} catch (Exception e) {
 						synchronized (baseGroupExec.getUuid()) {
-							baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType, Status.Stage.Failed);
+							baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType, Status.Stage.FAILED);
 						}
 						e.printStackTrace();
 						//	throw new RuntimeException();
@@ -328,11 +328,11 @@ public class RunBaseGroupService implements Callable<TaskHolder> {
 	public Boolean waitAndComplete (BaseRuleGroup baseGroup, BaseRuleGroupExec baseGroupExec, List<FutureTask<TaskHolder>> taskList) throws Exception {
 		logger.info(" Inside waitAndComplete for RunBaseGroupService ");
 		String outputThreadName = null;
-		boolean completed = true;
-		boolean killed = false;
-		boolean failed = false;
-		boolean onHold = false;
-		boolean resume = false;
+		boolean COMPLETED = true;
+		boolean KILLED = false;
+		boolean FAILED = false;
+		boolean PAUSE = false;
+		boolean RESUME = false;
 		TaskHolder taskHolder = null;
 		try {
 			// Collect results and clean map
@@ -344,7 +344,7 @@ public class RunBaseGroupService implements Callable<TaskHolder> {
 			            	if (taskHolder != null) {
 			            		outputThreadName = taskHolder.getName();
 			            	}
-			                logger.info("Thread " + outputThreadName + " completed ");
+			                logger.info("Thread " + outputThreadName + " COMPLETED ");
 			                taskThreadMap.remove(outputThreadName);
 			            } catch (InterruptedException e) {
 			                e.printStackTrace();
@@ -361,15 +361,15 @@ public class RunBaseGroupService implements Callable<TaskHolder> {
 				Status status=commonServiceImpl.getGroupStatus(baseGroupExec,groupExecType, execType);
 				logger.info(" Latest status and status in basegroupService.waitAndComplete : " + latestStatus + ":" + status.getStage());
 				synchronized (baseGroupExec.getUuid()) {
-					 if(status.getStage().equals(Status.Stage.Completed)){
-						 baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType,Status.Stage.Completed);
+					 if(status.getStage().equals(Status.Stage.COMPLETED)){
+						 baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType,Status.Stage.COMPLETED);
 						 return true;
 					 }
-					 if(status.getStage().equals(Status.Stage.Killed)){
-						 baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType,Status.Stage.Terminating);
-						 baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType,Status.Stage.Killed);
+					 if(status.getStage().equals(Status.Stage.KILLED)){
+						 baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType,Status.Stage.TERMINATING);
+						 baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType,Status.Stage.KILLED);
 					 }
-					 if(!latestStatus.equals(status.getStage()) || status.getStage().equals(Status.Stage.Failed)){
+					 if(!latestStatus.equals(status.getStage()) || status.getStage().equals(Status.Stage.FAILED)){
 						 baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType,status.getStage());
 						 return true;  
 					 }
@@ -377,7 +377,7 @@ public class RunBaseGroupService implements Callable<TaskHolder> {
 				}
 		} catch (Exception e) {
 			synchronized (baseGroupExec.getUuid()) {
-				baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType,Status.Stage.Failed);
+				baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType,Status.Stage.FAILED);
 			}
 			e.printStackTrace();
 			return true;

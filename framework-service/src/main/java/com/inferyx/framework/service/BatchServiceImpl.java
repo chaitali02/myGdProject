@@ -96,13 +96,13 @@ public class BatchServiceImpl {
 			
 			batchExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 	
-			batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.NotStarted);
-			batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.Initialized);
-			batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.Ready);
+			batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.PENDING);
+			batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.INITIALIZING);
+			batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.READY);
 
 		} catch (Exception e) {
 			logger.error(e);
-			batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.Failed);
+			batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.FAILED);
 			e.printStackTrace();
 			String message = null;
 			try {
@@ -125,11 +125,11 @@ public class BatchServiceImpl {
 		Batch batch = (Batch) commonServiceImpl.getOneByUuidAndVersion(batchUuid, batchVersion, MetaType.batch.toString());
 		RunBatchServiceImpl runBatchServiceImpl = new RunBatchServiceImpl();
 		
-		//Check if DAG is ready for execution
+		//Check if DAG is READY for execution
 		Status.Stage stg = Helper.getLatestStatus(batchExec.getStatusList()).getStage();		
-		if (stg.equals(Status.Stage.InProgress) || stg.equals(Status.Stage.Completed) || stg.equals(Status.Stage.OnHold)) {
-			logger.info("BatchExec is already in InProgress/Completed/OnHold status. Aborting execution....");
-			throw new Exception("BatchExec is already in InProgress/Completed/OnHold status. Aborting execution....");
+		if (stg.equals(Status.Stage.RUNNING) || stg.equals(Status.Stage.COMPLETED) || stg.equals(Status.Stage.PAUSE)) {
+			logger.info("BatchExec is alReady in RUNNING/COMPLETED/PAUSE status. Aborting execution....");
+			throw new Exception("BatchExec is alReady in RUNNING/COMPLETED/PAUSE status. Aborting execution....");
 		}
 		
 		User user = (User) commonServiceImpl.getOneByUuidAndVersion(batchExec.getCreatedBy().getRef().getUuid(), batchExec.getCreatedBy().getRef().getVersion(), batchExec.getCreatedBy().getRef().getType().toString());
@@ -182,11 +182,11 @@ public class BatchServiceImpl {
 	public BatchExec checkBatchStatus(BatchExec batchExec) throws Exception {
 		Batch batch = (Batch) commonServiceImpl.getOneByUuidAndVersion(batchExec.getDependsOn().getRef().getUuid(), batchExec.getDependsOn().getRef().getVersion(), batchExec.getDependsOn().getRef().getType().toString());
 		List<MetaIdentifierHolder> execList = batchExec.getExecList();
-		boolean areAllCompleted = false;
+		boolean areAllCOMPLETED = false;
 		Stage batchStatus = Helper.getLatestStatus(batchExec.getStatusList()).getStage();
-		boolean isKilled = false;
-		boolean isFailed = false;
-		boolean isCompleted = false;
+		boolean isKILLED = false;
+		boolean isFAILED = false;
+		boolean isCOMPLETED = false;
 		Map<Stage, Boolean> statusMap = new HashMap<>();
 		
 		do {
@@ -194,73 +194,73 @@ public class BatchServiceImpl {
 				MetaIdentifier execMI = execList.get(i).getRef();				
 				Status latestStatus = checkStatusByExec(execMI);
 				
-				if(latestStatus.getStage().equals(Status.Stage.Completed)) {
-					isCompleted = true;
-					statusMap.put(Stage.Completed, true);
-				} else if(latestStatus.getStage().equals(Status.Stage.InProgress)) {
-					statusMap.put(Stage.InProgress, true);
+				if(latestStatus.getStage().equals(Status.Stage.COMPLETED)) {
+					isCOMPLETED = true;
+					statusMap.put(Stage.COMPLETED, true);
+				} else if(latestStatus.getStage().equals(Status.Stage.RUNNING)) {
+					statusMap.put(Stage.RUNNING, true);
 					MetaIdentifier batchExecMI = new MetaIdentifier(MetaType.batchExec, batchExec.getUuid(), batchExec.getVersion());
 					Status batchExecLatestStatus = checkStatusByExec(batchExecMI);
 					
-					if(!batchExecLatestStatus.getStage().equals(Status.Stage.InProgress)) {
-						batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.InProgress);
+					if(!batchExecLatestStatus.getStage().equals(Status.Stage.RUNNING)) {
+						batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.RUNNING);
 					}
-				} else if(latestStatus.getStage().equals(Status.Stage.Terminating)) {
-					statusMap.put(Stage.Terminating, true);
+				} else if(latestStatus.getStage().equals(Status.Stage.TERMINATING)) {
+					statusMap.put(Stage.TERMINATING, true);
 					MetaIdentifier batchExecMI = new MetaIdentifier(MetaType.batchExec, batchExec.getUuid(), batchExec.getVersion());
 					Status batchExecLatestStatus = checkStatusByExec(batchExecMI);
 					
-					if(!batchExecLatestStatus.getStage().equals(Status.Stage.Terminating)) {
-						batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.Terminating);
+					if(!batchExecLatestStatus.getStage().equals(Status.Stage.TERMINATING)) {
+						batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.TERMINATING);
 					}
-				} else if(latestStatus.getStage().equals(Status.Stage.NotStarted)) {
-					statusMap.put(Stage.NotStarted, true);
-				} else if(latestStatus.getStage().equals(Status.Stage.Killed)) {
-					isKilled = true;
-					statusMap.put(Stage.Killed, true);
-				} else if(latestStatus.getStage().equals(Status.Stage.Failed)) {
-					isFailed = true;
-					statusMap.put(Stage.Failed, true);
+				} else if(latestStatus.getStage().equals(Status.Stage.PENDING)) {
+					statusMap.put(Stage.PENDING, true);
+				} else if(latestStatus.getStage().equals(Status.Stage.KILLED)) {
+					isKILLED = true;
+					statusMap.put(Stage.KILLED, true);
+				} else if(latestStatus.getStage().equals(Status.Stage.FAILED)) {
+					isFAILED = true;
+					statusMap.put(Stage.FAILED, true);
 				} 			
 			}
 			
-			if((statusMap.get(Stage.NotStarted) != null && statusMap.get(Stage.NotStarted).equals(true)) 
-					|| (statusMap.get(Stage.InProgress) != null && statusMap.get(Stage.InProgress).equals(true))
-					|| (statusMap.get(Stage.Terminating) != null && statusMap.get(Stage.Terminating).equals(true))) {
-				areAllCompleted = false;
-			} else if((statusMap.get(Stage.Completed) != null && statusMap.get(Stage.Completed).equals(true)) 
-					|| (statusMap.get(Stage.Failed) != null && statusMap.get(Stage.Failed).equals(true))
-					|| (statusMap.get(Stage.Killed) != null && statusMap.get(Stage.Killed).equals(true))) {
-				areAllCompleted = true;
+			if((statusMap.get(Stage.PENDING) != null && statusMap.get(Stage.PENDING).equals(true)) 
+					|| (statusMap.get(Stage.RUNNING) != null && statusMap.get(Stage.RUNNING).equals(true))
+					|| (statusMap.get(Stage.TERMINATING) != null && statusMap.get(Stage.TERMINATING).equals(true))) {
+				areAllCOMPLETED = false;
+			} else if((statusMap.get(Stage.COMPLETED) != null && statusMap.get(Stage.COMPLETED).equals(true)) 
+					|| (statusMap.get(Stage.FAILED) != null && statusMap.get(Stage.FAILED).equals(true))
+					|| (statusMap.get(Stage.KILLED) != null && statusMap.get(Stage.KILLED).equals(true))) {
+				areAllCOMPLETED = true;
 			}
 			statusMap = resetMap(statusMap);
-			if(isFailed && batch.getInParallel() != null && !batch.getInParallel().isEmpty() && batch.getInParallel().equalsIgnoreCase("false")) {
+			if(isFAILED && batch.getInParallel() != null && !batch.getInParallel().isEmpty() && batch.getInParallel().equalsIgnoreCase("false")) {
 				batchExec = kill(batchExec.getUuid(), batchExec.getVersion());
 			}
 			
-			if(areAllCompleted) {
-				if(isFailed) {
-					batchStatus = Status.Stage.Failed;
-				} else if(isKilled) {
-					batchStatus = Status.Stage.Killed;
-				} else if(isCompleted) {
-					batchStatus = Status.Stage.Completed;
+			if(areAllCOMPLETED) {
+				if(isFAILED) {
+					batchStatus = Status.Stage.FAILED;
+				} else if(isKILLED) {
+					batchStatus = Status.Stage.KILLED;
+				} else if(isCOMPLETED) {
+					batchStatus = Status.Stage.COMPLETED;
 				}
 				batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, batchStatus);
 			}
 			Thread.sleep(10000);
-		} while(!areAllCompleted);
+		} while(!areAllCOMPLETED);
 		
 		return batchExec;
 	}
 	
 	public Map<Stage, Boolean> resetMap(Map<Stage, Boolean> statusMap) {
-		statusMap.put(Stage.Completed, false);
-		statusMap.put(Stage.InProgress, false);
-		statusMap.put(Stage.Terminating, false);
-		statusMap.put(Stage.NotStarted, false);
-		statusMap.put(Stage.Killed, false);
-		statusMap.put(Stage.Failed, false);		
+		statusMap.put(Stage.COMPLETED, false);
+		statusMap.put(Stage.RUNNING, false);
+		statusMap.put(Stage.TERMINATING, false);
+		statusMap.put(Stage.PENDING, false);
+		statusMap.put(Stage.KILLED, false);
+		statusMap.put(Stage.FAILED, false);		
 		return statusMap;
 	}
 	
@@ -314,7 +314,7 @@ public class BatchServiceImpl {
 	public BatchExec submitRestart(String execUuid, String execVersion, RunMode runMode) throws Exception {
 		BatchExec batchExec = (BatchExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.batchExec.toString());
 		synchronized (batchExec.getUuid()) {
-			batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.Ready);
+			batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.READY);
 		}
 		RunBatchServiceImpl runBatchServiceImpl = new RunBatchServiceImpl();
 		runBatchServiceImpl.setBatchExec(batchExec);
@@ -331,42 +331,42 @@ public class BatchServiceImpl {
 	}
 	
 	public BatchExec checkIndvExecKillStatus(BatchExec batchExec) throws Exception {
-		boolean areAllExecKilled = false;
-		boolean isAnyoneFailed = false;
+		boolean areAllExecKILLED = false;
+		boolean isAnyoneFAILED = false;
 		do {			
 			for(MetaIdentifierHolder execHolder : batchExec.getExecList()) {
 				Status latestStatus = checkStatusByExec(execHolder.getRef());
 				
-				if(latestStatus.getStage().equals(Status.Stage.Terminating)) {
+				if(latestStatus.getStage().equals(Status.Stage.TERMINATING)) {
 					MetaIdentifier batchExecMI = new MetaIdentifier(MetaType.batchExec, batchExec.getUuid(), batchExec.getVersion());
 					Status batchExecLatestStatus = checkStatusByExec(batchExecMI);
 					
-					if(batchExecLatestStatus.getStage().equals(Status.Stage.InProgress)) {
-						batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.Terminating);
+					if(batchExecLatestStatus.getStage().equals(Status.Stage.RUNNING)) {
+						batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.TERMINATING);
 					}
-				} else if(latestStatus.getStage().equals(Status.Stage.Killed)) {
-					areAllExecKilled = true;
+				} else if(latestStatus.getStage().equals(Status.Stage.KILLED)) {
+					areAllExecKILLED = true;
 					MetaIdentifier batchExecMI = new MetaIdentifier(MetaType.batchExec, batchExec.getUuid(), batchExec.getVersion());
 					Status batchExecLatestStatus = checkStatusByExec(batchExecMI);
 					
-					if(batchExecLatestStatus.getStage().equals(Status.Stage.InProgress)) {
-						batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.Terminating);
+					if(batchExecLatestStatus.getStage().equals(Status.Stage.RUNNING)) {
+						batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.TERMINATING);
 					}
-				} else if(latestStatus.getStage().equals(Status.Stage.Failed)) {
-					areAllExecKilled = true;
-					isAnyoneFailed = true;
-				} else if(latestStatus.getStage().equals(Status.Stage.NotStarted) || latestStatus.getStage().equals(Status.Stage.InProgress)) {
+				} else if(latestStatus.getStage().equals(Status.Stage.FAILED)) {
+					areAllExecKILLED = true;
+					isAnyoneFAILED = true;
+				} else if(latestStatus.getStage().equals(Status.Stage.PENDING) || latestStatus.getStage().equals(Status.Stage.RUNNING)) {
 					kill(batchExec.getUuid(), batchExec.getVersion());
-					areAllExecKilled = false;
+					areAllExecKILLED = false;
 				}
 			}
-		} while(!areAllExecKilled);	
+		} while(!areAllExecKILLED);	
 		
-		if(areAllExecKilled) {
-			if(isAnyoneFailed) {
-				batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.Failed);
+		if(areAllExecKILLED) {
+			if(isAnyoneFAILED) {
+				batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.FAILED);
 			} else {
-				batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.Killed);
+				batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.KILLED);
 			}
 		}
 		return batchExec;
@@ -392,40 +392,40 @@ public class BatchServiceImpl {
 	
 	public BatchExec checkIndvExecRestartStatus(BatchExec batchExec, RunMode runMode) throws Exception {
 		boolean areAllExecRestarted = false;
-		boolean isAnyoneFailed = false;
+		boolean isAnyoneFAILED = false;
 		
 		do {
 			for(MetaIdentifierHolder execHolder : batchExec.getExecList()) {
 				Status latestStatus = checkStatusByExec(execHolder.getRef());
 				
-				if(latestStatus.getStage().equals(Status.Stage.Killed)) {
+				if(latestStatus.getStage().equals(Status.Stage.KILLED)) {
 					try {
 						restart(batchExec.getUuid(), batchExec.getVersion(), runMode);
 					} catch (Exception e) {
 						e.printStackTrace();
 						areAllExecRestarted = false;
-						isAnyoneFailed = true;
+						isAnyoneFAILED = true;
 					}
-				} else if(latestStatus.getStage().equals(Status.Stage.InProgress)) {
+				} else if(latestStatus.getStage().equals(Status.Stage.RUNNING)) {
 					areAllExecRestarted = true;
 
 					MetaIdentifier batchExecMI = new MetaIdentifier(MetaType.batchExec, batchExec.getUuid(), batchExec.getVersion());
 					Status batchExecLatestStatus = checkStatusByExec(batchExecMI);
 					
-					if(batchExecLatestStatus.getStage().equals(Status.Stage.Killed)) {
-						batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.InProgress);
+					if(batchExecLatestStatus.getStage().equals(Status.Stage.KILLED)) {
+						batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.RUNNING);
 					}
-				} else if(latestStatus.getStage().equals(Status.Stage.Failed)) {
+				} else if(latestStatus.getStage().equals(Status.Stage.FAILED)) {
 					areAllExecRestarted = true;
-					isAnyoneFailed = true;
+					isAnyoneFAILED = true;
 				}
 			}
 			Thread.sleep(5000);
 		} while(!areAllExecRestarted);
 		
 		if(areAllExecRestarted) {
-			if(isAnyoneFailed) {
-				batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.Failed);
+			if(isAnyoneFAILED) {
+				batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.FAILED);
 			} else {
 				batchExec = checkBatchStatus(batchExec);
 			}			
@@ -447,7 +447,7 @@ public class BatchServiceImpl {
 		Notification notification = new Notification();
 
 		String subject = Helper.getPropertyValue("framework.email.subject");
-		subject = MessageFormat.format(subject, "SUCCESS", "Batch", batch.getName(), "completed");
+		subject = MessageFormat.format(subject, "SUCCESS", "Batch", batch.getName(), "COMPLETED");
 		notification.setSubject(subject);
 
 		String roleUuid = sessionHelper.getSessionContext().getRoleInfo().getRef().getUuid();
@@ -479,7 +479,7 @@ public class BatchServiceImpl {
 		Notification notification = new Notification();
 		
 		String subject = Helper.getPropertyValue("framework.email.subject");
-		subject = MessageFormat.format(subject, "FAILURE", "Batch", batch.getName(), "failed");
+		subject = MessageFormat.format(subject, "FAILURE", "Batch", batch.getName(), "FAILED");
 		notification.setSubject(subject);
 
 		String roleUuid = sessionHelper.getSessionContext().getRoleInfo().getRef().getUuid();

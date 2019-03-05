@@ -378,7 +378,7 @@ public class RuleServiceImpl extends RuleTemplate {
 		} catch (Exception e) {
 			synchronized (ruleExec.getUuid()) {
 				try {
-					commonServiceImpl.setMetaStatus(ruleExec, MetaType.ruleExec, Status.Stage.Failed);
+					commonServiceImpl.setMetaStatus(ruleExec, MetaType.ruleExec, Status.Stage.FAILED);
 				} catch (Exception e1) {
 					e1.printStackTrace();
 					String message = null;
@@ -474,7 +474,7 @@ public class RuleServiceImpl extends RuleTemplate {
 	 * ruleExec = (RuleExec) super.create(ruleUUID, ruleVersion, MetaType.rule,
 	 * MetaType.ruleExec, ruleExec, refKeyMap, datapodList, dagExec); } catch
 	 * (Exception e) { try { commonServiceImpl.setMetaStatus(ruleExec,
-	 * MetaType.ruleExec, Status.Stage.Failed); } catch (Exception e1) {
+	 * MetaType.ruleExec, Status.Stage.FAILED); } catch (Exception e1) {
 	 * e1.printStackTrace(); } e.printStackTrace(); } return ruleExec; }
 	 */
 	/**
@@ -497,7 +497,7 @@ public class RuleServiceImpl extends RuleTemplate {
 						ruleExec.getDependsOn().getRef(), taskList, execParams, runMode);
 		} catch (Exception e) {
 			synchronized (ruleExec.getUuid()) {
-				commonServiceImpl.setMetaStatus(ruleExec, MetaType.ruleExec, Status.Stage.Failed);
+				commonServiceImpl.setMetaStatus(ruleExec, MetaType.ruleExec, Status.Stage.FAILED);
 			}
 			e.printStackTrace();
 			String message = null;
@@ -508,8 +508,8 @@ public class RuleServiceImpl extends RuleTemplate {
 			}
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 			dependsOn.setRef(new MetaIdentifier(MetaType.ruleExec, ruleExec.getUuid(), ruleExec.getVersion()));
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Business Rule execution failed.", dependsOn);
-			throw new Exception((message != null) ? message : "Business Rule execution failed.");
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Business Rule execution FAILED.", dependsOn);
+			throw new Exception((message != null) ? message : "Business Rule execution FAILED.");
 		}
 		return ruleExec;
 	}
@@ -791,7 +791,7 @@ public class RuleServiceImpl extends RuleTemplate {
 		RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
 				MetaType.ruleExec.toString(), "N");
 		synchronized (execUuid) {
-			commonServiceImpl.setMetaStatus(ruleExec, MetaType.ruleExec, Status.Stage.Initialized);
+			commonServiceImpl.setMetaStatus(ruleExec, MetaType.ruleExec, Status.Stage.INITIALIZING);
 		}
 		// rule = iRuleDao.findLatestByUuid(ruleExec.getDependsOn().getRef().getUuid(),
 		// new Sort(Sort.Direction.DESC, "version"));
@@ -806,7 +806,7 @@ public class RuleServiceImpl extends RuleTemplate {
 		ruleExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 		logger.info("sql_generated: " + ruleExec.getExec());
 		synchronized (execUuid) {
-			commonServiceImpl.setMetaStatus(ruleExec, MetaType.ruleExec, Status.Stage.Ready);
+			commonServiceImpl.setMetaStatus(ruleExec, MetaType.ruleExec, Status.Stage.READY);
 		}
 		synchronized (ruleExec.getUuid()) {
 //			RuleExec ruleExec1 = (RuleExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.ruleExec, ruleExec.getUuid(), ruleExec.getVersion()));
@@ -966,7 +966,7 @@ public class RuleServiceImpl extends RuleTemplate {
 			}
 		} catch (Exception e) {
 			try {
-				commonServiceImpl.setMetaStatus(ruleExec, MetaType.ruleExec, Status.Stage.Failed);
+				commonServiceImpl.setMetaStatus(ruleExec, MetaType.ruleExec, Status.Stage.FAILED);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}

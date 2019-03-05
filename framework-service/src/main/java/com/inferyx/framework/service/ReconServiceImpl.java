@@ -133,7 +133,7 @@ public class ReconServiceImpl extends RuleTemplate {
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
 		ReconExec reconExec = (ReconExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.reconExec.toString());
 		synchronized (execUuid) {
-			commonServiceImpl.setMetaStatus(reconExec, MetaType.reconExec, Status.Stage.Initialized);
+			commonServiceImpl.setMetaStatus(reconExec, MetaType.reconExec, Status.Stage.INITIALIZING);
 		}
 		recon = (Recon) commonServiceImpl.getOneByUuidAndVersion(reconExec.getDependsOn().getRef().getUuid(), reconExec.getDependsOn().getRef().getVersion(), MetaType.recon.toString());
 		try {
@@ -150,12 +150,12 @@ public class ReconServiceImpl extends RuleTemplate {
 				newReconExec = null;
 			}
 		}catch (Exception e) {
-			commonServiceImpl.setMetaStatus(reconExec, MetaType.reconExec, Status.Stage.Failed);
+			commonServiceImpl.setMetaStatus(reconExec, MetaType.reconExec, Status.Stage.FAILED);
 			e.printStackTrace();
 			throw new Exception("ReconExec not created.");
 		}
 		synchronized (execUuid) {
-			commonServiceImpl.setMetaStatus(reconExec, MetaType.reconExec, Status.Stage.Ready);
+			commonServiceImpl.setMetaStatus(reconExec, MetaType.reconExec, Status.Stage.READY);
 		}
 		return reconExec;
 	}
@@ -190,7 +190,7 @@ public class ReconServiceImpl extends RuleTemplate {
 			reconExec = (ReconExec) super.execute(MetaType.recon, MetaType.reconExec, metaExecutor, reconExec, targetDatapodKey, taskList, execParams, runMode);
 		} catch (Exception e) {
 			synchronized (reconExec.getUuid()) {
-				commonServiceImpl.setMetaStatus(reconExec, MetaType.reconExec, Status.Stage.Failed);
+				commonServiceImpl.setMetaStatus(reconExec, MetaType.reconExec, Status.Stage.FAILED);
 			}
 		}
 		return reconExec;
@@ -291,7 +291,7 @@ public class ReconServiceImpl extends RuleTemplate {
 		} catch (Exception e) {
 			synchronized (reconExec.getUuid()) {
 				try {
-					commonServiceImpl.setMetaStatus(reconExec, MetaType.reconExec, Status.Stage.Failed);
+					commonServiceImpl.setMetaStatus(reconExec, MetaType.reconExec, Status.Stage.FAILED);
 				} catch (Exception e1) {
 					e1.printStackTrace();
 					String message = null;
@@ -370,7 +370,7 @@ public class ReconServiceImpl extends RuleTemplate {
 			} else if (endDate != null && !endDate.isEmpty())
 				query.addCriteria(Criteria.where("createdOn").lte(simpleDateFormat.parse(endDate)));
 
-			query.addCriteria(Criteria.where("statusList.stage").in(Status.Stage.Completed.toString()));
+			query.addCriteria(Criteria.where("statusList.stage").in(Status.Stage.COMPLETED.toString()));
 			query.addCriteria(Criteria.where("dependsOn.ref.uuid").is(reconExecUuid));
 			query.addCriteria(Criteria.where("appInfo.ref.uuid").is(commonServiceImpl.getApp().getUuid()));
 			query.addCriteria(Criteria.where("active").is("Y"));

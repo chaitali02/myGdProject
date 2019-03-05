@@ -610,18 +610,18 @@
           result.duration="-NA-"
           if(response[i].status !=null && response[i].status.length > 1){
             for(var j=0;j<response[i].status.length;j++){
-              if(response[i].status[j].stage == "InProgress"){
+              if(response[i].status[j].stage == "RUNNING"){
                 result.startTime=$filter('date')(new Date(response[i].status[j].createdOn), "EEE MMM dd HH:mm:ss yyyy");
                 break;
               }
             }
             // for(var j=0;j<response[i].statusList.length;j++){
-            // 	if(response[i].statusList[j].stage == "InProgress"){
-            // 		result.InProgressTime=$filter('date')(new Date(response[i].statusList[j].createdOn), "EEE MMM dd HH:mm:ss yyyy");
+            // 	if(response[i].statusList[j].stage == "RUNNING"){
+            // 		result.RUNNINGTime=$filter('date')(new Date(response[i].statusList[j].createdOn), "EEE MMM dd HH:mm:ss yyyy");
             // 		break;
             // 	}
             // }
-            if(response[i].status[len].stage == "Completed"){
+            if(response[i].status[len].stage == "COMPLETED"){
               result.endTime=$filter('date')(new Date(response[i].status[len].createdOn), "EEE MMM dd HH:mm:ss yyyy");
               var date1 = new Date(result.startTime)
               var date2 = new Date(result.endTime)
@@ -631,10 +631,10 @@
     
             }
           if(response[i].status !=null && response[i].status.length > 0){
-            if (response[i].status[len].stage == "NotStarted") {
-              result.status = "Not Started"
-            } else if (response[i].status[len].stage == "InProgress") {
-              result.status = "In Progress"
+            if (response[i].status[len].stage == "PENDING") {
+              result.status = "PENDING"
+            } else if (response[i].status[len].stage == "RUNNING") {
+              result.status = "RUNNING"
             } else {
               result.status = response[i].status[len].stage;
             }

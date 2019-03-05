@@ -166,7 +166,7 @@ public class DatasetServiceImpl {
 		Filter filter = datasetView.getFilter();
 		List<AttributeRefHolder> filterList = new ArrayList<AttributeRefHolder>();
 		AttributeRefHolder filterHolder = new AttributeRefHolder();
-		MetaIdentifierHolder relationHolder = datasetView.getDependsOn();
+		MetaIdentifierHolder relatiPAUSEer = datasetView.getDependsOn();
 
 		/*if (datasetView.getSourceChg().equalsIgnoreCase("y")) {
 			// create relation for dataset
@@ -183,13 +183,13 @@ public class DatasetServiceImpl {
 		}*/
 		// create relation meta for dependsOn
 		//MetaIdentifier relationMeta = new MetaIdentifier(MetaType.relation, relation.getUuid(), null);
-		//relationHolder.setRef(relationMeta);		
+		//relatiPAUSEer.setRef(relationMeta);		
 
 		if ((datasetView.getFilterChg().equalsIgnoreCase("y") && datasetView.getFilter() != null) || (datasetView.getSourceChg().equalsIgnoreCase("y") && datasetView.getFilter() != null)) {
 			// create filter for dataset
 			filter = new Filter();
 			filter.setName(datasetView.getName());
-			filter.setDependsOn(relationHolder);
+			filter.setDependsOn(relatiPAUSEer);
 			filter.setTags(datasetView.getTags());
 			filter.setDesc(datasetView.getDesc());
 			filter.setFilterInfo(datasetView.getFilter().getFilterInfo());
@@ -207,7 +207,7 @@ public class DatasetServiceImpl {
 		dataset.setDesc(datasetView.getDesc());
 	//	dataset.setFilterInfo(filterList);
 		dataset.setName(datasetView.getName());
-		dataset.setDependsOn(relationHolder);
+		dataset.setDependsOn(relatiPAUSEer);
 		dataset.setAttributeInfo(datasetView.getAttributeInfo());
 		dataset.setPublished(datasetView.getPublished());
 		dataset.setLimit(datasetView.getLimit());
@@ -391,14 +391,14 @@ public class DatasetServiceImpl {
 	 * relation.setActive(datasetHolder.getRelationActive());
 	 * relationServiceImpl.Save(relation);
 	 * 
-	 * //create relation meta for map MetaIdentifierHolder relationHolder = new
+	 * //create relation meta for map MetaIdentifierHolder relatiPAUSEer = new
 	 * MetaIdentifierHolder(); MetaIdentifier relationMeta = new
 	 * MetaIdentifier(MetaType.relation,relation.getUuid(),relation.getVersion()
-	 * ); relationHolder.setRef(relationMeta);
+	 * ); relatiPAUSEer.setRef(relationMeta);
 	 * 
 	 * //create map for dataset Map map = new Map();
 	 * map.setAttributeMap(datasetHolder.getAttributeList());
-	 * map.setName(datasetHolder.getMapName()); map.setSource(relationHolder);
+	 * map.setName(datasetHolder.getMapName()); map.setSource(relatiPAUSEer);
 	 * map.setTarget(datasetHolder.getTargetDatapod());
 	 * map.setTags(datasetHolder.getMapTags());
 	 * map.setDesc(datasetHolder.getMapDesc());
@@ -410,7 +410,7 @@ public class DatasetServiceImpl {
 	 * mapHolder.setRef(mapMeta);
 	 * 
 	 * //create filter for dataset Filter filter = new Filter();
-	 * filter.setDependsOn(relationHolder);
+	 * filter.setDependsOn(relatiPAUSEer);
 	 * filter.setDesc(datasetHolder.getFilterDesc());
 	 * filter.setTags(datasetHolder.getFilterTags());
 	 * filter.setActive(datasetHolder.getFilterActive());

@@ -350,7 +350,7 @@ public class DagServiceImpl2 {
 
 	/**
 	 * Submit DAG with full DAG body and execParams. A reference to the DAG should
-	 * already exist in meta, though it shall act more as a template rather than an
+	 * alReady exist in meta, though it shall act more as a template rather than an
 	 * exact replica of what is sent here. Also accepts an execParam to run
 	 * 
 	 * @param dag
@@ -376,11 +376,11 @@ public class DagServiceImpl2 {
 			//dagExecServiceImpl.save(dagExec);
 		}
 		
-		//Check if DAG is ready for execution
+		//Check if DAG is READY for execution
 		Status.Stage stg = Helper.getLatestStatus(dagExec.getStatusList()).getStage();		
-		if (stg.equals(Status.Stage.InProgress) || stg.equals(Status.Stage.Completed) || stg.equals(Status.Stage.OnHold)) {
-			logger.info("DAGExec is already in InProgress/Completed/OnHold status. Aborting execution.");
-			throw new Exception("DAGExec is already in InProgress/Completed/OnHold status. Aborting execution.");
+		if (stg.equals(Status.Stage.RUNNING) || stg.equals(Status.Stage.COMPLETED) || stg.equals(Status.Stage.PAUSE)) {
+			logger.info("DAGExec is alReady in RUNNING/COMPLETED/PAUSE status. Aborting execution.");
+			throw new Exception("DAGExec is alReady in RUNNING/COMPLETED/PAUSE status. Aborting execution.");
 		}
 					
 		// Populate ParseRunDagServiceImpl
@@ -464,7 +464,7 @@ public class DagServiceImpl2 {
 				stageExec.setStatusList(DagExecUtil.createInitialInactiveStatus(stageExec.getStatusList()));
 				continue;
 			} else {
-				// Set stage status to Not Started
+				// Set stage status to PENDING
 				stageExec.setStatusList(DagExecUtil.createInitialStatus(stageExec.getStatusList()));
 			}
 
@@ -512,7 +512,7 @@ public class DagServiceImpl2 {
 																						// for
 			// refKey preparation
 
-			// Set Tasks status to Not Started
+			// Set Tasks status to PENDING
 			taskExec.setStatusList(DagExecUtil.createInitialStatus(taskExec.getStatusList()));
 
 			// Traverse task & Populate RefKeys
@@ -653,17 +653,17 @@ public class DagServiceImpl2 {
 						logger.info(" otherParams : " + otherParams);
 						logger.info(" execParams.getOtherParams() : " + execParams.getOtherParams());
 						baseExec.setRefKeyList(execParams.getRefKeyList());
-						if (baseExec.getStatusList().contains(new Status(Status.Stage.Failed, new Date()))) {
+						if (baseExec.getStatusList().contains(new Status(Status.Stage.FAILED, new Date()))) {
 							throw new Exception();
 						}
 					} catch (Exception e) {
-						Status failedStatus = new Status(Status.Stage.Failed, new Date());
+						Status FAILEDStatus = new Status(Status.Stage.FAILED, new Date());
 						List<Status> statusList = indvExecTask.getStatusList();
 						if (statusList == null) {
 							statusList = new ArrayList<Status>();
 						}
-						statusList.remove(failedStatus);
-						statusList.add(failedStatus);
+						statusList.remove(FAILEDStatus);
+						statusList.add(FAILEDStatus);
 						e.printStackTrace();
 						String message = null;
 						try {
@@ -673,8 +673,8 @@ public class DagServiceImpl2 {
 						}
 						MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 						dependsOn.setRef(new MetaIdentifier(MetaType.dag, dagExec.getUuid(), dagExec.getVersion()));
-						commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Pipeline execution failed.", dependsOn);
-						throw new Exception((message != null) ? message : "Pipeline execution failed.");
+						commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Pipeline execution FAILED.", dependsOn);
+						throw new Exception((message != null) ? message : "Pipeline execution FAILED.");
 					} finally {
 						commonServiceImpl.save(helper.getExecType(ref.getType()).toString(), baseExec);
 					}
@@ -683,7 +683,7 @@ public class DagServiceImpl2 {
 				operatorList.add(operator);
 				// Set Stage and Task status
 				List<Status> statusList = new ArrayList<Status>();
-				Status status = new Status(Status.Stage.NotStarted, new Date());
+				Status status = new Status(Status.Stage.PENDING, new Date());
 				statusList.add(status);
 				indvExecTask.setStatusList(statusList);
 			}
@@ -708,13 +708,13 @@ public class DagServiceImpl2 {
 	public DagExec prepareDagExec(String uuid, String version, ExecParams execParams, String metaType)throws Exception{
 		DagExec dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, metaType);
 		for(int i=0;i<dagExec.getStages().size();i++){
-			if(Helper.getLatestStatus(dagExec.getStages().get(i).getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))
-					||Helper.getLatestStatus(dagExec.getStages().get(i).getStatusList()).equals(new Status(Status.Stage.Killed, new Date()))){
+			if(Helper.getLatestStatus(dagExec.getStages().get(i).getStatusList()).equals(new Status(Status.Stage.FAILED, new Date()))
+					||Helper.getLatestStatus(dagExec.getStages().get(i).getStatusList()).equals(new Status(Status.Stage.KILLED, new Date()))){
 				for(int j=0;j<dagExec.getStages().get(i).getTasks().size();j++){
-					if(Helper.getLatestStatus(dagExec.getStages().get(i).getTasks().get(j).getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))
-							||Helper.getLatestStatus(dagExec.getStages().get(i).getTasks().get(j).getStatusList()).equals(new Status(Status.Stage.Killed, new Date()))){
+					if(Helper.getLatestStatus(dagExec.getStages().get(i).getTasks().get(j).getStatusList()).equals(new Status(Status.Stage.FAILED, new Date()))
+							||Helper.getLatestStatus(dagExec.getStages().get(i).getTasks().get(j).getStatusList()).equals(new Status(Status.Stage.KILLED, new Date()))){
 						TaskExec taskExec = dagExecServiceImpl.getTaskExec(dagExec,dagExec.getStages().get(i).getStageId(), dagExec.getStages().get(i).getTasks().get(j).getTaskId());
-						commonServiceImpl.setMetaStatusForTask(dagExec, taskExec, Status.Stage.NotStarted,dagExec.getStages().get(i).getStageId(), dagExec.getStages().get(i).getTasks().get(j).getTaskId());
+						commonServiceImpl.setMetaStatusForTask(dagExec, taskExec, Status.Stage.PENDING,dagExec.getStages().get(i).getStageId(), dagExec.getStages().get(i).getTasks().get(j).getTaskId());
 					}	
 				}
 			}

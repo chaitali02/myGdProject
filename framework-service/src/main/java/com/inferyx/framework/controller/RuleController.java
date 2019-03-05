@@ -114,7 +114,7 @@ public class RuleController {
 			ruleExec = ruleServiceImpl.execute(metaExecutor, ruleExec, taskList, execParams, runMode);
 		} catch (Exception e) {
 			try {
-				commonServiceImpl.setMetaStatus(ruleExec, MetaType.ruleExec, Status.Stage.Failed);
+				commonServiceImpl.setMetaStatus(ruleExec, MetaType.ruleExec, Status.Stage.FAILED);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
@@ -174,7 +174,7 @@ public class RuleController {
 			ruleGroupServiceImpl.execute(ruleGroupExec.getDependsOn().getRef().getUuid(), ruleGroupExec.getDependsOn().getRef().getVersion(), execParams, ruleGroupExec, runMode);
 		} catch (Exception e) {
 			try {
-				commonServiceImpl.setMetaStatus(ruleGroupExec, MetaType.rulegroupExec, Status.Stage.Failed);
+				commonServiceImpl.setMetaStatus(ruleGroupExec, MetaType.rulegroupExec, Status.Stage.FAILED);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}

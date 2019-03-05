@@ -252,8 +252,8 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			//commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Map execution failed.");
-			throw new Exception((message != null) ? message : "Map execution failed.");
+			//commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Map execution FAILED.");
+			throw new Exception((message != null) ? message : "Map execution FAILED.");
 		}
 		TaskHolder taskHolder = new TaskHolder(name, new MetaIdentifier(execType, mapExec.getUuid(), mapExec.getVersion()));
 		return taskHolder;
@@ -283,15 +283,15 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 		List<Status> statusList = null;
 		try{			
 			if (Helper.getLatestStatus(statusList) != null 
-					&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.InProgress, new Date())) 
-							|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.Completed, new Date())) 
-							|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.OnHold, new Date())))) {
-				logger.info(" This process is In Progress or has been completed previously or is On Hold. Hence it cannot be rerun. ");
+					&& (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.RUNNING, new Date())) 
+							|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.COMPLETED, new Date())) 
+							|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.PAUSE, new Date())))) {
+				logger.info(" This process is RUNNING or has been COMPLETED previously or is On Hold. Hence it cannot be rerun. ");
 				return;
 			}
 			long countRows = -1L;
-			// Set status to In Progress
-			mapExec = (MapExec) commonServiceImpl.setMetaStatus(mapExec, MetaType.mapExec, Status.Stage.InProgress);
+			// Set status to RUNNING
+			mapExec = (MapExec) commonServiceImpl.setMetaStatus(mapExec, MetaType.mapExec, Status.Stage.RUNNING);
 			
 			if (datapodKey.getVersion() == null) {
 //				MetaIdentifier datapodKeyRef = new MetaIdentifier(MetaType.datapod, datapodKey.getUUID(), datapodKey.getVersion());
@@ -378,9 +378,9 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 					, Helper.getPersistModeFromRunMode(runMode.toString()), null);
 			logger.info("After map persist ");
 			mapExec.setResult(resultRef);
-			mapExec = (MapExec) commonServiceImpl.setMetaStatus(mapExec, MetaType.mapExec, Status.Stage.Completed);			
+			mapExec = (MapExec) commonServiceImpl.setMetaStatus(mapExec, MetaType.mapExec, Status.Stage.COMPLETED);			
 		} catch (Exception e) {
-			mapExec = (MapExec) commonServiceImpl.setMetaStatus(mapExec, MetaType.mapExec, Status.Stage.Failed);			
+			mapExec = (MapExec) commonServiceImpl.setMetaStatus(mapExec, MetaType.mapExec, Status.Stage.FAILED);			
 			e.printStackTrace();
 			String message = null;
 			try {
@@ -390,8 +390,8 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 			}
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 			dependsOn.setRef(new MetaIdentifier(MetaType.mapExec, mapExec.getUuid(), mapExec.getVersion()));
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Map execution failed.", dependsOn);
-			throw new RuntimeException((message != null) ? message : "Map execution failed.");			
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Map execution FAILED.", dependsOn);
+			throw new RuntimeException((message != null) ? message : "Map execution FAILED.");			
 		} 		
 	}
 	

@@ -669,7 +669,7 @@ public class TaskServiceImpl implements Callable<String> {
 		} else {
 			datapodTableName = "";
 		}
-		Status failedStatus = new Status(Status.Stage.Failed, new Date());
+		Status FAILEDStatus = new Status(Status.Stage.FAILED, new Date());
 		if(operatorInfo.get(0).getRef()!=null && operatorInfo.get(0).getRef().getType().equals(MetaType.load)){
 			try {
 				Load load = (Load) commonServiceImpl.getOneByUuidAndVersion(operator.getOperatorInfo().get(0).getRef().getUuid(), operator.getOperatorInfo().get(0).getRef().getVersion(), MetaType.load.toString());
@@ -710,8 +710,8 @@ public class TaskServiceImpl implements Callable<String> {
 				DataQualExec dataqualExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getVersion(), MetaType.dqExec.toString());
 				//ExecParams execParams = commonServiceImpl.getExecParams(taskExec.getOperators().get(0));
 				dataqualExec = dataqualServiceImpl.execute(dataqualExec.getDependsOn().getRef().getUuid(), dataqualExec.getDependsOn().getRef().getVersion(), dataqualExec, null, execParams, runMode);
-				if (Helper.getLatestStatus(dataqualExec.getStatusList()).equals(failedStatus)) {
-					throw new Exception("DQ failed");
+				if (Helper.getLatestStatus(dataqualExec.getStatusList()).equals(FAILEDStatus)) {
+					throw new Exception("DQ FAILED");
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -722,7 +722,7 @@ public class TaskServiceImpl implements Callable<String> {
 				//DataQualGroupExec dataqualGroupExec = dataqualGroupExecServiceImpl.findOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion());
 				DataQualGroupExec dataqualGroupExec = (DataQualGroupExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getVersion(), MetaType.dqgroupExec.toString());
 				dataqualGroupServiceImpl.execute(dataqualGroupExec.getDependsOn().getRef().getUuid(), dataqualGroupExec.getDependsOn().getRef().getVersion(), null, dataqualGroupExec, runMode);
-				if (Helper.getLatestStatus(dataqualGroupExec.getStatusList()).equals(new Status (Status.Stage.Failed, new Date()))) {
+				if (Helper.getLatestStatus(dataqualGroupExec.getStatusList()).equals(new Status (Status.Stage.FAILED, new Date()))) {
 					throw new RuntimeException();
 				}
 			} catch (Exception e) {
@@ -757,8 +757,8 @@ public class TaskServiceImpl implements Callable<String> {
 					ruleExec.setExecParams(execParams3);
 					commonServiceImpl.save(MetaType.ruleExec.toString(), ruleExec);
 					ruleServiceImpl.prepareRule(operatorInfo.getRef().getUuid(), operatorInfo.getRef().getVersion(), execParams3, ruleExec, RunMode.ONLINE);
-					if (Helper.getLatestStatus(ruleExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
-						throw new Exception("Rule execution failed.");
+					if (Helper.getLatestStatus(ruleExec.getStatusList()).equals(new Status(Status.Stage.FAILED, new Date()))) {
+						throw new Exception("Rule execution FAILED.");
 					}
 					i++;
 				}
@@ -773,7 +773,7 @@ public class TaskServiceImpl implements Callable<String> {
 				internalVarMap.put("$CURRENT_TASK_OBJ_VERSION", ruleGroupExec.getVersion());
 				execParams.setInternalVarMap(internalVarMap);
 				ruleGroupServiceImpl.execute(ruleGroupExec.getDependsOn().getRef().getUuid(), ruleGroupExec.getDependsOn().getRef().getVersion(), execParams, ruleGroupExec, RunMode.ONLINE);
-				if (Helper.getLatestStatus(ruleGroupExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
+				if (Helper.getLatestStatus(ruleGroupExec.getStatusList()).equals(new Status(Status.Stage.FAILED, new Date()))) {
 					throw new Exception();
 				}
 			} catch (Exception e) {
@@ -795,7 +795,7 @@ public class TaskServiceImpl implements Callable<String> {
 				//ProfileGroupExec profileGroupExec = profileGroupExecServiceImpl.findOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().getRef().getVersion());
 				ProfileGroupExec profileGroupExec = (ProfileGroupExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getVersion(), MetaType.profilegroupExec.toString());
 				profileGroupServiceImpl.execute(profileGroupExec.getDependsOn().getRef().getUuid(), profileGroupExec.getDependsOn().getRef().getVersion(), null, profileGroupExec, runMode);
-				if (Helper.getLatestStatus(profileGroupExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
+				if (Helper.getLatestStatus(profileGroupExec.getStatusList()).equals(new Status(Status.Stage.FAILED, new Date()))) {
 					throw new Exception();
 				}
 			} catch (Exception e) {
@@ -817,8 +817,8 @@ public class TaskServiceImpl implements Callable<String> {
 						execParamsTemp = execParams2;
 					}
 					modelServiceImpl.prepareTrain(trainExec.getDependsOn().getRef().getUuid(), trainExec.getDependsOn().getRef().getVersion(), trainExec, execParamsTemp, runMode);
-					if (Helper.getLatestStatus(trainExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
-						throw new Exception("Train execution failed.");
+					if (Helper.getLatestStatus(trainExec.getStatusList()).equals(new Status(Status.Stage.FAILED, new Date()))) {
+						throw new Exception("Train execution FAILED.");
 					}
 					i++;
 				}				
@@ -862,7 +862,7 @@ public class TaskServiceImpl implements Callable<String> {
 				//ExecParams execParams = commonServiceImpl.getExecParams(taskExec.getOperators().get(0));
 				reconServiceImpl.execute(taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getVersion(), null, reconExec, null, null, execParams, runMode);
 				
-				if (Helper.getLatestStatus(reconExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
+				if (Helper.getLatestStatus(reconExec.getStatusList()).equals(new Status(Status.Stage.FAILED, new Date()))) {
 					throw new Exception();
 				}
 			} catch (Exception e) {
@@ -873,7 +873,7 @@ public class TaskServiceImpl implements Callable<String> {
 			try {
 				ReconGroupExec reconGroupExec = (ReconGroupExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getVersion(), MetaType.recongroupExec.toString());
 				reconGroupServiceImpl.execute(reconGroupExec.getDependsOn().getRef().getUuid(), reconGroupExec.getDependsOn().getRef().getVersion(), execParams, reconGroupExec, runMode);
-				if (Helper.getLatestStatus(reconGroupExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
+				if (Helper.getLatestStatus(reconGroupExec.getStatusList()).equals(new Status(Status.Stage.FAILED, new Date()))) {
 					throw new Exception();
 				}
 			} catch (Exception e) {
@@ -890,7 +890,7 @@ public class TaskServiceImpl implements Callable<String> {
 				Helper.mergeMap(operatorExecParams.getOtherParams(), execParams.getOtherParams());
 				operatorServiceImpl.execute((BaseExec) operatorExec, operatorExecParams, runMode);
 				
-				if (Helper.getLatestStatus(operatorExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
+				if (Helper.getLatestStatus(operatorExec.getStatusList()).equals(new Status(Status.Stage.FAILED, new Date()))) {
 					throw new Exception();
 				}
 			} catch (Exception e) {
@@ -904,8 +904,8 @@ public class TaskServiceImpl implements Callable<String> {
 				Ingest ingest = (Ingest) commonServiceImpl.getLatestByUuid(ingestExec.getDependsOn().getRef().getUuid(), MetaType.ingest.toString());
 				ingestExec = ingestServiceImpl.execute(ingest.getUuid(), ingest.getVersion(), ingestExec, execParams, null, runMode);
 				
-				if (Helper.getLatestStatus(ingestExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
-					throw new Exception("Ingest rule execution failed");
+				if (Helper.getLatestStatus(ingestExec.getStatusList()).equals(new Status(Status.Stage.FAILED, new Date()))) {
+					throw new Exception("Ingest rule execution FAILED");
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -916,7 +916,7 @@ public class TaskServiceImpl implements Callable<String> {
 				IngestGroupExec ingestGroupExec = (IngestGroupExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getVersion(), MetaType.ingestgroupExec.toString());
 				MetaIdentifier ingestGroupExecMI = ingestGroupExec.getDependsOn().getRef();
 				ingestGroupServiceImpl.execute(ingestGroupExecMI.getUuid(), ingestGroupExecMI.getVersion(), execParams, ingestGroupExec, runMode);
-				if (Helper.getLatestStatus(ingestGroupExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
+				if (Helper.getLatestStatus(ingestGroupExec.getStatusList()).equals(new Status(Status.Stage.FAILED, new Date()))) {
 					throw new Exception();
 				}
 			} catch (Exception e) {
@@ -929,8 +929,8 @@ public class TaskServiceImpl implements Callable<String> {
 				ReportExec reportExec = (ReportExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getVersion(), MetaType.reportExec.toString());
 				reportExec = reportServiceImpl.execute(reportExec.getUuid(), reportExec.getVersion(), execParams, runMode);
 				
-				if (Helper.getLatestStatus(reportExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
-					throw new Exception("Report rule execution failed.");
+				if (Helper.getLatestStatus(reportExec.getStatusList()).equals(new Status(Status.Stage.FAILED, new Date()))) {
+					throw new Exception("Report rule execution FAILED.");
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -942,8 +942,8 @@ public class TaskServiceImpl implements Callable<String> {
 				DashboardExec dashboardExec = (DashboardExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getVersion(), MetaType.dashboardExec.toString());
 				dashboardExec = dashboardServiceImpl.execute(dashboardExec.getUuid(), dashboardExec.getVersion(), execParams, runMode);
 				
-				if (Helper.getLatestStatus(dashboardExec.getStatusList()).equals(new Status(Status.Stage.Failed, new Date()))) {
-					throw new Exception("Dashboard execution failed.");
+				if (Helper.getLatestStatus(dashboardExec.getStatusList()).equals(new Status(Status.Stage.FAILED, new Date()))) {
+					throw new Exception("Dashboard execution FAILED.");
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -1018,18 +1018,18 @@ public class TaskServiceImpl implements Callable<String> {
 					+ " task Status : " + dagExecServiceImpl.getTaskStatus(dagExecUUID, dagExecVer, stageId, taskId));
 		//Start the task execution
 		if (!killThread 
-				&& dagExecServiceImpl.getStageStatus(dagExecUUID, dagExecVer, stageId).equals(Status.Stage.InProgress) 
-				&& dagExecServiceImpl.getTaskStatus(dagExecUUID, dagExecVer, stageId, taskId).equals(Status.Stage.Ready)) {
+				&& dagExecServiceImpl.getStageStatus(dagExecUUID, dagExecVer, stageId).equals(Status.Stage.RUNNING) 
+				&& dagExecServiceImpl.getTaskStatus(dagExecUUID, dagExecVer, stageId, taskId).equals(Status.Stage.READY)) {
 
-			//Set Task to InProgress
+			//Set Task to RUNNING
 			synchronized (dagExecUUID) {
 				try {
-					commonServiceImpl.setMetaStatusForTask(dagExec, taskExec, Status.Stage.InProgress, stageId, taskId);
+					commonServiceImpl.setMetaStatusForTask(dagExec, taskExec, Status.Stage.RUNNING, stageId, taskId);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
-			logger.info("Setting InProgress status stageId: " + stageId + " and taskId: " + taskId);
+			logger.info("Setting RUNNING status stageId: " + stageId + " and taskId: " + taskId);
 
 			// DataFrame dfTask = null;
 			String datapodTableName  = null;
@@ -1041,7 +1041,7 @@ public class TaskServiceImpl implements Callable<String> {
 					e.printStackTrace();
 					synchronized (dagExecUUID) {
 						try {
-							commonServiceImpl.setMetaStatusForTask(dagExec, taskExec, Status.Stage.Failed, stageId, taskId);
+							commonServiceImpl.setMetaStatusForTask(dagExec, taskExec, Status.Stage.FAILED, stageId, taskId);
 						} catch (Exception e1) {
 							e1.printStackTrace();
 						}
@@ -1052,12 +1052,12 @@ public class TaskServiceImpl implements Callable<String> {
 					FrameworkThreadLocal.getSessionContext().set(sessionContext);
 					datapodTableName = executeTask();	// This is the actual task execution call
 				} catch (Exception e) {
-					logger.info("Task failed : " + taskId);
+					logger.info("Task FAILED : " + taskId);
 					e.printStackTrace();
 					synchronized (dagExecUUID) {
-						taskStatus = com.inferyx.framework.domain.Status.Stage.Failed;
+						taskStatus = com.inferyx.framework.domain.Status.Stage.FAILED;
 						try {
-							commonServiceImpl.setMetaStatusForTask(dagExec, taskExec, Status.Stage.Failed, stageId, taskId);
+							commonServiceImpl.setMetaStatusForTask(dagExec, taskExec, Status.Stage.FAILED, stageId, taskId);
 						} catch (Exception e1) {
 							e1.printStackTrace();
 						}
@@ -1074,7 +1074,7 @@ public class TaskServiceImpl implements Callable<String> {
 			    
 				//Set Task to Complete
 				synchronized (dagExecUUID) {
-					if (taskStatus != com.inferyx.framework.domain.Status.Stage.Failed) {
+					if (taskStatus != com.inferyx.framework.domain.Status.Stage.FAILED) {
 						try {
 							Object execObj=commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getVersion(), taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getType().toString(), "N");
 							@SuppressWarnings("unchecked")
@@ -1086,23 +1086,23 @@ public class TaskServiceImpl implements Callable<String> {
 						}
 					}
 				}
-				logger.info("Setting Completed status for taskId: " + taskId);
+				logger.info("Setting COMPLETED status for taskId: " + taskId);
 
 				logger.info("Execution end dataframe is register as table name " + datapodTableName);
 
 			} else if(killThread){
 				synchronized (dagExecUUID) {
-					dagExecServiceImpl.setTaskKilled(dagExecUUID, dagExecVer, stageId, taskId);
+					dagExecServiceImpl.setTaskKILLED(dagExecUUID, dagExecVer, stageId, taskId);
 				}
 			}
 			} else {
 				if(killThread){
 					synchronized (dagExecUUID) {
-						dagExecServiceImpl.setTaskKilled(dagExecUUID, dagExecVer, stageId, taskId);
+						dagExecServiceImpl.setTaskKILLED(dagExecUUID, dagExecVer, stageId, taskId);
 					}
 				} 
-				while (dagExecServiceImpl.getStageStatus(dagExecUUID, dagExecVer, stageId).equals(Status.Stage.OnHold) 
-				|| dagExecServiceImpl.getTaskStatus(dagExecUUID, dagExecVer, stageId, taskId).equals(Status.Stage.OnHold)) {
+				while (dagExecServiceImpl.getStageStatus(dagExecUUID, dagExecVer, stageId).equals(Status.Stage.PAUSE) 
+				|| dagExecServiceImpl.getTaskStatus(dagExecUUID, dagExecVer, stageId, taskId).equals(Status.Stage.PAUSE)) {
 					try {
 						Thread.sleep(10000);
 					} catch (InterruptedException e) {
@@ -1110,21 +1110,21 @@ public class TaskServiceImpl implements Callable<String> {
 					}
 				}
 				try {
-					if (dagExecServiceImpl.getStageStatus(dagExecUUID, dagExecVer, stageId).equals(Status.Stage.Resume)) {
+					if (dagExecServiceImpl.getStageStatus(dagExecUUID, dagExecVer, stageId).equals(Status.Stage.RESUME)) {
 						synchronized (dagExecUUID) {
-							commonServiceImpl.setMetaStatusForStage(dagExec, DagExecUtil.getStageExecFromDagExec(dagExec,  stageId), Status.Stage.Ready, stageId);
+							commonServiceImpl.setMetaStatusForStage(dagExec, DagExecUtil.getStageExecFromDagExec(dagExec,  stageId), Status.Stage.READY, stageId);
 						}
 						call();
 					}
-					if (dagExecServiceImpl.getTaskStatus(dagExecUUID, dagExecVer, stageId, taskId).equals(Status.Stage.Resume)) {
+					if (dagExecServiceImpl.getTaskStatus(dagExecUUID, dagExecVer, stageId, taskId).equals(Status.Stage.RESUME)) {
 						FrameworkThreadLocal.getSessionContext().set(sessionContext);
 						synchronized (dagExecUUID) {
-							commonServiceImpl.setMetaStatusForTask(dagExec, taskExec, Status.Stage.Ready, stageId, taskId);
+							commonServiceImpl.setMetaStatusForTask(dagExec, taskExec, Status.Stage.READY, stageId, taskId);
 						}
 						call();
 					}
 				} catch (Exception e) {
-					logger.error("Exception while setting stage/task to ready and calling task for Resume status. ");
+					logger.error("Exception while setting stage/task to READY and calling task for RESUME status. ");
 					e.printStackTrace();
 				}
 			logger.info("This is not valid for Execution");
