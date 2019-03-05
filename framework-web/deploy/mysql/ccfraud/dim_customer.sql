@@ -1,0 +1,20 @@
+drop table if exists dim_customer;
+create table dim_customer(	
+	customer_id varchar(50) default 0 not null,
+	src_customer_id varchar(50),
+	title varchar(100),
+	first_name varchar(100),
+	middle_name varchar(100),
+	last_name varchar(100),
+	address_line1 varchar(50),
+	address_line2 varchar(50),
+	phone varchar(50),
+	date_first_purchase varchar(10),
+	commute_distance integer(10),
+	city varchar(100),
+	state varchar(100),
+	postal_code varchar(10),
+	country varchar(100),
+	load_date varchar(10),
+	load_id integer(50), 
+constraint customer_id_pk  primary key(customer_id));
