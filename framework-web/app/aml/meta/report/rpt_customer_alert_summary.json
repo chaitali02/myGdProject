@@ -1,6 +1,6 @@
 {
   "uuid": "6a1074a8-9b70-4fd4-8739-69691d54d62b",
-  "version": "1551467075",
+  "version": "1551894086",
   "name": "rpt_customer_alert_summary",
   "desc": "Customer Alert Summary",
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Fri Mar 01 14:04:35 EST 2019",
+  "createdOn": "Wed Mar 06 12:41:26 EST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -159,20 +159,19 @@
     }
   ],
   "saveOnRefresh": "Y",
- "format":"EXCEL",
   "senderInfo": {
     "emailTo": [
       "jkumar@gtpltech.com"
     ],
     "emailBCC": [
+      "ypalrecha@inferyx.com"
+    ],
+    "emailCC": [
       "vkatkar@gtpltech.com",
       "gsonawane@gtpltech.com"
     ],
-    "emailCC": [
-      "ypalrecha@inferyx.com"
-    ],
     "emailAttachment": null,
-    "notifOnSuccess": "Y",
+    "notifyOnSuccess": "Y",
     "notifyOnFailure": "Y",
     "sendAttachment": "Y"
   },
@@ -185,5 +184,6 @@
     },
     "value": null
   },
-  "limit": -1
+  "limit": -1,
+  "format": "EXCEL"
 }

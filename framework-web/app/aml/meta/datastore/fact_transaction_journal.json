@@ -1,6 +1,6 @@
 {
-  "uuid": "23bdf611-4373-4266-aa00-5f3e29868f1c",
-  "version": "1542598080",
+  "uuid": "55452346-9a92-4525-a45e-065dd46273bd",
+  "version": "1551894685",
   "name": "fact_transaction_journal",
   "desc": "Creating datastore for fact_transaction_journal",
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Sun Nov 18 22:28:00 EST 2018",
+  "createdOn": "Wed Mar 06 12:51:25 EST 2019",
   "tags": null,
   "active": "Y",
   "locked": "N",
@@ -22,17 +22,18 @@
       "ref": {
         "type": "application",
         "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-        "version": "1521430822",
+        "version": "1548315745",
         "name": "Anti Money Laundering"
       },
       "value": null
     }
   ],
+  "publicFlag": "N",
   "metaId": {
     "ref": {
       "type": "datapod",
       "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-      "version": "1542590225",
+      "version": "1551893309",
       "name": "fact_transaction_journal"
     },
     "value": null
@@ -40,13 +41,13 @@
   "execId": {
     "ref": {
       "type": "loadExec",
-      "uuid": "3c297fa0-e492-436a-ae91-3441ded70877",
-      "version": "1542598079",
+      "uuid": "1c99df56-8c18-4fbd-848d-b973065c76ff",
+      "version": "1551894683",
       "name": "fact_transaction_journal"
     },
     "value": null
   },
-  "location": "/5e87bde8-18ed-4b0e-993a-d19d26c495ad/1542590225/1542598079",
+  "location": "/5e87bde8-18ed-4b0e-993a-d19d26c495ad/1551893309/1551894683",
   "persistMode": "DISK_ONLY",
   "dimInfo": null,
   "numRows": 6012,
