@@ -30,7 +30,24 @@ public class Report extends BaseEntity {
 	private SenderInfo senderInfo;
 	private MetaIdentifierHolder paramList;
 	private int limit;
+	private String format;
 	
+	/**
+	 * @Ganesh
+	 *
+	 * @return the format
+	 */
+	public String getFormat() {
+		return format;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param format the format to set
+	 */
+	public void setFormat(String format) {
+		this.format = format;
+	}
 	/**
 	 * @Ganesh
 	 *
