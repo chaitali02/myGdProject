@@ -401,7 +401,13 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			else{
 				$scope.allFormula = response;
 			}
-			
+			if($scope.datasetLodeFormula && $scope.datasetLodeFormula.length >0){
+				var temp = $scope.datasetLodeFormula.concat(response);
+				$scope.datasetLodeFormula=temp;
+			}
+			else{
+				$scope.datasetLodeFormula = response;
+			}
 			console.log(response);
 		    console.log($scope.allFormula);
 		}
@@ -1162,7 +1168,8 @@ MetadataModule.controller('MetadataDatasetController', function (dagMetaDataServ
 			$scope.attributeTableArray[index].isOnDropDown=true;
 			MetadataDatasetSerivce.getFormulaByType($scope.datasetRelation.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessExpression(response.data) });
 			var onSuccessExpression = function (response) {
-				$scope.datasetLodeFormula = response
+				$scope.datasetLodeFormula = response;
+				$scope.getFormulaByApp();
 
 			}
 		}
