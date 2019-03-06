@@ -752,9 +752,9 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
              }
                
              $(".status[element-id=" + taskid + "] .statusImg").attr("xlink:href","assets/layouts/layout/img/new_status/"+statusTask+".svg");
-             $(".status[element-id=" + taskid + "] .statusTitle").text(statusTask);
+             $(".status[element-id=" + taskid + "] .statusTitle").text(dagMetaDataService.statusDefs[statusTask].caption);
              $(".status[element-id=" + taskid + "] .rectstatus").attr("fill",dagMetaDataService.statusDefs[statusTask].color);
-             $(".status[element-id=" + taskid + "] .statusText").text(statusTask)//.substring(0,3) + "..");
+             $(".status[element-id=" + taskid + "] .statusText").text(dagMetaDataService.statusDefs[statusTask].caption)//.substring(0,3) + "..");
              if(statusTask !=null){
               $(".status[element-id=" + taskid + "] .rectstatus").attr("width",dagMetaDataService.statusDefs[statusTask].jointWidth);
              }
@@ -1797,8 +1797,8 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          $(".status[element-id=" + dagid + "] .statusImg").attr("xlink:href","assets/layouts/layout/img/new_status/"+statusDag+".svg");
          $(".status[element-id=" + dagid + "] .rectstatus").attr("fill",dagMetaDataService.statusDefs[statusDag].color);
          
-         $(".status[element-id=" + dagid + "] .statusTitle").text(statusDag);
-         $(".status[element-id=" + dagid + "] .statusText").text(statusDag)//substring(0,3) + "..");
+         $(".status[element-id=" + dagid + "] .statusTitle").text(dagMetaDataService.statusDefs[statusDag].caption);
+         $(".status[element-id=" + dagid + "] .statusText").text(dagMetaDataService.statusDefs[statusDag].caption)//substring(0,3) + "..");
          if(statusDag !=null){
           $(".status[element-id=" + dagid + "] .rectstatus").attr("width",dagMetaDataService.statusDefs[statusDag].jointWidth);
          }
@@ -1813,9 +1813,9 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
            $(".status[element-id=" + stageid + "] .statusImg").attr("xlink:href","assets/layouts/layout/img/new_status/"+statusStage+".svg");
            $(".status[element-id=" + stageid + "] .rectstatus").attr("fill",dagMetaDataService.statusDefs[statusStage].color);
 
-           $(".status[element-id=" + stageid + "] .statusTitle").text(statusStage);
+           $(".status[element-id=" + stageid + "] .statusTitle").text(dagMetaDataService.statusDefs[statusStage].caption);
            console.log(statusStage)
-           $(".status[element-id=" + stageid + "] .statusText").text(statusStage)//.substring(0,3) + "..");
+           $(".status[element-id=" + stageid + "] .statusText").text(dagMetaDataService.statusDefs[statusStage].caption)//.substring(0,3) + "..");
            if(statusStage !=null){
             $(".status[element-id=" + stageid + "] .rectstatus").attr("width",dagMetaDataService.statusDefs[statusStage].jointWidth);
            }
@@ -1830,8 +1830,8 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
              $(".status[element-id=" + taskid + "] .statusImg").attr("xlink:href","assets/layouts/layout/img/new_status/"+statusTask+".svg");         
              $(".status[element-id=" + taskid + "] .rectstatus").attr("fill",dagMetaDataService.statusDefs[statusTask].color);
 
-             $(".status[element-id=" + taskid + "] .statusTitle").text(statusTask);
-             $(".status[element-id=" + taskid + "] .statusText").text(statusTask)//.substring(0,3) + "..");
+             $(".status[element-id=" + taskid + "] .statusTitle").text(dagMetaDataService.statusDefs[statusTask].caption);
+             $(".status[element-id=" + taskid + "] .statusText").text(dagMetaDataService.statusDefs[statusTask].caption)//.substring(0,3) + "..");
              if(statusTask !=null){
               $(".status[element-id=" + taskid + "] .rectstatus").attr("width",dagMetaDataService.statusDefs[statusTask].jointWidth);
              }
@@ -2701,10 +2701,10 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          }
          $("#"+divid).show();
          var status = jointElement.find('.status');
-         var startTime = status.attr("RUNNING");
+         var startTime = status.attr("PENDING");
          var statusList=status.attr("statusList");
          if(statusList && statusList.length >0)
-         startTime=getStatsListObject(JSON.parse(statusList),"RUNNING");
+         startTime=getStatsListObject(JSON.parse(statusList),"PENDING");
          var endTime = status.attr("COMPLETED");
          $scope.popoverData = {};
          $scope.popoverData.startTime = startTime || '-';
