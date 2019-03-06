@@ -2713,7 +2713,7 @@ RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaData
 		$('#downloadSample').modal("hide"); 
     $http({
       method: 'GET',
-      url: url + "rule/download?action=view&ruleExecUUID=" + uuid + "&ruleExecVersion=" + version+"&rows="+$scope.download.rows,
+      url: url + "rule/download?action=view&ruleExecUUID=" + uuid + "&ruleExecVersion=" + version+"&rows="+$scope.download.rows+"&format="+$scope.download.selectFormate,
       responseType: 'arraybuffer'
     }).success(function (data, status, headers) {
       headers = headers();

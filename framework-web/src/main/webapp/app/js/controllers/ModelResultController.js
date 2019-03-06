@@ -716,10 +716,10 @@ DatascienceModule.controller('ResultModelController', function ($filter, $state,
         var baseurl = $location.absUrl().split("app")[0];
         var url;
         if ($stateParams.type == "predict") {
-            url = baseurl + "model/predict/download?action=view&predictExecUUID=" + $scope.modelDetail.uuid + "&predictExecVersion=" + $scope.modelDetail.version + "&mode=BATCH" + "&rows=" + $scope.download.rows;
+            url = baseurl + "model/predict/download?action=view&predictExecUUID=" + $scope.modelDetail.uuid + "&predictExecVersion=" + $scope.modelDetail.version + "&mode=BATCH" + "&rows=" + $scope.download.rows+"&format="+$scope.download.selectFormate;
         }
         else if ($stateParams.type == "simulate") {
-            url = baseurl + "model/simulate/download?action=view&simulateExecUUID=" + $scope.modelDetail.uuid + "&simulateExecVersion=" + $scope.modelDetail.version + "&mode=''" + "&rows=" + $scope.download.rows;
+            url = baseurl + "model/simulate/download?action=view&simulateExecUUID=" + $scope.modelDetail.uuid + "&simulateExecVersion=" + $scope.modelDetail.version + "&mode=''" + "&rows=" + $scope.download.rows+"&format="+$scope.download.selectFormate;
         }
 
         $('#downloadSample').modal("hide");

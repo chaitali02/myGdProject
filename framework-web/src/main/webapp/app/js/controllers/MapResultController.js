@@ -112,7 +112,7 @@ MetadataModule.controller('ResultMapController', function ($filter, $state, $loc
     $scope.submitDownload = function () {
         var baseurl = $location.absUrl().split("app")[0];
         var url;
-        url = baseurl + "map/download?action=view&mapExecUUID=" + $scope.maplDetail.uuid + "&mapExecVersion=" + $scope.maplDetail.version + "&mode=BATCH" + "&rows=" + $scope.download.rows;
+        url = baseurl + "map/download?action=view&mapExecUUID=" + $scope.maplDetail.uuid + "&mapExecVersion=" + $scope.maplDetail.version + "&mode=BATCH" + "&rows=" + $scope.download.rows+"&format="+$scope.download.selectFormate;
         $('#downloadSample').modal("hide");
         $http({
             method: 'GET',
