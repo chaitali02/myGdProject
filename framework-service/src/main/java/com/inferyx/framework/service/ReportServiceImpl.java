@@ -310,7 +310,7 @@ public class ReportServiceImpl extends RuleTemplate {
 		
 		File reportDocDir = new File(defaultDownloadPath.concat(reportFilePath));
 		if(!reportDocDir.exists()) {
-			reportDocDir.mkdir();
+			reportDocDir.mkdirs();
 		}
 		String reportFileName = null;
 		if(format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {

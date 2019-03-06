@@ -4073,7 +4073,7 @@ public class CommonServiceImpl<T> {
 			
 			File defaultDir = new File(defaultPath);
 			if(!defaultDir.exists()) {
-				defaultDir.mkdir();
+				defaultDir.mkdirs();
 			}
 			
 			//writting as per provided format
