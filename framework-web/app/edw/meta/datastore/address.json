@@ -1,8 +1,8 @@
 {
-  "uuid": "c403c935-a2aa-4039-a5fa-21845a5ffa75",
-  "version": "1551892948",
-  "name": "dim_country",
-  "desc": "Creating datastore for dim_country",
+  "uuid": "ffeece31-69a8-4085-bb66-05491d21b9f1",
+  "version": "1551896028",
+  "name": "address",
+  "desc": "Creating datastore for address",
   "createdBy": {
     "ref": {
       "type": "user",
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Wed Mar 06 12:22:28 EST 2019",
+  "createdOn": "Wed Mar 06 13:13:48 EST 2019",
   "tags": null,
   "active": "Y",
   "locked": "N",
@@ -32,24 +32,24 @@
   "metaId": {
     "ref": {
       "type": "datapod",
-      "uuid": "570bb0dc-067e-4aed-9893-30033e73f584",
-      "version": "1502631071",
-      "name": "dim_country"
+      "uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6",
+      "version": "1488620382",
+      "name": "address"
     },
     "value": null
   },
   "execId": {
     "ref": {
       "type": "loadExec",
-      "uuid": "2ddde474-5166-4721-bd17-c2cd8bb30afb",
-      "version": "1551892947",
-      "name": "dim_country"
+      "uuid": "a676f0c7-488b-4f41-9960-ba599496247a",
+      "version": "1551896027",
+      "name": "address"
     },
     "value": null
   },
-  "location": "/570bb0dc-067e-4aed-9893-30033e73f584/1502631071/1551892947",
+  "location": "/89c15cd1-bd0d-4ae4-bedd-587047b665d6/1488620382/1551896027",
   "persistMode": "DISK_ONLY",
   "dimInfo": null,
-  "numRows": 249,
+  "numRows": 60,
   "runMode": "BATCH"
 }
