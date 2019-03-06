@@ -1060,6 +1060,14 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
+                                                <label class="col-md-3 control-label">Format</label>
+                                                <div class="col-md-3 col-sm-3 col-xs-12">
+                                                    <select class="form-control" ng-disabled="{{mode}}"data-ng-model="report.format"
+                                                        ng-options="r for r in allFormats" required>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
                                                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Send Notification</label>
                                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                                     <fieldset form="form1" style="border:1px solid #c2cad8;padding:9px;padding-top:15px;">

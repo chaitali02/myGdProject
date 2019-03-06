@@ -1073,7 +1073,7 @@ public class DagServiceImpl {
 							// consider inactive stage)
 			}
 			synchronized (dagExec.getUuid()) {
-				commonServiceImpl.setMetaStatusForStage(dagExec, indvDagExecStg, Status.Stage.INITIALIZING, indvDagExecStg.getStageId());
+				commonServiceImpl.setMetaStatusForStage(dagExec, indvDagExecStg, Status.Stage.STARTING, indvDagExecStg.getStageId());
 			}
 			for (TaskExec indvExecTask : dagExecTasks) {
 				ExecParams taskExecParams = createChildParams(execParams);
@@ -1084,7 +1084,7 @@ public class DagServiceImpl {
 				
 				
 				synchronized (dagExec.getUuid()) {
-					commonServiceImpl.setMetaStatusForTask(dagExec, indvExecTask, Status.Stage.INITIALIZING, indvDagExecStg.getStageId(), indvExecTask.getTaskId());
+					commonServiceImpl.setMetaStatusForTask(dagExec, indvExecTask, Status.Stage.STARTING, indvDagExecStg.getStageId(), indvExecTask.getTaskId());
 				}
 				
 				List<TaskOperator> operatorList = new ArrayList<>();

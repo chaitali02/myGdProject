@@ -868,7 +868,7 @@ public class RunStageServiceImpl implements Callable<String> {
 							|| taskStatus.equals(Status.Stage.PAUSE)) {
 						continue;
 					}*/
-					if (!taskStatus.equals(Status.Stage.INITIALIZING) 
+					if (!taskStatus.equals(Status.Stage.STARTING) 
 							&& !taskStatus.equals(Status.Stage.READY)
 							&& !taskStatus.equals(Status.Stage.RUNNING)
 							&& !taskStatus.equals(Status.Stage.RESUME)) {
@@ -880,7 +880,7 @@ public class RunStageServiceImpl implements Callable<String> {
 					logger.info("Task dependencyStatus : " + indvTaskExec.getTaskId() + " : " + dependencyStatus);
 					if (StringUtils.isBlank(dependencyStatus) 
 							|| dependencyStatus.equalsIgnoreCase(Status.Stage.PENDING.toString())
-							|| dependencyStatus.equalsIgnoreCase(Status.Stage.INITIALIZING.toString()) 
+							|| dependencyStatus.equalsIgnoreCase(Status.Stage.STARTING.toString()) 
 							|| dependencyStatus.equalsIgnoreCase(Status.Stage.READY.toString())) {
 						checkDependencyStatus = false;
 					} else if (dependencyStatus.equalsIgnoreCase(Status.Stage.KILLED.toString())) {

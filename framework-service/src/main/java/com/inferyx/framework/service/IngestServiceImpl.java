@@ -663,7 +663,7 @@ public class IngestServiceImpl extends RuleTemplate {
 	@Override
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		synchronized (baseExec.getUuid()) {
-			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.ingestExec, Status.Stage.INITIALIZING);
+			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.ingestExec, Status.Stage.STARTING);
 		}
 		synchronized (baseExec.getUuid()) {
 			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.ingestExec, Status.Stage.READY);
@@ -677,7 +677,7 @@ public class IngestServiceImpl extends RuleTemplate {
 			throws Exception {	
 		BaseRuleExec baseRuleExec = (BaseRuleExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.ingestExec.toString(), "N");
 		synchronized (execUuid) {
-			baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, MetaType.ingestExec, Status.Stage.INITIALIZING);
+			baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, MetaType.ingestExec, Status.Stage.STARTING);
 		}
 		synchronized (execUuid) {
 			baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, MetaType.ingestExec, Status.Stage.READY);

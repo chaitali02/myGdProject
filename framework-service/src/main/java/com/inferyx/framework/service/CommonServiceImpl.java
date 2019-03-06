@@ -3054,15 +3054,15 @@ public class CommonServiceImpl<T> {
 		return statusList;
 	}
 	
-	private List<Status> setInitializingStatus(List<Status> statusList) {
+	private List<Status> setStartingStatus(List<Status> statusList) {
 		if (statusList == null || statusList.isEmpty()) {
-			logger.info("Nothing in statusList. Cannot go to INITIALIZING status ... ");
+			logger.info("Nothing in statusList. Cannot go to Starting status ... ");
 			return null;
 		}
 		if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.PENDING, new Date()))) {
-			statusList.add(new Status(Status.Stage.INITIALIZING, new Date()));
+			statusList.add(new Status(Status.Stage.STARTING, new Date()));
 		} else {
-			logger.info("Latest Status is not in PENDING. Cannot go to INITIALIZING status. Exiting...");
+			logger.info("Latest Status is not in PENDING. Cannot go to Starting status. Exiting...");
 		}
 		return statusList;
 	}
@@ -3078,10 +3078,10 @@ public class CommonServiceImpl<T> {
 				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.KILLED, new Date()))) 
 				&& Helper.isStatusPresent(new Status(Status.Stage.READY, new Date()), statusList)) {
 			statusList.add(new Status(Status.Stage.READY, new Date()));
-		}else if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.INITIALIZING, new Date()))) {
+		}else if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.STARTING, new Date()))) {
 			statusList.add(new Status(Status.Stage.READY, new Date()));
 		} else {
-			logger.info("Latest Status is not in RESUME/FAILED/KILLED/INITIALIZING. Cannot go to READY status. Exiting...");
+			logger.info("Latest Status is not in RESUME/FAILED/KILLED/Starting. Cannot go to READY status. Exiting...");
 		}
 		return statusList;
 	}
@@ -3121,8 +3121,8 @@ public class CommonServiceImpl<T> {
 
 	private List<Status> setTerminatingStatus(List<Status> statusList) {
 		if (!Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.RUNNING, new Date())) 
-				&& !Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.INITIALIZING, new Date()))) {
-			logger.info("Latest Status is not in RUNNING or INITIALIZING. Exiting...");
+				&& !Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.STARTING, new Date()))) {
+			logger.info("Latest Status is not in RUNNING or Starting. Exiting...");
 			return statusList;
 		}
 		statusList.add(new Status(Status.Stage.TERMINATING, new Date()));
@@ -3241,8 +3241,8 @@ public class CommonServiceImpl<T> {
 		case PENDING:
 			statusList = setPendingStatus(statusList);
 			break;
-		case INITIALIZING:
-			statusList = setInitializingStatus(statusList);
+		case STARTING:
+			statusList = setStartingStatus(statusList);
 			break;
 		case READY:
 			statusList = setReadyStatus(statusList);
@@ -3326,8 +3326,8 @@ public class CommonServiceImpl<T> {
 		case PENDING:
 			statusList = setPendingStatus(statusList);
 			break;
-		case INITIALIZING:
-			statusList = setInitializingStatus(statusList);
+		case STARTING:
+			statusList = setStartingStatus(statusList);
 			break;
 		case READY:
 			statusList = setReadyStatus(statusList);
@@ -3410,8 +3410,8 @@ public class CommonServiceImpl<T> {
 		case PENDING:
 			statusList = setPendingStatus(statusList);
 			break;
-		case INITIALIZING:
-			statusList = setInitializingStatus(statusList);
+		case STARTING:
+			statusList = setStartingStatus(statusList);
 			break;
 		case READY:
 			statusList = setReadyStatus(statusList);

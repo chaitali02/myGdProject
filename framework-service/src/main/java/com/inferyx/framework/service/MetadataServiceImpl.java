@@ -379,6 +379,10 @@ public class MetadataServiceImpl {
 		query.fields().include("published");
 		query.fields().include("appInfo");
 		query.fields().include("statusList");
+		if(metaType.equals(MetaType.reportExec)){
+			query.fields().include("numRows");
+			query.fields().include("sizeMB");
+		}
 		
 		//Apply filter
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat ("EEE MMM dd HH:mm:ss yyyy z");
@@ -433,6 +437,7 @@ public class MetadataServiceImpl {
 		for (Object metaObject: metaObjectList)
 		{
 			List<Status> execStatus = null;
+			BaseEntityStatus baseEntityStatus = new BaseEntityStatus();			
 			//type.toLowerCase() == MetaType.dagexec.toString().toLowerCase()
 			if (type.equalsIgnoreCase(MetaType.dagExec.toString())) {
 				DagExec execObject = new DagExec();
@@ -530,7 +535,10 @@ public class MetadataServiceImpl {
 			else if(type.equalsIgnoreCase(MetaType.reportExec.toString())){
 				ReportExec reportExec = new ReportExec();
 				reportExec = (ReportExec) metaObject;
-				execStatus = (List<Status>) reportExec.getStatusList();	
+				execStatus = (List<Status>) reportExec.getStatusList();
+				baseEntityStatus.setNumRows(reportExec.getNumRows());
+				baseEntityStatus.setSizeMB(reportExec.getSizeMB());
+				
 			}
 			else if(type.equalsIgnoreCase(MetaType.batchExec.toString())){
 				BatchExec batchExec = new BatchExec();
@@ -563,7 +571,6 @@ public class MetadataServiceImpl {
 				execStatus = (List<Status>) execObject.getStatusList();	
 			} 
 				
-			BaseEntityStatus baseEntityStatus = new BaseEntityStatus();			
 			BaseEntity baseEntityTmp = (BaseEntity) metaObject;			
 			baseEntityTmp = resolveBaseEntity(baseEntityTmp);
 			baseEntityStatus.setId(baseEntityTmp.getId());

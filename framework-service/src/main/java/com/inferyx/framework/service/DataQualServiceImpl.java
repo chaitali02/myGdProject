@@ -458,7 +458,7 @@ public class DataQualServiceImpl  extends RuleTemplate{
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
 		DataQualExec dataQualExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.dqExec.toString(), "N");
 		synchronized (execUuid) {
-			commonServiceImpl.setMetaStatus(dataQualExec, MetaType.dqExec, Status.Stage.INITIALIZING);
+			commonServiceImpl.setMetaStatus(dataQualExec, MetaType.dqExec, Status.Stage.STARTING);
 		}
 		DataQual dataQual = (DataQual) commonServiceImpl.getOneByUuidAndVersion(dataQualExec.getDependsOn().getRef().getUuid(), dataQualExec.getDependsOn().getRef().getVersion(), MetaType.dq.toString(), "N");
 		try{

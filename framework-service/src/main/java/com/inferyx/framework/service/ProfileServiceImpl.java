@@ -556,7 +556,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 			profileExec = (ProfileExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
 					MetaType.profileExec.toString());
 			synchronized (execUuid) {
-				commonServiceImpl.setMetaStatus(profileExec, MetaType.profileExec, Status.Stage.INITIALIZING);
+				commonServiceImpl.setMetaStatus(profileExec, MetaType.profileExec, Status.Stage.STARTING);
 			}
 			profile = (Profile) commonServiceImpl.getOneByUuidAndVersion(profileExec.getDependsOn().getRef().getUuid(),
 					profileExec.getDependsOn().getRef().getVersion(), MetaType.profile.toString());

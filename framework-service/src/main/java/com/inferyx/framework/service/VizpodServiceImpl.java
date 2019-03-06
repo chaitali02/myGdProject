@@ -842,7 +842,7 @@ public class VizpodServiceImpl extends RuleTemplate {
 
 		VizExec vizExec = (VizExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.vizExec.toString(), "N");
 
-		vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.INITIALIZING);
+		vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.STARTING);
 		
 		MetaIdentifier vizpodMI = vizExec.getDependsOn().getRef();
 		Vizpod vizpod = (Vizpod) commonServiceImpl.getOneByUuidAndVersion(vizpodMI.getUuid(), vizpodMI.getVersion(), MetaType.vizpod.toString(), "Y");
@@ -1497,7 +1497,7 @@ public class VizpodServiceImpl extends RuleTemplate {
 		@Override
 		public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 			synchronized (baseExec.getUuid()) {
-				baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.vizExec, Status.Stage.INITIALIZING);
+				baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.vizExec, Status.Stage.STARTING);
 			}
 			synchronized (baseExec.getUuid()) {
 				baseExec = (DashboardExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.vizExec, Status.Stage.READY);
@@ -1511,7 +1511,7 @@ public class VizpodServiceImpl extends RuleTemplate {
 				throws Exception {
 			BaseRuleExec baseRuleExec = (BaseRuleExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.vizExec.toString(), "N");
 			synchronized (execUuid) {
-				baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, MetaType.vizExec, Status.Stage.INITIALIZING);
+				baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, MetaType.vizExec, Status.Stage.STARTING);
 			}
 			synchronized (execUuid) {
 				baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, MetaType.vizExec, Status.Stage.READY);

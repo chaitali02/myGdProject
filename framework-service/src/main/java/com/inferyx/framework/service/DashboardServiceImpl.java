@@ -160,7 +160,7 @@ public class DashboardServiceImpl extends RuleTemplate {
 		}		
 		dashboardExec.setVizExecInfo(vizExecInfo);
 		synchronized (dashboardExec.getUuid()) {
-			dashboardExec = (DashboardExec) commonServiceImpl.setMetaStatus(dashboardExec, MetaType.dashboardExec, Status.Stage.INITIALIZING);
+			dashboardExec = (DashboardExec) commonServiceImpl.setMetaStatus(dashboardExec, MetaType.dashboardExec, Status.Stage.STARTING);
 			dashboardExec = (DashboardExec) commonServiceImpl.setMetaStatus(dashboardExec, MetaType.dashboardExec, Status.Stage.READY);
 		}
 		
@@ -314,7 +314,7 @@ public class DashboardServiceImpl extends RuleTemplate {
 	@Override
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		synchronized (baseExec.getUuid()) {
-			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.dashboardExec, Status.Stage.INITIALIZING);
+			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.dashboardExec, Status.Stage.STARTING);
 		}
 		synchronized (baseExec.getUuid()) {
 			baseExec = (DashboardExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.dashboardExec, Status.Stage.READY);
@@ -328,7 +328,7 @@ public class DashboardServiceImpl extends RuleTemplate {
 			throws Exception {
 		BaseRuleExec baseRuleExec = (BaseRuleExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.dashboardExec.toString(), "N");
 		synchronized (execUuid) {
-			baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, MetaType.dashboardExec, Status.Stage.INITIALIZING);
+			baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, MetaType.dashboardExec, Status.Stage.STARTING);
 		}
 		synchronized (execUuid) {
 			baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, MetaType.dashboardExec, Status.Stage.READY);

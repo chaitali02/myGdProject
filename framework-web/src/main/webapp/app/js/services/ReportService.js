@@ -165,6 +165,21 @@ DatavisualizationModule.factory('ReportFactory', function ($http, $location) {
 				return response;
 			})
 	}
+	factory.reSendEMail = function (uuid, version, mode, data) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			method: 'POST',
+			url: url + "report/reSendEMail?action=view&uuid=" + uuid + "&version=" + version + "&type=reportexec&mode="+mode,
+			headers: {
+				'Accept': '*/*',
+				'content-Type': "application/json",
+			},
+			data: JSON.stringify(data),
+		}).
+			then(function (response, status, headers) {
+				return response;
+			})
+	}
 	factory.findAttributeValues = function (uuid, attributeId, type) {
 		var url = $location.absUrl().split("app")[0]
 		if (type == "datapod") {
@@ -182,8 +197,20 @@ DatavisualizationModule.factory('ReportFactory', function ($http, $location) {
 
 		}).then(function (response, status, headers) {
 			return response;
-		})
+	})
+	
 	}
+	factory.findNumRowsbyExec = function (uuid, version) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			method: 'GET',
+			url: url + "metadata/getNumRowsbyExec?action=view&execUuid=" + uuid + "&execVersion=" + version + "&type=reportexec",
+		}).
+			then(function (response, status, headers) {
+				return response;
+			})
+	}
+     
 	factory.disableRhsType = function (arrayStr) {
 		var rTypes = [
 			{ "text": "string", "caption": "string", "disabled": false },
@@ -208,6 +235,16 @@ DatavisualizationModule.factory('ReportFactory', function ($http, $location) {
 });
 
 DatavisualizationModule.service('ReportSerivce', function ($q, sortFactory, ReportFactory, CF_GRID) {
+	this.getNumRowsbyExec = function (uuid, type) {
+		var deferred = $q.defer();
+		ReportFactory.findNumRowsbyExec(uuid, type).then(function (response) { onSuccess(response.data) });
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			})
+		}
+		return deferred.promise;
+	};
 	this.getReportByReportExec = function (uuid, type) {
 		var deferred = $q.defer();
 		ReportFactory.findReportByReportExec(uuid, type).then(function (response) { onSuccess(response.data) });
@@ -230,6 +267,21 @@ DatavisualizationModule.service('ReportSerivce', function ($q, sortFactory, Repo
 		}
 		return deferred.promise;
 	};
+	this.reSendEMail = function (uuid, version, mode ,data) {
+		var deferred = $q.defer();
+		ReportFactory.reSendEMail(uuid, version, mode ,data).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			});
+		}
+		var onError = function (response) {
+			deferred.reject({
+				data: response
+			})
+		}
+		return deferred.promise;
+	}
 	this.reportExecute = function (uuid, version, data) {
 		var deferred = $q.defer();
 		ReportFactory.findExecute(uuid, version, data).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });

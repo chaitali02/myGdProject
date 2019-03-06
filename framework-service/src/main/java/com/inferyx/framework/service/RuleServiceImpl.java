@@ -791,7 +791,7 @@ public class RuleServiceImpl extends RuleTemplate {
 		RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
 				MetaType.ruleExec.toString(), "N");
 		synchronized (execUuid) {
-			commonServiceImpl.setMetaStatus(ruleExec, MetaType.ruleExec, Status.Stage.INITIALIZING);
+			commonServiceImpl.setMetaStatus(ruleExec, MetaType.ruleExec, Status.Stage.STARTING);
 		}
 		// rule = iRuleDao.findLatestByUuid(ruleExec.getDependsOn().getRef().getUuid(),
 		// new Sort(Sort.Direction.DESC, "version"));
