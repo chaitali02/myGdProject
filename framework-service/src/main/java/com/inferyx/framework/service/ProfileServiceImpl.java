@@ -632,44 +632,23 @@ public class ProfileServiceImpl extends RuleTemplate {
 		}
 	}
 
-	public HttpServletResponse download(String uuid, String version, String format, String download, int offset,
-			int limit, HttpServletResponse response, int rowLimit, String sortBy, String order, String requestId,
-			RunMode runMode) throws Exception {
+	public HttpServletResponse download(String profileExecUuid, String profileExecVersion, String format,
+			String download, int offset, int limit, HttpServletResponse response, int rowLimit, String sortBy,
+			String order, String requestId, RunMode runMode) throws Exception {
 
 		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
-		if(rowLimit > maxRows) {
-			logger.error("Requested rows exceeded the limit of "+maxRows);
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Requested rows exceeded the limit of "+maxRows, null);
-			throw new RuntimeException("Requested rows exceeded the limit of "+maxRows);
+		if (rowLimit > maxRows) {
+			logger.error("Requested rows exceeded the limit of " + maxRows);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
+					"Requested rows exceeded the limit of " + maxRows, null);
+			throw new RuntimeException("Requested rows exceeded the limit of " + maxRows);
 		}
-		
-		List<Map<String, Object>> results = getProfileResults(uuid, version, offset, limit, sortBy, order, requestId,
-				runMode);
-		response = commonServiceImpl.download(uuid, version, format, offset, limit, response, rowLimit, sortBy, order,
-				requestId, runMode, results, MetaType.downloadExec,
-				new MetaIdentifierHolder(new MetaIdentifier(MetaType.profileExec, uuid, version)));
 
-		/*
-		 * try { FileOutputStream fileOut = null;
-		 * response.setContentType("application/xml charset=utf-16");
-		 * response.setHeader("Content-type", "application/xml"); HSSFWorkbook workbook
-		 * = WorkbookUtil.getWorkbook(results);
-		 * 
-		 * String downloadPath =
-		 * Helper.getPropertyValue("framework.file.download.path");
-		 * response.addHeader("Content-Disposition", "attachment; filename=" + uuid +
-		 * ".xlsx"); ServletOutputStream os = response.getOutputStream();
-		 * workbook.write(os);
-		 * 
-		 * fileOut = new FileOutputStream(downloadPath + "/" + uuid + "_" + version +
-		 * ".xlsx"); workbook.write(fileOut); os.write(workbook.getBytes()); os.close();
-		 * fileOut.close();
-		 * 
-		 * } catch (IOException e1) { e1.printStackTrace();
-		 * logger.info("exception caught while download file"); }
-		 */
+		List<Map<String, Object>> results = getProfileResults(profileExecUuid, profileExecVersion, offset, limit,
+				sortBy, order, requestId, runMode);
+		response = commonServiceImpl.download(format, response, runMode, results, new MetaIdentifierHolder(
+				new MetaIdentifier(MetaType.profileExec, profileExecUuid, profileExecVersion)));
 		return response;
-
 	}
 
 	@SuppressWarnings("unlikely-arg-type")

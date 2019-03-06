@@ -493,7 +493,7 @@ public class DataQualServiceImpl  extends RuleTemplate{
 		return dataQualExec;
 	}
 
-	public HttpServletResponse download(String dataQualExecUUID, String dataQualExecVersion, String format,
+	public HttpServletResponse download(String dqExecUuid, String dqExecVersion, String format,
 			String download, int offset, int limit, HttpServletResponse response, int rowLimit, String sortBy,
 			String order, String requestId, RunMode runMode) throws Exception {
 
@@ -505,13 +505,11 @@ public class DataQualServiceImpl  extends RuleTemplate{
 			throw new RuntimeException("Requested rows exceeded the limit of " + maxRows);
 		}
 
-		List<Map<String, Object>> results = getDQResults(dataQualExecUUID, dataQualExecVersion, offset, limit, sortBy,
+		List<Map<String, Object>> results = getDQResults(dqExecUuid, dqExecVersion, offset, limit, sortBy,
 				order, requestId, runMode);
-		response = commonServiceImpl.download(dataQualExecUUID, dataQualExecVersion, format, offset, limit, response,
-				rowLimit, sortBy, order, requestId, runMode, results, MetaType.downloadExec,
-				new MetaIdentifierHolder(new MetaIdentifier(MetaType.dqExec, dataQualExecUUID, dataQualExecVersion)));
+		response = commonServiceImpl.download(format, response, runMode, results,
+				new MetaIdentifierHolder(new MetaIdentifier(MetaType.dqExec, dqExecUuid, dqExecVersion)));
 		return response;
-
 	}
 	
 	public String getSummarySql(String tableName) {

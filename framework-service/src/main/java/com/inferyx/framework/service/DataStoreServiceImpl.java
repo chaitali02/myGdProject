@@ -11,7 +11,6 @@
 package com.inferyx.framework.service;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
-import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -36,11 +35,8 @@ import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
@@ -53,7 +49,6 @@ import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Key;
-import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -131,8 +126,6 @@ public class DataStoreServiceImpl {
 	Engine engine;
 	@Autowired
 	Helper helper;
-	@Autowired
-	private MessageServiceImpl messageServiceImpl;
 	@Autowired
 	private SparkExecutor<?> sparkExecutor;
 	
@@ -400,20 +393,9 @@ public class DataStoreServiceImpl {
 		// Fetch the datapod details for each id
 
 		List<DataStore> result = new ArrayList<DataStore>();
-		for (DataStore s : datastoreList) {
-			String appUuid = (securityServiceImpl.getAppInfo() != null
-					&& securityServiceImpl.getAppInfo().getRef() != null)
-							? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-			DataStore datastoreLatest = null;
-			if (appUuid != null) {
-				datastoreLatest = (DataStore) commonServiceImpl.getOneByUuidAndVersion(s.getId(), s.getVersion(),MetaType.datastore.toString());
-			} else {
-				datastoreLatest = datastoreLatest = (DataStore) commonServiceImpl.getOneByUuidAndVersion(s.getId(), s.getVersion(),MetaType.datastore.toString());
-			}
-			//DataStore datastore = resolveName(datastoreLatest);
-			DataStore datastore = (DataStore) commonServiceImpl.resolveName(datastoreLatest, MetaType.datastore);
-
-			result.add(datastoreLatest);
+		for (DataStore datastore : datastoreList) {
+			DataStore resolvedDs = (DataStore) commonServiceImpl.getOneByUuidAndVersion(datastore.getId(), datastore.getVersion(),MetaType.datastore.toString());
+			result.add(resolvedDs);
 		}
 		return result;
 	}
@@ -1745,12 +1727,12 @@ public class DataStoreServiceImpl {
 		return data;
 	}
 	
-	public HttpServletResponse download(String uuid, String version, String format, int offset,
+	public HttpServletResponse download(String datastoreUuid, String datastoreVersion, String format, int offset,
 			int limit, HttpServletResponse response, int rowLimit, String sortBy, String order, String requestId,
 			RunMode runMode) throws Exception {
 		setRunMode(runMode);
-		DataStore ds = (DataStore) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datastore.toString());
-		if (ds == null) {
+		DataStore datastore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(datastoreUuid, datastoreVersion, MetaType.datastore.toString());
+		if (datastore == null) {
 			logger.error("Datastore is not available for this datapod");
 			throw new Exception();
 		}
@@ -1762,10 +1744,9 @@ public class DataStoreServiceImpl {
 			throw new RuntimeException("Requested rows exceeded the limit of "+maxRows);
 		}
 		
-		List<Map<String, Object>> results = getDatapodResults(ds.getUuid(), ds.getVersion(), null,
+		List<Map<String, Object>> results = getDatapodResults(datastore.getUuid(), datastore.getVersion(), null,
 				0, limit, response, rowLimit, null, null, null, runMode);
-		response = commonServiceImpl.download(uuid, version, format, offset, limit, response, rowLimit, sortBy, order, requestId, runMode, results,MetaType.downloadExec,new MetaIdentifierHolder(new MetaIdentifier(MetaType.datapod,uuid,version)));
-	
+		response = commonServiceImpl.download(format, response, runMode, results, datastore.getExecId());	
 		return response;
 
 	}

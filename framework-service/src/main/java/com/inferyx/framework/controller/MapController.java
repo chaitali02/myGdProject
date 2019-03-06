@@ -15,10 +15,8 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.FutureTask;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -40,7 +38,6 @@ import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.MapServiceImpl;
-import com.inferyx.framework.service.TaskHolder;
 
 @RestController
 @RequestMapping(value = "/map")

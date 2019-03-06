@@ -33,6 +33,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -49,6 +50,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +73,7 @@ import com.inferyx.framework.common.CustomLogger;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.GraphInfo;
 import com.inferyx.framework.common.Helper;
+import com.inferyx.framework.common.PDFUtil;
 import com.inferyx.framework.common.SessionHelper;
 import com.inferyx.framework.common.WorkbookUtil;
 import com.inferyx.framework.dao.IActivityDao;
@@ -496,6 +499,8 @@ public class CommonServiceImpl<T> {
 	SessionHelper sessionHelper;
 	@Autowired
 	private IDashboardExecDao iDashboardExecDao;
+	@Autowired
+	private PDFUtil pdfUtil;
 
 	/**
 	 * @Ganesh
@@ -4023,36 +4028,80 @@ public class CommonServiceImpl<T> {
 		return response;
 	}
 
-	public HttpServletResponse download(String uuid, String version, String format, int offset, int limit,
-			HttpServletResponse response, int rowLimit, String sortBy, String order, String requestId, RunMode runMode,
-			List<Map<String, Object>> results, MetaType metaType, MetaIdentifierHolder dependsOn) throws Exception {
+	public HttpServletResponse download(String format, HttpServletResponse response, RunMode runMode,
+			List<Map<String, Object>> results, MetaIdentifierHolder dependsOn) throws Exception {
+		logger.info("inside download method....");
+		String defaultPath = Helper.getPropertyValue("framework.file.download.path");
+		defaultPath = defaultPath.endsWith("/") ? defaultPath : defaultPath.concat("/");
 
-		String downloadPath = Helper.getPropertyValue("framework.file.download.path");
 		DownloadExec downloadExec = new DownloadExec();
-
 		downloadExec.setBaseEntity();
-		downloadExec
-				.setLocation(downloadPath + "/" + downloadExec.getUuid() + "_" + downloadExec.getVersion() + ".xls");
 		downloadExec.setDependsOn(dependsOn);
+		
+		String fileName = null;		
+		if(format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
+			fileName = String.format("%s_%s.%s", downloadExec.getUuid().replaceAll("-", "_"), downloadExec.getVersion(), FileType.PDF.toString().toLowerCase());
+		} else {
+			fileName = String.format("%s_%s.%s", downloadExec.getUuid().replaceAll("-", "_"), downloadExec.getVersion(), FileType.XLS.toString().toLowerCase());
+		}
+
+		String filePathUrl = defaultPath.concat(fileName);
+				
+		downloadExec.setLocation(filePathUrl);
 		try {
-			FileOutputStream fileOut = null;
-			HSSFWorkbook workbook = WorkbookUtil.getWorkbook(results);
-			downloadPath = Helper.getPropertyValue("framework.file.download.path");
-			// response.addHeader("Content-Disposition", "attachment; filename=" + uuid +
-			// ".xls");
-			response.setContentType("application/xml charset=utf-16");
-			response.setHeader("Content-disposition", "attachment");
-			response.setHeader("filename", "" + uuid + "_" + version + ".xls");
-			ServletOutputStream os = response.getOutputStream();
-			workbook.write(os);
+//			//checking whether data is available or not
+//			if(results == null || (results != null && results.isEmpty())) {
+//				results = new ArrayList<>();
+//				
+//				Map<String,Object> dataMap = new LinkedHashMap<>();
+//				int i = 0;
+//				for(AttributeSource attributeSource : report.getAttributeInfo()) {
+//					if(i == 0) {
+//						dataMap.put(attributeSource.getAttrSourceName(), "no data available.");
+//					} else {
+//						dataMap.put(attributeSource.getAttrSourceName(), "");
+//					}
+//					i++;
+//				}
+//
+//				results.add(dataMap);
+//			}
+			
+			PDDocument doc = null;
+			HSSFWorkbook workbook = null;
+			ServletOutputStream servletOutputStream = response.getOutputStream();
+			
+			File defaultDir = new File(defaultPath);
+			if(!defaultDir.exists()) {
+				defaultDir.mkdir();
+			}
+			
+			//writting as per provided format
+			if(format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
+				doc = pdfUtil.getPDFDoc(results);
+				FileOutputStream fileOutPDF = new FileOutputStream(new File(filePathUrl));
+				doc.save(fileOutPDF);
+				fileOutPDF.close();
+				
+				response.setContentType("application/pdf");
+				response.setHeader("Content-disposition", "attachment");
+				response.setHeader("filename", fileName);
+				doc.save(servletOutputStream);
+				doc.close();
+			} else {
+				FileOutputStream fileOut = new FileOutputStream(filePathUrl);
+				workbook = WorkbookUtil.getWorkbook(results);
+				workbook.write(fileOut);		
+				fileOut.close();
+				
+				response.setContentType("application/xml");
+				response.setHeader("Content-disposition", "attachment");
+				response.setHeader("filename", fileName);
+				workbook.write(servletOutputStream);
+				workbook.close();
+			}
 
-			fileOut = new FileOutputStream(
-					downloadPath + "/" + downloadExec.getUuid() + "_" + downloadExec.getVersion() + ".xls");
-			workbook.write(fileOut);
-			os.write(workbook.getBytes());
-			save(metaType.toString(), downloadExec);
-
-			fileOut.close();
+			save(MetaType.downloadExec.toString(), downloadExec);
 
 		} catch (IOException e1) {
 			e1.printStackTrace();

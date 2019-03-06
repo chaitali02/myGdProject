@@ -779,30 +779,31 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 
 	
 	
-	public HttpServletResponse download(String execUUID, String execVersion, String format, String download, int offset,
-			int limit, HttpServletResponse response, int rowLimit, String sortBy,String type, String order, String requestId,
-			RunMode runMode) throws Exception {
-		
+	public HttpServletResponse download(String execUuid, String execVersion, String format, String download, int offset,
+			int limit, HttpServletResponse response, int rowLimit, String sortBy, String type, String order,
+			String requestId, RunMode runMode) throws Exception {
+
 		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
-		if(rowLimit > maxRows) {
-			logger.error("Requested rows exceeded the limit of "+maxRows);
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Requested rows exceeded the limit of "+maxRows, null);
-			throw new RuntimeException("Requested rows exceeded the limit of "+maxRows);
+		if (rowLimit > maxRows) {
+			logger.error("Requested rows exceeded the limit of " + maxRows);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
+					"Requested rows exceeded the limit of " + maxRows, null);
+			throw new RuntimeException("Requested rows exceeded the limit of " + maxRows);
 		}
-		
-		if(type.equalsIgnoreCase(MetaType.predictExec.toString())) {
-			List<Map<String, Object>> results =getPredictResults(execUUID, execVersion, rowLimit);
-			response = commonServiceImpl.download(execUUID, execVersion, format, offset, limit, response, rowLimit, sortBy, order, requestId, runMode, results,MetaType.downloadExec,new MetaIdentifierHolder(new MetaIdentifier(MetaType.predict,execUUID,execVersion)));
-		
-		}else {
-		List<Map<String, Object>> results = getSimulateResults(execUUID, execVersion, rowLimit);
-		response = commonServiceImpl.download(execUUID, execVersion, format, offset, limit, response, rowLimit, sortBy, order, requestId, runMode, results,MetaType.downloadExec,new MetaIdentifierHolder(new MetaIdentifier(MetaType.simulate,execUUID,execVersion)));
+
+		if (type.equalsIgnoreCase(MetaType.predictExec.toString())) {
+			List<Map<String, Object>> results = getPredictResults(execUuid, execVersion, rowLimit);
+			response = commonServiceImpl.download(format, response, runMode, results,
+					new MetaIdentifierHolder(new MetaIdentifier(MetaType.predictExec, execUuid, execVersion)));
+		} else {
+			List<Map<String, Object>> results = getSimulateResults(execUuid, execVersion, rowLimit);
+			response = commonServiceImpl.download(format, response, runMode, results,
+					new MetaIdentifierHolder(new MetaIdentifier(MetaType.simulateExec, execUuid, execVersion)));
 		}
 		return response;
 	}
 	
 	public Model getModelByTrainExec(String trainExecUUID, String trainExecVersion) throws JsonProcessingException {
-
 		TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(trainExecUUID, trainExecVersion,
 				MetaType.trainExec.toString());
 

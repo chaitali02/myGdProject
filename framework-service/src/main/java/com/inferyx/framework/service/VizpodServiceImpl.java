@@ -1368,21 +1368,23 @@ public class VizpodServiceImpl extends RuleTemplate {
 		
 		
 		
-	public HttpServletResponse download(String execUuid, String execVersion, String saveOnRefresh, String format, ExecParams execParams, String download, int offset,
-			int limit, HttpServletResponse response, int rowLimit, String sortBy, String order, String requestId,
-			RunMode runMode) throws Exception {
+	public HttpServletResponse download(String execUuid, String execVersion, String saveOnRefresh, String format,
+			ExecParams execParams, String download, int offset, int limit, HttpServletResponse response, int rowLimit,
+			String sortBy, String order, String requestId, RunMode runMode) throws Exception {
 
 		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
-		if(rowLimit > maxRows) {
-			logger.error("Requested rows exceeded the limit of "+maxRows);
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Requested rows exceeded the limit of "+maxRows, null);
-			throw new RuntimeException("Requested rows exceeded the limit of "+maxRows);
+		if (rowLimit > maxRows) {
+			logger.error("Requested rows exceeded the limit of " + maxRows);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
+					"Requested rows exceeded the limit of " + maxRows, null);
+			throw new RuntimeException("Requested rows exceeded the limit of " + maxRows);
 		}
-		
-		List<Map<String, Object>> results = getVizpodResults(execUuid, execVersion, saveOnRefresh, rowLimit, offset, limit, sortBy, order, requestId, runMode);
-		response = commonServiceImpl.download(execUuid, execVersion, format, offset, limit, response, rowLimit, sortBy, order, requestId, runMode, results,MetaType.downloadExec,new MetaIdentifierHolder(new MetaIdentifier(MetaType.vizpod,execUuid,execVersion)));
-		return response;
 
+		List<Map<String, Object>> results = getVizpodResults(execUuid, execVersion, saveOnRefresh, rowLimit, offset,
+				limit, sortBy, order, requestId, runMode);
+		response = commonServiceImpl.download(format, response, runMode, results,
+				new MetaIdentifierHolder(new MetaIdentifier(MetaType.vizExec, execUuid, execVersion)));
+		return response;
 	}
 
 	/**

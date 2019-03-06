@@ -4268,19 +4268,19 @@ public class ModelServiceImpl {
 		}
 	}
 
-	public HttpServletResponse download(String trainExecUuid, String trainExecVersion, String format, int rows, String setType, RunMode runMode, HttpServletResponse response) throws Exception {
+	public HttpServletResponse download(String trainExecUuid, String trainExecVersion, String format, int rows,
+			String setType, RunMode runMode, HttpServletResponse response) throws Exception {
 		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
-		if(rows > maxRows) {
-			logger.error("Requested rows exceeded the limit of "+maxRows);
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Requested rows exceeded the limit of "+maxRows, null);
-			throw new RuntimeException("Requested rows exceeded the limit of "+maxRows);
-		}		
-		
+		if (rows > maxRows) {
+			logger.error("Requested rows exceeded the limit of " + maxRows);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
+					"Requested rows exceeded the limit of " + maxRows, null);
+			throw new RuntimeException("Requested rows exceeded the limit of " + maxRows);
+		}
+
 		List<Map<String, Object>> results = getTrainOrTestSet(trainExecUuid, trainExecVersion, setType);
-		response = commonServiceImpl.download(trainExecUuid, trainExecVersion, format
-				, 0, rows, response, 0, null, null, null
-				, runMode, results, MetaType.downloadExec
-				, new MetaIdentifierHolder(new MetaIdentifier(MetaType.trainExec, trainExecUuid, trainExecVersion)));
+		response = commonServiceImpl.download(format, response, runMode, results,
+				new MetaIdentifierHolder(new MetaIdentifier(MetaType.trainExec, trainExecUuid, trainExecVersion)));
 		return response;
 	}
 	

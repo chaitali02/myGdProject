@@ -351,7 +351,7 @@ public class ReportServiceImpl extends RuleTemplate {
 
 			datastoreServiceImpl.setRunMode(runMode);
 			List<Map<String, Object>> data = datastoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, limit, null, null);		
-			data = null;
+			
 			//checking whether data is available or not
 			if(data == null || (data != null && data.isEmpty())) {
 				data = new ArrayList<>();
@@ -372,8 +372,6 @@ public class ReportServiceImpl extends RuleTemplate {
 			
 			//writting as per provided format
 			if(format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
-//				data.addAll(data);
-//				data.addAll(data);
 				doc = pdfUtil.getPDFDocForReport(data, reportExec);
 				FileOutputStream fileOutPDF = new FileOutputStream(new File(filePathUrl));
 				doc.save(fileOutPDF);
@@ -388,7 +386,7 @@ public class ReportServiceImpl extends RuleTemplate {
 			DownloadExec downloadExec = new DownloadExec();
 			downloadExec.setBaseEntity();
 			downloadExec.setLocation(filePathUrl);
-			downloadExec.setDependsOn(datastore.getMetaId());
+			downloadExec.setDependsOn(datastore.getExecId());
 			commonServiceImpl.save(MetaType.downloadExec.toString(), downloadExec);
 		}
 		

@@ -1147,12 +1147,12 @@ public class DatapodServiceImpl {
 		}	
 	}
 
-	public HttpServletResponse download(String uuid, String version, String format, int offset,
+	public HttpServletResponse download(String datastoreUuid, String datastoreVersion, String format, int offset,
 			int limit, HttpServletResponse response, int rowLimit, String sortBy, String order, String requestId,
 			RunMode runMode) throws Exception {
 		datastoreServiceImpl.setRunMode(runMode);
-		DataStore ds = datastoreServiceImpl.findDataStoreByMeta(uuid, version);
-		if (ds == null) {
+		DataStore dataStore = datastoreServiceImpl.findDataStoreByMeta(datastoreUuid, datastoreVersion);
+		if (dataStore == null) {
 			logger.error("Datastore is not available for this datapod");
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Datastore is not available for this datapod", null);
 			throw new RuntimeException("Datastore is not available for this datapod");
@@ -1165,41 +1165,9 @@ public class DatapodServiceImpl {
 			throw new RuntimeException("Requested rows exceeded the limit of "+maxRows);
 		}
 		
-		List<Map<String, Object>> results = datastoreServiceImpl.getDatapodResults(ds.getUuid(), ds.getVersion(), null,
+		List<Map<String, Object>> results = datastoreServiceImpl.getDatapodResults(dataStore.getUuid(), dataStore.getVersion(), null,
 				0, rowLimit, response, rowLimit, null, null, null, runMode);
-		response = commonServiceImpl.download(uuid, version, format, offset, rowLimit, response, rowLimit, sortBy, order, requestId, runMode, results,MetaType.downloadExec,new MetaIdentifierHolder(new MetaIdentifier(MetaType.datapod,uuid,version)));
-		
-		/*
-		String downloadPath = Helper.getPropertyValue("framework.file.download.path");
-       DownloadExec downloadExec=new DownloadExec();
-       
-       downloadExec.setBaseEntity();
-       downloadExec.setLocation(downloadPath + "/" + downloadExec.getUuid() + "_" + downloadExec.getVersion() + ".xlsx");
-       downloadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.datapod,uuid,version)));
-		try {
-			FileOutputStream fileOut = null;
-			response.setContentType("application/xml charset=utf-16");
-			response.setHeader("Content-type", "application/xml");
-			HSSFWorkbook workbook = WorkbookUtil.getWorkbook(results);
-
-			downloadPath = Helper.getPropertyValue("framework.file.download.path");
-			response.addHeader("Content-Disposition", "attachment; filename=" + uuid + ".xlsx");
-			ServletOutputStream os = response.getOutputStream();
-			workbook.write(os);
-
-			fileOut = new FileOutputStream(downloadPath + "/" + downloadExec.getUuid() + "_" + downloadExec.getVersion() + ".xlsx");
-			workbook.write(fileOut);
-			os.write(workbook.getBytes());
-			commonServiceImpl.save(MetaType.datapod.toString(), downloadExec);
-			os.close();
-			fileOut.close();
-
-		} catch (IOException e1) {
-			e1.printStackTrace();
-			logger.info("exception caught while download file");
-			response.setStatus(300);
-        	throw new FileNotFoundException();
-		}*/
+		response = commonServiceImpl.download(format, response, runMode, results, dataStore.getExecId());
 		return response;
 
 	}
@@ -1445,9 +1413,9 @@ public class DatapodServiceImpl {
 		} else if(object instanceof Rule) {
 			return ruleOperator.generateSql((Rule) object, null, null, new HashSet<>(), null, runMode);
 		} else if(object instanceof Relation) {
-			MetaIdentifier dependsOn = ((Relation)object).getDependsOn().getRef();
-			Object relDependsOn = commonServiceImpl.getOneByUuidAndVersion(dependsOn.getUuid(), dependsOn.getVersion(), dependsOn.getType().toString(), "N");
-			String dependsOnSql = generateSqlByObject(relDependsOn, runMode);
+//			MetaIdentifier dependsOn = ((Relation)object).getDependsOn().getRef();
+//			Object relDependsOn = commonServiceImpl.getOneByUuidAndVersion(dependsOn.getUuid(), dependsOn.getVersion(), dependsOn.getType().toString(), "N");
+//			String dependsOnSql = generateSqlByObject(relDependsOn, runMode);
 			String relSql = relationOperator.generateSql((Relation)object, null, null, null, new HashSet<>(), runMode);
 			if(relSql != null && !relSql.isEmpty()) {
 				return "SELECT * FROM "+relSql;
