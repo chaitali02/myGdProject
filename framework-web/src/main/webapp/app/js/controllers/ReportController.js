@@ -644,9 +644,11 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 
 });//End ReportListController
 
-DatavisualizationModule.controller('ReportDetailController', function ($q, dagMetaDataService, $location, $http, $rootScope, $state, $scope, $stateParams, $cookieStore, $timeout, $filter, ReportSerivce, $sessionStorage, privilegeSvc, CommonService, CF_FILTER, CF_META_TYPES, CF_GRID) {
+DatavisualizationModule.controller('ReportDetailController', function ($q, dagMetaDataService, $location, $http, $rootScope, $state, $scope, $stateParams, $cookieStore, $timeout, $filter, ReportSerivce, $sessionStorage, privilegeSvc, CommonService, CF_FILTER, CF_META_TYPES, CF_GRID, CF_DOWNLOAD) {
 	$rootScope.isCommentVeiwPrivlage = true;
 	$scope.paramTypes = ["paramlist", "paramset"];
+	$scope.allFormats = CF_DOWNLOAD.formate;
+
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
 		$scope.isversionEnable = false;
@@ -1063,6 +1065,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		$scope.report = {};
 		$scope.report.locked = "N";
 		$scope.report.limit = -1;
+		$scope.report.format = CF_DOWNLOAD.formate[0];
 		$scope.report.senderInfo = {};
 		$scope.report.senderInfo.sendAttachment = "Y";
 		$scope.report.senderInfo.notifyOnSuccess = "Y";
@@ -1787,7 +1790,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		reportJson.headerAlign = $scope.report.headerAlign;
 		reportJson.footerAlign = $scope.report.footerAlign;
 		reportJson.limit = $scope.report.limit;
-
+        reportJson.format=$scope.report.format;
 		var tagArray = [];
 		if ($scope.tags != null) {
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
