@@ -3068,10 +3068,12 @@ public class CommonServiceImpl<T> {
 			logger.info("Nothing in statusList. Cannot go to READY status ... ");
 			return null;
 		}
-		if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.RESUME, new Date()))
+		if ((Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.RESUME, new Date()))
 				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.FAILED, new Date()))
-				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.KILLED, new Date())) 
-				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.INITIALIZING, new Date()))) {
+				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.KILLED, new Date()))) 
+				&& Helper.isStatusPresent(new Status(Status.Stage.READY, new Date()), statusList)) {
+			statusList.add(new Status(Status.Stage.READY, new Date()));
+		}else if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.INITIALIZING, new Date()))) {
 			statusList.add(new Status(Status.Stage.READY, new Date()));
 		} else {
 			logger.info("Latest Status is not in RESUME/FAILED/KILLED/INITIALIZING. Cannot go to READY status. Exiting...");
