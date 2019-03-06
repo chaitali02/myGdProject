@@ -521,7 +521,7 @@ public class LoadServiceImpl {
 			
 			synchronized (loadExec.getUuid()) {
 				loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.PENDING);
-				loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.INITIALIZING);
+				loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.STARTING);
 				loadExec = (LoadExec) commonServiceImpl.setMetaStatus(loadExec, MetaType.loadExec, Status.Stage.READY);
 			}
 			// loadExec.setExec(dqOperator.generateSql(dataQual, datapodList, dataQualExec,

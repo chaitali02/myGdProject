@@ -62,7 +62,7 @@ public class GraphOperator implements IOperator {
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		//commonServiceImpl.setMetaStatus(baseExec, MetaType.graphExec.toString(),null);
 		commonServiceImpl.setMetaStatus(baseExec, MetaType.graphExec,
-				Status.Stage.INITIALIZING);
+				Status.Stage.STARTING);
 		// Fetch graphPod - START
 		Graphpod graphPod = (Graphpod) commonServiceImpl.getOneByUuidAndVersion(baseExec.getDependsOn().getRef().getUuid(), baseExec.getDependsOn().getRef().getVersion(), MetaType.graphpod.toString());
 		// Fetch graphPod - END

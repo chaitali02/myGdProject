@@ -613,7 +613,7 @@ public class DQOperator implements IParsable {
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		DataQualExec dataQualExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(baseExec.getUuid(), baseExec.getVersion(), MetaType.dqExec.toString(), "N");
 		synchronized (dataQualExec.getUuid()) {
-			commonServiceImpl.setMetaStatus(dataQualExec, MetaType.dqExec, Status.Stage.INITIALIZING);
+			commonServiceImpl.setMetaStatus(dataQualExec, MetaType.dqExec, Status.Stage.STARTING);
 		}
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
 		DataQual dataQual = (DataQual) commonServiceImpl.getOneByUuidAndVersion(baseExec.getDependsOn().getRef().getUuid(), baseExec.getDependsOn().getRef().getVersion(), MetaType.dq.toString(), "N");

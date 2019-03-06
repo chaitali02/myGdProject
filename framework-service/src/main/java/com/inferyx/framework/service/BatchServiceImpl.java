@@ -97,7 +97,7 @@ public class BatchServiceImpl {
 			batchExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 	
 			batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.PENDING);
-			batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.INITIALIZING);
+			batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.STARTING);
 			batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.READY);
 
 		} catch (Exception e) {

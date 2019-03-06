@@ -133,7 +133,7 @@ public class ReconServiceImpl extends RuleTemplate {
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
 		ReconExec reconExec = (ReconExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.reconExec.toString());
 		synchronized (execUuid) {
-			commonServiceImpl.setMetaStatus(reconExec, MetaType.reconExec, Status.Stage.INITIALIZING);
+			commonServiceImpl.setMetaStatus(reconExec, MetaType.reconExec, Status.Stage.STARTING);
 		}
 		recon = (Recon) commonServiceImpl.getOneByUuidAndVersion(reconExec.getDependsOn().getRef().getUuid(), reconExec.getDependsOn().getRef().getVersion(), MetaType.recon.toString());
 		try {

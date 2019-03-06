@@ -686,7 +686,7 @@ public class Helper {
 		} else if (latestStatus.equals(Status.Stage.RUNNING) 
 					|| latestStatus.equals(Status.Stage.PENDING) 
 					|| latestStatus.equals(Status.Stage.TERMINATING) 
-					|| latestStatus.equals(Status.Stage.INITIALIZING) 
+					|| latestStatus.equals(Status.Stage.STARTING) 
 					|| latestStatus.equals(Status.Stage.READY)) {
 			statusHolder.setCompleted(Boolean.FALSE);
 		}
@@ -709,6 +709,8 @@ public class Helper {
 				case "Resume": return Status.Stage.RESUME;
 				case "suspend": return Status.Stage.Suspend;
 				case "terminating": return Status.Stage.TERMINATING;
+				case "ready": return Status.Stage.READY;
+				case "starting": return Status.Stage.STARTING;
 				default : return null;
 			}
 		}else

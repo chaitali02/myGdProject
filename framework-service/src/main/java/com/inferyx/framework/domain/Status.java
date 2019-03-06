@@ -16,7 +16,7 @@ public class Status implements Comparable<Status>{
 
   public enum Stage {
 		PENDING("PENDING"),
-		INITIALIZING("INITIALIZING"),
+		STARTING("STARTING"),
 		READY("READY"),
 		RUNNING("RUNNING"),
 		COMPLETED("COMPLETED"), 
