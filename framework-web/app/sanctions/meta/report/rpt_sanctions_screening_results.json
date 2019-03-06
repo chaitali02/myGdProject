@@ -353,6 +353,7 @@
       }
     }
   ],
+ "format":"EXCEL",
 "senderInfo" : {
         "emailTo" : [ 
             "jkumar@gtpltech.com"

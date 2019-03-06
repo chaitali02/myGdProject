@@ -611,7 +611,15 @@
           result.duration="-NA-"
           if(type =="reportExec" ){
             result.numRows=response[i].numRows;
-            result.sizeMB=response[i].sizeMB!=null?response[i].sizeMB >1?"> 1":response[i].sizeMB:"-NA-";
+            if(response[i].sizeMB!=null){
+              if(response[i].sizeMB < 1){
+                result.sizeMB=" > 1"
+              }else{
+                result.sizeMB=response[i].sizeMB
+              }
+            }else{
+              result.sizeMB="-NA-"
+            }
           }
           if(response[i].status !=null && response[i].status.length > 1){
             for(var j=0;j<response[i].status.length;j++){

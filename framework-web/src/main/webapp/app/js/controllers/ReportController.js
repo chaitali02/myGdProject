@@ -2468,7 +2468,7 @@ DatavisualizationModule.controller("ReportArchivesSearchController", function ($
 			headerCellClass: 'text-center'
 		},
 		{
-			displayName: 'size MB',
+			displayName: 'Size MB',
 			name: 'sizeMB',
 			cellClass: 'text-center',
 			maxWidth:140,
