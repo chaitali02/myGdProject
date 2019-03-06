@@ -75,12 +75,12 @@ public class PDFUtil {
 		contentStream.setFont(PDType1Font.HELVETICA_BOLD, 10.0f);
 		
 		//writting other contents
-		PDStreamUtils.write(contentStream, "Report Name: ".concat(report.getName()).concat(": "),
+		PDStreamUtils.write(contentStream, "Report Name".concat(": ").concat(report.getName()),
 				(PDFont) PDType1Font.HELVETICA, 10.0f, margin, y, Color.black);
 		y -= 15.0f;
 		
 		PDStreamUtils.write(contentStream,
-				"Report Description".concat(report.getDesc() != null ? report.getDesc() : "").concat(": "),
+				"Report Description".concat(": ").concat(report.getDesc() != null ? report.getDesc() : ""),
 				(PDFont) PDType1Font.HELVETICA, 10.0f, margin, y, Color.black);
 		y -= 15.0f;
 
