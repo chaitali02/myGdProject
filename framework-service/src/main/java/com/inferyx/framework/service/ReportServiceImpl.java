@@ -519,8 +519,12 @@ public class ReportServiceImpl extends RuleTemplate {
 		String appUuid = sessionHelper.getSessionContext().getAppInfo().getRef().getUuid();
 
 		String contextPath = Helper.getPropertyValue("framework.webserver.contextpath");
-		contextPath = contextPath.startsWith("/") ? contextPath : "/".concat(contextPath);
-		contextPath = contextPath.endsWith("/") ? contextPath.substring(contextPath.lastIndexOf("/")) : contextPath;
+		if(contextPath.startsWith("")) {
+			contextPath = "";
+		} else {
+			contextPath = contextPath.startsWith("/") ? contextPath : "/".concat(contextPath);
+			contextPath = contextPath.endsWith("/") ? contextPath.substring(contextPath.lastIndexOf("/")) : contextPath;	
+		}
 		
 		String resultUrl = Helper.getPropertyValue("framework.url.report.result.success");
 		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.webserver.host"),
@@ -566,8 +570,12 @@ public class ReportServiceImpl extends RuleTemplate {
 		String appUuid = sessionHelper.getSessionContext().getAppInfo().getRef().getUuid();
 
 		String contextPath = Helper.getPropertyValue("framework.webserver.contextpath");
-		contextPath = contextPath.startsWith("/") ? contextPath : "/".concat(contextPath);
-		contextPath = contextPath.endsWith("/") ? contextPath.substring(contextPath.lastIndexOf("/")) : contextPath;
+		if(contextPath.startsWith("")) {
+			contextPath = "";
+		} else {
+			contextPath = contextPath.startsWith("/") ? contextPath : "/".concat(contextPath);
+			contextPath = contextPath.endsWith("/") ? contextPath.substring(contextPath.lastIndexOf("/")) : contextPath;	
+		}
 		
 		String resultUrl = Helper.getPropertyValue("framework.url.report.result.failure");
 		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.webserver.host"),

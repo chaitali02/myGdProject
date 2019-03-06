@@ -454,8 +454,12 @@ public class BatchServiceImpl {
 		String appUuid = sessionHelper.getSessionContext().getAppInfo().getRef().getUuid();
 		
 		String contextPath = Helper.getPropertyValue("framework.webserver.contextpath");
-		contextPath = contextPath.startsWith("/") ? contextPath : "/".concat(contextPath);
-		contextPath = contextPath.endsWith("/") ? contextPath.substring(contextPath.lastIndexOf("/")) : contextPath;
+		if(contextPath.startsWith("")) {
+			contextPath = "";
+		} else {
+			contextPath = contextPath.startsWith("/") ? contextPath : "/".concat(contextPath);
+			contextPath = contextPath.endsWith("/") ? contextPath.substring(contextPath.lastIndexOf("/")) : contextPath;	
+		}
 		
 		String resultUrl = Helper.getPropertyValue("framework.url.batch.result");
 		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.webserver.host"),
@@ -490,8 +494,12 @@ public class BatchServiceImpl {
 		String appUuid = sessionHelper.getSessionContext().getAppInfo().getRef().getUuid();
 
 		String contextPath = Helper.getPropertyValue("framework.webserver.contextpath");
-		contextPath = contextPath.startsWith("/") ? contextPath : "/".concat(contextPath);
-		contextPath = contextPath.endsWith("/") ? contextPath.substring(contextPath.lastIndexOf("/")) : contextPath;
+		if(contextPath.startsWith("")) {
+			contextPath = "";
+		} else {
+			contextPath = contextPath.startsWith("/") ? contextPath : "/".concat(contextPath);
+			contextPath = contextPath.endsWith("/") ? contextPath.substring(contextPath.lastIndexOf("/")) : contextPath;	
+		}
 		
 		String resultUrl = Helper.getPropertyValue("framework.url.batch.result");
 		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.webserver.host"),

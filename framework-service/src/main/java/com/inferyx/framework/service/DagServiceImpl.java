@@ -92,7 +92,7 @@ import com.inferyx.framework.register.GraphRegister;
 public class DagServiceImpl {
 	
 	private static final String GET = "get";
-	private static final String SET = "set";
+//	private static final String SET = "set";
 
 	@Autowired
 	GraphRegister<?> registerGraph;
@@ -1646,8 +1646,12 @@ public class DagServiceImpl {
 		String appUuid = sessionHelper.getSessionContext().getAppInfo().getRef().getUuid();
 
 		String contextPath = Helper.getPropertyValue("framework.webserver.contextpath");
-		contextPath = contextPath.startsWith("/") ? contextPath : "/".concat(contextPath);
-		contextPath = contextPath.endsWith("/") ? contextPath.substring(contextPath.lastIndexOf("/")) : contextPath;
+		if(contextPath.startsWith("")) {
+			contextPath = "";
+		} else {
+			contextPath = contextPath.startsWith("/") ? contextPath : "/".concat(contextPath);
+			contextPath = contextPath.endsWith("/") ? contextPath.substring(contextPath.lastIndexOf("/")) : contextPath;	
+		}
 		
 		String resultUrl = Helper.getPropertyValue("framework.url.dag.result");
 		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.webserver.host"),
@@ -1679,8 +1683,12 @@ public class DagServiceImpl {
 		String appUuid = sessionHelper.getSessionContext().getAppInfo().getRef().getUuid();
 
 		String contextPath = Helper.getPropertyValue("framework.webserver.contextpath");
-		contextPath = contextPath.startsWith("/") ? contextPath : "/".concat(contextPath);
-		contextPath = contextPath.endsWith("/") ? contextPath.substring(contextPath.lastIndexOf("/")) : contextPath;
+		if(contextPath.startsWith("")) {
+			contextPath = "";
+		} else {
+			contextPath = contextPath.startsWith("/") ? contextPath : "/".concat(contextPath);
+			contextPath = contextPath.endsWith("/") ? contextPath.substring(contextPath.lastIndexOf("/")) : contextPath;	
+		}
 		
 		String resultUrl = Helper.getPropertyValue("framework.url.dag.result");
 		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.webserver.host"),

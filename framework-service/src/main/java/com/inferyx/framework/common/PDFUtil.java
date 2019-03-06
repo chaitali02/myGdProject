@@ -177,6 +177,18 @@ public class PDFUtil {
 				Cell<PDPage> cell = tableRow.createCell(25, row.get(colName).toString());
 			}
 		}
+	    
+//	    List<List> tempList = new ArrayList<>();
+//	    for(final Map<String, Object> row : resultList) {
+////	    	Row<PDPage> tableRow = table.createRow(12);
+////			for(String colName : row.keySet()) {
+////				Cell<PDPage> cell = tableRow.createCell(25, row.get(colName).toString());
+////			}
+//			List<Object> rowList = new ArrayList<>(row.values());
+//			tempList.add(rowList);
+//		}
+//	    DataTable t = new DataTable(table, pdfPage);
+//		t.addListToTable(tempList, DataTable.HASHEADER);
 
 	    table.draw();
 		contentStream.close();
