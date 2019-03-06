@@ -1,7 +1,6 @@
 {
-  "id": "5c8010183749ab4ea7c836a1",
   "uuid": "89b89a8e-9fc2-4e7a-aaee-ff474f7c1a1a",
-  "version": "1551896600",
+  "version": "1551914316",
   "name": "ds_account_summary_monthly",
   "desc": null,
   "createdBy": {
@@ -13,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Wed Mar 06 23:53:20 IST 2019",
+  "createdOn": "Wed Mar 06 18:18:36 EST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -39,8 +38,71 @@
     },
     "value": null
   },
-  "filterInfo": null,
-   "attributeInfo": [
+  "filterInfo": [
+    {
+      "display_seq": "0",
+      "logicalOperator": "",
+      "operator": ">=",
+      "operand": [
+        {
+          "ref": {
+            "type": "datapod",
+            "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+            "version": null,
+            "name": "fact_transaction_journal"
+          },
+          "attributeId": 5,
+          "value": null,
+          "attributeName": "transaction_date",
+          "attributeType": null
+        },
+        {
+          "ref": {
+            "type": "formula",
+            "uuid": "70665ca3-143c-4f4b-8a35-7a5abac8ed55",
+            "version": null,
+            "name": "fm_lookback_monthly"
+          },
+          "attributeId": null,
+          "value": null,
+          "attributeName": null,
+          "attributeType": null
+        }
+      ]
+    },
+    {
+      "display_seq": "1",
+      "logicalOperator": "AND",
+      "operator": "<=",
+      "operand": [
+        {
+          "ref": {
+            "type": "datapod",
+            "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+            "version": null,
+            "name": "fact_transaction_journal"
+          },
+          "attributeId": 5,
+          "value": null,
+          "attributeName": "transaction_date",
+          "attributeType": null
+        },
+        {
+          "ref": {
+            "type": "paramlist",
+            "uuid": "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z",
+            "version": null,
+            "name": "paramlist_aml_app"
+          },
+          "attributeId": 3,
+          "value": null,
+          "attributeName": "last_90days_start_date",
+          "attributeType": null
+        }
+      ]
+    }
+  ],
+  "attributeInfo": [
     {
       "attrSourceId": "0",
       "attrDisplaySeq": "0",
@@ -131,7 +193,7 @@
           "type": "formula",
           "uuid": "1395d517-a5c3-438c-b389-fa7d1143f36c",
           "version": null,
-          "name": "fm_in_wire_transfers_trans_count"
+          "name": "fm_month_num"
         },
         "value": null,
         "attrId": null,
