@@ -1,6 +1,6 @@
 {
   "uuid": "996ff741-fe09-4197-ba24-d1ac3b8b1312",
-  "version": "1533935781",
+  "version": "1551857299",
   "name": "viz_portfolio_loss_distribution_histogram",
   "desc": null,
   "createdBy": {
@@ -12,10 +12,10 @@
     },
     "value": null
   },
-    "createdOn" : ISODate("2018-06-11T12:47:30.806Z"),
+  "createdOn": "Wed Mar 06 12:58:19 IST 2019",
   "tags": [],
-  "active" : "Y",
-  "locked" : "N",
+  "active": "Y",
+  "locked": "N",
   "published": "N",
   "appInfo": [
     {
@@ -28,6 +28,7 @@
       "value": null
     }
   ],
+  "publicFlag": "N",
   "title": null,
   "source": {
     "ref": {
@@ -55,7 +56,56 @@
     }
   ],
   "dimension": [],
-  "detailAttr": [],
+  "detailAttr": [
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "2b9b0cb9-0fa7-4e98-a049-afd5bb0f6d7d",
+        "version": null,
+        "name": "portfolio_loss_histogram"
+      },
+      "attributeId": 0,
+      "function": null,
+      "value": null,
+      "attributeName": "reporting_date"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "2b9b0cb9-0fa7-4e98-a049-afd5bb0f6d7d",
+        "version": null,
+        "name": "portfolio_loss_histogram"
+      },
+      "attributeId": 1,
+      "function": null,
+      "value": null,
+      "attributeName": "bucket"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "2b9b0cb9-0fa7-4e98-a049-afd5bb0f6d7d",
+        "version": null,
+        "name": "portfolio_loss_histogram"
+      },
+      "attributeId": 2,
+      "function": null,
+      "value": null,
+      "attributeName": "frequency"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "2b9b0cb9-0fa7-4e98-a049-afd5bb0f6d7d",
+        "version": null,
+        "name": "portfolio_loss_histogram"
+      },
+      "attributeId": 3,
+      "function": null,
+      "value": null,
+      "attributeName": "version"
+    }
+  ],
   "filterInfo": [],
   "groups": [],
   "values": [
@@ -71,5 +121,7 @@
       "value": null,
       "attributeName": "frequency"
     }
-  ]
+  ],
+  "sortBy": [],
+  "sortOrder": null
 }

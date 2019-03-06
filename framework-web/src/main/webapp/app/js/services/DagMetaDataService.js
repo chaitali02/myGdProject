@@ -31,30 +31,22 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
   obj.statusDefs={
     'PENDING':{
       name : 'PENDING',
-      caption:'PENDING',
+      caption:'Pending',
       color :'#6c757d',//'#659be0',
       iconPath : 'assets/layouts/layout/img/new_status/PENDING.svg',
-      jointWidth:"80px"
-    },
-    'PENDING':{
-      name : 'PENDING',
-      caption:'PENDING',
-      color :'#6c757d',//'#659be0',
-      iconPath : 'assets/layouts/layout/img/new_status/PENDING.svg',
-      jointWidth:"80px"
-
+      jointWidth:"70px"
     },
     'COMPLETED':{
       name : 'COMPLETED',
-      caption:'COMPLETED',
+      caption:'Completed',
       color :'#34bfa3',//'#36c6d3',
       iconPath : 'assets/layouts/layout/img/new_status/COMPLETED.svg',
-      jointWidth:"98px"
+      jointWidth:"90px"
 
     },
     'KILLED':{
       name : 'KILLED',
-      caption:'KILLED',
+      caption:'Killed',
       color :'#dc3545',//'#ed6b75',
       iconPath : 'assets/layouts/layout/img/new_status/KILLED.svg',
       jointWidth:"58px"
@@ -62,15 +54,15 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
     },
     'FAILED':{
       name : 'FAILED',
-      caption:'FAILED',
+      caption:'Failed',
       color :'#dc3545',//'#ed6b75',
       iconPath : 'assets/layouts/layout/img/new_status/FAILED.svg',
-      jointWidth:"58px"
+      jointWidth:"55px"
 
     },
     'RESUME':{
       name : 'RESUME',
-      caption:'RESUME',
+      caption:'Resume',
       color :'#006df0',
       iconPath : 'assets/layouts/layout/img/new_status/RESUME.svg',
       jointWidth:"68px"
@@ -78,50 +70,43 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
     },
     'TERMINATING':{
       name : 'TERMINATING',
-      caption:'TERMINATING',
+      caption:'Terminating',
       color : '#f4516c',//'#FFCCCC',
       iconPath : 'assets/layouts/layout/img/new_status/TERMINATING.svg',
-      jointWidth:"110px"
+      jointWidth:"100px"
 
     },
     'PAUSE':{
       name : 'PAUSE',
-      caption:'PAUSE',
+      caption:'Pause',
       color :'#36a3f7',//'#ffda44',
       iconPath : 'assets/layouts/layout/img/new_status/PAUSE.svg',
-      jointWidth:"68px"
+      jointWidth:"55px"
 
     },
     'RUNNING':{
       name : 'RUNNING',
-      caption:'RUNNING',
+      caption:'Running',
       color :'#ffc107',//'#F1C40F',
       iconPath : 'assets/layouts/layout/img/new_status/RUNNING.svg',
-      jointWidth:"80px"
+      jointWidth:"70px"
 
     },
-    'RUNNING':{
-      name : 'RUNNING',
-      caption:'RUNNING',
-      color :'#ffc107',//'#F1C40F',
-      iconPath : 'assets/layouts/layout/img/new_status/RUNNING.svg',
-      jointWidth:"80px"
-
-    },
+  
     'INITIALIZING':{
       name : 'INITIALIZING',
-      caption:'INITIALIZING',
+      caption:'Initializing',
       color :'#ffc107',//'#F1C40F',
       iconPath : 'assets/layouts/layout/img/new_status/INITIALIZING.svg',
-      jointWidth:"95px"
+      jointWidth:"85px"
 
     },
     'READY':{
       name : 'READY',
-      caption:'READY',
+      caption:'Ready',
       color :'#36a3f7',//'#659be0',
       iconPath : 'assets/layouts/layout/img/new_status/READY.svg',
-      jointWidth:"58px"
+      jointWidth:"55px"
 
     },
     'active':{
@@ -340,7 +325,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       headerCellClass: 'text-center',
       maxWidth: 100,
       //cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><img title="{{row.entity.status}}" ng-src=\"{{grid.appScope.path[row.entity.status].iconPath}}\" border=\"0\" width=\"15\">'
-      cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div class="label-sm label-success" style=" width: 97%;font-size: 13px;padding: 2px;color: white;margin: 0 auto;font-weight: 300;background-color:{{grid.appScope.path[row.entity.status].color}} !important" ng-style="">{{row.entity.status}}</div></div>'
+      cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div class="label-sm label-success" style=" width: 88%;font-size: 13px;padding: 2px;color: white;margin: 0 auto;font-weight: 300;background-color:{{grid.appScope.path[row.entity.status].color}} !important" ng-style="">{{grid.appScope.path[row.entity.status].caption}}</div></div>'
 
 
     }
@@ -2314,10 +2299,10 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
           "xlink:href": "assets/layouts/layout/img/delete.png"
       },
       magnet:true,
-      text: { text: 'Default Element',y: '60px', 'font-size': 10, style: { 'text-shadow': '1px 1px 1px lightgray' } },
+      ".label": { text: 'Default Element',y: '60px', 'font-size': 10, style: { 'text-shadow': '1px 1px 1px lightgray' } },
       '.statusText': {
         x:"55", y:"-10",height:"25px", width:"25px",'font-size': 15,
-        fill:"white"
+        fill:"white",ext: 'Default Element',style: { 'text-shadow': '1px 1px 1px lightgray' } 
       },
     }
   };

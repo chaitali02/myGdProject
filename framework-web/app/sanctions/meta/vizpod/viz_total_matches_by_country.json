@@ -1,6 +1,6 @@
 {
   "uuid": "0af6129d-8f73-46c4-a33e-51d88030a32e",
-  "version": "1547586537",
+  "version": "1551858179",
   "name": "viz_total_matches_by_country",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Tue Jan 15 16:08:57 EST 2019",
+  "createdOn": "Wed Mar 06 13:12:59 IST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -28,6 +28,7 @@
       "value": null
     }
   ],
+  "publicFlag": "N",
   "title": null,
   "source": {
     "ref": {
@@ -55,7 +56,608 @@
     }
   ],
   "dimension": [],
-  "detailAttr": [],
+  "detailAttr": [
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 0,
+      "function": null,
+      "value": null,
+      "attributeName": "transaction_id"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 1,
+      "function": null,
+      "value": null,
+      "attributeName": "account_id"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 2,
+      "function": null,
+      "value": null,
+      "attributeName": "customer_id"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 3,
+      "function": null,
+      "value": null,
+      "attributeName": "transaction_type_code"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 4,
+      "function": null,
+      "value": null,
+      "attributeName": "transaction_date"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 5,
+      "function": null,
+      "value": null,
+      "attributeName": "transaction_country"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 6,
+      "function": null,
+      "value": null,
+      "attributeName": "sender_country"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 7,
+      "function": null,
+      "value": null,
+      "attributeName": "reciever_country"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 8,
+      "function": null,
+      "value": null,
+      "attributeName": "amount_usd"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 9,
+      "function": null,
+      "value": null,
+      "attributeName": "sender_name"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 10,
+      "function": null,
+      "value": null,
+      "attributeName": "reciever_name"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 11,
+      "function": null,
+      "value": null,
+      "attributeName": "sender_address"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 12,
+      "function": null,
+      "value": null,
+      "attributeName": "reciever_address"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 13,
+      "function": null,
+      "value": null,
+      "attributeName": "ent_num_prim"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 14,
+      "function": null,
+      "value": null,
+      "attributeName": "sdn_name"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 15,
+      "function": null,
+      "value": null,
+      "attributeName": "sdn_type"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 16,
+      "function": null,
+      "value": null,
+      "attributeName": "program"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 17,
+      "function": null,
+      "value": null,
+      "attributeName": "title"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 18,
+      "function": null,
+      "value": null,
+      "attributeName": "call_sign"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 19,
+      "function": null,
+      "value": null,
+      "attributeName": "vess_type"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 20,
+      "function": null,
+      "value": null,
+      "attributeName": "tonnage"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 21,
+      "function": null,
+      "value": null,
+      "attributeName": "grt"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 22,
+      "function": null,
+      "value": null,
+      "attributeName": "vess_flag"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 23,
+      "function": null,
+      "value": null,
+      "attributeName": "vess_owner"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 24,
+      "function": null,
+      "value": null,
+      "attributeName": "remarks"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 25,
+      "function": null,
+      "value": null,
+      "attributeName": "ent_num_alt"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 26,
+      "function": null,
+      "value": null,
+      "attributeName": "alt_num"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 27,
+      "function": null,
+      "value": null,
+      "attributeName": "alt_type"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 28,
+      "function": null,
+      "value": null,
+      "attributeName": "alt_name"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 29,
+      "function": null,
+      "value": null,
+      "attributeName": "alt_remarks"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 30,
+      "function": null,
+      "value": null,
+      "attributeName": "ent_num_add"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 31,
+      "function": null,
+      "value": null,
+      "attributeName": "add_num"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 32,
+      "function": null,
+      "value": null,
+      "attributeName": "address1"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 33,
+      "function": null,
+      "value": null,
+      "attributeName": "address2"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 34,
+      "function": null,
+      "value": null,
+      "attributeName": "country"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 35,
+      "function": null,
+      "value": null,
+      "attributeName": "add_remarks"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 36,
+      "function": null,
+      "value": null,
+      "attributeName": "version"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 37,
+      "function": null,
+      "value": null,
+      "attributeName": "sender_name_sdn_name_lev_score"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 38,
+      "function": null,
+      "value": null,
+      "attributeName": "sender_name_alt_name_lev_score"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 39,
+      "function": null,
+      "value": null,
+      "attributeName": "sender_addr_sdn_addr_lev_score"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 40,
+      "function": null,
+      "value": null,
+      "attributeName": "reciever_name_sdn_name_lev_score"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 41,
+      "function": null,
+      "value": null,
+      "attributeName": "reciever_name_alt_name_lev_score"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 42,
+      "function": null,
+      "value": null,
+      "attributeName": "reciever_addr_sdn_addr_lev_score"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 43,
+      "function": null,
+      "value": null,
+      "attributeName": "sdn_full_address"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 44,
+      "function": null,
+      "value": null,
+      "attributeName": "sender_name_match"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 45,
+      "function": null,
+      "value": null,
+      "attributeName": "reciever_name_match"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 46,
+      "function": null,
+      "value": null,
+      "attributeName": "sender_address_name_match"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "d2d16643-87c4-4d30-aa57-a89893aaaa59",
+        "version": null,
+        "name": "ds_sanctions_screening_matches"
+      },
+      "attributeId": 47,
+      "function": null,
+      "value": null,
+      "attributeName": "reciever_address_name_match"
+    },
+    {
+      "ref": {
+        "type": "formula",
+        "uuid": "5f55f88c-eade-4079-85b8-342b892f86eb",
+        "version": null,
+        "name": "fm_overall_match_flag"
+      },
+      "attributeId": null,
+      "function": null,
+      "value": null,
+      "attributeName": null
+    },
+    {
+      "ref": {
+        "type": "formula",
+        "uuid": "4e788d2b-2e89-4257-83c0-a33ab134daaa",
+        "version": null,
+        "name": "fm_match_count_by_country"
+      },
+      "attributeId": null,
+      "function": null,
+      "value": null,
+      "attributeName": null
+    }
+  ],
   "filterInfo": [],
   "groups": [],
   "values": [
@@ -71,5 +673,7 @@
       "value": null,
       "attributeName": null
     }
-  ]
+  ],
+  "sortBy": [],
+  "sortOrder": null
 }

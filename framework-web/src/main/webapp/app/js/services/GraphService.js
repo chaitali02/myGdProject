@@ -53,7 +53,7 @@ InferyxApp.factory('graphService',function(dagMetaDataService,setDataFactory){
                 'element-id' : 'dag_0',
               },
               //dag.name
-              text: { text:'Start',y:'60px','font-size': 10, style: { 'text-shadow': '1px 1px 1px lightgray;','text-anchor': 'start'} }
+              ".label": { text:'Start',y:'60px','font-size': 10, style: { 'text-shadow': '1px 1px 1px lightgray;','text-anchor': 'start'} }
           }
         })
       ));
@@ -105,7 +105,7 @@ InferyxApp.factory('graphService',function(dagMetaDataService,setDataFactory){
                 "active":true,
                 "model-data": JSON.stringify({name:'stage',uuid:"stage_0",version:"N/a",isTemplate:true})
               },
-                text: { text: 'stage'}
+              ".label": { text: 'stage'}
             }
           })
         ));
@@ -138,7 +138,7 @@ InferyxApp.factory('graphService',function(dagMetaDataService,setDataFactory){
                     "element-id": stage.stageId,
                     "active":true
                   },
-                  text: { text: stage.name}
+                  ".label": { text: stage.name}
               }
             })
           ));
@@ -157,7 +157,7 @@ InferyxApp.factory('graphService',function(dagMetaDataService,setDataFactory){
                     "element-id": stage.stageId,
                     "active":!isTemplate
                   },
-                  text: { text: stage.name}
+                  ".label": { text: stage.name}
               }
             })
           ));
@@ -198,7 +198,7 @@ InferyxApp.factory('graphService',function(dagMetaDataService,setDataFactory){
                       '.status': {
                           'element-id' : task.taskId,
                       },
-                      text: { text: task.name}
+                      ".label": { text: task.name}
                   }
               })
             ));

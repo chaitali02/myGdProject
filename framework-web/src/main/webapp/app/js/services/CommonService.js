@@ -610,7 +610,7 @@
           result.duration="-NA-"
           if(response[i].status !=null && response[i].status.length > 1){
             for(var j=0;j<response[i].status.length;j++){
-              if(response[i].status[j].stage == "RUNNING"){
+              if(response[i].status[j].stage == "PENDING"){
                 result.startTime=$filter('date')(new Date(response[i].status[j].createdOn), "EEE MMM dd HH:mm:ss yyyy");
                 break;
               }

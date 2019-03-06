@@ -55,7 +55,36 @@
     }
   ],
   "dimension": [],
-  "detailAttr": [],
+  "detailAttr": [ 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "3c9fb2a0-68e9-4df9-a56b-7f7928b2465a"
+            },
+            "attributeId" : 0
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "3c9fb2a0-68e9-4df9-a56b-7f7928b2465a"
+            },
+            "attributeId" : 1
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "3c9fb2a0-68e9-4df9-a56b-7f7928b2465a"
+            },
+            "attributeId" : 2
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "3c9fb2a0-68e9-4df9-a56b-7f7928b2465a"
+            },
+            "attributeId" : 3
+        }
+    ],
   "filterInfo": [],
   "groups": [],
   "values": [
