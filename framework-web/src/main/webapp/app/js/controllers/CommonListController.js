@@ -240,6 +240,9 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       case 'mapexec':
         api = 'map';
         break;
+      case 'reportexec':
+        api = 'reprot';
+        break;
     }
     if (!api) {
       return
@@ -358,6 +361,9 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
         break;
       case 'graphexec':
         api = 'graphpod';
+        break;
+      case 'reportexec':
+        api = 'report';
         break;
     }
     if (!api) {

@@ -1519,7 +1519,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
     $('#downloadSample').modal("hide");
     $http({
       method: 'GET',
-      url: url + "vizpod/download?action=view&uuid=" + uuid + "&version=" + version + "&rows=" + $scope.download.rows+"&saveOnRefresh="+$scope.dashboardExecData.dashboard.saveOnRefresh,
+      url: url + "vizpod/download?action=view&uuid=" + uuid + "&version=" + version + "&rows=" + $scope.download.rows+"&saveOnRefresh="+$scope.dashboardExecData.dashboard.saveOnRefresh+"&format="+$scope.download.selectFormate,
       responseType: 'arraybuffer'
     }).success(function (data, status, headers) {
 

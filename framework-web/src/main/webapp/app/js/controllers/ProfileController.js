@@ -1503,7 +1503,7 @@ ProfileModule.controller('ResultProfileController', function ($http, dagMetaData
 		$('#downloadSample').modal("hide");
 		$http({
 			method: 'GET',
-			url: url + "profile/download?action=view&profileExecUUID=" + uuid + "&profileExecVersion=" + version + "&rows=" + $scope.download.rows,
+			url: url + "profile/download?action=view&profileExecUUID=" + uuid + "&profileExecVersion=" + version + "&rows=" + $scope.download.rows+"&format="+$scope.download.selectFormate,
 			responseType: 'arraybuffer'
 		}).success(function (data, status, headers) {
 			$scope.download.rows = CF_DOWNLOAD.framework_download_minrows;

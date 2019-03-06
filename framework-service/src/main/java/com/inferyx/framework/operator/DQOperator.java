@@ -611,21 +611,24 @@ public class DQOperator implements IParsable {
 
 	@Override
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
-		DataQualExec dataQualExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(baseExec.getUuid(), baseExec.getVersion(), MetaType.dqExec.toString());
+		DataQualExec dataQualExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(baseExec.getUuid(), baseExec.getVersion(), MetaType.dqExec.toString(), "N");
+		synchronized (dataQualExec.getUuid()) {
+			commonServiceImpl.setMetaStatus(dataQualExec, MetaType.dqExec, Status.Stage.INITIALIZING);
+		}
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
-		DataQual dataQual = (DataQual) commonServiceImpl.getOneByUuidAndVersion(baseExec.getDependsOn().getRef().getUuid(), baseExec.getDependsOn().getRef().getVersion(), MetaType.dq.toString());
+		DataQual dataQual = (DataQual) commonServiceImpl.getOneByUuidAndVersion(baseExec.getDependsOn().getRef().getUuid(), baseExec.getDependsOn().getRef().getVersion(), MetaType.dq.toString(), "N");
 		try{
 			dataQualExec.setExec(generateSql(dataQual, null, dataQualExec, null, usedRefKeySet, execParams.getOtherParams(), runMode));
 			dataQualExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 			
 			synchronized (dataQualExec.getUuid()) {
-//				DataQualExec dataQualExec1 = (DataQualExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.dqExec, dataQualExec.getUuid(), dataQualExec.getVersion()));
 				DataQualExec dataQualExec1 = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(dataQualExec.getUuid(), dataQualExec.getVersion(), MetaType.dqExec.toString(), "N");
 				
 				dataQualExec1.setExec(dataQualExec.getExec());
 				dataQualExec1.setRefKeyList(dataQualExec.getRefKeyList());
 				commonServiceImpl.save(MetaType.dqExec.toString(), dataQualExec1);
 				dataQualExec1 = null;
+				commonServiceImpl.setMetaStatus(dataQualExec, MetaType.dqExec, Status.Stage.READY);
 			}
 			}catch(Exception e){
 				commonServiceImpl.setMetaStatus(dataQualExec, MetaType.dqExec, Status.Stage.FAILED);
@@ -639,8 +642,8 @@ public class DQOperator implements IParsable {
 				
 				MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 				dependsOn.setRef(new MetaIdentifier(MetaType.dqExec, dataQualExec.getUuid(), dataQualExec.getVersion()));
-				commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "FAILED data quality parsing.", dependsOn);
-				throw new Exception((message != null) ? message : "FAILED data quality parsing.");
+				commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "READY data quality parsing.", dependsOn);
+				throw new Exception((message != null) ? message : "READY data quality parsing.");
 			}
 		return dataQualExec;
 	}
