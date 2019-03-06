@@ -17,7 +17,7 @@ public class BaseEntityStatus extends BaseEntity{
 	List<Status> status;
 	String type;
 	private long numRows;
-	private String sizeMB;
+	private double sizeMB;
 	
 	
 	
@@ -61,7 +61,7 @@ public class BaseEntityStatus extends BaseEntity{
 	 *
 	 * @return the sizeMB
 	 */
-	public String getSizeMB() {
+	public double getSizeMB() {
 		return sizeMB;
 	}
 	/**
@@ -69,7 +69,7 @@ public class BaseEntityStatus extends BaseEntity{
 	 *
 	 * @param sizeMB the sizeMB to set
 	 */
-	public void setSizeMB(String sizeMB) {
+	public void setSizeMB(double sizeMB) {
 		this.sizeMB = sizeMB;
 	}
 }

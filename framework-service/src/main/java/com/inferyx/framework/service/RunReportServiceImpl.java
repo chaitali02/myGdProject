@@ -282,8 +282,7 @@ public class RunReportServiceImpl implements Callable<TaskHolder> {
 				String srcFilePath = commonServiceImpl.getFileNameFromDir(filePathUrl, FileType.PARQUET.toString(), FileType.PARQUET.toString());
 				File reportFile = new File(srcFilePath);
 				if(reportFile.exists()) {
-					double fileSize = reportFile.length()/(1024.0 * 1024.0);
-					reportExec.setSizeMB(String.format("%.2f", fileSize)+"");
+					reportExec.setSizeMB(Double.parseDouble(String.format("%.2f", (reportFile.length()/(1024.0 * 1024.0)))));
 				}
 			}
 			

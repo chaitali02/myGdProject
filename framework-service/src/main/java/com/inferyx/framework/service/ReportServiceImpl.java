@@ -303,6 +303,7 @@ public class ReportServiceImpl extends RuleTemplate {
 		MetaIdentifier dependsOnMI = reportExec.getDependsOn().getRef();
 		Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(),
 				dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
+		format = report.getFormat();
 		
 		String defaultDownloadPath = Helper.getPropertyValue("framework.report.Path"); 
 		defaultDownloadPath = defaultDownloadPath.endsWith("/") ? defaultDownloadPath : defaultDownloadPath.concat("/");
@@ -536,17 +537,31 @@ public class ReportServiceImpl extends RuleTemplate {
 
 		if (senderInfo.getSendAttachment().equalsIgnoreCase("Y")) {			
 			try {
-				download(reportExec.getUuid(), reportExec.getVersion(), "excel", 0, report.getLimit(), null, null, null, null,
+				String format = report.getFormat();
+				download(reportExec.getUuid(), reportExec.getVersion(), format, 0, report.getLimit(), null, null, null, null,
 						runMode, true);
 
 				String defaultDownloadPath = Helper.getPropertyValue("framework.report.Path"); 
 				defaultDownloadPath = defaultDownloadPath.endsWith("/") ? defaultDownloadPath : defaultDownloadPath.concat("/");
 				String reportFilePath = String.format("%s/%s/%s/%s/", report.getUuid(), report.getVersion(), reportExec.getVersion(), "doc");
-				String reportFileName = String.format("%s_%s.%s", report.getName(), reportExec.getVersion(), "xls");
+				
+				String reportFileName = null;
+				if(format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
+					reportFileName = String.format("%s_%s.%s", report.getName(), reportExec.getVersion(), FileType.PDF.toString().toLowerCase());
+				} else {
+					reportFileName = String.format("%s_%s.%s", report.getName(), reportExec.getVersion(), FileType.XLS.toString().toLowerCase());
+				}
+				
 				String filePathUrl = defaultDownloadPath.concat(reportFilePath).concat(reportFileName);		
 
 				Map<String, String> emailAttachment = new HashMap<>();
-				emailAttachment.put(report.getName().concat("_").concat(reportExec.getVersion().concat(".xls")), filePathUrl);
+				if (format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
+					emailAttachment.put(report.getName().concat("_").concat(reportExec.getVersion()).concat(".")
+							.concat(FileType.PDF.toString().toLowerCase()), filePathUrl);
+				} else {
+					emailAttachment.put(report.getName().concat("_").concat(reportExec.getVersion()).concat(".")
+							.concat(FileType.XLS.toString().toLowerCase()), filePathUrl);
+				}
 				senderInfo.setEmailAttachment(emailAttachment);
 			} catch (Exception e) {
 				e.printStackTrace();
