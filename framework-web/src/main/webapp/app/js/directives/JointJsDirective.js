@@ -416,7 +416,7 @@ DataPipelineModule.directive('gridResultsDirective', function ($rootScope, $comp
         $('#downloadSampleCommon').modal("hide");
         $http({
           method: 'GET',
-          url: $scope.download.url + "&rows=" + $scope.download.rows,
+          url: $scope.download.url + "&rows=" + $scope.download.rows+"&format="+$scope.download.selectFormate,
           responseType: 'arraybuffer'
         }).success(function (data, status, headers) {
           headers = headers();

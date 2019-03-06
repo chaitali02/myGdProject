@@ -1839,7 +1839,7 @@ ReconModule.controller('ResultReconController', function( $http,dagMetaDataServi
 		$('#downloadSample').modal("hide"); 
     $http({
       method: 'GET',
-      url:url+"recon/download?action=view&reconExecUUID="+uuid+"&reconExecVersion="+version+"&rows="+$scope.download.rows,
+      url:url+"recon/download?action=view&reconExecUUID="+uuid+"&reconExecVersion="+version+"&rows="+$scope.download.rows+"&format="+$scope.download.selectFormate,
       responseType: 'arraybuffer'
     }).success(function(data, status, headers) {
       headers = headers();

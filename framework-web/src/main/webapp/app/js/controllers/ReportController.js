@@ -2239,7 +2239,7 @@ DatavisualizationModule.controller('ReportResultController', function ($q, dagMe
 	$scope.download = {};
 	$scope.download.rows = CF_DOWNLOAD.framework_download_minrows;
 	$scope.download.formates = CF_DOWNLOAD.formate;
-	$scope.download.formates[1]="PDF";
+	//$scope.download.formates[1]="PDF";
 	$scope.download.selectFormate = CF_DOWNLOAD.formate[0];
 	$scope.download.maxrow = CF_DOWNLOAD.framework_download_maxrow;
 	$scope.download.limit_to = CF_DOWNLOAD.limit_to;

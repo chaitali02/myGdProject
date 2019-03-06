@@ -1875,7 +1875,7 @@ DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataS
     $('#downloadSample').modal("hide");
     $http({
       method: 'GET',
-      url: url + "dataqual/download?action=view&dataQualExecUUID=" + uuid + "&dataQualExecVersion=" + version + "&rows=" + $scope.download.rows,
+      url: url + "dataqual/download?action=view&dataQualExecUUID=" + uuid + "&dataQualExecVersion=" + version + "&rows=" + $scope.download.rows+"&format="+$scope.download.selectFormate,
       responseType: 'arraybuffer'
     }).success(function (data, status, headers) {
       headers = headers();
