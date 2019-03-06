@@ -647,7 +647,6 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 DatavisualizationModule.controller('ReportDetailController', function ($q, dagMetaDataService, $location, $http, $rootScope, $state, $scope, $stateParams, $cookieStore, $timeout, $filter, ReportSerivce, $sessionStorage, privilegeSvc, CommonService, CF_FILTER, CF_META_TYPES, CF_GRID) {
 	$rootScope.isCommentVeiwPrivlage = true;
 	$scope.paramTypes = ["paramlist", "paramset"];
-
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
 		$scope.isversionEnable = false;
@@ -777,7 +776,6 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 	}/*End ShowGraph*/
 
 	$scope.enableEdit = function (uuid, version) {
-		debugger
 		if ($scope.isPrivlage || $scope.report.locked == "Y") {
 			return false;
 		}
@@ -2422,4 +2420,404 @@ DatavisualizationModule.controller('ReportResultController', function ($q, dagMe
 
 	}
 
+});
+
+
+DatavisualizationModule.controller("ReportArchivesSearchController", function ($filter, $location, $http, dagMetaDataService, $scope, ReportSerivce, CommonService) {
+    $scope.searchForm = {};
+    $scope.tz = localStorage.serverTz;
+    var matches = $scope.tz.match(/\b(\w)/g);
+    $scope.timezone = matches.join('');
+    $scope.autoRefreshCounter = 05;
+    $scope.autoRefreshResult = false;
+    $scope.path = dagMetaDataService.statusDefs;
+    var notify = {
+        type: 'success',
+        title: 'Success',
+        content: '',
+        timeout: 3000 //time in ms
+	};
+	
+    $scope.searchForm.modelType ='reportexec';
+    $scope.newType =$scope.searchForm.modelType;
+    $scope.getGridStyle = function () {
+        var style = {
+            'margin-top': '10px',
+            'margin-bottom': '10px',
+        }
+        if ($scope.filteredRows && $scope.filteredRows.length > 0) {
+            style['height'] = (($scope.filteredRows.length < 10 ? $scope.filteredRows.length * 40 : 400) + 40) + 'px';
+        } else {
+            style['height'] = "100px"
+        }
+        return style;
+    }
+    $scope.gridOptions = {};
+	$scope.gridOptions =  angular.copy(dagMetaDataService.getGridOptionsDefault());
+    var columnDefs=null;
+	columnDefs=$scope.gridOptions.columnDefs;
+	columnDefs.push(
+		{
+			displayName: 'Num Rows',
+			name: 'numRows',
+			cellClass: 'text-center',
+			maxWidth:140,
+			headerCellClass: 'text-center'
+		},
+		{
+			displayName: 'size MB',
+			name: 'sizeMB',
+			cellClass: 'text-center',
+			maxWidth:140,
+			headerCellClass: 'text-center'
+		},   
+		{
+			displayName: 'Status',
+			name: 'status',
+			cellClass: 'text-center',
+			headerCellClass: 'text-center',
+			maxWidth: 110,
+			cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div class="label-sm label-success" style=" width: 88%;font-size: 13px;padding: 2px;color: white;margin: 0 auto;font-weight: 300;background-color:{{grid.appScope.path[row.entity.status].color}} !important" ng-style="">{{grid.appScope.path[row.entity.status].caption}}</div></div>'
+	  
+	  
+		  },
+		{
+			displayName: 'Action',
+			name: 'action',
+			cellClass: 'text-center',
+			headerCellClass: 'text-center',
+			maxWidth: 100,
+			cellTemplate: [
+			  '<div class="ui-grid-cell-contents">',
+			  '  <div class="dropdown" uib-dropdown dropdown-append-to-body>',
+			  '    <button class="btn green btn-xs btn-outline dropdown-toggle" uib-dropdown-toggle>Action',
+			  '    <i class="fa fa-angle-down"></i></button>',
+			  '    <ul uib-dropdown-menu class="dropdown-menu-grid">',
+			  '       <li><a  ng-click="grid.appScope.getDownload(row.entity)"><i class="fa fa-download" aria-hidden="true"></i> Download </a></li>',
+			  '       <li><a  ng-click="grid.appScope.sentMail(row.entity)"><i class="fa fa-envelope-o" aria-hidden="true"></i> Email </a></li>',		  
+			  '    </ul>',
+			  '  </div>',
+			  '</div>'
+			].join('')
+	    }
+	);
+
+	$scope.gridOptions.columnDefs=columnDefs;
+    $scope.gridOptions.onRegisterApi = function (gridApi) {
+        $scope.gridApi = gridApi;
+        $scope.filteredRows = $scope.gridApi.core.getVisibleRows($scope.gridApi.grid);
+	};
+	
+    $scope.refreshData = function () {
+        $scope.gridOptions.data = $filter('filter')($scope.originalData, $scope.searchtext, undefined);
+
+	};
+	
+    $scope.refresh = function () {
+        $scope.searchForm.execname = "";
+        $scope.allExecName = [];
+        $scope.searchForm.username = "";
+        $scope.searchForm.tags = [];
+        $scope.searchForm.published = "";
+        $scope.searchForm.active = "";
+        $scope.searchForm.status = "";
+        $scope.searchForm.startdate = null;
+        $scope.searchForm.enddate = null;
+        $scope.allStatus = [{
+            "caption": "PENDING",
+            "name": "PENDING"
+        },
+        {
+            "caption": "RUNNING",
+            "name": "RUNNING"
+        },
+        {
+            "caption": "COMPLETED",
+            "name": "COMPLETED"
+        },
+        {
+            "caption": "KILLED",
+            "name": "KILLED"
+        },
+        {
+            "caption": "FAILED",
+            "name": "FAILED"
+        }
+        ];
+        $scope.getBaseEntityStatusByCriteria(true);
+    };
+
+    var myVar;
+    $scope.autoRefreshOnChange = function () {
+        if ($scope.autorefresh) {
+            myVar = setInterval(function () {
+                $scope.getBaseEntityStatusByCriteria(false);
+            }, $scope.autoRefreshCounter + "000");
+        }
+        else {
+            clearInterval(myVar);
+        }
+    }
+    $scope.refreshList = function () {
+        $scope.getBaseEntityStatusByCriteria(false);
+    }
+    $scope.$on('$destroy', function () {
+        // Make sure that the interval is destroyed too
+        clearInterval(myVar);
+    });
+
+    $scope.startDateOnSetTime = function () {
+        $scope.$broadcast('start-date-changed');
+    }
+
+    $scope.endDateOnSetTime = function () {
+        $scope.$broadcast('end-date-changed');
+    }
+
+    $scope.startDateBeforeRender = function ($dates) {
+        if ($scope.searchForm.enddate) {
+            var activeDate = moment($scope.searchForm.enddate);
+            $dates.filter(function (date) {
+                return date.localDateValue() >= activeDate.valueOf()
+            }).forEach(function (date) {
+                date.selectable = false;
+            })
+        }
+    }
+
+    $scope.endDateBeforeRender = function ($view, $dates) {
+        if ($scope.searchForm.startdate) {
+            var activeDate = moment($scope.searchForm.startdate).subtract(1, $view).add(1, 'minute');
+            $dates.filter(function (date) {
+                return date.localDateValue() <= activeDate.valueOf()
+            }).forEach(function (date) {
+                date.selectable = false;
+            })
+        }
+    }
+    $scope.getAllLatest = function (type,propName) {
+        CommonService.getAllLatest(type).then(function (response) { onSuccessGetAllLatest(response.data) });
+        var onSuccessGetAllLatest = function (response) {
+			if(propName =="name"){
+				$scope.allExecName = response;
+			}
+			if(propName=="user"){
+				$scope.allUSerName=response;
+			}
+        }
+    }
+	$scope.getAllLatest(dagMetaDataService.elementDefs["report"].metaType,"name");
+	$scope.getAllLatest(dagMetaDataService.elementDefs["user"].metaType,"user");
+   
+
+    $scope.getBaseEntityStatusByCriteria = function () {
+        var startdate = ""
+        if ($scope.searchForm.startdate != null) {
+            startdate = $filter('date')($scope.searchForm.startdate, "EEE MMM dd HH:mm:ss yyyy", 'UTC');
+            startdate = startdate + " UTC"
+        }
+        var enddate = "";
+        if ($scope.searchForm.enddate != null) {
+            enddate = $filter('date')($scope.searchForm.enddate, "EEE MMM dd HH:mm:ss yyyy", 'UTC');
+            enddate = enddate + " UTC";
+        }
+
+        var tags = [];
+        if ($scope.searchForm.tags) {
+            for (i = 0; i < $scope.searchForm.tags.length; i++) {
+                tags[i] = $scope.searchForm.tags[i].text;
+            }
+        }
+        tags = tags.toString();
+        CommonService.getBaseEntityStatusByCriteria(dagMetaDataService.elementDefs[$scope.searchForm.modelType].execType, $scope.searchForm.execname || '', $scope.searchForm.username || "", startdate, enddate, tags, $scope.searchForm.active || '', $scope.searchForm.published || '', $scope.searchForm.status || '').then(function (response) { onSuccess(response.data) }, function error() {
+            $scope.loading = false;
+        });
+        var onSuccess = function (response) {
+            // console.log(response);
+            $scope.gridOptions.data = response;
+            $scope.originalData = response;
+        }
+    }
+    $scope.getBaseEntityStatusByCriteria(false);
+    $scope.refresh();
+
+    $scope.searchCriteria = function () {
+        $scope.getBaseEntityStatusByCriteria(false);
+	}
+	
+    $scope.getDownload = function (data) {
+		notify.type = 'success',
+		notify.title = 'Success',
+		notify.content = 'Report Download Submitted'
+		$scope.$emit('notify', notify);
+		$scope.submitDownload(data);
+	}
+	
+    $scope.submitDownload = function (data) {
+		var uuid = data.uuid;
+		var version = data.version;
+		var url = $location.absUrl().split("app")[0];
+		$http({
+			method: 'GET',
+			url: url + "report/download?action=view&uuid=" + uuid + "&version=" + version + "&rows=-1&format=EXCEL",
+			responseType: 'arraybuffer'
+		}).success(function (data, status, headers) {
+			headers = headers();
+			$scope.isDownlodInprogess = false;
+			var filename = headers['filename'];
+			var contentType = headers['content-type'];
+			var linkElement = document.createElement('a');
+			try {
+				var blob = new Blob([data], {
+					type: contentType
+				});
+				var url = window.URL.createObjectURL(blob);
+
+				linkElement.setAttribute('href', url);
+				linkElement.setAttribute("download", filename);
+
+				var clickEvent = new MouseEvent("click", {
+					"view": window,
+					"bubbles": true,
+					"cancelable": false
+				});
+				linkElement.dispatchEvent(clickEvent);
+			} catch (ex) {
+				console.log(ex);
+			}
+		}).error(function (data) {
+			console.log(data);
+			$scope.isDownlodInprogess = false;
+		});
+
+	}
+    $scope.sentMail=function(data){
+		$scope.objDetail=data;
+		$scope.sendAttachment="Y";
+		$scope.tagsTo=[];
+		$scope.tagsCC=[];
+		$scope.tagsBcc=[];
+		$('#mailSendMdoel').modal({
+			backdrop: 'static',
+			keyboard: false
+		});
+	}
+
+	$scope.okSentMail=function(){
+		$('#mailSendMdoel').modal('hide');
+		var senderInfo = {};
+		var tagArrayTo = [];
+		if ($scope.tagsTo != null) {
+			for (let counttag = 0; counttag < $scope.tagsTo.length; counttag++) {
+				tagArrayTo[counttag] = $scope.tagsTo[counttag].text;
+			}
+		}
+		senderInfo.emailTo = tagArrayTo;
+		var tagArrayCC = [];
+		if ($scope.tagsCC != null) {
+			for (let counttag = 0; counttag < $scope.tagsCC.length; counttag++) {
+				tagArrayCC[counttag] = $scope.tagsCC[counttag].text;
+			}
+		}
+		senderInfo.emailBCC = tagArrayCC;
+		var tagArrayBcc = [];
+		if ($scope.tagsBcc != null) {
+			for (let counttag = 0; counttag < $scope.tagsBcc.length; counttag++) {
+				tagArrayBcc[counttag] = $scope.tagsBcc[counttag].text;
+			}
+		}
+		senderInfo.emailCC = tagArrayBcc;
+		senderInfo.sendAttachment = $scope.sendAttachment;
+		console.log(senderInfo);
+		ReportSerivce.getNumRowsbyExec($scope.objDetail.uuid,$scope.objDetail.version).then(function (response) { onSuccess(response.data) }, function error() {});
+        var onSuccess = function (response) {
+			$scope.reSendEMail(response,senderInfo);
+		}
+	}
+	
+	$scope.reSendEMail=function(response,senderInfo){
+		ReportSerivce.reSendEMail($scope.objDetail.uuid, $scope.objDetail.version, response.mode, senderInfo).then(function (response) { onSuccess(response.data) }, function error() {});
+        var onSuccess = function (response) {
+			console.log(response);
+			notify.type = 'success',
+			notify.title = 'Success',
+			notify.content = 'Email Sent Successfully '
+			$scope.$emit('notify', notify);
+		}
+	}
+
+    $scope.setStatus = function (row, status) {
+        $scope.execDetail=row;
+        $scope.execDetail.setStatus=status;
+        $scope.msg =status;
+        $('#confModal').modal({
+          backdrop: 'static',
+          keyboard: false
+        });  
+     
+    }
+    
+    $scope.okSetStatus=function(){
+        var api = false;
+        var type = dagMetaDataService.elementDefs[$scope.searchForm.modelType].execType;
+        var api = false;
+        switch (type) {
+            case 'reportexec':
+                api = "reprot";
+                break;
+        }
+        if (!api) {
+            return
+        }
+        notify.type = 'success',
+        notify.title = 'Success',
+        notify.content = dagMetaDataService.elementDefs[$scope.searchForm.modelType].caption + " Killed Successfully"
+        $scope.$emit('notify', notify);
+        $('#confModal').modal('hide');
+        var url = $location.absUrl().split("app")[0];
+        $http.put(url + 'model/setStatus?uuid=' + $scope.execDetail.uuid + '&version=' + $scope.execDetail.version + '&type=' + type + '&status=' + $scope.execDetail.setStatus).then(function (response) {
+            console.log(response);
+        });
+    }
+
+    $scope.restartExec = function (row, status) {
+        $scope.execDetail=row;
+        $scope.msg ="Restart";
+        $('#confModal').modal({
+          backdrop: 'static',
+          keyboard: false
+        });  
+	}
+	
+    $scope.okRestart=function(){
+        var type = dagMetaDataService.elementDefs[$scope.searchForm.modelType].execType;
+        var api = false;
+        switch (type) {
+            case 'reportexec':
+                api = 'report';
+                break;
+        }
+        if (!api) {
+            return
+        }
+        notify.type = 'success',
+        notify.title = 'Success',
+        notify.content = dagMetaDataService.elementDefs[$scope.searchForm.modelType].caption + " Restarted Successfully"
+        $scope.$emit('notify', notify);
+        $('#confModal').modal('hide');
+        var url = $location.absUrl().split("app")[0];
+        $http.get(url + '' + api + '/restart?uuid=' + $scope.execDetail.uuid + '&version=' + $scope.execDetail.version + '&type=' + type + '&action=execute').then(function (response) {
+            //console.log(response);
+
+        });
+    }
+
+    $scope.submitOk = function (action) {
+        if (action == "Restart") {
+          $scope.okRestart();
+        }
+        if(action == "Killed"){
+            $scope.okSetStatus()
+        }
+    }
 });

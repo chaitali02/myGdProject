@@ -188,7 +188,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
     enableGridMenu: true,
     rowHeight: 40,
     exporterSuppressCtiolumns: [ 'action' ],
-    exporterMenuPdf: true,
+    exporterMenuPdf: false,
     exporterPdfOrientation: 'landscape',
     exporterPdfPageSize: 'A4',
     exporterPdfDefaultStyle: {fontSize: 9},
@@ -2252,7 +2252,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
         allowInChildMenu : false,
       },
   };
-
+  
   var validElementTypes = ['dag','stage','dq','dqgroup','map','load','profile','profilegroup','model','rule','rulegroup','train','predict','simulate','recon','recongroup','operatortype','operator',,'ingest','ingestgroup','report','dashboard'];
   obj.validTaskTypes = ['dq','dqgroup','map','load','profile','profilegroup','model','rule','rulegroup','train','predict','simulate','recon','recongroup','operatortype','operator',,'ingest','ingestgroup','report','dashboard'];
   var defaultElement = {
@@ -2675,5 +2675,11 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
     }
     $state.go(obj.elementDefs[ref.type.toLowerCase()].detailState,{id:ref.uuid,version:ref.version || " ",mode:true,returnBack:true});
   }
+  obj.getGridOptionsDefault=function(){
+     let temp;
+      temp=obj.gridOptionsDefault
+    return temp;
+  }
+
   return obj;
 });

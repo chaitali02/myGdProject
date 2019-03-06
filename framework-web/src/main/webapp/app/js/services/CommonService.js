@@ -605,9 +605,14 @@
           result.createdBy = response[i].createdBy;
           result.createdOn = response[i].createdOn;
           result.active = response[i].active;
+          
           result.startTime="-NA-";
           result.endTime="-NA-";
           result.duration="-NA-"
+          if(type =="reportExec" ){
+            result.numRows=response[i].numRows;
+            result.sizeMB=response[i].sizeMB!=null?response[i].sizeMB:"-NA-";
+          }
           if(response[i].status !=null && response[i].status.length > 1){
             for(var j=0;j<response[i].status.length;j++){
               if(response[i].status[j].stage == "PENDING"){
