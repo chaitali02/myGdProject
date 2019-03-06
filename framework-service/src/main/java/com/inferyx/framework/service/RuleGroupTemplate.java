@@ -376,7 +376,7 @@ public abstract class RuleGroupTemplate implements IExecutable, IParsable {
 								RunMode runMode) throws Exception {
 		BaseRuleGroupExec baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, groupExecType.toString());
 		synchronized (execUuid) {
-			commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType, Status.Stage.INITIALIZING);
+			commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType, Status.Stage.STARTING);
 		}
 		BaseRuleExec ruleExec = null;
 		RuleTemplate baseRuleService = serviceFactory.getRuleService(ruleType);

@@ -189,7 +189,7 @@ public class RunDagServiceImpl implements Callable<String> {
 				// Parse to create SQL
 				logger.info(" Before parse ");
 				synchronized (dagExec.getUuid()) {
-					commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.INITIALIZING);
+					commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.STARTING);
 				}
 				dagExec = dagServiceImpl.parseDagExec(dag, dagExec);
 				logger.info(" After parse ");

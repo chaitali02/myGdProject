@@ -1695,7 +1695,7 @@ public class GraphServiceImpl extends BaseRuleExecTemplate implements IParsable,
 	@Override
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		synchronized (baseExec.getUuid()) {
-			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.graphExec, Status.Stage.INITIALIZING);
+			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.graphExec, Status.Stage.STARTING);
 		}
 		baseExec = graphOperator.parse(baseExec, execParams, runMode);
 		synchronized (baseExec.getUuid()) {

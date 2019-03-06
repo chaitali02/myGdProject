@@ -21,7 +21,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.FutureTask;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -34,7 +33,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
@@ -43,7 +41,6 @@ import com.inferyx.framework.common.SessionHelper;
 import com.inferyx.framework.dao.IMapDao;
 import com.inferyx.framework.dao.IMapExecDao;
 import com.inferyx.framework.domain.BaseExec;
-import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
@@ -757,7 +754,7 @@ public class MapServiceImpl implements IParsable, IExecutable {
 			try {
 				logger.info("Before generateSql from MapServiceImpl");
 				synchronized (mapExec.getUuid()) {
-					commonServiceImpl.setMetaStatus(mapExec, MetaType.mapExec, Status.Stage.INITIALIZING);
+					commonServiceImpl.setMetaStatus(mapExec, MetaType.mapExec, Status.Stage.STARTING);
 				}
 				mapExec.setExec(mapOperator.generateSql(map, refKeyMap, otherParams, execParams, usedRefKeySet, runMode));
 				synchronized (mapExec.getUuid()) {
@@ -964,15 +961,9 @@ public class MapServiceImpl implements IParsable, IExecutable {
 	}
 	
 	
-	public HttpServletResponse download(String uuid, String version, String format, int offset,
+	public HttpServletResponse download(String mapExecUuid, String mapExecVersion, String format, int offset,
 			int limit, HttpServletResponse response, int rowLimit, String sortBy, String order, String requestId,
 			RunMode runMode) throws Exception {
-		//datastoreServiceImpl.setRunMode(runMode);
-		/*DataStore ds = datastoreServiceImpl.findDataStoreByMeta(uuid, version);
-		if (ds == null) {
-			throw new Exception();
-		}*/		
-		
 		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
 		if(rowLimit > maxRows) {
 			logger.error("Requested rows exceeded the limit of "+maxRows);
@@ -980,9 +971,8 @@ public class MapServiceImpl implements IParsable, IExecutable {
 			throw new RuntimeException("Requested rows exceeded the limit of "+maxRows);
 		}
 		
-		List<java.util.Map<String, Object>> results = getMapResults(uuid, version, offset, limit, sortBy, order, requestId, runMode);
-		response = commonServiceImpl.download(uuid, version, format, offset, limit, response, rowLimit, sortBy, order, requestId, runMode, results,MetaType.downloadExec,new MetaIdentifierHolder(new MetaIdentifier(MetaType.mapExec,uuid,version)));
-
+		List<java.util.Map<String, Object>> results = getMapResults(mapExecUuid, mapExecVersion, offset, limit, sortBy, order, requestId, runMode);
+		response = commonServiceImpl.download(format, response, runMode, results, new MetaIdentifierHolder(new MetaIdentifier(MetaType.mapExec, mapExecUuid, mapExecVersion)));
 		return response;
 
 	}

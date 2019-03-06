@@ -521,7 +521,8 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, $window, $s
             { "name": "reportlist", "type": "report", "uuid": "null", "caption": "Report" },
             // { "name": "reportlist2", "type": "report2", "uuid": "null", "caption": "Report2" },
             { "name": "paramlistreport", "type": "paramlistreport", "typeCount": "paramlistreport", "uuid": "null", "caption": "Parameter List" },
-            { "name": "reportexeclist", "type": "reportexec", "uuid": "null", "caption": "Results","typeCount": "reportexec", }
+            { "name": "reportexeclist", "type": "reportexec", "uuid": "null", "caption": "Results","typeCount": "reportexec", },
+            { "name": "reportArchives", "type": "reportexec", "uuid": "null", "caption": "Archives","typeCount": "reportexec",}
 
         ]  
     }
@@ -1325,7 +1326,25 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
             data: { pageTitle: ' Data Visualization' },
             params: { type: 'reportexec', isExec: true }
         })
+
         
+        .state('reportArchives', {
+            url: "/ReportArchives",
+            templateUrl: "views/report-archives.html",
+            data: { pageTitle: 'Data Visualization' },
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'InferyxApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            'js/controllers/ReportController.js',
+                            'js/services/ReportService.js'
+                        ]
+                    });
+                }]
+            }
+        })
         .state('resultxecresult', {
             url: "/ReportResult?id&mode&returnBack&version&appId&roleId&redirect",
             templateUrl: "views/report-result.html",

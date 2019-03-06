@@ -133,7 +133,7 @@ public class ReconServiceImpl extends RuleTemplate {
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
 		ReconExec reconExec = (ReconExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.reconExec.toString());
 		synchronized (execUuid) {
-			commonServiceImpl.setMetaStatus(reconExec, MetaType.reconExec, Status.Stage.INITIALIZING);
+			commonServiceImpl.setMetaStatus(reconExec, MetaType.reconExec, Status.Stage.STARTING);
 		}
 		recon = (Recon) commonServiceImpl.getOneByUuidAndVersion(reconExec.getDependsOn().getRef().getUuid(), reconExec.getDependsOn().getRef().getVersion(), MetaType.recon.toString());
 		try {
@@ -214,25 +214,27 @@ public class ReconServiceImpl extends RuleTemplate {
 		mi.setVersion(reconExec.getDependsOn().getRef().getVersion());
 		return mi;
 	}
-	public HttpServletResponse download(String reconExecUUID, String reconExecVersion, String format, String download, int offset,
-			int limit, HttpServletResponse response, int rowLimit, String sortBy, String order, String requestId,
-			RunMode runMode) throws Exception {
-		
+
+	public HttpServletResponse download(String reconExecUuid, String reconExecVersion, String format, String download,
+			int offset, int limit, HttpServletResponse response, int rowLimit, String sortBy, String order,
+			String requestId, RunMode runMode) throws Exception {
+
 		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
-		if(rowLimit > maxRows) {
-			logger.error("Requested rows exceeded the limit of "+maxRows);
+		if (rowLimit > maxRows) {
+			logger.error("Requested rows exceeded the limit of " + maxRows);
 
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
-			dependsOn.setRef(new MetaIdentifier(MetaType.reconExec, reconExecUUID, reconExecVersion));
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Requested rows exceeded the limit of "+maxRows, dependsOn);
-			throw new RuntimeException("Requested rows exceeded the limit of "+maxRows);
+			dependsOn.setRef(new MetaIdentifier(MetaType.reconExec, reconExecUuid, reconExecVersion));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
+					"Requested rows exceeded the limit of " + maxRows, dependsOn);
+			throw new RuntimeException("Requested rows exceeded the limit of " + maxRows);
 		}
-		
-		List<Map<String, Object>> results =getReconResults(reconExecUUID,reconExecVersion,offset,limit,sortBy,order,requestId, runMode);
-		response = commonServiceImpl.download(reconExecUUID, reconExecVersion, format, offset, limit, response, rowLimit, sortBy, order, requestId, runMode, results,MetaType.downloadExec,new MetaIdentifierHolder(new MetaIdentifier(MetaType.reconExec,reconExecUUID,reconExecVersion)));
-	
-		return response;
 
+		List<Map<String, Object>> results = getReconResults(reconExecUuid, reconExecVersion, offset, limit, sortBy,
+				order, requestId, runMode);
+		response = commonServiceImpl.download(format, response, runMode, results,
+				new MetaIdentifierHolder(new MetaIdentifier(MetaType.reconExec, reconExecUuid, reconExecVersion)));
+		return response;
 	}
 	
 	public List<Map<String, Object>> getReconResults(String reconExecUUID, String reconExecVersion, int offset, int limit, String sortBy, String order, String requestId, RunMode runMode) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, SQLException, JSONException {

@@ -163,7 +163,7 @@ public class ReportServiceImpl extends RuleTemplate {
 			}
 			report = (Report) commonServiceImpl.getLatestByUuid(reportExec.getDependsOn().getRef().getUuid(), MetaType.report.toString(), "N");
 			synchronized (execUuid) {
-				reportExec = (ReportExec) commonServiceImpl.setMetaStatus(reportExec, MetaType.reportExec, Status.Stage.INITIALIZING);
+				reportExec = (ReportExec) commonServiceImpl.setMetaStatus(reportExec, MetaType.reportExec, Status.Stage.STARTING);
 			}
 			reportExec.setExec(reportOperator.generateSql(report, refKeyMap, otherParams, usedRefKeySet, reportExec.getExecParams(), runMode));
 			synchronized (execUuid) {
@@ -303,6 +303,7 @@ public class ReportServiceImpl extends RuleTemplate {
 		MetaIdentifier dependsOnMI = reportExec.getDependsOn().getRef();
 		Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(),
 				dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
+		format = report.getFormat();
 		
 		String defaultDownloadPath = Helper.getPropertyValue("framework.report.Path"); 
 		defaultDownloadPath = defaultDownloadPath.endsWith("/") ? defaultDownloadPath : defaultDownloadPath.concat("/");
@@ -310,7 +311,7 @@ public class ReportServiceImpl extends RuleTemplate {
 		
 		File reportDocDir = new File(defaultDownloadPath.concat(reportFilePath));
 		if(!reportDocDir.exists()) {
-			reportDocDir.mkdir();
+			reportDocDir.mkdirs();
 		}
 		String reportFileName = null;
 		if(format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
@@ -351,7 +352,7 @@ public class ReportServiceImpl extends RuleTemplate {
 
 			datastoreServiceImpl.setRunMode(runMode);
 			List<Map<String, Object>> data = datastoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, limit, null, null);		
-			data = null;
+			
 			//checking whether data is available or not
 			if(data == null || (data != null && data.isEmpty())) {
 				data = new ArrayList<>();
@@ -372,8 +373,6 @@ public class ReportServiceImpl extends RuleTemplate {
 			
 			//writting as per provided format
 			if(format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
-//				data.addAll(data);
-//				data.addAll(data);
 				doc = pdfUtil.getPDFDocForReport(data, reportExec);
 				FileOutputStream fileOutPDF = new FileOutputStream(new File(filePathUrl));
 				doc.save(fileOutPDF);
@@ -388,7 +387,7 @@ public class ReportServiceImpl extends RuleTemplate {
 			DownloadExec downloadExec = new DownloadExec();
 			downloadExec.setBaseEntity();
 			downloadExec.setLocation(filePathUrl);
-			downloadExec.setDependsOn(datastore.getMetaId());
+			downloadExec.setDependsOn(datastore.getExecId());
 			commonServiceImpl.save(MetaType.downloadExec.toString(), downloadExec);
 		}
 		
@@ -479,7 +478,7 @@ public class ReportServiceImpl extends RuleTemplate {
 	@Override
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		synchronized (baseExec.getUuid()) {
-			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.reportExec, Status.Stage.INITIALIZING);
+			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.reportExec, Status.Stage.STARTING);
 		}
 		synchronized (baseExec.getUuid()) {
 			baseExec = (BaseExec) commonServiceImpl.setMetaStatus(baseExec, MetaType.reportExec, Status.Stage.READY);
@@ -493,7 +492,7 @@ public class ReportServiceImpl extends RuleTemplate {
 			throws Exception {
 		BaseRuleExec baseRuleExec = (BaseRuleExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.reportExec.toString(), "N");
 		synchronized (execUuid) {
-			baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, MetaType.reportExec, Status.Stage.INITIALIZING);
+			baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, MetaType.reportExec, Status.Stage.STARTING);
 		}
 		synchronized (execUuid) {
 			baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, MetaType.reportExec, Status.Stage.READY);
@@ -519,10 +518,18 @@ public class ReportServiceImpl extends RuleTemplate {
 
 		String roleUuid = sessionHelper.getSessionContext().getRoleInfo().getRef().getUuid();
 		String appUuid = sessionHelper.getSessionContext().getAppInfo().getRef().getUuid();
+
+		String contextPath = Helper.getPropertyValue("framework.webserver.contextpath");
+		if(contextPath.startsWith("")) {
+			contextPath = "";
+		} else {
+			contextPath = contextPath.startsWith("/") ? contextPath : "/".concat(contextPath);
+			contextPath = contextPath.endsWith("/") ? contextPath.substring(contextPath.lastIndexOf("/")) : contextPath;	
+		}
 		
 		String resultUrl = Helper.getPropertyValue("framework.url.report.result.success");
 		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.webserver.host"),
-				Helper.getPropertyValue("framework.webserver.port"), reportExec.getUuid(), reportExec.getVersion(), roleUuid, appUuid);
+				Helper.getPropertyValue("framework.webserver.port"), contextPath, reportExec.getUuid(), reportExec.getVersion(), roleUuid, appUuid);
 
 		String message = Helper.getPropertyValue("framework.email.body");
 		message = MessageFormat.format(message, resultUrl);
@@ -530,17 +537,31 @@ public class ReportServiceImpl extends RuleTemplate {
 
 		if (senderInfo.getSendAttachment().equalsIgnoreCase("Y")) {			
 			try {
-				download(reportExec.getUuid(), reportExec.getVersion(), "excel", 0, report.getLimit(), null, null, null, null,
+				String format = report.getFormat();
+				download(reportExec.getUuid(), reportExec.getVersion(), format, 0, report.getLimit(), null, null, null, null,
 						runMode, true);
 
 				String defaultDownloadPath = Helper.getPropertyValue("framework.report.Path"); 
 				defaultDownloadPath = defaultDownloadPath.endsWith("/") ? defaultDownloadPath : defaultDownloadPath.concat("/");
 				String reportFilePath = String.format("%s/%s/%s/%s/", report.getUuid(), report.getVersion(), reportExec.getVersion(), "doc");
-				String reportFileName = String.format("%s_%s.%s", report.getName(), reportExec.getVersion(), "xls");
+				
+				String reportFileName = null;
+				if(format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
+					reportFileName = String.format("%s_%s.%s", report.getName(), reportExec.getVersion(), FileType.PDF.toString().toLowerCase());
+				} else {
+					reportFileName = String.format("%s_%s.%s", report.getName(), reportExec.getVersion(), FileType.XLS.toString().toLowerCase());
+				}
+				
 				String filePathUrl = defaultDownloadPath.concat(reportFilePath).concat(reportFileName);		
 
 				Map<String, String> emailAttachment = new HashMap<>();
-				emailAttachment.put(report.getName().concat("_").concat(reportExec.getVersion().concat(".xls")), filePathUrl);
+				if (format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
+					emailAttachment.put(report.getName().concat("_").concat(reportExec.getVersion()).concat(".")
+							.concat(FileType.PDF.toString().toLowerCase()), filePathUrl);
+				} else {
+					emailAttachment.put(report.getName().concat("_").concat(reportExec.getVersion()).concat(".")
+							.concat(FileType.XLS.toString().toLowerCase()), filePathUrl);
+				}
 				senderInfo.setEmailAttachment(emailAttachment);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -562,10 +583,18 @@ public class ReportServiceImpl extends RuleTemplate {
 
 		String roleUuid = sessionHelper.getSessionContext().getRoleInfo().getRef().getUuid();
 		String appUuid = sessionHelper.getSessionContext().getAppInfo().getRef().getUuid();
+
+		String contextPath = Helper.getPropertyValue("framework.webserver.contextpath");
+		if(contextPath.startsWith("")) {
+			contextPath = "";
+		} else {
+			contextPath = contextPath.startsWith("/") ? contextPath : "/".concat(contextPath);
+			contextPath = contextPath.endsWith("/") ? contextPath.substring(contextPath.lastIndexOf("/")) : contextPath;	
+		}
 		
 		String resultUrl = Helper.getPropertyValue("framework.url.report.result.failure");
 		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.webserver.host"),
-				Helper.getPropertyValue("framework.webserver.port"), roleUuid, appUuid);
+				Helper.getPropertyValue("framework.webserver.port"), contextPath, roleUuid, appUuid);
 
 		String message = Helper.getPropertyValue("framework.email.body");
 		message = MessageFormat.format(message, resultUrl);

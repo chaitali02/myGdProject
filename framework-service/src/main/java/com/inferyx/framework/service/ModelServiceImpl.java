@@ -1359,7 +1359,7 @@ public class ModelServiceImpl {
 			
 			synchronized (predictExec.getUuid()) {
 				predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.PENDING);
-				predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.INITIALIZING);
+				predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.STARTING);
 				predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.READY);
 			}
 
@@ -1417,7 +1417,7 @@ public class ModelServiceImpl {
 			
 			synchronized (simulateExec.getUuid()) {
 				simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.PENDING);
-				simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.INITIALIZING);
+				simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.STARTING);
 				simulateExec = (SimulateExec) commonServiceImpl.setMetaStatus(simulateExec, MetaType.simulateExec, Status.Stage.READY);
 			}
 		} catch (Exception e) {
@@ -1511,7 +1511,7 @@ public class ModelServiceImpl {
 			trainExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 			synchronized (trainExec.getUuid()) {
 				trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.PENDING);
-				trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.INITIALIZING);
+				trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.STARTING);
 				trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.READY);
 			}
 //			if(model.getType().equalsIgnoreCase(ExecContext.R.toString()) || model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
@@ -4268,19 +4268,19 @@ public class ModelServiceImpl {
 		}
 	}
 
-	public HttpServletResponse download(String trainExecUuid, String trainExecVersion, String format, int rows, String setType, RunMode runMode, HttpServletResponse response) throws Exception {
+	public HttpServletResponse download(String trainExecUuid, String trainExecVersion, String format, int rows,
+			String setType, RunMode runMode, HttpServletResponse response) throws Exception {
 		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
-		if(rows > maxRows) {
-			logger.error("Requested rows exceeded the limit of "+maxRows);
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Requested rows exceeded the limit of "+maxRows, null);
-			throw new RuntimeException("Requested rows exceeded the limit of "+maxRows);
-		}		
-		
+		if (rows > maxRows) {
+			logger.error("Requested rows exceeded the limit of " + maxRows);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
+					"Requested rows exceeded the limit of " + maxRows, null);
+			throw new RuntimeException("Requested rows exceeded the limit of " + maxRows);
+		}
+
 		List<Map<String, Object>> results = getTrainOrTestSet(trainExecUuid, trainExecVersion, setType);
-		response = commonServiceImpl.download(trainExecUuid, trainExecVersion, format
-				, 0, rows, response, 0, null, null, null
-				, runMode, results, MetaType.downloadExec
-				, new MetaIdentifierHolder(new MetaIdentifier(MetaType.trainExec, trainExecUuid, trainExecVersion)));
+		response = commonServiceImpl.download(format, response, runMode, results,
+				new MetaIdentifierHolder(new MetaIdentifier(MetaType.trainExec, trainExecUuid, trainExecVersion)));
 		return response;
 	}
 	

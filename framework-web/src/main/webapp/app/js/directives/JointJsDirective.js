@@ -960,7 +960,7 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
                '.status': {
                  'element-id' : startParams.id,
                },
-               text: { text: startParams.name.length >20 ?startParams.name.substring(0, 15) + "....":startParams.name || startParams.id,},
+               ".label": { text: startParams.name.length >20 ?startParams.name.substring(0, 15) + "....":startParams.name || startParams.id,},
                title: { text: startParams.name || startParams.id}
              }
            })
@@ -993,7 +993,7 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
                    '.status image' : {
                      "xlink:href":"assets/layouts/layout/img/new_status/"+task.statusList[task.statusList.length -1].stage+".svg"
                    },
-                   text: { text: task.name.length >30 ?task.name.substring(0, 27) + "....":task.name},
+                   ".label": { text: task.name.length >30 ?task.name.substring(0, 27) + "....":task.name},
                    title: { text: task.name }
                  }
                })
@@ -1055,7 +1055,7 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
                    var iconMenuItems = [{title:'Show Details', type : 'element'}];
                 
                    if($scope.execMode || true){
-                     var status = $(".status[element-id=" + taskId + "] .statusTitle")[0].innerHTML;
+                     var status = $(".status[element-id=" + taskId + "] .statusTitle")[0].innerHTML.toUpperCase();
                      if(status && (status=='COMPLETED') && isGroupExec!=true && type !='ingest' ){
                        iconMenuItems.push({title:'Show Results', type : 'results'});
                        iconMenuItems.push({title:'Show Logs', type : 'logs'});
@@ -1079,7 +1079,7 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
                       iconMenuItems.splice(0,0,{title:'Kill', type : 'killexecution'});
                         iconMenuItems.push({title:'Show Logs', type : 'logs'});
                     }
-                    else if(status && status=='INITIALIZING'){
+                    else if(status && status=='STARTING'){
                       iconMenuItems.splice(0,0,{title:'Kill', type : 'killexecution'});
                     }
                      
@@ -2020,14 +2020,14 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
              var localPoint = pt.matrixTransform(svg.getScreenCTM().inverse());
              var iconMenuItems = [];
              if($scope.execMode){
-               var status = $(".status[element-id=" + id + "] .statusTitle")[0].innerHTML;
+               var status = $(".status[element-id=" + id + "] .statusTitle")[0].innerHTML.toUpperCase();
                if(status && ( status=='RESUME')){
                  iconMenuItems.push({title:'Pause', type : 'PAUSE'});
                }
                else if(status && status=='RUNNING'){
                  iconMenuItems.push({title:'Kill', type : 'killexecution'});
                }
-               else if(status && status=='INITIALIZING'){
+               else if(status && status=='STARTING'){
                 iconMenuItems.push({title:'Kill', type : 'killexecution'});
               }
                else if(status && status=='PAUSE'){
@@ -2079,7 +2079,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
              var iconMenuItems = [{title:'Show Details', type : 'element'}];
              if($scope.execMode){
                
-               var status = $(".status[element-id=" + taskId + "] .statusTitle")[0].innerHTML;
+               var status = $(".status[element-id=" + taskId + "] .statusTitle")[0].innerHTML.toUpperCase();
                if(status && (status=='COMPLETED') ||(status== 'FAILED')|| (status== 'RUNNING')){
                  if(isExec && (status=='COMPLETED')){
                    iconMenuItems.push({title:'Show Results', type : 'results'});
@@ -2110,7 +2110,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                  iconMenuItems.splice(0,0,{title:'Kill', type : 'killexecution'});
                  iconMenuItems.push({title:'Show Logs', type : 'logs'});
                }
-               if(status && status=='INITIALIZING'){
+               if(status && status=='STARTING'){
                 iconMenuItems.splice(0,0,{title:'Kill', type : 'killexecution'});
                }
               //  if(isGroupExec){

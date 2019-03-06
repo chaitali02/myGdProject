@@ -55,6 +55,10 @@ public class NotificationServiceImpl {
 		senderProps.put("mail.smtp.port", notification.getPort());  
 		senderProps.put("mail.smtp.auth", "true"); 
 		senderProps.put("mail.smtp.starttls.enable", "true");
+		if(notification.getHost().contains("gmail")) {
+			senderProps.put("mail.smtp.socketFactory.class",    
+	                "javax.net.ssl.SSLSocketFactory");
+		}
 		
 		Session session = Session.getDefaultInstance(senderProps, new Authenticator() {
 			 protected PasswordAuthentication getPasswordAuthentication() {  

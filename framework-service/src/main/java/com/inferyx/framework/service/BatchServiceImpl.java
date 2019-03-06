@@ -97,7 +97,7 @@ public class BatchServiceImpl {
 			batchExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 	
 			batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.PENDING);
-			batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.INITIALIZING);
+			batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.STARTING);
 			batchExec = (BatchExec) commonServiceImpl.setMetaStatus(batchExec, MetaType.batchExec, Status.Stage.READY);
 
 		} catch (Exception e) {
@@ -453,9 +453,17 @@ public class BatchServiceImpl {
 		String roleUuid = sessionHelper.getSessionContext().getRoleInfo().getRef().getUuid();
 		String appUuid = sessionHelper.getSessionContext().getAppInfo().getRef().getUuid();
 		
+		String contextPath = Helper.getPropertyValue("framework.webserver.contextpath");
+		if(contextPath.startsWith("")) {
+			contextPath = "";
+		} else {
+			contextPath = contextPath.startsWith("/") ? contextPath : "/".concat(contextPath);
+			contextPath = contextPath.endsWith("/") ? contextPath.substring(contextPath.lastIndexOf("/")) : contextPath;	
+		}
+		
 		String resultUrl = Helper.getPropertyValue("framework.url.batch.result");
 		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.webserver.host"),
-				Helper.getPropertyValue("framework.webserver.port"), batchExec.getUuid(), batchExec.getVersion(),
+				Helper.getPropertyValue("framework.webserver.port"), contextPath, batchExec.getUuid(), batchExec.getVersion(),
 				batch.getName(), roleUuid, appUuid);
 
 		String message = Helper.getPropertyValue("framework.email.body");
@@ -484,10 +492,18 @@ public class BatchServiceImpl {
 
 		String roleUuid = sessionHelper.getSessionContext().getRoleInfo().getRef().getUuid();
 		String appUuid = sessionHelper.getSessionContext().getAppInfo().getRef().getUuid();
+
+		String contextPath = Helper.getPropertyValue("framework.webserver.contextpath");
+		if(contextPath.startsWith("")) {
+			contextPath = "";
+		} else {
+			contextPath = contextPath.startsWith("/") ? contextPath : "/".concat(contextPath);
+			contextPath = contextPath.endsWith("/") ? contextPath.substring(contextPath.lastIndexOf("/")) : contextPath;	
+		}
 		
 		String resultUrl = Helper.getPropertyValue("framework.url.batch.result");
 		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.webserver.host"),
-				Helper.getPropertyValue("framework.webserver.port"), batchExec.getUuid(), batchExec.getVersion(),
+				Helper.getPropertyValue("framework.webserver.port"), contextPath, batchExec.getUuid(), batchExec.getVersion(),
 				batch.getName(), roleUuid, appUuid);
 		
 		String message = Helper.getPropertyValue("framework.email.body");

@@ -26,13 +26,11 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.dao.IDatasetDao;
 import com.inferyx.framework.dao.IFilterDao;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.DataSet;
-import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Filter;
@@ -565,7 +563,7 @@ public class DatasetServiceImpl {
 	}
 	
 	
-	public HttpServletResponse download(String uuid, String version, String format,int rows,RunMode runMode, HttpServletResponse response) throws Exception {
+	public HttpServletResponse download(String datasetUuid, String datasetVersion, String format,int rows,RunMode runMode, HttpServletResponse response) throws Exception {
 		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
 		if(rows > maxRows) {
 			logger.error("Requested rows exceeded the limit of "+maxRows);
@@ -573,8 +571,9 @@ public class DatasetServiceImpl {
 			throw new RuntimeException("Requested rows exceeded the limit of "+maxRows);
 		}
 //		getDatasetSample(uuid, version, rows, null, runMode);
-		List<Map<String, Object>> results = getDatasetSample(uuid, version, rows, null, runMode);
-		response = commonServiceImpl.download(uuid, version, format, 0, rows, response, 0, null, null, null, runMode, results, MetaType.downloadExec, new MetaIdentifierHolder(new MetaIdentifier(MetaType.dataset,uuid,version)));
+		List<Map<String, Object>> results = getDatasetSample(datasetUuid, datasetVersion, rows, null, runMode);
+		response = commonServiceImpl.download(format, response, runMode, results,
+				new MetaIdentifierHolder(new MetaIdentifier(MetaType.dataset, datasetUuid, datasetVersion)));
 		return response;
 
 	}

@@ -75,12 +75,12 @@ public class PDFUtil {
 		contentStream.setFont(PDType1Font.HELVETICA_BOLD, 10.0f);
 		
 		//writting other contents
-		PDStreamUtils.write(contentStream, "Report Name: ".concat(report.getName()).concat(": "),
+		PDStreamUtils.write(contentStream, "Report Name".concat(": ").concat(report.getName()),
 				(PDFont) PDType1Font.HELVETICA, 10.0f, margin, y, Color.black);
 		y -= 15.0f;
 		
 		PDStreamUtils.write(contentStream,
-				"Report Description".concat(report.getDesc() != null ? report.getDesc() : "").concat(": "),
+				"Report Description".concat(": ").concat(report.getDesc() != null ? report.getDesc() : ""),
 				(PDFont) PDType1Font.HELVETICA, 10.0f, margin, y, Color.black);
 		y -= 15.0f;
 
@@ -143,6 +143,54 @@ public class PDFUtil {
 	    
 //	    PDStreamUtils.write(contentStream, report.getFooter(),
 //				(PDFont) PDType1Font.HELVETICA, 10.0f, margin, y, Color.black);
+		contentStream.close();
+		return pdfDoc;
+	}
+	
+	public PDDocument getPDFDoc(List<Map<String, Object>> resultList)
+			throws IOException {
+		PDDocument pdfDoc = new PDDocument();
+		PDPage pdfPage = new PDPage();
+		pdfDoc.addPage(pdfPage);
+
+		contentStream = new PDPageContentStream(pdfDoc, pdfPage);
+		
+		float y = 750.0f;
+		float margin = 50.0f;
+
+		//adding column names into list as row
+		Map<String, Object> colMap = new LinkedHashMap<>();
+		for(String colName : resultList.get(0).keySet()) {
+			colMap.put(colName, colName);
+		}
+		
+		resultList.add(0, colMap);
+		
+		//writting data into table
+		final float tableWidth = pdfPage.getMediaBox().getWidth() - 2.0f * margin;
+		float tableHeight = pdfPage.getMediaBox().getHeight() - (2 * margin);
+		BaseTable table = new BaseTable(y, tableHeight, 50f, tableWidth, margin, pdfDoc, pdfPage, true, true);
+		
+	    for(final Map<String, Object> row : resultList) {
+	    	Row<PDPage> tableRow = table.createRow(12);
+			for(String colName : row.keySet()) {
+				Cell<PDPage> cell = tableRow.createCell(25, row.get(colName).toString());
+			}
+		}
+	    
+//	    List<List> tempList = new ArrayList<>();
+//	    for(final Map<String, Object> row : resultList) {
+////	    	Row<PDPage> tableRow = table.createRow(12);
+////			for(String colName : row.keySet()) {
+////				Cell<PDPage> cell = tableRow.createCell(25, row.get(colName).toString());
+////			}
+//			List<Object> rowList = new ArrayList<>(row.values());
+//			tempList.add(rowList);
+//		}
+//	    DataTable t = new DataTable(table, pdfPage);
+//		t.addListToTable(tempList, DataTable.HASHEADER);
+
+	    table.draw();
 		contentStream.close();
 		return pdfDoc;
 	}

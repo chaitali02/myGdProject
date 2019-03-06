@@ -92,7 +92,7 @@ import com.inferyx.framework.register.GraphRegister;
 public class DagServiceImpl {
 	
 	private static final String GET = "get";
-	private static final String SET = "set";
+//	private static final String SET = "set";
 
 	@Autowired
 	GraphRegister<?> registerGraph;
@@ -1073,7 +1073,7 @@ public class DagServiceImpl {
 							// consider inactive stage)
 			}
 			synchronized (dagExec.getUuid()) {
-				commonServiceImpl.setMetaStatusForStage(dagExec, indvDagExecStg, Status.Stage.INITIALIZING, indvDagExecStg.getStageId());
+				commonServiceImpl.setMetaStatusForStage(dagExec, indvDagExecStg, Status.Stage.STARTING, indvDagExecStg.getStageId());
 			}
 			for (TaskExec indvExecTask : dagExecTasks) {
 				ExecParams taskExecParams = createChildParams(execParams);
@@ -1084,7 +1084,7 @@ public class DagServiceImpl {
 				
 				
 				synchronized (dagExec.getUuid()) {
-					commonServiceImpl.setMetaStatusForTask(dagExec, indvExecTask, Status.Stage.INITIALIZING, indvDagExecStg.getStageId(), indvExecTask.getTaskId());
+					commonServiceImpl.setMetaStatusForTask(dagExec, indvExecTask, Status.Stage.STARTING, indvDagExecStg.getStageId(), indvExecTask.getTaskId());
 				}
 				
 				List<TaskOperator> operatorList = new ArrayList<>();
@@ -1644,10 +1644,18 @@ public class DagServiceImpl {
 
 		String roleUuid = sessionHelper.getSessionContext().getRoleInfo().getRef().getUuid();
 		String appUuid = sessionHelper.getSessionContext().getAppInfo().getRef().getUuid();
+
+		String contextPath = Helper.getPropertyValue("framework.webserver.contextpath");
+		if(contextPath.startsWith("")) {
+			contextPath = "";
+		} else {
+			contextPath = contextPath.startsWith("/") ? contextPath : "/".concat(contextPath);
+			contextPath = contextPath.endsWith("/") ? contextPath.substring(contextPath.lastIndexOf("/")) : contextPath;	
+		}
 		
 		String resultUrl = Helper.getPropertyValue("framework.url.dag.result");
 		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.webserver.host"),
-				Helper.getPropertyValue("framework.webserver.port"), dagExec.getUuid(), dagExec.getVersion(),
+				Helper.getPropertyValue("framework.webserver.port"), contextPath, dagExec.getUuid(), dagExec.getVersion(),
 				MetaType.dagExec.toString().toLowerCase(), roleUuid, appUuid);
 
 		String message = Helper.getPropertyValue("framework.email.body");
@@ -1673,10 +1681,18 @@ public class DagServiceImpl {
 
 		String roleUuid = sessionHelper.getSessionContext().getRoleInfo().getRef().getUuid();
 		String appUuid = sessionHelper.getSessionContext().getAppInfo().getRef().getUuid();
+
+		String contextPath = Helper.getPropertyValue("framework.webserver.contextpath");
+		if(contextPath.startsWith("")) {
+			contextPath = "";
+		} else {
+			contextPath = contextPath.startsWith("/") ? contextPath : "/".concat(contextPath);
+			contextPath = contextPath.endsWith("/") ? contextPath.substring(contextPath.lastIndexOf("/")) : contextPath;	
+		}
 		
 		String resultUrl = Helper.getPropertyValue("framework.url.dag.result");
 		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.webserver.host"),
-				Helper.getPropertyValue("framework.webserver.port"), dagExec.getUuid(), dagExec.getVersion(),
+				Helper.getPropertyValue("framework.webserver.port"), contextPath, dagExec.getUuid(), dagExec.getVersion(),
 				MetaType.dagExec.toString().toLowerCase(), roleUuid, appUuid);
 
 		String message = Helper.getPropertyValue("framework.email.body");

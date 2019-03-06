@@ -15,7 +15,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection="reportexec")
 public class ReportExec extends BaseRuleExec {
 	private long numRows;
-	private String sizeMB;
+	private double sizeMB;
 	
 	/**
 	 * @Ganesh
@@ -38,7 +38,7 @@ public class ReportExec extends BaseRuleExec {
 	 *
 	 * @return the sizeMB
 	 */
-	public String getSizeMB() {
+	public double getSizeMB() {
 		return sizeMB;
 	}
 	/**
@@ -46,7 +46,7 @@ public class ReportExec extends BaseRuleExec {
 	 *
 	 * @param sizeMB the sizeMB to set
 	 */
-	public void setSizeMB(String sizeMB) {
+	public void setSizeMB(double sizeMB) {
 		this.sizeMB = sizeMB;
 	}
 	
