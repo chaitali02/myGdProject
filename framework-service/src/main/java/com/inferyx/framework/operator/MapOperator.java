@@ -166,7 +166,7 @@ public class MapOperator implements IParsable {
 			datapodKey.setVersion(DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()).get(MetaType.datapod + "_" + datapodKey.getUUID()).getVersion());
 		} else {
 			Datapod targetDatapod = (Datapod) commonServiceImpl
-					.getOneByUuidAndVersion(map.getTarget().getRef().getUuid(), map.getTarget().getRef().getVersion(), MetaType.datapod.toString());
+					.getOneByUuidAndVersion(map.getTarget().getRef().getUuid(), map.getTarget().getRef().getVersion(), MetaType.datapod.toString(), "N");
 			datapodKey.setVersion(targetDatapod.getVersion());
 		}
 		return builder.toString();
@@ -175,7 +175,7 @@ public class MapOperator implements IParsable {
 	@Override
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
-		Map map = (Map) commonServiceImpl.getOneByUuidAndVersion(baseExec.getDependsOn().getRef().getUuid(), baseExec.getDependsOn().getRef().getVersion(), MetaType.map.toString());
+		Map map = (Map) commonServiceImpl.getOneByUuidAndVersion(baseExec.getDependsOn().getRef().getUuid(), baseExec.getDependsOn().getRef().getVersion(), MetaType.map.toString(), "N");
 		baseExec.setName(map.getName());
 		baseExec.setAppInfo(map.getAppInfo());
 		try {
