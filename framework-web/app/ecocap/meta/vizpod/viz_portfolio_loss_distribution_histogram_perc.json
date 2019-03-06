@@ -1,6 +1,6 @@
 {
   "uuid": "c647d7be-4cc0-41ab-856f-b30a04d8e9e9",
-  "version": "1533935874",
+  "version": "1551857308",
   "name": "viz_portfolio_loss_distribution_histogram_perc",
   "desc": null,
   "createdBy": {
@@ -12,10 +12,10 @@
     },
     "value": null
   },
-    "createdOn" : ISODate("2018-06-11T12:47:30.806Z"),
+  "createdOn": "Wed Mar 06 12:58:28 IST 2019",
   "tags": [],
-  "active" : "Y",
-  "locked" : "N",
+  "active": "Y",
+  "locked": "N",
   "published": "N",
   "appInfo": [
     {
@@ -28,13 +28,14 @@
       "value": null
     }
   ],
+  "publicFlag": "N",
   "title": null,
   "source": {
     "ref": {
       "type": "datapod",
       "uuid": "cc33d6f6-e44b-4f99-90e5-313c9db447af",
       "version": null,
-      "name": "portfolio_loss_histogram_perc"
+      "name": "portfolio_loss_histogram_percentage"
     },
     "value": null
   },
@@ -46,7 +47,7 @@
         "type": "datapod",
         "uuid": "cc33d6f6-e44b-4f99-90e5-313c9db447af",
         "version": null,
-        "name": "portfolio_loss_histogram_perc"
+        "name": "portfolio_loss_histogram_percentage"
       },
       "attributeId": 1,
       "function": null,
@@ -55,7 +56,56 @@
     }
   ],
   "dimension": [],
-  "detailAttr": [],
+  "detailAttr": [
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "cc33d6f6-e44b-4f99-90e5-313c9db447af",
+        "version": null,
+        "name": "portfolio_loss_histogram_percentage"
+      },
+      "attributeId": 0,
+      "function": null,
+      "value": null,
+      "attributeName": "reporting_date"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "cc33d6f6-e44b-4f99-90e5-313c9db447af",
+        "version": null,
+        "name": "portfolio_loss_histogram_percentage"
+      },
+      "attributeId": 1,
+      "function": null,
+      "value": null,
+      "attributeName": "bucket"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "cc33d6f6-e44b-4f99-90e5-313c9db447af",
+        "version": null,
+        "name": "portfolio_loss_histogram_percentage"
+      },
+      "attributeId": 2,
+      "function": null,
+      "value": null,
+      "attributeName": "frequency"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "cc33d6f6-e44b-4f99-90e5-313c9db447af",
+        "version": null,
+        "name": "portfolio_loss_histogram_percentage"
+      },
+      "attributeId": 3,
+      "function": null,
+      "value": null,
+      "attributeName": "version"
+    }
+  ],
   "filterInfo": [],
   "groups": [],
   "values": [
@@ -64,12 +114,14 @@
         "type": "datapod",
         "uuid": "cc33d6f6-e44b-4f99-90e5-313c9db447af",
         "version": null,
-        "name": "portfolio_loss_histogram_perc"
+        "name": "portfolio_loss_histogram_percentage"
       },
       "attributeId": 2,
       "function": null,
       "value": null,
       "attributeName": "frequency"
     }
-  ]
+  ],
+  "sortBy": [],
+  "sortOrder": null
 }

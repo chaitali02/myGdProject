@@ -1,6 +1,6 @@
 {
   "uuid": "d6863f63-bb9d-42ac-997e-4094abdc8fcf",
-  "version": "1534012521",
+  "version": "1551857319",
   "name": "viz_customer_var_contribution",
   "desc": null,
   "createdBy": {
@@ -12,10 +12,10 @@
     },
     "value": null
   },
-  "createdOn": "Sat Aug 11 14:35:21 EDT 2018",
+  "createdOn": "Wed Mar 06 12:58:39 IST 2019",
   "tags": [],
-  "active" : "Y",
-  "locked" : "N",
+  "active": "Y",
+  "locked": "N",
   "published": "N",
   "appInfo": [
     {
@@ -28,6 +28,7 @@
       "value": null
     }
   ],
+  "publicFlag": "N",
   "title": null,
   "source": {
     "ref": {
@@ -55,7 +56,56 @@
     }
   ],
   "dimension": [],
-  "detailAttr": [],
+  "detailAttr": [
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "9b8485f7-2099-4163-9ca5-a241e952c631",
+        "version": null,
+        "name": "customer_var_contribution_topn_perc"
+      },
+      "attributeId": 0,
+      "function": null,
+      "value": null,
+      "attributeName": "reporting_date"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "9b8485f7-2099-4163-9ca5-a241e952c631",
+        "version": null,
+        "name": "customer_var_contribution_topn_perc"
+      },
+      "attributeId": 1,
+      "function": null,
+      "value": null,
+      "attributeName": "top_n"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "9b8485f7-2099-4163-9ca5-a241e952c631",
+        "version": null,
+        "name": "customer_var_contribution_topn_perc"
+      },
+      "attributeId": 2,
+      "function": null,
+      "value": null,
+      "attributeName": "var_contribution_perc"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "9b8485f7-2099-4163-9ca5-a241e952c631",
+        "version": null,
+        "name": "customer_var_contribution_topn_perc"
+      },
+      "attributeId": 3,
+      "function": null,
+      "value": null,
+      "attributeName": "version"
+    }
+  ],
   "filterInfo": [],
   "groups": [],
   "values": [
@@ -71,5 +121,7 @@
       "value": null,
       "attributeName": "var_contribution_perc"
     }
-  ]
+  ],
+  "sortBy": [],
+  "sortOrder": null
 }

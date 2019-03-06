@@ -56,7 +56,176 @@
     }
   ],
   "dimension": [],
-  "detailAttr": [],
+  "detailAttr": [ 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "14bebb86-6137-4109-ad45-0eea53066768"
+            },
+            "attributeId" : 0
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "14bebb86-6137-4109-ad45-0eea53066768"
+            },
+            "attributeId" : 1
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "14bebb86-6137-4109-ad45-0eea53066768"
+            },
+            "attributeId" : 2
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "14bebb86-6137-4109-ad45-0eea53066768"
+            },
+            "attributeId" : 3
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "14bebb86-6137-4109-ad45-0eea53066768"
+            },
+            "attributeId" : 4
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "14bebb86-6137-4109-ad45-0eea53066768"
+            },
+            "attributeId" : 5
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "14bebb86-6137-4109-ad45-0eea53066768"
+            },
+            "attributeId" : 6
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "14bebb86-6137-4109-ad45-0eea53066768"
+            },
+            "attributeId" : 7
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "14bebb86-6137-4109-ad45-0eea53066768"
+            },
+            "attributeId" : 8
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "14bebb86-6137-4109-ad45-0eea53066768"
+            },
+            "attributeId" : 9
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "14bebb86-6137-4109-ad45-0eea53066768"
+            },
+            "attributeId" : 10
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "14bebb86-6137-4109-ad45-0eea53066768"
+            },
+            "attributeId" : 11
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "14bebb86-6137-4109-ad45-0eea53066768"
+            },
+            "attributeId" : 12
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "14bebb86-6137-4109-ad45-0eea53066768"
+            },
+            "attributeId" : 13
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "14bebb86-6137-4109-ad45-0eea53066768"
+            },
+            "attributeId" : 14
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "14bebb86-6137-4109-ad45-0eea53066768"
+            },
+            "attributeId" : 15
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "14bebb86-6137-4109-ad45-0eea53066768"
+            },
+            "attributeId" : 16
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "14bebb86-6137-4109-ad45-0eea53066768"
+            },
+            "attributeId" : 17
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "0c9b5122-ced3-404d-a22b-ff1105e1f9ac"
+            },
+            "attributeId" : 0
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "0c9b5122-ced3-404d-a22b-ff1105e1f9ac"
+            },
+            "attributeId" : 1
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "0c9b5122-ced3-404d-a22b-ff1105e1f9ac"
+            },
+            "attributeId" : 2
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "0c9b5122-ced3-404d-a22b-ff1105e1f9ac"
+            },
+            "attributeId" : 3
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "0c9b5122-ced3-404d-a22b-ff1105e1f9ac"
+            },
+            "attributeId" : 4
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "0c9b5122-ced3-404d-a22b-ff1105e1f9ac"
+            },
+            "attributeId" : 5
+        }
+    ],
   "filterInfo": [],
   "groups": [],
   "values": [

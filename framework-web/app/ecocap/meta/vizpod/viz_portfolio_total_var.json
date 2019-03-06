@@ -1,6 +1,6 @@
 {
   "uuid": "d08bce3c-2c73-481c-8809-4e2c24b9596c",
-  "version": "1534280419",
+  "version": "1551857273",
   "name": "viz_portfolio_total_var",
   "desc": null,
   "createdBy": {
@@ -12,10 +12,10 @@
     },
     "value": null
   },
-    "createdOn" : ISODate("2018-06-03T18:34:22.000Z"),
+  "createdOn": "Wed Mar 06 12:57:53 IST 2019",
   "tags": [],
-  "active" : "Y",
-  "locked" : "N",
+  "active": "Y",
+  "locked": "N",
   "published": "N",
   "appInfo": [
     {
@@ -28,13 +28,14 @@
       "value": null
     }
   ],
+  "publicFlag": "N",
   "title": null,
   "source": {
     "ref": {
       "type": "dataset",
       "uuid": "6d29226b-05b1-4717-9344-4c5c18652a49",
       "version": null,
-      "name": "ds_portfolio_var_heatmap2"
+      "name": "ds_portfolio_var_heatmap"
     },
     "value": null
   },
@@ -46,7 +47,7 @@
         "type": "dataset",
         "uuid": "6d29226b-05b1-4717-9344-4c5c18652a49",
         "version": null,
-        "name": "ds_portfolio_var_heatmap2"
+        "name": "ds_portfolio_var_heatmap"
       },
       "attributeId": 3,
       "function": null,
@@ -55,7 +56,68 @@
     }
   ],
   "dimension": [],
-  "detailAttr": [],
+  "detailAttr": [
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "6d29226b-05b1-4717-9344-4c5c18652a49",
+        "version": null,
+        "name": "ds_portfolio_var_heatmap"
+      },
+      "attributeId": 0,
+      "function": null,
+      "value": null,
+      "attributeName": "portfolio_pd_bucket"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "6d29226b-05b1-4717-9344-4c5c18652a49",
+        "version": null,
+        "name": "ds_portfolio_var_heatmap"
+      },
+      "attributeId": 1,
+      "function": null,
+      "value": null,
+      "attributeName": "portfolio_lgd_bucket"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "6d29226b-05b1-4717-9344-4c5c18652a49",
+        "version": null,
+        "name": "ds_portfolio_var_heatmap"
+      },
+      "attributeId": 2,
+      "function": null,
+      "value": null,
+      "attributeName": "fm_portfolio_var_heatmap"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "6d29226b-05b1-4717-9344-4c5c18652a49",
+        "version": null,
+        "name": "ds_portfolio_var_heatmap"
+      },
+      "attributeId": 3,
+      "function": null,
+      "value": null,
+      "attributeName": "reporting_date"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "6d29226b-05b1-4717-9344-4c5c18652a49",
+        "version": null,
+        "name": "ds_portfolio_var_heatmap"
+      },
+      "attributeId": 4,
+      "function": null,
+      "value": null,
+      "attributeName": "version"
+    }
+  ],
   "filterInfo": [],
   "groups": [],
   "values": [
@@ -64,12 +126,14 @@
         "type": "dataset",
         "uuid": "6d29226b-05b1-4717-9344-4c5c18652a49",
         "version": null,
-        "name": "ds_portfolio_var_heatmap2"
+        "name": "ds_portfolio_var_heatmap"
       },
       "attributeId": 2,
       "function": null,
       "value": null,
       "attributeName": "fm_portfolio_var_heatmap"
     }
-  ]
+  ],
+  "sortBy": [],
+  "sortOrder": null
 }

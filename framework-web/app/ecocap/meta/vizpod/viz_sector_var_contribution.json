@@ -1,6 +1,6 @@
 {
   "uuid": "56c3a7cc-c00f-41d7-8df3-2c03acf9ea9f",
-  "version": "1534019617",
+  "version": "1551857336",
   "name": "viz_sector_var_contribution",
   "desc": null,
   "createdBy": {
@@ -12,10 +12,10 @@
     },
     "value": null
   },
-  "createdOn": "Sat Aug 11 16:33:37 EDT 2018",
+  "createdOn": "Wed Mar 06 12:58:56 IST 2019",
   "tags": [],
-  "active" : "Y",
-  "locked" : "N",
+  "active": "Y",
+  "locked": "N",
   "published": "N",
   "appInfo": [
     {
@@ -28,6 +28,7 @@
       "value": null
     }
   ],
+  "publicFlag": "N",
   "title": null,
   "source": {
     "ref": {
@@ -55,7 +56,56 @@
     }
   ],
   "dimension": [],
-  "detailAttr": [],
+  "detailAttr": [
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "4fa6fabc-9cf3-45b7-b220-ff9c8d6f6daa",
+        "version": null,
+        "name": "ds_sector_var_contribution_perc"
+      },
+      "attributeId": 0,
+      "function": null,
+      "value": null,
+      "attributeName": "industry"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "4fa6fabc-9cf3-45b7-b220-ff9c8d6f6daa",
+        "version": null,
+        "name": "ds_sector_var_contribution_perc"
+      },
+      "attributeId": 1,
+      "function": null,
+      "value": null,
+      "attributeName": "sector_var_contribution_perc"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "4fa6fabc-9cf3-45b7-b220-ff9c8d6f6daa",
+        "version": null,
+        "name": "ds_sector_var_contribution_perc"
+      },
+      "attributeId": 2,
+      "function": null,
+      "value": null,
+      "attributeName": "reporting_date"
+    },
+    {
+      "ref": {
+        "type": "dataset",
+        "uuid": "4fa6fabc-9cf3-45b7-b220-ff9c8d6f6daa",
+        "version": null,
+        "name": "ds_sector_var_contribution_perc"
+      },
+      "attributeId": 3,
+      "function": null,
+      "value": null,
+      "attributeName": "version"
+    }
+  ],
   "filterInfo": [],
   "groups": [],
   "values": [
@@ -71,5 +121,7 @@
       "value": null,
       "attributeName": "sector_var_contribution_perc"
     }
-  ]
+  ],
+  "sortBy": [],
+  "sortOrder": null
 }

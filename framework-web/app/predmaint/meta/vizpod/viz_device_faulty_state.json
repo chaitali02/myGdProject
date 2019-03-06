@@ -1,6 +1,6 @@
 {
   "uuid": "ca06cb36-d16d-48f0-b7ac-86b73a8b30a6",
-  "version": "1550347236",
+  "version": "1551857935",
   "name": "viz_device_faulty_state",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Sat Feb 16 15:00:36 EST 2019",
+  "createdOn": "Wed Mar 06 13:08:55 IST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -56,7 +56,1028 @@
     }
   ],
   "dimension": [],
-  "detailAttr": [],
+  "detailAttr": [
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 0,
+      "function": null,
+      "value": null,
+      "attributeName": "deviceid"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 1,
+      "function": null,
+      "value": null,
+      "attributeName": "date"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 2,
+      "function": null,
+      "value": null,
+      "attributeName": "warn_type1_total"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 3,
+      "function": null,
+      "value": null,
+      "attributeName": "warn_type2_total"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 4,
+      "function": null,
+      "value": null,
+      "attributeName": "fault_code_type_1_count"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 5,
+      "function": null,
+      "value": null,
+      "attributeName": "fault_code_type_2_count"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 6,
+      "function": null,
+      "value": null,
+      "attributeName": "fault_code_type_3_count"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 7,
+      "function": null,
+      "value": null,
+      "attributeName": "fault_code_type_4_count"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 8,
+      "function": null,
+      "value": null,
+      "attributeName": "problem_type_1_per_usage1"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 9,
+      "function": null,
+      "value": null,
+      "attributeName": "problem_type_2_per_usage1"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 10,
+      "function": null,
+      "value": null,
+      "attributeName": "problem_type_3_per_usage1"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 11,
+      "function": null,
+      "value": null,
+      "attributeName": "problem_type_4_per_usage1"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 12,
+      "function": null,
+      "value": null,
+      "attributeName": "fault_code_type_1_count_per_usage1"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 13,
+      "function": null,
+      "value": null,
+      "attributeName": "fault_code_type_2_count_per_usage1"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 14,
+      "function": null,
+      "value": null,
+      "attributeName": "fault_code_type_3_count_per_usage1"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 15,
+      "function": null,
+      "value": null,
+      "attributeName": "fault_code_type_4_count_per_usage1"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 16,
+      "function": null,
+      "value": null,
+      "attributeName": "problem_type_1_per_usage2"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 17,
+      "function": null,
+      "value": null,
+      "attributeName": "problem_type_2_per_usage2"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 18,
+      "function": null,
+      "value": null,
+      "attributeName": "problem_type_3_per_usage2"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 19,
+      "function": null,
+      "value": null,
+      "attributeName": "problem_type_4_per_usage2"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 20,
+      "function": null,
+      "value": null,
+      "attributeName": "fault_code_type_1_count_per_usage2"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 21,
+      "function": null,
+      "value": null,
+      "attributeName": "fault_code_type_2_count_per_usage2"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 22,
+      "function": null,
+      "value": null,
+      "attributeName": "fault_code_type_3_count_per_usage2"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 23,
+      "function": null,
+      "value": null,
+      "attributeName": "fault_code_type_4_count_per_usage2"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 24,
+      "function": null,
+      "value": null,
+      "attributeName": "problem_type_1"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 25,
+      "function": null,
+      "value": null,
+      "attributeName": "problem_type_2"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 26,
+      "function": null,
+      "value": null,
+      "attributeName": "problem_type_3"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 27,
+      "function": null,
+      "value": null,
+      "attributeName": "problem_type_4"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 28,
+      "function": null,
+      "value": null,
+      "attributeName": "problemreported"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 29,
+      "function": null,
+      "value": null,
+      "attributeName": "usage_count_1"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 30,
+      "function": null,
+      "value": null,
+      "attributeName": "usage_count_2"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 31,
+      "function": null,
+      "value": null,
+      "attributeName": "error_count_1"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 32,
+      "function": null,
+      "value": null,
+      "attributeName": "error_count_2"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 33,
+      "function": null,
+      "value": null,
+      "attributeName": "error_count_3"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 34,
+      "function": null,
+      "value": null,
+      "attributeName": "error_count_4"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 35,
+      "function": null,
+      "value": null,
+      "attributeName": "error_count_5"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 36,
+      "function": null,
+      "value": null,
+      "attributeName": "error_count_6"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 37,
+      "function": null,
+      "value": null,
+      "attributeName": "error_count_7"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 38,
+      "function": null,
+      "value": null,
+      "attributeName": "error_count_8"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 39,
+      "function": null,
+      "value": null,
+      "attributeName": "date_month"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 40,
+      "function": null,
+      "value": null,
+      "attributeName": "date_week"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 41,
+      "function": null,
+      "value": null,
+      "attributeName": "date_day"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 42,
+      "function": null,
+      "value": null,
+      "attributeName": "cat1"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 43,
+      "function": null,
+      "value": null,
+      "attributeName": "cat2"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 44,
+      "function": null,
+      "value": null,
+      "attributeName": "cat3"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 45,
+      "function": null,
+      "value": null,
+      "attributeName": "cat4"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 46,
+      "function": null,
+      "value": null,
+      "attributeName": "problem_type_1_category"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 47,
+      "function": null,
+      "value": null,
+      "attributeName": "problem_type_2_category"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 48,
+      "function": null,
+      "value": null,
+      "attributeName": "problem_type_3_category"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 49,
+      "function": null,
+      "value": null,
+      "attributeName": "problem_type_4_category"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 50,
+      "function": null,
+      "value": null,
+      "attributeName": "problem_type_1_per_usage1_category"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 51,
+      "function": null,
+      "value": null,
+      "attributeName": "problem_type_2_per_usage1_category"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 52,
+      "function": null,
+      "value": null,
+      "attributeName": "problem_type_3_per_usage1_category"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 53,
+      "function": null,
+      "value": null,
+      "attributeName": "problem_type_4_per_usage1_category"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 54,
+      "function": null,
+      "value": null,
+      "attributeName": "problem_type_1_per_usage2_category"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 55,
+      "function": null,
+      "value": null,
+      "attributeName": "problem_type_2_per_usage2_category"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 56,
+      "function": null,
+      "value": null,
+      "attributeName": "problem_type_3_per_usage2_category"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 57,
+      "function": null,
+      "value": null,
+      "attributeName": "problem_type_4_per_usage2_category"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 58,
+      "function": null,
+      "value": null,
+      "attributeName": "fault_code_type_1_count_category"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 59,
+      "function": null,
+      "value": null,
+      "attributeName": "fault_code_type_2_count_category"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 60,
+      "function": null,
+      "value": null,
+      "attributeName": "fault_code_type_3_count_category"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 61,
+      "function": null,
+      "value": null,
+      "attributeName": "fault_code_type_4_count_category"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 62,
+      "function": null,
+      "value": null,
+      "attributeName": "fault_code_type_1_count_per_usage1_category"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 63,
+      "function": null,
+      "value": null,
+      "attributeName": "fault_code_type_2_count_per_usage1_category"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 64,
+      "function": null,
+      "value": null,
+      "attributeName": "fault_code_type_3_count_per_usage1_category"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 65,
+      "function": null,
+      "value": null,
+      "attributeName": "fault_code_type_4_count_per_usage1_category"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 66,
+      "function": null,
+      "value": null,
+      "attributeName": "fault_code_type_1_count_per_usage2_category"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 67,
+      "function": null,
+      "value": null,
+      "attributeName": "fault_code_type_2_count_per_usage2_category"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 68,
+      "function": null,
+      "value": null,
+      "attributeName": "fault_code_type_3_count_per_usage2_category"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 69,
+      "function": null,
+      "value": null,
+      "attributeName": "fault_code_type_4_count_per_usage2_category"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 70,
+      "function": null,
+      "value": null,
+      "attributeName": "warning_features"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 71,
+      "function": null,
+      "value": null,
+      "attributeName": "summary_features"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "fc55b32a-7612-460d-a01c-99a2690d9fdf",
+        "version": null,
+        "name": "device_data_final_features"
+      },
+      "attributeId": 72,
+      "function": null,
+      "value": null,
+      "attributeName": "version"
+    },
+    {
+      "ref": {
+        "type": "formula",
+        "uuid": "fe0d1839-5781-4cbc-9daa-28689b101692",
+        "version": null,
+        "name": "fm_warning_type_1_count"
+      },
+      "attributeId": null,
+      "function": null,
+      "value": null,
+      "attributeName": null
+    },
+    {
+      "ref": {
+        "type": "formula",
+        "uuid": "678a5b68-11b3-4187-8d9a-56abb69eb892",
+        "version": null,
+        "name": "fm_problem_type_3_count"
+      },
+      "attributeId": null,
+      "function": null,
+      "value": null,
+      "attributeName": null
+    },
+    {
+      "ref": {
+        "type": "formula",
+        "uuid": "5d19252e-5c50-443a-9b4e-210585a6e403",
+        "version": null,
+        "name": "fm_warning_type_2_count"
+      },
+      "attributeId": null,
+      "function": null,
+      "value": null,
+      "attributeName": null
+    },
+    {
+      "ref": {
+        "type": "formula",
+        "uuid": "5162bc06-4b76-4699-8880-e9ae26064062",
+        "version": null,
+        "name": "fm_problem_type_2_count"
+      },
+      "attributeId": null,
+      "function": null,
+      "value": null,
+      "attributeName": null
+    },
+    {
+      "ref": {
+        "type": "formula",
+        "uuid": "0cd7cd98-9a1d-49f5-a11d-93316c8549d6",
+        "version": null,
+        "name": "fm_problem_type_1_count"
+      },
+      "attributeId": null,
+      "function": null,
+      "value": null,
+      "attributeName": null
+    },
+    {
+      "ref": {
+        "type": "formula",
+        "uuid": "ae2c1aab-4355-4224-9f48-73d314ff5742",
+        "version": null,
+        "name": "fm_problem_report_count"
+      },
+      "attributeId": null,
+      "function": null,
+      "value": null,
+      "attributeName": null
+    },
+    {
+      "ref": {
+        "type": "formula",
+        "uuid": "1296fc36-0d49-4a19-9e42-ddaef1e5f82b",
+        "version": null,
+        "name": "fm_faulty_code_type_4_count"
+      },
+      "attributeId": null,
+      "function": null,
+      "value": null,
+      "attributeName": null
+    },
+    {
+      "ref": {
+        "type": "formula",
+        "uuid": "6a5b5d49-2e4c-4c0b-9409-02d48da8fdec",
+        "version": null,
+        "name": "fm_faulty_code_type_3_count"
+      },
+      "attributeId": null,
+      "function": null,
+      "value": null,
+      "attributeName": null
+    },
+    {
+      "ref": {
+        "type": "formula",
+        "uuid": "126e4d0b-9f20-4f43-b407-1165b6ed577f",
+        "version": null,
+        "name": "fm_faulty_code_type_2_count"
+      },
+      "attributeId": null,
+      "function": null,
+      "value": null,
+      "attributeName": null
+    },
+    {
+      "ref": {
+        "type": "formula",
+        "uuid": "487a80bb-14aa-4aeb-b950-00be3d8bf4f1",
+        "version": null,
+        "name": "fm_problem_type_4_count"
+      },
+      "attributeId": null,
+      "function": null,
+      "value": null,
+      "attributeName": null
+    },
+    {
+      "ref": {
+        "type": "formula",
+        "uuid": "d4e2a3b5-cb92-464b-9808-cfbc21eda043",
+        "version": null,
+        "name": "fm_faulty_code_type_1_count"
+      },
+      "attributeId": null,
+      "function": null,
+      "value": null,
+      "attributeName": null
+    },
+    {
+      "ref": {
+        "type": "formula",
+        "uuid": "29acb8f8-5d89-43d3-bb58-ec287f01c542",
+        "version": null,
+        "name": "fm_device_count"
+      },
+      "attributeId": null,
+      "function": null,
+      "value": null,
+      "attributeName": null
+    }
+  ],
   "filterInfo": [],
   "groups": [],
   "values": [
