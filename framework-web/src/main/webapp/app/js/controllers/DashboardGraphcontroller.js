@@ -1525,21 +1525,18 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
 
       $scope.download.rows = CF_DOWNLOAD.framework_download_minrows;
 
-      headers = headers();
-      var filename = headers['x-filename'];
-      var contentType = headers['content-type'];
-
-      var linkElement = document.createElement('a');
-      try {
-        var blob = new Blob([data], {
-          type: contentType
-        });
-        var url = window.URL.createObjectURL(blob);
-
-        linkElement.setAttribute('href', url);
-        linkElement.setAttribute("download", uuid + ".xls");
-
-        var clickEvent = new MouseEvent("click", {
+        headers = headers();
+		var filename = headers['filename'];
+		var contentType = headers['content-type'];
+		var linkElement = document.createElement('a');
+		try {
+			var blob = new Blob([data], {
+				type: contentType
+			});
+			var url = window.URL.createObjectURL(blob);
+			linkElement.setAttribute('href', url);
+			linkElement.setAttribute("download",filename);
+            var clickEvent = new MouseEvent("click", {
           "view": window,
           "bubbles": true,
           "cancelable": false

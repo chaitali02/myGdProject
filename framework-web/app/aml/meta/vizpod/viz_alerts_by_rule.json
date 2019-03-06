@@ -55,7 +55,43 @@
     }
   ],
   "dimension": [],
-  "detailAttr": [],
+  "detailAttr": [ 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "04afa6cf-0021-4ca1-a492-966bb528d060"
+            },
+            "attributeId" : 0
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "04afa6cf-0021-4ca1-a492-966bb528d060"
+            },
+            "attributeId" : 1
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "04afa6cf-0021-4ca1-a492-966bb528d060"
+            },
+            "attributeId" : 2
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "04afa6cf-0021-4ca1-a492-966bb528d060"
+            },
+            "attributeId" : 3
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "04afa6cf-0021-4ca1-a492-966bb528d060"
+            },
+            "attributeId" : 4
+        }
+    ],
   "filterInfo": [],
   "groups": [
     

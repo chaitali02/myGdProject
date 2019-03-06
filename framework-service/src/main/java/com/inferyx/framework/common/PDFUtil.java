@@ -146,4 +146,40 @@ public class PDFUtil {
 		contentStream.close();
 		return pdfDoc;
 	}
+	
+	public PDDocument getPDFDoc(List<Map<String, Object>> resultList)
+			throws IOException {
+		PDDocument pdfDoc = new PDDocument();
+		PDPage pdfPage = new PDPage();
+		pdfDoc.addPage(pdfPage);
+
+		contentStream = new PDPageContentStream(pdfDoc, pdfPage);
+		
+		float y = 750.0f;
+		float margin = 50.0f;
+
+		//adding column names into list as row
+		Map<String, Object> colMap = new LinkedHashMap<>();
+		for(String colName : resultList.get(0).keySet()) {
+			colMap.put(colName, colName);
+		}
+		
+		resultList.add(0, colMap);
+		
+		//writting data into table
+		final float tableWidth = pdfPage.getMediaBox().getWidth() - 2.0f * margin;
+		float tableHeight = pdfPage.getMediaBox().getHeight() - (2 * margin);
+		BaseTable table = new BaseTable(y, tableHeight, 50f, tableWidth, margin, pdfDoc, pdfPage, true, true);
+		
+	    for(final Map<String, Object> row : resultList) {
+	    	Row<PDPage> tableRow = table.createRow(12);
+			for(String colName : row.keySet()) {
+				Cell<PDPage> cell = tableRow.createCell(25, row.get(colName).toString());
+			}
+		}
+
+	    table.draw();
+		contentStream.close();
+		return pdfDoc;
+	}
 }

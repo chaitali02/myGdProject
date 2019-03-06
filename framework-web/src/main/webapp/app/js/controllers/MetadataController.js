@@ -1259,7 +1259,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		var url = $location.absUrl().split("app")[0]
 		$http({
 			method: 'GET',
-			url: url+$scope.download.type+"/download?action=view&uuid="+$scope.download.uuid+"&version="+$scope.download.version + "&rows="+$scope.download.rows+"&formate="+$scope.download.selectFormate,
+			url: url+$scope.download.type+"/download?action=view&uuid="+$scope.download.uuid+"&version="+$scope.download.version + "&rows="+$scope.download.rows+"&format="+$scope.download.selectFormate,
 			responseType: 'arraybuffer'
 		}).success(function (data, status, headers) {
 			$scope.download.rows=CF_DOWNLOAD.framework_download_minrows;

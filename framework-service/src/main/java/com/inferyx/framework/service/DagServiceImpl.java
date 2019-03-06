@@ -1644,10 +1644,14 @@ public class DagServiceImpl {
 
 		String roleUuid = sessionHelper.getSessionContext().getRoleInfo().getRef().getUuid();
 		String appUuid = sessionHelper.getSessionContext().getAppInfo().getRef().getUuid();
+
+		String contextPath = Helper.getPropertyValue("framework.webserver.contextpath");
+		contextPath = contextPath.startsWith("/") ? contextPath : "/".concat(contextPath);
+		contextPath = contextPath.endsWith("/") ? contextPath.substring(contextPath.lastIndexOf("/")) : contextPath;
 		
 		String resultUrl = Helper.getPropertyValue("framework.url.dag.result");
 		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.webserver.host"),
-				Helper.getPropertyValue("framework.webserver.port"), dagExec.getUuid(), dagExec.getVersion(),
+				Helper.getPropertyValue("framework.webserver.port"), contextPath, dagExec.getUuid(), dagExec.getVersion(),
 				MetaType.dagExec.toString().toLowerCase(), roleUuid, appUuid);
 
 		String message = Helper.getPropertyValue("framework.email.body");
@@ -1673,10 +1677,14 @@ public class DagServiceImpl {
 
 		String roleUuid = sessionHelper.getSessionContext().getRoleInfo().getRef().getUuid();
 		String appUuid = sessionHelper.getSessionContext().getAppInfo().getRef().getUuid();
+
+		String contextPath = Helper.getPropertyValue("framework.webserver.contextpath");
+		contextPath = contextPath.startsWith("/") ? contextPath : "/".concat(contextPath);
+		contextPath = contextPath.endsWith("/") ? contextPath.substring(contextPath.lastIndexOf("/")) : contextPath;
 		
 		String resultUrl = Helper.getPropertyValue("framework.url.dag.result");
 		resultUrl = MessageFormat.format(resultUrl, Helper.getPropertyValue("framework.webserver.host"),
-				Helper.getPropertyValue("framework.webserver.port"), dagExec.getUuid(), dagExec.getVersion(),
+				Helper.getPropertyValue("framework.webserver.port"), contextPath, dagExec.getUuid(), dagExec.getVersion(),
 				MetaType.dagExec.toString().toLowerCase(), roleUuid, appUuid);
 
 		String message = Helper.getPropertyValue("framework.email.body");

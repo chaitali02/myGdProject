@@ -56,7 +56,36 @@
     }
   ],
   "dimension": [],
-  "detailAttr": [],
+  "detailAttr": [ 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "d84332ef-3c2e-4d27-8733-ce0b6e699d0f"
+            },
+            "attributeId" : 0
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "d84332ef-3c2e-4d27-8733-ce0b6e699d0f"
+            },
+            "attributeId" : 1
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "d84332ef-3c2e-4d27-8733-ce0b6e699d0f"
+            },
+            "attributeId" : 2
+        }, 
+        {
+            "ref" : {
+                "type" : "datapod",
+                "uuid" : "d84332ef-3c2e-4d27-8733-ce0b6e699d0f"
+            },
+            "attributeId" : 3
+        }
+    ],
   "filterInfo": [],
   "groups": [],
   "values": [

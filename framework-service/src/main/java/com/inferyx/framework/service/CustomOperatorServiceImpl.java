@@ -434,10 +434,11 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 		return baseExec;
 	}
 	
-	public HttpServletResponse download(String uuid, String version, String format, int offset,
+	public HttpServletResponse download(String operatorExecUuid, String operatorExecVersion, String format, int offset,
 			int limit, HttpServletResponse response, int rowLimit, String sortBy, String order, String requestId,
 			RunMode runMode) throws Exception {
-		
+		OperatorExec operatorExec = (OperatorExec) commonServiceImpl.getOneByUuidAndVersion(operatorExecUuid,
+				operatorExecVersion, MetaType.operatorExec.toString());
 		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
 		if(rowLimit > maxRows) {
 			logger.error("Requested rows exceeded the limit of "+maxRows);
@@ -446,8 +447,8 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 			throw new RuntimeException("Requested rows exceeded the limit of "+maxRows);
 		}
 		
-		List<Map<String, Object>> results =getOperatorResults(uuid,version,rowLimit);
-		response = commonServiceImpl.download(uuid, version, format, offset, limit, response, rowLimit, sortBy, order, requestId, runMode, results,MetaType.downloadExec,new MetaIdentifierHolder(new MetaIdentifier(MetaType.datapod,uuid,version)));
+		List<Map<String, Object>> results = getOperatorResults(operatorExecUuid, operatorExecVersion, rowLimit);
+		response = commonServiceImpl.download(format, response, runMode, results, new MetaIdentifierHolder(new MetaIdentifier(MetaType.operatorExec, operatorExecUuid, operatorExecVersion)));
 	
 		return response;
 
