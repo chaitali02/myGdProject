@@ -1,8 +1,8 @@
 {
-
-  "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
-  "version": "1543077215",
-  "name": "customer_summary_yearly",
+  "id": "5c8010ef3749ab4ea7c839f7",
+  "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
+  "version": "1551896815",
+  "name": "account_summary_yearly",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -13,8 +13,8 @@
     },
     "value": null
   },
-  "createdOn": "Wed Mar 06 18:03:44 IST 2019",
-  "tags": null,
+  "createdOn": "Wed Mar 06 23:56:55 IST 2019",
+  "tags": [],
   "active": "Y",
   "locked": "N",
   "published": "N",
@@ -23,7 +23,7 @@
       "ref": {
         "type": "application",
         "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-        "version": "1521430822",
+        "version": "1548315745",
         "name": "Anti Money Laundering"
       },
       "value": null
@@ -40,7 +40,7 @@
     "value": null
   },
   "cache": null,
-  "attributes": [
+ "attributes": [
     {
       "attributeId": 0,
       "displaySeq": null,
@@ -55,8 +55,22 @@
       "length": null,
       "attrUnitType": null
     },
-    {
+     {
       "attributeId": 1,
+      "displaySeq": null,
+      "name": "account_id",
+      "type": "STRING",
+      "desc": "",
+      "expression": null,
+      "key": "",
+      "partition": "N",
+      "dispName": "account_id",
+      "active": "Y",
+      "length": null,
+      "attrUnitType": null
+    },
+    {
+      "attributeId": 2,
       "displaySeq": null,
       "name": "trans_start_date",
       "type": "STRING",
@@ -70,7 +84,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 2,
+      "attributeId": 3,
       "displaySeq": null,
       "name": "trans_end_date",
       "type": "STRING",
@@ -84,7 +98,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 3,
+      "attributeId": 4,
       "displaySeq": null,
       "name": "year_num",
       "type": "STRING",
@@ -98,7 +112,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 4,
+      "attributeId": 5,
       "displaySeq": null,
       "name": "in_wire_transfers_trans_count",
       "type": "INTEGER",
@@ -112,7 +126,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 5,
+      "attributeId": 6,
       "displaySeq": null,
       "name": "in_wire_transfers_trans_amount_usd",
       "type": "DECIMAL",
@@ -126,7 +140,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 6,
+      "attributeId": 7,
       "displaySeq": null,
       "name": "out_wire_transfers_trans_count",
       "type": "INTEGER",
@@ -140,7 +154,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 7,
+      "attributeId": 8,
       "displaySeq": null,
       "name": "out_wire_transfers_trans_amount_usd",
       "type": "DECIMAL",
@@ -154,7 +168,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 8,
+      "attributeId": 9,
       "displaySeq": null,
       "name": "net_wire_transfers_trans_count",
       "type": "INTEGER",
@@ -168,7 +182,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 9,
+      "attributeId": 10,
       "displaySeq": null,
       "name": "net_wire_transfers_trans_amount_usd",
       "type": "DECIMAL",
@@ -182,7 +196,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 10,
+      "attributeId": 11,
       "displaySeq": null,
       "name": "in_cash_transfers_trans_count",
       "type": "INTEGER",
@@ -196,7 +210,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 11,
+      "attributeId": 12,
       "displaySeq": null,
       "name": "in_cash_transfers_trans_amount_usd",
       "type": "DECIMAL",
@@ -210,7 +224,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 12,
+      "attributeId": 13,
       "displaySeq": null,
       "name": "out_cash_transfers_trans_count",
       "type": "INTEGER",
@@ -224,7 +238,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 13,
+      "attributeId": 14,
       "displaySeq": null,
       "name": "out_cash_transfers_trans_amount_usd",
       "type": "DECIMAL",
@@ -238,7 +252,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 14,
+      "attributeId": 15,
       "displaySeq": null,
       "name": "net_cash_transfers_trans_count",
       "type": "INTEGER",
@@ -252,7 +266,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 15,
+      "attributeId": 16,
       "displaySeq": null,
       "name": "net_cash_transfers_trans_amount_usd",
       "type": "DECIMAL",
@@ -266,7 +280,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 16,
+      "attributeId": 17,
       "displaySeq": null,
       "name": "all_wire_transfers_round_amount_usd",
       "type": "DECIMAL",
@@ -280,7 +294,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 17,
+      "attributeId": 18,
       "displaySeq": null,
       "name": "all_cash_transfers_round_amount_usd",
       "type": "DECIMAL",
@@ -294,7 +308,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 18,
+      "attributeId": 19,
       "displaySeq": null,
       "name": "all_cash_transfers_round_amount_count",
       "type": "INTEGER",
@@ -308,7 +322,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 19,
+      "attributeId": 20,
       "displaySeq": null,
       "name": "all_wire_transfers_round_amount_count",
       "type": "INTEGER",
@@ -322,7 +336,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 20,
+      "attributeId": 21,
       "displaySeq": null,
       "name": "all_cash_transfers_trans_count",
       "type": "INTEGER",
@@ -336,7 +350,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 21,
+      "attributeId": 22,
       "displaySeq": null,
       "name": "all_wire_transfers_trans_count",
       "type": "INTEGER",
@@ -350,7 +364,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 22,
+      "attributeId": 23,
       "displaySeq": null,
       "name": "in_cash_transfers_trans_amount_min",
       "type": "DECIMAL",
@@ -364,7 +378,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 23,
+      "attributeId": 24,
       "displaySeq": null,
       "name": "out_wire_transfers_trans_amount_min",
       "type": "DECIMAL",
@@ -378,7 +392,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 24,
+      "attributeId": 25,
       "displaySeq": null,
       "name": "all_wire_transfers_round_amount_min",
       "type": "DECIMAL",
@@ -392,7 +406,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 25,
+      "attributeId": 26,
       "displaySeq": null,
       "name": "all_cash_transfers_round_amount_min",
       "type": "DECIMAL",
@@ -406,7 +420,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 26,
+      "attributeId": 27,
       "displaySeq": null,
       "name": "in_wire_transfers_trans_amount_min",
       "type": "DECIMAL",
@@ -420,7 +434,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 27,
+      "attributeId": 28,
       "displaySeq": null,
       "name": "out_cash_transfers_trans_amount_min",
       "type": "DECIMAL",
@@ -434,7 +448,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 28,
+      "attributeId": 29,
       "displaySeq": null,
       "name": "all_cash_transfers_round_amount_max",
       "type": "DECIMAL",
@@ -448,7 +462,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 29,
+      "attributeId": 30,
       "displaySeq": null,
       "name": "all_wire_transfers_round_amount_max",
       "type": "DECIMAL",
@@ -462,7 +476,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 30,
+      "attributeId": 31,
       "displaySeq": null,
       "name": "in_wire_transfers_trans_amount_max",
       "type": "DECIMAL",
@@ -476,7 +490,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 31,
+      "attributeId": 32,
       "displaySeq": null,
       "name": "in_cash_transfers_trans_amount_max",
       "type": "DECIMAL",
@@ -490,7 +504,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 32,
+      "attributeId": 33,
       "displaySeq": null,
       "name": "out_wire_transfers_trans_amount_max",
       "type": "DECIMAL",
@@ -504,7 +518,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 33,
+      "attributeId": 34,
       "displaySeq": null,
       "name": "out_cash_transfers_trans_amount_max",
       "type": "DECIMAL",
@@ -518,7 +532,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 34,
+      "attributeId": 35,
       "displaySeq": null,
       "name": "all_wire_transfers_round_amount_avg",
       "type": "DECIMAL",
@@ -532,7 +546,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 35,
+      "attributeId": 36,
       "displaySeq": null,
       "name": "all_cash_transfers_round_amount_avg",
       "type": "DECIMAL",
@@ -546,7 +560,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 36,
+      "attributeId": 37,
       "displaySeq": null,
       "name": "in_wire_transfers_trans_amount_avg",
       "type": "DECIMAL",
@@ -560,7 +574,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 37,
+      "attributeId": 38,
       "displaySeq": null,
       "name": "in_cash_transfers_trans_amount_avg",
       "type": "DECIMAL",
@@ -574,7 +588,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 38,
+      "attributeId": 39,
       "displaySeq": null,
       "name": "out_wire_transfers_trans_amount_avg",
       "type": "DECIMAL",
@@ -588,7 +602,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 39,
+      "attributeId": 40,
       "displaySeq": null,
       "name": "out_cash_transfers_trans_amount_avg",
       "type": "DECIMAL",
@@ -602,7 +616,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 40,
+      "attributeId": 41,
       "displaySeq": null,
       "name": "all_cash_transfers_round_amount_stddev",
       "type": "DECIMAL",
@@ -616,7 +630,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 41,
+      "attributeId": 42,
       "displaySeq": null,
       "name": "in_cash_transfers_trans_amount_stddev",
       "type": "DECIMAL",
@@ -630,7 +644,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 42,
+      "attributeId": 43,
       "displaySeq": null,
       "name": "out_cash_transfers_trans_amount_stddev",
       "type": "DECIMAL",
@@ -644,7 +658,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 43,
+      "attributeId": 44,
       "displaySeq": null,
       "name": "all_wire_transfers_round_amount_stddev",
       "type": "DECIMAL",
@@ -658,7 +672,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 44,
+      "attributeId": 45,
       "displaySeq": null,
       "name": "in_wire_transfers_trans_amount_stddev",
       "type": "DECIMAL",
@@ -672,7 +686,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 45,
+      "attributeId": 46,
       "displaySeq": null,
       "name": "out_wire_transfers_trans_amount_stddev",
       "type": "DECIMAL",
@@ -686,7 +700,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 46,
+      "attributeId": 47,
       "displaySeq": null,
       "name": "in_cash_transfers_round_amount_count",
       "type": "INTEGER",
@@ -700,7 +714,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 47,
+      "attributeId": 48,
       "displaySeq": null,
       "name": "in_wire_transfers_round_amount_count",
       "type": "INTEGER",
@@ -714,7 +728,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 48,
+      "attributeId": 49,
       "displaySeq": null,
       "name": "out_wire_transfers_round_amount_count",
       "type": "INTEGER",
@@ -728,7 +742,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 49,
+      "attributeId": 50,
       "displaySeq": null,
       "name": "out_cash_transfers_round_amount_count",
       "type": "INTEGER",
@@ -742,7 +756,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 50,
+      "attributeId": 51,
       "displaySeq": null,
       "name": "out_cash_transfers_round_amount_sum",
       "type": "DECIMAL",
@@ -756,7 +770,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 51,
+      "attributeId": 52,
       "displaySeq": null,
       "name": "out_wire_transfers_round_amount_sum",
       "type": "DECIMAL",
@@ -770,7 +784,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 52,
+      "attributeId": 53,
       "displaySeq": null,
       "name": "in_wire_transfers_round_amount_sum",
       "type": "DECIMAL",
@@ -784,7 +798,7 @@
       "attrUnitType": null
     },
     {
-      "attributeId": 53,
+      "attributeId": 54,
       "displaySeq": null,
       "name": "in_cash_transfers_round_amount_sum",
       "type": "DECIMAL",

@@ -1,7 +1,8 @@
 {
-  "uuid": "ead6ee63-8e52-41d4-b0b2-795d6a0eb915",
-  "version": "1551905548",
-  "name": "map_customer_summary_yearly",
+  "id": "5c8035b73749ab4ea7c84ce9",
+  "uuid": "df977fc1-50ce-4bb7-8568-c90d4035c318",
+  "version": "1551906231",
+  "name": "map_account_summary_yearly",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +13,7 @@
     },
     "value": null
   },
-  "createdOn": "Thu Mar 07 02:22:28 IST 2019",
+  "createdOn": "Thu Mar 07 02:33:51 IST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -32,18 +33,18 @@
   "target": {
     "ref": {
       "type": "datapod",
-      "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+      "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
       "version": null,
-      "name": "customer_summary_yearly"
+      "name": "account_summary_yearly"
     },
     "value": null
   },
   "source": {
     "ref": {
       "type": "dataset",
-      "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+      "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
       "version": null,
-      "name": "ds_customer_summary_yearly"
+      "name": "ds_account_summary_yearly"
     },
     "value": null
   },
@@ -53,9 +54,9 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "0",
@@ -67,9 +68,9 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "0",
@@ -84,13 +85,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "1",
-        "attrName": "trans_start_date",
+        "attrName": "account_id",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -98,13 +99,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "1",
-        "attrName": "trans_start_date",
+        "attrName": "account_id",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -115,13 +116,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "2",
-        "attrName": "trans_end_date",
+        "attrName": "trans_start_date",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -129,13 +130,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "2",
-        "attrName": "trans_end_date",
+        "attrName": "trans_start_date",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -146,13 +147,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "3",
-        "attrName": "year_num",
+        "attrName": "trans_end_date",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -160,13 +161,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "3",
-        "attrName": "year_num",
+        "attrName": "trans_end_date",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -177,13 +178,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "4",
-        "attrName": "in_wire_transfers_trans_count",
+        "attrName": "year_num",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -191,13 +192,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "4",
-        "attrName": "in_wire_transfers_trans_count",
+        "attrName": "year_num",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -208,13 +209,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "5",
-        "attrName": "in_wire_transfers_trans_amount_usd",
+        "attrName": "in_wire_transfers_trans_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -222,13 +223,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "5",
-        "attrName": "in_wire_transfers_trans_amount_usd",
+        "attrName": "in_wire_transfers_trans_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -239,13 +240,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "6",
-        "attrName": "out_wire_transfers_trans_count",
+        "attrName": "in_wire_transfers_trans_amount_usd",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -253,13 +254,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "6",
-        "attrName": "out_wire_transfers_trans_count",
+        "attrName": "in_wire_transfers_trans_amount_usd",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -270,13 +271,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "7",
-        "attrName": "out_wire_transfers_trans_amount_usd",
+        "attrName": "out_wire_transfers_trans_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -284,13 +285,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "7",
-        "attrName": "out_wire_transfers_trans_amount_usd",
+        "attrName": "out_wire_transfers_trans_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -301,13 +302,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "8",
-        "attrName": "net_wire_transfers_trans_count",
+        "attrName": "out_wire_transfers_trans_amount_usd",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -315,13 +316,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "8",
-        "attrName": "net_wire_transfers_trans_count",
+        "attrName": "out_wire_transfers_trans_amount_usd",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -332,13 +333,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "9",
-        "attrName": "net_wire_transfers_trans_amount_usd",
+        "attrName": "net_wire_transfers_trans_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -346,13 +347,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "9",
-        "attrName": "net_wire_transfers_trans_amount_usd",
+        "attrName": "net_wire_transfers_trans_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -363,13 +364,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "10",
-        "attrName": "in_cash_transfers_trans_count",
+        "attrName": "net_wire_transfers_trans_amount_usd",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -377,13 +378,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "10",
-        "attrName": "in_cash_transfers_trans_count",
+        "attrName": "net_wire_transfers_trans_amount_usd",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -394,13 +395,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "11",
-        "attrName": "in_cash_transfers_trans_amount_usd",
+        "attrName": "in_cash_transfers_trans_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -408,13 +409,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "11",
-        "attrName": "in_cash_transfers_trans_amount_usd",
+        "attrName": "in_cash_transfers_trans_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -425,13 +426,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "12",
-        "attrName": "out_cash_transfers_trans_count",
+        "attrName": "in_cash_transfers_trans_amount_usd",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -439,13 +440,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "12",
-        "attrName": "out_cash_transfers_trans_count",
+        "attrName": "in_cash_transfers_trans_amount_usd",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -456,13 +457,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "13",
-        "attrName": "out_cash_transfers_trans_amount_usd",
+        "attrName": "out_cash_transfers_trans_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -470,13 +471,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "13",
-        "attrName": "out_cash_transfers_trans_amount_usd",
+        "attrName": "out_cash_transfers_trans_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -487,13 +488,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "14",
-        "attrName": "net_cash_transfers_trans_count",
+        "attrName": "out_cash_transfers_trans_amount_usd",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -501,13 +502,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "14",
-        "attrName": "net_cash_transfers_trans_count",
+        "attrName": "out_cash_transfers_trans_amount_usd",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -518,13 +519,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "15",
-        "attrName": "net_cash_transfers_trans_amount_usd",
+        "attrName": "net_cash_transfers_trans_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -532,13 +533,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "15",
-        "attrName": "net_cash_transfers_trans_amount_usd",
+        "attrName": "net_cash_transfers_trans_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -549,13 +550,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "16",
-        "attrName": "all_wire_transfers_round_amount_usd",
+        "attrName": "net_cash_transfers_trans_amount_usd",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -563,13 +564,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "16",
-        "attrName": "all_wire_transfers_round_amount_usd",
+        "attrName": "net_cash_transfers_trans_amount_usd",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -580,13 +581,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "17",
-        "attrName": "all_cash_transfers_round_amount_usd",
+        "attrName": "all_wire_transfers_round_amount_usd",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -594,13 +595,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "17",
-        "attrName": "all_cash_transfers_round_amount_usd",
+        "attrName": "all_wire_transfers_round_amount_usd",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -611,13 +612,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "18",
-        "attrName": "all_cash_transfers_round_amount_count",
+        "attrName": "all_cash_transfers_round_amount_usd",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -625,13 +626,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "18",
-        "attrName": "all_cash_transfers_round_amount_count",
+        "attrName": "all_cash_transfers_round_amount_usd",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -642,13 +643,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "19",
-        "attrName": "all_wire_transfers_round_amount_count",
+        "attrName": "all_cash_transfers_round_amount_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -656,13 +657,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "19",
-        "attrName": "all_wire_transfers_round_amount_count",
+        "attrName": "all_cash_transfers_round_amount_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -673,13 +674,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "20",
-        "attrName": "all_cash_transfers_trans_count",
+        "attrName": "all_wire_transfers_round_amount_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -687,13 +688,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "20",
-        "attrName": "all_cash_transfers_trans_count",
+        "attrName": "all_wire_transfers_round_amount_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -704,13 +705,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "21",
-        "attrName": "all_wire_transfers_trans_count",
+        "attrName": "all_cash_transfers_trans_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -718,13 +719,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "21",
-        "attrName": "all_wire_transfers_trans_count",
+        "attrName": "all_cash_transfers_trans_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -735,13 +736,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "22",
-        "attrName": "in_cash_transfers_trans_amount_min",
+        "attrName": "all_wire_transfers_trans_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -749,13 +750,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "22",
-        "attrName": "in_cash_transfers_trans_amount_min",
+        "attrName": "all_wire_transfers_trans_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -766,13 +767,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "23",
-        "attrName": "out_wire_transfers_trans_amount_min",
+        "attrName": "in_cash_transfers_trans_amount_min",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -780,13 +781,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "23",
-        "attrName": "out_wire_transfers_trans_amount_min",
+        "attrName": "in_cash_transfers_trans_amount_min",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -797,13 +798,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "24",
-        "attrName": "all_wire_transfers_round_amount_min",
+        "attrName": "out_wire_transfers_trans_amount_min",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -811,13 +812,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "24",
-        "attrName": "all_wire_transfers_round_amount_min",
+        "attrName": "out_wire_transfers_trans_amount_min",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -828,13 +829,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "25",
-        "attrName": "all_cash_transfers_round_amount_min",
+        "attrName": "all_wire_transfers_round_amount_min",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -842,13 +843,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "25",
-        "attrName": "all_cash_transfers_round_amount_min",
+        "attrName": "all_wire_transfers_round_amount_min",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -859,13 +860,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "26",
-        "attrName": "in_wire_transfers_trans_amount_min",
+        "attrName": "all_cash_transfers_round_amount_min",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -873,13 +874,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "26",
-        "attrName": "in_wire_transfers_trans_amount_min",
+        "attrName": "all_cash_transfers_round_amount_min",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -890,13 +891,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "27",
-        "attrName": "out_cash_transfers_trans_amount_min",
+        "attrName": "in_wire_transfers_trans_amount_min",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -904,13 +905,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "27",
-        "attrName": "out_cash_transfers_trans_amount_min",
+        "attrName": "in_wire_transfers_trans_amount_min",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -921,13 +922,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "28",
-        "attrName": "all_cash_transfers_round_amount_max",
+        "attrName": "out_cash_transfers_trans_amount_min",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -935,13 +936,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "28",
-        "attrName": "all_cash_transfers_round_amount_max",
+        "attrName": "out_cash_transfers_trans_amount_min",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -952,13 +953,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "29",
-        "attrName": "all_wire_transfers_round_amount_max",
+        "attrName": "all_cash_transfers_round_amount_max",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -966,13 +967,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "29",
-        "attrName": "all_wire_transfers_round_amount_max",
+        "attrName": "all_cash_transfers_round_amount_max",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -983,13 +984,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "30",
-        "attrName": "in_wire_transfers_trans_amount_max",
+        "attrName": "all_wire_transfers_round_amount_max",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -997,13 +998,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "30",
-        "attrName": "in_wire_transfers_trans_amount_max",
+        "attrName": "all_wire_transfers_round_amount_max",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1014,13 +1015,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "31",
-        "attrName": "in_cash_transfers_trans_amount_max",
+        "attrName": "in_wire_transfers_trans_amount_max",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1028,13 +1029,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "31",
-        "attrName": "in_cash_transfers_trans_amount_max",
+        "attrName": "in_wire_transfers_trans_amount_max",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1045,13 +1046,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "32",
-        "attrName": "out_wire_transfers_trans_amount_max",
+        "attrName": "in_cash_transfers_trans_amount_max",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1059,13 +1060,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "32",
-        "attrName": "out_wire_transfers_trans_amount_max",
+        "attrName": "in_cash_transfers_trans_amount_max",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1076,13 +1077,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "33",
-        "attrName": "out_cash_transfers_trans_amount_max",
+        "attrName": "out_wire_transfers_trans_amount_max",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1090,13 +1091,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "33",
-        "attrName": "out_cash_transfers_trans_amount_max",
+        "attrName": "out_wire_transfers_trans_amount_max",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1107,13 +1108,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "34",
-        "attrName": "all_wire_transfers_round_amount_avg",
+        "attrName": "out_cash_transfers_trans_amount_max",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1121,13 +1122,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "34",
-        "attrName": "all_wire_transfers_round_amount_avg",
+        "attrName": "out_cash_transfers_trans_amount_max",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1138,13 +1139,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "35",
-        "attrName": "all_cash_transfers_round_amount_avg",
+        "attrName": "all_wire_transfers_round_amount_avg",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1152,13 +1153,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "35",
-        "attrName": "all_cash_transfers_round_amount_avg",
+        "attrName": "all_wire_transfers_round_amount_avg",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1169,13 +1170,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "36",
-        "attrName": "in_wire_transfers_trans_amount_avg",
+        "attrName": "all_cash_transfers_round_amount_avg",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1183,13 +1184,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "36",
-        "attrName": "in_wire_transfers_trans_amount_avg",
+        "attrName": "all_cash_transfers_round_amount_avg",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1200,13 +1201,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "37",
-        "attrName": "in_cash_transfers_trans_amount_avg",
+        "attrName": "in_wire_transfers_trans_amount_avg",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1214,13 +1215,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "37",
-        "attrName": "in_cash_transfers_trans_amount_avg",
+        "attrName": "in_wire_transfers_trans_amount_avg",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1231,13 +1232,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "38",
-        "attrName": "out_wire_transfers_trans_amount_avg",
+        "attrName": "in_cash_transfers_trans_amount_avg",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1245,13 +1246,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "38",
-        "attrName": "out_wire_transfers_trans_amount_avg",
+        "attrName": "in_cash_transfers_trans_amount_avg",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1262,13 +1263,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "39",
-        "attrName": "out_cash_transfers_trans_amount_avg",
+        "attrName": "out_wire_transfers_trans_amount_avg",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1276,13 +1277,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "39",
-        "attrName": "out_cash_transfers_trans_amount_avg",
+        "attrName": "out_wire_transfers_trans_amount_avg",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1293,13 +1294,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "40",
-        "attrName": "all_cash_transfers_round_amount_stddev",
+        "attrName": "out_cash_transfers_trans_amount_avg",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1307,13 +1308,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "40",
-        "attrName": "all_cash_transfers_round_amount_stddev",
+        "attrName": "out_cash_transfers_trans_amount_avg",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1324,13 +1325,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "41",
-        "attrName": "in_cash_transfers_trans_amount_stddev",
+        "attrName": "all_cash_transfers_round_amount_stddev",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1338,13 +1339,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "41",
-        "attrName": "in_cash_transfers_trans_amount_stddev",
+        "attrName": "all_cash_transfers_round_amount_stddev",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1355,13 +1356,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "42",
-        "attrName": "out_cash_transfers_trans_amount_stddev",
+        "attrName": "in_cash_transfers_trans_amount_stddev",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1369,13 +1370,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "42",
-        "attrName": "out_cash_transfers_trans_amount_stddev",
+        "attrName": "in_cash_transfers_trans_amount_stddev",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1386,13 +1387,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "43",
-        "attrName": "all_wire_transfers_round_amount_stddev",
+        "attrName": "out_cash_transfers_trans_amount_stddev",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1400,13 +1401,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "43",
-        "attrName": "all_wire_transfers_round_amount_stddev",
+        "attrName": "out_cash_transfers_trans_amount_stddev",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1417,13 +1418,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "44",
-        "attrName": "in_wire_transfers_trans_amount_stddev",
+        "attrName": "all_wire_transfers_round_amount_stddev",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1431,13 +1432,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "44",
-        "attrName": "in_wire_transfers_trans_amount_stddev",
+        "attrName": "all_wire_transfers_round_amount_stddev",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1448,13 +1449,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "45",
-        "attrName": "out_wire_transfers_trans_amount_stddev",
+        "attrName": "in_wire_transfers_trans_amount_stddev",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1462,13 +1463,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "45",
-        "attrName": "out_wire_transfers_trans_amount_stddev",
+        "attrName": "in_wire_transfers_trans_amount_stddev",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1479,13 +1480,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "46",
-        "attrName": "in_cash_transfers_round_amount_count",
+        "attrName": "out_wire_transfers_trans_amount_stddev",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1493,13 +1494,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "46",
-        "attrName": "in_cash_transfers_round_amount_count",
+        "attrName": "out_wire_transfers_trans_amount_stddev",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1510,13 +1511,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "47",
-        "attrName": "in_wire_transfers_round_amount_count",
+        "attrName": "in_cash_transfers_round_amount_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1524,13 +1525,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "47",
-        "attrName": "in_wire_transfers_round_amount_count",
+        "attrName": "in_cash_transfers_round_amount_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1541,13 +1542,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "48",
-        "attrName": "out_wire_transfers_round_amount_count",
+        "attrName": "in_wire_transfers_round_amount_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1555,13 +1556,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "48",
-        "attrName": "out_wire_transfers_round_amount_count",
+        "attrName": "in_wire_transfers_round_amount_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1572,13 +1573,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "49",
-        "attrName": "out_cash_transfers_round_amount_count",
+        "attrName": "out_wire_transfers_round_amount_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1586,13 +1587,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "49",
-        "attrName": "out_cash_transfers_round_amount_count",
+        "attrName": "out_wire_transfers_round_amount_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1603,13 +1604,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "50",
-        "attrName": "out_cash_transfers_round_amount_sum",
+        "attrName": "out_cash_transfers_round_amount_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1617,13 +1618,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "50",
-        "attrName": "out_cash_transfers_round_amount_sum",
+        "attrName": "out_cash_transfers_round_amount_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1634,13 +1635,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "51",
-        "attrName": "out_wire_transfers_round_amount_sum",
+        "attrName": "out_cash_transfers_round_amount_sum",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1648,13 +1649,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "51",
-        "attrName": "out_wire_transfers_round_amount_sum",
+        "attrName": "out_cash_transfers_round_amount_sum",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1665,13 +1666,13 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "52",
-        "attrName": "in_wire_transfers_round_amount_sum",
+        "attrName": "out_wire_transfers_round_amount_sum",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1679,13 +1680,13 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
         "attrId": "52",
-        "attrName": "in_wire_transfers_round_amount_sum",
+        "attrName": "out_wire_transfers_round_amount_sum",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1696,12 +1697,43 @@
       "sourceAttr": {
         "ref": {
           "type": "dataset",
-          "uuid": "dc265559-bc3a-4b8b-9187-26478048d222",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
           "version": null,
-          "name": "ds_customer_summary_yearly"
+          "name": "ds_account_summary_yearly"
         },
         "value": null,
         "attrId": "53",
+        "attrName": "in_wire_transfers_round_amount_sum",
+        "attrType": null,
+        "attrUnitType": null,
+        "function": null
+      },
+      "targetAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
+          "version": null,
+          "name": "account_summary_yearly"
+        },
+        "value": null,
+        "attrId": "53",
+        "attrName": "in_wire_transfers_round_amount_sum",
+        "attrType": null,
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrMapId": "54",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "e2098708-8785-4ce3-98b5-c1361c3529e6",
+          "version": null,
+          "name": "ds_account_summary_yearly"
+        },
+        "value": null,
+        "attrId": "54",
         "attrName": "in_cash_transfers_round_amount_sum",
         "attrType": null,
         "attrUnitType": null,
@@ -1710,12 +1742,12 @@
       "targetAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "d5b89ce6-59a5-473e-a540-733b27c33277",
+          "uuid": "44cf3d99-00ee-4a90-8cb3-f7357ea58727",
           "version": null,
-          "name": "customer_summary_yearly"
+          "name": "account_summary_yearly"
         },
         "value": null,
-        "attrId": "53",
+        "attrId": "54",
         "attrName": "in_cash_transfers_round_amount_sum",
         "attrType": null,
         "attrUnitType": null,

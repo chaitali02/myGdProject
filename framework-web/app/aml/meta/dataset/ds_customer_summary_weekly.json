@@ -40,7 +40,7 @@
     "value": null
   },
   "filterInfo": null,
-  "attributeInfo": [
+ "attributeInfo": [
     {
       "attrSourceId": "0",
       "attrDisplaySeq": "0",
@@ -64,6 +64,66 @@
     {
       "attrSourceId": "1",
       "attrDisplaySeq": "1",
+      "attrSourceName": "trans_start_date",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "70665ca3-143c-4f4b-8a35-7a5abac8ed56",
+          "version": null,
+          "name": "fm_lookback_weekly"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrSourceId": "2",
+      "attrDisplaySeq": "2",
+      "attrSourceName": "trans_end_date",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "paramlist",
+          "uuid": "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z",
+          "version": null,
+          "name": "paramlist_aml_app"
+        },
+        "value": null,
+        "attrId": "0",
+        "attrName": "business_date",
+        "attrType": null,
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrSourceId": "3",
+      "attrDisplaySeq": "3",
+     "attrSourceName": "week_num",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "formula",
+          "uuid": "0260173b-b626-4778-8327-d27b0c6bc7a9",
+          "version": null,
+          "name": "fm_week_num"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrSourceId": "4",
+      "attrDisplaySeq": "4",
       "attrSourceName": "in_wire_transfers_trans_count",
       "function": null,
       "sourceAttr": {
@@ -82,8 +142,8 @@
       }
     },
     {
-      "attrSourceId": "2",
-      "attrDisplaySeq": "2",
+      "attrSourceId": "5",
+      "attrDisplaySeq": "5",
       "attrSourceName": "in_wire_transfers_trans_amount_usd",
       "function": null,
       "sourceAttr": {
@@ -102,8 +162,8 @@
       }
     },
     {
-      "attrSourceId": "3",
-      "attrDisplaySeq": "3",
+      "attrSourceId": "6",
+      "attrDisplaySeq": "6",
       "attrSourceName": "out_wire_transfers_trans_count",
       "function": null,
       "sourceAttr": {
@@ -122,8 +182,8 @@
       }
     },
     {
-      "attrSourceId": "4",
-      "attrDisplaySeq": "4",
+      "attrSourceId": "7",
+      "attrDisplaySeq": "7",
       "attrSourceName": "out_wire_transfers_trans_amount_usd",
       "function": null,
       "sourceAttr": {
@@ -142,8 +202,8 @@
       }
     },
     {
-      "attrSourceId": "5",
-      "attrDisplaySeq": "5",
+      "attrSourceId": "8",
+      "attrDisplaySeq": "8",
       "attrSourceName": "net_wire_transfers_trans_count",
       "function": null,
       "sourceAttr": {
@@ -162,8 +222,8 @@
       }
     },
     {
-      "attrSourceId": "6",
-      "attrDisplaySeq": "6",
+      "attrSourceId": "9",
+      "attrDisplaySeq": "9",
       "attrSourceName": "net_wire_transfers_trans_amount_usd",
       "function": null,
       "sourceAttr": {
@@ -182,8 +242,8 @@
       }
     },
     {
-      "attrSourceId": "7",
-      "attrDisplaySeq": "7",
+      "attrSourceId": "10",
+      "attrDisplaySeq": "10",
       "attrSourceName": "in_cash_transfers_trans_count",
       "function": null,
       "sourceAttr": {
@@ -202,8 +262,8 @@
       }
     },
     {
-      "attrSourceId": "8",
-      "attrDisplaySeq": "8",
+      "attrSourceId": "11",
+      "attrDisplaySeq": "11",
       "attrSourceName": "in_cash_transfers_trans_amount_usd",
       "function": null,
       "sourceAttr": {
@@ -222,8 +282,8 @@
       }
     },
     {
-      "attrSourceId": "9",
-      "attrDisplaySeq": "9",
+      "attrSourceId": "12",
+      "attrDisplaySeq": "12",
       "attrSourceName": "out_cash_transfers_trans_count",
       "function": null,
       "sourceAttr": {
@@ -242,8 +302,8 @@
       }
     },
     {
-      "attrSourceId": "10",
-      "attrDisplaySeq": "10",
+      "attrSourceId": "13",
+      "attrDisplaySeq": "13",
       "attrSourceName": "out_cash_transfers_trans_amount_usd",
       "function": null,
       "sourceAttr": {
@@ -262,8 +322,8 @@
       }
     },
     {
-      "attrSourceId": "11",
-      "attrDisplaySeq": "11",
+      "attrSourceId": "14",
+      "attrDisplaySeq": "14",
       "attrSourceName": "net_cash_transfers_trans_count",
       "function": null,
       "sourceAttr": {
@@ -282,8 +342,8 @@
       }
     },
     {
-      "attrSourceId": "12",
-      "attrDisplaySeq": "12",
+      "attrSourceId": "15",
+      "attrDisplaySeq": "15",
       "attrSourceName": "net_cash_transfers_trans_amount_usd",
       "function": null,
       "sourceAttr": {
@@ -302,8 +362,8 @@
       }
     },
     {
-      "attrSourceId": "13",
-      "attrDisplaySeq": "13",
+      "attrSourceId": "16",
+      "attrDisplaySeq": "16",
       "attrSourceName": "all_wire_transfers_round_amount_usd",
       "function": null,
       "sourceAttr": {
@@ -322,8 +382,8 @@
       }
     },
     {
-      "attrSourceId": "14",
-      "attrDisplaySeq": "14",
+      "attrSourceId": "17",
+      "attrDisplaySeq": "17",
       "attrSourceName": "all_cash_transfers_round_amount_usd",
       "function": null,
       "sourceAttr": {
@@ -342,8 +402,8 @@
       }
     },
     {
-      "attrSourceId": "15",
-      "attrDisplaySeq": "15",
+      "attrSourceId": "18",
+      "attrDisplaySeq": "18",
       "attrSourceName": "all_cash_transfers_round_amount_count",
       "function": null,
       "sourceAttr": {
@@ -362,8 +422,8 @@
       }
     },
     {
-      "attrSourceId": "16",
-      "attrDisplaySeq": "16",
+      "attrSourceId": "19",
+      "attrDisplaySeq": "19",
       "attrSourceName": "all_wire_transfers_round_amount_count",
       "function": null,
       "sourceAttr": {
@@ -382,8 +442,8 @@
       }
     },
     {
-      "attrSourceId": "17",
-      "attrDisplaySeq": "17",
+      "attrSourceId": "20",
+      "attrDisplaySeq": "20",
       "attrSourceName": "all_cash_transfers_trans_count",
       "function": null,
       "sourceAttr": {
@@ -402,8 +462,8 @@
       }
     },
     {
-      "attrSourceId": "18",
-      "attrDisplaySeq": "18",
+      "attrSourceId": "21",
+      "attrDisplaySeq": "21",
       "attrSourceName": "all_wire_transfers_trans_count",
       "function": null,
       "sourceAttr": {
@@ -422,8 +482,8 @@
       }
     },
     {
-      "attrSourceId": "19",
-      "attrDisplaySeq": "19",
+      "attrSourceId": "22",
+      "attrDisplaySeq": "22",
       "attrSourceName": "in_cash_transfers_trans_amount_min",
       "function": null,
       "sourceAttr": {
@@ -442,8 +502,8 @@
       }
     },
     {
-      "attrSourceId": "20",
-      "attrDisplaySeq": "20",
+      "attrSourceId": "23",
+      "attrDisplaySeq": "23",
       "attrSourceName": "out_wire_transfers_trans_amount_min",
       "function": null,
       "sourceAttr": {
@@ -462,8 +522,8 @@
       }
     },
     {
-      "attrSourceId": "21",
-      "attrDisplaySeq": "21",
+      "attrSourceId": "24",
+      "attrDisplaySeq": "24",
       "attrSourceName": "all_wire_transfers_round_amount_min",
       "function": null,
       "sourceAttr": {
@@ -482,8 +542,8 @@
       }
     },
     {
-      "attrSourceId": "22",
-      "attrDisplaySeq": "22",
+      "attrSourceId": "25",
+      "attrDisplaySeq": "25",
       "attrSourceName": "all_cash_transfers_round_amount_min",
       "function": null,
       "sourceAttr": {
@@ -502,8 +562,8 @@
       }
     },
     {
-      "attrSourceId": "23",
-      "attrDisplaySeq": "23",
+      "attrSourceId": "26",
+      "attrDisplaySeq": "26",
       "attrSourceName": "in_wire_transfers_trans_amount_min",
       "function": null,
       "sourceAttr": {
@@ -522,8 +582,8 @@
       }
     },
     {
-      "attrSourceId": "24",
-      "attrDisplaySeq": "24",
+      "attrSourceId": "27",
+      "attrDisplaySeq": "27",
       "attrSourceName": "out_cash_transfers_trans_amount_min",
       "function": null,
       "sourceAttr": {
@@ -542,8 +602,8 @@
       }
     },
     {
-      "attrSourceId": "25",
-      "attrDisplaySeq": "25",
+      "attrSourceId": "28",
+      "attrDisplaySeq": "28",
       "attrSourceName": "all_cash_transfers_round_amount_max",
       "function": null,
       "sourceAttr": {
@@ -562,8 +622,8 @@
       }
     },
     {
-      "attrSourceId": "26",
-      "attrDisplaySeq": "26",
+      "attrSourceId": "29",
+      "attrDisplaySeq": "29",
       "attrSourceName": "all_wire_transfers_round_amount_max",
       "function": null,
       "sourceAttr": {
@@ -582,8 +642,8 @@
       }
     },
     {
-      "attrSourceId": "27",
-      "attrDisplaySeq": "27",
+      "attrSourceId": "30",
+      "attrDisplaySeq": "30",
       "attrSourceName": "in_wire_transfers_trans_amount_max",
       "function": null,
       "sourceAttr": {
@@ -602,8 +662,8 @@
       }
     },
     {
-      "attrSourceId": "28",
-      "attrDisplaySeq": "28",
+      "attrSourceId": "31",
+      "attrDisplaySeq": "31",
       "attrSourceName": "in_cash_transfers_trans_amount_max",
       "function": null,
       "sourceAttr": {
@@ -622,8 +682,8 @@
       }
     },
     {
-      "attrSourceId": "29",
-      "attrDisplaySeq": "29",
+      "attrSourceId": "32",
+      "attrDisplaySeq": "32",
       "attrSourceName": "out_wire_transfers_trans_amount_max",
       "function": null,
       "sourceAttr": {
@@ -642,8 +702,8 @@
       }
     },
     {
-      "attrSourceId": "30",
-      "attrDisplaySeq": "30",
+      "attrSourceId": "33",
+      "attrDisplaySeq": "33",
       "attrSourceName": "out_cash_transfers_trans_amount_max",
       "function": null,
       "sourceAttr": {
@@ -662,8 +722,8 @@
       }
     },
     {
-      "attrSourceId": "31",
-      "attrDisplaySeq": "31",
+      "attrSourceId": "34",
+      "attrDisplaySeq": "34",
       "attrSourceName": "all_wire_transfers_round_amount_avg",
       "function": null,
       "sourceAttr": {
@@ -682,8 +742,8 @@
       }
     },
     {
-      "attrSourceId": "32",
-      "attrDisplaySeq": "32",
+      "attrSourceId": "35",
+      "attrDisplaySeq": "35",
       "attrSourceName": "all_cash_transfers_round_amount_avg",
       "function": null,
       "sourceAttr": {
@@ -702,8 +762,8 @@
       }
     },
     {
-      "attrSourceId": "33",
-      "attrDisplaySeq": "33",
+      "attrSourceId": "36",
+      "attrDisplaySeq": "36",
       "attrSourceName": "in_wire_transfers_trans_amount_avg",
       "function": null,
       "sourceAttr": {
@@ -722,8 +782,8 @@
       }
     },
     {
-      "attrSourceId": "34",
-      "attrDisplaySeq": "34",
+      "attrSourceId": "37",
+      "attrDisplaySeq": "37",
       "attrSourceName": "in_cash_transfers_trans_amount_avg",
       "function": null,
       "sourceAttr": {
@@ -742,8 +802,8 @@
       }
     },
     {
-      "attrSourceId": "35",
-      "attrDisplaySeq": "35",
+      "attrSourceId": "38",
+      "attrDisplaySeq": "38",
       "attrSourceName": "out_wire_transfers_trans_amount_avg",
       "function": null,
       "sourceAttr": {
@@ -762,8 +822,8 @@
       }
     },
     {
-      "attrSourceId": "36",
-      "attrDisplaySeq": "36",
+      "attrSourceId": "39",
+      "attrDisplaySeq": "39",
       "attrSourceName": "out_cash_transfers_trans_amount_avg",
       "function": null,
       "sourceAttr": {
@@ -782,8 +842,8 @@
       }
     },
     {
-      "attrSourceId": "37",
-      "attrDisplaySeq": "37",
+      "attrSourceId": "40",
+      "attrDisplaySeq": "40",
       "attrSourceName": "all_cash_transfers_round_amount_stddev",
       "function": null,
       "sourceAttr": {
@@ -802,8 +862,8 @@
       }
     },
     {
-      "attrSourceId": "38",
-      "attrDisplaySeq": "38",
+      "attrSourceId": "41",
+      "attrDisplaySeq": "41",
       "attrSourceName": "in_cash_transfers_trans_amount_stddev",
       "function": null,
       "sourceAttr": {
@@ -822,8 +882,8 @@
       }
     },
     {
-      "attrSourceId": "39",
-      "attrDisplaySeq": "39",
+      "attrSourceId": "42",
+      "attrDisplaySeq": "42",
       "attrSourceName": "out_cash_transfers_trans_amount_stddev",
       "function": null,
       "sourceAttr": {
@@ -842,8 +902,8 @@
       }
     },
     {
-      "attrSourceId": "40",
-      "attrDisplaySeq": "40",
+      "attrSourceId": "43",
+      "attrDisplaySeq": "43",
       "attrSourceName": "all_wire_transfers_round_amount_stddev",
       "function": null,
       "sourceAttr": {
@@ -862,8 +922,8 @@
       }
     },
     {
-      "attrSourceId": "41",
-      "attrDisplaySeq": "41",
+      "attrSourceId": "44",
+      "attrDisplaySeq": "44",
       "attrSourceName": "in_wire_transfers_trans_amount_stddev",
       "function": null,
       "sourceAttr": {
@@ -882,8 +942,8 @@
       }
     },
     {
-      "attrSourceId": "42",
-      "attrDisplaySeq": "42",
+      "attrSourceId": "45",
+      "attrDisplaySeq": "45",
       "attrSourceName": "out_wire_transfers_trans_amount_stddev",
       "function": null,
       "sourceAttr": {
@@ -902,8 +962,8 @@
       }
     },
     {
-      "attrSourceId": "43",
-      "attrDisplaySeq": "43",
+      "attrSourceId": "46",
+      "attrDisplaySeq": "46",
       "attrSourceName": "in_cash_transfers_round_amount_count",
       "function": null,
       "sourceAttr": {
@@ -922,8 +982,8 @@
       }
     },
     {
-      "attrSourceId": "44",
-      "attrDisplaySeq": "44",
+      "attrSourceId": "47",
+      "attrDisplaySeq": "47",
       "attrSourceName": "in_wire_transfers_round_amount_count",
       "function": null,
       "sourceAttr": {
@@ -942,8 +1002,8 @@
       }
     },
     {
-      "attrSourceId": "45",
-      "attrDisplaySeq": "45",
+      "attrSourceId": "48",
+      "attrDisplaySeq": "48",
       "attrSourceName": "out_wire_transfers_round_amount_count",
       "function": null,
       "sourceAttr": {
@@ -962,8 +1022,8 @@
       }
     },
     {
-      "attrSourceId": "46",
-      "attrDisplaySeq": "46",
+      "attrSourceId": "49",
+      "attrDisplaySeq": "49",
       "attrSourceName": "out_cash_transfers_round_amount_count",
       "function": null,
       "sourceAttr": {
@@ -982,8 +1042,8 @@
       }
     },
     {
-      "attrSourceId": "47",
-      "attrDisplaySeq": "47",
+      "attrSourceId": "50",
+      "attrDisplaySeq": "50",
       "attrSourceName": "out_cash_transfers_round_amount_sum",
       "function": null,
       "sourceAttr": {
@@ -1002,8 +1062,8 @@
       }
     },
     {
-      "attrSourceId": "48",
-      "attrDisplaySeq": "48",
+      "attrSourceId": "51",
+      "attrDisplaySeq": "51",
       "attrSourceName": "out_wire_transfers_round_amount_sum",
       "function": null,
       "sourceAttr": {
@@ -1022,8 +1082,8 @@
       }
     },
     {
-      "attrSourceId": "49",
-      "attrDisplaySeq": "49",
+      "attrSourceId": "52",
+      "attrDisplaySeq": "52",
       "attrSourceName": "in_wire_transfers_round_amount_sum",
       "function": null,
       "sourceAttr": {
@@ -1042,8 +1102,8 @@
       }
     },
     {
-      "attrSourceId": "50",
-      "attrDisplaySeq": "50",
+      "attrSourceId": "53",
+      "attrDisplaySeq": "53",
       "attrSourceName": "in_cash_transfers_round_amount_sum",
       "function": null,
       "sourceAttr": {
@@ -1056,46 +1116,6 @@
         "value": null,
         "attrId": null,
         "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "51",
-      "attrDisplaySeq": "51",
-      "attrSourceName": "start_date",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "formula",
-          "uuid": "70665ca3-143c-4f4b-8a35-7a5abac8ed56",
-          "version": null,
-          "name": "fm_lookback_weekly"
-        },
-        "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
-        "attrUnitType": null,
-        "function": null
-      }
-    },
-    {
-      "attrSourceId": "52",
-      "attrDisplaySeq": "52",
-      "attrSourceName": "end_date",
-      "function": null,
-      "sourceAttr": {
-        "ref": {
-          "type": "paramlist",
-          "uuid": "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z",
-          "version": null,
-          "name": "paramlist_aml_app"
-        },
-        "value": null,
-        "attrId": "0",
-        "attrName": "business_date",
         "attrType": null,
         "attrUnitType": null,
         "function": null

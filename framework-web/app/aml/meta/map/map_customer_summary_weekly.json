@@ -1,6 +1,6 @@
 {
-  "uuid": "a6effc9c-203f-49fe-825b-0f69ad1a47a6",
-  "version": "1551878668",
+  "uuid": "1e7aa9bf-9c6b-47df-abb1-2dc8aa1bf130",
+  "version": "1551905676",
   "name": "map_customer_summary_weekly",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Wed Mar 06 18:54:28 IST 2019",
+  "createdOn": "Thu Mar 07 02:24:36 IST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -34,7 +34,7 @@
       "type": "datapod",
       "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
       "version": null,
-      "name": "customer_summary_quarterly"
+      "name": "customer_summary_weekly"
     },
     "value": null
   },
@@ -43,7 +43,7 @@
       "type": "dataset",
       "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
       "version": null,
-      "name": "ds_customer_summary_quarterly"
+      "name": "ds_customer_summary_weekly"
     },
     "value": null
   },
@@ -55,7 +55,7 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "0",
@@ -69,7 +69,7 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "0",
@@ -86,11 +86,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "1",
-        "attrName": "in_wire_transfers_trans_count",
+        "attrName": "trans_start_date",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -100,11 +100,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "1",
-        "attrName": "in_wire_transfers_trans_count",
+        "attrName": "trans_start_date",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -117,11 +117,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "2",
-        "attrName": "in_wire_transfers_trans_amount_usd",
+        "attrName": "trans_end_date",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -131,11 +131,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "2",
-        "attrName": "in_wire_transfers_trans_amount_usd",
+        "attrName": "trans_end_date",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -148,11 +148,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "3",
-        "attrName": "out_wire_transfers_trans_count",
+        "attrName": "week_num",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -162,11 +162,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "3",
-        "attrName": "out_wire_transfers_trans_count",
+        "attrName": "week_num",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -179,11 +179,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "4",
-        "attrName": "out_wire_transfers_trans_amount_usd",
+        "attrName": "in_wire_transfers_trans_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -193,11 +193,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "4",
-        "attrName": "out_wire_transfers_trans_amount_usd",
+        "attrName": "in_wire_transfers_trans_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -210,11 +210,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "5",
-        "attrName": "net_wire_transfers_trans_count",
+        "attrName": "in_wire_transfers_trans_amount_usd",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -224,11 +224,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "5",
-        "attrName": "net_wire_transfers_trans_count",
+        "attrName": "in_wire_transfers_trans_amount_usd",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -241,11 +241,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "6",
-        "attrName": "net_wire_transfers_trans_amount_usd",
+        "attrName": "out_wire_transfers_trans_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -255,11 +255,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "6",
-        "attrName": "net_wire_transfers_trans_amount_usd",
+        "attrName": "out_wire_transfers_trans_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -272,11 +272,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "7",
-        "attrName": "in_cash_transfers_trans_count",
+        "attrName": "out_wire_transfers_trans_amount_usd",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -286,11 +286,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "7",
-        "attrName": "in_cash_transfers_trans_count",
+        "attrName": "out_wire_transfers_trans_amount_usd",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -303,11 +303,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "8",
-        "attrName": "in_cash_transfers_trans_amount_usd",
+        "attrName": "net_wire_transfers_trans_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -317,11 +317,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "8",
-        "attrName": "in_cash_transfers_trans_amount_usd",
+        "attrName": "net_wire_transfers_trans_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -334,11 +334,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "9",
-        "attrName": "out_cash_transfers_trans_count",
+        "attrName": "net_wire_transfers_trans_amount_usd",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -348,11 +348,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "9",
-        "attrName": "out_cash_transfers_trans_count",
+        "attrName": "net_wire_transfers_trans_amount_usd",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -365,11 +365,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "10",
-        "attrName": "out_cash_transfers_trans_amount_usd",
+        "attrName": "in_cash_transfers_trans_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -379,11 +379,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "10",
-        "attrName": "out_cash_transfers_trans_amount_usd",
+        "attrName": "in_cash_transfers_trans_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -396,11 +396,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "11",
-        "attrName": "net_cash_transfers_trans_count",
+        "attrName": "in_cash_transfers_trans_amount_usd",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -410,11 +410,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "11",
-        "attrName": "net_cash_transfers_trans_count",
+        "attrName": "in_cash_transfers_trans_amount_usd",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -427,11 +427,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "12",
-        "attrName": "net_cash_transfers_trans_amount_usd",
+        "attrName": "out_cash_transfers_trans_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -441,11 +441,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "12",
-        "attrName": "net_cash_transfers_trans_amount_usd",
+        "attrName": "out_cash_transfers_trans_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -458,11 +458,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "13",
-        "attrName": "all_wire_transfers_round_amount_usd",
+        "attrName": "out_cash_transfers_trans_amount_usd",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -472,11 +472,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "13",
-        "attrName": "all_wire_transfers_round_amount_usd",
+        "attrName": "out_cash_transfers_trans_amount_usd",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -489,11 +489,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "14",
-        "attrName": "all_cash_transfers_round_amount_usd",
+        "attrName": "net_cash_transfers_trans_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -503,11 +503,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "14",
-        "attrName": "all_cash_transfers_round_amount_usd",
+        "attrName": "net_cash_transfers_trans_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -520,11 +520,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "15",
-        "attrName": "all_cash_transfers_round_amount_count",
+        "attrName": "net_cash_transfers_trans_amount_usd",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -534,11 +534,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "15",
-        "attrName": "all_cash_transfers_round_amount_count",
+        "attrName": "net_cash_transfers_trans_amount_usd",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -551,11 +551,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "16",
-        "attrName": "all_wire_transfers_round_amount_count",
+        "attrName": "all_wire_transfers_round_amount_usd",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -565,11 +565,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "16",
-        "attrName": "all_wire_transfers_round_amount_count",
+        "attrName": "all_wire_transfers_round_amount_usd",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -582,11 +582,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "17",
-        "attrName": "all_cash_transfers_trans_count",
+        "attrName": "all_cash_transfers_round_amount_usd",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -596,11 +596,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "17",
-        "attrName": "all_cash_transfers_trans_count",
+        "attrName": "all_cash_transfers_round_amount_usd",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -613,11 +613,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "18",
-        "attrName": "all_wire_transfers_trans_count",
+        "attrName": "all_cash_transfers_round_amount_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -627,11 +627,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "18",
-        "attrName": "all_wire_transfers_trans_count",
+        "attrName": "all_cash_transfers_round_amount_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -644,11 +644,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "19",
-        "attrName": "in_cash_transfers_trans_amount_min",
+        "attrName": "all_wire_transfers_round_amount_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -658,11 +658,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "19",
-        "attrName": "in_cash_transfers_trans_amount_min",
+        "attrName": "all_wire_transfers_round_amount_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -675,11 +675,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "20",
-        "attrName": "out_wire_transfers_trans_amount_min",
+        "attrName": "all_cash_transfers_trans_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -689,11 +689,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "20",
-        "attrName": "out_wire_transfers_trans_amount_min",
+        "attrName": "all_cash_transfers_trans_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -706,11 +706,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "21",
-        "attrName": "all_wire_transfers_round_amount_min",
+        "attrName": "all_wire_transfers_trans_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -720,11 +720,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "21",
-        "attrName": "all_wire_transfers_round_amount_min",
+        "attrName": "all_wire_transfers_trans_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -737,11 +737,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "22",
-        "attrName": "all_cash_transfers_round_amount_min",
+        "attrName": "in_cash_transfers_trans_amount_min",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -751,11 +751,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "22",
-        "attrName": "all_cash_transfers_round_amount_min",
+        "attrName": "in_cash_transfers_trans_amount_min",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -768,11 +768,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "23",
-        "attrName": "in_wire_transfers_trans_amount_min",
+        "attrName": "out_wire_transfers_trans_amount_min",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -782,11 +782,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "23",
-        "attrName": "in_wire_transfers_trans_amount_min",
+        "attrName": "out_wire_transfers_trans_amount_min",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -799,11 +799,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "24",
-        "attrName": "out_cash_transfers_trans_amount_min",
+        "attrName": "all_wire_transfers_round_amount_min",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -813,11 +813,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "24",
-        "attrName": "out_cash_transfers_trans_amount_min",
+        "attrName": "all_wire_transfers_round_amount_min",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -830,11 +830,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "25",
-        "attrName": "all_cash_transfers_round_amount_max",
+        "attrName": "all_cash_transfers_round_amount_min",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -844,11 +844,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "25",
-        "attrName": "all_cash_transfers_round_amount_max",
+        "attrName": "all_cash_transfers_round_amount_min",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -861,11 +861,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "26",
-        "attrName": "all_wire_transfers_round_amount_max",
+        "attrName": "in_wire_transfers_trans_amount_min",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -875,11 +875,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "26",
-        "attrName": "all_wire_transfers_round_amount_max",
+        "attrName": "in_wire_transfers_trans_amount_min",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -892,11 +892,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "27",
-        "attrName": "in_wire_transfers_trans_amount_max",
+        "attrName": "out_cash_transfers_trans_amount_min",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -906,11 +906,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "27",
-        "attrName": "in_wire_transfers_trans_amount_max",
+        "attrName": "out_cash_transfers_trans_amount_min",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -923,11 +923,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "28",
-        "attrName": "in_cash_transfers_trans_amount_max",
+        "attrName": "all_cash_transfers_round_amount_max",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -937,11 +937,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "28",
-        "attrName": "in_cash_transfers_trans_amount_max",
+        "attrName": "all_cash_transfers_round_amount_max",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -954,11 +954,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "29",
-        "attrName": "out_wire_transfers_trans_amount_max",
+        "attrName": "all_wire_transfers_round_amount_max",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -968,11 +968,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "29",
-        "attrName": "out_wire_transfers_trans_amount_max",
+        "attrName": "all_wire_transfers_round_amount_max",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -985,11 +985,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "30",
-        "attrName": "out_cash_transfers_trans_amount_max",
+        "attrName": "in_wire_transfers_trans_amount_max",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -999,11 +999,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "30",
-        "attrName": "out_cash_transfers_trans_amount_max",
+        "attrName": "in_wire_transfers_trans_amount_max",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1016,11 +1016,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "31",
-        "attrName": "all_wire_transfers_round_amount_avg",
+        "attrName": "in_cash_transfers_trans_amount_max",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1030,11 +1030,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "31",
-        "attrName": "all_wire_transfers_round_amount_avg",
+        "attrName": "in_cash_transfers_trans_amount_max",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1047,11 +1047,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "32",
-        "attrName": "all_cash_transfers_round_amount_avg",
+        "attrName": "out_wire_transfers_trans_amount_max",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1061,11 +1061,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "32",
-        "attrName": "all_cash_transfers_round_amount_avg",
+        "attrName": "out_wire_transfers_trans_amount_max",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1078,11 +1078,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "33",
-        "attrName": "in_wire_transfers_trans_amount_avg",
+        "attrName": "out_cash_transfers_trans_amount_max",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1092,11 +1092,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "33",
-        "attrName": "in_wire_transfers_trans_amount_avg",
+        "attrName": "out_cash_transfers_trans_amount_max",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1109,11 +1109,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "34",
-        "attrName": "in_cash_transfers_trans_amount_avg",
+        "attrName": "all_wire_transfers_round_amount_avg",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1123,11 +1123,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "34",
-        "attrName": "in_cash_transfers_trans_amount_avg",
+        "attrName": "all_wire_transfers_round_amount_avg",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1140,11 +1140,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "35",
-        "attrName": "out_wire_transfers_trans_amount_avg",
+        "attrName": "all_cash_transfers_round_amount_avg",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1154,11 +1154,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "35",
-        "attrName": "out_wire_transfers_trans_amount_avg",
+        "attrName": "all_cash_transfers_round_amount_avg",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1171,11 +1171,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "36",
-        "attrName": "out_cash_transfers_trans_amount_avg",
+        "attrName": "in_wire_transfers_trans_amount_avg",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1185,11 +1185,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "36",
-        "attrName": "out_cash_transfers_trans_amount_avg",
+        "attrName": "in_wire_transfers_trans_amount_avg",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1202,11 +1202,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "37",
-        "attrName": "all_cash_transfers_round_amount_stddev",
+        "attrName": "in_cash_transfers_trans_amount_avg",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1216,11 +1216,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "37",
-        "attrName": "all_cash_transfers_round_amount_stddev",
+        "attrName": "in_cash_transfers_trans_amount_avg",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1233,11 +1233,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "38",
-        "attrName": "in_cash_transfers_trans_amount_stddev",
+        "attrName": "out_wire_transfers_trans_amount_avg",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1247,11 +1247,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "38",
-        "attrName": "in_cash_transfers_trans_amount_stddev",
+        "attrName": "out_wire_transfers_trans_amount_avg",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1264,11 +1264,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "39",
-        "attrName": "out_cash_transfers_trans_amount_stddev",
+        "attrName": "out_cash_transfers_trans_amount_avg",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1278,11 +1278,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "39",
-        "attrName": "out_cash_transfers_trans_amount_stddev",
+        "attrName": "out_cash_transfers_trans_amount_avg",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1295,11 +1295,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "40",
-        "attrName": "all_wire_transfers_round_amount_stddev",
+        "attrName": "all_cash_transfers_round_amount_stddev",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1309,11 +1309,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "40",
-        "attrName": "all_wire_transfers_round_amount_stddev",
+        "attrName": "all_cash_transfers_round_amount_stddev",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1326,11 +1326,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "41",
-        "attrName": "in_wire_transfers_trans_amount_stddev",
+        "attrName": "in_cash_transfers_trans_amount_stddev",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1340,11 +1340,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "41",
-        "attrName": "in_wire_transfers_trans_amount_stddev",
+        "attrName": "in_cash_transfers_trans_amount_stddev",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1357,11 +1357,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "42",
-        "attrName": "out_wire_transfers_trans_amount_stddev",
+        "attrName": "out_cash_transfers_trans_amount_stddev",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1371,11 +1371,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "42",
-        "attrName": "out_wire_transfers_trans_amount_stddev",
+        "attrName": "out_cash_transfers_trans_amount_stddev",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1388,11 +1388,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "43",
-        "attrName": "in_cash_transfers_round_amount_count",
+        "attrName": "all_wire_transfers_round_amount_stddev",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1402,11 +1402,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "43",
-        "attrName": "in_cash_transfers_round_amount_count",
+        "attrName": "all_wire_transfers_round_amount_stddev",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1419,11 +1419,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "44",
-        "attrName": "in_wire_transfers_round_amount_count",
+        "attrName": "in_wire_transfers_trans_amount_stddev",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1433,11 +1433,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "44",
-        "attrName": "in_wire_transfers_round_amount_count",
+        "attrName": "in_wire_transfers_trans_amount_stddev",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1450,11 +1450,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "45",
-        "attrName": "out_wire_transfers_round_amount_count",
+        "attrName": "out_wire_transfers_trans_amount_stddev",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1464,11 +1464,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "45",
-        "attrName": "out_wire_transfers_round_amount_count",
+        "attrName": "out_wire_transfers_trans_amount_stddev",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1481,11 +1481,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "46",
-        "attrName": "out_cash_transfers_round_amount_count",
+        "attrName": "in_cash_transfers_round_amount_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1495,11 +1495,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "46",
-        "attrName": "out_cash_transfers_round_amount_count",
+        "attrName": "in_cash_transfers_round_amount_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1512,11 +1512,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "47",
-        "attrName": "out_cash_transfers_round_amount_sum",
+        "attrName": "in_wire_transfers_round_amount_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1526,11 +1526,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "47",
-        "attrName": "out_cash_transfers_round_amount_sum",
+        "attrName": "in_wire_transfers_round_amount_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1543,11 +1543,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "48",
-        "attrName": "out_wire_transfers_round_amount_sum",
+        "attrName": "out_wire_transfers_round_amount_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1557,11 +1557,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "48",
-        "attrName": "out_wire_transfers_round_amount_sum",
+        "attrName": "out_wire_transfers_round_amount_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1574,11 +1574,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "49",
-        "attrName": "in_wire_transfers_round_amount_sum",
+        "attrName": "out_cash_transfers_round_amount_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1588,11 +1588,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "49",
-        "attrName": "in_wire_transfers_round_amount_sum",
+        "attrName": "out_cash_transfers_round_amount_count",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1605,11 +1605,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "50",
-        "attrName": "in_cash_transfers_round_amount_sum",
+        "attrName": "out_cash_transfers_round_amount_sum",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1619,11 +1619,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "50",
-        "attrName": "in_cash_transfers_round_amount_sum",
+        "attrName": "out_cash_transfers_round_amount_sum",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1636,11 +1636,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "51",
-        "attrName": "start_date",
+        "attrName": "out_wire_transfers_round_amount_sum",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1650,11 +1650,11 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "51",
-        "attrName": "start_date",
+        "attrName": "out_wire_transfers_round_amount_sum",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1667,11 +1667,11 @@
           "type": "dataset",
           "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
           "version": null,
-          "name": "ds_customer_summary_quarterly"
+          "name": "ds_customer_summary_weekly"
         },
         "value": null,
         "attrId": "52",
-        "attrName": "end_date",
+        "attrName": "in_wire_transfers_round_amount_sum",
         "attrType": null,
         "attrUnitType": null,
         "function": null
@@ -1681,11 +1681,42 @@
           "type": "datapod",
           "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
           "version": null,
-          "name": "customer_summary_quarterly"
+          "name": "customer_summary_weekly"
         },
         "value": null,
         "attrId": "52",
-        "attrName": "end_date",
+        "attrName": "in_wire_transfers_round_amount_sum",
+        "attrType": null,
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrMapId": "53",
+      "sourceAttr": {
+        "ref": {
+          "type": "dataset",
+          "uuid": "dc265559-bc3a-4b8b-9187-26478048d212",
+          "version": null,
+          "name": "ds_customer_summary_weekly"
+        },
+        "value": null,
+        "attrId": "53",
+        "attrName": "in_cash_transfers_round_amount_sum",
+        "attrType": null,
+        "attrUnitType": null,
+        "function": null
+      },
+      "targetAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "d4b89ce6-59a5-473e-a333-733b27c33277",
+          "version": null,
+          "name": "customer_summary_weekly"
+        },
+        "value": null,
+        "attrId": "53",
+        "attrName": "in_cash_transfers_round_amount_sum",
         "attrType": null,
         "attrUnitType": null,
         "function": null
