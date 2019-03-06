@@ -124,18 +124,18 @@
     {
       "attrSourceId": "4",
       "attrDisplaySeq": "4",
-      "attrSourceName": "day_num",
+       "attrSourceName": "day_num",
       "function": null,
-     "sourceAttr": {
+      "sourceAttr": {
         "ref": {
-          "type": "paramlist",
-          "uuid": "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z",
+          "type": "formula",
+          "uuid": "1953344d-b323-461e-9617-b88e9665d4e8",
           "version": null,
-          "name": "paramlist_aml_app"
+          "name": "fm_day_num"
         },
         "value": null,
-        "attrId": "0",
-        "attrName": "business_date",
+        "attrId": null,
+        "attrName": null,
         "attrType": null,
         "attrUnitType": null,
         "function": null
