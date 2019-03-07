@@ -22,6 +22,24 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 		$sessionStorage.fromParams = fromParams
 
 	});
+	$scope.popup2 = {
+    	opened: false
+    };
+	$scope.dateOptions = {
+		//dateDisabled: disabled,
+		formatYear: 'yy',
+	//	maxDate: new Date(2020, 5, 22),
+	//	minDate: new Date(),
+		startingDay: 1
+	};
+	function disabled(data) {
+		var date = data.date,
+		  mode = data.mode;
+		return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
+	}
+	$scope.open2 = function() {
+		$scope.popup2.opened = true;
+	};
 	$scope.updateStats = function () {
 		CommonService.getMetaStats("report").then(function (response) {
 			if (response.data && response.data.length && response.data.length > 0) {
@@ -219,8 +237,8 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 			else {
 				$scope.message = "Report Submitted Successfully"
 				notify.type = 'success',
-					notify.title = 'Success',
-					notify.content = $scope.message
+				notify.title = 'Success',
+				notify.content = $scope.message
 				$scope.$emit('notify', notify);
 				$scope.reportExecute(null);
 			}
@@ -258,10 +276,15 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 				paramInfo.paramId = response[i].paramId;
 				paramInfo.paramName = response[i].paramName;
 				paramInfo.paramType = response[i].paramType.toLowerCase();
-				if (response[i].paramValue != null && response[i].paramValue.ref.type == "simple") {
+				if (response[i].paramValue != null && response[i].paramValue.ref.type == "simple" && response[i].paramType!="date") {
 					paramInfo.paramValue = response[i].paramValue.value.replace(/["']/g, "");
 					paramInfo.paramValueType = "simple"
-				} else if (response[i].paramValue != null) {
+				}
+				else if(response[i].paramValue != null && response[i].paramValue.ref.type == "simple" &&  response[i].paramType=="date"){
+					var temp =response[i].paramValue.value.replace(/["']/g, "")
+					paramInfo.paramValue = new Date(temp);
+				}
+				 else if (response[i].paramValue != null) {
 					var paramValue = {};
 					paramValue.uuid = response[i].paramValue.ref.uuid;
 					paramValue.type = response[i].paramValue.ref.type;
@@ -332,7 +355,12 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 					var refParamValue = {};
 					refParamValue.type = $scope.selectParamList.paramInfo[i].paramValueType;
 					paramListObj.paramValue.ref = refParamValue;
-					paramListObj.paramValue.value = $scope.selectParamList.paramInfo[i].paramValue.replace(/["']/g, "");
+					if($scope.selectParamList.paramInfo[i].paramType =="date"){
+						paramListObj.paramValue.value = $filter('date')($scope.selectParamList.paramInfo[i].paramValue, "yyyy-MM-dd");
+					}else{
+						paramListObj.paramValue.value = $scope.selectParamList.paramInfo[i].paramValue.replace(/["']/g, "");
+					}
+					
 					paramListInfo[i] = paramListObj;
 
 				}
