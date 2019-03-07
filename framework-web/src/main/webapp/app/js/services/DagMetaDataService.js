@@ -689,6 +689,24 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       allowInChildMenu :true,
 
     },
+    'rule2':{
+      name : 'rule2',
+      caption : 'Rule2',
+      color : '#2489D1',
+      icon : 'rule.svg',
+      parentIconCaption:'Business Rules',
+      childIconCaption:'Rule',
+      execType:'rule2Exec',
+      metaType:'rule2',
+      iconPath : 'assets/layouts/layout/img/rule.svg',
+      allowInMenu :false,
+      listState:'viewrule2',
+      detailState: 'createrules2',
+      state: 'createrules2',
+      childMenu:[],
+      allowInChildMenu :false,
+
+    },
     'model':{
       name : 'model',
       caption : 'Model',
