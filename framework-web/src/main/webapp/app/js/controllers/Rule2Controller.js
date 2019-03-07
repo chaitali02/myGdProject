@@ -1,0 +1,1163 @@
+
+DatavisualizationModule = angular.module('DatavisualizationModule')
+
+DatavisualizationModule.controller('RuleDetailController', function (dagMetaDataService, $rootScope, $state, $scope, $stateParams, $timeout, $filter, Rule2Service, privilegeSvc, CommonService, CF_FILTER, CF_META_TYPES, CF_DOWNLOAD) {
+	$rootScope.isCommentVeiwPrivlage = true;
+	$scope.paramTypes = ["paramlist", "paramset"];
+	$scope.allFormats = CF_DOWNLOAD.formate;
+
+	if ($stateParams.mode == 'true') {
+		$scope.isEdit = false;
+		$scope.isversionEnable = false;
+		$scope.isAdd = false;
+		$scope.isDragable = "false";
+		var privileges = privilegeSvc.privileges[CF_META_TYPES.comment] || [];
+		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges[CF_META_TYPES.comment] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
+
+		});
+	}
+	else if ($stateParams.mode == 'false') {
+		$scope.isEdit = true;
+		$scope.isversionEnable = true;
+		$scope.isAdd = false;
+		$scope.isDragable = "true";
+		$scope.isPanelActiveOpen = true;
+		var privileges = privilegeSvc.privileges[CF_META_TYPES.comment] || [];
+		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
+		$scope.$on('privilegesUpdated', function (e, data) {
+			var privileges = privilegeSvc.privileges[CF_META_TYPES.comment] || [];
+			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+			$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
+
+		});
+	}
+	else {
+		$scope.isAdd = true;
+		$scope.isDragable = "true";
+		$scope.isEditInprogess = false;
+		$scope.isEditVeiwError = false;
+
+	}
+	$scope.userDetail = {}
+	$scope.userDetail.uuid = $rootScope.setUseruuid;
+	$scope.userDetail.name = $rootScope.setUserName;
+	$scope.mode = "false";
+	$scope.dataLoading = false;
+	$scope.iSSubmitEnable = false;
+	$scope.continueCount = 1;
+	$scope.ruleVersion = {};
+	$scope.ruleVersion.versions = [];
+	$scope.rule = {};
+	$scope.showForm = true;
+	$scope.data = null;
+	$scope.showgraph = false
+	$scope.showGraphDiv = false
+	$scope.graphDataStatus = false;
+	$scope.logicalOperator = ["AND", "OR"];
+	$scope.SourceTypes = ["datapod", "relation", 'dataset'];
+	$scope.spacialOperator = ['<', '>', '<=', '>=', '=', 'LIKE', 'NOT LIKE', 'RLIKE'];
+	$scope.rhsNA = ['NULL', "NOT NULL"];
+	$scope.operator = CF_FILTER.operator;
+	$scope.isSubmitEnable = true;
+	$scope.criteriaTableArray = null;
+	$scope.isDependencyShow = false;
+	$scope.privileges = [];
+	$scope.privileges = privilegeSvc.privileges['rule2'] || [];
+	console.log($scope.privileges.indexOf('Edit'))
+	$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
+	$scope.$on('privilegesUpdated', function (e, data) {
+		$scope.privileges = privilegeSvc.privileges[CF_META_TYPES.rule2] || [];
+		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
+	});
+	$scope.lhsType = [
+		{ "text": "string", "caption": "string" },
+		{ "text": "string", "caption": "integer" },
+		{ "text": "datapod", "caption": "attribute" },
+		{ "text": "formula", "caption": "formula" }];
+
+	var notify = {
+		type: 'success',
+		title: 'Success',
+		content: '',
+		timeout: 3000 //time in ms
+	};
+	$scope.sourceAttributeTypes = [
+		{ "text": "string", "caption": "string" },
+		{ "text": "datapod", "caption": "attribute" },
+		{ "text": "expression", "caption": "expression" },
+		{ "text": "formula", "caption": "formula" },
+		{ "text": "function", "caption": "function" },
+		{ "text": "paramlist", "caption": "paramlist" }
+	];
+
+	$scope.checkIsInrogess = function () {
+		if ($scope.isEditInprogess || $scope.isEditVeiwError) {
+			return false;
+		}
+	}
+
+	/*Start showPage*/
+	$scope.showPage = function () {
+		if ($scope.checkIsInrogess() == false) {
+			return false;
+		}
+		$scope.showForm = true;
+		$scope.showGraphDiv = false
+	}/*End showPage*/
+
+	$scope.showHome = function (uuid, version, mode) {
+		if ($scope.checkIsInrogess() == false) {
+			return false;
+		}
+		$scope.showPage()
+		var state = dagMetaDataService.elementDefs["rule2"].detailState
+		$state.go(state, {
+			id: uuid,
+			version: version,
+			mode: mode
+		});
+	}
+	$scope.showGraph = function () {
+		if ($scope.checkIsInrogess() == false) {
+			return false;
+		}
+		$scope.showForm = false;
+		$scope.showGraphDiv = true;
+
+	}/*End ShowGraph*/
+
+	$scope.enableEdit = function (uuid, version) {
+		if ($scope.isPrivlage || $scope.rule.locked == "Y") {
+			return false;
+		}
+		if ($scope.checkIsInrogess() == false) {
+			return false;
+		}
+		$scope.showPage()
+		var state = dagMetaDataService.elementDefs["rule2"].detailState
+		setTimeout(function () { $state.go(state, { 'id': uuid, 'version': version, 'mode': 'false' }); }, 100);
+	}
+
+	$scope.showView = function (uuid, version) {
+		if ($scope.checkIsInrogess() == false) {
+			return false;
+		}
+		if (!$scope.isEdit) {
+			$scope.showPage()
+			var state = dagMetaDataService.elementDefs["rule2"].detailState
+			setTimeout(function () { $state.go(state, { 'id': uuid, 'version': version, 'mode': 'false' }); }, 100);
+		}
+	}
+
+	$scope.getLovByType = function () {
+		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
+		var onSuccessGetLovByType = function (response) {
+			console.log(response)
+			$scope.lobTag = response[0].value
+		}
+	}
+
+	$scope.loadTag = function (query) {
+		return $timeout(function () {
+			return $filter('filter')($scope.lobTag, query);
+		});
+	};
+	$scope.getLovByType();
+
+	$scope.countContinue = function () {
+		if ($scope.continueCount == 3) {
+			if ($scope.isDuplication == true) {
+				return true;
+			}
+		}
+		$scope.continueCount = $scope.continueCount + 1;
+		if ($scope.continueCount >= 4) {
+			$scope.isSubmitShow = true;
+		} else {
+			$scope.isSubmitShow = false;
+		}
+	}
+
+	$scope.countBack = function () {
+		$scope.continueCount = $scope.continueCount - 1;
+		$scope.isSubmitShow = false;
+	}
+
+	
+	$scope.ondrop = function (e) {
+		$scope.myform.$dirty = true;
+	}
+
+	$scope.getFunctionByCriteria = function () {
+		CommonService.getFunctionByCriteria("", "N", "function").then(function (response) { onSuccessFuntion(response.data) });
+		var onSuccessFuntion = function (response) {
+			$scope.allSourceFunction = response;
+			$scope.allFunction = response;
+		}
+	}
+
+	$scope.getExpressionByType = function () {
+		Rule2Service.getExpressionByType($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessExpression(response.data) });
+		var onSuccessExpression = function (response) {
+			$scope.allExpress = response
+		}
+	}
+	$scope.getFormulaByType = function () {
+		Rule2Service.getFormulaByType($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessFormula(response.data) });
+		var onSuccessFormula = function (response) {
+			$scope.allSourceFormula = response;;
+			$scope.allFilterormula = response;
+
+		}//End onSuccessGetFormulaByType
+	}
+
+	$scope.getAllAttributeBySource = function () {
+		Rule2Service.getAllAttributeBySource($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessGetDatapodByRelation(response.data) })
+		var onSuccessGetDatapodByRelation = function (response) {
+			$scope.sourcedatapodattribute = response;
+			$scope.lhsdatapodattributefilter = response;
+			$scope.allattribute = response;
+		}
+	}
+	$scope.getAllLatest = function (type, defaultvalue) {
+		Rule2Service.getAllLatest(type).then(function (response) { onSuccess(response.data) });
+		var onSuccess = function (response) {
+			$scope.allSource = response;
+			if (defaultvalue != null) {
+				var defaultoption = {};
+				defaultoption.type = defaultvalue.ref.type
+				defaultoption.uuid = defaultvalue.ref.uuid
+				$scope.allSource.defaultoption = defaultoption;
+			}
+			$scope.getAllAttributeBySource();
+			$scope.getFormulaByType();
+			$scope.getExpressionByType();
+		}
+	}
+	$scope.selectType = function () {
+		$scope.getAllLatest($scope.selectSourceType, null);
+	}
+
+	$scope.selectOption = function () {
+		$scope.getAllAttributeBySource();
+	}
+
+	$scope.getParamByApp = function () {
+		CommonService.getParamByApp($rootScope.appUuidd || "", "application").
+			then(function (response) { onSuccessGetParamByApp(response.data) });
+		var onSuccessGetParamByApp = function (response) {
+			$scope.allparamlistParams = [];
+			if (response.length > 0) {
+				var paramsArray = [];
+				for (var i = 0; i < response.length; i++) {
+					var paramsjson = {};
+					paramsjson.uuid = response[i].ref.uuid;
+					paramsjson.name = response[i].ref.name + "." + response[i].paramName;
+					paramsjson.attributeId = response[i].paramId;
+					paramsjson.attrType = response[i].paramType;
+					paramsjson.paramName = response[i].paramName;
+					paramsjson.caption = "app." + paramsjson.paramName
+					paramsArray[i] = paramsjson
+				}
+				$scope.allparamlistParams = paramsArray;
+			}
+		}
+		$scope.getOneByUuidParamList();
+	}
+
+	$scope.onChangeParamListOFRule = function () {
+		setTimeout(function () { $scope.paramTypes = ["paramlist", "paramset"]; }, 1);
+		$scope.getParamByApp();
+	}
+
+	$scope.getOneByUuidParamList = function () {
+		if ($scope.allparamlist && $scope.allparamlist.defaultoption != null) {
+			Rule2Service.getLatestByUuid($scope.allparamlist.defaultoption.uuid, "paramlist").
+				then(function (response) { onSuccessParamList(response.data) });
+			var onSuccessParamList = function (response) {
+				var paramsArray = [];
+				for (var i = 0; i < response.params.length; i++) {
+					var paramsjson = {};
+					paramsjson.uuid = response.uuid;
+					paramsjson.name = response.name + "." + response.params[i].paramName;
+					paramsjson.attributeId = response.params[i].paramId;
+					paramsjson.attrType = response.params[i].paramType;
+					paramsjson.paramName = response.params[i].paramName;
+					paramsjson.caption = "rule." + paramsjson.paramName;
+					paramsArray[i] = paramsjson;
+				}
+				$scope.ruleParamListParam = paramsArray
+				if ($scope.allparamlistParams && $scope.allparamlistParams.length > 0)
+					$scope.allparamlistParams = $scope.allparamlistParams.concat($scope.ruleParamListParam);
+			}
+		}
+	}
+
+	$scope.getAllLatestParamListByTemplate = function () {
+		CommonService.getAllLatestParamListByTemplate('Y', "paramlist", "rule").then(function (response) {
+			onSuccessGetAllLatestParamListByTemplate(response.data)
+		});
+		var onSuccessGetAllLatestParamListByTemplate = function (response) {
+			$scope.allparamlist = {};
+			$scope.allparamlist.options = response;
+			if ($scope.rule.paramList != null) {
+				var defaultoption = {};
+				defaultoption.uuid = $scope.rule.paramList.ref.uuid;
+				defaultoption.name = $scope.rule.paramList.ref.name;
+				$scope.allparamlist.defaultoption = defaultoption;
+				$scope.getOneByUuidParamList();
+
+			} else {
+				$scope.allparamlist.defaultoption = null;
+			}
+		}
+	}
+	$scope.getAllLatestParamListByTemplate();
+	if (typeof $stateParams.id != "undefined") {
+		$scope.showactive = "true"
+		$scope.mode = $stateParams.mode;
+		$scope.isDependencyShow = true;
+		$scope.isEditInprogess = true;
+		$scope.isEditVeiwError = false;
+		Rule2Service.getAllVersionByUuid($stateParams.id, CF_META_TYPES.rule2).then(function (response) { onSuccessGetAllVersionByUuid(response.data) });
+		var onSuccessGetAllVersionByUuid = function (response) {
+			for (var i = 0; i < response.length; i++) {
+				var ruleVersion = {};
+				ruleVersion.version = response[i].version;
+				$scope.ruleVersion.versions[i] = ruleVersion;
+			}
+		}
+
+		Rule2Service.getOneByUuidAndVersion($stateParams.id, $stateParams.version, CF_META_TYPES.rule2)
+			.then(function (response) { onSuccessResult(response.data) }, function (response) { onError(response.data) });
+		var onSuccessResult = function (response) {
+			$scope.isEditInprogess = false;
+			$scope.rule = response.rule;
+			$scope.selectSourceType = response.rule.sourceInfo.ref.type
+			var defaultversion = {};
+			defaultversion.version = response.rule.version;
+			defaultversion.uuid = response.rule.uuid;
+			$scope.ruleVersion.defaultVersion = defaultversion;
+
+			$scope.tags = response.tags;
+			
+			if ($scope.rule.paramList != null && $scope.allparamlist !=null) {
+				var defaultoption = {};
+				defaultoption.uuid = $scope.rule.paramList.ref.uuid;
+				defaultoption.name = $scope.rule.paramList.ref.name;
+				$scope.allparamlist.defaultoption = defaultoption;
+			}
+			$scope.getParamByApp();
+
+			$scope.getAllLatest($scope.selectSourceType, response.rule.dependsOn);
+			$scope.getFunctionByCriteria();
+			$scope.attributeTableArray = response.sourceAttributes;
+			$scope.filterTableArray = response.filterInfo;
+		}//End onSuccessResult
+		var onError = function () {
+			$scope.isEditInprogess = false;
+			$scope.isEditVeiwError = true;
+		};
+	}//End If
+	else {
+		$scope.rule = {};
+		$scope.rule.locked = "N";
+		$scope.rule.limit = -1;
+		$scope.rule.format = CF_DOWNLOAD.formate[0];
+		$scope.rule.senderInfo = {};
+		$scope.rule.senderInfo.sendAttachment = "Y";
+		$scope.rule.senderInfo.notifyOnSuccess = "Y";
+		$scope.rule.senderInfo.notifyOnFailure = "Y";
+
+	}
+
+	$scope.selectVersion = function () {
+		$scope.allSource = null;
+		$scope.selectSourceType = null;
+		$scope.myform1.$dirty = false;
+		$scope.myform2.$dirty = false;
+		$scope.myform3.$dirty = false;
+		$scope.isEditInprogess = true;
+		$scope.isEditVeiwError = false;
+		Rule2Service.getOneByUuidAndVersion($scope.ruleVersion.defaultVersion.uuid, $scope.ruleVersion.defaultVersion.version, CF_META_TYPES.rule2)
+			.then(function (response) { onSuccessResult(response.data) }, function (response) { onError(response.data) });
+		var onSuccessResult = function (response) {
+			$scope.isEditInprogess = false;
+			$scope.rule = response.rule;
+			$scope.selectSourceType = response.rule.dependsOn.ref.type
+			var defaultversion = {};
+			defaultversion.version = response.rule.version;
+			defaultversion.uuid = response.rule.uuid;
+			$scope.ruleVersion.defaultVersion = defaultversion;
+
+			$scope.tags = response.tags;
+			if (response.rule.senderInfo != null) {
+				$scope.tagsTo = response.rule.senderInfo.emailTo;
+				$scope.tagsCC = response.rule.senderInfo.emailCC;
+				$scope.tagsBcc = response.rule.senderInfo.emailBCC;
+			}
+
+			$scope.getParamByApp();
+			$scope.getAllLatest($scope.selectSourceType, response.rule.dependsOn);
+			$scope.getFunctionByCriteria();
+			$scope.attributeTableArray = response.sourceAttributes;
+			$scope.filterTableArray = response.filterInfo;
+		}//End onSuccessResult
+		var onError = function () {
+			$scope.isEditInprogess = false;
+			$scope.isEditVeiwError = true;
+		};
+	}
+
+	$scope.SearchAttribute = function (index, type, propertyType) {
+		$scope.selectAttr = $scope.filterTableArray[index][propertyType]
+		$scope.searchAttr = {};
+		$scope.searchAttr.type = type;
+		$scope.searchAttr.propertyType = propertyType;
+		$scope.searchAttr.index = index;
+		Rule2Service.getAllLatest(type).then(function (response) { onSuccessGetAllLatest(response.data) });
+		$scope.searchAttrIndex = index;
+		var onSuccessGetAllLatest = function (response) {
+			$scope.allSearchType = response;
+			var temp;
+			if ($scope.selectSourceType == "dataset") {
+				temp = $scope.allSearchType.options.filter(function (el) {
+					return el.uuid !== $scope.datasetRelation.defaultoption.uuid;
+				});
+				$scope.allSearchType.options = temp;
+				$scope.allSearchType.defaultoption = temp[0]
+			}
+			if ($scope.dataset) {
+				temp = $scope.allSearchType.options.filter(function (el) {
+					return el.uuid !== $scope.dataset.uuid;
+				});
+				$scope.allSearchType.options = temp;
+				$scope.allSearchType.defaultoption = temp[0]
+			}
+			if (typeof $stateParams.id != "undefined" && $scope.selectAttr) {
+				var defaultoption = {};
+				defaultoption.uuid = $scope.selectAttr.uuid;
+				defaultoption.name = "";
+				$scope.allSearchType.defaultoption = defaultoption;
+			}
+			$('#searchAttr').modal({
+				backdrop: 'static',
+				keyboard: false
+			});
+			Rule2Service.getAllAttributeBySource($scope.allSearchType.defaultoption.uuid, type).then(function (response) { onSuccessAttributeBySource(response.data) });
+			var onSuccessAttributeBySource = function (response) {
+				$scope.allAttr = response;
+				if (typeof $stateParams.id != "undefined" && $scope.selectAttr) {
+					var defaultoption = {};
+					defaultoption.uuid = $scope.selectAttr.uuid;
+					defaultoption.name = "";
+					$scope.allSearchType.defaultoption = defaultoption;
+				} else {
+					$scope.selectAttr = $scope.allAttr[0]
+				}
+
+			}
+		}
+	}
+
+	$scope.onChangeSearchAttr = function () {
+		Rule2Service.getAllAttributeBySource($scope.allSearchType.defaultoption.uuid, $scope.searchAttr.type).then(function (response) { onSuccessAttributeBySource(response.data) });
+		var onSuccessAttributeBySource = function (response) {
+			$scope.allAttr = response;
+		}
+	}
+
+	$scope.SubmitSearchAttr = function () {
+		$scope.filterTableArray[$scope.searchAttr.index][$scope.searchAttr.propertyType] = $scope.selectAttr;
+		$('#searchAttr').modal('hide')
+	}
+
+	$scope.disableRhsType = function (rshTypes, arrayStr) {
+		for (var i = 0; i < rshTypes.length; i++) {
+			rshTypes[i].disabled = false;
+			if (arrayStr.length > 0) {
+				var index = arrayStr.indexOf(rshTypes[i].caption);
+				if (index != -1) {
+					rshTypes[i].disabled = true;
+				}
+			}
+		}
+		return rshTypes;
+	}
+
+	$scope.onChangeOperator = function (index) {
+
+		$scope.filterTableArray[index].isRhsNA = false;
+		if ($scope.filterTableArray[index].operator == 'BETWEEN') {
+			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[1];
+			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['attribute', 'formula', 'dataset', 'function', 'paramlist'])
+			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
+		}
+		else if (['IN', 'NOT IN'].indexOf($scope.filterTableArray[index].operator) != -1) {
+			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, []);
+			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[4];
+			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
+		}
+		else if (['EXISTS', 'NOT EXISTS'].indexOf($scope.filterTableArray[index].operator) != -1) {
+			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['attribute', 'formula', 'function', 'paramlist', 'string', 'integer']);
+			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[4];
+			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
+		}
+
+		else if (['<', '>', "<=", '>='].indexOf($scope.filterTableArray[index].operator) != -1) {
+			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['dataset']);
+			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[1];
+			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
+		}
+		else if (['IS'].indexOf($scope.filterTableArray[index].operator) != -1) {
+			$scope.filterTableArray[index].isRhsNA = true;
+			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['attribute', 'formula', 'dataset', 'function', 'paramlist', 'integer']);
+			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[0];
+			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
+		}
+		else {
+			$scope.filterTableArray[index].rhsTypes = $scope.disableRhsType($scope.filterTableArray[index].rhsTypes, ['dataset']);
+			$scope.filterTableArray[index].rhstype = $scope.filterTableArray[index].rhsTypes[0];
+			$scope.selectrhsType($scope.filterTableArray[index].rhstype.text, index);
+		}
+	}
+
+	$scope.checkAllFilterRow = function () {
+		if (!$scope.selectedAllFitlerRow) {
+			$scope.selectedAllFitlerRow = true;
+		}
+		else {
+			$scope.selectedAllFitlerRow = false;
+		}
+		angular.forEach($scope.filterTableArray, function (filter) {
+			filter.selected = $scope.selectedAllFitlerRow;
+		});
+	}
+
+	function returnRshType() {
+		var rTypes = [
+			{ "text": "string", "caption": "string", "disabled": false },
+			{ "text": "string", "caption": "integer", "disabled": false },
+			{ "text": "datapod", "caption": "attribute", "disabled": false },
+			{ "text": "formula", "caption": "formula", "disabled": false },
+			{ "text": "dataset", "caption": "dataset", "disabled": false },
+			{ "text": "paramlist", "caption": "paramlist", "disabled": false },
+			{ "text": "function", "caption": "function", "disabled": false }]
+		return rTypes;
+	}
+
+	$scope.addRowFilter = function () {
+		if ($scope.filterTableArray == null) {
+			$scope.filterTableArray = [];
+		}
+		$scope.myform2.$dirty=true;
+		var filertable = {};
+		filertable.islhsDatapod = true;
+		filertable.islhsFormula = false;
+		filertable.islhsSimple = false;
+		filertable.isrhsDatapod = true;
+		filertable.isrhsFormula = false;
+		filertable.isrhsSimple = false;
+		filertable.lhsFilter = $scope.lhsdatapodattributefilter[0];
+		filertable.lhsdatapodAttribute = $scope.lhsdatapodattributefilter[0];
+		filertable.rhsdatapodAttribute = $scope.lhsdatapodattributefilter[0];
+
+		filertable.logicalOperator = $scope.filterTableArray.length == 0 ? "" : $scope.logicalOperator[0]
+		filertable.operator = $scope.operator[0].value
+		filertable.lhstype = $scope.lhsType[2]
+		filertable.rhstype = returnRshType()[2];
+		filertable.rhsTypes = returnRshType();
+
+		filertable.rhsTypes = $scope.disableRhsType(filertable.rhsTypes, ['dataset']);
+		filertable.rhsvalue;
+		filertable.lhsvalue;
+		$scope.filterTableArray.splice($scope.filterTableArray.length, 0, filertable);
+	}
+
+	$scope.removeRowFitler = function () {
+		var newDataList = [];
+		$scope.checkAll = false;
+		angular.forEach($scope.filterTableArray, function (selected) {
+			if (!selected.selected) {
+				newDataList.push(selected);
+			}
+			$scope.fitlerAttrTableSelectedItem = [];
+		});
+
+		if (newDataList.length > 0) {
+			newDataList[0].logicalOperator = "";
+		}
+		$scope.filterTableArray = newDataList;
+	}
+
+	$scope.fitlerAttrTableSelectedItem = [];
+	$scope.onChangeFilterAttRow = function (index, status) {
+		if (status == true) {
+			$scope.fitlerAttrTableSelectedItem.push(index);
+		}
+		else {
+			let tempIndex = $scope.fitlerAttrTableSelectedItem.indexOf(index);
+
+			if (tempIndex != -1) {
+				$scope.fitlerAttrTableSelectedItem.splice(tempIndex, 1);
+
+			}
+		}
+	}
+
+	$scope.onAttrFilterRowDown = function (index) {
+		var rowTempIndex = $scope.filterTableArray[index];
+		var rowTempIndexPlus = $scope.filterTableArray[index + 1];
+		$scope.filterTableArray[index] = rowTempIndexPlus;
+		$scope.filterTableArray[index + 1] = rowTempIndex;
+		if (index == 0) {
+			$scope.filterTableArray[index + 1].logicalOperator = $scope.filterTableArray[index].logicalOperator;
+			$scope.filterTableArray[index].logicalOperator = ""
+		}
+	}
+
+	$scope.onAttrFilterRowUp = function (index) {
+		var rowTempIndex = $scope.filterTableArray[index];
+		var rowTempIndexMines = $scope.filterTableArray[index - 1];
+		$scope.filterTableArray[index] = rowTempIndexMines;
+		$scope.filterTableArray[index - 1] = rowTempIndex;
+		if (index == 1) {
+			$scope.filterTableArray[index].logicalOperator = $scope.filterTableArray[index - 1].logicalOperator;
+			$scope.filterTableArray[index - 1].logicalOperator = ""
+		}
+	}
+
+	$scope.onFilterDrop = function (index) {
+		if (index.targetIndex == 0) {
+			$scope.filterTableArray[index.sourceIndex].logicalOperator = $scope.filterTableArray[index.targetIndex].logicalOperator;
+			$scope.filterTableArray[index.targetIndex].logicalOperator = ""
+		}
+		if (index.sourceIndex == 0) {
+			$scope.filterTableArray[index.targetIndex].logicalOperator = $scope.filterTableArray[index.sourceIndex].logicalOperator;
+			$scope.filterTableArray[index.sourceIndex].logicalOperator = ""
+		}
+	}
+
+	$scope.selectlhsType = function (type, index) {
+		if (type == "string") {
+			$scope.filterTableArray[index].islhsSimple = true;
+			$scope.filterTableArray[index].islhsDatapod = false;
+			$scope.filterTableArray[index].lhsvalue;
+			$scope.filterTableArray[index].islhsFormula = false;
+		}
+		else if (type == "datapod") {
+
+			$scope.filterTableArray[index].islhsSimple = false;
+			$scope.filterTableArray[index].islhsDatapod = true;
+			$scope.filterTableArray[index].islhsFormula = false;
+		}
+		else if (type == "formula") {
+
+			$scope.filterTableArray[index].islhsFormula = true;
+			$scope.filterTableArray[index].islhsSimple = false;
+			$scope.filterTableArray[index].islhsDatapod = false;
+			if (typeof $stateParams.id == "undefined") {
+				$scope.getFormulaByType();
+			}
+		}
+	}
+
+
+	$scope.selectrhsType = function (type, index) {
+		if (type == "string") {
+			$scope.filterTableArray[index].isrhsSimple = true;
+			$scope.filterTableArray[index].isrhsDatapod = false;
+			$scope.filterTableArray[index].isrhsFormula = false;
+			$scope.filterTableArray[index].rhsvalue;
+			$scope.filterTableArray[index].isrhsDataset = false;
+			$scope.filterTableArray[index].isrhsParamlist = false;
+			$scope.filterTableArray[index].isrhsFunction = false;
+
+		}
+		else if (type == "datapod") {
+
+			$scope.filterTableArray[index].isrhsSimple = false;
+			$scope.filterTableArray[index].isrhsDatapod = true;
+			$scope.filterTableArray[index].isrhsFormula = false;
+			$scope.filterTableArray[index].isrhsDataset = false;
+			$scope.filterTableArray[index].isrhsParamlist = false;
+			$scope.filterTableArray[index].isrhsFunction = false;
+
+		}
+		else if (type == "formula") {
+
+			$scope.filterTableArray[index].isrhsFormula = true;
+			$scope.filterTableArray[index].isrhsSimple = false;
+			$scope.filterTableArray[index].isrhsDatapod = false;
+			$scope.filterTableArray[index].isrhsDataset = false;
+			$scope.filterTableArray[index].isrhsParamlist = false;
+			$scope.filterTableArray[index].isrhsFunction = false;
+			if (typeof $stateParams.id == "undefined") {
+				$scope.getFormulaByType();
+			}
+
+		}
+		else if (type == "function") {
+
+			$scope.filterTableArray[index].isrhsFormula = false;
+			$scope.filterTableArray[index].isrhsSimple = false;
+			$scope.filterTableArray[index].isrhsDatapod = false;
+			$scope.filterTableArray[index].isrhsDataset = false;
+			$scope.filterTableArray[index].isrhsParamlist = false;
+			$scope.filterTableArray[index].isrhsParamlist = false;
+			$scope.filterTableArray[index].isrhsFunction = true;
+			$scope.getFunctionByCriteria();
+
+		}
+		else if (type == "dataset") {
+			$scope.filterTableArray[index].isrhsFormula = false;
+			$scope.filterTableArray[index].isrhsSimple = false;
+			$scope.filterTableArray[index].isrhsDatapod = false;
+			$scope.filterTableArray[index].isrhsDataset = true;
+			$scope.filterTableArray[index].isrhsParamlist = false;
+			$scope.filterTableArray[index].isrhsFunction = false;
+
+		}
+		else if (type == "paramlist") {
+			$scope.filterTableArray[index].isrhsFormula = false;
+			$scope.filterTableArray[index].isrhsSimple = false;
+			$scope.filterTableArray[index].isrhsDatapod = false;
+			$scope.filterTableArray[index].isrhsDataset = false;
+			$scope.filterTableArray[index].isrhsParamlist = true;
+			$scope.filterTableArray[index].isrhsFunction = false;
+			$scope.getParamByApp();
+		}
+
+	}
+
+    $scope.addRowCriteria=function(){
+		if($scope.criteriaTableArray ==null){
+			$scope.criteriaTableArray=[];
+		}
+		var len=$scope.criteriaTableArray.length-1;
+		var criteriaInfo={};
+		criteriaInfo.criteriaId=len;
+		criteriaInfo.criteriaName="criteria"+len+1;
+		var filertable = {};
+		filertable.islhsDatapod = true;
+		filertable.islhsFormula = false;
+		filertable.islhsSimple = false;
+		filertable.isrhsDatapod = true;
+		filertable.isrhsFormula = false;
+		filertable.isrhsSimple = false;
+		filertable.lhsFilter = $scope.lhsdatapodattributefilter[0];
+		filertable.lhsdatapodAttribute = $scope.lhsdatapodattributefilter[0];
+		filertable.rhsdatapodAttribute = $scope.lhsdatapodattributefilter[0];
+
+		filertable.logicalOperator = $scope.filterTableArray.length == 0 ? "" : $scope.logicalOperator[0]
+		filertable.operator = $scope.operator[0].value
+		filertable.lhstype = $scope.lhsType[2]
+		filertable.rhstype = returnRshType()[2];
+		filertable.rhsTypes = returnRshType();
+
+		filertable.rhsTypes = $scope.disableRhsType(filertable.rhsTypes, ['dataset']);
+		filertable.rhsvalue;
+		filertable.lhsvalue;
+		criteriaInfo.filterInfo=[];
+		criteriaInfo.filterInfo.push(filertable)
+		$scope.criteriaTableArray.splice(len,0,criteriaInfo);
+
+	}
+
+	$scope.expandAll = function (expanded) {
+		// $scope is required here, hence the injection above, even though we're using "controller as" syntax
+		$scope.$broadcast('onExpandAll', { expanded: expanded });
+	};
+	$scope.submit = function () {
+		var upd_tag = "N"
+		$scope.isshowmodel = true;
+		$scope.dataLoading = true;
+		$scope.iSSubmitEnable = false;
+		$scope.myform1.$dirty = false;
+		$scope.myform2.$dirty = false;
+ 		$scope.myform3.$dirty = false;
+		$scope.myform4.$dirty = false;
+
+		var ruleJson = {}
+		ruleJson.uuid = $scope.rule.uuid
+		ruleJson.name = $scope.rule.name;
+		ruleJson.desc = $scope.rule.desc
+		ruleJson.active = $scope.rule.active;
+		ruleJson.locked = $scope.rule.locked;
+		ruleJson.published = $scope.rule.published;
+		ruleJson.publicFlag = $scope.rule.publicFlag;
+		ruleJson.saveOnRefresh = $scope.rule.saveOnRefresh;
+
+		ruleJson.title = $scope.rule.title;
+		ruleJson.header = $scope.rule.header;
+		ruleJson.footer = $scope.rule.footer;
+		ruleJson.headerAlign = $scope.rule.headerAlign;
+		ruleJson.footerAlign = $scope.rule.footerAlign;
+		ruleJson.limit = $scope.rule.limit;
+        ruleJson.format=$scope.rule.format;
+		var tagArray = [];
+		if ($scope.tags != null) {
+			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
+				tagArray[counttag] = $scope.tags[counttag].text;
+			}
+			var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
+			if (result == false) {
+				upd_tag = "Y"
+			}
+		}
+
+		ruleJson.tags = tagArray;
+		var dependsOn = {};
+		var ref = {};
+		ref.type = $scope.selectSourceType
+		ref.uuid = $scope.allSource.defaultoption.uuid
+		dependsOn.ref = ref;
+		ruleJson.dependsOn = dependsOn;
+
+		if ($scope.allparamlist && $scope.allparamlist.defaultoption != null) {
+			var paramlist = {};
+			var ref = {};
+			ref.type = "paramlist";
+			ref.uuid = $scope.allparamlist.defaultoption.uuid;
+			paramlist.ref = ref;
+			ruleJson.paramList = paramlist;
+		}
+		else {
+			ruleJson.paramList = null;
+		}
+
+		//filterInfo
+		var filterInfoArray = [];
+		if ($scope.filterTableArray && $scope.filterTableArray.length > 0) {
+			for (var i = 0; i < $scope.filterTableArray.length; i++) {
+				var filterInfo = {};
+				var operand = []
+				var lhsoperand = {}
+				var lhsref = {}
+				var rhsoperand = {}
+				var rhsref = {};
+				filterInfo.display_seq = i;
+				if (typeof $scope.filterTableArray[i].logicalOperator == "undefined") {
+					filterInfo.logicalOperator = ""
+				}
+				else {
+					filterInfo.logicalOperator = $scope.filterTableArray[i].logicalOperator
+				}
+				filterInfo.operator = $scope.filterTableArray[i].operator;
+				if ($scope.filterTableArray[i].lhstype.text == "string") {
+
+					lhsref.type = "simple";
+					lhsoperand.ref = lhsref;
+					lhsoperand.attributeType = $scope.filterTableArray[i].lhstype.caption;
+					lhsoperand.value = $scope.filterTableArray[i].lhsvalue;
+
+				}
+				else if ($scope.filterTableArray[i].lhstype.text == "datapod") {
+
+					lhsref.type = $scope.filterTableArray[i].lhsdatapodAttribute.type;
+					lhsref.uuid = $scope.filterTableArray[i].lhsdatapodAttribute.uuid;
+					lhsoperand.ref = lhsref;
+					lhsoperand.attributeId = $scope.filterTableArray[i].lhsdatapodAttribute.attributeId;
+				}
+				else if ($scope.filterTableArray[i].lhstype.text == "formula") {
+
+					lhsref.type = "formula";
+					lhsref.uuid = $scope.filterTableArray[i].lhsformula.uuid;
+					lhsoperand.ref = lhsref;
+				}
+				operand[0] = lhsoperand;
+				if ($scope.filterTableArray[i].rhstype.text == "string") {
+
+					rhsref.type = "simple";
+					rhsoperand.ref = rhsref;
+					rhsoperand.attributeType = $scope.filterTableArray[i].rhstype.caption;
+					rhsoperand.value = $scope.filterTableArray[i].rhsvalue;
+					if ($scope.filterTableArray[i].operator == 'BETWEEN') {
+						rhsoperand.value = $scope.filterTableArray[i].rhsvalue1 + "and" + $scope.filterTableArray[i].rhsvalue2;
+					}
+				}
+				else if ($scope.filterTableArray[i].rhstype.text == "datapod") {
+
+					rhsref.type = $scope.filterTableArray[i].rhsdatapodAttribute.type;
+					rhsref.uuid = $scope.filterTableArray[i].rhsdatapodAttribute.uuid;
+
+					rhsoperand.ref = rhsref;
+					rhsoperand.attributeId = $scope.filterTableArray[i].rhsdatapodAttribute.attributeId;
+				}
+				else if ($scope.filterTableArray[i].rhstype.text == "formula") {
+
+					rhsref.type = "formula";
+					rhsref.uuid = $scope.filterTableArray[i].rhsformula.uuid;
+					rhsoperand.ref = rhsref;
+				}
+				else if ($scope.filterTableArray[i].rhstype.text == "function") {
+					rhsref.type = "function";
+					rhsref.uuid = $scope.filterTableArray[i].rhsfunction.uuid;
+					rhsoperand.ref = rhsref;
+				}
+				else if ($scope.filterTableArray[i].rhstype.text == "dataset") {
+					rhsref.type = "dataset";
+					rhsref.uuid = $scope.filterTableArray[i].rhsdataset.uuid;
+					rhsoperand.ref = rhsref;
+					rhsoperand.attributeId = $scope.filterTableArray[i].rhsdataset.attributeId;
+				}
+				else if ($scope.filterTableArray[i].rhstype.text == "paramlist") {
+
+					rhsref.type = "paramlist";
+					rhsref.uuid = $scope.filterTableArray[i].rhsparamlist.uuid;
+					rhsoperand.ref = rhsref;
+					rhsoperand.attributeId = $scope.filterTableArray[i].rhsparamlist.attributeId;
+				}
+				operand[1] = rhsoperand;
+				filterInfo.operand = operand;
+				filterInfoArray[i] = filterInfo;
+
+			}//End FilterInfo
+
+			ruleJson.filterInfo = filterInfoArray;
+		}
+		else {
+			ruleJson.filterInfo = null;
+		}
+
+		console.log(JSON.stringify(ruleJson))
+
+		Rule2Service.submit(ruleJson, 'rule2', upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		var onSuccess = function (response) {
+			if ($scope.checkboxModelexecution == "YES" && $scope.allparamlist.defaultoption != null) {
+				$scope.ruleId = response.data;
+				$scope.showParamlistPopup();
+			} //End if
+			else if ($scope.checkboxModelexecution == "YES" && $scope.allparamlist.defaultoption == null) {
+				Rule2Service.getOneById(response.data, "rule2").then(function (response) {
+					onSuccessGetOneById(response.data)
+				});
+				var onSuccessGetOneById = function (result) {
+					$scope.ruleExecute(result);
+				}
+			}
+			else {
+				$scope.dataLoading = false;
+				notify.type = 'success',
+				notify.title = 'Success',
+				notify.content = 'Rule Saved Successfully'
+				$scope.$emit('notify', notify);
+				$scope.close();
+			}
+		}
+		var onError = function (response) {
+			notify.type = 'error',
+			notify.title = 'Error',
+			notify.content = "Some Error Occurred"
+			$scope.$emit('notify', notify);
+			$scope.iSSubmitEnable = false;
+
+		}
+
+		return false;
+	}
+
+	$scope.close = function () {
+		var hidemode = "yes";
+		if (hidemode == 'yes') {
+			setTimeout(function () { $state.go('viewrule2'); }, 2000);
+		}
+	}
+
+	$scope.changeCheckboxExecution = function () {
+		$scope.allparamset = null;
+		$scope.allParamList = null;
+		$scope.isParamLsitTable = false;
+		$scope.selectParamList = null;
+		$scope.paramTypes = null;
+		$scope.selectParamType = null;
+	}
+
+	$scope.ruleExecute = function (modeldetail) {
+		if ($scope.selectParamType == "paramlist") {
+			if ($scope.paramlistdata) {
+				var execParams = {};
+				var paramListInfo = [];
+				var paramInfo = {};
+				var paramInfoRef = {};
+				paramInfoRef.uuid = $scope.paramlistdata.uuid;
+				paramInfoRef.type = "paramlist";
+				paramInfo.ref = paramInfoRef;
+				//paramListInfo[0] = paramInfo;
+				for (var i = 0; i < $scope.selectParamList.paramInfo.length; i++) {
+					var paramListObj = {};
+					var ref = {};
+					ref.uuid = $scope.paramlistdata.uuid;
+					ref.type = "paramlist";
+					paramListObj.ref = ref;
+					paramListObj.paramId = $scope.selectParamList.paramInfo[i].paramId;
+					paramListObj.paramName = $scope.selectParamList.paramInfo[i].paramName;
+					paramListObj.paramType = $scope.selectParamList.paramInfo[i].paramType;
+					paramListObj.paramValue = {};
+					var refParamValue = {};
+					refParamValue.type = $scope.selectParamList.paramInfo[i].paramValueType;
+					paramListObj.paramValue.ref = refParamValue;
+					paramListObj.paramValue.value = $scope.selectParamList.paramInfo[i].paramValue.replace(/["']/g, "");
+					paramListInfo[i] = paramListObj;
+
+				}
+				execParams.paramListInfo = paramListInfo;
+			} else {
+				execParams = null;
+			}
+			$scope.paramlistdata = null;
+			$scope.selectParamType = null;
+		}
+		else {
+			$scope.newDataList = [];
+			$scope.selectallattribute = false;
+			angular.forEach($scope.paramtable, function (selected) {
+				if (selected.selected) {
+					$scope.newDataList.push(selected);
+				}
+			});
+			var paramInfoArray = [];
+			if ($scope.newDataList.length > 0) {
+				var execParams = {}
+				var ref = {}
+				ref.uuid = $scope.paramsetdata.uuid;
+				ref.version = $scope.paramsetdata.version;
+				for (var i = 0; i < $scope.newDataList.length; i++) {
+					var paraminfo = {};
+					paraminfo.paramSetId = $scope.newDataList[i].paramSetId;
+					paraminfo.ref = ref;
+					paramInfoArray[i] = paraminfo;
+				}
+			}
+			if (paramInfoArray.length > 0) {
+				execParams.paramInfo = paramInfoArray;
+			} else {
+				execParams = null
+			}
+		}
+		Rule2Service.ruleExecute(modeldetail.uuid, modeldetail.version, execParams)
+		.then(function (response) {onSuccessGetReportExecute(response.data)}, function (response) {onError(response.data)});
+		var onSuccessGetReportExecute = function (response) {
+			$scope.dataLoading = false;
+			$scope.saveMessage = "Rule Saved and Submitted Successfully";
+			notify.type = 'success',
+			notify.title = 'Success',
+			notify.content = $scope.saveMessage
+			$scope.$emit('notify', notify);
+			$scope.close();
+		}
+		var onError=function(response){
+			$scope.dataLoading = false;
+			$scope.iSSubmitEnable = false;
+			$scope.close();
+		}
+	}
+
+	$scope.showParamlistPopup = function () {
+		setTimeout(function () { $scope.paramTypes = ["paramlist", "paramset"]; }, 1);
+		if ($scope.checkboxModelexecution == "YES" && $scope.allparamlist.defaultoption != null) {
+			$('#responsive').modal({
+				backdrop: 'static',
+				keyboard: false
+			});
+		} else {
+			$scope.isShowExecutionparam = false;
+			$scope.allparamset = null;
+			$scope.dataLoading = false;
+		}
+	}
+
+	$scope.closeParalistPopup = function () {
+		$scope.dataLoading = false;
+		$scope.checkboxModelexecution = "NO";
+		$scope.isSubmitDisabled = false;
+		$('#responsive').modal('hide');
+	}
+
+	$scope.executeWithExecParams = function () {
+		$('#responsive').modal('hide');
+		Rule2Service.getOneById($scope.ruleId, "rule").then(function (response) {
+			onSuccessGetOneById(response.data)
+		});
+		var onSuccessGetOneById = function (result) {
+			$scope.ruleExecute(result);
+		}
+	}
+
+	$scope.getParamSetByParamList = function () {
+		ReportService.getParamSetByParamList($scope.allparamlist.defaultoption.uuid, "").then(function (response) { onSuccessGetParamSetByParmLsit(response.data) });
+		var onSuccessGetParamSetByParmLsit = function (response) {
+			$scope.allparamset = response
+			$scope.isShowExecutionparam = true;
+		}
+	}
+
+	$scope.getParamListChilds = function () {
+		CommonService.getParamListChilds($scope.allparamlist.defaultoption.uuid, "", "paramlist").then(function (response) { onSuccessGetParamListChilds(response.data) });
+		var onSuccessGetParamListChilds = function (response) {
+			var defaultoption = {};
+			defaultoption.uuid = $scope.allparamlist.defaultoption.uuid;
+			defaultoption.name = $scope.allparamlist.defaultoption.name;
+			if (response.length > 0) {
+				$scope.allParamList = response;
+				$scope.allParamList.splice(0, 0, defaultoption);
+			} else {
+				$scope.allParamList = [];
+				$scope.allParamList[0] = defaultoption;
+			}
+		}
+	}
+
+	$scope.onChangeParamType = function () {
+		$scope.allparamset = null;
+		$scope.allParamList = null;
+		$scope.isParamLsitTable = false;
+		$scope.selectParamList = null;
+		if ($scope.selectParamType == "paramlist") {
+			$scope.paramlistdata = null;
+			$scope.getParamListChilds();
+		}
+		else if ($scope.selectParamType == "paramset") {
+			$scope.getParamSetByParamList();
+		}
+	}
+
+	$scope.onChangeParamList=function(){
+		$scope.isParamLsitTable=false;
+		CommonService.getParamByParamList($scope.paramlistdata.uuid,"paramlist").then(function (response){ onSuccesGetParamListByTrain(response.data)});
+		var onSuccesGetParamListByTrain = function (response) {
+		  $scope.isParamLsitTable=true;
+		  $scope.selectParamList=response;
+		  var paramArray=[];
+		  for(var i=0;i<response.length;i++){
+			var paramInfo={}
+			  paramInfo.paramId=response[i].paramId; 
+			  paramInfo.paramName=response[i].paramName;
+			  paramInfo.paramType=response[i].paramType.toLowerCase();
+			  if(response[i].paramValue !=null && response[i].paramValue.ref.type == "simple"){
+				paramInfo.paramValue=response[i].paramValue.value.replace(/["']/g, "");;
+				paramInfo.paramValueType="simple"
+			}else if(response[i].paramValue !=null){
+			  var paramValue={};
+			  paramValue.uuid=response[i].paramValue.ref.uuid;
+			  paramValue.type=response[i].paramValue.ref.type;
+			  paramInfo.paramValue=paramValue;
+			  paramInfo.paramValueType=response[i].paramValue.ref.type;
+			}else{
+			  
+			}
+			paramArray[i]=paramInfo;
+		  }
+		  $scope.selectParamList.paramInfo=paramArray;
+		}
+	  }
+	
+
+});
+
