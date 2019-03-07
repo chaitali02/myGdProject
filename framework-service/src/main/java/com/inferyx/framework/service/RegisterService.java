@@ -245,7 +245,7 @@ public class RegisterService {
 	private ReportServiceImpl reportServiceImpl;
 	@Autowired
 	private DashboardServiceImpl dashboardServiceImpl;
-	
+
 	List<String> createDet = new ArrayList<String>();
 	List<String> datapodResult = new ArrayList<String>();
 

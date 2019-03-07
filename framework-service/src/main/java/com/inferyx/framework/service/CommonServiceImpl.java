@@ -147,7 +147,9 @@ import com.inferyx.framework.dao.IRelationDao;
 import com.inferyx.framework.dao.IReportDao;
 import com.inferyx.framework.dao.IReportExecDao;
 import com.inferyx.framework.dao.IRoleDao;
+import com.inferyx.framework.dao.IRule2Dao;
 import com.inferyx.framework.dao.IRuleDao;
+import com.inferyx.framework.dao.IRule2ExecDao;
 import com.inferyx.framework.dao.IRuleExecDao;
 import com.inferyx.framework.dao.IRuleGroupDao;
 import com.inferyx.framework.dao.IRuleGroupExecDao;
@@ -501,6 +503,29 @@ public class CommonServiceImpl<T> {
 	private IDashboardExecDao iDashboardExecDao;
 	@Autowired
 	private PDFUtil pdfUtil;
+	@Autowired
+	IRule2Dao iRule2Dao;
+	@Autowired
+	IRule2ExecDao iRule2ExecDao;
+
+	
+	
+	public IRule2ExecDao getiRule2ExecDao() {
+		return iRule2ExecDao;
+	}
+
+	public void setiRule2ExecDao(IRule2ExecDao iRule2ExecDao) {
+		this.iRule2ExecDao = iRule2ExecDao;
+	}
+
+	public IRule2Dao getiRule2Dao() {
+		return iRule2Dao;
+	}
+
+	public void setiRule2Dao(IRule2Dao iRule2Dao) {
+		this.iRule2Dao = iRule2Dao;
+	}
+
 
 	/**
 	 * @Ganesh
