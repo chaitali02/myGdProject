@@ -687,7 +687,12 @@ public class ReportServiceImpl extends RuleTemplate {
 				reportExecView.setSenderInfo(report.getSenderInfo());
 				reportExecView.setSaveOnRefresh(report.getSaveOnRefresh());
 				reportExecView.setFormat(report.getFormat());
-				reportExecView.setBaseEntity();
+				reportExecView.setName(baseEntityStatus.getName());
+				reportExecView.setActive(baseEntityStatus.getActive());
+				reportExecView.setUuid(baseEntityStatus.getUuid());
+				reportExecView.setVersion(baseEntityStatus.getVersion());
+				reportExecView.setCreatedOn(baseEntityStatus.getCreatedOn());
+				reportExecView.setCreatedBy(baseEntityStatus.getCreatedBy());
 				listReportExecView.add(reportExecView);
 			}
 

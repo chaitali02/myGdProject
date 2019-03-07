@@ -2496,8 +2496,8 @@ DatavisualizationModule.controller("ReportArchivesSearchController", function ($
 			  '    <button class="btn green btn-xs btn-outline dropdown-toggle" uib-dropdown-toggle>Action',
 			  '    <i class="fa fa-angle-down"></i></button>',
 			  '    <ul uib-dropdown-menu class="dropdown-menu-grid">',
-			  '       <li><a  ng-disabled="[\'COMPLETED\'].indexOf(row.entity.status)==-1" ng-click="grid.appScope.getDownload(row.entity)"><i class="fa fa-download" aria-hidden="true"></i> Download </a></li>',
-			  '       <li><a  ng-disabled="[\'COMPLETED\'].indexOf(row.entity.status)==-1" ng-click="grid.appScope.sentMail(row.entity)"><i class="fa fa-envelope-o" aria-hidden="true"></i> Email </a></li>',		  
+			  '       <li><a  ng-disabled="[\'COMPLETED\'].indexOf(row.entity.status) !=-1?((row.entity.saveOnRefresh ==\'Y\' && row.entity.senderInfo.sendAttachment ==\'Y\')?false:true):true" ng-click="grid.appScope.getDownload(row.entity)"><i class="fa fa-download" aria-hidden="true"></i> Download </a></li>',
+			  '       <li><a  ng-disabled="[\'COMPLETED\'].indexOf(row.entity.status) !=-1?((row.entity.saveOnRefresh ==\'Y\' && row.entity.senderInfo.sendAttachment ==\'Y\')?false:true):true" ng-click="grid.appScope.sentMail(row.entity)"><i class="fa fa-envelope-o" aria-hidden="true"></i> Email </a></li>',		  
 			  '    </ul>',
 			  '  </div>',
 			  '</div>'
@@ -2632,7 +2632,7 @@ DatavisualizationModule.controller("ReportArchivesSearchController", function ($
             }
         }
         tags = tags.toString();
-        CommonService.getBaseEntityStatusByCriteria(dagMetaDataService.elementDefs[$scope.searchForm.modelType].execType, $scope.searchForm.execname || '', $scope.searchForm.username || "", startdate, enddate, tags, $scope.searchForm.active || '', $scope.searchForm.published || '', $scope.searchForm.status || '').then(function (response) { onSuccess(response.data) }, function error() {
+        ReportSerivce.getReprotExecViewByCriteria(dagMetaDataService.elementDefs[$scope.searchForm.modelType].execType, $scope.searchForm.execname || '', $scope.searchForm.username || "", startdate, enddate, tags, $scope.searchForm.active || '', $scope.searchForm.published || '', $scope.searchForm.status || '').then(function (response) { onSuccess(response.data) }, function error() {
             $scope.loading = false;
         });
         var onSuccess = function (response) {
@@ -2742,10 +2742,17 @@ DatavisualizationModule.controller("ReportArchivesSearchController", function ($
 		ReportSerivce.reSendEMail($scope.objDetail.uuid, $scope.objDetail.version, response.mode, senderInfo).then(function (response) { onSuccess(response.data) }, function error() {});
         var onSuccess = function (response) {
 			console.log(response);
-			notify.type = 'success',
-			notify.title = 'Success',
-			notify.content = 'Email Sent Successfully '
-			$scope.$emit('notify', notify);
+			if(response ==true){
+				notify.type = 'success',
+				notify.title = 'Success',
+				notify.content = 'Email Sent Successfully '
+				$scope.$emit('notify', notify);
+			}else{
+				notify.type = 'error',
+				notify.title = 'Error',
+				notify.content = 'Some Error Occure'
+				$scope.$emit('notify', notify);
+			}
 		}
 	}
 

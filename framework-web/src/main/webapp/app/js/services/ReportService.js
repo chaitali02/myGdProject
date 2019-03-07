@@ -234,7 +234,7 @@ DatavisualizationModule.factory('ReportFactory', function ($http, $location) {
 	factory.findReprotExecViewByCriteria = function(type, name, userName, startDate, endDate, tags, active,published,status) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
-		  url: url + "reprot/getReprotExecViewByCriteria?action=view&type=" + type + "&name=" + name + "&userName=" + userName + "&startDate=" + startDate + "&endDate=" + endDate + "&tags=" + tags + "&active=" + active +  "&published=" + published +"&status=" + status,
+		  url: url + "report/getReportExecViewByCriteria?action=view&type=" + type + "&name=" + name + "&userName=" + userName + "&startDate=" + startDate + "&endDate=" + endDate + "&tags=" + tags + "&active=" + active +  "&published=" + published +"&status=" + status,
 		  method: "GET",
 		}).then(function(response) {
 		  return response
@@ -243,11 +243,11 @@ DatavisualizationModule.factory('ReportFactory', function ($http, $location) {
 	return factory;
 });
 
-DatavisualizationModule.service('ReportSerivce', function ($q, sortFactory, ReportFactory, CF_GRID) {
+DatavisualizationModule.service('ReportSerivce', function ($q,$filter, sortFactory, ReportFactory, CF_GRID) {
 	
 	this.getReprotExecViewByCriteria = function(type, name, userName, startDate, endDate, tags, active,published,status) {
 		var deferred = $q.defer();
-		CommonFactory.findReprotExecViewByCriteria(type, name, userName, startDate, endDate, tags, active,published,status).then(function(response) {
+		ReportFactory.findReprotExecViewByCriteria(type, name, userName, startDate, endDate, tags, active,published,status).then(function(response) {
 		  onSuccess(response.data)
 		});
 		var onSuccess = function(response) {
@@ -266,7 +266,8 @@ DatavisualizationModule.service('ReportSerivce', function ($q, sortFactory, Repo
 			result.createdBy = response[i].createdBy;
 			result.createdOn = response[i].createdOn;
 			result.active = response[i].active;
-			
+			result.senderInfo = response[i].senderInfo;
+			result.saveOnRefresh = response[i].saveOnRefresh;						
 			result.startTime="-NA-";
 			result.endTime="-NA-";
 			result.duration="-NA-"
@@ -318,7 +319,7 @@ DatavisualizationModule.service('ReportSerivce', function ($q, sortFactory, Repo
 		  })
 		}
 		return deferred.promise;
-	} /*
+	} 
 	this.getNumRowsbyExec = function (uuid, type) {
 		var deferred = $q.defer();
 		ReportFactory.findNumRowsbyExec(uuid, type).then(function (response) { onSuccess(response.data) });
