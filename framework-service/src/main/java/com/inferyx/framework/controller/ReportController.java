@@ -18,6 +18,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,9 +30,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
+import com.inferyx.framework.domain.BaseEntityStatus;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.ReportExec;
+import com.inferyx.framework.domain.ReportExecView;
 import com.inferyx.framework.domain.SenderInfo;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.service.ReportServiceImpl;
@@ -103,5 +106,22 @@ public class ReportController {
 			@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException, IOException {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		return reportServiceImpl.reSendNotification(reportExecUuid, reportExecVersion, senderInfo, runMode);
+	}	
+
+	@RequestMapping(value = "/getReportExecViewByCriteria", method = RequestMethod.GET)
+	public @ResponseBody List<ReportExecView> getReportExecViewByCriteria(@RequestParam("type") String type,
+			@RequestParam(value = "name", required = false) String name,
+			@RequestParam(value = "userName", required = false) String userName,
+			@RequestParam(value = "startDate", required = false) String startDate,
+			@RequestParam(value = "endDate", required = false) String endDate,
+			@RequestParam(value = "tags", required = false) String tags,
+			@RequestParam(value = "active", required = false) String active,
+			@RequestParam(value = "status", required = false) String status,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "appUuid", required = false) String appUuid,
+			@RequestParam(value = "role", required = false) String role) {
+
+		return reportServiceImpl.getReportExecViewByCriteria(role, appUuid, type, name, userName, startDate, endDate,
+				tags, active, status);
 	}
 }

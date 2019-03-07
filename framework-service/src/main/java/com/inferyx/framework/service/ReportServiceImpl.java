@@ -47,6 +47,7 @@ import com.inferyx.framework.common.PDFUtil;
 import com.inferyx.framework.common.SessionHelper;
 import com.inferyx.framework.common.WorkbookUtil;
 import com.inferyx.framework.domain.AttributeSource;
+import com.inferyx.framework.domain.BaseEntityStatus;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.DagExec;
@@ -65,6 +66,7 @@ import com.inferyx.framework.domain.Notification;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.ReportExec;
+import com.inferyx.framework.domain.ReportExecView;
 import com.inferyx.framework.domain.SenderInfo;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
@@ -80,6 +82,8 @@ import com.inferyx.framework.operator.ReportOperator;
 public class ReportServiceImpl extends RuleTemplate {
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
+	@Autowired 
+	private MetadataServiceImpl metadataServiceImpl;
 	@Autowired
 	private ReportOperator reportOperator;
 	@Autowired
@@ -657,5 +661,41 @@ public class ReportServiceImpl extends RuleTemplate {
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), e.getMessage(), dependsOn);
 			throw new RuntimeException(e.getMessage());
 		}
+	}
+
+	public List<ReportExecView> getReportExecViewByCriteria(String role, String appUuid, String type, String name,
+			String userName, String startDate, String endDate, String tags, String active, String status) {
+		List<ReportExecView> listReportExecView = new ArrayList<>();
+
+		Report report = null;
+		ReportExec reportExec = null;
+		List<BaseEntityStatus> baseEntityStatusList;
+		try {
+			baseEntityStatusList = metadataServiceImpl.getBaseEntityStatusByCriteria(role, appUuid, type, name,
+					userName, startDate, endDate, tags, active, status);
+			for (BaseEntityStatus baseEntityStatus : baseEntityStatusList) {
+				reportExec = (ReportExec) commonServiceImpl.getOneByUuidAndVersion(baseEntityStatus.getUuid(),
+						baseEntityStatus.getVersion(), MetaType.reportExec.toString(), "N");
+
+				MetaIdentifier dependsOnMI = reportExec.getDependsOn().getRef();
+				report = (Report) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(),
+						dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
+				ReportExecView reportExecView = new ReportExecView();
+				reportExecView.setStatusList(baseEntityStatus.getStatus());
+				reportExecView.setNumRows(baseEntityStatus.getNumRows());
+				reportExecView.setSizeMB(baseEntityStatus.getSizeMB());
+				reportExecView.setSenderInfo(report.getSenderInfo());
+				reportExecView.setSaveOnRefresh(report.getSaveOnRefresh());
+				reportExecView.setFormat(report.getFormat());
+				reportExecView.setBaseEntity();
+				listReportExecView.add(reportExecView);
+			}
+
+		} catch (JsonProcessingException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+				| NoSuchMethodException | SecurityException | NullPointerException | ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return listReportExecView;
 	}
 }
