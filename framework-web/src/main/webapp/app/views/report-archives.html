@@ -244,27 +244,22 @@
         </div>
         <form class="form-horizontal" name="responsive" ng-submit="okSentMail()" novalidate="novalidate">
           <div class="modal-body">
-            <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 345px;">
-              <div class="scroller" style="height: 440px; overflow-y: auto; width: auto;" data-always-visible="1"
+            <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 230px;">
+              <div class="scroller" style="height: 390px; overflow-y: auto; width: auto;" data-always-visible="1"
                 data-rail-visible1="1" data-initialized="1">
                 <br>
-                <div class="form-group">
-                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Send Notification</label>
-                  <div class="col-md-6 col-sm-6 col-xs-12">
-                    <fieldset form="form1" style="border:1px solid #c2cad8;padding:9px;padding-top:15px;">
-                      <!-- <fieldset form="form1" style="border:1px solid #c2cad8;padding:9px;margin-left:4%;"> -->
-                      <!-- <legend style="width:auto;border:none;padding:0px 5px 0px 5px;margin-bottom:2px;">Send Notification</legend> -->
-                      <div class="form-group">
-                        <label class="control-label col-md-2 col-sm-2 col-xs-3">To</label>
-                        <div class="col-md-10 col-sm-10 col-xs-12">
-                          <tags-input data-ng-model="tagsTo" class="tag-scroll-height-report" style="height:70px;"
-                            min-length="0" ng-disabled="{{mode}}" name="tagsTo" allowed-tags-pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
-                            template="my-custom-template"></tags-input>
-                          <input type="hidden" name="tagsTo" data-ng-model="tagsTo" required>
-                        </div>
-
+               
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-3">To</label>
+                      <div class="col-md-7 col-sm-7 col-xs-12">
+                        <tags-input data-ng-model="tagsTo" class="tag-scroll-height-report" style="height:40px;"
+                          min-length="0" ng-disabled="{{mode}}" name="tagsTo" allowed-tags-pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
+                          template="my-custom-template"></tags-input>
+                        <input type="hidden" name="tagsTo" data-ng-model="tagsTo" required>
                       </div>
-                      <script type="text/ng-template" id="my-custom-template">
+
+                    </div>
+                    <script type="text/ng-template" id="my-custom-template">
                           <div class="tag-template" style="resize:vertical;">
                             <div style="resize:vertical;">
                               <span>{{$getDisplayText()}}</span>
@@ -273,41 +268,34 @@
                             </div>
                           </div>
                           </script>
-                      <div class="form-group">
-                        <label class="control-label col-md-2 col-sm-2 col-xs-3">Cc</label>
-                        <div class="col-md-10 col-sm-10 col-xs-12">
-                          <tags-input data-ng-model="tagsCC" class="tag-scroll-height-report" min-length="0"
-                            ng-disabled="{{mode}}" allowed-tags-pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
-                            template="my-custom-template"></tags-input>
-                        </div>
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-3">Cc</label>
+                      <div class="col-md-7 col-sm-7 col-xs-12">
+                        <tags-input data-ng-model="tagsCC" class="tag-scroll-height-report"  style="height:40px;" min-length="0" ng-disabled="{{mode}}"
+                          allowed-tags-pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" template="my-custom-template"></tags-input>
                       </div>
-                      <div class="form-group">
-                        <label class="control-label col-md-2 col-sm-2 col-xs-2">Bcc</label>
-                        <div class="col-md-10 col-sm-10 col-xs-10">
-                          <tags-input data-ng-model="tagsBcc" class="tag-scroll-height-report" min-length="0"
-                            ng-disabled="{{mode}}" allowed-tags-pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
-                            template="my-custom-template"></tags-input>
-                        </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-2">Bcc</label>
+                      <div class="col-md-7 col-sm-7 col-xs-12">
+                        <tags-input data-ng-model="tagsBcc" class="tag-scroll-height-report"  style="height:40px;" min-length="0" ng-disabled="{{mode}}"
+                          allowed-tags-pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" template="my-custom-template"></tags-input>
                       </div>
-                      <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-3" style="padding-left:0px;padding-right: 0px;">As Attachment</label>
-                        <div class="col-md-9 col-sm-9 col-xs-12">
-                          <div class="col-md-1 col-sm-1 col-xs-1" style="padding-left:0px">
-                            <div class="mt-checkbox-list" style="margin-top:-7px">
-                              <label class="mt-checkbox mt-checkbox-outline">
-                                <input type="checkbox" ng-model="sendAttachment" ng-true-value="'Y'"
-                                  ng-false-value="'N'" class="ng-pristine ng-untouched ng-valid ng-not-empty"
-                                  ng-disabled="{{mode}}">
-                                <span ng-disabled="{{mode}}"></span>
-                              </label>
-                            </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label col-md-3 col-sm-3 col-xs-3" style="padding-left:0px;padding-right: 0px;">As Attachment</label>
+                      <div class="col-md-7 col-sm-7 col-xs-12">
+                        <div class="col-md-1 col-sm-1 col-xs-1" style="padding-left:0px">
+                          <div class="mt-checkbox-list" style="margin-top:-7px">
+                            <label class="mt-checkbox mt-checkbox-outline">
+                              <input type="checkbox" ng-model="sendAttachment" ng-true-value="'Y'" ng-false-value="'N'"
+                                class="ng-pristine ng-untouched ng-valid ng-not-empty" ng-disabled="{{mode}}">
+                              <span ng-disabled="{{mode}}"></span>
+                            </label>
                           </div>
                         </div>
                       </div>
-                    </fieldset>
-                  </div>
-                </div>
-
+                    </div>
               </div>
             </div>
           </div>
@@ -319,4 +307,5 @@
       </div>
     </div>
   </div>
+  
 </div>

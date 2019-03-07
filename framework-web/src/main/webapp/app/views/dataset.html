@@ -548,7 +548,7 @@
                                   </div>
                                   <div ng-if="tabledata.isrhsParamlist">
                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                      <select select2 class="form-control" data-ng-model="tabledata.rhsparamlist" ng-options="r as r.caption for r in allparamlistParams track by r.uuid+attributeId"
+                                      <select select2 class="form-control" data-ng-model="tabledata.rhsparamlist" ng-options="r as r.caption for r in allparamlistParams track by r.uuid+r.attributeId"
                                         ng-disabled="{{mode}}" required disable-validation-message="" ng-change="onChangeRhsParamList()"></select>
                                     </span>
                                   </div>

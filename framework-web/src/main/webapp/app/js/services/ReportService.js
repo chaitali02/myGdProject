@@ -231,10 +231,94 @@ DatavisualizationModule.factory('ReportFactory', function ($http, $location) {
 		}
 		return rTypes;
 	}
+	factory.findReprotExecViewByCriteria = function(type, name, userName, startDate, endDate, tags, active,published,status) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+		  url: url + "reprot/getReprotExecViewByCriteria?action=view&type=" + type + "&name=" + name + "&userName=" + userName + "&startDate=" + startDate + "&endDate=" + endDate + "&tags=" + tags + "&active=" + active +  "&published=" + published +"&status=" + status,
+		  method: "GET",
+		}).then(function(response) {
+		  return response
+		})
+	  }
 	return factory;
 });
 
 DatavisualizationModule.service('ReportSerivce', function ($q, sortFactory, ReportFactory, CF_GRID) {
+	
+	this.getReprotExecViewByCriteria = function(type, name, userName, startDate, endDate, tags, active,published,status) {
+		var deferred = $q.defer();
+		CommonFactory.findReprotExecViewByCriteria(type, name, userName, startDate, endDate, tags, active,published,status).then(function(response) {
+		  onSuccess(response.data)
+		});
+		var onSuccess = function(response) {
+		  var results = []
+		  for (var i = 0; i < response.length; i++) {
+			var result = {};
+			if (response[i].statusList != null) {
+			  response[i].statusList.sort(sortFactory.sortByProperty("createdOn"));
+			  var len = response[i].statusList.length - 1;
+			}
+			result.index=i;
+			result.id = response[i].id;
+			result.uuid = response[i].uuid;
+			result.version = response[i].version;
+			result.name = response[i].name;
+			result.createdBy = response[i].createdBy;
+			result.createdOn = response[i].createdOn;
+			result.active = response[i].active;
+			
+			result.startTime="-NA-";
+			result.endTime="-NA-";
+			result.duration="-NA-"
+			if(type =="reportExec" ){
+			  result.numRows=response[i].numRows;
+			  if(response[i].sizeMB!=null){
+				if(response[i].sizeMB < 1){
+				  result.sizeMB=" < 1"
+				}else{
+				  result.sizeMB=response[i].sizeMB
+				}
+			  }else{
+				result.sizeMB="-NA-"
+			  }
+			}
+			if(response[i].statusList !=null && response[i].statusList.length > 1){
+			  for(var j=0;j<response[i].statusList.length;j++){
+				if(response[i].statusList[j].stage == "PENDING"){
+				  result.startTime=$filter('date')(new Date(response[i].statusList[j].createdOn), "EEE MMM dd HH:mm:ss yyyy");
+				  break;
+				}
+			  }
+			 
+			  if(response[i].statusList[len].stage == "COMPLETED"){
+				result.endTime=$filter('date')(new Date(response[i].statusList[len].createdOn), "EEE MMM dd HH:mm:ss yyyy");
+				var date1 = new Date(result.startTime)
+				var date2 = new Date(result.endTime)
+				result.duration= moment.utc(moment(date2).diff(moment(date1))).format("HH:mm:ss")
+					 
+			  }
+	  
+			  }
+			if(response[i].statusList !=null && response[i].statusList.length > 0){
+			  if (response[i].statusList[len].stage == "PENDING") {
+				result.status = "PENDING"
+			  } else if (response[i].statusList[len].stage == "RUNNING") {
+				result.status = "RUNNING"
+			  } else {
+				result.status = response[i].statusList[len].stage;
+			  }
+			}
+			else{
+			  result.status="-NA-";
+			}
+			results[i] = result
+		  }
+		  deferred.resolve({
+			data: results
+		  })
+		}
+		return deferred.promise;
+	} /*
 	this.getNumRowsbyExec = function (uuid, type) {
 		var deferred = $q.defer();
 		ReportFactory.findNumRowsbyExec(uuid, type).then(function (response) { onSuccess(response.data) });

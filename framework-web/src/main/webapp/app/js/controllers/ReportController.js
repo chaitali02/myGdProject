@@ -2496,8 +2496,8 @@ DatavisualizationModule.controller("ReportArchivesSearchController", function ($
 			  '    <button class="btn green btn-xs btn-outline dropdown-toggle" uib-dropdown-toggle>Action',
 			  '    <i class="fa fa-angle-down"></i></button>',
 			  '    <ul uib-dropdown-menu class="dropdown-menu-grid">',
-			  '       <li><a  ng-click="grid.appScope.getDownload(row.entity)"><i class="fa fa-download" aria-hidden="true"></i> Download </a></li>',
-			  '       <li><a  ng-click="grid.appScope.sentMail(row.entity)"><i class="fa fa-envelope-o" aria-hidden="true"></i> Email </a></li>',		  
+			  '       <li><a  ng-disabled="[\'COMPLETED\'].indexOf(row.entity.status)==-1" ng-click="grid.appScope.getDownload(row.entity)"><i class="fa fa-download" aria-hidden="true"></i> Download </a></li>',
+			  '       <li><a  ng-disabled="[\'COMPLETED\'].indexOf(row.entity.status)==-1" ng-click="grid.appScope.sentMail(row.entity)"><i class="fa fa-envelope-o" aria-hidden="true"></i> Email </a></li>',		  
 			  '    </ul>',
 			  '  </div>',
 			  '</div>'

@@ -613,7 +613,7 @@
             result.numRows=response[i].numRows;
             if(response[i].sizeMB!=null){
               if(response[i].sizeMB < 1){
-                result.sizeMB=" > 1"
+                result.sizeMB=" < 1"
               }else{
                 result.sizeMB=response[i].sizeMB
               }

@@ -49,7 +49,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       caption:'Killed',
       color :'#dc3545',//'#ed6b75',
       iconPath : 'assets/layouts/layout/img/new_status/KILLED.svg',
-      jointWidth:"58px"
+      jointWidth:"50px"
 
     },
     'FAILED':{
@@ -73,7 +73,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       caption:'Terminating',
       color : '#f4516c',//'#FFCCCC',
       iconPath : 'assets/layouts/layout/img/new_status/TERMINATING.svg',
-      jointWidth:"100px"
+      jointWidth:"95px"
 
     },
     'PAUSE':{
@@ -98,7 +98,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       caption:'Starting',
       color :'#ffc107',//'#F1C40F',
       iconPath : 'assets/layouts/layout/img/new_status/STARTING.svg',
-      jointWidth:"70px"
+      jointWidth:"65px"
 
     },
     'READY':{
