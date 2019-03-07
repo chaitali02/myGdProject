@@ -15,7 +15,7 @@
     padding: 9px;
   }
 </style>
-
+<script src="assets/jquery-filestyle/js/jquery-filestyle.js"></script>
 <div data-ng-controller="MetadataDatapodController">
   <!-- BEGIN PAGE HEADER-->
   <div class="page-bar">
@@ -39,8 +39,8 @@
     </ul>
     <div class="page-toolbar">
       <div class="col-md-12">
-        <div id="dashboard-report-range" class="tooltips btn btn-sm col-md-10" style="width:89%;" data-container="body" data-placement="bottom"
-          data-original-title="Change dashboard date range">
+        <div id="dashboard-report-range" class="tooltips btn btn-sm col-md-10" style="width:89%;" data-container="body"
+          data-placement="bottom" data-original-title="Change dashboard date range">
           <i class="icon-calendar"></i>&nbsp;
           <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
         </div>
@@ -60,15 +60,18 @@
       <div class="portlet box green">
         <div class="portlet-title">
           <div class="caption">
-            <i class="fa fa-gift"></i>{{isShowDatastore == true ?'Data Store':isShowCompareMetaData ==true?'Compare Metadata':datapoddata.name}}
+            <i class="fa fa-gift"></i>{{isShowDatastore == true ?'Data Store':isShowCompareMetaData ==true?'Compare
+            Metadata':datapoddata.name}}
           </div>
           <div class="tools">
-            <a href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top" tooltip ng-hide="isAdd" ng-class="(showFrom==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
+            <a href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top" tooltip ng-hide="isAdd"
+              ng-class="(showFrom==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
               style="height:16px;font-size:16px;" data-ng-click="showHome(datapoddata.uuid,datapoddata.version,mode)">
               <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
-            <a title="Edit" ng-class="(isEdit==true || isPrivlage || datapoddata.locked == 'Y' ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
-              data-placement="top" tooltip ng-click="enableEdit(datapoddata.uuid,datapoddata.version)" ng-hide="isAdd" style="height:16px;">
+            <a title="Edit" ng-class="(isEdit==true || isPrivlage || datapoddata.locked == 'Y' ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
+              data-toggle="tooltip" data-placement="top" tooltip ng-click="enableEdit(datapoddata.uuid,datapoddata.version)"
+              ng-hide="isAdd" style="height:16px;">
               <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
             <a title="Meta Compare" data-toggle="tooltip" data-placement="top" tooltip ng-class="(isShowCompareMetaData==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
@@ -83,21 +86,21 @@
               ng-hide="isAdd" data-ng-click="showDatastrores(datapoddata)" style="height:16px;">
               <i class="fa fa-database" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
-            <a ng-click="downloadFile(datapoddata)" tooltip-placement="top" uib-tooltip="Download" ng-hide="isAdd" ng-class="(isDownloadDatapod==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
+            <a ng-click="downloadFile(datapoddata)" tooltip-placement="top" uib-tooltip="Download" ng-hide="isAdd"
+              ng-class="(isDownloadDatapod==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
               ng-disabled="isDownloadDatapod">
               <i class="fa fa-download" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
-            <!-- <a title="Edit" ng-disabled="isPrivlage" ng-class="(showFrom==true && isShowSimpleData==false && isEdit==true)? 'currentpage':'notcurrentpage'"
-              data-toggle="tooltip" data-placement="top" tooltip ng-click="enableEdit(datapoddata.uuid,datapoddata.version)"
-              ng-hide="isAdd" style="height:16px;">
-              <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+            <a ng-click="getDetailForUpload(datapoddata)" tooltip-placement="top" uib-tooltip="Upload" ng-hide="isAdd"
+              ng-class="(showFrom==false || isUploadingDatapod==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
+              ng-disabled="isUploadingDatapod">
+              <i class=" fa fa-upload" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
-            <a title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showFrom==true && isShowSimpleData==false || isEdit==true)? 'currentpage':'notcurrentpage'"
-              ng-click="showview(datapoddata.uuid,datapoddata.version)" ng-hide="isAdd" style="height:16px;">
-              <span class="glyphicon glyphicon-file" style="color:white;"></span>
-            </a> -->
+           
+          
 
-            <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="(showGraphDiv ||isEditInprogess ==true || isEditVeiwError ==true) ? 'currentpage':'notcurrentpage'"
+            <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow"
+              ng-class="(showGraphDiv ||isEditInprogess ==true || isEditVeiwError ==true) ? 'currentpage':'notcurrentpage'"
               data-ng-click="showGraph(datapoddata.uuid,datapoddata.version)" style="height:14px;">
               <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
             </a>
@@ -106,7 +109,8 @@
               data-toggle="tooltip" data-placement="top" tooltip>
               <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
             </a>
-            <a title="Close" data-toggle="tooltip" data-placement="top" tooltip ng-click="genericClose($event,'datapod')" style="height:14px;">
+            <a title="Close" data-toggle="tooltip" data-placement="top" tooltip ng-click="genericClose($event,'datapod')"
+              style="height:14px;">
               <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform:scale(1,1.2)"></i>
             </a>
           </div>
@@ -130,12 +134,14 @@
                     <label>Search:</label>
                     <input type="search" class="form-control input-sm input-small   input-inline" ng-change="refreshCompareMetaData($parent.searchtextCompareMetadata)"
                       ng-model="$parent.searchtextCompareMetadata" aria-controls="datastoredatatable">
-                    <a class="btn btn-primary fa fa-random " tooltip-placement="left" uib-tooltip="Meta Sync" ng-disabled="isMetaSysn" ng-class="isMetaSysn || selectSourceType =='file' ? 'currentpage':'notcurrentpage'"
+                    <a class="btn btn-primary fa fa-random " tooltip-placement="left" uib-tooltip="Meta Sync"
+                      ng-disabled="isMetaSysn" ng-class="isMetaSysn || selectSourceType =='file' ? 'currentpage':'notcurrentpage'"
                       ng-click="synchronousMetadata(datapoddata)" style="line-height:1;padding: 6px 5px;border: none;"></a>
                   </div>
                 </div>
               </div>
-              <div ui-grid="gridOptionsCompareMetaData" class="grid" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter ng-style="getGridStyleCompareMetaData()">
+              <div ui-grid="gridOptionsCompareMetaData" class="grid" ui-grid-resize-columns ui-grid-auto-resize
+                ui-grid-exporter ng-style="getGridStyleCompareMetaData()">
                 <div class="nodatawatermark" ng-show="!gridOptionsCompareMetaData.data.length">No data available</div>
               </div>
             </div>
@@ -149,12 +155,13 @@
               <div class="col-md-6 col-sm-6">
                 <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
                   <label>Search:</label>
-                  <input type="search" class="form-control input-sm input-small   input-inline" ng-change="refreshDataDatastore()" ng-model="$parent.searchtextDatastore"
-                    aria-controls="datastoredatatable">
+                  <input type="search" class="form-control input-sm input-small   input-inline" ng-change="refreshDataDatastore()"
+                    ng-model="$parent.searchtextDatastore" aria-controls="datastoredatatable">
                 </div>
               </div>
             </div>
-            <div ui-grid="gridOptionsDataStrore" class="grid" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter ng-style="getGridStyleDatastore()">
+            <div ui-grid="gridOptionsDataStrore" class="grid" ui-grid-resize-columns ui-grid-auto-resize
+              ui-grid-exporter ng-style="getGridStyleDatastore()">
               <div class="nodatawatermark" ng-show="!gridOptionsDataStrore.data.length">No data available</div>
             </div>
           </div>
@@ -174,8 +181,8 @@
                 <div class="col-md-6 col-sm-6">
                   <div class="dataTables_length" id="sample_1_length">
                     <label>Show
-                      <select name="sample_1_length" aria-controls="sample_1" class="form-control input-sm input-xsmall input-inline" ng-model="pagination.pageSize"
-                        ng-options="r for r in pagination.paginationPageSizes" ng-change="onPerPageChange()">
+                      <select name="sample_1_length" aria-controls="sample_1" class="form-control input-sm input-xsmall input-inline"
+                        ng-model="pagination.pageSize" ng-options="r for r in pagination.paginationPageSizes" ng-change="onPerPageChange()">
                       </select>
                     </label>
                   </div>
@@ -183,12 +190,13 @@
                 <div class="col-md-6 col-sm-6">
                   <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
                     <label>Search:</label>
-                    <input type="search" class="form-control input-sm input-small   input-inline" ng-change="refreshData()" ng-model="searchtext"
-                      aria-controls="datastoredatatable">
+                    <input type="search" class="form-control input-sm input-small   input-inline" ng-change="refreshData()"
+                      ng-model="searchtext" aria-controls="datastoredatatable">
                   </div>
                 </div>
               </div>
-              <div ui-grid="gridOptions" class="grid" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter ng-style="getGridStyle()">
+              <div ui-grid="gridOptions" class="grid" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter
+                ng-style="getGridStyle()">
                 <div class="nodatawatermark_results" ng-show="!gridOptions.data.length">No data available</div>
               </div>
 
@@ -200,14 +208,14 @@
                 <div class="col-md-6">
                   <ul uib-pagination items-per-page="pagination.pageSize" total-items="pagination.totalItems" ng-model="pagination.currentPage"
                     ng-change="pageChanged()" style="float:right;overflow:hidden;z-index:1;" max-size="pagination.maxSize"
-                    class="pagination-md" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
-                    last-text="&raquo;"></ul>
+                    class="pagination-md" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;"
+                    first-text="&laquo;" last-text="&raquo;"></ul>
                 </div>
               </div>
               <div class="row">
                 <div class="col-md-6"></div>
-                <div class="col-md-6" >
-                  <div class="grey"style="float:right;font-style: italic;">Note : Showing max {{sample.rows}} rows</div>
+                <div class="col-md-6">
+                  <div class="grey" style="float:right;font-style: italic;">Note : Showing max {{sample.rows}} rows</div>
                 </div>
               </div>
             </div>
@@ -220,7 +228,8 @@
               <div class="bounce2"></div>
               <div class="bounce3"></div>
             </div>
-            <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="datapoddata.uuid" version="datapod.defaultVersion.version">
+            <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="datapoddata.uuid"
+              version="datapod.defaultVersion.version">
             </div>
           </div>
           <!-- prevent-enter-submit -->
@@ -236,13 +245,14 @@
               </div>
             </div>
             <div ng-show="!isEditInprogess && !isEditVeiwError">
-              <form class="form-horizontal" name="myform" novalidate="novalidate" ng-submit="submitDatapod()" form-on-change="datapodFormChange()"
-                prevent-enter-submit>
+              <form class="form-horizontal" name="myform" novalidate="novalidate" ng-submit="submitDatapod()"
+                form-on-change="datapodFormChange()" prevent-enter-submit>
 
                 <div class="form-group" ng-show="datapoddata.uuid">
                   <label class="col-md-3 control-label">UUID</label>
                   <div class="col-md-6">
-                    <input type="text" class="form-control" data-ng-disabled="true" ng-model="datapoddata.uuid" placeholder="">
+                    <input type="text" class="form-control" data-ng-disabled="true" ng-model="datapoddata.uuid"
+                      placeholder="">
                   </div>
                 </div>
 
@@ -251,16 +261,16 @@
                     <span class="required" aria-required="true"> * </span>
                   </label>
                   <div class="col-md-6">
-                    <input type="text" class="form-control" ng-disabled="{{mode}}" ng-Change="onChangeName(datapoddata.name)" ng-model="datapoddata.name"
-                      placeholder="" required="">
+                    <input type="text" class="form-control" ng-disabled="{{mode}}" ng-Change="onChangeName(datapoddata.name)"
+                      ng-model="datapoddata.name" placeholder="" required="">
                   </div>
                 </div>
 
                 <div class="form-group" ng-show="datapoddata.uuid">
                   <label class="col-md-3 control-label">Version </label>
                   <div class="col-md-6">
-                    <select class="form-control" select2 name="version" ng-disabled="{{isversionEnable}}" ng-change="selectVersion()" data-ng-model="datapod.defaultVersion.version"
-                      ng-options="c.version as c.version for c in datapod.versions">
+                    <select class="form-control" select2 name="version" ng-disabled="{{isversionEnable}}" ng-change="selectVersion()"
+                      data-ng-model="datapod.defaultVersion.version" ng-options="c.version as c.version for c in datapod.versions">
                       <option>-select-</option>
                     </select>
                   </div>
@@ -283,9 +293,10 @@
                 <div class="form-group taginput">
                   <label for="middle-name" class="control-label col-md-3">Tags</label>
                   <div class="col-md-6 ">
-                    <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true"
-                      add-on-space="true">
-                      <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" max-results-to-show="10">
+                    <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false"
+                      add-on-enter="true" add-on-space="true">
+                      <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true"
+                        max-results-to-show="10">
                       </auto-complete>
                     </tags-input>
                   </div>
@@ -294,7 +305,8 @@
                 <div class="form-group">
                   <label for="middle-name" class="control-label col-md-3">Desc</label>
                   <div class="col-md-6">
-                    <textarea class="form-control noresize" ng-disabled="{{mode}}" ng-model="datapoddata.desc" rows="2" style="resize:none;"></textarea>
+                    <textarea class="form-control noresize" ng-disabled="{{mode}}" ng-model="datapoddata.desc" rows="2"
+                      style="resize:none;"></textarea>
                   </div>
                 </div>
                 <div class="col-md-12">
@@ -315,8 +327,8 @@
                       <span class="required" aria-required="true"> * </span>
                     </label>
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                      <select class="form-control" ng-disabled="{{mode}}" ng-change="selectOption()" data-ng-model="selectDataSource" ng-options="r as r.name for r in alldatasource  track by r.uuid "
-                        required>
+                      <select class="form-control" ng-disabled="{{mode}}" ng-change="selectOption()" data-ng-model="selectDataSource"
+                        ng-options="r as r.name for r in alldatasource  track by r.uuid " required>
                       </select>
                     </div>
                   </div>
@@ -356,13 +368,15 @@
                     </div>
                   </div>
                 </div>
-                 
+
                 <div class="form-group">
                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Cache</label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
                     <div class="btn-group" ng-init="datapoddata.cache='Y'">
-                      <label class="btn btn-default" ng-model="datapoddata.cache" uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
-                      <label class="btn btn-default" ng-model="datapoddata.cache" uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
+                      <label class="btn btn-default" ng-model="datapoddata.cache" uib-btn-radio="'Y'" ng-disabled="{{mode}}"
+                        uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-model="datapoddata.cache" uib-btn-radio="'N'" ng-disabled="{{mode}}"
+                        uncheckable>No</label>
                     </div>
                   </div>
                 </div>
@@ -370,10 +384,10 @@
                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Public</label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
                     <div class="btn-group" ng-init="datapoddata.publicFlag='N'">
-                      <label class="btn btn-default" ng-model="datapoddata.publicFlag" uib-btn-radio="'Y'"
-                        ng-disabled="{{mode}}" uncheckable>Yes</label>
-                      <label class="btn btn-default" ng-model="datapoddata.publicFlag" uib-btn-radio="'N'"
-                        ng-disabled="{{mode}}" uncheckable>No</label>
+                      <label class="btn btn-default" ng-model="datapoddata.publicFlag" uib-btn-radio="'Y'" ng-disabled="{{mode}}"
+                        uncheckable>Yes</label>
+                      <label class="btn btn-default" ng-model="datapoddata.publicFlag" uib-btn-radio="'N'" ng-disabled="{{mode}}"
+                        uncheckable>No</label>
                     </div>
                   </div>
                 </div>
@@ -409,9 +423,9 @@
                       <li class="divider" style="margin: 0px;"> </li>
                       <li>
                         <div class="form-group" style="margin: 1%;">
-                          <input type="number" class="form-control" ng-if="attrTableSelectedItem.length == 1" ng-model="moveTo" min="0" max="{{attributetable.length}}"
-                            name="moveto" style="border:0" placeholder="Move To" ng-model-options="{debounce:3000}" ng-change="autoMoveTo(moveTo)"
-                            focus-me="true" required />
+                          <input type="number" class="form-control" ng-if="attrTableSelectedItem.length == 1" ng-model="moveTo"
+                            min="0" max="{{attributetable.length}}" name="moveto" style="border:0" placeholder="Move To"
+                            ng-model-options="{debounce:3000}" ng-change="autoMoveTo(moveTo)" focus-me="true" required />
                         </div>
                       </li>
                     </ul>
@@ -421,7 +435,7 @@
                   </h4>
                   <hr>
                 </div>
-                <br/>
+                <br />
                 <div style="overflow-y: auto;overflow-x: hidden;max-height:400px;">
 
                   <!-- <div ui-grid="gridOptionsDatapod" ui-grid-selection ui-grid-resize-columns ui-grid-auto-resize ui-grid-edit ui-grid-row-edit
@@ -431,8 +445,8 @@
                     <thead>
                       <tr>
                         <th style="text-align: center; Vertical-align: middle;width:5%;">
-                          <input style="width: 16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="selectallattribute" ng-change="selectAllRow()"
-                          />
+                          <input style="width: 16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="selectallattribute"
+                            ng-change="selectAllRow()" />
                         </th>
                         <th style="width:7%;text-align:center">ID</th>
                         <th style="width:5%;" class="text-center">Key</th>
@@ -452,7 +466,8 @@
                       <tr ng-repeat="tabledata in attributetable" drag-drop draggable="{{isDragable}}" after-drop="ondrop">
                         <td style="text-align: center; Vertical-align: middle;width:5%;">
                           <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                            <input style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" ng-disabled="{{mode}}" ng-change="onChangeAttrRow($index,tabledata.selected)" />
+                            <input style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected"
+                              ng-disabled="{{mode}}" ng-change="onChangeAttrRow($index,tabledata.selected)" />
                           </span>
                         </td>
                         <td>
@@ -462,25 +477,26 @@
                         </td>
                         <td style="text-align: center; Vertical-align: middle;">
                           <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                            <input type="checkbox" style="width:16px;height:16px;" ng-model="tabledata.key" ng-disabled="{{mode}}" ng-true-value="'Y'"
-                              ng-false-value="'N'">
+                            <input type="checkbox" style="width:16px;height:16px;" ng-model="tabledata.key" ng-disabled="{{mode}}"
+                              ng-true-value="'Y'" ng-false-value="'N'">
                           </span>
                         </td>
                         <td style="text-align:center;Vertical-align:middle;">
                           <span class="form-group" style="margin-left:0px;margin-right:0px;">
-                            <input type="checkbox" style="width:16px;height:16px;" ng-model="tabledata.partition" ng-disabled="{{mode}}" ng-true-value="'Y'"
-                              ng-false-value="'N'">
+                            <input type="checkbox" style="width:16px;height:16px;" ng-model="tabledata.partition"
+                              ng-disabled="{{mode}}" ng-true-value="'Y'" ng-false-value="'N'">
                           </span>
                         </td>
                         <td style="text-align: center; Vertical-align: middle;">
                           <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                            <input type="checkbox" style="width: 16px;height:16px;" ng-model="tabledata.active" ng-disabled="{{mode}}" ng-true-value="'Y'"
-                              ng-false-value="'N'">
+                            <input type="checkbox" style="width: 16px;height:16px;" ng-model="tabledata.active"
+                              ng-disabled="{{mode}}" ng-true-value="'Y'" ng-false-value="'N'">
                           </span>
                         </td>
                         <td>
                           <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                            <input type="text" ng-model="tabledata.dispName" title="{{tabledata.dispName}}" ng-disabled="{{mode}}" class="form-control">
+                            <input type="text" ng-model="tabledata.dispName" title="{{tabledata.dispName}}" ng-disabled="{{mode}}"
+                              class="form-control">
                           </span>
                         </td>
                         <td>
@@ -491,18 +507,21 @@
                         </td>
                         <td>
                           <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                            <select ng-model="tabledata.type" ng-options="x for x in type" ng-disabled="{{mode}}" class="form-control" required disable-validation-message=""></select>
+                            <select ng-model="tabledata.type" ng-options="x for x in type" ng-disabled="{{mode}}" class="form-control"
+                              required disable-validation-message=""></select>
                           </span>
                         </td>
                         <td>
                           <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                            <input type="text" ng-model="tabledata.length" title="{{tabledata.length}}" ng-disabled="{{mode}}" class="form-control">
+                            <input type="text" ng-model="tabledata.length" title="{{tabledata.length}}" ng-disabled="{{mode}}"
+                              class="form-control">
                           </span>
                         </td>
                         <td>
                           <span class="form-group" style="margin-left:0px;margin-right: 0px;">
 
-                            <select ng-model="tabledata.attrUnitType" ng-options="x.text as x.caption for x in unitTypes" ng-disabled="{{mode}}" class="form-control">
+                            <select ng-model="tabledata.attrUnitType" ng-options="x.text as x.caption for x in unitTypes"
+                              ng-disabled="{{mode}}" class="form-control">
                               <option value="">-Select-</option>
                             </select>
                             <!-- <input type="text" ng-model="tabledata.attrUnitType" title="{{tabledata.attrUnitType}}" ng-disabled="{{mode}}" class="form-control"> -->
@@ -510,7 +529,8 @@
                         </td>
                         <td>
                           <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                            <input type="text" ng-model="tabledata.desc" title="{{tabledata.desc}}" ng-disabled="{{mode}}" class="form-control">
+                            <input type="text" ng-model="tabledata.desc" title="{{tabledata.desc}}" ng-disabled="{{mode}}"
+                              class="form-control">
                           </span>
                         </td>
                         <!-- <td>
@@ -545,8 +565,8 @@
               <i class="fa fa-download" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
 
-            <a title="Refresh" ng-class="(showFrom==true && isShowSimpleData==false)? 'currentpage':'notcurrentpage'" ng-click="getResultByDatastore(datastoreDetail)"
-              data-toggle="tooltip" data-placement="top" tooltip>
+            <a title="Refresh" ng-class="(showFrom==true && isShowSimpleData==false)? 'currentpage':'notcurrentpage'"
+              ng-click="getResultByDatastore(datastoreDetail)" data-toggle="tooltip" data-placement="top" tooltip>
               <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
             </a>
           </div>
@@ -568,8 +588,8 @@
                 <div class="col-md-6 col-sm-6">
                   <div class="dataTables_length" id="sample_1_length">
                     <label>Show
-                      <select name="sample_1_length" aria-controls="sample_1" class="form-control input-sm input-xsmall input-inline" ng-model="pagination.pageSize"
-                        ng-options="r for r in pagination.paginationPageSizes" ng-change="onPerPageChange()">
+                      <select name="sample_1_length" aria-controls="sample_1" class="form-control input-sm input-xsmall input-inline"
+                        ng-model="pagination.pageSize" ng-options="r for r in pagination.paginationPageSizes" ng-change="onPerPageChange()">
                       </select>
                     </label>
                   </div>
@@ -577,13 +597,15 @@
                 <div class="col-md-6 col-sm-6">
                   <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
                     <label>Search:</label>
-                    <input type="search" class="form-control input-sm input-small   input-inline" ng-change="refreshData()" ng-model="$parent.searchtext"
-                      aria-controls="datastoredatatable">
+                    <input type="search" class="form-control input-sm input-small   input-inline" ng-change="refreshData()"
+                      ng-model="$parent.searchtext" aria-controls="datastoredatatable">
                   </div>
                 </div>
               </div>
-              <div ui-grid="gridOptions" class="grid" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter ng-style="getGridStyle()">
-                <div class="nodatawatermark_results" ng-show="!gridOptions.data.length" style="top:41%;">No data available</div>
+              <div ui-grid="gridOptions" class="grid" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter
+                ng-style="getGridStyle()">
+                <div class="nodatawatermark_results" ng-show="!gridOptions.data.length" style="top:41%;">No data
+                  available</div>
               </div>
               <div class="row">
                 <div class="col-md-6" style="margin-top:17px">
@@ -592,14 +614,14 @@
                 <div class="col-md-6">
                   <ul uib-pagination items-per-page="pagination.pageSize" total-items="pagination.totalItems" ng-model="pagination.currentPage"
                     ng-change="pageChanged()" style="float:right;overflow:hidden;z-index:1;" max-size="pagination.maxSize"
-                    class="pagination-md" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;"
-                    last-text="&raquo;"></ul>
+                    class="pagination-md" boundary-links="true" previous-text="&lsaquo;" next-text="&rsaquo;"
+                    first-text="&laquo;" last-text="&raquo;"></ul>
                 </div>
               </div>
               <div class="row">
                 <div class="col-md-6"></div>
-                <div class="col-md-6" >
-                  <div class="grey"style="float:right;font-style: italic;">Note : Showing max {{sample.rows}} rows</div>
+                <div class="col-md-6">
+                  <div class="grey" style="float:right;font-style: italic;">Note : Showing max {{sample.rows}} rows</div>
                 </div>
               </div>
             </div>
@@ -627,13 +649,15 @@
                       <label class="col-md-3 control-label">Rows</label>
                       <div class="col-md-8">
                         <!-- limit-to="{{download.limit_to}}" -->
-                        <input type="number" min="1" class="form-control" ng-model="download.rows" max="{{download.maxrow}}" required max-err-type="maxLimitDownload">
+                        <input type="number" min="1" class="form-control" ng-model="download.rows" max="{{download.maxrow}}"
+                          required max-err-type="maxLimitDownload">
                       </div>
                     </div>
                     <div class="form-group">
                       <label class="col-md-3 control-label">Format</label>
                       <div class="col-md-8">
-                        <select class="form-control" data-ng-model="download.selectFormate" ng-options="r for r in download.formates" required>
+                        <select class="form-control" data-ng-model="download.selectFormate" ng-options="r for r in download.formates"
+                          required>
                         </select>
                       </div>
                     </div>
@@ -662,15 +686,15 @@
           novalidate="novalidate">
           <div class="modal-body" style="padding:0px">
             <div class="slimScrollDiv" style="position: relative; overflow-y: auto !important; width:auto;padding:10px;">
-              <div class="scroller" style="height:80px;overflow-y: auto !important; width: auto;margin-top:30px" data-always-visible="1"
-                data-rail-visible1="1" data-initialized="1">
+              <div class="scroller" style="height:80px;overflow-y: auto !important; width: auto;margin-top:30px"
+                data-always-visible="1" data-rail-visible1="1" data-initialized="1">
                 <div class="row">
                   <div class="col-md-12">
                     <div class="form-group">
                       <label class="col-md-3 control-label">Rows</label>
                       <div class="col-md-8">
-                        <input type="number" limit-to="{{sample.limit_to}}" min="1" class="form-control" ng-model="sample.rows" max="{{sample.maxrow}}"
-                          required>
+                        <input type="number" limit-to="{{sample.limit_to}}" min="1" class="form-control" ng-model="sample.rows"
+                          max="{{sample.maxrow}}" required>
                       </div>
                     </div>
                   </div>
@@ -698,8 +722,8 @@
           novalidate="novalidate">
           <div class="modal-body" style="padding:0px">
             <div class="slimScrollDiv" style="position: relative; overflow-y: auto !important; width:auto;padding:10px;">
-              <div class="scroller" style="height:360px;overflow-y: auto !important; width: auto;margin-top:0px" data-always-visible="1"
-                data-rail-visible1="1" data-initialized="1">
+              <div class="scroller" style="height:360px;overflow-y: auto !important; width: auto;margin-top:0px"
+                data-always-visible="1" data-rail-visible1="1" data-initialized="1">
                 <div class="centercontent" ng-if="isHistogramError">
                   <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
                 </div>
@@ -712,24 +736,28 @@
                 </div>
                 <br>
                 <div style="margin-bottom: 10px; float:right;">
-                  <a class="btn btn-circle btn-icon-only btn-default" ng-if="isShowDataGrid" tooltip-placement="left" uib-tooltip="Chart" ng-click="onClickChart()">
+                  <a class="btn btn-circle btn-icon-only btn-default" ng-if="isShowDataGrid" tooltip-placement="left"
+                    uib-tooltip="Chart" ng-click="onClickChart()">
                     <i class="fa fa-line-chart" style="display:block;margin:2px 0px 0px 1px;"></i>
                   </a>
-                  <a class="btn btn-circle btn-icon-only btn-default" ng-if="isShowChart" tooltip-placement="left" uib-tooltip="Grid" ng-click="onClickGrid()">
+                  <a class="btn btn-circle btn-icon-only btn-default" ng-if="isShowChart" tooltip-placement="left"
+                    uib-tooltip="Grid" ng-click="onClickGrid()">
                     <i class="fa fa-th" style="display:block;margin:2px 0px 0px 1px;"></i>
                   </a>
 
                 </div>
 
-                <div class="row" ng-if="datacol !=null && !isHistogramError && !isHistogramInprogess && isShowChart" style="width:97%;margin-top:10px;">
+                <div class="row" ng-if="datacol !=null && !isHistogramError && !isHistogramInprogess && isShowChart"
+                  style="width:97%;margin-top:10px;">
                   <div class="col-md-12">
-                    <c3chart chartGroup="chart" bindto-id="histrogramDatapod" chart-data="datacol.datapoints" chart-columns="datacol.datacolumns"
-                      chart-x="datacol.datax" enable-zoom="true" callback-function="handleCallbackGroup">
+                    <c3chart chartGroup="chart" bindto-id="histrogramDatapod" chart-data="datacol.datapoints"
+                      chart-columns="datacol.datacolumns" chart-x="datacol.datax" enable-zoom="true" callback-function="handleCallbackGroup">
                       <chart-bar ratio="0.5" />
                       <chart-axes values-x="">
                         <chart-axis>
                           <chart-axis-x axis-position="outer-center" axis-height="50px" axis-type="category" axis-label="">
-                            <chart-axis-x-tick tick-rotate="25" tick-multiline="false" ng-if="datacol.datapoints.length >9" tick-culling-max="5" />
+                            <chart-axis-x-tick tick-rotate="25" tick-multiline="false" ng-if="datacol.datapoints.length >9"
+                              tick-culling-max="5" />
                             <chart-axis-x-tick tick-rotate="25" tick-multiline="false" ng-if="datacol.datapoints.length <=10" />
                           </chart-axis-x>
                           <chart-axis-Y>
@@ -760,8 +788,10 @@
                         </div>
                       </div>
                     </div>
-                    <div ui-grid="gridOptionsHitogram" class="grid" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter ng-style="getGridStyleHistogram()">
-                      <div class="nodatawatermark_results" ng-show="!gridOptionsHitogram.data.length" style="top:41%;">No data available</div>
+                    <div ui-grid="gridOptionsHitogram" class="grid" ui-grid-resize-columns ui-grid-auto-resize
+                      ui-grid-exporter ng-style="getGridStyleHistogram()">
+                      <div class="nodatawatermark_results" ng-show="!gridOptionsHitogram.data.length" style="top:41%;">No
+                        data available</div>
                     </div>
                     <!-- <div class="row">
                           <div class="col-md-6" style="margin-top:17px">
@@ -784,6 +814,49 @@
             <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
           </div>
         </form>
+      </div>
+    </div>
+  </div>
+  <div id="fileupload" class="modal fade bs-modal-lg in" tabindex="-1" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog" style="width:27%;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+          <h4 class="modal-title">File Upload</h4>
+        </div>
+        <div class="modal-body">
+          <div class="slimScrollDiv" style="padding-top:10px;">
+            <div class="scroller" data-always-visible="1" data-rail-visible1="1" data-initialized="1">
+              <div class="row">
+                <div class="col-md-2" style="margin-top:5px;">
+                  <label style="margin-left:4px;">Select</label>
+                </div>
+                <div class="col-md-10">
+                  <input type="file" id="csv_file" class="jfilestyle" file-model-change " on-submit=" fileNameValidate
+                    "  accept=" .csv " data-buttonText=" <span class='glyphicon glyphicon-folder-open' style='color:#94A0B2;'>
+                  </span>" style="float:left;margin-left:4px;">
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12" style="margin-left:4px;font-size:12px;color: red;">
+                  <div ng-show="!isFileNameValid">Special character or space not allowed in file name.</div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-2" style="margin-top:5px;">
+                  <label style="margin-left:4px;">Desc</label>
+                </div>
+                <div class="col-md-10">
+                  <input type="text" class="form-control" ng-model="fileUpladDesc">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+          <button type="button" class="btn green" ng-click="uploadFile()" ng-disabled="isFileSubmitDisable">Submit</button>
+        </div>
       </div>
     </div>
   </div>

@@ -77,6 +77,9 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	$scope.datapodsampledata = null;
 	$scope.isDependencyShow = false;
 	$scope.StateName = "metadata({'type':'datapod'})"
+	$scope.isUploadingDatapod=false;
+	$scope.isFileNameValid=true;
+    $scope.isFileSubmitDisable=true
 	$scope.isDependencyShow = false;
 	$scope.isSimpleRecord = false;
 	$scope.searchtext = '';
@@ -1322,6 +1325,71 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			$(".actions").removeClass("open");
 		}
 	}
+
+	$scope.getDetailForUpload = function (data) {
+		debugger
+		console.log(data)
+		if($scope.checkIsInrogess () ==false){
+			return false;
+		}
+		if($scope.showFrom==true && $scope.isUploadingDatapod==false){
+			$scope.uploaaduuid = data.uuid
+			$scope.uploadDetail=data;
+			$(":file").jfilestyle('clear')
+			$("#csv_file").val("");
+			$('#fileupload').modal({
+			backdrop: 'static',
+			keyboard: false
+			});
+	    }
+	}
+	
+	$scope.fileNameValidate=function(data){
+		console.log(data)
+		$scope.isFileNameValid=data.valid;
+		$scope.isFileSubmitDisable=!data.valid;
+	}
+	$scope.uploadFile = function () {
+		if($scope.isFileSubmitDisable){
+		  $scope.msg = "Special character or space not allowed in file name."
+		  notify.type = 'info',
+		  notify.title = 'Info',
+		  notify.content = $scope.msg
+		  $scope.$emit('notify', notify);
+		  return false; 
+		}
+		$scope.isUploadingDatapod=true;
+		var iEl = angular.element(document.querySelector('#csv_file'));
+		var file = iEl[0].files[0]
+		var fd = new FormData();
+		fd.append('csvFileName', file);
+		$('#fileupload').modal('hide');
+		CommonService.uploadFile($scope.uploaaduuid, fd, "datapod",$scope.fileUpladDesc || "").then(function (response) { onSuccess(response.data) },function (response) { onError(response.data) });
+		var onSuccess = function (response) {
+		  $scope.isUploadingDatapod=false;
+		  $scope.fileUpladDesc="";
+		  $scope.uploadDetail=null;
+		  $scope.isFileNameValid=true;
+          $scope.isFileSubmitDisable=true
+		  $scope.executionmsg = "Data Uploaded Successfully"
+		  notify.type = 'success',
+		  notify.title = 'Success',
+		  notify.content = $scope.executionmsg
+		  $scope.$emit('notify', notify);
+	
+		}
+		var onError = function (response) {
+		  $('#fileupload').modal('hide');
+		  $scope.uploadDetail=null;
+		  $scope.isUploadingDatapod=false;
+		  $scope.isFileNameValid=true;
+          $scope.isFileSubmitDisable=true
+		  notify.type = 'error',
+		  notify.title = 'Error',
+		  notify.content = "Some Error Occurred"
+		 // $scope.$emit('notify', notify);
+		}
+	  }
 })/* End MetadataDatapodController*/
 
 
