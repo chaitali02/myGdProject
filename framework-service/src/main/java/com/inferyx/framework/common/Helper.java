@@ -135,7 +135,9 @@ import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.ReportExec;
 import com.inferyx.framework.domain.Role;
 import com.inferyx.framework.domain.Rule;
+import com.inferyx.framework.domain.Rule2;
 import com.inferyx.framework.domain.RuleExec;
+import com.inferyx.framework.domain.Rule2Exec;
 import com.inferyx.framework.domain.RuleGroup;
 import com.inferyx.framework.domain.RuleGroupExec;
 import com.inferyx.framework.domain.RunStatusHolder;
@@ -337,6 +339,8 @@ public class Helper {
 				case processExec : return "iProcessExecDao";
 				case organization : return "iOrganizationDao";
 				case dashboardExec : return "iDashboardExecDao";
+				case rule2: return "iRule2Dao";
+				case rule2Exec: return "iRule2ExecDao";	
 				default:
 					return null;
 			}
@@ -378,6 +382,8 @@ public class Helper {
 		case processExec : return "ProcessServiceImpl";
 		case dashboardExec : return " DashboardServiceImpl";
 		case graphExec : return " GraphServiceImpl";
+		case rule2 : return "Rule2ServiceImpl";
+		case rule2Exec : return "Rule2ExecServiceImpl";
 		default: return null;
 		}
 	}
@@ -472,6 +478,8 @@ public class Helper {
 		case processExec : return ProcessExec.class;
 		case organization : return Organization.class;
 		case dashboardExec : return DashboardExec.class;
+		case rule2 : return Rule2.class;
+		case rule2Exec : return Rule2Exec.class;
 		default: return null;
 		}
 	}
@@ -571,6 +579,8 @@ public class Helper {
 				case "processexec" : return MetaType.processExec;
 				case "organization" : return MetaType.organization;
 				case "dashboardexec" : return MetaType.dashboardExec;
+				case "rule2" : return MetaType.rule2;
+				case "rule2exec" : return MetaType.rule2Exec;
 				default : return null;
 			}
 		}
@@ -705,8 +715,8 @@ public class Helper {
 				case "inactive": return Status.Stage.Inactive;
 				case "login": return Status.Stage.login;
 				case "logout": return Status.Stage.logout;
-				case "Offhold": return Status.Stage.OffHold;
-				case "Resume": return Status.Stage.RESUME;
+				case "offhold": return Status.Stage.OffHold;
+				case "resume": return Status.Stage.RESUME;
 				case "suspend": return Status.Stage.Suspend;
 				case "terminating": return Status.Stage.TERMINATING;
 				case "ready": return Status.Stage.READY;
@@ -987,6 +997,7 @@ public class Helper {
 		case ingest : return MetaType.ingestExec;
 		case ingestgroup : return MetaType.ingestgroupExec;
 		case dashboard : return MetaType.dashboardExec;
+		case rule2 : return MetaType.rule2Exec;
 		default : return null;
 		}
 	}
@@ -1019,6 +1030,7 @@ public class Helper {
 		case ingestExec : return MetaType.ingest;
 		case ingestgroupExec : return MetaType.ingestgroup;
 		case dashboardExec : return MetaType.dashboard;
+		case rule2Exec : return MetaType.rule2;		
 		default : return null;
 		}
 	}
@@ -1085,6 +1097,7 @@ public class Helper {
 		case ingestgroupExec : return new IngestGroupExec();
 		case reportExec : return new ReportExec();
 		case dashboardExec : return new DashboardExec();
+		case rule2Exec : return new Rule2Exec();
 		default : return null;
 		}
 	}

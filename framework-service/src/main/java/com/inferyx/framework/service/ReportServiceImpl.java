@@ -711,51 +711,54 @@ public class ReportServiceImpl extends RuleTemplate {
 		return listReportExecView;
 	}
 	
-	public HttpServletResponse downloadReport(String reportExecUuid, String reportExecVersion, String format, int offset,
-			int limit, HttpServletResponse response, String sortBy, String order, String requestId,
+	public HttpServletResponse downloadReport(String reportExecUuid, String reportExecVersion, String format,
+			int offset, int limit, HttpServletResponse response, String sortBy, String order, String requestId,
 			RunMode runMode, boolean skipLimitCheck) throws Exception {
 
 		ReportExec reportExec = (ReportExec) commonServiceImpl.getOneByUuidAndVersion(reportExecUuid, reportExecVersion,
 				MetaType.reportExec.toString(), "N");
-		
+
 		MetaIdentifier dependsOnMI = reportExec.getDependsOn().getRef();
 		Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(),
 				dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
 		format = report.getFormat();
-		
-		String defaultDownloadPath = Helper.getPropertyValue("framework.report.Path"); 
+
+		String defaultDownloadPath = Helper.getPropertyValue("framework.report.Path");
 		defaultDownloadPath = defaultDownloadPath.endsWith("/") ? defaultDownloadPath : defaultDownloadPath.concat("/");
-		String reportFilePath = String.format("%s/%s/%s/%s/", report.getUuid(), report.getVersion(), reportExec.getVersion(), "doc");
-		
+		String reportFilePath = String.format("%s/%s/%s/%s/", report.getUuid(), report.getVersion(),
+				reportExec.getVersion(), "doc");
+
 		File reportDocDir = new File(defaultDownloadPath.concat(reportFilePath));
-		if(!reportDocDir.exists()) {
+		if (!reportDocDir.exists()) {
 			reportDocDir.mkdirs();
 		}
 		String reportFileName = null;
-		if(format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
-			reportFileName = String.format("%s_%s.%s", report.getName(), reportExec.getVersion(), FileType.PDF.toString().toLowerCase());
+		if (format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
+			reportFileName = String.format("%s_%s.%s", report.getName(), reportExec.getVersion(),
+					FileType.PDF.toString().toLowerCase());
 		} else {
-			reportFileName = String.format("%s_%s.%s", report.getName(), reportExec.getVersion(), FileType.XLS.toString().toLowerCase());
+			reportFileName = String.format("%s_%s.%s", report.getName(), reportExec.getVersion(),
+					FileType.XLS.toString().toLowerCase());
 		}
-		
-		String filePathUrl = defaultDownloadPath.concat(reportFilePath).concat(reportFileName);		
+
+		String filePathUrl = defaultDownloadPath.concat(reportFilePath).concat(reportFileName);
 
 		Workbook workbook = null;
 		PDDocument doc = null;
-		
+
 		File reportFile = new File(filePathUrl);
-		if(reportFile.exists()) {
-			if(format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
+		if (reportFile.exists()) {
+			if (format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
 				doc = PDDocument.load(reportFile);
 			} else {
-				 workbook = WorkbookFactory.create(reportFile);
+				workbook = WorkbookFactory.create(reportFile);
 			}
-		} 
-		
-		if(response != null) {
+		}
+
+		if (response != null) {
 			try {
 				ServletOutputStream servletOutputStream = response.getOutputStream();
-				if(format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
+				if (format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
 					response.setContentType("application/pdf");
 					response.setHeader("Content-disposition", "attachment");
 					response.setHeader("filename", report.getName().concat("_").concat(reportExec.getVersion())
@@ -769,66 +772,67 @@ public class ReportServiceImpl extends RuleTemplate {
 							.concat(".").concat(FileType.XLS.toString().toLowerCase()));
 					workbook.write(servletOutputStream);
 					workbook.close();
-				}				
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 				logger.error("Can not download file.");
 				response.setStatus(300);
-	        	throw new FileNotFoundException("Can not download file.");
+				throw new FileNotFoundException("Can not download file.");
 			}
 		}
-		
+
 		return response;
 	}
 
-	public HttpServletResponse downloadSample(String reportExecUuid, String reportExecVersion, String format, int offset,
-			int limit, HttpServletResponse response, String sortBy, String order, String requestId,
+	public HttpServletResponse downloadSample(String reportExecUuid, String reportExecVersion, String format,
+			int offset, int limit, HttpServletResponse response, String sortBy, String order, String requestId,
 			RunMode runMode, boolean skipLimitCheck) throws Exception {
 		ReportExec reportExec = (ReportExec) commonServiceImpl.getOneByUuidAndVersion(reportExecUuid, reportExecVersion,
 				MetaType.reportExec.toString(), "N");
-		
+
 		MetaIdentifier dependsOnMI = reportExec.getDependsOn().getRef();
 		Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(),
 				dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
-		
-		
-		String defaultDownloadPath = Helper.getPropertyValue("framework.report.Path"); 
+
+		String defaultDownloadPath = Helper.getPropertyValue("framework.report.Path");
 		defaultDownloadPath = defaultDownloadPath.endsWith("/") ? defaultDownloadPath : defaultDownloadPath.concat("/");
-		String reportFilePath = String.format("%s/%s/%s/%s/", report.getUuid(), report.getVersion(), reportExec.getVersion(), "doc");
-		
+		String reportFilePath = String.format("%s/%s/%s/%s/", report.getUuid(), report.getVersion(),
+				reportExec.getVersion(), "doc");
+
 		File reportDocDir = new File(defaultDownloadPath.concat(reportFilePath));
-		if(!reportDocDir.exists()) {
+		if (!reportDocDir.exists()) {
 			reportDocDir.mkdirs();
 		}
 		String reportFileName = null;
-		if(format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
-			reportFileName = String.format("%s_%s.%s", report.getName(), reportExec.getVersion(), FileType.PDF.toString().toLowerCase());
+		if (format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
+			reportFileName = String.format("%s_%s.%s", report.getName(), reportExec.getVersion(),
+					FileType.PDF.toString().toLowerCase());
 		} else {
-			reportFileName = String.format("%s_%s.%s", report.getName(), reportExec.getVersion(), FileType.XLS.toString().toLowerCase());
+			reportFileName = String.format("%s_%s.%s", report.getName(), reportExec.getVersion(),
+					FileType.XLS.toString().toLowerCase());
 		}
-		
-		String filePathUrl = defaultDownloadPath.concat(reportFilePath).concat(reportFileName);		
+
+		String filePathUrl = defaultDownloadPath.concat(reportFilePath).concat(reportFileName);
 
 		Workbook workbook = null;
 		PDDocument doc = null;
-		
+
 		File reportFile = new File(filePathUrl);
-		if(reportFile.exists()) {
-			if(format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
+		if (reportFile.exists()) {
+			if (format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
 				doc = PDDocument.load(reportFile);
 			} else {
-				 workbook = WorkbookFactory.create(reportFile);
+				workbook = WorkbookFactory.create(reportFile);
 			}
 		}
-		
-		
+
 		DataStore datastore = dataStoreServiceImpl.getDatastore(reportExec.getResult().getRef().getUuid(),
 				reportExec.getResult().getRef().getVersion());
 		if (datastore == null) {
 			logger.error("Datastore is not available.");
 			throw new Exception("Datastore is not available.");
 		}
-		
+
 		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
 		if (!skipLimitCheck && limit > maxRows) {
 			logger.error("Requested rows exceeded the limit of " + maxRows);
@@ -842,20 +846,21 @@ public class ReportServiceImpl extends RuleTemplate {
 		datastoreServiceImpl.setRunMode(runMode);
 		List<Map<String, Object>> data = null;
 		try {
-			data = datastoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, limit, null, null);
+			data = datastoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0,
+					limit, null, null);
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-		}		
-		
-		//checking whether data is available or not
-		if(data == null || (data != null && data.isEmpty())) {
+		}
+
+		// checking whether data is available or not
+		if (data == null || (data != null && data.isEmpty())) {
 			data = new ArrayList<>();
-			
-			Map<String,Object> dataMap = new LinkedHashMap<>();
+
+			Map<String, Object> dataMap = new LinkedHashMap<>();
 			int i = 0;
-			for(AttributeSource attributeSource : report.getAttributeInfo()) {
-				if(i == 0) {
+			for (AttributeSource attributeSource : report.getAttributeInfo()) {
+				if (i == 0) {
 					dataMap.put(attributeSource.getAttrSourceName(), "no data available.");
 				} else {
 					dataMap.put(attributeSource.getAttrSourceName(), "");
@@ -865,9 +870,9 @@ public class ReportServiceImpl extends RuleTemplate {
 
 			data.add(dataMap);
 		}
-		
-		//writting as per provided format
-		if(format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
+
+		// writting as per provided format
+		if (format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
 			doc = pdfUtil.getPDFDocForReport(data, reportExec);
 			FileOutputStream fileOutPDF = new FileOutputStream(new File(filePathUrl));
 			doc.save(fileOutPDF);
@@ -875,10 +880,10 @@ public class ReportServiceImpl extends RuleTemplate {
 		} else {
 			FileOutputStream fileOut = new FileOutputStream(filePathUrl);
 			workbook = workbookUtil.getWorkbookForReport(data, reportExec);
-			workbook.write(fileOut);		
+			workbook.write(fileOut);
 			fileOut.close();
 		}
-		
+
 		DownloadExec downloadExec = new DownloadExec();
 		downloadExec.setBaseEntity();
 		downloadExec.setLocation(filePathUrl);
@@ -889,36 +894,35 @@ public class ReportServiceImpl extends RuleTemplate {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-	
 
-	if(response!=null)
+		if (response != null)
 
-	{
-		try {
-			ServletOutputStream servletOutputStream = response.getOutputStream();
-			if (format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
-				response.setContentType("application/pdf");
-				response.setHeader("Content-disposition", "attachment");
-				response.setHeader("filename", report.getName().concat("_").concat(reportExec.getVersion()).concat(".")
-						.concat(FileType.PDF.toString().toLowerCase()));
-				doc.save(servletOutputStream);
-				doc.close();
-			} else {
-				response.setContentType("application/xml");
-				response.setHeader("Content-disposition", "attachment");
-				response.setHeader("filename", report.getName().concat("_").concat(reportExec.getVersion()).concat(".")
-						.concat(FileType.XLS.toString().toLowerCase()));
-				workbook.write(servletOutputStream);
-				workbook.close();
+		{
+			try {
+				ServletOutputStream servletOutputStream = response.getOutputStream();
+				if (format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
+					response.setContentType("application/pdf");
+					response.setHeader("Content-disposition", "attachment");
+					response.setHeader("filename", report.getName().concat("_").concat(reportExec.getVersion())
+							.concat(".").concat(FileType.PDF.toString().toLowerCase()));
+					doc.save(servletOutputStream);
+					doc.close();
+				} else {
+					response.setContentType("application/xml");
+					response.setHeader("Content-disposition", "attachment");
+					response.setHeader("filename", report.getName().concat("_").concat(reportExec.getVersion())
+							.concat(".").concat(FileType.XLS.toString().toLowerCase()));
+					workbook.write(servletOutputStream);
+					workbook.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+				logger.error("Can not download file.");
+				response.setStatus(300);
+				throw new FileNotFoundException("Can not download file.");
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
-			logger.error("Can not download file.");
-			response.setStatus(300);
-			throw new FileNotFoundException("Can not download file.");
 		}
-	}
 
-	return response;
+		return response;
 	}
 }
