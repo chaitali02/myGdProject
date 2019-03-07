@@ -1,6 +1,6 @@
 {
   "uuid": "aeeb6281-9fd6-4c7b-ac0d-50d8ca9069c8",
-  "version": "1551914254",
+  "version": "1551970389",
   "name": "ds_account_summary_daily",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Wed Mar 06 18:17:34 EST 2019",
+  "createdOn": "Thu Mar 07 20:23:09 IST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -63,9 +63,9 @@
             "version": null,
             "name": "paramlist_aml_app"
           },
-          "attributeId": 3,
+          "attributeId": 0,
           "value": null,
-          "attributeName": "last_90days_start_date",
+          "attributeName": "business_date",
           "attributeType": null
         }
       ]
@@ -94,9 +94,9 @@
             "version": null,
             "name": "paramlist_aml_app"
           },
-          "attributeId": 3,
+          "attributeId": 0,
           "value": null,
-          "attributeName": "last_90days_start_date",
+          "attributeName": "business_date",
           "attributeType": null
         }
       ]
@@ -1205,5 +1205,5 @@
     }
   ],
   "groupBy": null,
-  "limit": 0
+  "limit": -1
 }

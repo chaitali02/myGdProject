@@ -1,7 +1,6 @@
 {
-
   "uuid": "dc265559-bc3a-4b8b-9187-26478048d223",
-  "version": "1551874826",
+  "version": "1551970688",
   "name": "ds_customer_summary_daily",
   "desc": null,
   "createdBy": {
@@ -13,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Wed Mar 06 17:50:26 IST 2019",
+  "createdOn": "Thu Mar 07 20:28:08 IST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -39,7 +38,70 @@
     },
     "value": null
   },
-  "filterInfo": null,
+  "filterInfo": [
+    {
+      "display_seq": "0",
+      "logicalOperator": "",
+      "operator": ">=",
+      "operand": [
+        {
+          "ref": {
+            "type": "datapod",
+            "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+            "version": null,
+            "name": "fact_transaction_journal"
+          },
+          "attributeId": 5,
+          "value": null,
+          "attributeName": "transaction_date",
+          "attributeType": null
+        },
+        {
+          "ref": {
+            "type": "paramlist",
+            "uuid": "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z",
+            "version": null,
+            "name": "paramlist_aml_app"
+          },
+          "attributeId": 0,
+          "value": null,
+          "attributeName": "business_date",
+          "attributeType": null
+        }
+      ]
+    },
+    {
+      "display_seq": "1",
+      "logicalOperator": "AND",
+      "operator": "<=",
+      "operand": [
+        {
+          "ref": {
+            "type": "datapod",
+            "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+            "version": null,
+            "name": "fact_transaction_journal"
+          },
+          "attributeId": 5,
+          "value": null,
+          "attributeName": "transaction_date",
+          "attributeType": null
+        },
+        {
+          "ref": {
+            "type": "paramlist",
+            "uuid": "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z",
+            "version": null,
+            "name": "paramlist_aml_app"
+          },
+          "attributeId": 0,
+          "value": null,
+          "attributeName": "business_date",
+          "attributeType": null
+        }
+      ]
+    }
+  ],
   "attributeInfo": [
     {
       "attrSourceId": "0",
@@ -1123,5 +1185,5 @@
     }
   ],
   "groupBy": null,
-  "limit": 0
+  "limit": -1
 }

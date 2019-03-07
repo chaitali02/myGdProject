@@ -1,7 +1,6 @@
 {
-  "id": "5c800fa13749ab4ea7c834b5",
   "uuid": "1ee47375-87e7-49ac-a4d5-9a0ed33d0a60",
-  "version": "1551896481",
+  "version": "1551970468",
   "name": "ds_account_summary_weekly",
   "desc": null,
   "createdBy": {
@@ -13,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Wed Mar 06 23:51:21 IST 2019",
+  "createdOn": "Thu Mar 07 20:24:28 IST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -39,8 +38,71 @@
     },
     "value": null
   },
-  "filterInfo": null,
-   "attributeInfo": [
+  "filterInfo": [
+    {
+      "display_seq": "0",
+      "logicalOperator": "",
+      "operator": ">=",
+      "operand": [
+        {
+          "ref": {
+            "type": "datapod",
+            "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+            "version": null,
+            "name": "fact_transaction_journal"
+          },
+          "attributeId": 5,
+          "value": null,
+          "attributeName": "transaction_date",
+          "attributeType": null
+        },
+        {
+          "ref": {
+            "type": "formula",
+            "uuid": "70665ca3-143c-4f4b-8a35-7a5abac8ed56",
+            "version": null,
+            "name": "fm_lookback_weekly"
+          },
+          "attributeId": null,
+          "value": null,
+          "attributeName": null,
+          "attributeType": null
+        }
+      ]
+    },
+    {
+      "display_seq": "1",
+      "logicalOperator": "AND",
+      "operator": "<=",
+      "operand": [
+        {
+          "ref": {
+            "type": "datapod",
+            "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
+            "version": null,
+            "name": "fact_transaction_journal"
+          },
+          "attributeId": 5,
+          "value": null,
+          "attributeName": "transaction_date",
+          "attributeType": null
+        },
+        {
+          "ref": {
+            "type": "paramlist",
+            "uuid": "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z",
+            "version": null,
+            "name": "paramlist_aml_app"
+          },
+          "attributeId": 0,
+          "value": null,
+          "attributeName": "business_date",
+          "attributeType": null
+        }
+      ]
+    }
+  ],
+  "attributeInfo": [
     {
       "attrSourceId": "0",
       "attrDisplaySeq": "0",
@@ -124,7 +186,7 @@
     {
       "attrSourceId": "4",
       "attrDisplaySeq": "4",
-     "attrSourceName": "week_num",
+      "attrSourceName": "week_num",
       "function": null,
       "sourceAttr": {
         "ref": {
@@ -1143,5 +1205,5 @@
     }
   ],
   "groupBy": null,
-  "limit": 0
+  "limit": -1
 }
