@@ -147,6 +147,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 		static Map<String, TaskServiceImpl> mapTaskThread = new HashMap<String, TaskServiceImpl>();
 	
 		public String killDag (String uuid, String version) throws JsonProcessingException {
+			logger.info("Inside kill dag");
 			FutureTask<String> futureTask = null;
 			@SuppressWarnings("unused")
 			String status = null;
@@ -157,11 +158,11 @@ import com.inferyx.framework.factory.ExecutorFactory;
 				synchronized (dagExec.getUuid()) {
 					commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.TERMINATING);
 				}
+				
 				if (!Helper.getLatestStatus(dagExec.getStatusList()).getStage().equals(Status.Stage.TERMINATING)) {
 					logger.info("Status is not TERMINATING. So cannot proceed to kill ");
 					return "Status is not TERMINATING. So cannot proceed to kill ";
 				}
-				
 				futureTask = (FutureTask<String>) taskThreadMap.get("Dag_" + uuid);
 				if (futureTask != null && !futureTask.isDone()) {
 					logger.info("Going to kill Dag ###################### " + "Dag_" + uuid);

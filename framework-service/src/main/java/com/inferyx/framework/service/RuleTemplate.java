@@ -127,7 +127,7 @@ public abstract class RuleTemplate implements IExecutable, IParsable {
 			logger.info(" Nothing to create exec upon. Aborting ... ");
 			return null;
 		}
-		baseRule = (BaseRule) commonServiceImpl.getOneByUuidAndVersion(uuid, version, type.toString());
+		baseRule = (BaseRule) commonServiceImpl.getOneByUuidAndVersion(uuid, version, type.toString(), "N");
 		if (baseRule == null || type == null || execType == null) {
 			logger.info(" Nothing to create exec upon. Aborting ... ");
 			return null;

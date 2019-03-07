@@ -614,6 +614,7 @@ public class RegisterService {
 	public String validateUser(String userName, String password) throws IOException, JSONException, ParseException,
 			ServletException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException {
+		logger.info("Inside validateUser");
 		String result = null;
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		result = ow.writeValueAsString(sessionServiceImpl.validateUser(userName, password));

@@ -480,11 +480,11 @@ public class LoadServiceImpl {
 		if (StringUtils.isBlank(loadVersion)) {
 			// load = iLoadDao.findLatestByUuid(loadUUID, new Sort(Sort.Direction.DESC,
 			// "version"));
-			load = (Load) commonServiceImpl.getLatestByUuid(loadUUID, MetaType.load.toString());
+			load = (Load) commonServiceImpl.getLatestByUuid(loadUUID, MetaType.load.toString(), "N");
 			loadVersion = load.getVersion();
 		} else {
 			// load = iLoadDao.findOneByUuidAndVersion(loadUUID, loadVersion);
-			load = (Load) commonServiceImpl.getOneByUuidAndVersion(loadUUID, loadVersion, MetaType.load.toString());
+			load = (Load) commonServiceImpl.getOneByUuidAndVersion(loadUUID, loadVersion, MetaType.load.toString(), "N");
 		}
 		if (loadExec == null) {
 			loadExec = new LoadExec();
