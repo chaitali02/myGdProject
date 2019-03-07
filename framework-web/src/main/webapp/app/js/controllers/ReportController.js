@@ -2390,7 +2390,7 @@ DatavisualizationModule.controller('ReportResultController', function ($q, dagMe
 		$scope.isDownlodInprogess = true;
 		$http({
 			method: 'GET',
-			url: url + "report/download?action=view&uuid=" + uuid + "&version=" + version + "&rows=" + $scope.download.rows+"&format="+$scope.download.selectFormate,
+			url: url + "report/downloadSample?action=view&uuid=" + uuid + "&version=" + version + "&rows=" + $scope.download.rows+"&format="+$scope.download.selectFormate,
 			responseType: 'arraybuffer'
 		}).success(function (data, status, headers) {
 			headers = headers();
@@ -2662,7 +2662,7 @@ DatavisualizationModule.controller("ReportArchivesSearchController", function ($
 		var url = $location.absUrl().split("app")[0];
 		$http({
 			method: 'GET',
-			url: url + "report/download?action=view&uuid=" + uuid + "&version=" + version + "&rows=-1&format=EXCEL",
+			url: url + "report/downloadReport?action=view&uuid=" + uuid + "&version=" + version + "&rows=-1&format=EXCEL",
 			responseType: 'arraybuffer'
 		}).success(function (data, status, headers) {
 			headers = headers();

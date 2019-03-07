@@ -635,13 +635,20 @@ public class ReportServiceImpl extends RuleTemplate {
 			MetaIdentifier dependsOnMI = reportExec.getDependsOn().getRef();
 			Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(),
 					dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
-			
+			String format=report.getFormat();
 			Status status = Helper.getLatestStatus(reportExec.getStatusList());
 			if(status.getStage().equals(Status.Stage.COMPLETED)) {				
 				String defaultDownloadPath = Helper.getPropertyValue("framework.report.Path"); 
 				defaultDownloadPath = defaultDownloadPath.endsWith("/") ? defaultDownloadPath : defaultDownloadPath.concat("/");
 				String reportFilePath = String.format("%s/%s/%s/%s/", report.getUuid(), report.getVersion(), reportExec.getVersion(), "doc");
-				String reportFileName = String.format("%s_%s.%s", report.getName(), reportExec.getVersion(), "xls");
+			//	String reportFileName = String.format("%s_%s.%s", report.getName(), reportExec.getVersion(), "xls");
+				String reportFileName = null;
+				if(format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
+					reportFileName = String.format("%s_%s.%s", report.getName(), reportExec.getVersion(), FileType.PDF.toString().toLowerCase());
+				} else {
+					reportFileName = String.format("%s_%s.%s", report.getName(), reportExec.getVersion(), FileType.XLS.toString().toLowerCase());
+				}
+				
 				String filePathUrl = defaultDownloadPath.concat(reportFilePath).concat(reportFileName);		
 				
 				if(new File(filePathUrl).exists()) {
