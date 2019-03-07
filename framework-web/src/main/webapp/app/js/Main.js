@@ -423,6 +423,8 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, $window, $s
         "class": "fa fa-cogs",
         "submenu": [
             { "name": "viewrule", "type": "rule", "typeCount": "rule", "uuid": "null", "caption": "Rule" },
+            { "name": "viewrule2", "type": "rule2", "typeCount": "rule2", "uuid": "null", "caption": "Rule2" },
+
             { "name": "rulesgroup", "type": "rulegroup", "typeCount": "rulegroup", "uuid": "null", "caption": "Rule Group" },
             { "name": "paramlistrule", "type": "paramlist", "typeCount": "paramlistrule", "uuid": "null", "caption": "Parameter List" },
             { "name": "rulerestult", "type": "ruleexec", "typeCount": "ruleexec", "uuid": "null", "caption": "Rule Results" }
@@ -1631,6 +1633,12 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
             data: { pageTitle: 'Business Rules' },
             params: { type: 'rule' }
         })
+        .state('viewrule2', {
+            url: "/ListRule2",
+            templateUrl: "views/common-list.html",
+            data: { pageTitle: 'Business Rules' },
+            params: { type: 'rule2' }
+        })
 
         .state('createrules', {
             url: "/CreateRule?id&mode&returnBack&version",
@@ -1652,6 +1660,33 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
                         files: [
                             'js/controllers/RuleController.js',
                             'js/services/RuleService.js'
+                        ]
+                    }
+                    ]);
+                }]
+            }
+        })
+
+        .state('createrules2', {
+            url: "/CreateRule2?id&mode&returnBack&version",
+            templateUrl: "views/rule2.html",
+            data: { pageTitle: 'Business Rules' },
+            controller: "",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load([{
+                        name: 'formwizard',
+                        files: [
+                            "assets/global/plugins/jquery-validation/js/jquery.validate.min.js",
+                            "assets/global/plugins/bootstrap-wizard/jquery.bootstrap.wizard.min.js",
+                            "assets/pages/scripts/form-wizard.js"
+                        ]
+                    },
+                    {
+                        name: 'createRule2',
+                        files: [
+                            'js/controllers/Rule2Controller.js',
+                            'js/services/Rule2Service.js'
                         ]
                     }
                     ]);
