@@ -90,6 +90,39 @@ public class ReportController {
 		    return null;
 	   }
 	
+	
+	@RequestMapping(value="/downloadSample",method=RequestMethod.GET)
+	public HttpServletResponse  downloadSample(
+			 	@RequestParam(value= "uuid") String reportExecUuid, 
+	    		@RequestParam(value= "version") String reportExecVersion,
+				@RequestParam(value = "format", defaultValue = "excel") String format,
+				@RequestParam(value = "rows", defaultValue = "200") int rows,
+				@RequestParam(value = "type", required = false) String type,
+				@RequestParam(value = "action", required = false) String action,
+				@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode,
+				HttpServletResponse response) throws Exception {
+		    RunMode runMode = Helper.getExecutionMode(mode);
+		    reportServiceImpl.downloadSample(reportExecUuid, reportExecVersion, format, 0, rows, response, null, null,
+					null, runMode, false);
+		    return null;
+	   }
+	
+	@RequestMapping(value="/downloadReport",method=RequestMethod.GET)
+	public HttpServletResponse  downloadReport(
+			 	@RequestParam(value= "uuid") String reportExecUuid, 
+	    		@RequestParam(value= "version") String reportExecVersion,
+				@RequestParam(value = "format", defaultValue = "excel") String format,
+				@RequestParam(value = "rows", defaultValue = "200") int rows,
+				@RequestParam(value = "type", required = false) String type,
+				@RequestParam(value = "action", required = false) String action,
+				@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode,
+				HttpServletResponse response) throws Exception {
+		    RunMode runMode = Helper.getExecutionMode(mode);
+		    reportServiceImpl.downloadReport(reportExecUuid, reportExecVersion, format, 0, rows, response, null, null,
+					null, runMode, false);
+		    return null;
+	   }
+	
 	@RequestMapping(value = "/getReportByReportExec", method = RequestMethod.GET)
 	public @ResponseBody Report getRuleExecByRule(@RequestParam("uuid") String reportExecUuid,
 			@RequestParam(value = "type", required = false) String type,
