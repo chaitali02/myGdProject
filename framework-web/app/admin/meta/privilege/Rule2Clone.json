@@ -1,0 +1,36 @@
+{
+	"uuid": "2e0d90d0-ea23-4123-8fcb-95d861440c52",
+	"name": "Rule2Clone",
+	"version": "1464977196",
+	"desc": "Analyst role for users",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"active" : "Y",
+  "locked" : "N",
+	"appInfo": [
+		{
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		},
+		{
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			}
+		}
+	],
+	"privType": "Clone",
+	"metaId": {
+		"ref": {
+			"type": "meta",
+			"uuid": "0031d20c-3aef-44e6-b9c6-6f67053e693g"
+		}
+	}
+}
