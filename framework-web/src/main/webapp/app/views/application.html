@@ -407,7 +407,6 @@
 
                           <div ng-if="tabledata.paramValueType =='date'">
                             <div class="col-md-12" style="margin-top:0px;margin-bottom:-20px;padding-left: 0px;padding-right: 0px;">
-
                               <p class="input-group">
                                 <input type="text" class="form-control" title="{{tabledata.paramValue|date: 'yyyy-MM-dd'}}"  uib-datepicker-popup="yyyy-MM-dd" ng-keypress="ValidationKeyPress($event)" ng-model="tabledata.paramValue"
                                   is-open="popup2.opened" ng-disabled="!isEdit" datepicker-options="dateOptions"
@@ -424,7 +423,6 @@
                             <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                               <tags-input class="tag-scroll-height" ng-model="tabledata.paramArrayTags" ng-disabled="{{mode}}"
                                 min-length="0" add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
-
                               </tags-input>
                             </span>
                           </div>

@@ -1084,6 +1084,7 @@
     });
     var onSuccess = function(response) {
       var result=[];
+
       if(response && response.length >0){
       // response[0].ref.name=response[0].ref.name//+ " (default)"
         for(var i=0;i<response.length;i++){

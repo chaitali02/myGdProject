@@ -142,8 +142,8 @@
                     </div>
                     <form class="form-horizontal" name="responsive" ng-submit="executeWithExecParams()" novalidate="novalidate">
                         <div class="modal-body">
-                            <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 300px;">
-                                <div class="scroller" style="height: 300px; overflow-y: auto; width: auto;"
+                            <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 350px;">
+                                <div class="scroller" style="height: 350px; overflow-y: auto; width: auto;"
                                     data-always-visible="1" data-rail-visible1="1" data-initialized="1">
                                     <div class="row">
                                         <div class="col-md-12">
@@ -203,7 +203,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group" ng-if="selectParamType== null">
+                                            <div class="form-group" ng-if="selectParamType== null" style="margin-top:20px;">
                                                 <div class="row">
                                                     <label class="control-label col-md-3 col-sm-3 col-xs-12" for="select">Name
                                                     </label>
@@ -217,6 +217,7 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <br>
                                             <br>
                                             <div ng-if="isParamLsitTable">
                                                 <table class=" row-border hover table  table-striped table-bordered">
@@ -251,21 +252,28 @@
                                                                 </span>
                                                             </td>
                                                             <td>
-                                                                <div ng-if="tabledata.paramValueType =='distribution'"
-                                                                    ng-init="getAllLatest('distribution',$index)">
-                                                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                        <input name="tabledata{{$index}}" type="text"
-                                                                            ng-model="tabledata.selectedParamValue.name" />
-                                                                    </span>
-                                                                </div>
-                                                                <div ng-if="tabledata.paramValueType =='simple'">
+                                                                <div ng-if="tabledata.paramType =='string'">
                                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                         <input type="text" ng-model="tabledata.paramValue"
                                                                             title="{{tabledata.paramValue}}"
                                                                             ng-disabled="false" class="form-control">
                                                                     </span>
                                                                 </div>
-                                                                <div class="text-center" ng-if="['simple','distribution'].indexOf(tabledata.paramValueType) == -1">
+                                                                <div ng-if="tabledata.paramType =='date'">
+                                                                    <div class="col-md-12" style="margin-top:-20px;margin-bottom:-20px;padding-left: 0px;padding-right: 0px;">
+                                                                        <p class="input-group">
+                                                                        <input type="text" class="form-control" title="{{tabledata.paramValue|date: 'yyyy-MM-dd'}}"  popup-placement="left" uib-datepicker-popup="yyyy-MM-dd" ng-keypress="ValidationKeyPress($event)" ng-model="tabledata.paramValue"
+                                                                            is-open="popup2.opened"  datepicker-options="dateOptions"
+                                                                            ng-required="true" close-text="Close" />
+                                                                        <span class="input-group-btn">
+                                                                            <button type="button" class="btn btn-default" ng-click="open2()">
+                                                                            <i class="glyphicon glyphicon-calendar"></i>
+                                                                            </button>
+                                                                        </span>
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="text-center" ng-if="['datapod','distribution'].indexOf(tabledata.paramValueType) !=-1">
                                                                     NA
                                                                 </div>
                                                             </td>
