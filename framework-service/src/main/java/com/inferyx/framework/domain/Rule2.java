@@ -63,4 +63,9 @@ public class Rule2 extends BaseRule {
 		this.criteriaInfo = criteriaInfo;
 	}
 
+	public MetaIdentifierHolder getParamList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
