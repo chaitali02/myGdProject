@@ -185,7 +185,8 @@ public class RunDagServiceImpl implements Callable<String> {
 			logger.info(" After set sessionContext ");
 			//Check if parsing has happ or not. If not then parse.
 			dagServiceImpl.setRunMode(runMode);
-			if (Helper.getLatestStatus(dagExec.getStatusList()).getStage().equals(Status.Stage.PENDING)) {
+			if (Helper.getLatestStatus(dagExec.getStatusList()).getStage().equals(Status.Stage.PENDING) 
+					|| Helper.getLatestStatus(dagExec.getStatusList()).getStage().equals(Status.Stage.STARTING)) {
 				// Parse to create SQL
 				logger.info(" Before parse ");
 				synchronized (dagExec.getUuid()) {
