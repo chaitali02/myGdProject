@@ -167,13 +167,19 @@ import com.inferyx.framework.factory.ExecutorFactory;
 				if (futureTask != null && !futureTask.isDone()) {
 					logger.info("Going to kill Dag ###################### " + "Dag_" + uuid);
 					futureTask.cancel(true);
-					logger.info("Kill Signal sent to Dag Thread");
+					logger.info("Kill Signal sent to Dag Thread " + uuid);
 					status = "Kill Signal sent to Stage Thread";
 					taskThreadMap.remove("Dag_" + uuid);
 				} else {
 					logger.info("DagThread is not alive. It might have COMPLETED its execution alReady");
 					status = "DagThread is not alive. It might have COMPLETED its execution alReady";
 				}
+				if (futureTask == null) {
+					logger.info("futureTask is null");
+				} else {
+					logger.info("futureTask.isCancelled() : futureTask.isDone() : " + futureTask.isCancelled() + " : " + futureTask.isDone());
+				}
+				Thread.sleep(100);
 				while(! (futureTask == null || futureTask.isCancelled() || futureTask.isDone())) {
 					logger.info("Sleeping thread Dag : " + "Dag_" + uuid);
 					Thread.sleep(1000);
@@ -187,7 +193,6 @@ import com.inferyx.framework.factory.ExecutorFactory;
 					commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.KILLED);
 				}
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			return "Not KILLED.";

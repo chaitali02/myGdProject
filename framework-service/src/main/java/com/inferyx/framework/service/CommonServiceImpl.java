@@ -3084,10 +3084,12 @@ public class CommonServiceImpl<T> {
 			logger.info("Nothing in statusList. Cannot go to Starting status ... ");
 			return null;
 		}
-		if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.PENDING, new Date()))) {
+		if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.PENDING, new Date())) 
+				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.KILLED, new Date())) 
+				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.FAILED, new Date())) ) {
 			statusList.add(new Status(Status.Stage.STARTING, new Date()));
 		} else {
-			logger.info("Latest Status is not in PENDING. Cannot go to Starting status. Exiting...");
+			logger.info("Latest Status is not in PENDING/FAILED/KILLED. Cannot go to Starting status. Exiting...");
 		}
 		return statusList;
 	}

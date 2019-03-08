@@ -933,6 +933,8 @@ public class DagServiceImpl {
 						targetAttrRef = commonServiceImpl.populateRefKeys(refKeys, targetAttrRef, inputRefKeys);
 						sourceAttrRef = commonServiceImpl.populateRefKeys(refKeys, sourceAttrRef, inputRefKeys);
 					}
+					baseExec = mapServiceImpl.create(ref.getUuid(), ref.getVersion(), (MapExec) baseExec, dagExec, 
+							datapodList, refKeys, otherParams, taskExecParams, RunMode.BATCH);
 				} else if (indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef().getType().equals(MetaType.load)) {// MetaType
 																														// load
 					loadRef = indvTask.getOperators().get(0).getOperatorInfo().get(0).getRef();
@@ -1086,9 +1088,9 @@ public class DagServiceImpl {
 		// Get the dag - END
 		for (StageExec indvDagExecStg : dagExecStgs) {
 			
-			synchronized (dagExec.getUuid()) {
+			/*synchronized (dagExec.getUuid()) {
 				commonServiceImpl.setMetaStatusForStage(dagExec, indvDagExecStg, Status.Stage.PENDING, indvDagExecStg.getStageId());
-			}
+			}*/
 
 			List<TaskExec> dagExecTasks = DagExecUtil.castToTaskExecList(indvDagExecStg.getTasks());
 			Stage stage = DagExecUtil.getStageFromDag(dag, indvDagExecStg.getStageId());
@@ -1101,6 +1103,7 @@ public class DagServiceImpl {
 				commonServiceImpl.setMetaStatusForStage(dagExec, indvDagExecStg, Status.Stage.STARTING, indvDagExecStg.getStageId());
 			}
 			for (TaskExec indvExecTask : dagExecTasks) {
+				Thread.sleep(10);
 				ExecParams taskExecParams = createChildParams(execParams);
 				otherParams = taskExecParams.getOtherParams();
 				Task indvTask = DagExecUtil.getTaskFromStage(stage, indvExecTask.getTaskId());
@@ -1522,7 +1525,7 @@ public class DagServiceImpl {
 										commonServiceImpl.setMetaStatus(baseExec, meta.getType(), Status.Stage.READY);
 									} else {
 										commonServiceImpl.setMetaStatus(baseExec, meta.getType(), Status.Stage.PENDING);
-										operatorLeastSigStatus = new Status(Status.Stage.PENDING, new Date());
+										operatorLeastSigStatus = new Status(Status.Stage.STARTING, new Date());
 									}
 								}
 							} // End for operator
@@ -1544,7 +1547,7 @@ public class DagServiceImpl {
 				dagExec = (DagExec) commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, stageLeastSigStatus.getStage());
 			}
 		}
-		logger.info("After setting status to READY or PENDING ");
+		logger.info("After setting status to READY or STARTING ");
 		return dagExec;
 	}
 	
