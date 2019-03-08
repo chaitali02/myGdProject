@@ -1,6 +1,6 @@
 {
-  "uuid": "55452346-9a92-4525-a45e-065dd46273bd",
-  "version": "1551894685",
+  "uuid": "6c34aa7d-877b-4347-b8c2-9c4526591ee5",
+  "version": "1552068621",
   "name": "fact_transaction_journal",
   "desc": "Creating datastore for fact_transaction_journal",
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Wed Mar 06 12:51:25 EST 2019",
+  "createdOn": "Fri Mar 08 13:10:21 EST 2019",
   "tags": null,
   "active": "Y",
   "locked": "N",
@@ -33,7 +33,7 @@
     "ref": {
       "type": "datapod",
       "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
-      "version": "1551893309",
+      "version": "1552068467",
       "name": "fact_transaction_journal"
     },
     "value": null
@@ -41,13 +41,13 @@
   "execId": {
     "ref": {
       "type": "loadExec",
-      "uuid": "1c99df56-8c18-4fbd-848d-b973065c76ff",
-      "version": "1551894683",
+      "uuid": "e27fcdd9-2e9d-4dd2-b36c-aa85e5a8ff2f",
+      "version": "1552068618",
       "name": "fact_transaction_journal"
     },
     "value": null
   },
-  "location": "/5e87bde8-18ed-4b0e-993a-d19d26c495ad/1551893309/1551894683",
+  "location": "/5e87bde8-18ed-4b0e-993a-d19d26c495ad/1552068467/1552068618",
   "persistMode": "DISK_ONLY",
   "dimInfo": null,
   "numRows": 6012,

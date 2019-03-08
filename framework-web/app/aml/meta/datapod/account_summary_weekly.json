@@ -63,7 +63,7 @@
       "expression": null,
       "key": "",
       "partition": "N",
-      "dispName": "customer_id",
+      "dispName": "account_id",
       "active": "Y",
       "length": null,
       "attrUnitType": null
