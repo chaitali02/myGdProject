@@ -62,7 +62,30 @@ public class JoinKeyOperator {
 			, ExecParams execParams
 			, Boolean isAggrAllowed
 			, Boolean isAggrReqd
-			, RunMode runMode, Datasource datasource) throws Exception {
+			, RunMode runMode
+			, Datasource datasource) throws Exception {
+		return generateSql(filters
+				, filterSource
+				, refKeyMap
+				, otherParams
+				, usedRefKeySet
+				, execParams
+				, isAggrAllowed
+				, isAggrReqd
+				, runMode 
+				, datasource
+				, new ArrayList<String>());
+	}
+	
+	public String generateSql(List<FilterInfo> filters, MetaIdentifierHolder filterSource
+			, java.util.Map<String, MetaIdentifier> refKeyMap
+			, HashMap<String, String> otherParams
+			, Set<MetaIdentifier> usedRefKeySet
+			, ExecParams execParams
+			, Boolean isAggrAllowed
+			, Boolean isAggrReqd
+			, RunMode runMode, Datasource datasource
+			, List<String> attributeList) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		StringBuilder filterBuilder = new StringBuilder("");
 		builder.append("(").append(" ");
@@ -72,7 +95,7 @@ public class JoinKeyOperator {
 		}
 
 		for (FilterInfo filterInfo : filters) {
-			String filter = generateSql(filterInfo, filterSource, refKeyMap, otherParams, usedRefKeySet, execParams, isAggrAllowed, isAggrReqd, runMode, datasource);
+			String filter = generateSql(filterInfo, filterSource, refKeyMap, otherParams, usedRefKeySet, execParams, isAggrAllowed, isAggrReqd, runMode, datasource, attributeList);
 			if (StringUtils.isNotBlank(filter)) {
 				if (StringUtils.isNotBlank(filterBuilder)) {
 					filterBuilder.append(" ").append(filterInfo.getLogicalOperator()).append(" ");
@@ -99,7 +122,9 @@ public class JoinKeyOperator {
 			, ExecParams execParams
 			, Boolean isAggrAllowed
 			, Boolean isAggrReqd
-			, RunMode runMode, Datasource datasource) throws Exception {
+			, RunMode runMode
+			, Datasource datasource
+			, List<String> attributeList) throws Exception {
 		List<String> operandValue = new ArrayList<>(2);
 		int aggrCount = 0;
 		for (SourceAttr sourceAttr : filterInfo.getOperand()) {
@@ -124,13 +149,13 @@ public class JoinKeyOperator {
 							value = "'"+value+"'";
 						}
 					}
-				
 					operandValue.add(value);
 				}
 			} else if (sourceAttr.getRef().getType().equals(MetaType.attribute)) {
 				if (StringUtils.isBlank(sourceAttr.getValue())) {
 					operandValue.add("''");
 				} else {
+					attributeList.add(sourceAttr.getValue());
 					operandValue.add(sourceAttr.getValue());
 				}
 			} else if (sourceAttr.getRef().getType().equals(MetaType.paramlist)) {
@@ -151,6 +176,7 @@ public class JoinKeyOperator {
 //				String attrName = datasetAttributes.get(sourceAttr.getAttributeId()).getAttrName();
 				String attrName = datasetServiceImpl.getAttributeName(dataset,sourceAttr.getAttributeId().toString());
 				operandValue.add(dataset.sql(attrName));
+				attributeList.add(dataset.sql(attrName));
 				MetaIdentifier datasetRef = new MetaIdentifier(MetaType.dataset, dataset.getUuid(), dataset.getVersion());
 				usedRefKeySet.add(datasetRef);				
 			} else if (sourceAttr.getRef().getType() == MetaType.rule) {
@@ -163,6 +189,7 @@ public class JoinKeyOperator {
 				String attrName = ruleServiceImpl.getAttributeName(rule,sourceAttr.getAttributeId().toString());
 //				logger.info(" Rule sql : " + rule.sql(attrName));
 				operandValue.add(rule.sql(attrName));
+				attributeList.add(rule.sql(attrName));
 				MetaIdentifier ruleRef = new MetaIdentifier(MetaType.rule, rule.getUuid(), rule.getVersion());
 				usedRefKeySet.add(ruleRef);
 			} else if (sourceAttr.getRef().getType() == MetaType.datapod) {
@@ -171,6 +198,7 @@ public class JoinKeyOperator {
 				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 						
 				operandValue.add(datapod.sql(sourceAttr.getAttributeId()));
+				attributeList.add(datapod.sql(sourceAttr.getAttributeId()));
 				MetaIdentifier datapodRef = new MetaIdentifier(MetaType.datapod, datapod.getUuid(), datapod.getVersion());
 				usedRefKeySet.add(datapodRef);
 			} else if (sourceAttr.getRef().getType() == MetaType.formula) {
@@ -180,14 +208,14 @@ public class JoinKeyOperator {
 				if (formulaRef.getFormulaType().equals(FormulaType.aggr)) {
 					aggrCount += 1;
 				}
-				operandValue.add(formulaOperator.generateSql(formulaRef, refKeyMap, otherParams, execParams, datasource));
+				operandValue.add(formulaOperator.generateSql(formulaRef, refKeyMap, otherParams, execParams, datasource, attributeList));
 				MetaIdentifier formulaRef1 = new MetaIdentifier(MetaType.formula, formulaRef.getUuid(), formulaRef.getVersion());
 				usedRefKeySet.add(formulaRef1);
 			} else if (sourceAttr.getRef().getType() == MetaType.function) {
 //					Function functionRef = (Function) daoRegister.getRefObject(TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap));
 					MetaIdentifier ref = TaskParser.populateRefVersion(sourceAttr.getRef(), refKeyMap);
 					Function functionRef = (Function) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
-					operandValue.add(functionOperator.generateSql(functionRef, refKeyMap, otherParams, datasource));
+					operandValue.add(functionOperator.generateSql(functionRef, refKeyMap, otherParams, datasource, attributeList));
 					MetaIdentifier functionRef1 = new MetaIdentifier(MetaType.function, functionRef.getUuid(), functionRef.getVersion());
 					usedRefKeySet.add(functionRef1);
 				}	

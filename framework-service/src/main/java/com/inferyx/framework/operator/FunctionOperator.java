@@ -12,6 +12,7 @@ package com.inferyx.framework.operator;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -124,6 +125,13 @@ public class FunctionOperator {
 			HashMap<String, String> otherParams, Datasource datasource)
 			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		return generateSql(function, refKeyMap, otherParams, datasource, new ArrayList<String>());
+	}
+	
+	public String generateSql(Function function, java.util.Map<String, MetaIdentifier> refKeyMap,
+			HashMap<String, String> otherParams, Datasource datasource, List<String> attributeList)
+			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 
 		List<FunctionInfo> list = function.getFunctionInfo();
 		String functionName = "";
@@ -145,6 +153,7 @@ public class FunctionOperator {
 						if (functionInfo.getParamType().equalsIgnoreCase(MetaType.function.toString())) {
 							concatName = functionInfo.getParamName().concat("()");															
 						}else {
+							attributeList.add(functionInfo.getParamName());
 							concatName = functionInfo.getParamName();
 						}
 						functionName = functionName.concat(concatName);	
@@ -156,6 +165,7 @@ public class FunctionOperator {
 							if (functionInfo.getParamType().equalsIgnoreCase(MetaType.function.toString())) {
 								concatName = functionInfo.getParamName().concat("()");								
 							} else {
+								attributeList.add(functionInfo.getParamName());
 								concatName = functionInfo.getParamName();								
 							}
 							functionName = functionName.concat(concatName);
