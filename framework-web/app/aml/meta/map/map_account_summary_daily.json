@@ -1,6 +1,6 @@
 {
   "uuid": "bde67f2d-ca21-4b6c-b1ae-fea15e4c3b2b",
-  "version": "1551905913",
+  "version": "1552070581",
   "name": "map_account_summary_daily",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Thu Mar 07 02:28:33 IST 2019",
+  "createdOn": "Fri Mar 08 13:43:01 EST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -89,8 +89,8 @@
           "name": "ds_account_summary_daily"
         },
         "value": null,
-        "attrId": "0",
-        "attrName": "customer_id",
+        "attrId": "1",
+        "attrName": "account_id",
         "attrType": null,
         "attrUnitType": null,
         "function": null

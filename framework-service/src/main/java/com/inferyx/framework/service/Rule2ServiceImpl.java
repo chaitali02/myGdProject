@@ -446,6 +446,8 @@ public class Rule2ServiceImpl extends RuleTemplate {
 			if(execParams != null) {
 				ruleExec.setExecParams(execParams);
 				commonServiceImpl.save(MetaType.ruleExec.toString(), ruleExec);
+			}else {
+				ruleExec.setExecParams(execParams);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -800,8 +802,9 @@ public class Rule2ServiceImpl extends RuleTemplate {
 				MetaType.rule2.toString(), "N");
 		
 		String sql = "select current_date() as date";
-		ruleExec.setExec(sql);
+	//	ruleExec.setExec(sql);
 		//ruleExec.setExec(rule2Operator.generateSql(rule2, refKeyMap, otherParams, usedRefKeySet, ruleExec.getExecParams(), runMode));
+		ruleExec.setExec(rule2Operator.generateSql(rule2, refKeyMap, otherParams, usedRefKeySet, new ExecParams(), runMode));
 		if(rule2.getParamList() != null) {
 			MetaIdentifier mi = rule2.getParamList().getRef();
 			ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(mi.getUuid(), mi.getVersion(), mi.getType().toString(), "N");

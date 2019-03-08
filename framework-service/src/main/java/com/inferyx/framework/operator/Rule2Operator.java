@@ -31,10 +31,12 @@ import com.inferyx.framework.domain.AttributeMap;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.BaseExec;
+import com.inferyx.framework.domain.Criteria;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.Key;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -48,6 +50,7 @@ import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
+import com.inferyx.framework.service.DatapodServiceImpl;
 
 @Component
 public class Rule2Operator implements IParsable, IReferenceable {
@@ -63,22 +66,33 @@ public class Rule2Operator implements IParsable, IReferenceable {
 	@Autowired
 	DataStoreServiceImpl datastoreServiceImpl;
 	@Autowired
+	DatapodServiceImpl datapodServiceImpl;
+	@Autowired
 	FilterOperator2 filterOperator2;
 	
 	
 	static final Logger logger = Logger.getLogger(Rule2Operator.class);
 	
-	public String generateSql(Rule2 rule2, java.util.Map<String, MetaIdentifier> refKeyMap,HashMap<String, String> otherParams, 
+/*	public String generateSql(Rule2 rule2, java.util.Map<String, MetaIdentifier> refKeyMap,HashMap<String, String> otherParams, 
 								Set<MetaIdentifier> usedRefKeySet,	ExecParams execParams, RunMode runMode) throws Exception {
-		/*String sql = generateSelect(rule2, refKeyMap, otherParams, execParams, runMode)
+		String sql = generateSelect(rule2, refKeyMap, otherParams, execParams, runMode)
 				.concat(getFrom())
 				.concat(generateFrom(rule2, refKeyMap, otherParams, usedRefKeySet, execParams, runMode))
 				.concat(generateWhere())
 				.concat(generateFilter(rule2, refKeyMap, otherParams, usedRefKeySet, execParams, runMode))
 				.concat(selectGroupBy(rule2, refKeyMap, otherParams, execParams))
 				.concat(generateHaving(rule2, refKeyMap, otherParams, usedRefKeySet, execParams, runMode));
-*/		return null;
+		System.out.println(sql);
+		return null;
 	}
+	*/
+	public String generateSql(Rule2 rule2, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
+			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception{	
+		// TODO Auto-generated method stub
+		String sql = generateWith(rule2, refKeyMap, otherParams, execParams, runMode);
+		return sql;
+	}
+	
 	
 	private List<AttributeMap> createAttrMap (Rule2 rule2, java.util.Map<String, MetaIdentifier> refKeyMap) {
 		// Create AttributeMap
@@ -100,12 +114,99 @@ public class Rule2Operator implements IParsable, IReferenceable {
 		return attrMapList;
 	}
 	
-	public String generateSelect(Rule2 rule2, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		// return ConstantsUtil.SELECT.concat("row_number() over (partition by 1) as rownum, ").concat(attributeMapOperator.generateSql(createAttrMap (rule, refKeyMap), rule.getSource(), refKeyMap, null));
-		attributeMapOperator.setRunMode(runMode);
-	//commented by vaibhav
-		//return ConstantsUtil.SELECT.concat(attributeMapOperator.generateSql(createAttrMap (rule, refKeyMap), rule.getSource(), refKeyMap, otherParams, execParams));
-	return null;
+	public String generateWith(Rule2 rule2, java.util.Map<String, MetaIdentifier> refKeyMap,
+			HashMap<String, String> otherParams, ExecParams execParams, RunMode runMode) throws Exception {
+		// return ConstantsUtil.SELECT.concat("row_number() over (partition by 1) as
+		// rownum, ").concat(attributeMapOperator.generateSql(createAttrMap (rule,
+		// refKeyMap), rule.getSource(), refKeyMap, null));
+		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
+		String result = "";
+		StringBuilder selectbuilder = new StringBuilder();
+		StringBuilder withbuilder = new StringBuilder();
+		int criteria_id = 1;
+		String comma = ", ";
+		MetaIdentifierHolder filterSource = new MetaIdentifierHolder(
+				new MetaIdentifier(MetaType.rule2, rule2.getUuid(), rule2.getVersion()));
+		
+		AttributeRefHolder attributeRefHolder = rule2.getEntityId();
+		String attrName = null;
+		String tablename = null;
+		String aliasName = null;
+		String filter="";
+		switch (attributeRefHolder.getRef().getType()) {
+		case datapod:
+			Datapod dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(attributeRefHolder.getRef().getUuid(),
+					attributeRefHolder.getRef().getVersion(), MetaType.datapod.toString());
+			attrName = datapodServiceImpl.getAttributeName(attributeRefHolder.getRef().getUuid(),
+					Integer.parseInt(attributeRefHolder.getAttrId()));
+			tablename = dp.getName();
+			
+			 aliasName = datastoreServiceImpl.getTableNameByDatapod(new Key(dp.getUuid(), dp.getVersion()), runMode);
+			break;
+		case dataset:
+			DataSet ds = (DataSet) commonServiceImpl.getOneByUuidAndVersion(attributeRefHolder.getRef().getUuid(),
+					attributeRefHolder.getRef().getVersion(), MetaType.datapod.toString());
+			tablename = ds.getName();
+			break;
+
+		case relation:
+			Relation relation = (Relation) commonServiceImpl.getOneByUuidAndVersion(
+					attributeRefHolder.getRef().getUuid(), attributeRefHolder.getRef().getVersion(),
+					MetaType.datapod.toString());
+			tablename = relation.getName();
+			break;
+
+		}
+		Datasource mapSourceDS = commonServiceImpl.getDatasourceByObject(rule2);
+		
+		withbuilder.append("WITH rule_with_query AS\n" + "(").append(ConstantsUtil.SELECT).append(" * ")
+				.append(ConstantsUtil.FROM).append(aliasName+" "+tablename).append(" ").append(ConstantsUtil.WHERE_1_1).append(" )");
+		selectbuilder.append("( ");
+		for (Criteria criteria : rule2.getCriteriaInfo()) {
+			StringBuilder criteria_indBuilder = new StringBuilder();
+
+			attributeMapOperator.setRunMode(runMode);
+		
+			selectbuilder.append(ConstantsUtil.SELECT);
+
+			selectbuilder.append("'").append(rule2.getName()).append("'").append(" as ").append(" rule_name")
+					.append(comma);
+
+			selectbuilder.append("'").append(rule2.getEntityType()).append("'").append(" as ").append(" entity_type")
+					.append(comma);
+
+			selectbuilder.append("rule_with_query".concat("." + attrName) ).append(" as ")
+					.append(" entity_id").append(comma);
+
+			selectbuilder.append("'").append(criteria_id).append("'").append(" as ").append(" criteria_id")
+					.append(comma);
+
+			selectbuilder.append("'").append(criteria.getCriteriaName()).append("'").append(" as ")
+					.append(" criteria_name").append(comma);
+
+			filter = filterOperator2.generateSql(criteria.getCriteriaFilter(), refKeyMap, filterSource,
+					otherParams, usedRefKeySet, execParams, false, false, runMode, mapSourceDS);
+
+			filter = filter.replaceAll(tablename, "rule_with_query");
+			criteria_indBuilder.append("CASE WHEN ").append("1=1").append(filter)
+					.append(" THEN 'PASS' ELSE 'FAIL' END ");
+			filter="";
+			selectbuilder.append(criteria_indBuilder.toString()).append(" as ").append(" criteria_ind").append(comma);
+			
+			selectbuilder.append(rule2.getVersion()).append(" as ").append(" version").append(" ")
+					.append(ConstantsUtil.FROM).append(" rule_with_query  ");
+
+			if(rule2.getCriteriaInfo().size()!=criteria_id)
+			selectbuilder.append(ConstantsUtil.UNION_ALL);
+			
+			
+			criteria_id++;
+
+		}
+		selectbuilder.append(" )");
+		result=result.concat(withbuilder+selectbuilder.toString());
+		return result;
+
 	}
 	
 	public String getFrom() {
@@ -116,7 +217,31 @@ public class Rule2Operator implements IParsable, IReferenceable {
 								Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		Relation relation = null;
-	
+
+		usedRefKeySet.add(rule2.getSourceInfo().getRef());
+		if (rule2.getSourceInfo().getRef().getType() == MetaType.relation) {
+//			relation = (Relation) daoRegister.getRefObject(rule.getSource().getRef()); 
+			relation = (Relation) commonServiceImpl.getOneByUuidAndVersion(rule2.getSourceInfo().getRef().getUuid(), rule2.getSourceInfo().getRef().getVersion(), rule2.getSourceInfo().getRef().getType().toString(), "N");
+			builder.append(relationOperator.generateSql(relation, refKeyMap, otherParams, null, usedRefKeySet, runMode));
+		} else if (rule2.getSourceInfo().getRef().getType() == MetaType.datapod) {
+//			Datapod datapod = (Datapod) daoRegister.getRefObject(TaskParser.populateRefVersion(rule.getSource().getRef(), refKeyMap));
+			MetaIdentifier ref = TaskParser.populateRefVersion(rule2.getSourceInfo().getRef(), refKeyMap);
+			Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
+			
+			String table = null;
+			if (otherParams == null	|| otherParams.get("datapod_".concat(datapod.getUuid())) == null) {
+				table = datastoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+			} else {
+				String tableKey = "datapod_".concat(datapod.getUuid());
+				table = otherParams.get(tableKey);
+			}
+			builder.append(String.format(table, datapod.getName())).append("  ").append(datapod.getName()).append(" ");
+		} else if (rule2.getSourceInfo().getRef().getType() == MetaType.dataset) {
+//			DataSet dataset = (DataSet) daoRegister.getRefObject(rule.getSource().getRef());
+			DataSet dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(rule2.getSourceInfo().getRef().getUuid(), rule2.getSourceInfo().getRef().getVersion(), rule2.getSourceInfo().getRef().getType().toString(), "N");
+			
+			builder.append("(").append(datasetOperator.generateSql(dataset, refKeyMap, otherParams, usedRefKeySet, execParams, runMode)).append(")  ").append(dataset.getName());
+		} 
 		return builder.toString();
 	}
 	
@@ -194,5 +319,8 @@ public class Rule2Operator implements IParsable, IReferenceable {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	
+	
 
 }

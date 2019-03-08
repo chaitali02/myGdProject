@@ -1,0 +1,167 @@
+{
+  "uuid": "a5ecf36a-a352-4fad-88d4-e9c8a585d285",
+  "version": "1552066243",
+  "name": "Customer Focus - Outgoing Round Dollar Wire Transfers",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Fri Mar 08 12:30:43 EST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+        "version": "1548315745",
+        "name": "Anti Money Laundering"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "sourceInfo": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "ef27c8b4-0d55-421e-8a9f-8054cb89c275",
+      "version": null,
+      "name": "account_summary_daily"
+    },
+    "value": null
+  },
+  "filterInfo": [
+    {
+      "display_seq": "0",
+      "logicalOperator": "",
+      "operator": "=",
+      "operand": [
+        {
+          "ref": {
+            "type": "datapod",
+            "uuid": "ef27c8b4-0d55-421e-8a9f-8054cb89c275",
+            "version": null,
+            "name": "account_summary_daily"
+          },
+          "attributeId": 2,
+          "value": null,
+          "attributeName": "trans_start_date",
+          "attributeType": null
+        },
+        {
+          "ref": {
+            "type": "paramlist",
+            "uuid": "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z",
+            "version": null,
+            "name": "paramlist_aml_app"
+          },
+          "attributeId": 0,
+          "value": null,
+          "attributeName": "business_date",
+          "attributeType": null
+        }
+      ]
+    }
+  ],
+  "entityType": "Customer",
+  "entityId": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "ef27c8b4-0d55-421e-8a9f-8054cb89c275",
+      "version": null,
+      "name": "account_summary_daily"
+    },
+    "value": null,
+    "attrId": "0",
+    "attrName": "customer_id",
+    "attrType": null,
+    "attrUnitType": null,
+    "function": null
+  },
+  "criteriaInfo": [
+    {
+      "criteriaId": "0",
+      "criteriaName": "Transaction Volume",
+      "activeFlag": "Y",
+      "criteriaFilter": [
+        {
+          "display_seq": "0",
+          "logicalOperator": "",
+          "operator": ">=",
+          "operand": [
+            {
+              "ref": {
+                "type": "datapod",
+                "uuid": "ef27c8b4-0d55-421e-8a9f-8054cb89c275",
+                "version": null,
+                "name": "account_summary_daily"
+              },
+              "attributeId": 5,
+              "value": null,
+              "attributeName": "in_wire_transfers_trans_count",
+              "attributeType": null
+            },
+            {
+              "ref": {
+                "type": "simple",
+                "uuid": null,
+                "version": null,
+                "name": null
+              },
+              "attributeId": null,
+              "value": "1",
+              "attributeName": null,
+              "attributeType": "integer"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "criteriaId": "1",
+      "criteriaName": "Transaction Amount",
+      "activeFlag": "Y",
+      "criteriaFilter": [
+        {
+          "display_seq": "0",
+          "logicalOperator": "",
+          "operator": ">",
+          "operand": [
+            {
+              "ref": {
+                "type": "datapod",
+                "uuid": "ef27c8b4-0d55-421e-8a9f-8054cb89c275",
+                "version": null,
+                "name": "account_summary_daily"
+              },
+              "attributeId": 8,
+              "value": null,
+              "attributeName": "out_wire_transfers_trans_amount_usd",
+              "attributeType": null
+            },
+            {
+              "ref": {
+                "type": "simple",
+                "uuid": null,
+                "version": null,
+                "name": null
+              },
+              "attributeId": null,
+              "value": "100",
+              "attributeName": null,
+              "attributeType": "integer"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -312,6 +312,7 @@
 	<bean id="dataQualGroupExecServiceImpl" class="com.inferyx.framework.service.DataQualGroupExecServiceImpl"></bean>
 	<bean id="dqViewServiceImpl" class="com.inferyx.framework.service.DQViewServiceImpl"></bean>
 	<bean id="ruleServiceImpl" class="com.inferyx.framework.service.RuleServiceImpl"></bean>
+	<bean id="rule2ServiceImpl" class="com.inferyx.framework.service.Rule2ServiceImpl"></bean>
 	<bean id="ruleGroupServiceImpl" class="com.inferyx.framework.service.RuleGroupServiceImpl"></bean>
 	<bean id="functionServiceImpl" class="com.inferyx.framework.service.FunctionServiceImpl"></bean>
 	<bean id="mapExecServiceImpl" class="com.inferyx.framework.service.MapExecServiceImpl"></bean>
