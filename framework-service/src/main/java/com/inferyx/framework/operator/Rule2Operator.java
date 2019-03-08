@@ -89,11 +89,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 	public String generateSql(Rule2 rule2, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
 			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception{	
 		// TODO Auto-generated method stub
-		String sql = generateSelect(rule2, refKeyMap, otherParams, execParams, runMode).concat(getFrom())
-				.concat(generateFrom(rule2, refKeyMap, otherParams, usedRefKeySet, execParams, runMode))
-				.concat(generateWhere())
-				.concat(generateFilter(rule2, refKeyMap, otherParams, usedRefKeySet, execParams, runMode));
-		System.out.println(sql);
+		String sql = generateWith(rule2, refKeyMap, otherParams, execParams, runMode);
 		return sql;
 	}
 	
@@ -118,13 +114,13 @@ public class Rule2Operator implements IParsable, IReferenceable {
 		return attrMapList;
 	}
 	
-	public String generateSelect(Rule2 rule2, java.util.Map<String, MetaIdentifier> refKeyMap,
+	public String generateWith(Rule2 rule2, java.util.Map<String, MetaIdentifier> refKeyMap,
 			HashMap<String, String> otherParams, ExecParams execParams, RunMode runMode) throws Exception {
 		// return ConstantsUtil.SELECT.concat("row_number() over (partition by 1) as
 		// rownum, ").concat(attributeMapOperator.generateSql(createAttrMap (rule,
 		// refKeyMap), rule.getSource(), refKeyMap, null));
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
-		String result = null;
+		String result = "";
 		StringBuilder selectbuilder = new StringBuilder();
 		StringBuilder withbuilder = new StringBuilder();
 		int criteria_id = 1;
@@ -136,7 +132,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 		String attrName = null;
 		String tablename = null;
 		String aliasName = null;
-		StringBuilder criteria_indBuilder = new StringBuilder();
+		String filter="";
 		switch (attributeRefHolder.getRef().getType()) {
 		case datapod:
 			Datapod dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(attributeRefHolder.getRef().getUuid(),
@@ -164,9 +160,11 @@ public class Rule2Operator implements IParsable, IReferenceable {
 		Datasource mapSourceDS = commonServiceImpl.getDatasourceByObject(rule2);
 		
 		withbuilder.append("WITH rule_with_query AS\n" + "(").append(ConstantsUtil.SELECT).append(" * ")
-				.append(ConstantsUtil.FROM).append(aliasName).append(" ").append(ConstantsUtil.WHERE_1_1).append(" ");
-		
+				.append(ConstantsUtil.FROM).append(aliasName+" "+tablename).append(" ").append(ConstantsUtil.WHERE_1_1).append(" )");
+		selectbuilder.append("( ");
 		for (Criteria criteria : rule2.getCriteriaInfo()) {
+			StringBuilder criteria_indBuilder = new StringBuilder();
+
 			attributeMapOperator.setRunMode(runMode);
 		
 			selectbuilder.append(ConstantsUtil.SELECT);
@@ -186,12 +184,13 @@ public class Rule2Operator implements IParsable, IReferenceable {
 			selectbuilder.append("'").append(criteria.getCriteriaName()).append("'").append(" as ")
 					.append(" criteria_name").append(comma);
 
-			String filter = filterOperator2.generateSql(criteria.getCriteriaFilter(), refKeyMap, filterSource,
+			filter = filterOperator2.generateSql(criteria.getCriteriaFilter(), refKeyMap, filterSource,
 					otherParams, usedRefKeySet, execParams, false, false, runMode, mapSourceDS);
 
 			filter = filter.replaceAll(tablename, "rule_with_query");
-			criteria_indBuilder.append("CASE WHEN ").append(ConstantsUtil.WHERE_1_1).append(filter)
+			criteria_indBuilder.append("CASE WHEN ").append("1=1").append(filter)
 					.append(" THEN 'PASS' ELSE 'FAIL' END ");
+			filter="";
 			selectbuilder.append(criteria_indBuilder.toString()).append(" as ").append(" criteria_ind").append(comma);
 			
 			selectbuilder.append(rule2.getVersion()).append(" as ").append(" version").append(" ")
@@ -204,7 +203,8 @@ public class Rule2Operator implements IParsable, IReferenceable {
 			criteria_id++;
 
 		}
-		result.concat(selectbuilder.toString());
+		selectbuilder.append(" )");
+		result=result.concat(withbuilder+selectbuilder.toString());
 		return result;
 
 	}
