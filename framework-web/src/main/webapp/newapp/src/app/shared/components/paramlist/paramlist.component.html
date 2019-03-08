@@ -10,29 +10,30 @@
       <div class="portlet box green">
         <div class="portlet-title">
           <div class="caption">
-            <i class="fa fa-gift"></i>{{paramlist.name}}
+            <i class="fa fa-gift"></i>{{paramlist.name}}{{isEdit}}
           </div>
           <div class="tools">
 
-            <a style="color:white" title="Main" data-placement="top" tooltip [ngClass]="isHomeEnable==true ? 'notcurrentpage':'currentpage'"
+            <a class="left-marginpage" style="color:white" title="Main" data-placement="top" tooltip [ngClass]="showForm==true ? 'currentpage':'notcurrentpage'"
               data- (click)="showMainPage(uuid,version)">
               <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
 
-            <a href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top" tooltip [ngClass]="mode == 'true' && showGraph == false? 'notcurrentpage':'currentpage'"
-              data-(click)="enableEdit(uuid,version)">
+            <a class="left-marginpage" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top" tooltip
+              [ngClass]="isEdit == true? 'currentpage':'notcurrentpage'" data-(click)="enableEdit(uuid,version)">
               <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
 
-            <a href="javascript:;" title="Show Dependencies" data-placement="top" tooltip [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'"
-              data- (click)="showDagGraph(uuid,version)">
+            <a class="left-marginpage" href="javascript:;" title="Show Dependencies" data-placement="top" tooltip [ngClass]="showForm==false ? 'currentpage':'notcurrentpage'"
+              data- (click)="showGraph(uuid,version)">
               <i class="fa fa-sitemap" style="display: inline;margin:2px auto;color:white;"></i>
             </a>
 
-            <a href="javascript:;" disabled="true" (click)="broadcastRefreshData()" data-original-title="" title="Refresh">
+            <a class="left-marginpage" href="javascript:;" disabled="true" (click)="showGraph(uuid,label)"
+              data-original-title="" title="Refresh">
               <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white"></i>
             </a>
-            <a (click)="goBack()" title="Close">
+            <a class="left-marginpage" (click)="goBack()" title="Close">
               <i class="fa fa-times" style="margin: 2px auto;color:white"></i>
             </a>
           </div>
@@ -40,7 +41,7 @@
 
 
         <div class="portlet-body form">
-          <div class="form-body graph-body" *ngIf="showGraph" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=');">
+          <div class="form-body graph-body" *ngIf="showDivGraph" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=');">
             <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
             <div class="spinner" id="graphloader">
               <div class="bounce1"></div>
@@ -52,218 +53,249 @@
             </div>
           </div>
 
-          <div class="form-body" style="padding-top:50px;" *ngIf="!showGraph">
-            <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="submitParamlist()" #myNewForm="ngForm">
-              <div class="form-group" *ngIf="mode">
-                <label class="col-md-3 control-label">UUID</label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="paramlist.uuid" name="uuid" placeholder="" [disabled]="true">
-                </div>
-              </div>
+          <div class="form-body" style="padding-top:50px;" *ngIf="showForm">
 
-              <div class="form-group">
-                <label class="col-md-3 control-label">Name
-                  <span class="required" aria-required="true"> * </span>
-                </label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" [(ngModel)]="paramlist.name" name="name" placeholder="" [disabled]="mode == 'true'">
-                </div>
-              </div>
+            <div class="centercontent" style="min-height:500px;" *ngIf="isEditError">
+              <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
+            </div>
 
-              <div class="form-group" *ngIf="mode">
-                <label class="col-md-3 control-label">Version </label>
-                <div class="col-md-6">
-                  <p-dropdown [options]="VersionList" [(ngModel)]="selectedVersion" name="version" [style]="{'width':'100%','padding':'3px'}"
-                    [filter]="true" [disabled]="mode == 'false'" (onChange)="onVersionChange()">
-                  </p-dropdown>
-                </div>
+            <div class="centercontent" style="min-height:500px;" *ngIf="isEditInprogess">
+              <div class="spinner" id="graphloader">
+                <div class="bounce1"></div>
+                <div class="bounce2"></div>
+                <div class="bounce3"></div>
               </div>
+            </div>
 
-              <div class="form-group" *ngIf="mode">
-                <label class="col-md-3 control-label">CreatedBy</label>
-                <div class="col-md-6" *ngIf="locations!=''">
-                  <input type="text" class="form-control" [disabled]="true" [(ngModel)]="createdBy" name="createdBy">
-                </div>
-              </div>
-
-              <div class="form-group" *ngIf="mode">
-                <label class="col-md-3 control-label">CreatedOn</label>
-                <div class="col-md-6">
-                  <input type="text" class="form-control" [disabled]="true" [(ngModel)]="paramlist.createdOn" name="createdOn">
-                </div>
-              </div>
-
-              <div class="form-group taginput">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
-                <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="locations!=''">
-                  <tag-input [(ngModel)]="tags" name="tags" [disable]="mode == 'true'" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden;padding-left:5px; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;"></tag-input>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
-                <div class="col-md-6">
-                  <textarea [disabled]="mode == 'true'" [(ngModel)]="paramlist.desc" name="desc" class="form-control noresize " rows="2" style="resize:none;"></textarea>
-                </div>
-              </div>
-
-              <!-- <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <div class="btn-group">
-                    <ui-switch (change)="onChangeActive($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="paramlist.active"
-                      name="active" [checked]="active" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+            <div class="portlet-body form" *ngIf="!isEditInprogess && !isEditError">
+              <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="submitParamlist()"
+                #myNewForm="ngForm">
+                <div class="form-group" *ngIf="mode">
+                  <label class="col-md-3 control-label">UUID</label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" [(ngModel)]="paramlist.uuid" name="uuid" placeholder=""
+                      [disabled]="true">
                   </div>
                 </div>
-              </div>
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <div class="btn-group">
-                    <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="paramlist.locked" name="locked" [checked]="locked"
-                      color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+
+                <div class="form-group">
+                  <label class="col-md-3 control-label">Name
+                    <span class="required" aria-required="true"> * </span>
+                  </label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" [(ngModel)]="paramlist.name" name="name" placeholder=""
+                      [disabled]="mode == 'true'">
                   </div>
                 </div>
-              </div>
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-                  <div class="btn-group">
-                    <ui-switch (change)="onChangePublished($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="published" name="published"
-                      [checked]="published" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+
+                <div class="form-group" *ngIf="mode">
+                  <label class="col-md-3 control-label">Version </label>
+                  <div class="col-md-6">
+                    <p-dropdown [options]="VersionList" [(ngModel)]="selectedVersion" name="version" [style]="{'width':'100%','padding':'3px'}"
+                      [filter]="true" [disabled]="mode == 'false'" (onChange)="onVersionChange()">
+                    </p-dropdown>
                   </div>
                 </div>
-              </div>
 
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Is Template</label>
-                <div class="col-md-6 col-sm-6 col-xs-12">
-
-                  <div class="btn-group">
-                    <ui-switch (change)="onChangeIsTemplate($event)" [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="paramlist.templateFlg"
-                      name="templateFlg" [checked]="templateFlg" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                <div class="form-group" *ngIf="mode">
+                  <label class="col-md-3 control-label">CreatedBy</label>
+                  <div class="col-md-6" *ngIf="locations!=''">
+                    <input type="text" class="form-control" [disabled]="true" [(ngModel)]="createdBy" name="createdBy">
                   </div>
                 </div>
-              </div> -->
 
-              <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12 col-lg-3">Use Template</label>
-                <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
-                  <p-dropdown [options]="allTemplateList" [(ngModel)]="template" name="template" dataKey="uuid" [style]="{'width':'100%','padding':'3px'}"
-                    [filter]="true" [disabled]="mode == 'true'|| mode == 'false' || paramlist.templateFlg == true" (onChange)="onChangeTemplate()"
-                    placeholder="Select">
-                  </p-dropdown>
+                <div class="form-group" *ngIf="mode">
+                  <label class="col-md-3 control-label">CreatedOn</label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" [disabled]="true" [(ngModel)]="paramlist.createdOn" name="createdOn">
+                  </div>
                 </div>
-              </div>
 
-              <div class="form-group" style="padding-top: 10px;">
-                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                  <a class="btn btn-primary" (click)="goBack()">Cancel</a>
-                  <input type="submit" class="btn btn-success" value="Submit" name="submit" [disabled]="(!iSSubmitEnable == false|| mode == false || myNewForm.form.dirty == true)?false:true">
+                <div class="form-group taginput">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="locations!=''">
+                    <!-- <tag-input [(ngModel)]="tags" name="tags" [disable]="mode == 'true'" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden;padding-left:5px; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;"></tag-input> -->
+                    <p-chips [(ngModel)]="paramlist.tags" styleClass="pchip-height" [disabled]="mode == 'true'" name="tags"></p-chips>
+                  </div>
                 </div>
-              </div>
-              <div class="x_title">
-                <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right" (click)="removeAttribute()" [disabled]="mode == 'true' || paramlist.templateFlg == false"></button>
-                <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" (click)="addAttribute()" [disabled]="mode == 'true' || paramlist.templateFlg == false"></button>
-                <h4>
-                  <strong>Parameter Details</strong>
-                </h4>
-                <hr>
-              </div>
-              <div class="pull-right" *ngIf="isUseTemlateText" style="font-style: italic;color:blue;margin-bottom:10px;margin-top:-10px;">Note : Template in use</div>
-              <div>
-                <!-- <div class="portlet-title">
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
+                  <div class="col-md-6">
+                    <textarea [disabled]="mode == 'true'" [(ngModel)]="paramlist.desc" name="desc" class="form-control noresize "
+                      rows="2" style="resize:none;"></textarea>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12 ui-switch-top-left-padding">
+                    <div class="btn-group">
+                      <ui-switch (change)="onChangeActive($event)" [disabled]="mode == 'true' || mode == 'false'"
+                        [(ngModel)]="paramlist.active" name="active" [checked]="active" color="#32c5d2" labelOn="Yes"
+                        labelOff="No"></ui-switch>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12 ui-switch-top-left-padding">
+                    <div class="btn-group">
+                      <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="paramlist.locked" name="locked"
+                        [checked]="locked" color="#32c5d2"></ui-switch>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12 ui-switch-top-left-padding">
+                    <div class="btn-group">
+                      <ui-switch (change)="onChangePublished($event)" [disabled]="mode == 'true' || mode == 'false'"
+                        [(ngModel)]="published" name="published" [checked]="published" color="#32c5d2"></ui-switch>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Is Template</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12 ui-switch-top-left-padding">
+                    <div class="btn-group">
+                      <ui-switch (change)="onChangeIsTemplate($event)" [disabled]="mode == 'true' || mode == 'false'"
+                        [(ngModel)]="paramlist.templateFlg" name="templateFlg" [checked]="templateFlg" color="#32c5d2"></ui-switch>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12 col-lg-3">Use Template</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
+                    <p-dropdown [options]="allTemplateList" [(ngModel)]="template" name="template" dataKey="uuid"
+                      [style]="{'width':'100%','padding':'3px'}" [filter]="true" [disabled]="mode == 'true'|| mode == 'false' || paramlist.templateFlg == true"
+                      (onChange)="onChangeTemplate()" placeholder="Select">
+                    </p-dropdown>
+                  </div>
+                </div>
+
+                <div class="form-group" style="padding-top: 10px;">
+                  <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                    <a class="btn btn-primary" (click)="goBack()">Cancel</a>
+                    <input type="submit" class="btn btn-success btn-margin" value="Submit" name="submit" [disabled]="(!iSSubmitEnable == false|| mode == false || myNewForm.form.dirty == true)?false:true">
+                  </div>
+                </div>
+                <div class="x_title">
+                  <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right" (click)="removeAttribute()"
+                    [disabled]="mode == 'true' || paramlist.templateFlg == false"></button>
+                  <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" (click)="addAttribute()"
+                    [disabled]="mode == 'true' || paramlist.templateFlg == false"></button>
+                  <h4>
+                    <strong>Parameter Details</strong>
+                  </h4>
+                  <hr>
+                </div>
+                <div class="pull-right" *ngIf="isUseTemlateText" style="font-style: italic;color:blue;margin-bottom:10px;margin-top:-10px;">Note
+                  : Template in use</div>
+                <div>
+                  <!-- <div class="portlet-title">
                   <div class="caption">
                     <i class="fa fa-gift"></i>Parameter Details
                   </div>
                 </div> -->
 
-                <div>
-                  <!-- <div class="x_title" style="padding:10px;">
+                  <div>
+                    <!-- <div class="x_title" style="padding:10px;">
                     <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right" (click)="removeAttribute()" [disabled]="mode == 'true' || paramlist.templateFlg == false"></button>
                     <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" (click)="addAttribute()" [disabled]="mode == 'true' || paramlist.templateFlg == false"></button>
                   </div> -->
-                  <div class="form-body" style="padding-top:50px;">
-                    <div>
-                      <table class=" row-border hover table  table-striped table-bordered" style="table-layout:fixed;">
-                        <thead>
-                          <tr>
-                            <th style="width:5%;text-align: center; Vertical-align: middle;">
-                              <input [disabled]="mode == 'true' || paramlist.templateFlg == false" style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="selectAllAttributeRow"
-                                name="selectAllAttributeRow" (click)="checkAllAttributeRow()" />
-                            </th>
-                            <th style="text-align: center; Vertical-align: middle;width:10%;">ID</th>
-                            <th style="text-align: center;width:15%;">Name</th>
-                            <th class="text-center" style="width:15%;">Display Name</th>
-                            <th class="text-center" style="width:20%;">Desc</th>
-                            <th style="text-align: center;width:20%;">Type</th>
-                            <th style="text-align: center;width:20%;">Default Value</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr *ngFor="let data1 of paramtableArray; let i=index">
-                            <td style="text-align:center;Vertical-align:middle;">
-                              <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="data1.selected" name="selectedAttr+{{i}}" [disabled]="mode == 'true' || paramlist.templateFlg == false"
-                              />
-                            </td>
-                            <td style="width:10%;">
-                              <input style="text-align:center;" type="text" [value]="i" [disabled]="true" class="form-control">
-                            </td>
-                            <td>
-                              <input type="text" class="form-control" [(ngModel)]="data1.paramName" name="name+{{i}}" [disabled]="mode == 'true' || paramlist.templateFlg == false"
-                                class="form-control">
-                            </td>
-                            <td>
-                              <input type="text" class="form-control" [(ngModel)]="data1.paramDispName" name="paramDispName+{{i}}" [disabled]="mode == 'true' || paramlist.templateFlg == false"
-                                class="form-control">
-                            </td>
-                            <td>
-                              <input type="text" class="form-control" [(ngModel)]="data1.paramDesc" name="paramDesc+{{i}}" [disabled]="mode == 'true' || paramlist.templateFlg == false"
-                                class="form-control">
-                            </td>
-                            <td>
-                              <p-dropdown [options]="types" [(ngModel)]="data1.paramType" name="type+{{i}}" [disabled]="mode == 'true' || paramlist.templateFlg == false"
-                                [style]="{'width':'100%','padding':'3px'}" [filter]="true" placeholder="Select" (onChange)="onChangeType(i)">
-                              </p-dropdown>
-                            </td>
+                    <div class="form-body" style="padding-top:50px;">
+                      <div>
+                        <table class=" row-border hover table  table-striped table-bordered" style="table-layout:fixed;">
+                          <thead>
+                            <tr>
+                              <th style="width:5%;text-align: center; Vertical-align: middle;">
+                                <input [disabled]="mode == 'true' || paramlist.templateFlg == false" style="width: 16px;height:16px;"
+                                  type="checkbox" [(ngModel)]="selectAllAttributeRow" name="selectAllAttributeRow"
+                                  (click)="checkAllAttributeRow()" />
+                              </th>
+                              <th style="text-align: center; Vertical-align: middle;width:10%;">ID</th>
+                              <th style="text-align: center;width:15%;">Name</th>
+                              <th class="text-center" style="width:15%;">Display Name</th>
+                              <th class="text-center" style="width:20%;">Desc</th>
+                              <th style="text-align: center;width:20%;">Type</th>
+                              <th style="text-align: center;width:20%;">Default Value</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let data1 of paramtableArray; let i=index">
+                              <td style="text-align:center;Vertical-align:middle;">
+                                <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="data1.selected"
+                                  name="selectedAttr+{{i}}" [disabled]="mode == 'true' || paramlist.templateFlg == false" />
+                              </td>
+                              <td style="width:10%;">
+                                <input style="text-align:center;" type="text" [value]="i" [disabled]="true" class="form-control">
+                              </td>
+                              <td>
+                                <input type="text" class="form-control" [(ngModel)]="data1.paramName" name="name+{{i}}"
+                                  [disabled]="mode == 'true' || paramlist.templateFlg == false" class="form-control">
+                              </td>
+                              <td>
+                                <input type="text" class="form-control" [(ngModel)]="data1.paramDispName" name="paramDispName+{{i}}"
+                                  [disabled]="mode == 'true' || paramlist.templateFlg == false" class="form-control">
+                              </td>
+                              <td>
+                                <input type="text" class="form-control" [(ngModel)]="data1.paramDesc" name="paramDesc+{{i}}"
+                                  [disabled]="mode == 'true' || paramlist.templateFlg == false" class="form-control">
+                              </td>
+                              <td>
+                                <p-dropdown [options]="types" [(ngModel)]="data1.paramType" name="type+{{i}}"
+                                  [disabled]="mode == 'true' || paramlist.templateFlg == false" [style]="{'width':'100%','padding':'3px'}"
+                                  [filter]="true" placeholder="Select" (onChange)="onChangeType(i)">
+                                </p-dropdown>
+                              </td>
 
-                            <td *ngIf="typeSimple.indexOf(data1.paramType) != -1">
-                              <input type="text" class="form-control" [(ngModel)]="data1.paramValue" name="value1+{{i}}" [disabled]="mode">
-                            </td>
+                              <td *ngIf="typeSimple.indexOf(data1.paramType) != -1">
+                                <input type="text" class="form-control" [(ngModel)]="data1.paramValue" name="value1+{{i}}"
+                                  [disabled]="mode">
+                              </td>
 
-                            <td *ngIf="data1.paramType == 'distribution'">
-                              <p-dropdown [options]="distributionListOptions" [(ngModel)]="data1.paramValue" name="value1+{{i}}" [disabled]="mode == 'true'"
-                                [style]="{'width':'100%'}" [filter]="true" dataKey="uuid" placeholder="Select">
-                              </p-dropdown>
-                            </td>
-                            <td *ngIf="data1.paramType == 'function'">
-                              <p-dropdown [options]="functnListOptions" [(ngModel)]="data1.paramValue" name="value1+{{i}}" [disabled]="mode == 'true'"
-                                [style]="{'width':'100%'}" [filter]="true" dataKey="uuid" placeholder="Select">
-                              </p-dropdown>
-                            </td>
-                            <td *ngIf="data1.paramType == 'array'">
-                              <tag-input [(ngModel)]="data1.paramValue" name="paramValue+{{i}}" [disable]="mode == 'true'" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden;padding-left:5px; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;"></tag-input>
-                            </td>
-                            <td *ngIf="data1.paramType == 'date'">
-                              <div style="width:150px">
-                                <p-calendar [inputStyle]="{'width':'105%','height':'32px','margin':'0px 0px 0px 1px'}" format="mm dd yy" [(ngModel)]="data1.paramValue"
-                                  name="paramValue+{{i}}" [utc]="true" hourFormat="12" [disabled]="mode == 'true'" [styleClass]="{'position': 'fixed', 'overflow': 'visible', 'z-index': '999'}"
-                                  [readonlyInput]="true">
-                                </p-calendar>
-                              </div>
+                              <td *ngIf="data1.paramType == 'distribution'">
+                                <p-dropdown [options]="distributionListOptions" [(ngModel)]="data1.paramValue" name="value1+{{i}}"
+                                  [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}" [filter]="true"
+                                  dataKey="uuid" placeholder="Select">
+                                </p-dropdown>
+                              </td>
+                              <td *ngIf="data1.paramType == 'function'">
+                                <p-dropdown [options]="functnListOptions" [(ngModel)]="data1.paramValue" name="value1+{{i}}"
+                                  [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}" [filter]="true"
+                                  dataKey="uuid" placeholder="Select">
+                                </p-dropdown>
+                              </td>
+                              <td *ngIf="data1.paramType == 'array'">
+                                <!-- <tag-input [(ngModel)]="data1.paramValue" name="paramValue+{{i}}" [disable]="mode == 'true'" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden;padding-left:5px; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;"></tag-input> -->
+                                <p-chips [(ngModel)]="data1.paramValue" styleClass="pchip-height" [disabled]="mode == 'true'"
+                                  name="paramValue"></p-chips>
+                              </td>
+                              <td *ngIf="data1.paramType == 'date'">
+                                <div style="width:150px">
+                                  <p-calendar [inputStyle]="{'width':'105%','height':'32px','margin':'0px 0px 0px 1px'}"
+                                    format="mm dd yy" [(ngModel)]="data1.paramValue" name="paramValue+{{i}}" [utc]="true"
+                                    hourFormat="12" [disabled]="mode == 'true'" [styleClass]="{'position': 'fixed', 'overflow': 'visible', 'z-index': '999'}"
+                                    [readonlyInput]="true">
+                                  </p-calendar>
+                                </div>
 
-                            </td>
-                            <td *ngIf="(typeSimple.indexOf(data1.paramType) == -1) && !(data1.paramType == 'distribution') && !(data1.paramType == 'function')&& !(data1.paramType == 'array')&& !(data1.paramType == 'date')">
-                              {{"NA"}}
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
+                              </td>
+                              <td *ngIf="(typeSimple.indexOf(data1.paramType) == -1) && !(data1.paramType == 'distribution') && !(data1.paramType == 'function')&& !(data1.paramType == 'array')&& !(data1.paramType == 'date')">
+                                {{"NA"}}
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </form>
+              </form>
+            </div>
           </div>
         </div>
       </div>

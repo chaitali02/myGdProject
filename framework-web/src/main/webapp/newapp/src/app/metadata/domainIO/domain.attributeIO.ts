@@ -1,6 +1,6 @@
 export class AttributeIO {
 
-    id: String;
+    id: any;
     uuid: String;
     datapodname: String;
     name: String;

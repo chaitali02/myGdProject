@@ -1,5 +1,7 @@
 import { AttributeRefHolder } from '../domain/domain.attributeRefHolder';
 import { AttributeIO } from './domain.attributeIO';
+import { MetaIdentifier } from '../domain/domain.metaIdentifier';
+import { SourceAttr } from '../domain/domain.sourceAttr';
 
 export class AttributeMapIO {
     attrMapId: any;
@@ -10,4 +12,10 @@ export class AttributeMapIO {
     // 	sourceAttr: AttributeRefHolder;
     // 	targetAttr: AttributeRefHolder;
     selected?: any
+
+    // for business rule
+    attrSourceId: any;
+    attrSourceName: any;
+    sourceAttr: any;
+    attrDisplaySeq: any;
 }

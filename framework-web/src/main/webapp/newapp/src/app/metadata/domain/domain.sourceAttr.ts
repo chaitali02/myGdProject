@@ -8,5 +8,9 @@ export class SourceAttr {
     attributeType: String;
     ref: MetaIdentifier;
 
+    // attrId: any;
+    // attrType:any;
+
+
 }
 

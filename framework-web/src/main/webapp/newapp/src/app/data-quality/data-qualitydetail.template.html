@@ -173,7 +173,7 @@
 
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
-                        <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0.7% 0% 0% 1.5%;">
+                        <div class="col-md-6 col-sm-6 col-xs-12 ui-switch-top-left-padding" >
                           <div class="btn-group">
                             <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="active" name="active"
                               [checked]="active" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
@@ -182,7 +182,7 @@
                       </div>
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Lock</label>
-                        <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0.7% 0% 0% 1.5%;">
+                        <div class="col-md-6 col-sm-6 col-xs-12 ui-switch-top-left-padding">
                           <div class="btn-group">
                             <ui-switch [(ngModel)]="locked" name="locked" [disabled]="mode == 'true' || mode == 'false'"></ui-switch>
                           </div>
@@ -190,7 +190,7 @@
                       </div>
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
-                        <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0.7% 0% 0% 1.5%;">
+                        <div class="col-md-6 col-sm-6 col-xs-12 ui-switch-top-left-padding">
                           <div class="btn-group">
                             <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="published" name="published"
                               [checked]="published" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
@@ -257,7 +257,7 @@
 
                           <div class="actions">
                             <div class="btn-group btn-group-devided" data-toggle="buttons">
-                              <div class="x_title">{{filterTableArray|json}}
+                              <div class="x_title">
                                 <!-- <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right"
                                   (click)="removeRow()" [disabled]="mode == 'true'"></button>
                                 <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right"
@@ -275,13 +275,13 @@
                                     </li>
                                     <li class="divider" style="margin: 0px;"> </li>
                                     <li (click)="updateArray(filterTableArray.length-1, '')">
-                                      <a href="javascript:;" [attr.disabled]="fitlerAttrTableSelectedItem[0]==filterTableArray.length-1 ?'disabled' : null">Bottom</a>
+                                      <a href="javascript:;">Bottom</a>
                                     </li>
                                     <li class="divider" style="margin: 0px;"> </li>
                                     <li>
                                       <div class="form-group" style="margin: 1%;" *ngIf="filterTableArray">
                                         <input type="number" class="form-control" [(ngModel)]="moveTo" min="0" max="{{filterTableArray.length}}"
-                                          name="moveto" style="border:0" placeholder="Move To" (ngModelChange)="updateArray(moveTo, 'range',$event)"
+                                          name="moveto" style="border:0" placeholder="Move To" (ngModelChange)="updateArray(moveTo-1, 'range', $event)"
                                           focus-me="true" />
                                       </div>
                                     </li>
@@ -470,8 +470,9 @@
                                       <div *ngIf="data.rhsAttribute != null">
                                         <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute.label"
                                           name="rhsAttribute+{{i}}" [disabled]="'true'" style="width:80%;display: inline-block"
-                                          [disabled]="mode == 'true'" #rhsAttribute="ngModel" required placeholder=""
-                                          [ngClass]="{'has-error':myNewForm2.submitted || (rhsAttribute.invalid && (rhsAttribute.dirty || rhsAttribute.touched))}">
+                                          [disabled]="mode == 'true'" placeholder="" >
+                                          <!-- #rhsAttribute="ngModel" required 
+                                          [ngClass]="{'has-error':myNewForm2.submitted || (rhsAttribute.invalid && (rhsAttribute.dirty || rhsAttribute.touched))}" -->
                                         <i class="fa fa-search" (click)="searchOption(data.rhsAttribute, i)" style="width:10%;display:inline-block;padding-left: 7%;"
                                           pTooltip="Search"></i>
                                       </div>

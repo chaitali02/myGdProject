@@ -3,4 +3,5 @@ export class RoutesParam {
     version: String;
     mode: String;
     type: String;
+    parentType: String;
 }

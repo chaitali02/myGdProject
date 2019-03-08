@@ -14,13 +14,15 @@ import { ResponseContentType } from '@angular/http';
 import { saveAs } from 'file-saver';
 import { AppConfig } from '../app.config';
 import { KnowledgeGraphComponent } from '../shared/components/knowledgeGraph/knowledgeGraph.component';
+import { RoutesParam } from '../metadata/domain/domain.routeParams';
+import { GraphParamIO } from '../metadata/domainIO/domain.graphParamIO';
 @Component({
   selector: 'app-profile',
   templateUrl: './business-rulesresult.template.html',
   styleUrls: []
 })
 export class BusinessRulesResultComponent {
-  download: {};
+  download: {rows: any, selectFormat: any, format: any};
   downloadType: any;
   downloadVersion: any;
   downloadUuid: any;
@@ -41,23 +43,25 @@ export class BusinessRulesResultComponent {
   baseUrl: any;
   istableShow: boolean;
   isgraphShow: boolean;
-  params: any
+  graphParams: any
   @ViewChild(JointjsGroupComponent) d_JointjsGroupComponent: JointjsGroupComponent;
   @ViewChild(TableRenderComponent) d_tableRenderComponent: TableRenderComponent;
   @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
   showGraph: boolean;
 
-  constructor(private http: Http, private _config: AppConfig, private _location: Location, private _activatedRoute: ActivatedRoute, private router: Router, public appMetadata: AppMetadata, private _commonService: CommonService) {
+  constructor(private http: Http, private _config: AppConfig, private _location: Location, 
+    private _activatedRoute: ActivatedRoute, private router: Router, public appMetadata: AppMetadata, 
+    private _commonService: CommonService) {
 
     this.showGraph = false
     this.isHomeEnable = false
     this.baseUrl = _config.getBaseUrl();
     this.isgraphShow = false;
     this.istableShow = false;
-    this.download = {}
-    this.download["format"] = ["excel"]
-    this.download["rows"] = 100
-    this.download["selectFormat"] = 'excel'
+    this.download = {rows: 0, selectFormat: "", format: []};
+    this.download.format = ["excel"]
+    this.download.rows = 100
+    this.download.selectFormat = 'excel'
     this.breadcrumbDataFrom = [{
       "caption": "Business Rules",
       "routeurl": "/app/list/ruleexec"
@@ -75,18 +79,21 @@ export class BusinessRulesResultComponent {
       "routeurl": null
     }
     ]
-    this.params = {
+    this.graphParams = {
       "typeLabel": "RuleGroup",
       "url": "rule/getRuleExecByRGExec?",
       "ref": {}
     }
     this._activatedRoute.params.subscribe((params: Params) => {
-      this._uuid = params['id'];
-      this._version = params['version'];
-      this._mode = params['mode'];
-      this._type = params['type'];
+      let param = <RoutesParam>params;
+      this._uuid = param.id;
+      this._version = param.version;
+      this._mode = param.mode;
+      this._type = param.type;
       this.getOneByUuidAndVersion(this._uuid, this._version, this._type)
     });
+
+    this.graphParams = new GraphParamIO();
   }
 
   getOneByUuidAndVersion(id, version, type) {
@@ -100,15 +107,15 @@ export class BusinessRulesResultComponent {
 
   onSuccessgetOneByUuidAndVersion(response) {
     this.breadcrumbDataFrom[2].caption = response.name;
-    this.params["id"] = this._uuid;
-    this.params["uuid"] = this._uuid;
-    this.params["name"] = response.name;
-    this.params["elementType"] = this._type;
-    this.params["version"] = this._version;
-    this.params.ref["id"] = this._uuid;
-    this.params.ref["name"] = response.name;
-    this.params.ref["type"] = this._type;
-    this.params.ref["version"] = this._version;
+    this.graphParams.id = this._uuid;
+    this.graphParams.uuid = this._uuid;
+    this.graphParams.name = response.name;
+    this.graphParams.elementType = this._type;
+    this.graphParams.version = this._version;
+    this.graphParams.ref.id = this._uuid;
+    this.graphParams.ref.name = response.name;
+    this.graphParams.ref.type = this._type;
+    this.graphParams.ref.version = this._version;
     if (this._type.slice(-4) == 'Exec' || this._type.slice(-4) == 'exec') {
       if (this._type.slice(-9) == 'groupExec' || this._type.slice(-9) == 'groupexec') {
         this.isgraphShow = true;
@@ -120,15 +127,15 @@ export class BusinessRulesResultComponent {
     }
     if (this.istableShow == true) {
       setTimeout(() => {
-        this.params["type"] = this.appMetadata.getMetadataDefs(this._type.toLowerCase())['name']
-        this.d_tableRenderComponent.renderTable(this.params);
-        this.downloadUuid = this.params.uuid;
-        this.downloadVersion = this.params.version;
-        this.downloadType = this.params.type;
+        this.graphParams.type = this.appMetadata.getMetadataDefs(this._type.toLowerCase()).name
+        this.d_tableRenderComponent.renderTable(this.graphParams);
+        this.downloadUuid = this.graphParams.uuid;
+        this.downloadVersion = this.graphParams.version;
+        this.downloadType = this.graphParams.type;
       }, 1000);
     }
     else {
-      this.params["type"] = this._type;
+      this.graphParams.type = this._type;
       this.isgraphShow = true;
     }
   }
@@ -158,7 +165,7 @@ export class BusinessRulesResultComponent {
   }
   downloadResult() {
     const headers = new Headers();
-    this.http.get(this.baseUrl + '/rule/download?action=view&ruleExecUUID=' + this.downloadUuid + '&ruleExecVersion=' + this.downloadVersion + '&mode=' + this.runMode + '&row=' + this.download["rows"] + '&formate=' + this.download["selectFormat"],
+    this.http.get(this.baseUrl + '/rule/download?action=view&ruleExecUUID=' + this.downloadUuid + '&ruleExecVersion=' + this.downloadVersion + '&mode=' + this.runMode + '&row=' + this.download.rows + '&formate=' + this.download.selectFormat,
       { headers: headers, responseType: ResponseContentType.Blob })
       .toPromise()
       .then(response => this.saveToFileSystem(response));
@@ -182,15 +189,15 @@ export class BusinessRulesResultComponent {
     this.istableShow = true;
     this.isResultTable = true;
     setTimeout(() => {
-      this.params["type"] = this.appMetadata.getMetadataDefs(this._type.toLowerCase())['name']
-      this.d_tableRenderComponent.renderTable(this.params);
-      this.downloadUuid = this.params.uuid;
-      this.downloadVersion = this.params.version;
-      this.downloadType = this.params.type;
+      this.graphParams.type = this.appMetadata.getMetadataDefs(this._type.toLowerCase()).name;
+      this.d_tableRenderComponent.renderTable(this.graphParams);
+      this.downloadUuid = this.graphParams.uuid;
+      this.downloadVersion = this.graphParams.version;
+      this.downloadType = this.graphParams.type;
     }, 1000);
   }
 
-  showDagGraph(uuid, version) {
+  showDagGraph() {debugger
     this.isHomeEnable = true;
     this.showGraph = true;
     this.isResultTable = false;

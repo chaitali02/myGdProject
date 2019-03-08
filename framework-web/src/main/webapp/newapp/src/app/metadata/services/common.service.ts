@@ -161,7 +161,7 @@ export class CommonService {
         attributes.push(attributedetail)
       }
     }
-    console.log("from commonService :" + attributes);
+    // console.log("from commonService :" + attributes);
     return attributes;
   }
   modifyResponse(response) {

@@ -132,6 +132,7 @@ export class DataQualityGroupDetailComponent {
 
   enableEdit(uuid, version) {
     this.router.navigate(['app/dataQuality/dqgroup', uuid, version, 'false']);
+    this.isEdit = true;
     this.dropdownSettings = {
       singleSelection: false,
       text: "Select Attrubutes",

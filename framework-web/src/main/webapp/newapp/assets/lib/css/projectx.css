@@ -1298,11 +1298,11 @@ cursor: not-allowed !important;
 } 
 /* view single-Page Icon margin */
 .left-marginpage{
-  margin: 0px 5px 0px 0px;
+  margin: 0px 2px 0px 0px;
 }
 
 .btn-margin{
-  margin: 0% 0% 0% 1%;
+  margin: 0% 0% 0% 1.5%;
   border-radius: 3px !important;
 }
 
@@ -1312,6 +1312,9 @@ cursor: not-allowed !important;
 }
 .switch.checked {
   width: 40px !important;
+}
+.ui-switch-top-left-padding{
+  padding: 0.7% 0% 0% 1.5%;
 }
 
 .btn.btn-outline.green-haze:hover, .btn.btn-outline.green-haze:active,
