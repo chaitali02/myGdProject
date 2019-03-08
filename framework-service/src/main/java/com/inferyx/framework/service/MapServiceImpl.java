@@ -690,6 +690,82 @@ public class MapServiceImpl implements IParsable, IExecutable {
 			execParams.getInternalVarMap().put("\\$".concat(SysVarType.exec_version.toString()), mapExec.getVersion());
 		}
 	}
+	
+	/**
+	 * 
+	 * @param uuid
+	 * @param version
+	 * @param mapExec
+	 * @param dagExec
+	 * @param datapodList
+	 * @param refKeyMap
+	 * @param otherParams
+	 * @param execParams
+	 * @param runMode
+	 * @return
+	 * @throws Exception
+	 */
+	public MapExec create(String uuid, String version, MapExec mapExec, 
+			DagExec dagExec, List<String> datapodList, 
+			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 
+			ExecParams execParams, RunMode runMode) throws Exception {
+		logger.info("Inside MapServiceImpl.create");
+		try {
+			if (otherParams == null) {
+				otherParams = new HashMap<>();
+			}
+			if (datapodList == null) {
+				datapodList = new ArrayList<>();
+			}
+			Map map = null;
+			MetaIdentifierHolder mapRef = new MetaIdentifierHolder();
+			Task indvTask = null;
+			Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
+
+			if (StringUtils.isBlank(version)) {
+				//map = iMapDao.findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version"));
+				map = (Map) commonServiceImpl.getLatestByUuid(uuid, MetaType.map.toString(), "N");
+				version = map.getVersion();
+			} else {
+				//map = iMapDao.findOneByUuidAndVersion(uuid, version);
+				map = (Map) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.map.toString(), "N");
+			}
+			// Create mapExec
+			if (mapExec == null) {
+				mapExec = new MapExec();
+				mapRef.setRef(new MetaIdentifier(MetaType.map, uuid, version));
+				mapExec.setDependsOn(mapRef);
+				mapExec.setBaseEntity();
+			}
+			mapExec.setName(map.getName());
+			mapExec.setAppInfo(map.getAppInfo());
+			
+			/***** This part is very important and populates otherParams based on the resolved table Names (Shall continue staying in MapServiceImpl) - START ******/
+//			parseDPNames(map, datapodList, refKeyMap, otherParams, mapExec, runMode);
+			/***** This part is very important and populates otherParams based on the resolved table Names (Shall continue staying in MapServiceImpl) - END ******/
+			
+			Status status = new Status(Status.Stage.PENDING, new Date());
+			List<Status> statusList = new ArrayList<>();		
+			statusList.add(status);
+			//mapExec.setName(map.getName());
+			mapExec.setStatusList(statusList);
+			commonServiceImpl.save(MetaType.mapExec.toString(), mapExec);
+		} catch(Exception e) {
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.mapExec, mapExec.getUuid(), mapExec.getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create mapExec.", dependsOn);
+			throw new Exception((message != null) ? message : "Can not create mapExec.");
+		}
+			return mapExec;
+		}
+
 		
 	/**
 	 * Generate SQL for Map and populate in MapExec
@@ -745,11 +821,18 @@ public class MapServiceImpl implements IParsable, IExecutable {
 			parseDPNames(map, datapodList, refKeyMap, otherParams, mapExec, runMode);
 			/***** This part is very important and populates otherParams based on the resolved table Names (Shall continue staying in MapServiceImpl) - END ******/
 			
-			Status status = new Status(Status.Stage.PENDING, new Date());
-			List<Status> statusList = new ArrayList<>();		
-			statusList.add(status);
+//			Status status = new Status(Status.Stage.PENDING, new Date());
+			List<Status> statusList = mapExec.getStatusList();
+			if (statusList == null || statusList.isEmpty()) {
+				logger.error("MapExec does not have status during parse state. Creating new >>>>>>>>>>>>>>> ");
+				statusList = new ArrayList<>();
+				synchronized (mapExec.getUuid()) {
+					commonServiceImpl.setMetaStatus(mapExec, MetaType.mapExec, Status.Stage.PENDING);
+				}
+				mapExec.setStatusList(statusList);
+			}
+//			statusList.add(status);
 			//mapExec.setName(map.getName());
-			mapExec.setStatusList(statusList);
 			commonServiceImpl.save(MetaType.mapExec.toString(), mapExec);
 			try {
 				logger.info("Before generateSql from MapServiceImpl");
