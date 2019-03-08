@@ -106,6 +106,7 @@ export class DataQualityDetailComponent {
   moveToEnable: boolean;
   count: any[];
   txtQueryChanged: Subject<string> = new Subject<string>();
+  txtQueryChanged1: Subject<string> = new Subject<string>();
   rowIndex: any;
   showDivGraph: boolean;
   isGraphInprogess: boolean;
@@ -113,6 +114,8 @@ export class DataQualityDetailComponent {
   isEdit: boolean = false;
   isAdd: boolean;
   isversionEnable: boolean;
+  invalideRowNo0: boolean = false;
+  invalideRowNo1: boolean = false;
 
   constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router,
     private _commonService: CommonService, private _dataQualityService: DataQualityService, public appHelper: AppHelper) {
@@ -127,12 +130,12 @@ export class DataQualityDetailComponent {
     this.dialogAttributeName = {};
     this.selectRefIntegrity = {};
     this.operators = [
+      { 'value': '=', 'label': 'EQUAL TO(=)' },
+      { 'value': '!=', 'label': 'NOT EQUAL(!=)' },
       { 'value': '<', 'label': 'LESS THAN(<)' },
       { 'value': '>', 'label': 'GREATER THAN(>)' },
       { 'value': '<=', 'label': 'LESS OR  EQUAL(<=)' },
       { 'value': '>=', 'label': 'GREATER OR EQUAL(>=)' },
-      { 'value': '=', 'label': 'EQUAL TO(=)' },
-      { 'value': '!=', 'label': 'NOT EQUAL(!=)' },
       { 'value': 'BETWEEN', 'label': 'BETWEEN' },
       { 'value': 'LIKE', 'label': 'LIKE' },
       { 'value': 'NOT LIKE', 'label': 'NOT LIKE' },
@@ -224,8 +227,21 @@ export class DataQualityDetailComponent {
       .pipe(debounceTime(3000), distinctUntilChanged())
       .subscribe(index => {
         this.filterTableArray[index].selected = "";
-        this.checkSelected(false);
+        this.moveTo = null;
+        // this.checkSelected(false);
+        this.invalideRowNo0 = false;
+        this.invalideRowNo1 = false;
       });
+    this.txtQueryChanged1
+      .pipe(debounceTime(3000), distinctUntilChanged())
+      .subscribe(index => {
+        this.moveTo = null;
+        this.invalideRowNo0 = false;
+        this.invalideRowNo1 = false;
+      });
+
+    this.invalideRowNo0 = false;
+    this.invalideRowNo1 = false;
   }
   ngOnInit() {
     this.setMode(this.mode);
@@ -496,15 +512,20 @@ export class DataQualityDetailComponent {
   }
 
   searchOption(data, index) {
-
     this.rowIndex = index;
     this.displayDialogBox = true;
-    this._commonService.getAllLatest(MetaTypeEnum.MetaType.DATASET)
-      .subscribe(response => { this.onSuccessgetAllLatestDialogBox(response, data) },
-        error => console.log("Error ::", error));
-    // this._commonService.getAttributesByDataset(MetaTypeEnum.MetaType.DATASET, data.uuid)
-    //   .subscribe(response => { this.onSuccessgetAttributesByDatasetDialogBox(response, data) },
-    //     error => console.log("Error ::", error));
+    if (!data.uuid) {
+      this.dialogSelectName = "";
+      this.dialogAttributeName = "";
+      this._commonService.getAllLatest(MetaTypeEnum.MetaType.DATASET)
+        .subscribe(response => { this.onSuccessgetAllLatestDialogBox(response, data) },
+          error => console.log("Error ::", error));
+    }
+    else {
+      this._commonService.getAllLatest(MetaTypeEnum.MetaType.DATASET)
+        .subscribe(response => { this.onSuccessgetAllLatestDialogBox(response, data) },
+          error => console.log("Error ::", error));
+    }
   }
 
   onSuccessgetAllLatestDialogBox(response, data) {
@@ -519,32 +540,15 @@ export class DataQualityDetailComponent {
       temp[i] = dialogAttriObj;
 
       if (data.uuid && data.uuid == response[i].uuid) {
-        this.dialogSelectName = dialogAttriObj.value;
-        var flag = true;
+        this.dialogSelectName = data;
+        this._commonService.getAttributesByDataset(MetaTypeEnum.MetaType.DATASET, data.uuid)
+          .subscribe(response => { this.onSuccessgetAttributesByDatasetDialogBox(response, data) },
+            error => console.log("Error ::", error));
       }
-      else if (flag && (flag!=true)) {
-        this.dialogSelectName = "";
-        this.dialogAttributeName = "";
-      }
-      else
-        flag = false;
-
     }
     this.dialogAttriArray = temp;
-
-    this._commonService.getAttributesByDataset(MetaTypeEnum.MetaType.DATASET, data.uuid)
-      .subscribe(response => { this.onSuccessgetAttributesByDatasetDialogBox(response, data) },
-        error => console.log("Error ::", error));
   }
-
-  onChangeDialogAttribute(data) {
-    this._commonService.getAttributesByDataset(MetaTypeEnum.MetaType.DATASET, this.dialogSelectName.uuid)
-      .subscribe(response => { this.onSuccessgetAttributesByDatasetDialogBox(response, null) },
-        error => console.log("Error ::", error))
-  }
-
   onSuccessgetAttributesByDatasetDialogBox(response, data) {
-
     this.dialogAttriNameArray = [];
     for (const i in response) {
       let dialogAttriNameObj = new AttributeIO();
@@ -556,14 +560,31 @@ export class DataQualityDetailComponent {
 
       console.log(response[i].attrId);
       if (data) {
-        let a = data.attributeId.toString();
-        let b = response[i].attrId;
         if (data.attributeId.toString()) {
           if (data.attributeId.toString() == response[i].attrId) {
             this.dialogAttributeName = dialogAttriNameObj.value;
           }
         }
       }
+      this.dialogAttriNameArray[i] = dialogAttriNameObj;
+    }
+  }
+
+  onChangeDialogAttribute(dialogSelectDatasetName) {
+    this._commonService.getAttributesByDataset(MetaTypeEnum.MetaType.DATASET, dialogSelectDatasetName.uuid)
+      .subscribe(response => { this.onSuccessgetAttributesByDatasetChangeDialogAttr(response) },
+        error => console.log("Error ::", error))
+
+  }
+  onSuccessgetAttributesByDatasetChangeDialogAttr(response) {
+    this.dialogAttriNameArray = [];
+    for (const i in response) {
+      let dialogAttriNameObj = new AttributeIO();
+      dialogAttriNameObj.label = response[i].attrName;
+      dialogAttriNameObj.value = { label: "", attributeId: "", uuid: "" };
+      dialogAttriNameObj.value.label = response[i].attrName;
+      dialogAttriNameObj.value.attributeId = response[i].attrId;
+      dialogAttriNameObj.value.uuid = response[i].ref.uuid;
       this.dialogAttriNameArray[i] = dialogAttriNameObj;
     }
   }
@@ -757,18 +778,23 @@ export class DataQualityDetailComponent {
     }
   }
   addRow() {
-    if (this.filterTableArray == null) {
+    var filertable = new FilterInfoIO;
+
+    if (this.filterTableArray == null || this.filterTableArray.length == 0) {
       this.filterTableArray = [];
+      filertable.logicalOperator = '';
     }
-    var len = this.filterTableArray.length + 1
-    var filertable = { logicalOperator: "", lhsType: "", lhsAttribute: "", operator: "", rhsType: "", rhsAttribute: "" };
-    filertable.logicalOperator = ""
-    filertable.lhsType = "integer"
-    filertable.lhsAttribute = ""
-    filertable.operator = ""
-    filertable.rhsType = "integer"
-    filertable.rhsAttribute = ""
+    else {
+      filertable.logicalOperator = this.logicalOperators[1].label;
+    }
+    filertable.lhsType = "string"
+    filertable.lhsAttribute = null;
+    filertable.operator = this.operators[0].label;
+    filertable.rhsType = "string"
+    filertable.rhsAttribute = null;
     this.filterTableArray.splice(this.filterTableArray.length, 0, filertable);
+    this.count = [];
+    this.checkSelected(false);
   }
   removeRow() {
     let newDataList = [];
@@ -782,6 +808,8 @@ export class DataQualityDetailComponent {
     if (newDataList.length > 0) {
       newDataList[0].logicalOperator = "";
     }
+    this.count = [];
+    this.checkSelected(false);
     this.filterTableArray = newDataList;
   }
   checkAllFilterRow() {
@@ -791,6 +819,7 @@ export class DataQualityDetailComponent {
     else {
       this.selectedAllFitlerRow = false;
     }
+    this.checkSelected(false);
     this.filterTableArray.forEach(filter => {
       filter.selected = this.selectedAllFitlerRow;
     });
@@ -1110,26 +1139,41 @@ export class DataQualityDetailComponent {
   updateArray(new_index, range, event) {
     for (let i = 0; i < this.filterTableArray.length; i++) {
       if (this.filterTableArray[i].selected) {
-        let old_index = i;
-        this.array_move(this.filterTableArray, old_index, new_index);
-        if (range) {
-          this.txtQueryChanged.next(event);
+
+        if (new_index < 0) {
+          this.invalideRowNo0 = true;
+          this.txtQueryChanged1.next(event);
+          // this.filterTableArray[i].selected = "";
         }
-        else if (new_index == 0 || new_index == 1) {
-          this.filterTableArray[0].logicalOperator = "";
-          if (!this.filterTableArray[1].logicalOperator) {
-            this.filterTableArray[1].logicalOperator = this.logicalOperators[1].label;
+        else if (new_index >= this.filterTableArray.length) {
+          this.invalideRowNo1 = true;
+          this.txtQueryChanged1.next(event);
+          // this.filterTableArray[i].selected = "";
+        }
+        else if(new_index == null){}
+        else {
+          let old_index = i;
+          this.array_move(this.filterTableArray, old_index, new_index);
+
+          if (range) {
+            this.txtQueryChanged.next(event);
           }
-          this.filterTableArray[new_index].selected = "";
-          this.checkSelected(false);
+          else if (new_index == 0 || new_index == 1) {
+            this.filterTableArray[0].logicalOperator = "";
+            if (!this.filterTableArray[1].logicalOperator) {
+              this.filterTableArray[1].logicalOperator = this.logicalOperators[1].label;
+            }
+            this.filterTableArray[new_index].selected = "";
+            this.checkSelected(false);
+          }
+          else if (new_index == this.filterTableArray.length - 1) {
+            this.filterTableArray[0].logicalOperator = "";
+            this.filterTableArray[new_index].logicalOperator = this.logicalOperators[1].label;
+            this.filterTableArray[i].selected = "";
+            this.checkSelected(false);
+          }
+          break;
         }
-        else if (new_index == this.filterTableArray.length - 1) {
-          this.filterTableArray[0].logicalOperator = "";
-          this.filterTableArray[new_index].logicalOperator = this.logicalOperators[1].label;
-          this.filterTableArray[i].selected = "";
-          this.checkSelected(false);
-        }
-        break;
       }
     }
   }
@@ -1152,6 +1196,7 @@ export class DataQualityDetailComponent {
   checkSelected(flag) {
     if (flag == true) {
       this.count.push(flag);
+      // console.log("Flag: " + flag + " /Count : " + this.count);
     }
     else
       this.count.pop();

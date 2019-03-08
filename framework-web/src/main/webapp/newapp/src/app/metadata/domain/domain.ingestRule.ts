@@ -1,11 +1,12 @@
-import { BaseEntity } from './domain.baseEntity';
+
 import { MetaIdentifierHolder } from './domain.metaIdentifierHolder';
 import { FilterInfo } from './domain.filterInfo';
 import { AttributeRefHolder } from './domain.attributeRefHolder';
 import { SaveMode } from '../enums/saveMode';
 import { AttributeMap } from './domain.attributeMap';
+import { BaseRule } from './domain.baseRule';
 
-export class IngestRule extends BaseEntity {
+export class IngestRule extends BaseRule {
 
     type: String; //FILE-FILE, FILE-TABLE, TABLE-FILE, TABLE-TABLE
     sourceDatasource: MetaIdentifierHolder;

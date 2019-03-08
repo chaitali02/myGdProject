@@ -18,8 +18,8 @@ export class DataIngestionService {
 	baseUrl: string;
 	headers: Headers;
 	constructor(@Inject(Http) private http: Http, private _sharedService: SharedService, private _commonService: CommonService) {
-	
-	 }
+
+	}
 	private handleError<T>(error: any, result?: T) {
 		return throwError(error);
 	}
@@ -96,10 +96,10 @@ export class DataIngestionService {
 				catchError(error => this.handleError<string>(error, "Network Error!")));
 	}
 
-	getOneByUuidAndVersion(uuid: any, version: any, type: String)  {
+	getOneByUuidAndVersion(uuid: any, version: any, type: String) {
 		return this._commonService.getOneByUuidAndVersion(uuid, version, type)
 			.pipe(
-				map(response=> {
+				map(response => {
 					let dataIngestIO = new DataIngestRuleIO();
 					dataIngestIO.ingestRule = response;
 
@@ -109,13 +109,13 @@ export class DataIngestionService {
 							let filterInfoIO = new FilterInfoIO();
 							filterInfoIO.logicalOperator = response.filterInfo[k].logicalOperator
 							filterInfoIO.lhsType = response.filterInfo[k].operand[0].ref.type;
-							filterInfoIO.operator= response.filterInfo[k].operator;
+							filterInfoIO.operator = response.filterInfo[k].operator;
 							filterInfoIO.rhsType = response.filterInfo[k].operand[1].ref.type;
 
 							if (response.filterInfo[k].operand[0].ref.type == 'formula') {
 								let lhsAttribute = new AttributeIO()
-								lhsAttribute.uuid  = response.filterInfo[k].operand[0].ref.uuid;
-								lhsAttribute.label  = response.filterInfo[k].operand[0].ref.name;
+								lhsAttribute.uuid = response.filterInfo[k].operand[0].ref.uuid;
+								lhsAttribute.label = response.filterInfo[k].operand[0].ref.name;
 								filterInfoIO.lhsAttribute = lhsAttribute;
 							}
 							else if (response.filterInfo[k].operand[0].ref.type == 'datapod') {
@@ -149,22 +149,22 @@ export class DataIngestionService {
 							}
 							else if (response.filterInfo[k].operand[1].ref.type == 'function') {
 								let rhsAttribute = new AttributeIO();
-								rhsAttribute.uuid  = response.filterInfo[k].operand[1].ref.uuid;
-								rhsAttribute.label  = response.filterInfo[k].operand[1].ref.name;
+								rhsAttribute.uuid = response.filterInfo[k].operand[1].ref.uuid;
+								rhsAttribute.label = response.filterInfo[k].operand[1].ref.name;
 								filterInfoIO.rhsAttribute = rhsAttribute;
 							}
 							else if (response.filterInfo[k].operand[1].ref.type == 'paramlist') {
 								let rhsAttribute = new AttributeIO();
 								rhsAttribute.uuid = response.filterInfo[k].operand[1].ref.uuid;
 								rhsAttribute.attributeId = response.filterInfo[k].operand[1].attributeId;
-								rhsAttribute.label= "app." + response.filterInfo[k].operand[1].attributeName;
+								rhsAttribute.label = "app." + response.filterInfo[k].operand[1].attributeName;
 								filterInfoIO.rhsAttribute = rhsAttribute;
 							}
 							else if (response.filterInfo[k].operand[1].ref.type == 'dataset') {
 								let rhsAttribute = new AttributeIO();
-								rhsAttribute.uuid= response.filterInfo[k].operand[1].ref.uuid;
+								rhsAttribute.uuid = response.filterInfo[k].operand[1].ref.uuid;
 								rhsAttribute.attributeId = response.filterInfo[k].operand[1].attributeId;
-								rhsAttribute.label= response.filterInfo[k].operand[1].attributeName;
+								rhsAttribute.label = response.filterInfo[k].operand[1].attributeName;
 								filterInfoIO.rhsAttribute = rhsAttribute;
 							}
 							else if (response.filterInfo[k].operand[1].ref.type == 'datapod') {
@@ -200,14 +200,14 @@ export class DataIngestionService {
 							}
 							filterInfoArray[k] = filterInfoIO;
 							console.log(filterInfoArray)
-							dataIngestIO.filterInfo= filterInfoArray; 
+							dataIngestIO.filterInfo = filterInfoArray;
 						}
-					}else{
-						dataIngestIO.filterInfo=[];
+					} else {
+						dataIngestIO.filterInfo = null;
 					}
-					
-					if (response.attributeMap != null) {
-						let attributeTableArray = [new AttributeMapIO];
+
+					if (response.attributeMap) {
+						let attributeTableArray = [];
 						for (let i = 0; i < response.attributeMap.length; i++) {
 							let attributeInfo = new AttributeMapIO();
 							attributeInfo.attrMapId = response.attributeMap[i].attrMapId;
@@ -226,10 +226,10 @@ export class DataIngestionService {
 							}
 
 							else if (response.attributeMap[i].sourceAttr.ref.type == "simple") {
-								
+
 								attributeInfo.sourceAttribute = response.attributeMap[i].sourceAttr.value;
 								attributeInfo.sourceType = "string";
-							} 
+							}
 							else if (response.attributeMap[i].sourceAttr.ref.type == "attribute") {
 								attributeInfo.sourceAttribute = response.attributeMap[i].sourceAttr.value;
 								attributeInfo.sourceType = "datapod";
@@ -257,7 +257,7 @@ export class DataIngestionService {
 								targetAttribute.attrName = response.attributeMap[i].targetAttr.attrName;
 								attributeInfo.targetAttribute = targetAttribute;
 								attributeInfo.IsTargetAttributeSimple = "false";
-								
+
 							}
 							else {
 								let targetAttribute = response.attributeMap[i].targetAttr.value;
@@ -267,12 +267,15 @@ export class DataIngestionService {
 							attributeTableArray[i] = attributeInfo;
 						}
 						//response.attributeMap = attributeTableArray;
-						
+
 						//dataIngestIO.attributeMap= attributeTableArray;  
-						dataIngestIO.attributeMap =attributeTableArray;
-					}else {
-						dataIngestIO.attributeMap=[];
+						dataIngestIO.attributeMap = attributeTableArray;
+
+					} 
+					else {
+						dataIngestIO.attributeMap = [];
 					}
+					console.log(JSON.stringify(dataIngestIO.attributeMap));
 					console.log(JSON.stringify(dataIngestIO));
 					return <any>dataIngestIO;
 				}), catchError(error => this.handleError<string>(error, "Network Error!")))

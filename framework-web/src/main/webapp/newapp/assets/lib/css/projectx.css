@@ -1133,7 +1133,9 @@ cursor: not-allowed !important;
 
   .ui-dropdown{
     border: 1px solid #c2cad8 !important; 
+    /* border: 1px solid #6de908 !important;  */
   }
+
   .glyphicon.spinning {
     animation: spin 1s infinite linear;
     -webkit-animation: spin2 1s infinite linear;
@@ -1281,6 +1283,7 @@ cursor: not-allowed !important;
 }
 .has-error {
   border-color: #e73d4a !important;
+  /* border: 1px solid #e73d4a !important; */
 }
 
 /* dq moveRow button */
@@ -1311,11 +1314,13 @@ cursor: not-allowed !important;
   width: 40px !important;
 }
 
-
 .btn.btn-outline.green-haze:hover, .btn.btn-outline.green-haze:active,
 .btn.btn-outline.green-haze:active:hover, .btn.btn-outline.green-haze:active:focus,
 .btn.btn-outline.green-haze:focus, .btn.btn-outline.green-haze.active{
 border-color: #a0a0a0;
 color: #ffffff;
 background-color: #a0a0a0;
+}
+.customDropdown{
+  border: 1px solid blue !important; 
 }

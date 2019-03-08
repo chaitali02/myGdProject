@@ -257,11 +257,11 @@
 
                           <div class="actions">
                             <div class="btn-group btn-group-devided" data-toggle="buttons">
-                              <div class="x_title" style="padding:10px;">
-                                <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right"
+                              <div class="x_title">{{filterTableArray|json}}
+                                <!-- <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right"
                                   (click)="removeRow()" [disabled]="mode == 'true'"></button>
                                 <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right"
-                                  (click)="addRow()" [disabled]="mode == 'true'"></button>
+                                  (click)="addRow()" [disabled]="mode == 'true'"></button> -->
                                 <div class="actions pull-right" style="position:relative;padding-right: 5px;">
                                   <a class="btn green-haze btn-outline btn-circle auto-map btn-sm" href="javascript:;"
                                     data-toggle="dropdown" tooltip-placement="left" uib-tooltip="Move" data-hover="dropdown"
@@ -271,11 +271,11 @@
                                   </a>
                                   <ul class="dropdown-menu pull-right" style="z-index:10000;top:28px;right:45px;position:absolute">
                                     <li (click)="updateArray(0, '')">
-                                      <a href="javascript:;" [attr.disabled]="fitlerAttrTableSelectedItem[0]==0?true:null">Top</a>
+                                      <a href="javascript:;" [attr.disabled]="fitlerAttrTableSelectedItem[0]==0?'disabled' : null">Top</a>
                                     </li>
                                     <li class="divider" style="margin: 0px;"> </li>
                                     <li (click)="updateArray(filterTableArray.length-1, '')">
-                                      <a href="javascript:;" ng-disabled="fitlerAttrTableSelectedItem[0]==filterTableArray.length-1 ? true:false">Bottom</a>
+                                      <a href="javascript:;" [attr.disabled]="fitlerAttrTableSelectedItem[0]==filterTableArray.length-1 ?'disabled' : null">Bottom</a>
                                     </li>
                                     <li class="divider" style="margin: 0px;"> </li>
                                     <li>
@@ -285,14 +285,34 @@
                                           focus-me="true" />
                                       </div>
                                     </li>
+                                    <div *ngIf="invalideRowNo0">
+                                      <li class="divider" style="margin: 0px;"> </li>
+                                      <li style="color:red">
+                                        Please enter the minimum no of 0.
+                                      </li>
+                                    </div>
+                                    <div *ngIf="invalideRowNo1">
+                                      <li class="divider" style="margin: 0px;"> </li>
+                                      <li style="color:red">
+                                        Please enter the minimum no of {{filterTableArray.length}}
+                                      </li>
+                                    </div>
                                   </ul>
                                 </div>
                               </div>
                             </div>
                           </div>
                         </div>
+
                         <div class="portlet-body form">
-                          <div class="form-body" style="padding: 1% 0% 0% 0%; ">
+                          <div class="x_title" style="padding: 0px 0px 30px 0px;">
+                            <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right"
+                              (click)="removeRow()" [disabled]="mode == 'true'"></button>
+                            <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" (click)="addRow()"
+                              [disabled]="mode == 'true'"></button>
+                          </div>
+
+                          <div class="form-body">
                             <table class=" row-border hover table  table-striped table-bordered" style="table-layout: fixed;">
                               <thead>
                                 <tr>
@@ -356,7 +376,7 @@
                                   <td>
                                     <p-dropdown [options]="operators" [(ngModel)]="data.operator" name="operator+{{i}}"
                                       [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="false"
-                                      placeholder="--Select--" (onChange)="onChangeOperator(i)">
+                                      (onChange)="onChangeOperator(i)">
                                     </p-dropdown>
                                   </td>
                                   <td>
@@ -443,8 +463,8 @@
                                         [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
                                         placeholder="--Select--" datakey="attributeId">
                                       </p-dropdown>
-                                      <input type="hidden" [(ngModel)]="data.rhsAttribute" name="rhsAttribute{{i}}"
-                                        required [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute'+i]?.invalid)}" />
+                                      <!-- <input type="hidden" [(ngModel)]="data.rhsAttribute" name="rhsAttribute{{i}}"
+                                        required [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute'+i]?.invalid)}" /> -->
                                     </div>
                                     <div *ngIf="data.rhsType == 'dataset'">
                                       <div *ngIf="data.rhsAttribute != null">
@@ -496,7 +516,7 @@
                                           <p-dropdown [options]="dialogAttriNameArray" [(ngModel)]="dialogAttributeName"
                                             name="dialogAttributeName+{{i}}" [style]="{'width':'235px','padding':'3px'}"
                                             [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--"
-                                            dataKey="uuid">
+                                            dataKey="attributeId">
                                           </p-dropdown>
                                         </div>
                                       </div>

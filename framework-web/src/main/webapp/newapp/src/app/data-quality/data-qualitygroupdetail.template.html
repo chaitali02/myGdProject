@@ -41,7 +41,6 @@
           </div>
         </div>
 
-
         <div class="form-body graph-body" *ngIf="showDivGraph" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=');">
           <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
           <div class="spinner" id="graphloader">
@@ -55,7 +54,6 @@
         </div>
 
         <div class="form-body" style="padding-top:50px;" *ngIf="showForm">
-
           <div class="centercontent" style="min-height:500px;" *ngIf="isEditError">
             <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
           </div>
@@ -87,7 +85,8 @@
                   <input type="text" class="form-control" [(ngModel)]="dqgroupdata.name" name="name" placeholder=""
                     (ngModelChange)="onChangeName($event)" [disabled]="mode == 'true'" #name="ngModel" required
                     [ngClass]="{'has-error':myNewForm.submitted && (myNewForm.form.controls['name']?.invalid)}">
-                  <div *ngIf="myNewForm.submitted && (myNewForm.form.controls['name']?.invalid)">
+
+                  <div *ngIf="myNewForm.submitted && (myNewForm.form.controls['name']?.invalid)">{{myNewForm.submitted}}{{(myNewForm.form.controls['name']?.invalid)}}
                     <div class="help-block has-error error-msg">
                       This field is required
                     </div>

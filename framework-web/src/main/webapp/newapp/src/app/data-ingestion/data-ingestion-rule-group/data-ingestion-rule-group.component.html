@@ -11,165 +11,203 @@
           <span class="caption-subject bold">Rule Group</span>
         </div>
         <div class="actions">
-          <a class="btn btn-circle btn-icon-only btn-default " title="Main" data-placement="top" tooltip [ngClass]="isHomeEnable==true ? 'notcurrentpage':'currentpage'"
-            data- (click)="showMainPage(ingestGroupData.uuid,ingestGroupData.version)">
+          <a class="btn btn-circle btn-icon-only btn-default left-margin" title="Main" data-placement="top" tooltip
+            [ngClass]="showForm==true ? 'currentpage':'notcurrentpage'" data- (click)="showMainPage(ingestGroupData.uuid,ingestGroupData.version)">
             <i class="fa fa-home" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
           </a>
 
-          <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
-            tooltip [ngClass]="mode == 'true' && showGraph == false? 'notcurrentpage':'currentpage'" data-(click)="enableEdit(ingestGroupData.uuid,ingestGroupData.version)">
+          <a class="btn btn-circle btn-icon-only btn-default left-margin " href="javascript:;" title="Edit" data-toggle="tooltip"
+            data-placement="top" tooltip [ngClass]="isEdit == true? 'currentpage':'notcurrentpage'" data-(click)="enableEdit(ingestGroupData.uuid,ingestGroupData.version)">
             <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
           </a>
 
-          <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Show Dependencies" data-placement="top" tooltip
-            [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'" data-(click)="showDagGraph(ingestGroupData.uuid,ingestGroupData.version)">
+          <a class="btn btn-circle btn-icon-only btn-default left-margin" href="javascript:;" title="Show Dependencies"
+            data-placement="top" tooltip [ngClass]="showForm==false ? 'currentpage':'notcurrentpage'" data-(click)="showDagGraph(ingestGroupData.uuid,ingestGroupData.version)">
             <i class="fa fa-sitemap" style="margin:2px auto;color:#a0a0a0;"></i>
           </a>
 
-          <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default " disabled="true" (click)="broadcastRefreshData()"
-            data-original-title="" title="Refresh">
+          <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default left-margin" disabled="true"
+            data-original-title="" [ngClass]="showForm==true ? 'currentpage':'notcurrentpage'" data-(click)="showDagGraph(ingestGroupData.uuid,ingestGroupData.version)"
+            title="Refresh">
             <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
           </a>
-          <a class="btn btn-circle btn-icon-only btn-default" (click)="goBack()" title="Close">
+
+          <a class="btn btn-circle btn-icon-only btn-default left-margin" (click)="goBack()" title="Close">
             <i class="fa fa-times" style="margin: 2px auto;color:#a0a0a0;"></i>
           </a>
         </div>
       </div>
       <br>
+
       <div class="form-body graph-body" *ngIf="showGraph" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=');">
         <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
-        <div class="spinner" id="graphloader">
+        <div class="spinner"  *ngIf="isGraphInprogess">
           <div class="bounce1"></div>
           <div class="bounce2"></div>
           <div class="bounce3"></div>
         </div>
-        <div class="show-graph-body" id="graphWrapper" >
-          <knowledge-graph ></knowledge-graph>
+        <div class="show-graph-body" id="graphWrapper">
+          <knowledge-graph></knowledge-graph>
         </div>
       </div>
-      <div *ngIf="!showGraph">
-        <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="submit()" #myNewForm="ngForm">
-          <div class="form-group" *ngIf="mode">
-            <label class="col-md-3 control-label">UUID</label>
-            <div class="col-md-6">
-              <input type="text" class="form-control" [(ngModel)]="ingestGroupData.uuid" name="uuid" placeholder="" [disabled]="true">
-            </div>
+
+      <div class="portlet-body form" *ngIf="showForm">
+        <div class="centercontent" style="min-height:500px;" *ngIf="isEditError">
+          <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
+        </div>
+        <div class="centercontent" style="min-height:500px;" *ngIf="isEditInprogess">
+          <div class="spinner">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
           </div>
-          <div class="form-group">
-            <label class="col-md-3 control-label">Name
-              <span class="required" aria-required="true"> * </span>
-            </label>
-            <div class="col-md-6">
-              <input type="text" class="form-control" [(ngModel)]="ingestGroupData.name" name="name" [disabled]="mode == 'true'">
-            </div>
-          </div>
-          <div class="form-group" *ngIf="mode">
-            <label class="col-md-3 control-label">Version </label>
-            <div class="col-md-6">
-              <p-dropdown [options]="VersionList" [(ngModel)]="selectedVersion" name="selectedVersion" [style]="{'width':'100%','padding':'3px'}"
-                [filter]="true" [disabled]="mode == 'false'" dataKey="uuid" (onChange)="onVersionChange()">
-              </p-dropdown>
-            </div>
-          </div>
-          <div class="form-group" *ngIf="mode">
-            <label class="col-md-3 control-label">CreatedBy</label>
-            <div class="col-md-6" *ngIf="locations!=''">
-              <input type="text" class="form-control" [disabled]="true" [(ngModel)]="createdBy" name="createdBy">
-            </div>
-          </div>
-          <div class="form-group" *ngIf="mode">
-            <label class="col-md-3 control-label">CreatedOn</label>
-            <div class="col-md-6">
-              <input type="text" class="form-control" [disabled]="true" [(ngModel)]="ingestGroupData.createdOn" name="createdOn">
-            </div>
-          </div>
-          <div class="form-group taginput">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
-            <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="locations!=''">
-              <tag-input [(ngModel)]="tags" name="tags" [disable]="mode == 'true'" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden;padding-left:5px; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;"></tag-input>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
-            <div class="col-md-6">
-              <textarea [disabled]="mode == 'true'" [(ngModel)]="ingestGroupData.desc" name="desc" class="form-control noresize " rows="2"
-                style="resize:none;"></textarea>
-            </div>
-          </div>
-          <!-- <div class="form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
-            <div class="col-md-6 col-sm-6 col-xs-12">
-              <div class="btn-group">
-                <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="ingestGroupData.active" name="active" [checked]="active"
-                  color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+        </div>
+
+        <div *ngIf="!isEditInprogess && !isEditError">
+          <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="myform.form.valid && submitIngestGroup()" #myform="ngForm">
+            <div class="form-group" *ngIf="mode">
+              <label class="col-md-3 control-label">UUID</label>
+              <div class="col-md-6">
+                <input type="text" class="form-control" [(ngModel)]="ingestGroupData.uuid" name="uuid" placeholder=""
+                  [disabled]="true">
               </div>
             </div>
-          </div>
-
-          <div class="form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12 col-lg-3">Published</label>
-            <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
-              <div class="btn-group">
-                <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="ingestGroupData.published " name="published" [checked]="published"
-                  color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+            <div class="form-group">
+              <label class="col-md-3 control-label" [ngClass]="{'has-error': myform.submitted && (myform.form.controls['name']?.invalid)}">Name
+                <span class="required" aria-required="true"> * </span>
+              </label>
+              <div class="col-md-6">
+                <input type="text" class="form-control" [(ngModel)]="ingestGroupData.name" name="name" (ngModelChange)="onChangeName($event)"
+                [disabled]="mode == 'true'" #name="ngModel" required placeholder="" [ngClass]="{'has-error':myform.submitted && (myform.form.controls['name']?.invalid)}">
+              </div>
+              <div *ngIf="myform.submitted && (myform.form.controls['name']?.invalid)">
+                <div class="help-block has-error error-msg">
+                  This field is required
+                </div>
               </div>
             </div>
-          </div>
-
-          <div class="form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12 col-lg-3">Locked</label>
-            <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
-              <div class="btn-group">
-                <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="ingestGroupData.locked " name="locked" [checked]="locked"
-                  color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+          
+            <div class="form-group" *ngIf="mode">
+              <label class="col-md-3 control-label">Version</label>
+              <div class="col-md-6">
+                <p-dropdown [options]="VersionList" [(ngModel)]="selectedVersion" name="selectedVersion" [style]="{'width':'100%','padding':'3px'}"
+                  [filter]="true" [disabled]="isversionEnable" dataKey="uuid" (onChange)="onVersionChange()">
+                </p-dropdown>
               </div>
             </div>
-          </div> -->
 
-          <div class="form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12">Run In Parallel ?
-            </label>
-            <div class="col-md-6 col-sm-6 col-xs-12">
-              <p-checkbox [(ngModel)]="runInParallel" [disabled]="mode == 'true' " name="runInParallel" binary="true"></p-checkbox>
+            <div class="form-group" *ngIf="mode">
+              <label class="col-md-3 control-label">CreatedBy</label>
+              <div class="col-md-6" *ngIf="locations!=''">
+                <input type="text" class="form-control" [disabled]="true" [(ngModel)]="createdBy" name="createdBy">
+              </div>
             </div>
-          </div>
 
-          <div class="form-group">
-            <label class="col-md-3 control-label">Rules</label>
-            <div class="col-md-6">
-              <angular2-multiselect [data]="ruleInfoArray" [(ngModel)]="ruleInfo" name="ruleInfo" [settings]="dropdownSettingsRuleInfo"
-                (onSelect)="onItemSelect($event)" (onDeSelect)="OnItemDeSelect($event)" (onSelectAll)="onSelectAll($event)"
-                (onDeSelectAll)="onDeSelectAll($event)">
-              </angular2-multiselect>
+            <div class="form-group" *ngIf="mode">
+              <label class="col-md-3 control-label">CreatedOn</label>
+              <div class="col-md-6">
+                <input type="text" class="form-control" [disabled]="true" [(ngModel)]="ingestGroupData.createdOn" name="createdOn">
+              </div>
             </div>
-            <div class="col-md-1">
-              <span *ngIf="mode != 'true'" class="glyphicon glyphicon-erase" title="Clear All" data-toggle="tooltip" data-placement="top"
-                tooltip aria-hidden="true" (click)=" clear()" style="top:3px;left:-24px;cursor: pointer;"></span>
-            </div>
-          </div>
 
-          <div class="form-group">
-            <label class="control-label col-md-3 col-sm-3 col-xs-12">Run Immediately ?
-            </label>
-            <div class="col-md-6 col-sm-6 col-xs-12">
-              <p-checkbox [(ngModel)]="checkboxModelexecution" [disabled]="mode == 'true' " name="checkboxModelexecution" binary="true"></p-checkbox>
+            <div class="form-group taginput">
+              <label class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
+              <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="locations!=''">
+                <p-chips [(ngModel)]="tags" styleClass="pchip-height" [disabled]="mode == 'true'" name="tags"></p-chips>
+              </div>
             </div>
-          </div>
 
-          <div class="form-group" style="padding-top: 10px;">
-            <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-              <a class="btn btn-primary" (click)="goBack()">Cancel</a>
-              <input type="submit" class="btn btn-success" value="Submit" name="submit" [disabled]="(mode == 'true' || isSubmit == 'true'|| myNewForm.form.dirty == true)? false : true">
-              <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" *ngIf="isSubmit=='true'">
-                <!-- <button type="submit" class="btn green" [disabled]="mode == 'true' || isSubmit == 'true'" (click)="ruleSubmit()">Submit</button>
-              <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" *ngIf="isSubmit=='true'"> -->
-                <div class="bounce1"></div>
-                <div class="bounce2"></div>
-                <div class="bounce3"></div>
-              </span>
+            <div class="form-group">
+              <label class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
+              <div class="col-md-6">
+                <textarea [disabled]="mode == 'true'" [(ngModel)]="ingestGroupData.desc" name="desc" class="form-control noresize "
+                  rows="2" style="resize:none;"></textarea>
+              </div>
             </div>
-          </div>
-        </form>
+
+            <div class="form-group">
+              <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="btn-group">
+                  <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="active" name="active"
+                    [checked]="active" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="control-label col-md-3 col-sm-3 col-xs-12 col-lg-3">Locked</label>
+              <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
+                <div class="btn-group">
+                  <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="locked " name="locked"
+                    [checked]="locked" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="control-label col-md-3 col-sm-3 col-xs-12 col-lg-3">Published</label>
+              <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
+                <div class="btn-group">
+                  <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="published " name="published"
+                    [checked]="published" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="control-label col-md-3 col-sm-3 col-xs-12">Run In Parallel ?
+              </label>
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <p-checkbox [(ngModel)]="runInParallel" [disabled]="mode == 'true' " name="runInParallel" binary="true"></p-checkbox>
+              </div>
+            </div>
+
+            <div class="form-group" [ngClass]="{'has-error':myform.submitted && (myform.form.controls['ruleInfo1']?.invalid)}">
+              <label class="col-md-3 control-label col-sm-3 col-xs-12">Rules
+                <span class="required" aria-required="true"> * </span>
+              </label>
+              <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="ruleInfoArray" [ngClass]="{'has-error':myform.submitted && (myform.form.controls['ruleInfo1']?.invalid)}">
+                <angular2-multiselect [data]="ruleInfoArray" [(ngModel)]="ruleInfo" name="ruleInfo1" [settings]="dropdownSettingsRuleInfo"
+                  (onSelect)="onItemSelect($event)" (onDeSelect)="OnItemDeSelect($event)" (onSelectAll)="onSelectAll($event)"
+                  (onDeSelectAll)="onDeSelectAll($event)" #ruleInfo1="ngModel" required>
+                </angular2-multiselect>
+                <div *ngIf="myform.submitted && (myform.form.controls['ruleInfo1']?.invalid)">
+                  <div class="help-block has-error error-msg">
+                    This field is required
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-1">
+                <span *ngIf="mode != 'true'" class="glyphicon glyphicon-erase" title="Clear All" data-toggle="tooltip"
+                  data-placement="top" tooltip aria-hidden="true" (click)="clear()" style="top:3px;left:-24px;cursor: pointer;"></span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="control-label col-md-3 col-sm-3 col-xs-12">Run Immediately ?
+              </label>
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <p-checkbox [(ngModel)]="checkboxModelexecution" [disabled]="mode == 'true' " name="checkboxModelexecution" binary="true"></p-checkbox>
+              </div>
+            </div>
+
+            <div class="form-group" style="padding-top: 10px;">
+              <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                <a class="btn btn-primary" (click)="goBack()">Cancel</a>
+                 
+                <input type="submit" class="btn btn-success btn-margin" value="Submit" name="submit" 
+                [disabled]="(mode == 'false' || myform.form.dirty == true)?false:true">
+
+                <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" *ngIf="isSubmit=='true'">
+                  <div class="bounce1"></div>
+                  <div class="bounce2"></div>
+                  <div class="bounce3"></div>
+                </span>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>

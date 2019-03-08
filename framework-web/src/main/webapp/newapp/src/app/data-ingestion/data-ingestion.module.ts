@@ -5,7 +5,7 @@ import { DataIngestionComponent } from './data-ingestion.component';
 import { routing1 } from './data-ingestion-routing.module';
 import { DataIngestionDetailComponent } from './data-ingestion-detail/data-ingestion-detail.component'
 import { FormsModule } from '@angular/forms';
-import { GrowlModule } from 'primeng/primeng';
+import { GrowlModule, ChipsModule } from 'primeng/primeng';
 import { ResultModule } from '../shared/module/result.module';
 import { ProjectSharedModule } from '../shared/module/shared.module';
 import { CheckboxModule } from 'primeng/components/checkbox/checkbox';
@@ -29,6 +29,7 @@ import { UiSwitchModule } from 'ngx-ui-switch';
     DialogModule,
     CheckboxModule,
     AngularMultiSelectModule,
+    ChipsModule,
     UiSwitchModule.forRoot({
       size: 'small',
       color: '#15C5D5',

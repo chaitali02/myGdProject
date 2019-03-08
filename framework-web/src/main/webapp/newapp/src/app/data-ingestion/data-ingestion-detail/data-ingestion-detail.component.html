@@ -14,32 +14,44 @@
 
         <div class="actions">
           <a class="btn btn-circle btn-icon-only btn-default left-margin" title="Main" data-placement="top" tooltip
-            [ngClass]="isHomeEnable==true ? 'notcurrentpage':'currentpage'" data- (click)="showMainPage(ingestData.uuid,ingestData.version)">
+            [ngClass]="showForm==true ? 'currentpage':'notcurrentpage'" data- (click)="showMainPage(ingestData.uuid,ingestData.version)">
             <i class="fa fa-home" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
           </a>
 
           <a class="btn btn-circle btn-icon-only btn-default left-margin" href="javascript:;" title="Edit" data-toggle="tooltip"
-            data-placement="top" tooltip [ngClass]="mode == 'true' && showGraph == false? 'notcurrentpage':'currentpage'"
-            data-(click)="enableEdit(ingestData.uuid,ingestData.version)">
+            data-placement="top" tooltip [ngClass]="isEdit == true? 'currentpage':'notcurrentpage'" data-(click)="enableEdit(ingestData.uuid,ingestData.version)">
             <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
           </a>
 
           <a class="btn btn-circle btn-icon-only btn-default left-margin" href="javascript:;" title="Show Dependencies"
-            data-placement="top" tooltip [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'" data- (click)="showDagGraph(ingestData.uuid,ingestData.version)">
+            data-placement="top" tooltip [ngClass]="showForm==false ? 'currentpage':'notcurrentpage'" data- (click)="showDagGraph(ingestData.uuid,ingestData.version)">
             <i class="fa fa-sitemap" style="margin:2px auto;color:#a0a0a0;"></i>
           </a>
 
-          <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default left-margin" disabled="true"
-            (click)="broadcastRefreshData()" data-original-title="" title="Refresh">
+          <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default left-margin" [ngClass]="showForm==true ? 'currentpage':'notcurrentpage'"
+            (click)="showDagGraph(ingestData.uuid,ingestData.version)" data-original-title="" title="Refresh">
             <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
           </a>
+
           <a class="btn btn-circle btn-icon-only btn-default left-margin" (click)="goBack()" title="Close">
             <i class="fa fa-times" style="margin: 2px auto;color:#a0a0a0;"></i>
           </a>
+
         </div>
       </div>
-      <div class="portlet-body form" *ngIf="!showGraph">
-        <div>
+      <div class="portlet-body form" *ngIf="showForm">
+        <div class="centercontent" style="min-height:500px;" *ngIf="isEditError">
+          <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
+        </div>
+        <div class="centercontent" style="min-height:500px;" *ngIf="isEditInprogess">
+          <div class="spinner">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+          </div>
+        </div>
+
+        <div *ngIf="!isEditInprogess && !isEditError">
           <div class="form-wizard">
             <div class="form-body" style="padding-top: 20px;">
               <ul class="nav nav-pills nav-justified steps" style="margin-bottom:20px;">
@@ -82,7 +94,8 @@
               </div>
               <div class="tab-content">
                 <div class="tab-pane" id="tab1" [ngClass]="{'active' : continueCount == 1}">
-                  <form class="form-horizontal" name="myform" novalidate="novalidate">
+                  <form class="form-horizontal" name="myNewForm1" novalidate="novalidate" (ngSubmit)="myNewForm1.form.valid && countContinue()"
+                    #myNewForm1="ngForm">
 
                     <div class="form-group" *ngIf="mode">
                       <label class="col-md-3 control-label">UUID</label>
@@ -92,14 +105,21 @@
                       </div>
                     </div>
                     <div class="form-group">
-                      <label class="col-md-3 control-label">Name
+                      <label class="col-md-3 control-label" [ngClass]="{'has-error': myNewForm1.submitted && (myNewForm1.form.controls['name']?.invalid)}">Name
                         <span class="required" aria-required="true"> * </span>
                       </label>
                       <div class="col-md-6">
                         <input type="text" class="form-control" [(ngModel)]="ingestData.name" name="name" placeholder=""
-                          [disabled]="mode == 'true'">
+                          (ngModelChange)="onChangeName($event)" [disabled]="mode == 'true'" #name="ngModel" required
+                          [ngClass]="{'has-error':myNewForm1.submitted && (myNewForm1.form.controls['name']?.invalid)}">
+                        <div *ngIf="myNewForm1.submitted && (myNewForm1.form.controls['name']?.invalid)">
+                          <div class="help-block has-error error-msg">
+                            This field is required
+                          </div>
+                        </div>
                       </div>
                     </div>
+
                     <div class="form-group" *ngIf="mode">
                       <label class="col-md-3 control-label">Version </label>
                       <div class="col-md-6">
@@ -125,8 +145,8 @@
                     <div class="form-group taginput">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
                       <div class="col-md-6 col-sm-6 col-xs-12" *ngIf="locations!=''">
-                        <tag-input [(ngModel)]="ingestData.tags" name="tags" [disable]="mode == 'true'" theme='bootstrap'
-                          style=" max-height: 40px;overflow-x: hidden;padding-left:5px; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px;"></tag-input>
+                        <p-chips [(ngModel)]="ingestData.tags" styleClass="pchip-height" [disabled]="mode == 'true'"
+                          name="tags"></p-chips>
                       </div>
                     </div>
                     <div class="form-group">
@@ -170,18 +190,26 @@
                       <label class="col-md-3 control-label">Type
                         <span class="required" aria-required="true"> * </span>
                       </label>
-                      <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
-                        <p-dropdown [options]="ruleTypes" [(ngModel)]="selectedRuleType" name="selectedRuleType"
-                          [style]="{'width':'100%','padding':'3px'}" [filter]="true" [disabled]="mode == 'true'"
-                          (onChange)="onChangeRuleType()" placeholder="--Select--">
-                        </p-dropdown>
+                      <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6 " [ngClass]="{'has-error': myNewForm1.submitted && (myNewForm1.form.controls['selectedRuleType1']?.invalid)}">
+                        <div class="pdropdown-border" [ngClass]="{'has-error':myNewForm1.submitted && (myNewForm1.form.controls['selectedRuleType1']?.invalid)}">
+                          <p-dropdown [options]="ruleTypes" [(ngModel)]="selectedRuleType" name="selectedRuleType1"
+                            [style]="{'width':'100%','padding':'3px'}" [filter]="true" [disabled]="mode == 'true'"
+                            (onChange)="onChangeRuleType()" placeholder="--Select--" #selectedRuleType1="ngModel"
+                            required>
+                          </p-dropdown>
+                        </div>
+                        <div *ngIf="myNewForm1.submitted && (myNewForm1.form.controls['selectedRuleType1']?.invalid)">
+                          <div class="help-block has-error error-msg">
+                            This field is required
+                          </div>
+                        </div>
                       </div>
                     </div>
 
                     <div class="row">
                       <label class="control-label col-md-3"></label>
                       <div class="col-md-4 col-sm-4 col-xs-8 col-lg-4" style="padding-top: 2%;">
-                        <button type="submit" class="btn btn-outline green" (click)="countContinue()"> Continue
+                        <button type="submit" class="btn btn-outline green"> Continue
                           <i class="fa fa-angle-right"></i>
                         </button>
                       </div>
@@ -192,16 +220,31 @@
 
                 <!--Start Tab2-->
                 <div class="tab-pane" id="tab2" [ngClass]="{'active' : continueCount == 2}">
-                  <form class="form-horizontal" name="myform2" id="submit_form2" (submit)="countContinue()" novalidate="novalidate">
+                  <form class="form-horizontal" name="myNewForm2" (ngSubmit)="(myNewForm2.form.valid && datasetNotEmpty) && countContinue()"
+                    novalidate="novalidate" #myNewForm2="ngForm">
                     <div class="form-group">
-                      <label class="col-md-3 control-label col-sm-3 col-xs-6 col-lg-3">Source DS
+                      <label class="col-md-3 control-label col-sm-3 col-xs-6 col-lg-3" [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['sourceDsReq']?.invalid)}">Source
+                        DS
                         <span class="required" aria-required="true"> * </span>
                       </label>
                       <div class="col-md-3 col-sm-3 col-xs-6 col-lg-3">
-                        <p-dropdown [options]="allSourceDatasource" [(ngModel)]="sourceDs" name="sourceDs" [style]="{'width':'100%','padding':'3px'}"
-                          [filter]="true" [disabled]="mode == 'true'" (onChange)="onChangeSourceDs()" dataKey="uuid"
-                          placeholder="--Select--">
-                        </p-dropdown>
+                        <div class="pdropdown-border" [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['sourceDsReq']?.invalid)}">
+                          <p-dropdown [options]="allSourceDatasource" [(ngModel)]="sourceDs" name="sourceDsReq" [style]="{'width':'100%','padding':'3px'}"
+                            [filter]="true" [disabled]="mode == 'true'" (onChange)="onChangeSourceDs()" dataKey="uuid"
+                            placeholder="--Select--" #sourceDsReq="ngModel" required>
+                          </p-dropdown>
+                        </div>
+                        <!-- <div [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['sourceDsReq']?.invalid)}">
+                          <p-dropdown [options]="allSourceDatasource" [(ngModel)]="sourceDs" name="sourceDsReq" [style]="{'width':'100%','padding':'3px','border':'1px solid red'}"
+                            [filter]="true" [disabled]="mode == 'true'" (onChange)="onChangeSourceDs()" dataKey="uuid" [styleClass]="ui.dropdown.border: yellow"
+                            placeholder="--Select--" #sourceDsReq="ngModel" required >
+                          </p-dropdown>
+                        </div> -->
+                        <div *ngIf="myNewForm2.submitted && (myNewForm2.form.controls['sourceDsReq']?.invalid)">
+                          <div class="help-block has-error error-msg">
+                            This field is required
+                          </div>
+                        </div>
                       </div>
 
                       <label class="col-md-1 control-label col-sm-1 col-lg-1 col-xs-2">Format</label>
@@ -214,12 +257,18 @@
                     </div>
 
                     <div class="form-group" *ngIf="selectedSourceType == 'FILE'">
-                      <label class="col-md-3 control-label">Source Name
+                      <label class="col-md-3 control-label" [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['sourceNameReq']?.invalid)}">Sourc
+                        Name
                         <span class="required" aria-required="true"> * </span>
                       </label>
                       <div class="col-md-3">
                         <input type="text" class="form-control" [disabled]="mode == 'true'" [(ngModel)]="sourceName"
-                          name="sourceName" placeholder="--Select--">
+                          name="sourceNameReq" placeholder="--Select--" #sourceNameReq="ngModel" required [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['sourceNameReq']?.invalid)}">
+                        <div *ngIf="myNewForm2.submitted && (myNewForm2.form.controls['sourceNameReq']?.invalid)">
+                          <div class="help-block has-error error-msg">
+                            This field is required
+                          </div>
+                        </div>
                       </div>
 
                       <label class="col-md-1 control-label">Extension</label>
@@ -246,13 +295,22 @@
                     </div>
 
                     <div class="form-group" *ngIf="selectedSourceType == 'TABLE'">
-                      <label class="col-md-3 control-label">Source Type
+                      <label class="col-md-3 control-label" [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['sourceTypeReq']?.invalid)}">Source
+                        Type
                         <span class="required" aria-required="true"> * </span>
                       </label>
                       <div class="col-md-2">
-                        <p-dropdown [options]="sourceTypeArray" [(ngModel)]="sourceType" name="sourceType" [style]="{'width':'100%','padding':'3px'}"
-                          [filter]="true" [disabled]="mode == 'true'" placeholder="-Select-" (onChange)="onChangeSourceType()">
-                        </p-dropdown>
+                        <div class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['sourceTypeReq']?.invalid)}">
+                          <p-dropdown [options]="sourceTypeArray" [(ngModel)]="sourceType" name="sourceTypeReq" [style]="{'width':'100%','padding':'3px'}"
+                            [filter]="true" [disabled]="mode == 'true'" placeholder="-Select-" (onChange)="onChangeSourceType()"
+                            #sourceTypeReq="ngModel" required>
+                          </p-dropdown>
+                        </div>
+                        <div *ngIf="myNewForm2.submitted && (myNewForm2.form.controls['sourceTypeReq']?.invalid)">
+                          <div class="help-block has-error error-msg">
+                            This field is required
+                          </div>
+                        </div>
                       </div>
 
                       <label class="col-md-1 control-label">Name</label>
@@ -265,50 +323,82 @@
                     </div>
 
                     <div class="form-group" *ngIf="selectedSourceType == 'TABLE'">
-                      <label class="col-md-3 control-label">Incremental Key
+                      <label class="col-md-3 control-label" [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['incrementKeyReq']?.invalid)}">Incremental
+                        Key
                         <span class="required" aria-required="true"> * </span>
                       </label>
                       <div class="col-md-6">
-                        <p-dropdown [options]="allSourceAttributeForIncrmSplitBy" [(ngModel)]="incrementKey" name="incrementKey"
-                          [style]="{'width':'100%','padding':'3px'}" [filter]="true" [disabled]="mode == 'true'"
-                          placeholder="--Select--" dataKey="uuid">
-                        </p-dropdown>
+                        <div class="pdropdown-border " [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['incrementKeyReq']?.invalid)}">
+                          <p-dropdown [options]="allSourceAttributeForIncrmSplitBy" [(ngModel)]="incrementKey" name="incrementKeyReq"
+                            [style]="{'width':'100%','padding':'3px'}" [filter]="true" [disabled]="mode == 'true'"
+                            placeholder="--Select--" dataKey="uuid" #incrementKeyReq="ngModel" required>
+                          </p-dropdown>
+                        </div>
+                        <div *ngIf="myNewForm2.submitted && (myNewForm2.form.controls['incrementKeyReq']?.invalid)">
+                          <div class="help-block has-error error-msg">
+                            This field is required
+                          </div>
+                        </div>
                       </div>
                     </div>
 
                     <div class="form-group" *ngIf="selectedSourceType == 'TABLE'">
-                      <label class="col-md-3 control-label">Split By
+                      <label class="col-md-3 control-label" [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['splitByReq']?.invalid)}">Split
+                        By
                         <span class="required" aria-required="true"> * </span>
                       </label>
                       <div class="col-md-6">
-                        <p-dropdown [options]="allSourceAttributeForIncrmSplitBy" [(ngModel)]="splitBy" name="splitBy"
-                          [style]="{'width':'100%','padding':'3px'}" [filter]="true" [disabled]="mode == 'true'"
-                          placeholder="--Select--" dataKey="uuid">
-                        </p-dropdown>
+                        <div class="pdropdown-border " [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['splitByReq']?.invalid)}">
+                          <p-dropdown [options]="allSourceAttributeForIncrmSplitBy" [(ngModel)]="splitBy" name="splitByReq"
+                            [style]="{'width':'100%','padding':'3px'}" [filter]="true" [disabled]="mode == 'true'"
+                            placeholder="--Select--" dataKey="uuid" #splitByReq="ngModel" required>
+                          </p-dropdown>
+                        </div>
+                        <div *ngIf="myNewForm2.submitted && (myNewForm2.form.controls['splitByReq']?.invalid)">
+                          <div class="help-block has-error error-msg">
+                            This field is required
+                          </div>
+                        </div>
                       </div>
                     </div>
 
                     <div class="form-group" *ngIf="selectedSourceType == 'STREAM'">
-                      <label class="col-md-3 control-label">Source Name
+                      <label class="col-md-3 control-label" [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['targetDsReq']?.invalid)}">Source
+                        Name
                         <span class="required" aria-required="true"> * </span>
                       </label>
                       <div class="col-md-6">
-                        <p-dropdown [options]="streamSourceNameArray" [(ngModel)]="sourceName" name="sourceName"
-                          [style]="{'width':'100%','padding':'3px'}" [filter]="true" [disabled]="mode == 'true'"
-                          placeholder="--Select--" dataKey="uuid">
-                        </p-dropdown>
+                        <div class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['sourceNameReq']?.invalid)}">
+                          <p-dropdown [options]="streamSourceNameArray" [(ngModel)]="sourceName" name="sourceNameReq"
+                            [style]="{'width':'100%','padding':'3px'}" [filter]="true" [disabled]="mode == 'true'"
+                            placeholder="--Select--" dataKey="uuid" #sourceNameReq="ngModel" required>
+                          </p-dropdown>
+                        </div>
+                        <div *ngIf="myNewForm2.submitted && (myNewForm2.form.controls['sourceNameReq']?.invalid)">
+                          <div class="help-block has-error error-msg">
+                            This field is required
+                          </div>
+                        </div>
                       </div>
                     </div>
 
                     <div class="form-group">
-                      <label class="col-md-3 control-label">Target DS
+                      <label class="col-md-3 control-label" [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['targetDsReq']?.invalid)}">Target
+                        DS
                         <span class="required" aria-required="true"> * </span>
                       </label>
                       <div class="col-md-3">
-                        <p-dropdown [options]="allTargetDatasource" [(ngModel)]="targetDs" name="targetDs" [style]="{'width':'100%','padding':'3px'}"
-                          [filter]="true" [disabled]="mode == 'true'" dataKey="uuid" (onChange)="onChangeTargetDs()"
-                          placeholder="--Select--">
-                        </p-dropdown>
+                        <div class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['targetDsReq']?.invalid)}">
+                          <p-dropdown [options]="allTargetDatasource" [(ngModel)]="targetDs" name="targetDsReq" [style]="{'width':'100%','padding':'3px'}"
+                            [filter]="true" [disabled]="mode == 'true'" dataKey="uuid" (onChange)="onChangeTargetDs()"
+                            placeholder="--Select--" #targetDsReq="ngModel" required>
+                          </p-dropdown>
+                        </div>
+                        <div *ngIf="myNewForm2.submitted && (myNewForm2.form.controls['targetDsReq']?.invalid)">
+                          <div class="help-block has-error error-msg">
+                            This field is required
+                          </div>
+                        </div>
                       </div>
 
                       <label class="col-md-1 control-label">Format</label>
@@ -321,12 +411,18 @@
                     </div>
 
                     <div class="form-group" *ngIf="selectedTargetType == 'FILE'">
-                      <label class="col-md-3 control-label">Target Name
+                      <label class="col-md-3 control-label" [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['targetNameReq']?.invalid)}">Target
+                        Name
                         <span class="required" aria-required="true"> * </span>
                       </label>
                       <div class="col-md-3">
                         <input type="text" class="form-control" [disabled]="mode == 'true'" [(ngModel)]="targetName"
-                          name="targetName">
+                          name="targetNameReq" #targetNameReq="ngModel" required [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['targetNameReq']?.invalid)}">
+                        <div *ngIf="myNewForm2.submitted && (myNewForm2.form.controls['targetNameReq']?.invalid)">
+                          <div class="help-block has-error error-msg">
+                            This field is required
+                          </div>
+                        </div>
                       </div>
 
                       <label class="col-md-1 control-label">Extension</label>
@@ -347,45 +443,63 @@
                     </div>
 
                     <div class="form-group" *ngIf="selectedTargetType == 'TABLE'">
-                      <label class="col-md-3 control-label">Target Name
+                      <label class="col-md-3 control-label" [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['targetDsReq']?.invalid)}">Target
+                        Name
                         <span class="required" aria-required="true"> * </span>
                       </label>
                       <div class="col-md-6">
-                        <p-dropdown [options]="targetNameArray" [(ngModel)]="targetNameForTable" name="targetNameForTable"
-                          [style]="{'width':'100%','padding':'3px'}" [filter]="true" [disabled]="mode == 'true'"
-                          placeholder="--Select--" dataKey="uuid" (onChange)="onChangeTargetNameTable()">
-                        </p-dropdown>
+                        <div class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['targetNameForTableReq']?.invalid)}">
+                          <p-dropdown [options]="targetNameArray" [(ngModel)]="targetNameForTable" name="targetNameForTableReq"
+                            [style]="{'width':'100%','padding':'3px'}" [filter]="true" [disabled]="mode == 'true'"
+                            placeholder="--Select--" dataKey="uuid" (onChange)="onChangeTargetNameTable()"
+                            #targetNameForTableReq="ngModel" required>
+                          </p-dropdown>
+                        </div>
+                        <div *ngIf="myNewForm2.submitted && (myNewForm2.form.controls['targetNameForTableReq']?.invalid)">
+                          <div class="help-block has-error error-msg">
+                            This field is required
+                          </div>
+                        </div>
                       </div>
                     </div>
 
                     <div class="form-group" *ngIf="selectedTargetType == 'TABLE'">
-                      <label class="col-md-3 control-label">Save Mode
-                        <span class="required" aria-required="true"> * </span>
+                      <label class="col-md-3 control-label">Save
+                        Mode
                       </label>
                       <div class="col-md-6">
-                        <p-dropdown [options]="saveModeArrayTable" [(ngModel)]="saveMode" name="saveMode" [style]="{'width':'100%','padding':'3px'}"
-                          [filter]="true" [disabled]="mode == 'true'" placeholder="--Select--">
+                        <p-dropdown [options]="saveModeArrayTable" [(ngModel)]="saveMode" name="saveModeReq" [style]="{'width':'100%','padding':'3px'}"
+                          [filter]="true" [disabled]="mode == 'true'" placeholder="--Select--" #saveModeReq="ngModel"
+                          required>
                         </p-dropdown>
                       </div>
                     </div>
 
                     <div class="form-group" *ngIf="selectedTargetType == 'FILE'">
-                      <label class="col-md-3 control-label">Save Mode
+                      <label class="col-md-3 control-label" [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['saveModeFileReq']?.invalid)}">Save
+                        Mode
                         <span class="required" aria-required="true"> * </span>
                       </label>
                       <div class="col-md-6">
-                        <p-dropdown [options]="saveModeArrayFile" [(ngModel)]="saveMode" name="saveMode" [style]="{'width':'100%','padding':'3px'}"
-                          [filter]="true" [disabled]="mode == 'true'" placeholder="--Select--">
-                        </p-dropdown>
+                        <div class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['saveModeFileReq']?.invalid)}">
+                          <p-dropdown [options]="saveModeArrayFile" [(ngModel)]="saveMode" name="saveModeFileReq"
+                            [style]="{'width':'100%','padding':'3px'}" [filter]="true" [disabled]="mode == 'true'"
+                            placeholder="--Select--" #saveModeFileReq="ngModel" required>
+                          </p-dropdown>
+                        </div>
+                        <div *ngIf="myNewForm2.submitted && (myNewForm2.form.controls['saveModeFileReq']?.invalid)">
+                          <div class="help-block has-error error-msg">
+                            This field is required
+                          </div>
+                        </div>
                       </div>
                     </div>
 
                     <div class="form-group">
                       <label class="col-md-3 control-label">Run Param
-                        <span class="required" aria-required="true"> * </span>
                       </label>
                       <div class="col-md-6">
-                        <textarea [disabled]="mode == 'true'" [(ngModel)]="runParams" name="runParams" class="form-control noresize "
+                        <textarea [disabled]="mode == 'true'" [(ngModel)]="runParams" name="runParamsReq" class="form-control noresize "
                           rows="2" style="resize:none;"></textarea>
                       </div>
                     </div>
@@ -407,7 +521,7 @@
                               <a href="javascript:;" [attr.disabled]="topDisabled == true ? 'disabled' : null">Top</a>
                             </li>
                             <li class="divider" style="margin: 0px;"> </li>
-                            <li (click)="updateArray(filterTableArray.length-1, '')">{{bottomDisabled}}
+                            <li (click)="updateArray(filterTableArray.length-1, '')">
                               <a href="javascript:;" [attr.disabled]="bottomDisabled == true ? 'disabled' : null">Bottom</a>
                             </li>
                             <li class="divider" style="margin: 0px;"> </li>
@@ -480,35 +594,38 @@
                                 </td>
 
                                 <td>
-                                  <input type="text" class="form-control" [(ngModel)]="data.lhsAttribute" name="lhsAttribute+{{i}}"
+                                  <input type="text" class="form-control" [(ngModel)]="data.lhsAttribute" name="lhsAttribute{{i}}"
                                     pTooltip="enter only integer" tooltipPosition="top" [disabled]="mode == 'true'"
                                     [style]="{'width':'100%','padding':'3px'}" *ngIf="data.lhsType == 'integer'"
-                                    placeholder="--Enter Value--">
-                                  <input type="text" class="form-control" [(ngModel)]="data.lhsAttribute" name="lhsAttribute+{{i}}"
+                                    placeholder="--Enter Value--" #lhsAttribute="ngModel" required [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['lhsAttribute'+i]?.invalid)}">
+
+                                  <input type="text" class="form-control" [(ngModel)]="data.lhsAttribute" name="lhsAttribute{{i}}"
                                     pTooltip="enter values into single quotes" tooltipPosition="top" tooltipEvent="focus"
                                     [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}" *ngIf="data.lhsType == 'string'"
-                                    placeholder="--Enter String--">
-                                  <div *ngIf="data.lhsType == 'formula'">
-                                    <p-dropdown [options]="FormulaArray" [(ngModel)]="data.lhsAttribute" name="lhsAttribute+{{i}}"
+                                    placeholder="--Enter String--" #lhsAttribute="ngModel" required [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['lhsAttribute'+i]?.invalid)}">
+
+                                  <div *ngIf="data.lhsType == 'formula'" class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['lhsAttribute'+i]?.invalid)}">
+                                    <p-dropdown [options]="FormulaArray" [(ngModel)]="data.lhsAttribute" name="lhsAttribute{{i}}"
                                       [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
-                                      placeholder="--Select--" dataKey="uuid">
+                                      placeholder="--Select--" dataKey="uuid" required #lhsAttribute="ngModel">
                                     </p-dropdown>
                                   </div>
-                                  <div *ngIf="data.lhsType == 'datapod' && selectedSourceType !== 'FILE'">
+                                  <div *ngIf="data.lhsType == 'datapod' && selectedSourceType !== 'FILE'" class="pdropdown-border"
+                                    [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['lhsAttribute'+i]?.invalid)}">
                                     <p-dropdown [options]="attributesArray" [(ngModel)]="data.lhsAttribute" dataKey="uuid"
-                                      name="lhsAttribute+{{i}}" [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'"
-                                      [filter]="true" placeholder="--Select--" dataKey="uuid">
+                                      name="lhsAttribute{{i}}" [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'"
+                                      [filter]="true" placeholder="--Select--" dataKey="uuid" required #lhsAttribute="ngModel">
                                     </p-dropdown>
                                   </div>
-                                  <div *ngIf="data.lhsType == 'datapod' && selectedSourceType == 'FILE'">
-                                    <input type="text" class="form-control" [(ngModel)]="data.lhsAttribute" name="lhsAttribute+{{i}}"
-                                      [disabled]="mode == 'true'">
+                                  <div *ngIf="data.lhsType == 'datapod' && selectedSourceType == 'FILE'" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['lhsAttribute'+i]?.invalid)}">
+                                    <input type="text" class="form-control" [(ngModel)]="data.lhsAttribute" name="lhsAttribute{{i}}"
+                                      [disabled]="mode == 'true'" required #lhsAttribute="ngModel">
                                   </div>
                                 </td>
                                 <td>
                                   <p-dropdown [options]="operators" [(ngModel)]="data.operator" name="operator+{{i}}"
                                     [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
-                                    (onChange)="onChangeOperator(i)">
+                                    (onChange)="onChangeOperator(i)" placeholder="--Select--">
                                   </p-dropdown>
                                 </td>
                                 <td>
@@ -566,59 +683,79 @@
                                   </select>
                                 </td>
                                 <td>
-                                  <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}"
+                                  <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute" name="rhsAttribute{{i}}"
                                     [disabled]="mode == 'true'" *ngIf="data.rhsType == 'integer'&& data.operator != 'BETWEEN'"
-                                    placeholder="--Enter integer value--">
-                                  <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}"
+                                    placeholder="--Enter integer value--" #rhsAttribute="ngModel" required [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute'+i]?.invalid)}">
+                                  <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute" name="rhsAttribute{{i}}"
                                     [disabled]="mode == 'true'" *ngIf="data.rhsType == 'string'&& data.operator != 'BETWEEN' && data.operator != 'IS'"
-                                    placeholder="--Enter String--">
+                                    placeholder="--Enter String--" #rhsAttribute="ngModel" required [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute'+i]?.invalid)}">
+
                                   <div *ngIf="data.operator == 'BETWEEN' && (data.rhsType == 'integer'|| data.rhsType == 'string')">
-                                    <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute1" name="rhsAttribute1+{{i}}"
-                                      style="width:30%;display: inline-block" [disabled]="mode == 'true'" placeholder="--Select--">
+                                    <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute1" name="rhsAttribute1{{i}}"
+                                      style="width:30%;display: inline-block" [disabled]="mode == 'true'" placeholder="--Select--"
+                                      #rhsAttribute1="ngModel" required [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute1'+i]?.invalid)}">
                                     {{"-"}}
-                                    <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute2" name="rhsAttribute2+{{i}}"
-                                      style="width:30%;display: inline-block" [disabled]="mode == 'true'" placeholder="--Select--">
+                                    <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute2" name="rhsAttribute2{{i}}"
+                                      style="width:30%;display: inline-block" [disabled]="mode == 'true'" placeholder="--Select--"
+                                      #rhsAttribute2="ngModel" required [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute2'+i]?.invalid)}">
                                   </div>
-                                  <div *ngIf="data.rhsType == 'formula'">
-                                    <p-dropdown [options]="FormulaArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}"
+
+                                  <div *ngIf="data.rhsType == 'formula'" class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute'+i]?.invalid)}">
+                                    <p-dropdown [options]="FormulaArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute{{i}}"
                                       [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
-                                      placeholder="--Select--" dataKey="uuid">
+                                      placeholder="--Select--" dataKey="uuid" required #rhsAttribute="ngModel">
                                     </p-dropdown>
                                   </div>
-                                  <div *ngIf="data.rhsType == 'datapod' && selectedSourceType !== 'FILE' && data.operator !== '!='">
-                                    <p-dropdown [options]="attributesArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}"
+
+                                  <!-- <div *ngIf="data.lhsType == 'datapod' && selectedSourceType !== 'FILE'" class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['lhsAttribute'+i]?.invalid)}">
+                                      <p-dropdown [options]="attributesArray" [(ngModel)]="data.lhsAttribute" dataKey="uuid"
+                                        name="lhsAttribute{{i}}" [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'"
+                                        [filter]="true" placeholder="--Select--" dataKey="uuid" required #lhsAttribute="ngModel">
+                                      </p-dropdown>
+                                    </div> -->
+
+                                  <div *ngIf="data.rhsType == 'datapod' && selectedSourceType !== 'FILE' && data.operator !== '!='"
+                                    class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute'+i]?.invalid)}">
+                                    <p-dropdown [options]="attributesArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute{{i}}"
                                       [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
-                                      placeholder="--Select--" dataKey="uuid">
+                                      placeholder="--Select--" dataKey="uuid" required #rhsAttribute="ngModel">
                                     </p-dropdown>
                                   </div>
+
                                   <div *ngIf="data.rhsType == 'datapod' && selectedSourceType == 'FILE'">
-                                    <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}"
-                                      [disabled]="mode == 'true'">
+                                    <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute" name="rhsAttribute{{i}}"
+                                      [disabled]="mode == 'true'" #rhsAttribute="ngModel" required [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute'+i]?.invalid)}">
                                   </div>
-                                  <div *ngIf="data.rhsType == 'dataset' ">
-                                    <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute.label" name="rhsAttribute+{{i}}"
-                                      [disabled]="'true'" style="width:80%;display: inline-block">
+                                  <div *ngIf="data.rhsType == 'dataset'">
+                                    <input type="text" class="form-control" [(ngModel)]="data.rhsAttribute.label" name="rhsAttributeReq{{i}}"
+                                      [disabled]="'true'" style="width:80%;display: inline-block" #rhsAttributeReq="ngModel"
+                                      required [ngClass]="{'has-error':myNewForm2.submitted && ( data.rhsAttribute.label === '')}">
                                     <i class="fa fa-search" (click)="searchOption(i)" style="width:10%;display:inline-block"
                                       pTooltip="Search"></i>
                                   </div>
-                                  <div *ngIf="data.rhsType == 'function'">
-                                    <p-dropdown [options]="functionArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}"
+
+                                  <div *ngIf="data.rhsType == 'function'" class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute'+i]?.invalid)}">
+                                    <p-dropdown [options]="functionArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute{{i}}"
                                       [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
-                                      placeholder="--Select--" dataKey="uuid">
+                                      placeholder="--Select--" dataKey="uuid" required #rhsAttribute="ngModel">
                                     </p-dropdown>
                                   </div>
-                                  <div *ngIf="data.rhsType == 'paramlist'">
-                                    <p-dropdown [options]="paramlistArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}"
+
+                                  <div *ngIf="data.rhsType == 'paramlist'" class="pdropdown-border" [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute'+i]?.invalid)}">
+                                    <p-dropdown [options]="paramlistArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute{{i}}"
                                       [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
-                                      placeholder="--Select--" dataKey="uuid">
+                                      placeholder="--Select--" dataKey="uuid" required #rhsAttribute="ngModel">
                                     </p-dropdown>
                                   </div>
-                                  <div *ngIf="data.rhsType == 'string' && data.operator == 'IS'">
-                                    <p-dropdown [options]="isNullArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}"
+
+                                  <div *ngIf="data.rhsType == 'string' && data.operator == 'IS'" class="pdropdown-border"
+                                    [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute'+i]?.invalid)}">
+                                    <p-dropdown [options]="isNullArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute{{i}}"
                                       [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
-                                      placeholder="--Select--">
+                                      placeholder="--Select--" required #rhsAttribute="ngModel">
                                     </p-dropdown>
                                   </div>
+
                                   <p-dialog header="Search Attribute" [(visible)]="displayDialogBox" [modal]="true"
                                     [responsive]="true" [width]="400" [resizable]="true" [baseZIndex]="1000"
                                     [contentStyle]="{'height':'200px'}">
@@ -665,10 +802,10 @@
                     <div class="row">
                       <label class="control-label col-md-3"></label>
                       <div class="col-md-4" style="padding-top: 2%;">
-                        <a href="javascript:;" class="btn default button-previous" (click)="countBack()">
+                        <a href="javascript:;" class="btn default button-previous" (click)="countBack()" style="margin: 0% 1% 0% 0%;">
                           <i class="fa fa-angle-left"></i> Back
                         </a>
-                        <button type="submit" class="btn btn-outline green "> Continue
+                        <button type="submit" class="btn btn-outline green"> Continue
                           <i class="fa fa-angle-right"></i>
                         </button>
                       </div>
@@ -678,14 +815,13 @@
                 <!--End Tab2-->
                 <!-- Start Tab3 -->
                 <div class="tab-pane" id="tab3" [ngClass]="{'active' : continueCount == 3}">
-                  <form class="form-horizontal" name="myform2" id="submit_form2" (submit)="countContinue()" novalidate="novalidate">
+                  <form class="form-horizontal" name="myNewForm3" (submit)="myNewForm3.form.valid && countContinue()"
+                    novalidate="novalidate" #myNewForm3="ngForm">
 
                     <div class="portlet light bordered">
                       <div class="x_title">
                         <div class="caption">
-                          <h4>
-                            Attribute Mapping
-                          </h4>
+                          <span class="caption-subject sbold" style="font-size: 16px;">Attribute Mapping</span>
                         </div>
                       </div>
 
@@ -717,7 +853,7 @@
                             </div>
                             <div class="col-md-8">
                               <p-dropdown [options]="allAutoMapFile" [(ngModel)]="selectedAutoMode" name="selectedAutoMode"
-                                [style]="{'width':'100%','padding':'3px'}" [filter]="true" [disabled]="mode == 'true'"
+                                [style]="{'width':'100%','padding':'3px'}" [filter]="true" [disabled]="mode == 'true'|| (selectedSourceType =='FILE' && selectedTargetType =='FILE')"
                                 (onChange)="onChangeAutoMode()">
                               </p-dropdown>
                             </div>
@@ -725,7 +861,7 @@
                         </div>
 
                         <div class="form-body">
-                          <table class=" row-border hover table  table-striped table-bordered" style="padding-top:10px">
+                          <table class=" row-border hover table  table-striped table-bordered" style="padding-top:10px;table-layout: fixed">
                             <thead>
                               <tr>
                                 <th style="width:5%;text-align: center; Vertical-align: middle;">
@@ -733,72 +869,90 @@
                                     [(ngModel)]="checkAll" name="checkAll" (click)="checkAllAttributeRow()" />
                                 </th>
                                 <th style="text-align: center; Vertical-align: middle;width:7%;">Id</th>
-                                <th style="text-align: center;width:30%;">Source Type</th>
-                                <th style="text-align: center;width:33%;">Source Attribute</th>
-                                <th style="text-align: center;width:30%;">Target Attribute</th>
+                                <th style="text-align: center;width:20%;">Source Type</th>
+                                <th style="text-align: center;width:35%;">Source Attribute</th>
+                                <th style="text-align: center;width:33%;">Target Attribute</th>
                               </tr>
                             </thead>
                             <tbody>
                               <tr *ngFor="let data of attributeTableArray;let i=index">
                                 <td style="text-align:center;Vertical-align:middle;">
                                   <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="data.selected"
-                                    name="selected+{{i}}" [disabled]="isAttributeMapDisable" />
+                                    name="selected+{{i}}" [disabled]="isAttributeMapDisable"/>
                                 </td>
                                 <td>
                                   <input type="text" class="form-control" [(ngModel)]="data.attrMapId" name="attrMapId+{{i}}"
                                     [disabled]="true">
                                 </td>
                                 <td>
-                                  <p-dropdown [options]="attributeSourceTypeArray" [(ngModel)]="data.sourceType" name="sourceType+{{i}}"
+                                  <p-dropdown [options]="attributeSourceTypeArray" [(ngModel)]="data.sourceType" name="sourceType{{i}}"
                                     [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
                                     placeholder="--Select--" (onChange)="onChangeAttributeTableType(i)">
                                   </p-dropdown>
                                 </td>
 
                                 <td *ngIf="data.sourceType == 'datapod' && selectedSourceType == 'TABLE'">
-                                  <p-dropdown [options]="allSourceAttribute" [(ngModel)]="data.sourceAttribute" name="sourceAttribute+{{i}}"
-                                    datakey="attrName" [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'"
-                                    [filter]="true" placeholder="--Select--">
-                                  </p-dropdown>
+                                  <div class="pdropdown-border" [ngClass]="{'has-error':myNewForm3.submitted && (myNewForm3.form.controls['sourceAttribute'+i]?.invalid)}">
+                                    <p-dropdown [options]="allSourceAttribute" [(ngModel)]="data.sourceAttribute" name="sourceAttribute{{i}}"
+                                      datakey="attrName" [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'"
+                                      [filter]="true" placeholder="--Select--" required #sourceAttribute="ngModel">
+
+                                      <!-- <ng-template let-item pTemplate="group" > 
+                                      <div class="ui-dropdown" style="border: 1px solid blue">
+                                        <span style="width:100%;padding:3px;">{{item.label}}{{"1"}}</span>
+                                      </div>
+                                    </ng-template> -->
+
+                                    </p-dropdown>
+                                  </div>
+
                                 </td>
                                 <td *ngIf="data.sourceType == 'datapod' && selectedSourceType !== 'TABLE'">
-                                  <input type="text" class="form-control" [(ngModel)]="data.sourceAttribute" name="sourceAttribute+{{i}}"
-                                    [disabled]="mode == 'true'">
+                                  <input type="text" class="form-control" [(ngModel)]="data.sourceAttribute" name="sourceAttribute{{i}}"
+                                    [disabled]="mode == 'true'" #sourceAttribute="ngModel" required [ngClass]="{'has-error':myNewForm3.submitted && (myNewForm3.form.controls['sourceAttribute'+i]?.invalid)}">
                                 </td>
                                 <td *ngIf="data.sourceType == 'function'">
-                                  <p-dropdown [options]="functionArray" [(ngModel)]="data.sourceAttribute" name="sourceAttribute+{{i}}"
-                                    datakey="label" [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'"
-                                    [filter]="true" placeholder="--Select--">
-                                  </p-dropdown>
+                                  <div class="pdropdown-border" [ngClass]="{'has-error':myNewForm3.submitted && (myNewForm3.form.controls['sourceAttribute'+i]?.invalid)}">
+                                    <p-dropdown [options]="functionArray" [(ngModel)]="data.sourceAttribute" name="sourceAttribute{{i}}"
+                                      datakey="label" [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'"
+                                      [filter]="true" placeholder="--Select--" required #sourceAttribute="ngModel">
+                                    </p-dropdown>
+                                  </div>
                                 </td>
                                 <td *ngIf="data.sourceType == 'formula'">
-                                  <p-dropdown [options]="FormulaArray" [(ngModel)]="data.sourceAttribute" name="sourceAttribute+{{i}}"
-                                    datakey="label" [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'"
-                                    [filter]="true" placeholder="--Select--">
-                                  </p-dropdown>
+                                  <div class="pdropdown-border" [ngClass]="{'has-error':myNewForm3.submitted && (myNewForm3.form.controls['sourceAttribute'+i]?.invalid)}">
+                                    <p-dropdown [options]="FormulaArray" [(ngModel)]="data.sourceAttribute" name="sourceAttribute{{i}}"
+                                      datakey="label" [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'"
+                                      [filter]="true" placeholder="--Select--" required #sourceAttribute="ngModel">
+                                    </p-dropdown>
+                                  </div>
                                 </td>
                                 <td *ngIf="data.sourceType == 'string'">
-                                  <input type="text" class="form-control" [(ngModel)]="data.sourceAttribute" name="sourceAttribute+{{i}}"
-                                    [disabled]="mode == 'true'">
+                                  <input type="text" class="form-control" [(ngModel)]="data.sourceAttribute" name="sourceAttribute{{i}}"
+                                    [disabled]="mode == 'true'" #sourceAttribute="ngModel" required [ngClass]="{'has-error':myNewForm3.submitted && (myNewForm3.form.controls['sourceAttribute'+i]?.invalid)}">
                                 </td>
                                 <td *ngIf="data.sourceType == 'attribute'">
-                                  <input type="text" class="form-control" [(ngModel)]="data.sourceAttribute" name="sourceAttribute+{{i}}"
-                                    [disabled]="mode == 'true'">
+                                  <input type="text" class="form-control" [(ngModel)]="data.sourceAttribute" name="sourceAttribute{{i}}"
+                                    [disabled]="mode == 'true'" #sourceAttribute="ngModel" required [ngClass]="{'has-error':myNewForm3.submitted && (myNewForm2.form.controls['sourceAttribute'+i]?.invalid)}">
                                 </td>
 
                                 <td>
                                   <div *ngIf="data.IsTargetAttributeSimple == 'true'">
-                                    <input type="text" class="form-control" [(ngModel)]="data.targetAttribute" name="targetAttribute+{{i}}"
-                                      [disabled]="mode || selectedTargetType == 'TABLE'">
+                                    <input type="text" class="form-control" [(ngModel)]="data.targetAttribute" name="targetAttribute{{i}}"
+                                      [disabled]="mode || selectedTargetType == 'TABLE'" #targetAttribute="ngModel"
+                                      required [ngClass]="{'has-error':myNewForm3.submitted && (myNewForm3.form.controls['targetAttribute'+i]?.invalid)}">
                                   </div>
                                   <div *ngIf="(data.IsTargetAttributeSimple == 'false') && (selectedSourceType !== 'STREAM' || selectedTargetType !== 'TABLE')">
                                     <input type="text" class="form-control" [(ngModel)]="data.targetAttribute.label"
-                                      name="targetAttribute+{{i}}" [disabled]="true || selectedTargetType !== 'TABLE'">
+                                      name="targetAttribute{{i}}" [disabled]="true || selectedTargetType !== 'TABLE'"
+                                      #targetAttribute="ngModel" required [ngClass]="{'has-error':myNewForm3.submitted && (myNewForm3.form.controls['targetAttribute'+i]?.invalid)}">
                                   </div>
-                                  <div *ngIf="(selectedSourceType =='STREAM' &&  selectedTargetType =='TABLE')">
+                                  <div *ngIf="(selectedSourceType =='STREAM' &&  selectedTargetType =='TABLE')" class="pdropdown-border"
+                                    [ngClass]="{'has-error':myNewForm3.submitted && (myNewForm3.form.controls['targetAttribute'+i]?.invalid)}">
                                     <p-dropdown [options]="allSourceAttributeTarget" [(ngModel)]="data.targetAttribute"
-                                      name="targetAttribute+{{i}}" datakey="label" [style]="{'width':'100%','padding':'3px'}"
-                                      [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--">
+                                      name="targetAttribute{{i}}" datakey="label" [style]="{'width':'100%','padding':'3px'}"
+                                      [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--" required
+                                      #targetAttribute="ngModel">
                                     </p-dropdown>
                                   </div>
                                 </td>
@@ -812,7 +966,7 @@
                     <div class="row">
                       <label class="control-label col-md-3"></label>
                       <div class="col-md-4" style="padding-top: 2%;">
-                        <a href="javascript:;" class="btn default button-previous" (click)="countBack()">
+                        <a href="javascript:;" class="btn default button-previous" (click)="countBack()" style="margin: 0% 1% 0% 0%;">
                           <i class="fa fa-angle-left"></i> Back
                         </a>
                         <button type="submit" class="btn btn-outline green "> Continue
@@ -835,11 +989,11 @@
                   <div class="row">
                     <label class="control-label col-md-3"></label>
                     <div class="col-md-4" style="padding-top: 2%;">
-                      <a href="javascript:;" class="btn default button-previous" (click)="countBack()">
+                      <a href="javascript:;" class="btn default button-previous" (click)="countBack()" style="margin: 0% 1% 0% 0%;">
                         <i class="fa fa-angle-left"></i> Back
                       </a>
-                      <input type="submit" class="btn green" value="Submit" name="submit" [disabled]="mode == 'true' || isSubmit == 'true'"
-                        (click)="ingestSubmit()">
+                      <input type="submit" class="btn green" value="Submit" name="submit" [disabled]="mode == 'true' || isSubmit == 'true'|| !(myNewForm1.form.dirty || myNewForm2.form.dirty || myNewForm3.form.dirty )"
+                        (click)="submitIngest()" style="border-radius: 4px;">
                       <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" *ngIf="isSubmit=='true'">
                         <div class="bounce1"></div>
                         <div class="bounce2"></div>
@@ -851,7 +1005,6 @@
                 <!-- End Tab4-->
               </div>
               <!--End form-body-->
-              <hr>
             </div>
             <!--End form-wizard-->
           </div>
@@ -860,7 +1013,7 @@
 
       <div class="form-body graph-body" *ngIf="showGraph" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=');">
         <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
-        <div class="spinner" id="graphloader">
+        <div class="spinner" *ngIf="isGraphInprogess">
           <div class="bounce1"></div>
           <div class="bounce2"></div>
           <div class="bounce3"></div>
