@@ -10,7 +10,9 @@
  *******************************************************************************/
 package com.inferyx.framework.operator;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -128,12 +130,93 @@ public class FilterOperator2 {
 			, ExecParams execParams
 			, Boolean isAggrAllowed
 			, Boolean isAggrReqd, RunMode runMode, Datasource mapSourceDS) throws Exception {
+		return generateSql(filterInfo
+				, refKeyMap
+				, filterSource
+				, otherParams
+				, usedRefKeySet
+				, execParams
+				, isAggrAllowed
+				, isAggrReqd
+				, runMode
+				, mapSourceDS
+				, new ArrayList<String>());
+	}
+	
+	/**
+	 * 
+	 * @param filterInfo
+	 * @param refKeyMap
+	 * @param filterSource
+	 * @param otherParams
+	 * @param usedRefKeySet
+	 * @param execParams
+	 * @param isAggrAllowed
+	 * @param isAggrReqd
+	 * @param runMode
+	 * @param mapSourceDS
+	 * @param attributeList
+	 * @return
+	 * @throws Exception
+	 */
+	public String generateExprSql(List<FilterInfo> filterInfo
+			, java.util.Map<String, MetaIdentifier> refKeyMap
+			, MetaIdentifierHolder filterSource
+			, HashMap<String, String> otherParams
+			, Set<MetaIdentifier> usedRefKeySet
+			, ExecParams execParams
+			, Boolean isAggrAllowed
+			, Boolean isAggrReqd
+			, RunMode runMode
+			, Datasource mapSourceDS
+			, List<String> attributeList) throws Exception {
+
+		String XPLAIN_SINGLE_QUOTES = "'";
+		String XPLAIN_START_BRACKET = "('";
+		String XPLAIN_END_BRACKET = "')";
+		String XPLAIN_CONCAT = "CONCAT";
+		String XPLAIN_COMMA = ", ";
+		String sql = generateSql(filterInfo
+				, refKeyMap
+				, filterSource
+				, otherParams
+				, usedRefKeySet
+				, execParams
+				, isAggrAllowed
+				, isAggrReqd
+				, runMode
+				, mapSourceDS
+				, attributeList);
+		if (attributeList == null 
+				|| attributeList.isEmpty()) {
+			return sql;
+		}
+		attributeList = new ArrayList<>(new HashSet<>(attributeList));	// Deduplicate, else attr shall be replaced multiple times
+		sql = XPLAIN_CONCAT + XPLAIN_START_BRACKET + sql;
+		for (String attr : attributeList) {
+			sql = sql.replaceAll(attr, attr + XPLAIN_START_BRACKET + XPLAIN_COMMA + attr + XPLAIN_COMMA + XPLAIN_END_BRACKET);
+		}
+		sql = sql + XPLAIN_END_BRACKET;
+		return sql;
+	}
+	
+	public String generateSql(List<FilterInfo> filterInfo
+			, java.util.Map<String, MetaIdentifier> refKeyMap
+			, MetaIdentifierHolder filterSource
+			, HashMap<String, String> otherParams
+			, Set<MetaIdentifier> usedRefKeySet
+			, ExecParams execParams
+			, Boolean isAggrAllowed
+			, Boolean isAggrReqd
+			, RunMode runMode
+			, Datasource mapSourceDS
+			, List<String> attributeList) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		if (filterInfo == null || filterInfo.size() <= 0) {
 			return "";
 		}
 		
-		String filterStr = joinKeyOperator.generateSql(filterInfo, filterSource, refKeyMap, otherParams, usedRefKeySet, execParams,isAggrAllowed, isAggrReqd, runMode, mapSourceDS);
+		String filterStr = joinKeyOperator.generateSql(filterInfo, filterSource, refKeyMap, otherParams, usedRefKeySet, execParams,isAggrAllowed, isAggrReqd, runMode, mapSourceDS, attributeList);
 		if (StringUtils.isBlank(filterStr)) {
 			builder.append(ConstantsUtil.BLANK);
 		} else {
