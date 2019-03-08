@@ -31,7 +31,7 @@ RuleModule.factory('Rule2Factory', function ($http, $location) {
     var url = $location.absUrl().split("app")[0]
     return $http({
       method: 'POST',
-      url: url + "rule/executeRule?action=execute&ruleUUID=" + uuid + "&ruleVersion=" + version,
+      url: url + "rule2/execute?action=execute&uuid=" + uuid + "&version=" + version,
       headers: {
         'Accept': '*/*',
         'content-Type': "application/json",
@@ -211,7 +211,7 @@ RuleModule.factory('Rule2Factory', function ($http, $location) {
         return response;
       })
   }
-  
+
   factory.findFormulaByType = function (uuid, type) {
     var url = $location.absUrl().split("app")[0]
     return $http({
@@ -353,7 +353,7 @@ RuleModule.factory('Rule2Factory', function ($http, $location) {
 
 
 RuleModule.service("Rule2Service", function ($q, Rule2Factory, sortFactory, CF_GRID) {
-  
+
   this.executeRuleWithParams = function (uuid, version, data) {
     var deferred = $q.defer();
     if (data != null) {
@@ -420,7 +420,7 @@ RuleModule.service("Rule2Service", function ($q, Rule2Factory, sortFactory, CF_G
   }
 
 
-  
+
   this.getAll = function (type) {
     var deferred = $q.defer();
     Rule2Factory.findAll(type).then(function (response) { onSuccess(response) });
@@ -615,6 +615,7 @@ RuleModule.service("Rule2Service", function ($q, Rule2Factory, sortFactory, CF_G
             filterInfo.islhsFormula = false
             filterInfo.islhsDatapod = true;
             lhsdatapodAttribute.uuid = response.filterInfo[i].operand[0].ref.uuid;
+            lhsdatapodAttribute.type = response.filterInfo[i].operand[0].ref.type;
             lhsdatapodAttribute.datapodname = response.filterInfo[i].operand[0].ref.name;
             lhsdatapodAttribute.name = response.filterInfo[i].operand[0].attributeName;
             lhsdatapodAttribute.dname = response.filterInfo[i].operand[0].ref.name + "." + response.filterInfo[i].operand[0].attributeName;
@@ -631,6 +632,7 @@ RuleModule.service("Rule2Service", function ($q, Rule2Factory, sortFactory, CF_G
             filterInfo.islhsSimple = false;
             filterInfo.islhsDatapod = false;
             lhsformula.uuid = response.filterInfo[i].operand[0].ref.uuid;
+            lhsformula.type = response.filterInfo[i].operand[0].ref.type;
             lhsformula.name = response.filterInfo[i].operand[0].ref.name;
             filterInfo.lhsformula = lhsformula;
           }
@@ -676,13 +678,14 @@ RuleModule.service("Rule2Service", function ($q, Rule2Factory, sortFactory, CF_G
             filterInfo.isrhsDatapod = true;
             filterInfo.isrhsDataset = false;
             rhsdatapodAttribute.uuid = response.filterInfo[i].operand[1].ref.uuid;
+            rhsdatapodAttribute.type = response.filterInfo[i].operand[1].ref.type;
             rhsdatapodAttribute.datapodname = response.filterInfo[i].operand[1].ref.name;
             rhsdatapodAttribute.name = response.filterInfo[i].operand[1].attributeName;
             rhsdatapodAttribute.dname = response.filterInfo[i].operand[1].ref.name + "." + response.filterInfo[i].operand[1].attributeName;
             rhsdatapodAttribute.attributeId = response.filterInfo[i].operand[1].attributeId;
             filterInfo.rhsdatapodAttribute = rhsdatapodAttribute;
           }
-          else if (response.filterInfo[i].operand[1].ref.type == "dataset" && response.source.ref.uuid == response.filterInfo[i].operand[1].ref.uuid) {
+          else if (response.filterInfo[i].operand[1].ref.type == "dataset" && response.sourceInfo.ref.uuid == response.filterInfo[i].operand[1].ref.uuid) {
             var rhsdatapodAttribute = {}
             var obj = {}
             obj.text = "datapod"
@@ -693,6 +696,7 @@ RuleModule.service("Rule2Service", function ($q, Rule2Factory, sortFactory, CF_G
             filterInfo.isrhsDatapod = true;
             filterInfo.isrhsDataset = false;
             rhsdatapodAttribute.uuid = response.filterInfo[i].operand[1].ref.uuid;
+            rhsdatapodAttribute.type = response.filterInfo[i].operand[1].ref.type;
             rhsdatapodAttribute.datapodname = response.filterInfo[i].operand[1].ref.name;
             rhsdatapodAttribute.name = response.filterInfo[i].operand[1].attributeName;
             rhsdatapodAttribute.dname = response.filterInfo[i].operand[1].ref.name + "." + response.filterInfo[i].operand[1].attributeName;
@@ -710,6 +714,7 @@ RuleModule.service("Rule2Service", function ($q, Rule2Factory, sortFactory, CF_G
             filterInfo.isrhsDatapod = false;
             filterInfo.isrhsDataset = false;
             rhsformula.uuid = response.filterInfo[i].operand[1].ref.uuid;
+            rhsformula.type = response.filterInfo[i].operand[1].ref.type;
             rhsformula.name = response.filterInfo[i].operand[1].ref.name;
             filterInfo.rhsformula = rhsformula;
           }
@@ -726,6 +731,7 @@ RuleModule.service("Rule2Service", function ($q, Rule2Factory, sortFactory, CF_G
             filterInfo.isrhsParamlist = false;
             filterInfo.isrhsFunction = true;
             rhsfunction.uuid = response.filterInfo[i].operand[1].ref.uuid;
+            rhsfunction.type = response.filterInfo[i].operand[1].ref.type;
             rhsfunction.name = response.filterInfo[i].operand[1].ref.name;
             filterInfo.rhsfunction = rhsfunction;
           }
@@ -740,6 +746,7 @@ RuleModule.service("Rule2Service", function ($q, Rule2Factory, sortFactory, CF_G
             filterInfo.isrhsDatapod = false;
             filterInfo.isrhsDataset = true;
             rhsdataset.uuid = response.filterInfo[i].operand[1].ref.uuid;
+            rhsdataset.type = response.filterInfo[i].operand[1].ref.type;
             rhsdataset.datapodname = response.filterInfo[i].operand[1].ref.name;
             rhsdataset.name = response.filterInfo[i].operand[1].attributeName;
             rhsdataset.dname = response.filterInfo[i].operand[1].ref.name + "." + response.filterInfo[i].operand[1].attributeName;
@@ -759,6 +766,7 @@ RuleModule.service("Rule2Service", function ($q, Rule2Factory, sortFactory, CF_G
             filterInfo.isrhsParamlist = true;
             filterInfo.isrhsFunction = false;
             rhsparamlist.uuid = response.filterInfo[i].operand[1].ref.uuid;
+            rhsparamlist.type = response.filterInfo[i].operand[1].ref.type;
             rhsparamlist.datapodname = response.filterInfo[i].operand[1].ref.name;
             rhsparamlist.name = response.filterInfo[i].operand[1].attributeName;
             rhsparamlist.dname = response.filterInfo[i].operand[1].ref.name + "." + response.filterInfo[i].operand[1].attributeName;
@@ -771,6 +779,232 @@ RuleModule.service("Rule2Service", function ($q, Rule2Factory, sortFactory, CF_G
         }
       }
       ruleJSOn.filterInfo = filterInfoArray;
+
+
+      var criteriaInfoArray = [];
+      if (response.criteriaInfo && response.criteriaInfo.length > 0) {
+        for (var i = 0; i < response.criteriaInfo.length; i++) {
+          var criteriaInfo = {};
+          criteriaInfo.criteriaId = response.criteriaInfo[i].criteriaId;
+          criteriaInfo.criteriaName = response.criteriaInfo[i].criteriaName;
+          criteriaInfo.activeFlag = response.criteriaInfo[i].activeFlag=="Y"?true:false;
+          var filterInfoArray=[];
+          if (response.criteriaInfo[i].criteriaFilter && response.criteriaInfo[i].criteriaFilter.length > 0) {
+            for (var j = 0; j < response.criteriaInfo[i].criteriaFilter.length; j++) {
+              var filterInfo = {};
+              filterInfo.parentIndex=i;
+              filterInfo.logicalOperator = response.criteriaInfo[i].criteriaFilter[j].logicalOperator;
+              filterInfo.operator = response.criteriaInfo[i].criteriaFilter[j].operator;
+              var rhsTypes = null;
+              filterInfo.rhsTypes = null;
+              if (filterInfo.operator == 'BETWEEN') {
+                filterInfo.rhsTypes = Rule2Factory.disableRhsType(['attribute', 'formula', 'dataset', 'function', 'paramlist'])
+              }
+              else if (['IN', 'NOT IN'].indexOf(filterInfo.operator) != -1) {
+                filterInfo.rhsTypes = Rule2Factory.disableRhsType([]);
+              }
+              else if (['<', '>', "<=", '>='].indexOf(filterInfo.operator) != -1) {
+                filterInfo.rhsTypes = Rule2Factory.disableRhsType(['string', 'dataset']);
+              }
+              else if (['EXISTS', 'NOT EXISTS'].indexOf(filterInfo.operator) != -1) {
+                filterInfo.rhsTypes = Rule2Factory.disableRhsType(['attribute', 'formula', 'function', 'paramlist', 'string', 'integer']);
+              }
+              else if (['IS'].indexOf(filterInfo.operator) != -1) {
+                filterInfo.rhsTypes = Rule2Factory.disableRhsType(['attribute', 'formula', 'dataset', 'function', 'paramlist']);
+              }
+              else {
+                filterInfo.rhsTypes = Rule2Factory.disableRhsType(['dataset']);
+              }
+
+              if (response.criteriaInfo[i].criteriaFilter[j].operand[0].ref.type == "simple") {
+                var obj = {}
+                obj.text = "string"
+                obj.caption = "string"
+                filterInfo.lhstype = obj;
+                filterInfo.islhsSimple = true;
+                filterInfo.islhsDatapod = false;
+                filterInfo.islhsFormula = false;
+                filterInfo.lhsvalue = response.criteriaInfo[i].criteriaFilter[j].operand[0].value;
+                if (response.filterInfo[i].operand[0].attributeType == "integer") {
+                  obj.caption = "integer";
+                }
+              }
+              else if (response.criteriaInfo[i].criteriaFilter[j].operand[0].ref.type == "datapod" || response.criteriaInfo[i].criteriaFilter[j].operand[0].ref.type == "dataset" || response.criteriaInfo[i].criteriaFilter[j].operand[0].ref.type == "rule") {
+                var lhsdatapodAttribute = {}
+                var obj = {}
+                obj.text = "datapod"
+                obj.caption = "attribute"
+                filterInfo.lhstype = obj;
+                filterInfo.islhsSimple = false;
+                filterInfo.islhsFormula = false
+                filterInfo.islhsDatapod = true;
+                lhsdatapodAttribute.uuid = response.criteriaInfo[i].criteriaFilter[j].operand[0].ref.uuid;
+                lhsdatapodAttribute.type = response.criteriaInfo[i].criteriaFilter[j].operand[0].ref.type;
+                lhsdatapodAttribute.datapodname = response.criteriaInfo[i].criteriaFilter[j].operand[0].ref.name;
+                lhsdatapodAttribute.name = response.criteriaInfo[i].criteriaFilter[j].operand[0].attributeName;
+                lhsdatapodAttribute.dname = response.criteriaInfo[i].criteriaFilter[j].operand[0].ref.name + "." + response.criteriaInfo[i].criteriaFilter[j].operand[0].attributeName;
+                lhsdatapodAttribute.attributeId = response.criteriaInfo[i].criteriaFilter[j].operand[0].attributeId;
+                filterInfo.lhsdatapodAttribute = lhsdatapodAttribute;
+              }
+              else if (response.criteriaInfo[i].criteriaFilter[j].operand[0].ref.type == "formula") {
+                var lhsformula = {}
+                var obj = {}
+                obj.text = "formula"
+                obj.caption = "formula"
+                filterInfo.lhstype = obj;
+                filterInfo.islhsFormula = true;
+                filterInfo.islhsSimple = false;
+                filterInfo.islhsDatapod = false;
+                lhsformula.uuid = response.criteriaInfo[i].criteriaFilter[j].operand[0].ref.uuid;
+                lhsformula.type = response.criteriaInfo[i].criteriaFilter[j].operand[0].ref.type;
+                lhsformula.name = response.criteriaInfo[i].criteriaFilter[j].operand[0].ref.name;
+                filterInfo.lhsformula = lhsformula;
+              }
+              if (response.criteriaInfo[i].criteriaFilter[j].operand[1].ref.type == "simple") {
+                var obj = {}
+                obj.text = "string"
+                obj.caption = "string"
+                filterInfo.rhstype = obj;
+                filterInfo.isrhsSimple = true;
+                filterInfo.isrhsDatapod = false;
+                filterInfo.isrhsFormula = false;
+                filterInfo.isrhsDataset = false;
+                filterInfo.rhsvalue = response.criteriaInfo[i].criteriaFilter[j].operand[1].value;
+                var temp =response.criteriaInfo[i].criteriaFilter[j].operator;
+                temp = temp.replace(/ /g, '');
+                if (response.criteriaInfo[i].criteriaFilter[j].operator == "BETWEEN") {
+                  obj.caption = "integer";
+                  filterInfo.rhsvalue1 = response.criteriaInfo[i].criteriaFilter[j].operand[1].value.split("and")[0];
+                  filterInfo.rhsvalue2 = response.criteriaInfo[i].criteriaFilter[j].operand[1].value.split("and")[1];
+                } else if (['<', '>', "<=", '>='].indexOf(response.criteriaInfo[i].criteriaFilter[j].operator) != -1) {
+                  obj.caption = "integer";
+                  filterInfo.rhsvalue = response.criteriaInfo[i].criteriaFilter[j].operand[1].value
+
+                } else if (response.criteriaInfo[i].criteriaFilter[j].operator == '=' && response.criteriaInfo[i].criteriaFilter[j].operand[1].attributeType == "integer") {
+                  obj.caption = "integer";
+                  filterInfo.rhsvalue = response.criteriaInfo[i].criteriaFilter[j].operand[1].value
+                }
+                else if (temp == "ISNULL" || temp == "ISNOTNULL") {
+                  filterInfo.isRhsNA = true;
+                }
+                else {
+                  filterInfo.rhsvalue = response.criteriaInfo[i].criteriaFilter[j].operand[1].value//.replace(/["']/g, "");
+                }
+              }
+              else if (response.criteriaInfo[i].criteriaFilter[j].operand[1].ref.type == "datapod" || response.criteriaInfo[i].criteriaFilter[j].operand[1].ref.type == "rule") {
+                var rhsdatapodAttribute = {}
+                var obj = {}
+                obj.text = "datapod"
+                obj.caption = "attribute"
+                filterInfo.rhstype = obj;
+                filterInfo.isrhsSimple = false;
+                filterInfo.isrhsFormula = false
+                filterInfo.isrhsDatapod = true;
+                filterInfo.isrhsDataset = false;
+                rhsdatapodAttribute.uuid = response.criteriaInfo[i].criteriaFilter[j].operand[1].ref.uuid;
+                rhsdatapodAttribute.type = response.criteriaInfo[i].criteriaFilter[j].operand[1].ref.type;
+                rhsdatapodAttribute.datapodname = response.criteriaInfo[i].criteriaFilter[j].operand[1].ref.name;
+                rhsdatapodAttribute.name = response.criteriaInfo[i].criteriaFilter[j].operand[1].attributeName;
+                rhsdatapodAttribute.dname = response.criteriaInfo[i].criteriaFilter[j].operand[1].ref.name + "." + response.criteriaInfo[i].criteriaFilter[j].operand[1].attributeName;
+                rhsdatapodAttribute.attributeId = response.criteriaInfo[i].criteriaFilter[j].operand[1].attributeId;
+                filterInfo.rhsdatapodAttribute = rhsdatapodAttribute;
+              }
+              else if (response.criteriaInfo[i].criteriaFilter[j].operand[1].ref.type == "dataset" && response.sourceInfo.ref.uuid == response.criteriaInfo[i].criteriaFilter[j].operand[1].ref.uuid) {
+                var rhsdatapodAttribute = {}
+                var obj = {}
+                obj.text = "datapod"
+                obj.caption = "attribute"
+                filterInfo.rhstype = obj;
+                filterInfo.isrhsSimple = false;
+                filterInfo.isrhsFormula = false
+                filterInfo.isrhsDatapod = true;
+                filterInfo.isrhsDataset = false;
+                rhsdatapodAttribute.uuid = response.criteriaInfo[i].criteriaFilter[j].operand[1].ref.uuid;
+                rhsdatapodAttribute.type = response.criteriaInfo[i].criteriaFilter[j].operand[1].ref.type;
+                rhsdatapodAttribute.datapodname = response.criteriaInfo[i].criteriaFilter[j].operand[1].ref.name;
+                rhsdatapodAttribute.name = response.criteriaInfo[i].criteriaFilter[j].operand[1].attributeName;
+                rhsdatapodAttribute.dname = response.criteriaInfo[i].criteriaFilter[j].operand[1].ref.name + "." + response.criteriaInfo[i].criteriaFilter[j].operand[1].attributeName;
+                rhsdatapodAttribute.attributeId = response.criteriaInfo[i].criteriaFilter[j].operand[1].attributeId;
+                filterInfo.rhsdatapodAttribute = rhsdatapodAttribute;
+              }
+              else if (response.criteriaInfo[i].criteriaFilter[j].operand[1].ref.type == "formula") {
+                var rhsformula = {}
+                var obj = {}
+                obj.text = "formula"
+                obj.caption = "formula"
+                filterInfo.rhstype = obj;
+                filterInfo.isrhsFormula = true;
+                filterInfo.isrhsSimple = false;
+                filterInfo.isrhsDatapod = false;
+                filterInfo.isrhsDataset = false;
+                rhsformula.uuid = response.criteriaInfo[i].criteriaFilter[j].operand[1].ref.uuid;
+                rhsformula.type = response.criteriaInfo[i].criteriaFilter[j].operand[1].ref.type;
+                rhsformula.name = response.criteriaInfo[i].criteriaFilter[j].operand[1].ref.name;
+                filterInfo.rhsformula = rhsformula;
+              }
+              else if (response.criteriaInfo[i].criteriaFilter[j].operand[1].ref.type == "function") {
+                var rhsfunction = {}
+                var obj = {}
+                obj.text = "function"
+                obj.caption = "function"
+                filterInfo.rhstype = obj;
+                filterInfo.isrhsFormula = false;
+                filterInfo.isrhsSimple = false;
+                filterInfo.isrhsDatapod = false;
+                filterInfo.isrhsDataset = false;
+                filterInfo.isrhsParamlist = false;
+                filterInfo.isrhsFunction = true;
+                rhsfunction.uuid = response.criteriaInfo[i].criteriaFilter[j].operand[1].ref.uuid;
+                rhsfunction.type = response.criteriaInfo[i].criteriaFilter[j].operand[1].ref.type;
+                rhsfunction.name = response.criteriaInfo[i].criteriaFilter[j].operand[1].ref.name;
+                filterInfo.rhsfunction = rhsfunction;
+              }
+              else if (response.criteriaInfo[i].criteriaFilter[j].operand[1].ref.type == "dataset") {
+                var rhsdataset = {}
+                var obj = {}
+                obj.text = "dataset"
+                obj.caption = "dataset"
+                filterInfo.rhstype = obj;
+                filterInfo.isrhsFormula = false;
+                filterInfo.isrhsSimple = false;
+                filterInfo.isrhsDatapod = false;
+                filterInfo.isrhsDataset = true;
+                rhsdataset.uuid = response.criteriaInfo[i].criteriaFilter[j].operand[1].ref.uuid;
+                rhsdataset.type = response.criteriaInfo[i].criteriaFilter[j].operand[1].ref.type;
+                rhsdataset.datapodname = response.criteriaInfo[i].criteriaFilter[j].operand[1].ref.name;
+                rhsdataset.name = response.criteriaInfo[i].criteriaFilter[j].operand[1].attributeName;
+                rhsdataset.dname = response.criteriaInfo[i].criteriaFilter[j].operand[1].ref.name + "." + response.criteriaInfo[i].criteriaFilter[j].operand[1].attributeName;
+                rhsdataset.attributeId = response.criteriaInfo[i].criteriaFilter[j].operand[1].attributeId;
+                filterInfo.rhsdataset = rhsdataset;
+              }
+              else if (response.criteriaInfo[i].criteriaFilter[j].operand[1].ref.type == "paramlist") {
+                var rhsparamlist = {}
+                var obj = {}
+                obj.text = "paramlist"
+                obj.caption = "paramlist"
+                filterInfo.rhstype = obj;
+                filterInfo.isrhsFormula = false;
+                filterInfo.isrhsSimple = false;
+                filterInfo.isrhsDatapod = false;
+                filterInfo.isrhsDataset = false;
+                filterInfo.isrhsParamlist = true;
+                filterInfo.isrhsFunction = false;
+                rhsparamlist.uuid = response.criteriaInfo[i].criteriaFilter[j].operand[1].ref.uuid;
+                rhsparamlist.type = response.criteriaInfo[i].criteriaFilter[j].operand[1].ref.type;
+                rhsparamlist.datapodname = response.criteriaInfo[i].criteriaFilter[j].operand[1].ref.name;
+                rhsparamlist.name = response.criteriaInfo[i].criteriaFilter[j].operand[1].attributeName;
+                rhsparamlist.dname = response.criteriaInfo[i].criteriaFilter[j].operand[1].ref.name + "." + response.criteriaInfo[i].criteriaFilter[j].operand[1].attributeName;
+                rhsparamlist.attributeId = response.criteriaInfo[i].criteriaFilter[j].operand[1].attributeId;
+                filterInfo.rhsparamlist = rhsparamlist;
+              }
+              filterInfoArray[j] = filterInfo
+              criteriaInfo.filterInfo=filterInfoArray;
+            }
+          }
+          criteriaInfoArray[i]=criteriaInfo;
+        }
+      }
+      ruleJSOn.criteriaInfo=criteriaInfoArray;
       deferred.resolve({
         data: ruleJSOn
       })
