@@ -1,3 +1,4 @@
+import { BaseEntity } from './../metadata/domain/domain.baseEntity';
 
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
@@ -10,6 +11,17 @@ import { CommonService } from './../metadata/services/common.service';
 
 import { Version } from './../metadata/domain/version'
 import { KnowledgeGraphComponent } from '../shared/components/knowledgeGraph/knowledgeGraph.component';
+import { DataQualityGroup } from '../metadata/domain/domain.dataQualityGroup';
+import { RuleGroup } from '../metadata/domain/domain.ruleGroup';
+import { MetaType } from '../metadata/enums/metaType';
+import { DropDownIO } from '../metadata/domainIO/domain.dropDownIO';
+import { AppHelper } from '../app.helper';
+import { MultiSelectIO } from '../metadata/domainIO/domain.multiselectIO';
+import { MetaIdentifierHolder } from '../metadata/domain/domain.metaIdentifierHolder';
+import { AttributeRefHolder } from '../metadata/domain/domain.attributeRefHolder';
+import { MetaIdentifier } from '../metadata/domain/domain.metaIdentifier';
+import { RoutesParam } from '../metadata/domain/domain.routeParams';
+
 @Component({
   selector: 'app-qualityGroup',
   templateUrl: './business-rulesgroupdetail.template.html',
@@ -17,7 +29,9 @@ import { KnowledgeGraphComponent } from '../shared/components/knowledgeGraph/kno
 })
 
 export class BusinessRulesGroupDetailComponent {
-  showGraph: boolean;
+
+  rulegroupdata: any;
+  //showGraph: boolean;
   isHomeEnable: boolean;
   graphDataStatus: boolean;
   showProfileGroupForm: boolean;
@@ -33,7 +47,7 @@ export class BusinessRulesGroupDetailComponent {
   dropdownList: any;
 
   selectedVersion: Version;
-  VersionList: SelectItem[] = [];
+  versionList: SelectItem[] = [];
   allNames: SelectItem[] = [];
   createdBy: any;
   mode: any;
@@ -43,10 +57,23 @@ export class BusinessRulesGroupDetailComponent {
   routerUrl: any;
   datarulegroup: any;
   @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
+  isEditInprogess: boolean = false;
+  isEditError: boolean = false;
+  isEdit: boolean = false;
+  isversionEnable: boolean;
+  isAdd: boolean;
+  showForm: boolean = true;
+  showDivGraph: boolean;
+  published: boolean;
+  locked: boolean;
+  active: boolean;
+  metaType = MetaType;
 
-  constructor(private activatedRoute: ActivatedRoute, private router: Router, public metaconfig: AppMetadata, private _commonService: CommonService, private _location: Location) {
-    
-    this.showGraph = false;
+  constructor(private activatedRoute: ActivatedRoute, private router: Router, public metaconfig: AppMetadata,
+    private _commonService: CommonService, private _location: Location, public appHelper: AppHelper) {
+
+    //this.showGraph = false;
+    this.rulegroupdata = new RuleGroup();
     this.isHomeEnable = false;
     this.datarulegroup = {};
     this.datarulegroup["active"] = true
@@ -62,28 +89,35 @@ export class BusinessRulesGroupDetailComponent {
       maxHeight: 110,
       disabled: false
     };
-    this.breadcrumbDataFrom = [{
-      "caption": "Business Rules",
-      "routeurl": "/app/list/rulegroup"
-    },
-    {
-      "caption": "Rule Group ",
-      "routeurl": "/app/list/rulegroup"
-    },
-    {
-      "caption": "",
-      "routeurl": null
-    }
-    ]
+    this.breadcrumbDataFrom = [
+      {
+        "caption": "Business Rules",
+        "routeurl": "/app/list/rulegroup"
+      },
+      {
+        "caption": "Rule Group ",
+        "routeurl": "/app/list/rulegroup"
+      },
+      {
+        "caption": "",
+        "routeurl": null
+      }
+    ];
 
+    this.isEditInprogess = false;
+    // this.isEditError = false;
+    this.active = true;
+    this.locked = false;
+    this.published = false;
 
   }
 
   ngOnInit() {
     this.activatedRoute.params.subscribe((params: Params) => {
-      this.id = params['id'];
-      this.version = params['version'];
-      this.mode = params['mode'];
+      let param = <RoutesParam>params;
+      this.id = param.id;
+      this.version = param.version;
+      this.mode = param.mode;
       if (this.mode !== undefined) {
         this.getOneByUuidAndVersion(this.id, this.version);
         this.getAllVersionByUuid();
@@ -92,79 +126,128 @@ export class BusinessRulesGroupDetailComponent {
       }
       else {
         this.getAllLatest();
+        this.isSubmitEnable = true;
+        this.isEditInprogess = false;
+        this.isEditError = false;
       }
     });
+
+    this.setMode(this.mode);
   }
 
-  showDagGraph(uuid, version) {
+  setMode(mode: any) {
+    if (mode == 'true') {
+      this.isEdit = false;
+      this.isversionEnable = false;
+      this.isAdd = false;
+    } else if (mode == 'false') {
+      this.isEdit = true;
+      this.isversionEnable = true;
+      this.isAdd = false;
+    } else {
+      this.isAdd = true;
+      this.isEdit = false;
+    }
+  }
+  enableEdit(uuid, version) {
+    this.router.navigate(['app/businessRules/rulegroup', uuid, version, 'false']);
+    this.isEdit = true;
+    this.dropdownSettings = {
+      singleSelection: false,
+      text: "Select Attrubutes",
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      enableSearchFilter: true,
+      classes: "myclass custom-class",
+      maxHeight: 110,
+      disabled: true
+    };
+
+  }
+
+  showMainPage(uuid, version) {
+    this.isHomeEnable = false;
+    this.showDivGraph = false;
+    this.showForm = true;
+  }
+
+  showGraph(uuid, version) {
     this.isHomeEnable = true;
-    this.showGraph = true;
+    this.showDivGraph = false;
+    this.showForm = false;
     setTimeout(() => {
       this.d_KnowledgeGraphComponent.getGraphData(this.id, this.version);
     }, 1000);
   }
+  onChangeName() {
+    this.breadcrumbDataFrom[2].caption = this.rulegroupdata.name;
+  }
+  public goBack() {
+    //this._location.back();
+    this.router.navigate(['app/list/dqgroup']);
+  }
 
+  clear() {
+    this.selectedItems = []
+  }
   getAllLatest() {
-    this._commonService.getAllLatest("rule").subscribe(
+    this._commonService.getAllLatest(this.metaType.RULE).subscribe(
       response => { this.OnSuccesgetAllLatest(response) },
       error => console.log('Error :: ' + error)
     )
   }
-  OnSuccesgetAllLatest(response) {
+  OnSuccesgetAllLatest(response: BaseEntity[]) {
     let temp = []
     for (const n in response) {
-      let allname = {};
-      allname["id"] = response[n]['uuid'];
-      allname["itemName"] = response[n]['name'];
-      allname["uuid"] = response[n]['uuid'];
+      let allname = new MultiSelectIO();
+      allname.id = response[n].uuid.toString();
+      allname.itemName = response[n].name.toString();
+      allname.uuid = response[n].uuid.toString();
       temp[n] = allname;
     }
     this.dropdownList = temp
   }
   getOneByUuidAndVersion(id, version) {
-    this._commonService.getOneByUuidAndVersion(id, version, 'rulegroup')
+    this.isEditInprogess = true;
+    this.isEditError = false;
+    this._commonService.getOneByUuidAndVersion(id, version, this.metaType.RULEGROUP)
       .subscribe(
         response => {
           this.onSuccessgetOneByUuidAndVersion(response)
         },
-        error => console.log("Error :: " + error));
+        error => {
+          console.log("Error :: " + error);
+          this.isEditError = false;
+        });
   }
   onSuccessgetOneByUuidAndVersion(response) {
     this.breadcrumbDataFrom[2].caption = response.name;
     this.datarulegroup = response;
     this.createdBy = response.createdBy.ref.name
-    this.datarulegroup.published = response["published"] == 'Y' ? true : false
-    this.datarulegroup.active = response["active"] == 'Y' ? true : false
-    this.datarulegroup.locked = response["locked"] == 'Y' ? true : false
+    this.published = this.appHelper.convertStringToBoolean(this.datarulegroup.published);
+    this.active = this.appHelper.convertStringToBoolean(this.datarulegroup.active);
+    this.locked = this.appHelper.convertStringToBoolean(this.datarulegroup.locked);
+
     const version: Version = new Version();
     this.uuid = response.uuid;
-    version.label = response['version'];
-    version.uuid = response['uuid'];
+    version.label = this.datarulegroup.version;
+    version.uuid = this.datarulegroup.uuid;
     this.selectedVersion = version
-    var tags = [];
-    if (response.tags != null) {
-      for (var i = 0; i < response.tags.length; i++) {
-        var tag = {};
-        tag['value'] = response.tags[i];
-        tag['display'] = response.tags[i];
-        tags[i] = tag
 
-      }//End For
-      this.datarulegroup.tags = tags;
-    }//End If
     let tmp = [];
     for (let i = 0; i < response.ruleInfo.length; i++) {
-      let ruleinfo = {};
-      ruleinfo["id"] = response.ruleInfo[i]["ref"]["uuid"];
-      ruleinfo["itemName"] = response.ruleInfo[i]["ref"]["name"];
-      ruleinfo["uuid"] = response.ruleInfo[i]["ref"]["uuid"];
+      let ruleinfo = new MultiSelectIO();
+      ruleinfo.id = response.ruleInfo[i].ref.uuid;
+      ruleinfo.itemName = response.ruleInfo[i].ref.name;
+      ruleinfo.uuid = response.ruleInfo[i].ref.uuid;
       tmp[i] = ruleinfo;
     }
     this.selectedItems = tmp;
+    this.isEditInprogess = false;
   }
 
   getAllVersionByUuid() {
-    this._commonService.getAllVersionByUuid('rulegroup', this.id)
+    this._commonService.getAllVersionByUuid(this.metaType.RULEGROUP, this.id)
       .subscribe(
         response => {
           this.OnSuccesgetAllVersionByUuid(response)
@@ -173,55 +256,53 @@ export class BusinessRulesGroupDetailComponent {
   }
   OnSuccesgetAllVersionByUuid(response) {
     for (const i in response) {
-      let ver = {};
-      ver["label"] = response[i]['version'];
-      ver["value"] = {};
-      ver["value"]["label"] = response[i]['version'];
-      ver["value"]["uuid"] = response[i]['uuid'];
-      this.VersionList[i] = ver;
+      let ver = new DropDownIO();
+      ver.label = response[i].version;
+      ver.value = { label: "", uuid: "" };
+      ver.value.label = response[i].version;
+      ver.value.uuid = response[i].uuid;
+      this.versionList[i] = ver;
     }
-  }
-
-  public goBack() {
-    //this._location.back();
-    this.router.navigate(['app/list/rulegroup']);
   }
 
   onVersionChange() {
     this.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label);
   }
-  submit() {
+
+  submitRuleGroup() {
     this.isSubmitEnable = true;
     this.IsProgerssShow = "true";
-    let rulegroupJson = {}
-    rulegroupJson["uuid"] = this.datarulegroup.uuid
-    rulegroupJson["name"] = this.datarulegroup.name
-    rulegroupJson["desc"] = this.datarulegroup.desc
+    let rulegroupJson = new RuleGroup();
+    rulegroupJson.uuid = this.datarulegroup.uuid;
+    rulegroupJson.name = this.datarulegroup.name;
+    rulegroupJson.desc = this.datarulegroup.desc;
+    rulegroupJson.tags = this.datarulegroup.tags;
+    rulegroupJson.active = this.appHelper.convertBooleanToString(this.datarulegroup.active);
+    rulegroupJson.published = this.appHelper.convertBooleanToString(this.datarulegroup.published);
+    rulegroupJson.locked = this.appHelper.convertBooleanToString(this.datarulegroup.locked);
 
-    var tagArray = [];
-    if (this.datarulegroup.tags != null) {
-      for (var counttag = 0; counttag < this.datarulegroup.tags.length; counttag++) {
-        tagArray[counttag] = this.datarulegroup.tags[counttag].value;
+    // var tagArray = [];
+    // if (this.datarulegroup.tags != null) {
+    //   for (var counttag = 0; counttag < this.datarulegroup.tags.length; counttag++) {
+    //     tagArray[counttag] = this.datarulegroup.tags[counttag].value;
 
-      }
-    }
-    rulegroupJson['tags'] = tagArray
-    rulegroupJson["active"] = this.datarulegroup.active == true ? 'Y' : "N"
-    rulegroupJson["published"] = this.datarulegroup.published == true ? 'Y' : "N"
-    rulegroupJson["locked"] = this.datarulegroup.locked == true ? 'Y' : "N"
-    let ruleInfo = [];
+    //   }
+    // }
+    // rulegroupJson['tags'] = tagArray
+    let ruleInfo = [new MetaIdentifierHolder];
     for (let i = 0; i < this.selectedItems.length; i++) {
-      let rules = {}
-      let ref = {};
-      ref["uuid"] = this.selectedItems[i]["uuid"];
-      ref["type"] = "rule";
-      rules["ref"] = ref;
+      let rules = new AttributeRefHolder();
+      let ref = new MetaIdentifier();
+      ref.uuid = this.selectedItems[i].uuid;
+      ref.type = this.metaType.RULE;
+      rules.ref = ref;
       ruleInfo[i] = rules;
     }
-    rulegroupJson["ruleInfo"] = ruleInfo;
-    rulegroupJson["inParallel"] = this.datarulegroup.inParallel
+    rulegroupJson.ruleInfo = ruleInfo;
+    rulegroupJson.inParallel = this.datarulegroup.inParallel;
+
     console.log(rulegroupJson);
-    this._commonService.submit("rulegroup", rulegroupJson).subscribe(
+    this._commonService.submit(this.metaType.RULEGROUP, rulegroupJson).subscribe(
       response => { this.OnSuccessubmit(response) },
       error => console.log('Error :: ' + error)
     )
@@ -229,7 +310,7 @@ export class BusinessRulesGroupDetailComponent {
   }
   OnSuccessubmit(response) {
     if (this.checkboxModelexecution == true) {
-      this._commonService.getOneById("rulegroup", response).subscribe(
+      this._commonService.getOneById(this.metaType.RULEGROUP, response).subscribe(
         response => {
           this.OnSucessGetOneById(response);
           this.goBack()
@@ -249,7 +330,7 @@ export class BusinessRulesGroupDetailComponent {
   }
 
   OnSucessGetOneById(response) {
-    this._commonService.execute(response.uuid, response.version, "rulegroup", "execute").subscribe(
+    this._commonService.execute(response.uuid, response.version, this.metaType.RULEGROUP, "execute").subscribe(
       response => {
         this.showMassage('Rule Group Save and Submit Successfully', 'success', 'Success Message')
         setTimeout(() => {
@@ -267,20 +348,7 @@ export class BusinessRulesGroupDetailComponent {
     this.msgs = [];
     this.msgs.push({ severity: msgtype, summary: msgsumary, detail: msg });
   }
-  enableEdit(uuid, version) {
-    this.router.navigate(['app/businessRules/rulegroup', uuid, version, 'false']);
-    this.dropdownSettings = {
-      singleSelection: false,
-      text: "Select Attrubutes",
-      selectAllText: 'Select All',
-      unSelectAllText: 'UnSelect All',
-      enableSearchFilter: true,
-      classes: "myclass custom-class",
-      maxHeight: 110,
-      disabled: true
-    };
 
-  }
 
   showview(uuid, version) {
     this.router.navigate(['app/businessRules/rulegroup', uuid, version, 'true']);
@@ -296,9 +364,7 @@ export class BusinessRulesGroupDetailComponent {
     };
 
   }
-  clear() {
-    this.selectedItems = []
-  }
+
   showProfileGroupePage() {
     this.showProfileGroup = true;
     this.showgraphdiv = false;
@@ -307,9 +373,5 @@ export class BusinessRulesGroupDetailComponent {
 
   }
 
-  showMainPage() {
-    this.isHomeEnable = false
-    // this._location.back();
-    this.showGraph = false;
-  }
+
 }

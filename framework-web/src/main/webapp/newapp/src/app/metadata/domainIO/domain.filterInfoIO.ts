@@ -14,4 +14,7 @@ export class FilterInfoIO {
 	rhsAttribute2: String;
 	selected?: any;
 
+	lhsFilter?: any;
+	filtervalue?: any;
+
 }

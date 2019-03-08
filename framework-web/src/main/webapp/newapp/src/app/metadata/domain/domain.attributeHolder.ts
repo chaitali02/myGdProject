@@ -5,5 +5,6 @@ export class AttributeHolder {
         uuid: any;
         attrId : any;
         value?: any;
+        name?: any;
 }
     

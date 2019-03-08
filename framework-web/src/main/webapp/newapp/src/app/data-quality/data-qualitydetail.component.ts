@@ -21,7 +21,7 @@ import { AppHelper } from '../app.helper';
 import { MetaIdentifierHolder } from '../metadata/domain/domain.metaIdentifierHolder';
 import { MetaIdentifier } from '../metadata/domain/domain.metaIdentifier';
 import { AttributeRefHolder } from '../metadata/domain/domain.attributeRefHolder';
-import * as MetaTypeEnum from '../metadata/enums/metaType';
+import { MetaType } from '../metadata/enums/metaType';
 import { SourceAttr } from '../metadata/domain/domain.sourceAttr';
 import { Subject, fromEvent } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -63,7 +63,7 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy{
   // customInput: Subject<string> = new Subject();
   operators: any;
   logicalOperators: any;
-  filterTableArray: any[];
+  filterTableArray: any = [];
   allIntegrityAttribute: any[];
   selectIntegrityAttribute: any;
   selectRefIntegrity: any;
@@ -119,7 +119,7 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy{
 
   constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router,
     private _commonService: CommonService, private _dataQualityService: DataQualityService, public appHelper: AppHelper) {
-    this.metaType = MetaTypeEnum.MetaType;
+   // this.metaType = MetaTypeEnum.MetaType;
     this.dqdata = new DataQuality();
     this.isHomeEnable = false
     this.displayDialogBox = false;
@@ -265,6 +265,7 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy{
 
   enableEdit(uuid, version) {
     this.router.navigate(['app/dataQuality/dq', uuid, version, 'false']);
+    this.isEdit = true;
   }
 
   showMainPage(uuid, version) {
@@ -430,7 +431,7 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy{
     this.isEditInprogess = true;
     this.isEditError = false;
 
-    this._dataQualityService.getOneByUuidAndVersion(id, version, MetaTypeEnum.MetaType.DQ)
+    this._dataQualityService.getOneByUuidAndVersion(id, version, MetaType.DQ)
       .subscribe(
         response => {
           this.onSuccessgetOneByUuidAndVersion(response)
@@ -521,12 +522,12 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy{
     if (!data.uuid) {
       this.dialogSelectName = "";
       this.dialogAttributeName = "";
-      this._commonService.getAllLatest(MetaTypeEnum.MetaType.DATASET)
+      this._commonService.getAllLatest(MetaType.DATASET)
         .subscribe(response => { this.onSuccessgetAllLatestDialogBox(response, data) },
           error => console.log("Error ::", error));
     }
     else {
-      this._commonService.getAllLatest(MetaTypeEnum.MetaType.DATASET)
+      this._commonService.getAllLatest(MetaType.DATASET)
         .subscribe(response => { this.onSuccessgetAllLatestDialogBox(response, data) },
           error => console.log("Error ::", error));
     }
@@ -545,7 +546,7 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy{
 
       if (data.uuid && data.uuid == response[i].uuid) {
         this.dialogSelectName = data;
-        this._commonService.getAttributesByDataset(MetaTypeEnum.MetaType.DATASET, data.uuid)
+        this._commonService.getAttributesByDataset(MetaType.DATASET, data.uuid)
           .subscribe(response => { this.onSuccessgetAttributesByDatasetDialogBox(response, data) },
             error => console.log("Error ::", error));
       }
@@ -575,7 +576,7 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy{
   }
 
   onChangeDialogAttribute(dialogSelectDatasetName) {
-    this._commonService.getAttributesByDataset(MetaTypeEnum.MetaType.DATASET, dialogSelectDatasetName.uuid)
+    this._commonService.getAttributesByDataset(MetaType.DATASET, dialogSelectDatasetName.uuid)
       .subscribe(response => { this.onSuccessgetAttributesByDatasetChangeDialogAttr(response) },
         error => console.log("Error ::", error))
 
@@ -607,7 +608,7 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy{
   }
 
   getAllVersionByUuid() {
-    this._commonService.getAllVersionByUuid(MetaTypeEnum.MetaType.DQ, this.id)
+    this._commonService.getAllVersionByUuid(MetaType.DQ, this.id)
       .subscribe(
         response => {
           this.OnSuccesgetAllVersionByUuid(response)
@@ -647,10 +648,10 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy{
 
     this.filterTableArray[index].lhsAttribute = null;
 
-    if (this.filterTableArray[index].lhsType == MetaTypeEnum.MetaType.FORMULA) {
+    if (this.filterTableArray[index].lhsType == MetaType.FORMULA) {
       this.getFormulaByType("lhsType");
     }
-    else if (this.filterTableArray[index].lhsType == MetaTypeEnum.MetaType.DATAPOD) {
+    else if (this.filterTableArray[index].lhsType == MetaType.DATAPOD) {
       this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source)
         .subscribe(response => { this.onSuccessgetAllAttributeBySource(response) },
           error => console.log("Error ::", error))
@@ -663,21 +664,21 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy{
   onChangeRhsType(index) {
     this.filterTableArray[index].rhsAttribute = null;
 
-    if (this.filterTableArray[index].rhsType == MetaTypeEnum.MetaType.FORMULA) {
+    if (this.filterTableArray[index].rhsType == MetaType.FORMULA) {
       this.getFormulaByType("rhsType");
     }
-    else if (this.filterTableArray[index].rhsType == MetaTypeEnum.MetaType.DATAPOD) {
+    else if (this.filterTableArray[index].rhsType == MetaType.DATAPOD) {
       this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source)
         .subscribe(response => { this.onSuccessgetAllAttributeBySource(response) },
           error => console.log("Error ::", error))
     }
-    else if (this.filterTableArray[index].rhsType == MetaTypeEnum.MetaType.FUNCTION) {
+    else if (this.filterTableArray[index].rhsType == MetaType.FUNCTION) {
       this.getFunctionByCriteria();
     }
-    else if (this.filterTableArray[index].rhsType == MetaTypeEnum.MetaType.PARAMLIST) {
+    else if (this.filterTableArray[index].rhsType == MetaType.PARAMLIST) {
       this.getParamByApp();
     }
-    else if (this.filterTableArray[index].rhsType == MetaTypeEnum.MetaType.DATASET) {
+    else if (this.filterTableArray[index].rhsType == MetaType.DATASET) {
       let rhsAttribute = new AttributeIO();
       rhsAttribute.label = "-Select-";
       rhsAttribute.uuid = "";
@@ -690,7 +691,7 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy{
   }
 
   getFunctionByCriteria() {
-    this._commonService.getFunctionByCriteria("", "N", MetaTypeEnum.MetaType.FUNCTION)
+    this._commonService.getFunctionByCriteria("", "N", MetaType.FUNCTION)
       .subscribe(response => { this.onSuccessgetFunctionByCriteria(response) },
         error => console.log("Error ::", error))
   }
@@ -708,7 +709,7 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy{
   }
 
   getParamByApp() {
-    this._commonService.getParamByApp("", MetaTypeEnum.MetaType.APPLICATION)
+    this._commonService.getParamByApp("", MetaType.APPLICATION)
       .subscribe(response => { this.onSuccessgetParamByApp(response) },
         error => console.log("Error ::", error))
   }
@@ -767,7 +768,7 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy{
     this.filterTableArray[index].rhsAttribute = null;
     if (this.filterTableArray[index].operator == 'EXISTS' || this.filterTableArray[index].operator == 'NOT EXISTS'
       || this.filterTableArray[index].operator == 'IN' || this.filterTableArray[index].operator == 'NOT IN') {
-      this.filterTableArray[index].rhsType = MetaTypeEnum.MetaType.DATASET;
+      this.filterTableArray[index].rhsType = MetaType.DATASET;
       let rhsAttribute = new AttributeIO();
       rhsAttribute.label = "-Select-";
       rhsAttribute.uuid = "";
@@ -859,7 +860,7 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy{
     if (this.selectAttribute != null) {
       let attributeref = new MetaIdentifierHolder();
       let attribute = new AttributeRefHolder();
-      attributeref.type = MetaTypeEnum.MetaType.DATAPOD;
+      attributeref.type = MetaType.DATAPOD;
       attributeref.uuid = this.selectAttribute.uuid;
       attribute.ref = attributeref;
       attribute.attrId = this.selectAttribute.attrId;
@@ -898,7 +899,7 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy{
 
     let refIntegrityCheck = new AttributeRefHolder();
     if (typeof this.selectRefIntegrity != "undefined" && typeof this.selectIntegrityAttribute != "undefined") {
-      ref.type = MetaTypeEnum.MetaType.DATAPOD;
+      ref.type = MetaType.DATAPOD;
       ref.uuid = this.selectRefIntegrity.uuid;
       refIntegrityCheck.ref = ref;
       refIntegrityCheck.attrId = this.selectIntegrityAttribute.attrId;
@@ -919,24 +920,24 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy{
           if (this.filterTableArray[i].lhsType == 'integer' || this.filterTableArray[i].lhsType == 'string') {
             let operatorObj = new SourceAttr();
             let ref = new MetaIdentifier();
-            ref.type = MetaTypeEnum.MetaType.SIMPLE;
+            ref.type = MetaType.SIMPLE;
             operatorObj.ref = ref;
             operatorObj.value = this.filterTableArray[i].lhsAttribute;
             operatorObj.attributeType = "string"
             filterInfo.operand[0] = operatorObj;
           }
-          else if (this.filterTableArray[i].lhsType == MetaTypeEnum.MetaType.FORMULA) {
+          else if (this.filterTableArray[i].lhsType == MetaType.FORMULA) {
             let operatorObj = new SourceAttr();
             let ref = new MetaIdentifier();
-            ref.type = MetaTypeEnum.MetaType.FORMULA;
+            ref.type = MetaType.FORMULA;
             ref.uuid = this.filterTableArray[i].lhsAttribute.uuid;
             operatorObj.ref = ref;
             filterInfo.operand[0] = operatorObj;
           }
-          else if (this.filterTableArray[i].lhsType == MetaTypeEnum.MetaType.DATAPOD) {
+          else if (this.filterTableArray[i].lhsType == MetaType.DATAPOD) {
             let operatorObj = new SourceAttr();
             let ref = new MetaIdentifier();
-            ref.type = MetaTypeEnum.MetaType.DATAPOD;
+            ref.type = MetaType.DATAPOD;
             ref.uuid = this.filterTableArray[i].lhsAttribute.uuid;
             operatorObj.ref = ref;
             operatorObj.attributeId = this.filterTableArray[i].lhsAttribute.attributeId;
@@ -945,7 +946,7 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy{
           if (this.filterTableArray[i].rhsType == 'integer' || this.filterTableArray[i].rhsType == 'string') {
             let operatorObj = new SourceAttr();
             let ref = new MetaIdentifier();
-            ref.type = MetaTypeEnum.MetaType.SIMPLE;
+            ref.type = MetaType.SIMPLE;
             operatorObj.ref = ref;
             operatorObj.value = this.filterTableArray[i].rhsAttribute;
             operatorObj.attributeType = "string"
@@ -953,50 +954,50 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy{
             if (this.filterTableArray[i].rhsType == 'integer' && this.filterTableArray[i].operator == 'BETWEEN') {
               let operatorObj = new SourceAttr();
               let ref = new MetaIdentifier();
-              ref.type = MetaTypeEnum.MetaType.SIMPLE;
+              ref.type = MetaType.SIMPLE;
               operatorObj.ref = ref;
               operatorObj.value = this.filterTableArray[i].rhsAttribute1 + "and" + this.filterTableArray[i].rhsAttribute2;
               filterInfo.operand[1] = operatorObj;
             }
           }
-          else if (this.filterTableArray[i].rhsType == MetaTypeEnum.MetaType.FORMULA) {
+          else if (this.filterTableArray[i].rhsType == MetaType.FORMULA) {
             let operatorObj = new SourceAttr();
             let ref = new MetaIdentifier();
-            ref.type = MetaTypeEnum.MetaType.FORMULA;
+            ref.type = MetaType.FORMULA;
             ref.uuid = this.filterTableArray[i].rhsAttribute.uuid;
             operatorObj.ref = ref;
             filterInfo.operand[1] = operatorObj;
           }
-          else if (this.filterTableArray[i].rhsType == MetaTypeEnum.MetaType.FUNCTION) {
+          else if (this.filterTableArray[i].rhsType == MetaType.FUNCTION) {
             let operatorObj = new SourceAttr();
             let ref = new MetaIdentifier();
-            ref.type = MetaTypeEnum.MetaType.FUNCTION;
+            ref.type = MetaType.FUNCTION;
             ref.uuid = this.filterTableArray[i].rhsAttribute.uuid;
             operatorObj.ref = ref;
             filterInfo.operand[1] = operatorObj;
           }
-          else if (this.filterTableArray[i].rhsType == MetaTypeEnum.MetaType.PARAMLIST) {
+          else if (this.filterTableArray[i].rhsType == MetaType.PARAMLIST) {
             let operatorObj = new SourceAttr();
             let ref = new MetaIdentifier();
-            ref.type = MetaTypeEnum.MetaType.PARAMLIST;
-            ref.uuid = this.filterTableArray[i].rhsAttribute.uuid;
-            operatorObj.ref = ref;
-            operatorObj.attributeId = this.filterTableArray[i].rhsAttribute.attributeId;
-            filterInfo.operand[1] = operatorObj;
-          }
-          else if (this.filterTableArray[i].rhsType == MetaTypeEnum.MetaType.DATASET) {
-            let operatorObj = new SourceAttr();
-            let ref = new MetaIdentifier();
-            ref.type = MetaTypeEnum.MetaType.DATASET;
+            ref.type = MetaType.PARAMLIST;
             ref.uuid = this.filterTableArray[i].rhsAttribute.uuid;
             operatorObj.ref = ref;
             operatorObj.attributeId = this.filterTableArray[i].rhsAttribute.attributeId;
             filterInfo.operand[1] = operatorObj;
           }
-          else if (this.filterTableArray[i].rhsType == MetaTypeEnum.MetaType.DATAPOD) {
+          else if (this.filterTableArray[i].rhsType == MetaType.DATASET) {
             let operatorObj = new SourceAttr();
             let ref = new MetaIdentifier();
-            ref.type = MetaTypeEnum.MetaType.DATAPOD;
+            ref.type = MetaType.DATASET;
+            ref.uuid = this.filterTableArray[i].rhsAttribute.uuid;
+            operatorObj.ref = ref;
+            operatorObj.attributeId = this.filterTableArray[i].rhsAttribute.attributeId;
+            filterInfo.operand[1] = operatorObj;
+          }
+          else if (this.filterTableArray[i].rhsType == MetaType.DATAPOD) {
+            let operatorObj = new SourceAttr();
+            let ref = new MetaIdentifier();
+            ref.type = MetaType.DATAPOD;
             ref.uuid = this.filterTableArray[i].rhsAttribute.uuid;
             operatorObj.ref = ref;
             operatorObj.attributeId = this.filterTableArray[i].rhsAttribute.attributeId;
@@ -1007,14 +1008,14 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy{
         dqJson.filterInfo = filterInfoArray;
       }
     }
-    this._commonService.submit(MetaTypeEnum.MetaType.DQ, dqJson).subscribe(
+    this._commonService.submit(MetaType.DQ, dqJson).subscribe(
       response => { this.OnSuccessubmit(response) },
       error => console.log('Error :: ' + error)
     )
   }
   OnSuccessubmit(response) {
     if (this.checkboxModelexecution == true) {
-      this._commonService.getOneById(MetaTypeEnum.MetaType.DQ, response).subscribe(
+      this._commonService.getOneById(MetaType.DQ, response).subscribe(
         response => {
           this.OnSucessGetOneById(response);
           this.goBack()
@@ -1034,7 +1035,7 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy{
   }
 
   OnSucessGetOneById(response) {
-    this._commonService.execute(response.uuid, response.version, MetaTypeEnum.MetaType.DQ, "execute").subscribe(
+    this._commonService.execute(response.uuid, response.version, MetaType.DQ, "execute").subscribe(
       response => {
         this.showMessage('DQ Save and Submit Successfully', 'success', 'Success Message')
         setTimeout(() => {

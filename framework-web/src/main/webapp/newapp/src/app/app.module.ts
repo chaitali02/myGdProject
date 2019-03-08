@@ -36,16 +36,23 @@ const APP_PROVIDERS = [AppConfig, AppMetadata, AppHelper];
     BrowserAnimationsModule,
     ProjectSharedModule.forRoot(),
     TooltipModule,
-
     UiSwitchModule.forRoot({
       size: 'small',
-      color: 'rgb(0, 189, 99)',
-      switchColor: '#80FFA2',
-      defaultBgColor: '#00ACFF',
-      defaultBoColor : '#476EFF',
-      checkedLabel: 'on',
-      uncheckedLabel: 'off'
-    })
+      color: '#15C5D5',
+      switchColor: '#FFFFF',
+      defaultBoColor : '#ccc',
+     // checkedLabel: 'Yes',
+      //uncheckedLabel: 'No'
+    })  
+    // UiSwitchModule.forRoot({
+    //   size: 'small',
+    //   color: 'rgb(0, 189, 99)',
+    //   switchColor: '#80FFA2',
+    //   defaultBgColor: '#00ACFF',
+    //   defaultBoColor : '#476EFF',
+      // checkedLabel: 'on',
+      // uncheckedLabel: 'off'
+    // })
   ],
 
   providers: [

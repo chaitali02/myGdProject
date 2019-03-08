@@ -173,7 +173,7 @@
 
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
-                        <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0.7% 0% 0% 1.5%;">
+                        <div class="col-md-6 col-sm-6 col-xs-12 ui-switch-top-left-padding" >
                           <div class="btn-group">
                             <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="active" name="active"
                               [checked]="active" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
@@ -182,7 +182,7 @@
                       </div>
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Lock</label>
-                        <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0.7% 0% 0% 1.5%;">
+                        <div class="col-md-6 col-sm-6 col-xs-12 ui-switch-top-left-padding">
                           <div class="btn-group">
                             <ui-switch [(ngModel)]="locked" name="locked" [disabled]="mode == 'true' || mode == 'false'"></ui-switch>
                           </div>
@@ -190,7 +190,7 @@
                       </div>
                       <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
-                        <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0.7% 0% 0% 1.5%;">
+                        <div class="col-md-6 col-sm-6 col-xs-12 ui-switch-top-left-padding">
                           <div class="btn-group">
                             <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="published" name="published"
                               [checked]="published" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
@@ -275,7 +275,7 @@
                                     </li>
                                     <li class="divider" style="margin: 0px;"> </li>
                                     <li (click)="updateArray(filterTableArray.length-1, '')">
-                                      <a href="javascript:;" [attr.disabled]="fitlerAttrTableSelectedItem[0]==filterTableArray.length-1 ?'disabled' : null">Bottom</a>
+                                      <a href="javascript:;">Bottom</a>
                                     </li>
                                     <li class="divider" style="margin: 0px;"> </li>
                                     <li>
