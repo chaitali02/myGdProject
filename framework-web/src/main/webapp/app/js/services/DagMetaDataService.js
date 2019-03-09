@@ -2317,7 +2317,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
           "xlink:href": "assets/layouts/layout/img/delete.png"
       },
       magnet:true,
-      ".label": { text: 'Default Element',y: '60px', 'font-size': 10, style: { 'text-shadow': '1px 1px 1px lightgray' } },
+      text: { text: 'Default Element',y: '60px', 'font-size': 10, style: { 'text-shadow': '1px 1px 1px lightgray' } },
       '.statusText': {
         x:"55", y:"-10",height:"25px", width:"25px",'font-size': 15,
         fill:"white",ext: 'Default Element',style: { 'text-shadow': '1px 1px 1px lightgray' } 

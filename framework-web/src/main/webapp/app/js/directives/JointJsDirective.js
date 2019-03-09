@@ -3359,6 +3359,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         cell.attr('text', { text: $scope.popupModel.modelData.name});
         $scope.isExecParamList=false;    
         $scope.isExecParamSet=false;
+        $scope.isExecParams=false
         if($scope.selectParamType =="paramlist"){
           if($scope.paramlistdata){
             var execParams = {};
@@ -3618,20 +3619,22 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         var execParams={};
         var count = 0;
         $scope.filterListarray = [];
-		    for (var i = 0; i < $scope.selectedAttributeValue.length; i++){
-			    var filterList = {};
-		  	  var ref = {};
-			    if ($scope.selectedAttributeValue[i].value != "-select-") {
-				    ref.type = $scope.filterAttribureIdValues[i].type;
-				    ref.uuid = $scope.filterAttribureIdValues[i].datapoduuid
-				    filterList.ref = ref;
-				    if($scope.filterAttribureIdValues[i].type !="formual"){
-					    filterList.attrId = $scope.filterAttribureIdValues[i].datapodattrId;
-				    }
-				    filterList.value = $scope.selectedAttributeValue[i].value;
-				    $scope.filterListarray[count] = filterList;
-				    count = count + 1;
-			    }
+        if($scope.selectedAttributeValue){
+          for (var i = 0; i < $scope.selectedAttributeValue.length; i++){
+            var filterList = {};
+            var ref = {};
+            if ($scope.selectedAttributeValue[i].value != "-select-") {
+              ref.type = $scope.filterAttribureIdValues[i].type;
+              ref.uuid = $scope.filterAttribureIdValues[i].datapoduuid
+              filterList.ref = ref;
+              if($scope.filterAttribureIdValues[i].type !="formual"){
+                filterList.attrId = $scope.filterAttribureIdValues[i].datapodattrId;
+              }
+              filterList.value = $scope.selectedAttributeValue[i].value;
+              $scope.filterListarray[count] = filterList;
+              count = count + 1;
+            }
+          }
         }
         if($scope.filterListarray.length > 0) {
           execParams.EXEC_PARAMS={};
@@ -3645,6 +3648,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
       $scope.executeWithExecParamList=function(){
         $scope.isExecParamList=false;    
         $scope.isExecParamSet=false;
+        $scope.isExecParams=false;
        console.log(JSON.stringify($scope.paramListHolder))
         var cell = $scope.graph.getCell($scope.popupModel.id);
         cell.attr('text', { text: $scope.popupModel.modelData.name});
