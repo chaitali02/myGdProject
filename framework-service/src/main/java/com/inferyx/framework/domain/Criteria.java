@@ -18,6 +18,16 @@ public class Criteria {
 	private String criteriaName;
 	private String activeFlag;
 	private List<FilterInfo> criteriaFilter;
+	private double criteriaWeight;
+	
+	
+	public double getCriteriaWeight() {
+		return criteriaWeight;
+	}
+
+	public void setCriteriaWeight(double criteriaWeight) {
+		this.criteriaWeight = criteriaWeight;
+	}
 
 	public String getCriteriaId() {
 		return criteriaId;

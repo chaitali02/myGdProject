@@ -21,6 +21,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.hamcrest.core.IsInstanceOf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -127,12 +128,12 @@ public class Rule2Operator implements IParsable, IReferenceable {
 		String comma = ", ";
 		MetaIdentifierHolder filterSource = new MetaIdentifierHolder(
 				new MetaIdentifier(MetaType.rule2, rule2.getUuid(), rule2.getVersion()));
-		
+		List<String> attributeList = new ArrayList<String>();
 		AttributeRefHolder attributeRefHolder = rule2.getEntityId();
 		String attrName = null;
 		String tablename = null;
 		String aliasName = null;
-		String filter="";
+		String filter = "";
 		switch (attributeRefHolder.getRef().getType()) {
 		case datapod:
 			Datapod dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(attributeRefHolder.getRef().getUuid(),
@@ -140,8 +141,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 			attrName = datapodServiceImpl.getAttributeName(attributeRefHolder.getRef().getUuid(),
 					Integer.parseInt(attributeRefHolder.getAttrId()));
 			tablename = dp.getName();
-			
-			 aliasName = datastoreServiceImpl.getTableNameByDatapod(new Key(dp.getUuid(), dp.getVersion()), runMode);
+			aliasName = datastoreServiceImpl.getTableNameByDatapod(new Key(dp.getUuid(), dp.getVersion()), runMode);
 			break;
 		case dataset:
 			DataSet ds = (DataSet) commonServiceImpl.getOneByUuidAndVersion(attributeRefHolder.getRef().getUuid(),
@@ -155,60 +155,93 @@ public class Rule2Operator implements IParsable, IReferenceable {
 					MetaType.datapod.toString());
 			tablename = relation.getName();
 			break;
+		default:
+			break;
 
 		}
 		Datasource mapSourceDS = commonServiceImpl.getDatasourceByObject(rule2);
-		
+
 		withbuilder.append("WITH rule_with_query AS\n" + "(").append(ConstantsUtil.SELECT).append(" * ")
-				.append(ConstantsUtil.FROM).append(aliasName+" "+tablename).append(" ").append(ConstantsUtil.WHERE_1_1).append(" )");
+				.append(ConstantsUtil.FROM).append(aliasName + " " + tablename).append(" ")
+				.append(ConstantsUtil.WHERE_1_1).append(" )");
 		selectbuilder.append("( ");
 		for (Criteria criteria : rule2.getCriteriaInfo()) {
 			StringBuilder criteria_indBuilder = new StringBuilder();
+			StringBuilder criteria_scoreBuilder = new StringBuilder();
 
 			attributeMapOperator.setRunMode(runMode);
-		
+
 			selectbuilder.append(ConstantsUtil.SELECT);
 
-			selectbuilder.append("'").append(rule2.getName()).append("'").append(" as ").append(" rule_name")
+			selectbuilder.append("'").append(rule2.getUuid()).append("'").append(" as ").append(" rule_uuid")
 					.append(comma);
 
-			selectbuilder.append("'").append(rule2.getEntityType()).append("'").append(" as ").append(" entity_type")
+			selectbuilder.append("'").append(rule2.getName()).append("'").append(" as ").append("rule_name")
 					.append(comma);
 
-			selectbuilder.append("rule_with_query".concat("." + attrName) ).append(" as ")
-					.append(" entity_id").append(comma);
+			selectbuilder.append("'").append(rule2.getEntityType()).append("'").append(" as ").append("entity_type")
+					.append(comma);
 
-			selectbuilder.append("'").append(criteria_id).append("'").append(" as ").append(" criteria_id")
+			selectbuilder.append("rule_with_query".concat("." + attrName)).append(" as ").append("entity_id")
+					.append(comma);
+
+			selectbuilder.append("'").append(criteria_id).append("'").append(" as ").append("criteria_id")
 					.append(comma);
 
 			selectbuilder.append("'").append(criteria.getCriteriaName()).append("'").append(" as ")
-					.append(" criteria_name").append(comma);
-
-			filter = filterOperator2.generateSql(criteria.getCriteriaFilter(), refKeyMap, filterSource,
-					otherParams, usedRefKeySet, execParams, false, false, runMode, mapSourceDS);
+					.append("criteria_name").append(comma);
+			
+			
+			//Calculating criteria_met_ind
+			filter = filterOperator2.generateSql(criteria.getCriteriaFilter(), refKeyMap, filterSource, otherParams,
+					usedRefKeySet, execParams, false, false, runMode, mapSourceDS);
 
 			filter = filter.replaceAll(tablename, "rule_with_query");
-			criteria_indBuilder.append("CASE WHEN ").append("1=1").append(filter)
+			criteria_indBuilder.append(ConstantsUtil.CASE_WHEN).append("1=1").append(filter)
 					.append(" THEN 'PASS' ELSE 'FAIL' END ");
-			filter="";
-			selectbuilder.append(criteria_indBuilder.toString()).append(" as ").append(" criteria_ind").append(comma);
-			
-			selectbuilder.append(rule2.getVersion()).append(" as ").append(" version").append(" ")
-					.append(ConstantsUtil.FROM).append(" rule_with_query  ");
+			selectbuilder.append(criteria_indBuilder.toString()).append(" as ").append("criteria_met_ind")
+					.append(comma);
 
-			if(rule2.getCriteriaInfo().size()!=criteria_id)
-			selectbuilder.append(ConstantsUtil.UNION_ALL);
+			
+			//Calculating criteria_expr
+			filter = "";
+			filter = filterOperator2.generateExprSql(criteria.getCriteriaFilter(), refKeyMap, filterSource, otherParams,
+					usedRefKeySet, execParams, false, false, runMode, mapSourceDS, attributeList);
+			filter = filter.replaceAll(tablename, "rule_with_query");
+
+			selectbuilder.append(filter).append(" as ").append("criteria_expr").append(comma);
 			
 			
+			
+			//Calculating criteria_score   
+			//(CASE WHEN 1=1 filter THEN 1 ELSE 0 END) * criteriaWeight  as  criteria_score
+			filter = "";
+			filter = filterOperator2.generateSql(criteria.getCriteriaFilter(), refKeyMap, filterSource, otherParams,
+					usedRefKeySet, execParams, false, false, runMode, mapSourceDS);
+
+			filter = filter.replaceAll(tablename, "rule_with_query");
+			criteria_scoreBuilder.append("(").append(ConstantsUtil.CASE_WHEN).append("1=1").append(filter)
+					.append(" THEN 1 ELSE 0 END) * ").append(criteria.getCriteriaWeight());
+			filter = "";
+			selectbuilder.append(criteria_scoreBuilder.toString()).append(" as ").append("criteria_score")
+					.append(comma);			
+			
+			
+			selectbuilder.append(rule2.getVersion()).append(" as ").append("version").append(" ")
+					.append(ConstantsUtil.FROM).append("rule_with_query");
+
+			if (rule2.getCriteriaInfo().size() != criteria_id)
+				selectbuilder.append(ConstantsUtil.UNION_ALL);
+
 			criteria_id++;
 
 		}
 		selectbuilder.append(" )");
-		result=result.concat(withbuilder+selectbuilder.toString());
+		result = result.concat(withbuilder + selectbuilder.toString());
 		return result;
 
 	}
-	
+
 	public String getFrom() {
 		return ConstantsUtil.FROM;
 	}

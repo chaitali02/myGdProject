@@ -1,0 +1,184 @@
+{
+	"uuid": "17741969-5a2f-442a-bf8d-4fa5a0c7117a",
+	"version": "1552115484",
+	"name": "rule_result_detail",
+	"desc": null,
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+			"version": "1464977196",
+			"name": "ypalrecha"
+		},
+		"value": null
+	},
+	"createdOn": "Sat Mar 09 12:41:24 IST 2019",
+	"tags": [],
+	"active": "Y",
+	"locked": "N",
+	"published": "N",
+	 "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+        "version": "1548315745",
+        "name": "Anti Money Laundering"
+      },
+      "value": null
+    }
+  ],
+	"publicFlag": "N",
+	"datasource": {
+		"ref": {
+			"type": "datasource",
+			"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
+			"version": null,
+			"name": "file_data"
+		},
+		"value": null
+	},
+	"cache": "Y",
+	"attributes": [
+		{
+			"attributeId": 0,
+			"displaySeq": 0,
+			"name": "rule_uuid",
+			"type": "string",
+			"desc": "rule_uuid",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "rule_uuid",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 1,
+			"displaySeq": 1,
+			"name": "rule_name",
+			"type": "string",
+			"desc": "rule_name",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "rule_name",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 2,
+			"displaySeq": 2,
+			"name": "entity_type",
+			"type": "string",
+			"desc": "entity_type",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "entity_type",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 3,
+			"displaySeq": 3,
+			"name": "entity_id",
+			"type": "string",
+			"desc": "entity_id",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "entity_id",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 4,
+			"displaySeq": 4,
+			"name": "criteria_id",
+			"type": "string",
+			"desc": "criteria_id",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "criteria_id",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 5,
+			"displaySeq": 5,
+			"name": "criteria_name",
+			"type": "string",
+			"desc": "criteria_name",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "criteria_name",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 6,
+			"displaySeq": 6,
+			"name": "criteria_met_ind",
+			"type": "string",
+			"desc": "criteria_met_ind",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "criteria_met_ind",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 7,
+			"displaySeq": 7,
+			"name": "criteria_expr",
+			"type": "string",
+			"desc": "criteria_expr",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "criteria_expr",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 8,
+			"displaySeq": 8,
+			"name": "criteria_score",
+			"type": "double",
+			"desc": "criteria_score",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "criteria_score",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 9,
+			"displaySeq": 9,
+			"name": "version",
+			"type": "string",
+			"desc": "version",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "version",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		}
+	]
+}
