@@ -25,9 +25,7 @@ public class Rule2 extends BaseRule {
 	private MetaIdentifierHolder paramList;
 
 
-	public void setParamList(MetaIdentifierHolder paramList) {
-		this.paramList = paramList;
-	}
+	
 
 	public MetaIdentifierHolder getSourceInfo() {
 		return sourceInfo;
@@ -68,10 +66,13 @@ public class Rule2 extends BaseRule {
 	public void setCriteriaInfo(List<Criteria> criteriaInfo) {
 		this.criteriaInfo = criteriaInfo;
 	}
-
+	
+	public void setParamList(MetaIdentifierHolder paramList) {
+		this.paramList = paramList;
+	}
+	
 	public MetaIdentifierHolder getParamList() {
-		// TODO Auto-generated method stub
-		return null;
+		return paramList;
 	}
 
 }

@@ -27,15 +27,16 @@ RuleModule.factory('Rule2Factory', function ($http, $location) {
 
 
   }
-  factory.executeRule = function (uuid, version) {
+  factory.executeRule = function (uuid, version, data) {
     var url = $location.absUrl().split("app")[0]
     return $http({
-      method: 'POST',
       url: url + "rule2/execute?action=execute&uuid=" + uuid + "&version=" + version,
       headers: {
         'Accept': '*/*',
         'content-Type': "application/json",
       },
+      method: "POST",
+      data: JSON.stringify(data),
     }).
       then(function (response, status, headers) {
         return response;
@@ -466,9 +467,9 @@ RuleModule.service("Rule2Service", function ($q, Rule2Factory, sortFactory, CF_G
     return deferred.promise;
   }
 
-  this.executeRule = function (uuid, version) {
+  this.executeRule = function (uuid, version, data) {
     var deferred = $q.defer();
-    Rule2Factory.executeRule(uuid, version).then(function (response) { onSuccess(response) });
+    Rule2Factory.executeRule(uuid, version,data).then(function (response) { onSuccess(response) });
     var onSuccess = function (response) {
       deferred.resolve({
         data: response
@@ -788,6 +789,7 @@ RuleModule.service("Rule2Service", function ($q, Rule2Factory, sortFactory, CF_G
           criteriaInfo.criteriaId = response.criteriaInfo[i].criteriaId;
           criteriaInfo.criteriaName = response.criteriaInfo[i].criteriaName;
           criteriaInfo.activeFlag = response.criteriaInfo[i].activeFlag=="Y"?true:false;
+          criteriaInfo.criteriaWeight= response.criteriaInfo[i].criteriaWeight;
           var filterInfoArray=[];
           if (response.criteriaInfo[i].criteriaFilter && response.criteriaInfo[i].criteriaFilter.length > 0) {
             for (var j = 0; j < response.criteriaInfo[i].criteriaFilter.length; j++) {
@@ -1025,17 +1027,7 @@ RuleModule.service("Rule2Service", function ($q, Rule2Factory, sortFactory, CF_G
 
 
 
-  this.executeRule = function (uuid, version) {
-    var deferred = $q.defer();
-    Rule2Factory.executeRule(uuid, version).then(function (response) { onSuccess(response) });
-    var onSuccess = function (response) {
-      deferred.resolve({
-        data: response
-      })
-    }
-    return deferred.promise;
-  }
-
+ 
   this.getRuleResults = function (uuid, version, offset, limit, requestId, sortBy, order) {
     var deferred = $q.defer();
     var url;

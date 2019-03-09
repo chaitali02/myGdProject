@@ -106,6 +106,7 @@ import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.ReportExec;
 import com.inferyx.framework.domain.Role;
 import com.inferyx.framework.domain.Rule;
+import com.inferyx.framework.domain.Rule2;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.domain.VizExec;
 import com.inferyx.framework.enums.ApplicationType;
@@ -1826,6 +1827,23 @@ public class MetadataServiceImpl {
 
 	public List<ParamListHolder> getParamListByRule(String ruleUuid, String ruleVersion, MetaType paramListType) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Rule rule = (Rule) commonServiceImpl.getOneByUuidAndVersion(ruleUuid, ruleVersion, MetaType.rule.toString());
+
+		List<ParamListHolder> plHolderList = new ArrayList<>();
+		if(rule.getParamList() != null) {
+			MetaIdentifier plMI = rule.getParamList().getRef();
+			ParamListHolder plHolder = new ParamListHolder();
+			plHolder.setRef(plMI);
+			plHolderList.add(plHolder);
+			ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(plMI.getUuid(), plMI.getVersion(), plMI.getType().toString());
+			if(paramList.getTemplateFlg().equalsIgnoreCase("Y")) {
+				List<ParamList> childs = commonServiceImpl.getAllLatestParamListByTemplate(null, paramList.getUuid(), paramList.getVersion(), paramListType);
+				plHolderList.addAll(persistPLTemplateChilds(childs));
+			}
+		}
+		return plHolderList;
+	}
+	public List<ParamListHolder> getParamListByRule2(String ruleUuid, String ruleVersion, MetaType paramListType) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		Rule2 rule = (Rule2) commonServiceImpl.getOneByUuidAndVersion(ruleUuid, ruleVersion, MetaType.rule2.toString());
 
 		List<ParamListHolder> plHolderList = new ArrayList<>();
 		if(rule.getParamList() != null) {
