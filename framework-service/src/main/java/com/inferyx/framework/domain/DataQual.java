@@ -32,6 +32,7 @@ public class DataQual extends BaseRule{
 	//private String stdDevCheck;
 	private List<FilterInfo> filterInfo;	
 	private List<MetaIdentifierHolder> userInfo;
+	private Threshold thresholdInfo;
 	
 	
 	public List<MetaIdentifierHolder> getUserInfo() {
@@ -127,6 +128,13 @@ public class DataQual extends BaseRule{
 	public void setStdDevCheck(String stdDevCheck) {
 		this.stdDevCheck = stdDevCheck;
 	}*/
+	
+	public Threshold getThresholdInfo() {
+		return thresholdInfo;
+	}
+	public void setThresholdInfo(Threshold thresholdInfo) {
+		this.thresholdInfo = thresholdInfo;
+	}
 		
 	
 }
