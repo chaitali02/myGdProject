@@ -932,6 +932,14 @@ public class MetadataController {
 			@RequestParam(value = "type", required = false) String type) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {		
 		return metadataServiceImpl.getParamListByRule(ruleUuid, ruleVersion, null);
 	}
+	@RequestMapping(value = "/getParamListByRule2", method = RequestMethod.GET)
+	public @ResponseBody List<ParamListHolder> getParamListByRule2(
+			@RequestParam(value = "uuid", required = false) String ruleUuid,
+			@RequestParam(value = "version", required = false) String ruleVersion,
+			@RequestParam(value = "paramListType", required = false) MetaType paramListType,
+			@RequestParam(value = "type", required = false) String type) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {		
+		return metadataServiceImpl.getParamListByRule2(ruleUuid, ruleVersion, null);
+	}
 	
 	@RequestMapping(value = "/getParamListByReport", method = RequestMethod.GET, params = {"uuid", "version"})
 	public @ResponseBody List<ParamListHolder> getParamListByReport(

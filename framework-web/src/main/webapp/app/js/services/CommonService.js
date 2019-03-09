@@ -1074,6 +1074,9 @@
     url ="metadata/getParamListByTrain?action=view&uuid=" +uuid+"&version="+version+"&type=" + type;
     else if(type=="rule")
     url ="metadata/getParamListByRule?action=view&uuid=" +uuid+"&version="+version+"&type=" + type;
+    else if(type=="rule2")
+    url ="metadata/getParamListByRule2?action=view&uuid=" +uuid+"&version="+version+"&type=" + type;
+   
     else if(type=="dag")
     url ="metadata/getParamListByDag?action=view&uuid=" +uuid+"&version="+version+"&type=" + type;
     else if(type=="report")

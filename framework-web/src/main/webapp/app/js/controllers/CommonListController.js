@@ -913,7 +913,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     // if($scope.select == 'rule') {  //|| $scope.select == 'train'
     //   $scope.getExecParamsSet();
     // }
-    if($scope.select == 'train' || $scope.select == 'rule' || $scope.select == 'dag' || $scope.select == 'report' ){
+    if($scope.select == 'train' || $scope.select == 'rule' || $scope.select == 'dag' || $scope.select == 'report' || $scope.select == 'rule2' ){
       $scope.selectParamType=null;
       $scope.paramtable=null;
       $scope.isTabelShow=false;
@@ -922,7 +922,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
       $scope.isParamLsitTable=false;
       setTimeout(function(){    $scope.paramTypes=[{"text":"paramlist","caption":"paramlist","disabled": false  },{"text":"paramset","caption":"paramset" ,"disabled": false }];
       ; },100);
-      if($scope.select =='rule' || $scope.select =='dag' || $scope.select == 'report'){
+      if($scope.select =='rule' || $scope.select =='dag' || $scope.select == 'report' || $scope.select =='rule2'){
         $scope.isParamListRquired=false;
         CommonService.getOneByUuidAndVersion($scope.exeDetail.uuid,$scope.exeDetail.version,$scope.select).then(function (response){onSuccessGetOneByUuidAndVersion(response.data)});
         var onSuccessGetOneByUuidAndVersion = function (response) {
