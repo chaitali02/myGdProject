@@ -21,7 +21,6 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.hamcrest.core.IsInstanceOf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -74,19 +73,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 	
 	static final Logger logger = Logger.getLogger(Rule2Operator.class);
 	
-/*	public String generateSql(Rule2 rule2, java.util.Map<String, MetaIdentifier> refKeyMap,HashMap<String, String> otherParams, 
-								Set<MetaIdentifier> usedRefKeySet,	ExecParams execParams, RunMode runMode) throws Exception {
-		String sql = generateSelect(rule2, refKeyMap, otherParams, execParams, runMode)
-				.concat(getFrom())
-				.concat(generateFrom(rule2, refKeyMap, otherParams, usedRefKeySet, execParams, runMode))
-				.concat(generateWhere())
-				.concat(generateFilter(rule2, refKeyMap, otherParams, usedRefKeySet, execParams, runMode))
-				.concat(selectGroupBy(rule2, refKeyMap, otherParams, execParams))
-				.concat(generateHaving(rule2, refKeyMap, otherParams, usedRefKeySet, execParams, runMode));
-		System.out.println(sql);
-		return null;
-	}
-	*/
+
 	public String generateDetailSql(Rule2 rule2, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
 			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception{	
 		// TODO Auto-generated method stub
@@ -127,32 +114,10 @@ public class Rule2Operator implements IParsable, IReferenceable {
 		return result;
 	}
 
-	private List<AttributeMap> createAttrMap (Rule2 rule2, java.util.Map<String, MetaIdentifier> refKeyMap) {
-		// Create AttributeMap
-		List<AttributeMap> attrMapList = new ArrayList<>();
-		AttributeMap attrMap = null; 
-		AttributeRefHolder sourceAttr = null;
-	/*	for (AttributeSource sourceAttribute : rule.getAttributeInfo()) {
-			sourceAttr = new AttributeRefHolder();
-			sourceAttr.setAttrId(sourceAttribute.getSourceAttr().getAttrId());
-			sourceAttr.setValue(sourceAttribute.getSourceAttr().getValue());
-			sourceAttr.setAttrName(sourceAttribute.getAttrSourceName());
-			sourceAttr.setRef(sourceAttribute.getSourceAttr().getRef());
-			attrMap = new AttributeMap();
-			attrMap.setSourceAttr(sourceAttr);
-			attrMap.setAttrMapId(sourceAttribute.getAttrSourceId());
-			//attrMap.setDesc(sourceAttribute.getName());
-			attrMapList.add(attrMap);
-		}*/
-		return attrMapList;
-	}
 	
 	public String generateWith(Rule2 rule2, java.util.Map<String, MetaIdentifier> refKeyMap,
 			HashMap<String, String> otherParams, ExecParams execParams, RunMode runMode) throws Exception {
-		// return ConstantsUtil.SELECT.concat("row_number() over (partition by 1) as
-		// rownum, ").concat(attributeMapOperator.generateSql(createAttrMap (rule,
-		// refKeyMap), rule.getSource(), refKeyMap, null));
-		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
+			Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
 		String result = "";
 		StringBuilder selectbuilder = new StringBuilder();
 		StringBuilder withbuilder = new StringBuilder();
@@ -205,7 +170,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 
 			selectbuilder.append(ConstantsUtil.SELECT);
 
-			selectbuilder.append("'").append(rule2.getUuid()).append("'").append(" as ").append(" rule_uuid")
+			selectbuilder.append("'").append(rule2.getUuid()).append("'").append(" as ").append("rule_uuid")
 					.append(comma);
 
 			selectbuilder.append("'").append(rule2.getName()).append("'").append(" as ").append("rule_name")

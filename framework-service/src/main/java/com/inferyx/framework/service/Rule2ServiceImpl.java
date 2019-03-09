@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -54,16 +55,21 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ParamSetHolder;
+import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.Rule2;
 import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.enums.SaveMode;
+import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ConnectionFactory;
+import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.operator.Rule2Operator;
 import com.inferyx.framework.register.GraphRegister;
+import com.inferyx.framework.writer.IWriter;
 
 @Service
 public class Rule2ServiceImpl extends RuleTemplate {
@@ -98,6 +104,8 @@ public class Rule2ServiceImpl extends RuleTemplate {
 	HDFSInfo hdfsInfo;
 	@Autowired
 	ThreadPoolTaskExecutor metaExecutor;
+	@Autowired
+	DataSourceFactory dataSourceFactory;
 	/*
 	 * @Autowired private IRuleExecDao iRuleExecDao;
 	 */
@@ -823,20 +831,72 @@ public class Rule2ServiceImpl extends RuleTemplate {
 		String detailsql = rule2Operator.generateDetailSql(rule2, refKeyMap, otherParams, usedRefKeySet,
 				new ExecParams(), runMode);
 
+		
+		
+		//***************************************************  persist datapod 
+
 		Application application = commonServiceImpl.getApp();
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
-		String filePath = "/" + rule2.getUuid().replace("-", "_") + "/" + rule2.getVersion() + "/"
-				+ ruleExec.getVersion();
-		String tableName = rule2.getUuid().replace("-", "_") + "_" + rule2.getVersion() + "_" + ruleExec.getVersion()
-				+ "_detail";
 		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(rule2Info.getRule_result_details(), null,
 				MetaType.datapod.toString(), "N");
+		// String filePath = "/" + datapod.getUuid()+ "/" + datapod.getVersion() + "/"+
+		// ruleExec.getVersion();
+		String filePath = Helper.getFileName(datapod.getUuid(), datapod.getVersion(), ruleExec.getVersion());
+		String tableName = Helper.genTableName(filePath);
 
-		//exec.executeRegisterAndPersist(detailsql, tableName, filePath, datapod, RunMode.ONLINE.toString(), true,
-		//		application.getUuid());
-		exec.executeAndRegister(detailsql, tableName, application.getUuid());
-		String summarysql = rule2Operator.generateSummarySql(rule2, tableName, datapod, refKeyMap, otherParams,
+		ResultSetHolder rsHolder;
+
+		long countRows = 0;
+
+		ExecContext execContext = null;
+
+		execContext = executorServiceImpl.getExecContext(runMode, datasource);
+
+		Datasource appDatasource = commonServiceImpl.getDatasourceByApp();
+		Datasource ruleDatasource = commonServiceImpl.getDatasourceByObject(rule2);
+		if (runMode != null && runMode.equals(RunMode.BATCH)) {
+			MetaIdentifier targetDsMI = datapod.getDatasource().getRef();
+			Datasource targetDatasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(targetDsMI.getUuid(),
+					targetDsMI.getVersion(), targetDsMI.getType().toString());
+			if (appDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+					&& !targetDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+				rsHolder = exec.executeSqlByDatasource(detailsql, ruleDatasource, application.getUuid());
+				if (targetDatasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+					tableName = targetDatasource.getSid().concat(".").concat(datapod.getName());
+				} else {
+					tableName = targetDatasource.getDbname().concat(".").concat(datapod.getName());
+				}
+				rsHolder.setTableName(tableName);
+				rsHolder = exec.persistDataframe(rsHolder, targetDatasource, datapod, SaveMode.APPEND.toString());
+			} else if (targetDatasource.getType().equals(ExecContext.FILE.toString())) {
+				exec.executeRegisterAndPersist(detailsql, tableName, filePath, datapod, "overwrite", true,
+						application.getUuid());
+			} else {
+				String sql = helper.buildInsertQuery(execContext.toString(), tableName, datapod, detailsql);
+				exec.executeSql(sql, application.getUuid());
+			}
+		} else {
+			rsHolder = exec.executeAndRegisterByDatasource(detailsql, tableName, ruleDatasource, application.getUuid());
+
+			countRows = rsHolder.getCountRows();
+		}
+
+		logger.info("temp table registered: " + tableName);
+
+		Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(rule2Info.getRule_result_details(),
+				null, MetaType.datapod.toString(), "N");
+
+		MetaIdentifier targetDatapodKey = new MetaIdentifier(MetaType.datapod, targetDatapod.getUuid(),
+				targetDatapod.getVersion());
+
+		persistDatastore(tableName, filePath, ruleExec, null, targetDatapodKey, countRows, runMode);
+
+		//*******************************************************
+		
+		
+		
+	String summarysql = rule2Operator.generateSummarySql(rule2, tableName, datapod, refKeyMap, otherParams,
 				usedRefKeySet, new ExecParams(), runMode);
 
 		ruleExec.setExec(summarysql);
@@ -865,6 +925,15 @@ public class Rule2ServiceImpl extends RuleTemplate {
 		}
 
 		return ruleExec;
+	}
+	
+	protected void persistDatastore(String tableName, String filePath,RuleExec ruleExec ,MetaIdentifierHolder resultRef,MetaIdentifier datapodKey, long countRows, RunMode runMode) throws Exception {
+		/*DataStore ds = new DataStore();
+		ds.setCreatedBy(baseRuleExec.getCreatedBy());*/
+		dataStoreServiceImpl.setRunMode(runMode);
+		dataStoreServiceImpl.create(filePath, tableName, datapodKey, ruleExec.getRef(MetaType.reconExec), ruleExec.getAppInfo(), ruleExec.getCreatedBy(), SaveMode.APPEND.toString(), resultRef, countRows, Helper.getPersistModeFromRunMode(runMode.toString()), null);
+		/*dataStoreServiceImpl.persistDataStore(df, tableName, null, filePath,datapodKey, baseRuleExec.getRef(ruleExecType),
+				null,baseRuleExec.getAppInfo(),SaveMode.Append.toString(), resultRef,ds);*/
 	}
 
 	@Override
