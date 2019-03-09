@@ -1080,6 +1080,9 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 
 	/*Start SubmitDatapod*/
 	$scope.submitDatapod = function () {
+		if($scope.isDuplication ==true){
+			return false;
+		}
 		var datapodJson = {};
 		var upd_tag = "N"
 		$scope.dataLoading = true;
@@ -1184,6 +1187,38 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			$scope.$emit('notify', notify);
 		}
 	}/*End SubmitDatapod*/
+	
+	
+	function isDublication (arr, field, index, name,darray) {
+		var res = [];
+		for(var i = 0; i < arr.length;i++){
+			if (arr[i][field] == arr[index][field] && i != index) {
+			    $scope.myform[name].$invalid = true;
+				darray.push(i);
+				break
+			}
+			else {
+				$scope.myform[name].$invalid = false;	
+			}
+		}
+		
+		return darray;
+	}
+	$scope.onChangeDisplayName = function (index) {
+		var dupArray=[];
+		for(var i=0;i<$scope.attributetable.length;i++){
+			setTimeout(function(index){
+				if ($scope.attributetable[index].dispName) {
+					var res = isDublication($scope.attributetable, "dispName", index, "dispName"+index, dupArray);
+					if(res.length >0 ){
+						$scope.isDuplication = true;
+					}else {
+						$scope.isDuplication = false;
+					}
+				}
+			},10,(i));
+		}
+	}
 
 
 	$scope.addRow = function () {
@@ -1192,6 +1227,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		}
 		var attributejson = {}
 		attributejson.attributeId = $scope.attributetable.length//$scope.attributetable.length;
+		attributejson.active="Y";
 		//$scope.gridOptionsDatapod.data.push(attributejson);
 		$scope.attributetable.push(attributejson)
 	}

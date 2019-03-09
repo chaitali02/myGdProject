@@ -436,6 +436,15 @@
                   <hr>
                 </div>
                 <br />
+                <div class="row">
+                    <div class="col-md-12">
+                <div id="hideshow" class="alert alert-danger pull-left" ng-if="isDuplication" style="margin:-30px 0px 10px;width:22%;">
+                  <button class="close" data-close="alert"></button>
+                  <div>Duplicate not allowed. </div>
+                </div>
+                </div></div>
+                <div class="row">
+                  <div class="col-md-12">
                 <div style="overflow-y: auto;overflow-x: hidden;max-height:400px;">
 
                   <!-- <div ui-grid="gridOptionsDatapod" ui-grid-selection ui-grid-resize-columns ui-grid-auto-resize ui-grid-edit ui-grid-row-edit
@@ -494,9 +503,9 @@
                           </span>
                         </td>
                         <td>
-                          <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                          <span class="form-group" style="margin-left:0px;margin-right: 0px;" ng-class="{ 'has-error' : myform['dispName'+$index].$invalid}">
                             <input type="text" ng-model="tabledata.dispName" title="{{tabledata.dispName}}" ng-disabled="{{mode}}"
-                              class="form-control">
+                              class="form-control" ng-change="onChangeDisplayName($indez)"  name="dispName{{$index}}">
                           </span>
                         </td>
                         <td>
@@ -549,6 +558,8 @@
                     </tbody>
                   </table>
                 </div>
+              </div>
+            </div>
               </form>
             </div>
           </div>
