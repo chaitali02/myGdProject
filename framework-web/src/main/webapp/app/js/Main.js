@@ -749,6 +749,9 @@ InferyxApp.controller('AppRoleController', function ($scope,$sessionStorage,$roo
             var onSecurityAppRoleSuccess = function (response) {
                 localStorage.isAppRoleExists = true;
                 localStorage.appUuid=$scope.selectedApp.appId.ref.uuid;
+                localStorage.appName = $scope.selectedApp.appId.ref.name;
+                localStorage.role = $scope.selectedRole.ref.name
+                $rootScope.role = localStorage.role;
                 console.log(JSON.stringify(response.data));
                 $rootScope.metaStats={};
                 LhsService.getMetaStats().then(function (response) { onSuccessGetMetaStats(response.data) });

@@ -1467,10 +1467,13 @@ transition: right 1m
 
    tags-input .tags .tag-item{
     background: #36a3f7 !important;/*#e0e0e0 !important;*/
-    color: white;
+    /* color: white; */
+    background: white !important;
+    /* color: white; */
+    border: 1px solid #32c5d2;
    }
    tags-input .tags .tag-item .remove-button{
-     color: white;
+     /* color: white; */
    }
 
 
@@ -1480,4 +1483,11 @@ transition: right 1m
 
    .list-group-item{
     padding:5px 15px;background-color:#ddd;
+   }
+
+   .portlet.box.green > .portlet-title > .actions .btn-default{
+     color: white !important
+   }
+   .portlet.box.green > .portlet-title > .actions .btn-default > i{
+     color: white !important
    }
