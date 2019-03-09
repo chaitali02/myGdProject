@@ -1,7 +1,8 @@
 /****/
 DataQualityModule = angular.module('DataQualityModule');
 
-DataQualityModule.controller('DetailDataQualityController', function ($state, $stateParams, $location, $rootScope, $scope, DataqulityService, privilegeSvc, CommonService, $timeout, $filter, CF_FILTER,CF_SUCCESS_MSG) {
+DataQualityModule.controller('DetailDataQualityController', function ($state, $stateParams, $rootScope, $scope, 
+    DataqulityService, privilegeSvc, CommonService, $timeout, $filter, CF_FILTER, CF_SUCCESS_MSG, CF_THRESHOLDTYPE) {
   $scope.dataqualitydata = {};
   $scope.mode = "false";
   if ($stateParams.mode == 'true') {
@@ -37,6 +38,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     $scope.isAdd = true;
   }
   $scope.isDestoryState = false; 
+  $scope.thresholdType=CF_THRESHOLDTYPE.thresholdType
   $scope.rhsNA=['NULL',"NOT NULL"];
   $scope.userDetail = {}
   $scope.userDetail.uuid = $rootScope.setUseruuid;
@@ -218,6 +220,21 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     }
     $scope.dependsOnDataQuality();
   }
+  
+  $scope.onChangeTLow=function(){
+    $scope.thresholdInfo.mediumMin=$scope.thresholdInfo.low;
+    
+
+  }
+
+  $scope.onChangeTMedium=function(){
+    $scope.thresholdInfo.lowMax=$scope.thresholdInfo.medium;
+    $scope.thresholdInfo.highMin=$scope.thresholdInfo.medium;    
+  }
+
+  $scope.onChangeTHigh=function(){
+    $scope.thresholdInfo.mediumMax=$scope.thresholdInfo.high;
+  }
 
   if (typeof $stateParams.id != "undefined") {
     $scope.mode = $stateParams.mode;
@@ -287,6 +304,30 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
         dataqualityoption.attributeId = response.dqdata.attribute.attrId
         $scope.dataqualityoption = dataqualityoption;
       }
+      if(response.dqdata.thresholdInfo !=null){
+        $scope.thresholdInfo={};
+        $scope.thresholdInfo.lowMin=1;
+        $scope.thresholdInfo.lowMax=parseInt(response.dqdata.thresholdInfo.medium);
+        $scope.thresholdInfo.mediumMin=parseInt(response.dqdata.thresholdInfo.low);
+        $scope.thresholdInfo.mediumMax=parseInt(response.dqdata.thresholdInfo.high);
+        $scope.thresholdInfo.highMin=parseInt(response.dqdata.thresholdInfo.medium);
+        $scope.thresholdInfo.highMax=100;
+        $scope.thresholdInfo.low=parseInt(response.dqdata.thresholdInfo.low);
+        $scope.thresholdInfo.medium=parseInt(response.dqdata.thresholdInfo.medium);
+        $scope.thresholdInfo.high=parseInt(response.dqdata.thresholdInfo.high);
+        $scope.thresholdInfo.type=response.dqdata.thresholdInfo.type;
+        $scope.thresholdInfo.isPresent=true;
+
+      }else{
+        $scope.thresholdInfo={};
+        $scope.thresholdInfo.lowMin=1;
+        $scope.thresholdInfo.lowMax=100;
+        $scope.thresholdInfo.mediumMin=1;
+        $scope.thresholdInfo.mediumMax=100;
+        $scope.thresholdInfo.highMin=1;
+        $scope.thresholdInfo.highMax=100;
+        $scope.thresholdInfo.isPresent=false;
+      }
 
       $scope.dataqualityoption = dataqualityoption;
       $scope.refIntegrityCheckoption = refIntegrityCheckoption
@@ -322,7 +363,22 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
   else {
     $scope.showactive = "false";
     $scope.dataqualitydata.locked="N";
+    $scope.thresholdInfo={};
+    $scope.thresholdInfo.low=25;
+    $scope.thresholdInfo.medium=50;
+    $scope.thresholdInfo.high=75;
+    $scope.thresholdInfo.lowMin=1;
+    $scope.thresholdInfo.lowMax=$scope.thresholdInfo.medium;
+    $scope.thresholdInfo.mediumMin=$scope.thresholdInfo.low;
+    $scope.thresholdInfo.mediumMax=$scope.thresholdInfo.high;
+    $scope.thresholdInfo.highMin=$scope.thresholdInfo.medium;
+    $scope.thresholdInfo.highMax=100;
+    $scope.thresholdInfo.type=$scope.thresholdType[0];
+    $scope.thresholdInfo.isPresent=true;
+     
   }
+
+   
 
   $scope.selectVersion = function () {
     $scope.isSelectSoureceAttr = false
@@ -405,7 +461,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
       $scope.refIntegrityCheckeckoption = refIntegrityCheckoption
       $scope.selectrefIntegrityCheck = selectrefIntegrityCheck
       $scope.filterTableArray = response.filterInfo
-
+      
       if (response.dqdata.refIntegrityCheck.ref != null) {
         DataqulityService.getAttributeByDatapod(response.dqdata.refIntegrityCheck.ref.uuid).then(function (response) {
           onSuccess(response.data)
@@ -413,6 +469,31 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
         var onSuccess = function (response) {
           $scope.refIntegrityCheckoptions = response;
         }
+      }
+
+      if(response.dqdata.thresholdInfo !=null){
+        $scope.thresholdInfo={};
+        $scope.thresholdInfo.lowMin=1;
+        $scope.thresholdInfo.lowMax=parseInt(response.dqdata.thresholdInfo.medium);
+        $scope.thresholdInfo.mediumMin=parseInt(response.dqdata.thresholdInfo.low);
+        $scope.thresholdInfo.mediumMax=parseInt(response.dqdata.thresholdInfo.high);
+        $scope.thresholdInfo.highMin=parseInt(response.dqdata.thresholdInfo.medium);
+        $scope.thresholdInfo.highMax=100;
+        $scope.thresholdInfo.low=parseInt(response.dqdata.thresholdInfo.low);
+        $scope.thresholdInfo.medium=parseInt(response.dqdata.thresholdInfo.medium);
+        $scope.thresholdInfo.high=parseInt(response.dqdata.thresholdInfo.high);
+        $scope.thresholdInfo.type=response.dqdata.thresholdInfo.type;
+        $scope.thresholdInfo.isPresent=true;
+
+      }else{
+        $scope.thresholdInfo={};
+        $scope.thresholdInfo.lowMin=1;
+        $scope.thresholdInfo.lowMax=100;
+        $scope.thresholdInfo.mediumMin=1;
+        $scope.thresholdInfo.mediumMax=100;
+        $scope.thresholdInfo.highMin=1;
+        $scope.thresholdInfo.highMax=100;
+        $scope.thresholdInfo.isPresent=false;
       }
     };
     var onError =function(){
@@ -999,7 +1080,17 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
       }
     } else {
       dataqualityjosn.filterInfo = null;
-     
+    }
+    
+    var thresholdInfo={};
+    if($scope.thresholdInfo.isPresent =true){
+      thresholdInfo.type=$scope.thresholdInfo.type;
+      thresholdInfo.low=$scope.thresholdInfo.low;
+      thresholdInfo.medium=$scope.thresholdInfo.medium;
+      thresholdInfo.high=$scope.thresholdInfo.high;
+      dataqualityjosn.thresholdInfo=thresholdInfo;
+    }else{
+      dataqualityjosn.thresholdInfo=null;
     }
     console.log(JSON.stringify(dataqualityjosn))
     DataqulityService.submit(dataqualityjosn, "dq", upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });

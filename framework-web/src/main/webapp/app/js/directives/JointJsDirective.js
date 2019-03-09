@@ -2111,7 +2111,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                  iconMenuItems.push({title:'Show Logs', type : 'logs'});
                }
                if(status && status=='STARTING'){
-                iconMenuItems.splice(0,0,{title:'Kill', type : 'killexecution'});
+                //iconMenuItems.splice(0,0,{title:'Kill', type : 'killexecution'});
                }
               //  if(isGroupExec){
               //   iconMenuItems.push({title:'Show Logs', type : 'logs'});
