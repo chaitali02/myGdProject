@@ -34,14 +34,20 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
+import com.inferyx.framework.common.ProfileInfo;
+import com.inferyx.framework.common.Rule2Info;
 import com.inferyx.framework.dao.IRule2Dao;
 import com.inferyx.framework.dao.IRuleDao;
+import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataStore;
+import com.inferyx.framework.domain.Datapod;
+import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -54,6 +60,7 @@ import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.operator.Rule2Operator;
 import com.inferyx.framework.register.GraphRegister;
@@ -67,6 +74,8 @@ public class Rule2ServiceImpl extends RuleTemplate {
 	 */
 	@Autowired
 	IRule2Dao iRule2Dao;
+	@Autowired
+	Rule2Info rule2Info;
 	@Autowired
 	MongoTemplate mongoTemplate;
 	@Autowired
@@ -493,11 +502,18 @@ public class Rule2ServiceImpl extends RuleTemplate {
 	 * @throws Exception
 	 */
 	public RuleExec execute(ThreadPoolTaskExecutor metaExecutor, RuleExec ruleExec,
-							List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
+			List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
 		logger.info("Inside ruleServiceImpl.execute");
 		try {
+
+			Datapod targetDatapod = (Datapod) commonServiceImpl
+					.getOneByUuidAndVersion(rule2Info.getRule_result_summary(), null, MetaType.datapod.toString(), "N");
+
+			MetaIdentifier targetDatapodKey = new MetaIdentifier(MetaType.datapod, targetDatapod.getUuid(),
+					targetDatapod.getVersion());
+
 			ruleExec = (RuleExec) super.execute(MetaType.rule2, MetaType.ruleExec, metaExecutor, ruleExec,
-						ruleExec.getDependsOn().getRef(), taskList, execParams, runMode);
+					targetDatapodKey, taskList, execParams, runMode);
 		} catch (Exception e) {
 			synchronized (ruleExec.getUuid()) {
 				commonServiceImpl.setMetaStatus(ruleExec, MetaType.ruleExec, Status.Stage.FAILED);
@@ -785,8 +801,9 @@ public class Rule2ServiceImpl extends RuleTemplate {
 	 * This is an override of BaseRuleService.parse for rule
 	 */
 	@Override
-	public RuleExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 
-			List<String> datapodList, DagExec dagExec, RunMode runMode) throws Exception {
+	public RuleExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap,
+			HashMap<String, String> otherParams, List<String> datapodList, DagExec dagExec, RunMode runMode)
+			throws Exception {
 		logger.info("Inside ruleServiceImpl.parse");
 		Rule2 rule2 = null;
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
@@ -800,14 +817,33 @@ public class Rule2ServiceImpl extends RuleTemplate {
 		// new Sort(Sort.Direction.DESC, "version"));
 		rule2 = (Rule2) commonServiceImpl.getLatestByUuid(ruleExec.getDependsOn().getRef().getUuid(),
 				MetaType.rule2.toString(), "N");
-		
-		String sql = "select current_date() as date";
-	//	ruleExec.setExec(sql);
-		//ruleExec.setExec(rule2Operator.generateSql(rule2, refKeyMap, otherParams, usedRefKeySet, ruleExec.getExecParams(), runMode));
-		ruleExec.setExec(rule2Operator.generateSql(rule2, refKeyMap, otherParams, usedRefKeySet, new ExecParams(), runMode));
-		if(rule2.getParamList() != null) {
+
+		// ruleExec.setExec(rule2Operator.generateSql(rule2, refKeyMap, otherParams,
+		// usedRefKeySet, ruleExec.getExecParams(), runMode));
+		String detailsql = rule2Operator.generateDetailSql(rule2, refKeyMap, otherParams, usedRefKeySet,
+				new ExecParams(), runMode);
+
+		Application application = commonServiceImpl.getApp();
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		IExecutor exec = execFactory.getExecutor(datasource.getType());
+		String filePath = "/" + rule2.getUuid().replace("-", "_") + "/" + rule2.getVersion() + "/"
+				+ ruleExec.getVersion();
+		String tableName = rule2.getUuid().replace("-", "_") + "_" + rule2.getVersion() + "_" + ruleExec.getVersion()
+				+ "_detail";
+		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(rule2Info.getRule_result_details(), null,
+				MetaType.datapod.toString(), "N");
+
+		//exec.executeRegisterAndPersist(detailsql, tableName, filePath, datapod, RunMode.ONLINE.toString(), true,
+		//		application.getUuid());
+		exec.executeAndRegister(detailsql, tableName, application.getUuid());
+		String summarysql = rule2Operator.generateSummarySql(rule2, tableName, datapod, refKeyMap, otherParams,
+				usedRefKeySet, new ExecParams(), runMode);
+
+		ruleExec.setExec(summarysql);
+		if (rule2.getParamList() != null) {
 			MetaIdentifier mi = rule2.getParamList().getRef();
-			ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(mi.getUuid(), mi.getVersion(), mi.getType().toString(), "N");
+			ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(mi.getUuid(), mi.getVersion(),
+					mi.getType().toString(), "N");
 			usedRefKeySet.add(new MetaIdentifier(MetaType.paramlist, paramList.getUuid(), paramList.getVersion()));
 		}
 		ruleExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
@@ -816,15 +852,18 @@ public class Rule2ServiceImpl extends RuleTemplate {
 			commonServiceImpl.setMetaStatus(ruleExec, MetaType.ruleExec, Status.Stage.READY);
 		}
 		synchronized (ruleExec.getUuid()) {
-//			RuleExec ruleExec1 = (RuleExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.ruleExec, ruleExec.getUuid(), ruleExec.getVersion()));
-			RuleExec ruleExec1 = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(ruleExec.getUuid(), ruleExec.getVersion(), MetaType.ruleExec.toString(), "N");
+			// RuleExec ruleExec1 = (RuleExec) daoRegister.getRefObject(new
+			// MetaIdentifier(MetaType.ruleExec, ruleExec.getUuid(),
+			// ruleExec.getVersion()));
+			RuleExec ruleExec1 = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(ruleExec.getUuid(),
+					ruleExec.getVersion(), MetaType.ruleExec.toString(), "N");
 			ruleExec1.setExec(ruleExec.getExec());
 			ruleExec1.setRefKeyList(ruleExec.getRefKeyList());
 			// iRuleExecDao.save(ruleExec1);
 			commonServiceImpl.save(MetaType.ruleExec.toString(), ruleExec1);
 			ruleExec1 = null;
 		}
-		
+
 		return ruleExec;
 	}
 

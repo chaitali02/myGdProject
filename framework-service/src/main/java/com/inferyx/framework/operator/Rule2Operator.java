@@ -87,14 +87,46 @@ public class Rule2Operator implements IParsable, IReferenceable {
 		return null;
 	}
 	*/
-	public String generateSql(Rule2 rule2, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
+	public String generateDetailSql(Rule2 rule2, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
 			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception{	
 		// TODO Auto-generated method stub
 		String sql = generateWith(rule2, refKeyMap, otherParams, execParams, runMode);
 		return sql;
 	}
 	
+	public String generateSummarySql(Rule2 rule2, String tableName, Datapod datapod, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
+			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception{	
+		// TODO Auto-generated method stub
+		String sql = generateSql(tableName,datapod);
+		return sql;
+	}
 	
+	
+	private String generateSql(String tableName, Datapod datapod) {
+		String result = "";
+		StringBuilder querybuilder = new StringBuilder();
+		String comma = ", ";
+
+		querybuilder.append(ConstantsUtil.SELECT);
+		querybuilder.append("rule_uuid").append(" as ").append("rule_uuid").append(comma);
+		querybuilder.append("rule_name").append(" as ").append("rule_name").append(comma);
+		querybuilder.append("entity_type").append(" as ").append("entity_type").append(comma);
+		querybuilder.append("entity_id").append(" as ").append("entity_id").append(comma);
+		querybuilder.append("sum(criteria_score)").append(" as ").append("score").append(comma);
+		querybuilder.append("version").append(" as ").append("version");
+		querybuilder.append(ConstantsUtil.FROM);
+		querybuilder.append(tableName);
+		querybuilder.append(ConstantsUtil.GROUP_BY);
+		querybuilder.append("rule_uuid").append(comma);
+		querybuilder.append("rule_name").append(comma);
+		querybuilder.append("entity_type").append(comma);
+		querybuilder.append("entity_id").append(comma);
+		querybuilder.append("version");
+
+		result = querybuilder.toString();
+		return result;
+	}
+
 	private List<AttributeMap> createAttrMap (Rule2 rule2, java.util.Map<String, MetaIdentifier> refKeyMap) {
 		// Create AttributeMap
 		List<AttributeMap> attrMapList = new ArrayList<>();
@@ -326,7 +358,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 				MetaType.rule2.toString());
 		
 	
-		ruleExec.setExec(generateSql(rule2, DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(), usedRefKeySet, ruleExec.getExecParams(), runMode));
+		ruleExec.setExec(generateDetailSql(rule2, DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(), usedRefKeySet, ruleExec.getExecParams(), runMode));
 		if(rule2.getParamList() != null) {
 			MetaIdentifier mi = rule2.getParamList().getRef();
 			ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(mi.getUuid(), mi.getVersion(), mi.getType().toString());

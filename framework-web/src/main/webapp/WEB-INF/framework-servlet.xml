@@ -252,6 +252,11 @@
 		<property name="profileTargetUUID" value="${framework.profile.datapod.uuid}"></property>
 	</bean>
 	
+	<bean id="rule2Info" class="com.inferyx.framework.common.Rule2Info">
+		<property name="rule_result_details" value="${framework.rule2.datapod.details.uuid}"></property>
+		<property name="rule_result_summary" value="${framework.rule2.datapod.summary.uuid}"></property>
+	</bean>
+	
 	<bean id="reconInfo" class="com.inferyx.framework.common.ReconInfo">
 		<property name="reconTargetUUID" value="${framework.recon.datapod.uuid}"></property>
 	</bean>
