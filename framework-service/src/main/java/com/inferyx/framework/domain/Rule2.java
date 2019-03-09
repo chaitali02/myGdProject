@@ -22,6 +22,12 @@ public class Rule2 extends BaseRule {
 	private String entityType;
 	private AttributeRefHolder entityId;
 	private List<Criteria> criteriaInfo;
+	private MetaIdentifierHolder paramList;
+
+
+	public void setParamList(MetaIdentifierHolder paramList) {
+		this.paramList = paramList;
+	}
 
 	public MetaIdentifierHolder getSourceInfo() {
 		return sourceInfo;
