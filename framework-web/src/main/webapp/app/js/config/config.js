@@ -108,7 +108,7 @@ InferyxApp.constant('CF_ENCODINGTYPE',{
 });
 
 InferyxApp.constant('CF_THRESHOLDTYPE',{
-    thresholdType:["NUMERIC", "PERCENT", "STDDEV"]
+    thresholdType:["NUMERIC", "PERCENTAGE", "STDDEV"]
 });
 
 

@@ -484,9 +484,9 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, $window, $s
         ]
     };
     $scope.GraphAnalysis = {
-        "caption": "Graph Analysis ",
+        "caption": "Link Analysis ",
         "name": "graphanalysis ",
-        "class": "fa fa-bar-chart",
+        "class": "fa fa-share-alt",
         "submenu": [
             { "name": "creaetgraphpod", "type": "graphpod", "typeCount": "","uuid": "null", "caption": "Create New" },
             { "name": "listgraphpod", "type": "graphpod", "typeCount": "graphpod","uuid": "null", "caption": "List" },

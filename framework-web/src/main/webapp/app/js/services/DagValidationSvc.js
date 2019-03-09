@@ -5,7 +5,6 @@ InferyxApp.factory('dagValidationSvc',function(dagMetaDataService){
     return inboundLinks.length == 0 && s==='dag' && t ==='stage';
   }
   function stageToStage (graph,s,t,inboundLinks,outboundLinks){
-    debugger
      console.log(inboundLinks)
      console.log(outboundLinks)
     
