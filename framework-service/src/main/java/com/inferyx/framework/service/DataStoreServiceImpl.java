@@ -56,6 +56,7 @@ import com.inferyx.framework.domain.Operator;
 import com.inferyx.framework.domain.Recon;
 import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.Rule;
+import com.inferyx.framework.domain.Rule2;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
@@ -605,6 +606,22 @@ public class DataStoreServiceImpl {
 			String ruleName = rule.getName();
 			if(ruleName.toLowerCase().contains("rule_"))
 				ruleName = ruleName.replace("rule_", "");
+			
+			/*if((engine.getExecEngine().equalsIgnoreCase("livy-spark"))) {
+				tableName = Helper.genTableName(filePath);
+			} else*/ if(runMode != null && runMode.equals(RunMode.ONLINE)) {
+				tableName = Helper.genTableName(filePath);
+			}else
+			if ((/*dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
+					||*/ dsType.equalsIgnoreCase(ExecContext.FILE.toString())))
+					tableName = Helper.genTableName(filePath);
+				else
+					tableName = appDatasource.getDbname() + "." + ruleName;
+		}else if (metaType == MetaType.rule2) {
+			Rule2 rule2 = (Rule2) commonServiceImpl.getOneByUuidAndVersion(metaid, metaV, MetaType.rule2.toString());
+			String ruleName = rule2.getName();
+			if(ruleName.toLowerCase().contains("rule2_"))
+				ruleName = ruleName.replace("rule2_", "");
 			
 			/*if((engine.getExecEngine().equalsIgnoreCase("livy-spark"))) {
 				tableName = Helper.genTableName(filePath);

@@ -12,7 +12,9 @@ package com.inferyx.framework.operator;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.log4j.Logger;
@@ -54,10 +56,32 @@ public class FormulaOperator {
 	CommonServiceImpl<?> commonServiceImpl;
 	
 	static final Logger LOGGER = Logger.getLogger(FormulaOperator.class);
-
+	
 	public String generateSql(Formula formula,
 			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams, Datasource datasource) 
 					throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		return generateSql(formula
+				, refKeyMap
+				, otherParams
+				, execParams
+				, datasource
+				, new ArrayList<String>());
+	}
+
+	public String generateSql(Formula formula
+							, java.util.Map<String, MetaIdentifier> refKeyMap
+							, HashMap<String, String> otherParams
+							, ExecParams execParams
+							, Datasource datasource
+							, List<String> attributeList) 
+					throws JsonProcessingException
+						, IllegalAccessException
+						, IllegalArgumentException
+						, InvocationTargetException
+						, NoSuchMethodException
+						, SecurityException
+						, NullPointerException
+						, ParseException {
 		
 		boolean pctFormula = false;
 		StringBuilder builder = new StringBuilder();
@@ -109,7 +133,7 @@ public class FormulaOperator {
 //				Function function = (Function) daoRegister.getRefObject(sourceAttr.getRef());
 				Function function = (Function) commonServiceImpl.getOneByUuidAndVersion(sourceAttr.getRef().getUuid(), sourceAttr.getRef().getVersion(), sourceAttr.getRef().getType().toString(), "N");
 						
-				builder.append(functionOperator.generateSql(function, refKeyMap, otherParams, datasource));
+				builder.append(functionOperator.generateSql(function, refKeyMap, otherParams, datasource, attributeList));
 			}
 			// implementing nested formula
 			if (sourceAttr.getRef().getType() == MetaType.formula) {
@@ -119,7 +143,7 @@ public class FormulaOperator {
 				Formula innerFormula = (Formula)  commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 						
 				Datasource datasource2 = commonServiceImpl.getDatasourceByObject(formula);
-				builder.append(" (" + generateSql(innerFormula, refKeyMap, otherParams, execParams, datasource2) + ") ");
+				builder.append(" (" + generateSql(innerFormula, refKeyMap, otherParams, execParams, datasource2, attributeList) + ") ");
 			}
 
 			if (sourceAttr.getRef().getType() == MetaType.datapod) {
@@ -140,6 +164,7 @@ public class FormulaOperator {
 				}else {
 					builder.append(datapod.sql(sourceAttr.getAttributeId()));
 				}
+				attributeList.add(datapod.sql(sourceAttr.getAttributeId()));
 			}
 			
 			if (sourceAttr.getRef().getType() == MetaType.dataset) {
@@ -149,6 +174,7 @@ public class FormulaOperator {
 				DataSet dataset = (DataSet) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 						
 				builder.append(datasetServiceImpl.getAttributeSql(dataset, sourceAttr.getAttributeId()+"")).append(" ").toString();
+				attributeList.add(datasetServiceImpl.getAttributeSql(dataset, sourceAttr.getAttributeId()+""));
 			}
 			
 			if (sourceAttr.getRef().getType() == MetaType.rule) {
@@ -158,6 +184,7 @@ public class FormulaOperator {
 				Rule rule = (Rule) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 						
 				builder.append(ruleServiceImpl.getAttributeSql(rule, sourceAttr.getAttributeId()+"")).append(" ").toString();
+				attributeList.add(ruleServiceImpl.getAttributeSql(rule, sourceAttr.getAttributeId()+""));
 			}
 		}
 		if (formula.getFormulaType() != null && formula.getFormulaType().equals(FormulaType.sum_aggr)) {
