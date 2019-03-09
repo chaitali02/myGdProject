@@ -369,13 +369,6 @@ public class DatapodServiceImpl {
 	// This method returns the attributeName of the ref object
 	public String getAttributeName(String uuid, int attrId) throws JsonProcessingException {
 		String alias = null;
-		/*String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;*/
-		/*if (appUuid != null) {
-			datapod = idatapodDao.findLatestByUuid(appUuid, uuid, new Sort(Sort.Direction.DESC, "version"));
-		} else {
-			datapod = idatapodDao.findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version"));
-		}*/
 		datapod = (Datapod) commonServiceImpl.getLatestByUuid(uuid, MetaType.datapod.toString());
 		alias = datapod.getAttribute(attrId).getName();
 		return alias;
