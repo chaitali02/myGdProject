@@ -635,7 +635,7 @@ public class DQOperator implements IParsable {
 					.append(generateSummarySql1Case(DUP_CHECK_PASS, SINGLE_QUOTED_Y, DUP_CHECK_P)).append(COMMA)
 					.append(generateSummarySql1Case(DUP_CHECK_PASS, SINGLE_QUOTED_N, DUP_CHECK_F)).append(COMMA)
 					.append(generateSummarySql1Case(CUSTOM_CHECK_PASS, SINGLE_QUOTED_Y, CUSTOM_CHECK_P)).append(COMMA)
-					.append(generateSummarySql1Case(CUSTOM_CHECK_PASS, SINGLE_QUOTED_N, CUSTOM_CHECK_P)).append(COMMA)
+					.append(generateSummarySql1Case(CUSTOM_CHECK_PASS, SINGLE_QUOTED_N, CUSTOM_CHECK_F)).append(COMMA)
 					.append(CASE_WHEN).append(BRACKET_OPEN)
 					.append(NULL_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
 					.append(VALUE_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
