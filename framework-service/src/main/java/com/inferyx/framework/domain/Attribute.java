@@ -24,8 +24,33 @@ public class Attribute {
 	private String active = "Y";
 	private Integer length;
 	private String attrUnitType;
-    
+    private MetaIdentifierHolder domain;
+    private String piiFlag = "N";
+    private String cdeFlag = "N";
 	
+	public String getPiiFlag() {
+		return piiFlag;
+	}
+
+	public void setPiiFlag(String piiFlag) {
+		this.piiFlag = piiFlag;
+	}
+
+	public String getCdeFlag() {
+		return cdeFlag;
+	}
+
+	public void setCdeFlag(String cdeFlag) {
+		this.cdeFlag = cdeFlag;
+	}
+
+	public MetaIdentifierHolder getDomain() {
+		return domain;
+	}
+
+	public void setDomain(MetaIdentifierHolder domain) {
+		this.domain = domain;
+	}
 
 	/**
 	 *
