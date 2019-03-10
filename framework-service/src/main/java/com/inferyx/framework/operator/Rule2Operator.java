@@ -87,30 +87,31 @@ public class Rule2Operator implements IParsable, IReferenceable {
 	public String generateSummarySql(Rule2 rule2, String tableName, Datapod datapod, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
 			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception{	
 		// TODO Auto-generated method stub
-		String sql = generateSql(tableName,datapod);
+		String sql = generateSql(tableName,rule2.getVersion(),datapod);
 		return sql;
 	}
 	
 	
-	private String generateSql(String tableName, Datapod datapod) {
+	private String generateSql(String tableName,String rule2Version, Datapod datapod) {
 		String result = "";
 		StringBuilder querybuilder = new StringBuilder();
-		String comma = ", ";
-
+	
 		querybuilder.append(ConstantsUtil.SELECT);
-		querybuilder.append("rule_uuid").append(" as ").append("rule_uuid").append(comma);
-		querybuilder.append("rule_name").append(" as ").append("rule_name").append(comma);
-		querybuilder.append("entity_type").append(" as ").append("entity_type").append(comma);
-		querybuilder.append("entity_id").append(" as ").append("entity_id").append(comma);
-		querybuilder.append("sum(criteria_score)").append(" as ").append("score").append(comma);
+		querybuilder.append("rule_uuid").append(" as ").append("rule_uuid").append(ConstantsUtil.COMMA);
+		querybuilder.append(rule2Version).append(" as ").append("rule_version").append(ConstantsUtil.COMMA);
+		querybuilder.append("rule_name").append(" as ").append("rule_name").append(ConstantsUtil.COMMA);
+		querybuilder.append("entity_type").append(" as ").append("entity_type").append(ConstantsUtil.COMMA);
+		querybuilder.append("entity_id").append(" as ").append("entity_id").append(ConstantsUtil.COMMA);
+		querybuilder.append("sum(criteria_score)").append(" as ").append("score").append(ConstantsUtil.COMMA);
 		querybuilder.append("version").append(" as ").append("version");
 		querybuilder.append(ConstantsUtil.FROM);
 		querybuilder.append(tableName);
 		querybuilder.append(ConstantsUtil.GROUP_BY);
-		querybuilder.append("rule_uuid").append(comma);
-		querybuilder.append("rule_name").append(comma);
-		querybuilder.append("entity_type").append(comma);
-		querybuilder.append("entity_id").append(comma);
+		querybuilder.append("rule_uuid").append(ConstantsUtil.COMMA);
+		querybuilder.append("rule_version").append(ConstantsUtil.COMMA);
+		querybuilder.append("rule_name").append(ConstantsUtil.COMMA);
+		querybuilder.append("entity_type").append(ConstantsUtil.COMMA);
+		querybuilder.append("entity_id").append(ConstantsUtil.COMMA);
 		querybuilder.append("version");
 
 		result = querybuilder.toString();
@@ -187,6 +188,9 @@ public class Rule2Operator implements IParsable, IReferenceable {
 			selectbuilder.append("'").append(rule2.getUuid()).append("'").append(" as ").append("rule_uuid")
 					.append(ConstantsUtil.COMMA);
 
+			selectbuilder.append("'").append(rule2.getVersion()).append("'").append(" as ").append("rule_version")
+					.append(ConstantsUtil.COMMA);
+
 			selectbuilder.append("'").append(rule2.getName()).append("'").append(" as ").append("rule_name")
 					.append(ConstantsUtil.COMMA);
 
@@ -232,8 +236,8 @@ public class Rule2Operator implements IParsable, IReferenceable {
 			filter = "";
 			selectbuilder.append(criteria_scoreBuilder.toString()).append(" as ").append("criteria_score")
 					.append(ConstantsUtil.COMMA);			
-			
-			
+						
+	
 			selectbuilder.append(rule2.getVersion()).append(" as ").append("version").append(" ")
 					.append(ConstantsUtil.FROM).append("rule_with_query");
 

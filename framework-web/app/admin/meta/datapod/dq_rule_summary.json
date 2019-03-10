@@ -1,7 +1,7 @@
 {
-	"uuid": "17741969-5a2f-442a-bf8d-4fa5a0c7117a",
+	"uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71122",
 	"version": "1552115484",
-	"name": "rule_result_detail",
+	"name": "dq_rule_summary",
 	"desc": null,
 	"createdBy": {
 		"ref": {
@@ -17,17 +17,29 @@
 	"active": "Y",
 	"locked": "N",
 	"published": "N",
-	 "appInfo": [
-    {
-      "ref": {
-        "type": "application",
-        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
-        "version": "1548315745",
-        "name": "Anti Money Laundering"
-      },
-      "value": null
-    }
-  ],
+	  "appInfo" : [ 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb",
+                "name" : "Administration"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+                "name" : "Data Warehouse"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce",
+                "name" : "Fraud Analytics"
+            }
+        }
+    ],
 	"publicFlag": "N",
 	"datasource": {
 		"ref": {
@@ -85,13 +97,13 @@
 		{
 			"attributeId": 3,
 			"displaySeq": 3,
-			"name": "entity_type",
+			"name": "datapod_uuid",
 			"type": "string",
-			"desc": "entity_type",
+			"desc": "datapod_uuid",
 			"expression": null,
 			"key": "",
 			"partition": "N",
-			"dispName": "entity_type",
+			"dispName": "datapod_uuid",
 			"active": "Y",
 			"length": null,
 			"attrUnitType": null
@@ -99,13 +111,13 @@
 		{
 			"attributeId": 4,
 			"displaySeq": 4,
-			"name": "entity_id",
+			"name": "datapod_version",
 			"type": "string",
-			"desc": "entity_id",
+			"desc": "datapod_version",
 			"expression": null,
 			"key": "",
 			"partition": "N",
-			"dispName": "entity_id",
+			"dispName": "datapod_version",
 			"active": "Y",
 			"length": null,
 			"attrUnitType": null
@@ -113,13 +125,13 @@
 		{
 			"attributeId": 5,
 			"displaySeq": 5,
-			"name": "criteria_id",
+			"name": "datapod_name",
 			"type": "string",
-			"desc": "criteria_id",
+			"desc": "datapod_name",
 			"expression": null,
 			"key": "",
 			"partition": "N",
-			"dispName": "criteria_id",
+			"dispName": "datapod_name",
 			"active": "Y",
 			"length": null,
 			"attrUnitType": null
@@ -127,13 +139,13 @@
 		{
 			"attributeId": 6,
 			"displaySeq": 6,
-			"name": "criteria_name",
+			"name": "all_check_pass",
 			"type": "string",
-			"desc": "criteria_name",
+			"desc": "all_check_pass",
 			"expression": null,
 			"key": "",
 			"partition": "N",
-			"dispName": "criteria_name",
+			"dispName": "all_check_pass",
 			"active": "Y",
 			"length": null,
 			"attrUnitType": null
@@ -141,13 +153,13 @@
 		{
 			"attributeId": 7,
 			"displaySeq": 7,
-			"name": "criteria_met_ind",
+			"name": "total_row_count",
 			"type": "string",
-			"desc": "criteria_met_ind",
+			"desc": "total_row_count",
 			"expression": null,
 			"key": "",
 			"partition": "N",
-			"dispName": "criteria_met_ind",
+			"dispName": "total_row_count",
 			"active": "Y",
 			"length": null,
 			"attrUnitType": null
@@ -155,13 +167,13 @@
 		{
 			"attributeId": 8,
 			"displaySeq": 8,
-			"name": "criteria_expr",
+			"name": "total_pass_count",
 			"type": "string",
-			"desc": "criteria_expr",
+			"desc": "total_pass_count",
 			"expression": null,
 			"key": "",
 			"partition": "N",
-			"dispName": "criteria_expr",
+			"dispName": "total_pass_count",
 			"active": "Y",
 			"length": null,
 			"attrUnitType": null
@@ -169,13 +181,13 @@
 		{
 			"attributeId": 9,
 			"displaySeq": 9,
-			"name": "criteria_score",
+			"name": "total_fail_count",
 			"type": "double",
-			"desc": "criteria_score",
+			"desc": "total_fail_count",
 			"expression": null,
 			"key": "",
 			"partition": "N",
-			"dispName": "criteria_score",
+			"dispName": "total_fail_count",
 			"active": "Y",
 			"length": null,
 			"attrUnitType": null
@@ -183,6 +195,48 @@
 		{
 			"attributeId": 10,
 			"displaySeq": 10,
+			"name": "threshold_type",
+			"type": "double",
+			"desc": "threshold_type",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "threshold_type",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 11,
+			"displaySeq": 11,
+			"name": "threshold_limit",
+			"type": "double",
+			"desc": "threshold_limit",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "threshold_limit",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 12,
+			"displaySeq": 12,
+			"name": "threshold_ind",
+			"type": "double",
+			"desc": "threshold_ind",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "threshold_ind",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 13,
+			"displaySeq": 13,
 			"name": "version",
 			"type": "string",
 			"desc": "version",
