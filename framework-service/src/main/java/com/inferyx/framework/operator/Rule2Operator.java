@@ -246,14 +246,18 @@ public class Rule2Operator implements IParsable, IReferenceable {
 
 		}
 		selectbuilder.append(" )");
-		
+		Set<String> attributeSet = new HashSet<String>(); 
+		attributeSet.addAll(attributeList);
 		StringBuilder attrListBuilder = new StringBuilder();
-		attrListBuilder.append(tablename + "." + entityAttrName);
-		for (String attrList : attributeList){
+		//attrListBuilder.append(tablename + "." + entityAttrName);
+		
+		attributeSet.add(tablename + "." + entityAttrName);
+		for (String attrList : attributeSet){
+			
 			attrListBuilder.append(ConstantsUtil.COMMA).append(attrList);
 		}
 		
-		String withbuilder_new = withbuilder.toString().replaceAll("_attrList", attrListBuilder.toString());
+		String withbuilder_new = withbuilder.toString().replaceAll("_attrList", attrListBuilder.toString().substring(1, attrListBuilder.length()));
 		result = result.concat(withbuilder_new + selectbuilder.toString());
 		return result;
 
