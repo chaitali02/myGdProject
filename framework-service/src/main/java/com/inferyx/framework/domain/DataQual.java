@@ -33,8 +33,28 @@ public class DataQual extends BaseRule{
 	private List<FilterInfo> filterInfo;	
 	private List<MetaIdentifierHolder> userInfo;
 	private Threshold thresholdInfo;
+	private MetaIdentifierHolder domainCheck;
+	private String blankSpaceCheck;
+	private MetaIdentifierHolder expressionCheck;
 	
-	
+	public MetaIdentifierHolder getDomainCheck() {
+		return domainCheck;
+	}
+	public void setDomainCheck(MetaIdentifierHolder domainCheck) {
+		this.domainCheck = domainCheck;
+	}
+	public String getBlankSpaceCheck() {
+		return blankSpaceCheck;
+	}
+	public void setBlankSpaceCheck(String blankSpaceCheck) {
+		this.blankSpaceCheck = blankSpaceCheck;
+	}
+	public MetaIdentifierHolder getExpressionCheck() {
+		return expressionCheck;
+	}
+	public void setExpressionCheck(MetaIdentifierHolder expressionCheck) {
+		this.expressionCheck = expressionCheck;
+	}
 	public List<MetaIdentifierHolder> getUserInfo() {
 		return userInfo;
 	}
