@@ -26,6 +26,7 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.BaseExec;
+import com.inferyx.framework.domain.BlankSpaceCheckOptions;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataQual;
 import com.inferyx.framework.domain.DataQualDomain;
@@ -33,6 +34,7 @@ import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.Expression;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -94,6 +96,9 @@ public class DQOperator implements IParsable {
 	private String REFINT_CHECK_P = "refIntegrityCheck_p";
 	private String DUP_CHECK_P = "dupCheck_p";
 	private String CUSTOM_CHECK_P = "customCheck_p";
+	private String DOMAIN_CHECK_P = "domainCheck_p";
+	private String BLANK_SPACE_CHECK_P = "blankSpaceCheck_p";
+	private String EXPRESSION_CHECK_P = "expressionCheck_p";
 	
 	private String NULL_CHECK_F = "nullCheck_f";
 	private String VALUE_CHECK_F= "valueCheck_f";
@@ -104,6 +109,9 @@ public class DQOperator implements IParsable {
 	private String REFINT_CHECK_F = "refIntegrityCheck_f";
 	private String DUP_CHECK_F = "dupCheck_f";
 	private String CUSTOM_CHECK_F = "customCheck_f";
+	private String DOMAIN_CHECK_F = "domainCheck_f";
+	private String BLANK_SPACE_CHECK_F = "blankSpaceCheck_f";
+	private String EXPRESSION_CHECK_F = "expressionCheck_f";
 
 	private String TOTAL_ROW_COUNT = "total_row_count";
 	private String TOTAL_PASS_COUNT = "total_pass_count";
@@ -168,6 +176,9 @@ public class DQOperator implements IParsable {
 
 	@Autowired
 	FilterOperator2 filterOperator2;
+	@Autowired
+	ExpressionOperator expressionOperator;
+	
 	static final Logger logger = Logger.getLogger(DQOperator.class);
 
 	public String generateSql(DataQual dataQual, List<String> datapodList, DataQualExec dataQualExec, DagExec dagExec,
@@ -636,6 +647,12 @@ public class DQOperator implements IParsable {
 					.append(generateSummarySql1Case(DUP_CHECK_PASS, SINGLE_QUOTED_N, DUP_CHECK_F)).append(COMMA)
 					.append(generateSummarySql1Case(CUSTOM_CHECK_PASS, SINGLE_QUOTED_Y, CUSTOM_CHECK_P)).append(COMMA)
 					.append(generateSummarySql1Case(CUSTOM_CHECK_PASS, SINGLE_QUOTED_N, CUSTOM_CHECK_F)).append(COMMA)
+					.append(generateSummarySql1Case(DOMAIN_CHECK_PASS, SINGLE_QUOTED_Y, DOMAIN_CHECK_P)).append(COMMA)
+					.append(generateSummarySql1Case(DOMAIN_CHECK_PASS, SINGLE_QUOTED_N, DOMAIN_CHECK_F)).append(COMMA)
+					.append(generateSummarySql1Case(BLANK_SPACE_CHECK_PASS, SINGLE_QUOTED_Y, BLANK_SPACE_CHECK_P)).append(COMMA)
+					.append(generateSummarySql1Case(BLANK_SPACE_CHECK_PASS, SINGLE_QUOTED_N, BLANK_SPACE_CHECK_F)).append(COMMA)
+					.append(generateSummarySql1Case(EXPRESSION_CHECK_PASS, SINGLE_QUOTED_Y, EXPRESSION_CHECK_P)).append(COMMA)
+					.append(generateSummarySql1Case(EXPRESSION_CHECK_PASS, SINGLE_QUOTED_N, EXPRESSION_CHECK_F)).append(COMMA)
 					.append(CASE_WHEN).append(BRACKET_OPEN)
 					.append(NULL_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
 					.append(VALUE_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
@@ -645,7 +662,10 @@ public class DQOperator implements IParsable {
 					.append(LENGTH_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
 					.append(REFINT_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
 					.append(DUP_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
-					.append(CUSTOM_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(BRACKET_CLOSE) 
+					.append(CUSTOM_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
+					.append(DOMAIN_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
+					.append(BLANK_SPACE_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
+					.append(EXPRESSION_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(BRACKET_CLOSE) 
 					.append(THEN_0_1).append(ALL_CHECK_PASS).append(COMMA)
 					.append(VERSION).append(FROM).append(BRACKET_OPEN)
 					.append(resSql).append(BRACKET_CLOSE).append(DQ_RESULT_ALIAS);
@@ -817,7 +837,35 @@ public class DQOperator implements IParsable {
 		} else {
 			dqBuilder.append("'' as ").append(DOMAIN_CHECK_PASS).append(COMMA);
 		} // End domainCheck If
-
+		if (StringUtils.isNotBlank(dq.getBlankSpaceCheck())) {
+			
+			if (dq.getBlankSpaceCheck().equals(BlankSpaceCheckOptions.LEADING)) {
+				check = tableAttr.concat(" LIKE ' %' ");
+			} else if (dq.getBlankSpaceCheck().equals(BlankSpaceCheckOptions.TRAILING)) {
+				check = tableAttr.concat(" LIKE '% ' ");
+			} else if (dq.getBlankSpaceCheck().equals(BlankSpaceCheckOptions.IN_BETWEEN)) {
+				check = tableAttr.concat(" LIKE '% ' ");
+			} else if (dq.getBlankSpaceCheck().equals(BlankSpaceCheckOptions.ALL)) {
+				check = tableAttr.concat(" LIKE '% ' AND ").concat(tableAttr).concat(" LIKE ' %' ");
+			}
+			colName = BLANK_SPACE_CHECK_PASS;
+			dqBuilder.append(caseWrapper(check, colName)).append(COMMA);
+		} else {
+			dqBuilder.append("'' as ").append(BLANK_SPACE_CHECK_PASS).append(COMMA);
+		} // End blankSpaceCheck If
+		if (dq.getExpressionCheck() != null && dq.getExpressionCheck().getRef() != null) {
+			Expression expression = (Expression) commonServiceImpl.getOneByUuidAndVersion(dq.getExpressionCheck().getRef().getUuid()
+																						, dq.getExpressionCheck().getRef().getVersion()
+																						, dq.getExpressionCheck().getRef().getType().toString()
+																						, "N");
+			MetaIdentifierHolder expressionSource = new MetaIdentifierHolder(dq.getExpressionCheck().getRef());
+			check = expressionOperator.generateSql(expression.getExpressionInfo(), expressionSource, null, new HashMap<String, String>(), null, commonServiceImpl.getDatasourceByObject(dq));
+			colName = EXPRESSION_CHECK_PASS;
+			dqBuilder.append(caseWrapper(check, colName)).append(COMMA);
+		} else {
+			dqBuilder.append("'' as ").append(EXPRESSION_CHECK_PASS).append(COMMA);
+		} // End expressionCheck If
+		
 		
 		dqString = dqBuilder.toString();
 		return dqString.substring(0, dqString.length() - 2);
