@@ -224,7 +224,7 @@
                                     </label>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
                                         <div ng-if="applicationOrgDetail.applicationType =='SYSADMIN'">
-                                                <select class="form-control" select2 ng-disabled="{{mode}}" data-ng-model="selectOrgInfo" ng-change="onChangeOrg()" ng-options="r as r.name for r in allOrgnization  track by r.uuid "
+                                                <select class="form-control" select2 ng-disabled="{{mode}}" data-ng-model="$parent.selectOrgInfo" ng-change="onChangeOrg()" ng-options="r as r.name for r in allOrgnization  track by r.uuid "
                                                 required>
                                                 </select>
                                         </div>
