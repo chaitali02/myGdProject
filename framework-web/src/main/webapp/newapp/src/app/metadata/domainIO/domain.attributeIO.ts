@@ -8,7 +8,7 @@ export class AttributeIO {
     attributeId?: String;
     attrType: String;
     version: String
-    label?: String;
+    label: String;
     type: String;
     attrName: String;
     

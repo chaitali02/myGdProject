@@ -463,8 +463,8 @@
                                         [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
                                         placeholder="--Select--" datakey="attributeId">
                                       </p-dropdown>
-                                      <input type="hidden" [(ngModel)]="data.rhsAttribute" name="rhsAttribute{{i}}"
-                                        required [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute'+i]?.invalid)}" />
+                                      <!-- <input type="hidden" [(ngModel)]="data.rhsAttribute" name="rhsAttribute{{i}}"
+                                        required [ngClass]="{'has-error':myNewForm2.submitted && (myNewForm2.form.controls['rhsAttribute'+i]?.invalid)}" /> -->
                                     </div>
                                     <div *ngIf="data.rhsType == 'dataset'">
                                       <div *ngIf="data.rhsAttribute != null">
