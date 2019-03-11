@@ -24,6 +24,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.common.DQInfo;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
@@ -75,7 +76,18 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 	protected Helper helper;
 	protected ExecParams execParams;
 	protected ExecutorServiceImpl executorServiceImpl;
+	protected DQInfo dqInfo;
 	
+	public DQInfo getDqInfo() {
+		return dqInfo;
+	}
+
+
+
+	public void setDqInfo(DQInfo dqInfo) {
+		this.dqInfo = dqInfo;
+	}
+
 	static final Logger logger = Logger.getLogger(RunBaseRuleService.class);	
 	
 	
@@ -587,14 +599,22 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 			// Actual execution happens here - START
 			logger.info("Before execution result : " + baseRuleExec.getExec());
 			rsHolder = execute(baseRuleExec.getExec(), appDatasource, ruleDatasource, tableName, filePath, appUuid, exec, execContext);
+
 			if (rsHolder != null) {
 				countRows = rsHolder.getCountRows();
 			}
-			logger.info("temp table registered: "+tableName);
-			String summaryTableName = tableName + "_summary";
+			logger.info("Temp table registered: "+tableName);
+			
+			Datapod summaryDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dqInfo.getDq_result_summary(), null, MetaType.datapod.toString(), "N");
+			MetaIdentifier summaryDatapodKey = new MetaIdentifier(MetaType.datapod, summaryDatapod.getUuid(),
+					summaryDatapod.getVersion());		
+			tableName = getTableName(baseRule, baseRuleExec, summaryDatapodKey, execContext, runMode);
+			logger.info("Table name in RunBaseruleServiceImpl : " + tableName);
+			
+//			String summaryTableName = tableName + "_summary";
 			logger.info("Before execution summary : " + baseRuleExec.getSummaryExec());
-			execute(baseRuleExec.getSummaryExec(), appDatasource, ruleDatasource, summaryTableName, filePath + "/summary", appUuid, exec, execContext);
-			logger.info("Temp summary table registered : " + summaryTableName);
+			execute(baseRuleExec.getSummaryExec(), appDatasource, ruleDatasource, tableName, filePath , appUuid, exec, execContext);
+			logger.info("Temp summary table registered : " + tableName);
 			// Actual execution happens here - END
 			
 			

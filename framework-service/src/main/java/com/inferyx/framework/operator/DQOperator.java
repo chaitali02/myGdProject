@@ -155,7 +155,8 @@ public class DQOperator implements IParsable {
 	private String DATAPODVERSION = "datapodVersion";
 	private String ATTRIBUTE_ID = "attributeId";
 	private String ATTRIBUTE_VAL = "attributeValue";
-	private String ROWKEY = "rowKey";
+	private String ROWKEY_NAME = "rowKeyName";
+	private String ROWKEY_VALUE = "rowKeyValue";
 	private String EMPTY = "";
 	private String VERSION = " version ";
 	private String DATAPOD_NAME = " datapodName";
@@ -270,7 +271,9 @@ public class DQOperator implements IParsable {
 		}
 		select = select.concat(SINGLE_QUOTE).concat(AS).concat(ATTRIBUTE_NAME).concat(COMMA);
 		select = select.concat(tildeSepAttrs(datapod.getName(), getRowKeyList(datapod))).concat(AS)
-						.concat(ROWKEY).concat(COMMA);
+						.concat(ROWKEY_NAME).concat(COMMA);
+		select = select.concat(tildeSepAttrs(datapod.getName(), getRowKeyList(datapod))).concat(AS)
+						.concat(ROWKEY_VALUE).concat(COMMA);
 
 		if (dq.getAttribute() != null) {
 			select = select.concat(" CAST(").concat(datapod.getName()).concat(DOT).concat(attributeName)

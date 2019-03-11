@@ -246,6 +246,8 @@
 
 	<bean id="dqInfo" class="com.inferyx.framework.common.DQInfo">
 		<property name="dqTargetUUID" value="${framework.dataqual.datapod.uuid}"></property>
+		<property name="dq_result_detail" value="${framework.dataqual.detail.uuid}"></property>
+		<property name="dq_result_summary" value="${framework.dataqual.summary.uuid}"></property>
 	</bean>
 	
 	<bean id="profileInfo" class="com.inferyx.framework.common.ProfileInfo">
@@ -253,8 +255,8 @@
 	</bean>
 	
 	<bean id="rule2Info" class="com.inferyx.framework.common.Rule2Info">
-		<property name="rule_result_details" value="${framework.rule2.datapod.details.uuid}"></property>
-		<property name="rule_result_summary" value="${framework.rule2.datapod.summary.uuid}"></property>
+		<property name="rule_result_details" value="${framework.rule2.detail.uuid}"></property>
+		<property name="rule_result_summary" value="${framework.rule2.summary.uuid}"></property>
 	</bean>
 	
 	<bean id="reconInfo" class="com.inferyx.framework.common.ReconInfo">

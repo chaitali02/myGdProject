@@ -29,6 +29,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.common.DQInfo;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
@@ -85,7 +86,9 @@ public abstract class RuleTemplate implements IExecutable, IParsable {
 	Helper helper;
 	@Autowired
 	ExecutorServiceImpl executorServiceImpl;
-	
+	@Autowired
+	DQInfo dqInfo;
+
 	static final Logger logger = Logger.getLogger(RuleTemplate.class);
 
 	/**
@@ -189,7 +192,12 @@ public abstract class RuleTemplate implements IExecutable, IParsable {
 	 * @return BaseRuleExec
 	 * @throws Exception
 	 */
-	@SuppressWarnings({ "unchecked", "static-access" })
+
+//	public BaseRuleExec execute(MetaType type, MetaType execType, 
+//			ThreadPoolTaskExecutor metaExecutor, BaseRuleExec baseRuleExec, MetaIdentifier datapodKey, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
+//			return execute(type,execType,metaExecutor,baseRuleExec,datapodKey,taskList,execParams,runMode,"N");
+//		}
+
 	public BaseRuleExec execute(MetaType type, MetaType execType, 
 			ThreadPoolTaskExecutor metaExecutor, BaseRuleExec baseRuleExec, MetaIdentifier datapodKey, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
 		logger.info("Inside BaseRuleExec.execute ");
@@ -241,6 +249,7 @@ public abstract class RuleTemplate implements IExecutable, IParsable {
 		runBaseRuleService.setExecutorServiceImpl(executorServiceImpl);
 		runBaseRuleService.setExecParams(execParams);
 		runBaseRuleService.setDatasource(getDatasource(baseRule));
+		runBaseRuleService.setDqInfo(dqInfo);
 
 		if (metaExecutor == null) {
 			runBaseRuleService.execute();
