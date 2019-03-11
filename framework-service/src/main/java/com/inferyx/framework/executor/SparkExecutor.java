@@ -2721,6 +2721,8 @@ public class SparkExecutor<T> implements IExecutor {
 			case "double": return DataTypes.DoubleType;
 			case "date": return DataTypes.DateType;
 			case "string": return DataTypes.StringType;
+			case "varchar": return DataTypes.StringType;
+			case "varchar2": return DataTypes.StringType;
 			case "timestamp": return DataTypes.TimestampType;
 			case "long" : return DataTypes.LongType;
 			case "binary" : return DataTypes.BinaryType;

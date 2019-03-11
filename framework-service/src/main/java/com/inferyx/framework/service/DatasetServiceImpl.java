@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.dao.IDatasetDao;
 import com.inferyx.framework.dao.IFilterDao;
@@ -49,6 +50,8 @@ import com.inferyx.framework.view.metadata.DatasetView;
 public class DatasetServiceImpl {
 	static final Logger logger = Logger.getLogger(DatasetServiceImpl.class);
 
+	@Autowired
+	private static DataSet dataset;	
 	@Autowired
 	GraphRegister<?> registerGraph;
 	/*@Autowired
@@ -446,6 +449,13 @@ public class DatasetServiceImpl {
 		return null;
 	}
 
+	public String getAttributeName(String uuid, int attrId) throws JsonProcessingException {
+		String alias = null;
+		dataset = (DataSet) commonServiceImpl.getLatestByUuid(uuid, MetaType.dataset.toString());
+		alias = dataset.getAttribute(attrId).getAttrSourceName();
+		return alias;
+	}
+	
 	public String getAttributeName(DataSet dataset, String attributeId) {
 		List<AttributeSource> sourceAttrs = dataset.getAttributeInfo();
 		for (AttributeSource sourceAttr : sourceAttrs) {

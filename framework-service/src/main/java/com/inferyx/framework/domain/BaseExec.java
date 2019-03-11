@@ -15,6 +15,7 @@ public class BaseExec extends BaseEntity {
 	protected List<Status> statusList;
 	protected MetaIdentifierHolder dependsOn;
 	protected String exec;
+	protected String summaryExec;
 	protected MetaIdentifierHolder result;
 	protected List<MetaIdentifier> refKeyList;
 	protected ExecParams execParams;	
@@ -132,13 +133,28 @@ public class BaseExec extends BaseEntity {
 	}
 
 
+	/**
+	 * @return the summaryExec
+	 */
+	public String getSummaryExec() {
+		return summaryExec;
+	}
+
+	/**
+	 * @param summaryExec the summaryExec to set
+	 */
+	public void setSummaryExec(String summaryExec) {
+		this.summaryExec = summaryExec;
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "BaseExec [statusList=" + statusList + ", dependsOn=" + dependsOn + ", exec=" + exec + ", result="
-				+ result + ", refKeyList=" + refKeyList + ", securityServiceImpl=" + securityServiceImpl + "]";
+		return "BaseExec [statusList=" + statusList + ", dependsOn=" + dependsOn + ", exec=" + exec + ", summaryExec="
+				+ summaryExec + ", result=" + result + ", refKeyList=" + refKeyList + ", execParams=" + execParams
+				+ "]";
 	}
 	
 }

@@ -26,18 +26,22 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.BaseExec;
+import com.inferyx.framework.domain.BlankSpaceCheckOptions;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataQual;
+import com.inferyx.framework.domain.DataQualDomain;
 import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.Expression;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.enums.ThresholdType;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
@@ -49,7 +53,15 @@ public class DQOperator implements IParsable {
 
 	private String BLANK = " ";
 	private String CASE_WHEN = " CASE WHEN ";
-	private String THEN = " THEN 'Y' ELSE 'N' END as ";
+	private String SINGLE_QUOTED_Y = "'Y'";
+	private String SINGLE_QUOTED_N = "'N'";
+	private String ONLY_THEN = " THEN ";
+	private String ONLY_WHEN = " WHEN ";
+	private String ONLY_ELSE = " ELSE ";
+	private String ONLY_END = " END ";
+	private String THEN = " THEN 'Y' ELSE 'N' END AS ";
+	private String THEN_1_0 = " THEN 1 ELSE 0 END AS ";
+	private String THEN_0_1 = " THEN 0 ELSE 1 END AS ";
 	private String SELECT = " SELECT ";
 	private String FROM = " FROM ";
 //	private String JOIN = " JOIN ";
@@ -60,27 +72,82 @@ public class DQOperator implements IParsable {
 	private String ON = " ON ";
 	private String DOT = ".";
 	private String IS_NOT_NULL = " IS NOT NULL ";
-	private String NULL_CHECK_PASS = "nullCheck_pass";
-	private String VALUE_CHECK_PASS = "valueCheck_pass";
-	private String RANGE_CHECK_PASS = "rangeCheck_pass";
-	private String DATATYPE_CHECK_PASS = "dataTypeCheck_pass";
-	private String DATEFORMAT_CHECK_PASS = "dataFormatCheck_pass";
-	private String LENGTH_CHECK_PASS = "lengthCheck_pass";
+	private String NULL_CHECK_PASS = "null_check_pass";
+	private String VALUE_CHECK_PASS = "value_check_pass";
+	private String RANGE_CHECK_PASS = "range_check_pass";
+	private String DATATYPE_CHECK_PASS = "dataType_check_pass";
+	private String DATAFORMAT_CHECK_PASS = "dataFormat_check_pass";
+	private String LENGTH_CHECK_PASS = "length_check_pass";
 	// private String STDDEV_CHECK_PASS = "stdDevCheck_pass";
-	private String REFINT_CHECK_PASS = "refIntegrityCheck_pass";
-	private String DUP_CHECK_PASS = "dupCheck_pass";
-	private String CUSTOM_CHECK_PASS = "customCheck_pass";
+	private String REFINT_CHECK_PASS = "refIntegrity_check_pass";
+	private String DUP_CHECK_PASS = "dup_check_pass";
+	private String CUSTOM_CHECK_PASS = "custom_check_pass";
+	private String DOMAIN_CHECK_PASS = "domain_check_pass";
+	private String BLANK_SPACE_CHECK_PASS = "blank_space_check_pass";
+	private String EXPRESSION_CHECK_PASS = "expression_check_pass";
+	private String ALL_CHECK_PASS = "all_check_pass";
+	
+	private String NULL_CHECK_P = "nullCheck_p";
+	private String VALUE_CHECK_P= "valueCheck_p";
+	private String RANGE_CHECK_P = "rangeCheck_p";
+	private String DATATYPE_CHECK_P = "dataTypeCheck_p";
+	private String DATAFORMAT_CHECK_P = "dataFormatCheck_p";
+	private String LENGTH_CHECK_P = "lengthCheck_p";
+	private String REFINT_CHECK_P = "refIntegrityCheck_p";
+	private String DUP_CHECK_P = "dupCheck_p";
+	private String CUSTOM_CHECK_P = "customCheck_p";
+	private String DOMAIN_CHECK_P = "domainCheck_p";
+	private String BLANK_SPACE_CHECK_P = "blankSpaceCheck_p";
+	private String EXPRESSION_CHECK_P = "expressionCheck_p";
+	
+	private String NULL_CHECK_F = "nullCheck_f";
+	private String VALUE_CHECK_F= "valueCheck_f";
+	private String RANGE_CHECK_F = "rangeCheck_f";
+	private String DATATYPE_CHECK_F = "dataTypeCheck_f";
+	private String DATAFORMAT_CHECK_F = "dataFormatCheck_f";
+	private String LENGTH_CHECK_F = "lengthCheck_f";
+	private String REFINT_CHECK_F = "refIntegrityCheck_f";
+	private String DUP_CHECK_F = "dupCheck_f";
+	private String CUSTOM_CHECK_F = "customCheck_f";
+	private String DOMAIN_CHECK_F = "domainCheck_f";
+	private String BLANK_SPACE_CHECK_F = "blankSpaceCheck_f";
+	private String EXPRESSION_CHECK_F = "expressionCheck_f";
+
+	private String TOTAL_ROW_COUNT = "total_row_count";
+	private String TOTAL_PASS_COUNT = "total_pass_count";
+	private String TOTAL_FAIL_COUNT = "total_fail_count";
+	private String DQ_RESULT_ALIAS = "dq_result_alias";
+	private String DQ_RESULT_READY_ALIAS = "dq_result_ready_alias";
+	private String DQ_RESULT_SUM_ALIAS = "dq_result_sum_alias";
+	private String SCORE = " score ";
+	private String RULEUUID = "rule_uuid";
+	private String RULEVERSION = "rule_version";
+	private String RULENAME = "rule_name";
+	
+	private String THRESHOLD_TYPE = "threshold_type";
+	private String THRESHOLD_LIMIT = "threshold_limit";
+	private String THRESHOLD_IND = "threshold_ind";
+	private String HIGH = " 'HIGH' ";
+	private String MEDIUM = " 'MEDIUM' ";
+	private String LOW = " 'LOW' ";
+	
 //	private String UNDERSCORE = "_";
 	private String COMMA = ", ";
 	private String COUNT = " COUNT";
+	private String SUM = " SUM";
 	private String HAVING = " HAVING (1=1) ";
 	private String DUP_TABLE = " dupTable ";
 	private String ONE = " 1 ";
 	private String BETWEEN = " BETWEEN ";
 	private String AND = " AND ";
+	private String OR = " OR ";
 	private String GREATER_THAN = " > ";
 	private String LESS_THAN = " < ";
 	private String LESS_THAN_EQUALS = " <= ";
+	private String EQUAL_TO = " = ";
+	private String MINUS = " - ";
+	private String DIVIDE_BY = " / ";
+	private String MULTIPLY_BY = " * ";
 	private String SINGLE_QUOTE = "'";
 	private String AS = " AS ";
 	private final String WHERE_1_1 = " WHERE (1=1) ";
@@ -88,7 +155,8 @@ public class DQOperator implements IParsable {
 	private String DATAPODVERSION = "datapodVersion";
 	private String ATTRIBUTE_ID = "attributeId";
 	private String ATTRIBUTE_VAL = "attributeValue";
-	private String ROWKEY = "rowKey";
+	private String ROWKEY_NAME = "rowKeyName";
+	private String ROWKEY_VALUE = "rowKeyValue";
 	private String EMPTY = "";
 	private String VERSION = " version ";
 	private String DATAPOD_NAME = " datapodName";
@@ -109,6 +177,9 @@ public class DQOperator implements IParsable {
 
 	@Autowired
 	FilterOperator2 filterOperator2;
+	@Autowired
+	ExpressionOperator expressionOperator;
+	
 	static final Logger logger = Logger.getLogger(DQOperator.class);
 
 	public String generateSql(DataQual dataQual, List<String> datapodList, DataQualExec dataQualExec, DagExec dagExec,
@@ -181,8 +252,11 @@ public class DQOperator implements IParsable {
 		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dq.getDependsOn().getRef().getUuid(), dq.getDependsOn().getRef().getVersion(), dq.getDependsOn().getRef().getType().toString(), "N");
 		// String select = SELECT.concat("row_number() over (partition by 1) as rownum,
 		// ")
-		String select = SELECT.concat(tildeSepAttrs(datapod.getName(), getRowKeyList(datapod))).concat(AS)
-				.concat(ROWKEY).concat(COMMA).concat(SINGLE_QUOTE).concat(dq.getDependsOn().getRef().getUuid())
+		String select = SELECT
+				.concat(SINGLE_QUOTE).concat(dq.getUuid()).concat(SINGLE_QUOTE).concat(AS).concat(RULEUUID).concat(COMMA)
+				.concat(SINGLE_QUOTE).concat(dq.getVersion()).concat(SINGLE_QUOTE).concat(AS).concat(RULEVERSION).concat(COMMA)
+				.concat(SINGLE_QUOTE).concat(dq.getName()).concat(SINGLE_QUOTE).concat(AS).concat(RULENAME).concat(COMMA)
+				.concat(SINGLE_QUOTE).concat(dq.getDependsOn().getRef().getUuid())
 				.concat(SINGLE_QUOTE).concat(AS).concat(DATAPODUUID).concat(COMMA).concat(SINGLE_QUOTE)
 				.concat(datapod.getVersion()).concat(SINGLE_QUOTE).concat(AS).concat(DATAPODVERSION)
 				.concat(COMMA).concat(SINGLE_QUOTE).concat(datapod.getName()).concat(SINGLE_QUOTE).concat(AS)
@@ -196,6 +270,10 @@ public class DQOperator implements IParsable {
 			select = select.concat(attributeName);
 		}
 		select = select.concat(SINGLE_QUOTE).concat(AS).concat(ATTRIBUTE_NAME).concat(COMMA);
+		select = select.concat(tildeSepAttrs(datapod.getName(), getRowKeyList(datapod))).concat(AS)
+						.concat(ROWKEY_NAME).concat(COMMA);
+		select = select.concat(tildeSepAttrs(datapod.getName(), getRowKeyList(datapod))).concat(AS)
+						.concat(ROWKEY_VALUE).concat(COMMA);
 
 		if (dq.getAttribute() != null) {
 			select = select.concat(" CAST(").concat(datapod.getName()).concat(DOT).concat(attributeName)
@@ -447,6 +525,159 @@ public class DQOperator implements IParsable {
 		return select.concat(generateFrom(dq, dq.getDependsOn().getRef(), datapodList, dagExec, usedRefKeySet, otherParams, runMode))
 				.concat(WHERE_1_1).concat(generateFilter(dq, usedRefKeySet, runMode));
 	}
+	
+	public String generateSummarySql(DataQual dq, List<String> datapodList,
+			DataQualExec dataQualExec, DagExec dagExec, Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode)
+			throws Exception {
+		// Find result sql
+		String resSql = dataQualExec.getExec();
+		String sql = generateSummarySql3(dq, generateSummarySql2(generateSummarySql1(resSql)));
+		return sql;
+	}
+	
+	public String generateSummarySql3 (DataQual dq, String summarySql2) {
+		StringBuilder select = new StringBuilder(SELECT)
+				  .append(RULEUUID).append(COMMA)
+				  .append(RULEVERSION).append(COMMA)
+				  .append(RULENAME).append(COMMA)
+				  .append(DATAPODUUID).append(COMMA)
+				  .append(DATAPODVERSION).append(COMMA)
+				  .append(DATAPOD_NAME).append(COMMA)
+				  .append(ALL_CHECK_PASS).append(COMMA)
+				  .append(TOTAL_ROW_COUNT).append(COMMA)
+				  .append(TOTAL_PASS_COUNT).append(COMMA)
+				  .append(BRACKET_OPEN).append(TOTAL_ROW_COUNT).append(MINUS).append(TOTAL_PASS_COUNT).append(BRACKET_CLOSE).append(AS).append(TOTAL_FAIL_COUNT).append(COMMA)
+				  .append(generateThresholdSql(dq)).append(COMMA)
+				  .append(BRACKET_OPEN).append(TOTAL_PASS_COUNT).append(DIVIDE_BY).append(TOTAL_ROW_COUNT).append(BRACKET_CLOSE).append(MULTIPLY_BY).append(" 100 ").append(AS).append(SCORE).append(COMMA)
+				  .append(VERSION).append(FROM).append(BRACKET_OPEN)
+				  .append(summarySql2).append(BRACKET_CLOSE).append(DQ_RESULT_SUM_ALIAS);
+		return select.toString();
+	}
+	
+	/**
+	 * 
+	 * @param dq
+	 * @return
+	 */
+	public String generateThresholdSql(DataQual dq) {
+		StringBuilder threshold = new StringBuilder();
+		if (dq.getThresholdInfo() == null || StringUtils.isBlank(dq.getThresholdInfo().getLow())) {
+			return threshold.append("''").append(AS).append(THRESHOLD_TYPE).append(COMMA)
+							.append("''").append(AS).append(THRESHOLD_LIMIT).append(COMMA)
+							.append(LOW).append(AS).append(THRESHOLD_IND).toString();
+		}
+		String failCount = BRACKET_OPEN.concat(TOTAL_ROW_COUNT).concat(MINUS).concat(TOTAL_PASS_COUNT).concat(BRACKET_CLOSE);
+		String failPct = BRACKET_OPEN.concat(failCount).concat(DIVIDE_BY).concat(TOTAL_ROW_COUNT).concat(BRACKET_CLOSE).concat(MULTIPLY_BY).concat(" 100 ");
+		String thresholdType = null;
+		String thresholdLimit = null;
+		String thresholdInd = null;
+		if (dq.getThresholdInfo().getType().equals(ThresholdType.NUMERIC)) {
+			thresholdInd = 
+					CASE_WHEN.concat(BRACKET_OPEN).concat(failCount).concat(LESS_THAN_EQUALS).concat(dq.getThresholdInfo().getLow()).concat(BRACKET_CLOSE).concat(ONLY_THEN).concat(LOW)
+					 .concat(ONLY_WHEN).concat(BRACKET_OPEN).concat(failCount).concat(LESS_THAN_EQUALS).concat(dq.getThresholdInfo().getMedium()).concat(BRACKET_CLOSE).concat(ONLY_THEN).concat(MEDIUM)
+					 .concat(ONLY_ELSE).concat(HIGH).concat(ONLY_END).concat(AS).concat(THRESHOLD_IND);
+			thresholdLimit = 
+					CASE_WHEN.concat(BRACKET_OPEN).concat(failCount).concat(LESS_THAN_EQUALS).concat(dq.getThresholdInfo().getLow()).concat(BRACKET_CLOSE).concat(ONLY_THEN).concat(dq.getThresholdInfo().getLow())
+					 .concat(ONLY_WHEN).concat(BRACKET_OPEN).concat(failCount).concat(LESS_THAN_EQUALS).concat(dq.getThresholdInfo().getMedium()).concat(BRACKET_CLOSE).concat(ONLY_THEN).concat(dq.getThresholdInfo().getMedium())
+					 .concat(ONLY_ELSE).concat(dq.getThresholdInfo().getHigh()).concat(ONLY_END).concat(AS).concat(THRESHOLD_LIMIT);
+			thresholdType = SINGLE_QUOTE.concat(dq.getThresholdInfo().getType().toString()).concat(SINGLE_QUOTE).concat(AS).concat(THRESHOLD_TYPE);
+		} else if (dq.getThresholdInfo().getType().equals(ThresholdType.PERCENTAGE)) {
+			thresholdInd = 
+					CASE_WHEN.concat(BRACKET_OPEN).concat(failPct).concat(LESS_THAN_EQUALS).concat(dq.getThresholdInfo().getLow()).concat(BRACKET_CLOSE).concat(ONLY_THEN).concat(LOW)
+					 .concat(ONLY_WHEN).concat(BRACKET_OPEN).concat(failPct).concat(LESS_THAN_EQUALS).concat(dq.getThresholdInfo().getMedium()).concat(BRACKET_CLOSE).concat(ONLY_THEN).concat(MEDIUM)
+					 .concat(ONLY_ELSE).concat(HIGH).concat(ONLY_END).concat(AS).concat(THRESHOLD_IND);
+			thresholdLimit = 
+					CASE_WHEN.concat(BRACKET_OPEN).concat(failPct).concat(LESS_THAN_EQUALS).concat(dq.getThresholdInfo().getLow()).concat(BRACKET_CLOSE).concat(ONLY_THEN).concat(dq.getThresholdInfo().getLow())
+					 .concat(ONLY_WHEN).concat(BRACKET_OPEN).concat(failPct).concat(LESS_THAN_EQUALS).concat(dq.getThresholdInfo().getMedium()).concat(BRACKET_CLOSE).concat(ONLY_THEN).concat(dq.getThresholdInfo().getMedium())
+					 .concat(ONLY_ELSE).concat(dq.getThresholdInfo().getHigh()).concat(ONLY_END).concat(AS).concat(THRESHOLD_LIMIT);
+			thresholdType = SINGLE_QUOTE.concat(dq.getThresholdInfo().getType().toString()).concat(SINGLE_QUOTE).concat(AS).concat(THRESHOLD_TYPE);
+		}  
+		
+		return threshold.append(thresholdType).append(COMMA)
+				.append(thresholdLimit).append(COMMA)
+				.append(thresholdInd).toString();
+	}
+	
+	public String generateSummarySql2 (String summarySql1) {
+		StringBuilder sql = new StringBuilder(SELECT)
+											.append(RULEUUID).append(COMMA)
+											.append(RULEVERSION).append(COMMA)
+											.append(RULENAME).append(COMMA)
+											.append(DATAPODUUID).append(COMMA)
+				  							.append(DATAPODVERSION).append(COMMA)
+				  							.append(DATAPOD_NAME).append(COMMA);
+		sql = sql.append(SUM).append(BRACKET_OPEN).append(ALL_CHECK_PASS).append(BRACKET_CLOSE).append(AS).append(ALL_CHECK_PASS).append(COMMA)
+						.append(COUNT).append(BRACKET_OPEN).append(NULL_CHECK_P).append(BRACKET_CLOSE).append(AS).append(TOTAL_ROW_COUNT).append(COMMA)
+						.append(SUM).append(BRACKET_OPEN).append(ALL_CHECK_PASS).append(BRACKET_CLOSE).append(AS).append(TOTAL_PASS_COUNT).append(COMMA)
+						.append(VERSION).append(FROM).append(BRACKET_OPEN)
+						.append(summarySql1).append(BRACKET_CLOSE).append(DQ_RESULT_READY_ALIAS);
+		sql = sql.append(GROUP_BY)
+					.append(RULEUUID).append(COMMA)
+					.append(RULEVERSION).append(COMMA)
+					.append(RULENAME).append(COMMA)
+					.append(DATAPODUUID).append(COMMA)
+					.append(DATAPODVERSION).append(COMMA)
+					.append(DATAPOD_NAME).append(COMMA)
+					.append(VERSION);
+		
+		return sql.toString();
+	}
+	
+	public String generateSummarySql1 (String resSql) {
+		StringBuilder select = new StringBuilder(SELECT)
+								.append(RULEUUID).append(COMMA)
+								.append(RULEVERSION).append(COMMA)
+								.append(RULENAME).append(COMMA)
+								.append(DATAPODUUID).append(COMMA)
+								.append(DATAPODVERSION).append(COMMA)
+								.append(DATAPOD_NAME).append(COMMA);
+		select = select
+					.append(generateSummarySql1Case(NULL_CHECK_PASS, SINGLE_QUOTED_Y, NULL_CHECK_P)).append(COMMA)
+					.append(generateSummarySql1Case(NULL_CHECK_PASS, SINGLE_QUOTED_N, NULL_CHECK_F)).append(COMMA)
+					.append(generateSummarySql1Case(VALUE_CHECK_PASS, SINGLE_QUOTED_Y, VALUE_CHECK_P)).append(COMMA)
+					.append(generateSummarySql1Case(VALUE_CHECK_PASS, SINGLE_QUOTED_N, VALUE_CHECK_F)).append(COMMA)
+					.append(generateSummarySql1Case(RANGE_CHECK_PASS, SINGLE_QUOTED_Y, RANGE_CHECK_P)).append(COMMA)
+					.append(generateSummarySql1Case(RANGE_CHECK_PASS, SINGLE_QUOTED_N, RANGE_CHECK_F)).append(COMMA)
+					.append(generateSummarySql1Case(DATATYPE_CHECK_PASS, SINGLE_QUOTED_Y, DATATYPE_CHECK_P)).append(COMMA)
+					.append(generateSummarySql1Case(DATATYPE_CHECK_PASS, SINGLE_QUOTED_N, DATATYPE_CHECK_F)).append(COMMA)
+					.append(generateSummarySql1Case(DATAFORMAT_CHECK_PASS, SINGLE_QUOTED_Y, DATAFORMAT_CHECK_P)).append(COMMA)
+					.append(generateSummarySql1Case(DATAFORMAT_CHECK_PASS, SINGLE_QUOTED_N, DATAFORMAT_CHECK_F)).append(COMMA)
+					.append(generateSummarySql1Case(LENGTH_CHECK_PASS, SINGLE_QUOTED_Y, LENGTH_CHECK_P)).append(COMMA)
+					.append(generateSummarySql1Case(LENGTH_CHECK_PASS, SINGLE_QUOTED_N, LENGTH_CHECK_F)).append(COMMA)
+					.append(generateSummarySql1Case(REFINT_CHECK_PASS, SINGLE_QUOTED_Y, REFINT_CHECK_P)).append(COMMA)
+					.append(generateSummarySql1Case(REFINT_CHECK_PASS, SINGLE_QUOTED_N, REFINT_CHECK_F)).append(COMMA)
+					.append(generateSummarySql1Case(DUP_CHECK_PASS, SINGLE_QUOTED_Y, DUP_CHECK_P)).append(COMMA)
+					.append(generateSummarySql1Case(DUP_CHECK_PASS, SINGLE_QUOTED_N, DUP_CHECK_F)).append(COMMA)
+					.append(generateSummarySql1Case(CUSTOM_CHECK_PASS, SINGLE_QUOTED_Y, CUSTOM_CHECK_P)).append(COMMA)
+					.append(generateSummarySql1Case(CUSTOM_CHECK_PASS, SINGLE_QUOTED_N, CUSTOM_CHECK_F)).append(COMMA)
+					.append(generateSummarySql1Case(DOMAIN_CHECK_PASS, SINGLE_QUOTED_Y, DOMAIN_CHECK_P)).append(COMMA)
+					.append(generateSummarySql1Case(DOMAIN_CHECK_PASS, SINGLE_QUOTED_N, DOMAIN_CHECK_F)).append(COMMA)
+					.append(generateSummarySql1Case(BLANK_SPACE_CHECK_PASS, SINGLE_QUOTED_Y, BLANK_SPACE_CHECK_P)).append(COMMA)
+					.append(generateSummarySql1Case(BLANK_SPACE_CHECK_PASS, SINGLE_QUOTED_N, BLANK_SPACE_CHECK_F)).append(COMMA)
+					.append(generateSummarySql1Case(EXPRESSION_CHECK_PASS, SINGLE_QUOTED_Y, EXPRESSION_CHECK_P)).append(COMMA)
+					.append(generateSummarySql1Case(EXPRESSION_CHECK_PASS, SINGLE_QUOTED_N, EXPRESSION_CHECK_F)).append(COMMA)
+					.append(CASE_WHEN).append(BRACKET_OPEN)
+					.append(NULL_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
+					.append(VALUE_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
+					.append(RANGE_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
+					.append(DATATYPE_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
+					.append(DATAFORMAT_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
+					.append(LENGTH_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
+					.append(REFINT_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
+					.append(DUP_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
+					.append(CUSTOM_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
+					.append(DOMAIN_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
+					.append(BLANK_SPACE_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
+					.append(EXPRESSION_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(BRACKET_CLOSE) 
+					.append(THEN_0_1).append(ALL_CHECK_PASS).append(COMMA)
+					.append(VERSION).append(FROM).append(BRACKET_OPEN)
+					.append(resSql).append(BRACKET_CLOSE).append(DQ_RESULT_ALIAS);
+		return select.toString();
+	}
+	
+	public String generateSummarySql1Case(String checkField, String checkString, String aliasField) {
+		return CASE_WHEN + checkField + " = " + checkString + THEN_1_0 + aliasField;
+	}
 
 	public String generateCase(DataQual dq, String tableName, String attributeName)
 			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
@@ -518,10 +749,10 @@ public class DQOperator implements IParsable {
 		if (StringUtils.isNotBlank(dq.getDateFormatCheck())) {
 			check = " DATE_FORMAT(".concat(tableAttr).concat(",'").concat(dq.getDateFormatCheck())
 					.concat("') IS NOT NULL").concat(BLANK);
-			colName = DATEFORMAT_CHECK_PASS;
+			colName = DATAFORMAT_CHECK_PASS;
 			dqBuilder.append(caseWrapper(check, colName)).append(COMMA);
 		} else {
-			dqBuilder.append("'' as ").append(DATEFORMAT_CHECK_PASS).append(COMMA);
+			dqBuilder.append("'' as ").append(DATAFORMAT_CHECK_PASS).append(COMMA);
 		} // End dateFormatCheck If
 		if (dq.getLengthCheck() != null && !dq.getLengthCheck().isEmpty()) {
 			boolean containsLB = dq.getLengthCheck().containsKey("minLength")
@@ -598,7 +829,47 @@ public class DQOperator implements IParsable {
 		} else {
 			dqBuilder.append("'' as ").append(CUSTOM_CHECK_PASS).append(COMMA);
 		} // End customCheck If
-
+		if (dq.getDomainCheck() != null && dq.getDomainCheck().getRef() != null) {
+			DataQualDomain dataQualDomain = (DataQualDomain) commonServiceImpl.getOneByUuidAndVersion(dq.getDomainCheck().getRef().getUuid()
+													, dq.getDomainCheck().getRef().getVersion()
+													, dq.getDomainCheck().getRef().getType().toString()
+													, "N");
+			check = tableAttr.concat(" RLIKE ( ").concat(dataQualDomain.getRegEx()).concat(BRACKET_CLOSE);
+			colName = DOMAIN_CHECK_PASS;
+			dqBuilder.append(caseWrapper(check, colName)).append(COMMA);
+		} else {
+			dqBuilder.append("'' as ").append(DOMAIN_CHECK_PASS).append(COMMA);
+		} // End domainCheck If
+		if (StringUtils.isNotBlank(dq.getBlankSpaceCheck())) {
+			
+			if (dq.getBlankSpaceCheck().equals(BlankSpaceCheckOptions.LEADING)) {
+				check = tableAttr.concat(" LIKE ' %' ");
+			} else if (dq.getBlankSpaceCheck().equals(BlankSpaceCheckOptions.TRAILING)) {
+				check = tableAttr.concat(" LIKE '% ' ");
+			} else if (dq.getBlankSpaceCheck().equals(BlankSpaceCheckOptions.IN_BETWEEN)) {
+				check = tableAttr.concat(" LIKE '% ' ");
+			} else if (dq.getBlankSpaceCheck().equals(BlankSpaceCheckOptions.ALL)) {
+				check = tableAttr.concat(" LIKE '% ' AND ").concat(tableAttr).concat(" LIKE ' %' ");
+			}
+			colName = BLANK_SPACE_CHECK_PASS;
+			dqBuilder.append(caseWrapper(check, colName)).append(COMMA);
+		} else {
+			dqBuilder.append("'' as ").append(BLANK_SPACE_CHECK_PASS).append(COMMA);
+		} // End blankSpaceCheck If
+		if (dq.getExpressionCheck() != null && dq.getExpressionCheck().getRef() != null) {
+			Expression expression = (Expression) commonServiceImpl.getOneByUuidAndVersion(dq.getExpressionCheck().getRef().getUuid()
+																						, dq.getExpressionCheck().getRef().getVersion()
+																						, dq.getExpressionCheck().getRef().getType().toString()
+																						, "N");
+			MetaIdentifierHolder expressionSource = new MetaIdentifierHolder(dq.getExpressionCheck().getRef());
+			check = expressionOperator.generateSql(expression.getExpressionInfo(), expressionSource, null, new HashMap<String, String>(), null, commonServiceImpl.getDatasourceByObject(dq));
+			colName = EXPRESSION_CHECK_PASS;
+			dqBuilder.append(caseWrapper(check, colName)).append(COMMA);
+		} else {
+			dqBuilder.append("'' as ").append(EXPRESSION_CHECK_PASS).append(COMMA);
+		} // End expressionCheck If
+		
+		
 		dqString = dqBuilder.toString();
 		return dqString.substring(0, dqString.length() - 2);
 	}

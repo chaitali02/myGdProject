@@ -1,0 +1,426 @@
+{
+	"uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71122",
+	"version": "1552115484",
+	"name": "dq_rule_detail",
+	"desc": null,
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+			"version": "1464977196",
+			"name": "ypalrecha"
+		},
+		"value": null
+	},
+    "createdOn" : ISODate("2018-12-11T05:43:34.691Z"),
+	"tags": [],
+	"active": "Y",
+	"locked": "N",
+	"published": "N",
+	 "appInfo" : [ 
+	{
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+            }
+        }, 
+       
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+ 				 "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbyog"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+ 				 "uuid": "39937670-837c-4027-aa45-aff8a57b738a"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "4be92a58-3e24-410c-ab09-e1e719c1db81"
+            }
+        }
+    ],
+	"publicFlag": "N",
+	"datasource": {
+		"ref": {
+			"type": "datasource",
+			"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
+			"version": null,
+			"name": "file_data"
+		},
+		"value": null
+	},
+	"cache": "Y",
+	"attributes": [
+		{
+			"attributeId": 0,
+			"displaySeq": 0,
+			"name": "rule_uuid",
+			"type": "string",
+			"desc": "rule_uuid",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "rule_uuid",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 1,
+			"displaySeq": 1,
+			"name": "rule_version",
+			"type": "string",
+			"desc": "rule_version",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "rule_version",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 2,
+			"displaySeq": 2,
+			"name": "rule_name",
+			"type": "string",
+			"desc": "rule_name",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "rule_name",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 3,
+			"displaySeq": 3,
+			"name": "datapod_uuid",
+			"type": "string",
+			"desc": "datapod_uuid",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "datapod_uuid",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 4,
+			"displaySeq": 4,
+			"name": "datapod_version",
+			"type": "string",
+			"desc": "datapod_version",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "datapod_version",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 5,
+			"displaySeq": 5,
+			"name": "datapod_name",
+			"type": "string",
+			"desc": "datapod_name",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "datapod_name",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 6,
+			"displaySeq": 6,
+			"name": "attribute_id",
+			"type": "string",
+			"desc": "attribute_id",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "attribute_id",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 7,
+			"displaySeq": 7,
+			"name": "attribute_name",
+			"type": "string",
+			"desc": "attribute_name",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "attribute_name",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 8,
+			"displaySeq": 8,
+			"name": "attribute_value",
+			"type": "string",
+			"desc": "attribute_value",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "attribute_value",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 9,
+			"displaySeq": 9,
+			"name": "rowkey_name",
+			"type": "string",
+			"desc": "rowkey_name",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "rowkey_name",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 10,
+			"displaySeq": 10,
+			"name": "rowkey_value",
+			"type": "string",
+			"desc": "rowkey_value",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "rowkey_value",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 11,
+			"displaySeq": 11,
+			"name": "null_check_pass",
+			"type": "string",
+			"desc": "null_check_pass",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "null_check_pass",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 12,
+			"displaySeq": 12,
+			"name": "value_check_pass",
+			"type": "string",
+			"desc": "value_check_pass",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "value_check_pass",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 13,
+			"displaySeq": 13,
+			"name": "range_check_pass",
+			"type": "string",
+			"desc": "range_check_pass",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "range_check_pass",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 14,
+			"displaySeq": 14,
+			"name": "datatype_check_pass",
+			"type": "string",
+			"desc": "datatype_check_pass",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "datatype_check_pass",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 15,
+			"displaySeq": 15,
+			"name": "format_check_pass",
+			"type": "string",
+			"desc": "format_check_pass",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "format_check_pass",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 16,
+			"displaySeq": 16,
+			"name": "length_check_pass",
+			"type": "string",
+			"desc": "length_check_pass",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "length_check_pass",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 17,
+			"displaySeq": 17,
+			"name": "ri_check_pass",
+			"type": "string",
+			"desc": "ri_check_pass",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "ri_check_pass",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 18,
+			"displaySeq": 18,
+			"name": "dup_check_pass",
+			"type": "string",
+			"desc": "dup_check_pass",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "dup_check_pass",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 19,
+			"displaySeq": 19,
+			"name": "custom_check_pass",
+			"type": "string",
+			"desc": "custom_check_pass",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "custom_check_pass",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 20,
+			"displaySeq": 20,
+			"name": "domain_check_pass",
+			"type": "string",
+			"desc": "domain_check_pass",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "domain_check_pass",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 21,
+			"displaySeq": 21,
+			"name": "blankspace_check_pass",
+			"type": "string",
+			"desc": "blankspace_check_pass",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "blankspace_check_pass",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 22,
+			"displaySeq": 22,
+			"name": "expr_check_pass",
+			"type": "string",
+			"desc": "expr_check_pass",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "expr_check_pass",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 23,
+			"displaySeq": 23,
+			"name": "version",
+			"type": "string",
+			"desc": "version",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "version",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		}
+	]
+}

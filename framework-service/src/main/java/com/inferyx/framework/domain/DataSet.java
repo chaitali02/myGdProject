@@ -78,6 +78,17 @@ public class DataSet extends BaseEntity {
 		this.attributeInfo = attributeInfo;
 	}
 
+	public AttributeSource getAttribute(Integer attributeId) {
+
+		for (AttributeSource attr : getAttributeInfo()) {
+			if (attr.getAttrSourceId().equals(attributeId)) {
+				return attr;
+			}
+		}
+
+		return null;
+	}
+	
 	public String getAttributeName(Integer attributeId) {
 		List<AttributeSource> sourceAttrs = getAttributeInfo();
 		for (AttributeSource sourceAttr : sourceAttrs) {

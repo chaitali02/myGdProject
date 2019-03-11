@@ -10,6 +10,9 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +24,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.common.DQInfo;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
@@ -72,7 +76,18 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 	protected Helper helper;
 	protected ExecParams execParams;
 	protected ExecutorServiceImpl executorServiceImpl;
+	protected DQInfo dqInfo;
 	
+	public DQInfo getDqInfo() {
+		return dqInfo;
+	}
+
+
+
+	public void setDqInfo(DQInfo dqInfo) {
+		this.dqInfo = dqInfo;
+	}
+
 	static final Logger logger = Logger.getLogger(RunBaseRuleService.class);	
 	
 	
@@ -470,8 +485,8 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 
 		Datapod dp = null;
 		try {
-			dp = (Datapod) commonServiceImpl.getLatestByUuid(datapodKey.getUuid(), MetaType.datapod.toString());
-			Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(dp.getDatasource().getRef().getUuid(), dp.getDatasource().getRef().getVersion(), MetaType.datasource.toString());
+			dp = (Datapod) commonServiceImpl.getLatestByUuid(datapodKey.getUuid(), MetaType.datapod.toString(), "N");
+			Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(dp.getDatasource().getRef().getUuid(), dp.getDatasource().getRef().getVersion(), MetaType.datasource.toString(), "N");
 			if (datasource.getType().equals(ExecContext.FILE.toString())) {
 				return String.format("%s_%s_%s", baseRule.getUuid().replace("-", "_"), baseRule.getVersion(), baseRuleExec.getVersion());
 			} else {
@@ -569,43 +584,39 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 			logger.info("Table name in RunBaseruleServiceImpl : " + tableName);
 			logger.info("execContext : " + execContext);
 			
-			Datapod targetDp = null;
+			
 			ResultSetHolder rsHolder = null;
 			appUuid = commonServiceImpl.getApp().getUuid();
 			
 			/***** Replace internalVarMap - START *****/
 			checkInternalVarMap(execParams, baseRuleExec);
 			baseRuleExec.setExec(DagExecUtil.replaceInternalVarMap(execParams, baseRuleExec.getExec()));
+			baseRuleExec.setSummaryExec(DagExecUtil.replaceInternalVarMap(execParams, baseRuleExec.getSummaryExec()));
 			/***** Replace internalVarMap - END *****/
 			
 			Datasource appDatasource = commonServiceImpl.getDatasourceByApp();
 			Datasource ruleDatasource = commonServiceImpl.getDatasourceByObject(baseRule);
-			if (runMode!= null && runMode.equals(RunMode.BATCH)) {
-				targetDp = (Datapod) commonServiceImpl.getLatestByUuid(datapodKey.getUuid(), MetaType.datapod.toString());
-				MetaIdentifier targetDsMI = targetDp.getDatasource().getRef();
-				Datasource targetDatasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(targetDsMI.getUuid(), targetDsMI.getVersion(), targetDsMI.getType().toString());
-				if(appDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
-						&& !targetDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
-					rsHolder = exec.executeSqlByDatasource(baseRuleExec.getExec(), ruleDatasource, appUuid);
-					if(targetDatasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
-						tableName = targetDatasource.getSid().concat(".").concat(targetDp.getName());
-					} else {
-						tableName = targetDatasource.getDbname().concat(".").concat(targetDp.getName());					
-					}
-					rsHolder.setTableName(tableName);
-					rsHolder = exec.persistDataframe(rsHolder, targetDatasource, targetDp, SaveMode.APPEND.toString());
-				} else if(targetDatasource.getType().equals(ExecContext.FILE.toString())) {
-					exec.executeRegisterAndPersist(baseRuleExec.getExec(), tableName, filePath, targetDp, "overwrite", true, appUuid);
-				} else {
-					String sql = helper.buildInsertQuery(execContext.toString(), tableName, targetDp, baseRuleExec.getExec());
-					exec.executeSql(sql, appUuid);
-				}
-			} else {
-				rsHolder = exec.executeAndRegisterByDatasource(baseRuleExec.getExec(), Helper.genTableName(filePath), ruleDatasource, appUuid);
+			// Actual execution happens here - START
+			logger.info("Before execution result : " + baseRuleExec.getExec());
+			rsHolder = execute(baseRuleExec.getExec(), appDatasource, ruleDatasource, tableName, filePath, appUuid, exec, execContext);
+
+			if (rsHolder != null) {
 				countRows = rsHolder.getCountRows();
 			}
-				
-			logger.info("temp table registered: "+tableName);
+			logger.info("Temp table registered: "+tableName);
+			
+			Datapod summaryDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dqInfo.getDq_result_summary(), null, MetaType.datapod.toString(), "N");
+			MetaIdentifier summaryDatapodKey = new MetaIdentifier(MetaType.datapod, summaryDatapod.getUuid(),
+					summaryDatapod.getVersion());		
+			tableName = getTableName(baseRule, baseRuleExec, summaryDatapodKey, execContext, runMode);
+			logger.info("Table name in RunBaseruleServiceImpl : " + tableName);
+			
+//			String summaryTableName = tableName + "_summary";
+			logger.info("Before execution summary : " + baseRuleExec.getSummaryExec());
+			execute(baseRuleExec.getSummaryExec(), appDatasource, ruleDatasource, tableName, filePath , appUuid, exec, execContext);
+			logger.info("Temp summary table registered : " + tableName);
+			// Actual execution happens here - END
+			
 			
 			//******setting createdBy in datastore***********
 			MetaIdentifierHolder user = new MetaIdentifierHolder();
@@ -648,6 +659,46 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 		TaskHolder taskHolder = new TaskHolder(name, new MetaIdentifier(ruleExecType, baseRuleExec.getUuid(), baseRuleExec.getVersion())); 
 		return taskHolder;
 
+	}
+	
+	private ResultSetHolder execute(String execSql
+									, Datasource appDatasource
+									, Datasource ruleDatasource
+									, String tableName
+									, String filePath
+									, String appUuid
+									, IExecutor exec
+									, ExecContext execContext) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		Datapod targetDp = null;
+		ResultSetHolder rsHolder = null;
+		if (StringUtils.isBlank(execSql)) {
+			return rsHolder;
+		}
+		if (runMode!= null && runMode.equals(RunMode.BATCH)) {
+			targetDp = (Datapod) commonServiceImpl.getLatestByUuid(datapodKey.getUuid(), MetaType.datapod.toString(), "N");
+			MetaIdentifier targetDsMI = targetDp.getDatasource().getRef();
+			Datasource targetDatasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(targetDsMI.getUuid(), targetDsMI.getVersion(), targetDsMI.getType().toString(), "N");
+			if(appDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+					&& !targetDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+				rsHolder = exec.executeSqlByDatasource(execSql, ruleDatasource, appUuid);
+				if(targetDatasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+					tableName = targetDatasource.getSid().concat(".").concat(targetDp.getName());
+				} else {
+					tableName = targetDatasource.getDbname().concat(".").concat(targetDp.getName());					
+				}
+				rsHolder.setTableName(tableName);
+				rsHolder = exec.persistDataframe(rsHolder, targetDatasource, targetDp, SaveMode.APPEND.toString());
+			} else if(targetDatasource.getType().equals(ExecContext.FILE.toString())) {
+				exec.executeRegisterAndPersist(execSql, tableName, filePath, targetDp, "overwrite", true, appUuid);
+			} else {
+				String sql = helper.buildInsertQuery(execContext.toString(), tableName, targetDp, execSql);
+				exec.executeSql(sql, appUuid);
+			}
+		} else {
+			rsHolder = exec.executeAndRegisterByDatasource(execSql, Helper.genTableName(filePath), ruleDatasource, appUuid);
+//			countRows = rsHolder.getCountRows();
+		}
+		return rsHolder;
 	}
 	
 }

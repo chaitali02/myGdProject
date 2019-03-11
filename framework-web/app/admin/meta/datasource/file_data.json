@@ -61,6 +61,12 @@
                 "type" : "application",
  				 "uuid": "39937670-837c-4027-aa45-aff8a57b738a"
             }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "4be92a58-3e24-410c-ab09-e1e719c1db81"
+            }
         }
      ],
 	"type": "FILE",

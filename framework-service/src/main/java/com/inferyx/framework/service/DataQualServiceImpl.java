@@ -316,7 +316,8 @@ public class DataQualServiceImpl  extends RuleTemplate{
 
 	public DataQualExec execute(ThreadPoolTaskExecutor metaExecutor, DataQualExec dataqualExec, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
 //		Datapod targetDatapod = (Datapod) daoRegister.getRefObject(new MetaIdentifier(MetaType.datapod, dqInfo.getDqTargetUUID(), null));
-		Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dqInfo.getDqTargetUUID(), null, MetaType.datapod.toString(), "N");
+//		Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dqInfo.getDqTargetUUID(), null, MetaType.datapod.toString(), "N");
+		Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dqInfo.getDq_result_detail(), null, MetaType.datapod.toString(), "N");
 		MetaIdentifier targetDatapodKey = new MetaIdentifier(MetaType.datapod, targetDatapod.getUuid(),
 				targetDatapod.getVersion());		
 		try {
@@ -463,8 +464,9 @@ public class DataQualServiceImpl  extends RuleTemplate{
 		DataQual dataQual = (DataQual) commonServiceImpl.getOneByUuidAndVersion(dataQualExec.getDependsOn().getRef().getUuid(), dataQualExec.getDependsOn().getRef().getVersion(), MetaType.dq.toString(), "N");
 		try{
 			dataQualExec.setExec(dqOperator.generateSql(dataQual, datapodList, dataQualExec, dagExec, usedRefKeySet, otherParams, runMode));
+			dataQualExec.setSummaryExec(dqOperator.generateSummarySql(dataQual, datapodList, dataQualExec, dagExec, usedRefKeySet, otherParams, runMode));
 			dataQualExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
-			
+			logger.info(String.format("DQ Result sql for DQExec : %s is : ", execUuid, dataQualExec.getExec()));
 			synchronized (dataQualExec.getUuid()) {
 //				DataQualExec dataQualExec1 = (DataQualExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.dqExec, dataQualExec.getUuid(), dataQualExec.getVersion()));
 				DataQualExec dataQualExec1 = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(dataQualExec.getUuid(), dataQualExec.getVersion(), MetaType.dqExec.toString(), "N");

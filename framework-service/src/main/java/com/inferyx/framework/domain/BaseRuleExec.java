@@ -23,8 +23,9 @@ public class BaseRuleExec extends BaseExec {
 	 */
 	@Override
 	public String toString() {
-		return "BaseRuleExec [statusList=" + statusList + ", dependsOn=" + dependsOn + ", exec=" + exec + ", result=" + result
-				+ ", refKeyList=" + refKeyList + "]";
+		return "BaseRuleExec [statusList=" + statusList + ", dependsOn=" + dependsOn + ", exec=" + exec
+				+ ", summaryExec=" + summaryExec + ", result=" + result + ", refKeyList=" + refKeyList + ", execParams="
+				+ execParams + ", securityServiceImpl=" + securityServiceImpl + "]";
 	}
 
 }
