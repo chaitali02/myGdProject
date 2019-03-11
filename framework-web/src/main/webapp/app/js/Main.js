@@ -2001,7 +2001,7 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
             params: { type: 'dqexec', isExec: true, isExec2:false }
         })
         .state('viewdqresults2', {
-            url: "/DataQualityResultList",
+            url: "/DataQualityResultList2",
             templateUrl: "views/common-list.html",
             data: { pageTitle: 'Data Quality' },
             params: { type: 'dqexec', isExec: true , isExec2:true}

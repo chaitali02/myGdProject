@@ -804,14 +804,14 @@
       return deferred.promise;
     }
 
-    this.getColunmDetail = function(type) {
+    this.getColunmDetail = function(type, resultType) {
       var deferred = $q.defer();
       var url
       if(type=='profile'){
         url = "metadata/getDpDatapod?type=" + type+'&action=view';
       }
       else  if(type=='dataqual' || type=='dq'){
-        url = "metadata/getDqDatapod?type=dq&action=view";
+        url = "metadata/getDqDatapod?type=dq&action=view&resultType="+resultType;
       }
       else  if(type=='recon'){
         url = "metadata/getRcDatapod?type=" + type+'&action=view';

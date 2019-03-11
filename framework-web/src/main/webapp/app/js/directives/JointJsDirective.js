@@ -1524,6 +1524,11 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         window.navigateTo(JSON.stringify(execUrl));
         return false;
       }
+      if(["dq"].indexOf(params.elementType) !=-1 && execUrl !=null){
+        execUrl.state=dagMetaDataService.elementDefs[params.elementType.toLowerCase()+"exec"].resultState2
+        window.navigateTo(JSON.stringify(execUrl));
+        return false;
+      }
        $scope.lastParams = params;
        $scope.isExecParamsetTable=false;
        App.scrollTop();

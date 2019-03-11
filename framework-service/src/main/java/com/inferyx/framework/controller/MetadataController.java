@@ -1105,21 +1105,22 @@ public class MetadataController {
 	public @ResponseBody Datapod getdpByDatapod(
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws FileNotFoundException, IOException {
-		return metadataServiceImpl.getDatapodByType(MetaType.profile.toString());
+		return metadataServiceImpl.getDatapodByType(MetaType.profile.toString(), null);
 	}
 	
 	@RequestMapping(value = "/getRcDatapod",method=RequestMethod.GET)
 	public @ResponseBody Datapod getrcDatapod(
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws FileNotFoundException, IOException {
-		return metadataServiceImpl.getDatapodByType(MetaType.recon.toString());
+		return metadataServiceImpl.getDatapodByType(MetaType.recon.toString(), null);
 	}
 	
 	@RequestMapping(value = "/getDqDatapod",method=RequestMethod.GET)
 	public @ResponseBody Datapod getdqDatapod(
 			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action) throws FileNotFoundException, IOException {
-		return metadataServiceImpl.getDatapodByType(MetaType.dq.toString());
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "resultType", required = false,defaultValue="null") String resultType) throws FileNotFoundException, IOException {
+		return metadataServiceImpl.getDatapodByType(MetaType.dq.toString(),resultType);
 	}
 	
 	@RequestMapping(value = "/getGroupsByOrg",method=RequestMethod.GET)

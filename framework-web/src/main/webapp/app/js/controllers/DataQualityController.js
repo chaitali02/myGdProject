@@ -46,7 +46,8 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
   $scope.dq = {};
   $scope.dq.versions = []
   $scope.dataqualitycompare = null;
-  $scope.datatype = ["", "String", "Int", "Float", "Double", "Date"];
+  $scope.datatype = ["DATE", "DOUBLE", "FLOAT", "INTEGER", "STRING", "TIMESTAMP"];
+  $scope.blankSpaceTypes=["LEADING", "TRAILING", "IN_BETWEEN", "ALL"]
   $scope.selectDataType = $scope.datatype[0];
   $scope.sourceType = ["datapod"]
   $scope.dataqualitysourceType = $scope.sourceType[0];
@@ -235,6 +236,24 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
   $scope.onChangeTHigh=function(){
     $scope.thresholdInfo.mediumMax=$scope.thresholdInfo.high;
   }
+  
+
+  $scope.getAllLatestDomain = function () {
+		DataqulityService.getAllLatest("domain").then(function (response) { onSuccess(response.data) });
+		var onSuccess = function (response) {
+      $scope.allDomain=response;
+		}
+  }
+  $scope.getAllLatestDomain();
+  $scope.getExpressionByType = function () {
+    if($scope.selectDependsOn){
+      DataqulityService.getExpressionByType($scope.selectDependsOn.uuid, $scope.selectDependsOn).then(function (response) { onSuccessExpression(response.data) });
+      var onSuccessExpression = function (response) {
+        $scope.allExpress = response
+      }
+    }
+	}
+  
 
   if (typeof $stateParams.id != "undefined") {
     $scope.mode = $stateParams.mode;
@@ -269,7 +288,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
       $scope.dataqualitydata.lowerBound = response.dqdata.rangeCheck.lowerBound;
       $scope.getParamByApp();
       if (response.dqdata.dataTypeCheck != null) {
-        $scope.selectDataType = response.dqdata.dataTypeCheck;
+        $scope.selectDataType = response.dqdata.dataTypeCheck.toUpperCase();
       }
 
       $scope.selectdatefromate = response.dqdata.dateFormatCheck;
@@ -333,6 +352,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
       $scope.refIntegrityCheckoption = refIntegrityCheckoption
       $scope.selectrefIntegrityCheck = selectrefIntegrityCheck
       $scope.filterTableArray = response.filterInfo
+      
       DataqulityService.getAllLatestActive($scope.dataqualitysourceType).then(function (response) {
         onSuccessgetAllLatest(response.data)
       });
@@ -353,6 +373,20 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
         var onSuccess = function (response) {
           $scope.refIntegrityCheckoptions = response;
         }
+      }
+      $scope.getExpressionByType();
+      if(response.dqdata.domainCheck !=null){
+        var domainCheck = {};
+        domainCheck.uuid = response.dqdata.domainCheck.ref.uuid;
+        domainCheck.name = response.dqdata.domainCheck.attrName;
+        $scope.selectedDomain=domainCheck;
+      }
+      debugger
+      if(response.dqdata.expressionCheck !=null){
+        var expressionCheck = {};
+        expressionCheck.uuid = response.dqdata.expressionCheck.ref.uuid;
+        expressionCheck.name = response.dqdata.expressionCheck.ref.name;
+        $scope.selectedExpression=expressionCheck;
       }
     };
     var onError =function(){
@@ -402,7 +436,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
       $scope.dataqualitydata.lowerBound = response.dqdata.rangeCheck.lowerBound;
       $scope.getParamByApp();
       if (response.dqdata.dataTypeCheck != null) {
-        $scope.selectDataType = response.dqdata.dataTypeCheck;
+        $scope.selectDataType = response.dqdata.dataTypeCheck.toUpperCase();
       }
       $scope.selectdatefromate = response.dqdata.dateFormatCheck;
       $scope.dataqualitydata.maxLength = response.dqdata.lengthCheck.maxLength
@@ -469,6 +503,19 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
         var onSuccess = function (response) {
           $scope.refIntegrityCheckoptions = response;
         }
+        $scope.getExpressionByType();
+        if(response.dqdata.domainCheck !=null){
+          var domainCheck = {};
+          domainCheck.uuid = response.dqdata.domainCheck.ref.uuid;
+          domainCheck.name = response.dqdata.domainCheck.attrName;
+          $scope.selectedDomain=domainCheck;
+        }
+        if(response.dqdata.expressionCheck !=null){
+          var expressionCheck = {};
+          expressionCheck.uuid = response.dqdata.expressionCheck.ref.uuid;
+          expressionCheck.name = response.dqdata.expressionCheck.attrName;
+          $scope.selectedExpression=expressionCheck;
+        }
       }
 
       if(response.dqdata.thresholdInfo !=null){
@@ -523,6 +570,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
 
       $scope.allFromula = response;
     }
+    $scope.getExpressionByType();
   }
 
   $scope.onSourceAttributeChagne = function () {
@@ -939,6 +987,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
       attribute.ref = attributeref;
       attribute.attrId = $scope.dataqualityoption.attributeId;
       dataqualityjosn.attribute = attribute;
+      dataqualityjosn.blankSpaceCheck=$scope.dataqualitydata.blankSpaceCheck;
     } else {
       dataqualityjosn.attribute = null;
     }
@@ -1092,6 +1141,26 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
     }else{
       dataqualityjosn.thresholdInfo=null;
     }
+
+
+    if($scope.selectedExpression){
+      var expressionInfo = {};
+      var ref={};
+      ref.type = "expression";
+      ref.uuid = $scope.selectedExpression.uuid;
+      expressionInfo.ref = ref;
+      dataqualityjosn.expressionCheck = expressionInfo;
+    }
+    
+    if($scope.selectedDomain){
+      var domainInfo = {};
+      var ref={};
+      ref.type = "domain"
+      ref.uuid = $scope.selectedDomain.uuid;
+      domainInfo.ref = ref;
+      dataqualityjosn.expressionCheck = domainInfo;
+    }
+
     console.log(JSON.stringify(dataqualityjosn))
     DataqulityService.submit(dataqualityjosn, "dq", upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
     var onSuccess = function (response) {
@@ -1558,7 +1627,7 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
 });
 
 
-DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataService, $state, $timeout, $filter, $stateParams, $location, $rootScope, $scope, NgTableParams, DataqulityService, uuid2, CommonService, privilegeSvc, CF_DOWNLOAD) {
+DataQualityModule.controller('Result2DQController', function ($http, dagMetaDataService, $state, $timeout, $filter, $stateParams, $location, $rootScope, $scope, NgTableParams, DataqulityService, uuid2, CommonService, privilegeSvc, CF_DOWNLOAD) {
 
   $scope.select = $stateParams.type;
   $scope.type = {
@@ -1576,11 +1645,12 @@ DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataS
   $scope.currentPage = 1;
   $scope.pageSize = 10;
   $scope.paginationPageSizes = [10, 25, 50, 75, 100],
-    $scope.maxSize = 5;
+  $scope.maxSize = 5;
   $scope.bigTotalItems = 175;
   $scope.bigCurrentPage = 1;
   $scope.testgrid = false;
-  $scope.filteredRows = [];
+  $scope.filteredRowsDetail = [];
+  $scope.filteredRowsSummary = [];
   $scope.download = {};
   $scope.download.rows = CF_DOWNLOAD.framework_download_minrows;
   $scope.download.formates = CF_DOWNLOAD.formate;
@@ -1606,7 +1676,7 @@ DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataS
   $scope.userDetail = {}
   $scope.userDetail.uuid = $rootScope.setUseruuid;
   $scope.userDetail.name = $rootScope.setUserName;
-  $scope.gridOptions = {
+  $scope.gridOptionsDetail = {
     rowHeight: 40,
     useExternalPagination: true,
     exporterMenuPdf: false,
@@ -1624,9 +1694,9 @@ DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataS
     fastWatch: true,
     columnDefs: [],
     onRegisterApi: function (gridApi) {
-      $scope.gridApiResule = gridApi;
-      $scope.filteredRows = $scope.gridApiResule.core.getVisibleRows($scope.gridApiResule.grid);
-      $scope.gridApiResule.core.on.sortChanged($scope, function (grid, sortColumns) {
+      $scope.gridApiResultDetail = gridApi;
+      $scope.filteredRowsDetail = $scope.gridApiResultDetail.core.getVisibleRows($scope.gridApiResultDetail.grid);
+      $scope.gridApiResultDetail.core.on.sortChanged($scope, function (grid, sortColumns) {
         if (sortColumns.length > 0) {
           $scope.searchRequestId(sortColumns);
         }
@@ -1639,16 +1709,64 @@ DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataS
       'margin-top': '10px',
       'margin-bottom': '10px',
     }
-    if ($scope.filteredRows && $scope.filteredRows.length > 0) {
-      style['height'] = (($scope.filteredRows.length < 10 ? $scope.filteredRows.length * 40 : 400) + 40) + 'px';
+    if ($scope.filteredRowsDetail && $scope.filteredRowsDetail.length > 0) {
+      style['height'] = (($scope.filteredRowsDetail.length < 10 ? $scope.filteredRowsDetail.length * 40 : 400) + 40) + 'px';
     }
     else {
       style['height'] = "100px";
     }
     return style;
   }
-  $scope.refreshData = function () {
-    $scope.gridOptions.data = $filter('filter')($scope.originalData, $scope.searchtext, undefined);
+
+  $scope.gridOptionsSummary = {
+    rowHeight: 40,
+    useExternalPagination: true,
+    exporterMenuPdf: false,
+    exporterPdfOrientation: 'landscape',
+    exporterPdfPageSize: 'A4',
+    exporterPdfDefaultStyle: { fontSize: 9 },
+    exporterPdfTableHeaderStyle: { fontSize: 10, bold: true, italics: true, color: 'red' },
+    useExternalPagination: true,
+    enableSorting: true,
+    useExternalSorting: true,
+    enableFiltering: false,
+    enableRowSelection: true,
+    enableSelectAll: true,
+    enableGridMenu: true,
+    fastWatch: true,
+    columnDefs: [],
+    onRegisterApi: function (gridApi) {
+      $scope.gridApiResultSummary = gridApi;
+      $scope.filteredRowsSummary = $scope.gridApiResultSummary.core.getVisibleRows($scope.gridApiResultSummary.grid);
+      $scope.gridApiResultSummary.core.on.sortChanged($scope, function (grid, sortColumns) {
+        if (sortColumns.length > 0) {
+          $scope.searchRequestId(sortColumns);
+        }
+      });
+    }
+  };
+
+  $scope.getGridStyleSummary = function () {
+    var style = {
+      'margin-top': '10px',
+      'margin-bottom': '10px',
+    }
+    
+    if ($scope.filteredRowsSummary && $scope.filteredRowsSummary.length > 0) {
+      style['height'] = (($scope.filteredRowsSummary.length < 10 ? $scope.filteredRowsSummary.length * 40 : 400) + 50) + 'px';
+    }
+    else {
+      style['height'] = "100px";
+    }
+    return style;
+  }
+
+  $scope.refreshDataSummary = function (searchtextSummary) {
+    debugger
+    $scope.gridOptionsSummary.data = $filter('filter')($scope.originalDataSummary,searchtextSummary, undefined);
+  };
+  $scope.refreshDataDetail = function (searchtextDetail) {
+    $scope.gridOptionsDetail.data = $filter('filter')($scope.originalDataDetail ,searchtextDetail, undefined);
   };
 
   $scope.selectPage = function (pageNo) {
@@ -1657,8 +1775,11 @@ DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataS
 
   $scope.pageChanged = function () {
     $scope.getResults(null)
-    //$log.log('Page changed to: ' + (($scope.currentPage - 1) * $scope.pageSize));
+   
   };
+  $scope.pageChangedSummary=function(){
+    $scope.getColumnDetail('dq',$scope.originalDataSummary,"summary"); 
+  }
 
   $scope.onPerPageChange = function () {
     $scope.currentPage = 1;
@@ -1746,9 +1867,10 @@ DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataS
     $scope.getResults(result);
   }
 
-  $scope.getColumnDetail = function (type, result) {
-    CommonService.getColunmDetail(type).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) })
+  $scope.getColumnDetail = function (type, result,resultType) {
+    CommonService.getColunmDetail(type,resultType).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) })
     var onSuccess = function (respone) {
+      $scope.gridOptionsDetail.columnDefs=[];
       $scope.ColumnDetails=respone;
       $scope.isDataError = false;
       if($scope.ColumnDetails && $scope.ColumnDetails.length >0){
@@ -1763,7 +1885,13 @@ DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataS
           attribute.name = $scope.ColumnDetails[i].name
           attribute.displayName = $scope.ColumnDetails[i].displayName
           attribute.width = $scope.ColumnDetails[i].name.split('').length + 2 + "%" // Math.floor(Math.random() * (120 - 50 + 1)) + 150
-          $scope.gridOptions.columnDefs.push(attribute)
+          if(resultType=="detail"){
+           
+            $scope.gridOptionsDetail.columnDefs.push(attribute);
+          }else{
+            
+            $scope.gridOptionsSummary.columnDefs.push(attribute);
+          }
         }
       }
       else{
@@ -1778,25 +1906,41 @@ DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataS
           attribute.name = key
           attribute.displayName = key
           attribute.width = key.split('').length + 2 + "%" // Math.floor(Math.random() * (120 - 50 + 1)) + 150
-          $scope.gridOptions.columnDefs.push(attribute)
+          if(resultType=="detail"){
+           
+            $scope.gridOptionsDetail.columnDefs.push(attribute)
+          }else{
+        
+            $scope.gridOptionsSummary.columnDefs.push(attribute)
+          }
         });
       }
+      
+      if(resultType=="detail"){
+        $scope.gridOptionsDetail.data = result;
+        $scope.totalItems =result.length;
+        $scope.originalDataDetail = result;
+      }else{
+        $scope.gridOptionsSummary.data = result;
+        $scope.totalItems =result.length;
 
-      $scope.gridOptions.data = result;
-      $scope.originalData = result;
+        $scope.originalDataSummary = result;
+      }
+      console.log($scope.gridOptionsSummary.columnDefs)
       $scope.testgrid = true;
       $scope.showprogress = false;
     }
   }
 
-  $scope.getResults = function (params) {
+  $scope.getResults = function (params,resultType) {
+    $scope.showprogress = false;  
     $scope.to = (($scope.currentPage - 1) * $scope.pageSize);
     if ($scope.totalItems < ($scope.pageSize * $scope.currentPage)) {
       $scope.from = $scope.totalItems;
     } else {
       $scope.from = (($scope.currentPage) * $scope.pageSize);
     }
-    $scope.gridOptions.columnDefs = [];
+    $scope.gridOptionsDetail.columnDefs = [];
     var uuid = $scope.dqexecdetail.uuid
     var version = $scope.dqexecdetail.version;
     var limit = $scope.pageSize;
@@ -1817,10 +1961,11 @@ DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataS
 
     }
 
-    DataqulityService.getDataQualResults(uuid, version, offset || 0, limit, requestId, sortBy, order)
-      .then(function (response) {getResult(response.data)}, function (response) { OnError(response.data) });
+    DataqulityService.getDataQualResults2(uuid, version, offset || 0, limit, requestId, sortBy, order,resultType)
+      .then(function (response) { getResult(response.data)}, function (response) { OnError(response.data) });
     var getResult = function (response) {
-      $scope.getColumnDetail('dq',response.data);  
+      $scope.getColumnDetail('dq',response.data,resultType);
+      $scope.showprogress = false;  
     
     }
     var OnError = function (response) {
@@ -1828,6 +1973,22 @@ DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataS
       $scope.isDataError = true;
       $scope.datamessage = "Some Error Occurred"
     }
+  }
+
+  $scope.go=function(index){
+    if(index ==1){
+      $scope.getDqExec({
+        uuid:  $stateParams.id,
+        version:  $stateParams.version
+      },"detail");
+    }
+    else{
+        $scope.getDqExec({
+          uuid:  $stateParams.id,
+          version:  $stateParams.version
+        },"summary");
+    }
+    
   }
 
   window.showResult = function (params) {
@@ -1847,13 +2008,17 @@ DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataS
   $scope.refreshResultFunction = function () {
     $scope.isD3RuleEexecGraphShow = false;
     $scope.testgrid = false;
-    $scope.getDqExec($scope.ruleexecdetail)
+    if($scope.activeTabIndex==0){
+      $scope.getDqExec($scope.ruleexecdetail,"summary");
+    }else{
+      $scope.getDqExec($scope.ruleexecdetail,"detail");
+    }
   }
   $scope.ruleExecshowGraph = function () {
     $scope.isD3RuleEexecGraphShow = true;
   }
 
-  $scope.getDqExec = function (data) {
+  $scope.getDqExec = function (data, resultType) {
     $scope.execDetail = data;
     $scope.metaType = dagMetaDataService.elementDefs["dq"].execType;
     $scope.ruleexecdetail = data
@@ -1877,8 +2042,8 @@ DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataS
       onSuccessGetNumRowsbyExec(response.data)
     });
     var onSuccessGetNumRowsbyExec = function (response) {
-      $scope.totalItems = response.numRows;
-      $scope.getResults(null);
+     // $scope.totalItems = response.numRows;
+      $scope.getResults(null,resultType);
     }
   } //End getDqExec Method
 
@@ -1894,465 +2059,7 @@ DataQualityModule.controller('ResultDQController', function ($http, dagMetaDataS
 
   $scope.dqGroupExec = function (data) {
     if ($scope.type.text == 'dq') {
-      $scope.getDqExec(data);
-      return;
-    }
-    $scope.execDetail = data;
-    $scope.metaType = dagMetaDataService.elementDefs[$scope.type.text.toLowerCase()].execType;
-    $scope.rulegroupdatail = data
-    $scope.rGExecUuid = data.uuid;
-    $scope.rGExecVersion = data.version;
-    $scope.ruleGrpupName = data.name;
-    $scope.isRuleGroupExec = false;
-    $scope.isRuleSelect = false;
-    $scope.isRuleExec = true;
-    $scope.isRuleGroupTitle = true;
-    if ($scope.type.text == 'dqgroup') {
-      $scope.isGraphRuleGroupExec = true;
-    } else {
-      $scope.isGraphRuleGroupExec = false;
-    }
-    var params = {
-      "id": data.uuid,
-      "name": data.name,
-      "elementType": "dqgroup",
-      "version": data.version,
-      "type": "dataQualGroup",
-      "typeLabel": "DataQualGroup",
-      "url": "dataqual/getdqExecBydqGroupExec?",
-      "ref": {
-        "type": "dqgroupExec",
-        "uuid": data.uuid,
-        "version": data.version,
-        "name": data.name
-      }
-    };
-    setTimeout(function () {
-      $scope.$broadcast('generateGroupGraph', params);
-    }, 500);
-  } //End dqGroupExec
-
-  $scope.getExec = $scope.dqGroupExec;
-  $scope.getExec({
-    uuid: $stateParams.id,
-    version: $stateParams.version,
-    name: $stateParams.name
-  });
-  $scope.reGroupExecute = function () {
-    $('#reExModal').modal({
-      backdrop: 'static',
-      keyboard: false
-    });
-
-  }
-  $scope.okReGroupExecute = function () {
-    $('#reExModal').modal('hide');
-    $scope.executionmsg = "DQ Group Restarted Successfully"
-    notify.type = 'success',
-      notify.title = 'Success',
-      notify.content = $scope.executionmsg
-    $rootScope.$emit('notify', notify);
-    CommonService.restartExec("dqgroupExec", $stateParams.id, $stateParams.version).then(function (response) { onSuccess(response.data) });
-    var onSuccess = function (response) {
-      //$scope.refreshRuleGroupExecFunction();
-    }
-    $scope.refreshRuleGroupExecFunction();
-  }
-
-  $scope.submitDownload = function () {
-    var uuid = $scope.download.data.uuid;
-    var version = $scope.download.data.version;
-    var url = $location.absUrl().split("app")[0];
-    $('#downloadSample').modal("hide");
-    $http({
-      method: 'GET',
-      url: url + "dataqual/download?action=view&dataQualExecUUID=" + uuid + "&dataQualExecVersion=" + version + "&rows=" + $scope.download.rows+"&format="+$scope.download.selectFormate,
-      responseType: 'arraybuffer'
-    }).success(function (data, status, headers) {
-      headers = headers();
-      $scope.download.rows = CF_DOWNLOAD.framework_download_minrows;
-
-      var filename = headers['filename'];
-      var contentType = headers['content-type'];
-
-      var linkElement = document.createElement('a');
-      try {
-        var blob = new Blob([data], {
-          type: contentType
-        });
-        var url = window.URL.createObjectURL(blob);
-
-        linkElement.setAttribute('href', url);
-        linkElement.setAttribute("download", filename);
-        var clickEvent = new MouseEvent("click", {
-          "view": window,
-          "bubbles": true,
-          "cancelable": false
-        });
-        linkElement.dispatchEvent(clickEvent);
-      } catch (ex) {
-        console.log(ex);
-      }
-    }).error(function (data) {
-      console.log(data);
-    });
-  }
-
-
-  $scope.downloadFile = function (data) {
-    if ($scope.isD3RuleEexecGraphShow) {
-      return false;
-    }
-    $scope.download.data = data;
-    $('#downloadSample').modal({
-      backdrop: 'static',
-      keyboard: false
-    });
-
-
-  };
-}); //End DQRuleResultController
-
-
-
-
-DataQualityModule.controller('Result2DQController', function ($http, dagMetaDataService, $state, $timeout, $filter, $stateParams, $location, $rootScope, $scope, NgTableParams, DataqulityService, uuid2, CommonService, privilegeSvc, CF_DOWNLOAD) {
-
-  $scope.select = $stateParams.type;
-  $scope.type = {
-    text: $scope.select == 'dqgroupexec' ? 'dqgroup' : 'dq'
-  };
-  $scope.sortdetail = [];
-  $scope.colcount = 0;
-  $scope.showprogress = false;
-  $scope.isRuleExec = false;
-  $scope.isRuleResult = false;
-  $scope.zoomSize = 7;
-  $scope.isGraphRuleGroupExec = false;
-  $scope.isD3RuleEexecGraphShow = false;
-  $scope.isD3RGEexecGraphShow = false;
-  $scope.currentPage = 1;
-  $scope.pageSize = 10;
-  $scope.paginationPageSizes = [10, 25, 50, 75, 100],
-  $scope.maxSize = 5;
-  $scope.bigTotalItems = 175;
-  $scope.bigCurrentPage = 1;
-  $scope.testgrid = false;
-  $scope.filteredRows = [];
-  $scope.download = {};
-  $scope.download.rows = CF_DOWNLOAD.framework_download_minrows;
-  $scope.download.formates = CF_DOWNLOAD.formate;
-  $scope.download.selectFormate = CF_DOWNLOAD.formate[0];
-  $scope.download.maxrow = CF_DOWNLOAD.framework_download_maxrow;
-  $scope.download.limit_to = CF_DOWNLOAD.limit_to;
-  var notify = {
-    type: 'success',
-    title: 'Success',
-    content: '',
-    timeout: 3000 //time in ms
-  };
-  var privileges = privilegeSvc.privileges['comment'] || [];
-  $rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
-  $rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
-  $scope.$on('privilegesUpdated', function (e, data) {
-    var privileges = privilegeSvc.privileges['comment'] || [];
-    $rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
-    $rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
-
-  });
-  $scope.metaType = dagMetaDataService.elementDefs[$stateParams.type.toLowerCase()].metaType;
-  $scope.userDetail = {}
-  $scope.userDetail.uuid = $rootScope.setUseruuid;
-  $scope.userDetail.name = $rootScope.setUserName;
-  $scope.gridOptions = {
-    rowHeight: 40,
-    useExternalPagination: true,
-    exporterMenuPdf: false,
-    exporterPdfOrientation: 'landscape',
-    exporterPdfPageSize: 'A4',
-    exporterPdfDefaultStyle: { fontSize: 9 },
-    exporterPdfTableHeaderStyle: { fontSize: 10, bold: true, italics: true, color: 'red' },
-    useExternalPagination: true,
-    enableSorting: true,
-    useExternalSorting: true,
-    enableFiltering: false,
-    enableRowSelection: true,
-    enableSelectAll: true,
-    enableGridMenu: true,
-    fastWatch: true,
-    columnDefs: [],
-    onRegisterApi: function (gridApi) {
-      $scope.gridApiResule = gridApi;
-      $scope.filteredRows = $scope.gridApiResule.core.getVisibleRows($scope.gridApiResule.grid);
-      $scope.gridApiResule.core.on.sortChanged($scope, function (grid, sortColumns) {
-        if (sortColumns.length > 0) {
-          $scope.searchRequestId(sortColumns);
-        }
-      });
-    }
-  };
-
-  $scope.getGridStyle = function () {
-    var style = {
-      'margin-top': '10px',
-      'margin-bottom': '10px',
-    }
-    if ($scope.filteredRows && $scope.filteredRows.length > 0) {
-      style['height'] = (($scope.filteredRows.length < 10 ? $scope.filteredRows.length * 40 : 400) + 40) + 'px';
-    }
-    else {
-      style['height'] = "100px";
-    }
-    return style;
-  }
-  $scope.refreshData = function () {
-    $scope.gridOptions.data = $filter('filter')($scope.originalData, $scope.searchtext, undefined);
-  };
-
-  $scope.selectPage = function (pageNo) {
-    $scope.currentPage = pageNo;
-  };
-
-  $scope.pageChanged = function () {
-    $scope.getResults(null)
-    //$log.log('Page changed to: ' + (($scope.currentPage - 1) * $scope.pageSize));
-  };
-
-  $scope.onPerPageChange = function () {
-    $scope.currentPage = 1;
-    $scope.getResults(null)
-  }
-  $scope.$watch("zoomSize", function (newData, oldData) {
-    $scope.$broadcast('zoomChange', newData);
-  });
-
-  window.navigateTo = function (url) {
-    var state = JSON.parse(url);
-    $rootScope.previousState = {
-      name: $state.current.name,
-      params: $state.params
-    };
-    var ispresent = false;
-    if (ispresent != true) {
-      var stateTab = {};
-      stateTab.route = state.state;
-      stateTab.param = state.params;
-      stateTab.active = false;
-      $rootScope.$broadcast('onAddTab', stateTab);
-    }
-    $state.go(state.state, state.params);
-
-  }
-  $scope.toggleZoom = function () {
-    $scope.showZoom = !$scope.showZoom;
-  }
-
-  $scope.onClickRuleResult = function () {
-    $scope.isRuleExec = true;
-    $scope.isRuleResult = false;
-    $scope.isD3RuleEexecGraphShow = false;
-    if ($scope.type.text == "dqgroup") {
-      $scope.isGraphRuleExec = false;
-      $scope.execDetail = $scope.rulegroupdatail;
-      $scope.metaType = dagMetaDataService.elementDefs[$scope.type.text.toLowerCase()].execType;
-
-    } else {
-      $scope.isRuleTitle = false;
-      $scope.isRuleSelect = true;
-    }
-  }
-  $scope.searchRequestId = function (sortColumns) {
-    var sortBy = sortColumns[0].name;
-    var order = sortColumns[0].sort.direction;
-    var result = {};
-    result.sortBy = sortBy;
-    result.order = order;
-    if ($scope.sortdetail.length == 0) {
-      var sortobj = {};
-      sortobj.uuid = uuid2.newuuid();
-      sortobj.colname = sortColumns[0].name;
-      sortobj.order = sortColumns[0].sort.direction;
-      sortobj.limit = $scope.pageSize;
-      $scope.sortdetail[$scope.colcount] = sortobj;
-      $scope.colcount = $scope.colcount + 1;
-      result.requestId = sortobj.uuid;
-      //offset = 0;
-    } else {
-      var idpresent = "N";
-      for (var i = 0; i < $scope.sortdetail.length; i++) {
-        if ($scope.sortdetail[i].colname == sortBy && $scope.sortdetail[i].order == order && $scope.sortdetail[i].limit == $scope.pageSize) {
-          result.requestId = $scope.sortdetail[i].uuid;
-          idpresent = "Y"
-          break;
-        }
-      } //End For
-      if (idpresent == "N") {
-        var sortobj = {};
-        sortobj.uuid = uuid2.newuuid();
-        result.requestId = sortobj.uuid;
-        sortobj.colname = sortColumns[0].name;
-        sortobj.order = sortColumns[0].sort.direction;
-        sortobj.limit = $scope.pageSize;
-        $scope.sortdetail[$scope.colcount] = sortobj;
-        $scope.colcount = $scope.colcount + 1;
-        offset = 0;
-      } //End Else Innder IF
-    } //End IF Inner Else
-    console.log(JSON.stringify($scope.sortdetail));
-    $scope.showprogress = true;
-    $scope.testgrid = false;
-    $scope.getResults(result);
-  }
-
-  $scope.getColumnDetail = function (type, result) {
-    CommonService.getColunmDetail(type).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) })
-    var onSuccess = function (respone) {
-      $scope.ColumnDetails=respone;
-      $scope.isDataError = false;
-      if($scope.ColumnDetails && $scope.ColumnDetails.length >0){
-        for(var i=0;i<$scope.ColumnDetails.length;i++){
-          var attribute = {};
-          var hiveKey = ["rownum", "DatapodUUID", "DatapodVersion"]
-          if (hiveKey.indexOf($scope.ColumnDetails[i].name) != -1) {
-            attribute.visible = false
-          } else {
-            attribute.visible = true
-          }
-          attribute.name = $scope.ColumnDetails[i].name
-          attribute.displayName = $scope.ColumnDetails[i].displayName
-          attribute.width = $scope.ColumnDetails[i].name.split('').length + 2 + "%" // Math.floor(Math.random() * (120 - 50 + 1)) + 150
-          $scope.gridOptions.columnDefs.push(attribute)
-        }
-      }
-      else{
-        angular.forEach(response.data[0], function (value, key) {
-          var attribute = {};
-          var hiveKey = ["rownum", "DatapodUUID", "DatapodVersion"]
-          if (hiveKey.indexOf(key) != -1) {
-            attribute.visible = false
-          } else {
-            attribute.visible = true
-          }
-          attribute.name = key
-          attribute.displayName = key
-          attribute.width = key.split('').length + 2 + "%" // Math.floor(Math.random() * (120 - 50 + 1)) + 150
-          $scope.gridOptions.columnDefs.push(attribute)
-        });
-      }
-
-      $scope.gridOptions.data = result;
-      $scope.originalData = result;
-      $scope.testgrid = true;
-      $scope.showprogress = false;
-    }
-  }
-
-  $scope.getResults = function (params) {
-    $scope.to = (($scope.currentPage - 1) * $scope.pageSize);
-    if ($scope.totalItems < ($scope.pageSize * $scope.currentPage)) {
-      $scope.from = $scope.totalItems;
-    } else {
-      $scope.from = (($scope.currentPage) * $scope.pageSize);
-    }
-    $scope.gridOptions.columnDefs = [];
-    var uuid = $scope.dqexecdetail.uuid
-    var version = $scope.dqexecdetail.version;
-    var limit = $scope.pageSize;
-    var offset;
-    var requestId;
-    var sortBy;
-    var order;
-    if (params == null) {
-      offset = (($scope.currentPage - 1) * $scope.pageSize) //(($scope.pagination.pageNumber - 1) * $scope.pagination.pageSize);
-      requestId = "";
-      sortBy = null
-      order = null;
-    } else {
-      offset = 0;
-      requestId = params.requestId;
-      sortBy = params.sortBy
-      order = params.order;
-
-    }
-
-    DataqulityService.getDataQualResults(uuid, version, offset || 0, limit, requestId, sortBy, order)
-      .then(function (response) {getResult(response.data)}, function (response) { OnError(response.data) });
-    var getResult = function (response) {
-      $scope.getColumnDetail('dq',response.data);  
-    
-    }
-    var OnError = function (response) {
-      $scope.showprogress = false;
-      $scope.isDataError = true;
-      $scope.datamessage = "Some Error Occurred"
-    }
-  }
-
-  window.showResult = function (params) {
-    App.scrollTop();
-    $scope.testgrid = false;
-    $scope.selectGraphRuleExec = params.name
-    $scope.isGraphRuleExec = true;
-    $scope.isRuleGroupTitle = true;
-    $scope.isRuleTitle = false;
-    $scope.getDqExec({
-      uuid: params.id,
-      version: params.version
-    });
-  }
-
-
-  $scope.refreshResultFunction = function () {
-    $scope.isD3RuleEexecGraphShow = false;
-    $scope.testgrid = false;
-    $scope.getDqExec($scope.ruleexecdetail)
-  }
-  $scope.ruleExecshowGraph = function () {
-    $scope.isD3RuleEexecGraphShow = true;
-  }
-
-  $scope.getDqExec = function (data) {
-    $scope.execDetail = data;
-    $scope.metaType = dagMetaDataService.elementDefs["dq"].execType;
-    $scope.ruleexecdetail = data
-    $scope.isRuleResult = true;
-    $scope.isRuleExec = false;
-    $scope.isRuleSelect = false;
-    $scope.isData = false;
-    $scope.showprogress = true;
-    if ($scope.type.text == 'dqgroup') {
-      $scope.isRuleGroupTitle = true;
-    } else {
-      $scope.isRuleTitle = true;
-      $scope.isRuleGroupTitle = false;
-    }
-    var dqexecjson = {}
-    dqexecjson.uuid = data.uuid;
-    dqexecjson.version = data.version;
-    $scope.ruledata = data.name;
-    $scope.dqexecdetail = dqexecjson
-    DataqulityService.getNumRowsbyExec(data.uuid, data.version, "dqexec").then(function (response) {
-      onSuccessGetNumRowsbyExec(response.data)
-    });
-    var onSuccessGetNumRowsbyExec = function (response) {
-      $scope.totalItems = response.numRows;
-      $scope.getResults(null);
-    }
-  } //End getDqExec Method
-
-  $scope.refreshRuleGroupExecFunction = function () {
-    $scope.isD3RGEexecGraphShow = false;
-    $scope.dqGroupExec($scope.rulegroupdatail);
-  }
-
-  $scope.rGExecshowGraph = function () {
-    $scope.isGraphRuleGroupExec = false;
-    $scope.isD3RGEexecGraphShow = true;
-  }
-
-  $scope.dqGroupExec = function (data) {
-    if ($scope.type.text == 'dq') {
-      $scope.getDqExec(data);
+      $scope.getDqExec(data,"summary");
       return;
     }
     $scope.execDetail = data;
