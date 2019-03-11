@@ -707,8 +707,7 @@ public class DataQualServiceImpl extends RuleTemplate {
 				}
 				return exec.executeAndFetchByDatasource(sql, summaryDpDs, appUuid);
 			}
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-				| SecurityException | NullPointerException | ParseException | IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			String message = null;
 			try {
