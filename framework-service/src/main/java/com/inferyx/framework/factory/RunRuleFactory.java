@@ -20,6 +20,7 @@ import com.inferyx.framework.service.RunDataQualGroupServiceImpl;
 import com.inferyx.framework.service.RunDataQualServiceImpl;
 import com.inferyx.framework.service.RunProfileGroupServiceImpl;
 import com.inferyx.framework.service.RunProfileServiceImpl;
+import com.inferyx.framework.service.RunRule2ServiceImpl;
 import com.inferyx.framework.service.RunRuleGroupServiceImpl;
 import com.inferyx.framework.service.RunRuleServiceImpl;
 
@@ -46,6 +47,10 @@ public class RunRuleFactory {
 		if (type == MetaType.rule) {
 			logger.info("Returning RunRuleServiceImpl");
 			return new RunRuleServiceImpl();
+		}
+		if (type == MetaType.rule2) {
+			logger.info("Returning RunRule2ServiceImpl");
+			return new RunRule2ServiceImpl();
 		}
 		if (type == MetaType.dq) {
 			logger.info("Returning RunDataQualServiceImpl");
