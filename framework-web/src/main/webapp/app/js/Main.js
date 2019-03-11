@@ -448,7 +448,9 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, $window, $s
         "submenu": [
             { "name": "viewdataquality", "type": "dq", "uuid": "null", "caption": "Rule" },
             { "name": "viewdataqualitygroup", "type": "dqgroup", "uuid": "null", "caption": "Rule Group" },
-            { "name": "viewdqresults", "type": "dqexec", "uuid": "null", "caption": "Rule Results" }
+            { "name": "viewdqresults", "type": "dqexec", "uuid": "null", "caption": "Rule Results" },
+            { "name": "viewdqresults2", "type": "dqexec", "uuid": "null", "caption": "Rule Results2" }
+
         ]
     }
 
@@ -1996,12 +1998,36 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
             url: "/DataQualityResultList",
             templateUrl: "views/common-list.html",
             data: { pageTitle: 'Data Quality' },
-            params: { type: 'dqexec', isExec: true }
+            params: { type: 'dqexec', isExec: true, isExec2:false }
+        })
+        .state('viewdqresults2', {
+            url: "/DataQualityResultList",
+            templateUrl: "views/common-list.html",
+            data: { pageTitle: 'Data Quality' },
+            params: { type: 'dqexec', isExec: true , isExec2:true}
         })
 
         .state('viewdqresultspage', {
             url: "/DataQualityResults?id&version&type&name",
             templateUrl: "views/dataquality-result.html",
+            data: { pageTitle: 'Data Quality' },
+            controller: "",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load([{
+                        name: 'InferyxApp',
+                        files: [
+                            'js/controllers/DataQualityController.js',
+                            'js/services/DataQualityService.js'
+
+                        ]
+                    }]);
+                }]
+            }
+        })
+        .state('viewdqresultspage2', {
+            url: "/DataQualityResults2?id&version&type&name",
+            templateUrl: "views/dataquality-result2.html",
             data: { pageTitle: 'Data Quality' },
             controller: "",
             resolve: {

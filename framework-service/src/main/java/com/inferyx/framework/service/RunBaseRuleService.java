@@ -620,22 +620,26 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 			}
 			logger.info("Temp table registered: "+tableName);
 			Datapod summaryDatapod;
-			MetaIdentifier summaryDatapodKey;
+			MetaIdentifier summaryDatapodKey=null;
 			if (baseRuleExec.getDependsOn().getRef().getType() == MetaType.dq) {
 				 summaryDatapod = (Datapod) commonServiceImpl
 						.getOneByUuidAndVersion(dqInfo.getDq_result_summary(), null, MetaType.datapod.toString(), "N");
 				 summaryDatapodKey = new MetaIdentifier(MetaType.datapod, summaryDatapod.getUuid(),
 						summaryDatapod.getVersion());
+					filePath=getFileName(baseRule, baseRuleExec, summaryDatapodKey);
+					datapodKey=summaryDatapodKey;
 				tableName = getTableName(baseRule, baseRuleExec, summaryDatapodKey, execContext, runMode);
 			} else if (baseRuleExec.getDependsOn().getRef().getType() == MetaType.rule2) {
 				 summaryDatapod = (Datapod) commonServiceImpl
 						.getOneByUuidAndVersion(rule2Info.getRule_result_summary(), null, MetaType.datapod.toString(), "N");
 				 summaryDatapodKey = new MetaIdentifier(MetaType.datapod, summaryDatapod.getUuid(),
 						summaryDatapod.getVersion());
+				filePath=getFileName(baseRule, baseRuleExec, summaryDatapodKey);
+				datapodKey=summaryDatapodKey;
 				tableName = getTableName(baseRule, baseRuleExec, summaryDatapodKey, execContext, runMode);
 			}
 			logger.info("Table name in RunBaseruleServiceImpl : " + tableName);
-			
+			logger.info("Table name in RunBaseruleServiceImpl : " + tableName);
 //			String summaryTableName = tableName + "_summary";
 			logger.info("Before execution summary : " + baseRuleExec.getSummaryExec());
 			execute(baseRuleExec.getSummaryExec(), appDatasource, ruleDatasource, tableName, filePath , appUuid, exec, execContext);
