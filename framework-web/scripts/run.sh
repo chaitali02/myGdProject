@@ -8,6 +8,7 @@
 ./install_application.sh localhost append ../app/aml/meta
 ./install_application.sh localhost append ../app/predmaint/meta
 ./install_application.sh localhost append ../app/sanctions/meta
+./install_application.sh localhost append ../app/db/meta
 ./update_createdOn.sh localhost
 ./create_indexes.sh localhost
 rm -r /user/hive/warehouse/framework/*
