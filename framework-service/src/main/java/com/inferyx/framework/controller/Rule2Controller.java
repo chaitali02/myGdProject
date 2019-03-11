@@ -71,7 +71,7 @@ public class Rule2Controller {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws Exception {
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
-		return rule2Operator.generateDetailSql(rule, null, null, usedRefKeySet, null, RunMode.ONLINE);
+		return rule2Operator.generateDetailSql(rule, null, null, null, null, usedRefKeySet, null, RunMode.ONLINE).get(0);
 	}
 	
 	@RequestMapping(value = "/create", method = RequestMethod.POST)

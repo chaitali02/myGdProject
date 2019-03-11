@@ -827,15 +827,24 @@ public class Rule2ServiceImpl extends RuleTemplate {
 		// new Sort(Sort.Direction.DESC, "version"));
 		rule2 = (Rule2) commonServiceImpl.getLatestByUuid(ruleExec.getDependsOn().getRef().getUuid(),
 				MetaType.rule2.toString(), "N");
-
+		
+		List<String> listSql=new ArrayList<String>();
+		String withSql = null;
+		String detailSelectSql=null;
 		// ruleExec.setExec(rule2Operator.generateSql(rule2, refKeyMap, otherParams,
 		// usedRefKeySet, ruleExec.getExecParams(), runMode));
-		String detailsql = rule2Operator.generateDetailSql(rule2, refKeyMap, otherParams, usedRefKeySet,
+		listSql = rule2Operator.generateDetailSql(rule2,withSql,detailSelectSql,refKeyMap, otherParams, usedRefKeySet,
 				new ExecParams(), runMode);
+        String detailsql=listSql.get(0);
+		
+		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(rule2Info.getRule_result_details(), null,
+				MetaType.datapod.toString(), "N");
+		// String filePath = "/" + datapod.getUuid()+ "/" + datapod.getVersion() + "/"+
+		// ruleExec.getVersion();
+		String filePath = Helper.getFileName(datapod.getUuid(), datapod.getVersion(), ruleExec.getVersion());
+		String tableName = Helper.genTableName(filePath);
 
-		
-		
-		//***************************************************  persist datapod 
+		/*//***************************************************  persist datapod 
 
 		Application application = commonServiceImpl.getApp();
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
@@ -863,7 +872,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 					targetDsMI.getVersion(), targetDsMI.getType().toString());
 			if (appDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
 					&& !targetDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
-				rsHolder = exec.executeSqlByDatasource(detailsql, ruleDatasource, application.getUuid());
+				rsHolder = exec.executeSqlByDatasource(listSql.get(0), ruleDatasource, application.getUuid());
 				if (targetDatasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
 					tableName = targetDatasource.getSid().concat(".").concat(datapod.getName());
 				} else {
@@ -872,14 +881,14 @@ public class Rule2ServiceImpl extends RuleTemplate {
 				rsHolder.setTableName(tableName);
 				rsHolder = exec.persistDataframe(rsHolder, targetDatasource, datapod, SaveMode.APPEND.toString());
 			} else if (targetDatasource.getType().equals(ExecContext.FILE.toString())) {
-				exec.executeRegisterAndPersist(detailsql, tableName, filePath, datapod, "overwrite", true,
+				exec.executeRegisterAndPersist(listSql.get(0), tableName, filePath, datapod, "overwrite", true,
 						application.getUuid());
 			} else {
-				String sql = helper.buildInsertQuery(execContext.toString(), tableName, datapod, detailsql);
+				String sql = helper.buildInsertQuery(execContext.toString(), tableName, datapod, listSql.get(0));
 				exec.executeSql(sql, application.getUuid());
 			}
 		} else {
-			rsHolder = exec.executeAndRegisterByDatasource(detailsql, tableName, ruleDatasource, application.getUuid());
+			rsHolder = exec.executeAndRegisterByDatasource(listSql.get(0), tableName, ruleDatasource, application.getUuid());
 
 			countRows = rsHolder.getCountRows();
 		}
@@ -892,13 +901,13 @@ public class Rule2ServiceImpl extends RuleTemplate {
 		MetaIdentifier targetDatapodKey = new MetaIdentifier(MetaType.datapod, targetDatapod.getUuid(),
 				targetDatapod.getVersion());
 
-		persistDatastore(tableName, filePath, ruleExec, null, targetDatapodKey, countRows, runMode);
+	//	persistDatastore(tableName, filePath, ruleExec, null, targetDatapodKey, countRows, runMode);
 
 		//*******************************************************
 		
+		*/
 		
-		
-	String summarysql = rule2Operator.generateSummarySql(rule2, tableName, datapod, refKeyMap, otherParams,
+	String summarysql = rule2Operator.generateSummarySql(rule2,listSql, tableName, datapod, refKeyMap, otherParams,
 				usedRefKeySet, new ExecParams(), runMode);
 
 		ruleExec.setExec(detailsql);
@@ -1102,9 +1111,9 @@ public class Rule2ServiceImpl extends RuleTemplate {
 		}
 		exec = execFactory.getExecutor(execContext.toString());
 		appUuid = commonServiceImpl.getApp().getUuid();
-		String sql=rule2Operator.generateDetailSql(rule2, null, null, null,
-				new ExecParams(), runMode);
-		data = exec.executeAndFetch(sql, appUuid);
+		List<String> listSql=rule2Operator.generateDetailSql(rule2, null, null, null,
+				null, null, new ExecParams(), runMode);
+		data = exec.executeAndFetch(listSql.get(0), appUuid);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
 				| NoSuchMethodException | SecurityException | NullPointerException | ParseException | IOException e) {
 			// TODO Auto-generated catch block

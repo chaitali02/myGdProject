@@ -74,28 +74,31 @@ public class Rule2Operator implements IParsable, IReferenceable {
 	FilterOperator2 filterOperator2;
 	
 	
+	
+	
 	static final Logger logger = Logger.getLogger(Rule2Operator.class);
 	
 
-	public String generateDetailSql(Rule2 rule2, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
+	public List<String> generateDetailSql(Rule2 rule2, String withSql, String detailSelectSql, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
 			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception{	
 		// TODO Auto-generated method stub
-		String sql = generateWith(rule2, refKeyMap, otherParams, execParams, runMode);
+		return  generateWith(rule2,withSql,detailSelectSql, refKeyMap, otherParams, execParams, runMode);
+	}
+	
+	public String generateSummarySql(Rule2 rule2, List<String> listSql, String tableName, Datapod datapod, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
+			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception{	
+		// TODO Auto-generated method stub
+		String sql = generateSql(tableName,listSql,rule2.getVersion(),datapod);
 		return sql;
 	}
 	
-	public String generateSummarySql(Rule2 rule2, String tableName, Datapod datapod, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
-			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception{	
-		// TODO Auto-generated method stub
-		String sql = generateSql(tableName,rule2.getVersion(),datapod);
-		return sql;
-	}
 	
-	
-	private String generateSql(String tableName,String rule2Version, Datapod datapod) {
+	private String generateSql(String tableName,List<String> listSql, String rule2Version, Datapod datapod) {
 		String result = "";
+		String withSql=listSql.get(2);
+		String detailSelectSql=listSql.get(1);
 		StringBuilder querybuilder = new StringBuilder();
-	
+		querybuilder.append(withSql);
 		querybuilder.append(ConstantsUtil.SELECT);
 		querybuilder.append("rule_uuid").append(" as ").append("rule_uuid").append(ConstantsUtil.COMMA);
 		querybuilder.append(rule2Version).append(" as ").append("rule_version").append(ConstantsUtil.COMMA);
@@ -105,7 +108,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 		querybuilder.append("sum(criteria_score)").append(" as ").append("score").append(ConstantsUtil.COMMA);
 		querybuilder.append("version").append(" as ").append("version");
 		querybuilder.append(ConstantsUtil.FROM);
-		querybuilder.append(tableName);
+		querybuilder.append(detailSelectSql);
 		querybuilder.append(ConstantsUtil.GROUP_BY);
 		querybuilder.append("rule_uuid").append(ConstantsUtil.COMMA);
 		querybuilder.append("rule_version").append(ConstantsUtil.COMMA);
@@ -115,11 +118,15 @@ public class Rule2Operator implements IParsable, IReferenceable {
 		querybuilder.append("version");
 
 		result = querybuilder.toString();
+		
+		
+		
+		
 		return result;
 	}
 
 	
-	public String generateWith(Rule2 rule2, java.util.Map<String, MetaIdentifier> refKeyMap,
+	public List<String> generateWith(Rule2 rule2, String withSql, String detailSelectSql, java.util.Map<String, MetaIdentifier> refKeyMap,
 			HashMap<String, String> otherParams, ExecParams execParams, RunMode runMode) throws Exception {
 			Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
 		String result = "";
@@ -256,10 +263,16 @@ public class Rule2Operator implements IParsable, IReferenceable {
 			
 			attrListBuilder.append(ConstantsUtil.COMMA).append(attrList);
 		}
-		
+		List<String> listSql=new ArrayList<String>();
 		String withbuilder_new = withbuilder.toString().replaceAll("_attrList", attrListBuilder.toString().substring(1, attrListBuilder.length()));
+		withSql=withbuilder_new;
+		detailSelectSql=selectbuilder.toString();
 		result = result.concat(withbuilder_new + selectbuilder.toString());
-		return result;
+		listSql.add(result);
+		listSql.add(detailSelectSql);
+		listSql.add(withSql);
+
+		return listSql;
 
 	}
 
@@ -347,7 +360,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 				MetaType.rule2.toString());
 		
 	
-		ruleExec.setExec(generateDetailSql(rule2, DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(), usedRefKeySet, ruleExec.getExecParams(), runMode));
+		ruleExec.setExec(generateDetailSql(rule2, null, null, DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(), usedRefKeySet, ruleExec.getExecParams(), runMode).get(0));
 		if(rule2.getParamList() != null) {
 			MetaIdentifier mi = rule2.getParamList().getRef();
 			ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(mi.getUuid(), mi.getVersion(), mi.getType().toString());
