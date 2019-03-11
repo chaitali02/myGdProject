@@ -234,7 +234,7 @@ public class DataQualController {
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
-		return dataQualServiceImpl.getResultDetail(execUuid, execVersion, offset, limit, sortBy, order, requestId,
+		return dataQualServiceImpl.getResultDetails(execUuid, execVersion, offset, limit, sortBy, order, requestId,
 				runMode);
 	}
 	

@@ -74,12 +74,13 @@ import com.inferyx.framework.register.GraphRegister;
 import com.inferyx.framework.view.metadata.DQView;
 
 @Service
-public class DataQualServiceImpl  extends RuleTemplate{
+public class DataQualServiceImpl extends RuleTemplate {
 
 	@Autowired
 	GraphRegister<?> registerGraph;
-	/*@Autowired
-	JavaSparkContext javaSparkContext;*/
+	/*
+	 * @Autowired JavaSparkContext javaSparkContext;
+	 */
 	@Autowired
 	IDataQualDao iDataQualDao;
 	@Autowired
@@ -102,12 +103,12 @@ public class DataQualServiceImpl  extends RuleTemplate{
 	DQInfo dqInfo;
 	@Autowired
 	FilterServiceImpl filterServiceImpl;
-	@Autowired 
+	@Autowired
 	RegisterService registerService;
 	@Autowired
 	IDataQualExecDao iDataQualExecDao;
 	@Autowired
-	IFilterDao ifilterDao;	
+	IFilterDao ifilterDao;
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
@@ -120,18 +121,17 @@ public class DataQualServiceImpl  extends RuleTemplate{
 	ExecutorServiceImpl executorServiceImpl;
 	@Autowired
 	private SparkExecutor<?> sparkExecutor;
-	
+
 	Map<String, String> requestMap = new HashMap<String, String>();
 
 	static final Logger logger = Logger.getLogger(DataQualServiceImpl.class);
-	
+
 	public DataQual save(DQView dqView) throws Exception {
-		DataQual dq = new DataQual();		
+		DataQual dq = new DataQual();
 		MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
 		List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
 		metaIdentifierHolderList.add(meta);
-		if(dqView.getUuid() != null)
-		{
+		if (dqView.getUuid() != null) {
 			dq.setUuid(dqView.getUuid());
 		}
 		dq.setAppInfo(metaIdentifierHolderList);
@@ -150,25 +150,25 @@ public class DataQualServiceImpl  extends RuleTemplate{
 		dq.setNullCheck(dqView.getNullCheck());
 		dq.setRangeCheck(dqView.getRangeCheck());
 		dq.setRefIntegrityCheck(dqView.getRefIntegrityCheck());
-		//dq.setStdDevCheck(dqView.getStdDevCheck());
+		// dq.setStdDevCheck(dqView.getStdDevCheck());
 		dq.setValueCheck(dqView.getValueCheck());
 		dq.setTarget(dqView.getTarget());
 		Filter filter = null;
 //		List<AttributeRefHolder> filterList = new ArrayList<AttributeRefHolder>();
 //		AttributeRefHolder filterMeta = new AttributeRefHolder();
-		if(dqView.getFilter() != null) {
-		filter = dqView.getFilter();
-		filter.setName(dqView.getName());
-		filter.setDesc(dqView.getDesc());
-		filter.setTags(dqView.getTags());
-		MetaIdentifierHolder filterInfo = new MetaIdentifierHolder();
-		filterInfo.setRef(dqView.getDependsOn().getRef());
-		filter.setDependsOn(filterInfo);		
+		if (dqView.getFilter() != null) {
+			filter = dqView.getFilter();
+			filter.setName(dqView.getName());
+			filter.setDesc(dqView.getDesc());
+			filter.setTags(dqView.getTags());
+			MetaIdentifierHolder filterInfo = new MetaIdentifierHolder();
+			filterInfo.setRef(dqView.getDependsOn().getRef());
+			filter.setDependsOn(filterInfo);
 		}
 		if (dqView.getFilterChg().equalsIgnoreCase("y")) {
-			//filterServiceImpl.save(filter);
+			// filterServiceImpl.save(filter);
 			commonServiceImpl.save(MetaType.filter.toString(), filter);
-		}		
+		}
 //		if(filter != null)
 //		{
 //		MetaIdentifier filterInfo = new MetaIdentifier(MetaType.filter, filter.getUuid(), null);
@@ -178,14 +178,15 @@ public class DataQualServiceImpl  extends RuleTemplate{
 //		}
 		dq.setBaseEntity();
 		dq.setPublished(dqView.getPublished());
-		DataQual dataqual=iDataQualDao.save(dq);
+		DataQual dataqual = iDataQualDao.save(dq);
 		registerGraph.updateGraph((Object) dataqual, MetaType.dq);
 		return dataqual;
 	}
 
 	public List<DataQual> findAll() {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
+				? securityServiceImpl.getAppInfo().getRef().getUuid()
+				: null;
 		if (appUuid == null) {
 			return iDataQualDao.findAll();
 		}
@@ -211,7 +212,8 @@ public class DataQualServiceImpl  extends RuleTemplate{
 
 	public DataQual findOneByUuidAndVersion(String uuid, String version) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
+				? securityServiceImpl.getAppInfo().getRef().getUuid()
+				: null;
 		if (appUuid == null) {
 			return iDataQualDao.findOneByUuidAndVersion(uuid, version);
 		} else
@@ -220,7 +222,8 @@ public class DataQualServiceImpl  extends RuleTemplate{
 
 	public DataQual findLatestByUuid(String uuid) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
+				? securityServiceImpl.getAppInfo().getRef().getUuid()
+				: null;
 		if (appUuid == null) {
 			return iDataQualDao.findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version"));
 		}
@@ -229,7 +232,8 @@ public class DataQualServiceImpl  extends RuleTemplate{
 
 	public List<DataQual> findAllLatest() {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
+				? securityServiceImpl.getAppInfo().getRef().getUuid()
+				: null;
 		Aggregation dqAggr = newAggregation(group("uuid").max("version").as("version"));
 		AggregationResults<DataQual> dqResults = mongoTemplate.aggregate(dqAggr, "dq", DataQual.class);
 		List<DataQual> dataQualList = dqResults.getMappedResults();
@@ -242,9 +246,8 @@ public class DataQualServiceImpl  extends RuleTemplate{
 			} else {
 				dqLatest = iDataQualDao.findOneByUuidAndVersion(d.getId(), d.getVersion());
 			}
-			if(dqLatest != null)
-			{
-			result.add(dqLatest);
+			if (dqLatest != null) {
+				result.add(dqLatest);
 			}
 		}
 		return result;
@@ -261,72 +264,79 @@ public class DataQualServiceImpl  extends RuleTemplate{
 			DataQual dqLatest;
 			String appUuid = (securityServiceImpl.getAppInfo() != null
 					&& securityServiceImpl.getAppInfo().getRef() != null)
-							? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
+							? securityServiceImpl.getAppInfo().getRef().getUuid()
+							: null;
 			if (appUuid != null) {
 				dqLatest = iDataQualDao.findOneByUuidAndVersion(appUuid, r.getId(), r.getVersion());
 			} else {
 				dqLatest = iDataQualDao.findOneByUuidAndVersion(r.getId(), r.getVersion());
 			}
-			if(dqLatest != null)
-			{
-			result.add(dqLatest);
+			if (dqLatest != null) {
+				result.add(dqLatest);
 			}
 		}
 		return result;
 	}
 
-	public DataQualExec create(String dataQualUUID, String dataQualVersion,
-			Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec) throws Exception {
+	public DataQualExec create(String dataQualUUID, String dataQualVersion, Map<String, MetaIdentifier> refKeyMap,
+			List<String> datapodList, DagExec dagExec) throws Exception {
 		try {
-			return (DataQualExec) super.create(dataQualUUID, dataQualVersion, MetaType.dq, MetaType.dqExec, null, refKeyMap, datapodList, dagExec);
+			return (DataQualExec) super.create(dataQualUUID, dataQualVersion, MetaType.dq, MetaType.dqExec, null,
+					refKeyMap, datapodList, dagExec);
 		} catch (Exception e) {
 			e.printStackTrace();
 			String message = null;
 			try {
 				message = e.getMessage();
-			}catch (Exception e2) {
+			} catch (Exception e2) {
 				// TODO: handle exception
 			}
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 			dependsOn.setRef(new MetaIdentifier(MetaType.dagExec, dagExec.getUuid(), dagExec.getVersion()));
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create DQExec.", dependsOn);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
+					(message != null) ? message : "Can not create DQExec.", dependsOn);
 			throw new Exception((message != null) ? message : "Can not create DQExec.");
 		}
 	}
-	
+
 	public DataQualExec create(String dataQualUUID, String dataQualVersion, DataQualExec dataQualExec,
 			Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec) throws Exception {
 		try {
-			return (DataQualExec) super.create(dataQualUUID, dataQualVersion, MetaType.dq, MetaType.dqExec, dataQualExec, refKeyMap, datapodList, dagExec);
+			return (DataQualExec) super.create(dataQualUUID, dataQualVersion, MetaType.dq, MetaType.dqExec,
+					dataQualExec, refKeyMap, datapodList, dagExec);
 		} catch (Exception e) {
 			e.printStackTrace();
 			String message = null;
 			try {
 				message = e.getMessage();
-			}catch (Exception e2) {
+			} catch (Exception e2) {
 				// TODO: handle exception
 			}
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 			dependsOn.setRef(new MetaIdentifier(MetaType.dagExec, dagExec.getUuid(), dagExec.getVersion()));
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create DQExec.", dependsOn);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
+					(message != null) ? message : "Can not create DQExec.", dependsOn);
 			throw new Exception((message != null) ? message : "Can not create DQExec.");
 		}
 	}
-	
+
 	public DataQualExec execute(String dataqualUUID, String dataqualVersion, DataQualExec dataqualExec,
 			DataQualGroupExec dataqualGroupExec, ExecParams execParams, RunMode runMode) throws Exception {
 		execute(null, dataqualExec, null, execParams, runMode);
 		return dataqualExec;
 	}
 
-	public DataQualExec execute(ThreadPoolTaskExecutor metaExecutor, DataQualExec dataqualExec, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
+	public DataQualExec execute(ThreadPoolTaskExecutor metaExecutor, DataQualExec dataqualExec,
+			List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
 //		Datapod targetDatapod = (Datapod) daoRegister.getRefObject(new MetaIdentifier(MetaType.datapod, dqInfo.getDqTargetUUID(), null));
 //		Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dqInfo.getDqTargetUUID(), null, MetaType.datapod.toString(), "N");
-		Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dqInfo.getDq_result_detail(), null, MetaType.datapod.toString(), "N");
+		Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dqInfo.getDq_result_detail(), null,
+				MetaType.datapod.toString(), "N");
 		MetaIdentifier targetDatapodKey = new MetaIdentifier(MetaType.datapod, targetDatapod.getUuid(),
-				targetDatapod.getVersion());		
+				targetDatapod.getVersion());
 		try {
-			return (DataQualExec) super.execute(MetaType.dq, MetaType.dqExec, metaExecutor, dataqualExec, targetDatapodKey, taskList, execParams, runMode);
+			return (DataQualExec) super.execute(MetaType.dq, MetaType.dqExec, metaExecutor, dataqualExec,
+					targetDatapodKey, taskList, execParams, runMode);
 		} catch (Exception e) {
 			e.printStackTrace();
 			dataqualExec = (DataQualExec) commonServiceImpl.setMetaStatus(dataqualExec, MetaType.dqExec,
@@ -334,85 +344,60 @@ public class DataQualServiceImpl  extends RuleTemplate{
 			String message = null;
 			try {
 				message = e.getMessage();
-			}catch (Exception e2) {
+			} catch (Exception e2) {
 				// TODO: handle exception
 			}
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 			dependsOn.setRef(new MetaIdentifier(MetaType.dqExec, dataqualExec.getUuid(), dataqualExec.getVersion()));
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Data Quality execution FAILED.", dependsOn);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
+					(message != null) ? message : "Data Quality execution FAILED.", dependsOn);
 			throw new Exception((message != null) ? message : "Data Quality execution FAILED.");
 		}
 	}
-	
+
 	@Override
-	public BaseRuleExec execute(ThreadPoolTaskExecutor metaExecutor,
-			BaseRuleExec baseRuleExec, MetaIdentifier datapodKey,
-			List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
-			return execute(metaExecutor, (DataQualExec) baseRuleExec, taskList, execParams, runMode);
-	}
-	
-	
-	
-	public String getTableName(Datapod datapod, RunMode runMode) throws Exception {
-		return dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+	public BaseRuleExec execute(ThreadPoolTaskExecutor metaExecutor, BaseRuleExec baseRuleExec,
+			MetaIdentifier datapodKey, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode)
+			throws Exception {
+		return execute(metaExecutor, (DataQualExec) baseRuleExec, taskList, execParams, runMode);
 	}
 
-	public List<Map<String, Object>> getDQResults(String dataQualExecUUID, String dataQualExecVersion, int offset, int limit, String sortBy, String order, String requestId, RunMode runMode) throws Exception {
+	public String getTableName(Datapod datapod, RunMode runMode) throws Exception {
+		return dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()),
+				runMode);
+	}
+
+	public List<Map<String, Object>> getDQResults(String dataQualExecUUID, String dataQualExecVersion, int offset,
+			int limit, String sortBy, String order, String requestId, RunMode runMode) throws Exception {
 		List<Map<String, Object>> data = new ArrayList<>();
 		try {
-			limit = offset+limit;
-			offset = offset+1;			
+			limit = offset + limit;
+			offset = offset + 1;
 			DataQualExec dqExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(dataQualExecUUID,
 					dataQualExecVersion, MetaType.dqExec.toString());
 			dataStoreServiceImpl.setRunMode(runMode);
 			DataStore datastore = dataStoreServiceImpl.getDatastore(dqExec.getResult().getRef().getUuid(),
 					dqExec.getResult().getRef().getVersion());
-	
-			data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order, dqExec.getVersion());	
-		}catch (Exception e) {
+
+			data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId,
+					offset, limit, sortBy, order, dqExec.getVersion());
+		} catch (Exception e) {
 			e.printStackTrace();
 			String message = null;
 			try {
 				message = e.getMessage();
-			}catch (Exception e2) {
+			} catch (Exception e2) {
 				// TODO: handle exception
 			}
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 			dependsOn.setRef(new MetaIdentifier(MetaType.dqExec, dataQualExecUUID, dataQualExecVersion));
-			commonServiceImpl.sendResponse("402", MessageStatus.FAIL.toString(), (message != null) ? message : "Table not found.", dependsOn);
+			commonServiceImpl.sendResponse("402", MessageStatus.FAIL.toString(),
+					(message != null) ? message : "Table not found.", dependsOn);
 			throw new Exception((message != null) ? message : "Table not found.");
 		}
 		return data;
 	}
 
-	public List<Map<String, Object>> getResultDetail(String execUuid, String execVersion, int offset, int limit, String sortBy, String order, String requestId, RunMode runMode) throws Exception {
-		List<Map<String, Object>> data = new ArrayList<>();
-		try {
-			limit = offset+limit;
-			offset = offset+1;			
-			DataQualExec dqExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(execUuid,
-					execVersion, MetaType.dqExec.toString());
-			dataStoreServiceImpl.setRunMode(runMode);
-			DataStore datastore = dataStoreServiceImpl.getDatastore(dqExec.getResult().getRef().getUuid(),
-					dqExec.getResult().getRef().getVersion());
-	
-			data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order, dqExec.getVersion());	
-		}catch (Exception e) {
-			e.printStackTrace();
-			String message = null;
-			try {
-				message = e.getMessage();
-			}catch (Exception e2) {
-				// TODO: handle exception
-			}
-			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
-			dependsOn.setRef(new MetaIdentifier(MetaType.dqExec, execUuid, execVersion));
-			commonServiceImpl.sendResponse("402", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not fetch data.", dependsOn);
-			throw new Exception((message != null) ? message : "Can not fetch data.");
-		}
-		return data;
-	}
-	
 	public MetaIdentifier getMetaIdByExecId(String execUuid, String execVersion) throws Exception {
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
 		DataQualExec dataQualExec = iDataQualExecDao.findOneByUuidAndVersion(appUuid, execUuid, execVersion);
@@ -422,7 +407,7 @@ public class DataQualServiceImpl  extends RuleTemplate{
 		mi.setVersion(dataQualExec.getDependsOn().getRef().getVersion());
 		return mi;
 	}
-	
+
 	/**
 	 * 
 	 * @param baseExec
@@ -439,17 +424,21 @@ public class DataQualServiceImpl  extends RuleTemplate{
 		}
 	}
 
-	public void restart(String type,String uuid,String version, ExecParams execParams, RunMode runMode) throws Exception{
-		//DataQualExec dataQualExec= dataQualExecServiceImpl.findOneByUuidAndVersion(uuid,version);
-		DataQualExec dataQualExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(uuid,version, MetaType.dqExec.toString());
+	public void restart(String type, String uuid, String version, ExecParams execParams, RunMode runMode)
+			throws Exception {
+		// DataQualExec dataQualExec=
+		// dataQualExecServiceImpl.findOneByUuidAndVersion(uuid,version);
+		DataQualExec dataQualExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version,
+				MetaType.dqExec.toString());
 		try {
 			HashMap<String, String> otherParams = null;
-			if(execParams != null) 
-				otherParams  = execParams.getOtherParams();
-			
-			dataQualExec = (DataQualExec) parse(uuid,version, null, otherParams, null, null, runMode);
-			execute(dataQualExec.getDependsOn().getRef().getUuid(),dataQualExec.getDependsOn().getRef().getVersion(),dataQualExec,null, execParams, runMode);
-		
+			if (execParams != null)
+				otherParams = execParams.getOtherParams();
+
+			dataQualExec = (DataQualExec) parse(uuid, version, null, otherParams, null, null, runMode);
+			execute(dataQualExec.getDependsOn().getRef().getUuid(), dataQualExec.getDependsOn().getRef().getVersion(),
+					dataQualExec, null, execParams, runMode);
+
 		} catch (Exception e) {
 			synchronized (dataQualExec.getUuid()) {
 				try {
@@ -459,12 +448,14 @@ public class DataQualServiceImpl  extends RuleTemplate{
 					String message = null;
 					try {
 						message = e1.getMessage();
-					}catch (Exception e2) {
+					} catch (Exception e2) {
 						// TODO: handle exception
 					}
 					MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
-					dependsOn.setRef(new MetaIdentifier(MetaType.dqExec,dataQualExec.getDependsOn().getRef().getUuid(),dataQualExec.getDependsOn().getRef().getVersion()));
-					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Data Quality.", dependsOn);
+					dependsOn.setRef(new MetaIdentifier(MetaType.dqExec, dataQualExec.getDependsOn().getRef().getUuid(),
+							dataQualExec.getDependsOn().getRef().getVersion()));
+					commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
+							(message != null) ? message : "Can not parse Data Quality.", dependsOn);
 					throw new Exception((message != null) ? message : "Can not parse Data Quality.");
 				}
 			}
@@ -472,19 +463,22 @@ public class DataQualServiceImpl  extends RuleTemplate{
 			String message = null;
 			try {
 				message = e.getMessage();
-			}catch (Exception e2) {
+			} catch (Exception e2) {
 				// TODO: handle exception
 			}
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
-			dependsOn.setRef(new MetaIdentifier(MetaType.dqExec, dataQualExec.getDependsOn().getRef().getUuid(),dataQualExec.getDependsOn().getRef().getVersion()));
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not parse Data Quality.", dependsOn);
+			dependsOn.setRef(new MetaIdentifier(MetaType.dqExec, dataQualExec.getDependsOn().getRef().getUuid(),
+					dataQualExec.getDependsOn().getRef().getVersion()));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
+					(message != null) ? message : "Can not parse Data Quality.", dependsOn);
 			throw new Exception((message != null) ? message : "Can not parse Data Quality.");
 		}
-		
+
 	}
 
 	@Override
-	public BaseRuleExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, List<String> datapodList, DagExec dagExec, RunMode runMode)
+	public BaseRuleExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap,
+			HashMap<String, String> otherParams, List<String> datapodList, DagExec dagExec, RunMode runMode)
 			throws Exception {
 		logger.info("Inside dataQualServiceImpl.parse");
 		if (datapodList != null) {
@@ -492,36 +486,43 @@ public class DataQualServiceImpl  extends RuleTemplate{
 		}
 
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
-		DataQualExec dataQualExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.dqExec.toString(), "N");
+		DataQualExec dataQualExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
+				MetaType.dqExec.toString(), "N");
 		synchronized (execUuid) {
 			commonServiceImpl.setMetaStatus(dataQualExec, MetaType.dqExec, Status.Stage.STARTING);
 		}
-		DataQual dataQual = (DataQual) commonServiceImpl.getOneByUuidAndVersion(dataQualExec.getDependsOn().getRef().getUuid(), dataQualExec.getDependsOn().getRef().getVersion(), MetaType.dq.toString(), "N");
-		try{
-			dataQualExec.setExec(dqOperator.generateSql(dataQual, datapodList, dataQualExec, dagExec, usedRefKeySet, otherParams, runMode));
-			dataQualExec.setSummaryExec(dqOperator.generateSummarySql(dataQual, datapodList, dataQualExec, dagExec, usedRefKeySet, otherParams, runMode));
+		DataQual dataQual = (DataQual) commonServiceImpl.getOneByUuidAndVersion(
+				dataQualExec.getDependsOn().getRef().getUuid(), dataQualExec.getDependsOn().getRef().getVersion(),
+				MetaType.dq.toString(), "N");
+		try {
+			dataQualExec.setExec(dqOperator.generateSql(dataQual, datapodList, dataQualExec, dagExec, usedRefKeySet,
+					otherParams, runMode));
+			dataQualExec.setSummaryExec(dqOperator.generateSummarySql(dataQual, datapodList, dataQualExec, dagExec,
+					usedRefKeySet, otherParams, runMode));
 			dataQualExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 			logger.info(String.format("DQ Result sql for DQExec : %s is : ", execUuid, dataQualExec.getExec()));
 			synchronized (dataQualExec.getUuid()) {
 //				DataQualExec dataQualExec1 = (DataQualExec) daoRegister.getRefObject(new MetaIdentifier(MetaType.dqExec, dataQualExec.getUuid(), dataQualExec.getVersion()));
-				DataQualExec dataQualExec1 = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(dataQualExec.getUuid(), dataQualExec.getVersion(), MetaType.dqExec.toString(), "N");
+				DataQualExec dataQualExec1 = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(
+						dataQualExec.getUuid(), dataQualExec.getVersion(), MetaType.dqExec.toString(), "N");
 				dataQualExec1.setExec(dataQualExec.getExec());
 				dataQualExec1.setRefKeyList(dataQualExec.getRefKeyList());
 				commonServiceImpl.save(MetaType.dqExec.toString(), dataQualExec1);
 				dataQualExec1 = null;
 			}
-		}catch(Exception e){
+		} catch (Exception e) {
 			commonServiceImpl.setMetaStatus(dataQualExec, MetaType.dqExec, Status.Stage.FAILED);
 			e.printStackTrace();
 			String message = null;
 			try {
 				message = e.getMessage();
-			}catch (Exception e2) {
+			} catch (Exception e2) {
 				// TODO: handle exception
 			}
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 			dependsOn.setRef(new MetaIdentifier(MetaType.dqExec, dataQualExec.getUuid(), dataQualExec.getVersion()));
-			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "FAILED data quality parsing.", dependsOn);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
+					(message != null) ? message : "FAILED data quality parsing.", dependsOn);
 			throw new Exception((message != null) ? message : "FAILED data quality parsing.");
 		}
 		synchronized (execUuid) {
@@ -530,9 +531,9 @@ public class DataQualServiceImpl  extends RuleTemplate{
 		return dataQualExec;
 	}
 
-	public HttpServletResponse download(String dqExecUuid, String dqExecVersion, String format,
-			String download, int offset, int limit, HttpServletResponse response, int rowLimit, String sortBy,
-			String order, String requestId, RunMode runMode) throws Exception {
+	public HttpServletResponse download(String dqExecUuid, String dqExecVersion, String format, String download,
+			int offset, int limit, HttpServletResponse response, int rowLimit, String sortBy, String order,
+			String requestId, RunMode runMode) throws Exception {
 
 		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
 		if (rowLimit > maxRows) {
@@ -542,59 +543,77 @@ public class DataQualServiceImpl  extends RuleTemplate{
 			throw new RuntimeException("Requested rows exceeded the limit of " + maxRows);
 		}
 
-		List<Map<String, Object>> results = getDQResults(dqExecUuid, dqExecVersion, offset, limit, sortBy,
-				order, requestId, runMode);
+		List<Map<String, Object>> results = getDQResults(dqExecUuid, dqExecVersion, offset, limit, sortBy, order,
+				requestId, runMode);
 		response = commonServiceImpl.download(format, response, runMode, results,
 				new MetaIdentifierHolder(new MetaIdentifier(MetaType.dqExec, dqExecUuid, dqExecVersion)));
 		return response;
 	}
-	
+
 	public String getSummarySql(String tableName, String execVersion, ExecContext execContext) {
 		StringBuilder filterBuilder = new StringBuilder(" ");
-		if(!execContext.equals(ExecContext.FILE)
-				|| !execContext.equals(ExecContext.spark)) {
-			filterBuilder.append(" AND version = "+execVersion);
+		if (!execContext.equals(ExecContext.FILE) || !execContext.equals(ExecContext.spark)) {
+			filterBuilder.append(" AND version = " + execVersion);
 		}
-		String sql = "SELECT datapodname, attributeId, attributename, 'NULL CHECK' as check_type, 'PASS' as result_type, count(nullCheck_pass) AS count FROM " + tableName + " WHERE nullCheck_pass = 'Y' "+filterBuilder.toString()+" GROUP BY datapodname, attributeId, attributename " 
-					+ " UNION ALL " 
-					+ "SELECT datapodname, attributeId, attributename, 'VALUE CHECK' as check_type, 'PASS' as result_type, count(valueCheck_pass) AS count FROM " + tableName + " WHERE valueCheck_pass = 'Y' "+filterBuilder.toString()+" GROUP BY datapodname, attributeId, attributename " 
-					+ " UNION ALL "
-					+  "SELECT datapodname, attributeId, attributename, 'RANGE CHECK' as check_type, 'PASS' as result_type, count(rangeCheck_pass) AS count FROM " + tableName + " WHERE rangeCheck_pass = 'Y' "+filterBuilder.toString()+" GROUP BY datapodname, attributeId, attributename " 
-					+ " UNION ALL "
-					+ "SELECT datapodname, attributeId, attributename, 'DATA TYPE CHECK' as check_type, 'PASS' as result_type, count(dataTypeCheck_pass) AS count FROM " + tableName + " WHERE dataTypeCheck_pass = 'Y' "+filterBuilder.toString()+" GROUP BY datapodname, attributeId, attributename " 
-					+ " UNION ALL "
-					+ "SELECT datapodname, attributeId, attributename, 'DATA FORMAT CHECK' as check_type, 'PASS' as result_type, count(dataFormatCheck_pass) AS count FROM " + tableName + " WHERE dataFormatCheck_pass = 'Y' "+filterBuilder.toString()+" GROUP BY datapodname, attributeId, attributename " 
-					+ " UNION ALL "
-					+ "SELECT datapodname, attributeId, attributename, 'LENGTH CHECK' as check_type, 'PASS' as result_type, count(lengthCheck_pass) AS count FROM " + tableName + " WHERE lengthCheck_pass = 'Y' "+filterBuilder.toString()+" GROUP BY datapodname, attributeId, attributename " 
-					+ " UNION ALL "
-					+ "SELECT datapodname, attributeId, attributename, 'REF INT CHECK' as check_type, 'PASS' as result_type, count(refIntegrityCheck_pass) AS count FROM " + tableName + " WHERE refIntegrityCheck_pass = 'Y' "+filterBuilder.toString()+" GROUP BY datapodname, attributeId, attributename " 
-					+ " UNION ALL "
-					+ "SELECT datapodname, attributeId, attributename, 'DUP CHECK' as check_type, 'PASS' as result_type, count(dupCheck_pass) AS count FROM " + tableName + " WHERE dupCheck_pass = 'Y' "+filterBuilder.toString()+" GROUP BY datapodname, attributeId, attributename " 
-					+ " UNION ALL "
-					+ "SELECT datapodname, attributeId, attributename, 'CUSTOM CHECK' as check_type, 'PASS' as result_type, count(customCheck_pass) AS count FROM " + tableName + " WHERE customCheck_pass = 'Y' "+filterBuilder.toString()+" GROUP BY datapodname, attributeId, attributename "
-					+ " UNION ALL "
-					+ "SELECT datapodname, attributeId, attributename, 'NULL CHECK' as check_type, 'FAIL' as result_type, count(nullCheck_pass) AS count FROM " + tableName + " WHERE nullCheck_pass = 'N' "+filterBuilder.toString()+" GROUP BY datapodname, attributeId, attributename " 
-					+ " UNION ALL " 
-					+ "SELECT datapodname, attributeId, attributename, 'VALUE CHECK' as check_type, 'FAIL' as result_type, count(valueCheck_pass) AS count FROM " + tableName + " WHERE valueCheck_pass = 'N' "+filterBuilder.toString()+" GROUP BY datapodname, attributeId, attributename " 
-					+ " UNION ALL "
-					+  "SELECT datapodname, attributeId, attributename, 'RANGE CHECK' as check_type, 'FAIL' as result_type, count(rangeCheck_pass) AS count FROM " + tableName + " WHERE rangeCheck_pass = 'N' "+filterBuilder.toString()+" GROUP BY datapodname, attributeId, attributename " 
-					+ " UNION ALL "
-					+ "SELECT datapodname, attributeId, attributename, 'DATA TYPE CHECK' as check_type, 'FAIL' as result_type, count(dataTypeCheck_pass) AS count FROM " + tableName + " WHERE dataTypeCheck_pass = 'N' "+filterBuilder.toString()+" GROUP BY datapodname, attributeId, attributename " 
-					+ " UNION ALL "
-					+ "SELECT datapodname, attributeId, attributename, 'DATA FORMAT CHECK' as check_type, 'FAIL' as result_type, count(dataFormatCheck_pass) AS count FROM " + tableName + " WHERE dataFormatCheck_pass = 'N' "+filterBuilder.toString()+" GROUP BY datapodname, attributeId, attributename " 
-					+ " UNION ALL "
-					+ "SELECT datapodname, attributeId, attributename, 'LENGTH CHECK' as check_type, 'FAIL' as result_type, count(lengthCheck_pass) AS count FROM " + tableName + " WHERE lengthCheck_pass = 'N' "+filterBuilder.toString()+" GROUP BY datapodname, attributeId, attributename " 
-					+ " UNION ALL "
-					+ "SELECT datapodname, attributeId, attributename, 'REF INT CHECK' as check_type, 'FAIL' as result_type, count(refIntegrityCheck_pass) AS count FROM " + tableName + " WHERE refIntegrityCheck_pass = 'N' "+filterBuilder.toString()+" GROUP BY datapodname, attributeId, attributename " 
-					+ " UNION ALL "
-					+ "SELECT datapodname, attributeId, attributename, 'DUP CHECK' as check_type, 'FAIL' as result_type, count(dupCheck_pass) AS count FROM " + tableName + " WHERE dupCheck_pass = 'N' "+filterBuilder.toString()+" GROUP BY datapodname, attributeId, attributename " 
-					+ " UNION ALL "
-					+ "SELECT datapodname, attributeId, attributename, 'CUSTOM CHECK' as check_type, 'FAIL' as result_type, count(customCheck_pass) AS count FROM " + tableName + " WHERE customCheck_pass = 'N' "+filterBuilder.toString()+" GROUP BY datapodname, attributeId, attributename ";
+		String sql = "SELECT datapodname, attributeId, attributename, 'NULL CHECK' as check_type, 'PASS' as result_type, count(nullCheck_pass) AS count FROM "
+				+ tableName + " WHERE nullCheck_pass = 'Y' " + filterBuilder.toString()
+				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
+				+ "SELECT datapodname, attributeId, attributename, 'VALUE CHECK' as check_type, 'PASS' as result_type, count(valueCheck_pass) AS count FROM "
+				+ tableName + " WHERE valueCheck_pass = 'Y' " + filterBuilder.toString()
+				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
+				+ "SELECT datapodname, attributeId, attributename, 'RANGE CHECK' as check_type, 'PASS' as result_type, count(rangeCheck_pass) AS count FROM "
+				+ tableName + " WHERE rangeCheck_pass = 'Y' " + filterBuilder.toString()
+				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
+				+ "SELECT datapodname, attributeId, attributename, 'DATA TYPE CHECK' as check_type, 'PASS' as result_type, count(dataTypeCheck_pass) AS count FROM "
+				+ tableName + " WHERE dataTypeCheck_pass = 'Y' " + filterBuilder.toString()
+				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
+				+ "SELECT datapodname, attributeId, attributename, 'DATA FORMAT CHECK' as check_type, 'PASS' as result_type, count(dataFormatCheck_pass) AS count FROM "
+				+ tableName + " WHERE dataFormatCheck_pass = 'Y' " + filterBuilder.toString()
+				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
+				+ "SELECT datapodname, attributeId, attributename, 'LENGTH CHECK' as check_type, 'PASS' as result_type, count(lengthCheck_pass) AS count FROM "
+				+ tableName + " WHERE lengthCheck_pass = 'Y' " + filterBuilder.toString()
+				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
+				+ "SELECT datapodname, attributeId, attributename, 'REF INT CHECK' as check_type, 'PASS' as result_type, count(refIntegrityCheck_pass) AS count FROM "
+				+ tableName + " WHERE refIntegrityCheck_pass = 'Y' " + filterBuilder.toString()
+				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
+				+ "SELECT datapodname, attributeId, attributename, 'DUP CHECK' as check_type, 'PASS' as result_type, count(dupCheck_pass) AS count FROM "
+				+ tableName + " WHERE dupCheck_pass = 'Y' " + filterBuilder.toString()
+				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
+				+ "SELECT datapodname, attributeId, attributename, 'CUSTOM CHECK' as check_type, 'PASS' as result_type, count(customCheck_pass) AS count FROM "
+				+ tableName + " WHERE customCheck_pass = 'Y' " + filterBuilder.toString()
+				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
+				+ "SELECT datapodname, attributeId, attributename, 'NULL CHECK' as check_type, 'FAIL' as result_type, count(nullCheck_pass) AS count FROM "
+				+ tableName + " WHERE nullCheck_pass = 'N' " + filterBuilder.toString()
+				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
+				+ "SELECT datapodname, attributeId, attributename, 'VALUE CHECK' as check_type, 'FAIL' as result_type, count(valueCheck_pass) AS count FROM "
+				+ tableName + " WHERE valueCheck_pass = 'N' " + filterBuilder.toString()
+				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
+				+ "SELECT datapodname, attributeId, attributename, 'RANGE CHECK' as check_type, 'FAIL' as result_type, count(rangeCheck_pass) AS count FROM "
+				+ tableName + " WHERE rangeCheck_pass = 'N' " + filterBuilder.toString()
+				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
+				+ "SELECT datapodname, attributeId, attributename, 'DATA TYPE CHECK' as check_type, 'FAIL' as result_type, count(dataTypeCheck_pass) AS count FROM "
+				+ tableName + " WHERE dataTypeCheck_pass = 'N' " + filterBuilder.toString()
+				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
+				+ "SELECT datapodname, attributeId, attributename, 'DATA FORMAT CHECK' as check_type, 'FAIL' as result_type, count(dataFormatCheck_pass) AS count FROM "
+				+ tableName + " WHERE dataFormatCheck_pass = 'N' " + filterBuilder.toString()
+				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
+				+ "SELECT datapodname, attributeId, attributename, 'LENGTH CHECK' as check_type, 'FAIL' as result_type, count(lengthCheck_pass) AS count FROM "
+				+ tableName + " WHERE lengthCheck_pass = 'N' " + filterBuilder.toString()
+				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
+				+ "SELECT datapodname, attributeId, attributename, 'REF INT CHECK' as check_type, 'FAIL' as result_type, count(refIntegrityCheck_pass) AS count FROM "
+				+ tableName + " WHERE refIntegrityCheck_pass = 'N' " + filterBuilder.toString()
+				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
+				+ "SELECT datapodname, attributeId, attributename, 'DUP CHECK' as check_type, 'FAIL' as result_type, count(dupCheck_pass) AS count FROM "
+				+ tableName + " WHERE dupCheck_pass = 'N' " + filterBuilder.toString()
+				+ " GROUP BY datapodname, attributeId, attributename " + " UNION ALL "
+				+ "SELECT datapodname, attributeId, attributename, 'CUSTOM CHECK' as check_type, 'FAIL' as result_type, count(customCheck_pass) AS count FROM "
+				+ tableName + " WHERE customCheck_pass = 'N' " + filterBuilder.toString()
+				+ " GROUP BY datapodname, attributeId, attributename ";
 		return sql;
 	}
-	
-	
-	public List<Map<String, Object>> getSummary(String dataQualExecUUID, String dataQualExecVersion, RunMode runMode) throws JsonProcessingException {
+
+	public List<Map<String, Object>> getSummary(String dataQualExecUUID, String dataQualExecVersion, RunMode runMode)
+			throws JsonProcessingException {
 		DataQualExec dqExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(dataQualExecUUID,
 				dataQualExecVersion, MetaType.dqExec.toString());
 		DataStore datastore = dataStoreServiceImpl.getDatastore(dqExec.getResult().getRef().getUuid(),
@@ -606,24 +625,24 @@ public class DataQualServiceImpl  extends RuleTemplate{
 		try {
 			tableName = dataStoreServiceImpl.getTableNameByDatastore(datastore.getUuid(), datastore.getVersion(),
 					runMode);
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		ExecContext execContext = null;
-		IExecutor exec = null;
-		// String sql = null;
-		String appUuid = null;
-		if (runMode.equals(RunMode.ONLINE)) {
-			execContext = (engine.getExecEngine().equalsIgnoreCase("livy-spark")
-					|| engine.getExecEngine().equalsIgnoreCase("livy_spark"))
-							? helper.getExecutorContext(engine.getExecEngine())
-							: helper.getExecutorContext(ExecContext.spark.toString());
-		} else {
-			execContext = helper.getExecutorContext(datasource.getType().toLowerCase());
-		}
-		exec = execFactory.getExecutor(execContext.toString());
-		appUuid = commonServiceImpl.getApp().getUuid();
-		data = exec.executeAndFetch(getSummarySql(tableName, dqExec.getVersion(), execContext), appUuid);
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
-				| NoSuchMethodException | SecurityException | NullPointerException | ParseException | IOException e) {
+			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+			ExecContext execContext = null;
+			IExecutor exec = null;
+			// String sql = null;
+			String appUuid = null;
+			if (runMode.equals(RunMode.ONLINE)) {
+				execContext = (engine.getExecEngine().equalsIgnoreCase("livy-spark")
+						|| engine.getExecEngine().equalsIgnoreCase("livy_spark"))
+								? helper.getExecutorContext(engine.getExecEngine())
+								: helper.getExecutorContext(ExecContext.spark.toString());
+			} else {
+				execContext = helper.getExecutorContext(datasource.getType().toLowerCase());
+			}
+			exec = execFactory.getExecutor(execContext.toString());
+			appUuid = commonServiceImpl.getApp().getUuid();
+			data = exec.executeAndFetch(getSummarySql(tableName, dqExec.getVersion(), execContext), appUuid);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+				| SecurityException | NullPointerException | ParseException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -632,16 +651,24 @@ public class DataQualServiceImpl  extends RuleTemplate{
 
 	@Override
 	public String execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
-		ThreadPoolTaskExecutor metaExecutor = (execParams != null && execParams.getExecutionContext() != null && execParams.getExecutionContext().containsKey("EXECUTOR")) ? (ThreadPoolTaskExecutor)(execParams.getExecutionContext().get("EXECUTOR")) : null;
+		ThreadPoolTaskExecutor metaExecutor = (execParams != null && execParams.getExecutionContext() != null
+				&& execParams.getExecutionContext().containsKey("EXECUTOR"))
+						? (ThreadPoolTaskExecutor) (execParams.getExecutionContext().get("EXECUTOR"))
+						: null;
 		@SuppressWarnings("unchecked")
-		List<FutureTask<TaskHolder>> taskList = (execParams != null && execParams.getExecutionContext() != null && execParams.getExecutionContext().containsKey("TASKLIST")) ? (List<FutureTask<TaskHolder>>)(execParams.getExecutionContext().get("TASKLIST")) : null;
-		execute(metaExecutor, (DataQualExec)baseExec, taskList, execParams, runMode);
+		List<FutureTask<TaskHolder>> taskList = (execParams != null && execParams.getExecutionContext() != null
+				&& execParams.getExecutionContext().containsKey("TASKLIST"))
+						? (List<FutureTask<TaskHolder>>) (execParams.getExecutionContext().get("TASKLIST"))
+						: null;
+		execute(metaExecutor, (DataQualExec) baseExec, taskList, execParams, runMode);
 		return null;
 	}
 
 	@Override
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
-		return parse(baseExec.getUuid(), baseExec.getVersion(), DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(), null, null, runMode);
+		return parse(baseExec.getUuid(), baseExec.getVersion(),
+				DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(), null, null,
+				runMode);
 	}
 
 	public List<Map<String, Object>> getResultSummary(String execUuid, String execVersion, int offset, int limit,
@@ -666,15 +693,17 @@ public class DataQualServiceImpl  extends RuleTemplate{
 			if (runMode.equals(RunMode.ONLINE)) {
 				return sparkExecutor.executeAndFetchFromTempTable(sql, appUuid);
 			} else {
-				if(summaryDpDs.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+				if (summaryDpDs.getType().equalsIgnoreCase(ExecContext.FILE.toString())
 						|| summaryDpDs.getType().equalsIgnoreCase(ExecContext.spark.toString())) {
 					String dafaultPath = Helper.getPropertyValue("framework.schema.Path");
 					dafaultPath = dafaultPath.endsWith("/") ? dafaultPath : dafaultPath.concat("/");
-					String filePath = String.format("%s/%s/%s", summaryDp.getUuid(), summaryDp.getVersion(), dqExec.getVersion());
+					String filePath = String.format("%s/%s/%s", summaryDp.getUuid(), summaryDp.getVersion(),
+							dqExec.getVersion());
 					String filePathUrl = hdfsInfo.getHdfsURL().concat(dafaultPath).concat(filePath);
 					List<String> filePathUrlList = new ArrayList<>();
 					filePathUrlList.add(filePathUrl);
-					sparkExecutor.readAndRegisterFile(tableName, filePathUrlList, FileType.PARQUET.toString(), "true", appUuid, true);
+					sparkExecutor.readAndRegisterFile(tableName, filePathUrlList, FileType.PARQUET.toString(), "true",
+							appUuid, true);
 				}
 				return exec.executeAndFetchByDatasource(sql, summaryDpDs, appUuid);
 			}
@@ -693,23 +722,78 @@ public class DataQualServiceImpl  extends RuleTemplate{
 			throw new RuntimeException((message != null) ? message : "Can not fetch summary.");
 		}
 	}
-	
+
 	public String getTableName(Datasource datasource, Datapod datapod, DataQualExec dqExec, RunMode runMode) {
 		if (runMode.equals(RunMode.ONLINE)) {
 			return Helper.genTableName(datapod.getUuid(), datapod.getVersion(), dqExec.getVersion());
 		} else {
-			if(datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+			if (datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
 				return datasource.getSid().concat(".").concat(datapod.getName());
 			} else {
 				return datasource.getDbname().concat(".").concat(datapod.getName());
 			}
 		}
 	}
-	
-/*	@Override
-	public Datasource getDatasource(BaseRule baseRule) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		MetaIdentifier datapodRef = ((DataQual)baseRule).getDependsOn().getRef();
-		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodRef.getUuid(), datapodRef.getVersion(), datapodRef.getType().toString());
-		return commonServiceImpl.getDatasourceByDatapod(datapod);
-	}*/
+
+	public List<Map<String, Object>> getResultDetails(String execUuid, String execVersion, int offset, int limit,
+			String sortBy, String order, String requestId, RunMode runMode)
+			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
+			SecurityException, NullPointerException, JSONException, ParseException, IOException {
+		DataQualExec dqExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
+				MetaType.dqExec.toString());
+		try {
+			Datapod detailsDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+					Helper.getPropertyValue("framework.dataqual.detail.uuid"), null, MetaType.datapod.toString(), "N");
+			Datasource detailsDpDs = commonServiceImpl.getDatasourceByDatapod(detailsDp);
+
+			String tableName = getTableName(detailsDpDs, detailsDp, dqExec, runMode);
+
+			String sql = "SELECT * FROM " + tableName;
+
+			Datasource appDS = commonServiceImpl.getDatasourceByApp();
+			IExecutor exec = execFactory.getExecutor(appDS.getType().toLowerCase());
+
+			String appUuid = commonServiceImpl.getApp().getUuid();
+			if (runMode.equals(RunMode.ONLINE)) {
+				return sparkExecutor.executeAndFetchFromTempTable(sql, appUuid);
+			} else {
+				if (detailsDpDs.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+						|| detailsDpDs.getType().equalsIgnoreCase(ExecContext.spark.toString())) {
+					String dafaultPath = Helper.getPropertyValue("framework.schema.Path");
+					dafaultPath = dafaultPath.endsWith("/") ? dafaultPath : dafaultPath.concat("/");
+					String filePath = String.format("%s/%s/%s", detailsDp.getUuid(), detailsDp.getVersion(),
+							dqExec.getVersion());
+					String filePathUrl = hdfsInfo.getHdfsURL().concat(dafaultPath).concat(filePath);
+					List<String> filePathUrlList = new ArrayList<>();
+					filePathUrlList.add(filePathUrl);
+					sparkExecutor.readAndRegisterFile(tableName, filePathUrlList, FileType.PARQUET.toString(), "true",
+							appUuid, true);
+				}
+				return exec.executeAndFetchByDatasource(sql, detailsDpDs, appUuid);
+			}
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+				| SecurityException | NullPointerException | ParseException | IOException e) {
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
+					(message != null) ? message : "Can not fetch result details.",
+					new MetaIdentifierHolder(new MetaIdentifier(MetaType.dqExec, execUuid, execVersion)));
+			throw new RuntimeException((message != null) ? message : "Can not fetch result details");
+		}
+	}
+	/*
+	 * @Override public Datasource getDatasource(BaseRule baseRule) throws
+	 * JsonProcessingException, IllegalAccessException, IllegalArgumentException,
+	 * InvocationTargetException, NoSuchMethodException, SecurityException,
+	 * NullPointerException, ParseException { MetaIdentifier datapodRef =
+	 * ((DataQual)baseRule).getDependsOn().getRef(); Datapod datapod = (Datapod)
+	 * commonServiceImpl.getOneByUuidAndVersion(datapodRef.getUuid(),
+	 * datapodRef.getVersion(), datapodRef.getType().toString()); return
+	 * commonServiceImpl.getDatasourceByDatapod(datapod); }
+	 */
 }
