@@ -1,0 +1,54 @@
+{
+	"firstName": "Administrator",
+	"middleName": "",
+	"lastName": "Administrator",
+	"emailId": "admin@db.com",
+	"password": "db_admin",
+	"groupInfo": [
+		{
+			"ref": {
+				"type": "group",
+				"uuid": "02eba0e8-a06a-4374-81b3-8a5a39dea13f"
+			}
+		}
+	],
+	"defaultGroup": {
+		"ref": {
+			"type": "group",
+			"uuid": "02eba0e8-a06a-4374-81b3-8a5a39dea13f"
+		}
+	},
+	"orgInfo": {
+		"ref": {
+			"type": "organization",
+			"uuid": "3386f49d-77b2-4743-bb5e-a011894ee89f"
+		}
+	},
+	"uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
+	"version": "1548315952",
+	"name": "db_admin",
+	"desc": "Admin user",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f85",
+			"version": "1464977196",
+			"name": "admin"
+		}
+	},
+	"createdOn": ISODate("2019-01-24T13:05:54.507Z"),
+	"tags": [],
+	"active": "Y",
+	"locked": "N",
+	"published": "N",
+	"appInfo": [
+		{
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb",
+				"version": "1464977196",
+				"name": "Administration"
+			}
+		}
+	]
+}

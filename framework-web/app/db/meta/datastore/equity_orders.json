@@ -1,0 +1,55 @@
+{
+  "uuid": "789cdfc2-2232-4010-b21a-40a546e1ac83",
+  "version": "1552238970",
+  "name": "equity_orders",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
+      "version": "1548315952",
+      "name": "db_admin"
+    },
+    "value": null
+  },
+  "createdOn": "Sun Mar 10 13:29:30 EDT 2019",
+  "tags": null,
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
+        "version": "1552236606",
+        "name": "Deutsche Admin"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "metaId": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
+      "version": "1552238970",
+      "name": "equity_orders"
+    },
+    "value": null
+  },
+  "execId": {
+    "ref": {
+      "type": "loadExec",
+      "uuid": "88806b68-c4a1-4f48-9396-4bca782875d6",
+      "version": "1552238970",
+      "name": "equity_orders"
+    },
+    "value": null
+  },
+  "location": null,
+  "persistMode": "MEMORY_ONLY",
+  "dimInfo": null,
+  "numRows": 0,
+  "runMode": null
+}

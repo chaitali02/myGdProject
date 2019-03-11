@@ -1,5 +1,5 @@
 {
-	"uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71122",
+	"uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71124",
 	"version": "1552115484",
 	"name": "dq_rule_detail",
 	"desc": null,
@@ -18,55 +18,6 @@
 	"locked": "N",
 	"published": "N",
 	 "appInfo" : [ 
-	{
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
-            }
-        }, 
-       
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
- 				 "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbyog"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
- 				 "uuid": "39937670-837c-4027-aa45-aff8a57b738a"
-            }
-        }, 
         {
             "ref" : {
                 "type" : "application",
@@ -75,15 +26,13 @@
         }
     ],
 	"publicFlag": "N",
-	"datasource": {
-		"ref": {
-			"type": "datasource",
-			"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
-			"version": null,
-			"name": "file_data"
-		},
-		"value": null
-	},
+    "datasource" : {
+        "ref" : {
+            "type" : "datasource",
+            "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73024",
+            "version" : "1464977196"
+        }
+    },
 	"cache": "Y",
 	"attributes": [
 		{

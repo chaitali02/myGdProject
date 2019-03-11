@@ -1,0 +1,61 @@
+{
+  "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
+  "version": "1552267311",
+  "name": "Deutsche Admin",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f85",
+      "version": "1464977196",
+      "name": "admin"
+    },
+    "value": null
+  },
+  "createdOn": "Sun Mar 10 21:21:51 EDT 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb",
+        "version": "1464977196",
+        "name": "Administration"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "dataSource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73024",
+      "version": null,
+      "name": "mysql"
+    },
+    "value": null
+  },
+  "paramList": {
+    "ref": {
+      "type": "paramlist",
+      "uuid": "87588abf-478e-4cfe-b6b5-e0b265fa4403",
+      "version": null,
+      "name": "paramlist_Deutsche Admin"
+    },
+    "value": null
+  },
+  "deployPort": "5001",
+  "orgInfo": {
+    "ref": {
+      "type": "organization",
+      "uuid": "3386f49d-77b2-4743-bb5e-a011894ee89f",
+      "version": null,
+      "name": "Deutsche Bank"
+    },
+    "value": null
+  },
+  "applicationType": "APPADMIN"
+}
