@@ -411,8 +411,7 @@ public class SparkExecutor<T> implements IExecutor {
 
 	@Override
 	public List<Map<String, Object>> executeAndFetchByDatasource(String sql, Datasource datasource, String clientContext) throws IOException {
-		logger.info(sql);
-		logger.info("Started SQL Execution");
+		logger.info("Executing SQL: "+sql);
 		List<Map<String, Object>> data = new ArrayList<>();
 		ResultSetHolder rsHolder = executeSqlByDatasource(sql, datasource, clientContext);
 		Dataset<Row> dfSorted = rsHolder.getDataFrame();
@@ -2120,6 +2119,7 @@ public class SparkExecutor<T> implements IExecutor {
 		return rsHolder;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public PipelineModel train(ParamMap paramMap, String[] fieldArray, String label, String trainName
 			, double trainPercent, double valPercent, String tableName, String clientContext
@@ -2964,6 +2964,7 @@ public class SparkExecutor<T> implements IExecutor {
 		return 0;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public Object trainCrossValidation(ParamMap paramMap, String[] fieldArray, String label, String trainName
 			, double trainPercent, double valPercent, String tableName

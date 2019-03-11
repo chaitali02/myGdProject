@@ -565,7 +565,7 @@ public class RuleServiceImpl extends RuleTemplate {
 			DataStore datastore = dataStoreServiceImpl.getDatastore(ruleExec.getResult().getRef().getUuid(),
 					ruleExec.getResult().getRef().getVersion());
 
-			data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order);
+			data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order, null);
 			
 			/*boolean requestIdExistFlag = false;
 			StringBuilder orderBy = new StringBuilder();
