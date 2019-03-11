@@ -182,7 +182,6 @@ export class ParamlistComponent implements OnInit {
     }
   }
   enableEdit(uuid, version) {
-    debugger
     if (this.parentType == this.metaType.RULE) {
       this.router.navigate(['app/businessRules/paramlist', this.parentType, uuid, version, 'false']);
       this.isEdit = true;
@@ -224,13 +223,13 @@ export class ParamlistComponent implements OnInit {
     console.log(response)
     var temp = []
     for (const i in response) {
-      let ver = {};
-      ver["label"] = response[i].name;
-      ver["value"] = {};
-      ver["value"]["label"] = response[i].name;
-      ver["value"]["uuid"] = response[i].uuid;
-      ver["value"]["version"] = response[i].version;
-      ver["value"]["params"] = response[i].params;
+      let ver = new AttributeIO()
+      ver.label = response[i].name;
+      ver.value = {label: "", uuid: "", version: "", params: ""};
+      ver.value.label = response[i].name;
+      ver.value.uuid = response[i].uuid;
+      ver.value.version = response[i].version;
+      ver.value.params = response[i].params;
       temp[i] = ver;
     }
     this.allTemplateList = temp;
@@ -413,11 +412,11 @@ export class ParamlistComponent implements OnInit {
   OnSuccesgetAllVersionByUuid(response) {
     var temp = []
     for (const i in response) {
-      let ver = {};
-      ver["label"] = response[i]['version'];
-      ver["value"] = {};
-      ver["value"]["label"] = response[i]['version'];
-      ver["value"]["uuid"] = response[i]['uuid'];
+      let ver = new DropDownIO();
+      ver.label = response[i].version;
+      ver.value = {label: "", uuid: ""};
+      ver.value.label = response[i].version;
+      ver.value.uuid = response[i].uuid;
       //allName["uuid"]=response[i]['uuid']/*  */
       temp[i] = ver;
     }
@@ -436,10 +435,10 @@ export class ParamlistComponent implements OnInit {
 
     for (const i in response) {
       let distributionObj = new DropDownIO();
-      distributionObj.label = response[i]['name'];
+      distributionObj.label = response[i].name;
       distributionObj.value = { label: "", uuid: "", u_Id: "" };
-      distributionObj.value.label = response[i]['name'];
-      distributionObj.value.uuid = response[i]['uuid'];
+      distributionObj.value.label = response[i].name;
+      distributionObj.value.uuid = response[i].uuid;
       distributionListOptions[i] = distributionObj;
     }
     this.distributionListOptions = distributionListOptions;

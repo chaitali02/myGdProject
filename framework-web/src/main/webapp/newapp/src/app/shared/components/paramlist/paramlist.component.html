@@ -216,11 +216,11 @@
                                   type="checkbox" [(ngModel)]="selectAllAttributeRow" name="selectAllAttributeRow"
                                   (click)="checkAllAttributeRow()" />
                               </th>
-                              <th style="text-align: center; Vertical-align: middle;width:10%;">ID</th>
-                              <th style="text-align: center;width:15%;">Name</th>
-                              <th class="text-center" style="width:15%;">Display Name</th>
+                              <th style="text-align: center; Vertical-align: middle;width:6%;">ID</th>
+                              <th style="text-align: center;width:20%;">Name</th>
+                              <th class="text-center" style="width:20%;">Display Name</th>
                               <th class="text-center" style="width:20%;">Desc</th>
-                              <th style="text-align: center;width:20%;">Type</th>
+                              <th style="text-align: center;width:14%;">Type</th>
                               <th style="text-align: center;width:20%;">Default Value</th>
                             </tr>
                           </thead>
@@ -275,13 +275,19 @@
                                   name="paramValue"></p-chips>
                               </td>
                               <td *ngIf="data1.paramType == 'date'">
-                                <div style="width:150px">
-                                  <p-calendar [inputStyle]="{'width':'105%','height':'32px','margin':'0px 0px 0px 1px'}"
+                                <!-- <div style="width:150px"> -->
+                                  <!-- <p-calendar format="ddd MMM D HH:mm:ss YYYY z" [(ngModel)]="searchForm.startDate" styleClass="dateTimeField"
+                                  name="startDate" [utc]="true" hourFormat="12"
+                                  [disabled]="mode == 'true'" [minDate]="today" (onSelect)="onUpdateStartDate(startDate)"
+                                  [showIcon]="true" icon="fa fa-calendar" >
+                              </p-calendar> -->
+
+                                  <p-calendar [inputStyle]="{'width':'50%','height':'32px','margin':'0px 0px 0px 1px'}"
                                     format="mm dd yy" [(ngModel)]="data1.paramValue" name="paramValue+{{i}}" [utc]="true"
-                                    hourFormat="12" [disabled]="mode == 'true'" [styleClass]="{'position': 'fixed', 'overflow': 'visible', 'z-index': '999'}"
-                                    [readonlyInput]="true">
+                                    hourFormat="12" [disabled]="mode == 'true'" 
+                                    [readonlyInput]="true" [showIcon]="true" icon="fa fa-calendar">
                                   </p-calendar>
-                                </div>
+                                <!-- </div> -->
 
                               </td>
                               <td *ngIf="(typeSimple.indexOf(data1.paramType) == -1) && !(data1.paramType == 'distribution') && !(data1.paramType == 'function')&& !(data1.paramType == 'array')&& !(data1.paramType == 'date')">
