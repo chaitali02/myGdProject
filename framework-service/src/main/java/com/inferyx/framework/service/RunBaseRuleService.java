@@ -489,10 +489,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 			return String.format("%s_%s_%s", baseRule.getUuid().replace("-", "_"), baseRule.getVersion(), baseRuleExec.getVersion());
 
 		}
-		if(datapodKey.getType().equals(MetaType.rule2)) {
-			return String.format("%s_%s_%s", baseRule.getUuid().replace("-", "_"), baseRule.getVersion(), baseRuleExec.getVersion());
-
-		}
+		
 	    else if (execContext == null /*|| execContext.equals(ExecContext.spark)*/ || runMode.equals(RunMode.ONLINE) && execContext.equals(ExecContext.FILE) 
 				/*|| execContext.equals(ExecContext.livy_spark)*/) {
 			return String.format("%s_%s_%s", baseRule.getUuid().replace("-", "_"), baseRule.getVersion(), baseRuleExec.getVersion());
