@@ -24,7 +24,8 @@ public enum MetaType {
 	appConfig, /*operatortype,*/ operatorExec, operator ,comment, commentView, tag, lov, GenerateData, Transpose, 
 	CloneData, GenDataAttr, GenDataValList ,graphpod ,graphExec, report, reportExec, reportview, batch, batchExec,
 	schedule, batchview, ingest, ingestExec, ingestview, ingestgroup, ingestgroupExec, attribute, applicationview,
-	trainresult, trainresultview, deployExec, trainexecview, processExec, organization, dashboardExec, dashboardExecView,rule2,rule2Exec;
+	trainresult, trainresultview, deployExec, trainexecview, processExec, organization, dashboardExec,
+	dashboardExecView, rule2, rule2Exec, domain;
 
 	public static List<MetaType> getMetaList() {
 		return Arrays.asList(MetaType.activity, MetaType.algorithm, MetaType.application, MetaType.condition,

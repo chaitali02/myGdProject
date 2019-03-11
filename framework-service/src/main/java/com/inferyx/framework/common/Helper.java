@@ -250,6 +250,7 @@ public class Helper {
 				case dashboardExec : return "iDashboardExecDao";
 				case rule2: return "iRule2Dao";
 				case rule2Exec: return "iRule2ExecDao";	
+				case domain: return "iAttributeDomainDao";
 				default:
 					return null;
 			}
@@ -389,6 +390,7 @@ public class Helper {
 		case dashboardExec : return DashboardExec.class;
 		case rule2 : return Rule2.class;
 		case rule2Exec : return Rule2Exec.class;
+		case domain: return AttributeDomain.class;
 		default: return null;
 		}
 	}
@@ -490,6 +492,7 @@ public class Helper {
 				case "dashboardexec" : return MetaType.dashboardExec;
 				case "rule2" : return MetaType.rule2;
 				case "rule2exec" : return MetaType.rule2Exec;
+				case "domain" : return MetaType.domain;
 				default : return null;
 			}
 		}
