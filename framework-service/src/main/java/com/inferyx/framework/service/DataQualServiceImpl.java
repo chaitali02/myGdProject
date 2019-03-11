@@ -727,11 +727,16 @@ public class DataQualServiceImpl extends RuleTemplate {
 		if (runMode.equals(RunMode.ONLINE)) {
 			return Helper.genTableName(datapod.getUuid(), datapod.getVersion(), dqExec.getVersion());
 		} else {
+			if (datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+				|| datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())) {
+				return Helper.genTableName(datapod.getUuid(), datapod.getVersion(), dqExec.getVersion());
+		} else {
 			if (datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
 				return datasource.getSid().concat(".").concat(datapod.getName());
 			} else {
 				return datasource.getDbname().concat(".").concat(datapod.getName());
 			}
+		}
 		}
 	}
 
