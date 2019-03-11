@@ -2367,7 +2367,7 @@ public class MetadataServiceImpl {
 	}
 	
 	
-	public Datapod getDatapodByType(String type) throws FileNotFoundException, IOException {
+	public Datapod getDatapodByType(String type, String resultType) throws FileNotFoundException, IOException {
 		
 		if(type.equalsIgnoreCase(MetaType.profile.toString()))
 			{
@@ -2381,8 +2381,19 @@ public class MetadataServiceImpl {
 			return dp;
 		}
 		else if(type.equalsIgnoreCase(MetaType.dq.toString())){
-			Datapod dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
-					Helper.getPropertyValue("framework.dataqual.datapod.uuid"), null, MetaType.datapod.toString());
+			Datapod dp =null;
+			if(resultType ==null) {
+				dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+						Helper.getPropertyValue("framework.dataqual.datapod.uuid"), null, MetaType.datapod.toString());
+			}
+			else if(resultType.equals("summary")) {
+				dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+						Helper.getPropertyValue("framework.dataqual.summary.uuid"), null, MetaType.datapod.toString());
+			}
+			else if(resultType.equals("detail")) {
+				dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+						Helper.getPropertyValue("framework.dataqual.detail.uuid"), null, MetaType.datapod.toString());
+			}
 			return dp;
 		}
 		return null;

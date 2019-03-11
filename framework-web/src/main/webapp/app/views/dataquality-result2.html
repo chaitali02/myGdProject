@@ -1,0 +1,336 @@
+<div class="row" ng-controller="Result2DQController">
+  <div class="col-md-12">
+    <!-- BEGIN PAGE HEADER-->
+    <div class="page-bar">
+      <ul class="page-breadcrumb">
+        <li>
+          <a ui-sref="home">Home</a>
+          <i class="fa fa-circle"></i>
+        </li>
+        <li>
+          <a ui-sref="viewdqresults">
+            <span>{{$state.current.data.pageTitle}}</span>
+          </a>
+          <i class="fa fa-circle"></i>
+        </li>
+        <li>
+          <a ui-sref="viewdqresults">
+            <span>Rule Results</span>
+          </a>
+        </li>
+        <li ng-show="isRuleGroupTitle">
+          <i class="fa fa-circle"></i>
+          <span>{{ruleGrpupName}}</span>
+        </li>
+        <li ng-show="isRuleTitle">
+          <i class="fa fa-circle"></i>
+          <span>{{ruledata}}</span>
+        </li>
+        <li ng-show="isGraphRuleExec">
+          <i class="fa fa-circle"></i>
+          <span>{{selectGraphRuleExec}}</span>
+        </li>
+      </ul>
+      <div class="page-toolbar">
+        <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom"
+          data-original-title="Change dashboard date range">
+          <i class="icon-calendar"></i>&nbsp;
+          <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
+        </div>
+      </div>
+    </div><!-- END PAGE HEADER-->
+    <br>
+    <!-- BEGIN MAIN CONTENT -->
+
+
+    <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+    <div options="dirOptions" type="metaType" on-close="onPanelClose" mode="mode" current-user="userDetail"
+      comment-data="execDetail" comment-panel-directive></div>
+    <div class="portlet box green" ng-show="isRuleExec">
+      <div class="portlet-title">
+        <div class="caption">
+          <i class="fa fa-cogs"></i>Rule Exec
+        </div>
+        <div class="tools">
+          <a title="Main" data-toggle="tooltip" data-placement="top" tooltip ng-class="isD3RGEexecGraphShow==false? 'currentpage':'notcurrentpage'"
+            data-ng-click="refreshRuleGroupExecFunction()" style="height:16px;font-size:16px;">
+            <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+          </a>
+          <a style="color:white;" ng-disabled="!allowReGroupExecution" ng-class="{'currentpage':!allowReGroupExecution}"
+            title="Restart" data-toggle="tooltip" data-placement="top" tooltip="" ng-click="reGroupExecute()" disabled="disabled"
+            class="currentpage">
+            <i class="fa fa-repeat" area-hidden="true"></i>
+          </a>
+          <!-- <a title="Show Details" data-toggle="tooltip" data-placement="top" tooltip ng-class="isD3RGEexecGraphShow==false? 'currentpage':'notcurrentpage'" data-ng-click="refreshRuleGroupExecFunction()" style="height:16px;">
+            <span class="glyphicon glyphicon-file" style="color:white;"></span>
+          </a> -->
+          <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip data-ng-click="rGExecshowGraph()"
+            ng-class="isD3RGEexecGraphShow==true? 'currentpage':'notcurrentpage'">
+            <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
+          </a>
+          <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip ng-click="isGraphRuleGroupExec ? refreshRuleGroupExecFunction():isD3RGEexecGraphShow ?broadcastRefreshData() : refreshSearchResults()">
+            <i class="fa fa-refresh" aria-hidden="true" style="display:block;margin: 2px auto;color:white;">
+            </i>
+          </a>
+
+          <a href="javascript:;" class="collapse" data-original-title="" title="" style="height:14px;" ng-show="!isGraphRuleGroupExec && !isD3RGEexecGraphShow">
+          </a>
+          <a title="Close" ui-sref="viewdqresults2" data-toggle="tooltip" data-placement="top" style="height:14px;"
+            ng-show="isGraphRuleGroupExec || isD3RGEexecGraphShow ">
+            <i class="fa fa-times" style="display:block;margin:0px 2px 0px 0px;color:white;transform: scale(1,1.2);"></i>
+          </a>
+        </div>
+      </div>
+      <div class="portlet-body" style="overflow:auto;min-height:190px;">
+        <div ng-if="isD3RGEexecGraphShow" class="form-body graph-body">
+          <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
+          <div class="spinner text-center" id="graphloader">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+          </div>
+          <div id="graphWrapper" class="form-body show-graph-body" tree-graph-directive uuid="rGExecUuid" version="rGExecVersion">
+          </div>
+        </div>
+        <div class="form-body text-center" id="groupErrorMsg" style="color:blue;"></div>
+        <div class="spinner centercontent" id="grouploader">
+          <div class="bounce1"></div>
+          <div class="bounce2"></div>
+          <div class="bounce3"></div>
+        </div>
+        <div id="showgrouppaper" render-group-directive ng-show="isGraphRuleGroupExec" style="max-height:700px;"></div>
+
+        <div ng-show="!isGraphRuleGroupExec && !isD3RGEexecGraphShow">
+          <div class="row">
+            <div class="col-md-12 col-sm-12">
+              <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
+                <label>Search:</label>
+                <input type="search" class="form-control input-sm input-small   input-inline" ng-change="refreshRuleExecData()"
+                  ng-model="searchruletext" aria-controls="datastoredatatable">
+              </div>
+            </div>
+          </div>
+          <div ui-grid="gridOptionsRule" class="grid" ui-grid-resize-columns ng-if="gridOptionsRule.data"
+            ui-grid-auto-resize ng-style="getGridStyle()"></div>
+        </div>
+      </div>
+    </div><!-- END SAMPLE TABLE PORTLET-->
+
+    <div class="portlet box green" ng-show="isRuleResult">
+      <div class="portlet-title">
+        <div class="caption">
+          <i class="fa fa-cogs"></i>Rule Result
+        </div>
+        <div class="tools">
+          <a title="Main" data-toggle="tooltip" data-placement="top" tooltip ng-class="isD3RuleEexecGraphShow==false? 'currentpage':'notcurrentpage'"
+            data-ng-click="refreshResultFunction()" style="height:16px;font-size:16px;">
+            <i class="fa fa-home" style="display:block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
+          </a>
+          <a ng-click="downloadFile(ruleexecdetail)" tooltip-placement="{{showtooltip}}" uib-tooltip="Download"
+            ng-class="isD3RuleEexecGraphShow==true? 'currentpage':'notcurrentpage'">
+            <i class=" fa fa-download" aria-hidden="true" style="display:block;margin:2px auto;color:white;"></i>
+          </a>
+          <!-- <a title="Show Details" data-toggle="tooltip" data-placement="top" tooltip ng-class="isD3RuleEexecGraphShow==false? 'currentpage':'notcurrentpage'"  data-ng-click="refreshResultFunction()" style="height:16px;">
+            <span class="glyphicon glyphicon-file" style="color:white;"></span>
+          </a> -->
+          <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip data-ng-click="ruleExecshowGraph()"
+            ng-class="isD3RuleEexecGraphShow==true? 'currentpage':'notcurrentpage'">
+            <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
+          </a>
+          <a title="Refresh" href="javasculript:;" ng-click="isD3RuleEexecGraphShow ? broadcastRefreshData(): refreshResultFunction()"
+            data-toggle="tooltip" data-placement="top">
+            <i class="fa fa-refresh" aria-hidden="true" style="display:block;margin:2px auto;color:white;"></i>
+          </a>
+          <a title="Close" ng-if="type.text == 'dqgroup'" href="javascript:;" ng-click="onClickRuleResult()"
+            data-toggle="tooltip" data-placement="top" tooltip style="height:14px;">
+            <i class="fa fa-times" style="display:block;margin:0px 2px 0px 0px;color:white;transform: scale(1,1.2);"></i>
+          </a>
+          <a title="Close" ng-if="type.text == 'dq'" ui-sref="viewdqresults2" data-toggle="tooltip" data-placement="top"
+            tooltip style="height:14px;">
+            <i class="fa fa-times" style="display:block;margin:0px 2px 0px 0px;color:white;transform: scale(1,1.2);"></i>
+          </a>
+        </div>
+      </div>
+      <div class="portlet-body" style="min-heigth:100px;">
+        <div ng-if="isD3RuleEexecGraphShow" class="form-body graph-body">
+          <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
+          <div class="spinner text-center" id="graphloader">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+          </div>
+          <div id="graphWrapper" class="form-body show-graph-body" tree-graph-directive uuid="dqexecdetail.uuid"
+            version="dqexecdetail.version">
+          </div>
+        </div>
+
+        <div ng-show="testgrid && !isD3RuleEexecGraphShow">
+          <uib-tabset active="activeTabIndex">
+            <uib-tab index="0" heading="Summary" select="go(0)">
+              <div ng-show="isDataError">
+                <h3 style="font-size:14px;color:red;">{{datamessage}}</h3>
+              </div>
+              <div class="form-body text-center" id="grouploader" ng-show="showprogress">
+                <div class="spinner">
+                  <div class="bounce1"></div>
+                  <div class="bounce2"></div>
+                  <div class="bounce3"></div>
+                </div>
+              </div>
+              <div class="row" ng-if="!showprogress">
+                <div class="col-md-6 col-sm-6">
+                  <!-- <div class="dataTables_length" id="sample_1_length">
+                        <label>Show
+                          <select name="sample_1_length" aria-controls="sample_1" class="form-control input-sm input-xsmall input-inline"
+                            ng-model="pageSize" ng-options="r for r in paginationPageSizes" ng-change="onPerPageChange()">
+                          </select>
+                        </label>
+                      </div> -->
+                </div>
+                <div class="col-md-6 col-sm-6">
+                  <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
+                    <label>Search:</label>
+                    <input type="search" class="form-control input-sm input-small   input-inline" ng-change="refreshDataSummary(searchtextSummary)"
+                      ng-model="searchtextSummary" aria-controls="datastoredatatable">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row" style="margin-top:10px;" ng-if="!showprogress">
+                <div class="col-md-12">
+                  <div ui-grid="gridOptionsSummary" class="grid" ng-if="testgrid" ui-grid-resize-columns
+                    ui-grid-pinning ui-grid-auto-resize ui-grid-exporter ng-style="getGridStyleSummary()" style="max-height:373px">
+                    <div class="nodatawatermark_results" ng-show="!gridOptionsSummary.data.length" style="top: 50%;">No
+                      data available</div>
+                  </div>
+                  <!-- <div class="row">
+                        <div class="col-md-6" style="margin-top:17px">
+                          Showing {{to}} to {{from}} of {{totalItems}} records
+                        </div>
+                        <div class="col-md-6">
+                          <ul uib-pagination items-per-page="pageSize" total-items="totalItems" ng-model="currentPage"
+                            ng-change="pageChangedSummary()" style="float:right;float:right;overflow:hidden;z-index:1;" max-size="maxSize"
+                            boundary-links="true" class="pagination-md" previous-text="&lsaquo;" next-text="&rsaquo;"
+                            first-text="&laquo;" last-text="&raquo;"></ul>
+                        </div>
+                      </div> -->
+                </div>
+              </div>
+            </uib-tab>
+            <uib-tab index="1" heading="Detail" select="go(1)">
+              <div ng-show="isDataError">
+                <h3 style="font-size:14px;color:red;">{{datamessage}}</h3>
+              </div>
+              <div class="form-body text-center" id="grouploader" ng-show="showprogress">
+                <div class="spinner">
+                  <div class="bounce1"></div>
+                  <div class="bounce2"></div>
+                  <div class="bounce3"></div>
+                </div>
+              </div>
+              <div class="row" ng-if="!showprogress">
+                <div class="col-md-6 col-sm-6">
+                  <!-- <div class="dataTables_length" id="sample_1_length">
+                    <label>Show
+                      <select name="sample_1_length" aria-controls="sample_1" class="form-control input-sm input-xsmall input-inline"
+                        ng-model="pageSize" ng-options="r for r in paginationPageSizes" ng-change="onPerPageChange()">
+                      </select>
+                    </label>
+                  </div> -->
+                </div>
+                <div class="col-md-6 col-sm-6">
+                  <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">
+                    <label>Search:</label>
+                    <input type="search" class="form-control input-sm input-small   input-inline" ng-change="refreshDataDetail(searchtextDetail)"
+                      ng-model="searchtextDetail" aria-controls="datastoredatatable">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row" style="margin-top:10px;" ng-if="!showprogress">
+                <div class="col-md-12">
+                  <div ui-grid="gridOptionsDetail" class="grid" ng-if="testgrid" ui-grid-resize-columns ui-grid-pinning
+                    ui-grid-auto-resize ui-grid-exporter ng-style="getGridStyle()" style="max-height:373px">
+                    <div class="nodatawatermark_results" ng-show="!gridOptionsDetail.data.length" style="top: 50%;">No
+                      data available</div>
+                  </div>
+                  <!-- <div class="row">
+                    <div class="col-md-6" style="margin-top:17px">
+                      Showing {{to}} to {{from}} of {{totalItems}} records
+                    </div>
+                    <div class="col-md-6">
+                      <ul uib-pagination items-per-page="pageSize" total-items="totalItems" ng-model="currentPage"
+                        ng-change="pageChanged()" style="float:right;float:right;overflow:hidden;z-index:1;" max-size="maxSize"
+                        boundary-links="true" class="pagination-md" previous-text="&lsaquo;" next-text="&rsaquo;"
+                        first-text="&laquo;" last-text="&raquo;"></ul>
+                    </div>
+                  </div> -->
+                </div>
+              </div>
+            </uib-tab>
+
+          </uib-tabset>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade in" id="reExModal" tabindex="-1" role="basic" aria-hidden="true" style="display:none; padding-right: 15px;">
+      <div class="modal-dialog">
+        <div class="modal-content rulemodel">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+            </button>
+            <h4 class="modal-title">Confirm</h4>
+          </div>
+          <div class="modal-body">Restart <span style="text-transform: capitalize">DQ Group</span> ?</div>
+          <div class="modal-footer">
+            <button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn green" ng-click="okReGroupExecute()">Ok</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+    <div id="downloadSample" class="modal fade bs-modal-lg in" style="display: none;">
+      <div class="modal-dialog" style="width:40%">
+        <div class="modal-content" style="resize: both;overflow: auto;">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+            <h4 class="modal-title">Download</h4>
+          </div>
+          <form class="form-horizontal" name="myform3" ng-submit="submitDownload()" novalidate="novalidate">
+            <div class="modal-body" style="padding-top:0px">
+              <div class="slimScrollDiv" style="position: relative; overflow-y: auto !important; width:auto;padding:10px;">
+                <div class="scroller" style="max-height:150px;min-height:110px; overflow-y: auto !important; width: auto;margin-top:30px"
+                  data-always-visible="1" data-rail-visible1="1" data-initialized="1">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label class="col-md-3 control-label">Rows</label>
+                        <div class="col-md-8">
+                          <input type="number" min="1" class="form-control" ng-model="download.rows" max="{{download.maxrow}}"
+                            required max-err-type="maxLimitDownload">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="col-md-3 control-label">Format</label>
+                        <div class="col-md-8">
+                          <select class="form-control" data-ng-model="download.selectFormate" ng-options="r for r in download.formates"
+                            required>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--End Model Body-->
+            <div class="modal-footer">
+              <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+              <button type="submit" class="btn green">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
