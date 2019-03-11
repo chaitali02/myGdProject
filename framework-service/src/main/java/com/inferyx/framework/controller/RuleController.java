@@ -298,5 +298,4 @@ public class RuleController {
 			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException, ParseException {
         return ruleServiceImpl.finddqExecByDatapod(datapodUUID,type);
   }
-
 }

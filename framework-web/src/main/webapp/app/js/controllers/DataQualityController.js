@@ -1158,7 +1158,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
       ref.type = "domain"
       ref.uuid = $scope.selectedDomain.uuid;
       domainInfo.ref = ref;
-      dataqualityjosn.expressionCheck = domainInfo;
+      dataqualityjosn.domainCheck = domainInfo;
     }
 
     console.log(JSON.stringify(dataqualityjosn))

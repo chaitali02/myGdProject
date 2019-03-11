@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -40,7 +42,10 @@ import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataStore;
+import com.inferyx.framework.domain.Datapod;
+import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -52,6 +57,9 @@ import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.executor.ExecContext;
+import com.inferyx.framework.executor.IExecutor;
+import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.operator.RuleOperator;
 import com.inferyx.framework.register.GraphRegister;
@@ -101,12 +109,15 @@ public class RuleServiceImpl extends RuleTemplate {
 	private CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	RuleExecServiceImpl ruleExecServiceImpl;
+	@SuppressWarnings("rawtypes")
 	@Resource(name = "taskThreadMap")
 	ConcurrentHashMap taskThreadMap;
 	@Autowired
 	ConnectionFactory connFactory;
 	@Autowired
 	MessageServiceImpl messageServiceImpl;
+	@Autowired
+	private SparkExecutor<?> sparkExecutor;
 
 	Map<String, List<Map<String, Object>>> requestMap = new HashMap<>();
 
@@ -880,6 +891,7 @@ public class RuleServiceImpl extends RuleTemplate {
 	@Override
 	public String execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		ThreadPoolTaskExecutor metaExecutor = (execParams != null && execParams.getExecutionContext() != null && execParams.getExecutionContext().containsKey("EXECUTOR")) ? (ThreadPoolTaskExecutor)(execParams.getExecutionContext().get("EXECUTOR")) : null;
+		@SuppressWarnings("unchecked")
 		List<FutureTask<TaskHolder>> taskList = (execParams != null && execParams.getExecutionContext() != null && execParams.getExecutionContext().containsKey("TASKLIST")) ? (List<FutureTask<TaskHolder>>)(execParams.getExecutionContext().get("TASKLIST")) : null;
 		execute(metaExecutor, (RuleExec)baseExec, taskList, execParams, runMode);
 		return null;
@@ -955,4 +967,5 @@ public class RuleServiceImpl extends RuleTemplate {
 		commonServiceImpl.completeTaskThread(taskList);
 		return ruleExecMetaList;
 	}
+
 }

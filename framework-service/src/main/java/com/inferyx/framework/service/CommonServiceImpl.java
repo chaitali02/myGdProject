@@ -98,6 +98,7 @@ import com.inferyx.framework.dao.IDatasourceDao;
 import com.inferyx.framework.dao.IDeployExecDao;
 import com.inferyx.framework.dao.IDimensionDao;
 import com.inferyx.framework.dao.IDistributionDao;
+import com.inferyx.framework.dao.IAttributeDomainDao;
 import com.inferyx.framework.dao.IDownloadDao;
 import com.inferyx.framework.dao.IEdgeDao;
 import com.inferyx.framework.dao.IExportDao;
@@ -507,9 +508,27 @@ public class CommonServiceImpl<T> {
 	IRule2Dao iRule2Dao;
 	@Autowired
 	IRule2ExecDao iRule2ExecDao;
+	@Autowired
+	private IAttributeDomainDao iAttributeDomainDao;	
+	
+	/**
+	 * @Ganesh
+	 *
+	 * @return the iAttributeDomainDao
+	 */
+	public IAttributeDomainDao getiAttributeDomainDao() {
+		return iAttributeDomainDao;
+	}
 
-	
-	
+	/**
+	 * @Ganesh
+	 *
+	 * @param iAttributeDomainDao the iAttributeDomainDao to set
+	 */
+	public void setiAttributeDomainDao(IAttributeDomainDao iAttributeDomainDao) {
+		this.iAttributeDomainDao = iAttributeDomainDao;
+	}
+
 	public IRule2ExecDao getiRule2ExecDao() {
 		return iRule2ExecDao;
 	}

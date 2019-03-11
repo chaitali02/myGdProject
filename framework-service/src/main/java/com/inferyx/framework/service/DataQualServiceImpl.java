@@ -680,35 +680,42 @@ public class DataQualServiceImpl extends RuleTemplate {
 		try {
 			Datapod summaryDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
 					Helper.getPropertyValue("framework.dataqual.summary.uuid"), null, MetaType.datapod.toString(), "N");
-			Datasource summaryDpDs = commonServiceImpl.getDatasourceByDatapod(summaryDp);
 
-			String tableName = getTableName(summaryDpDs, summaryDp, dqExec, runMode);
+			limit = offset + limit;
+			offset = offset + 1;
+			dataStoreServiceImpl.setRunMode(runMode);
+			DataStore datastore = dataStoreServiceImpl.findDataStoreByMeta(summaryDp.getUuid(), summaryDp.getVersion());
 
-			String sql = "SELECT * FROM " + tableName;
-
-			Datasource appDS = commonServiceImpl.getDatasourceByApp();
-			IExecutor exec = execFactory.getExecutor(appDS.getType().toLowerCase());
-
-			String appUuid = commonServiceImpl.getApp().getUuid();
-			if (runMode.equals(RunMode.ONLINE)) {
-				return sparkExecutor.executeAndFetchFromTempTable(sql, appUuid);
-			} else {
-				if (summaryDpDs.getType().equalsIgnoreCase(ExecContext.FILE.toString())
-						|| summaryDpDs.getType().equalsIgnoreCase(ExecContext.spark.toString())) {
-					String dafaultPath = Helper.getPropertyValue("framework.schema.Path");
-					dafaultPath = dafaultPath.endsWith("/") ? dafaultPath : dafaultPath.concat("/");
-					String filePath = String.format("%s/%s/%s", summaryDp.getUuid(), summaryDp.getVersion(),
-							dqExec.getVersion());
-					String filePathUrl = hdfsInfo.getHdfsURL().concat(dafaultPath).concat(filePath);
-					List<String> filePathUrlList = new ArrayList<>();
-					filePathUrlList.add(filePathUrl);
-					sparkExecutor.readAndRegisterFile(tableName, filePathUrlList, FileType.PARQUET.toString(), "true",
-							appUuid, true);
-				}
-				return exec.executeAndFetchByDatasource(sql, summaryDpDs, appUuid);
-			}
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-				| SecurityException | NullPointerException | ParseException | IOException e) {
+			return dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId,
+					offset, limit, sortBy, order, dqExec.getVersion());
+//			Datasource summaryDpDs = commonServiceImpl.getDatasourceByDatapod(summaryDp);
+//
+//			String tableName = getTableName(summaryDpDs, summaryDp, dqExec, runMode);
+//
+//			String sql = "SELECT * FROM " + tableName;
+//
+//			Datasource appDS = commonServiceImpl.getDatasourceByApp();
+//			IExecutor exec = execFactory.getExecutor(appDS.getType().toLowerCase());
+//
+//			String appUuid = commonServiceImpl.getApp().getUuid();
+//			if (runMode.equals(RunMode.ONLINE)) {
+//				return sparkExecutor.executeAndFetchFromTempTable(sql, appUuid);
+//			} else {
+//				if (summaryDpDs.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+//						|| summaryDpDs.getType().equalsIgnoreCase(ExecContext.spark.toString())) {
+//					String dafaultPath = Helper.getPropertyValue("framework.schema.Path");
+//					dafaultPath = dafaultPath.endsWith("/") ? dafaultPath : dafaultPath.concat("/");
+//					String filePath = String.format("%s/%s/%s", summaryDp.getUuid(), summaryDp.getVersion(),
+//							dqExec.getVersion());
+//					String filePathUrl = hdfsInfo.getHdfsURL().concat(dafaultPath).concat(filePath);
+//					List<String> filePathUrlList = new ArrayList<>();
+//					filePathUrlList.add(filePathUrl);
+//					sparkExecutor.readAndRegisterFile(tableName, filePathUrlList, FileType.PARQUET.toString(), "true",
+//							appUuid, true);
+//				}
+//				return exec.executeAndFetchByDatasource(sql, summaryDpDs, appUuid);
+//			}
+		} catch (Exception e) {
 			e.printStackTrace();
 			String message = null;
 			try {
@@ -749,33 +756,41 @@ public class DataQualServiceImpl extends RuleTemplate {
 		try {
 			Datapod detailsDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
 					Helper.getPropertyValue("framework.dataqual.detail.uuid"), null, MetaType.datapod.toString(), "N");
-			Datasource detailsDpDs = commonServiceImpl.getDatasourceByDatapod(detailsDp);
+			
+			limit = offset + limit;
+			offset = offset + 1;
+			dataStoreServiceImpl.setRunMode(runMode);
+			DataStore datastore = dataStoreServiceImpl.findDataStoreByMeta(detailsDp.getUuid(), detailsDp.getVersion());
 
-			String tableName = getTableName(detailsDpDs, detailsDp, dqExec, runMode);
-
-			String sql = "SELECT * FROM " + tableName;
-
-			Datasource appDS = commonServiceImpl.getDatasourceByApp();
-			IExecutor exec = execFactory.getExecutor(appDS.getType().toLowerCase());
-
-			String appUuid = commonServiceImpl.getApp().getUuid();
-			if (runMode.equals(RunMode.ONLINE)) {
-				return sparkExecutor.executeAndFetchFromTempTable(sql, appUuid);
-			} else {
-				if (detailsDpDs.getType().equalsIgnoreCase(ExecContext.FILE.toString())
-						|| detailsDpDs.getType().equalsIgnoreCase(ExecContext.spark.toString())) {
-					String dafaultPath = Helper.getPropertyValue("framework.schema.Path");
-					dafaultPath = dafaultPath.endsWith("/") ? dafaultPath : dafaultPath.concat("/");
-					String filePath = String.format("%s/%s/%s", detailsDp.getUuid(), detailsDp.getVersion(),
-							dqExec.getVersion());
-					String filePathUrl = hdfsInfo.getHdfsURL().concat(dafaultPath).concat(filePath);
-					List<String> filePathUrlList = new ArrayList<>();
-					filePathUrlList.add(filePathUrl);
-					sparkExecutor.readAndRegisterFile(tableName, filePathUrlList, FileType.PARQUET.toString(), "true",
-							appUuid, true);
-				}
-				return exec.executeAndFetchByDatasource(sql, detailsDpDs, appUuid);
-			}
+			return dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId,
+					offset, limit, sortBy, order, dqExec.getVersion());
+//			Datasource detailsDpDs = commonServiceImpl.getDatasourceByDatapod(detailsDp);
+//
+//			String tableName = getTableName(detailsDpDs, detailsDp, dqExec, runMode);
+//
+//			String sql = "SELECT * FROM " + tableName;
+//
+//			Datasource appDS = commonServiceImpl.getDatasourceByApp();
+//			IExecutor exec = execFactory.getExecutor(appDS.getType().toLowerCase());
+//
+//			String appUuid = commonServiceImpl.getApp().getUuid();
+//			if (runMode.equals(RunMode.ONLINE)) {
+//				return sparkExecutor.executeAndFetchFromTempTable(sql, appUuid);
+//			} else {
+//				if (detailsDpDs.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+//						|| detailsDpDs.getType().equalsIgnoreCase(ExecContext.spark.toString())) {
+//					String dafaultPath = Helper.getPropertyValue("framework.schema.Path");
+//					dafaultPath = dafaultPath.endsWith("/") ? dafaultPath : dafaultPath.concat("/");
+//					String filePath = String.format("%s/%s/%s", detailsDp.getUuid(), detailsDp.getVersion(),
+//							dqExec.getVersion());
+//					String filePathUrl = hdfsInfo.getHdfsURL().concat(dafaultPath).concat(filePath);
+//					List<String> filePathUrlList = new ArrayList<>();
+//					filePathUrlList.add(filePathUrl);
+//					sparkExecutor.readAndRegisterFile(tableName, filePathUrlList, FileType.PARQUET.toString(), "true",
+//							appUuid, true);
+//				}
+//				return exec.executeAndFetchByDatasource(sql, detailsDpDs, appUuid);
+//			}
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
 				| SecurityException | NullPointerException | ParseException | IOException e) {
 			e.printStackTrace();

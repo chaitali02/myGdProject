@@ -791,7 +791,7 @@
                     <div class="form-group">
                       <label class="control-label col-md-3">Domain Check</label>
                       <div class="col-md-6">
-                        <select select2 ng-disabled="{{mode}} || !isSelectSoureceAttr" ng-model="selectedDomain" ng-options="x as x.name for x in allDomain | orderBy"
+                        <select select2 ng-disabled="{{mode}} || !isSelectSoureceAttr" ng-model="selectedDomain" ng-options="x as x.name for x in allDomain | orderBy track by x.uuid"
                           class="form-control" ng-change="OnselectType()">
                           <option value="">-Select-</option>
                         </select>
