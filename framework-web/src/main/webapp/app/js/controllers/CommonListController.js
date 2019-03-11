@@ -171,7 +171,18 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   }
 
   $scope.getExec = function (data) {
-    var stateName = dagMetaDataService.elementDefs[$scope.select].resultState;
+    debugger
+    var stateName;
+    if($scope.select == "dqexec"){
+      if($stateParams.isExec2){
+        stateName = dagMetaDataService.elementDefs[$scope.select].resultState2;
+      }
+      else{
+      stateName = dagMetaDataService.elementDefs[$scope.select].resultState;
+     }
+    }else{
+    stateName = dagMetaDataService.elementDefs[$scope.select].resultState;
+    }
     if (stateName) {
       $state.go(stateName, {
         id: data.uuid,

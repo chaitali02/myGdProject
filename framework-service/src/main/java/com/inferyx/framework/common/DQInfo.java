@@ -14,8 +14,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class DQInfo {
-
 	private String dqTargetUUID;
+	private String dq_result_detail;
+	private String dq_result_summary;
+	
 	public String getDq_result_detail() {
 		return dq_result_detail;
 	}
@@ -31,9 +33,6 @@ public class DQInfo {
 	public void setDq_result_summary(String dq_result_summary) {
 		this.dq_result_summary = dq_result_summary;
 	}
-
-	private String dq_result_detail;
-	private String dq_result_summary;
 
 	public String getDqTargetUUID() {
 		return dqTargetUUID;

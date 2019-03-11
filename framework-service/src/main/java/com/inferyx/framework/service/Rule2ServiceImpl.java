@@ -26,7 +26,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -36,21 +35,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.ProfileInfo;
 import com.inferyx.framework.common.Rule2Info;
 import com.inferyx.framework.dao.IRule2Dao;
-import com.inferyx.framework.dao.IRuleDao;
 import com.inferyx.framework.domain.Application;
-import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.DagExec;
-import com.inferyx.framework.domain.Rule2Exec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
-import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -58,7 +52,6 @@ import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ParamSetHolder;
 import com.inferyx.framework.domain.ResultSetHolder;
-import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.Rule2;
 import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.Status;
@@ -71,7 +64,6 @@ import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.operator.Rule2Operator;
 import com.inferyx.framework.register.GraphRegister;
-import com.inferyx.framework.writer.IWriter;
 
 @Service
 public class Rule2ServiceImpl extends RuleTemplate {
@@ -121,6 +113,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 	private CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	RuleExecServiceImpl ruleExecServiceImpl;
+	@SuppressWarnings("rawtypes")
 	@Resource(name = "taskThreadMap")
 	ConcurrentHashMap taskThreadMap;
 	@Autowired
@@ -594,7 +587,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 			DataStore datastore = dataStoreServiceImpl.getDatastore(ruleExec.getResult().getRef().getUuid(),
 					ruleExec.getResult().getRef().getVersion());
 
-			data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order);
+			data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order, null);
 			
 			/*boolean requestIdExistFlag = false;
 			StringBuilder orderBy = new StringBuilder();
@@ -1007,6 +1000,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 	@Override
 	public String execute(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		ThreadPoolTaskExecutor metaExecutor = (execParams != null && execParams.getExecutionContext() != null && execParams.getExecutionContext().containsKey("EXECUTOR")) ? (ThreadPoolTaskExecutor)(execParams.getExecutionContext().get("EXECUTOR")) : null;
+		@SuppressWarnings("unchecked")
 		List<FutureTask<TaskHolder>> taskList = (execParams != null && execParams.getExecutionContext() != null && execParams.getExecutionContext().containsKey("TASKLIST")) ? (List<FutureTask<TaskHolder>>)(execParams.getExecutionContext().get("TASKLIST")) : null;
 		execute(metaExecutor, (RuleExec)baseExec, taskList, execParams, runMode);
 		return null;
@@ -1086,16 +1080,16 @@ public class Rule2ServiceImpl extends RuleTemplate {
 	public List<Map<String, Object>> getDetailResults(String rule2ExecUUID, String rule2ExecVersion, RunMode runMode) throws Exception {
 		RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(rule2ExecUUID, rule2ExecVersion,
 				MetaType.ruleExec.toString());
-		DataStore datastore = dataStoreServiceImpl.getDatastore(ruleExec.getResult().getRef().getUuid(),
-				ruleExec.getResult().getRef().getVersion());
+//		DataStore datastore = dataStoreServiceImpl.getDatastore(ruleExec.getResult().getRef().getUuid(),
+//				ruleExec.getResult().getRef().getVersion());
 		Rule2 rule2 = (Rule2) commonServiceImpl.getOneByUuidAndVersion(ruleExec.getDependsOn().getRef().getUuid(),
 				ruleExec.getDependsOn().getRef().getVersion(), MetaType.rule2.toString());
 		dataStoreServiceImpl.setRunMode(runMode);
-		String tableName = null;
+//		String tableName = null;
 		List<Map<String, Object>> data = new ArrayList<>();
 		try {
-			tableName = dataStoreServiceImpl.getTableNameByDatastore(datastore.getUuid(), datastore.getVersion(),
-					runMode);
+//			tableName = dataStoreServiceImpl.getTableNameByDatastore(datastore.getUuid(), datastore.getVersion(),
+//					runMode);
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		ExecContext execContext = null;
 		IExecutor exec = null;
@@ -1133,10 +1127,11 @@ public class Rule2ServiceImpl extends RuleTemplate {
 			offset = offset + 1;
 			RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(ruleExecUUID, ruleExecVersion,
 					MetaType.ruleExec.toString());
+			dataStoreServiceImpl.setRunMode(runMode);
 			DataStore datastore = dataStoreServiceImpl.getDatastore(ruleExec.getResult().getRef().getUuid(),
 					ruleExec.getResult().getRef().getVersion());
 
-			data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order);
+			data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order, null);
 			
 			/*boolean requestIdExistFlag = false;
 			StringBuilder orderBy = new StringBuilder();

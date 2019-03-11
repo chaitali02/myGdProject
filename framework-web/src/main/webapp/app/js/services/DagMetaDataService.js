@@ -940,6 +940,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       joblistState : 'jobmonitoringlist',
       detailState :'jobexecutorlistdqexec',
       resultState:'viewdqresultspage',
+      resultState2:'viewdqresultspage2',
       childMenu:[],
       allowInChildMenu : false,
     },

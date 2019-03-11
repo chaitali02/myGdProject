@@ -59,7 +59,7 @@ public class DatastoreController {
 												@RequestParam(value = "action", required = false) String action) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException, IOException{
 		limit = offset+limit;
 		offset = offset+1;
-		return dataStoreServiceImpl.getResultByDatastore(datastoreUuid, datastoreVersion, requestId, offset, limit, sortBy, order);
+		return dataStoreServiceImpl.getResultByDatastore(datastoreUuid, datastoreVersion, requestId, offset, limit, sortBy, order, null);
 	}
 
 	@RequestMapping(value = "/download", method = RequestMethod.GET)

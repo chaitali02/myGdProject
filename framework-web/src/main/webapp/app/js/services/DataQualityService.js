@@ -271,6 +271,17 @@ DataQualityModule.factory('DataQualityFactory', function ($http, $location) {
 				return response;
 			})
 	}
+
+	factory.findExpressionByType = function (uuid, type) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			method: 'GET',
+			url: url + "metadata/getExpressionByType2?action=view&uuid=" + uuid + "&type=" + type
+		}).
+			then(function (response, status, headers) {
+				return response;
+			})
+	}
 	factory.disableRhsType = function (arrayStr) {
 		var rTypes = [
 			{ "text": "string", "caption": "string", "disabled": false },
@@ -600,6 +611,41 @@ DataQualityModule.service("DataqulityService", function ($q, DataQualityFactory,
 
 		return deferred.promise;
 	}
+	this.getDataQualResults2 = function (uuid, version, offset, limit, requestId, sortBy, order, resultType) {
+		var deferred = $q.defer();
+		var url;
+		if (resultType == "detail") {
+			if (sortBy == null && order == null) {
+				url = "dataqual/getResultDetail?action=view&uuid=" + uuid + "&version=" + version + "&offset=" + offset + "&limit=" + limit + "&requestId=" + requestId;
+			}
+			else {
+				url = "dataqual/getResultDetail?action=view&uuid=" + uuid + "&version=" + version + "&offset=" + offset + "&limit=" + limit + "&requestId=" + requestId + "&order=" + order + "&sortBy=" + sortBy;
+
+			}
+		} else {
+			if (sortBy == null && order == null) {
+				url = "dataqual/getResultSummary?action=view&uuid=" + uuid + "&version=" + version + "&offset=" + offset + "&limit=" + limit + "&requestId=" + requestId;
+			}
+			else {
+				url = "dataqual/getResultSummary?action=view&uuid=" + uuid + "&version=" + version + "&offset=" + offset + "&limit=" + limit + "&requestId=" + requestId + "&order=" + order + "&sortBy=" + sortBy;
+
+			}
+		} DataQualityFactory.findDataQualResults(url).then(function (response) { onSuccess(response) }, function (response) { onError(response.data) });
+		var onSuccess = function (response) {
+		
+			deferred.resolve({
+				data: response
+			})
+		}
+		var onError = function (response) {
+			deferred.reject({
+				data: response
+			})
+		}
+
+		return deferred.promise;
+	}
+
 	this.executeDQRule = function (uuid, version) {
 		var deferred = $q.defer();
 		DataQualityFactory.executeRule(uuid, version).then(function (response) { onSuccess(response) });
@@ -639,7 +685,7 @@ DataQualityModule.service("DataqulityService", function ($q, DataQualityFactory,
 	this.getOneByUuidAndVersionDQView = function (uuid, version, type) {
 		var deferred = $q.defer();
 		DataQualityFactory.findOneByUuidAndVersion(uuid, version, type)
-			.then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
+			.then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			var dqJson = {};
 			dqJson.dqdata = response
@@ -663,11 +709,11 @@ DataQualityModule.service("DataqulityService", function ($q, DataQualityFactory,
 						filterInfo.rhsTypes = DataQualityFactory.disableRhsType(['string', 'dataset']);
 					}
 					else if (['EXISTS', 'NOT EXISTS'].indexOf(filterInfo.operator) != -1) {
-						filterInfo.rhsTypes = DataQualityFactory.disableRhsType(['attribute', 'formula', 'function', 'paramlist','string','integer']);
+						filterInfo.rhsTypes = DataQualityFactory.disableRhsType(['attribute', 'formula', 'function', 'paramlist', 'string', 'integer']);
 					}
-					else if (['IS'].indexOf(filterInfo.operator) != -1){
-						
-						filterInfo.rhsTypes = DataQualityFactory.disableRhsType(['attribute', 'formula', 'dataset', 'function', 'paramlist','integer']);
+					else if (['IS'].indexOf(filterInfo.operator) != -1) {
+
+						filterInfo.rhsTypes = DataQualityFactory.disableRhsType(['attribute', 'formula', 'dataset', 'function', 'paramlist', 'integer']);
 					}
 					else {
 						filterInfo.rhsTypes = DataQualityFactory.disableRhsType(['dataset']);
@@ -850,7 +896,7 @@ DataQualityModule.service("DataqulityService", function ($q, DataQualityFactory,
 		};
 		var onError = function (response) {
 			deferred.reject({
-			  data: response
+				data: response
 			})
 		}
 		return deferred.promise;
@@ -893,7 +939,7 @@ DataQualityModule.service("DataqulityService", function ($q, DataQualityFactory,
 	this.getOneByUuidAndVersion = function (uuid, version, type) {
 		var deferred = $q.defer();
 		DataQualityFactory.findOneByUuidAndVersion(uuid, version, type)
-			.then(function (response) { onSuccess(response) },function (response) { onError(response.data) });
+			.then(function (response) { onSuccess(response) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			deferred.resolve({
 				data: response
@@ -901,7 +947,7 @@ DataQualityModule.service("DataqulityService", function ($q, DataQualityFactory,
 		}
 		var onError = function (response) {
 			deferred.reject({
-			  data: response
+				data: response
 			})
 		}
 
@@ -910,7 +956,7 @@ DataQualityModule.service("DataqulityService", function ($q, DataQualityFactory,
 	this.getOneByUuidAndVersion1 = function (uuid, version, type) {
 		var deferred = $q.defer();
 		DataQualityFactory.findOneByUuidAndVersion(uuid, version, type)
-			.then(function (response) { onSuccess(response.data)},function (response) { onError(response.data) });
+			.then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			deferred.resolve({
 				data: response
@@ -918,7 +964,7 @@ DataQualityModule.service("DataqulityService", function ($q, DataQualityFactory,
 		}
 		var onError = function (response) {
 			deferred.reject({
-			  data: response
+				data: response
 			})
 		}
 		return deferred.promise;
@@ -967,7 +1013,27 @@ DataQualityModule.service("DataqulityService", function ($q, DataQualityFactory,
 		var deferred = $q.defer();
 		DataQualityFactory.findAllLatest(type).then(function (response) { onSuccess(response.data) });
 		var onSuccess = function (response) {
-			var result = response.sort(sortFactory.sortByProperty("name"));
+			var result=[];
+			if(response !=null){
+				result= response.sort(sortFactory.sortByProperty("name"));
+		    }
+			deferred.resolve({
+				data: result
+			})
+		}
+		return deferred.promise;
+	}
+	this.getExpressionByType = function (uuid, type) {
+		var deferred = $q.defer();
+		DataQualityFactory.findExpressionByType(uuid, type).then(function (response) { onSuccess(response.data) });
+		var onSuccess = function (response) {
+			var result = [];
+			for (var i = 0; i < response.length; i++) {
+				var obj = {}
+				obj.name = response[i].ref.name;
+				obj.uuid = response[i].ref.uuid;
+				result.push(obj);
+			}
 			deferred.resolve({
 				data: result
 			})
@@ -1073,7 +1139,7 @@ DataQualityModule.service("DataqulityService", function ($q, DataQualityFactory,
 			DataQualityFactory.findAttributeByDatapod(uuid, type).then(function (response) { onSuccess(response.data) });
 			var onSuccess = function (response) {
 				var attributes = [];
-		    	/* var attributedetail={};
+				/* var attributedetail={};
 				  attributedetail.uuid=""
 				  attributedetail.datapodname=""
 				  attributedetail.name=""

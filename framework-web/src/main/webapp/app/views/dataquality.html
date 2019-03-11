@@ -18,7 +18,8 @@
           </li>
         </ul>
         <div class="page-toolbar">
-          <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+          <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom"
+            data-original-title="Change dashboard date range">
             <i class="icon-calendar"></i>&nbsp;
             <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
           </div>
@@ -39,12 +40,14 @@
           </div>
 
           <div class="actions">
-            <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top"
-              tooltip ng-hide="isAdd"  ng-class="(showRule==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'" data-ng-click="showHome(dataqualitydata.uuid,dataqualitydata.version,mode)">
+            <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Main" data-toggle="tooltip"
+              data-placement="top" tooltip ng-hide="isAdd" ng-class="(showRule==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
+              data-ng-click="showHome(dataqualitydata.uuid,dataqualitydata.version,mode)">
               <i class="fa fa-home icon-circle home-icon-circle"></i>
             </a>
-             <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
-              tooltip ng-class="(isEdit==true || isPrivlage || dataqualitydata.locked == 'Y' ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="enableEdit(dataqualitydata.uuid,dataqualitydata.version)">
+            <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip"
+              data-placement="top" tooltip ng-class="(isEdit==true || isPrivlage || dataqualitydata.locked == 'Y' ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
+              ng-hide="isAdd" data-ng-click="enableEdit(dataqualitydata.uuid,dataqualitydata.version)">
               <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
             </a>
             <!-- <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
@@ -56,16 +59,17 @@
               <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
             </a> -->
             <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Knowledge Graph" ng-show="isDependencyShow"
-              ng-class="(showRule==false ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'" data-toggle="tooltip" data-placement="top" tooltip
-              data-ng-click="showRuleGraph(dataqualitydata.uuid,dataqualitydata.version)">
+              ng-class="(showRule==false ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
+              data-toggle="tooltip" data-placement="top" tooltip data-ng-click="showRuleGraph(dataqualitydata.uuid,dataqualitydata.version)">
               <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:#a0a0a0;"></i>
             </a>
-            <a href="javascript:;" ng-class="(showRule==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'" class="reload btn btn-circle btn-icon-only btn-default"
-              ng-click="broadcastRefreshData()" data-original-title="" title="">
+            <a href="javascript:;" ng-class="(showRule==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
+              class="reload btn btn-circle btn-icon-only btn-default" ng-click="broadcastRefreshData()"
+              data-original-title="" title="">
               <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
             </a>
-            <a class="btn btn-circle btn-icon-only btn-default" ng-click="close()" title="Close" data-toggle="tooltip" data-placement="top"
-              tooltip>
+            <a class="btn btn-circle btn-icon-only btn-default" ng-click="close()" title="Close" data-toggle="tooltip"
+              data-placement="top" tooltip>
               <i class="fa fa-times" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
             </a>
           </div>
@@ -79,11 +83,12 @@
               <div class="bounce2"></div>
               <div class="bounce3"></div>
             </div>
-            <div class="form-body show-graph-body tree-graph" id="graphWrapper" tree-graph-directive uuid="dataqualitydata.uuid" version="dq.defaultVersion.version"></div>
+            <div class="form-body show-graph-body tree-graph" id="graphWrapper" tree-graph-directive uuid="dataqualitydata.uuid"
+              version="dq.defaultVersion.version"></div>
           </div>
 
           <div class="form-wizard" ng-show="showRuleForm">
-            <div class="centercontent" style="min-height:500px;" ng-if="isEditVeiwError" >
+            <div class="centercontent" style="min-height:500px;" ng-if="isEditVeiwError">
               <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
             </div>
             <div class="centercontent" style="min-height:500px;" ng-if="isEditInprogess && !isEditVeiwError">
@@ -138,8 +143,8 @@
                   <button class="close" data-dismiss="alert"></button> Your form validation is successful!
                 </div>
                 <div class="tab-pane" id="tab1" ng-class="{'active' : continueCount == 1}">
-                  <form class="form-horizontal" type="form" name="myform1" id="submit_form1" ng-submit="countContinue()" novalidate="novalidate"
-                    prevent-enter-submit>
+                  <form class="form-horizontal" type="form" name="myform1" id="submit_form1" ng-submit="countContinue()"
+                    novalidate="novalidate" prevent-enter-submit>
                     <div class="form-group" ng-show="dataqualitydata.uuid">
                       <label class="control-label col-md-3">UUID</label>
                       <div class="col-md-6">
@@ -158,8 +163,8 @@
                     <div class="form-group" ng-show="dataqualitydata.uuid">
                       <label class="col-md-3 control-label">Version</label>
                       <div class="col-md-6">
-                        <select class="form-control" select2 name="version" ng-disabled="isversionEnable" ng-change="selectVersion()" data-ng-model="dq.defaultVersion.version"
-                          ng-options="c.version as c.version for c in dq.versions">
+                        <select class="form-control" select2 name="version" ng-disabled="isversionEnable" ng-change="selectVersion()"
+                          data-ng-model="dq.defaultVersion.version" ng-options="c.version as c.version for c in dq.versions">
                           <option>-select-</option>
                         </select>
                       </div>
@@ -167,7 +172,8 @@
                     <div class="form-group" ng-show="dataqualitydata.uuid">
                       <label class="control-label col-md-3">Created By</label>
                       <div class="col-md-6">
-                        <input type="text" class="form-control" ng-model="dataqualitydata.createdBy.ref.name" ng-disabled="true">
+                        <input type="text" class="form-control" ng-model="dataqualitydata.createdBy.ref.name"
+                          ng-disabled="true">
                       </div>
                     </div>
                     <div class="form-group" ng-show="dataqualitydata.uuid">
@@ -180,9 +186,10 @@
                       <label class="control-label col-md-3">Tag</label>
                       <div class="col-md-6">
                         <!-- <tags-input ng-model="tags" min-length="0" ng-disabled="{{mode}}"></tags-input> -->
-                        <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false"
-                          add-on-enter="true" add-on-space="true">
-                          <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" max-results-to-show="10">
+                        <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0"
+                          add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
+                          <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0"
+                            highlight-matched-text="true" max-results-to-show="10">
                           </auto-complete>
                         </tags-input>
                       </div>
@@ -191,7 +198,8 @@
                       <label class="control-label col-md-3">Desc</label>
                       <div class="col-md-6">
                         <!--  <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="dataqualitydata.desc" > -->
-                        <textarea class="form-control" ng-disabled="{{mode}}" ng-model="dataqualitydata.desc" rows="2" style="resize:none;"></textarea>
+                        <textarea class="form-control" ng-disabled="{{mode}}" ng-model="dataqualitydata.desc" rows="2"
+                          style="resize:none;"></textarea>
                       </div>
                     </div>
 
@@ -199,8 +207,10 @@
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
                       <div class="col-md-6">
                         <div class="btn-group" ng-init="dataqualitydata.active='Y'">
-                          <label class="btn btn-default" ng-model="dataqualitydata.active" ng-disabled="{{showactive}}" uib-btn-radio="'Y'">Yes</label>
-                          <label class="btn btn-default" ng-model="dataqualitydata.active" ng-disabled="{{showactive}}" uib-btn-radio="'N'" uncheckable>No</label>
+                          <label class="btn btn-default" ng-model="dataqualitydata.active" ng-disabled="{{showactive}}"
+                            uib-btn-radio="'Y'">Yes</label>
+                          <label class="btn btn-default" ng-model="dataqualitydata.active" ng-disabled="{{showactive}}"
+                            uib-btn-radio="'N'" uncheckable>No</label>
                         </div>
                       </div>
                     </div>
@@ -208,8 +218,10 @@
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
                       <div class="col-md-6">
                         <div class="btn-group">
-                          <label class="btn btn-default" ng-model="dataqualitydata.locked" ng-disabled="{{showactive}}" uib-btn-radio="'Y'">Yes</label>
-                          <label class="btn btn-default" ng-model="dataqualitydata.locked" ng-disabled="{{showactive}}" uib-btn-radio="'N'" uncheckable>No</label>
+                          <label class="btn btn-default" ng-model="dataqualitydata.locked" ng-disabled="{{showactive}}"
+                            uib-btn-radio="'Y'">Yes</label>
+                          <label class="btn btn-default" ng-model="dataqualitydata.locked" ng-disabled="{{showactive}}"
+                            uib-btn-radio="'N'" uncheckable>No</label>
                         </div>
                       </div>
                     </div>
@@ -217,8 +229,10 @@
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
                         <div class="btn-group" ng-init="dataqualitydata.published='N'">
-                          <label class="btn btn-default" ng-model="dataqualitydata.published" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
-                          <label class="btn btn-default" ng-model="dataqualitydata.published" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
+                          <label class="btn btn-default" ng-model="dataqualitydata.published" uib-btn-radio="'Y'"
+                            ng-disabled="{{showactive}}" uncheckable>Yes</label>
+                          <label class="btn btn-default" ng-model="dataqualitydata.published" uib-btn-radio="'N'"
+                            ng-disabled="{{showactive}}" uncheckable>No</label>
                         </div>
                       </div>
                     </div>
@@ -252,8 +266,8 @@
                         <span class="required" aria-required="true"> * </span>
                       </label>
                       <div class="col-md-6">
-                        <select class="form-control" data-ng-model="dataqualitysourceType" ng-options="r for r in sourceType" ng-disabled="{{mode}}"
-                          ng-change="OnSourceTypeChange()" required>
+                        <select class="form-control" data-ng-model="dataqualitysourceType" ng-options="r for r in sourceType"
+                          ng-disabled="{{mode}}" ng-change="OnSourceTypeChange()" required>
                         </select>
                       </div>
                     </div>
@@ -287,34 +301,34 @@
                         <div class="actions">
                           <div class="btn-group btn-group-devided" data-toggle="buttons">
                             <div class="x_title" style="padding:10px;">
-                              <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-disabled="{{mode}}" ng-click="removeFilterRow()"
-                                ng-disabled="isButtonEnaple"></button>
-                              <button type="Button" class=" btn btn-success fa fa-plus pull-right" ng-disabled="{{mode}}" ng-click="addRowFilter();" ng-disabled="isButtonEnaple"></button>
+                              <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-disabled="{{mode}}"
+                                ng-click="removeFilterRow()" ng-disabled="isButtonEnaple"></button>
+                              <button type="Button" class=" btn btn-success fa fa-plus pull-right" ng-disabled="{{mode}}"
+                                ng-click="addRowFilter();" ng-disabled="isButtonEnaple"></button>
                               <div class="actions pull-right" style="position:relative;padding-right: 5px;">
                                 <a class="btn green-haze btn-outline btn-circle auto-map btn-sm" ng-disabled="fitlerAttrTableSelectedItem.length ==1 && filterTableArray.length >1 ?false:true"
-                                    href="javascript:;" data-toggle="dropdown" tooltip-placement="left"
-                                    uib-tooltip="Move" data-hover="dropdown" data-close-others="true"
-                                    aria-expanded="false">
-                                    <span class="fa fa-arrows" aria-hidden="true"></span>
-                                    <i class="fa fa-angle-down"></i>
+                                  href="javascript:;" data-toggle="dropdown" tooltip-placement="left" uib-tooltip="Move"
+                                  data-hover="dropdown" data-close-others="true" aria-expanded="false">
+                                  <span class="fa fa-arrows" aria-hidden="true"></span>
+                                  <i class="fa fa-angle-down"></i>
                                 </a>
                                 <ul class="dropdown-menu pull-right" style="z-index:10000;top:28px;right:45px;position:absolute">
-                                    <li ng-click="autoMove(0,'filterAttr')">
-                                        <a href="javascript:;" ng-disabled="fitlerAttrTableSelectedItem[0]==0?true:false">Top</a>
-                                    </li>
-                                    <li class="divider" style="margin: 0px;"> </li>
-                                    <li ng-click="autoMove(filterTableArray.length-1,'filterAttr')">
-                                        <a href="javascript:;" ng-disabled="fitlerAttrTableSelectedItem[0]==filterTableArray.length-1 ? true:false">Bottom</a>
-                                    </li>
-                                    <li class="divider" style="margin: 0px;"> </li>
-                                    <li>
-                                        <div class="form-group" style="margin: 1%;">
-                                            <input type="number" class="form-control" ng-if="fitlerAttrTableSelectedItem.length == 1" ng-model="moveTo" min="0" max="{{filterTableArray.length}}"
-                                                name="moveto" style="border:0" placeholder="Move To"
-                                                ng-model-options="{debounce:3000}" ng-change="autoMoveTo(moveTo,'filterAttr')"
-                                                focus-me="true" required />
-                                        </div>
-                                    </li>
+                                  <li ng-click="autoMove(0,'filterAttr')">
+                                    <a href="javascript:;" ng-disabled="fitlerAttrTableSelectedItem[0]==0?true:false">Top</a>
+                                  </li>
+                                  <li class="divider" style="margin: 0px;"> </li>
+                                  <li ng-click="autoMove(filterTableArray.length-1,'filterAttr')">
+                                    <a href="javascript:;" ng-disabled="fitlerAttrTableSelectedItem[0]==filterTableArray.length-1 ? true:false">Bottom</a>
+                                  </li>
+                                  <li class="divider" style="margin: 0px;"> </li>
+                                  <li>
+                                    <div class="form-group" style="margin: 1%;">
+                                      <input type="number" class="form-control" ng-if="fitlerAttrTableSelectedItem.length == 1"
+                                        ng-model="moveTo" min="0" max="{{filterTableArray.length}}" name="moveto" style="border:0"
+                                        placeholder="Move To" ng-model-options="{debounce:3000}" ng-change="autoMoveTo(moveTo,'filterAttr')"
+                                        focus-me="true" required />
+                                    </div>
+                                  </li>
                                 </ul>
                               </div>
                             </div>
@@ -340,8 +354,8 @@
                               <tr>
                                 <th style="text-align: center; Vertical-align:middle;width:7%;">
                                   <span class="form-group" style="margin-left:0px;margin-right:0px;">
-                                    <input style="width: 16px;height:16px;" type="checkbox" ng-model="checkAll" ng-click="checkAllFilterRow()" ng-disabled="{{mode}}"
-                                    />
+                                    <input style="width: 16px;height:16px;" type="checkbox" ng-model="checkAll"
+                                      ng-click="checkAllFilterRow()" ng-disabled="{{mode}}" />
                                   </span>
                                 </th>
                                 <th style="width:16%;text-align:center;">Logical Operator</th>
@@ -354,20 +368,24 @@
                               </tr>
                             </thead>
                             <tbody>
-                              <tr ng-repeat="tabledata in filterTableArray" drag-drop draggable="{{isDragable}}" after-drop="onFilterDrop">
+                              <tr ng-repeat="tabledata in filterTableArray" drag-drop draggable="{{isDragable}}"
+                                after-drop="onFilterDrop">
                                 <td style="text-align:center;Vertical-align:middle;">
                                   <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                    <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected" ng-change="onChangeFilterAttRow($index,tabledata.selected)" />
+                                    <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox"
+                                      ng-model="tabledata.selected" ng-change="onChangeFilterAttRow($index,tabledata.selected)" />
                                   </span>
                                 </td>
                                 <td>
                                   <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                    <select ng-model="tabledata.logicalOperator" ng-options="x for x in logicalOperator" ng-disabled=" $first ||{{mode}}" class="form-control"></select>
+                                    <select ng-model="tabledata.logicalOperator" ng-options="x for x in logicalOperator"
+                                      ng-disabled=" $first ||{{mode}}" class="form-control"></select>
                                   </span>
                                 </td>
                                 <td>
                                   <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                    <select ng-change="selectlhsType(tabledata.lhstype.text,$index)" ng-model="tabledata.lhstype" ng-options="x as x.caption for x in lhsType | orderBy : 'caption'  track by x.text+x.caption"
+                                    <select ng-change="selectlhsType(tabledata.lhstype.text,$index)" ng-model="tabledata.lhstype"
+                                      ng-options="x as x.caption for x in lhsType | orderBy : 'caption'  track by x.text+x.caption"
                                       ng-disabled=" {{mode}}" class="form-control">
                                     </select>
                                   </span>
@@ -378,41 +396,47 @@
                                       <!-- <input type="text" ng-disabled="{{mode}}" name="lhsvalue{{$index}}" ng-model="tabledata.lhsvalue" title="{{tabledata.lhsvalue}}"
                                         class="form-control" required disable-validation-message="" uib-tooltip="{{myform['lhsvalue'+$index].$valid ? '' : 'enter value into single quotes'}}"
                                         ng-pattern="/(^[\'][a-zA-Z0-9\-_%]+[']$)/"> -->
-                                        <input type="text" ng-disabled="{{mode}}" name="lhsvalue{{$index}}" ng-model="tabledata.lhsvalue" title="{{tabledata.lhsvalue}}"
-                                        class="form-control" required disable-validation-message="">
+                                      <input type="text" ng-disabled="{{mode}}" name="lhsvalue{{$index}}" ng-model="tabledata.lhsvalue"
+                                        title="{{tabledata.lhsvalue}}" class="form-control" required
+                                        disable-validation-message="">
                                     </span>
                                     <span ng-if="tabledata.lhstype.caption=='integer'">
-                                      <input type="text" ng-disabled="{{mode}}" name="lhsvalue{{$index}}" ng-model="tabledata.lhsvalue" title="{{tabledata.lhsvalue}}"
-                                        class="form-control" required disable-validation-message="" uib-tooltip="{{myform['lhsvalue'+$index].$valid ? '' : 'enter only interger'}}"
+                                      <input type="text" ng-disabled="{{mode}}" name="lhsvalue{{$index}}" ng-model="tabledata.lhsvalue"
+                                        title="{{tabledata.lhsvalue}}" class="form-control" required
+                                        disable-validation-message="" uib-tooltip="{{myform['lhsvalue'+$index].$valid ? '' : 'enter only interger'}}"
                                         ng-pattern="/^[0-9]{1,20}$/">
                                     </span>
                                   </span>
                                   <div width="190px" ng-show="tabledata.islhsDatapod">
                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                      <select select2 ng-show="tabledata.islhsDatapod" ng-model="tabledata.lhsdatapodAttribute" ng-disabled="{{mode}}" class="form-control"
-                                        ng-change="onChangeAttribute()" ng-options="c as (c.datapodname + '.' + c.name) for c in lhsdatapodattributefilter track by c.uuid+c.attributeId">
+                                      <select select2 ng-show="tabledata.islhsDatapod" ng-model="tabledata.lhsdatapodAttribute"
+                                        ng-disabled="{{mode}}" class="form-control" ng-change="onChangeAttribute()"
+                                        ng-options="c as (c.datapodname + '.' + c.name) for c in lhsdatapodattributefilter track by c.uuid+c.attributeId">
                                       </select>
                                     </span>
                                   </div>
                                   <div ng-show="tabledata.islhsFormula">
                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                      <select select2 class="form-control"  data-ng-model="tabledata.lhsformula" ng-options="r as r.name for r in ruleLodeFormula track by r.uuid"
-                                        ng-disabled="{{mode}}" ng-show="tabledata.islhsFormula" ng-change="onChangeFromula()">
+                                      <select select2 class="form-control" data-ng-model="tabledata.lhsformula"
+                                        ng-options="r as r.name for r in ruleLodeFormula track by r.uuid" ng-disabled="{{mode}}"
+                                        ng-show="tabledata.islhsFormula" ng-change="onChangeFromula()">
                                       </select>
                                     </span>
                                   </div>
                                 </td>
                                 <td>
                                   <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                    <select ng-init="tabledata.operator" ng-disabled="{{mode}}" ng-model="tabledata.operator" ng-options="x.value as x.caption for x in operator"
-                                      ng-disabled="{{mode}}" class="form-control" ng-change="onChangeOperator($index)"></select>
+                                    <select ng-init="tabledata.operator" ng-disabled="{{mode}}" ng-model="tabledata.operator"
+                                      ng-options="x.value as x.caption for x in operator" ng-disabled="{{mode}}" class="form-control"
+                                      ng-change="onChangeOperator($index)"></select>
                                   </span>
                                 </td>
                                 <td>
                                   <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                     <!-- <select ng-change="selectrhsType(tabledata.rhstype.text,$index)" ng-model="tabledata.rhstype" ng-options="x as x.caption disable when ['EXISTS','NOT EXISTS','IN','NOT IN'].indexOf(tabledata.operator) !=-1?false:true && x.text =='dataset' for x in rhsType  | orderBy : 'caption'  track by x.text+x.caption" -->
-                                    <select ng-change="selectrhsType(tabledata.rhstype.text,$index)" ng-model="tabledata.rhstype" ng-options="x as x.caption disable when x.disabled for x in tabledata.rhsTypes | orderBy : 'caption' track by x.text+x.caption"
-                                    ng-disabled=" {{mode}}" class="form-control">
+                                    <select ng-change="selectrhsType(tabledata.rhstype.text,$index)" ng-model="tabledata.rhstype"
+                                      ng-options="x as x.caption disable when x.disabled for x in tabledata.rhsTypes | orderBy : 'caption' track by x.text+x.caption"
+                                      ng-disabled=" {{mode}}" class="form-control">
                                     </select>
                                   </span>
                                 </td>
@@ -424,13 +448,15 @@
                                         <!-- <input class="form-control" type="text" ng-disabled="{{mode}}" name="rhsvalue_{{$index}}" ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}"
                                           required disable-validation-message="" uib-tooltip="{{myform['rhsvalue_'+$index].$valid ? '' : 'enter values into single quotes and seprated by comma'}}"
                                           ng-pattern="/([\']+[a-zA-Z0-9\-_%,]*[']+$)/" tooltip-placement="left"> -->
-                                          <input class="form-control" type="text" ng-disabled="{{mode}}" name="rhsvalue_{{$index}}" ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}"
-                                          required disable-validation-message="">
+                                        <input class="form-control" type="text" ng-disabled="{{mode}}" name="rhsvalue_{{$index}}"
+                                          ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}" required
+                                          disable-validation-message="">
                                       </span>
                                       <span ng-if="['IN','NOT IN'].indexOf(tabledata.operator) !=-1 && tabledata.rhstype.caption=='integer'">
                                         <!-- ng-pattern="/^[0-9a-zA-Z\_-]*$/"  -->
-                                        <input class="form-control" type="text" ng-disabled="{{mode}}" name="rhsvalue_{{$index}}" ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}"
-                                          required ng-pattern="/^[0-9\,]{1,20}$/" disable-validation-message="" uib-tooltip="{{myform['rhsvalue_'+$index].$valid ? '' : 'enter only integer value seprated by comma '}}"
+                                        <input class="form-control" type="text" ng-disabled="{{mode}}" name="rhsvalue_{{$index}}"
+                                          ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}" required
+                                          ng-pattern="/^[0-9\,]{1,20}$/" disable-validation-message="" uib-tooltip="{{myform['rhsvalue_'+$index].$valid ? '' : 'enter only integer value seprated by comma '}}"
                                           tooltip-placement="left">
                                       </span>
 
@@ -439,19 +465,22 @@
                                         <!-- <input class="form-control" type="text" ng-disabled="{{mode}}" name="rhsvalue_{{$index}}" ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}"
                                           required disable-validation-message="" uib-tooltip="{{myform['rhsvalue_'+$index].$valid ? '' : 'enter value into single quotes'}}"
                                           ng-pattern="/(^[\'][a-zA-Z0-9\-_%]+[']$)/"> -->
-                                          <input class="form-control" type="text" ng-disabled="{{mode}}" name="rhsvalue_{{$index}}" ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}"
-                                          required disable-validation-message="">
+                                        <input class="form-control" type="text" ng-disabled="{{mode}}" name="rhsvalue_{{$index}}"
+                                          ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}" required
+                                          disable-validation-message="">
                                       </span>
                                       <span ng-if="spacialOperator.indexOf(tabledata.operator) !=-1 && tabledata.rhstype.caption=='integer'">
-                                        <input class="form-control" type="text" name="rhsvalue_{{$index}}" ng-disabled="{{mode}}" ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}"
-                                          required ng-pattern="/^[0-9]{1,20}$/" disable-validation-message="" uib-tooltip="{{myform['rhsvalue_'+$index].$valid ? '' : 'enter only integer'}}">
+                                        <input class="form-control" type="text" name="rhsvalue_{{$index}}" ng-disabled="{{mode}}"
+                                          ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}" required
+                                          ng-pattern="/^[0-9]{1,20}$/" disable-validation-message="" uib-tooltip="{{myform['rhsvalue_'+$index].$valid ? '' : 'enter only integer'}}">
                                       </span>
                                     </span>
                                     <span ng-if="tabledata.operator =='BETWEEN'">
                                       <div class="col-md-5 col-sm-5 col-xs-12" style="padding:0px">
                                         <span class="form-group" style="margin-left:0px;margin-right:0px;">
-                                          <input ng-model="tabledata.rhsvalue1" name="rhsvalue1_{{$index}}" type="text" class="form-control" ng-disabled="{{mode}}"
-                                            required ng-pattern="/^[0-9]{1,20}$/" disable-validation-message="" uib-tooltip="{{myform['rhsvalue1_'+$index].$valid ? '' : 'enter only integer'}}"
+                                          <input ng-model="tabledata.rhsvalue1" name="rhsvalue1_{{$index}}" type="text"
+                                            class="form-control" ng-disabled="{{mode}}" required ng-pattern="/^[0-9]{1,20}$/"
+                                            disable-validation-message="" uib-tooltip="{{myform['rhsvalue1_'+$index].$valid ? '' : 'enter only integer'}}"
                                             tooltip-placement="left">
                                         </span>
                                       </div>
@@ -461,23 +490,24 @@
                                       </div>
                                       <div class="col-md-5 col-sm-5 col-xs-12" style="padding:0px">
                                         <span class="form-group" style="margin-left:0px;margin-right:0px;">
-                                          <input ng-model="tabledata.rhsvalue2" name="rhsvalue2_{{$index}}" type="text" class="form-control" ng-disabled="{{mode}}"
-                                            ng-pattern="/^[0-9]{1,20}$/" required disable-validation-message="" uib-tooltip="{{myform['rhsvalue2_'+$index].$valid ? '' : 'enter only integer'}}"
+                                          <input ng-model="tabledata.rhsvalue2" name="rhsvalue2_{{$index}}" type="text"
+                                            class="form-control" ng-disabled="{{mode}}" ng-pattern="/^[0-9]{1,20}$/"
+                                            required disable-validation-message="" uib-tooltip="{{myform['rhsvalue2_'+$index].$valid ? '' : 'enter only integer'}}"
                                             tooltip-placement="left">
                                         </span>
                                       </div>
                                     </span>
                                     <div ng-if="['IS'].indexOf(tabledata.operator) !=-1">
                                       <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                        <select  class="form-control"  ng-model="tabledata.rhsvalue" ng-options="r for r in rhsNA"
+                                        <select class="form-control" ng-model="tabledata.rhsvalue" ng-options="r for r in rhsNA"
                                           ng-disabled="{{mode}}" required disable-validation-message=""></select>
                                       </span>
                                     </div>
                                   </div>
                                   <div ng-if="tabledata.isrhsDatapod">
                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                      <select select2 class="form-control" name="rhsdatapodAttribute_{{$index}}" ng-model="tabledata.rhsdatapodAttribute" ng-disabled="{{mode}}"
-                                        ng-options="c as (c.datapodname + '.' + c.name) for c in lhsdatapodattributefilter track by c.uuid+c.attributeId"
+                                      <select select2 class="form-control" name="rhsdatapodAttribute_{{$index}}"
+                                        ng-model="tabledata.rhsdatapodAttribute" ng-disabled="{{mode}}" ng-options="c as (c.datapodname + '.' + c.name) for c in lhsdatapodattributefilter track by c.uuid+c.attributeId"
                                         required disable-validation-message="" uib-tooltip="{{myform['rhsdatapodAttribute_'+$index].$valid ? '' : 'Please select Attribute'}}"
                                         tooltip-placement="top">
                                       </select>
@@ -485,58 +515,62 @@
                                   </div>
                                   <div ng-if="tabledata.isrhsFormula">
                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                      <select select2 class="form-control" name="rhsformula_{{$index}}" ng-change="selectmetrhsType()" data-ng-model="tabledata.rhsformula"
-                                        ng-options="r as r.name for r in expressionFormula track by r.uuid" ng-disabled="{{mode}}"
-                                        ng-show="tabledata.isrhsFormula" required disable-validation-message="" uib-tooltip="{{myform['rhsformula'+$index].$valid ? '' : 'Please select formula'}}"
+                                      <select select2 class="form-control" name="rhsformula_{{$index}}" ng-change="selectmetrhsType()"
+                                        data-ng-model="tabledata.rhsformula" ng-options="r as r.name for r in expressionFormula track by r.uuid"
+                                        ng-disabled="{{mode}}" ng-show="tabledata.isrhsFormula" required
+                                        disable-validation-message="" uib-tooltip="{{myform['rhsformula'+$index].$valid ? '' : 'Please select formula'}}"
                                         tooltip-placement="top">
                                       </select>
                                     </span>
                                   </div>
                                   <div ng-if="tabledata.isrhsFunction">
                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                        <select select2 class="form-control" name="rhsformula_{{$index}}"  ng-change="onChangeFunction()" data-ng-model="tabledata.rhsfunction"
-                                        ng-options="c as  c.name for c in allFunction track by c.uuid"
-                                            ng-disabled="{{mode}}" ng-show="tabledata.isrhsFunction" required
-                                            disable-validation-message="" uib-tooltip="{{myform['rhsfunction'+$index].$valid ? '' : 'Please select function'}}"
-                                            tooltip-placement="top">
-                                        </select>
+                                      <select select2 class="form-control" name="rhsformula_{{$index}}" ng-change="onChangeFunction()"
+                                        data-ng-model="tabledata.rhsfunction" ng-options="c as  c.name for c in allFunction track by c.uuid"
+                                        ng-disabled="{{mode}}" ng-show="tabledata.isrhsFunction" required
+                                        disable-validation-message="" uib-tooltip="{{myform['rhsfunction'+$index].$valid ? '' : 'Please select function'}}"
+                                        tooltip-placement="top">
+                                      </select>
                                     </span>
                                   </div>
                                   <div ng-if="tabledata.isrhsDataset">
                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-            
+
                                       <div class="col-md-11" style="padding: 0px;">
-                                        <input type="text" ng-disabled="true" class="form-control" ng-model="tabledata.rhsdataset.name" title="{{tabledata.rhsdataset.dname}}"
-                                          required disable-validation-message="">
+                                        <input type="text" ng-disabled="true" class="form-control" ng-model="tabledata.rhsdataset.name"
+                                          title="{{tabledata.rhsdataset.dname}}" required disable-validation-message="">
                                       </div>
                                       <div class="col-md-1" style="padding:7px 0px 0px 5px;">
-                                        <span class="fa fa-search" tooltip-placement="left" uib-tooltip="Search" ng-click="SearchAttribute($index,tabledata.rhstype.text,'rhsdataset')"></span>
+                                        <span class="fa fa-search" tooltip-placement="left" uib-tooltip="Search"
+                                          ng-click="SearchAttribute($index,tabledata.rhstype.text,'rhsdataset')"></span>
                                       </div>
                                     </span>
                                   </div>
                                   <div ng-if="tabledata.isrhsParamlist">
                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                        <!-- <div class="col-md-11" style="padding: 0px;">
+                                      <!-- <div class="col-md-11" style="padding: 0px;">
                                             <input type="text" ng-disabled="true" class="form-control" ng-model="tabledata.rhsparamlist.name" title="{{tabledata.rhsparamlist.dname}}"
                                             required disable-validation-message="">
                                         </div>
                                         <div class="col-md-1" style="padding:7px 0px 0px 5px;">
                                             <span class="fa fa-search" tooltip-placement="left" uib-tooltip="Search" ng-click="SearchAttribute($index,tabledata.rhstype.text,'rhsparamlist')"></span>
                                         </div> -->
-                                        <select select2 class="form-control"  data-ng-model="tabledata.rhsparamlist"
-                                        ng-options="r as r.caption for r in allparamlistParams track by r.uuid+r.attributeId" ng-disabled="{{mode}}"
-                                         required disable-validation-message="" ng-change="onChangeRhsParamList()"></select>
+                                      <select select2 class="form-control" data-ng-model="tabledata.rhsparamlist"
+                                        ng-options="r as r.caption for r in allparamlistParams track by r.uuid+r.attributeId"
+                                        ng-disabled="{{mode}}" required disable-validation-message="" ng-change="onChangeRhsParamList()"></select>
                                     </span>
                                   </div>
                                 </td>
                                 <td>
                                   <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                     <div style="text-align: center;">
-                                      <a class="move-column" ng-disabled="($index == 0 || {{mode}}==true) ?true:false" ng-click="onAttrFilterRowUp($index)">
+                                      <a class="move-column" ng-disabled="($index == 0 || {{mode}}==true) ?true:false"
+                                        ng-click="onAttrFilterRowUp($index)">
                                         <!-- <i class="glyphicon glyphicon-arrow-up"></i> -->
                                         <i class="glyphicon glyphicon-circle-arrow-up" style="font-size:20px"></i>
                                       </a>
-                                      <a class="move-column" ng-disabled="($index == filterTableArray.length-1 || {{mode}}) ? true:false" ng-click="onAttrFilterRowDown($index)">
+                                      <a class="move-column" ng-disabled="($index == filterTableArray.length-1 || {{mode}}) ? true:false"
+                                        ng-click="onAttrFilterRowDown($index)">
                                         <!-- <i class="glyphicon glyphicon-arrow-down"></i> -->
                                         <i class="glyphicon glyphicon-circle-arrow-down	" style="font-size:20px"></i>
                                       </a>
@@ -567,29 +601,64 @@
                 <!--Start Tab3-->
                 <div class="tab-pane" id="tab3" ng-class="{'active' : continueCount == 3}">
                   <form class="form-horizontal" name="myform3" id="submit_form3" ng-submit="countContinue()" novalidate="novalidate">
-                    <div class="form-group">
+                    <div class="col-md-12">
+                       
+                        <div class="col-md-4 form-group">
+                          <label class="control-label col-md-8 col-sm-8 col-xs-12 col-md-offset-1" style="margin-top:-4px;">Duplicate Key Check
+                          </label>
+                          <div class="col-md-2 col-sm-2 col-xs-12"  style="margin-left: 7px;">
+                            <div class="mt-checkbox-inline" style="margin-top:-17px;padding-top:4px;" ng-init="dataqualitydata.duplicateKeyCheck='N'">
+                              <label class="mt-checkbox " style="margin-bottom:-1px;">
+                                <input type="checkbox" ng-model="dataqualitydata.duplicateKeyCheck" ng-disabled="{{mode}}"
+                                  ng-true-value="'Y'" ng-false-value="'N'">
+                                <span style="border: 1px solid rgba(128, 128, 128, 0.38);background-color:white;"
+                                  ng-disabled="{{mode}}"></span>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-2 form-group"></div>
+                        <div class="col-md-6 form-group">
+                          <label class="control-label col-md-4 col-sm-6 col-xs-12" style="padding-right:0px;width:72px;padding-left:0px;margin-top:-4px;">Null Check
+                          </label>
+                          <div class="col-md-6 col-sm-6 col-xs-12">
+                            <div class="mt-checkbox-inline" style="margin-top:-17px;padding-top:4px;" ng-init="dataqualitydata.nullCheck='N'">
+                              <label class="mt-checkbox " style="margin-bottom:-1px;">
+                                <input type="checkbox" ng-model="dataqualitydata.nullCheck" ng-disabled="{{mode}} || !isSelectSoureceAttr"
+                                  ng-true-value="'Y'" ng-false-value="'N'" ng-change="changeCheckboxExecution()">
+                                <span style="border: 1px solid rgba(128, 128, 128, 0.38);background-color:white;"
+                                  ng-disabled="{{mode}} || !isSelectSoureceAttr"></span>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    <!-- <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Duplicate Key Check</label>
                       <div class="col-md-6">
                         <div class="mt-checkbox-inline" style="margin-top:-17px;padding-top:4px;" ng-init="dataqualitydata.duplicateKeyCheck='N'">
                           <label class="mt-checkbox " style="margin-bottom:-1px;">
-                            <input type="checkbox" ng-model="dataqualitydata.duplicateKeyCheck" ng-disabled="{{mode}}" ng-true-value="'Y'" ng-false-value="'N'">
-                            <span style="border: 1px solid rgba(128, 128, 128, 0.38);background-color:white;" ng-disabled="{{mode}}"></span>
+                            <input type="checkbox" ng-model="dataqualitydata.duplicateKeyCheck" ng-disabled="{{mode}}"
+                              ng-true-value="'Y'" ng-false-value="'N'">
+                            <span style="border: 1px solid rgba(128, 128, 128, 0.38);background-color:white;"
+                              ng-disabled="{{mode}}"></span>
                           </label>
                         </div>
                       </div>
-                    </div>
-                    <div class="form-group">
+                    </div> -->
+                    <!-- <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Null Check</label>
                       <div class="col-md-6">
                         <div class="mt-checkbox-inline" style="margin-top:-17px;padding-top:4px;" ng-init="dataqualitydata.nullCheck='N'">
                           <label class="mt-checkbox " style="margin-bottom:-1px;">
-                            <input type="checkbox" ng-model="dataqualitydata.nullCheck" ng-disabled="{{mode}} || !isSelectSoureceAttr" ng-true-value="'Y'"
-                              ng-false-value="'N'" ng-change="changeCheckboxExecution()">
-                            <span style="border: 1px solid rgba(128, 128, 128, 0.38);background-color:white;" ng-disabled="{{mode}} || !isSelectSoureceAttr"></span>
+                            <input type="checkbox" ng-model="dataqualitydata.nullCheck" ng-disabled="{{mode}} || !isSelectSoureceAttr"
+                              ng-true-value="'Y'" ng-false-value="'N'" ng-change="changeCheckboxExecution()">
+                            <span style="border: 1px solid rgba(128, 128, 128, 0.38);background-color:white;"
+                              ng-disabled="{{mode}} || !isSelectSoureceAttr"></span>
                           </label>
                         </div>
                       </div>
-                    </div>
+                    </div> -->
 
                     <div class="form-group">
                       <label class="control-label col-md-3">Value Check</label>
@@ -597,7 +666,7 @@
                         <tags-input ng-model="dataqualitydata.valueCheck" min-length="0" ng-disabled="{{mode}}|| !isSelectSoureceAttr"></tags-input>
                       </div>
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Range Check</label>
                       <div class="col-md-2 col-sm-2 col-xs-12 col2dqragecheck">
                         <input title="Lower Bound" data-toggle="tooltip" data-placement="top" tooltip placeholder="Lower Bound" type="text" class="form-control"
@@ -605,14 +674,34 @@
                       </div>
                       <div class="col-md-1 col-sm-1 " style="width:1%;">
                         <i class="fa fa-minus" aria-hidden="true" style="margin-top: 10px;margin-left:-3px;"></i>
-                        <!--  <span class="bold"> </span> -->
                       </div>
                       <div class="col-md-2 col-sm-2 col-xs-12 col2dqragecheck">
                         <input title="Upper Bound" data-toggle="tooltip" data-placement="top" tooltip placeholder="Upper Bound" type="text" class="form-control"
                           ng-model="dataqualitydata.upperBound" ng-disabled="{{mode}} || !isSelectSoureceAttr">
                       </div>
-                    </div>
+                    </div> -->
+                    <div class="col-md-12">
+                      <div class="col-md-6 form-group">
+                        <label class="control-label col-md-6 col-sm-6 col-xs-12">Range Check
+                          <span class="required" aria-required="true"> * </span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input title="Lower Bound" data-toggle="tooltip" data-placement="top" tooltip placeholder="Lower Bound"
+                            type="text" class="form-control" ng-model="dataqualitydata.lowerBound" ng-disabled="{{mode}} || !isSelectSoureceAttr">
+                        </div>
+                      </div>
 
+                      <div class="col-md-6 form-group" style="padding-right: 0px;padding-left: 0px;">
+                        <label class="control-label col-md-2 col-sm-6 col-xs-12" style="padding-right:20px;width:60px;padding-left:0px;margin-top:-6px;">
+                          <i class="fa fa-minus" aria-hidden="true" style="margin-top:10px;margin-left:-15px;"></i>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12" style=" padding-left: 0px;">
+                          <input title="Upper Bound" data-toggle="tooltip" data-placement="top" tooltip placeholder="Upper Bound"
+                            type="text" class="form-control" ng-model="dataqualitydata.upperBound" ng-disabled="{{mode}} || !isSelectSoureceAttr">
+                        </div>
+                      </div>
+                    </div>
+                    
                     <div class="form-group">
                       <label class="control-label col-md-3">Data Type Check</label>
                       <div class="col-md-6">
@@ -623,16 +712,12 @@
                     <div class="form-group">
                       <label class="control-label col-md-3">Date Format Check</label>
                       <div class=" selectSimulationType col-md-6">
-                        <select ng-disabled="{{mode}} || selectType || !isSelectSoureceAttr" title="Type" ng-model="selectdatefromate" ng-options="x for x in datefromate"
-                          class="form-control"></select>
+                          <!-- || selectType -->
+                        <select ng-disabled="{{mode}}  || !isSelectSoureceAttr" title="Type" ng-model="selectdatefromate"
+                          ng-options="x for x in datefromate" class="form-control"></select>
                       </div>
                     </div>
-                    <!--   <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Custom Format Check</label>
-                                        <div class="col-md-5 col-sm-5 col-xs-12">
-                                            <select ng-disabled="{{mode}}" title="Type" ng-model="selectCustomFormatCheck" ng-options="x as x.name for x in allFromula"class="form-control " ></select>
-                                        </div>
-                                    </div>  -->
+                   
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Custom Format Check</label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
@@ -640,76 +725,116 @@
 
                       </div>
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12 ">Length Check</label>
                       <div class="col-md-2 col-sm-2 col-xs-12 col2dqragecheck">
                         <input title="Min Length" data-toggle="tooltip" ng-model="dataqualitydata.minLength" data-placement="top" tooltip placeholder="Min Length"
                           type="text" class="form-control" ng-disabled="{{mode}} || !isSelectSoureceAttr">
                       </div>
-                      <div class="col-md-1 col-sm-1 " style="width:1%;">
-                        <i class="fa fa-minus" aria-hidden="true" style="margin-top: 10px;margin-left:-3px;"></i>
-                        <!-- <span class="bold"> <i class="fa fa-minus" aria-hidden="true" style="margin-top: 10px;"></i></span> -->
+                      <div class="col-md-1 col-sm-1 " style="width:10px;">
+                        <i class="fa fa-minus" aria-hidden="true" style="margin-top: 10px;margin-left:-15px;"></i>
                       </div>
-                      <div class="col-md-3 col-sm-3 col-xs-12 col2dqragecheck">
+                      <div class="col-md-3 col-sm-3 col-xs-12" style="padding-left: 0px;margin-left: -15px;">
                         <input title="Max Length" data-toggle="tooltip" ng-model="dataqualitydata.maxLength" data-placement="top" tooltip placeholder="Max Length"
                           type="text" class="form-control" ng-disabled="{{mode}} || !isSelectSoureceAttr">
                       </div>
+                    </div> -->
+                    <div class="col-md-12">
+                      <div class="col-md-6 form-group">
+                        <label class="control-label col-md-6 col-sm-6 col-xs-12">Length Check
+                          <span class="required" aria-required="true"> * </span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input title="Min Length" data-toggle="tooltip" ng-model="dataqualitydata.minLength"
+                            data-placement="top" tooltip placeholder="Min Length" type="text" class="form-control"
+                            ng-disabled="{{mode}} || !isSelectSoureceAttr">
+                        </div>
+                      </div>
+
+                      <div class="col-md-6 form-group" style="padding-right: 0px;padding-left: 0px;">
+                        <label class="control-label col-md-2 col-sm-6 col-xs-12" style="padding-right:20px;width:60px;padding-left:0px;margin-top:-6px;">
+                          <i class="fa fa-minus" aria-hidden="true" style="margin-top:10px;margin-left:-15px;"></i>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12" style=" padding-left: 0px;">
+                          <input title="Max Length" data-toggle="tooltip" ng-model="dataqualitydata.maxLength"
+                            data-placement="top" tooltip placeholder="Max Length" type="text" class="form-control"
+                            ng-disabled="{{mode}} || !isSelectSoureceAttr">
+                        </div>
+                      </div>
                     </div>
-                    <!--   <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Ref Integrity Check</label>
-                                        <div class="col-md-2 col-sm-2 col-xs-12">
-                                            <select title="Type"  ng-model="selectrefIntegrityCheck" ng-options="x as x.name for x in refIntegrityCheck track by x.uuid" ng-change="onRefIntegrityCheck()" class="form-control" ng-disabled="{{mode}}">
-                                            </select>
-                                        </div>
-                                        <label class="control-label col-md-1 col-sm-1 col-xs-12" style="margin-left:-23px;">Name</label>
-                                        <div class="col-md-2 col-sm-2 col-xs-12" style="width:19%;">
-                                            <select class="form-control"
-					                        data-ng-model="refIntegrityCheckoption" ng-options="r as r.name for r in refIntegrityCheckoptions  track by r.uuid+ r.attributeId"
-					                        ng-disabled="{{mode}}">
-					                       </select>
-                                        </div>
-                                    </div> -->
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Ref Integrity Check</label>
                       <div class="col-md-3 col-sm-3 col-xs-12">
                         <!-- style="width:21%; -->
-                        <select select2 title="Name" data-toggle="tooltip" data-placement="top" tooltip ng-model="selectrefIntegrityCheck" ng-options="x as x.name for x in refIntegrityCheck track by x.uuid"
-                          ng-change="onRefIntegrityCheck()" class="form-control" ng-disabled="{{mode}} || !isSelectSoureceAttr">
+                        <select select2 title="Name" data-toggle="tooltip" data-placement="top" tooltip ng-model="selectrefIntegrityCheck"
+                          ng-options="x as x.name for x in refIntegrityCheck track by x.uuid" ng-change="onRefIntegrityCheck()"
+                          class="form-control" ng-disabled="{{mode}} || !isSelectSoureceAttr">
                         </select>
                       </div>
 
                       <div class="col-md-3 col-sm-3 col-xs-12">
-                        <select select2 class="form-control" title="Attribute" data-toggle="tooltip" data-placement="top" tooltip data-ng-model="refIntegrityCheckoption"
-                          ng-options="r as r.name for r in refIntegrityCheckoptions  track by r.uuid+ r.attributeId" ng-disabled="{{mode}} || !isSelectSoureceAttr">
+                        <select select2 class="form-control" title="Attribute" data-toggle="tooltip" data-placement="top"
+                          tooltip data-ng-model="refIntegrityCheckoption" ng-options="r as r.name for r in refIntegrityCheckoptions  track by r.uuid+ r.attributeId"
+                          ng-disabled="{{mode}} || !isSelectSoureceAttr">
                         </select>
                       </div>
                     </div>
                     <div class="form-group">
+                      <label class="control-label col-md-3">Blank Space Check</label>
+                      <div class="col-md-6">
+                        <select ng-disabled="{{mode}} || !isSelectSoureceAttr" ng-model="dataqualitydata.blankSpaceCheck" ng-options="x for x in blankSpaceTypes | orderBy"
+                          class="form-control" ng-change="OnselectType()">
+                          <option value="">-Select-</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label col-md-3">Domain Check</label>
+                      <div class="col-md-6">
+                        <select select2 ng-disabled="{{mode}} || !isSelectSoureceAttr" ng-model="selectedDomain" ng-options="x as x.name for x in allDomain | orderBy"
+                          class="form-control" ng-change="OnselectType()">
+                          <option value="">-Select-</option>
+                        </select>
+                      </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label col-md-3">Expression Check</label>
+                        <div class="col-md-6">
+                          <select select2 ng-disabled="{{mode}} || !isSelectSoureceAttr" ng-model="selectedExpression" ng-options="x as x.name for x in allExpress | orderBy track by x.uuid"
+                            class="form-control" ng-change="OnselectType()">
+                            <option value="">-Select-</option>
+                          </select>
+                        </div>
+                      </div>
+                    <div class="form-group">
                       <label class="control-label col-md-3">Threshold Type</label>
                       <div class="col-md-6">
                         <select ng-disabled="{{mode}}" ng-model="thresholdInfo.type" ng-options="x for x in thresholdType | orderBy"
-                          class="form-control" ></select>
+                          class="form-control"></select>
                       </div>
                     </div>
                     <div class="form-group">
                       <label class="control-label col-md-3">Threshold Limit (L-M-H)</label>
                       <div class="col-md-2 col-sm-2 col-xs-12">
-                        <input title="Low" data-toggle="tooltip" ng-model="thresholdInfo.low" data-placement="top" tooltip placeholder="Low Limit "
-                          type="number" class="form-control" ng-disabled="{{mode}}" required min="{{thresholdInfo.lowMin}}" max="{{thresholdInfo.lowMax}}" ng-change="onChangeTLow()">
+                        <input title="Low" data-toggle="tooltip" ng-model="thresholdInfo.low" data-placement="top"
+                          tooltip placeholder="Low Limit " type="number" class="form-control" ng-disabled="{{mode}}"
+                          required min="{{thresholdInfo.lowMin}}" max="{{thresholdInfo.lowMax}}" ng-change="onChangeTLow()">
                       </div>
-                      <div class="col-md-1 col-sm-1 " style="width:1%;padding-left:0px;padding-right: 0px;">
+                      <div class="col-md-1 col-sm-1 " style="width:10px;padding-left:0px;padding-right: 0px;">
                         <i class="fa fa-minus" aria-hidden="true" style="margin-top: 10px;margin-left:-8px;"></i>
                       </div>
                       <div class="col-md-2 col-sm-2 col-xs-12" style="margin-left: -10px;">
-                        <input title="Medium" data-toggle="tooltip" ng-model="thresholdInfo.medium" data-placement="top" tooltip placeholder="Medium Limit"
-                          type="number" class="form-control" ng-disabled="{{mode}}" required min="{{thresholdInfo.mediumMin}}" max="{{thresholdInfo.mediumMax}}" ng-change="onChangeTMedium()">
+                        <input title="Medium" data-toggle="tooltip" ng-model="thresholdInfo.medium" data-placement="top"
+                          tooltip placeholder="Medium Limit" type="number" class="form-control" ng-disabled="{{mode}}"
+                          required min="{{thresholdInfo.mediumMin}}" max="{{thresholdInfo.mediumMax}}" ng-change="onChangeTMedium()">
                       </div>
-                      <div class="col-md-1 col-sm-1 " style="width:1%;padding-left:0px;padding-right: 0px;">
+                      <div class="col-md-1 col-sm-1 " style="width:10px;padding-left:0px;padding-right: 0px;">
                         <i class="fa fa-minus" aria-hidden="true" style="margin-top: 10px;margin-left:-8px;"></i>
                       </div>
                       <div class="col-md-2 col-sm-2 col-xs-12" style="margin-left: -10px;">
-                        <input title="High" data-toggle="tooltip" ng-model="thresholdInfo.high" data-placement="top" tooltip placeholder="High Limit"
-                          type="number" class="form-control" ng-disabled="{{mode}}" required  min="{{thresholdInfo.highMin}}" max="{{thresholdInfo.highMax}}" ng-change="onChangeTHigh()">
+                        <input title="High" data-toggle="tooltip" ng-model="thresholdInfo.high" data-placement="top"
+                          tooltip placeholder="High Limit" type="number" class="form-control" ng-disabled="{{mode}}"
+                          required min="{{thresholdInfo.highMin}}" max="{{thresholdInfo.highMax}}" ng-change="onChangeTHigh()">
                       </div>
                     </div>
                     <div class="row">
@@ -729,14 +854,15 @@
 
                 <!-- Start Tab4 -->
                 <div class="tab-pane" id="tab4" ng-class="{'active' : continueCount == 4}">
-                  <form class="form-horizontal" name="myform4" id="submit_form4" ng-submit="sbumitDataqulity()" novalidate="novalidate">
+                  <form class="form-horizontal" name="myform4" id="submit_form4" ng-submit="sbumitDataqulity()"
+                    novalidate="novalidate">
                     <div class="form-group">
                       <label class="col-md-3 control-label">Run Immediately ?</label>
                       <div class="col-md-9">
                         <div class="mt-checkbox-list" style="margin-top:-7px" ng-init="checkboxModelexecution='NO'">
                           <label class="mt-checkbox mt-checkbox-outline">
-                            <input ng-disabled="{{mode}}" type="checkbox" ng-model="checkboxModelexecution" ng-true-value="'YES'" ng-false-value="'NO'"
-                              ng-change="changeCheckboxExecution()">
+                            <input ng-disabled="{{mode}}" type="checkbox" ng-model="checkboxModelexecution"
+                              ng-true-value="'YES'" ng-false-value="'NO'" ng-change="changeCheckboxExecution()">
                             <span ng-disabled="{{mode}}"></span>
                           </label>
                         </div>
@@ -775,40 +901,41 @@
   <!--End Row-->
   <div id="searchAttr" class="modal fade bs-modal-lg in" aria-hidden="true" style="display: none;">
     <div class="modal-dialog" style="width:35%;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                <h4 class="modal-title">Search Attribute</h4>
-            </div>
-            <div class="modal-body">
-                <div class="slimScrollDiv" style="padding-top:10px;">
-                    <div class="scroller" data-always-visible="1" data-rail-visible1="1" data-initialized="1">
-                        <form class="form-horizontal" novalidate="novalidate" name="myform1">
-                            <div class="form-group">
-                                <label class="col-md-3 control-label">Select</label>
-                                <div class="col-md-8">
-                                    <select select2 class="form-control" ng-change="onChangeSearchAttr()" data-ng-model="allSearchType.defaultoption" ng-options="r as r.name for r in allSearchType.options track by r.uuid">
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 control-label">Attribute</label>
-                                <div class="col-md-8">
-                                    <select select2 class="form-control" data-ng-model="selectAttr" ng-options="r as r.name for r in allAttr track by r.uuid+r.attributeId">
-                                    </select>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
-                <button type="button" class="btn green" ng-click="SubmitSearchAttr()">Submit</button>
-            </div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+          <h4 class="modal-title">Search Attribute</h4>
         </div>
+        <div class="modal-body">
+          <div class="slimScrollDiv" style="padding-top:10px;">
+            <div class="scroller" data-always-visible="1" data-rail-visible1="1" data-initialized="1">
+              <form class="form-horizontal" novalidate="novalidate" name="myform1">
+                <div class="form-group">
+                  <label class="col-md-3 control-label">Select</label>
+                  <div class="col-md-8">
+                    <select select2 class="form-control" ng-change="onChangeSearchAttr()" data-ng-model="allSearchType.defaultoption"
+                      ng-options="r as r.name for r in allSearchType.options track by r.uuid">
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label">Attribute</label>
+                  <div class="col-md-8">
+                    <select select2 class="form-control" data-ng-model="selectAttr" ng-options="r as r.name for r in allAttr track by r.uuid+r.attributeId">
+                    </select>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+          <button type="button" class="btn green" ng-click="SubmitSearchAttr()">Submit</button>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
 </div>
 
 <style>

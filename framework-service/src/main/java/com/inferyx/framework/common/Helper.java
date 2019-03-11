@@ -113,18 +113,18 @@ public class Helper {
 		
 		return String.format("%s_%s_%s", list[list.length-3].replaceAll("-", "_"), list[list.length-2], list[list.length-1]);
 	}
+
+	/********************** UNUSED **********************/
+//	public static String genTableName(String datapodUUID, String datapodVersion) 
+//	{
+//		String tableName = null;
+//		String datapod = datapodUUID.replace("-", "_");
+//		tableName = datapod+"_"+datapodVersion;
+//		logger.info("Hive Table name is :: "+tableName);
+//		return tableName;
+//	}
 	
-	public static String genTableName(String datapodUUID, String datapodVersion) 
-	{
-		String tableName = null;
-		String datapod = datapodUUID.replace("-", "_");
-		tableName = datapod+"_"+datapodVersion;
-		logger.info("Hive Table name is :: "+tableName);
-		return tableName;
-	}
-	
-	public static String genTableName(String datapodUUID, String datapodVersion, String execVersion) 
-	{
+	public static String genTableName(String datapodUUID, String datapodVersion, String execVersion) {
 		String tableName = null;
 		String datapod = datapodUUID.replace("-", "_");
 		tableName = datapod+"_"+datapodVersion+"_"+execVersion;

@@ -294,7 +294,7 @@ public class ReportServiceImpl extends RuleTemplate {
 			filePathList.add(datastore.getLocation());
 			sparkExecutor.readAndRegisterFile(tableName, filePathList, FileType.PARQUET.toString(), null, appUuid, true);
 		}
-		return dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, rows, null, null);
+		return dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, rows, null, null, null);
 	}
 	
 	public HttpServletResponse download(String reportExecUuid, String reportExecVersion, String format, int offset,
@@ -355,7 +355,7 @@ public class ReportServiceImpl extends RuleTemplate {
 			}
 
 			datastoreServiceImpl.setRunMode(runMode);
-			List<Map<String, Object>> data = datastoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, limit, null, null);		
+			List<Map<String, Object>> data = datastoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, limit, null, null, null);		
 			
 			//checking whether data is available or not
 			if(data == null || (data != null && data.isEmpty())) {
@@ -847,7 +847,7 @@ public class ReportServiceImpl extends RuleTemplate {
 		List<Map<String, Object>> data = null;
 		try {
 			data = datastoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0,
-					limit, null, null);
+					limit, null, null, null);
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

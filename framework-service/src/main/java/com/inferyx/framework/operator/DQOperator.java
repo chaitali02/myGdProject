@@ -29,7 +29,7 @@ import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BlankSpaceCheckOptions;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataQual;
-import com.inferyx.framework.domain.DataQualDomain;
+import com.inferyx.framework.domain.AttributeDomain;
 import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -830,11 +830,11 @@ public class DQOperator implements IParsable {
 			dqBuilder.append("'' as ").append(CUSTOM_CHECK_PASS).append(COMMA);
 		} // End customCheck If
 		if (dq.getDomainCheck() != null && dq.getDomainCheck().getRef() != null) {
-			DataQualDomain dataQualDomain = (DataQualDomain) commonServiceImpl.getOneByUuidAndVersion(dq.getDomainCheck().getRef().getUuid()
+			AttributeDomain attributeDomain = (AttributeDomain) commonServiceImpl.getOneByUuidAndVersion(dq.getDomainCheck().getRef().getUuid()
 													, dq.getDomainCheck().getRef().getVersion()
 													, dq.getDomainCheck().getRef().getType().toString()
 													, "N");
-			check = tableAttr.concat(" RLIKE ( ").concat(dataQualDomain.getRegEx()).concat(BRACKET_CLOSE);
+			check = tableAttr.concat(" RLIKE ( ").concat(attributeDomain.getRegEx()).concat(BRACKET_CLOSE);
 			colName = DOMAIN_CHECK_PASS;
 			dqBuilder.append(caseWrapper(check, colName)).append(COMMA);
 		} else {
