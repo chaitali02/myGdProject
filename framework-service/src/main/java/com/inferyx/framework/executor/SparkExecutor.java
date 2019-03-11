@@ -3926,8 +3926,8 @@ public class SparkExecutor<T> implements IExecutor {
 
 		logger.info("inside method applySchema");
 		Dataset<Row> df = rsHolder.getDataFrame();
-//		df.show(true);
-//		df.printSchema();
+     	df.show(true);
+	   df.printSchema();
 		String[] dfColumns = df.columns();
 		if(datapod != null && df.columns().length != datapod.getAttributes().size()) {
 			throw new RuntimeException("Datapod '" + datapod.getName() + "' column size(" + datapod.getAttributes().size() + ") does not match with column size("+ df.columns().length +") of dataframe");
