@@ -689,7 +689,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 				rsHolder.setTableName(tableName);
 				rsHolder = exec.persistDataframe(rsHolder, targetDatasource, targetDp, SaveMode.APPEND.toString());
 			} else if(targetDatasource.getType().equals(ExecContext.FILE.toString())) {
-				exec.executeRegisterAndPersist(execSql, tableName, filePath, targetDp, "overwrite", true, appUuid);
+				exec.executeRegisterAndPersist(execSql, tableName, filePath, targetDp, SaveMode.APPEND.toString(), true, appUuid);
 			} else {
 				String sql = helper.buildInsertQuery(execContext.toString(), tableName, targetDp, execSql);
 				exec.executeSql(sql, appUuid);
