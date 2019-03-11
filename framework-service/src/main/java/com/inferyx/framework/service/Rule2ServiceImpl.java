@@ -26,6 +26,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -45,6 +46,7 @@ import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
@@ -60,6 +62,7 @@ import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.enums.SaveMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
+import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.operator.Rule2Operator;
@@ -120,6 +123,8 @@ public class Rule2ServiceImpl extends RuleTemplate {
 	ConnectionFactory connFactory;
 	@Autowired
 	MessageServiceImpl messageServiceImpl;
+	@Autowired
+	private SparkExecutor<?> sparkExecutor;
 
 	Map<String, List<Map<String, Object>>> requestMap = new HashMap<>();
 
@@ -1279,6 +1284,176 @@ public class Rule2ServiceImpl extends RuleTemplate {
 		return data;
 	}
 
-	
+
+	public String getTableName(Datasource datasource, Datapod datapod, RuleExec ruleExec, RunMode runMode) {
+		if (runMode.equals(RunMode.ONLINE)) {
+			return Helper.genTableName(datapod.getUuid(), datapod.getVersion(), ruleExec.getVersion());
+		} else {
+			if (datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+				|| datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())) {
+				return Helper.genTableName(datapod.getUuid(), datapod.getVersion(), ruleExec.getVersion());
+		} else {
+			if (datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+				return datasource.getSid().concat(".").concat(datapod.getName());
+			} else {
+				return datasource.getDbname().concat(".").concat(datapod.getName());
+			}
+		}
+		}
+	}
+
+	/**
+	 * @param execUuid
+	 * @param execVersion
+	 * @param offset
+	 * @param limit
+	 * @param sortBy
+	 * @param order
+	 * @param requestId
+	 * @param runMode
+	 * @return
+	 * @throws IOException 
+	 * @throws ParseException 
+	 * @throws JSONException 
+	 * @throws NullPointerException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
+	 */
+	public List<Map<String, Object>> getResultDetail(String execUuid, String execVersion, int offset, int limit,
+			String sortBy, String order, String requestId, RunMode runMode) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException, IOException {
+		RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.ruleExec.toString(), "N");
+		try {
+			Datapod detailsDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+					Helper.getPropertyValue("framework.rule2.detail.uuid"), null, MetaType.datapod.toString(), "N");
+
+			limit = offset + limit;
+			offset = offset + 1;
+			dataStoreServiceImpl.setRunMode(runMode);
+			DataStore datastore = dataStoreServiceImpl.findDataStoreByMeta(detailsDp.getUuid(), detailsDp.getVersion());
+
+			return dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId,
+					offset, limit, sortBy, order, ruleExec.getVersion());
+//			Datasource detailsDpDs = commonServiceImpl.getDatasourceByDatapod(detailsDp);
+//
+//			String tableName = getTableName(detailsDpDs, detailsDp, ruleExec, runMode);
+//
+//			String sql = "SELECT * FROM " + tableName;
+//
+//			Datasource appDS = commonServiceImpl.getDatasourceByApp();
+//			IExecutor exec = execFactory.getExecutor(appDS.getType().toLowerCase());
+//
+//			String appUuid = commonServiceImpl.getApp().getUuid();
+//			
+//			if (runMode.equals(RunMode.ONLINE)) {
+//				return sparkExecutor.executeAndFetchFromTempTable(sql, appUuid);
+//			} else {
+//				if (detailsDpDs.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+//						|| detailsDpDs.getType().equalsIgnoreCase(ExecContext.spark.toString())) {
+//					String dafaultPath = Helper.getPropertyValue("framework.schema.Path");
+//					dafaultPath = dafaultPath.endsWith("/") ? dafaultPath : dafaultPath.concat("/");
+//					String filePath = String.format("%s/%s/%s", detailsDp.getUuid(), detailsDp.getVersion(),
+//							ruleExec.getVersion());
+//					String filePathUrl = hdfsInfo.getHdfsURL().concat(dafaultPath).concat(filePath);
+//					List<String> filePathUrlList = new ArrayList<>();
+//					filePathUrlList.add(filePathUrl);
+//					sparkExecutor.readAndRegisterFile(tableName, filePathUrlList, FileType.PARQUET.toString(), "true",
+//							appUuid, true);
+//				}
+//				return exec.executeAndFetchByDatasource(sql, detailsDpDs, appUuid);
+//			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
+					(message != null) ? message : "Can not fetch result details.",
+					new MetaIdentifierHolder(new MetaIdentifier(MetaType.ruleExec, execUuid, execVersion)));
+			throw new RuntimeException((message != null) ? message : "Can not fetch result details");
+		}
+	}
+
+	/**
+	 * @param execUuid
+	 * @param execVersion
+	 * @param offset
+	 * @param limit
+	 * @param sortBy
+	 * @param order
+	 * @param requestId
+	 * @param runMode
+	 * @return
+	 * @throws IOException 
+	 * @throws ParseException 
+	 * @throws JSONException 
+	 * @throws NullPointerException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
+	 */
+	public List<Map<String, Object>> getResultSummary(String execUuid, String execVersion, int offset, int limit,
+			String sortBy, String order, String requestId, RunMode runMode) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException, IOException {
+		RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.ruleExec.toString(), "N");
+		try {
+			Datapod summaryDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+					Helper.getPropertyValue("framework.rule2.summary.uuid"), null, MetaType.datapod.toString(), "N");
+
+			limit = offset + limit;
+			offset = offset + 1;
+			dataStoreServiceImpl.setRunMode(runMode);
+			DataStore datastore = dataStoreServiceImpl.findDataStoreByMeta(summaryDp.getUuid(), summaryDp.getVersion());
+
+			return dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId,
+					offset, limit, sortBy, order, ruleExec.getVersion());
+//			Datasource summaryDpDs = commonServiceImpl.getDatasourceByDatapod(summaryDp);
+//
+//			String tableName = getTableName(summaryDpDs, summaryDp, ruleExec, runMode);
+//
+//			String sql = "SELECT * FROM " + tableName;
+//
+//			Datasource appDS = commonServiceImpl.getDatasourceByApp();
+//			IExecutor exec = execFactory.getExecutor(appDS.getType().toLowerCase());
+//
+//			String appUuid = commonServiceImpl.getApp().getUuid();
+//			
+//			if (runMode.equals(RunMode.ONLINE)) {
+//				return sparkExecutor.executeAndFetchFromTempTable(sql, appUuid);
+//			} else {
+//				if (summaryDpDs.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+//						|| summaryDpDs.getType().equalsIgnoreCase(ExecContext.spark.toString())) {
+//					String dafaultPath = Helper.getPropertyValue("framework.schema.Path");
+//					dafaultPath = dafaultPath.endsWith("/") ? dafaultPath : dafaultPath.concat("/");
+//					String filePath = String.format("%s/%s/%s", summaryDp.getUuid(), summaryDp.getVersion(),
+//							ruleExec.getVersion());
+//					String filePathUrl = hdfsInfo.getHdfsURL().concat(dafaultPath).concat(filePath);
+//					List<String> filePathUrlList = new ArrayList<>();
+//					filePathUrlList.add(filePathUrl);
+//					sparkExecutor.readAndRegisterFile(tableName, filePathUrlList, FileType.PARQUET.toString(), "true",
+//							appUuid, true);
+//				}
+//				return exec.executeAndFetchByDatasource(sql, summaryDpDs, appUuid);
+//			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
+					(message != null) ? message : "Can not fetch summary.",
+					new MetaIdentifierHolder(new MetaIdentifier(MetaType.ruleExec, execUuid, execVersion)));
+			throw new RuntimeException((message != null) ? message : "Can not fetch summary.");
+		}
+	}
 
 }
