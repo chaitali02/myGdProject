@@ -28,6 +28,7 @@ import java.util.concurrent.FutureTask;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -55,6 +56,7 @@ import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.Filter;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
@@ -64,6 +66,7 @@ import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
+import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.operator.DQOperator;
@@ -115,6 +118,8 @@ public class DataQualServiceImpl  extends RuleTemplate{
 	Engine engine;
 	@Autowired
 	ExecutorServiceImpl executorServiceImpl;
+	@Autowired
+	private SparkExecutor<?> sparkExecutor;
 	
 	Map<String, String> requestMap = new HashMap<String, String>();
 
@@ -589,7 +594,7 @@ public class DataQualServiceImpl  extends RuleTemplate{
 	}
 	
 	
-	public List<Map<String, Object>> getResultSummary(String dataQualExecUUID, String dataQualExecVersion, RunMode runMode) throws JsonProcessingException {
+	public List<Map<String, Object>> getSummary(String dataQualExecUUID, String dataQualExecVersion, RunMode runMode) throws JsonProcessingException {
 		DataQualExec dqExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(dataQualExecUUID,
 				dataQualExecVersion, MetaType.dqExec.toString());
 		DataStore datastore = dataStoreServiceImpl.getDatastore(dqExec.getResult().getRef().getUuid(),
@@ -639,6 +644,68 @@ public class DataQualServiceImpl  extends RuleTemplate{
 		return parse(baseExec.getUuid(), baseExec.getVersion(), DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(), null, null, runMode);
 	}
 
+	public List<Map<String, Object>> getResultSummary(String execUuid, String execVersion, int offset, int limit,
+			String sortBy, String order, String requestId, RunMode runMode)
+			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
+			SecurityException, NullPointerException, JSONException, ParseException, IOException {
+		DataQualExec dqExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
+				MetaType.dqExec.toString());
+		try {
+			Datapod summaryDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+					Helper.getPropertyValue("framework.dataqual.summary.uuid"), null, MetaType.datapod.toString(), "N");
+			Datasource summaryDpDs = commonServiceImpl.getDatasourceByDatapod(summaryDp);
+
+			String tableName = getTableName(summaryDpDs, summaryDp, dqExec, runMode);
+
+			String sql = "SELECT * FROM " + tableName;
+
+			Datasource appDS = commonServiceImpl.getDatasourceByApp();
+			IExecutor exec = execFactory.getExecutor(appDS.getType().toLowerCase());
+
+			String appUuid = commonServiceImpl.getApp().getUuid();
+			if (runMode.equals(RunMode.ONLINE)) {
+				return sparkExecutor.executeAndFetchFromTempTable(sql, appUuid);
+			} else {
+				if(summaryDpDs.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+						|| summaryDpDs.getType().equalsIgnoreCase(ExecContext.spark.toString())) {
+					String dafaultPath = Helper.getPropertyValue("framework.schema.Path");
+					dafaultPath = dafaultPath.endsWith("/") ? dafaultPath : dafaultPath.concat("/");
+					String filePath = String.format("%s/%s/%s", summaryDp.getUuid(), summaryDp.getVersion(), dqExec.getVersion());
+					String filePathUrl = hdfsInfo.getHdfsURL().concat(dafaultPath).concat(filePath);
+					List<String> filePathUrlList = new ArrayList<>();
+					filePathUrlList.add(filePathUrl);
+					sparkExecutor.readAndRegisterFile(tableName, filePathUrlList, FileType.PARQUET.toString(), "true", appUuid, true);
+				}
+				return exec.executeAndFetchByDatasource(sql, summaryDpDs, appUuid);
+			}
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+				| SecurityException | NullPointerException | ParseException | IOException e) {
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
+					(message != null) ? message : "Can not fetch summary.",
+					new MetaIdentifierHolder(new MetaIdentifier(MetaType.dqExec, execUuid, execVersion)));
+			throw new RuntimeException((message != null) ? message : "Can not fetch summary.");
+		}
+	}
+	
+	public String getTableName(Datasource datasource, Datapod datapod, DataQualExec dqExec, RunMode runMode) {
+		if (runMode.equals(RunMode.ONLINE)) {
+			return Helper.genTableName(datapod.getUuid(), datapod.getVersion(), dqExec.getVersion());
+		} else {
+			if(datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+				return datasource.getSid().concat(".").concat(datapod.getName());
+			} else {
+				return datasource.getDbname().concat(".").concat(datapod.getName());
+			}
+		}
+	}
+	
 /*	@Override
 	public Datasource getDatasource(BaseRule baseRule) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		MetaIdentifier datapodRef = ((DataQual)baseRule).getDependsOn().getRef();

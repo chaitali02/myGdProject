@@ -619,23 +619,23 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 				countRows = rsHolder.getCountRows();
 			}
 			logger.info("Temp table registered: "+tableName);
-			Datapod summaryDatapod;
-			MetaIdentifier summaryDatapodKey=null;
-			if (baseRuleExec.getDependsOn().getRef().getType() == MetaType.dq) {
-				 summaryDatapod = (Datapod) commonServiceImpl
-						.getOneByUuidAndVersion(dqInfo.getDq_result_summary(), null, MetaType.datapod.toString(), "N");
-				 summaryDatapodKey = new MetaIdentifier(MetaType.datapod, summaryDatapod.getUuid(),
+			Datapod summaryDatapod = null;
+			MetaIdentifier summaryDatapodKey = null;
+			if (baseRuleExec.getDependsOn().getRef().getType().equals(MetaType.dq)) {
+				summaryDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dqInfo.getDq_result_summary(), null,
+						MetaType.datapod.toString(), "N");
+				summaryDatapodKey = new MetaIdentifier(MetaType.datapod, summaryDatapod.getUuid(),
 						summaryDatapod.getVersion());
-					filePath=getFileName(baseRule, baseRuleExec, summaryDatapodKey);
-					datapodKey=summaryDatapodKey;
+				filePath = getFileName(baseRule, baseRuleExec, summaryDatapodKey);
+				datapodKey = summaryDatapodKey;
 				tableName = getTableName(baseRule, baseRuleExec, summaryDatapodKey, execContext, runMode);
-			} else if (baseRuleExec.getDependsOn().getRef().getType() == MetaType.rule2) {
-				 summaryDatapod = (Datapod) commonServiceImpl
-						.getOneByUuidAndVersion(rule2Info.getRule_result_summary(), null, MetaType.datapod.toString(), "N");
-				 summaryDatapodKey = new MetaIdentifier(MetaType.datapod, summaryDatapod.getUuid(),
+			} else if (baseRuleExec.getDependsOn().getRef().getType().equals(MetaType.rule2)) {
+				summaryDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(rule2Info.getRule_result_summary(),
+						null, MetaType.datapod.toString(), "N");
+				summaryDatapodKey = new MetaIdentifier(MetaType.datapod, summaryDatapod.getUuid(),
 						summaryDatapod.getVersion());
-				filePath=getFileName(baseRule, baseRuleExec, summaryDatapodKey);
-				datapodKey=summaryDatapodKey;
+				filePath = getFileName(baseRule, baseRuleExec, summaryDatapodKey);
+				datapodKey = summaryDatapodKey;
 				tableName = getTableName(baseRule, baseRuleExec, summaryDatapodKey, execContext, runMode);
 			}
 			logger.info("Table name in RunBaseruleServiceImpl : " + tableName);
