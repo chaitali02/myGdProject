@@ -29,6 +29,7 @@ import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
+import com.inferyx.framework.common.Rule2Info;
 import com.inferyx.framework.domain.BaseRule;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.Datapod;
@@ -77,7 +78,21 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 	protected ExecParams execParams;
 	protected ExecutorServiceImpl executorServiceImpl;
 	protected DQInfo dqInfo;
+	protected Rule2Info rule2Info;
+
 	
+	public Rule2Info getRule2Info() {
+		return rule2Info;
+	}
+
+
+
+	public void setRule2Info(Rule2Info rule2Info) {
+		this.rule2Info = rule2Info;
+	}
+
+
+
 	public DQInfo getDqInfo() {
 		return dqInfo;
 	}
@@ -604,11 +619,21 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 				countRows = rsHolder.getCountRows();
 			}
 			logger.info("Temp table registered: "+tableName);
-			
-			Datapod summaryDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dqInfo.getDq_result_summary(), null, MetaType.datapod.toString(), "N");
-			MetaIdentifier summaryDatapodKey = new MetaIdentifier(MetaType.datapod, summaryDatapod.getUuid(),
-					summaryDatapod.getVersion());		
-			tableName = getTableName(baseRule, baseRuleExec, summaryDatapodKey, execContext, runMode);
+			Datapod summaryDatapod;
+			MetaIdentifier summaryDatapodKey;
+			if (baseRuleExec.getDependsOn().getRef().getType() == MetaType.dq) {
+				 summaryDatapod = (Datapod) commonServiceImpl
+						.getOneByUuidAndVersion(dqInfo.getDq_result_summary(), null, MetaType.datapod.toString(), "N");
+				 summaryDatapodKey = new MetaIdentifier(MetaType.datapod, summaryDatapod.getUuid(),
+						summaryDatapod.getVersion());
+				tableName = getTableName(baseRule, baseRuleExec, summaryDatapodKey, execContext, runMode);
+			} else if (baseRuleExec.getDependsOn().getRef().getType() == MetaType.rule2) {
+				 summaryDatapod = (Datapod) commonServiceImpl
+						.getOneByUuidAndVersion(rule2Info.getRule_result_summary(), null, MetaType.datapod.toString(), "N");
+				 summaryDatapodKey = new MetaIdentifier(MetaType.datapod, summaryDatapod.getUuid(),
+						summaryDatapod.getVersion());
+				tableName = getTableName(baseRule, baseRuleExec, summaryDatapodKey, execContext, runMode);
+			}
 			logger.info("Table name in RunBaseruleServiceImpl : " + tableName);
 			
 //			String summaryTableName = tableName + "_summary";

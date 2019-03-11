@@ -26,6 +26,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -44,6 +45,7 @@ import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.DagExec;
+import com.inferyx.framework.domain.Rule2Exec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -515,7 +517,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 		try {
 
 			Datapod targetDatapod = (Datapod) commonServiceImpl
-					.getOneByUuidAndVersion(rule2Info.getRule_result_summary(), null, MetaType.datapod.toString(), "N");
+					.getOneByUuidAndVersion(rule2Info.getRule_result_details(), null, MetaType.datapod.toString(), "N");
 
 			MetaIdentifier targetDatapodKey = new MetaIdentifier(MetaType.datapod, targetDatapod.getUuid(),
 					targetDatapod.getVersion());
@@ -899,7 +901,8 @@ public class Rule2ServiceImpl extends RuleTemplate {
 	String summarysql = rule2Operator.generateSummarySql(rule2, tableName, datapod, refKeyMap, otherParams,
 				usedRefKeySet, new ExecParams(), runMode);
 
-		ruleExec.setExec(summarysql);
+		ruleExec.setExec(detailsql);
+		ruleExec.setSummaryExec(summarysql);
 		if (rule2.getParamList() != null) {
 			MetaIdentifier mi = rule2.getParamList().getRef();
 			ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(mi.getUuid(), mi.getVersion(),
@@ -964,7 +967,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 	}
 	
 	@SuppressWarnings({ "unchecked"})
-	public List<RuleExec> finddqExecByDatapod(String datapodUUID,String type) throws JsonProcessingException, ParseException {
+	public List<RuleExec> findrule2ExecByDatapod(String datapodUUID,String type) throws JsonProcessingException, ParseException {
 
 		List<String> ruleUUIDlist = new ArrayList<String>();
 		List<RuleExec> result = new ArrayList<RuleExec>();
@@ -1069,6 +1072,216 @@ public class Rule2ServiceImpl extends RuleTemplate {
 		
 		commonServiceImpl.completeTaskThread(taskList);
 		return ruleExecMetaList;
+	}
+
+	public List<Map<String, Object>> getDetailResults(String rule2ExecUUID, String rule2ExecVersion, RunMode runMode) throws Exception {
+		RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(rule2ExecUUID, rule2ExecVersion,
+				MetaType.ruleExec.toString());
+		DataStore datastore = dataStoreServiceImpl.getDatastore(ruleExec.getResult().getRef().getUuid(),
+				ruleExec.getResult().getRef().getVersion());
+		Rule2 rule2 = (Rule2) commonServiceImpl.getOneByUuidAndVersion(ruleExec.getDependsOn().getRef().getUuid(),
+				ruleExec.getDependsOn().getRef().getVersion(), MetaType.rule2.toString());
+		dataStoreServiceImpl.setRunMode(runMode);
+		String tableName = null;
+		List<Map<String, Object>> data = new ArrayList<>();
+		try {
+			tableName = dataStoreServiceImpl.getTableNameByDatastore(datastore.getUuid(), datastore.getVersion(),
+					runMode);
+		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+		ExecContext execContext = null;
+		IExecutor exec = null;
+		// String sql = null;
+		String appUuid = null;
+		if (runMode.equals(RunMode.ONLINE)) {
+			execContext = (engine.getExecEngine().equalsIgnoreCase("livy-spark")
+					|| engine.getExecEngine().equalsIgnoreCase("livy_spark"))
+							? helper.getExecutorContext(engine.getExecEngine())
+							: helper.getExecutorContext(ExecContext.spark.toString());
+		} else {
+			execContext = helper.getExecutorContext(datasource.getType().toLowerCase());
+		}
+		exec = execFactory.getExecutor(execContext.toString());
+		appUuid = commonServiceImpl.getApp().getUuid();
+		String sql=rule2Operator.generateDetailSql(rule2, null, null, null,
+				new ExecParams(), runMode);
+		data = exec.executeAndFetch(sql, appUuid);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
+				| NoSuchMethodException | SecurityException | NullPointerException | ParseException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return data;
+	}
+	
+	
+	
+	
+	public List<Map<String, Object>> getSummaryResults(String ruleExecUUID, String ruleExecVersion, int offset,
+			int limit, String sortBy, String order, String requestId, RunMode runMode) throws Exception {
+		List<Map<String, Object>> data = new ArrayList<>();
+		try {
+			limit = offset + limit;
+			offset = offset + 1;
+			RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(ruleExecUUID, ruleExecVersion,
+					MetaType.ruleExec.toString());
+			DataStore datastore = dataStoreServiceImpl.getDatastore(ruleExec.getResult().getRef().getUuid(),
+					ruleExec.getResult().getRef().getVersion());
+
+			data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order);
+			
+			/*boolean requestIdExistFlag = false;
+			StringBuilder orderBy = new StringBuilder();
+			dataStoreServiceImpl.setRunMode(runMode);
+			String tableName = dataStoreServiceImpl.getTableNameByDatastore(datastore.getUuid(),
+					datastore.getVersion(), runMode);
+			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+			ExecContext execContext = null;
+			IExecutor exec = null;
+			//String sql = null;
+			String appUuid = null;
+			if (runMode.equals(Mode.ONLINE)) {
+				execContext = helper.getExecutorContext(engine.getExecEngine());
+				appUuid = commonServiceImpl.getApp().getUuid();
+			} else {
+				execContext = helper.getExecutorContext(datasource.getType().toLowerCase());
+			}
+			exec = execFactory.getExecutor(execContext.toString());
+			if (requestId == null|| requestId.equals("null") || requestId.isEmpty()) {
+				if (datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
+						|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())
+						|| datasource.getType().toUpperCase().contains(ExecContext.HIVE.toString())
+						|| datasource.getType().toUpperCase().contains(ExecContext.IMPALA.toString())) {
+					data = exec.executeAndFetch("Select * from (Select Row_Number() Over(ORDER BY 1) as rownum, * from "
+							+ tableName + ")as tab where rownum >= " + offset + " AND rownum <= " + limit, appUuid);
+				} else {
+					if (datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
+						if (runMode.equals(Mode.ONLINE))
+							data = exec.executeAndFetch("Select * from " + tableName + " limit " + limit, appUuid);
+						else
+							data = exec.executeAndFetch("Select * from " + tableName + " where rownum< " + limit,
+									appUuid);
+					else {
+						data = exec.executeAndFetch("Select * from " + tableName + " limit " + limit, appUuid);
+					}
+				}
+			} else {
+				List<String> orderList = Arrays.asList(order.split("\\s*,\\s*"));
+				List<String> sortList = Arrays.asList(sortBy.split("\\s*,\\s*"));
+
+				if (StringUtils.isNotBlank(sortBy) || StringUtils.isNotBlank(order)) {
+					for (int i = 0; i < sortList.size(); i++)
+						orderBy.append(sortList.get(i)).append(" ").append(orderList.get(i));
+					///if (requestId != null) {
+						String tabName = null;
+						for (Map.Entry<String, List<Map<String, Object>>> entry : requestMap.entrySet()) {
+							String id = entry.getKey();
+							if (id.equals(requestId)) {
+								requestIdExistFlag = true;
+							}
+						}
+						if (requestIdExistFlag) {
+							data = requestMap.get(requestId);
+//							if (datasource.getType().toLowerCase().toLowerCase().contains("spark")
+//									|| datasource.getType().toLowerCase().toLowerCase().contains("file")
+//									|| datasource.getType().toLowerCase().toLowerCase().contains("hive")
+//									|| datasource.getType().toLowerCase().toLowerCase().contains("impala")) {
+//								data = exec.executeAndFetch("Select * from " + tabName + " where rownum >= " + offset
+//										+ " AND rownum <= " + limit, appUuid);
+//							} else {
+//								if (datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
+//									if (runMode.equals(Mode.ONLINE))
+//										data = exec.executeAndFetch("Select * from " + tableName + " limit " + limit,
+//												appUuid);
+//									else
+//										data = exec.executeAndFetch(
+//												"Select * from " + tableName + " where  rownum<" + limit, appUuid);
+//								else {
+//									data = exec.executeAndFetch("Select * from " + tableName + " limit " + limit,
+//											appUuid);
+//								}
+//							}
+						} else {
+							if (datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
+									|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())
+									|| datasource.getType().toUpperCase().contains(ExecContext.HIVE.toString())
+									|| datasource.getType().toUpperCase().contains(ExecContext.IMPALA.toString())) {
+								data = exec.executeAndFetch(
+										"SELECT * FROM (SELECT Row_Number() Over(ORDER BY "+ orderBy.toString()+") AS rownum, * FROM (SELECT * FROM "
+												+ tableName +") as tab) as tab1",
+												appUuid);
+							} else {
+								if (datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
+									if (runMode.equals(Mode.ONLINE))
+										data = exec.executeAndFetch("Select * from " + tableName + " limit " + limit,
+												appUuid);
+									else
+										data = exec.executeAndFetch(
+												"Select * from " + tableName + " where  rownum<" + limit, appUuid);
+								else {
+									data = exec.executeAndFetch("Select * from " + tableName + " limit " + limit,
+											appUuid);
+								}
+							}
+
+							tabName = requestId.replace("-", "_");
+							requestMap.put(requestId, data);
+//							if (datasource.getType().toLowerCase().toLowerCase().contains("spark")
+//									|| datasource.getType().toLowerCase().toLowerCase().contains("file")
+//									|| datasource.getType().toLowerCase().toLowerCase().contains("hive")
+//									|| datasource.getType().toLowerCase().toLowerCase().contains("impala")) {
+//								data = exec.executeAndFetch("Select * from " + tabName + " where rownum >= " + offset
+//										+ " AND rownum <= " + limit, appUuid);
+//							} else {
+//								if (datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
+//									if (runMode.equals(Mode.ONLINE))
+//										data = exec.executeAndFetch("Select * from " + tableName + " limit " + limit,
+//												appUuid);
+//									else
+//										data = exec.executeAndFetch(
+//												"Select * from " + tableName + " where  rownum<" + limit, appUuid);
+//								else {
+//									data = exec.executeAndFetch("Select * from " + tableName + " limit " + limit,
+//											appUuid);
+//								}
+//							}
+						}
+					//}
+				}else {
+					if (datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
+							|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())
+							|| datasource.getType().toUpperCase().contains(ExecContext.HIVE.toString())
+							|| datasource.getType().toUpperCase().contains(ExecContext.IMPALA.toString())) {
+						data = exec.executeAndFetch("SELECT * FROM " + tableName + " WHERE rownum >= " + offset
+								+ " AND rownum <= " + limit, appUuid);
+					} else {
+						if (datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
+							if (runMode.equals(Mode.ONLINE))
+								data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit,
+										appUuid);
+							else
+								data = exec.executeAndFetch(
+										"SELECT * FROM " + tableName + " WHERE  rownum<" + limit, appUuid);
+						else {
+							data = exec.executeAndFetch("SELECT * FROM " + tableName + " LIMIT " + limit,
+									appUuid);
+						}
+					}
+				}
+			}*/
+		} catch (Exception e) {
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.ruleExec, ruleExecUUID, ruleExecVersion));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Table not found.", dependsOn);
+			throw new Exception((message != null) ? message : "Table not found.");
+		}
+		return data;
 	}
 
 	

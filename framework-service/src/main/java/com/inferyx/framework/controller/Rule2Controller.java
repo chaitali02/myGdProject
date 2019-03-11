@@ -292,11 +292,31 @@ public class Rule2Controller {
 		return null;
 	}
 
-	@RequestMapping(value = "/getRuleExeByDatapod", method = RequestMethod.GET)
-    public List<RuleExec> getdqExecByDatapod(@RequestParam("datapodUUID") String datapodUUID,
+	@RequestMapping(value = "/getDetailResults", method = RequestMethod.GET)
+	public List<Map<String, Object>> getDetailResults(@RequestParam("uuid") String ruleExecUUID,@RequestParam("version") String ruleExecVersion,
+			@RequestParam(value="offset", defaultValue="0") int offset, 
+			@RequestParam(value="limit", defaultValue="200") int limit,
+			@RequestParam(value="sortBy", required=false) String sortBy,
+			@RequestParam(value="order", required=false) String order, 
+			@RequestParam(value="requestId") String requestId,
 			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException, ParseException {
-        return rule2ServiceImpl.finddqExecByDatapod(datapodUUID,type);
-  }
+			@RequestParam(value = "action", required = false) String action, 
+			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
+		RunMode runMode = Helper.getExecutionMode(mode);
+		return rule2ServiceImpl.getDetailResults(ruleExecUUID,ruleExecVersion, runMode);
+	}
+	@RequestMapping(value = "/getSummaryResults", method = RequestMethod.GET)
+	public List<Map<String, Object>> getSummaryResults(@RequestParam("uuid") String ruleExecUUID,@RequestParam("version") String ruleExecVersion,
+			@RequestParam(value="offset", defaultValue="0") int offset, 
+			@RequestParam(value="limit", defaultValue="200") int limit,
+			@RequestParam(value="sortBy", required=false) String sortBy,
+			@RequestParam(value="order", required=false) String order, 
+			@RequestParam(value="requestId") String requestId,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action, 
+			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
+		RunMode runMode = Helper.getExecutionMode(mode);
+		return rule2ServiceImpl.getSummaryResults(ruleExecUUID,ruleExecVersion,offset,limit,sortBy,order,requestId, runMode);
+	}
 
 }

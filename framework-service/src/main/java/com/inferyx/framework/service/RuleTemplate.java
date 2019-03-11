@@ -33,6 +33,7 @@ import com.inferyx.framework.common.DQInfo;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
+import com.inferyx.framework.common.Rule2Info;
 import com.inferyx.framework.common.SessionHelper;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRule;
@@ -88,6 +89,8 @@ public abstract class RuleTemplate implements IExecutable, IParsable {
 	ExecutorServiceImpl executorServiceImpl;
 	@Autowired
 	DQInfo dqInfo;
+	@Autowired
+	Rule2Info rule2Info;
 
 	static final Logger logger = Logger.getLogger(RuleTemplate.class);
 
@@ -250,6 +253,7 @@ public abstract class RuleTemplate implements IExecutable, IParsable {
 		runBaseRuleService.setExecParams(execParams);
 		runBaseRuleService.setDatasource(getDatasource(baseRule));
 		runBaseRuleService.setDqInfo(dqInfo);
+		runBaseRuleService.setRule2Info(rule2Info);
 
 		if (metaExecutor == null) {
 			runBaseRuleService.execute();
