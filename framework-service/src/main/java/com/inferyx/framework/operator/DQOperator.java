@@ -151,16 +151,16 @@ public class DQOperator implements IParsable {
 	private String SINGLE_QUOTE = "'";
 	private String AS = " AS ";
 	private final String WHERE_1_1 = " WHERE (1=1) ";
-	private String DATAPODUUID = "datapodUuid";
-	private String DATAPODVERSION = "datapodVersion";
-	private String ATTRIBUTE_ID = "attributeId";
-	private String ATTRIBUTE_VAL = "attributeValue";
-	private String ROWKEY_NAME = "rowKeyName";
-	private String ROWKEY_VALUE = "rowKeyValue";
+	private String DATAPODUUID = "datapod_uuid";
+	private String DATAPODVERSION = "datapod_version";
+	private String ATTRIBUTE_ID = "attribute_id";
+	private String ATTRIBUTE_VAL = "attribute_value";
+	private String ROWKEY_NAME = "rowkey_name";
+	private String ROWKEY_VALUE = "rowkey_value";
 	private String EMPTY = "";
 	private String VERSION = " version ";
-	private String DATAPOD_NAME = " datapodName";
-	private String ATTRIBUTE_NAME = " attributeName";
+	private String DATAPOD_NAME = " datapod_name";
+	private String ATTRIBUTE_NAME = " attribute_name";
 
 	@Autowired
 	RelationOperator relationOperator;
@@ -261,19 +261,28 @@ public class DQOperator implements IParsable {
 				.concat(datapod.getVersion()).concat(SINGLE_QUOTE).concat(AS).concat(DATAPODVERSION)
 				.concat(COMMA).concat(SINGLE_QUOTE).concat(datapod.getName()).concat(SINGLE_QUOTE).concat(AS)
 				.concat(DATAPOD_NAME).concat(COMMA).concat(SINGLE_QUOTE);
+
 		if (dq.getAttribute() != null) {
 			select = select.concat(dq.getAttribute().getAttrId());
+		}
+		else {
+			select = select.concat(commaSepAttrIds(getRowKeyList(datapod)));
 		}
 		select = select.concat(SINGLE_QUOTE).concat(AS).concat(ATTRIBUTE_ID).concat(COMMA).concat(SINGLE_QUOTE);
 
 		if (dq.getAttribute() != null) {
 			select = select.concat(attributeName);
 		}
+		else {
+			select = select.concat(commaSepAttrNames(getRowKeyList(datapod)));
+		}
 		select = select.concat(SINGLE_QUOTE).concat(AS).concat(ATTRIBUTE_NAME).concat(COMMA);
-		select = select.concat(tildeSepAttrs(datapod.getName(), getRowKeyList(datapod))).concat(AS)
+		select = select.concat(SINGLE_QUOTE).concat(commaSepAttrNames(getRowKeyList(datapod))).concat(SINGLE_QUOTE).concat(AS)
 						.concat(ROWKEY_NAME).concat(COMMA);
 		select = select.concat(tildeSepAttrs(datapod.getName(), getRowKeyList(datapod))).concat(AS)
-						.concat(ROWKEY_VALUE).concat(COMMA);
+			.concat(ROWKEY_VALUE).concat(COMMA);
+//		select = select.concat(tildeSepAttrs(datapod.getName(), getRowKeyList(datapod))).concat(AS)
+//						.concat(ROWKEY_VALUE).concat(COMMA);
 
 		if (dq.getAttribute() != null) {
 			select = select.concat(" CAST(").concat(datapod.getName()).concat(DOT).concat(attributeName)
@@ -283,7 +292,8 @@ public class DQOperator implements IParsable {
 									? " AS VARCHAR2(70)) "
 									: " AS STRING)"));
 		} else {
-			select = select.concat(SINGLE_QUOTE).concat(SINGLE_QUOTE);
+//			select = select.concat(SINGLE_QUOTE).concat(SINGLE_QUOTE);
+			select = select.concat(tildeSepAttrs(datapod.getName(), getRowKeyList(datapod)));
 		}
 		select = select.concat(AS).concat(ATTRIBUTE_VAL).concat(COMMA)
 				.concat(generateCase(dq, tableName, attributeName)).concat(COMMA);
@@ -472,6 +482,32 @@ public class DQOperator implements IParsable {
 			}
 		}
 		return attributeList;
+	}
+
+	private String commaSepAttrIds(List<Attribute> attrList) {
+		StringBuilder attrStr = new StringBuilder();
+		String attrs = null;
+		if (attrList == null || attrList.isEmpty()) {
+			return null;
+		}
+		for (Attribute attribute : attrList) {
+			attrStr.append(attribute.getAttributeId()).append(COMMA);
+		}
+		attrs = attrStr.toString();
+		return attrs.substring(0, attrs.length() - 2);
+	}
+
+	private String commaSepAttrNames(List<Attribute> attrList) {
+		StringBuilder attrStr = new StringBuilder();
+		String attrs = null;
+		if (attrList == null || attrList.isEmpty()) {
+			return null;
+		}
+		for (Attribute attribute : attrList) {
+			attrStr.append(attribute.getName()).append(COMMA);
+		}
+		attrs = attrStr.toString();
+		return attrs.substring(0, attrs.length() - 2);
 	}
 
 	private String commaSepAttrs(List<Attribute> attrList) {
@@ -834,7 +870,7 @@ public class DQOperator implements IParsable {
 													, dq.getDomainCheck().getRef().getVersion()
 													, dq.getDomainCheck().getRef().getType().toString()
 													, "N");
-			check = tableAttr.concat(" RLIKE ( ").concat(attributeDomain.getRegEx()).concat(BRACKET_CLOSE);
+			check = tableAttr.concat(" RLIKE ( '").concat(attributeDomain.getRegEx()).concat("'").concat(BRACKET_CLOSE);
 			colName = DOMAIN_CHECK_PASS;
 			dqBuilder.append(caseWrapper(check, colName)).append(COMMA);
 		} else {
