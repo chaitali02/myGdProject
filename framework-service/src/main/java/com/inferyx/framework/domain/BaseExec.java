@@ -17,10 +17,20 @@ public class BaseExec extends BaseEntity {
 	protected String exec;
 	protected String summaryExec;
 	protected MetaIdentifierHolder result;
+	protected MetaIdentifierHolder summaryResult;
 	protected List<MetaIdentifier> refKeyList;
 	protected ExecParams execParams;	
 //	protected Message messageInfo;
 
+	public MetaIdentifierHolder getSummaryResult() {
+		return summaryResult;
+	}
+
+	public void setSummaryResult(MetaIdentifierHolder summaryResult) {
+		this.summaryResult = summaryResult;
+	}
+
+	
 	/**
 	 *
 	 * @Ganesh
