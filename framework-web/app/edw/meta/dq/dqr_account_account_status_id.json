@@ -1,15 +1,15 @@
 {
 	"attribute" : {
-		"attrId" : "1",
+		"attrId" : "0",
 		"ref" : {
 			"type" : "datapod",
-			"uuid" : "0c9b5122-ced3-404d-a22b-ff1105e1f9ac"
+			"uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
 		}
 	},
 	"dependsOn" : {
 		"ref" : {
 			"type" : "datapod",
-			"uuid" : "0c9b5122-ced3-404d-a22b-ff1105e1f9ac"
+			"uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
 		}
 	},
 	"duplicateKeyCheck" : "N",
@@ -25,21 +25,21 @@
 		"dependsOn" : {
 			"ref" : {
 				"type" : "datapod",
-				"uuid" : "0c9b5122-ced3-404d-a22b-ff1105e1f9ac"
+				"uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
 			}
 		},
 		"targetAttr" : {
-			"attrId" : "0",
+			"attrId" : "2",
 			"ref" : {
 				"type" : "datapod",
-				"uuid" : "0c9b5122-ced3-404d-a22b-ff1105e1f9ac"
+				"uuid" : "ed47f654-2d4b-483c-971f-804ee88f092f"
 			}
 		}
 	},
-	"uuid" : "560603bc-31b0-4e46-8ec2-a02485ab202a",
-	"version" : "1490089929",
-	"name" : "dqr_dim_transaction_type_src_transaction_type_id",
-	"desc" : "dq rule to check referential integrity for foreign keys by comparing against its natural keys within the target data model",
+	"uuid" : "21f22d9e-d769-4150-9bfc-857be7e047e9",
+	"version" : "1490073052",
+	"name" : "dqr_account_account_status_Id",
+	"desc" : "dq rule to check referential integrity for foreign keys by comparing against its natural keys within the source data model",
 	"createdBy" : {
 		"ref" : {
 			"type" : "user",

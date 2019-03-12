@@ -1,66 +1,72 @@
 {
-	"attribute": {
-		"attrId": "0",
-		"ref": {
-			"type": "datapod",
-			"uuid": "2996b01d-cbc8-4ac7-8aff-1e887204101b"
+	"attribute" : {
+		"attrId" : "0",
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "2996b01d-cbc8-4ac7-8aff-1e887204101b"
 		}
 	},
-	"dependsOn": {
-		"ref": {
-			"type": "datapod",
-			"uuid": "2996b01d-cbc8-4ac7-8aff-1e887204101b"
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "2996b01d-cbc8-4ac7-8aff-1e887204101b"
 		}
 	},
-	"duplicateKeyCheck": "N",
-	"nullCheck": "Y",
-	"valueCheck": [],
-	"rangeCheck": {
+	"duplicateKeyCheck" : "N",
+	"nullCheck" : "Y",
+	"valueCheck" : [ ],
+	"rangeCheck" : {
 		
 	},
-	"lengthCheck": {
+	"lengthCheck" : {
 		
 	},
-	"refIntegrityCheck": {
-    "dependsOn": {
-      "ref": {
-        "type": "datapod",
-        "uuid": "2996b01d-cbc8-4ac7-8aff-1e887204101b"
-      }
-    },
-    "targetAttr": {
-      "attrId": "2",
-      "ref": {
-        "type": "datapod",
-        "uuid": "2996b01d-cbc8-4ac7-8aff-1e887204101b"
-      }
-    }
-  },
-	"uuid": "f0c947da-5fcf-48b5-8823-4fcaad25ce2b",
-	"version": "1490076410",
-	"name": "dqr_account_status_type_account_status_desc",
-	"desc": "dq rule to check referential integrity for foreign keys by comparing against its natural keys within the source data model",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"refIntegrityCheck" : {
+		"dependsOn" : {
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "2996b01d-cbc8-4ac7-8aff-1e887204101b"
+			}
+		},
+		"targetAttr" : {
+			"attrId" : "2",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "2996b01d-cbc8-4ac7-8aff-1e887204101b"
+			}
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-	"tags": [
+	"uuid" : "f0c947da-5fcf-48b5-8823-4fcaad25ce2b",
+	"version" : "1490076410",
+	"name" : "dqr_account_status_type_account_status_desc",
+	"desc" : "dq rule to check referential integrity for foreign keys by comparing against its natural keys within the source data model",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
+		}
+	},
+	"createdOn" : ISODate("2019-03-12T15:03:50.766Z"),
+	"tags" : [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-  "locked" : "N",
-	"published": "N",
-	"appInfo": [
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
 		}
-	]
+	],
+	"thresholdInfo" : {
+		"low" : "25",
+		"medium" : "50",
+		"high" : "75",
+		"type" : "PERCENTAGE"
+	}
 }

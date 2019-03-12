@@ -1,6 +1,6 @@
 {
   "uuid": "745a0e88-e7cf-49fc-aea4-fa0fe3a3cbfa",
-  "version": "1536860214",
+  "version": "1552409279",
   "name": "Customer Transaction Summary",
   "desc": "Customer Transaction Summary",
   "createdBy": {
@@ -12,13 +12,13 @@
     },
     "value": null
   },
-    "createdOn" : ISODate("2018-06-03T20:05:09.000Z"),
+  "createdOn": "Tue Mar 12 12:47:59 EDT 2019",
   "tags": [
     "DEV",
     "0.1.0"
   ],
-  "active" : "Y",
-  "locked" : "N",
+  "active": "Y",
+  "locked": "N",
   "published": "N",
   "appInfo": [
     {
@@ -31,6 +31,7 @@
       "value": null
     }
   ],
+  "publicFlag": "N",
   "sectionInfo": [
     {
       "sectionId": "2",
@@ -40,7 +41,7 @@
           "type": "vizpod",
           "uuid": "5c8e3a39-58f6-4eea-b89a-09e36ad685f1",
           "version": null,
-          "name": "Customers and Accounts By Country"
+          "name": "viz_cust_and_acct_by_country_barline"
         },
         "value": null
       },
@@ -55,7 +56,7 @@
           "type": "vizpod",
           "uuid": "887b311f-bb30-43aa-836a-93f9093b858b",
           "version": null,
-          "name": "Accounts By Nationality - Bar Chart"
+          "name": "viz_accounts_by_nationality_bar"
         },
         "value": null
       },
@@ -70,7 +71,7 @@
           "type": "vizpod",
           "uuid": "887b311f-bb30-43aa-836a-93f9093b858f",
           "version": null,
-          "name": "Trans Amount By Country - Pie Chart"
+          "name": "viz_trans_amount_by_country_pie"
         },
         "value": null
       },
@@ -85,7 +86,7 @@
           "type": "vizpod",
           "uuid": "887b311f-bb30-43aa-836a-93f9093b858d",
           "version": null,
-          "name": "Trans Count By Country - Donut Chart"
+          "name": "viz_trans_count_by_country_donut"
         },
         "value": null
       },
@@ -100,7 +101,7 @@
           "type": "vizpod",
           "uuid": "c0a28a37-80a8-4a38-bd64-314b447a69fc",
           "version": null,
-          "name": "Trans Amount By Country - Bubble Chart"
+          "name": "viz_trans_amount_by_country_bubble"
         },
         "value": null
       },
@@ -115,7 +116,7 @@
           "type": "vizpod",
           "uuid": "98aba397-92b5-46ad-9ea2-ec066ed01467",
           "version": null,
-          "name": "Total Customers - State"
+          "name": "viz_total_customers_by_state_map"
         },
         "value": null
       },
@@ -128,7 +129,7 @@
       "type": "relation",
       "uuid": "15beaf47-0a35-486b-9b65-9a57a2e835df",
       "version": null,
-      "name": "relation_datawarehouse"
+      "name": "rel_datawarehouse"
     },
     "value": null
   },
@@ -143,7 +144,9 @@
       "value": null,
       "attrId": "3",
       "attrName": "branch_name",
-      "attrType": null
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
     },
     {
       "ref": {
@@ -155,7 +158,9 @@
       "value": null,
       "attrId": "2",
       "attrName": "transaction_type_code",
-      "attrType": null
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
     },
     {
       "ref": {
@@ -167,7 +172,10 @@
       "value": null,
       "attrId": "2",
       "attrName": "account_type_code",
-      "attrType": null
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
     }
-  ]
+  ],
+  "saveOnRefresh": "Y"
 }
