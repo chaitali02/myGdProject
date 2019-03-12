@@ -309,7 +309,7 @@
                     <span class="required" aria-required="true"> * </span>
                   </label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
-                    <select class="form-control" [disabled]="mode == 'true'" [(ngModel)]="selectdatasourceType" name="datasource_name"
+                    <select class="form-control" [disabled]="mode == 'true'" [(ngModel)]="selectdatasourceType" name="selectdatasourceType"
                       #d name="d" id="d" (change)="selectType(d.value)">
                       <option *ngFor="let d of datasourceType" [value]="d.value">{{d.name}}</option>
                     </select>
@@ -321,19 +321,29 @@
                     <span class="required" aria-required="true"> * </span>
                   </label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
-                    <select class="form-control" [(ngModel)]="detasource_uuid" name="detasource_uuid" [disabled]="mode == 'true'">
-                      <option selected *ngFor="let d of datasource1" [value]="d.uuid">{{d.name}}</option>
-                    </select>
+                    <p-dropdown [options]="dataSourceNameArray" [(ngModel)]="datasourceName" name="datasourceName" [disabled]="mode == 'true'"
+                    [style]="{'width':'100%','padding':'3px'}" [filter]="true"  placeholder="--Select--">
+                    </p-dropdown>
                   </div>
                 </div>
               </div>
-
-              <!-- <div class="form-group">
+              
+              <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
                   <div class="btn-group">
                     <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="active" name="active"
                       [checked]="active" color="#32c5d2" labelOn="Yes" labelOff="No"></ui-switch>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="btn-group">
+                    <ui-switch [(ngModel)]="locked" name="locked" [checked]="locked" color="#32c5d2" labelOn="Yes"
+                      labelOff="No"></ui-switch>
                   </div>
                 </div>
               </div>
@@ -348,6 +358,7 @@
                 </div>
               </div>
 
+
               <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12">Cache</label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
@@ -356,7 +367,7 @@
                       labelOff="No"></ui-switch>
                   </div>
                 </div>
-              </div> -->
+              </div>
 
               <div class="form-group" style="padding-top: 10px;">
                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">

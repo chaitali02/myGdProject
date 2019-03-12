@@ -4,7 +4,7 @@ import { Attribute } from './domain.attribute';
 
 export class Datapod extends BaseEntity{
 
-    private cache : String;
-    private datasource : MetaIdentifierHolder;
-    private attributes : Attribute[];
+     cache : String;
+     datasource : MetaIdentifierHolder;
+     attributes : Attribute[];
 }

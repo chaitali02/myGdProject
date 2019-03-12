@@ -175,21 +175,22 @@ export class DataIngestionDetailComponent implements OnInit {
     this.moveToEnable = false;
     this.count = [];
 
+    
     this.txtQueryChanged
       .pipe(debounceTime(3000), distinctUntilChanged())
       .subscribe(index => {
-        this.filterTableArray[index].selected = "";
-        this.checkSelected(false, null);
+        console.log(parseInt(index) - 1);
+        this.filterTableArray[parseInt(index) - 1].selected = "";
         this.moveTo = null;
+        this.checkSelected(false,null);
         this.invalideRowNo0 = false;
         this.invalideRowNo1 = false;
       });
-
     this.txtQueryChanged1
       .pipe(debounceTime(3000), distinctUntilChanged())
       .subscribe(index => {
-        this.checkSelected(false, null);
         this.moveTo = null;
+        this.checkSelected(false,null);
         this.invalideRowNo0 = false;
         this.invalideRowNo1 = false;
       });
@@ -879,6 +880,8 @@ export class DataIngestionDetailComponent implements OnInit {
     filertable.rhsType = "string"
     filertable.rhsAttribute = null
     this.filterTableArray.splice(this.filterTableArray.length, 0, filertable);
+
+    this.checkSelected(false,null);
   }
   removeRow() {
     let newDataList = [new FilterInfoIO];
@@ -892,6 +895,8 @@ export class DataIngestionDetailComponent implements OnInit {
       newDataList[0].logicalOperator = "";
     }
     this.filterTableArray = newDataList;
+
+    this.checkSelected(false,null);
   }
   checkAllFilterRow() {
     if (!this.selectedAllFilterRow) {
@@ -1848,66 +1853,125 @@ export class DataIngestionDetailComponent implements OnInit {
   // }
 
   updateArray(new_index, range, event) {
+    // for (let i = 0; i < this.filterTableArray.length; i++) {
+    //   if (this.filterTableArray[i].selected) {
+    //     // let old_index = i;
+    //     // this.array_move(this.filterTableArray, old_index, new_index);
+    //     // if (range) {
+    //     //   this.txtQueryChanged.next(event);
+    //     // }
+    //     // else if (new_index == 0 || new_index == 1) {
+    //     //   this.filterTableArray[0].logicalOperator = "";
+    //     //   if (!this.filterTableArray[1].logicalOperator) {
+    //     //     this.filterTableArray[1].logicalOperator = this.logicalOperators[1].label;
+    //     //   }
+    //     //   this.filterTableArray[new_index].selected = "";
+    //     //   this.checkSelected(false,old_index);
+    //     // }
+    //     // else if (new_index == this.filterTableArray.length - 1) {
+    //     //   this.filterTableArray[0].logicalOperator = "";
+    //     //   this.filterTableArray[new_index].logicalOperator = this.logicalOperators[1].label;
+    //     //   this.filterTableArray[i].selected = "";
+    //     //   this.checkSelected(false,old_index);
+    //     // }
+    //     // break;
+
+    //     if (new_index < 0) {
+    //       this.invalideRowNo0 = true;
+    //       this.txtQueryChanged1.next(event);
+    //       // this.filterTableArray[i].selected = "";
+    //     }
+    //     else if (new_index >= this.filterTableArray.length) {
+    //       this.invalideRowNo1 = true;
+    //       this.txtQueryChanged1.next(event);
+    //       // this.filterTableArray[i].selected = "";
+    //     }
+    //     else if (new_index == null) { }
+    //     else {
+    //       let old_index = i;
+    //       this.array_move(this.filterTableArray, old_index, new_index);
+
+    //       if (range) {
+    //         this.txtQueryChanged.next(event);
+    //       }
+    //       else if (new_index == 0 || new_index == 1) {
+    //         this.filterTableArray[0].logicalOperator = "";
+    //         if (!this.filterTableArray[1].logicalOperator) {
+    //           this.filterTableArray[1].logicalOperator = this.logicalOperators[1].label;
+    //         }
+    //         this.filterTableArray[new_index].selected = "";
+    //         this.checkSelected(false, old_index);
+    //       }
+    //       else if (new_index == this.filterTableArray.length - 1) {
+    //         this.filterTableArray[0].logicalOperator = "";
+    //         this.filterTableArray[new_index].logicalOperator = this.logicalOperators[1].label;
+    //         this.filterTableArray[i].selected = "";
+    //         this.checkSelected(false, old_index);
+    //       }
+    //       break;
+    //     }
+    //   }
+    // }
+
+
     for (let i = 0; i < this.filterTableArray.length; i++) {
       if (this.filterTableArray[i].selected) {
-        // let old_index = i;
-        // this.array_move(this.filterTableArray, old_index, new_index);
-        // if (range) {
-        //   this.txtQueryChanged.next(event);
-        // }
-        // else if (new_index == 0 || new_index == 1) {
-        //   this.filterTableArray[0].logicalOperator = "";
-        //   if (!this.filterTableArray[1].logicalOperator) {
-        //     this.filterTableArray[1].logicalOperator = this.logicalOperators[1].label;
-        //   }
-        //   this.filterTableArray[new_index].selected = "";
-        //   this.checkSelected(false,old_index);
-        // }
-        // else if (new_index == this.filterTableArray.length - 1) {
-        //   this.filterTableArray[0].logicalOperator = "";
-        //   this.filterTableArray[new_index].logicalOperator = this.logicalOperators[1].label;
-        //   this.filterTableArray[i].selected = "";
-        //   this.checkSelected(false,old_index);
-        // }
-        // break;
 
         if (new_index < 0) {
           this.invalideRowNo0 = true;
           this.txtQueryChanged1.next(event);
-          // this.filterTableArray[i].selected = "";
         }
         else if (new_index >= this.filterTableArray.length) {
           this.invalideRowNo1 = true;
           this.txtQueryChanged1.next(event);
-          // this.filterTableArray[i].selected = "";
         }
         else if (new_index == null) { }
         else {
           let old_index = i;
-          this.array_move(this.filterTableArray, old_index, new_index);
-
+          this.array_move(this.filterTableArray, old_index, new_index);debugger
           if (range) {
             this.txtQueryChanged.next(event);
+            if (new_index == 0 || new_index == 1) {
+              this.first(new_index, "");
+            }
+            if (new_index == this.filterTableArray.length - 1) {
+              this.last(new_index, "");
+            }
           }
           else if (new_index == 0 || new_index == 1) {
-            this.filterTableArray[0].logicalOperator = "";
-            if (!this.filterTableArray[1].logicalOperator) {
-              this.filterTableArray[1].logicalOperator = this.logicalOperators[1].label;
-            }
-            this.filterTableArray[new_index].selected = "";
-            this.checkSelected(false, old_index);
+            this.first(new_index, range);
           }
           else if (new_index == this.filterTableArray.length - 1) {
-            this.filterTableArray[0].logicalOperator = "";
-            this.filterTableArray[new_index].logicalOperator = this.logicalOperators[1].label;
-            this.filterTableArray[i].selected = "";
-            this.checkSelected(false, old_index);
+            this.last(new_index, range);
           }
           break;
         }
       }
     }
   }
+
+  first(new_index, range) {
+    this.filterTableArray[0].logicalOperator = "";
+    if (!this.filterTableArray[1].logicalOperator) {
+      this.filterTableArray[1].logicalOperator = this.logicalOperators[1].label;
+    }
+    if (range) {
+      this.filterTableArray[new_index].selected = "";
+    }
+    this.checkSelected(false,null);
+  }
+
+  last(new_index, range) {
+    this.filterTableArray[0].logicalOperator = "";
+    if (this.filterTableArray[new_index].logicalOperator == "") {
+      this.filterTableArray[new_index].logicalOperator = this.logicalOperators[1].label;
+    }
+    if (range) {
+      this.filterTableArray[new_index].selected = "";
+    }
+    this.checkSelected(false,null);
+  }
+
   array_move(arr, old_index, new_index) {
     while (old_index < 0) {
       old_index += arr.length;
@@ -1924,6 +1988,7 @@ export class DataIngestionDetailComponent implements OnInit {
     arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
     return arr;
   }
+
   checkSelected(flag: any, index: any) {
     if (flag == true) {
       this.count.push(flag);
@@ -1948,5 +2013,10 @@ export class DataIngestionDetailComponent implements OnInit {
         this.bottomDisabled = false;
       }
     }
+  }
+
+  ngOnDestroy() {
+    this.txtQueryChanged.unsubscribe();
+    this.txtQueryChanged1.unsubscribe();
   }
 }

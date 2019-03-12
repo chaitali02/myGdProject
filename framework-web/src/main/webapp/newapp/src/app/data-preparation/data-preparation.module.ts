@@ -4,7 +4,7 @@ import { CommonModule , DatePipe} from '@angular/common';
 import { FormsModule } from '@angular/forms';
 // import { UiSwitchModule } from 'ngx-toggle-switch/src';
 import { TagInputModule } from 'ngx-chips';
-import { MessagesModule} from 'primeng/primeng';
+import { MessagesModule, ChipsModule} from 'primeng/primeng';
 import { MessageModule} from 'primeng/primeng';
 import {NgSelectModule, NgOption} from '@ng-select/ng-select';
 import {DropdownModule,SelectItem} from 'primeng/primeng';
@@ -35,6 +35,7 @@ import { DialogModule } from 'primeng/components/dialog/dialog';
 import {DragDropModule} from 'primeng/components/dragdrop/dragdrop';
 import { ResultComponent } from './result/result.component';
 import { ResultModule } from '../shared/module/result.module';
+import { UiSwitchModule } from 'ngx-ui-switch';
 
 @NgModule({
     imports: [
@@ -42,10 +43,8 @@ import { ResultModule } from '../shared/module/result.module';
         FormsModule,
         routing1,
         ProjectSharedModule,
-        // UiSwitchModule,
-        TagInputModule,
         MessagesModule,
-        MessageModule,
+        MessageModule,TagInputModule,
         NgSelectModule,
         DropdownModule,
         DataTableModule,
@@ -55,7 +54,16 @@ import { ResultModule } from '../shared/module/result.module';
         StorageServiceModule,
         DialogModule,
         DragDropModule,
-        ResultModule
+        ResultModule,
+        ChipsModule,
+        UiSwitchModule.forRoot({
+          size: 'small',
+          color: '#15C5D5',
+          switchColor: '#FFFFF',
+          defaultBoColor : '#ccc',
+         // checkedLabel: 'Yes',
+          //uncheckedLabel: 'No'
+        })
       
     ],
     declarations: [
