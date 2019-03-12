@@ -532,7 +532,7 @@ public class DataQualServiceImpl extends RuleTemplate {
 
 	public HttpServletResponse download(String dqExecUuid, String dqExecVersion, String format, String download,
 			int offset, int limit, HttpServletResponse response, int rowLimit, String sortBy, String order,
-			String requestId, RunMode runMode) throws Exception {
+			String requestId, RunMode runMode, String resultType) throws Exception {
 
 		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
 		if (rowLimit > maxRows) {
@@ -542,8 +542,12 @@ public class DataQualServiceImpl extends RuleTemplate {
 			throw new RuntimeException("Requested rows exceeded the limit of " + maxRows);
 		}
 
-		List<Map<String, Object>> results = getDQResults(dqExecUuid, dqExecVersion, offset, limit, sortBy, order,
-				requestId, runMode);
+		List<Map<String, Object>> results = null;
+		if(resultType == null || (resultType != null && resultType.equalsIgnoreCase("summary"))) {
+			results = getResultSummary(dqExecUuid, dqExecVersion, offset, rowLimit, sortBy, order, requestId, runMode);
+		} else {
+			results = getResultDetails(dqExecUuid, dqExecVersion, offset, rowLimit, sortBy, order, requestId, runMode);
+		}
 		response = commonServiceImpl.download(format, response, runMode, results,
 				new MetaIdentifierHolder(new MetaIdentifier(MetaType.dqExec, dqExecUuid, dqExecVersion)));
 		return response;
