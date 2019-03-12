@@ -395,15 +395,6 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
       $scope.filterTableArray = response.filterInfo;
       $scope.getAllLatestActiveDependsOn($scope.dataqualitysourceType);
 
-      if (response.dqdata.refIntegrityCheck.ref != null) {
-        DataqulityService.getAttributeByDatapod(response.dqdata.refIntegrityCheck.ref.uuid).then(function (response) {
-          onSuccess(response.data)
-        });
-        var onSuccess = function (response) {
-          $scope.refIntegrityCheckoptions = response;
-        }
-      }
-
       $scope.getExpressionByType();
 
       if (response.dqdata.domainCheck != null) {
@@ -516,7 +507,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
 
       $scope.filterTableArray = response.filterInfo;
       $scope.getExpressionByType();
-      
+
       if (response.dqdata.domainCheck != null) {
         var domainCheck = {};
         domainCheck.uuid = response.dqdata.domainCheck.ref.uuid;
@@ -1645,9 +1636,25 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
 DataQualityModule.controller('Result2DQController', function ($http, dagMetaDataService, $state, $timeout, $filter, $stateParams, $location, $rootScope, $scope, NgTableParams, DataqulityService, uuid2, CommonService, privilegeSvc, CF_DOWNLOAD) {
 
   $scope.select = $stateParams.type;
+  
   $scope.type = {
     text: $scope.select == 'dqgroupexec' ? 'dqgroup' : 'dq'
   };
+  $scope.setType=function(){
+    $scope.select = $stateParams.type;
+    $scope.type = {
+      text: $scope.select == 'dqgroupexec' ? 'dqgroup' : 'dq'
+    };
+    if( $scope.type =="dq"){
+      $scope.obj={};
+      $scope.obj.uuid=$stateParams.id;
+      $scope.obj.version=$stateParams.version;
+    }else{
+
+    }
+  }
+
+  
   $scope.sortdetail = [];
   $scope.colcount = 0;
   $scope.showprogress = false;
@@ -1777,7 +1784,6 @@ DataQualityModule.controller('Result2DQController', function ($http, dagMetaData
   }
 
   $scope.refreshDataSummary = function (searchtextSummary) {
-    debugger
     $scope.gridOptionsSummary.data = $filter('filter')($scope.originalDataSummary, searchtextSummary, undefined);
   };
   $scope.refreshDataDetail = function (searchtextDetail) {
@@ -1829,6 +1835,7 @@ DataQualityModule.controller('Result2DQController', function ($http, dagMetaData
     $scope.isRuleExec = true;
     $scope.isRuleResult = false;
     $scope.isD3RuleEexecGraphShow = false;
+    $scope.activeTabIndex=0;
     if ($scope.type.text == "dqgroup") {
       $scope.isGraphRuleExec = false;
       $scope.execDetail = $scope.rulegroupdatail;
@@ -1991,19 +1998,23 @@ DataQualityModule.controller('Result2DQController', function ($http, dagMetaData
   }
 
   $scope.go = function (index) {
-    if (index == 1) {
-      $scope.getDqExec({
-        uuid: $stateParams.id,
-        version: $stateParams.version
-      }, "detail");
+    debugger
+   
+    if($scope.type.text =="dq" || $scope.selectResult =="dq"){
+      $scope.setType();
+      if (index == 1) {
+        $scope.getDqExec({
+          uuid:$scope.obj.id,
+          version:$scope.obj.version
+        }, "detail");
+      }
+      else {
+        $scope.getDqExec({
+          uuid: $scope.obj.id,
+          version:$scope.obj.version
+        }, "summary");
+      }
     }
-    else {
-      $scope.getDqExec({
-        uuid: $stateParams.id,
-        version: $stateParams.version
-      }, "summary");
-    }
-
   }
 
   window.showResult = function (params) {
@@ -2013,10 +2024,15 @@ DataQualityModule.controller('Result2DQController', function ($http, dagMetaData
     $scope.isGraphRuleExec = true;
     $scope.isRuleGroupTitle = true;
     $scope.isRuleTitle = false;
+    $scope.selectResult="dq";
+    $scope.obj={};
+    $scope.obj.id=params.id;
+    $scope.obj.version=params.version;
+    debugger
     $scope.getDqExec({
       uuid: params.id,
       version: params.version
-    });
+    },"summary");
   }
 
 
@@ -2073,6 +2089,8 @@ DataQualityModule.controller('Result2DQController', function ($http, dagMetaData
   }
 
   $scope.dqGroupExec = function (data) {
+    debugger
+    $scope.setType();
     if ($scope.type.text == 'dq') {
       $scope.getDqExec(data, "summary");
       return;
