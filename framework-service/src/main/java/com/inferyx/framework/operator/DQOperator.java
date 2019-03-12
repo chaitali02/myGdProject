@@ -76,14 +76,14 @@ public class DQOperator implements IParsable {
 	private String VALUE_CHECK_PASS = "value_check_pass";
 	private String RANGE_CHECK_PASS = "range_check_pass";
 	private String DATATYPE_CHECK_PASS = "dataType_check_pass";
-	private String DATAFORMAT_CHECK_PASS = "dataFormat_check_pass";
+	private String FORMAT_CHECK_PASS = "format_check_pass";
 	private String LENGTH_CHECK_PASS = "length_check_pass";
 	// private String STDDEV_CHECK_PASS = "stdDevCheck_pass";
-	private String REFINT_CHECK_PASS = "refIntegrity_check_pass";
+	private String REFINT_CHECK_PASS = "ri_check_pass";
 	private String DUP_CHECK_PASS = "dup_check_pass";
 	private String CUSTOM_CHECK_PASS = "custom_check_pass";
 	private String DOMAIN_CHECK_PASS = "domain_check_pass";
-	private String BLANK_SPACE_CHECK_PASS = "blank_space_check_pass";
+	private String BLANK_SPACE_CHECK_PASS = "blankspace_check_pass";
 	private String EXPRESSION_CHECK_PASS = "expression_check_pass";
 	private String ALL_CHECK_PASS = "all_check_pass";
 	
@@ -91,7 +91,7 @@ public class DQOperator implements IParsable {
 	private String VALUE_CHECK_P= "valueCheck_p";
 	private String RANGE_CHECK_P = "rangeCheck_p";
 	private String DATATYPE_CHECK_P = "dataTypeCheck_p";
-	private String DATAFORMAT_CHECK_P = "dataFormatCheck_p";
+	private String FORMAT_CHECK_P = "formatCheck_p";
 	private String LENGTH_CHECK_P = "lengthCheck_p";
 	private String REFINT_CHECK_P = "refIntegrityCheck_p";
 	private String DUP_CHECK_P = "dupCheck_p";
@@ -104,7 +104,7 @@ public class DQOperator implements IParsable {
 	private String VALUE_CHECK_F= "valueCheck_f";
 	private String RANGE_CHECK_F = "rangeCheck_f";
 	private String DATATYPE_CHECK_F = "dataTypeCheck_f";
-	private String DATAFORMAT_CHECK_F = "dataFormatCheck_f";
+	private String FORMAT_CHECK_F = "formatCheck_f";
 	private String LENGTH_CHECK_F = "lengthCheck_f";
 	private String REFINT_CHECK_F = "refIntegrityCheck_f";
 	private String DUP_CHECK_F = "dupCheck_f";
@@ -301,7 +301,7 @@ public class DQOperator implements IParsable {
 		return select;
 	}
 
-	private String generateFrom(DataQual dq, MetaIdentifier ref, List<String> datapodList, DagExec dagExec,
+	private String generateFrom(DataQual dq, MetaIdentifier ref, String attributeName, List<String> datapodList, DagExec dagExec,
 			Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode) throws Exception {
 		Datapod srcDP = null;
 		String resp = null;
@@ -324,7 +324,7 @@ public class DQOperator implements IParsable {
 		 * null)).concat(") as ").concat(dataSet.getName()).concat(WHERE_1_1); }
 		 */
 		return resp
-				.concat(generateRefIntFrom(dq, getTableName(srcDP, datapodList, dagExec, otherParams, runMode), srcDP.getName(),
+				.concat(generateRefIntFrom(dq, getTableName(srcDP, datapodList, dagExec, otherParams, runMode), attributeName,
 						datapodList, dagExec, usedRefKeySet, otherParams, runMode))
 				// .concat(generateStddevFrom(dq, getDataQualTableName(srcDP, datapodList,
 				// dagExec), srcDP.getName(), datapodList, dagExec))
@@ -460,14 +460,20 @@ public class DQOperator implements IParsable {
 		refIntStr = LEFT_OUTER_JOIN.concat(getTableName(datapodRef, datapodList, dagExec, otherParams, runMode))
 				// .concat(AS)
 				.concat(" ").concat(datapodRef.getName()).concat("_ref").concat(ON).concat(BRACKET_OPEN);
-		for (Attribute attribute : rowKeyAttrList) {
-			refIntStr = refIntStr.concat(datapod.getName()).concat(DOT).concat(attribute.getName()).concat(" = ")
-					.concat(datapodRef.getName()).concat("_ref").concat(DOT)
-					.concat(datapodRef.getAttribute(Integer.parseInt(dq.getRefIntegrityCheck().getAttrId())).getName())
-					.concat(AND);
 
-		}
-		refIntStr = refIntStr.substring(0, refIntStr.length() - AND.length()).concat(BRACKET_CLOSE);
+		refIntStr = refIntStr.concat(datapod.getName()).concat(DOT).concat(attributeName).concat(" = ")
+						.concat(datapodRef.getName()).concat("_ref").concat(DOT)
+						.concat(datapodRef.getAttribute(Integer.parseInt(dq.getRefIntegrityCheck().getAttrId())).getName())
+						.concat(BRACKET_CLOSE);
+		
+//		for (Attribute attribute : rowKeyAttrList) {
+//			refIntStr = refIntStr.concat(datapod.getName()).concat(DOT).concat(attribute.getName()).concat(" = ")
+//					.concat(datapodRef.getName()).concat("_ref").concat(DOT)
+//					.concat(datapodRef.getAttribute(Integer.parseInt(dq.getRefIntegrityCheck().getAttrId())).getName())
+//					.concat(AND);
+//
+//		}
+//		refIntStr = refIntStr.substring(0, refIntStr.length() - AND.length()).concat(BRACKET_CLOSE);
 		return refIntStr;
 	}
 
@@ -558,7 +564,7 @@ public class DQOperator implements IParsable {
 		if (StringUtils.isBlank(select)) {
 			return null;
 		}
-		return select.concat(generateFrom(dq, dq.getDependsOn().getRef(), datapodList, dagExec, usedRefKeySet, otherParams, runMode))
+		return select.concat(generateFrom(dq, dq.getDependsOn().getRef(), attributeName, datapodList, dagExec, usedRefKeySet, otherParams, runMode))
 				.concat(WHERE_1_1).concat(generateFilter(dq, usedRefKeySet, runMode));
 	}
 	
@@ -676,8 +682,8 @@ public class DQOperator implements IParsable {
 					.append(generateSummarySql1Case(RANGE_CHECK_PASS, SINGLE_QUOTED_N, RANGE_CHECK_F)).append(COMMA)
 					.append(generateSummarySql1Case(DATATYPE_CHECK_PASS, SINGLE_QUOTED_Y, DATATYPE_CHECK_P)).append(COMMA)
 					.append(generateSummarySql1Case(DATATYPE_CHECK_PASS, SINGLE_QUOTED_N, DATATYPE_CHECK_F)).append(COMMA)
-					.append(generateSummarySql1Case(DATAFORMAT_CHECK_PASS, SINGLE_QUOTED_Y, DATAFORMAT_CHECK_P)).append(COMMA)
-					.append(generateSummarySql1Case(DATAFORMAT_CHECK_PASS, SINGLE_QUOTED_N, DATAFORMAT_CHECK_F)).append(COMMA)
+					.append(generateSummarySql1Case(FORMAT_CHECK_PASS, SINGLE_QUOTED_Y, FORMAT_CHECK_P)).append(COMMA)
+					.append(generateSummarySql1Case(FORMAT_CHECK_PASS, SINGLE_QUOTED_N, FORMAT_CHECK_F)).append(COMMA)
 					.append(generateSummarySql1Case(LENGTH_CHECK_PASS, SINGLE_QUOTED_Y, LENGTH_CHECK_P)).append(COMMA)
 					.append(generateSummarySql1Case(LENGTH_CHECK_PASS, SINGLE_QUOTED_N, LENGTH_CHECK_F)).append(COMMA)
 					.append(generateSummarySql1Case(REFINT_CHECK_PASS, SINGLE_QUOTED_Y, REFINT_CHECK_P)).append(COMMA)
@@ -697,7 +703,7 @@ public class DQOperator implements IParsable {
 					.append(VALUE_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
 					.append(RANGE_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
 					.append(DATATYPE_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
-					.append(DATAFORMAT_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
+					.append(FORMAT_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
 					.append(LENGTH_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
 					.append(REFINT_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
 					.append(DUP_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
@@ -785,10 +791,10 @@ public class DQOperator implements IParsable {
 		if (StringUtils.isNotBlank(dq.getDateFormatCheck())) {
 			check = " DATE_FORMAT(".concat(tableAttr).concat(",'").concat(dq.getDateFormatCheck())
 					.concat("') IS NOT NULL").concat(BLANK);
-			colName = DATAFORMAT_CHECK_PASS;
+			colName = FORMAT_CHECK_PASS;
 			dqBuilder.append(caseWrapper(check, colName)).append(COMMA);
 		} else {
-			dqBuilder.append("'' as ").append(DATAFORMAT_CHECK_PASS).append(COMMA);
+			dqBuilder.append("'' as ").append(FORMAT_CHECK_PASS).append(COMMA);
 		} // End dateFormatCheck If
 		if (dq.getLengthCheck() != null && !dq.getLengthCheck().isEmpty()) {
 			boolean containsLB = dq.getLengthCheck().containsKey("minLength")

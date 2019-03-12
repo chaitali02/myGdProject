@@ -108,7 +108,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 		querybuilder.append("sum(criteria_score)").append(" as ").append("score").append(ConstantsUtil.COMMA);
 		querybuilder.append("version").append(" as ").append("version");
 		querybuilder.append(ConstantsUtil.FROM);
-		querybuilder.append(detailSelectSql);
+		querybuilder.append(detailSelectSql + " rule_select_query");
 		querybuilder.append(ConstantsUtil.GROUP_BY);
 		querybuilder.append("rule_uuid").append(ConstantsUtil.COMMA);
 		querybuilder.append("rule_version").append(ConstantsUtil.COMMA);
@@ -252,7 +252,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 				selectbuilder.append(ConstantsUtil.UNION_ALL);
 
 		}
-		selectbuilder.append(" )");
+		selectbuilder.append(" ) ");
 		Set<String> attributeSet = new HashSet<String>(); 
 		attributeSet.addAll(attributeList);
 		StringBuilder attrListBuilder = new StringBuilder();

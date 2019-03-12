@@ -589,8 +589,8 @@ public class Rule2ServiceImpl extends RuleTemplate {
 			offset = offset + 1;
 			RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(ruleExecUUID, ruleExecVersion,
 					MetaType.ruleExec.toString());
-			DataStore datastore = dataStoreServiceImpl.getDatastore(ruleExec.getResult().getRef().getUuid(),
-					ruleExec.getResult().getRef().getVersion());
+			DataStore datastore = dataStoreServiceImpl.getDatastore(ruleExec.getSummaryResult().getRef().getUuid(),
+					ruleExec.getSummaryResult().getRef().getVersion());
 
 			data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order, null);
 			
@@ -1133,8 +1133,8 @@ public class Rule2ServiceImpl extends RuleTemplate {
 			RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(ruleExecUUID, ruleExecVersion,
 					MetaType.ruleExec.toString());
 			dataStoreServiceImpl.setRunMode(runMode);
-			DataStore datastore = dataStoreServiceImpl.getDatastore(ruleExec.getResult().getRef().getUuid(),
-					ruleExec.getResult().getRef().getVersion());
+			DataStore datastore = dataStoreServiceImpl.getDatastore(ruleExec.getSummaryResult().getRef().getUuid(),
+					ruleExec.getSummaryResult().getRef().getVersion());
 
 			data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order, null);
 			
