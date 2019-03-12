@@ -109,8 +109,11 @@
                   <div class="progress-bar progress-bar-success" [style.width]="progressbarWidth"></div>
                 </div>
                 <div class="tab-content">
-                  <div class="tab-pane" id="tab1" [ngClass]="{'active' : continueCount == 1}">
-                    <form class="form-horizontal" name="myform" novalidate="novalidate">
+                  <div class="tab-pane" id="tab1" [ngClass]="{'active' : continueCount == 0}">
+                    <form class="form-horizontal" name="myNewForm1" novalidate="novalidate" (ngSubmit)="myNewForm1.form.valid && countContinue()"
+                      #myNewForm1="ngForm">
+
+
                       <div class="form-group" *ngIf="mode">
                         <label class="col-md-3 control-label">UUID</label>
                         <div class="col-md-6">
@@ -118,14 +121,20 @@
                             [disabled]="true">
                         </div>
                       </div>
-                      
+
                       <div class="form-group">
-                        <label class="col-md-3 control-label">Name
+                        <label class="col-md-3 control-label" [ngClass]="{'has-error': myNewForm1.submitted && (myNewForm1.form.controls['name']?.invalid)}">Name
                           <span class="required" aria-required="true"> * </span>
                         </label>
                         <div class="col-md-6">
                           <input type="text" class="form-control" [(ngModel)]="ruledata.name" name="name" placeholder=""
-                            [disabled]="mode == 'true'">
+                            [disabled]="mode == 'true'" (ngModelChange)="onChangeName($event)" [disabled]="mode == 'true'"
+                            #name="ngModel" required [ngClass]="{'has-error':myNewForm1.submitted && (myNewForm1.form.controls['name']?.invalid)}">
+                          <div *ngIf="myNewForm1.submitted && (myNewForm1.form.controls['name']?.invalid)">
+                            <div class="help-block has-error error-msg">
+                              This field is required
+                            </div>
+                          </div>
                         </div>
                       </div>
                       <div class="form-group" *ngIf="mode">
@@ -197,7 +206,7 @@
                       <div class="row">
                         <label class="control-label col-md-3"></label>
                         <div class="col-md-4" style="padding-top: 2%;">
-                          <button type="submit" class="btn btn-outline green " (click)="countContinue()"> Continue
+                          <button type="submit" class="btn btn-outline green "> Continue
                             <i class="fa fa-angle-right"></i>
                           </button>
                         </div>
@@ -207,33 +216,48 @@
                   <!-- End Tab1-->
 
                   <!--Start Tab2-->
-                  <div class="tab-pane" id="tab2" [ngClass]="{'active' : continueCount == 2}">
-                    <form class="form-horizontal" name="myform2" id="submit_form2" (submit)="countContinue()"
-                      novalidate="novalidate">
+                  <div class="tab-pane" id="tab2" [ngClass]="{'active' : continueCount == 1}">
+                    <form class="form-horizontal" name="myNewForm2" id="submit_form2" (ngSubmit)="(myNewForm2.form.valid && datasetNotEmpty) && countContinue()"
+                      novalidate="novalidate" #myNewForm2="ngForm">
+
                       <div class="form-group">
-                        <label class="col-md-3 control-label">Source
+                        <label class="col-md-3 control-label" [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['sourceRef']?.invalid)}">Source
                           <span class="required" aria-required="true"> * </span>
                         </label>
                         <div class="col-md-2">
-                          <select class="form-control" [(ngModel)]="source" name="source" [disabled]="mode == 'true'"
-                            (change)="changeType()">
+                          <select class="form-control" [(ngModel)]="source" name="sourceRef" [disabled]="mode == 'true'"
+                            (change)="changeType()" placeholder="--Select--" #sourceRef="ngModel" required [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['sourceRef']?.invalid)}">
                             <option *ngFor="let app of sources" [ngValue]="app">{{app}} </option>
                           </select>
+                          <div *ngIf="myNewForm2.submitted && (myNewForm2.form.controls['sourceRef']?.invalid)">
+                            <div class="help-block has-error error-msg">
+                              This field is required
+                            </div>
+                          </div>
                         </div>
 
-                        <label class="col-md-1 control-label"> Name
+                        <label class="col-md-1 control-label" [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['sourcedataReq']?.invalid)}">
+                          Name
                           <span class="required" aria-required="true"> * </span>
                         </label>
                         <div class="col-md-3">
-                          <p-dropdown [options]="allNames" [(ngModel)]="sourcedata" name="sourcedata" dataKey="uuid"
-                            [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}" [filter]="true"
-                            (onChange)="changeSourceType()">
-                          </p-dropdown>
+                          <div class="pdropdown-border" [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['sourcedataReq']?.invalid)}">
+                            <p-dropdown [options]="allNames" [(ngModel)]="sourcedata" name="sourcedataReq" dataKey="uuid"
+                              [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}" [filter]="true"
+                              (onChange)="changeSourceType()" placeholder="--Select--" #sourcedataReq="ngModel"
+                              required>
+                            </p-dropdown>
+                          </div>
+                          <div *ngIf="myNewForm2.submitted && (myNewForm2.form.controls['sourcedataReq']?.invalid)">
+                            <div class="help-block has-error error-msg">
+                              This field is required
+                            </div>
+                          </div>
                         </div>
                       </div>
                       <div class="form-group">
                         <label class="col-md-3 control-label">Parameter List
-                          <span class="required" aria-required="true"> * </span>
+                          <!-- <span class="required" aria-required="true"> * </span> -->
                         </label>
                         <div class="col-md-6">
                           <p-dropdown [options]="allParameterList" [(ngModel)]="selectParameterlist" name="sourcedata"
@@ -241,6 +265,7 @@
                             [filter]="true" (onChange)="changeParamertLsitType(selectParameterlist)">
                           </p-dropdown>
                         </div>
+
                       </div>
 
                       <div class="centercontent" style="min-height:500px;" *ngIf="isFilterInprogess">
@@ -274,12 +299,12 @@
                                   </a>
                                   <ul class="dropdown-menu pull-right" style="z-index:10000;top:28px;right:45px;position:absolute">
                                     <li (click)="updateArray(0, '')">
-                                        <!-- [attr.disabled]="fitlerAttrTableSelectedItem[0]==0?'disabled' : null" -->
-                                      <a href="javascript:;" >Top</a>
+                                      <!-- [attr.disabled]="fitlerAttrTableSelectedItem[0]==0?'disabled' : null" -->
+                                      <a href="javascript:;" [attr.disabled]="topDisabled == true ? 'disabled' : null">Top</a>
                                     </li>
                                     <li class="divider" style="margin: 0px;"> </li>
                                     <li (click)="updateArray(ruledata.filterTableArray.length-1, '')">
-                                      <a href="javascript:;">Bottom</a>
+                                      <a href="javascript:;" [attr.disabled]="bottomDisabled == true ? 'disabled' : null">Bottom</a>
                                     </li>
                                     <li class="divider" style="margin: 0px;"> </li>
                                     <li>
@@ -289,13 +314,13 @@
                                           focus-me="true" />
                                       </div>
                                     </li>
-                                    <div *ngIf="invalideRowNo0">
+                                    <div *ngIf="invalideMinRow">
                                       <li class="divider" style="margin: 0px;"> </li>
                                       <li style="color:red">
                                         Please enter the minimum no of 0.
                                       </li>
                                     </div>
-                                    <div *ngIf="invalideRowNo1">
+                                    <div *ngIf="invalideMaxRow">
                                       <li class="divider" style="margin: 0px;"> </li>
                                       <li style="color:red">
                                         Please enter the minimum no of {{ruledata.filterTableArray.length}}
@@ -313,9 +338,9 @@
                         <div class="portlet-body form">
                           <div class="x_title" style="padding:10px;">
                             <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right"
-                              (click)="removeRow()" [disabled]="mode == 'true'"></button>
+                              (click)="removeRow()" [disabled]="mode == 'true' || source == null"></button>
                             <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" (click)="addRow()"
-                              [disabled]="mode == 'true'"></button>
+                              [disabled]="mode == 'true' || source == null"></button>
                           </div>
                           <br>
                           <div class="form-body" style="padding-top:30px;">
@@ -341,7 +366,7 @@
 
                                   <td style="text-align:center;Vertical-align:middle;">
                                     <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="data.selected"
-                                      name="selected" [disabled]="mode == 'true'" (change)="checkSelected(data.selected)"/>
+                                      name="selected" [disabled]="mode == 'true'" (change)="checkSelected(data.selected, i)" />
                                   </td>
                                   <td>
                                     <p-dropdown [options]="logicalOperators" [(ngModel)]="data.logicalOperator" name="logicalOperator+{{i}}"
@@ -364,16 +389,17 @@
                                       pTooltip="enter values into single quotes" tooltipPosition="top" tooltipEvent="focus"
                                       [disabled]="mode == 'true'" [style]="{'width':'100%','padding':'3px'}" *ngIf="data.lhsType == 'string'"
                                       placeholder="-enter string-">
-                                    <div *ngIf="data.lhsType == 'formula'">
-                                      <p-dropdown [options]="lhsFormulaArray" [(ngModel)]="data.lhsAttribute" name="lhsAttribute+{{i}}"
+                                    <div *ngIf="data.lhsType == 'formula'" class="pdropdown-border" [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['lhsAttribute'+i]?.invalid)}">
+
+                                      <p-dropdown [options]="lhsFormulaArray" [(ngModel)]="data.lhsAttribute" name="lhsAttribute{{i}}"
                                         [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
-                                        placeholder="--Select--">
+                                        placeholder="--Select--" required #lhsAttribute="ngModel">
                                       </p-dropdown>
                                     </div>
-                                    <div *ngIf="data.lhsType == 'datapod'">
-                                      <p-dropdown [options]="attributesArray" [(ngModel)]="data.lhsAttribute" name="lhsAttribute+{{i}}"
+                                    <div *ngIf="data.lhsType == 'datapod'" class="pdropdown-border" [ngClass]="{'has-error': myNewForm2.submitted && (myNewForm2.form.controls['lhsAttribute'+i]?.invalid)}">
+                                      <p-dropdown [options]="attributesArray" [(ngModel)]="data.lhsAttribute" name="lhsAttribute{{i}}"
                                         [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
-                                        placeholder="--Select--" datakey="label">
+                                        placeholder="--Select--" datakey="label" required #lhsAttribute="ngModel">
                                       </p-dropdown>
                                     </div>
                                   </td>
@@ -478,7 +504,7 @@
                                     <div *ngIf="data.rhsType == 'paramlist'">
                                       <p-dropdown [options]="paramlistArray" [(ngModel)]="data.rhsAttribute" name="rhsAttribute+{{i}}"
                                         [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'" [filter]="true"
-                                        placeholder="--Select--" dataKey="uuid" >
+                                        placeholder="--Select--" dataKey="uuid">
                                       </p-dropdown>
                                     </div>
 
@@ -579,13 +605,54 @@
                           <div class="caption">
                             <span class="caption-subject  sbold ">Attribute</span>
                           </div>
-                          <div class="actions">
-                            <a class="btn btn-circle btn-icon-only btn-default" [attr.disabled]="mode == 'true'?'disabled' : null"
+
+
+
+                          <div class="actions pull-right" style="position:relative;padding-right: 5px;">
+                            <a class="btn green-haze btn-outline btn-circle auto-map btn-sm" href="javascript:;"
+                              data-toggle="dropdown" tooltip-placement="left" uib-tooltip="Move" data-hover="dropdown"
+                              data-close-others="true" aria-expanded="false" [attr.disabled]="(moveToEnable == false) ?'disabled' : null">
+                              <span class="fa fa-arrows" aria-hidden="true" style="margin-right: 5px;"></span>
+                              <i class="fa fa-angle-down"></i>
+                            </a>
+                            <ul class="dropdown-menu pull-right" style="z-index:10000;top:28px;right:45px;position:absolute">
+                              <li (click)="updateArrayAttribute(0, '')">
+                                <!-- [attr.disabled]="fitlerAttrTableSelectedItem[0]==0?'disabled' : null" -->
+                                <a href="javascript:;" [attr.disabled]="topDisabled == true ? 'disabled' : null">Top</a>
+                              </li>
+                              <li class="divider" style="margin: 0px;"> </li>
+                              <li (click)="updateArrayAttribute(attributeTableArray.length-1, '')">
+                                <a href="javascript:;" [attr.disabled]="bottomDisabled == true ? 'disabled' : null">Bottom</a>
+                              </li>
+                              <li class="divider" style="margin: 0px;"> </li>
+                              <li>
+                                <div class="form-group" style="margin: 1%;" *ngIf="attributeTableArray">
+                                  <input type="number" class="form-control" [(ngModel)]="moveTo" min="0" max="{{attributeTableArray.length}}"
+                                    name="moveto" style="border:0" placeholder="Move To" (ngModelChange)="updateArrayAttribute(moveTo-1, 'range', $event)"
+                                    focus-me="true" />
+                                </div>
+                              </li>
+                              <div *ngIf="invalideMinRow">
+                                <li class="divider" style="margin: 0px;"> </li>
+                                <li style="color:red">
+                                  Please enter the minimum no of 0.
+                                </li>
+                              </div>
+                              <div *ngIf="invalideMaxRow">
+                                <li class="divider" style="margin: 0px;"> </li>
+                                <li style="color:red">
+                                  Please enter the minimum no of {{attributeTableArray.length}}
+                                </li>
+                              </div>
+                            </ul>
+
+                            <a class="btn btn-circle btn-icon-only btn-default left-margin" [attr.disabled]="mode == 'true'?'disabled' : null"
                               (click)="autoPopulate()" tooltip-placement="top" uib-tooltip="Auto Populate">
                               <span class="fa fa-map-signs" aria-hidden="true" style="color:#a0a0a0;"></span>
                             </a>
-
                           </div>
+
+
                         </div>
                         <div class="portlet-body">
                           <div class="row">
@@ -623,7 +690,7 @@
                                     pDroppable="cars1" (onDrop)="dropAttr($event,i)">
                                     <td style="text-align:center;Vertical-align:middle;">
                                       <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="data.selected"
-                                        name="selectedAttr+{{i}}" [disabled]="mode == 'true'" />
+                                        name="selectedAttr+{{i}}" [disabled]="mode == 'true'" (change)="checkSelectedAttribute(data.selected, i)" />
                                     </td>
                                     <td style="width:10%;">
                                       <input style="text-align:center;" type="text" [value]="i" name="id[i]" [disabled]="true"

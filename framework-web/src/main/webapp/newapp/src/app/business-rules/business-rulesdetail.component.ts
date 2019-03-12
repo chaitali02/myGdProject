@@ -32,6 +32,7 @@ import { Paramset } from '../metadata/domain/domain.paramset';
 import { ParamInfo } from '../metadata/domain/domain.paramInfo';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { RoutesParam } from '../metadata/domain/domain.routeParams';
 
 @Component({
   selector: 'app-business-rulesdetail',
@@ -114,10 +115,13 @@ export class BusinessRulesDetailComponent {
   moveTo: number;
   moveToEnable: boolean;
   count: any[];
-  invalideRowNo0: boolean = false;
-  invalideRowNo1: boolean = false;
-  txtQueryChanged: Subject<string> = new Subject<string>();
-  txtQueryChanged1: Subject<string> = new Subject<string>();
+  invalideMinRow: boolean = false;
+  invalideMaxRow: boolean = false;
+  txtQueryChangedFilter: Subject<string> = new Subject<string>();
+  resetTableTopBottom: Subject<string> = new Subject<string>();
+  txtQueryChangedAttribute: Subject<string> = new Subject<string>();
+  topDisabled: boolean;
+  bottomDisabled: boolean;
 
   constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router,
     private _commonService: CommonService, private _ruleService: RuleService, public appHelper: AppHelper) {
@@ -131,7 +135,7 @@ export class BusinessRulesDetailComponent {
     this.dialogAttributeName = {};
     this.dialogSelectName = {};
     this.sources = ["datapod", "relation", "dataset", "rule"];
-    this.source = this.sources[0];
+    //this.source = this.sources[0];
     this.progressbarWidth = 25 * this.continueCount + "%";
     this.dataqualitycompare = null;
     this.filterTableArray = null;
@@ -161,9 +165,10 @@ export class BusinessRulesDetailComponent {
       { "text": "formula", "label": "formula" }
     ]
     this.activatedRoute.params.subscribe((params: Params) => {
-      this.id = params['id'];
-      this.version = params['version'];
-      this.mode = params['mode'];
+      let param = <RoutesParam>params;
+      this.id = param.id;
+      this.version = param.version;
+      this.mode = param.mode;
       if (this.mode !== undefined) {
         this.getOneByUuidAndVersion(this.id, this.version);
         this.getAllVersionByUuid();
@@ -217,26 +222,48 @@ export class BusinessRulesDetailComponent {
 
     this.moveToEnable = false;
     this.count = [];
-    this.txtQueryChanged
+    this.txtQueryChangedFilter
       .pipe(debounceTime(3000), distinctUntilChanged())
       .subscribe(index => {
         console.log(parseInt(index) - 1);
-        this.filterTableArray[parseInt(index) - 1].selected = "";
+        for (const i in this.ruledata.filterTableArray) {
+          if (this.ruledata.filterTableArray[i].hasOwnProperty("selected"))
+            this.ruledata.filterTableArray[i].selected = false;
+        }
         this.moveTo = null;
-        this.checkSelected(false);
-        this.invalideRowNo0 = false;
-        this.invalideRowNo1 = false;
+        this.checkSelected(false, null);
+        this.invalideMinRow = false;
+        this.invalideMaxRow = false;
       });
-    this.txtQueryChanged1
+
+    this.resetTableTopBottom
       .pipe(debounceTime(3000), distinctUntilChanged())
       .subscribe(index => {
         this.moveTo = null;
-        this.checkSelected(false);
-        this.invalideRowNo0 = false;
-        this.invalideRowNo1 = false;
+        this.checkSelected(false, null);
+        this.checkSelectedAttribute(false, null);
+        this.invalideMinRow = false;
+        this.invalideMaxRow = false;
       });
-    this.invalideRowNo0 = false;
-    this.invalideRowNo1 = false;
+    this.invalideMinRow = false;
+    this.invalideMaxRow = false;
+    this.topDisabled = false;
+    this.bottomDisabled = false;
+
+    this.txtQueryChangedAttribute
+      .pipe(debounceTime(3000), distinctUntilChanged())
+      .subscribe(index => {
+        console.log(parseInt(index) - 1);
+        for (const i in this.attributeTableArray) {
+          if (this.attributeTableArray[i].hasOwnProperty("selected"))
+            this.attributeTableArray[i].selected = false;
+        }
+        this.moveTo = null;
+        this.checkSelectedAttribute(false, null);
+        this.invalideMinRow = false;
+        this.invalideMaxRow = false;
+      });
+
   }
 
   ngOnInit() {
@@ -284,13 +311,6 @@ export class BusinessRulesDetailComponent {
     }, 1000);
   }
 
-  // showDagGraph(uuid, version) {
-  // 	this.isHomeEnable = true;
-  // 	//this.showGraph = true;
-  // 	setTimeout(() => {
-  // 		this.d_KnowledgeGraphComponent.getGraphData(this.id, this.version);
-  // 	}, 1000);
-  // }
   onChangeName() {
     this.breadcrumbDataFrom[2].caption = this.ruledata.name;
   }
@@ -369,20 +389,7 @@ export class BusinessRulesDetailComponent {
     }
   }
 
-  checkAllAttributeRow() {
-
-    if (!this.selectAllAttributeRow) {
-      this.selectAllAttributeRow = true;
-    }
-    else {
-      this.selectAllAttributeRow = false;
-    }
-    this.attributeTableArray.forEach(attribute => {
-      attribute.selected = this.selectAllAttributeRow;
-    });
-  }
   addAttribute() {
-    debugger
     if (this.attributeTableArray == null) {
       this.attributeTableArray = [];
     }
@@ -394,6 +401,7 @@ export class BusinessRulesDetailComponent {
     attrinfo.isSourceAtributeSimple = true;
     attrinfo.isSourceAtributeDatapod = false;
     this.attributeTableArray.splice(this.attributeTableArray.length, 0, attrinfo);
+    // this.checkSelectedAttribute(false, this.attributeTableArray.length - 1);
   }
 
   removeAttribute() {
@@ -404,7 +412,22 @@ export class BusinessRulesDetailComponent {
         newDataList.push(selected);
       }
     });
+    this.checkSelectedAttribute(false, null);
     this.attributeTableArray = newDataList;
+  }
+
+  checkAllAttributeRow() {
+
+    if (!this.selectAllAttributeRow) {
+      this.selectAllAttributeRow = true;
+    }
+    else {
+      this.selectAllAttributeRow = false;
+    }
+    this.checkSelectedAttribute(false, null);
+    this.attributeTableArray.forEach(attribute => {
+      attribute.selected = this.selectAllAttributeRow;
+    });
   }
 
   onChangeAttributeDatapod(data, index) {
@@ -420,21 +443,20 @@ export class BusinessRulesDetailComponent {
   }
 
   onSelectparamSet() {
-    var paramSetjson = {};
+    var paramSetjson = { paramInfoArray: [] };
     var paramInfoArray = [];
     if (this.paramsetdata && this.paramsetdata != null) {
-      debugger
       for (var i = 0; i < this.paramsetdata.paramInfo.length; i++) {
         var paramInfo = new ParamInfoIO();
         paramInfo.paramSetId = this.paramsetdata.paramInfo[i].paramSetId
         paramInfo.selected = false
         var paramSetValarray = [];
         for (var j = 0; j < this.paramsetdata.paramInfo[i].paramSetVal.length; j++) {
-          var paramSetValjson = {};
-          paramSetValjson["paramId"] = this.paramsetdata.paramInfo[i].paramSetVal[j].paramId;
-          paramSetValjson["paramName"] = this.paramsetdata.paramInfo[i].paramSetVal[j].paramName;
-          paramSetValjson["value"] = this.paramsetdata.paramInfo[i].paramSetVal[j].value;
-          paramSetValjson["ref"] = this.paramsetdata.paramInfo[i].paramSetVal[j].ref;
+          var paramSetValjson = { paramId: "", paramName: "", value: "", ref: "" };
+          paramSetValjson.paramId = this.paramsetdata.paramInfo[i].paramSetVal[j].paramId;
+          paramSetValjson.paramName = this.paramsetdata.paramInfo[i].paramSetVal[j].paramName;
+          paramSetValjson.value = this.paramsetdata.paramInfo[i].paramSetVal[j].value;
+          paramSetValjson.ref = this.paramsetdata.paramInfo[i].paramSetVal[j].ref;
           paramSetValarray[j] = paramSetValjson;
           paramInfo.paramSetVal = paramSetValarray;
           paramInfo.value = this.paramsetdata.paramInfo[i].paramSetVal[j].value;
@@ -443,7 +465,7 @@ export class BusinessRulesDetailComponent {
       }
       this.paramtablecol = paramInfoArray[0].paramSetVal;
       this.paramtable = paramInfoArray;
-      paramSetjson["paramInfoArray"] = paramInfoArray;
+      paramSetjson.paramInfoArray = paramInfoArray;
       this.isTabelShow = true;
     } else {
       this.isTabelShow = false;
@@ -505,10 +527,9 @@ export class BusinessRulesDetailComponent {
 
 
   modelExecute(modeldetail) {
-    debugger
     let newDataList = [];
     this.selectallattribute = false;
-    let execParams = {}
+    let execParams = new Paramset();
     if (this.paramtable) {
       this.paramtable.forEach(selected => {
         if (selected.selected) {
@@ -531,13 +552,13 @@ export class BusinessRulesDetailComponent {
       }
 
       if (paramInfoArray.length > 0) {
-        execParams["paramInfo"] = paramInfoArray;
+        execParams.paramInfo = paramInfoArray;
       }
       else {
         execParams = null
       }
     }
-    console.log(JSON.stringify(execParams)); debugger
+    console.log(JSON.stringify(execParams));
     this._ruleService.execute(modeldetail.uuid, modeldetail.version, execParams).subscribe(
       response => { this.onSuccessExecute(response) },
       error => console.log('Error :: ' + error)
@@ -662,10 +683,12 @@ export class BusinessRulesDetailComponent {
 
   }
   getAllLatest(IsDefault) {
-    this._commonService.getAllLatest(this.source).subscribe(
-      response => { this.OnSuccesgetAllLatest(response, IsDefault) },
-      error => console.log('Error :: ' + error)
-    )
+    if (this.source) {
+      this._commonService.getAllLatest(this.source).subscribe(
+        response => { this.OnSuccesgetAllLatest(response, IsDefault) },
+        error => console.log('Error :: ' + error)
+      )
+    }
   }
 
   OnSuccesgetAllLatest(response1, IsDefault) {
@@ -702,13 +725,13 @@ export class BusinessRulesDetailComponent {
     this.lhsdatapodattributefilter = null
     let attribute = []
     for (const n in response) {
-      let allname = {};
-      allname["label"] = response[n].dname;
-      allname["value"] = {};
-      allname["value"]["label"] = response[n].dname;
-      allname["value"]["u_Id"] = response[n].id;
-      allname["value"]["uuid"] = response[n].uuid;
-      allname["value"]["attrId"] = response[n].attributeId;
+      let allname = new AttributeIO();
+      allname.label = response[n].dname;
+      allname.value = {};
+      allname.value.label = response[n].dname;
+      allname.value.u_Id = response[n].id;
+      allname.value.uuid = response[n].uuid;
+      allname.value.attrId = response[n].attributeId;
       attribute[n] = allname
     }
     this.allSourceAttribute = attribute
@@ -832,7 +855,7 @@ export class BusinessRulesDetailComponent {
 
     this.getAllLatest(false);
     this.getAllFunctions();
-    
+
     this.source = this.ruledata.source.ref.type
     if (response.isFormulaExits == true) {
       this._commonService.getFormulaByType(this.sourcedata.uuid, this.source)
@@ -859,7 +882,7 @@ export class BusinessRulesDetailComponent {
       this._commonService.getLatestByUuid(this.ruledata.paramList.ref.uuid, this.metaType.PARAMLIST)
         .subscribe(response => { this.onSuccessgetLatestByUuid(response) },
           error => console.log("Error ::", error));
-     
+
     }
     if (response.isFunctionExits == true) {
 
@@ -867,8 +890,8 @@ export class BusinessRulesDetailComponent {
         .subscribe(response => { this.onSuccessgetFunctionByCriteria(response) },
           error => console.log("Error ::", error))
     }
-    
-    this.ruledata.filterTableArray = response.filterInfo; 
+
+    this.ruledata.filterTableArray = response.filterInfo;
 
     this.isEditInprogess = false;
   }
@@ -886,11 +909,11 @@ export class BusinessRulesDetailComponent {
     var temp = []
     for (const i in response) {
       let ver = new DropDownIO();
-      ver.label = response[i]['version'];
+      ver.label = response[i].version;
       ver.value = { label: "", uuid: "", u_Id: "" }
-      ver.value.label = response[i]['version'];
-      ver.value.uuid = response[i]['uuid'];
-      ver.value.u_Id = response[i]['uuid'] + "_" + response[i]['version']
+      ver.value.label = response[i].version;
+      ver.value.uuid = response[i].uuid;
+      ver.value.u_Id = response[i].uuid + "_" + response[i].version
       temp[i] = ver;
     }
     this.VersionList = temp
@@ -957,22 +980,23 @@ export class BusinessRulesDetailComponent {
   }
 
   onChangeLhsType(index) {
-    this.ruledata.filterTableArray[index].lhsAttribute = null;
-    if (this.ruledata.filterTableArray[index].lhsType == this.metaType.FORMULA) {
-      this._commonService.getFormulaByType(this.sourcedata.uuid, this.source)
-        .subscribe(response => { this.onSuccessgetFormulaByLhsType(response) },
-          error => console.log("Error ::", error))
-    }
-
-    else if (this.ruledata.filterTableArray[index].lhsType == this.metaType.DATAPOD) {
-      this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source)
-        .subscribe(response => { this.onSuccessgetAllAttributeBySourceLhs(response) },
-          error => console.log("Error ::", error))
-    }
-
-    else {
       this.ruledata.filterTableArray[index].lhsAttribute = null;
-    }
+      if (this.ruledata.filterTableArray[index].lhsType == this.metaType.FORMULA) {
+        this._commonService.getFormulaByType(this.sourcedata.uuid, this.source)
+          .subscribe(response => { this.onSuccessgetFormulaByLhsType(response) },
+            error => console.log("Error ::", error))
+      }
+
+      else if (this.ruledata.filterTableArray[index].lhsType == this.metaType.DATAPOD) {
+        this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source)
+          .subscribe(response => { this.onSuccessgetAllAttributeBySourceLhs(response) },
+            error => console.log("Error ::", error))
+      }
+
+      else {
+        this.ruledata.filterTableArray[index].lhsAttribute = null;
+      }
+    
   }
 
   onChangeRhsType(index) {
@@ -1033,7 +1057,7 @@ export class BusinessRulesDetailComponent {
     filertable.rhsAttribute = null;
     this.ruledata.filterTableArray.splice(this.ruledata.filterTableArray.length, 0, filertable);
     this.count = [];
-    this.checkSelected(false);
+    this.checkSelected(false, this.ruledata.filterTableArray.length - 1);
   }
 
   removeRow() {
@@ -1049,7 +1073,7 @@ export class BusinessRulesDetailComponent {
     }
 
     this.count = [];
-    this.checkSelected(false);
+    this.checkSelected(false, null);
     this.ruledata.filterTableArray = newDataList;
   }
 
@@ -1060,7 +1084,7 @@ export class BusinessRulesDetailComponent {
     else {
       this.selectedAllFitlerRow = false;
     }
-    this.checkSelected(false);
+    this.checkSelected(false, null);
     this.ruledata.filterTableArray.forEach(filter => {
       filter.selected = this.selectedAllFitlerRow;
     });
@@ -1161,7 +1185,6 @@ export class BusinessRulesDetailComponent {
     source.ref = ref;
     baseRuleJson.source = source;
 
-    debugger
 
     if (this.selectParameterlist.uuid != null && this.selectParameterlist.uuid != "") {
       let paramlist = new MetaIdentifierHolder();
@@ -1343,7 +1366,7 @@ export class BusinessRulesDetailComponent {
       }//End FOR Loop
 
       baseRuleJson.attributeInfo = attributesArray;
-    } debugger
+    }
     this._commonService.submit(this.metaType.RULE, baseRuleJson).subscribe(
       response => { this.OnSuccessubmit(response) },
       error => console.log('Error :: ' + error)
@@ -1387,26 +1410,26 @@ export class BusinessRulesDetailComponent {
     this.ruledata.filterTableArray[index - 1] = rowTempIndex;
     this.iSSubmitEnable = true
   }
-  dragStart(event, data) {
-    console.log(event)
-    console.log(data)
-    this.dragIndex = data
-  }
-  dragEnd(event) {
-    console.log(event)
-  }
-  drop(event, data) {
-    if (this.mode == 'false') {
-      this.dropIndex = data
-      // console.log(event)
-      // console.log(data)
-      var item = this.ruledata.filterTableArray[this.dragIndex]
-      this.ruledata.filterTableArray.splice(this.dragIndex, 1)
-      this.ruledata.filterTableArray.splice(this.dropIndex, 0, item)
-      this.iSSubmitEnable = true
-    }
+  // dragStart(event, data) {
+  //   console.log(event)
+  //   console.log(data)
+  //   this.dragIndex = data
+  // }
+  // dragEnd(event) {
+  //   console.log(event)
+  // }
+  // drop(event, data) {
+  //   if (this.mode == 'false') {
+  //     this.dropIndex = data
+  //     // console.log(event)
+  //     // console.log(data)
+  //     var item = this.ruledata.filterTableArray[this.dragIndex]
+  //     this.ruledata.filterTableArray.splice(this.dragIndex, 1)
+  //     this.ruledata.filterTableArray.splice(this.dropIndex, 0, item)
+  //     this.iSSubmitEnable = true
+  //   }
 
-  }
+  // }
   onAttrRowDown(index) {
     var rowTempIndex = this.attributeTableArray[index];
     var rowTempIndexPlus = this.attributeTableArray[index + 1];
@@ -1423,56 +1446,75 @@ export class BusinessRulesDetailComponent {
     this.attributeTableArray[index - 1] = rowTempIndex;
     this.iSSubmitEnable = true
   }
-  dragAttrStart(event, data) {
-    console.log(event)
-    console.log(data)
-    this.dragIndex = data
-  }
-  dragAttrEnd(event) {
-    console.log(event)
-  }
-  dropAttr(event, data) {
-    if (this.mode == 'false') {
-      this.dropIndex = data
-      // console.log(event)
-      // console.log(data)
-      var item = this.attributeTableArray[this.dragIndex]
-      this.attributeTableArray.splice(this.dragIndex, 1)
-      this.attributeTableArray.splice(this.dropIndex, 0, item)
-      this.iSSubmitEnable = true
-    }
-  }
+  // dragAttrStart(event, data) {
+  //   console.log(event)
+  //   console.log(data)
+  //   this.dragIndex = data
+  // }
+  // dragAttrEnd(event) {
+  //   console.log(event)
+  // }
+  // dropAttr(event, data) {
+  //   if (this.mode == 'false') {
+  //     this.dropIndex = data
+  //     // console.log(event)
+  //     // console.log(data)
+  //     var item = this.attributeTableArray[this.dragIndex]
+  //     this.attributeTableArray.splice(this.dragIndex, 1)
+  //     this.attributeTableArray.splice(this.dropIndex, 0, item)
+  //     this.iSSubmitEnable = true
+  //   }
+  // }
 
   updateArray(new_index, range, event) {
     for (let i = 0; i < this.ruledata.filterTableArray.length; i++) {
       if (this.ruledata.filterTableArray[i].selected) {
 
         if (new_index < 0) {
-          this.invalideRowNo0 = true;
-          this.txtQueryChanged1.next(event);
+          this.invalideMinRow = true;
+          this.resetTableTopBottom.next(event);
         }
         else if (new_index >= this.ruledata.filterTableArray.length) {
-          this.invalideRowNo1 = true;
-          this.txtQueryChanged1.next(event);
+          this.invalideMaxRow = true;
+          this.resetTableTopBottom.next(event);
         }
         else if (new_index == null) { }
         else {
           let old_index = i;
           this.array_move(this.ruledata.filterTableArray, old_index, new_index);
           if (range) {
-            this.txtQueryChanged.next(event);
+
             if (new_index == 0 || new_index == 1) {
-              this.first(new_index, "");
+              this.ruledata.filterTableArray[0].logicalOperator = "";
+              if (!this.ruledata.filterTableArray[1].logicalOperator) {
+                this.ruledata.filterTableArray[1].logicalOperator = this.logicalOperators[1].label;
+              }
+              this.checkSelected(false, null);
             }
             if (new_index == this.ruledata.filterTableArray.length - 1) {
-              this.last(new_index, "");
+              this.ruledata.filterTableArray[0].logicalOperator = "";
+              if (this.ruledata.filterTableArray[new_index].logicalOperator == "") {
+                this.ruledata.filterTableArray[new_index].logicalOperator = this.logicalOperators[1].label;
+              }
+              this.checkSelected(false, null);
             }
+            this.txtQueryChangedFilter.next(new_index);
           }
           else if (new_index == 0 || new_index == 1) {
-            this.first(new_index, range);
+            this.ruledata.filterTableArray[0].logicalOperator = "";
+            if (!this.ruledata.filterTableArray[1].logicalOperator) {
+              this.ruledata.filterTableArray[1].logicalOperator = this.logicalOperators[1].label;
+            }
+            this.ruledata.filterTableArray[new_index].selected = "";
+            this.checkSelected(false, null);
           }
           else if (new_index == this.ruledata.filterTableArray.length - 1) {
-            this.last(new_index, range);
+            this.ruledata.filterTableArray[0].logicalOperator = "";
+            if (this.ruledata.filterTableArray[new_index].logicalOperator == "") {
+              this.ruledata.filterTableArray[new_index].logicalOperator = this.logicalOperators[1].label;
+            }
+            this.ruledata.filterTableArray[new_index].selected = "";
+            this.checkSelected(false, null);
           }
           break;
         }
@@ -1480,26 +1522,6 @@ export class BusinessRulesDetailComponent {
     }
   }
 
-  first(new_index, range) {debugger
-    this.ruledata.filterTableArray[0].logicalOperator = "";
-    if (!this.ruledata.filterTableArray[1].logicalOperator) {
-      this.ruledata.filterTableArray[1].logicalOperator = this.logicalOperators[1].label;
-    }
-    if (range) {
-      this.ruledata.filterTableArray[new_index].selected = "";
-    }
-    this.checkSelected(false);
-  }
-  last(new_index, range) {debugger
-    this.ruledata.filterTableArray[0].logicalOperator = "";
-    if (this.ruledata.filterTableArray[new_index].logicalOperator == "") {
-      this.ruledata.filterTableArray[new_index].logicalOperator = this.logicalOperators[1].label;
-    }
-    if (range) {
-      this.ruledata.filterTableArray[new_index].selected = "";
-    }
-    this.checkSelected(false);
-  }
 
   array_move(arr, old_index, new_index) {
     while (old_index < 0) {
@@ -1518,7 +1540,7 @@ export class BusinessRulesDetailComponent {
     return arr;
   }
 
-  checkSelected(flag) {
+  checkSelected(flag: any, index: any) {
     if (flag == true) {
       this.count.push(flag);
       // console.log("Flag: " + flag + " /Count : " + this.count);
@@ -1528,11 +1550,111 @@ export class BusinessRulesDetailComponent {
 
     this.moveToEnable = (this.count.length == 1) ? true : false;
 
+    if (index != null) {
+      if (index == 0 && flag == true) {
+        this.topDisabled = true;
+      }
+      else {
+        this.topDisabled = false;
+      }
+
+      if (index == (this.ruledata.filterTableArray.length - 1) && flag == true) {
+        this.bottomDisabled = true;
+      }
+      else {
+        this.bottomDisabled = false;
+      }
+    }
   }
 
+  updateArrayAttribute(new_index, range, event) {
+    for (let i = 0; i < this.attributeTableArray.length; i++) {
+      if (this.attributeTableArray[i].selected) {
+
+        if (new_index < 0) {
+          this.invalideMinRow = true;
+          this.resetTableTopBottom.next(event);
+        }
+        else if (new_index >= this.attributeTableArray.length) {
+          this.invalideMaxRow = true;
+          this.resetTableTopBottom.next(event);
+        }
+        else if (new_index == null) { }
+        else {
+          let old_index = i;
+          this.array_move(this.attributeTableArray, old_index, new_index);
+          if (range) {
+
+            // if (new_index == 0 || new_index == 1) {
+            //   this.attributeTableArray[0].logicalOperator = "";
+            //   if (!this.attributeTableArray[1].logicalOperator) {
+            //     this.attributeTableArray[1].logicalOperator = this.logicalOperators[1].label;
+            //   }
+            //   this.checkSelectedAttribute(false, null);
+            // }
+            // if (new_index == this.attributeTableArray.length - 1) {
+            //   this.attributeTableArray[0].logicalOperator = "";
+            //   if (this.attributeTableArray[new_index].logicalOperator == "") {
+            //     this.attributeTableArray[new_index].logicalOperator = this.logicalOperators[1].label;
+            //   }
+            this.checkSelectedAttribute(false, null);
+            // }
+            this.txtQueryChangedAttribute.next(new_index);
+          }
+          else if (new_index == 0 || new_index == 1) {
+            // this.attributeTableArray[0].logicalOperator = "";
+            // if (!this.attributeTableArray[1].logicalOperator) {
+            //   this.attributeTableArray[1].logicalOperator = this.logicalOperators[1].label;
+            // }
+            this.attributeTableArray[new_index].selected = "";
+            this.checkSelectedAttribute(false, null);
+          }
+          else if (new_index == this.attributeTableArray.length - 1) {
+            // this.attributeTableArray[0].logicalOperator = "";
+            // if (this.attributeTableArray[new_index].logicalOperator == "") {
+            //   this.attributeTableArray[new_index].logicalOperator = this.logicalOperators[1].label;
+            // }
+            this.attributeTableArray[new_index].selected = "";
+            this.checkSelectedAttribute(false, null);
+          }
+          break;
+        }
+      }
+    }
+  }
+
+
+  checkSelectedAttribute(flag: any, index: any) {
+    if (flag == true) {
+      this.count.push(flag);
+    }
+    else
+      this.count.pop();
+
+    this.moveToEnable = (this.count.length == 1) ? true : false;
+
+    if (index != null) {
+      if (index == 0 && flag == true) {
+        this.topDisabled = true;
+      }
+      else {
+        this.topDisabled = false;
+      }
+
+      if (index == (this.attributeTableArray.length - 1) && flag == true) {
+        this.bottomDisabled = true;
+      }
+      else {
+        this.bottomDisabled = false;
+      }
+    }
+  }
+
+
   ngOnDestroy() {
-    this.txtQueryChanged.unsubscribe();
-    this.txtQueryChanged1.unsubscribe();
+    this.txtQueryChangedFilter.unsubscribe();
+    this.resetTableTopBottom.unsubscribe();
+    this.txtQueryChangedAttribute.unsubscribe();
   }
 
 }
