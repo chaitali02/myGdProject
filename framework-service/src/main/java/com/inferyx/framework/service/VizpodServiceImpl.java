@@ -1547,14 +1547,20 @@ public class VizpodServiceImpl extends RuleTemplate {
 		limit = offset + limit;
 		offset = offset + 1;
 
-		if (datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
-				|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
-			data = exec.executeAndFetch("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM (" + sql
-					+ ") tn ) AS tab WHERE rownum >= " + offset + " AND rownum <= " + limit, null);
-		} else if (datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
-			data = exec.executeAndFetch("SELECT * FROM (" + sql + ") vizpod WHERE rownum <= " + limit, null);
+		String appUuid = commonServiceImpl.getApp().getUuid();
+		
+		MetaIdentifier dependsOnMI = vizpod.getSource().getRef();
+		Object sourceObj = commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(), dependsOnMI.getVersion(),
+				dependsOnMI.getType().toString(), "N");
+		Datasource vizDatasource = commonServiceImpl.getDatasourceByObject(sourceObj);
+		if (vizDatasource.getType().toUpperCase().contains(ExecContext.spark.toString())
+				|| vizDatasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
+			data = exec.executeAndFetchByDatasource("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM (" + sql
+					+ ") tn ) AS tab WHERE rownum >= " + offset + " AND rownum <= " + limit, vizDatasource, appUuid);
+		} else if (vizDatasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
+			data = exec.executeAndFetchByDatasource("SELECT * FROM (" + sql + ") vizpod WHERE rownum <= " + limit, vizDatasource, appUuid);
 		} else {
-			data = exec.executeAndFetch("SELECT * FROM (" + sql + ") vizpod LIMIT " + limit, null);
+			data = exec.executeAndFetchByDatasource("SELECT * FROM (" + sql + ") vizpod LIMIT " + limit, vizDatasource, appUuid);
 		}
 		return data;
 	}
