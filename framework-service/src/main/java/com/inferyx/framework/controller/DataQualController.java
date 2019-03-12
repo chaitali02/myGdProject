@@ -201,6 +201,7 @@ public class DataQualController {
 	@RequestMapping(value = "/download", method = RequestMethod.GET)
 	public HttpServletResponse download(@RequestParam(value = "dataQualExecUUID") String dataQualExecUUID,
 			@RequestParam(value = "dataQualExecVersion") String dataQualExecVersion,
+			@RequestParam(value = "resultType") String resultType,
 			@RequestParam(value = "format", defaultValue = "excel") String format,
 			@RequestParam(value = "rows", defaultValue = "200") int rows,
 			@RequestParam(value = "type", required = false) String type,
@@ -209,7 +210,7 @@ public class DataQualController {
 			HttpServletResponse response) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		dataQualServiceImpl.download(dataQualExecUUID, dataQualExecVersion, format, null, 0, rows, response, rows, null,
-				null, null, runMode);
+				null, null, runMode, resultType);
 		return null;
 	}
 	
