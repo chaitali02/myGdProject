@@ -131,7 +131,7 @@ public class VizpodDetailParser {
 			}
 
 			finalBuilder.append(selectBuilder);
-				finalBuilder.deleteCharAt(finalBuilder.lastIndexOf(","));
+			finalBuilder.deleteCharAt(finalBuilder.lastIndexOf(","));
 
 			if (StringUtils.isBlank(tableName) && vizpod.getSource().getRef().getType() == MetaType.datapod) {
 				List<DataStore> listDataStore = dataStoreServiceImpl
