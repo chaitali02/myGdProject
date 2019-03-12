@@ -22,12 +22,20 @@
 		
 	},
 	"refIntegrityCheck": {
-		"attrId": "16",
-		"ref": {
-			"type": "datapod",
-			"uuid": "ed47f654-2d4b-483c-971f-804ee88f092f"
-		}
-	},
+    "dependsOn": {
+      "ref": {
+        "type": "datapod",
+        "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f"
+      }
+    },
+    "targetAttr": {
+      "attrId": "16",
+      "ref": {
+        "type": "datapod",
+        "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f"
+      }
+    }
+  },
 	"uuid": "94f9a363-8318-4619-9b01-2cc137e2bd74",
 	"version": "1490075674",
 	"name": "dqr_account_overdue_date",

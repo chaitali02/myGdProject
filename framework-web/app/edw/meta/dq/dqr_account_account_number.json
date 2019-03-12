@@ -21,13 +21,21 @@
 	"lengthCheck": {
 		
 	},
-	"refIntegrityCheck": {
-		"attrId": "12",
-		"ref": {
-			"type": "datapod",
-			"uuid": "ed47f654-2d4b-483c-971f-804ee88f092f"
-		}
-	},
+	 "refIntegrityCheck": {
+    "dependsOn": {
+      "ref": {
+        "type": "datapod",
+        "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f"
+      }
+    },
+    "targetAttr": {
+      "attrId": "12",
+      "ref": {
+        "type": "datapod",
+        "uuid": "ed47f654-2d4b-483c-971f-804ee88f092f"
+      }
+    }
+  },
 	"uuid": "37cf7cb0-d1bf-441d-b631-a63ac4e5d110",
 	"version": "1490074807",
 	"name": "dqr_account_account_number",

@@ -22,12 +22,20 @@
 		
 	},
 	"refIntegrityCheck": {
-		"attrId": "5",
-		"ref": {
-			"type": "datapod",
-			"uuid": "838251a0-bc55-42c2-96eb-327527512933"
-		}
-	},
+    "dependsOn": {
+      "ref": {
+        "type": "datapod",
+        "uuid": "838251a0-bc55-42c2-96eb-327527512933"
+      }
+    },
+    "targetAttr": {
+      "attrId": "5",
+      "ref": {
+        "type": "datapod",
+        "uuid": "838251a0-bc55-42c2-96eb-327527512933"
+      }
+    }
+  },
 	"uuid": "e469f01f-359b-491b-9bac-4b6b432a88d8",
 	"version": "1490079191",
 	"name": "dqr_bank_bank_check_digits",

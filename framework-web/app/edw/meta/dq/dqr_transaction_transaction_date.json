@@ -22,12 +22,20 @@
 		
 	},
 	"refIntegrityCheck": {
-		"attrId": "0",
-		"ref": {
-			"type": "datapod",
-			"uuid": "49fc0656-109d-46a2-a826-c09e92895035"
-		}
-	},
+    "dependsOn": {
+      "ref": {
+        "type": "datapod",
+        "uuid": "49fc0656-109d-46a2-a826-c09e92895035"
+      }
+    },
+    "targetAttr": {
+      "attrId": "0",
+      "ref": {
+        "type": "datapod",
+        "uuid": "49fc0656-109d-46a2-a826-c09e92895035"
+      }
+    }
+  },
 	"uuid": "6c52d54e-0ccf-4e35-9a7b-ad073b7b5f97",
 	"version": "1490081574",
 	"name": "dqr_transaction_transaction_date",

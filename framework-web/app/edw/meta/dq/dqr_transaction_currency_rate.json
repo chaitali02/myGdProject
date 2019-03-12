@@ -22,12 +22,20 @@
 		
 	},
 	"refIntegrityCheck": {
-		"attrId": "0",
-		"ref": {
-			"type": "datapod",
-			"uuid": "49fc0656-109d-46a2-a826-c09e92895035"
-		}
-	},
+    "dependsOn": {
+      "ref": {
+        "type": "datapod",
+        "uuid": "49fc0656-109d-46a2-a826-c09e92895035"
+      }
+    },
+    "targetAttr": {
+      "attrId": "0",
+      "ref": {
+        "type": "datapod",
+        "uuid": "49fc0656-109d-46a2-a826-c09e92895035"
+      }
+    }
+  },
 	"uuid": "ea90edd6-a0b9-4f3b-9893-3d0d9532c2b2",
 	"version": "1490082135",
 	"name": "dqr_transaction_currency_rate",

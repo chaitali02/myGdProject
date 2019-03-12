@@ -22,12 +22,20 @@
 		
 	},
 	"refIntegrityCheck": {
-		"attrId": "0",
-		"ref": {
-			"type": "datapod",
-			"uuid": "14bebb86-6137-4109-ad45-0eea53066768"
-		}
-	},
+    "dependsOn": {
+      "ref": {
+        "type": "datapod",
+        "uuid": "14bebb86-6137-4109-ad45-0eea53066768"
+      }
+    },
+    "targetAttr": {
+      "attrId": "0",
+      "ref": {
+        "type": "datapod",
+        "uuid": "14bebb86-6137-4109-ad45-0eea53066768"
+      }
+    }
+  },
 	"uuid": "7b24f083-6e38-4289-82b3-6b9d01c81bf4",
 	"version": "1490091244",
 	"name": "dqr_fact_transaction_branch_id",
