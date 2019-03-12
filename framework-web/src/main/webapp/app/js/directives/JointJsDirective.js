@@ -960,7 +960,7 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
                '.status': {
                  'element-id' : startParams.id,
                },
-               ".label": { text: startParams.name.length >20 ?startParams.name.substring(0, 15) + "....":startParams.name || startParams.id,},
+               text: { text: startParams.name.length >20 ?startParams.name.substring(0, 15) + "....":startParams.name || startParams.id,},
                title: { text: startParams.name || startParams.id}
              }
            })
@@ -993,7 +993,7 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
                    '.status image' : {
                      "xlink:href":"assets/layouts/layout/img/new_status/"+task.statusList[task.statusList.length -1].stage+".svg"
                    },
-                   ".label": { text: task.name.length >30 ?task.name.substring(0, 27) + "....":task.name},
+                   text: { text: task.name.length >30 ?task.name.substring(0, 27) + "....":task.name},
                    title: { text: task.name }
                  }
                })
