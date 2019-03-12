@@ -1678,6 +1678,7 @@ DataQualityModule.controller('Result2DQController', function ($http, dagMetaData
   $scope.download.formates = CF_DOWNLOAD.formate;
   $scope.download.selectFormate = CF_DOWNLOAD.formate[0];
   $scope.download.maxrow = CF_DOWNLOAD.framework_download_maxrow;
+  $scope.download.resultType="summary";
   $scope.download.limit_to = CF_DOWNLOAD.limit_to;
   var notify = {
     type: 'success',
@@ -1998,17 +1999,17 @@ DataQualityModule.controller('Result2DQController', function ($http, dagMetaData
   }
 
   $scope.go = function (index) {
-    debugger
-   
     if($scope.type.text =="dq" || $scope.selectResult =="dq"){
       $scope.setType();
       if (index == 1) {
+        $scope.download.resultType="detail";
         $scope.getDqExec({
           uuid:$scope.obj.id,
           version:$scope.obj.version
         }, "detail");
       }
       else {
+        $scope.download.resultType="summary";
         $scope.getDqExec({
           uuid: $scope.obj.id,
           version:$scope.obj.version
@@ -2092,6 +2093,9 @@ DataQualityModule.controller('Result2DQController', function ($http, dagMetaData
     debugger
     $scope.setType();
     if ($scope.type.text == 'dq') {
+      $scope.obj={};
+      $scope.obj.id=data.uuid;
+      $scope.obj.version=data.version
       $scope.getDqExec(data, "summary");
       return;
     }
@@ -2164,7 +2168,7 @@ DataQualityModule.controller('Result2DQController', function ($http, dagMetaData
     $('#downloadSample').modal("hide");
     $http({
       method: 'GET',
-      url: url + "dataqual/download?action=view&dataQualExecUUID=" + uuid + "&dataQualExecVersion=" + version + "&rows=" + $scope.download.rows + "&format=" + $scope.download.selectFormate,
+      url: url + "dataqual/download?action=view&dataQualExecUUID=" + uuid + "&dataQualExecVersion=" + version + "&rows=" + $scope.download.rows + "&format=" + $scope.download.selectFormate+"&resultType="+$scope.download.resultType,
       responseType: 'arraybuffer'
     }).success(function (data, status, headers) {
       headers = headers();
