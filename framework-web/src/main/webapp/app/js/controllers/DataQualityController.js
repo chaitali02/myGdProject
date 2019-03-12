@@ -2092,6 +2092,9 @@ DataQualityModule.controller('Result2DQController', function ($http, dagMetaData
     debugger
     $scope.setType();
     if ($scope.type.text == 'dq') {
+      $scope.obj={};
+      $scope.obj.id=data.uuid;
+      $scope.obj.version=data.version
       $scope.getDqExec(data, "summary");
       return;
     }
