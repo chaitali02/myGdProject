@@ -1956,7 +1956,7 @@ DataQualityModule.controller('Result2DQController', function ($http, dagMetaData
   }
 
   $scope.getResults = function (params, resultType) {
-    $scope.showprogress = false;
+    $scope.showprogress = true;
     $scope.to = (($scope.currentPage - 1) * $scope.pageSize);
     if ($scope.totalItems < ($scope.pageSize * $scope.currentPage)) {
       $scope.from = $scope.totalItems;

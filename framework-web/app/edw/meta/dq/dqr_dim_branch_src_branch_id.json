@@ -22,12 +22,20 @@
 		
 	},
 	"refIntegrityCheck": {
-		"attrId": "0",
-		"ref": {
-			"type": "datapod",
-			"uuid": "80794b71-8707-4f71-ae20-f22e839a8279"
-		}
-	},
+    "dependsOn": {
+      "ref": {
+        "type": "datapod",
+        "uuid": "80794b71-8707-4f71-ae20-f22e839a8279"
+      }
+    },
+    "targetAttr": {
+      "attrId": "0",
+      "ref": {
+        "type": "datapod",
+        "uuid": "80794b71-8707-4f71-ae20-f22e839a8279"
+      }
+    }
+  },
 	"uuid": "cf00725d-f82e-4669-b324-cd30034da3c6",
 	"version": "1490088236",
 	"name": "dqr_dim_branch_src_branch_id",

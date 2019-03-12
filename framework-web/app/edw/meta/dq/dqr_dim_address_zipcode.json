@@ -22,12 +22,20 @@
 		
 	},
 	"refIntegrityCheck": {
-		"attrId": "0",
-		"ref": {
-			"type": "datapod",
-			"uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
-		}
-	},
+    "dependsOn": {
+      "ref": {
+        "type": "datapod",
+        "uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
+      }
+    },
+    "targetAttr": {
+      "attrId": "0",
+      "ref": {
+        "type": "datapod",
+        "uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
+      }
+    }
+  },
 	"uuid": "08d259be-7377-4545-9647-6e42de482927",
 	"version": "1490087101",
 	"name": "dqr_dim_address_zipcode",

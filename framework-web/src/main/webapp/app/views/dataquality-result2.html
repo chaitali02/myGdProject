@@ -163,21 +163,20 @@
             version="dqexecdetail.version">
           </div>
         </div>
-
-        <div ng-show="testgrid && !isD3RuleEexecGraphShow">
+        <div ng-show="!isD3RuleEexecGraphShow">
           <uib-tabset active="activeTabIndex">
             <uib-tab index="0" heading="Summary" select="go(0)">
               <div ng-show="isDataError">
                 <h3 style="font-size:14px;color:red;">{{datamessage}}</h3>
               </div>
-              <div class="form-body text-center" id="grouploader" ng-show="showprogress">
+              <div class="form-body text-center" ng-show="showprogress">
                 <div class="spinner">
                   <div class="bounce1"></div>
                   <div class="bounce2"></div>
                   <div class="bounce3"></div>
                 </div>
               </div>
-              <div class="row" ng-if="!showprogress">
+              <div class="row" ng-if="testgrid && !showprogress">
                 <div class="col-md-6 col-sm-6">
                   <!-- <div class="dataTables_length" id="sample_1_length">
                         <label>Show
@@ -196,7 +195,7 @@
                 </div>
               </div>
 
-              <div class="row" style="margin-top:10px;" ng-if="!showprogress">
+              <div class="row" style="margin-top:10px;" ng-if="testgrid &&  !showprogress">
                 <div class="col-md-12">
                   <div ui-grid="gridOptionsSummary" class="grid" ng-if="testgrid" ui-grid-resize-columns
                     ui-grid-pinning ui-grid-auto-resize ui-grid-exporter ng-style="getGridStyleSummary()" style="max-height:373px">
@@ -221,14 +220,14 @@
               <div ng-show="isDataError">
                 <h3 style="font-size:14px;color:red;">{{datamessage}}</h3>
               </div>
-              <div class="form-body text-center" id="grouploader" ng-show="showprogress">
+              <div class="form-body text-center"  ng-show="showprogress">
                 <div class="spinner">
                   <div class="bounce1"></div>
                   <div class="bounce2"></div>
                   <div class="bounce3"></div>
                 </div>
               </div>
-              <div class="row" ng-if="!showprogress">
+              <div class="row" ng-if="testgrid &&  !showprogress">
                 <div class="col-md-6 col-sm-6">
                   <!-- <div class="dataTables_length" id="sample_1_length">
                     <label>Show
@@ -247,7 +246,7 @@
                 </div>
               </div>
 
-              <div class="row" style="margin-top:10px;" ng-if="!showprogress">
+              <div class="row" style="margin-top:10px;" ng-if="testgrid &&  !showprogress">
                 <div class="col-md-12">
                   <div ui-grid="gridOptionsDetail" class="grid" ng-if="testgrid" ui-grid-resize-columns ui-grid-pinning
                     ui-grid-auto-resize ui-grid-exporter ng-style="getGridStyle()" style="max-height:373px">

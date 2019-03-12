@@ -22,12 +22,20 @@
 		
 	},
 	"refIntegrityCheck": {
-		"attrId": "3",
-		"ref": {
-			"type": "datapod",
-			"uuid": "838251a0-bc55-42c2-96eb-327527512933"
-		}
-	},
+    "dependsOn": {
+      "ref": {
+        "type": "datapod",
+        "uuid": "838251a0-bc55-42c2-96eb-327527512933"
+      }
+    },
+    "targetAttr": {
+      "attrId": "3",
+      "ref": {
+        "type": "datapod",
+        "uuid": "838251a0-bc55-42c2-96eb-327527512933"
+      }
+    }
+  },
 	"uuid": "55880238-a265-4b2b-aa87-589ca8763562",
 	"version": "1490078966",
 	"name": "dqr_bank_bank_account_number",
