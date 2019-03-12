@@ -355,7 +355,12 @@ public class ReportServiceImpl extends RuleTemplate {
 			}
 
 			datastoreServiceImpl.setRunMode(runMode);
-			List<Map<String, Object>> data = datastoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, limit, null, null, null);		
+			List<Map<String, Object>> data = null;
+			try {
+				data = datastoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, limit, null, null, null);	
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
 			
 			//checking whether data is available or not
 			if(data == null || (data != null && data.isEmpty())) {
