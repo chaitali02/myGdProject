@@ -25,11 +25,11 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.domain.Attribute;
+import com.inferyx.framework.domain.AttributeDomain;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BlankSpaceCheckOptions;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataQual;
-import com.inferyx.framework.domain.AttributeDomain;
 import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -39,6 +39,7 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
+import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.enums.ThresholdType;
@@ -443,7 +444,7 @@ public class DQOperator implements IParsable {
 	private String generateRefIntFrom(DataQual dq, String tableName, String attributeName, List<String> datapodList,
 			DagExec dagExec, Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode) throws Exception {
 		String refIntStr = null;
-		if (dq == null || dq.getRefIntegrityCheck() == null || dq.getRefIntegrityCheck().getRef() == null) {
+		if (dq == null || dq.getRefIntegrityCheck() == null || dq.getRefIntegrityCheck().getDependsOn() == null || dq.getRefIntegrityCheck().getDependsOn().getRef() == null) {
 			return EMPTY;
 		}
 //		Datapod datapod = (Datapod) daoRegister.getRefObject(dq.getDependsOn().getRef());
@@ -455,16 +456,27 @@ public class DQOperator implements IParsable {
 			return EMPTY;
 		}
 //		Datapod datapodRef = (Datapod) daoRegister.getRefObject(dq.getRefIntegrityCheck().getRef());
-		Datapod datapodRef = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dq.getRefIntegrityCheck().getRef().getUuid(), dq.getRefIntegrityCheck().getRef().getVersion(), dq.getRefIntegrityCheck().getRef().getType().toString(), "N");
-		usedRefKeySet.add(dq.getRefIntegrityCheck().getRef());
-		refIntStr = LEFT_OUTER_JOIN.concat(getTableName(datapodRef, datapodList, dagExec, otherParams, runMode))
-				// .concat(AS)
-				.concat(" ").concat(datapodRef.getName()).concat("_ref").concat(ON).concat(BRACKET_OPEN);
+		Datapod datapodRef = null;
+		Relation relation = null;
+		if (dq.getRefIntegrityCheck().getDependsOn().getRef().getType() == MetaType.datapod) {
+			datapodRef = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dq.getRefIntegrityCheck().getDependsOn().getRef().getUuid(), dq.getRefIntegrityCheck().getDependsOn().getRef().getVersion(), dq.getRefIntegrityCheck().getDependsOn().getRef().getType().toString(), "N");
+			refIntStr = LEFT_OUTER_JOIN.concat(getTableName(datapodRef, datapodList, dagExec, otherParams, runMode))
+					// .concat(AS)
+					.concat(" ").concat(datapodRef.getName()).concat("_ref").concat(ON).concat(BRACKET_OPEN);
+			refIntStr = refIntStr.concat(datapod.getName()).concat(DOT).concat(attributeName).concat(" = ")
+					.concat(datapodRef.getName()).concat("_ref").concat(DOT)
+					.concat(datapodRef.getAttribute(Integer.parseInt(dq.getRefIntegrityCheck().getTargetAttr().getAttrId())).getName())
+					.concat(BRACKET_CLOSE);
+			usedRefKeySet.add(dq.getRefIntegrityCheck().getTargetAttr().getRef());
+		} else if (dq.getRefIntegrityCheck().getDependsOn().getRef().getType() == MetaType.relation) {
+			relation = (Relation) commonServiceImpl.getOneByUuidAndVersion(dq.getRefIntegrityCheck().getDependsOn().getRef().getUuid(), dq.getRefIntegrityCheck().getDependsOn().getRef().getVersion(), dq.getRefIntegrityCheck().getDependsOn().getRef().getType().toString(), "N");
+			refIntStr = LEFT_OUTER_JOIN.concat(BRACKET_OPEN).concat(relationOperator.generateSql(relation, null, otherParams, null, usedRefKeySet, runMode)).concat(BRACKET_CLOSE)
+					.concat(" ").concat(relation.getName()).concat("_ref ");
+			MetaIdentifier relationRef = new MetaIdentifier(MetaType.relation, relation.getUuid(), relation.getVersion());
+			usedRefKeySet.add(relationRef);
+		}
 
-		refIntStr = refIntStr.concat(datapod.getName()).concat(DOT).concat(attributeName).concat(" = ")
-						.concat(datapodRef.getName()).concat("_ref").concat(DOT)
-						.concat(datapodRef.getAttribute(Integer.parseInt(dq.getRefIntegrityCheck().getAttrId())).getName())
-						.concat(BRACKET_CLOSE);
+		
 		
 //		for (Attribute attribute : rowKeyAttrList) {
 //			refIntStr = refIntStr.concat(datapod.getName()).concat(DOT).concat(attribute.getName()).concat(" = ")
@@ -837,14 +849,25 @@ public class DQOperator implements IParsable {
 		} else {
 			dqBuilder.append("'' as ").append(LENGTH_CHECK_PASS).append(COMMA);
 		} // End lengthCheck If
-		if (dq.getRefIntegrityCheck() != null && dq.getRefIntegrityCheck().getRef() != null) {
+		if (dq.getRefIntegrityCheck() != null && dq.getRefIntegrityCheck().getTargetAttr() != null && 
+				dq.getRefIntegrityCheck().getTargetAttr().getRef() != null) {
 //			Datapod refIntTab = (Datapod) daoRegister.getRefObject(dq.getRefIntegrityCheck().getRef());
-			Datapod refIntTab = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dq.getRefIntegrityCheck().getRef().getUuid(), dq.getRefIntegrityCheck().getRef().getVersion(), dq.getRefIntegrityCheck().getRef().getType().toString(), "N");
 			
-			dq.getRefIntegrityCheck().setAttrName(
-					refIntTab.getAttribute(Integer.parseInt(dq.getRefIntegrityCheck().getAttrId())).getName());
-			check = refIntTab.getName().concat("_ref").concat(DOT).concat(dq.getRefIntegrityCheck().getAttrName())
-					.concat(IS_NOT_NULL);
+			if (dq.getRefIntegrityCheck().getDependsOn().getRef().getType() == MetaType.datapod) {
+				Datapod refIntTab = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dq.getRefIntegrityCheck().getTargetAttr().getRef().getUuid(), dq.getRefIntegrityCheck().getTargetAttr().getRef().getVersion(), dq.getRefIntegrityCheck().getTargetAttr().getRef().getType().toString(), "N");
+				
+				dq.getRefIntegrityCheck().getTargetAttr().setAttrName(
+						refIntTab.getAttribute(Integer.parseInt(dq.getRefIntegrityCheck().getTargetAttr().getAttrId())).getName());
+				check = refIntTab.getName().concat("_ref").concat(DOT).concat(dq.getRefIntegrityCheck().getTargetAttr().getAttrName())
+						.concat(IS_NOT_NULL);
+			} else if (dq.getRefIntegrityCheck().getDependsOn().getRef().getType() == MetaType.relation) {
+				Relation refIntTab = (Relation) commonServiceImpl.getOneByUuidAndVersion(dq.getRefIntegrityCheck().getDependsOn().getRef().getUuid(), dq.getRefIntegrityCheck().getDependsOn().getRef().getVersion(), dq.getRefIntegrityCheck().getDependsOn().getRef().getType().toString(), "N");
+				Datapod targetAttr = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dq.getRefIntegrityCheck().getTargetAttr().getRef().getUuid(), dq.getRefIntegrityCheck().getTargetAttr().getRef().getVersion(), dq.getRefIntegrityCheck().getTargetAttr().getRef().getType().toString(), "N");
+				dq.getRefIntegrityCheck().getTargetAttr().setAttrName(
+						targetAttr.getAttribute(Integer.parseInt(dq.getRefIntegrityCheck().getTargetAttr().getAttrId())).getName());
+				check = refIntTab.getName().concat("_ref").concat(DOT).concat(dq.getRefIntegrityCheck().getTargetAttr().getAttrName())
+						.concat(IS_NOT_NULL);
+			}
 			colName = REFINT_CHECK_PASS;
 			dqBuilder.append(caseWrapper(check, colName)).append(COMMA);
 		} else {
