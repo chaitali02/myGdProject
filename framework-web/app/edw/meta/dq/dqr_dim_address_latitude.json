@@ -22,12 +22,20 @@
 		
 	},
 	"refIntegrityCheck": {
-		"attrId": "0",
-		"ref": {
-			"type": "datapod",
-			"uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
-		}
-	},
+    "dependsOn": {
+      "ref": {
+        "type": "datapod",
+        "uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
+      }
+    },
+    "targetAttr": {
+      "attrId": "0",
+      "ref": {
+        "type": "datapod",
+        "uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
+      }
+    }
+  },
 	"uuid": "a21eefb2-4e59-4b5b-a7b8-c1602eb95a95",
 	"version": "1490087228",
 	"name": "dqr_dim_address_latitude",

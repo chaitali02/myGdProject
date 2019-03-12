@@ -22,12 +22,20 @@
 		
 	},
 	"refIntegrityCheck": {
-		"attrId": "5",
-		"ref": {
-			"type": "datapod",
-			"uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
-		}
-	},
+    "dependsOn": {
+      "ref": {
+        "type": "datapod",
+        "uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
+      }
+    },
+    "targetAttr": {
+      "attrId": "5",
+      "ref": {
+        "type": "datapod",
+        "uuid": "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
+      }
+    }
+  },
 	"uuid": "f52738ba-91e4-45a4-a102-80692dafb2b9",
 	"version": "1490077116",
 	"name": "dqr_address_county",

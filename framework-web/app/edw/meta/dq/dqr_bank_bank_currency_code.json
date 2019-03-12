@@ -22,12 +22,20 @@
 		
 	},
 	"refIntegrityCheck": {
-		"attrId": "4",
-		"ref": {
-			"type": "datapod",
-			"uuid": "838251a0-bc55-42c2-96eb-327527512933"
-		}
-	},
+    "dependsOn": {
+      "ref": {
+        "type": "datapod",
+        "uuid": "838251a0-bc55-42c2-96eb-327527512933"
+      }
+    },
+    "targetAttr": {
+      "attrId": "4",
+      "ref": {
+        "type": "datapod",
+        "uuid": "838251a0-bc55-42c2-96eb-327527512933"
+      }
+    }
+  },
 	"uuid": "f9b73298-0c49-4e00-b700-8892384b0588",
 	"version": "1490079068",
 	"name": "dqr_bank_bank_currency_code",

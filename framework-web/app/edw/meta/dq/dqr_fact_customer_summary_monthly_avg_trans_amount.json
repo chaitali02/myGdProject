@@ -23,12 +23,20 @@
 		
 	},
 	"refIntegrityCheck": {
-		"attrId": "0",
-		"ref": {
-			"type": "datapod",
-			"uuid": "e5a12713-0b1d-4d2a-b082-a65cad576e94"
-		}
-	},
+    "dependsOn": {
+      "ref": {
+        "type": "datapod",
+        "uuid": "e5a12713-0b1d-4d2a-b082-a65cad576e94"
+      }
+    },
+    "targetAttr": {
+      "attrId": "0",
+      "ref": {
+        "type": "datapod",
+        "uuid": "e5a12713-0b1d-4d2a-b082-a65cad576e94"
+      }
+    }
+  },
 	"uuid": "6eb4e10d-f9a2-4864-9f99-1b250b28b846",
 	"version": "1491629930",
 	"name": "dqr_fact_customer_summary_monthly_avg_trans_amount",
