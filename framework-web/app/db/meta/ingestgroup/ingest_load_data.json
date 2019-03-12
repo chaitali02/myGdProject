@@ -1,0 +1,62 @@
+{
+  "uuid": "ab5e6efa-5044-4c8b-8ac8-c00a03497faf",
+  "version": "1552346868",
+  "name": "ingest_load_data",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
+      "version": "1548315952",
+      "name": "db_admin"
+    },
+    "value": null
+  },
+  "createdOn": "Mon Mar 11 19:27:48 EDT 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
+        "version": "1552267311",
+        "name": "Deutsche Admin"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "ruleInfo": [
+    {
+      "ref": {
+        "type": "ingest",
+        "uuid": "9086e235-2e69-47dd-be80-07367f5d1bb0",
+        "version": null,
+        "name": "ingest_security"
+      },
+      "value": null
+    },
+    {
+      "ref": {
+        "type": "ingest",
+        "uuid": "59ac76c9-4d0c-472f-a022-085cc5636b2e",
+        "version": null,
+        "name": "ingest_equity_orders"
+      },
+      "value": null
+    },
+    {
+      "ref": {
+        "type": "ingest",
+        "uuid": "8c416899-f4d5-4d12-9d97-604da82eb406",
+        "version": null,
+        "name": "ingest_equity_executions"
+      },
+      "value": null
+    }
+  ],
+  "inParallel": null
+}

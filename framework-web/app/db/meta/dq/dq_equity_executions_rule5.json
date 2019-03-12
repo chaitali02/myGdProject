@@ -1,8 +1,8 @@
 {
-  "uuid": "8fc47cd2-adce-40a5-8043-1d82936c212e",
-  "version": "1552334154",
-  "name": "dq_equity_orders_rule1",
-  "desc": "Order ID cannot be blank",
+  "uuid": "a3945b0a-aa86-4169-9128-a0fd580dc005",
+  "version": "1552334091",
+  "name": "dq_equity_executions_rule5",
+  "desc": "Execution Price must be a positive number",
   "createdBy": {
     "ref": {
       "type": "user",
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Mar 11 15:55:54 EDT 2019",
+  "createdOn": "Mon Mar 11 15:55:19 EDT 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -22,7 +22,7 @@
       "ref": {
         "type": "application",
         "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
-        "version": "1552236606",
+        "version": "1552267311",
         "name": "Deutsche Admin"
       },
       "value": null
@@ -33,13 +33,13 @@
   "attribute": {
     "ref": {
       "type": "datapod",
-      "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
+      "uuid": "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
       "version": null,
-      "name": "equity_orders"
+      "name": "equity_executions"
     },
     "value": null,
-    "attrId": "0",
-    "attrName": "order_id",
+    "attrId": "8",
+    "attrName": "execution_price",
     "attrType": null,
     "attrUnitType": null,
     "function": null
@@ -47,14 +47,14 @@
   "dependsOn": {
     "ref": {
       "type": "datapod",
-      "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
+      "uuid": "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
       "version": null,
-      "name": "equity_orders"
+      "name": "equity_executions"
     },
     "value": null
   },
   "duplicateKeyCheck": "N",
-  "nullCheck": "Y",
+  "nullCheck": "N",
   "valueCheck": [],
   "rangeCheck": {},
   "dataTypeCheck": "",
@@ -80,5 +80,13 @@
   },
   "domainCheck": null,
   "blankSpaceCheck": null,
-  "expressionCheck": null
+  "expressionCheck": {
+    "ref": {
+      "type": "expression",
+      "uuid": "1f65205b-4df2-44c5-bcd2-85312ded509b",
+      "version": null,
+      "name": "expr_dq_equity_executions_rule5"
+    },
+    "value": null
+  }
 }

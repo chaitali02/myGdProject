@@ -1,8 +1,8 @@
 {
-  "uuid": "8fc47cd2-adce-40a5-8043-1d82936c212e",
-  "version": "1552334154",
-  "name": "dq_equity_orders_rule1",
-  "desc": "Order ID cannot be blank",
+  "uuid": "8fc47cd2-adce-40a5-8043-1d82936c212f",
+  "version": "1552334143",
+  "name": "dq_equity_orders_rule3",
+  "desc": "Order Placement date must be less than or equal to the order event date",
   "createdBy": {
     "ref": {
       "type": "user",
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Mar 11 15:55:54 EDT 2019",
+  "createdOn": "Mon Mar 11 15:55:43 EDT 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -38,8 +38,8 @@
       "name": "equity_orders"
     },
     "value": null,
-    "attrId": "0",
-    "attrName": "order_id",
+    "attrId": "3",
+    "attrName": "order_placement_date",
     "attrType": null,
     "attrUnitType": null,
     "function": null
@@ -54,7 +54,7 @@
     "value": null
   },
   "duplicateKeyCheck": "N",
-  "nullCheck": "Y",
+  "nullCheck": "N",
   "valueCheck": [],
   "rangeCheck": {},
   "dataTypeCheck": "",
@@ -80,5 +80,13 @@
   },
   "domainCheck": null,
   "blankSpaceCheck": null,
-  "expressionCheck": null
+  "expressionCheck": {
+    "ref": {
+      "type": "expression",
+      "uuid": "ee7e7517-cd1e-4174-890d-aebdef78d31c",
+      "version": null,
+      "name": "expr_dq_rule3"
+    },
+    "value": null
+  }
 }

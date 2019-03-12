@@ -346,13 +346,13 @@
 		{
 			"attributeId": 22,
 			"displaySeq": 22,
-			"name": "expr_check_pass",
+			"name": "expression_check_pass",
 			"type": "string",
-			"desc": "expr_check_pass",
+			"desc": "expression_check_pass",
 			"expression": null,
 			"key": "",
 			"partition": "N",
-			"dispName": "expr_check_pass",
+			"dispName": "expression_check_pass",
 			"active": "Y",
 			"length": null,
 			"attrUnitType": null
@@ -360,6 +360,20 @@
 		{
 			"attributeId": 23,
 			"displaySeq": 23,
+			"name": "all_check_pass",
+			"type": "string",
+			"desc": "all_check_pass",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "all_check_pass",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 24,
+			"displaySeq": 24,
 			"name": "version",
 			"type": "string",
 			"desc": "version",

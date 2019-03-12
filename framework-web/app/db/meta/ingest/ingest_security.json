@@ -1,0 +1,238 @@
+{
+  "uuid": "9086e235-2e69-47dd-be80-07367f5d1bb0",
+  "version": "1552343934",
+  "name": "ingest_security",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
+      "version": "1548315952",
+      "name": "db_admin"
+    },
+    "value": null
+  },
+  "createdOn": "Mon Mar 11 18:38:54 EDT 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
+        "version": "1552267311",
+        "name": "Deutsche Admin"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "type": "FILE-TABLE",
+  "sourceDatasource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73040",
+      "version": null,
+      "name": "file_upload"
+    },
+    "value": null
+  },
+  "sourceDetail": {
+    "ref": {
+      "type": "simple",
+      "uuid": null,
+      "version": null,
+      "name": null
+    },
+    "value": "security"
+  },
+  "targetDatasource": {
+    "ref": {
+      "type": "datasource",
+      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73024",
+      "version": null,
+      "name": "mysql"
+    },
+    "value": null
+  },
+  "targetDetail": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "1d83dac9-4733-4503-b14d-afd91675d69b",
+      "version": null,
+      "name": "security"
+    },
+    "value": null
+  },
+  "filterInfo": null,
+  "runParams": null,
+  "sourceFormat": "CSV",
+  "targetFormat": null,
+  "incrAttr": null,
+  "saveMode": "OVERWRITE",
+  "ignoreCase": "Y",
+  "sourceExtn": "csv",
+  "targetExtn": null,
+  "attributeMap": [
+    {
+      "attrMapId": "0",
+      "sourceAttr": {
+        "ref": {
+          "type": "attribute",
+          "uuid": null,
+          "version": null,
+          "name": null
+        },
+        "value": "security_id",
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null,
+        "function": null
+      },
+      "targetAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1d83dac9-4733-4503-b14d-afd91675d69b",
+          "version": null,
+          "name": "security"
+        },
+        "value": null,
+        "attrId": "0",
+        "attrName": "security_id",
+        "attrType": null,
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrMapId": "1",
+      "sourceAttr": {
+        "ref": {
+          "type": "attribute",
+          "uuid": null,
+          "version": null,
+          "name": null
+        },
+        "value": "security_symbol",
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null,
+        "function": null
+      },
+      "targetAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1d83dac9-4733-4503-b14d-afd91675d69b",
+          "version": null,
+          "name": "security"
+        },
+        "value": null,
+        "attrId": "1",
+        "attrName": "security_symbol",
+        "attrType": null,
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrMapId": "2",
+      "sourceAttr": {
+        "ref": {
+          "type": "attribute",
+          "uuid": null,
+          "version": null,
+          "name": null
+        },
+        "value": "ric_code",
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null,
+        "function": null
+      },
+      "targetAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1d83dac9-4733-4503-b14d-afd91675d69b",
+          "version": null,
+          "name": "security"
+        },
+        "value": null,
+        "attrId": "2",
+        "attrName": "ric_code",
+        "attrType": null,
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrMapId": "3",
+      "sourceAttr": {
+        "ref": {
+          "type": "attribute",
+          "uuid": null,
+          "version": null,
+          "name": null
+        },
+        "value": "security_description",
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null,
+        "function": null
+      },
+      "targetAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1d83dac9-4733-4503-b14d-afd91675d69b",
+          "version": null,
+          "name": "security"
+        },
+        "value": null,
+        "attrId": "3",
+        "attrName": "security_description",
+        "attrType": null,
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrMapId": "4",
+      "sourceAttr": {
+        "ref": {
+          "type": "function",
+          "uuid": "9e3dff24-02fb-11e7-93ae-92361f002671",
+          "version": null,
+          "name": "unix_timestamp()"
+        },
+        "value": null,
+        "attrId": null,
+        "attrName": null,
+        "attrType": null,
+        "attrUnitType": null,
+        "function": null
+      },
+      "targetAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "1d83dac9-4733-4503-b14d-afd91675d69b",
+          "version": null,
+          "name": "security"
+        },
+        "value": null,
+        "attrId": "4",
+        "attrName": "version",
+        "attrType": null,
+        "attrUnitType": null,
+        "function": null
+      }
+    }
+  ],
+  "splitBy": null,
+  "sourceHeader": "Y",
+  "targetHeader": "N"
+}

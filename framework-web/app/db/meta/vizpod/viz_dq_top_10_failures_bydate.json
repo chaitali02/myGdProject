@@ -1,0 +1,91 @@
+{
+  "uuid": "69a934e4-aa1c-4feb-97b7-d95a0360b2a0",
+  "version": "1552353296",
+  "name": "viz_dq_top_10_failures_bydate",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
+      "version": "1548315952",
+      "name": "db_admin"
+    },
+    "value": null
+  },
+  "createdOn": "Mon Mar 11 21:14:56 EDT 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
+        "version": "1552267311",
+        "name": "Deutsche Admin"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "title": null,
+  "source": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+      "version": null,
+      "name": "dq_rule_summary"
+    },
+    "value": null
+  },
+  "type": "bar-chart",
+  "limit": 10,
+  "keys": [
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+        "version": null,
+        "name": "dq_rule_summary"
+      },
+      "attributeId": 14,
+      "function": null,
+      "value": null,
+      "attributeName": "version"
+    }
+  ],
+  "dimension": [],
+  "detailAttr": [],
+  "filterInfo": [],
+  "groups": [],
+  "values": [
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+        "version": null,
+        "name": "dq_rule_summary"
+      },
+      "attributeId": 9,
+      "function": "MAX",
+      "value": null,
+      "attributeName": "total_fail_count"
+    }
+  ],
+  "sortBy": [
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+        "version": null,
+        "name": "dq_rule_summary"
+      },
+      "attributeId": 9,
+      "function": null,
+      "value": null,
+      "attributeName": "total_fail_count"
+    }
+  ],
+  "sortOrder": "DESC"
+}

@@ -1,8 +1,8 @@
 {
-  "uuid": "8fc47cd2-adce-40a5-8043-1d82936c212e",
-  "version": "1552334154",
-  "name": "dq_equity_orders_rule1",
-  "desc": "Order ID cannot be blank",
+  "uuid": "7e75ef14-4888-41ef-b419-8b8eeb35c29d",
+  "version": "1552334275",
+  "name": "dq_equity_orders_rule6",
+  "desc": "Order Type cannot be blank and must be one of the following - Market, Limit, Stop, Stop Limit",
   "createdBy": {
     "ref": {
       "type": "user",
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Mar 11 15:55:54 EDT 2019",
+  "createdOn": "Mon Mar 11 15:57:55 EDT 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -22,7 +22,7 @@
       "ref": {
         "type": "application",
         "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
-        "version": "1552236606",
+        "version": "1552267311",
         "name": "Deutsche Admin"
       },
       "value": null
@@ -38,8 +38,8 @@
       "name": "equity_orders"
     },
     "value": null,
-    "attrId": "0",
-    "attrName": "order_id",
+    "attrId": "8",
+    "attrName": "order_type",
     "attrType": null,
     "attrUnitType": null,
     "function": null
@@ -55,7 +55,12 @@
   },
   "duplicateKeyCheck": "N",
   "nullCheck": "Y",
-  "valueCheck": [],
+  "valueCheck": [
+    "Market",
+    "Limit",
+    "Stop",
+    "Stop-Limit"
+  ],
   "rangeCheck": {},
   "dataTypeCheck": "",
   "dateFormatCheck": null,

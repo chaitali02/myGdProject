@@ -1,0 +1,102 @@
+{
+  "uuid": "dc88666f-e856-4237-b988-581dd9f27704",
+  "version": "1552352997",
+  "name": "viz_dq_overall_status",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
+      "version": "1548315952",
+      "name": "db_admin"
+    },
+    "value": null
+  },
+  "createdOn": "Mon Mar 11 21:09:57 EDT 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
+        "version": "1552267311",
+        "name": "Deutsche Admin"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "title": null,
+  "source": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+      "version": null,
+      "name": "dq_rule_summary"
+    },
+    "value": null
+  },
+  "type": "bar-chart",
+  "limit": 0,
+  "keys": [
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+        "version": null,
+        "name": "dq_rule_summary"
+      },
+      "attributeId": 14,
+      "function": null,
+      "value": null,
+      "attributeName": "version"
+    }
+  ],
+  "dimension": [],
+  "detailAttr": [],
+  "filterInfo": [],
+  "groups": [],
+  "values": [
+    {
+      "ref": {
+        "type": "formula",
+        "uuid": "a8cbac4f-39db-44ff-8ccf-0dd0a5f5daa2",
+        "version": null,
+        "name": "fm_sum_total_row_count"
+      },
+      "attributeId": null,
+      "function": null,
+      "value": null,
+      "attributeName": null
+    },
+    {
+      "ref": {
+        "type": "formula",
+        "uuid": "2d7f7d93-1c10-4a52-8c22-733f79c725d0",
+        "version": null,
+        "name": "fm_sum_total_pass_count"
+      },
+      "attributeId": null,
+      "function": null,
+      "value": null,
+      "attributeName": null
+    },
+    {
+      "ref": {
+        "type": "formula",
+        "uuid": "cac8a9c0-07fb-4bc5-b475-61fc93d249b9",
+        "version": null,
+        "name": "fm_sum_total_fail_count"
+      },
+      "attributeId": null,
+      "function": null,
+      "value": null,
+      "attributeName": null
+    }
+  ],
+  "sortBy": [],
+  "sortOrder": null
+}
