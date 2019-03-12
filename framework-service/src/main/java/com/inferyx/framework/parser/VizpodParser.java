@@ -253,6 +253,8 @@ public class VizpodParser {
 				Key dpKey = new Key();
 				dpKey.setUUID(vizpod.getSource().getRef().getUuid());
 				dpKey.setVersion(vizpod.getSource().getRef().getVersion());
+				
+				dataStoreServiceImpl.setRunMode(runMode);
 				tableName = dataStoreServiceImpl.getTableNameByDatapod(dpKey,runMode);
 //				List<DataStore> listDataStore = dataStoreServiceImpl
 //						.findDataStoreByDatapod(vizpod.getSource().getRef().getUuid());
