@@ -1,6 +1,6 @@
 {
   "uuid": "dc88666f-e856-4237-b988-581dd9f27704",
-  "version": "1552352997",
+  "version": "1552395742",
   "name": "viz_dq_overall_status",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Mar 11 21:09:57 EDT 2019",
+  "createdOn": "Tue Mar 12 18:32:22 IST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -56,16 +56,193 @@
     }
   ],
   "dimension": [],
-  "detailAttr": [],
-  "filterInfo": [],
-  "groups": [],
-  "values": [
+  "detailAttr": [
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+        "version": null,
+        "name": "dq_rule_summary"
+      },
+      "attributeId": 0,
+      "function": null,
+      "value": null,
+      "attributeName": "rule_uuid"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+        "version": null,
+        "name": "dq_rule_summary"
+      },
+      "attributeId": 1,
+      "function": null,
+      "value": null,
+      "attributeName": "rule_version"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+        "version": null,
+        "name": "dq_rule_summary"
+      },
+      "attributeId": 2,
+      "function": null,
+      "value": null,
+      "attributeName": "rule_name"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+        "version": null,
+        "name": "dq_rule_summary"
+      },
+      "attributeId": 3,
+      "function": null,
+      "value": null,
+      "attributeName": "datapod_uuid"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+        "version": null,
+        "name": "dq_rule_summary"
+      },
+      "attributeId": 4,
+      "function": null,
+      "value": null,
+      "attributeName": "datapod_version"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+        "version": null,
+        "name": "dq_rule_summary"
+      },
+      "attributeId": 5,
+      "function": null,
+      "value": null,
+      "attributeName": "datapod_name"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+        "version": null,
+        "name": "dq_rule_summary"
+      },
+      "attributeId": 6,
+      "function": null,
+      "value": null,
+      "attributeName": "all_check_pass"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+        "version": null,
+        "name": "dq_rule_summary"
+      },
+      "attributeId": 7,
+      "function": null,
+      "value": null,
+      "attributeName": "total_row_count"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+        "version": null,
+        "name": "dq_rule_summary"
+      },
+      "attributeId": 8,
+      "function": null,
+      "value": null,
+      "attributeName": "total_pass_count"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+        "version": null,
+        "name": "dq_rule_summary"
+      },
+      "attributeId": 9,
+      "function": null,
+      "value": null,
+      "attributeName": "total_fail_count"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+        "version": null,
+        "name": "dq_rule_summary"
+      },
+      "attributeId": 10,
+      "function": null,
+      "value": null,
+      "attributeName": "threshold_type"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+        "version": null,
+        "name": "dq_rule_summary"
+      },
+      "attributeId": 11,
+      "function": null,
+      "value": null,
+      "attributeName": "threshold_limit"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+        "version": null,
+        "name": "dq_rule_summary"
+      },
+      "attributeId": 12,
+      "function": null,
+      "value": null,
+      "attributeName": "threshold_ind"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+        "version": null,
+        "name": "dq_rule_summary"
+      },
+      "attributeId": 13,
+      "function": null,
+      "value": null,
+      "attributeName": "score"
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+        "version": null,
+        "name": "dq_rule_summary"
+      },
+      "attributeId": 14,
+      "function": null,
+      "value": null,
+      "attributeName": "version"
+    },
     {
       "ref": {
         "type": "formula",
-        "uuid": "a8cbac4f-39db-44ff-8ccf-0dd0a5f5daa2",
+        "uuid": "473e41a1-a76d-4dd8-ad8f-5ed8d25b1865",
         "version": null,
-        "name": "fm_sum_total_row_count"
+        "name": "fm_sum_total_fail_count"
       },
       "attributeId": null,
       "function": null,
@@ -75,7 +252,7 @@
     {
       "ref": {
         "type": "formula",
-        "uuid": "2d7f7d93-1c10-4a52-8c22-733f79c725d0",
+        "uuid": "f5d9ac38-18ca-488c-80a5-16c1ec00eb8b",
         "version": null,
         "name": "fm_sum_total_pass_count"
       },
@@ -87,9 +264,49 @@
     {
       "ref": {
         "type": "formula",
-        "uuid": "cac8a9c0-07fb-4bc5-b475-61fc93d249b9",
+        "uuid": "f17f74cf-4d2a-4ea0-9afb-4df8d19fe88a",
+        "version": null,
+        "name": "fm_sum_total_row_count"
+      },
+      "attributeId": null,
+      "function": null,
+      "value": null,
+      "attributeName": null
+    }
+  ],
+  "filterInfo": [],
+  "groups": [],
+  "values": [
+    {
+      "ref": {
+        "type": "formula",
+        "uuid": "473e41a1-a76d-4dd8-ad8f-5ed8d25b1865",
         "version": null,
         "name": "fm_sum_total_fail_count"
+      },
+      "attributeId": null,
+      "function": null,
+      "value": null,
+      "attributeName": null
+    },
+    {
+      "ref": {
+        "type": "formula",
+        "uuid": "f5d9ac38-18ca-488c-80a5-16c1ec00eb8b",
+        "version": null,
+        "name": "fm_sum_total_pass_count"
+      },
+      "attributeId": null,
+      "function": null,
+      "value": null,
+      "attributeName": null
+    },
+    {
+      "ref": {
+        "type": "formula",
+        "uuid": "f17f74cf-4d2a-4ea0-9afb-4df8d19fe88a",
+        "version": null,
+        "name": "fm_sum_total_row_count"
       },
       "attributeId": null,
       "function": null,
