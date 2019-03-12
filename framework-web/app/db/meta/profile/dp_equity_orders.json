@@ -1,0 +1,380 @@
+{
+  "uuid": "26a095f0-41d7-4d35-95b7-f8f6627f9a9c",
+  "version": "1552422667",
+  "name": "dp_equity_orders",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
+      "version": "1548315952",
+      "name": "db_admin"
+    },
+    "value": null
+  },
+  "createdOn": "Tue Mar 12 16:31:07 EDT 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
+        "version": "1552267311",
+        "name": "Deutsche Admin"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "dependsOn": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
+      "version": null,
+      "name": "equity_orders"
+    },
+    "value": null
+  },
+  "attributeInfo": [
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
+        "version": null,
+        "name": "equity_orders"
+      },
+      "value": null,
+      "attrId": "0",
+      "attrName": "order_id",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
+        "version": null,
+        "name": "equity_orders"
+      },
+      "value": null,
+      "attrId": "1",
+      "attrName": "version_id",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
+        "version": null,
+        "name": "equity_orders"
+      },
+      "value": null,
+      "attrId": "2",
+      "attrName": "order_event_type",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
+        "version": null,
+        "name": "equity_orders"
+      },
+      "value": null,
+      "attrId": "3",
+      "attrName": "order_placement_date",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
+        "version": null,
+        "name": "equity_orders"
+      },
+      "value": null,
+      "attrId": "4",
+      "attrName": "order_placement_time",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
+        "version": null,
+        "name": "equity_orders"
+      },
+      "value": null,
+      "attrId": "5",
+      "attrName": "order_event_date",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
+        "version": null,
+        "name": "equity_orders"
+      },
+      "value": null,
+      "attrId": "6",
+      "attrName": "order_event_time",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
+        "version": null,
+        "name": "equity_orders"
+      },
+      "value": null,
+      "attrId": "7",
+      "attrName": "time_in_force",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
+        "version": null,
+        "name": "equity_orders"
+      },
+      "value": null,
+      "attrId": "8",
+      "attrName": "order_type",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
+        "version": null,
+        "name": "equity_orders"
+      },
+      "value": null,
+      "attrId": "9",
+      "attrName": "limit_price",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
+        "version": null,
+        "name": "equity_orders"
+      },
+      "value": null,
+      "attrId": "10",
+      "attrName": "stop_price",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
+        "version": null,
+        "name": "equity_orders"
+      },
+      "value": null,
+      "attrId": "11",
+      "attrName": "trading_account_id",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
+        "version": null,
+        "name": "equity_orders"
+      },
+      "value": null,
+      "attrId": "12",
+      "attrName": "sales_trader_id",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
+        "version": null,
+        "name": "equity_orders"
+      },
+      "value": null,
+      "attrId": "13",
+      "attrName": "position_trader_id",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
+        "version": null,
+        "name": "equity_orders"
+      },
+      "value": null,
+      "attrId": "14",
+      "attrName": "security_id",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
+        "version": null,
+        "name": "equity_orders"
+      },
+      "value": null,
+      "attrId": "15",
+      "attrName": "security_symbol",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
+        "version": null,
+        "name": "equity_orders"
+      },
+      "value": null,
+      "attrId": "16",
+      "attrName": "ric_code",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
+        "version": null,
+        "name": "equity_orders"
+      },
+      "value": null,
+      "attrId": "17",
+      "attrName": "security_description",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
+        "version": null,
+        "name": "equity_orders"
+      },
+      "value": null,
+      "attrId": "18",
+      "attrName": "client_account_id",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
+        "version": null,
+        "name": "equity_orders"
+      },
+      "value": null,
+      "attrId": "19",
+      "attrName": "parent_order_id",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
+        "version": null,
+        "name": "equity_orders"
+      },
+      "value": null,
+      "attrId": "20",
+      "attrName": "route_destination",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
+        "version": null,
+        "name": "equity_orders"
+      },
+      "value": null,
+      "attrId": "21",
+      "attrName": "quantity",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
+        "version": null,
+        "name": "equity_orders"
+      },
+      "value": null,
+      "attrId": "22",
+      "attrName": "reason",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
+        "version": null,
+        "name": "equity_orders"
+      },
+      "value": null,
+      "attrId": "23",
+      "attrName": "version",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    }
+  ],
+  "filterInfo": null
+}

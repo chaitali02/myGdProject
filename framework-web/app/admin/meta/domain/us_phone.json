@@ -1,8 +1,8 @@
 {
-    "uuid" : "4184980f-9f36-4c6c-aa26-ecda1bd1d751",
+    "uuid" : "4184980f-9f36-4c6c-aa26-ecda1bd1d753",
     "version" : "1552160296",
-    "name" : "VISA_CC",
-    "desc" : "Visa Credit Card",
+    "name" : "US_PHONE",
+    "desc" : "United States Phone Number",
     "active" : "Y",
     "appInfo" : [ 
        {
@@ -73,5 +73,5 @@
     "locked" : "N",
     "published" : "N",
     "publicFlag" :"Y",
-    "regEx" : "^4[0-9]{12}(?:[0-9]{3})?$"
+    "regEx" : "^(\([0-9]{3}\)|[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
 }

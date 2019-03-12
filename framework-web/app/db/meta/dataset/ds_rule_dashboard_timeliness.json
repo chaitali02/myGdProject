@@ -1,8 +1,8 @@
 {
-  "uuid": "925e968d-3866-4639-a370-7929efed3a00",
-  "version": "1552424065",
-  "name": "rpt_data_quality_summary",
-  "desc": "Data Quality Summary",
+  "uuid": "724b2100-641f-4ed4-b93f-89432501ab89",
+  "version": "1552418561",
+  "name": "ds_rule_dashboard_timeliness",
+  "desc": null,
   "createdBy": {
     "ref": {
       "type": "user",
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Tue Mar 12 16:54:25 EDT 2019",
+  "createdOn": "Tue Mar 12 15:22:41 EDT 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -29,336 +29,350 @@
     }
   ],
   "publicFlag": "N",
-  "title": "Deutsche Bank",
-  "header": "Data Quality Summary",
-  "headerAlign": "CENTER",
-  "footer": "End of Report",
-  "footerAlign": "RIGHT",
-  "filterInfo": null,
   "dependsOn": {
     "ref": {
       "type": "datapod",
-      "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+      "uuid": "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
       "version": null,
-      "name": "dq_rule_summary"
+      "name": "dq_rule_dashboard"
     },
     "value": null
   },
+  "filterInfo": [
+    {
+      "display_seq": "0",
+      "logicalOperator": "",
+      "operator": "=",
+      "operand": [
+        {
+          "ref": {
+            "type": "datapod",
+            "uuid": "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
+            "version": null,
+            "name": "dq_rule_dashboard"
+          },
+          "attributeId": 13,
+          "value": null,
+          "attributeName": "dimension",
+          "attributeType": null
+        },
+        {
+          "ref": {
+            "type": "simple",
+            "uuid": null,
+            "version": null,
+            "name": null
+          },
+          "attributeId": null,
+          "value": "TIMELINESS",
+          "attributeName": null,
+          "attributeType": "string"
+        }
+      ]
+    }
+  ],
   "attributeInfo": [
     {
       "attrSourceId": "0",
-      "attrDisplaySeq": null,
+      "attrDisplaySeq": "0",
       "attrSourceName": "rule_uuid",
       "function": null,
       "sourceAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+          "uuid": "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
           "version": null,
-          "name": "dq_rule_summary"
+          "name": "dq_rule_dashboard"
         },
         "value": null,
         "attrId": "0",
         "attrName": "rule_uuid",
-        "attrType": "string",
+        "attrType": "VARCHAR",
         "attrUnitType": null,
         "function": null
       }
     },
     {
       "attrSourceId": "1",
-      "attrDisplaySeq": null,
+      "attrDisplaySeq": "1",
       "attrSourceName": "rule_version",
       "function": null,
       "sourceAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+          "uuid": "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
           "version": null,
-          "name": "dq_rule_summary"
+          "name": "dq_rule_dashboard"
         },
         "value": null,
         "attrId": "1",
         "attrName": "rule_version",
-        "attrType": "string",
+        "attrType": "INTEGER",
         "attrUnitType": null,
         "function": null
       }
     },
     {
       "attrSourceId": "2",
-      "attrDisplaySeq": null,
+      "attrDisplaySeq": "2",
       "attrSourceName": "rule_name",
       "function": null,
       "sourceAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+          "uuid": "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
           "version": null,
-          "name": "dq_rule_summary"
+          "name": "dq_rule_dashboard"
         },
         "value": null,
         "attrId": "2",
         "attrName": "rule_name",
-        "attrType": "string",
+        "attrType": "VARCHAR",
         "attrUnitType": null,
         "function": null
       }
     },
     {
       "attrSourceId": "3",
-      "attrDisplaySeq": null,
+      "attrDisplaySeq": "3",
       "attrSourceName": "datapod_uuid",
       "function": null,
       "sourceAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+          "uuid": "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
           "version": null,
-          "name": "dq_rule_summary"
+          "name": "dq_rule_dashboard"
         },
         "value": null,
         "attrId": "3",
         "attrName": "datapod_uuid",
-        "attrType": "string",
+        "attrType": "VARCHAR",
         "attrUnitType": null,
         "function": null
       }
     },
     {
       "attrSourceId": "4",
-      "attrDisplaySeq": null,
+      "attrDisplaySeq": "4",
       "attrSourceName": "datapod_version",
       "function": null,
       "sourceAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+          "uuid": "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
           "version": null,
-          "name": "dq_rule_summary"
+          "name": "dq_rule_dashboard"
         },
         "value": null,
         "attrId": "4",
         "attrName": "datapod_version",
-        "attrType": "string",
+        "attrType": "INTEGER",
         "attrUnitType": null,
         "function": null
       }
     },
     {
       "attrSourceId": "5",
-      "attrDisplaySeq": null,
+      "attrDisplaySeq": "5",
       "attrSourceName": "datapod_name",
       "function": null,
       "sourceAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+          "uuid": "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
           "version": null,
-          "name": "dq_rule_summary"
+          "name": "dq_rule_dashboard"
         },
         "value": null,
         "attrId": "5",
         "attrName": "datapod_name",
-        "attrType": "string",
+        "attrType": "VARCHAR",
         "attrUnitType": null,
         "function": null
       }
     },
     {
       "attrSourceId": "6",
-      "attrDisplaySeq": null,
-      "attrSourceName": "all_check_pass",
+      "attrDisplaySeq": "6",
+      "attrSourceName": "attribute_id",
       "function": null,
       "sourceAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+          "uuid": "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
           "version": null,
-          "name": "dq_rule_summary"
+          "name": "dq_rule_dashboard"
         },
         "value": null,
         "attrId": "6",
-        "attrName": "all_check_pass",
-        "attrType": "string",
+        "attrName": "attribute_id",
+        "attrType": "VARCHAR",
         "attrUnitType": null,
         "function": null
       }
     },
     {
       "attrSourceId": "7",
-      "attrDisplaySeq": null,
-      "attrSourceName": "total_row_count",
+      "attrDisplaySeq": "7",
+      "attrSourceName": "attribute_name",
       "function": null,
       "sourceAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+          "uuid": "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
           "version": null,
-          "name": "dq_rule_summary"
+          "name": "dq_rule_dashboard"
         },
         "value": null,
         "attrId": "7",
-        "attrName": "total_row_count",
-        "attrType": "string",
+        "attrName": "attribute_name",
+        "attrType": "VARCHAR",
         "attrUnitType": null,
         "function": null
       }
     },
     {
       "attrSourceId": "8",
-      "attrDisplaySeq": null,
-      "attrSourceName": "total_pass_count",
+      "attrDisplaySeq": "8",
+      "attrSourceName": "attribute_value",
       "function": null,
       "sourceAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+          "uuid": "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
           "version": null,
-          "name": "dq_rule_summary"
+          "name": "dq_rule_dashboard"
         },
         "value": null,
         "attrId": "8",
-        "attrName": "total_pass_count",
-        "attrType": "string",
+        "attrName": "attribute_value",
+        "attrType": "VARCHAR",
         "attrUnitType": null,
         "function": null
       }
     },
     {
       "attrSourceId": "9",
-      "attrDisplaySeq": null,
-      "attrSourceName": "total_fail_count",
+      "attrDisplaySeq": "9",
+      "attrSourceName": "rowkey_name",
       "function": null,
       "sourceAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+          "uuid": "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
           "version": null,
-          "name": "dq_rule_summary"
+          "name": "dq_rule_dashboard"
         },
         "value": null,
         "attrId": "9",
-        "attrName": "total_fail_count",
-        "attrType": "string",
+        "attrName": "rowkey_name",
+        "attrType": "VARCHAR",
         "attrUnitType": null,
         "function": null
       }
     },
     {
       "attrSourceId": "10",
-      "attrDisplaySeq": null,
-      "attrSourceName": "threshold_type",
+      "attrDisplaySeq": "10",
+      "attrSourceName": "rowkey_value",
       "function": null,
       "sourceAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+          "uuid": "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
           "version": null,
-          "name": "dq_rule_summary"
+          "name": "dq_rule_dashboard"
         },
         "value": null,
         "attrId": "10",
-        "attrName": "threshold_type",
-        "attrType": "string",
+        "attrName": "rowkey_value",
+        "attrType": "VARCHAR",
         "attrUnitType": null,
         "function": null
       }
     },
     {
       "attrSourceId": "11",
-      "attrDisplaySeq": null,
-      "attrSourceName": "threshold_limit",
+      "attrDisplaySeq": "11",
+      "attrSourceName": "check_type",
       "function": null,
       "sourceAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+          "uuid": "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
           "version": null,
-          "name": "dq_rule_summary"
+          "name": "dq_rule_dashboard"
         },
         "value": null,
         "attrId": "11",
-        "attrName": "threshold_limit",
-        "attrType": "string",
+        "attrName": "check_type",
+        "attrType": "VARCHAR",
         "attrUnitType": null,
         "function": null
       }
     },
     {
       "attrSourceId": "12",
-      "attrDisplaySeq": null,
-      "attrSourceName": "threshold_ind",
+      "attrDisplaySeq": "12",
+      "attrSourceName": "check_pass",
       "function": null,
       "sourceAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+          "uuid": "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
           "version": null,
-          "name": "dq_rule_summary"
+          "name": "dq_rule_dashboard"
         },
         "value": null,
         "attrId": "12",
-        "attrName": "threshold_ind",
-        "attrType": "string",
+        "attrName": "check_pass",
+        "attrType": "VARCHAR",
         "attrUnitType": null,
         "function": null
       }
     },
     {
       "attrSourceId": "13",
-      "attrDisplaySeq": null,
-      "attrSourceName": "score",
+      "attrDisplaySeq": "13",
+      "attrSourceName": "dimension",
       "function": null,
       "sourceAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+          "uuid": "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
           "version": null,
-          "name": "dq_rule_summary"
+          "name": "dq_rule_dashboard"
         },
         "value": null,
         "attrId": "13",
-        "attrName": "score",
-        "attrType": "integer",
+        "attrName": "dimension",
+        "attrType": "VARCHAR",
         "attrUnitType": null,
         "function": null
       }
     },
     {
       "attrSourceId": "14",
-      "attrDisplaySeq": null,
+      "attrDisplaySeq": "14",
       "attrSourceName": "version",
       "function": null,
       "sourceAttr": {
         "ref": {
           "type": "datapod",
-          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+          "uuid": "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
           "version": null,
-          "name": "dq_rule_summary"
+          "name": "dq_rule_dashboard"
         },
         "value": null,
         "attrId": "14",
         "attrName": "version",
-        "attrType": "string",
+        "attrType": "INTEGER",
         "attrUnitType": null,
         "function": null
       }
     }
   ],
-  "saveOnRefresh": "Y",
-  "senderInfo": {
-    "emailTo": [
-      "ypalrecha@inferyx.com"
-    ],
-    "emailBCC": [],
-    "emailCC": [],
-    "emailAttachment": null,
-    "notifyOnSuccess": "Y",
-    "notifyOnFailure": "Y",
-    "sendAttachment": "Y"
-  },
-  "paramList": null,
-  "limit": -1,
-  "format": "EXCEL"
+  "groupBy": null,
+  "limit": -1
 }
