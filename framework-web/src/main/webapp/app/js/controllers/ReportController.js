@@ -932,7 +932,6 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		var onSuccessFormula = function (response) {
 			$scope.allSourceFormula = response;;
 			$scope.allFilterormula = response;
-
 		}//End onSuccessGetFormulaByType
 	}
 

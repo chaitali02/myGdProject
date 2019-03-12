@@ -302,12 +302,46 @@ DataQualityModule.factory('DataQualityFactory', function ($http, $location) {
 		}
 		return rTypes;
 	}
+	factory.findAttributesByRelation = function (uuid, type) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			method: 'GET',
+			url: url + "metadata/getAttributesByRelation?action=view&uuid=" + uuid + "&type=" + type,
+		}).
+			then(function (response, status, headers) {
+				return response;
+			})
+	}
+	factory.findRelationByDatapod = function (uuid, type) {
+		var url = $location.absUrl().split("app")[0]
+		return $http({
+			method: 'GET',
+			url: url + "metadata/getRelationByDatapod?action=view&datapodUUID=" + uuid + "&type=" + type,
+		}).
+			then(function (response, status, headers) {
+				return response;
+			})
+	}
+
+	
 
 	return factory;
 });
 
 
 DataQualityModule.service("DataqulityService", function ($q, DataQualityFactory, sortFactory) {
+	
+	this.findRelationByDatapod = function (uuid, type) {
+		var deferred = $q.defer();
+		DataQualityFactory.findRelationByDatapod(uuid, type).then(function (response) { onSuccess(response.data) });
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			})
+		}
+		return deferred.promise;
+	}
+
 	this.getFormulaByType = function (uuid, type) {
 		var deferred = $q.defer();
 		DataQualityFactory.findFormulaByType(uuid, type).then(function (response) { onSuccess(response.data) });
@@ -632,7 +666,7 @@ DataQualityModule.service("DataqulityService", function ($q, DataQualityFactory,
 			}
 		} DataQualityFactory.findDataQualResults(url).then(function (response) { onSuccess(response) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
-		
+
 			deferred.resolve({
 				data: response
 			})
@@ -1013,10 +1047,10 @@ DataQualityModule.service("DataqulityService", function ($q, DataQualityFactory,
 		var deferred = $q.defer();
 		DataQualityFactory.findAllLatest(type).then(function (response) { onSuccess(response.data) });
 		var onSuccess = function (response) {
-			var result=[];
-			if(response !=null){
-				result= response.sort(sortFactory.sortByProperty("name"));
-		    }
+			var result = [];
+			if (response != null) {
+				result = response.sort(sortFactory.sortByProperty("name"));
+			}
 			deferred.resolve({
 				data: result
 			})
@@ -1083,29 +1117,23 @@ DataQualityModule.service("DataqulityService", function ($q, DataQualityFactory,
 	}
 	this.getAllAttributeBySource = function (uuid, type) {
 		var deferred = $q.defer();
-
 		if (type == "relation") {
-
-			DataQualityFactory.findDatapodByRelation(uuid, type).then(function (response) { onSuccess(response.data) });
+			DataQualityFactory.findAttributesByRelation(uuid, "relation", "").then(function (response) { onSuccess(response.data) });
 			var onSuccess = function (response) {
-				//console.log(JSON.stringify(response))
 				var attributes = [];
 				for (var j = 0; j < response.length; j++) {
-					for (var i = 0; i < response[j].attributes.length; i++) {
-						var attributedetail = {};
-						attributedetail.uuid = response[j].uuid;
-						attributedetail.datapodname = response[j].name;
-						attributedetail.name = response[j].attributes[i].name;
-						attributedetail.dname = response[j].name + "." + response[j].attributes[i].name;
-						attributedetail.attributeId = response[j].attributes[i].attributeId;
-
-						/* attributedetail.type=response[j].attributes[i].type;
-						attributedetail.desc=response[j].attributes[i].desc;*/
-						attributes.push(attributedetail)
-					}
+					var attributedetail = {};
+					attributedetail.uuid = response[j].ref.uuid;
+					attributedetail.type = response[j].ref.type;
+					attributedetail.datapodname = response[j].ref.name;
+					attributedetail.name = response[j].attrName;
+					attributedetail.attributeId = response[j].attrId;
+					attributedetail.attrType = response[j].attrType;
+					attributedetail.dname = response[j].ref.name + "." + response[j].attrName;
+					attributedetail.id = response[j].ref.uuid + "_" + response[j].attrId;
+					attributes.push(attributedetail)
 				}
-				//
-				console.log(JSON.stringify(attributes))
+
 				deferred.resolve({
 					data: attributes
 				})
@@ -1114,12 +1142,11 @@ DataQualityModule.service("DataqulityService", function ($q, DataQualityFactory,
 		if (type == "dataset") {
 			DataQualityFactory.findDatapodByDataset(uuid).then(function (response) { onSuccess(response.data) });
 			var onSuccess = function (response) {
-				//console.log(JSON.stringify(response))
-
 				var attributes = [];
 				for (var j = 0; j < response.length; j++) {
 					var attributedetail = {};
 					attributedetail.uuid = response[j].ref.uuid;
+					attributedetail.type = response[j].ref.type;
 					attributedetail.datapodname = response[j].ref.name;
 					attributedetail.name = response[j].attrName;
 					attributedetail.attributeId = response[j].attrId;
@@ -1139,16 +1166,10 @@ DataQualityModule.service("DataqulityService", function ($q, DataQualityFactory,
 			DataQualityFactory.findAttributeByDatapod(uuid, type).then(function (response) { onSuccess(response.data) });
 			var onSuccess = function (response) {
 				var attributes = [];
-				/* var attributedetail={};
-				  attributedetail.uuid=""
-				  attributedetail.datapodname=""
-				  attributedetail.name=""
-				  attributedetail.attributeId=""
-				  attributedetail.dname=""
-				  attributes.push(attributedetail)*/
 				for (var j = 0; j < response.length; j++) {
 					var attributedetail = {};
 					attributedetail.uuid = response[j].ref.uuid;
+					attributedetail.type = response[j].ref.type;
 					attributedetail.datapodname = response[j].ref.name;
 					attributedetail.name = response[j].attrName;
 					attributedetail.attributeId = response[j].attrId;
