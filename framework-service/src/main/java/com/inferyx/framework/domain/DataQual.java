@@ -28,7 +28,7 @@ public class DataQual extends BaseRule{
 	private String dateFormatCheck;
 	private String customFormatCheck;
 	private Map<String, Long> lengthCheck;
-	private AttributeRefHolder refIntegrityCheck;	
+	private RefIntegrity refIntegrityCheck;	
 	//private String stdDevCheck;
 	private List<FilterInfo> filterInfo;	
 	private List<MetaIdentifierHolder> userInfo;
@@ -81,10 +81,10 @@ public class DataQual extends BaseRule{
 	public void setFilterInfo(List<FilterInfo> filterInfo) {
 		this.filterInfo = filterInfo;
 	}
-	public AttributeRefHolder getRefIntegrityCheck() {
+	public RefIntegrity getRefIntegrityCheck() {
 		return refIntegrityCheck;
 	}
-	public void setRefIntegrityCheck(AttributeRefHolder refIntegrityCheck) {
+	public void setRefIntegrityCheck(RefIntegrity refIntegrityCheck) {
 		this.refIntegrityCheck = refIntegrityCheck;
 	}	
 	public AttributeRefHolder getAttribute() {

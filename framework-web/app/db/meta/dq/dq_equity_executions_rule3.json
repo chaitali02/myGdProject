@@ -1,8 +1,8 @@
 {
-  "uuid": "8fc47cd2-adce-40a5-8043-1d82936c212e",
-  "version": "1552334154",
-  "name": "dq_equity_orders_rule1",
-  "desc": "Order ID cannot be blank",
+  "uuid": "8fc47cd2-adce-40a5-8043-1d82936c2123",
+  "version": "1552334143",
+  "name": "dq_equity_executions_rule3",
+  "desc": "Execution date must be less than or equal to the Execution event date",
   "createdBy": {
     "ref": {
       "type": "user",
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Mar 11 15:55:54 EDT 2019",
+  "createdOn": "Mon Mar 11 15:55:43 EDT 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -33,13 +33,13 @@
   "attribute": {
     "ref": {
       "type": "datapod",
-      "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
+      "uuid": "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
       "version": null,
-      "name": "equity_orders"
+      "name": "equity_executions"
     },
     "value": null,
-    "attrId": "0",
-    "attrName": "order_id",
+    "attrId": "4",
+    "attrName": "execution_date",
     "attrType": null,
     "attrUnitType": null,
     "function": null
@@ -47,14 +47,14 @@
   "dependsOn": {
     "ref": {
       "type": "datapod",
-      "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
+      "uuid": "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
       "version": null,
-      "name": "equity_orders"
+      "name": "equity_executions"
     },
     "value": null
   },
   "duplicateKeyCheck": "N",
-  "nullCheck": "Y",
+  "nullCheck": "N",
   "valueCheck": [],
   "rangeCheck": {},
   "dataTypeCheck": "",
@@ -80,5 +80,10 @@
   },
   "domainCheck": null,
   "blankSpaceCheck": null,
-  "expressionCheck": null
+  "expressionCheck": {
+    "ref": {
+      "type": "expression",
+      "uuid": "5237851a-5f41-4456-8426-a6138cf9ac03"
+    }
+  }
 }

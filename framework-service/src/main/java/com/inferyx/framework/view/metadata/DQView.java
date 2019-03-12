@@ -17,6 +17,7 @@ import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.Filter;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
+import com.inferyx.framework.domain.RefIntegrity;
 
 public class DQView extends BaseEntity{
 	private Filter filter;	
@@ -32,7 +33,7 @@ public class DQView extends BaseEntity{
 	private String dateFormatCheck;
 	private String customFormatCheck;
 	private Map<String, Long> lengthCheck;
-	private AttributeRefHolder refIntegrityCheck;	
+	private RefIntegrity refIntegrityCheck;	
 	private String stdDevCheck;
 	
 	
@@ -48,10 +49,10 @@ public class DQView extends BaseEntity{
 	public void setDependsOn(MetaIdentifierHolder dependsOn) {
 		this.dependsOn = dependsOn;
 	}
-	public AttributeRefHolder getRefIntegrityCheck() {
+	public RefIntegrity getRefIntegrityCheck() {
 		return refIntegrityCheck;
 	}
-	public void setRefIntegrityCheck(AttributeRefHolder refIntegrityCheck) {
+	public void setRefIntegrityCheck(RefIntegrity refIntegrityCheck) {
 		this.refIntegrityCheck = refIntegrityCheck;
 	}
 	

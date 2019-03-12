@@ -32,9 +32,7 @@
   "dataSource": {
     "ref": {
       "type": "datasource",
-      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73024",
-      "version": null,
-      "name": "mysql"
+      "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020"
     },
     "value": null
   },

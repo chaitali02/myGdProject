@@ -56,7 +56,6 @@ import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
-import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.Filter;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
@@ -678,13 +677,15 @@ public class DataQualServiceImpl extends RuleTemplate {
 		DataQualExec dqExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
 				MetaType.dqExec.toString());
 		try {
-			Datapod summaryDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
-					Helper.getPropertyValue("framework.dataqual.summary.uuid"), null, MetaType.datapod.toString(), "N");
+//			Datapod summaryDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+//					Helper.getPropertyValue("framework.dataqual.summary.uuid"), null, MetaType.datapod.toString(), "N");
 
 			limit = offset + limit;
 			offset = offset + 1;
 			dataStoreServiceImpl.setRunMode(runMode);
-			DataStore datastore = dataStoreServiceImpl.findDataStoreByMeta(summaryDp.getUuid(), summaryDp.getVersion());
+			DataStore datastore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(dqExec.getSummaryResult().getRef().getUuid(),
+					dqExec.getSummaryResult().getRef().getVersion(),MetaType.datastore.toString());
+//			DataStore datastore = dataStoreServiceImpl.findDataStoreByMeta(summaryDp.getUuid(), summaryDp.getVersion());
 
 			return dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId,
 					offset, limit, sortBy, order, dqExec.getVersion());
@@ -754,13 +755,15 @@ public class DataQualServiceImpl extends RuleTemplate {
 		DataQualExec dqExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion,
 				MetaType.dqExec.toString());
 		try {
-			Datapod detailsDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
-					Helper.getPropertyValue("framework.dataqual.detail.uuid"), null, MetaType.datapod.toString(), "N");
+//			Datapod detailsDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+//					Helper.getPropertyValue("framework.dataqual.detail.uuid"), null, MetaType.datapod.toString(), "N");
 			
 			limit = offset + limit;
 			offset = offset + 1;
 			dataStoreServiceImpl.setRunMode(runMode);
-			DataStore datastore = dataStoreServiceImpl.findDataStoreByMeta(detailsDp.getUuid(), detailsDp.getVersion());
+			DataStore datastore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(dqExec.getResult().getRef().getUuid(),
+					dqExec.getResult().getRef().getVersion(),MetaType.datastore.toString());
+//			DataStore datastore = dataStoreServiceImpl.findDataStoreByMeta(detailsDp.getUuid(), detailsDp.getVersion());
 
 			return dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId,
 					offset, limit, sortBy, order, dqExec.getVersion());

@@ -1,6 +1,6 @@
 {
   "uuid": "59ac76c9-4d0c-472f-a022-085cc5636b2e",
-  "version": "1552239994",
+  "version": "1552331262",
   "name": "ingest_equity_orders",
   "desc": "Equity Orders",
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Sun Mar 10 13:46:34 EDT 2019",
+  "createdOn": "Mon Mar 11 15:07:42 EDT 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -71,7 +71,7 @@
   "sourceFormat": "CSV",
   "targetFormat": null,
   "incrAttr": null,
-  "saveMode": "APPEND",
+  "saveMode": "OVERWRITE",
   "ignoreCase": "Y",
   "sourceExtn": "csv",
   "targetExtn": null,

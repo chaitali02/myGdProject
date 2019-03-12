@@ -1,0 +1,103 @@
+{
+  "uuid": "5237851a-5f41-4456-8426-a6138cf9ac03",
+  "version": "1552342562",
+  "name": "expr_dq_equity_executions_rule3",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
+      "version": "1548315952",
+      "name": "db_admin"
+    },
+    "value": null
+  },
+  "createdOn": "Mon Mar 11 18:16:02 EDT 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
+        "version": "1552267311",
+        "name": "Deutsche Admin"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "dependsOn": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
+      "version": null,
+      "name": "equity_executions"
+    },
+    "value": null
+  },
+  "condition": null,
+  "match": {
+    "ref": {
+      "type": "simple",
+      "uuid": null,
+      "version": null,
+      "name": null
+    },
+    "value": "'TRUE'",
+    "attrId": null,
+    "attrName": null,
+    "attrType": null,
+    "attrUnitType": null,
+    "function": null
+  },
+  "noMatch": {
+    "ref": {
+      "type": "simple",
+      "uuid": null,
+      "version": null,
+      "name": null
+    },
+    "value": "'FALSE'",
+    "attrId": null,
+    "attrName": null,
+    "attrType": null,
+    "attrUnitType": null,
+    "function": null
+  },
+  "expressionInfo": [
+    {
+      "display_seq": null,
+      "logicalOperator": " ",
+      "operator": "<=",
+      "operand": [
+        {
+          "ref": {
+            "type": "datapod",
+            "uuid": "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
+            "version": null,
+            "name": "equity_executions"
+          },
+          "attributeId": 4,
+          "value": null,
+          "attributeName": "execution_date",
+          "attributeType": null
+        },
+        {
+          "ref": {
+            "type": "datapod",
+            "uuid": "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
+            "version": null,
+            "name": "equity_executions"
+          },
+          "attributeId": 6,
+          "value": null,
+          "attributeName": "execution_event_date",
+          "attributeType": null
+        }
+      ]
+    }
+  ]
+}

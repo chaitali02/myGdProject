@@ -1646,7 +1646,7 @@ public class DataStoreServiceImpl {
 			Datasource mapSourceDS =  commonServiceImpl.getDatasourceByObject(dataStore);
 			MetaType metaType = dataStore.getMetaId().getRef().getType();
 			if(runMode.equals(RunMode.ONLINE) && (metaType.equals(MetaType.rule)
-					||  metaType.equals(MetaType.datapod) || metaType.equals(MetaType.report))) {
+					||  metaType.equals(MetaType.datapod) || metaType.equals(MetaType.report) || metaType.equals(MetaType.vizpod))) {
 				customCondition.append(limitBuilder);
 				data = sparkExecutor.executeAndFetchFromTempTable("SELECT * FROM " + tableName + customCondition.toString(), appUuid);
 			} else if (requestId == null|| requestId.equals("null") || requestId.isEmpty()) {

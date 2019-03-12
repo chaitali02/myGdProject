@@ -64,7 +64,7 @@ public class DashboardController {
 			@RequestBody(required = false) ExecParams execParams,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action, 
-			@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception {
+			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		DashboardExec dashboardExec = dashboardServiceImpl.create(dashboardUuid, dashboardVersion, null, execParams, runMode);
 		dashboardExec = dashboardServiceImpl.parse(dashboardExec.getUuid(), dashboardExec.getVersion(), execParams, null, null, null, null, runMode);

@@ -1,8 +1,8 @@
 {
-  "uuid": "8fc47cd2-adce-40a5-8043-1d82936c212e",
-  "version": "1552334154",
-  "name": "dq_equity_orders_rule1",
-  "desc": "Order ID cannot be blank",
+  "uuid": "45f5f608-72bb-4f39-90f7-c3e500744f5a",
+  "version": "1552334119",
+  "name": "dq_equity_orders_rule4",
+  "desc": "Order Placement time must be less than or equal to the order event time",
   "createdBy": {
     "ref": {
       "type": "user",
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Mar 11 15:55:54 EDT 2019",
+  "createdOn": "Mon Mar 11 15:55:19 EDT 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -22,7 +22,7 @@
       "ref": {
         "type": "application",
         "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
-        "version": "1552236606",
+        "version": "1552267311",
         "name": "Deutsche Admin"
       },
       "value": null
@@ -38,8 +38,8 @@
       "name": "equity_orders"
     },
     "value": null,
-    "attrId": "0",
-    "attrName": "order_id",
+    "attrId": "4",
+    "attrName": "order_placement_time",
     "attrType": null,
     "attrUnitType": null,
     "function": null
@@ -54,7 +54,7 @@
     "value": null
   },
   "duplicateKeyCheck": "N",
-  "nullCheck": "Y",
+  "nullCheck": "N",
   "valueCheck": [],
   "rangeCheck": {},
   "dataTypeCheck": "",
@@ -80,5 +80,13 @@
   },
   "domainCheck": null,
   "blankSpaceCheck": null,
-  "expressionCheck": null
+  "expressionCheck": {
+    "ref": {
+      "type": "expression",
+      "uuid": "f5d8f521-d622-4779-be88-a43160234069",
+      "version": null,
+      "name": "expr_dq_rule4"
+    },
+    "value": null
+  }
 }

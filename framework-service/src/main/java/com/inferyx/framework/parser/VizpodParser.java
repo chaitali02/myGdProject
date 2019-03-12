@@ -38,6 +38,7 @@ import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Expression;
 import com.inferyx.framework.domain.Formula;
 import com.inferyx.framework.domain.FormulaType;
+import com.inferyx.framework.domain.Key;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
@@ -249,16 +250,20 @@ public class VizpodParser {
 			outerSelectBuilder.deleteCharAt(outerSelectBuilder.lastIndexOf(","));
 
 			if (StringUtils.isBlank(tableName) && vizpod.getSource().getRef().getType() == MetaType.datapod) {
-				List<DataStore> listDataStore = dataStoreServiceImpl
-						.findDataStoreByDatapod(vizpod.getSource().getRef().getUuid());
-				if (listDataStore != null && !listDataStore.isEmpty()) {
-					DataStore dataStore = listDataStore.get(0);
-					tableName = dataStoreServiceImpl.getTableNameByDatastore(dataStore.getUuid(),
-							dataStore.getVersion(), runMode);
-				} else {
-					throw new RuntimeException(
-							"No datastore available for datapod " + vizpod.getSource().getRef().getName());
-				}
+				Key dpKey = new Key();
+				dpKey.setUUID(vizpod.getSource().getRef().getUuid());
+				dpKey.setVersion(vizpod.getSource().getRef().getVersion());
+				tableName = dataStoreServiceImpl.getTableNameByDatapod(dpKey,runMode);
+//				List<DataStore> listDataStore = dataStoreServiceImpl
+//						.findDataStoreByDatapod(vizpod.getSource().getRef().getUuid());
+//				if (listDataStore != null && !listDataStore.isEmpty()) {
+//					DataStore dataStore = listDataStore.get(0);
+//					tableName = dataStoreServiceImpl.getTableNameByDatastore(dataStore.getUuid(),
+//							dataStore.getVersion(), runMode);
+//				} else {
+//					throw new RuntimeException(
+//							"No datastore available for datapod " + vizpod.getSource().getRef().getName());
+//				}
 			}
 
 			finalBuilder.append(" 	FROM");

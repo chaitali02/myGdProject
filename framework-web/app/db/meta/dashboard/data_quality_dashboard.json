@@ -1,0 +1,147 @@
+{
+  "uuid": "34ea69de-8430-4949-b0a0-e9137d47ee64",
+  "version": "1552353509",
+  "name": "Data Quality Dashboard",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
+      "version": "1548315952",
+      "name": "db_admin"
+    },
+    "value": null
+  },
+  "createdOn": "Mon Mar 11 21:18:29 EDT 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
+        "version": "1552267311",
+        "name": "Deutsche Admin"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "sectionInfo": [
+    {
+      "sectionId": null,
+      "name": "Overall Status",
+      "vizpodInfo": {
+        "ref": {
+          "type": "vizpod",
+          "uuid": "dc88666f-e856-4237-b988-581dd9f27704",
+          "version": null,
+          "name": "viz_dq_overall_status"
+        },
+        "value": null
+      },
+      "rowNo": 1,
+      "colNo": 1
+    },
+    {
+      "sectionId": null,
+      "name": "Top 10 Failures By Time",
+      "vizpodInfo": {
+        "ref": {
+          "type": "vizpod",
+          "uuid": "69a934e4-aa1c-4feb-97b7-d95a0360b2a0",
+          "version": null,
+          "name": "viz_dq_top_10_failures_bydate"
+        },
+        "value": null
+      },
+      "rowNo": 1,
+      "colNo": 2
+    },
+    {
+      "sectionId": null,
+      "name": "Top 10 Failures By Table",
+      "vizpodInfo": {
+        "ref": {
+          "type": "vizpod",
+          "uuid": "0885a173-e33d-40e1-b905-72604032bf18",
+          "version": null,
+          "name": "viz_dq_top_10_failures_bytable"
+        },
+        "value": null
+      },
+      "rowNo": 1,
+      "colNo": 3
+    }
+  ],
+  "dependsOn": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+      "version": null,
+      "name": "dq_rule_summary"
+    },
+    "value": null
+  },
+  "filterInfo": [
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+        "version": null,
+        "name": "dq_rule_summary"
+      },
+      "value": null,
+      "attrId": "1",
+      "attrName": "rule_version",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+        "version": null,
+        "name": "dq_rule_summary"
+      },
+      "value": null,
+      "attrId": "2",
+      "attrName": "rule_name",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+        "version": null,
+        "name": "dq_rule_summary"
+      },
+      "value": null,
+      "attrId": "5",
+      "attrName": "datapod_name",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    },
+    {
+      "ref": {
+        "type": "datapod",
+        "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+        "version": null,
+        "name": "dq_rule_summary"
+      },
+      "value": null,
+      "attrId": "12",
+      "attrName": "threshold_ind",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    }
+  ],
+  "saveOnRefresh": "Y"
+}

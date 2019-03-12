@@ -1,8 +1,8 @@
 {
-  "uuid": "8fc47cd2-adce-40a5-8043-1d82936c212e",
-  "version": "1552334154",
-  "name": "dq_equity_orders_rule1",
-  "desc": "Order ID cannot be blank",
+  "uuid": "fd5f3f02-c648-467e-9e7b-8fcfc6392a42",
+  "version": "1552334132",
+  "name": "dq_equity_executions_rule2",
+  "desc": "Execution ID, Version ID, Execution Event Type combination must be unique for each record",
   "createdBy": {
     "ref": {
       "type": "user",
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Mar 11 15:55:54 EDT 2019",
+  "createdOn": "Mon Mar 11 15:55:32 EDT 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -22,7 +22,7 @@
       "ref": {
         "type": "application",
         "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
-        "version": "1552236606",
+        "version": "1552267311",
         "name": "Deutsche Admin"
       },
       "value": null
@@ -30,37 +30,27 @@
   ],
   "publicFlag": "N",
   "target": null,
-  "attribute": {
-    "ref": {
-      "type": "datapod",
-      "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
-      "version": null,
-      "name": "equity_orders"
-    },
-    "value": null,
-    "attrId": "0",
-    "attrName": "order_id",
-    "attrType": null,
-    "attrUnitType": null,
-    "function": null
-  },
+  "attribute": null,
   "dependsOn": {
     "ref": {
       "type": "datapod",
-      "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
+      "uuid": "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
       "version": null,
-      "name": "equity_orders"
+      "name": "equity_executions"
     },
     "value": null
   },
-  "duplicateKeyCheck": "N",
-  "nullCheck": "Y",
+  "duplicateKeyCheck": "Y",
+  "nullCheck": "N",
   "valueCheck": [],
   "rangeCheck": {},
   "dataTypeCheck": "",
-  "dateFormatCheck": null,
+  "dateFormatCheck": "",
   "customFormatCheck": null,
-  "lengthCheck": {},
+  "lengthCheck": {
+    "minLength": null,
+    "maxLength": null
+  },
   "refIntegrityCheck": {
     "ref": null,
     "value": null,

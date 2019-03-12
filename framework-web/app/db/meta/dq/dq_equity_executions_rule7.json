@@ -1,8 +1,8 @@
 {
-  "uuid": "8fc47cd2-adce-40a5-8043-1d82936c212e",
-  "version": "1552334154",
-  "name": "dq_equity_orders_rule1",
-  "desc": "Order ID cannot be blank",
+  "uuid": "291d1c24-5b2a-43f4-b17c-1cb08d9f3126",
+  "version": "1552344240",
+  "name": "dq_equity_executions_rule7",
+  "desc": "Security ID must be populated and must be available in the security master reference data",
   "createdBy": {
     "ref": {
       "type": "user",
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Mar 11 15:55:54 EDT 2019",
+  "createdOn": "Mon Mar 11 18:44:00 EDT 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -22,7 +22,7 @@
       "ref": {
         "type": "application",
         "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
-        "version": "1552236606",
+        "version": "1552267311",
         "name": "Deutsche Admin"
       },
       "value": null
@@ -33,13 +33,13 @@
   "attribute": {
     "ref": {
       "type": "datapod",
-      "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
+      "uuid": "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
       "version": null,
-      "name": "equity_orders"
+      "name": "equity_executions"
     },
     "value": null,
-    "attrId": "0",
-    "attrName": "order_id",
+    "attrId": "11",
+    "attrName": "security_id",
     "attrType": null,
     "attrUnitType": null,
     "function": null
@@ -47,28 +47,41 @@
   "dependsOn": {
     "ref": {
       "type": "datapod",
-      "uuid": "80683e69-1f59-45ee-adc0-3f796f85071b",
+      "uuid": "4d97e5d8-0a63-47b8-aeb0-d599f854cf10",
       "version": null,
-      "name": "equity_orders"
+      "name": "equity_executions"
     },
     "value": null
   },
   "duplicateKeyCheck": "N",
-  "nullCheck": "Y",
+  "nullCheck": "N",
   "valueCheck": [],
   "rangeCheck": {},
   "dataTypeCheck": "",
   "dateFormatCheck": null,
   "customFormatCheck": null,
   "lengthCheck": {},
-  "refIntegrityCheck": {
-    "ref": null,
-    "value": null,
-    "attrId": null,
-    "attrName": null,
-    "attrType": null,
-    "attrUnitType": null,
-    "function": null
+  "refIntegrityCheck" : {
+	    "dependsOn" : {
+	        "ref" : {
+	            "type" : "relation",
+	            "uuid" : "3c772fa7-758d-4371-8e80-65056573c545"
+	        }
+	    },
+	    "targetAttr" : {
+	        "ref" : {
+	            "type" : "datapod",
+	            "uuid" : "1d83dac9-4733-4503-b14d-afd91675d69b",
+	            "version" : null,
+	            "name" : "security"
+	        },
+	        "value" : null,
+	        "attrId" : "0",
+	        "attrName" : "security_id",
+	        "attrType" : null,
+	        "attrUnitType" : null,
+	        "function" : null
+	    }
   },
   "filterInfo": null,
   "userInfo": null,
@@ -76,7 +89,7 @@
     "low": "25",
     "medium": "50",
     "high": "75",
-    "type": "PERCENTAGE"
+    "type": "NUMERIC"
   },
   "domainCheck": null,
   "blankSpaceCheck": null,

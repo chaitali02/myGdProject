@@ -1,6 +1,6 @@
 {
   "uuid": "8c416899-f4d5-4d12-9d97-604da82eb406",
-  "version": "1552240681",
+  "version": "1552331380",
   "name": "ingest_equity_executions",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Sun Mar 10 13:58:01 EDT 2019",
+  "createdOn": "Mon Mar 11 15:09:40 EDT 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -71,7 +71,7 @@
   "sourceFormat": "CSV",
   "targetFormat": null,
   "incrAttr": null,
-  "saveMode": "APPEND",
+  "saveMode": "OVERWRITE",
   "ignoreCase": "Y",
   "sourceExtn": "csv",
   "targetExtn": null,

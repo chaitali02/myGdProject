@@ -557,6 +557,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 	public TaskHolder execute() throws Exception {
 		// Set status to RUNNING
 		MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
+		MetaIdentifierHolder summaryResultRef = new MetaIdentifierHolder();
 		long countRows = -1L;
 		FrameworkThreadLocal.getSessionContext().set(sessionContext);
 		List<Status> ruleExecStatusList = baseRuleExec.getStatusList();
@@ -633,7 +634,6 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 					summaryDatapodKey = new MetaIdentifier(MetaType.datapod, summaryDatapod.getUuid(),
 							summaryDatapod.getVersion());
 					filePath = getFileName(baseRule, baseRuleExec, summaryDatapodKey);
-					datapodKey = summaryDatapodKey;
 					tableName = getTableName(baseRule, baseRuleExec, summaryDatapodKey, execContext, runMode);
 				} else if (baseRuleExec.getDependsOn().getRef().getType().equals(MetaType.rule2)) {
 					summaryDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(rule2Info.getRule_result_summary(),
@@ -641,7 +641,6 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 					summaryDatapodKey = new MetaIdentifier(MetaType.datapod, summaryDatapod.getUuid(),
 							summaryDatapod.getVersion());
 					filePath = getFileName(baseRule, baseRuleExec, summaryDatapodKey);
-					datapodKey = summaryDatapodKey;
 					tableName = getTableName(baseRule, baseRuleExec, summaryDatapodKey, execContext, runMode);
 				}
 				logger.info("Table name registered : " + tableName);
@@ -653,9 +652,9 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 				}
 				
 				//******Adding one more parameter in persistDataStorenew
-				persistDatastore(tableName, filePath, resultRef, datapodKey, countRows, runMode);
+				persistDatastore(tableName, filePath, summaryResultRef, summaryDatapodKey, countRows, runMode);
 	
-				baseRuleExec.setSummaryResult(resultRef);
+				baseRuleExec.setSummaryResult(summaryResultRef);
 			}
 //			Ending Summary business
 			
@@ -716,11 +715,11 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 			if(appDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
 					&& !targetDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
 				rsHolder = exec.executeSqlByDatasource(execSql, ruleDatasource, appUuid);
-				if(targetDatasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
-					tableName = targetDatasource.getSid().concat(".").concat(targetDp.getName());
-				} else {
-					tableName = targetDatasource.getDbname().concat(".").concat(targetDp.getName());					
-				}
+//				if(targetDatasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+//					tableName = targetDatasource.getSid().concat(".").concat(targetDp.getName());
+//				} else {
+//					tableName = targetDatasource.getDbname().concat(".").concat(targetDp.getName());					
+//				}
 				rsHolder.setTableName(tableName);
 				rsHolder = exec.persistDataframe(rsHolder, targetDatasource, targetDp, SaveMode.APPEND.toString());
 			} else if(targetDatasource.getType().equals(ExecContext.FILE.toString())) {
