@@ -120,12 +120,12 @@ export class DataIngestionDetailComponent implements OnInit {
   metaType: any;
   moveToEnable: boolean;
   count: any[];
-  txtQueryChanged: Subject<string> = new Subject<string>();
-  txtQueryChanged1: Subject<string> = new Subject<string>();
+  txtQueryChangedFilter: Subject<string> = new Subject<string>();
+  resetTableTopBottom: Subject<string> = new Subject<string>();
   topDisabled: boolean;
   bottomDisabled: boolean;
-  invalideRowNo0: boolean = false;
-  invalideRowNo1: boolean = false;
+  invalideMinRow: boolean = false;
+  invalideMaxRow: boolean = false;
   moveTo: number;
 
   showForm: boolean;
@@ -139,6 +139,8 @@ export class DataIngestionDetailComponent implements OnInit {
   
   sourceHeader: boolean;
   datasetNotEmpty: boolean = true;
+  checkAllFilter: boolean;
+  datasetRowIndex: any;
   constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _dataInjectService: DataIngestionService, private appHelper: AppHelper) {
     this.metaType = MetaTypeEnum.MetaType;
     this.isSubmit = "false"
@@ -176,27 +178,32 @@ export class DataIngestionDetailComponent implements OnInit {
     this.count = [];
 
     
-    this.txtQueryChanged
+    this.txtQueryChangedFilter
       .pipe(debounceTime(3000), distinctUntilChanged())
       .subscribe(index => {
         console.log(parseInt(index) - 1);
-        this.filterTableArray[parseInt(index) - 1].selected = "";
+        for (const i in this.filterTableArray) {
+          if (this.filterTableArray[i].hasOwnProperty("selected"))
+            this.filterTableArray[i].selected = false;
+        }
         this.moveTo = null;
-        this.checkSelected(false,null);
-        this.invalideRowNo0 = false;
-        this.invalideRowNo1 = false;
+        this.checkSelected(false, null);
+        this.invalideMinRow = false;
+        this.invalideMaxRow = false;
       });
-    this.txtQueryChanged1
+
+    this.resetTableTopBottom
       .pipe(debounceTime(3000), distinctUntilChanged())
       .subscribe(index => {
         this.moveTo = null;
-        this.checkSelected(false,null);
-        this.invalideRowNo0 = false;
-        this.invalideRowNo1 = false;
+        this.checkSelected(false, null);
+        this.invalideMinRow = false;
+        this.invalideMaxRow = false;
       });
-
-    this.invalideRowNo0 = false;
-    this.invalideRowNo1 = false;
+    this.invalideMinRow = false;
+    this.invalideMaxRow = false;
+    this.topDisabled = false;
+    this.bottomDisabled = false;
 
     this.ruleTypes = [
       { "value": "FILE-FILE", "label": "File - File" },
@@ -883,8 +890,9 @@ export class DataIngestionDetailComponent implements OnInit {
 
     this.checkSelected(false,null);
   }
+
   removeRow() {
-    let newDataList = [new FilterInfoIO];
+    let newDataList = [];
     this.selectedAllFilterRow = false;
     this.filterTableArray.forEach(selected => {
       if (!selected.selected) {
@@ -894,10 +902,13 @@ export class DataIngestionDetailComponent implements OnInit {
     if (newDataList.length > 0) {
       newDataList[0].logicalOperator = "";
     }
-    this.filterTableArray = newDataList;
 
-    this.checkSelected(false,null);
+    this.count = [];
+    this.checkSelected(false, null);
+    this.filterTableArray = newDataList;
+    this.checkAllFilter = false;
   }
+
   checkAllFilterRow() {
     if (!this.selectedAllFilterRow) {
       this.selectedAllFilterRow = true;
@@ -1270,6 +1281,7 @@ export class DataIngestionDetailComponent implements OnInit {
   }
 
   searchOption(index: any) {
+    this.datasetRowIndex = index
     this.displayDialogBox = true;
     this._commonService.getAllLatest(MetaTypeEnum.MetaType.DATASET)
       .subscribe(response => { this.onSuccessgetAllLatestDialogBox(response) },
@@ -1310,13 +1322,13 @@ export class DataIngestionDetailComponent implements OnInit {
     }
   }
 
-  submitDialogBox(index: any) {
+  submitDialogBox() {
     this.displayDialogBox = false;
     let rhsattribute = new AttributeIO()
     rhsattribute.label = this.dialogAttributeName.label;
     rhsattribute.uuid = this.dialogAttributeName.uuid;
     rhsattribute.attributeId = this.dialogAttributeName.attributeId;
-    this.filterTableArray[index].rhsAttribute = rhsattribute;
+    this.filterTableArray[this.datasetRowIndex].rhsAttribute = rhsattribute;
     this.datasetNotEmpty = true;
   }
 
@@ -1815,161 +1827,60 @@ export class DataIngestionDetailComponent implements OnInit {
     }, 1000);
   }
 
-  // onAttrRowDown(index) {
-  //   var rowTempIndex = this.filterTableArray[index];
-  //   var rowTempIndexPlus = this.filterTableArray[index + 1];
-  //   this.filterTableArray[index] = rowTempIndexPlus;
-  //   this.filterTableArray[index + 1] = rowTempIndex;
-  //   this.isSubmit = "true"
-
-  // }
-
-  // onAttrRowUp(index) {
-  //   var rowTempIndex = this.filterTableArray[index];
-  //   var rowTempIndexMines = this.filterTableArray[index - 1];
-  //   this.filterTableArray[index] = rowTempIndexMines;
-  //   this.filterTableArray[index - 1] = rowTempIndex;
-  //   this.isSubmit = "true"
-  // }
-  // dragStart(event, data) {
-  //   console.log(event)
-  //   console.log(data)
-  //   this.dragIndex = data
-  // }
-  // dragEnd(event) {
-  //   console.log(event)
-  // }
-  // drop(event, data) {
-  //   if (this.mode == 'false') {
-  //     this.dropIndex = data
-  //     // console.log(event)
-  //     // console.log(data)
-  //     var item = this.filterTableArray[this.dragIndex]
-  //     this.filterTableArray.splice(this.dragIndex, 1)
-  //     this.filterTableArray.splice(this.dropIndex, 0, item)
-  //     this.isSubmit = "true"
-  //   }
-
-  // }
-
   updateArray(new_index, range, event) {
-    // for (let i = 0; i < this.filterTableArray.length; i++) {
-    //   if (this.filterTableArray[i].selected) {
-    //     // let old_index = i;
-    //     // this.array_move(this.filterTableArray, old_index, new_index);
-    //     // if (range) {
-    //     //   this.txtQueryChanged.next(event);
-    //     // }
-    //     // else if (new_index == 0 || new_index == 1) {
-    //     //   this.filterTableArray[0].logicalOperator = "";
-    //     //   if (!this.filterTableArray[1].logicalOperator) {
-    //     //     this.filterTableArray[1].logicalOperator = this.logicalOperators[1].label;
-    //     //   }
-    //     //   this.filterTableArray[new_index].selected = "";
-    //     //   this.checkSelected(false,old_index);
-    //     // }
-    //     // else if (new_index == this.filterTableArray.length - 1) {
-    //     //   this.filterTableArray[0].logicalOperator = "";
-    //     //   this.filterTableArray[new_index].logicalOperator = this.logicalOperators[1].label;
-    //     //   this.filterTableArray[i].selected = "";
-    //     //   this.checkSelected(false,old_index);
-    //     // }
-    //     // break;
-
-    //     if (new_index < 0) {
-    //       this.invalideRowNo0 = true;
-    //       this.txtQueryChanged1.next(event);
-    //       // this.filterTableArray[i].selected = "";
-    //     }
-    //     else if (new_index >= this.filterTableArray.length) {
-    //       this.invalideRowNo1 = true;
-    //       this.txtQueryChanged1.next(event);
-    //       // this.filterTableArray[i].selected = "";
-    //     }
-    //     else if (new_index == null) { }
-    //     else {
-    //       let old_index = i;
-    //       this.array_move(this.filterTableArray, old_index, new_index);
-
-    //       if (range) {
-    //         this.txtQueryChanged.next(event);
-    //       }
-    //       else if (new_index == 0 || new_index == 1) {
-    //         this.filterTableArray[0].logicalOperator = "";
-    //         if (!this.filterTableArray[1].logicalOperator) {
-    //           this.filterTableArray[1].logicalOperator = this.logicalOperators[1].label;
-    //         }
-    //         this.filterTableArray[new_index].selected = "";
-    //         this.checkSelected(false, old_index);
-    //       }
-    //       else if (new_index == this.filterTableArray.length - 1) {
-    //         this.filterTableArray[0].logicalOperator = "";
-    //         this.filterTableArray[new_index].logicalOperator = this.logicalOperators[1].label;
-    //         this.filterTableArray[i].selected = "";
-    //         this.checkSelected(false, old_index);
-    //       }
-    //       break;
-    //     }
-    //   }
-    // }
-
-
     for (let i = 0; i < this.filterTableArray.length; i++) {
       if (this.filterTableArray[i].selected) {
 
         if (new_index < 0) {
-          this.invalideRowNo0 = true;
-          this.txtQueryChanged1.next(event);
+          this.invalideMinRow = true;
+          this.resetTableTopBottom.next(event);
         }
         else if (new_index >= this.filterTableArray.length) {
-          this.invalideRowNo1 = true;
-          this.txtQueryChanged1.next(event);
+          this.invalideMaxRow = true;
+          this.resetTableTopBottom.next(event);
         }
         else if (new_index == null) { }
         else {
           let old_index = i;
-          this.array_move(this.filterTableArray, old_index, new_index);debugger
+          this.array_move(this.filterTableArray, old_index, new_index);
           if (range) {
-            this.txtQueryChanged.next(event);
+
             if (new_index == 0 || new_index == 1) {
-              this.first(new_index, "");
+              this.filterTableArray[0].logicalOperator = "";
+              if (!this.filterTableArray[1].logicalOperator) {
+                this.filterTableArray[1].logicalOperator = this.logicalOperators[1].label;
+              }
+              this.checkSelected(false, null);
             }
             if (new_index == this.filterTableArray.length - 1) {
-              this.last(new_index, "");
+              this.filterTableArray[0].logicalOperator = "";
+              if (this.filterTableArray[new_index].logicalOperator == "") {
+                this.filterTableArray[new_index].logicalOperator = this.logicalOperators[1].label;
+              }
+              this.checkSelected(false, null);
             }
+            this.txtQueryChangedFilter.next(new_index);
           }
           else if (new_index == 0 || new_index == 1) {
-            this.first(new_index, range);
+            this.filterTableArray[0].logicalOperator = "";
+            if (!this.filterTableArray[1].logicalOperator) {
+              this.filterTableArray[1].logicalOperator = this.logicalOperators[1].label;
+            }
+            this.filterTableArray[new_index].selected = "";
+            this.checkSelected(false, null);
           }
           else if (new_index == this.filterTableArray.length - 1) {
-            this.last(new_index, range);
+            this.filterTableArray[0].logicalOperator = "";
+            if (this.filterTableArray[new_index].logicalOperator == "") {
+              this.filterTableArray[new_index].logicalOperator = this.logicalOperators[1].label;
+            }
+            this.filterTableArray[new_index].selected = "";
+            this.checkSelected(false, null);
           }
           break;
         }
       }
     }
-  }
-
-  first(new_index, range) {
-    this.filterTableArray[0].logicalOperator = "";
-    if (!this.filterTableArray[1].logicalOperator) {
-      this.filterTableArray[1].logicalOperator = this.logicalOperators[1].label;
-    }
-    if (range) {
-      this.filterTableArray[new_index].selected = "";
-    }
-    this.checkSelected(false,null);
-  }
-
-  last(new_index, range) {
-    this.filterTableArray[0].logicalOperator = "";
-    if (this.filterTableArray[new_index].logicalOperator == "") {
-      this.filterTableArray[new_index].logicalOperator = this.logicalOperators[1].label;
-    }
-    if (range) {
-      this.filterTableArray[new_index].selected = "";
-    }
-    this.checkSelected(false,null);
   }
 
   array_move(arr, old_index, new_index) {
@@ -2016,7 +1927,7 @@ export class DataIngestionDetailComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.txtQueryChanged.unsubscribe();
-    this.txtQueryChanged1.unsubscribe();
+    this.txtQueryChangedFilter.unsubscribe();
+    this.resetTableTopBottom.unsubscribe();
   }
 }

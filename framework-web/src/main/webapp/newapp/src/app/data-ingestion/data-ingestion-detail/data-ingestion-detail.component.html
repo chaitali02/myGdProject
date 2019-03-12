@@ -528,18 +528,18 @@
                             <li>
                               <div class="form-group" style="margin: 1%;" *ngIf="filterTableArray">
                                 <input type="number" class="form-control" [(ngModel)]="moveTo" min="0" max="{{filterTableArray.length}}"
-                                  name="moveto" style="border:0" placeholder="Move To" (ngModelChange)="updateArray(moveTo, 'range',$event)"
+                                  name="moveto" style="border:0" placeholder="Move To" (ngModelChange)="updateArray(moveTo-1, 'range',$event)"
                                   focus-me="true" />
                               </div>
                             </li>
 
-                            <div *ngIf="invalideRowNo0">
+                            <div *ngIf="invalideMinRow">
                               <li class="divider" style="margin: 0px;"> </li>
                               <li style="color:red">
                                 Please enter the minimum no of 0.
                               </li>
                             </div>
-                            <div *ngIf="invalideRowNo1">
+                            <div *ngIf="invalideMaxRow">
                               <li class="divider" style="margin: 0px;"> </li>
                               <li style="color:red">
                                 Please enter the minimum no of {{filterTableArray.length}}
@@ -563,7 +563,7 @@
                               <tr>
                                 <th style="width:5%;text-align: center; Vertical-align: middle;">
                                   <input [disabled]="mode == 'true'" style="width: 16px;height:16px;" type="checkbox"
-                                    [(ngModel)]="checkAll" name="checkAll" (click)="checkAllFilterRow()" />
+                                    [(ngModel)]="checkAllFilter" name="checkAllFilter" (click)="checkAllFilterRow()" />
                                 </th>
                                 <th style="text-align: center; Vertical-align: middle;width:15%;">Logical Operator</th>
                                 <th style="text-align: center;width:13%;">LHS Type</th>
@@ -756,15 +756,14 @@
                                     </p-dropdown>
                                   </div>
 
-                                  <p-dialog header="Search Attribute" [(visible)]="displayDialogBox" [modal]="true"
-                                    [responsive]="true" [width]="400" [resizable]="true" [baseZIndex]="1000"
-                                    [contentStyle]="{'height':'200px'}">
-
+                                  <p-dialog class="dialog-titlebar" header="Search Attribute" [(visible)]="displayDialogBox"
+                                      [modal]="true" [responsive]="true" [width]="430" [resizable]="true"
+                                      [contentStyle]="{'overflow':'visible'}" [style]="{'border-radius': '6px','box-shadow': '0 5px 15px rgba(0,0,0,.5)'}">
                                     <div class="form-group">
                                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Select</label>
                                       <div class="col-md-6 col-sm-6 col-xs-12">
                                         <p-dropdown [options]="dialogAttriArray" [(ngModel)]="dialogSelectName" name="dialogSelectName+{{i}}"
-                                          [style]="{'width':'200px','padding':'3px'}" [disabled]="mode == 'true'"
+                                          [style]="{'width':'235px','padding':'3px'}" [disabled]="mode == 'true'"
                                           [filter]="true" placeholder="--Select--" (onChange)="onChangeDialogAttribute() "
                                           dataKey="uuid">
                                         </p-dropdown>
@@ -776,18 +775,20 @@
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Name</label>
                                         <div class="col-md-6 col-sm-6 col-xs-12">
                                           <p-dropdown [options]="dialogAttriNameArray" [(ngModel)]="dialogAttributeName"
-                                            name="dialogAttributeName+{{i}}" [style]="{'width':'200px','padding':'3px'}"
+                                            name="dialogAttributeName+{{i}}" [style]="{'width':'235px','padding':'3px'}"
                                             [disabled]="mode == 'true'" [filter]="true" placeholder="--Select--"
                                             dataKey="uuid">
                                           </p-dropdown>
                                         </div>
                                       </div>
                                     </div>
+
                                     <p-footer>
-                                      <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3" style="padding-bottom: 10px;">
-                                        <a class="btn btn-primary" (click)="cancelDialogBox()">Cancel</a>
+                                      <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-6" style="padding: 0px 0px 13px 0px;">
+                                        <input type="button" class="btn dark btn-outline" value="Close" name="close"
+                                          style="border-radius: 4px;" (click)="cancelDialogBox()">
                                         <input type="button" class="btn btn-success" value="Submit" name="submit"
-                                          (click)="submitDialogBox(i)">
+                                          style="border-radius: 4px;" (click)="submitDialogBox()">
                                       </div>
                                     </p-footer>
                                   </p-dialog>
