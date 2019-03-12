@@ -1,7 +1,7 @@
 <div data-ng-controller="DetailDataQualityController">
   <div class="row">
     <div class="col-md-12">
-      <!-- BEGIN PAGE HEADER-->
+
       <div class="page-bar">
         <ul class="page-breadcrumb">
           <li>
@@ -14,7 +14,6 @@
           </li>
           <li>
             <span>Rule</span>
-
           </li>
         </ul>
         <div class="page-toolbar">
@@ -25,9 +24,10 @@
           </div>
         </div>
       </div>
-      <br>
       <!-- END PAGE HEADER-->
+
       <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
+
       <div options="dirOptions" type="'dq'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="dataqualitydata"
         comment-panel-directive></div>
       <div class="portlet light bordered" id="form_wizard_1">
@@ -50,14 +50,6 @@
               ng-hide="isAdd" data-ng-click="enableEdit(dataqualitydata.uuid,dataqualitydata.version)">
               <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
             </a>
-            <!-- <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
-              tooltip ng-class="(showRule==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="enableEdit(dataqualitydata.uuid,dataqualitydata.version)">
-              <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
-            </a>
-            <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="View" data-toggle="tooltip" data-placement="top"
-              tooltip ng-class="(showRule==true || isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="showview(dataqualitydata.uuid,dataqualitydata.version)">
-              <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
-            </a> -->
             <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Knowledge Graph" ng-show="isDependencyShow"
               ng-class="(showRule==false ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
               data-toggle="tooltip" data-placement="top" tooltip data-ng-click="showRuleGraph(dataqualitydata.uuid,dataqualitydata.version)">
@@ -74,9 +66,9 @@
             </a>
           </div>
         </div>
+
         <div class="portlet-body">
           <div class="form-body graph-body" ng-if="showgraphdiv">
-
             <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
             <div class="spinner" id="graphloader">
               <div class="bounce1"></div>
@@ -185,7 +177,6 @@
                     <div class="form-group">
                       <label class="control-label col-md-3">Tag</label>
                       <div class="col-md-6">
-                        <!-- <tags-input ng-model="tags" min-length="0" ng-disabled="{{mode}}"></tags-input> -->
                         <tags-input class="tag-scroll-height" ng-model="tags" ng-disabled="{{mode}}" min-length="0"
                           add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
                           <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0"
@@ -197,7 +188,6 @@
                     <div class="form-group">
                       <label class="control-label col-md-3">Desc</label>
                       <div class="col-md-6">
-                        <!--  <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="dataqualitydata.desc" > -->
                         <textarea class="form-control" ng-disabled="{{mode}}" ng-model="dataqualitydata.desc" rows="2"
                           style="resize:none;"></textarea>
                       </div>
@@ -256,8 +246,8 @@
                       </div>
                     </div>
                   </form>
-                </div>
-                <!-- End Tab1-->
+                </div><!-- End Tab1-->
+
                 <!--Start Tab2-->
                 <div class="tab-pane" id="tab2" ng-class="{'active' : continueCount == 2}">
                   <form class="form-horizontal" name="myform2" id="submit_form2" ng-submit="countContinue()" novalidate="novalidate">
@@ -291,7 +281,6 @@
                         </select>
                       </div>
                     </div>
-
 
                     <div class="portlet light bordered">
                       <div class="portlet-title">
@@ -334,6 +323,7 @@
                             </div>
                           </div>
                         </div>
+
                       </div>
                       <div class="portlet-body">
                         <div class="">
@@ -364,7 +354,6 @@
                                 <th style="width:13%;text-align:center;">Operator</th>
                                 <th style="width:13%;text-align:center;">RHS Type</th>
                                 <th style="width:180px;text-align:center;">RHS Attribute</th>
-                                <th style="width:8%;text-align:center;">Move</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -418,7 +407,7 @@
                                   <div ng-show="tabledata.islhsFormula">
                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                       <select select2 class="form-control" data-ng-model="tabledata.lhsformula"
-                                        ng-options="r as r.name for r in ruleLodeFormula track by r.uuid" ng-disabled="{{mode}}"
+                                        ng-options="r as r.name for r in allFromula track by r.uuid" ng-disabled="{{mode}}"
                                         ng-show="tabledata.islhsFormula" ng-change="onChangeFromula()">
                                       </select>
                                     </span>
@@ -433,7 +422,6 @@
                                 </td>
                                 <td>
                                   <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                    <!-- <select ng-change="selectrhsType(tabledata.rhstype.text,$index)" ng-model="tabledata.rhstype" ng-options="x as x.caption disable when ['EXISTS','NOT EXISTS','IN','NOT IN'].indexOf(tabledata.operator) !=-1?false:true && x.text =='dataset' for x in rhsType  | orderBy : 'caption'  track by x.text+x.caption" -->
                                     <select ng-change="selectrhsType(tabledata.rhstype.text,$index)" ng-model="tabledata.rhstype"
                                       ng-options="x as x.caption disable when x.disabled for x in tabledata.rhsTypes | orderBy : 'caption' track by x.text+x.caption"
                                       ng-disabled=" {{mode}}" class="form-control">
@@ -516,7 +504,7 @@
                                   <div ng-if="tabledata.isrhsFormula">
                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                       <select select2 class="form-control" name="rhsformula_{{$index}}" ng-change="selectmetrhsType()"
-                                        data-ng-model="tabledata.rhsformula" ng-options="r as r.name for r in expressionFormula track by r.uuid"
+                                        data-ng-model="tabledata.rhsformula" ng-options="r as r.name for r in allFromula track by r.uuid"
                                         ng-disabled="{{mode}}" ng-show="tabledata.isrhsFormula" required
                                         disable-validation-message="" uib-tooltip="{{myform['rhsformula'+$index].$valid ? '' : 'Please select formula'}}"
                                         tooltip-placement="top">
@@ -548,35 +536,26 @@
                                   </div>
                                   <div ng-if="tabledata.isrhsParamlist">
                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                      <!-- <div class="col-md-11" style="padding: 0px;">
-                                            <input type="text" ng-disabled="true" class="form-control" ng-model="tabledata.rhsparamlist.name" title="{{tabledata.rhsparamlist.dname}}"
-                                            required disable-validation-message="">
-                                        </div>
-                                        <div class="col-md-1" style="padding:7px 0px 0px 5px;">
-                                            <span class="fa fa-search" tooltip-placement="left" uib-tooltip="Search" ng-click="SearchAttribute($index,tabledata.rhstype.text,'rhsparamlist')"></span>
-                                        </div> -->
                                       <select select2 class="form-control" data-ng-model="tabledata.rhsparamlist"
                                         ng-options="r as r.caption for r in allparamlistParams track by r.uuid+r.attributeId"
                                         ng-disabled="{{mode}}" required disable-validation-message="" ng-change="onChangeRhsParamList()"></select>
                                     </span>
                                   </div>
                                 </td>
-                                <td>
+                                <!-- <td>
                                   <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                     <div style="text-align: center;">
                                       <a class="move-column" ng-disabled="($index == 0 || {{mode}}==true) ?true:false"
                                         ng-click="onAttrFilterRowUp($index)">
-                                        <!-- <i class="glyphicon glyphicon-arrow-up"></i> -->
                                         <i class="glyphicon glyphicon-circle-arrow-up" style="font-size:20px"></i>
                                       </a>
                                       <a class="move-column" ng-disabled="($index == filterTableArray.length-1 || {{mode}}) ? true:false"
                                         ng-click="onAttrFilterRowDown($index)">
-                                        <!-- <i class="glyphicon glyphicon-arrow-down"></i> -->
                                         <i class="glyphicon glyphicon-circle-arrow-down	" style="font-size:20px"></i>
                                       </a>
                                     </div>
                                   </span>
-                                </td>
+                                </td> -->
                               </tr>
                             </tbody>
                           </table>
@@ -595,44 +574,44 @@
                       </div>
                     </div>
                   </form>
-                </div>
-                <!--End Tab2-->
+                </div> <!--End Tab2-->
 
                 <!--Start Tab3-->
                 <div class="tab-pane" id="tab3" ng-class="{'active' : continueCount == 3}">
                   <form class="form-horizontal" name="myform3" id="submit_form3" ng-submit="countContinue()" novalidate="novalidate">
                     <div class="col-md-12">
-                       
-                        <div class="col-md-4 form-group">
-                          <label class="control-label col-md-8 col-sm-8 col-xs-12 col-md-offset-1" style="margin-top:-4px;">Duplicate Key Check
-                          </label>
-                          <div class="col-md-2 col-sm-2 col-xs-12"  style="margin-left: 7px;">
-                            <div class="mt-checkbox-inline" style="margin-top:-17px;padding-top:4px;" ng-init="dataqualitydata.duplicateKeyCheck='N'">
-                              <label class="mt-checkbox " style="margin-bottom:-1px;">
-                                <input type="checkbox" ng-model="dataqualitydata.duplicateKeyCheck" ng-disabled="{{mode}}"
-                                  ng-true-value="'Y'" ng-false-value="'N'">
-                                <span style="border: 1px solid rgba(128, 128, 128, 0.38);background-color:white;"
-                                  ng-disabled="{{mode}}"></span>
-                              </label>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-md-2 form-group"></div>
-                        <div class="col-md-6 form-group">
-                          <label class="control-label col-md-4 col-sm-6 col-xs-12" style="padding-right:0px;width:72px;padding-left:0px;margin-top:-4px;">Null Check
-                          </label>
-                          <div class="col-md-6 col-sm-6 col-xs-12">
-                            <div class="mt-checkbox-inline" style="margin-top:-17px;padding-top:4px;" ng-init="dataqualitydata.nullCheck='N'">
-                              <label class="mt-checkbox " style="margin-bottom:-1px;">
-                                <input type="checkbox" ng-model="dataqualitydata.nullCheck" ng-disabled="{{mode}} || !isSelectSoureceAttr"
-                                  ng-true-value="'Y'" ng-false-value="'N'" ng-change="changeCheckboxExecution()">
-                                <span style="border: 1px solid rgba(128, 128, 128, 0.38);background-color:white;"
-                                  ng-disabled="{{mode}} || !isSelectSoureceAttr"></span>
-                              </label>
-                            </div>
+
+                      <div class="col-md-4 form-group">
+                        <label class="control-label col-md-8 col-sm-8 col-xs-12 col-md-offset-1" style="margin-top:-4px;">Duplicate
+                          Key Check
+                        </label>
+                        <div class="col-md-2 col-sm-2 col-xs-12" style="margin-left: 7px;">
+                          <div class="mt-checkbox-inline" style="margin-top:-17px;padding-top:4px;" ng-init="dataqualitydata.duplicateKeyCheck='N'">
+                            <label class="mt-checkbox " style="margin-bottom:-1px;">
+                              <input type="checkbox" ng-model="dataqualitydata.duplicateKeyCheck" ng-disabled="{{mode}}"
+                                ng-true-value="'Y'" ng-false-value="'N'">
+                              <span style="border: 1px solid rgba(128, 128, 128, 0.38);background-color:white;"
+                                ng-disabled="{{mode}}"></span>
+                            </label>
                           </div>
                         </div>
                       </div>
+                      <div class="col-md-2 form-group"></div>
+                      <div class="col-md-6 form-group">
+                        <label class="control-label col-md-4 col-sm-6 col-xs-12" style="padding-right:0px;width:72px;padding-left:0px;margin-top:-4px;">Null Check
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <div class="mt-checkbox-inline" style="margin-top:-17px;padding-top:4px;" ng-init="dataqualitydata.nullCheck='N'">
+                            <label class="mt-checkbox " style="margin-bottom:-1px;">
+                              <input type="checkbox" ng-model="dataqualitydata.nullCheck" ng-disabled="{{mode}} || !isSelectSoureceAttr"
+                                ng-true-value="'Y'" ng-false-value="'N'" ng-change="changeCheckboxExecution()">
+                              <span style="border: 1px solid rgba(128, 128, 128, 0.38);background-color:white;"
+                                ng-disabled="{{mode}} || !isSelectSoureceAttr"></span>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                     <!-- <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Duplicate Key Check</label>
                       <div class="col-md-6">
@@ -701,7 +680,7 @@
                         </div>
                       </div>
                     </div>
-                    
+
                     <div class="form-group">
                       <label class="control-label col-md-3">Data Type Check</label>
                       <div class="col-md-6">
@@ -712,12 +691,12 @@
                     <div class="form-group">
                       <label class="control-label col-md-3">Date Format Check</label>
                       <div class=" selectSimulationType col-md-6">
-                          <!-- || selectType -->
+                        <!-- || selectType -->
                         <select ng-disabled="{{mode}}  || !isSelectSoureceAttr" title="Type" ng-model="selectdatefromate"
                           ng-options="x for x in datefromate" class="form-control"></select>
                       </div>
                     </div>
-                   
+
                     <div class="form-group">
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Custom Format Check</label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
@@ -762,28 +741,47 @@
                         </div>
                       </div>
                     </div>
-                    <div class="form-group">
-                      <label class="control-label col-md-3 col-sm-3 col-xs-12">Ref Integrity Check</label>
-                      <div class="col-md-3 col-sm-3 col-xs-12">
-                        <!-- style="width:21%; -->
-                        <select select2 title="Name" data-toggle="tooltip" data-placement="top" tooltip ng-model="selectrefIntegrityCheck"
+                    <div class="col-md-12">
+                      <div class="col-md-6 form-group">
+                        <label class="control-label col-md-6 col-sm-6 col-xs-12">Ref Integrity Type
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <select class="form-control" data-ng-model="selectedRIType" ng-options="r for r in refIntegrityTypes"
+                          ng-disabled="{{mode}} || !isSelectSoureceAttr" ng-change="OnChangeRIType()">
+                          <option value="">-Select-</option>
+                        </select>
+                        </div>
+                      </div>
+    
+                      <div class="col-md-6 form-group">
+                        <label class="control-label col-md-2 col-sm-6 col-xs-12" style="padding-right: 0px;width:60px;padding-left:0px;">Name
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <select select2 title="Name" data-toggle="tooltip" data-placement="top" tooltip ng-model="selectrefIntegrityCheck"
                           ng-options="x as x.name for x in refIntegrityCheck track by x.uuid" ng-change="onRefIntegrityCheck()"
                           class="form-control" ng-disabled="{{mode}} || !isSelectSoureceAttr">
+                          <option value="">-Select-</option>
                         </select>
-                      </div>
-
-                      <div class="col-md-3 col-sm-3 col-xs-12">
-                        <select select2 class="form-control" title="Attribute" data-toggle="tooltip" data-placement="top"
-                          tooltip data-ng-model="refIntegrityCheckoption" ng-options="r as r.name for r in refIntegrityCheckoptions  track by r.uuid+ r.attributeId"
-                          ng-disabled="{{mode}} || !isSelectSoureceAttr">
-                        </select>
+                        </div>
                       </div>
                     </div>
                     <div class="form-group">
+                      
+                      <label class="control-label col-md-3">Ref Integrity Attribute</label>
+                      <div class="col-md-6">
+                        <select select2 class="form-control" title="Attribute" data-toggle="tooltip" data-placement="top"
+                          tooltip data-ng-model="refIntegrityCheckoption" ng-options="r as r.name for r in refIntegrityCheckoptions  track by r.uuid+ r.attributeId"
+                          ng-disabled="{{mode}} || !isSelectSoureceAttr">
+                          <option value="">-Select-</option>
+                        </select>
+                      </div>
+                    </div>
+                   
+                    <div class="form-group">
                       <label class="control-label col-md-3">Blank Space Check</label>
                       <div class="col-md-6">
-                        <select ng-disabled="{{mode}} || !isSelectSoureceAttr" ng-model="dataqualitydata.blankSpaceCheck" ng-options="x for x in blankSpaceTypes | orderBy"
-                          class="form-control" ng-change="OnselectType()">
+                        <select ng-disabled="{{mode}} || !isSelectSoureceAttr" ng-model="dataqualitydata.blankSpaceCheck"
+                          ng-options="x for x in blankSpaceTypes | orderBy" class="form-control" ng-change="OnselectType()">
                           <option value="">-Select-</option>
                         </select>
                       </div>
@@ -791,21 +789,23 @@
                     <div class="form-group">
                       <label class="control-label col-md-3">Domain Check</label>
                       <div class="col-md-6">
-                        <select select2 ng-disabled="{{mode}} || !isSelectSoureceAttr" ng-model="selectedDomain" ng-options="x as x.name for x in allDomain | orderBy track by x.uuid"
-                          class="form-control" ng-change="OnselectType()">
+                        <select select2 ng-disabled="{{mode}} || !isSelectSoureceAttr" ng-model="selectedDomain"
+                          ng-options="x as x.name for x in allDomain | orderBy track by x.uuid" class="form-control"
+                          ng-change="OnselectType()">
                           <option value="">-Select-</option>
                         </select>
                       </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="control-label col-md-3">Expression Check</label>
+                      <div class="col-md-6">
+                        <select select2 ng-disabled="{{mode}} || !isSelectSoureceAttr" ng-model="selectedExpression"
+                          ng-options="x as x.name for x in allExpress | orderBy track by x.uuid" class="form-control"
+                          ng-change="OnselectType()">
+                          <option value="">-Select-</option>
+                        </select>
                       </div>
-                      <div class="form-group">
-                        <label class="control-label col-md-3">Expression Check</label>
-                        <div class="col-md-6">
-                          <select select2 ng-disabled="{{mode}} || !isSelectSoureceAttr" ng-model="selectedExpression" ng-options="x as x.name for x in allExpress | orderBy track by x.uuid"
-                            class="form-control" ng-change="OnselectType()">
-                            <option value="">-Select-</option>
-                          </select>
-                        </div>
-                      </div>
+                    </div>
                     <div class="form-group">
                       <label class="control-label col-md-3">Threshold Type</label>
                       <div class="col-md-6">
@@ -882,23 +882,17 @@
                       </div>
                     </div>
                   </form>
-                </div>
-                <!-- End Tab4 -->
-              </div>
-              <!--End tab-content-->
-            </div>
-            <!--End form-body-->
+                </div> <!-- End Tab4 -->
+              </div><!--End tab-content-->
+            </div><!--End form-body-->
             <div class="form-actions">
-              <!-- <a href="javascript:;" class="btn green button-submit" style="display: none;"> Submit
-                <i class="fa fa-check"></i>
-              </a>-->
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <!--End Row-->
+  </div><!--End Row-->
+
   <div id="searchAttr" class="modal fade bs-modal-lg in" aria-hidden="true" style="display: none;">
     <div class="modal-dialog" style="width:35%;">
       <div class="modal-content">
