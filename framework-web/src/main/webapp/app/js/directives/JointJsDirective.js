@@ -1109,7 +1109,7 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
                      var url=$location.absUrl().split("app")[0];
                      $http.get(url+'common/getLatestByUuid?action=view&uuid='+modelData.dependsOn.ref.uuid+'&type='+modelData.dependsOn.ref.type).then(function (res) {
                        state = {state : dagMetaDataService.elementDefs[modelData.dependsOn.ref.type].state, params : {id :modelData.dependsOn.ref.uuid,name:modelData.dependsOn.ref.name,version :res.data.version,type:modelData.dependsOn.ref.type,mode:true, returnBack: true}};
-                       execStates= {state : dagMetaDataService.elementDefs[type+"exec"].detailState, params : {id :ref.uuid,version:res.data.version,name:ref.name,type:ref.type+"exec",mode:true, returnBack: true}};
+                       execStates= {state : dagMetaDataService.elementDefs[type+"exec"].detailState, params : {id :ref.uuid,version:ref.version,name:ref.name,type:ref.type+"exec",mode:true, returnBack: true}};
                        iconMenu(localPoint.x, localPoint.y, JSON.stringify(state),JSON.stringify(execStates),JSON.stringify(resultparams));
                      });
                    }
@@ -1194,7 +1194,7 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
                  .attr('y', function(d, i){ return y + (i * height); })
                  .attr('onclick', function(d){
                  if(d.type == 'results'){
-                   return 'showResult('+resultParams+')'
+                   return 'showResult('+resultParams+','+url+','+execUrl+')'
                  }
                  else if(d.type =='logs'){
                   return 'showLogs('+execUrl+')'
@@ -1219,7 +1219,7 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
                    .text(function(d){ return d.title; })
                    .attr('onclick', function(d){
                    if(d.type == 'results'){
-                     return 'showResult('+resultParams+')'
+                     return 'showResult('+resultParams+','+url+','+execUrl+')'
                    }
                    else if(d.type =='logs'){
                     return 'showLogs('+execUrl+')'
@@ -1526,6 +1526,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
       }
       if(["dq"].indexOf(params.elementType) !=-1 && execUrl !=null){
         execUrl.state=dagMetaDataService.elementDefs[params.elementType.toLowerCase()+"exec"].resultState2
+        execUrl.params.type="dqexec"
         window.navigateTo(JSON.stringify(execUrl));
         return false;
       }
@@ -2008,7 +2009,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          $('#paper svg').addClass('view-mode');
          d3.selectAll('.joint-element .body')
          .on('contextmenu', function(){
-           debugger
+           
            d3.event.preventDefault();
            d3.event.stopPropagation();
            var vm = this;
@@ -2123,6 +2124,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
               //  }
              }
              iconMenu.resetItems(iconMenuItems);
+             
              var apis = {
                dq : {name:'dataqual', label: 'DataQual'},
                dqgroup : {name:'dataQualGroup', label: 'DataQualGroup',url :'dataqual/getdqExecBydqGroupExec?'},
@@ -2147,8 +2149,10 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
  
              var resultparams = {id:ref.uuid,name:cell.attributes['model-data'].name,elementType:type,version:ref.version,type: apis[type].name ,typeLabel:apis[type].label,url:apis[type].url, ref :ref,parentStage:parentStage,taskId:taskId,operator:operator};
              var url=$location.absUrl().split("app")[0];
+             
              execStates={state : dagMetaDataService.elementDefs[ref.type.toLowerCase()].detailState, params : {id :ref.uuid,version:ref.version || " ",name:ref.name,type:ref.type,mode:true, returnBack: true}};
              $http.get(url+'metadata/getMetaIdByExecId?action=view&execUuid='+ref.uuid+'&execVersion='+ref.version+'&type='+ref.type).then(function (res) {
+              
               state = {state : dagMetaDataService.elementDefs[res.data.type].state, params : {id :res.data.uuid,version:res.data.version || " ",name:ref.name,type:ref.type,mode:true, returnBack: true}};
                iconMenu(localPoint.x, localPoint.y, JSON.stringify(state),JSON.stringify(execStates),JSON.stringify(resultparams));
              });
@@ -2156,7 +2160,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
            else {
              var url=$location.absUrl().split("app")[0];
               $http.get(url+'common/getLatestByUuid?action=view&uuid='+ref.uuid+'&type='+ref.type).then(function (res) {
-              execStates= {state : dagMetaDataService.elementDefs[type].detailState, params : {id :ref.uuid,version:res.data.version,name:ref.name,type:ref.type,mode:true, returnBack: true}};
+                execStates= {state : dagMetaDataService.elementDefs[type].detailState, params : {id :ref.uuid,version:res.data.version,name:ref.name,type:ref.type,mode:true, returnBack: true}};
               state = {state : dagMetaDataService.elementDefs[type].state, params : {id :ref.uuid,version:res.data.version,name:ref.name,type:ref.type,mode:true, returnBack: true}};
              iconMenu(localPoint.x, localPoint.y, JSON.stringify(state),JSON.stringify(execStates));
              });
