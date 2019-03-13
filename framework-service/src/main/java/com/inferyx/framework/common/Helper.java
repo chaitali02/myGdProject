@@ -389,7 +389,7 @@ public class Helper {
 		case organization : return Organization.class;
 		case dashboardExec : return DashboardExec.class;
 		case rule2 : return Rule2.class;
-		case rule2Exec : return Rule2Exec.class;
+		case rule2Exec : return RuleExec.class;
 		case domain: return AttributeDomain.class;
 		default: return null;
 		}
@@ -909,7 +909,7 @@ public class Helper {
 		case ingest : return MetaType.ingestExec;
 		case ingestgroup : return MetaType.ingestgroupExec;
 		case dashboard : return MetaType.dashboardExec;
-		case rule2 : return MetaType.rule2Exec;
+		case rule2 : return MetaType.ruleExec;
 		default : return null;
 		}
 	}
@@ -1009,7 +1009,7 @@ public class Helper {
 		case ingestgroupExec : return new IngestGroupExec();
 		case reportExec : return new ReportExec();
 		case dashboardExec : return new DashboardExec();
-		case rule2Exec : return new Rule2Exec();
+		case rule2Exec : return new RuleExec();
 		default : return null;
 		}
 	}

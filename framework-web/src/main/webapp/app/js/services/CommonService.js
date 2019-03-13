@@ -816,6 +816,9 @@
       else  if(type=='recon'){
         url = "metadata/getRcDatapod?type=" + type+'&action=view';
       } 
+      else  if(type=='rule2'){
+        url = "metadata/getRuleDatapod?type=" + type+'&action=view&resultType='+resultType;
+      } 
       CommonFactory.httpGet(url).then(function(response){onSuccess(response.data)},function(response){onError(response.data)});
       var onSuccess = function(response) {
         var columnDetails=[];

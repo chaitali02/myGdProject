@@ -1122,6 +1122,14 @@ public class MetadataController {
 			@RequestParam(value = "resultType", required = false,defaultValue="null") String resultType) throws FileNotFoundException, IOException {
 		return metadataServiceImpl.getDatapodByType(MetaType.dq.toString(),resultType);
 	}
+
+	@RequestMapping(value = "/getRuleDatapod",method=RequestMethod.GET)
+	public @ResponseBody Datapod getRuleDatapod(
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "resultType", required = false,defaultValue="null") String resultType) throws FileNotFoundException, IOException {
+		return metadataServiceImpl.getDatapodByType(MetaType.rule2.toString(),resultType);
+	}
 	
 	@RequestMapping(value = "/getGroupsByOrg",method=RequestMethod.GET)
 	public @ResponseBody List<Group> getGroupsByOrg(

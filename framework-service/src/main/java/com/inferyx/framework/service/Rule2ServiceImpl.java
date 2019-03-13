@@ -832,7 +832,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 		// ruleExec.setExec(rule2Operator.generateSql(rule2, refKeyMap, otherParams,
 		// usedRefKeySet, ruleExec.getExecParams(), runMode));
 		listSql = rule2Operator.generateDetailSql(rule2,withSql,detailSelectSql,refKeyMap, otherParams, usedRefKeySet,
-				new ExecParams(), runMode);
+				new ExecParams(), runMode,ruleExec);
         String detailsql=listSql.get(0);
 		
 		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(rule2Info.getRule_result_details(), null,
@@ -956,7 +956,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 	
 	public HttpServletResponse download(String ruleExecUUID, String ruleExecVersion, String format, String download,
 			int offset, int limit, HttpServletResponse response, int rowLimit, String sortBy, String order,
-			String requestId, RunMode runMode) throws Exception {
+			String requestId, RunMode runMode,String resultType) throws Exception {
 
 		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
 		if (rowLimit > maxRows) {
@@ -965,9 +965,12 @@ public class Rule2ServiceImpl extends RuleTemplate {
 					"Requested rows exceeded the limit of " + maxRows, null);
 			throw new RuntimeException("Requested rows exceeded the limit of " + maxRows);
 		}
-
-		List<Map<String, Object>> results = getRule2Results(ruleExecUUID, ruleExecVersion, offset, limit, sortBy, order,
-				requestId, runMode);
+		List<Map<String, Object>> results = null;
+		if(resultType == null || (resultType != null && resultType.equalsIgnoreCase("summary"))) {
+			results = getResultSummary(ruleExecUUID, ruleExecVersion, offset, rowLimit, sortBy, order, requestId, runMode);
+		} else {
+			results = getResultDetail(ruleExecUUID, ruleExecVersion, offset, rowLimit, sortBy, order, requestId, runMode);
+		}
 		response = commonServiceImpl.download(format, response, runMode, results,
 				new MetaIdentifierHolder(new MetaIdentifier(MetaType.ruleExec, ruleExecUUID, ruleExecVersion)));
 		return response;
@@ -1111,7 +1114,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 		exec = execFactory.getExecutor(execContext.toString());
 		appUuid = commonServiceImpl.getApp().getUuid();
 		List<String> listSql=rule2Operator.generateDetailSql(rule2, null, null, null,
-				null, null, new ExecParams(), runMode);
+				null, null, new ExecParams(), runMode,ruleExec);
 		data = exec.executeAndFetch(listSql.get(0), appUuid);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
 				| NoSuchMethodException | SecurityException | NullPointerException | ParseException | IOException e) {
@@ -1412,6 +1415,8 @@ public class Rule2ServiceImpl extends RuleTemplate {
 			String sortBy, String order, String requestId, RunMode runMode) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException, IOException {
 		RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.ruleExec.toString(), "N");
 		try {
+			List<Map<String, Object>> data = new ArrayList<>();
+
 			Datapod summaryDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
 					Helper.getPropertyValue("framework.rule2.summary.uuid"), null, MetaType.datapod.toString(), "N");
 
@@ -1419,9 +1424,9 @@ public class Rule2ServiceImpl extends RuleTemplate {
 			offset = offset + 1;
 			dataStoreServiceImpl.setRunMode(runMode);
 			DataStore datastore = dataStoreServiceImpl.findDataStoreByMeta(summaryDp.getUuid(), summaryDp.getVersion());
-
-			return dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId,
-					offset, limit, sortBy, order, ruleExec.getVersion());
+            data=dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId,
+					offset, limit, sortBy, order,ruleExec.getVersion());
+			return data;
 //			Datasource summaryDpDs = commonServiceImpl.getDatasourceByDatapod(summaryDp);
 //
 //			String tableName = getTableName(summaryDpDs, summaryDp, ruleExec, runMode);
@@ -1464,5 +1469,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 			throw new RuntimeException((message != null) ? message : "Can not fetch summary.");
 		}
 	}
+	
+
 
 }

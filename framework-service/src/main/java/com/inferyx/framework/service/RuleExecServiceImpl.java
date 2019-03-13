@@ -304,11 +304,11 @@ public class RuleExecServiceImpl extends BaseRuleExecTemplate {
 		/*String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();*/
 		//RuleExec ruleExec = iRuleExecDao.findOneByUuidAndVersion(appUuid, execUuid, execVersion);
 		RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.ruleExec.toString());
-		MetaIdentifier mi = new MetaIdentifier();
-		mi.setType(MetaType.rule);
-		mi.setUuid(ruleExec.getDependsOn().getRef().getUuid());
-		mi.setVersion(ruleExec.getDependsOn().getRef().getVersion());
-		return mi;
+//		MetaIdentifier mi = new MetaIdentifier();
+//		mi.setType(MetaType.rule);
+//		mi.setUuid(ruleExec.getDependsOn().getRef().getUuid());
+//		mi.setVersion(ruleExec.getDependsOn().getRef().getVersion());
+		return ruleExec.getDependsOn().getRef();
 	}
 	
 	public ExecStatsHolder getNumRowsbyExec(String execUuid, String execVersion) throws Exception {

@@ -2406,6 +2406,18 @@ public class MetadataServiceImpl {
 			}
 			return dp;
 		}
+		else if(type.equalsIgnoreCase(MetaType.rule2.toString())){
+			Datapod dp =null;
+			if(resultType.equals("summary")) {
+				dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+						Helper.getPropertyValue("framework.rule2.summary.uuid"), null, MetaType.datapod.toString());
+			}
+			else if(resultType.equals("detail")) {
+				dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+						Helper.getPropertyValue("framework.rule2.detail.uuid"), null, MetaType.datapod.toString());
+			}
+			return dp;
+		}
 		return null;
 	}
 

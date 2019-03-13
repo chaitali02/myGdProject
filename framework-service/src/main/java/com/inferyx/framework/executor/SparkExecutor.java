@@ -583,19 +583,9 @@ public class SparkExecutor<T> implements IExecutor {
 	 */
 	public Boolean registerTempTable(Dataset<Row> dfTemp, String tableName) throws IOException {
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
-		ConnectionHolder conHolder = connector.getConnection();
-		Object obj = conHolder.getStmtObject();
-		SparkSession sparkSession;
-		if (obj instanceof SparkSession) {
-			sparkSession = (SparkSession) conHolder.getStmtObject();
-			// dfTemp.registerTempTable("temp");
-			// DataFrame df = hiveContext.sql("Select Row_Number() Over() as rownum,* from
-			// temp");
-			dfTemp.persist(StorageLevel.MEMORY_AND_DISK());
-			sparkSession.sqlContext().registerDataFrameAsTable(dfTemp, tableName);
-			// dfTemp.cache();
-			// hiveContext.registerDataFrameAsTable(dfTemp, tableName);
-		}
+		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();;
+		dfTemp.persist(StorageLevel.MEMORY_AND_DISK());
+		sparkSession.sqlContext().registerDataFrameAsTable(dfTemp, tableName);
 		return true;
 	}
 

@@ -251,7 +251,7 @@
                           <select class="form-control" name="ParamType" ng-disabled="isModelDisable" select2 ng-change="onChangeParamType()" data-ng-model="$parent.selectParamType" ng-options="r  for r in paramTypes">
                             <option value="">-Select-</option>
                           </select>
-                          <input type="hidden" name="ParamType" ng-model="selectParamType" required>
+                          <input type="hidden" name="ParamType" ng-model="selectParamType">
                         </div>
                       </div>
                     </div>
@@ -294,7 +294,7 @@
                           <select class="form-control" select2  name="paramlistdata1"  data-ng-model="paramlistdata1" ng-options="r as r.name for r in allParamList">
                               <option value="">-Select-</option>
                           </select>
-                          <input type="hidden" name="paramlistdata1" ng-model="paramlistdata1" required>
+                          <input type="hidden" name="paramlistdata1" ng-model="paramlistdata1" >
                         </div>
                       </div>
                     </div>

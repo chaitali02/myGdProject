@@ -188,6 +188,17 @@
                                     </div>
                                 </div>
 
+                                <div class="form-group">
+                                    <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Summary Exec
+                                    </label>
+                                    <div class="col-md-6">
+                                        <textarea class="form-control" ng-disabled="{{mode}}" ng-model="execData.summaryExec" rows="8" style="resize:none;"></textarea>
+                                    </div>
+                                    <div class="col-md-1" tooltip-placement="left" uib-tooltip="Show Query" style="padding:0px;" ng-click="showSqlFormaterSummary()">
+                                        <i class="fa fa-external-link"></i>
+                                    </div>
+                                </div>
+
                                 <div class="form-group" style="padding-top:10px;">
                                     <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                                         <a href="javascript:;" ng-click="close()" class="btn btn-primary">Cancel</a>

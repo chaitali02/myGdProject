@@ -75,6 +75,8 @@ import com.inferyx.framework.factory.ExecutorFactory;
 
 @Service
 public class TaskServiceImpl implements Callable<String> {	
+
+	static final Logger logger = Logger.getLogger(TaskServiceImpl.class);
 	
 	private DagExecServiceImpl dagExecServiceImpl;
 	private CommonServiceImpl<?> commonServiceImpl;
@@ -134,8 +136,25 @@ public class TaskServiceImpl implements Callable<String> {
 	private IngestGroupServiceImpl ingestGroupServiceImpl;
 	private ReportServiceImpl reportServiceImpl;
 	private DashboardServiceImpl dashboardServiceImpl;
+	private Rule2ServiceImpl rule2ServiceImpl;
 	
-	static final Logger logger = Logger.getLogger(TaskServiceImpl.class);
+	/**
+	 * @Ganesh
+	 *
+	 * @return the rule2ServiceImpl
+	 */
+	public Rule2ServiceImpl getRule2ServiceImpl() {
+		return rule2ServiceImpl;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param rule2ServiceImpl the rule2ServiceImpl to set
+	 */
+	public void setRule2ServiceImpl(Rule2ServiceImpl rule2ServiceImpl) {
+		this.rule2ServiceImpl = rule2ServiceImpl;
+	}
 	
 	/**
 	 * @Ganesh
@@ -730,7 +749,7 @@ public class TaskServiceImpl implements Callable<String> {
 				throw e;
 			}
 		} else if (operatorInfo.get(0).getRef()!=null && operatorInfo.get(0).getRef().getType().equals(MetaType.rule)) {
-			logger.info("Going to ruleServiceImpl.execute");
+			logger.info("Going to ruleServiceImpl.prepareRule");
 			try {
 				int i = 0;
 				ExecParams execParams2 = commonServiceImpl.getExecParams(taskExec.getOperators().get(0));
@@ -923,27 +942,81 @@ public class TaskServiceImpl implements Callable<String> {
 				e.printStackTrace();
 				throw e;
 			}
-		} else if (operatorInfo.get(0).getRef()!=null && operatorInfo.get(0).getRef().getType().equals(MetaType.report)) {
+		} else if (operatorInfo.get(0).getRef() != null
+				&& operatorInfo.get(0).getRef().getType().equals(MetaType.report)) {
 			logger.info("Going to reportServiceImpl.execute");
 			try {
-				ReportExec reportExec = (ReportExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getVersion(), MetaType.reportExec.toString());
-				reportExec = reportServiceImpl.execute(reportExec.getUuid(), reportExec.getVersion(), execParams, runMode);
-				
-				if (Helper.getLatestStatus(reportExec.getStatusList()).equals(new Status(Status.Stage.FAILED, new Date()))) {
+				ReportExec reportExec = (ReportExec) commonServiceImpl.getOneByUuidAndVersion(
+						taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid(),
+						taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getVersion(),
+						MetaType.reportExec.toString());
+				reportExec = reportServiceImpl.execute(reportExec.getUuid(), reportExec.getVersion(), execParams,
+						runMode);
+
+				if (Helper.getLatestStatus(reportExec.getStatusList())
+						.equals(new Status(Status.Stage.FAILED, new Date()))) {
 					throw new Exception("Report rule execution FAILED.");
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 				throw e;
 			}
-		}  else if (operatorInfo.get(0).getRef()!=null && operatorInfo.get(0).getRef().getType().equals(MetaType.dashboard)) {
+		} else if (operatorInfo.get(0).getRef() != null
+				&& operatorInfo.get(0).getRef().getType().equals(MetaType.dashboard)) {
 			logger.info("Going to dashboardServiceImpl.execute");
 			try {
-				DashboardExec dashboardExec = (DashboardExec) commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getVersion(), MetaType.dashboardExec.toString());
-				dashboardExec = dashboardServiceImpl.execute(dashboardExec.getUuid(), dashboardExec.getVersion(), execParams, runMode);
-				
-				if (Helper.getLatestStatus(dashboardExec.getStatusList()).equals(new Status(Status.Stage.FAILED, new Date()))) {
+				DashboardExec dashboardExec = (DashboardExec) commonServiceImpl.getOneByUuidAndVersion(
+						taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid(),
+						taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getVersion(),
+						MetaType.dashboardExec.toString());
+				dashboardExec = dashboardServiceImpl.execute(dashboardExec.getUuid(), dashboardExec.getVersion(),
+						execParams, runMode);
+
+				if (Helper.getLatestStatus(dashboardExec.getStatusList())
+						.equals(new Status(Status.Stage.FAILED, new Date()))) {
 					throw new Exception("Dashboard execution FAILED.");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw e;
+			}
+		} else if (operatorInfo.get(0).getRef() != null
+				&& operatorInfo.get(0).getRef().getType().equals(MetaType.rule2)) {
+			logger.info("Going to rule2ServiceImpl.prepareRule2");
+			try {
+				int i = 0;
+				ExecParams execParams2 = commonServiceImpl.getExecParams(taskExec.getOperators().get(0));
+				for (MetaIdentifierHolder operatorInfo : taskExec.getOperators().get(0).getOperatorInfo()) {
+					RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(
+							operatorInfo.getRef().getUuid(), operatorInfo.getRef().getVersion(),
+							MetaType.ruleExec.toString());
+					internalVarMap.put("$CURRENT_TASK_OBJ_VERSION", ruleExec.getVersion());
+					execParams.setInternalVarMap(internalVarMap);
+					ExecParams execParams3 = new ExecParams();
+					// execParams3.setInternalVarMap(execParams.getInternalVarMap());
+					execParams3.setOtherParams(execParams.getOtherParams());
+					execParams3.setRefKeyList(execParams.getRefKeyList());
+
+					if (execParams2 != null && execParams2.getParamInfo() != null) {
+						List<ParamSetHolder> paramInfo = new ArrayList<>();
+						paramInfo.add(execParams2.getParamInfo().get(i));
+						execParams3.setParamInfo(paramInfo);
+						execParams3.setCurrParamSet(execParams2.getParamInfo().get(i));
+					} else if (execParams2 != null && execParams2.getParamListInfo() != null) {
+						List<ParamListHolder> paramListInfo = new ArrayList<>();
+						paramListInfo.add(execParams2.getParamListInfo().get(i));
+						execParams3.setParamListInfo(paramListInfo);
+						execParams3.setParamListHolder(execParams2.getParamListInfo().get(i));
+					}
+					ruleExec.setExecParams(execParams3);
+					commonServiceImpl.save(MetaType.ruleExec.toString(), ruleExec);
+					rule2ServiceImpl.prepareRule2(operatorInfo.getRef().getUuid(), operatorInfo.getRef().getVersion(),
+							execParams3, ruleExec, RunMode.ONLINE);
+					if (Helper.getLatestStatus(ruleExec.getStatusList())
+							.equals(new Status(Status.Stage.FAILED, new Date()))) {
+						throw new Exception("Rule2 execution FAILED.");
+					}
+					i++;
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

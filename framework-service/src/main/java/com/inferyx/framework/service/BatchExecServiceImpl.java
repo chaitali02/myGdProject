@@ -140,6 +140,8 @@ import com.inferyx.framework.factory.ExecutorFactory;
 		private ReportServiceImpl reportServiceImpl;
 		@Autowired
 		private DashboardServiceImpl dashboardServiceImpl;
+		@Autowired
+		private Rule2ServiceImpl rule2ServiceImpl;
 		
 		static final Logger logger = Logger.getLogger(BatchExecServiceImpl.class);
 	
@@ -687,6 +689,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 			indivStageExe.setIngestGroupServiceImpl(ingestGroupServiceImpl);
 			indivStageExe.setReportServiceImpl(reportServiceImpl);
 			indivStageExe.setDashboardServiceImpl(dashboardServiceImpl);
+			indivStageExe.setRule2ServiceImpl(rule2ServiceImpl);
 			FutureTask<String> futureTask = new FutureTask<String>(indivStageExe);
 			stageExecutor.execute(futureTask);
 			logger.info("Thread watch : DagExec : " + dagExec.getUuid() + " StageExec : " + indvStg.getStageId() + " started >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");

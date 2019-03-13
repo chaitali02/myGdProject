@@ -44,10 +44,7 @@
               data-ng-click="showExecPage()" style="height:16px;font-size:16px;">
               <span class="fa fa-home" style="display: block;margin: 2px auto;color:white;"></span>
             </a>
-            <!-- <a title="Show Details" data-toggle="tooltip" data-placement="top" tooltip ng-class="showExec==true? 'currentpage':'notcurrentpage'"
-              data-ng-click="showExecPage()" style="height:16px;">
-              <span class="glyphicon glyphicon-file" style="color:white;"></span>
-            </a> -->
+        
             <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-class="showExec==false? 'currentpage':'notcurrentpage'"
               data-ng-click="showGraph(execData.uuid,execData.version)" style="height:14px;">
               <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
@@ -190,6 +187,16 @@
                     <textarea class="form-control" ng-disabled="{{mode}}" ng-model="execData.exec" rows="8" style="resize:none;"></textarea>
                   </div>
                   <div class="col-md-1" tooltip-placement="left" uib-tooltip="Show Query" style="padding:0px;" ng-click="showSqlFormater()">
+                    <i class="fa fa-external-link"></i>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Summary Exec
+                  </label>
+                  <div class="col-md-6">
+                    <textarea class="form-control" ng-disabled="{{mode}}" ng-model="execData.summaryExec" rows="8" style="resize:none;"></textarea>
+                  </div>
+                  <div class="col-md-1" tooltip-placement="left" uib-tooltip="Show Query" style="padding:0px;" ng-click="showSqlFormaterSummary()">
                     <i class="fa fa-external-link"></i>
                   </div>
                 </div>

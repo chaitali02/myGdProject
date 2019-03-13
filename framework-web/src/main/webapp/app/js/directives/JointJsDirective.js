@@ -1097,6 +1097,7 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
                      map : {name:'map', label: 'Map'},
                      model : {name:'model', label: 'Model'},
                      rule : {name:'rule', label: 'Rule'},
+                     rule : {name:'rule2', label: 'Rule2'},
                      rulegroup : {name:'rulegroup', label: 'RuleGroup',url:'rule/getRuleExecByRGExec?'},
                      recon : {name:'recon', label: 'Recon'},
                      recongroup : {name:'recongroup', label: 'ReconGroup',url:'recon/getReconExecByRGExec?'},
@@ -1310,6 +1311,9 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
                  api = 'profile';
                  break;
                  case 'rule':
+                   api = 'rule';
+                   break;
+                  case 'rule2':
                    api = 'rule';
                    break;
                  case 'rulegroup':
@@ -1527,6 +1531,12 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
       if(["dq"].indexOf(params.elementType) !=-1 && execUrl !=null){
         execUrl.state=dagMetaDataService.elementDefs[params.elementType.toLowerCase()+"exec"].resultState2
         execUrl.params.type="dqexec"
+        window.navigateTo(JSON.stringify(execUrl));
+        return false;
+      }
+      if(["rule2"].indexOf(params.elementType) !=-1 && execUrl !=null){
+        execUrl.state=dagMetaDataService.elementDefs[params.elementType.toLowerCase()+"exec"].resultState2
+        execUrl.params.type="ruleexec"
         window.navigateTo(JSON.stringify(execUrl));
         return false;
       }
@@ -2333,7 +2343,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         });
         var type = $scope.popupModel.modelData.operators[0].operatorInfo[0].ref.type;
         var typeParamListArray=["simulate","operator","operatorexec","simulateexec"];
-        var typeParamSetArray=["train","rule","ruleexec",'trainexec','report','reportexec'];
+        var typeParamSetArray=["train","rule",'rule2',"ruleexec",'trainexec','report','reportexec'];
         var typeParamsArray=[]//["dashboard",'dashboardexec'];
         if(typeParamSetArray.indexOf(type.toLowerCase()) !=-1 && ($scope.paramsetdata ||  $scope.popupModel.selectedType)){
           $scope.isExecParamSet=false;
@@ -3127,7 +3137,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         objDetail.version="";
         var type = $scope.popupModel.modelData.operators[0].operatorInfo[0].ref.type;
         objDetail.type=type;
-        var typeParamSetArray=["train","rule",'report'];
+        var typeParamSetArray=["train","rule",'rule2','report'];
         var typeParamListArray=["simulate","operator"];
         var typeParamArray=[];//['dashboard'];
         if(typeParamSetArray.indexOf(type) != -1){

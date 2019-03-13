@@ -1636,7 +1636,6 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
 DataQualityModule.controller('Result2DQController', function ($http, dagMetaDataService, $state, $timeout, $filter, $stateParams, $location, $rootScope, $scope, NgTableParams, DataqulityService, uuid2, CommonService, privilegeSvc, CF_DOWNLOAD) {
 
   $scope.select = $stateParams.type;
-  
   $scope.type = {
     text: $scope.select == 'dqgroupexec' ? 'dqgroup' : 'dq'
   };
@@ -1667,7 +1666,7 @@ DataQualityModule.controller('Result2DQController', function ($http, dagMetaData
   $scope.currentPage = 1;
   $scope.pageSize = 100;
   $scope.paginationPageSizes = [10, 25, 50, 75, 100],
-    $scope.maxSize = 5;
+  $scope.maxSize = 5;
   $scope.bigTotalItems = 175;
   $scope.bigCurrentPage = 1;
   $scope.testgrid = false;
@@ -1699,6 +1698,7 @@ DataQualityModule.controller('Result2DQController', function ($http, dagMetaData
   $scope.userDetail = {}
   $scope.userDetail.uuid = $rootScope.setUseruuid;
   $scope.userDetail.name = $rootScope.setUserName;
+
   $scope.gridOptionsDetail = {
     rowHeight: 40,
     useExternalPagination: true,
@@ -2029,7 +2029,6 @@ DataQualityModule.controller('Result2DQController', function ($http, dagMetaData
     $scope.obj={};
     $scope.obj.id=params.id;
     $scope.obj.version=params.version;
-    debugger
     $scope.getDqExec({
       uuid: params.id,
       version: params.version
@@ -2090,7 +2089,6 @@ DataQualityModule.controller('Result2DQController', function ($http, dagMetaData
   }
 
   $scope.dqGroupExec = function (data) {
-    debugger
     $scope.setType();
     if ($scope.type.text == 'dq') {
       $scope.obj={};

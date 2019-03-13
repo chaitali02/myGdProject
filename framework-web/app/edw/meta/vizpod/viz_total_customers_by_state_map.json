@@ -2012,54 +2012,6 @@
       "function": null,
       "value": null,
       "attributeName": "version"
-    },
-    {
-      "ref": {
-        "type": "formula",
-        "uuid": "3f7f7487-32be-46be-9b2a-b17bd45dab96",
-        "version": null,
-        "name": "formula_total_trans_amount"
-      },
-      "attributeId": null,
-      "function": null,
-      "value": null,
-      "attributeName": null
-    },
-    {
-      "ref": {
-        "type": "formula",
-        "uuid": "023784f5-c31f-4f67-9a42-25fb104fcf6c",
-        "version": null,
-        "name": "formula_total_transactions"
-      },
-      "attributeId": null,
-      "function": null,
-      "value": null,
-      "attributeName": null
-    },
-    {
-      "ref": {
-        "type": "formula",
-        "uuid": "9b4e727c-75c6-4e95-a7a5-3f5b024635ae",
-        "version": null,
-        "name": "formula_total_customers"
-      },
-      "attributeId": null,
-      "function": null,
-      "value": null,
-      "attributeName": null
-    },
-    {
-      "ref": {
-        "type": "formula",
-        "uuid": "84b75dac-08b5-4b55-a304-ef76f5ddfc10",
-        "version": null,
-        "name": "formula_total_accounts"
-      },
-      "attributeId": null,
-      "function": null,
-      "value": null,
-      "attributeName": null
     }
   ],
   "filterInfo": [],

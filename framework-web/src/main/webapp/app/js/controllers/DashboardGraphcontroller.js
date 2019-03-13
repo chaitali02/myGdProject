@@ -1601,7 +1601,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
       }
       else{
         let len=response.length-1;
-        $scope.selectedDExec = response[len];
+        $scope.selectedDExec = response[0];
         $scope.getOneByUuidAndVersionDashboardExec($scope.selectedDExec);
       }
     }

@@ -71,7 +71,7 @@ public class Rule2Controller {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws Exception {
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
-		return rule2Operator.generateDetailSql(rule, null, null, null, null, usedRefKeySet, null, RunMode.ONLINE).get(0);
+		return rule2Operator.generateDetailSql(rule, null, null, null, null, usedRefKeySet, null, RunMode.ONLINE,null).get(0);
 	}
 	
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
@@ -280,6 +280,7 @@ public class Rule2Controller {
 	@RequestMapping(value = "/download", method = RequestMethod.GET)
 	public HttpServletResponse download(@RequestParam(value = "ruleExecUUID") String ruleExecUUID,
 			@RequestParam(value = "ruleExecVersion") String ruleExecVersion,
+			@RequestParam(value = "resultType") String resultType,
 			@RequestParam(value = "format", defaultValue = "excel") String format,
 			@RequestParam(value = "rows", defaultValue = "200") int rows,
 			@RequestParam(value = "type", required = false) String type,
@@ -288,36 +289,11 @@ public class Rule2Controller {
 			HttpServletResponse response) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		rule2ServiceImpl.download(ruleExecUUID, ruleExecVersion, format, null, 0, rows, response, rows, null, null, null,
-				runMode);
+				runMode,resultType);
 		return null;
 	}
 
-	@RequestMapping(value = "/getDetailResults", method = RequestMethod.GET)
-	public List<Map<String, Object>> getDetailResults(@RequestParam("uuid") String ruleExecUUID,@RequestParam("version") String ruleExecVersion,
-			@RequestParam(value="offset", defaultValue="0") int offset, 
-			@RequestParam(value="limit", defaultValue="200") int limit,
-			@RequestParam(value="sortBy", required=false) String sortBy,
-			@RequestParam(value="order", required=false) String order, 
-			@RequestParam(value="requestId") String requestId,
-			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action, 
-			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
-		RunMode runMode = Helper.getExecutionMode(mode);
-		return rule2ServiceImpl.getDetailResults(ruleExecUUID,ruleExecVersion, runMode);
-	}
-	@RequestMapping(value = "/getSummaryResults", method = RequestMethod.GET)
-	public List<Map<String, Object>> getSummaryResults(@RequestParam("uuid") String ruleExecUUID,@RequestParam("version") String ruleExecVersion,
-			@RequestParam(value="offset", defaultValue="0") int offset, 
-			@RequestParam(value="limit", defaultValue="200") int limit,
-			@RequestParam(value="sortBy", required=false) String sortBy,
-			@RequestParam(value="order", required=false) String order, 
-			@RequestParam(value="requestId") String requestId,
-			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action, 
-			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
-		RunMode runMode = Helper.getExecutionMode(mode);
-		return rule2ServiceImpl.getSummaryResults(ruleExecUUID,ruleExecVersion,offset,limit,sortBy,order,requestId, runMode);
-	}
+
 
 	
 	@RequestMapping(value = "/getResultDetail", method = RequestMethod.GET)
@@ -351,4 +327,6 @@ public class Rule2Controller {
 		return rule2ServiceImpl.getResultSummary(execUuid, execVersion, offset, limit, sortBy, order, requestId,
 				runMode);
 	}
+	
+	
 }
