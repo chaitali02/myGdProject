@@ -23,8 +23,7 @@ import java.util.concurrent.FutureTask;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Row;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.apache.spark.sql.Row;import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.DQInfo;
@@ -123,7 +122,25 @@ public class RunStageServiceImpl implements Callable<String> {
 	private IngestGroupServiceImpl ingestGroupServiceImpl;
 	private ReportServiceImpl reportServiceImpl;
 	private DashboardServiceImpl dashboardServiceImpl;
+	private Rule2ServiceImpl rule2ServiceImpl;
 	
+	/**
+	 * @Ganesh
+	 *
+	 * @return the rule2ServiceImpl
+	 */
+	public Rule2ServiceImpl getRule2ServiceImpl() {
+		return rule2ServiceImpl;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param rule2ServiceImpl the rule2ServiceImpl to set
+	 */
+	public void setRule2ServiceImpl(Rule2ServiceImpl rule2ServiceImpl) {
+		this.rule2ServiceImpl = rule2ServiceImpl;
+	}
 
 	/**
 	 * @Ganesh
@@ -811,7 +828,8 @@ public class RunStageServiceImpl implements Callable<String> {
 								|| operationInfoHolder.getRef().getType().equals(MetaType.ingest)
 								|| operationInfoHolder.getRef().getType().equals(MetaType.ingestgroup)
 								|| operationInfoHolder.getRef().getType().equals(MetaType.report)
-								|| operationInfoHolder.getRef().getType().equals(MetaType.dashboard)) {
+								|| operationInfoHolder.getRef().getType().equals(MetaType.dashboard)
+								|| operationInfoHolder.getRef().getType().equals(MetaType.rule2)) {
 						continue;
 						}
 					}
@@ -982,7 +1000,8 @@ public class RunStageServiceImpl implements Callable<String> {
 									|| operationInfoHolder.getRef().getType().equals(MetaType.ingest)
 									|| operationInfoHolder.getRef().getType().equals(MetaType.ingestgroup)
 									|| operationInfoHolder.getRef().getType().equals(MetaType.report)
-									|| operationInfoHolder.getRef().getType().equals(MetaType.dashboard)) {
+									|| operationInfoHolder.getRef().getType().equals(MetaType.dashboard)
+									|| operationInfoHolder.getRef().getType().equals(MetaType.rule2)) {
 							continue;
 							}
 						}
@@ -1331,6 +1350,8 @@ public class RunStageServiceImpl implements Callable<String> {
 		indivTaskExe.setIngestGroupServiceImpl(ingestGroupServiceImpl);
 		indivTaskExe.setReportServiceImpl(reportServiceImpl);
 		indivTaskExe.setDashboardServiceImpl(dashboardServiceImpl);
+		indivTaskExe.setRule2ServiceImpl(rule2ServiceImpl);
+		
 		taskExecutor.execute(futureTask);
 		logger.info("Thread watch : DagExec : " + dagExec.getUuid() + " StageExec : " + stageId + " taskExec : " + indvTask.getTaskId() + " started >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
 		taskList.add(futureTask);

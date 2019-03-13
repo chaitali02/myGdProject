@@ -160,6 +160,8 @@ public class DagServiceImpl {
 	private DashboardServiceImpl dashboardServiceImpl;
 	@Autowired
 	private NotificationServiceImpl notificationServiceImpl; 
+	@Autowired
+	private Rule2ServiceImpl rule2ServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(DagServiceImpl.class);
 	ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
@@ -794,7 +796,7 @@ public class DagServiceImpl {
 		return stageExecs;
 	}
 
-	@SuppressWarnings("unused")
+	@SuppressWarnings({ "unused", "unchecked" })
 	private List<TaskExec> createDagExecTasks(DagExec dagExec, List<String> datapodList, List<Task> dagTasks, List<String> dependsOn, Stage indvStg,
 			MetaIdentifier dagRef, ExecParams execParams) throws Exception {
 		List<TaskExec> taskExecs = new ArrayList<>();
@@ -992,8 +994,10 @@ public class DagServiceImpl {
 					baseExec = ingestGroupServiceImpl.create(ref.getUuid(), ref.getVersion(), execParams, datapodList, (IngestGroupExec)baseExec, dagExec);
 				} else if (ref.getType().equals(MetaType.report)) {
 					baseExec = reportServiceImpl.create(ref.getUuid(), ref.getVersion(), execParams, (ReportExec) baseExec, RunMode.BATCH);
-				}  else if (ref.getType().equals(MetaType.dashboard)) {
+				} else if (ref.getType().equals(MetaType.dashboard)) {
 					baseExec = dashboardServiceImpl.create(ref.getUuid(), ref.getVersion(), (DashboardExec) baseExec, execParams, RunMode.BATCH);
+				} else if (ref.getType().equals(MetaType.rule2)) {
+					baseExec = rule2ServiceImpl.create(ref.getUuid(), ref.getVersion(), (RuleExec) baseExec, refKeys, taskExecParams, datapodList, dagExec);
 				}  
 			}
 			/*try {
@@ -1238,7 +1242,9 @@ public class DagServiceImpl {
 						}  else if (ref.getType().equals(MetaType.dashboard)) {
 //							baseExec = dashboardServiceImpl.create(ref.getUuid(), ref.getVersion(), (DashboardExec) baseExec, execParams, RunMode.BATCH);
 							baseExec = dashboardServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), execParams, refKeyMap, otherParams, datapodList, dagExec, runMode);
-						} 
+						} else if (ref.getType().equals(MetaType.rule2)) {
+							baseExec = rule2ServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, RunMode.BATCH);
+						}
 						taskExecParams.setOtherParams((HashMap<String, String>)Helper.mergeMap(otherParams, taskExecParams.getOtherParams()));
 						// If conditions with parse goes here - END	
 						logger.info(" otherParams : " + otherParams);
