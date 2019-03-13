@@ -349,6 +349,17 @@ RuleModule.factory('Rule2Factory', function ($http, $location) {
     }
     return rTypes;
   }
+
+  factory.findRule2Results = function (url) {
+		var baseurl = $location.absUrl().split("app")[0] + url
+		return $http({
+			url: baseurl,
+			method: 'GET',
+		}).
+			then(function (response, status, headers) {
+				return response;
+			})
+	}
   return factory;
 })
 
@@ -419,7 +430,40 @@ RuleModule.service("Rule2Service", function ($q, Rule2Factory, sortFactory, CF_G
     }
     return deferred.promise;
   }
+  
+  this.getRuleResults2 = function (uuid, version, offset, limit, requestId, sortBy, order, resultType) {
+		var deferred = $q.defer();
+		var url;
+		if (resultType == "detail") {
+			if (sortBy == null && order == null) {
+				url = "rule2/getResultDetail?action=view&uuid=" + uuid + "&version=" + version + "&offset=" + offset + "&limit=" + limit + "&requestId=" + requestId;
+			}
+			else {
+				url = "rule2/getResultDetail?action=view&uuid=" + uuid + "&version=" + version + "&offset=" + offset + "&limit=" + limit + "&requestId=" + requestId + "&order=" + order + "&sortBy=" + sortBy;
 
+			}
+		} else {
+			if (sortBy == null && order == null) {
+				url = "rule2/getResultSummary?action=view&uuid=" + uuid + "&version=" + version + "&offset=" + offset + "&limit=" + limit + "&requestId=" + requestId;
+			}
+			else {
+				url = "rule2/getResultSummary?action=view&uuid=" + uuid + "&version=" + version + "&offset=" + offset + "&limit=" + limit + "&requestId=" + requestId + "&order=" + order + "&sortBy=" + sortBy;
+
+			}
+    } 
+    Rule2Factory.findRule2Results(url).then(function (response) { onSuccess(response) }, function (response) { onError(response.data) });
+		var onSuccess = function (response) {
+			deferred.resolve({
+				data: response
+			})
+		}
+		var onError = function (response) {
+			deferred.reject({
+				data: response
+			})
+		}
+		return deferred.promise;
+	}
 
 
   this.getAll = function (type) {
