@@ -31,7 +31,7 @@ import { RoutesParam } from '../metadata/domain/domain.routeParams';
   selector: 'app-data-pipeli',
   templateUrl: './data-qualitydetail.template.html',
 })
-export class DataQualityDetailComponent implements OnInit, OnDestroy{
+export class DataQualityDetailComponent implements OnInit, OnDestroy {
   dropIndex: any;
   dragIndex: any;
   isHomeEnable: boolean;
@@ -105,8 +105,8 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy{
   moveTo: number;
   moveToEnable: boolean;
   count: any[];
-  txtQueryChanged: Subject<string> = new Subject<string>();
-  txtQueryChanged1: Subject<string> = new Subject<string>();
+  txtQueryChangedFilter: Subject<string> = new Subject<string>();
+  resetTableTopBottom: Subject<string> = new Subject<string>();
   rowIndex: any;
   showDivGraph: boolean;
   isGraphInprogess: boolean;
@@ -114,12 +114,15 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy{
   isEdit: boolean = false;
   isAdd: boolean;
   isversionEnable: boolean;
-  invalideRowNo0: boolean = false;
-  invalideRowNo1: boolean = false;
+  topDisabled: boolean;
+  bottomDisabled: boolean;
+  invalideMinRow: boolean = false;
+  invalideMaxRow: boolean = false;
+  datasetNotEmpty: boolean = true;
 
   constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router,
     private _commonService: CommonService, private _dataQualityService: DataQualityService, public appHelper: AppHelper) {
-   // this.metaType = MetaTypeEnum.MetaType;
+    // this.metaType = MetaTypeEnum.MetaType;
     this.dqdata = new DataQuality();
     this.isHomeEnable = false
     this.displayDialogBox = false;
@@ -209,9 +212,9 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy{
     ]
     this.activatedRoute.params.subscribe((params: Params) => {
       let param = <RoutesParam>params;
-      this.id = params.id;
-      this.version = params.version;
-      this.mode = params.mode;
+      this.id = param.id;
+      this.version = param.version;
+      this.mode = param.mode;
       if (this.mode !== undefined) {
         this.getAllVersionByUuid();
         this.getOneByUuidAndVersion(this.id, this.version);
@@ -223,30 +226,36 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy{
     this.moveToEnable = false;
     this.count = [];
 
-    this.txtQueryChanged
+    this.txtQueryChangedFilter
       .pipe(debounceTime(3000), distinctUntilChanged())
       .subscribe(index => {
         console.log(parseInt(index) - 1);
-        this.filterTableArray[parseInt(index) - 1].selected = "";
+        for (const i in this.filterTableArray) {
+          if (this.filterTableArray[i].hasOwnProperty("selected"))
+            this.filterTableArray[i].selected = false;
+        }
         this.moveTo = null;
-        this.checkSelected(false);
-        this.invalideRowNo0 = false;
-        this.invalideRowNo1 = false;
+        this.checkSelected(false, null);
+        this.invalideMinRow = false;
+        this.invalideMaxRow = false;
       });
-    this.txtQueryChanged1
+
+    this.resetTableTopBottom
       .pipe(debounceTime(3000), distinctUntilChanged())
       .subscribe(index => {
         this.moveTo = null;
-        this.checkSelected(false);
-        this.invalideRowNo0 = false;
-        this.invalideRowNo1 = false;
+        this.checkSelected(false, null);
+        this.invalideMinRow = false;
+        this.invalideMaxRow = false;
       });
 
-    this.invalideRowNo0 = false;
-    this.invalideRowNo1 = false;
+    this.invalideMinRow = false;
+    this.invalideMaxRow = false;
+    this.topDisabled = false;
+    this.bottomDisabled = false;
   }
   ngOnInit() {
-    this.setMode(this.mode);    
+    this.setMode(this.mode);
   }
   setMode(mode: any) {
     if (mode == 'true') {
@@ -601,6 +610,7 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy{
     rhsattribute.uuid = this.dialogAttributeName.uuid;
     rhsattribute.attributeId = this.dialogAttributeName.attributeId;
     this.filterTableArray[index].rhsAttribute = rhsattribute;
+    this.datasetNotEmpty = true;
   }
 
   cancelDialogBox() {
@@ -678,9 +688,10 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy{
     else if (this.filterTableArray[index].rhsType == MetaType.PARAMLIST) {
       this.getParamByApp();
     }
-    else if (this.filterTableArray[index].rhsType == MetaType.DATASET) {
+    else if (this.filterTableArray[index].rhsType == MetaType.DATASET) {   
+      this.datasetNotEmpty = false;
       let rhsAttribute = new AttributeIO();
-      rhsAttribute.label = "-Select-";
+      rhsAttribute.label = "";
       rhsAttribute.uuid = "";
       rhsAttribute.attributeId = "";
       this.filterTableArray[index].rhsAttribute = rhsAttribute;
@@ -769,8 +780,9 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy{
     if (this.filterTableArray[index].operator == 'EXISTS' || this.filterTableArray[index].operator == 'NOT EXISTS'
       || this.filterTableArray[index].operator == 'IN' || this.filterTableArray[index].operator == 'NOT IN') {
       this.filterTableArray[index].rhsType = MetaType.DATASET;
+      this.datasetNotEmpty = false;
       let rhsAttribute = new AttributeIO();
-      rhsAttribute.label = "-Select-";
+      rhsAttribute.label = "";
       rhsAttribute.uuid = "";
       rhsAttribute.attributeId = "";
       this.filterTableArray[index].rhsAttribute = rhsAttribute
@@ -799,7 +811,7 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy{
     filertable.rhsAttribute = null;
     this.filterTableArray.splice(this.filterTableArray.length, 0, filertable);
     this.count = [];
-    this.checkSelected(false);
+    this.checkSelected(false, this.filterTableArray.length - 1);
   }
   removeRow() {
     let newDataList = [];
@@ -814,7 +826,7 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy{
       newDataList[0].logicalOperator = "";
     }
     this.count = [];
-    this.checkSelected(false);
+    this.checkSelected(false, null);
     this.filterTableArray = newDataList;
   }
   checkAllFilterRow() {
@@ -824,7 +836,7 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy{
     else {
       this.selectedAllFitlerRow = false;
     }
-    this.checkSelected(false);
+    this.checkSelected(false, null);
     this.filterTableArray.forEach(filter => {
       filter.selected = this.selectedAllFitlerRow;
     });
@@ -1090,25 +1102,25 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy{
   //   this.isSubmit = true
   // }
 
-  dragStart(event, data) {
-    // console.log(event)
-    // console.log(data)
-    this.dragIndex = data
-  }
-  dragEnd(event) {
-    // console.log(event)
-  }
-  drop(event, data) {
-    if (this.mode == 'false') {
-      this.dropIndex = data
-      // console.log(event)
-      // console.log(data)
-      var item = this.dqdata.filterTableArray[this.dragIndex]
-      this.dqdata.filterTableArray.splice(this.dragIndex, 1)
-      this.dqdata.filterTableArray.splice(this.dropIndex, 0, item)
-      this.isSubmit = true
-    }
-  }
+  // dragStart(event, data) {
+  //   // console.log(event)
+  //   // console.log(data)
+  //   this.dragIndex = data
+  // }
+  // dragEnd(event) {
+  //   // console.log(event)
+  // }
+  // drop(event, data) {
+  //   if (this.mode == 'false') {
+  //     this.dropIndex = data
+  //     // console.log(event)
+  //     // console.log(data)
+  //     var item = this.dqdata.filterTableArray[this.dragIndex]
+  //     this.dqdata.filterTableArray.splice(this.dragIndex, 1)
+  //     this.dqdata.filterTableArray.splice(this.dropIndex, 0, item)
+  //     this.isSubmit = true
+  //   }
+  // }
 
   onChangeFilterAttRow = function (index, status) {
     this.fitlerAttrTableSelectedItem = [];
@@ -1142,99 +1154,59 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy{
   }
 
   updateArray(new_index, range, event) {
-
-    // if (new_index < 0) {
-    //   this.invalideRowNo0 = true;
-    //   this.txtQueryChanged1.next(event);
-    //   // this.filterTableArray[i].selected = "";
-    // }
-    // else if (new_index >= this.filterTableArray.length) {
-    //   this.invalideRowNo1 = true;
-    //   this.txtQueryChanged1.next(event);
-    //   // this.filterTableArray[i].selected = "";
-    // }
-    // else if (new_index == null) { }
-    // else
     for (let i = 0; i < this.filterTableArray.length; i++) {
       if (this.filterTableArray[i].selected) {
 
         if (new_index < 0) {
-          this.invalideRowNo0 = true;
-          this.txtQueryChanged1.next(event);
-          // this.filterTableArray[i].selected = "";
+          this.invalideMinRow = true;
+          this.resetTableTopBottom.next(event);
         }
         else if (new_index >= this.filterTableArray.length) {
-          this.invalideRowNo1 = true;
-          this.txtQueryChanged1.next(event);
-          // this.filterTableArray[i].selected = "";
+          this.invalideMaxRow = true;
+          this.resetTableTopBottom.next(event);
         }
         else if (new_index == null) { }
         else {
           let old_index = i;
-          this.array_move(this.filterTableArray, old_index, new_index);debugger
+          this.array_move(this.filterTableArray, old_index, new_index);
           if (range) {
-            this.txtQueryChanged.next(event);
+
             if (new_index == 0 || new_index == 1) {
-              this.first(new_index, "");
-              // this.filterTableArray[0].logicalOperator = "";
-              // if (!this.filterTableArray[1].logicalOperator) {
-              //   this.filterTableArray[1].logicalOperator = this.logicalOperators[1].label;
-              // }
-              // this.filterTableArray[new_index].selected = "";
+              this.filterTableArray[0].logicalOperator = "";
+              if (!this.filterTableArray[1].logicalOperator) {
+                this.filterTableArray[1].logicalOperator = this.logicalOperators[1].label;
+              }
+              this.checkSelected(false, null);
             }
             if (new_index == this.filterTableArray.length - 1) {
-              this.last(new_index, "");
-              // this.filterTableArray[0].logicalOperator = "";
-              // if (this.filterTableArray[new_index].logicalOperator == "") {
-              //   this.filterTableArray[new_index].logicalOperator = this.logicalOperators[1].label;
-              // }
-              // this.filterTableArray[new_index].selected = "";
-              // this.checkSelected(false);
+              this.filterTableArray[0].logicalOperator = "";
+              if (this.filterTableArray[new_index].logicalOperator == "") {
+                this.filterTableArray[new_index].logicalOperator = this.logicalOperators[1].label;
+              }
+              this.checkSelected(false, null);
             }
+            this.txtQueryChangedFilter.next(new_index);
           }
           else if (new_index == 0 || new_index == 1) {
-            this.first(new_index, range);
-            // this.filterTableArray[0].logicalOperator = "";
-            // if (!this.filterTableArray[1].logicalOperator) {
-            //   this.filterTableArray[1].logicalOperator = this.logicalOperators[1].label;
-            // }
-            // this.filterTableArray[new_index].selected = "";
-            // this.checkSelected(false);
+            this.filterTableArray[0].logicalOperator = "";
+            if (!this.filterTableArray[1].logicalOperator) {
+              this.filterTableArray[1].logicalOperator = this.logicalOperators[1].label;
+            }
+            this.filterTableArray[new_index].selected = "";
+            this.checkSelected(false, null);
           }
           else if (new_index == this.filterTableArray.length - 1) {
-            this.last(new_index, range);
-            // this.filterTableArray[0].logicalOperator = "";
-            // if (this.filterTableArray[new_index].logicalOperator == "") {
-            //   this.filterTableArray[new_index].logicalOperator = this.logicalOperators[1].label;
-            // }
-            // this.filterTableArray[new_index].selected = "";
-            // this.checkSelected(false);
+            this.filterTableArray[0].logicalOperator = "";
+            if (this.filterTableArray[new_index].logicalOperator == "") {
+              this.filterTableArray[new_index].logicalOperator = this.logicalOperators[1].label;
+            }
+            this.filterTableArray[new_index].selected = "";
+            this.checkSelected(false, null);
           }
           break;
         }
       }
     }
-  }
-
-  first(new_index, range) {
-    this.filterTableArray[0].logicalOperator = "";
-    if (!this.filterTableArray[1].logicalOperator) {
-      this.filterTableArray[1].logicalOperator = this.logicalOperators[1].label;
-    }
-    if (range) {
-      this.filterTableArray[new_index].selected = "";
-    }
-    this.checkSelected(false);
-  }
-  last(new_index, range) {
-    this.filterTableArray[0].logicalOperator = "";
-    if (this.filterTableArray[new_index].logicalOperator == "") {
-      this.filterTableArray[new_index].logicalOperator = this.logicalOperators[1].label;
-    }
-    if (range) {
-      this.filterTableArray[new_index].selected = "";
-    }
-    this.checkSelected(false);
   }
 
   array_move(arr, old_index, new_index) {
@@ -1255,21 +1227,35 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy{
     return arr;
   }
 
-  checkSelected(flag) {
+  checkSelected(flag: any, index: any) {
     if (flag == true) {
       this.count.push(flag);
-      // console.log("Flag: " + flag + " /Count : " + this.count);
     }
     else
       this.count.pop();
 
     this.moveToEnable = (this.count.length == 1) ? true : false;
 
+    if (index != null) {
+      if (index == 0 && flag == true) {
+        this.topDisabled = true;
+      }
+      else {
+        this.topDisabled = false;
+      }
+
+      if (index == (this.filterTableArray.length - 1) && flag == true) {
+        this.bottomDisabled = true;
+      }
+      else {
+        this.bottomDisabled = false;
+      }
+    }
   }
 
   ngOnDestroy() {
-    this.txtQueryChanged.unsubscribe();
-    this.txtQueryChanged1.unsubscribe();
+    this.txtQueryChangedFilter.unsubscribe();
+    this.resetTableTopBottom.unsubscribe();
   }
 
 }

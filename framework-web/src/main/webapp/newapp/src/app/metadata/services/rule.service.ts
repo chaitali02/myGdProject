@@ -224,7 +224,7 @@ export class RuleService {
         map(response => {
 
           let ruleIO = new RuleIO();
-          ruleIO.baseRule = response;
+          ruleIO = response;
 
           // Filter Table
           if (response.filterInfo != null) {

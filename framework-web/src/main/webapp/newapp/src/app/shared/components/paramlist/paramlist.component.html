@@ -10,27 +10,27 @@
       <div class="portlet box green">
         <div class="portlet-title">
           <div class="caption">
-            <i class="fa fa-gift"></i>{{paramlist.name}}{{isEdit}}
+            <i class="fa fa-gift"></i>{{paramlist.name}}
           </div>
           <div class="tools">
-
-            <a class="left-marginpage" style="color:white" title="Main" data-placement="top" tooltip [ngClass]="showForm==true ? 'currentpage':'notcurrentpage'"
-              data- (click)="showMainPage(uuid,version)">
+            
+            <a *ngIf="!isAdd" class="left-marginpage" style="color:white" title="Main" data-placement="top" tooltip 
+              [ngClass]="showForm==true ? 'currentpage':'notcurrentpage'" data- (click)="showMainPage(uuid,version)">
               <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
 
-            <a class="left-marginpage" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top" tooltip
-              [ngClass]="isEdit == true? 'currentpage':'notcurrentpage'" data-(click)="enableEdit(uuid,version)">
+            <a *ngIf="!isAdd" class="left-marginpage" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
+              tooltip [ngClass]="isEdit == true? 'currentpage':'notcurrentpage'" data-(click)="enableEdit(uuid,version)">
               <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
 
-            <a class="left-marginpage" href="javascript:;" title="Show Dependencies" data-placement="top" tooltip [ngClass]="showForm==false ? 'currentpage':'notcurrentpage'"
-              data- (click)="showGraph(uuid,version)">
+            <a *ngIf="!isAdd" class="left-marginpage" href="javascript:;" title="Show Dependencies" data-placement="top" tooltip
+              [ngClass]="showForm==false ? 'currentpage':'notcurrentpage'" data- (click)="showGraph(uuid,version)">
               <i class="fa fa-sitemap" style="display: inline;margin:2px auto;color:white;"></i>
             </a>
 
             <a class="left-marginpage" href="javascript:;" disabled="true" (click)="showGraph(uuid,label)"
-              data-original-title="" title="Refresh">
+              data-original-title="" title="Refresh" [ngClass]="showForm==true ? 'currentpage':'notcurrentpage'">
               <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white"></i>
             </a>
             <a class="left-marginpage" (click)="goBack()" title="Close">
@@ -68,8 +68,9 @@
             </div>
 
             <div class="portlet-body form" *ngIf="!isEditInprogess && !isEditError">
-              <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="submitParamlist()"
+              <form class="form-horizontal" name="myNewForm" novalidate="novalidate" (ngSubmit)="myNewForm.form.valid && submitParamlist()"
                 #myNewForm="ngForm">
+
                 <div class="form-group" *ngIf="mode">
                   <label class="col-md-3 control-label">UUID</label>
                   <div class="col-md-6">
@@ -79,12 +80,18 @@
                 </div>
 
                 <div class="form-group">
-                  <label class="col-md-3 control-label">Name
+                  <label class="col-md-3 control-label" [ngClass]="{'has-error': myNewForm.submitted && (myNewForm.form.controls['name']?.invalid)}">Name
                     <span class="required" aria-required="true"> * </span>
                   </label>
                   <div class="col-md-6">
                     <input type="text" class="form-control" [(ngModel)]="paramlist.name" name="name" placeholder=""
-                      [disabled]="mode == 'true'">
+                      [disabled]="mode == 'true'" (ngModelChange)="onChangeName($event)" [disabled]="mode == 'true'"
+                      #name="ngModel" required [ngClass]="{'has-error': myNewForm.submitted && (myNewForm.form.controls['name']?.invalid)}">
+                    <div *ngIf="myNewForm.submitted && (myNewForm.form.controls['name']?.invalid)">
+                      <div class="help-block has-error error-msg">
+                        This field is required
+                      </div>
+                    </div>
                   </div>
                 </div>
 
@@ -131,9 +138,8 @@
                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
                   <div class="col-md-6 col-sm-6 col-xs-12 ui-switch-top-left-padding">
                     <div class="btn-group">
-                      <ui-switch (change)="onChangeActive($event)" [disabled]="mode == 'true' || mode == 'false'"
-                        [(ngModel)]="paramlist.active" name="active" [checked]="active" color="#32c5d2" labelOn="Yes"
-                        labelOff="No"></ui-switch>
+                      <ui-switch (change)="onChangeActive($event)" [(ngModel)]="active" name="active" 
+                      [disabled]="((isEdit ==true ||isEdit == false) && isAdd ==false)?true:false" ></ui-switch>
                     </div>
                   </div>
                 </div>
@@ -141,8 +147,8 @@
                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
                   <div class="col-md-6 col-sm-6 col-xs-12 ui-switch-top-left-padding">
                     <div class="btn-group">
-                      <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="paramlist.locked" name="locked"
-                        [checked]="locked" color="#32c5d2"></ui-switch>
+                      <ui-switch [(ngModel)]="locked" name="locked"
+                      [disabled]="((isEdit ==true ||isEdit == false) && isAdd ==false)?true:false" ></ui-switch>
                     </div>
                   </div>
                 </div>
@@ -150,8 +156,8 @@
                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
                   <div class="col-md-6 col-sm-6 col-xs-12 ui-switch-top-left-padding">
                     <div class="btn-group">
-                      <ui-switch (change)="onChangePublished($event)" [disabled]="mode == 'true' || mode == 'false'"
-                        [(ngModel)]="published" name="published" [checked]="published" color="#32c5d2"></ui-switch>
+                      <ui-switch (change)="onChangePublished($event)" [(ngModel)]="published" name="published" 
+                      [disabled]="((isEdit ==true ||isEdit == false) && isAdd ==false)?true:false" ></ui-switch>
                     </div>
                   </div>
                 </div>
@@ -214,8 +220,7 @@
                               <th style="width:5%;text-align: center; Vertical-align: middle;">
                                 <input [disabled]="mode == 'true' || paramlist.templateFlg == false" style="width: 16px;height:16px;"
                                   type="checkbox" [(ngModel)]="selectAllAttributeRow" name="selectAllAttributeRow"
-                                  (click)="checkAllAttributeRow()" />
-                              </th>
+                                  (click)="checkAllAttributeRow()" /></th>
                               <th style="text-align: center; Vertical-align: middle;width:6%;">ID</th>
                               <th style="text-align: center;width:20%;">Name</th>
                               <th class="text-center" style="width:20%;">Display Name</th>
@@ -234,12 +239,14 @@
                                 <input style="text-align:center;" type="text" [value]="i" [disabled]="true" class="form-control">
                               </td>
                               <td>
-                                <input type="text" class="form-control" [(ngModel)]="data1.paramName" name="name+{{i}}"
-                                  [disabled]="mode == 'true' || paramlist.templateFlg == false" class="form-control">
+                                <input type="text" class="form-control" [(ngModel)]="data1.paramName" name="name{{i}}"
+                                  [disabled]="mode == 'true' || paramlist.templateFlg == false" class="form-control"  
+                                  #name="ngModel" required [ngClass]="{'has-error':myNewForm.submitted && (myNewForm.form.controls['name'+i]?.invalid)}">
                               </td>
                               <td>
-                                <input type="text" class="form-control" [(ngModel)]="data1.paramDispName" name="paramDispName+{{i}}"
-                                  [disabled]="mode == 'true' || paramlist.templateFlg == false" class="form-control">
+                                <input type="text" class="form-control" [(ngModel)]="data1.paramDispName" name="paramDispName{{i}}"
+                                  [disabled]="mode == 'true' || paramlist.templateFlg == false" class="form-control"
+                                  #paramDispName="ngModel" required [ngClass]="{'has-error':myNewForm.submitted && (myNewForm.form.controls['paramDispName'+i]?.invalid)}">
                               </td>
                               <td>
                                 <input type="text" class="form-control" [(ngModel)]="data1.paramDesc" name="paramDesc+{{i}}"
@@ -253,8 +260,8 @@
                               </td>
 
                               <td *ngIf="typeSimple.indexOf(data1.paramType) != -1">
-                                <input type="text" class="form-control" [(ngModel)]="data1.paramValue" name="value1+{{i}}"
-                                  [disabled]="mode">
+                                <input type="text" class="form-control" [(ngModel)]="data1.paramValue" name="value1{{i}}"
+                                  [disabled]="mode"  #value1="ngModel" required [ngClass]="{'has-error':myNewForm.submitted && (myNewForm.form.controls['value1'+i]?.invalid)}">
                               </td>
 
                               <td *ngIf="data1.paramType == 'distribution'">
@@ -276,17 +283,17 @@
                               </td>
                               <td *ngIf="data1.paramType == 'date'">
                                 <!-- <div style="width:150px"> -->
-                                  <!-- <p-calendar format="ddd MMM D HH:mm:ss YYYY z" [(ngModel)]="searchForm.startDate" styleClass="dateTimeField"
+                                <!-- <p-calendar format="ddd MMM D HH:mm:ss YYYY z" [(ngModel)]="searchForm.startDate" styleClass="dateTimeField"
                                   name="startDate" [utc]="true" hourFormat="12"
                                   [disabled]="mode == 'true'" [minDate]="today" (onSelect)="onUpdateStartDate(startDate)"
                                   [showIcon]="true" icon="fa fa-calendar" >
                               </p-calendar> -->
 
-                                  <p-calendar [inputStyle]="{'width':'50%','height':'32px','margin':'0px 0px 0px 1px'}"
-                                    format="mm dd yy" [(ngModel)]="data1.paramValue" name="paramValue+{{i}}" [utc]="true"
-                                    hourFormat="12" [disabled]="mode == 'true'" 
-                                    [readonlyInput]="true" [showIcon]="true" icon="fa fa-calendar">
-                                  </p-calendar>
+                                <p-calendar [inputStyle]="{'width':'50%','height':'32px','margin':'0px 0px 0px 1px'}"
+                                  format="mm dd yy" [(ngModel)]="data1.paramValue" name="paramValue+{{i}}" [utc]="true"
+                                  hourFormat="12" [disabled]="mode == 'true'" [readonlyInput]="true" [showIcon]="true"
+                                  icon="fa fa-calendar">
+                                </p-calendar>
                                 <!-- </div> -->
 
                               </td>

@@ -11,6 +11,7 @@ export class RuleIO{
 	attributeTableArray: any;
 	// paramlistArray1: any;
 
+	isSimpleExits:Boolean;
 	isFormulaExits: Boolean;
 	isAttributeExits: Boolean;
 	isFunctionExits:Boolean;

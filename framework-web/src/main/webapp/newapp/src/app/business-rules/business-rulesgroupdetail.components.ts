@@ -11,7 +11,6 @@ import { CommonService } from './../metadata/services/common.service';
 
 import { Version } from './../metadata/domain/version'
 import { KnowledgeGraphComponent } from '../shared/components/knowledgeGraph/knowledgeGraph.component';
-import { DataQualityGroup } from '../metadata/domain/domain.dataQualityGroup';
 import { RuleGroup } from '../metadata/domain/domain.ruleGroup';
 import { MetaType } from '../metadata/enums/metaType';
 import { DropDownIO } from '../metadata/domainIO/domain.dropDownIO';
@@ -184,7 +183,7 @@ export class BusinessRulesGroupDetailComponent {
   }
   public goBack() {
     //this._location.back();
-    this.router.navigate(['app/list/dqgroup']);
+    this.router.navigate(['app/list/rulegroup']);
   }
 
   clear() {
@@ -268,6 +267,7 @@ export class BusinessRulesGroupDetailComponent {
   onVersionChange() {
     this.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label);
   }
+  
 
   submitRuleGroup() {
     this.isSubmitEnable = true;
@@ -275,7 +275,7 @@ export class BusinessRulesGroupDetailComponent {
     let rulegroupJson = new RuleGroup();
     rulegroupJson.uuid = this.datarulegroup.uuid;
     rulegroupJson.name = this.datarulegroup.name;
-    rulegroupJson.desc = this.datarulegroup.desc;
+    rulegroupJson.desc = this.datarulegroup.desc;debugger
     rulegroupJson.tags = this.datarulegroup.tags;
     rulegroupJson.active = this.appHelper.convertBooleanToString(this.datarulegroup.active);
     rulegroupJson.published = this.appHelper.convertBooleanToString(this.datarulegroup.published);
@@ -349,7 +349,6 @@ export class BusinessRulesGroupDetailComponent {
     this.msgs.push({ severity: msgtype, summary: msgsumary, detail: msg });
   }
 
-
   showview(uuid, version) {
     this.router.navigate(['app/businessRules/rulegroup', uuid, version, 'true']);
     this.dropdownSettings = {
@@ -362,7 +361,6 @@ export class BusinessRulesGroupDetailComponent {
       maxHeight: 110,
       disabled: false
     };
-
   }
 
   showProfileGroupePage() {
@@ -370,8 +368,20 @@ export class BusinessRulesGroupDetailComponent {
     this.showgraphdiv = false;
     this.graphDataStatus = false;
     this.showProfileGroupForm = true;
-
   }
 
-
+  onItemSelect(item: any) {
+    console.log(item);
+    // console.log(this.selectedItems);
+  }
+  OnItemDeSelect(item: any) {
+    console.log(item);
+    // console.log(this.selectedItems);
+  }
+  onSelectAll(items: any) {
+    console.log(items);
+  }
+  onDeSelectAll(items: any) {
+    console.log(items);
+  }
 }
