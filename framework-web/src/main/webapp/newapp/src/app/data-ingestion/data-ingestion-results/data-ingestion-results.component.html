@@ -12,12 +12,13 @@
                         (click)="showMainPage()">
                         <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.2,1.2);"></i>
                     </a>
-                    <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top" tooltip (click)="downloadResult()"
-                        [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'" *ngIf="istableShow == true">
+                    <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top"
+                        tooltip (click)="downloadResult()" [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'"
+                        *ngIf="istableShow == true">
                         <i class="fa fa-download" area-hidden="true"></i>
                     </a>
-                    <a style="color:white;" href="javascript:;" title="Show Dependencies" data-placement="top" tooltip [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'"
-                        data- (click)="showDagGraph()">
+                    <a style="color:white;" href="javascript:;" title="Show Dependencies" data-placement="top" tooltip
+                        [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'" data- (click)="showDagGraph()">
                         <i class="fa fa-sitemap" style="margin:2px auto"></i>
                     </a>
                     <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip (click)="broadcastRefreshData()">
@@ -26,6 +27,7 @@
                     <a title="Close" (click)="goBack()" style="height:14px;">
                         <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
                     </a>
+
                 </div>
             </div>
             <div class="portlet-body">

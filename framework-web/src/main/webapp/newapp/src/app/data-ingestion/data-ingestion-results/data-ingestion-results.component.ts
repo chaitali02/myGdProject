@@ -2,16 +2,18 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Params, ActivatedRoute, Router } from '@angular/router';
 import { AppConfig } from '../../app.config';
 import { Http, Headers} from '@angular/http';
+import { Location } from '@angular/common';
+
 import { AppMetadata } from '../../app.metadata';
 import { CommonService } from '../../metadata/services/common.service';
-import { Location } from '@angular/common';
 import { JointjsGroupComponent } from '../../shared/components/jointjsgroup/jointjsgroup.component';
 import { KnowledgeGraphComponent } from '../../shared/components/knowledgeGraph/knowledgeGraph.component';
 import { ResponseContentType } from '@angular/http';
 import { saveAs } from 'file-saver';
+import { RoutesParam } from '../../metadata/domain/domain.routeParams';
 
 @Component({
-  selector: 'app-data-ingestion-results',
+  selector: 'app-data-ingestion-results',     
   templateUrl: './data-ingestion-results.component.html'
 })
 export class DataIngestionResultsComponent implements OnInit {
@@ -34,6 +36,7 @@ export class DataIngestionResultsComponent implements OnInit {
   @ViewChild(JointjsGroupComponent) d_JointjsGroupComponent: JointjsGroupComponent;
   @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
   breadcrumbDataFrom: { "caption": string; "routeurl": string; }[];
+  isEditInprogess: boolean;
 
   constructor(private _config: AppConfig, private http: Http, private _location: Location, private _activatedRoute: ActivatedRoute, private router: Router, public appMetadata: AppMetadata, private _commonService: CommonService) {
     this.baseUrl = _config.getBaseUrl();
@@ -42,6 +45,7 @@ export class DataIngestionResultsComponent implements OnInit {
     this.isHomeEnable = false;
     this.displayDialogBox = false
     this.isgraphShow = false;
+    this.isEditInprogess = false;
     this.breadcrumbDataFrom = [
       {
         "caption": "Data Ingestion ",
@@ -68,15 +72,17 @@ export class DataIngestionResultsComponent implements OnInit {
 
   ngOnInit() {
     this._activatedRoute.params.subscribe((params: Params) => {
-      this._uuid = params['id'];
-      this._version = params['version'];
-      this._mode = params['mode'];
-      this._type = params['type'];
+      let param = <RoutesParam>params;
+      this._uuid = param.id;
+      this._version = param.version;
+      this._mode = param.mode;
+      this._type = params.type;
       this.getOneByUuidAndVersion(this._uuid, this._version, this._type)
     });
   }
 
   getOneByUuidAndVersion(id, version, type) {
+    this.isEditInprogess = false;
     this._commonService.getOneByUuidAndVersion(id, version, type)
       .subscribe(
       response => {
@@ -85,23 +91,25 @@ export class DataIngestionResultsComponent implements OnInit {
       error => console.log("Error :: " + error));
   }
 
-  onSuccessgetOneByUuidAndVersion(response) {
+  onSuccessgetOneByUuidAndVersion(response ) {
     this.breadcrumbDataFrom[2].caption = response.name;
-    this.params["id"] = this._uuid;
-    this.params["uuid"] = this._uuid;
-    this.params["name"] = response.name;
-    this.params["elementType"] = this._type;
-    this.params["version"] = this._version;
-    this.params.ref["id"] = this._uuid;
-    this.params.ref["name"] = response.name;
-    this.params.ref["type"] = this._type;
-    this.params.ref["version"] = this._version;
+    this.params.id = this._uuid;
+    this.params.uuid = this._uuid;
+    this.params.name = response.name;
+   // this.params["elementType"] = this._type;
+    this.params.version = this._version;
+    this.params.ref.id = this._uuid;
+    this.params.ref.name = response.name;
+    this.params.ref.type = this._type;
+    this.params.ref.version = this._version;
     if (this._type.slice(-4) == 'Exec' || this._type.slice(-4) == 'exec') {
       if (this._type.slice(-9) == 'groupExec' || this._type.slice(-9) == 'groupexec') {
         this.isgraphShow = true;
       }
     }
     this.params["type"] = this._type;
+
+    this.isEditInprogess = true;
   }
   
   public goBack() {

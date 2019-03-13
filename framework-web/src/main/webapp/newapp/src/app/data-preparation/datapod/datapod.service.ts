@@ -25,10 +25,6 @@ export class MetaDataDataPodService {
         catchError(error => this.handleError<string>(error, "Network Error!")));
   }
 
-
-
-
-
   getDatapodSample(api_url): Observable<any> {
     return this.http
       .get(api_url, { headers: this.headers })
