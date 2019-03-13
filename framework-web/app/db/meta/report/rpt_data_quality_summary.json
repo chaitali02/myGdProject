@@ -1,234 +1,364 @@
 {
-    "title" : "Deutsche Bank",
-    "header" : "Data Quality Summary",
-    "headerAlign" : "CENTER",
-    "footer" : "End of Report",
-    "footerAlign" : "RIGHT",
-    "dependsOn" : {
-        "ref" : {
-            "type" : "datapod",
-            "uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c71125"
-        }
+  "uuid": "925e968d-3866-4639-a370-7929efed3a00",
+  "version": "1552424065",
+  "name": "rpt_data_quality_summary",
+  "desc": "Data Quality Summary",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
+      "version": "1548315952",
+      "name": "db_admin"
     },
-    "attributeInfo" : [ 
-        {
-            "attrSourceId" : "0",
-            "attrSourceName" : "rule_uuid",
-            "sourceAttr" : {
-                "attrId" : "0",
-                "attrType" : "string",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c71125"
-                }
-            }
-        }, 
-        {
-            "attrSourceId" : "1",
-            "attrSourceName" : "rule_version",
-            "sourceAttr" : {
-                "attrId" : "1",
-                "attrType" : "string",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c71125"
-                }
-            }
-        }, 
-        {
-            "attrSourceId" : "2",
-            "attrSourceName" : "rule_name",
-            "sourceAttr" : {
-                "attrId" : "2",
-                "attrType" : "string",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c71125"
-                }
-            }
-        }, 
-        {
-            "attrSourceId" : "3",
-            "attrSourceName" : "datapod_uuid",
-            "sourceAttr" : {
-                "attrId" : "3",
-                "attrType" : "string",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c71125"
-                }
-            }
-        }, 
-        {
-            "attrSourceId" : "4",
-            "attrSourceName" : "datapod_version",
-            "sourceAttr" : {
-                "attrId" : "4",
-                "attrType" : "string",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c71125"
-                }
-            }
-        }, 
-        {
-            "attrSourceId" : "5",
-            "attrSourceName" : "datapod_name",
-            "sourceAttr" : {
-                "attrId" : "5",
-                "attrType" : "string",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c71125"
-                }
-            }
-        }, 
-        {
-            "attrSourceId" : "6",
-            "attrSourceName" : "all_check_pass",
-            "sourceAttr" : {
-                "attrId" : "6",
-                "attrType" : "string",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c71125"
-                }
-            }
-        }, 
-        {
-            "attrSourceId" : "7",
-            "attrSourceName" : "total_row_count",
-            "sourceAttr" : {
-                "attrId" : "7",
-                "attrType" : "string",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c71125"
-                }
-            }
-        }, 
-        {
-            "attrSourceId" : "8",
-            "attrSourceName" : "total_pass_count",
-            "sourceAttr" : {
-                "attrId" : "8",
-                "attrType" : "string",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c71125"
-                }
-            }
-        }, 
-        {
-            "attrSourceId" : "9",
-            "attrSourceName" : "total_fail_count",
-            "sourceAttr" : {
-                "attrId" : "9",
-                "attrType" : "string",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c71125"
-                }
-            }
-        }, 
-        {
-            "attrSourceId" : "10",
-            "attrSourceName" : "threshold_type",
-            "sourceAttr" : {
-                "attrId" : "10",
-                "attrType" : "string",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c71125"
-                }
-            }
-        }, 
-        {
-            "attrSourceId" : "11",
-            "attrSourceName" : "threshold_limit",
-            "sourceAttr" : {
-                "attrId" : "11",
-                "attrType" : "string",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c71125"
-                }
-            }
-        }, 
-        {
-            "attrSourceId" : "12",
-            "attrSourceName" : "threshold_ind",
-            "sourceAttr" : {
-                "attrId" : "12",
-                "attrType" : "string",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c71125"
-                }
-            }
-        }, 
-        {
-            "attrSourceId" : "13",
-            "attrSourceName" : "score",
-            "sourceAttr" : {
-                "attrId" : "13",
-                "attrType" : "integer",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c71125"
-                }
-            }
-        }, 
-        {
-            "attrSourceId" : "14",
-            "attrSourceName" : "version",
-            "sourceAttr" : {
-                "attrId" : "14",
-                "attrType" : "string",
-                "ref" : {
-                    "type" : "datapod",
-                    "uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c71125"
-                }
-            }
-        }
+    "value": null
+  },
+  "createdOn": "Tue Mar 12 16:54:25 EDT 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
+        "version": "1552267311",
+        "name": "Deutsche Admin"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "title": "Deutsche Bank",
+  "header": "Data Quality Summary",
+  "headerAlign": "CENTER",
+  "footer": "End of Report",
+  "footerAlign": "RIGHT",
+  "filterInfo": null,
+  "dependsOn": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+      "version": null,
+      "name": "dq_rule_summary"
+    },
+    "value": null
+  },
+  "attributeInfo": [
+    {
+      "attrSourceId": "0",
+      "attrDisplaySeq": null,
+      "attrSourceName": "rule_uuid",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+          "version": null,
+          "name": "dq_rule_summary"
+        },
+        "value": null,
+        "attrId": "0",
+        "attrName": "rule_uuid",
+        "attrType": "string",
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrSourceId": "1",
+      "attrDisplaySeq": null,
+      "attrSourceName": "rule_version",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+          "version": null,
+          "name": "dq_rule_summary"
+        },
+        "value": null,
+        "attrId": "1",
+        "attrName": "rule_version",
+        "attrType": "string",
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrSourceId": "2",
+      "attrDisplaySeq": null,
+      "attrSourceName": "rule_name",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+          "version": null,
+          "name": "dq_rule_summary"
+        },
+        "value": null,
+        "attrId": "2",
+        "attrName": "rule_name",
+        "attrType": "string",
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrSourceId": "3",
+      "attrDisplaySeq": null,
+      "attrSourceName": "datapod_uuid",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+          "version": null,
+          "name": "dq_rule_summary"
+        },
+        "value": null,
+        "attrId": "3",
+        "attrName": "datapod_uuid",
+        "attrType": "string",
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrSourceId": "4",
+      "attrDisplaySeq": null,
+      "attrSourceName": "datapod_version",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+          "version": null,
+          "name": "dq_rule_summary"
+        },
+        "value": null,
+        "attrId": "4",
+        "attrName": "datapod_version",
+        "attrType": "string",
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrSourceId": "5",
+      "attrDisplaySeq": null,
+      "attrSourceName": "datapod_name",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+          "version": null,
+          "name": "dq_rule_summary"
+        },
+        "value": null,
+        "attrId": "5",
+        "attrName": "datapod_name",
+        "attrType": "string",
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrSourceId": "6",
+      "attrDisplaySeq": null,
+      "attrSourceName": "all_check_pass",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+          "version": null,
+          "name": "dq_rule_summary"
+        },
+        "value": null,
+        "attrId": "6",
+        "attrName": "all_check_pass",
+        "attrType": "string",
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrSourceId": "7",
+      "attrDisplaySeq": null,
+      "attrSourceName": "total_row_count",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+          "version": null,
+          "name": "dq_rule_summary"
+        },
+        "value": null,
+        "attrId": "7",
+        "attrName": "total_row_count",
+        "attrType": "string",
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrSourceId": "8",
+      "attrDisplaySeq": null,
+      "attrSourceName": "total_pass_count",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+          "version": null,
+          "name": "dq_rule_summary"
+        },
+        "value": null,
+        "attrId": "8",
+        "attrName": "total_pass_count",
+        "attrType": "string",
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrSourceId": "9",
+      "attrDisplaySeq": null,
+      "attrSourceName": "total_fail_count",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+          "version": null,
+          "name": "dq_rule_summary"
+        },
+        "value": null,
+        "attrId": "9",
+        "attrName": "total_fail_count",
+        "attrType": "string",
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrSourceId": "10",
+      "attrDisplaySeq": null,
+      "attrSourceName": "threshold_type",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+          "version": null,
+          "name": "dq_rule_summary"
+        },
+        "value": null,
+        "attrId": "10",
+        "attrName": "threshold_type",
+        "attrType": "string",
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrSourceId": "11",
+      "attrDisplaySeq": null,
+      "attrSourceName": "threshold_limit",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+          "version": null,
+          "name": "dq_rule_summary"
+        },
+        "value": null,
+        "attrId": "11",
+        "attrName": "threshold_limit",
+        "attrType": "string",
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrSourceId": "12",
+      "attrDisplaySeq": null,
+      "attrSourceName": "threshold_ind",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+          "version": null,
+          "name": "dq_rule_summary"
+        },
+        "value": null,
+        "attrId": "12",
+        "attrName": "threshold_ind",
+        "attrType": "string",
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrSourceId": "13",
+      "attrDisplaySeq": null,
+      "attrSourceName": "score",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+          "version": null,
+          "name": "dq_rule_summary"
+        },
+        "value": null,
+        "attrId": "13",
+        "attrName": "score",
+        "attrType": "integer",
+        "attrUnitType": null,
+        "function": null
+      }
+    },
+    {
+      "attrSourceId": "14",
+      "attrDisplaySeq": null,
+      "attrSourceName": "version",
+      "function": null,
+      "sourceAttr": {
+        "ref": {
+          "type": "datapod",
+          "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+          "version": null,
+          "name": "dq_rule_summary"
+        },
+        "value": null,
+        "attrId": "14",
+        "attrName": "version",
+        "attrType": "string",
+        "attrUnitType": null,
+        "function": null
+      }
+    }
+  ],
+  "saveOnRefresh": "Y",
+  "senderInfo": {
+    "emailTo": [
+      "ypalrecha@inferyx.com"
     ],
-    "saveOnRefresh" : "Y",
-    "senderInfo" : {
-        "emailTo" : [ 
-            "ypalrecha@inferyx.com"
-        ],
-        "emailBCC" : [],
-        "emailCC" : [],
-        "notifyOnSuccess" : "Y",
-        "notifyOnFailure" : "Y",
-        "sendAttachment" : "Y"
-    },
-    "limit" : -1,
-    "format" : "EXCEL",
-    "uuid" : "925e968d-3866-4639-a370-7929efed3a00",
-    "version" : "1552360115",
-    "name" : "rpt_data_quality_summary",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
-            "version" : "1548315952",
-            "name" : "db_admin"
-        }
-    },
-    "createdOn" : ISODate("2019-03-12T03:08:35.000Z"),
-    "tags" : [],
-    "active" : "Y",
-    "locked" : "N",
-    "published" : "N",
-    "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "4be92a58-3e24-410c-ab09-e1e719c1db81",
-                "version" : "1552267311"
-            }
-        }
-    ],
-    "publicFlag" : "N"
+    "emailBCC": [],
+    "emailCC": [],
+    "emailAttachment": null,
+    "notifyOnSuccess": "Y",
+    "notifyOnFailure": "Y",
+    "sendAttachment": "Y"
+  },
+  "paramList": null,
+  "limit": -1,
+  "format": "EXCEL"
 }

@@ -1,67 +1,73 @@
 {
-	"attribute": {
-		"attrId": "1",
-		"ref": {
-			"type": "datapod",
-			"uuid": "e5a12713-0b1d-4d2a-b082-a65cad576e94"
+	"attribute" : {
+		"attrId" : "1",
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "e5a12713-0b1d-4d2a-b082-a65cad576e94"
 		}
 	},
-	"dependsOn": {
-		"ref": {
-			"type": "datapod",
-			"uuid": "e5a12713-0b1d-4d2a-b082-a65cad576e94"
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "e5a12713-0b1d-4d2a-b082-a65cad576e94"
 		}
 	},
-	"duplicateKeyCheck": "N",
-	"nullCheck": "Y",
-	"valueCheck": [],
-	"rangeCheck": {
+	"duplicateKeyCheck" : "N",
+	"nullCheck" : "Y",
+	"valueCheck" : [ ],
+	"rangeCheck" : {
 		
 	},
-	"dataTypeCheck": "",
-	"lengthCheck": {
+	"dataTypeCheck" : "",
+	"lengthCheck" : {
 		
 	},
-	"refIntegrityCheck": {
-    "dependsOn": {
-      "ref": {
-        "type": "datapod",
-        "uuid": "e5a12713-0b1d-4d2a-b082-a65cad576e94"
-      }
-    },
-    "targetAttr": {
-      "attrId": "0",
-      "ref": {
-        "type": "datapod",
-        "uuid": "e5a12713-0b1d-4d2a-b082-a65cad576e94"
-      }
-    }
-  },
-	"uuid": "2f2a9f61-9482-4591-978e-7a6b25564445",
-	"version": "1491629643",
-	"name": "dqr_fact_customer_summary_monthly_year_month",
-	"desc": "Dq rule check for null values and foreign key comparison against primary key for aggregation datapods",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"refIntegrityCheck" : {
+		"dependsOn" : {
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "e5a12713-0b1d-4d2a-b082-a65cad576e94"
+			}
+		},
+		"targetAttr" : {
+			"attrId" : "0",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "e5a12713-0b1d-4d2a-b082-a65cad576e94"
+			}
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-	"tags": [
+	"uuid" : "2f2a9f61-9482-4591-978e-7a6b25564445",
+	"version" : "1491629643",
+	"name" : "dqr_fact_customer_summary_monthly_year_month",
+	"desc" : "Dq rule check for null values and foreign key comparison against primary key for aggregation datapods",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
+		}
+	},
+	"createdOn" : ISODate("2019-03-12T15:03:50.766Z"),
+	"tags" : [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-  "locked" : "N",
-	"published": "N",
-	"appInfo": [
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
 		}
-	]
+	],
+	"thresholdInfo" : {
+		"low" : "25",
+		"medium" : "50",
+		"high" : "75",
+		"type" : "PERCENTAGE"
+	}
 }

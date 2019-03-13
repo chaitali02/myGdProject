@@ -1665,7 +1665,7 @@ DataQualityModule.controller('Result2DQController', function ($http, dagMetaData
   $scope.isD3RuleEexecGraphShow = false;
   $scope.isD3RGEexecGraphShow = false;
   $scope.currentPage = 1;
-  $scope.pageSize = 10;
+  $scope.pageSize = 100;
   $scope.paginationPageSizes = [10, 25, 50, 75, 100],
     $scope.maxSize = 5;
   $scope.bigTotalItems = 175;

@@ -1,66 +1,72 @@
 {
-	"attribute": {
-		"attrId": "8",
-		"ref": {
-			"type": "datapod",
-			"uuid": "14bebb86-6137-4109-ad45-0eea53066768"
+	"attribute" : {
+		"attrId" : "8",
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "14bebb86-6137-4109-ad45-0eea53066768"
 		}
 	},
-	"dependsOn": {
-		"ref": {
-			"type": "datapod",
-			"uuid": "14bebb86-6137-4109-ad45-0eea53066768"
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "14bebb86-6137-4109-ad45-0eea53066768"
 		}
 	},
-	"duplicateKeyCheck": "N",
-	"nullCheck": "Y",
-	"valueCheck": [],
-	"rangeCheck": {
+	"duplicateKeyCheck" : "N",
+	"nullCheck" : "Y",
+	"valueCheck" : [ ],
+	"rangeCheck" : {
 		
 	},
-	"lengthCheck": {
+	"lengthCheck" : {
 		
 	},
-	"refIntegrityCheck": {
-    "dependsOn": {
-      "ref": {
-        "type": "datapod",
-        "uuid": "14bebb86-6137-4109-ad45-0eea53066768"
-      }
-    },
-    "targetAttr": {
-      "attrId": "0",
-      "ref": {
-        "type": "datapod",
-        "uuid": "14bebb86-6137-4109-ad45-0eea53066768"
-      }
-    }
-  },
-	"uuid": "3de92fa4-b137-4b67-b5f3-54f3733f0a9d",
-	"version": "1490091468",
-	"name": "dqr_fact_transaction_account_id",
-	"desc": "dq rule to check referential integrity for foreign keys by comparing against its natural keys within the target data model",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"refIntegrityCheck" : {
+		"dependsOn" : {
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "14bebb86-6137-4109-ad45-0eea53066768"
+			}
+		},
+		"targetAttr" : {
+			"attrId" : "0",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "14bebb86-6137-4109-ad45-0eea53066768"
+			}
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-	"tags": [
+	"uuid" : "3de92fa4-b137-4b67-b5f3-54f3733f0a9d",
+	"version" : "1490091468",
+	"name" : "dqr_fact_transaction_account_id",
+	"desc" : "dq rule to check referential integrity for foreign keys by comparing against its natural keys within the target data model",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
+		}
+	},
+	"createdOn" : ISODate("2019-03-12T15:03:50.766Z"),
+	"tags" : [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-  "locked" : "N",
-	"published": "N",
-	"appInfo": [
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
 		}
-	]
+	],
+	"thresholdInfo" : {
+		"low" : "25",
+		"medium" : "50",
+		"high" : "75",
+		"type" : "PERCENTAGE"
+	}
 }

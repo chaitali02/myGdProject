@@ -1,66 +1,72 @@
 {
-	"attribute": {
-		"attrId": "8",
-		"ref": {
-			"type": "datapod",
-			"uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
+	"attribute" : {
+		"attrId" : "8",
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
 		}
 	},
-	"dependsOn": {
-		"ref": {
-			"type": "datapod",
-			"uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
 		}
 	},
-	"duplicateKeyCheck": "N",
-	"nullCheck": "Y",
-	"valueCheck": [],
-	"rangeCheck": {
+	"duplicateKeyCheck" : "N",
+	"nullCheck" : "Y",
+	"valueCheck" : [ ],
+	"rangeCheck" : {
 		
 	},
-	"lengthCheck": {
+	"lengthCheck" : {
 		
 	},
-	"refIntegrityCheck": {
-    "dependsOn": {
-      "ref": {
-        "type": "datapod",
-        "uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
-      }
-    },
-    "targetAttr": {
-      "attrId": "0",
-      "ref": {
-        "type": "datapod",
-        "uuid": "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
-      }
-    }
-  },
-	"uuid": "08d259be-7377-4545-9647-6e42de482927",
-	"version": "1490087101",
-	"name": "dqr_dim_address_zipcode",
-	"desc": "dq rule to check referential integrity for foreign keys by comparing against its natural keys within the target data model",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"refIntegrityCheck" : {
+		"dependsOn" : {
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
+			}
+		},
+		"targetAttr" : {
+			"attrId" : "0",
+			"ref" : {
+				"type" : "datapod",
+				"uuid" : "52bbfced-1b47-41fa-94a8-2e9f7bd9f725"
+			}
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-	"tags": [
+	"uuid" : "08d259be-7377-4545-9647-6e42de482927",
+	"version" : "1490087101",
+	"name" : "dqr_dim_address_zipcode",
+	"desc" : "dq rule to check referential integrity for foreign keys by comparing against its natural keys within the target data model",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
+		}
+	},
+	"createdOn" : ISODate("2019-03-12T15:03:50.766Z"),
+	"tags" : [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-  "locked" : "N",
-	"published": "N",
-	"appInfo": [
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
 		}
-	]
+	],
+	"thresholdInfo" : {
+		"low" : "25",
+		"medium" : "50",
+		"high" : "75",
+		"type" : "PERCENTAGE"
+	}
 }

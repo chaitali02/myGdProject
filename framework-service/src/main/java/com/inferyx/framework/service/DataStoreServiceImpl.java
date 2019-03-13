@@ -292,11 +292,16 @@ public class DataStoreServiceImpl {
 		query.fields().include("uuid");
 		query.fields().include("version");
 
-		if (appUuid != null && version != null)
+		if (uuid != null && version != null) {
 			query.addCriteria(Criteria.where("metaId.ref.uuid").is(uuid)
 					.andOperator(Criteria.where("metaId.ref.version").is(version)));
-		else if (appUuid != null)
+		} else {
+			query.addCriteria(Criteria.where("metaId.ref.uuid").is(uuid));
+		}
+			
+		if (appUuid != null) {
 			query.addCriteria(Criteria.where("appInfo.ref.uuid").is(appUuid));
+		}
 
 		query.with(new Sort(Sort.Direction.DESC, "version"));
 		query.addCriteria(Criteria.where("active").is("Y"));
@@ -308,14 +313,15 @@ public class DataStoreServiceImpl {
 				Aggregation dataStoreAggr = newAggregation(match(Criteria.where("metaId.ref.uuid").is(uuid)),
 						group("uuid").first("uuid").as("uuid").max("version").as("version"));
 
-				AggregationResults<DataStore> datastoreResults = mongoTemplate.aggregate(dataStoreAggr, "datastore",
+				AggregationResults<DataStore> datastoreResults = mongoTemplate.aggregate(dataStoreAggr, MetaType.datastore.toString().toLowerCase(),
 						DataStore.class);
 				datastoreList = datastoreResults.getMappedResults();
 			}
 
-			if (datastoreList.size() > 0)
-			dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(datastoreList.get(0).getUuid(),
-					datastoreList.get(0).getVersion(), MetaType.datastore.toString());
+			if (datastoreList.size() > 0) {
+				dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(datastoreList.get(0).getUuid(),
+						datastoreList.get(0).getVersion(), MetaType.datastore.toString());
+			}
 
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block

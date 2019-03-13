@@ -1,21 +1,31 @@
 select tabname,cnt from
 (
-select 'rule_result_detail' as tabname, count(*) as cnt from aml_small.rule_result_detail
+select 'dq_rule_summary' as tabname, count(*) as cnt from framework.dq_rule_summary
 union
-select 'rule_result_summary' as tabname, count(*) as cnt from aml_small.rule_result_summary
+select 'dq_rule_detail' as tabname, count(*) as cnt from framework.dq_rule_detail
 union
-select 'account_summary_daily' as tabname, count(*) as cnt from aml_small.account_summary_daily
+select 'equity_orders' as tabname, count(*) as cnt from framework.equity_orders
 union
-select 'fact_transaction_journal' as tabname, count(*) as cnt from aml_small.fact_transaction_journal
+select 'equity_executions' as tabname, count(*) as cnt from framework.equity_executions
 union
-select 'customer_alert_summary' as tabname, count(*) as cnt from aml_small.customer_alert_summary
+select 'security' as tabname, count(*) as cnt from framework.security
 union
-select 'rule_alert_summary' as tabname, count(*) as cnt from aml_small.rule_alert_summary
+select 'rule_result_detail' as tabname, count(*) as cnt from framework.rule_result_detail
 union
-select 'country_alert_summary' as tabname, count(*) as cnt from aml_small.country_alert_summary
+select 'rule_result_summary' as tabname, count(*) as cnt from framework.rule_result_summary
 union
-select 'predict_suspicious_activity_gbt' as tabname, count(*) as cnt from aml_small.predict_suspicious_activity_gbt
+select 'account_summary_daily' as tabname, count(*) as cnt from framework.account_summary_daily
 union
-select 'predict_suspicious_activity_lr' as tabname, count(*) as cnt from aml_small.predict_suspicious_activity_lr
+select 'fact_transaction_journal' as tabname, count(*) as cnt from framework.fact_transaction_journal
+union
+select 'customer_alert_summary' as tabname, count(*) as cnt from framework.customer_alert_summary
+union
+select 'rule_alert_summary' as tabname, count(*) as cnt from framework.rule_alert_summary
+union
+select 'country_alert_summary' as tabname, count(*) as cnt from framework.country_alert_summary
+union
+select 'predict_suspicious_activity_gbt' as tabname, count(*) as cnt from framework.predict_suspicious_activity_gbt
+union
+select 'predict_suspicious_activity_lr' as tabname, count(*) as cnt from framework.predict_suspicious_activity_lr
 ) t1
 order by tabname;

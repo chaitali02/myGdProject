@@ -1,6 +1,6 @@
 {
   "uuid": "291d1c24-5b2a-43f4-b17c-1cb08d9f3126",
-  "version": "1552344240",
+  "version": "1552424274",
   "name": "dq_equity_executions_rule7",
   "desc": "Security ID must be populated and must be available in the security master reference data",
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Mar 11 18:44:00 EDT 2019",
+  "createdOn": "Tue Mar 12 16:57:54 EDT 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -61,27 +61,30 @@
   "dateFormatCheck": null,
   "customFormatCheck": null,
   "lengthCheck": {},
-  "refIntegrityCheck" : {
-	    "dependsOn" : {
-	        "ref" : {
-	            "type" : "relation",
-	            "uuid" : "3c772fa7-758d-4371-8e80-65056573c545"
-	        }
-	    },
-	    "targetAttr" : {
-	        "ref" : {
-	            "type" : "datapod",
-	            "uuid" : "1d83dac9-4733-4503-b14d-afd91675d69b",
-	            "version" : null,
-	            "name" : "security"
-	        },
-	        "value" : null,
-	        "attrId" : "0",
-	        "attrName" : "security_id",
-	        "attrType" : null,
-	        "attrUnitType" : null,
-	        "function" : null
-	    }
+  "refIntegrityCheck": {
+    "dependsOn": {
+      "ref": {
+        "type": "relation",
+        "uuid": "3c772fa7-758d-4371-8e80-65056573c545",
+        "version": null,
+        "name": "rel_dq_equity_executions_rule7"
+      },
+      "value": null
+    },
+    "targetAttr": {
+      "ref": {
+        "type": "datapod",
+        "uuid": "1d83dac9-4733-4503-b14d-afd91675d69b",
+        "version": null,
+        "name": "security"
+      },
+      "value": null,
+      "attrId": "0",
+      "attrName": "security_id",
+      "attrType": null,
+      "attrUnitType": null,
+      "function": null
+    }
   },
   "filterInfo": null,
   "userInfo": null,

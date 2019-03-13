@@ -217,42 +217,6 @@
                 "uuid" : "44e7dd6f-e8e6-41fa-a2fd-9b2e9b25ba98"
             },
             "attributeId" : 22
-        }, 
-        {
-            "ref" : {
-                "type" : "formula",
-                "uuid" : "0a0898e4-50b0-4b71-95f5-6f0b67c57eb5"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "formula",
-                "uuid" : "017a63de-8265-4229-8508-bf2f5982d36a"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "formula",
-                "uuid" : "ba827628-39fd-4d4b-b848-66bc1381967c"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "formula",
-                "uuid" : "148c305e-d31f-4239-b1b2-bf4b2c16ac50"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "formula",
-                "uuid" : "9101aa0b-f5c0-468d-a3a8-9410fffd209b"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "formula",
-                "uuid" : "9decfa52-ab8c-43e0-8251-5c053773679c"
-            }
         }
     ],
   "filterInfo": [],

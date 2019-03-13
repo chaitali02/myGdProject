@@ -1,0 +1,27 @@
+drop table if exists equity_orders;
+ create table equity_orders(
+order_id int(10),
+version_id int(10),
+order_event_type varchar(50),
+order_placement_date varchar(50),
+order_placement_time varchar(50),
+order_event_date varchar(50),
+order_event_time varchar(50),
+time_in_force varchar(50),
+order_type varchar(50),
+limit_price double,
+stop_price double,
+trading_account_id int(10),
+sales_trader_id  int(10),
+position_trader_id int(10),
+security_id int(10),
+security_symbol  varchar(50),
+ric_code varchar(50),
+security_description varchar(50),
+client_account_id int(10),
+parent_order_id  int(10),
+route_destination varchar(50),
+quantity double,
+reason varchar(50),
+version  int(10));
+

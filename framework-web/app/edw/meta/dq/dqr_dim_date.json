@@ -1,47 +1,53 @@
 {
-	"dependsOn": {
-		"ref": {
-			"type": "datapod",
-			"uuid": "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5"
+	"dependsOn" : {
+		"ref" : {
+			"type" : "datapod",
+			"uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5"
 		}
 	},
-	"duplicateKeyCheck": "Y",
-	"nullCheck": "N",
-	"valueCheck": [],
-	"rangeCheck": {
+	"duplicateKeyCheck" : "Y",
+	"nullCheck" : "N",
+	"valueCheck" : [ ],
+	"rangeCheck" : {
 		
 	},
-	"lengthCheck": {
+	"lengthCheck" : {
 		
 	},
-	"refIntegrityCheck": {
+	"refIntegrityCheck" : {
 		
 	},
-	"uuid": "4b25ffe6-7b32-4626-bab7-4bed477a5a1d",
-	"version": "1490112346",
-	"name": "dqr_dim_date",
-	"desc": "dq table level check on target tables for duplicates",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
+	"uuid" : "4b25ffe6-7b32-4626-bab7-4bed477a5a1d",
+	"version" : "1490112346",
+	"name" : "dqr_dim_date",
+	"desc" : "dq table level check on target tables for duplicates",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-	"tags": [
+	"createdOn" : ISODate("2019-03-12T15:03:50.766Z"),
+	"tags" : [
 		"DEV",
 		"1.0.1",
 		"DEMO"
 	],
 	"active" : "Y",
-  "locked" : "N",
-	"published": "N",
-	"appInfo": [
+	"locked" : "N",
+	"published" : "N",
+	"appInfo" : [
 		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
 			}
 		}
-	]
+	],
+	"thresholdInfo" : {
+		"low" : "25",
+		"medium" : "50",
+		"high" : "75",
+		"type" : "PERCENTAGE"
+	}
 }
