@@ -685,7 +685,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       listState:'viewrule',
       detailState: 'createrules',
       state: 'createrules',
-      childMenu:['rule','rulegroup'],
+      childMenu:['rule','rule2','rulegroup'],
       allowInChildMenu :true,
 
     },
@@ -695,7 +695,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       color : '#2489D1',
       icon : 'rule.svg',
       parentIconCaption:'Business Rules',
-      childIconCaption:'Rule',
+      childIconCaption:'Rule2',
       execType:'rule2Exec',
       metaType:'rule2',
       iconPath : 'assets/layouts/layout/img/rule.svg',
@@ -780,6 +780,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       joblistState : 'jobmonitoringlist',
       detailState :'jobexecutorlistruleexec',
       resultState:'rulerestultpage',
+      resultState2:'rule2restultpage',
       childMenu:[],
       allowInChildMenu : false,
     },
@@ -2272,8 +2273,8 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       },
   };
   
-  var validElementTypes = ['dag','stage','dq','dqgroup','map','load','profile','profilegroup','model','rule','rulegroup','train','predict','simulate','recon','recongroup','operatortype','operator',,'ingest','ingestgroup','report','dashboard'];
-  obj.validTaskTypes = ['dq','dqgroup','map','load','profile','profilegroup','model','rule','rulegroup','train','predict','simulate','recon','recongroup','operatortype','operator',,'ingest','ingestgroup','report','dashboard'];
+  var validElementTypes = ['dag','stage','dq','dqgroup','map','load','profile','profilegroup','model','rule','rule2','rulegroup','train','predict','simulate','recon','recongroup','operatortype','operator',,'ingest','ingestgroup','report','dashboard'];
+  obj.validTaskTypes = ['dq','dqgroup','map','load','profile','profilegroup','model','rule','rule2','rulegroup','train','predict','simulate','recon','recongroup','operatortype','operator',,'ingest','ingestgroup','report','dashboard'];
   var defaultElement = {
     // markup: '<g class="rotatable"><g class="scalable"><image class="body"/></g><image class="remove"/><g class="status"><rect class="rectstatus" x="82" y="-25" height="22px" width="65px" rx="10" ry="10" fill="white"></rect><text class="statusText"/><image class="statusImg"><title class="statusTitle">Status</title></image></g><text class="label" /> <title /><g class="inPorts"/><g class="outPorts"/></g>',
     markup: '<g class="rotatable"><g class="scalable"><image class="body"/></g><image class="remove"/><g class="status"><rect class="rectstatus" x="50" y="-26" height="22px" width="90px" rx="10" ry="10" fill="white"></rect><text class="statusText"/><title class="statusTitle">Status</title></g><text class="label" /> <title /><g class="inPorts"/><g class="outPorts"/></g>',
@@ -2491,6 +2492,15 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
         }
       }
     }),
+    'rule2' : angular.merge({},defaultElement,{
+      elementType:'rule2',
+      attrs: {
+        '.body': {
+          elementType : 'rule2',
+          "xlink:href": obj.elementDefs['rule2'].iconPath
+        }
+      }
+    }),
     
     'operatortype' : angular.merge({},defaultElement,{
       elementType:'operatortype',
@@ -2616,6 +2626,15 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
         '.body': {
           elementType : 'rule',
           "xlink:href": obj.elementDefs['rule'].iconPathInactive
+        }
+      }
+    }),
+    'rule2Inactive' : angular.merge({},defaultElement,{
+      elementType:'rule2',
+      attrs: {
+        '.body': {
+          elementType : 'rule2',
+          "xlink:href": obj.elementDefs['rule2'].iconPathInactive
         }
       }
     }),

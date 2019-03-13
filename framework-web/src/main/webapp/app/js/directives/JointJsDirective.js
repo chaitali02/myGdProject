@@ -1097,6 +1097,7 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
                      map : {name:'map', label: 'Map'},
                      model : {name:'model', label: 'Model'},
                      rule : {name:'rule', label: 'Rule'},
+                     rule : {name:'rule2', label: 'Rule2'},
                      rulegroup : {name:'rulegroup', label: 'RuleGroup',url:'rule/getRuleExecByRGExec?'},
                      recon : {name:'recon', label: 'Recon'},
                      recongroup : {name:'recongroup', label: 'ReconGroup',url:'recon/getReconExecByRGExec?'},
@@ -1310,6 +1311,9 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
                  api = 'profile';
                  break;
                  case 'rule':
+                   api = 'rule';
+                   break;
+                  case 'rule2':
                    api = 'rule';
                    break;
                  case 'rulegroup':
