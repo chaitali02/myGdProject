@@ -228,6 +228,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 			filter = filterOperator2.generateExprSql(criteria.getCriteriaFilter(), refKeyMap, filterSource, otherParams,
 					usedRefKeySet, execParams, false, false, runMode, mapSourceDS, attributeList);
 			filter = filter.replaceAll(tablename, "rule_with_query");
+			filter = filter.replaceAll("'", "''");
 
 			selectbuilder.append(filter).append(" as ").append("criteria_expr").append(ConstantsUtil.COMMA);
 			

@@ -1,9 +1,10 @@
-drop table if exists security;
-create table security(	
-	security_id int(10),
-	security_symbol varchar(50),
-	ric_code varchar(50),
-	security_description varchar(50),
-	version int(10));
+DROP TABLE IF EXISTS security; 
 
-	 
+CREATE TABLE security 
+  ( 
+     security_id          INT(10), 
+     security_symbol      VARCHAR(50), 
+     ric_code             VARCHAR(50), 
+     security_description VARCHAR(100), 
+     version              INT(10) 
+  ); 

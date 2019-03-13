@@ -61,6 +61,7 @@ public class DQOperator implements IParsable {
 	private String ONLY_ELSE = " ELSE ";
 	private String ONLY_END = " END ";
 	private String THEN = " THEN 'Y' ELSE 'N' END AS ";
+	private String THEN_N_Y = " THEN 'N' ELSE 'Y' END AS ";
 	private String THEN_1_0 = " THEN 1 ELSE 0 END AS ";
 	private String THEN_0_1 = " THEN 0 ELSE 1 END AS ";
 	private String SELECT = " SELECT ";
@@ -100,6 +101,7 @@ public class DQOperator implements IParsable {
 	private String DOMAIN_CHECK_P = "domainCheck_p";
 	private String BLANK_SPACE_CHECK_P = "blankSpaceCheck_p";
 	private String EXPRESSION_CHECK_P = "expressionCheck_p";
+	private String ALL_CHECK_P = "allCheck_p";
 	
 	private String NULL_CHECK_F = "nullCheck_f";
 	private String VALUE_CHECK_F= "valueCheck_f";
@@ -113,6 +115,7 @@ public class DQOperator implements IParsable {
 	private String DOMAIN_CHECK_F = "domainCheck_f";
 	private String BLANK_SPACE_CHECK_F = "blankSpaceCheck_f";
 	private String EXPRESSION_CHECK_F = "expressionCheck_f";
+	private String ALL_CHECK_F = "allCheck_f";
 
 	private String TOTAL_ROW_COUNT = "total_row_count";
 	private String TOTAL_PASS_COUNT = "total_pass_count";
@@ -577,12 +580,60 @@ public class DQOperator implements IParsable {
 			DataQualExec dataQualExec, DagExec dagExec, Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode)
 			throws Exception {
 		String select = generateSelect(dq, dataQualExec, tableName, attributeName);
-		logger.info("Select for dataQual : " + dq.getUuid() + " : " + StringUtils.isBlank(select));
 		if (StringUtils.isBlank(select)) {
 			return null;
 		}
-		return select.concat(generateFrom(dq, dq.getDependsOn().getRef(), attributeName, datapodList, dagExec, usedRefKeySet, otherParams, runMode))
+		select = select.concat(generateFrom(dq, dq.getDependsOn().getRef(), attributeName, datapodList, dagExec, usedRefKeySet, otherParams, runMode))
 				.concat(WHERE_1_1).concat(generateFilter(dq, usedRefKeySet, runMode));
+		select = generateallCheckFlag(select);
+		logger.info("Detail SQL for dataQual : " + dq.getUuid() + " : " + StringUtils.isBlank(select));
+		return select;
+		
+	}
+	
+	public String generateallCheckFlag (String detailSql) {
+		StringBuilder sql = new StringBuilder(SELECT)
+											.append(RULEUUID).append(COMMA)
+											.append(RULEVERSION).append(COMMA)
+											.append(RULENAME).append(COMMA)
+											.append(DATAPODUUID).append(COMMA)
+				  							.append(DATAPODVERSION).append(COMMA)
+				  							.append(DATAPOD_NAME).append(COMMA)
+				  							.append(ATTRIBUTE_ID).append(COMMA)
+				  							.append(ATTRIBUTE_NAME).append(COMMA)
+				  							.append(ATTRIBUTE_VAL).append(COMMA)
+				  							.append(ROWKEY_NAME).append(COMMA)
+				  							.append(ROWKEY_VALUE).append(COMMA)
+				  							.append(NULL_CHECK_PASS).append(COMMA)
+				  							.append(VALUE_CHECK_PASS).append(COMMA)
+				  							.append(RANGE_CHECK_PASS).append(COMMA)
+				  							.append(DATATYPE_CHECK_PASS).append(COMMA)
+				  							.append(FORMAT_CHECK_PASS).append(COMMA)
+				  							.append(LENGTH_CHECK_PASS).append(COMMA)
+				  							.append(REFINT_CHECK_PASS).append(COMMA)
+				  							.append(DUP_CHECK_PASS).append(COMMA)
+				  							.append(CUSTOM_CHECK_PASS).append(COMMA)
+				  							.append(DOMAIN_CHECK_PASS).append(COMMA)
+				  							.append(BLANK_SPACE_CHECK_PASS).append(COMMA)
+				  							.append(EXPRESSION_CHECK_PASS).append(COMMA)
+											.append(CASE_WHEN).append(BRACKET_OPEN)
+											.append(NULL_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
+											.append(VALUE_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
+											.append(RANGE_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
+											.append(DATATYPE_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
+											.append(FORMAT_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
+											.append(LENGTH_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
+											.append(REFINT_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
+											.append(DUP_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
+											.append(CUSTOM_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
+											.append(DOMAIN_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
+											.append(BLANK_SPACE_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
+											.append(EXPRESSION_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(BRACKET_CLOSE) 
+											.append(THEN_N_Y).append(ALL_CHECK_PASS).append(COMMA)
+											.append(VERSION).append(FROM).append(BRACKET_OPEN)
+											.append(detailSql).append(BRACKET_CLOSE).append(DQ_RESULT_READY_ALIAS);
+		
+		return sql.toString();
 	}
 	
 	public String generateSummarySql(DataQual dq, List<String> datapodList,
@@ -602,7 +653,6 @@ public class DQOperator implements IParsable {
 				  .append(DATAPODUUID).append(COMMA)
 				  .append(DATAPODVERSION).append(COMMA)
 				  .append(DATAPOD_NAME).append(COMMA)
-				  .append(ALL_CHECK_PASS).append(COMMA)
 				  .append(TOTAL_ROW_COUNT).append(COMMA)
 				  .append(TOTAL_PASS_COUNT).append(COMMA)
 				  .append(BRACKET_OPEN).append(TOTAL_ROW_COUNT).append(MINUS).append(TOTAL_PASS_COUNT).append(BRACKET_CLOSE).append(AS).append(TOTAL_FAIL_COUNT).append(COMMA)
@@ -657,6 +707,31 @@ public class DQOperator implements IParsable {
 				.append(thresholdInd).toString();
 	}
 	
+//	public String generateSummarySql3 (String summarySql2) {
+//		StringBuilder sql = new StringBuilder(SELECT)
+//											.append(RULEUUID).append(COMMA)
+//											.append(RULEVERSION).append(COMMA)
+//											.append(RULENAME).append(COMMA)
+//											.append(DATAPODUUID).append(COMMA)
+//				  							.append(DATAPODVERSION).append(COMMA)
+//				  							.append(DATAPOD_NAME).append(COMMA);
+//		sql = sql.append(SUM).append(BRACKET_OPEN).append(ALL_CHECK_PASS).append(BRACKET_CLOSE).append(AS).append(ALL_CHECK_PASS).append(COMMA)
+//						.append(COUNT).append(BRACKET_OPEN).append(NULL_CHECK_P).append(BRACKET_CLOSE).append(AS).append(TOTAL_ROW_COUNT).append(COMMA)
+//						.append(SUM).append(BRACKET_OPEN).append(ALL_CHECK_PASS).append(BRACKET_CLOSE).append(AS).append(TOTAL_PASS_COUNT).append(COMMA)
+//						.append(VERSION).append(FROM).append(BRACKET_OPEN)
+//						.append(summarySql2).append(BRACKET_CLOSE).append(DQ_RESULT_READY_ALIAS);
+//		sql = sql.append(GROUP_BY)
+//					.append(RULEUUID).append(COMMA)
+//					.append(RULEVERSION).append(COMMA)
+//					.append(RULENAME).append(COMMA)
+//					.append(DATAPODUUID).append(COMMA)
+//					.append(DATAPODVERSION).append(COMMA)
+//					.append(DATAPOD_NAME).append(COMMA)
+//					.append(VERSION);
+//		
+//		return sql.toString();
+//	}
+	
 	public String generateSummarySql2 (String summarySql1) {
 		StringBuilder sql = new StringBuilder(SELECT)
 											.append(RULEUUID).append(COMMA)
@@ -665,11 +740,12 @@ public class DQOperator implements IParsable {
 											.append(DATAPODUUID).append(COMMA)
 				  							.append(DATAPODVERSION).append(COMMA)
 				  							.append(DATAPOD_NAME).append(COMMA);
-		sql = sql.append(SUM).append(BRACKET_OPEN).append(ALL_CHECK_PASS).append(BRACKET_CLOSE).append(AS).append(ALL_CHECK_PASS).append(COMMA)
-						.append(COUNT).append(BRACKET_OPEN).append(NULL_CHECK_P).append(BRACKET_CLOSE).append(AS).append(TOTAL_ROW_COUNT).append(COMMA)
-						.append(SUM).append(BRACKET_OPEN).append(ALL_CHECK_PASS).append(BRACKET_CLOSE).append(AS).append(TOTAL_PASS_COUNT).append(COMMA)
-						.append(VERSION).append(FROM).append(BRACKET_OPEN)
-						.append(summarySql1).append(BRACKET_CLOSE).append(DQ_RESULT_READY_ALIAS);
+
+		sql = sql.append(COUNT).append(BRACKET_OPEN).append(ALL_CHECK_PASS).append(BRACKET_CLOSE).append(AS).append(TOTAL_ROW_COUNT).append(COMMA)
+					.append(SUM).append(BRACKET_OPEN).append(CASE_WHEN).append(ALL_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_Y).append("THEN 1 ELSE 0 END").append(BRACKET_CLOSE).append(AS).append(TOTAL_PASS_COUNT).append(COMMA)
+					.append(VERSION).append(FROM).append(BRACKET_OPEN)
+					.append(summarySql1).append(BRACKET_CLOSE).append(DQ_RESULT_READY_ALIAS);
+
 		sql = sql.append(GROUP_BY)
 					.append(RULEUUID).append(COMMA)
 					.append(RULEVERSION).append(COMMA)
@@ -689,7 +765,8 @@ public class DQOperator implements IParsable {
 								.append(RULENAME).append(COMMA)
 								.append(DATAPODUUID).append(COMMA)
 								.append(DATAPODVERSION).append(COMMA)
-								.append(DATAPOD_NAME).append(COMMA);
+								.append(DATAPOD_NAME).append(COMMA)
+								.append(ALL_CHECK_PASS).append(COMMA);
 		select = select
 					.append(generateSummarySql1Case(NULL_CHECK_PASS, SINGLE_QUOTED_Y, NULL_CHECK_P)).append(COMMA)
 					.append(generateSummarySql1Case(NULL_CHECK_PASS, SINGLE_QUOTED_N, NULL_CHECK_F)).append(COMMA)
@@ -715,20 +792,8 @@ public class DQOperator implements IParsable {
 					.append(generateSummarySql1Case(BLANK_SPACE_CHECK_PASS, SINGLE_QUOTED_N, BLANK_SPACE_CHECK_F)).append(COMMA)
 					.append(generateSummarySql1Case(EXPRESSION_CHECK_PASS, SINGLE_QUOTED_Y, EXPRESSION_CHECK_P)).append(COMMA)
 					.append(generateSummarySql1Case(EXPRESSION_CHECK_PASS, SINGLE_QUOTED_N, EXPRESSION_CHECK_F)).append(COMMA)
-					.append(CASE_WHEN).append(BRACKET_OPEN)
-					.append(NULL_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
-					.append(VALUE_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
-					.append(RANGE_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
-					.append(DATATYPE_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
-					.append(FORMAT_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
-					.append(LENGTH_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
-					.append(REFINT_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
-					.append(DUP_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
-					.append(CUSTOM_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
-					.append(DOMAIN_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
-					.append(BLANK_SPACE_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
-					.append(EXPRESSION_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(BRACKET_CLOSE) 
-					.append(THEN_0_1).append(ALL_CHECK_PASS).append(COMMA)
+					.append(generateSummarySql1Case(ALL_CHECK_PASS, SINGLE_QUOTED_Y, ALL_CHECK_P)).append(COMMA)
+					.append(generateSummarySql1Case(ALL_CHECK_PASS, SINGLE_QUOTED_N, ALL_CHECK_F)).append(COMMA)
 					.append(VERSION).append(FROM).append(BRACKET_OPEN)
 					.append(resSql).append(BRACKET_CLOSE).append(DQ_RESULT_ALIAS);
 		return select.toString();
@@ -937,8 +1002,7 @@ public class DQOperator implements IParsable {
 			dqBuilder.append(caseWrapper(check, colName)).append(COMMA);
 		} else {
 			dqBuilder.append("'' as ").append(EXPRESSION_CHECK_PASS).append(COMMA);
-		} // End expressionCheck If
-		
+		} // End expressionCheck If		
 		
 		dqString = dqBuilder.toString();
 		return dqString.substring(0, dqString.length() - 2);
