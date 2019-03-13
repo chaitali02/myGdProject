@@ -579,7 +579,7 @@ export class BusinessRulesDetailComponent {
   onChangeOperator(index) {
     this.ruledata.filterTableArray[index].rhsAttribute = null;
     if (this.ruledata.filterTableArray[index].operator == 'EXISTS' || this.ruledata.filterTableArray[index].operator == 'NOT EXISTS' ||
-    this.ruledata.filterTableArray[index].operator == 'IN' || this.ruledata.filterTableArray[index].operator == 'NOT IN') {
+      this.ruledata.filterTableArray[index].operator == 'IN' || this.ruledata.filterTableArray[index].operator == 'NOT IN') {
       this.ruledata.filterTableArray[index].rhsType = this.metaType.DATASET;
       this.datasetNotEmpty = false;
       let rhsAttribute = new AttributeIO();
@@ -687,7 +687,7 @@ export class BusinessRulesDetailComponent {
 
   }
   getAllLatest(IsDefault) {
-    if(this.source){
+    if (this.source) {
       this._commonService.getAllLatest(this.source).subscribe(
         response => { this.OnSuccesgetAllLatest(response, IsDefault) },
         error => console.log('Error :: ' + error)
@@ -858,7 +858,7 @@ export class BusinessRulesDetailComponent {
     }
 
     this.source = this.ruledata.source.ref.type;
-    this.getAllLatest(false);    
+    this.getAllLatest(false);
     this.getAllFunctions();
 
     if (response.isFormulaExits == true) {
@@ -886,8 +886,9 @@ export class BusinessRulesDetailComponent {
       this._commonService.getLatestByUuid(this.ruledata.paramList.ref.uuid, this.metaType.PARAMLIST)
         .subscribe(response => { this.onSuccessgetLatestByUuid(response) },
           error => console.log("Error ::", error));
-
     }
+    else 
+      this.isFilterInprogess = false;
     if (response.isFunctionExits == true) {
 
       this._commonService.getFunctionByCriteria("", "N", this.metaType.FUNCTION)
@@ -984,23 +985,23 @@ export class BusinessRulesDetailComponent {
   }
 
   onChangeLhsType(index) {
+    this.ruledata.filterTableArray[index].lhsAttribute = null;
+    if (this.ruledata.filterTableArray[index].lhsType == this.metaType.FORMULA) {
+      this._commonService.getFormulaByType(this.sourcedata.uuid, this.source)
+        .subscribe(response => { this.onSuccessgetFormulaByLhsType(response) },
+          error => console.log("Error ::", error))
+    }
+
+    else if (this.ruledata.filterTableArray[index].lhsType == this.metaType.DATAPOD) {
+      this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source)
+        .subscribe(response => { this.onSuccessgetAllAttributeBySourceLhs(response) },
+          error => console.log("Error ::", error))
+    }
+
+    else {
       this.ruledata.filterTableArray[index].lhsAttribute = null;
-      if (this.ruledata.filterTableArray[index].lhsType == this.metaType.FORMULA) {
-        this._commonService.getFormulaByType(this.sourcedata.uuid, this.source)
-          .subscribe(response => { this.onSuccessgetFormulaByLhsType(response) },
-            error => console.log("Error ::", error))
-      }
+    }
 
-      else if (this.ruledata.filterTableArray[index].lhsType == this.metaType.DATAPOD) {
-        this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source)
-          .subscribe(response => { this.onSuccessgetAllAttributeBySourceLhs(response) },
-            error => console.log("Error ::", error))
-      }
-
-      else {
-        this.ruledata.filterTableArray[index].lhsAttribute = null;
-      }
-    
   }
 
   onChangeRhsType(index) {
@@ -1029,7 +1030,7 @@ export class BusinessRulesDetailComponent {
           error => console.log("Error ::", error))
     }
 
-    else if (this.ruledata.filterTableArray[index].rhsType == this.metaType.DATASET) {      
+    else if (this.ruledata.filterTableArray[index].rhsType == this.metaType.DATASET) {
       this.datasetNotEmpty = false;
       let rhsAttribute = new AttributeIO();
       rhsAttribute.label = "";
@@ -1151,6 +1152,7 @@ export class BusinessRulesDetailComponent {
     this.displayDialogBox = false;
   }
   autoPopulate() {
+    debugger
     // this.attributeTableArray = [];
     // for (var i = 0; i < this.allSourceAttribute.length; i++) {
     //   let attributeinfo = new AttributeInfoIO();
@@ -1180,16 +1182,16 @@ export class BusinessRulesDetailComponent {
 
       attributeinfo.name = (this.allSourceAttribute[i].value.label).split(".")[1];
 
-      attributeinfo.sourceattribute = {attrId: "", uuid: "", u_Id: "", label: ""};
+      attributeinfo.sourceattribute = { attrId: "", uuid: "", u_Id: "", label: "" };
       attributeinfo.sourceattribute.uuid = this.allSourceAttribute[i].value.uuid;
-      attributeinfo.sourceattribute.label = this.allSourceAttribute[i].value.datapodname;
-      attributeinfo.sourceattribute.u_Id = this.allSourceAttribute[i].value.label;
+      attributeinfo.sourceattribute.label = this.allSourceAttribute[i].value.label;
+      attributeinfo.sourceattribute.u_Id = this.allSourceAttribute[i].value.u_Id;
       // attributeinfo.sourceattribute.type = "datapod";
-      attributeinfo.sourceattribute.attrId = this.allSourceAttribute[i].value.attributeId;
+      attributeinfo.sourceattribute.attrId = this.allSourceAttribute[i].value.attrId;
       // attributeinfo.sourceattribute.id = this.allSourceAttribute[i].value.id;
 
       // { "text": "datapod", "label": "attribute" },
-      let obj = {text: "", label: ""}
+      let obj = { text: "", label: "" }
       obj.text = this.metaType.DATAPOD
       obj.label = "attribute"
       attributeinfo.sourceAttributeType = obj;
@@ -1222,16 +1224,18 @@ export class BusinessRulesDetailComponent {
     baseRuleJson.source = source;
 
 
-    if (this.selectParameterlist.uuid != null && this.selectParameterlist.uuid != "") {
-      let paramlist = new MetaIdentifierHolder();
-      let ref = new MetaIdentifier();
-      ref.uuid = this.selectParameterlist.uuid;
-      ref.type = this.metaType.PARAMLIST;
-      paramlist.ref = ref
-      baseRuleJson.paramList = paramlist;
+    if (this.selectParameterlist) {
+      if (this.selectParameterlist.uuid != null && this.selectParameterlist.uuid != "") {
+        let paramlist = new MetaIdentifierHolder();
+        let ref = new MetaIdentifier();
+        ref.uuid = this.selectParameterlist.uuid;
+        ref.type = this.metaType.PARAMLIST;
+        paramlist.ref = ref
+        baseRuleJson.paramList = paramlist;
+      }
+      else
+        baseRuleJson.paramList = null;
     }
-    else
-      baseRuleJson.paramList = null;
 
     let filterInfoArray = [];
     if (this.ruledata.filterTableArray != null) {

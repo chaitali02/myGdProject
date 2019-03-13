@@ -197,7 +197,7 @@ export class BusinessRulesResultComponent {
     }, 1000);
   }
 
-  showDagGraph() {debugger
+  showDagGraph() {
     this.isHomeEnable = true;
     this.showGraph = true;
     this.isResultTable = false;
