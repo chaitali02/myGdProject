@@ -35,6 +35,7 @@
     "locked" : "N",
     "published" : "N",
     "inputReq" : "Y",
+    "publicFlag" : "Y",
     "appInfo" : [ 
         {
             "ref" : {

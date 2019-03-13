@@ -1439,16 +1439,26 @@ public class MetadataServiceImpl {
 		MetaType metaType = Helper.getMetaType(type);
 		Criteria criteria = new Criteria();
 		List<Criteria> criteriaList = new ArrayList<Criteria>();
+		List<String> orgAppUuidList = null;
 
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy z");
-
+		Application application = commonServiceImpl.getApp();
 		String appUuid = commonServiceImpl.findAppId(type);
 
 		try {
-			if (appUuid != null)
-				criteriaList.add(where("appInfo.ref.uuid").is(appUuid));
+				if(orgAppUuidList != null && !orgAppUuidList.isEmpty()) {
+					criteriaList.add(where("appInfo.ref.uuid").in(orgAppUuidList));
+					
+				}
+				else if (appUuid != null) {
+					criteriaList.add(where("_id").ne("1").orOperator(where("appInfo.ref.uuid").is(appUuid),
+							where("publicFlag").is("Y")));
+				}
+//				criteriaList.add(where("appInfo.ref.uuid").is(appUuid));
+			
 			if (name != null && !name.isEmpty())
 				criteriaList.add(where("name").is(name));
+			
 			if (userName != null && !userName.isEmpty()) {
 				User user = userServiceImpl.findUserByName(userName);
 				if (user != null && user.getUuid().equals(getCurrentUser().getUuid())) {

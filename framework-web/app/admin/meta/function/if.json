@@ -97,6 +97,7 @@
         }
     ],
     "funcType" : "hive",
-    "category" : "conditional"
+    "category" : "conditional",
+    "publicFlag" : "Y"
 }
 

@@ -34,7 +34,7 @@ public interface ISessionDao extends MongoRepository<Session, String>
 	@Query(value="{'uuid':?0}")
 	public Session findAllByUuid(String uuid);
 	
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid':?1}")
+	@Query(value="{$or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ],'uuid' : ?1}")
 	public Session findAllByUuid(String appUuid, String uuid);
 	
 	@Query(value="{ 'uuid' : ?0 }")

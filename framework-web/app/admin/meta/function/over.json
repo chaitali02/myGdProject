@@ -44,6 +44,7 @@
     "active" : "Y",
     "locked" : "N",
     "published" : "N",
+    "publicFlag" : "Y",
     "appInfo": [
 		{
             "ref" : {

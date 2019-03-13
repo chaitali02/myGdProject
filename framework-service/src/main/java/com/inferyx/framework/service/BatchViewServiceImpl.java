@@ -72,6 +72,7 @@ public class BatchViewServiceImpl {
 		batchView.setCreatedOn(batch.getCreatedOn());
 		batchView.setDesc(batch.getDesc());
 		batchView.setPublished(batch.getPublished());
+		batchView.setPublicFlag(batch.getPublicFlag());
 		batchView.setTags(batch.getTags());
 		
 		//setting batchView properties specific to batch
@@ -140,6 +141,7 @@ public class BatchViewServiceImpl {
 			//setting batch baseEntity
 			batch.setName(batchView.getName());
 			batch.setTags(batchView.getTags());
+			batch.setPublicFlag(batchView.getPublicFlag());
 			batch.setLocked(batchView.getLocked());
 			batch.setBaseEntity();
 			
@@ -208,6 +210,7 @@ public class BatchViewServiceImpl {
 		batch.setDesc(batchView.getDesc());
 		batch.setName(batchView.getName());
 		batch.setPublished(batchView.getPublished());
+		batch.setPublicFlag(batchView.getPublicFlag());
 		batch.setTags(batchView.getTags());
 		batch.setUuid(batchView.getUuid());
 		if(version != null) {

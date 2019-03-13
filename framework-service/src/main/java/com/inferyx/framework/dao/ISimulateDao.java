@@ -49,7 +49,7 @@ public interface ISimulateDao extends MongoRepository<Simulate, String> {
 	@Query(value = "{ 'userInfo.ref.uuid' : ?0 }")
 	public List<Simulate> findActivityByUser(String uuid, Sort sort);
 
-	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1}")
+	@Query(value = "{$or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ],'uuid' : ?1}")
 	public List<Simulate> findAllVersion(String appUuid, String uuid);
 
 	@Query(value = "{'uuid' : ?0}")

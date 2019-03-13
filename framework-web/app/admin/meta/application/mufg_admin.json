@@ -1,7 +1,7 @@
 {
     "uuid" : "39937670-837c-4027-aa45-aff8a57b738a",
     "version" : "1548315514",
-    "name" : "MUFG Admin",
+    "name" : "MUFG Admin"
     "createdBy" : {
         "ref" : {
             "type" : "user",

@@ -41,7 +41,7 @@ public interface IBatchExecDao extends MongoRepository<BatchExec, String> {
 	@Query(value = "{ 'uuid' : ?0 }")
 	public BatchExec findLatestByUuid(String uuid, Sort sort);
 
-	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1}")
+	@Query(value = "{$or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ],'uuid' : ?1}")
 	public List<BatchExec> findAllVersion(String appUuid, String uuid);
 
 	@Query(value = "{'uuid' : ?0}")

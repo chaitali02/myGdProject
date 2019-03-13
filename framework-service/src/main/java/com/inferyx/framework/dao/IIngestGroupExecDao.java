@@ -55,7 +55,7 @@ public interface IIngestGroupExecDao extends MongoRepository<IngestGroupExec, St
 	@Query(value = "{'uuid':?0}")
 	public IngestGroupExec findAllByUuid(String uuid);
 
-	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1 }")
+	@Query(value = "{$or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ],'uuid' : ?1}")
 	public List<IngestGroupExec> findAllVersion(String appUuid, String uuid);
 
 	@Query(value = "{'uuid' : ?0 }")

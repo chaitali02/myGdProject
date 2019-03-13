@@ -112,5 +112,6 @@
       "paramInfoHolder": []
     }
   ],
-  "category": "STRING"
+  "category": "STRING",
+  "publicFlag" : "Y"
 }

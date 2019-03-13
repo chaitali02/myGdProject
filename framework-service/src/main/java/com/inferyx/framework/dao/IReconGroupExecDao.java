@@ -49,7 +49,7 @@ public interface IReconGroupExecDao extends MongoRepository<ReconGroupExec, Stri
 	@Query(value = "{'_id' : ?0}")
 	public void delete(String id);
 	
-	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1}")
+	@Query(value = "{$or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ],'uuid' : ?1}")
 	public List<ReconGroupExec> findAllVersion(String appUuid, String uuid);
 
 	@Query(value = "{'uuid' : ?0}")

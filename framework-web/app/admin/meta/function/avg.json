@@ -90,6 +90,7 @@
             "paramInfoHolder" : []
         }
     ],
-    "category" : "AGGREGATE"
+    "category" : "AGGREGATE",
+    "publicFlag" : "Y"
 }
 

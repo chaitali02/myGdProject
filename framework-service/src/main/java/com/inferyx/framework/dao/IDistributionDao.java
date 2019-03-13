@@ -53,7 +53,7 @@ public interface IDistributionDao extends MongoRepository<Distribution, String> 
 	@Query(value = "{ 'userInfo.ref.uuid' : ?0 }")
 	public List<Distribution> findActivityByUser(String uuid, Sort sort);
 
-	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1}")
+	@Query(value = "{$or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ],'uuid' : ?1}")
 	public List<Distribution> findAllVersion(String appUuid, String uuid);
 
 	@Query(value = "{'uuid' : ?0}")
