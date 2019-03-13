@@ -32,7 +32,7 @@ public interface IMapDao extends MongoRepository<Map, String>{
 	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'target.ref.uuid' : ?1 }")
 	public List<Map> findMapByDatapod(String appUuid, String datapodUUID, Sort sort);
 	
-	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1}")
+	@Query(value = "{$or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ],'uuid' : ?1}")
 	public List<Map> findAllVersion(String appUuid, String uuid);
 
 	@Query(value = "{'uuid' : ?0}")
