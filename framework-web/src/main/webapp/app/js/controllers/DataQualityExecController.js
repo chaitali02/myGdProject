@@ -78,6 +78,17 @@ JobMonitoringModule.controller('DetailDqExecController', function ($filter, $sta
         });
         $scope.formateSql = sqlFormatter.format($scope.execData.exec);
     }
-
+    
+    $scope.showSqlFormaterSummary=function(){
+        debugger
+        if($scope.execData.summaryExec !=null){
+          $('#sqlFormaterModel').modal({
+            backdrop: 'static',
+            keyboard: false
+          });
+          $scope.formateSql=sqlFormatter.format($scope.execData.summaryExec);
+        }
+      }
+    
 
 });
