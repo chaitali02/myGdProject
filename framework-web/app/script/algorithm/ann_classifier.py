@@ -738,7 +738,7 @@ def train():
     
     # Splitting the dataset into the Training set and Test set
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = testPercent, random_state = 0)
-    
+
     pd_X_test = None
     if includeFeatures == "Y":
         pd_X_test = pd.DataFrame(X_test)
@@ -747,7 +747,14 @@ def train():
     sc = StandardScaler()
     X_train = sc.fit_transform(X_train)
     X_test = sc.transform(X_test)
-    
+
+
+    # replacing NaN with 0.0
+    X_train[np.isnan(X_train)] = 0.0
+    X_test[np.isnan(X_test)] = 0.0
+    y_train[np.isnan(y_train)] = 0.0
+    y_test[np.isnan(y_test)] = 0.0
+
     print("train_size: ", len(X_train))
     print("test_size: ", len(X_test))
     
@@ -924,7 +931,9 @@ def predict():
     # Feature Scaling    
     sc = StandardScaler()
     feature_dataset = sc.fit_transform(dataset2)
-    
+
+    # replacing NaN values with 0.0
+    feature_dataset[np.isnan(feature_dataset)] = 0.0
     print("Data to be predicted:")
     print(feature_dataset)
     
@@ -954,8 +963,10 @@ def predict():
     if includeFeatures == "Y":
         feature_schema = getSparkSchemaByDtypes(dataset2.iloc[:, :].dtypes)
     
-        pd_feature_dataset = pd.DataFrame(feature_dataset)
-        spark_feature_dataset_df = createSparkDfByPandasDfAndSparkSchema(pd_feature_dataset, feature_schema)
+        # pd_feature_dataset = pd.DataFrame(feature_dataset)
+        # print("printing feature datase: ")
+        # print(pd_feature_dataset)
+        spark_feature_dataset_df = createSparkDfByPandasDfAndSparkSchema(dataset2, feature_schema)
         spark_feature_dataset_df = addIndexToSparkDf(spark_feature_dataset_df)
         joined_df = joinSparkDfByIndex(spark_feature_dataset_df, spark_pred_df)
     else:
