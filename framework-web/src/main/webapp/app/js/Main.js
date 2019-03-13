@@ -427,7 +427,9 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, $window, $s
 
             { "name": "rulesgroup", "type": "rulegroup", "typeCount": "rulegroup", "uuid": "null", "caption": "Rule Group" },
             { "name": "paramlistrule", "type": "paramlist", "typeCount": "paramlistrule", "uuid": "null", "caption": "Parameter List" },
-            { "name": "rulerestult", "type": "ruleexec", "typeCount": "ruleexec", "uuid": "null", "caption": "Rule Results" }
+            { "name": "rulerestult", "type": "ruleexec", "typeCount": "ruleexec", "uuid": "null", "caption": "Rule Results" },
+            { "name": "rule2restult", "type": "ruleexec", "typeCount": "ruleexec", "uuid": "null", "caption": "Rule2 Results" }
+        
         ]
     }
     $scope.Recondata = {
@@ -1611,8 +1613,16 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
             url: "/RuleResultList",
             templateUrl: "views/common-list.html",
             data: { pageTitle: 'Business Rules' },
-            params: { type: 'ruleexec', isExec: true }
+            params: { type: 'ruleexec', isExec: true ,isExec2:false}
         })
+        .state('rule2restult', {
+            url: "/Rule2ResultList",
+            templateUrl: "views/common-list.html",
+            data: { pageTitle: 'Business Rules' },
+            params: { type: 'ruleexec', isExec: true ,isExec2:true}
+        })
+
+        
 
         .state('rulerestultpage', {
             url: "/RuleResults?id&version&type&name",
@@ -1631,7 +1641,24 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
                 }]
             }
         })
-
+        .state('rule2restultpage', {
+            url: "/Rule2Results?id&version&type&name",
+            templateUrl: "views/rule2-result.html",
+            data: { pageTitle: 'Business Rules' },
+            controller: "",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load([{
+                        name: 'RuleResult',
+                        files: [
+                            'js/controllers/Rule2Controller.js',
+                            'js/services/Rule2Service.js'
+                        ]
+                    }]);
+                }]
+            }
+        })
+        
         .state('viewrule', {
             url: "/ListRule",
             templateUrl: "views/common-list.html",
