@@ -50,7 +50,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
   $scope.dataqualitycompare = null;
   $scope.datatype = ["DATE", "DOUBLE", "FLOAT", "INTEGER", "STRING", "TIMESTAMP"];
   $scope.blankSpaceTypes = ["LEADING", "TRAILING", "IN_BETWEEN", "ALL"]
-  $scope.selectDataType = $scope.datatype[0];
+  $scope.selectDataType;// = $scope.datatype[0];
   $scope.sourceType = ["datapod"];
   $scope.refIntegrityTypes = ["datapod", "dataset", "relation"];
   $scope.dataqualitysourceType = $scope.sourceType[0];

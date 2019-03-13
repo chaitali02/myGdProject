@@ -685,7 +685,9 @@
                       <label class="control-label col-md-3">Data Type Check</label>
                       <div class="col-md-6">
                         <select ng-disabled="{{mode}} || !isSelectSoureceAttr" ng-model="selectDataType" ng-options="x for x in datatype | orderBy"
-                          class="form-control" ng-change="OnselectType()"></select>
+                          class="form-control" ng-change="OnselectType()">
+                          <option value="">-Select-</option>
+                        </select>
                       </div>
                     </div>
                     <div class="form-group">
@@ -693,7 +695,9 @@
                       <div class=" selectSimulationType col-md-6">
                         <!-- || selectType -->
                         <select ng-disabled="{{mode}}  || !isSelectSoureceAttr" title="Type" ng-model="selectdatefromate"
-                          ng-options="x for x in datefromate" class="form-control"></select>
+                          ng-options="x for x in datefromate" class="form-control">
+                          <option value="">-Select-</option>
+                        </select>
                       </div>
                     </div>
 
