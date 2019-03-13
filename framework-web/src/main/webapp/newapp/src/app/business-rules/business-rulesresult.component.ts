@@ -43,7 +43,7 @@ export class BusinessRulesResultComponent {
   baseUrl: any;
   istableShow: boolean;
   isgraphShow: boolean;
-  graphParams: any
+  params: any
   @ViewChild(JointjsGroupComponent) d_JointjsGroupComponent: JointjsGroupComponent;
   @ViewChild(TableRenderComponent) d_tableRenderComponent: TableRenderComponent;
   @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
@@ -53,6 +53,7 @@ export class BusinessRulesResultComponent {
     private _activatedRoute: ActivatedRoute, private router: Router, public appMetadata: AppMetadata, 
     private _commonService: CommonService) {
 
+    this.params = new GraphParamIO();
     this.showGraph = false
     this.isHomeEnable = false
     this.baseUrl = _config.getBaseUrl();
@@ -79,7 +80,7 @@ export class BusinessRulesResultComponent {
       "routeurl": null
     }
     ]
-    this.graphParams = {
+    this.params = {
       "typeLabel": "RuleGroup",
       "url": "rule/getRuleExecByRGExec?",
       "ref": {}
@@ -93,7 +94,7 @@ export class BusinessRulesResultComponent {
       this.getOneByUuidAndVersion(this._uuid, this._version, this._type)
     });
 
-    this.graphParams = new GraphParamIO();
+    
   }
 
   getOneByUuidAndVersion(id, version, type) {
@@ -107,15 +108,15 @@ export class BusinessRulesResultComponent {
 
   onSuccessgetOneByUuidAndVersion(response) {
     this.breadcrumbDataFrom[2].caption = response.name;
-    this.graphParams.id = this._uuid;
-    this.graphParams.uuid = this._uuid;
-    this.graphParams.name = response.name;
-    this.graphParams.elementType = this._type;
-    this.graphParams.version = this._version;
-    this.graphParams.ref.id = this._uuid;
-    this.graphParams.ref.name = response.name;
-    this.graphParams.ref.type = this._type;
-    this.graphParams.ref.version = this._version;
+    this.params.id = this._uuid;
+    this.params.uuid = this._uuid;
+    this.params.name = response.name;
+    this.params.elementType = this._type;
+    this.params.version = this._version;
+    this.params.ref.id = this._uuid;
+    this.params.ref.name = response.name;
+    this.params.ref.type = this._type;
+    this.params.ref.version = this._version;
     if (this._type.slice(-4) == 'Exec' || this._type.slice(-4) == 'exec') {
       if (this._type.slice(-9) == 'groupExec' || this._type.slice(-9) == 'groupexec') {
         this.isgraphShow = true;
@@ -127,15 +128,15 @@ export class BusinessRulesResultComponent {
     }
     if (this.istableShow == true) {
       setTimeout(() => {
-        this.graphParams.type = this.appMetadata.getMetadataDefs(this._type.toLowerCase()).name
-        this.d_tableRenderComponent.renderTable(this.graphParams);
-        this.downloadUuid = this.graphParams.uuid;
-        this.downloadVersion = this.graphParams.version;
-        this.downloadType = this.graphParams.type;
+        this.params.type = this.appMetadata.getMetadataDefs(this._type.toLowerCase()).name
+        this.d_tableRenderComponent.renderTable(this.params);
+        this.downloadUuid = this.params.uuid;
+        this.downloadVersion = this.params.version;
+        this.downloadType = this.params.type;
       }, 1000);
     }
     else {
-      this.graphParams.type = this._type;
+      this.params.type = this._type;
       this.isgraphShow = true;
     }
   }
@@ -189,11 +190,11 @@ export class BusinessRulesResultComponent {
     this.istableShow = true;
     this.isResultTable = true;
     setTimeout(() => {
-      this.graphParams.type = this.appMetadata.getMetadataDefs(this._type.toLowerCase()).name;
-      this.d_tableRenderComponent.renderTable(this.graphParams);
-      this.downloadUuid = this.graphParams.uuid;
-      this.downloadVersion = this.graphParams.version;
-      this.downloadType = this.graphParams.type;
+      this.params.type = this.appMetadata.getMetadataDefs(this._type.toLowerCase()).name;
+      this.d_tableRenderComponent.renderTable(this.params);
+      this.downloadUuid = this.params.uuid;
+      this.downloadVersion = this.params.version;
+      this.downloadType = this.params.type;
     }, 1000);
   }
 
