@@ -73,4 +73,14 @@ JobMonitoringModule.controller('DetailRuleExecController', function ($state, $fi
     $scope.formateSql=sqlFormatter.format($scope.execData.exec);
   }
 
+  $scope.showSqlFormaterSummary=function(){
+    if($scope.execData.summaryExec !=null){
+      $('#sqlFormaterModel').modal({
+        backdrop: 'static',
+        keyboard: false
+      });
+      $scope.formateSql=sqlFormatter.format($scope.execData.summaryExec);
+    }
+  }
+
 });
