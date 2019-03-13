@@ -1011,7 +1011,7 @@ public class TaskServiceImpl implements Callable<String> {
 					ruleExec.setExecParams(execParams3);
 					commonServiceImpl.save(MetaType.ruleExec.toString(), ruleExec);
 					rule2ServiceImpl.prepareRule2(operatorInfo.getRef().getUuid(), operatorInfo.getRef().getVersion(),
-							execParams3, ruleExec, RunMode.ONLINE);
+							execParams3, ruleExec, runMode);
 					if (Helper.getLatestStatus(ruleExec.getStatusList())
 							.equals(new Status(Status.Stage.FAILED, new Date()))) {
 						throw new Exception("Rule2 execution FAILED.");
