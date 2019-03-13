@@ -704,7 +704,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       detailState: 'createrules2',
       state: 'createrules2',
       childMenu:[],
-      allowInChildMenu :false,
+      allowInChildMenu :true,
 
     },
     'model':{
