@@ -1540,7 +1540,7 @@ public class VizpodServiceImpl extends RuleTemplate {
 		}
 		String sql = vizpodDetailParser.toSql(vizpod, null, usedRefKeySet, true, runMode, false);
 
-		logger.info(sql);
+		logger.info("vizpod details quary: "+sql);
 
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());

@@ -314,6 +314,11 @@ public class DQOperator implements IParsable {
 			
 			resp = FROM.concat(getTableName(srcDP, datapodList, dagExec, otherParams, runMode)).concat("  ").concat(srcDP.getName());
 		}
+		if (dq.getRefIntegrityCheck() != null 
+				&& dq.getRefIntegrityCheck().getDependsOn() != null 
+				&& dq.getRefIntegrityCheck().getDependsOn().getRef().getType() == MetaType.relation) {
+			resp = FROM;
+		}
 		/*
 		 * if (ref.getType() == MetaType.relation) { relation = (Relation)
 		 * daoRegister.getRefAS CHAR(50))Object(ref); return
@@ -470,8 +475,8 @@ public class DQOperator implements IParsable {
 			usedRefKeySet.add(dq.getRefIntegrityCheck().getTargetAttr().getRef());
 		} else if (dq.getRefIntegrityCheck().getDependsOn().getRef().getType() == MetaType.relation) {
 			relation = (Relation) commonServiceImpl.getOneByUuidAndVersion(dq.getRefIntegrityCheck().getDependsOn().getRef().getUuid(), dq.getRefIntegrityCheck().getDependsOn().getRef().getVersion(), dq.getRefIntegrityCheck().getDependsOn().getRef().getType().toString(), "N");
-			refIntStr = LEFT_OUTER_JOIN.concat(BRACKET_OPEN).concat(relationOperator.generateSql(relation, null, otherParams, null, usedRefKeySet, runMode)).concat(BRACKET_CLOSE)
-					.concat(" ").concat(relation.getName()).concat("_ref ");
+			refIntStr = BRACKET_OPEN.concat(relationOperator.generateSql(relation, null, otherParams, null, usedRefKeySet, runMode)).concat(BRACKET_CLOSE);
+//					.concat(" ").concat(relation.getName()).concat("_ref ");
 			MetaIdentifier relationRef = new MetaIdentifier(MetaType.relation, relation.getUuid(), relation.getVersion());
 			usedRefKeySet.add(relationRef);
 		}
@@ -862,10 +867,10 @@ public class DQOperator implements IParsable {
 						.concat(IS_NOT_NULL);
 			} else if (dq.getRefIntegrityCheck().getDependsOn().getRef().getType() == MetaType.relation) {
 				Relation refIntTab = (Relation) commonServiceImpl.getOneByUuidAndVersion(dq.getRefIntegrityCheck().getDependsOn().getRef().getUuid(), dq.getRefIntegrityCheck().getDependsOn().getRef().getVersion(), dq.getRefIntegrityCheck().getDependsOn().getRef().getType().toString(), "N");
-				Datapod targetAttr = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dq.getRefIntegrityCheck().getTargetAttr().getRef().getUuid(), dq.getRefIntegrityCheck().getTargetAttr().getRef().getVersion(), dq.getRefIntegrityCheck().getTargetAttr().getRef().getType().toString(), "N");
+				Datapod targetDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dq.getRefIntegrityCheck().getTargetAttr().getRef().getUuid(), dq.getRefIntegrityCheck().getTargetAttr().getRef().getVersion(), dq.getRefIntegrityCheck().getTargetAttr().getRef().getType().toString(), "N");
 				dq.getRefIntegrityCheck().getTargetAttr().setAttrName(
-						targetAttr.getAttribute(Integer.parseInt(dq.getRefIntegrityCheck().getTargetAttr().getAttrId())).getName());
-				check = refIntTab.getName().concat("_ref").concat(DOT).concat(dq.getRefIntegrityCheck().getTargetAttr().getAttrName())
+						targetDp.getAttribute(Integer.parseInt(dq.getRefIntegrityCheck().getTargetAttr().getAttrId())).getName());
+				check = targetDp.getName().concat(DOT).concat(dq.getRefIntegrityCheck().getTargetAttr().getAttrName())
 						.concat(IS_NOT_NULL);
 			}
 			colName = REFINT_CHECK_PASS;

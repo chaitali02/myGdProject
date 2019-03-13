@@ -1,7 +1,7 @@
 {
     "uuid" : "4184980f-9f36-4c6c-aa26-ecda1bd1d751",
     "version" : "1552160296",
-    "name" : "Visa Credit Card",
+    "name" : "VISA_CC",
     "desc" : "Visa Credit Card",
     "active" : "Y",
     "appInfo" : [ 

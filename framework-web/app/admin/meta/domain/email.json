@@ -1,0 +1,77 @@
+{
+    "uuid" : "4184980f-9f36-4c6c-aa26-ecda1bd1d754",
+    "version" : "1552160296",
+    "name" : "EMAIL",
+    "desc" : "Email Address like joe@aol.com | ssmith@aspalliance.com | a@b.cc",
+    "active" : "Y",
+    "appInfo" : [ 
+       {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+            }
+        }, 
+       
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+ 				 "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbyog"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+ 				 "uuid": "39937670-837c-4027-aa45-aff8a57b738a"
+            }
+        }, 
+        {
+            "ref" : {
+                "type" : "application",
+                "uuid" : "4be92a58-3e24-410c-ab09-e1e719c1db81"
+            }
+        }
+    ],
+    "createdBy" : {
+        "ref" : {
+            "type" : "user",
+            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+        }
+    },
+    "createdOn" : ISODate("2019-03-09T19:34:32.912Z"),
+    "tags" : [],
+    "active" : "Y",
+    "locked" : "N",
+    "published" : "N",
+    "publicFlag" :"Y",
+    "regEx" : "^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$"
+}

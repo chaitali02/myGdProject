@@ -295,7 +295,7 @@ public class RunReportServiceImpl implements Callable<TaskHolder> {
 			commonServiceImpl.save(MetaType.reportExec.toString(), reportExec);
 			
 			//sending report execution status through email
-			if(senderInfo != null && senderInfo.getNotifyOnSuccess().equalsIgnoreCase("Y")) {
+			if(senderInfo.getEmailTo().size() > 0 && senderInfo.getNotifyOnSuccess().equalsIgnoreCase("Y")) {
 				synchronized (reportExec.getUuid()) {
 					if(!reportServiceImpl.sendSuccessNotification(senderInfo, report, reportExec, runMode)) {
 						throw new RuntimeException("Can not send email notification.");
@@ -308,7 +308,7 @@ public class RunReportServiceImpl implements Callable<TaskHolder> {
 			
 			//sending report execution status through email 
 			try {
-				if(senderInfo != null && senderInfo.getNotifyOnFailure().equalsIgnoreCase("Y")) {
+				if(senderInfo.getEmailTo().size() > 0 && senderInfo.getNotifyOnFailure().equalsIgnoreCase("Y")) {
 					reportServiceImpl.sendFailureNotification(senderInfo, report, reportExec);
 				}
 			} catch (Exception exc) {
