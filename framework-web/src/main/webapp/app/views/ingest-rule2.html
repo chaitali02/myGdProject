@@ -410,7 +410,7 @@
                                             </label>
                                             <div class="col-md-6">
                                                 <select class="form-control" select2 name="tagetDetail" data-ng-model="$parent.selectedTargetDetail" ng-options="r as r.name for r in tagetDetail track by r.uuid"
-                                                    ng-disabled="{{mode}}" ng-change="getAllAttributeByTarget();">
+                                                    ng-disabled="{{mode}}" ng-change="getAllAttributeByTarget(null);">
                                                 </select>
                                                 <input type="hidden" name="tagetDetail" ng-model="$parent.selectedTargetDetail.uuid" required>
                                             </div>

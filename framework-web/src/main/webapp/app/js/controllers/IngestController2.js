@@ -593,9 +593,11 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 		if ($scope.selectedTargetDetail) {
 			IngestRuleService.getAllAttributeBySource($scope.selectedTargetDetail.uuid, "datapod").then(function (response) { onSuccessGetAllAttributeBySource(response.data) })
 			var onSuccessGetAllAttributeBySource = function (response) {
-                $scope.allTargetAttribute = response;
+				$scope.allTargetAttribute = response;
+				if(data==null){
+				   $scope.ingestTableArray=[];
+			    }
                 if ($scope.ingestTableArray.length == 0 &&   $scope.selectedSourceType != "STREAM") {
-					$scope.ingestTableArray=[];
 					$scope.ingestTableInfo=$scope.allTargetAttribute;
 					for(var i=0;i <$scope.allTargetAttribute.length;i++){
 						var attributemapjson={};
