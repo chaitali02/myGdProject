@@ -181,7 +181,7 @@ export class ParamlistComponent implements OnInit {
       this.isEdit = false;
     }
   }
-  enableEdit(uuid, version) {
+  enableEdit(uuid, version) {debugger
     if (this.parentType == this.metaType.RULE) {
       this.router.navigate(['app/businessRules/paramlist', this.parentType, uuid, version, 'false']);
       this.isEdit = true;
@@ -332,9 +332,9 @@ export class ParamlistComponent implements OnInit {
     //   this.tags = tags;
     // }//End If
 
-    this.paramlist.published = this.appHelper.convertStringToBoolean(response.published)
-    this.paramlist.active = this.appHelper.convertStringToBoolean(response.active)
-    this.paramlist.locked = this.appHelper.convertStringToBoolean(response.locked)
+    this.published = this.appHelper.convertStringToBoolean(response.published)
+    this.active = this.appHelper.convertStringToBoolean(response.active)
+    this.locked = this.appHelper.convertStringToBoolean(response.locked)
     this.breadcrumbDataFrom[2].caption = response.name;
 
     var arrayTemp = [];
@@ -465,23 +465,23 @@ export class ParamlistComponent implements OnInit {
     this.functnListOptions = functnListOptions;
     console.log(this.distributionListOptions);
   }
-  onChangeActive(event) {
-    if (event === true) {
-      this.paramlist.active = 'Y';
-    }
-    else {
-      this.paramlist.active = 'N';
-    }
-  }
+  // onChangeActive(event) {
+  //   if (event === true) {
+  //     this.paramlist.active = 'Y';
+  //   }
+  //   else {
+  //     this.paramlist.active = 'N';
+  //   }
+  // }
 
-  onChangePublished(event) {
-    if (event === true) {
-      this.paramlist.published = 'Y';
-    }
-    else {
-      this.paramlist.published = 'N';
-    }
-  }
+  // onChangePublished(event) {
+  //   if (event === true) {
+  //     this.paramlist.published = 'Y';
+  //   }
+  //   else {
+  //     this.paramlist.published = 'N';
+  //   }
+  // }
 
   addAttribute() {
     if (this.paramtableArray == null) {
@@ -527,6 +527,10 @@ export class ParamlistComponent implements OnInit {
           this.onSuccessgetOneByUuidAndVersion(response)
         },
         error => console.log("Error :: " + error));
+  }
+
+  onChangeName() {
+    this.breadcrumbDataFrom[2].caption = this.paramlist.name;
   }
 
   submitParamlist() {

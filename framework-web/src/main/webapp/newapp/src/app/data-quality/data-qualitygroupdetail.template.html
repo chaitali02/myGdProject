@@ -14,24 +14,25 @@
             <b>{{"DQ Rule Group"}}</b>
           </div>
           <div class="actions">
-            <a class="btn btn-circle btn-icon-only btn-default left-margin" title="Main" data-placement="top" tooltip
+            <a *ngIf="!isAdd" class="btn btn-circle btn-icon-only btn-default left-margin" title="Main" data-placement="top" tooltip
               [ngClass]="showForm==true ? 'currentpage':'notcurrentpage'" data- (click)="showMainPage(dqgroupdata.uuid,version)">
               <i class="fa fa-home" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
             </a>
 
-            <a class="btn btn-circle btn-icon-only btn-default left-margin" href="javascript:;" title="Edit"
+            <a *ngIf="!isAdd" class="btn btn-circle btn-icon-only btn-default left-margin" href="javascript:;" title="Edit"
               data-toggle="tooltip" data-placement="top" tooltip [ngClass]="isEdit == true? 'currentpage':'notcurrentpage'"
               data-(click)="enableEdit(dqgroupdata.uuid,version)">
               <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
             </a>
 
-            <a class="btn btn-circle btn-icon-only btn-default left-margin" href="javascript:;" title="Show Dependencies"
+            <a *ngIf="!isAdd" class="btn btn-circle btn-icon-only btn-default left-margin" href="javascript:;" title="Show Dependencies"
               data-placement="top" tooltip [ngClass]="showForm==false ? 'currentpage':'notcurrentpage'" data- (click)="showGraph(dqgroupdata.uuid,version)">
               <i class="fa fa-sitemap" style="margin:2px auto;color:#a0a0a0;"></i>
             </a>
 
             <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default left-margin" disabled="true"
-              (click)="broadcastRefreshData()" data-original-title="" title="Refresh">
+              (click)="broadcastRefreshData()" data-original-title="" title="Refresh"
+              [ngClass]="showForm==true ? 'currentpage':'notcurrentpage'">
               <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
             </a>
 

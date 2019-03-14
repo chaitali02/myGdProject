@@ -184,63 +184,61 @@ export class CompareResultComponent {
   }
 
   onSuccessgetAllLatest(response: AttributeIO[], type: String): any {
-    debugger
     if (type == MetaTypeEnum.MetaType.DQ || type == MetaTypeEnum.MetaType.DATAPOD) {
       this.allNameDq = [];
-      this.allNameDq = this.fillArrayName(response);
-      // for (const i in response) {
-      //   let ver = new DropDownIO();
-      //   ver.label = response[i].name;
-      //   ver.value = {label: String, uuid: String, version: String};
-      //   ver.value.label = response[i].name;
-      //   ver.value.uuid = response[i].uuid;
-      //   ver.value.version = response[i].version;
-      //   this.allNameDq[i] = ver;
-      // }
+      // this.allNameDq = this.fillArrayName(response);
+      for (const i in response) {
+        let ver = new DropDownIO();
+        ver.label = response[i].name;
+        ver.value = {label: String, uuid: String, version: String};
+        ver.value.label = response[i].name;
+        ver.value.uuid = response[i].uuid;
+        ver.value.version = response[i].version;
+        this.allNameDq[i] = ver;
+      }
     }
 
     else if (type == MetaTypeEnum.MetaType.RULEGROUP) {
       this.allNameRuleGroup = [];
-      this.allNameRuleGroup = this.fillArrayName(response);
-      // for (const i in response) {
-      //   let ver = new DropDownIO();
-      //   ver.label = response[i].name;
-      //   ver.value = {label: String, uuid: String, version: String};
-      //   ver.value.label = response[i].name;
-      //   ver.value.uuid = response[i].uuid;
-      //   ver.value.version = response[i].version;
-      //   this.allNameRuleGroup[i] = ver;
-      // }
+      // this.allNameRuleGroup = this.fillArrayName(response);
+      for (const i in response) {
+        let ver = new DropDownIO();
+        ver.label = response[i].name;
+        ver.value = {label: String, uuid: String, version: String};
+        ver.value.label = response[i].name;
+        ver.value.uuid = response[i].uuid;
+        ver.value.version = response[i].version;
+        this.allNameRuleGroup[i] = ver;
+      }
     }
     else if (type == MetaTypeEnum.MetaType.RULE) {
       this.allNameRule = [];
-      this.allNameRule = this.fillArrayName(response);
-      // for (const i in response) {
-      //   let ver = new DropDownIO();
-      //   ver.label = response[i].name;
-      //   ver.value = {label: String, uuid: String, version: String};
-      //   ver.value.label = response[i].name;
-      //   ver.value.uuid = response[i].uuid;
-      //   ver.value.version = response[i].version;
-      //   this.allNameRule[i] = ver;
-      // }
+      // this.allNameRule = this.fillArrayName(response);
+      for (const i in response) {
+        let ver = new DropDownIO();
+        ver.label = response[i].name;
+        ver.value = {label: String, uuid: String, version: String};
+        ver.value.label = response[i].name;
+        ver.value.uuid = response[i].uuid;
+        ver.value.version = response[i].version;
+        this.allNameRule[i] = ver;
+      }
     }
     else if (type == MetaTypeEnum.MetaType.RECON) {
       this.allNameRecon = [];
-      this.allNameRecon = this.fillArrayName(response);
-      // for (const i in response) {
-      //   let ver = new DropDownIO();
-      //   ver.label = response[i].name;
-      //   ver.value = {label: String, uuid: String, version: String};
-      //   ver.value.label = response[i].name;
-      //   ver.value.uuid = response[i].uuid;
-      //   ver.value.version = response[i].version;
-      //   this.allNameRecon[i] = ver;
-      // }
+      // this.allNameRecon = this.fillArrayName(response);
+      for (const i in response) {
+        let ver = new DropDownIO();
+        ver.label = response[i].name;
+        ver.value = {label: String, uuid: String, version: String};
+        ver.value.label = response[i].name;
+        ver.value.uuid = response[i].uuid;
+        ver.value.version = response[i].version;
+        this.allNameRecon[i] = ver;
+      }
     }
   }
   fillArrayName(response) {
-    debugger
     let mainArray = [];
     for (const i in response) {
       let ver = new DropDownIO();
@@ -317,43 +315,40 @@ export class CompareResultComponent {
 
   }
   onSuccessgetReconExecByRecon(response: CompareResult[]): any {
-    debugger
     this.isInProgress = false;
     this.alltargetTemp = response;
     this.allsource = [];
-    this.allsource = this.fillArrayCreatedOn(response);
-    // for (const i in response) {
-    //   let ver = new DropDownIO();
-    //   ver.label = response[i].createdOn;
-    //   ver.value = { label: String, uuid: String, version: "" };
-    //   ver.value.label = response[i].createdOn;
-    //   ver.value.uuid = response[i].uuid;
-    //   ver.value.version = response[i].version;
-    //   this.allsource[i] = ver;
-    // }
+    // this.allsource = this.fillArrayCreatedOn(response);
+    for (const i in response) {
+      let ver = new DropDownIO();
+      ver.label = response[i].createdOn;
+      ver.value = { label: String, uuid: String, version: "" };
+      ver.value.label = response[i].createdOn;
+      ver.value.uuid = response[i].uuid;
+      ver.value.version = response[i].version;
+      this.allsource[i] = ver;
+    }
     this.alltarget = [];
   }
 
   onSuccessgetDataQualExec(response: CompareResult[]): any {
-    debugger
     this.isInProgress = false;
     this.alltargetTemp = response;
     this.allsource = [];
-    this.allsource = this.fillArrayCreatedOn(response);
-    // for (const i in response) {
-    //   let ver = new DropDownIO();
-    //   ver.label = response[i].createdOn;
-    //   ver.value = {label: String, uuid: String, version:""};
-    //   ver.value.label = response[i].createdOn;
-    //   ver.value.uuid = response[i].uuid;
-    //   ver.value.version = response[i].version;
-    //   this.allsource[i] = ver;
-    // }
+    // this.allsource = this.fillArrayCreatedOn(response);
+    for (const i in response) {
+      let ver = new DropDownIO();
+      ver.label = response[i].createdOn;
+      ver.value = {label: String, uuid: String, version:""};
+      ver.value.label = response[i].createdOn;
+      ver.value.uuid = response[i].uuid;
+      ver.value.version = response[i].version;
+      this.allsource[i] = ver;
+    }
     this.alltarget = [];
   }
 
   onChangeSource(selectedSource: any) {
-    debugger
     this.sourceShowProgress = true;
     this.isSourceTableShow = false;
     this.selectedTarget = ''
@@ -511,34 +506,32 @@ export class CompareResultComponent {
       error => console.log("Error :: " + error));
   }
   onSuccessgetOneByUuidAndVersion(response: RuleGroup): any {
-    debugger
     this.allNameRule = [];
-    this.allNameRule = this.fillArrayName(response);
-    // for (const i in response.ruleInfo) {
-    //   let ver = new DropDownIO();
-    //   ver.label = response.ruleInfo[i].ref.name;
-    //   ver.value = { label: String, uuid: String, version: "" };
-    //   ver.value.label = response.ruleInfo[i].ref.name;
-    //   ver.value.uuid = response.ruleInfo[i].ref.uuid;
-    //   this.allNameRule[i] = ver;
-    // }
+    // this.allNameRule = this.fillArrayName(response);
+    for (const i in response.ruleInfo) {
+      let ver = new DropDownIO();
+      ver.label = response.ruleInfo[i].ref.name;
+      ver.value = { label: String, uuid: String, version: "" };
+      ver.value.label = response.ruleInfo[i].ref.name;
+      ver.value.uuid = response.ruleInfo[i].ref.uuid;
+      this.allNameRule[i] = ver;
+    }
   }
 
   onSuccessgetRuleExecByRule(response: CompareResult[]): any {
-    debugger
     this.isInProgress = false;
     this.alltargetTemp = response;
     this.allsource = [];
-    this.allsource = this.fillArrayCreatedOn(response);
-    // for (const i in response) {
-    //   let ver = new DropDownIO();
-    //   ver.label = response[i].createdOn;
-    //   ver.value = { label: String, uuid: String, version: "" };
-    //   ver.value.label = response[i].createdOn;
-    //   ver.value.uuid = response[i].uuid;
-    //   ver.value.version = response[i].version;
-    //   this.allsource[i] = ver;
-    // }
+    // this.allsource = this.fillArrayCreatedOn(response);
+    for (const i in response) {
+      let ver = new DropDownIO();
+      ver.label = response[i].createdOn;
+      ver.value = { label: String, uuid: String, version: "" };
+      ver.value.label = response[i].createdOn;
+      ver.value.uuid = response[i].uuid;
+      ver.value.version = response[i].version;
+      this.allsource[i] = ver;
+    }
     this.alltarget = [];
   }
 

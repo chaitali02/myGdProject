@@ -33,6 +33,7 @@ import { ParamInfo } from '../metadata/domain/domain.paramInfo';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { RoutesParam } from '../metadata/domain/domain.routeParams';
+import { RuleIO } from '../metadata/domainIO/domain.ruleIO';
 
 @Component({
   selector: 'app-business-rulesdetail',
@@ -120,8 +121,10 @@ export class BusinessRulesDetailComponent {
   txtQueryChangedFilter: Subject<string> = new Subject<string>();
   resetTableTopBottom: Subject<string> = new Subject<string>();
   txtQueryChangedAttribute: Subject<string> = new Subject<string>();
+  rowIndex: any;
   topDisabled: boolean;
   bottomDisabled: boolean;
+  datasetNotEmpty: boolean = true;
 
   constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router,
     private _commonService: CommonService, private _ruleService: RuleService, public appHelper: AppHelper) {
@@ -383,7 +386,6 @@ export class BusinessRulesDetailComponent {
       this.attributeTableArray[index].isSourceAtributeFormula = false;
       this.attributeTableArray[index].isSourceAtributeExpression = false;
       this.attributeTableArray[index].isSourceAtributeFunction = true;
-      this.attributeTableArray[index].isSourceAtributeFunction = true;
       this.attributeTableArray[index].sourcefunction = {}
       this.getAllFunctions()
     }
@@ -576,10 +578,12 @@ export class BusinessRulesDetailComponent {
 
   onChangeOperator(index) {
     this.ruledata.filterTableArray[index].rhsAttribute = null;
-    if (this.ruledata.filterTableArray[index].operator == 'EXISTS' || this.ruledata.filterTableArray[index].operator == 'NOT EXISTS') {
+    if (this.ruledata.filterTableArray[index].operator == 'EXISTS' || this.ruledata.filterTableArray[index].operator == 'NOT EXISTS' ||
+      this.ruledata.filterTableArray[index].operator == 'IN' || this.ruledata.filterTableArray[index].operator == 'NOT IN') {
       this.ruledata.filterTableArray[index].rhsType = this.metaType.DATASET;
+      this.datasetNotEmpty = false;
       let rhsAttribute = new AttributeIO();
-      rhsAttribute.label = "-Select-";
+      rhsAttribute.label = "";
       rhsAttribute.uuid = "";
       rhsAttribute.attributeId = "";
       this.ruledata.filterTableArray[index].rhsAttribute = rhsAttribute
@@ -702,7 +706,7 @@ export class BusinessRulesDetailComponent {
 
     for (const n in response1) {
       let allname = new DropDownIO();
-      response1.sort((a, b) => a.name.localeCompare(b.name.toString()));
+      // response1.sort((a, b) => a.name.localeCompare(b.name.toString()));
       allname.label = response1[n].name;
       allname.value = { label: "", uuid: "" };
       allname.value.label = response1[n].name;
@@ -821,14 +825,14 @@ export class BusinessRulesDetailComponent {
     this.isFilterInprogess = false;
   }
 
-  onSuccessgetOneByUuidAndVersion(response) {
+  onSuccessgetOneByUuidAndVersion(response: RuleIO) {
 
-    this.breadcrumbDataFrom[2].caption = response.baseRule.name
-    this.ruledata = response.baseRule;
+    this.ruledata = response;
+    this.breadcrumbDataFrom[2].caption = this.ruledata.name;
 
-    this.dataqualitycompare = response.baseRule;
+    this.dataqualitycompare = response;
     this.attributeTableArray = response.attributeTableArray;
-    //this.createdBy = response.baseRule.createdBy.ref.name
+    //this.createdBy = response.createdBy.ref.name
 
     this.ruledata.published = this.appHelper.convertStringToBoolean(this.ruledata.published);
     this.ruledata.active = this.appHelper.convertStringToBoolean(this.ruledata.active);
@@ -853,10 +857,10 @@ export class BusinessRulesDetailComponent {
       this.selectParameterlist = selectedParameterlist;
     }
 
+    this.source = this.ruledata.source.ref.type;
     this.getAllLatest(false);
     this.getAllFunctions();
 
-    this.source = this.ruledata.source.ref.type
     if (response.isFormulaExits == true) {
       this._commonService.getFormulaByType(this.sourcedata.uuid, this.source)
         .subscribe(response => { this.onSuccessgetFormulaByLhsType(response) },
@@ -882,8 +886,9 @@ export class BusinessRulesDetailComponent {
       this._commonService.getLatestByUuid(this.ruledata.paramList.ref.uuid, this.metaType.PARAMLIST)
         .subscribe(response => { this.onSuccessgetLatestByUuid(response) },
           error => console.log("Error ::", error));
-
     }
+    else 
+      this.isFilterInprogess = false;
     if (response.isFunctionExits == true) {
 
       this._commonService.getFunctionByCriteria("", "N", this.metaType.FUNCTION)
@@ -980,23 +985,23 @@ export class BusinessRulesDetailComponent {
   }
 
   onChangeLhsType(index) {
+    this.ruledata.filterTableArray[index].lhsAttribute = null;
+    if (this.ruledata.filterTableArray[index].lhsType == this.metaType.FORMULA) {
+      this._commonService.getFormulaByType(this.sourcedata.uuid, this.source)
+        .subscribe(response => { this.onSuccessgetFormulaByLhsType(response) },
+          error => console.log("Error ::", error))
+    }
+
+    else if (this.ruledata.filterTableArray[index].lhsType == this.metaType.DATAPOD) {
+      this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source)
+        .subscribe(response => { this.onSuccessgetAllAttributeBySourceLhs(response) },
+          error => console.log("Error ::", error))
+    }
+
+    else {
       this.ruledata.filterTableArray[index].lhsAttribute = null;
-      if (this.ruledata.filterTableArray[index].lhsType == this.metaType.FORMULA) {
-        this._commonService.getFormulaByType(this.sourcedata.uuid, this.source)
-          .subscribe(response => { this.onSuccessgetFormulaByLhsType(response) },
-            error => console.log("Error ::", error))
-      }
+    }
 
-      else if (this.ruledata.filterTableArray[index].lhsType == this.metaType.DATAPOD) {
-        this._commonService.getAllAttributeBySource(this.sourcedata.uuid, this.source)
-          .subscribe(response => { this.onSuccessgetAllAttributeBySourceLhs(response) },
-            error => console.log("Error ::", error))
-      }
-
-      else {
-        this.ruledata.filterTableArray[index].lhsAttribute = null;
-      }
-    
   }
 
   onChangeRhsType(index) {
@@ -1026,8 +1031,9 @@ export class BusinessRulesDetailComponent {
     }
 
     else if (this.ruledata.filterTableArray[index].rhsType == this.metaType.DATASET) {
+      this.datasetNotEmpty = false;
       let rhsAttribute = new AttributeIO();
-      rhsAttribute.label = "-Select-";
+      rhsAttribute.label = "";
       rhsAttribute.uuid = "";
       rhsAttribute.attributeId = "";
       this.ruledata.filterTableArray[index].rhsAttribute = rhsAttribute;
@@ -1090,7 +1096,8 @@ export class BusinessRulesDetailComponent {
     });
   }
 
-  searchOption(index) {
+  searchOption(data, index) {
+    this.rowIndex = index;
     this.displayDialogBox = true;
     this._commonService.getAllLatest(this.metaType.DATASET)
       .subscribe(response => { this.onSuccessgetAllLatestDialogBox(response) },
@@ -1138,26 +1145,57 @@ export class BusinessRulesDetailComponent {
     rhsattribute.uuid = this.dialogAttributeName.uuid;
     rhsattribute.attributeId = this.dialogAttributeName.attributeId;
     this.ruledata.filterTableArray[index].rhsAttribute = rhsattribute;
+    this.datasetNotEmpty = true;
   }
 
   cancelDialogBox() {
     this.displayDialogBox = false;
   }
   autoPopulate() {
+    debugger
+    // this.attributeTableArray = [];
+    // for (var i = 0; i < this.allSourceAttribute.length; i++) {
+    //   let attributeinfo = new AttributeInfoIO();
+    //   attributeinfo.id = i+1;
+    //   attributeinfo.name = this.allSourceAttribute[i].value.label
+    //   // attributeinfo.sourceattribute = {};
+    //   let sourceattribute1 = new AttributeHolder();
+    //   sourceattribute1 = {attrId: "", uuid: "", u_Id: "", label: ""};
+    //   sourceattribute1.attrId = this.allSourceAttribute[i].value.attrId;
+    //   sourceattribute1.uuid = this.allSourceAttribute[i].value.uuid;
+    //   sourceattribute1.u_Id = this.allSourceAttribute[i].value.u_Id
+    //   sourceattribute1.label = this.allSourceAttribute[i].value.label;
+    //   attributeinfo.sourceattribute = sourceattribute1;
+
+    //   attributeinfo.sourceAttributeType = this.sourceAttributeTypes[2];
+    //   attributeinfo.isSourceAtributeSimple = false;
+    //   attributeinfo.isSourceAtributeDatapod = true;
+    //   attributeinfo.isSourceAtributeFormula = false;
+    //   attributeinfo.isSourceAtributeExpression = false;
+    //   attributeinfo.isSourceAtributeFunction = false;
+    //   attributeinfo.isSourceAtributeParamList = false;
     this.attributeTableArray = [];
     for (var i = 0; i < this.allSourceAttribute.length; i++) {
+      var that = this;
       var attributeinfo = new AttributeInfoIO();
-      attributeinfo.id = i;
-      // attributeinfo.sourceattribute = {};
-      var sourceattribute: AttributeHolder = new AttributeHolder();
-      attributeinfo.name = this.allSourceAttribute[i].value.label
-      sourceattribute.attrId = this.allSourceAttribute[i].value.attrId;
-      sourceattribute.uuid = this.allSourceAttribute[i].value.uuid;
-      sourceattribute.u_Id = this.allSourceAttribute[i].value.u_Id
-      sourceattribute.label = this.allSourceAttribute[i].value.label;
-      attributeinfo.sourceattribute = sourceattribute;
+      attributeinfo.id = i + 1;
 
-      attributeinfo.sourceAttributeType = this.sourceAttributeTypes[2];
+      attributeinfo.name = (this.allSourceAttribute[i].value.label).split(".")[1];
+
+      attributeinfo.sourceattribute = { attrId: "", uuid: "", u_Id: "", label: "" };
+      attributeinfo.sourceattribute.uuid = this.allSourceAttribute[i].value.uuid;
+      attributeinfo.sourceattribute.label = this.allSourceAttribute[i].value.label;
+      attributeinfo.sourceattribute.u_Id = this.allSourceAttribute[i].value.u_Id;
+      // attributeinfo.sourceattribute.type = "datapod";
+      attributeinfo.sourceattribute.attrId = this.allSourceAttribute[i].value.attrId;
+      // attributeinfo.sourceattribute.id = this.allSourceAttribute[i].value.id;
+
+      // { "text": "datapod", "label": "attribute" },
+      let obj = { text: "", label: "" }
+      obj.text = this.metaType.DATAPOD
+      obj.label = "attribute"
+      attributeinfo.sourceAttributeType = obj;
+
       attributeinfo.isSourceAtributeSimple = false;
       attributeinfo.isSourceAtributeDatapod = true;
       attributeinfo.isSourceAtributeFormula = false;
@@ -1186,16 +1224,18 @@ export class BusinessRulesDetailComponent {
     baseRuleJson.source = source;
 
 
-    if (this.selectParameterlist.uuid != null && this.selectParameterlist.uuid != "") {
-      let paramlist = new MetaIdentifierHolder();
-      let ref = new MetaIdentifier();
-      ref.uuid = this.selectParameterlist.uuid;
-      ref.type = this.metaType.PARAMLIST;
-      paramlist.ref = ref
-      baseRuleJson.paramList = paramlist;
+    if (this.selectParameterlist) {
+      if (this.selectParameterlist.uuid != null && this.selectParameterlist.uuid != "") {
+        let paramlist = new MetaIdentifierHolder();
+        let ref = new MetaIdentifier();
+        ref.uuid = this.selectParameterlist.uuid;
+        ref.type = this.metaType.PARAMLIST;
+        paramlist.ref = ref
+        baseRuleJson.paramList = paramlist;
+      }
+      else
+        baseRuleJson.paramList = null;
     }
-    else
-      baseRuleJson.paramList = null;
 
     let filterInfoArray = [];
     if (this.ruledata.filterTableArray != null) {
