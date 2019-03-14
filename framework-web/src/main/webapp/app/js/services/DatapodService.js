@@ -358,7 +358,8 @@ MetadataModule.service('MetadataDatapodSerivce', function ($q, sortFactory, Meta
 				attribute.desc = response.attributes[i].desc;
 				attribute.active = response.attributes[i].active;
 				attribute.length = response.attributes[i].length;
-				attribute.attrUnitType = response.attributes[i].attrUnitType;
+				attribute.piiFlag = response.attributes[i].piiFlag;
+				attribute.cdeFlag = response.attributes[i].cdeFlag;
 				if (response.attributes[i].key != "" && response.attributes[i].key != null) {
 					attribute.key = "Y";
 				}
@@ -366,6 +367,13 @@ MetadataModule.service('MetadataDatapodSerivce', function ($q, sortFactory, Meta
 					attribute.key = "N";
 				}
 				attribute.partition = response.attributes[i].partition;
+				if(response.attributes[i].domain !=null){
+					var selectDomain={};
+					selectDomain.uuid=response.attributes[i].domain.ref.uuid;
+					selectDomain.type=response.attributes[i].domain.ref.type;
+					selectDomain.name=response.attributes[i].domain.ref.name;
+					attribute.selectDomain=selectDomain;
+				}
 				attributearray[i] = attribute
 			}
 			datapodjson.attributes = attributearray
