@@ -30,6 +30,7 @@
     border-bottom: 4px solid #9fe4ea;
     cursor: default;
   }
+
   .tags {
     height: 35px !important;
     overflow-y: scroll !important;
@@ -61,7 +62,8 @@
       </li>
     </ul>
     <div class="page-toolbar">
-      <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+      <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom"
+        data-original-title="Change dashboard date range">
         <i class="icon-calendar"></i>&nbsp;
         <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
       </div>
@@ -70,16 +72,16 @@
   <br>
   <div notifybar style="position:fixed;top:40px;right:0;z-index:1000" ng-if="tabIndex !=5"></div>
   <div ng-hide="onAccess">
-    <form class="form-horizontal" name="myform" ng-submit="submitSettings()">
+    <form class="form-horizontal" name="myform" ng-submit="activeForm==4?submitAppConfig():submitSettings()">
       <uib-tabset active="activeForm">
-        
         <uib-tab index="0" heading="General" select="go(0)">
           <div>
             <div class="row">
               <div class="x_title">
-                <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right" ng-click="removeRowGeneral()" ng-disabled="{{mode}}"></button>
-                <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" ng-click="addRowGeneral()" ng-disabled="{{mode}}"></button>
-
+                <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right" ng-click="removeRowGeneral()"
+                  ng-disabled="{{mode}}"></button>
+                <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" ng-click="addRowGeneral()"
+                  ng-disabled="{{mode}}"></button>
               </div>
               <h4>
                 <strong>General Settings</strong>
@@ -99,18 +101,23 @@
               <tbody>
                 <tr ng-repeat="data in settingData.generalSetting">
                   <td style="text-align:center;Vertical-align:middle;">
-                    <input style="width:16px;height:16px;" type="checkbox" ng-model="data.selectedGeneral" />
+                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                      <input style="width:16px;height:16px;" type="checkbox" ng-model="data.selectedGeneral" />
+                    </span>
                   </td>
                   <td>
-                    <input type="text" class="form-control" ng-model="data.propertyName" title="{{data.propertynamegeneral}}">
+                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                      <input type="text" class="form-control" ng-model="data.propertyName" title="{{data.propertynamegeneral}}">
+                    </span>
                   </td>
                   <td>
-                    <input type="text" class="form-control" ng-model="data.propertyValue" title="{{data.propertyvaluegeneral}}">
+                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                      <input type="text" class="form-control" ng-model="data.propertyValue" title="{{data.propertyvaluegeneral}}">
+                    </span>
                   </td>
                 </tr>
               </tbody>
             </table>
-
           </div>
         </uib-tab>
 
@@ -119,9 +126,10 @@
           <div>
             <div class="row">
               <div class="x_title">
-                <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right" ng-click="removeRowMeta()" ng-disabled="{{mode}}"></button>
-                <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" ng-click="addRowMeta()" ng-disabled="{{mode}}"></button>
-
+                <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right" ng-click="removeRowMeta()"
+                  ng-disabled="{{mode}}"></button>
+                <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" ng-click="addRowMeta()"
+                  ng-disabled="{{mode}}"></button>
               </div>
               <h4>
                 <strong>Meta Engine Settings</strong>
@@ -132,8 +140,8 @@
               <thead>
                 <tr>
                   <th style="width:5%;text-align: center; Vertical-align: middle;">
-                    <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="checkAllMeta" ng-click="checkAllMetaRow()"
-                    />
+                    <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="checkAllMeta"
+                      ng-click="checkAllMetaRow()"/>
                   </th>
                   <th style="text-align: center; Vertical-align: middle;width:45%;">Property Name</th>
                   <th style="text-align: center;width:50%;">Property Value</th>
@@ -143,18 +151,23 @@
               <tbody>
                 <tr ng-repeat="data in settingData.metaEngine">
                   <td style="text-align:center;Vertical-align:middle;">
-                    <input style="width: 16px;height:16px;" type="checkbox" ng-model="data.selectedMeta" novalidate />
+                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                      <input style="width: 16px;height:16px;" type="checkbox" ng-model="data.selectedMeta" novalidate />
+                    </span>
                   </td>
                   <td>
-                    <input type="text" class="form-control" ng-model="data.propertyName" title="{{data.propertynamemeta}}">
+                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                      <input type="text" class="form-control" ng-model="data.propertyName" title="{{data.propertynamemeta}}">
+                    </span>
                   </td>
                   <td>
-                    <input type="text" class="form-control" ng-model="data.propertyValue" title="{{data.propertyvaluemeta}}">
-                  </td>
+                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                      <input type="text" class="form-control" ng-model="data.propertyValue" title="{{data.propertyvaluemeta}}">
+                    </span>                 
+                   </td>
                 </tr>
               </tbody>
             </table>
-
           </div>
         </uib-tab>
 
@@ -163,9 +176,10 @@
           <div>
             <div class="row">
               <div class="x_title">
-                <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right" ng-click="removeRowRule()" ng-disabled="{{mode}}"></button>
-                <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" ng-click="addRowRule()" ng-disabled="{{mode}}"></button>
-
+                <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right" ng-click="removeRowRule()"
+                  ng-disabled="{{mode}}"></button>
+                <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" ng-click="addRowRule()"
+                  ng-disabled="{{mode}}"></button>
               </div>
               <h4>
                 <strong>Rule Engine Settings</strong>
@@ -176,46 +190,38 @@
               <thead>
                 <tr>
                   <th style="width:5%;text-align: center; Vertical-align: middle;">
-                    <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="checkAllRule" ng-click="checkAllRuleRow()"
-                    />
+                    <input ng-disabled="{{mode}}" style="width: 16px;height:16px;" type="checkbox" ng-model="checkAllRule"
+                      ng-click="checkAllRuleRow()" />
                   </th>
                   <th style="text-align: center; Vertical-align: middle;width:45%;">Property Name</th>
                   <th style="text-align: center;width:50%;">Property Value</th>
-
                 </tr>
               </thead>
               <tbody>
                 <tr ng-repeat="data in settingData.ruleEngine">
                   <td style="text-align:center;Vertical-align:middle;">
-                    <input style="width: 16px;height:16px;" type="checkbox" ng-model="data.selectedRule" />
+                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">                    
+                      <input style="width: 16px;height:16px;" type="checkbox" ng-model="data.selectedRule" />
+                    </span>
+                   </td>
+                  <td>
+                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                      <input type="text" class="form-control" ng-model="data.propertyName" title="{{data.propertynamerule}}">
+                    </span>
                   </td>
                   <td>
-                    <input type="text" class="form-control" ng-model="data.propertyName" title="{{data.propertynamerule}}">
-                  </td>
-                  <td>
-                    <input type="text" class="form-control" ng-model="data.propertyValue" title="{{data.propertyvaluerule}}">
+                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                      <input type="text" class="form-control" ng-model="data.propertyValue" title="{{data.propertyvaluerule}}">
+                    </span>
                   </td>
                 </tr>
               </tbody>
             </table>
-
           </div>
         </uib-tab>
 
 
         <uib-tab index="3" heading="Graph Engine" select="go(3)">
-          <!-- <div class="form-group" style="padding-top: 15px;" ng-if="tabIndex ==3">
-            <div class="col-md-12 col-sm-6 col-xs-12 ">
-              <div class="form-group">
-                <input type="button" class="btn btn-success" value="Refresh Graph" ng-disabled="isDataLodingBG" ng-click="callBulidGraph()">
-                <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="isDataLodingBG">
-                  <div class="bounce1"></div>
-                  <div class="bounce2"></div>
-                  <div class="bounce3"></div>
-                </span>
-              </div>
-            </div>
-          </div> -->
           <div class="form-group" style="padding-top: 15px;">
             <div class="row">
               <div class="col-md-12">
@@ -224,24 +230,22 @@
                     <div class="caption">
                       <i class="icon-magnifier"></i>Search Criteria
                     </div>
-                    <div class="tools">
-                      <a title="Refresh" data-toggle="tooltip" data-placement="top" ng-click="refresh()" data-original-title="" title="">
-                        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
-                      </a>
-                      <a href="javascript:;" class="collapse" data-original-title="" title="" style="height:14px;"></a>
+                    <div class="actions">
+                      <a ng-click="callBulidGraph()" class="btn btn-default btn-sm">
+                        <i class="fa fa-line-chart"></i> Refresh Graph</a>
                     </div>
                   </div>
 
                   <div class="portlet-body">
-                    <form class="form-horizontal">
                       <div class="row">
                         <div class="col-md-12">
                           <div class="col-md-4 col-sm-6 col-xs-12 custpadding">
                             <div class="form-group">
                               <label class="control-label col-md-3 col-sm-3 col-xs-6">Name</label>
                               <div class="col-md-9 col-sm-9 col-xs-6">
-                                <select title="Type" class="form-control ng-pristine ng-valid ng-not-empty ng-touched" data-ng-model="searchForm.execname"
-                                  ng-options="r.name as r.name for r in gridOptionsGraphEngin.data" select2>
+                                <select title="Type" class="form-control ng-pristine ng-valid ng-not-empty ng-touched"
+                                  data-ng-model="searchForm.execname" ng-options="r.name as r.name for r in gridOptionsGraphEngin.data"
+                                  select2>
                                   <option value="">-Select-</option>
                                 </select>
                               </div>
@@ -252,15 +256,16 @@
                             <div class="form-group">
                               <label class="control-label col-md-3 col-sm-3 col-xs-12">Start Date</label>
                               <div class="col-md-8 col-sm-9 col-xs-9">
-                                  <a class="dropdown-toggle" id="start_date" role="button" data-toggle="dropdown" data-target="#" href="#">
-                                      <div class="input-group date">
-                                        <!-- <input type="text" class="form-control" data-ng-model="searchForm.startdate " readonly> -->
-                                        <span style="padding-right: 5px; text-align: right;" class="form-control" title="{{tz}}">{{searchForm.startdate | date :'EEE MMM dd HH:mm:ss yyyy'}} {{timezone}}</span>
-                                        <span class="input-group-addon">
-                                          <i class="fa fa-calendar"></i>
-                                        </span>
-                                      </div>
-                                    </a>
+                                <a class="dropdown-toggle" id="start_date" role="button" data-toggle="dropdown"
+                                  data-target="#" href="#">
+                                  <div class="input-group date">
+                                    <span style="padding-right: 5px; text-align: right;" class="form-control" title="{{tz}}">{{searchForm.startdate
+                                      | date :'EEE MMM dd HH:mm:ss yyyy'}} {{timezone}}</span>
+                                    <span class="input-group-addon">
+                                      <i class="fa fa-calendar"></i>
+                                    </span>
+                                  </div>
+                                </a>
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                                   <datetimepicker data-ng-model="searchForm.startdate" data-datetimepicker-config="{ dropdownSelector: '#start_date', renderOn: 'end-date-changed',parseFormat:'EEE MMM dd HH:mm:ss yyyyZ'}"
                                     data-on-set-time="startDateOnSetTime()" data-before-render="startDateBeforeRender($dates)"></datetimepicker>
@@ -286,8 +291,9 @@
                             <div class="form-group">
                               <label class="control-label col-md-3 col-sm-3 col-xs-6" for="select">User</label>
                               <div class="col-md-9 col-sm-9 col-xs-6">
-                                <select title="Type" class="form-control ng-pristine ng-valid ng-not-empty ng-touched" data-ng-model="searchForm.execname"
-                                  ng-options="r.name as r.name for r in allUser" select2>
+                                <select title="Type" class="form-control ng-pristine ng-valid ng-not-empty ng-touched"
+                                  data-ng-model="searchForm.execname" ng-options="r.name as r.name for r in allUser"
+                                  select2>
                                   <option value="">-Select-</option>
                                 </select>
                               </div>
@@ -298,9 +304,11 @@
                             <div class="form-group">
                               <label class="control-label col-md-3 col-sm-3 col-xs-6">End Date </label>
                               <div class="col-md-8 col-sm-9 col-xs-6">
-                                <a class="dropdown-toggle" id="end_date" role="button" data-toggle="dropdown" data-target="#" href="#">
+                                <a class="dropdown-toggle" id="end_date" role="button" data-toggle="dropdown"
+                                  data-target="#" href="#">
                                   <div class="input-group date">
-                                    <span class="form-control" style="padding-right: 5px; text-align: right;" title="{{tz}}">{{searchForm.enddate | date :'EEE MMM dd HH:mm:ss yyyy'}} {{timezone}} </span>
+                                    <span class="form-control" style="padding-right: 5px; text-align: right;" title="{{tz}}">{{searchForm.enddate
+                                      | date :'EEE MMM dd HH:mm:ss yyyy'}} {{timezone}} </span>
                                     <span class="input-group-addon">
                                       <i class="fa fa-calendar"></i>
                                     </span>
@@ -312,8 +320,10 @@
                                 </ul>
                               </div>
                             </div>
-                            <div ng-show="showEndErrorMessage" style="padding-left: 27%;padding-bottom: 4%;color: red;">End date is lesser than start date.</div>
-                            <div ng-show="showStartErrorMessage" style="padding-left: 27%;padding-bottom: 4%;color: red;">Start date is greater than end date.</div>
+                            <div ng-show="showEndErrorMessage" style="padding-left: 27%;padding-bottom: 4%;color: red;">End
+                              date is lesser than start date.</div>
+                            <div ng-show="showStartErrorMessage" style="padding-left: 27%;padding-bottom: 4%;color: red;">Start
+                              date is greater than end date.</div>
                           </div>
 
                           <div class="col-md-3 col-sm-6 col-xs-12 custpadding">
@@ -342,10 +352,8 @@
                           </div>
                         </div>
                       </div>
-                    </form>
                   </div>
                 </div>
-
               </div>
             </div>
             <div class="row">
@@ -356,30 +364,37 @@
                       <i class="fa fa-cogs"></i>
                       <span style="text-transform:capitalize">Process </span>
                     </div>
-                    <div class="actions">
-                      <a ng-click="callBulidGraph()" class="btn btn-default btn-sm">
-                        <i class="fa fa-line-chart"></i> Refresh Graph</a>
+                    <div class="tools">
+                      <a title="Refresh" data-toggle="tooltip" data-placement="top" ng-click="refresh()"
+                        data-original-title="" title="">
+                        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                      </a>
+                      <a class="collapse" data-original-title="" title="" style="height:14px;"></a>
                     </div>
                   </div>
                   <div class="portlet-body">
                     <div class="row">
-                      <div class="col-md-6 col-sm-6" >
+                      <div class="col-md-6 col-sm-6">
                         <div id="datastoredatatable_filter" class="dataTables_filter">
-                          <input style="width:15px !important;height:15px;margin:0 0 0;"  class="form-control input-sm input-small input-inline"  type="checkbox" ng-model="autorefresh" ng-change="autoRefreshOnChange(autorefresh)"/>
+                          <input style="width:15px !important;height:15px;margin:0 0 0;" class="form-control input-sm input-small input-inline"
+                            type="checkbox" ng-model="autorefresh" ng-change="autoRefreshOnChange(autorefresh)" />
                           <label style="vertical-align:middle;margin-bottom:0px;">Auto Refresh:</label>
-                          <input style="width:55px !important;"  min="5" max="99"type="number"  class="form-control input-sm input-small input-inline"  ng-model="autoRefreshCounter" /> <label style="vertical-align:middle;margin-bottom:0px;">secs</label>
+                          <input style="width:55px !important;" min="5" max="99" type="number" class="form-control input-sm input-small input-inline"
+                            ng-model="autoRefreshCounter" /> <label style="vertical-align:middle;margin-bottom:0px;">secs</label>
                         </div>
                       </div>
                       <div class="col-md-6 col-sm-6">
                         <div class="dataTables_filter" style="float:right;">
                           <label>Search:</label>
-                          <input type="search" class="form-control input-sm input-small input-inline" ng-change="refreshDataGraphEngin(searchtext)" ng-model="searchtext"
-                            aria-controls="datastoredatatable">
+                          <input type="search" class="form-control input-sm input-small input-inline" ng-change="refreshDataGraphEngin(searchtext)"
+                            ng-model="searchtext" aria-controls="datastoredatatable">
                         </div>
                       </div>
                     </div>
-                    <div ui-grid="gridOptionsGraphEngin" class="grid" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter ng-style="getGridStyle()">
-                      <div class="nodatawatermark" ng-show="!loading && !gridOptionsGraphEngin.data.length">No data available</div>
+                    <div ui-grid="gridOptionsGraphEngin" class="grid" ui-grid-resize-columns ui-grid-auto-resize
+                      ui-grid-exporter ng-style="getGridStyle()">
+                      <div class="nodatawatermark" ng-show="!loading && !gridOptionsGraphEngin.data.length">No data
+                        available</div>
                     </div>
                   </div>
                 </div>
@@ -388,59 +403,73 @@
           </div>
         </uib-tab>
 
-
-
         <uib-tab index="4" heading="Application Engine" select="go(4)">
-          <div class="form-group" style="padding-top: 15px;" ng-if="tabIndex == 4">
+      
+          <div style="padding-top: 15px;">
+            <div class="row">
+              <div class="x_title">
+                <button type="Button" class="clickRemoveFilter btn btn-danger fa fa-minus pull-right" ng-click="removeRowAppConfig()"
+                  ng-disabled="{{mode}}"></button>
+                <button type="Button" class="clickAddFilter btn btn-success fa fa-plus pull-right" ng-click="addRowAppConfig()"
+                  ng-disabled="{{mode}}"></button>
+              </div>
+              <h4>
+                <strong>App Config</strong>
+              </h4>
+              <hr>
+            </div>
             <div class="row">
               <div class="col-md-12">
-                <search-criteria loading="loading" module-type="'appconfig'" handle-group="false" no-exec="!(false || false)" on-submit="selectData"
-                  data="data"></search-criteria>
-                <div class="portlet box green">
-                  <div class="portlet-title">
-                    <div class="caption">
-                      <i class="fa fa-cogs"></i>
-                      <span style="text-transform: capitalize">App Config</span>
-                    </div>
-                    <div class="actions">
-                      <a ng-disabled="privileges.indexOf('Add') == -1" ng-click="addMode()" class="btn btn-default btn-sm">
-                        <i class="fa fa-plus"></i> Add </a>
-                    </div>
-                  </div>
-                  <div class="portlet-body">
-                    <div class="row">
-                      <div class="col-md-6 col-sm-6">
-                      </div>
-                      <div class="col-md-6 col-sm-6">
-                        <div class="dataTables_filter" style="float:right;">
-                          <label>Search:</label>
-                          <input type="search" class="form-control input-sm input-small   input-inline" ng-change="refreshData(searchtext)" ng-model="searchtext"
-                            aria-controls="datastoredatatable">
-                        </div>
-                      </div>
-                    </div>
-                    <div ui-grid="gridOptions" class="grid" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter ng-style="getGridStyle()">
-                      <div class="nodatawatermark" ng-show="!loading && !gridOptions.data.length">No data available</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="modal fade in" id="ConfModal" tabindex="-1" role="basic" aria-hidden="true" style="display:none; padding-right: 15px;">
-                  <div class="modal-dialog">
-                    <div class="modal-content rulemodel">
-                      <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                        <h4 class="modal-title">Confirm</h4>
-                      </div>
-                      <div class="modal-body">{{modelMsg}}</div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn green" ng-click="okSubmit(actionType)">Ok</button>
-                      </div>
-                    </div>
-                    <!-- /.modal-content -->
-                  </div>
-                  <!-- /.modal-dialog -->
-                </div>
+                <table class=" row-border hover table  table-striped table-bordered">
+                  <thead>
+                    <tr>
+                      <th style="text-align:center;Vertical-align: middle;width:5%;">
+                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                         
+                          <input style="width:16px;height:16px;" type="checkbox" name="selectedAllRowAppConfig" ng-disabled="{{mode}}" ng-model="selectedCheckBox.selectedAllRowAppConfig"                          "
+                            ng-change="selectAllRowAppConfig()" />
+                        </span>
+                      </th>
+                      <th style="width:6%;text-align:center">ID</th>
+                      <th class="text-center">Name</th>
+                      <th class="text-center" style="width:20%;">Type</th>
+                      <th class="text-center">Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="tabledata in configTable">
+                      <td style="text-align:center;Vertical-align:middle;width:5%;">
+                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                          <input style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected"
+                            ng-disabled="{{mode}}" />
+                        </span>
+                      </td>
+                      <td>
+                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                          <input type="text" ng-model="$index" ng-disabled="true" class="form-control">
+                        </span>
+                      </td>
+                      <td>
+                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                          <input type="text" ng-model="tabledata.configName" title="{{tabledata.configName}}"
+                            ng-disabled="{{mode}}" class="form-control">
+                        </span>
+                      </td>
+                      <td>
+                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                          <select select2 ng-model="tabledata.configType" ng-options="x.name as x.caption for x in type | orderBy:orderByValue"
+                            ng-disabled="{{mode}}" class="form-control"></select>
+                        </span>
+                      </td>
+                      <td>
+                        <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                          <input type="text" ng-model="tabledata.configVal" title="{{tabledata.configVal}}" ng-disabled="{{mode}}"
+                            class="form-control">
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
@@ -448,7 +477,6 @@
 
 
         <uib-tab index="5" heading="Prediction Engine" select="go(5)">
-          <form class="form-horizontal" type="form" name="myformPrediction" novalidate="novalidate" prevent-enter-submit>
             <div class="form-group">
               <label class="control-label col-md-2">Server Status </label>
               <div class="col-md-3">
@@ -472,11 +500,11 @@
                 </span>
               </div>
             </div>
-          </form>
+         
         </uib-tab>
 
       </uib-tabset>
-      <div class="form-group" style="padding-top: 15px;" ng-if="tabIndex !=3 && tabIndex !=4 &&  tabIndex !=5">
+      <div class="form-group" style="padding-top: 15px;" ng-if="tabIndex !=3  &&  tabIndex !=5">
         <div class="col-md-12 col-sm-6 col-xs-12 ">
           <div class="col-md-6 col-md-offset-5 col-sm-6 col-xs-12">
             <a data-ui-sref="home" class="btn btn-primary" style="margin-right:3%;margin-left: -2%;">Cancel</a>

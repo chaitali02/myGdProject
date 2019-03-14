@@ -94,6 +94,22 @@ AdminModule.service("SettingsService",function($q,$http,$location,CommonFactory)
     }
     return deferred.promise;
   }
-
+  this.getAppConfigByApp=function(){
+    var deferred = $q.defer();
+    var url = "metadata/getAppConfigByApp?type=appconfig&action=view";
+    CommonFactory.httpGet(url).then(function(response){OnSuccess(response.data)},function(response){onError(response.data)});
+    var OnSuccess = function(response) {
+      deferred.resolve({
+        data: response
+      });
+    }
+    var onError=function(response){
+      deferred.reject({
+        data:response
+      });
+    }
+    return deferred.promise;
+  }
+  
 
 })
