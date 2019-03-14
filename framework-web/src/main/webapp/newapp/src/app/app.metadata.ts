@@ -2421,7 +2421,7 @@ export class AppMetadata {
   getAllMetadataDefs(): Object {
     return this.obj.metadataDefs;
   }
-  getStatusDefs(status): Object {
+  getStatusDefs(status): any {
     return this.obj.statusDefs[status];
   }
 

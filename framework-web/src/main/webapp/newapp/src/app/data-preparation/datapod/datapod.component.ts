@@ -1,28 +1,30 @@
 import { NgModule, Component, ViewEncapsulation, Input, ViewChild } from '@angular/core';
-//import { MetaDataDataPodService } from './datapod.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { count } from 'rxjs/operators';
-import { SelectItem } from 'primeng/primeng';
+import { count, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { Http, Headers } from '@angular/http';
+import { ResponseContentType } from '@angular/http';
+import { saveAs } from 'file-saver';
 
 import { AppConfig } from '../../app.config';
-import { DataPodResource } from './datapod-resource';
 import { AppMetadata } from '../../app.metadata';
 import { AppHelper } from '../../app.helper';
-
 import { Version } from '../../shared/version';
+import { KnowledgeGraphComponent } from '../../shared/components/knowledgeGraph/knowledgeGraph.component';
 
 import { CommonService } from '../../metadata/services/common.service';
 import { DatapodService } from '../../metadata/services/datapod.service';
 
-import { Http, Headers } from '@angular/http';
-import { ResponseContentType } from '@angular/http';
-import { saveAs } from 'file-saver';
-import { KnowledgeGraphComponent } from '../../shared/components/knowledgeGraph/knowledgeGraph.component';
-
+import { DatapodAttributeIO } from '../../metadata/domainIO/domain.datapodAttributeIO';
+import { BaseEntity } from '../../metadata/domain/domain.baseEntity';
 import { DatapodIO } from '../../metadata/domainIO/domain.datapodIO';
 import { DropDownIO } from '../../metadata/domainIO/domain.dropDownIO';
-import { BaseEntity } from '../../metadata/domain/domain.baseEntity';
-import { DatapodAttributeIO } from '../../metadata/domainIO/domain.datapodAttributeIO';
+import { Datapod } from '../../metadata/domain/domain.datapod';
+import { MetaIdentifier } from '../../metadata/domain/domain.metaIdentifier';
+import { MetaIdentifierHolder } from '../../metadata/domain/domain.metaIdentifierHolder';
+import { Attribute } from '../../metadata/domain/domain.attribute';
+import { RoutesParam } from '../../metadata/domain/domain.routeParams';
+import { MetadataIO } from '../../metadata/domainIO/domain.metadataIO';
 
 @Component({
   selector: 'app-data-preparation',
@@ -86,12 +88,11 @@ export class DatapodComponent {
   isDataInpogress: any;
   tableclass: any;
   showdatapod: any;
-  showgraph: any;
   graphDataStatus: any;
   showGraph: any;
 
   versions: any;
-  mode: string;
+  mode: any;
   datasource1: any;
   cache: any;
   uuid: any;
@@ -110,17 +111,34 @@ export class DatapodComponent {
   VersionList: Array<DropDownIO>;
   dataSourceNameArray: any[];
   datasourceName: any;
-  download: { "format": string[]; "rows": any; "selectFormat": string; };
+  download: { "format": any; "rows": any; "selectFormat": string; };
+
+  isEdit: boolean = false;
+  isversionEnable: boolean = false;
+  isAdd: boolean = false;
+  showForm: boolean;
+  isEditError: boolean = false;
+  isEditInprogess: boolean = false;
+  attrUnitTypeArray: { 'value': String; 'label': String; }[];
+
+  moveToEnable: boolean;
+  count: any[];
+  txtQueryChangedFilter: Subject<string> = new Subject<string>();
+  resetTableTopBottom: Subject<string> = new Subject<string>();
+  topDisabled: boolean;
+  bottomDisabled: boolean;
+  invalideMinRow: boolean = false;
+  invalideMaxRow: boolean = false;
+  moveTo: number;
 
   constructor(private _config: AppConfig, public metaconfig: AppMetadata, public appHelper: AppHelper, private http: Http, private _commonService: CommonService, private _datapodService: DatapodService, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private route: ActivatedRoute) {
     this.baseUrl = config.getBaseUrl();
-    this.isHomeEnable = false
     this.selectVersion = { "version": "" };
     this.showdatapod = true;
     this.isSubmitEnable = true;
     this.showGraph = false;
     this.uuid = '';
-    //this.download = {"format" :"","rows":"","selectFormat":""}
+    this.download = {"format" :"","rows":"","selectFormat":""}
     this.download.format = ["excel"]
     this.download.rows = 100
     this.download.selectFormat = 'excel'
@@ -137,6 +155,38 @@ export class DatapodComponent {
       "routeurl": null
     }
     ]
+
+    this.showForm = true
+
+    this.moveToEnable = false;
+    this.count = [];
+    
+    this.txtQueryChangedFilter
+      .pipe(debounceTime(3000), distinctUntilChanged())
+      .subscribe(index => {
+        console.log(parseInt(index) - 1);
+        for (const i in this.attributes) {
+          if (this.attributes[i].hasOwnProperty("selected"))
+            this.attributes[i].selected = false;
+        }
+        this.moveTo = null;
+        this.checkSelected(false, null);
+        this.invalideMinRow = false;
+        this.invalideMaxRow = false;
+      });
+
+    this.resetTableTopBottom
+      .pipe(debounceTime(3000), distinctUntilChanged())
+      .subscribe(index => {
+        this.moveTo = null;
+        this.checkSelected(false, null);
+        this.invalideMinRow = false;
+        this.invalideMaxRow = false;
+      });
+    this.invalideMinRow = false;
+    this.invalideMaxRow = false;
+    this.topDisabled = false;
+    this.bottomDisabled = false;
   }
 
   ngOnInit() {
@@ -146,6 +196,12 @@ export class DatapodComponent {
     this.cache = true;
     this.selectallattribute = false;
     this.attrtypes = ["string", "float", "bigint", 'double', 'timestamp', 'integer'];
+    this.attrUnitTypeArray = [
+      { "value": "*", "label": "* Text" },
+      { "value": "#", "label": "# Number" },
+      { "value": "$", "label": "$ Currency" },
+      { "value": "%", "label": "% Percent" }
+    ]
     this.datasourceType = [
       { 'value': 'FILE', name: 'file' },
       { 'value': 'HIVE', name: 'hive' },
@@ -156,28 +212,62 @@ export class DatapodComponent {
     this.selectdatasourceType = this.datasourceType[0].value
 
     this.activatedRoute.params.subscribe((params: Params) => {
-      this.id = params['id'];
-      this.version = params['version'];
-      this.mode = params['mode'];
+      let param = <RoutesParam>params;
+      this.id = param.id;
+      this.version = param.version;
+      this.mode = param.mode;
+
       if (this.mode !== undefined) {
         this.getAllVersionByUuid();
         this.getOneByUuidAndVersion(this.id, this.version);
       }
       else {
         this.selectType(this.selectdatasourceType);
+        this.isEditInprogess = false;
+        this.isEditError = false;
       }
+      this.setMode(this.mode);
     });
+  }
+
+ setMode(mode: any) {
+    if (mode == 'true') {
+      this.isEdit = false;
+      this.isversionEnable = false;
+      this.isAdd = false;
+    } else if (mode == 'false') {
+      this.isEdit = true;
+      this.isversionEnable = true;
+      this.isAdd = false;
+    } else {
+      this.isAdd = true;
+      this.isEdit = false;
+    }
+  }
+
+  onChangeName() {
+    this.breadcrumbDataFrom[2].caption = this.datapodjson.name;
   }
 
   showMainPage() {
     this.isHomeEnable = false
     // this._location.back();
     this.showGraph = false;
+    this.showForm = true
+    this.isShowCompareMetaData = false
+    this.showdatapod = false
+    this.isShowSimpleData = false;
+    this.isShowDatastore = false;
   }
 
   showDagGraph(uuid, version) {
     this.isHomeEnable = true;
     this.showGraph = true;
+    this.showForm = false;
+    this.isShowCompareMetaData = false
+    this.showdatapod = false
+    this.isShowSimpleData = false;
+    this.isShowDatastore = false;
     setTimeout(() => {
       this.d_KnowledgeGraphComponent.getGraphData(this.id, this.version);
     }, 1000);
@@ -215,6 +305,8 @@ export class DatapodComponent {
   }
 
   getOneByUuidAndVersion(id, version) {
+
+    this.isEditInprogess = true;
     this._datapodService.getOneByUuidAndVersion(id, version, 'datapod')
       .subscribe(
         response => {
@@ -251,18 +343,15 @@ export class DatapodComponent {
     this.active = this.appHelper.convertStringToBoolean(response.datapoddata.active);
     this.locked = this.appHelper.convertStringToBoolean(response.datapoddata.locked);
     this.cache = this.appHelper.convertStringToBoolean(response.datapoddata.cache);
-
-    this.selectdatasourceName = (response.datapoddata.datasource.ref.name).toUpperCase();
-    // this.selectType(this.selectdatasourceName);
     this._datapodService.getLatestDataSourceByUuid(response.datapoddata.datasource.ref.uuid, response.datapoddata.datasource.ref.type)
       .subscribe(
         response => {
           this.OnSuccesLatestDatasourceByUuid(response)
         },
         error => console.log("Error :: " + error));
+        this.isEditInprogess = false;
   }
   OnSuccesLatestDatasourceByUuid(response: any) {
-    debugger
     this.selectdatasourceType = response.type;
     this.selectType(this.selectdatasourceType);
   }
@@ -274,12 +363,12 @@ export class DatapodComponent {
     this.isDataInpogress = true;
     this.tableclass = 'centercontent';
     this.showdatapod = false;
-    this.showgraph = false;
     this.graphDataStatus = false;
     this.showGraph = false;
     this.IsTableShow = false;
     this.isShowDatastore = false
     this.isShowCompareMetaData = false
+    this.showForm = false;
     const api_url = this.baseUrl + 'datapod/getDatapodSample?action=view&datapodUUID=' + data.uuid + '&datapodVersion=' + data.version + '&row=100';
     const DatapodSampleData = this._datapodService.getDatapodSample(api_url).subscribe(
       response => { this.OnSuccesDatapodSample(response) },
@@ -293,20 +382,19 @@ export class DatapodComponent {
 
   OnSuccesDatapodSample(response) {
     this.IsTableShow = true;
-
     this.colsdata = response
     let columns = [];
     console.log(response)
     for (var j = 0; j < this.datapodjson.attributes.length; j++) {
-      var attribute = {};
-      attribute["field"] = this.datapodjson.attributes[j].name;
-      attribute["header"] = this.datapodjson.attributes[j].name;
-      attribute["colwidth"] = ((attribute["header"].length * 9) + 40) + "px"
-      attribute["name"] = this.datapodjson.attributes[j].name;
-      attribute["dname"] = this.datapodjson.name;
-      attribute["uuid"] = this.datapodjson.uuid;
-      attribute["version"] = this.datapodjson.version;
-      attribute["attributeId"] = this.datapodjson.attributes[j].attributeId;
+      var attribute = {"field":"","header":"","colwidth":"","name":"","dname":"","uuid":"","version":"","attributeId":""};
+      attribute.field = this.datapodjson.attributes[j].name;
+      attribute.header = this.datapodjson.attributes[j].name;
+      attribute.colwidth = ((attribute.header.length * 9) + 40) + "px"
+      attribute.name = this.datapodjson.attributes[j].name;
+      attribute.dname = this.datapodjson.name;
+      attribute.uuid = this.datapodjson.uuid;
+      attribute.version = this.datapodjson.version;
+      attribute.attributeId = this.datapodjson.attributes[j].attributeId;
 
       columns.push(attribute)
     }
@@ -327,7 +415,6 @@ export class DatapodComponent {
   }
 
   selectType(val) {
-
     this._datapodService.getDatasourceByType(val)
       .subscribe(
         response => {
@@ -337,16 +424,6 @@ export class DatapodComponent {
   }
 
   OnSuccesDatasourceByType(response) {
-    debugger
-    // this.detasource_uuid = response[0]['uuid'];
-    // const datasource2: Array<DataPodResource> = [];
-    // for (const i in response) {
-    //   datasource2.push(new DataPodResource(
-    //     response[i]['uuid'], response[i]['name']
-    //   ));
-    // }
-    // this.datasource1 = datasource2;
-
     this.dataSourceNameArray = []
     for (const i in response) {
       let dataSourceArrayObj = new DropDownIO();
@@ -359,44 +436,46 @@ export class DatapodComponent {
   }
 
   submitDatapod() {
-    let datapod = {};
+    let datapod = new Datapod();
     this.isSubmitEnable = true;
-    datapod["uuid"] = this.datapodjson.uuid;
-    datapod["name"] = this.datapodjson.name;
-    datapod["desc"] = this.datapodjson.desc;
-    datapod["active"] = this.active == true ? "Y" : "N";
-    datapod["published"] = this.published == true ? "Y" : "N";
-    datapod["cache"] = this.cache == true ? "Y" : "N";
+    datapod.uuid = this.datapodjson.uuid;
+    datapod.name = this.datapodjson.name;
+    datapod.desc = this.datapodjson.desc;
+    datapod.active = this.active == true ? "Y" : "N";
+    datapod.published = this.published == true ? "Y" : "N";
+    datapod.cache = this.cache == true ? "Y" : "N";
 
-    //datapod.tags = this.tags
-    let datasource = {}
-    let ref = {};
-    ref["type"] = "datasource";
-    ref["uuid"] = this.detasource_uuid;
-    datasource["ref"] = ref;
-    datapod["datasource"] = datasource;
+    datapod.tags = this.tags
+    let datasource = new MetaIdentifierHolder();
+    let ref = new MetaIdentifier();
+    ref.type = "datasource";
+    ref.uuid = this.datasourceName.uuid;
+    datasource.ref = ref;
+    datapod.datasource = datasource;
     let attributesArray = [];
     let count = 1;
     if (this.attributes.length > 0) {
       for (let i = 0; i < this.attributes.length; i++) {
-        let attribute = {};
-        if (this.attributes[i]["key"] == true) {
-          attribute["key"] = count;
+        let attribute = new Attribute();
+        if (this.attributes[i].key == true) {
+          attribute.key = count;
           count = count + 1;
         }
         else {
-          attribute["key"] = null;
+          attribute.key = null;
         }
-        attribute["partition"] = this.attributes[i]["partition"] == true ? "Y" : "N";
-        attribute["active"] = this.attributes[i]["active"] == true ? "Y" : "N";
-        attribute["dispName"] = this.attributes[i]["dispName"];
-        attribute["type"] = this.attributes[i]["type"];
-        attribute["name"] = this.attributes[i]["name"];
-        attribute["desc"] = this.attributes[i]["desc"];
+        attribute.partition = this.attributes[i].partition == true ? "Y" : "N";
+        attribute.active = this.attributes[i].active == true ? "Y" : "N";
+        attribute.dispName = this.attributes[i].dispName;
+        attribute.type = this.attributes[i].type;
+        attribute.name = this.attributes[i].name;
+        attribute.length = this.attributes[i].length;
+        attribute.attrUnitType = this.attributes[i].attrUnitType;
+        attribute.desc = this.attributes[i].desc;
         attributesArray[i] = attribute;
       }
     }
-    datapod["attributes"] = attributesArray;
+    datapod.attributes = attributesArray;
     console.log(JSON.stringify(datapod));
     this._commonService.submit("datapod", datapod).subscribe(
       response => { this.OnSuccessubmit(response) },
@@ -418,16 +497,10 @@ export class DatapodComponent {
     this.router.navigate(['app/dataPreparation/datapod', uuid, version, 'false']);
   }
 
-  showview(uuid, version) {
-    this.showDatapodPage();
-    this.router.navigate(['app/dataPreparation/datapod', uuid, version, 'true']);
-  }
-
   showDatapodPage() {
     this.isShowCompareMetaData = false
     this.showdatapod = true;
     this.isShowSimpleData = false;
-    this.showgraph = false;
     this.graphDataStatus = false;
     this.showGraph = false
     this.isShowDatastore = false
@@ -435,14 +508,13 @@ export class DatapodComponent {
   }
 
   showDatapodGraph() {
-    this.isShowCompareMetaData = false
+    this.isShowCompareMetaData = false;
     this.showdatapod = false;
-    this.showgraph = false;
     this.isShowSimpleData = false;
     this.graphDataStatus = true;
     this.showGraph = true;
-    this.isShowDatastore = false
-    this.showgetResults = false
+    this.isShowDatastore = false;
+    this.showgetResults = false;
   }
 
   addRow() {
@@ -459,6 +531,7 @@ export class DatapodComponent {
     datapodtable.desc = " ";
     this.attributes.splice(this.attributes.length, 0, datapodtable);
   }
+
   removeRow() {
     let newDataList = [];
     this.selectallattribute = false;
@@ -524,6 +597,7 @@ export class DatapodComponent {
     this.isDownloadDatapod = true;
     this.showdatapod = false
     this.showgetResults = false
+    this.showForm = false;
     this._datapodService.getDatastoreByDatapod(data, "datapod").subscribe(
       response => { this.OnSuccesgetDatastoreByDatapod(response) },
       error => console.log('Error :: ' + error)
@@ -578,28 +652,32 @@ export class DatapodComponent {
     this.IsTableShow = false
     this.isShowCompareMetaData = true
     this.showdatapod = false;
-    this.showgraph = false;
     this.isShowSimpleData = false;
     this.graphDataStatus = false;
     this.showGraph = false;
     this.isShowDatastore = false
     this.showgetResults = false
+    this.showForm = false;
     this._datapodService.compareMetadata(data.uuid, data.version, 'datapod').subscribe(
       response => { this.OnSuccescompareMetadata(response) },
       error => console.log('Error :: ' + error)
     )
-
   }
+
   OnSuccescompareMetadata(response) {
     this.IsTableShow = true
     for (let i = 0; i < response.length; i++) {
       if (response[i].status != null) {
         let status = response[i].status;
-        let count
+
+        let metadata = new MetadataIO();
+        metadata = this.metaconfig.getStatusDefs(status);
+
+        let count;
         response[i].status = {};
-        response[i].status.value = this.metaconfig.getStatusDefs(status)['caption']
+        response[i].status.value = metadata.caption
         //  response[i]["status"].stage = this.appHelper.getStatus(status)["stage"];
-        response[i].status.color = this.metaconfig.getStatusDefs(status)['color'];
+        response[i].status.color = metadata.color;
         if (response[i].status == "NOCHANGE") {
           count = count + 1;
         }
@@ -611,8 +689,8 @@ export class DatapodComponent {
       this.isMetaSysn = false;
     }
     this.metaCompareData = response
-
   }
+
   synchronousMetadata(data) {
     if (this.isMetaSysn || this.selectdatasourceType == 'file') {
       return false
@@ -721,12 +799,98 @@ export class DatapodComponent {
   drop(event, data) {
     if (this.mode == 'false') {
       this.dropIndex = data
-      // console.log(event)
-      // console.log(data)
       var item = this.attributes[this.dragIndex]
       this.attributes.splice(this.dragIndex, 1)
       this.attributes.splice(this.dropIndex, 0, item)
       this.iSSubmitEnable = true
     }
+  }
+
+  updateArray(new_index, range, event) {
+    for (let i = 0; i < this.attributes.length; i++) {
+      if (this.attributes[i].selected) {
+
+        if (new_index < 0) {
+          this.invalideMinRow = true;
+          this.resetTableTopBottom.next(event);
+        }
+        else if (new_index >= this.attributes.length) {
+          this.invalideMaxRow = true;
+          this.resetTableTopBottom.next(event);
+        }
+        else if (new_index == null) { }
+        else {
+          let old_index = i;
+          this.array_move(this.attributes, old_index, new_index);
+          if (range) {
+
+            if (new_index == 0 || new_index == 1) {
+              this.checkSelected(false, null);
+            }
+            if (new_index == this.attributes.length - 1) {
+              this.checkSelected(false, null);
+            }
+            this.txtQueryChangedFilter.next(new_index);
+          }
+          else if (new_index == 0 || new_index == 1) {
+            this.attributes[new_index].selected = "";
+            this.checkSelected(false, null);
+          }
+          else if (new_index == this.attributes.length - 1) {
+            this.attributes[new_index].selected = "";
+            this.checkSelected(false, null);
+          }
+          break;
+        }
+      }
+    }
+  }
+
+  array_move(arr, old_index, new_index) {
+    while (old_index < 0) {
+      old_index += arr.length;
+    }
+    while (new_index < 0) {
+      new_index += arr.length;
+    }
+    if (new_index >= arr.length) {
+      var k = new_index - arr.length + 1;
+      while (k--) {
+        arr.push(undefined);
+      }
+    }
+    arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+    return arr;
+  }
+
+  checkSelected(flag: any, index: any) {
+    if (flag == true) {
+      this.count.push(flag);
+    }
+    else {
+      this.count.pop();
+    }
+    this.moveToEnable = (this.count.length == 1) ? true : false;
+
+    if (index != null) {
+      if (index == 0 && flag == true) {
+        this.topDisabled = true;
+      }
+      else {
+        this.topDisabled = false;
+      }
+
+      if (index == (this.attributes.length - 1) && flag == true) {
+        this.bottomDisabled = true;
+      }
+      else {
+        this.bottomDisabled = false;
+      }
+    }
+  }
+
+  ngOnDestroy() {
+    this.txtQueryChangedFilter.unsubscribe();
+    this.resetTableTopBottom.unsubscribe();
   }
 }

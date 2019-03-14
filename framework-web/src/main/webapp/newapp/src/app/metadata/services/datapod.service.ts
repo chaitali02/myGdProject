@@ -41,6 +41,10 @@ export class DatapodService {
                         attribute.selected = false;
                         attribute.dispName = response.attributes[i].dispName;
                         attribute.type = response.attributes[i].type.toLowerCase();
+
+                        attribute.length = response.attributes[i].length;
+                        attribute.attrUnitType = response.attributes[i].attrUnitType;
+
                         attribute.desc = response.attributes[i].desc;
                         if (response.attributes[i].key != "" && response.attributes[i].key != null) {
                             attribute.key = true;
