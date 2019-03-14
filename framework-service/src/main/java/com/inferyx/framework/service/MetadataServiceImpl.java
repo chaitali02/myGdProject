@@ -840,6 +840,8 @@ public class MetadataServiceImpl {
 			baseEntity.setPublished(baseEntityTmp.getPublished());
 			baseEntity.setAppInfo(baseEntityTmp.getAppInfo());
 			baseEntityList.add(baseEntity);
+			
+			
 		}
 		return baseEntityList;
 	}

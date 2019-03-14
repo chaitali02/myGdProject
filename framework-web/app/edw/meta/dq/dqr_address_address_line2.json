@@ -22,19 +22,7 @@
 		
 	},
 	"refIntegrityCheck" : {
-		"dependsOn" : {
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
-			}
-		},
-		"targetAttr" : {
-			"attrId" : "2",
-			"ref" : {
-				"type" : "datapod",
-				"uuid" : "89c15cd1-bd0d-4ae4-bedd-587047b665d6"
-			}
-		}
+		
 	},
 	"uuid" : "ff7cd11b-4df9-4959-a4da-975305efb07a",
 	"version" : "1490076915",
@@ -46,7 +34,7 @@
 			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-	"createdOn" : ISODate("2019-03-12T15:03:50.766Z"),
+	"createdOn" : ISODate("2019-03-14T14:58:47.746Z"),
 	"tags" : [
 		"DEV",
 		"1.0.1",
