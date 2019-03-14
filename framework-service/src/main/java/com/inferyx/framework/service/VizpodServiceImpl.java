@@ -1450,20 +1450,12 @@ public class VizpodServiceImpl extends RuleTemplate {
 		 * @param order
 		 * @param requestId
 		 * @param runMode
-		 * @throws ParseException 
-		 * @throws NullPointerException 
-		 * @throws SecurityException 
-		 * @throws NoSuchMethodException 
-		 * @throws InvocationTargetException 
-		 * @throws IllegalArgumentException 
-		 * @throws IllegalAccessException 
-		 * @throws IOException 
-		 * @throws JSONException 
+		 * @throws Exception 
 		 * @returnList<Map<String, Object>>
 		 */
 		public List<Map<String, Object>> getVizpodResults(String vizExecUuid, String vizExecVersion, String saveOnRefresh,
 				int rows, int offset, int limit, String sortBy, String order, String requestId,
-				RunMode runMode) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException, IOException {
+				RunMode runMode) throws Exception {
 			VizExec vizExec = (VizExec) commonServiceImpl.getOneByUuidAndVersion(vizExecUuid, vizExecVersion, MetaType.vizExec.toString());
 			MetaIdentifier vizpodMI = vizExec.getDependsOn().getRef();
 			Vizpod vizpod = (Vizpod) commonServiceImpl.getOneByUuidAndVersion(vizpodMI.getUuid(), vizpodMI.getVersion(), vizpodMI.getType().toString());

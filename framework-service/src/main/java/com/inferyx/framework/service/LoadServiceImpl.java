@@ -320,14 +320,7 @@ public class LoadServiceImpl {
 	 * @param datapodTableName
 	 * @param metaDetails
 	 * @param resultRef
-	 * @throws IOException
-	 * @throws ParseException
-	 * @throws NullPointerException
-	 * @throws SecurityException
-	 * @throws NoSuchMethodException
-	 * @throws InvocationTargetException
-	 * @throws IllegalArgumentException
-	 * @throws IllegalAccessException
+	 * @throws Exception 
 	 */
 	/*
 	 * private void persistDataStore(DataFrame dfDataqual, String datapodTableName,
@@ -381,8 +374,7 @@ public class LoadServiceImpl {
 
 	public List<java.util.Map<String, Object>> getLoadResults(String loadExecUUID, String loadExecVersion, int offset,
 			int limit, String sortBy, String order, String requestId, RunMode runMode)
-			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
-			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			throws Exception {
 
 		List<java.util.Map<String, Object>> data = new ArrayList<>();
 		limit = offset + limit;

@@ -2,7 +2,7 @@ drop table if exists dq_rule_detail;
  create table dq_rule_detail (
 rule_uuid varchar(50),
 rule_version int(10) ,
-rule_name varchar(50),
+rule_name varchar(100),
 datapod_uuid varchar(50),
 datapod_version int(10) ,
 datapod_name varchar(50),
@@ -23,6 +23,7 @@ custom_check_pass varchar(1) ,
 domain_check_pass varchar(1) ,
 blankspace_check_pass varchar(1) ,
 expression_check_pass varchar(1) ,
+all_check_pass varchar(1) ,
 version int(10));
 
 

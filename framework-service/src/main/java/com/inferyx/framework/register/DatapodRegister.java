@@ -226,12 +226,13 @@ public class DatapodRegister {
 		}
 	}*/
 	
-	/********************** UNUSED **********************/
+	/********************** UNUSED 
+	 * @throws Exception **********************/
 	/*public void registerDatapod (DataStore datastore, Datapod datapod) {
 		registerDatapod(datastore, datapod, Mode.BATCH);
 	}*/
 	
-	public void registerDatapod (DataStore datastore, Datapod datapod, RunMode runMode) {
+	public void registerDatapod (DataStore datastore, Datapod datapod, RunMode runMode) throws Exception {
 		try {
 			/*IReader iReader = dataSourceFactory.getDatapodReader(datapod, commonActivity);*/
 			/*String datasourceUUID = datapod.getDatasource().getRef().getUuid();
@@ -292,12 +293,13 @@ public class DatapodRegister {
 				exec.registerDatapod(filepath, tableName, appUuid);
 			}
 		} catch (Exception e) {
-			logger.error("Error registering datastore");
+			logger.error("Error registering datastore", e);
 			e.printStackTrace();
-
+			throw e;
 		} catch (AssertionError e) {
 			logger.error("Error registering datastore");
 			e.printStackTrace();
+			throw e;
 		}
 
 	}

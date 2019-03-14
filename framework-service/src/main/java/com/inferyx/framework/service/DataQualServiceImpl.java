@@ -616,7 +616,7 @@ public class DataQualServiceImpl extends RuleTemplate {
 	}
 
 	public List<Map<String, Object>> getSummary(String dataQualExecUUID, String dataQualExecVersion, RunMode runMode)
-			throws JsonProcessingException {
+			throws Exception {
 		DataQualExec dqExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(dataQualExecUUID,
 				dataQualExecVersion, MetaType.dqExec.toString());
 		DataStore datastore = dataStoreServiceImpl.getDatastore(dqExec.getResult().getRef().getUuid(),
@@ -644,10 +644,10 @@ public class DataQualServiceImpl extends RuleTemplate {
 			exec = execFactory.getExecutor(execContext.toString());
 			appUuid = commonServiceImpl.getApp().getUuid();
 			data = exec.executeAndFetch(getSummarySql(tableName, dqExec.getVersion(), execContext), appUuid);
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-				| SecurityException | NullPointerException | ParseException | IOException e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) {
+			logger.error("Exception in DataQualServiceImpl", e);
 			e.printStackTrace();
+			throw e;
 		}
 		return data;
 	}

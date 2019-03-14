@@ -1818,7 +1818,7 @@
     ],
     "uuid" : "e5e1aee8-86a3-11e8-adc0-fa7ae01bbebc",
     "version" : "1550847709",
-    "name" : "graph_customer_360",
+    "name" : "customer_360",
     "desc" : "",
     "createdBy" : {
         "ref" : {

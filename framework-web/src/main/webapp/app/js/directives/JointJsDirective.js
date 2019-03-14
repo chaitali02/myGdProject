@@ -1097,7 +1097,7 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
                      map : {name:'map', label: 'Map'},
                      model : {name:'model', label: 'Model'},
                      rule : {name:'rule', label: 'Rule'},
-                     rule : {name:'rule2', label: 'Rule2'},
+                     rule2 : {name:'rule2', label: 'Rule2'},
                      rulegroup : {name:'rulegroup', label: 'RuleGroup',url:'rule/getRuleExecByRGExec?'},
                      recon : {name:'recon', label: 'Recon'},
                      recongroup : {name:'recongroup', label: 'ReconGroup',url:'recon/getReconExecByRGExec?'},
@@ -1518,6 +1518,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
     }
 
     window.showResult = function(params,url,execUrl){
+      debugger
        if(["dashboard"].indexOf(params.elementType) !=-1 && url !=null){
          url.state=dagMetaDataService.elementDefs[params.elementType.toLowerCase()].resultState
         window.navigateTo(JSON.stringify(url));
@@ -2148,6 +2149,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                simulate : {name:'simulate', label: 'Simulate'},
                operator : {name:'operator', label: 'Operator'},
                rule : {name:'rule', label: 'Rule'},
+               rule2 : {name:'rule2', label: 'Rule2'},
                report : { name:'report', label: 'Report'},
                dashboard : { name:'dashboard', label: 'Dashboard'},
                rulegroup : {name:'rulegroup', label: 'RuleGroup',url:'rule/getRuleExecByRGExec?'},
@@ -2162,7 +2164,8 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
              
              execStates={state : dagMetaDataService.elementDefs[ref.type.toLowerCase()].detailState, params : {id :ref.uuid,version:ref.version || " ",name:ref.name,type:ref.type,mode:true, returnBack: true}};
              $http.get(url+'metadata/getMetaIdByExecId?action=view&execUuid='+ref.uuid+'&execVersion='+ref.version+'&type='+ref.type).then(function (res) {
-              
+              debugger
+              resultparams.elementType=res.data.type;
               state = {state : dagMetaDataService.elementDefs[res.data.type].state, params : {id :res.data.uuid,version:res.data.version || " ",name:ref.name,type:ref.type,mode:true, returnBack: true}};
                iconMenu(localPoint.x, localPoint.y, JSON.stringify(state),JSON.stringify(execStates),JSON.stringify(resultparams));
              });
@@ -2170,6 +2173,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
            else {
              var url=$location.absUrl().split("app")[0];
               $http.get(url+'common/getLatestByUuid?action=view&uuid='+ref.uuid+'&type='+ref.type).then(function (res) {
+                
                 execStates= {state : dagMetaDataService.elementDefs[type].detailState, params : {id :ref.uuid,version:res.data.version,name:ref.name,type:ref.type,mode:true, returnBack: true}};
               state = {state : dagMetaDataService.elementDefs[type].state, params : {id :ref.uuid,version:res.data.version,name:ref.name,type:ref.type,mode:true, returnBack: true}};
              iconMenu(localPoint.x, localPoint.y, JSON.stringify(state),JSON.stringify(execStates));
