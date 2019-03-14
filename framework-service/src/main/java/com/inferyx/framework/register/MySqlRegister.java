@@ -81,7 +81,7 @@ public class MySqlRegister {
 		List<Datapod> dpList = new ArrayList<>();
 
 		try {
-			datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datasource.toString());//commonServiceImpl.getDatasourceByApp();
+			datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datasource.toString(), "N");//commonServiceImpl.getDatasourceByApp();
 			MetaIdentifier datasourceRef = new MetaIdentifier(MetaType.datasource, datasource.getUuid(), datasource.getVersion());
 			datastoreMeta.setRef(datasourceRef);
 			
@@ -118,9 +118,9 @@ public class MySqlRegister {
 						attr.setType(getconvertedDataType(rs.getString("TYPE_NAME")));
 						attr.setDesc(colName);
 						if(pkList.contains(colName)) {
-							attr.setKey("Y");
+							attr.setKey(""+pkList.indexOf(colName));
 						} else {
-							attr.setKey("N");
+							attr.setKey(null);
 						}
 						attr.setLength(Integer.parseInt(rs.getString("COLUMN_SIZE")));
 						attr.setPartition("N");

@@ -1319,6 +1319,7 @@ public class DatapodServiceImpl {
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
 		String sourceTableName = null;
 		try {
+			datastoreServiceImpl.setRunMode(runMode);
 			sourceTableName = datastoreServiceImpl.getTableNameByDatapod(new OrderKey(datapodUuid, datapodVersion),
 					runMode);
 		} catch (Exception e) {

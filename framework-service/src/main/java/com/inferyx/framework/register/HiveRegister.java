@@ -111,9 +111,9 @@ public class HiveRegister extends DataSourceRegister {
 						attr.setType(colType);
 						attr.setDesc(colName);
 						if(pkList.contains(colName)) {
-							attr.setKey("Y");
+							attr.setKey(""+pkList.indexOf(colName));
 						} else {
-							attr.setKey("N");
+							attr.setKey(null);
 						}
 						attr.setLength(Integer.parseInt(rs.getString("COLUMN_SIZE")));
 						attr.setPartition("N");
