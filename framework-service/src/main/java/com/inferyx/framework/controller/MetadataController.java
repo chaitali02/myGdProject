@@ -40,6 +40,7 @@ import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.dao.IDatasourceDao;
 import com.inferyx.framework.domain.Algorithm;
+import com.inferyx.framework.domain.AppConfig;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseEntityStatus;
@@ -1139,7 +1140,10 @@ public class MetadataController {
 		return  metadataServiceImpl.getGroupsByOrg(orgUuid);
 	}
 			
-			
-			
+	@RequestMapping(value = "/getAppConfigByApp", method = RequestMethod.GET)
+	public @ResponseBody String getAppConfigByApp(@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {
+		return new ObjectMapper().writeValueAsString(metadataServiceImpl.getAppConfigByCurrentApp());
+	}
 	
 }

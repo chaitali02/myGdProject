@@ -12,6 +12,7 @@ package com.inferyx.framework.service;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.limit;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort;
 
@@ -43,6 +44,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.aggregation.GroupOperation;
+import org.springframework.data.mongodb.core.aggregation.LimitOperation;
 import org.springframework.data.mongodb.core.aggregation.MatchOperation;
 import org.springframework.data.mongodb.core.aggregation.SortOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -57,11 +59,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.dao.IMetaDao;
 import com.inferyx.framework.domain.Algorithm;
+import com.inferyx.framework.domain.AppConfig;
 import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseEntityStatus;
 import com.inferyx.framework.domain.BatchExec;
 import com.inferyx.framework.domain.CommentView;
+import com.inferyx.framework.domain.Config;
 import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DashboardExec;
@@ -104,12 +108,10 @@ import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.ReconGroupExec;
 import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.ReportExec;
-import com.inferyx.framework.domain.Role;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.Rule2;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.domain.VizExec;
-import com.inferyx.framework.enums.ApplicationType;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.RuleGroupExec;
@@ -2472,5 +2474,37 @@ public class MetadataServiceImpl {
 		}
 		return groupList;
 	}
-	
+
+	/**
+	 * @return AppConfig
+	 * @throws ParseException 
+	 * @throws NullPointerException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
+	 * @throws JsonProcessingException 
+	 */
+	public List<Config> getAppConfigByCurrentApp() throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		String appUuid = commonServiceImpl.getApp().getUuid();
+		MatchOperation filter = match(new Criteria("appInfo.ref.uuid").in(appUuid));
+		GroupOperation groupByUuid = group("uuid").max("version").as("version");
+		SortOperation sortByVersion = sort(new Sort(Direction.DESC, "version"));
+		LimitOperation limitByDocument = limit(1);
+		
+		Aggregation aggregation = newAggregation(filter, groupByUuid, sortByVersion, limitByDocument);
+		AggregationResults<AppConfig> aggregationResults = mongoTemplate.aggregate(aggregation, MetaType.appConfig.toString().toLowerCase(), AppConfig.class);
+		AppConfig appConfig = aggregationResults.getUniqueMappedResult();
+		if(appConfig != null) {
+			AppConfig appConfig2 = (AppConfig) commonServiceImpl.getLatestByUuid(appConfig.getId(), MetaType.appConfig.toString());
+			if(appConfig2.getConfigInfo() != null) {
+				return appConfig2.getConfigInfo();
+			} else {
+				return new ArrayList<>();
+			}
+		} else {
+			return new ArrayList<>();
+		}
+	}
 }

@@ -16,7 +16,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection="appconfig")
 public class AppConfig extends BaseEntity{
-	List<Config> configInfo;
+	private List<Config> configInfo;
 	private MetaIdentifierHolder dependsOn;	
 
 	public List<Config> getConfigInfo() {
