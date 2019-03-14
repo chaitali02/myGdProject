@@ -1170,33 +1170,34 @@ cursor: not-allowed !important;
 }
 .weekDays-selector input {
   display: none!important;
-  margin-right: 4px;
+  /* margin-right: 4px; */
 }
-
 .weekDays-selector input[type=checkbox] + label {
   display: inline-block;
   border-radius: 50%;
   background: #dddddd;
   height: 35px;
   width: 35px;
-  margin-right: 3px;
+  margin-right: 10px;
   line-height: 36px;
   text-align: center;
   cursor: pointer;
   font-size: 11px;
   color: #313131;
 }
-
 .weekDays-selector input[type=checkbox]:checked + label {
   background: #4285f4;
   color: #ffffff;
 }
 /*--Week selector end--*/
+
 /*--Dialog titlebar disable--*/
 .dialogBox .ui-dialog-titlebar{
   display: none !important;
 }
-
+.dialogBox1 .ui-dialog.ui-widget .ui-dialog-content {
+  padding: 1em 0.4em 0em 1em;
+}
 .dialogBox3 .ui-dialog{
   position: fixed;
   padding: 0;
@@ -1286,7 +1287,7 @@ cursor: not-allowed !important;
   /* border: 1px solid #e73d4a !important; */
 }
 
-/* dq moveRow button */
+/* moveRow button */
 .btn.btn-outline.green-haze {
   border-color: #a0a0a0;
   color: #a0a0a0;
@@ -1315,6 +1316,10 @@ cursor: not-allowed !important;
 }
 .ui-switch-top-left-padding{
   padding: 0.7% 0% 0% 1.5%;
+}
+
+.ui-switch-top-padding{
+  padding: 1.7% 0% 0% 0%;
 }
 
 .btn.btn-outline.green-haze:hover, .btn.btn-outline.green-haze:active,

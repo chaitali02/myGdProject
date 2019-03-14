@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 // import { UiSwitchModule } from 'ngx-toggle-switch/src';
 import { TagInputModule } from 'ngx-chips';
 import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown';
-import { CheckboxModule, CalendarModule, OverlayPanelModule, DialogModule, MultiSelectModule} from 'primeng/primeng';
+import { CheckboxModule, CalendarModule, OverlayPanelModule, DialogModule, MultiSelectModule, ChipsModule} from 'primeng/primeng';
 import { ResultModule } from '../shared/module/result.module';
 import { ProjectSharedModule } from '../shared/module/shared.module';
 
@@ -25,6 +25,7 @@ import { MetadataService } from '../metadata/services/metadata.service';
 import { SharedDataService } from '../data-pipeline/shareddata.service';
 import { DataPipelineService } from '../metadata/services/dataPipeline.service';
 import { JointjsService } from '../shared/components/jointjs/jointjsservice';
+import { UiSwitchModule } from 'ngx-ui-switch';
 //import { DataPiplineResultComponent } from './../data-pipeline/data-pipelineresult.component';
 //import { JointjsComponent } from '../data-pipeline/jointjs.component';
 //import { ShContextMenuModule } from 'ng2-right-click-menu';
@@ -44,7 +45,16 @@ import { JointjsService } from '../shared/components/jointjs/jointjsservice';
         OverlayPanelModule,
         DialogModule,
         MenuModule,
-        MultiSelectModule
+        MultiSelectModule,
+        ChipsModule,
+        UiSwitchModule.forRoot({
+            size: 'small',
+            color: '#15C5D5',
+            switchColor: '#FFFFF',
+            defaultBoColor : '#ccc',
+           // checkedLabel: 'Yes',
+            //uncheckedLabel: 'No'
+          })
         //ShContextMenuModule
         
         

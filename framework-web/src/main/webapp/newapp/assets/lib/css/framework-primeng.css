@@ -72,6 +72,17 @@
 .ui-inputtext:focus{
   box-shadow: none !important;
 }
+
+.ui-datepicker.ui-widget .ui-datepicker-calendar td a.ui-state-active {
+  background-color: #4285f4 !important;
+  color: #ffffff !important;
+  border: 1px solid#ffffff !important;
+}
+.ui-datepicker.ui-widget .ui-datepicker-calendar td a.ui-state-highlight {
+  background-color: #d6d6d6 !important;
+}
+
+
 /* .ui-widget-header .ui-button, .ui-widget-content .ui-button, .ui-widget.ui-button, .ui-button{
   border: 1px solid #ccc !important;
   border-left: none !important;

@@ -1,5 +1,6 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, Input } from '@angular/core';
 import {Router} from '@angular/router';
+import { AppConfig } from '../../../app.config';
 
 
 @Component({
@@ -8,6 +9,12 @@ import {Router} from '@angular/router';
   templateUrl: './footer.template.html'
 })
 export class FooterComponent {
-  constructor(public router: Router) {
+
+  version: any;
+
+  constructor(public router: Router, private _appConfig: AppConfig) {
+
+    this.version = _appConfig.config.version;
+  
   }
 }

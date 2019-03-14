@@ -1,3 +1,4 @@
+
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonService } from '../metadata/services/common.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
@@ -10,6 +11,15 @@ declare var require: any;
 const moment=  require('moment');
 import { FrequencyType } from './frequencyType';
 import { KnowledgeGraphComponent } from '../shared/components/knowledgeGraph/knowledgeGraph.component';
+import { MetaType } from './../metadata/enums/metaType';
+import { BatchView } from '../metadata/domain/domain.batchView';
+import { Schedule } from '../metadata/domain/domain.schedule';
+import { AppHelper } from '../app.helper';
+import { MultiSelectIO } from '../metadata/domainIO/domain.multiselectIO';
+import { ScheduleIO } from './../metadata/domainIO/domain.scheduleIO';
+import { Batch } from '../metadata/domain/domain.batch';
+import { MetaIdentifierHolder } from '../metadata/domain/domain.metaIdentifierHolder';
+import { MetaIdentifier } from '../metadata/domain/domain.metaIdentifier';
 
 @Component({
   selector: 'app-batch-scheduler',
@@ -116,13 +126,43 @@ export class BatchSchedulerComponent implements OnInit {
   minimumDate: Date;
   startDate= new Date();
   @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
-  showGraph: boolean;
+  // showGraph: boolean;
   isHomeEnable: boolean;
+
+  metaType = MetaType;
+  isEditInprogess: boolean = false;
+  isEditError: boolean = false;
+  showForm: boolean = true;
+  // fitlerAttrTableSelectedItem: any[] = [];
+  // allname: Array<DropDownIO>;
+  // published: boolean;
+  // active: boolean;
+  // locked: boolean;
+  // metaType: any;
+  // moveTo: number;
+  // moveToEnable: boolean;
+  // count: any[];
+  // txtQueryChangedFilter: Subject<string> = new Subject<string>();
+  // resetTableTopBottom: Subject<string> = new Subject<string>();
+  // rowIndex: any;
+   showDivGraph: boolean;
+  isGraphInprogess: boolean;
+  // isGraphError: boolean;
+  isEdit: boolean = false;
+  isAdd: boolean;
+  isversionEnable: boolean;
+  // batchdata: any;
+  // topDisabled: boolean;
+  // bottomDisabled: boolean;
+  // invalideMinRow: boolean = false;
+  // invalideMaxRow: boolean = false;
+  // datasetNotEmpty: boolean = true;
   
 
-  constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private datePipe: DatePipe) {
+  constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, 
+    private _commonService: CommonService, private datePipe: DatePipe, public appHelper: AppHelper) {
     
-    this.showGraph = false
+    // this.showGraph = false
     this.isHomeEnable = false;
     this.privResponse = null;
     this.pipelineInfoTags = null;
@@ -161,7 +201,9 @@ export class BatchSchedulerComponent implements OnInit {
     this.optionChoose = this.attributes;
     this.isSubmitEnable = false;
 
-     this.minimumDate = this.startDate;
+    this.minimumDate = this.startDate;
+    this.isEditInprogess = false;
+    this.isEditError = false;
   }
 
   ngOnInit() {
@@ -179,33 +221,72 @@ export class BatchSchedulerComponent implements OnInit {
     })
     this.attrtypes = ["Once", "Daily", "Weekly", "Bi-Weekly", "Hourly", "Quarterly", "Monthly", "Yearly"];
     this.attrtype = this.attrtypes[0];
+    this.setMode(this.mode);
+  }
+  setMode(mode: any) {
+    if (mode == 'true') {
+      this.isEdit = false;
+      this.isversionEnable = false;
+      this.isAdd = false;
+    } else if (mode == 'false') {
+      this.isEdit = true;
+      this.isversionEnable = true;
+      this.isAdd = false;
+    } else {
+      this.isAdd = true;
+      this.isEdit = false;
+    }
+  }
+
+  enableEdit(uuid, version) {
+    this.router.navigate(['app/batchScheduler/batch', uuid, version, 'false']);
+    this.isEdit = true;
+    this.dropdownSettingsPipeline = {
+      singleSelection: false,
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      enableSearchFilter: true,
+      disabled: true
+    };
   }
   
   showMainPage() {
     this.isHomeEnable = false
-    // this._location.back();
-    this.showGraph = false;
+    this.showDivGraph = false;
+    this.showForm = true;
   }
 
-  showDagGraph(uuid,version){
+  showGraph(uuid,version){
     this.isHomeEnable = true;
-    this.showGraph = true;
+    this.showDivGraph = true;
+    this.showForm = false;
+    this.isGraphInprogess = true;
     setTimeout(() => {
       this.d_KnowledgeGraphComponent.getGraphData(this.id,this.version);
     }, 1000); 
   }
 
+  onChangeName() {
+    this.breadcrumbDataFrom[2].caption = this.batch.name;
+  }
+  
+
   getOneByUuidAndVersion() {
-    this._commonService.getOneByUuidAndVersion(this.id, this.version, 'batchview')
+    this.isEditInprogess = true;
+    this.isEditError = false;
+
+    this._commonService.getOneByUuidAndVersion(this.id, this.version, this.metaType.BATCHVIEW)
       .subscribe(
         response => {
           this.onSuccessgetOneByUuidAndVersion(response)
         },
-        error => console.log("Error :: " + error));
+        error =>{ console.log("Error :: " + error);
+        this.isEditError = true;      
+      });
   }
 
   getAllVersionByUuid() {
-    this._commonService.getAllVersionByUuid('batch', this.id)
+    this._commonService.getAllVersionByUuid(this.metaType.BATCH, this.id)
       .subscribe(
         response => {
           this.OnSuccesgetAllVersionByUuid(response)
@@ -213,98 +294,91 @@ export class BatchSchedulerComponent implements OnInit {
         error => console.log("Error :: " + error));
   }
 
-  onSuccessgetOneByUuidAndVersion(response) {
+  onSuccessgetOneByUuidAndVersion(response: BatchView) {
     this.batch = response;
+    this.breadcrumbDataFrom[2].caption = response.name;
     this.uuid = response.uuid;
-    const version: Version = new Version();
-    version.label = response['version'];
-    version.uuid = response['uuid'];
-    this.selectedVersion = version
-    this.createdBy = response.createdBy.ref.name;
-    this.batch.published = response["published"] == 'Y' ? true : false
-    this.batch.inParallel = response["inParallel"] == 'true' ? true : false
-    this.batch.active = response["active"] == 'Y' ? true : false
-    var tags = [];
-    if (response.tags != null) {
-      for (var i = 0; i < response.tags.length; i++) {
-        var tag = {};
-        tag['value'] = response.tags[i];
-        tag['display'] = response.tags[i];
-        tags[i] = tag
 
-      }//End For
-      this.batch.tags = tags;
-    }//End If
-    this.breadcrumbDataFrom[2].caption = this.batch.name;
+    const version: Version = new Version();
+    version.label = response.version;
+    version.uuid = response.uuid;
+    this.selectedVersion = version
+
+    this.published = this.appHelper.convertStringToBoolean(response.published);
+    this.inParallel = this.appHelper.convertStringToBoolean(response.inParallel);
+    this.active = this.appHelper.convertStringToBoolean(response.active);
+
     let pipelineInfoNew = [];
     for (const i in response.pipelineInfo) {
-      let pipelinetag = {};
-      pipelinetag["id"] = response.pipelineInfo[i].ref.uuid;
-      pipelinetag["itemName"] = response.pipelineInfo[i].ref.name;
+      let pipelinetag = new MultiSelectIO();
+      pipelinetag.id = response.pipelineInfo[i].ref.uuid;
+      pipelinetag.itemName = response.pipelineInfo[i].ref.name;
       pipelineInfoNew[i] = pipelinetag;
     }
     this.pipelineInfoTags = pipelineInfoNew;
 
     let attribute: any[] = [];
-    for (var i = 0; i < response['scheduleInfo'].length; i++) {
+    for (var i = 0; i < response.scheduleInfo.length; i++) {
 
-      let obj = {};
-      obj["uuid"] = response['scheduleInfo'][i].uuid;
-      obj["name"] = response['scheduleInfo'][i].name;
-      obj["startDate"] = new Date(this.datePipe.transform(response['scheduleInfo'][i].startDate, "EEE MMM dd HH:mm:ss +0530 yyyy"));
-      obj["endDate"] = new Date(this.datePipe.transform(response['scheduleInfo'][i].endDate, "EEE MMM dd HH:mm:ss +0530 yyyy"));
-      obj["attrtype"] = this.toTitleCase(response['scheduleInfo'][i].frequencyType);
-      obj["frequencyDetail"] = [];
+      let obj = new ScheduleIO();
+      obj.uuid = response.scheduleInfo[i].uuid;
+      obj.name = response.scheduleInfo[i].name;
+      obj.startDate = new Date(this.datePipe.transform(response.scheduleInfo[i].startDate, "EEE MMM dd HH:mm:ss +0530 yyyy"));
+      obj.endDate = new Date(this.datePipe.transform(response.scheduleInfo[i].endDate, "EEE MMM dd HH:mm:ss +0530 yyyy"));
+      obj.attrtype = this.toTitleCase(response.scheduleInfo[i].frequencyType);
+      obj.frequencyDetail = [];
 
-      if (obj["attrtype"] == "Weekly" || obj["attrtype"] == "Bi-Weekly") {
+      if (obj.attrtype == "Weekly" || obj.attrtype == "Bi-Weekly") {
         let p = 0;
         for (let k = 0; k < this.weekName.weekAlias.length; k++) {
-          if (response['scheduleInfo'][i].frequencyDetail[p] == this.weekName.weekAlias[k].position) {
-            obj["frequencyDetail"][p] = this.weekName.weekAlias[k].name;
+          if (response.scheduleInfo[i].frequencyDetail[p] == this.weekName.weekAlias[k].position) {
+            obj.frequencyDetail[p] = this.weekName.weekAlias[k].name;
             p++;
             k = -1;
           }
         }
       }
 
-      if (obj["attrtype"] == "Quarterly") {
+      if (obj.attrtype == "Quarterly") {
         let p = 0;
         for (let k = 0; k < this.weekName.quarters.length; k++) {
-          if (response['scheduleInfo'][i].frequencyDetail[p] == this.weekName.quarters[k].position) {
-            obj["frequencyDetail"][p] = this.weekName.quarters[k].name;
+          if (response.scheduleInfo[i].frequencyDetail[p] == this.weekName.quarters[k].position) {
+            obj.frequencyDetail[p] = this.weekName.quarters[k].name;
             p++;
             k = -1;
           }
         }
       }
 
-      if (obj["attrtype"] == "Hourly") {
+      if (obj.attrtype == "Hourly") {
         let p = 0;
         for (let k = 0; k < this.weekName.hour.length; k++) {
-          if (response['scheduleInfo'][i].frequencyDetail[p] == this.weekName.hour[k].position) {
-            obj["frequencyDetail"][p] = this.weekName.hour[k].name;
+          // add toString() to last check strickly
+          if (response.scheduleInfo[i].frequencyDetail[p] == this.weekName.hour[k].position.toString()) {
+            obj.frequencyDetail[p] = this.weekName.hour[k].name;
             p++;
             k = -1;
           }
         }
       }
 
-      if (obj["attrtype"] == "Monthly") {
+      if (obj.attrtype == "Monthly") {
         let p = 0;
-        obj["frequencyDetail"] = response['scheduleInfo'][i].frequencyDetail;
+        obj.frequencyDetail = response.scheduleInfo[i].frequencyDetail;
         p++;
       }
 
-      if (obj["attrtype"] == "Once" || obj["attrtype"] == "Daily" || obj["attrtype"] == "Yearly") {
-        obj["frequencyDetail"] = [];
+      if (obj.attrtype == "Once" || obj.attrtype == "Daily" || obj.attrtype == "Yearly") {
+        obj.frequencyDetail = [];
       }
 
-      obj["scheduleChg"] = "N"
+      obj.scheduleChg = "N"
       attribute[i] = obj;
     }
 
     this.attributes = attribute;
     console.log(JSON.stringify(this.pipelineInfoTags));
+    this.isEditInprogess = false;
   }
 
   toTitleCase(str) {
@@ -328,7 +402,7 @@ export class BatchSchedulerComponent implements OnInit {
   }
 
   getAllLatestPipeline() {
-    this._commonService.getAllLatest('dag')
+    this._commonService.getAllLatest(this.metaType.DAG)
       .subscribe(
         response => {
           this.onSuccessgetAllLatestPipeline(response)
@@ -351,7 +425,7 @@ export class BatchSchedulerComponent implements OnInit {
   }
 
   onVersionChange() {
-    this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, 'batch')
+    this._commonService.getOneByUuidAndVersion(this.selectedVersion.uuid, this.selectedVersion.label, this.metaType.BATCH)
       .subscribe(
         response => {
           this.onSuccessgetOneByUuidAndVersion(response)
@@ -359,32 +433,32 @@ export class BatchSchedulerComponent implements OnInit {
         error => console.log("Error :: " + error));
   }
 
-  onChangeActive(event) {
-    if (event === true) {
-      this.batch.active = 'Y';
-    }
-    else {
-      this.batch.active = 'N';
-    }
-  }
+  // onChangeActive(event) {
+  //   if (event === true) {
+  //     this.batch.active = 'Y';
+  //   }
+  //   else {
+  //     this.batch.active = 'N';
+  //   }
+  // }
 
-  onChangePublished(event) {
-    if (event === true) {
-      this.batch.published = 'Y';
-    }
-    else {
-      this.batch.published = 'N';
-    }
-  }
-  onChangeParallel(event) {
-    if (event === true) {
-      this.batch.inParallel = 'true';
-    }
-    else {
-      this.batch.inParallel = 'false';
-    }
-    this.batchChg = "Y"
-  }
+  // onChangePublished(event) {
+  //   if (event === true) {
+  //     this.batch.published = 'Y';
+  //   }
+  //   else {
+  //     this.batch.published = 'N';
+  //   }
+  // }
+  // onChangeParallel(event) {
+  //   if (event === true) {
+  //     this.batch.inParallel = 'true';
+  //   }
+  //   else {
+  //     this.batch.inParallel = 'false';
+  //   }
+  //   this.batchChg = "Y"
+  // }
   onItemSelect(item: any) {
     console.log(item);
     this.batchChg = "Y"
@@ -405,60 +479,63 @@ export class BatchSchedulerComponent implements OnInit {
   submitbatch() {
     this.isSubmitEnable = true;
     this.IsProgerssShow = "true";
-    let batchJson = {};
-    batchJson["uuid"] = this.batch.uuid;
-    batchJson["id"] = this.batch.id;
-    if (batchJson["uuid"] == null) {
+    let batchJson = new BatchView();
+    batchJson.uuid = this.batch.uuid;
+    batchJson.id = this.batch.id;
+    if (batchJson.uuid == null) {
       this.batchChg = "Y"
     }
 
-    batchJson["batchChg"] = this.batchChg;
-    batchJson["name"] = this.batch.name;
-    var tagArray = [];
-    if (this.batch.tags != null) {
-      for (var counttag = 0; counttag < this.batch.tags.length; counttag++) {
-        tagArray[counttag] = this.batch.tags[counttag].value;
+    batchJson.batchChg = this.batchChg;
+    batchJson.name = this.batch.name;
+    // var tagArray = [];
+    // if (this.batch.tags != null) {
+    //   for (var counttag = 0; counttag < this.batch.tags.length; counttag++) {
+    //     tagArray[counttag] = this.batch.tags[counttag].value;
 
-      }
-    }
+    //   }
+    // }
 
-    batchJson['tags'] = tagArray
-    batchJson["desc"] = this.batch.desc;
+    batchJson.tags = this.batch.tags;debugger
+    batchJson.desc = this.batch.desc;
+    
     let pipelineInfoArrayNew = [];
     if (this.pipelineInfoTags != null) {
       for (const c in this.pipelineInfoTags) {
-        let pipelineInfoRef = {};
-        let pipelineRef = {};
-        pipelineInfoRef["uuid"] = this.pipelineInfoTags[c].id;
-        pipelineInfoRef["type"] = "dag";
-        pipelineRef["ref"] = pipelineInfoRef;
+        let pipelineInfoRef = new MetaIdentifier();
+        let pipelineRef = new MetaIdentifierHolder();
+        pipelineInfoRef.uuid = this.pipelineInfoTags[c].id;
+        pipelineInfoRef.type = this.metaType.DAG;
+        pipelineRef.ref = pipelineInfoRef;
         pipelineInfoArrayNew.push(pipelineRef);
       }
     }
+    batchJson.pipelineInfo = pipelineInfoArrayNew;
 
-    batchJson["pipelineInfo"] = pipelineInfoArrayNew;
-    batchJson["active"] = this.batch.active == true ? 'Y' : "N"
-    batchJson["published"] = this.batch.published == true ? 'Y' : "N"
-    batchJson["inParallel"] = this.batch.inParallel == true ? 'true' : "false"
+    batchJson.active =  this.appHelper.convertBooleanToString(this.batch.active);
+    batchJson.published =  this.appHelper.convertBooleanToString(this.batch.published);
+    batchJson.inParallel =  this.appHelper.convertBooleanToString(this.batch.inParallel);
 
-    let attributesArray = [];
+    let attributesArray = []
+    // attributesArray = [];
+    
     if (this.attributes != null) {
       if (this.attributes.length > 0) {
         for (let i = 0; i < this.attributes.length; i++) {
-          let attribute = {};
-          attribute["uuid"] = this.attributes[i]["uuid"];
+          let attribute = new ScheduleIO();
+          attribute.uuid = this.attributes[i]["uuid"];
 
           if (this.attributes[i]["uuid"] == null) {
             this.attributes[i]["scheduleChg"] = "Y";
           }
 
-          attribute["scheduleChg"] = this.attributes[i]["scheduleChg"]
-          attribute["name"] = this.attributes[i]["name"];
-          var a = this.attributes[i]["attrtype"];
-          if (a != null)
-            attribute["frequencyType"] = a.toUpperCase();
+          attribute.scheduleChg = this.attributes[i]["scheduleChg"]
+          attribute.name = this.attributes[i]["name"];
+          //var a = this.attributes[i]["attrtype"];
+          if (this.attributes[i]["attrtype"] != null)
+            attribute.frequencyType = this.attributes[i]["attrtype"].toUpperCase();
 
-          let indexArr: any = [];
+          // let indexArr: any = [];
           let frequencyDetails: any[] = []; 
           if (this.attributes[i]["attrtype"] == "Once" || this.attributes[i]["attrtype"] == "Daily" || this.attributes[i]["attrtype"] == "Yearly") {
             frequencyDetails = this.attributes[i].frequencyDetail;
@@ -504,24 +581,24 @@ export class BatchSchedulerComponent implements OnInit {
             }
           }
 
-          attribute["frequencyDetail"] = frequencyDetails;
-          attribute["startDate"] = this.datePipe.transform(this.attributes[i]["startDate"], 'EEE MMM dd HH:mm:ss +0530 yyyy');
-          attribute["endDate"] = this.datePipe.transform(this.attributes[i]["endDate"], 'EEE MMM dd HH:mm:ss +0530 yyyy');
+          attribute.frequencyDetail = frequencyDetails;
+          attribute.startDate = this.datePipe.transform(this.attributes[i]["startDate"], 'EEE MMM dd HH:mm:ss +0530 yyyy');
+          attribute.endDate = this.datePipe.transform(this.attributes[i]["endDate"], 'EEE MMM dd HH:mm:ss +0530 yyyy');
           attributesArray[i] = attribute;
         }
       }
     }
-    batchJson["scheduleInfo"] = attributesArray;
+    batchJson.scheduleInfo = attributesArray;
 
     console.log(JSON.stringify(batchJson));
-    this._commonService.submit("batchview", batchJson).subscribe(
+    this._commonService.submit(this.metaType.BATCHVIEW, batchJson).subscribe(
       response => { this.OnSuccessubmit(response) },
       error => console.log('Error :: ' + error)
     )
   }
   OnSuccessubmit(response) {
     if (this.checkboxModelexecution == true) {
-      this._commonService.getOneById("batch", response).subscribe(
+      this._commonService.getOneById(this.metaType.BATCH, response).subscribe(
         response => {
           this.OnSucessGetOneById(response);
           this.goBack()
@@ -540,7 +617,7 @@ export class BatchSchedulerComponent implements OnInit {
     }
   }
   OnSucessGetOneById(response) {
-    this._commonService.execute(response.uuid, response.version, "batch", "execute").subscribe(
+    this._commonService.execute(response.uuid, response.version, this.metaType.BATCH, "execute").subscribe(
       response => {
         this.showMassage('Batch Save and Submit Successfully', 'success', 'Success Message')
         setTimeout(() => {
@@ -562,16 +639,7 @@ export class BatchSchedulerComponent implements OnInit {
     this.router.navigate(['app/list/batch']);
   }
 
-  enableEdit(uuid, version) {
-    this.router.navigate(['app/batchScheduler/batch', uuid, version, 'false']);
-    this.dropdownSettingsPipeline = {
-      singleSelection: false,
-      selectAllText: 'Select All',
-      unSelectAllText: 'UnSelect All',
-      enableSearchFilter: true,
-      disabled: true
-    };
-  }
+  
 
   showview(uuid, version) {
     this.router.navigate(['app/batchScheduler/batch', uuid, version, 'true']);
@@ -782,9 +850,6 @@ export class BatchSchedulerComponent implements OnInit {
     this.attributes[index].frequencyDetail = [];
     this.attributes[index].scheduleChg = "Y";
     //this.minimumDate = this.startDate;
-  }
-  onChangeName(index) {
-    this.attributes[index].scheduleChg = "Y";
   }
 
   onUpdateStartDate(startdate: Date, index: any) {
