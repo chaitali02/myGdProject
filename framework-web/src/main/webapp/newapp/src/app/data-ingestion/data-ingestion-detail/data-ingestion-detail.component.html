@@ -14,17 +14,17 @@
 
         <div class="actions">
           <a class="btn btn-circle btn-icon-only btn-default left-margin" title="Main" data-placement="top" tooltip
-            [ngClass]="showForm==true ? 'currentpage':'notcurrentpage'" data- (click)="showMainPage(ingestData.uuid,ingestData.version)">
+            [ngClass]="showForm==true ? 'currentpage':'notcurrentpage'" data- (click)="showMainPage(ingestData.uuid,ingestData.version)" *ngIf="!isAdd">
             <i class="fa fa-home" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
           </a>
 
           <a class="btn btn-circle btn-icon-only btn-default left-margin" href="javascript:;" title="Edit" data-toggle="tooltip"
-            data-placement="top" tooltip [ngClass]="isEdit == true? 'currentpage':'notcurrentpage'" data-(click)="enableEdit(ingestData.uuid,ingestData.version)">
+            data-placement="top" tooltip [ngClass]="isEdit == true? 'currentpage':'notcurrentpage'" data-(click)="enableEdit(ingestData.uuid,ingestData.version)" *ngIf="!isAdd">
             <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
           </a>
 
           <a class="btn btn-circle btn-icon-only btn-default left-margin" href="javascript:;" title="Show Dependencies"
-            data-placement="top" tooltip [ngClass]="showForm==false ? 'currentpage':'notcurrentpage'" data- (click)="showDagGraph(ingestData.uuid,ingestData.version)">
+            data-placement="top" tooltip [ngClass]="showForm==false ? 'currentpage':'notcurrentpage'" data- (click)="showDagGraph(ingestData.uuid,ingestData.version)" *ngIf="!isAdd">
             <i class="fa fa-sitemap" style="margin:2px auto;color:#a0a0a0;"></i>
           </a>
 
@@ -803,10 +803,10 @@
                     <div class="row">
                       <label class="control-label col-md-3"></label>
                       <div class="col-md-4" style="padding-top: 2%;">
-                        <a href="javascript:;" class="btn default button-previous" (click)="countBack()" style="margin: 0% 1% 0% 0%;">
+                        <a href="javascript:;" class="btn default button-previous" (click)="countBack()" >
                           <i class="fa fa-angle-left"></i> Back
                         </a>
-                        <button type="submit" class="btn btn-outline green"> Continue
+                        <button type="submit" class="btn btn-outline green btn-margin"> Continue
                           <i class="fa fa-angle-right"></i>
                         </button>
                       </div>
