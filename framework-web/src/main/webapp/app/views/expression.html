@@ -19,7 +19,8 @@
             </li>
         </ul>
         <div class="page-toolbar">
-            <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Change dashboard date range">
+            <div id="dashboard-report-range" class="pull-right tooltips btn btn-sm" data-container="body"
+                data-placement="bottom" data-original-title="Change dashboard date range">
                 <i class="icon-calendar"></i>&nbsp;
                 <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
             </div>
@@ -29,8 +30,8 @@
     <br>
     <!-- END PAGE HEADER-->
     <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
-    <div options="dirOptions" type="'expression'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="expressiondata"
-        comment-panel-directive></div>
+    <div options="dirOptions" type="'expression'" on-close="onPanelClose" mode="mode" current-user="userDetail"
+        comment-data="expressiondata" comment-panel-directive></div>
     <div class="row">
         <div class="col-md-12">
             <div class="portlet box green">
@@ -40,32 +41,27 @@
                     </div>
 
                     <div class="tools">
-                        <a href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top" tooltip ng-hide="isAdd" ng-class="(showForm==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
+                        <a href="javascript:;" title="Main" data-toggle="tooltip" data-placement="top" tooltip ng-hide="isAdd"
+                            ng-class="(showForm==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
                             style="height:16px;font-size:16px;" data-ng-click="showHome(expressiondata.uuid,expressiondata.version,mode)">
                             <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
                         </a>
-                        <a title="Edit" ng-class="(isEdit==true || isPrivlage || expressiondata.locked == 'Y' ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'" data-toggle="tooltip"
-                            data-placement="top" tooltip ng-click="enableEdit(expressiondata.uuid,expressiondata.version)" ng-hide="isAdd"
-                            style="height:16px;">
-                            <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
-                        </a>
-                        <!-- <a title="Edit" ng-disabled="isPrivlage" ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'"
+                        <a title="Edit" ng-class="(isEdit==true || isPrivlage || expressiondata.locked == 'Y' ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
                             data-toggle="tooltip" data-placement="top" tooltip ng-click="enableEdit(expressiondata.uuid,expressiondata.version)"
                             ng-hide="isAdd" style="height:16px;">
                             <i class="fa fa-edit" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
                         </a>
-                        <a title="View" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showForm==true || isEdit==true)? 'currentpage':'notcurrentpage'"
-                            ng-click="showView(expressiondata.uuid,expressiondata.version)" ng-hide="isAdd" style="height:16px;">
-                            <span class="glyphicon glyphicon-file" style="color:white;"></span>
-                        </a> -->
-                        <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow" ng-class="(showForm==false ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
+                        <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow"
+                            ng-class="(showForm==false ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
                             data-ng-click="showGraph(expressiondata.uuid,expressiondata.version)" style="height:14px;">
                             <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
                         </a>
-                        <a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top" tooltip ng-class="(showForm==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'">
+                        <a title="Refresh" ng-click="broadcastRefreshData()" data-toggle="tooltip" data-placement="top"
+                            tooltip ng-class="(showForm==true ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'">
                             <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
                         </a>
-                        <a title="Close" data-toggle="tooltip" data-placement="top" tooltip data-ui-sref="metadata({type:'expression'})" style="height:14px;">
+                        <a title="Close" data-toggle="tooltip" data-placement="top" tooltip data-ui-sref="metadata({type:'expression'})"
+                            style="height:14px;">
                             <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
                         </a>
                     </div>
@@ -79,7 +75,8 @@
                             <div class="bounce2"></div>
                             <div class="bounce3"></div>
                         </div>
-                        <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="expressiondata.uuid" version="expression.defaultVersion.version">
+                        <div class="form-body show-graph-body" id="graphWrapper" tree-graph-directive uuid="expressiondata.uuid"
+                            version="expression.defaultVersion.version">
                         </div>
                     </div>
 
@@ -95,8 +92,8 @@
                             </div>
                         </div>
                         <div ng-show="!isEditInprogess && !isEditVeiwError">
-                            <form class="form-horizontal" novalidate="novalidate" name="myform" ng-submit="submitexpression()" form-on-change="expressionFormChange()"
-                                prevent-enter-submit>
+                            <form class="form-horizontal" novalidate="novalidate" name="myform" ng-submit="submitexpression()"
+                                form-on-change="expressionFormChange()" prevent-enter-submit>
 
                                 <div class="form-group" ng-show="expressiondata.uuid">
                                     <label class="col-md-3 control-label">UUID</label>
@@ -110,14 +107,16 @@
                                         <span class="required" aria-required="true"> * </span>
                                     </label>
                                     <div class="col-md-6">
-                                        <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="expressiondata.name" required="">
+                                        <input type="text" class="form-control" ng-disabled="{{mode}}" ng-model="expressiondata.name"
+                                            required="">
                                     </div>
                                 </div>
 
                                 <div class="form-group" ng-show="expressiondata.uuid">
                                     <label class="col-md-3 control-label">Version</label>
                                     <div class="col-md-6">
-                                        <select class="form-control" select2 name="version" ng-disabled="isversionEnable" ng-change="selectVersion()" data-ng-model="expression.defaultVersion.version"
+                                        <select class="form-control" select2 name="version" ng-disabled="isversionEnable"
+                                            ng-change="selectVersion()" data-ng-model="expression.defaultVersion.version"
                                             ng-options="c.version as c.version for c in expression.versions">
                                             <option>-select-</option>
                                         </select>
@@ -142,9 +141,10 @@
                                 <div class="form-group">
                                     <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
                                     <div class="col-md-6">
-                                        <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0" add-from-autocomplete-only="false" add-on-enter="true"
-                                            add-on-space="true">
-                                            <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0" highlight-matched-text="true" max-results-to-show="10">
+                                        <tags-input ng-model="tags" ng-disabled="{{mode}}" min-length="0"
+                                            add-from-autocomplete-only="false" add-on-enter="true" add-on-space="true">
+                                            <auto-complete source="loadTag($query)" min-length="0" debounce-delay="0"
+                                                highlight-matched-text="true" max-results-to-show="10">
                                             </auto-complete>
                                         </tags-input>
                                     </div>
@@ -153,7 +153,8 @@
                                     <label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
                                     <div class="col-md-6">
 
-                                        <textarea class="form-control" ng-disabled="{{mode}}" ng-model="expressiondata.desc" rows="2" style="resize:none;"></textarea>
+                                        <textarea class="form-control" ng-disabled="{{mode}}" ng-model="expressiondata.desc"
+                                            rows="2" style="resize:none;"></textarea>
 
                                     </div>
                                 </div>
@@ -162,8 +163,9 @@
                                         <span class="required" aria-required="true"> * </span>
                                     </label>
                                     <div class="col-md-2 col-sm-2 col-xs-12">
-                                        <select title="Type" ng-model="selectExpression" ng-options="x for x in relation" ng-change="dependsOndd()" class="form-control"
-                                            ng-disabled=" isDependonDisabled || {{mode}}" required>
+                                        <select title="Type" ng-model="selectExpression" ng-options="x for x in relation"
+                                            ng-change="dependsOndd()" class="form-control" ng-disabled=" isDependonDisabled || {{mode}}"
+                                            required>
                                         </select>
                                     </div>
 
@@ -171,8 +173,9 @@
                                         <span class="required" aria-required="true"> * </span>
                                     </label>
                                     <div class="col-md-3 col-sm-3 col-xs-12">
-                                        <select class="form-control" select2 name="" ng-change="changeRelation()" data-ng-model="expressionRelation.defaultoption"
-                                            ng-options="r as r.name for r in expressionRelation.options track by r.uuid" ng-disabled="isDependonDisabled || {{mode}}">
+                                        <select class="form-control" select2 name="" ng-change="changeRelation()"
+                                            data-ng-model="expressionRelation.defaultoption" ng-options="r as r.name for r in expressionRelation.options track by r.uuid"
+                                            ng-disabled="isDependonDisabled || {{mode}}">
                                         </select>
                                     </div>
                                 </div>
@@ -181,8 +184,10 @@
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Active</label>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
                                         <div class="btn-group" ng-init="expressiondata.active='Y'">
-                                            <label class="btn btn-default" ng-model="expressiondata.active" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
-                                            <label class="btn btn-default" ng-model="expressiondata.active" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
+                                            <label class="btn btn-default" ng-model="expressiondata.active"
+                                                uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
+                                            <label class="btn btn-default" ng-model="expressiondata.active"
+                                                uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
                                         </div>
                                     </div>
                                 </div>
@@ -190,8 +195,10 @@
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Locked</label>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
                                         <div class="btn-group">
-                                            <label class="btn btn-default" ng-model="expressiondata.locked" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
-                                            <label class="btn btn-default" ng-model="expressiondata.locked" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
+                                            <label class="btn btn-default" ng-model="expressiondata.locked"
+                                                uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
+                                            <label class="btn btn-default" ng-model="expressiondata.locked"
+                                                uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
                                         </div>
                                     </div>
                                 </div>
@@ -200,29 +207,31 @@
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Published</label>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
                                         <div class="btn-group" ng-init="expressiondata.published='N'">
-                                            <label class="btn btn-default" ng-model="expressiondata.published" uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
-                                            <label class="btn btn-default" ng-model="expressiondata.published" uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
+                                            <label class="btn btn-default" ng-model="expressiondata.published"
+                                                uib-btn-radio="'Y'" ng-disabled="{{showactive}}" uncheckable>Yes</label>
+                                            <label class="btn btn-default" ng-model="expressiondata.published"
+                                                uib-btn-radio="'N'" ng-disabled="{{showactive}}" uncheckable>No</label>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12">Public</label>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
-                                      <div class="btn-group" ng-init="expressiondata.publicFlag='N'">
-                                        <label class="btn btn-default" ng-model="expressiondata.publicFlag" uib-btn-radio="'Y'"
-                                          ng-disabled="{{mode}}" uncheckable>Yes</label>
-                                        <label class="btn btn-default" ng-model="expressiondata.publicFlag" uib-btn-radio="'N'"
-                                          ng-disabled="{{mode}}" uncheckable>No</label>
-                                      </div>
+                                        <div class="btn-group" ng-init="expressiondata.publicFlag='N'">
+                                            <label class="btn btn-default" ng-model="expressiondata.publicFlag"
+                                                uib-btn-radio="'Y'" ng-disabled="{{mode}}" uncheckable>Yes</label>
+                                            <label class="btn btn-default" ng-model="expressiondata.publicFlag"
+                                                uib-btn-radio="'N'" ng-disabled="{{mode}}" uncheckable>No</label>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group" style="padding-top: 10px;">
                                     <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                                         <a ui-sref="metadata({type:'expression'})" class="btn btn-primary">Cancel</a>
-                                        <!-- expressionHasChanged == false ||  -->
                                         <input type="submit" class="btn btn-success" value="Submit" ng-disabled="(!iSSubmitEnable == false|| mode == false || myform.$dirty == true)?false:true"
                                             name="submit">
-                                        <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" ng-if="dataLoading">
+                                        <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;"
+                                            ng-if="dataLoading">
                                             <div class="bounce1"></div>
                                             <div class="bounce2"></div>
                                             <div class="bounce3"></div>
@@ -231,69 +240,76 @@
                                 </div>
 
                                 <div class="x_title">
-                                    <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-click="removeRow()" ng-disabled="{{mode}}"></button>
-                                    <button type="Button" class=" btn btn-success fa fa-plus pull-right" ng-click="addRow()" ng-disabled="{{mode}}"></button>
+                                    <button type="Button" class=" btn btn-danger fa fa-minus pull-right" ng-click="removeRow()"
+                                        ng-disabled="{{mode}}"></button>
+                                    <button type="Button" class=" btn btn-success fa fa-plus pull-right" ng-click="addRow()"
+                                        ng-disabled="{{mode}}"></button>
                                     <h4>
                                         <strong>Details</strong>
                                     </h4>
                                     <hr>
 
                                 </div>
-                                <br/>
+                                <br />
                                 <div>
-                                    <table id="addConditionAttributeTable" class=" row-border hover table  table-striped table-bordered" style="table-layout:fixed;word-wrap:break-word;">
+                                    <table id="addConditionAttributeTable" class=" row-border hover table  table-striped table-bordered"
+                                        style="table-layout:fixed;word-wrap:break-word;">
                                         <thead>
                                             <tr>
                                                 <th style="text-align: center; Vertical-align: middle;width:5%;">
                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                        <input style="width: 16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="selectallrow" ng-change="selectAllRow()"
-                                                        />
+                                                        <input style="width: 16px;height:16px;" type="checkbox"
+                                                            ng-disabled="{{mode}}" ng-model="selectallrow" ng-change="selectAllRow()" />
                                                     </span>
                                                 </th>
-                                                <th style="width:11%;text-align:center;">Logical Operator</th>
+                                                <th style="width:15%;text-align:center;">Logical Operator</th>
                                                 <th style="width:13%;text-align:center;"> LHS Type</th>
-                                                <th style="width:25%;text-align:center;">LHS Attribute</th>
+                                                <th style="width:20%;text-align:center;">LHS Attribute</th>
                                                 <th style="width:13%;text-align:center;">Operator</th>
                                                 <th style="width:13%;text-align:center;">RHS Type</th>
-                                                <th style="width:25%;text-align:center;">RHS Attribute</th>
+                                                <th style="width:20%;text-align:center;">RHS Attribute</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr ng-repeat="tabledata in expressionTableArray">
                                                 <th style="text-align: center; Vertical-align: middle;width:5%;">
                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                        <input style="width: 16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="tabledata.selected" />
+                                                        <input style="width: 16px;height:16px;" type="checkbox"
+                                                            ng-disabled="{{mode}}" ng-model="tabledata.selected" />
                                                     </span>
                                                 </th>
                                                 <td>
                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                        <select ng-model="tabledata.logicalOperator" ng-options="x for x in logicalOperator" ng-disabled=" $first || {{mode}}" class="form-control">
+                                                        <select ng-model="tabledata.logicalOperator" ng-options="x for x in logicalOperator"
+                                                            ng-disabled=" $first || {{mode}}" class="form-control">
                                                         </select>
                                                     </span>
                                                 </td>
                                                 <td>
                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                        <select ng-change="selectlhsType(tabledata.lhstype.text,$index)" ng-model="tabledata.lhstype" ng-options="x as x.caption for x in lshType track by x.text"
-                                                            ng-disabled=" {{mode}}" class="form-control">
+                                                        <select ng-change="selectlhsType(tabledata.lhstype.text,$index)"
+                                                            ng-model="tabledata.lhstype" ng-options="x as x.caption for x in lshType track by x.text"
+                                                            ng-disabled=" {{mode}}" class="form-control" required disable-validation-message="">
                                                         </select>
                                                     </span>
                                                 </td>
                                                 <td>
                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                        <input type="text" ng-disabled="{{mode}}" ng-model="tabledata.lhsvalue" title="{{tabledata.lhsvalue}}" class="form-control"
-                                                            ng-show="tabledata.islhsSimple">
+                                                        <input type="text" ng-disabled="{{mode}}" ng-model="tabledata.lhsvalue"
+                                                            title="{{tabledata.lhsvalue}}" class="form-control" ng-if="tabledata.islhsSimple" required disable-validation-message="">
                                                     </span>
-                                                    <div ng-show="tabledata.islhsDatapod">
+                                                    <div ng-if="tabledata.islhsDatapod">
                                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                            <select select2 ng-show="tabledata.islhsDatapod" ng-model="tabledata.lhsdatapodAttribute" ng-disabled="{{mode}}" class="form-control"
-                                                                ng-options="c as (c.datapodname + '.' + c.name) for c in expressionDatapod track by c.uuid+c.attributeId">
+                                                            <select select2 ng-show="tabledata.islhsDatapod" ng-model="tabledata.lhsdatapodAttribute"
+                                                                ng-disabled="{{mode}}" class="form-control" ng-options="c as (c.datapodname + '.' + c.name) for c in expressionDatapod track by c.uuid+c.attributeId" required disable-validation-message="">
                                                             </select>
                                                         </span>
                                                     </div>
-                                                    <div ng-show="tabledata.islhsFormula">
+                                                    <div ng-if="tabledata.islhsFormula">
                                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                            <select select2 class="form-control" ng-change="selectmetlhsType()" data-ng-model="tabledata.lhsformula" ng-options="r as r.name for r in expressionFormula track by r.uuid"
-                                                                ng-disabled="{{mode}}" ng-show="tabledata.islhsFormula">
+                                                            <select select2 class="form-control" ng-change="selectmetlhsType()"
+                                                                data-ng-model="tabledata.lhsformula" ng-options="r as r.name for r in expressionFormula track by r.uuid"
+                                                                ng-disabled="{{mode}}" ng-show="tabledata.islhsFormula" required disable-validation-message="">
                                                             </select>
                                                         </span>
                                                     </div>
@@ -301,32 +317,37 @@
                                                 </td>
                                                 <td>
                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                        <select ng-model="tabledata.operator" ng-options="x for x in operator" ng-disabled="{{mode}}" class="form-control">
+                                                        <select ng-model="tabledata.operator" ng-options="x for x in operator"
+                                                            ng-disabled="{{mode}}" class="form-control" required disable-validation-message="">
                                                         </select>
                                                     </span>
                                                 </td>
                                                 <td>
                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                        <select ng-change="selectrhsType(tabledata.rhstype.text,$index)" ng-model="tabledata.rhstype" ng-options="x as x.caption for x in lshType track by x.text"
-                                                            ng-disabled=" {{mode}}" class="form-control">
+                                                        <select ng-change="selectrhsType(tabledata.rhstype.text,$index)"
+                                                            ng-model="tabledata.rhstype" ng-options="x as x.caption for x in lshType track by x.text"
+                                                            ng-disabled=" {{mode}}" class="form-control" required disable-validation-message="">
                                                         </select>
                                                     </span>
                                                 </td>
                                                 <td>
                                                     <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                        <input type="text" ng-disabled="{{mode}}" class="form-control" ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}"
-                                                            ng-show="tabledata.isrhsSimple">
+                                                        <input type="text" ng-disabled="{{mode}}" class="form-control"
+                                                            ng-model="tabledata.rhsvalue" title="{{tabledata.rhsvalue}}"
+                                                            ng-if="tabledata.isrhsSimple" required disable-validation-message="">
                                                     </span>
-                                                    <div ng-show="tabledata.isrhsDatapod">
+                                                    <div ng-if="tabledata.isrhsDatapod">
                                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                            <select select2 ng-model="tabledata.rhsdatapodAttribute" ng-disabled="{{mode}}" class="form-control" ng-options="c as (c.datapodname + '.' + c.name) for c in expressionDatapod track by c.uuid+c.attributeId">
+                                                            <select select2 ng-model="tabledata.rhsdatapodAttribute"
+                                                                ng-disabled="{{mode}}" class="form-control" ng-options="c as (c.datapodname + '.' + c.name) for c in expressionDatapod track by c.uuid+c.attributeId" required disable-validation-message="">
                                                             </select>
                                                         </span>
                                                     </div>
-                                                    <div ng-show="tabledata.isrhsFormula">
+                                                    <div ng-if="tabledata.isrhsFormula">
                                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                            <select select2 class="form-control" ng-change="selectmetrhsType()" data-ng-model="tabledata.rhsformula" ng-options="r as r.name for r in expressionFormula track by r.uuid"
-                                                                ng-disabled="{{mode}}" ng-show="tabledata.isrhsFormula">
+                                                            <select select2 class="form-control" ng-change="selectmetrhsType()"
+                                                                data-ng-model="tabledata.rhsformula" ng-options="r as r.name for r in expressionFormula track by r.uuid"
+                                                                ng-disabled="{{mode}}">
                                                             </select>
                                                         </span>
                                                     </div>
@@ -347,16 +368,24 @@
                                         <tbody>
                                             <tr>
                                                 <td style="width:15%;">
-                                                    <select ng-change="selectmetlhsType(expressionmetnotmat.metinfo.mettype)" ng-model="expressionmetnotmat.metinfo.mettype"
-                                                        ng-options="x for x in matType" ng-disabled=" {{mode}}" class="form-control">
-                                                    </select>
+                                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                        <select ng-change="selectmetlhsType(expressionmetnotmat.metinfo.mettype)"
+                                                            ng-model="expressionmetnotmat.metinfo.mettype" ng-options="x for x in matType"
+                                                            ng-disabled=" {{mode}}" class="form-control" required disable-validation-message="">
+                                                        </select>
+                                                    </span>
                                                 </td>
                                                 <td>
-                                                    <select class="form-control" ng-change="selectmetlhsType()" data-ng-model="expressionmetnotmat.metinfo.metformula" ng-options="r as r.name for r in expressionFormula track by r.uuid"
-                                                        ng-disabled="{{mode}}" ng-show="expressionmetnotmat.metinfo.ismetFormula">
-                                                    </select>
-                                                    <input type="text" class="form-control" ng-model="expressionmetnotmat.metinfo.metlhsvalue" title="{{expressionmetnotmat.metinfo.metlhsvalue}}"
-                                                        ng-show="expressionmetnotmat.metinfo.ismetlhsSimple" ng-disabled="{{mode}}">
+                                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                        <select class="form-control" ng-change="selectmetlhsType()"
+                                                            data-ng-model="expressionmetnotmat.metinfo.metformula"
+                                                            ng-options="r as r.name for r in expressionFormula track by r.uuid"
+                                                            ng-disabled="{{mode}}" ng-if="expressionmetnotmat.metinfo.ismetFormula" required disable-validation-message="">
+                                                        </select>
+                                                        <input type="text" class="form-control" ng-model="expressionmetnotmat.metinfo.metlhsvalue"
+                                                            title="{{expressionmetnotmat.metinfo.metlhsvalue}}" ng-if="expressionmetnotmat.metinfo.ismetlhsSimple"
+                                                            ng-disabled="{{mode}}" required disable-validation-message="">
+                                                    </span>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -364,7 +393,7 @@
 
                                     <h4 class="pull-left bold" style="padding:10px;margin-top:-12px;">Not Match</h4>
                                     <table class="table table-condensed table-bordered">
-                                        <thead class=" ">
+                                        <thead class="">
                                             <tr>
                                                 <th style="width:20%;text-align:left;padding-left: 10px;">Type</th>
                                                 <th style="width:20%;text-align:center;">Value</th>
@@ -373,16 +402,24 @@
                                         <tbody>
                                             <tr>
                                                 <td style="width:15%;">
-                                                    <select ng-change="selectnotmmetlhsType(expressionmetnotmat.notmetinfo.notmettype)" ng-model="expressionmetnotmat.notmetinfo.notmettype"
-                                                        ng-options="x for x in matType" ng-disabled=" {{mode}}" class="form-control">
-                                                    </select>
+                                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                        <select ng-change="selectnotmmetlhsType(expressionmetnotmat.notmetinfo.notmettype)"
+                                                            ng-model="expressionmetnotmat.notmetinfo.notmettype" ng-options="x for x in matType"
+                                                            ng-disabled=" {{mode}}" class="form-control" required disable-validation-message="">
+                                                        </select>
+                                                    </span>
                                                 </td>
                                                 <td>
-                                                    <select class="form-control" data-ng-model="expressionmetnotmat.notmetinfo.notmetformula" ng-options="r as r.name for r in expressionFormula track by r.uuid"
-                                                        ng-disabled="{{mode}}" ng-show="expressionmetnotmat.notmetinfo.isnotmetFormula">
-                                                    </select>
-                                                    <input type="text" class="form-control" ng-model="expressionmetnotmat.notmetinfo.notmetlhsvalue" title="{{expressionmetnotmat.notmetinfo.notmetlhsvalue}}"
-                                                        ng-show="expressionmetnotmat.notmetinfo.isnotmetlhsSimple" ng-disabled="{{mode}}">
+                                                    <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                        <select class="form-control" data-ng-model="expressionmetnotmat.notmetinfo.notmetformula"
+                                                            ng-options="r as r.name for r in expressionFormula track by r.uuid"
+                                                            ng-disabled="{{mode}}" ng-if="expressionmetnotmat.notmetinfo.isnotmetFormula" required disable-validation-message="">
+                                                        </select>
+                                                        <input type="text" class="form-control" ng-model="expressionmetnotmat.notmetinfo.notmetlhsvalue"
+                                                            title="{{expressionmetnotmat.notmetinfo.notmetlhsvalue}}"
+                                                            ng-if="expressionmetnotmat.notmetinfo.isnotmetlhsSimple"
+                                                            ng-disabled="{{mode}}" required disable-validation-message="">
+                                                    </span>
                                                 </td>
                                             </tr>
                                         </tbody>

@@ -1,6 +1,7 @@
 MetadataModule = angular.module('MetadataModule');
 
-MetadataModule.controller('MetadataFunctionController', function ($state, $scope, $stateParams, $rootScope, MetadataFunctionSerivce, privilegeSvc,CommonService,$timeout,$filter) {
+MetadataModule.controller('MetadataFunctionController', function ($state, $scope, $stateParams, $rootScope, 
+	MetadataFunctionSerivce, privilegeSvc, CommonService, $timeout, $filter, CF_FUNCTION) {
 	$scope.mode = "";
 	$scope.dataLoading = false;
 	if ($stateParams.mode == 'true') {
@@ -46,8 +47,8 @@ MetadataModule.controller('MetadataFunctionController', function ($state, $scope
 	$scope.funcType = ["hive", "impala", "oracle"];
 	$scope.allTypes = ["file", "hive", "impala", "mysql", "oracle","postgres"];
 	$scope.allParamTypes = ["string", "function"]
-	//$scope.catogory = ["math", "string", "date", "conditional", "aggregate"];
-	$scope.catogory = ["MATH", "STRING", "DATE", "CONDITIONAL", "AGGREGATE","WINDOW"];
+    $scope.returnType=CF_FUNCTION.retrunType
+  	$scope.catogory = ["MATH", "STRING", "DATE", "CONDITIONAL", "AGGREGATE","WINDOW"];
 	$scope.isDependencyShow = false;
 	$scope.type = ["string", "float", "bigint", 'double', 'timestamp', 'integer', 'distinct', 'binary', 'number',
 		'decimal'
@@ -363,8 +364,8 @@ MetadataModule.controller('MetadataFunctionController', function ($state, $scope
 		functionJson.published = $scope.functiondata.published;
 		functionJson.functionInfo = $scope.functiondata.functionInfo;
 		functionJson.publicFlag = $scope.functiondata.publicFlag;
-
 		functionJson.category = $scope.selectCatogory.toUpperCase();
+		functionJson.returnType=$scope.functiondata.returnType;
 	// 	functionJson.funcType = $scope.selectFunctionType;
 		functionJson.inputReq = $scope.functiondata.inputReq;
 		var tagArray = [];

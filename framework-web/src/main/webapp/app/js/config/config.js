@@ -103,6 +103,10 @@ InferyxApp.constant('CF_GRID',{
    
 });
 
+InferyxApp.constant('CF_FUNCTION',{
+    retrunType:["STRING", "BOOLEAN", "INTEGER", "DATE", "DOUBLE"]
+})
+
 InferyxApp.constant('CF_ENCODINGTYPE',{
     encodingType:["ORDINAL", "ONEHOT", "BINARY", "BASEN","HASHING"]
 });
