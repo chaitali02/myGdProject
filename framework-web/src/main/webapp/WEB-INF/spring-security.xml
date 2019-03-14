@@ -32,8 +32,8 @@
 		security="none" />
 	<security:http pattern="/common/getMetaStats"
 		security="none" />
-		<security:http pattern="/metadata/getExecStats"
-		security="none" />
+	<security:http pattern="/metadata/getExecStats"
+	security="none" />
 		
 	<!-- Rest authentication entry point configuration -->
 
