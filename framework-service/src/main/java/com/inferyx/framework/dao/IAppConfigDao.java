@@ -49,7 +49,6 @@ public interface IAppConfigDao  extends MongoRepository<AppConfig, String>{
 	public void delete(String id);
 	
 	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1}")
-	
 	public List<AppConfig> findAllVersion(String appUuid, String uuid);
 	
 	@Query(value = "{'uuid' : ?0}")

@@ -165,7 +165,8 @@ public class MetadataServiceImpl {
 			//User user = (User) Helper.getDomainClass(MetaType.user).cast(iDao.getClass().getMethod("findLatestByUuid",String.class,Sort.class ).invoke(iDao, uuid,new Sort(Sort.Direction.DESC, "version")));	
 			baseEntity.getCreatedBy().getRef().setName(user.getName());
 		}
-		
+		/*System.out.println("name: "+baseEntity.getName());
+		System.out.println("appInfo: "+baseEntity.getAppInfo());*/
 		//Resolve appname
 		if (baseEntity.getAppInfo() != null) {
 			for (int i = 0; i < baseEntity.getAppInfo().size(); i++) {
