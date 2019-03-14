@@ -49,7 +49,7 @@ public class LoadController {
 			@RequestParam(value="requestId", required=false) String requestId,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action, 
-			@RequestParam(value = "mode", required = false, defaultValue="BATCH") String mode) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+			@RequestParam(value = "mode", required = false, defaultValue="BATCH") String mode) throws Exception {
 			RunMode runMode = Helper.getExecutionMode(mode);
 			return loadServiceImpl.getLoadResults(loadExecUUID, loadExecVersion, offset, limit, sortBy, order, requestId, runMode);
 	}

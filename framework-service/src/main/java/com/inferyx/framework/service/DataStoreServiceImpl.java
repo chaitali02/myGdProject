@@ -556,7 +556,7 @@ public class DataStoreServiceImpl {
 		return datasource;
 	}
 	// generating table Name from dataSource
-	public String getTableNameByDatastore(String dataStoreUUID, String dataStoreVersion, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public String getTableNameByDatastore(String dataStoreUUID, String dataStoreVersion, RunMode runMode) throws Exception {
 		String tableName = null;
 		DataStore dataStore = null;
 		dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(dataStoreUUID, dataStoreVersion, MetaType.datastore.toString());
@@ -1305,7 +1305,7 @@ public class DataStoreServiceImpl {
 		return mongoOperations.find(dimMatchQuery, DataStore.class);
 	}
 
-	public List<Map<String, Object>> getAttributeValues(String datapodUUID, int attributeID, RunMode runMode) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	public List<Map<String, Object>> getAttributeValues(String datapodUUID, int attributeID, RunMode runMode) throws Exception {
 		setRunMode(runMode);
 		List<Map<String, Object>> data = new ArrayList<>();
 		//Datapod datapodDO = datapodServiceImpl.findLatestByUuid(datapodUUID);

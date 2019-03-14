@@ -1170,6 +1170,7 @@ public class SparkExecutor<T> implements IExecutor {
 			}
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
 				| SecurityException | NullPointerException | ParseException e) {
+			logger.error("Exception in SparkExecutor", e);
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}

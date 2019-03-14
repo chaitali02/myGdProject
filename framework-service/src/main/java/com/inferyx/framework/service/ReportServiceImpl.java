@@ -268,7 +268,7 @@ public class ReportServiceImpl extends RuleTemplate {
 	}
 
 	public List<Map<String, Object>> getReportSample(String reportExecUuid, String reportExecVersion, int rows,
-			ExecParams execParams, RunMode runMode) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException, IOException {
+			ExecParams execParams, RunMode runMode) throws Exception {
 		ReportExec reportExec = (ReportExec) commonServiceImpl.getOneByUuidAndVersion(reportExecUuid, reportExecVersion,
 				MetaType.reportExec.toString());
 		DataStore datastore = dataStoreServiceImpl.getDatastore(reportExec.getResult().getRef().getUuid(),

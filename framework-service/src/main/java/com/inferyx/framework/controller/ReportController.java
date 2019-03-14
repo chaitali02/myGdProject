@@ -69,9 +69,14 @@ public class ReportController {
 			@RequestBody (required = false) ExecParams execParams,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action, 
-			@RequestParam(value = "mode", required = false, defaultValue="ONLINE") String mode) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException, IOException {
+			@RequestParam(value = "mode", required = false, defaultValue="ONLINE") String mode) throws Exception {
 		 	RunMode runMode = Helper.getExecutionMode(mode);
-		 	return reportServiceImpl.getReportSample(reportExecUuid, reportExecVersion, rows, execParams, runMode);
+		 	try {
+				return reportServiceImpl.getReportSample(reportExecUuid, reportExecVersion, rows, execParams, runMode);
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new Exception("Exception in report controller", e);
+			}
 	}
 	
 	@RequestMapping(value="/download",method=RequestMethod.GET)
