@@ -118,9 +118,9 @@ public class OracleRegister {
 						attr.setType(getconvertedDataType(rs.getString(2)));
 						attr.setDesc(colName);
 						if(pkList.contains(colName)) {
-							attr.setKey("Y");
+							attr.setKey(""+pkList.indexOf(colName));
 						} else {
-							attr.setKey("N");
+							attr.setKey(null);
 						}
 						rsTabMeta.next();
 						attr.setLength(Integer.parseInt(rsTabMeta.getString("COLUMN_SIZE")));

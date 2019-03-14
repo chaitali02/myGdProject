@@ -1214,8 +1214,10 @@ public class GraphRegister<T> {
 			Date startDate = formatter.parse((new Date()).toString());
 			
 			processExec.setProcessType(ProcessType.BUILDING_GRAPH_ENGINE);
-			processExec.setBaseEntity();			
+			processExec.setBaseEntity();		
 			commonServiceImpl.setMetaStatus(processExec, MetaType.processExec, Status.Stage.PENDING);
+			commonServiceImpl.setMetaStatus(processExec, MetaType.processExec, Status.Stage.STARTING);	
+			commonServiceImpl.setMetaStatus(processExec, MetaType.processExec, Status.Stage.READY);
 			commonServiceImpl.setMetaStatus(processExec, MetaType.processExec, Status.Stage.RUNNING);
 			processExec.setStartTime(startDate);
 			

@@ -3711,19 +3711,19 @@ public class RegisterService {
 	public List<Registry> register(String uuid, String version, String type, List<Registry> registryList, RunMode runMode) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException, IOException
 			 {
 		try {
-			Datasource ds = (Datasource) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datasource.toString());
+			Datasource ds = (Datasource) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datasource.toString(), "N");
 			if (ds.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
-				return csvRegister.register(uuid, version, registryList, runMode);
+				return csvRegister.register(uuid, version, registryList, RunMode.ONLINE);
 			} else if (ds.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
-				return hiveRegister.registerDB(uuid, version, registryList, runMode);
+				return hiveRegister.registerDB(uuid, version, registryList, RunMode.BATCH);
 			}else if (ds.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
 				return impalaRegister.registerDB(uuid, version, registryList);
 			}  else if (ds.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())) {
-				return mysqlRegister.registerDB(uuid, version, registryList, runMode);
+				return mysqlRegister.registerDB(uuid, version, registryList, RunMode.BATCH);
 			} else if (ds.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
-				return oracleRegister.registerDB(uuid, version, registryList, runMode);
+				return oracleRegister.registerDB(uuid, version, registryList, RunMode.BATCH);
 			} else if (ds.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
-				return postGresRegister.registerDB(uuid, version, registryList, runMode);
+				return postGresRegister.registerDB(uuid, version, registryList, RunMode.BATCH);
 			} else {
 				return null;
 			}

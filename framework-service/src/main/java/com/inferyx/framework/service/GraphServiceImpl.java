@@ -77,6 +77,7 @@ import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Vertex;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.IExecutor;
+import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.GraphOperator;
 import com.inferyx.framework.operator.IExecutable;
@@ -106,6 +107,8 @@ public class GraphServiceImpl extends BaseRuleExecTemplate implements IParsable,
 	SecurityServiceImpl securityServiceImpl;
 	@Autowired
 	MongoTemplate mongoTemplate;
+	@Autowired
+	private SparkExecutor<?> sparkExecutor;
 
 	public LogServiceImpl getLogServiceImpl() {
 		return logServiceImpl;
@@ -1758,7 +1761,9 @@ public class GraphServiceImpl extends BaseRuleExecTemplate implements IParsable,
 		}
 		// Get the graphFrame and parse
 		GraphFrame graph = (GraphFrame) graphpodMap.get(graphExecKey);
-
+		String defaultName = String.format("%s_%s_%S", graphpod.getUuid().replaceAll("-", "_"), graphpod.getVersion(), graphExec.getVersion());
+		sparkExecutor.registerTempTable(graph.edges(), defaultName.concat("_edge"));
+		sparkExecutor.registerTempTable(graph.vertices(), defaultName.concat("_node"));
 		graph.edges().show(false);
 		graph.vertices().show(false);
 
