@@ -41,6 +41,7 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.enums.CaseCheckType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.enums.ThresholdType;
 import com.inferyx.framework.executor.ExecContext;
@@ -89,6 +90,7 @@ public class DQOperator implements IParsable {
 	private String BLANK_SPACE_CHECK_PASS = "blankspace_check_pass";
 	private String EXPRESSION_CHECK_PASS = "expression_check_pass";
 	private String ALL_CHECK_PASS = "all_check_pass";
+	private String CASE_CHECK_PASS = "case_check_pass";
 	
 	private String NULL_CHECK_P = "nullCheck_p";
 	private String VALUE_CHECK_P= "valueCheck_p";
@@ -103,6 +105,7 @@ public class DQOperator implements IParsable {
 	private String BLANK_SPACE_CHECK_P = "blankSpaceCheck_p";
 	private String EXPRESSION_CHECK_P = "expressionCheck_p";
 	private String ALL_CHECK_P = "allCheck_p";
+	private String CASE_CHECK_P = "caseCheck_p";
 	
 	private String NULL_CHECK_F = "nullCheck_f";
 	private String VALUE_CHECK_F= "valueCheck_f";
@@ -117,7 +120,7 @@ public class DQOperator implements IParsable {
 	private String BLANK_SPACE_CHECK_F = "blankSpaceCheck_f";
 	private String EXPRESSION_CHECK_F = "expressionCheck_f";
 	private String ALL_CHECK_F = "allCheck_f";
-	private String CASE_CHECK = "caseCheck";
+	private String CASE_CHECK_F = "caseCheck_f";
 
 	private String TOTAL_ROW_COUNT = "total_row_count";
 	private String TOTAL_PASS_COUNT = "total_pass_count";
@@ -618,6 +621,7 @@ public class DQOperator implements IParsable {
 				  							.append(DOMAIN_CHECK_PASS).append(COMMA)
 				  							.append(BLANK_SPACE_CHECK_PASS).append(COMMA)
 				  							.append(EXPRESSION_CHECK_PASS).append(COMMA)
+				  							.append(CASE_CHECK_PASS).append(COMMA)
 											.append(CASE_WHEN).append(BRACKET_OPEN)
 											.append(NULL_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
 											.append(VALUE_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
@@ -630,9 +634,9 @@ public class DQOperator implements IParsable {
 											.append(CUSTOM_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
 											.append(DOMAIN_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
 											.append(BLANK_SPACE_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
-											.append(EXPRESSION_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(BRACKET_CLOSE) 
-											.append(CASE_WHEN).append(BLANK).append(dataQual.getAttribute().getAttrName()).append(BLANK)
-											.append("REGEXP [A-Za-z]").append(THEN_Y_N).append(CASE_CHECK)
+											.append(EXPRESSION_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
+											.append(CASE_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N)
+											.append(BRACKET_CLOSE) 
 											.append(THEN_N_Y).append(ALL_CHECK_PASS).append(COMMA)
 											.append(VERSION).append(FROM).append(BRACKET_OPEN)
 											.append(detailSql).append(BRACKET_CLOSE).append(DQ_RESULT_READY_ALIAS);
@@ -1008,9 +1012,17 @@ public class DQOperator implements IParsable {
 			dqBuilder.append("'' as ").append(EXPRESSION_CHECK_PASS).append(COMMA);
 		} // End expressionCheck If		
 		
+		if(dq.getCaseCheck() != null) {
+			check = dq.getAttribute().getAttrName().concat(BLANK).concat(" REGEXP [A-Za-z] ");
+			colName = CASE_CHECK_PASS;
+			dqBuilder.append(caseWrapper(check, colName)).append(COMMA);
+		} else {
+			dqBuilder.append("'' AS ").append(CASE_CHECK_PASS).append(COMMA);
+		}
+		
 		dqString = dqBuilder.toString();
 		return dqString.substring(0, dqString.length() - 2);
-	}
+	} // End of caseCheck If
 
 	private String caseWrapper(String check, String colName) {
 		StringBuilder caseBuilder = new StringBuilder(CASE_WHEN).append(check).append(THEN).append(colName)

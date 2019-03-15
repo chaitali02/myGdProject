@@ -407,10 +407,24 @@
             "active" : "Y",
             "length" : null,
             "attrUnitType" : null
-        }, 
-        {
+        },
+	{
             "attributeId" : 23,
             "displaySeq" : 23,
+            "name" : "caseCheck",
+            "type" : "string",
+            "desc" : "caseCheck",
+            "expression" : null,
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "caseCheck",
+            "active" : "Y",
+            "length" : null,
+            "attrUnitType" : null
+        }, 
+        {
+            "attributeId" : 24,
+            "displaySeq" : 24,
             "name" : "all_check_pass",
             "type" : "string",
             "desc" : "all_check_pass",
@@ -421,9 +435,10 @@
             "active" : "Y",
             "length" : null,
             "attrUnitType" : null
-        },         {
-            "attributeId" : 24,
-            "displaySeq" : 24,
+        },    
+     {
+            "attributeId" : 25,
+            "displaySeq" : 25,
             "name" : "version",
             "type" : "integer",
             "desc" : "version",
