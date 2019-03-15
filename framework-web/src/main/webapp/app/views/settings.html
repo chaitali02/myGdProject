@@ -239,14 +239,14 @@
               </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
           </div>
-          <div class="row">
+          <!-- <div class="row">
             <div class="col-md-6"></div>
             <div class="col-md-6" style="padding-right: 0px;">
               <a ng-click="confirmBulidGraph()" class="btn btn-default btn-sm" style="float:right;color:white;background-color: #337ab7">
                 <i class="fa fa-line-chart"></i> Refresh Graph
               </a>
             </div>
-          </div>
+          </div> -->
           <div class="form-group" style="padding-top: 15px;">
             <div class="row">
               <div class="col-md-12">
@@ -396,12 +396,20 @@
                       <i class="fa fa-cogs"></i>
                       <span style="text-transform:capitalize">Process </span>
                     </div>
+                    
                     <div class="tools">
+                        <!-- <a ng-click="confirmBulidGraph()" class="btn btn-default btn-sm">
+                          <i class="fa fa-line-chart"></i> Refresh Graph
+                        </a> -->
                       <a title="Refresh" data-toggle="tooltip" data-placement="top" ng-click="refresh()"
                         data-original-title="" title="">
                         <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
                       </a>
                       <a class="collapse" data-original-title="" title="" style="height:14px;"></a>
+                    </div>
+                    <div class="actions" style="margin-right: 4px;">
+                      <a ng-click="confirmBulidGraph()" class="btn btn-default btn-sm">
+                        <i class="fa fa-line-chart"></i> Refresh Graph</a>
                     </div>
                   </div>
                   <div class="portlet-body">
