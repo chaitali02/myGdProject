@@ -69,5 +69,6 @@
       "paramInfoHolder": []
     }
   ],
-  "category": "date"
+  "category": "date",
+  "publicFlag" : "Y"
 }

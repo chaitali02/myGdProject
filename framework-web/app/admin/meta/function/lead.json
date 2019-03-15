@@ -91,6 +91,7 @@
         }
     ],
     "funcType" : "hive",
-    "category" : "window"
+    "category" : "window",
+    "publicFlag" : "Y"
 }
 

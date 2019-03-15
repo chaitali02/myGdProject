@@ -6,6 +6,7 @@
     "version" : "1488801521",
     "name" : "function_uuid",
     "desc" : "function for uuid generation using hive functions",
+    "publicFlag" : "Y",
     "createdBy" : {
         "ref" : {
             "type" : "user",

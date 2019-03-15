@@ -52,7 +52,7 @@ public interface IUserDao extends MongoRepository<User, String>
 	@Query(value="{'uuid' : ?0}")
 	public List<User> findAllVersion(String uuid);
 	
-	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1}")
+	@Query(value = "{$or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ],'uuid' : ?1}")
 	public List<User> findAllVersion(String appUuid, String uuid);
 
 	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")

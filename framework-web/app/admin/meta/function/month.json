@@ -61,7 +61,7 @@
         }
   ],
   "inputReq": "Y",
-
+  "publicFlag" : "Y",
   "functionInfo": [
     {
       "name": "month",

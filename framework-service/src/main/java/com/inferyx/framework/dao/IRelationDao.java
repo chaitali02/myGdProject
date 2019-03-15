@@ -50,7 +50,7 @@ public interface IRelationDao extends MongoRepository<Relation, String>{
     @Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid':?1}")
     public Relation findAllByUuid(String appUuid,String uuid);
 
-    @Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1}")
+    @Query(value="{$or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ],'uuid' : ?1}")
     public List<Relation> findAllVersion(String appUuid,String uuid);
     
     @Query(value="{'uuid' : ?0}")

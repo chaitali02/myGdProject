@@ -53,7 +53,7 @@ public interface IExpressionDao extends MongoRepository<Expression, String>{
 	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} , '_id' : ?1 }")
 	public Expression findOneById(String appUuid, String id);
 	
-	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1}")
+	@Query(value = "{$or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ],'uuid' : ?1}")
 	public List<Expression> findAllVersion(String appUuid, String uuid);
 
 	@Query(value = "{'uuid' : ?0}")

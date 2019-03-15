@@ -84,5 +84,6 @@
       "paramInfoHolder": []
     }
   ],
-  "category": "math"
+  "category": "math",
+  "publicFlag" : "Y"
 }
