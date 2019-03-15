@@ -320,11 +320,11 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			'width':'100%;'
 		}
 		if ($scope.filteredRowsCompareMetaData && $scope.filteredRowsCompareMetaData.length > 0) {
-			style['height'] = (($scope.filteredRowsCompareMetaData.length < 10 ? $scope.filteredRowsCompareMetaData.length * 50 : 400) + 70) + 'px';
+			style['height'] = (($scope.filteredRowsCompareMetaData.length < 10 ? $scope.filteredRowsCompareMetaData.length * 40 : 400) + 40) + 'px';
 		}
 		else {
 		
-			style['height'] = "150px";
+			style['height'] = "100px";
 		}
 		return style;
 	}
@@ -958,6 +958,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		MetadataDatapodSerivce.synchronizeMetadata(data.uuid,data.version,'datapod').then(function (response) { onSuccessSynchronizeMetadata(response.data) }, function (response) { onError(response.data) })
 		var onSuccessSynchronizeMetadata = function (response) {
 			$scope.datapoddata=response;
+			$scope.isShowCompareMetaData=false;
 			$scope.showCompareMetaData($scope.datapoddata)
 		}
 		var onError = function (response) {
