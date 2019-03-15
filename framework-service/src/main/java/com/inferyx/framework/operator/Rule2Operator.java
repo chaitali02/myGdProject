@@ -36,6 +36,7 @@ import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.domain.FilterInfo;
 import com.inferyx.framework.domain.Key;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
@@ -80,9 +81,9 @@ public class Rule2Operator implements IParsable, IReferenceable {
 	
 
 	public List<String> generateDetailSql(Rule2 rule2, String withSql, String detailSelectSql, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
-			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode, RuleExec ruleExec) throws Exception{	
+			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode, RuleExec ruleExec, List<FilterInfo> list) throws Exception{	
 		// TODO Auto-generated method stub
-		return  generateWith(rule2,withSql,detailSelectSql, refKeyMap, otherParams, execParams, runMode,ruleExec);
+		return  generateWith(rule2,withSql,detailSelectSql, refKeyMap, otherParams, execParams, runMode,ruleExec,list);
 	}
 	
 	public String generateSummarySql(Rule2 rule2, List<String> listSql, String tableName, Datapod datapod, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
@@ -127,10 +128,12 @@ public class Rule2Operator implements IParsable, IReferenceable {
 
 	
 	public List<String> generateWith(Rule2 rule2, String withSql, String detailSelectSql, java.util.Map<String, MetaIdentifier> refKeyMap,
-			HashMap<String, String> otherParams, ExecParams execParams, RunMode runMode, RuleExec ruleExec) throws Exception {
+			HashMap<String, String> otherParams, ExecParams execParams, RunMode runMode, RuleExec ruleExec, List<FilterInfo> list) throws Exception {
 			Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
 		String result = "";
 		StringBuilder selectbuilder = new StringBuilder();
+		String wherebuilder = null;
+
 		StringBuilder withbuilder = new StringBuilder();
 		int criteria_id = 0;
 		MetaIdentifierHolder filterSource = new MetaIdentifierHolder(
@@ -177,10 +180,13 @@ public class Rule2Operator implements IParsable, IReferenceable {
 
 		}
 		Datasource mapSourceDS = commonServiceImpl.getDatasourceByObject(rule2);
+		wherebuilder="";
+		wherebuilder  = filterOperator2.generateSql(list, refKeyMap, filterSource, otherParams,
+				usedRefKeySet, execParams, false, false, runMode, mapSourceDS);
 
 		withbuilder.append("WITH rule_with_query AS\n" + "(").append(ConstantsUtil.SELECT).append("_attrList")
 				.append(ConstantsUtil.FROM).append("(").append(tablename + ") " + aliasName)
-				.append(ConstantsUtil.WHERE_1_1).append(")");
+				.append(ConstantsUtil.WHERE_1_1).append(wherebuilder).append(")");
 		selectbuilder.append("(");
 		for (Criteria criteria : rule2.getCriteriaInfo()) {
 			
@@ -267,6 +273,8 @@ public class Rule2Operator implements IParsable, IReferenceable {
 			
 			attrListBuilder.append(ConstantsUtil.COMMA).append(attrList);
 		}
+		
+		
 		List<String> listSql=new ArrayList<String>();
 		String withbuilder_new = withbuilder.toString().replaceAll("_attrList", attrListBuilder.toString().substring(1, attrListBuilder.length()));
 		withSql=withbuilder_new;
@@ -364,7 +372,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 				MetaType.rule2.toString());
 		
 	
-		ruleExec.setExec(generateDetailSql(rule2, null, null, DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(), usedRefKeySet, ruleExec.getExecParams(), runMode, ruleExec).get(0));
+		ruleExec.setExec(generateDetailSql(rule2, null, null, DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(), usedRefKeySet, ruleExec.getExecParams(), runMode, ruleExec, null).get(0));
 		if(rule2.getParamList() != null) {
 			MetaIdentifier mi = rule2.getParamList().getRef();
 			ParamList paramList = (ParamList) commonServiceImpl.getOneByUuidAndVersion(mi.getUuid(), mi.getVersion(), mi.getType().toString());
