@@ -24,7 +24,8 @@ CREATE TABLE dq_rule_detail
      custom_check_pass     VARCHAR(1), 
      domain_check_pass     VARCHAR(1), 
      blankspace_check_pass VARCHAR(1), 
-     expression_check_pass VARCHAR(1), 
+     expression_check_pass VARCHAR(1),  
+     case_check_pass VARCHAR(1), 
      all_check_pass        VARCHAR(1), 
      version               INT(10) 
   ); 
