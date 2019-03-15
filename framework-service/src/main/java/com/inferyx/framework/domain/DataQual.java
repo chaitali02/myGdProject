@@ -15,6 +15,8 @@ import java.util.Map;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.inferyx.framework.enums.CaseCheckType;
+
 @Document(collection="dq")
 public class DataQual extends BaseRule{
 	private MetaIdentifierHolder target;	
@@ -36,6 +38,7 @@ public class DataQual extends BaseRule{
 	private MetaIdentifierHolder domainCheck;
 	private String blankSpaceCheck;
 	private MetaIdentifierHolder expressionCheck;
+	private CaseCheckType caseCheck;
 	
 	public MetaIdentifierHolder getDomainCheck() {
 		return domainCheck;
@@ -155,6 +158,20 @@ public class DataQual extends BaseRule{
 	public void setThresholdInfo(Threshold thresholdInfo) {
 		this.thresholdInfo = thresholdInfo;
 	}
-		
-	
+	/**
+	 * @Ganesh
+	 *
+	 * @return the caseCheck
+	 */
+	public CaseCheckType getCaseCheck() {
+		return caseCheck;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param caseCheck the caseCheck to set
+	 */
+	public void setCaseCheck(CaseCheckType caseCheck) {
+		this.caseCheck = caseCheck;
+	}
 }
