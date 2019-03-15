@@ -1,7 +1,7 @@
 {
     "uuid" : "9e3dff24-02fb-11e7-93ae-92361f002tot",
     "version" : "1488801521",
-    "name" : "unix_timestamp(string date)",
+    "name" : "unix_timestamp2",
     "desc" : "Converts time string in format yyyy-MM-dd HH:mm:ss to Unix timestamp (in seconds), using the default timezone and the default locale, return 0 if fail: unix_timestamp('2009-03-20 11:30:01') = 1237573801",
     "createdBy" : {
         "ref" : {
@@ -25,37 +25,6 @@
             "ref" : {
                 "type" : "application",
                 "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
-            }
-        }, 
-       
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
-            }
-        },
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz"
             }
         }
     ],
@@ -91,6 +60,7 @@
             "paramInfoHolder" : []
         }
     ],
-    "category" : "DATE"
+    "returnType":"LONG",
+  "category" : "DATE"
 }
 

@@ -1,7 +1,7 @@
 {
 	"uuid": "e26970d6-999e-4ffa-9903-0f6e8ac39bb5",
 	"version": "1488801521",
-	"name": "upper(string A)",
+	"name": "upper",
 	"desc": "Returns the string resulting from converting all characters of A to upper case. For example, upper('fOoBaR') results in 'FOOBAR'",
 	"createdBy": {
 		"ref": {
@@ -35,40 +35,11 @@
                 "type" : "application",
                 "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
             }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
-            }
-        }, 
-       
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
-            }
-        },{
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz"
-            }
         }
 	],
 
-	"category": "STRING",
+	"returnType":"STRING",
+  "category": "STRING",
 	"functionInfo" : [ 
         {
             "type" : "file",

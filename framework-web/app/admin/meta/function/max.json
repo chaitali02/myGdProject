@@ -1,7 +1,7 @@
 {
     "uuid" : "9e3e2bfc-02fb-11e7-93ae-92361f002671",
     "version" : "1488801521",
-    "name" : "max(col)",
+    "name" : "max",
     "desc" : "Returns the maximum value of the column in the group.",
     "createdBy" : {
         "ref" : {
@@ -26,47 +26,11 @@
                 "type" : "application",
                 "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
             }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
-            }
-        }, 
-       
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
-            }
-        },
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
- 				 "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbyog"
-            }
         }
     ],
 
-    "category" : "AGGREGATE",
+    "returnType":"DOUBLE",
+  "category" : "AGGREGATE",
     "functionInfo" : [  
         {
             "type" : "file",
