@@ -1203,7 +1203,10 @@ public class MetadataServiceImpl {
 		return null;
 	}	
 	
-	public List<Function> getFunctionByType(String category){
+	public List<Function> getFunctionByType(String category) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException{
+		
+		Application application = commonServiceImpl.getApp();
+		
 		Query query = new Query();
 		query.fields().include("uuid");
 		query.fields().include("version");
@@ -1215,10 +1218,18 @@ public class MetadataServiceImpl {
 		query.fields().include("desc");
 		query.fields().include("published");
 		query.fields().include("inputReq");
+		query.fields().include("publicFlag");
 		query.fields().include("funcType");
 		query.fields().include("functionInfo");
 		query.fields().include("category");
 		
+		String appUuid = application.getUuid();
+		Criteria criteria = new Criteria();
+		
+		if(appUuid != null && !appUuid.isEmpty()) {
+			query.addCriteria(Criteria.where("_id").ne("1").orOperator(where("appInfo.ref.uuid").is(appUuid),where("publicFlag").is("Y")));
+			
+		}
 
 		query.addCriteria(Criteria.where("category").is(category.toUpperCase()));
 
@@ -2027,7 +2038,10 @@ public class MetadataServiceImpl {
 	}
 	
 	
-	public List<Function> getFunctionByCriteria(String category, String inputReq) throws JsonProcessingException {
+	public List<Function> getFunctionByCriteria(String category, String inputReq) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		
+		Application application = commonServiceImpl.getApp();
+
 		Query query = new Query();
 		query.fields().include("uuid");
 		query.fields().include("version");
@@ -2039,10 +2053,28 @@ public class MetadataServiceImpl {
 		query.fields().include("desc");
 		query.fields().include("published");
 		query.fields().include("inputReq");
+		query.fields().include("publicFlag");
 		query.fields().include("funcType");
 		query.fields().include("functionInfo");
 		query.fields().include("category");
 
+		String appUuid=application.getUuid();
+
+		Criteria criteria = new Criteria();
+				/*
+		if(orgAppUuidList != null && !orgAppUuidList.isEmpty()) {
+			criteriaList.add(where("appInfo.ref.uuid").in(orgAppUuidList));
+			
+		}
+		else*/ 
+		
+		if(appUuid != null && !appUuid.isEmpty()) {
+			query.addCriteria(Criteria.where("_id").ne("1").orOperator(where("appInfo.ref.uuid").is(appUuid),where("publicFlag").is("Y")));
+			
+		}
+		
+		
+		
 		if (inputReq != null && !inputReq.isEmpty()) {
 			query.addCriteria(Criteria.where("inputReq").is(inputReq));
 		}

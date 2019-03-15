@@ -1,7 +1,7 @@
 {
     "uuid" : "ae9ee197-dc0f-4820-88b1-6025260f1000",
     "version" : "1488801522",
-    "name" : "if()",
+    "name" : "if",
     "desc" : "Returns valueTrue when testCondition is true, returns valueFalseOrNull otherwise.",
     "createdBy" : {
         "ref" : {
@@ -24,43 +24,6 @@
             "ref" : {
                 "type" : "application",
                 "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
-            }
-        }, 
-       
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
-            }
-        },
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
- 				 "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbyog"
             }
         }
 	],
