@@ -16,7 +16,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "domain")
 
 public class AttributeDomain extends BaseEntity {	
-
+	private String regEx;
+	
 	public String getRegEx() {
 		return regEx;
 	}
@@ -25,7 +26,6 @@ public class AttributeDomain extends BaseEntity {
 		this.regEx = regEx;
 	}
 
-	private String regEx;
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()

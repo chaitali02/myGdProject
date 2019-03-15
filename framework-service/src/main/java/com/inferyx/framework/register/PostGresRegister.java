@@ -38,6 +38,7 @@ import com.inferyx.framework.domain.Registry;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.Compare;
 import com.inferyx.framework.enums.PersistMode;
+import com.inferyx.framework.enums.RegistryType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.MySqlExecutor;
@@ -136,7 +137,7 @@ public class PostGresRegister {
 
 					if (registryList.get(i).getName().equals(tableName)) {
 						registryList.get(i).setRegisteredOn(datapod.getCreatedOn());
-						registryList.get(i).setStatus("Registered");
+						registryList.get(i).setStatus(RegistryType.REGISTERED.toString());
 						registryList.get(i).setCompareStatus(Compare.NOCHANGE.toString());
 					}
 
@@ -178,6 +179,7 @@ public class PostGresRegister {
 					dpList.add(datapod);
 				} catch (Exception e) {
 					iDatapodDao.delete(datapod);
+					registryList.get(i).setStatus(RegistryType.FAILED.toString());
 				}
 			}
 			return registryList;

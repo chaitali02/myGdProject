@@ -119,6 +119,7 @@ import com.inferyx.framework.domain.User;
 import com.inferyx.framework.domain.VizExec;
 import com.inferyx.framework.domain.Vizpod;
 import com.inferyx.framework.enums.Compare;
+import com.inferyx.framework.enums.RegistryType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.factory.ConnectionFactory;
@@ -3558,85 +3559,21 @@ public class RegisterService {
 			List<Registry> datapodList = createDatapodList(tablesWithPath, datasourceUuid, appUuid);
 			registryList.addAll(datapodList);
 		}
-//		//For Mysql
-//		else if (datasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())) {
-//			List<String> tables = new ArrayList<String>();
-//			try {
-//				IConnector connector = connectionFactory.getConnector(ExecContext.MYSQL.toString());
-//				ConnectionHolder connectiPAUSEer = connector.getConnection();
-//				Connection con = ((Statement) connectiPAUSEer.getStmtObject()).getConnection();
-//				DatabaseMetaData dbMetaData = con.getMetaData();
-//				ResultSet rs = dbMetaData.getTables(null, null, "%", null);
-//				
-//				while (rs.next()) 
-//					tables.add(rs.getString(3));
-//				logger.info("Mysql Tables :  " + tables);
-//				rs.close();				
-//
-//				List<Registry> datapodList = createDatapodList(tables, datasourceUuid, appUuid);
-//				registryList.addAll(datapodList);
-//			} catch (IllegalArgumentException | SecurityException | NullPointerException | SQLException e1) {
-//				e1.printStackTrace();
-//			}
-//		}
-//		// For Oracle
-//		else if (datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
-//			List<String> tables = new ArrayList<String>();
-//			try {			
-//				IConnector connector = connectionFactory.getConnector(ExecContext.ORACLE.toString());
-//				ConnectionHolder connectiPAUSEer = connector.getConnection();
-//				Connection con = ((Statement) connectiPAUSEer.getStmtObject()).getConnection();
-//				DatabaseMetaData dbMetaData = con.getMetaData();
-//				ResultSet rs = dbMetaData.getTables(null, null, "%", null);
-//
-//				while (rs.next()) 
-//					tables.add(rs.getString(3));				
-//				logger.info("Oracle Tables :  " + tables);
-//				rs.close();
-//
-//				List<Registry> datapodList = createDatapodList(tables, datasourceUuid, appUuid);
-//				registryList.addAll(datapodList);
-//				
-//			} catch (IllegalArgumentException | SecurityException | NullPointerException | SQLException e1) {
-//				e1.printStackTrace();
-//			}
-//		} 
-//		//for Postgres
-//		else if (datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
-//			List<String> tables = new ArrayList<String>();
-//			try {
-//				IConnector connector = connectionFactory.getConnector(ExecContext.MYSQL.toString());
-//				ConnectionHolder connectiPAUSEer = connector.getConnection();
-//				Connection con = ((Statement) connectiPAUSEer.getStmtObject()).getConnection();
-//				DatabaseMetaData dbMetaData = con.getMetaData();
-//				ResultSet rs = dbMetaData.getTables(null, null, "%", null);
-//				
-//				while (rs.next()) 
-//					tables.add(rs.getString(3));
-//				logger.info("PostGres Tables :  " + tables);				
-//				rs.close();		
-//				
-//				List<Registry> datapodList = createDatapodList(tables, datasourceUuid, appUuid);
-//				registryList.addAll(datapodList);
-//			} catch (IllegalArgumentException | SecurityException | NullPointerException | SQLException e1) {
-//				e1.printStackTrace();
-//			}
-//		}
 //		
-		if (status.equalsIgnoreCase("UnRegistered")) {
+		if (status.equalsIgnoreCase(RegistryType.NOT_REGISTERED.toString())) {
 			int count = 1;
 			for (Registry unRegiser : registryList) {				
-				if (unRegiser.getStatus().equalsIgnoreCase("UnRegistered")) {		
+				if (unRegiser.getStatus().equalsIgnoreCase(RegistryType.NOT_REGISTERED.toString())) {		
 					unRegiser.setId(Integer.toString(count));
 					unRegisterList.add(unRegiser);
 					count++;
 				}
 			}
 			return unRegisterList;
-		} else if (status.equals("Registered")) {
+		} else if (status.equals(RegistryType.REGISTERED.toString())) {
 			int count = 1;
 			for (Registry register : registryList) {				
-				if (register.getStatus().equals("Registered")) {					
+				if (register.getStatus().equals(RegistryType.REGISTERED.toString())) {					
 					register.setId(Integer.toString(count));
 					registerList.add(register);
 					count++;
@@ -3672,8 +3609,8 @@ public class RegisterService {
 							registry.setPath(tableWithPath.getValue());
 							registry.setRegisteredOn(datapod.getCreatedOn());
 							registry.setDesc(datapod.getDesc());
-							registry.setRegisteredOn(datapod.getCreatedOn());
-							registry.setStatus("Registered");
+							registry.setRegisteredBy(datapod.getCreatedBy().getRef().getName());
+							registry.setStatus(RegistryType.REGISTERED.toString());
 							registry.setCompareStatus(compareStatus);
 							registryList.add(registry);
 							break;
@@ -3684,8 +3621,7 @@ public class RegisterService {
 							registry.setPath(tableWithPath.getValue());
 							registry.setRegisteredOn(null);
 							registry.setDesc(null);
-							registry.setRegisteredOn(null);
-							registry.setStatus("UnRegistered");
+							registry.setStatus(RegistryType.NOT_REGISTERED.toString());
 							registry.setCompareStatus(Compare.NEW.toString());
 							registryList.add(registry);
 						}
@@ -3698,8 +3634,7 @@ public class RegisterService {
 				registry.setPath(tableWithPath.getValue());
 				registry.setRegisteredOn(null);
 				registry.setDesc(null);
-				registry.setRegisteredOn(null);
-				registry.setStatus("UnRegistered");
+				registry.setStatus(RegistryType.NOT_REGISTERED.toString());
 				registry.setCompareStatus(Compare.NEW.toString());
 				registryList.add(registry);
 			}
@@ -3708,31 +3643,20 @@ public class RegisterService {
 		return registryList;
 	}
 
-	public List<Registry> register(String uuid, String version, String type, List<Registry> registryList, RunMode runMode) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException, IOException
-			 {
-		try {
-			Datasource ds = (Datasource) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datasource.toString(), "N");
-			if (ds.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
-				return csvRegister.register(uuid, version, registryList, RunMode.ONLINE);
-			} else if (ds.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
-				return hiveRegister.registerDB(uuid, version, registryList, RunMode.BATCH);
-			}else if (ds.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
-				return impalaRegister.registerDB(uuid, version, registryList);
-			}  else if (ds.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())) {
-				return mysqlRegister.registerDB(uuid, version, registryList, RunMode.BATCH);
-			} else if (ds.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
-				return oracleRegister.registerDB(uuid, version, registryList, RunMode.BATCH);
-			} else if (ds.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
-				return postGresRegister.registerDB(uuid, version, registryList, RunMode.BATCH);
-			} else {
-				return null;
-			}
-		} catch(Exception e) {
-			if(e.getMessage().contains("Cannot resolve column name")) {				
-				commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Cannot resolve column name", null);
-			} else {
-				commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), e.toString(), null);
-			}
+	public List<Registry> register(String uuid, String version, String type, List<Registry> registryList, RunMode runMode) throws Exception {
+		Datasource ds = (Datasource) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datasource.toString(), "N");
+		if (ds.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+			return csvRegister.register(uuid, version, registryList, RunMode.ONLINE);
+		} else if (ds.getType().equalsIgnoreCase(ExecContext.HIVE.toString())) {
+			return hiveRegister.registerDB(uuid, version, registryList, RunMode.BATCH);
+		}else if (ds.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
+			return impalaRegister.registerDB(uuid, version, registryList);
+		}  else if (ds.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())) {
+			return mysqlRegister.registerDB(uuid, version, registryList, RunMode.BATCH);
+		} else if (ds.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+			return oracleRegister.registerDB(uuid, version, registryList, RunMode.BATCH);
+		} else if (ds.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
+			return postGresRegister.registerDB(uuid, version, registryList, RunMode.BATCH);
 		}
 		return registryList;
 	}

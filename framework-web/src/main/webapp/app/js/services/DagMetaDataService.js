@@ -121,6 +121,43 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       color :'#ed6b75',//'#d80029',
       iconPath :'',
     },
+    'Not Registered':{
+      name : 'PENDING',
+      caption:'Pending',
+      color :'#6c757d',//'#659be0',
+      iconPath : 'assets/layouts/layout/img/new_status/PENDING.svg',
+      jointWidth:"70px"
+    },
+    'NOT_REGISTERED':{
+      name : 'PENDING',
+      caption:'Pending',
+      color :'#6c757d',//'#659be0',
+      iconPath : 'assets/layouts/layout/img/new_status/PENDING.svg',
+      jointWidth:"70px"
+    },
+    'Registered':{
+      name : 'COMPLETED',
+      caption:'Completed',
+      color :'#34bfa3',//'#36c6d3',
+      iconPath : 'assets/layouts/layout/img/new_status/COMPLETED.svg',
+      jointWidth:"90px"
+    },
+    'Registering':{
+      name : 'RUNNING',
+      caption:'Running',
+      color :'#ffc107',//'#F1C40F',
+      iconPath : 'assets/layouts/layout/img/new_status/RUNNING.svg',
+      jointWidth:"70px"
+    },
+    'REGISTERED':{
+      name : 'COMPLETED',
+      caption:'Completed',
+      color :'#34bfa3',//'#36c6d3',
+      iconPath : 'assets/layouts/layout/img/new_status/COMPLETED.svg',
+      jointWidth:"90px"
+    }
+    
+
   }
   $rootScope.imgPath=obj.statusDefs
   obj.gridOptionsDefault = {
@@ -721,6 +758,23 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       state: 'createmodel',
       detailState: 'createmodel',
       childMenu:["train","predict","simulate"],
+      allowInChildMenu : false,
+    },
+
+    'domain':{
+      name : 'domain',
+      caption : 'Domain',
+      color : '#1DE9B6',
+      icon : '',
+      parentIconCaption:'',
+      childIconCaption:'',
+      execType:'',
+      metaType:'domain',
+      iconPath : '',
+      allowInMenu : false,
+      state: 'createdomain',
+      detailState: 'createdomain',
+      childMenu:[],
       allowInChildMenu : false,
     },
    

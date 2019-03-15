@@ -1218,8 +1218,8 @@ public class DatapodServiceImpl {
 	public List<CompareMetaData> compareMetadata(String datapodUuid, String datapodVersion, RunMode runMode) throws Exception {
 		Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodUuid, datapodVersion, MetaType.datapod.toString());
 		MetaIdentifier dsMI = targetDatapod.getDatasource().getRef();
-		Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(dsMI.getUuid(), dsMI.getVersion(), dsMI.getType().toString());
-		IExecutor exec = execFactory.getExecutor(datasource.getType());
+		Datasource targetDS = (Datasource) commonServiceImpl.getOneByUuidAndVersion(dsMI.getUuid(), dsMI.getVersion(), dsMI.getType().toString());
+		IExecutor exec = execFactory.getExecutor(targetDS.getType());
 		
 		String sourceTableName = null;
 		try {
@@ -1227,14 +1227,14 @@ public class DatapodServiceImpl {
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		return exec.compareMetadata(targetDatapod, datasource, sourceTableName);
+		return exec.compareMetadata(targetDatapod, targetDS, sourceTableName);
 	}
 
 	public Datapod synchronizeMetadata(String datapodUuid, String datapodVersion, RunMode runMode) throws IOException, JSONException, ParseException {
 		Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodUuid, datapodVersion, MetaType.datapod.toString());
 		MetaIdentifier dsMI = targetDatapod.getDatasource().getRef();
-		Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(dsMI.getUuid(), dsMI.getVersion(), dsMI.getType().toString());
-		IExecutor exec = execFactory.getExecutor(datasource.getType());
+		Datasource targetDS = (Datasource) commonServiceImpl.getOneByUuidAndVersion(dsMI.getUuid(), dsMI.getVersion(), dsMI.getType().toString());
+		IExecutor exec = execFactory.getExecutor(targetDS.getType());
 		
 		String sourceTableName = null;
 		try {
@@ -1243,7 +1243,7 @@ public class DatapodServiceImpl {
 			// TODO: handle exception
 		}
 		
-		List<CompareMetaData> comparisonResult = exec.compareMetadata(targetDatapod, datasource, sourceTableName);
+		List<CompareMetaData> comparisonResult = exec.compareMetadata(targetDatapod, targetDS, sourceTableName);
 		List<Attribute> attributes = new ArrayList<>();
 		int i = 0;
 		for(CompareMetaData compareMetaData : comparisonResult) {

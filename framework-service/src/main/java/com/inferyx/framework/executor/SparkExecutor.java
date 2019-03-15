@@ -3750,7 +3750,7 @@ public class SparkExecutor<T> implements IExecutor {
 		Map<String, CompareMetaData> comparisonResultMap = new LinkedHashMap<>();
 		if(sourceTableName != null) {
 			String sql = "SELECT * FROM " + sourceTableName + " LIMIT 2";
-			Dataset<Row> df = executeSql(sql).getDataFrame(); 
+			Dataset<Row> df = executeSqlByDatasource(sql,datasource, null).getDataFrame(); 
 			Tuple2<String, String>[] dTypes = df.dtypes();
 			
 			List<String> sourceAttrList = Arrays.asList(df.columns());

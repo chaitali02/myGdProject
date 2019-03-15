@@ -53,19 +53,22 @@ public class CSVRegister extends DataSourceRegister {
 			MetaIdentifierHolder loadExec = null;
 			try {
 				loadExec = datapodServiceImpl.createAndLoad(filepath+registryList.get(i).getName()+"."+FileType.CSV.toString().toLowerCase(), runMode);
-			}catch (Exception e) {
+				registryList.get(i).setCompareStatus(Compare.NEW.toString());
+				if(loadExec != null) {
+					registryList.get(i).setStatus(RegistryType.REGISTERED.toString());
+				} else {
+					registryList.get(i).setStatus(RegistryType.NOT_REGISTERED.toString());
+				}
+			} catch (Exception e) {
 				// TODO: handle exception
 				e.printStackTrace();
+				registryList.get(i).setStatus(RegistryType.FAILED.toString());
 			}
-			if(loadExec != null) {
-				registryList.get(i).setStatus(RegistryType.REGISTERED.toString());
-			} else {
-				registryList.get(i).setStatus(RegistryType.NOT_REGISTERED.toString());
-			}
-			registryList.get(i).setCompareStatus(Compare.NEW.toString());
 			Datapod dp = datapodServiceImpl.findOneByName(registryList.get(i).getName().toLowerCase());
-			registryList.get(i).setRegisteredOn(dp.getCreatedOn());
-			registryList.get(i).setRegisteredBy(dp.getCreatedBy().getRef().getName());
+			if(dp != null) {
+				registryList.get(i).setRegisteredOn(dp.getCreatedOn());
+				registryList.get(i).setRegisteredBy(dp.getCreatedBy().getRef().getName());
+			}
 		}
  		return registryList;
 	}

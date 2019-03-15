@@ -626,7 +626,7 @@ public class MySqlExecutor implements IExecutor {
 			RunMode runMode) throws AnalysisException, IOException {
 		return sparkExecutor.mattrix(locationDatapod, operation, lhsTableName, rhsTableName, lhsSql, rhsSql, saveTableName, baseExec, otherParams, runMode);
 	}
-
+	
 	@Override
 	public List<CompareMetaData> compareMetadata(Datapod targetDatapod, Datasource datasource, String sourceTableName)
 			throws IOException {	
@@ -693,7 +693,7 @@ public class MySqlExecutor implements IExecutor {
 		String attrLength = attribute.getLength() != null ? attribute.getLength().toString() : "";
 		if(attribute.getName().equalsIgnoreCase(sourceAttrDetails.get("COLUMN_NAME"))) {	
 			String status = null;			
-			if(sourceAttrDetails.get("TYPE_NAME").toLowerCase().contains(attribute.getType().toLowerCase())) {
+			if(Helper.getMappedDataTypes(attribute.getType()).contains(sourceAttrDetails.get("TYPE_NAME").toLowerCase())) {
 				status = Compare.NOCHANGE.toString();
 			} else {
 				status = Compare.MODIFIED.toString();
