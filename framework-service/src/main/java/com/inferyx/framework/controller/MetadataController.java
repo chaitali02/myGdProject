@@ -676,7 +676,7 @@ public class MetadataController {
 			@RequestParam(value = "status", required = false) String status,
 			@RequestParam(value = "action", required = false) String action)
 			throws IOException, SQLException {
-		return registerService.getRegistryByDatasource(datasourceUuid,status);
+		return registerService.getRegistryByDatasource(datasourceUuid, status);
 	}
 
 	@RequestMapping(value = "/getFunctionByFunctionInfo", method = RequestMethod.GET)

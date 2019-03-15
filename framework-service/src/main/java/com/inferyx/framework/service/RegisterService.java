@@ -3559,85 +3559,21 @@ public class RegisterService {
 			List<Registry> datapodList = createDatapodList(tablesWithPath, datasourceUuid, appUuid);
 			registryList.addAll(datapodList);
 		}
-//		//For Mysql
-//		else if (datasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())) {
-//			List<String> tables = new ArrayList<String>();
-//			try {
-//				IConnector connector = connectionFactory.getConnector(ExecContext.MYSQL.toString());
-//				ConnectionHolder connectiPAUSEer = connector.getConnection();
-//				Connection con = ((Statement) connectiPAUSEer.getStmtObject()).getConnection();
-//				DatabaseMetaData dbMetaData = con.getMetaData();
-//				ResultSet rs = dbMetaData.getTables(null, null, "%", null);
-//				
-//				while (rs.next()) 
-//					tables.add(rs.getString(3));
-//				logger.info("Mysql Tables :  " + tables);
-//				rs.close();				
-//
-//				List<Registry> datapodList = createDatapodList(tables, datasourceUuid, appUuid);
-//				registryList.addAll(datapodList);
-//			} catch (IllegalArgumentException | SecurityException | NullPointerException | SQLException e1) {
-//				e1.printStackTrace();
-//			}
-//		}
-//		// For Oracle
-//		else if (datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
-//			List<String> tables = new ArrayList<String>();
-//			try {			
-//				IConnector connector = connectionFactory.getConnector(ExecContext.ORACLE.toString());
-//				ConnectionHolder connectiPAUSEer = connector.getConnection();
-//				Connection con = ((Statement) connectiPAUSEer.getStmtObject()).getConnection();
-//				DatabaseMetaData dbMetaData = con.getMetaData();
-//				ResultSet rs = dbMetaData.getTables(null, null, "%", null);
-//
-//				while (rs.next()) 
-//					tables.add(rs.getString(3));				
-//				logger.info("Oracle Tables :  " + tables);
-//				rs.close();
-//
-//				List<Registry> datapodList = createDatapodList(tables, datasourceUuid, appUuid);
-//				registryList.addAll(datapodList);
-//				
-//			} catch (IllegalArgumentException | SecurityException | NullPointerException | SQLException e1) {
-//				e1.printStackTrace();
-//			}
-//		} 
-//		//for Postgres
-//		else if (datasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
-//			List<String> tables = new ArrayList<String>();
-//			try {
-//				IConnector connector = connectionFactory.getConnector(ExecContext.MYSQL.toString());
-//				ConnectionHolder connectiPAUSEer = connector.getConnection();
-//				Connection con = ((Statement) connectiPAUSEer.getStmtObject()).getConnection();
-//				DatabaseMetaData dbMetaData = con.getMetaData();
-//				ResultSet rs = dbMetaData.getTables(null, null, "%", null);
-//				
-//				while (rs.next()) 
-//					tables.add(rs.getString(3));
-//				logger.info("PostGres Tables :  " + tables);				
-//				rs.close();		
-//				
-//				List<Registry> datapodList = createDatapodList(tables, datasourceUuid, appUuid);
-//				registryList.addAll(datapodList);
-//			} catch (IllegalArgumentException | SecurityException | NullPointerException | SQLException e1) {
-//				e1.printStackTrace();
-//			}
-//		}
 //		
-		if (status.equalsIgnoreCase("UnRegistered")) {
+		if (status.equalsIgnoreCase(RegistryType.NOT_REGISTERED.toString())) {
 			int count = 1;
 			for (Registry unRegiser : registryList) {				
-				if (unRegiser.getStatus().equalsIgnoreCase("UnRegistered")) {		
+				if (unRegiser.getStatus().equalsIgnoreCase(RegistryType.NOT_REGISTERED.toString())) {		
 					unRegiser.setId(Integer.toString(count));
 					unRegisterList.add(unRegiser);
 					count++;
 				}
 			}
 			return unRegisterList;
-		} else if (status.equals("Registered")) {
+		} else if (status.equals(RegistryType.REGISTERED.toString())) {
 			int count = 1;
 			for (Registry register : registryList) {				
-				if (register.getStatus().equals("Registered")) {					
+				if (register.getStatus().equals(RegistryType.REGISTERED.toString())) {					
 					register.setId(Integer.toString(count));
 					registerList.add(register);
 					count++;
