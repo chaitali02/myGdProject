@@ -112,6 +112,7 @@
       "paramInfoHolder": []
     }
   ],
+  "returnType":"INTEGER",
   "category": "STRING",
   "publicFlag" : "Y"
 }

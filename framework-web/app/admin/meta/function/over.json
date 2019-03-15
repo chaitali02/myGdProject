@@ -27,7 +27,8 @@
             "paramInfoHolder" : []
         }
     ],
-    "category" : "WINDOW",
+    "returnType":"STRING",
+  "category" : "WINDOW",
     "uuid" : "1ea83629-e9c8-47c4-9c76-6fe61b3fe84f",
     "version" : "1547105966",
     "name" : "over",

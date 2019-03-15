@@ -65,6 +65,7 @@
       "paramInfoHolder": []
     }
   ],
+  "returnType":"STRING",
   "category": "DATE",
   "publicFlag" : "Y"
 }

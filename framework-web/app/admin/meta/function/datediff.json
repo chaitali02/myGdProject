@@ -91,6 +91,7 @@
         }
     ],
 
-    "category" : "DATE",
+    "returnType":"INTEGER",
+  "category" : "DATE",
     "publicFlag" : "Y"
 }

@@ -1,5 +1,5 @@
 {
-    "uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+    "uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c71127",
     "version" : "1552115484",
     "name" : "dq_rule_summary",
     "desc" : null,
@@ -29,7 +29,7 @@
     "datasource" : {
         "ref" : {
             "type" : "datasource",
-            "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
+            "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73024",
             "version" : "1464977196"
         }
     },

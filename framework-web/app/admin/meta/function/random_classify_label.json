@@ -84,6 +84,7 @@
       "paramInfoHolder": []
     }
   ],
+  "returnType":"DOUBLE",
   "category": "math",
   "publicFlag" : "Y"
 }

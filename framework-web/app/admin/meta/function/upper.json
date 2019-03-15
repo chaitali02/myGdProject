@@ -68,7 +68,8 @@
         }
 	],
 
-	"category": "STRING",
+	"returnType":"STRING",
+  "category": "STRING",
 	"functionInfo" : [ 
         {
             "type" : "file",

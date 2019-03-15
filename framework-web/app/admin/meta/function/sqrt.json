@@ -62,7 +62,8 @@
     ],
     "functionInfo" : "sqrt",
 
-    "category" : "MATH",
+    "returnType":"DOUBLE",
+  "category" : "MATH",
     "functionInfo" : [ 
         {
             "type" : "file",

@@ -74,7 +74,8 @@
             }
         }
     ],
-    "category" : "CONDITIONAL",
+    "returnType":"STRING",
+  "category" : "CONDITIONAL",
     "functionInfo" : [ 
         {
             "type" : "file",
