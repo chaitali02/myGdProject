@@ -90,7 +90,8 @@
             "paramInfoHolder" : []
         }
     ],
-    "category" : "DATE",
+    "returnType":"STRING",
+  "category" : "DATE",
     "publicFlag" : "Y"
 }
 

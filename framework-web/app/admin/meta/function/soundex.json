@@ -106,6 +106,7 @@
       "paramInfoHolder": []
     }
   ],
+  "returnType":"STRING",
   "category": "STRING",
   "publicFlag" : "Y"
 }

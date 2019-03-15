@@ -1,7 +1,7 @@
 {
 
 
-    "category" : "STRING",
+   
     "uuid" : "d265ac19-4fd0-42d9-8f1b-c704918dad78",
     "version" : "1488801521",
     "name" : "function_uuid",
@@ -152,5 +152,7 @@
             "name" : "uuid()",
             "paramInfoHolder" : []
         }
-    ]
+    ],
+     "returnType":"STRING",
+     "category" : "STRING",
 }

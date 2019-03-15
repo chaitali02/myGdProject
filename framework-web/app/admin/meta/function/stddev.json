@@ -60,7 +60,8 @@
         }
     ],
 
-    "category":"AGGREGATE",
+    "returnType":"DOUBLE",
+  "category":"AGGREGATE",
     "functionInfo" : [     	 
         {
             "type" : "file",

@@ -76,7 +76,8 @@
         }
     ],
 
-    "category" : "STRING",
+    "returnType":"DOUBLE",
+  "category" : "STRING",
     "functionInfo" : [ 
         {
             "type" : "file",

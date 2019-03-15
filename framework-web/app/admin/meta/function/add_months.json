@@ -93,6 +93,7 @@
       "paramInfoHolder": []
     }
   ],
+  "returnType":"DATE",
   "category": "DATE",
   "publicFlag" : "Y"
 }

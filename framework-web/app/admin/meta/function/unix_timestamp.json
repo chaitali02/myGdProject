@@ -91,6 +91,7 @@
             "paramInfoHolder" : []
         }
     ],
-    "category" : "DATE"
+    "returnType":"LONG",
+  "category" : "DATE"
 }
 

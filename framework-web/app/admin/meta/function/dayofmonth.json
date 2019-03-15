@@ -94,6 +94,7 @@
       "paramInfoHolder": []
     }
   ],
+  "returnType":"INTEGER",
   "category": "DATE",
   "publicFlag" : "Y"
 }
