@@ -81,7 +81,7 @@ public class DataSet extends BaseEntity {
 	public AttributeSource getAttribute(Integer attributeId) {
 
 		for (AttributeSource attr : getAttributeInfo()) {
-			if (attr.getAttrSourceId().equals(attributeId)) {
+			if (attr.getAttrSourceId().equals(attributeId.toString())) {
 				return attr;
 			}
 		}

@@ -147,17 +147,20 @@ public class Rule2Operator implements IParsable, IReferenceable {
 					MetaType.datapod.toString());
 			entityAttrName = datapodServiceImpl.getAttributeName(attributeRefHolder.getRef().getUuid(),
 					Integer.parseInt(attributeRefHolder.getAttrId()));
-			tablename = dp.getName();
-			aliasName = datastoreServiceImpl.getTableNameByDatapod(new Key(dp.getUuid(), dp.getVersion()), runMode);
+			aliasName = dp.getName();
+			tablename = datastoreServiceImpl.getTableNameByDatapod(new Key(dp.getUuid(), dp.getVersion()), runMode);
 			break;
 		case dataset:
 			DataSet ds = (DataSet) commonServiceImpl.getLatestByUuid(attributeRefHolder.getRef().getUuid(),
-					MetaType.datapod.toString());
-			tablename = ds.getName();
+					MetaType.dataset.toString());
+			entityAttrName = datasetServiceImpl.getAttributeName(attributeRefHolder.getRef().getUuid(),
+					Integer.parseInt(attributeRefHolder.getAttrId()));
+			aliasName = ds.getName();
+			tablename = datasetOperator.generateSql(ds, null, null, usedRefKeySet, null, runMode);
 			break;
 		case relation:
 			Relation relation = (Relation) commonServiceImpl.getLatestByUuid(attributeRefHolder.getRef().getUuid(),
-					MetaType.datapod.toString());
+					MetaType.relation.toString());
 			if (attributeRefHolder.getRef().getType().equals(MetaType.datapod))
 				entityAttrName = datapodServiceImpl.getAttributeName(attributeRefHolder.getRef().getUuid(),
 						Integer.parseInt(attributeRefHolder.getAttrId()));
@@ -166,7 +169,8 @@ public class Rule2Operator implements IParsable, IReferenceable {
 						MetaType.datapod.toString());
 				entityAttrName = datasetServiceImpl.getAttributeName(rel_ds, attributeRefHolder.getAttrId());
 			}
-			tablename = relation.getName();
+			aliasName = relation.getName();
+			tablename = relationOperator.generateSql(relation, null, null, null, usedRefKeySet, runMode);
 			break;
 		default:
 			break;
@@ -175,7 +179,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 		Datasource mapSourceDS = commonServiceImpl.getDatasourceByObject(rule2);
 
 		withbuilder.append("WITH rule_with_query AS\n" + "(").append(ConstantsUtil.SELECT).append("_attrList")
-				.append(ConstantsUtil.FROM).append(aliasName + " " + tablename)
+				.append(ConstantsUtil.FROM).append("(").append(tablename + ") " + aliasName)
 				.append(ConstantsUtil.WHERE_1_1).append(")");
 		selectbuilder.append("(");
 		for (Criteria criteria : rule2.getCriteriaInfo()) {
@@ -217,7 +221,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 			filter = filterOperator2.generateSql(criteria.getCriteriaFilter(), refKeyMap, filterSource, otherParams,
 					usedRefKeySet, execParams, false, false, runMode, mapSourceDS);
 
-			filter = filter.replaceAll(tablename, "rule_with_query");
+			filter = filter.replaceAll(aliasName, "rule_with_query");
 			criteria_indBuilder.append(ConstantsUtil.CASE_WHEN).append("1=1").append(filter)
 					.append(" THEN 'PASS' ELSE 'FAIL' END ");
 			selectbuilder.append(criteria_indBuilder.toString()).append(" as ").append("criteria_met_ind")
@@ -227,7 +231,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 			filter = "";
 			filter = filterOperator2.generateExprSql(criteria.getCriteriaFilter(), refKeyMap, filterSource, otherParams,
 					usedRefKeySet, execParams, false, false, runMode, mapSourceDS, attributeList);
-			filter = filter.replaceAll(tablename, "rule_with_query");
+			filter = filter.replaceAll(aliasName, "rule_with_query");
 
 			selectbuilder.append(filter).append(" as ").append("criteria_expr").append(ConstantsUtil.COMMA);
 			
@@ -237,7 +241,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 			filter = filterOperator2.generateSql(criteria.getCriteriaFilter(), refKeyMap, filterSource, otherParams,
 					usedRefKeySet, execParams, false, false, runMode, mapSourceDS);
 
-			filter = filter.replaceAll(tablename, "rule_with_query");
+			filter = filter.replaceAll(aliasName, "rule_with_query");
 			criteria_scoreBuilder.append("(").append(ConstantsUtil.CASE_WHEN).append("1=1").append(filter)
 					.append(" THEN 1 ELSE 0 END) * ").append(criteria.getCriteriaWeight());
 			filter = "";
@@ -258,7 +262,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 		StringBuilder attrListBuilder = new StringBuilder();
 		//attrListBuilder.append(tablename + "." + entityAttrName);
 		
-		attributeSet.add(tablename + "." + entityAttrName);
+		attributeSet.add(aliasName + "." + entityAttrName);
 		for (String attrList : attributeSet){
 			
 			attrListBuilder.append(ConstantsUtil.COMMA).append(attrList);
