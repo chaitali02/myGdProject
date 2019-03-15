@@ -5,15 +5,15 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
   $scope.isSelectAllDisabled=true;
   $scope.isRSDisable=true;
   $scope.path = dagMetaDataService.compareMetaDataStatusDefs
+  $scope.status = dagMetaDataService.statusDefs
+
   $scope.searchButtonText = "Register";
   $scope.gridOptions = {
     paginationPageSizes: null,
     enableGridMenu: true,
     rowHeight: 40,
       columnDefs: [
-      
       {
-        
         name: "selected",
         maxWidth: 40,
         visible: true,
@@ -65,7 +65,10 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
         cellClass: 'text-center',
         headerCellClass: 'text-center',
         // cellTemplate:'<div class="ui-grid-cell-contents text-center" ><i style="margin:3px auto;" ng-show="row.entity.status ==\'Registering\'" class="glyphicon glyphicon-refresh spinning" aria-hidden="true"></i><span ng-show="row.entity.status !=\'Registering\'">{{row.entity.status  }}</span> <span><i  ng-if="row.entity.isSuccessShow || row.entity.isErrorShow"style="color:{{row.entity.status==\'Not Registered\'?\'#DF0000\':\'#71F354\'}};font-size:14px;" class="{{row.entity.status!=\'Not Registered\' ? \'icon-check\' :  \'icon-close\'}}" aria-hidden="true"></i></span></div>'
-        cellTemplate:'<div class="ui-grid-cell-contents text-center" ><span ng-show="row.entity.status ==\'Registering\'"> In Progess <i style="margin:3px auto;"  class="glyphicon glyphicon-refresh spinning" aria-hidden="true"></i></span><span ng-show="row.entity.status !=\'Registering\'">{{row.entity.status }} </span> <img  ng-if="row.entity.isSuccessShow || row.entity.isErrorShow" ng-src="{{row.entity.status!=\'FAILED\' ? \'assets/layouts/layout/img/new_status/COMPLETED.svg\' :  \'assets/layouts/layout/img/new_status/KILLED.svg\'}}"  width="20" height="20"></div>'
+       // cellTemplate:'<div class="ui-grid-cell-contents text-center" ><span ng-show="row.entity.status ==\'Registering\'"> In Progess <i style="margin:3px auto;"  class="glyphicon glyphicon-refresh spinning" aria-hidden="true"></i></span><span ng-show="row.entity.status !=\'Registering\'">{{row.entity.status }} </span> <img  ng-if="row.entity.isSuccessShow || row.entity.isErrorShow" ng-src="{{row.entity.status!=\'FAILED\' ? \'assets/layouts/layout/img/new_status/COMPLETED.svg\' :  \'assets/layouts/layout/img/new_status/KILLED.svg\'}}"  width="20" height="20"></div>'
+      //  cellTemplate:'<div class="ui-grid-cell-contents text-center" ><span ng-show="row.entity.status ==\'Registering\'"> Running <i style="margin:3px auto;"  class="glyphicon glyphicon-refresh spinning" aria-hidden="true"></i></span><span ng-show="row.entity.status !=\'Registering\'">{{row.entity.status }} </span> </div>'
+        cellTemplate: '<div class=\"ui-grid-cell-contents ng-scope ng-binding\"><div class="label-sm" style=" width: 88%;font-size: 13px;padding: 2px;color: white;margin: -2px auto;font-weight: 300;background-color:{{grid.appScope.status[row.entity.status].color}} !important" ng-style="">{{grid.appScope.status[row.entity.status].caption}}</div></div>'
+
 
       },
       {
@@ -169,7 +172,6 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
     $scope.isDataSourceInpogress = true;
     RegisterSourceService.getRegistryByDatasource($scope.selectDataSource.uuid,$scope.selectStatus).then(function (response) {onSuccessGetRegistryByDatasource(response.data)}, function (response) {onError(response.data)});
     var onSuccessGetRegistryByDatasource = function (response) {
-     // console.log(JSON.stringify(response))
       $scope.isDataSourceInpogress = false;
       $scope.originalData = response
       $scope.gridOptions.data=response;
@@ -236,7 +238,9 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
     }
     return index;
   } 
-  $scope.submitRegisgterSource = function () {
+
+  $scope.okRegiter=function(){
+    $('#confExModal').modal('hide');
     var registerSourceArray = [];
     $scope.isRSDisable=true;
     var count = 0;
@@ -334,6 +338,13 @@ AdminModule.controller('RegisterSourceController', function ($stateParams,$filte
       }
 
     }
+  }
+
+  $scope.submitRegisgterSource = function () {
+    $('#confExModal').modal({
+      backdrop: 'static',
+      keyboard: false
+    });
   }
   
 

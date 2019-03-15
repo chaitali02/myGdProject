@@ -15,5 +15,5 @@ package com.inferyx.framework.enums;
  *
  */
 public enum RegistryType {
-	REGISTERED, NOT_REGISTERED, UN_REGISTERED
+	REGISTERED, NOT_REGISTERED, UN_REGISTERED, FAILED
 }
