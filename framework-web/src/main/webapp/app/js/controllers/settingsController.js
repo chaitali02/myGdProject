@@ -296,8 +296,16 @@ AdminModule.controller('settingsController', function ($rootScope,$scope,$stateP
     $scope.activeForm = 2
   }
   
+  $scope.confirmBulidGraph=function(){
+    $('#confExModal').modal({
+      backdrop: 'static',
+      keyboard: false
+    });
+  }
+
   $scope.callBulidGraph = function () {
     //$scope.isDataLodingBG = true;
+    $('#confExModal').modal('hide');
     $scope.autorefresh=true;
     $scope.autoRefreshOnChange ($scope.autorefresh);
     SettingsService.buildGraph().then(function (response) { onSuccess(response.data) });
@@ -310,6 +318,7 @@ AdminModule.controller('settingsController', function ($rootScope,$scope,$stateP
       //$scope.isDataLodingBG = false;
       $scope.getBaseEntityStatusByCriteria();
     }
+
   }
 
 
