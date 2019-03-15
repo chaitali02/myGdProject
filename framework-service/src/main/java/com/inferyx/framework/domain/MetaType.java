@@ -46,7 +46,7 @@ public enum MetaType {
 				MetaType.graphpod, MetaType.report, MetaType.reportExec, MetaType.batch, MetaType.batchExec,
 				MetaType.schedule, MetaType.ingest, MetaType.ingestExec, MetaType.ingestgroup, MetaType.ingestgroupExec,
 				MetaType.trainresult, MetaType.deployExec, MetaType.processExec,MetaType.organization,
-				MetaType.dashboardExec, MetaType.graphExec ,MetaType.reportExec, MetaType.dashboardExec, MetaType.rule2, MetaType.rule2Exec);
+				MetaType.dashboardExec, MetaType.graphExec ,MetaType.reportExec, MetaType.dashboardExec, MetaType.rule2, MetaType.rule2Exec, MetaType.domain);
 	}
 
 	public static List<MetaType> getMetaExecList() {
