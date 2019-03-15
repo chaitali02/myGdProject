@@ -18,7 +18,7 @@
                     <a style="margin:2px auto;color:white;" href="javascript:;" title="Show Dependencies" data-toggle="tooltip" data-placement="top" tooltip ng-class="showgraphdiv==true? 'currentpage':'notcurrentpage'"  ng-click="showgraphdiv = true">
                         <i class="fa fa-sitemap" area-hidden="true"></i>
                     </a>-->                    
-                    <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top" tooltip (click)="downloadPipeline()">
+                    <a class="left-marginpage" style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top" tooltip (click)="downloadPipeline()">
                         <i class="fa fa-download" area-hidden="true"></i>
                     </a>
                      <!--<a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip onClick="refreshSubGroupGraph()" ng-if="!showgraphdiv && (daggroupExecName || resultExecName)">
@@ -27,7 +27,7 @@
                     <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip ng-click="broadcastRefreshData()" ng-if="showgraphdiv || !(daggroupExecName || resultExecName)">
                         <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
                     </a> -->
-                    <a title="Close" (click)="goBack()" style="height:14px;">
+                    <a class="left-marginpage" title="Close" (click)="goBack()" style="height:14px;">
                         <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
                     </a>
                 </div>

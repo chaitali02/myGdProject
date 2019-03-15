@@ -1,0 +1,20 @@
+export enum Stage {
+    INITIALIZED = "Initialized",
+    NOTSTARTED = "Not Started", 
+    INPROGRESS = "In Progress",
+    COMPLETED = "Completed", 
+    FAILED = "Failed", 
+    SUSPEND = "Suspend",
+    KILLED = "Killed",
+    LOGIN = "login",
+    LOGOUT = "logout",
+    EXPIRED = "expired",
+    ACTIVE = "active", 
+    INACTIVE = "inactive",
+    ONHOLD = "OnHold",
+    OFFHOLD = "OffHold",
+    RESUME = "Resume",
+    TERMINATING  = "Terminating",
+    STARTED = "started",
+    STOPPED = "stopped"
+}

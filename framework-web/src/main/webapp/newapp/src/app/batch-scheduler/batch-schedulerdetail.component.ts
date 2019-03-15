@@ -1,3 +1,4 @@
+import { MetaType } from './../metadata/enums/metaType';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { JointjsComponent } from '../shared/components/jointjs/jointjs.component';
 import { JointjsGroupComponent } from '../shared/components/jointjsgroup/jointjsgroup.component';
@@ -12,6 +13,7 @@ import { AppConfig } from '../app.config';
 import { saveAs } from 'file-saver';
 import { Location } from '@angular/common';
 import { CommonListService } from '../common-list/common-list.service';
+import { RoutesParam } from '../metadata/domain/domain.routeParams';
 
 @Component({
     selector: 'app-batch-schedulerdetail',
@@ -35,9 +37,10 @@ export class BatchSchedulerdetailComponent {
     dagdata: any;
     mode: any;
     breadcrumbDataFrom: { "caption": string; "routeurl": string; }[];
-
+    metaType = MetaType;
     @ViewChild(JointjsComponent) d_JointjsComponent: JointjsComponent;
     @ViewChild(JointjsGroupComponent) d_JointjsGroupComponent: JointjsGroupComponent;
+
     constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _jointjsService: JointjsService, private _sharedDataService: SharedDataService, private _dataPipelineService: DataPipelineService, private http: Http, private _config: AppConfig, private _commonListService: CommonListService) {
         this.baseUrl = _config.getBaseUrl();
         this.dagdata = {};
@@ -55,9 +58,10 @@ export class BatchSchedulerdetailComponent {
             });
         console.log(this.activatedRoute)
         this.activatedRoute.params.subscribe((params: Params) => {
-            this.id = params['id'];
-            this.version = params['version'];
-            this.mode = params['mode'];
+            let param = <RoutesParam>params;
+            this.id = param.id;
+            this.version = param.version;
+            this.mode = param.mode;
             if (this.mode !== undefined) {
                 this.getOneByUuidAndVersion(this.id, this.version);
             }
@@ -96,7 +100,7 @@ export class BatchSchedulerdetailComponent {
 
     getOneByUuidAndVersion(id, version) {
         this.stopStatusUpdate();
-        this._commonService.getOneByUuidAndVersion(id, version, 'dagexec')
+        this._commonService.getOneByUuidAndVersion(id, version, this.metaType.DAGEXEC)
             .subscribe(
                 response => {
                     this.onSuccessgetOneByUuidAndVersion(response)
@@ -146,7 +150,7 @@ export class BatchSchedulerdetailComponent {
         //     if(latestStatus(response.status).stage == 'Failed'){
         //         $scope.allowReExecution = true;
         //     }
-        if (['Completed', 'Failed', 'Killed'].indexOf(this.latestStatus(response["status"]).stage) > -1) {
+        if (['Completed', 'Failed', 'Killed'].indexOf(this.latestStatus(response.status).stage) > -1) {
             this.stopStatusUpdate();
         }
         //else{
@@ -168,7 +172,7 @@ export class BatchSchedulerdetailComponent {
         this.versionJointJs = this.d_JointjsComponent.version;
         this.typeJointJs = this.d_JointjsComponent.type;
 
-        this._commonService.getNumRowsbyExec(this.uuidJointJs, this.versionJointJs, 'mapexec')
+        this._commonService.getNumRowsbyExec(this.uuidJointJs, this.versionJointJs, this.metaType.MAPEXEC)
             .subscribe(
                 response => {
                     this.onSuccessgetNumRowsbyExec(response);
@@ -210,10 +214,10 @@ export class BatchSchedulerdetailComponent {
         this.getBaseEntityByCriteria();
     }
     getBaseEntityByCriteria(): void {
-        this._commonListService.getParamListByRule((("batchexec").toLowerCase()), "", "", "", "", "", "", "")
-            // .subscribe(
-            //     response => { this.getGrid(response) },
-            //     error => console.log("Error :: " + error)
-            // )
+        this._commonListService.getParamListByRule(((this.metaType.BATCHEXEC).toLowerCase()), "", "", "", "", "", "", "")
+        // .subscribe(
+        //     response => { this.getGrid(response) },
+        //     error => console.log("Error :: " + error)
+        // )
     }
 }

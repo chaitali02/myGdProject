@@ -12,5 +12,6 @@ export class ScheduleIO extends BaseEntity{
     dependsOn: MetaIdentifierHolder;
 	scheduleChg: String;
     attrtype : String;
+    selected: any;
     // attribute : Schedule;
 }

@@ -1,4 +1,5 @@
-import { Stage, Status } from './domain.status';
+import { Status } from './domain.status';
+import { Stage } from '../enums/stage';
 
 
 export class Pipeline{

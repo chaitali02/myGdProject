@@ -4,32 +4,29 @@
 
 <div class="portlet box green">
   <div class="portlet-title">
-    <div class="caption">
+    <div class="caption" *ngIf="!isEditInprogess && !isEditError">
       <i class="fa fa-cogs"></i>Batch Details
     </div>
     <div class="tools">
-      <a title="Main" style="color:white;" title="Main" data-placement="top" tooltip [ngClass]="isHomeEnable==true?'notcurrentpage':'currentpage'"
+
+      <a class="left-marginpage" title="Main" style="color:white;" title="Main" data-placement="top" tooltip [ngClass]="(showForm==true)? 'currentpage':'notcurrentpage'"
         (click)="showMainPage()">
         <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.2,1.2);"></i>
       </a>
-
-      <!-- <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top" tooltip (click)="downloadResult()"
-          [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'" *ngIf="isResultTable == true">
-          <i class="fa fa-download" area-hidden="true"></i>
-      </a> -->
-      <a style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip" data-placement="top" tooltip
-        (click)="downloadResult()" *ngIf="isResultTable == true">
+      <a class="left-marginpage" style="color:white;" href="javascript:;" title="Download" data-toggle="tooltip"
+        data-placement="top" tooltip (click)="downloadResult()" *ngIf="isResultTable == true">
         <i class="fa fa-download" area-hidden="true"></i>
       </a>
-      <a style="color:white;" href="javascript:;" title="Show Dependencies" data-placement="top" tooltip [ngClass]="isHomeEnable==false? 'notcurrentpage':'currentpage'"
-        data- (click)="showDagGraph()">
+      <a class="left-marginpage" style="color:white;" href="javascript:;" title="Show Dependencies" data-placement="top"
+        tooltip [ngClass]="showForm==false? 'currentpage':'notcurrentpage'" data- (click)="showDagGraph()">
         <i class="fa fa-sitemap" style="margin:2px auto;"></i>
       </a>
 
-      <a title="Refresh" data-toggle="tooltip" data-placement="top" tooltip (click)="broadcastRefreshData()">
+      <a class="left-marginpage" title="Refresh" data-toggle="tooltip" data-placement="top" [ngClass]="(showForm==true)? 'currentpage':'notcurrentpage'"
+        tooltip (click)="showGraph()">
         <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
       </a>
-      <a title="Close" (click)="goBack()" style="height:14px;">
+      <a class="left-marginpage" title="Close" (click)="goBack()" style="height:14px;">
         <i class="fa fa-times" aria-hidden="true" style="display: block;margin: 2px auto;color:white;transform: scale(1,1.2);"></i>
       </a>
     </div>
@@ -37,9 +34,9 @@
   </div>
   <div class="portlet-body">
 
-    <div class="form-body graph-body" *ngIf="showGraph" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=');">
-      <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
-      <div class="spinner" id="graphloader">
+    <div class="form-body graph-body" *ngIf="showDivGraph" style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAI0lEQVQYV2NkIBIwgtStWrXqf1hYGJiNC+CVRNY0qhBv0AMAsKgECyGgekgAAAAASUVORK5CYII=');">
+      <div class="form-body text-center" id="errorMsg" style="color:blue;" *ngIf="isGraphError">Some Error Occur</div>
+      <div class="spinner" id="graphloader" *ngIf="isGraphInprogess">
         <div class="bounce1"></div>
         <div class="bounce2"></div>
         <div class="bounce3"></div>
@@ -49,63 +46,77 @@
       </div>
     </div>
 
-    <div class="row" *ngIf="!showGraph">
-      <form class="form-horizontal">
-        <div class="col-md-12">
-          <table class=" row-border hover table  table-striped table-bordered">
-            <thead>
-              <tr>
-                <th class="text-center" style="width:20%;">Name</th>
-                <th class="text-center" style="width:18%;">Start Time</th>
-                <th class="text-center" style="width:18%;">End Time</th>
-                <th class="text-center" style="width:10%;">Duration</th>
-                <th class="text-center" style="width:10%;">Status</th>
-                <th class="text-center" style="width:10%;">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let tabledata of batchexecData;">
-                <td>
-                  <div>
-                    {{tabledata.name}}
-                  </div>
-                  <!-- <input type="text" [(ngModel)]="tabledata.name" title="{{tabledata.name}}" name="name" class="form-control"> -->
-                </td>
-                <td>
-                  <div class="text-center">
-                    {{tabledata.starttime}}
-                  </div>
-                  <!-- <input type="text" [(ngModel)]="starttime" title="{{starttime}}" name="starttime" class="form-control"> -->
-                </td>
-                <td>
-                  <div class="text-center">
-                    {{tabledata.endtime}}
-                  </div>
-                  <!-- <input type="text" [(ngModel)]="endtime" title="{{endtime}}" name="{{endtime}}" class="form-control" > -->
-                </td>
-                <td>
-                  <div class="text-center">
-                    {{tabledata.duration}}
-                  </div>
-                  <!-- <input type="text" [(ngModel)]="duration" title="{{duration}}" name="duration" class="form-control"> -->
-                </td>
-                <td>
-                  <div class="label-sm label-success text-center" [ngStyle]="{'background-color':tabledata.color}"
-                    style="width:88%;font-size:13px;padding:2px;color:white;margin: 0 auto;font-weight:300">{{tabledata.stage}}</div>
-                  <!-- <div class="label-sm label-success text-center" [ngStyle]="{'background-color':batchStatus.color}" style="width:88%;font-size:13px;padding:2px;color:white;margin: 0 auto;font-weight:300">{{batchStatus.stage}}</div> -->
-
-                </td>
-                <td>
-                  <p-menu #menu popup="popup" appendTo="body" [model]="items"></p-menu>
-                  <div style="text-align: center;">
-                    <button type="button" pButton label="Action" icon="fa fa-angle-down" iconPos="right" (click)="menu.toggle($event);onClickMenu(tabledata.uuid, tabledata.version, tabledata.type);"></button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+    <div class="form-body" style="padding-top:50px;" *ngIf="showForm">
+      <div class="centercontent" style="min-height:500px;" *ngIf="isEditError">
+        <h3 style="font-size:14px;color:red;">Some Error Occur</h3>
+      </div>
+      <div class="centercontent" style="min-height:500px;" *ngIf="isEditInprogess">
+        <div class="spinner">
+          <div class="bounce1"></div>
+          <div class="bounce2"></div>
+          <div class="bounce3"></div>
         </div>
-      </form>
+      </div>
+      <!-- <div > -->
+
+      <div class="row" *ngIf="!isEditInprogess && !isEditError">
+        <form class="form-horizontal">
+          <div class="col-md-12">
+            <table class=" row-border hover table  table-striped table-bordered">
+              <thead>
+                <tr>
+                  <th class="text-center" style="width:20%;">Name</th>
+                  <th class="text-center" style="width:18%;">Start Time</th>
+                  <th class="text-center" style="width:18%;">End Time</th>
+                  <th class="text-center" style="width:10%;">Duration</th>
+                  <th class="text-center" style="width:10%;">Status</th>
+                  <th class="text-center" style="width:10%;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let tabledata of batchexecData;">
+                  <td>
+                    <div>
+                      {{tabledata.name}}
+                    </div>
+                    <!-- <input type="text" [(ngModel)]="tabledata.name" title="{{tabledata.name}}" name="name" class="form-control"> -->
+                  </td>
+                  <td>
+                    <div class="text-center">
+                      {{tabledata.starttime}}
+                    </div>
+                    <!-- <input type="text" [(ngModel)]="starttime" title="{{starttime}}" name="starttime" class="form-control"> -->
+                  </td>
+                  <td>
+                    <div class="text-center">
+                      {{tabledata.endtime}}
+                    </div>
+                    <!-- <input type="text" [(ngModel)]="endtime" title="{{endtime}}" name="{{endtime}}" class="form-control" > -->
+                  </td>
+                  <td>
+                    <div class="text-center">
+                      {{tabledata.duration}}
+                    </div>
+                    <!-- <input type="text" [(ngModel)]="duration" title="{{duration}}" name="duration" class="form-control"> -->
+                  </td>
+                  <td>
+                    <div class="label-sm label-success text-center" [ngStyle]="{'background-color':tabledata.color}"
+                      style="width:88%;font-size:13px;padding:2px;color:white;margin: 0 auto;font-weight:300">{{tabledata.stage}}</div>
+                    <!-- <div class="label-sm label-success text-center" [ngStyle]="{'background-color':batchStatus.color}" style="width:88%;font-size:13px;padding:2px;color:white;margin: 0 auto;font-weight:300">{{batchStatus.stage}}</div> -->
+
+                  </td>
+                  <td>
+                    <p-menu #menu popup="popup" appendTo="body" [model]="items"></p-menu>
+                    <div style="text-align: center;">
+                      <button type="button" pButton label="Action" icon="fa fa-angle-down" iconPos="right" (click)="menu.toggle($event);onClickMenu(tabledata.uuid, tabledata.version, tabledata.type);"></button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </form>
+      </div>
     </div>
 
   </div>
