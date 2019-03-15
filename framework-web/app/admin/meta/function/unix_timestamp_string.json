@@ -29,7 +29,8 @@
         }
 	],
 
-	"category": "DATE",
+	"returnType":"STRING",
+     "category": "DATE",
 	"functionInfo" : [ 
         {
             "type" : "file",

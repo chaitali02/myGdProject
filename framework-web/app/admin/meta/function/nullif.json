@@ -29,7 +29,8 @@
         }
 	],
 
-    "category" : "SIMPLE",
+    "returnType":"STRING",
+  "category" : "SIMPLE",
     "functionInfo" : [  
         {
             "type" : "file",

@@ -83,7 +83,8 @@
         }
     ],
 
-    "category" : "DATE",
+    "returnType":"DATE",
+  "category" : "DATE",
     "publicFlag" : "Y"
 }
 

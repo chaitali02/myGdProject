@@ -64,5 +64,6 @@
       "paramInfoHolder": []
     }
   ],
+  "returnType":"INTEGER",
   "category": "DATE"
 }

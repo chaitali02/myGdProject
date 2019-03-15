@@ -60,6 +60,7 @@
         }
     ],
     "funcType" : "hive",
+    "returnType":"STRING",
     "category" : "window",
     "publicFlag" : "Y"
 }

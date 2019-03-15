@@ -49,7 +49,8 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
   $scope.dq.versions = []
   $scope.dataqualitycompare = null;
   $scope.datatype = ["DATE", "DOUBLE", "FLOAT", "INTEGER", "STRING", "TIMESTAMP"];
-  $scope.blankSpaceTypes = ["LEADING", "TRAILING", "IN_BETWEEN", "ALL"]
+  $scope.blankSpaceTypes = ["LEADING", "TRAILING", "IN_BETWEEN", "ALL"];
+  $scope.CaseCheckType=["UPPER","LOWER","INITCAP"];
   $scope.selectDataType;// = $scope.datatype[0];
   $scope.sourceType = ["datapod"];
   $scope.refIntegrityTypes = ["datapod", "dataset", "relation"];
@@ -1155,7 +1156,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
       expressionInfo.ref = ref;
       dataqualityjosn.expressionCheck = expressionInfo;
     }
-
+    dataqualityjosn.caseCheck=$scope.dataqualitydata.caseCheck;
     if ($scope.selectedDomain) {
       var domainInfo = {};
       var ref = {};

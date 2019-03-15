@@ -811,6 +811,15 @@
                       </div>
                     </div>
                     <div class="form-group">
+                      <label class="control-label col-md-3">Case Check</label>
+                      <div class="col-md-6">
+                        <select ng-disabled="{{mode}} || !isSelectSoureceAttr" ng-model="dataqualitydata.caseCheck"
+                          ng-options="x for x in CaseCheckType | orderBy" class="form-control">
+                          <option value="">-Select-</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group">
                       <label class="control-label col-md-3">Threshold Type</label>
                       <div class="col-md-6">
                         <select ng-disabled="{{mode}}" ng-model="thresholdInfo.type" ng-options="x for x in thresholdType | orderBy"

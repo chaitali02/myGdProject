@@ -59,7 +59,8 @@
             "paramInfoHolder" : []
         }
     ],
-    "category" : "AGGREGATE",
+    "returnType":"DOUBLE",
+  "category" : "AGGREGATE",
     "publicFlag" : "Y"
 }
 

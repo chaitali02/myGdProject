@@ -29,7 +29,8 @@
         }
     ],
 
-    "category" : "STRING",
+    "returnType":"INTEGER",
+  "category" : "STRING",
     "functionInfo" : [  
         {
             "type" : "file",

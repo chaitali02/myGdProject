@@ -60,6 +60,7 @@
         }
     ],
 
+    "returnType":"LONG",
     "category" : "AGGREGATE",
     "publicFlag" : "Y"
 }

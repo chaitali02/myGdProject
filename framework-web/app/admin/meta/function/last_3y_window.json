@@ -38,6 +38,7 @@
       "paramInfoHolder": []
     }
   ],
+  "returnType":"INTEGER",
   "category": "date",
   "publicFlag" : "Y"
 }

@@ -23,6 +23,7 @@ import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.IngestGroupExec;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
 
 /**
@@ -73,4 +74,15 @@ public class IngestGroupServiceImpl extends RuleGroupTemplate {
 		IngestGroupExec ingestGroupExec = (IngestGroupExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.ingestgroupExec.toString());
 		execute(ingestGroupExec.getDependsOn().getRef().getUuid(),ingestGroupExec.getDependsOn().getRef().getVersion(),null,ingestGroupExec, runMode);
 	}
+	
+	/**
+	 * 
+	 * @param baseExec
+	 * @return
+	 * @throws Exception
+	 */
+	public Status restart(BaseExec baseExec) throws Exception {
+		return super.restart(baseExec.getUuid(), baseExec.getVersion(), MetaType.ingestgroupExec, MetaType.ingestExec);
+	}
+	
 }
