@@ -22,7 +22,7 @@ public class Function extends BaseEntity {
 //	private FuncType funcType;
 	private List<FunctionInfo> functionInfo;
 	private String category;
-    
+    private DataType returnType;
 	
 	public String getInputReq() {
 		return inputReq;
@@ -30,6 +30,14 @@ public class Function extends BaseEntity {
 
 	public void setInputReq(String inputReq) {
 		this.inputReq = inputReq;
+	}
+
+	public DataType getReturnType() {
+		return returnType;
+	}
+
+	public void setReturnType(DataType returnType) {
+		this.returnType = returnType;
 	}
 
 	public String getCategory() {

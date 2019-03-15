@@ -2,9 +2,9 @@
 **/
 
 MetadataModule = angular.module('MetadataModule');
-/* Start MetadataDatapodController*/
+
 MetadataModule.controller('MetadataDatapodController', function ($location,$window,$timeout,$http,$filter,$rootScope,$state,$sessionStorage, 
-	 $scope, $stateParams,$cookieStore, uiGridConstants,dagMetaDataService,MetadataDatapodSerivce,privilegeSvc,commentService,
+	 $scope, $stateParams, uiGridConstants,dagMetaDataService,MetadataDatapodSerivce,privilegeSvc,commentService,
 	 CommonService,CF_DOWNLOAD,CF_SAMPLE) {
 
 	if ($stateParams.mode == 'true') {
@@ -47,6 +47,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		$scope.isDragable = "true";
 
 	}
+
 	$scope.unitTypes=[{"text":"*","caption":"* Text"},{"text":"#","caption":"# Number"},{"text":"$","caption":"$ Currrency"},{"text":"%","caption":"% Percent"}];
 	$scope.path = dagMetaDataService.compareMetaDataStatusDefs;
 	$scope.download={};
@@ -117,11 +118,13 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		exporterPdfDefaultStyle: { fontSize: 9 },
 		exporterPdfTableHeaderStyle: { fontSize: 10, bold: true, italics: true, color: 'red' },
 	}
-    $scope.checkIsInrogess=function(){
+	
+	$scope.checkIsInrogess=function(){
 		if($scope.isEditInprogess || $scope.isEditVeiwError){
 		return false;
 		}
     }
+	
 	/*Start showPage*/
 	$scope.showPage = function () {
 		if($scope.checkIsInrogess () ==false){
@@ -147,7 +150,8 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		$scope.isShowCompareMetaData=false;
 
 	}/*End ShowGraph*/
-    $scope.showHome=function(uuid, version,mode){
+	
+	$scope.showHome=function(uuid, version,mode){
 		if($scope.checkIsInrogess () ==false){
 			return false;
 		}
@@ -158,6 +162,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			mode: mode
 		});
 	}
+	
 	$scope.enableEdit = function (uuid, version) {
 		if($scope.isPrivlage || $scope.datapoddata.locked =="Y"){
           return false;
@@ -323,6 +328,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		}
 		return style;
 	}
+
 	$scope.gridOptionsDataStrore={
 		rowHeight: 40,
 		enableGridMenu: true,
@@ -346,7 +352,9 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			name: 'name',
 			minWidth: 220,
 			displayName: 'Name',
-			headerCellClass: 'text-center'
+			headerCellClass: 'text-center',
+			cellTemplate:'<div class="grid-tooltip" title="{{row.entity.name}}" ><div class="ui-grid-cell-contents">{{ COL_FIELD }}</div></div>',
+
 		},
 		{
 			name: 'version',
@@ -563,6 +571,14 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 
 	$scope.getLovByType();
 	
+    $scope.getAllLatestDomain = function () {
+		CommonService.getAllLatest("domain").then(function (response) { onSuccess(response.data) });
+		var onSuccess = function (response) {
+		$scope.allDomain = response;
+		}
+    }
+
+    $scope.getAllLatestDomain(); 
 	$scope.datapodFormChange = function () {
 		if ($scope.mode == "true") {
 			$scope.datapodHasChanged = true;
@@ -1152,6 +1168,8 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			attributes.dispName = $scope.attributetable[datapodattr].dispName;
 			attributes.active = $scope.attributetable[datapodattr].active;
 			attributes.length = $scope.attributetable[datapodattr].length;
+			attributes.piiFlag = $scope.attributetable[datapodattr].piiFlag;
+			attributes.cdeFlag = $scope.attributetable[datapodattr].cdeFlag;
 			attributes.attrUnitType = $scope.attributetable[datapodattr].attrUnitType;
 			if ($scope.attributetable[datapodattr].key == "Y") {
 				attributes.key = count;
@@ -1165,6 +1183,17 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			}
 			else {
 				attributes.partition = "N"
+			}
+			if($scope.attributetable[datapodattr].selectDomain){
+				var selectDomain={};
+				var refDomain={};
+				refDomain.uuid=$scope.attributetable[datapodattr].selectDomain.uuid;
+				refDomain.type="domain";
+				selectDomain.ref=refDomain;
+				attributes.domain=selectDomain;
+
+			}else{
+				attributes.domain=null;
 			}
 			attributesarray[datapodattr] = attributes
 		}

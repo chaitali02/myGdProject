@@ -637,6 +637,8 @@ MetadataModule.controller('MetadataRelationController', function ($state, $rootS
 		relationjson.locked = $scope.relationdata.locked;
 		relationjson.desc = $scope.relationdata.desc;
 		relationjson.published = $scope.relationdata.published;
+		relationjson.publicFlag = $scope.relationdata.publicFlag;
+
 		var tagArray = [];
 		if ($scope.tags != null) {
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {

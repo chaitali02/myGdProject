@@ -118,9 +118,9 @@ public class PostGresRegister {
 						attr.setType(getconvertedDataType(rs.getString("TYPE_NAME")));
 						attr.setDesc(colName);
 						if(pkList.contains(colName)) {
-							attr.setKey("Y");
+							attr.setKey(""+pkList.indexOf(colName));
 						} else {
-							attr.setKey("N");
+							attr.setKey(null);
 						}
 						attr.setLength(Integer.parseInt(rs.getString("COLUMN_SIZE")));
 						attr.setPartition("N");

@@ -1079,7 +1079,7 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
                       iconMenuItems.splice(0,0,{title:'Kill', type : 'killexecution'});
                         iconMenuItems.push({title:'Show Logs', type : 'logs'});
                     }
-                    else if(status && status=='STARTING'){
+                    else if(status && status=='STARTING' &&  isGroupExec){
                       iconMenuItems.splice(0,0,{title:'Kill', type : 'killexecution'});
                     }
                      
@@ -2044,7 +2044,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                else if(status && status=='RUNNING'){
                  iconMenuItems.push({title:'Kill', type : 'killexecution'});
                }
-               else if(status && status=='STARTING'){
+               else if(status && status=='STARTING' && type != 'stage'){
                 iconMenuItems.push({title:'Kill', type : 'killexecution'});
               }
                else if(status && status=='PAUSE'){

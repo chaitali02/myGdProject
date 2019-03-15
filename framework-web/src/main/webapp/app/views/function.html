@@ -162,17 +162,28 @@
 									</select>
 								</div>
 							</div> -->
-
+							<div class="form-group">
+								<label class="control-label col-md-3 col-sm-3 col-xs-12">Category
+									<span class="required" aria-required="true"> * </span>
+								</label>
+								<div class="col-md-2 col-sm-2 col-xs-12">
+									<select title="Type" ng-model="selectCatogory" ng-options="x for x in catogory  | orderBy" class="form-control" ng-disabled="{{mode}}"
+									 required="">
+									</select>
+								</div>
+							</div>
 								<div class="form-group">
-									<label class="control-label col-md-3 col-sm-3 col-xs-12">Category
-										<span class="required" aria-required="true"> * </span>
+									<label class="control-label col-md-3 col-sm-3 col-xs-12">Return Type 
+										<!-- <span class="required" aria-required="true"> * </span> -->
 									</label>
 									<div class="col-md-2 col-sm-2 col-xs-12">
-										<select title="Type" ng-model="selectCatogory" ng-options="x for x in catogory  | orderBy" class="form-control" ng-disabled="{{mode}}"
-										 required="">
+										<select title="Type" ng-model="functiondata.returnType" ng-options="x for x in returnType  | orderBy" class="form-control" ng-disabled="{{mode}}">
 										</select>
 									</div>
 								</div>
+
+								
+								
 
 								<div class="form-group">
 									<label class="control-label col-md-3 col-sm-3 col-xs-12">InputFlag</label>

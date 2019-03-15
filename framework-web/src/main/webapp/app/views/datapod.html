@@ -96,8 +96,8 @@
               ng-disabled="isUploadingDatapod">
               <i class=" fa fa-upload" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
-           
-          
+
+
 
             <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-show="isDependencyShow"
               ng-class="(showGraphDiv ||isEditInprogess ==true || isEditVeiwError ==true) ? 'currentpage':'notcurrentpage'"
@@ -437,129 +437,133 @@
                 </div>
                 <br />
                 <div class="row">
-                    <div class="col-md-12">
-                <div id="hideshow" class="alert alert-danger pull-left" ng-if="isDuplication" style="margin:-30px 0px 10px;width:22%;">
-                  <button class="close" data-close="alert"></button>
-                  <div>Duplicate not allowed. </div>
+                  <div class="col-md-12">
+                    <div id="hideshow" class="alert alert-danger pull-left" ng-if="isDuplication" style="margin:-30px 0px 10px;width:22%;">
+                      <button class="close" data-close="alert"></button>
+                      <div>Duplicate not allowed. </div>
+                    </div>
+                  </div>
                 </div>
-                </div></div>
                 <div class="row">
                   <div class="col-md-12">
-                <div style="overflow-y: auto;overflow-x: hidden;max-height:400px;">
+                    <div style="overflow-y: auto;overflow-x:auto;max-height:400px;">
+                      <table class=" row-border hover table table-striped table-bordered" style="width:1400px;">
+                        <thead>
+                          <tr>
+                            <th style="text-align: center; Vertical-align: middle;width:5%;">
+                              <input style="width: 16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="selectallattribute"
+                                ng-change="selectAllRow()" />
+                            </th>
+                            <th style="width:7%;text-align:center">ID</th>
+                            <th style="width:5%;" class="text-center">Key</th>
+                            <th style="width:6%;" class="text-center">Partition</th>
+                            <th style="width:5%;" class="text-center">Active</th>
+                            <th class="text-center">Display Name</th>
+                            <th class="text-center">Name</th>
+                            <th class="text-center" style="width:11%;">Type</th>
+                            <th class="text-center" style="width: 7%;">Length</th>
+                            <th class="text-center" style="width:12%;">Unit Type</th>
+                            <th class="text-center">Desc</th>
+                            <th class="text-center" style="width:5%;">PLL</th>
+                            <th class="text-center" style="width:5%;">CDE</th>
+                            <th class="text-center" style="width:10%;">Domain</th>
+                          </tr>
+                        </thead>
+                        <tbody>
 
-                  <!-- <div ui-grid="gridOptionsDatapod" ui-grid-selection ui-grid-resize-columns ui-grid-auto-resize ui-grid-edit ui-grid-row-edit
-                    ui-grid-cellNav class="grid" ng-style="getGridStyle()"></div> -->
-                  <!-- <div class="nodatawatermark_results" ng-show="!gridOptions.data.length">No data available</div> -->
-                  <table class=" row-border hover table  table-striped table-bordered">
-                    <thead>
-                      <tr>
-                        <th style="text-align: center; Vertical-align: middle;width:5%;">
-                          <input style="width: 16px;height:16px;" type="checkbox" ng-disabled="{{mode}}" ng-model="selectallattribute"
-                            ng-change="selectAllRow()" />
-                        </th>
-                        <th style="width:7%;text-align:center">ID</th>
-                        <th style="width:5%;" class="text-center">Key</th>
-                        <th style="width:6%;" class="text-center">Partition</th>
-                        <th style="width:5%;" class="text-center">Active</th>
-                        <th class="text-center">Display Name</th>
-                        <th class="text-center">Name</th>
-                        <th class="text-center" style="width:11%;">Type</th>
-                        <th class="text-center" style="width: 7%;">Length</th>
-                        <th class="text-center" style="width:12%;">Unit Type</th>
-                        <th class="text-center">Desc</th>
-                        <!-- <th class="text-center;" style="width: 7%;">Move</th> -->
-                      </tr>
-                    </thead>
-                    <tbody>
-
-                      <tr ng-repeat="tabledata in attributetable" drag-drop draggable="{{isDragable}}" after-drop="ondrop">
-                        <td style="text-align: center; Vertical-align: middle;width:5%;">
-                          <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                            <input style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected"
-                              ng-disabled="{{mode}}" ng-change="onChangeAttrRow($index,tabledata.selected)" />
-                          </span>
-                        </td>
-                        <td>
-                          <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                            <input type="text" ng-value="$index+1" ng-disabled="true" class="form-control">
-                          </span>
-                        </td>
-                        <td style="text-align: center; Vertical-align: middle;">
-                          <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                            <input type="checkbox" style="width:16px;height:16px;" ng-model="tabledata.key" ng-disabled="{{mode}}"
-                              ng-true-value="'Y'" ng-false-value="'N'">
-                          </span>
-                        </td>
-                        <td style="text-align:center;Vertical-align:middle;">
-                          <span class="form-group" style="margin-left:0px;margin-right:0px;">
-                            <input type="checkbox" style="width:16px;height:16px;" ng-model="tabledata.partition"
-                              ng-disabled="{{mode}}" ng-true-value="'Y'" ng-false-value="'N'">
-                          </span>
-                        </td>
-                        <td style="text-align: center; Vertical-align: middle;">
-                          <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                            <input type="checkbox" style="width: 16px;height:16px;" ng-model="tabledata.active"
-                              ng-disabled="{{mode}}" ng-true-value="'Y'" ng-false-value="'N'">
-                          </span>
-                        </td>
-                        <td>
-                          <span class="form-group" style="margin-left:0px;margin-right: 0px;" ng-class="{ 'has-error' : myform['dispName'+$index].$invalid}">
-                            <input type="text" ng-model="tabledata.dispName" title="{{tabledata.dispName}}" ng-disabled="{{mode}}"
-                              class="form-control" ng-change="onChangeDisplayName($indez)"  name="dispName{{$index}}">
-                          </span>
-                        </td>
-                        <td>
-                          <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                            <input type="text" ng-model="tabledata.name" title="{{tabledata.name}}" ng-disabled="tabledata.isAttributeEnable ||{{mode}}"
-                              class="form-control">
-                          </span>
-                        </td>
-                        <td>
-                          <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                            <select ng-model="tabledata.type" ng-options="x for x in type" ng-disabled="{{mode}}" class="form-control"
-                              required disable-validation-message=""></select>
-                          </span>
-                        </td>
-                        <td>
-                          <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                            <input type="text" ng-model="tabledata.length" title="{{tabledata.length}}" ng-disabled="{{mode}}"
-                              class="form-control">
-                          </span>
-                        </td>
-                        <td>
-                          <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-
-                            <select ng-model="tabledata.attrUnitType" ng-options="x.text as x.caption for x in unitTypes"
-                              ng-disabled="{{mode}}" class="form-control">
-                              <option value="">-Select-</option>
-                            </select>
-                            <!-- <input type="text" ng-model="tabledata.attrUnitType" title="{{tabledata.attrUnitType}}" ng-disabled="{{mode}}" class="form-control"> -->
-                          </span>
-                        </td>
-                        <td>
-                          <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                            <input type="text" ng-model="tabledata.desc" title="{{tabledata.desc}}" ng-disabled="{{mode}}"
-                              class="form-control">
-                          </span>
-                        </td>
-                        <!-- <td>
-                          <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                            <div style="text-align: center;">
-                              <a class="move-column" ng-disabled="($index == 0 || {{mode}}==true) ?true:false" ng-click="onAttrRowUp($index)">
-                                <i class="glyphicon glyphicon-circle-arrow-up" style="font-size:20px"></i>
-                              </a>
-                              <a class="move-column" ng-disabled="($index == attributetable.length-1 || {{mode}}) ? true:false" ng-click="onAttrRowDown($index)">
-                                <i class="glyphicon glyphicon-circle-arrow-down	" style="font-size:20px"></i>
-                              </a>
-                            </div>
-                          </span>
-                        </td> -->
-                      </tr>
-                    </tbody>
-                  </table>
+                          <tr ng-repeat="tabledata in attributetable" drag-drop draggable="{{isDragable}}" after-drop="ondrop">
+                            <td style="text-align: center; Vertical-align: middle;width:5%;">
+                              <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                <input style="width: 16px;height:16px;" type="checkbox" ng-model="tabledata.selected"
+                                  ng-disabled="{{mode}}" ng-change="onChangeAttrRow($index,tabledata.selected)" />
+                              </span>
+                            </td>
+                            <td>
+                              <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                <input type="text" ng-value="$index+1" ng-disabled="true" class="form-control">
+                              </span>
+                            </td>
+                            <td style="text-align: center; Vertical-align: middle;">
+                              <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                <input type="checkbox" style="width:16px;height:16px;" ng-model="tabledata.key"
+                                  ng-disabled="{{mode}}" ng-true-value="'Y'" ng-false-value="'N'">
+                              </span>
+                            </td>
+                            <td style="text-align:center;Vertical-align:middle;">
+                              <span class="form-group" style="margin-left:0px;margin-right:0px;">
+                                <input type="checkbox" style="width:16px;height:16px;" ng-model="tabledata.partition"
+                                  ng-disabled="{{mode}}" ng-true-value="'Y'" ng-false-value="'N'">
+                              </span>
+                            </td>
+                            <td style="text-align: center; Vertical-align: middle;">
+                              <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                <input type="checkbox" style="width: 16px;height:16px;" ng-model="tabledata.active"
+                                  ng-disabled="{{mode}}" ng-true-value="'Y'" ng-false-value="'N'">
+                              </span>
+                            </td>
+                            <td>
+                              <span class="form-group" style="margin-left:0px;margin-right: 0px;" ng-class="{ 'has-error' : myform['dispName'+$index].$invalid}">
+                                <input type="text" ng-model="tabledata.dispName" title="{{tabledata.dispName}}"
+                                  ng-disabled="{{mode}}" class="form-control" ng-change="onChangeDisplayName($indez)"
+                                  name="dispName{{$index}}">
+                              </span>
+                            </td>
+                            <td>
+                              <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                <input type="text" ng-model="tabledata.name" title="{{tabledata.name}}" ng-disabled="tabledata.isAttributeEnable ||{{mode}}"
+                                  class="form-control">
+                              </span>
+                            </td>
+                            <td>
+                              <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                <select ng-model="tabledata.type" ng-options="x for x in type" ng-disabled="{{mode}}"
+                                  class="form-control" required disable-validation-message=""></select>
+                              </span>
+                            </td>
+                            <td>
+                              <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                <input type="text" ng-model="tabledata.length" title="{{tabledata.length}}" ng-disabled="{{mode}}"
+                                  class="form-control">
+                              </span>
+                            </td>
+                            <td>
+                              <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                <select ng-model="tabledata.attrUnitType" ng-options="x.text as x.caption for x in unitTypes"
+                                  ng-disabled="{{mode}}" class="form-control">
+                                  <option value="">-Select-</option>
+                                </select>
+                              </span>
+                            </td>
+                            <td>
+                              <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                <input type="text" ng-model="tabledata.desc" title="{{tabledata.desc}}" ng-disabled="{{mode}}"
+                                  class="form-control">
+                              </span>
+                            </td>
+                            <td style="text-align: center; Vertical-align: middle;">
+                              <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                <input type="checkbox" style="width: 16px;height:16px;" ng-model="tabledata.piiFlag"
+                                  ng-disabled="{{mode}}" ng-true-value="'Y'" ng-false-value="'N'">
+                              </span>
+                            </td>
+                              <td style="text-align: center; Vertical-align: middle;">
+                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                  <input type="checkbox" style="width: 16px;height:16px;" ng-model="tabledata.cdeFlag"
+                                    ng-disabled="{{mode}}" ng-true-value="'Y'" ng-false-value="'N'">
+                                </span>
+                              </td>
+                              <td style="text-align: center; Vertical-align: middle;">
+                                <select ng-model="tabledata.selectDomain" ng-options="x as x.name for x in allDomain track by x.uuid"
+                                  ng-disabled="{{mode}}" class="form-control">
+                                  <option value="">-Select-</option>
+                                </select>
+                              </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
               </form>
             </div>
           </div>
@@ -722,6 +726,7 @@
       </div>
     </div>
   </div>
+
   <div id="histogamModel" class="modal fade bs-modal-lg in" style="display: none;">
     <div class="modal-dialog" style="width:52%">
       <div class="modal-content" style="resize: both;overflow: auto;">
@@ -783,13 +788,6 @@
                   <div class="col-md-12">
                     <div class="row">
                       <div class="col-md-6 col-sm-6">
-                        <!-- <div class="dataTables_length" id="sample_1_length">
-                              <label>Show
-                                <select name="sample_1_length" aria-controls="sample_1" class="form-control input-sm input-xsmall input-inline" ng-model="pagination.pageSize"
-                                  ng-options="r for r in pagination.paginationPageSizes" ng-change="onPerPageChange()">
-                                </select>
-                              </label>
-                            </div> -->
                       </div>
                       <div class="col-md-6 col-sm-6">
                         <div id="datastoredatatable_filter" class="dataTables_filter" style="float:right;">

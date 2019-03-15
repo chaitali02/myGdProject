@@ -1,41 +1,41 @@
 MetadataModule = angular.module('MetadataModule');
 
-MetadataModule.controller('MetadataExpressionController', function ($state, $scope, $stateParams, $cookieStore, $sessionStorage, MetadataExpressionSerivce, privilegeSvc,$rootScope,$filter,$timeout,CommonService) {
+MetadataModule.controller('MetadataExpressionController', function ($state, $scope, $stateParams, $cookieStore, $sessionStorage, MetadataExpressionSerivce, privilegeSvc, $rootScope, $filter, $timeout, CommonService) {
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
 		$scope.isversionEnable = false;
 		$scope.isAdd = false;
-		$scope.isPanelActiveOpen=true;
+		$scope.isPanelActiveOpen = true;
 		var privileges = privilegeSvc.privileges['comment'] || [];
-		$rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
-		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+		$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
 		$scope.$on('privilegesUpdated', function (e, data) {
 			var privileges = privilegeSvc.privileges['comment'] || [];
 			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
-			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
-		});  
+			$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
+		});
 	}
 	else if ($stateParams.mode == 'false') {
 		$scope.isEdit = true;
 		$scope.isversionEnable = true;
 		$scope.isAdd = false;
-		$scope.isPanelActiveOpen=true;
+		$scope.isPanelActiveOpen = true;
 		var privileges = privilegeSvc.privileges['comment'] || [];
 		$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
-		$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+		$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
 		$scope.$on('privilegesUpdated', function (e, data) {
 			var privileges = privilegeSvc.privileges['comment'] || [];
 			$rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
-			$rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
-			
+			$rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
+
 		});
 	}
 	else {
 		$scope.isAdd = true;
 	}
-	$scope.userDetail={}
-	$scope.userDetail.uuid= $rootScope.setUseruuid;
-	$scope.userDetail.name= $rootScope.setUserName;
+	$scope.userDetail = {}
+	$scope.userDetail.uuid = $rootScope.setUseruuid;
+	$scope.userDetail.name = $rootScope.setUserName;
 	$scope.mode = "false"
 	$scope.isDependonDisabled = false;
 	$scope.expressiondata;
@@ -45,7 +45,7 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 	$scope.expression = {};
 	$scope.expression.versions = [];
 	$scope.relation = ["relation", "dataset", "datapod"];
-	$scope.logicalOperator = [" ", "OR", "AND"];
+	$scope.logicalOperator = ["AND","OR"];
 	$scope.operator = ["=", "<", ">", "<=", ">=", "IN", "NOT IN", "BETWEEN"];
 	$scope.lshType = [
 		{ "text": "string", "caption": "string" },
@@ -72,11 +72,11 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 		$scope.isPrivlage = $scope.privileges.indexOf('Edit') == -1;
 	});
 
-	$scope.getLovByType = function() {
+	$scope.getLovByType = function () {
 		CommonService.getLovByType("TAG").then(function (response) { onSuccessGetLovByType(response.data) }, function (response) { onError(response.data) })
 		var onSuccessGetLovByType = function (response) {
 			console.log(response)
-			$scope.lobTag=response[0].value
+			$scope.lobTag = response[0].value
 		}
 	}
 	$scope.loadTag = function (query) {
@@ -84,27 +84,27 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 			return $filter('filter')($scope.lobTag, query);
 		});
 	};
-    $scope.getLovByType();
-    $scope.checkIsInrogess=function(){
-		if($scope.isEditInprogess || $scope.isEditVeiwError){
-		return false;
+	$scope.getLovByType();
+	$scope.checkIsInrogess = function () {
+		if ($scope.isEditInprogess || $scope.isEditVeiwError) {
+			return false;
 		}
 	}
-	
+
 	$scope.showPage = function () {
 		$scope.showForm = true;
 		$scope.showGraphDiv = false
 	}
 
 	$scope.showGraph = function (uuid, version) {
-		if($scope.checkIsInrogess () ==false){
+		if ($scope.checkIsInrogess() == false) {
 			return false;
 		}
 		$scope.showForm = false;
 		$scope.showGraphDiv = true
 	}
-	$scope.showHome=function(uuid, version,mode){
-		if($scope.checkIsInrogess () ==false){
+	$scope.showHome = function (uuid, version, mode) {
+		if ($scope.checkIsInrogess() == false) {
 			return false;
 		}
 		$scope.showPage()
@@ -115,10 +115,10 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 		});
 	}
 	$scope.enableEdit = function (uuid, version) {
-		if($scope.isPrivlage || $scope.expressiondata.locked =="Y"){
+		if ($scope.isPrivlage || $scope.expressiondata.locked == "Y") {
 			return false;
 		}
-		if($scope.checkIsInrogess () ==false){
+		if ($scope.checkIsInrogess() == false) {
 			return false;
 		}
 		$scope.showPage()
@@ -129,17 +129,17 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 		});
 	}
 	$scope.showView = function (uuid, version) {
-		if($scope.checkIsInrogess () ==false){
+		if ($scope.checkIsInrogess() == false) {
 			return false;
 		}
-		if(!$scope.isEdit){
+		if (!$scope.isEdit) {
 			$scope.showPage()
 			$state.go('metaListexpression', {
 				id: uuid,
 				version: version,
 				mode: 'true'
 			});
-	    }
+		}
 	}
 	var notify = {
 		type: 'success',
@@ -164,7 +164,7 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 		}
 
 	});
-	
+
 
 	$scope.convertUppdercase = function (value) {
 		var resultvalue = value.split("_");
@@ -180,8 +180,8 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 		$scope.showactive = "true"
 		$scope.mode = $stateParams.mode
 		$scope.isDependencyShow = true;
-		$scope.isEditInprogess=true;
-		$scope.isEditVeiwError=false;
+		$scope.isEditInprogess = true;
+		$scope.isEditVeiwError = false;
 		MetadataExpressionSerivce.getAllVersionByUuid($stateParams.id, "expression").then(function (response) { onSuccessGetAllVersionByUuid(response.data) });
 		var onSuccessGetAllVersionByUuid = function (response) {
 			for (var i = 0; i < response.length; i++) {
@@ -192,9 +192,9 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 			}
 		}
 		MetadataExpressionSerivce.getOneByUuidAndVersion($stateParams.id, $stateParams.version, 'expression')
-		.then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
+			.then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
-			$scope.isEditInprogess=false;
+			$scope.isEditInprogess = false;
 			var defaultversion = {};
 			var defaultoption = {};
 			$scope.expressiondata = response.expressiondata
@@ -231,19 +231,18 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 				$scope.tags = tags;
 			}
 		};
-		var onError=function(){
-			$scope.isEditInprogess=false;
-			$scope.isEditVeiwError=true;
+		var onError = function () {
+			$scope.isEditInprogess = false;
+			$scope.isEditVeiwError = true;
 		};
 	}
 	else {
 		$scope.showactive = "false"
 		$scope.expressionmetnotmat = {}
-		$scope.expressiondata={};
-		$scope.expressiondata.locked="N";
+		$scope.expressiondata = {};
+		$scope.expressiondata.locked = "N";
 		var metinfo = {}
 		metinfo.ismetlhsSimple = true;
-		//metinfo.metlhsvalu="''"
 		$scope.expressionmetnotmat.metinfo = metinfo;
 		var notmetinfo = {}
 		notmetinfo.isnotmetlhsSimple = true;
@@ -278,8 +277,9 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 			}
 			MetadataExpressionSerivce.getAllAttributeBySource($scope.expressionRelation.defaultoption.uuid, $scope.selectExpression).then(function (response) { onSuccessAttributeBySource(response.data) });
 			var onSuccessAttributeBySource = function (response) {
-
-				$scope.expressionDatapod = response
+				$scope.expressionDatapod = response;
+				$scope.expressionTableArray=null;
+				$scope.addRow();
 
 			}
 		}
@@ -291,7 +291,9 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 		}
 		MetadataExpressionSerivce.getAllAttributeBySource($scope.expressionRelation.defaultoption.uuid, $scope.selectExpression).then(function (response) { onSuccessAttributeBySource(response.data) });
 		var onSuccessAttributeBySource = function (response) {
-			$scope.expressionDatapod = response
+			$scope.expressionDatapod = response;
+			$scope.expressionTableArray=null;
+				$scope.addRow();
 
 		}
 	}
@@ -301,12 +303,12 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 	$scope.selectVersion = function () {
 		$scope.expressionRelation = null;
 		$scope.myform.$dirty = false;
-		$scope.isEditInprogess=true;
-		$scope.isEditVeiwError=false;
+		$scope.isEditInprogess = true;
+		$scope.isEditVeiwError = false;
 		MetadataExpressionSerivce.getOneByUuidAndVersion($scope.expression.defaultVersion.uuid, $scope.expression.defaultVersion.version, 'expression')
-			.then(function (response) { onSuccess(response.data) },function (response) { onError(response.data)});
+			.then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
-			$scope.isEditInprogess=false;
+			$scope.isEditInprogess = false;
 			var defaultversion = {};
 			var defaultoption = {};
 			$scope.expressiondata = response.expressiondata
@@ -343,9 +345,9 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 				$scope.tags = tags;
 			}
 		};
-		var onError=function(){
-			$scope.isEditInprogess=false;
-			$scope.isEditVeiwError=true;
+		var onError = function () {
+			$scope.isEditInprogess = false;
+			$scope.isEditVeiwError = true;
 		};
 
 	}
@@ -361,6 +363,7 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 
 			$scope.expressionTableArray = [];
 		}
+		$scope.myform.$dirty=true;
 		var expessioninfo = {}
 		expessioninfo.islhsDatapod = false;
 		expessioninfo.islhsFormula = false;
@@ -369,11 +372,17 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 		expessioninfo.isrhsFormula = false;
 		expessioninfo.isrhsSimple = true;
 		expessioninfo.operator = $scope.operator[0]
-		expessioninfo.lhstype = $scope.lshType[0]
-		expessioninfo.rhstype = $scope.lshType[0]
-		expessioninfo.rhsvalue = "''";
-		expessioninfo.lhsvalue = "''";
-		expessioninfo.logicalOperator = $scope.logicalOperator[0];
+		expessioninfo.lhstype = $scope.lshType[1]
+		expessioninfo.rhstype = $scope.lshType[1]
+		expessioninfo.rhsvalue;
+		expessioninfo.lhsvalue;
+		expessioninfo.isrhsSimple = false;
+		expessioninfo.isrhsDatapod = true;
+		expessioninfoisrhsFormula = false;
+		expessioninfo.islhsSimple = false;
+		expessioninfo.islhsDatapod = true;
+		expessioninfoislhsFormula = false;
+		expessioninfo.logicalOperator = $scope.expressionTableArray.length==0?"":$scope.logicalOperator[0];
 		$scope.expressionTableArray.splice($scope.expressionTableArray.length, 0, expessioninfo);
 
 	}
@@ -452,7 +461,7 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 		//alert(type)
 		if (type == "string") {
 			$scope.expressionmetnotmat.metinfo.ismetlhsSimple = true;
-			$scope.expressionmetnotmat.metinfo.metlhsvalue = "''"
+			$scope.expressionmetnotmat.metinfo.metlhsvalue;
 			$scope.expressionmetnotmat.metinfo.ismetFormula = false;
 		}
 		else if (type == "formula") {
@@ -472,7 +481,7 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 		if (type == "string") {
 			$scope.expressionmetnotmat.notmetinfo.isnotmetlhsSimple = true;
 			$scope.expressionmetnotmat.notmetinfo.isnotmetFormula = false;
-			$scope.expressionmetnotmat.notmetinfo.notmetlhsvalue = "''"
+			$scope.expressionmetnotmat.notmetinfo.notmetlhsvalue;
 		}
 		else if (type == "formula") {
 			$scope.expressionmetnotmat.notmetinfo.isnotmetlhsSimple = false;
@@ -488,7 +497,7 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 	}
 
 	$scope.submitexpression = function () {
-		var upd_tag="N"
+		var upd_tag = "N"
 		$scope.isshowmodel = true;
 		$scope.dataLoading = true;
 		$scope.iSSubmitEnable = false;
@@ -509,8 +518,8 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 				tagArray[counttag] = $scope.tags[counttag].text;
 			}
 			var result = (tagArray.length === _.intersection(tagArray, $scope.lobTag).length);
-			if(result ==false){
-				upd_tag="Y"	
+			if (result == false) {
+				upd_tag = "Y"
 			}
 		}
 		expressionjson.tags = tagArray;
@@ -623,7 +632,7 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 		}
 		expressionjson.expressionInfo = expressioninfoArray
 		console.log(JSON.stringify(expressionjson))
-		MetadataExpressionSerivce.submit(expressionjson, 'expression',upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
+		MetadataExpressionSerivce.submit(expressionjson, 'expression', upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
 		var onSuccess = function (response) {
 			var dependon = {}
 			dependon.type = "expression";
@@ -632,7 +641,7 @@ MetadataModule.controller('MetadataExpressionController', function ($state, $sco
 			$scope.dataLoading = false;
 			$scope.iSSubmitEnable = false;
 			$scope.changemodelvalue();
-		
+
 			notify.type = 'success',
 				notify.title = 'Success',
 				notify.content = 'Expression Saved Successfully'

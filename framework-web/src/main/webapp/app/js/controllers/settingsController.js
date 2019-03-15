@@ -5,7 +5,7 @@ var notify = {
   timeout: 3000 //time in ms
 };
 
-AdminModule.controller('settingsController', function (cacheService,$scope,$stateParams,$window, SettingsService,dagMetaDataService,CommonService,FileSaver,Blob,$filter,$state,privilegeSvc) {
+AdminModule.controller('settingsController', function ($rootScope,$scope,$stateParams, SettingsService,dagMetaDataService,CommonService,FileSaver,Blob,$filter,$state,privilegeSvc) {
 
 
   $scope.activeForm = 0;
@@ -318,200 +318,86 @@ AdminModule.controller('settingsController', function (cacheService,$scope,$stat
 
 
 //***************************************Start Application Engin****************************************
-$scope.isUpload=-1;
-$scope.selectType= dagMetaDataService.elementDefs['appconfig'].metaType;
-$scope.caption= dagMetaDataService.elementDefs['appconfig'].caption;
-$scope.detailState = dagMetaDataService.elementDefs[$scope.selectType.toLowerCase()].detailState;
-$scope.gridOptions = dagMetaDataService.gridOptions;
-$scope.privileges = [];
-$scope.privileges = privilegeSvc.privileges[$scope.selectType.toLowerCase()] || [];
- 
-$scope.$on('privilegesUpdated', function (e, data) {
-  $scope.privileges = privilegeSvc.privileges[$scope.selectType.toLowerCase()] || [];  
-});
-
-$scope.filteredRows = [];
-$scope.gridOptions.onRegisterApi = function (gridApi) {
-  $scope.gridApi = gridApi;
-  $scope.filteredRows = $scope.gridApi.core.getVisibleRows($scope.gridApi.grid);
-};
-$scope.getGridStyle = function () {
-  var style = {
-    'margin-top': '10px',
-    'margin-bottom': '10px',
+$scope.selectedCheckBox={};
+$scope.selectedCheckBox.selectedAllRowAppConfig=false;
+$scope.type = [
+  {"name":"string","caption":"string"},
+  {"name":"double","caption":"double"},
+   {"name":"date","caption":"date"}, 
+  {"name":"integer","caption":"integer"}]
+$scope.addRowAppConfig = function () {
+  if ($scope.configTable == null) {
+    $scope.configTable = [];
   }
-  if ($scope.filteredRows && $scope.filteredRows.length > 0) {
-    style['height'] = (($scope.filteredRows.length < 10 ? $scope.filteredRows.length * 40 : 400) + 40) + 'px';
-  }
-  else {
-    style['height'] = "100px";
-  }
-  return style;
+  var paramjson = {}
+  paramjson.configId = $scope.configTable.length;
+  $scope.configTable.splice($scope.configTable.length, 0, paramjson);
 }
 
-$scope.setActivity = function (uuid, version, type, action) {
-  CommonService.setActivity(uuid, version, type, action).then(function (response) { onSuccessSetActivity(response.data) });
-  var onSuccessSetActivity = function (response) {
+$scope.selectAllRowAppConfig = function () {
+  angular.forEach($scope.configTable, function (stage) {
+    stage.selected = $scope.selectedCheckBox.selectedAllRowAppConfig;
+  });
+}
+
+$scope.getAppConfigByApp=function(){
+  SettingsService.getAppConfigByApp().then(function (response) { onSuccessGetAppConfigByApp(response.data) });
+  var onSuccessGetAppConfigByApp = function (response) {
+    $scope.configTable = response;
   }
 }
-$scope.updateStats = function () {
-  CommonService.getMetaStats($scope.selectType).then(function (response) {
-    if (response.data && response.data.length && response.data.length > 0) {
-      $rootScope.metaStats[$scope.select] = response.data[0];
+$scope.getAppConfigByApp();
+$scope.removeRowAppConfig = function () {
+  var newDataList = [];
+  angular.forEach($scope.configTable, function (selected) {
+    if (!selected.selected) {
+      newDataList.push(selected);
     }
   });
-}
-$scope.refreshData = function (searchtext) {
-  $scope.gridOptions.data = $filter('filter')($scope.originalData, searchtext, undefined);
-};
-$scope.addMode = function () {
-  cacheService.searchCriteria = {};
-  $state.go($scope.detailState);
+  $scope.configTable = newDataList;
+  $scope.selectedCheckBox.selectedAllRowAppConfig=false;
 }
 
-$scope.action = function (data, mode, privilege) {
-  cacheService.searchCriteria = {};
-  $scope.setActivity(data.uuid, data.version, $scope.selectType, mode);
-  if($scope.detailState)
-    $state.go($scope.detailState, {
-      id: data.uuid,
-      version: data.version,
-      mode: mode == 'view' ? true : false
-    });
-}
-
-$scope.getDetail = function (data) {
-  $scope.actionType='export'
-  $scope.modelMsg='Save File ?'
-  $scope.setActivity(data.uuid, data.version, $scope.selectType, "export");
-  var uuid = data.uuid;
-  $scope.selectTypeUuid =uuid
-  $('#ConfModal').modal({
-    backdrop: 'static',
-    keyboard: false
-  });
-}
-$scope.okSubmit=function(actionType){
-  if(actionType == 'export'){
-    $scope.export();
-  }
-  else if(actionType == 'delete'){
-    $scope.okDelete();
-  }
-  else if(actionType=='publish'){
-    $scope.okpublished();
-  }
-  else if(actionType == 'clone'){
-    $scope.okClone();
-  }
-}
-
-$scope.export = function () {
-  $('#ConfModal').modal('hide');
-  CommonService.getLatestByUuid($scope.selectTypeUuid, $scope.selectType).then(function (response) {onSuccessGetUuid(response.data)});
-  var onSuccessGetUuid = function (response) {
-    var jsonobj = angular.toJson(response, true);
-    var data = new Blob([jsonobj], {
-      type: 'application/json;charset=utf-8'
-    });
-    FileSaver.saveAs(data, response.name + '.json');
-    $scope.message = $scope.caption + " Downloaded Successfully";
-    notify.type = 'success',
-    notify.title = 'Success',
-    notify.content = $scope.message
-    $scope.$emit('notify', notify);
-  }
-}
-
-$scope.delete = function (data, restore) {
-  var action = restore == true ? "restore" : "delete";
-  $scope.actionType='delete'
-  $scope.setActivity(data.uuid, data.version, $scope.selectType, action);
-  var uuid = data.id;
-  $scope.selectuuid = uuid;
-  $scope.modelMsg = restore ? 'Restore ? ' : 'Delete ?';
-  $('#ConfModal').modal({
-    backdrop: 'static',
-    keyboard: false
-  });
-  $scope.onSuccessDelete = function (response) { 
-    data.active = restore ? 'Y' : 'N';
-    $('#ConfModal').modal('hide');
-    $scope.message = $scope.caption + (restore ? " Restored" : " Deleted") + " Successfully";
-  }
-  $scope.okDelete = function () {
-    CommonService[restore ? 'restore' : 'delete']($scope.selectuuid, $scope.selectType).then(function (response) {
-      $scope.onSuccessDelete(response.data);
-      notify.type = 'success',
-      notify.title = 'Success',
-      notify.content = $scope.message
-      $scope.$emit('notify', notify);
-    });
-  }
-}
-
-$scope.publish = function (data, unpublish) {
-  var action = unpublish == true ? "unpublish" : "publish";
-  $scope.actionType='publish'
-  $scope.setActivity(data.uuid, data.version, $scope.selectType, action);
-  var uuid = data.id;
-  $scope.selectuuid = uuid;
-  $scope.modelMsg = unpublish ? 'Unpublish ? ' : 'Publish ?';
-  $('#ConfModal').modal({
-    backdrop: 'static',
-    keyboard: false
-  });
-  $scope.onSuccessPublish = function (response) {
-    data.published = unpublish ? 'N' : 'Y';
-    $scope.publishmessage = $scope.caption + (unpublish ? " Unpublished" : " Published") + " Successfully";
+$scope.submitAppConfig=function(){
+  $scope.dataLoading=true;
+  CommonService.getLatestByUuid($rootScope.appUuid,"application").then(function (response) { onSuccessGetLatestByUuid(response.data) });
+  var onSuccessGetLatestByUuid = function (response) {
+      $scope.applicationData = response;
+      var appconfig={}
+      appconfig.name=response.name;
+      appconfig.active=response.active;
+      appconfig.publicFlag=response.publicFlag;
+      var dependsOn={};
+      var ref={};
+      ref.uuid=$rootScope.appUuid;
+      ref.type="application";
+      dependsOn.ref=ref;
+      appconfig.dependsOn=dependsOn;
+      appconfig.tags=response.tags;
+      var configInfoArray = [];
+		  if ($scope.configTable &&$scope.configTable.length > 0) {
+        for (var i = 0; i < $scope.configTable.length; i++) {
+          var paraminfo = {};
+          paraminfo.configId = $scope.configTable[i].configId;
+          paraminfo.configName = $scope.configTable[i].configName;
+          paraminfo.configType = $scope.configTable[i].configType;
+          paraminfo.configVal = $scope.configTable[i].configVal;
+          configInfoArray[i] = paraminfo;
+        }
+		  }
+		  appconfig.configInfo = configInfoArray;
+      CommonService.submit(appconfig,"appconfig").then(function (response) { onSuccessSubmit(response.data) });
+      var onSuccessSubmit = function (response) {
+        $scope.dataLoading=false
+        notify.type = 'success',
+        notify.title = 'Success',
+        notify.content = 'App Config Saved Successfully'
+        $scope.$emit('notify', notify);
+     }
   }
 
-$scope.okpublished = function () {
-  $('#ConfModal').modal('hide');
-  CommonService[unpublish ? 'unpublish' : 'publish']($scope.selectuuid, $scope.selectType).then(function (response) {
-  $scope.onSuccessPublish(response.data);
-    notify.type = 'success',
-    notify.title = 'Success',
-    notify.content = $scope.publishmessage;
-    $scope.$emit('notify', notify);
-  });
-}
-}
-$scope.createCopy = function (data) {
-  $scope.setActivity(data.uuid, data.version, $scope.selectType, "clone");
-  $scope.actionType='clone'
-  var uuid = data.uuid;
-  var version = data.version;
-  $scope.clone = {};
-  $scope.clone.uuid = uuid;
-  $scope.clone.version = version;
-  $scope.modelMsg = 'Clone ?';
-  $('#ConfModal').modal({
-    backdrop: 'static',
-    keyboard: false
-  });
 }
 
-$scope.okClone = function () {
-  $('#ConfModal').modal('hide');
-  CommonService.getSaveAS($scope.clone.uuid, $scope.clone.version, $scope.selectType).then(function (response) {
-    onSuccessSaveAs(response.data);
-    $scope.updateStats();
-  });
-  var onSuccessSaveAs = function (response) {
-    $scope.originalData.splice(0, 0, response);
-    $scope.message = $scope.caption + " Cloned Successfully"
-    notify.type = 'success',
-    notify.title = 'Success',
-    notify.content = $scope.message
-    $scope.$emit('notify', notify);
-  }
-}
-$scope.gridOptions.data = [];
-$scope.selectData=function(data){
-  //$scope.gridOptions.data = data.data;
-  //$scope.originalData=$scope.gridOptions.data 
-}
 
 //***************************************End Application Engin****************************************
 
