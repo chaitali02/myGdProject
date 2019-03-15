@@ -292,8 +292,8 @@ public abstract class RuleTemplate implements IExecutable, IParsable {
 			if (Helper.isStatusPresent(new Status(Status.Stage.READY, new Date()), baseRuleExec.getStatusList())) {
 				commonServiceImpl.setMetaStatus(baseRuleExec, ruleExecType, Status.Stage.READY);
 			} else {
-				commonServiceImpl.setMetaStatus(baseRuleExec, ruleExecType, Status.Stage.PENDING);
-				operatorLeastSigStatus = new Status(Status.Stage.PENDING, new Date());
+				commonServiceImpl.setMetaStatus(baseRuleExec, ruleExecType, Status.Stage.STARTING);
+				operatorLeastSigStatus = new Status(Status.Stage.STARTING, new Date());
 			}
 		}
 		logger.info("Status of baseruleexec " + baseRuleExecUUID + " = " + operatorLeastSigStatus.getStage().toString());
