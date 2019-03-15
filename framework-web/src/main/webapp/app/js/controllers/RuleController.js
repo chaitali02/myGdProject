@@ -2665,7 +2665,7 @@ RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaData
         attribute.width = key.split('').length + 2 + "%" // Math.floor(Math.random() * (120 - 50 + 1)) + 150
         $scope.gridOptions.columnDefs.push(attribute)
       });
-      debugger
+    
       
       $scope.gridOptions.data = response.data;
       $scope.originalData = response.data;
