@@ -800,6 +800,8 @@ public class DQOperator implements IParsable {
 					.append(generateSummarySql1Case(BLANK_SPACE_CHECK_PASS, SINGLE_QUOTED_N, BLANK_SPACE_CHECK_F)).append(COMMA)
 					.append(generateSummarySql1Case(EXPRESSION_CHECK_PASS, SINGLE_QUOTED_Y, EXPRESSION_CHECK_P)).append(COMMA)
 					.append(generateSummarySql1Case(EXPRESSION_CHECK_PASS, SINGLE_QUOTED_N, EXPRESSION_CHECK_F)).append(COMMA)
+					.append(generateSummarySql1Case(CASE_CHECK_PASS, SINGLE_QUOTED_Y, CASE_CHECK_P)).append(COMMA)
+					.append(generateSummarySql1Case(CASE_CHECK_PASS, SINGLE_QUOTED_N, CASE_CHECK_F)).append(COMMA)
 					.append(generateSummarySql1Case(ALL_CHECK_PASS, SINGLE_QUOTED_Y, ALL_CHECK_P)).append(COMMA)
 					.append(generateSummarySql1Case(ALL_CHECK_PASS, SINGLE_QUOTED_N, ALL_CHECK_F)).append(COMMA)
 					.append(VERSION).append(FROM).append(BRACKET_OPEN)
@@ -1013,7 +1015,7 @@ public class DQOperator implements IParsable {
 		} // End expressionCheck If		
 		
 		if(dq.getCaseCheck() != null) {
-			check = dq.getAttribute().getAttrName().concat(BLANK).concat(" REGEXP [A-Za-z] ");
+			check = dq.getAttribute().getAttrName().concat(EQUAL_TO).concat(dq.getCaseCheck().toString()).concat(BRACKET_OPEN).concat(dq.getAttribute().getAttrName()).concat(BRACKET_CLOSE);
 			colName = CASE_CHECK_PASS;
 			dqBuilder.append(caseWrapper(check, colName)).append(COMMA);
 		} else {
