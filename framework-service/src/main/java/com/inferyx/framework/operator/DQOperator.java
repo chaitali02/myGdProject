@@ -62,6 +62,7 @@ public class DQOperator implements IParsable {
 	private String ONLY_END = " END ";
 	private String THEN = " THEN 'Y' ELSE 'N' END AS ";
 	private String THEN_N_Y = " THEN 'N' ELSE 'Y' END AS ";
+	private String THEN_Y_N = " THEN 'Y' ELSE 'N' END AS ";
 	private String THEN_1_0 = " THEN 1 ELSE 0 END AS ";
 	private String THEN_0_1 = " THEN 0 ELSE 1 END AS ";
 	private String SELECT = " SELECT ";
@@ -116,6 +117,7 @@ public class DQOperator implements IParsable {
 	private String BLANK_SPACE_CHECK_F = "blankSpaceCheck_f";
 	private String EXPRESSION_CHECK_F = "expressionCheck_f";
 	private String ALL_CHECK_F = "allCheck_f";
+	private String CASE_CHECK = "caseCheck";
 
 	private String TOTAL_ROW_COUNT = "total_row_count";
 	private String TOTAL_PASS_COUNT = "total_pass_count";
@@ -585,13 +587,13 @@ public class DQOperator implements IParsable {
 		}
 		select = select.concat(generateFrom(dq, dq.getDependsOn().getRef(), attributeName, datapodList, dagExec, usedRefKeySet, otherParams, runMode))
 				.concat(WHERE_1_1).concat(generateFilter(dq, usedRefKeySet, runMode));
-		select = generateallCheckFlag(select);
+		select = generateallCheckFlag(select, dq);
 		logger.info("Detail SQL for dataQual : " + dq.getUuid() + " : " + StringUtils.isBlank(select));
 		return select;
 		
 	}
 	
-	public String generateallCheckFlag (String detailSql) {
+	public String generateallCheckFlag (String detailSql, DataQual dataQual) {
 		StringBuilder sql = new StringBuilder(SELECT)
 											.append(RULEUUID).append(COMMA)
 											.append(RULEVERSION).append(COMMA)
@@ -629,6 +631,8 @@ public class DQOperator implements IParsable {
 											.append(DOMAIN_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
 											.append(BLANK_SPACE_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(OR)
 											.append(EXPRESSION_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTED_N).append(BRACKET_CLOSE) 
+											.append(CASE_WHEN).append(BLANK).append(dataQual.getAttribute().getAttrName()).append(BLANK)
+											.append("REGEXP [A-Za-z]").append(THEN_Y_N).append(CASE_CHECK)
 											.append(THEN_N_Y).append(ALL_CHECK_PASS).append(COMMA)
 											.append(VERSION).append(FROM).append(BRACKET_OPEN)
 											.append(detailSql).append(BRACKET_CLOSE).append(DQ_RESULT_READY_ALIAS);
@@ -977,13 +981,13 @@ public class DQOperator implements IParsable {
 		} // End domainCheck If
 		if (StringUtils.isNotBlank(dq.getBlankSpaceCheck())) {
 			
-			if (dq.getBlankSpaceCheck().equals(BlankSpaceCheckOptions.LEADING)) {
+			if (dq.getBlankSpaceCheck().equals(BlankSpaceCheckOptions.LEADING.toString())) {
 				check = tableAttr.concat(" LIKE ' %' ");
-			} else if (dq.getBlankSpaceCheck().equals(BlankSpaceCheckOptions.TRAILING)) {
+			} else if (dq.getBlankSpaceCheck().equals(BlankSpaceCheckOptions.TRAILING.toString())) {
 				check = tableAttr.concat(" LIKE '% ' ");
-			} else if (dq.getBlankSpaceCheck().equals(BlankSpaceCheckOptions.IN_BETWEEN)) {
+			} else if (dq.getBlankSpaceCheck().equals(BlankSpaceCheckOptions.IN_BETWEEN.toString())) {
 				check = tableAttr.concat(" LIKE '% ' ");
-			} else if (dq.getBlankSpaceCheck().equals(BlankSpaceCheckOptions.ALL)) {
+			} else if (dq.getBlankSpaceCheck().equals(BlankSpaceCheckOptions.ALL.toString())) {
 				check = tableAttr.concat(" LIKE '% ' AND ").concat(tableAttr).concat(" LIKE ' %' ");
 			}
 			colName = BLANK_SPACE_CHECK_PASS;
