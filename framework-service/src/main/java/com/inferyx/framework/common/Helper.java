@@ -17,6 +17,7 @@ import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -1168,6 +1169,85 @@ public class Helper {
 		 case "GlobalPooling":  return new GlobalPoolingLayer.Builder();
 		 case "FrozenLayer":  return new FrozenLayer.Builder();
 		 default : return new DenseLayer.Builder();
+		}
+	}
+
+	public static String mapMySQLDTypeByDatapodDtype(String dataType) {
+		switch(dataType.toLowerCase()) {
+			case "varchar" : return "STRING";
+			case "char" : return "VARCHAR";
+			case "text" : return "STRING";
+			case "float" : return "FLOAT";
+			case "bigint" : return "BIGINT";
+			case "double" : return "DOUBLE";
+			case "timestamp" : return "TIMESTAMP";
+			case "int" : return "INTEGER";
+			case "decimal" : return "DECIMAL";
+			default : return "STRING";
+		}
+	}
+	
+	public static List<String> getMappedDataTypes(String dataType) {
+		List<String> mappedDTypes = new ArrayList<>();
+		switch (dataType.toUpperCase()) {
+		case "STRING":
+			mappedDTypes.add("varchar");
+			mappedDTypes.add("char");
+			mappedDTypes.add("text");
+			return mappedDTypes;
+		case "VARCHAR":
+			mappedDTypes.add("varchar");
+			mappedDTypes.add("char");
+			mappedDTypes.add("text");
+			return mappedDTypes;
+		case "CHAR":
+			mappedDTypes.add("varchar");
+			mappedDTypes.add("char");
+			mappedDTypes.add("text");
+		case "TEXT":
+			mappedDTypes.add("varchar");
+			mappedDTypes.add("char");
+			mappedDTypes.add("text");
+			return mappedDTypes;
+		case "FLOAT":
+			mappedDTypes.add("float");
+			mappedDTypes.add("double");
+			return mappedDTypes;
+		case "DOUBLE":
+			mappedDTypes.add("double");
+			mappedDTypes.add("float");
+			return mappedDTypes;
+		case "BIGINT":
+			mappedDTypes.add("bigint");
+			return mappedDTypes;
+		case "INTEGER":
+			mappedDTypes.add("integer");
+			mappedDTypes.add("int");
+			return mappedDTypes;
+		case "INT":
+			mappedDTypes.add("integer");
+			mappedDTypes.add("int");
+			return mappedDTypes;
+		case "LONG":
+			mappedDTypes.add("long");
+			mappedDTypes.add("int");
+			mappedDTypes.add("integer");
+//			mappedDTypes.add("bigint");
+//			mappedDTypes.add("tinyint");
+//			mappedDTypes.add("smallint");
+			return mappedDTypes;
+		case "TIMESTAMP":
+			mappedDTypes.add("timestamp");
+			return mappedDTypes;
+		case "DECIMAL":
+			mappedDTypes.add("decimal");
+			return mappedDTypes;
+		case "VECTOR":
+			mappedDTypes.add("vector");
+			mappedDTypes.add("array");
+			return mappedDTypes;
+		default:
+			return mappedDTypes;
 		}
 	}
 }
