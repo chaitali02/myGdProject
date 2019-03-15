@@ -26,8 +26,8 @@
             }
         }
     ],
-    "privilegeInfo" : [ 	
-       	 {
+   "privilegeInfo": [
+    {
       "ref": {
         "type": "privilege",
         "uuid": "b421b020-0dfe-11e7-93ae-92361f002671",
@@ -7682,7 +7682,7 @@
         "type": "privilege",
         "uuid": "a6c00106-2d4e-45e9-891d-b63ec6dbb232",
         "version": null,
-        "name": "RuleView"
+        "name": "Rule2View"
       },
       "value": null
     },
@@ -7721,8 +7721,105 @@
         "name": "Rule2Restore"
       },
       "value": null
+    },
+    {
+      "ref": {
+        "type": "privilege",
+        "uuid": "10f61ab4-4716-11e9-b210-d663bd873d93",
+        "version": null,
+        "name": "DomainView"
+      },
+      "value": null
+    },
+    {
+      "ref": {
+        "type": "privilege",
+        "uuid": "10f61f82-4716-11e9-b210-d663bd873d93",
+        "version": null,
+        "name": "DomainUnlock"
+      },
+      "value": null
+    },
+    {
+      "ref": {
+        "type": "privilege",
+        "uuid": "10f625cc-4716-11e9-b210-d663bd873d93",
+        "version": null,
+        "name": "DomainLock"
+      },
+      "value": null
+    },
+    {
+      "ref": {
+        "type": "privilege",
+        "uuid": "10f62d9c-4716-11e9-b210-d663bd873d93",
+        "version": null,
+        "name": "DomainEdit"
+      },
+      "value": null
+    },
+    {
+      "ref": {
+        "type": "privilege",
+        "uuid": "10f633be-4716-11e9-b210-d663bd873d93",
+        "version": null,
+        "name": "DomainAdd"
+      },
+      "value": null
+    },
+    {
+      "ref": {
+        "type": "privilege",
+        "uuid": "10f6290a-4716-11e9-b210-d663bd873d93",
+        "version": null,
+        "name": "DomainExport"
+      },
+      "value": null
+    },
+    {
+      "ref": {
+        "type": "privilege",
+        "uuid": "10f62fea-4716-11e9-b210-d663bd873d93",
+        "version": null,
+        "name": "DomainDelete"
+      },
+      "value": null
+    },
+    {
+      "ref": {
+        "type": "privilege",
+        "uuid": "10f63224-4716-11e9-b210-d663bd873d93",
+        "version": null,
+        "name": "DomainClone"
+      },
+      "value": null
+    },
+    {
+      "ref": {
+        "type": "privilege",
+        "uuid": "10f62158-4716-11e9-b210-d663bd873d93",
+        "version": null,
+        "name": "DomainRestore"
+      },
+      "value": null
+    },
+    {
+      "ref": {
+        "type": "privilege",
+        "uuid": "10f62432-4716-11e9-b210-d663bd873d93",
+        "version": null,
+        "name": "DomainPublish"
+      },
+      "value": null
+    },
+    {
+      "ref": {
+        "type": "privilege",
+        "uuid": "10f61d98-4716-11e9-b210-d663bd873d93",
+        "version": null,
+        "name": "DomainUnpublish"
+      },
+      "value": null
     }
-        
-		
-    ]
+  ]
 }
