@@ -760,6 +760,23 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       childMenu:["train","predict","simulate"],
       allowInChildMenu : false,
     },
+
+    'domain':{
+      name : 'domain',
+      caption : 'Domain',
+      color : '#1DE9B6',
+      icon : '',
+      parentIconCaption:'',
+      childIconCaption:'',
+      execType:'',
+      metaType:'domain',
+      iconPath : '',
+      allowInMenu : false,
+      state: 'createdomain',
+      detailState: 'createdomain',
+      childMenu:[],
+      allowInChildMenu : false,
+    },
    
     'loadexec':{
       name : 'load',

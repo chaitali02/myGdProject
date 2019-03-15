@@ -19,7 +19,7 @@
 			}
 		}
 	],
-	"desc": "Meta for domain",
+    "desc": "Meta for domain",
     "menu":"admin"
 }
 

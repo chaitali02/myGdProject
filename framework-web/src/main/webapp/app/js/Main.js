@@ -2201,6 +2201,25 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
             }
         })
 
+        .state('createdomain', {
+            url: "/Admin/Domain?id&version&mode&returnBack",
+            templateUrl: "views/domain.html",
+            data: { pageTitle: 'Admin' },
+            controller: "",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'InferyxApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before a LINK element with this ID. Dynamic CSS files must be loaded between core and theme css files
+                        files: [
+                            'js/controllers/DomainController.js',
+                            'js/services/DomainService.js'
+                        ]
+                    });
+                }]
+            }
+        })
+
 
 
         .state('metaListgroup', {
