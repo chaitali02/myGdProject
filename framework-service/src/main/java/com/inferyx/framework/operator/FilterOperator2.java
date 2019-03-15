@@ -192,6 +192,7 @@ public class FilterOperator2 {
 			return sql;
 		}
 		attributeList = new ArrayList<>(new HashSet<>(attributeList));	// Deduplicate, else attr shall be replaced multiple times
+		sql = sql.replaceAll("'", "''");
 		sql = XPLAIN_CONCAT + XPLAIN_START_BRACKET + sql;
 		for (String attr : attributeList) {
 			sql = sql.replaceAll(attr, attr + XPLAIN_START_BRACKET + XPLAIN_COMMA + attr + XPLAIN_COMMA + XPLAIN_END_BRACKET);
