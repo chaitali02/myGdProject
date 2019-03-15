@@ -119,6 +119,7 @@ import com.inferyx.framework.domain.User;
 import com.inferyx.framework.domain.VizExec;
 import com.inferyx.framework.domain.Vizpod;
 import com.inferyx.framework.enums.Compare;
+import com.inferyx.framework.enums.RegistryType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.factory.ConnectionFactory;
@@ -3672,8 +3673,8 @@ public class RegisterService {
 							registry.setPath(tableWithPath.getValue());
 							registry.setRegisteredOn(datapod.getCreatedOn());
 							registry.setDesc(datapod.getDesc());
-							registry.setRegisteredOn(datapod.getCreatedOn());
-							registry.setStatus("Registered");
+							registry.setRegisteredBy(datapod.getCreatedBy().getRef().getName());
+							registry.setStatus(RegistryType.REGISTERED.toString());
 							registry.setCompareStatus(compareStatus);
 							registryList.add(registry);
 							break;
@@ -3684,8 +3685,7 @@ public class RegisterService {
 							registry.setPath(tableWithPath.getValue());
 							registry.setRegisteredOn(null);
 							registry.setDesc(null);
-							registry.setRegisteredOn(null);
-							registry.setStatus("UnRegistered");
+							registry.setStatus(RegistryType.NOT_REGISTERED.toString());
 							registry.setCompareStatus(Compare.NEW.toString());
 							registryList.add(registry);
 						}
@@ -3698,8 +3698,7 @@ public class RegisterService {
 				registry.setPath(tableWithPath.getValue());
 				registry.setRegisteredOn(null);
 				registry.setDesc(null);
-				registry.setRegisteredOn(null);
-				registry.setStatus("UnRegistered");
+				registry.setStatus(RegistryType.NOT_REGISTERED.toString());
 				registry.setCompareStatus(Compare.NEW.toString());
 				registryList.add(registry);
 			}

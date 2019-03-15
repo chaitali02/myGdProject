@@ -41,6 +41,7 @@ import com.inferyx.framework.domain.Registry;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.PersistMode;
+import com.inferyx.framework.enums.RegistryType;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.ImpalaExecutor;
@@ -138,7 +139,7 @@ public class ImpalaRegister extends DataSourceRegister {
 
 					if (registryList.get(i).getName().equals(tableName)) {
 						registryList.get(i).setRegisteredOn(datapod.getCreatedOn());
-						registryList.get(i).setStatus("Registered");
+						registryList.get(i).setStatus(RegistryType.REGISTERED.toString());
 					}
 
 					MetaIdentifierHolder holder = new MetaIdentifierHolder();
