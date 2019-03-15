@@ -455,9 +455,8 @@
                                                                             <select select2 class="form-control"
                                                                                 ng-change="onChangeFromula()"
                                                                                 data-ng-model="tabledata.lhsformula"
-                                                                                ng-options="r as r.name for r in allFormula track by r.uuid"
+                                                                                ng-options="r as r.name for r in allFilterormula track by r.uuid"
                                                                                 ng-disabled="{{mode}}" ng-show="tabledata.islhsFormula"
-                                                                                
                                                                                 required disable-validation-message="">
                                                                             </select>
 
@@ -581,8 +580,8 @@
                                                                             <select select2 class="form-control"
                                                                                 ng-change="selectmetrhsType()"
                                                                                 data-ng-model="tabledata.rhsformula"
-                                                                                ng-options="r as r.name for r in allFormula track by r.uuid"
-                                                                                ng-disabled="{{mode}}">
+                                                                                ng-options="r as r.name for r in allFilterormula track by r.uuid"
+                                                                                ng-disabled="{{mode}}" required disable-validation-message="">
                                                                             </select>
                                                                         </span>
                                                                     </div>
@@ -883,7 +882,7 @@
                                                                                                             <select select2 class="form-control"
                                                                                                                 ng-change="onChangeFromula()"
                                                                                                                 data-ng-model="dataFilterIfo.lhsformula"
-                                                                                                                ng-options="r as r.name for r in allFormula track by r.uuid"
+                                                                                                                ng-options="r as r.name for r in allSourceFormula track by r.uuid"
                                                                                                                 ng-disabled="{{mode}} || data.activeFlag==true?false:true" ng-show="dataFilterIfo.islhsFormula"
                                                                                                                 required disable-validation-message="">
                                                                                                             </select>
@@ -1008,7 +1007,7 @@
                                                                                                             <select select2 class="form-control"
                                                                                                                 ng-change="selectmetrhsType()"
                                                                                                                 data-ng-model="dataFilterIfo.rhsformula"
-                                                                                                                ng-options="r as r.name for r in allFormula track by r.uuid"
+                                                                                                                ng-options="r as r.name for r in allSourceFormula track by r.uuid"
                                                                                                                 ng-disabled="{{mode}} || data.activeFlag==true?false:true">
                                                                                                             </select>
                                                                                                         </span>
