@@ -489,7 +489,9 @@ public class CommonServiceImpl<T> {
 	@Autowired
 	IngestExecServiceImpl ingestExecServiceImpl;
 	@Autowired
-	IngestGroupServiceImpl ingestGroupServiceImpl;
+	IngestServiceImpl ingestServiceImpl;	
+	@Autowired
+	IngestGroupServiceImpl ingestGroupServiceImpl;	
 	@Autowired
 	ITrainResultDao iTrainResultDao;
 	@Autowired
@@ -510,6 +512,23 @@ public class CommonServiceImpl<T> {
 	IRule2ExecDao iRule2ExecDao;
 	@Autowired
 	private IAttributeDomainDao iAttributeDomainDao;	
+	
+	
+	public IngestServiceImpl getIngestServiceImpl() {
+		return ingestServiceImpl;
+	}
+
+	public void setIngestServiceImpl(IngestServiceImpl ingestServiceImpl) {
+		this.ingestServiceImpl = ingestServiceImpl;
+	}
+
+	public IngestGroupServiceImpl getIngestGroupServiceImpl() {
+		return ingestGroupServiceImpl;
+	}
+
+	public void setIngestGroupServiceImpl(IngestGroupServiceImpl ingestGroupServiceImpl) {
+		this.ingestGroupServiceImpl = ingestGroupServiceImpl;
+	}
 	
 	/**
 	 * @Ganesh
