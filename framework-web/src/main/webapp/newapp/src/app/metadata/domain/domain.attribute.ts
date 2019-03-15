@@ -1,14 +1,16 @@
 
 export class Attribute {
 
-	private attributeId : Number;
-    private name : String ;
-    private type : String ;
-    private desc : String ; 
-    private key : String;
-    private partition : String ;
-    private dispName : String ;
-	private active : String = "Y";
+	 attributeId : Number;
+     name : String ;
+     type : String ;
+     desc : String ; 
+     key : any;
+     partition : String ;
+     dispName : String ;
+     active : String = "Y";
+     attrUnitType: any;
+     length: any;
 } 
     
 
