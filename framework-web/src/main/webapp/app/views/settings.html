@@ -222,6 +222,31 @@
 
 
         <uib-tab index="3" heading="Graph Engine" select="go(3)">
+           <div class="modal fade in" id="confExModal" tabindex="-1" role="basic" aria-hidden="true" style="display:none; padding-right: 15px;">
+            <div class="modal-dialog">
+              <div class="modal-content rulemodel">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                  </button>
+                  <h4 class="modal-title">Confirm</h4>
+                </div>
+                <div class="modal-body">Refresh Graph ?
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+                  <button type="button" class="btn green" ng-click="callBulidGraph()">Ok</button>
+                </div>
+              </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+          </div>
+          <div class="row">
+            <div class="col-md-6"></div>
+            <div class="col-md-6" style="padding-right: 0px;">
+              <a ng-click="confirmBulidGraph()" class="btn btn-default btn-sm" style="float:right;color:white;background-color: #337ab7">
+                <i class="fa fa-line-chart"></i> Refresh Graph
+              </a>
+            </div>
+          </div>
           <div class="form-group" style="padding-top: 15px;">
             <div class="row">
               <div class="col-md-12">
@@ -230,9 +255,16 @@
                     <div class="caption">
                       <i class="icon-magnifier"></i>Search Criteria
                     </div>
-                    <div class="actions">
+                    <!-- <div class="actions">
                       <a ng-click="callBulidGraph()" class="btn btn-default btn-sm">
                         <i class="fa fa-line-chart"></i> Refresh Graph</a>
+                    </div> -->
+                    <div class="tools">
+                      <a title="Refresh" data-toggle="tooltip" data-placement="top" ng-click="refresh()"
+                        data-original-title="" title="">
+                        <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
+                      </a>
+                      <a class="collapse" data-original-title="" title="" style="height:14px;"></a>
                     </div>
                   </div>
 

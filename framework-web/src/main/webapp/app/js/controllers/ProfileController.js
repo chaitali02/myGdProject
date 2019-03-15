@@ -118,7 +118,7 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 	}
     $scope.formChange=function(){
 		$scope.myform1.$dirty=true;
-		$scope.myform12.$dirty=true;
+		$scope.myform2.$dirty=true;
 	}
 
 	$scope.countContinue = function () {

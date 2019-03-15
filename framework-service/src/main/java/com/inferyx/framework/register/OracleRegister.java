@@ -178,6 +178,7 @@ public class OracleRegister {
 					dpList.add(datapod);
 				} catch (Exception e) {
 					iDatapodDao.delete(datapod);
+					registryList.get(i).setStatus(RegistryType.FAILED.toString());
 				}
 				
 			}

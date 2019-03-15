@@ -212,8 +212,8 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 	$scope.getFormulaByType = function () {
 		Rule2Service.getFormulaByType($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessFormula(response.data) });
 		var onSuccessFormula = function (response) {
-			$scope.allSourceFormula = response;;
-			$scope.allFilterormula = response;
+			$scope.allSourceFormula = response.data;
+			$scope.allFilterormula = response.data;
 
 		}//End onSuccessGetFormulaByType
 	}
@@ -811,6 +811,7 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 			$scope.filterTableArray[index].isrhsDataset = false;
 			$scope.filterTableArray[index].isrhsParamlist = false;
 			$scope.filterTableArray[index].isrhsFunction = false;
+
 			if (typeof $stateParams.id == "undefined") {
 				$scope.getFormulaByType();
 			}
@@ -1517,7 +1518,6 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 			onSuccessGetOneById(response.data)
 		});
 		var onSuccessGetOneById = function (result) {
-			debugger
 			$scope.ruleExecute(result.data);
 		}
 	}
