@@ -832,7 +832,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 		// ruleExec.setExec(rule2Operator.generateSql(rule2, refKeyMap, otherParams,
 		// usedRefKeySet, ruleExec.getExecParams(), runMode));
 		listSql = rule2Operator.generateDetailSql(rule2,withSql,detailSelectSql,refKeyMap, otherParams, usedRefKeySet,
-				new ExecParams(), runMode,ruleExec);
+				new ExecParams(), runMode, ruleExec, rule2.getFilterInfo());
         String detailsql=listSql.get(0);
 		
 		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(rule2Info.getRule_result_details(), null,
@@ -1114,7 +1114,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 		exec = execFactory.getExecutor(execContext.toString());
 		appUuid = commonServiceImpl.getApp().getUuid();
 		List<String> listSql=rule2Operator.generateDetailSql(rule2, null, null, null,
-				null, null, new ExecParams(), runMode,ruleExec);
+				null, null, new ExecParams(), runMode,ruleExec, null);
 		data = exec.executeAndFetch(listSql.get(0), appUuid);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
 				| NoSuchMethodException | SecurityException | NullPointerException | ParseException | IOException e) {

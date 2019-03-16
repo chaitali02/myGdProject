@@ -23,58 +23,9 @@
                 "type" : "application",
                 "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
             }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
-            }
-        }, 
-       
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
- 				 "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbyog"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
- 				 "uuid": "39937670-837c-4027-aa45-aff8a57b738a"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "4be92a58-3e24-410c-ab09-e1e719c1db81"
-            }
         }
     ],
-	"publicFlag": "N",
+	"publicFlag": "Y",
 	"datasource": {
 		"ref": {
 			"type": "datasource",
@@ -407,10 +358,24 @@
             "active" : "Y",
             "length" : null,
             "attrUnitType" : null
-        }, 
-        {
+        },
+		{
             "attributeId" : 23,
             "displaySeq" : 23,
+            "name" : "case_check_pass",
+            "type" : "string",
+            "desc" : "case_check_pass",
+            "expression" : null,
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "case_check_pass",
+            "active" : "Y",
+            "length" : null,
+            "attrUnitType" : null
+        }, 
+        {
+            "attributeId" : 24,
+            "displaySeq" : 24,
             "name" : "all_check_pass",
             "type" : "string",
             "desc" : "all_check_pass",
@@ -421,9 +386,10 @@
             "active" : "Y",
             "length" : null,
             "attrUnitType" : null
-        },         {
-            "attributeId" : 24,
-            "displaySeq" : 24,
+        },    
+     {
+            "attributeId" : 25,
+            "displaySeq" : 25,
             "name" : "version",
             "type" : "integer",
             "desc" : "version",

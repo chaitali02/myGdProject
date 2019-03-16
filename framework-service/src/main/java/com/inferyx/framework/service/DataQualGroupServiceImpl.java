@@ -283,8 +283,7 @@ public class DataQualGroupServiceImpl extends RuleGroupTemplate {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 				commonServiceImpl.setMetaStatus(dataQualGroupExec, MetaType.dqgroupExec, Status.Stage.FAILED);
-
-			e.printStackTrace();
+				e.printStackTrace();
 		}
 		return null;
 	}

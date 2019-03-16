@@ -1531,7 +1531,7 @@ public class DagServiceImpl {
 									if (helper.isStatusPresent(new Status(Status.Stage.READY, new Date()), baseExec.getStatusList())) {
 										commonServiceImpl.setMetaStatus(baseExec, meta.getType(), Status.Stage.READY);
 									} else {
-										commonServiceImpl.setMetaStatus(baseExec, meta.getType(), Status.Stage.PENDING);
+										commonServiceImpl.setMetaStatus(baseExec, meta.getType(), Status.Stage.STARTING);
 										operatorLeastSigStatus = new Status(Status.Stage.STARTING, new Date());
 									}
 								}

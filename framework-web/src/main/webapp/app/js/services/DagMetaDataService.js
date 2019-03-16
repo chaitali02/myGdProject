@@ -129,31 +129,31 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       jointWidth:"70px"
     },
     'NOT_REGISTERED':{
-      name : 'PENDING',
-      caption:'Pending',
+      name : 'NOT_REGISTERED',
+      caption:'Not Registered',
       color :'#6c757d',//'#659be0',
-      iconPath : 'assets/layouts/layout/img/new_status/PENDING.svg',
+      iconPath : 'assets/layouts/layout/img/new_status/NOT_REGISTERED.svg',
       jointWidth:"70px"
     },
     'Registered':{
-      name : 'COMPLETED',
-      caption:'Completed',
+      name : 'Registered',
+      caption:'Registered',
       color :'#34bfa3',//'#36c6d3',
-      iconPath : 'assets/layouts/layout/img/new_status/COMPLETED.svg',
+      iconPath : 'assets/layouts/layout/img/new_status/Registered.svg',
       jointWidth:"90px"
     },
     'Registering':{
-      name : 'RUNNING',
-      caption:'Running',
+      name : 'Registering',
+      caption:'Registering',
       color :'#ffc107',//'#F1C40F',
-      iconPath : 'assets/layouts/layout/img/new_status/RUNNING.svg',
+      iconPath : 'assets/layouts/layout/img/new_status/Registering.svg',
       jointWidth:"70px"
     },
     'REGISTERED':{
-      name : 'COMPLETED',
-      caption:'Completed',
+      name : 'REGISTERED',
+      caption:'Registered',
       color :'#34bfa3',//'#36c6d3',
-      iconPath : 'assets/layouts/layout/img/new_status/COMPLETED.svg',
+      iconPath : 'assets/layouts/layout/img/new_status/REGISTERED.svg',
       jointWidth:"90px"
     }
     
