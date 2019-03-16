@@ -15,6 +15,8 @@ import { KnowledgeGraphComponent } from '../shared/components/knowledgeGraph/kno
 import { MetaType } from '../metadata/enums/metaType';
 import { RoutesParam } from '../metadata/domain/domain.routeParams';
 import { BaseEntityStatus } from '../metadata/domain/domain.baseEntityStatus';
+import { MetadataIO } from '../metadata/domainIO/domain.metadataIO';
+
 
 @Component({
   selector: 'app-batch-schedulerresult-component',
@@ -161,35 +163,35 @@ export class BatchSchedulerResultComponent {
     for (var i = 0; i < response.length; i++) {
       for (var j = 0; j < response[i].status.length; j++) {
         if (response[i].status[j].stage == "InProgress") {
-          this.starttime = this.datePipe.transform(response[i].status[j]["createdOn"], "EEE MMM dd HH:mm:ss yyyy");
+          this.starttime = this.datePipe.transform(response[i].status[j].createdOn, "EEE MMM dd HH:mm:ss yyyy");
           //obj["startDate"] = new Date(this.datePipe.transform(response['scheduleInfo'][i].startDate, "EEE MMM dd HH:mm:ss +0530 yyyy"));
-          this.batchexecData[i]["starttime"] = this.starttime;
+          this.batchexecData[i].starttime = this.starttime;
           break;
         }
         else {
           this.starttime = "- N/A -";
-          this.batchexecData[i]["starttime"] = this.starttime;
+          this.batchexecData[i].starttime = this.starttime;
         }
       }
 
       for (var j = 0; j < response[i].status.length; j++) {
-        if (response[i].status[j]["stage"] == "Completed") {
-          this.endtime = this.datePipe.transform(response[i].status[j]["createdOn"], "EEE MMM dd HH:mm:ss yyyy");
-          this.batchexecData[i]["endtime"] = this.endtime;
+        if (response[i].status[j].stage == "Completed") {
+          this.endtime = this.datePipe.transform(response[i].status[j].createdOn, "EEE MMM dd HH:mm:ss yyyy");
+          this.batchexecData[i].endtime = this.endtime;
           this.duration = moment.utc(moment(this.endtime).diff(moment(this.starttime))).format("HH:mm:ss");
-          this.batchexecData[i]["duration"] = this.duration;
+          this.batchexecData[i].duration = this.duration;
         }
         else {
           this.endtime = "- N/A -";
           this.duration = "- N/A -";
-          this.batchexecData[i]["endtime"] = this.endtime;
-          this.batchexecData[i]["duration"] = this.duration;
+          this.batchexecData[i].endtime = this.endtime;
+          this.batchexecData[i].duration = this.duration;
         }
       }
 
       for (var j = 0; j < response[i].status.length; j++) {
-        this.batchexecData[i]['stage'] = response[i].status[j].stage;
-        this.batchexecData[i]['color'] = this.metaconfig.getStatusDefs(response[i].status[j].stage)['color'];
+        this.batchexecData[i].stage = response[i].status[j].stage;
+        this.batchexecData[i].color = this.metaconfig.getStatusDefs(response[i].status[j].stage).color;
       }
     }
 
@@ -197,6 +199,8 @@ export class BatchSchedulerResultComponent {
   }
 
   viewPage(uuid, version) {debugger
+    // let metadata = new MetadataIO();
+    //     metadata = this.metaconfig.getStatusDefs("dagexec");
     let _moduleUrl = this.metaconfig.getMetadataDefs("dagexec")['moduleState']
     let _routerUrl = this.metaconfig.getMetadataDefs("dagexec")['resultState']
     this.router.navigate(["../../../../../" + _moduleUrl + "/" + _routerUrl, uuid, version, 'true'], { relativeTo: this.activeroute });
