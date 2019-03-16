@@ -195,8 +195,12 @@ public class RunDagServiceImpl implements Callable<String> {
 				dagExec = dagServiceImpl.parseDagExec(dag, dagExec);
 				logger.info(" After parse ");
 				//dagExecServiceImpl.save(dagExec);
-				commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
+				if (Helper.getLatestStatus(dagExec.getStatusList()).getStage() != Status.Stage.STARTING) {
+					logger.info("DagExec not in STARTING stage after parse. Aborting Dag processing ... ");
+					return "Dag_"+dagExec.getUuid();
+				}
 				synchronized (dagExec.getUuid()) {
+					commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
 					commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.READY);
 				}
 			}
