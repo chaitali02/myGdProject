@@ -13,6 +13,7 @@ package com.inferyx.framework.service;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -63,6 +64,7 @@ import com.inferyx.framework.dao.IDataStoreDao;
 import com.inferyx.framework.dao.IDatapodDao;
 import com.inferyx.framework.dao.IDatasourceDao;
 import com.inferyx.framework.dao.IUploadDao;
+import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseEntity;
@@ -828,12 +830,22 @@ public class DatapodServiceImpl {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<DatapodStatsHolder> getDatapodStats(String searchStr) throws JsonProcessingException {
+	public List<DatapodStatsHolder> getDatapodStats(String searchStr) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 
 		List<DatapodStatsHolder> result = new ArrayList<DatapodStatsHolder>();
 		List<Datapod> datapodList = commonServiceImpl.findAllLatest(MetaType.datapod, searchStr);
 		List<Datasource> dsList = commonServiceImpl.findAllLatest(MetaType.datasource);
-
+		
+		/*Application application = commonServiceImpl.getApp();
+		Criteria criteria = new Criteria();
+		Query query = new Query();
+		String appUuid=application.getUuid();
+		
+		if(appUuid != null && !appUuid.isEmpty()) {
+			query.addCriteria(Criteria.where("_id").ne("1").orOperator(where("appInfo.ref.uuid").is(appUuid),where("publicFlag").is("Y")));
+			
+		}*/
+		
 		Map<String, String> dsMap = new HashMap<String, String>();
 		for (Datasource dsrc : dsList) {
 			dsMap.put(dsrc.getUuid(), dsrc.getName());

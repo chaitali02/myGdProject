@@ -27,7 +27,7 @@ public interface IDatapodDao extends MongoRepository<Datapod, String> {
 	 * String version);
 	 */
 
-	@Query(value = "{$or: [ { publicFlag: \"Y\"},{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} }],'uuid' : ?1 , 'version' : ?2 }")
+	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'uuid' : ?1 , 'version' : ?2 }")
 	public Datapod findOneByUuidAndVersion(String appUuid, String uuid, String version);
 
 	@Query(value = "{'uuid' : ?0 , 'version' : ?1 }")
@@ -54,7 +54,7 @@ public interface IDatapodDao extends MongoRepository<Datapod, String> {
 	@Query(value = "{$group :{ _id : '$uuid', maxVersion : {$max : '$version'} }}")
 	public List<Datapod> test(String param1);
 
-	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
+	@Query(value = "{$or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]}")
 	public List<Datapod> findAll(String appUuid);
 
 	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'uuid':?1}")
@@ -104,7 +104,7 @@ public interface IDatapodDao extends MongoRepository<Datapod, String> {
 	@Query(value = "{'_id' : ?0}")
 	public Datapod save(String id);	
 	
-	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,$or : [  {'name':{$regex : ?1,$options : \"i\"}} , {'desc':{$regex : ?1,$options : \"i\"}}, {'attributes':{$elemMatch:{'desc':{$regex : ?1,$options : \"i\"}}}},{'attributes':{$elemMatch:{'name':{$regex : ?1,$options : \"i\"}}}}] }")
+	@Query(value = "{$or: [ { publicFlag: \"Y\"},{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,$or : [  {'name':{$regex : ?1,$options : \"i\"}}] , {'desc':{$regex : ?1,$options : \"i\"}}, {'attributes':{$elemMatch:{'desc':{$regex : ?1,$options : \"i\"}}}},{'attributes':{$elemMatch:{'name':{$regex : ?1,$options : \"i\"}}}}] }")
 	public List<Datapod> findAll(String appUuid,String searchStr);
 
 
