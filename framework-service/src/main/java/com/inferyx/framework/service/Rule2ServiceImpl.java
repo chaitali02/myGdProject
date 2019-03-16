@@ -60,6 +60,7 @@ import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.enums.SaveMode;
+import com.inferyx.framework.enums.ScoringMethod;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.SparkExecutor;
@@ -904,8 +905,9 @@ public class Rule2ServiceImpl extends RuleTemplate {
 		//*******************************************************
 		
 		*/
-		
-	String summarysql = rule2Operator.generateSummarySql(rule2,listSql, tableName, datapod, refKeyMap, otherParams,
+		String filterExpr;
+		ScoringMethod scoringMethod=rule2.getScoringMethod();
+		String summarysql = rule2Operator.generateSummarySql(rule2,listSql, scoringMethod, tableName, datapod, refKeyMap, otherParams,
 				usedRefKeySet, new ExecParams(), runMode);
 
 		ruleExec.setExec(detailsql);

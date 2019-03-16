@@ -18,9 +18,26 @@ public class Criteria {
 	private String criteriaName;
 	private String activeFlag;
 	private List<FilterInfo> criteriaFilter;
+	private String score="1";
+	private String filter_critria;
 	private double criteriaWeight;
 	
+	public String getScore() {
+		return score;
+	}
+
+	public void setScore(String score) {
+		this.score = score;
+	}
 	
+	public String getFilter_critria() {
+		return filter_critria;
+	}
+
+	public void setFilter_critria(String filter_critria) {
+		this.filter_critria = filter_critria;
+	}
+
 	public double getCriteriaWeight() {
 		return criteriaWeight;
 	}
