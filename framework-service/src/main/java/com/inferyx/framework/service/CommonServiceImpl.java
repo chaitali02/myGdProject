@@ -3349,6 +3349,7 @@ public class CommonServiceImpl<T> {
 		StageExec.class.getMethod("setStatusList", List.class).invoke(retObj, statusList);
 		dagExecServiceImpl.setStageExec(dagExec, (StageExec) retObj);
 		save(MetaType.dagExec.toString(), dagExec);
+		logger.info(String.format(">>>> Status changed to %s for %s having id %s ", Helper.getLatestStatus(statusList).getStage().name(), "dagExec stage", stageId));
 		return retObj;
 	}
 
@@ -3433,6 +3434,7 @@ public class CommonServiceImpl<T> {
 		TaskExec.class.getMethod("setStatusList", List.class).invoke(retObj, statusList);
 		dagExecServiceImpl.setTaskExec(dagExec, (TaskExec) retObj);
 		save(MetaType.dagExec.toString(), dagExec);
+		logger.info(String.format(">>>> Status changed to %s for %s having id %s ", Helper.getLatestStatus(statusList).getStage().name(), "dagExec task", taskId));
 		return retObj;
 	}
 
@@ -3515,6 +3517,7 @@ public class CommonServiceImpl<T> {
 		// Save the status in mongo
 		Helper.getDomainClass(metaType).getMethod("setStatusList", List.class).invoke(retObj, statusList);
 		save(metaType.toString(), retObj);
+		logger.info(String.format(">>>> Status changed to %s for %s having id %s ", Helper.getLatestStatus(statusList).getStage().name(), metaType.toString(), uuid));
 		return retObj;
 	}
 
