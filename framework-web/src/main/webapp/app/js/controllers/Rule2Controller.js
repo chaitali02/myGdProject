@@ -210,8 +210,7 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 		}
 	}
 	$scope.getFormulaByType = function () {
-		debugger
-		// Rule2Service.getFormulaByType($scope.allparamlist.defaultoption.uuid, "datapod").then(function (response) { onSuccessFormula(response.data) });
+		// Rule2Service.getFormulaByType($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessFormula(response.data) });
 		// var onSuccessFormula = function (response) {
 		// 	$scope.allSourceFormula = response.data;
 		// 	$scope.allFilterormula = response.data;
@@ -270,7 +269,6 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 	}
 
 	$scope.getParamByApp = function () {
-		debugger
 		CommonService.getParamByApp($rootScope.appUuidd || "", "application").
 			then(function (response) { onSuccessGetParamByApp(response.data) });
 		var onSuccessGetParamByApp = function (response) {
@@ -294,7 +292,6 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 	}
 
 	$scope.onChangeParamListOFRule = function () {
-		debugger
 		setTimeout(function () { $scope.paramTypes = ["paramlist", "paramset"]; }, 1);
 		$scope.getParamByApp();
 		$scope.getFormulaByType();
@@ -325,7 +322,6 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 	}
 
 	$scope.getAllLatestParamListByTemplate = function () {
-		debugger
 		CommonService.getAllLatestParamListByTemplate('Y', "paramlist", "rule").then(function (response) {
 			onSuccessGetAllLatestParamListByTemplate(response.data)
 		});
@@ -345,7 +341,7 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 			$scope.allparamlist.options = response;
 		}
 	}
-	
+
 	$scope.getAllLatestParamListByTemplate();
 	if (typeof $stateParams.id != "undefined") {
 		$scope.showactive = "true"
@@ -1117,7 +1113,6 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 	}
 
 	$scope.expandAll = function (expanded) {
-		debugger
 		// $scope is required here, hence the injection above, even though we're using "controller as" syntax
 		$scope.$broadcast('onExpandAll', { expanded: expanded });
 	};

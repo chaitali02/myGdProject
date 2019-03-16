@@ -244,6 +244,7 @@ public class DatasourceServiceImpl {
 	public List<Datasource> getDatasourceByType(String type) throws JsonProcessingException {   
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
 		MatchOperation filter = null;
+		
 		if(appUuid != null && !appUuid.isEmpty()) {
 			filter = match(new Criteria("type").is(type).andOperator(new Criteria("appInfo.ref.uuid").is(appUuid)));
 		} else {
