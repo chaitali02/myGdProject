@@ -210,12 +210,20 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 		}
 	}
 	$scope.getFormulaByType = function () {
-		Rule2Service.getFormulaByType($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessFormula(response.data) });
-		var onSuccessFormula = function (response) {
-			$scope.allSourceFormula = response.data;
-			$scope.allFilterormula = response.data;
+		debugger
+		// Rule2Service.getFormulaByType($scope.allparamlist.defaultoption.uuid, "datapod").then(function (response) { onSuccessFormula(response.data) });
+		// var onSuccessFormula = function (response) {
+		// 	$scope.allSourceFormula = response.data;
+		// 	$scope.allFilterormula = response.data;
+		// }
 
-		}//End onSuccessGetFormulaByType
+		if ($scope.allparamlist.defaultoption != null) {
+			Rule2Service.getFormulaByType($scope.allparamlist.defaultoption.uuid, "datapod").then(function (response) { onSuccessFormula(response.data) });
+			var onSuccessFormula = function (response) {
+				$scope.allSourceFormula = response.data;
+				$scope.allFilterormula = response.data;
+			}
+		}
 	}
 
 	$scope.getAllAttributeBySource = function (isAddRowCriteria) {
@@ -262,6 +270,7 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 	}
 
 	$scope.getParamByApp = function () {
+		debugger
 		CommonService.getParamByApp($rootScope.appUuidd || "", "application").
 			then(function (response) { onSuccessGetParamByApp(response.data) });
 		var onSuccessGetParamByApp = function (response) {
@@ -285,8 +294,11 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 	}
 
 	$scope.onChangeParamListOFRule = function () {
+		debugger
 		setTimeout(function () { $scope.paramTypes = ["paramlist", "paramset"]; }, 1);
 		$scope.getParamByApp();
+		$scope.getFormulaByType();
+
 	}
 
 	$scope.getOneByUuidParamList = function () {
@@ -313,13 +325,14 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 	}
 
 	$scope.getAllLatestParamListByTemplate = function () {
+		debugger
 		CommonService.getAllLatestParamListByTemplate('Y', "paramlist", "rule").then(function (response) {
 			onSuccessGetAllLatestParamListByTemplate(response.data)
 		});
 		var onSuccessGetAllLatestParamListByTemplate = function (response) {
 			$scope.allparamlist = {};
-			$scope.allparamlist.options = response;
-			if ($scope.rule.paramList != null) {
+
+			if ($scope.rule.paramList != null && $scope.allparamlist != null) {
 				var defaultoption = {};
 				defaultoption.uuid = $scope.rule.paramList.ref.uuid;
 				defaultoption.name = $scope.rule.paramList.ref.name;
@@ -329,8 +342,10 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 			} else {
 				$scope.allparamlist.defaultoption = null;
 			}
+			$scope.allparamlist.options = response;
 		}
 	}
+	
 	$scope.getAllLatestParamListByTemplate();
 	if (typeof $stateParams.id != "undefined") {
 		$scope.showactive = "true"
@@ -1534,7 +1549,7 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 		CommonService.getParamListChilds($scope.allparamlist.defaultoption.uuid, "", "paramlist").then(function (response) { onSuccessGetParamListChilds(response.data) });
 		var onSuccessGetParamListChilds = function (response) {
 			var defaultoption = {};
-			defaultoption.uuid = $scope.allparamlist.defaultoption.uuid;
+			defaultoption.uuid = $scope.allparamlist.option.uuid;
 			defaultoption.name = $scope.allparamlist.defaultoption.name;
 			if (response.length > 0) {
 				$scope.allParamList = response;
@@ -1598,28 +1613,28 @@ RuleModule.controller('ResultRule2Controller', function ($http, $log, dagMetaDat
 	$scope.type = {
 		text: $scope.select == 'rulegroupexec' ? 'rulegroup' : 'rule'
 	};
-	
-	$scope.setType=function(){
+
+	$scope.setType = function () {
 		$scope.select = $stateParams.type;
 		$scope.type = {
 			text: $scope.select == 'rulegroupexec' ? 'rulegroup' : 'rule'
 		};
-		if( $scope.type =="rule"){
-		  $scope.obj={};
-		  $scope.obj.uuid=$stateParams.id;
-		  $scope.obj.version=$stateParams.version;
-		}else{
-	
+		if ($scope.type == "rule") {
+			$scope.obj = {};
+			$scope.obj.uuid = $stateParams.id;
+			$scope.obj.version = $stateParams.version;
+		} else {
+
 		}
 	}
-	$scope.pagination={
-		currentPage:1,
-		pageSize:100,
-		pageSizes:[10, 25, 50, 75, 100],
-		maxSize:5,
-		to:null,
-		from:null,
-		totalItems:null,
+	$scope.pagination = {
+		currentPage: 1,
+		pageSize: 100,
+		pageSizes: [10, 25, 50, 75, 100],
+		maxSize: 5,
+		to: null,
+		from: null,
+		totalItems: null,
 	}
 	$scope.sortdetail = [];
 	$scope.isRuleGroupExec = false;
@@ -1639,7 +1654,7 @@ RuleModule.controller('ResultRule2Controller', function ($http, $log, dagMetaDat
 	$scope.download.selectFormate = CF_DOWNLOAD.formate[0];
 	$scope.download.maxrow = CF_DOWNLOAD.framework_download_maxrow;
 	$scope.download.limit_to = CF_DOWNLOAD.limit_to;
-	$scope.download.resultType="summary";
+	$scope.download.resultType = "summary";
 	$scope.filteredRowsDetail = [];
 	$scope.filteredRowsSummary = [];
 	var notify = {
@@ -1690,8 +1705,8 @@ RuleModule.controller('ResultRule2Controller', function ($http, $log, dagMetaDat
 			});
 		}
 	};
-	 
-	
+
+
 	$scope.gridOptionsSummary = {
 		rowHeight: 40,
 		useExternalPagination: true,
@@ -1709,13 +1724,13 @@ RuleModule.controller('ResultRule2Controller', function ($http, $log, dagMetaDat
 		fastWatch: true,
 		columnDefs: [],
 		onRegisterApi: function (gridApi) {
-		  $scope.gridApiResultSummary = gridApi;
-		  $scope.filteredRowsSummary = $scope.gridApiResultSummary.core.getVisibleRows($scope.gridApiResultSummary.grid);
-		  $scope.gridApiResultSummary.core.on.sortChanged($scope, function (grid, sortColumns) {
-			if (sortColumns.length > 0) {
-			  $scope.searchRequestId(sortColumns);
-			}
-		  });
+			$scope.gridApiResultSummary = gridApi;
+			$scope.filteredRowsSummary = $scope.gridApiResultSummary.core.getVisibleRows($scope.gridApiResultSummary.grid);
+			$scope.gridApiResultSummary.core.on.sortChanged($scope, function (grid, sortColumns) {
+				if (sortColumns.length > 0) {
+					$scope.searchRequestId(sortColumns);
+				}
+			});
 		}
 	};
 
@@ -1732,41 +1747,41 @@ RuleModule.controller('ResultRule2Controller', function ($http, $log, dagMetaDat
 		}
 		return style;
 	}
-	
+
 	$scope.getGridStyleSummary = function () {
-	  var style = {
-		'margin-top': '10px',
-		'margin-bottom': '10px',
-	  }
-	  if ($scope.filteredRowsSummary && $scope.filteredRowsSummary.length > 0) {
-		style['height'] = (($scope.filteredRowsSummary.length < 10 ? $scope.filteredRowsSummary.length * 40 : 400) + 80) + 'px';
-	  }
-	  else {
-		style['height'] = "100px"
-	  }
-	  return style;
-	}
-	
-	
-	$scope.go = function (index) {
-		if($scope.type.text =="rule" || $scope.selectResult =="rule"){
-		  $scope.setType();
-		  if (index == 1) {
-			$scope.download.resultType="detail";
-			$scope.getRuleExec({
-			  uuid:$scope.obj.id,
-			  version:$scope.obj.version
-			}, "detail");
-		  }
-		  else {
-			$scope.download.resultType="summary";
-			$scope.getRuleExec({
-			  uuid: $scope.obj.id,
-			  version:$scope.obj.version
-			}, "summary");
-		  }
+		var style = {
+			'margin-top': '10px',
+			'margin-bottom': '10px',
 		}
-	  }
+		if ($scope.filteredRowsSummary && $scope.filteredRowsSummary.length > 0) {
+			style['height'] = (($scope.filteredRowsSummary.length < 10 ? $scope.filteredRowsSummary.length * 40 : 400) + 80) + 'px';
+		}
+		else {
+			style['height'] = "100px"
+		}
+		return style;
+	}
+
+
+	$scope.go = function (index) {
+		if ($scope.type.text == "rule" || $scope.selectResult == "rule") {
+			$scope.setType();
+			if (index == 1) {
+				$scope.download.resultType = "detail";
+				$scope.getRuleExec({
+					uuid: $scope.obj.id,
+					version: $scope.obj.version
+				}, "detail");
+			}
+			else {
+				$scope.download.resultType = "summary";
+				$scope.getRuleExec({
+					uuid: $scope.obj.id,
+					version: $scope.obj.version
+				}, "summary");
+			}
+		}
+	}
 
 	$scope.onClickRuleResult = function () {
 		$scope.isRuleExec = true;
@@ -1823,13 +1838,13 @@ RuleModule.controller('ResultRule2Controller', function ($http, $log, dagMetaDat
 		$scope.isGraphRuleExec = true;
 		$scope.isRuleGroupTitle = true;
 		$scope.isRuleTitle = false;
-		$scope.obj={};
-		$scope.obj.id=params.id;
-		$scope.obj.version=params.version;
+		$scope.obj = {};
+		$scope.obj.id = params.id;
+		$scope.obj.version = params.version;
 		$scope.getRuleExec({
 			uuid: params.id,
 			version: params.version
-		},"summary");
+		}, "summary");
 	}
 
 	$scope.toggleZoom = function () {
@@ -1840,7 +1855,7 @@ RuleModule.controller('ResultRule2Controller', function ($http, $log, dagMetaDat
 		$scope.isD3RGEexecGraphShow = false;
 		$scope.getRuleGroupExec($scope.rulegroupdatail)
 	}
-	
+
 	$scope.rGExecshowGraph = function () {
 		$scope.isGraphRuleGroupExec = false;
 		$scope.isD3RGEexecGraphShow = true;
@@ -1849,10 +1864,10 @@ RuleModule.controller('ResultRule2Controller', function ($http, $log, dagMetaDat
 	$scope.getRuleGroupExec = function (data) {
 		$scope.setType();
 		if ($scope.type.text == 'rule') {
-			$scope.obj={};
-			$scope.obj.id=data.uuid;
-			$scope.obj.version=data.version
-			$scope.getRuleExec(data,"summary");
+			$scope.obj = {};
+			$scope.obj.id = data.uuid;
+			$scope.obj.version = data.version
+			$scope.getRuleExec(data, "summary");
 			return;
 		}
 		$scope.execDetail = data;
@@ -1899,9 +1914,9 @@ RuleModule.controller('ResultRule2Controller', function ($http, $log, dagMetaDat
 		$scope.isD3RuleEexecGraphShow = false;
 		if ($scope.activeTabIndex == 0) {
 			$scope.getRuleExec($scope.ruleexecdetail, "summary");
-		  } else {
+		} else {
 			$scope.getRuleExec($scope.ruleexecdetail, "detail");
-		  }
+		}
 	}
 
 	$scope.RuleExecshowGraph = function () {
@@ -1909,7 +1924,7 @@ RuleModule.controller('ResultRule2Controller', function ($http, $log, dagMetaDat
 		$scope.isD3RuleEexecGraphShow = true;
 	}
 
-	$scope.getRuleExec = function (data,resultType) {
+	$scope.getRuleExec = function (data, resultType) {
 		$scope.execDetail = data;
 		$scope.metaType = dagMetaDataService.elementDefs["rule"].execType;
 		$scope.testgrid = false;
@@ -1935,90 +1950,90 @@ RuleModule.controller('ResultRule2Controller', function ($http, $log, dagMetaDat
 			.then(function (response) { onSuccessGetNumRowsbyExec(response.data) });
 		var onSuccessGetNumRowsbyExec = function (response) {
 			$scope.pagination.totalItems = response.numRows;
-			$scope.getResults(null,resultType);
+			$scope.getResults(null, resultType);
 		}
 	} //End getRuleExec
 
 
 	$scope.refreshDataDetail = function (searchtextDetail) {
-		$scope.gridOptionsDetail.data = $filter('filter')($scope.originalDataDetail,searchtextDetail, undefined);
+		$scope.gridOptionsDetail.data = $filter('filter')($scope.originalDataDetail, searchtextDetail, undefined);
 	};
-	
+
 	$scope.refreshDataSummary = function (searchtextSummary) {
-		$scope.gridOptionsSummary.data = $filter('filter')($scope.originalDataSummary,searchtextSummary, undefined);
+		$scope.gridOptionsSummary.data = $filter('filter')($scope.originalDataSummary, searchtextSummary, undefined);
 	};
 
 	$scope.onPerPageChange = function (resultType) {
 		$scope.pagination.currentPage = 1;
-		var data= resultType =="summary"?$scope.originalDataSummary:$scope.originalDataDetail;
-        $scope.getResultsClientSide(data,resultType);
+		var data = resultType == "summary" ? $scope.originalDataSummary : $scope.originalDataDetail;
+		$scope.getResultsClientSide(data, resultType);
 	}
 
-    $scope.getColumnDetail = function (type, result, resultType) {
+	$scope.getColumnDetail = function (type, result, resultType) {
 		CommonService.getColunmDetail(type, resultType).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) })
 		var onSuccess = function (respone) {
-		  $scope.gridOptionsDetail.columnDefs = [];
-		  $scope.ColumnDetails = respone;
-		  $scope.isDataError = false;
-		  if ($scope.ColumnDetails && $scope.ColumnDetails.length > 0) {
-			for (var i = 0; i < $scope.ColumnDetails.length; i++) {
-			  var attribute = {};
-			  var hiveKey = ["rownum", "DatapodUUID", "DatapodVersion"]
-			  if (hiveKey.indexOf($scope.ColumnDetails[i].name) != -1) {
-				attribute.visible = false
-			  } else {
-				attribute.visible = true
-			  }
-			  attribute.name = $scope.ColumnDetails[i].name
-			  attribute.displayName = $scope.ColumnDetails[i].displayName
-			  attribute.width = $scope.ColumnDetails[i].name.split('').length + 2 + "%" // Math.floor(Math.random() * (120 - 50 + 1)) + 150
-			  if (resultType == "detail") {
-	
-				$scope.gridOptionsDetail.columnDefs.push(attribute);
-			  } else {
-	
-				$scope.gridOptionsSummary.columnDefs.push(attribute);
-			  }
+			$scope.gridOptionsDetail.columnDefs = [];
+			$scope.ColumnDetails = respone;
+			$scope.isDataError = false;
+			if ($scope.ColumnDetails && $scope.ColumnDetails.length > 0) {
+				for (var i = 0; i < $scope.ColumnDetails.length; i++) {
+					var attribute = {};
+					var hiveKey = ["rownum", "DatapodUUID", "DatapodVersion"]
+					if (hiveKey.indexOf($scope.ColumnDetails[i].name) != -1) {
+						attribute.visible = false
+					} else {
+						attribute.visible = true
+					}
+					attribute.name = $scope.ColumnDetails[i].name
+					attribute.displayName = $scope.ColumnDetails[i].displayName
+					attribute.width = $scope.ColumnDetails[i].name.split('').length + 2 + "%" // Math.floor(Math.random() * (120 - 50 + 1)) + 150
+					if (resultType == "detail") {
+
+						$scope.gridOptionsDetail.columnDefs.push(attribute);
+					} else {
+
+						$scope.gridOptionsSummary.columnDefs.push(attribute);
+					}
+				}
 			}
-		  }
-		  else {
-			angular.forEach(response.data[0], function (value, key) {
-			  var attribute = {};
-			  var hiveKey = ["rownum", "DatapodUUID", "DatapodVersion"]
-			  if (hiveKey.indexOf(key) != -1) {
-				attribute.visible = false
-			  } else {
-				attribute.visible = true
-			  }
-			  attribute.name = key
-			  attribute.displayName = key
-			  attribute.width = key.split('').length + 2 + "%" // Math.floor(Math.random() * (120 - 50 + 1)) + 150
-			  if (resultType == "detail") {
-	
-				$scope.gridOptionsDetail.columnDefs.push(attribute)
-			  } else {
-	
-				$scope.gridOptionsSummary.columnDefs.push(attribute)
-			  }
-			});
-		  }
-	
-		  if (resultType == "detail") {
-			$scope.gridOptionsDetail.data = result;
-			$scope.totalItems = result.length;
-			$scope.originalDataDetail = result;
-		  } else {
-			$scope.gridOptionsSummary.data = result;
-			$scope.totalItems = result.length;
-			$scope.originalDataSummary = result;
-		  }
-		  console.log($scope.gridOptionsSummary.columnDefs)
-		  $scope.testgrid = true;
-		  $scope.showprogress = false;
+			else {
+				angular.forEach(response.data[0], function (value, key) {
+					var attribute = {};
+					var hiveKey = ["rownum", "DatapodUUID", "DatapodVersion"]
+					if (hiveKey.indexOf(key) != -1) {
+						attribute.visible = false
+					} else {
+						attribute.visible = true
+					}
+					attribute.name = key
+					attribute.displayName = key
+					attribute.width = key.split('').length + 2 + "%" // Math.floor(Math.random() * (120 - 50 + 1)) + 150
+					if (resultType == "detail") {
+
+						$scope.gridOptionsDetail.columnDefs.push(attribute)
+					} else {
+
+						$scope.gridOptionsSummary.columnDefs.push(attribute)
+					}
+				});
+			}
+
+			if (resultType == "detail") {
+				$scope.gridOptionsDetail.data = result;
+				$scope.totalItems = result.length;
+				$scope.originalDataDetail = result;
+			} else {
+				$scope.gridOptionsSummary.data = result;
+				$scope.totalItems = result.length;
+				$scope.originalDataSummary = result;
+			}
+			console.log($scope.gridOptionsSummary.columnDefs)
+			$scope.testgrid = true;
+			$scope.showprogress = false;
 		}
 	}
-	
-	$scope.getResults = function (params,resultType) {
+
+	$scope.getResults = function (params, resultType) {
 		$scope.gridOptionsDetail.columnDefs = [];
 		var uuid = $scope.ruleExecUuid
 		var version = $scope.ruleExecVersion;
@@ -2039,8 +2054,8 @@ RuleModule.controller('ResultRule2Controller', function ($http, $log, dagMetaDat
 			order = params.order;
 
 		}
-		Rule2Service.getRuleResults2(uuid, version, offset || 0, limit, requestId, sortBy, order,resultType)
-			.then(function (response) {getResult(response.data)}, function (response) { OnError(response.data)});
+		Rule2Service.getRuleResults2(uuid, version, offset || 0, limit, requestId, sortBy, order, resultType)
+			.then(function (response) { getResult(response.data) }, function (response) { OnError(response.data) });
 		var getResult = function (response) {
 			$scope.getColumnDetail('rule2', response.data, resultType);
 			$scope.showprogress = false;
@@ -2053,32 +2068,32 @@ RuleModule.controller('ResultRule2Controller', function ($http, $log, dagMetaDat
 		}
 	}
 
-	$scope.getResultsClientSide = function (params,resultType) {
-        $scope.pagination.totalItems = params.length;
-        if ($scope.pagination.totalItems > 0) {
-          $scope.pagination.to = ((($scope.pagination.currentPage - 1) * ($scope.pagination.pageSize)) + 1);
-        }
-        else {
-          $scope.pagination.to = 0;
-        }
-        if ($scope.pagination.totalItems < ($scope.pagination.pageSize * $scope.pagination.currentPage)) {
-          $scope.pagination.from = $scope.pagination.totalItems;
-        }
-        else {
-          $scope.pagination.from = (($scope.pagination.currentPage) * $scope.pagination.pageSize);
-        }
+	$scope.getResultsClientSide = function (params, resultType) {
+		$scope.pagination.totalItems = params.length;
+		if ($scope.pagination.totalItems > 0) {
+			$scope.pagination.to = ((($scope.pagination.currentPage - 1) * ($scope.pagination.pageSize)) + 1);
+		}
+		else {
+			$scope.pagination.to = 0;
+		}
+		if ($scope.pagination.totalItems < ($scope.pagination.pageSize * $scope.pagination.currentPage)) {
+			$scope.pagination.from = $scope.pagination.totalItems;
+		}
+		else {
+			$scope.pagination.from = (($scope.pagination.currentPage) * $scope.pagination.pageSize);
+		}
 
-        var limit = ($scope.pagination.pageSize * $scope.pagination.currentPage);
+		var limit = ($scope.pagination.pageSize * $scope.pagination.currentPage);
 		var offset = (($scope.pagination.currentPage - 1) * $scope.pagination.pageSize);
-		if(resultType =="summary"){
+		if (resultType == "summary") {
 			$scope.gridOptionsSummary.data = params.slice(offset, limit);
-		}else{
+		} else {
 			$scope.gridOptionsDetail.data = params.slice(offset, limit);
 		}
-        
-      }
+
+	}
 	$scope.getExec = $scope.getRuleGroupExec;
-	
+
 	$scope.getExec({
 		uuid: $stateParams.id,
 		version: $stateParams.version,
@@ -2096,8 +2111,8 @@ RuleModule.controller('ResultRule2Controller', function ($http, $log, dagMetaDat
 		$('#reExModal').modal('hide');
 		$scope.executionmsg = "Rule Group Restarted Successfully"
 		notify.type = 'success',
-		notify.title = 'Success',
-		notify.content = $scope.executionmsg
+			notify.title = 'Success',
+			notify.content = $scope.executionmsg
 		$rootScope.$emit('notify', notify);
 		CommonService.restartExec("rulegroupExec", $stateParams.id, $stateParams.version).then(function (response) { onSuccess(response.data) });
 		var onSuccess = function (response) {
@@ -2114,7 +2129,7 @@ RuleModule.controller('ResultRule2Controller', function ($http, $log, dagMetaDat
 		$('#downloadSample').modal("hide");
 		$http({
 			method: 'GET',
-			url: url + "rule2/download?action=view&ruleExecUUID=" + uuid + "&ruleExecVersion=" + version + "&rows=" + $scope.download.rows + "&format=" + $scope.download.selectFormate+"&resultType="+$scope.download.resultType,
+			url: url + "rule2/download?action=view&ruleExecUUID=" + uuid + "&ruleExecVersion=" + version + "&rows=" + $scope.download.rows + "&format=" + $scope.download.selectFormate + "&resultType=" + $scope.download.resultType,
 			responseType: 'arraybuffer'
 		}).success(function (data, status, headers) {
 			headers = headers();
