@@ -209,16 +209,18 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 		}
 	}
 
-	$scope.getFormulaByType = function () {		
+	$scope.getFormulaByType = function () {
 		Rule2Service.getFormulaByType($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessFormula(response.data) });
 		var onSuccessFormula = function (response) {
-			$scope.allSourceFormula = response.data; 
+			$scope.allSourceFormula = response.data;
 			$scope.allFilterormula = response.data;
+			$scope.getParamListByFormula();
 		}
 	}
 
-	$scope.getParamListByFormula = function () {		
-		if ($scope.allparamlist.defaultoption) {debugger
+	$scope.getParamListByFormula = function () {
+		if ($scope.allparamlist.defaultoption) {
+
 			Rule2Service.getFormulaByType($scope.allparamlist.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccressGetFormula(response.data) });
 			var onSuccressGetFormula = function (response) {
 				if ($scope.allFilterormula && $scope.allFilterormula.length > 0) {
@@ -270,7 +272,7 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 
 	$scope.selectOption = function () {
 		$scope.getAllAttributeBySource(true);
-		$scope.filterTableArray = null;		
+		$scope.filterTableArray = null;
 		$scope.getParamListByFormula();
 		$scope.criteriaTableArray = null;
 		//	$scope.addRowCriteria();
@@ -380,6 +382,7 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 			defaultversion.uuid = response.rule.uuid;
 			$scope.ruleVersion.defaultVersion = defaultversion;
 			$scope.tags = response.tags;
+
 			if ($scope.rule.paramList != null && $scope.allparamlist != null) {
 				var defaultoption = {};
 				defaultoption.uuid = $scope.rule.paramList.ref.uuid;
@@ -387,7 +390,6 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 				$scope.allparamlist.defaultoption = defaultoption;
 			}
 			$scope.getParamByApp();
-
 			$scope.getAllLatest($scope.selectSourceType, response.rule.sourceInfo, false);
 			$scope.getFunctionByCriteria();
 			$scope.filterTableArray = response.filterInfo;
@@ -396,6 +398,8 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 			$scope.selectEntityId.uuid = $scope.rule.entityId.ref.uuid;
 			$scope.selectEntityId.type = $scope.rule.entityId.ref.type;
 			$scope.selectEntityId.attributeId = $scope.rule.entityId.attrId;
+
+
 		}//End onSuccessResult
 		var onError = function () {
 			$scope.isEditInprogess = false;
@@ -411,7 +415,6 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 		$scope.rule.senderInfo.sendAttachment = "Y";
 		$scope.rule.senderInfo.notifyOnSuccess = "Y";
 		$scope.rule.senderInfo.notifyOnFailure = "Y";
-
 	}
 
 	$scope.selectVersion = function () {
@@ -438,12 +441,14 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 			$scope.getParamByApp();
 			$scope.getAllLatest($scope.selectSourceType, response.rule.sourceInfo, false);
 			$scope.getFunctionByCriteria();
+
 			$scope.filterTableArray = response.filterInfo;
 			$scope.criteriaTableArray = response.criteriaInfo;
 			$scope.selectEntityId = {};
 			$scope.selectEntityId.uuid = $scope.rule.entityId.ref.uuid;
 			$scope.selectEntityId.type = $scope.rule.entityId.ref.type;
 			$scope.selectEntityId.attributeId = $scope.rule.entityId.attrId;
+
 
 		}//End onSuccessResult
 		var onError = function () {
