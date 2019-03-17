@@ -209,19 +209,26 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 			$scope.allExpress = response
 		}
 	}
-	$scope.getFormulaByType = function () {
-		// Rule2Service.getFormulaByType($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessFormula(response.data) });
-		// var onSuccessFormula = function (response) {
-		// 	$scope.allSourceFormula = response.data;
-		// 	$scope.allFilterormula = response.data;
-		// }
-
-		if ($scope.allparamlist.defaultoption != null) {
-			Rule2Service.getFormulaByType($scope.allparamlist.defaultoption.uuid, "datapod").then(function (response) { onSuccessFormula(response.data) });
-			var onSuccessFormula = function (response) {
-				$scope.allSourceFormula = response.data;
-				$scope.allFilterormula = response.data;
+	$scope.getFormulaByType = function () {		
+		Rule2Service.getFormulaByType($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessFormula(response.data) });
+		var onSuccessFormula = function (response) {
+			$scope.allSourceFormula = response.data; 
+			$scope.allFilterormula = response.data;
+		}
+	}
+	$scope.getParamListByFormula = function () {		
+		if ($scope.allparamlist.defaultoption) {
+			Rule2Service.getFormulaByType($scope.allparamlist.defaultoption.uuid, "datapod").then(function (response) { onSuccressGetFormula(response.data) });
+			var onSuccressGetFormula = function (response) {
+				if ($scope.allFilterormula && $scope.allFilterormula.length > 0) {
+					$scope.allFilterormula = $scope.allFilterormula.concat(response.data)
+				} else {
+					$scope.allParamlistFormula = response.data
+					$scope.allFilterormula = $scope.allParamlistFormula;
+				}
 			}
+		} else {
+			$scope.allFilterormula = $scope.allSourceFormula;
 		}
 	}
 
@@ -260,12 +267,14 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 		$scope.rule.entityType = null;
 	}
 
-	$scope.selectOption = function () {
+	$scope.selectOption = function (oldValue) {
 		$scope.getAllAttributeBySource(true);
-		$scope.filterTableArray = null;
+		$scope.filterTableArray = null;		
+		$scope.getParamListByFormula();
 		$scope.criteriaTableArray = null;
 		//	$scope.addRowCriteria();
 		$scope.rule.entityType = null;
+		$scope.getFormulaByType();
 	}
 
 	$scope.getParamByApp = function () {
@@ -292,10 +301,11 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 	}
 
 	$scope.onChangeParamListOFRule = function () {
+		$scope.allFilterormula == null;
+		$scope.allFilterormula = $scope.allSourceFormula;
+		$scope.getParamListByFormula();
 		setTimeout(function () { $scope.paramTypes = ["paramlist", "paramset"]; }, 1);
 		$scope.getParamByApp();
-		$scope.getFormulaByType();
-
 	}
 
 	$scope.getOneByUuidParamList = function () {
