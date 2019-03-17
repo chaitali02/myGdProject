@@ -190,7 +190,6 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 		$scope.isSubmitShow = false;
 	}
 
-
 	$scope.ondrop = function (e) {
 		$scope.myform.$dirty = true;
 	}
@@ -209,6 +208,7 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 			$scope.allExpress = response
 		}
 	}
+
 	$scope.getFormulaByType = function () {		
 		Rule2Service.getFormulaByType($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessFormula(response.data) });
 		var onSuccessFormula = function (response) {
@@ -216,9 +216,10 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 			$scope.allFilterormula = response.data;
 		}
 	}
+
 	$scope.getParamListByFormula = function () {		
-		if ($scope.allparamlist.defaultoption) {
-			Rule2Service.getFormulaByType($scope.allparamlist.defaultoption.uuid, "datapod").then(function (response) { onSuccressGetFormula(response.data) });
+		if ($scope.allparamlist.defaultoption) {debugger
+			Rule2Service.getFormulaByType($scope.allparamlist.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccressGetFormula(response.data) });
 			var onSuccressGetFormula = function (response) {
 				if ($scope.allFilterormula && $scope.allFilterormula.length > 0) {
 					$scope.allFilterormula = $scope.allFilterormula.concat(response.data)
@@ -260,11 +261,14 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 		}
 	}
 	$scope.selectType = function () {
+		$scope.getAllAttributeBySource(true);
 		$scope.getAllLatest($scope.selectSourceType, null, true);
-		$scope.filterTableArray = null;
+		$scope.filterTableArray = null;	
+		$scope.getParamListByFormula();
 		$scope.criteriaTableArray = null;
 		//$scope.addRowCriteria();
 		$scope.rule.entityType = null;
+		$scope.getFormulaByType();
 	}
 
 	$scope.selectOption = function () {
