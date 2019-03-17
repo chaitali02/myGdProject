@@ -267,7 +267,7 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 		$scope.rule.entityType = null;
 	}
 
-	$scope.selectOption = function (oldValue) {
+	$scope.selectOption = function () {
 		$scope.getAllAttributeBySource(true);
 		$scope.filterTableArray = null;		
 		$scope.getParamListByFormula();
