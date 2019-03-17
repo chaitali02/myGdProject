@@ -472,6 +472,22 @@ public class RuleServiceImpl extends RuleTemplate {
 		}
 		return ruleExec;
 	}
+	
+	/**
+	 * 
+	 * @return
+	 * @throws JsonProcessingException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws NullPointerException
+	 * @throws ParseException
+	 */
+	protected MetaIdentifier getTargetResultDp () throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		return null;
+	}
 
 	/*
 	 * public RuleExec create(String ruleUUID, String ruleVersion,
@@ -505,7 +521,7 @@ public class RuleServiceImpl extends RuleTemplate {
 		logger.info("Inside ruleServiceImpl.execute");
 		try {
 			ruleExec = (RuleExec) super.execute(MetaType.rule, MetaType.ruleExec, metaExecutor, ruleExec,
-						ruleExec.getDependsOn().getRef(), taskList, execParams, runMode);
+												ruleExec.getDependsOn().getRef(), taskList, execParams, runMode);
 		} catch (Exception e) {
 			synchronized (ruleExec.getUuid()) {
 				commonServiceImpl.setMetaStatus(ruleExec, MetaType.ruleExec, Status.Stage.FAILED);

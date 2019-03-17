@@ -27,6 +27,7 @@ import java.util.concurrent.FutureTask;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,7 @@ import com.inferyx.framework.dao.IDataQualExecDao;
 import com.inferyx.framework.dao.IFilterDao;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRuleExec;
+import com.inferyx.framework.domain.Config;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataQual;
 import com.inferyx.framework.domain.DataQualExec;
@@ -324,18 +326,36 @@ public class DataQualServiceImpl extends RuleTemplate {
 		execute(null, dataqualExec, null, execParams, runMode);
 		return dataqualExec;
 	}
+	
+	/**
+	 * 
+	 */
+	protected MetaIdentifier getTargetSummaryDp () throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		return getSummaryOrDetail("framework.dataqual.summary.uuid", (dqInfo != null) ? dqInfo.getDq_result_summary() : null);
+	}
+
+	/**
+	 * 
+	 * @return
+	 * @throws JsonProcessingException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws NullPointerException
+	 * @throws ParseException
+	 */
+	protected MetaIdentifier getTargetResultDp () throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		return getSummaryOrDetail("framework.dataqual.detail.uuid", (dqInfo != null) ? dqInfo.getDq_result_detail() : null);
+	}
+
 
 	public DataQualExec execute(ThreadPoolTaskExecutor metaExecutor, DataQualExec dataqualExec,
 			List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
-//		Datapod targetDatapod = (Datapod) daoRegister.getRefObject(new MetaIdentifier(MetaType.datapod, dqInfo.getDqTargetUUID(), null));
-//		Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dqInfo.getDqTargetUUID(), null, MetaType.datapod.toString(), "N");
-		Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dqInfo.getDq_result_detail(), null,
-				MetaType.datapod.toString(), "N");
-		MetaIdentifier targetDatapodKey = new MetaIdentifier(MetaType.datapod, targetDatapod.getUuid(),
-				targetDatapod.getVersion());
 		try {
 			return (DataQualExec) super.execute(MetaType.dq, MetaType.dqExec, metaExecutor, dataqualExec,
-					targetDatapodKey, taskList, execParams, runMode);
+												getTargetResultDp(), taskList, execParams, runMode);
 		} catch (Exception e) {
 			e.printStackTrace();
 			dataqualExec = (DataQualExec) commonServiceImpl.setMetaStatus(dataqualExec, MetaType.dqExec,

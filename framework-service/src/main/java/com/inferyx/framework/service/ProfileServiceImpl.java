@@ -16,6 +16,7 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.newA
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -604,19 +605,30 @@ public class ProfileServiceImpl extends RuleTemplate {
 		}
 		return profileExec;
 	}
+	
+	/**
+	 * 
+	 * @return
+	 * @throws JsonProcessingException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws NullPointerException
+	 * @throws ParseException
+	 */
+	protected MetaIdentifier getTargetResultDp () throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		return getSummaryOrDetail("framework.profile.datapod.uuid", (profileInfo != null) ? profileInfo.getProfileTargetUUID() : null);
+	}
 
 	@Override
 	public BaseRuleExec execute(ThreadPoolTaskExecutor metaExecutor,
 			BaseRuleExec baseRuleExec, MetaIdentifier datapodKey,
 			List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
 		try {
-//			Datapod targetDatapod = (Datapod) daoRegister.getRefObject(new MetaIdentifier(MetaType.datapod, profileInfo.getProfileTargetUUID(), null));
-			Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(profileInfo.getProfileTargetUUID(), null, MetaType.datapod.toString(), "N");
-			
-			MetaIdentifier targetDatapodKey = new MetaIdentifier(MetaType.datapod, targetDatapod.getUuid(),
-					targetDatapod.getVersion());
 			return super.execute(MetaType.profile, MetaType.profileExec, metaExecutor, baseRuleExec,
-								targetDatapodKey, taskList, execParams, runMode);			
+								getTargetResultDp(), taskList, execParams, runMode);			
 		}catch (Exception e) {
 			e.printStackTrace();
 			String message = null;

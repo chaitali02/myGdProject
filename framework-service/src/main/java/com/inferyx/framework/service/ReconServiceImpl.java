@@ -178,16 +178,27 @@ public class ReconServiceImpl extends RuleTemplate {
 		return (ReconExec) super.create(reconUuid, reconVersion, MetaType.recon, MetaType.reconExec, reconExec, refKeyMap, datapodList, dagExec);
 	}
 	
+	/**
+	 * 
+	 * @return
+	 * @throws JsonProcessingException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws NullPointerException
+	 * @throws ParseException
+	 */
+	protected MetaIdentifier getTargetResultDp () throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		return getSummaryOrDetail("framework.recon.datapod.uuid", (reconInfo != null) ? reconInfo.getReconTargetUUID() : null);
+	}
+	
 	public ReconExec execute(String reconUuid, String reconVersion,
 			ThreadPoolTaskExecutor metaExecutor, ReconExec reconExec, ReconGroupExec reconGroupExec, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
 		logger.info("Inside reconServiceImpl.execute");
 		try {
-//			Datapod targetDatapod = (Datapod) daoRegister.getRefObject(new MetaIdentifier(MetaType.datapod, reconInfo.getReconTargetUUID(), null));
-			Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(reconInfo.getReconTargetUUID(), null, MetaType.datapod.toString());
-			
-			MetaIdentifier targetDatapodKey = new MetaIdentifier(MetaType.datapod, targetDatapod.getUuid(),
-					targetDatapod.getVersion());
-			reconExec = (ReconExec) super.execute(MetaType.recon, MetaType.reconExec, metaExecutor, reconExec, targetDatapodKey, taskList, execParams, runMode);
+			reconExec = (ReconExec) super.execute(MetaType.recon, MetaType.reconExec, metaExecutor, reconExec, getTargetResultDp(), taskList, execParams, runMode);
 		} catch (Exception e) {
 			synchronized (reconExec.getUuid()) {
 				commonServiceImpl.setMetaStatus(reconExec, MetaType.reconExec, Status.Stage.FAILED);

@@ -25,6 +25,7 @@ import java.util.concurrent.FutureTask;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,7 @@ import com.inferyx.framework.dao.IRule2Dao;
 import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRuleExec;
+import com.inferyx.framework.domain.Config;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
@@ -514,15 +516,8 @@ public class Rule2ServiceImpl extends RuleTemplate {
 			List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
 		logger.info("Inside ruleServiceImpl.execute");
 		try {
-
-			Datapod targetDatapod = (Datapod) commonServiceImpl
-					.getOneByUuidAndVersion(rule2Info.getRule_result_details(), null, MetaType.datapod.toString(), "N");
-
-			MetaIdentifier targetDatapodKey = new MetaIdentifier(MetaType.datapod, targetDatapod.getUuid(),
-					targetDatapod.getVersion());
-
 			ruleExec = (RuleExec) super.execute(MetaType.rule2, MetaType.ruleExec, metaExecutor, ruleExec,
-					targetDatapodKey, taskList, execParams, runMode);
+												getTargetResultDp(), taskList, execParams, runMode);
 		} catch (Exception e) {
 			synchronized (ruleExec.getUuid()) {
 				commonServiceImpl.setMetaStatus(ruleExec, MetaType.ruleExec, Status.Stage.FAILED);
@@ -1471,7 +1466,29 @@ public class Rule2ServiceImpl extends RuleTemplate {
 			throw new RuntimeException((message != null) ? message : "Can not fetch summary.");
 		}
 	}
-	
+
+	/**
+	 * 
+	 */
+	protected MetaIdentifier getTargetSummaryDp () throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		return getSummaryOrDetail("framework.rule2.summary.uuid", (rule2Info != null) ? rule2Info.getRule_result_summary() : null);
+	}
+
+	/**
+	 * 
+	 * @return
+	 * @throws JsonProcessingException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws NullPointerException
+	 * @throws ParseException
+	 */
+	protected MetaIdentifier getTargetResultDp () throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		return getSummaryOrDetail("framework.rule2.detail.uuid", (rule2Info != null) ? rule2Info.getRule_result_details() : null);
+	}
 
 
 }
