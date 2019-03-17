@@ -148,10 +148,24 @@
             "active" : "Y",
             "length" : null,
             "attrUnitType" : null
-        }, 
+        },
         {
             "attributeId" : 8,
             "displaySeq" : 8,
+            "name" : "attribute_value",
+            "type" : "string",
+            "desc" : "attribute_value",
+            "expression" : null,
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "attribute_value",
+            "active" : "Y",
+            "length" : null,
+            "attrUnitType" : null
+        }, 
+        {
+            "attributeId" : 9,
+            "displaySeq" : 9,
             "name" : "rowkey_name",
             "type" : "string",
             "desc" : "rowkey_name",
@@ -164,8 +178,8 @@
             "attrUnitType" : null
         }, 
         {
-            "attributeId" : 9,
-            "displaySeq" : 9,
+            "attributeId" : 10,
+            "displaySeq" : 10,
             "name" : "rowkey_value",
             "type" : "string",
             "desc" : "rowkey_value",
@@ -176,21 +190,7 @@
             "active" : "Y",
             "length" : null,
             "attrUnitType" : null
-        }, 
-        {
-            "attributeId" : 10,
-            "displaySeq" : 10,
-            "name" : "attribute_value",
-            "type" : "string",
-            "desc" : "attribute_value",
-            "expression" : null,
-            "key" : "",
-            "partition" : "N",
-            "dispName" : "attribute_value",
-            "active" : "Y",
-            "length" : null,
-            "attrUnitType" : null
-        }, 
+        },         
         {
             "attributeId" : 11,
             "displaySeq" : 11,
