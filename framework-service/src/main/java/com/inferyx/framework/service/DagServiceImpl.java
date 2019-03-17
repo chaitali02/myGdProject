@@ -1250,8 +1250,8 @@ public class DagServiceImpl {
 						logger.info(" otherParams : " + otherParams);
 						logger.info(" taskExecParams.getOtherParams() : " + taskExecParams.getOtherParams());
 						baseExec.setRefKeyList(taskExecParams.getRefKeyList());
-						if (baseExec.getStatusList().contains(new Status(Status.Stage.FAILED, new Date()))) {
-							throw new Exception();
+						if (helper.getLatestStatus(baseExec.getStatusList()).getStage() == Status.Stage.FAILED) {
+							throw new Exception("DAG failed. So cannot proceed ... ");
 						}
 					} catch (Exception e) {
 						Status FAILEDStatus = new Status(Status.Stage.FAILED, new Date());
