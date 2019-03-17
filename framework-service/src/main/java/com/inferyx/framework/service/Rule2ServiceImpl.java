@@ -828,7 +828,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 		// ruleExec.setExec(rule2Operator.generateSql(rule2, refKeyMap, otherParams,
 		// usedRefKeySet, ruleExec.getExecParams(), runMode));
 		listSql = rule2Operator.generateDetailSql(rule2,withSql,detailSelectSql,refKeyMap, otherParams, usedRefKeySet,
-				new ExecParams(), runMode, ruleExec, rule2.getFilterInfo());
+				ruleExec.getExecParams(), runMode, ruleExec, rule2.getFilterInfo());
         String detailsql=listSql.get(0);
 		
 		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(rule2Info.getRule_result_details(), null,
