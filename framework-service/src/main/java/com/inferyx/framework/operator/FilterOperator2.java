@@ -176,6 +176,8 @@ public class FilterOperator2 {
 		String XPLAIN_END_BRACKET = "')";
 		String XPLAIN_CONCAT = "CONCAT";
 		String XPLAIN_COMMA = ", ";
+		String XPLIAN_COALESCE_START = " COALESCE( ";
+		String XPLAIN_COALESCE_SINGLE_QUOTES = ", '') ";
 		String sql = generateSql(filterInfo
 				, refKeyMap
 				, filterSource
@@ -195,7 +197,7 @@ public class FilterOperator2 {
 		sql = sql.replaceAll("'", "''");
 		sql = XPLAIN_CONCAT + XPLAIN_START_BRACKET + sql;
 		for (String attr : attributeList) {
-			sql = sql.replaceAll(attr, attr + XPLAIN_START_BRACKET + XPLAIN_COMMA + attr + XPLAIN_COMMA + XPLAIN_END_BRACKET);
+			sql = sql.replaceAll(attr, XPLIAN_COALESCE_START + attr + XPLAIN_COALESCE_SINGLE_QUOTES + XPLAIN_START_BRACKET + XPLAIN_COMMA + XPLIAN_COALESCE_START + attr + XPLAIN_COALESCE_SINGLE_QUOTES + XPLAIN_COMMA + XPLAIN_END_BRACKET);
 		}
 		sql = sql + XPLAIN_END_BRACKET;
 		return sql;
