@@ -39,7 +39,9 @@ import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRule;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.BaseRuleGroupExec;
+import com.inferyx.framework.domain.Config;
 import com.inferyx.framework.domain.DagExec;
+import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
@@ -90,7 +92,10 @@ public abstract class RuleTemplate implements IExecutable, IParsable {
 	@Autowired
 	DQInfo dqInfo;
 	@Autowired
+	MetadataServiceImpl metadataServiceImpl;
+	@Autowired
 	Rule2Info rule2Info;
+	
 
 	static final Logger logger = Logger.getLogger(RuleTemplate.class);
 
@@ -200,9 +205,56 @@ public abstract class RuleTemplate implements IExecutable, IParsable {
 //			ThreadPoolTaskExecutor metaExecutor, BaseRuleExec baseRuleExec, MetaIdentifier datapodKey, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
 //			return execute(type,execType,metaExecutor,baseRuleExec,datapodKey,taskList,execParams,runMode,"N");
 //		}
+	
+	/**
+	 * 
+	 * @param configVal
+	 * @param uuid
+	 * @return
+	 * @throws ParseException 
+	 * @throws NullPointerException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException 
+	 * @throws JsonProcessingException 
+	 */
+	public MetaIdentifier getSummaryOrDetail(String configName, String uuid) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		List<Config> appConfigList = metadataServiceImpl.getAppConfigByCurrentApp();
+		Config resultConfig = null;
+		Datapod targetDp = null;
+		Datapod infoDatapod = null;
+		for (Config config : appConfigList) {
+			if (config.getConfigName().equals(configName)) {
+				resultConfig = config;
+				break;
+			}
+		}
+		if (StringUtils.isNotBlank(uuid)) {
+			infoDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(uuid, null, MetaType.datapod.toString(), "N");
+		}
+		
+		if (resultConfig == null) {
+			targetDp = infoDatapod; 
+		} else {
+			targetDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(resultConfig.getConfigVal(), null, MetaType.datapod.toString(), "N");
+			if (targetDp == null) {
+				targetDp = infoDatapod;
+			}
+		}
+		
+		if (targetDp == null) {
+			return null;
+		}
+		
+		return new MetaIdentifier(MetaType.datapod, targetDp.getUuid(), targetDp.getVersion());
+	}
 
-	public BaseRuleExec execute(MetaType type, MetaType execType, 
-			ThreadPoolTaskExecutor metaExecutor, BaseRuleExec baseRuleExec, MetaIdentifier datapodKey, List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
+	public BaseRuleExec execute(MetaType type, MetaType execType,  
+			ThreadPoolTaskExecutor metaExecutor, BaseRuleExec baseRuleExec, 
+			MetaIdentifier targetDatapodKey, List<FutureTask<TaskHolder>> taskList, 
+			ExecParams execParams, RunMode runMode) throws Exception {
 		logger.info("Inside BaseRuleExec.execute ");
 		BaseRule baseRule = null;
 		
@@ -241,7 +293,7 @@ public abstract class RuleTemplate implements IExecutable, IParsable {
 		runBaseRuleService.setBaseRuleExec(baseRuleExec);
 		runBaseRuleService.setCommonServiceImpl(commonServiceImpl);
 		runBaseRuleService.setName(execType+"_"+baseRuleExec.getUuid()+"_"+baseRuleExec.getVersion());
-		runBaseRuleService.setDatapodKey(datapodKey);
+		runBaseRuleService.setDatapodKey(targetDatapodKey);
 		runBaseRuleService.setRuleExecType(execType);
 		runBaseRuleService.setSessionContext(sessionHelper.getSessionContext());
 		runBaseRuleService.setRunMode(runMode);
@@ -252,8 +304,7 @@ public abstract class RuleTemplate implements IExecutable, IParsable {
 		runBaseRuleService.setExecutorServiceImpl(executorServiceImpl);
 		runBaseRuleService.setExecParams(execParams);
 		runBaseRuleService.setDatasource(getDatasource(baseRule));
-		runBaseRuleService.setDqInfo(dqInfo);
-		runBaseRuleService.setRule2Info(rule2Info);
+		runBaseRuleService.setSummaryDatapodKey(getTargetSummaryDp());
 
 		if (metaExecutor == null) {
 			runBaseRuleService.execute();
@@ -271,6 +322,14 @@ public abstract class RuleTemplate implements IExecutable, IParsable {
 			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		return commonServiceImpl.getDatasourceByApp();
+	}
+	
+	protected MetaIdentifier getTargetSummaryDp() throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		return null;
+	}
+	
+	protected MetaIdentifier getTargetResultDp() throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		return null;
 	}
 	
 	/**

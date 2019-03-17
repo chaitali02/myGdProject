@@ -66,6 +66,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 	protected Authentication authentication;
 	protected CommonServiceImpl<?> commonServiceImpl;
 	protected MetaIdentifier datapodKey;
+	protected MetaIdentifier summaryDatapodKey;
 	protected String name;
 	protected MetaType ruleExecType;
 	protected SessionContext sessionContext;
@@ -77,24 +78,6 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 	protected Helper helper;
 	protected ExecParams execParams;
 	protected ExecutorServiceImpl executorServiceImpl;
-	protected DQInfo dqInfo;
-	protected Rule2Info rule2Info;
-
-	public Rule2Info getRule2Info() {
-		return rule2Info;
-	}
-
-	public void setRule2Info(Rule2Info rule2Info) {
-		this.rule2Info = rule2Info;
-	}
-
-	public DQInfo getDqInfo() {
-		return dqInfo;
-	}
-
-	public void setDqInfo(DQInfo dqInfo) {
-		this.dqInfo = dqInfo;
-	}
 
 	static final Logger logger = Logger.getLogger(RunBaseRuleService.class);
 
@@ -271,6 +254,20 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 	 */
 	public void setDatapodKey(MetaIdentifier datapodKey) {
 		this.datapodKey = datapodKey;
+	}
+
+	/**
+	 * @return the summaryDatapodKey
+	 */
+	public MetaIdentifier getSummaryDatapodKey() {
+		return summaryDatapodKey;
+	}
+
+	/**
+	 * @param summaryDatapodKey the summaryDatapodKey to set
+	 */
+	public void setSummaryDatapodKey(MetaIdentifier summaryDatapodKey) {
+		this.summaryDatapodKey = summaryDatapodKey;
 	}
 
 	/**
@@ -564,25 +561,13 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 //			Starting Summary business
 			if (baseRuleExec.getDependsOn().getRef().getType().equals(MetaType.dq)
 					|| baseRuleExec.getDependsOn().getRef().getType().equals(MetaType.rule2)) {
-				Datapod summaryDatapod = null;
-				MetaIdentifier summaryDatapodKey = null;
-				if (baseRuleExec.getDependsOn().getRef().getType().equals(MetaType.dq)) {
-					summaryDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dqInfo.getDq_result_summary(),
-							null, MetaType.datapod.toString(), "N");
-					summaryDatapodKey = new MetaIdentifier(MetaType.datapod, summaryDatapod.getUuid(),
-							summaryDatapod.getVersion());
-					datapodKey = summaryDatapodKey;
-					filePath = getFileName(baseRule, baseRuleExec, summaryDatapodKey);
-					tableName = getTableName(baseRule, baseRuleExec, summaryDatapodKey, execContext, runMode);
-				} else if (baseRuleExec.getDependsOn().getRef().getType().equals(MetaType.rule2)) {
-					summaryDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
-							rule2Info.getRule_result_summary(), null, MetaType.datapod.toString(), "N");
-					summaryDatapodKey = new MetaIdentifier(MetaType.datapod, summaryDatapod.getUuid(),
-							summaryDatapod.getVersion());
-					datapodKey = summaryDatapodKey;
-					filePath = getFileName(baseRule, baseRuleExec, summaryDatapodKey);
-					tableName = getTableName(baseRule, baseRuleExec, summaryDatapodKey, execContext, runMode);
-				}
+//				Datapod summaryDatapod = null;
+				MetaIdentifier summaryDatapodKey = this.summaryDatapodKey;
+				
+				datapodKey = summaryDatapodKey;
+				filePath = getFileName(baseRule, baseRuleExec, summaryDatapodKey);
+				tableName = getTableName(baseRule, baseRuleExec, summaryDatapodKey, execContext, runMode);
+				
 				logger.info("Table name registered : " + tableName);
 				logger.info("Before execution summary : " + baseRuleExec.getSummaryExec());
 				rsHolder = execute(baseRuleExec.getSummaryExec(), appDatasource, ruleDatasource, tableName, filePath,
