@@ -261,14 +261,11 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 		}
 	}
 	$scope.selectType = function () {
-		$scope.getAllAttributeBySource(true);
 		$scope.getAllLatest($scope.selectSourceType, null, true);
-		$scope.filterTableArray = null;	
-		$scope.getParamListByFormula();
+		$scope.filterTableArray = null;
 		$scope.criteriaTableArray = null;
 		//$scope.addRowCriteria();
 		$scope.rule.entityType = null;
-		$scope.getFormulaByType();
 	}
 
 	$scope.selectOption = function () {
