@@ -48,6 +48,7 @@ import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.Rule2;
 import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.enums.ScoringMethod;
 import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
@@ -86,16 +87,17 @@ public class Rule2Operator implements IParsable, IReferenceable {
 		return  generateWith(rule2,withSql,detailSelectSql, refKeyMap, otherParams, execParams, runMode,ruleExec,list);
 	}
 	
-	public String generateSummarySql(Rule2 rule2, List<String> listSql, String tableName, Datapod datapod, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
+	public String generateSummarySql(Rule2 rule2, List<String> listSql,ScoringMethod scoringMethod, String tableName, Datapod datapod, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
 			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception{	
 		// TODO Auto-generated method stub
-		String sql = generateSql(tableName,listSql,rule2.getVersion(),datapod);
+		String sql = generateSql(rule2,tableName,listSql,rule2.getVersion(),datapod, scoringMethod);
 		return sql;
 	}
 	
 	
-	private String generateSql(String tableName,List<String> listSql, String rule2Version, Datapod datapod) {
+	private String generateSql(Rule2 rule2, String tableName,List<String> listSql, String rule2Version, Datapod datapod, ScoringMethod scoringMethod) {
 		String result = "";
+		
 		String withSql=listSql.get(2);
 		String detailSelectSql=listSql.get(1);
 		StringBuilder querybuilder = new StringBuilder();
@@ -106,7 +108,19 @@ public class Rule2Operator implements IParsable, IReferenceable {
 		querybuilder.append("rule_name").append(" as ").append("rule_name").append(ConstantsUtil.COMMA);
 		querybuilder.append("entity_type").append(" as ").append("entity_type").append(ConstantsUtil.COMMA);
 		querybuilder.append("entity_id").append(" as ").append("entity_id").append(ConstantsUtil.COMMA);
-		querybuilder.append("sum(criteria_score)").append(" as ").append("score").append(ConstantsUtil.COMMA);
+	
+		if (scoringMethod == ScoringMethod.WT_AVG) {
+			querybuilder.append("avg(criteria_score)").append(" as ").append("score").append(ConstantsUtil.COMMA);
+		}else if (scoringMethod == ScoringMethod.WT_SUM) {
+			querybuilder.append("sum(criteria_score)").append(" as ").append("score").append(ConstantsUtil.COMMA);
+		}else {
+			querybuilder.append("sum(criteria_score)").append(" as ").append("score").append(ConstantsUtil.COMMA);
+
+		}
+
+		querybuilder.append("\""+ listSql.get(3) +"\"").append(" as ")
+				.append("filter_expr").append(ConstantsUtil.COMMA);
+
 		querybuilder.append("version").append(" as ").append("version");
 		querybuilder.append(ConstantsUtil.FROM);
 		querybuilder.append(detailSelectSql + " rule_select_query");
@@ -116,6 +130,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 		querybuilder.append("rule_name").append(ConstantsUtil.COMMA);
 		querybuilder.append("entity_type").append(ConstantsUtil.COMMA);
 		querybuilder.append("entity_id").append(ConstantsUtil.COMMA);
+		querybuilder.append("filter_expr").append(ConstantsUtil.COMMA);
 		querybuilder.append("version");
 
 		result = querybuilder.toString();
@@ -241,7 +256,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 
 			selectbuilder.append(filter).append(" as ").append("criteria_expr").append(ConstantsUtil.COMMA);
 			
-			//Calculating criteria_score   
+			/*//Calculating criteria_score   
 			//(CASE WHEN 1=1 filter THEN 1 ELSE 0 END) * criteriaWeight  as  criteria_score
 			filter = "";
 			filter = filterOperator2.generateSql(criteria.getCriteriaFilter(), refKeyMap, filterSource, otherParams,
@@ -252,6 +267,15 @@ public class Rule2Operator implements IParsable, IReferenceable {
 					.append(" THEN 1 ELSE 0 END) * ").append(criteria.getCriteriaWeight());
 			filter = "";
 			selectbuilder.append(criteria_scoreBuilder.toString()).append(" as ").append("criteria_score")
+					.append(ConstantsUtil.COMMA);			*/
+			
+			
+			//Calculating criteria_score   
+			//(CASE WHEN 1=1 filter THEN 1 ELSE 0 END) * criteriaWeight  as  criteria_score
+
+		
+			
+			selectbuilder.append(criteria.getScore()).append(" * ").append(criteria.getCriteriaWeight()).append(" as ").append("criteria_score")
 					.append(ConstantsUtil.COMMA);			
 						
 	
@@ -262,6 +286,13 @@ public class Rule2Operator implements IParsable, IReferenceable {
 				selectbuilder.append(ConstantsUtil.UNION_ALL);
 
 		}
+		
+		
+		String filterExpr = filterOperator2.generateExprSql(rule2.getFilterInfo(), refKeyMap, filterSource, otherParams,
+				usedRefKeySet, execParams, false, false, runMode, mapSourceDS, attributeList);
+		
+		filterExpr="CONCAT( 1=1 AND "+filterExpr+")";
+		
 		selectbuilder.append(" ) ");
 		Set<String> attributeSet = new HashSet<String>(); 
 		attributeSet.addAll(attributeList);
@@ -283,7 +314,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 		listSql.add(result);
 		listSql.add(detailSelectSql);
 		listSql.add(withSql);
-
+        listSql.add(filterExpr);
 		return listSql;
 
 	}

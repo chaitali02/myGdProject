@@ -14,19 +14,30 @@ import java.util.List;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.inferyx.framework.enums.ScoringMethod;
+import com.inferyx.framework.enums.ScoringMethod;
+
 @Document(collection = "rule2")
 public class Rule2 extends BaseRule {
 
 	private MetaIdentifierHolder sourceInfo;
 	private List<FilterInfo> filterInfo;
 	private String entityType;
+	private ScoringMethod  scoringMethod;
 	private AttributeRefHolder entityId;
 	private List<Criteria> criteriaInfo;
 	private MetaIdentifierHolder paramList;
 
 
 	
+	public ScoringMethod getScoringMethod() {
+		return scoringMethod;
+	}
 
+	public void setScoringMethod(ScoringMethod scoringMethod) {
+		this.scoringMethod = scoringMethod;
+	}
+	
 	public MetaIdentifierHolder getSourceInfo() {
 		return sourceInfo;
 	}
