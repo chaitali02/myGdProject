@@ -213,25 +213,24 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 		Rule2Service.getFormulaByType($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessFormula(response.data) });
 		var onSuccessFormula = function (response) {
 			$scope.allSourceFormula = response.data;
-			$scope.allFilterormula = response.data;
-			$scope.getParamListByFormula();
+			$scope.allFilterFormula = response.data;
+			$scope.getFormulaByParamList();
 		}
 	}
 
-	$scope.getParamListByFormula = function () {
+	$scope.getFormulaByParamList = function () {
 		if ($scope.allparamlist.defaultoption) {
-
 			Rule2Service.getFormulaByType($scope.allparamlist.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccressGetFormula(response.data) });
 			var onSuccressGetFormula = function (response) {
-				if ($scope.allFilterormula && $scope.allFilterormula.length > 0) {
-					$scope.allFilterormula = $scope.allFilterormula.concat(response.data)
+				if ($scope.allFilterFormula && $scope.allFilterFormula.length > 0) {
+					$scope.allFilterFormula = $scope.allFilterFormula.concat(response.data)
 				} else {
 					$scope.allParamlistFormula = response.data
-					$scope.allFilterormula = $scope.allParamlistFormula;
+					$scope.allFilterFormula = $scope.allParamlistFormula;
 				}
 			}
 		} else {
-			$scope.allFilterormula = $scope.allSourceFormula;
+			$scope.allFilterFormula = $scope.allSourceFormula;
 		}
 	}
 
@@ -273,7 +272,7 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 	$scope.selectOption = function () {
 		$scope.getAllAttributeBySource(true);
 		$scope.filterTableArray = null;
-		$scope.getParamListByFormula();
+		$scope.getFormulaByParamList();
 		$scope.criteriaTableArray = null;
 		//	$scope.addRowCriteria();
 		$scope.rule.entityType = null;
@@ -304,9 +303,9 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 	}
 
 	$scope.onChangeParamListOFRule = function () {
-		$scope.allFilterormula == null;
-		$scope.allFilterormula = $scope.allSourceFormula;
-		$scope.getParamListByFormula();
+		$scope.allFilterFormula == null;
+		$scope.allFilterFormula = $scope.allSourceFormula;
+		$scope.getFormulaByParamList();
 		setTimeout(function () { $scope.paramTypes = ["paramlist", "paramset"]; }, 1);
 		$scope.getParamByApp();
 	}

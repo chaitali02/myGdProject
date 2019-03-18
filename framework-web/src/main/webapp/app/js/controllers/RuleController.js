@@ -552,11 +552,11 @@ var confirmDialog = function(newVal, yes, no) {
       var onSuccressGetFormula = function (response) {
         $scope.ruleLodeFormula = response.data;
         $scope.allSourceFormula=response.data;
-        $scope.getParamListByFormula();  
+        $scope.getFormulaByParamList();  
       }
     }
   }
-  $scope.getParamListByFormula=function(){
+  $scope.getFormulaByParamList=function(){
     if($scope.allparamlist.defaultoption){
       RuleService.getFormulaByType($scope.allparamlist.defaultoption.uuid,$scope.rulsourcetype).then(function (response) { onSuccressGetFormula(response.data) });
       var onSuccressGetFormula = function (response) {
@@ -761,7 +761,7 @@ var confirmDialog = function(newVal, yes, no) {
     $scope.selectParamType=null;
     $scope.ruleLodeFormula ==null;
     $scope.ruleLodeFormula = $scope.allSourceFormula
-    $scope.getParamListByFormula();
+    $scope.getFormulaByParamList();
     setTimeout(function(){  $scope.paramTypes=["paramlist","paramset"]; },1);
     $scope.checkboxModelexecution="NO";
     $scope.ruleLodeParamList=null;
