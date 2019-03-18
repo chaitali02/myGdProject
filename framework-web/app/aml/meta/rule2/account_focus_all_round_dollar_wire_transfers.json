@@ -162,7 +162,7 @@
     },
     {
       "criteriaId": "1",
-      "criteriaName": "criteria2",
+      "criteriaName": "Transaction Value",
       "activeFlag": "Y",
       "criteriaFilter": [
         {
@@ -199,7 +199,7 @@
       ],
       "score": 1,
       "filter_critria": null,
-      "criteriaWeight": 1
+      "criteriaWeight": 0.5
     }
   ],
   "paramList": {

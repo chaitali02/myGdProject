@@ -1,7 +1,7 @@
 {
-  "uuid": "56fbc459-5b41-46e6-9ef4-d3da33d3337c",
-  "version": "1552914117",
-  "name": "customer_focus_outgoing_round_dollar_wire_transfers",
+  "uuid": "0c664fdc-9eb3-4220-a990-7b5acae4e59d",
+  "version": "1552913999",
+  "name": "customer_focus_all_round_dollar_cash_transfers",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Mar 18 18:31:57 IST 2019",
+  "createdOn": "Mon Mar 18 18:29:59 IST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -136,9 +136,9 @@
                 "version": null,
                 "name": "customer_summary_daily"
               },
-              "attributeId": 6,
+              "attributeId": 17,
               "value": null,
-              "attributeName": "out_wire_transfers_trans_count",
+              "attributeName": "all_cash_transfers_round_amount_usd",
               "attributeType": null
             },
             {
@@ -177,9 +177,9 @@
                 "version": null,
                 "name": "customer_summary_daily"
               },
-              "attributeId": 7,
+              "attributeId": 18,
               "value": null,
-              "attributeName": "out_wire_transfers_trans_amount_usd",
+              "attributeName": "all_cash_transfers_round_amount_count",
               "attributeType": null
             },
             {
