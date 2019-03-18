@@ -1,3 +1,4 @@
+
 package com.inferyx.framework.dao;
 
 import java.util.List;
@@ -9,7 +10,7 @@ import org.springframework.data.mongodb.repository.Query;
 import com.inferyx.framework.domain.Graphpod;
 
 public interface IGraphpodDao extends MongoRepository<Graphpod, String> {
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1 , 'version' : ?2 }")
+	@Query(value="{$or: [ { publicFlag: \"Y\"},{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} }],'uuid' : ?1 , 'version' : ?2 }")
 	public Graphpod findOneByUuidAndVersion(String appUuid,String datapodUUID, String version);
 	
 	@Query(value="{ 'uuid' : ?0 , 'version' : ?1 }")

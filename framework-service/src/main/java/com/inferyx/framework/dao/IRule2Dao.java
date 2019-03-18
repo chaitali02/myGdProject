@@ -21,7 +21,7 @@ import com.inferyx.framework.domain.Rule2;
 
 public interface IRule2Dao extends MongoRepository<Rule2, String> {
 
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1 , 'version' : ?2 }")
+	@Query(value="{$or: [ { publicFlag: \"Y\"},{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} }],'uuid' : ?1 , 'version' : ?2 }")
 	public Rule2 findOneByUuidAndVersion(String appUuid,String uuid, String version);	
 	
 	@Query(value="{ 'uuid' : ?0 , 'version' : ?1 }")
