@@ -1,0 +1,31 @@
+{
+	"uuid" : "a918cc9d-3047-4fa2-9982-5662863a9fec",
+	"name" : "IngestgroupexecExport",
+	"version" : "1464977196",
+	"desc" : "Ingestgroupexec Privilage for Publish Export",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-03-18T14:21:59.582Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"privType" : "Export",
+	"metaId" : {
+		"ref" : {
+			"type" : "meta",
+			"uuid" : "8e5a1663-0036-48a8-9e1c-3a255a51b2a5"
+		}
+	},
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"publicFlag" : "Y"
+}

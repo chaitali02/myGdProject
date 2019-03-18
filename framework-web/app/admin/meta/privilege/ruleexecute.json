@@ -1,0 +1,31 @@
+{
+	"uuid" : "2e028507-cafe-4820-afe4-ec3d89839601",
+	"name" : "RuleExecute",
+	"version" : "1464977196",
+	"desc" : "Analyst role for users",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-03-18T14:21:59.582Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"privType" : "Execute",
+	"metaId" : {
+		"ref" : {
+			"type" : "meta",
+			"uuid" : "0031d20c-3aef-44e6-b9c6-6f67053e693f"
+		}
+	},
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"publicFlag" : "Y"
+}

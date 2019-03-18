@@ -1,0 +1,31 @@
+{
+	"uuid" : "cb7cd122-e198-11e8-9f32-f2801f1b9fd1",
+	"name" : "OperatorExecUnlock",
+	"version" : "1464977196",
+	"desc" : "Privilage for Unlock",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-03-18T14:21:59.582Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"privType" : "Unlock",
+	"metaId" : {
+		"ref" : {
+			"type" : "meta",
+			"uuid" : "9d365196-4925-11e8-842f-0ed5f89f718b"
+		}
+	},
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"publicFlag" : "Y"
+}

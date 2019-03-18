@@ -1,0 +1,31 @@
+{
+	"uuid" : "dd014185-9d1a-4d0c-bf69-7ff083ae87c8",
+	"name" : "TagAdd",
+	"version" : "1464977196",
+	"desc" : "Privilage for Add",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-03-18T14:21:59.582Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"privType" : "Add",
+	"metaId" : {
+		"ref" : {
+			"type" : "meta",
+			"uuid" : "181e5151-1510-42be-acf3-bc0309257851"
+		}
+	},
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"publicFlag" : "Y"
+}

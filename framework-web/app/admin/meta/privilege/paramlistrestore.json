@@ -1,0 +1,31 @@
+{
+	"uuid" : "cc2abf85-a93e-4681-9fb8-c7ff8aacaea5",
+	"name" : "ParamlistRestore",
+	"version" : "1464977196",
+	"desc" : "Analyst role for users",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-03-18T14:21:59.582Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"privType" : "Restore",
+	"metaId" : {
+		"ref" : {
+			"type" : "meta",
+			"uuid" : "36b73690-8130-48d0-bfaa-8da1d20c7c37"
+		}
+	},
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"publicFlag" : "Y"
+}

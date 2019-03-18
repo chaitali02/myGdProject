@@ -1,0 +1,39 @@
+{
+	"id" : "59840b7527505215a959c1c5",
+	"uuid" : "a1062776-a39b-4015-9a6d-a1f885a98522",
+	"version" : "1501825909",
+	"name" : "ImportEdit",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : "1464977196",
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-03-18T14:21:59.582Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"privType" : "Edit",
+	"metaId" : {
+		"ref" : {
+			"type" : "meta",
+			"uuid" : "6f37d577-585e-4a40-afed-228d540ee909",
+			"version" : null,
+			"name" : "import"
+		},
+		"value" : null
+	},
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"publicFlag" : "Y"
+}

@@ -1,0 +1,31 @@
+{
+	"uuid" : "b2cc4fbb-c6f3-41cb-b774-24db0b435135",
+	"name" : "RulegroupRestore",
+	"version" : "1464977196",
+	"desc" : "Analyst role for users",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-03-18T14:21:59.582Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"privType" : "Restore",
+	"metaId" : {
+		"ref" : {
+			"type" : "meta",
+			"uuid" : "0204c7f4-fcfd-4948-8a1b-a3ae3deba6bd"
+		}
+	},
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"publicFlag" : "Y"
+}

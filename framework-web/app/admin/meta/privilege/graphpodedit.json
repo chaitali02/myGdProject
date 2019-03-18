@@ -1,0 +1,31 @@
+{
+	"uuid" : "bf9eeb6e-75ec-11e8-adc0-fa7ae01bbebc",
+	"name" : "GraphpodEdit",
+	"version" : "1464977196",
+	"desc" : "Analyst role for users",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-03-18T14:21:59.582Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"privType" : "Edit",
+	"metaId" : {
+		"ref" : {
+			"type" : "meta",
+			"uuid" : "bf9ee678-75ec-11e8-adc0-fa7ae01bbebc"
+		}
+	},
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"publicFlag" : "Y"
+}
