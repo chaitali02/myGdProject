@@ -455,7 +455,7 @@
                                                                             <select select2 class="form-control"
                                                                                 ng-change="onChangeFromula()"
                                                                                 data-ng-model="tabledata.lhsformula"
-                                                                                ng-options="r as r.name for r in allFilterormula track by r.uuid"
+                                                                                ng-options="r as r.name for r in allFilterFormula track by r.uuid"
                                                                                 ng-disabled="{{mode}}" ng-show="tabledata.islhsFormula"
                                                                                 required disable-validation-message="">
                                                                             </select>
@@ -580,7 +580,7 @@
                                                                             <select select2 class="form-control"
                                                                                 ng-change="selectmetrhsType()"
                                                                                 data-ng-model="tabledata.rhsformula"
-                                                                                ng-options="r as r.name for r in allFilterormula track by r.uuid"
+                                                                                ng-options="r as r.name for r in allFilterFormula track by r.uuid"
                                                                                 ng-disabled="{{mode}}" required disable-validation-message="">
                                                                             </select>
                                                                         </span>
@@ -628,13 +628,13 @@
                                                                         </span>
                                                                     </div>
                                                                     <div ng-if="tabledata.isrhsParamlist">
-
+                                                                        {{tabledata.rhsparamlist}}
                                                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                             <select select2 class="form-control"
                                                                                 data-ng-model="tabledata.rhsparamlist"
                                                                                 ng-options="r as r.caption for r in allparamlistParams track by r.uuid+r.attributeId"
                                                                                 ng-disabled="{{mode}}" required
-                                                                                disable-validation-message="" ng-change="onChangeRhsParamList()"></select>
+                                                                                disable-validation-message=""></select>
                                                                         </span>
                                                                     </div>
                                                                 </td>
@@ -731,7 +731,7 @@
                                                                             </th>
                                                                             <th style="text-align: center;width:5%;">Id</th>
                                                                             <th style="text-align: center;width:15%;">Name</th>
-                                                                           
+                                                                            <th style="text-align:center;width:5%;">Score</th>
                                                                             <th style="text-align:center;width:5%;">Weight</th>
                                                                             <th style="text-align:center;width:5%;">Active</th>
                                                                             <th style="width:2%;">
@@ -748,7 +748,6 @@
                                                                         <tr ng-repeat-start="data in criteriaTableArray " drag-drop
                                                                         draggable="{{isDragable}}"  after-drop="onCriteriaDrop">
                                                                             <td style="text-align: center; Vertical-align: middle;width:3%;">
-                                                                             
                                                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                                     <input style="width: 16px;height:16px;"
                                                                                         type="checkbox" ng-model="data.selected"
@@ -766,10 +765,14 @@
                                                                                     <input class="form-control" type="text" name="name" data-ng-model="data.criteriaName" required  ng-disabled="{{mode}} || data.activeFlag==true?false:true">
                                                                                 </span>
                                                                             </td>
-                                                                           
                                                                             <td>
                                                                                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                                                                                    <input class="form-control" type="number" name="name" data-ng-model="data.criteriaWeight" step="0.1" min="0.01" max="1" required  ng-disabled="{{mode}} || data.activeFlag==true?false:true">
+                                                                                    <input class="form-control" type="number" name="criteriaWeight" data-ng-model="data.score" step="1" min="1"  required  ng-disabled="{{mode}} || data.activeFlag==true?false:true">
+                                                                                </span>
+                                                                            </td>
+                                                                            <td>
+                                                                                <span class="form-group" style="margin-left:0px;margin-right: 0px;">
+                                                                                    <input class="form-control"  limit-to="7" type="number" name="criteriaWeight" data-ng-model="data.criteriaWeight" step="0.1" min="0.01" max="1" required  ng-disabled="{{mode}} || data.activeFlag==true?false:true">
                                                                                 </span>
                                                                             </td>
                                                                             <td style="text-align: center; Vertical-align: middle;width:5%;">
@@ -787,7 +790,7 @@
                                                                             </td>
                                                                         </tr>
                                                                         <tr ng-repeat-end ng-show="expanded">
-                                                                            <td colspan="5" style="padding: 0px 17px;">
+                                                                            <td colspan="6" style="padding: 0px 17px;">
                                                                                 <div class="x_title" style="padding:10px;">
                                                                                     <button type="Button" class=" btn btn-danger fa fa-minus pull-right"
                                                                                         ng-click="removeSubRowCriteria($index)"

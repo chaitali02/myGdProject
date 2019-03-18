@@ -18,15 +18,15 @@ public class Criteria {
 	private String criteriaName;
 	private String activeFlag;
 	private List<FilterInfo> criteriaFilter;
-	private String score="1";
+	private int score=1;
 	private String filter_critria;
 	private double criteriaWeight;
 	
-	public String getScore() {
+	public int getScore() {
 		return score;
 	}
 
-	public void setScore(String score) {
+	public void setScore(int score) {
 		this.score = score;
 	}
 	
