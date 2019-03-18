@@ -1052,32 +1052,32 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
                  var localPoint = pt.matrixTransform(svg.getScreenCTM().inverse());
                  var state;
                  if(isExec || isGroupExec){
-                   var iconMenuItems = [{title:'Show Details', type : 'element'}];
+                   var iconMenuItems = [{title:'Show Details', type : 'element'},{title:'Show Logs', type : 'logs'}];
                 
                    if($scope.execMode || true){
                      var status = $(".status[element-id=" + taskId + "] .statusTitle")[0].innerHTML.toUpperCase();
                      if(status && (status=='COMPLETED') && isGroupExec!=true && type !='ingest' ){
                        iconMenuItems.push({title:'Show Results', type : 'results'});
-                       iconMenuItems.push({title:'Show Logs', type : 'logs'});
+                      // iconMenuItems.push({title:'Show Logs', type : 'logs'});
                      }
                      else if(status && (status=='PENDING' || status=='RESUME')){
                        
                        iconMenuItems.push({title:'Pause', type : 'PAUSE'});
-                       iconMenuItems.push({title:'Show Logs', type : 'logs'});
+                     //  iconMenuItems.push({title:'Show Logs', type : 'logs'});
                      }
                      else if(status && status=='RUNNING'){
                       iconMenuItems.splice(0,0,{title:'Kill', type : 'killexecution'});
-                         iconMenuItems.push({title:'Show Logs', type : 'logs'});
+                      //iconMenuItems.push({title:'Show Logs', type : 'logs'});
                      }
                     else if(status && status=='KILLED'){
-                        iconMenuItems.push({title:'Show Logs', type : 'logs'});
+                        //iconMenuItems.push({title:'Show Logs', type : 'logs'});
                     }
                     else if(status && status=='FAILED'){
-                      iconMenuItems.push({title:'Show Logs', type : 'logs'});
+                      ///iconMenuItems.push({title:'Show Logs', type : 'logs'});
                   }
                     else if(status && status=='RUNNING'){
                       iconMenuItems.splice(0,0,{title:'Kill', type : 'killexecution'});
-                        iconMenuItems.push({title:'Show Logs', type : 'logs'});
+                        //iconMenuItems.push({title:'Show Logs', type : 'logs'});
                     }
                     else if(status && status=='STARTING' &&  isGroupExec){
                       iconMenuItems.splice(0,0,{title:'Kill', type : 'killexecution'});
@@ -1518,7 +1518,6 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
     }
 
     window.showResult = function(params,url,execUrl){
-      debugger
        if(["dashboard"].indexOf(params.elementType) !=-1 && url !=null){
          url.state=dagMetaDataService.elementDefs[params.elementType.toLowerCase()].resultState
         window.navigateTo(JSON.stringify(url));
@@ -2093,19 +2092,18 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
            var  execStates;
            
            if(isExec || isGroupExec){
-             var iconMenuItems = [{title:'Show Details', type : 'element'}];
+             var iconMenuItems = [{title:'Show Details', type : 'element'},{title:'Show Logs', type : 'logs'}];
              if($scope.execMode){
-               
                var status = $(".status[element-id=" + taskId + "] .statusTitle")[0].innerHTML.toUpperCase();
-               if(status && (status=='COMPLETED') ||(status== 'FAILED')|| (status== 'RUNNING')){
+               if(status && (status=='COMPLETED') ||(status== 'FAILED')||(status== 'KILLED')|| (status== 'RUNNING')){
                  if(isExec && (status=='COMPLETED')){
                    iconMenuItems.push({title:'Show Results', type : 'results'});
-                   iconMenuItems.push({title:'Show Logs', type : 'logs'});
+                  // iconMenuItems.push({title:'Show Logs', type : 'logs'});
                  }
                  if(isGroupExec){
                    iconMenuItems.push({title:'Show Results', type : 'results'});
-                   if(status=='COMPLETED')
-                    iconMenuItems.push({title:'Show Logs', type : 'logs'});
+                  //  if(status=='COMPLETED')
+                  //   iconMenuItems.push({title:'Show Logs', type : 'logs'});
                  }
                }
                else if(status && (status=='PENDING' || status=='RESUME')){
@@ -2116,16 +2114,16 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                }
                
                if(status && status=='FAILED'){
-                iconMenuItems.push({title:'Show Logs', type : 'logs'});
+                //iconMenuItems.push({title:'Show Logs', type : 'logs'});
                 
                }
                if(status && status=='KILLED'){
-                iconMenuItems.push({title:'Show Logs', type : 'logs'});
+               // iconMenuItems.push({title:'Show Logs', type : 'logs'});
                 
                }
                if(status && status=='RUNNING'){
                  iconMenuItems.splice(0,0,{title:'Kill', type : 'killexecution'});
-                 iconMenuItems.push({title:'Show Logs', type : 'logs'});
+                // iconMenuItems.push({title:'Show Logs', type : 'logs'});
                }
                if(status && status=='STARTING'){
                 //iconMenuItems.splice(0,0,{title:'Kill', type : 'killexecution'});

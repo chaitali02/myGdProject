@@ -592,7 +592,7 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
                     else if (['IN', 'NOT IN'].indexOf(filterInfo.operator) != -1) {
 						filterInfo.rhsTypes = IngestRuleFactory.disableRhsType([]);
 					} else if (['<', '>', "<=", '>='].indexOf(filterInfo.operator) != -1) {
-						filterInfo.rhsTypes = IngestRuleFactory.disableRhsType(['string', 'dataset']);
+						filterInfo.rhsTypes = IngestRuleFactory.disableRhsType(['dataset']);
 					}
 					else if (['EXISTS', 'NOT EXISTS'].indexOf(filterInfo.operator) != -1) {
 						filterInfo.rhsTypes = IngestRuleFactory.disableRhsType(['attribute', 'formula', 'function', 'paramlist','string','integer']);
@@ -673,7 +673,7 @@ DataIngestionModule.service("IngestRuleService", function ($q, IngestRuleFactory
 							filterInfo.rhsvalue1=response.filterInfo[i].operand[1].value.split("and")[0];
 							filterInfo.rhsvalue2=response.filterInfo[i].operand[1].value.split("and")[1];	
 						}else if(['<','>',"<=",'>='].indexOf(response.filterInfo[i].operator) !=-1){
-							obj.caption = "integer";
+							obj.caption = response.filterInfo[i].operand[1].attributeType;
 							filterInfo.rhsvalue = response.filterInfo[i].operand[1].value
 
 						}else if(response.filterInfo[i].operator =='=' && response.filterInfo[i].operand[1].attributeType =="integer"){

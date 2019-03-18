@@ -528,7 +528,7 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 					else if (['IN', 'NOT IN'].indexOf(filterInfo.operator) != -1) {
 						filterInfo.rhsTypes = MetadataDatasetFactory.disableRhsType([]);
 					} else if (['<', '>', "<=", '>='].indexOf(filterInfo.operator) != -1) {
-						filterInfo.rhsTypes = MetadataDatasetFactory.disableRhsType(['string', 'dataset']);
+						filterInfo.rhsTypes = MetadataDatasetFactory.disableRhsType(['dataset']);
 					}
 					else if (['EXISTS', 'NOT EXISTS'].indexOf(filterInfo.operator) != -1) {
 						filterInfo.rhsTypes = MetadataDatasetFactory.disableRhsType(['attribute', 'formula', 'function', 'paramlist','string','integer']);
@@ -604,8 +604,9 @@ MetadataModule.service('MetadataDatasetSerivce', function ($http, $q, sortFactor
 							obj.caption = "integer";
 							filterInfo.rhsvalue1 = response.filterInfo[i].operand[1].value.split("and")[0];
 							filterInfo.rhsvalue2 = response.filterInfo[i].operand[1].value.split("and")[1];
+
 						} else if (['<', '>', "<=", '>='].indexOf(response.filterInfo[i].operator) != -1) {
-							obj.caption = "integer";
+							obj.caption =response.filterInfo[i].operand[1].attributeType;
 							filterInfo.rhsvalue = response.filterInfo[i].operand[1].value
 
 						} else if (response.filterInfo[i].operator == '=' && response.filterInfo[i].operand[1].attributeType == "integer") {

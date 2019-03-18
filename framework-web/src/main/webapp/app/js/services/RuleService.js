@@ -608,7 +608,7 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory,CF_FILT
           }else if(['IN','NOT IN'].indexOf(filterInfo.operator) !=-1){
             filterInfo.rhsTypes=RuleFactory.disableRhsType([]);
           }else if(['<','>',"<=",'>='].indexOf(filterInfo.operator) !=-1){
-            filterInfo.rhsTypes=RuleFactory.disableRhsType(['string','dataset']);
+            filterInfo.rhsTypes=RuleFactory.disableRhsType(['dataset']);
           }
           else if (['EXISTS', 'NOT EXISTS'].indexOf(filterInfo.operator) != -1) {
 						filterInfo.rhsTypes = RuleFactory.disableRhsType(['attribute', 'formula', 'function', 'paramlist','string','integer']);
@@ -680,7 +680,7 @@ RuleModule.factory("RuleService", function ($q, RuleFactory, sortFactory,CF_FILT
 							filterInfo.rhsvalue1=response.filterInfo[i].operand[1].value.split("and")[0];
 							filterInfo.rhsvalue2=response.filterInfo[i].operand[1].value.split("and")[1];	
 						}else if(['<','>',"<=",'>='].indexOf(response.filterInfo[i].operator) !=-1){
-							obj.caption = "integer";
+							obj.caption =response.filterInfo[i].operand[1].attributeType;
               filterInfo.rhsvalue = response.filterInfo[i].operand[1].value
 
 						}else if(response.filterInfo[i].operator =='=' && response.filterInfo[i].operand[1].attributeType =="integer"){
