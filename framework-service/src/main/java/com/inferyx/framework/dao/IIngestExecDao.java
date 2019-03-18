@@ -23,7 +23,7 @@ import com.inferyx.framework.domain.IngestExec;
  *
  */
 public interface IIngestExecDao extends MongoRepository<IngestExec, String> {
-	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1 , 'version' : ?2 }")
+	@Query(value = "{$or: [ { publicFlag: \"Y\"},{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} }],'uuid' : ?1 , 'version' : ?2 }")
 	public IngestExec findOneByUuidAndVersion(String appUuid, String uuid, String version);
 
 	@Query(value = "{ 'uuid' : ?0 , 'version' : ?1 }")
