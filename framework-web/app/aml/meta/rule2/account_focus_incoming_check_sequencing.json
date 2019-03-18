@@ -1,7 +1,7 @@
 {
   "uuid": "fa01d362-cdf5-455f-a7ca-afd2832d6c70",
   "version": "1552675019",
-  "name": "Account Focus - Incoming Check Sequencing",
+  "name": "account_focus_incoming_check_sequencing",
   "desc": null,
   "createdBy": {
     "ref": {
