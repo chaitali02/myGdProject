@@ -86,7 +86,7 @@ public class IngestController {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		IngestGroupExec ingestGroupExec = null;
 		ingestGroupExec = ingestGroupServiceImpl.create(groupUuid, groupVersion, execParams, null, null, null);
-		ingestGroupExec = ingestGroupServiceImpl.parse(ingestGroupExec.getUuid(), ingestGroupExec.getVersion(), null, null, null, runMode);
+		ingestGroupExec = ingestGroupServiceImpl.parse(ingestGroupExec.getUuid(), ingestGroupExec.getVersion(), null, null, null, null, runMode);
 		return ingestGroupServiceImpl.execute(groupUuid, groupVersion, execParams, ingestGroupExec, runMode);
 	}
 	

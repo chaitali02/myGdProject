@@ -94,7 +94,7 @@ public class DataQualController {
 			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		DataQualGroupExec dataQualGroupExec = dataQualGroupServiceImpl.create(dataQualGroupUUID, dataQualGroupVersion, execParams, null, null, null);
-		dataQualGroupExec = dataQualGroupServiceImpl.parse(dataQualGroupExec.getRef(MetaType.dqgroupExec), null, null, null, runMode);
+		dataQualGroupExec = dataQualGroupServiceImpl.parse(dataQualGroupExec.getRef(MetaType.dqgroupExec), null, null, null, null, runMode);
 		return dataQualGroupServiceImpl.execute(dataQualGroupUUID, dataQualGroupVersion, execParams, dataQualGroupExec, runMode);
 	}
 

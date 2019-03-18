@@ -11,6 +11,7 @@
 package com.inferyx.framework.service;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -303,7 +304,7 @@ public class RuleGroupServiceImpl extends RuleGroupTemplate {
 //		} catch (Exception e) {
 //			e.printStackTrace();
 //		}
-		ruleGroupExec = parse(ruleGroupExec.getUuid(), ruleGroupExec.getVersion(), null, null, null, runMode);
+		ruleGroupExec = parse(ruleGroupExec.getUuid(), ruleGroupExec.getVersion(), null, null, null, null, runMode);
 		execute(ruleGroupExec.getDependsOn().getRef().getUuid(), ruleGroupExec.getDependsOn().getRef().getVersion(), null,ruleGroupExec, runMode);
 		
 	}
@@ -324,9 +325,9 @@ public class RuleGroupServiceImpl extends RuleGroupTemplate {
 		}
 	}
 
-	public RuleGroupExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec, RunMode runMode)
+	public RuleGroupExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, List<String> datapodList, DagExec dagExec, RunMode runMode)
 			throws Exception {
-		return (RuleGroupExec) super.parse(execUuid, execVersion, MetaType.rulegroup, MetaType.rulegroupExec, MetaType.rule, MetaType.ruleExec, refKeyMap, datapodList, dagExec, runMode);
+		return (RuleGroupExec) super.parse(execUuid, execVersion, MetaType.rulegroup, MetaType.rulegroupExec, MetaType.rule, MetaType.ruleExec, refKeyMap, otherParams, datapodList, dagExec, runMode);
 	}
 
 	/**
@@ -344,6 +345,6 @@ public class RuleGroupServiceImpl extends RuleGroupTemplate {
 	@Override
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		return parse(baseExec.getUuid(), baseExec.getVersion(), MetaType.rulegroup, MetaType.rulegroupExec, MetaType.rule, MetaType.ruleExec, 
-				DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), null, null, runMode);
+				DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), null, null, null, runMode);
 	}
 }

@@ -13,6 +13,7 @@ package com.inferyx.framework.service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -275,11 +276,11 @@ public class DataQualGroupServiceImpl extends RuleGroupTemplate {
 		return (DataQualGroupExec) super.create(dataQualGroupUUID, dataQualGroupVersion, MetaType.dqgroup, MetaType.dqgroupExec, MetaType.dq, MetaType.dqExec, execParams, datapodList, dataQualGroupExec, dagExec); 
 	}
 	
-	public DataQualGroupExec parse(MetaIdentifier dqGroupExec, Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec, RunMode runMode) throws Exception {
+	public DataQualGroupExec parse(MetaIdentifier dqGroupExec, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, List<String> datapodList, DagExec dagExec, RunMode runMode) throws Exception {
 		DataQualGroupExec dataQualGroupExec=null;
 		try {
 			dataQualGroupExec=(DataQualGroupExec) commonServiceImpl.getOneByUuidAndVersion(dqGroupExec.getUuid(), dqGroupExec.getVersion(), MetaType.dqgroupExec.toString());
-			return (DataQualGroupExec) super.parse(dqGroupExec.getUuid(), dqGroupExec.getVersion(), MetaType.dqgroup, MetaType.dqgroupExec, MetaType.dq, MetaType.dqExec, refKeyMap, datapodList, dagExec, runMode);
+			return (DataQualGroupExec) super.parse(dqGroupExec.getUuid(), dqGroupExec.getVersion(), MetaType.dqgroup, MetaType.dqgroupExec, MetaType.dq, MetaType.dqExec, refKeyMap, otherParams, datapodList, dagExec, runMode);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 				commonServiceImpl.setMetaStatus(dataQualGroupExec, MetaType.dqgroupExec, Status.Stage.FAILED);
@@ -358,7 +359,7 @@ public class DataQualGroupServiceImpl extends RuleGroupTemplate {
 		//DataQualGroupExec dataQualGroupExec= dataQualGroupExecServiceImpl.findOneByUuidAndVersion(uuid,version);
 		DataQualGroupExec dataQualGroupExec = (DataQualGroupExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dqgroupExec.toString());
 		//dataQualGroupExec = create(dataQualGroupExec.getDependsOn().getRef().getUuid(),dataQualGroupExec.getDependsOn().getRef().getVersion(), null, null, dataQualGroupExec, null);
-		dataQualGroupExec = parse(dataQualGroupExec.getRef(MetaType.dqgroupExec), null, null, null, runMode);
+		dataQualGroupExec = parse(dataQualGroupExec.getRef(MetaType.dqgroupExec), null, null, null, null, runMode);
 		execute(dataQualGroupExec.getDependsOn().getRef().getUuid(),dataQualGroupExec.getDependsOn().getRef().getVersion(),null,dataQualGroupExec, runMode);
 	}
 	
@@ -393,7 +394,7 @@ public class DataQualGroupServiceImpl extends RuleGroupTemplate {
 	@Override
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		return parse(baseExec.getUuid(), baseExec.getVersion(), MetaType.dqgroup, MetaType.dqgroupExec, MetaType.dq, MetaType.dqExec, 
-				DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), null, null, runMode);
+				DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), null, null, null, runMode);
 	}
 	
 	
