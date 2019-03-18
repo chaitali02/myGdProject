@@ -331,7 +331,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
    $scope.okRestart=function(){
     var api = false;
     switch ($scope.newType) {
-      case 'dqexec':
+      case 'dqExec':
         api = 'dataqual';
         break;
       case 'dqgroupExec':
