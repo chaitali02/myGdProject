@@ -23,7 +23,7 @@ public interface IReconExecDao extends MongoRepository<ReconExec, String>{
 	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid':?1}")
 	public ReconExec findAllByUuid(String appUuid,String uuid);
 	
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1 , 'version' : ?2 }")
+	@Query(value="{$or: [ { publicFlag: \"Y\"},{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} }],'uuid' : ?1 , 'version' : ?2 }")
 	public ReconExec findOneByUuidAndVersion(String appUuid,String uuid, String version);
 	
 	@Query(value="{ 'uuid' : ?0 , 'version' : ?1 }")

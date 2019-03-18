@@ -21,7 +21,7 @@ import com.inferyx.framework.domain.DataSet;
 
 public interface IDatasetDao extends MongoRepository<DataSet, String>
 {
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1 , 'version' : ?2 }")
+	@Query(value="{$or: [ { publicFlag: \"Y\"},{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} }],'uuid' : ?1 , 'version' : ?2 }")
 	public DataSet findOneByUuidAndVersion(String appUuid,String uuid, String version);
 	
 	@Query(value="{ 'uuid' : ?0 , 'version' : ?1 }")

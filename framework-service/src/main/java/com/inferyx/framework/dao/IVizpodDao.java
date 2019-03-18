@@ -21,7 +21,7 @@ import com.inferyx.framework.domain.Vizpod;
 
 
 public interface IVizpodDao  extends MongoRepository<Vizpod, String> {
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1 , 'version' : ?2 }")
+	@Query(value="{$or: [ { publicFlag: \"Y\"},{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} }],'uuid' : ?1 , 'version' : ?2 }")
 	public Vizpod findOneByUuidAndVersion(String appUuid,String datapodUUID, String version);
 	
 	@Query(value="{ 'uuid' : ?0 , 'version' : ?1 }")

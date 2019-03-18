@@ -23,7 +23,7 @@ import com.inferyx.framework.domain.DashboardExec;
  *
  */
 public interface IDashboardExecDao extends MongoRepository<DashboardExec, String> {
-	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'uuid' : ?1 , 'version' : ?2 }")
+	@Query(value = "{$or: [ { publicFlag: \"Y\"},{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} }],'uuid' : ?1 , 'version' : ?2 }")
 	public DashboardExec findOneByUuidAndVersion(String appUuid, String uuid, String version);
 
 	@Query(value = "{'uuid' : ?0 , 'version' : ?1 }")
@@ -59,7 +59,7 @@ public interface IDashboardExecDao extends MongoRepository<DashboardExec, String
 	@Query(value = "{'uuid':?0}")
 	public DashboardExec findAllByUuid(String uuid);
 
-	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1 }")
+	@Query(value = "{$or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ],'uuid' : ?1}")
 	public List<DashboardExec> findAllVersion(String appUuid, String uuid);
 
 	@Query(value = "{'uuid' : ?0 }")
