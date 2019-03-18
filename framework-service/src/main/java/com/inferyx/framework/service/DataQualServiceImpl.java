@@ -500,6 +500,7 @@ public class DataQualServiceImpl extends RuleTemplate {
 			HashMap<String, String> otherParams, List<String> datapodList, DagExec dagExec, RunMode runMode)
 			throws Exception {
 		logger.info("Inside dataQualServiceImpl.parse");
+		logger.info("OtherParams : " + otherParams);
 		if (datapodList != null) {
 			logger.info(" Size of datapodList : " + datapodList.size());
 		}

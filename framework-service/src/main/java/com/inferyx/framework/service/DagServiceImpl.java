@@ -812,6 +812,7 @@ public class DagServiceImpl {
 		} else {
 			execParams = new ExecParams();
 			execParams.setRefKeyList(new ArrayList<>());
+			dagExec.setExecParams(execParams);
 		}
 		java.util.Map<String, MetaIdentifier> inputRefKeys = new HashMap<>();
 		if (inputRefKeyList != null && inputRefKeyList.size() > 0) {
@@ -1012,6 +1013,8 @@ public class DagServiceImpl {
 				e.printStackTrace();
 			}*/
 			execParams.setRefKeyList(DagExecUtil.convertRefKeyMapToList(refKeys));
+			execParams = includeInParentParams(execParams, taskExecParams);
+			
 		}
 		// For GC - START
 		mapRef = null;

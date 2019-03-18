@@ -193,6 +193,7 @@ public class DQOperator implements IParsable {
 
 	public String generateSql(DataQual dataQual, List<String> datapodList, DataQualExec dataQualExec, DagExec dagExec,
 			Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode) throws Exception {
+		logger.info("DQ generateSql otherParams : " + otherParams);
 		Datapod srcDP = null;
 //		DataSet dataset = null;
 		if (dataQual == null) {
