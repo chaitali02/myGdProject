@@ -1,6 +1,6 @@
 {
   "uuid": "1953344d-b323-461e-9617-b88e9665d4e8",
-  "version": "1551907688",
+  "version": "1552858719",
   "name": "fm_day_num",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Thu Mar 07 02:58:08 IST 2019",
+  "createdOn": "Sun Mar 17 17:38:39 EDT 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -31,23 +31,23 @@
   "publicFlag": "N",
   "dependsOn": {
     "ref": {
-      "type": "paramlist",
-      "uuid": "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z",
+      "type": "datapod",
+      "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
       "version": null,
-      "name": "paramlist_aml_app"
+      "name": "fact_transaction_journal"
     },
     "value": null
   },
   "formulaInfo": [
     {
       "ref": {
-        "type": "simple",
-        "uuid": null,
+        "type": "function",
+        "uuid": "9e3e2936-02fb-11e7-93ae-92361f002786",
         "version": null,
-        "name": null
+        "name": "dayofyear"
       },
       "attributeId": null,
-      "value": "dayofyear",
+      "value": null,
       "attributeName": null,
       "attributeType": null
     },
@@ -65,14 +65,14 @@
     },
     {
       "ref": {
-        "type": "paramlist",
-        "uuid": "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z",
+        "type": "datapod",
+        "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
         "version": null,
-        "name": "paramlist_aml_app"
+        "name": "fact_transaction_journal"
       },
-      "attributeId": 0,
+      "attributeId": 5,
       "value": null,
-      "attributeName": "business_date",
+      "attributeName": "transaction_date",
       "attributeType": null
     },
     {
@@ -88,5 +88,5 @@
       "attributeType": null
     }
   ],
-  "formulaType": "custom"
+  "formulaType": "simple"
 }
