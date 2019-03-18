@@ -103,16 +103,16 @@ public class Rule2Operator implements IParsable, IReferenceable {
 		String withSql = listSql.get(2);
 		String detailSelectSql = listSql.get(1);
 		StringBuilder querybuilder = new StringBuilder();
+
+		// generated inner select
 		innerSql = generateInnerSql(detailSelectSql, rule2Version);
-		
-		//genrated outer select by providing innerselect
+
+		// generated outer select by providing innerselect
 		outerSql = generateOuterSql(rule2Version, innerSql, scoringMethod);
-		
-		
+
 		querybuilder.append(withSql);
 		querybuilder.append(outerSql);
-		
-		
+
 		result = querybuilder.toString();
 		return result;
 	}
@@ -136,7 +136,6 @@ public class Rule2Operator implements IParsable, IReferenceable {
 		}
 
 		querybuilder.append("filter_expr").append(ConstantsUtil.COMMA);
-
 		querybuilder.append("version").append(" as ").append("version");
 		querybuilder.append(ConstantsUtil.FROM);
 		querybuilder.append(innerSql);
