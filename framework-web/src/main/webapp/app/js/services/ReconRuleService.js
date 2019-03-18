@@ -394,7 +394,7 @@ ReconModule.service("ReconRuleService", function ($q, ReconRuleFactory, sortFact
 					}else if (['IN', 'NOT IN'].indexOf(filterInfo.operator) != -1) {
 						filterInfo.rhsTypes = ReconRuleFactory.disableRhsType([]);
 					} else if (['<', '>', "<=", '>='].indexOf(filterInfo.operator) != -1) {
-						filterInfo.rhsTypes = ReconRuleFactory.disableRhsType(['string', 'dataset']);
+						filterInfo.rhsTypes = ReconRuleFactory.disableRhsType(['dataset']);
 					}
 					else if (['EXISTS', 'NOT EXISTS'].indexOf(filterInfo.operator) != -1) {
 						filterInfo.rhsTypes = ReconRuleFactory.disableRhsType(['attribute', 'formula', 'function', 'paramlist','string','integer']);
@@ -464,7 +464,7 @@ ReconModule.service("ReconRuleService", function ($q, ReconRuleFactory, sortFact
                             filterInfo.rhsvalue1 = response.sourceFilter[i].operand[1].value.split(" and")[0];
                             filterInfo.rhsvalue2 = response.sourceFilter[i].operand[1].value.split("and ")[1];
                         } else if (['<', '>', "<=", '>='].indexOf(response.sourceFilter[i].operator) != -1) {
-                            obj.caption = "integer";
+                            obj.caption = response.filterInfo[i].operand[1].attributeType;
 
                         } else if (response.sourceFilter[i].operator == '=' && response.sourceFilter[i].operand[1].attributeType == "integer") {
                             obj.caption = "integer";
