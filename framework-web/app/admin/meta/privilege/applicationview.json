@@ -1,0 +1,31 @@
+{
+	"uuid" : "b421a5a8-0dfe-11e7-93ae-92361f002671",
+	"name" : "ApplicationView",
+	"version" : "1464977196",
+	"desc" : "Analyst role for users",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-03-18T14:21:59.582Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"privType" : "View",
+	"metaId" : {
+		"ref" : {
+			"type" : "meta",
+			"uuid" : "5db596aa-0474-4807-a577-a19c93dc11fk"
+		}
+	},
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"publicFlag" : "Y"
+}

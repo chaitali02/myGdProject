@@ -1,0 +1,31 @@
+{
+	"uuid" : "d66fa6e1-34b5-4a56-9814-8ec324537ca6",
+	"name" : "DqgroupexecExecute",
+	"version" : "1464977196",
+	"desc" : "Analyst role for users",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-03-18T14:21:59.582Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"privType" : "Execute",
+	"metaId" : {
+		"ref" : {
+			"type" : "meta",
+			"uuid" : "75b63f1a-9eab-44ea-8bee-8fcde26d58e8"
+		}
+	},
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"publicFlag" : "Y"
+}

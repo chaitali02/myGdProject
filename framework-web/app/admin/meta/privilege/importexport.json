@@ -1,0 +1,39 @@
+{
+	"id" : "598951d431cb174289933b7e",
+	"uuid" : "2385f16d-3678-470c-acb9-45bdb1520ad2",
+	"version" : "1502171604",
+	"name" : "ImportExport",
+	"desc" : null,
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+			"version" : null,
+			"name" : "ypalrecha"
+		},
+		"value" : null
+	},
+	"createdOn" : ISODate("2019-03-18T14:21:59.582Z"),
+	"tags" : [ ],
+	"active" : "Y",
+	"locked" : "N",
+	"privType" : "Export",
+	"metaId" : {
+		"ref" : {
+			"type" : "meta",
+			"uuid" : "6f37d577-585e-4a40-afed-228d540ee909",
+			"version" : null,
+			"name" : "import"
+		},
+		"value" : null
+	},
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"publicFlag" : "Y"
+}

@@ -1,0 +1,31 @@
+{
+	"uuid" : "14692771-128c-4d4e-a9c8-28623d7bfb48",
+	"name" : "RulegroupexecPublish",
+	"version" : "1464977196",
+	"desc" : "Privilage for Publish",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-03-18T14:21:59.582Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"privType" : "Publish",
+	"metaId" : {
+		"ref" : {
+			"type" : "meta",
+			"uuid" : "a10e0e27-f5e0-4d73-b5ad-d0258ea3ec9d"
+		}
+	},
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"publicFlag" : "Y"
+}

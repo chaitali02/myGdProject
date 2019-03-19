@@ -1,0 +1,31 @@
+{
+	"uuid" : "e6fbb645-5e4a-4dd1-b3fa-dc02a6bfa8e4",
+	"name" : "AlgorithmUnpublish",
+	"version" : "1464977196",
+	"desc" : "Privilage for Unpublish",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-03-18T14:21:59.582Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"privType" : "Unpublish",
+	"metaId" : {
+		"ref" : {
+			"type" : "meta",
+			"uuid" : "7dd66959-2787-4217-aae8-0eeacb4b7886"
+		}
+	},
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"publicFlag" : "Y"
+}

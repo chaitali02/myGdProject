@@ -11,6 +11,7 @@
 package com.inferyx.framework.service;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
@@ -3540,9 +3541,34 @@ public class RegisterService {
 		//For FILE
 		else if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
 			File folder = new File(datasource.getPath());
-			File[] listOfFiles = folder.listFiles();
+			
+			 // create new filename filter
+	         FilenameFilter fileNameFilter = new FilenameFilter() {
+	         @Override
+	            public boolean accept(File dir, String name) {
+	               if(name.lastIndexOf('.')>0) {
+	               
+	                  // get last index for '.' char
+	                  int lastIndex = name.lastIndexOf('.');
+	                  
+	                  // get extension
+	                  String str = name.substring(lastIndex);
+	                  
+	                  // match path name extension
+	                  if(str.equals(".csv")) {
+	                     return true;
+	                  }
+	               }
+	               
+	               return false;
+	            }
+	         };
+	     
+	     	File[] listOfFiles = folder.listFiles(fileNameFilter);
+	     	
 //			List<String> fileList = new ArrayList<String>();
 			Map<String, String> tablesWithPath = new Hashtable<>();
+			
 			for (int i = 0; i < listOfFiles.length; i++) {
 				if (listOfFiles[i].isFile()) {
 					logger.info("File " + listOfFiles[i].getName());

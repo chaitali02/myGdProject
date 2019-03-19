@@ -1,0 +1,31 @@
+{
+	"uuid" : "8e76b86c-8074-4428-a2b4-e35a2c55edce",
+	"name" : "DistributionExport",
+	"version" : "1464977196",
+	"desc" : "Privilage for Export",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-03-18T14:21:59.582Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"privType" : "Export",
+	"metaId" : {
+		"ref" : {
+			"type" : "meta",
+			"uuid" : "c4ec3bbc-39fa-43b2-9656-f886f2655288"
+		}
+	},
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"publicFlag" : "Y"
+}

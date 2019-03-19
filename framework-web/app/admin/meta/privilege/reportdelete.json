@@ -1,0 +1,31 @@
+{
+	"uuid" : "f064d010-0158-4f15-935f-47327a8929c3",
+	"name" : "ReportDelete",
+	"version" : "1464977196",
+	"desc" : "Privilage for delete",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-03-18T14:21:59.582Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"privType" : "Delete",
+	"metaId" : {
+		"ref" : {
+			"type" : "meta",
+			"uuid" : "1403555a-4cbf-4742-99ef-908adff15909"
+		}
+	},
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"publicFlag" : "Y"
+}

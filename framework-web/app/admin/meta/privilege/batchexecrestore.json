@@ -1,0 +1,31 @@
+{
+	"uuid" : "42220ff9-0fa2-4758-af9c-2db8c65b7f6b",
+	"name" : "BatchexecRestore",
+	"version" : "1464977196",
+	"desc" : "Batchexec Privilage for Publish Restore",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-03-18T14:21:59.582Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"privType" : "Restore",
+	"metaId" : {
+		"ref" : {
+			"type" : "meta",
+			"uuid" : "8358ab73-b07b-4cfc-8023-598e0ba8f4d2"
+		}
+	},
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"publicFlag" : "Y"
+}

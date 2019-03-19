@@ -1,0 +1,31 @@
+{
+	"uuid" : "b421be1c-0dfe-11e7-93ae-92361f002671",
+	"name" : "DagEdit",
+	"version" : "1464977196",
+	"desc" : "Analyst role for users",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-03-18T14:21:59.582Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"privType" : "Edit",
+	"metaId" : {
+		"ref" : {
+			"type" : "meta",
+			"uuid" : "9fa19f69-b40c-45b5-bec7-75420cb91f6c"
+		}
+	},
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"publicFlag" : "Y"
+}

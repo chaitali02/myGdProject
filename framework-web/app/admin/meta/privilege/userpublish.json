@@ -1,0 +1,31 @@
+{
+	"uuid" : "c13c4583-ac13-48d1-8262-5f6aed8053a3",
+	"name" : "UserPublish",
+	"version" : "1464977196",
+	"desc" : "Privilage for Publish",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-03-18T14:21:59.582Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"privType" : "Publish",
+	"metaId" : {
+		"ref" : {
+			"type" : "meta",
+			"uuid" : "c7265fe4-5d39-4577-86c1-3f7d5467961c"
+		}
+	},
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"publicFlag" : "Y"
+}

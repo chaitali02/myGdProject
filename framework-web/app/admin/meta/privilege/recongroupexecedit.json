@@ -1,0 +1,31 @@
+{
+	"uuid" : "3a833d52-2bb4-4a5f-a117-2dda1cdb36eb",
+	"name" : "RecongroupexecEdit",
+	"version" : "1464977196",
+	"desc" : "Recongroupexec Privilage for Edit",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-03-18T14:21:59.582Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"privType" : "Edit",
+	"metaId" : {
+		"ref" : {
+			"type" : "meta",
+			"uuid" : "af07e3f3-bc8b-4881-aeae-fd346f3fbc3e"
+		}
+	},
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"publicFlag" : "Y"
+}

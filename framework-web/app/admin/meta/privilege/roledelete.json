@@ -1,0 +1,31 @@
+{
+	"uuid" : "808cafe3-bc6c-4c4e-9f04-d30ba1fe9838",
+	"name" : "RoleDelete",
+	"version" : "1464977196",
+	"desc" : "Analyst role for users",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-03-18T14:21:59.582Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"privType" : "Delete",
+	"metaId" : {
+		"ref" : {
+			"type" : "meta",
+			"uuid" : "9e8ea3d8-a7fe-4978-b51a-ed865cbdcbab"
+		}
+	},
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"publicFlag" : "Y"
+}
