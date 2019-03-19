@@ -145,7 +145,7 @@ public class RuleController {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		RuleGroupExec ruleGroupExec = null;
 		ruleGroupExec = ruleGroupServiceImpl.create(ruleGroupUUID, ruleGroupVersion, execParams, null, null, null);
-		ruleGroupExec = ruleGroupServiceImpl.parse(ruleGroupExec.getUuid(), ruleGroupExec.getVersion(), null, null, null, runMode);
+		ruleGroupExec = ruleGroupServiceImpl.parse(ruleGroupExec.getUuid(), ruleGroupExec.getVersion(), null, null, null, null, runMode);
 		return ruleGroupServiceImpl.execute(ruleGroupUUID, ruleGroupVersion, execParams, ruleGroupExec, runMode);
 	}
 	
@@ -170,7 +170,7 @@ public class RuleController {
 		RuleGroupExec ruleGroupExec = null;
 		try {
 			ruleGroupExec = (RuleGroupExec) commonServiceImpl.getOneByUuidAndVersion(ruleGroupExecUUID, ruleGroupExecVersion, MetaType.rulegroupExec.toString());
-			ruleGroupExec = ruleGroupServiceImpl.parse(ruleGroupExecUUID, ruleGroupExecVersion, null, null, null, runMode);
+			ruleGroupExec = ruleGroupServiceImpl.parse(ruleGroupExecUUID, ruleGroupExecVersion, null, null, null, null, runMode);
 			ruleGroupServiceImpl.execute(ruleGroupExec.getDependsOn().getRef().getUuid(), ruleGroupExec.getDependsOn().getRef().getVersion(), execParams, ruleGroupExec, runMode);
 		} catch (Exception e) {
 			try {

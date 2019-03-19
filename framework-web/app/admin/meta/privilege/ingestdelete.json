@@ -1,0 +1,31 @@
+{
+	"uuid" : "11502ad7-8a2d-43b2-b9b5-03af519297b5",
+	"name" : "IngestDelete",
+	"version" : "1464977196",
+	"desc" : "Privilege for Ingest Delete",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-03-18T14:21:59.582Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"privType" : "Delete",
+	"metaId" : {
+		"ref" : {
+			"type" : "meta",
+			"uuid" : "39c902d9-e1e6-4c79-9e3f-9369bd91f015"
+		}
+	},
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"publicFlag" : "Y"
+}

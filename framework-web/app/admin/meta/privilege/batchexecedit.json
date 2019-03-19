@@ -1,0 +1,31 @@
+{
+	"uuid" : "a41d5a83-61a9-4770-b4fa-4bb24f14a831",
+	"name" : "BatchexecEdit",
+	"version" : "1464977196",
+	"desc" : "Batchexec Privilage for Publish Edit",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-03-18T14:21:59.582Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"privType" : "Edit",
+	"metaId" : {
+		"ref" : {
+			"type" : "meta",
+			"uuid" : "8358ab73-b07b-4cfc-8023-598e0ba8f4d2"
+		}
+	},
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"publicFlag" : "Y"
+}

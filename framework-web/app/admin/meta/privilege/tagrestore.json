@@ -1,0 +1,31 @@
+{
+	"uuid" : "3affec5b-9567-466d-86ae-7e1d8dc5bad7",
+	"name" : "TagRestore",
+	"version" : "1464977196",
+	"desc" : "Privilage for Restore",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-03-18T14:21:59.582Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"privType" : "Restore",
+	"metaId" : {
+		"ref" : {
+			"type" : "meta",
+			"uuid" : "181e5151-1510-42be-acf3-bc0309257851"
+		}
+	},
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"publicFlag" : "Y"
+}

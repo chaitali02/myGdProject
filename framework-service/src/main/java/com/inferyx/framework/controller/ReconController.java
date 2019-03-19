@@ -167,7 +167,7 @@ public class ReconController {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		ReconGroupExec reconGroupExec = null;
 		reconGroupExec = reconGroupServiceImpl.create(reconGroupUUID, reconGroupVersion, execParams, null, null, null);
-		reconGroupExec = reconGroupServiceImpl.parse(reconGroupExec.getUuid(), reconGroupExec.getVersion(), null, null, null, runMode);
+		reconGroupExec = reconGroupServiceImpl.parse(reconGroupExec.getUuid(), reconGroupExec.getVersion(), null, null, null, null, runMode);
 		return reconGroupServiceImpl.execute(reconGroupUUID, reconGroupVersion, execParams, reconGroupExec, runMode);
 	}
 

@@ -1,0 +1,31 @@
+{
+	"uuid" : "67e01616-c938-4019-a747-a3ff91480020",
+	"name" : "IngestgroupRestore",
+	"version" : "1464977196",
+	"desc" : "Ingestgroup Privilage for Publish Restore",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-03-18T14:21:59.582Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"privType" : "Restore",
+	"metaId" : {
+		"ref" : {
+			"type" : "meta",
+			"uuid" : "23531915-45fd-4167-a110-3561c9a2eeb8"
+		}
+	},
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"publicFlag" : "Y"
+}

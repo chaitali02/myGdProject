@@ -1,0 +1,31 @@
+{
+	"uuid" : "226791a3-07b5-410d-9ede-83a22278e1ef",
+	"name" : "RulegroupexecDelete",
+	"version" : "1464977196",
+	"desc" : "Analyst role for users",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-03-18T14:21:59.582Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"privType" : "Delete",
+	"metaId" : {
+		"ref" : {
+			"type" : "meta",
+			"uuid" : "a10e0e27-f5e0-4d73-b5ad-d0258ea3ec9d"
+		}
+	},
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"publicFlag" : "Y"
+}

@@ -1,0 +1,31 @@
+{
+	"uuid" : "1cc7e964-9667-4436-812a-8342c2cfea2f",
+	"name" : "DqgroupView",
+	"version" : "1464977196",
+	"desc" : "Analyst role for users",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-03-18T14:21:59.582Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"privType" : "View",
+	"metaId" : {
+		"ref" : {
+			"type" : "meta",
+			"uuid" : "dd846a6c-a5b2-4ca2-a5e4-0e2b698aab8f"
+		}
+	},
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"publicFlag" : "Y"
+}
