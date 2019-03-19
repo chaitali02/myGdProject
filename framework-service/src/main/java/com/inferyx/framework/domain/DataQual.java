@@ -15,7 +15,9 @@ import java.util.Map;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.inferyx.framework.enums.AbortConditionType;
 import com.inferyx.framework.enums.CaseCheckType;
+import com.inferyx.framework.enums.ThresholdType;
 
 @Document(collection="dq")
 public class DataQual extends BaseRule{
@@ -39,6 +41,7 @@ public class DataQual extends BaseRule{
 	private String blankSpaceCheck;
 	private MetaIdentifierHolder expressionCheck;
 	private CaseCheckType caseCheck;
+	private AbortConditionType abortCondition;
 	
 	public MetaIdentifierHolder getDomainCheck() {
 		return domainCheck;
@@ -173,5 +176,11 @@ public class DataQual extends BaseRule{
 	 */
 	public void setCaseCheck(CaseCheckType caseCheck) {
 		this.caseCheck = caseCheck;
+	}
+	public AbortConditionType getAbortCondition() {
+		return abortCondition;
+	}
+	public void setAbortCondition(AbortConditionType abortCondition) {
+		this.abortCondition = abortCondition;
 	}
 }
