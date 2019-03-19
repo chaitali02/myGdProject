@@ -84,7 +84,7 @@ public class GenerateDataForValList extends GenerateDataOperator {
 		
 //		String newVersion = Helper.getVersion();
 //		locationDatapod.setVersion(newVersion);
-		String tableName = datapodServiceImpl.genTableNameByDatapod(locationDatapod, execVersion, runMode);
+		String tableName = datapodServiceImpl.genTableNameByDatapod(locationDatapod, execVersion, null, null, null, runMode, false);
 		otherParams.put("datapodUuid_" + locationDatapod.getUuid() + "_tableName", tableName);
 		otherParams.put("datapodUuid_" + "valList" + "_tableName", valTableName);
 			

@@ -3,8 +3,6 @@
  */
 package com.inferyx.framework.operator;
 
-import static org.bytedeco.javacpp.lept.pixDestroy;
-import static org.bytedeco.javacpp.lept.pixReadMem;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -18,23 +16,17 @@ import org.apache.log4j.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.bytedeco.javacpp.BytePointer;
-import org.bytedeco.javacpp.lept.PIX;
-//import org.bytedeco.javacpp.tesseract.TessBaseAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.enums.RunMode;
-import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
-import com.inferyx.framework.service.DataStoreServiceImpl;
 import com.inferyx.framework.service.DatapodServiceImpl;
-import com.inferyx.framework.service.DatasetServiceImpl;
 import com.inferyx.framework.service.ParamSetServiceImpl;
 
 /**
@@ -49,15 +41,7 @@ public class PDFConverterOperator implements IOperator {
 	@Autowired
 	ParamSetServiceImpl paramSetServiceImpl;
 	@Autowired
-	private ExecutorFactory execFactory;
-	@Autowired
-	private DataStoreServiceImpl dataStoreServiceImpl;
-	@Autowired
 	private DatapodServiceImpl datapodServiceImpl;
-	@Autowired
-	private DatasetServiceImpl datasetServiceImpl;
-	@Autowired
-	private Helper helper;
 	
 	static final Logger logger = Logger.getLogger(PDFConverterOperator.class);
 
@@ -164,7 +148,7 @@ public class PDFConverterOperator implements IOperator {
 		MetaIdentifier locDpIdentifier = locationInfo.getParamValue().getRef();
 		Datapod locationDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(locDpIdentifier.getUuid(), locDpIdentifier.getVersion(), locDpIdentifier.getType().toString());
 		
-		String tableName = datapodServiceImpl.genTableNameByDatapod(locationDatapod, execVersion, runMode);
+		String tableName = datapodServiceImpl.genTableNameByDatapod(locationDatapod, execVersion, null, null, null, runMode, false);
 		otherParams.put("datapodUuid_" + locationDatapod.getUuid() + "_tableName", tableName);
 		logger.info("otherParams in transposeOperator : "+ otherParams);
 		

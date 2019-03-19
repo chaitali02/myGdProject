@@ -331,7 +331,7 @@ public class MatrixMultOperator implements IOperator {
 			rhsTableName = commonServiceImpl.getTableNameBySource(rhsDatapod, runMode);
 			otherParams.put("datapodUuid_" + rhsDatapod.getUuid() + "_tableName", rhsTableName);
 		}
-		String tableName = datapodServiceImpl.genTableNameByDatapod(locationDatapod, execVersion, runMode);
+		String tableName = datapodServiceImpl.genTableNameByDatapod(locationDatapod, execVersion, null, null, null, runMode, false);
 		logger.info(" lhsTableName : " + lhsTableName);
 		logger.info(" rhsTableName : " + rhsTableName);
 		logger.info(" saveTableName : " + tableName);

@@ -305,7 +305,7 @@ public class DataSamplingOperator implements IOperator, Serializable {
 		
 //				String newVersion = Helper.getVersion();
 //				locationDatapod.setVersion(newVersion);
-		String tableName = datapodServiceImpl.genTableNameByDatapod(locationDatapod, execVersion, runMode);
+		String tableName = datapodServiceImpl.genTableNameByDatapod(locationDatapod, execVersion, null, null, null, runMode, false);
 		otherParams.put("datapodUuid_" + locationDatapod.getUuid() + "_tableName", tableName);
 		/*******************************************************************************/
 		/************************ Retrieve destination - END ***************************/

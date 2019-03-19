@@ -478,7 +478,7 @@ public class RunSimulateServiceImpl implements Callable<TaskHolder> {
 					Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
 							holder.getParamValue().getRef().getUuid(), holder.getParamValue().getRef().getVersion(),
 							holder.getParamValue().getRef().getType().toString());
-					tableName = datapodServiceImpl.genTableNameByDatapod(datapod, simulateExec.getVersion(), runMode);
+					tableName = datapodServiceImpl.genTableNameByDatapod(datapod, simulateExec.getVersion(), null, null, null, runMode, false);
 				}
 			}
 			distExecParam.setParamListInfo(distParamHolderList);
