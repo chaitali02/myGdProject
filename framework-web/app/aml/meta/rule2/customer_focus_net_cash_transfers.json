@@ -1,0 +1,214 @@
+{
+  "uuid": "594db064-fe9d-4b53-baed-60a4436180b4",
+  "version": "1552907256",
+  "name": "customer_focus_net_cash_transfers",
+  "desc": null,
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Mon Mar 18 16:37:36 IST 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz",
+        "version": "1548315745",
+        "name": "Anti Money Laundering"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "sourceInfo": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "d4b99ce6-59a5-455e-a540-733b27c33277",
+      "version": null,
+      "name": "customer_summary_daily"
+    },
+    "value": null
+  },
+  "filterInfo": [
+    {
+      "display_seq": "0",
+      "logicalOperator": "",
+      "operator": ">=",
+      "operand": [
+        {
+          "ref": {
+            "type": "datapod",
+            "uuid": "d4b99ce6-59a5-455e-a540-733b27c33277",
+            "version": null,
+            "name": "customer_summary_daily"
+          },
+          "attributeId": 1,
+          "value": null,
+          "attributeName": "trans_start_date",
+          "attributeType": null
+        },
+        {
+          "ref": {
+            "type": "formula",
+            "uuid": "24670241-fcfc-41bc-9eb8-51505fc6fd7e",
+            "version": null,
+            "name": "fm_lookback_date_money_transfers"
+          },
+          "attributeId": null,
+          "value": null,
+          "attributeName": null,
+          "attributeType": null
+        }
+      ]
+    },
+    {
+      "display_seq": "1",
+      "logicalOperator": "AND",
+      "operator": "<=",
+      "operand": [
+        {
+          "ref": {
+            "type": "datapod",
+            "uuid": "d4b99ce6-59a5-455e-a540-733b27c33277",
+            "version": null,
+            "name": "customer_summary_daily"
+          },
+          "attributeId": 1,
+          "value": null,
+          "attributeName": "trans_start_date",
+          "attributeType": null
+        },
+        {
+          "ref": {
+            "type": "paramlist",
+            "uuid": "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z",
+            "version": null,
+            "name": "paramlist_aml_app"
+          },
+          "attributeId": 0,
+          "value": null,
+          "attributeName": "business_date",
+          "attributeType": null
+        }
+      ]
+    }
+  ],
+  "entityType": "Customer",
+  "scoringMethod": null,
+  "entityId": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "d4b99ce6-59a5-455e-a540-733b27c33277",
+      "version": null,
+      "name": "customer_summary_daily"
+    },
+    "value": null,
+    "attrId": "0",
+    "attrName": "customer_id",
+    "attrType": null,
+    "attrUnitType": null,
+    "function": null
+  },
+  "criteriaInfo": [
+    {
+      "criteriaId": "0",
+      "criteriaName": "Transaction Volume",
+      "activeFlag": "Y",
+      "criteriaFilter": [
+        {
+          "display_seq": "0",
+          "logicalOperator": "",
+          "operator": ">=",
+          "operand": [
+            {
+              "ref": {
+                "type": "datapod",
+                "uuid": "d4b99ce6-59a5-455e-a540-733b27c33277",
+                "version": null,
+                "name": "customer_summary_daily"
+              },
+              "attributeId": 14,
+              "value": null,
+              "attributeName": "net_cash_transfers_trans_count",
+              "attributeType": null
+            },
+            {
+              "ref": {
+                "type": "paramlist",
+                "uuid": "09c86a69-59f7-44db-b088-e94c8df651b5",
+                "version": null,
+                "name": "paramlist_money_transfers"
+              },
+              "attributeId": 0,
+              "value": null,
+              "attributeName": "trans_count",
+              "attributeType": null
+            }
+          ]
+        }
+      ],
+      "score": 1,
+      "filter_critria": null,
+      "criteriaWeight": 0.5
+    },
+    {
+      "criteriaId": "1",
+      "criteriaName": "Transaction Value",
+      "activeFlag": "Y",
+      "criteriaFilter": [
+        {
+          "display_seq": "0",
+          "logicalOperator": "",
+          "operator": ">=",
+          "operand": [
+            {
+              "ref": {
+                "type": "datapod",
+                "uuid": "d4b99ce6-59a5-455e-a540-733b27c33277",
+                "version": null,
+                "name": "customer_summary_daily"
+              },
+              "attributeId": 15,
+              "value": null,
+              "attributeName": "net_cash_transfers_trans_amount_usd",
+              "attributeType": null
+            },
+            {
+              "ref": {
+                "type": "paramlist",
+                "uuid": "09c86a69-59f7-44db-b088-e94c8df651b5",
+                "version": null,
+                "name": "paramlist_money_transfers"
+              },
+              "attributeId": 1,
+              "value": null,
+              "attributeName": "trans_amount_usd",
+              "attributeType": null
+            }
+          ]
+        }
+      ],
+      "score": 1,
+      "filter_critria": null,
+      "criteriaWeight": 0.5
+    }
+  ],
+  "paramList": {
+    "ref": {
+      "type": "paramlist",
+      "uuid": "09c86a69-59f7-44db-b088-e94c8df651b5",
+      "version": null,
+      "name": "paramlist_money_transfers"
+    },
+    "value": null
+  }
+}

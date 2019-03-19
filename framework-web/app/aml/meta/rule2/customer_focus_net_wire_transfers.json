@@ -1,7 +1,7 @@
 {
-  "uuid": "5d4ac577-acad-4885-8e44-8af9d2f6c63f",
-  "version": "1552853181",
-  "name": "Account Focus - Net Cash Transfers",
+  "uuid": "938c0fdc-86a1-4370-841f-5275c8b3a7b8",
+  "version": "1552908608",
+  "name": "customer_focus_net_wire_transfers",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Mar 18 01:36:21 IST 2019",
+  "createdOn": "Mon Mar 18 17:00:08 IST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -32,9 +32,9 @@
   "sourceInfo": {
     "ref": {
       "type": "datapod",
-      "uuid": "ef27c8b4-0d55-421e-8a9f-8054cb89c275",
+      "uuid": "d4b99ce6-59a5-455e-a540-733b27c33277",
       "version": null,
-      "name": "account_summary_daily"
+      "name": "customer_summary_daily"
     },
     "value": null
   },
@@ -47,11 +47,11 @@
         {
           "ref": {
             "type": "datapod",
-            "uuid": "ef27c8b4-0d55-421e-8a9f-8054cb89c275",
+            "uuid": "d4b99ce6-59a5-455e-a540-733b27c33277",
             "version": null,
-            "name": "account_summary_daily"
+            "name": "customer_summary_daily"
           },
-          "attributeId": 2,
+          "attributeId": 1,
           "value": null,
           "attributeName": "trans_start_date",
           "attributeType": null
@@ -78,11 +78,11 @@
         {
           "ref": {
             "type": "datapod",
-            "uuid": "ef27c8b4-0d55-421e-8a9f-8054cb89c275",
+            "uuid": "d4b99ce6-59a5-455e-a540-733b27c33277",
             "version": null,
-            "name": "account_summary_daily"
+            "name": "customer_summary_daily"
           },
-          "attributeId": 2,
+          "attributeId": 1,
           "value": null,
           "attributeName": "trans_start_date",
           "attributeType": null
@@ -102,18 +102,18 @@
       ]
     }
   ],
-  "entityType": "Account",
+  "entityType": "Customer",
   "scoringMethod": null,
   "entityId": {
     "ref": {
       "type": "datapod",
-      "uuid": "ef27c8b4-0d55-421e-8a9f-8054cb89c275",
+      "uuid": "d4b99ce6-59a5-455e-a540-733b27c33277",
       "version": null,
-      "name": "account_summary_daily"
+      "name": "customer_summary_daily"
     },
     "value": null,
-    "attrId": "1",
-    "attrName": "account_id",
+    "attrId": "0",
+    "attrName": "customer_id",
     "attrType": null,
     "attrUnitType": null,
     "function": null
@@ -132,13 +132,13 @@
             {
               "ref": {
                 "type": "datapod",
-                "uuid": "ef27c8b4-0d55-421e-8a9f-8054cb89c275",
+                "uuid": "d4b99ce6-59a5-455e-a540-733b27c33277",
                 "version": null,
-                "name": "account_summary_daily"
+                "name": "customer_summary_daily"
               },
-              "attributeId": 15,
+              "attributeId": 8,
               "value": null,
-              "attributeName": "net_cash_transfers_trans_count",
+              "attributeName": "net_wire_transfers_trans_count",
               "attributeType": null
             },
             {
@@ -156,9 +156,9 @@
           ]
         }
       ],
-      "score": "1",
+      "score": 1,
       "filter_critria": null,
-      "criteriaWeight": 0.5
+      "criteriaWeight": 1
     },
     {
       "criteriaId": "1",
@@ -173,13 +173,13 @@
             {
               "ref": {
                 "type": "datapod",
-                "uuid": "ef27c8b4-0d55-421e-8a9f-8054cb89c275",
+                "uuid": "d4b99ce6-59a5-455e-a540-733b27c33277",
                 "version": null,
-                "name": "account_summary_daily"
+                "name": "customer_summary_daily"
               },
-              "attributeId": 16,
+              "attributeId": 9,
               "value": null,
-              "attributeName": "net_cash_transfers_trans_amount_usd",
+              "attributeName": "net_wire_transfers_trans_amount_usd",
               "attributeType": null
             },
             {
@@ -197,9 +197,9 @@
           ]
         }
       ],
-      "score": "1",
+      "score": 1,
       "filter_critria": null,
-      "criteriaWeight": 0.5
+      "criteriaWeight": 1
     }
   ],
   "paramList": {

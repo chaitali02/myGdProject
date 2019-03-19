@@ -11,6 +11,7 @@
 package com.inferyx.framework.service;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -46,7 +47,7 @@ public class ReconGroupServiceImpl extends RuleGroupTemplate {
 
 	public void restart(String type, String uuid, String version, RunMode runMode) throws Exception {
 		ReconGroupExec reconGroupExec = (ReconGroupExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.recongroupExec.toString());
-		reconGroupExec = parse(reconGroupExec.getRef(MetaType.recongroupExec), null, null, null, runMode);
+		reconGroupExec = parse(reconGroupExec.getRef(MetaType.recongroupExec), null, null, null, null, runMode);
 		execute(reconGroupExec.getDependsOn().getRef().getUuid(),reconGroupExec.getDependsOn().getRef().getVersion(),null,reconGroupExec, runMode);
 	}
 	
@@ -66,9 +67,9 @@ public class ReconGroupServiceImpl extends RuleGroupTemplate {
 		}
 	}
 	
-	public ReconGroupExec parse(MetaIdentifier reconGroupExec, Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec, RunMode runMode) {
+	public ReconGroupExec parse(MetaIdentifier reconGroupExec, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, List<String> datapodList, DagExec dagExec, RunMode runMode) {
 		try {
-			return (ReconGroupExec) super.parse(reconGroupExec.getUuid(), reconGroupExec.getVersion(), MetaType.recongroup, MetaType.recongroupExec, MetaType.recon, MetaType.reconExec, refKeyMap, datapodList, dagExec, runMode);
+			return (ReconGroupExec) super.parse(reconGroupExec.getUuid(), reconGroupExec.getVersion(), MetaType.recongroup, MetaType.recongroupExec, MetaType.recon, MetaType.reconExec, refKeyMap, otherParams, datapodList, dagExec, runMode);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -86,10 +87,10 @@ public class ReconGroupServiceImpl extends RuleGroupTemplate {
 				MetaType.recon, MetaType.reconExec, execParams, datapodList, reconGroupExec, dagExec);
 	}
 
-	public ReconGroupExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap,
+	public ReconGroupExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
 			List<String> datapodList, DagExec dagExec, RunMode runMode) throws Exception {
 		return (ReconGroupExec) super.parse(execUuid, execVersion, MetaType.recongroup, MetaType.recongroupExec,
-				MetaType.recon, MetaType.reconExec, refKeyMap, datapodList, dagExec, runMode);
+				MetaType.recon, MetaType.reconExec, refKeyMap, otherParams, datapodList, dagExec, runMode);
 	}
 	
 	/**
@@ -107,7 +108,7 @@ public class ReconGroupServiceImpl extends RuleGroupTemplate {
 	@Override
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		return parse(baseExec.getUuid(), baseExec.getVersion(), MetaType.recongroup, MetaType.recongroupExec, MetaType.recon, MetaType.reconExec, 
-				DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), null, null, runMode);
+				DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), null, null, null, runMode);
 	}
 
 

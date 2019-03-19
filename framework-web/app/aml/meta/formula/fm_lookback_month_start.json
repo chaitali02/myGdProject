@@ -1,7 +1,7 @@
 {
-  "uuid": "70665ca3-143c-4f4b-8a35-7a5abac8ed56",
-  "version": "1551890064",
-  "name": "fm_lookback_weekly",
+  "uuid": "70665ca3-143c-4f4b-8a35-7a5abac8ed55",
+  "version": "1552863693",
+  "name": "fm_lookback_month_start",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Wed Mar 06 22:04:24 IST 2019",
+  "createdOn": "Sun Mar 17 19:01:33 EDT 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -44,7 +44,7 @@
         "type": "function",
         "uuid": "9e3e2936-02fb-11e7-93ae-92361f002695",
         "version": null,
-        "name": "date_sub(startdate,days)"
+        "name": "date_sub"
       },
       "attributeId": null,
       "value": null,
@@ -60,18 +60,6 @@
       },
       "attributeId": null,
       "value": "(",
-      "attributeName": null,
-      "attributeType": null
-    },
-    {
-      "ref": {
-        "type": "simple",
-        "uuid": null,
-        "version": null,
-        "name": null
-      },
-      "attributeId": null,
-      "value": "next_day(",
       "attributeName": null,
       "attributeType": null
     },
@@ -107,8 +95,32 @@
         "name": null
       },
       "attributeId": null,
-      "value": "'sunday'",
+      "value": "DAY",
       "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "simple",
+        "uuid": null,
+        "version": null,
+        "name": null
+      },
+      "attributeId": null,
+      "value": "(",
+      "attributeName": null,
+      "attributeType": null
+    },
+    {
+      "ref": {
+        "type": "paramlist",
+        "uuid": "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z",
+        "version": null,
+        "name": "paramlist_aml_app"
+      },
+      "attributeId": 0,
+      "value": null,
+      "attributeName": "business_date",
       "attributeType": null
     },
     {
@@ -131,7 +143,7 @@
         "name": null
       },
       "attributeId": null,
-      "value": ",",
+      "value": "-",
       "attributeName": null,
       "attributeType": null
     },
@@ -143,7 +155,7 @@
         "name": null
       },
       "attributeId": null,
-      "value": "7",
+      "value": "1",
       "attributeName": null,
       "attributeType": null
     },

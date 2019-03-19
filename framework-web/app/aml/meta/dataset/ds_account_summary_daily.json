@@ -1,6 +1,6 @@
 {
   "uuid": "aeeb6281-9fd6-4c7b-ac0d-50d8ca9069c8",
-  "version": "1551970389",
+  "version": "1552858852",
   "name": "ds_account_summary_daily",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Thu Mar 07 20:23:09 IST 2019",
+  "createdOn": "Sun Mar 17 17:40:52 EDT 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -58,14 +58,14 @@
         },
         {
           "ref": {
-            "type": "paramlist",
-            "uuid": "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z",
+            "type": "formula",
+            "uuid": "57c768a1-cfd7-4a02-b3cd-1fe5eb660c5a",
             "version": null,
-            "name": "paramlist_aml_app"
+            "name": "fm_lookback_yearly"
           },
-          "attributeId": 0,
+          "attributeId": null,
           "value": null,
-          "attributeName": "business_date",
+          "attributeName": null,
           "attributeType": null
         }
       ]
@@ -150,15 +150,15 @@
       "function": null,
       "sourceAttr": {
         "ref": {
-          "type": "formula",
-          "uuid": "70665ca3-143c-4f4b-8a35-7a5abac8ed57",
+          "type": "datapod",
+          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
           "version": null,
-          "name": "fm_lookback_daily"
+          "name": "fact_transaction_journal"
         },
         "value": null,
-        "attrId": null,
-        "attrName": null,
-        "attrType": null,
+        "attrId": "5",
+        "attrName": "transaction_date",
+        "attrType": "string",
         "attrUnitType": null,
         "function": null
       }
@@ -170,15 +170,15 @@
       "function": null,
       "sourceAttr": {
         "ref": {
-          "type": "paramlist",
-          "uuid": "1555bf00-7b09-400d-a9f6-d1a30b7a9e6z",
+          "type": "datapod",
+          "uuid": "5e87bde8-18ed-4b0e-993a-d19d26c495ad",
           "version": null,
-          "name": "paramlist_aml_app"
+          "name": "fact_transaction_journal"
         },
         "value": null,
-        "attrId": "0",
-        "attrName": "business_date",
-        "attrType": null,
+        "attrId": "5",
+        "attrName": "transaction_date",
+        "attrType": "string",
         "attrUnitType": null,
         "function": null
       }

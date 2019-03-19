@@ -23,7 +23,7 @@ public interface IReportExecDao  extends MongoRepository<ReportExec, String>{
 	@Query(value="{ 'uuid' : ?0 , 'version' : ?1 }")
 	public ReportExec findOneByUuidAndVersion(String uuid, String version);
 	
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}}, 'uuid' : ?1 , 'version' : ?2 }")
+	@Query(value="{$or: [ { publicFlag: \"Y\"},{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} }],'uuid' : ?1 , 'version' : ?2 }")
 	public ReportExec findOneByUuidAndVersion(String appUuid,String uuid, String version);
 	
 	@Query(value="{'uuid':?0}")
@@ -50,7 +50,7 @@ public interface IReportExecDao  extends MongoRepository<ReportExec, String>{
 	@Query(value = "{'_id' : ?0}")
 	public void delete(String id);
 	
-    @Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1}")
+    @Query(value = "{$or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ],'uuid' : ?1}")
 	public List<ReportExec> findAllVersion(String appUuid, String uuid);
 	
 	@Query(value = "{'uuid' : ?0}")

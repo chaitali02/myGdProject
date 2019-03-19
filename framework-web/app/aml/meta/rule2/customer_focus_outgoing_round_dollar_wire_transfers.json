@@ -1,7 +1,7 @@
 {
-  "uuid": "a5ecf36a-a352-4fad-88d4-e9c8a585d285",
-  "version": "1552066243",
-  "name": "Customer Focus - Outgoing Round Dollar Wire Transfers",
+  "uuid": "56fbc459-5b41-46e6-9ef4-d3da33d3337c",
+  "version": "1552914117",
+  "name": "customer_focus_outgoing_round_dollar_wire_transfers",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Fri Mar 08 12:30:43 EST 2019",
+  "createdOn": "Mon Mar 18 18:31:57 IST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -32,9 +32,9 @@
   "sourceInfo": {
     "ref": {
       "type": "datapod",
-      "uuid": "ef27c8b4-0d55-421e-8a9f-8054cb89c275",
+      "uuid": "d4b99ce6-59a5-455e-a540-733b27c33277",
       "version": null,
-      "name": "account_summary_daily"
+      "name": "customer_summary_daily"
     },
     "value": null
   },
@@ -42,16 +42,47 @@
     {
       "display_seq": "0",
       "logicalOperator": "",
-      "operator": "=",
+      "operator": ">=",
       "operand": [
         {
           "ref": {
             "type": "datapod",
-            "uuid": "ef27c8b4-0d55-421e-8a9f-8054cb89c275",
+            "uuid": "d4b99ce6-59a5-455e-a540-733b27c33277",
             "version": null,
-            "name": "account_summary_daily"
+            "name": "customer_summary_daily"
           },
-          "attributeId": 2,
+          "attributeId": 1,
+          "value": null,
+          "attributeName": "trans_start_date",
+          "attributeType": null
+        },
+        {
+          "ref": {
+            "type": "formula",
+            "uuid": "7eca606a-b789-4826-a91d-42511d8c1a08",
+            "version": null,
+            "name": "fm_lookback_date_round_amount_transfers"
+          },
+          "attributeId": null,
+          "value": null,
+          "attributeName": null,
+          "attributeType": null
+        }
+      ]
+    },
+    {
+      "display_seq": "1",
+      "logicalOperator": "AND",
+      "operator": "<=",
+      "operand": [
+        {
+          "ref": {
+            "type": "datapod",
+            "uuid": "d4b99ce6-59a5-455e-a540-733b27c33277",
+            "version": null,
+            "name": "customer_summary_daily"
+          },
+          "attributeId": 1,
           "value": null,
           "attributeName": "trans_start_date",
           "attributeType": null
@@ -72,12 +103,13 @@
     }
   ],
   "entityType": "Customer",
+  "scoringMethod": null,
   "entityId": {
     "ref": {
       "type": "datapod",
-      "uuid": "ef27c8b4-0d55-421e-8a9f-8054cb89c275",
+      "uuid": "d4b99ce6-59a5-455e-a540-733b27c33277",
       "version": null,
-      "name": "account_summary_daily"
+      "name": "customer_summary_daily"
     },
     "value": null,
     "attrId": "0",
@@ -100,68 +132,83 @@
             {
               "ref": {
                 "type": "datapod",
-                "uuid": "ef27c8b4-0d55-421e-8a9f-8054cb89c275",
+                "uuid": "d4b99ce6-59a5-455e-a540-733b27c33277",
                 "version": null,
-                "name": "account_summary_daily"
+                "name": "customer_summary_daily"
               },
-              "attributeId": 5,
+              "attributeId": 6,
               "value": null,
-              "attributeName": "in_wire_transfers_trans_count",
+              "attributeName": "out_wire_transfers_trans_count",
               "attributeType": null
             },
             {
               "ref": {
-                "type": "simple",
-                "uuid": null,
+                "type": "paramlist",
+                "uuid": "c27cb79d-3150-47ee-98b9-d9a832cad143",
                 "version": null,
-                "name": null
+                "name": "paramlist_round_amount_transfers"
               },
-              "attributeId": null,
-              "value": "1",
-              "attributeName": null,
-              "attributeType": "integer"
+              "attributeId": 0,
+              "value": null,
+              "attributeName": "trans_count",
+              "attributeType": null
             }
           ]
         }
-      ]
+      ],
+      "score": 1,
+      "filter_critria": null,
+      "criteriaWeight": 0.5
     },
     {
       "criteriaId": "1",
-      "criteriaName": "Transaction Amount",
+      "criteriaName": "Transaction Value",
       "activeFlag": "Y",
       "criteriaFilter": [
         {
           "display_seq": "0",
           "logicalOperator": "",
-          "operator": ">",
+          "operator": ">=",
           "operand": [
             {
               "ref": {
                 "type": "datapod",
-                "uuid": "ef27c8b4-0d55-421e-8a9f-8054cb89c275",
+                "uuid": "d4b99ce6-59a5-455e-a540-733b27c33277",
                 "version": null,
-                "name": "account_summary_daily"
+                "name": "customer_summary_daily"
               },
-              "attributeId": 8,
+              "attributeId": 7,
               "value": null,
               "attributeName": "out_wire_transfers_trans_amount_usd",
               "attributeType": null
             },
             {
               "ref": {
-                "type": "simple",
-                "uuid": null,
+                "type": "paramlist",
+                "uuid": "c27cb79d-3150-47ee-98b9-d9a832cad143",
                 "version": null,
-                "name": null
+                "name": "paramlist_round_amount_transfers"
               },
-              "attributeId": null,
-              "value": "100",
-              "attributeName": null,
-              "attributeType": "integer"
+              "attributeId": 1,
+              "value": null,
+              "attributeName": "trans_amount_usd",
+              "attributeType": null
             }
           ]
         }
-      ]
+      ],
+      "score": 1,
+      "filter_critria": null,
+      "criteriaWeight": 0.5
     }
-  ]
+  ],
+  "paramList": {
+    "ref": {
+      "type": "paramlist",
+      "uuid": "c27cb79d-3150-47ee-98b9-d9a832cad143",
+      "version": null,
+      "name": "paramlist_round_amount_transfers"
+    },
+    "value": null
+  }
 }

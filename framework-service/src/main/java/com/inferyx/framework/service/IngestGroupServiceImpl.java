@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -51,7 +52,7 @@ public class IngestGroupServiceImpl extends RuleGroupTemplate {
 	@Override
 	public BaseExec parse(BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		return parse(baseExec.getUuid(), baseExec.getVersion(), MetaType.ingestgroup, MetaType.ingestgroupExec, MetaType.ingest, MetaType.ingestExec, 
-				DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), null, null, runMode);
+				DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), null, null, null, runMode);
 	}
 
 	public IngestGroupExec create(String groupUuid, String groupVersion, ExecParams execParams, List<String> datapodList, 
@@ -60,9 +61,9 @@ public class IngestGroupServiceImpl extends RuleGroupTemplate {
 		return (IngestGroupExec) super.create(groupUuid, groupVersion, MetaType.ingestgroup, MetaType.ingestgroupExec, MetaType.ingest, MetaType.ingestExec, execParams, datapodList, ingestGroupExec, dagExec);
 	}
 
-	public IngestGroupExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap,
+	public IngestGroupExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
 			List<String> datapodList, DagExec dagExec, RunMode runMode) throws Exception {
-		return (IngestGroupExec) super.parse(execUuid, execVersion, MetaType.ingestgroup, MetaType.ingestgroupExec, MetaType.ingest, MetaType.ingestExec, refKeyMap, datapodList, dagExec, runMode);
+		return (IngestGroupExec) super.parse(execUuid, execVersion, MetaType.ingestgroup, MetaType.ingestgroupExec, MetaType.ingest, MetaType.ingestExec, refKeyMap, otherParams, datapodList, dagExec, runMode);
 	}
 
 	public MetaIdentifier execute(String groupUuid, String groupVersion, ExecParams execParams,

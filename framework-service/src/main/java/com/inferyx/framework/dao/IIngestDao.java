@@ -23,7 +23,7 @@ import com.inferyx.framework.domain.Ingest;
  *
  */
 public interface IIngestDao extends MongoRepository<Ingest, String> {
-	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'uuid' : ?1 , 'version' : ?2 }")
+	@Query(value = "{$or: [ { publicFlag: \"Y\"},{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} }],'uuid' : ?1 , 'version' : ?2 }")
 	public Ingest findOneByUuidAndVersion(String appUuid, String uuid, String version);
 
 	@Query(value = "{'uuid' : ?0 , 'version' : ?1 }")

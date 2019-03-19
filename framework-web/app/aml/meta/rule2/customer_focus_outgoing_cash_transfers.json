@@ -1,7 +1,7 @@
 {
-  "uuid": "9ba756fb-4ed8-4347-8bb3-05a48d923ca2",
-  "version": "1552852969",
-  "name": "Account Focus - Outgoing Cash Transfers",
+  "uuid": "2cddc26b-d5c4-4f07-ae6a-c4016a68b7fe",
+  "version": "1552907617",
+  "name": "customer_focus_outgoing_cash_transfers",
   "desc": null,
   "createdBy": {
     "ref": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Mar 18 01:32:49 IST 2019",
+  "createdOn": "Mon Mar 18 16:43:37 IST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -32,9 +32,9 @@
   "sourceInfo": {
     "ref": {
       "type": "datapod",
-      "uuid": "ef27c8b4-0d55-421e-8a9f-8054cb89c275",
+      "uuid": "d4b99ce6-59a5-455e-a540-733b27c33277",
       "version": null,
-      "name": "account_summary_daily"
+      "name": "customer_summary_daily"
     },
     "value": null
   },
@@ -47,11 +47,11 @@
         {
           "ref": {
             "type": "datapod",
-            "uuid": "ef27c8b4-0d55-421e-8a9f-8054cb89c275",
+            "uuid": "d4b99ce6-59a5-455e-a540-733b27c33277",
             "version": null,
-            "name": "account_summary_daily"
+            "name": "customer_summary_daily"
           },
-          "attributeId": 2,
+          "attributeId": 1,
           "value": null,
           "attributeName": "trans_start_date",
           "attributeType": null
@@ -73,16 +73,16 @@
     {
       "display_seq": "1",
       "logicalOperator": "AND",
-      "operator": "<=",
+      "operator": ">=",
       "operand": [
         {
           "ref": {
             "type": "datapod",
-            "uuid": "ef27c8b4-0d55-421e-8a9f-8054cb89c275",
+            "uuid": "d4b99ce6-59a5-455e-a540-733b27c33277",
             "version": null,
-            "name": "account_summary_daily"
+            "name": "customer_summary_daily"
           },
-          "attributeId": 2,
+          "attributeId": 1,
           "value": null,
           "attributeName": "trans_start_date",
           "attributeType": null
@@ -102,18 +102,18 @@
       ]
     }
   ],
-  "entityType": "Account",
+  "entityType": "Customer",
   "scoringMethod": null,
   "entityId": {
     "ref": {
       "type": "datapod",
-      "uuid": "ef27c8b4-0d55-421e-8a9f-8054cb89c275",
+      "uuid": "d4b99ce6-59a5-455e-a540-733b27c33277",
       "version": null,
-      "name": "account_summary_daily"
+      "name": "customer_summary_daily"
     },
     "value": null,
-    "attrId": "1",
-    "attrName": "account_id",
+    "attrId": "0",
+    "attrName": "customer_id",
     "attrType": null,
     "attrUnitType": null,
     "function": null
@@ -132,11 +132,11 @@
             {
               "ref": {
                 "type": "datapod",
-                "uuid": "ef27c8b4-0d55-421e-8a9f-8054cb89c275",
+                "uuid": "d4b99ce6-59a5-455e-a540-733b27c33277",
                 "version": null,
-                "name": "account_summary_daily"
+                "name": "customer_summary_daily"
               },
-              "attributeId": 13,
+              "attributeId": 12,
               "value": null,
               "attributeName": "out_cash_transfers_trans_count",
               "attributeType": null
@@ -156,7 +156,7 @@
           ]
         }
       ],
-      "score": "1",
+      "score": 1,
       "filter_critria": null,
       "criteriaWeight": 0.5
     },
@@ -173,11 +173,11 @@
             {
               "ref": {
                 "type": "datapod",
-                "uuid": "ef27c8b4-0d55-421e-8a9f-8054cb89c275",
+                "uuid": "d4b99ce6-59a5-455e-a540-733b27c33277",
                 "version": null,
-                "name": "account_summary_daily"
+                "name": "customer_summary_daily"
               },
-              "attributeId": 14,
+              "attributeId": 13,
               "value": null,
               "attributeName": "out_cash_transfers_trans_amount_usd",
               "attributeType": null
@@ -197,7 +197,7 @@
           ]
         }
       ],
-      "score": "1",
+      "score": 1,
       "filter_critria": null,
       "criteriaWeight": 0.5
     }

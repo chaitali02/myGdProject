@@ -95,35 +95,51 @@ public class Rule2Operator implements IParsable, IReferenceable {
 	}
 	
 	
-	private String generateSql(Rule2 rule2, String tableName,List<String> listSql, String rule2Version, Datapod datapod, ScoringMethod scoringMethod) {
+	private String generateSql(Rule2 rule2, String tableName, List<String> listSql, String rule2Version,
+			Datapod datapod, ScoringMethod scoringMethod) {
 		String result = "";
-		
-		String withSql=listSql.get(2);
-		String detailSelectSql=listSql.get(1);
+		String outerSql = null;
+		String innerSql = null;
+		String withSql = listSql.get(2);
+		String detailSelectSql = listSql.get(1);
 		StringBuilder querybuilder = new StringBuilder();
+
+		// generated inner select
+		innerSql = generateInnerSql(detailSelectSql, rule2Version);
+
+		// generated outer select by providing innerselect
+		outerSql = generateOuterSql(rule2Version, innerSql, scoringMethod);
+
 		querybuilder.append(withSql);
+		querybuilder.append(outerSql);
+
+		result = querybuilder.toString();
+		return result;
+	}
+	
+	public String generateOuterSql(String rule2Version, String innerSql, ScoringMethod scoringMethod) {
+		StringBuilder querybuilder = new StringBuilder();
 		querybuilder.append(ConstantsUtil.SELECT);
 		querybuilder.append("rule_uuid").append(" as ").append("rule_uuid").append(ConstantsUtil.COMMA);
-		querybuilder.append(rule2Version).append(" as ").append("rule_version").append(ConstantsUtil.COMMA);
+		querybuilder.append("rule_version").append(" as ").append("rule_version").append(ConstantsUtil.COMMA);
 		querybuilder.append("rule_name").append(" as ").append("rule_name").append(ConstantsUtil.COMMA);
 		querybuilder.append("entity_type").append(" as ").append("entity_type").append(ConstantsUtil.COMMA);
 		querybuilder.append("entity_id").append(" as ").append("entity_id").append(ConstantsUtil.COMMA);
-	
+
 		if (scoringMethod == ScoringMethod.WT_AVG) {
 			querybuilder.append("avg(criteria_score)").append(" as ").append("score").append(ConstantsUtil.COMMA);
-		}else if (scoringMethod == ScoringMethod.WT_SUM) {
+		} else if (scoringMethod == ScoringMethod.WT_SUM) {
 			querybuilder.append("sum(criteria_score)").append(" as ").append("score").append(ConstantsUtil.COMMA);
-		}else {
+		} else {
 			querybuilder.append("sum(criteria_score)").append(" as ").append("score").append(ConstantsUtil.COMMA);
 
 		}
 
-		querybuilder.append("\""+ listSql.get(3) +"\"").append(" as ")
-				.append("filter_expr").append(ConstantsUtil.COMMA);
-
+		querybuilder.append("filter_expr").append(ConstantsUtil.COMMA);
 		querybuilder.append("version").append(" as ").append("version");
 		querybuilder.append(ConstantsUtil.FROM);
-		querybuilder.append(detailSelectSql + " rule_select_query");
+		querybuilder.append(innerSql);
+		querybuilder.append(") rule_outer_select_query");
 		querybuilder.append(ConstantsUtil.GROUP_BY);
 		querybuilder.append("rule_uuid").append(ConstantsUtil.COMMA);
 		querybuilder.append("rule_version").append(ConstantsUtil.COMMA);
@@ -133,14 +149,27 @@ public class Rule2Operator implements IParsable, IReferenceable {
 		querybuilder.append("filter_expr").append(ConstantsUtil.COMMA);
 		querybuilder.append("version");
 
-		result = querybuilder.toString();
-		
-		
-		
-		
-		return result;
+		return querybuilder.toString();
 	}
-
+	
+	
+	public String generateInnerSql(String detailSql, String rule2Version) {
+		StringBuilder querybuilder = new StringBuilder();
+		querybuilder.append("(");
+		querybuilder.append(ConstantsUtil.SELECT);
+		querybuilder.append("rule_uuid").append(" as ").append("rule_uuid").append(ConstantsUtil.COMMA);
+		querybuilder.append(rule2Version).append(" as ").append("rule_version").append(ConstantsUtil.COMMA);
+		querybuilder.append("rule_name").append(" as ").append("rule_name").append(ConstantsUtil.COMMA);
+		querybuilder.append("entity_type").append(" as ").append("entity_type").append(ConstantsUtil.COMMA);
+		querybuilder.append("entity_id").append(" as ").append("entity_id").append(ConstantsUtil.COMMA);
+		querybuilder.append("criteria_score").append(" as ").append("criteria_score").append(ConstantsUtil.COMMA);
+		querybuilder.append("filter_expr").append(ConstantsUtil.COMMA);
+		querybuilder.append("version").append(" as ").append("version");
+		querybuilder.append(ConstantsUtil.FROM);
+		querybuilder.append(detailSql);
+		querybuilder.append(" rule_inner_select_query");
+		return querybuilder.toString();
+	}
 	
 	public List<String> generateWith(Rule2 rule2, String withSql, String detailSelectSql, java.util.Map<String, MetaIdentifier> refKeyMap,
 			HashMap<String, String> otherParams, ExecParams execParams, RunMode runMode, RuleExec ruleExec, List<FilterInfo> list) throws Exception {
@@ -276,7 +305,10 @@ public class Rule2Operator implements IParsable, IReferenceable {
 		
 			
 			selectbuilder.append(criteria.getScore()).append(" * ").append(criteria.getCriteriaWeight()).append(" as ").append("criteria_score")
-					.append(ConstantsUtil.COMMA);			
+					.append(ConstantsUtil.COMMA);	
+		
+			
+			selectbuilder.append("filter_expr").append(ConstantsUtil.COMMA);	
 						
 	
 			selectbuilder.append(ruleExec.getVersion()).append(" as ").append("version").append(" ")
@@ -291,7 +323,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 		String filterExpr = filterOperator2.generateExprSql(rule2.getFilterInfo(), refKeyMap, filterSource, otherParams,
 				usedRefKeySet, execParams, false, false, runMode, mapSourceDS, attributeList);
 		
-		filterExpr="CONCAT( 1=1 AND "+filterExpr+")";
+		filterExpr="CONCAT(' 1=1 ',"+filterExpr+")";
 		
 		selectbuilder.append(" ) ");
 		Set<String> attributeSet = new HashSet<String>(); 
@@ -304,7 +336,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 			
 			attrListBuilder.append(ConstantsUtil.COMMA).append(attrList);
 		}
-		
+		attrListBuilder.append(ConstantsUtil.COMMA).append(filterExpr).append(" as ").append("filter_expr");
 		
 		List<String> listSql=new ArrayList<String>();
 		String withbuilder_new = withbuilder.toString().replaceAll("_attrList", attrListBuilder.toString().substring(1, attrListBuilder.length()));

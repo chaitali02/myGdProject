@@ -1,7 +1,6 @@
 
-DatavisualizationModule = angular.module('DatavisualizationModule')
-
-DatavisualizationModule.controller('RuleDetailController', function (dagMetaDataService, $rootScope, $state, $scope, $stateParams, $timeout, $filter, Rule2Service, privilegeSvc, CommonService, CF_FILTER, CF_META_TYPES, CF_DOWNLOAD) {
+RuleModule = angular.module('RuleModule');
+RuleModule.controller('RuleDetailController', function (dagMetaDataService, $rootScope, $state, $scope, $stateParams, $timeout, $filter, Rule2Service, privilegeSvc, CommonService, CF_FILTER, CF_META_TYPES, CF_DOWNLOAD) {
 	$rootScope.isCommentVeiwPrivlage = true;
 	$scope.paramTypes = ["paramlist", "paramset"];
 	$scope.allFormats = CF_DOWNLOAD.formate;
@@ -44,6 +43,7 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 		$scope.isEditVeiwError = false;
 
 	}
+	$scope.ruleParamListParam=[];
 	$scope.expanded = false;
 	$scope.userDetail = {}
 	$scope.userDetail.uuid = $rootScope.setUseruuid;
@@ -213,25 +213,24 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 		Rule2Service.getFormulaByType($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessFormula(response.data) });
 		var onSuccessFormula = function (response) {
 			$scope.allSourceFormula = response.data;
-			$scope.allFilterormula = response.data;
-			$scope.getParamListByFormula();
+			$scope.allFilterFormula = response.data;
+			$scope.getFormulaByParamList();
 		}
 	}
 
-	$scope.getParamListByFormula = function () {
+	$scope.getFormulaByParamList = function () {
 		if ($scope.allparamlist.defaultoption) {
-
 			Rule2Service.getFormulaByType($scope.allparamlist.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccressGetFormula(response.data) });
 			var onSuccressGetFormula = function (response) {
-				if ($scope.allFilterormula && $scope.allFilterormula.length > 0) {
-					$scope.allFilterormula = $scope.allFilterormula.concat(response.data)
+				if ($scope.allFilterFormula && $scope.allFilterFormula.length > 0) {
+					$scope.allFilterFormula = $scope.allFilterFormula.concat(response.data)
 				} else {
 					$scope.allParamlistFormula = response.data
-					$scope.allFilterormula = $scope.allParamlistFormula;
+					$scope.allFilterFormula = $scope.allParamlistFormula;
 				}
 			}
 		} else {
-			$scope.allFilterormula = $scope.allSourceFormula;
+			$scope.allFilterFormula = $scope.allSourceFormula;
 		}
 	}
 
@@ -273,7 +272,7 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 	$scope.selectOption = function () {
 		$scope.getAllAttributeBySource(true);
 		$scope.filterTableArray = null;
-		$scope.getParamListByFormula();
+		$scope.getFormulaByParamList();
 		$scope.criteriaTableArray = null;
 		//	$scope.addRowCriteria();
 		$scope.rule.entityType = null;
@@ -284,7 +283,7 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 		CommonService.getParamByApp($rootScope.appUuidd || "", "application").
 			then(function (response) { onSuccessGetParamByApp(response.data) });
 		var onSuccessGetParamByApp = function (response) {
-			$scope.allparamlistParams = [];
+			//$scope.allparamlistParams = [];
 			if (response.length > 0) {
 				var paramsArray = [];
 				for (var i = 0; i < response.length; i++) {
@@ -297,28 +296,32 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 					paramsjson.caption = "app." + paramsjson.paramName
 					paramsArray[i] = paramsjson
 				}
-				$scope.allparamlistParams = paramsArray;
+				$scope.allparamlistParams = angular.copy(paramsArray);
 			}
+				$scope.getOneByUuidParamList();
+		    
 		}
-		$scope.getOneByUuidParamList();
+	
+		
 	}
 
 	$scope.onChangeParamListOFRule = function () {
-		$scope.allFilterormula == null;
-		$scope.allFilterormula = $scope.allSourceFormula;
-		$scope.getParamListByFormula();
+		$scope.allFilterFormula == null;
+		$scope.allFilterFormula = $scope.allSourceFormula;
+		$scope.getFormulaByParamList();
 		setTimeout(function () { $scope.paramTypes = ["paramlist", "paramset"]; }, 1);
 		$scope.getParamByApp();
 	}
 
 	$scope.getOneByUuidParamList = function () {
+		console.log($scope.allparamlistParams)
 		if ($scope.allparamlist && $scope.allparamlist.defaultoption != null) {
 			Rule2Service.getLatestByUuid($scope.allparamlist.defaultoption.uuid, "paramlist").
 				then(function (response) { onSuccessParamList(response.data) });
 			var onSuccessParamList = function (response) {
-				var paramsArray = [];
-				for (var i = 0; i < response.params.length; i++) {
-					var paramsjson = {};
+				let paramsArray = [];
+				for (let i = 0; i < response.params.length; i++) {
+					let paramsjson = {};
 					paramsjson.uuid = response.uuid;
 					paramsjson.name = response.name + "." + response.params[i].paramName;
 					paramsjson.attributeId = response.params[i].paramId;
@@ -327,7 +330,8 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 					paramsjson.caption = "rule." + paramsjson.paramName;
 					paramsArray[i] = paramsjson;
 				}
-				$scope.ruleParamListParam = paramsArray
+				$scope.ruleParamListParam = paramsArray;
+				
 				if ($scope.allparamlistParams && $scope.allparamlistParams.length > 0)
 					$scope.allparamlistParams = $scope.allparamlistParams.concat($scope.ruleParamListParam);
 			}
@@ -872,7 +876,10 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 			$scope.filterTableArray[index].isrhsDataset = false;
 			$scope.filterTableArray[index].isrhsParamlist = true;
 			$scope.filterTableArray[index].isrhsFunction = false;
-			$scope.getParamByApp();
+			if (typeof $stateParams.id == "undefined") {
+				$scope.getParamByApp();
+			}
+			
 		}
 
 	}
@@ -884,7 +891,6 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 				$scope.criteriaTableArray[index.sourceIndex].filterInfo[i].parentIndex = $scope.criteriaTableArray[index.targetIndex].filterInfo[0].parentIndex;
 			}
 		}
-
 		if ($scope.criteriaTableArray[index.targetIndex].filterInfo[0].parentIndex && $scope.criteriaTableArray[index.targetIndex].filterInfo[0].parentIndex.length) {
 			for (var j = 0; j < $scope.criteriaTableArray[index.targetIndex].filterInfo.length; j++) {
 				$scope.criteriaTableArray[index.targetIndex].filterInfo[j].parentIndex = tempParentIndex;
@@ -933,11 +939,14 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 			$scope.criteriaTableArray = [];
 		}
 		$scope.expanded = true;
+	    $scope.myform3.$dirty=true;
 		var len = $scope.criteriaTableArray.length;
 		var criteriaInfo = {};
 		criteriaInfo.criteriaId = len;
 		var tempLen = len + 1;
 		criteriaInfo.criteriaName = "criteria" + tempLen;
+		criteriaInfo.score = 1;
+		criteriaInfo.criteriaWeight =1;
 		criteriaInfo.activeFlag = true;
 		//	criteriaInfo.expanded=true;
 		$scope.criteriaTableArray.splice(len, 0, criteriaInfo);
@@ -1123,7 +1132,9 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 			$scope.criteriaTableArray[parentIndex].filterInfo[index].isrhsDataset = false;
 			$scope.criteriaTableArray[parentIndex].filterInfo[index].isrhsParamlist = true;
 			$scope.criteriaTableArray[parentIndex].filterInfo[index].isrhsFunction = false;
-			$scope.getParamByApp();
+			if (typeof $stateParams.id == "undefined") {
+				$scope.getParamByApp();
+		    }
 		}
 
 	}
@@ -1290,6 +1301,8 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 				criteriaInfo.criteriaName = $scope.criteriaTableArray[i].criteriaName;
 				criteriaInfo.activeFlag = $scope.criteriaTableArray[i].activeFlag == true ? "Y" : "N";
 				criteriaInfo.criteriaWeight = $scope.criteriaTableArray[i].criteriaWeight;
+				criteriaInfo.score = $scope.criteriaTableArray[i].score;
+
 				var filterInfoArray = [];
 				if ($scope.criteriaTableArray[i].filterInfo && $scope.criteriaTableArray[i].filterInfo.length > 0) {
 					for (var j = 0; j < $scope.criteriaTableArray[i].filterInfo.length; j++) {
@@ -1560,14 +1573,14 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 		CommonService.getParamListChilds($scope.allparamlist.defaultoption.uuid, "", "paramlist").then(function (response) { onSuccessGetParamListChilds(response.data) });
 		var onSuccessGetParamListChilds = function (response) {
 			var defaultoption = {};
-			defaultoption.uuid = $scope.allparamlist.option.uuid;
+			defaultoption.uuid = $scope.allparamlist.defaultoption.uuid;
 			defaultoption.name = $scope.allparamlist.defaultoption.name;
 			if (response.length > 0) {
-				$scope.allParamList = response;
-				$scope.allParamList.splice(0, 0, defaultoption);
+				$scope.allParamListResult = response;
+				$scope.allParamListResult.splice(0, 0, defaultoption);
 			} else {
-				$scope.allParamList = [];
-				$scope.allParamList[0] = defaultoption;
+				$scope.allParamListResult = [];
+				$scope.allParamListResult[0] = defaultoption;
 			}
 		}
 	}
@@ -1588,6 +1601,7 @@ DatavisualizationModule.controller('RuleDetailController', function (dagMetaData
 
 	$scope.onChangeParamList = function () {
 		$scope.isParamLsitTable = false;
+		debugger
 		CommonService.getParamByParamList($scope.paramlistdata.uuid, "paramlist").then(function (response) { onSuccesGetParamListByTrain(response.data) });
 		var onSuccesGetParamListByTrain = function (response) {
 			$scope.isParamLsitTable = true;

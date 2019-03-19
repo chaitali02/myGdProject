@@ -30,7 +30,7 @@ public interface IDashboardDao extends MongoRepository<Dashboard, String> {
 	@Query(value="{'uuid' : ?0 , 'version' : ?1 }")
 	public Dashboard findOneByUuidAndVersion(String uuid, String version);
 	
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1 , 'version' : ?2 }")
+	@Query(value="{$or: [ { publicFlag: \"Y\"},{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} }],'uuid' : ?1 , 'version' : ?2 }")
 	public Dashboard findOneByUuidAndVersion(String appUuid,String uuid, String version);
 
 	@Query(value="{ 'uuid' : ?0 }")
@@ -39,7 +39,7 @@ public interface IDashboardDao extends MongoRepository<Dashboard, String> {
 	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1 }")
 	public Dashboard findLatestByUuid(String appUuid,String uuid, Sort sort);
 	
-	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1}")
+	@Query(value = "{$or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ],'uuid' : ?1}")
 	public List<Dashboard> findAllVersion(String appUuid, String uuid);
 
 	@Query(value = "{'uuid' : ?0}")
