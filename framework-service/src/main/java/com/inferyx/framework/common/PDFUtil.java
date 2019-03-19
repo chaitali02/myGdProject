@@ -21,10 +21,13 @@ import com.inferyx.framework.service.CommonServiceImpl;
 import be.quodlibet.boxable.BaseTable;
 import be.quodlibet.boxable.Cell;
 import be.quodlibet.boxable.Row;
+import be.quodlibet.boxable.datatable.DataTable;
+import be.quodlibet.boxable.page.DefaultPageProvider;
 import be.quodlibet.boxable.utils.PDStreamUtils;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +36,7 @@ import org.apache.log4j.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
@@ -56,6 +60,7 @@ public class PDFUtil {
 				reportExec.getDependsOn().getRef().getType().toString());
 		PDDocument pdfDoc = new PDDocument();
 		PDPage pdfPage = new PDPage();
+//		pdfPage.setMediaBox(new PDRectangle(PDRectangle.A4.getHeight(), PDRectangle.A4.getWidth()));
 		pdfDoc.addPage(pdfPage);
 
 		contentStream = new PDPageContentStream(pdfDoc, pdfPage);
@@ -125,21 +130,55 @@ public class PDFUtil {
 			colMap.put(colName, colName);
 		}
 		
-		resultList.add(0, colMap);
+//		resultList.add(0, colMap);
 		
 		//writting data into table
 		final float tableWidth = pdfPage.getMediaBox().getWidth() - 2.0f * margin;
-		float tableHeight = pdfPage.getMediaBox().getHeight() - (2 * margin);
-		BaseTable table = new BaseTable(y, tableHeight, 50f, tableWidth, margin, pdfDoc, pdfPage, true, true);
-		
+		float yStartNewPage = pdfPage.getMediaBox().getHeight() - (2 * margin);
+        float yStart = yStartNewPage;
+        float bottomMargin = 0;
+		BaseTable baseTable = new BaseTable(y, yStartNewPage, 50f, tableWidth, margin, pdfDoc, pdfPage, true, true);
+//		
+//	    for(final Map<String, Object> row : resultList) {
+//	    	Row<PDPage> tableRow = table.createRow(12);
+//			for(String colName : row.keySet()) {
+//				Cell<PDPage> cell = tableRow.createCell(25, row.get(colName).toString());
+//			}
+//		}
+
+//	    BaseTable baseTable = new BaseTable(y, yStartNewPage, 50f, tableWidth, margin, pdfDoc, pdfPage, true, true);
+	    
+//	    BaseTable baseTable = new BaseTable(yStart, yStartNewPage, bottomMargin, tableWidth, margin, pdfDoc, pdfPage, true,
+//                true);
+//	    DataTable t = new DataTable(baseTable, pdfPage);
+//	    
+//	    List<List> data = new ArrayList();
+//	    for(final Map<String, Object> row : resultList) {
+//	    	List<String> row2 = new ArrayList();
+//	    	for(String colName : row.keySet()) {
+//	    		row2.add(row.get(colName).toString());
+//	    	}
+//	    	data.add(row2);
+//	    }
+//	    t.addListToTable(data, DataTable.HASHEADER);
+	    
+	    
+	    Row<PDPage> headerRow = baseTable.createRow(15f);
+	    for(String colName : colMap.keySet()) {
+		    Cell<PDPage> cell = headerRow.createCell(25, colMap.get(colName).toString());
+		    cell.setFont(PDType1Font.HELVETICA_BOLD);
+		    cell.setFillColor(Color.WHITE);
+	    }
+	    baseTable.addHeaderRow(headerRow);
+	    
 	    for(final Map<String, Object> row : resultList) {
-	    	Row<PDPage> tableRow = table.createRow(12);
+	    	Row<PDPage> tableRow = baseTable.createRow(12);
 			for(String colName : row.keySet()) {
 				Cell<PDPage> cell = tableRow.createCell(25, row.get(colName).toString());
 			}
 		}
-
-	    table.draw();
+	    
+	    baseTable.draw();
 	    
 //	    PDStreamUtils.write(contentStream, report.getFooter(),
 //				(PDFont) PDType1Font.HELVETICA, 10.0f, margin, y, Color.black);
