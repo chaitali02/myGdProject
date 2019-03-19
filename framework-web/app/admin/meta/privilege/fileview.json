@@ -1,0 +1,31 @@
+{
+	"uuid" : "82b2f0fb-0177-4f63-9698-7ab3458d109a",
+	"name" : "FileView",
+	"version" : "1464977196",
+	"desc" : "Analyst role for users",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-03-18T14:21:59.582Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"privType" : "View",
+	"metaId" : {
+		"ref" : {
+			"type" : "meta",
+			"uuid" : "fbdd3e2f-713d-448e-976c-b277ccc801cf"
+		}
+	},
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"publicFlag" : "Y"
+}

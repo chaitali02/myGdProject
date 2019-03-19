@@ -1,0 +1,31 @@
+{
+	"uuid" : "8cca7197-c7c0-4f3f-b3fe-892d7687af2f",
+	"name" : "BatchRestore",
+	"version" : "1464977196",
+	"desc" : "Batch Privilage for Publish Restore",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-03-18T14:21:59.582Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"privType" : "Restore",
+	"metaId" : {
+		"ref" : {
+			"type" : "meta",
+			"uuid" : "c8f961bc-bae1-4a0e-93a6-b79ae67287d7"
+		}
+	},
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"publicFlag" : "Y"
+}

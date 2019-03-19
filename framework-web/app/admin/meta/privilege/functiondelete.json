@@ -1,0 +1,31 @@
+{
+	"uuid" : "b42201c4-0dfe-11e7-93ae-92361f002671",
+	"name" : "FunctionDelete",
+	"version" : "1464977196",
+	"desc" : "Analyst role for users",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-03-18T14:21:59.582Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"privType" : "Delete",
+	"metaId" : {
+		"ref" : {
+			"type" : "meta",
+			"uuid" : "9daf5daf-749f-4034-8a53-e44e4a00ed0e"
+		}
+	},
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"publicFlag" : "Y"
+}

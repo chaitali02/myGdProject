@@ -1,0 +1,31 @@
+{
+	"uuid" : "d24caf5b-47e0-47bc-880e-fbed8bf82429",
+	"name" : "DatasourceUnpublish",
+	"version" : "1464979255",
+	"desc" : "Privilage for Unpublish",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-03-18T14:21:59.582Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"privType" : "Unpublish",
+	"metaId" : {
+		"ref" : {
+			"type" : "meta",
+			"uuid" : "5db596aa-0474-4807-a577-a19c93dc22ff"
+		}
+	},
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"publicFlag" : "Y"
+}

@@ -321,7 +321,15 @@ public class DatapodServiceImpl {
 		return resolveName(idatapodDao.findLatest(new Sort(Sort.Direction.DESC, "version")));
 	}*/
 
-	/********************** UNUSED **********************/
+	/********************** UNUSED 
+	 * @throws ParseException 
+	 * @throws JsonProcessingException 
+	 * @throws NullPointerException 
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
+	 * @throws IllegalAccessException **********************/
 	/*public Datapod findAllByUuid(String uuid) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;	
@@ -331,10 +339,14 @@ public class DatapodServiceImpl {
 					return idatapodDao.findAllByUuid(uuid);
 	}*/
 
-	public Datapod findOneByName(String fileName) {
+	public Datapod findOneByName(String fileName) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JsonProcessingException, ParseException {
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
 		//String appUuid = "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb";
-		return idatapodDao.findOneByFileName(appUuid, fileName);
+		Datapod dp=idatapodDao.findOneByFileName(appUuid, fileName);
+		if (dp != null)
+			dp = (Datapod) commonServiceImpl.resolveName(dp.getUuid(), MetaType.datapod.toString());
+
+		return dp;
 	}
 
 	/********************** UNUSED **********************/

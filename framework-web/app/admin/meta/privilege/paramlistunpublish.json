@@ -1,0 +1,31 @@
+{
+	"uuid" : "ddcfe9ec-a58b-45a7-be1f-814ce10ea85f",
+	"name" : "ParamlistUnpublish",
+	"version" : "1464977196",
+	"desc" : "Privilage for Unpublish",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-03-18T14:21:59.582Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"privType" : "Unpublish",
+	"metaId" : {
+		"ref" : {
+			"type" : "meta",
+			"uuid" : "36b73690-8130-48d0-bfaa-8da1d20c7c37"
+		}
+	},
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"publicFlag" : "Y"
+}

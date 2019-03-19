@@ -1,0 +1,31 @@
+{
+	"uuid" : "09e9c765-b649-4f5e-90a7-9d845349fd45",
+	"name" : "PredictView",
+	"version" : "1464977196",
+	"desc" : "Analyst role for users",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-03-18T14:21:59.582Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"privType" : "View",
+	"metaId" : {
+		"ref" : {
+			"type" : "meta",
+			"uuid" : "76e6b0be-36a3-4dd4-8be4-fc9a951364cf"
+		}
+	},
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"publicFlag" : "Y"
+}

@@ -1,0 +1,31 @@
+{
+	"uuid" : "04f87d52-28fa-4025-af8f-9ef62afd28e6",
+	"name" : "ProfilegroupexecUnpublish",
+	"version" : "1464977196",
+	"desc" : "Privilage for Unpublish",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-03-18T14:21:59.582Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"privType" : "Unpublish",
+	"metaId" : {
+		"ref" : {
+			"type" : "meta",
+			"uuid" : "180899d2-a6c8-4358-81f9-8ac9a45bc53e"
+		}
+	},
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"publicFlag" : "Y"
+}

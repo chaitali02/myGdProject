@@ -1,0 +1,31 @@
+{
+	"uuid" : "dcf67ef6-97e9-4b8f-a492-4d61cb42e703",
+	"name" : "SimulateUnpublish",
+	"version" : "1464977196",
+	"desc" : "Privilage for Unpublish",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-03-18T14:21:59.582Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"privType" : "Unpublish",
+	"metaId" : {
+		"ref" : {
+			"type" : "meta",
+			"uuid" : "5ad0b54b-4c8c-491f-94d4-682a269b74f2"
+		}
+	},
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"publicFlag" : "Y"
+}
