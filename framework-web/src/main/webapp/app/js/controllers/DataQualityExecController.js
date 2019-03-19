@@ -49,12 +49,16 @@ JobMonitoringModule.controller('DetailDqExecController', function ($filter, $sta
         var refkeylist = [];
         if (response.refKeyList != null) {
             for (i = 0; i < response.refKeyList.length; i++) {
-                refkeylist[i] = response.refKeyList[i].type + "-" + response.refKeyList[i].name;
-
+              //  refkeylist[i] = response.refKeyList[i].type + "-" + response.refKeyList[i].name;
+                var refkey = {};
+                refkey.type = response.refKeyList[i].type;
+                refkey.name = response.refKeyList[i].type + "-"+response.refKeyList[i].name;
+                refkey.uuid = response.refKeyList[i].uuid;
+                refkey.version = response.refKeyList[i].version || "";
+                refkeylist[i] = refkey;
             }
         }
         $scope.refkeylist = refkeylist
-
     }
     var onError=function(){
         $scope.isEditInprogess=false;
@@ -66,6 +70,22 @@ JobMonitoringModule.controller('DetailDqExecController', function ($filter, $sta
         $scope.showGraphDiv = true;
 
     }
+    $scope.onShowDetail = function (data) {
+        $rootScope.previousState = {};
+        $rootScope.previousState.name = dagMetaDataService.elementDefs['dqexec'].detailState;
+        $rootScope.previousState.params = {};
+        $rootScope.previousState.params.id = $stateParams.id;
+        $rootScope.previousState.params.mode = true;
+        var type = data.type
+        var uuid = data.uuid
+        var stageName = dagMetaDataService.elementDefs[type.toLowerCase()].detailState;
+        var stageparam = {};
+        stageparam.id = uuid;
+        stageparam.version = data.version;
+        stageparam.mode = true;
+        stageparam.returnBack = true;
+        $state.go(stageName, stageparam);
+    };
 
     $scope.showExecPage = function () {
         $scope.showExec = true

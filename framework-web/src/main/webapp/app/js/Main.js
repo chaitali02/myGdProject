@@ -890,6 +890,7 @@ InferyxApp.controller('LogoutController', function ($scope, $rootScope, $cookieS
                 localStorage.clear();
                 if (typeof localStorage.userdetail == "undefined") {
                     $window.location.href = 'login.html';
+                    $rootScope.$emit('$destroy', {});
                 }
             }
         }
@@ -899,6 +900,7 @@ InferyxApp.controller('LogoutController', function ($scope, $rootScope, $cookieS
             localStorage.clear();
             if (typeof localStorage.userdetail == "undefined") {
                 $window.location.href = 'login.html';
+                $rootScope.$emit('$destroy', {});
             }
         }
 
