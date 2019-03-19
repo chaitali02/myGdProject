@@ -414,35 +414,37 @@ public class DataStoreServiceImpl {
 	 * { return iDataStoreDao.findDataStoreByMeta(metaUUID,metaVersion); }
 	 */
 	
-	public String getTableNameByDatapod(Key sourceAttr, RunMode runMode) throws Exception {
-		//logger.info("sourceAttr ::: " + sourceAttr);
-		DataStore datastore = new DataStore();
-		String dataStoreMetaUUID = sourceAttr.getUUID();
-		String dataStoreMetaVer = sourceAttr.getVersion();
-		
-		Datapod dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dataStoreMetaUUID, dataStoreMetaVer, MetaType.datapod.toString());
-		if (dp == null) {
-			//dp = datapodServiceImpl.findLatestByUuid(dataStoreMetaUUID);
-			dp = (Datapod) commonServiceImpl.getLatestByUuid(dataStoreMetaUUID, MetaType.datapod.toString());
-		}
-		String datasource = dp.getDatasource().getRef().getUuid();
-		//Datasource ds = datasourceServiceImpl.findLatestByUuid(datasource);
-		Datasource ds = (Datasource) commonServiceImpl.getLatestByUuid(datasource, MetaType.datasource.toString());
-		String dsType = ds.getType();
-		if (/*!engine.getExecEngine().equalsIgnoreCase("livy-spark")
-				&& !dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
-				&& */!dsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
-			String tableName = ds.getDbname() + "." + dp.getName();
-			return tableName;
-		} 
-		datastore = findLatestByMeta(dataStoreMetaUUID, dataStoreMetaVer);
-		if (datastore == null) {
-			//logger.error("No data found for datapod " + dp.getUuid());
-			logger.error("No data found for datapod "+dp.getName()+".");
-			throw new Exception("No data found for datapod "+dp.getName()+".");
-		}
-		return getTableNameByDatastore(datastore.getUuid(), datastore.getVersion(), runMode);
-	}
+
+	/********************** MOVED TO DATAPODSERVICEIMPL **********************/
+//	public String getTableNameByDatapod(Key sourceAttr, RunMode runMode) throws Exception {
+//		//logger.info("sourceAttr ::: " + sourceAttr);
+//		DataStore datastore = new DataStore();
+//		String dataStoreMetaUUID = sourceAttr.getUUID();
+//		String dataStoreMetaVer = sourceAttr.getVersion();
+//		
+//		Datapod dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dataStoreMetaUUID, dataStoreMetaVer, MetaType.datapod.toString());
+//		if (dp == null) {
+//			//dp = datapodServiceImpl.findLatestByUuid(dataStoreMetaUUID);
+//			dp = (Datapod) commonServiceImpl.getLatestByUuid(dataStoreMetaUUID, MetaType.datapod.toString());
+//		}
+//		String datasource = dp.getDatasource().getRef().getUuid();
+//		//Datasource ds = datasourceServiceImpl.findLatestByUuid(datasource);
+//		Datasource ds = (Datasource) commonServiceImpl.getLatestByUuid(datasource, MetaType.datasource.toString());
+//		String dsType = ds.getType();
+//		if (/*!engine.getExecEngine().equalsIgnoreCase("livy-spark")
+//				&& !dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
+//				&& */!dsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
+//			String tableName = ds.getDbname() + "." + dp.getName();
+//			return tableName;
+//		} 
+//		datastore = findLatestByMeta(dataStoreMetaUUID, dataStoreMetaVer);
+//		if (datastore == null) {
+//			//logger.error("No data found for datapod " + dp.getUuid());
+//			logger.error("No data found for datapod "+dp.getName()+".");
+//			throw new Exception("No data found for datapod "+dp.getName()+".");
+//		}
+//		return getTableNameByDatastore(datastore.getUuid(), datastore.getVersion(), runMode);
+//	}
 
 	/*public DataFrame getDataFrameByDatapod(String datapodUUID , String datapodVersion) throws Exception {
 		Datapod datapod = new Datapod();

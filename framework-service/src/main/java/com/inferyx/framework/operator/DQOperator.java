@@ -41,13 +41,11 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Status;
-import com.inferyx.framework.enums.CaseCheckType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.enums.ThresholdType;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.service.CommonServiceImpl;
-import com.inferyx.framework.service.DataStoreServiceImpl;
-import com.inferyx.framework.service.DatasetServiceImpl;
+import com.inferyx.framework.service.DatapodServiceImpl;
 import com.inferyx.framework.service.MessageStatus;
 
 @Component
@@ -178,20 +176,13 @@ public class DQOperator implements IParsable {
 	@Autowired
 	RelationOperator relationOperator;
 	@Autowired
-	MapOperator mapOperator;
-	@Autowired
-	AttributeMapOperator attributeMapOperator;
-	@Autowired
-	DatasetServiceImpl datasetServiceImpl;
-	@Autowired
-	DataStoreServiceImpl datastoreServiceImpl;
-	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
-
 	@Autowired
 	FilterOperator2 filterOperator2;
 	@Autowired
 	ExpressionOperator expressionOperator;
+	@Autowired
+	private DatapodServiceImpl datapodServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(DQOperator.class);
 
@@ -247,8 +238,7 @@ public class DQOperator implements IParsable {
 			return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");
 		}
 		//logger.info(" runMode : " + runMode.toString() + " : datapod : " + datapod.getUuid() + " : datapodList.contains(datapod.getUuid()) : " + datapodList.contains(datapod.getUuid()));
-		datastoreServiceImpl.setRunMode(runMode);
-		return datastoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()),
+		return datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()),
 				runMode);
 	}
 
@@ -980,7 +970,7 @@ public class DQOperator implements IParsable {
 				check = refIntTab.getName().concat("_ref").concat(DOT).concat(dq.getRefIntegrityCheck().getTargetAttr().getAttrName())
 						.concat(IS_NOT_NULL);
 			} else if (dq.getRefIntegrityCheck().getDependsOn().getRef().getType() == MetaType.relation) {
-				Relation refIntTab = (Relation) commonServiceImpl.getOneByUuidAndVersion(dq.getRefIntegrityCheck().getDependsOn().getRef().getUuid(), dq.getRefIntegrityCheck().getDependsOn().getRef().getVersion(), dq.getRefIntegrityCheck().getDependsOn().getRef().getType().toString(), "N");
+//				Relation refIntTab = (Relation) commonServiceImpl.getOneByUuidAndVersion(dq.getRefIntegrityCheck().getDependsOn().getRef().getUuid(), dq.getRefIntegrityCheck().getDependsOn().getRef().getVersion(), dq.getRefIntegrityCheck().getDependsOn().getRef().getType().toString(), "N");
 				Datapod targetDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dq.getRefIntegrityCheck().getTargetAttr().getRef().getUuid(), dq.getRefIntegrityCheck().getTargetAttr().getRef().getVersion(), dq.getRefIntegrityCheck().getTargetAttr().getRef().getType().toString(), "N");
 				dq.getRefIntegrityCheck().getTargetAttr().setAttrName(
 						targetDp.getAttribute(Integer.parseInt(dq.getRefIntegrityCheck().getTargetAttr().getAttrId())).getName());

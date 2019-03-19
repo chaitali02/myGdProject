@@ -28,7 +28,7 @@ import com.inferyx.framework.domain.Property;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.service.CommonServiceImpl;
-import com.inferyx.framework.service.DataStoreServiceImpl;
+import com.inferyx.framework.service.DatapodServiceImpl;
 
 /**
  * @author joy
@@ -40,11 +40,9 @@ public class GraphOperator implements IOperator {
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
-	DataStoreServiceImpl dataStoreServiceImpl;
-	@Autowired
 	AttributeMapOperator attributeMapOperator;
-//	@Autowired
-//	MetadataUtil daoRegister;
+	@Autowired
+	private DatapodServiceImpl datapodServiceImpl;
 	
 	private static final Logger logger = Logger.getLogger(GraphOperator.class);
 
@@ -289,7 +287,7 @@ public class GraphOperator implements IOperator {
 			return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");
 		} else {
 			try {
-				return dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+				return datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
 			} catch(Exception e) {
 				return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(), baseExec.getVersion());
 			}

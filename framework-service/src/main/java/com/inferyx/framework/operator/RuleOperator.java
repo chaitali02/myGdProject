@@ -47,6 +47,7 @@ import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
+import com.inferyx.framework.service.DatapodServiceImpl;
 
 @Component
 public class RuleOperator implements IParsable, IReferenceable {
@@ -63,6 +64,8 @@ public class RuleOperator implements IParsable, IReferenceable {
 	DataStoreServiceImpl datastoreServiceImpl;
 	@Autowired
 	FilterOperator2 filterOperator2;
+	@Autowired
+	private DatapodServiceImpl datapodServiceImpl;
 	
 	
 	static final Logger logger = Logger.getLogger(RuleOperator.class);
@@ -125,7 +128,7 @@ public class RuleOperator implements IParsable, IReferenceable {
 			
 			String table = null;
 			if (otherParams == null	|| otherParams.get("datapod_".concat(datapod.getUuid())) == null) {
-				table = datastoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+				table = datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
 			} else {
 				String tableKey = "datapod_".concat(datapod.getUuid());
 				table = otherParams.get(tableKey);

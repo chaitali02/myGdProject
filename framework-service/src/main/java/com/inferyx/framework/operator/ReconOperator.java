@@ -37,7 +37,7 @@ import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.enums.FunctionCategory;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.service.CommonServiceImpl;
-import com.inferyx.framework.service.DataStoreServiceImpl;
+import com.inferyx.framework.service.DatapodServiceImpl;
 import com.inferyx.framework.service.MessageStatus;
 
 /**
@@ -47,8 +47,6 @@ import com.inferyx.framework.service.MessageStatus;
 @Component
 public class ReconOperator {
 	@Autowired
-	private DataStoreServiceImpl datastoreServiceImpl;
-	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	protected FunctionOperator functionOperator;
@@ -56,6 +54,8 @@ public class ReconOperator {
 	private DatasetOperator datasetOperator;
 	@Autowired
 	FilterOperator2 filterOperator2;
+	@Autowired
+	private DatapodServiceImpl datapodServiceImpl;
 
 	static final Logger LOGGER = Logger.getLogger(ReconOperator.class);
 
@@ -406,8 +406,7 @@ public class ReconOperator {
 		} else if (otherParams!= null && otherParams.containsKey("datapodUuid_" + datapod.getUuid() + "_tableName")) {
 			return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");
 		}
-		datastoreServiceImpl.setRunMode(runMode);
-		return datastoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()),
+		return datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()),
 				runMode);
 	}
 	

@@ -43,8 +43,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.inferyx.framework.common.DagExecUtil;
-import com.inferyx.framework.common.Engine;
-import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.ReconInfo;
 import com.inferyx.framework.domain.BaseExec;
@@ -63,51 +61,25 @@ import com.inferyx.framework.domain.ReconGroupExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.enums.RunMode;
-import com.inferyx.framework.factory.ConnectionFactory;
-import com.inferyx.framework.factory.DataSourceFactory;
-import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.ReconOperator;
-import com.inferyx.framework.register.GraphRegister;
 
 @Service
 public class ReconServiceImpl extends RuleTemplate {
 
 	@Autowired
-	GraphRegister<?> registerGraph;
-	@Autowired
 	MongoTemplate mongoTemplate;
-	@Autowired
-	UserServiceImpl userServiceImpl;
-	@Autowired
-	SecurityServiceImpl securityServiceImpl;
-	@Autowired
-	ApplicationServiceImpl applicationServiceImpl;
-	@Autowired
-	RegisterService registerService;
-	@Autowired
-	HDFSInfo hdfsInfo;
-	@Autowired
-	protected DataSourceFactory datasourceFactory;
-	@Autowired
-	ThreadPoolTaskExecutor metaExecutor;
 	@Autowired
 	DataStoreServiceImpl dataStoreServiceImpl;
 	@Autowired
-	protected ExecutorFactory execFactory;
-	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
-	@Autowired
-	ConnectionFactory connFactory;
-	@Autowired
-	MessageServiceImpl messageServiceImpl;
-	@Autowired
-	Engine engine;
 	@Autowired
 	private ReconOperator reconOperator;
 	@Autowired
 	private ReconInfo reconInfo;
 	@Autowired
 	private ReconExecServiceImpl reconExecServiceImpl;
+	@Autowired
+	private DatapodServiceImpl datapodServiceImpl;
 
 	@Resource(name = "taskThreadMap")
 	ConcurrentHashMap<?, ?> taskThreadMap;
@@ -214,7 +186,7 @@ public class ReconServiceImpl extends RuleTemplate {
 	}
 	
 	public String getTableName(Datapod datapod, RunMode runMode) throws Exception {
-		return dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+		return datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
 	}
 
 	public Object getMetaIdByExecId(String execUuid, String execVersion) throws JsonProcessingException {

@@ -1826,7 +1826,7 @@ public class ModelServiceImpl {
 				throw new Exception();
 			}			
 		
-			String tableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), RunMode.BATCH);
+			String tableName = datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), RunMode.BATCH);
 			logger.info("Table name : " + tableName);
 			String sql = "SELECT * FROM "+tableName;
 			return sql;

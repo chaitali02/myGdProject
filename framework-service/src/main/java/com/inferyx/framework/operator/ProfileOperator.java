@@ -22,7 +22,6 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
@@ -36,6 +35,7 @@ import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
+import com.inferyx.framework.service.DatapodServiceImpl;
 
 @Component
 public class ProfileOperator {
@@ -47,6 +47,8 @@ public class ProfileOperator {
 	private FilterOperator2 filterOperator2;
 	@Autowired
 	private Helper helper;
+	@Autowired
+	private DatapodServiceImpl datapodServiceImpl;
 
 	static final Logger logger = Logger.getLogger(ProfileOperator.class);
 	Datapod dp;
@@ -429,6 +431,6 @@ public class ProfileOperator {
 		}
 		//logger.info(" runMode : " + runMode.toString() + " : datapod : " + dp.getUuid() + " : datapodList.contains(datapod.getUuid()) : " + datapodList.contains(dp.getUuid()));
 		datastoreServiceImpl.setRunMode(runMode);
-		return datastoreServiceImpl.getTableNameByDatapod(new OrderKey(dp.getUuid(), dp.getVersion()), runMode);
+		return datapodServiceImpl.getTableNameByDatapod(new OrderKey(dp.getUuid(), dp.getVersion()), runMode);
 	}
 }
