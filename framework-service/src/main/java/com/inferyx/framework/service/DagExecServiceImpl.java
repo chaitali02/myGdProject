@@ -2054,4 +2054,9 @@ public class DagExecServiceImpl {
 		}
 		return (DagExec) commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
 	}
+	
+	public MetaIdentifier getMetaIdByExecId(String execUuid, String execVersion, String type) throws Exception {
+		DagExec exec = (DagExec)commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, type);
+		return exec.getDependsOn();
+	}
 }

@@ -3997,6 +3997,9 @@ public class RegisterService {
 			case "dashboardexec":
 				result = ow.writeValueAsString(dashboardServiceImpl.getMetaIdByExecId(execUuid, execVersion, type));
 				break;
+			case "dagexec":
+				result = ow.writeValueAsString(dagExecServiceImpl.getMetaIdByExecId(execUuid, execVersion, type));
+				break;
 			}
 		}
 		return result;
