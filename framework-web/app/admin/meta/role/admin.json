@@ -9,7 +9,7 @@
 			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
 		}
 	},
-	"createdOn" : ISODate("2019-03-18T12:48:51.315Z"),
+	"createdOn" : ISODate("2019-03-18T14:22:00.385Z"),
 	"active" : "Y",
 	"locked" : "N",
 	"privilegeInfo" : [
@@ -7811,8 +7811,10 @@
 	"publicFlag" : "Y",
 	"appInfo" : [
 		{
-			"type" : "application",
-			"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
 		}
 	]
 }
