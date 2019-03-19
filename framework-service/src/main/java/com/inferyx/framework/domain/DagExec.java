@@ -22,6 +22,8 @@ public class DagExec extends Dag {
 		setDependsOn(dagRef);
 	}
 	
+	private String execCreated = "N";
+	
 	MetaIdentifier dependsOn;
 	
 	private ExecParams execParams;
@@ -40,6 +42,18 @@ public class DagExec extends Dag {
 
 	public void setExecParams(ExecParams execParams) {
 		this.execParams = execParams;
+	}
+	/**
+	 * @return the execCreated
+	 */
+	public String getExecCreated() {
+		return execCreated;
+	}
+	/**
+	 * @param execCreated the execCreated to set
+	 */
+	public void setExecCreated(String execCreated) {
+		this.execCreated = execCreated;
 	}
 
 }

@@ -685,10 +685,18 @@ public class DQOperator implements IParsable {
 				  .append(TOTAL_PASS_COUNT).append(COMMA)
 				  .append(BRACKET_OPEN).append(TOTAL_ROW_COUNT).append(MINUS).append(TOTAL_PASS_COUNT).append(BRACKET_CLOSE).append(AS).append(TOTAL_FAIL_COUNT).append(COMMA)
 				  .append(BRACKET_OPEN).append(TOTAL_PASS_COUNT).append(DIVIDE_BY).append(TOTAL_ROW_COUNT).append(BRACKET_CLOSE).append(MULTIPLY_BY).append(" 100 ").append(AS).append(SCORE).append(COMMA)
-				  .append(VERSION).append(COMMA)
-				  .append(STD_DEV_FAIL).append(FROM).append(BRACKET_OPEN)
-				  .append(summarySql2).append(BRACKET_CLOSE).append(DQ_RESULT_SUM_ALIAS)
-				  .append(CROSS_JOIN).append(BRACKET_OPEN).append(SELECT)
+				  .append(VERSION).append(COMMA);
+		if (dq.getThresholdInfo().getType() != null 
+				&& dq.getThresholdInfo().getType().equals(ThresholdType.STDDEV)) {
+				  select = select.append(STD_DEV_FAIL);
+		} else {
+			select = select.append(" 1 ").append(AS).append(STD_DEV_FAIL);
+		}
+				  select = select.append(FROM).append(BRACKET_OPEN)
+				  .append(summarySql2).append(BRACKET_CLOSE).append(DQ_RESULT_SUM_ALIAS);
+		if (dq.getThresholdInfo().getType() != null 
+				&& dq.getThresholdInfo().getType().equals(ThresholdType.STDDEV)) {
+				  select = select.append(CROSS_JOIN).append(BRACKET_OPEN).append(SELECT)
 					// added filter by vaibhav
 			   	  .append(ConstantsUtil.CASE_WHEN).append(BRACKET_OPEN).append(STDDEV).append(BRACKET_OPEN)
 				  .append(TOTAL_FAIL_COUNT).append(BRACKET_CLOSE).append(EQUAL_TO).append("'NaN'").append(OR)
@@ -697,8 +705,9 @@ public class DQOperator implements IParsable {
 				  .append(BRACKET_OPEN).append(TOTAL_FAIL_COUNT).append(BRACKET_CLOSE).append("END")
 				  .append(AS).append(STD_DEV_FAIL)
 				  .append(FROM).append(summaryTableName).append(ConstantsUtil.WHERE_1_1).append(ConstantsUtil.AND)
-				  .append("rule_uuid='" + dq.getUuid() + "'").append(ConstantsUtil.AND)
-				  .append("datapod_uuid='" + dq.getDependsOn().getRef().getUuid()+ "'").append(BRACKET_CLOSE).append(DQ_SUMMARY_ALIAS);
+				  .append(RULEUUID).append(" ='" + dq.getUuid() + "'").append(ConstantsUtil.AND)
+				  .append(DATAPODUUID).append(" ='" + dq.getDependsOn().getRef().getUuid()+ "'").append(BRACKET_CLOSE).append(DQ_SUMMARY_ALIAS);
+		}
 		return select.toString();
 	}
 	
