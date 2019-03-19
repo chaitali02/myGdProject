@@ -2825,58 +2825,59 @@ public class SparkExecutor<T> implements IExecutor {
 		return trainedModel;
 	}
 
-	@Override
-	public ResultSetHolder predict2(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
-			String[] fieldArray, String trainName, String label, Datasource datasource, String clientContext) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException{
-		String sql = "SELECT * FROM " + tableName /*+ " LIMIT 100"*/;
-		Dataset<Row> df1 = executeSql(sql, clientContext).getDataFrame();
-		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
-		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
-		
-		VectorAssembler va = new VectorAssembler();
-		Dataset<Row> transformedDf = null;
-
-		if (trainName.contains("LinearRegression")
-				|| trainName.contains("LogisticRegression")
-				|| trainName.contains("LinearSVC")
-				|| trainName.contains("RandomForest")
-				|| trainName.contains("AFTSurvivalRegression")
-				|| trainName.contains("DecisionTree")
-				|| trainName.contains("NaiveBayes")) {
-			va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
-			Dataset<Row> trainingTmp = va.transform(df1);
-			transformedDf = trainingTmp.withColumn("label", trainingTmp.col(label).cast("Double")).select("label", "features");
-			logger.info("DataFrame count: " + transformedDf.count());
-		} else {
-			va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
-			transformedDf = va.transform(df1);
-		}
-		
-//		transformedDf.show(false);
-		@SuppressWarnings("unchecked")
-		Dataset<Row> predictedDf = (Dataset<Row>) trainedModel.getClass().getMethod("transform", Dataset.class).invoke(trainedModel, transformedDf);
-//		predictedDf.show(true);
-
-		String targetTableName = null;
-		if(targetDp != null)
-			targetTableName = modelServiceImpl.getTableNameByObject(targetDp);
-		sparkSession.sqlContext().registerDataFrameAsTable(predictedDf, "tempPredictResult");
-		ResultSetHolder rsHolder = new ResultSetHolder();
-		rsHolder.setType(ResultType.dataframe);
-		rsHolder.setDataFrame(predictedDf);
-		rsHolder.setCountRows(predictedDf.count());
-		rsHolder.setTableName(targetTableName);
-		String dsType = datasource.getType();
-		if ((!engine.getExecEngine().equalsIgnoreCase("livy-spark")
-				|| !engine.getExecEngine().equalsIgnoreCase(ExecContext.livy_spark.toString()))
-				&& !dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
-				&& !dsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
-			persistDataframe(rsHolder, datasource, targetDp, null);	
-		}
-		
-		rsHolder.setTableName("tempPredictResult");
-		return rsHolder;
-	}
+	/********************** UNUSED **********************/
+//	@Override
+//	public ResultSetHolder predict2(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
+//			String[] fieldArray, String trainName, String label, Datasource datasource, String clientContext) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException{
+//		String sql = "SELECT * FROM " + tableName /*+ " LIMIT 100"*/;
+//		Dataset<Row> df1 = executeSql(sql, clientContext).getDataFrame();
+//		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
+//		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
+//		
+//		VectorAssembler va = new VectorAssembler();
+//		Dataset<Row> transformedDf = null;
+//
+//		if (trainName.contains("LinearRegression")
+//				|| trainName.contains("LogisticRegression")
+//				|| trainName.contains("LinearSVC")
+//				|| trainName.contains("RandomForest")
+//				|| trainName.contains("AFTSurvivalRegression")
+//				|| trainName.contains("DecisionTree")
+//				|| trainName.contains("NaiveBayes")) {
+//			va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
+//			Dataset<Row> trainingTmp = va.transform(df1);
+//			transformedDf = trainingTmp.withColumn("label", trainingTmp.col(label).cast("Double")).select("label", "features");
+//			logger.info("DataFrame count: " + transformedDf.count());
+//		} else {
+//			va = (new VectorAssembler().setInputCols(fieldArray).setOutputCol("features"));
+//			transformedDf = va.transform(df1);
+//		}
+//		
+////		transformedDf.show(false);
+//		@SuppressWarnings("unchecked")
+//		Dataset<Row> predictedDf = (Dataset<Row>) trainedModel.getClass().getMethod("transform", Dataset.class).invoke(trainedModel, transformedDf);
+////		predictedDf.show(true);
+//
+//		String targetTableName = null;
+//		if(targetDp != null)
+//			targetTableName = modelServiceImpl.getTableNameByObject(targetDp);
+//		sparkSession.sqlContext().registerDataFrameAsTable(predictedDf, "tempPredictResult");
+//		ResultSetHolder rsHolder = new ResultSetHolder();
+//		rsHolder.setType(ResultType.dataframe);
+//		rsHolder.setDataFrame(predictedDf);
+//		rsHolder.setCountRows(predictedDf.count());
+//		rsHolder.setTableName(targetTableName);
+//		String dsType = datasource.getType();
+//		if ((!engine.getExecEngine().equalsIgnoreCase("livy-spark")
+//				|| !engine.getExecEngine().equalsIgnoreCase(ExecContext.livy_spark.toString()))
+//				&& !dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
+//				&& !dsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
+//			persistDataframe(rsHolder, datasource, targetDp, null);	
+//		}
+//		
+//		rsHolder.setTableName("tempPredictResult");
+//		return rsHolder;
+//	}
 	
 	public ResultSetHolder uploadCsvToDatabase(Load load, Datasource datasource, String targetTableName, Datapod datapod) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
 		ResultSetHolder rsHolder = new ResultSetHolder();

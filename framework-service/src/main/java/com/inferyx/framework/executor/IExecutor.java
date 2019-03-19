@@ -44,7 +44,6 @@ import com.inferyx.framework.domain.Feature;
 import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.Model;
-import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.RowObj;
@@ -529,33 +528,34 @@ public interface IExecutor {
 			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
 			SecurityException, NullPointerException, ParseException, IOException;
 
-	/**
-	 * 
-	 * @Ganesh
-	 *
-	 * @param trainedModel
-	 * @param targetDp
-	 * @param filePathUrl
-	 * @param tableName
-	 * @param fieldArray
-	 * @param trainName
-	 * @param label
-	 * @param datasource
-	 * @param clientContext
-	 * @return ResultSetHolder
-	 * @throws IllegalAccessException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
-	 * @throws NoSuchMethodException
-	 * @throws SecurityException
-	 * @throws NullPointerException
-	 * @throws ParseException
-	 * @throws IOException
-	 */
-	ResultSetHolder predict2(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
-			String[] fieldArray, String trainName, String label, Datasource datasource, String clientContext)
-			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
-			SecurityException, NullPointerException, ParseException, IOException;
+	/********************** UNUSED **********************/
+//	/**
+//	 * 
+//	 * @Ganesh
+//	 *
+//	 * @param trainedModel
+//	 * @param targetDp
+//	 * @param filePathUrl
+//	 * @param tableName
+//	 * @param fieldArray
+//	 * @param trainName
+//	 * @param label
+//	 * @param datasource
+//	 * @param clientContext
+//	 * @return ResultSetHolder
+//	 * @throws IllegalAccessException
+//	 * @throws IllegalArgumentException
+//	 * @throws InvocationTargetException
+//	 * @throws NoSuchMethodException
+//	 * @throws SecurityException
+//	 * @throws NullPointerException
+//	 * @throws ParseException
+//	 * @throws IOException
+//	 */
+//	ResultSetHolder predict2(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
+//			String[] fieldArray, String trainName, String label, Datasource datasource, String clientContext)
+//			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
+//			SecurityException, NullPointerException, ParseException, IOException;
 	
 	/**
 	 * 

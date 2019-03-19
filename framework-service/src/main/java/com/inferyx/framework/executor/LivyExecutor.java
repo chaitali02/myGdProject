@@ -45,7 +45,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.client.LivyClientImpl;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.connector.ConnectionHolder;
 import com.inferyx.framework.connector.IConnector;
 import com.inferyx.framework.domain.Algorithm;
@@ -63,7 +62,6 @@ import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Param;
-import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.ResultType;
@@ -80,7 +78,6 @@ import com.inferyx.framework.livyjob.ExecRegAndPersistJob;
 import com.inferyx.framework.livyjob.ExecuteAndRegisterJob;
 import com.inferyx.framework.livyjob.ExecuteAndResult;
 import com.inferyx.framework.livyjob.RegisterDatapodJob;
-import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.writer.IWriter;
 
 @Component
@@ -433,14 +430,15 @@ public class LivyExecutor implements IExecutor {
 		return null;
 	}
 
-	@Override
-	public ResultSetHolder predict2(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
-			String[] fieldArray, String trainName, String label, Datasource datasource, String clientContext)
-			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
-			SecurityException, NullPointerException, ParseException, IOException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	/********************** UNUSED **********************/
+//	@Override
+//	public ResultSetHolder predict2(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
+//			String[] fieldArray, String trainName, String label, Datasource datasource, String clientContext)
+//			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
+//			SecurityException, NullPointerException, ParseException, IOException {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 
 	@Override
 	public long load(Load load, String datapodTableName, Datasource datasource, Datapod datapod, String clientContext) throws IOException {

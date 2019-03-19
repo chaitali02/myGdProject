@@ -14,7 +14,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -43,6 +42,7 @@ import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
+import com.inferyx.framework.service.DatapodServiceImpl;
 
 /**
  * @author Ganesh
@@ -64,6 +64,8 @@ public class ReportOperator implements IOperator {
 	DatasetOperator datasetOperator;
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
+	@Autowired
+	private DatapodServiceImpl datapodServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(ReportOperator.class);
 	
@@ -149,7 +151,7 @@ public class ReportOperator implements IOperator {
 				return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName") + " " + datapod.getName();
 			} else {
 				try {
-					table = datastoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+					table = datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
 				} catch(Exception e) {
 					table =  String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(), report.getVersion());
 				}

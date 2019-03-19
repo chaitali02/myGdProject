@@ -39,6 +39,7 @@ import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
+import com.inferyx.framework.service.DatapodServiceImpl;
 import com.inferyx.framework.service.MessageStatus;
 
 @Component
@@ -57,6 +58,9 @@ public class MapOperator implements IParsable {
 	DataStoreServiceImpl datastoreServiceImpl;
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
+	@Autowired
+	private DatapodServiceImpl datapodServiceImpl;
+	
 	
 //	private final String INSERT = "INSERT ";
 	private final String SELECT = "SELECT ";
@@ -140,7 +144,7 @@ public class MapOperator implements IParsable {
 				String table = null;
 				if (otherParams == null 
 						|| otherParams.get("datapod_".concat(datapod.getUuid())) == null) {
-					table = datastoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), RunMode.BATCH);
+					table = datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), RunMode.BATCH);
 				} else {
 					String tableKey = "datapod_".concat(datapod.getUuid());
 					table = otherParams.get(tableKey);

@@ -15,18 +15,14 @@ import org.springframework.stereotype.Service;
 import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseExec;
-import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.ParamListHolder;
-import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.ResultSetHolder;
-import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
@@ -324,7 +320,7 @@ public class MatrixMultOperator implements IOperator {
 		if (otherParams.containsKey("datapodUuid_" + lhsDatapod.getUuid() + "_tableName")) {
 			lhsTableName = otherParams.get("datapodUuid_" + lhsDatapod.getUuid() + "_tableName");
 		} else {
-			lhsTableName = getTableNameBySource(lhsDatapod, runMode);
+			lhsTableName = commonServiceImpl.getTableNameBySource(lhsDatapod, runMode);
 			otherParams.put("datapodUuid_" + lhsDatapod.getUuid() + "_tableName", lhsTableName);
 		}
 
@@ -332,7 +328,7 @@ public class MatrixMultOperator implements IOperator {
 		if (otherParams.containsKey("datapodUuid_" + rhsDatapod.getUuid() + "_tableName")) {
 			rhsTableName = otherParams.get("datapodUuid_" + rhsDatapod.getUuid() + "_tableName");
 		} else {
-			rhsTableName = getTableNameBySource(rhsDatapod, runMode);
+			rhsTableName = commonServiceImpl.getTableNameBySource(rhsDatapod, runMode);
 			otherParams.put("datapodUuid_" + rhsDatapod.getUuid() + "_tableName", rhsTableName);
 		}
 		String tableName = datapodServiceImpl.genTableNameByDatapod(locationDatapod, execVersion, runMode);
@@ -346,75 +342,76 @@ public class MatrixMultOperator implements IOperator {
 		return otherParams;
 	}
 
-	/**
-	 * 
-	 * @param sourceData
-	 * @param runMode
-	 * @return
-	 * @throws Exception
-	 */
-	public String getTableNameBySource(Object sourceData, RunMode runMode) throws Exception {
-		String sourceTableName = null;
-		if (sourceData instanceof Datapod) {
-			Datapod datapod = (Datapod) sourceData;
-			sourceTableName = dataStoreServiceImpl
-					.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
-		} else if (sourceData instanceof DataSet) {
-			DataSet dataSet = (DataSet) sourceData;
-			MetaIdentifierHolder dependsOn = dataSet.getDependsOn();
-			if (dependsOn.getRef().getType().equals(MetaType.datapod)) {
-				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dependsOn.getRef().getUuid(),
-						dependsOn.getRef().getVersion(), dependsOn.getRef().getType().toString());
-				sourceTableName = dataStoreServiceImpl
-						.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
-			} else if (dependsOn.getRef().getType().equals(MetaType.relation)) {
-				Relation relation = (Relation) sourceData;
-				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
-						relation.getDependsOn().getRef().getUuid(), relation.getDependsOn().getRef().getVersion(),
-						relation.getDependsOn().getRef().getType().toString());
-				sourceTableName = dataStoreServiceImpl
-						.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
-			}
-		} else if (sourceData instanceof Rule) {
-			Rule rule = (Rule) sourceData;
-			MetaIdentifierHolder sourceHolder = rule.getSource();
-			if (sourceHolder.getRef().getType().equals(MetaType.datapod)) {
-				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceHolder.getRef().getUuid(),
-						sourceHolder.getRef().getVersion(), sourceHolder.getRef().getType().toString());
-				sourceTableName = dataStoreServiceImpl
-						.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
-			} else if (sourceHolder.getRef().getType().equals(MetaType.dataset)) {
-				DataSet dataSet = (DataSet) commonServiceImpl.getOneByUuidAndVersion(sourceHolder.getRef().getUuid(),
-						sourceHolder.getRef().getVersion(), sourceHolder.getRef().getType().toString());
-				MetaIdentifierHolder dependsOn = dataSet.getDependsOn();
-				if (dependsOn.getRef().getType().equals(MetaType.datapod)) {
-					Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dependsOn.getRef().getUuid(),
-							dependsOn.getRef().getVersion(), dependsOn.getRef().getType().toString());
-					sourceTableName = dataStoreServiceImpl
-							.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
-				} else if (dependsOn.getRef().getType().equals(MetaType.relation)) {
-					Relation relation = (Relation) sourceData;
-					Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
-							relation.getDependsOn().getRef().getUuid(), relation.getDependsOn().getRef().getVersion(),
-							relation.getDependsOn().getRef().getType().toString());
-					sourceTableName = dataStoreServiceImpl
-							.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
-				}
-			} else if (sourceHolder.getRef().getType().equals(MetaType.relation)) {
-				Relation relation = (Relation) commonServiceImpl.getOneByUuidAndVersion(sourceHolder.getRef().getUuid(),
-						sourceHolder.getRef().getVersion(), sourceHolder.getRef().getType().toString());
-				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
-						relation.getDependsOn().getRef().getUuid(), relation.getDependsOn().getRef().getVersion(),
-						relation.getDependsOn().getRef().getType().toString());
-				sourceTableName = dataStoreServiceImpl
-						.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
-			} else if (sourceHolder.getRef().getType().equals(MetaType.rule)) {
-				Rule rule2 = (Rule) commonServiceImpl.getOneByUuidAndVersion(sourceHolder.getRef().getUuid(),
-						sourceHolder.getRef().getVersion(), sourceHolder.getRef().getType().toString());
-				sourceTableName = getTableNameBySource(rule2, runMode);
-			}
-		}
-		return sourceTableName;
-	}
+	/********************** UNUSED **********************/
+//	/**
+//	 * 
+//	 * @param sourceData
+//	 * @param runMode
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	public String getTableNameBySource(Object sourceData, RunMode runMode) throws Exception {
+//		String sourceTableName = null;
+//		if (sourceData instanceof Datapod) {
+//			Datapod datapod = (Datapod) sourceData;
+//			sourceTableName = datapodServiceImpl
+//					.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+//		} else if (sourceData instanceof DataSet) {
+//			DataSet dataSet = (DataSet) sourceData;
+//			MetaIdentifierHolder dependsOn = dataSet.getDependsOn();
+//			if (dependsOn.getRef().getType().equals(MetaType.datapod)) {
+//				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dependsOn.getRef().getUuid(),
+//						dependsOn.getRef().getVersion(), dependsOn.getRef().getType().toString());
+//				sourceTableName = datapodServiceImpl
+//						.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+//			} else if (dependsOn.getRef().getType().equals(MetaType.relation)) {
+//				Relation relation = (Relation) sourceData;
+//				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+//						relation.getDependsOn().getRef().getUuid(), relation.getDependsOn().getRef().getVersion(),
+//						relation.getDependsOn().getRef().getType().toString());
+//				sourceTableName = datapodServiceImpl
+//						.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+//			}
+//		} else if (sourceData instanceof Rule) {
+//			Rule rule = (Rule) sourceData;
+//			MetaIdentifierHolder sourceHolder = rule.getSource();
+//			if (sourceHolder.getRef().getType().equals(MetaType.datapod)) {
+//				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceHolder.getRef().getUuid(),
+//						sourceHolder.getRef().getVersion(), sourceHolder.getRef().getType().toString());
+//				sourceTableName = datapodServiceImpl
+//						.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+//			} else if (sourceHolder.getRef().getType().equals(MetaType.dataset)) {
+//				DataSet dataSet = (DataSet) commonServiceImpl.getOneByUuidAndVersion(sourceHolder.getRef().getUuid(),
+//						sourceHolder.getRef().getVersion(), sourceHolder.getRef().getType().toString());
+//				MetaIdentifierHolder dependsOn = dataSet.getDependsOn();
+//				if (dependsOn.getRef().getType().equals(MetaType.datapod)) {
+//					Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dependsOn.getRef().getUuid(),
+//							dependsOn.getRef().getVersion(), dependsOn.getRef().getType().toString());
+//					sourceTableName = datapodServiceImpl
+//							.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+//				} else if (dependsOn.getRef().getType().equals(MetaType.relation)) {
+//					Relation relation = (Relation) sourceData;
+//					Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+//							relation.getDependsOn().getRef().getUuid(), relation.getDependsOn().getRef().getVersion(),
+//							relation.getDependsOn().getRef().getType().toString());
+//					sourceTableName = datapodServiceImpl
+//							.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+//				}
+//			} else if (sourceHolder.getRef().getType().equals(MetaType.relation)) {
+//				Relation relation = (Relation) commonServiceImpl.getOneByUuidAndVersion(sourceHolder.getRef().getUuid(),
+//						sourceHolder.getRef().getVersion(), sourceHolder.getRef().getType().toString());
+//				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+//						relation.getDependsOn().getRef().getUuid(), relation.getDependsOn().getRef().getVersion(),
+//						relation.getDependsOn().getRef().getType().toString());
+//				sourceTableName = datapodServiceImpl
+//						.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+//			} else if (sourceHolder.getRef().getType().equals(MetaType.rule)) {
+//				Rule rule2 = (Rule) commonServiceImpl.getOneByUuidAndVersion(sourceHolder.getRef().getUuid(),
+//						sourceHolder.getRef().getVersion(), sourceHolder.getRef().getType().toString());
+//				sourceTableName = getTableNameBySource(rule2, runMode);
+//			}
+//		}
+//		return sourceTableName;
+//	}
 
 }

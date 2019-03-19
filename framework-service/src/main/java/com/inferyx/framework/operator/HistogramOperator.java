@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.apache.spark.SparkException;
-import org.apache.spark.sql.SaveMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,12 +29,14 @@ import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.enums.SaveMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
+import com.inferyx.framework.service.DatapodServiceImpl;
 import com.inferyx.framework.service.ParamSetServiceImpl;
 
 
@@ -60,6 +60,8 @@ public class HistogramOperator implements IOperator {
 	Engine engine;
 	@Autowired
 	private SparkExecutor<?> sparkExecutor;
+	@Autowired
+	private DatapodServiceImpl datapodServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(HistogramOperator.class);
 	
@@ -107,7 +109,7 @@ public class HistogramOperator implements IOperator {
 
 		Datasource datasource = commonServiceImpl.getDatasourceByDatapod(locationDatapod);
 		if(!datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
-			locationTableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(locationDatapod.getUuid(), locationDatapod.getVersion()), runMode);
+			locationTableName = datapodServiceImpl.getTableNameByDatapod(new OrderKey(locationDatapod.getUuid(), locationDatapod.getVersion()), runMode);
 		} else if(locationTableName == null || locationTableName.isEmpty()) {			
 			locationTableName = String.format("%s_%s_%s", locationDatapod.getUuid().replace("-", "_"), locationDatapod.getVersion(), baseExec.getVersion());
 		}
@@ -169,7 +171,7 @@ public class HistogramOperator implements IOperator {
 				tableName = otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");				
 			}
 			if(tableName == null || tableName.isEmpty()) {
-				tableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+				tableName = datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
 			}
 			sqlBuilder.append("SELECT ");
 			
@@ -227,7 +229,7 @@ public class HistogramOperator implements IOperator {
 				|| datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
 				|| datasource.getType().equalsIgnoreCase(ExecContext.livy_spark.toString())
 				|| datasource.getType().equalsIgnoreCase("livy-spark")*/) {
-			resultSetHolder = exec.registerAndPersist(resultSetHolder, tableName, getFilePath(locationDatapod, execVersion), locationDatapod, SaveMode.Append.toString(), commonServiceImpl.getApp().getUuid());
+			resultSetHolder = exec.registerAndPersist(resultSetHolder, tableName, getFilePath(locationDatapod, execVersion), locationDatapod, SaveMode.APPEND.toString(), commonServiceImpl.getApp().getUuid());
 		} else {
 			resultSetHolder = sparkExecutor.persistDataframe(resultSetHolder, datasource, locationDatapod, null);
 		}		
@@ -241,7 +243,7 @@ public class HistogramOperator implements IOperator {
 		dataStoreServiceImpl.create(getFilePath(locationDatapod, execVersion), getFileName(locationDatapod, execVersion), 
 				new MetaIdentifier(MetaType.datapod, locationDatapod.getUuid(), locationDatapod.getVersion()) 
 				, new MetaIdentifier(MetaType.operatorExec, execUuid, execVersion) ,
-				appInfo, createdBy, SaveMode.Append.toString(), resultRef, resultSetHolder.getCountRows(), null, null);
+				appInfo, createdBy, SaveMode.APPEND.toString(), resultRef, resultSetHolder.getCountRows(), null, null);
 		
 		metaExec.getClass().getMethod("setResult", MetaIdentifierHolder.class).invoke(metaExec, resultRef);
 		logger.info("After setResult : " + ((OperatorExec)metaExec).getResult().getRef().getUuid());
@@ -271,7 +273,7 @@ public class HistogramOperator implements IOperator {
 		String attributeType = attribute.getType();
 		String sql = null;
 		if(attributeType.equalsIgnoreCase("String")) {
-			String tableName = dataStoreServiceImpl.getTableNameByDatapod(new Key(attrDp.getUuid(), attrDp.getVersion()), runMode);
+			String tableName = datapodServiceImpl.getTableNameByDatapod(new Key(attrDp.getUuid(), attrDp.getVersion()), runMode);
 			sql = "SELECT "
 					.concat(attribute.getName()).concat(" AS bucket ").concat(", ")
 					.concat(" COUNT("+attribute.getName()+") ").concat(" AS frequency")

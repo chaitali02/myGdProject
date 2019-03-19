@@ -24,8 +24,6 @@ import java.util.concurrent.ExecutionException;
 
 import javax.xml.bind.JAXBException;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.ml.PipelineModel;
 import org.apache.spark.ml.param.ParamMap;
@@ -62,7 +60,6 @@ import com.inferyx.framework.domain.GraphExec;
 import com.inferyx.framework.domain.Load;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.Param;
-import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.Predict;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.RowObj;
@@ -451,14 +448,15 @@ public class RExecutor implements IExecutor {
 		return null;
 	}
 
-	@Override
-	public ResultSetHolder predict2(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
-			String[] fieldArray, String trainName, String label, Datasource datasource, String clientContext)
-			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
-			SecurityException, NullPointerException, ParseException, IOException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	/********************** UNUSED **********************/
+//	@Override
+//	public ResultSetHolder predict2(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
+//			String[] fieldArray, String trainName, String label, Datasource datasource, String clientContext)
+//			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
+//			SecurityException, NullPointerException, ParseException, IOException {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 
 	@Override
 	public long load(Load load, String datapodTableName, Datasource datasource, Datapod datapod, String clientContext) throws IOException {

@@ -34,6 +34,7 @@ import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
+import com.inferyx.framework.service.DatapodServiceImpl;
  
 @Component
 public class RelationOperator {
@@ -45,6 +46,8 @@ public class RelationOperator {
 	protected DataStoreServiceImpl dataStoreServiceImpl;
 	@Autowired
 	protected DatasetOperator datasetOperator;
+	@Autowired
+	private DatapodServiceImpl datapodServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(RelationOperator.class);
 	
@@ -92,7 +95,7 @@ public class RelationOperator {
 				&& (otherParams == null 
 				|| (otherParams.get("relation_".concat(relation.getUuid().concat("_datapod_").concat(fromDatapod.getUuid()))) == null
 				&& otherParams.get("datapodUuid_"+fromDatapod.getUuid()+"_tableName") == null))) {
-			table = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(fromDatapod.getUuid(), fromDatapod.getVersion()), runMode);
+			table = datapodServiceImpl.getTableNameByDatapod(new OrderKey(fromDatapod.getUuid(), fromDatapod.getVersion()), runMode);
 		} else if (relation.getDependsOn().getRef().getType() == MetaType.datapod ){
 			String tableKey = "relation_".concat(relation.getUuid().concat("_datapod_").concat(fromDatapod.getUuid()));
 			table = otherParams.get(tableKey);
@@ -152,7 +155,7 @@ public class RelationOperator {
 					&& (otherParams == null 
 					|| (otherParams.get("relation_".concat(relation.getUuid().concat("_datapod_").concat(datapod.getUuid()))) == null  
 					&& otherParams.get("datapodUuid_".concat(datapod.getUuid()).concat("_tableName")) == null))) {
-				rightTable = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+				rightTable = datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
 			} else if (relInfoList.get(i).getJoin().getRef().getType() == MetaType.datapod) {
 				logger.info("datapodUuid_"+datapod.getUuid()+"_tableName : " + otherParams.get("datapodUuid_".concat(datapod.getUuid()).concat("_tableName")));
 				String tableKey = "relation_".concat(relation.getUuid().concat("_datapod_").concat(datapod.getUuid()));
@@ -221,7 +224,7 @@ public class RelationOperator {
 						}
 					} else {
 						builder.append(joinType + " JOIN ").append(" ");
-						builder.append(dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode)).append(" ").append(datapod.getName()).append(" ");
+						builder.append(datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode)).append(" ").append(datapod.getName()).append(" ");
 
 						if (joinKey != null && joinKey.size() > 0) {
 							builder.append(" ").append(" ON ").append(joinKeyOperator.generateSql(joinKey, relInfoList.get(i).getJoin(), refKeyMap, otherParams, usedRefKeySet, execParams, false, false, null, mapSourceDS));

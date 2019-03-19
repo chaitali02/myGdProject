@@ -27,10 +27,6 @@ import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.SessionHelper;
-import com.inferyx.framework.dao.IAlgorithmDao;
-import com.inferyx.framework.dao.IModelDao;
-import com.inferyx.framework.dao.IModelExecDao;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
@@ -42,18 +38,15 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Operator;
 import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.ParamListHolder;
-import com.inferyx.framework.domain.PredictExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.OperatorType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.CustomOperatorFactory;
-import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.IExecutable;
 import com.inferyx.framework.operator.IParsable;
 import com.inferyx.framework.operator.TransposeOldOperator;
-import com.inferyx.framework.register.GraphRegister;
 
 @Service
 public class CustomOperatorServiceImpl implements IParsable, IExecutable {
@@ -61,46 +54,15 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 	@Autowired
 	CustomOperatorFactory operatorFactory;
 	@Autowired
-	GraphRegister<?> registerGraph;
-	/*
-	 * @Autowired JavaSparkContext javaSparkContext;
-	 */
-	@Autowired
-	IModelDao iModelDao;
-	@Autowired
-	IAlgorithmDao iAlgorithmDao;
-	@Autowired
-	ApplicationServiceImpl applicationServiceImpl;
-	@Autowired
-	UserServiceImpl userServiceImpl;
-	@Autowired
 	MongoTemplate mongoTemplate;
-	@Autowired
-	IModelExecDao iModelExecDao;
 	@Autowired
 	DataStoreServiceImpl dataStoreServiceImpl;
 	@Autowired
-	ModelExecServiceImpl modelExecServiceImpl;
-	@Autowired
-	ParamSetServiceImpl paramSetServiceImpl;
-	@Autowired
-	ParamListServiceImpl paramListServiceImpl;
-	@Autowired
-	SecurityServiceImpl securityServiceImpl;
-	@Autowired
 	private HDFSInfo hdfsInfo;
-	@Autowired
-	DatapodServiceImpl datapodServiceImpl;
-	@Autowired
-	DatasetServiceImpl datasetServiceImpl;
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
-	SessionHelper sessionHelper;
-	@Autowired
 	private ExecutorFactory execFactory;
-	@Autowired
-	DataSourceFactory dataSourceFactory;
 	@Autowired
 	private TransposeOldOperator transposeOldOperator;
 	@Autowired

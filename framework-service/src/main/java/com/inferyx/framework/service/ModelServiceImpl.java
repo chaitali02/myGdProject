@@ -1826,7 +1826,7 @@ public class ModelServiceImpl {
 				throw new Exception();
 			}			
 		
-			String tableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), RunMode.BATCH);
+			String tableName = datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), RunMode.BATCH);
 			logger.info("Table name : " + tableName);
 			String sql = "SELECT * FROM "+tableName;
 			return sql;
@@ -1981,407 +1981,7 @@ public class ModelServiceImpl {
 			runPredictServiceImpl.setPredictMLOperator(predictMLOperator);
 			runPredictServiceImpl.setTrainedModelMap(trainedModelMap);			
 			runPredictServiceImpl.call();
-			
-//			String[] fieldArray = modelExecServiceImpl.getAttributeNames(predict);
-//			Datasource appDatasource = commonServiceImpl.getDatasourceByApp();
-//			Datasource sourceDS = commonServiceImpl.getDatasourceByObject(predict);
-//			IExecutor exec = execFactory.getExecutor(appDatasource.getType());
-//
-//
-//			String predictName = String.format("%s_%s_%s", predict.getUuid().replace("-", "_"), predict.getVersion(), predictExec.getVersion());
-//			String filePath = String.format("/%s/%s/%s", predict.getUuid(), predict.getVersion(), predictExec.getVersion());
-//			String tableName = String.format("%s_%s_%s", predict.getUuid().replace("-", "_"), predict.getVersion(), predictExec.getVersion());
-//
-//			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), Helper.getPropertyValue("framework.model.predict.path"), filePath);
-//
-//			Object result = null;
-//			long count = -1L;
-//			MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
-//			
-//			if(model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-//				Train train = (Train) commonServiceImpl.getOneByUuidAndVersion(predict.getTrainInfo().getRef().getUuid(), predict.getTrainInfo().getRef().getVersion(), predict.getTrainInfo().getRef().getType().toString());
-//				Model trainModel = (Model) commonServiceImpl.getOneByUuidAndVersion(train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(), MetaType.model.toString());
-//				
-//				if(trainModel.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-//					TrainExec trainExec = modelExecServiceImpl.getLatestTrainExecByTrain(predict.getTrainInfo().getRef().getUuid(), predict.getTrainInfo().getRef().getVersion());
-//					if (trainExec == null) {
-//						throw new Exception("No trained model found.");
-//					}
-//					
-//					MetaIdentifier dataStoreMI = trainExec.getResult().getRef();
-//					DataStore dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(dataStoreMI.getUuid(), dataStoreMI.getVersion(), dataStoreMI.getType().toString());
-//
-//					Map<String, EncodingType> encodingDetails = getEncodingDetails(predict.getFeatureAttrMap(), model.getFeatures());
-////					LinkedHashMap<String, Object> imputationDetails = imputeOperator.resolveAttributeImputeValue(predict.getFeatureAttrMap(), source, model, execParams, runMode, (tableName+"_train_source_data"));
-//					
-//					
-//					List<String> argList = new ArrayList<>();
-//					PredictInput predictInput = new PredictInput();
-//					Map<String, Object> otherParams = new HashMap<>();
-//
-//					predictInput.setEncodingDetails(encodingDetails);
-////					predictInput.setImputeDetails(imputationDetails);					
-//					
-//					predictInput.setIncludeFeatures(predict.getIncludeFeatures());
-//					
-//					String mappedFeatureAttrSql = generateFeatureSQLBySource(predict.getFeatureAttrMap(), source, execParams, fieldArray, null, tableName);	
-//
-//					final String URI = Helper.getPropertyValue("framework.hdfs.URI");
-//					String defaultDir = Helper.getPropertyValue("framework.model.predict.path")+filePath+"/";
-//					String modelFileName = dataStore.getLocation();
-//					String savePredict = URI+Helper.getPropertyValue("framework.model.predict.path")+filePath+"/"+"output";
-//					filePathUrl = savePredict;
-//
-//					deleteFileOrDirIfExists(defaultDir);
-//					
-//					logger.info("Default dir name : " + defaultDir);
-//					logger.info("Model file name : " + modelFileName);
-//					logger.info("Saved predict file name : " + savePredict);
-//										
-//					String sourceQuery = generateSQLBySource(source, execParams);
-//					String sourceCustomQuery = null;
-//					List<String> rowIdentifierCols = null;
-//					if(predict.getRowIdentifier() != null && !predict.getRowIdentifier().isEmpty()) {
-//						rowIdentifierCols = getRowIdentifierCols(predict.getRowIdentifier());
-//						if(predict.getIncludeFeatures().equalsIgnoreCase("Y")
-//								&& rowIdentifierCols != null 
-//								&& !rowIdentifierCols.isEmpty()) {
-//							rowIdentifierCols = removeDuplicateColNames(fieldArray, rowIdentifierCols);
-//						}
-//						
-//						if(rowIdentifierCols != null && !rowIdentifierCols.isEmpty()) {				
-//							StringBuilder builder = new StringBuilder();
-//							builder.append("SELECT ");
-//							int i=0;
-//							for(String colName : rowIdentifierCols) {
-//								builder.append(colName);
-//								if(i<rowIdentifierCols.size()-1) {
-//									builder.append(", ");
-//								}
-//								i++;
-//							}
-//							
-//							builder.append(" FROM ");
-//							builder.append(" (");
-//							builder.append(sourceQuery);
-//							builder.append(") ");
-//							builder.append(" sourceUniqueData");
-//							sourceCustomQuery = builder.toString();
-//						} else {
-//							rowIdentifierCols = null;
-//						}
-//						
-//						
-//						predictInput.setRowIdentifier(rowIdentifierCols);
-//						Datapod sourceDp = commonServiceImpl.getDatapodByObject(source);
-//						Map<String, String> colDetails = getColumnNameAndDatatypeByAttrList(sourceDp.getAttributes());
-//						otherParams.put("sourceAttrDetails", colDetails);
-//					}
-//										
-//					String sourceDsType = sourceDS.getType().toLowerCase();
-//					predictInput.setSourceDsType(sourceDsType);
-//					
-//					exec.executeAndRegisterByDatasource(sourceQuery, tableName, sourceDS, appUuid);	
-//					LinkedHashMap<String, Object> imputationDetails = imputeOperator.resolveAttributeImputeValue(predict.getFeatureAttrMap(), source, model, execParams, runMode, tableName);					
-//					LinkedHashMap<String, Object> remappedImputationDetails = remapSourceImpueValToFeature(source, predict.getFeatureAttrMap(), model.getFeatures(), imputationDetails);
-//					predictInput.setImputationDetails(remappedImputationDetails);
-//					
-//					if(sourceDsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
-//						sourceDsType = appDatasource.getType().toLowerCase();
-//						String saveFileName = Helper.getPropertyValue("framework.model.predict.path")+filePath+"/"+"input";
-//						
-//						File saveFile = new File(saveFileName);
-//						if(!saveFile.exists()) {
-//							String mappedAttrSql = generateFeatureSQLByTempTable(predict.getFeatureAttrMap(), tableName, null, tableName);
-//							ResultSetHolder rsHolder = exec.executeAndRegisterByDatasource(mappedAttrSql, tableName, appDatasource, appUuid);	
-//							
-//							if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
-//								String doubleCastSql = "SELECT * FROM " + tableName;
-//								rsHolder = sparkExecutor.castDFCloumnsToDoubleType(null, doubleCastSql, sourceDS, tableName, true, appUuid);	
-//							}
-//							
-////							exec.saveDataframeAsCSV(tableName, saveFileName, appUuid);
-//							sparkExecutor.registerAndPersistDataframe(rsHolder, null, SaveMode.APPEND.toString()
-//									, "file://"+saveFileName, tableName
-//									, "true", true);
-//							saveFileName = renameFileAndGetFilePathFromDir(saveFileName, "input_data", FileType.PARQUET.toString().toLowerCase());
-//							saveFileName = URI+saveFileName;
-//							logger.info("Saved file name : " + saveFileName);
-//						}						
-//						
-//						String inputSourceFileName = null;
-//						if(predict.getRowIdentifier() != null 
-//								&& !predict.getRowIdentifier().isEmpty()
-//								&& rowIdentifierCols != null 
-//								&& !rowIdentifierCols.isEmpty()) {
-//							inputSourceFileName = Helper.getPropertyValue("framework.model.predict.path")+filePath+"/"+"input_source";
-//							logger.info("Saved source file name : " + inputSourceFileName);
-//							
-//							File inputSourceFile = new File(inputSourceFileName);
-//							if(!inputSourceFile.exists()) {
-//								ResultSetHolder rsHolder = exec.executeAndRegisterByDatasource(sourceCustomQuery, tableName.concat("_sourceQuery"), sourceDS, appUuid);
-////								exec.saveDataframeAsCSV(tableName.concat("_sourceQuery"), "file://"+inputSourceFileName, appUuid);
-//								sparkExecutor.registerAndPersistDataframe(rsHolder, null, SaveMode.APPEND.toString()
-//										, "file://"+inputSourceFileName, tableName.concat("_sourceQuery")
-//										, "true", true);
-//								String inputSourceFilePath = renameFileAndGetFilePathFromDir(inputSourceFileName, "input_source_data", FileType.PARQUET.toString().toLowerCase());
-//								otherParams.put("inputSourceFileName", "file://"+inputSourceFilePath);
-//							}		
-//						}
-//
-//						predictInput.setSourceFilePath(saveFileName);
-//					} else {
-//						predictInput.setQuery(mappedFeatureAttrSql);
-//						
-//						java.util.Map<String, Object> sourceDsDetails = new HashMap<>();						
-//						sourceDsDetails.put("sourceHostName", sourceDS.getHost());
-//						sourceDsDetails.put("sourceDbName", sourceDS.getDbname());
-//						if(sourceDsType.equalsIgnoreCase(ExecContext.ORACLE.toString())) {
-//							sourceDsDetails.put("sourceDbName", sourceDS.getSid());						
-//						} else {
-//							sourceDsDetails.put("sourceDbName", sourceDS.getDbname());
-//						}
-//						sourceDsDetails.put("sourcePort", sourceDS.getPort());
-//						sourceDsDetails.put("sourceUserName", sourceDS.getUsername());
-//						sourceDsDetails.put("sourcePassword", sourceDS.getPassword());
-//						
-//						predictInput.setSourceDsDetails(sourceDsDetails);
-//						
-//						if(train.getRowIdentifier() != null && !train.getRowIdentifier().isEmpty()) {
-//							otherParams.put("sourceQuery", sourceCustomQuery);
-//						}
-//						//creating default directory to allow script/python-code to store file in this location
-//						File defaultDirFile = new File(defaultDir);
-//						if(!defaultDirFile.exists()) {
-//							defaultDirFile.mkdirs();
-//						}
-//					}
-//					
-//					String scriptName = algorithm.getScriptName();
-//					
-//					MetaIdentifier targetMI = predict.getTarget().getRef();
-//					if(targetMI.getType().equals(MetaType.datapod)) {
-//						Datapod targetDP = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetMI.getUuid(), targetMI.getVersion(), targetMI.getType().toString());
-//						Datasource targetDpDs = commonServiceImpl.getDatasourceByDatapod(targetDP);
-//						String targetDsType = targetDpDs.getType();
-//						predictInput.setTargetDsType(targetDsType.toLowerCase());
-//						
-//						java.util.Map<String, Object> targetDsDetails = new HashMap<>();
-//						targetDsDetails.put("targetHostName", targetDpDs.getHost());
-//						if(targetDsType.equalsIgnoreCase(ExecContext.ORACLE.toString())) {
-//							targetDsDetails.put("targetDbName", targetDpDs.getSid());						
-//						} else {
-//							targetDsDetails.put("targetDbName", targetDpDs.getDbname());
-//						}
-//						targetDsDetails.put("targetPort", targetDpDs.getPort());
-//						targetDsDetails.put("targetUserName", targetDpDs.getUsername());
-//						targetDsDetails.put("targetPassword", targetDpDs.getPassword());
-//						targetDsDetails.put("targetDriver", targetDpDs.getDriver());
-//						
-//						predictInput.setTargetDsDetails(targetDsDetails);
-//						predictInput.setTargetTableName(targetDP.getName());
-//						predictInput.setUrl(Helper.genUrlByDatasource(targetDpDs));
-//					} else if(targetMI.getType().equals(MetaType.file)) {
-//						predictInput.setTargetPath(savePredict);
-//						predictInput.setTargetDsType(MetaType.file.toString().toLowerCase());
-//					}					
-//					
-//					predictInput.setOtherParams(otherParams);
-//					
-//					predictInput.setNumInput(fieldArray.length);
-//					predictInput.setModelFilePath(modelFileName);
-//					predictInput.setOperation(MetaType.predict.toString().toLowerCase());
-//
-//					String inputConfigFilePath = defaultDir.concat("input_config.json");
-//					ObjectMapper mapper = new ObjectMapper();
-//					mapper.writeValue(new File(defaultDir.concat("input_config.json")), predictInput);
-//					
-//					argList.add("inputConfigFilePath");
-//					argList.add(inputConfigFilePath);
-//
-//					logger.info("Object PredictInput: "+predictInput.toString());
-//					result = executeScript(model.getType(), scriptName, trainExec.getUuid(), trainExec.getVersion(), argList);
-//					List<String> tempTableList = new ArrayList<>();
-//					tempTableList.add(tableName);
-//					sparkExecutor.dropTempTable(tempTableList);
-//				} else {
-//					throw new Exception("Model type has been changed from \'"+model.getType().toUpperCase()+"\' to \'"+trainModel.getType().toUpperCase()+"\'.");
-//				}
-//			} else {					
-//				if(model.getDependsOn().getRef().getType().equals(MetaType.formula)) {
-//					logger.info("Model depends on formula");
-//					//getting data from source
-//					String sql = generateSQLBySource(source, execParams);
-//					ResultSetHolder rsHolder = exec.executeAndRegisterByDatasource(sql, (tableName+"_pred_data"), sourceDS, appUuid);
-////					rsHolder = exec.replaceNullValByDoubleValFromDF(rsHolder, null, sourceDS, (tableName+"_pred_data"), true, appUuid);
-//					
-//					String predictQuery = predictMLOperator.generateSql(predict, (tableName+"_pred_data"));				
-//					if(predict.getTarget().getRef().getType().equals(MetaType.datapod)) {
-//						Datasource targetDatasource = commonServiceImpl.getDatasourceByObject(target);
-//						if(appDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
-//								&& !targetDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
-//							rsHolder = exec.executeSqlByDatasource(predictQuery, sourceDS, appUuid);
-//							if(targetDatasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
-//								tableName = targetDatasource.getSid().concat(".").concat(target.getName());
-//							} else {
-//								tableName = targetDatasource.getDbname().concat(".").concat(target.getName());					
-//							}
-//							rsHolder.setTableName(tableName);
-//							rsHolder = exec.persistDataframe(rsHolder, targetDatasource, target, SaveMode.APPEND.toString());
-//						} else {
-//							rsHolder = exec.executeRegisterAndPersist(predictQuery, (tableName+"_pred_data"), filePathUrl, target, SaveMode.APPEND.toString(), false, appUuid);
-//						}																
-//					} else {
-//						rsHolder = exec.executeRegisterAndPersist(predictQuery, (tableName+"_pred_data"), filePathUrl, null, SaveMode.APPEND.toString(), false, appUuid);
-//						result = rsHolder;					
-//						count = rsHolder.getCountRows();
-//					}
-//					
-//					//generating datastore for datapod
-//					result = rsHolder;					
-//					count = rsHolder.getCountRows();
-//					createDatastore(filePathUrl, predict.getName(), 
-//							new MetaIdentifier(MetaType.datapod, target.getUuid(), target.getVersion()), 
-//							new MetaIdentifier(MetaType.predictExec, predictExec.getUuid(), predictExec.getVersion()),
-//							predictExec.getAppInfo(), predictExec.getCreatedBy(), SaveMode.APPEND.toString(), resultRef, count, 
-//							Helper.getPersistModeFromRunMode(runMode.toString()), runMode);	
-//					
-//					List<String> tempTableList = new ArrayList<>();
-//					tempTableList.add((tableName+"_pred_data"));
-//					sparkExecutor.dropTempTable(tempTableList);
-//				} else if(model.getDependsOn().getRef().getType().equals(MetaType.algorithm)) {
-//					logger.info("Model depends on algorithm");
-//					TrainExec trainExec = modelExecServiceImpl.getLatestTrainExecByTrain(predict.getTrainInfo().getRef().getUuid(), predict.getTrainInfo().getRef().getVersion());
-//					if (trainExec == null) {
-//						throw new Exception("No trained model found.");
-//					}
-//
-//					boolean isResultSaved = false;
-//					
-////					rsHolder = exec.replaceNullValByDoubleValFromDF(rsHolder, null, sourceDS, (tableName+"_pred_data"), true, appUuid);
-//					fieldArray = getMappedAttrs(predict.getFeatureAttrMap());
-//					
-//					//getting data from source
-//					String sourceSql = generateSQLBySource(source, execParams);
-//					ResultSetHolder rsHolder = exec.executeAndRegisterByDatasource(sourceSql, (tableName+"_pred_data"), sourceDS, appUuid);					
-//
-//					//finding impute values of attribute
-//					LinkedHashMap<String, Object> resolvedimputeAttributeValues = imputeOperator.resolveAttributeImputeValue(predict.getFeatureAttrMap(), source, model, execParams, runMode, (tableName+"_pred_data"));
-//					
-//					//applying imputation valued per column to data
-//					rsHolder = exec.applyAttrImputeValuesToData(rsHolder, resolvedimputeAttributeValues, true, (tableName+"_pred_data"));
-//
-//					//getting data having only feature columns
-//					String mappedFeatureAttrSql = generateFeatureSQLByTempTable(predict.getFeatureAttrMap(), (tableName+"_pred_data"), null, (tableName+"_pred_mapped_data"));
-//					rsHolder = sparkExecutor.readTempTable(mappedFeatureAttrSql, appUuid);
-//					sparkExecutor.registerTempTable(rsHolder.getDataFrame(), (tableName+"_pred_mapped_data"));	
-//
-//					Map<String, EncodingType> encodingDetails = getEncodingDetails(predict.getFeatureAttrMap(), model.getFeatures());
-//					if(encodingDetails != null && !encodingDetails.isEmpty()) {
-////						rsHolder = sparkExecutor.preparePredictDfForEncoding(rsHolder, encodingDetails, true, (tableName+"_pred_assembled_data"));
-//					}
-//					//assembling the data to for feature vector
-////					exec.assembleDF(fieldArray, rsHolder, null, (tableName+"_pred_assembled_data"), sourceDS, true, appUuid);
-//					
-//					exec.registerDataFrameAsTable(rsHolder, tableName+"_pred_assembled_data");
-//					
-//					
-//					String key = String.format("%s_%s", model.getUuid().replaceAll("-", "_"), model.getVersion());
-//					Object trainedModel = null;
-//					if(trainedModelMap.get(key) != null) {
-//						trainedModel = trainedModelMap.get(key);
-//					} else {
-//						trainedModel = getTrainedModelByTrainExec(algorithm.getModelClass(), trainExec);
-//						trainedModelMap.put(key, trainedModel);
-//					}
-//					//prediction operation
-//					logger.info("Trained Model class " + trainedModel.getClass().getName());
-//					rsHolder =  exec.predict(trainedModel, target, filePathUrl, (tableName+"_pred_assembled_data"), appUuid, encodingDetails);
-//					logger.info("After predict");
-//					
-//					List<String> rowIdentifierCols = getRowIdentifierCols(predict.getRowIdentifier());
-//					if(predict.getTarget().getRef().getType().equals(MetaType.datapod)) {
-//						Datasource targetDatasource = commonServiceImpl.getDatasourceByObject(target);
-//						
-//					//writing into table
-//					String targetTableName = null;
-//					if(targetDatasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
-//						targetTableName = targetDatasource.getSid().concat(".").concat(target.getName());
-//					} else {
-//						targetTableName = targetDatasource.getDbname().concat(".").concat(target.getName());					
-//					}
-//					logger.info("Read dataframes : ");
-//					logger.info("Predicted DF");
-//					sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_assembled_data"), appUuid).getDataFrame().show();
-//					logger.info("feature DF");
-//					sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_mapped_data"), appUuid).getDataFrame().show();
-//					logger.info("source DF");
-//					sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_data"), appUuid).getDataFrame().show();
-////					if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
-//						isResultSaved = sparkExecutor.savePredictionResult(sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_assembled_data"), appUuid).getDataFrame()
-//								, sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_mapped_data"), appUuid).getDataFrame()
-//								, sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_data"), appUuid).getDataFrame()
-//								, filePathUrl, rowIdentifierCols, predict.getIncludeFeatures(), fieldArray, algorithm.getTrainClass()
-//								, target, targetDatasource, targetTableName, SaveMode.APPEND.toString());		
-////					}
-//						//generating datastore for datapod
-//						count = rsHolder.getCountRows();
-//						createDatastore(filePathUrl, predict.getName(), 
-//								new MetaIdentifier(MetaType.datapod, target.getUuid(), target.getVersion()), 
-//								new MetaIdentifier(MetaType.predictExec, predictExec.getUuid(), predictExec.getVersion()),
-//								predictExec.getAppInfo(), predictExec.getCreatedBy(), SaveMode.APPEND.toString(), resultRef, count, 
-//								Helper.getPersistModeFromRunMode(runMode.toString()), runMode);		
-//					} else {
-//						//writing into file
-//						logger.info("Read dataframes : ");
-//						logger.info("Predicted DF");
-//						sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_assembled_data"), appUuid).getDataFrame().show();
-//						logger.info("feature DF");
-//						sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_mapped_data"), appUuid).getDataFrame().show();
-//						logger.info("source DF");
-//						sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_data"), appUuid).getDataFrame().show();
-////						if(encodingDetails == null || (encodingDetails != null && encodingDetails.isEmpty())) {
-//							isResultSaved = sparkExecutor.savePredictionResult(sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_assembled_data"), appUuid).getDataFrame()
-//									, sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_mapped_data"), appUuid).getDataFrame()
-//									, sparkExecutor.readTempTable("SELECT * FROM "+(tableName+"_pred_data"), appUuid).getDataFrame()
-//									, filePathUrl, rowIdentifierCols, predict.getIncludeFeatures(), fieldArray, algorithm.getTrainClass()
-//									, null, null, null, null);
-////						}
-//					}
-//					logger.info("After writing prediction results");
-//					//dropping temp table(s)
-//					List<String> tempTableList = new ArrayList<>();
-//					tempTableList.add((tableName+"_pred_data"));
-//					tempTableList.add((tableName+"_pred_mapped_data"));
-//					tempTableList.add((tableName+"_pred_assembled_data"));
-//					sparkExecutor.dropTempTable(tempTableList);
-//					
-//					if(isResultSaved) {
-//						result = isResultSaved;
-//					} else {
-//						result = null;
-//					}
-//				}
-//			}
-//
-//			createDatastore(filePathUrl, predictName,
-//					new MetaIdentifier(MetaType.predict, predict.getUuid(), predict.getVersion()),
-//					new MetaIdentifier(MetaType.predictExec, predictExec.getUuid(), predictExec.getVersion()),
-//					predictExec.getAppInfo(), predictExec.getCreatedBy(), SaveMode.APPEND.toString(), resultRef, count, 
-//					Helper.getPersistModeFromRunMode(runMode.toString()), runMode);
-//			logger.info("After create Datastore");
-//
-//			predictExec.setLocation(filePathUrl);
-//			predictExec.setResult(resultRef);
-//			commonServiceImpl.save(MetaType.predictExec.toString(), predictExec);
-//			logger.info("After saving predictExec");
-//			if (result != null) {
-//				isSuccess = true;
-//				predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.COMPLETED);
-//			}else {
-//				isSuccess = false;
-//				predictExec = (PredictExec) commonServiceImpl.setMetaStatus(predictExec, MetaType.predictExec, Status.Stage.FAILED);
-//			}
+
 			isSuccess = true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2573,26 +2173,27 @@ public class ModelServiceImpl {
 		trainList = mongoTemplate.find(query, Train.class);
 		return trainList;
 	}
-	
-	public String genTableNameByMetaIdentifier(MetaIdentifier tabNameMI, Datapod datapod, String execversion, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		String tableName = null;
-//		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		Datasource datasource = commonServiceImpl.getDatasourceByDatapod(datapod);
-		String dsType = datasource.getType();
-		if(runMode.equals(RunMode.BATCH)) {
-			if (/*!engine.getExecEngine().equalsIgnoreCase("livy-spark")
-					&& !dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
-					&&*/ !dsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
-				tableName = datasource.getDbname() + "." + datapod.getName();
-				return tableName;
-			} else {
-				tableName = String.format("%s_%s_%s", tabNameMI.getUuid().replace("-", "_"), tabNameMI.getVersion(), execversion);
-			}
-		} else if(runMode.equals(RunMode.ONLINE)) {
-			tableName = String.format("%s_%s_%s", tabNameMI.getUuid().replace("-", "_"), tabNameMI.getVersion(), execversion);
-		}		
-		return tableName;
-	}
+
+	/********************** UNUSED **********************/
+//	public String genTableNameByMetaIdentifier(MetaIdentifier tabNameMI, Datapod datapod, String execversion, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+//		String tableName = null;
+////		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+//		Datasource datasource = commonServiceImpl.getDatasourceByDatapod(datapod);
+//		String dsType = datasource.getType();
+//		if(runMode.equals(RunMode.BATCH)) {
+//			if (/*!engine.getExecEngine().equalsIgnoreCase("livy-spark")
+//					&& !dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
+//					&&*/ !dsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
+//				tableName = datasource.getDbname() + "." + datapod.getName();
+//				return tableName;
+//			} else {
+//				tableName = String.format("%s_%s_%s", tabNameMI.getUuid().replace("-", "_"), tabNameMI.getVersion(), execversion);
+//			}
+//		} else if(runMode.equals(RunMode.ONLINE)) {
+//			tableName = String.format("%s_%s_%s", tabNameMI.getUuid().replace("-", "_"), tabNameMI.getVersion(), execversion);
+//		}		
+//		return tableName;
+//	}
 
 	/********************** UNUSED **********************/
 //	public boolean predict2(Predict predict, ExecParams execParams, PredictExec predictExec, RunMode runMode) throws Exception {
@@ -2733,52 +2334,53 @@ public class ModelServiceImpl {
 //		}
 //		return isSuccess;
 //	}
-	
-	public String getTableNameByObject(Object metaObject) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		String tableName = null;
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		if (metaObject instanceof Datapod) {
-			Datapod datapod = (Datapod) metaObject;			
-			return datasource.getDbname()+"."+datapod.getName();
-		} else if (metaObject instanceof DataSet) {
-			DataSet dataset = (DataSet) metaObject;
-			MetaIdentifier dependsOnIdentifier = dataset.getDependsOn().getRef(); 
-			MetaType dependsOnType = dependsOnIdentifier.getType();
-			if(dependsOnType.equals(MetaType.datapod)) {
-				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dependsOnIdentifier.getUuid(), dependsOnIdentifier.getVersion(), dependsOnType.toString());
-				return getTableNameByObject(datapod); 
-			} else if(dependsOnType.equals(MetaType.dataset)) {
-				DataSet dataSet2 = (DataSet) commonServiceImpl.getOneByUuidAndVersion(dependsOnIdentifier.getUuid(), dependsOnIdentifier.getVersion(), dependsOnType.toString());
-				return getTableNameByObject(dataSet2);
-			} else if(dependsOnType.equals(MetaType.relation)) {
-				Relation relation = (Relation) commonServiceImpl.getOneByUuidAndVersion(dependsOnIdentifier.getUuid(), dependsOnIdentifier.getVersion(), dependsOnType.toString());
-				return getTableNameByObject(relation);
-			}			
-		} else if (metaObject instanceof Rule) {
-			Rule rule = (Rule) metaObject;
-			MetaIdentifier ruleSourceIdentifier = rule.getSource().getRef(); 
-			MetaType dependsOnType = ruleSourceIdentifier.getType();
-			if(dependsOnType.equals(MetaType.datapod)) {
-				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(ruleSourceIdentifier.getUuid(), ruleSourceIdentifier.getVersion(), dependsOnType.toString());
-				return getTableNameByObject(datapod); 
-			} else if(dependsOnType.equals(MetaType.dataset)) {
-				DataSet dataSet2 = (DataSet) commonServiceImpl.getOneByUuidAndVersion(ruleSourceIdentifier.getUuid(), ruleSourceIdentifier.getVersion(), dependsOnType.toString());
-				return getTableNameByObject(dataSet2);
-			} else if(dependsOnType.equals(MetaType.relation)) {
-				Relation relation = (Relation) commonServiceImpl.getOneByUuidAndVersion(ruleSourceIdentifier.getUuid(), ruleSourceIdentifier.getVersion(), dependsOnType.toString());
-				return getTableNameByObject(relation);
-			} else if(dependsOnType.equals(MetaType.rule)) {
-				Rule rule2 = (Rule) commonServiceImpl.getOneByUuidAndVersion(ruleSourceIdentifier.getUuid(), ruleSourceIdentifier.getVersion(), dependsOnType.toString());
-				return getTableNameByObject(rule2);
-			}
-		} else if (metaObject instanceof Relation) {
-			Relation relation = (Relation) metaObject;
-			MetaIdentifier dependsOnIdentifier = relation.getDependsOn().getRef();
-			Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dependsOnIdentifier.getUuid(), dependsOnIdentifier.getVersion(), dependsOnIdentifier.getType().toString());
-			return getTableNameByObject(datapod);
-		}
-		return tableName;
-	}
+
+	/********************** UNUSED **********************/
+//	public String getTableNameByObject(Object metaObject) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+//		String tableName = null;
+//		Datasource datasource = commonServiceImpl.getDatasourceByApp();
+//		if (metaObject instanceof Datapod) {
+//			Datapod datapod = (Datapod) metaObject;			
+//			return datasource.getDbname()+"."+datapod.getName();
+//		} else if (metaObject instanceof DataSet) {
+//			DataSet dataset = (DataSet) metaObject;
+//			MetaIdentifier dependsOnIdentifier = dataset.getDependsOn().getRef(); 
+//			MetaType dependsOnType = dependsOnIdentifier.getType();
+//			if(dependsOnType.equals(MetaType.datapod)) {
+//				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dependsOnIdentifier.getUuid(), dependsOnIdentifier.getVersion(), dependsOnType.toString());
+//				return getTableNameByObject(datapod); 
+//			} else if(dependsOnType.equals(MetaType.dataset)) {
+//				DataSet dataSet2 = (DataSet) commonServiceImpl.getOneByUuidAndVersion(dependsOnIdentifier.getUuid(), dependsOnIdentifier.getVersion(), dependsOnType.toString());
+//				return getTableNameByObject(dataSet2);
+//			} else if(dependsOnType.equals(MetaType.relation)) {
+//				Relation relation = (Relation) commonServiceImpl.getOneByUuidAndVersion(dependsOnIdentifier.getUuid(), dependsOnIdentifier.getVersion(), dependsOnType.toString());
+//				return getTableNameByObject(relation);
+//			}			
+//		} else if (metaObject instanceof Rule) {
+//			Rule rule = (Rule) metaObject;
+//			MetaIdentifier ruleSourceIdentifier = rule.getSource().getRef(); 
+//			MetaType dependsOnType = ruleSourceIdentifier.getType();
+//			if(dependsOnType.equals(MetaType.datapod)) {
+//				Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(ruleSourceIdentifier.getUuid(), ruleSourceIdentifier.getVersion(), dependsOnType.toString());
+//				return getTableNameByObject(datapod); 
+//			} else if(dependsOnType.equals(MetaType.dataset)) {
+//				DataSet dataSet2 = (DataSet) commonServiceImpl.getOneByUuidAndVersion(ruleSourceIdentifier.getUuid(), ruleSourceIdentifier.getVersion(), dependsOnType.toString());
+//				return getTableNameByObject(dataSet2);
+//			} else if(dependsOnType.equals(MetaType.relation)) {
+//				Relation relation = (Relation) commonServiceImpl.getOneByUuidAndVersion(ruleSourceIdentifier.getUuid(), ruleSourceIdentifier.getVersion(), dependsOnType.toString());
+//				return getTableNameByObject(relation);
+//			} else if(dependsOnType.equals(MetaType.rule)) {
+//				Rule rule2 = (Rule) commonServiceImpl.getOneByUuidAndVersion(ruleSourceIdentifier.getUuid(), ruleSourceIdentifier.getVersion(), dependsOnType.toString());
+//				return getTableNameByObject(rule2);
+//			}
+//		} else if (metaObject instanceof Relation) {
+//			Relation relation = (Relation) metaObject;
+//			MetaIdentifier dependsOnIdentifier = relation.getDependsOn().getRef();
+//			Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dependsOnIdentifier.getUuid(), dependsOnIdentifier.getVersion(), dependsOnIdentifier.getType().toString());
+//			return getTableNameByObject(datapod);
+//		}
+//		return tableName;
+//	}
 
 	public String getTableNameByDatapod(Datapod datapod, Datasource datasource) {
 		if(datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
