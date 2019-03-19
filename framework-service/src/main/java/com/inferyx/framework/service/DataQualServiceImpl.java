@@ -517,7 +517,7 @@ public class DataQualServiceImpl extends RuleTemplate {
 		try {
 			dataQualExec.setExec(dqOperator.generateSql(dataQual, datapodList, dataQualExec, dagExec, usedRefKeySet,
 					otherParams, runMode));
-			dataQualExec.setSummaryExec(dqOperator.generateSummarySql(dataQual, datapodList, dataQualExec, dagExec,
+			dataQualExec.setSummaryExec(dqOperator.generateSummarySql(dataQual, datapodList, dataQualExec, dagExec, getTargetSummaryDp(), 
 					usedRefKeySet, otherParams, runMode));
 			dataQualExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 			logger.info(String.format("DQ Result sql for DQExec : %s is : ", execUuid, dataQualExec.getExec()));

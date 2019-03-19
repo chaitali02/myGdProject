@@ -315,7 +315,7 @@ public abstract class RuleGroupTemplate implements IExecutable, IParsable {
 		BaseRuleExec ruleExec1 = null;
 		if (ruleExecMetaList != null && !ruleExecMetaList.isEmpty()) {
 			for (MetaIdentifierHolder ruleExecMeta1 : ruleExecMetaList) {
-				ruleExec1 = (BaseRuleExec) commonServiceImpl.getOneByUuidAndVersion(ruleExecMeta1.getRef().getUuid(), ruleExecMeta1.getRef().getVersion(), ruleExecMeta1.getRef().getType().toString());
+				ruleExec1 = (BaseRuleExec) commonServiceImpl.getOneByUuidAndVersion(ruleExecMeta1.getRef().getUuid(), ruleExecMeta1.getRef().getVersion(), ruleExecMeta1.getRef().getType().toString(), "N");
 				ruleExecHolderMap.put(ruleExec1.getDependsOn().getRef().getUuid(), ruleExec1);
 			}
 		}

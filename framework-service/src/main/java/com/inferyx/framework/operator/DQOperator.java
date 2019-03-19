@@ -128,6 +128,8 @@ public class DQOperator implements IParsable {
 	private String DQ_RESULT_ALIAS = "dq_result_alias";
 	private String DQ_RESULT_READY_ALIAS = "dq_result_ready_alias";
 	private String DQ_RESULT_SUM_ALIAS = "dq_result_sum_alias";
+	private String DQ_SUMMARY_ALIAS = " dq_summary_alias ";
+	private String STD_DEV_FAIL = " STD_DEV_FAIL ";
 	private String SCORE = " score ";
 	private String RULEUUID = "rule_uuid";
 	private String RULEVERSION = "rule_version";
@@ -170,6 +172,8 @@ public class DQOperator implements IParsable {
 	private String VERSION = " version ";
 	private String DATAPOD_NAME = " datapod_name";
 	private String ATTRIBUTE_NAME = " attribute_name";
+	private String CROSS_JOIN = " CROSS JOIN ";
+	private String STDDEV = " STDDEV ";
 
 	@Autowired
 	RelationOperator relationOperator;
@@ -191,7 +195,7 @@ public class DQOperator implements IParsable {
 	
 	static final Logger logger = Logger.getLogger(DQOperator.class);
 
-	public String generateSql(DataQual dataQual, List<String> datapodList, DataQualExec dataQualExec, DagExec dagExec,
+	public String generateSql(DataQual dataQual, List<String> datapodList, DataQualExec dataQualExec, DagExec dagExec,  
 			Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode) throws Exception {
 		logger.info("DQ generateSql otherParams : " + otherParams);
 		Datapod srcDP = null;
@@ -646,15 +650,36 @@ public class DQOperator implements IParsable {
 	}
 	
 	public String generateSummarySql(DataQual dq, List<String> datapodList,
-			DataQualExec dataQualExec, DagExec dagExec, Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode)
+			DataQualExec dataQualExec, DagExec dagExec, MetaIdentifier summaryDpRef, Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode)
 			throws Exception {
 		// Find result sql
+		Datapod summaryDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(summaryDpRef.getUuid(), summaryDpRef.getVersion(), summaryDpRef.getType().toString(), "N");
+		String summaryTableName = getTableName(summaryDp, datapodList, dagExec, otherParams, runMode);
 		String resSql = dataQualExec.getExec();
-		String sql = generateSummarySql3(dq, generateSummarySql2(generateSummarySql1(resSql)));
+		String sql = generateSummarySql4(dq, generateSummarySql3(generateSummarySql2(generateSummarySql1(resSql)), summaryTableName));
 		return sql;
 	}
 	
-	public String generateSummarySql3 (DataQual dq, String summarySql2) {
+	public String generateSummarySql4 (DataQual dq, String summarySql3) {
+		StringBuilder select = new StringBuilder(SELECT)
+				  .append(RULEUUID).append(COMMA)
+				  .append(RULEVERSION).append(COMMA)
+				  .append(RULENAME).append(COMMA)
+				  .append(DATAPODUUID).append(COMMA)
+				  .append(DATAPODVERSION).append(COMMA)
+				  .append(DATAPOD_NAME).append(COMMA)
+				  .append(TOTAL_ROW_COUNT).append(COMMA)
+				  .append(TOTAL_PASS_COUNT).append(COMMA)
+				  .append(TOTAL_FAIL_COUNT).append(COMMA)
+				  .append(generateThresholdSql(dq, "1")).append(COMMA)
+				  //.append(generateThresholdSql(dq, STD_DEV_FAIL)).append(COMMA)
+				  .append(SCORE).append(COMMA)
+				  .append(VERSION).append(FROM).append(BRACKET_OPEN)
+				  .append(summarySql3).append(BRACKET_CLOSE).append(DQ_RESULT_SUM_ALIAS);
+		return select.toString();
+	}
+	
+	public String generateSummarySql3 (String summarySql2, String summaryTableName) {
 		StringBuilder select = new StringBuilder(SELECT)
 				  .append(RULEUUID).append(COMMA)
 				  .append(RULEVERSION).append(COMMA)
@@ -665,10 +690,12 @@ public class DQOperator implements IParsable {
 				  .append(TOTAL_ROW_COUNT).append(COMMA)
 				  .append(TOTAL_PASS_COUNT).append(COMMA)
 				  .append(BRACKET_OPEN).append(TOTAL_ROW_COUNT).append(MINUS).append(TOTAL_PASS_COUNT).append(BRACKET_CLOSE).append(AS).append(TOTAL_FAIL_COUNT).append(COMMA)
-				  .append(generateThresholdSql(dq)).append(COMMA)
 				  .append(BRACKET_OPEN).append(TOTAL_PASS_COUNT).append(DIVIDE_BY).append(TOTAL_ROW_COUNT).append(BRACKET_CLOSE).append(MULTIPLY_BY).append(" 100 ").append(AS).append(SCORE).append(COMMA)
-				  .append(VERSION).append(FROM).append(BRACKET_OPEN)
+				  .append(VERSION)/*.append(COMMA)
+				  .append(STD_DEV_FAIL)*/.append(FROM).append(BRACKET_OPEN)
 				  .append(summarySql2).append(BRACKET_CLOSE).append(DQ_RESULT_SUM_ALIAS);
+				  /*.append(CROSS_JOIN).append(BRACKET_OPEN).append(SELECT).append(STDDEV).append(BRACKET_OPEN).append(TOTAL_FAIL_COUNT).append(BRACKET_CLOSE).append(AS).append(STD_DEV_FAIL)
+				  .append(FROM).append(summaryTableName).append(BRACKET_CLOSE).append(DQ_SUMMARY_ALIAS);*/
 		return select.toString();
 	}
 	
@@ -677,7 +704,7 @@ public class DQOperator implements IParsable {
 	 * @param dq
 	 * @return
 	 */
-	public String generateThresholdSql(DataQual dq) {
+	public String generateThresholdSql(DataQual dq, String failStddev) {
 		StringBuilder threshold = new StringBuilder();
 		if (dq.getThresholdInfo() == null || StringUtils.isBlank(dq.getThresholdInfo().getLow())) {
 			return threshold.append("''").append(AS).append(THRESHOLD_TYPE).append(COMMA)
@@ -707,6 +734,16 @@ public class DQOperator implements IParsable {
 			thresholdLimit = 
 					CASE_WHEN.concat(BRACKET_OPEN).concat(failPct).concat(LESS_THAN_EQUALS).concat(dq.getThresholdInfo().getLow()).concat(BRACKET_CLOSE).concat(ONLY_THEN).concat(dq.getThresholdInfo().getLow())
 					 .concat(ONLY_WHEN).concat(BRACKET_OPEN).concat(failPct).concat(LESS_THAN_EQUALS).concat(dq.getThresholdInfo().getMedium()).concat(BRACKET_CLOSE).concat(ONLY_THEN).concat(dq.getThresholdInfo().getMedium())
+					 .concat(ONLY_ELSE).concat(dq.getThresholdInfo().getHigh()).concat(ONLY_END).concat(AS).concat(THRESHOLD_LIMIT);
+			thresholdType = SINGLE_QUOTE.concat(dq.getThresholdInfo().getType().toString()).concat(SINGLE_QUOTE).concat(AS).concat(THRESHOLD_TYPE);
+		} else if (dq.getThresholdInfo().getType().equals(ThresholdType.STDDEV)) {
+			thresholdInd = 
+					CASE_WHEN.concat(BRACKET_OPEN).concat(failCount).concat(LESS_THAN_EQUALS).concat(dq.getThresholdInfo().getLow()).concat(MULTIPLY_BY).concat(failStddev).concat(BRACKET_CLOSE).concat(ONLY_THEN).concat(LOW)
+					 .concat(ONLY_WHEN).concat(BRACKET_OPEN).concat(failCount).concat(LESS_THAN_EQUALS).concat(dq.getThresholdInfo().getMedium()).concat(MULTIPLY_BY).concat(failStddev).concat(BRACKET_CLOSE).concat(ONLY_THEN).concat(MEDIUM)
+					 .concat(ONLY_ELSE).concat(HIGH).concat(ONLY_END).concat(AS).concat(THRESHOLD_IND);
+			thresholdLimit = 
+					CASE_WHEN.concat(BRACKET_OPEN).concat(failCount).concat(LESS_THAN_EQUALS).concat(dq.getThresholdInfo().getLow()).concat(MULTIPLY_BY).concat(failStddev).concat(BRACKET_CLOSE).concat(ONLY_THEN).concat(dq.getThresholdInfo().getLow())
+					 .concat(ONLY_WHEN).concat(BRACKET_OPEN).concat(failCount).concat(LESS_THAN_EQUALS).concat(dq.getThresholdInfo().getMedium()).concat(MULTIPLY_BY).concat(failStddev).concat(BRACKET_CLOSE).concat(ONLY_THEN).concat(dq.getThresholdInfo().getMedium())
 					 .concat(ONLY_ELSE).concat(dq.getThresholdInfo().getHigh()).concat(ONLY_END).concat(AS).concat(THRESHOLD_LIMIT);
 			thresholdType = SINGLE_QUOTE.concat(dq.getThresholdInfo().getType().toString()).concat(SINGLE_QUOTE).concat(AS).concat(THRESHOLD_TYPE);
 		}  
@@ -740,6 +777,7 @@ public class DQOperator implements IParsable {
 //		
 //		return sql.toString();
 //	}
+	
 	
 	public String generateSummarySql2 (String summarySql1) {
 		StringBuilder sql = new StringBuilder(SELECT)
