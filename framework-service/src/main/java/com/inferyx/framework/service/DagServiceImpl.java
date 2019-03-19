@@ -744,6 +744,9 @@ public class DagServiceImpl {
 		dagExec.setExecParams(execParams);
 		dagExec.setName(dag.getName());
 		dagExec.setBaseEntity();
+		dagExec.setExecCreated("N");
+		dagExec.setStatusList(DagExecUtil.createInitialStatus(dagExec.getStatusList()));
+		commonServiceImpl.save(MetaType.dagExec.toString(), dagExec);
 		List<String> datapodList = new ArrayList<>();
 		MetaIdentifier dagRef = new MetaIdentifier(MetaType.dag, dag.getUuid(), dag.getVersion());
 		// Loop in Stages
@@ -753,8 +756,8 @@ public class DagServiceImpl {
 		dagExec.setStages(DagExecUtil.convertToStageList(dagExecStages));
 		// dagExec.setName("sys_" + dagExec.getUuid());
 		dagExec.setAppInfo(dag.getAppInfo());
+		dagExec.setExecCreated("Y");
 		// Set DagExec Status
-		dagExec.setStatusList(DagExecUtil.createInitialStatus(dagExec.getStatusList()));
 		return dagExec;
 	}
 
