@@ -40,6 +40,48 @@
         {
             "attributeId" : 0,
             "displaySeq" : 0,
+            "name" : "rule_exec_uuid",
+            "type" : "string",
+            "desc" : "ruleexec_uuid",
+            "expression" : null,
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "rule_exec_uuid",
+            "active" : "Y",
+            "length" : null,
+            "attrUnitType" : null
+        }, 
+        {
+            "attributeId" : 1,
+            "displaySeq" : 1,
+            "name" : "rule_exec_version",
+            "type" : "integer",
+            "desc" : "rule_exec_version",
+            "expression" : null,
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "rule_exec_version",
+            "active" : "Y",
+            "length" : null,
+            "attrUnitType" : null
+        }, 
+        {
+            "attributeId" : 2,
+            "displaySeq" : 2,
+            "name" : "rule_exec_time",
+            "type" : "string",
+            "desc" : "rule_exec_time",
+            "expression" : null,
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "rule_exec_time",
+            "active" : "Y",
+            "length" : null,
+            "attrUnitType" : null
+        },
+        {
+            "attributeId" : 3,
+            "displaySeq" : 3,
             "name" : "rule_uuid",
             "type" : "string",
             "desc" : "rule_uuid",
@@ -52,8 +94,8 @@
             "attrUnitType" : null
         }, 
         {
-            "attributeId" : 1,
-            "displaySeq" : 1,
+            "attributeId" : 4,
+            "displaySeq" : 4,
             "name" : "rule_version",
             "type" : "integer",
             "desc" : "rule_version",
@@ -66,8 +108,8 @@
             "attrUnitType" : null
         }, 
         {
-            "attributeId" : 2,
-            "displaySeq" : 2,
+            "attributeId" : 5,
+            "displaySeq" : 5,
             "name" : "rule_name",
             "type" : "string",
             "desc" : "rule_name",
@@ -80,8 +122,8 @@
             "attrUnitType" : null
         }, 
         {
-            "attributeId" : 3,
-            "displaySeq" : 3,
+            "attributeId" : 6,
+            "displaySeq" : 6,
             "name" : "datapod_uuid",
             "type" : "string",
             "desc" : "datapod_uuid",
@@ -94,8 +136,8 @@
             "attrUnitType" : null
         }, 
         {
-            "attributeId" : 4,
-            "displaySeq" : 4,
+            "attributeId" : 7,
+            "displaySeq" : 7,
             "name" : "datapod_version",
             "type" : "integer",
             "desc" : "datapod_version",
@@ -108,8 +150,8 @@
             "attrUnitType" : null
         }, 
         {
-            "attributeId" : 5,
-            "displaySeq" : 5,
+            "attributeId" : 8,
+            "displaySeq" : 8,
             "name" : "datapod_name",
             "type" : "string",
             "desc" : "datapod_name",
@@ -120,10 +162,10 @@
             "active" : "Y",
             "length" : null,
             "attrUnitType" : null
-        }, 
+        },
         {
-            "attributeId" : 6,
-            "displaySeq" : 6,
+            "attributeId" : 9,
+            "displaySeq" : 9,
             "name" : "attribute_id",
             "type" : "string",
             "desc" : "attribute_id",
@@ -136,8 +178,8 @@
             "attrUnitType" : null
         }, 
         {
-            "attributeId" : 7,
-            "displaySeq" : 7,
+            "attributeId" : 10,
+            "displaySeq" : 10,
             "name" : "attribute_name",
             "type" : "string",
             "desc" : "attribute_name",
@@ -150,8 +192,8 @@
             "attrUnitType" : null
         },
         {
-            "attributeId" : 8,
-            "displaySeq" : 8,
+            "attributeId" : 11,
+            "displaySeq" : 11,
             "name" : "attribute_value",
             "type" : "string",
             "desc" : "attribute_value",
@@ -164,8 +206,8 @@
             "attrUnitType" : null
         }, 
         {
-            "attributeId" : 9,
-            "displaySeq" : 9,
+            "attributeId" : 12,
+            "displaySeq" : 12,
             "name" : "rowkey_name",
             "type" : "string",
             "desc" : "rowkey_name",
@@ -178,8 +220,8 @@
             "attrUnitType" : null
         }, 
         {
-            "attributeId" : 10,
-            "displaySeq" : 10,
+            "attributeId" : 13,
+            "displaySeq" : 13,
             "name" : "rowkey_value",
             "type" : "string",
             "desc" : "rowkey_value",
@@ -192,8 +234,8 @@
             "attrUnitType" : null
         },         
         {
-            "attributeId" : 11,
-            "displaySeq" : 11,
+            "attributeId" : 14,
+            "displaySeq" : 14,
             "name" : "null_check_pass",
             "type" : "string",
             "desc" : "null_check_pass",
@@ -206,8 +248,8 @@
             "attrUnitType" : null
         }, 
         {
-            "attributeId" : 12,
-            "displaySeq" : 12,
+            "attributeId" : 15,
+            "displaySeq" : 15,
             "name" : "value_check_pass",
             "type" : "string",
             "desc" : "value_check_pass",
@@ -220,8 +262,8 @@
             "attrUnitType" : null
         }, 
         {
-            "attributeId" : 13,
-            "displaySeq" : 13,
+            "attributeId" : 16,
+            "displaySeq" : 16,
             "name" : "range_check_pass",
             "type" : "string",
             "desc" : "range_check_pass",
@@ -234,8 +276,8 @@
             "attrUnitType" : null
         }, 
         {
-            "attributeId" : 14,
-            "displaySeq" : 14,
+            "attributeId" : 17,
+            "displaySeq" : 17,
             "name" : "datatype_check_pass",
             "type" : "string",
             "desc" : "datatype_check_pass",
@@ -248,8 +290,8 @@
             "attrUnitType" : null
         }, 
         {
-            "attributeId" : 15,
-            "displaySeq" : 15,
+            "attributeId" : 18,
+            "displaySeq" : 18,
             "name" : "format_check_pass",
             "type" : "string",
             "desc" : "format_check_pass",
@@ -262,8 +304,8 @@
             "attrUnitType" : null
         }, 
         {
-            "attributeId" : 16,
-            "displaySeq" : 16,
+            "attributeId" : 19,
+            "displaySeq" : 19,
             "name" : "length_check_pass",
             "type" : "string",
             "desc" : "length_check_pass",
@@ -276,8 +318,8 @@
             "attrUnitType" : null
         }, 
         {
-            "attributeId" : 17,
-            "displaySeq" : 17,
+            "attributeId" : 20,
+            "displaySeq" : 20,
             "name" : "ri_check_pass",
             "type" : "string",
             "desc" : "ri_check_pass",
@@ -290,8 +332,8 @@
             "attrUnitType" : null
         }, 
         {
-            "attributeId" : 18,
-            "displaySeq" : 18,
+            "attributeId" : 21,
+            "displaySeq" : 21,
             "name" : "dup_check_pass",
             "type" : "string",
             "desc" : "dup_check_pass",
@@ -304,8 +346,8 @@
             "attrUnitType" : null
         }, 
         {
-            "attributeId" : 19,
-            "displaySeq" : 19,
+            "attributeId" : 22,
+            "displaySeq" : 22,
             "name" : "custom_check_pass",
             "type" : "string",
             "desc" : "custom_check_pass",
@@ -318,8 +360,8 @@
             "attrUnitType" : null
         }, 
         {
-            "attributeId" : 20,
-            "displaySeq" : 20,
+            "attributeId" : 23,
+            "displaySeq" : 23,
             "name" : "domain_check_pass",
             "type" : "string",
             "desc" : "domain_check_pass",
@@ -332,8 +374,8 @@
             "attrUnitType" : null
         }, 
         {
-            "attributeId" : 21,
-            "displaySeq" : 21,
+            "attributeId" : 24,
+            "displaySeq" : 24,
             "name" : "blankspace_check_pass",
             "type" : "string",
             "desc" : "blankspace_check_pass",
@@ -346,8 +388,8 @@
             "attrUnitType" : null
         }, 
         {
-            "attributeId" : 22,
-            "displaySeq" : 22,
+            "attributeId" : 25,
+            "displaySeq" : 25,
             "name" : "expression_check_pass",
             "type" : "string",
             "desc" : "expression_check_pass",
@@ -360,8 +402,8 @@
             "attrUnitType" : null
         },
 		{
-            "attributeId" : 23,
-            "displaySeq" : 23,
+            "attributeId" : 26,
+            "displaySeq" : 26,
             "name" : "case_check_pass",
             "type" : "string",
             "desc" : "case_check_pass",
@@ -374,8 +416,8 @@
             "attrUnitType" : null
         }, 
         {
-            "attributeId" : 24,
-            "displaySeq" : 24,
+            "attributeId" : 27,
+            "displaySeq" : 27,
             "name" : "all_check_pass",
             "type" : "string",
             "desc" : "all_check_pass",
@@ -388,8 +430,8 @@
             "attrUnitType" : null
         },    
      {
-            "attributeId" : 25,
-            "displaySeq" : 25,
+            "attributeId" : 28,
+            "displaySeq" : 28,
             "name" : "version",
             "type" : "integer",
             "desc" : "version",
