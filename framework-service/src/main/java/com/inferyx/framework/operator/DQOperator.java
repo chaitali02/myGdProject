@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeDomain;
 import com.inferyx.framework.domain.BaseExec;
@@ -173,7 +174,7 @@ public class DQOperator implements IParsable {
 	private String DATAPOD_NAME = " datapod_name";
 	private String ATTRIBUTE_NAME = " attribute_name";
 	private String CROSS_JOIN = " CROSS JOIN ";
-	private String STDDEV = " STDDEV ";
+	private String STDDEV = " STDDEV";
 
 	@Autowired
 	RelationOperator relationOperator;
@@ -656,7 +657,7 @@ public class DQOperator implements IParsable {
 		Datapod summaryDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(summaryDpRef.getUuid(), summaryDpRef.getVersion(), summaryDpRef.getType().toString(), "N");
 		String summaryTableName = getTableName(summaryDp, datapodList, dagExec, otherParams, runMode);
 		String resSql = dataQualExec.getExec();
-		String sql = generateSummarySql4(dq, generateSummarySql3(generateSummarySql2(generateSummarySql1(resSql)), summaryTableName));
+		String sql = generateSummarySql4(dq, generateSummarySql3(generateSummarySql2(generateSummarySql1(resSql)), summaryTableName,dq));
 		return sql;
 	}
 	
@@ -671,15 +672,17 @@ public class DQOperator implements IParsable {
 				  .append(TOTAL_ROW_COUNT).append(COMMA)
 				  .append(TOTAL_PASS_COUNT).append(COMMA)
 				  .append(TOTAL_FAIL_COUNT).append(COMMA)
-				  .append(generateThresholdSql(dq, "1")).append(COMMA)
-				  //.append(generateThresholdSql(dq, STD_DEV_FAIL)).append(COMMA)
+				  .append(generateThresholdSql(dq, STD_DEV_FAIL)).append(COMMA)
 				  .append(SCORE).append(COMMA)
-				  .append(VERSION).append(FROM).append(BRACKET_OPEN)
+				  .append(VERSION).append(COMMA)
+				  .append(STD_DEV_FAIL.toLowerCase()).append(FROM).append(BRACKET_OPEN)
 				  .append(summarySql3).append(BRACKET_CLOSE).append(DQ_RESULT_SUM_ALIAS);
+		
+
 		return select.toString();
 	}
 	
-	public String generateSummarySql3 (String summarySql2, String summaryTableName) {
+	public String generateSummarySql3 (String summarySql2, String summaryTableName, DataQual dq) {
 		StringBuilder select = new StringBuilder(SELECT)
 				  .append(RULEUUID).append(COMMA)
 				  .append(RULEVERSION).append(COMMA)
@@ -691,11 +694,20 @@ public class DQOperator implements IParsable {
 				  .append(TOTAL_PASS_COUNT).append(COMMA)
 				  .append(BRACKET_OPEN).append(TOTAL_ROW_COUNT).append(MINUS).append(TOTAL_PASS_COUNT).append(BRACKET_CLOSE).append(AS).append(TOTAL_FAIL_COUNT).append(COMMA)
 				  .append(BRACKET_OPEN).append(TOTAL_PASS_COUNT).append(DIVIDE_BY).append(TOTAL_ROW_COUNT).append(BRACKET_CLOSE).append(MULTIPLY_BY).append(" 100 ").append(AS).append(SCORE).append(COMMA)
-				  .append(VERSION)/*.append(COMMA)
-				  .append(STD_DEV_FAIL)*/.append(FROM).append(BRACKET_OPEN)
-				  .append(summarySql2).append(BRACKET_CLOSE).append(DQ_RESULT_SUM_ALIAS);
-				  /*.append(CROSS_JOIN).append(BRACKET_OPEN).append(SELECT).append(STDDEV).append(BRACKET_OPEN).append(TOTAL_FAIL_COUNT).append(BRACKET_CLOSE).append(AS).append(STD_DEV_FAIL)
-				  .append(FROM).append(summaryTableName).append(BRACKET_CLOSE).append(DQ_SUMMARY_ALIAS);*/
+				  .append(VERSION).append(COMMA)
+				  .append(STD_DEV_FAIL).append(FROM).append(BRACKET_OPEN)
+				  .append(summarySql2).append(BRACKET_CLOSE).append(DQ_RESULT_SUM_ALIAS)
+				  .append(CROSS_JOIN).append(BRACKET_OPEN).append(SELECT)
+					// added filter by vaibhav
+			   	  .append(ConstantsUtil.CASE_WHEN).append(BRACKET_OPEN).append(STDDEV).append(BRACKET_OPEN)
+				  .append(TOTAL_FAIL_COUNT).append(BRACKET_CLOSE).append(EQUAL_TO).append("'NaN'").append(OR)
+				  .append(STDDEV).append(BRACKET_OPEN).append(TOTAL_FAIL_COUNT).append(BRACKET_CLOSE).append("IS")
+				  .append(" NULL").append(BRACKET_CLOSE).append("THEN").append(" 1 ").append("ELSE").append(STDDEV)
+				  .append(BRACKET_OPEN).append(TOTAL_FAIL_COUNT).append(BRACKET_CLOSE).append("END")
+				  .append(AS).append(STD_DEV_FAIL)
+				  .append(FROM).append(summaryTableName).append(ConstantsUtil.WHERE_1_1).append(ConstantsUtil.AND)
+				  .append("rule_uuid='" + dq.getUuid() + "'").append(ConstantsUtil.AND)
+				  .append("datapod_uuid='" + dq.getDependsOn().getRef().getUuid()+ "'").append(BRACKET_CLOSE).append(DQ_SUMMARY_ALIAS);
 		return select.toString();
 	}
 	
@@ -973,7 +985,7 @@ public class DQOperator implements IParsable {
 //			Datapod refIntTab = (Datapod) daoRegister.getRefObject(dq.getRefIntegrityCheck().getRef());
 			
 			if (dq.getRefIntegrityCheck().getDependsOn().getRef().getType() == MetaType.datapod) {
-				Datapod refIntTab = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dq.getRefIntegrityCheck().getTargetAttr().getRef().getUuid(), dq.getRefIntegrityCheck().getTargetAttr().getRef().getVersion(), dq.getRefIntegrityCheck().getTargetAttr().getRef().getType().toString(), "N");
+				Datapod refIntTab = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dq.getRefIntegrityCheck().getTargetAttr().getRef().getUuid(), dq.getRefIntegrityCheck().getTargetAttr().getRef().getVersion(), MetaType.datapod.toString(), "N");
 				
 				dq.getRefIntegrityCheck().getTargetAttr().setAttrName(
 						refIntTab.getAttribute(Integer.parseInt(dq.getRefIntegrityCheck().getTargetAttr().getAttrId())).getName());
@@ -1078,7 +1090,7 @@ public class DQOperator implements IParsable {
 			commonServiceImpl.setMetaStatus(dataQualExec, MetaType.dqExec, Status.Stage.STARTING);
 		}
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
-		DataQual dataQual = (DataQual) commonServiceImpl.getOneByUuidAndVersion(baseExec.getDependsOn().getRef().getUuid(), baseExec.getDependsOn().getRef().getVersion(), MetaType.dq.toString(), "N");
+		DataQual dataQual = (DataQual) commonServiceImpl.getOneByUuidAndVersion(baseExec.getDependsOn().getRef().getUuid(), baseExec.getDependsOn().getRef().getVersion(), MetaType.dq.toString(), "Y");
 		try{
 			dataQualExec.setExec(generateSql(dataQual, null, dataQualExec, null, usedRefKeySet, execParams.getOtherParams(), runMode));
 			dataQualExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
