@@ -49,12 +49,10 @@ import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataStore;
-import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Recon;
 import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.ReconGroupExec;
@@ -78,9 +76,6 @@ public class ReconServiceImpl extends RuleTemplate {
 	private ReconInfo reconInfo;
 	@Autowired
 	private ReconExecServiceImpl reconExecServiceImpl;
-	@Autowired
-	private DatapodServiceImpl datapodServiceImpl;
-
 	@Resource(name = "taskThreadMap")
 	ConcurrentHashMap<?, ?> taskThreadMap;
 
@@ -184,10 +179,11 @@ public class ReconServiceImpl extends RuleTemplate {
 		execute(reconUuid, reconVersion, null, reconExec, reconGroupExec, null, execParams, runMode);
 		return reconExec;
 	}
-	
-	public String getTableName(Datapod datapod, RunMode runMode) throws Exception {
-		return datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
-	}
+
+	/********************** UNUSED **********************/
+//	public String getTableName(Datapod datapod, RunMode runMode) throws Exception {
+//		return datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+//	}
 
 	public Object getMetaIdByExecId(String execUuid, String execVersion) throws JsonProcessingException {
 		ReconExec reconExec = (ReconExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.reconExec.toString());

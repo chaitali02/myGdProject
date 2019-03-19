@@ -49,7 +49,6 @@ import com.inferyx.framework.domain.Filter;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
@@ -345,10 +344,11 @@ public class DataQualServiceImpl extends RuleTemplate {
 		return execute(metaExecutor, (DataQualExec) baseRuleExec, taskList, execParams, runMode);
 	}
 
-	public String getTableName(Datapod datapod, RunMode runMode) throws Exception {
-		return datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()),
-				runMode);
-	}
+	/********************** UNUSED **********************/
+//	public String getTableName(Datapod datapod, RunMode runMode) throws Exception {
+//		return datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()),
+//				runMode);
+//	}
 
 	public List<Map<String, Object>> getDQResults(String dataQualExecUUID, String dataQualExecVersion, int offset,
 			int limit, String sortBy, String order, String requestId, RunMode runMode) throws Exception {

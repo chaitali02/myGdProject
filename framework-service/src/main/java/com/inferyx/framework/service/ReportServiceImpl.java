@@ -51,10 +51,7 @@ import com.inferyx.framework.domain.BaseEntityStatus;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.DagExec;
-import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
-import com.inferyx.framework.domain.Datapod;
-import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.DownloadExec;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.ExecStatsHolder;
@@ -63,14 +60,12 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Notification;
-import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.ReportExec;
 import com.inferyx.framework.domain.ReportExecView;
 import com.inferyx.framework.domain.SenderInfo;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
-import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.operator.ReportOperator;
 
@@ -241,26 +236,27 @@ public class ReportServiceImpl extends RuleTemplate {
 	protected String getFileName(Report report, ReportExec reportExec) {
 		return String.format("/%s/%s/%s", report.getUuid(), report.getVersion(), reportExec.getVersion());
 	}
-	
-	protected String getTableName(Report report, ReportExec reportExec, ExecContext execContext, Datasource reportDS) throws JsonProcessingException {
-		if (execContext == null || execContext.equals(ExecContext.spark) || execContext.equals(ExecContext.FILE) 
-				|| execContext.equals(ExecContext.livy_spark)) {
-			return String.format("%s_%s_%s", report.getUuid().replace("-", "_"), report.getVersion(), reportExec.getVersion());
-		}
-		
-		MetaIdentifier dependsOn = report.getDependsOn().getRef();
-		if(dependsOn.getType().equals(MetaType.datapod)) {
-			Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dependsOn.getUuid(), dependsOn.getVersion(), dependsOn.getType().toString());
-			return "temp"+datapod.getName().trim();
-		} else if(report.getDependsOn().getRef().getType().equals(MetaType.dataset)) {
-			DataSet dataSet = (DataSet) commonServiceImpl.getOneByUuidAndVersion(dependsOn.getUuid(), dependsOn.getVersion(), dependsOn.getType().toString());
-			return "temp"+dataSet.getName().trim();
-		} else if(report.getDependsOn().getRef().getType().equals(MetaType.relation)) {
-			Relation relation = (Relation) commonServiceImpl.getOneByUuidAndVersion(dependsOn.getUuid(), dependsOn.getVersion(), dependsOn.getType().toString());
-			return "temp"+relation.getName().trim();
-		}
-		return null;
-	}
+
+	/********************** UNUSED **********************/
+//	protected String getTableName(Report report, ReportExec reportExec, ExecContext execContext, Datasource reportDS) throws JsonProcessingException {
+//		if (execContext == null || (execContext != null && (execContext.equals(ExecContext.spark) || execContext.equals(ExecContext.FILE) 
+//				|| execContext.equals(ExecContext.livy_spark)))) {
+//			return String.format("%s_%s_%s", report.getUuid().replace("-", "_"), report.getVersion(), reportExec.getVersion());
+//		}
+//		
+//		MetaIdentifier dependsOn = report.getDependsOn().getRef();
+//		if(dependsOn.getType().equals(MetaType.datapod)) {
+//			Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dependsOn.getUuid(), dependsOn.getVersion(), dependsOn.getType().toString());
+//			return "temp"+datapod.getName().trim();
+//		} else if(report.getDependsOn().getRef().getType().equals(MetaType.dataset)) {
+//			DataSet dataSet = (DataSet) commonServiceImpl.getOneByUuidAndVersion(dependsOn.getUuid(), dependsOn.getVersion(), dependsOn.getType().toString());
+//			return "temp"+dataSet.getName().trim();
+//		} else if(report.getDependsOn().getRef().getType().equals(MetaType.relation)) {
+//			Relation relation = (Relation) commonServiceImpl.getOneByUuidAndVersion(dependsOn.getUuid(), dependsOn.getVersion(), dependsOn.getType().toString());
+//			return "temp"+relation.getName().trim();
+//		}
+//		return null;
+//	}
 	
 	protected void persistDatastore(ReportExec reportExec, String tableName, String filePath, MetaIdentifierHolder resultRef, MetaIdentifier metaId, long countRows, RunMode runMode) throws Exception {
 		dataStoreServiceImpl.setRunMode(runMode);

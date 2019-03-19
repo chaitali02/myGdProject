@@ -431,33 +431,35 @@ public class MapServiceImpl implements IParsable, IExecutable {
 		return refMeta;
 	}*/
 
-	/**
-	 * 
-	 * @param datapod
-	 * @param indvTask
-	 * @param datapodList
-	 * @param dagExec
-	 * @param otherParams
-	 * @return
-	 * @throws Exception
-	 */
-	protected String getTableName(Datapod datapod, 
-			HashMap<String, String> otherParams, MapExec mapExec, RunMode runMode) throws Exception {
-		if (otherParams != null && otherParams.containsKey("datapodUuid_" + datapod.getUuid() + "_tableName")) {
-			return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");
-		} else {
-			try {
-				return datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
-			} catch(Exception e) {
-				return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(), mapExec.getVersion());
-			}
-		}
-	}
+	/********************** UNUSED **********************/
+//	/**
+//	 * 
+//	 * @param datapod
+//	 * @param indvTask
+//	 * @param datapodList
+//	 * @param dagExec
+//	 * @param otherParams
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	protected String getTableName(Datapod datapod, 
+//			HashMap<String, String> otherParams, MapExec mapExec, RunMode runMode) throws Exception {
+//		if (otherParams != null && otherParams.containsKey("datapodUuid_" + datapod.getUuid() + "_tableName")) {
+//			return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");
+//		} else {
+//			try {
+//				return datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+//			} catch(Exception e) {
+//				return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(), mapExec.getVersion());
+//			}
+//		}
+//	}
 
 	// If Map is dependent on datapod
 	public void parseDatapodNames(Datapod datapod, HashMap<String, String> otherParams, MapExec mapExec, RunMode runMode) throws Exception {
-		String table = getTableName(datapod, otherParams, mapExec, runMode);
-		otherParams.put("datapodUuid_" + datapod.getUuid() + "_tableName", table);
+//		String tableName = getTableName(datapod, otherParams, mapExec, runMode);
+		String tableName = datapodServiceImpl.genTableNameByDatapod(datapod, mapExec.getVersion(), null, otherParams, null, runMode, true);
+		otherParams.put("datapodUuid_" + datapod.getUuid() + "_tableName", tableName);
 	}
 
 	// If Map is dependent on relation
@@ -477,8 +479,9 @@ public class MapServiceImpl implements IParsable, IExecutable {
 			Datapod fromDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 			parseDatapodNames(fromDatapod, otherParams, mapExec, runMode);
 			// Derive table name on the basis of depends on value.
-			String table = getTableName(fromDatapod, otherParams, mapExec, runMode);
-			otherParams.put("relation_".concat(relation.getUuid().concat("_datapod_").concat(fromDatapod.getUuid())), table);
+//			String tableName = getTableName(fromDatapod, otherParams, mapExec, runMode);
+			String tableName = datapodServiceImpl.genTableNameByDatapod(fromDatapod, mapExec.getVersion(), null, otherParams, null, runMode, true);
+			otherParams.put("relation_".concat(relation.getUuid().concat("_datapod_").concat(fromDatapod.getUuid())), tableName);
 		} else if (relation.getDependsOn().getRef().getType() == MetaType.dataset) {
 //			fromDataset = (DataSet) daoRegister.getRefObject(TaskParser.populateRefVersion(relation.getDependsOn().getRef(), refKeyMap));
 			MetaIdentifier ref = TaskParser.populateRefVersion(relation.getDependsOn().getRef(), refKeyMap);
@@ -498,7 +501,8 @@ public class MapServiceImpl implements IParsable, IExecutable {
 				MetaIdentifier ref = TaskParser.populateRefVersion(relInfoList.get(i).getJoin().getRef(), refKeyMap);
 				datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 				
-				String rightTable = getTableName(datapod, otherParams, mapExec, runMode);
+//				String rightTable = getTableName(datapod, otherParams, mapExec, runMode);
+				String rightTable = datapodServiceImpl.genTableNameByDatapod(datapod, mapExec.getVersion(), null, otherParams, null, runMode, true);
 				otherParams.put("relation_".concat(relation.getUuid().concat("_datapod_").concat(datapod.getUuid())),
 						rightTable);
 			} else if (relInfoList.get(i).getJoin().getRef().getType() == MetaType.dataset) {
@@ -530,7 +534,7 @@ public class MapServiceImpl implements IParsable, IExecutable {
 		}
 		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(map.getTarget().getRef().getUuid(), map.getTarget().getRef().getVersion(), MetaType.datapod.toString());
 		logger.info("adding target datapod in parseDPNames : " + datapodStr);
-		otherParams.put("datapodUuid_" + datapodStr + "_tableName", getTableName(datapod, otherParams, mapExec, runMode));
+		otherParams.put("datapodUuid_" + datapodStr + "_tableName", datapodServiceImpl.genTableNameByDatapod(datapod, mapExec.getVersion(), null, otherParams, null, runMode, true));
 		datapodList.add(datapodStr);// Add target datapod in datapodlist
 	}
 	

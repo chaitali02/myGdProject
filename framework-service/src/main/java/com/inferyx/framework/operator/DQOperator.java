@@ -38,7 +38,6 @@ import com.inferyx.framework.domain.Expression;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
@@ -201,16 +200,17 @@ public class DQOperator implements IParsable {
 //			srcDP = (Datapod) daoRegister.getRefObject(dataQual.getDependsOn().getRef());
 			srcDP = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dataQual.getDependsOn().getRef().getUuid(), dataQual.getDependsOn().getRef().getVersion(), dataQual.getDependsOn().getRef().getType().toString(), "N");
 			if (dataQual.getAttribute() != null) {
-				logger.info("getDataQualTableName(srcDP) : " + getTableName(srcDP, datapodList, dagExec, otherParams, runMode));
+//				logger.info("getDataQualTableName(srcDP) : " + getTableName(srcDP, datapodList, dagExec, otherParams, runMode));
+				logger.info("getDataQualTableName(srcDP) : " + datapodServiceImpl.genTableNameByDatapod(srcDP, dagExec != null ? dagExec.getVersion(): null, datapodList, otherParams, dagExec, runMode, true));
 				dataQual.getAttribute().setAttrName(
 						srcDP.getAttribute(Integer.parseInt(dataQual.getAttribute().getAttrId())).getName());
 				MetaIdentifier srcDPRef = new MetaIdentifier(MetaType.datapod, srcDP.getUuid(), srcDP.getVersion());
 				usedRefKeySet.add(srcDPRef);
-				return generateSql(dataQual, getTableName(srcDP, datapodList, dagExec, otherParams, runMode),
+				return generateSql(dataQual, datapodServiceImpl.genTableNameByDatapod(srcDP, dagExec != null ? dagExec.getVersion(): null, datapodList, otherParams, dagExec, runMode, true),
 						srcDP.getAttribute(Integer.parseInt(dataQual.getAttribute().getAttrId())).getName(),
 						datapodList, dataQualExec, dagExec, usedRefKeySet, otherParams, runMode);
 			} else {
-				return generateSql(dataQual, getTableName(srcDP, datapodList, dagExec, otherParams, runMode), null, datapodList,
+				return generateSql(dataQual, datapodServiceImpl.genTableNameByDatapod(srcDP, dagExec != null ? dagExec.getVersion(): null, datapodList, otherParams, dagExec, runMode, true), null, datapodList,
 						dataQualExec, dagExec, usedRefKeySet, otherParams, runMode);
 			}
 		}
@@ -228,19 +228,20 @@ public class DQOperator implements IParsable {
 		return null;
 	}
 
-	public String getTableName(Datapod datapod, List<String> datapodList, DagExec dagExec, HashMap<String, String> otherParams, RunMode runMode)
-			throws Exception {
-		logger.info(" OtherParams : datapod : " + otherParams + " : " + datapod.getUuid());
-		if (runMode.equals(RunMode.ONLINE) && datapodList != null && datapodList.contains(datapod.getUuid())) {
-			return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(),
-					dagExec.getVersion());
-		} else if (otherParams!=null && otherParams.containsKey("datapodUuid_" + datapod.getUuid() + "_tableName")) {
-			return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");
-		}
-		//logger.info(" runMode : " + runMode.toString() + " : datapod : " + datapod.getUuid() + " : datapodList.contains(datapod.getUuid()) : " + datapodList.contains(datapod.getUuid()));
-		return datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()),
-				runMode);
-	}
+	/********************** UNUSED **********************/
+//	public String getTableName(Datapod datapod, List<String> datapodList, DagExec dagExec, HashMap<String, String> otherParams, RunMode runMode)
+//			throws Exception {
+//		logger.info(" OtherParams : datapod : " + otherParams + " : " + datapod.getUuid());
+//		if (runMode.equals(RunMode.ONLINE) && datapodList != null && datapodList.contains(datapod.getUuid())) {
+//			return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(),
+//					dagExec.getVersion());
+//		} else if (otherParams!=null && otherParams.containsKey("datapodUuid_" + datapod.getUuid() + "_tableName")) {
+//			return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");
+//		}
+//		//logger.info(" runMode : " + runMode.toString() + " : datapod : " + datapod.getUuid() + " : datapodList.contains(datapod.getUuid()) : " + datapodList.contains(datapod.getUuid()));
+//		return datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()),
+//				runMode);
+//	}
 
 	private String generateSelect(DataQual dq, DataQualExec dataQualExec, String tableName, String attributeName)
 			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
@@ -315,7 +316,7 @@ public class DQOperator implements IParsable {
 //			srcDP = (Datapod) daoRegister.getRefObject(ref);
 			srcDP = (Datapod) commonServiceImpl.getOneByUuidAndVersion(ref.getUuid(), ref.getVersion(), ref.getType().toString(), "N");
 			
-			resp = FROM.concat(getTableName(srcDP, datapodList, dagExec, otherParams, runMode)).concat("  ").concat(srcDP.getName());
+			resp = FROM.concat(datapodServiceImpl.genTableNameByDatapod(srcDP, dagExec != null ? dagExec.getVersion(): null, datapodList, otherParams, dagExec, runMode, true)).concat("  ").concat(srcDP.getName());
 		}
 		if (dq.getRefIntegrityCheck() != null 
 				&& dq.getRefIntegrityCheck().getDependsOn() != null 
@@ -333,11 +334,11 @@ public class DQOperator implements IParsable {
 		 * null)).concat(") as ").concat(dataSet.getName()).concat(WHERE_1_1); }
 		 */
 		return resp
-				.concat(generateRefIntFrom(dq, getTableName(srcDP, datapodList, dagExec, otherParams, runMode), attributeName,
+				.concat(generateRefIntFrom(dq, datapodServiceImpl.genTableNameByDatapod(srcDP, dagExec != null ? dagExec.getVersion(): null, datapodList, otherParams, dagExec, runMode, true), attributeName,
 						datapodList, dagExec, usedRefKeySet, otherParams, runMode))
 				// .concat(generateStddevFrom(dq, getDataQualTableName(srcDP, datapodList,
 				// dagExec), srcDP.getName(), datapodList, dagExec))
-				.concat(generateDupCheckFrom(dq, getTableName(srcDP, datapodList, dagExec, otherParams, runMode), srcDP.getName(),
+				.concat(generateDupCheckFrom(dq, datapodServiceImpl.genTableNameByDatapod(srcDP, dagExec != null ? dagExec.getVersion(): null, datapodList, otherParams, dagExec, runMode, true), srcDP.getName(),
 						usedRefKeySet));
 	}
 
@@ -468,7 +469,7 @@ public class DQOperator implements IParsable {
 		Relation relation = null;
 		if (dq.getRefIntegrityCheck().getDependsOn().getRef().getType() == MetaType.datapod) {
 			datapodRef = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dq.getRefIntegrityCheck().getDependsOn().getRef().getUuid(), dq.getRefIntegrityCheck().getDependsOn().getRef().getVersion(), dq.getRefIntegrityCheck().getDependsOn().getRef().getType().toString(), "N");
-			refIntStr = LEFT_OUTER_JOIN.concat(getTableName(datapodRef, datapodList, dagExec, otherParams, runMode))
+			refIntStr = LEFT_OUTER_JOIN.concat(datapodServiceImpl.genTableNameByDatapod(datapodRef, dagExec != null ? dagExec.getVersion(): null, datapodList, otherParams, dagExec, runMode, true))
 					// .concat(AS)
 					.concat(" ").concat(datapodRef.getName()).concat("_ref").concat(ON).concat(BRACKET_OPEN);
 			refIntStr = refIntStr.concat(datapod.getName()).concat(DOT).concat(attributeName).concat(" = ")
@@ -644,7 +645,7 @@ public class DQOperator implements IParsable {
 			throws Exception {
 		// Find result sql
 		Datapod summaryDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(summaryDpRef.getUuid(), summaryDpRef.getVersion(), summaryDpRef.getType().toString(), "N");
-		String summaryTableName = getTableName(summaryDp, datapodList, dagExec, otherParams, runMode);
+		String summaryTableName = datapodServiceImpl.genTableNameByDatapod(summaryDp, dagExec != null ? dagExec.getVersion(): null, datapodList, otherParams, dagExec, runMode, true);
 		String resSql = dataQualExec.getExec();
 		String sql = generateSummarySql4(dq, generateSummarySql3(generateSummarySql2(generateSummarySql1(resSql)), summaryTableName));
 		return sql;

@@ -4848,30 +4848,31 @@ public class CommonServiceImpl<T> {
 
 	}
 
-	/**
-	 * 
-	 * @param datapod
-	 * @param indvTask
-	 * @param datapodList
-	 * @param dagExec
-	 * @param otherParams
-	 * @return
-	 * @throws Exception
-	 */
-	protected String getTableName(Datapod datapod, HashMap<String, String> otherParams, BaseExec baseExec,
-			RunMode runMode) throws Exception {
-		if (otherParams != null && otherParams.containsKey("datapodUuid_" + datapod.getUuid() + "_tableName")) {
-			return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");
-		} else {
-			try {
-				return datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()),
-						runMode);
-			} catch (Exception e) {
-				return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(),
-						baseExec.getVersion());
-			}
-		}
-	}
+	/********************** UNUSED **********************/
+//	/**
+//	 * 
+//	 * @param datapod
+//	 * @param indvTask
+//	 * @param datapodList
+//	 * @param dagExec
+//	 * @param otherParams
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	protected String getTableName(Datapod datapod, HashMap<String, String> otherParams, BaseExec baseExec,
+//			RunMode runMode) throws Exception {
+//		if (otherParams != null && otherParams.containsKey("datapodUuid_" + datapod.getUuid() + "_tableName")) {
+//			return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");
+//		} else {
+//			try {
+//				return datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()),
+//						runMode);
+//			} catch (Exception e) {
+//				return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(),
+//						baseExec.getVersion());
+//			}
+//		}
+//	}
 
 	/**
 	 * 
@@ -4955,9 +4956,10 @@ public class CommonServiceImpl<T> {
 	 */
 	public String getSource(Object object, BaseExec baseExec, ExecParams execParams, RunMode runMode) throws Exception {
 		if (object == null) {
-			throw new Exception("No source chosen");
+			throw new Exception("No source chosen.");
 		} else if (object instanceof Datapod) {
-			return getTableName(((Datapod) object), execParams.getOtherParams(), baseExec, runMode);
+//			return getTableName(((Datapod) object), execParams.getOtherParams(), baseExec, runMode);
+			return datapodServiceImpl.genTableNameByDatapod((Datapod) object, baseExec.getVersion(), null, execParams.getOtherParams(), null, runMode, true); 
 		} else if (object instanceof DataSet) {
 			return "(" + datasetOperator.generateSql(((DataSet) object),
 					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(),
@@ -4967,7 +4969,7 @@ public class CommonServiceImpl<T> {
 					DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()), execParams.getOtherParams(), null,
 					execParams, runMode) + ")";
 		} else {
-			throw new Exception("Wrong choice of source");
+			throw new Exception("Wrong choice of source.");
 		}
 
 	}

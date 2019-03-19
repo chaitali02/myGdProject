@@ -3,7 +3,6 @@
  */
 package com.inferyx.framework.operator;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,18 +16,15 @@ import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.DataType;
-import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.GraphEdge;
 import com.inferyx.framework.domain.GraphNode;
 import com.inferyx.framework.domain.Graphpod;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Property;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.service.CommonServiceImpl;
-import com.inferyx.framework.service.DatapodServiceImpl;
 
 /**
  * @author joy
@@ -41,8 +37,6 @@ public class GraphOperator implements IOperator {
 	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	AttributeMapOperator attributeMapOperator;
-	@Autowired
-	private DatapodServiceImpl datapodServiceImpl;
 	
 	private static final Logger logger = Logger.getLogger(GraphOperator.class);
 
@@ -270,29 +264,30 @@ public class GraphOperator implements IOperator {
 		nodeSql = sb.toString().replaceAll(",  FROM", " FROM");
 		return nodeSql;
 	}
-	
-	/**
-	 * 
-	 * @param datapod
-	 * @param indvTask
-	 * @param datapodList
-	 * @param dagExec
-	 * @param otherParams
-	 * @return
-	 * @throws Exception
-	 */
-	protected String getTableName(Datapod datapod, 
-			HashMap<String, String> otherParams, BaseExec baseExec, RunMode runMode) throws Exception {
-		if (otherParams != null && otherParams.containsKey("datapodUuid_" + datapod.getUuid() + "_tableName")) {
-			return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");
-		} else {
-			try {
-				return datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
-			} catch(Exception e) {
-				return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(), baseExec.getVersion());
-			}
-		}
-	}
+
+	/********************** UNUSED **********************/
+//	/**
+//	 * 
+//	 * @param datapod
+//	 * @param indvTask
+//	 * @param datapodList
+//	 * @param dagExec
+//	 * @param otherParams
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	protected String getTableName(Datapod datapod, 
+//			HashMap<String, String> otherParams, BaseExec baseExec, RunMode runMode) throws Exception {
+//		if (otherParams != null && otherParams.containsKey("datapodUuid_" + datapod.getUuid() + "_tableName")) {
+//			return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");
+//		} else {
+//			try {
+//				return datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+//			} catch(Exception e) {
+//				return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(), baseExec.getVersion());
+//			}
+//		}
+//	}
 	
 	/**
 	 * 
@@ -301,7 +296,6 @@ public class GraphOperator implements IOperator {
 	 * @return
 	 * @throws Exception 
 	 */
-	@SuppressWarnings("unused")
 	private String createEdgeSql(List<GraphEdge> edgeList, ExecParams execParams, BaseExec baseExec, RunMode runMode)
 			throws Exception {
 		if (edgeList == null || edgeList.isEmpty()) {

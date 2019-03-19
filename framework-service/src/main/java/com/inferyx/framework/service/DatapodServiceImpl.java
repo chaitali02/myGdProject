@@ -67,6 +67,7 @@ import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.CompareMetaData;
+import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
@@ -1199,32 +1200,60 @@ public class DatapodServiceImpl {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}				
-			} else
+			} else {
 				logger.info("HttpServletResponse response is \"" + null + "\"");
-		} else
+			}
+		} else {
 			logger.info("ServletRequestAttributes requestAttributes is \"" + null + "\"");
+		}
 	}
 
 	public String genTableNameByDatapod(Datapod datapod, String execversion, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		String tableName = null;
-//		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		Datasource datasource = commonServiceImpl.getDatasourceByDatapod(datapod);
-		String dsType = datasource.getType();
+		Datasource datapodDs = commonServiceImpl.getDatasourceByDatapod(datapod);		
 		if(runMode.equals(RunMode.BATCH)) {
-			if (/*!engine.getExecEngine().equalsIgnoreCase("livy-spark")
-					&& !dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
-					&&*/ !dsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
-				tableName = datasource.getDbname() + "." + datapod.getName();
-				return tableName;
+			if (!datapodDs.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+				return datapodDs.getDbname() + "." + datapod.getName();
 			} else {
-				tableName = String.format("%s_%s_%s", datapod.getUuid().replace("-", "_"), datapod.getVersion(), execversion);
+				return String.format("%s_%s_%s", datapod.getUuid().replace("-", "_"), datapod.getVersion(), execversion);
 			}
-		} else if(runMode.equals(RunMode.ONLINE)) {
-			tableName = String.format("%s_%s_%s", datapod.getUuid().replace("-", "_"), datapod.getVersion(), execversion);
+		} else {
+			return String.format("%s_%s_%s", datapod.getUuid().replace("-", "_"), datapod.getVersion(), execversion);
 		}		
-		return tableName;
 	}
 
+	public String genTableNameByDatapod(Datapod datapod, String execversion, List<String> datapodList,
+			HashMap<String, String> otherParams, DagExec dagExec, RunMode runMode, boolean getFromGetTablenameBydatapod)
+			throws Exception {
+		logger.info(" OtherParams : datapod : " + otherParams + " : " + datapod.getUuid());
+		if (runMode.equals(RunMode.ONLINE) && datapodList != null && datapodList.contains(datapod.getUuid())) {
+			return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(),
+					dagExec.getVersion());
+		} else if (otherParams != null && otherParams.containsKey("datapodUuid_" + datapod.getUuid() + "_tableName")) {
+			return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");
+		}
+		
+		if(getFromGetTablenameBydatapod) {
+			try {
+				return getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()),
+						runMode);
+			} catch (Exception e) {
+				// TODO: handle exception
+			} 
+		}
+		
+		Datasource datapodDs = commonServiceImpl.getDatasourceByDatapod(datapod);
+		if (runMode.equals(RunMode.BATCH)) {
+			if (!datapodDs.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+				return datapodDs.getDbname() + "." + datapod.getName();
+			} else {
+				return String.format("%s_%s_%s", datapod.getUuid().replace("-", "_"), datapod.getVersion(),
+						execversion);
+			}
+		} else {
+			return String.format("%s_%s_%s", datapod.getUuid().replace("-", "_"), datapod.getVersion(), execversion);
+		}
+	}
+	
 	public List<CompareMetaData> compareMetadata(String datapodUuid, String datapodVersion, RunMode runMode) throws Exception {
 		Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodUuid, datapodVersion, MetaType.datapod.toString());
 		MetaIdentifier dsMI = targetDatapod.getDatasource().getRef();
