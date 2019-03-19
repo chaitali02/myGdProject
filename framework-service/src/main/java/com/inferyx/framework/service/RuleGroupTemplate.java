@@ -419,7 +419,7 @@ public abstract class RuleGroupTemplate implements IExecutable, IParsable {
 		BaseRuleGroup baseGroup = (BaseRuleGroup) commonServiceImpl.getOneByUuidAndVersion(baseGroupExec.getDependsOn().getRef().getUuid(), baseGroupExec.getDependsOn().getRef().getVersion(), groupType.toString(), "N");
 		List<FutureTask> taskList = new ArrayList<FutureTask>();
 		RuleTemplate baseRuleService = serviceFactory.getRuleService(ruleType);
-		baseGroup.setInParallel("false");
+//		baseGroup.setInParallel("false");
 
 		/*List<BaseRuleExec> ruleExecList = new ArrayList<>();
 		List<Status> statusList = baseGroupExec.getStatusList();
