@@ -628,7 +628,6 @@
                                                                         </span>
                                                                     </div>
                                                                     <div ng-if="tabledata.isrhsParamlist">
-                                                                        {{tabledata.rhsparamlist}}
                                                                         <span class="form-group" style="margin-left:0px;margin-right: 0px;">
                                                                             <select select2 class="form-control"
                                                                                 data-ng-model="tabledata.rhsparamlist"
@@ -1232,7 +1231,7 @@
                                             <div class="col-md-6">
                                                 <div>
                                                     <select class="form-control" name="paramlistdata" select2 ng-change="onChangeParamList()"
-                                                        data-ng-model="$parent.paramlistdata" ng-options="r as r.name for r in allParamList">
+                                                        data-ng-model="$parent.paramlistdata" ng-options="r as r.name for r in allParamListResult">
                                                         <option value="">-Select-</option>
                                                     </select>
                                                     <input type="hidden" name="paramlistdata" ng-model="$parent.paramlistdata"
@@ -1245,7 +1244,7 @@
                                             </label>
                                             <div class="col-md-6">
                                                 <select class="form-control" select2 name="paramlistdata1"
-                                                    data-ng-model="paramlistdata1" ng-options="r as r.name for r in allParamList">
+                                                    data-ng-model="paramlistdata1" ng-options="r as r.name for r in allParamListResult">
                                                     <option value="">-Select-</option>
                                                 </select>
                                                 <input type="hidden" name="paramlistdata1" ng-model="paramlistdata1"

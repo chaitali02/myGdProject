@@ -1573,14 +1573,14 @@ RuleModule.controller('RuleDetailController', function (dagMetaDataService, $roo
 		CommonService.getParamListChilds($scope.allparamlist.defaultoption.uuid, "", "paramlist").then(function (response) { onSuccessGetParamListChilds(response.data) });
 		var onSuccessGetParamListChilds = function (response) {
 			var defaultoption = {};
-			defaultoption.uuid = $scope.allparamlist.option.uuid;
+			defaultoption.uuid = $scope.allparamlist.defaultoption.uuid;
 			defaultoption.name = $scope.allparamlist.defaultoption.name;
 			if (response.length > 0) {
-				$scope.allParamList = response;
-				$scope.allParamList.splice(0, 0, defaultoption);
+				$scope.allParamListResult = response;
+				$scope.allParamListResult.splice(0, 0, defaultoption);
 			} else {
-				$scope.allParamList = [];
-				$scope.allParamList[0] = defaultoption;
+				$scope.allParamListResult = [];
+				$scope.allParamListResult[0] = defaultoption;
 			}
 		}
 	}
@@ -1601,6 +1601,7 @@ RuleModule.controller('RuleDetailController', function (dagMetaDataService, $roo
 
 	$scope.onChangeParamList = function () {
 		$scope.isParamLsitTable = false;
+		debugger
 		CommonService.getParamByParamList($scope.paramlistdata.uuid, "paramlist").then(function (response) { onSuccesGetParamListByTrain(response.data) });
 		var onSuccesGetParamListByTrain = function (response) {
 			$scope.isParamLsitTable = true;

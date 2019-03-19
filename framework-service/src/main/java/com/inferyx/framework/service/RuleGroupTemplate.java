@@ -315,7 +315,7 @@ public abstract class RuleGroupTemplate implements IExecutable, IParsable {
 		BaseRuleExec ruleExec1 = null;
 		if (ruleExecMetaList != null && !ruleExecMetaList.isEmpty()) {
 			for (MetaIdentifierHolder ruleExecMeta1 : ruleExecMetaList) {
-				ruleExec1 = (BaseRuleExec) commonServiceImpl.getOneByUuidAndVersion(ruleExecMeta1.getRef().getUuid(), ruleExecMeta1.getRef().getVersion(), ruleExecMeta1.getRef().getType().toString());
+				ruleExec1 = (BaseRuleExec) commonServiceImpl.getOneByUuidAndVersion(ruleExecMeta1.getRef().getUuid(), ruleExecMeta1.getRef().getVersion(), ruleExecMeta1.getRef().getType().toString(), "N");
 				ruleExecHolderMap.put(ruleExec1.getDependsOn().getRef().getUuid(), ruleExec1);
 			}
 		}
@@ -371,6 +371,7 @@ public abstract class RuleGroupTemplate implements IExecutable, IParsable {
 								MetaType ruleType, 
 								MetaType ruleExecType,
 								Map<String, MetaIdentifier> refKeyMap, 
+								HashMap<String, String> otherParams, 
 								List<String> datapodList, 
 								DagExec dagExec, 
 								RunMode runMode) throws Exception {
@@ -387,9 +388,9 @@ public abstract class RuleGroupTemplate implements IExecutable, IParsable {
 		if (ruleExecList == null || ruleExecList.isEmpty()) {
 			return null;
 		}
-		HashMap<String, String> otherParams = null;
-		if(dagExec != null)
-			otherParams = dagExec.getExecParams().getOtherParams();
+//		HashMap<String, String> otherParams = null;
+//		if(dagExec != null)
+//			otherParams = dagExec.getExecParams().getOtherParams();
 		for (MetaIdentifierHolder ruleExecMeta : ruleExecList) {
 			ruleExec = (BaseRuleExec) commonServiceImpl.getOneByUuidAndVersion(ruleExecMeta.getRef().getUuid(), ruleExecMeta.getRef().getVersion(), ruleExecType.toString());
 			ruleExec = baseRuleService.parse(ruleExec.getUuid(), ruleExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);

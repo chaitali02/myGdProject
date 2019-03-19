@@ -1181,21 +1181,21 @@ public class DagServiceImpl {
 						} else if (ref.getType().equals(MetaType.rulegroup)) {
 //							baseExec = ruleGroupServiceImpl.create(ref.getUuid(), ref.getVersion(), null,
 //									datapodList, (RuleGroupExec)baseExec, dagExec);
-							baseExec = ruleGroupServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, datapodList, dagExec, RunMode.ONLINE);
+							baseExec = ruleGroupServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, RunMode.ONLINE);
 						} else if (ref.getType().equals(MetaType.dq)) {
 //							baseExec = dataQualServiceImpl.create(ref.getUuid(),ref.getVersion(),(DataQualExec) baseExec,refKeyMap,datapodList,dagExec);
 							baseExec =  (DataQualExec)dataQualServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);
 						} else if (ref.getType().equals(MetaType.dqgroup)) {
 //							baseExec = dataQualGroupServiceImpl.create(ref.getUuid(), ref.getVersion(), null,
 //									datapodList, (DataQualGroupExec)baseExec, dagExec);
-							baseExec = dataQualGroupServiceImpl.parse(indvExecTask.getOperators().get(0).getOperatorInfo().get(0).getRef(),refKeyMap, datapodList, dagExec, runMode);
+							baseExec = dataQualGroupServiceImpl.parse(indvExecTask.getOperators().get(0).getOperatorInfo().get(0).getRef(),refKeyMap, otherParams, datapodList, dagExec, runMode);
 						} else if (ref.getType().equals(MetaType.profile)) {
 //							baseExec = profileServiceImpl.create(ref.getUuid(),ref.getVersion(),(ProfileExec)baseExec,refKeyMap,datapodList,dagExec);
 							baseExec =  (ProfileExec)profileServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);
 						} else if (ref.getType().equals(MetaType.profilegroup)) {
 //							baseExec = profileGroupServiceImpl.create(ref.getUuid(), ref.getVersion(), null,
 //									datapodList, dagExec, (ProfileGroupExec) baseExec);
-							baseExec = (ProfileGroupExec) profileGroupServiceImpl.parse(baseExec.getUuid(),baseExec.getVersion(),refKeyMap, datapodList, dagExec, runMode);
+							baseExec = (ProfileGroupExec) profileGroupServiceImpl.parse(baseExec.getUuid(),baseExec.getVersion(),refKeyMap, otherParams, datapodList, dagExec, runMode);
 						} /*else if (ref.getType().equals(MetaType.load)) {
 							baseExec = loadServiceImpl.create(ref.getUuid(), ref.getVersion(), taskExecParams, null, (LoadExec)baseExec);
 						} else if (ref.getType().equals(MetaType.train)) {
@@ -1215,7 +1215,7 @@ public class DagServiceImpl {
 						} else if (ref.getType().equals(MetaType.recongroup)) {
 							baseExec = reconGroupServiceImpl.create(ref.getUuid(), ref.getVersion(), null,
 									datapodList, (ReconGroupExec) baseExec, dagExec);
-							baseExec = reconGroupServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, datapodList, dagExec, runMode);
+							baseExec = reconGroupServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);
 						} else if (ref.getType().equals(MetaType.operator)) {
 							ExecParams operatorExecParams = commonServiceImpl.getExecParams(indvExecTask.getOperators().get(0));
 							operatorExecParams.setParamListInfo(replaceParams(execParams.getParamListInfo(), operatorExecParams.getParamListInfo()));
@@ -1232,13 +1232,13 @@ public class DagServiceImpl {
 							}*/
 						} else if (ref.getType().equals(MetaType.graphpod)) {
 //							baseExec = graphServiceImpl.create(baseExec, taskExecParams, runMode);
-							baseExec = reconGroupServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, datapodList, dagExec, runMode);
+							baseExec = reconGroupServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, runMode);
 						} else if (ref.getType().equals(MetaType.ingest)) {
 //							baseExec = ingestServiceImpl.create(ref.getUuid(), ref.getVersion(), MetaType.ingest, MetaType.ingestExec, (IngestExec) baseExec, refKeyMap, datapodList, dagExec);
 							baseExec = ingestServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, RunMode.BATCH);
 						} else if (ref.getType().equals(MetaType.ingestgroup)) {
 //							baseExec = ingestGroupServiceImpl.create(ref.getUuid(), ref.getVersion(), execParams, datapodList, (IngestGroupExec)baseExec, dagExec);
-							baseExec = ingestGroupServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, datapodList, dagExec, RunMode.BATCH);
+							baseExec = ingestGroupServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, datapodList, dagExec, RunMode.BATCH);
 						} else if (ref.getType().equals(MetaType.report)) {
 //							baseExec = reportServiceImpl.create(ref.getUuid(), ref.getVersion(), execParams, (ReportExec) baseExec, RunMode.BATCH);
 							baseExec = reportServiceImpl.parse(baseExec.getUuid(), baseExec.getVersion(), refKeyMap, otherParams, dagExec, runMode);
