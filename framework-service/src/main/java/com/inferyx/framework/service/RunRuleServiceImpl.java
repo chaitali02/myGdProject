@@ -54,7 +54,7 @@ public class RunRuleServiceImpl extends RunBaseRuleService {
 	}
 	
 	@Override
-	protected String getTableName(BaseRule baseRule, BaseRuleExec baseRuleExec, MetaIdentifier datapodKey,
+	protected String genTableNameByRule(BaseRule baseRule, BaseRuleExec baseRuleExec, MetaIdentifier datapodKey,
 			ExecContext execContext, RunMode runMode) throws JsonProcessingException {
 		if (datapodKey.getType().equals(MetaType.rule)) {
 			return String.format("%s_%s_%s", baseRule.getUuid().replace("-", "_"), baseRule.getVersion(),

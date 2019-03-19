@@ -144,7 +144,7 @@ public class TransposeOperator implements IOperator {
 		
 //		String newVersion = Helper.getVersion();
 //		locationDatapod.setVersion(newVersion);
-		String tableName = datapodServiceImpl.genTableNameByDatapod(locationDatapod, execVersion, runMode);
+		String tableName = datapodServiceImpl.genTableNameByDatapod(locationDatapod, execVersion, null, null, null, runMode, false);
 		otherParams.put("datapodUuid_" + locationDatapod.getUuid() + "_tableName", tableName);
 		logger.info("otherParams in transposeOperator : "+ otherParams);
 		

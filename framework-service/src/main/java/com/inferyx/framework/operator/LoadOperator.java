@@ -150,7 +150,7 @@ public class LoadOperator implements IOperator {
 		MetaIdentifierHolder targetHolder = load.getTarget();
 		String filePathUrl = load.getSource().getValue();
 		Datapod targetDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(targetHolder.getRef().getUuid(), targetHolder.getRef().getVersion(), targetHolder.getRef().getType().toString());
-		String targetTableName = datapodServiceImpl.genTableNameByDatapod(targetDp, loadExec.getVersion(), runMode);
+		String targetTableName = datapodServiceImpl.genTableNameByDatapod(targetDp, loadExec.getVersion(), null, null, null, runMode, false);
 		String sql = generateSql(targetTableName, targetHolder, filePathUrl);
 		baseExec.setExec(sql);
 		commonServiceImpl.save(MetaType.loadExec.toString(), baseExec);

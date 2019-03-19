@@ -1220,18 +1220,18 @@ public class DatapodServiceImpl {
 		}
 	}
 
-	public String genTableNameByDatapod(Datapod datapod, String execversion, RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		Datasource datapodDs = commonServiceImpl.getDatasourceByDatapod(datapod);		
-		if(runMode.equals(RunMode.BATCH)) {
-			if (!datapodDs.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
-				return datapodDs.getDbname() + "." + datapod.getName();
-			} else {
-				return String.format("%s_%s_%s", datapod.getUuid().replace("-", "_"), datapod.getVersion(), execversion);
-			}
-		} else {
-			return String.format("%s_%s_%s", datapod.getUuid().replace("-", "_"), datapod.getVersion(), execversion);
-		}		
-	}
+//	public String genTableNameByDatapod(Datapod datapod, String execversion, List<String> datapodList, HashMap<String, String> otherParams, DagExec dagExec, RunMode runMode, boolean getFromGetTablenameBydatapod) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+//		Datasource datapodDs = commonServiceImpl.getDatasourceByDatapod(datapod);		
+//		if(runMode.equals(RunMode.BATCH)) {
+//			if (!datapodDs.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+//				return datapodDs.getDbname() + "." + datapod.getName();
+//			} else {
+//				return String.format("%s_%s_%s", datapod.getUuid().replace("-", "_"), datapod.getVersion(), execversion);
+//			}
+//		} else {
+//			return String.format("%s_%s_%s", datapod.getUuid().replace("-", "_"), datapod.getVersion(), execversion);
+//		}		
+//	}
 
 	public String genTableNameByDatapod(Datapod datapod, String execversion, List<String> datapodList,
 			HashMap<String, String> otherParams, DagExec dagExec, RunMode runMode, boolean getFromGetTablenameBydatapod)
@@ -1288,10 +1288,7 @@ public class DatapodServiceImpl {
 		String dataStoreMetaVer = sourceAttr.getVersion();
 		
 		Datapod dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dataStoreMetaUUID, dataStoreMetaVer, MetaType.datapod.toString());
-		if (dp == null) {
-			//dp = datapodServiceImpl.findLatestByUuid(dataStoreMetaUUID);
-			dp = (Datapod) commonServiceImpl.getLatestByUuid(dataStoreMetaUUID, MetaType.datapod.toString());
-		}
+		
 		String datasource = dp.getDatasource().getRef().getUuid();
 		//Datasource ds = datasourceServiceImpl.findLatestByUuid(datasource);
 		Datasource ds = (Datasource) commonServiceImpl.getLatestByUuid(datasource, MetaType.datasource.toString());

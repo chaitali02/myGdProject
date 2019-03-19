@@ -399,17 +399,14 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 	 * @return
 	 * @throws JsonProcessingException
 	 */
-	protected String getTableName(BaseRule baseRule, BaseRuleExec baseRuleExec, MetaIdentifier datapodKey,
+	protected String genTableNameByRule(BaseRule baseRule, BaseRuleExec baseRuleExec, MetaIdentifier datapodKey,
 			ExecContext execContext, RunMode runMode) throws JsonProcessingException {
 		if (datapodKey.getType().equals(MetaType.rule)) {
 			return String.format("%s_%s_%s", baseRule.getUuid().replace("-", "_"), baseRule.getVersion(),
 					baseRuleExec.getVersion());
 
-		}
-
-		else if (execContext == null /* || execContext.equals(ExecContext.spark) */ || runMode.equals(RunMode.ONLINE)
-				&& execContext.equals(ExecContext.FILE)
-		/* || execContext.equals(ExecContext.livy_spark) */) {
+		} else if (execContext == null || runMode.equals(RunMode.ONLINE)
+				&& execContext.equals(ExecContext.FILE)) {
 			return String.format("%s_%s_%s", baseRule.getUuid().replace("-", "_"), baseRule.getVersion(),
 					baseRuleExec.getVersion());
 		}
@@ -525,7 +522,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 			execContext = executorServiceImpl.getExecContext(runMode, datasource);
 			exec = execFactory.getExecutor(execContext.toString());
 
-			tableName = getTableName(baseRule, baseRuleExec, datapodKey, execContext, runMode);
+			tableName = genTableNameByRule(baseRule, baseRuleExec, datapodKey, execContext, runMode);
 			logger.info("Table name in RunBaseruleServiceImpl : " + tableName);
 			logger.info("execContext : " + execContext);
 
@@ -563,7 +560,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 				
 				datapodKey = summaryDatapodKey;
 				filePath = getFileName(baseRule, baseRuleExec, summaryDatapodKey);
-				tableName = getTableName(baseRule, baseRuleExec, summaryDatapodKey, execContext, runMode);
+				tableName = genTableNameByRule(baseRule, baseRuleExec, summaryDatapodKey, execContext, runMode);
 				
 				logger.info("Table name registered : " + tableName);
 				logger.info("Before execution summary : " + baseRuleExec.getSummaryExec());

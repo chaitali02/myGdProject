@@ -97,7 +97,7 @@ public class GenerateDataForAttrRef extends GenerateDataOperator {
 		} 
 		
 //		String newVersion = Helper.getVersion();
-		String tableName = datapodServiceImpl.genTableNameByDatapod(locationDatapod, execVersion, runMode);
+		String tableName = datapodServiceImpl.genTableNameByDatapod(locationDatapod, execVersion, null, null, null, runMode, false);
 		otherParams.put("datapodUuid_" + locationDatapod.getUuid() + "_tableName", tableName);
 		logger.info(" Filled up otherParams : " + otherParams);	
 		return otherParams;
