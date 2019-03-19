@@ -32,6 +32,7 @@ import com.inferyx.framework.domain.BlankSpaceCheckOptions;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataQual;
 import com.inferyx.framework.domain.DataQualExec;
+import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
@@ -45,6 +46,7 @@ import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.enums.ThresholdType;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.service.CommonServiceImpl;
+import com.inferyx.framework.service.DataStoreServiceImpl;
 import com.inferyx.framework.service.DatapodServiceImpl;
 import com.inferyx.framework.service.MessageStatus;
 
@@ -132,6 +134,9 @@ public class DQOperator implements IParsable {
 	private String RULEUUID = "rule_uuid";
 	private String RULEVERSION = "rule_version";
 	private String RULENAME = "rule_name";
+	private String RULE_EXEC_UUID = "ruleexec_uuid";
+	private String RULE_EXEC_VERSION = "rule_exec_version";
+	private String RULE_EXEC_TIME = "rule_exec_time";
 	
 	private String THRESHOLD_TYPE = "threshold_type";
 	private String THRESHOLD_LIMIT = "threshold_limit";
@@ -183,9 +188,11 @@ public class DQOperator implements IParsable {
 	ExpressionOperator expressionOperator;
 	@Autowired
 	private DatapodServiceImpl datapodServiceImpl;
+	@Autowired
+	private DataStoreServiceImpl datastoreServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(DQOperator.class);
-
+	
 	public String generateSql(DataQual dataQual, List<String> datapodList, DataQualExec dataQualExec, DagExec dagExec,  
 			Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode) throws Exception {
 		logger.info("DQ generateSql otherParams : " + otherParams);
@@ -259,6 +266,9 @@ public class DQOperator implements IParsable {
 		// String select = SELECT.concat("row_number() over (partition by 1) as rownum,
 		// ")
 		String select = SELECT
+				.concat(SINGLE_QUOTE).concat(dataQualExec.getUuid()).concat(SINGLE_QUOTE).concat(AS).concat(RULE_EXEC_UUID).concat(COMMA)
+				.concat(dataQualExec.getVersion()).concat(AS).concat(RULE_EXEC_VERSION).concat(COMMA)
+				.concat(SINGLE_QUOTE).concat(System.currentTimeMillis() + "").concat(SINGLE_QUOTE).concat(AS).concat(RULE_EXEC_TIME).concat(COMMA)
 				.concat(SINGLE_QUOTE).concat(dq.getUuid()).concat(SINGLE_QUOTE).concat(AS).concat(RULEUUID).concat(COMMA)
 				.concat(SINGLE_QUOTE).concat(dq.getVersion()).concat(SINGLE_QUOTE).concat(AS).concat(RULEVERSION).concat(COMMA)
 				.concat(SINGLE_QUOTE).concat(dq.getName()).concat(SINGLE_QUOTE).concat(AS).concat(RULENAME).concat(COMMA)
@@ -587,14 +597,30 @@ public class DQOperator implements IParsable {
 		}
 		select = select.concat(generateFrom(dq, dq.getDependsOn().getRef(), attributeName, datapodList, dagExec, usedRefKeySet, otherParams, runMode))
 				.concat(WHERE_1_1).concat(generateFilter(dq, usedRefKeySet, runMode));
-		select = generateallCheckFlag(select, dq);
+		select = generateallCheckFlag(select, dq, dataQualExec);
 		logger.info("Detail SQL for dataQual : " + dq.getUuid() + " : " + StringUtils.isBlank(select));
 		return select;
 		
 	}
 	
-	public String generateallCheckFlag (String detailSql, DataQual dataQual) {
+	public String generateAbortQuery(DataQual dq, List<String> datapodList,
+			DataQualExec dataQualExec, DagExec dagExec, MetaIdentifier summaryDpRef, HashMap<String, String> otherParams, RunMode runMode) throws Exception {
+		Datapod summaryDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(summaryDpRef.getUuid(), summaryDpRef.getVersion(), summaryDpRef.getType().toString(), "N");
+//		String summaryTableName = datapodServiceImpl.genTableNameByDatapod(summaryDp, dagExec != null ? dagExec.getVersion(): null, datapodList, otherParams, dagExec, runMode, true);
+		String summaryTableName = commonServiceImpl.genTableNameByRule(dq, dataQualExec, summaryDpRef, ExecContext.spark, runMode)+"_summary";
+		StringBuilder select = new StringBuilder(SELECT)
+								.append(THRESHOLD_LIMIT).append(FROM)
+								.append(summaryTableName).append(WHERE_1_1)
+								.append(AND).append(RULEUUID).append(" ='" + dq.getUuid() + "'")
+								.append(AND).append(DATAPODUUID).append(" ='" + dq.getDependsOn().getRef().getUuid()+ "'");
+		return select.toString();
+	}
+	
+	public String generateallCheckFlag (String detailSql, DataQual dataQual, DataQualExec dataQualExec) {
 		StringBuilder sql = new StringBuilder(SELECT)
+											.append(SINGLE_QUOTE).append(dataQualExec.getUuid()).append(SINGLE_QUOTE).append(AS).append(RULE_EXEC_UUID).append(COMMA)
+											.append(dataQualExec.getVersion()).append(AS).append(RULE_EXEC_VERSION).append(COMMA)
+											.append(SINGLE_QUOTE).append(System.currentTimeMillis() + "").append(SINGLE_QUOTE).append(AS).append(RULE_EXEC_TIME).append(COMMA)
 											.append(RULEUUID).append(COMMA)
 											.append(RULEVERSION).append(COMMA)
 											.append(RULENAME).append(COMMA)
@@ -644,16 +670,21 @@ public class DQOperator implements IParsable {
 	public String generateSummarySql(DataQual dq, List<String> datapodList,
 			DataQualExec dataQualExec, DagExec dagExec, MetaIdentifier summaryDpRef, Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode)
 			throws Exception {
-		// Find result sql
+		// Find summary sql
 		Datapod summaryDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(summaryDpRef.getUuid(), summaryDpRef.getVersion(), summaryDpRef.getType().toString(), "N");
-		String summaryTableName = datapodServiceImpl.genTableNameByDatapod(summaryDp, dagExec != null ? dagExec.getVersion(): null, datapodList, otherParams, dagExec, runMode, true);
+//		String summaryTableName = datapodServiceImpl.genTableNameByDatapod(summaryDp, dagExec != null ? dagExec.getVersion(): null, datapodList, otherParams, dagExec, runMode, true);
+		DataStore datasore = datastoreServiceImpl.findLatestByMeta(summaryDpRef.getUuid(), summaryDpRef.getVersion());
+		String summaryTableName = datastoreServiceImpl.getTableNameByDatastore(datasore.getUuid(), datasore.getVersion(), runMode);
 		String resSql = dataQualExec.getExec();
-		String sql = generateSummarySql4(dq, generateSummarySql3(generateSummarySql2(generateSummarySql1(resSql)), summaryTableName,dq));
+		String sql = generateSummarySql4(dq, dataQualExec, generateSummarySql3(generateSummarySql2(generateSummarySql1(resSql)), summaryTableName,dq));
 		return sql;
 	}
 	
-	public String generateSummarySql4 (DataQual dq, String summarySql3) {
+	public String generateSummarySql4 (DataQual dq, DataQualExec dataQualExec, String summarySql3) {
 		StringBuilder select = new StringBuilder(SELECT)
+				  .append(SINGLE_QUOTE).append(dataQualExec.getUuid()).append(SINGLE_QUOTE).append(AS).append(RULE_EXEC_UUID).append(COMMA)
+				  .append(dataQualExec.getVersion()).append(AS).append(RULE_EXEC_VERSION).append(COMMA)
+				  .append(SINGLE_QUOTE).append(System.currentTimeMillis()).append(SINGLE_QUOTE).append(AS).append(RULE_EXEC_TIME).append(COMMA)
 				  .append(RULEUUID).append(COMMA)
 				  .append(RULEVERSION).append(COMMA)
 				  .append(RULENAME).append(COMMA)
@@ -665,8 +696,9 @@ public class DQOperator implements IParsable {
 				  .append(TOTAL_FAIL_COUNT).append(COMMA)
 				  .append(generateThresholdSql(dq, STD_DEV_FAIL)).append(COMMA)
 				  .append(SCORE).append(COMMA)
-				  .append(VERSION).append(COMMA)
-				  .append(STD_DEV_FAIL.toLowerCase()).append(FROM).append(BRACKET_OPEN)
+				  .append(VERSION)//.append(COMMA)
+//				  .append(STD_DEV_FAIL.toLowerCase())
+				  .append(FROM).append(BRACKET_OPEN)
 				  .append(summarySql3).append(BRACKET_CLOSE).append(DQ_RESULT_SUM_ALIAS);
 		
 
