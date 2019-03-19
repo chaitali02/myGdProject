@@ -44,6 +44,8 @@ InferyxApp.factory('graphService',function(dagMetaDataService,setDataFactory){
       cells.push( new joint.shapes.devs.Model(
         angular.merge({},dagMetaDataService.getCustomElement('dag',isTemplate,addMode),{
           id: "dag_0",
+          "model-data":{name:dag.name,uuid:dag.uuid,version:dag.version,isTemplate:true},
+
           position: { x: dag.xPos || 30, y : dag.yPos || 250 },
           attrs: {
               '.body': { "element-id":"dag_0",

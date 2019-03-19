@@ -446,6 +446,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       iconPath : 'assets/layouts/layout/img/dag.svg',
       allowInMenu : false,
       detailState: 'createwf',
+      state: 'createwf',
       childMenu:[],
       allowInChildMenu : false,
     },
