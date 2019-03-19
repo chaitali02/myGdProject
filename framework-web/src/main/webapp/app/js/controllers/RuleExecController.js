@@ -45,16 +45,45 @@ JobMonitoringModule.controller('DetailRuleExecController', function ($state, $fi
       statusList[i] = response.statusList[i].stage + "-" + d;
     }
     $scope.statusList = statusList
-    var refkeylist = [];
+    /*var refkeylist = [];
     for (i = 0; i < response.refKeyList.length; i++) {
       refkeylist[i] = response.refKeyList[i].type + "-" + response.refKeyList[i].name;
     }
-    $scope.refkeylist = refkeylist
+    $scope.refkeylist = refkeylist*/
+    var refkeylist = [];
+    if (response.refKeyList != null) {
+        for (i = 0; i < response.refKeyList.length; i++) {
+            var refkey = {};
+            refkey.type = response.refKeyList[i].type;
+            refkey.name = response.refKeyList[i].type + "-"+response.refKeyList[i].name;
+            refkey.uuid = response.refKeyList[i].uuid;
+            refkey.version = response.refKeyList[i].version;
+            refkeylist[i] = refkey;
+        }
+    }
+    $scope.refkeylist = refkeylist;
   }
   var onError=function(){
     $scope.isEditInprogess=false;
     $scope.isEditVeiwError=true;
   }
+
+  $scope.onShowDetail = function (data) { 
+    $rootScope.previousState = {};
+    $rootScope.previousState.name = dagMetaDataService.elementDefs['ruleexec'].detailState;
+    $rootScope.previousState.params = {};
+    $rootScope.previousState.params.id = $stateParams.id;
+    $rootScope.previousState.params.mode = true;
+    var type = data.type
+    var uuid = data.uuid
+    var stageName = dagMetaDataService.elementDefs[type.toLowerCase()].detailState;
+    var stageparam = {};
+    stageparam.id = uuid;
+    stageparam.version = data.version;
+    stageparam.mode = true;
+    stageparam.returnBack = true;
+    $state.go(stageName, stageparam);
+  };
 
   $scope.showGraph = function (uuid, version) {
     $scope.showExec = false;

@@ -1057,10 +1057,10 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
                    if($scope.execMode || true){
                      var status = $(".status[element-id=" + taskId + "] .statusTitle")[0].innerHTML.toUpperCase();
                      if(status && (status=='COMPLETED') && isGroupExec!=true && type !='ingest' ){
-                       iconMenuItems.push({title:'Show Results', type : 'results'});
+                      iconMenuItems.splice(1,0,{title:'Show Results', type : 'results'});
                       // iconMenuItems.push({title:'Show Logs', type : 'logs'});
                      }
-                     else if(status && (status=='PENDING' || status=='RESUME')){
+                     else if(status && (status=='PENDING' || status=='READY' || status=='RESUME')){
                        
                        iconMenuItems.push({title:'Pause', type : 'PAUSE'});
                      //  iconMenuItems.push({title:'Show Logs', type : 'logs'});
@@ -1537,6 +1537,13 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
       if(["rule2"].indexOf(params.elementType) !=-1 && execUrl !=null){
         execUrl.state=dagMetaDataService.elementDefs[params.elementType.toLowerCase()+"exec"].resultState2
         execUrl.params.type="ruleexec"
+        window.navigateTo(JSON.stringify(execUrl));
+        return false;
+      }
+      debugger
+      if(["train"].indexOf(params.elementType) !=-1 && execUrl !=null){
+        execUrl.state=dagMetaDataService.elementDefs[params.elementType.toLowerCase()+"exec"].resultState
+        execUrl.params.type="trainexec"
         window.navigateTo(JSON.stringify(execUrl));
         return false;
       }
@@ -2030,21 +2037,23 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
            }
            var type = cell.attributes.elementType;
            if(type == 'stage' || type == 'dag'){
+             debugger
              var svg = document.querySelector('svg');
              var pt = svg.createSVGPoint();
              pt.x = d3.event.clientX; pt.y = d3.event.clientY;
              var localPoint = pt.matrixTransform(svg.getScreenCTM().inverse());
              var iconMenuItems = [];
+             if(type=="dag"){iconMenuItems=[{title:'Show Details', type : 'element'},{title:'Show Logs', type : 'logs'}];}
              if($scope.execMode){
                var status = $(".status[element-id=" + id + "] .statusTitle")[0].innerHTML.toUpperCase();
                if(status && ( status=='RESUME')){
                  iconMenuItems.push({title:'Pause', type : 'PAUSE'});
                }
                else if(status && status=='RUNNING'){
-                 iconMenuItems.push({title:'Kill', type : 'killexecution'});
+                 iconMenuItems.splice(0,0,{title:'Kill', type : 'killexecution'});
                }
                else if(status && status=='STARTING' && type != 'stage'){
-                iconMenuItems.push({title:'Kill', type : 'killexecution'});
+                iconMenuItems.splice(0,0,{title:'Kill', type : 'killexecution'});
               }
                else if(status && status=='PAUSE'){
                  iconMenuItems.push({title:'Resume', type : 'RESUME'});
@@ -2060,8 +2069,20 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                dag : {name:'dag', label: 'dag'},
                stage : {name:'stage', label: 'stage'},
              }
+             
              var resultparams = {id:id,name:type,elementType:type,type: apis[type].name,typeLabel:apis[type].label};
-             iconMenu(localPoint.x, localPoint.y, JSON.stringify(state),null,JSON.stringify(resultparams));
+             var state;
+             if(type =="dag"){
+             var dagExec = cell.attributes['model-data'];
+             var url=$location.absUrl().split("app")[0];
+             execStates={state : dagMetaDataService.elementDefs[type.toLowerCase()+"exec"].detailState, params : {id :dagExec.uuid,version:dagExec.version || " ",name:dagExec.name,type:type+"exec",mode:true, returnBack: true}};
+             $http.get(url+'metadata/getMetaIdByExecId?action=view&execUuid='+dagExec.uuid+'&execVersion='+dagExec.version+'&type='+type+"exec").then(function (res) {
+              state = {state : dagMetaDataService.elementDefs[res.data.type].state, params : {id :res.data.uuid,version:res.data.version || " ",name:"",type:type,mode:true, returnBack: true}};
+               iconMenu(localPoint.x, localPoint.y, JSON.stringify(state),JSON.stringify(execStates),JSON.stringify(resultparams));
+             });}
+             else{
+              iconMenu(localPoint.x, localPoint.y, JSON.stringify(state),JSON.stringify(state),JSON.stringify(resultparams));
+             }
              return;
            }//End If
            console.log(cell);
@@ -2097,16 +2118,16 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                var status = $(".status[element-id=" + taskId + "] .statusTitle")[0].innerHTML.toUpperCase();
                if(status && (status=='COMPLETED') ||(status== 'FAILED')||(status== 'KILLED')|| (status== 'RUNNING')){
                  if(isExec && (status=='COMPLETED')){
-                   iconMenuItems.push({title:'Show Results', type : 'results'});
+                   iconMenuItems.splice(1,0,{title:'Show Results', type : 'results'});
                   // iconMenuItems.push({title:'Show Logs', type : 'logs'});
                  }
                  if(isGroupExec){
-                   iconMenuItems.push({title:'Show Results', type : 'results'});
+                   iconMenuItems.splice(1,0,{title:'Show Results', type : 'results'});
                   //  if(status=='COMPLETED')
                   //   iconMenuItems.push({title:'Show Logs', type : 'logs'});
                  }
                }
-               else if(status && (status=='PENDING' || status=='RESUME')){
+               else if(status && (status=='PENDING' || status=='READY'|| status=='RESUME')){
                  iconMenuItems.push({title:'Pause', type : 'PAUSE'});
                }
                else if(status && status=='PAUSE'){
@@ -2162,7 +2183,6 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
              
              execStates={state : dagMetaDataService.elementDefs[ref.type.toLowerCase()].detailState, params : {id :ref.uuid,version:ref.version || " ",name:ref.name,type:ref.type,mode:true, returnBack: true}};
              $http.get(url+'metadata/getMetaIdByExecId?action=view&execUuid='+ref.uuid+'&execVersion='+ref.version+'&type='+ref.type).then(function (res) {
-              debugger
               resultparams.elementType=res.data.type;
               state = {state : dagMetaDataService.elementDefs[res.data.type].state, params : {id :res.data.uuid,version:res.data.version || " ",name:ref.name,type:ref.type,mode:true, returnBack: true}};
                iconMenu(localPoint.x, localPoint.y, JSON.stringify(state),JSON.stringify(execStates),JSON.stringify(resultparams));
@@ -2172,7 +2192,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
              var url=$location.absUrl().split("app")[0];
               $http.get(url+'common/getLatestByUuid?action=view&uuid='+ref.uuid+'&type='+ref.type).then(function (res) {
                 
-                execStates= {state : dagMetaDataService.elementDefs[type].detailState, params : {id :ref.uuid,version:res.data.version,name:ref.name,type:ref.type,mode:true, returnBack: true}};
+              execStates= {state : dagMetaDataService.elementDefs[type].detailState, params : {id :ref.uuid,version:res.data.version,name:ref.name,type:ref.type,mode:true, returnBack: true}};
               state = {state : dagMetaDataService.elementDefs[type].state, params : {id :ref.uuid,version:res.data.version,name:ref.name,type:ref.type,mode:true, returnBack: true}};
              iconMenu(localPoint.x, localPoint.y, JSON.stringify(state),JSON.stringify(execStates));
              });

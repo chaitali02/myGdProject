@@ -850,6 +850,15 @@
                           required min="{{thresholdInfo.highMin}}" max="{{thresholdInfo.highMax}}" ng-change="onChangeTHigh()">
                       </div>
                     </div>
+                    <div class="form-group">
+                      <label class="control-label col-md-3">Abort Condition</label>
+                      <div class="col-md-6">
+                        <select ng-disabled="{{mode}}" ng-model="dataqualitydata.abortCondition" ng-options="x for x in abortConditionTypes | orderBy"
+                          class="form-control">
+                        <option value="">-Select-</option>
+                        </select>
+                      </div>
+                    </div>
                     <div class="row">
                       <label class="control-label col-md-3"></label>
                       <div class="col-md-4">

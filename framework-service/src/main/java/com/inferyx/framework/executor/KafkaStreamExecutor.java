@@ -17,7 +17,6 @@ import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Map;
 import com.inferyx.framework.domain.StreamInput;
 import com.inferyx.framework.executor.helper.KafkaStreamToTableHelper;
-import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
 
 /**
@@ -28,8 +27,6 @@ public class KafkaStreamExecutor<T, K> {
 	
 	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
-	@Autowired
-	private ExecutorFactory execFactory;
 	@Autowired
 	private KafkaStreamToTableHelper kafkaStreamToTableHelper;
 	

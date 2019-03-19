@@ -39,6 +39,7 @@ import com.inferyx.framework.operator.MapIterOperator;
 import com.inferyx.framework.operator.MapOperator;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
+import com.inferyx.framework.service.DatapodServiceImpl;
 
 @Component
 public class MapTaskParser extends TaskParser {
@@ -50,6 +51,8 @@ public class MapTaskParser extends TaskParser {
 	protected DataStoreServiceImpl dataStoreServiceImpl;
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
+	@Autowired
+	private DatapodServiceImpl datapodServiceImpl;
 	
 	private final String WHERE_1_1 = " WHERE (1=1) ";//" WHERE \\(1=1\\) ";
 	
@@ -172,7 +175,7 @@ public class MapTaskParser extends TaskParser {
 			return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapodVersion,
 					dagExecVersion);
 		} else {
-			return dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), RunMode.BATCH);
+			return datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), RunMode.BATCH);
 		}
 	}
 	

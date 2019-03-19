@@ -1033,8 +1033,6 @@ public class DagServiceImpl {
 
 	@SuppressWarnings({ "unused", "unlikely-arg-type", "unchecked" })
 	public DagExec parseDagExec(Dag dag, DagExec dagExec) throws Exception {
-
-		mapServiceImpl.setRunMode(runMode);
 		if (dagExec == null) {
 			logger.info("Nothing to parse. Aborting parseDagExec");
 			return null;
@@ -1253,7 +1251,7 @@ public class DagServiceImpl {
 						logger.info(" otherParams : " + otherParams);
 						logger.info(" taskExecParams.getOtherParams() : " + taskExecParams.getOtherParams());
 						baseExec.setRefKeyList(taskExecParams.getRefKeyList());
-						if (helper.getLatestStatus(baseExec.getStatusList()).getStage() == Status.Stage.FAILED) {
+						if (Helper.getLatestStatus(baseExec.getStatusList()).getStage() == Status.Stage.FAILED) {
 							throw new Exception("DAG failed. So cannot proceed ... ");
 						}
 					} catch (Exception e) {
@@ -1526,7 +1524,7 @@ public class DagServiceImpl {
 												.invoke(commonServiceImpl));
 									Status restartStatus = (Status) obj.getClass().getMethod("restart", BaseExec.class).invoke(obj, baseExec);
 								} else {
-									if (helper.isStatusPresent(new Status(Status.Stage.READY, new Date()), baseExec.getStatusList())) {
+									if (Helper.isStatusPresent(new Status(Status.Stage.READY, new Date()), baseExec.getStatusList())) {
 										commonServiceImpl.setMetaStatus(baseExec, meta.getType(), Status.Stage.READY);
 										logger.info(String.format(" Setting operatorexec %s to READY ", baseExec.getUuid()));
 									} else {
@@ -1536,7 +1534,7 @@ public class DagServiceImpl {
 								}
 							} // End for operator
 							
-							if (helper.isStatusPresent(new Status(Status.Stage.READY, new Date()), taskExec.getStatusList())) {
+							if (Helper.isStatusPresent(new Status(Status.Stage.READY, new Date()), taskExec.getStatusList())) {
 								taskExec = (TaskExec) commonServiceImpl.setMetaStatusForTask(dagExec, taskExec, Status.Stage.READY, dagExec.getStages().get(i).getStageId(), dagExec.getStages().get(i).getTasks().get(j).getTaskId());
 								logger.info(String.format(" Setting taskexec %s to READY ", taskExec.getTaskId()));
 							} else {
@@ -1547,7 +1545,7 @@ public class DagServiceImpl {
 							dagExec.getStages().get(i).getTasks().add(j, taskExec); 
 						}	
 					} // End tasks
-					if (helper.isStatusPresent(new Status(Status.Stage.READY, new Date()), stageExec.getStatusList())) {
+					if (Helper.isStatusPresent(new Status(Status.Stage.READY, new Date()), stageExec.getStatusList())) {
 						stageExec = (StageExec) commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.READY, stageExec.getStageId());
 						logger.info(String.format(" Setting stageexec %s to READY ", stageExec.getStageId()));
 					} else {
@@ -1558,7 +1556,7 @@ public class DagServiceImpl {
 					dagExec.getStages().add(i, stageExec);
 				}
 			} // End stages
-				if (helper.isStatusPresent(new Status(Status.Stage.READY, new Date()), dagExec.getStatusList())) {
+				if (Helper.isStatusPresent(new Status(Status.Stage.READY, new Date()), dagExec.getStatusList())) {
 					dagExec = (DagExec) commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.READY);
 					logger.info(String.format(" Setting dagexec %s to READY ", dagExec.getUuid()));
 				} else {

@@ -32,8 +32,6 @@ import java.util.stream.Collectors;
 
 import javax.xml.bind.JAXBException;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.ml.PipelineModel;
 import org.apache.spark.ml.param.ParamMap;
@@ -511,14 +509,15 @@ public class PythonExecutor implements IExecutor {
 		return null;
 	}
 
-	@Override
-	public ResultSetHolder predict2(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
-			String[] fieldArray, String trainName, String label, Datasource datasource, String clientContext)
-			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
-			SecurityException, NullPointerException, ParseException, IOException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	/********************** UNUSED **********************/
+//	@Override
+//	public ResultSetHolder predict2(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
+//			String[] fieldArray, String trainName, String label, Datasource datasource, String clientContext)
+//			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
+//			SecurityException, NullPointerException, ParseException, IOException {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 
 	@Override
 	public long load(Load load, String datapodTableName, Datasource datasource, Datapod datapod, String clientContext) throws IOException {
@@ -652,6 +651,7 @@ public class PythonExecutor implements IExecutor {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Map<String, Object> summary(Object trndModel, String trainClass, List<String> summaryMethods, String clientContext)
 			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,

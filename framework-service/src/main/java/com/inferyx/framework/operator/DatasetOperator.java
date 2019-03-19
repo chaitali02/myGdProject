@@ -43,7 +43,7 @@ import com.inferyx.framework.domain.SourceAttr;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.parser.TaskParser;
 import com.inferyx.framework.service.CommonServiceImpl;
-import com.inferyx.framework.service.DataStoreServiceImpl;
+import com.inferyx.framework.service.DatapodServiceImpl;
 	@Component
 	public class DatasetOperator {
 		
@@ -54,11 +54,11 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 		@Autowired
 		MapOperator mapOperator;
 		@Autowired
-		DataStoreServiceImpl datastoreServiceImpl;
-		@Autowired
 		private CommonServiceImpl<?> commonServiceImpl;		
 		@Autowired
 		FilterOperator2 filterOperator2;
+		@Autowired
+		private DatapodServiceImpl datapodServiceImpl;
 		
 		static final Logger logger = Logger.getLogger(DatasetOperator.class);
 		
@@ -195,7 +195,7 @@ import com.inferyx.framework.service.DataStoreServiceImpl;
 					return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName") + " " + datapod.getName();
 				} else {
 					try {
-						table = datastoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+						table = datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
 					} catch(Exception e) {
 						table =  String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(), dataset.getVersion());
 					}

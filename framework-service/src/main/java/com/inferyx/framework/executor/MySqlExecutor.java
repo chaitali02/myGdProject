@@ -578,11 +578,12 @@ public class MySqlExecutor implements IExecutor {
 		return null;
 	}
 
-	@Override
-	public ResultSetHolder predict2(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
-			String[] fieldArray, String trainName, String label, Datasource datasource, String clientContext) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException{
-		return sparkExecutor.predict2(trainedModel, targetDp, filePathUrl, tableName, fieldArray, trainName, label, datasource, clientContext);
-	}
+	/********************** UNUSED **********************/
+//	@Override
+//	public ResultSetHolder predict2(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
+//			String[] fieldArray, String trainName, String label, Datasource datasource, String clientContext) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException{
+//		return sparkExecutor.predict2(trainedModel, targetDp, filePathUrl, tableName, fieldArray, trainName, label, datasource, clientContext);
+//	}
 
 	@Override
 	public Object loadTrainedModel(Class<?> modelClass, String location)

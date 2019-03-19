@@ -25,7 +25,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,35 +34,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.MetadataUtil;
 import com.inferyx.framework.common.SessionHelper;
-import com.inferyx.framework.dao.IDagDao;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.Dag;
 import com.inferyx.framework.domain.DagExec;
-import com.inferyx.framework.domain.DataQualExec;
-import com.inferyx.framework.domain.DataQualGroupExec;
 import com.inferyx.framework.domain.ExecParams;
-import com.inferyx.framework.domain.LoadExec;
-import com.inferyx.framework.domain.MapExec;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.Model;
-import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ParamSetHolder;
-import com.inferyx.framework.domain.Predict;
-import com.inferyx.framework.domain.PredictExec;
-import com.inferyx.framework.domain.ProfileExec;
-import com.inferyx.framework.domain.ProfileGroupExec;
-import com.inferyx.framework.domain.ReconExec;
-import com.inferyx.framework.domain.ReconGroupExec;
-import com.inferyx.framework.domain.RuleExec;
-import com.inferyx.framework.domain.RuleGroupExec;
-import com.inferyx.framework.domain.Simulate;
-import com.inferyx.framework.domain.SimulateExec;
 import com.inferyx.framework.domain.Stage;
 import com.inferyx.framework.domain.StageExec;
 import com.inferyx.framework.domain.StageRef;
@@ -71,64 +52,26 @@ import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Task;
 import com.inferyx.framework.domain.TaskExec;
 import com.inferyx.framework.domain.TaskOperator;
-import com.inferyx.framework.domain.Train;
-import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.factory2.ExecFactory2;
 import com.inferyx.framework.factory2.SystemOperatorFactory2;
 import com.inferyx.framework.operator.IOperator;
-import com.inferyx.framework.register.GraphRegister;
-import com.inferyx.framework.service.ApplicationServiceImpl;
 import com.inferyx.framework.service.BatchExecServiceImpl;
 import com.inferyx.framework.service.CommonServiceImpl;
-import com.inferyx.framework.service.CustomOperatorServiceImpl;
 import com.inferyx.framework.service.DagExecServiceImpl;
 import com.inferyx.framework.service.DagServiceImpl;
-import com.inferyx.framework.service.DataQualGroupServiceImpl;
-import com.inferyx.framework.service.DataQualServiceImpl;
-import com.inferyx.framework.service.DataStoreServiceImpl;
-import com.inferyx.framework.service.GraphServiceImpl;
-import com.inferyx.framework.service.LoadServiceImpl;
-import com.inferyx.framework.service.MapServiceImpl;
 import com.inferyx.framework.service.MessageStatus;
-import com.inferyx.framework.service.ModelServiceImpl;
-import com.inferyx.framework.service.ProfileGroupServiceImpl;
-import com.inferyx.framework.service.ProfileServiceImpl;
-import com.inferyx.framework.service.ReconGroupServiceImpl;
-import com.inferyx.framework.service.ReconServiceImpl;
-import com.inferyx.framework.service.RegisterService;
-import com.inferyx.framework.service.RuleGroupServiceImpl;
-import com.inferyx.framework.service.RuleServiceImpl;
 import com.inferyx.framework.service.RunDagServiceImpl;
-import com.inferyx.framework.service.SecurityServiceImpl;
 
 @Service
 public class DagServiceImpl2 {
 
-	@Autowired
-	GraphRegister<?> registerGraph;
-	/*@Autowired
-	JavaSparkContext javaSparkContext;*/
-	@Autowired
-	IDagDao iDagDao;
-	@Autowired
-	MongoTemplate mongoTemplate;
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	private BatchExecServiceImpl btchServ;
 	@Autowired
 	private DagExecServiceImpl dagExecServiceImpl;
-	@Autowired
-	private MapServiceImpl mapServiceImpl;
-	@Autowired
-	SecurityServiceImpl securityServiceImpl;
-	@Autowired
-	ApplicationServiceImpl applicationServiceImpl;
-	@Autowired
-	RegisterService registerService;
-	@Autowired
-	DataStoreServiceImpl dataStoreServiceImpl;
 	@Autowired
 	private ThreadPoolTaskExecutor dagExecutor;
 	@Resource(name="taskThreadMap")
@@ -491,9 +434,9 @@ public class DagServiceImpl2 {
 		// Convert refKeyList to HashMap
 		List<MetaIdentifier> inputRefKeyList = null;
 		if (execParams == null) {
-			inputRefKeyList = execParams.getRefKeyList();
 			execParams = new ExecParams();
 		} else {
+			inputRefKeyList = execParams.getRefKeyList();
 			execParams.setRefKeyList(new ArrayList<>());
 		}
 		java.util.Map<String, MetaIdentifier> inputRefKeys = new HashMap<>();
@@ -558,7 +501,6 @@ public class DagServiceImpl2 {
 	@SuppressWarnings({ "unused", "unlikely-arg-type", "unchecked" })
 	public DagExec parseDagExec(Dag dag, DagExec dagExec) throws Exception {
 
-		mapServiceImpl.setRunMode(runMode);
 		if (dagExec == null) {
 			logger.info("Nothing to parse. Aborting parseDagExec");
 			return null;

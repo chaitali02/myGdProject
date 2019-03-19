@@ -24,12 +24,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.common.DQInfo;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.Rule2Info;
 import com.inferyx.framework.domain.BaseRule;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.Datapod;
@@ -416,17 +414,16 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 					baseRuleExec.getVersion());
 		}
 
-		Datapod dp = null;
 		try {
-			dp = (Datapod) commonServiceImpl.getLatestByUuid(datapodKey.getUuid(), MetaType.datapod.toString(), "N");
+			Datapod datapod = (Datapod) commonServiceImpl.getLatestByUuid(datapodKey.getUuid(), MetaType.datapod.toString(), "N");
 			Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(
-					dp.getDatasource().getRef().getUuid(), dp.getDatasource().getRef().getVersion(),
+					datapod.getDatasource().getRef().getUuid(), datapod.getDatasource().getRef().getVersion(),
 					MetaType.datasource.toString(), "N");
 			if (datasource.getType().equals(ExecContext.FILE.toString())) {
 				return String.format("%s_%s_%s", baseRule.getUuid().replace("-", "_"), baseRule.getVersion(),
 						baseRuleExec.getVersion());
 			} else {
-				return datasource.getDbname() + "." + dp.getName();
+				return datasource.getDbname() + "." + datapod.getName();
 			}
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
