@@ -1,39 +1,39 @@
 
 # coding: utf-8
 
-# In[109]:
+# In[113]:
 
 
 import pandas as pd
 
-df = pd.read_csv('/Users/ypalrecha/git/inferyx/framework-web/app/db/data/csv/header/equity_orders_new.csv')
+df_orig = pd.read_csv('/home/inferyx/git/inferyx/framework-web/app/db/data/csv/header/equity_orders_orig.csv')
 
 
-# In[110]:
+# In[134]:
 
 
-iterRange = 250
-newDF = pd.DataFrame() 
+iterRange = 25000
+writeSize=2500
+df_final = pd.DataFrame() 
+out_file='/home/inferyx/git/inferyx/framework-web/app/db/data/csv/header/equity_orders.csv'
 i_new = 0
-for i in range(0,iterRange):
+for i in range(1,iterRange+1):
     i_new += 1
-    df_new = pd.DataFrame()
-    df_new = df_new.append(df)
-    df_new.order_identifier = df_new.order_identifier+i
-    df_new.parent_order_id = df_new.parent_order_id+i
-    newDF = newDF.append(df_new)
-
-
-# In[111]:
-
-
-newDF.shape
-
-
-# In[112]:
-
-
-newDF.to_csv('/Users/ypalrecha/git/inferyx/framework-web/app/db/data/csv/header/equity_orders_new_1000.csv',index=False)
+    df_tmp = pd.DataFrame()
+    df_tmp = df_tmp.append(df_orig)
+    df_tmp.order_identifier = df_tmp.order_identifier+i
+    df_tmp.parent_order_id = df_tmp.parent_order_id+i
+    df_final = df_final.append(df_tmp)   
+    if i % writeSize == 0:
+        print(df_final.shape)
+        print('Saving data ' + str(i))
+        if i == writeSize:
+            print('Creating new file')
+            df_final.to_csv(out_file,index=False,mode = 'a')
+        else:
+            print('Appending to file')
+            df_final.to_csv(out_file,index=False,mode = 'a',header=False)
+        df_final.drop(df_final.index, inplace=True)
 
 
 # In[ ]:
@@ -41,32 +41,32 @@ newDF.to_csv('/Users/ypalrecha/git/inferyx/framework-web/app/db/data/csv/header/
 
 import pandas as pd
 
-df = pd.read_csv('/Users/ypalrecha/git/inferyx/framework-web/app/db/data/csv/header/equity_executions_new.csv')
+df_orig = pd.read_csv('/home/inferyx/git/inferyx/framework-web/app/db/data/csv/header/equity_executions_orig.csv')
 
 
 # In[ ]:
 
 
-iterRange = 250
-newDF = pd.DataFrame() 
+iterRange = 25000
+writeSize=2500
+df_final = pd.DataFrame() 
+out_file='/home/inferyx/git/inferyx/framework-web/app/db/data/csv/header/equity_executions.csv'
 i_new = 0
-for i in range(0,iterRange):
+for i in range(1,iterRange+1):
     i_new += 1
-    df_new = pd.DataFrame()
-    df_new = df_new.append(df)
-    df_new.order_identifier = df_new.order_identifier+i
-    df_new.trade_execution_identifier = df_new.trade_execution_identifier+i
-    newDF = newDF.append(df_new)
-
-
-# In[ ]:
-
-
-newDF.shape
-
-
-# In[ ]:
-
-
-newDF.to_csv('/Users/ypalrecha/git/inferyx/framework-web/app/db/data/csv/header/equity_executions_new_1000.csv',index=False)
+    df_tmp = pd.DataFrame()
+    df_tmp = df_tmp.append(df_orig)
+    df_tmp.order_identifier = df_tmp.order_identifier+i
+    df_tmp.trade_execution_identifier = df_tmp.trade_execution_identifier+i
+    df_final = df_final.append(df_tmp)   
+    if i % writeSize == 0:
+        print(df_final.shape)
+        print('Saving data ' + str(i))
+        if i == writeSize:
+            print('Creating new file')
+            df_final.to_csv(out_file,index=False,mode = 'a')
+        else:
+            print('Appending to file')
+            df_final.to_csv(out_file,index=False,mode = 'a',header=False)
+        df_final.drop(df_final.index, inplace=True)
 

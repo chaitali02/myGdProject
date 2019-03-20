@@ -62,6 +62,7 @@ public class DQOperator implements IParsable {
 	private String ONLY_WHEN = " WHEN ";
 	private String ONLY_ELSE = " ELSE ";
 	private String ONLY_END = " END ";
+	private String NULL = " NULL ";
 	private String THEN = " THEN 'Y' ELSE 'N' END AS ";
 	private String THEN_N_Y = " THEN 'N' ELSE 'Y' END AS ";
 	private String THEN_Y_N = " THEN 'Y' ELSE 'N' END AS ";
@@ -129,9 +130,9 @@ public class DQOperator implements IParsable {
 	private String DQ_RESULT_ALIAS = "dq_result_alias";
 	private String DQ_RESULT_READY_ALIAS = "dq_result_ready_alias";
 	private String DQ_RESULT_SUM_ALIAS = "dq_result_sum_alias";
-	private String DQ_SUMMARY_ALIAS = " dq_summary_alias ";
-	private String STD_DEV_FAIL = " STD_DEV_FAIL ";
-	private String SCORE = " score ";
+	private String DQ_SUMMARY_ALIAS = "dq_summary_alias";
+	private String STD_DEV_FAIL = "std_dev_fail";
+	private String SCORE = "score";
 	private String RULEUUID = "rule_uuid";
 	private String RULEVERSION = "rule_version";
 	private String RULENAME = "rule_name";
@@ -173,11 +174,11 @@ public class DQOperator implements IParsable {
 	private String ROWKEY_NAME = "rowkey_name";
 	private String ROWKEY_VALUE = "rowkey_value";
 	private String EMPTY = "";
-	private String VERSION = " version ";
-	private String DATAPOD_NAME = " datapod_name";
-	private String ATTRIBUTE_NAME = " attribute_name";
+	private String VERSION = "version";
+	private String DATAPOD_NAME = "datapod_name";
+	private String ATTRIBUTE_NAME = "attribute_name";
 	private String CROSS_JOIN = " CROSS JOIN ";
-	private String STDDEV = " STDDEV";
+	private String STDDEV = "STDDEV";
 	private String ORDER_BY = " ORDER BY ";
 
 	@Autowired
@@ -748,8 +749,8 @@ public class DQOperator implements IParsable {
 			   	  .append(ConstantsUtil.CASE_WHEN).append(BRACKET_OPEN).append(STDDEV).append(BRACKET_OPEN)
 				  .append(TOTAL_FAIL_COUNT).append(BRACKET_CLOSE).append(EQUAL_TO).append("'NaN'").append(OR)
 				  .append(STDDEV).append(BRACKET_OPEN).append(TOTAL_FAIL_COUNT).append(BRACKET_CLOSE).append(EQUAL_TO)
-				  .append(" NULL").append(BRACKET_CLOSE).append("THEN").append(" 1 ").append("ELSE").append(STDDEV)
-				  .append(BRACKET_OPEN).append(TOTAL_FAIL_COUNT).append(BRACKET_CLOSE).append("END")
+				  .append(NULL).append(BRACKET_CLOSE).append(ONLY_THEN).append("1").append(ONLY_ELSE).append(STDDEV)
+				  .append(BRACKET_OPEN).append(TOTAL_FAIL_COUNT).append(BRACKET_CLOSE).append(ONLY_END)
 				  .append(AS).append(STD_DEV_FAIL)
 				  .append(FROM).append(summaryTableName).append(ConstantsUtil.WHERE_1_1).append(ConstantsUtil.AND)
 				  .append(RULEUUID).append(" ='" + dq.getUuid() + "'").append(ConstantsUtil.AND)

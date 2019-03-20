@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.Datapod;
@@ -34,17 +35,20 @@ import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DatapodServiceImpl;
+import com.inferyx.framework.service.ExecutorServiceImpl;
 
 @Component
 public class ProfileOperator {
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
+	private ExecutorServiceImpl executorServiceImpl;
+	@Autowired
 	private FilterOperator2 filterOperator2;
 	@Autowired
-	private Helper helper;
-	@Autowired
 	private DatapodServiceImpl datapodServiceImpl;
+	@Autowired
+	Engine engine;
 
 	static final Logger logger = Logger.getLogger(ProfileOperator.class);
 	Datapod dp;
@@ -119,11 +123,15 @@ public class ProfileOperator {
 			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException, Exception {
 		MetaIdentifierHolder filterSource = new MetaIdentifierHolder(new MetaIdentifier(MetaType.profile, profile.getUuid(), profile.getVersion()));
-		Datasource mapSourceDS = commonServiceImpl.getDatasourceByObject(profile);
-		String datasourceType = mapSourceDS.getType();
-		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(profile.getDependsOn().getRef().getUuid(), profile.getDependsOn().getRef().getVersion(), MetaType.datapod.toString());
 
-		ExecContext execContext = helper.getExecutorContext(datasourceType);
+		Datasource mapSourceDS = commonServiceImpl.getDatasourceByObject(profile);
+//		String datasourceType = mapSourceDS.getType();
+//		ExecContext execContext = helper.getExecutorContext(datasourceType);
+
+		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(profile.getDependsOn().getRef().getUuid(), profile.getDependsOn().getRef().getVersion(), MetaType.datapod.toString());
+		
+		ExecContext execContext = executorServiceImpl.getExecContext(runMode, mapSourceDS);
+
 		switch(execContext) {
 		case HIVE : 
 			return "SELECT \'"
@@ -350,7 +358,7 @@ public class ProfileOperator {
 //					+ "count(1) AS numRows, "
 //					+ "min(" + attrName + ") AS minVal, "
 //					+ "max(" + attrName + ") AS maxVal, "
-//					+ "avg(cast(" + attrName + " AS int)) AS avgVal, "
+//					+ "avg(cast(" + attrName + " AS int)) AS " + AVG_VAL + ", "
 //					+ "percentile(cast(" + attrName + " as BIGINT), 0.5) AS medianVal, "
 //					+ "stddev(" + attrName + ") AS stdDev, "
 //					+ "count(distinct " + attrName + ") AS numDistinct, "
@@ -378,7 +386,7 @@ public class ProfileOperator {
 //					+ "(SELECT COUNT(1) FROM " + profileTableName + " tab) AS numRows, "
 //					+ "min(cast(" + attrName + " AS int)) AS minVal, "
 //					+ "max(cast(" + attrName + " AS int)) AS maxVal, "
-//					+ "avg(cast(" + attrName + " AS int)) AS avgVal, "
+//					+ "avg(cast(" + attrName + " AS int)) AS " + AVG_VAL + ", "
 //					+ "appx_median(cast(" + attrName + " AS DOUBLE)) AS mediaVal, " 
 //					+ "stddev(cast(" + attrName + " AS int)) AS stdDev, "
 //					+ "cast(count(distinct " + attrName + ") AS INT) AS numDistinct, "
@@ -400,7 +408,7 @@ public class ProfileOperator {
 //					+ "(SELECT COUNT(1) FROM " + profileTableName +" tab) AS numRows, "
 //					+ "min(cast(" + attrName + " AS SIGNED)) AS minVal, "
 //					+ "max(cast(" + attrName + " AS SIGNED)) AS maxVal, "
-//					+ "avg(" + attrName + ") AS avgVal,"
+//					+ "avg(" + attrName + ") AS " + AVG_VAL + ","
 //					+ "cast(" + getMedianVal(attrName) + " AS decimal) AS medianVal, "
 //					+ "stddev(" + attrName + ") AS stdDev, "
 //					+ "count(distinct " + attrName + ") AS numDistinct, "
@@ -427,7 +435,7 @@ public class ProfileOperator {
 //					+ "(SELECT COUNT(1) FROM "+ profileTableName + " tab) AS numRows, "
 //					+ "min(cast(decode( translate(" + attrName + ",' 0123456789',' '), null, " + attrName + ", 1)AS int)) AS minVal, "
 //					+ "max(cast(decode( translate(" + attrName + ",' 0123456789',' '), null, "+ attrName + ", 1)AS int)) AS maxVal, "
-//					+ "avg(decode(translate(" + attrName + ",' 0123456789',' '), null, "+ attrName + ", '0')) AS avgVal ,"
+//					+ "avg(decode(translate(" + attrName + ",' 0123456789',' '), null, "+ attrName + ", '0')) AS " + AVG_VAL + " ,"
 //					+ "median(cast(decode( translate(" + attrName + ",' 0123456789',' '), null, " + attrName + ", 1)AS int)) AS mediaVal, " 
 //					+ "stddev(decode( translate(" + attrName + ",' 0123456789',' '), null, " + attrName + ", '0')) AS stdDev, "
 //					+ "cast(count(distinct " + attrName + ") AS decimal) AS numDistinct, "
@@ -457,7 +465,7 @@ public class ProfileOperator {
 //					+ "(SELECT COUNT(1) FROM " + profileTableName +" tab) AS numRows,"
 //					+ "MIN(" + attrName1 + ") AS minVal,"
 //					+ "MAX(" + attrName1 + ") AS maxVal,"				
-//					+ "AVG(" + attrName1 + ") AS avgVal,"				
+//					+ "AVG(" + attrName1 + ") AS " + AVG_VAL + ","				
 //					+ "PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY "+ attrName1 + ") AS medianVal,"				
 //					+ "STDDEV(" + attrName1 + ") AS stdDev,"				
 //					+ "COUNT(" + attrName1 + ") AS numDistinct,"
