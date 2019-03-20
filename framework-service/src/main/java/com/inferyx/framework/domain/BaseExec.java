@@ -16,6 +16,7 @@ public class BaseExec extends BaseEntity {
 	protected MetaIdentifierHolder dependsOn;
 	protected String exec;
 	protected String summaryExec;
+	protected String abortExec;
 	protected MetaIdentifierHolder result;
 	protected MetaIdentifierHolder summaryResult;
 	protected List<MetaIdentifier> refKeyList;
@@ -157,14 +158,28 @@ public class BaseExec extends BaseEntity {
 		this.summaryExec = summaryExec;
 	}
 
+	/**
+	 * @return the abortExec
+	 */
+	public String getAbortExec() {
+		return abortExec;
+	}
+
+	/**
+	 * @param abortExec the abortExec to set
+	 */
+	public void setAbortExec(String abortExec) {
+		this.abortExec = abortExec;
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
 		return "BaseExec [statusList=" + statusList + ", dependsOn=" + dependsOn + ", exec=" + exec + ", summaryExec="
-				+ summaryExec + ", result=" + result + ", refKeyList=" + refKeyList + ", execParams=" + execParams
-				+ "]";
+				+ summaryExec + ", abortExec=" + abortExec + ", result=" + result + ", summaryResult=" + summaryResult
+				+ ", refKeyList=" + refKeyList + ", execParams=" + execParams + "]";
 	}
 	
 }
