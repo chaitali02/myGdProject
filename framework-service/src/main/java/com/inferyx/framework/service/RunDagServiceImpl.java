@@ -263,16 +263,18 @@ public class RunDagServiceImpl implements Callable<String> {
 			taskThreadMap.remove("Dag_"+dagExec.getUuid());
 			logger.info("Thread watch : DagExec : " + dagExec.getUuid() + " RunDagServiceImpl complete >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
 			
-			SenderInfo senderInfo = dag.getSenderInfo();
-			if(senderInfo != null) {	
-				Status latestStatus = Helper.getLatestStatus(dagExec.getStatusList());
-				if(latestStatus.getStage().equals(Status.Stage.COMPLETED) && senderInfo.getNotifyOnSuccess().equalsIgnoreCase("Y")) {
-					synchronized(dagExec.getUuid()) {
-						dagServiceImpl.sendSuccessNotification(senderInfo, dag, dagExec);
+			if(Helper.getPropertyValue("framework.email.enable").equalsIgnoreCase("Y")) {
+				SenderInfo senderInfo = dag.getSenderInfo();
+				if(senderInfo != null) {	
+					Status latestStatus = Helper.getLatestStatus(dagExec.getStatusList());
+					if(latestStatus.getStage().equals(Status.Stage.COMPLETED) && senderInfo.getEmailTo().size() > 0 && senderInfo.getNotifyOnSuccess().equalsIgnoreCase("Y")) {
+						synchronized(dagExec.getUuid()) {
+							dagServiceImpl.sendSuccessNotification(senderInfo, dag, dagExec);
+						}
+					} else if(latestStatus.getStage().equals(Status.Stage.FAILED) && senderInfo.getEmailTo().size() > 0 && senderInfo.getNotifyOnFailure().equalsIgnoreCase("Y")) {
+						dagServiceImpl.sendFailureNotification(senderInfo, dag, dagExec);
 					}
-				} else if(latestStatus.getStage().equals(Status.Stage.FAILED) && senderInfo.getNotifyOnFailure().equalsIgnoreCase("Y")) {
-					dagServiceImpl.sendFailureNotification(senderInfo, dag, dagExec);
-				}
+				}	
 			}
 			
 			return "Dag_"+dagExec.getUuid();

@@ -16,11 +16,20 @@ public class BaseEntityStatus extends BaseEntity{
 
 	List<Status> status;
 	String type;
+	String execCreated;
 	private long numRows;
 	private double sizeMB;
 	
 	
 	
+	public String getExecCreated() {
+		return execCreated;
+	}
+
+	public void setExecCreated(String execCreated) {
+		this.execCreated = execCreated;
+	}
+
 	public BaseEntityStatus() {
 		super();
 	}
