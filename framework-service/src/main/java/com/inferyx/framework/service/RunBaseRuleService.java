@@ -585,7 +585,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 								Status.Stage.FAILED);
 					}
 					logger.error("Rule to be Aborted ");
-					throw new Exception("Rule execution FAILED.");
+					throw new Exception("Rule execution Aborted.");
 				}
 				
 				if (rsHolder != null) {
@@ -628,8 +628,8 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 			dependsOn.setRef(new MetaIdentifier(ruleExecType, baseRuleExec.getUuid(), baseRuleExec.getVersion()));
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
-					(message != null) ? message : "Execution FAILED.", dependsOn);
-			throw new java.lang.Exception((message != null) ? message : "Execution FAILED.");
+					(message != null) ? message : "Rule execution failed.", dependsOn);
+			throw new java.lang.Exception((message != null) ? message : "Rule execution failed.");
 		}
 		TaskHolder taskHolder = new TaskHolder(name,
 				new MetaIdentifier(ruleExecType, baseRuleExec.getUuid(), baseRuleExec.getVersion()));

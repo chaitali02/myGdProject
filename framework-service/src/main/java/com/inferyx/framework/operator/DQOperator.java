@@ -178,6 +178,7 @@ public class DQOperator implements IParsable {
 	private String ATTRIBUTE_NAME = " attribute_name";
 	private String CROSS_JOIN = " CROSS JOIN ";
 	private String STDDEV = " STDDEV";
+	private String ORDER_BY = " ORDER BY ";
 
 	@Autowired
 	RelationOperator relationOperator;
@@ -617,7 +618,8 @@ public class DQOperator implements IParsable {
 								.append(THRESHOLD_IND).append(FROM)
 								.append(summaryTableName).append(WHERE_1_1)
 								.append(AND).append(RULEUUID).append(" ='" + dq.getUuid() + "'")
-								.append(AND).append(DATAPODUUID).append(" ='" + dq.getDependsOn().getRef().getUuid()+ "'");
+								.append(AND).append(DATAPODUUID).append(" ='" + dq.getDependsOn().getRef().getUuid()+ "'")
+								.append(ORDER_BY).append(RULE_EXEC_TIME).append(" DESC");
 		return select.toString();
 	}
 	
