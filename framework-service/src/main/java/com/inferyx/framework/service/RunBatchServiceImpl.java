@@ -303,15 +303,17 @@ public class RunBatchServiceImpl implements Callable<String> {
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Batch execution FAILED.", dependsOn);
 			throw new Exception((message != null) ? message : "Batch execution FAILED.");
 		} finally {
-			SenderInfo senderInfo = batch.getSenderInfo();
-			if(senderInfo != null) {
-				Status latestStatus = Helper.getLatestStatus(batchExec.getStatusList());
-				if(latestStatus.getStage().equals(Status.Stage.COMPLETED) && senderInfo.getNotifyOnSuccess().equalsIgnoreCase("Y")) {
-					synchronized (batchExec.getUuid()) {
-						batchServiceImpl.sendSuccessNotification(senderInfo, batch, batchExec);
+			if(Helper.getPropertyValue("framework.email.enable").equalsIgnoreCase("Y")) {
+				SenderInfo senderInfo = batch.getSenderInfo();
+				if(senderInfo != null) {
+					Status latestStatus = Helper.getLatestStatus(batchExec.getStatusList());
+					if(latestStatus.getStage().equals(Status.Stage.COMPLETED) && senderInfo.getEmailTo().size() > 0 && senderInfo.getNotifyOnSuccess().equalsIgnoreCase("Y")) {
+						synchronized (batchExec.getUuid()) {
+							batchServiceImpl.sendSuccessNotification(senderInfo, batch, batchExec);
+						}
+					} else if(latestStatus.getStage().equals(Status.Stage.FAILED) && senderInfo.getEmailTo().size() > 0 && senderInfo.getNotifyOnFailure().equalsIgnoreCase("Y")) {
+						batchServiceImpl.sendFailureNotification(senderInfo, batch, batchExec);
 					}
-				} else if(latestStatus.getStage().equals(Status.Stage.FAILED) && senderInfo.getNotifyOnFailure().equalsIgnoreCase("Y")) {
-					batchServiceImpl.sendFailureNotification(senderInfo, batch, batchExec);
 				}
 			}
 		}
