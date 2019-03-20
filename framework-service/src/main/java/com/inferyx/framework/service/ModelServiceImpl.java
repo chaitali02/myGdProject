@@ -230,38 +230,13 @@ public class ModelServiceImpl {
 		return iModelDao.findLatestByUuid(uuid,new Sort(Sort.Direction.DESC, "version"));	
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public Model findOneByUuidAndVersion(String uuid,String version){
-		return iModelDao.findOneByUuidAndVersion(uuid,version);
-	}*/
 
 	/********************** UNUSED **********************/
 	/*public Model findOneById(String id){
 		return iModelDao.findOne(id);
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public void  delete(String Id){
-		Model model = iModelDao.findOne(Id);
-		model.setActive("N");
-		iModelDao.save(model);
-//		String ID=application.getId();
-//		iApplicationDao.delete(ID);
-//		application.exportBaseProperty();
-	}*/
 
-	/********************** UNUSED 
-	 * @throws JsonProcessingException **********************/
-	/*public Model save(Model model) throws Exception{
-		MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
-		List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
-		metaIdentifierHolderList.add(meta);
-		model.setAppInfo(metaIdentifierHolderList);
-		model.setBaseEntity();
-		Model app=iModelDao.save(model);
-		registerGraph.updateGraph((Object) app, MetaType.model);
-		return app;
-	}*/
 
 	/********************** UNUSED **********************/
 	/**
@@ -535,54 +510,7 @@ public class ModelServiceImpl {
 	   return result;
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public MetaIdentifierHolder saveAs(Model model) throws Exception {
-		MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
-		MetaIdentifier ref = new MetaIdentifier();		
-		Model appNew = new Model();
-		appNew.setName(model.getName()+"_copy");
-		appNew.setActive(model.getActive());		
-		appNew.setDesc(model.getDesc());		
-		appNew.setTags(model.getTags());	
-		save(appNew);
-		ref.setType(MetaType.model);
-		ref.setUuid(appNew.getUuid());
-		refMeta.setRef(ref);
-		return refMeta;
-	}*/
 	
-	/********************** UNUSED **********************/	
-	/*public List<BaseEntity> findList(List<? extends BaseEntity> modelList) {
-		List<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
-		for(BaseEntity model : modelList)
-		{
-			BaseEntity baseEntity = new BaseEntity();
-			String id = model.getId();
-			String uuid = model.getUuid();
-			String version = model.getVersion();
-			String name = model.getName();
-			String desc = model.getDesc();
-			String published=model.getPublished();
-			MetaIdentifierHolder createdBy = model.getCreatedBy();
-			String createdOn = model.getCreatedOn();
-			String[] tags = model.getTags();
-			String active = model.getActive();
-			List<MetaIdentifierHolder> appInfo = model.getAppInfo();
-			baseEntity.setId(id);
-			baseEntity.setUuid(uuid);
-			baseEntity.setVersion(version);
-			baseEntity.setName(name);
-			baseEntity.setDesc(desc);
-			baseEntity.setCreatedBy(createdBy);
-			baseEntity.setCreatedOn(createdOn);
-			baseEntity.setPublished(published);
-			baseEntity.setTags(tags);
-			baseEntity.setActive(active);
-			baseEntity.setAppInfo(appInfo);
-			baseEntityList.add(baseEntity);
-		}
-		return baseEntityList;
-	}*/
 
 	/********************** UNUSED **********************/
 	/*public ModelExec create( String modelUUID, String modelVersion, ExecParams execParams, ParamMap paramMap, ModelExec modelExec) throws Exception {

@@ -105,16 +105,6 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 
 	/********************** UNUSED **********************/
 	/*
-	 * public ModelExec save(ModelExec modelExec) { if(modelExec.getAppInfo() ==
-	 * null) { MetaIdentifierHolder meta=securityServiceImpl.getAppInfo();
-	 * List<MetaIdentifierHolder> metaIdentifierHolderList=new
-	 * ArrayList<MetaIdentifierHolder>(); metaIdentifierHolderList.add(meta);
-	 * modelExec.setAppInfo(metaIdentifierHolderList); } modelExec.setBaseEntity();
-	 * return iModelExecDao.save(modelExec); }
-	 */
-
-	/********************** UNUSED **********************/
-	/*
 	 * public ModelExec findLatestByUuid(String modelExecUUID) { String appUuid =
 	 * (securityServiceImpl.getAppInfo() != null &&
 	 * securityServiceImpl.getAppInfo().getRef() != null
@@ -125,15 +115,7 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 	 * Sort(Sort.Direction.DESC, "version")); }
 	 */
 
-	/********************** UNUSED **********************/
-	/*
-	 * public void delete(String id){ String appUuid =
-	 * securityServiceImpl.getAppInfo().getRef().getUuid(); ModelExec DataQualExec =
-	 * iModelExecDao.findOneById(appUuid,id); DataQualExec.setActive("N");
-	 * iModelExecDao.save(DataQualExec); // String ID=DataQualExec.getId(); //
-	 * iDataQualExecDao.delete(ID); }
-	 */
-
+	
 	/********************** UNUSED **********************/
 	/*
 	 * public ModelExec findAllByUuid(String uuid) { String appUuid =
@@ -165,13 +147,7 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 	 * } } return result; }
 	 */
 
-	/********************** UNUSED **********************/
-	/*
-	 * public ModelExec findOneByUuidAndVersion(String uuid, String version){
-	 * //String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-	 * //String appUuid = "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"; return
-	 * iModelExecDao.findOneByUuidAndVersion(uuid,version); }
-	 */
+
 
 	/********************** UNUSED **********************/
 	/*
@@ -185,23 +161,7 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 	 * }
 	 */
 
-	/********************** UNUSED **********************/
-	/*
-	 * public MetaIdentifierHolder saveAs(ModelExec modelExec) {
-	 * MetaIdentifierHolder refMeta = new MetaIdentifierHolder(); MetaIdentifier ref
-	 * = new MetaIdentifier(); ModelExec modelExecNew = new ModelExec();
-	 * modelExecNew.setName(modelExec.getName()+"_copy");
-	 * modelExecNew.setActive(modelExec.getActive());
-	 * modelExecNew.setDesc(modelExec.getDesc());
-	 * modelExecNew.setTags(modelExec.getTags());
-	 * modelExecNew.setStatusList(modelExec.getStatusList());
-	 * modelExecNew.setDependsOn(modelExec.getDependsOn());
-	 * modelExecNew.setExec(modelExec.getExec());
-	 * modelExecNew.setExecParams(modelExec.getExecParams());
-	 * modelExecNew.setResult(modelExec.getResult()); save(modelExecNew);
-	 * ref.setType(MetaType.dqExec); ref.setUuid(modelExecNew.getUuid());
-	 * refMeta.setRef(ref); return refMeta; }
-	 */
+	
 
 	/********************** UNUSED **********************/
 	/*
@@ -218,28 +178,7 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 	 * resolvedModelExecList.add(modelExec); } return resolvedModelExecList; }
 	 */
 
-	/********************** UNUSED **********************/
-	/*
-	 * public List<BaseEntity> findList(List<? extends BaseEntity> modelExecList) {
-	 * List<BaseEntity> baseEntityList = new ArrayList<BaseEntity>(); for(BaseEntity
-	 * modelExec : modelExecList) { BaseEntity baseEntity = new BaseEntity(); String
-	 * id = modelExec.getId(); String uuid = modelExec.getUuid(); String version =
-	 * modelExec.getVersion(); String name = modelExec.getName(); String desc =
-	 * modelExec.getDesc(); String published=modelExec.getPublished();
-	 * MetaIdentifierHolder createdBy = modelExec.getCreatedBy(); String createdOn =
-	 * modelExec.getCreatedOn(); String[] tags = modelExec.getTags(); String active
-	 * = modelExec.getActive(); List<MetaIdentifierHolder> appInfo =
-	 * modelExec.getAppInfo(); baseEntity.setId(id); baseEntity.setUuid(uuid);
-	 * baseEntity.setVersion(version); baseEntity.setName(name);
-	 * baseEntity.setDesc(desc); baseEntity.setCreatedBy(createdBy);
-	 * baseEntity.setCreatedOn(createdOn); baseEntity.setPublished(published);
-	 * baseEntity.setTags(tags); baseEntity.setActive(active);
-	 * baseEntity.setAppInfo(appInfo); baseEntityList.add(baseEntity); } return
-	 * baseEntityList; }
-	 */
-
-
-	/********************** UNUSED **********************/
+		/********************** UNUSED **********************/
 	/*public MetaIdentifier getMetaIdByExecId(String execUuid, String execVersion) throws Exception {
 		 String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid(); 
 		// ModelExec modelExec = iModelExecDao.findOneByUuidAndVersion(appUuid,

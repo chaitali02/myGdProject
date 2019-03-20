@@ -61,18 +61,6 @@ public class RuleGroupExecServiceImpl extends BaseGroupExecTemplate {
 		return iRuleGroupExecDao.findOne(id);
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public RuleGroupExec save(RuleGroupExec ruleGroupExec) {
-		if(ruleGroupExec.getAppInfo() == null)
-		{
-		MetaIdentifierHolder meta=securityServiceImpl.getAppInfo();
-		List<MetaIdentifierHolder> metaIdentifierHolderList=new ArrayList<MetaIdentifierHolder>();
-		metaIdentifierHolderList.add(meta);
-		ruleGroupExec.setAppInfo(metaIdentifierHolderList);
-		}
-		ruleGroupExec.setBaseEntity();
-		return iRuleGroupExecDao.save(ruleGroupExec);		
-	}*/
 
 	/********************** UNUSED **********************/
 	/*public RuleGroupExec findLatestByUuid(String RuleGroupExecUUID) {

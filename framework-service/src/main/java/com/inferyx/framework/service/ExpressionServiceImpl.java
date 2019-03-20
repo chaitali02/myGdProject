@@ -95,20 +95,6 @@ public class ExpressionServiceImpl {
 		return iExpressionDao.findOne(uid);
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public Expression save(Expression expression) throws Exception {
-		MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
-		List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
-		metaIdentifierHolderList.add(meta);
-		expression.setAppInfo(metaIdentifierHolderList);
-		expression.setBaseEntity();
-		Expression expressionSave=iExpressionDao.save(expression);
-		registerGraph.updateGraph((Object) expressionSave, MetaType.expression);
-		return expressionSave;
-	}*/
-
-
-
 	/*public Expression update(Expression expression) throws IOException {
 		expression.exportBaseProperty();
 		Expression expressionDet=iExpressionDao.save(expression);
@@ -121,27 +107,6 @@ public class ExpressionServiceImpl {
 		return iExpressionDao.exists(id);
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public void delete(String Id) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		Expression expression = iExpressionDao.findOneById(appUuid, Id);
-		expression.setActive("N");
-		iExpressionDao.save(expression);
-//		String ID = expression.getId();
-//		iExpressionDao.delete(ID);
-//		expression.exportBaseProperty();
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Expression> test(String param1) {
-		return iExpressionDao.test(param1);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Expression findOneByUuidAndVersion(String uuid, String version) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iExpressionDao.findOneByUuidAndVersion(appUuid, uuid, version);
-	}*/
 
 	/********************** UNUSED **********************/
 	/*public Expression getOneByUuidAndVersion(String uuid, String version) {
@@ -236,61 +201,6 @@ public class ExpressionServiceImpl {
 		return result;
 	}
 
-	/********************** UNUSED **********************/
-	/*public MetaIdentifierHolder saveAs(Expression expression) throws Exception {
-		MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
-		MetaIdentifier ref = new MetaIdentifier();		
-		Expression expNew = new Expression();
-		expNew.setName(expression.getName()+"_copy");
-		expNew.setActive(expression.getActive());		
-		expNew.setDesc(expression.getDesc());		
-		expNew.setTags(expression.getTags());	
-		expNew.setDependsOn(expression.getDependsOn());		
-		expNew.setCondition(expression.getCondition());
-		expNew.setPublished(expression.getPublished());
-		expNew.setNoMatch(expression.getNoMatch());
-		expNew.setMatch(expression.getMatch());
-		expNew.setExpressionInfo(expression.getExpressionInfo());
-		save(expNew);
-		ref.setType(MetaType.expression);
-		ref.setUuid(expNew.getUuid());
-		refMeta.setRef(ref);
-		return refMeta;
-	}*/
-
-	/********************** UNUSED 
-	 * @throws JsonProcessingException **********************/
-	/*public List<BaseEntity> findList(List<? extends BaseEntity> expressionList) {
-		List<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
-		for(BaseEntity expression : expressionList)
-		{
-			BaseEntity baseEntity = new BaseEntity();
-			String id = expression.getId();
-			String uuid = expression.getUuid();
-			String version = expression.getVersion();
-			String name = expression.getName();
-			String desc = expression.getDesc();
-			String published=expression.getPublished();
-			MetaIdentifierHolder createdBy = expression.getCreatedBy();
-			String createdOn = expression.getCreatedOn();
-			String[] tags = expression.getTags();
-			String active = expression.getActive();
-			List<MetaIdentifierHolder> appInfo = expression.getAppInfo();
-			baseEntity.setId(id);
-			baseEntity.setUuid(uuid);
-			baseEntity.setVersion(version);
-			baseEntity.setName(name);
-			baseEntity.setDesc(desc);
-			baseEntity.setCreatedBy(createdBy);
-			baseEntity.setCreatedOn(createdOn);
-			baseEntity.setPublished(published);
-			baseEntity.setTags(tags);
-			baseEntity.setActive(active);
-			baseEntity.setAppInfo(appInfo);
-			baseEntityList.add(baseEntity);
-		}
-		return baseEntityList;
-	}*/
 
 	public List<MetaIdentifierHolder> findExpressionByType2(String uuid) throws JsonProcessingException {
 		/*String appUuid = (securityServiceImpl.getAppInfo() != null

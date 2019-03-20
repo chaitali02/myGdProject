@@ -196,16 +196,6 @@ public class MetadataServiceImpl {
 	}
 
 	/********************** UNUSED **********************/
-	/*public Meta Save(Meta metadata){
-		MetaIdentifierHolder meta=securityServiceImpl.getAppInfo();
-		List<MetaIdentifierHolder> metaIdentifierHolderList=new ArrayList<MetaIdentifierHolder>();
-		metaIdentifierHolderList.add(meta);
-		metadata.setAppInfo(metaIdentifierHolderList);
-		metadata.setBaseEntity();
-		return iMetadataDao.save(metadata);
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public Meta findOneById(String id){
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
 		if(appUuid != null)
@@ -215,21 +205,7 @@ public class MetadataServiceImpl {
 		return iMetadataDao.findOne(id);
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public List<Meta> test(String param1) {	
-		return iMetadataDao.test(param1);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public void  delete(String Id){
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		Meta metadata = iMetadataDao.findOneById(appUuid,Id);
-		metadata.setActive("N");
-		iMetadataDao.save(metadata);
-//		String ID=metadata.getId();
-//		iMetadataDao.delete(ID);
-//		metadata.exportBaseProperty();
-	}*/
+	
 	/*public Map update(Map map){
 		map.exportBaseProperty(objectState.EDIT.toString());
 		return iMapDao.save(map);
@@ -239,11 +215,6 @@ public class MetadataServiceImpl {
 		return iMapDao.exists(id);
 	}
 	
-	public void  delete(String Id,String version){
-		Map map = iMapDao.findOne(Id ,version);
-		map.exportBaseProperty(objectState.DELETE.toString());
-		iMapDao.save(map);
-	}
 	
 	public List<Map> findAllVersion(String datapodName){
 		return iMapDao.findAllVersion(datapodName);

@@ -67,36 +67,11 @@ public class AlgorithmServiceImpl {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public Algorithm findOneByUuidAndVersion(String uuid,String version){
-		return iAlgorithmDao.findOneByUuidAndVersion(uuid,version);
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public Algorithm findOneById(String id){
 		return iAlgorithmDao.findOne(id);
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public void  delete(String Id){
-		Algorithm algorithm = iAlgorithmDao.findOne(Id);
-		algorithm.setActive("N");
-		iAlgorithmDao.save(algorithm);
-		//String ID=application.getId();
-		//iApplicationDao.delete(ID);
-		//application.exportBaseProperty();
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Algorithm save(Algorithm algorithm) throws Exception{
-		MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
-		List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
-		metaIdentifierHolderList.add(meta);
-		algorithm.setAppInfo(metaIdentifierHolderList);
-		algorithm.setBaseEntity();
-		Algorithm app=iAlgorithmDao.save(algorithm);
-		registerGraph.updateGraph((Object) app, MetaType.algorithm);
-		return app;
-	}*/
+	
 
 	/********************** UNUSED **********************/
 	/*public List<Algorithm> findAllLatestActive() 	
@@ -115,52 +90,5 @@ public class AlgorithmServiceImpl {
 	   return result;
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public MetaIdentifierHolder saveAs(Algorithm algorithm) throws Exception {
-		MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
-		MetaIdentifier ref = new MetaIdentifier();		
-		Algorithm appNew = new Algorithm();
-		appNew.setName(algorithm.getName()+"_copy");
-		appNew.setActive(algorithm.getActive());		
-		appNew.setDesc(algorithm.getDesc());		
-		appNew.setTags(algorithm.getTags());	
-		save(appNew);
-		ref.setType(MetaType.algorithm);
-		ref.setUuid(appNew.getUuid());
-		refMeta.setRef(ref);
-		return refMeta;
-	}*/
-
-	/********************** UNUSED **********************/
-/*	public List<BaseEntity> findList(List<? extends BaseEntity> algorithmList) {
-		List<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
-		for(BaseEntity algorithm : algorithmList)
-		{
-			BaseEntity baseEntity = new BaseEntity();
-			String id = algorithm.getId();
-			String uuid = algorithm.getUuid();
-			String version = algorithm.getVersion();
-			String name = algorithm.getName();
-			String desc = algorithm.getDesc();
-			String published=algorithm.getPublished();
-			MetaIdentifierHolder createdBy = algorithm.getCreatedBy();
-			String createdOn = algorithm.getCreatedOn();
-			String[] tags = algorithm.getTags();
-			String active = algorithm.getActive();
-			List<MetaIdentifierHolder> appInfo = algorithm.getAppInfo();
-			baseEntity.setId(id);
-			baseEntity.setUuid(uuid);
-			baseEntity.setVersion(version);
-			baseEntity.setName(name);
-			baseEntity.setDesc(desc);
-			baseEntity.setCreatedBy(createdBy);
-			baseEntity.setCreatedOn(createdOn);
-			baseEntity.setPublished(published);
-			baseEntity.setTags(tags);
-			baseEntity.setActive(active);
-			baseEntity.setAppInfo(appInfo);
-			baseEntityList.add(baseEntity);
-		}
-		return baseEntityList;
-	}*/
+	
 }

@@ -94,48 +94,10 @@ public class FormulaServiceImpl {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public Formula save(Formula formula) throws Exception {
-		MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
-		List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
-		metaIdentifierHolderList.add(meta);
-		formula.setAppInfo(metaIdentifierHolderList);
-		formula.setBaseEntity();
-		Formula formulaDet=iFormulaDao.save(formula);
-		registerGraph.updateGraph((Object) formulaDet, MetaType.formula);
-		return formulaDet;
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public boolean isExists(String id) {
 		return iFormulaDao.exists(id);
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public void delete(String Id) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		Formula formula = iFormulaDao.findOneById(appUuid, Id);
-		formula.setActive("N");
-		iFormulaDao.save(formula);
-//		String ID = formula.getId();
-//		iFormulaDao.delete(ID);
-//		formula.exportBaseProperty();
-	}*/
-
-
-	/********************** UNUSED **********************/
-	/*public List<Formula> test(String param1) {
-		return iFormulaDao.test(param1);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Formula findOneByUuidAndVersion(String uuid, String version) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iFormulaDao.findOneByUuidAndVersion(appUuid, uuid, version);
-		} 
-		return iFormulaDao.findOneByUuidAndVersion(uuid, version);
-	}*/
 
 	/********************** UNUSED **********************/
 	/*public Formula getOneByUuidAndVersion(String uuid, String version) {
@@ -231,58 +193,6 @@ public class FormulaServiceImpl {
 			return iFormulaDao.findAsOf(uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public MetaIdentifierHolder saveAs(Formula formula) throws Exception {
-		MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
-		MetaIdentifier ref = new MetaIdentifier();		
-		Formula formulaNew = new Formula();
-		formulaNew.setName(formula.getName()+"_copy");
-		formulaNew.setActive(formula.getActive());		
-		formulaNew.setDesc(formula.getDesc());		
-		formulaNew.setTags(formula.getTags());	
-		formulaNew.setDependsOn(formula.getDependsOn());	
-		formulaNew.setFormulaInfo(formula.getFormulaInfo());
-		formulaNew.setFormulaType(formula.getFormulaType());		
-		save(formulaNew);
-		ref.setType(MetaType.formula);
-		ref.setUuid(formulaNew.getUuid());
-		refMeta.setRef(ref);
-		return refMeta;
-	}*/
-
-	/********************** UNUSED 
-	 * @throws JsonProcessingException **********************/
-	/*public List<BaseEntity> findList(List<? extends BaseEntity> formulaList) {
-		List<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
-		for(BaseEntity formula : formulaList)
-		{
-			BaseEntity baseEntity = new BaseEntity();
-			String id = formula.getId();
-			String uuid = formula.getUuid();
-			String version = formula.getVersion();
-			String name = formula.getName();
-			String desc = formula.getDesc();
-			String published=formula.getPublished();
-			MetaIdentifierHolder createdBy = formula.getCreatedBy();
-			String createdOn = formula.getCreatedOn();
-			String[] tags = formula.getTags();
-			String active = formula.getActive();
-			List<MetaIdentifierHolder> appInfo = formula.getAppInfo();
-			baseEntity.setId(id);
-			baseEntity.setUuid(uuid);
-			baseEntity.setVersion(version);
-			baseEntity.setName(name);
-			baseEntity.setDesc(desc);
-			baseEntity.setCreatedBy(createdBy);
-			baseEntity.setCreatedOn(createdOn);
-			baseEntity.setPublished(published);
-			baseEntity.setTags(tags);
-			baseEntity.setActive(active);
-			baseEntity.setAppInfo(appInfo);
-			baseEntityList.add(baseEntity);
-		}
-		return baseEntityList;
-	}*/
 
 	public List<FormulaTypeHolder> findFormulaByType2(String uuid, String[] formulaType) throws JsonProcessingException {
 		return findFormulaByType2(uuid, formulaType, "Y");

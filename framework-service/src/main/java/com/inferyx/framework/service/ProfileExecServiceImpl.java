@@ -95,15 +95,7 @@ public class ProfileExecServiceImpl extends BaseRuleExecTemplate {
 		return iProfileExecDao.findLatestByUuid(appUuid, uuid, new Sort(Sort.Direction.DESC, "version"));
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public ProfileExec findOneByUuidAndVersion(String uuid, String version) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iProfileExecDao.findOneByUuidAndVersion(appUuid, uuid, version);
-		} else
-			return iProfileExecDao.findOneByUuidAndVersion(uuid, version);
-	}*/
+	
 
 	/********************** UNUSED **********************/
 	/*public ProfileExec findOneById(String id) {
@@ -116,14 +108,6 @@ public class ProfileExecServiceImpl extends BaseRuleExecTemplate {
 
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public void delete(String Id) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		ProfileExec ProfileExec = iProfileExecDao.findOneById(appUuid, Id);
-		String ID = ProfileExec.getId();
-		iProfileExecDao.delete(appUuid, ID);
-		ProfileExec.setBaseEntity();
-	}*/
 
 	public ProfileExec resolveName(ProfileExec ProfileExec) {
 		try {
@@ -156,21 +140,6 @@ public class ProfileExecServiceImpl extends BaseRuleExecTemplate {
 		return ProfileExec;
 	}
 
-	/********************** UNUSED **********************/
-	/*public ProfileExec save(ProfileExec ProfileExec) throws Exception {
-		if(ProfileExec.getAppInfo() == null)
-		{
-		MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
-		List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
-		metaIdentifierHolderList.add(meta);
-		ProfileExec.setAppInfo(metaIdentifierHolderList);
-		}
-		System.out.println(" Profile exec App info : " + ProfileExec.getAppInfo());
-		ProfileExec.setBaseEntity();
-		ProfileExec app=iProfileExecDao.save(ProfileExec);
-		registerGraph.updateGraph((Object) app, MetaType.profileExec);
-		return app;		
-	}*/
 
 	/********************** UNUSED **********************/
 	/*public List<ProfileExec> findAllLatestActive() {
@@ -207,61 +176,8 @@ public class ProfileExecServiceImpl extends BaseRuleExecTemplate {
 			return iProfileExecDao.findAsOf(uuid, asOf, new Sort(Sort.Direction.DESC, "version"));
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public MetaIdentifierHolder saveAs(ProfileExec ProfileExec) throws Exception {
-		MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
-		MetaIdentifier ref = new MetaIdentifier();
-		ProfileExec ProfileExecNew = new ProfileExec();
-		ProfileExecNew.setName(ProfileExec.getName() + "_copy");
-		ProfileExecNew.setActive(ProfileExec.getActive());
-		ProfileExecNew.setDesc(ProfileExec.getDesc());
-		ProfileExecNew.setTags(ProfileExec.getTags());
-		ProfileExecNew.setDependsOn(ProfileExec.getDependsOn());	
-		ProfileExecNew.setExec(ProfileExec.getExec());
-		ProfileExecNew.setExecParams(ProfileExec.getExecParams());
-		ProfileExecNew.setStatusList(ProfileExec.getStatusList());
-		ProfileExecNew.setResult(ProfileExec.getResult());
-		save(ProfileExecNew);
-		ref.setType(MetaType.profileExec);
-		ref.setUuid(ProfileExecNew.getUuid());
-		refMeta.setRef(ref);
-		return refMeta;
-	}*/
-
-	/********************** UNUSED 
-	 * @throws ParseException 
-	 * @throws JsonProcessingException **********************/
-	/*public List<BaseEntity> findList(List<? extends BaseEntity> ProfileExecList) {
-		List<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
-		for (BaseEntity ProfileExec : ProfileExecList) {
-			BaseEntity baseEntity = new BaseEntity();
-			String id = ProfileExec.getId();
-			String uuid = ProfileExec.getUuid();
-			String version = ProfileExec.getVersion();
-			String name = ProfileExec.getName();
-			String desc = ProfileExec.getDesc();
-			String published=ProfileExec.getPublished();
-			MetaIdentifierHolder createdBy = ProfileExec.getCreatedBy();
-			String createdOn = ProfileExec.getCreatedOn();
-			String[] tags = ProfileExec.getTags();
-			String active = ProfileExec.getActive();
-			List<MetaIdentifierHolder> appInfo = ProfileExec.getAppInfo();
-			baseEntity.setId(id);
-			baseEntity.setUuid(uuid);
-			baseEntity.setVersion(version);
-			baseEntity.setName(name);
-			baseEntity.setDesc(desc);
-			baseEntity.setCreatedBy(createdBy);
-			baseEntity.setCreatedOn(createdOn);
-			baseEntity.setPublished(published);
-			baseEntity.setTags(tags);
-			baseEntity.setActive(active);
-			baseEntity.setAppInfo(appInfo);
-			baseEntityList.add(baseEntity);
-		}
-		return baseEntityList;
-	}*/
-
+	
+	
 	@SuppressWarnings({ "unchecked", "null" })
 	public List<ProfileExec> findProfileExecByDatapod(String datapodUUID,String type) throws JsonProcessingException, ParseException {
 

@@ -350,12 +350,6 @@ public class DashboardServiceImpl extends RuleTemplate {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public Dashboard findOneByUuidAndVersion(String uuid, String version) {
-		//String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iDashboardDao.findOneByUuidAndVersion(uuid, version);
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public Dashboard findLatestByUuid(String uuid) {
 		//String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
 		return iDashboardDao.findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version"));
@@ -407,22 +401,7 @@ public class DashboardServiceImpl extends RuleTemplate {
 		}
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public MetaIdentifierHolder saveAs(Dashboard dashboard) throws Exception {
-		MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
-		MetaIdentifier ref = new MetaIdentifier();		
-		Dashboard dashboardNew = new Dashboard();
-		dashboardNew.setName(dashboard.getName()+"_copy");
-		dashboardNew.setActive(dashboard.getActive());		
-		dashboardNew.setDesc(dashboard.getDesc());		
-		dashboardNew.setTags(dashboard.getTags());
-		dashboardNew.setDependsOn(dashboard.getDependsOn());
-		save(dashboardNew);
-		ref.setType(MetaType.dashboard);
-		ref.setUuid(dashboardNew.getUuid());
-		refMeta.setRef(ref);
-		return refMeta;
-	}*/
+
 }
 
 	

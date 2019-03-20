@@ -113,18 +113,6 @@ public class MapServiceImpl implements IParsable, IExecutable {
 		} else
 			return iMapDao.findOne(id);
 	}*/
-
-	/********************** UNUSED **********************/
-	/*public Map findOneByUuidAndVersion(String uuid, String version) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iMapDao.findOneByUuidAndVersion(appUuid, uuid, version);
-		} else {
-			return iMapDao.findOneByUuidAndVersion(uuid, version);
-		}
-	}
-*/
 	/********************** UNUSED **********************/
 	/*public Map getOneByUuidAndVersion(String uuid, String version) {
 
@@ -139,18 +127,6 @@ public class MapServiceImpl implements IParsable, IExecutable {
 			return iMapDao.findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version"));
 		}
 		return iMapDao.findLatestByUuid(appUuid, uuid, new Sort(Sort.Direction.DESC, "version"));
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Map save(Map map) throws Exception {
-		MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
-		List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
-		metaIdentifierHolderList.add(meta);
-		map.setAppInfo(metaIdentifierHolderList);
-		map.setBaseEntity();
-		Map mapDet = iMapDao.save(map);
-		registerGraph.updateGraph((Object) mapDet, MetaType.map);
-		return mapDet;
 	}*/
 
 
@@ -172,21 +148,9 @@ public class MapServiceImpl implements IParsable, IExecutable {
 		return iMapDao.exists(id);
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public void delete(String Id) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		Map map = iMapDao.findOneById(appUuid, Id);
-		map.setActive("N");
-		iMapDao.save(map);
-//		String ID = map.getId();
-//		iMapDao.delete(ID);
-//		map.exportBaseProperty();
-	}*/
+	
 
-	/********************** UNUSED **********************/
-	/*public List<Map> test(String param1) {
-		return iMapDao.test(param1);
-	}*/
+	
 
 	/********************** UNUSED **********************/
 	/*public List<Map> findAllLatestActive() {
@@ -224,25 +188,6 @@ public class MapServiceImpl implements IParsable, IExecutable {
 			return iMapDao.findAsOf(uuid, asOf, new Sort(Sort.Direction.DESC, "version"));
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public MetaIdentifierHolder saveAs(com.inferyx.framework.domain.Map map) throws Exception {
-		MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
-		MetaIdentifier ref = new MetaIdentifier();
-		Map mapNew = new Map();
-		mapNew.setName(map.getName()+"_copy");
-		mapNew.setActive(map.getActive());		
-		mapNew.setDesc(map.getDesc());		
-		mapNew.setTags(map.getTags());	
-		//mapNew.setGroupBy(map.getGroupBy());
-		mapNew.setSource(map.getSource());
-		mapNew.setTarget(map.getTarget());
-		mapNew.setAttributeMap(map.getAttributeMap());
-		save(mapNew);
-		ref.setType(MetaType.map);
-		ref.setUuid(mapNew.getUuid());
-		refMeta.setRef(ref);
-		return refMeta;
-	}*/
 
 	/********************** UNUSED **********************/
 //	/**

@@ -106,19 +106,6 @@ public class LoadServiceImpl {
 	 * Sort(Sort.Direction.DESC, "version")); }
 	 */
 
-	/********************** UNUSED **********************/
-	/*
-	 * public Load findOneByUuidAndVersion(String uuid,String version){ String
-	 * appUuid = (securityServiceImpl.getAppInfo() != null &&
-	 * securityServiceImpl.getAppInfo().getRef() != null
-	 * )?securityServiceImpl.getAppInfo().getRef().getUuid():null; if(appUuid !=
-	 * null) { if (StringUtils.isBlank(version)) { return
-	 * iLoadDao.findLatestByUuid(appUuid, uuid, new Sort(Sort.Direction.DESC,
-	 * "version")); } return iLoadDao.findOneByUuidAndVersion(appUuid,
-	 * uuid,version); } else if (StringUtils.isBlank(version)) { return
-	 * iLoadDao.findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version")); }
-	 * return iLoadDao.findOneByUuidAndVersion(uuid,version); }
-	 */
 
 	public Load save(Load load) throws Exception {
 		MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
@@ -159,17 +146,6 @@ public class LoadServiceImpl {
 	 * @throws JSONException
 	 * @throws JsonProcessingException
 	 **********************/
-	/*
-	 * public MetaIdentifierHolder saveAs(Load load) throws Exception {
-	 * MetaIdentifierHolder refMeta = new MetaIdentifierHolder(); MetaIdentifier ref
-	 * = new MetaIdentifier(); Load loadNew = new Load();
-	 * loadNew.setName(load.getName()+"_copy"); loadNew.setActive(load.getActive());
-	 * loadNew.setDesc(load.getDesc()); loadNew.setTags(load.getTags());
-	 * loadNew.setAppend(load.getAppend()); loadNew.setHeader(load.getHeader());
-	 * loadNew.setSource(load.getSource()); loadNew.setTarget(load.getTarget());
-	 * save(loadNew); ref.setType(MetaType.load); ref.setUuid(loadNew.getUuid());
-	 * refMeta.setRef(ref); return refMeta; }
-	 */
 
 	public void executeSql(LoadExec loadExec, String dagExecVer, String targetTableName, OrderKey datapodKey, RunMode runMode, String desc)
 			throws JsonProcessingException, JSONException, ParseException {

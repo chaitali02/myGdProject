@@ -106,21 +106,6 @@ public class SessionServiceImpl {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public List<Session> test(String param1) {
-		return iSessionDao.test(param1);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Session findOneByUuidAndVersion(String uuid, String version) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iSessionDao.findOneByUuidAndVersion(appUuid, uuid, version);
-		}
-		return iSessionDao.findOneByUuidAndVersion(uuid, version);
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public Session findOneById(String id) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
@@ -130,37 +115,7 @@ public class SessionServiceImpl {
 		return iSessionDao.findOne(id);
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public void delete(String id) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		Session session = null;
-		if (appUuid != null) {
-			session = iSessionDao.findOneById(appUuid, id);
-		} else {
-			session = iSessionDao.findOne(id);
-		}
-		session.setActive("N");
-		iSessionDao.save(session);
-		String ID = session.getId();
-		iSessionDao.delete(ID);
-
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Session save(Session session) throws IOException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
-		if (session.getAppInfo() == null) {
-			MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
-			List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
-			metaIdentifierHolderList.add(meta);
-			session.setAppInfo(metaIdentifierHolderList);
-		}
-		session.setBaseEntity();
-		Session sessionDet = iSessionDao.save(session);
-		registerGraph.updateGraph((Object) sessionDet, MetaType.session);
-		return sessionDet;
-	}*/
-
+	
 	public Session getSessionByUser(String userUUID) {
 		return iSessionDao.findSessionByUser(userUUID, new Sort(Sort.Direction.DESC, "version"));
 	}
@@ -461,54 +416,5 @@ public class SessionServiceImpl {
 		return session;
 	}
 
-	/*public MetaIdentifierHolder saveAs(Session session) throws IOException{
-		MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
-		MetaIdentifier ref = new MetaIdentifier();		
-		Session sessionNew = new Session();
-		sessionNew.setName(session.getName()+"_copy");
-		sessionNew.setActive(session.getActive());		
-		sessionNew.setDesc(session.getDesc());		
-		sessionNew.setTags(session.getTags());	
-		sessionNew.setRoleInfo(session.getRoleInfo());
-		sessionNew.setStatus(session.getStatus());
-		sessionNew.setUserInfo(session.getUserInfo());
-		Save(sessionNew);
-		ref.setType(MetaType.session);
-		ref.setUuid(sessionNew.getUuid());
-		refMeta.setRef(ref);
-		return refMeta;
-	}*/
 
-	/********************** UNUSED **********************/
-	/*public List<BaseEntity> findList(List<? extends BaseEntity> sessionList) {
-		List<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
-		for(BaseEntity session : sessionList)
-		{
-			BaseEntity baseEntity = new BaseEntity();
-			String id = session.getId();
-			String uuid = session.getUuid();
-			String version = session.getVersion();
-			String name = session.getName();
-			String desc = session.getDesc();
-			String published=session.getPublished();
-			MetaIdentifierHolder createdBy = session.getCreatedBy();
-			String createdOn = session.getCreatedOn();
-			String[] tags = session.getTags();
-			String active = session.getActive();
-			List<MetaIdentifierHolder> appInfo = session.getAppInfo();
-			baseEntity.setId(id);
-			baseEntity.setUuid(uuid);
-			baseEntity.setVersion(version);
-			baseEntity.setName(name);
-			baseEntity.setDesc(desc);
-			baseEntity.setCreatedBy(createdBy);
-			baseEntity.setCreatedOn(createdOn);
-			baseEntity.setPublished(published);
-			baseEntity.setTags(tags);
-			baseEntity.setActive(active);
-			baseEntity.setAppInfo(appInfo);
-			baseEntityList.add(baseEntity);
-		}
-		return baseEntityList;
-	}*/
 }

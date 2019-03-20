@@ -159,32 +159,12 @@ public class RuleServiceImpl extends RuleTemplate {
 	 * public boolean isExists(String id) { return iRuleDao.exists(id); }
 	 */
 
-	/********************** UNUSED **********************/
-	/*
-	 * public void delete(String Id) { String appUuid =
-	 * securityServiceImpl.getAppInfo().getRef().getUuid(); Rule rule =
-	 * iRuleDao.findOneById(appUuid, Id); rule.setActive("N"); iRuleDao.save(rule);
-	 * // // * String ID = rule.getId(); iRuleDao.delete(ID); // *
-	 * rule.exportBaseProperty(); // }
-	 */
-
+	
 	/********************** UNUSED **********************/
 	/*
 	 * public List<Rule> test(String param1) { return iRuleDao.test(param1); }
 	 */
 
-
-	/********************** UNUSED **********************/
-	/*
-	 * public Rule findOneByUuidAndVersion(String uuid, String version) { String
-	 * appUuid = (securityServiceImpl.getAppInfo() != null &&
-	 * securityServiceImpl.getAppInfo().getRef() != null) ?
-	 * securityServiceImpl.getAppInfo().getRef().getUuid() : null; if (appUuid ==
-	 * null) { return iRuleDao.findOneByUuidAndVersion(uuid, version); } return
-	 * iRuleDao.findOneByUuidAndVersion(appUuid, uuid, version);
-	 * 
-	 * }
-	 */
 
 	/********************** UNUSED **********************/
 	/*
@@ -219,69 +199,6 @@ public class RuleServiceImpl extends RuleTemplate {
 	 * result.add(ruleLatest); } return result; }
 	 */
 
-	/********************** UNUSED **********************/
-//	public Rule save(RuleView ruleView) throws Exception {
-//		List<AttributeRefHolder> filterList = new ArrayList<AttributeRefHolder>();
-//		/* List<AttributeMap> attrMapList = new ArrayList<AttributeMap>(); */
-//		AttributeRefHolder filterInfo = new AttributeRefHolder();
-//		if (ruleView == null)
-//			return null;
-//		Rule rule = new Rule();
-//		if (StringUtils.isNotBlank(ruleView.getUuid()))
-//			rule.setUuid(ruleView.getUuid());
-//		// save(rule);
-//		// rule.exportBaseProperty();
-//		if (ruleView.getTags() != null)
-//			rule.setTags(ruleView.getTags());
-//		if (StringUtils.isNotBlank(ruleView.getName()))
-//			rule.setName(ruleView.getName());
-//		if (StringUtils.isNotBlank(ruleView.getDesc()))
-//			rule.setDesc(ruleView.getDesc());
-//		Filter filter = null;
-//		MetaIdentifierHolder source = ruleView.getSource();
-//		source.getRef().setVersion(null);
-//		rule.setSource(source);
-//		if (ruleView.getFilter() != null) {
-//			filter = ruleView.getFilter();
-//			filter.setDependsOn(source);
-//			filter.setName(ruleView.getName());
-//			filter.setDesc(ruleView.getDesc());
-//			filter.setTags(ruleView.getTags());
-//			if (ruleView.getFilterChg().equalsIgnoreCase("y") && filter != null) {
-//				try {
-//					// filterdet = filterServiceImpl.save(filter);
-//		         commonServiceImpl.save(MetaType.filter.toString(), filter);
-//				} catch (IOException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
-//		}
-//		if (filter != null) {
-//			MetaIdentifier filterMeta = new MetaIdentifier(MetaType.filter, filter.getUuid(), null);
-//			filterInfo.setRef(filterMeta);
-//			filterList.add(filterInfo);
-//			rule.setFilterInfo(filterList);
-//		}
-//		List<AttributeSource> sourceAttr = ruleView.getAttributeInfo();
-//		rule.setAttributeInfo(sourceAttr);
-//		rule.setParamList(ruleView.getParamList());
-//		rule.setPublished(ruleView.getPublished());
-//		rule = save(rule);
-//		return rule;
-//	}
-
-	/********************** UNUSED **********************/
-//	public Rule save(Rule rule) throws Exception {
-//		MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
-//		List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
-//		metaIdentifierHolderList.add(meta);
-//		rule.setAppInfo(metaIdentifierHolderList);
-//		rule.setBaseEntity();
-//		Rule ruleDet = iRuleDao.save(rule);
-//		registerGraph.updateGraph((Object) ruleDet, MetaType.rule);
-//		return ruleDet;
-//	}
 
 	/*
 	 * public List<MetaIdentifier> execute(String ruleUUID, String ruleVersion,
@@ -718,26 +635,7 @@ public class RuleServiceImpl extends RuleTemplate {
 		return null;
 	}
 
-	/********************** UNUSED **********************/
-	/*
-	 * public MetaIdentifierHolder saveAs(Rule rule) throws Exception {
-	 * MetaIdentifierHolder refMeta = new MetaIdentifierHolder(); MetaIdentifier ref
-	 * = new MetaIdentifier(); Rule ruleNew = new Rule();
-	 * ruleNew.setName(rule.getName() + "_copy");
-	 * ruleNew.setActive(rule.getActive()); ruleNew.setDesc(rule.getDesc());
-	 * ruleNew.setTags(rule.getTags());
-	 * ruleNew.setExpressionInfo(rule.getExpressionInfo());
-	 * ruleNew.setFilterInfo(rule.getFilterInfo());
-	 * ruleNew.setDebugMode(rule.isDebugMode());
-	 * ruleNew.setAttributeInfo(rule.getAttributeInfo());
-	 * ruleNew.setSource(rule.getSource());
-	 * ruleNew.setPersistFlag(rule.getPersistFlag());
-	 * ruleNew.setDatasource(rule.getDatasource());
-	 * ruleNew.setPublished(rule.getPublished()); save(ruleNew);
-	 * ref.setType(MetaType.rule); ref.setUuid(ruleNew.getUuid());
-	 * refMeta.setRef(ref); return refMeta; }
-	 */
-
+	
 	/**
 	 * This is an override of BaseRuleService.parse for rule
 	 */

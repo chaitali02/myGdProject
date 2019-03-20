@@ -86,19 +86,6 @@ static final Logger logger = Logger.getLogger(FunctionServiceImpl.class);
 			return iFunctionDao.findOne(id);
 	}
 */
-
-/********************** UNUSED **********************/
-	/*public Function save(Function function) throws Exception {
-		MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
-		List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
-		metaIdentifierHolderList.add(meta);
-		function.setAppInfo(metaIdentifierHolderList);
-		function.setBaseEntity();
-		Function FunctionDet=iFunctionDao.save(function);
-		registerGraph.updateGraph((Object) FunctionDet, MetaType.function);
-		return FunctionDet;
-	}*/
-
 	/********************** UNUSED **********************/
 /*	public Function update(Function function) throws IOException {
 		function.setBaseEntity();
@@ -112,22 +99,7 @@ static final Logger logger = Logger.getLogger(FunctionServiceImpl.class);
 		return iFunctionDao.exists(id);
 	}*/
 
-/********************** UNUSED **********************/
-	/*public void delete(String Id) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		Function function = iFunctionDao.findOneById(appUuid, Id);
-		function.setActive("N");
-		iFunctionDao.save(function);
-//		String ID = function.getId();
-//		iFunctionDao.delete(ID);
-//		function.exportBaseProperty();
-	}*/
 
-	/********************** UNUSED **********************/
-	/*public Function findOneByUuidAndVersion(String uuid, String version) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iFunctionDao.findOneByUuidAndVersion(appUuid, uuid, version);
-	}*/
 
 	/********************** UNUSED **********************/
 	/*public Function getOneByUuidAndVersion(String uuid, String version) {
@@ -192,22 +164,4 @@ static final Logger logger = Logger.getLogger(FunctionServiceImpl.class);
 		return functionList;
 	}
 
-	/********************** UNUSED **********************/
-	/*public MetaIdentifierHolder saveAs(Function function) throws Exception {
-		MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
-		MetaIdentifier ref = new MetaIdentifier();		
-		Function functionNew = new Function();
-		functionNew.setName(function.getName()+"_copy");
-		functionNew.setActive(function.getActive());		
-		functionNew.setDesc(function.getDesc());		
-		functionNew.setTags(function.getTags());		
-		functionNew.setFunctionInfo(function.getFunctionInfo());
-		functionNew.setFuncType(function.getFuncType());	
-		functionNew.setCategory(function.getCategory());
-		save(functionNew);
-		ref.setType(MetaType.function);
-		ref.setUuid(functionNew.getUuid());
-		refMeta.setRef(ref);
-		return refMeta;
-	}*/
 }

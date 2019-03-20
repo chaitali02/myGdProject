@@ -158,10 +158,10 @@ public class DatasourceServiceImpl {
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
 		MatchOperation filter = null;
 		
-		if(appUuid != null && !appUuid.isEmpty()) {
+		if(appUuid != null && !appUuid.isEmpty() && !type.equalsIgnoreCase("file")) {
 			filter = match(new Criteria("type").is(type).andOperator(new Criteria("appInfo.ref.uuid").is(appUuid)));
 		} else {
-			filter = match(new Criteria("type").is(type));
+			filter = match(new Criteria("type").is(type).andOperator(new Criteria("publicFlag").is("Y")));
 		}
 		 
 		GroupOperation groupByUuid = group("uuid").max("version").as("version");
