@@ -614,7 +614,7 @@ public class DQOperator implements IParsable {
 //		DataStore datasore = datastoreServiceImpl.findLatestByMeta(summaryDpRef.getUuid(), summaryDpRef.getVersion());
 //		String summaryTableName = datastoreServiceImpl.getTableNameByDatastore(datasore.getUuid(), datasore.getVersion(), runMode);
 		StringBuilder select = new StringBuilder(SELECT)
-								.append(THRESHOLD_LIMIT).append(FROM)
+								.append(THRESHOLD_IND).append(FROM)
 								.append(summaryTableName).append(WHERE_1_1)
 								.append(AND).append(RULEUUID).append(" ='" + dq.getUuid() + "'")
 								.append(AND).append(DATAPODUUID).append(" ='" + dq.getDependsOn().getRef().getUuid()+ "'");
