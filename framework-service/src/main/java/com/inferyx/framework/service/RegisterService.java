@@ -945,7 +945,7 @@ public class RegisterService {
 			switch (type) {
 			
 			case "datasetview":
-				result = ow.writeValueAsString(findOneById(id));
+				result = ow.writeValueAsString(datasetViewServiceImpl.findOneById(id));
 				break;
 			case "dqview":
 				DQView dqView = dqViewServiceImpl.findOneById(id);

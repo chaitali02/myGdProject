@@ -254,7 +254,6 @@ public class DatapodServiceImpl {
 		return idatapodDao.test(param1);
 	}*/
 
-	public Datapod findOneByName(String fileName) {
 	/********************** UNUSED **********************/
 	/*public Datapod findLatest() {
 		return resolveName(idatapodDao.findLatest(new Sort(Sort.Direction.DESC, "version")));
