@@ -71,12 +71,6 @@ public class GroupServiceImpl {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public Group findAllByUuid(String uuid) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iUserGroupDao.findAllByUuid(appUuid,uuid);	
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public Group findLatestByUuid(String uuid){
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
 		if(appUuid == null)
@@ -104,16 +98,6 @@ public class GroupServiceImpl {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public List<Group> findAll(){
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid == null)
-		{
-			return iUserGroupDao.findAll(); 
-		}
-		return iUserGroupDao.findAll(appUuid);
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public void  delete(String id){
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
 		Group userGroup = iUserGroupDao.findOneById(appUuid,id);
@@ -123,30 +107,6 @@ public class GroupServiceImpl {
 //		iUserGroupDao.delete(ID);		
 	}*/
 
-	/********************** UNUSED **********************/
-	 /*public Group resolveName(Group usergroup) throws JsonProcessingException{
-			if(usergroup.getCreatedBy() != null)
-			{
-		    String createdByRefUuid = usergroup.getCreatedBy().getRef().getUuid();
-			User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			usergroup.getCreatedBy().getRef().setName(user.getName());
-			}
-			if (usergroup.getAppInfo() != null) {
-				for (int i = 0; i < usergroup.getAppInfo().size(); i++) {
-					String appUuid = usergroup.getAppInfo().get(i).getRef().getUuid();
-					Application application = (Application) commonServiceImpl.getLatestByUuid(appUuid, MetaType.application.toString());
-					String appName = application.getName();
-					usergroup.getAppInfo().get(i).getRef().setName(appName);
-				}
-			}
-			for(int i=0;i<usergroup.getRoleInfo().size();i++)
-			{
-				String uuid=usergroup.getRoleInfo().get(i).getRef().getUuid();
-				Role role=roleServiceImpl.findLatestByUuid(uuid);
-				usergroup.getRoleInfo().get(i).getRef().setName(role.getName());
-			}
-			return usergroup;
-		}*/
 
 	/********************** UNUSED **********************/
 	/*public Group save(Group userGroup) throws Exception{
@@ -163,92 +123,6 @@ public class GroupServiceImpl {
 	/*public List<Group> findAllVersion(String datapodName){
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
 		return iUserGroupDao.findAllVersion(appUuid,datapodName);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Group> findAllLatest() {
-		{	   
-			//String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-			   Aggregation userGroupAggr = newAggregation(group("uuid").max("version").as("version"));
-			   AggregationResults<Group> userGroupResults = mongoTemplate.aggregate(userGroupAggr,"group", Group.class);	   
-			   List<Group> userGroupList = userGroupResults.getMappedResults();
-			   
-			   List<Group> result=new  ArrayList<Group>();
-			   for(Group ug : userGroupList)
-			   {   
-				   Group userGroupLatest;
-					String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-					if(appUuid != null)
-					{
-					//String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();;
-						//userGroupLatest = iUserGroupDao.findOneByUuidAndVersion(appUuid,ug.getId(), ug.getVersion());
-						userGroupLatest = iUserGroupDao.findOneByUuidAndVersion(appUuid,ug.getId(), ug.getVersion());
-					}
-					else
-					{
-						userGroupLatest = iUserGroupDao.findOneByUuidAndVersion(ug.getId(), ug.getVersion());
-					}
-					//logger.debug("datapodLatest is " + datapodLatest.getName());
-					if(userGroupLatest != null)
-					{
-					result.add(userGroupLatest);
-					}
-			   }
-			   return result;
-			}
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Group> findAllLatestActive() 	
-	{	   
-	   Aggregation userGroupAggr = newAggregation(match(Criteria.where("active").is("Y")),match(Criteria.where("name").ne(null)),group("uuid").max("version").as("version"));
-	   AggregationResults<Group> userGroupResults = mongoTemplate.aggregate(userGroupAggr,"group", Group.class);	   
-	   List<Group> userGroupList = userGroupResults.getMappedResults();
-
-	   // Fetch the userGroup details for each id
-	   List<Group> result=new  ArrayList<Group>();
-	   for(Group u : userGroupList)
-	   {   
-		   Group userGroupLatest;
-			String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-			if(appUuid != null)
-			{
-				userGroupLatest = iUserGroupDao.findOneByUuidAndVersion(appUuid,u.getId(), u.getVersion());
-			}
-			else
-			{
-				userGroupLatest = iUserGroupDao.findOneByUuidAndVersion(u.getId(), u.getVersion());
-			}
-			if(userGroupLatest != null)
-			{
-			result.add(userGroupLatest);
-			}
-	   }
-	   return result;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Group> resolveName(List<Group> usergroup) {
-		List<Group> userGroupList = new ArrayList<Group>();
-		for(Group ug : usergroup)
-		{
-		 String createdByRefUuid = ug.getCreatedBy().getRef().getUuid();
-			User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			ug.getCreatedBy().getRef().setName(user.getName());
-			userGroupList.add(ug);
-		}
-		return userGroupList;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Group> findAllByVersion(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid != null)
-		{
-		return iUserGroupDao.findAllVersion(appUuid, uuid);
-		}
-		else
-		return iUserGroupDao.findAllVersion(uuid);
 	}*/
 
 	/********************** UNUSED **********************/

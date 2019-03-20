@@ -62,15 +62,6 @@ public class ActivityServiceImpl {
 	
 	static final Logger logger = Logger.getLogger(ActivityServiceImpl.class);
 
-	/********************** UNUSED **********************/
-	/*public Activity findAllByUuid(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid == null) {
-			return iActivityDao.findAllByUuid(uuid);
-		} else
-			return iActivityDao.findAllByUuid(appUuid, uuid);
-	}*/
 
 	/********************** UNUSED **********************/
 	/*public Activity findLatestByUuid(String uuid) {
@@ -112,15 +103,6 @@ public class ActivityServiceImpl {
 			return iActivityDao.findOneById(appUuid, id);
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public List<Activity> findAll() {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid == null) {
-			return iActivityDao.findAll();
-		} else
-			return iActivityDao.findAll(appUuid);
-	}*/
 
 	/********************** UNUSED **********************/
 	/*public void delete(String id) {
@@ -152,58 +134,7 @@ public class ActivityServiceImpl {
 		return activityDet;
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public Activity resolveName(Activity activity) {
-		if (activity.getCreatedBy() != null) {
-			String createdByRefUuid = activity.getCreatedBy().getRef().getUuid();
-			User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			activity.getCreatedBy().getRef().setName(user.getName());
-		}
-		String UserInfoRefUuid = activity.getUserInfo().getRef().getUuid();
-		User userDO = userServiceImpl.findLatestByUuid(UserInfoRefUuid);
-		String userName = userDO.getName();
-		activity.getUserInfo().getRef().setName(userName);
-		if (activity.getAppInfo() != null) {
-			for (int i = 0; i < activity.getAppInfo().size(); i++) {
-				String appUuid = activity.getAppInfo().get(i).getRef().getUuid();
-				Application application = applicationServiceImpl.findLatestByUuid(appUuid);
-				String appName = application.getName();
-				activity.getAppInfo().get(i).getRef().setName(appName);
-			}
-		}
-		return activity;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Activity> findAllLatest() {
-		{
-			Aggregation activityAggr = newAggregation(group("uuid").max("version").as("version"));
-			AggregationResults<Activity> activityResults = mongoTemplate.aggregate(activityAggr, "activity",
-					Activity.class);
-			List<Activity> activityList = activityResults.getMappedResults();
-
-			// Fetch the relation details for each id
-			List<Activity> result = new ArrayList<Activity>();
-			for (Activity s : activityList) {
-				String appUuid = (securityServiceImpl.getAppInfo() != null
-						&& securityServiceImpl.getAppInfo().getRef() != null)
-								? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-				Activity activityLatest;
-				if (appUuid == null) {
-					activityLatest = iActivityDao.findOneByUuidAndVersion(s.getId(), s.getVersion());
-				} else {
-					activityLatest = iActivityDao.findOneByUuidAndVersion(appUuid, s.getId(), s.getVersion());
-				}
-				if(activityLatest != null)
-				{
-				result.add(activityLatest);
-				}
-			}
-
-			return result;
-		}
-	}*/
-
+		
 	/********************** UNUSED **********************/
 	/*public List<Activity> findAllLatestActive() {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
@@ -288,28 +219,6 @@ public class ActivityServiceImpl {
 		return holder;	
 	}
 	
-	/********************** UNUSED **********************/
-	/*public List<Activity> resolveName(List<Activity> activity) {
-		List<Activity> activityList = new ArrayList<>();
-		for (Activity act : activity) {
-			String createdByRefUuid = act.getCreatedBy().getRef().getUuid();
-			User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			act.getCreatedBy().getRef().setName(user.getName());
-			activityList.add(act);
-		}
-		return activityList;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Activity> findAllByVersion(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iActivityDao.findAllVersion(appUuid, uuid);
-		} else
-			return iActivityDao.findAllVersion(uuid);
-	}*/
-
 	/********************** UNUSED **********************/
 	/*public Activity getAsOf(String uuid, String asOf) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)

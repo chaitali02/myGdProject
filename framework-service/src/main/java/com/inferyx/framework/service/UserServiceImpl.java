@@ -78,24 +78,7 @@ public class UserServiceImpl {
 		return resolveName(iUserDao.findLatest(new Sort(Sort.Direction.DESC, "version")));
 	}	*/
 
-	/********************** UNUSED **********************/
-	/*public User findAllByUuid(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid != null)
-		{
-		return iUserDao.findAllByUuid(appUuid,uuid);
-		}
-		return iUserDao.findAllByUuid(uuid);
-	}*/
-	/********************** UNUSED **********************/
-	/*public User findLatestByUuid(String uuid){
-	//	String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-	//	if(appUuid != null)
-	//	{
-	//	return iUserDao.findLatestByUuid(appUuid,uuid,new Sort(Sort.Direction.DESC, "version"));
-	//	}		
-		return iUserDao.findLatestByUuid(uuid,new Sort(Sort.Direction.DESC, "version"));
-	}*/
+
 	/********************** UNUSED **********************/
 	/*public List<User> test(String param1) {	
 		return iUserDao.test(param1);
@@ -117,15 +100,7 @@ public class UserServiceImpl {
 		}
 		return iUserDao.findOne(id);
 	}*/
-	/********************** UNUSED **********************/
-	/*public List<User> findAll(){
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid == null)
-		{
-			return iUserDao.findAll();
-		}
-			return iUserDao.findAll(appUuid);
-	}*/
+
 	/********************** UNUSED **********************/
 	/*public void  delete(String id){
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
@@ -171,49 +146,7 @@ public class UserServiceImpl {
 		return userDet;
 		}*/
 
-	/********************** UNUSED **********************/
-	/* public User resolveName(User user){		
-			if(user.getCreatedBy() != null)
-			{
-			String createdByRefUuid = user.getCreatedBy().getRef().getUuid();
-			User user1= findLatestByUuid(createdByRefUuid);
-			user.getCreatedBy().getRef().setName(user1.getName());			
-			//}
-			if (user.getAppInfo() != null) {
-				for (int i = 0; i < user.getAppInfo().size(); i++) {
-					String appUuid = user.getAppInfo().get(i).getRef().getUuid();
-					Application application = applicationServiceImpl.findLatestByUuid(appUuid);
-					String appName = application.getName();
-					user.getAppInfo().get(i).getRef().setName(appName);
-				}
-			}
-			List<MetaIdentifierHolder> appInfoList = user.getAppInfo();
-			for(int i=0; i<appInfoList.size(); i++)
-			{
-			String appUuid = user.getAppInfo().get(i).getRef().getUuid();
-			Application appDO = applicationServiceImpl.findLatestByUuid(appUuid);
-			user.getAppInfo().get(i).getRef().setName(appDO.getName());
-			}
-			if(user.getRoleInfo().size()>0){
-			for(int i=0;i<user.getRoleInfo().size();i++)
-			{
-				String uuid=user.getRoleInfo().get(i).getRef().getUuid();
-				Role role=roleServiceImpl.findLatestByUuid(uuid);
-				user.getRoleInfo().get(i).getRef().setName(role.getName());
-			}
-			}
-			if(user.getGroupInfo().size()>0){
-			for(int i=0;i<user.getGroupInfo().size();i++)
-			{
-				String uuid=user.getGroupInfo().get(i).getRef().getUuid();
-				Group group=groupServiceImpl.findLatestByUuid(uuid);
-				user.getGroupInfo().get(i).getRef().setName(group.getName());
-			}
-			}
-			return user;
-
-		}
-	*/
+	
 	/********************** UNUSED **********************/
 	/*public List<User> findAllVersion(String userName){
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
@@ -222,35 +155,6 @@ public class UserServiceImpl {
 		return iUserDao.findAllVersion(appUuid,userName);
 		}
 		return iUserDao.findAllVersion(userName);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<User> findAllLatest() {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		
-			   Aggregation userAggr = newAggregation(group("uuid").max("version").as("version"));
-			   AggregationResults<User> userResults = mongoTemplate.aggregate(userAggr,"user", User.class);	   
-			   List<User> userList = userResults.getMappedResults();
-
-			   // Fetch the relation details for each id
-			   List<User> result=new  ArrayList<User>();
-			   for(User s :userList)
-			   {   User userLatest = null;
-				   if(appUuid != null)
-					{
-				   userLatest = iUserDao.findOneByUuidAndVersion(appUuid,s.getId(),s.getVersion());
-					}
-				   else
-				   {
-					   userLatest = iUserDao.findOneByUuidAndVersion(s.getId(),s.getVersion());
-				   }
-				   if(userLatest != null)
-				   {
-				   result.add(userLatest);
-				   }
-			   }
-			   return result;
-		
 	}*/
 
 	/********************** UNUSED **********************/	
@@ -308,18 +212,6 @@ public class UserServiceImpl {
 		return iUserDao.findLatestByUsername(userName,new Sort(Sort.Direction.DESC, "version"));
 	}
 	
-	/*public List<User> resolveName(List<User> user) throws JsonProcessingException {
-		List<User> userList = new ArrayList<User>();
-		//User user1 = null;
-		for(User usr : user) {
-			String createdByRefUuid = usr.getCreatedBy().getRef().getUuid();
-			//User userCreated = findLatestByUuid(createdByRefUuid);
-			User userCreated = (User) commonServiceImpl.getLatestByUuid(createdByRefUuid, MetaType.user.toString());
-			usr.getCreatedBy().getRef().setName(userCreated.getName());
-			userList.add(usr);
-		}			
-		return userList;
-	}*/
 	/********************** UNUSED **********************/
 	/*public List<Application> findAppBySession(String userUuid) throws JsonProcessingException {
 		List<Application> appList = new ArrayList<Application>();			
@@ -379,15 +271,7 @@ public class UserServiceImpl {
 		
 		return roleList;
 	}*/
-	/********************** UNUSED **********************/
-	/*public List<User> findAllByVersion(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid != null)
-		{
-		return iUserDao.findAllVersion(appUuid,uuid);		
-		}
-		return iUserDao.findAllVersion(uuid);
-	}*/
+	
 	/********************** UNUSED **********************/
 	/*public User getAsOf(String uuid, String asOf) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;

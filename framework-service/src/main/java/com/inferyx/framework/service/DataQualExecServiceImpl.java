@@ -76,16 +76,6 @@ public class DataQualExecServiceImpl extends BaseRuleExecTemplate {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public List<DataQualExec> findAll() {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid == null)
-		{
-			return iDataQualExecDao.findAll(); 
-		}
-		return iDataQualExecDao.findAll(appUuid);
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public DataQualExec findOneById(String id) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
 		if(appUuid != null)
@@ -125,12 +115,6 @@ public class DataQualExecServiceImpl extends BaseRuleExecTemplate {
 		iDataQualExecDao.save(DataQualExec);
 //		String ID=DataQualExec.getId();
 //		iDataQualExecDao.delete(ID);		
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public DataQualExec findAllByUuid(String uuid) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iDataQualExecDao.findAllByUuid(appUuid,uuid);
 	}*/
 
 	/********************** UNUSED **********************/
@@ -198,19 +182,6 @@ public class DataQualExecServiceImpl extends BaseRuleExecTemplate {
 		return iDataQualExecDao.findOneByUuidAndVersion(uuid,version);
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public List<DataQualExec> resolveName(List<DataQualExec> DataQualExec) {
-		List<DataQualExec> DataQualExecList = new ArrayList<>();
-		for(DataQualExec DataqualE : DataQualExec)
-		{
-		String createdByRefUuid = DataqualE.getCreatedBy().getRef().getUuid();
-		User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-		DataqualE.getCreatedBy().getRef().setName(user.getName());
-		DataQualExecList.add(DataqualE);
-		}
-		return DataQualExecList;
-	}*/
-
 	public DataQualExec resolveName(DataQualExec DataQualExec) throws JsonProcessingException {
 		String createdByRefUuid = DataQualExec.getCreatedBy().getRef().getUuid();
 		//User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
@@ -232,17 +203,6 @@ public class DataQualExecServiceImpl extends BaseRuleExecTemplate {
 		}
 		return DataQualExec;
 	}
-
-	/********************** UNUSED **********************/
-	/*public List<DataQualExec> findAllByVersion(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid != null)
-		{
-		return iDataQualExecDao.findAllVersion(appUuid, uuid);
-		}
-		else
-		return iDataQualExecDao.findAllVersion(uuid);
-	}*/
 
 	public List<DataQualExec> findDataQualExecByDataqual(String dataqualUuid) throws JsonProcessingException {
 		List<DataQualExec> DataQualExecList=null;

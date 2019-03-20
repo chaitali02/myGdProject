@@ -224,16 +224,6 @@ public class DatasetServiceImpl {
 			return iDatasetDao.findOneByUuidAndVersion(uuid, version);
 		}
 		return iDatasetDao.findOneByUuidAndVersion(appUuid, uuid, version);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Dataset> findAll() {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid == null) {
-			return iDatasetDao.findAll();
-		}
-		return iDatasetDao.findAll(appUuid);
 	}*/	
 
 	/*public Dataset update(Dataset dataset) throws IOException {
@@ -246,68 +236,6 @@ public class DatasetServiceImpl {
 	/********************** UNUSED **********************/
 	/*public boolean isExists(String id) {
 		return iDatasetDao.exists(id);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Dataset> resolveName(List<Dataset> dataSet) {
-		List<Dataset> datasetList = new ArrayList<Dataset>();
-		for (Dataset dataset : dataSet)
-			if (dataset.getCreatedBy() != null) {
-				String createdByRefUuid = dataset.getCreatedBy().getRef().getUuid();
-				User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-				dataset.getCreatedBy().getRef().setName(user.getName());
-				datasetList.add(dataset);
-			}
-		return datasetList;
-
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Dataset resolveName(Dataset dataSet) {
-		if (dataSet.getCreatedBy() != null) {
-			String createdByRefUuid = dataSet.getCreatedBy().getRef().getUuid();
-			User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			dataSet.getCreatedBy().getRef().setName(user.getName());
-		}
-		if (dataSet.getAppInfo() != null) {
-			for (int i = 0; i < dataSet.getAppInfo().size(); i++) {
-				String appUuid = dataSet.getAppInfo().get(i).getRef().getUuid();
-				Application application = applicationServiceImpl.findLatestByUuid(appUuid);
-				String appName = application.getName();
-				dataSet.getAppInfo().get(i).getRef().setName(appName);
-			}
-		}
-		return dataSet;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Dataset> findAllLatest(){
-		// String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		Aggregation datasetaggr = newAggregation(group("uuid").max("version").as("version"));
-		AggregationResults<Dataset> datasetResults = mongoTemplate.aggregate(datasetaggr, "dataset", Dataset.class);
-		List<Dataset> datasetList = datasetResults.getMappedResults();
-		// Fetch the dataset details for each id
-		List<Dataset> result = new ArrayList<Dataset>();
-		for (Dataset s : datasetList) {
-			Dataset datasetLatest;
-			String appUuid = (securityServiceImpl.getAppInfo() != null
-					&& securityServiceImpl.getAppInfo().getRef() != null)
-							? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-			if (appUuid != null) {
-				// String appUuid =
-				// securityServiceImpl.getAppInfo().getRef().getUuid();;
-				datasetLatest = iDatasetDao.findOneByUuidAndVersion(appUuid, s.getId(), s.getVersion());
-			} else {
-				datasetLatest = iDatasetDao.findOneByUuidAndVersion(s.getId(), s.getVersion());
-			}
-			// logger.debug("datapodLatest is " + datapodLatest.getName());
-			if (datasetLatest != null) {
-				result.add(datasetLatest);
-			}
-		}
-		logger.debug("End of findAllLatest()");
-
-		return result;
 	}*/
 
 	/********************** UNUSED **********************/
@@ -353,13 +281,6 @@ public class DatasetServiceImpl {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public Dataset findAllByUuid(String uuid) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iDatasetDao.findAllByUuid(appUuid, uuid);
-
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public Dataset findOneById(String id) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
@@ -369,16 +290,6 @@ public class DatasetServiceImpl {
 			return iDatasetDao.findOneById(appUuid, id);
 		} else
 			return iDatasetDao.findOne(id);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Dataset> findAllByVersion(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iDatasetDao.findAllVersion(appUuid, uuid);
-		} else
-			return iDatasetDao.findAllVersion(uuid);
 	}*/
 
 	/*

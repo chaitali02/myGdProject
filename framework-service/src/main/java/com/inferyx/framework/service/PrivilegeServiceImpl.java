@@ -71,11 +71,6 @@ public class PrivilegeServiceImpl {
 		return resolveName(iPrivilegeDao.findLatest(new Sort(Sort.Direction.DESC, "version")));
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public Privilege findAllByUuid(String uuid) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iPrivilegeDao.findAllByUuid(appUuid, uuid);
-	}*/
 
 	/********************** UNUSED **********************/
 	/*public Privilege findLatestByUuid(String uuid) {
@@ -87,25 +82,6 @@ public class PrivilegeServiceImpl {
 		return iPrivilegeDao.findLatestByUuid(appUuid, uuid, new Sort(Sort.Direction.DESC, "version"));
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public Privilege resolveName(Privilege privilege) throws JsonProcessingException {
-		if (privilege.getCreatedBy() != null) {
-			String createdByRefUuid = privilege.getCreatedBy().getRef().getUuid();
-			User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			privilege.getCreatedBy().getRef().setName(user.getName());
-		}
-		if (privilege.getAppInfo() != null) {
-			for (int i = 0; i < privilege.getAppInfo().size(); i++) {
-				String appUuid = privilege.getAppInfo().get(i).getRef().getUuid();
-				Application application = (Application) commonServiceImpl.getLatestByUuid(appUuid, MetaType.application.toString());
-				String appName = application.getName();
-				privilege.getAppInfo().get(i).getRef().setName(appName);
-			}
-		}
-
-		return privilege;
-	}
-*/
 	/********************** UNUSED **********************/
 	/*public Privilege findOneByUuidAndVersion(String uuid, String version) {
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
@@ -120,16 +96,6 @@ public class PrivilegeServiceImpl {
 			return iPrivilegeDao.findOneById(appUuid, id);
 		}
 		return iPrivilegeDao.findOne(id);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Privilege> findAll() {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid == null) {
-			return iPrivilegeDao.findAll();
-		}
-		return iPrivilegeDao.findAll(appUuid);
 	}*/
 
 	/********************** UNUSED **********************/
@@ -161,38 +127,6 @@ public class PrivilegeServiceImpl {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public List<Privilege> findAllLatest() {
-		{
-			// String appUuid =
-			// securityServiceImpl.getAppInfo().getRef().getUuid();
-			Aggregation privilegeAggr = newAggregation(group("uuid").max("version").as("version"));
-			AggregationResults<Privilege> privilegeResults = mongoTemplate.aggregate(privilegeAggr, "privilege",
-					Privilege.class);
-			List<Privilege> privilegeList = privilegeResults.getMappedResults();
-
-			List<Privilege> result = new ArrayList<Privilege>();
-			for (Privilege p : privilegeList) {
-				Privilege privilegeLatest;
-				String appUuid = (securityServiceImpl.getAppInfo() != null
-						&& securityServiceImpl.getAppInfo().getRef() != null)
-								? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-				if (appUuid != null) {
-					// String appUuid =
-					// securityServiceImpl.getAppInfo().getRef().getUuid();;
-					privilegeLatest = iPrivilegeDao.findOneByUuidAndVersion(appUuid, p.getId(), p.getVersion());
-				} else {
-					privilegeLatest = iPrivilegeDao.findOneByUuidAndVersion(p.getId(), p.getVersion());
-				}
-				// logger.debug("datapodLatest is " + datapodLatest.getName());
-				if (privilegeLatest != null) {
-					result.add(privilegeLatest);
-				}
-			}
-			return result;
-		}
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public List<Privilege> findAllLatestActive() {
 		Aggregation privilegeAggr = newAggregation(match(Criteria.where("active").is("Y")),
 				match(Criteria.where("name").ne(null)), group("uuid").max("version").as("version"));
@@ -217,28 +151,6 @@ public class PrivilegeServiceImpl {
 			}
 		}
 		return result;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Privilege> resolveName(List<Privilege> privilege) {
-		List<Privilege> privilegeList = new ArrayList<Privilege>();
-		for (Privilege priv : privilege) {
-			String createdByRefUuid = priv.getCreatedBy().getRef().getUuid();
-			User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			priv.getCreatedBy().getRef().setName(user.getName());
-			privilegeList.add(priv);
-		}
-		return privilegeList;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Privilege> findAllByVersion(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iPrivilegeDao.findAllVersion(appUuid, uuid);
-		} else
-			return iPrivilegeDao.findAllVersion(uuid);
 	}*/
 
 	/********************** UNUSED **********************/

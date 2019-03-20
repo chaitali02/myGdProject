@@ -227,16 +227,6 @@ public class DatapodServiceImpl {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public List<Datapod> findAll() {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid == null) {
-			return idatapodDao.findAll();
-		}
-		return idatapodDao.findAll(appUuid);
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public Datapod update(Datapod datapod) {
 		datapod.setBaseEntity();		
 		return idatapodDao.save(datapod);
@@ -247,58 +237,6 @@ public class DatapodServiceImpl {
 		return idatapodDao.exists(id);
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public Datapod resolveName(Datapod datapod) {
-
-		if (datapod == null)
-			return null;
-					
-		if (datapod.getCreatedBy() != null) {
-			String createdByRefUuid = datapod.getCreatedBy().getRef().getUuid();
-			User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			datapod.getCreatedBy().getRef().setName(user.getName());
-		}
-		if (datapod.getAppInfo() != null) {
-			for (int i = 0; i < datapod.getAppInfo().size(); i++) {
-				if( datapod.getAppInfo().get(i)!=null){
-				String appUuid = datapod.getAppInfo().get(i).getRef().getUuid();
-				Application application = applicationServiceImpl.findLatestByUuid(appUuid);
-				String appName = application.getName();
-				datapod.getAppInfo().get(i).getRef().setName(appName);
-				}
-			}
-		}
-		return datapod;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Datapod> findAllLatest() {
-		logger.debug("start of findAllLatest()");
-		Aggregation datapodAggr = newAggregation(group("uuid").max("version").as("version"));
-		AggregationResults<Datapod> datapodResults = mongoTemplate.aggregate(datapodAggr, "datapod", Datapod.class);
-		List<Datapod> datapodList = datapodResults.getMappedResults();
-		// Fetch the datapod details for each id
-		List<Datapod> result = new ArrayList<Datapod>();
-		for (Datapod s : datapodList) {
-			Datapod datapodLatest;
-			String appUuid = (securityServiceImpl.getAppInfo() != null
-					&& securityServiceImpl.getAppInfo().getRef() != null)
-							? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-			if (appUuid != null) {
-				// String appUuid =
-				// securityServiceImpl.getAppInfo().getRef().getUuid();;
-				datapodLatest = idatapodDao.findOneByUuidAndVersion(appUuid, s.getId(), s.getVersion());
-			} else {
-				datapodLatest = idatapodDao.findOneByUuidAndVersion(s.getId(), s.getVersion());
-			}
-			// logger.debug("datapodLatest is " + datapodLatest.getName());
-			if(datapodLatest != null){
-			result.add(datapodLatest);
-			}
-		}
-		logger.debug("End of findAllLatest()");
-		return result;
-	}*/
 
 	/********************** UNUSED **********************/
 	/*public void delete(String Id) {
@@ -668,18 +606,6 @@ public class DatapodServiceImpl {
 	}
 
 	/********************** UNUSED **********************/
-	/*public List<Datapod> resolveName(List<Datapod> datapod) {
-		List<Datapod> datapodList = new ArrayList<Datapod>();
-		for (Datapod dpod : datapod) {
-			String createdByRefUuid = dpod.getCreatedBy().getRef().getUuid();
-			User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			dpod.getCreatedBy().getRef().setName(user.getName());
-			datapodList.add(dpod);
-		}
-		return datapodList;
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public List<Datapod> findAllLatestActive()
 
 	{
@@ -708,17 +634,6 @@ public class DatapodServiceImpl {
 		return result;
 	}
 */
-
-	/********************** UNUSED **********************/
-	/*public List<Datapod> findAllByVersion(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return idatapodDao.findAllVersion(appUuid, uuid);
-		} else
-			return idatapodDao.findAllVersion(uuid);
-
-	}*/
 
 	/********************** UNUSED **********************/
 	/*public Datapod getAsOf(String uuid, String asOf) {

@@ -119,11 +119,6 @@ public class VizpodServiceImpl extends RuleTemplate {
 		return resolveName(iVizpodDao.findLatest(new Sort(Sort.Direction.DESC, "version")));
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public Vizpod findAllByUuid(String uuid) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iVizpodDao.findAllByUuid(appUuid,uuid);
-	}*/
 
 	/********************** UNUSED **********************/
 	/*public Vizpod findLatestByUuid(String uuid) {
@@ -317,17 +312,6 @@ public class VizpodServiceImpl extends RuleTemplate {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public List<Vizpod> findAll() {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid == null)
-		{
-			return iVizpodDao.findAll(); 
-		}
-		else
-		return iVizpodDao.findAll(appUuid);
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public void delete(String Id) {
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
 		Vizpod vizpod = iVizpodDao.findOneById(appUuid,Id);
@@ -348,38 +332,6 @@ public class VizpodServiceImpl extends RuleTemplate {
 		Vizpod vizpodDet=iVizpodDao.save(vizpod);
 		registerGraph.updateGraph((Object) vizpodDet, MetaType.vizpod);
 		return vizpodDet;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Vizpod> findAllLatest() {
-		{
-			//String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-			Aggregation vizpodAggr = newAggregation(group("uuid").max("version").as("version"));
-			AggregationResults<Vizpod> vizpodResults = mongoTemplate.aggregate(vizpodAggr, "vizpod", Vizpod.class);
-			List<Vizpod> vizpodList = vizpodResults.getMappedResults();
-
-			// Fetch the relation details for each id
-			List<Vizpod> result = new ArrayList<Vizpod>();
-			for (Vizpod s : vizpodList) {
-				Vizpod vizpodLatest;
-				String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-				if(appUuid != null)
-				{
-				//String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();;
-					vizpodLatest = iVizpodDao.findOneByUuidAndVersion(appUuid,s.getId(), s.getVersion());
-				}
-				else
-				{
-					vizpodLatest = iVizpodDao.findOneByUuidAndVersion(s.getId(), s.getVersion());
-				}
-				//logger.debug("datapodLatest is " + datapodLatest.getName());
-				if(vizpodLatest != null)
-				{
-				result.add(vizpodLatest);
-				}
-			}
-			return result;
-		}
 	}*/
 
 	/********************** UNUSED 
@@ -1272,31 +1224,6 @@ public class VizpodServiceImpl extends RuleTemplate {
 			}
 			return result;
 		}
-
-		/********************** UNUSED **********************/
-	/*public List<Vizpod> resolveName(List<Vizpod> vizpod) throws JsonProcessingException {
-		List<Vizpod> vizpodList = new ArrayList<>();
-		for(Vizpod viz : vizpod){
-			String createdByRefUuid = viz.getCreatedBy().getRef().getUuid();
-			//User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			User user = (User) commonServiceImpl.getLatestByUuid(createdByRefUuid, MetaType.user.toString());
-			viz.getCreatedBy().getRef().setName(user.getName());
-			vizpodList.add(viz);
-		}
-		return vizpodList;
-	}
-
-	*/
-	/********************** UNUSED **********************/
-	/*public List<Vizpod> findAllByVersion(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid != null)
-		{
-		return iVizpodDao.findAllVersion(appUuid, uuid);
-		}
-		else
-		return iVizpodDao.findAllVersion(uuid);
-	}*/
 
 		/********************** UNUSED **********************/
 	/*public Vizpod getAsOf(String uuid, String asOf) {

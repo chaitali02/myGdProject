@@ -102,16 +102,6 @@ public class MeasureServiceImpl {
 		return iMeasureDao.findOneByUuidAndVersion(appUuid, uuid, version);
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public List<Measure> findAll() {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iMeasureDao.findAll(appUuid);
-		} else
-			return iMeasureDao.findAll();
-	}*/
-
 	/*public Measure update(Measure measure) throws IOException {
 		measure.exportBaseProperty();
 		Measure measureDet=iMeasureDao.save(measure);
@@ -146,41 +136,6 @@ public class MeasureServiceImpl {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public List<Measure> findAllLatest()
-
-	{
-		// String appUuid =
-		// securityServiceImpl.getAppInfo().getRef().getUuid();;
-		logger.debug("start of findAllLatest()");
-		Aggregation measureAggr = newAggregation(group("uuid").max("version").as("version"));
-		AggregationResults<Measure> measureResults = mongoTemplate.aggregate(measureAggr, "measure", Measure.class);
-		List<Measure> measureList = measureResults.getMappedResults();
-		// Fetch the measure details for each id
-		List<Measure> result = new ArrayList<Measure>();
-		for (Measure s : measureList) {
-			Measure measureLatest;
-			String appUuid = (securityServiceImpl.getAppInfo() != null
-					&& securityServiceImpl.getAppInfo().getRef() != null)
-							? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-			if (appUuid != null) {
-				// String appUuid =
-				// securityServiceImpl.getAppInfo().getRef().getUuid();;
-				measureLatest = iMeasureDao.findOneByUuidAndVersion(appUuid, s.getId(), s.getVersion());
-			} else {
-				measureLatest = iMeasureDao.findOneByUuidAndVersion(s.getId(), s.getVersion());
-			}
-			// logger.debug("datapodLatest is " + datapodLatest.getName());
-			if(measureLatest != null)
-			{
-			result.add(measureLatest);
-			}
-		}
-		logger.debug("End of findAllLatest()");
-
-		return result;
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public List<Measure> findAllLatestActive() {
 		Aggregation measureAggr = newAggregation(match(Criteria.where("active").is("Y")),
 				match(Criteria.where("name").ne(null)), group("uuid").max("version").as("version"));
@@ -205,118 +160,6 @@ public class MeasureServiceImpl {
 			}
 		}
 		return result;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Measure> findAllByUuid(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid == null) {
-			return iMeasureDao.findAll();
-		}
-		return iMeasureDao.findAll(appUuid);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<MetaIdentifierHolder> findMeasureInfoByRelation(String relationUUID) throws JsonProcessingException {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		;
-		List<Datapod> datapodList = null;
-		List<Formula> formulaList = null;
-		try {
-			datapodList = relationServiceImpl.findDatapodByRelation(relationUUID,null);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		formulaList = formulaServiceImpl.findFormulaByRelation(relationUUID);
-		List<MetaIdentifierHolder> result = new ArrayList<MetaIdentifierHolder>();
-		for (Datapod datapod : datapodList) {
-			List<Attribute> attrList = datapod.getAttributes();
-			String datapodUUID = datapod.getUuid();
-			Aggregation measureAggr = newAggregation(match(Criteria.where("measureInfo.ref.uuid").is(datapodUUID)),
-					group("uuid").max("version").as("version"));
-			AggregationResults<Measure> measureResults = mongoTemplate.aggregate(measureAggr, "measure", Measure.class);
-			List<Measure> measureList = measureResults.getMappedResults();
-
-			// Fetch measure details for each id
-			for (Measure m : measureList) {
-				Measure measureLatest = iMeasureDao.findOneByUuidAndVersion(appUuid, m.getId(), m.getVersion());
-				int attrID = Integer.parseInt(measureLatest.getMeasureInfo().getAttrId());
-				AttributeRefHolder datapodMeasureInfo = measureLatest.getMeasureInfo();
-				datapodMeasureInfo.getRef().setName(datapod.getName());
-				String attrName = datapod.getAttribute(attrID).getName();
-				datapodMeasureInfo.setAttrName(attrName);
-				result.add(datapodMeasureInfo);
-			}
-		}
-		for (Formula formula : formulaList) {
-			String formulaUUID = formula.getUuid();
-			Aggregation measureAggr = newAggregation(match(Criteria.where("measureInfo.ref.uuid").is(formulaUUID)),
-					group("uuid").max("version").as("version"));
-			AggregationResults<Measure> measureResults = mongoTemplate.aggregate(measureAggr, "measure", Measure.class);
-			List<Measure> measureList = measureResults.getMappedResults();
-
-			// Fetch measure details for each id
-			for (Measure m : measureList) {
-				Measure measureLatest = iMeasureDao.findOneByUuidAndVersion(appUuid, m.getId(), m.getVersion());
-				MetaIdentifierHolder formulaMeasureInfo = measureLatest.getMeasureInfo();
-				formulaMeasureInfo.getRef().setName(formula.getName());
-				result.add(formulaMeasureInfo);
-			}
-		}
-
-		return result;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Measure resolveName(Measure measure) throws JsonProcessingException {
-		if (measure.getCreatedBy() != null) {
-			String createdByRefUuid = measure.getCreatedBy().getRef().getUuid();
-			User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			measure.getCreatedBy().getRef().setName(user.getName());
-		}
-		if (measure.getAppInfo() != null) {
-			for (int i = 0; i < measure.getAppInfo().size(); i++) {
-				String appUuid = measure.getAppInfo().get(i).getRef().getUuid();
-				Application application = (Application) commonServiceImpl.getLatestByUuid(appUuid, MetaType.application.toString());
-				String appName = application.getName();
-				measure.getAppInfo().get(i).getRef().setName(appName);
-			}
-		}
-		String measureUUID = measure.getUuid();
-		Measure measureDO = findLatestByUuid(measureUUID);
-		MetaType refType = measureDO.getMeasureInfo().getRef().getType();
-		if (refType.toString().equalsIgnoreCase(MetaType.datapod.toString())) {
-			int attrID = Integer.parseInt(measureDO.getMeasureInfo().getAttrId());
-			String datapodUUID = measureDO.getMeasureInfo().getRef().getUuid();
-			Datapod datapodDO = datapodServiceImpl.findLatestByUuid(datapodUUID);
-			List<Attribute> attrList = datapodDO.getAttributes();
-			measure.getMeasureInfo().setAttrName(attrList.get(attrID).getName());
-			measure.getMeasureInfo().getRef().setName(datapodDO.getName());
-		}
-		return measure;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Measure> resolveName(List<Measure> measure) {
-		List<Measure> measureList = new ArrayList<Measure>();
-		for (Measure m : measure) {
-			String createdByRefUuid = m.getCreatedBy().getRef().getUuid();
-			User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			m.getCreatedBy().getRef().setName(user.getName());
-			measureList.add(m);
-		}
-		return measureList;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Measure> findAllByVersion(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iMeasureDao.findAllVersion(appUuid, uuid);
-		} else
-			return iMeasureDao.findAllVersion(uuid);
 	}*/
 
 	/********************** UNUSED **********************/

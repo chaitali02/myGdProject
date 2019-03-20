@@ -226,11 +226,6 @@ public class ModelServiceImpl {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public Model findAllByUuid(String uuid) {
-		return iModelDao.findAllByUuid(uuid);	
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public Model findLatestByUuid(String uuid){
 		return iModelDao.findLatestByUuid(uuid,new Sort(Sort.Direction.DESC, "version"));	
 	}*/
@@ -243,11 +238,6 @@ public class ModelServiceImpl {
 	/********************** UNUSED **********************/
 	/*public Model findOneById(String id){
 		return iModelDao.findOne(id);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Model> findAll(){
-		return iModelDao.findAll();
 	}*/
 
 	/********************** UNUSED **********************/
@@ -290,19 +280,6 @@ public class ModelServiceImpl {
 		this.runMode = runMode;
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public List<Model> resolveName(List<Model> models) throws JsonProcessingException {
-		List<Model> modelList = new ArrayList<Model>(); 
-		for(Model model : models)
-		{
-			String createdByRefUuid = model.getCreatedBy().getRef().getUuid();
-			//User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			User user = (User) commonServiceImpl.getLatestByUuid(createdByRefUuid, MetaType.user.toString());
-			model.getCreatedBy().getRef().setName(user.getName());
-			modelList.add(model);
-		}
-		return modelList;
-	}*/
 	
 	@SuppressWarnings("unused")
 	public Model resolveName(Model model) throws JsonProcessingException {
@@ -540,32 +517,6 @@ public class ModelServiceImpl {
 		}*/
 		return train;
 	}
-
-	/********************** UNUSED **********************/
-	/*public List<Model> findAllByVersion(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iModelDao.findAllVersion(appUuid, uuid);
-		} else
-			return iModelDao.findAllVersion(uuid);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Model> findAllLatest() {	
-			   Aggregation ModelAggr = newAggregation(group("uuid").max("version").as("version"));
-			   AggregationResults<Model> ModelResults = mongoTemplate.aggregate(ModelAggr, "model", Model.class);	   
-			   List<Model> ModelList = ModelResults.getMappedResults();
-
-			   // Fetch the relation details for each id
-			   List<Model> result=new  ArrayList<Model>();
-			   for(Model a :ModelList)
-			   {   
-				   Model ModelLatest = iModelDao.findOneByUuidAndVersion(a.getId(),a.getVersion());
-				   result.add(ModelLatest);
-			   }
-			   return result;			
-	}*/
 
 	/********************** UNUSED **********************/
 	/*public List<Model> findAllLatestActive() 	

@@ -126,63 +126,6 @@ public class RelationServiceImpl {
 		return relationDet;
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public Relation resolveName(Relation relation) {
-		if (relation.getCreatedBy() != null) {
-			String createdByRefUuid = relation.getCreatedBy().getRef().getUuid();
-			User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			relation.getCreatedBy().getRef().setName(user.getName());
-		}
-		String dependsOnRefUuid = relation.getDependsOn().getRef().getUuid();
-		Datapod datapodDO = datapodServiceImpl.findLatestByUuid(dependsOnRefUuid);
-
-		String datapodName = datapodDO.getName();
-		relation.getDependsOn().getRef().setName(datapodName);
-		if (relation.getAppInfo() != null) {
-			for (int i = 0; i < relation.getAppInfo().size(); i++) {
-				String appUuid = relation.getAppInfo().get(i).getRef().getUuid();
-				Application application = applicationServiceImpl.findLatestByUuid(appUuid);
-				String appName = application.getName();
-				relation.getAppInfo().get(i).getRef().setName(appName);
-			}
-		}
-		for (int i = 0; i < relation.getRelationInfo().size(); i++) {
-
-			//for (int l = 0; l < relation.getRelationInfo().get(i).getJoin().size(); l++) {
-				String joinRefUuid = relation.getRelationInfo().get(i).getJoin().getRef().getUuid();
-				Datapod joindatapodDO = datapodServiceImpl.findLatestByUuid(joinRefUuid);
-				String joinDatapodName = joindatapodDO.getName();
-				relation.getRelationInfo().get(i).getJoin().getRef().setName(joinDatapodName);
-		//	}
-			for (int j = 0; j < relation.getRelationInfo().get(i).getJoinKey().size(); j++) {
-				for (int k = 0; k < relation.getRelationInfo().get(i).getJoinKey().get(j).getOperand().size(); k++) {
-
-					String operandRefUuid = relation.getRelationInfo().get(i).getJoinKey().get(j).getOperand().get(k)
-							.getRef().getUuid();
-					Integer operandAttributeId = relation.getRelationInfo().get(i).getJoinKey().get(j).getOperand()
-							.get(k).getAttributeId();
-					Datapod operandDatapodDO = datapodServiceImpl.findLatestByUuid(operandRefUuid);
-					String operandDatapodName = operandDatapodDO.getName();
-					relation.getRelationInfo().get(i).getJoinKey().get(j).getOperand().get(k).getRef()
-							.setName(operandDatapodName);
-					List<Attribute> attributeList = operandDatapodDO.getAttributes();
-					relation.getRelationInfo().get(i).getJoinKey().get(j).getOperand().get(k)
-							.setAttributeName(attributeList.get(operandAttributeId).getName());
-				}
-			}
-		}
-		return relation;
-	}
-*/
-	/********************** UNUSED **********************/
-	/*public List<Relation> findAll() {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid == null) {
-			return iRelationDao.findAll();
-		}
-		return iRelationDao.findAll(appUuid);
-	}*/
 
 	/*public Relation update(Relation relation) throws IOException {
 		relation.exportBaseProperty();
@@ -218,51 +161,6 @@ public class RelationServiceImpl {
 	/********************** UNUSED **********************/
 	/*public List<Relation> test(String param1) {
 		return iRelationDao.test(param1);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Relation findAllByUuid(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid == null) {
-			return iRelationDao.findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version"));
-		}
-		return iRelationDao.findAllByUuid(appUuid, uuid);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Relation> findAllLatest() {
-		{
-			// String appUuid =
-			// securityServiceImpl.getAppInfo().getRef().getUuid();
-			Aggregation relationAggr = newAggregation(group("uuid").max("version").as("version"));
-			AggregationResults<Relation> relationResults = mongoTemplate.aggregate(relationAggr, "relation",
-					Relation.class);
-			List<Relation> relationList = relationResults.getMappedResults();
-
-			// Fetch the relation details for each id
-			List<Relation> result = new ArrayList<Relation>();
-			for (Relation s : relationList) {
-				Relation relationLatest;
-				String appUuid = (securityServiceImpl.getAppInfo() != null
-						&& securityServiceImpl.getAppInfo().getRef() != null)
-								? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-				if (appUuid != null) {
-					// String appUuid =
-					// securityServiceImpl.getAppInfo().getRef().getUuid();;
-					relationLatest = iRelationDao.findOneByUuidAndVersion(appUuid, s.getId(), s.getVersion());
-				} else {
-					relationLatest = iRelationDao.findOneByUuidAndVersion(s.getId(), s.getVersion());
-				}
-				// logger.debug("datapodLatest is " + datapodLatest.getName());
-				if(relationLatest != null)
-				{
-				result.add(relationLatest);
-				}
-			}
-			return result;
-		}
-
 	}*/
 
 	/********************** UNUSED **********************/
@@ -373,28 +271,6 @@ public class RelationServiceImpl {
 			throw new RuntimeException(message != null ? message : "No data found for relation "+relation.getName()+".");
 		}
 	}
-
-	/********************** UNUSED **********************/
-	/*public List<Relation> resolveName(List<Relation> relation) {
-		List<Relation> relationList = new ArrayList<Relation>();
-		for (Relation rel : relation) {
-			String createdByRefUuid = rel.getCreatedBy().getRef().getUuid();
-			User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			rel.getCreatedBy().getRef().setName(user.getName());
-			relationList.add(rel);
-		}
-		return relationList;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Relation> findAllByVersion(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iRelationDao.findAllVersion(appUuid, uuid);
-		} else
-			return iRelationDao.findAllVersion(uuid);
-	}*/
 
 	/********************** UNUSED **********************/
 	/*public Relation getAsOf(String uuid, String asOf) {

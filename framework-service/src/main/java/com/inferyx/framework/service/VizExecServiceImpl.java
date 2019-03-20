@@ -44,15 +44,6 @@ public class VizExecServiceImpl {
 	static final Logger logger = Logger.getLogger(VizExecServiceImpl.class);	
 
 	/********************** UNUSED **********************/
-	/*public VizExec findLatest() {
-		VizExec vizexec=null;
-		if(iVizpodExec.findLatest(new Sort(Sort.Direction.DESC, "version"))!=null){
-			vizexec=resolveName(iVizpodExec.findLatest(new Sort(Sort.Direction.DESC, "version")));
-		}
-		return vizexec ;
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public List<VizExec> findLatestVizpodExec(String vizpodUUID, String vizpodVersion) {
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
 		return iVizpodExec.findLatestVizpodExec(appUuid,vizpodUUID, vizpodVersion);
@@ -62,16 +53,6 @@ public class VizExecServiceImpl {
 	/*public List<VizExec> findOneByvizpod(String vizpodUUID) {
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
 		return iVizpodExec.findOneByvizpod(appUuid,vizpodUUID);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<VizExec> findAll() {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid == null)
-		{
-			return iVizpodExec.findAll(); 
-		}
-		return iVizpodExec.findAll(appUuid);
 	}*/
 
 	/********************** UNUSED **********************/
@@ -117,33 +98,6 @@ public class VizExecServiceImpl {
 		iVizpodExec.delete(ID);		
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public List<VizExec> findAllLatest()
-
-	{		
-		//String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		Aggregation vizExecAggr = newAggregation(group("uuid").max("version").as("version"));
-		AggregationResults<VizExec> vizExecResults = mongoTemplate.aggregate(vizExecAggr, "vizexec", VizExec.class);
-		List<VizExec> vizExecList = vizExecResults.getMappedResults();
-		// Fetch the VizExec details for each id
-		List<VizExec> result = new ArrayList<VizExec>();
-		for (VizExec v : vizExecList) {
-			VizExec vizExecLatest;
-				String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-				if(appUuid != null)
-				{
-				//String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();;
-					vizExecLatest = iVizpodExec.findOneByUuidAndVersion(appUuid,v.getId(), v.getVersion());
-				}
-				else
-				{
-					vizExecLatest = iVizpodExec.findOneByUuidAndVersion(v.getId(), v.getVersion());
-				}
-				//logger.debug("datapodLatest is " + datapodLatest.getName());
-				result.add(vizExecLatest);
-		}	
-		return result;
-	}*/
 
 	/********************** UNUSED **********************/
 	/*public List<VizExec> findAllLatestActive() 	
@@ -212,20 +166,6 @@ public class VizExecServiceImpl {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public List<VizExec> resolveName(List<VizExec> vizExec) {
-		List<VizExec> vizExecList = new ArrayList<VizExec>();
-		for(VizExec v : vizExec)
-		{
-			String createdByRefUuid = v.getCreatedBy().getRef().getUuid();
-			User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			v.getCreatedBy().getRef().setName(user.getName());
-			vizExecList.add(v);
-		}
-		
-		return vizExecList;
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public VizExec findOneByUuidAndVersion(String uuid, String version) {		
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
 		if (appUuid == null) {
@@ -242,17 +182,6 @@ public class VizExecServiceImpl {
 			return iVizpodExec.findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version"));
 		}
 		return iVizpodExec.findLatestByUuid(appUuid, uuid, new Sort(Sort.Direction.DESC, "version"));
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<VizExec> findAllByVersion(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid != null)
-		{
-		return iVizpodExec.findAllVersion(appUuid, uuid);
-		}
-		else
-		return iVizpodExec.findAllVersion(uuid);
 	}*/
 
 	/********************** UNUSED **********************/

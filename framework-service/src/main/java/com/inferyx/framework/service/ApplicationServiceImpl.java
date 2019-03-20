@@ -58,16 +58,6 @@ public class ApplicationServiceImpl {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public Application findAllByUuid(String uuid) {
-		return iApplicationDao.findAllByUuid(uuid);	
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Application findLatestByUuid(String uuid){
-		return iApplicationDao.findLatestByUuid(uuid,new Sort(Sort.Direction.DESC, "version"));	
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public Application findOneByUuidAndVersion(String uuid,String version){
 		return iApplicationDao.findOneByUuidAndVersion(uuid,version);
 	}*/
@@ -75,11 +65,6 @@ public class ApplicationServiceImpl {
 	/********************** UNUSED **********************/
 	/*public Application findOneById(String id){
 		return iApplicationDao.findOne(id);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Application> findAll(){
-		return iApplicationDao.findAll();
 	}*/
 
 	/********************** UNUSED **********************/
@@ -93,53 +78,11 @@ public class ApplicationServiceImpl {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public Application resolveName(Application application){
-		if(application.getCreatedBy() != null)
-		{
-		String createdByRefUuid = application.getCreatedBy().getRef().getUuid();
-		User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-		application.getCreatedBy().getRef().setName(user.getName());
-		}
-		
-		return application;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Application> resolveName(List<Application> application) {
-		List<Application> applicationList = new ArrayList<Application>();
-		for(Application app : application)
-		{
-		String createdByRefUuid = app.getCreatedBy().getRef().getUuid();
-		User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-		app.getCreatedBy().getRef().setName(user.getName());
-		applicationList.add(app);
-		}
-		return applicationList;
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public Application save(Application application) throws Exception{
 		application.setBaseEntity();
 		Application app=iApplicationDao.save(application);
 		registerGraph.updateGraph((Object) app, MetaType.application);
 		return app;
-	}*/
-	
-
-	/********************** UNUSED **********************/
-	/*public List<Application> findAllLatest() {	
-			   Aggregation applicationAggr = newAggregation(group("uuid").max("version").as("version"));
-			   AggregationResults<Application> applicationResults = mongoTemplate.aggregate(applicationAggr,"application", Application.class);	   
-			   List<Application> applicationList = applicationResults.getMappedResults();
-
-			   // Fetch the relation details for each id
-			   List<Application> result=new  ArrayList<Application>();
-			   for(Application a :applicationList)
-			   {   
-				   Application applicationLatest = iApplicationDao.findOneByUuidAndVersion(a.getId(),a.getVersion());
-				   result.add(applicationLatest);
-			   }
-			   return result;			
 	}*/
 
 	/********************** UNUSED **********************/
@@ -159,10 +102,6 @@ public class ApplicationServiceImpl {
 	   return result;
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public List<Application> findAllByVersion(String uuid) {
-		return iApplicationDao.findAllVersion(uuid);
-	}*/
 
 	/********************** UNUSED **********************/
 	/*public Application getAsOf(String uuid, String asOf) {

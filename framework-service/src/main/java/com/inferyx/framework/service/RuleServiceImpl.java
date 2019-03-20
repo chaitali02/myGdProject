@@ -140,29 +140,6 @@ public class RuleServiceImpl extends RuleTemplate {
 	 * iRuleDao.findOne(id); }
 	 */
 
-	/********************** UNUSED **********************/
-	/*
-	 * public List<Rule> findAll() { String appUuid =
-	 * (securityServiceImpl.getAppInfo() != null &&
-	 * securityServiceImpl.getAppInfo().getRef() != null) ?
-	 * securityServiceImpl.getAppInfo().getRef().getUuid() : null; if (appUuid ==
-	 * null) { return iRuleDao.findAll(); } return iRuleDao.findAll(appUuid); }
-	 */
-
-	/**********************
-	 * UNUSED
-	 * 
-	 * @throws JsonProcessingException
-	 **********************/
-	/*
-	 * public List<Rule> resolveName(List<Rule> rule) { List<Rule> ruleList = new
-	 * ArrayList<>(); for (Rule ruleS : rule) { String createdByRefUuid =
-	 * ruleS.getCreatedBy().getRef().getUuid(); User user =
-	 * userServiceImpl.findLatestByUuid(createdByRefUuid);
-	 * ruleS.getCreatedBy().getRef().setName(user.getName()); ruleList.add(ruleS); }
-	 * return ruleList; }
-	 */
-
 	public Rule resolveName(Rule rule) throws JsonProcessingException {
 		String createdByRefUuid = rule.getCreatedBy().getRef().getUuid();
 		// User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
@@ -196,14 +173,6 @@ public class RuleServiceImpl extends RuleTemplate {
 	 * public List<Rule> test(String param1) { return iRuleDao.test(param1); }
 	 */
 
-	/********************** UNUSED **********************/
-	/*
-	 * public List<Rule> findAllByUuid(String uuid) { String appUuid =
-	 * securityServiceImpl.getAppInfo().getRef().getUuid(); return
-	 * iRuleDao.findAllByUuid(appUuid, uuid);
-	 * 
-	 * }
-	 */
 
 	/********************** UNUSED **********************/
 	/*
@@ -228,28 +197,7 @@ public class RuleServiceImpl extends RuleTemplate {
 	 * Sort(Sort.Direction.DESC, "version")); }
 	 */
 
-	/********************** UNUSED **********************/
-	/*
-	 * public List<Rule> findAllLatest() {
-	 * 
-	 * Aggregation ruleAggr =
-	 * newAggregation(group("uuid").max("version").as("version"));
-	 * AggregationResults<Rule> dagResults = mongoTemplate.aggregate(ruleAggr,
-	 * "rule", Rule.class); List<Rule> RuleList = dagResults.getMappedResults();
-	 * 
-	 * // Fetch the datapod details for each id List<Rule> result = new
-	 * ArrayList<Rule>(); for (Rule s : RuleList) { String appUuid =
-	 * (securityServiceImpl.getAppInfo() != null &&
-	 * securityServiceImpl.getAppInfo().getRef() != null) ?
-	 * securityServiceImpl.getAppInfo().getRef().getUuid() : null; Rule ruleLatest;
-	 * if (appUuid != null) { ruleLatest = iRuleDao.findOneByUuidAndVersion(appUuid,
-	 * s.getId(), s.getVersion());
-	 * 
-	 * } else { ruleLatest = iRuleDao.findOneByUuidAndVersion(s.getId(),
-	 * s.getVersion()); // result.add(ruleLatest); } if (ruleLatest != null) {
-	 * result.add(ruleLatest); } } return result; }
-	 */
-
+	
 	/********************** UNUSED **********************/
 	/*
 	 * public List<Rule> findAllLatestActive() { Aggregation ruleAggr =
@@ -748,21 +696,6 @@ public class RuleServiceImpl extends RuleTemplate {
 		}
 		return data;
 	}
-
-	
-	
-	
-	
-	
-	/********************** UNUSED **********************/
-	/*
-	 * public List<Rule> findAllByVersion(String uuid) { String appUuid =
-	 * (securityServiceImpl.getAppInfo() != null &&
-	 * securityServiceImpl.getAppInfo().getRef() != null) ?
-	 * securityServiceImpl.getAppInfo().getRef().getUuid() : null; if (appUuid !=
-	 * null) { return iRuleDao.findAllVersion(appUuid, uuid); } else return
-	 * iRuleDao.findAllVersion(uuid); }
-	 */
 
 	/**
 	 * Get the rulename.attributename for use of rule as a dependency of map
