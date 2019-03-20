@@ -1,0 +1,354 @@
+{
+	"datasource": {
+		"ref": {
+			"type": "datasource",
+			"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73024"
+		}
+	},
+	"cache": "Y",
+	"attributes": [
+		{
+			"attributeId": 0,
+			"displaySeq": 0,
+			"name": "rule_exec_uuid",
+			"type": "string",
+			"desc": "rule_exec_uuid",
+			"key": "0",
+			"partition": "N",
+			"dispName": "rule_exec_uuid",
+			"active": "Y",
+			"attrUnitType": "*"
+		},
+		{
+			"attributeId": 1,
+			"displaySeq": 1,
+			"name": "rule_exec_version",
+			"type": "integer",
+			"desc": "rule_exec_version",
+			"key": "0",
+			"partition": "N",
+			"dispName": "rule_exec_version",
+			"active": "Y",
+			"attrUnitType": "*"
+		},
+		{
+			"attributeId": 2,
+			"displaySeq": 2,
+			"name": "rule_exec_time",
+			"type": "string",
+			"desc": "rule_exec_time",
+			"key": "0",
+			"partition": "N",
+			"dispName": "rule_exec_time",
+			"active": "Y",
+			"attrUnitType": "*"
+		},
+		{
+			"attributeId": 3,
+			"displaySeq": 3,
+			"name": "rule_uuid",
+			"type": "string",
+			"desc": "rule_uuid",
+			"key": "0",
+			"partition": "N",
+			"dispName": "rule_uuid",
+			"active": "Y",
+			"attrUnitType": "*"
+		},
+		{
+			"attributeId": 4,
+			"displaySeq": 4,
+			"name": "rule_version",
+			"type": "integer",
+			"desc": "rule_version",
+			"key": "0",
+			"partition": "N",
+			"dispName": "rule_version",
+			"active": "Y",
+			"attrUnitType": "*"
+		},
+		{
+			"attributeId": 5,
+			"displaySeq": 5,
+			"name": "rule_name",
+			"type": "string",
+			"desc": "rule_name",
+			"key": "0",
+			"partition": "N",
+			"dispName": "rule_name",
+			"active": "Y",
+			"attrUnitType": "*"
+		},
+		{
+			"attributeId": 6,
+			"displaySeq": 6,
+			"name": "datapoduuid",
+			"type": "string",
+			"desc": "DatapodUUID",
+			"key": "0",
+			"partition": "N",
+			"dispName": "Datapod UUID",
+			"active": "Y",
+			"attrUnitType": "*"
+		},
+		{
+			"attributeId": 7,
+			"displaySeq": 7,
+			"name": "datapodversion",
+			"type": "string",
+			"desc": "DatapodVersion",
+			"key": "",
+			"partition": "N",
+			"dispName": "Datapod Version",
+			"active": "Y",
+			"attrUnitType": "#"
+		},
+		{
+			"attributeId": 8,
+			"displaySeq": 8,
+			"name": "datapodname",
+			"type": "string",
+			"desc": "DatapodName",
+			"key": "",
+			"partition": "N",
+			"dispName": "Datapod Name",
+			"active": "Y",
+			"attrUnitType": "*"
+		},
+		{
+			"attributeId": 9,
+			"displaySeq": 9,
+			"name": "attributeid",
+			"type": "string",
+			"desc": "AttributeId",
+			"key": "",
+			"partition": "N",
+			"dispName": "Attribute Id",
+			"active": "Y",
+			"attrUnitType": "#"
+		},
+		{
+			"attributeId": 10,
+			"displaySeq": 10,
+			"name": "attributename",
+			"type": "string",
+			"desc": "AttributeName",
+			"key": "",
+			"partition": "N",
+			"dispName": "Attribute Name",
+			"active": "Y",
+			"attrUnitType": "*"
+		},
+		{
+			"attributeId": 11,
+			"displaySeq": 11,
+			"name": "numrows",
+			"type": "long",
+			"desc": "Number of Rows",
+			"key": "",
+			"partition": "N",
+			"dispName": "Num Rows",
+			"active": "Y",
+			"attrUnitType": "#"
+		},
+		{
+			"attributeId": 12,
+			"displaySeq": 12,
+			"name": "minval",
+			"type": "double",
+			"desc": "Minimum value in data",
+			"key": "",
+			"partition": "N",
+			"dispName": "Min Val",
+			"active": "Y",
+			"attrUnitType": "#"
+		},
+		{
+			"attributeId": 13,
+			"displaySeq": 13,
+			"name": "maxval",
+			"type": "double",
+			"desc": "Maximum value in data",
+			"key": "",
+			"partition": "N",
+			"dispName": "Max Val",
+			"active": "Y",
+			"attrUnitType": "#"
+		},
+		{
+			"attributeId": 14,
+			"displaySeq": 14,
+			"name": "avgval",
+			"type": "double",
+			"desc": "Average value in data",
+			"key": "",
+			"partition": "N",
+			"dispName": "Avg Val",
+			"active": "Y",
+			"attrUnitType": "#"
+		},
+		{
+			"attributeId": 15,
+			"displaySeq": 15,
+			"name": "medianval",
+			"type": "double",
+			"desc": "Median value in data",
+			"key": "",
+			"partition": "N",
+			"dispName": "Median Val",
+			"active": "Y",
+			"attrUnitType": "#"
+		},
+		{
+			"attributeId": 16,
+			"displaySeq": 16,
+			"name": "stddev",
+			"type": "double",
+			"desc": "Standard deviation in data",
+			"key": "",
+			"partition": "N",
+			"dispName": "Std Dev",
+			"active": "Y",
+			"attrUnitType": "#"
+		},
+		{
+			"attributeId": 17,
+			"displaySeq": 17,
+			"name": "numdistinct",
+			"type": "integer",
+			"desc": "No of distinct values",
+			"key": "",
+			"partition": "N",
+			"dispName": "Num Distinct",
+			"active": "Y",
+			"attrUnitType": "#"
+		},
+		{
+			"attributeId": 18,
+			"displaySeq": 18,
+			"name": "perdistinct",
+			"type": "double",
+			"desc": "Percentage distinct values",
+			"key": "",
+			"partition": "N",
+			"dispName": "Per Distinct",
+			"active": "Y",
+			"attrUnitType": "%"
+		},
+		{
+			"attributeId": 19,
+			"displaySeq": 19,
+			"name": "numnull",
+			"type": "integer",
+			"desc": "No of null values",
+			"key": "",
+			"partition": "N",
+			"dispName": "Num Null",
+			"active": "Y",
+			"attrUnitType": "#"
+		},
+		{
+			"attributeId": 20,
+			"displaySeq": 20,
+			"name": "pernull",
+			"type": "double",
+			"desc": "Percentage null values",
+			"key": "",
+			"partition": "N",
+			"dispName": "Per Null",
+			"active": "Y",
+			"attrUnitType": "%"
+		},
+		{
+			"attributeId": 21,
+			"displaySeq": 21,
+			"name": "minlength",
+			"type": "double",
+			"desc": " ",
+			"key": "",
+			"partition": "N",
+			"dispName": "Min Length",
+			"active": "Y",
+			"attrUnitType": "#"
+		},
+		{
+			"attributeId": 22,
+			"displaySeq": 22,
+			"name": "maxlength",
+			"type": "double",
+			"desc": " ",
+			"key": "",
+			"partition": "N",
+			"dispName": "Max Length",
+			"active": "Y",
+			"attrUnitType": "#"
+		},
+		{
+			"attributeId": 23,
+			"displaySeq": 23,
+			"name": "avglength",
+			"type": "double",
+			"desc": " ",
+			"key": "",
+			"partition": "N",
+			"dispName": "Avg Length",
+			"active": "Y",
+			"attrUnitType": "#"
+		},
+		{
+			"attributeId": 24,
+			"displaySeq": 24,
+			"name": "numduplicates",
+			"type": "double",
+			"desc": " ",
+			"key": "",
+			"partition": "N",
+			"dispName": "Num Duplicates",
+			"active": "Y",
+			"attrUnitType": "#"
+		},
+		{
+			"attributeId": 25,
+			"displaySeq": 25,
+			"name": "version",
+			"type": "string",
+			"desc": "version",
+			"key": "",
+			"partition": "N",
+			"dispName": "Version",
+			"active": "Y",
+			"attrUnitType": "#"
+		}
+	],
+	"uuid": "77aefb4c-191c-11e7-93ae-92361f002622",
+	"version": "1544557215",
+	"name": "dp_rule_results",
+	"desc": "Profile Results",
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+			"version": "1464977196",
+			"name": "ypalrecha"
+		}
+	},
+	"createdOn": ISODate("2018-12-11T19:40:15.000Z"),
+	"tags": [],
+	"active": "Y",
+	"locked": "N",
+	"published": "N",
+	"appInfo": [
+		{
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		},
+		{
+			"ref": {
+				"type": "application",
+				"uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81"
+			}
+		}
+	]
+}

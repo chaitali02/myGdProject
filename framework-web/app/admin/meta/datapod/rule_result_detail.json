@@ -36,10 +36,52 @@
 		"value": null
 	},
 	"cache": "Y",
-	"attributes": [
+	"attributes": [ 
+	{
+            "attributeId" : 0,
+            "displaySeq" : 0,
+            "name" : "rule_exec_uuid",
+            "type" : "string",
+            "desc" : "ruleexec_uuid",
+            "expression" : null,
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "rule_exec_uuid",
+            "active" : "Y",
+            "length" : null,
+            "attrUnitType" : null
+        }, 
+        {
+            "attributeId" : 1,
+            "displaySeq" : 1,
+            "name" : "rule_exec_version",
+            "type" : "integer",
+            "desc" : "rule_exec_version",
+            "expression" : null,
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "rule_exec_version",
+            "active" : "Y",
+            "length" : null,
+            "attrUnitType" : null
+        }, 
+        {
+            "attributeId" : 2,
+            "displaySeq" : 2,
+            "name" : "rule_exec_time",
+            "type" : "string",
+            "desc" : "rule_exec_time",
+            "expression" : null,
+            "key" : "",
+            "partition" : "N",
+            "dispName" : "rule_exec_time",
+            "active" : "Y",
+            "length" : null,
+            "attrUnitType" : null
+        },
 		{
-			"attributeId": 0,
-			"displaySeq": 0,
+			"attributeId": 3,
+			"displaySeq": 3,
 			"name": "rule_uuid",
 			"type": "string",
 			"desc": "rule_uuid",
@@ -52,8 +94,8 @@
 			"attrUnitType": null
 		},
 		{
-			"attributeId": 1,
-			"displaySeq": 1,
+			"attributeId": 4,
+			"displaySeq": 4,
 			"name": "rule_version",
 			"type": "integer",
 			"desc": "rule_version",
@@ -66,8 +108,8 @@
 			"attrUnitType": null
 		},
 		{
-			"attributeId": 2,
-			"displaySeq": 2,
+			"attributeId": 5,
+			"displaySeq": 5,
 			"name": "rule_name",
 			"type": "string",
 			"desc": "rule_name",
@@ -80,8 +122,8 @@
 			"attrUnitType": null
 		},
 		{
-			"attributeId": 3,
-			"displaySeq": 3,
+			"attributeId": 6,
+			"displaySeq": 6,
 			"name": "entity_type",
 			"type": "string",
 			"desc": "entity_type",
@@ -94,8 +136,8 @@
 			"attrUnitType": null
 		},
 		{
-			"attributeId": 4,
-			"displaySeq": 4,
+			"attributeId": 7,
+			"displaySeq": 7,
 			"name": "entity_id",
 			"type": "string",
 			"desc": "entity_id",
@@ -108,8 +150,8 @@
 			"attrUnitType": null
 		},
 		{
-			"attributeId": 5,
-			"displaySeq": 5,
+			"attributeId": 8,
+			"displaySeq": 8,
 			"name": "criteria_id",
 			"type": "string",
 			"desc": "criteria_id",
@@ -122,8 +164,8 @@
 			"attrUnitType": null
 		},
 		{
-			"attributeId": 6,
-			"displaySeq": 6,
+			"attributeId": 9,
+			"displaySeq": 9,
 			"name": "criteria_name",
 			"type": "string",
 			"desc": "criteria_name",
@@ -136,8 +178,8 @@
 			"attrUnitType": null
 		},
 		{
-			"attributeId": 7,
-			"displaySeq": 7,
+			"attributeId": 10,
+			"displaySeq": 10,
 			"name": "criteria_met_ind",
 			"type": "string",
 			"desc": "criteria_met_ind",
@@ -150,8 +192,8 @@
 			"attrUnitType": null
 		},
 		{
-			"attributeId": 8,
-			"displaySeq": 8,
+			"attributeId": 11,
+			"displaySeq": 11,
 			"name": "criteria_expr",
 			"type": "string",
 			"desc": "criteria_expr",
@@ -164,8 +206,8 @@
 			"attrUnitType": null
 		},
 		{
-			"attributeId": 9,
-			"displaySeq": 9,
+			"attributeId": 12,
+			"displaySeq": 12,
 			"name": "criteria_score",
 			"type": "double",
 			"desc": "criteria_score",
@@ -178,8 +220,8 @@
 			"attrUnitType": null
 		},
 		{
-			"attributeId": 10,
-			"displaySeq": 10,
+			"attributeId": 13,
+			"displaySeq": 13,
 			"name": "version",
 			"type": "integer",
 			"desc": "version",

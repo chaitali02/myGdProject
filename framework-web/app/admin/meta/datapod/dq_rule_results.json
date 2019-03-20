@@ -1,7 +1,7 @@
 {
     "uuid" : "a942fb04-fd85-4f69-a33a-a0a8d68997c5",
     "version" : "1464977196",
-    "name" : "dq_rule_results",
+    "name" : "dq_result_summary",
     "desc" : "Data Quality Results",
     "createdBy" : {
         "ref" : {

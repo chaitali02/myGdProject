@@ -1,8 +1,8 @@
 {
   "uuid": "2d3206ae-6bc3-4b58-be3a-23029d4ad33d",
   "version": "1553020078",
-  "name": "dq_rule_summary",
-  "desc": "Creating datastore for dq_rule_summary",
+  "name": "dq_result_summary",
+  "desc": "Creating datastore for dq_result_summary",
   "createdBy": {
     "ref": {
       "type": "user",
@@ -34,7 +34,7 @@
       "type": "datapod",
       "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
       "version": "1552115484",
-      "name": "dq_rule_summary"
+      "name": "dq_result_summary"
     },
     "value": null
   },
@@ -43,7 +43,7 @@
       "type": "loadExec",
       "uuid": "7db0742b-33b5-448a-a1da-c266af517f54",
       "version": "1553020076",
-      "name": "dq_rule_summary"
+      "name": "dq_result_summary"
     },
     "value": null
   },
