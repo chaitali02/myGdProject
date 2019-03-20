@@ -447,6 +447,7 @@ public class MetadataServiceImpl {
 				DagExec execObject = new DagExec();
 				execObject = (DagExec) metaObject;
 			    execStatus = (List<Status>) execObject.getStatusList();
+				baseEntityStatus.setExecCreated(execObject.getExecCreated());
 			}
 			else if (type.equalsIgnoreCase(MetaType.ruleExec.toString())) {
 				RuleExec execObject =new RuleExec();
