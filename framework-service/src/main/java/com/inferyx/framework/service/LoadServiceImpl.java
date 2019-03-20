@@ -133,49 +133,6 @@ public class LoadServiceImpl {
 
 	/********************** UNUSED **********************/
 	/*
-	 * public List<Load> resolveName(List<Load> load) { List<Load> loadList = new
-	 * ArrayList<>(); for(Load loads : load) { String createdByRefUuid =
-	 * loads.getCreatedBy().getRef().getUuid(); User user =
-	 * userServiceImpl.findLatestByUuid(createdByRefUuid);
-	 * loads.getCreatedBy().getRef().setName(user.getName()); loadList.add(loads); }
-	 * return loadList; }
-	 */
-
-	/********************** UNUSED **********************/
-	/*
-	 * public Load resolveName(Load load) { String createdByRefUuid =
-	 * load.getCreatedBy().getRef().getUuid(); User user =
-	 * userServiceImpl.findLatestByUuid(createdByRefUuid);
-	 * load.getCreatedBy().getRef().setName(user.getName());
-	 * if(load.getTarget().getRef().getType().equals(MetaType.datapod)) { Datapod
-	 * datapod=datapodServiceImpl.findLatestByUuid(load.getTarget().getRef().getUuid
-	 * ()); load.getTarget().getRef().setName(datapod.getName()); } return load; }
-	 */
-
-	/********************** UNUSED **********************/
-	/*
-	 * public List<Load> findAllLatest() { { //String appUuid =
-	 * securityServiceImpl.getAppInfo().getRef().getUuid(); Aggregation LoadAggr =
-	 * newAggregation(group("uuid").max("version").as("version"));
-	 * AggregationResults<Load> GroupResults =
-	 * mongoTemplate.aggregate(LoadAggr,"load", Load.class); List<Load> LoadList =
-	 * GroupResults.getMappedResults();
-	 * 
-	 * // Fetch the relation details for each id List<Load> result=new
-	 * ArrayList<Load>(); for(Load gi :LoadList) { Load loadLatest; String appUuid =
-	 * (securityServiceImpl.getAppInfo() != null &&
-	 * securityServiceImpl.getAppInfo().getRef() != null
-	 * )?securityServiceImpl.getAppInfo().getRef().getUuid():null; if(appUuid !=
-	 * null) { //String appUuid =
-	 * securityServiceImpl.getAppInfo().getRef().getUuid();; loadLatest =
-	 * iLoadDao.findOneByUuidAndVersion(appUuid,gi.getId(), gi.getVersion()); } else
-	 * { loadLatest = iLoadDao.findOneByUuidAndVersion(gi.getId(), gi.getVersion());
-	 * } //logger.debug("datapodLatest is " + datapodLatest.getName());
-	 * if(loadLatest != null) { result.add(loadLatest); } } return result; } }
-	 */
-
-	/********************** UNUSED **********************/
-	/*
 	 * public List<Load> findAllLatestActive() { Aggregation loadAggr =
 	 * newAggregation(match(Criteria.where("active").is("Y")),match(Criteria.where(
 	 * "name").ne(null)),group("uuid").max("version").as("version"));
@@ -192,26 +149,6 @@ public class LoadServiceImpl {
 	 * l.getVersion()); } else { loadLatest =
 	 * iLoadDao.findOneByUuidAndVersion(l.getId(), l.getVersion()); } if(loadLatest
 	 * != null) { result.add(loadLatest); } } return result; }
-	 */
-
-	/********************** UNUSED **********************/
-	/*
-	 * public List<Load> findAll(){ String appUuid =
-	 * (securityServiceImpl.getAppInfo() != null &&
-	 * securityServiceImpl.getAppInfo().getRef() != null
-	 * )?securityServiceImpl.getAppInfo().getRef().getUuid():null; if(appUuid ==
-	 * null) { return iLoadDao.findAll(); } return iLoadDao.findAll(appUuid); }
-	 */
-
-	/********************** UNUSED **********************/
-	/*
-	 * public List<Load> findAllByVersion(String uuid) { String appUuid =
-	 * (securityServiceImpl.getAppInfo() != null &&
-	 * securityServiceImpl.getAppInfo().getRef() != null
-	 * )?securityServiceImpl.getAppInfo().getRef().getUuid():null; List<Load>
-	 * loadList; if(appUuid != null) { loadList = iLoadDao.findAllVersion(appUuid,
-	 * uuid); } else { loadList = iLoadDao.findAllVersion(uuid); } return
-	 * resolveName(loadList); }
 	 */
 
 	/**********************

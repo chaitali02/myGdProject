@@ -73,16 +73,6 @@ public class RuleExecServiceImpl extends BaseRuleExecTemplate {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public List<RuleExec> findAll() {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid == null)
-		{
-			return iRuleExecDao.findAll(); 
-		}
-		return iRuleExecDao.findAll(appUuid);
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public RuleExec findOneById(String id) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
 		if(appUuid != null)
@@ -127,33 +117,6 @@ public class RuleExecServiceImpl extends BaseRuleExecTemplate {
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
 		return iRuleExecDao.findAllByUuid(appUuid,uuid);
 		
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<RuleExec> findAllLatest()
-	{		
-		//String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		Aggregation ruleexecAggr = newAggregation(group("uuid").max("version").as("version"));
-		AggregationResults<RuleExec> ruleExecResults = mongoTemplate.aggregate(ruleexecAggr, "ruleexec", RuleExec.class);
-		List<RuleExec> ruleExecList = ruleExecResults.getMappedResults();
-		// Fetch the VizExec details for each id
-		List<RuleExec> result = new ArrayList<RuleExec>();
-		for (RuleExec v : ruleExecList) {
-			RuleExec ruleExecLatest;
-			String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-			if(appUuid != null)
-			{
-			//String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();;
-				ruleExecLatest = iRuleExecDao.findOneByUuidAndVersion(appUuid,v.getId(), v.getVersion());
-			}
-			else
-			{
-				ruleExecLatest = iRuleExecDao.findOneByUuidAndVersion(v.getId(), v.getVersion());
-			}
-			//logger.debug("datapodLatest is " + datapodLatest.getName());
-			result.add(ruleExecLatest);
-		}	
-		return result;
 	}*/
 
 	/********************** UNUSED **********************/
@@ -254,18 +217,6 @@ public class RuleExecServiceImpl extends BaseRuleExecTemplate {
 		}		
 		return ruleExec;		
 	}
-
-	/********************** UNUSED 
-	 * @throws JsonProcessingException **********************/
-	/*public List<RuleExec> findAllByVersion(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid != null)
-		{
-		return iRuleExecDao.findAllVersion(appUuid, uuid);
-		}
-		else
-		return iRuleExecDao.findAllVersion(uuid);
-	}*/
 
 	public List<RuleExec> findRuleExecByRuleGroupExec(String ruleGroupExecUuid, String ruleGroupExecVersion) throws JsonProcessingException {
 		/*String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;*/

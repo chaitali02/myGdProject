@@ -100,28 +100,11 @@ public class RuleGroupServiceImpl extends RuleGroupTemplate {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public List<RuleGroup> findAll(){
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid == null)
-		{
-			return iRuleGroupDao.findAll(); 
-		}
-		return iRuleGroupDao.findAll(appUuid);
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public void  delete(String Id){
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
 		RuleGroup ruleGroup = iRuleGroupDao.findOneById(appUuid,Id);
 		ruleGroup.setActive("N");
 		iRuleGroupDao.save(ruleGroup);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<RuleGroup> findAllByUuid(String uuid) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iRuleGroupDao.findAllByUuid(appUuid,uuid);
-		
 	}*/
 
 	/********************** UNUSED **********************/
@@ -144,36 +127,6 @@ public class RuleGroupServiceImpl extends RuleGroupTemplate {
 		return iRuleGroupDao.findLatestByUuid(appUuid,uuid,new Sort(Sort.Direction.DESC, "version"));			
 	}*/
 	
-	/********************** UNUSED **********************/
-	/*public List<RuleGroup> findAllLatest() 
-	
-	{	   
-		//String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-	   Aggregation ruleGroupAggr = newAggregation(group("uuid").max("version").as("version"));
-	   AggregationResults<RuleGroup> dagResults = mongoTemplate.aggregate(ruleGroupAggr,"rulegroup", RuleGroup.class);	   
-	   List<RuleGroup> RuleList = dagResults.getMappedResults();
-
-	   // Fetch the rulegroup details for each id
-	   List<RuleGroup> result=new  ArrayList<RuleGroup>();
-	   for(RuleGroup rg :RuleList)
-	   {   
-		   RuleGroup ruleGroupLatest;
-			String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-			if(appUuid != null)
-			{
-			//String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();;
-				ruleGroupLatest = iRuleGroupDao.findOneByUuidAndVersion(appUuid,rg.getId(), rg.getVersion());
-			}
-			else
-			{
-				ruleGroupLatest = iRuleGroupDao.findOneByUuidAndVersion(rg.getId(), rg.getVersion());
-			}
-			//logger.debug("datapodLatest is " + datapodLatest.getName());
-			result.add(ruleGroupLatest);
-	   }
-	   return result;
-	}*/
-
 	/********************** UNUSED **********************/
 	/*public List<RuleGroup> findAllLatestActive() 	
 	{	   
@@ -201,60 +154,6 @@ public class RuleGroupServiceImpl extends RuleGroupTemplate {
 	   return result;
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public List<RuleGroup> resolveName(List<RuleGroup> ruleGroup) {
-		List<RuleGroup> ruleGroupList = new ArrayList<RuleGroup>();
-		for(RuleGroup rGroup : ruleGroup)
-		{
-		String createdByRefUuid = rGroup.getCreatedBy().getRef().getUuid();
-		User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-		rGroup.getCreatedBy().getRef().setName(user.getName());
-		ruleGroupList.add(rGroup);
-		}
-		return ruleGroupList;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public RuleGroup resolveName(RuleGroup ruleGroup) {
-		if(ruleGroup.getCreatedBy() != null)
-		{
-		String createdByRefUuid = ruleGroup.getCreatedBy().getRef().getUuid();
-		User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-		ruleGroup.getCreatedBy().getRef().setName(user.getName());
-		}
-		if (ruleGroup.getAppInfo() != null) {
-		for (int i = 0; i < ruleGroup.getAppInfo().size(); i++) {
-			if(ruleGroup.getAppInfo().get(i)!=null)
-			{
-		String appUuid = ruleGroup.getAppInfo().get(i).getRef().getUuid();
-		Application application = applicationServiceImpl.findLatestByUuid(appUuid);
-		String appName = application.getName();
-		ruleGroup.getAppInfo().get(i).getRef().setName(appName);
-		}
-		}
-		}
-		List<MetaIdentifierHolder> ruleInfo = ruleGroup.getRuleInfo();
-		for(int i=0; i<ruleInfo.size();i++)
-		{
-		String ruleUuid = ruleInfo.get(i).getRef().getUuid();
-		Rule rule = ruleServiceImpl.findLatestByUuid(ruleUuid);
-		String ruleName = rule.getName();
-		ruleInfo.get(i).getRef().setName(ruleName);
-		}
-		ruleGroup.setRuleInfo(ruleInfo);
-		return ruleGroup;
-		}
-*/
-	/********************** UNUSED **********************/
-	/*public List<RuleGroup> findAllByVersion(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid != null)
-		{
-		return iRuleGroupDao.findAllVersion(appUuid, uuid);
-		}
-		else
-		return iRuleGroupDao.findAllVersion(uuid);
-	}*/
 
 	public RuleGroupExec create(String ruleGroupUUID, 
 										String ruleGroupVersion, 

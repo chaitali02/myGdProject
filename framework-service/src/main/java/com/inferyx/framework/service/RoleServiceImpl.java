@@ -67,16 +67,7 @@ public class RoleServiceImpl {
 	/*public Role findLatest() {
 		return resolveName(iRoleDao.findLatest(new Sort(Sort.Direction.DESC, "version")));
 	}*/
-	/********************** UNUSED **********************/
-	/*public Role findAllByUuid(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iRoleDao.findAllByUuid(appUuid, uuid);
-		} else
-			return iRoleDao.findAllByUuid(uuid);
-	}*/
-
+	
 	/********************** UNUSED **********************/
 	/*public Role findLatestByUuid(String uuid) {
 		// String appUuid = (securityServiceImpl.getAppInfo() != null &&
@@ -109,16 +100,6 @@ public class RoleServiceImpl {
 			return iRoleDao.findOneById(appUuid, id);
 		}
 		return iRoleDao.findOne(id);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Role> findAll() {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid == null) {
-			return iRoleDao.findAll();
-		}
-		return iRoleDao.findAll(appUuid);
 	}*/
 
 	/********************** UNUSED **********************/
@@ -159,30 +140,6 @@ public class RoleServiceImpl {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public List<Role> findAllLatest() {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-
-		Aggregation roleAggr = newAggregation(group("uuid").max("version").as("version"));
-		AggregationResults<Role> roleResults = mongoTemplate.aggregate(roleAggr,"role", Role.class);
-		List<Role> roleList = roleResults.getMappedResults();
-		List<Role> result = new ArrayList<Role>();
-		for (Role r : roleList) {
-			Role roleLatest = null;
-			if (appUuid != null) {
-				roleLatest = iRoleDao.findOneByUuidAndVersion(appUuid, r.getId(), r.getVersion());
-			} else {
-				roleLatest = iRoleDao.findOneByUuidAndVersion(r.getId(), r.getVersion());
-			}
-			if (roleLatest != null) {
-				result.add(roleLatest);
-			}
-		}
-		return result;
-
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public List<Role> findAllLatestActive() {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
@@ -206,60 +163,7 @@ public class RoleServiceImpl {
 		}
 		return result;
 	}*/
-
-	/********************** UNUSED **********************/
-/*	public Role resolveName(Role role) {
-		if (role.getCreatedBy() != null) {
-			String createdByRefUuid = role.getCreatedBy().getRef().getUuid();
-			User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			role.getCreatedBy().getRef().setName(user.getName());
-		}
-		if (role.getAppInfo() != null) {
-			for (int i = 0; i < role.getAppInfo().size(); i++) {
-				String appUuid = role.getAppInfo().get(i).getRef().getUuid();
-				Application application = applicationServiceImpl.findLatestByUuid(appUuid);
-				String appName = application.getName();
-				role.getAppInfo().get(i).getRef().setName(appName);
-			}
-		}
-		List<MetaIdentifierHolder> privInfo = role.getPrivilegeInfo();
-		for (int i = 0; i < privInfo.size(); i++) {
-			MetaIdentifier privRef = privInfo.get(i).getRef();
-			MetaType type = privRef.getType();
-			if (type.toString().equalsIgnoreCase(MetaType.role.toString())) {
-				Role roleDO = findLatestByUuid(privRef.getUuid());
-				role.getPrivilegeInfo().get(i).getRef().setName(roleDO.getName());
-			}
-			if (type.toString().equalsIgnoreCase(MetaType.privilege.toString())) {
-				Privilege privDO = privilegeServiceImpl.findLatestByUuid(privRef.getUuid());
-				role.getPrivilegeInfo().get(i).getRef().setName(privDO.getName());
-			}
-		}
-		return role;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Role> resolveName(List<Role> role) {
-		List<Role> roleList = new ArrayList<>();
-		for (Role r : role) {
-			String createdByRefUuid = r.getCreatedBy().getRef().getUuid();
-			User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			r.getCreatedBy().getRef().setName(user.getName());
-			roleList.add(r);
-		}
-		return roleList;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Role> findAllByVersion(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iRoleDao.findAllVersion(appUuid, uuid);
-		}
-		return iRoleDao.findAllVersion(uuid);
-	}*/
-
+	
 	/********************** UNUSED **********************/
 	/*public Role getAsOf(String uuid, String asOf) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)

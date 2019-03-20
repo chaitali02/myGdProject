@@ -196,32 +196,6 @@ public class ProfileServiceImpl extends RuleTemplate {
 		Profile.setBaseEntity();
 	}
 
-	/*
-	 * public Profile resolveName(Profile profile) { if (profile.getCreatedBy() !=
-	 * null) { String createdByRefUuid = profile.getCreatedBy().getRef().getUuid();
-	 * User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-	 * profile.getCreatedBy().getRef().setName(user.getName()); } if
-	 * (profile.getAppInfo() != null) { for (int i = 0; i <
-	 * profile.getAppInfo().size(); i++) { String appUuid =
-	 * profile.getAppInfo().get(i).getRef().getUuid(); Application application =
-	 * applicationServiceImpl.findLatestByUuid(appUuid); String appName =
-	 * application.getName(); profile.getAppInfo().get(i).getRef().setName(appName);
-	 * } } if (profile.getDependsOn().getRef().getType().equals("datapod")) { String
-	 * dependsOnRefUuid = profile.getDependsOn().getRef().getUuid(); Datapod
-	 * datapodDO = datapodServiceImpl.findLatestByUuid(dependsOnRefUuid); String
-	 * datapodName = datapodDO.getName();
-	 * profile.getDependsOn().getRef().setName(datapodName); }
-	 * 
-	 * for (int i = 0; i < profile.getAttributeInfo().size(); i++) { String
-	 * attributeId = profile.getAttributeInfo().get(i).getAttrId(); Datapod
-	 * datapodDO =
-	 * datapodServiceImpl.findLatestByUuid(profile.getAttributeInfo().get(i).getRef(
-	 * ).getUuid()); String datapodName = datapodDO.getName();
-	 * profile.getAttributeInfo().get(i).getRef().setName(datapodName);
-	 * List<Attribute> attributeList = datapodDO.getAttributes();
-	 * profile.getAttributeInfo().get(i).setAttrName(attributeList.get(Integer.
-	 * parseInt(attributeId)).getName()); } return profile; }
-	 */
 	public Profile save(Profile profile) throws Exception {
 		MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
 		List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
@@ -285,14 +259,6 @@ public class ProfileServiceImpl extends RuleTemplate {
 		return result;
 	}
 
-	/*
-	 * public List<Profile> resolveName(List<Profile> Profile) { List<Profile>
-	 * ProfileList = new ArrayList<Profile>(); for (Profile con : Profile) { String
-	 * createdByRefUuid = con.getCreatedBy().getRef().getUuid(); User user =
-	 * userServiceImpl.findLatestByUuid(createdByRefUuid);
-	 * con.getCreatedBy().getRef().setName(user.getName()); ProfileList.add(con); }
-	 * return ProfileList; }
-	 */
 	public List<Profile> findAllByVersion(String uuid) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 				? securityServiceImpl.getAppInfo().getRef().getUuid()

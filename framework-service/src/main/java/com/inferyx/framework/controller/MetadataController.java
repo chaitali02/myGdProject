@@ -129,50 +129,6 @@ public class MetadataController {
 			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
 		return registerService.getDagExecByDag(dagUUID, type);
 	}
-
-	/********************** UNUSED **********************/
-	/*@RequestMapping(value = "/getDagByDatapod", method = RequestMethod.GET)
-	public @ResponseBody String getDagByDatapod(@RequestParam("datapodUUID") String datapodUUID,
-			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action)
-			throws JsonProcessingException {
-		return registerService.getDagByDatapod(datapodUUID);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*@RequestMapping(value = "/getMapByDatapod", method = RequestMethod.GET)
-	public @ResponseBody String getMapByDatapod(@RequestParam("datapodUUID") String datapodUUID,
-			@RequestParam("type") String type,
-			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
-		return registerService.getMapByDatapod(datapodUUID, type);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*@RequestMapping(value = "/getDimByType", method = RequestMethod.GET)
-	public @ResponseBody String getDimensionByDatapod(@RequestParam("typeUUID") String typeUUID,
-			@RequestParam("type") String type,
-			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
-		return registerService.getDimByType(typeUUID, type);
-	}*/
-
-
-	/*@RequestMapping(value = "/getOneByUuidAndVersion", method = RequestMethod.GET)
-	public @ResponseBody String getOneByUuidAndVersion(@RequestParam("uuid") String uuid,
-			@RequestParam("version") String version, @RequestParam("type") String type) throws JsonProcessingException {
-		return registerService.getOneByUuidAndVersion(uuid, version, type);
-	}*/
-	
-	/*@RequestMapping(value = "/getLatestByUuid", method = RequestMethod.GET)
-	public @ResponseBody String getLatestByUuid(@RequestParam("uuid") String uuid, @RequestParam("type") String type)
-			throws JsonProcessingException {
-		return registerService.getLatestByUuid(uuid, type);
-	}*/
-	
-	/*@RequestMapping(value = "/getAllVersionByUuid", method = RequestMethod.GET)
-	public @ResponseBody String getAllVersion(@RequestParam("uuid") String uuid, @RequestParam("type") String type)
-			throws JsonProcessingException {
-		return registerService.getAllVersion(uuid, type);
-	}*/
 	
 	@RequestMapping(value = "/getLatestByUsername", method = RequestMethod.GET)
 	public @ResponseBody String getLatestByUsername(@RequestParam("userName") String userName,
@@ -181,38 +137,6 @@ public class MetadataController {
 			throws JsonProcessingException {
 		return registerService.getLatestByUsername(userName);
 	}
-
-	/********************** UNUSED **********************/
-	/*@RequestMapping(value = "/getFilterByRelation", method = RequestMethod.GET)
-	public @ResponseBody String getFilterByRelation(@RequestParam("relationUUID") String relationUUID,
-			@RequestParam("type") String type,
-			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
-		return registerService.getFilterByRelation(relationUUID, type);
-	}*/
-
-	/*@RequestMapping(value = "/getDimInfoByRelation", method = RequestMethod.GET)
-	public @ResponseBody String getDimInfoByRelation(@RequestParam("relationUUID") String relationUUID,
-			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action)
-			throws JsonProcessingException {
-		return registerService.getDimInfoByRelation(relationUUID);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*@RequestMapping(value = "/getMeasureInfoByRelation", method = RequestMethod.GET)
-	public @ResponseBody String getMeasureInfoRelation(@RequestParam("relationUUID") String relationUUID,
-			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action)
-			throws JsonProcessingException {
-		return registerService.getMeasureInfoByRelation(relationUUID);
-	}*/
-
-//	@RequestMapping(value = "/createActivity", method = RequestMethod.GET)
-//	public @ResponseBody String createActivity(@RequestParam("UserUUID") String UserUUID,
-//			@RequestParam(value = "type", required = false) String type,
-//			@RequestParam(value = "action", required = false) String action) throws IOException {
-//		return registerService.createActivity(UserUUID);
-//	}
 
 	@RequestMapping(value = "/getUserByName", method = RequestMethod.GET)
 	public @ResponseBody String getUserByName(@RequestParam("userName") String userName,
@@ -237,22 +161,6 @@ public class MetadataController {
 					throws IOException, JSONException, java.text.ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 		return registerService.createUserSession(userName);
 	}
-
-	/********************** UNUSED **********************/
-	/*@RequestMapping(value = "/getFilterByDatapod", method = RequestMethod.GET)
-	public @ResponseBody String getFilterByDatapod(@RequestParam("datapodUUID") String datapodUUID,
-			@RequestParam("type") String type,
-			@RequestParam(value = "action", required = false) String action) 
-					throws JsonProcessingException {
-		return registerService.getFilterByDatapod(datapodUUID, type);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*@RequestMapping(value = "/getOneById", method = RequestMethod.GET, params = { "id", "type" })
-	public @ResponseBody String getOneById(@RequestParam("id") String id, @RequestParam("type") String type,
-			HttpServletRequest request) throws JsonProcessingException {
-		return registerService.getOneById(id, type);
-	}*/
 	
 	@RequestMapping(value = "/getRelationByDatapod", method = RequestMethod.GET)
 	public @ResponseBody String getRelationByDatapod(@RequestParam("datapodUUID") String datapodUUID,
@@ -287,13 +195,6 @@ public class MetadataController {
 		return registerService.getDataStoreByDatapod(datapodUUID, type);
 	}
 
-	/********************** UNUSED **********************/
-	/*@RequestMapping(value = "/getAllLatest", method = RequestMethod.GET)
-	public @ResponseBody String getAllLatest(@RequestParam("type") String type, HttpServletRequest request,
-			@RequestParam(value = "inputFlag", required = false) String inputFlag) throws JsonProcessingException {
-		return registerService.getAllLatest(type, inputFlag);
-	}*/
-
 	@RequestMapping(value = "/getAllLatestActive", method = RequestMethod.GET)
 	public @ResponseBody String getAllLatestActive(@RequestParam("type") String type,
 			@RequestParam(value = "action", required = false) String action) 
@@ -302,19 +203,6 @@ public class MetadataController {
 		return objectWriter.writeValueAsString(commonServiceImpl.getAllLatest(type, "Y"));
 	}
 
-	/********************** UNUSED **********************/
-	/*@RequestMapping(value = "/getAllByUuid", method = RequestMethod.GET)
-	public @ResponseBody String getAllByUuid(@RequestParam("uuid") String uuid, @RequestParam("type") String type)
-			throws JsonProcessingException {
-		return registerService.getAllByUuid(uuid, type);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*@RequestMapping(value = "/getAll", method = RequestMethod.GET)
-	public @ResponseBody String getAll(@RequestParam("type") String type, HttpServletRequest request)
-			throws JsonProcessingException {
-		return registerService.getMetaDataList(type, request);
-	}*/
 
 	/********************** UNUSED **********************/
 	/*@RequestMapping(value = "/getList", method = RequestMethod.GET)

@@ -1,58 +1,34 @@
 {
-	"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73018",
-	"version": "1464977196",
-	"name": "hive",
-	"desc": "Hive Data Source",
-	"createdBy": {
-		"ref": {
-			"type": "user",
-			"uuid": "d04716df-e96a-419f-9118-c81342b47f85"
+	"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73018",
+	"version" : "1464977196",
+	"name" : "hive",
+	"desc" : "Hive Data Source",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
 		}
 	},
-	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
+	"createdOn" : ISODate("2019-03-19T07:37:48.434Z"),
 	"active" : "Y",
-  "locked" : "N",
-	"appInfo": [
+	"locked" : "N",
+	"publicFlag" : "Y",
+	"appInfo" : [
 		{
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
-            }
-        }, 
-       
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
-            }
-        }
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			}
+		}
 	],
-	"type": "HIVE",
-	"access": "JDBC",
-	"driver": "org.apache.hive.jdbc.HiveDriver",
-	"host": "localhost",
-	"dbname": "framework",
-	"port": "10000",
-	"username": "inferyx",
-	"password": "",
-	"path": "/user/hive/warehouse/framework.db",
-	"sessionParameters": "hive.exec.dynamic.partition=true,hive.exec.dynamic.partition.mode=nonstrict"
+	"type" : "HIVE",
+	"access" : "JDBC",
+	"driver" : "org.apache.hive.jdbc.HiveDriver",
+	"host" : "localhost",
+	"dbname" : "framework",
+	"port" : "10000",
+	"username" : "inferyx",
+	"password" : "",
+	"path" : "/user/hive/warehouse/framework.db",
+	"sessionParameters" : "hive.exec.dynamic.partition=true,hive.exec.dynamic.partition.mode=nonstrict"
 }

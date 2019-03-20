@@ -62,11 +62,6 @@ public class AlgorithmServiceImpl {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public Algorithm findAllByUuid(String uuid) {
-		return iAlgorithmDao.findAllByUuid(uuid);	
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public Algorithm findLatestByUuid(String uuid){
 		return iAlgorithmDao.findLatestByUuid(uuid,new Sort(Sort.Direction.DESC, "version"));	
 	}*/
@@ -79,11 +74,6 @@ public class AlgorithmServiceImpl {
 	/********************** UNUSED **********************/
 	/*public Algorithm findOneById(String id){
 		return iAlgorithmDao.findOne(id);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Algorithm> findAll(){
-		return iAlgorithmDao.findAll();
 	}*/
 
 	/********************** UNUSED **********************/
@@ -106,63 +96,6 @@ public class AlgorithmServiceImpl {
 		Algorithm app=iAlgorithmDao.save(algorithm);
 		registerGraph.updateGraph((Object) app, MetaType.algorithm);
 		return app;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Algorithm> resolveName(List<Algorithm> algorithms) {
-		List<Algorithm> algorithmList = new ArrayList<Algorithm>(); 
-		for(Algorithm algorithm : algorithms)
-		{
-			String createdByRefUuid = algorithm.getCreatedBy().getRef().getUuid();
-			User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			algorithm.getCreatedBy().getRef().setName(user.getName());
-			algorithmList.add(algorithm);
-		}
-		return algorithmList;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Algorithm resolveName(Algorithm algorithm) {
-		if (algorithm.getCreatedBy() != null) {
-			String createdByRefUuid = algorithm.getCreatedBy().getRef().getUuid();
-			User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			algorithm.getCreatedBy().getRef().setName(user.getName());
-		}
-		if (algorithm.getAppInfo() != null) {
-			for (int i = 0; i < algorithm.getAppInfo().size(); i++) {
-				String appUuid = algorithm.getAppInfo().get(i).getRef().getUuid();
-				Application application = applicationServiceImpl.findLatestByUuid(appUuid);
-				String appName = application.getName();
-				algorithm.getAppInfo().get(i).getRef().setName(appName);
-			}
-		}		
-		return algorithm;
-	}*/	
-
-	/********************** UNUSED **********************/
-	/*public List<Algorithm> findAllByVersion(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iAlgorithmDao.findAllVersion(appUuid, uuid);
-		} else
-			return iAlgorithmDao.findAllVersion(uuid);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Algorithm> findAllLatest() {	
-			   Aggregation AlgorithmAggr = newAggregation(group("uuid").max("version").as("version"));
-			   AggregationResults<Algorithm> AlgorithmResults = mongoTemplate.aggregate(AlgorithmAggr, "algorithm", Algorithm.class);	   
-			   List<Algorithm> AlgorithmList = AlgorithmResults.getMappedResults();
-
-			   // Fetch the relation details for each id
-			   List<Algorithm> result=new  ArrayList<Algorithm>();
-			   for(Algorithm a :AlgorithmList)
-			   {   
-				   Algorithm AlgorithmLatest = iAlgorithmDao.findOneByUuidAndVersion(a.getId(),a.getVersion());
-				   result.add(AlgorithmLatest);
-			   }
-			   return result;			
 	}*/
 
 	/********************** UNUSED **********************/

@@ -129,12 +129,6 @@ public class DagExecServiceImpl {
 		return iDagExec.findLatestDagExec(appUuid, dagUUID, dagVersion);
 	}
 
-	/********************** UNUSED **********************/
-	/*public List<DagExec> findAll() {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iDagExec.findAll(appUuid);
-	}*/
-
 	public List<DagExec> findDagExecByDatapod(String datapodUUID) {
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
 		return iDagExec.findOneByDatapod(appUuid, datapodUUID);
@@ -189,13 +183,6 @@ public class DagExecServiceImpl {
 	/********************** UNUSED **********************/
 	/*public List<DagExec> test(String param1, String param2) {
 		return iDagExec.test(param1, param2);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public DagExec findAllByUuid(String uuid) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iDagExec.findAllByUuid(appUuid, uuid);
-
 	}*/
 
 	/********************** UNUSED **********************/
@@ -438,37 +425,6 @@ public class DagExecServiceImpl {
 	public List<String> fetchAllTaskThread() {
 		return btchServ.fetchAllTaskThread();
 	}
-
-	/********************** UNUSED **********************/
-	/*public List<DagExec> findAllLatest() {
-		{
-			// String appUuid =
-			// securityServiceImpl.getAppInfo().getRef().getUuid();;
-			Aggregation dagexcAggr = newAggregation(group("uuid").max("version").as("version"));
-			AggregationResults<DagExec> dagexcResults = mongoTemplate.aggregate(dagexcAggr, "dagexec", DagExec.class);
-			List<DagExec> dagexcList = dagexcResults.getMappedResults();
-
-			// Fetch the relation details for each id@Autowired
-			List<DagExec> result = new ArrayList<DagExec>();
-			for (DagExec s : dagexcList) {
-				DagExec dagExecLatest;
-				String appUuid = (securityServiceImpl.getAppInfo() != null
-						&& securityServiceImpl.getAppInfo().getRef() != null)
-								? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-				if (appUuid != null) {
-					dagExecLatest = iDagExec.findOneByUuidAndVersion(appUuid, s.getId(), s.getVersion());
-				} else {
-					dagExecLatest = iDagExec.findOneByUuidAndVersion(s.getId(), s.getVersion());
-				}
-				// logger.debug("datapodLatest is " + datapodLatest.getName());
-				if (dagExecLatest != null) {
-					result.add(dagExecLatest);
-				}
-			}
-			return result;
-		}
-	}
-*/
 
 	/********************** UNUSED 
 	 * @throws JsonProcessingException 
@@ -1644,91 +1600,6 @@ public class DagExecServiceImpl {
 		return tableName;
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public List<DagExec> resolveName(List<DagExec> dagExec) {
-		List<DagExec> dagExecList = new ArrayList<>();
-		for (DagExec dExec : dagExec) {
-			String createdByRefUuid = dExec.getCreatedBy().getRef().getUuid();
-			User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			dExec.getCreatedBy().getRef().setName(user.getName());
-			List<MetaIdentifierHolder> appList = dExec.getAppInfo();
-			for (int i = 0; i < appList.size(); i++) {
-				String appuuid = dExec.getAppInfo().get(i).getRef().getUuid();
-				Application app = applicationServiceImpl.findLatestByUuid(appuuid);
-				dExec.getAppInfo().get(i).getRef().setName(app.getName());
-			}
-			dagExecList.add(dExec);
-		}
-		return dagExecList;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public DagExec resolveName(DagExec dagExec) {
-		
-	try {
-		String createdByRefUuid = dagExec.getCreatedBy().getRef().getUuid();
-		User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-		dagExec.getCreatedBy().getRef().setName(user.getName());
-		if (dagExec.getAppInfo() != null) {
-			for (int i = 0; i < dagExec.getAppInfo().size(); i++) {
-				String appUuid = dagExec.getAppInfo().get(i).getRef().getUuid();
-				Application application = applicationServiceImpl.findLatestByUuid(appUuid);
-				String appName = application.getName();
-				dagExec.getAppInfo().get(i).getRef().setName(appName);
-			}
-		}
-		
-
-		String dependsOnUuid=dagExec.getDependsOn().getUuid();
-		Dag dag=dagServiceImpl.findLatestByUuid(dependsOnUuid);
-		dagExec.getDependsOn().setName(dag.getName());
-		
-		for(int i=0;i<dagExec.getStages().size();i++){
-		for(int j=0;j<dagExec.getStages().get(i).getTasks().size();j++){
-		
-		MetaType type=dagExec.getStages().get(i).getTasks().get(j).getOperators().get(0).getOperatorInfo().getRef().getType();
-		if(type.toString().equals(MetaType.dqExec.toString())){
-		String dqgroupUuid=dagExec.getStages().get(i).getTasks().get(j).getOperators().get(0).getOperatorInfo().getRef().getUuid();
-		DataQualExec dataQualExec=dataQualExecServiceImpl.findLatestByUuid(dqgroupUuid);
-		dagExec.getStages().get(i).getTasks().get(j).getOperators().get(0).getOperatorInfo().getRef().setName(dataQualExec.getName());
-		}
-		else if(type.toString().equals(MetaType.loadExec.toString())){
-		String dqgroupUuid=dagExec.getStages().get(i).getTasks().get(j).getOperators().get(0).getOperatorInfo().getRef().getUuid();
-		LoadExec loadExec=loadExecServiceImpl.findLatestByUuid(dqgroupUuid);
-		dagExec.getStages().get(i).getTasks().get(j).getOperators().get(0).getOperatorInfo().getRef().setName(loadExec.getName());
-		}
-		else if(type.toString().equals(MetaType.mapExec.toString())){
-		String dqgroupUuid=dagExec.getStages().get(i).getTasks().get(j).getOperators().get(0).getOperatorInfo().getRef().getUuid();
-		MapExec mapExec=mapExecServiceImpl.findLatestByUuid(dqgroupUuid);
-		dagExec.getStages().get(i).getTasks().get(j).getOperators().get(0).getOperatorInfo().getRef().setName(mapExec.getName());
-		}
-		else if(type.toString().equals(MetaType.dqgroupExec.toString())){
-		String dqgroupUuid=dagExec.getStages().get(i).getTasks().get(j).getOperators().get(0).getOperatorInfo().getRef().getUuid();
-		DataQualGroupExec dataQualGroupExec=dataQualGroupExecServiceImpl.findLatestByUuid(dqgroupUuid);
-		dagExec.getStages().get(i).getTasks().get(j).getOperators().get(0).getOperatorInfo().getRef().setName(dataQualGroupExec.getName());
-		}
-		}
-		}
-		
-		
-	
-	} catch (Exception e) {
-	// TODO Auto-generated catch block
-	e.printStackTrace();
-	}
-			
-		return dagExec;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<DagExec> findAllByVersion(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iDagExec.findAllVersion(appUuid, uuid);
-		} else
-			return iDagExec.findAllVersion(uuid);
-	}*/
 
 	/********************** UNUSED **********************/
 	/*public DagExec getAsOf(String uuid, String asOf) {

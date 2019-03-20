@@ -107,86 +107,8 @@ public class ExpressionServiceImpl {
 		return expressionSave;
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public List<Expression> findAll() {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid == null) {
-			return iExpressionDao.findAll();
-		}
-		return iExpressionDao.findAll(appUuid);
-	}*/
 
-	/********************** UNUSED **********************/
-	/*public Expression resolveName(Expression expression) throws JsonProcessingException {
-		
-		if (expression == null) {
-			return null;
-		}
-		
-		if (expression.getCreatedBy() != null) {
-			String createdByRefUuid = expression.getCreatedBy().getRef().getUuid();
-			User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			expression.getCreatedBy().getRef().setName(user.getName());
-		}
-		if (expression.getAppInfo() != null) {
-			for (int i = 0; i < expression.getAppInfo().size(); i++) {
-				String appUuid = expression.getAppInfo().get(i).getRef().getUuid();
-				Application application = (Application) commonServiceImpl.getLatestByUuid(appUuid, MetaType.application.toString());
-				String appName = application.getName();
-				expression.getAppInfo().get(i).getRef().setName(appName);
-			}
-		}
-	//	for (int i = 0; i < expression.getExpressionInfo().size(); i++) {
-			if (expression.getMatch().getRef().getType() == MetaType.formula) {
-				String metUuid = expression.getMatch().getRef().getUuid();
-				Formula formula = formulaServiceImpl.findLatestByUuid(metUuid);
-				String formulaName = formula.getName();
-				expression.getMatch().getRef().setName(formulaName);
-			}
-			if (expression.getNoMatch().getRef().getType() == MetaType.formula) {
-				String metUuid = expression.getNoMatch().getRef().getUuid();
-				Formula formula = formulaServiceImpl.findLatestByUuid(metUuid);
-				String formulaName = formula.getName();
-				expression.getNoMatch().getRef().setName(formulaName);
-			}
-			for (int i = 0; i < expression.getExpressionInfo().size(); i++) {
-			for (int j = 0; j < expression.getExpressionInfo().get(i).getOperand().size(); j++) {
-				MetaType operandRefType = expression.getExpressionInfo().get(i).getOperand().get(j).getRef().getType();
-				String operandRefUuid = expression.getExpressionInfo().get(i).getOperand().get(j).getRef().getUuid();
 
-				if (operandRefType.toString().equals(MetaType.datapod.toString())) {
-					Integer operandAttributeId = expression.getExpressionInfo().get(i).getOperand().get(j)
-							.getAttributeId();
-					Datapod datapodDO = datapodServiceImpl.findLatestByUuid(operandRefUuid);
-					String datapodName = datapodDO.getName();
-					expression.getExpressionInfo().get(i).getOperand().get(j).getRef().setName(datapodName);
-					List<Attribute> attributeList = datapodDO.getAttributes();
-					expression.getExpressionInfo().get(i).getOperand().get(j)
-							.setAttributeName(attributeList.get(operandAttributeId).getName());
-				}
-			}
-			}
-		//}
-		String RefUuid = expression.getDependsOn().getRef().getUuid();
-		MetaType type = expression.getDependsOn().getRef().getType();
-		if (type.toString().equals(MetaType.relation.toString())) {
-			Relation relationDO = relationServiceImpl.findLatestByUuid(RefUuid);
-			String relationName = relationDO.getName();
-			expression.getDependsOn().getRef().setName(relationName);
-		} else if (type.toString().equals(MetaType.datapod.toString())) {
-			Datapod dependsOnDatapod = datapodServiceImpl.findLatestByUuid(RefUuid);
-			String datapodName = dependsOnDatapod.getName();
-			expression.getDependsOn().getRef().setName(datapodName);
-		} else if (type.toString().equals(MetaType.dataset.toString())) {
-			Dataset dependsOnDataset = datasetServiceImpl.findLatestByUuid(RefUuid);
-			String datasetName = dependsOnDataset.getName();
-			expression.getDependsOn().getRef().setName(datasetName);
-		}
-
-		return expression;
-	}
-*/
 	/*public Expression update(Expression expression) throws IOException {
 		expression.exportBaseProperty();
 		Expression expressionDet=iExpressionDao.save(expression);
@@ -216,12 +138,6 @@ public class ExpressionServiceImpl {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public Expression findAllByUuid(String uuid) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iExpressionDao.findAllByUuid(appUuid, uuid);
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public Expression findOneByUuidAndVersion(String uuid, String version) {
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
 		return iExpressionDao.findOneByUuidAndVersion(appUuid, uuid, version);
@@ -241,39 +157,7 @@ public class ExpressionServiceImpl {
 		}
 		return iExpressionDao.findLatestByUuid(appUuid, uuid, new Sort(Sort.Direction.DESC, "version"));
 	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Expression> findAllLatest() {
-		// String appUuid =
-		// securityServiceImpl.getAppInfo().getRef().getUuid();;
-		Aggregation expressionAggr = newAggregation(group("uuid").max("version").as("version"));
-		AggregationResults<Expression> expressionResults = mongoTemplate.aggregate(expressionAggr, "expression",
-				Expression.class);
-		List<Expression> expressionList = expressionResults.getMappedResults();
-
-		// Fetch the datapod details for each id
-		List<Expression> result = new ArrayList<Expression>();
-		for (Expression s : expressionList) {
-			Expression expressionLatest;
-			String appUuid = (securityServiceImpl.getAppInfo() != null
-					&& securityServiceImpl.getAppInfo().getRef() != null)
-							? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-			if (appUuid != null) {
-				// String appUuid =
-				// securityServiceImpl.getAppInfo().getRef().getUuid();;
-				expressionLatest = iExpressionDao.findOneByUuidAndVersion(appUuid, s.getId(), s.getVersion());
-			} else {
-				expressionLatest = iExpressionDao.findOneByUuidAndVersion(s.getId(), s.getVersion());
-			}
-			// logger.debug("datapodLatest is " + datapodLatest.getName());
-			if(expressionLatest != null)
-			{
-			result.add(expressionLatest);
-			}
-		}
-		return result;
-	}*/
-
+	
 	/********************** UNUSED 
 	 * @throws JsonProcessingException **********************/
 	/*public List<Expression> findAllLatestActive() {
@@ -320,28 +204,6 @@ public class ExpressionServiceImpl {
 		}
 		return result;
 	}
-
-	/********************** UNUSED **********************/
-	/*public List<Expression> resolveName(List<Expression> expression) {
-		List<Expression> expressionList = new ArrayList<Expression>();
-		for (Expression exp : expression) {
-			String createdByRefUuid = exp.getCreatedBy().getRef().getUuid();
-			User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			exp.getCreatedBy().getRef().setName(user.getName());
-			expressionList.add(exp);
-		}
-		return expressionList;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Expression> findAllByVersion(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iExpressionDao.findAllVersion(appUuid, uuid);
-		} else
-			return iExpressionDao.findAllVersion(uuid);
-	}*/
 
 	/********************** UNUSED 
 	 * @throws JsonProcessingException **********************/

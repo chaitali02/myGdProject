@@ -75,12 +75,6 @@ public class ConditionServiceImpl {
 	static final Logger logger = Logger.getLogger(ConditionServiceImpl.class);
 
 	/********************** UNUSED **********************/
-	/*public Condition findAllByUuid(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		return iConDao.findAllByUuid(appUuid,uuid);	
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public Condition findLatestByUuid(String uuid){
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
 		if(appUuid == null)
@@ -125,16 +119,6 @@ public class ConditionServiceImpl {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public List<Condition> findAll(){
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid == null)
-		{
-			return iConDao.findAll(); 
-		}
-		return iConDao.findAll(appUuid);
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public void  delete(String Id){
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
 		Condition condition = iConDao.findOneById(appUuid,Id);		
@@ -144,66 +128,7 @@ public class ConditionServiceImpl {
 		iConDao.delete(appUuid,ID);
 		condition.exportBaseProperty();
 	}*/
-	/*public Condition resolveName(Condition condition) throws JsonProcessingException{
-		if(condition.getCreatedBy() != null)
-		{
-		String createdByRefUuid = condition.getCreatedBy().getRef().getUuid();
-		User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-		condition.getCreatedBy().getRef().setName(user.getName());
-		}
-		if (condition.getAppInfo() != null) {
-			for (int i = 0; i < condition.getAppInfo().size(); i++) {
-				String appUuid = condition.getAppInfo().get(i).getRef().getUuid();
-				Application application = (Application) commonServiceImpl.getLatestByUuid(appUuid, "application");
-				String appName = application.getName();
-				condition.getAppInfo().get(i).getRef().setName(appName);
-			}
-		}
-		if(condition.getDependsOn().getRef().getType().equals(MetaType.relation.toString()))
-		{
-			String dependsOnRefUuid = condition.getDependsOn().getRef().getUuid();
-			Relation relationDO = relationServiceImpl.findLatestByUuid(dependsOnRefUuid);
-			
-			String relationName = relationDO.getName();
-			condition.getDependsOn().getRef().setName(relationName);
-		}
-		else if(condition.getDependsOn().getRef().getType().equals(MetaType.datapod.toString()))
-		{
-			String dependsOnRefUuid = condition.getDependsOn().getRef().getUuid();
-			Datapod datapodDO = datapodServiceImpl.findLatestByUuid(dependsOnRefUuid);		
-			String datapodName = datapodDO.getName();
-			condition.getDependsOn().getRef().setName(datapodName);
-		}
-		else if(condition.getDependsOn().getRef().getType().equals(MetaType.dataset.toString()))
-		{
-			String dependsOnRefUuid = condition.getDependsOn().getRef().getUuid();
-			Dataset datasetDO = datasetServiceImpl.findLatestByUuid(dependsOnRefUuid);		
-			String datasetName = datasetDO.getName();
-			condition.getDependsOn().getRef().setName(datasetName);
-		}
-		
-		
-		for(int i=0;i<condition.getConditionInfo().size();i++){	
-			for(int j=0;j<condition.getConditionInfo().get(i).getOperand().size();j++){
-				MetaType operandRefType = condition.getConditionInfo().get(i).getOperand().get(j).getRef().getType();
-	            String operandRefUuid = condition.getConditionInfo().get(i).getOperand().get(j).getRef().getUuid();
-	            
-				if(operandRefType.toString().equals(MetaType.datapod.toString()))
-				{
-					Integer operandAttributeId = condition.getConditionInfo().get(i).getOperand().get(j).getAttributeId();
-					Datapod datapodDO = datapodServiceImpl.findLatestByUuid(operandRefUuid);
-					String datapodName = datapodDO.getName();
-					condition.getConditionInfo().get(i).getOperand().get(j).getRef().setName(datapodName);
-					List<Attribute> attributeList = datapodDO.getAttributes();
-					condition.getConditionInfo().get(i).getOperand().get(j).setAttributeName(attributeList.get(operandAttributeId).getName());
-				}
-			
-			}	
-		}
-		
-		return condition;
-	}*/
-
+	
 	/********************** UNUSED **********************/
 	/*public Condition save(Condition condition) throws Exception{
 		MetaIdentifierHolder meta=securityServiceImpl.getAppInfo();
@@ -216,41 +141,6 @@ public class ConditionServiceImpl {
 		registerGraph.updateGraph((Object) condition1, MetaType.condition);
 		return condition1;
 	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Condition> findAllLatest() {
-		{	   
-			//String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();;
-			   Aggregation conditionAggr = newAggregation(group("uuid").max("version").as("version"));
-			   AggregationResults<Condition> conditionResults = mongoTemplate.aggregate(conditionAggr, "condition", Condition.class);	   
-			   List<Condition> conditionList = conditionResults.getMappedResults();
-
-			   // Fetch the relation details for each id
-			   List<Condition> result=new  ArrayList<Condition>();
-			   for(Condition s :conditionList)
-			   {  
-				 Condition conditionLatest;
-				String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-				if(appUuid == null)
-				{
-				//String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();;
-					conditionLatest = iConDao.findOneByUuidAndVersion(appUuid,s.getId(), s.getVersion());
-				}
-				else
-				{
-					conditionLatest = iConDao.findOneByUuidAndVersion(s.getId(), s.getVersion());
-				}
-				//logger.debug("datapodLatest is " + datapodLatest.getName());
-				 if(conditionLatest != null)
-				   {
-				   result.add(conditionLatest);
-				   }
-			   }
-			   return result;
-			}
-	}
-	*/
-
 	/********************** UNUSED **********************/
 	/*public List<Condition> findAllLatestActive() 	
 	{	  
@@ -301,27 +191,6 @@ public class ConditionServiceImpl {
 		return result;
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public List<Condition> resolveName(List<Condition> condition) {
-		List<Condition> conditionList = new ArrayList<Condition>();
-		for(Condition con : condition)
-		{
-		String createdByRefUuid = con.getCreatedBy().getRef().getUuid();
-		User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-		con.getCreatedBy().getRef().setName(user.getName());
-		conditionList.add(con);
-		}
-		return conditionList;
-	}*/
-	/*public List<Condition> findAllByVersion(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid != null)
-		{
-		return iConDao.findAllVersion(appUuid, uuid);
-		}
-		else
-		return iConDao.findAllVersion(uuid);
-	}*/
 	/*public Condition getAsOf(String uuid, String asOf) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;				

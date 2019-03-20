@@ -1,58 +1,34 @@
 {
-    "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73038",
-    "version" : "1464977196",
-    "name" : "postgres_ecocap",
-    "desc" : "PostGres_ecocap Data Source",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
-        }
-    },
-    "createdOn" : ISODate("2018-05-14T13:15:49.822Z"),
-    "active" : "Y",
-  "locked" : "N",
-    "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
-            }
-        }, 
-       
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
-            }
-        }
-    ],
-    "type" : "POSTGRES",
-    "access" : "JDBC",
-    "driver" : "org.postgresql.Driver",
-    "host" : "localhost",
-    "dbname" : "ecocap",
-    "port" : "5432",
-    "username" : "inferyx",
-    "password" : "inferyx",
-    "path": "/user/hive/warehouse/ecocap/",
-    "sessionParameters" : ""
+	"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73038",
+	"version" : "1464977196",
+	"name" : "postgres_ecocap",
+	"desc" : "PostGres_ecocap Data Source",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-03-19T07:37:48.434Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"publicFlag" : "N",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc"
+			}
+		}
+	],
+	"type" : "POSTGRES",
+	"access" : "JDBC",
+	"driver" : "org.postgresql.Driver",
+	"host" : "localhost",
+	"dbname" : "ecocap",
+	"port" : "5432",
+	"username" : "inferyx",
+	"password" : "inferyx",
+	"path" : "/user/hive/warehouse/ecocap/",
+	"sessionParameters" : ""
 }

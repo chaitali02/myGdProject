@@ -56,17 +56,6 @@ public class DataQualGroupExecServiceImpl  extends BaseGroupExecTemplate {
 		return resolveName(iDataQualGroupExecDao.findLatest(new Sort(Sort.Direction.DESC, "version")));
 	}*/
 	
-
-	/********************** UNUSED **********************/
-	/*public List<DataQualGroupExec> findAll() {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid == null)
-		{
-			return iDataQualGroupExecDao.findAll(); 
-		}
-		return iDataQualGroupExecDao.findAll(appUuid);
-	}*/
-
 	/********************** UNUSED **********************/
 	/*public DataQualGroupExec findOneById(String id) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
@@ -109,43 +98,6 @@ public class DataQualGroupExecServiceImpl  extends BaseGroupExecTemplate {
 		iDataQualGroupExecDao.save(DataQualGroupExec);
 //		String ID=DataQualGroupExec.getId();
 //		iDataQualGroupExecDao.delete(ID);		
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<DataQualGroupExec> findAllByUuid(String uuid) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iDataQualGroupExecDao.findAllByUuid(appUuid,uuid);
-		
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<DataQualGroupExec> findAllLatest()
-	{		
-		//String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		Aggregation DataQualGroupExecAggr = newAggregation(group("uuid").max("version").as("version"));
-		AggregationResults<DataQualGroupExec> DataQualExecResults = mongoTemplate.aggregate(DataQualGroupExecAggr, "dqgroupexec", DataQualGroupExec.class);
-		List<DataQualGroupExec> DataQualGroupExecList = DataQualExecResults.getMappedResults();
-		// Fetch the VizExec details for each id
-		List<DataQualGroupExec> result = new ArrayList<DataQualGroupExec>();
-		for (DataQualGroupExec v : DataQualGroupExecList) {
-			DataQualGroupExec DataQualGroupExecLatest;
-			String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-			if(appUuid != null)
-			{
-			//String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();;
-				DataQualGroupExecLatest = iDataQualGroupExecDao.findOneByUuidAndVersion(appUuid,v.getId(), v.getVersion());
-			}
-			else
-			{
-				DataQualGroupExecLatest = iDataQualGroupExecDao.findOneByUuidAndVersion(v.getId(), v.getVersion());
-			}
-			//logger.debug("datapodLatest is " + datapodLatest.getName());
-			if(DataQualGroupExecLatest != null)
-			{
-			result.add(DataQualGroupExecLatest);
-			}
-		}	
-		return result;
 	}*/
 
 	/********************** UNUSED **********************/
@@ -257,17 +209,7 @@ public class DataQualGroupExecServiceImpl  extends BaseGroupExecTemplate {
 
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public List<DataQualGroupExec> findAllByVersion(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid != null)
-		{
-		return iDataQualGroupExecDao.findAllVersion(appUuid, uuid);
-		}
-		else
-		return iDataQualGroupExecDao.findAllVersion(uuid);
-	}*/
-
+	
 	public List<DataQualGroupExec> finddqGroupExecBydqGroup(String dqGroupExecUUID,String dqGroupExecVersion) throws JsonProcessingException {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
 		List<DataQualGroupExec> dqGroupExecList = null;
