@@ -98,7 +98,15 @@ public class ProfileOperator {
 		ExecContext execContext = helper.getExecutorContext(datasourceType);
 		switch(execContext) {
 		case HIVE : 
-			return "SELECT \'" + datapod.getUuid() + "\' AS datapoduuid, \'"
+			return "SELECT \'"
+				    + profileExec.getUuid() + "\' AS rule_exec_uuid, \'"
+					+ profileExec.getVersion()+ "\' AS rule_exec_version, '"
+					+ System.currentTimeMillis() + "' AS rule_exec_time, \'" 
+					+ profile.getUuid() + "\' AS rule_uuid, \'"
+					+ profile.getVersion()+ "\' AS rule_version, \'"
+					+ profile.getName() + "' AS rule_name, \'" 
+				    
+			        + datapod.getUuid() + "\' AS datapoduuid, \'"
 					+ datapod.getVersion() + "\' AS datapodversion, '"
 					+ datapod.getName() + "' AS datapodname, " 
 					+ attrId + " AS attributeid, "
@@ -126,7 +134,15 @@ public class ProfileOperator {
 					+ " WHERE 1=1 "
 					+ filterOperator2.generateSql(profile.getFilterInfo(), null, filterSource, null, new HashSet<>(), profileExec.getExecParams(), false, false, runMode, mapSourceDS);
 		case FILE : 
-			return "SELECT \'" + datapod.getUuid() + "\' AS datapoduuid, \'"
+			return "SELECT \'"
+				    + profileExec.getUuid() + "\' AS rule_exec_uuid, \'"
+					+ profileExec.getVersion()+ "\' AS rule_exec_version, '"
+					+ System.currentTimeMillis() + "' AS rule_exec_time, \'" 
+					+ profile.getUuid() + "\' AS rule_uuid, \'"
+					+ profile.getVersion()+ "\' AS rule_version, \'"
+					+ profile.getName() + "' AS rule_name, \'" 
+						
+		            + datapod.getUuid() + "\' AS datapoduuid, \'"
 					+ datapod.getVersion() + "\' AS datapodversion, '"
 					+ datapod.getName() + "' AS datapodname, " 
 					+ attrId + " AS attributeid, "
@@ -155,6 +171,12 @@ public class ProfileOperator {
 					+ filterOperator2.generateSql(profile.getFilterInfo(), null, filterSource, null, new HashSet<>(), profileExec.getExecParams(), false, false, runMode, mapSourceDS);
 		case IMPALA : 
 			return "SELECT "
+					+ profileExec.getUuid() + "\' AS rule_exec_uuid, \'"
+				    + profileExec.getVersion()+ "\' AS rule_exec_version, '"
+					+ System.currentTimeMillis() + "' AS rule_exec_time, \'" 
+					+ profile.getUuid() + "\' AS rule_uuid, \'"
+					+ profile.getVersion()+ "\' AS rule_version, \'"
+					+ profile.getName() + "' AS rule_name, \'" 
 					+ "'" + datapod.getUuid() + "' AS datapoduuid, "
 					+ "'" + datapod.getVersion() + "' AS datapodVersion, "
 					+ "'" + datapod.getName()+ "' AS datapodname,"
@@ -180,7 +202,15 @@ public class ProfileOperator {
 					+ " WHERE 1=1 "
 					+ filterOperator2.generateSql(profile.getFilterInfo(), null, filterSource, null, new HashSet<>(), profileExec.getExecParams(), false, false, runMode, mapSourceDS);
 		case MYSQL : 
-			return "SELECT '" + datapod.getUuid() + "' AS datapoduuid, '"
+			return "SELECT '"   
+		            + profileExec.getUuid() + "\' AS rule_exec_uuid, \'"
+					+ profileExec.getVersion()+ "\' AS rule_exec_version, '"
+					+ System.currentTimeMillis() + "' AS rule_exec_time, \'" 
+					+ profile.getUuid() + "\' AS rule_uuid, \'"
+					+ profile.getVersion()+ "\' AS rule_version, \'"
+					+ profile.getName() + "' AS rule_name, \'" 
+					
+		            + datapod.getUuid() + "' AS datapoduuid, '"
 					+ datapod.getVersion() + "' AS datapodVersion, '"
 					+ datapod.getName()+"' AS datapodname, " 
 					+ attrId + " AS attributeid, '"
@@ -205,7 +235,15 @@ public class ProfileOperator {
 					+ " WHERE 1=1 "
 					+ filterOperator2.generateSql(profile.getFilterInfo(), null, filterSource, null, new HashSet<>(), profileExec.getExecParams(), false, false, runMode, mapSourceDS);
 		case ORACLE : 
-			return "SELECT \'" + datapod.getUuid() + "\' AS datapoduuid, \'"
+			return "SELECT \'" 
+				    + profileExec.getUuid() + "\' AS rule_exec_uuid, \'"
+					+ profileExec.getVersion()+ "\' AS rule_exec_version, '"
+					+ System.currentTimeMillis() + "' AS rule_exec_time, \'" 
+					+ profile.getUuid() + "\' AS rule_uuid, \'"
+					+ profile.getVersion()+ "\' AS rule_version, \'"
+					+ profile.getName() + "' AS rule_name, \'" 
+					
+		            + datapod.getUuid() + "\' AS datapoduuid, \'"
 					+ datapod.getVersion() + "\' AS datapodVersion, "
 					+ " '" + datapod.getName()+"' AS datapodname, "
 					+ attrId + "  AS attributeid,"
@@ -235,7 +273,16 @@ public class ProfileOperator {
 					+ " GROUP BY "+attrName;
 		case POSTGRES : 
 			String attrName1 = " cast(regexp_replace(COALESCE(NULLIF(cast(" + attrName + " as text),''),'0'), '[^0-9]+', '0', 'g') as decimal) ";
-			return "SELECT '" + datapod.getUuid() + "' AS datapoduuid, "
+			return "SELECT '" 
+				    + profileExec.getUuid() + "\' AS rule_exec_uuid, \'"
+					+ profileExec.getVersion()+ "\' AS rule_exec_version, '"
+					+ System.currentTimeMillis() + "' AS rule_exec_time, \'" 
+					+ profile.getUuid() + "\' AS rule_uuid, \'"
+					+ profile.getVersion()+ "\' AS rule_version, \'"
+					+ profile.getName() + "' AS rule_name, \'" 
+					
+					
+					+ datapod.getUuid() + "' AS datapoduuid, "
 					+ "'" + datapod.getVersion() + "' AS datapodVersion, '"
 					+ datapod.getName()+"' AS datapodname,"
 					+ attrId + " AS attributeid,'"

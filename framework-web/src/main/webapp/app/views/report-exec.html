@@ -11,7 +11,7 @@
                 <i class="fa fa-circle"></i>
             </li>
             <li>
-                <a ui-sref="{{state}}">Map</a>
+                <a ui-sref="{{state}}">Report</a>
                 <i class="fa fa-circle"></i>
             </li>
             <li>
@@ -44,10 +44,7 @@
                             data-ng-click="showExecPage()" style="height:16px;font-size:16px;">
                             <span class="fa fa-home" style="display: block;margin: 2px auto;color:white;"></span>
                         </a>
-                        <!-- <a title="Show Details" data-toggle="tooltip" data-placement="top" tooltip ng-class="showExec==true? 'currentpage':'notcurrentpage'"
-                            data-ng-click="showExecPage()" style="height:16px;">
-                            <span class="glyphicon glyphicon-file" style="color:white;"></span>
-                        </a> -->
+                      
                         <a title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip ng-class="showExec==false? 'currentpage':'notcurrentpage'"
                             data-ng-click="showGraph(execData.uuid,execData.version)" style="height:14px;">
                             <i class="fa fa-sitemap" style="display: block;margin:0px 2px 0px 0px;color:white;"></i>
@@ -167,10 +164,25 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group">
+                                <!-- <div class="form-group">
                                     <label class="col-md-3 control-label">Depends On</label>
                                     <div class="col-md-6">
                                         <input type="text" ng-model="execData.dependsOn.ref.name" ng-disabled="true" class="form-control">
+                                    </div>
+                                </div> -->
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label">Depends On</label>
+                                    <div class="col-md-6">
+                                        <ul class="tagitdd disabled-ul customul" style="height:36px;opacity:1;">
+                                            <li class="tagit-choice-dd tagit-choice-readonly-dd customli" ng-repeat="item in dependsOnlist track by $index" model="item" style="background: linear-gradient(to bottom, #f0f9ff 0%, rgba(203, 235, 255, 0.75) 47%, rgba(161, 219, 255, 0.62) 100%);;opacity:0.65;font: 14px Helvetica Neue, Helvetica, Arial, sans-serif;border-radius:3px;    line-height: 25px;padding: 0 5px;border: 1px solid #acacac;">
+                                                <span class="tagit-label" style="color: #333;">{{item.name}}
+                                                    <span class="fa fa-eye" ng-click="onShowDetailDepOn(item)" style="cursor:pointer;" title="Show Details"></span>
+                                                </span>
+                                                <a class="tagit-close-dd">
+                                                    <span class="ui-icon ui-icon-close"></span>
+                                                </a>
+                                            </li>
+                                        </ul>
                                     </div>
                                 </div>
 

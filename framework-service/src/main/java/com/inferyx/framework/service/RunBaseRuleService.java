@@ -579,7 +579,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 				persistDatastore(tableName, filePath, summaryResultRef, summaryDatapodKey, countRows, runMode);
 				baseRuleExec.setSummaryResult(summaryResultRef);
 				
-				if (isAbort(baseRule.getUuid(), baseRule.getVersion(), baseRuleExec, runMode)) {
+				if (baseRuleExec.getDependsOn().getRef().getType()==MetaType.dq && isAbort(baseRule.getUuid(), baseRule.getVersion(), baseRuleExec, runMode)) {
 					synchronized (baseRuleExec.getUuid()) {
 						baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRule, ruleExecType,
 								Status.Stage.FAILED);

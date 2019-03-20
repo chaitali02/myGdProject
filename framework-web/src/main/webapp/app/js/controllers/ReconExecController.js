@@ -63,6 +63,16 @@ JobMonitoringModule.controller('DetailReconExecController', function ($state, $f
         }
     }
     $scope.refkeylist = refkeylist;
+    var dependsOnlist = [];
+    if (response.dependsOn != null) {
+        var dependsOn = {};
+        dependsOn.type = response.dependsOn.ref.type;
+        dependsOn.name = response.dependsOn.ref.type + "-"+response.dependsOn.ref.name;
+        dependsOn.uuid = response.dependsOn.ref.uuid;
+        dependsOn.version = response.dependsOn.ref.version;
+        dependsOnlist[0] = dependsOn;
+    }
+    $scope.dependsOnlist=dependsOnlist;
   }
   var onError=function(){
     $scope.isEditInprogess=false;
@@ -72,8 +82,25 @@ JobMonitoringModule.controller('DetailReconExecController', function ($state, $f
   $scope.showGraph = function (uuid, version) {
     $scope.showExec = false;
     $scope.showGraphDiv = true;
-
   }
+
+  $scope.onShowDetailDepOn=function(data){
+    $rootScope.previousState = {};
+    $rootScope.previousState.name = dagMetaDataService.elementDefs['reconexec'].detailState;
+    $rootScope.previousState.params = {};
+    $rootScope.previousState.params.id = $stateParams.id;
+    $rootScope.previousState.params.mode = true;
+    var type = data.type
+    var uuid = data.uuid
+    var stageName = dagMetaDataService.elementDefs[type.toLowerCase()].detailState;
+    var stageparam = {};
+    stageparam.id = uuid;
+    stageparam.version = data.version;
+    stageparam.mode = true;
+    stageparam.returnBack = true;
+    $state.go(stageName, stageparam);
+  }
+
   $scope.onShowDetail = function (data) { 
     $rootScope.previousState = {};
     $rootScope.previousState.name = dagMetaDataService.elementDefs['reconexec'].detailState;

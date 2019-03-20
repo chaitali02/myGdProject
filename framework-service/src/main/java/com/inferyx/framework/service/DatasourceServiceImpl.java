@@ -71,12 +71,6 @@ public class DatasourceServiceImpl {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public Datasource findAllByUuid(String uuid) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iDatasourceDao.findAllByUuid(appUuid,uuid);	
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public Datasource findLatestByUuid(String uuid){
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
 		if(appUuid == null)
@@ -108,16 +102,6 @@ public class DatasourceServiceImpl {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public List<Datasource> findAll(){
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid == null)
-		{
-			return iDatasourceDao.findAll(); 
-		}
-		return iDatasourceDao.findAll(appUuid);
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public void  delete(String id){
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
 		Datasource datasource = iDatasourceDao.findOneById(appUuid,id);
@@ -140,78 +124,7 @@ public class DatasourceServiceImpl {
 		return dataSource;
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public Datasource resolveName(Datasource datasource){
-		if(datasource.getCreatedBy() != null)
-		{
-		String createdByRefUuid = datasource.getCreatedBy().getRef().getUuid();
-		User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-		datasource.getCreatedBy().getRef().setName(user.getName());
-		}
-		if (datasource.getAppInfo() != null) {
-			for (int i = 0; i < datasource.getAppInfo().size(); i++) {
-				String appUuid = datasource.getAppInfo().get(i).getRef().getUuid();
-				Application application = applicationServiceImpl.findLatestByUuid(appUuid);
-				String appName = application.getName();
-				datasource.getAppInfo().get(i).getRef().setName(appName);
-			}
-		}
-		List<MetaIdentifierHolder> appInfoList = datasource.getAppInfo();
-		for(int i=0; i<appInfoList.size(); i++)
-		{
-		String appUuid = datasource.getAppInfo().get(i).getRef().getUuid();
-		Application appDO = applicationServiceImpl.findLatestByUuid(appUuid);
-		datasource.getAppInfo().get(i).getRef().setName(appDO.getName());
-		}
-		return datasource;
-	}	*/
-
-	/********************** UNUSED **********************/
-	/*public List<Datasource> resolveName(List<Datasource> datasource) {
-		List<Datasource> datasourceList = new ArrayList<>();
-		for(Datasource datas : datasource)
-		{
-		String createdByRefUuid = datas.getCreatedBy().getRef().getUuid();
-		User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-		datas.getCreatedBy().getRef().setName(user.getName());
-		datasourceList.add(datas);
-		}
-		return datasourceList;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Datasource> findAllLatest() {
-		{	
-			//String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-			   Aggregation datasourceAggr = newAggregation(group("uuid").max("version").as("version"));
-			   AggregationResults<Datasource> datasourceResults = mongoTemplate.aggregate(datasourceAggr,"datasource", Datasource.class);	   
-			   List<Datasource> datasourceList = datasourceResults.getMappedResults();
-
-			   // Fetch the datasource details for each id
-			   List<Datasource> result=new  ArrayList<Datasource>();
-			   for(Datasource d : datasourceList)
-			   {   
-				   Datasource datasourceLatest;
-					String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-					if(appUuid != null)
-					{
-					//String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();;
-						datasourceLatest = iDatasourceDao.findOneByUuidAndVersion(appUuid,d.getId(), d.getVersion());
-					}
-					else
-					{
-						datasourceLatest = iDatasourceDao.findOneByUuidAndVersion(d.getId(), d.getVersion());
-					}
-					//logger.debug("datapodLatest is " + datapodLatest.getName());
-					if(datasourceLatest != null)
-					{
-					result.add(datasourceLatest);
-					}
-			   }
-			   return result;
-			}
-	}*/
-
+	
 	/********************** UNUSED 
 	 * @throws JsonProcessingException **********************/
 	/*public List<Datasource> findAllLatestActive() {	   
@@ -245,10 +158,10 @@ public class DatasourceServiceImpl {
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
 		MatchOperation filter = null;
 		
-		if(appUuid != null && !appUuid.isEmpty()) {
+		if(appUuid != null && !appUuid.isEmpty() && !type.equalsIgnoreCase("file")) {
 			filter = match(new Criteria("type").is(type).andOperator(new Criteria("appInfo.ref.uuid").is(appUuid)));
 		} else {
-			filter = match(new Criteria("type").is(type));
+			filter = match(new Criteria("type").is(type).andOperator(new Criteria("publicFlag").is("Y")));
 		}
 		 
 		GroupOperation groupByUuid = group("uuid").max("version").as("version");
@@ -269,17 +182,6 @@ public class DatasourceServiceImpl {
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();		
 		return iDatasourceDao.findDatasourceByParms(appUuid,type,dbname,host);
 	}
-
-	/********************** UNUSED **********************/
-	/*public List<Datasource> findAllByVersion(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid != null)
-		{
-		return iDatasourceDao.findAllVersion(appUuid, uuid);
-		}
-		else
-		return iDatasourceDao.findAllVersion(uuid);
-	}*/
 
 	/********************** UNUSED **********************/
 	/*public Datasource getAsOf(String uuid, String asOf) {

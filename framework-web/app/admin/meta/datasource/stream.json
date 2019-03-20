@@ -1,58 +1,34 @@
 {
-    "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73050",
-    "version" : "1464977196",
-    "name" : "Stream",
-    "desc" : "Kafka streaming",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
-        }
-    },
-    "createdOn" : ISODate("2018-10-02T07:21:57.231Z"),
-    "active" : "Y",
-  "locked" : "N",
-    "appInfo" : [ 
-     {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
-            }
-        }, 
-       
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
-            }
-        }
-    ],
-    "type" : "STREAM",
-    "access" : "",
-    "driver" : "",
-    "host" : "localhost",
-    "dbname" : "",
-    "port" : "2181",
-    "username" : "",
-    "password" : "",
-    "path" : "",
-    "sessionParameters" : ""
+	"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73050",
+	"version" : "1464977196",
+	"name" : "Stream",
+	"desc" : "Kafka streaming",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-03-19T07:37:48.434Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"publicFlag" : "Y",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
+			}
+		}
+	],
+	"type" : "STREAM",
+	"access" : "",
+	"driver" : "",
+	"host" : "localhost",
+	"dbname" : "",
+	"port" : "2181",
+	"username" : "",
+	"password" : "",
+	"path" : "",
+	"sessionParameters" : ""
 }

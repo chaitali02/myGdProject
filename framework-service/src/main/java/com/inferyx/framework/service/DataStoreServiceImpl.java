@@ -150,74 +150,7 @@ public class DataStoreServiceImpl {
 		this.runMode = runMode;
 	}
 
-	/********************** UNUSED **********************/
-	/*public DataStore findLatest() {
-		return resolveName(iDataStoreDao.findLatest(new Sort(Sort.Direction.DESC, "version")));
-	}
 	
-	public DataStore findAllByUuid(String uuid) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iDataStoreDao.findAllByUuid(appUuid, uuid);
-	}
-
-	public DataStore findLatestByUuid(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid == null) {
-			return iDataStoreDao.findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version"));
-		}
-		return iDataStoreDao.findLatestByUuid(appUuid, uuid, new Sort(Sort.Direction.DESC, "version"));
-	}
-
-	public List<DataStore> test(String param1) {
-		return iDataStoreDao.test(param1);
-	}
-
-	public DataStore findOneByUuidAndVersion(String uuid, String version) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iDataStoreDao.findOneByUuidAndVersion(appUuid, uuid, version);
-		} else {
-			return iDataStoreDao.findOneByUuidAndVersion(uuid, version);
-		}
-	}
-
-	public DataStore getOneByUuidAndVersion(String uuid, String version) {
-
-		return iDataStoreDao.findOneByUuidAndVersion(uuid, version);
-	}
-
-	public DataStore findOneById(String id) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iDataStoreDao.findOneById(appUuid, id);
-		} else
-			return iDataStoreDao.findOne(id);
-	}
-
-	public List<DataStore> findAll() {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid == null) {
-			return iDataStoreDao.findAll();
-		}
-		return iDataStoreDao.findAll(appUuid);
-	}
-
-	public void delete(String id) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		DataStore dataStore = iDataStoreDao.findOneById(appUuid, id);
-		dataStore.setActive("N");
-		iDataStoreDao.save(dataStore);
-		
-		 * String ID = dataStore.getId(); iDataStoreDao.delete(ID);
-		 * dataStore.exportBaseProperty();
-		 
-
-	}
-*/
 	public DataStore save(DataStore datastore) throws Exception {
 
 		MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
@@ -1247,18 +1180,6 @@ public class DataStoreServiceImpl {
 		result = dataFrameService.getAtributeValues(rsHolder, attributeName);
 
 		return result;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<DataStore> resolveName(List<DataStore> datastore) {
-		List<DataStore> dataStoreList = new ArrayList<>();
-		for (DataStore dStore : datastore) {
-			String createdByRefUuid = dStore.getCreatedBy().getRef().getUuid();
-			User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			dStore.getCreatedBy().getRef().setName(user.getName());
-			dataStoreList.add(dStore);
-		}
-		return dataStoreList;
 	}*/
 
 	@SuppressWarnings("static-access")

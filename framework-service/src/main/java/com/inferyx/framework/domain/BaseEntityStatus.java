@@ -16,7 +16,7 @@ public class BaseEntityStatus extends BaseEntity{
 
 	List<Status> status;
 	String type;
-	String execCreated;
+	private String execCreated;
 	private long numRows;
 	private double sizeMB;
 	

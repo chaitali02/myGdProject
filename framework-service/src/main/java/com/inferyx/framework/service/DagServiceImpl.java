@@ -174,11 +174,7 @@ public class DagServiceImpl {
 		this.runMode = runMode;
 	}
 
-	/********************** UNUSED **********************/
-	/*public Dag findLatest() {
-		return resolveName(iDagDao.findLatest(new Sort(Sort.Direction.DESC, "version")));
-	}*/
-
+	
 	/********************** UNUSED **********************/
 	/*public Dag findOneById(String id) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
@@ -188,29 +184,6 @@ public class DagServiceImpl {
 			return iDagDao.findOneById(appUuid, id);
 		}
 		return iDagDao.findOne(id);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Dag Save(Dag dag) throws Exception {
-		MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
-		List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
-		metaIdentifierHolderList.add(meta);
-		dag.setAppInfo(metaIdentifierHolderList);
-		dag.setBaseEntity();
-		Dag dagDet = iDagDao.save(dag);
-		registerGraph.updateGraph((Object) dagDet, MetaType.dag);
-		return dagDet;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Dag> findAll() {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid()
-				: null;
-		if (appUuid == null) {
-			return iDagDao.findAll();
-		}
-		return iDagDao.findAll(appUuid);
 	}*/
 
 	/*
@@ -223,45 +196,13 @@ public class DagServiceImpl {
 		return iDagDao.exists(id);
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public void delete(String Id) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid()
-				: null;
-		Dag dag = iDagDao.findOne(Id);
-		dag.setActive("N");
-		iDagDao.save(dag);
-
-//		
-//		 String ID = dag.getId(); iDagDao.delete(appUuid, ID);
-//		 dag.exportBaseProperty();
-//		 
-	}*/
+	
 
 	/********************** UNUSED **********************/
 	/*public List<Dag> test(String param1) {
 		return iDagDao.test(param1);
-	}*/
+	}*
 
-	/********************** UNUSED **********************/
-	/*public List<Dag> findAllByUuid(String uuid) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iDagDao.findAllByUuid(appUuid, uuid);
-
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Dag findOneByUuidAndVersion(String uuid, String version) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid()
-				: null;
-		if (appUuid != null) {
-			return iDagDao.findOneByUuidAndVersion(appUuid, uuid, version);
-		} else
-			return iDagDao.findOneByUuidAndVersion(uuid, version);
-
-	}
-*/
 	/********************** UNUSED **********************/
 	/*public Dag getOneByUuidAndVersion(String uuid, String version) {
 
@@ -279,65 +220,6 @@ public class DagServiceImpl {
 		return iDagDao.findLatestByUuid(appUuid, uuid, new Sort(Sort.Direction.DESC, "version"));
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public List<Dag> findAllLatest() {
-		// String appUuid =
-		// securityServiceImpl.getAppInfo().getRef().getUuid();;
-		Aggregation dagAggr = newAggregation(group("uuid").max("version").as("version"));
-		AggregationResults<Dag> dagResults = mongoTemplate.aggregate(dagAggr, "dag", Dag.class);
-		List<Dag> dagList = dagResults.getMappedResults();
-
-		// Fetch the datapod details for each id
-		List<Dag> result = new ArrayList<Dag>();
-		for (Dag s : dagList) {
-			Dag dagLatest;
-			String appUuid = (securityServiceImpl.getAppInfo() != null
-					&& securityServiceImpl.getAppInfo().getRef() != null)
-							? securityServiceImpl.getAppInfo().getRef().getUuid()
-							: null;
-			if (appUuid != null) {
-				// String appUuid =
-				// securityServiceImpl.getAppInfo().getRef().getUuid();;
-				dagLatest = iDagDao.findOneByUuidAndVersion(appUuid, s.getId(), s.getVersion());
-			} else {
-				dagLatest = iDagDao.findOneByUuidAndVersion(s.getId(), s.getVersion());
-			}
-			// logger.debug("datapodLatest is " + datapodLatest.getName());
-			if (dagLatest != null) {
-				result.add(dagLatest);
-			}
-		}
-		return result;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Dag> findAllLatestActive() {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid()
-				: null;
-		// String appUuid =
-		// securityServiceImpl.getAppInfo().getRef().getUuid();;
-		Aggregation dagAggr = newAggregation(match(Criteria.where("active").is("Y")),
-				match(Criteria.where("name").ne(null)), group("uuid").max("version").as("version"));
-		AggregationResults<Dag> dagResults = mongoTemplate.aggregate(dagAggr, "dag", Dag.class);
-		List<Dag> dagList = dagResults.getMappedResults();
-
-		// Fetch the datapod details for each id
-		List<Dag> result = new ArrayList<Dag>();
-		for (Dag s : dagList) {
-			Dag dagLatest;
-			if (appUuid != null) {
-				dagLatest = iDagDao.findOneByUuidAndVersion(appUuid, s.getId(), s.getVersion());
-			} else {
-				dagLatest = iDagDao.findOneByUuidAndVersion(s.getId(), s.getVersion());
-			}
-			if (dagLatest != null) {
-				result.add(dagLatest);
-			}
-		}
-		return result;
-	}
-*/
 	/**
 	 * Overloaded submitDag with input as dagRef
 	 * 
@@ -609,108 +491,7 @@ public class DagServiceImpl {
 		return mHolder;
 	}
 	
-	/********************** UNUSED 
-	 * @throws JsonProcessingException **********************/
-	/*public Dag resolveName(Dag dag) throws JsonProcessingException {
-
-		if (dag == null) {
-			return null;
-		}
-
-		if (dag.getCreatedBy() != null) {
-			String createdByRefUuid = dag.getCreatedBy().getRef().getUuid();
-			User user = (User) commonServiceImpl.getLatestByUuid(createdByRefUuid, MetaType.user.toString());
-			dag.getCreatedBy().getRef().setName(user.getName());
-		}
-		if (dag.getAppInfo() != null) {
-			for (int i = 0; i < dag.getAppInfo().size(); i++) {
-				String appUuid = dag.getAppInfo().get(i).getRef().getUuid();
-				Application application = (Application) commonServiceImpl.getLatestByUuid(appUuid, MetaType.application.toString());
-				String appName = application.getName();
-				dag.getAppInfo().get(i).getRef().setName(appName);
-			}
-		}
-		for (int i = 0; i < dag.getStages().size(); i++) {
-			for (int j = 0; j < dag.getStages().get(i).getTasks().size(); j++) {
-				for (int k = 0; k < dag.getStages().get(i).getTasks().get(j).getOperators().size(); k++) {
-					MetaType operatorInfoRefType = dag.getStages().get(i).getTasks().get(j).getOperators().get(k)
-							.getOperatorInfo().getRef().getType();
-					String operatorInfoRefUuid = dag.getStages().get(i).getTasks().get(j).getOperators().get(k)
-							.getOperatorInfo().getRef().getUuid();
-					if (operatorInfoRefType.toString().equalsIgnoreCase(MetaType.map.toString())) {
-						Map mapDO = (Map) commonServiceImpl.getLatestByUuid(operatorInfoRefUuid, MetaType.map.toString());
-						String mapName = mapDO.getName();
-						dag.getStages().get(i).getTasks().get(j).getOperators().get(k).getOperatorInfo().getRef()
-								.setName(mapName);
-					}
-					if (operatorInfoRefType.toString().equalsIgnoreCase(MetaType.load.toString())) {
-						Load loadDO = (Load) commonServiceImpl.getLatestByUuid(operatorInfoRefUuid, MetaType.load.toString());
-						String loadName = loadDO.getName();
-						dag.getStages().get(i).getTasks().get(j).getOperators().get(k).getOperatorInfo().getRef()
-								.setName(loadName);
-					}
-					if (operatorInfoRefType == MetaType.dq) {
-						DataQual dataQualDO = (DataQual) commonServiceImpl.getLatestByUuid(operatorInfoRefUuid, MetaType.dq.toString());
-						String dataQualName = dataQualDO.getName();
-						dag.getStages().get(i).getTasks().get(j).getOperators().get(k).getOperatorInfo().getRef()
-								.setName(dataQualName);
-					}
-					if (operatorInfoRefType == MetaType.dqgroup) {
-						DataQualGroup dataQualGroupDO = (DataQualGroup) commonServiceImpl.getLatestByUuid(operatorInfoRefUuid, MetaType.dqgroup.toString());
-						String dqGroupName = dataQualGroupDO.getName();
-						dag.getStages().get(i).getTasks().get(j).getOperators().get(k).getOperatorInfo().getRef()
-								.setName(dqGroupName);
-					}
-				}
-			}
-
-		}
-		return dag;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Dag> findDagbyDatapod(String datapodUUID) throws JsonProcessingException {
-		List<com.inferyx.framework.domain.Map> mapList = mapServiceImpl.findMapByDatapod(datapodUUID);
-		List<Dag> result = null;
-		result = new ArrayList<>();
-		for (com.inferyx.framework.domain.Map m : mapList) {
-			String mapUUID = m.getUuid();
-			Aggregation dagAggr = newAggregation(
-					match(Criteria.where("stages.tasks.operators.operatorInfo.ref.uuid").is(mapUUID)),
-					group("uuid").max("version").as("version"));
-			AggregationResults<Dag> dagResults = mongoTemplate.aggregate(dagAggr, "dag", Dag.class);
-			List<Dag> dagList = dagResults.getMappedResults();
-			for (Dag d : dagList) {
-				Dag dagLatest = (Dag) commonServiceImpl.getOneByUuidAndVersion(d.getId(), d.getVersion(), MetaType.dag.toString());
-				result.add(dagLatest);
-			}
-		}
-		return result;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Dag> resolveName(List<Dag> dag) {
-		List<Dag> dagList = new ArrayList<Dag>();
-		for (Dag d : dag) {
-			String createdByRefUuid = d.getCreatedBy().getRef().getUuid();
-			User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			d.getCreatedBy().getRef().setName(user.getName());
-			dagList.add(d);
-		}
-		return dagList;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Dag> findAllByVersion(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid()
-				: null;
-		if (appUuid != null) {
-			return iDagDao.findAllVersion(appUuid, uuid);
-		} else
-			return iDagDao.findAllVersion(uuid);
-	}*/
-
+	
 	/********************** UNUSED 
 	 * @throws Exception **********************/
 	/*public Dag getAsOf(String uuid, String asOf) {
@@ -721,22 +502,6 @@ public class DagServiceImpl {
 			return iDagDao.findAsOf(appUuid, uuid, asOf, new Sort(Sort.Direction.DESC, "version"));
 		} else
 			return iDagDao.findAsOf(uuid, asOf, new Sort(Sort.Direction.DESC, "version"));
-	}*/
-
-	/*public MetaIdentifierHolder saveAs(Dag dag) throws Exception {
-		MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
-		MetaIdentifier ref = new MetaIdentifier();
-		Dag dagNew = new Dag();
-		dagNew.setName(dag.getName() + "_copy");
-		dagNew.setActive(dag.getActive());
-		dagNew.setDesc(dag.getDesc());
-		dagNew.setTags(dag.getTags());
-		dagNew.setStages(dag.getStages());
-		Save(dagNew);
-		ref.setType(MetaType.dag);
-		ref.setUuid(dagNew.getUuid());
-		refMeta.setRef(ref);
-		return refMeta;
 	}*/
 
 	public DagExec createDAGExec(Dag dag, ExecParams execParams) throws Exception {
@@ -1335,37 +1100,6 @@ public class DagServiceImpl {
 		return latestKey;
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public List<BaseEntity> findList(List<? extends BaseEntity> dagList) {
-		List<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
-		for (BaseEntity dag : dagList) {
-			BaseEntity baseEntity = new BaseEntity();
-			String id = dag.getId();
-			String uuid = dag.getUuid();
-			String version = dag.getVersion();
-			String name = dag.getName();
-			String desc = dag.getDesc();
-			String published=dag.getPublished();
-			MetaIdentifierHolder createdBy = dag.getCreatedBy();
-			String createdOn = dag.getCreatedOn();
-			String[] tags = dag.getTags();
-			String active = dag.getActive();
-			List<MetaIdentifierHolder> appInfo = dag.getAppInfo();
-			baseEntity.setId(id);
-			baseEntity.setUuid(uuid);
-			baseEntity.setVersion(version);
-			baseEntity.setName(name);
-			baseEntity.setDesc(desc);
-			baseEntity.setCreatedBy(createdBy);
-			baseEntity.setCreatedOn(createdOn);
-			baseEntity.setPublished(published);
-			baseEntity.setTags(tags);
-			baseEntity.setActive(active);
-			baseEntity.setAppInfo(appInfo);
-			baseEntityList.add(baseEntity);
-		}
-		return baseEntityList;
-	}*/
 
 	public Dag findDagByDagExec(String dagExecUuid) throws JsonProcessingException {
 		//DagExec dagExec = dagExecServiceImpl.findLatestByUuid(dagExecUuid);

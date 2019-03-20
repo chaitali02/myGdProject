@@ -172,7 +172,7 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
 
   $scope.getExec = function (data) {
     var stateName;
-    if($scope.select == "dqexec" || $scope.select=="ruleexec"){
+    if($scope.select=="ruleexec"){
       if($stateParams.isExec2){
         stateName = dagMetaDataService.elementDefs[$scope.select].resultState2;
       }

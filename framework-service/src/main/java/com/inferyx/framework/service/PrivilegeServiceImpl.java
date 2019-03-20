@@ -71,11 +71,6 @@ public class PrivilegeServiceImpl {
 		return resolveName(iPrivilegeDao.findLatest(new Sort(Sort.Direction.DESC, "version")));
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public Privilege findAllByUuid(String uuid) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iPrivilegeDao.findAllByUuid(appUuid, uuid);
-	}*/
 
 	/********************** UNUSED **********************/
 	/*public Privilege findLatestByUuid(String uuid) {
@@ -87,30 +82,6 @@ public class PrivilegeServiceImpl {
 		return iPrivilegeDao.findLatestByUuid(appUuid, uuid, new Sort(Sort.Direction.DESC, "version"));
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public Privilege resolveName(Privilege privilege) throws JsonProcessingException {
-		if (privilege.getCreatedBy() != null) {
-			String createdByRefUuid = privilege.getCreatedBy().getRef().getUuid();
-			User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			privilege.getCreatedBy().getRef().setName(user.getName());
-		}
-		if (privilege.getAppInfo() != null) {
-			for (int i = 0; i < privilege.getAppInfo().size(); i++) {
-				String appUuid = privilege.getAppInfo().get(i).getRef().getUuid();
-				Application application = (Application) commonServiceImpl.getLatestByUuid(appUuid, MetaType.application.toString());
-				String appName = application.getName();
-				privilege.getAppInfo().get(i).getRef().setName(appName);
-			}
-		}
-
-		return privilege;
-	}
-*/
-	/********************** UNUSED **********************/
-	/*public Privilege findOneByUuidAndVersion(String uuid, String version) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iPrivilegeDao.findOneByUuidAndVersion(appUuid, uuid, version);
-	}*/
 
 	/********************** UNUSED **********************/
 	/*public Privilege findOneById(String id) {
@@ -122,74 +93,12 @@ public class PrivilegeServiceImpl {
 		return iPrivilegeDao.findOne(id);
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public List<Privilege> findAll() {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid == null) {
-			return iPrivilegeDao.findAll();
-		}
-		return iPrivilegeDao.findAll(appUuid);
-	}*/
 
-	/********************** UNUSED **********************/
-	/*public void delete(String id) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		Privilege privilege = iPrivilegeDao.findOneById(appUuid, id);
-		privilege.setActive("N");
-		iPrivilegeDao.save(privilege);
-//		String ID = privilege.getId();
-//		iPrivilegeDao.delete(ID);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Privilege save(Privilege privilege) throws Exception {
-		MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
-		List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
-		metaIdentifierHolderList.add(meta);
-		privilege.setAppInfo(metaIdentifierHolderList);
-		privilege.setBaseEntity();
-		Privilege privilegeDet = iPrivilegeDao.save(privilege);
-		registerGraph.updateGraph((Object) privilegeDet, MetaType.privilege);
-		return privilegeDet;
-	}*/
 
 	/********************** UNUSED **********************/
 	/*public List<Privilege> findAllVersion(String privilegeName) {
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
 		return iPrivilegeDao.findAllVersion(appUuid, privilegeName);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Privilege> findAllLatest() {
-		{
-			// String appUuid =
-			// securityServiceImpl.getAppInfo().getRef().getUuid();
-			Aggregation privilegeAggr = newAggregation(group("uuid").max("version").as("version"));
-			AggregationResults<Privilege> privilegeResults = mongoTemplate.aggregate(privilegeAggr, "privilege",
-					Privilege.class);
-			List<Privilege> privilegeList = privilegeResults.getMappedResults();
-
-			List<Privilege> result = new ArrayList<Privilege>();
-			for (Privilege p : privilegeList) {
-				Privilege privilegeLatest;
-				String appUuid = (securityServiceImpl.getAppInfo() != null
-						&& securityServiceImpl.getAppInfo().getRef() != null)
-								? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-				if (appUuid != null) {
-					// String appUuid =
-					// securityServiceImpl.getAppInfo().getRef().getUuid();;
-					privilegeLatest = iPrivilegeDao.findOneByUuidAndVersion(appUuid, p.getId(), p.getVersion());
-				} else {
-					privilegeLatest = iPrivilegeDao.findOneByUuidAndVersion(p.getId(), p.getVersion());
-				}
-				// logger.debug("datapodLatest is " + datapodLatest.getName());
-				if (privilegeLatest != null) {
-					result.add(privilegeLatest);
-				}
-			}
-			return result;
-		}
 	}*/
 
 	/********************** UNUSED **********************/
@@ -220,28 +129,6 @@ public class PrivilegeServiceImpl {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public List<Privilege> resolveName(List<Privilege> privilege) {
-		List<Privilege> privilegeList = new ArrayList<Privilege>();
-		for (Privilege priv : privilege) {
-			String createdByRefUuid = priv.getCreatedBy().getRef().getUuid();
-			User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			priv.getCreatedBy().getRef().setName(user.getName());
-			privilegeList.add(priv);
-		}
-		return privilegeList;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Privilege> findAllByVersion(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iPrivilegeDao.findAllVersion(appUuid, uuid);
-		} else
-			return iPrivilegeDao.findAllVersion(uuid);
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public Privilege getAsOf(String uuid, String asOf) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
@@ -251,55 +138,6 @@ public class PrivilegeServiceImpl {
 			return iPrivilegeDao.findAsOf(uuid, asOf, new Sort(Sort.Direction.DESC, "version"));
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public MetaIdentifierHolder saveAs(Privilege privilege) throws Exception {
-		MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
-		MetaIdentifier ref = new MetaIdentifier();
-		Privilege privNew = new Privilege();
-		privNew.setName(privilege.getName() + "_copy");
-		privNew.setActive(privilege.getActive());
-		privNew.setDesc(privilege.getDesc());
-		privNew.setTags(privilege.getTags());
-		privNew.setPrivType(privilege.getPrivType());
-		privNew.setMetaId(privilege.getMetaId());
-		save(privNew);
-		ref.setType(MetaType.privilege);
-		ref.setUuid(privNew.getUuid());
-		refMeta.setRef(ref);
-		return refMeta;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<BaseEntity> findList(List<? extends BaseEntity> privilegeList) {
-		List<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
-		for (BaseEntity privilege : privilegeList) {
-			BaseEntity baseEntity = new BaseEntity();
-			String id = privilege.getId();
-			String uuid = privilege.getUuid();
-			String version = privilege.getVersion();
-			String name = privilege.getName();
-			String desc = privilege.getDesc();
-			String published=privilege.getPublished();
-			MetaIdentifierHolder createdBy = privilege.getCreatedBy();
-			String createdOn = privilege.getCreatedOn();
-			String[] tags = privilege.getTags();
-			String active = privilege.getActive();
-			List<MetaIdentifierHolder> appInfo = privilege.getAppInfo();
-			baseEntity.setId(id);
-			baseEntity.setUuid(uuid);
-			baseEntity.setVersion(version);
-			baseEntity.setName(name);
-			baseEntity.setDesc(desc);
-			baseEntity.setCreatedBy(createdBy);
-			baseEntity.setCreatedOn(createdOn);
-			baseEntity.setPublished(published);
-			baseEntity.setTags(tags);
-			baseEntity.setActive(active);
-			baseEntity.setAppInfo(appInfo);
-			baseEntityList.add(baseEntity);
-		}
-		return baseEntityList;
-	}*/
 
 	public List<RolePriv> getRolePriv(String roleUuid) throws JsonProcessingException {
 //		List<RolePriv> userPrivList = new ArrayList<RolePriv>();

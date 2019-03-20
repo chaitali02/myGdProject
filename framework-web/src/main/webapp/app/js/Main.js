@@ -97,13 +97,9 @@ InferyxApp.config(['$httpProvider', '$ocLazyLoadProvider', 'KeepaliveProvider', 
                   config.cancel  = $q.defer();
                   config.timeout = config.cancel.promise;            
                 }
-        
                 return config;
               },
-        
-            'responseError': function (rejection) {
-               
-                            
+            'responseError': function (rejection) {           
                 if (rejection.status == 500) {
                     notify.type = 'error',
                     notify.title = 'Some Error Occured',
@@ -451,7 +447,7 @@ InferyxApp.controller('lhscontroller', function ($scope, $rootScope, $window, $s
             { "name": "viewdataquality", "type": "dq", "uuid": "null", "caption": "Rule" },
             { "name": "viewdataqualitygroup", "type": "dqgroup", "uuid": "null", "caption": "Rule Group" },
             { "name": "viewdqresults", "type": "dqexec", "uuid": "null", "caption": "Rule Results" },
-            { "name": "viewdqresults2", "type": "dqexec", "uuid": "null", "caption": "Rule Results2" }
+            // { "name": "viewdqresults2", "type": "dqexec", "uuid": "null", "caption": "Rule Results2" }
 
         ]
     }
@@ -2027,14 +2023,14 @@ InferyxApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvi
             url: "/DataQualityResultList",
             templateUrl: "views/common-list.html",
             data: { pageTitle: 'Data Quality' },
-            params: { type: 'dqexec', isExec: true, isExec2:false }
+            params: { type: 'dqexec', isExec: true}
         })
-        .state('viewdqresults2', {
-            url: "/DataQualityResultList2",
-            templateUrl: "views/common-list.html",
-            data: { pageTitle: 'Data Quality' },
-            params: { type: 'dqexec', isExec: true , isExec2:true}
-        })
+        // .state('viewdqresults2', {
+        //     url: "/DataQualityResultList2",
+        //     templateUrl: "views/common-list.html",
+        //     data: { pageTitle: 'Data Quality' },
+        //     params: { type: 'dqexec', isExec: true , isExec2:true}
+        // })
 
         .state('viewdqresultspage', {
             url: "/DataQualityResults?id&version&type&name",

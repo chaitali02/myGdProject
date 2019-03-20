@@ -80,30 +80,7 @@ public class ProfileGroupServiceImpl extends RuleGroupTemplate {
 		return iProfileGroupDao.findOneById(appUuid,id);
 		}
 		return iProfileGroupDao.findOne(id);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public ProfileGroup save(ProfileGroup ProfileGroup) throws Exception{	
-		MetaIdentifierHolder meta=securityServiceImpl.getAppInfo();
-		List<MetaIdentifierHolder> metaIdentifierHolderList=new ArrayList<MetaIdentifierHolder>();
-		metaIdentifierHolderList.add(meta);
-		ProfileGroup.setAppInfo(metaIdentifierHolderList);
-		ProfileGroup.setBaseEntity();
-		ProfileGroup dqgroup=iProfileGroupDao.save(ProfileGroup);	
-		registerGraph.updateGraph((Object) dqgroup, MetaType.profilegroup);
-		return dqgroup;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<ProfileGroup> findAll(){
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid == null)
-		{
-			return iProfileGroupDao.findAll(); 
-		}
-		return iProfileGroupDao.findAll(appUuid);
-	}*/
-	
+	}*
 	/*public ProfileGroup update(ProfileGroup ProfileGroup) throws IOException{
 		ProfileGroup.exportBaseProperty();
 		ProfileGroup dqGroup=iProfileGroupDao.save(ProfileGroup);
@@ -116,32 +93,7 @@ public class ProfileGroupServiceImpl extends RuleGroupTemplate {
 		return iProfileGroupDao.exists(id);
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public void  delete(String Id){
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		ProfileGroup ProfileGroup = iProfileGroupDao.findOneById(appUuid,Id);
-		String ID=ProfileGroup.getId();
-		iProfileGroupDao.delete(ID);
-		ProfileGroup.setBaseEntity();
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<ProfileGroup> findAllByUuid(String uuid) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iProfileGroupDao.findAllByUuid(appUuid, uuid);
-		
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public ProfileGroup findOneByUuidAndVersion(String uuid, String version){
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid == null)
-		{
-		return iProfileGroupDao.findOneByUuidAndVersion(uuid,version);
-		}
-		else
-			return iProfileGroupDao.findOneByUuidAndVersion(appUuid,uuid,version);
-	}*/
+	
 
 	/********************** UNUSED **********************/
 	/*public ProfileGroup findLatestByUuid(String uuid){
@@ -153,35 +105,6 @@ public class ProfileGroupServiceImpl extends RuleGroupTemplate {
 		return iProfileGroupDao.findLatestByUuid(appUuid,uuid,new Sort(Sort.Direction.DESC, "version"));	
 	}*/
 	
-	/********************** UNUSED **********************/
-	/*public List<ProfileGroup> findAllLatest() 	
-	{	   
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-	   Aggregation profileAggr = newAggregation(group("uuid").max("version").as("version"));
-	   AggregationResults<ProfileGroup> profileResults = mongoTemplate.aggregate(profileAggr,"profilegroup", ProfileGroup.class);	   
-	   List<ProfileGroup> profileList = profileResults.getMappedResults();
-
-	   // Fetch the profilegroup details for each id
-	   List<ProfileGroup> result=new  ArrayList<ProfileGroup>();
-	   for(ProfileGroup d : profileList)
-	   {   
-		   ProfileGroup profileGroupLatest;
-		   if(appUuid!=null)
-		   {
-			   profileGroupLatest = iProfileGroupDao.findOneByUuidAndVersion(appUuid,d.getId(),d.getVersion());
-		   }
-		   else
-		   {
-			   profileGroupLatest = iProfileGroupDao.findOneByUuidAndVersion(d.getId(),d.getVersion());
-		   }
-		   if(profileGroupLatest != null)
-			{
-			result.add(profileGroupLatest);
-			}
-	   }
-	   return result;
-	}*/
-
 	/********************** UNUSED **********************/
 	/*public List<ProfileGroup> findAllLatestActive() 	
 	{	   
@@ -212,59 +135,6 @@ public class ProfileGroupServiceImpl extends RuleGroupTemplate {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public List<ProfileGroup> resolveName(List<ProfileGroup> ProfileGroup) {
-		List<ProfileGroup> profileGroupList = new ArrayList<>();
-		for(ProfileGroup profilegroup : ProfileGroup)
-		{
-		String createdByRefUuid = profilegroup.getCreatedBy().getRef().getUuid();
-		User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-		profilegroup.getCreatedBy().getRef().setName(user.getName());
-		profileGroupList.add(profilegroup);
-		List<MetaIdentifierHolder> profileInfo = profilegroup.getRuleInfo();
-		for(int i=0; i<profileInfo.size(); i++)
-		{
-			String profileUuid = profileInfo.get(i).getRef().getUuid();
-			Profile profile = profileServiceImpl.findLatestByUuid(profileUuid);
-			String profileName = profile.getName();
-			profileInfo.get(i).getRef().setName(profileName);			
-		}
-		}
-		return profileGroupList;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public ProfileGroup resolveName(ProfileGroup ProfileGroup) {
-		String createdByRefUuid = ProfileGroup.getCreatedBy().getRef().getUuid();
-		User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-		ProfileGroup.getCreatedBy().getRef().setName(user.getName());
-		List<MetaIdentifierHolder> profileInfo = ProfileGroup.getRuleInfo();
-		for(int i=0; i<profileInfo.size(); i++)
-		{
-			String profileUuid = profileInfo.get(i).getRef().getUuid();
-			Profile profile = profileServiceImpl.findLatestByUuid(profileUuid);
-			String profileName = profile.getName();
-			profileInfo.get(i).getRef().setName(profileName);			
-		}
-		ProfileGroup.setRuleInfo(profileInfo);
-		return ProfileGroup;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<ProfileGroup> findAllByVersion(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		List<ProfileGroup> profileGroupList;
-		if(appUuid != null)
-		{
-			profileGroupList = iProfileGroupDao.findAllVersion(appUuid, uuid);
-		}
-		else
-		{
-			profileGroupList = iProfileGroupDao.findAllVersion(uuid);
-		}
-		return resolveName(profileGroupList);
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public ProfileGroup getAsOf(String uuid, String asOf) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;				
@@ -275,56 +145,7 @@ public class ProfileGroupServiceImpl extends RuleGroupTemplate {
 			return iProfileGroupDao.findAsOf(uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public MetaIdentifierHolder saveAs(ProfileGroup profileGroup) throws Exception {
-		MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
-		MetaIdentifier ref = new MetaIdentifier();		
-		ProfileGroup profileGroupNew = new ProfileGroup();
-		profileGroupNew.setName(profileGroup.getName()+"_copy");
-		profileGroupNew.setActive(profileGroup.getActive());		
-		profileGroupNew.setDesc(profileGroup.getDesc());		
-		profileGroupNew.setTags(profileGroup.getTags());	
-		profileGroupNew.setRuleInfo(profileGroup.getRuleInfo());
-		profileGroupNew.setInParallel(profileGroup.getInParallel());
-		save(profileGroupNew);
-		ref.setType(MetaType.profilegroup);
-		ref.setUuid(profileGroupNew.getUuid());
-		refMeta.setRef(ref);
-		return refMeta;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<BaseEntity> findList(List<? extends BaseEntity> profileGroupList) {
-		List<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
-		for(BaseEntity profile : profileGroupList)
-		{
-			BaseEntity baseEntity = new BaseEntity();
-			String id = profile.getId();
-			String uuid = profile.getUuid();
-			String version = profile.getVersion();
-			String name = profile.getName();
-			String desc = profile.getDesc();
-			String published=profile.getPublished();
-			MetaIdentifierHolder createdBy = profile.getCreatedBy();
-			String createdOn = profile.getCreatedOn();
-			String[] tags = profile.getTags();
-			String active = profile.getActive();
-			List<MetaIdentifierHolder> appInfo = profile.getAppInfo();
-			baseEntity.setId(id);
-			baseEntity.setUuid(uuid);
-			baseEntity.setVersion(version);
-			baseEntity.setName(name);
-			baseEntity.setDesc(desc);
-			baseEntity.setCreatedBy(createdBy);
-			baseEntity.setCreatedOn(createdOn);
-			baseEntity.setPublished(published);
-			baseEntity.setTags(tags);
-			baseEntity.setActive(active);
-			baseEntity.setAppInfo(appInfo);
-			baseEntityList.add(baseEntity);
-		}
-		return baseEntityList;
-	}*/
+	
 
 	/**
 	 * 

@@ -5316,24 +5316,12 @@ public class CommonServiceImpl<T> {
 		List finalObjectList = new ArrayList();
 		java.util.HashMap<String, BaseEntity> objectMap = new java.util.HashMap<>();
 		BaseEntity baseEntity = null;
-		//String appUuid = null;
-		
-		Application application = getApp();
-		//Criteria criteria = new Criteria();
-		Query query = new Query();
-		String appUuid=application.getUuid();
-		
-		if(appUuid != null && !appUuid.isEmpty()) {
-			query.addCriteria(Criteria.where("_id").ne("1").orOperator(where("appInfo.ref.uuid").is(appUuid),where("publicFlag").is("Y")));
-			
-		}
-		
+		 String appUuid = null;
 		
 		if (!type.equals(MetaType.user) && !type.equals(MetaType.group) && !type.equals(MetaType.role)
 				&& !type.equals(MetaType.privilege) && !type.equals(MetaType.application)) {
 			appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-					? securityServiceImpl.getAppInfo().getRef().getUuid()
-					: null;
+					? securityServiceImpl.getAppInfo().getRef().getUuid()				: null;
 		}
 		try {
 			Object iDao = this.getClass().getMethod(GET + Helper.getDaoClass(type)).invoke(this);

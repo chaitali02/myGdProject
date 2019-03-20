@@ -1,26 +1,26 @@
 JobMonitoringModule = angular.module('JobMonitoringModule');
 
-JobMonitoringModule.controller('DetailTrainExecController', function ($filter, $state, $stateParams, $rootScope, $scope, $sessionStorage, JobMonitoringService, sortFactory, dagMetaDataService,privilegeSvc) {
+JobMonitoringModule.controller('DetailTrainExecController', function ($filter, $state, $stateParams, $rootScope, $scope, $sessionStorage, JobMonitoringService, sortFactory, dagMetaDataService, privilegeSvc) {
 
   $scope.uuid = $stateParams.id;
   $scope.mode = $stateParams.mode;
   $scope.showExec = true;
-  $scope.isEditInprogess=true;
-  $scope.isEditVeiwError=false;
+  $scope.isEditInprogess = true;
+  $scope.isEditVeiwError = false;
   $scope.selectTitle = dagMetaDataService.elementDefs['trainexec'].caption;
   $scope.state = dagMetaDataService.elementDefs['trainexec'].listState + "({type:'" + dagMetaDataService.elementDefs['modelexec'].execType + "'})"
-  $rootScope.isCommentVeiwPrivlage=true;
+  $rootScope.isCommentVeiwPrivlage = true;
   var privileges = privilegeSvc.privileges['comment'] || [];
-  $rootScope.isCommentVeiwPrivlage =privileges.indexOf('View') == -1;
-  $rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;
+  $rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
+  $rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
   $scope.$on('privilegesUpdated', function (e, data) {
     var privileges = privilegeSvc.privileges['comment'] || [];
     $rootScope.isCommentVeiwPrivlage = privileges.indexOf('View') == -1;
-    $rootScope.isCommentDisabled=$rootScope.isCommentVeiwPrivlage;	
+    $rootScope.isCommentDisabled = $rootScope.isCommentVeiwPrivlage;
   });
-  $scope.userDetail={}
-  $scope.userDetail.uuid= $rootScope.setUseruuid;
-  $scope.userDetail.name= $rootScope.setUserName;
+  $scope.userDetail = {}
+  $scope.userDetail.uuid = $rootScope.setUseruuid;
+  $scope.userDetail.name = $rootScope.setUserName;
   $scope.close = function () {
     if ($stateParams.returnBack == "true" && $rootScope.previousState) {
       //revertback
@@ -34,9 +34,9 @@ JobMonitoringModule.controller('DetailTrainExecController', function ($filter, $
     }
   }
   JobMonitoringService.getLatestByUuid($scope.uuid, "trainexec")
-    .then(function (response) { onSuccess(response.data)},function (response) { onError(response.data)});
+    .then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
   var onSuccess = function (response) {
-    $scope.isEditInprogess=false;
+    $scope.isEditInprogess = false;
     $scope.execData = response;
     var status = [];
     for (i = 0; i < response.statusList.length; i++) {
@@ -58,20 +58,30 @@ JobMonitoringModule.controller('DetailTrainExecController', function ($filter, $
       for (i = 0; i < response.refKeyList.length; i++) {
         var refkey = {};
         refkey.type = response.refKeyList[i].type;
-        refkey.name = response.refKeyList[i].type + "-"+response.refKeyList[i].name;
+        refkey.name = response.refKeyList[i].type + "-" + response.refKeyList[i].name;
         refkey.uuid = response.refKeyList[i].uuid;
         refkey.version = response.refKeyList[i].version;
         refkeylist[i] = refkey;
       }
     }
     $scope.refkeylist = refkeylist;
+    var dependsOnlist = [];
+    if (response.dependsOn != null) {
+      var dependsOn = {};
+      dependsOn.type = response.dependsOn.ref.type;
+      dependsOn.name = response.dependsOn.ref.type + "-" + response.dependsOn.ref.name;
+      dependsOn.uuid = response.dependsOn.ref.uuid;
+      dependsOn.version = response.dependsOn.ref.version;
+      dependsOnlist[0] = dependsOn;
+    }
+    $scope.dependsOnlist = dependsOnlist;
   }
-  var onError=function(){
-    $scope.isEditInprogess=false;
-    $scope.isEditVeiwError=true;
+  var onError = function () {
+    $scope.isEditInprogess = false;
+    $scope.isEditVeiwError = true;
   }
-  
-  $scope.onShowDetail = function (data) { 
+
+  $scope.onShowDetail = function (data) {
     $rootScope.previousState = {};
     $rootScope.previousState.name = dagMetaDataService.elementDefs['trainxec'].detailState;
     $rootScope.previousState.params = {};
@@ -87,6 +97,24 @@ JobMonitoringModule.controller('DetailTrainExecController', function ($filter, $
     stageparam.returnBack = true;
     $state.go(stageName, stageparam);
   };
+  $scope.onShowDetailDepOn = function (data) {
+    $rootScope.previousState = {};
+    $rootScope.previousState.name = dagMetaDataService.elementDefs['trainexec'].detailState;
+    $rootScope.previousState.params = {};
+    $rootScope.previousState.params.id = $stateParams.id;
+    $rootScope.previousState.params.mode = true;
+    var type = data.type
+    var uuid = data.uuid
+    var stageName = dagMetaDataService.elementDefs[type.toLowerCase()].detailState;
+    var stageparam = {};
+    stageparam.id = uuid;
+    stageparam.version = data.version;
+    stageparam.mode = true;
+    stageparam.returnBack = true;
+    $state.go(stageName, stageparam);
+  }
+
+
   $scope.showGraph = function () {
     $scope.showExec = false;
     $scope.showGraphDiv = true;

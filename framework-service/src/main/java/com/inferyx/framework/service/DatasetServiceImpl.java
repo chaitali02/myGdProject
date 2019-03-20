@@ -140,13 +140,7 @@ public class DatasetServiceImpl {
 			return iDatasetDao.findLatestByUuid(appUuid, uuid, new Sort(Sort.Direction.DESC, "version"));
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public List<Dataset> findOneForDelete(String id, String name, String type, String desc) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iDatasetDao.findOneForDelete(appUuid, id, name, type, desc);
-
-	}*/
-
+	
 	public DataSet save(DataSet dataset) throws Exception {
 		MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
 		List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
@@ -215,27 +209,6 @@ public class DatasetServiceImpl {
 		DataSet datasetDet = save(dataset);
 		return datasetDet;
 	}
-
-	/********************** UNUSED **********************/
-	/*public Dataset findOneByUuidAndVersion(String uuid, String version) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid == null) {
-			return iDatasetDao.findOneByUuidAndVersion(uuid, version);
-		}
-		return iDatasetDao.findOneByUuidAndVersion(appUuid, uuid, version);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Dataset> findAll() {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid == null) {
-			return iDatasetDao.findAll();
-		}
-		return iDatasetDao.findAll(appUuid);
-	}*/	
-
 	/*public Dataset update(Dataset dataset) throws IOException {
 		dataset.exportBaseProperty();
 		Dataset datasetDet = iDatasetDao.save(dataset);
@@ -246,68 +219,6 @@ public class DatasetServiceImpl {
 	/********************** UNUSED **********************/
 	/*public boolean isExists(String id) {
 		return iDatasetDao.exists(id);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Dataset> resolveName(List<Dataset> dataSet) {
-		List<Dataset> datasetList = new ArrayList<Dataset>();
-		for (Dataset dataset : dataSet)
-			if (dataset.getCreatedBy() != null) {
-				String createdByRefUuid = dataset.getCreatedBy().getRef().getUuid();
-				User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-				dataset.getCreatedBy().getRef().setName(user.getName());
-				datasetList.add(dataset);
-			}
-		return datasetList;
-
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Dataset resolveName(Dataset dataSet) {
-		if (dataSet.getCreatedBy() != null) {
-			String createdByRefUuid = dataSet.getCreatedBy().getRef().getUuid();
-			User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			dataSet.getCreatedBy().getRef().setName(user.getName());
-		}
-		if (dataSet.getAppInfo() != null) {
-			for (int i = 0; i < dataSet.getAppInfo().size(); i++) {
-				String appUuid = dataSet.getAppInfo().get(i).getRef().getUuid();
-				Application application = applicationServiceImpl.findLatestByUuid(appUuid);
-				String appName = application.getName();
-				dataSet.getAppInfo().get(i).getRef().setName(appName);
-			}
-		}
-		return dataSet;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Dataset> findAllLatest(){
-		// String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		Aggregation datasetaggr = newAggregation(group("uuid").max("version").as("version"));
-		AggregationResults<Dataset> datasetResults = mongoTemplate.aggregate(datasetaggr, "dataset", Dataset.class);
-		List<Dataset> datasetList = datasetResults.getMappedResults();
-		// Fetch the dataset details for each id
-		List<Dataset> result = new ArrayList<Dataset>();
-		for (Dataset s : datasetList) {
-			Dataset datasetLatest;
-			String appUuid = (securityServiceImpl.getAppInfo() != null
-					&& securityServiceImpl.getAppInfo().getRef() != null)
-							? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-			if (appUuid != null) {
-				// String appUuid =
-				// securityServiceImpl.getAppInfo().getRef().getUuid();;
-				datasetLatest = iDatasetDao.findOneByUuidAndVersion(appUuid, s.getId(), s.getVersion());
-			} else {
-				datasetLatest = iDatasetDao.findOneByUuidAndVersion(s.getId(), s.getVersion());
-			}
-			// logger.debug("datapodLatest is " + datapodLatest.getName());
-			if (datasetLatest != null) {
-				result.add(datasetLatest);
-			}
-		}
-		logger.debug("End of findAllLatest()");
-
-		return result;
 	}*/
 
 	/********************** UNUSED **********************/
@@ -348,18 +259,6 @@ public class DatasetServiceImpl {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public List<Dataset> test(String param1) {
-		return iDatasetDao.test(param1);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Dataset findAllByUuid(String uuid) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iDatasetDao.findAllByUuid(appUuid, uuid);
-
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public Dataset findOneById(String id) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
@@ -369,16 +268,6 @@ public class DatasetServiceImpl {
 			return iDatasetDao.findOneById(appUuid, id);
 		} else
 			return iDatasetDao.findOne(id);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Dataset> findAllByVersion(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iDatasetDao.findAllVersion(appUuid, uuid);
-		} else
-			return iDatasetDao.findAllVersion(uuid);
 	}*/
 
 	/*
@@ -481,58 +370,6 @@ public class DatasetServiceImpl {
 			return iDatasetDao.findAsOf(uuid, asOf, new Sort(Sort.Direction.DESC, "version"));
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public MetaIdentifierHolder saveAs(Dataset dataset) throws Exception {
-		MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
-		MetaIdentifier ref = new MetaIdentifier();		
-		Dataset datasetNew = new Dataset();
-		datasetNew.setName(dataset.getName()+"_copy");
-		datasetNew.setActive(dataset.getActive());		
-		datasetNew.setDesc(dataset.getDesc());		
-		datasetNew.setTags(dataset.getTags());
-		datasetNew.setAttributeInfo(dataset.getAttributeInfo());
-		datasetNew.setDependsOn(dataset.getDependsOn());
-		datasetNew.setGroupBy(dataset.getGroupBy());
-		datasetNew.setFilterInfo(dataset.getFilterInfo());
-		save(datasetNew);
-		ref.setType(MetaType.dataset);
-		ref.setUuid(datasetNew.getUuid());
-		refMeta.setRef(ref);
-		return refMeta;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<BaseEntity> findList(List<? extends BaseEntity> datasetList) {
-		List<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
-		for(BaseEntity dataset : datasetList)
-		{
-			BaseEntity baseEntity = new BaseEntity();
-			String id = dataset.getId();
-			String uuid = dataset.getUuid();
-			String version = dataset.getVersion();
-			String name = dataset.getName();
-			String desc = dataset.getDesc();
-			String published=dataset.getPublished();
-			MetaIdentifierHolder createdBy = dataset.getCreatedBy();
-			String createdOn = dataset.getCreatedOn();
-			String[] tags = dataset.getTags();
-			String active = dataset.getActive();
-			List<MetaIdentifierHolder> appInfo = dataset.getAppInfo();
-			baseEntity.setId(id);
-			baseEntity.setUuid(uuid);
-			baseEntity.setVersion(version);
-			baseEntity.setName(name);
-			baseEntity.setDesc(desc);
-			baseEntity.setCreatedBy(createdBy);
-			baseEntity.setCreatedOn(createdOn);
-			baseEntity.setPublished(published);
-			baseEntity.setTags(tags);
-			baseEntity.setActive(active);
-			baseEntity.setAppInfo(appInfo);
-			baseEntityList.add(baseEntity);
-		}
-		return baseEntityList;
-	}*/
 	
 	public String generateSql (DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 
 			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {

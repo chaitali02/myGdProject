@@ -1,76 +1,34 @@
 {
-    "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73040",
-    "version" : "1464977196",
-    "name" : "file_upload",
-    "desc" : "File Data Source to upload file",
-    "createdBy" : {
-        "ref" : {
-            "type" : "user",
-            "uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
-        }
-    },
-    "createdOn" : ISODate("2018-09-21T05:05:03.045Z"),
-    "active" : "Y",
-  "locked" : "N",
-    "appInfo" : [ 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"
-            }
-        }, 
-       
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730ce"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbebc"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cz"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730dz"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
- 				 "uuid": "a93ba7a0-51c9-11e8-9c2d-fa7ae01bbyog"
-            }
-        }, 
-        {
-            "ref" : {
-                "type" : "application",
-                "uuid" : "4be92a58-3e24-410c-ab09-e1e719c1db81"
-            }
-        }
-    ],
-    "type" : "FILE",
-    "access" : "OS",
-    "driver" : "",
-    "host" : "localhost",
-    "dbname" : "",
-    "port" : "",
-    "username" : "",
-    "password" : "",
-    "path" : "/user/hive/warehouse/framework/upload/",
-    "sessionParameters" : "hive.exec.dynamic.partition=true,hive.exec.dynamic.partition.mode=nonstrict"
+	"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73040",
+	"version" : "1464977196",
+	"name" : "file_upload",
+	"desc" : "File Data Source to upload file",
+	"createdBy" : {
+		"ref" : {
+			"type" : "user",
+			"uuid" : "d04716df-e96a-419f-9118-c81342b47f85"
+		}
+	},
+	"createdOn" : ISODate("2019-03-19T07:37:48.434Z"),
+	"active" : "Y",
+	"locked" : "N",
+	"publicFlag" : "Y",
+	"appInfo" : [
+		{
+			"ref" : {
+				"type" : "application",
+				"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"type" : "FILE",
+	"access" : "OS",
+	"driver" : "",
+	"host" : "localhost",
+	"dbname" : "",
+	"port" : "",
+	"username" : "",
+	"password" : "",
+	"path" : "/user/hive/warehouse/framework/upload/",
+	"sessionParameters" : "hive.exec.dynamic.partition=true,hive.exec.dynamic.partition.mode=nonstrict"
 }

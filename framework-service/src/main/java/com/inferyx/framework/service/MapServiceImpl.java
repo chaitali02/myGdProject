@@ -113,44 +113,10 @@ public class MapServiceImpl implements IParsable, IExecutable {
 		} else
 			return iMapDao.findOne(id);
 	}*/
-
-	/********************** UNUSED **********************/
-	/*public Map findOneByUuidAndVersion(String uuid, String version) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iMapDao.findOneByUuidAndVersion(appUuid, uuid, version);
-		} else {
-			return iMapDao.findOneByUuidAndVersion(uuid, version);
-		}
-	}
-*/
 	/********************** UNUSED **********************/
 	/*public Map getOneByUuidAndVersion(String uuid, String version) {
 
 		return iMapDao.findOneByUuidAndVersion(uuid, version);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Map> findMapByDatapod(String datapodUUID) {
-		// return iMapDao.findMapByDatapod(datapodUUID,new
-		// Sort(Sort.Direction.DESC, "version"));
-
-		// Need to test below code. Its not working.
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		// String appUuid = "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb";
-		Aggregation mapAggr = newAggregation(match(Criteria.where("target.ref.uuid").is(datapodUUID)),
-				group("uuid").max("version").as("version").addToSet("uuid").as("uuid"));
-		AggregationResults<Map> mapResults = mongoTemplate.aggregate(mapAggr, "map", Map.class);
-		List<Map> mapList = mapResults.getMappedResults();
-
-		// Fetch the datapod details for each id
-		List<Map> result = new ArrayList<Map>();
-		for (Map s : mapList) {
-			Map mapLatest = iMapDao.findOneByUuidAndVersion(appUuid, s.getId(), s.getVersion());
-			result.add(mapLatest);
-		}
-		return result;
 	}*/
 
 	/********************** UNUSED **********************/
@@ -163,27 +129,6 @@ public class MapServiceImpl implements IParsable, IExecutable {
 		return iMapDao.findLatestByUuid(appUuid, uuid, new Sort(Sort.Direction.DESC, "version"));
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public Map save(Map map) throws Exception {
-		MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
-		List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
-		metaIdentifierHolderList.add(meta);
-		map.setAppInfo(metaIdentifierHolderList);
-		map.setBaseEntity();
-		Map mapDet = iMapDao.save(map);
-		registerGraph.updateGraph((Object) mapDet, MetaType.map);
-		return mapDet;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Map> findAll() {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid == null) {
-			return iMapDao.findAll();
-		}
-		return iMapDao.findAll(appUuid);
-	}*/
 
 	/********************** UNUSED **********************/
 	/*@SuppressWarnings("unchecked")
@@ -203,60 +148,9 @@ public class MapServiceImpl implements IParsable, IExecutable {
 		return iMapDao.exists(id);
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public void delete(String Id) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		Map map = iMapDao.findOneById(appUuid, Id);
-		map.setActive("N");
-		iMapDao.save(map);
-//		String ID = map.getId();
-//		iMapDao.delete(ID);
-//		map.exportBaseProperty();
-	}*/
+	
 
-	/********************** UNUSED **********************/
-	/*public List<Map> test(String param1) {
-		return iMapDao.test(param1);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Map findAllByUuid(String uuid) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iMapDao.findAllByUuid(appUuid, uuid);
-
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Map> findAllLatest() {
-		{
-			// String appUuid =
-			// securityServiceImpl.getAppInfo().getRef().getUuid();
-			Aggregation mapAggr = newAggregation(group("uuid").max("version").as("version"));
-			AggregationResults<Map> mapResults = mongoTemplate.aggregate(mapAggr, "map", Map.class);
-			List<Map> mapList = mapResults.getMappedResults();
-
-			// Fetch the relation details for each id
-			List<Map> result = new ArrayList<Map>();
-			for (Map s : mapList) {
-				Map mapLatest;
-				String appUuid = (securityServiceImpl.getAppInfo() != null
-						&& securityServiceImpl.getAppInfo().getRef() != null)
-								? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-				if (appUuid != null) {
-					// String appUuid =
-					// securityServiceImpl.getAppInfo().getRef().getUuid();;
-					mapLatest = iMapDao.findOneByUuidAndVersion(appUuid, s.getId(), s.getVersion());
-				} else {
-					mapLatest = iMapDao.findOneByUuidAndVersion(s.getId(), s.getVersion());
-				}
-				// logger.debug("datapodLatest is " + datapodLatest.getName());
-				if (mapLatest != null) {
-					result.add(mapLatest);
-				}
-			}
-			return result;
-		}
-	}*/
+	
 
 	/********************** UNUSED **********************/
 	/*public List<Map> findAllLatestActive() {
@@ -284,124 +178,7 @@ public class MapServiceImpl implements IParsable, IExecutable {
 		return result;
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public Map resolveName(Map map) throws JsonProcessingException {
-		if (map.getCreatedBy() != null) {
-			String createdByRefUuid = map.getCreatedBy().getRef().getUuid();
-			User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			map.getCreatedBy().getRef().setName(user.getName());
-		}
-		if (map.getAppInfo() != null) {
-			for (int i = 0; i < map.getAppInfo().size(); i++) {
-				String appUuid = map.getAppInfo().get(i).getRef().getUuid();
-				Application application = (Application) commonServiceImpl.getLatestByUuid(appUuid, MetaType.application.toString());
-				String appName = application.getName();
-				map.getAppInfo().get(i).getRef().setName(appName);
-			}
-		}
-		String sourceType = map.getSource().getRef().getType().toString();
-		if (sourceType.equalsIgnoreCase(MetaType.relation.toString())) {
-			String sourceUuid = map.getSource().getRef().getUuid();
-			Relation relationDO = relationServiceImpl.findLatestByUuid(sourceUuid);
-			String relationName = relationDO.getName();
-			map.getSource().getRef().setName(relationName);
-		} else if (sourceType.equalsIgnoreCase(MetaType.datapod.toString())) {
-			String sourceUuid = map.getSource().getRef().getUuid();
-			Datapod datapodDO = datapodServiceImpl.findLatestByUuid(sourceUuid);
-			String datapodName = datapodDO.getName();
-			map.getSource().getRef().setName(datapodName);
-		} else if (sourceType.equalsIgnoreCase(MetaType.dataset.toString())) {
-			String sourceUuid = map.getSource().getRef().getUuid();
-			Dataset datasetDO = datasetServiceImpl.findLatestByUuid(sourceUuid);
-			String datasetName = datasetDO.getName();
-			map.getSource().getRef().setName(datasetName);
-		}
-		String targetUuid = map.getTarget().getRef().getUuid();
-		Datapod datapodDO = datapodServiceImpl.findLatestByUuid(targetUuid);
-		String targetDatapodName = datapodDO.getName();
-		map.getTarget().getRef().setName(targetDatapodName);
-
-		if (map.getGroupBy() != null) {
-			List<AttributeRefHolder> groupList = map.getGroupBy();
-			for(int i=0; i<groupList.size(); i++)
-			{
-				String groupUuid = groupList.get(i).getRef().getUuid();
-				int attrId = Integer.parseInt(groupList.get(i).getAttrId());
-				Datapod datapod = datapodServiceImpl.findLatestByUuid(groupUuid);
-				String dpName = datapod.getName();
-				String attrName = datapod.getAttributes().get(attrId).getName();
-				map.getGroupBy().get(i).getRef().setName(dpName);
-				map.getGroupBy().get(i).setAttrName(attrName);
-			}			
-			//Group groupByDO = groupServiceImpl.findLatestByUuid(groupUuid);
-			//String groupName = groupByDO.getName();
-			//map.getGroupBy().getRef().setName(groupName);
-		} else {
-		}
-
-		for (int i = 0; i < map.getAttributeMap().size(); i++) {
-			MetaType sourceAttrType = map.getAttributeMap().get(i).getSourceAttr().getRef().getType();
-			String sourceAttrUuid = map.getAttributeMap().get(i).getSourceAttr().getRef().getUuid();
-
-			String targetAttrUuid = map.getAttributeMap().get(i).getTargetAttr().getRef().getUuid();
-			Datapod targetAttrDatapodDO = datapodServiceImpl.findLatestByUuid(targetAttrUuid);
-			String targetAttrDatapodName = targetAttrDatapodDO.getName();
-			map.getAttributeMap().get(i).getTargetAttr().getRef().setName(targetAttrDatapodName);
-			Integer targetAttributId = Integer.parseInt(map.getAttributeMap().get(i).getTargetAttr().getAttrId());
-
-			List<Attribute> targetAttributeList = targetAttrDatapodDO.getAttributes();
-			map.getAttributeMap().get(i).getTargetAttr()
-					.setAttrName(targetAttributeList.get(targetAttributId).getName());
-
-			if (sourceAttrType.toString().equalsIgnoreCase(MetaType.datapod.toString())) {
-				Datapod sourceAttrDatapodDO = datapodServiceImpl.findLatestByUuid(sourceAttrUuid);
-				String sourceDatapodName = sourceAttrDatapodDO.getName();
-				map.getAttributeMap().get(i).getSourceAttr().getRef().setName(sourceDatapodName);
-
-				Integer souceAttributId = Integer.parseInt(map.getAttributeMap().get(i).getSourceAttr().getAttrId());
-				List<Attribute> datapodAttributeList = sourceAttrDatapodDO.getAttributes();
-				map.getAttributeMap().get(i).getSourceAttr()
-						.setAttrName(datapodAttributeList.get(souceAttributId).getName());
-			}
-			if (sourceAttrType.toString().equalsIgnoreCase(MetaType.formula.toString())) {
-				Formula formulaDO = formulaServiceImpl.findLatestByUuid(sourceAttrUuid);
-				String formulaName = formulaDO.getName();
-				map.getAttributeMap().get(i).getSourceAttr().getRef().setName(formulaName);
-			}
-
-			if (sourceAttrType.toString().equalsIgnoreCase(MetaType.expression.toString())) {
-				Expression expressionDO = expressionServiceImpl.findLatestByUuid(sourceAttrUuid);
-				String expressionName = expressionDO.getName();
-				map.getAttributeMap().get(i).getSourceAttr().getRef().setName(expressionName);
-			}
-		}
-
-		return map;
-	}
-*/
-	/********************** UNUSED **********************/
-	/*public List<Map> resolveName(List<Map> map) {
-		List<Map> mapList = new ArrayList<>();
-		for (Map m : map) {
-			String createdByRefUuid = m.getCreatedBy().getRef().getUuid();
-			User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			m.getCreatedBy().getRef().setName(user.getName());
-			mapList.add(m);
-		}
-		return mapList;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Map> findAllByVersion(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iMapDao.findAllVersion(appUuid, uuid);
-		} else
-			return iMapDao.findAllVersion(uuid);
-	}*/
-
-	/********************** UNUSED **********************/
+		/********************** UNUSED **********************/
 	/*public com.inferyx.framework.domain.Map getAsOf(String uuid, String asOf) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
@@ -411,25 +188,6 @@ public class MapServiceImpl implements IParsable, IExecutable {
 			return iMapDao.findAsOf(uuid, asOf, new Sort(Sort.Direction.DESC, "version"));
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public MetaIdentifierHolder saveAs(com.inferyx.framework.domain.Map map) throws Exception {
-		MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
-		MetaIdentifier ref = new MetaIdentifier();
-		Map mapNew = new Map();
-		mapNew.setName(map.getName()+"_copy");
-		mapNew.setActive(map.getActive());		
-		mapNew.setDesc(map.getDesc());		
-		mapNew.setTags(map.getTags());	
-		//mapNew.setGroupBy(map.getGroupBy());
-		mapNew.setSource(map.getSource());
-		mapNew.setTarget(map.getTarget());
-		mapNew.setAttributeMap(map.getAttributeMap());
-		save(mapNew);
-		ref.setType(MetaType.map);
-		ref.setUuid(mapNew.getUuid());
-		refMeta.setRef(ref);
-		return refMeta;
-	}*/
 
 	/********************** UNUSED **********************/
 //	/**

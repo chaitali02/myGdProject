@@ -141,32 +141,6 @@ public class MapExecServiceImpl {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public List<MapExec> findAllLatest()	{		
-		//String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		Aggregation mapExecAggr = newAggregation(group("uuid").max("version").as("version"));
-		AggregationResults<MapExec> MapExecResults = mongoTemplate.aggregate(mapExecAggr, "mapexec", MapExec.class);
-		List<MapExec> MapExecList = MapExecResults.getMappedResults();
-		// Fetch the VizExec details for each id
-		List<MapExec> result = new ArrayList<MapExec>();
-		for (MapExec v : MapExecList) {
-			MapExec mapExecLatest;
-			String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-			if(appUuid != null)
-			{
-			//String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();;
-				mapExecLatest = iMapExecDao.findOneByUuidAndVersion(appUuid,v.getId(), v.getVersion());
-			}
-			else
-			{
-				mapExecLatest = iMapExecDao.findOneByUuidAndVersion(v.getId(), v.getVersion());
-			}
-			//logger.debug("datapodLatest is " + datapodLatest.getName());
-			result.add(mapExecLatest);
-		}	
-		return result;
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public List<MapExec> findAllLatestActive() 	
 	{	   
 	   Aggregation mapExecAggr = newAggregation(match(Criteria.where("active").is("Y")),match(Criteria.where("name").ne(null)),group("uuid").max("version").as("version"));
@@ -202,20 +176,6 @@ public class MapExecServiceImpl {
 		} else {
 			return iMapExecDao.findOneByUuidAndVersion(uuid, version);
 		}
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<MapExec> resolveName(List<MapExec> MapExec) {
-		List<MapExec> mapExecList = new ArrayList<>();
-		for(MapExec ruleE : MapExec)
-		{
-		MapExec mapExecLatest = findOneByUuidAndVersion(ruleE.getUuid(), ruleE.getVersion()); 
-		String createdByRefUuid = ruleE.getCreatedBy().getRef().getUuid();
-		User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-		mapExecLatest.getCreatedBy().getRef().setName(user.getName());		
-		mapExecList.add(mapExecLatest);
-		}
-		return mapExecList;
 	}*/
 
 	/********************** UNUSED **********************/

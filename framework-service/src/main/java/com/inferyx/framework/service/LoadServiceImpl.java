@@ -106,19 +106,6 @@ public class LoadServiceImpl {
 	 * Sort(Sort.Direction.DESC, "version")); }
 	 */
 
-	/********************** UNUSED **********************/
-	/*
-	 * public Load findOneByUuidAndVersion(String uuid,String version){ String
-	 * appUuid = (securityServiceImpl.getAppInfo() != null &&
-	 * securityServiceImpl.getAppInfo().getRef() != null
-	 * )?securityServiceImpl.getAppInfo().getRef().getUuid():null; if(appUuid !=
-	 * null) { if (StringUtils.isBlank(version)) { return
-	 * iLoadDao.findLatestByUuid(appUuid, uuid, new Sort(Sort.Direction.DESC,
-	 * "version")); } return iLoadDao.findOneByUuidAndVersion(appUuid,
-	 * uuid,version); } else if (StringUtils.isBlank(version)) { return
-	 * iLoadDao.findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version")); }
-	 * return iLoadDao.findOneByUuidAndVersion(uuid,version); }
-	 */
 
 	public Load save(Load load) throws Exception {
 		MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
@@ -130,49 +117,6 @@ public class LoadServiceImpl {
 		registerGraph.updateGraph((Object) loadDet, MetaType.load);
 		return loadDet;
 	}
-
-	/********************** UNUSED **********************/
-	/*
-	 * public List<Load> resolveName(List<Load> load) { List<Load> loadList = new
-	 * ArrayList<>(); for(Load loads : load) { String createdByRefUuid =
-	 * loads.getCreatedBy().getRef().getUuid(); User user =
-	 * userServiceImpl.findLatestByUuid(createdByRefUuid);
-	 * loads.getCreatedBy().getRef().setName(user.getName()); loadList.add(loads); }
-	 * return loadList; }
-	 */
-
-	/********************** UNUSED **********************/
-	/*
-	 * public Load resolveName(Load load) { String createdByRefUuid =
-	 * load.getCreatedBy().getRef().getUuid(); User user =
-	 * userServiceImpl.findLatestByUuid(createdByRefUuid);
-	 * load.getCreatedBy().getRef().setName(user.getName());
-	 * if(load.getTarget().getRef().getType().equals(MetaType.datapod)) { Datapod
-	 * datapod=datapodServiceImpl.findLatestByUuid(load.getTarget().getRef().getUuid
-	 * ()); load.getTarget().getRef().setName(datapod.getName()); } return load; }
-	 */
-
-	/********************** UNUSED **********************/
-	/*
-	 * public List<Load> findAllLatest() { { //String appUuid =
-	 * securityServiceImpl.getAppInfo().getRef().getUuid(); Aggregation LoadAggr =
-	 * newAggregation(group("uuid").max("version").as("version"));
-	 * AggregationResults<Load> GroupResults =
-	 * mongoTemplate.aggregate(LoadAggr,"load", Load.class); List<Load> LoadList =
-	 * GroupResults.getMappedResults();
-	 * 
-	 * // Fetch the relation details for each id List<Load> result=new
-	 * ArrayList<Load>(); for(Load gi :LoadList) { Load loadLatest; String appUuid =
-	 * (securityServiceImpl.getAppInfo() != null &&
-	 * securityServiceImpl.getAppInfo().getRef() != null
-	 * )?securityServiceImpl.getAppInfo().getRef().getUuid():null; if(appUuid !=
-	 * null) { //String appUuid =
-	 * securityServiceImpl.getAppInfo().getRef().getUuid();; loadLatest =
-	 * iLoadDao.findOneByUuidAndVersion(appUuid,gi.getId(), gi.getVersion()); } else
-	 * { loadLatest = iLoadDao.findOneByUuidAndVersion(gi.getId(), gi.getVersion());
-	 * } //logger.debug("datapodLatest is " + datapodLatest.getName());
-	 * if(loadLatest != null) { result.add(loadLatest); } } return result; } }
-	 */
 
 	/********************** UNUSED **********************/
 	/*
@@ -194,26 +138,6 @@ public class LoadServiceImpl {
 	 * != null) { result.add(loadLatest); } } return result; }
 	 */
 
-	/********************** UNUSED **********************/
-	/*
-	 * public List<Load> findAll(){ String appUuid =
-	 * (securityServiceImpl.getAppInfo() != null &&
-	 * securityServiceImpl.getAppInfo().getRef() != null
-	 * )?securityServiceImpl.getAppInfo().getRef().getUuid():null; if(appUuid ==
-	 * null) { return iLoadDao.findAll(); } return iLoadDao.findAll(appUuid); }
-	 */
-
-	/********************** UNUSED **********************/
-	/*
-	 * public List<Load> findAllByVersion(String uuid) { String appUuid =
-	 * (securityServiceImpl.getAppInfo() != null &&
-	 * securityServiceImpl.getAppInfo().getRef() != null
-	 * )?securityServiceImpl.getAppInfo().getRef().getUuid():null; List<Load>
-	 * loadList; if(appUuid != null) { loadList = iLoadDao.findAllVersion(appUuid,
-	 * uuid); } else { loadList = iLoadDao.findAllVersion(uuid); } return
-	 * resolveName(loadList); }
-	 */
-
 	/**********************
 	 * UNUSED
 	 * @param desc 
@@ -222,17 +146,6 @@ public class LoadServiceImpl {
 	 * @throws JSONException
 	 * @throws JsonProcessingException
 	 **********************/
-	/*
-	 * public MetaIdentifierHolder saveAs(Load load) throws Exception {
-	 * MetaIdentifierHolder refMeta = new MetaIdentifierHolder(); MetaIdentifier ref
-	 * = new MetaIdentifier(); Load loadNew = new Load();
-	 * loadNew.setName(load.getName()+"_copy"); loadNew.setActive(load.getActive());
-	 * loadNew.setDesc(load.getDesc()); loadNew.setTags(load.getTags());
-	 * loadNew.setAppend(load.getAppend()); loadNew.setHeader(load.getHeader());
-	 * loadNew.setSource(load.getSource()); loadNew.setTarget(load.getTarget());
-	 * save(loadNew); ref.setType(MetaType.load); ref.setUuid(loadNew.getUuid());
-	 * refMeta.setRef(ref); return refMeta; }
-	 */
 
 	public void executeSql(LoadExec loadExec, String dagExecVer, String targetTableName, OrderKey datapodKey, RunMode runMode, String desc)
 			throws JsonProcessingException, JSONException, ParseException {

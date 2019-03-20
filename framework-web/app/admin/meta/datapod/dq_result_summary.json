@@ -1,7 +1,7 @@
 {
     "uuid" : "17741969-5a2f-442a-bf8d-4fa5a0c71125",
     "version" : "1552115484",
-    "name" : "dq_rule_summary",
+    "name" : "dq_result_summary",
     "desc" : null,
     "createdBy" : {
         "ref" : {

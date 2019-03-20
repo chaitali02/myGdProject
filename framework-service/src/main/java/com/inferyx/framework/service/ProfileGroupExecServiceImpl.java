@@ -62,16 +62,6 @@ public class ProfileGroupExecServiceImpl extends BaseGroupExecTemplate {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public List<ProfileGroupExec> findAll() {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid == null)
-		{
-			return iProfileGroupExecDao.findAll(); 
-		}
-		return iProfileGroupExecDao.findAll(appUuid);
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public ProfileGroupExec findOneById(String id) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
 		if(appUuid != null)
@@ -79,21 +69,6 @@ public class ProfileGroupExecServiceImpl extends BaseGroupExecTemplate {
 		return iProfileGroupExecDao.findOneById(appUuid,id);
 		}
 		return iProfileGroupExecDao.findOne(id);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public ProfileGroupExec save(ProfileGroupExec ProfileGroupExec) throws Exception {
-		if(ProfileGroupExec.getAppInfo() == null)
-		{
-		MetaIdentifierHolder meta=securityServiceImpl.getAppInfo();
-		List<MetaIdentifierHolder> metaIdentifierHolderList=new ArrayList<MetaIdentifierHolder>();
-		metaIdentifierHolderList.add(meta);
-		ProfileGroupExec.setAppInfo(metaIdentifierHolderList);
-		}
-		ProfileGroupExec.setBaseEntity();
-		ProfileGroupExec profileExecGroup=iProfileGroupExecDao.save(ProfileGroupExec);		
-		registerGraph.updateGraph((Object) profileExecGroup, MetaType.profilegroupExec);
-		return profileExecGroup;		
 	}*/
 
 	/********************** UNUSED **********************/
@@ -106,48 +81,8 @@ public class ProfileGroupExecServiceImpl extends BaseGroupExecTemplate {
 		return iProfileGroupExecDao.findLatestByUuid(appUuid,ProfileGroupExecUUID,new Sort(Sort.Direction.DESC, "version"));		
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public void  delete(String id){
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		ProfileGroupExec ProfileGroupExec = iProfileGroupExecDao.findOneById(appUuid,id);
-		String ID=ProfileGroupExec.getId();
-		iProfileGroupExecDao.delete(ID);		
-	}*/
-	/********************** UNUSED **********************/
-	/*public List<ProfileGroupExec> findAllByUuid(String uuid) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iProfileGroupExecDao.findAllByUuid(appUuid,uuid);
-		
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<ProfileGroupExec> findAllLatest()
-	{	
-		Aggregation profileGroupExecAggr = newAggregation(group("uuid").max("version").as("version"));
-		AggregationResults<ProfileGroupExec> profileExecResults = mongoTemplate.aggregate(profileGroupExecAggr, "profilegroupexec", ProfileGroupExec.class);
-		List<ProfileGroupExec> ProfileGroupExecList = profileExecResults.getMappedResults();
-		// Fetch the ProfileGroupExec details for each id
-		List<ProfileGroupExec> result = new ArrayList<ProfileGroupExec>();
-		for (ProfileGroupExec v : ProfileGroupExecList) {
-			ProfileGroupExec ProfileGroupExecLatest;
-			String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-			if(appUuid != null)
-			{			
-				ProfileGroupExecLatest = iProfileGroupExecDao.findOneByUuidAndVersion(appUuid,v.getId(), v.getVersion());
-			}
-			else
-			{
-				ProfileGroupExecLatest = iProfileGroupExecDao.findOneByUuidAndVersion(v.getId(), v.getVersion());
-			}
-			
-			if(ProfileGroupExecLatest != null)
-			{
-			result.add(ProfileGroupExecLatest);
-			}
-		}	
-		return result;
-	}*/
-
+	
+	
 	/********************** UNUSED **********************/
 	/*public List<ProfileGroupExec> findAllLatestActive() 	
 	{	   
@@ -177,17 +112,6 @@ public class ProfileGroupExecServiceImpl extends BaseGroupExecTemplate {
 	   return result;
 	}*/
 
-	/********************** UNUSED 
-	 * @throws JsonProcessingException **********************/
-	/*public ProfileGroupExec findOneByUuidAndVersion(String uuid, String version){
-		 ProfileGroupExec ProfileGroupExecLatest;
-			String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-			if(appUuid != null)
-			{
-				return ProfileGroupExecLatest = iProfileGroupExecDao.findOneByUuidAndVersion(appUuid,uuid,version);
-			}			
-				return ProfileGroupExecLatest = iProfileGroupExecDao.findOneByUuidAndVersion(uuid,version);		
-	}*/
 
 	public List<ProfileGroupExec> resolveName(List<ProfileGroupExec> ProfileGroupExec) throws JsonProcessingException {
 		List<ProfileGroupExec> ProfileGroupExecList = new ArrayList<>();
@@ -203,40 +127,6 @@ public class ProfileGroupExecServiceImpl extends BaseGroupExecTemplate {
 	}
 
 	/********************** UNUSED **********************/
-	/*public ProfileGroupExec resolveName(ProfileGroupExec ProfileGroupExec) {
-		String createdByRefUuid = ProfileGroupExec.getCreatedBy().getRef().getUuid();
-		User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-		ProfileGroupExec.getCreatedBy().getRef().setName(user.getName());
-		
-		String dependsOnUuid=ProfileGroupExec.getDependsOn().getRef().getUuid();
-		ProfileGroup profilegroup=profileGroupServiceImpl.findLatestByUuid(dependsOnUuid);
-		ProfileGroupExec.getDependsOn().getRef().setName(profilegroup.getName());
-
-		if(ProfileGroupExec.getExecList() !=null){
-		for(int i=0;i<ProfileGroupExec.getExecList().size();i++){
-		String profileExecUuid=ProfileGroupExec.getExecList().get(i).getRef().getUuid();
-		ProfileExec profileExec=profileExecServiceImpl.findLatestByUuid(profileExecUuid);
-		ProfileGroupExec.getExecList().get(i).getRef().setName(profileExec.getName());
-
-		}
-
-		}
-		
-		return ProfileGroupExec;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<ProfileGroupExec> findAllByVersion(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid != null)
-		{
-		return iProfileGroupExecDao.findAllVersion(appUuid, uuid);
-		}
-		else
-		return iProfileGroupExecDao.findAllVersion(uuid);
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public ProfileGroupExec getAsOf(String uuid, String asOf) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;				
@@ -247,58 +137,7 @@ public class ProfileGroupExecServiceImpl extends BaseGroupExecTemplate {
 			return iProfileGroupExecDao.findAsOf(uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public MetaIdentifierHolder saveAs(ProfileGroupExec profileGroupExec) throws Exception {
-		MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
-		MetaIdentifier ref = new MetaIdentifier();		
-		ProfileGroupExec profileGroupExecNew = new ProfileGroupExec();
-		profileGroupExecNew.setName(profileGroupExec.getName()+"_copy");
-		profileGroupExecNew.setActive(profileGroupExec.getActive());		
-		profileGroupExecNew.setDesc(profileGroupExec.getDesc());		
-		profileGroupExecNew.setTags(profileGroupExec.getTags());
-		profileGroupExecNew.setStatusList(profileGroupExec.getStatusList());
-		profileGroupExecNew.setDependsOn(profileGroupExec.getDependsOn());
-		profileGroupExecNew.setExecList(profileGroupExec.getExecList());		
-		save(profileGroupExecNew);
-		ref.setType(MetaType.profilegroupExec);
-		ref.setUuid(profileGroupExecNew.getUuid());
-		refMeta.setRef(ref);
-		return refMeta;
-	}*/
-
-	/********************** UNUSED 
-	 * @throws JsonProcessingException **********************/
-	/*public List<BaseEntity> findList(List<? extends BaseEntity> profileGroupExecList) {
-		List<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
-		for(BaseEntity profilegroup : profileGroupExecList)
-		{
-			BaseEntity baseEntity = new BaseEntity();
-			String id = profilegroup.getId();
-			String uuid = profilegroup.getUuid();
-			String version = profilegroup.getVersion();
-			String name = profilegroup.getName();
-			String desc = profilegroup.getDesc();
-			String published=profilegroup.getPublished();
-			MetaIdentifierHolder createdBy = profilegroup.getCreatedBy();
-			String createdOn = profilegroup.getCreatedOn();
-			String[] tags = profilegroup.getTags();
-			String active = profilegroup.getActive();
-			List<MetaIdentifierHolder> appInfo = profilegroup.getAppInfo();
-			baseEntity.setId(id);
-			baseEntity.setUuid(uuid);
-			baseEntity.setVersion(version);
-			baseEntity.setName(name);
-			baseEntity.setDesc(desc);
-			baseEntity.setCreatedBy(createdBy);
-			baseEntity.setCreatedOn(createdOn);
-			baseEntity.setPublished(published);
-			baseEntity.setTags(tags);
-			baseEntity.setActive(active);
-			baseEntity.setAppInfo(appInfo);
-			baseEntityList.add(baseEntity);
-		}
-		return baseEntityList;
-	}*/
+	
 
 	public List<ProfileGroupExec> findProfileGroupExecByProfileGroup(String profileGroupUUID,
 			String profileGroupVersion) throws JsonProcessingException {

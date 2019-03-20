@@ -86,29 +86,6 @@ static final Logger logger = Logger.getLogger(FunctionServiceImpl.class);
 			return iFunctionDao.findOne(id);
 	}
 */
-
-/********************** UNUSED **********************/
-	/*public Function save(Function function) throws Exception {
-		MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
-		List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
-		metaIdentifierHolderList.add(meta);
-		function.setAppInfo(metaIdentifierHolderList);
-		function.setBaseEntity();
-		Function FunctionDet=iFunctionDao.save(function);
-		registerGraph.updateGraph((Object) FunctionDet, MetaType.function);
-		return FunctionDet;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Function> findAll() {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid == null) {
-			return iFunctionDao.findAll();
-		}
-		return iFunctionDao.findAll(appUuid);
-	}
-	*/
 	/********************** UNUSED **********************/
 /*	public Function update(Function function) throws IOException {
 		function.setBaseEntity();
@@ -122,80 +99,7 @@ static final Logger logger = Logger.getLogger(FunctionServiceImpl.class);
 		return iFunctionDao.exists(id);
 	}*/
 
-/********************** UNUSED **********************/
-	/*public void delete(String Id) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		Function function = iFunctionDao.findOneById(appUuid, Id);
-		function.setActive("N");
-		iFunctionDao.save(function);
-//		String ID = function.getId();
-//		iFunctionDao.delete(ID);
-//		function.exportBaseProperty();
-	}*/
 
-	/********************** UNUSED **********************/
-	/*public Function resolveName(Function function) throws JsonProcessingException {
-		if (function.getCreatedBy() != null) {
-			String createdByRefUuid = function.getCreatedBy().getRef().getUuid();
-			User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			function.getCreatedBy().getRef().setName(user.getName());
-		}
-		if (function.getAppInfo() != null) {
-			for (int i = 0; i < function.getAppInfo().size(); i++) {
-				String appUuid = function.getAppInfo().get(i).getRef().getUuid();
-				Application application = (Application) commonServiceImpl.getLatestByUuid(appUuid, MetaType.application.toString());
-				String appName = application.getName();
-				function.getAppInfo().get(i).getRef().setName(appName);
-			}
-		}		
-		for (int i = 0; i < function.getFunctionInfo().size(); i++) {
-			MetaType functionInfoRefType = function.getFunctionInfo().get(i).getRef().getType();
-			String functionInfoRefUuid = function.getFunctionInfo().get(i).getRef().getUuid();
-			if (functionInfoRefType.toString().equals("datapod")) {				
-				Integer functionInfoAttributeId = function.getFunctionInfo().get(i).getAttributeId();
-				Datapod datapodDO = datapodServiceImpl.findLatestByUuid(functionInfoRefUuid);
-				String datapodName = datapodDO.getName();
-				function.getFunctionInfo().get(i).getRef().setName(datapodName);
-				List<Attribute> attributeList = datapodDO.getAttributes();
-				function.getFunctionInfo().get(i).setAttributeName(attributeList.get(functionInfoAttributeId).getName());
-			}
-			else if (functionInfoRefType.toString().equals("dataset")) {
-				//String FunctionInfoRefUuid = function.getFunctionInfo().get(i).getRef().getUuid();
-				Integer FunctionInfoAttributeId = function.getFunctionInfo().get(i).getAttributeId();
-				Dataset datasetDO = datasetServiceImpl.findLatestByUuid(functionInfoRefUuid);
-				String datasetName = datasetDO.getName();
-				function.getFunctionInfo().get(i).getRef().setName(datasetName);
-				List<AttributeSource> attributeList = datasetDO.getAttributeInfo();
-				function.getFunctionInfo().get(i).setAttributeName(attributeList.get(FunctionInfoAttributeId).getAttrSourceName());
-			}
-			else if (functionInfoRefType.toString().equals("function")) {
-			//	String FunctionInfoRefUuid = function.getFunctionInfo().get(i).getRef().getUuid();
-				Function FunctionDO = findLatestByUuid(functionInfoRefUuid);
-				String FunctionName = FunctionDO.getName();
-				function.getFunctionInfo().get(i).getRef().setName(FunctionName);
-				}
-			else if (functionInfoRefType.toString().equals("expression")) {				
-				Expression expressionDO = expressionServiceImpl.findLatestByUuid(functionInfoRefUuid);
-				String expressionName = expressionDO.getName();
-				function.getFunctionInfo().get(i).getRef().setName(expressionName);				
-			}
-		}
-
-		return function;
-	}	*/
-
-	/********************** UNUSED **********************/
-	/*public Function findAllByUuid(String uuid) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iFunctionDao.findAllByUuid(appUuid, uuid);
-
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Function findOneByUuidAndVersion(String uuid, String version) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iFunctionDao.findOneByUuidAndVersion(appUuid, uuid, version);
-	}*/
 
 	/********************** UNUSED **********************/
 	/*public Function getOneByUuidAndVersion(String uuid, String version) {
@@ -212,42 +116,7 @@ static final Logger logger = Logger.getLogger(FunctionServiceImpl.class);
 		return iFunctionDao.findLatestByUuid(appUuid, uuid, new Sort(Sort.Direction.DESC, "version"));
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public List<Function> findAllLatest(String inputFlag) {
-		{			
-			Aggregation functionAggr;
-			if(StringUtils.isBlank(inputFlag))
-			{
-				functionAggr = newAggregation(group("uuid").max("version").as("version"));
-			}
-			else
-			{
-				StringUtils.lowerCase(inputFlag);
-				functionAggr = newAggregation(match(Criteria.where("inputReq").is(inputFlag)),group("uuid").max("version").as("version"));
-			}
-			AggregationResults<Function> functionResults = mongoTemplate.aggregate(functionAggr, "function", Function.class);
-			List<Function> functionList = functionResults.getMappedResults();
 
-			// Fetch the function details for each id
-			List<Function> result = new ArrayList<Function>();
-			for (Function s : functionList) {
-				Function functionLatest;
-				String appUuid = (securityServiceImpl.getAppInfo() != null
-						&& securityServiceImpl.getAppInfo().getRef() != null)
-								? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-				if (appUuid != null) {					
-					functionLatest = iFunctionDao.findOneByUuidAndVersion(appUuid, s.getId(), s.getVersion());
-				} else {
-					functionLatest = iFunctionDao.findOneByUuidAndVersion(s.getId(), s.getVersion());
-				}				
-				if(functionLatest != null)
-				{
-				result.add(functionLatest);
-				}
-			}
-			return result;
-		}
-	}*/
 
 	/********************** UNUSED 
 	 * @throws ParseException 
@@ -295,32 +164,4 @@ static final Logger logger = Logger.getLogger(FunctionServiceImpl.class);
 		return functionList;
 	}
 
-	/********************** UNUSED **********************/
-	/*public List<Function> findAllByVersion(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iFunctionDao.findAllVersion(appUuid, uuid);
-		} else
-			return iFunctionDao.findAllVersion(uuid);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public MetaIdentifierHolder saveAs(Function function) throws Exception {
-		MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
-		MetaIdentifier ref = new MetaIdentifier();		
-		Function functionNew = new Function();
-		functionNew.setName(function.getName()+"_copy");
-		functionNew.setActive(function.getActive());		
-		functionNew.setDesc(function.getDesc());		
-		functionNew.setTags(function.getTags());		
-		functionNew.setFunctionInfo(function.getFunctionInfo());
-		functionNew.setFuncType(function.getFuncType());	
-		functionNew.setCategory(function.getCategory());
-		save(functionNew);
-		ref.setType(MetaType.function);
-		ref.setUuid(functionNew.getUuid());
-		refMeta.setRef(ref);
-		return refMeta;
-	}*/
 }
