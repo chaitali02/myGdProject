@@ -1529,7 +1529,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         return false;
       }
       if(["dq"].indexOf(params.elementType) !=-1 && execUrl !=null){
-        execUrl.state=dagMetaDataService.elementDefs[params.elementType.toLowerCase()+"exec"].resultState2
+        execUrl.state=dagMetaDataService.elementDefs[params.elementType.toLowerCase()+"exec"].resultState
         execUrl.params.type="dqexec"
         window.navigateTo(JSON.stringify(execUrl));
         return false;
