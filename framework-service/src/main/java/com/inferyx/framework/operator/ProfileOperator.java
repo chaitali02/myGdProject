@@ -49,6 +49,8 @@ public class ProfileOperator {
 	private DatapodServiceImpl datapodServiceImpl;
 	@Autowired
 	Engine engine;
+	@Autowired
+	Helper helper;
 
 	static final Logger logger = Logger.getLogger(ProfileOperator.class);
 	Datapod dp;
@@ -125,12 +127,12 @@ public class ProfileOperator {
 		MetaIdentifierHolder filterSource = new MetaIdentifierHolder(new MetaIdentifier(MetaType.profile, profile.getUuid(), profile.getVersion()));
 
 		Datasource mapSourceDS = commonServiceImpl.getDatasourceByObject(profile);
-//		String datasourceType = mapSourceDS.getType();
-//		ExecContext execContext = helper.getExecutorContext(datasourceType);
+		String datasourceType = mapSourceDS.getType();
+		ExecContext execContext = helper.getExecutorContext(datasourceType);
 
 		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(profile.getDependsOn().getRef().getUuid(), profile.getDependsOn().getRef().getVersion(), MetaType.datapod.toString());
 		
-		ExecContext execContext = executorServiceImpl.getExecContext(runMode, mapSourceDS);
+//		ExecContext execContext = executorServiceImpl.getExecContext(runMode, mapSourceDS);
 
 		switch(execContext) {
 		case HIVE : 
@@ -254,7 +256,7 @@ public class ProfileOperator {
 					+ "(SELECT COUNT(1) FROM " + profileTableName +" tab) AS "+NUM_ROWS+", "
 					+ "min(cast(" + attrName + " AS SIGNED)) AS "+MIN_VAL+", "
 					+ "max(cast(" + attrName + " AS SIGNED)) AS "+MAX_VAL+", "
-					+ "avg(" + attrName + ") AS avgVal,"
+					+ "avg(" + attrName + ") AS " + AVG_VAL + ","
 					+ "cast(" + getMedianVal(attrName) + " AS decimal) AS "+MEDIAN_VAL+", "
 					+ "stddev(" + attrName + ") AS "+STD_DEV+", "
 					+ "count(distinct " + attrName + ") AS "+NUM_DISTINCT+", "

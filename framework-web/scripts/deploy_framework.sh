@@ -40,6 +40,7 @@ echo
 echo "Building and Deploying war..."
 mvn clean install
 cp framework-web/target/framework.war $TOMCAT_HOME/webapps
+rm $TOMCAT_HOME/webapps/framework/WEB-INF/lib/*
 cp framework-web/target/framework/WEB-INF/lib/framework-*.jar $TOMCAT_HOME/shared_lib
 
 echo
