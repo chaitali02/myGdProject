@@ -298,6 +298,10 @@ public class MetadataServiceImpl {
 			query.fields().include("numRows");
 			query.fields().include("sizeMB");
 		}
+		if(metaType.equals(MetaType.dagExec)) {
+			query.fields().include("execCreated");
+
+		}
 		
 		//Apply filter
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat ("EEE MMM dd HH:mm:ss yyyy z");

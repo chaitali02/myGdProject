@@ -608,7 +608,8 @@
           
           result.startTime="-NA-";
           result.endTime="-NA-";
-          result.duration="-NA-"
+          result.duration="-NA-";
+          result.execCreated= response[i].execCreated;
           if(type =="reportExec" ){
             result.numRows=response[i].numRows;
             if(response[i].sizeMB!=null){
@@ -621,7 +622,7 @@
               result.sizeMB="-NA-"
             }
           }
-          if(response[i].status !=null && response[i].status.length > 1){
+          if(response[i].status !=null && response[i].status.length > 0){
             for(var j=0;j<response[i].status.length;j++){
               if(response[i].status[j].stage == "PENDING"){
                 result.startTime=$filter('date')(new Date(response[i].status[j].createdOn), "EEE MMM dd HH:mm:ss yyyy");

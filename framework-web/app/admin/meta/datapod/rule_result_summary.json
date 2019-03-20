@@ -1,59 +1,101 @@
 {
-  "uuid": "787028ff-44ea-461f-b443-947b3f52fdbd",
-  "version": "1552115756",
-  "name": "rule_result_summary",
-  "desc": null,
-  "createdBy": {
-    "ref": {
-      "type": "user",
-      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
-      "version": "1464977196",
-      "name": "ypalrecha"
-    },
-    "value": null
-  },
-  "createdOn" : ISODate("2019-03-17T19:54:21.592Z"),
-  "tags": [],
-  "active": "Y",
-  "locked": "N",
-  "published": "N",
-  "appInfo": [
-	{
-            "ref" : {
-                "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-            }
-        }
-  ],
-  "publicFlag": "Y",
-  "datasource": {
-    "ref": {
-      "type": "datasource",
-      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
-      "version": null,
-      "name": "file_data"
-    },
-    "value": null
-  },
-  "cache": "Y",
-  "attributes": [
-    {
-      "attributeId": 0,
-      "displaySeq": 0,
-      "name": "rule_uuid",
-      "type": "string",
-      "desc": "rule_uuid",
-      "expression": null,
-      "key": "",
-      "partition": "N",
-      "dispName": "rule_uuid",
-      "active": "Y",
-      "length": null,
-      "attrUnitType": null
-    },
-    {
+	"uuid": "787028ff-44ea-461f-b443-947b3f52fdbd",
+	"version": "1552115756",
+	"name": "rule_result_summary",
+	"desc": null,
+	"createdBy": {
+		"ref": {
+			"type": "user",
+			"uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+			"version": "1464977196",
+			"name": "ypalrecha"
+		},
+		"value": null
+	},
+	"createdOn": ISODate("2019-03-17T19:54:21.592Z"),
+	"tags": [],
+	"active": "Y",
+	"locked": "N",
+	"published": "N",
+	"appInfo": [
+		{
+			"ref": {
+				"type": "application",
+				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+			}
+		}
+	],
+	"publicFlag": "Y",
+	"datasource": {
+		"ref": {
+			"type": "datasource",
+			"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
+			"version": null,
+			"name": "file_data"
+		},
+		"value": null
+	},
+	"cache": "Y",
+	"attributes": [
+		{
+			"attributeId": 0,
+			"displaySeq": 0,
+			"name": "rule_exec_uuid",
+			"type": "string",
+			"desc": "ruleexec_uuid",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "rule_exec_uuid",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
 			"attributeId": 1,
 			"displaySeq": 1,
+			"name": "rule_exec_version",
+			"type": "integer",
+			"desc": "rule_exec_version",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "rule_exec_version",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 2,
+			"displaySeq": 2,
+			"name": "rule_exec_time",
+			"type": "string",
+			"desc": "rule_exec_time",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "rule_exec_time",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 4,
+			"displaySeq": 4,
+			"name": "rule_uuid",
+			"type": "string",
+			"desc": "rule_uuid",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "rule_uuid",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 5,		
+			"displaySeq":5,
 			"name": "rule_version",
 			"type": "integer",
 			"desc": "rule_version",
@@ -64,90 +106,90 @@
 			"active": "Y",
 			"length": null,
 			"attrUnitType": null
-	},		
-    {
-      "attributeId": 2,
-      "displaySeq": 2,
-      "name": "rule_name",
-      "type": "string",
-      "desc": "rule_name",
-      "expression": null,
-      "key": "",
-      "partition": "N",
-      "dispName": "rule_name",
-      "active": "Y",
-      "length": null,
-      "attrUnitType": null
-    },
-    {
-      "attributeId": 3,
-      "displaySeq": 3,
-      "name": "entity_type",
-      "type": "string",
-      "desc": "entity_type",
-      "expression": null,
-      "key": "",
-      "partition": "N",
-      "dispName": "entity_type",
-      "active": "Y",
-      "length": null,
-      "attrUnitType": null
-    },
-    {
-      "attributeId": 4,
-      "displaySeq": 4,
-      "name": "entity_id",
-      "type": "string",
-      "desc": "entity_id",
-      "expression": null,
-      "key": "",
-      "partition": "N",
-      "dispName": "entity_id",
-      "active": "Y",
-      "length": null,
-      "attrUnitType": null
-    },
-    {
-      "attributeId": 5,
-      "displaySeq": 5,
-      "name": "score",
-      "type": "double",
-      "desc": "score",
-      "expression": null,
-      "key": "",
-      "partition": "N",
-      "dispName": "score",
-      "active": "Y",
-      "length": null,
-      "attrUnitType": null
-    },
-    {
-      "attributeId": 6,
-      "displaySeq": 6,
-      "name": "filter_expr",
-      "type": "string",
-      "desc": "filter_expr",
-      "expression": null,
-      "key": "",
-      "partition": "N",
-      "dispName": "filter_expr",
-      "active": "Y",
-      "length": null,
-      "attrUnitType": null
-    },    
-    {
-      "attributeId": 7,
-      "displaySeq": 7,
-      "name": "version",
-      "type": "integer",
-      "desc": "version",
-      "expression": null,
-      "key": "",
-      "partition": "N",
-      "dispName": "version",
-      "active": "Y",
-      "length": null,
-      "attrUnitType": null
-    }
-  ]
+		},
+		{
+			"attributeId": 6,
+			"displaySeq": 6,
+			"name": "rule_name",
+			"type": "string",
+			"desc": "rule_name",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "rule_name",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 7,
+			"displaySeq": 7,
+			"name": "entity_type",
+			"type": "string",
+			"desc": "entity_type",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "entity_type",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 8,
+			"displaySeq": 8,
+			"name": "entity_id",
+			"type": "string",
+			"desc": "entity_id",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "entity_id",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 9,
+			"displaySeq": 9,
+			"name": "score",
+			"type": "double",
+			"desc": "score",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "score",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 10,
+			"displaySeq": 10,
+			"name": "filter_expr",
+			"type": "string",
+			"desc": "filter_expr",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "filter_expr",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		},
+		{
+			"attributeId": 11,
+			"displaySeq": 11,
+			"name": "version",
+			"type": "integer",
+			"desc": "version",
+			"expression": null,
+			"key": "",
+			"partition": "N",
+			"dispName": "version",
+			"active": "Y",
+			"length": null,
+			"attrUnitType": null
+		}
+	]
 }

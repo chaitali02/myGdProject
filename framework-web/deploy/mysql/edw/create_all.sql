@@ -1,12 +1,38 @@
 
 
+drop table if exists account_mysql;
+create table account_mysql(	account_id varchar(50) default 0 not null,
+	account_type_id varchar(50),
+	account_status_id varchar(50),
+	product_type_id varchar(50),
+	customer_id varchar(50),
+	pin_number integer(50),
+	nationality varchar(50),
+	primary_iden_doc varchar(50),
+	primary_iden_doc_id varchar(50),
+	secondary_iden_doc varchar(50),
+	secondary_iden_doc_id varchar(50),
+	account_open_date varchar(10),
+	account_number varchar(50),
+	opening_balance integer(20),
+	current_balance integer(20),
+	overdue_balance integer(20),
+	overdue_date varchar(10),
+	currency_code varchar(10),
+	interest_type varchar(10),
+	interest_rate decimal(10,2),
+	load_date varchar(10),
+	load_id integer(50), 
+constraint account_mysql_pk  primary key(account_id));
+
+
 drop table if exists account;
 create table account(	account_id varchar(50) default 0 not null,
 	account_type_id varchar(50),
 	account_status_id varchar(50),
 	product_type_id varchar(50),
 	customer_id varchar(50),
-	pin_number integer(10),
+	pin_number integer(50),
 	nationality varchar(50),
 	primary_iden_doc varchar(50),
 	primary_iden_doc_id varchar(50),
@@ -128,9 +154,11 @@ create table dim_account(
 	currency_code varchar(10),
 	interest_type varchar(50),
 	interest_rate decimal(10,2),
+        customer_id varchar(50),
 	load_date varchar(10),
 	load_id integer(50), 
 constraint account_id_pk primary key(account_id));
+
 drop table if exists dim_address;
 create table dim_address(	
 	address_id varchar(50) default 0 not null,
@@ -175,13 +203,13 @@ create table dim_branch(
 constraint branch_id_pk  primary key(branch_id));
 drop table if exists dim_country;
 create table dim_country(	
-	country_id varchar(50) default 0 not null,
 	country_code varchar(10),
 	country_name varchar(100),
-	country_population integer(10),
+	country_population integer(10), 
+        country_risk_level integer(50),
 	load_date varchar(10),
-	load_id integer(50), 
-constraint country_id_pk  primary key(country_id));
+	load_id integer(50));
+
 drop table if exists dim_customer;
 create table dim_customer(	
 	customer_id varchar(50) default 0 not null,
@@ -285,25 +313,38 @@ create table dim_transaction_type(
 	load_id integer(50), 
 constraint load_id_pk  primary key(transaction_type_id));
 
-drop table if exists dp_rule_results;
-create table dp_rule_results(	
-	datapoduuid varchar(50) default 0 not null,
-	datapodversion varchar(50),
-	datapodname varchar(100),
-	attributeid varchar(50),
-	attributename varchar(100),
-	numrows varchar(50),
-	minval decimal(10,2),
-	maxval decimal(10,2),
-	avgval decimal(10,3),
-	medianval decimal(10,3),
-	stddev decimal(10,4),
-	numdistinct integer(10),
-	perdistinct decimal(10,2),
-	numnull integer(10),
-	pernull decimal(10,2),
-	sixsigma decimal(10,2),
-	version integer(10));
+DROP TABLE IF EXISTS dp_result_summary; 
+
+CREATE TABLE dp_result_summary 
+  ( 
+     rule_exec_uuid    VARCHAR(50), 
+     rule_exec_version INT(10), 
+     rule_exec_time    VARCHAR(100), 
+     rule_uuid         VARCHAR(50), 
+     rule_version      INT(10), 
+     rule_name         VARCHAR(100), 
+     datapoduuid       VARCHAR(50) , 
+     datapodversion    VARCHAR(50), 
+     datapodname       VARCHAR(100), 
+     attributeid       VARCHAR(50), 
+     attributename     VARCHAR(100), 
+     numrows           VARCHAR(50), 
+     minval            DECIMAL(20, 4), 
+     maxval            DECIMAL(20, 4), 
+     avgval            DECIMAL(20, 4), 
+     medianval         DECIMAL(20, 4), 
+     stddev            DECIMAL(20, 4), 
+     numdistinct       INTEGER(10), 
+     perdistinct       DECIMAL(20, 4), 
+     numnull           INTEGER(10), 
+     pernull           DECIMAL(20, 4), 
+     minlength         DECIMAL(20, 4), 
+     maxlength         DECIMAL(20, 4), 
+     avglength         DECIMAL(20, 4), 
+     numduplicates     DECIMAL(20, 4), 
+     version           INTEGER(10) 
+  ); 
+
 drop table if exists dq_rule_results;
 create table dq_rule_results(	
 	rowkey varchar(50),
@@ -352,10 +393,10 @@ drop table if exists fact_transaction;
 create table fact_transaction(	
 	transaction_id varchar(50) default 0 not null,
 	src_transaction_id varchar(50),
-	transaction_type_id integer(50),
-	trans_date_id integer(50),
-	bank_id integer(50),
-	branch_id integer(50),
+	transaction_type_id varchar(50),
+	trans_date_id varchar(50),
+	bank_id varchar(50),
+	branch_id varchar(50),
 	customer_id varchar(50),
 	address_id varchar(50),
 	account_id varchar(50),
@@ -365,10 +406,11 @@ create table fact_transaction(
 	amount_usd integer(10),
 	currency_code varchar(10),
 	currency_rate integer(10),
-	notes varchar(50),
+	notes varchar(200),
 	load_date varchar(10),
 	load_id integer(50), 
 constraint transaction_id_pk  primary key(transaction_id));
+
 drop table if exists model_training_set;
 create table model_training_set
 (
@@ -387,7 +429,8 @@ create table product_type(
 	product_type_desc varchar(500),
 	load_date varchar(10),
 	load_id integer(50), 
-constraint product_type_pk primary key(product_type_id));
+constraint product_type_id_pk primary key(product_type_id));
+
 drop table if exists rc_rule_results;
 create table rc_rule_results(	
 	sourceuuid varchar(50) default 0 not null,
