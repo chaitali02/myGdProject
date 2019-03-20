@@ -11,10 +11,7 @@ import { FilterInfoIO } from '../domainIO/domain.filterInfoIO';
 import * as MetaTypeEnum from '../../metadata/enums/metaType';
 import { AttributeIO } from '../domainIO/domain.attributeIO';
 
-
-
 @Injectable()
-
 export class DataQualityService {
 
   constructor(@Inject(Http) private http: Http, private _sharedService: SharedService, private _commonService: CommonService) { }
@@ -93,8 +90,6 @@ export class DataQualityService {
         map(response => { return <any[]>response.json(); }),
         catchError(error => this.handleError<string>(error, "Network Error!")));
   }
-
-
 
   getOneByUuidAndVersion(uuid, version, type): Observable<any> {
     return this._commonService.getOneByUuidAndVersion(uuid, version, type)
@@ -209,6 +204,6 @@ export class DataQualityService {
           }
           console.log(dataQualityIO);
           return <any>dataQualityIO;
-        }), catchError(error => this.handleError<string>(error, "Network Error!")));
-  }
+       }), catchError(error => this.handleError<string>(error, "Network Error!")));
+  } 
 }
