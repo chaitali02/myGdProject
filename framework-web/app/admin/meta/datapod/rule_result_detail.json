@@ -42,7 +42,7 @@
             "displaySeq" : 0,
             "name" : "rule_exec_uuid",
             "type" : "string",
-            "desc" : "ruleexec_uuid",
+            "desc" : "rule_exec_uuid",
             "expression" : null,
             "key" : "",
             "partition" : "N",
