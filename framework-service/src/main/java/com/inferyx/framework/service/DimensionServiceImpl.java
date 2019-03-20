@@ -92,55 +92,6 @@ public class DimensionServiceImpl {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public List<Dimension> findDimByType(String typeUUID) 	{
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		Aggregation dimensionAggr = newAggregation(match(Criteria.where("dependsOn.ref.uuid").is(typeUUID)),
-				group("uuid").max("version").as("version").addToSet("uuid").as("uuid"));
-		AggregationResults<Dimension> dimensionResults = mongoTemplate.aggregate(dimensionAggr, "dimension", Dimension.class);
-		List<Dimension> dimensionList = dimensionResults.getMappedResults();
-
-		List<Dimension> result = new ArrayList<Dimension>();
-		for (Dimension s : dimensionList) {
-			Dimension dimensionLatest = iDimensionDao.findOneByUuidAndVersion(appUuid,s.getId(), s.getVersion());
-			result.add(dimensionLatest);
-		}
-		
-	    return result;
-		}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Dimension> findAllLatest() {
-		{	   
-			//String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-			   Aggregation dimensionAggr = newAggregation(group("uuid").max("version").as("version"));
-			   AggregationResults<Dimension> dimensionResults = mongoTemplate.aggregate(dimensionAggr,"dimension", Dimension.class);	   
-			   List<Dimension> dimensionList = dimensionResults.getMappedResults();
-			   
-			   List<Dimension> result=new  ArrayList<Dimension>();
-			   for(Dimension p : dimensionList)
-			   { 
-				   Dimension dimensionLatest;
-				String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-				if(appUuid != null)
-				{
-				//String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();;
-					dimensionLatest = iDimensionDao.findOneByUuidAndVersion(appUuid,p.getId(), p.getVersion());
-				}
-				else
-				{
-					dimensionLatest = iDimensionDao.findOneByUuidAndVersion(p.getId(), p.getVersion());
-				}
-				//logger.debug("datapodLatest is " + datapodLatest.getName());
-				if(dimensionLatest != null)
-				{
-				result.add(dimensionLatest);
-				}
-			   }
-			   return result;
-			}
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public List<Dimension> findAllLatestActive() {	   
 	   Aggregation dimensionAggr = newAggregation(match(Criteria.where("active").is("Y")),match(Criteria.where("name").ne(null)),group("uuid").max("version").as("version"));
 	   AggregationResults<Dimension> dimensionResults = mongoTemplate.aggregate(dimensionAggr,"dimension", Dimension.class);	   
@@ -179,57 +130,6 @@ public class DimensionServiceImpl {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public Dimension findAllByUuid(String uuid) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iDimensionDao.findAllByUuid(appUuid,uuid);
-
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Dimension> findAll(){
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid == null)
-		{
-			return iDimensionDao.findAll(); 
-		}
-		return iDimensionDao.findAll(appUuid);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<MetaIdentifierHolder> findDimInfoByRelation(String relationUUID) throws JsonProcessingException{
-		List<Datapod> datapodList = null;
-		try {
-			datapodList = relationServiceImpl.findDatapodByRelation(relationUUID,null);
-		} catch (JSONException e) {			
-			e.printStackTrace();
-		}		
-		 List<MetaIdentifierHolder> result = new  ArrayList<MetaIdentifierHolder>();										
-			for(Datapod datapod : datapodList)
-			{
-				String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-				List<Attribute> attrList = datapod.getAttributes();				
-				String datapodUUID = datapod.getUuid();
-				Aggregation dimensionAggr = newAggregation(match(Criteria.where("dimInfo.ref.uuid").is(datapodUUID)),group("uuid").max("version").as("version"));
-				   AggregationResults<Dimension> dimensionResults = mongoTemplate.aggregate(dimensionAggr,"dimension", Dimension.class);	   
-				   List<Dimension> dimList = dimensionResults.getMappedResults();
-
-				   // Fetch dimension details for each id				
-				   for(Dimension d :dimList)
-				   {   					   
-					   Dimension dimLatest = iDimensionDao.findOneByUuidAndVersion(appUuid,d.getId(),d.getVersion());
-					   int attrID = Integer.parseInt(dimLatest.getDimInfo().getAttrId());
-					   AttributeRefHolder dimInfo = dimLatest.getDimInfo();
-					   dimInfo.getRef().setName(datapod.getName());
-					   String attrName = datapod.getAttribute(attrID).getName();
-					   dimInfo.setAttrName(attrName);
-					   result.add(dimInfo);
-				   }				   			
-			}
-		
-		return result;
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public Dimension resolveName(Dimension dimension) throws JsonProcessingException {
 		if(dimension.getCreatedBy() != null)
 		{
@@ -260,30 +160,6 @@ public class DimensionServiceImpl {
 		dimension.getDimInfo().setAttrName(attrList.get(attrID).getName());		
 		dimension.getDimInfo().getRef().setName(datapodDO.getName());
 		return dimension;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Dimension> resolveName(List<Dimension> dimension1) {
-		List<Dimension> dimList = new ArrayList<Dimension>();
-		for(Dimension dim : dimension1)
-		{
-			String createdByRefUuid = dim.getCreatedBy().getRef().getUuid();
-			User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			dim.getCreatedBy().getRef().setName(user.getName());
-			dimList.add(dim);
-		}
-		return dimList;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Dimension> findAllByVersion(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid != null)
-		{
-		return iDimensionDao.findAllVersion(appUuid, uuid);
-		}
-		else
-		return iDimensionDao.findAllVersion(uuid);
 	}*/
 
 	/********************** UNUSED **********************/

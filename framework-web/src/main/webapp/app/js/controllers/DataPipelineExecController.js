@@ -61,14 +61,39 @@ JobMonitoringModule.controller('DetailDataPipelineExecController', function ($fi
       d = d.toString().replace("+0530", "IST");
       statusList[i] = response.statusList[i].stage + "-" + d;
     }
-    $scope.statusList = statusList
+    $scope.statusList = statusList;
+    var dependsOnlist = [];
+    if (response.dependsOn != null) {
+        var dependsOn = {};
+        dependsOn.type = response.dependsOn.type;
+        dependsOn.name = response.dependsOn.type + "-"+response.dependsOn.name;
+        dependsOn.uuid = response.dependsOn.uuid;
+        dependsOn.version = response.dependsOn.version;
+        dependsOnlist[0] = dependsOn;
+    }
+    $scope.dependsOnlist=dependsOnlist;
 
   }
   var onError=function(){
     $scope.isEditInprogess=false;
     $scope.isEditVeiwError=true;
   }
-
+  $scope.onShowDetailDepOn=function(data){
+    $rootScope.previousState = {};
+    $rootScope.previousState.name = dagMetaDataService.elementDefs['dagexec'].detailState;
+    $rootScope.previousState.params = {};
+    $rootScope.previousState.params.id = $stateParams.id;
+    $rootScope.previousState.params.mode = true;
+    var type = data.type
+    var uuid = data.uuid
+    var stageName = dagMetaDataService.elementDefs[type.toLowerCase()].detailState;
+    var stageparam = {};
+    stageparam.id = uuid;
+    stageparam.version = data.version;
+    stageparam.mode = true;
+    stageparam.returnBack = true;
+    $state.go(stageName, stageparam);
+}
   $scope.expandAll = function (expanded) {
     $scope.$broadcast('onExpandAll', {
       expanded: expanded

@@ -52,16 +52,6 @@ public class RuleGroupExecServiceImpl extends BaseGroupExecTemplate {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public List<RuleGroupExec> findAll() {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid == null)
-		{
-			return iRuleGroupExecDao.findAll(); 
-		}
-		return iRuleGroupExecDao.findAll(appUuid);
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public RuleGroupExec findOneById(String id) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
 		if(appUuid != null)
@@ -106,33 +96,6 @@ public class RuleGroupExecServiceImpl extends BaseGroupExecTemplate {
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
 		return iRuleGroupExecDao.findAllByUuid(appUuid,uuid);
 		
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<RuleGroupExec> findAllLatest()
-	{		
-		//String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		Aggregation ruleGroupexecAggr = newAggregation(group("uuid").max("version").as("version"));
-		AggregationResults<RuleGroupExec> ruleGroupExecResults = mongoTemplate.aggregate(ruleGroupexecAggr, "rulegroupexec", RuleGroupExec.class);
-		List<RuleGroupExec> ruleGroupExecList = ruleGroupExecResults.getMappedResults();
-		// Fetch the VizExec details for each id
-		List<RuleGroupExec> result = new ArrayList<RuleGroupExec>();
-		for (RuleGroupExec v : ruleGroupExecList) {
-			RuleGroupExec ruleExecLatest;
-			String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-			if(appUuid != null)
-			{
-			//String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();;
-				ruleExecLatest = iRuleGroupExecDao.findOneByUuidAndVersion(appUuid,v.getId(), v.getVersion());
-			}
-			else
-			{
-				ruleExecLatest = iRuleGroupExecDao.findOneByUuidAndVersion(v.getId(), v.getVersion());
-			}
-			//logger.debug("datapodLatest is " + datapodLatest.getName());
-			result.add(ruleExecLatest);
-		}	
-		return result;
 	}*/
 
 	/********************** UNUSED **********************/
@@ -186,44 +149,6 @@ public class RuleGroupExecServiceImpl extends BaseGroupExecTemplate {
 		}
 		return ruleGroupExecListNew;
 	}
-
-	/********************** UNUSED **********************/
-	/*public RuleGroupExec resolveName(RuleGroupExec ruleGroupExec) throws JsonProcessingException {
-		String createdByRefUuid = ruleGroupExec.getCreatedBy().getRef().getUuid();
-		//User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-		User user = (User) commonServiceImpl.getLatestByUuid(createdByRefUuid, MetaType.user.toString());
-		ruleGroupExec.getCreatedBy().getRef().setName(user.getName());
-		
-		if(ruleGroupExec.getExecList() !=null){
-		    for(int i=0;i<ruleGroupExec.getExecList().size();i++) {
-			    String ruleExecUuid=ruleGroupExec.getExecList().get(i).getRef().getUuid();
-			    //com.inferyx.framework.domain.RuleExec ruleex=ruleExecServiceImpl.findLatestByUuid(ruleExecUuid);
-			    com.inferyx.framework.domain.RuleExec ruleex = (RuleExec) commonServiceImpl.getLatestByUuid(ruleExecUuid, MetaType.ruleExec.toString());
-			    ruleGroupExec.getExecList().get(i).getRef().setName(ruleex.getName());
-		    }
-		}
-		
-		if(ruleGroupExec.getDependsOn() != null){
-			String dependsOnUuid=ruleGroupExec.getDependsOn().getRef().getUuid();
-			//RuleGroup ruleGroup=ruleGroupServiceImpl.findLatestByUuid(dependsOnUuid);
-			RuleGroup ruleGroup = (RuleGroup) commonServiceImpl.getLatestByUuid(dependsOnUuid, MetaType.rulegroup.toString());
-			ruleGroupExec.getDependsOn().getRef().setName(ruleGroup.getName());
-		}
-		return ruleGroupExec;
-	}*/
-
-	/********************** UNUSED 
-	 * @throws JsonProcessingException **********************/
-	/*public List<RuleGroupExec> findAllByVersion(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid != null)
-		{
-		return iRuleGroupExecDao.findAllVersion(appUuid, uuid);
-		}
-		else
-		return iRuleGroupExecDao.findAllVersion(uuid);
-	}*/
-
 	public List<RuleGroupExec> findRuleGroupExecByRuleGroup(String ruleGroupUuid, String ruleGroupVersion) throws JsonProcessingException {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
 		List<RuleGroupExec> ruleGroupExecList = null;

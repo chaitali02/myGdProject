@@ -56,16 +56,6 @@ public class LoadExecServiceImpl  extends BaseRuleExecTemplate {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public List<LoadExec> findAll() {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid == null) {
-			return iLoadExecDao.findAll();
-		}
-		return iLoadExecDao.findAll(appUuid);
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public LoadExec findOneById(String id) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
@@ -107,38 +97,6 @@ public class LoadExecServiceImpl  extends BaseRuleExecTemplate {
 		iLoadExecDao.delete(ID);
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public LoadExec findAllByUuid(String uuid) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iLoadExecDao.findAllByUuid(appUuid, uuid);
-
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<LoadExec> findAllLatest() {
-		Aggregation loadExecAggr = newAggregation(group("uuid").max("version").as("version"));
-		AggregationResults<LoadExec> loadExecResults = mongoTemplate.aggregate(loadExecAggr,"loadexec",
-				LoadExec.class);
-		List<LoadExec> loadExecList = loadExecResults.getMappedResults();
-		// Fetch the LoadExec details for each id
-		List<LoadExec> result = new ArrayList<LoadExec>();
-		for (LoadExec v : loadExecList) {
-			LoadExec loadExecLatest;
-			String appUuid = (securityServiceImpl.getAppInfo() != null
-					&& securityServiceImpl.getAppInfo().getRef() != null)
-							? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-			if (appUuid != null) {
-				loadExecLatest = iLoadExecDao.findOneByUuidAndVersion(appUuid, v.getId(), v.getVersion());
-			} else {
-				loadExecLatest = iLoadExecDao.findOneByUuidAndVersion(v.getId(), v.getVersion());
-			}
-			if(loadExecLatest!=null)
-			{
-			result.add(loadExecLatest);
-			}
-		}
-		return result;
-	}*/
 
 	/********************** UNUSED **********************/
 /*	public List<LoadExec> findAllLatestActive() {
@@ -177,41 +135,6 @@ public class LoadExecServiceImpl  extends BaseRuleExecTemplate {
 		} else {
 			return iLoadExecDao.findOneByUuidAndVersion(uuid, version);
 		}
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<LoadExec> resolveName(List<LoadExec> loadExec) {
-		List<LoadExec> loadExecList = new ArrayList<>();
-		for (LoadExec loadE : loadExec) {
-			LoadExec LoadExecLatest = findOneByUuidAndVersion(loadE.getUuid(), loadE.getVersion());
-			String createdByRefUuid = loadE.getCreatedBy().getRef().getUuid();
-			User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			LoadExecLatest.getCreatedBy().getRef().setName(user.getName());
-			loadExecList.add(LoadExecLatest);
-		}
-		return loadExecList;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public LoadExec resolveName(LoadExec loadExec) {
-		String createdByRefUuid = loadExec.getCreatedBy().getRef().getUuid();
-		User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-		loadExec.getCreatedBy().getRef().setName(user.getName());
-		
-		String dependsOnUuid=loadExec.getDependsOn().getRef().getUuid();
-		com.inferyx.framework.domain.Load load=loadServiceImpl.findLatestByUuid(dependsOnUuid);
-		loadExec.getDependsOn().getRef().setName(load.getName());
-		return loadExec;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<LoadExec> findAllByVersion(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iLoadExecDao.findAllVersion(appUuid, uuid);
-		} else
-			return iLoadExecDao.findAllVersion(uuid);
 	}*/
 
 	/********************** UNUSED **********************/

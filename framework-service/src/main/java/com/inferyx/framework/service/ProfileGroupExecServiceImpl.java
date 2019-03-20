@@ -62,16 +62,6 @@ public class ProfileGroupExecServiceImpl extends BaseGroupExecTemplate {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public List<ProfileGroupExec> findAll() {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid == null)
-		{
-			return iProfileGroupExecDao.findAll(); 
-		}
-		return iProfileGroupExecDao.findAll(appUuid);
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public ProfileGroupExec findOneById(String id) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
 		if(appUuid != null)
@@ -113,41 +103,7 @@ public class ProfileGroupExecServiceImpl extends BaseGroupExecTemplate {
 		String ID=ProfileGroupExec.getId();
 		iProfileGroupExecDao.delete(ID);		
 	}*/
-	/********************** UNUSED **********************/
-	/*public List<ProfileGroupExec> findAllByUuid(String uuid) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iProfileGroupExecDao.findAllByUuid(appUuid,uuid);
-		
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<ProfileGroupExec> findAllLatest()
-	{	
-		Aggregation profileGroupExecAggr = newAggregation(group("uuid").max("version").as("version"));
-		AggregationResults<ProfileGroupExec> profileExecResults = mongoTemplate.aggregate(profileGroupExecAggr, "profilegroupexec", ProfileGroupExec.class);
-		List<ProfileGroupExec> ProfileGroupExecList = profileExecResults.getMappedResults();
-		// Fetch the ProfileGroupExec details for each id
-		List<ProfileGroupExec> result = new ArrayList<ProfileGroupExec>();
-		for (ProfileGroupExec v : ProfileGroupExecList) {
-			ProfileGroupExec ProfileGroupExecLatest;
-			String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-			if(appUuid != null)
-			{			
-				ProfileGroupExecLatest = iProfileGroupExecDao.findOneByUuidAndVersion(appUuid,v.getId(), v.getVersion());
-			}
-			else
-			{
-				ProfileGroupExecLatest = iProfileGroupExecDao.findOneByUuidAndVersion(v.getId(), v.getVersion());
-			}
-			
-			if(ProfileGroupExecLatest != null)
-			{
-			result.add(ProfileGroupExecLatest);
-			}
-		}	
-		return result;
-	}*/
-
+	
 	/********************** UNUSED **********************/
 	/*public List<ProfileGroupExec> findAllLatestActive() 	
 	{	   
@@ -201,40 +157,6 @@ public class ProfileGroupExecServiceImpl extends BaseGroupExecTemplate {
 		}
 		return ProfileGroupExecList;
 	}
-
-	/********************** UNUSED **********************/
-	/*public ProfileGroupExec resolveName(ProfileGroupExec ProfileGroupExec) {
-		String createdByRefUuid = ProfileGroupExec.getCreatedBy().getRef().getUuid();
-		User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-		ProfileGroupExec.getCreatedBy().getRef().setName(user.getName());
-		
-		String dependsOnUuid=ProfileGroupExec.getDependsOn().getRef().getUuid();
-		ProfileGroup profilegroup=profileGroupServiceImpl.findLatestByUuid(dependsOnUuid);
-		ProfileGroupExec.getDependsOn().getRef().setName(profilegroup.getName());
-
-		if(ProfileGroupExec.getExecList() !=null){
-		for(int i=0;i<ProfileGroupExec.getExecList().size();i++){
-		String profileExecUuid=ProfileGroupExec.getExecList().get(i).getRef().getUuid();
-		ProfileExec profileExec=profileExecServiceImpl.findLatestByUuid(profileExecUuid);
-		ProfileGroupExec.getExecList().get(i).getRef().setName(profileExec.getName());
-
-		}
-
-		}
-		
-		return ProfileGroupExec;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<ProfileGroupExec> findAllByVersion(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid != null)
-		{
-		return iProfileGroupExecDao.findAllVersion(appUuid, uuid);
-		}
-		else
-		return iProfileGroupExecDao.findAllVersion(uuid);
-	}*/
 
 	/********************** UNUSED **********************/
 	/*public ProfileGroupExec getAsOf(String uuid, String asOf) {

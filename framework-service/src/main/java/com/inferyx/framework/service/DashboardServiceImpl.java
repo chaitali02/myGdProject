@@ -350,13 +350,6 @@ public class DashboardServiceImpl extends RuleTemplate {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public List<Dashboard> findAllByUuid(String uuid) {
-	//	String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iDashboardDao.findAllByUuid(uuid);
-
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public Dashboard findOneByUuidAndVersion(String uuid, String version) {
 		//String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
 		return iDashboardDao.findOneByUuidAndVersion(uuid, version);
@@ -376,38 +369,6 @@ public class DashboardServiceImpl extends RuleTemplate {
 		iDashboardDao.delete(ID);
 		dashboard.setBaseEntity();
 	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Dashboard> findAllLatest() {
-		{
-			// String appUuid =
-			// securityServiceImpl.getAppInfo().getRef().getUuid();;
-			Aggregation dashboardAggr = newAggregation(group("uuid").max("version").as("version"));
-			AggregationResults<Dashboard> dashboardResults = mongoTemplate.aggregate(dashboardAggr, "dashboard", Dashboard.class);
-			List<Dashboard>dashboardList = dashboardResults.getMappedResults();
-
-			// Fetch the dashboard details for each id
-			List<Dashboard> result = new ArrayList<Dashboard>();
-			for (Dashboard d : dashboardList) {
-				Dashboard dashboardLatest = iDashboardDao.findOneByUuidAndVersion(d.getId(), d.getVersion());
-				result.add(dashboardLatest);
-				String appUuid = (securityServiceImpl.getAppInfo() != null
-						&& securityServiceImpl.getAppInfo().getRef() != null)
-								? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-				if (appUuid != null) {
-					// String appUuid =
-					// securityServiceImpl.getAppInfo().getRef().getUuid();;
-					dagExecLatest = iDagExec.findOneByUuidAndVersion(appUuid, s.getId(), s.getVersion());
-				} else {
-					dagExecLatest = iDagExec.findOneByUuidAndVersion(s.getId(), s.getVersion());
-				}
-				// logger.debug("datapodLatest is " + datapodLatest.getName());
-				
-			}
-			return result;
-		}
-	}
-	*/
 
 	/********************** UNUSED **********************/
 	/*public List<Dashboard> findAllLatestActive() 	
@@ -435,52 +396,6 @@ public class DashboardServiceImpl extends RuleTemplate {
 	   return result;
 	}
 	*/
-
-	/********************** UNUSED **********************/
-	/*public List<Dashboard> resolveName(List<Dashboard> dashboards) {
-		List<Dashboard> dashboardList = new ArrayList<Dashboard>(); 
-		for(Dashboard dashboard : dashboards)
-		{
-			String createdByRefUuid = dashboard.getCreatedBy().getRef().getUuid();
-			User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			dashboard.getCreatedBy().getRef().setName(user.getName());
-			dashboardList.add(dashboard);
-		}
-		return dashboardList;
-	}
-*/
-	/********************** UNUSED **********************/
-	/*public Dashboard resolveName(Dashboard dashboards) {
-		String createdByRefUuid = dashboards.getCreatedBy().getRef().getUuid();
-		User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-		dashboards.getCreatedBy().getRef().setName(user.getName());
-		for (int i = 0; i < dashboards.getAppInfo().size(); i++) {
-			String appUuid=dashboards.getAppInfo().get(i).getRef().getUuid();
-			Application app=applicationServiceImpl.findLatestByUuid(appUuid);
-			dashboards.getAppInfo().get(i).getRef().setName(app.getName());
-		}
-		for(int i=0;i<dashboards.getFilterInfo().size();i++)
-		{
-			String datapodUuid=dashboards.getFilterInfo().get(i).getRef().getUuid();
-			Datapod datapod=datapodServiceImpl.findLatestByUuid(datapodUuid);
-			dashboards.getFilterInfo().get(i).getRef().setName(datapod.getName());
-			String attrId=dashboards.getFilterInfo().get(i).getAttrId();
-			dashboards.getFilterInfo().get(i).setAttrName(datapod.getAttribute(Integer.parseInt(attrId)).getName());
-		}
-		
-		return dashboards;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Dashboard> findAllByVersion(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid != null)
-		{
-		return iDashboardDao.findAllVersion(appUuid, uuid);
-		}
-		else
-		return iDashboardDao.findAllVersion(uuid);
-	}*/
 
 	/********************** UNUSED **********************/
 	/*public Dashboard getLatestDashboardByName(String name) {

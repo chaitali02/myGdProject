@@ -295,22 +295,27 @@ public class RunReportServiceImpl implements Callable<TaskHolder> {
 			commonServiceImpl.save(MetaType.reportExec.toString(), reportExec);
 			
 			//sending report execution status through email
-			if(senderInfo.getEmailTo().size() > 0 && senderInfo.getNotifyOnSuccess().equalsIgnoreCase("Y")) {
-				synchronized (reportExec.getUuid()) {
-					if(!reportServiceImpl.sendSuccessNotification(senderInfo, report, reportExec, runMode)) {
-						throw new RuntimeException("Can not send email notification.");
+			if(Helper.getPropertyValue("framework.email.enable").equalsIgnoreCase("Y")) {
+				if(senderInfo != null && senderInfo.getEmailTo().size() > 0 && senderInfo.getNotifyOnSuccess().equalsIgnoreCase("Y")) {
+					synchronized (reportExec.getUuid()) {
+						if(!reportServiceImpl.sendSuccessNotification(senderInfo, report, reportExec, runMode)) {
+							throw new RuntimeException("Can not send email notification.");
+						}
 					}
 				}
 			}
+			
 			reportExec = (ReportExec) commonServiceImpl.setMetaStatus(reportExec, MetaType.reportExec, Status.Stage.COMPLETED);
 		} catch (Exception e) { 
 			e.printStackTrace();
 			
 			//sending report execution status through email 
 			try {
-				if(senderInfo.getEmailTo().size() > 0 && senderInfo.getNotifyOnFailure().equalsIgnoreCase("Y")) {
-					reportServiceImpl.sendFailureNotification(senderInfo, report, reportExec);
-				}
+				if(Helper.getPropertyValue("framework.email.enable").equalsIgnoreCase("Y")) {
+					if(senderInfo != null && senderInfo.getEmailTo().size() > 0 && senderInfo.getNotifyOnFailure().equalsIgnoreCase("Y")) {
+						reportServiceImpl.sendFailureNotification(senderInfo, report, reportExec);
+					}
+				}				
 			} catch (Exception exc) {
 				// TODO: handle exception
 				exc.printStackTrace();

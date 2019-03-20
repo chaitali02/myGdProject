@@ -106,16 +106,6 @@ public class FormulaServiceImpl {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public List<Formula> findAll() {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid == null) {
-			return iFormulaDao.findAll();
-		}
-		return iFormulaDao.findAll(appUuid);
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public boolean isExists(String id) {
 		return iFormulaDao.exists(id);
 	}*/
@@ -131,87 +121,10 @@ public class FormulaServiceImpl {
 //		formula.exportBaseProperty();
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public Formula resolveName(Formula formula) throws JsonProcessingException {
-		if (formula.getCreatedBy() != null) {
-			String createdByRefUuid = formula.getCreatedBy().getRef().getUuid();
-			User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			formula.getCreatedBy().getRef().setName(user.getName());
-		}
-		if (formula.getAppInfo() != null) {
-			for (int i = 0; i < formula.getAppInfo().size(); i++) {
-				String appUuid = formula.getAppInfo().get(i).getRef().getUuid();
-				Application application = (Application) commonServiceImpl.getLatestByUuid(appUuid, MetaType.application.toString());
-				String appName = application.getName();
-				formula.getAppInfo().get(i).getRef().setName(appName);
-			}
-		}
-		String dependsOnRefUuid = formula.getDependsOn().getRef().getUuid();
-		MetaType type = formula.getDependsOn().getRef().getType();
-		if (type.toString().equals(MetaType.relation.toString())) {
-			Relation relationDO = relationServiceImpl.findLatestByUuid(dependsOnRefUuid);
-			String relationName = relationDO.getName();
-			formula.getDependsOn().getRef().setName(relationName);
-		} else if (type.toString().equals(MetaType.datapod.toString())) {
-			Datapod dependsOnDatapod = datapodServiceImpl.findLatestByUuid(dependsOnRefUuid);
-			String datapodName = dependsOnDatapod.getName();
-			formula.getDependsOn().getRef().setName(datapodName);
-		}
-		else if (type.toString().equals(MetaType.dataset.toString())) {
-			Dataset dependsOnDataset = datasetServiceImpl.findLatestByUuid(dependsOnRefUuid);
-			String datasetName = dependsOnDataset.getName();
-			formula.getDependsOn().getRef().setName(datasetName);
-		}
 
-		for (int i = 0; i < formula.getFormulaInfo().size(); i++) {
-			MetaType formulaInfoRefType = formula.getFormulaInfo().get(i).getRef().getType();
-			if (formulaInfoRefType.toString().equals(MetaType.datapod.toString())) {
-				String formulaInfoRefUuid = formula.getFormulaInfo().get(i).getRef().getUuid();
-				Integer formulaInfoAttributeId = formula.getFormulaInfo().get(i).getAttributeId();
-				Datapod datapodDO = datapodServiceImpl.findLatestByUuid(formulaInfoRefUuid);
-				String datapodName = datapodDO.getName();
-				formula.getFormulaInfo().get(i).getRef().setName(datapodName);
-				List<Attribute> attributeList = datapodDO.getAttributes();
-				formula.getFormulaInfo().get(i).setAttributeName(attributeList.get(formulaInfoAttributeId).getName());
-			}
-			else if (formulaInfoRefType.toString().equals(MetaType.dataset.toString())) {
-				String formulaInfoRefUuid = formula.getFormulaInfo().get(i).getRef().getUuid();
-				Integer formulaInfoAttributeId = formula.getFormulaInfo().get(i).getAttributeId();
-				Dataset datasetDO = datasetServiceImpl.findLatestByUuid(formulaInfoRefUuid);
-				String datasetName = datasetDO.getName();
-				formula.getFormulaInfo().get(i).getRef().setName(datasetName);
-				List<AttributeSource> attributeList = datasetDO.getAttributeInfo();
-				formula.getFormulaInfo().get(i).setAttributeName(attributeList.get(formulaInfoAttributeId).getAttrSourceName());
-			}
-			else if (formulaInfoRefType.toString().equals(MetaType.formula.toString())) {
-				String formulaInfoRefUuid = formula.getFormulaInfo().get(i).getRef().getUuid();
-				Formula formulaDO = findLatestByUuid(formulaInfoRefUuid);
-				String formulaName = formulaDO.getName();
-				formula.getFormulaInfo().get(i).getRef().setName(formulaName);
-				}
-			else if (formulaInfoRefType.toString().equals(MetaType.expression.toString())) {
-				String formulaInfoRefUuid = formula.getFormulaInfo().get(i).getRef().getUuid();
-				//Integer formulaInfoAttributeId = formula.getFormulaInfo().get(i).getAttributeId();
-				Expression expressionDO = expressionServiceImpl.findLatestByUuid(formulaInfoRefUuid);
-				String expressionName = expressionDO.getName();
-				formula.getFormulaInfo().get(i).getRef().setName(expressionName);
-				//List<AttributeSource> attributeList = datasetDO.getAttributeInfo();
-				//formula.getFormulaInfo().get(i).setAttributeName(attributeList.get(formulaInfoAttributeId).getAttrSourceName());
-			}
-		}
-
-		return formula;
-	}
-*/
 	/********************** UNUSED **********************/
 	/*public List<Formula> test(String param1) {
 		return iFormulaDao.test(param1);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Formula findAllByUuid(String uuid) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iFormulaDao.findAllByUuid(appUuid, uuid);
 	}*/
 
 	/********************** UNUSED **********************/
@@ -241,39 +154,6 @@ public class FormulaServiceImpl {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public List<Formula> findAllLatest() {
-		{
-			// String appUuid =
-			// securityServiceImpl.getAppInfo().getRef().getUuid();;
-			Aggregation formulaAggr = newAggregation(group("uuid").max("version").as("version"));
-			AggregationResults<Formula> formulaResults = mongoTemplate.aggregate(formulaAggr, "formula", Formula.class);
-			List<Formula> formulaList = formulaResults.getMappedResults();
-
-			// Fetch the relation details for each id
-			List<Formula> result = new ArrayList<Formula>();
-			for (Formula s : formulaList) {
-				Formula formulaLatest;
-				String appUuid = (securityServiceImpl.getAppInfo() != null
-						&& securityServiceImpl.getAppInfo().getRef() != null)
-								? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-				if (appUuid != null) {
-					// String appUuid =
-					// securityServiceImpl.getAppInfo().getRef().getUuid();;
-					formulaLatest = iFormulaDao.findOneByUuidAndVersion(appUuid, s.getId(), s.getVersion());
-				} else {
-					formulaLatest = iFormulaDao.findOneByUuidAndVersion(s.getId(), s.getVersion());
-				}
-				// logger.debug("datapodLatest is " + datapodLatest.getName());
-				if(formulaLatest != null)
-				{
-				result.add(formulaLatest);
-				}
-			}
-			return result;
-		}
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public List<Formula> findAllLatestActive() {
 		Aggregation formulaAggr = newAggregation(match(Criteria.where("active").is("Y")),
 				match(Criteria.where("name").ne(null)), group("uuid").max("version").as("version"));
@@ -300,48 +180,7 @@ public class FormulaServiceImpl {
 		return result;
 	}*/
 
-	/********************** UNUSED **********************/
-	// Find formula by relation
-	/*public List<Formula> findFormulaByRelation(String relationUUID) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null
-				&& securityServiceImpl.getAppInfo().getRef() != null)
-						? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		Aggregation formulaAggr = newAggregation(match(Criteria.where("dependsOn.ref.uuid").is(relationUUID)),
-				group("uuid").max("version").as("version"));
-		AggregationResults<Formula> formulaResults = mongoTemplate.aggregate(formulaAggr, "formula", Formula.class);
-		List<Formula> formulaList = formulaResults.getMappedResults();
 
-		// Fetch relation details for each id
-		List<Formula> result = new ArrayList<Formula>();
-		for (Formula s : formulaList) {
-			Formula formulaLatest = iFormulaDao.findOneByUuidAndVersion(appUuid, s.getId(), s.getVersion());
-			result.add(formulaLatest);
-		}
-		return result;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Formula> resolveName(List<Formula> formula) {
-		List<Formula> formulaList = new ArrayList<Formula>();
-		for (Formula form : formula) {
-			String createdByRefUuid = form.getCreatedBy().getRef().getUuid();
-			User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			form.getCreatedBy().getRef().setName(user.getName());
-			formulaList.add(form);
-		}
-		return formulaList;
-	}*/
-
-	/********************** UNUSED 
-	 * @throws JsonProcessingException **********************/
-	/*public List<Formula> findAllByVersion(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iFormulaDao.findAllVersion(appUuid, uuid);
-		} else
-			return iFormulaDao.findAllVersion(uuid);
-	}*/
     public List<Formula> findFormulaByApp() throws JsonProcessingException{
     	
     	List<Formula> result = new ArrayList<Formula>();

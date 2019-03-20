@@ -88,15 +88,6 @@ public class ParamSetServiceImpl {
 		return resolveName(iParamSetDao.findLatest(new Sort(Sort.Direction.DESC, "version")));
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public List<ParamSet> findAllByUuid(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid == null) {
-			return iParamSetDao.findAllVersion(uuid);
-		}
-		return iParamSetDao.findAllVersion(appUuid,uuid);
-	}*/
 
 	public List<ParamSet> findLatestByDependsOn(MetaIdentifierHolder dependsOn){
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
@@ -128,10 +119,6 @@ public class ParamSetServiceImpl {
 	/********************** UNUSED **********************/
 	/*public ParamSet findOneById(String id){
 		return iParamSetDao.findOne(id);
-	}*/
-	/********************** UNUSED **********************/
-	/*public List<ParamSet> findAll(){
-		return iParamSetDao.findAll();
 	}*/
 	/********************** UNUSED **********************/
 	/*public void  delete(String Id){
@@ -197,32 +184,6 @@ public class ParamSetServiceImpl {
 		}
 		return paramSet;
 	}	
-
-	/********************** UNUSED **********************/
-	/*public List<ParamSet> findAllByVersion(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iParamSetDao.findAllVersion(appUuid, uuid);
-		} else
-			return iParamSetDao.findAllVersion(uuid);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<ParamSet> findAllLatest() {	
-			   Aggregation ParamSetAggr = newAggregation(group("uuid").max("version").as("version"));
-			   AggregationResults<ParamSet> ParamResults = mongoTemplate.aggregate(ParamSetAggr,"paramset", ParamSet.class);	   
-			   List<ParamSet> paramSetList = ParamResults.getMappedResults();
-
-			   // Fetch the relation details for each id
-			   List<ParamSet> result=new  ArrayList<ParamSet>();
-			   for(ParamSet a :paramSetList)
-			   {   
-				   ParamSet paramLatest = iParamSetDao.findOneByUuidAndVersion(a.getId(),a.getVersion());
-				   result.add(paramLatest);
-			   }
-			   return result;			
-	}*/
 
 	/********************** UNUSED **********************/
 	/*public List<ParamSet> findAllLatestActive() 	

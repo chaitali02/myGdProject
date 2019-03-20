@@ -95,16 +95,6 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 
 	/********************** UNUSED **********************/
 	/*
-	 * public List<ModelExec> findAll() { String appUuid =
-	 * (securityServiceImpl.getAppInfo() != null &&
-	 * securityServiceImpl.getAppInfo().getRef() != null
-	 * )?securityServiceImpl.getAppInfo().getRef().getUuid():null; if(appUuid ==
-	 * null) { return iModelExecDao.findAll(); } return
-	 * iModelExecDao.findAll(appUuid); }
-	 */
-
-	/********************** UNUSED **********************/
-	/*
 	 * public ModelExec findOneById(String id) { String appUuid =
 	 * (securityServiceImpl.getAppInfo() != null &&
 	 * securityServiceImpl.getAppInfo().getRef() != null
@@ -153,27 +143,6 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 	 * }
 	 */
 
-	/********************** UNUSED **********************/
-	/*
-	 * public List<ModelExec> findAllLatest() { //String appUuid =
-	 * securityServiceImpl.getAppInfo().getRef().getUuid(); Aggregation
-	 * modelExecAggr = newAggregation(group("uuid").max("version").as("version"));
-	 * AggregationResults<ModelExec> DataQualExecResults =
-	 * mongoTemplate.aggregate(modelExecAggr, "modelexec", ModelExec.class);
-	 * List<ModelExec> modelExecList = DataQualExecResults.getMappedResults(); //
-	 * Fetch the VizExec details for each id List<ModelExec> result = new
-	 * ArrayList<ModelExec>(); for (ModelExec v : modelExecList) { ModelExec
-	 * modelExecLatest; String appUuid = (securityServiceImpl.getAppInfo() != null
-	 * && securityServiceImpl.getAppInfo().getRef() != null
-	 * )?securityServiceImpl.getAppInfo().getRef().getUuid():null; if(appUuid !=
-	 * null) { //String appUuid =
-	 * securityServiceImpl.getAppInfo().getRef().getUuid();; modelExecLatest =
-	 * iModelExecDao.findOneByUuidAndVersion(appUuid,v.getId(), v.getVersion()); }
-	 * else { modelExecLatest = iModelExecDao.findOneByUuidAndVersion(v.getId(),
-	 * v.getVersion()); } //logger.debug("datapodLatest is " +
-	 * datapodLatest.getName()); if(modelExecLatest != null) {
-	 * result.add(modelExecLatest); } } return result; }
-	 */
 
 	/********************** UNUSED **********************/
 	/*
@@ -202,53 +171,6 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 	 * //String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
 	 * //String appUuid = "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd"; return
 	 * iModelExecDao.findOneByUuidAndVersion(uuid,version); }
-	 */
-
-	/********************** UNUSED **********************/
-	/*
-	 * public List<ModelExec> resolveName(List<ModelExec> modelExec) {
-	 * List<ModelExec> modelExecList = new ArrayList<>(); for(ModelExec modelE :
-	 * modelExec) { String createdByRefUuid =
-	 * modelE.getCreatedBy().getRef().getUuid(); User user =
-	 * userServiceImpl.findLatestByUuid(createdByRefUuid);
-	 * modelE.getCreatedBy().getRef().setName(user.getName());
-	 * modelExecList.add(modelE); } return modelExecList; }
-	 */
-
-	/********************** UNUSED **********************/
-	/*
-	 * public ModelExec resolveName(ModelExec modelExec) throws
-	 * JsonProcessingException { String createdByRefUuid =
-	 * modelExec.getCreatedBy().getRef().getUuid(); //User user =
-	 * userServiceImpl.findLatestByUuid(createdByRefUuid); User user = (User)
-	 * commonServiceImpl.getLatestByUuid(createdByRefUuid,
-	 * MetaType.user.toString());
-	 * modelExec.getCreatedBy().getRef().setName(user.getName());
-	 * 
-	 * String dependsOnUuid=modelExec.getDependsOn().getRef().getUuid();
-	 * //com.inferyx.framework.domain.Model
-	 * model=modelServiceImpl.findLatestByUuid(dependsOnUuid);
-	 * com.inferyx.framework.domain.Model model = (Model)
-	 * commonServiceImpl.getLatestByUuid(dependsOnUuid, MetaType.model.toString());
-	 * modelExec.getDependsOn().getRef().setName(model.getName());
-	 * 
-	 * if(modelExec.getResult() != null){ String
-	 * datastoreUuid=modelExec.getResult().getRef().getUuid(); //DataStore
-	 * dataStore=dataStoreServiceImpl.findAllByUuid(datastoreUuid); DataStore
-	 * dataStore = (DataStore) commonServiceImpl.getLatestByUuid(datastoreUuid,
-	 * MetaType.datastore.toString());
-	 * modelExec.getResult().getRef().setName(dataStore.getName()); } return
-	 * modelExec; }
-	 */
-
-	/********************** UNUSED **********************/
-	/*
-	 * public List<ModelExec> findAllByVersion(String uuid) { String appUuid =
-	 * (securityServiceImpl.getAppInfo() != null &&
-	 * securityServiceImpl.getAppInfo().getRef() != null
-	 * )?securityServiceImpl.getAppInfo().getRef().getUuid():null; if(appUuid !=
-	 * null) { return iModelExecDao.findAllVersion(appUuid, uuid); } else return
-	 * iModelExecDao.findAllVersion(uuid); }
 	 */
 
 	/********************** UNUSED **********************/

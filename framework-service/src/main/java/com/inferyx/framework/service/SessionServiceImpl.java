@@ -94,16 +94,7 @@ public class SessionServiceImpl {
 	/*public Session findLatest() {
 		return resolveName(iSessionDao.findLatest(new Sort(Sort.Direction.DESC, "version")));
 	}*/
-	/********************** UNUSED **********************/
-	/*public Session findAllByUuid(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iSessionDao.findAllByUuid(appUuid, uuid);
-		}
-		return iSessionDao.findAllByUuid(uuid);
-	}*/
-
+	
 	/********************** UNUSED **********************/
 	/*public Session findLatestByUuid(String uuid) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
@@ -137,16 +128,6 @@ public class SessionServiceImpl {
 			return iSessionDao.findOneById(appUuid, id);
 		}
 		return iSessionDao.findOne(id);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Session> findAll() {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid == null) {
-			return iSessionDao.findAll();
-		}
-		return iSessionDao.findAll(appUuid);
 	}*/
 
 	/********************** UNUSED **********************/
@@ -251,32 +232,7 @@ public class SessionServiceImpl {
 		return status;
 	}
 
-	/********************** UNUSED **********************/
-	/*public Session resolveName(Session session) {
-		if (session.getCreatedBy() != null) {
-			String createdByRefUuid = session.getCreatedBy().getRef().getUuid();
-			User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			session.getCreatedBy().getRef().setName(user.getName());
-		}
-		if (session.getAppInfo() != null) {
-			for (int i = 0; i < session.getAppInfo().size(); i++) {
-				String appUuid = session.getAppInfo().get(i).getRef().getUuid();
-				Application application = applicationServiceImpl.findLatestByUuid(appUuid);
-				String appName = application.getName();
-				session.getAppInfo().get(i).getRef().setName(appName);
-			}
-		}
-		String userInfoRefUuid = session.getUserInfo().getRef().getUuid();
-		User userDO = userServiceImpl.findLatestByUuid(userInfoRefUuid);
-		String userName = userDO.getName();
-		session.getUserInfo().getRef().setName(userName);
-		String roleInfoRefUuid = session.getRoleInfo().getRef().getUuid();
-		Role roleDo = roleServiceImpl.findLatestByUuid(roleInfoRefUuid);
-		String roleName = roleDo.getName();
-		session.getRoleInfo().getRef().setName(roleName);
-		return session;
-	}*/
-
+	
 	public Activity logoutSession(String sessionId) throws IOException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 		if(sessionId != null && !StringUtils.isAnyBlank(sessionId)) {
 			Session sessionObj = findSessionBySessionId(sessionId);
@@ -463,32 +419,7 @@ public class SessionServiceImpl {
 	    }
 	    return ipAddress;
 	}
-	/********************** UNUSED **********************/
-	/*public List<Session> findAllLatest() {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		{
-			Aggregation sessionAggr = newAggregation(group("uuid").max("version").as("version"));
-			AggregationResults<Session> sessionResults = mongoTemplate.aggregate(sessionAggr, "session", Session.class);
-			List<Session> sessionList = sessionResults.getMappedResults();
-
-			// Fetch the relation details for each id
-			List<Session> result = new ArrayList<Session>();
-			for (Session s : sessionList) {
-				Session sessionLatest;
-				if (appUuid != null) {
-					sessionLatest = iSessionDao.findOneByUuidAndVersion(appUuid, s.getId(), s.getVersion());
-				} else {
-					sessionLatest = iSessionDao.findOneByUuidAndVersion(s.getId(), s.getVersion());
-				}
-				if (sessionLatest != null) {
-					result.add(sessionLatest);
-				}
-			}
-			return result;
-		}
-	}*/
-
+	
 	/********************** UNUSED **********************/
 	/*public List<Session> findAllLatestActive() {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
@@ -512,28 +443,6 @@ public class SessionServiceImpl {
 			}
 		}
 		return result;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Session> resolveName(List<Session> session) {
-		List<Session> sessionList = new ArrayList<Session>();
-		for (Session ses : session) {
-			String createdByRefUuid = ses.getCreatedBy().getRef().getUuid();
-			User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			ses.getCreatedBy().getRef().setName(user.getName());
-			sessionList.add(ses);
-		}
-		return sessionList;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Session> findAllByVersion(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iSessionDao.findAllVersion(appUuid, uuid);
-		}
-		return iSessionDao.findAllVersion(uuid);
 	}*/
 
 	/********************** UNUSED **********************/

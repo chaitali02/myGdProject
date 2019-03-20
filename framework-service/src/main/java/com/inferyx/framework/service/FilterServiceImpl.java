@@ -70,46 +70,7 @@ public class FilterServiceImpl {
 	
 	static final Logger logger = Logger.getLogger(FilterServiceImpl.class);
 
-	/********************** UNUSED **********************/
-	/*public List<Filter> findFilterByDatapod(String datapodUUID)	{		
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		Aggregation filterAggr = 
-				newAggregation(	
-				match(Criteria.where("filterInfo.operand.ref.uuid").is(datapodUUID)),
-				group("uuid").max("version").as("version"));
-
-			 AggregationResults<Filter> groupResults 
-				= mongoTemplate.aggregate(filterAggr, "filter",Filter.class);
-			List<Filter> filterList = groupResults.getMappedResults();
-			List<Filter> result = new ArrayList<Filter>();
-			for (Filter s : filterList) {
-				Filter filterLatest = iFilterDao.findOneByUuidAndVersion(appUuid,s.getId(), s.getVersion());
-				result.add(filterLatest);
-			}
-			return result;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Filter> findFilterByRelation(String relationUUID)	{		
-		//return iFilterDao.findFilterByRelation(relationUUID,new Sort(Sort.Direction.DESC, "version"));
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		//Need to test below code. Its not working.
-		Aggregation filterAggr = newAggregation(match(Criteria.where("dependsOn.ref.uuid").is(relationUUID)),
-				group("uuid").max("version").as("version"));
-
-		// Convert the aggregation result into a List
-		AggregationResults<Filter> groupResults = mongoTemplate.aggregate(filterAggr, "filter", Filter.class);
-		List<Filter> filterList = groupResults.getMappedResults();
-
-		// Fetch the datapod details for each id
-		List<Filter> result = new ArrayList<Filter>();
-		for (Filter s : filterList) {
-			Filter filterLatest = iFilterDao.findOneByUuidAndVersion(appUuid,s.getId(), s.getVersion());
-			result.add(filterLatest);
-		}
-		return result;
-	}*/
-
+	
 	public Filter resolveName(Filter filter) throws JsonProcessingException{		
 		if (filter == null) {
 			return null;
@@ -230,23 +191,6 @@ public class FilterServiceImpl {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public List<Filter> findAll(){
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid == null)
-		{
-			return iFilterDao.findAll(); 
-		}
-		return iFilterDao.findAll(appUuid);
-	}*/
-	
-	/*public Filter update(Filter filter) throws IOException{
-		filter.exportBaseProperty();
-		Filter filterSave=iFilterDao.save(filter);
-	    registerService.createGraph();
-		return filterSave;
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public boolean isExists(String id){
 		return iFilterDao.exists(id);
 	}*/
@@ -267,47 +211,10 @@ public class FilterServiceImpl {
 		return iFilterDao.test(param1);
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public Filter findAllByUuid(String uuid) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iFilterDao.findAllByUuid(appUuid,uuid);
-		
-	}*/
-
+	
 	/********************** UNUSED **********************/
 	/*public Filter findLatest() {
 		return resolveName(iFilterDao.findLatest(new Sort(Sort.Direction.DESC, "version")));
-	}*/
-
-	/********************** UNUSED **********************/
-/*public List<Filter> findAllLatest() {
-	//String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-	   Aggregation filterAggr = newAggregation(group("uuid").max("version").as("version"));
-	   AggregationResults<Filter> filterResults = mongoTemplate.aggregate(filterAggr,"filter", Filter.class);	   
-	   List<Filter> filterList = filterResults.getMappedResults();
-
-	   // Fetch the datapod details for each id
-	   List<Filter> result=new  ArrayList<Filter>();
-	   for(Filter s :filterList)
-	   {   
-		   Filter filterLatest;
-			String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-			if(appUuid != null)
-			{
-			//String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();;
-				filterLatest = iFilterDao.findOneByUuidAndVersion(appUuid,s.getId(), s.getVersion());
-			}
-			else
-			{
-				filterLatest = iFilterDao.findOneByUuidAndVersion(s.getId(), s.getVersion());
-			}
-			//logger.debug("datapodLatest is " + datapodLatest.getName());
-			if(filterLatest != null)
-			{
-			result.add(filterLatest);
-			}
-	   }
-	   return result;
 	}*/
 
 	/********************** UNUSED **********************/
@@ -336,30 +243,6 @@ public class FilterServiceImpl {
 		}
    }
    return result;
-}*/
-
-	/********************** UNUSED **********************/
-/*public List<Filter> resolveName(List<Filter> filter) {
-	List<Filter> filterList = new ArrayList<Filter>();
-	for(Filter filtr : filter)
-	{
-		String createdByRefUuid = filtr.getCreatedBy().getRef().getUuid();
-		User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-		filtr.getCreatedBy().getRef().setName(user.getName());
-		filterList.add(filtr);
-	}
-	return filterList;
-}*/
-
-	/********************** UNUSED **********************/
-/*public List<Filter> findAllByVersion(String uuid) {
-	String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-	if(appUuid != null)
-	{
-	return iFilterDao.findAllVersion(appUuid, uuid);
-	}
-	else
-	return iFilterDao.findAllVersion(uuid);
 }*/
 
 	/********************** UNUSED **********************/

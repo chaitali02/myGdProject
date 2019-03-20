@@ -206,16 +206,6 @@ public class MetadataServiceImpl {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public List<Meta> findAll(){
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid == null)
-		{
-			return iMetadataDao.findAll(); 
-		}
-		return iMetadataDao.findAll(appUuid);
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public Meta findOneById(String id){
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
 		if(appUuid != null)
@@ -259,12 +249,6 @@ public class MetadataServiceImpl {
 		return iMapDao.findAllVersion(datapodName);
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public Meta findAllByUuid(String uuid) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iMetadataDao.findAllByUuid(appUuid,uuid);
-		
-	}*/
 
 	/********************** UNUSED **********************/
 	/*public Meta findOneByUuidAndVersion(String uuid,String version){
@@ -280,39 +264,6 @@ public class MetadataServiceImpl {
 			return iMetadataDao.findLatestByUuid(uuid,new Sort(Sort.Direction.DESC, "version"));
 		}
 		return iMetadataDao.findLatestByUuid(appUuid,uuid,new Sort(Sort.Direction.DESC, "version"));	
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Meta> findAllLatest() {
-		{	   
-		//	String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-			   Aggregation metadataAggr = newAggregation(group("uuid").max("version").as("version"));
-			   AggregationResults<Meta> metadataResults = mongoTemplate.aggregate(metadataAggr,"metadata", Meta.class);	   
-			   List<Meta> metadataList = metadataResults.getMappedResults();
-
-			   // Fetch the relation details for each id
-			   List<Meta> result=new  ArrayList<Meta>();
-			   for(Meta s :metadataList)
-			   {   
-				   Meta metadataLatest;
-					String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-					if(appUuid != null)
-					{
-					//String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();;
-						metadataLatest = iMetadataDao.findOneByUuidAndVersion(appUuid,s.getId(), s.getVersion());
-					}
-					else
-					{
-						metadataLatest = iMetadataDao.findOneByUuidAndVersion(s.getId(), s.getVersion());
-					}
-					//logger.debug("datapodLatest is " + datapodLatest.getName());
-					if(metadataLatest != null)
-					{		
-					result.add(metadataLatest);
-					}
-			   }
-			   return result;
-			}
 	}*/
 
 	/********************** UNUSED **********************/
@@ -342,19 +293,8 @@ public class MetadataServiceImpl {
 			}
 	   }
 	   return result;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Meta> findAllByVersion(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid != null)
-		{
-		return iMetadataDao.findAllVersion(appUuid, uuid);
-		}
-		else
-		return iMetadataDao.findAllVersion(uuid);
-	}*/
-
+	}*
+	
 	/********************** UNUSED **********************/
 	/*public Object getAsOf(String uuid, String asOf) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
@@ -386,6 +326,10 @@ public class MetadataServiceImpl {
 		if(metaType.equals(MetaType.reportExec)){
 			query.fields().include("numRows");
 			query.fields().include("sizeMB");
+		}
+		if(metaType.equals(MetaType.dagExec)) {
+			query.fields().include("execCreated");
+
 		}
 		
 		//Apply filter
