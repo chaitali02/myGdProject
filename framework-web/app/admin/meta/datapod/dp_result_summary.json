@@ -322,7 +322,7 @@
 	],
 	"uuid": "77aefb4c-191c-11e7-93ae-92361f002671",
 	"version": "1544557215",
-	"name": "dp_rule_results",
+	"name": "dp_result_summary",
 	"desc": "Profile Results",
 	"createdBy": {
 		"ref": {
