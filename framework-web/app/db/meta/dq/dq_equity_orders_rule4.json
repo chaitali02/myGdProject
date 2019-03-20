@@ -1,8 +1,8 @@
 {
   "uuid": "45f5f608-72bb-4f39-90f7-c3e500744f5a",
-  "version": "1552334119",
+  "version": "1553032635",
   "name": "dq_equity_orders_rule4",
-  "desc": "Order Placement time must be less than or equal to the order event time",
+  "desc": "Order Received time must be less than or equal to the order event time",
   "createdBy": {
     "ref": {
       "type": "user",
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Mar 11 15:55:19 EDT 2019",
+  "createdOn": "Tue Mar 19 17:57:15 EDT 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -38,8 +38,8 @@
       "name": "equity_orders"
     },
     "value": null,
-    "attrId": "4",
-    "attrName": "order_placement_time",
+    "attrId": "25",
+    "attrName": "order_received_time",
     "attrType": null,
     "attrUnitType": null,
     "function": null
@@ -54,22 +54,14 @@
     "value": null
   },
   "duplicateKeyCheck": "N",
-  "nullCheck": "N",
+  "nullCheck": "Y",
   "valueCheck": [],
   "rangeCheck": {},
   "dataTypeCheck": "",
   "dateFormatCheck": null,
   "customFormatCheck": null,
   "lengthCheck": {},
-  "refIntegrityCheck": {
-    "ref": null,
-    "value": null,
-    "attrId": null,
-    "attrName": null,
-    "attrType": null,
-    "attrUnitType": null,
-    "function": null
-  },
+  "refIntegrityCheck": null,
   "filterInfo": null,
   "userInfo": null,
   "thresholdInfo": {
@@ -85,8 +77,10 @@
       "type": "expression",
       "uuid": "f5d8f521-d622-4779-be88-a43160234069",
       "version": null,
-      "name": "expr_dq_rule4"
+      "name": "expr_dq_equity_orders_rule4"
     },
     "value": null
-  }
+  },
+  "caseCheck": null,
+  "abortCondition": null
 }

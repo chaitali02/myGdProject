@@ -473,14 +473,16 @@ public class ImpalaExecutor implements IExecutor {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	@Override
-	public ResultSetHolder predict2(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
-			String[] fieldArray, String trainName, String label, Datasource datasource, String clientContext)
-			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
-			SecurityException, NullPointerException, ParseException, IOException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
+	/********************** UNUSED **********************/
+//	@Override
+//	public ResultSetHolder predict2(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
+//			String[] fieldArray, String trainName, String label, Datasource datasource, String clientContext)
+//			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
+//			SecurityException, NullPointerException, ParseException, IOException {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 	@Override
 	public long load(Load load, String targetTableName, Datasource datasource, Datapod datapod, String clientContext) throws IOException {
 		String sourceTableName = load.getSource().getValue();

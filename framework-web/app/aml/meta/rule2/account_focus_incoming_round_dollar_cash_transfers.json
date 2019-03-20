@@ -1,6 +1,6 @@
 {
   "uuid": "679bdb34-3ef7-4070-98c2-eb4f4ad06ac0",
-  "version": "1552911423",
+  "version": "1553003569",
   "name": "account_focus_incoming_round_dollar_cash_transfers",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Mar 18 17:47:03 IST 2019",
+  "createdOn": "Tue Mar 19 19:22:49 IST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -73,7 +73,7 @@
     {
       "display_seq": "1",
       "logicalOperator": "AND",
-      "operator": ">=",
+      "operator": "<=",
       "operand": [
         {
           "ref": {

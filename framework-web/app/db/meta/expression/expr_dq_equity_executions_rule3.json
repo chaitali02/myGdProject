@@ -1,6 +1,6 @@
 {
   "uuid": "5237851a-5f41-4456-8426-a6138cf9ac03",
-  "version": "1552342562",
+  "version": "1553032138",
   "name": "expr_dq_equity_executions_rule3",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Mar 11 18:16:02 EDT 2019",
+  "createdOn": "Tue Mar 19 17:48:58 EDT 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -80,9 +80,9 @@
             "version": null,
             "name": "equity_executions"
           },
-          "attributeId": 4,
+          "attributeId": 3,
           "value": null,
-          "attributeName": "execution_date",
+          "attributeName": "trade_execution_date",
           "attributeType": null
         },
         {
@@ -92,9 +92,9 @@
             "version": null,
             "name": "equity_executions"
           },
-          "attributeId": 6,
+          "attributeId": 5,
           "value": null,
-          "attributeName": "execution_event_date",
+          "attributeName": "trade_execution_event_date",
           "attributeType": null
         }
       ]

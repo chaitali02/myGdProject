@@ -171,7 +171,6 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
   }
 
   $scope.getExec = function (data) {
-    debugger
     var stateName;
     if($scope.select == "dqexec" || $scope.select=="ruleexec"){
       if($stateParams.isExec2){
@@ -267,6 +266,8 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     var url = $location.absUrl().split("app")[0];
     $http.put(url + '' + api + '/setStatus?uuid=' + $scope.selectDetail.uuid + '&version=' + $scope.selectDetail.version + '&type=' + $scope.newType + '&status=' + $scope.selectDetail.setStatus.toUpperCase()).then(function (response) {
       console.log(response);
+      $rootScope.refreshRowData()
+      $scope.refreshRowData();
     });
   }
 
@@ -389,6 +390,8 @@ CommonModule.controller('CommonListController', function ($location, $http, cach
     var url = $location.absUrl().split("app")[0];
     $http.post(url + '' + api + '/restart?uuid=' + $scope.selectDetail.uuid + '&version=' + $scope.selectDetail.version + '&type=' + $scope.newType + '&action=execute').then(function (response) {
       //console.log(response);
+      $rootScope.refreshRowData()
+      $scope.refreshRowData();
     });
    }
   

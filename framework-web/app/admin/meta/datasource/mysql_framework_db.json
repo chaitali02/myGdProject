@@ -1,0 +1,44 @@
+{
+  "uuid": "4f65d730-866c-417d-9305-472cd82599db",
+  "version": "1553031028",
+  "name": "mysql_framework_db",
+  "desc": "MySql Data Source",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "b9099cf2-cabb-4b5a-8b74-eec30fcc3120",
+      "version": "1548315952",
+      "name": "db_admin"
+    },
+    "value": null
+  },
+  "createdOn": "Tue Mar 19 17:30:11 EDT 2019",
+  "tags": [],
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "4be92a58-3e24-410c-ab09-e1e719c1db81",
+        "version": "1552267311",
+        "name": "Deutsche Admin"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "type": "MYSQL",
+  "access": "JDBC",
+  "driver": "com.mysql.jdbc.Driver",
+  "host": "localhost",
+  "dbname": "framework_db",
+  "port": "3306",
+  "username": "inferyx",
+  "password": "inferyx",
+  "path": "/user/hive/warehouse/framework",
+  "subType": null,
+  "sessionParameters": "useSSL=false",
+  "sid": null
+}

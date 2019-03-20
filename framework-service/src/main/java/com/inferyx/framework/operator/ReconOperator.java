@@ -31,13 +31,12 @@ import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Recon;
 import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.enums.FunctionCategory;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.service.CommonServiceImpl;
-import com.inferyx.framework.service.DataStoreServiceImpl;
+import com.inferyx.framework.service.DatapodServiceImpl;
 import com.inferyx.framework.service.MessageStatus;
 
 /**
@@ -47,8 +46,6 @@ import com.inferyx.framework.service.MessageStatus;
 @Component
 public class ReconOperator {
 	@Autowired
-	private DataStoreServiceImpl datastoreServiceImpl;
-	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	protected FunctionOperator functionOperator;
@@ -56,6 +53,8 @@ public class ReconOperator {
 	private DatasetOperator datasetOperator;
 	@Autowired
 	FilterOperator2 filterOperator2;
+	@Autowired
+	private DatapodServiceImpl datapodServiceImpl;
 
 	static final Logger LOGGER = Logger.getLogger(ReconOperator.class);
 
@@ -319,7 +318,8 @@ public class ReconOperator {
 		if(obj instanceof DataSet) {
 			return "( " + datasetOperator.generateSql((DataSet)obj, refKeyMap, otherParams, usedRefKeySet, execParams, runMode) +" )";
 		} else if(obj instanceof Datapod) {
-			return getTableName((Datapod)obj, datapodList, dagExec, otherParams, runMode);
+//			return getTableName((Datapod)obj, datapodList, dagExec, otherParams, runMode);
+			return datapodServiceImpl.genTableNameByDatapod((Datapod)obj, dagExec != null ? dagExec.getVersion(): null, datapodList, otherParams, dagExec, runMode, true);
 		}
 		return null;
 	}
@@ -397,19 +397,19 @@ public class ReconOperator {
 			throw new Exception("Wrong function type.");
 		return val.toString();
 	}
-	
-	public String getTableName(Datapod datapod, List<String> datapodList, DagExec dagExec, HashMap<String, String> otherParams, RunMode runMode)
-			throws Exception {
-		if (runMode.equals(RunMode.ONLINE) && datapodList != null && datapodList.contains(datapod.getUuid())) {
-			return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(),
-					dagExec.getVersion());
-		} else if (otherParams!= null && otherParams.containsKey("datapodUuid_" + datapod.getUuid() + "_tableName")) {
-			return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");
-		}
-		datastoreServiceImpl.setRunMode(runMode);
-		return datastoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()),
-				runMode);
-	}
+
+	/********************** UNUSED **********************/
+//	public String getTableName(Datapod datapod, List<String> datapodList, DagExec dagExec, HashMap<String, String> otherParams, RunMode runMode)
+//			throws Exception {
+//		if (runMode.equals(RunMode.ONLINE) && datapodList != null && datapodList.contains(datapod.getUuid())) {
+//			return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(),
+//					dagExec.getVersion());
+//		} else if (otherParams!= null && otherParams.containsKey("datapodUuid_" + datapod.getUuid() + "_tableName")) {
+//			return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");
+//		}
+//		return datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()),
+//				runMode);
+//	}
 	
 	private String caseWrapper(String check, String colName) {
 		StringBuilder caseBuilder = new StringBuilder(CASE_WHEN).append(check).append(THEN).append(colName)

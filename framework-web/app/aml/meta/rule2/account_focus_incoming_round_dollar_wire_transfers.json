@@ -1,6 +1,6 @@
 {
   "uuid": "50d5fb6b-8baf-4519-9555-35a4fe242053",
-  "version": "1552911278",
+  "version": "1553003675",
   "name": "account_focus_incoming_round_dollar_wire_transfers",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Mar 18 17:44:38 IST 2019",
+  "createdOn": "Tue Mar 19 19:24:35 IST 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -73,7 +73,7 @@
     {
       "display_seq": "1",
       "logicalOperator": "AND",
-      "operator": ">=",
+      "operator": "<=",
       "operand": [
         {
           "ref": {

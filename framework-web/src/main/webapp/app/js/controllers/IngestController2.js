@@ -807,8 +807,6 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
 	
 	
     $scope.checkAllAttributeRow = function () {
-		
-	
 		angular.forEach($scope.ingestTableInfo, function (filter) {
 			filter.selected = $scope.selectedAllAttributeRow;
 		});
@@ -997,7 +995,7 @@ DataIngestionModule.controller('IngestRuleDetailController2', function ($state, 
     else{
 		
 		$scope.ingestData={};
-		$scope.ingestData.sourceHeader="N";
+		$scope.ingestData.sourceHeader="Y";
 		$scope.ingestData.targetHeader="N"
 		$scope.ingestData.locked="N";
 	//	$scope.onChangeRuleType();

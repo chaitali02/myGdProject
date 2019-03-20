@@ -1,6 +1,6 @@
 {
   "uuid": "3c772fa7-758d-4371-8e80-65056573c545",
-  "version": "1552349230",
+  "version": "1553032438",
   "name": "rel_dq_equity_executions_rule7",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Mar 11 20:07:10 EDT 2019",
+  "createdOn": "Tue Mar 19 17:53:58 EDT 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -63,10 +63,10 @@
                 "version": null,
                 "name": "security"
               },
-              "attributeId": 0,
+              "attributeId": 2,
               "value": null,
-              "attributeName": "security_id",
-              "attributeType": "INTEGER"
+              "attributeName": "ric_code",
+              "attributeType": "VARCHAR"
             },
             {
               "ref": {
@@ -75,10 +75,10 @@
                 "version": null,
                 "name": "equity_executions"
               },
-              "attributeId": 11,
+              "attributeId": 32,
               "value": null,
-              "attributeName": "security_id",
-              "attributeType": "INTEGER"
+              "attributeName": "security_identifier",
+              "attributeType": "VARCHAR"
             }
           ]
         }

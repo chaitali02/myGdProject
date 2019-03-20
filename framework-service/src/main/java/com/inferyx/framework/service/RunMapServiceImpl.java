@@ -48,7 +48,6 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 	ConnectionFactory connFactory;
 	
 	protected MapExec mapExec;
-	protected IMapExecDao iMapExecDao;
 	protected List<java.util.Map<String, Object>> data;
 	private HDFSInfo hdfsInfo;
 	protected DataStoreServiceImpl dataStoreServiceImpl;
@@ -65,9 +64,28 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 	protected SessionContext sessionContext;
 	private String name;
 	private MetaType execType;
+	private DatapodServiceImpl datapodServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(RunMapServiceImpl.class);
 	
+	/**
+	 * @Ganesh
+	 *
+	 * @return the datapodServiceImpl
+	 */
+	public DatapodServiceImpl getDatapodServiceImpl() {
+		return datapodServiceImpl;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param datapodServiceImpl the datapodServiceImpl to set
+	 */
+	public void setDatapodServiceImpl(DatapodServiceImpl datapodServiceImpl) {
+		this.datapodServiceImpl = datapodServiceImpl;
+	}
+
 	/**
 	 * @Ganesh
 	 *
@@ -176,14 +194,6 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 
 	public void setExecFactory(ExecutorFactory execFactory) {
 		this.execFactory = execFactory;
-	}
-
-	public IMapExecDao getiMapExecDao() {
-		return iMapExecDao;
-	}
-
-	public void setiMapExecDao(IMapExecDao iMapExecDao) {
-		this.iMapExecDao = iMapExecDao;
 	}
 
 	public MapExec getMapExec() {
@@ -312,7 +322,7 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 			String sql = mapExec.getExec();
 			if (!targetDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
 					&& appDatasource.getType().equalsIgnoreCase(targetDatasource.getType())) {
-				mapTableName = dataStoreServiceImpl.getTableNameByDatapod(datapodKey, runMode);
+				mapTableName = datapodServiceImpl.getTableNameByDatapod(datapodKey, runMode);
 				logger.info("Datapod: "+datapodKey.getUUID());
 				
 				String partitionColls = Helper.getPartitionColumns(targetDatapod);				

@@ -20,18 +20,19 @@ import java.util.concurrent.Callable;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.spark.sql.Row;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.inferyx.framework.common.DQInfo;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.Rule2Info;
 import com.inferyx.framework.domain.BaseRule;
 import com.inferyx.framework.domain.BaseRuleExec;
+import com.inferyx.framework.domain.DataQual;
+import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
@@ -42,6 +43,7 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.SessionContext;
 import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.enums.AbortConditionType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.enums.SaveMode;
 import com.inferyx.framework.enums.SysVarType;
@@ -401,32 +403,28 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 	 * @return
 	 * @throws JsonProcessingException
 	 */
-	protected String getTableName(BaseRule baseRule, BaseRuleExec baseRuleExec, MetaIdentifier datapodKey,
+	protected String genTableNameByRule(BaseRule baseRule, BaseRuleExec baseRuleExec, MetaIdentifier datapodKey,
 			ExecContext execContext, RunMode runMode) throws JsonProcessingException {
 		if (datapodKey.getType().equals(MetaType.rule)) {
 			return String.format("%s_%s_%s", baseRule.getUuid().replace("-", "_"), baseRule.getVersion(),
 					baseRuleExec.getVersion());
 
-		}
-
-		else if (execContext == null /* || execContext.equals(ExecContext.spark) */ || runMode.equals(RunMode.ONLINE)
-				&& execContext.equals(ExecContext.FILE)
-		/* || execContext.equals(ExecContext.livy_spark) */) {
+		} else if (execContext == null || runMode.equals(RunMode.ONLINE)
+				&& execContext.equals(ExecContext.FILE)) {
 			return String.format("%s_%s_%s", baseRule.getUuid().replace("-", "_"), baseRule.getVersion(),
 					baseRuleExec.getVersion());
 		}
 
-		Datapod dp = null;
 		try {
-			dp = (Datapod) commonServiceImpl.getLatestByUuid(datapodKey.getUuid(), MetaType.datapod.toString(), "N");
+			Datapod datapod = (Datapod) commonServiceImpl.getLatestByUuid(datapodKey.getUuid(), MetaType.datapod.toString(), "N");
 			Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(
-					dp.getDatasource().getRef().getUuid(), dp.getDatasource().getRef().getVersion(),
+					datapod.getDatasource().getRef().getUuid(), datapod.getDatasource().getRef().getVersion(),
 					MetaType.datasource.toString(), "N");
 			if (datasource.getType().equals(ExecContext.FILE.toString())) {
 				return String.format("%s_%s_%s", baseRule.getUuid().replace("-", "_"), baseRule.getVersion(),
 						baseRuleExec.getVersion());
 			} else {
-				return datasource.getDbname() + "." + dp.getName();
+				return datasource.getDbname() + "." + datapod.getName();
 			}
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
@@ -528,7 +526,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 			execContext = executorServiceImpl.getExecContext(runMode, datasource);
 			exec = execFactory.getExecutor(execContext.toString());
 
-			tableName = getTableName(baseRule, baseRuleExec, datapodKey, execContext, runMode);
+			tableName = genTableNameByRule(baseRule, baseRuleExec, datapodKey, execContext, runMode);
 			logger.info("Table name in RunBaseruleServiceImpl : " + tableName);
 			logger.info("execContext : " + execContext);
 
@@ -566,7 +564,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 				
 				datapodKey = summaryDatapodKey;
 				filePath = getFileName(baseRule, baseRuleExec, summaryDatapodKey);
-				tableName = getTableName(baseRule, baseRuleExec, summaryDatapodKey, execContext, runMode);
+				tableName = genTableNameByRule(baseRule, baseRuleExec, summaryDatapodKey, execContext, runMode);
 				
 				logger.info("Table name registered : " + tableName);
 				logger.info("Before execution summary : " + baseRuleExec.getSummaryExec());
@@ -580,6 +578,19 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 				// ******Adding one more parameter in persistDataStorenew
 				persistDatastore(tableName, filePath, summaryResultRef, summaryDatapodKey, countRows, runMode);
 				baseRuleExec.setSummaryResult(summaryResultRef);
+				
+				if (isAbort(baseRule.getUuid(), baseRule.getVersion(), baseRuleExec, runMode)) {
+					synchronized (baseRuleExec.getUuid()) {
+						baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRule, ruleExecType,
+								Status.Stage.FAILED);
+					}
+					logger.error("Rule to be Aborted ");
+					throw new Exception("Rule execution Aborted.");
+				}
+				
+				if (rsHolder != null) {
+					countRows = rsHolder.getCountRows();
+				}
 			}
 //			Ending Summary business
 
@@ -617,8 +628,8 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
 			dependsOn.setRef(new MetaIdentifier(ruleExecType, baseRuleExec.getUuid(), baseRuleExec.getVersion()));
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
-					(message != null) ? message : "Execution FAILED.", dependsOn);
-			throw new java.lang.Exception((message != null) ? message : "Execution FAILED.");
+					(message != null) ? message : "Rule execution failed.", dependsOn);
+			throw new java.lang.Exception((message != null) ? message : "Rule execution failed.");
 		}
 		TaskHolder taskHolder = new TaskHolder(name,
 				new MetaIdentifier(ruleExecType, baseRuleExec.getUuid(), baseRuleExec.getVersion()));
@@ -661,5 +672,40 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 		}
 		return rsHolder;
 	}
+	
+	public Boolean isAbort(String uuid, String version, BaseRuleExec baseruleExec, RunMode runMode)
+			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, IOException, ParseException {
 
+		logger.info("Inside isAbort ");
+		BaseRule baseRule = (BaseRule) commonServiceImpl.getOneByUuidAndVersion(uuid, version,
+				MetaType.dq.toString(), "N");
+		Datasource ruleDatasource = commonServiceImpl.getDatasourceByObject(baseRule);
+
+		ResultSetHolder rsHolder = execFactory.getExecutor(ExecContext.spark.toString()).executeAndRegisterByDatasource(
+				baseruleExec.getAbortExec(), baseruleExec.getUuid().replaceAll("-", "_") + "_" + baseruleExec.getVersion(),
+				ruleDatasource, commonServiceImpl.getApp().getUuid());
+		List<Row> resultList = (rsHolder.getDataFrame() == null) ? null : rsHolder.getDataFrame().collectAsList();
+		String abortThreshold = (resultList == null || resultList.isEmpty()) ? null : resultList.get(0).getString(0);
+
+		int abortThresholdOrdinal = -1;
+
+		if (baseRule.getAbortCondition() != null && StringUtils.isNotBlank(abortThreshold)) {
+			if (AbortConditionType.LOW.toString().equals(abortThreshold)) {
+				abortThresholdOrdinal = AbortConditionType.LOW.ordinal();
+			} else if (AbortConditionType.MEDIUM.toString().equals(abortThreshold)) {
+				abortThresholdOrdinal = AbortConditionType.MEDIUM.ordinal();
+			} else {
+				abortThresholdOrdinal = AbortConditionType.HIGH.ordinal();
+			}
+			if (abortThresholdOrdinal >= baseRule.getAbortCondition().ordinal()) {
+				logger.info("Rule to be aborted ");
+				return Boolean.TRUE;
+			}
+		}
+		logger.info("Rule not to be aborted ");
+		return Boolean.FALSE;
+	}
+
+	
 }

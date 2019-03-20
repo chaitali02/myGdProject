@@ -10,10 +10,6 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
-
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
@@ -29,13 +25,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.spark.sql.Row;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.AggregationResults;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
@@ -45,11 +37,8 @@ import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.dao.IDataQualDao;
-import com.inferyx.framework.dao.IDataQualExecDao;
-import com.inferyx.framework.dao.IFilterDao;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRuleExec;
-import com.inferyx.framework.domain.Config;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataQual;
 import com.inferyx.framework.domain.DataQualExec;
@@ -62,14 +51,12 @@ import com.inferyx.framework.domain.Filter;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.OrderKey;
+import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.enums.AbortConditionType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
-import com.inferyx.framework.executor.SparkExecutor;
-import com.inferyx.framework.factory.ConnectionFactory;
-import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.operator.DQOperator;
 import com.inferyx.framework.register.GraphRegister;
 import com.inferyx.framework.view.metadata.DQView;
@@ -79,49 +66,22 @@ public class DataQualServiceImpl extends RuleTemplate {
 
 	@Autowired
 	GraphRegister<?> registerGraph;
-	/*
-	 * @Autowired JavaSparkContext javaSparkContext;
-	 */
 	@Autowired
 	IDataQualDao iDataQualDao;
 	@Autowired
-	UserServiceImpl userServiceImpl;
-	@Autowired
 	SecurityServiceImpl securityServiceImpl;
-	@Autowired
-	MongoTemplate mongoTemplate;
 	@Autowired
 	DQOperator dqOperator;
 	@Autowired
-	protected DataSourceFactory datasourceFactory;
-	@Autowired
 	private DataStoreServiceImpl dataStoreServiceImpl;
-	@Autowired
-	ThreadPoolTaskExecutor metaExecutor;
 	@Autowired
 	DatapodServiceImpl datapodServiceImpl;
 	@Autowired
 	DQInfo dqInfo;
 	@Autowired
-	FilterServiceImpl filterServiceImpl;
-	@Autowired
-	RegisterService registerService;
-	@Autowired
-	IDataQualExecDao iDataQualExecDao;
-	@Autowired
-	IFilterDao ifilterDao;
-	@Autowired
 	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
-	ConnectionFactory connFactory;
-	@Autowired
-	MessageServiceImpl messageServiceImpl;
-	@Autowired
 	Engine engine;
-	@Autowired
-	ExecutorServiceImpl executorServiceImpl;
-	@Autowired
-	private SparkExecutor<?> sparkExecutor;
 
 	Map<String, String> requestMap = new HashMap<String, String>();
 
@@ -184,19 +144,21 @@ public class DataQualServiceImpl extends RuleTemplate {
 		return dataqual;
 	}
 
-	public List<DataQual> findAll() {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid()
-				: null;
-		if (appUuid == null) {
-			return iDataQualDao.findAll();
-		}
-		return iDataQualDao.findAll(appUuid);
-	}
+	/********************** UNUSED **********************/
+//	public List<DataQual> findAll() {
+//		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
+//				? securityServiceImpl.getAppInfo().getRef().getUuid()
+//				: null;
+//		if (appUuid == null) {
+//			return iDataQualDao.findAll();
+//		}
+//		return iDataQualDao.findAll(appUuid);
+//	}
 
-	public boolean isExists(String id) {
-		return iDataQualDao.exists(id);
-	}
+	/********************** UNUSED **********************/
+//	public boolean isExists(String id) {
+//		return iDataQualDao.exists(id);
+//	}
 
 	public void delete(String Id) {
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
@@ -205,79 +167,84 @@ public class DataQualServiceImpl extends RuleTemplate {
 		iDataQualDao.save(dataQual);
 	}
 
-	public List<DataQual> findAllByUuid(String uuid) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iDataQualDao.findAllByUuid(appUuid, uuid);
+	/********************** UNUSED **********************/
+//	public List<DataQual> findAllByUuid(String uuid) {
+//		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
+//		return iDataQualDao.findAllByUuid(appUuid, uuid);
+//
+//	}
 
-	}
+	/********************** UNUSED **********************/
+//	public DataQual findOneByUuidAndVersion(String uuid, String version) {
+//		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
+//				? securityServiceImpl.getAppInfo().getRef().getUuid()
+//				: null;
+//		if (appUuid == null) {
+//			return iDataQualDao.findOneByUuidAndVersion(uuid, version);
+//		} else
+//			return iDataQualDao.findOneByUuidAndVersion(appUuid, uuid, version);
+//	}
 
-	public DataQual findOneByUuidAndVersion(String uuid, String version) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid()
-				: null;
-		if (appUuid == null) {
-			return iDataQualDao.findOneByUuidAndVersion(uuid, version);
-		} else
-			return iDataQualDao.findOneByUuidAndVersion(appUuid, uuid, version);
-	}
+	/********************** UNUSED **********************/
+//	public DataQual findLatestByUuid(String uuid) {
+//		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
+//				? securityServiceImpl.getAppInfo().getRef().getUuid()
+//				: null;
+//		if (appUuid == null) {
+//			return iDataQualDao.findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version"));
+//		}
+//		return iDataQualDao.findLatestByUuid(appUuid, uuid, new Sort(Sort.Direction.DESC, "version"));
+//	}
 
-	public DataQual findLatestByUuid(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid()
-				: null;
-		if (appUuid == null) {
-			return iDataQualDao.findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version"));
-		}
-		return iDataQualDao.findLatestByUuid(appUuid, uuid, new Sort(Sort.Direction.DESC, "version"));
-	}
+	/********************** UNUSED **********************/
+//	public List<DataQual> findAllLatest() {
+//		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
+//				? securityServiceImpl.getAppInfo().getRef().getUuid()
+//				: null;
+//		Aggregation dqAggr = newAggregation(group("uuid").max("version").as("version"));
+//		AggregationResults<DataQual> dqResults = mongoTemplate.aggregate(dqAggr, "dq", DataQual.class);
+//		List<DataQual> dataQualList = dqResults.getMappedResults();
+//
+//		List<DataQual> result = new ArrayList<DataQual>();
+//		for (DataQual d : dataQualList) {
+//			DataQual dqLatest;
+//			if (appUuid != null) {
+//				dqLatest = iDataQualDao.findOneByUuidAndVersion(appUuid, d.getId(), d.getVersion());
+//			} else {
+//				dqLatest = iDataQualDao.findOneByUuidAndVersion(d.getId(), d.getVersion());
+//			}
+//			if (dqLatest != null) {
+//				result.add(dqLatest);
+//			}
+//		}
+//		return result;
+//	}
 
-	public List<DataQual> findAllLatest() {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid()
-				: null;
-		Aggregation dqAggr = newAggregation(group("uuid").max("version").as("version"));
-		AggregationResults<DataQual> dqResults = mongoTemplate.aggregate(dqAggr, "dq", DataQual.class);
-		List<DataQual> dataQualList = dqResults.getMappedResults();
-
-		List<DataQual> result = new ArrayList<DataQual>();
-		for (DataQual d : dataQualList) {
-			DataQual dqLatest;
-			if (appUuid != null) {
-				dqLatest = iDataQualDao.findOneByUuidAndVersion(appUuid, d.getId(), d.getVersion());
-			} else {
-				dqLatest = iDataQualDao.findOneByUuidAndVersion(d.getId(), d.getVersion());
-			}
-			if (dqLatest != null) {
-				result.add(dqLatest);
-			}
-		}
-		return result;
-	}
-
-	public List<DataQual> findAllLatestActive() {
-		Aggregation dqAggr = newAggregation(match(Criteria.where("active").is("Y")),
-				match(Criteria.where("name").ne(null)), group("uuid").max("version").as("version"));
-		AggregationResults<DataQual> dqResults = mongoTemplate.aggregate(dqAggr, "dq", DataQual.class);
-		List<DataQual> dqList = dqResults.getMappedResults();
-
-		List<DataQual> result = new ArrayList<DataQual>();
-		for (DataQual r : dqList) {
-			DataQual dqLatest;
-			String appUuid = (securityServiceImpl.getAppInfo() != null
-					&& securityServiceImpl.getAppInfo().getRef() != null)
-							? securityServiceImpl.getAppInfo().getRef().getUuid()
-							: null;
-			if (appUuid != null) {
-				dqLatest = iDataQualDao.findOneByUuidAndVersion(appUuid, r.getId(), r.getVersion());
-			} else {
-				dqLatest = iDataQualDao.findOneByUuidAndVersion(r.getId(), r.getVersion());
-			}
-			if (dqLatest != null) {
-				result.add(dqLatest);
-			}
-		}
-		return result;
-	}
+	/********************** UNUSED **********************/
+//	public List<DataQual> findAllLatestActive() {
+//		Aggregation dqAggr = newAggregation(match(Criteria.where("active").is("Y")),
+//				match(Criteria.where("name").ne(null)), group("uuid").max("version").as("version"));
+//		AggregationResults<DataQual> dqResults = mongoTemplate.aggregate(dqAggr, "dq", DataQual.class);
+//		List<DataQual> dqList = dqResults.getMappedResults();
+//
+//		List<DataQual> result = new ArrayList<DataQual>();
+//		for (DataQual r : dqList) {
+//			DataQual dqLatest;
+//			String appUuid = (securityServiceImpl.getAppInfo() != null
+//					&& securityServiceImpl.getAppInfo().getRef() != null)
+//							? securityServiceImpl.getAppInfo().getRef().getUuid()
+//							: null;
+//			if (appUuid != null) {
+//				dqLatest = iDataQualDao.findOneByUuidAndVersion(appUuid, r.getId(), r.getVersion());
+//			} else {
+//				dqLatest = iDataQualDao.findOneByUuidAndVersion(r.getId(), r.getVersion());
+//			}
+//			if (dqLatest != null) {
+//				result.add(dqLatest);
+//			}
+//		}
+//		return result;
+//	}
 
 	public DataQualExec create(String dataQualUUID, String dataQualVersion, Map<String, MetaIdentifier> refKeyMap,
 			List<String> datapodList, DagExec dagExec) throws Exception {
@@ -329,6 +296,26 @@ public class DataQualServiceImpl extends RuleTemplate {
 	
 	/**
 	 * 
+	 * @param dataqualUUID
+	 * @param dataqualVersion
+	 * @param dataqualExec
+	 * @param dataqualGroupExec
+	 * @param execParams
+	 * @param runMode
+	 * @return
+	 * @throws JsonProcessingException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws NullPointerException
+	 * @throws IOException
+	 * @throws ParseException
+	 */
+	
+	/**
+	 * 
 	 */
 	protected MetaIdentifier getTargetSummaryDp () throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		return getSummaryOrDetail("framework.dataqual.summary.uuid", (dqInfo != null) ? dqInfo.getDq_result_summary() : null);
@@ -354,8 +341,9 @@ public class DataQualServiceImpl extends RuleTemplate {
 	public DataQualExec execute(ThreadPoolTaskExecutor metaExecutor, DataQualExec dataqualExec,
 			List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
 		try {
-			return (DataQualExec) super.execute(MetaType.dq, MetaType.dqExec, metaExecutor, dataqualExec,
+			dataqualExec = (DataQualExec) super.execute(MetaType.dq, MetaType.dqExec, metaExecutor, dataqualExec,
 												getTargetResultDp(), taskList, execParams, runMode);
+			return dataqualExec;
 		} catch (Exception e) {
 			e.printStackTrace();
 			dataqualExec = (DataQualExec) commonServiceImpl.setMetaStatus(dataqualExec, MetaType.dqExec,
@@ -381,10 +369,11 @@ public class DataQualServiceImpl extends RuleTemplate {
 		return execute(metaExecutor, (DataQualExec) baseRuleExec, taskList, execParams, runMode);
 	}
 
-	public String getTableName(Datapod datapod, RunMode runMode) throws Exception {
-		return dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()),
-				runMode);
-	}
+	/********************** UNUSED **********************/
+//	public String getTableName(Datapod datapod, RunMode runMode) throws Exception {
+//		return datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()),
+//				runMode);
+//	}
 
 	public List<Map<String, Object>> getDQResults(String dataQualExecUUID, String dataQualExecVersion, int offset,
 			int limit, String sortBy, String order, String requestId, RunMode runMode) throws Exception {
@@ -418,13 +407,12 @@ public class DataQualServiceImpl extends RuleTemplate {
 	}
 
 	public MetaIdentifier getMetaIdByExecId(String execUuid, String execVersion) throws Exception {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		DataQualExec dataQualExec = iDataQualExecDao.findOneByUuidAndVersion(appUuid, execUuid, execVersion);
-		MetaIdentifier mi = new MetaIdentifier();
-		mi.setType(MetaType.dq);
-		mi.setUuid(dataQualExec.getDependsOn().getRef().getUuid());
-		mi.setVersion(dataQualExec.getDependsOn().getRef().getVersion());
-		return mi;
+		DataQualExec dataQualExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.dqExec.toString());
+//		MetaIdentifier mi = new MetaIdentifier();
+//		mi.setType(MetaType.dq);
+//		mi.setUuid(dataQualExec.getDependsOn().getRef().getUuid());
+//		mi.setVersion(dataQualExec.getDependsOn().getRef().getVersion());
+		return new MetaIdentifier(MetaType.dq, dataQualExec.getDependsOn().getRef().getUuid(), dataQualExec.getDependsOn().getRef().getVersion());
 	}
 
 	/**
@@ -519,6 +507,7 @@ public class DataQualServiceImpl extends RuleTemplate {
 					otherParams, runMode));
 			dataQualExec.setSummaryExec(dqOperator.generateSummarySql(dataQual, datapodList, dataQualExec, dagExec, getTargetSummaryDp(), 
 					usedRefKeySet, otherParams, runMode));
+			dataQualExec.setAbortExec(dqOperator.generateAbortQuery(dataQual, datapodList, dataQualExec, dagExec, getTargetSummaryDp(), otherParams, runMode));
 			dataQualExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 			logger.info(String.format("DQ Result sql for DQExec : %s is : ", execUuid, dataQualExec.getExec()));
 			synchronized (dataQualExec.getUuid()) {

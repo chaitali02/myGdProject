@@ -1,0 +1,55 @@
+{
+  "uuid": "2d3206ae-6bc3-4b58-be3a-23029d4ad33d",
+  "version": "1553020078",
+  "name": "dq_rule_summary",
+  "desc": "Creating datastore for dq_rule_summary",
+  "createdBy": {
+    "ref": {
+      "type": "user",
+      "uuid": "d04716df-e96a-419f-9118-c81342b47f86",
+      "version": "1464977196",
+      "name": "ypalrecha"
+    },
+    "value": null
+  },
+  "createdOn": "Tue Mar 19 14:27:58 EDT 2019",
+  "tags": null,
+  "active": "Y",
+  "locked": "N",
+  "published": "N",
+  "appInfo": [
+    {
+      "ref": {
+        "type": "application",
+        "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+        "version": "1548315769",
+        "name": "Enterprise Data Warehouse"
+      },
+      "value": null
+    }
+  ],
+  "publicFlag": "N",
+  "metaId": {
+    "ref": {
+      "type": "datapod",
+      "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71125",
+      "version": "1552115484",
+      "name": "dq_rule_summary"
+    },
+    "value": null
+  },
+  "execId": {
+    "ref": {
+      "type": "loadExec",
+      "uuid": "7db0742b-33b5-448a-a1da-c266af517f54",
+      "version": "1553020076",
+      "name": "dq_rule_summary"
+    },
+    "value": null
+  },
+  "location": "/17741969-5a2f-442a-bf8d-4fa5a0c71125/1552115484/1553020076",
+  "persistMode": "DISK_ONLY",
+  "dimInfo": null,
+  "numRows": 1,
+  "runMode": "BATCH"
+}

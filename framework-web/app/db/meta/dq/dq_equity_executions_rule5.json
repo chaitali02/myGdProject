@@ -1,6 +1,6 @@
 {
   "uuid": "a3945b0a-aa86-4169-9128-a0fd580dc005",
-  "version": "1552334091",
+  "version": "1553032283",
   "name": "dq_equity_executions_rule5",
   "desc": "Execution Price must be a positive number",
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Mar 11 15:55:19 EDT 2019",
+  "createdOn": "Tue Mar 19 17:51:23 EDT 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -38,8 +38,8 @@
       "name": "equity_executions"
     },
     "value": null,
-    "attrId": "8",
-    "attrName": "execution_price",
+    "attrId": "40",
+    "attrName": "price_issuing",
     "attrType": null,
     "attrUnitType": null,
     "function": null
@@ -54,22 +54,14 @@
     "value": null
   },
   "duplicateKeyCheck": "N",
-  "nullCheck": "N",
+  "nullCheck": "Y",
   "valueCheck": [],
   "rangeCheck": {},
   "dataTypeCheck": "",
   "dateFormatCheck": null,
   "customFormatCheck": null,
   "lengthCheck": {},
-  "refIntegrityCheck": {
-    "ref": null,
-    "value": null,
-    "attrId": null,
-    "attrName": null,
-    "attrType": null,
-    "attrUnitType": null,
-    "function": null
-  },
+  "refIntegrityCheck": null,
   "filterInfo": null,
   "userInfo": null,
   "thresholdInfo": {
@@ -88,5 +80,7 @@
       "name": "expr_dq_equity_executions_rule5"
     },
     "value": null
-  }
+  },
+  "caseCheck": null,
+  "abortCondition": null
 }

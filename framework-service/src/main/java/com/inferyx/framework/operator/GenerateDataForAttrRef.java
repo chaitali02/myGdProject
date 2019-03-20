@@ -39,7 +39,6 @@ import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.service.CommonServiceImpl;
-import com.inferyx.framework.service.DataStoreServiceImpl;
 import com.inferyx.framework.service.DatapodServiceImpl;
 import com.inferyx.framework.service.DatasetServiceImpl;
 import com.inferyx.framework.service.ParamSetServiceImpl;
@@ -56,8 +55,6 @@ public class GenerateDataForAttrRef extends GenerateDataOperator {
 	ParamSetServiceImpl paramSetServiceImpl;
 	@Autowired
 	private ExecutorFactory execFactory;
-	@Autowired
-	private DataStoreServiceImpl dataStoreServiceImpl;
 	@Autowired
 	private DatapodServiceImpl datapodServiceImpl;
 	@Autowired
@@ -92,15 +89,15 @@ public class GenerateDataForAttrRef extends GenerateDataOperator {
 		
 		MetaIdentifier attrDpIdentifier = attrInfo.getAttributeInfo().get(0).getRef();
 		Datapod attrDatapod = null; 
-		DataSet attrDataset = null;
+//		DataSet attrDataset = null;
 		if (attrDpIdentifier.getType() == MetaType.datapod) {
 			attrDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(attrDpIdentifier.getUuid(), attrDpIdentifier.getVersion(), attrDpIdentifier.getType().toString());
-			String attrDpTableName = dataStoreServiceImpl.getTableNameByDatapod(new OrderKey(attrDatapod.getUuid(), attrDatapod.getVersion()), runMode);
+			String attrDpTableName = datapodServiceImpl.getTableNameByDatapod(new OrderKey(attrDatapod.getUuid(), attrDatapod.getVersion()), runMode);
 			otherParams.put("datapodUuid_" + attrDatapod.getUuid() + "_tableName", attrDpTableName);
 		} 
 		
 //		String newVersion = Helper.getVersion();
-		String tableName = datapodServiceImpl.genTableNameByDatapod(locationDatapod, execVersion, runMode);
+		String tableName = datapodServiceImpl.genTableNameByDatapod(locationDatapod, execVersion, null, null, null, runMode, false);
 		otherParams.put("datapodUuid_" + locationDatapod.getUuid() + "_tableName", tableName);
 		logger.info(" Filled up otherParams : " + otherParams);	
 		return otherParams;

@@ -19,43 +19,32 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.FutureTask;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.DagExecUtil;
-import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.Rule2Info;
-import com.inferyx.framework.dao.IRule2Dao;
-import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRuleExec;
-import com.inferyx.framework.domain.Config;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
-import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ParamSetHolder;
-import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Rule2;
 import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.Status;
@@ -65,69 +54,18 @@ import com.inferyx.framework.enums.SaveMode;
 import com.inferyx.framework.enums.ScoringMethod;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
-import com.inferyx.framework.executor.SparkExecutor;
-import com.inferyx.framework.factory.ConnectionFactory;
-import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.operator.Rule2Operator;
-import com.inferyx.framework.register.GraphRegister;
 
 @Service
 public class Rule2ServiceImpl extends RuleTemplate {
 	@Autowired
-	GraphRegister<?> registerGraph;
-	/*
-	 * @Autowired JavaSparkContext javaSparkContext;
-	 */
-	@Autowired
-	IRule2Dao iRule2Dao;
-	@Autowired
-	Rule2Info rule2Info;
-	@Autowired
-	MongoTemplate mongoTemplate;
-	@Autowired
 	private Rule2Operator rule2Operator;
-	@Autowired
-	SecurityServiceImpl securityServiceImpl;
-	@Autowired
-	MapServiceImpl mapServiceImpl;
-	@Autowired
-	ExpressionServiceImpl expressionServiceImpl;
-	@Autowired
-	FilterServiceImpl filterServiceImpl;
-	@Autowired
-	DatapodServiceImpl datapodServiceImpl;
-	@Autowired
-	UserServiceImpl userServiceImpl;
 	@Autowired
 	private DataStoreServiceImpl dataStoreServiceImpl;
 	@Autowired
-	HDFSInfo hdfsInfo;
-	@Autowired
 	ThreadPoolTaskExecutor metaExecutor;
 	@Autowired
-	DataSourceFactory dataSourceFactory;
-	/*
-	 * @Autowired private IRuleExecDao iRuleExecDao;
-	 */
-	/*
-	 * @Autowired private IRuleGroupExecDao iRuleGroupExecDao;
-	 */
-	/*
-	 * @Autowired private ParamSetServiceImpl paramSetServiceImpl;
-	 */
-	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
-	@Autowired
-	RuleExecServiceImpl ruleExecServiceImpl;
-	@SuppressWarnings("rawtypes")
-	@Resource(name = "taskThreadMap")
-	ConcurrentHashMap taskThreadMap;
-	@Autowired
-	ConnectionFactory connFactory;
-	@Autowired
-	MessageServiceImpl messageServiceImpl;
-	@Autowired
-	private SparkExecutor<?> sparkExecutor;
 
 	Map<String, List<Map<String, Object>>> requestMap = new HashMap<>();
 
@@ -900,7 +838,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 		//*******************************************************
 		
 		*/
-		String filterExpr;
+//		String filterExpr;
 		ScoringMethod scoringMethod=rule2.getScoringMethod();
 		String summarysql = rule2Operator.generateSummarySql(rule2,listSql, scoringMethod, tableName, datapod, refKeyMap, otherParams,
 				usedRefKeySet, new ExecParams(), runMode);
@@ -1294,22 +1232,23 @@ public class Rule2ServiceImpl extends RuleTemplate {
 	}
 
 
-	public String getTableName(Datasource datasource, Datapod datapod, RuleExec ruleExec, RunMode runMode) {
-		if (runMode.equals(RunMode.ONLINE)) {
-			return Helper.genTableName(datapod.getUuid(), datapod.getVersion(), ruleExec.getVersion());
-		} else {
-			if (datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
-				|| datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())) {
-				return Helper.genTableName(datapod.getUuid(), datapod.getVersion(), ruleExec.getVersion());
-		} else {
-			if (datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
-				return datasource.getSid().concat(".").concat(datapod.getName());
-			} else {
-				return datasource.getDbname().concat(".").concat(datapod.getName());
-			}
-		}
-		}
-	}
+	/********************** UNUSED **********************/
+//	public String getTableName(Datasource datasource, Datapod datapod, RuleExec ruleExec, RunMode runMode) {
+//		if (runMode.equals(RunMode.ONLINE)) {
+//			return Helper.genTableName(datapod.getUuid(), datapod.getVersion(), ruleExec.getVersion());
+//		} else {
+//			if (datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+//				|| datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())) {
+//				return Helper.genTableName(datapod.getUuid(), datapod.getVersion(), ruleExec.getVersion());
+//		} else {
+//			if (datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+//				return datasource.getSid().concat(".").concat(datapod.getName());
+//			} else {
+//				return datasource.getDbname().concat(".").concat(datapod.getName());
+//			}
+//		}
+//		}
+//	}
 
 	/**
 	 * @param execUuid

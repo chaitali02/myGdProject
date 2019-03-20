@@ -51,6 +51,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
   $scope.datatype = ["DATE", "DOUBLE", "FLOAT", "INTEGER", "STRING", "TIMESTAMP"];
   $scope.blankSpaceTypes = ["LEADING", "TRAILING", "IN_BETWEEN", "ALL"];
   $scope.CaseCheckType=["UPPER","LOWER","INITCAP"];
+  $scope.abortConditionTypes=["HIGH", "LOW", "MEDIUM"];
   $scope.selectDataType;// = $scope.datatype[0];
   $scope.sourceType = ["datapod"];
   $scope.refIntegrityTypes = ["datapod", "dataset", "relation"];
@@ -1165,7 +1166,7 @@ DataQualityModule.controller('DetailDataQualityController', function ($state, $s
       domainInfo.ref = ref;
       dataqualityjosn.domainCheck = domainInfo;
     }
-
+    dataqualityjosn.abortCondition=$scope.dataqualitydata.abortCondition;
     console.log(JSON.stringify(dataqualityjosn))
     DataqulityService.submit(dataqualityjosn, "dq", upd_tag).then(function (response) { onSuccess(response.data) }, function (response) { onError(response.data) });
     var onSuccess = function (response) {

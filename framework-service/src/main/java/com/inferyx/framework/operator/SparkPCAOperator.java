@@ -25,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.Datapod;
@@ -67,8 +66,6 @@ public class SparkPCAOperator implements IOperator, Serializable {
 	private DatapodServiceImpl datapodServiceImpl;
 	@Autowired
 	private DatasetServiceImpl datasetServiceImpl;
-	@Autowired
-	private Helper helper;
 	@Autowired
 	private SparkExecutor<?> sparkExecutor;
 	
@@ -188,7 +185,8 @@ public class SparkPCAOperator implements IOperator, Serializable {
 		
 		Datasource destDS = commonServiceImpl.getDatasourceByObject(locationDatapod);	
 
-		String tableName = getTableName(baseExec, locationDatapod, destDS, runMode);		
+//		String tableName = getTableName(baseExec, locationDatapod, destDS, runMode);
+		String tableName = datapodServiceImpl.genTableNameByDatapod(locationDatapod, baseExec.getVersion(), null, null, null, runMode, false);
 		rsHolder.setTableName(tableName);
 		if(destDS.getType().equalsIgnoreCase(ExecContext.FILE.toString())
 				|| destDS.getType().equalsIgnoreCase(ExecContext.spark.toString())) {
@@ -248,15 +246,16 @@ public class SparkPCAOperator implements IOperator, Serializable {
 	public void persistDatastore() {
 		
 	}
-	
-	private String getTableName(BaseExec baseExec, BaseEntity baseEntity, Datasource datasource, RunMode runMode) {
-		if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
-				|| datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())) {
-			return String.format("%s_%s_%s", baseEntity.getUuid().replaceAll("-", "_"), baseEntity.getVersion(), baseExec.getVersion());
-		} else {
-			return datasource.getDbname().concat(".").concat(baseEntity.getName());
-		}
-	}
+
+	/********************** UNUSED **********************/
+//	private String getTableName(BaseExec baseExec, BaseEntity baseEntity, Datasource datasource, RunMode runMode) {
+//		if(datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+//				|| datasource.getType().equalsIgnoreCase(ExecContext.spark.toString())) {
+//			return String.format("%s_%s_%s", baseEntity.getUuid().replaceAll("-", "_"), baseEntity.getVersion(), baseExec.getVersion());
+//		} else {
+//			return datasource.getDbname().concat(".").concat(baseEntity.getName());
+//		}
+//	}
 
 	/* (non-Javadoc)
 	 * @see com.inferyx.framework.operator.IOperator#create(com.inferyx.framework.domain.BaseExec, com.inferyx.framework.domain.ExecParams, com.inferyx.framework.enums.RunMode)
@@ -322,7 +321,7 @@ public class SparkPCAOperator implements IOperator, Serializable {
 		
 //				String newVersion = Helper.getVersion();
 //				locationDatapod.setVersion(newVersion);
-		String tableName = datapodServiceImpl.genTableNameByDatapod(locationDatapod, execVersion, runMode);
+		String tableName = datapodServiceImpl.genTableNameByDatapod(locationDatapod, execVersion, null, null, null, runMode, false);
 		otherParams.put("datapodUuid_" + locationDatapod.getUuid() + "_tableName", tableName);
 		logger.info("otherParams in SparkPCAOperator : "+ otherParams);
 		return otherParams;

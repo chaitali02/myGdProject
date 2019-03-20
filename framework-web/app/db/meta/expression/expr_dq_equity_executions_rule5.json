@@ -1,6 +1,6 @@
 {
   "uuid": "1f65205b-4df2-44c5-bcd2-85312ded509b",
-  "version": "1552346093",
+  "version": "1553032303",
   "name": "expr_dq_equity_executions_rule5",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Mar 11 19:14:53 EDT 2019",
+  "createdOn": "Tue Mar 19 17:51:43 EDT 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -80,9 +80,9 @@
             "version": null,
             "name": "equity_executions"
           },
-          "attributeId": 8,
+          "attributeId": 40,
           "value": null,
-          "attributeName": "execution_price",
+          "attributeName": "price_issuing",
           "attributeType": null
         },
         {

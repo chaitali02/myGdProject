@@ -1,6 +1,6 @@
 {
   "uuid": "ee7e7517-cd1e-4174-890d-aebdef78d31c",
-  "version": "1552342283",
+  "version": "1553032526",
   "name": "expr_dq_equity_orders_rule3",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Mar 11 18:11:23 EDT 2019",
+  "createdOn": "Tue Mar 19 17:55:26 EDT 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -80,7 +80,7 @@
             "version": null,
             "name": "equity_orders"
           },
-          "attributeId": 3,
+          "attributeId": 2,
           "value": null,
           "attributeName": "order_placement_date",
           "attributeType": null
@@ -92,7 +92,7 @@
             "version": null,
             "name": "equity_orders"
           },
-          "attributeId": 5,
+          "attributeId": 11,
           "value": null,
           "attributeName": "order_event_date",
           "attributeType": null

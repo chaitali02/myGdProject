@@ -13,7 +13,6 @@ package com.inferyx.framework.parser;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -32,7 +31,6 @@ import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.DataSet;
-import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.Expression;
@@ -41,7 +39,6 @@ import com.inferyx.framework.domain.FormulaType;
 import com.inferyx.framework.domain.Key;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
-import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.Relation;
 import com.inferyx.framework.domain.Vizpod;
 import com.inferyx.framework.domain.Vizpod.AttributeDetails;
@@ -52,17 +49,13 @@ import com.inferyx.framework.operator.FilterOperator2;
 import com.inferyx.framework.operator.FormulaOperator;
 import com.inferyx.framework.operator.RelationOperator;
 import com.inferyx.framework.service.CommonServiceImpl;
-import com.inferyx.framework.service.DataStoreServiceImpl;
 import com.inferyx.framework.service.DatapodServiceImpl;
-import com.inferyx.framework.service.DatasetServiceImpl;
 
 @Component
 public class VizpodParser {
 
 	@Autowired
 	private DatapodServiceImpl datapodServiceImpl;
-	@Autowired
-	private DataStoreServiceImpl dataStoreServiceImpl;
 	@Autowired
 	private FormulaOperator formulaOperator;
 	@Autowired
@@ -75,8 +68,6 @@ public class VizpodParser {
 	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	private DatasetOperator datasetOperator;
-	@Autowired
-	private DatasetServiceImpl datasetServiceImpl;
 
 	private final String WHERE_1_1 = " WHERE (1=1) ";
 
@@ -254,8 +245,7 @@ public class VizpodParser {
 				dpKey.setUUID(vizpod.getSource().getRef().getUuid());
 				dpKey.setVersion(vizpod.getSource().getRef().getVersion());
 				
-				dataStoreServiceImpl.setRunMode(runMode);
-				tableName = dataStoreServiceImpl.getTableNameByDatapod(dpKey,runMode);
+				tableName = datapodServiceImpl.getTableNameByDatapod(dpKey,runMode);
 //				List<DataStore> listDataStore = dataStoreServiceImpl
 //						.findDataStoreByDatapod(vizpod.getSource().getRef().getUuid());
 //				if (listDataStore != null && !listDataStore.isEmpty()) {
@@ -658,7 +648,7 @@ public class VizpodParser {
 
 			dataSet.setAttributeInfo(attributeInfo);
 
-			String outerSql = datasetOperator.generateSql(dataSet, null, null, usedRefKeySet, null, runMode);
+//			String outerSql = datasetOperator.generateSql(dataSet, null, null, usedRefKeySet, null, runMode);
 
 			StringBuilder queryBuilder = new StringBuilder();
 			selectBuilder = new StringBuilder(generateSelectForDataSet(dataSet, vizpod));

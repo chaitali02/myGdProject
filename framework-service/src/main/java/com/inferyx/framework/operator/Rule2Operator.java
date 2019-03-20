@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.inferyx.framework.operator;
 
-import java.lang.reflect.InvocationTargetException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,12 +22,9 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.ConstantsUtil;
 import com.inferyx.framework.common.DagExecUtil;
-import com.inferyx.framework.domain.AttributeMap;
 import com.inferyx.framework.domain.AttributeRefHolder;
-import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.Criteria;
 import com.inferyx.framework.domain.DataSet;
@@ -44,7 +39,6 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
 import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.Relation;
-import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.Rule2;
 import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.enums.RunMode;
@@ -195,7 +189,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 			entityAttrName = datapodServiceImpl.getAttributeName(attributeRefHolder.getRef().getUuid(),
 					Integer.parseInt(attributeRefHolder.getAttrId()));
 			aliasName = dp.getName();
-			tablename = datastoreServiceImpl.getTableNameByDatapod(new Key(dp.getUuid(), dp.getVersion()), runMode);
+			tablename = datapodServiceImpl.getTableNameByDatapod(new Key(dp.getUuid(), dp.getVersion()), runMode);
 			break;
 		case dataset:
 			DataSet ds = (DataSet) commonServiceImpl.getLatestByUuid(attributeRefHolder.getRef().getUuid(),
@@ -240,7 +234,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 			}
 			
 			StringBuilder criteria_indBuilder = new StringBuilder();
-			StringBuilder criteria_scoreBuilder = new StringBuilder();
+//			StringBuilder criteria_scoreBuilder = new StringBuilder();
 
 			attributeMapOperator.setRunMode(runMode);
 
@@ -372,7 +366,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 			
 			String table = null;
 			if (otherParams == null	|| otherParams.get("datapod_".concat(datapod.getUuid())) == null) {
-				table = datastoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+				table = datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
 			} else {
 				String tableKey = "datapod_".concat(datapod.getUuid());
 				table = otherParams.get(tableKey);
@@ -390,14 +384,15 @@ public class Rule2Operator implements IParsable, IReferenceable {
 	public String generateWhere () {
 		return ConstantsUtil.WHERE_1_1;
 	}
-	
-	public String selectGroupBy (Rule2 rule2, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		MetaIdentifierHolder ruleSource = new MetaIdentifierHolder(rule2.getRef(MetaType.rule2));
-	
-		return null;
-	//	commented by vaibhav
-	//	return attributeMapOperator.selectGroupBy(attributeMapOperator.createAttrMap(rule.getAttributeInfo()), refKeyMap, otherParams, execParams, ruleSource);
-	}
+
+	/********************** UNUSED **********************/
+//	public String selectGroupBy (Rule2 rule2, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+//		MetaIdentifierHolder ruleSource = new MetaIdentifierHolder(rule2.getRef(MetaType.rule2));
+//	
+//		return null;
+//	//	commented by vaibhav
+//	//	return attributeMapOperator.selectGroupBy(attributeMapOperator.createAttrMap(rule.getAttributeInfo()), refKeyMap, otherParams, execParams, ruleSource);
+//	}
 	
 	public String generateFilter (Rule2 rule2, 
 									java.util.Map<String, MetaIdentifier> refKeyMap, 

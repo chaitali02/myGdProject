@@ -1,6 +1,6 @@
 {
   "uuid": "ab5e6efa-5044-4c8b-8ac8-c00a03497faf",
-  "version": "1552346868",
+  "version": "1553031531",
   "name": "ingest_load_data",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Mar 11 19:27:48 EDT 2019",
+  "createdOn": "Tue Mar 19 17:38:51 EDT 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -33,7 +33,7 @@
     {
       "ref": {
         "type": "ingest",
-        "uuid": "9086e235-2e69-47dd-be80-07367f5d1bb0",
+        "uuid": "540ac102-ec10-408c-bff0-5d6453eeb79f",
         "version": null,
         "name": "ingest_security"
       },
@@ -42,7 +42,7 @@
     {
       "ref": {
         "type": "ingest",
-        "uuid": "59ac76c9-4d0c-472f-a022-085cc5636b2e",
+        "uuid": "7a9d3508-793d-4c3d-9cdb-a9a050e00caa",
         "version": null,
         "name": "ingest_equity_orders"
       },
@@ -51,7 +51,7 @@
     {
       "ref": {
         "type": "ingest",
-        "uuid": "8c416899-f4d5-4d12-9d97-604da82eb406",
+        "uuid": "74813857-2c08-4578-ae6f-f7961621841a",
         "version": null,
         "name": "ingest_equity_executions"
       },
