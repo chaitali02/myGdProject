@@ -23,7 +23,9 @@ import java.util.concurrent.FutureTask;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.spark.sql.Row;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -49,7 +51,9 @@ import com.inferyx.framework.domain.Filter;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.enums.AbortConditionType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
@@ -292,6 +296,26 @@ public class DataQualServiceImpl extends RuleTemplate {
 	
 	/**
 	 * 
+	 * @param dataqualUUID
+	 * @param dataqualVersion
+	 * @param dataqualExec
+	 * @param dataqualGroupExec
+	 * @param execParams
+	 * @param runMode
+	 * @return
+	 * @throws JsonProcessingException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws NullPointerException
+	 * @throws IOException
+	 * @throws ParseException
+	 */
+	
+	/**
+	 * 
 	 */
 	protected MetaIdentifier getTargetSummaryDp () throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		return getSummaryOrDetail("framework.dataqual.summary.uuid", (dqInfo != null) ? dqInfo.getDq_result_summary() : null);
@@ -317,8 +341,9 @@ public class DataQualServiceImpl extends RuleTemplate {
 	public DataQualExec execute(ThreadPoolTaskExecutor metaExecutor, DataQualExec dataqualExec,
 			List<FutureTask<TaskHolder>> taskList, ExecParams execParams, RunMode runMode) throws Exception {
 		try {
-			return (DataQualExec) super.execute(MetaType.dq, MetaType.dqExec, metaExecutor, dataqualExec,
+			dataqualExec = (DataQualExec) super.execute(MetaType.dq, MetaType.dqExec, metaExecutor, dataqualExec,
 												getTargetResultDp(), taskList, execParams, runMode);
+			return dataqualExec;
 		} catch (Exception e) {
 			e.printStackTrace();
 			dataqualExec = (DataQualExec) commonServiceImpl.setMetaStatus(dataqualExec, MetaType.dqExec,
@@ -482,6 +507,7 @@ public class DataQualServiceImpl extends RuleTemplate {
 					otherParams, runMode));
 			dataQualExec.setSummaryExec(dqOperator.generateSummarySql(dataQual, datapodList, dataQualExec, dagExec, getTargetSummaryDp(), 
 					usedRefKeySet, otherParams, runMode));
+			dataQualExec.setAbortExec(dqOperator.generateAbortQuery(dataQual, datapodList, dataQualExec, dagExec, getTargetSummaryDp(), otherParams, runMode));
 			dataQualExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 			logger.info(String.format("DQ Result sql for DQExec : %s is : ", execUuid, dataQualExec.getExec()));
 			synchronized (dataQualExec.getUuid()) {

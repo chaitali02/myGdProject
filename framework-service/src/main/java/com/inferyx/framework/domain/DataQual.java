@@ -41,7 +41,7 @@ public class DataQual extends BaseRule{
 	private String blankSpaceCheck;
 	private MetaIdentifierHolder expressionCheck;
 	private CaseCheckType caseCheck;
-	private AbortConditionType abortCondition;
+	
 	
 	public MetaIdentifierHolder getDomainCheck() {
 		return domainCheck;
@@ -176,11 +176,5 @@ public class DataQual extends BaseRule{
 	 */
 	public void setCaseCheck(CaseCheckType caseCheck) {
 		this.caseCheck = caseCheck;
-	}
-	public AbortConditionType getAbortCondition() {
-		return abortCondition;
-	}
-	public void setAbortCondition(AbortConditionType abortCondition) {
-		this.abortCondition = abortCondition;
 	}
 }

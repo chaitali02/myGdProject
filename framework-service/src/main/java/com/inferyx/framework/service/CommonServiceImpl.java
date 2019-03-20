@@ -172,6 +172,7 @@ import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseExec;
+import com.inferyx.framework.domain.BaseRule;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.BaseRuleGroupExec;
 import com.inferyx.framework.domain.DagExec;
@@ -5408,6 +5409,35 @@ public class CommonServiceImpl<T> {
 			if (file.isFile() && dirFileName.toLowerCase().endsWith("."+fileExt)) {
 				return file.getAbsolutePath();
 			}
+		}
+		return null;
+	}
+	
+	public String genTableNameByRule(BaseRule baseRule, BaseRuleExec baseRuleExec, MetaIdentifier datapodKey,
+			ExecContext execContext, RunMode runMode) throws JsonProcessingException {
+		if (datapodKey.getType().equals(MetaType.rule)) {
+			return String.format("%s_%s_%s", baseRule.getUuid().replace("-", "_"), baseRule.getVersion(),
+					baseRuleExec.getVersion());
+
+		} else if (execContext == null || runMode.equals(RunMode.ONLINE)
+				&& execContext.equals(ExecContext.FILE)) {
+			return String.format("%s_%s_%s", baseRule.getUuid().replace("-", "_"), baseRule.getVersion(),
+					baseRuleExec.getVersion());
+		}
+
+		try {
+			Datapod datapod = (Datapod) getLatestByUuid(datapodKey.getUuid(), MetaType.datapod.toString(), "N");
+			Datasource datasource = (Datasource) getOneByUuidAndVersion(
+					datapod.getDatasource().getRef().getUuid(), datapod.getDatasource().getRef().getVersion(),
+					MetaType.datasource.toString(), "N");
+			if (datasource.getType().equals(ExecContext.FILE.toString())) {
+				return String.format("%s_%s_%s", baseRule.getUuid().replace("-", "_"), baseRule.getVersion(),
+						baseRuleExec.getVersion());
+			} else {
+				return datasource.getDbname() + "." + datapod.getName();
+			}
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
 		}
 		return null;
 	}

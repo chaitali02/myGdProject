@@ -607,7 +607,9 @@ public class DQOperator implements IParsable {
 			DataQualExec dataQualExec, DagExec dagExec, MetaIdentifier summaryDpRef, HashMap<String, String> otherParams, RunMode runMode) throws Exception {
 		Datapod summaryDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(summaryDpRef.getUuid(), summaryDpRef.getVersion(), summaryDpRef.getType().toString(), "N");
 //		String summaryTableName = datapodServiceImpl.genTableNameByDatapod(summaryDp, dagExec != null ? dagExec.getVersion(): null, datapodList, otherParams, dagExec, runMode, true);
-		String summaryTableName = commonServiceImpl.genTableNameByRule(dq, dataQualExec, summaryDpRef, ExecContext.spark, runMode)+"_summary";
+//		String summaryTableName = commonServiceImpl.genTableNameByRule(dq, dataQualExec, summaryDpRef, ExecContext.spark, runMode);
+		DataStore datasore = datastoreServiceImpl.findLatestByMeta(summaryDpRef.getUuid(), summaryDpRef.getVersion());
+		String summaryTableName = datastoreServiceImpl.getTableNameByDatastore(datasore.getUuid(), datasore.getVersion(), runMode);
 		StringBuilder select = new StringBuilder(SELECT)
 								.append(THRESHOLD_LIMIT).append(FROM)
 								.append(summaryTableName).append(WHERE_1_1)

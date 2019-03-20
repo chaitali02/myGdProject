@@ -20,6 +20,7 @@ import java.util.concurrent.Callable;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.spark.sql.Row;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +31,8 @@ import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.BaseRule;
 import com.inferyx.framework.domain.BaseRuleExec;
+import com.inferyx.framework.domain.DataQual;
+import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
@@ -40,6 +43,7 @@ import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.SessionContext;
 import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.enums.AbortConditionType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.enums.SaveMode;
 import com.inferyx.framework.enums.SysVarType;
@@ -574,6 +578,19 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 				// ******Adding one more parameter in persistDataStorenew
 				persistDatastore(tableName, filePath, summaryResultRef, summaryDatapodKey, countRows, runMode);
 				baseRuleExec.setSummaryResult(summaryResultRef);
+				
+				if (isAbort(baseRule.getUuid(), baseRule.getVersion(), baseRuleExec, runMode)) {
+					synchronized (baseRuleExec.getUuid()) {
+						baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRule, ruleExecType,
+								Status.Stage.FAILED);
+					}
+					logger.error("Rule to be Aborted ");
+					throw new Exception("Rule execution FAILED.");
+				}
+				
+				if (rsHolder != null) {
+					countRows = rsHolder.getCountRows();
+				}
 			}
 //			Ending Summary business
 
@@ -655,5 +672,40 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 		}
 		return rsHolder;
 	}
+	
+	public Boolean isAbort(String uuid, String version, BaseRuleExec baseruleExec, RunMode runMode)
+			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, IOException, ParseException {
 
+		logger.info("Inside isAbort ");
+		BaseRule baseRule = (BaseRule) commonServiceImpl.getOneByUuidAndVersion(uuid, version,
+				MetaType.dq.toString(), "N");
+		Datasource ruleDatasource = commonServiceImpl.getDatasourceByObject(baseRule);
+
+		ResultSetHolder rsHolder = execFactory.getExecutor(ExecContext.spark.toString()).executeAndRegisterByDatasource(
+				baseruleExec.getAbortExec(), baseruleExec.getUuid().replaceAll("-", "_") + "_" + baseruleExec.getVersion(),
+				ruleDatasource, commonServiceImpl.getApp().getUuid());
+		List<Row> resultList = (rsHolder.getDataFrame() == null) ? null : rsHolder.getDataFrame().collectAsList();
+		String abortThreshold = (resultList == null || resultList.isEmpty()) ? null : resultList.get(0).getString(0);
+
+		int abortThresholdOrdinal = -1;
+
+		if (baseRule.getAbortCondition() != null && StringUtils.isNotBlank(abortThreshold)) {
+			if (AbortConditionType.LOW.toString().equals(abortThreshold)) {
+				abortThresholdOrdinal = AbortConditionType.LOW.ordinal();
+			} else if (AbortConditionType.MEDIUM.toString().equals(abortThreshold)) {
+				abortThresholdOrdinal = AbortConditionType.MEDIUM.ordinal();
+			} else {
+				abortThresholdOrdinal = AbortConditionType.HIGH.ordinal();
+			}
+			if (abortThresholdOrdinal >= baseRule.getAbortCondition().ordinal()) {
+				logger.info("Rule to be aborted ");
+				return Boolean.TRUE;
+			}
+		}
+		logger.info("Rule not to be aborted ");
+		return Boolean.FALSE;
+	}
+
+	
 }
