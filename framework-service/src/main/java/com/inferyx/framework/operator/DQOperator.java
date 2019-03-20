@@ -49,6 +49,7 @@ import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
 import com.inferyx.framework.service.DatapodServiceImpl;
 import com.inferyx.framework.service.MessageStatus;
+import com.inferyx.framework.service.RunBaseRuleService;
 
 @Component
 public class DQOperator implements IParsable {
@@ -134,7 +135,7 @@ public class DQOperator implements IParsable {
 	private String RULEUUID = "rule_uuid";
 	private String RULEVERSION = "rule_version";
 	private String RULENAME = "rule_name";
-	private String RULE_EXEC_UUID = "ruleexec_uuid";
+	private String RULE_EXEC_UUID = "rule_exec_uuid";
 	private String RULE_EXEC_VERSION = "rule_exec_version";
 	private String RULE_EXEC_TIME = "rule_exec_time";
 	
@@ -607,7 +608,8 @@ public class DQOperator implements IParsable {
 			DataQualExec dataQualExec, DagExec dagExec, MetaIdentifier summaryDpRef, HashMap<String, String> otherParams, RunMode runMode) throws Exception {
 		Datapod summaryDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(summaryDpRef.getUuid(), summaryDpRef.getVersion(), summaryDpRef.getType().toString(), "N");
 //		String summaryTableName = datapodServiceImpl.genTableNameByDatapod(summaryDp, dagExec != null ? dagExec.getVersion(): null, datapodList, otherParams, dagExec, runMode, true);
-		String summaryTableName = commonServiceImpl.genTableNameByRule(dq, dataQualExec, summaryDpRef, ExecContext.spark, runMode)+"_summary";
+//		String summaryTableName = commonServiceImpl.genTableNameByRule(dq, dataQualExec, summaryDpRef, ExecContext.spark, runMode)+"_summary";
+		String summaryTableName = "_summary";
 		StringBuilder select = new StringBuilder(SELECT)
 								.append(THRESHOLD_LIMIT).append(FROM)
 								.append(summaryTableName).append(WHERE_1_1)
@@ -673,8 +675,16 @@ public class DQOperator implements IParsable {
 		// Find summary sql
 		Datapod summaryDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(summaryDpRef.getUuid(), summaryDpRef.getVersion(), summaryDpRef.getType().toString(), "N");
 //		String summaryTableName = datapodServiceImpl.genTableNameByDatapod(summaryDp, dagExec != null ? dagExec.getVersion(): null, datapodList, otherParams, dagExec, runMode, true);
-		DataStore datasore = datastoreServiceImpl.findLatestByMeta(summaryDpRef.getUuid(), summaryDpRef.getVersion());
-		String summaryTableName = datastoreServiceImpl.getTableNameByDatastore(datasore.getUuid(), datasore.getVersion(), runMode);
+
+//		MetaIdentifier dpKey = new MetaIdentifier();
+//		dpKey.setUuid(summaryDpRef.getUuid());
+//		dpKey.setVersion(summaryDpRef.getVersion());
+//		String summaryTableName = RunBaseRuleService.genTableNameByRule(null,null,dpKey,null,runMode);
+
+		String summaryTableName = datapodServiceImpl.genTableNameByDatapod(summaryDp, dagExec != null ? dagExec.getVersion(): null, datapodList, otherParams, dagExec, runMode, true);
+//		DataStore datasore = datastoreServiceImpl.findLatestByMeta(summaryDpRef.getUuid(), summaryDpRef.getVersion());
+//		String summaryTableName = datastoreServiceImpl.getTableNameByDatastore(datasore.getUuid(), datasore.getVersion(), runMode);
+
 		String resSql = dataQualExec.getExec();
 		String sql = generateSummarySql4(dq, dataQualExec, generateSummarySql3(generateSummarySql2(generateSummarySql1(resSql)), summaryTableName,dq));
 		return sql;
@@ -732,7 +742,7 @@ public class DQOperator implements IParsable {
 					// added filter by vaibhav
 			   	  .append(ConstantsUtil.CASE_WHEN).append(BRACKET_OPEN).append(STDDEV).append(BRACKET_OPEN)
 				  .append(TOTAL_FAIL_COUNT).append(BRACKET_CLOSE).append(EQUAL_TO).append("'NaN'").append(OR)
-				  .append(STDDEV).append(BRACKET_OPEN).append(TOTAL_FAIL_COUNT).append(BRACKET_CLOSE).append("IS")
+				  .append(STDDEV).append(BRACKET_OPEN).append(TOTAL_FAIL_COUNT).append(BRACKET_CLOSE).append(EQUAL_TO)
 				  .append(" NULL").append(BRACKET_CLOSE).append("THEN").append(" 1 ").append("ELSE").append(STDDEV)
 				  .append(BRACKET_OPEN).append(TOTAL_FAIL_COUNT).append(BRACKET_CLOSE).append("END")
 				  .append(AS).append(STD_DEV_FAIL)

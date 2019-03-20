@@ -1,6 +1,6 @@
 {
   "uuid": "291d1c24-5b2a-43f4-b17c-1cb08d9f3b03",
-  "version": "1552417428",
+  "version": "1553032386",
   "name": "dq_equity_executions_rule6",
   "desc": "Security ID must be populated and must be available in the security master reference data",
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Tue Mar 12 15:03:48 EDT 2019",
+  "createdOn": "Tue Mar 19 17:53:06 EDT 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -38,8 +38,8 @@
       "name": "equity_executions"
     },
     "value": null,
-    "attrId": "11",
-    "attrName": "security_id",
+    "attrId": "32",
+    "attrName": "security_identifier",
     "attrType": null,
     "attrUnitType": null,
     "function": null
@@ -54,7 +54,7 @@
     "value": null
   },
   "duplicateKeyCheck": "N",
-  "nullCheck": "N",
+  "nullCheck": "Y",
   "valueCheck": [],
   "rangeCheck": {},
   "dataTypeCheck": "",
@@ -79,8 +79,8 @@
         "name": "security"
       },
       "value": null,
-      "attrId": "0",
-      "attrName": "security_id",
+      "attrId": "2",
+      "attrName": "ric_code",
       "attrType": null,
       "attrUnitType": null,
       "function": null
@@ -96,5 +96,7 @@
   },
   "domainCheck": null,
   "blankSpaceCheck": null,
-  "expressionCheck": null
+  "expressionCheck": null,
+  "caseCheck": null,
+  "abortCondition": null
 }

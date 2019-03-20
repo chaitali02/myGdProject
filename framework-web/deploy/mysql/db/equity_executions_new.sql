@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS equity_executions_new; 
+DROP TABLE IF EXISTS equity_executions; 
 
-CREATE TABLE equity_executions_new 
+CREATE TABLE equity_executions
   ( 
      trade_execution_identifier              VARCHAR(50), 
      trade_execution_event_number            VARCHAR(50), 

@@ -1,6 +1,6 @@
 {
   "uuid": "a3945b0a-aa86-4169-9128-a0fd580dc004",
-  "version": "1552334091",
+  "version": "1553032671",
   "name": "dq_equity_orders_rule5",
   "desc": "Time in Force cannot be blank and must be one of the following - Day, GTC, GTD",
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Mar 11 15:54:51 EDT 2019",
+  "createdOn": "Tue Mar 19 17:57:51 EDT 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -38,7 +38,7 @@
       "name": "equity_orders"
     },
     "value": null,
-    "attrId": "7",
+    "attrId": "47",
     "attrName": "time_in_force",
     "attrType": null,
     "attrUnitType": null,
@@ -56,24 +56,16 @@
   "duplicateKeyCheck": "N",
   "nullCheck": "Y",
   "valueCheck": [
-    "Day",
     "GTD",
-    "GTC"
+    "GTC",
+    "DAY"
   ],
   "rangeCheck": {},
   "dataTypeCheck": "",
   "dateFormatCheck": null,
   "customFormatCheck": null,
   "lengthCheck": {},
-  "refIntegrityCheck": {
-    "ref": null,
-    "value": null,
-    "attrId": null,
-    "attrName": null,
-    "attrType": null,
-    "attrUnitType": null,
-    "function": null
-  },
+  "refIntegrityCheck": null,
   "filterInfo": null,
   "userInfo": null,
   "thresholdInfo": {
@@ -84,5 +76,7 @@
   },
   "domainCheck": null,
   "blankSpaceCheck": null,
-  "expressionCheck": null
+  "expressionCheck": null,
+  "caseCheck": null,
+  "abortCondition": null
 }

@@ -1,6 +1,6 @@
 {
   "uuid": "7e75ef14-4888-41ef-b419-8b8eeb35c29d",
-  "version": "1552334275",
+  "version": "1553032751",
   "name": "dq_equity_orders_rule6",
   "desc": "Order Type cannot be blank and must be one of the following - Market, Limit, Stop, Stop Limit",
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Mar 11 15:57:55 EDT 2019",
+  "createdOn": "Tue Mar 19 17:59:11 EDT 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -38,8 +38,8 @@
       "name": "equity_orders"
     },
     "value": null,
-    "attrId": "8",
-    "attrName": "order_type",
+    "attrId": "41",
+    "attrName": "order_type_code",
     "attrType": null,
     "attrUnitType": null,
     "function": null
@@ -56,25 +56,15 @@
   "duplicateKeyCheck": "N",
   "nullCheck": "Y",
   "valueCheck": [
-    "Market",
-    "Limit",
-    "Stop",
-    "Stop-Limit"
+    "1",
+    "2"
   ],
   "rangeCheck": {},
   "dataTypeCheck": "",
   "dateFormatCheck": null,
   "customFormatCheck": null,
   "lengthCheck": {},
-  "refIntegrityCheck": {
-    "ref": null,
-    "value": null,
-    "attrId": null,
-    "attrName": null,
-    "attrType": null,
-    "attrUnitType": null,
-    "function": null
-  },
+  "refIntegrityCheck": null,
   "filterInfo": null,
   "userInfo": null,
   "thresholdInfo": {
@@ -85,5 +75,7 @@
   },
   "domainCheck": null,
   "blankSpaceCheck": null,
-  "expressionCheck": null
+  "expressionCheck": null,
+  "caseCheck": null,
+  "abortCondition": null
 }

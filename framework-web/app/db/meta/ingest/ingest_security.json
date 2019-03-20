@@ -1,6 +1,6 @@
 {
-  "uuid": "9086e235-2e69-47dd-be80-07367f5d1bb0",
-  "version": "1552343934",
+  "uuid": "540ac102-ec10-408c-bff0-5d6453eeb79f",
+  "version": "1553031828",
   "name": "ingest_security",
   "desc": null,
   "createdBy": {
@@ -12,7 +12,7 @@
     },
     "value": null
   },
-  "createdOn": "Mon Mar 11 18:38:54 EDT 2019",
+  "createdOn": "Tue Mar 19 17:43:48 EDT 2019",
   "tags": [],
   "active": "Y",
   "locked": "N",
@@ -51,9 +51,9 @@
   "targetDatasource": {
     "ref": {
       "type": "datasource",
-      "uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73024",
+      "uuid": "4f65d730-866c-417d-9305-472cd82599db",
       "version": null,
-      "name": "mysql"
+      "name": "mysql_framework_db"
     },
     "value": null
   },
@@ -207,7 +207,7 @@
           "type": "function",
           "uuid": "9e3dff24-02fb-11e7-93ae-92361f002671",
           "version": null,
-          "name": "unix_timestamp()"
+          "name": "unix_timestamp"
         },
         "value": null,
         "attrId": null,

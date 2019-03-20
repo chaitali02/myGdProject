@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS equity_orders_new; 
+DROP TABLE IF EXISTS equity_orders; 
 
-CREATE TABLE equity_orders_new 
+CREATE TABLE equity_orders
   ( 
      order_identifier                        VARCHAR(50), 
      order_event_number                      VARCHAR(50), 
