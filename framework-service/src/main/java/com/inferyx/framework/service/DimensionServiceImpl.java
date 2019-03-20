@@ -63,33 +63,8 @@ public class DimensionServiceImpl {
 		return iDimensionDao.findOne(id);
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public Dimension findOneByUuidAndVersion(String uuid, String version) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iDimensionDao.findOneByUuidAndVersion(appUuid,uuid, version);
-	}*/
 
-	/********************** UNUSED **********************/
-	/*public Dimension save(Dimension dimension) throws Exception{
-		MetaIdentifierHolder meta=securityServiceImpl.getAppInfo();
-		List<MetaIdentifierHolder> metaIdentifierHolderList=new ArrayList<MetaIdentifierHolder>();
-		metaIdentifierHolderList.add(meta);
-		dimension.setAppInfo(metaIdentifierHolderList);
-		dimension.setBaseEntity();
-		Dimension dimensionDet=iDimensionDao.save(dimension);
-		registerGraph.updateGraph((Object) dimensionDet, MetaType.dimension);
-		return dimensionDet;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public void  delete(String id){
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		Dimension dimension = iDimensionDao.findOne(id);
-		dimension.setActive("N");
-		iDimensionDao.save(dimension);
-//		String ID=dimension.getId();
-//		iDimensionDao.delete(appUuid,ID);		
-	}*/
+	
 
 	/********************** UNUSED **********************/
 	/*public List<Dimension> findAllLatestActive() {	   
@@ -173,53 +148,5 @@ public class DimensionServiceImpl {
 			return iDimensionDao.findAsOf(uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public MetaIdentifierHolder saveAs(Dimension dimension) throws Exception {
-		MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
-		MetaIdentifier ref = new MetaIdentifier();		
-		Dimension dimNew = new Dimension();
-		dimNew.setName(dimension.getName()+"_copy");
-		dimNew.setActive(dimension.getActive());		
-		dimNew.setDesc(dimension.getDesc());		
-		dimNew.setTags(dimension.getTags());	
-		dimNew.setDimInfo(dimension.getDimInfo());		
-		save(dimNew);
-		ref.setType(MetaType.dimension);
-		ref.setUuid(dimNew.getUuid());
-		refMeta.setRef(ref);
-		return refMeta;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<BaseEntity> findList(List<? extends BaseEntity> dimensionList) {
-		List<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
-		for(BaseEntity dimension : dimensionList)
-		{
-			BaseEntity baseEntity = new BaseEntity();
-			String id = dimension.getId();
-			String uuid = dimension.getUuid();
-			String version = dimension.getVersion();
-			String name = dimension.getName();
-			String desc = dimension.getDesc();
-			String published=dimension.getPublished();
-			MetaIdentifierHolder createdBy = dimension.getCreatedBy();
-			String createdOn = dimension.getCreatedOn();
-			String[] tags = dimension.getTags();
-			String active = dimension.getActive();
-			List<MetaIdentifierHolder> appInfo = dimension.getAppInfo();
-			baseEntity.setId(id);
-			baseEntity.setUuid(uuid);
-			baseEntity.setVersion(version);
-			baseEntity.setName(name);
-			baseEntity.setDesc(desc);
-			baseEntity.setCreatedBy(createdBy);
-			baseEntity.setCreatedOn(createdOn);
-			baseEntity.setPublished(published);
-			baseEntity.setTags(tags);
-			baseEntity.setActive(active);
-			baseEntity.setAppInfo(appInfo);
-			baseEntityList.add(baseEntity);
-		}
-		return baseEntityList;
-	}*/
+	
 }

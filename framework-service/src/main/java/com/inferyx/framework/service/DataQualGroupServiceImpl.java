@@ -83,18 +83,6 @@ public class DataQualGroupServiceImpl extends RuleGroupTemplate {
 		}
 		return iDataQualGroupDao.findOne(id);
 	}*/
-
-	/********************** UNUSED **********************/
-	/*public DataQualGroup save(DataQualGroup dataQualGroup) throws Exception{	
-		MetaIdentifierHolder meta=securityServiceImpl.getAppInfo();
-		List<MetaIdentifierHolder> metaIdentifierHolderList=new ArrayList<MetaIdentifierHolder>();
-		metaIdentifierHolderList.add(meta);
-		dataQualGroup.setAppInfo(metaIdentifierHolderList);
-		dataQualGroup.setBaseEntity();
-		DataQualGroup dqgroup=iDataQualGroupDao.save(dataQualGroup);
-		registerGraph.updateGraph((Object) dqgroup, MetaType.dqgroup);
-		return dqgroup;
-	}*/
 	
 	/*public DataQualGroup update(DataQualGroup dataQualGroup) throws IOException{
 		dataQualGroup.exportBaseProperty();
@@ -108,16 +96,7 @@ public class DataQualGroupServiceImpl extends RuleGroupTemplate {
 		return iDataQualGroupDao.exists(id);
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public void  delete(String Id){
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		DataQualGroup dataQualGroup = iDataQualGroupDao.findOneById(appUuid,Id);
-		dataQualGroup.setActive("N");
-		iDataQualGroupDao.save(dataQualGroup);
-//		String ID=dataQualGroup.getId();
-//		iDataQualGroupDao.delete(ID);
-//		dataQualGroup.exportBaseProperty();
-	}*/
+	
 
 	/********************** UNUSED **********************/
 	/*public DataQualGroup findOneByUuidAndVersion(String uuid, String version){
@@ -208,56 +187,7 @@ public class DataQualGroupServiceImpl extends RuleGroupTemplate {
 			return iDataQualGroupDao.findAsOf(uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public MetaIdentifierHolder saveAs(DataQualGroup dqgroup) throws Exception {
-		MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
-		MetaIdentifier ref = new MetaIdentifier();		
-		DataQualGroup dqGroupNew = new DataQualGroup();
-		dqGroupNew.setName(dqgroup.getName()+"_copy");
-		dqGroupNew.setActive(dqgroup.getActive());		
-		dqGroupNew.setDesc(dqgroup.getDesc());		
-		dqGroupNew.setTags(dqgroup.getTags());	
-		dqGroupNew.setRuleInfo(dqgroup.getRuleInfo());
-		dqGroupNew.setInParallel(dqgroup.getInParallel());
-		save(dqGroupNew);
-		ref.setType(MetaType.dqgroup);
-		ref.setUuid(dqGroupNew.getUuid());
-		refMeta.setRef(ref);
-		return refMeta;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<BaseEntity> findList(List<? extends BaseEntity> dgGroupList) {
-		List<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
-		for(BaseEntity dq : dgGroupList)
-		{
-			BaseEntity baseEntity = new BaseEntity();
-			String id = dq.getId();
-			String uuid = dq.getUuid();
-			String version = dq.getVersion();
-			String name = dq.getName();
-			String desc = dq.getDesc();
-			String published=dq.getPublished();
-			MetaIdentifierHolder createdBy = dq.getCreatedBy();
-			String createdOn = dq.getCreatedOn();
-			String[] tags = dq.getTags();
-			String active = dq.getActive();
-			List<MetaIdentifierHolder> appInfo = dq.getAppInfo();
-			baseEntity.setId(id);
-			baseEntity.setUuid(uuid);
-			baseEntity.setVersion(version);
-			baseEntity.setName(name);
-			baseEntity.setDesc(desc);
-			baseEntity.setCreatedBy(createdBy);
-			baseEntity.setCreatedOn(createdOn);
-			baseEntity.setPublished(published);
-			baseEntity.setTags(tags);
-			baseEntity.setActive(active);
-			baseEntity.setAppInfo(appInfo);
-			baseEntityList.add(baseEntity);
-		}
-		return baseEntityList;
-	}*/
+	
 	
 	public void restart(String type,String uuid,String version, RunMode runMode) throws Exception{
 		//DataQualGroupExec dataQualGroupExec= dataQualGroupExecServiceImpl.findOneByUuidAndVersion(uuid,version);

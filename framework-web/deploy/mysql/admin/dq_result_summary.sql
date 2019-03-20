@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS dq_rule_summary; 
+DROP TABLE IF EXISTS dq_result_summary; 
 
-CREATE TABLE dq_rule_summary 
+CREATE TABLE dq_result_summary 
   ( 
      rule_exec_uuid    VARCHAR(50), 
      rule_exec_version INT(10), 

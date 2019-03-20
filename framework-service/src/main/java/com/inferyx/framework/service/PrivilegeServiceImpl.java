@@ -82,11 +82,6 @@ public class PrivilegeServiceImpl {
 		return iPrivilegeDao.findLatestByUuid(appUuid, uuid, new Sort(Sort.Direction.DESC, "version"));
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public Privilege findOneByUuidAndVersion(String uuid, String version) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iPrivilegeDao.findOneByUuidAndVersion(appUuid, uuid, version);
-	}*/
 
 	/********************** UNUSED **********************/
 	/*public Privilege findOneById(String id) {
@@ -98,27 +93,7 @@ public class PrivilegeServiceImpl {
 		return iPrivilegeDao.findOne(id);
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public void delete(String id) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		Privilege privilege = iPrivilegeDao.findOneById(appUuid, id);
-		privilege.setActive("N");
-		iPrivilegeDao.save(privilege);
-//		String ID = privilege.getId();
-//		iPrivilegeDao.delete(ID);
-	}*/
 
-	/********************** UNUSED **********************/
-	/*public Privilege save(Privilege privilege) throws Exception {
-		MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
-		List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
-		metaIdentifierHolderList.add(meta);
-		privilege.setAppInfo(metaIdentifierHolderList);
-		privilege.setBaseEntity();
-		Privilege privilegeDet = iPrivilegeDao.save(privilege);
-		registerGraph.updateGraph((Object) privilegeDet, MetaType.privilege);
-		return privilegeDet;
-	}*/
 
 	/********************** UNUSED **********************/
 	/*public List<Privilege> findAllVersion(String privilegeName) {
@@ -163,55 +138,6 @@ public class PrivilegeServiceImpl {
 			return iPrivilegeDao.findAsOf(uuid, asOf, new Sort(Sort.Direction.DESC, "version"));
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public MetaIdentifierHolder saveAs(Privilege privilege) throws Exception {
-		MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
-		MetaIdentifier ref = new MetaIdentifier();
-		Privilege privNew = new Privilege();
-		privNew.setName(privilege.getName() + "_copy");
-		privNew.setActive(privilege.getActive());
-		privNew.setDesc(privilege.getDesc());
-		privNew.setTags(privilege.getTags());
-		privNew.setPrivType(privilege.getPrivType());
-		privNew.setMetaId(privilege.getMetaId());
-		save(privNew);
-		ref.setType(MetaType.privilege);
-		ref.setUuid(privNew.getUuid());
-		refMeta.setRef(ref);
-		return refMeta;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<BaseEntity> findList(List<? extends BaseEntity> privilegeList) {
-		List<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
-		for (BaseEntity privilege : privilegeList) {
-			BaseEntity baseEntity = new BaseEntity();
-			String id = privilege.getId();
-			String uuid = privilege.getUuid();
-			String version = privilege.getVersion();
-			String name = privilege.getName();
-			String desc = privilege.getDesc();
-			String published=privilege.getPublished();
-			MetaIdentifierHolder createdBy = privilege.getCreatedBy();
-			String createdOn = privilege.getCreatedOn();
-			String[] tags = privilege.getTags();
-			String active = privilege.getActive();
-			List<MetaIdentifierHolder> appInfo = privilege.getAppInfo();
-			baseEntity.setId(id);
-			baseEntity.setUuid(uuid);
-			baseEntity.setVersion(version);
-			baseEntity.setName(name);
-			baseEntity.setDesc(desc);
-			baseEntity.setCreatedBy(createdBy);
-			baseEntity.setCreatedOn(createdOn);
-			baseEntity.setPublished(published);
-			baseEntity.setTags(tags);
-			baseEntity.setActive(active);
-			baseEntity.setAppInfo(appInfo);
-			baseEntityList.add(baseEntity);
-		}
-		return baseEntityList;
-	}*/
 
 	public List<RolePriv> getRolePriv(String roleUuid) throws JsonProcessingException {
 //		List<RolePriv> userPrivList = new ArrayList<RolePriv>();

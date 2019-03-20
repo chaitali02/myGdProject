@@ -104,9 +104,8 @@ public interface IDatapodDao extends MongoRepository<Datapod, String> {
 	@Query(value = "{'_id' : ?0}")
 	public Datapod save(String id);	
 	
-	@Query(value = "{$or: [ { publicFlag: \"Y\"},{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,$or : [  {'name':{$regex : ?1,$options : \"i\"}}] , {'desc':{$regex : ?1,$options : \"i\"}}, {'attributes':{$elemMatch:{'desc':{$regex : ?1,$options : \"i\"}}}},{'attributes':{$elemMatch:{'name':{$regex : ?1,$options : \"i\"}}}}] }")
-	public List<Datapod> findAll(String appUuid,String searchStr);
-
+	@Query(value = "{$and: [{$or: [ { publicFlag: \"Y\"},{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} }]} ,{$or : [  {'name':{$regex : ?1,$options : \"i\"}} , {'desc':{$regex : ?1,$options : \"i\"}}, {'attributes':{$elemMatch:{'desc':{$regex : ?1,$options : \"i\"}}}},{'attributes':{$elemMatch:{'name':{$regex : ?1,$options : \"i\"}}}}] }]}")
+	public List<Datapod> findAll(String appUuid,String searchStr);	
 
 //	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'_id' : ?1}")
 //	public Datapod count(String appUuid);

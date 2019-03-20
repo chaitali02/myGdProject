@@ -145,17 +145,6 @@ public class DataQualServiceImpl extends RuleTemplate {
 	}
 
 	/********************** UNUSED **********************/
-//	public List<DataQual> findAll() {
-//		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-//				? securityServiceImpl.getAppInfo().getRef().getUuid()
-//				: null;
-//		if (appUuid == null) {
-//			return iDataQualDao.findAll();
-//		}
-//		return iDataQualDao.findAll(appUuid);
-//	}
-
-	/********************** UNUSED **********************/
 //	public boolean isExists(String id) {
 //		return iDataQualDao.exists(id);
 //	}
@@ -174,17 +163,7 @@ public class DataQualServiceImpl extends RuleTemplate {
 //
 //	}
 
-	/********************** UNUSED **********************/
-//	public DataQual findOneByUuidAndVersion(String uuid, String version) {
-//		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-//				? securityServiceImpl.getAppInfo().getRef().getUuid()
-//				: null;
-//		if (appUuid == null) {
-//			return iDataQualDao.findOneByUuidAndVersion(uuid, version);
-//		} else
-//			return iDataQualDao.findOneByUuidAndVersion(appUuid, uuid, version);
-//	}
-
+	
 	/********************** UNUSED **********************/
 //	public DataQual findLatestByUuid(String uuid) {
 //		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)

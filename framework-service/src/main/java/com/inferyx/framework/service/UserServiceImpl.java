@@ -79,18 +79,8 @@ public class UserServiceImpl {
 	}	*/
 
 
-	/********************** UNUSED **********************/
-	/*public List<User> test(String param1) {	
-		return iUserDao.test(param1);
-	}*/
-	/*public User findOneByUuidAndVersion(String uuid,String version){
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid != null)
-		{
-		return iUserDao.findOneByUuidAndVersion(appUuid,uuid,version);
-		}
-		return iUserDao.findOneByUuidAndVersion(uuid,version);
-	}*/
+	
+	
 	/********************** UNUSED **********************/
 	/*public User findOneById(String id){
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
@@ -101,39 +91,6 @@ public class UserServiceImpl {
 		return iUserDao.findOne(id);
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public void  delete(String id){
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		User user = null;
-		if(appUuid != null)
-		{
-		user = iUserDao.findOneById(appUuid,id);
-		}
-		else
-		{
-			user = iUserDao.findOne(id);
-		}			
-		user.setActive("N");
-		iUserDao.save(user);
-//		String ID=user.getId();
-//		iUserDao.delete(ID);
-		
-	}*/
-	
-	/*public User Save(User user){
-		user.exportBaseProperty();
-		User userDo=iUserDao.findLatestByUuid(user.getUuid(), new Sort(Sort.Direction.DESC, "version"));
-		Session session =iSessionDao.findSessionByUser(userDo.getUuid(),new Sort(Sort.Direction.DESC, "version"));
-		User userObj= new User();
-		MetaIdentifierHolder mholder= new MetaIdentifierHolder();
-		MetaIdentifier mIdentifier = new MetaIdentifier();
-		mIdentifier.setType(MetaType.user);
-		mIdentifier.setUuid(session.getUserInfo().getRef().getUuid());
-		mholder.setRef(mIdentifier);
-		user.setCreatedBy(mholder);
-		userObj=iUserDao.save(user);
-		return userObj;
-		}*/
 	
 	/*public User save(User user) throws Exception {	
 		MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
@@ -281,60 +238,6 @@ public class UserServiceImpl {
 		}
 		return iUserDao.findAsOf(uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
 	}*/
-	/********************** UNUSED **********************/
-	/*public MetaIdentifierHolder saveAs(User user) throws Exception{
-		MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
-		MetaIdentifier ref = new MetaIdentifier();		
-		User userNew = new User();
-		userNew.setName(user.getName()+"_copy");
-		userNew.setActive(user.getActive());		
-		userNew.setDesc(user.getDesc());		
-		userNew.setTags(user.getTags());	
-		userNew.setEmailId(user.getEmailId());
-		userNew.setFirstName(user.getFirstName());
-		userNew.setGroupInfo(user.getGroupInfo());
-		userNew.setLastName(user.getLastName());
-		userNew.setPassword(user.getPassword());
-		userNew.setRoleInfo(user.getRoleInfo());
-		userNew.setMiddleName(user.getMiddleName());
-		save(userNew);
-		ref.setType(MetaType.user);
-		ref.setUuid(userNew.getUuid());
-		refMeta.setRef(ref);
-		return refMeta;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<BaseEntity> findList(List<? extends BaseEntity> userList) {
-		List<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
-		for(BaseEntity user : userList)
-		{
-			BaseEntity baseEntity = new BaseEntity();
-			String id = user.getId();
-			String uuid = user.getUuid();
-			String version = user.getVersion();
-			String name = user.getName();
-			String desc = user.getDesc();
-			String published=user.getPublished();
-			MetaIdentifierHolder createdBy = user.getCreatedBy();
-			String createdOn = user.getCreatedOn();
-			String[] tags = user.getTags();
-			String active = user.getActive();
-			List<MetaIdentifierHolder> appInfo = user.getAppInfo();
-			baseEntity.setId(id);
-			baseEntity.setUuid(uuid);
-			baseEntity.setVersion(version);
-			baseEntity.setName(name);
-			baseEntity.setDesc(desc);
-			baseEntity.setCreatedBy(createdBy);
-			baseEntity.setCreatedOn(createdOn);
-			baseEntity.setPublished(published);
-			baseEntity.setTags(tags);
-			baseEntity.setActive(active);
-			baseEntity.setAppInfo(appInfo);
-			baseEntityList.add(baseEntity);
-		}
-		return baseEntityList;
-	}*/
+	
 	
 }

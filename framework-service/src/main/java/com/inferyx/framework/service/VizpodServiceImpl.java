@@ -130,10 +130,6 @@ public class VizpodServiceImpl extends RuleTemplate {
 		return iVizpodDao.findLatestByUuid(appUuid,uuid,new Sort(Sort.Direction.DESC, "version"));	
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public List<Vizpod> test(String param1) {
-		return iVizpodDao.test(param1);
-	}*/
 
 	public Vizpod resolveName(Vizpod vizpod) throws JsonProcessingException {
 		if(vizpod.getCreatedBy() != null)
@@ -270,17 +266,6 @@ public class VizpodServiceImpl extends RuleTemplate {
 		return vizpod;
 	}
 
-	/********************** UNUSED 
-	 * @throws JsonProcessingException **********************/
-	/*public Vizpod findOneByUuidAndVersion(String uuid, String version) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid == null) {
-			return iVizpodDao.findOneByUuidAndVersion(uuid, version);
-		} else {
-			return iVizpodDao.findOneByUuidAndVersion(appUuid,uuid, version);
-		}
-	}*/
-	
 	public List<Vizpod> findVizpodByType(String uuid) throws JsonProcessingException {
 		/*String appUuid = (securityServiceImpl.getAppInfo() != null
 				&& securityServiceImpl.getAppInfo().getRef() != null)
@@ -309,29 +294,6 @@ public class VizpodServiceImpl extends RuleTemplate {
 		}
 		else
 		return iVizpodDao.findOne(id);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public void delete(String Id) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		Vizpod vizpod = iVizpodDao.findOneById(appUuid,Id);
-		vizpod.setActive("N");
-		iVizpodDao.save(vizpod);
-//		String ID = vizpod.getId();
-//		iVizpodDao.delete(ID);
-//		vizpod.exportBaseProperty();
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Vizpod save(Vizpod vizpod) throws Exception {
-		MetaIdentifierHolder meta=securityServiceImpl.getAppInfo();
-		List<MetaIdentifierHolder> metaIdentifierHolderList=new ArrayList<MetaIdentifierHolder>();
-		metaIdentifierHolderList.add(meta);
-		vizpod.setAppInfo(metaIdentifierHolderList);
-		vizpod.setBaseEntity();
-		Vizpod vizpodDet=iVizpodDao.save(vizpod);
-		registerGraph.updateGraph((Object) vizpodDet, MetaType.vizpod);
-		return vizpodDet;
 	}*/
 
 	/********************** UNUSED 
@@ -1236,65 +1198,8 @@ public class VizpodServiceImpl extends RuleTemplate {
 			return iVizpodDao.findAsOf(uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
 	}*/
 
-		/********************** UNUSED **********************/
-	/*public MetaIdentifierHolder saveAs(Vizpod vizpod) throws Exception{
-		MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
-		MetaIdentifier ref = new MetaIdentifier();		
-		Vizpod vizNew = new Vizpod();
-		vizNew.setName(vizpod.getName()+"_copy");
-		vizNew.setActive(vizpod.getActive());		
-		vizNew.setDesc(vizpod.getDesc());		
-		vizNew.setTags(vizpod.getTags());	
-		vizNew.setDimension(vizpod.getDimension());
-		vizNew.setTitle(vizpod.getTitle());
-		vizNew.setFilterInfo(vizpod.getFilterInfo());
-		vizNew.setGroups(vizpod.getGroups());
-		vizNew.setKeys(vizpod.getKeys());
-		vizNew.setValues(vizpod.getValues());
-		vizNew.setSource(vizpod.getSource());
-		vizNew.setLimit(vizpod.getLimit());		
-		save(vizNew);
-		ref.setType(MetaType.vizpod);
-		ref.setUuid(vizNew.getUuid());
-		refMeta.setRef(ref);
-		return refMeta;
-	}*/
 
-		/********************** UNUSED **********************/
-	/*public List<BaseEntity> findList(List<? extends BaseEntity> vizpodList) {
-		List<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
-		for(BaseEntity vizpod : vizpodList)
-		{
-			BaseEntity baseEntity = new BaseEntity();
-			String id = vizpod.getId();
-			String uuid = vizpod.getUuid();
-			String version = vizpod.getVersion();
-			String name = vizpod.getName();
-			String desc = vizpod.getDesc();
-			String published=vizpod.getPublished();
-			MetaIdentifierHolder createdBy = vizpod.getCreatedBy();
-			String createdOn = vizpod.getCreatedOn();
-			String[] tags = vizpod.getTags();
-			String active = vizpod.getActive();
-			List<MetaIdentifierHolder> appInfo = vizpod.getAppInfo();
-			baseEntity.setId(id);
-			baseEntity.setUuid(uuid);
-			baseEntity.setVersion(version);
-			baseEntity.setName(name);
-			baseEntity.setDesc(desc);
-			baseEntity.setCreatedBy(createdBy);
-			baseEntity.setCreatedOn(createdOn);
-			baseEntity.setPublished(published);
-			baseEntity.setTags(tags);
-			baseEntity.setActive(active);
-			baseEntity.setAppInfo(appInfo);
-			baseEntityList.add(baseEntity);
-		}
-		return baseEntityList;
-	}*/
-		
-		
-		
+
 	public HttpServletResponse download(String execUuid, String execVersion, String saveOnRefresh, String format,
 			ExecParams execParams, String download, int offset, int limit, HttpServletResponse response, int rowLimit,
 			String sortBy, String order, String requestId, RunMode runMode) throws Exception {

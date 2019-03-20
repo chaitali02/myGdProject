@@ -86,18 +86,6 @@ public class DataQualExecServiceImpl extends BaseRuleExecTemplate {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public DataQualExec save(DataQualExec DataQualExec) {
-		if(DataQualExec.getAppInfo() == null)	{
-		MetaIdentifierHolder meta=securityServiceImpl.getAppInfo();
-		List<MetaIdentifierHolder> metaIdentifierHolderList=new ArrayList<MetaIdentifierHolder>();
-		metaIdentifierHolderList.add(meta);
-		DataQualExec.setAppInfo(metaIdentifierHolderList);
-		}
-		DataQualExec.setBaseEntity();
-		return iDataQualExecDao.save(DataQualExec);		
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public DataQualExec findLatestByUuid(String DataQualExecUUID) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
 		if(appUuid == null)
@@ -107,15 +95,7 @@ public class DataQualExecServiceImpl extends BaseRuleExecTemplate {
 		return iDataQualExecDao.findLatestByUuid(appUuid,DataQualExecUUID,new Sort(Sort.Direction.DESC, "version"));		
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public void  delete(String id){
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		DataQualExec DataQualExec = iDataQualExecDao.findOneById(appUuid,id);
-		DataQualExec.setActive("N");
-		iDataQualExecDao.save(DataQualExec);
-//		String ID=DataQualExec.getId();
-//		iDataQualExecDao.delete(ID);		
-	}*/
+	
 
 	/********************** UNUSED **********************/
 	/*public List<DataQualExec> findAllLatest()	{		
@@ -175,12 +155,7 @@ public class DataQualExecServiceImpl extends BaseRuleExecTemplate {
 	   return result;
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public DataQualExec findOneByUuidAndVersion(String uuid, String version){
-		//String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		//String appUuid = "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd";
-		return iDataQualExecDao.findOneByUuidAndVersion(uuid,version);
-	}*/
+
 
 	public DataQualExec resolveName(DataQualExec DataQualExec) throws JsonProcessingException {
 		String createdByRefUuid = DataQualExec.getCreatedBy().getRef().getUuid();
@@ -298,59 +273,6 @@ public class DataQualExecServiceImpl extends BaseRuleExecTemplate {
 			return iDataQualExecDao.findAsOf(uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public MetaIdentifierHolder saveAs(DataQualExec dqExec) {
-		MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
-		MetaIdentifier ref = new MetaIdentifier();		
-		DataQualExec dqExecNew = new DataQualExec();
-		dqExecNew.setName(dqExec.getName()+"_copy");
-		dqExecNew.setActive(dqExec.getActive());		
-		dqExecNew.setDesc(dqExec.getDesc());		
-		dqExecNew.setTags(dqExec.getTags());
-		dqExecNew.setStatusList(dqExec.getStatusList());
-		dqExecNew.setDependsOn(dqExec.getDependsOn());
-		dqExecNew.setExec(dqExec.getExec());
-		dqExecNew.setExecParams(dqExec.getExecParams());
-		dqExecNew.setResult(dqExec.getResult());
-		save(dqExecNew);
-		ref.setType(MetaType.dqExec);
-		ref.setUuid(dqExecNew.getUuid());
-		refMeta.setRef(ref);
-		return refMeta;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<BaseEntity> findList(List<? extends BaseEntity> dqExecList) {
-		List<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
-		for(BaseEntity dqExec : dqExecList)
-		{
-			BaseEntity baseEntity = new BaseEntity();
-			String id = dqExec.getId();
-			String uuid = dqExec.getUuid();
-			String version = dqExec.getVersion();
-			String name = dqExec.getName();
-			String desc = dqExec.getDesc();
-			String published=dqExec.getPublished();
-			MetaIdentifierHolder createdBy = dqExec.getCreatedBy();
-			String createdOn = dqExec.getCreatedOn();
-			String[] tags = dqExec.getTags();
-			String active = dqExec.getActive();
-			List<MetaIdentifierHolder> appInfo = dqExec.getAppInfo();
-			baseEntity.setId(id);
-			baseEntity.setUuid(uuid);
-			baseEntity.setVersion(version);
-			baseEntity.setName(name);
-			baseEntity.setDesc(desc);
-			baseEntity.setCreatedBy(createdBy);
-			baseEntity.setCreatedOn(createdOn);
-			baseEntity.setPublished(published);
-			baseEntity.setTags(tags);
-			baseEntity.setActive(active);
-			baseEntity.setAppInfo(appInfo);
-			baseEntityList.add(baseEntity);
-		}
-		return baseEntityList;
-	}*/
 
 	public MetaIdentifier getMetaIdByExecId(String execUuid, String execVersion) throws Exception {
 		/*String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();*/

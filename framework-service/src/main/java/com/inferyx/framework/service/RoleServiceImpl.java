@@ -83,16 +83,6 @@ public class RoleServiceImpl {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public Role findOneByUuidAndVersion(String uuid, String version) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iRoleDao.findOneByUuidAndVersion(appUuid, uuid, version);
-		}
-		return iRoleDao.findOneByUuidAndVersion(uuid, version);
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public Role findOneById(String id) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
@@ -102,33 +92,7 @@ public class RoleServiceImpl {
 		return iRoleDao.findOne(id);
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public void delete(String id) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		Role role = null;
-		if (appUuid != null) {
-			role = iRoleDao.findOneById(appUuid, id);
-		}
-		role = iRoleDao.findOne(id);
-		role.setActive("N");
-		iRoleDao.save(role);
-//		String ID = role.getId();
-//		iRoleDao.delete(ID);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Role save(Role role) throws Exception {
-		MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
-		List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
-		metaIdentifierHolderList.add(meta);
-		role.setAppInfo(metaIdentifierHolderList);
-		role.setBaseEntity();
-		Role roleDet = iRoleDao.save(role);
-		registerGraph.updateGraph((Object) roleDet, MetaType.role);
-		return roleDet;
-	}*/
-
+	
 	/********************** UNUSED **********************/
 	/*public List<Role> findAllVersion(String roleName) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
@@ -174,53 +138,5 @@ public class RoleServiceImpl {
 		return iRoleDao.findAsOf(uuid, asOf, new Sort(Sort.Direction.DESC, "version"));
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public MetaIdentifierHolder saveAs(Role role) throws Exception {
-		MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
-		MetaIdentifier ref = new MetaIdentifier();
-		Role roleNew = new Role();
-		roleNew.setName(role.getName() + "_copy");
-		roleNew.setActive(role.getActive());
-		roleNew.setDesc(role.getDesc());
-		roleNew.setTags(role.getTags());
-		roleNew.setPrivilgeInfo(role.getPrivilegeInfo());
-		save(roleNew);
-		ref.setType(MetaType.role);
-		ref.setUuid(roleNew.getUuid());
-		refMeta.setRef(ref);
-		return refMeta;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<BaseEntity> findList(List<? extends BaseEntity> roleList) {
-		List<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
-		for(BaseEntity role : roleList)
-		{
-			BaseEntity baseEntity = new BaseEntity();
-			String id = role.getId();
-			String uuid = role.getUuid();
-			String version = role.getVersion();
-			String name = role.getName();
-			String desc = role.getDesc();
-			MetaIdentifierHolder createdBy = role.getCreatedBy();
-			String createdOn = role.getCreatedOn();
-			String[] tags = role.getTags();
-			String active = role.getActive();
-			String published=role.getPublished();
-			List<MetaIdentifierHolder> appInfo = role.getAppInfo();
-			baseEntity.setId(id);
-			baseEntity.setUuid(uuid);
-			baseEntity.setVersion(version);
-			baseEntity.setName(name);
-			baseEntity.setDesc(desc);
-			baseEntity.setCreatedBy(createdBy);
-			baseEntity.setCreatedOn(createdOn);
-			baseEntity.setPublished(published);
-			baseEntity.setTags(tags);
-			baseEntity.setActive(active);
-			baseEntity.setAppInfo(appInfo);
-			baseEntityList.add(baseEntity);
-		}
-		return baseEntityList;
-	}*/
+		
 }

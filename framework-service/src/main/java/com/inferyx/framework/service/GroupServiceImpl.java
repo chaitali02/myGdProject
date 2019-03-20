@@ -80,11 +80,6 @@ public class GroupServiceImpl {
 		return iUserGroupDao.findLatestByUuid(appUuid,uuid,new Sort(Sort.Direction.DESC, "version"));	
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public Group findOneByUuidAndVersion(String uuid,String version){
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iUserGroupDao.findOneByUuidAndVersion(appUuid,uuid,version);
-	}*/
 
 	/********************** UNUSED **********************/
 	/*public Group findOneById(String id){
@@ -97,28 +92,6 @@ public class GroupServiceImpl {
 			return iUserGroupDao.findOne(id);
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public void  delete(String id){
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		Group userGroup = iUserGroupDao.findOneById(appUuid,id);
-		userGroup.setActive("N");
-		iUserGroupDao.save(userGroup);
-//		String ID=userGroup.getId();
-//		iUserGroupDao.delete(ID);		
-	}*/
-
-
-	/********************** UNUSED **********************/
-	/*public Group save(Group userGroup) throws Exception{
-		MetaIdentifierHolder meta=securityServiceImpl.getAppInfo();
-		List<MetaIdentifierHolder> metaIdentifierHolderList=new ArrayList<MetaIdentifierHolder>();
-		metaIdentifierHolderList.add(meta);
-		userGroup.setAppInfo(metaIdentifierHolderList);
-		userGroup.setBaseEntity();
-		Group group=iUserGroupDao.save(userGroup);
-		registerGraph.updateGraph((Object) group, MetaType.group);
-		return group;
-	}*/
 	
 	/*public List<Group> findAllVersion(String datapodName){
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
@@ -136,53 +109,6 @@ public class GroupServiceImpl {
 			return iUserGroupDao.findAsOf(uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public MetaIdentifierHolder saveAs(Group group) throws Exception {
-		MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
-		MetaIdentifier ref = new MetaIdentifier();		
-		Group groupNew = new Group();
-		groupNew.setName(group.getName()+"_copy");
-		groupNew.setActive(group.getActive());		
-		groupNew.setDesc(group.getDesc());		
-		groupNew.setTags(group.getTags());	
-		groupNew.setRoleInfo(group.getRoleInfo());
-		save(groupNew);
-		ref.setType(MetaType.group);
-		ref.setUuid(groupNew.getUuid());
-		refMeta.setRef(ref);
-		return refMeta;
-	}*/	
-
-	/********************** UNUSED **********************/
-	/*public List<BaseEntity> findList(List<? extends BaseEntity> groupList) {
-		List<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
-		for(BaseEntity group : groupList)
-		{
-			BaseEntity baseEntity = new BaseEntity();
-			String id = group.getId();
-			String uuid = group.getUuid();
-			String version = group.getVersion();
-			String name = group.getName();
-			String desc = group.getDesc();
-			String published=group.getPublished();
-			MetaIdentifierHolder createdBy = group.getCreatedBy();
-			String createdOn = group.getCreatedOn();
-			String[] tags = group.getTags();
-			String active = group.getActive();
-			List<MetaIdentifierHolder> appInfo = group.getAppInfo();
-			baseEntity.setId(id);
-			baseEntity.setUuid(uuid);
-			baseEntity.setVersion(version);
-			baseEntity.setName(name);
-			baseEntity.setDesc(desc);
-			baseEntity.setCreatedBy(createdBy);
-			baseEntity.setCreatedOn(createdOn);
-			baseEntity.setPublished(published);
-			baseEntity.setTags(tags);
-			baseEntity.setActive(active);
-			baseEntity.setAppInfo(appInfo);
-			baseEntityList.add(baseEntity);
-		}
-		return baseEntityList;
-	}*/
+		
+    
 }

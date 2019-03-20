@@ -84,22 +84,7 @@ public class ConditionServiceImpl {
 		return iConDao.findLatestByUuid(appUuid,uuid,new Sort(Sort.Direction.DESC, "version"));	
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public List<Condition> test(String param1) {	
-		return iConDao.test(param1);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Condition findOneByUuidAndVersion(String uuid,String version){
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid == null)
-		{
-		return iConDao.findOneByUuidAndVersion(appUuid,uuid,version);
-		}
-		else
-			return iConDao.findOneByUuidAndVersion(uuid,version);
-	}*/
-
+	
 	/********************** UNUSED **********************/
 	/*public Condition getOneByUuidAndVersion(String uuid,String version){
 		
@@ -118,29 +103,7 @@ public class ConditionServiceImpl {
 			
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public void  delete(String Id){
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		Condition condition = iConDao.findOneById(appUuid,Id);		
-		condition.setActive("N");
-		iConDao.save(condition);
-		String ID=condition.getId();
-		iConDao.delete(appUuid,ID);
-		condition.exportBaseProperty();
-	}*/
 	
-	/********************** UNUSED **********************/
-	/*public Condition save(Condition condition) throws Exception{
-		MetaIdentifierHolder meta=securityServiceImpl.getAppInfo();
-		List<MetaIdentifierHolder> metaIdentifierHolderList=new ArrayList<MetaIdentifierHolder>();
-		metaIdentifierHolderList.add(meta);
-		condition.setAppInfo(metaIdentifierHolderList);
-		condition.setBaseEntity();
-	    Condition condition1=iConDao.save(condition);
-	   // registerService.createGraph();
-		registerGraph.updateGraph((Object) condition1, MetaType.condition);
-		return condition1;
-	}*/
 	/********************** UNUSED **********************/
 	/*public List<Condition> findAllLatestActive() 	
 	{	  
@@ -201,54 +164,6 @@ public class ConditionServiceImpl {
 			return iConDao.findAsOf(uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public MetaIdentifierHolder saveAs(Condition condition) throws Exception{
-		MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
-		MetaIdentifier ref = new MetaIdentifier();		
-		Condition conNew = new Condition();
-		conNew.setName(condition.getName()+"_copy");
-		conNew.setActive(condition.getActive());		
-		conNew.setDesc(condition.getDesc());		
-		conNew.setTags(condition.getTags());	
-		conNew.setDependsOn(condition.getDependsOn());
-		conNew.setConditionInfo(conNew.getConditionInfo());
-		save(conNew);
-		ref.setType(MetaType.condition);
-		ref.setUuid(conNew.getUuid());
-		refMeta.setRef(ref);
-		return refMeta;
-	}*/
 
-	/********************** UNUSED **********************/
-	/*public List<BaseEntity> findList(List<? extends BaseEntity> conditionList) {
-		List<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
-		for(BaseEntity condition : conditionList)
-		{
-			BaseEntity baseEntity = new BaseEntity();
-			String id = condition.getId();
-			String uuid = condition.getUuid();
-			String version = condition.getVersion();
-			String name = condition.getName();
-			String desc = condition.getDesc();
-			String published=condition.getPublished();
-			MetaIdentifierHolder createdBy = condition.getCreatedBy();
-			String createdOn = condition.getCreatedOn();
-			String[] tags = condition.getTags();
-			String active = condition.getActive();
-			List<MetaIdentifierHolder> appInfo = condition.getAppInfo();
-			baseEntity.setId(id);
-			baseEntity.setUuid(uuid);
-			baseEntity.setVersion(version);
-			baseEntity.setName(name);
-			baseEntity.setDesc(desc);
-			baseEntity.setCreatedBy(createdBy);
-			baseEntity.setCreatedOn(createdOn);
-			baseEntity.setPublished(published);
-			baseEntity.setTags(tags);
-			baseEntity.setActive(active);
-			baseEntity.setAppInfo(appInfo);
-			baseEntityList.add(baseEntity);
-		}
-		return baseEntityList;
-	}*/
+	
 }

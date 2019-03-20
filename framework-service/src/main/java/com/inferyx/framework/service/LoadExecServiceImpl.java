@@ -66,18 +66,6 @@ public class LoadExecServiceImpl  extends BaseRuleExecTemplate {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public LoadExec save(LoadExec loadExec) {
-		if (loadExec.getAppInfo() == null) {
-			MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
-			List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
-			metaIdentifierHolderList.add(meta);
-			loadExec.setAppInfo(metaIdentifierHolderList);
-		}
-		loadExec.setBaseEntity();
-		return iLoadExecDao.save(loadExec);
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public LoadExec findLatestByUuid(String loadExecUUID) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
@@ -87,16 +75,7 @@ public class LoadExecServiceImpl  extends BaseRuleExecTemplate {
 		return iLoadExecDao.findLatestByUuid(appUuid, loadExecUUID, new Sort(Sort.Direction.DESC, "version"));
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public void delete(String id) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		LoadExec LoadExec = iLoadExecDao.findOneById(appUuid, id);
-		LoadExec.setActive("N");
-		iLoadExecDao.save(LoadExec);
-		String ID = LoadExec.getId();
-		iLoadExecDao.delete(ID);
-	}*/
-
+	
 
 	/********************** UNUSED **********************/
 /*	public List<LoadExec> findAllLatestActive() {

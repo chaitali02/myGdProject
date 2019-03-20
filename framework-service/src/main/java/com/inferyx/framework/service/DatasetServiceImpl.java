@@ -140,13 +140,7 @@ public class DatasetServiceImpl {
 			return iDatasetDao.findLatestByUuid(appUuid, uuid, new Sort(Sort.Direction.DESC, "version"));
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public List<Dataset> findOneForDelete(String id, String name, String type, String desc) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return iDatasetDao.findOneForDelete(appUuid, id, name, type, desc);
-
-	}*/
-
+	
 	public DataSet save(DataSet dataset) throws Exception {
 		MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
 		List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
@@ -215,17 +209,6 @@ public class DatasetServiceImpl {
 		DataSet datasetDet = save(dataset);
 		return datasetDet;
 	}
-
-	/********************** UNUSED **********************/
-	/*public Dataset findOneByUuidAndVersion(String uuid, String version) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid == null) {
-			return iDatasetDao.findOneByUuidAndVersion(uuid, version);
-		}
-		return iDatasetDao.findOneByUuidAndVersion(appUuid, uuid, version);
-	}*/	
-
 	/*public Dataset update(Dataset dataset) throws IOException {
 		dataset.exportBaseProperty();
 		Dataset datasetDet = iDatasetDao.save(dataset);
@@ -273,11 +256,6 @@ public class DatasetServiceImpl {
 //		String ID = dataset.getId();
 //		iDatasetDao.delete(ID);
 //		dataset.exportBaseProperty();
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Dataset> test(String param1) {
-		return iDatasetDao.test(param1);
 	}*/
 
 	/********************** UNUSED **********************/
@@ -392,58 +370,6 @@ public class DatasetServiceImpl {
 			return iDatasetDao.findAsOf(uuid, asOf, new Sort(Sort.Direction.DESC, "version"));
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public MetaIdentifierHolder saveAs(Dataset dataset) throws Exception {
-		MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
-		MetaIdentifier ref = new MetaIdentifier();		
-		Dataset datasetNew = new Dataset();
-		datasetNew.setName(dataset.getName()+"_copy");
-		datasetNew.setActive(dataset.getActive());		
-		datasetNew.setDesc(dataset.getDesc());		
-		datasetNew.setTags(dataset.getTags());
-		datasetNew.setAttributeInfo(dataset.getAttributeInfo());
-		datasetNew.setDependsOn(dataset.getDependsOn());
-		datasetNew.setGroupBy(dataset.getGroupBy());
-		datasetNew.setFilterInfo(dataset.getFilterInfo());
-		save(datasetNew);
-		ref.setType(MetaType.dataset);
-		ref.setUuid(datasetNew.getUuid());
-		refMeta.setRef(ref);
-		return refMeta;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<BaseEntity> findList(List<? extends BaseEntity> datasetList) {
-		List<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
-		for(BaseEntity dataset : datasetList)
-		{
-			BaseEntity baseEntity = new BaseEntity();
-			String id = dataset.getId();
-			String uuid = dataset.getUuid();
-			String version = dataset.getVersion();
-			String name = dataset.getName();
-			String desc = dataset.getDesc();
-			String published=dataset.getPublished();
-			MetaIdentifierHolder createdBy = dataset.getCreatedBy();
-			String createdOn = dataset.getCreatedOn();
-			String[] tags = dataset.getTags();
-			String active = dataset.getActive();
-			List<MetaIdentifierHolder> appInfo = dataset.getAppInfo();
-			baseEntity.setId(id);
-			baseEntity.setUuid(uuid);
-			baseEntity.setVersion(version);
-			baseEntity.setName(name);
-			baseEntity.setDesc(desc);
-			baseEntity.setCreatedBy(createdBy);
-			baseEntity.setCreatedOn(createdOn);
-			baseEntity.setPublished(published);
-			baseEntity.setTags(tags);
-			baseEntity.setActive(active);
-			baseEntity.setAppInfo(appInfo);
-			baseEntityList.add(baseEntity);
-		}
-		return baseEntityList;
-	}*/
 	
 	public String generateSql (DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 
 			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode) throws Exception {

@@ -80,20 +80,7 @@ public class ProfileGroupServiceImpl extends RuleGroupTemplate {
 		return iProfileGroupDao.findOneById(appUuid,id);
 		}
 		return iProfileGroupDao.findOne(id);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public ProfileGroup save(ProfileGroup ProfileGroup) throws Exception{	
-		MetaIdentifierHolder meta=securityServiceImpl.getAppInfo();
-		List<MetaIdentifierHolder> metaIdentifierHolderList=new ArrayList<MetaIdentifierHolder>();
-		metaIdentifierHolderList.add(meta);
-		ProfileGroup.setAppInfo(metaIdentifierHolderList);
-		ProfileGroup.setBaseEntity();
-		ProfileGroup dqgroup=iProfileGroupDao.save(ProfileGroup);	
-		registerGraph.updateGraph((Object) dqgroup, MetaType.profilegroup);
-		return dqgroup;
-	}*/
-	
+	}*
 	/*public ProfileGroup update(ProfileGroup ProfileGroup) throws IOException{
 		ProfileGroup.exportBaseProperty();
 		ProfileGroup dqGroup=iProfileGroupDao.save(ProfileGroup);
@@ -106,25 +93,7 @@ public class ProfileGroupServiceImpl extends RuleGroupTemplate {
 		return iProfileGroupDao.exists(id);
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public void  delete(String Id){
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		ProfileGroup ProfileGroup = iProfileGroupDao.findOneById(appUuid,Id);
-		String ID=ProfileGroup.getId();
-		iProfileGroupDao.delete(ID);
-		ProfileGroup.setBaseEntity();
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public ProfileGroup findOneByUuidAndVersion(String uuid, String version){
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid == null)
-		{
-		return iProfileGroupDao.findOneByUuidAndVersion(uuid,version);
-		}
-		else
-			return iProfileGroupDao.findOneByUuidAndVersion(appUuid,uuid,version);
-	}*/
+	
 
 	/********************** UNUSED **********************/
 	/*public ProfileGroup findLatestByUuid(String uuid){
@@ -176,56 +145,7 @@ public class ProfileGroupServiceImpl extends RuleGroupTemplate {
 			return iProfileGroupDao.findAsOf(uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public MetaIdentifierHolder saveAs(ProfileGroup profileGroup) throws Exception {
-		MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
-		MetaIdentifier ref = new MetaIdentifier();		
-		ProfileGroup profileGroupNew = new ProfileGroup();
-		profileGroupNew.setName(profileGroup.getName()+"_copy");
-		profileGroupNew.setActive(profileGroup.getActive());		
-		profileGroupNew.setDesc(profileGroup.getDesc());		
-		profileGroupNew.setTags(profileGroup.getTags());	
-		profileGroupNew.setRuleInfo(profileGroup.getRuleInfo());
-		profileGroupNew.setInParallel(profileGroup.getInParallel());
-		save(profileGroupNew);
-		ref.setType(MetaType.profilegroup);
-		ref.setUuid(profileGroupNew.getUuid());
-		refMeta.setRef(ref);
-		return refMeta;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<BaseEntity> findList(List<? extends BaseEntity> profileGroupList) {
-		List<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
-		for(BaseEntity profile : profileGroupList)
-		{
-			BaseEntity baseEntity = new BaseEntity();
-			String id = profile.getId();
-			String uuid = profile.getUuid();
-			String version = profile.getVersion();
-			String name = profile.getName();
-			String desc = profile.getDesc();
-			String published=profile.getPublished();
-			MetaIdentifierHolder createdBy = profile.getCreatedBy();
-			String createdOn = profile.getCreatedOn();
-			String[] tags = profile.getTags();
-			String active = profile.getActive();
-			List<MetaIdentifierHolder> appInfo = profile.getAppInfo();
-			baseEntity.setId(id);
-			baseEntity.setUuid(uuid);
-			baseEntity.setVersion(version);
-			baseEntity.setName(name);
-			baseEntity.setDesc(desc);
-			baseEntity.setCreatedBy(createdBy);
-			baseEntity.setCreatedOn(createdOn);
-			baseEntity.setPublished(published);
-			baseEntity.setTags(tags);
-			baseEntity.setActive(active);
-			baseEntity.setAppInfo(appInfo);
-			baseEntityList.add(baseEntity);
-		}
-		return baseEntityList;
-	}*/
+	
 
 	/**
 	 * 

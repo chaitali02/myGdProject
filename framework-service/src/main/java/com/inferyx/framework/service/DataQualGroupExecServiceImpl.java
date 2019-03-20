@@ -67,20 +67,6 @@ public class DataQualGroupExecServiceImpl  extends BaseGroupExecTemplate {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public DataQualGroupExec save(DataQualGroupExec DataQualGroupExec) throws Exception {
-		if(DataQualGroupExec.getAppInfo() == null)	{
-		MetaIdentifierHolder meta=securityServiceImpl.getAppInfo();
-		List<MetaIdentifierHolder> metaIdentifierHolderList=new ArrayList<MetaIdentifierHolder>();
-		metaIdentifierHolderList.add(meta);
-		DataQualGroupExec.setAppInfo(metaIdentifierHolderList);
-		}
-		DataQualGroupExec.setBaseEntity();
-		DataQualGroupExec dqexecgroup=iDataQualGroupExecDao.save(DataQualGroupExec);
-		registerGraph.updateGraph((Object) dqexecgroup, MetaType.dqgroupExec);
-		return dqexecgroup;		
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public DataQualGroupExec findLatestByUuid(String DataQualGroupExecUUID) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
 		if(appUuid == null)
@@ -90,15 +76,7 @@ public class DataQualGroupExecServiceImpl  extends BaseGroupExecTemplate {
 		return iDataQualGroupExecDao.findLatestByUuid(appUuid,DataQualGroupExecUUID,new Sort(Sort.Direction.DESC, "version"));		
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public void  delete(String id){
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		DataQualGroupExec DataQualGroupExec = iDataQualGroupExecDao.findOneById(appUuid,id);
-		DataQualGroupExec.setActive("N");
-		iDataQualGroupExecDao.save(DataQualGroupExec);
-//		String ID=DataQualGroupExec.getId();
-//		iDataQualGroupExecDao.delete(ID);		
-	}*/
+	
 
 	/********************** UNUSED **********************/
 	/*public List<DataQualGroupExec> findAllLatestActive() 	
@@ -129,17 +107,6 @@ public class DataQualGroupExecServiceImpl  extends BaseGroupExecTemplate {
 	   return result;
 	}*/
 
-	/********************** UNUSED 
-	 * @throws JsonProcessingException **********************/
-	/*public DataQualGroupExec findOneByUuidAndVersion(String uuid, String version){
-		 DataQualGroupExec DataQualGroupExecLatest;
-			String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-			if(appUuid != null)
-			{
-				return DataQualGroupExecLatest = iDataQualGroupExecDao.findOneByUuidAndVersion(appUuid,uuid,version);
-			}			
-				return DataQualGroupExecLatest = iDataQualGroupExecDao.findOneByUuidAndVersion(uuid,version);
-	}*/
 
 	public List<DataQualGroupExec> resolveNameGroup(List<DataQualGroupExec> DataQualGroupExec) throws JsonProcessingException {
 		List<DataQualGroupExec> DataQualGroupExecList = new ArrayList<>();
@@ -231,57 +198,7 @@ public class DataQualGroupExecServiceImpl  extends BaseGroupExecTemplate {
 			return iDataQualGroupExecDao.findAsOf(uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public MetaIdentifierHolder saveAs(DataQualGroupExec dqgroupExec) throws Exception {
-		MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
-		MetaIdentifier ref = new MetaIdentifier();		
-		DataQualGroupExec dqGroupExecNew = new DataQualGroupExec();
-		dqGroupExecNew.setName(dqgroupExec.getName()+"_copy");
-		dqGroupExecNew.setActive(dqgroupExec.getActive());		
-		dqGroupExecNew.setDesc(dqgroupExec.getDesc());		
-		dqGroupExecNew.setTags(dqgroupExec.getTags());
-		dqGroupExecNew.setStatusList(dqgroupExec.getStatusList());
-		dqGroupExecNew.setDependsOn(dqgroupExec.getDependsOn());
-		dqGroupExecNew.setExecList(dqgroupExec.getExecList());		
-		save(dqGroupExecNew);
-		ref.setType(MetaType.dqgroupExec);
-		ref.setUuid(dqGroupExecNew.getUuid());
-		refMeta.setRef(ref);
-		return refMeta;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<BaseEntity> findList(List<? extends BaseEntity> dqGroupExecList) {
-		List<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
-		for(BaseEntity dqgroup : dqGroupExecList)
-		{
-			BaseEntity baseEntity = new BaseEntity();
-			String id = dqgroup.getId();
-			String uuid = dqgroup.getUuid();
-			String version = dqgroup.getVersion();
-			String name = dqgroup.getName();
-			String desc = dqgroup.getDesc();
-			String published=dqgroup.getPublished();
-			MetaIdentifierHolder createdBy = dqgroup.getCreatedBy();
-			String createdOn = dqgroup.getCreatedOn();
-			String[] tags = dqgroup.getTags();
-			String active = dqgroup.getActive();
-			List<MetaIdentifierHolder> appInfo = dqgroup.getAppInfo();
-			baseEntity.setId(id);
-			baseEntity.setUuid(uuid);
-			baseEntity.setVersion(version);
-			baseEntity.setName(name);
-			baseEntity.setDesc(desc);
-			baseEntity.setCreatedBy(createdBy);
-			baseEntity.setCreatedOn(createdOn);
-			baseEntity.setPublished(published);
-			baseEntity.setTags(tags);
-			baseEntity.setActive(active);
-			baseEntity.setAppInfo(appInfo);
-			baseEntityList.add(baseEntity);
-		}
-		return baseEntityList;
-	}*/
+	
 
 	/********************** UNUSED **********************/
 //	public List<DataQualExec> findDataQualExecByDataqualGroupExec(String dataqualGroupExecUuid, String dataqualGroupExecVersion) throws JsonProcessingException {

@@ -60,37 +60,12 @@ public class ParamListServiceImpl {
 	/*public ParamList findLatestByUuid(String uuid){
 		return iParamListDao.findLatestByUuid(uuid,new Sort(Sort.Direction.DESC, "version"));	
 	}*/
-
-	/********************** UNUSED **********************/
-	/*public ParamList findOneByUuidAndVersion(String uuid,String version){
-		return iParamListDao.findOneByUuidAndVersion(uuid,version);
-	}*/
+	
 	/********************** UNUSED **********************/
 	/*public ParamList findOneById(String id){
 		return iParamListDao.findOne(id);
 	}*/
-	/********************** UNUSED **********************/
-	/*public void  delete(String Id){
-		ParamList paramlist = iParamListDao.findOne(Id);
-		paramlist.setActive("N");
-		iParamListDao.save(paramlist);
-//		String ID=application.getId();
-//		iApplicationDao.delete(ID);
-//		application.exportBaseProperty();
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public ParamList save(ParamList paramlist) throws Exception{
-		MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
-		List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
-		metaIdentifierHolderList.add(meta);
-		paramlist.setAppInfo(metaIdentifierHolderList);
-		paramlist.setBaseEntity();
-		ParamList app=iParamListDao.save(paramlist);
-		registerGraph.updateGraph((Object) app, MetaType.paramlist);
-		return app;
-	}*/
-
+	
 
 	/********************** UNUSED **********************/
 	/*public List<ParamList> findAllLatestActive() 	
@@ -109,54 +84,7 @@ public class ParamListServiceImpl {
 	   return result;
 	}*/
 
-	/********************** UNUSED **********************/	
-	/*public MetaIdentifierHolder saveAs(ParamList paramlist) throws Exception {
-		MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
-		MetaIdentifier ref = new MetaIdentifier();		
-		ParamList appNew = new ParamList();
-		appNew.setName(paramlist.getName()+"_copy");
-		appNew.setActive(paramlist.getActive());		
-		appNew.setDesc(paramlist.getDesc());		
-		appNew.setTags(paramlist.getTags());	
-		save(appNew);
-		ref.setType(MetaType.paramlist);
-		ref.setUuid(appNew.getUuid());
-		refMeta.setRef(ref);
-		return refMeta;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<BaseEntity> findList(List<? extends BaseEntity> paramList) {
-		List<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
-		for(BaseEntity paraml : paramList)
-		{
-			BaseEntity baseEntity = new BaseEntity();
-			String id = paraml.getId();
-			String uuid = paraml.getUuid();
-			String version = paraml.getVersion();
-			String name = paraml.getName();
-			String desc = paraml.getDesc();
-			String published=paraml.getPublished();
-			MetaIdentifierHolder createdBy = paraml.getCreatedBy();
-			String createdOn = paraml.getCreatedOn();
-			String[] tags = paraml.getTags();
-			String active = paraml.getActive();
-			List<MetaIdentifierHolder> appInfo = paraml.getAppInfo();
-			baseEntity.setId(id);
-			baseEntity.setUuid(uuid);
-			baseEntity.setVersion(version);
-			baseEntity.setName(name);
-			baseEntity.setDesc(desc);
-			baseEntity.setCreatedBy(createdBy);
-			baseEntity.setCreatedOn(createdOn);
-			baseEntity.setPublished(published);
-			baseEntity.setTags(tags);
-			baseEntity.setActive(active);
-			baseEntity.setAppInfo(appInfo);
-			baseEntityList.add(baseEntity);
-		}
-		return baseEntityList;
-	}*/
+	
 
 	/********************** UNUSED **********************/
 	/*public List<ParamListHolder> getParamListHolder(ParamSetHolder paramSetHolder){

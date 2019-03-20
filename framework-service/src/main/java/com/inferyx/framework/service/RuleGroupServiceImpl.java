@@ -87,35 +87,7 @@ public class RuleGroupServiceImpl extends RuleGroupTemplate {
 		return iRuleGroupDao.findOne(id);
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public RuleGroup save(RuleGroup ruleGroup) throws Exception{
-		MetaIdentifierHolder meta=securityServiceImpl.getAppInfo();
-		List<MetaIdentifierHolder> metaIdentifierHolderList=new ArrayList<MetaIdentifierHolder>();
-		metaIdentifierHolderList.add(meta);
-		ruleGroup.setAppInfo(metaIdentifierHolderList);
-		ruleGroup.setBaseEntity();
-		RuleGroup rulegroup=iRuleGroupDao.save(ruleGroup);
-		registerGraph.updateGraph((Object) rulegroup, MetaType.rulegroup);
-		return rulegroup;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public void  delete(String Id){
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		RuleGroup ruleGroup = iRuleGroupDao.findOneById(appUuid,Id);
-		ruleGroup.setActive("N");
-		iRuleGroupDao.save(ruleGroup);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public RuleGroup findOneByUuidAndVersion(String uuid, String version){
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid != null)
-		{
-		return iRuleGroupDao.findOneByUuidAndVersion(appUuid,uuid,version);
-		}
-		return iRuleGroupDao.findOneByUuidAndVersion(uuid,version);
-	}*/
+	
 
 	/********************** UNUSED **********************/
 	/*public RuleGroup findLatestByUuid(String uuid){
@@ -177,23 +149,6 @@ public class RuleGroupServiceImpl extends RuleGroupTemplate {
 		return (RuleGroupExec) commonServiceImpl.getOneByUuidAndVersion(ruleGroupExecUUID, ruleGroupExecVersion, MetaType.rulegroupExec.toString());
 	}
 
-	/********************** UNUSED **********************/
-	/*public MetaIdentifierHolder saveAs(RuleGroup ruleGroup) throws Exception {
-		MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
-		MetaIdentifier ref = new MetaIdentifier();		
-		RuleGroup ruleGroupNew = new RuleGroup();
-		ruleGroupNew.setName(ruleGroup.getName()+"_copy");
-		ruleGroupNew.setActive(ruleGroup.getActive());		
-		ruleGroupNew.setDesc(ruleGroup.getDesc());		
-		ruleGroupNew.setTags(ruleGroup.getTags());	
-		ruleGroupNew.setRuleInfo(ruleGroup.getRuleInfo());
-		ruleGroupNew.setInParallel(ruleGroup.getInParallel());
-		save(ruleGroupNew);
-		ref.setType(MetaType.rulegroup);
-		ref.setUuid(ruleGroupNew.getUuid());
-		refMeta.setRef(ref);
-		return refMeta;
-	}*/
 	
 	public void restart(String type,String uuid,String version, RunMode runMode) throws Exception{
 		//RuleGroupExec ruleGroupExec= ruleGroupExecServiceImpl.findOneByUuidAndVersion(uuid, version);

@@ -177,22 +177,8 @@ public class DatapodServiceImpl {
 	   return mongoTemplate.count(query, Datapod.class);
 	}
 
-	/********************** UNUSED **********************/
-	/*public Datapod findLatestByUuid(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid == null) {
-			return idatapodDao.findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version"));
-		}
-		return idatapodDao.findLatestByUuid(appUuid, uuid, new Sort(Sort.Direction.DESC, "version"));
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Datapod> findOneForDelete(String id, String name, String type, String desc) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		return idatapodDao.findOneForDelete(appUuid, id, name, type, desc);
-	}*/
-
+	
+	
 	public Datapod save(Datapod datapod) throws Exception {
 		MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
 		List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
@@ -204,22 +190,6 @@ public class DatapodServiceImpl {
 		return dp;
 	}	
 
-	/********************** UNUSED **********************/
-	/*public Datapod findOneByUuidAndVersion(String uuid, String version) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			if (StringUtils.isBlank(version)) {
-				return idatapodDao.findLatestByUuid(appUuid, uuid, new Sort(Sort.Direction.DESC, "version"));
-			}
-			return idatapodDao.findOneByUuidAndVersion(appUuid, uuid, version);
-		} else {
-			if (StringUtils.isBlank(version)) {
-				return idatapodDao.findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version"));
-			}
-			return idatapodDao.findOneByUuidAndVersion(uuid, version);
-		}
-	}*/
 
 	/********************** UNUSED **********************/
 	/*public Datapod getOneByUuidAndVersion(String uuid, String version) {
@@ -646,40 +616,6 @@ public class DatapodServiceImpl {
 			return idatapodDao.findAsOf(uuid, asOf, new Sort(Sort.Direction.DESC, "version"));
 	}*/
 
-	/********************** UNUSED 
-	 * @throws JsonProcessingException **********************/
-	/*public List<BaseEntity> findList(List<? extends BaseEntity> datapodList) {
-		List<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
-		for(BaseEntity datapod : datapodList)
-		{
-			BaseEntity baseEntity = new BaseEntity();
-			String id = datapod.getId();
-			String uuid = datapod.getUuid();
-			String version = datapod.getVersion();
-			String name = datapod.getName();
-			String desc = datapod.getDesc();
-			String published=datapod.getPublished();
-			MetaIdentifierHolder createdBy = datapod.getCreatedBy();
-			String createdOn = datapod.getCreatedOn();
-			String[] tags = datapod.getTags();
-			String active = datapod.getActive();
-			List<MetaIdentifierHolder> appInfo = datapod.getAppInfo();
-			baseEntity.setId(id);
-			baseEntity.setUuid(uuid);
-			baseEntity.setVersion(version);
-			baseEntity.setName(name);
-			baseEntity.setDesc(desc);
-			baseEntity.setCreatedBy(createdBy);
-			baseEntity.setCreatedOn(createdOn);
-			baseEntity.setPublished(published);
-			baseEntity.setTags(tags);
-			baseEntity.setActive(active);
-			baseEntity.setAppInfo(appInfo);
-			baseEntityList.add(baseEntity);
-		}
-		return baseEntityList;
-	}
-*/
 	public List<Datapod> searchDatapodByName(String name, String datasourceUuid) throws JsonProcessingException {	
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;		
@@ -700,26 +636,6 @@ public class DatapodServiceImpl {
 				}				
 		return result;
 }
-
-	/********************** UNUSED 
-	 * @throws JsonProcessingException **********************/
-	/*public MetaIdentifierHolder saveAs(Datapod datapod) throws Exception{
-		MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
-		MetaIdentifier ref = new MetaIdentifier();		
-		Datapod dpNew = new Datapod();
-		dpNew.setName(datapod.getName()+"_copy");
-		dpNew.setActive(datapod.getActive());		
-		dpNew.setDesc(datapod.getDesc());		
-		dpNew.setTags(datapod.getTags());
-		dpNew.setAttributes(datapod.getAttributes());
-		dpNew.setCache(datapod.getCache());
-		dpNew.setDatasource(datapod.getDatasource());
-		save(dpNew);
-		ref.setType(MetaType.datapod);
-		ref.setUuid(dpNew.getUuid());
-		refMeta.setRef(ref);
-		return refMeta;
-	}*/
 
 	@SuppressWarnings("unchecked")
 	public List<DatapodStatsHolder> getDatapodStats() throws JsonProcessingException {		

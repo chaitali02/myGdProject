@@ -132,17 +132,6 @@ public class FilterServiceImpl {
 	}
 
 	/********************** UNUSED **********************/
-  /* public Filter findOneByUuidAndVersion(String uuid,String version){
-	   String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid != null)
-		{
-          return iFilterDao.findOneByUuidAndVersion(appUuid, uuid,version);
-		}
-		else
-			return iFilterDao.findOneByUuidAndVersion(uuid,version);			
-    }*/
-
-	/********************** UNUSED **********************/
    /*public Filter getOneByUuidAndVersion(String uuid,String version){
 	   
      return iFilterDao.findOneByUuidAndVersion(uuid,version);
@@ -176,39 +165,8 @@ public class FilterServiceImpl {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public Filter save(Filter filter) throws Exception{
-		if(filter.getAppInfo() == null)
-		{
-		MetaIdentifierHolder meta=securityServiceImpl.getAppInfo();
-		List<MetaIdentifierHolder> metaIdentifierHolderList=new ArrayList<MetaIdentifierHolder>();
-		metaIdentifierHolderList.add(meta);
-		filter.setAppInfo(metaIdentifierHolderList);
-		}
-		filter.setBaseEntity();
-		Filter filterSave=iFilterDao.save(filter);
-		registerGraph.updateGraph((Object) filterSave, MetaType.filter);
-		return filterSave;
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public boolean isExists(String id){
 		return iFilterDao.exists(id);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public void  delete(String Id){
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		Filter filter = iFilterDao.findOneById(appUuid,Id);
-		filter.setActive("N");
-		iFilterDao.save(filter);
-//		String ID=filter.getId();
-//		iFilterDao.delete(ID);
-//		filter.exportBaseProperty();		
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Filter> test(String param1) {	
-		return iFilterDao.test(param1);
 	}*/
 
 	
@@ -255,57 +213,7 @@ public class FilterServiceImpl {
 	else
 		return iFilterDao.findAsOf(uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
 }*/
-
-/********************** UNUSED **********************/
-/*public MetaIdentifierHolder saveAs(Filter filter) throws Exception {
-	MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
-	MetaIdentifier ref = new MetaIdentifier();		
-	Filter filterNew = new Filter();
-	filterNew.setName(filter.getName()+"_copy");
-	filterNew.setActive(filter.getActive());		
-	filterNew.setDesc(filter.getDesc());		
-	filterNew.setTags(filter.getTags());	
-	filterNew.setDependsOn(filter.getDependsOn());
-	filterNew.setFilterInfo(filter.getFilterInfo());	
-	save(filterNew);
-	ref.setType(MetaType.filter);
-	ref.setUuid(filterNew.getUuid());
-	refMeta.setRef(ref);
-	return refMeta;
-}*/
-
-	/********************** UNUSED **********************/
-/*public List<BaseEntity> findList(List<? extends BaseEntity> filterList) {
-	List<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
-	for(BaseEntity filter : filterList)
-	{
-		BaseEntity baseEntity = new BaseEntity();
-		String id = filter.getId();
-		String uuid = filter.getUuid();
-		String version = filter.getVersion();
-		String name = filter.getName();
-		String desc = filter.getDesc();
-		String published=filter.getPublished();
-		MetaIdentifierHolder createdBy = filter.getCreatedBy();
-		String createdOn = filter.getCreatedOn();
-		String[] tags = filter.getTags();
-		String active = filter.getActive();
-		List<MetaIdentifierHolder> appInfo = filter.getAppInfo();
-		baseEntity.setId(id);
-		baseEntity.setUuid(uuid);
-		baseEntity.setVersion(version);
-		baseEntity.setName(name);
-		baseEntity.setDesc(desc);
-		baseEntity.setCreatedBy(createdBy);
-		baseEntity.setCreatedOn(createdOn);
-		baseEntity.setPublished(published);
-		baseEntity.setTags(tags);
-		baseEntity.setActive(active);
-		baseEntity.setAppInfo(appInfo);
-		baseEntityList.add(baseEntity);
-	}
-	return baseEntityList;
-}*/
+	
 }
 
 	

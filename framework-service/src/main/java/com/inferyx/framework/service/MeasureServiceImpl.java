@@ -82,26 +82,7 @@ public class MeasureServiceImpl {
 		}
 		return iMeasureDao.findLatestByUuid(appUuid, uuid, new Sort(Sort.Direction.DESC, "version"));
 	}*/
-
-	/********************** UNUSED **********************/
-	/*public Measure save(Measure measure) throws Exception {
-		MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
-		List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
-		metaIdentifierHolderList.add(meta);
-		measure.setAppInfo(metaIdentifierHolderList);
-		measure.setBaseEntity();
-		Measure measureDet=iMeasureDao.save(measure);
-		registerGraph.updateGraph((Object) measureDet, MetaType.measure);
-		return measureDet;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Measure findOneByUuidAndVersion(String uuid, String version) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		;
-		return iMeasureDao.findOneByUuidAndVersion(appUuid, uuid, version);
-	}*/
-
+	
 	/*public Measure update(Measure measure) throws IOException {
 		measure.exportBaseProperty();
 		Measure measureDet=iMeasureDao.save(measure);
@@ -114,16 +95,7 @@ public class MeasureServiceImpl {
 		return iMeasureDao.exists(id);
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public void delete(String id) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		;
-		Measure measure = iMeasureDao.findOneById(appUuid, id);
-		measure.setActive("N");
-		iMeasureDao.save(measure);
-//		String ID = measure.getId();
-//		iMeasureDao.delete(ID);
-	}*/
+	
 
 	/********************** UNUSED **********************/
 	/*public Measure findOneById(String id) {
@@ -173,53 +145,5 @@ public class MeasureServiceImpl {
 			return iMeasureDao.findAsOf(uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public MetaIdentifierHolder saveAs(Measure measure) throws Exception {
-		MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
-		MetaIdentifier ref = new MetaIdentifier();		
-		Measure measureNew = new Measure();
-		measureNew.setName(measure.getName()+"_copy");
-		measureNew.setActive(measure.getActive());		
-		measureNew.setDesc(measure.getDesc());		
-		measureNew.setTags(measure.getTags());	
-		measureNew.setMeasureInfo(measure.getMeasureInfo());
-		save(measureNew);
-		ref.setType(MetaType.measure);
-		ref.setUuid(measureNew.getUuid());
-		refMeta.setRef(ref);
-		return refMeta;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<BaseEntity> findList(List<? extends BaseEntity> measureList) {
-		List<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
-		for(BaseEntity measure : measureList)
-		{
-			BaseEntity baseEntity = new BaseEntity();
-			String id = measure.getId();
-			String uuid = measure.getUuid();
-			String version = measure.getVersion();
-			String name = measure.getName();
-			String desc = measure.getDesc();
-			String published=measure.getPublished();
-			MetaIdentifierHolder createdBy = measure.getCreatedBy();
-			String createdOn = measure.getCreatedOn();
-			String[] tags = measure.getTags();
-			String active = measure.getActive();
-			List<MetaIdentifierHolder> appInfo = measure.getAppInfo();
-			baseEntity.setId(id);
-			baseEntity.setUuid(uuid);
-			baseEntity.setVersion(version);
-			baseEntity.setName(name);
-			baseEntity.setDesc(desc);
-			baseEntity.setCreatedBy(createdBy);
-			baseEntity.setCreatedOn(createdOn);
-			baseEntity.setPublished(published);
-			baseEntity.setTags(tags);
-			baseEntity.setActive(active);
-			baseEntity.setAppInfo(appInfo);
-			baseEntityList.add(baseEntity);
-		}
-		return baseEntityList;
-	}*/
+	
 }

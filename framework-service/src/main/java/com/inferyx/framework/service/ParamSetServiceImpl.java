@@ -112,32 +112,12 @@ public class ParamSetServiceImpl {
 		return iParamSetDao.findLatestByUuid(uuid,new Sort(Sort.Direction.DESC, "version"));	
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public ParamSet findOneByUuidAndVersion(String uuid,String version){
-		return iParamSetDao.findOneByUuidAndVersion(uuid,version);
-	}*/
+	
 	/********************** UNUSED **********************/
 	/*public ParamSet findOneById(String id){
 		return iParamSetDao.findOne(id);
 	}*/
-	/********************** UNUSED **********************/
-	/*public void  delete(String Id){
-		ParamSet paramlist = iParamSetDao.findOne(Id);
-		paramlist.setActive("N");
-		iParamSetDao.save(paramlist);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public ParamSet save(ParamSet paramSet) throws Exception{
-		MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
-		List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
-		metaIdentifierHolderList.add(meta);
-		paramSet.setAppInfo(metaIdentifierHolderList);
-		paramSet.setBaseEntity();
-		ParamSet app=iParamSetDao.save(paramSet);
-		registerGraph.updateGraph((Object) app, MetaType.paramset);
-		return app;
-	}*/
+	
 	
 	public List<ParamSet> resolveName(List<ParamSet> paramSetList) throws JsonProcessingException {
 		List<ParamSet> paramSet = new ArrayList<ParamSet>(); 
@@ -202,54 +182,6 @@ public class ParamSetServiceImpl {
 	   return result;
 	}*/
 
-	/********************** UNUSED **********************/	
-	/*public MetaIdentifierHolder saveAs(ParamSet paramset) throws Exception {
-		MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
-		MetaIdentifier ref = new MetaIdentifier();		
-		ParamSet appNew = new ParamSet();
-		appNew.setName(paramset.getName()+"_copy");
-		appNew.setActive(paramset.getActive());		
-		appNew.setDesc(paramset.getDesc());		
-		appNew.setTags(paramset.getTags());	
-		save(appNew);
-		ref.setType(MetaType.paramset);
-		ref.setUuid(appNew.getUuid());
-		refMeta.setRef(ref);
-		return refMeta;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<BaseEntity> findList(List<? extends BaseEntity> paramSetList) {
-		List<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
-		for(BaseEntity paramSet : paramSetList)
-		{
-			BaseEntity baseEntity = new BaseEntity();
-			String id = paramSet.getId();
-			String uuid = paramSet.getUuid();
-			String version = paramSet.getVersion();
-			String name = paramSet.getName();
-			String desc = paramSet.getDesc();
-			String published=paramSet.getPublished();
-			MetaIdentifierHolder createdBy = paramSet.getCreatedBy();
-			String createdOn = paramSet.getCreatedOn();
-			String[] tags = paramSet.getTags();
-			String active = paramSet.getActive();
-			List<MetaIdentifierHolder> appInfo = paramSet.getAppInfo();
-			baseEntity.setId(id);
-			baseEntity.setUuid(uuid);
-			baseEntity.setVersion(version);
-			baseEntity.setName(name);
-			baseEntity.setDesc(desc);
-			baseEntity.setCreatedBy(createdBy);
-			baseEntity.setCreatedOn(createdOn);
-			baseEntity.setPublished(published);
-			baseEntity.setTags(tags);
-			baseEntity.setActive(active);
-			baseEntity.setAppInfo(appInfo);
-			baseEntityList.add(baseEntity);
-		}
-		return baseEntityList;
-	}*/
 	
    public List<ParamSet> getParamSetByAlgorithm (String algorithmUUID, String algorithmVersion, String isHyperParam) throws JsonProcessingException {		
 		Algorithm algo = (Algorithm) commonServiceImpl.getLatestByUuid(algorithmUUID, MetaType.algorithm.toString());

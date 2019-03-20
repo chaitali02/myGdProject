@@ -71,10 +71,7 @@ public class RelationServiceImpl {
 	
 	static final Logger logger = Logger.getLogger(RelationServiceImpl.class);
 
-	/********************** UNUSED **********************/
-	/*public Relation findLatest() {
-		return resolveName(iRelationDao.findLatest(new Sort(Sort.Direction.DESC, "version")));
-	}*/
+	
 	/********************** UNUSED **********************/
 	/*public Relation findOneById(String id) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
@@ -83,19 +80,6 @@ public class RelationServiceImpl {
 			return iRelationDao.findOneById(appUuid, id);
 		} else
 			return iRelationDao.findOne(id);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Relation findOneByUuidAndVersion(String uuid, String version) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-				if (appUuid != null) {
-		return iRelationDao.findOneByUuidAndVersion(appUuid, uuid, version);
-				}
-				else
-				{
-					return iRelationDao.findOneByUuidAndVersion(uuid, version);
-				}
 	}*/
 
 	/********************** UNUSED **********************/
@@ -114,19 +98,6 @@ public class RelationServiceImpl {
 		return iRelationDao.findLatestByUuid(appUuid, uuid, new Sort(Sort.Direction.DESC, "version"));
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public Relation save(Relation relation) throws Exception {
-		MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
-		List<MetaIdentifierHolder> metaIdentifierHolderList = new ArrayList<MetaIdentifierHolder>();
-		metaIdentifierHolderList.add(meta);
-		relation.setAppInfo(metaIdentifierHolderList);
-		relation.setBaseEntity();
-		Relation relationDet=iRelationDao.save(relation);
-		registerGraph.updateGraph((Object) relationDet, MetaType.relation);
-		return relationDet;
-	}*/
-
-
 	/*public Relation update(Relation relation) throws IOException {
 		relation.exportBaseProperty();
 		Relation relationDet=iRelationDao.save(relation);
@@ -139,18 +110,6 @@ public class RelationServiceImpl {
 		return iRelationDao.exists(id);
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public void delete(String id) {
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
-		Relation relation = iRelationDao.findOneById(appUuid, id);
-		relation.setActive("N");
-		iRelationDao.save(relation);
-//		String ID = relation.getId();
-//		iRelationDao.delete(ID);
-//		relation.exportBaseProperty();
-//		logger.info(relation);
-//		// iRelationDao.save(relation);
-	}*/
 
 	public List<Relation> findRelationByDatapod(String datapodUUID) {
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
@@ -301,37 +260,5 @@ public class RelationServiceImpl {
 		return refMeta;
 	}*/
 
-	/********************** UNUSED **********************/	
-	/*public List<BaseEntity> findList(List<? extends BaseEntity> relationList) {
-		List<BaseEntity> baseEntityList = new ArrayList<BaseEntity>();
-		for(BaseEntity relation : relationList)
-		{
-			BaseEntity baseEntity = new BaseEntity();
-			String id = relation.getId();
-			String uuid = relation.getUuid();
-			String version = relation.getVersion();
-			String name = relation.getName();
-			String desc = relation.getDesc();
-			String published=relation.getPublished();
-			MetaIdentifierHolder createdBy = relation.getCreatedBy();
-			String createdOn = relation.getCreatedOn();
-			String[] tags = relation.getTags();
-			String active = relation.getActive();
-			List<MetaIdentifierHolder> appInfo = relation.getAppInfo();
-			baseEntity.setId(id);
-			baseEntity.setUuid(uuid);
-			baseEntity.setVersion(version);
-			baseEntity.setName(name);
-			baseEntity.setDesc(desc);
-			baseEntity.setCreatedBy(createdBy);
-			baseEntity.setCreatedOn(createdOn);
-			baseEntity.setPublished(published);
-			baseEntity.setTags(tags);
-			baseEntity.setActive(active);
-			baseEntity.setAppInfo(appInfo);
-			baseEntityList.add(baseEntity);
-		}
-		return baseEntityList;
-	}*/
 
 }

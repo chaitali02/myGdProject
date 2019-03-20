@@ -1,7 +1,7 @@
 {
-	"uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71124",
+	"uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71126",
 	"version": "1552115484",
-	"name": "dq_rule_detail",
+	"name": "dq_result_detail",
 	"desc": null,
 	"createdBy": {
 		"ref": {
@@ -21,22 +21,20 @@
 	{
             "ref" : {
                 "type" : "application",
-                "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
+                "uuid" : "4be92a58-3e24-410c-ab09-e1e719c1db81"
             }
         }
     ],
 	"publicFlag": "Y",
-	"datasource": {
-		"ref": {
-			"type": "datasource",
-			"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73020",
-			"version": null,
-			"name": "file_data"
-		},
-		"value": null
-	},
+  "datasource": {
+    "ref": {
+      "type": "datasource",
+  	  "uuid": "4f65d730-866c-417d-9305-472cd82599db",
+      "version": "1553031028"
+    }
+  },
 	"cache": "Y",
-	 "attributes" : [ 
+"attributes" : [ 
         {
             "attributeId" : 0,
             "displaySeq" : 0,
