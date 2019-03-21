@@ -845,7 +845,7 @@ public class DQOperator implements IParsable {
 					// added filter by vaibhav
 			   	  .append(ConstantsUtil.CASE_WHEN).append(BRACKET_OPEN).append(STDDEV).append(BRACKET_OPEN)
 				  .append(TOTAL_FAIL_COUNT).append(BRACKET_CLOSE).append(EQUAL_TO).append("'NaN'").append(OR)
-				  .append(STDDEV).append(BRACKET_OPEN).append(TOTAL_FAIL_COUNT).append(BRACKET_CLOSE).append(EQUAL_TO)
+				  .append(STDDEV).append(BRACKET_OPEN).append(TOTAL_FAIL_COUNT).append(BRACKET_CLOSE).append(" IS ")
 				  .append(NULL).append(BRACKET_CLOSE).append(ONLY_THEN).append("1").append(ONLY_ELSE).append(STDDEV)
 				  .append(BRACKET_OPEN).append(TOTAL_FAIL_COUNT).append(BRACKET_CLOSE).append(ONLY_END)
 				  .append(AS).append(STD_DEV_FAIL)
