@@ -1,0 +1,144 @@
+{
+
+  "uuid" : "f70c2194-159d-4248-a3f6-835e5fed5b6e",
+  "version" : "1553169418",
+  "name" : "dqr_dim_customer_phone_not_null_check",
+  "desc" : null,
+  "createdBy" : {
+    "ref" : {
+      "type" : "user",
+      "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+      "version" : "1464977196",
+      "name" : "ypalrecha"
+    },
+    "value" : null
+  },
+  "createdOn" : "Thu Mar 21 17:26:58 IST 2019",
+  "tags" : null,
+  "active" : "Y",
+  "locked" : "N",
+  "published" : "N",
+  "appInfo" : [ {
+    "ref" : {
+      "type" : "application",
+      "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+      "version" : "1548315769",
+      "name" : null
+    },
+    "value" : null
+  }, {
+    "ref" : {
+      "type" : "application",
+      "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+      "version" : "1548315769",
+      "name" : null
+    },
+    "value" : null
+  }, {
+    "ref" : {
+      "type" : "application",
+      "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+      "version" : "1548315769",
+      "name" : null
+    },
+    "value" : null
+  }, {
+    "ref" : {
+      "type" : "application",
+      "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+      "version" : "1548315769",
+      "name" : null
+    },
+    "value" : null
+  }, {
+    "ref" : {
+      "type" : "application",
+      "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+      "version" : "1548315769",
+      "name" : null
+    },
+    "value" : null
+  }, {
+    "ref" : {
+      "type" : "application",
+      "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+      "version" : "1548315769",
+      "name" : null
+    },
+    "value" : null
+  }, {
+    "ref" : {
+      "type" : "application",
+      "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+      "version" : "1548315769",
+      "name" : null
+    },
+    "value" : null
+  }, {
+    "ref" : {
+      "type" : "application",
+      "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+      "version" : "1548315769",
+      "name" : null
+    },
+    "value" : null
+  }, {
+    "ref" : {
+      "type" : "application",
+      "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+      "version" : "1548315769",
+      "name" : null
+    },
+    "value" : null
+  } ],
+  "publicFlag" : "N",
+  "abortCondition" : null,
+  "target" : null,
+  "attribute" : {
+    "ref" : {
+      "type" : "datapod",
+      "uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849",
+      "version" : "1488623492",
+      "name" : null
+    },
+    "value" : null,
+    "attrId" : "8",
+    "attrName" : "phone",
+    "attrType" : null,
+    "attrUnitType" : null,
+    "function" : null
+  },
+  "dependsOn" : {
+    "ref" : {
+      "type" : "datapod",
+      "uuid" : "57f76265-e1f5-41b8-afa4-cd06197bf849",
+      "version" : "1488623492",
+      "name" : null
+    },
+    "value" : null
+  },
+  "duplicateKeyCheck" : "N",
+  "nullCheck" : "Y",
+  "valueCheck" : [ ],
+  "rangeCheck" : { },
+  "dataTypeCheck" : "",
+  "dateFormatCheck" : null,
+  "customFormatCheck" : null,
+  "lengthCheck" : { },
+  "refIntegrityCheck" : {
+    "dependsOn" : null,
+    "targetAttr" : null
+  },
+  "filterInfo" : null,
+  "userInfo" : null,
+  "thresholdInfo" : {
+    "low" : "25",
+    "medium" : "50",
+    "high" : "75",
+    "type" : "NUMERIC"
+  },
+  "domainCheck" : null,
+  "blankSpaceCheck" : null,
+  "expressionCheck" : null,
+  "caseCheck" : null
+}

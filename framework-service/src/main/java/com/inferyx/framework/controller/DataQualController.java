@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
+import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.DataQualGroupExec;
 import com.inferyx.framework.domain.ExecParams;
@@ -253,4 +254,15 @@ public class DataQualController {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		return dataQualServiceImpl.getResultSummary(execUuid, execVersion, offset, limit, sortBy, order, requestId, runMode);
 	}
+	
+	@RequestMapping(value = "/createDQRuleForDatapod", method = RequestMethod.GET)
+	public List<BaseEntity> createDQRuleForDatapod(
+			@RequestParam(value = "uuid") String datapodUuid,
+			@RequestParam(value = "version") String datapodVersion,
+			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
+		RunMode runMode = Helper.getExecutionMode(mode);
+		return dataQualServiceImpl.createDQRuleForDatapod(datapodUuid,datapodVersion, runMode);
+	}
+	
+	
 }

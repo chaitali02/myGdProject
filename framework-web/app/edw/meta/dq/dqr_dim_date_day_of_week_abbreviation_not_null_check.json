@@ -1,0 +1,152 @@
+{
+
+  "uuid" : "0dcf7b0b-b96f-4a8d-b5c2-46287525dd33",
+  "version" : "1553169469",
+  "name" : "dqr_dim_date_day_of_week_abbreviation_not_null_check",
+  "desc" : null,
+  "createdBy" : {
+    "ref" : {
+      "type" : "user",
+      "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+      "version" : "1464977196",
+      "name" : "ypalrecha"
+    },
+    "value" : null
+  },
+  "createdOn" : "Thu Mar 21 17:27:49 IST 2019",
+  "tags" : null,
+  "active" : "Y",
+  "locked" : "N",
+  "published" : "N",
+  "appInfo" : [ {
+    "ref" : {
+      "type" : "application",
+      "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+      "version" : "1548315769",
+      "name" : null
+    },
+    "value" : null
+  }, {
+    "ref" : {
+      "type" : "application",
+      "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+      "version" : "1548315769",
+      "name" : null
+    },
+    "value" : null
+  }, {
+    "ref" : {
+      "type" : "application",
+      "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+      "version" : "1548315769",
+      "name" : null
+    },
+    "value" : null
+  }, {
+    "ref" : {
+      "type" : "application",
+      "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+      "version" : "1548315769",
+      "name" : null
+    },
+    "value" : null
+  }, {
+    "ref" : {
+      "type" : "application",
+      "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+      "version" : "1548315769",
+      "name" : null
+    },
+    "value" : null
+  }, {
+    "ref" : {
+      "type" : "application",
+      "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+      "version" : "1548315769",
+      "name" : null
+    },
+    "value" : null
+  }, {
+    "ref" : {
+      "type" : "application",
+      "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+      "version" : "1548315769",
+      "name" : null
+    },
+    "value" : null
+  }, {
+    "ref" : {
+      "type" : "application",
+      "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+      "version" : "1548315769",
+      "name" : null
+    },
+    "value" : null
+  }, {
+    "ref" : {
+      "type" : "application",
+      "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+      "version" : "1548315769",
+      "name" : null
+    },
+    "value" : null
+  }, {
+    "ref" : {
+      "type" : "application",
+      "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+      "version" : "1548315769",
+      "name" : null
+    },
+    "value" : null
+  } ],
+  "publicFlag" : "N",
+  "abortCondition" : null,
+  "target" : null,
+  "attribute" : {
+    "ref" : {
+      "type" : "datapod",
+      "uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+      "version" : "1489302919",
+      "name" : null
+    },
+    "value" : null,
+    "attrId" : "9",
+    "attrName" : "day_of_week_abbreviation",
+    "attrType" : null,
+    "attrUnitType" : null,
+    "function" : null
+  },
+  "dependsOn" : {
+    "ref" : {
+      "type" : "datapod",
+      "uuid" : "c3d30be3-3a20-48ab-9f93-7acb0a9f8ea5",
+      "version" : "1489302919",
+      "name" : null
+    },
+    "value" : null
+  },
+  "duplicateKeyCheck" : "N",
+  "nullCheck" : "Y",
+  "valueCheck" : [ ],
+  "rangeCheck" : { },
+  "dataTypeCheck" : "",
+  "dateFormatCheck" : null,
+  "customFormatCheck" : null,
+  "lengthCheck" : { },
+  "refIntegrityCheck" : {
+    "dependsOn" : null,
+    "targetAttr" : null
+  },
+  "filterInfo" : null,
+  "userInfo" : null,
+  "thresholdInfo" : {
+    "low" : "25",
+    "medium" : "50",
+    "high" : "75",
+    "type" : "NUMERIC"
+  },
+  "domainCheck" : null,
+  "blankSpaceCheck" : null,
+  "expressionCheck" : null,
+  "caseCheck" : null
+}

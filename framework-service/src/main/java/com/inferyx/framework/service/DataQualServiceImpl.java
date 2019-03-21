@@ -10,7 +10,9 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -23,20 +25,27 @@ import java.util.concurrent.FutureTask;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.spark.sql.Row;
 import org.codehaus.jettison.json.JSONException;
+import org.datavec.api.transform.quality.DataQualityAnalysis;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inferyx.framework.common.DQInfo;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.dao.IDataQualDao;
+import com.inferyx.framework.domain.Attribute;
+import com.inferyx.framework.domain.AttributeRefHolder;
+import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.DagExec;
@@ -51,10 +60,13 @@ import com.inferyx.framework.domain.Filter;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.RefIntegrity;
 import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.domain.Threshold;
 import com.inferyx.framework.enums.AbortConditionType;
 import com.inferyx.framework.enums.RunMode;
+import com.inferyx.framework.enums.ThresholdType;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.operator.DQOperator;
@@ -82,6 +94,14 @@ public class DataQualServiceImpl extends RuleTemplate {
 	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	Engine engine;
+	
+	public IDataQualDao getiDataQualDao() {
+		return iDataQualDao;
+	}
+
+	public void setiDataQualDao(IDataQualDao iDataQualDao) {
+		this.iDataQualDao = iDataQualDao;
+	}
 
 	Map<String, String> requestMap = new HashMap<String, String>();
 
@@ -812,4 +832,88 @@ public class DataQualServiceImpl extends RuleTemplate {
 	 * datapodRef.getVersion(), datapodRef.getType().toString()); return
 	 * commonServiceImpl.getDatasourceByDatapod(datapod); }
 	 */
+
+	public List<BaseEntity> createDQRuleForDatapod(String datapodUuid, String datapodVersion, RunMode runMode)
+			throws JSONException, ParseException, IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException,
+			NullPointerException, IOException {
+		// TODO Auto-generated method stub
+		ObjectMapper mapper = new ObjectMapper();
+
+		Datapod dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodUuid, datapodVersion,
+				MetaType.datapod.toString(), "Y");
+		MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+		dependsOn.setRef(new MetaIdentifier());
+		dependsOn.getRef().setUuid(dp.getUuid());
+		dependsOn.getRef().setType(MetaType.datapod);
+		dependsOn.getRef().setVersion(dp.getVersion());
+
+		MetaIdentifier miIdentifier = new MetaIdentifier();
+		miIdentifier.setUuid(dp.getUuid());
+		miIdentifier.setType(MetaType.datapod);
+		miIdentifier.setVersion(dp.getVersion());
+		List<Attribute> attrList = dp.getAttributes();
+		List<BaseEntity> baseEntities = new ArrayList<BaseEntity>();
+		MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
+		List<MetaIdentifierHolder> appInfo = new ArrayList<MetaIdentifierHolder>();
+
+		for (Attribute attr : attrList) {
+			DataQual dataqual = new DataQual();
+			dataqual.setName("dqr_" + dp.getName() + "_" + attr.getName() + "_not_null_check");
+
+			dataqual.setPublicFlag("N");
+			dataqual.setPublicFlag("N");
+			dataqual.setDependsOn(dependsOn);
+
+			AttributeRefHolder attributeRefHolder = new AttributeRefHolder();
+			attributeRefHolder.setRef(miIdentifier);
+			attributeRefHolder.setAttrId(String.valueOf(attr.getAttributeId()));
+			attributeRefHolder.setAttrName(attr.getName());
+
+			dataqual.setAttribute(attributeRefHolder);
+			dataqual.setValueCheck(new ArrayList<String>());
+			dataqual.setDataTypeCheck(new String());
+			dataqual.setCaseCheck(null);
+			dataqual.setDateFormatCheck(null);
+
+			dataqual.setDuplicateKeyCheck("N");
+			dataqual.setNullCheck("Y");
+			appInfo.add(meta);
+			dataqual.setAppInfo(appInfo);
+			dataqual.setRangeCheck(new HashMap<String, String>());
+			dataqual.setLengthCheck(new HashMap<String, Long>());
+			dataqual.setRefIntegrityCheck(new RefIntegrity());
+			dataqual.setActive("Y");
+			dataqual.setLocked("N");
+
+			Threshold thresholdInfo = new Threshold();
+			thresholdInfo.setHigh("75");
+			thresholdInfo.setLow("25");
+			thresholdInfo.setMedium("50");
+			thresholdInfo.setType(ThresholdType.NUMERIC);
+			dataqual.setThresholdInfo(thresholdInfo);
+			Object obje = dataqual;
+			Object metaObj = mapper.convertValue(obje, Helper.getDomainClass(MetaType.dq));
+
+			// }
+			Helper.getDomainClass(MetaType.dq).getSuperclass().getMethod("setBaseEntity").invoke(metaObj);
+
+			Object iDao = commonServiceImpl.getClass().getMethod("get" + Helper.getDaoClass(MetaType.dq))
+					.invoke(commonServiceImpl);
+			BaseEntity objDet = (BaseEntity) (iDao.getClass().getMethod("save", Object.class).invoke(iDao, metaObj));
+		
+			String jsonInString =  mapper.writerWithDefaultPrettyPrinter().writeValueAsString(metaObj);
+	    	String qq =jsonInString.substring(2, jsonInString.indexOf(",")+1);
+			
+	    	jsonInString=jsonInString.replace(qq, "");
+			FileUtils.writeStringToFile(new File("/home/gridedge-1/git/inferyx/framework-web/app/edw/meta/dqnew/"+dataqual.getName()+".json"), jsonInString);
+		
+		   //	registerGraph.updateGraph((Object) objDet, MetaType.dq);
+			// BaseEntity baseEntity = (BaseEntity)
+			// commonServiceImpl.save(MetaType.dq.toString(), obje);
+			baseEntities.add(objDet);
+		}
+
+		return baseEntities;
+	}
 }

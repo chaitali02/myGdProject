@@ -1,0 +1,104 @@
+{
+
+  "uuid" : "915a14a4-39da-4aa8-9553-236d868dbadc",
+  "version" : "1553168382",
+  "name" : "dqr_account_status_type_load_date_not_null_check",
+  "desc" : null,
+  "createdBy" : {
+    "ref" : {
+      "type" : "user",
+      "uuid" : "d04716df-e96a-419f-9118-c81342b47f86",
+      "version" : "1464977196",
+      "name" : "ypalrecha"
+    },
+    "value" : null
+  },
+  "createdOn" : "Thu Mar 21 17:09:42 IST 2019",
+  "tags" : null,
+  "active" : "Y",
+  "locked" : "N",
+  "published" : "N",
+  "appInfo" : [ {
+    "ref" : {
+      "type" : "application",
+      "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+      "version" : "1548315769",
+      "name" : null
+    },
+    "value" : null
+  }, {
+    "ref" : {
+      "type" : "application",
+      "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+      "version" : "1548315769",
+      "name" : null
+    },
+    "value" : null
+  }, {
+    "ref" : {
+      "type" : "application",
+      "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+      "version" : "1548315769",
+      "name" : null
+    },
+    "value" : null
+  }, {
+    "ref" : {
+      "type" : "application",
+      "uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cd",
+      "version" : "1548315769",
+      "name" : null
+    },
+    "value" : null
+  } ],
+  "publicFlag" : "N",
+  "abortCondition" : null,
+  "target" : null,
+  "attribute" : {
+    "ref" : {
+      "type" : "datapod",
+      "uuid" : "2996b01d-cbc8-4ac7-8aff-1e887204101b",
+      "version" : "1488620350",
+      "name" : null
+    },
+    "value" : null,
+    "attrId" : "3",
+    "attrName" : "load_date",
+    "attrType" : null,
+    "attrUnitType" : null,
+    "function" : null
+  },
+  "dependsOn" : {
+    "ref" : {
+      "type" : "datapod",
+      "uuid" : "2996b01d-cbc8-4ac7-8aff-1e887204101b",
+      "version" : "1488620350",
+      "name" : null
+    },
+    "value" : null
+  },
+  "duplicateKeyCheck" : "N",
+  "nullCheck" : "Y",
+  "valueCheck" : [ ],
+  "rangeCheck" : { },
+  "dataTypeCheck" : "",
+  "dateFormatCheck" : null,
+  "customFormatCheck" : null,
+  "lengthCheck" : { },
+  "refIntegrityCheck" : {
+    "dependsOn" : null,
+    "targetAttr" : null
+  },
+  "filterInfo" : null,
+  "userInfo" : null,
+  "thresholdInfo" : {
+    "low" : "25",
+    "medium" : "50",
+    "high" : "75",
+    "type" : "NUMERIC"
+  },
+  "domainCheck" : null,
+  "blankSpaceCheck" : null,
+  "expressionCheck" : null,
+  "caseCheck" : null
+}
