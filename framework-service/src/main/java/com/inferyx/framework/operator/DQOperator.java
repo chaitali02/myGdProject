@@ -56,6 +56,9 @@ public class DQOperator implements IParsable {
 	private String CASE_WHEN = " CASE WHEN ";
 	private String SINGLE_QUOTED_Y = "'Y'";
 	private String SINGLE_QUOTED_N = "'N'";
+	private String YES_Y = "Y";
+	private String NO_N = "N";
+	private String ALL_A = "A";
 	private String ONLY_THEN = " THEN ";
 	private String ONLY_WHEN = " WHEN ";
 	private String ONLY_ELSE = " ELSE ";
@@ -196,6 +199,21 @@ public class DQOperator implements IParsable {
 	private MetadataServiceImpl metadataServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(DQOperator.class);
+	
+	public String generateResFilteredSql(DataQual dataQual, List<String> datapodList, DataQualExec dataQualExec, DagExec dagExec,  
+			Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode) throws Exception {
+		String resultSql = generateSql(dataQual, datapodList, dataQualExec, dagExec, usedRefKeySet,
+										otherParams, runMode);
+		logger.info("Inside generateResFilteredSql : PasFailCheck : " + dataQual.getPassFailCheck());
+		if (StringUtils.isBlank(dataQual.getPassFailCheck()) || dataQual.getPassFailCheck().equalsIgnoreCase(ALL_A)) {
+			return resultSql;
+		}
+		
+		StringBuilder resultSqlBuilder = new StringBuilder(SELECT);
+		resultSqlBuilder = resultSqlBuilder.append(MULTIPLY_BY).append(FROM).append(BRACKET_OPEN).append(resultSql).append(BRACKET_CLOSE).append(DQ_RESULT_ALIAS);
+		resultSqlBuilder = resultSqlBuilder.append(WHERE_1_1).append(AND).append(ALL_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTE).append(dataQual.getPassFailCheck()).append(SINGLE_QUOTE);
+		return resultSqlBuilder.toString();
+	}
 	
 	public String generateSql(DataQual dataQual, List<String> datapodList, DataQualExec dataQualExec, DagExec dagExec,  
 			Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode) throws Exception {
