@@ -2460,4 +2460,17 @@ public class MetadataServiceImpl {
 			return new ArrayList<>();
 		}
 	}
+	
+	public String getConfigValueByName(String configName) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, FileNotFoundException, IOException {
+		List<Config> appConfigList = getAppConfigByCurrentApp();
+		for (Config config : appConfigList) {
+			if (config.getConfigName().equals(configName)) {
+				String configVal = config.getConfigVal();
+				if(configVal != null) {
+					return configVal;
+				}
+			}
+		}
+		return Helper.getPropertyValue(configName);
+	}
 }

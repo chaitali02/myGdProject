@@ -5408,7 +5408,7 @@ public class CommonServiceImpl<T> {
 					baseRuleExec.getVersion());
 
 		} else if (execContext == null || runMode.equals(RunMode.ONLINE)
-				&& execContext.equals(ExecContext.FILE)) {
+				&& (execContext.equals(ExecContext.FILE) || execContext.equals(ExecContext.spark))) {
 			return String.format("%s_%s_%s", baseRule.getUuid().replace("-", "_"), baseRule.getVersion(),
 					baseRuleExec.getVersion());
 		}

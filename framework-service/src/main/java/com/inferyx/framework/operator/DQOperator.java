@@ -32,7 +32,6 @@ import com.inferyx.framework.domain.BlankSpaceCheckOptions;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataQual;
 import com.inferyx.framework.domain.DataQualExec;
-import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
 import com.inferyx.framework.domain.ExecParams;
@@ -46,10 +45,9 @@ import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.enums.ThresholdType;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.service.CommonServiceImpl;
-import com.inferyx.framework.service.DataStoreServiceImpl;
 import com.inferyx.framework.service.DatapodServiceImpl;
 import com.inferyx.framework.service.MessageStatus;
-import com.inferyx.framework.service.RunBaseRuleService;
+import com.inferyx.framework.service.MetadataServiceImpl;
 
 @Component
 public class DQOperator implements IParsable {
@@ -129,6 +127,7 @@ public class DQOperator implements IParsable {
 	private String TOTAL_FAIL_COUNT = "total_fail_count";
 	private String DQ_RESULT_ALIAS = "dq_result_alias";
 	private String DQ_RESULT_READY_ALIAS = "dq_result_ready_alias";
+	private final String DQ_RESULT_ALL_CHECK_DETAIL = " dq_result_all_check_detail ";
 	private String DQ_RESULT_SUM_ALIAS = "dq_result_sum_alias";
 	private String DQ_SUMMARY_ALIAS = "dq_summary_alias";
 	private String STD_DEV_FAIL = "std_dev_fail";
@@ -180,6 +179,8 @@ public class DQOperator implements IParsable {
 	private String CROSS_JOIN = " CROSS JOIN ";
 	private String STDDEV = "STDDEV";
 	private String ORDER_BY = " ORDER BY ";
+	private final String WHERE = " WHERE ";
+	private final String LIMIT = " LIMIT ";
 
 	@Autowired
 	RelationOperator relationOperator;
@@ -192,7 +193,7 @@ public class DQOperator implements IParsable {
 	@Autowired
 	private DatapodServiceImpl datapodServiceImpl;
 	@Autowired
-	private DataStoreServiceImpl datastoreServiceImpl;
+	private MetadataServiceImpl metadataServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(DQOperator.class);
 	
@@ -601,6 +602,7 @@ public class DQOperator implements IParsable {
 		select = select.concat(generateFrom(dq, dq.getDependsOn().getRef(), attributeName, datapodList, dagExec, usedRefKeySet, otherParams, runMode))
 				.concat(WHERE_1_1).concat(generateFilter(dq, usedRefKeySet, runMode));
 		select = generateallCheckFlag(select, dq, dataQualExec);
+		select = generateAllCheckDetailSql(select);
 		logger.info("Detail SQL for dataQual : " + dq.getUuid() + " : " + StringUtils.isBlank(select));
 		return select;
 		
@@ -670,9 +672,89 @@ public class DQOperator implements IParsable {
 											.append(BRACKET_CLOSE) 
 											.append(THEN_N_Y).append(ALL_CHECK_PASS).append(COMMA)
 											.append(VERSION).append(FROM).append(BRACKET_OPEN)
-											.append(detailSql).append(BRACKET_CLOSE).append(DQ_RESULT_READY_ALIAS);
+											.append(detailSql).append(BRACKET_CLOSE).append(BLANK).append(DQ_RESULT_READY_ALIAS);
 		
 		return sql.toString();
+	}
+	
+	public String generateAllCheckDetailSql(String allCheckFlagSql) {
+		StringBuilder sql = new StringBuilder(SELECT)
+											.append(RULE_EXEC_UUID).append(COMMA)
+											.append(RULE_EXEC_VERSION).append(COMMA)
+											.append(RULE_EXEC_TIME).append(COMMA)
+											.append(RULEUUID).append(COMMA)
+											.append(RULEVERSION).append(COMMA)
+											.append(RULENAME).append(COMMA)
+											.append(DATAPODUUID).append(COMMA)
+				  							.append(DATAPODVERSION).append(COMMA)
+				  							.append(DATAPOD_NAME).append(COMMA)
+				  							.append(ATTRIBUTE_ID).append(COMMA)
+				  							.append(ATTRIBUTE_NAME).append(COMMA)
+				  							.append(ATTRIBUTE_VAL).append(COMMA)
+				  							.append(ROWKEY_NAME).append(COMMA)
+				  							.append(ROWKEY_VALUE).append(COMMA)
+				  							.append(NULL_CHECK_PASS).append(COMMA)
+				  							.append(VALUE_CHECK_PASS).append(COMMA)
+				  							.append(RANGE_CHECK_PASS).append(COMMA)
+				  							.append(DATATYPE_CHECK_PASS).append(COMMA)
+				  							.append(FORMAT_CHECK_PASS).append(COMMA)
+				  							.append(LENGTH_CHECK_PASS).append(COMMA)
+				  							.append(REFINT_CHECK_PASS).append(COMMA)
+				  							.append(DUP_CHECK_PASS).append(COMMA)
+				  							.append(CUSTOM_CHECK_PASS).append(COMMA)
+				  							.append(DOMAIN_CHECK_PASS).append(COMMA)
+				  							.append(BLANK_SPACE_CHECK_PASS).append(COMMA)
+				  							.append(EXPRESSION_CHECK_PASS).append(COMMA)
+				  							.append(CASE_CHECK_PASS).append(COMMA)
+											.append(ALL_CHECK_PASS).append(COMMA)
+											.append(VERSION).append(FROM).append(BRACKET_OPEN)
+											.append(allCheckFlagSql).append(BRACKET_CLOSE).append(BLANK).append(DQ_RESULT_ALL_CHECK_DETAIL)
+											.append(BLANK).append(WHERE).append(BLANK).append(generateAllCheckDetailFilter())
+											.append(BLANK).append(getAllCheckDetailLimit());
+		
+		return sql.toString();
+	}
+	
+	public String generateAllCheckDetailFilter() {
+		try {
+			String filterValue = metadataServiceImpl.getConfigValueByName("framework.dataqual.detail.log"); // pass/fail/all
+			if (StringUtils.isBlank(filterValue)) {
+				return " (1=1) ";
+			} else {
+				String detailLogValue = mapDetailLogValue(filterValue);
+				if (!StringUtils.isBlank(detailLogValue)) {
+					return ALL_CHECK_PASS.concat(" = ").concat(detailLogValue);
+				} else {
+					return " (1=1) ";
+				}
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			return " (1=1) ";
+		}
+	}
+
+	public String mapDetailLogValue(String detailLogValue) {
+		if (detailLogValue.equalsIgnoreCase("pass")) {
+			return "\"Y\"";
+		} else if (detailLogValue.equalsIgnoreCase("fail")) {
+			return "\"N\"";
+		}
+		return null;
+	}
+
+	public String getAllCheckDetailLimit() {
+		try {
+			String limitValue = metadataServiceImpl.getConfigValueByName("framework.dataqual.detail.limit"); // pass/fail/all
+			if (!StringUtils.isBlank(limitValue)) {
+				return LIMIT.concat(limitValue);
+			} else {
+				return " ";
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			return " ";
+		}
 	}
 	
 	public String generateSummarySql(DataQual dq, List<String> datapodList,
