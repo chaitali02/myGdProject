@@ -29,6 +29,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.SessionHelper;
+import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.BaseRuleGroup;
@@ -330,6 +331,14 @@ public abstract class RuleGroupTemplate implements IExecutable, IParsable {
 					baseRuleExec.setName(ruleMeta.getRef().getName());
 					baseRuleExec.setBaseEntity();
 				}
+				
+				if(baseRuleExec.getDependsOn() != null && baseRuleExec.getDependsOn().getRef().getVersion() == null) {
+					MetaIdentifier dependsOnMI = baseRuleExec.getDependsOn().getRef();
+					BaseEntity baseEntity = (BaseEntity) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(), dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
+					dependsOnMI.setVersion(baseEntity.getVersion());
+					baseRuleExec.setDependsOn(new MetaIdentifierHolder(dependsOnMI));
+				}
+				
 				ruleExecList.add(baseRuleExec);
 				MetaIdentifierHolder ruleRef = new MetaIdentifierHolder(new MetaIdentifier(ruleExecType, baseRuleExec.getUuid(), baseRuleExec.getVersion()));			
 				baseGroupExec.getExecList().add(ruleRef);
