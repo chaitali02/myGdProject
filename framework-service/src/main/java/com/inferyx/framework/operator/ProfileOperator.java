@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.Datapod;
@@ -34,21 +35,54 @@ import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DatapodServiceImpl;
+import com.inferyx.framework.service.ExecutorServiceImpl;
 
 @Component
 public class ProfileOperator {
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
+	private ExecutorServiceImpl executorServiceImpl;
+	@Autowired
 	private FilterOperator2 filterOperator2;
 	@Autowired
-	private Helper helper;
-	@Autowired
 	private DatapodServiceImpl datapodServiceImpl;
+	@Autowired
+	Engine engine;
+	@Autowired
+	Helper helper;
 
 	static final Logger logger = Logger.getLogger(ProfileOperator.class);
 	Datapod dp;
 	RunMode runMode;
+	
+	private String RULE_EXEC_UUID    = "rule_exec_uuid";
+	private String RULE_EXEC_VERSION = "rule_exec_version"; 
+	private String RULE_EXEC_TIME    = "rule_exec_time";
+	private String RULE_UUID         = "rule_uuid";
+	private String RULE_VERSION      = "rule_version"; 
+	private String RULE_NAME         = "rule_name";
+	private String DATAPOD_UUID      = "datapod_uuid";  
+	private String DATAPOD_VERSION   = "datapod_version";    
+	private String DATAPOD_NAME      = "datapod_name";  
+	private String ATTRIBUTE_ID      = "attribute_id";  
+	private String ATTRIBUTE_NAME    = "attribute_name";
+	private String NUM_ROWS          = "num_rows";  
+	private String MIN_VAL           = "min_val";  
+	private String MAX_VAL           = "max_val";  
+	private String AVG_VAL           = "avg_val";  
+	private String MEDIAN_VAL        = "median_val";    
+	private String STD_DEV           = "std_dev";  
+	private String NUM_DISTINCT      = "num_distinct";  
+	private String PERC_DISTINCT     = "perc_distinct";  
+	private String NUM_NULL          = "num_null";  
+	private String PERC_NULL         = "perc_null";
+	private String MIN_LENGTH        = "min_length";    
+	private String MAX_LENGTH        = "max_length";    
+	private String AVG_LENGTH        = "avg_length";    
+	private String NUM_DUPLICATES    = "num_duplicates";
+	private String VERSION           = "version";  
+
 
 	/**
 	 * @return the runMode
@@ -91,182 +125,186 @@ public class ProfileOperator {
 			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException, Exception {
 		MetaIdentifierHolder filterSource = new MetaIdentifierHolder(new MetaIdentifier(MetaType.profile, profile.getUuid(), profile.getVersion()));
+
 		Datasource mapSourceDS = commonServiceImpl.getDatasourceByObject(profile);
 		String datasourceType = mapSourceDS.getType();
-		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(profile.getDependsOn().getRef().getUuid(), profile.getDependsOn().getRef().getVersion(), MetaType.datapod.toString());
-
 		ExecContext execContext = helper.getExecutorContext(datasourceType);
+
+		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(profile.getDependsOn().getRef().getUuid(), profile.getDependsOn().getRef().getVersion(), MetaType.datapod.toString());
+		
+//		ExecContext execContext = executorServiceImpl.getExecContext(runMode, mapSourceDS);
+
 		switch(execContext) {
 		case HIVE : 
 			return "SELECT \'"
-				    + profileExec.getUuid() + "\' AS rule_exec_uuid, \'"
-					+ profileExec.getVersion()+ "\' AS rule_exec_version, '"
-					+ System.currentTimeMillis() + "' AS rule_exec_time, \'" 
-					+ profile.getUuid() + "\' AS rule_uuid, \'"
-					+ profile.getVersion()+ "\' AS rule_version, \'"
-					+ profile.getName() + "' AS rule_name, \'" 
+				    + profileExec.getUuid() + "\' AS "+RULE_EXEC_UUID+", \'"
+					+ profileExec.getVersion()+ "\' AS "+RULE_EXEC_VERSION+", '"
+					+ System.currentTimeMillis() + "' AS "+RULE_EXEC_TIME+", \'" 
+					+ profile.getUuid() + "\' AS "+RULE_UUID+", \'"
+					+ profile.getVersion()+ "\' AS "+RULE_VERSION+", \'"
+					+ profile.getName() + "' AS "+RULE_NAME+", \'" 
 				    
-			        + datapod.getUuid() + "\' AS datapoduuid, \'"
-					+ datapod.getVersion() + "\' AS datapodversion, '"
-					+ datapod.getName() + "' AS datapodname, " 
-					+ attrId + " AS attributeid, "
-					+ "'" + attrName + "' AS attributename, " 
-					+ "count(1) AS numrows, "
-					+ "min(" + attrName + ") AS minval, "
-					+ "max(" + attrName + ") AS maxval, "
-					+ "avg(cast(" + attrName + " AS int)) AS avgval, "
-					+ "percentile(cast(" + attrName + " as BIGINT), 0.5) AS medianval, "
-					+ "stddev(" + attrName + ") AS stddev, "
-					+ "count(distinct " + attrName + ") AS numdistinct, "
-					+ "count(distinct " + attrName + ")/count(1)*100 AS perdistinct, "
-					+ "sum(if(" + attrName + " is null,1,0)) AS numnull,"
-					+ "sum(if(" + attrName + "" + " is null,1,0)) / count(1)*100 AS pernull, "
-					+ "min(length(cast(" + attrName + " as string))) as minlength, "
-					+ "max(length(cast(" + attrName + " as string))) as maxlength, "
-					+ "avg(length(cast(" + attrName + " as string))) as avglength, "
+			        + datapod.getUuid() + "\' AS "+DATAPOD_UUID+", \'"
+					+ datapod.getVersion() + "\' AS "+DATAPOD_VERSION+", '"
+					+ datapod.getName() + "' AS "+DATAPOD_NAME+", " 
+					+ attrId + " AS "+ATTRIBUTE_ID+", "
+					+ "'" + attrName + "' AS "+ATTRIBUTE_NAME+", " 
+					+ "count(1) AS "+NUM_ROWS+", "
+					+ "min(" + attrName + ") AS "+MIN_VAL+", "
+					+ "max(" + attrName + ") AS "+MAX_VAL+", "
+					+ "avg(cast(" + attrName + " AS int)) AS "+AVG_VAL+", "
+					+ "percentile(cast(" + attrName + " as BIGINT), 0.5) AS "+MEDIAN_VAL+", "
+					+ "stddev(" + attrName + ") AS "+STD_DEV+", "
+					+ "count(distinct " + attrName + ") AS "+NUM_DISTINCT+", "
+					+ "count(distinct " + attrName + ")/count(1)*100 AS "+PERC_DISTINCT+", "
+					+ "sum(if(" + attrName + " is null,1,0)) AS "+NUM_NULL+","
+					+ "sum(if(" + attrName + "" + " is null,1,0)) / count(1)*100 AS "+PERC_NULL+", "
+					+ "min(length(cast(" + attrName + " as string))) as "+MIN_LENGTH+", "
+					+ "max(length(cast(" + attrName + " as string))) as "+MAX_LENGTH+", "
+					+ "avg(length(cast(" + attrName + " as string))) as "+AVG_LENGTH+", "
 					+ "(SELECT count(1) FROM (SELECT " + attrName + " , COUNT(1) "
 							+ " FROM " + profileTableName  
 							+ " GROUP BY " +  attrName 
-							+ " HAVING COUNT(" + attrName + ") > 1) t) AS numduplicates, "
-					+ "'" + profileExec.getVersion() + "' AS version "
+							+ " HAVING COUNT(" + attrName + ") > 1) t) AS "+NUM_DUPLICATES+", "
+					+ "'" + profileExec.getVersion() + "' AS "+VERSION+" "
 					+ " FROM " + profileTableName 
 					+ " " + datapod.getName()
 					+ " WHERE 1=1 "
 					+ filterOperator2.generateSql(profile.getFilterInfo(), null, filterSource, null, new HashSet<>(), profileExec.getExecParams(), false, false, runMode, mapSourceDS);
 		case FILE : 
 			return "SELECT \'"
-				    + profileExec.getUuid() + "\' AS rule_exec_uuid, \'"
-					+ profileExec.getVersion()+ "\' AS rule_exec_version, '"
-					+ System.currentTimeMillis() + "' AS rule_exec_time, \'" 
-					+ profile.getUuid() + "\' AS rule_uuid, \'"
-					+ profile.getVersion()+ "\' AS rule_version, \'"
-					+ profile.getName() + "' AS rule_name, \'" 
+				    + profileExec.getUuid() + "\' AS "+RULE_EXEC_UUID+", \'"
+					+ profileExec.getVersion()+ "\' AS "+RULE_EXEC_VERSION+", '"
+					+ System.currentTimeMillis() + "' AS "+RULE_EXEC_TIME+", \'" 
+					+ profile.getUuid() + "\' AS "+RULE_UUID+", \'"
+					+ profile.getVersion()+ "\' AS "+RULE_VERSION+", \'"
+					+ profile.getName() + "' AS "+RULE_NAME+", \'" 
 						
-		            + datapod.getUuid() + "\' AS datapoduuid, \'"
-					+ datapod.getVersion() + "\' AS datapodversion, '"
-					+ datapod.getName() + "' AS datapodname, " 
-					+ attrId + " AS attributeid, "
-					+ "'" + attrName + "' AS attributename, " 
-					+ "count(1) AS numrows, "
-					+ "min(" + attrName + ") AS minval, "
-					+ "max(" + attrName + ") AS maxval, "
-					+ "avg(cast(" + attrName + " AS int)) AS avgval, "
-					+ "percentile(cast(" + attrName + " as BIGINT), 0.5) AS medianval, "
-					+ "stddev(" + attrName + ") AS stddev, "
-					+ "count(distinct " + attrName + ") AS numdistinct, "
-					+ "count(distinct " + attrName + ")/count(1)*100 AS perdistinct, "
-					+ "sum(if(" + attrName + " is null,1,0)) AS numnull,"
-					+ "sum(if(" + attrName + "" + " is null,1,0)) / count(1)*100 AS pernull, "
-					+ "min(length(cast(" + attrName + " as string))) as minlength, "
-					+ "max(length(cast(" + attrName + " as string))) as maxlength, "
-					+ "avg(length(cast(" + attrName + " as string))) as avglength, "
+		            + datapod.getUuid() + "\' AS "+DATAPOD_UUID+", \'"
+					+ datapod.getVersion() + "\' AS "+DATAPOD_VERSION+", '"
+					+ datapod.getName() + "' AS "+DATAPOD_NAME+", " 
+					+ attrId + " AS "+ATTRIBUTE_ID+", "
+					+ "'" + attrName + "' AS "+ATTRIBUTE_NAME+", " 
+					+ "count(1) AS "+NUM_ROWS+", "
+					+ "min(" + attrName + ") AS "+MIN_VAL+", "
+					+ "max(" + attrName + ") AS "+MAX_VAL+", "
+					+ "avg(cast(" + attrName + " AS int)) AS "+AVG_VAL+", "
+					+ "percentile(cast(" + attrName + " as BIGINT), 0.5) AS "+MEDIAN_VAL+", "
+					+ "stddev(" + attrName + ") AS "+STD_DEV+", "
+					+ "count(distinct " + attrName + ") AS "+NUM_DISTINCT+", "
+					+ "count(distinct " + attrName + ")/count(1)*100 AS "+PERC_DISTINCT+", "
+					+ "sum(if(" + attrName + " is null,1,0)) AS "+NUM_NULL+","
+					+ "sum(if(" + attrName + "" + " is null,1,0)) / count(1)*100 AS "+PERC_NULL+", "
+					+ "min(length(cast(" + attrName + " as string))) as "+MIN_LENGTH+", "
+					+ "max(length(cast(" + attrName + " as string))) as "+MAX_LENGTH+", "
+					+ "avg(length(cast(" + attrName + " as string))) as "+AVG_LENGTH+", "
 					+ "(SELECT count(1) FROM (SELECT " + attrName + " ,COUNT(1) "  
 							+ " FROM " + profileTableName  
 							+ " GROUP BY " +  attrName 
-							+ " HAVING COUNT(" + attrName + ") > 1) t) AS numduplicates, '" 
-					+ profileExec.getVersion()+ "' AS version "
+							+ " HAVING COUNT(" + attrName + ") > 1) t) AS "+NUM_DUPLICATES+", '" 
+					+ profileExec.getVersion()+ "' AS "+VERSION+" "
 					+ " FROM " + profileTableName 
 					+ " " + datapod.getName()
 					+ " WHERE 1=1 "
 					+ filterOperator2.generateSql(profile.getFilterInfo(), null, filterSource, null, new HashSet<>(), profileExec.getExecParams(), false, false, runMode, mapSourceDS);
 		case IMPALA : 
 			return "SELECT "
-					+ profileExec.getUuid() + "\' AS rule_exec_uuid, \'"
-				    + profileExec.getVersion()+ "\' AS rule_exec_version, '"
-					+ System.currentTimeMillis() + "' AS rule_exec_time, \'" 
-					+ profile.getUuid() + "\' AS rule_uuid, \'"
-					+ profile.getVersion()+ "\' AS rule_version, \'"
-					+ profile.getName() + "' AS rule_name, \'" 
-					+ "'" + datapod.getUuid() + "' AS datapoduuid, "
-					+ "'" + datapod.getVersion() + "' AS datapodVersion, "
-					+ "'" + datapod.getName()+ "' AS datapodname,"
-					+ "cast(" + attrId + " AS string) AS attributeid, "
-					+ "'" + attrName + "' AS attributename, "
-					+ "COUNT(1)" +" AS numrows, "
-					+ "min(cast(" + attrName + " AS int)) AS minval, "
-					+ "max(cast(" + attrName + " AS int)) AS maxval, "
-					+ "avg(cast(" + attrName + " AS int)) AS avgval, "
-					+ "appx_median(cast(" + attrName + " AS DOUBLE)) AS mediaval, " 
-					+ "stddev(cast(" + attrName + " AS int)) AS stddev, "
-					+ "cast(count(distinct " + attrName + ") AS INT) AS numdistinct, "
-					+ "count(distinct " + attrName + ")/count(1)*100 AS perdistinct, "
-					+ "cast(count(" + attrName + ") AS INT) AS numnull, "
-					+ "sum(if(" + attrName + "" + " is null,1,0)) / count(1)*100 AS pernull, "
-					+ "min(length(cast(" + attrName + " as string))) as minlength, "
-					+ "max(length(cast(" + attrName + " as string))) as maxlength, "
-					+ "avg(length(cast(" + attrName + " as string))) as avglength, "
-					+ "(COUNT(*) - COUNT(DISTINCT "+attrName+")) AS numduplicates, "
-					+ "'"+ profileExec.getVersion() + "' AS version "
+					+ profileExec.getUuid() + "\' AS "+RULE_EXEC_UUID+", \'"
+				    + profileExec.getVersion()+ "\' AS "+RULE_EXEC_VERSION+", '"
+					+ System.currentTimeMillis() + "' AS "+RULE_EXEC_TIME+", \'" 
+					+ profile.getUuid() + "\' AS "+RULE_UUID+", \'"
+					+ profile.getVersion()+ "\' AS "+RULE_VERSION+", \'"
+					+ profile.getName() + "' AS "+RULE_NAME+", \'" 
+					+ "'" + datapod.getUuid() + "' AS "+DATAPOD_UUID+", "
+					+ "'" + datapod.getVersion() + "' AS "+DATAPOD_VERSION+", "
+					+ "'" + datapod.getName()+ "' AS "+DATAPOD_NAME+","
+					+ "cast(" + attrId + " AS string) AS "+ATTRIBUTE_ID+", "
+					+ "'" + attrName + "' AS "+ATTRIBUTE_NAME+", "
+					+ "COUNT(1)" +" AS "+NUM_ROWS+", "
+					+ "min(cast(" + attrName + " AS int)) AS "+MIN_VAL+", "
+					+ "max(cast(" + attrName + " AS int)) AS "+MAX_VAL+", "
+					+ "avg(cast(" + attrName + " AS int)) AS "+AVG_VAL+", "
+					+ "appx_median(cast(" + attrName + " AS DOUBLE)) AS "+MEDIAN_VAL+", " 
+					+ "stddev(cast(" + attrName + " AS int)) AS "+STD_DEV+", "
+					+ "cast(count(distinct " + attrName + ") AS INT) AS "+NUM_DISTINCT+", "
+					+ "count(distinct " + attrName + ")/count(1)*100 AS "+PERC_DISTINCT+", "
+					+ "cast(count(" + attrName + ") AS INT) AS "+NUM_NULL+", "
+					+ "sum(if(" + attrName + "" + " is null,1,0)) / count(1)*100 AS "+PERC_NULL+", "
+					+ "min(length(cast(" + attrName + " as string))) as "+MIN_LENGTH+", "
+					+ "max(length(cast(" + attrName + " as string))) as "+MAX_LENGTH+", "
+					+ "avg(length(cast(" + attrName + " as string))) as "+AVG_LENGTH+", "
+					+ "(COUNT(*) - COUNT(DISTINCT "+attrName+")) AS "+NUM_DUPLICATES+", "
+					+ "'"+ profileExec.getVersion() + "' AS "+VERSION+" "
 					+ " FROM " + profileTableName
 					+ " " + datapod.getName()
 					+ " WHERE 1=1 "
 					+ filterOperator2.generateSql(profile.getFilterInfo(), null, filterSource, null, new HashSet<>(), profileExec.getExecParams(), false, false, runMode, mapSourceDS);
 		case MYSQL : 
 			return "SELECT '"   
-		            + profileExec.getUuid() + "\' AS rule_exec_uuid, \'"
-					+ profileExec.getVersion()+ "\' AS rule_exec_version, '"
-					+ System.currentTimeMillis() + "' AS rule_exec_time, \'" 
-					+ profile.getUuid() + "\' AS rule_uuid, \'"
-					+ profile.getVersion()+ "\' AS rule_version, \'"
-					+ profile.getName() + "' AS rule_name, \'" 
+		            + profileExec.getUuid() + "\' AS "+RULE_EXEC_UUID+", \'"
+					+ profileExec.getVersion()+ "\' AS "+RULE_EXEC_VERSION+", '"
+					+ System.currentTimeMillis() + "' AS "+RULE_EXEC_TIME+", \'" 
+					+ profile.getUuid() + "\' AS "+RULE_UUID+", \'"
+					+ profile.getVersion()+ "\' AS "+RULE_VERSION+", \'"
+					+ profile.getName() + "' AS "+RULE_NAME+", \'" 
 					
-		            + datapod.getUuid() + "' AS datapoduuid, '"
-					+ datapod.getVersion() + "' AS datapodVersion, '"
-					+ datapod.getName()+"' AS datapodname, " 
-					+ attrId + " AS attributeid, '"
-					+ attrName+"' AS attributeName, " 
-					+ "(SELECT COUNT(1) FROM " + profileTableName +" tab) AS numrows, "
-					+ "min(cast(" + attrName + " AS SIGNED)) AS minval, "
-					+ "max(cast(" + attrName + " AS SIGNED)) AS maxval, "
-					+ "avg(" + attrName + ") AS avgVal,"
-					+ "cast(" + getMedianVal(attrName) + " AS decimal) AS medianval, "
-					+ "stddev(" + attrName + ") AS stddev, "
-					+ "count(distinct " + attrName + ") AS numdistinct, "
-					+ "count(distinct " + attrName + ")/count(1)*100 AS perdistinct, "
-					+ "sum(if(" + attrName + " is null,1,0)) AS numnull,"
-					+ "sum(if(" + attrName + " is null,1,0)) / count(1)*100 AS pernull, "
-					+ "min(length(cast(" + attrName + " as CHAR))) as minlength, "
-					+ "max(length(cast(" + attrName + " as CHAR))) as maxlength, "
-					+ "avg(length(cast(" + attrName + " as CHAR))) as avglength, "
+		            + datapod.getUuid() + "' AS "+DATAPOD_UUID+", '"
+					+ datapod.getVersion() + "' AS "+DATAPOD_VERSION+", '"
+					+ datapod.getName()+"' AS "+DATAPOD_NAME+", " 
+					+ attrId + " AS "+ATTRIBUTE_ID+", '"
+					+ attrName+"' AS "+ATTRIBUTE_NAME+", " 
+					+ "(SELECT COUNT(1) FROM " + profileTableName +" tab) AS "+NUM_ROWS+", "
+					+ "min(cast(" + attrName + " AS SIGNED)) AS "+MIN_VAL+", "
+					+ "max(cast(" + attrName + " AS SIGNED)) AS "+MAX_VAL+", "
+					+ "avg(" + attrName + ") AS " + AVG_VAL + ","
+					+ "cast(" + getMedianVal(attrName) + " AS decimal) AS "+MEDIAN_VAL+", "
+					+ "stddev(" + attrName + ") AS "+STD_DEV+", "
+					+ "count(distinct " + attrName + ") AS "+NUM_DISTINCT+", "
+					+ "count(distinct " + attrName + ")/count(1)*100 AS "+PERC_DISTINCT+", "
+					+ "sum(if(" + attrName + " is null,1,0)) AS "+NUM_NULL+","
+					+ "sum(if(" + attrName + " is null,1,0)) / count(1)*100 AS "+PERC_NULL+", "
+					+ "min(length(cast(" + attrName + " as CHAR))) as "+MIN_LENGTH+", "
+					+ "max(length(cast(" + attrName + " as CHAR))) as "+MAX_LENGTH+", "
+					+ "avg(length(cast(" + attrName + " as CHAR))) as "+AVG_LENGTH+", "
 					+ "(SELECT count(1) FROM (SELECT " + attrName + " , COUNT(1) FROM " + profileTableName + " " + datapod.getName()
 							+ " GROUP BY " +  attrName 
-							+ " HAVING COUNT(" + attrName + ") > 1) t) AS numduplicates, '"  
-					+ profileExec.getVersion() + "' AS version from " + profileTableName
+							+ " HAVING COUNT(" + attrName + ") > 1) t) AS "+NUM_DUPLICATES+", '"  
+					+ profileExec.getVersion() + "' AS "+VERSION+" from " + profileTableName
 					+ " WHERE 1=1 "
 					+ filterOperator2.generateSql(profile.getFilterInfo(), null, filterSource, null, new HashSet<>(), profileExec.getExecParams(), false, false, runMode, mapSourceDS);
 		case ORACLE : 
 			return "SELECT \'" 
-				    + profileExec.getUuid() + "\' AS rule_exec_uuid, \'"
-					+ profileExec.getVersion()+ "\' AS rule_exec_version, '"
-					+ System.currentTimeMillis() + "' AS rule_exec_time, \'" 
-					+ profile.getUuid() + "\' AS rule_uuid, \'"
-					+ profile.getVersion()+ "\' AS rule_version, \'"
-					+ profile.getName() + "' AS rule_name, \'" 
+				    + profileExec.getUuid() + "\' AS "+RULE_EXEC_UUID+", \'"
+					+ profileExec.getVersion()+ "\' AS "+RULE_EXEC_VERSION+", '"
+					+ System.currentTimeMillis() + "' AS "+RULE_EXEC_TIME+", \'" 
+					+ profile.getUuid() + "\' AS "+RULE_UUID+", \'"
+					+ profile.getVersion()+ "\' AS "+RULE_VERSION+", \'"
+					+ profile.getName() + "' AS "+RULE_NAME+", \'" 
 					
-		            + datapod.getUuid() + "\' AS datapoduuid, \'"
-					+ datapod.getVersion() + "\' AS datapodVersion, "
-					+ " '" + datapod.getName()+"' AS datapodname, "
-					+ attrId + "  AS attributeid,"
-					+ " '"+attrName+"' AS attributename, " 
-					+ "(SELECT COUNT(1) FROM "+ profileTableName + " tab) AS numrows, "
-					+ "min(cast(decode( translate(" + attrName + ",' 0123456789',' '), null, " + attrName + ", 1)AS int)) AS minval, "
-					+ "max(cast(decode( translate(" + attrName + ",' 0123456789',' '), null, "+ attrName + ", 1)AS int)) AS maxval, "
-					+ "avg(decode(translate(" + attrName + ",' 0123456789',' '), null, "+ attrName + ", '0')) AS avgval ,"
-					+ "median(cast(decode( translate(" + attrName + ",' 0123456789',' '), null, " + attrName + ", 1)AS int)) AS mediaval, " 
-					+ "stddev(decode( translate(" + attrName + ",' 0123456789',' '), null, " + attrName + ", '0')) AS stddev, "
-					+ "cast(count(distinct " + attrName + ") AS decimal) AS numdistinct, "
-					+ "count(distinct " + attrName + ")/count(1)*100  AS perdistinct, "
-					+ "cast(count(" + attrName + ") as decimal) AS numnull,"				
-					+ "sum(CASE WHEN " + attrName + " IS NULL THEN 0 ELSE 1 END) / count(1)*100 AS pernull, "				
+		            + datapod.getUuid() + "\' AS "+DATAPOD_UUID+", \'"
+					+ datapod.getVersion() + "\' AS "+DATAPOD_VERSION+", "
+					+ " '" + datapod.getName()+"' AS "+DATAPOD_NAME+", "
+					+ attrId + "  AS "+ATTRIBUTE_ID+","
+					+ " '"+attrName+"' AS "+ATTRIBUTE_NAME+", " 
+					+ "(SELECT COUNT(1) FROM "+ profileTableName + " tab) AS "+NUM_ROWS+", "
+					+ "min(cast(decode( translate(" + attrName + ",' 0123456789',' '), null, " + attrName + ", 1)AS int)) AS "+MIN_VAL+", "
+					+ "max(cast(decode( translate(" + attrName + ",' 0123456789',' '), null, "+ attrName + ", 1)AS int)) AS "+MAX_VAL+", "
+					+ "avg(decode(translate(" + attrName + ",' 0123456789',' '), null, "+ attrName + ", '0')) AS "+AVG_VAL+" ,"
+					+ "median(cast(decode( translate(" + attrName + ",' 0123456789',' '), null, " + attrName + ", 1)AS int)) AS "+MEDIAN_VAL+", " 
+					+ "stddev(decode( translate(" + attrName + ",' 0123456789',' '), null, " + attrName + ", '0')) AS "+STD_DEV+", "
+					+ "cast(count(distinct " + attrName + ") AS decimal) AS "+NUM_DISTINCT+", "
+					+ "count(distinct " + attrName + ")/count(1)*100  AS "+PERC_DISTINCT+", "
+					+ "cast(count(" + attrName + ") as decimal) AS "+NUM_NULL+","				
+					+ "sum(CASE WHEN " + attrName + " IS NULL THEN 0 ELSE 1 END) / count(1)*100 AS "+PERC_NULL+", "				
 //					+ "count(" + attrName + ") / sum(REPLACE(nvl(" + attrName + ",'0'),0 , 1))*100 AS perNull, "
-					+ "min(length(cast(" + attrName + " as CHAR))) as minlength, "
-					+ "max(length(cast(" + attrName + " as CHAR))) as maxlength, "
-					+ "avg(length(cast(" + attrName + " as CHAR))) as avglength, "
+					+ "min(length(cast(" + attrName + " as CHAR))) as "+MIN_LENGTH+", "
+					+ "max(length(cast(" + attrName + " as CHAR))) as "+MAX_LENGTH+", "
+					+ "avg(length(cast(" + attrName + " as CHAR))) as "+AVG_LENGTH+", "
 					+ "(SELECT count(1) FROM (SELECT " + attrName + " ,COUNT(1) "  
 							+ " FROM " + profileTableName  
 							+ " GROUP BY " +  attrName 
-							+ " HAVING COUNT(" + attrName + ") > 1) t) AS numduplicates, '"  
-					+ profileExec.getVersion() + "' AS version from " + profileTableName
+							+ " HAVING COUNT(" + attrName + ") > 1) t) AS "+NUM_DUPLICATES+", '"  
+					+ profileExec.getVersion() + "' AS VERSION from " + profileTableName
 					+ " " + datapod.getName()
 					+ " WHERE 1=1 "
 					+ filterOperator2.generateSql(profile.getFilterInfo(), null, filterSource, null, new HashSet<>(), profileExec.getExecParams(), false, false, runMode, mapSourceDS)
@@ -274,38 +312,38 @@ public class ProfileOperator {
 		case POSTGRES : 
 			String attrName1 = " cast(regexp_replace(COALESCE(NULLIF(cast(" + attrName + " as text),''),'0'), '[^0-9]+', '0', 'g') as decimal) ";
 			return "SELECT '" 
-				    + profileExec.getUuid() + "\' AS rule_exec_uuid, \'"
-					+ profileExec.getVersion()+ "\' AS rule_exec_version, '"
-					+ System.currentTimeMillis() + "' AS rule_exec_time, \'" 
-					+ profile.getUuid() + "\' AS rule_uuid, \'"
-					+ profile.getVersion()+ "\' AS rule_version, \'"
-					+ profile.getName() + "' AS rule_name, \'" 
+				    + profileExec.getUuid() + "\' AS "+RULE_EXEC_UUID+", \'"
+					+ profileExec.getVersion()+ "\' AS "+RULE_EXEC_VERSION+", '"
+					+ System.currentTimeMillis() + "' AS "+RULE_EXEC_TIME+", \'" 
+					+ profile.getUuid() + "\' AS "+RULE_UUID+", \'"
+					+ profile.getVersion()+ "\' AS "+RULE_VERSION+", \'"
+					+ profile.getName() + "' AS "+RULE_NAME+", \'" 
 					
 					
-					+ datapod.getUuid() + "' AS datapoduuid, "
-					+ "'" + datapod.getVersion() + "' AS datapodVersion, '"
-					+ datapod.getName()+"' AS datapodname,"
-					+ attrId + " AS attributeid,'"
-					+ attrName+"' AS attributename,"
-					+ "(SELECT COUNT(1) FROM " + profileTableName +" tab) AS numrows,"
-					+ "MIN(" + attrName1 + ") AS minval,"
-					+ "MAX(" + attrName1 + ") AS maxval,"				
-					+ "AVG(" + attrName1 + ") AS avgval,"				
-					+ "PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY "+ attrName1 + ") AS medianval,"				
-					+ "STDDEV(" + attrName1 + ") AS stddev,"				
-					+ "COUNT(" + attrName1 + ") AS numdistinct,"
-					+ "COUNT(distinct " + attrName1 + ")/COUNT(1)*100 AS perdistinct,"		
-					+ "COUNT(" + attrName1 + ") AS numnull,"				
+					+ datapod.getUuid() + "' AS "+DATAPOD_UUID+", "
+					+ "'" + datapod.getVersion() + "' AS "+DATAPOD_VERSION+", '"
+					+ datapod.getName()+"' AS "+DATAPOD_NAME+","
+					+ attrId + " AS "+ATTRIBUTE_ID+",'"
+					+ attrName+"' AS "+ATTRIBUTE_NAME+","
+					+ "(SELECT COUNT(1) FROM " + profileTableName +" tab) AS "+NUM_ROWS+","
+					+ "MIN(" + attrName1 + ") AS "+MIN_VAL+","
+					+ "MAX(" + attrName1 + ") AS "+MAX_VAL+","				
+					+ "AVG(" + attrName1 + ") AS "+AVG_VAL+","				
+					+ "PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY "+ attrName1 + ") AS "+MEDIAN_VAL+","				
+					+ "STDDEV(" + attrName1 + ") AS "+STD_DEV+","				
+					+ "COUNT(" + attrName1 + ") AS "+NUM_DISTINCT+","
+					+ "COUNT(distinct " + attrName1 + ")/COUNT(1)*100 AS "+PERC_DISTINCT+","		
+					+ "COUNT(" + attrName1 + ") AS "+NUM_NULL+","				
 //					+ "sum(if(" + attrName + "" + " is null,1,0)) / count(1)*100 AS perNull, "
-					+ "COUNT(" + attrName + ") / (CASE WHEN COUNT(" + attrName + ") IS NULL THEN 1 ELSE count(" + attrName + ") END)*100 AS pernull,"
-					+ "min(length(" + attrName + " :: varchar)) as minlength, "
-					+ "max(length(" + attrName + " :: varchar)) as maxlength, "
-					+ "avg(length(" + attrName + " :: varchar)) as avglength, "
+					+ "COUNT(" + attrName + ") / (CASE WHEN COUNT(" + attrName + ") IS NULL THEN 1 ELSE count(" + attrName + ") END)*100 AS "+PERC_NULL+","
+					+ "min(length(" + attrName + " :: varchar)) as "+MIN_LENGTH+", "
+					+ "max(length(" + attrName + " :: varchar)) as "+MAX_LENGTH+", "
+					+ "avg(length(" + attrName + " :: varchar)) as "+AVG_LENGTH+", "
 					+ "(SELECT count(1) FROM (SELECT " + attrName + " ,COUNT(1) "  
 							+ " FROM " + profileTableName  
 							+ " GROUP BY " +  attrName 
-							+ " HAVING COUNT(" + attrName + ") > 1) t) AS numduplicates, '" 
-					+ profileExec.getVersion() + "' AS version"
+							+ " HAVING COUNT(" + attrName + ") > 1) t) AS "+NUM_DUPLICATES+", '" 
+					+ profileExec.getVersion() + "' AS "+VERSION+""
 					+ " FROM " + profileTableName
 					+ " " + datapod.getName()
 					+ " WHERE 1=1 "
@@ -318,11 +356,11 @@ public class ProfileOperator {
 //			sql = "SELECT \'" + profile.getDependsOn().getRef().getUuid() + "\' AS datapodUUID, \'"
 //					+ profile.getDependsOn().getRef().getVersion() + "\' AS datapodVersion, '"
 //					+ datapod.getName() + "' AS datapodName, " + attrId
-//					+ " AS attributeId, '" + attrName + "' AS attributeName, " 
+//					+ " AS attributeId, '" + attrName + "' AS "+ATTRIBUTE_NAME+", " 
 //					+ "count(1) AS numRows, "
 //					+ "min(" + attrName + ") AS minVal, "
 //					+ "max(" + attrName + ") AS maxVal, "
-//					+ "avg(cast(" + attrName + " AS int)) AS avgVal, "
+//					+ "avg(cast(" + attrName + " AS int)) AS " + AVG_VAL + ", "
 //					+ "percentile(cast(" + attrName + " as BIGINT), 0.5) AS medianVal, "
 //					+ "stddev(" + attrName + ") AS stdDev, "
 //					+ "count(distinct " + attrName + ") AS numDistinct, "
@@ -336,7 +374,7 @@ public class ProfileOperator {
 //					+ " FROM " + profileTableName  
 //					+ " GROUP by " +  attrName 
 //					+ " HAVING COUNT(" + attrName + ") > 1) t) AS numDuplicates, '" 
-//					+ profileExec.getVersion()+ "' AS version from " + profileTableName 
+//					+ profileExec.getVersion()+ "' AS VERSION from " + profileTableName 
 //					+ " " + datapod.getName()
 //					+ " WHERE 1=1 "
 //					+ filterOperator2.generateSql(profile.getFilterInfo(), null, filterSource, null, new HashSet<>(), profileExec.getExecParams(), false, false, runMode, mapSourceDS);
@@ -346,11 +384,11 @@ public class ProfileOperator {
 //					+ "'" + profile.getDependsOn().getRef().getVersion() + "' AS datapodVersion, "
 //					+ "'" + datapod.getName()+ "' AS datapodName,"
 //					+ "cast(" + attrId + " AS string) AS attributeId, "
-//					+ "'" + attrName + "' AS attributeName, "
+//					+ "'" + attrName + "' AS "+ATTRIBUTE_NAME+", "
 //					+ "(SELECT COUNT(1) FROM " + profileTableName + " tab) AS numRows, "
 //					+ "min(cast(" + attrName + " AS int)) AS minVal, "
 //					+ "max(cast(" + attrName + " AS int)) AS maxVal, "
-//					+ "avg(cast(" + attrName + " AS int)) AS avgVal, "
+//					+ "avg(cast(" + attrName + " AS int)) AS " + AVG_VAL + ", "
 //					+ "appx_median(cast(" + attrName + " AS DOUBLE)) AS mediaVal, " 
 //					+ "stddev(cast(" + attrName + " AS int)) AS stdDev, "
 //					+ "cast(count(distinct " + attrName + ") AS INT) AS numDistinct, "
@@ -359,7 +397,7 @@ public class ProfileOperator {
 //					+ "sum(if(" + attrName + "" + " is null,1,0)) / count(1)*100 AS perNull, "
 //					//				+ "count(" + attrName + ") / count(1)*100 AS perNull, "
 //					+ "null AS sixSigma, " 
-//					+ "'"+ profileExec.getVersion() + "' AS version from " + profileTableName
+//					+ "'"+ profileExec.getVersion() + "' AS VERSION from " + profileTableName
 //					+ " " + datapod.getName()
 //					+ " WHERE 1=1 "
 //					+ filterOperator2.generateSql(profile.getFilterInfo(), null, filterSource, null, new HashSet<>(), profileExec.getExecParams(), false, false, runMode, mapSourceDS);			
@@ -368,11 +406,11 @@ public class ProfileOperator {
 //					+ profile.getDependsOn().getRef().getVersion() + "' AS datapodVersion, '"
 //					+ datapod.getName()+"' AS datapodName, " 
 //					+ attrId + " AS attributeId, '"
-//					+ attrName+"' AS attributeName, " 
+//					+ attrName+"' AS "+ATTRIBUTE_NAME+", " 
 //					+ "(SELECT COUNT(1) FROM " + profileTableName +" tab) AS numRows, "
 //					+ "min(cast(" + attrName + " AS SIGNED)) AS minVal, "
 //					+ "max(cast(" + attrName + " AS SIGNED)) AS maxVal, "
-//					+ "avg(" + attrName + ") AS avgVal,"
+//					+ "avg(" + attrName + ") AS " + AVG_VAL + ","
 //					+ "cast(" + getMedianVal(attrName) + " AS decimal) AS medianVal, "
 //					+ "stddev(" + attrName + ") AS stdDev, "
 //					+ "count(distinct " + attrName + ") AS numDistinct, "
@@ -387,7 +425,7 @@ public class ProfileOperator {
 //					+ " " + datapod.getName()
 //					+ " GROUP by " +  attrName 
 //					+ " HAVING COUNT(" + attrName + ") > 1) t) AS numDuplicates, '"  
-//					+ profileExec.getVersion() + "' AS version from " + profileTableName
+//					+ profileExec.getVersion() + "' AS VERSION from " + profileTableName
 //					+ " WHERE 1=1 "
 //					+ filterOperator2.generateSql(profile.getFilterInfo(), null, filterSource, null, new HashSet<>(), profileExec.getExecParams(), false, false, runMode, mapSourceDS);
 //		} else if (datasourceType.equalsIgnoreCase(ExecContext.ORACLE.toString())) {
@@ -395,11 +433,11 @@ public class ProfileOperator {
 //					+ profile.getDependsOn().getRef().getVersion() + "\' AS datapodVersion, "
 //					+ " '" + datapod.getName()+"' AS datapodName, "
 //					+ attrId + "  AS attributeId,"
-//					+ " '"+attrName+"' AS attributeName, " 
+//					+ " '"+attrName+"' AS "+ATTRIBUTE_NAME+", " 
 //					+ "(SELECT COUNT(1) FROM "+ profileTableName + " tab) AS numRows, "
 //					+ "min(cast(decode( translate(" + attrName + ",' 0123456789',' '), null, " + attrName + ", 1)AS int)) AS minVal, "
 //					+ "max(cast(decode( translate(" + attrName + ",' 0123456789',' '), null, "+ attrName + ", 1)AS int)) AS maxVal, "
-//					+ "avg(decode(translate(" + attrName + ",' 0123456789',' '), null, "+ attrName + ", '0')) AS avgVal ,"
+//					+ "avg(decode(translate(" + attrName + ",' 0123456789',' '), null, "+ attrName + ", '0')) AS " + AVG_VAL + " ,"
 //					+ "median(cast(decode( translate(" + attrName + ",' 0123456789',' '), null, " + attrName + ", 1)AS int)) AS mediaVal, " 
 //					+ "stddev(decode( translate(" + attrName + ",' 0123456789',' '), null, " + attrName + ", '0')) AS stdDev, "
 //					+ "cast(count(distinct " + attrName + ") AS decimal) AS numDistinct, "
@@ -414,7 +452,7 @@ public class ProfileOperator {
 //					+ " FROM " + profileTableName  
 //					+ " GROUP by " +  attrName 
 //					+ " HAVING COUNT(" + attrName + ") > 1) t) AS numDuplicates, '"  
-//					+ profileExec.getVersion() + "' AS version from " + profileTableName
+//					+ profileExec.getVersion() + "' AS VERSION from " + profileTableName
 //					+ " " + datapod.getName()
 //					+ " WHERE 1=1 "
 //					+ filterOperator2.generateSql(profile.getFilterInfo(), null, filterSource, null, new HashSet<>(), profileExec.getExecParams(), false, false, runMode, mapSourceDS)
@@ -425,11 +463,11 @@ public class ProfileOperator {
 //					+ "'" + profile.getDependsOn().getRef().getVersion() + "' AS datapodVersion, '"
 //					+ datapod.getName()+"' AS datapodName,"
 //					+ attrId + " AS attributeId,'"
-//					+ attrName+"' AS attributeName,"
+//					+ attrName+"' AS "+ATTRIBUTE_NAME+","
 //					+ "(SELECT COUNT(1) FROM " + profileTableName +" tab) AS numRows,"
 //					+ "MIN(" + attrName1 + ") AS minVal,"
 //					+ "MAX(" + attrName1 + ") AS maxVal,"				
-//					+ "AVG(" + attrName1 + ") AS avgVal,"				
+//					+ "AVG(" + attrName1 + ") AS " + AVG_VAL + ","				
 //					+ "PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY "+ attrName1 + ") AS medianVal,"				
 //					+ "STDDEV(" + attrName1 + ") AS stdDev,"				
 //					+ "COUNT(" + attrName1 + ") AS numDistinct,"
@@ -444,7 +482,7 @@ public class ProfileOperator {
 //					+ " FROM " + profileTableName  
 //					+ " GROUP by " +  attrName 
 //					+ " HAVING COUNT(" + attrName + ") > 1) t) AS numDuplicates, '" 
-//					+ profileExec.getVersion() + "' AS version"
+//					+ profileExec.getVersion() + "' AS VERSION"
 //					+ " FROM " + profileTableName
 //					+ " " + datapod.getName()
 //					+ " WHERE 1=1 "

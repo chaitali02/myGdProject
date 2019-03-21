@@ -85,7 +85,7 @@ InferyxApp.factory('graphService',function(dagMetaDataService,setDataFactory){
               }],
               isTemplate:true
             },
-            position: { x: 150 , y: stageYPos },
+            position: { x: 250 , y: stageYPos },
             attrs: {
               "model-data": {
                 uuid: "stage_0",
