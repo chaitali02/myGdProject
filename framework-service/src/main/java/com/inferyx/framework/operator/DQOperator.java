@@ -206,23 +206,23 @@ public class DQOperator implements IParsable {
 	
 	static final Logger logger = Logger.getLogger(DQOperator.class);
 	
-	public String generateResFilteredSql(DataQual dataQual, List<String> datapodList, DataQualExec dataQualExec, DagExec dagExec,  
-			Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode) throws Exception {
-		String resultSql = generateSql(dataQual, datapodList, dataQualExec, dagExec, usedRefKeySet,
-										otherParams, runMode);
-		logger.info("Inside generateResFilteredSql : PasFailCheck : " + dataQual.getPassFailCheck());
-		if (StringUtils.isBlank(dataQual.getPassFailCheck()) || dataQual.getPassFailCheck().equalsIgnoreCase(ALL_A)) {
-			return resultSql;
-		}
-		
-		StringBuilder resultSqlBuilder = new StringBuilder(SELECT);
-		resultSqlBuilder = resultSqlBuilder.append(MULTIPLY_BY).append(FROM).append(BRACKET_OPEN).append(resultSql).append(BRACKET_CLOSE).append(DQ_RESULT_ALIAS);
-		resultSqlBuilder = resultSqlBuilder.append(WHERE_1_1).append(AND).append(ALL_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTE).append(dataQual.getPassFailCheck()).append(SINGLE_QUOTE);
-		return resultSqlBuilder.toString();
-	}
+//	public String generateResFilteredSql(DataQual dataQual, List<String> datapodList, DataQualExec dataQualExec, DagExec dagExec,  
+//			Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode) throws Exception {
+//		String resultSql = generateSql(dataQual, datapodList, dataQualExec, dagExec, usedRefKeySet,
+//										otherParams, runMode);
+//		logger.info("Inside generateResFilteredSql : PasFailCheck : " + dataQual.getPassFailCheck());
+//		if (StringUtils.isBlank(dataQual.getPassFailCheck()) || dataQual.getPassFailCheck().equalsIgnoreCase(ALL_A)) {
+//			return resultSql;
+//		}
+//		
+//		StringBuilder resultSqlBuilder = new StringBuilder(SELECT);
+//		resultSqlBuilder = resultSqlBuilder.append(MULTIPLY_BY).append(FROM).append(BRACKET_OPEN).append(resultSql).append(BRACKET_CLOSE).append(DQ_RESULT_ALIAS);
+//		resultSqlBuilder = resultSqlBuilder.append(WHERE_1_1).append(AND).append(ALL_CHECK_PASS).append(EQUAL_TO).append(SINGLE_QUOTE).append(dataQual.getPassFailCheck()).append(SINGLE_QUOTE);
+//		return resultSqlBuilder.toString();
+//	}
 	
 	public String generateSql(DataQual dataQual, List<String> datapodList, DataQualExec dataQualExec, DagExec dagExec,  
-			Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode) throws Exception {
+			Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode, String summaryFlag) throws Exception {
 		logger.info("DQ generateSql otherParams : " + otherParams);
 		Datapod srcDP = null;
 //		DataSet dataset = null;
@@ -244,21 +244,13 @@ public class DQOperator implements IParsable {
 				usedRefKeySet.add(srcDPRef);
 				return generateSql(dataQual, datapodServiceImpl.genTableNameByDatapod(srcDP, dagExec != null ? dagExec.getVersion(): null, datapodList, otherParams, dagExec, runMode, true),
 						srcDP.getAttribute(Integer.parseInt(dataQual.getAttribute().getAttrId())).getName(),
-						datapodList, dataQualExec, dagExec, usedRefKeySet, otherParams, runMode);
+						datapodList, dataQualExec, dagExec, usedRefKeySet, otherParams, runMode, summaryFlag);
 			} else {
 				return generateSql(dataQual, datapodServiceImpl.genTableNameByDatapod(srcDP, dagExec != null ? dagExec.getVersion(): null, datapodList, otherParams, dagExec, runMode, true), null, datapodList,
-						dataQualExec, dagExec, usedRefKeySet, otherParams, runMode);
+						dataQualExec, dagExec, usedRefKeySet, otherParams, runMode, summaryFlag);
 			}
 		}
 		if (dataQual.getDependsOn().getRef().getType() == MetaType.dataset) {
-			/*
-			 * dataset = (Dataset)
-			 * daoRegister.getRefObject(dataQual.getAttribute().getRef()); String attr =
-			 * datasetServiceImpl.getAttributeSql(daoRegister, dataset,
-			 * Integer.parseInt(dataQual.getAttribute().getAttributeId())); if (attr ==
-			 * null) { return null; } return generateSql(dataQual, dataset.getName(),
-			 * attr.split("\\.")[1]);
-			 */
 			throw new Exception("DQ on dataset is not supported");
 		}
 		return null;
@@ -617,7 +609,7 @@ public class DQOperator implements IParsable {
 	}
 
 	public String generateSql(DataQual dq, String tableName, String attributeName, List<String> datapodList,
-			DataQualExec dataQualExec, DagExec dagExec, Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode)
+			DataQualExec dataQualExec, DagExec dagExec, Set<MetaIdentifier> usedRefKeySet, HashMap<String, String> otherParams, RunMode runMode, String summaryFlag)
 			throws Exception {
 		String select = generateSelect(dq, dataQualExec, tableName, attributeName);
 		if (StringUtils.isBlank(select)) {
@@ -626,12 +618,14 @@ public class DQOperator implements IParsable {
 		select = select.concat(generateFrom(dq, dq.getDependsOn().getRef(), attributeName, datapodList, dagExec, usedRefKeySet, otherParams, runMode))
 				.concat(WHERE_1_1).concat(generateFilter(dq, usedRefKeySet, runMode));
 		select = generateallCheckFlag(select, dq, dataQualExec);
-		select = generateAllCheckDetailSql(select);
-		logger.info("Detail SQL for dataQual : " + dq.getUuid() + " : " + StringUtils.isBlank(select));
+
+		if (summaryFlag == null || summaryFlag == "N")
+			select = generateAllCheckDetailSql(select);
+		
 		return select;
 		
 	}
-	
+
 	public String generateAbortQuery(DataQual dq, List<String> datapodList,
 			DataQualExec dataQualExec, DagExec dagExec, MetaIdentifier summaryDpRef, HashMap<String, String> otherParams, RunMode runMode) throws Exception {
 
@@ -793,7 +787,8 @@ public class DQOperator implements IParsable {
 //		DataStore datasore = datastoreServiceImpl.findLatestByMeta(summaryDpRef.getUuid(), summaryDpRef.getVersion());
 //		String summaryTableName = datastoreServiceImpl.getTableNameByDatastore(datasore.getUuid(), datasore.getVersion(), runMode);
 
-		String resSql = dataQualExec.getExec();
+//		String resSql = dataQualExec.getExec();
+		String resSql = generateSql(dq,datapodList,dataQualExec,dagExec,usedRefKeySet,otherParams,runMode,"Y");		
 		String sql = generateSummarySql4(dq, dataQualExec, generateSummarySql3(generateSummarySql2(generateSummarySql1(resSql)), summaryTableName,dq));
 		return sql;
 	}
@@ -1242,7 +1237,7 @@ public class DQOperator implements IParsable {
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
 		DataQual dataQual = (DataQual) commonServiceImpl.getOneByUuidAndVersion(baseExec.getDependsOn().getRef().getUuid(), baseExec.getDependsOn().getRef().getVersion(), MetaType.dq.toString(), "Y");
 		try{
-			dataQualExec.setExec(generateSql(dataQual, null, dataQualExec, null, usedRefKeySet, execParams.getOtherParams(), runMode));
+			dataQualExec.setExec(generateSql(dataQual, null, dataQualExec, null, usedRefKeySet, execParams.getOtherParams(), runMode, null));
 			dataQualExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 			
 			synchronized (dataQualExec.getUuid()) {

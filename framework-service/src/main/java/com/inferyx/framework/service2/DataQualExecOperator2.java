@@ -62,7 +62,7 @@ public class DataQualExecOperator2 implements IOperator {
 		DataQualExec dataQualExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(baseExec.getUuid(), baseExec.getVersion(), MetaType.dqExec.toString());
 		dataQual = (DataQual) commonServiceImpl.getOneByUuidAndVersion(dataQualExec.getDependsOn().getRef().getUuid(), dataQualExec.getDependsOn().getRef().getVersion(), MetaType.dq.toString());
 		try{
-		dataQualExec.setExec(dqOperator.generateSql(dataQual, null, dataQualExec, null, usedRefKeySet, execParams.getOtherParams(), runMode));
+		dataQualExec.setExec(dqOperator.generateSql(dataQual, null, dataQualExec, null, usedRefKeySet, execParams.getOtherParams(), runMode, null));
 		dataQualExec.setRefKeyList(new ArrayList<>(usedRefKeySet));
 		
 		synchronized (dataQualExec.getUuid()) {

@@ -500,12 +500,12 @@ public class DataQualServiceImpl extends RuleTemplate {
 		}
 		DataQual dataQual = (DataQual) commonServiceImpl.getOneByUuidAndVersion(
 				dataQualExec.getDependsOn().getRef().getUuid(), dataQualExec.getDependsOn().getRef().getVersion(),
-				MetaType.dq.toString(), "N");
+				MetaType.dq.toString(), "Y");
 		try {
-			/*dataQualExec.setExec(dqOperator.generateSql(dataQual, datapodList, dataQualExec, dagExec, usedRefKeySet,
-					otherParams, runMode));*/
-			dataQualExec.setExec(dqOperator.generateResFilteredSql(dataQual, datapodList, dataQualExec, dagExec, usedRefKeySet,
-					otherParams, runMode));
+			dataQualExec.setExec(dqOperator.generateSql(dataQual, datapodList, dataQualExec, dagExec, usedRefKeySet,
+					otherParams, runMode, null));
+//			dataQualExec.setExec(dqOperator.generateResFilteredSql(dataQual, datapodList, dataQualExec, dagExec, usedRefKeySet,
+//					otherParams, runMode));
 			dataQualExec.setSummaryExec(dqOperator.generateSummarySql(dataQual, datapodList, dataQualExec, dagExec, getTargetSummaryDp(), 
 					usedRefKeySet, otherParams, runMode));
 			dataQualExec.setAbortExec(dqOperator.generateAbortQuery(dataQual, datapodList, dataQualExec, dagExec, getTargetSummaryDp(), otherParams, runMode));

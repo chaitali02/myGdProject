@@ -16,7 +16,7 @@
             "configId" : "2",
             "configName" : "framework.profile.datapod.uuid",
             "configType" : "string",
-            "configVal" : "77aefb4c-191c-11e7-93ae-92361f002671"
+            "configVal" : "77aefb4c-191c-11e7-93ae-92361f002622"
         }
     ],
     "dependsOn" : {
