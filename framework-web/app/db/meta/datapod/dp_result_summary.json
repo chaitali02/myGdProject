@@ -2,7 +2,7 @@
 	"datasource": {
 		"ref": {
 			"type": "datasource",
-			"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b73024"
+  	  		"uuid": "4f65d730-866c-417d-9305-472cd82599db"
 		}
 	},
 	"cache": "Y",
@@ -338,12 +338,6 @@
 	"locked": "N",
 	"published": "N",
 	"appInfo": [
-		{
-			"ref": {
-				"type": "application",
-				"uuid": "d7c11fd7-ec1a-40c7-ba25-7da1e8b730cb"
-			}
-		},
 		{
 			"ref": {
 				"type": "application",
