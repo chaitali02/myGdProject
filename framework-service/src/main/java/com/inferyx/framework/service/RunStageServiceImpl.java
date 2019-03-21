@@ -1213,9 +1213,10 @@ public class RunStageServiceImpl implements Callable<String> {
 					&& operationInfoHolder.getRef().getType().equals(MetaType.dq)) {
 				MetaIdentifier mapRef = operationInfoHolder.getRef();
 				//DataQual dataQual = dataqualServiceImpl.findLatestByUuid(mapRef.getUuid());
-				DataQual dataQual = (DataQual) commonServiceImpl.getLatestByUuid(mapRef.getUuid(), MetaType.dq.toString());
+//				DataQual dataQual = (DataQual) commonServiceImpl.getLatestByUuid(mapRef.getUuid(), MetaType.dq.toString());
 //				Datapod targetDatapod = (Datapod) daoRegister.getRefObject(new MetaIdentifier(MetaType.datapod, dqInfo.getDqTargetUUID(), null));
-				Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dqInfo.getDqTargetUUID(), null, MetaType.datapod.toString(), "N");
+//				Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dqInfo.getDqTargetUUID(), null, MetaType.datapod.toString(), "N");
+				Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dqInfo.getDq_result_detail(), null, MetaType.datapod.toString(), "N");
 				
 				return new OrderKey(targetDatapod.getUuid(),
 						targetDatapod.getVersion());
@@ -1228,7 +1229,7 @@ public class RunStageServiceImpl implements Callable<String> {
 					&& operationInfoHolder.getRef().getType().equals(MetaType.profile)) {
 				MetaIdentifier mapRef = operationInfoHolder.getRef();
 				//Profile profile = profileServiceImpl.findLatestByUuid(mapRef.getUuid());
-				Profile profile = (Profile) commonServiceImpl.getLatestByUuid(mapRef.getUuid(), MetaType.profile.toString());
+//				Profile profile = (Profile) commonServiceImpl.getLatestByUuid(mapRef.getUuid(), MetaType.profile.toString());
 				/*Datapod targetDatapod = (Datapod) daoRegister
 						.getRefObject(new MetaIdentifier(MetaType.datapod, "77aefb4c-191c-11e7-93ae-92361f002671", null));*/
 //				Datapod targetDatapod = (Datapod) daoRegister.getRefObject(new MetaIdentifier(MetaType.datapod, profileInfo.getProfileTargetUUID(), null));
@@ -1238,8 +1239,8 @@ public class RunStageServiceImpl implements Callable<String> {
 						targetDatapod.getVersion());
 			}  else if (operationInfoHolder != null && operationInfoHolder.getRef() != null
 					&& operationInfoHolder.getRef().getType().equals(MetaType.recon)) {
-				MetaIdentifier reconRef = operationInfoHolder.getRef();
-				Recon recon = (Recon) commonServiceImpl.getLatestByUuid(reconRef.getUuid(), MetaType.recon.toString());
+//				MetaIdentifier reconRef = operationInfoHolder.getRef();
+//				Recon recon = (Recon) commonServiceImpl.getLatestByUuid(reconRef.getUuid(), MetaType.recon.toString());
 				/*Datapod targetDatapod = (Datapod) daoRegister
 						.getRefObject(new MetaIdentifier(MetaType.datapod, "77aefb4c-191c-11e7-93ae-92361f002699", null));*/
 //				Datapod targetDatapod = (Datapod) daoRegister.getRefObject(new MetaIdentifier(MetaType.datapod, reconInfo.getReconTargetUUID(), null));

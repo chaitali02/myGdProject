@@ -1,8 +1,8 @@
 {
-	"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73040",
+	"uuid" : "d7c11fd7-ec1a-40c7-ba25-7da1e8b73121",
 	"version" : "1464977196",
-	"name" : "file_upload",
-	"desc" : "File Data Source to upload file",
+	"name" : "file_download",
+	"desc" : "File Data Source to download file",
 	"createdBy" : {
 		"ref" : {
 			"type" : "user",
@@ -29,6 +29,6 @@
 	"port" : "",
 	"username" : "",
 	"password" : "",
-	"path" : "/user/hive/warehouse/framework/upload/",
+	"path" : "/user/hive/warehouse/framework/download/",
 	"sessionParameters" : ""
 }

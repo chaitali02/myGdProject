@@ -11,6 +11,12 @@
             "configName" : "framework.dataqual.summary.uuid",
             "configType" : "string",
             "configVal" : "17741969-5a2f-442a-bf8d-4fa5a0c71127"
+        }, 
+        {
+            "configId" : "2",
+            "configName" : "framework.profile.datapod.uuid",
+            "configType" : "string",
+            "configVal" : "77aefb4c-191c-11e7-93ae-92361f002671"
         }
     ],
     "dependsOn" : {
@@ -19,8 +25,8 @@
             "uuid" : "4be92a58-3e24-410c-ab09-e1e719c1db81"
         }
     },
-    "uuid" : "a9ac841e-04ef-4984-a245-295134280e23",
-    "version" : "1552585963",
+    "uuid" : "27d87a1b-13bf-4f37-ac3c-88e8c50585bb",
+    "version" : "1553135923",
     "name" : "Deutsche Admin",
     "createdBy" : {
         "ref" : {
@@ -30,7 +36,7 @@
             "name" : "db_admin"
         }
     },
-    "createdOn" : ISODate("2019-03-14T17:52:43.000Z"),
+    "createdOn" : ISODate("2019-03-21T02:38:43.000Z"),
     "tags" : [],
     "active" : "Y",
     "locked" : "N",

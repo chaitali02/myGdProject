@@ -25,6 +25,7 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.ConstantsUtil;
+import com.inferyx.framework.common.DQInfo;
 import com.inferyx.framework.domain.Attribute;
 import com.inferyx.framework.domain.AttributeDomain;
 import com.inferyx.framework.domain.BaseExec;
@@ -46,6 +47,7 @@ import com.inferyx.framework.enums.ThresholdType;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DatapodServiceImpl;
+import com.inferyx.framework.service.ExecutorServiceImpl;
 import com.inferyx.framework.service.MessageStatus;
 import com.inferyx.framework.service.MetadataServiceImpl;
 
@@ -197,6 +199,10 @@ public class DQOperator implements IParsable {
 	private DatapodServiceImpl datapodServiceImpl;
 	@Autowired
 	private MetadataServiceImpl metadataServiceImpl;
+	@Autowired
+	private ExecutorServiceImpl executorServiceImpl;
+	@Autowired
+	private DQInfo dqInfo;
 	
 	static final Logger logger = Logger.getLogger(DQOperator.class);
 	
@@ -628,13 +634,9 @@ public class DQOperator implements IParsable {
 	
 	public String generateAbortQuery(DataQual dq, List<String> datapodList,
 			DataQualExec dataQualExec, DagExec dagExec, MetaIdentifier summaryDpRef, HashMap<String, String> otherParams, RunMode runMode) throws Exception {
-//		Datapod summaryDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(summaryDpRef.getUuid(), summaryDpRef.getVersion(), summaryDpRef.getType().toString(), "N");
-//		String summaryTableName = datapodServiceImpl.genTableNameByDatapod(summaryDp, dagExec != null ? dagExec.getVersion(): null, datapodList, otherParams, dagExec, runMode, true);
-//		String summaryTableName = commonServiceImpl.genTableNameByRule(dq, dataQualExec, summaryDpRef, ExecContext.spark, runMode)+"_summary";
-//		String summaryTableName = "_summary";
-		String summaryTableName = commonServiceImpl.genTableNameByRule(dq, dataQualExec, summaryDpRef, ExecContext.spark, runMode);
-//		DataStore datasore = datastoreServiceImpl.findLatestByMeta(summaryDpRef.getUuid(), summaryDpRef.getVersion());
-//		String summaryTableName = datastoreServiceImpl.getTableNameByDatastore(datasore.getUuid(), datasore.getVersion(), runMode);
+
+		Datapod summaryDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(summaryDpRef.getUuid(), summaryDpRef.getVersion(), summaryDpRef.getType().toString(), "N");
+		String summaryTableName = datapodServiceImpl.genTableNameByDatapod(summaryDp, dagExec != null ? dagExec.getVersion(): null, datapodList, otherParams, dagExec, runMode, true);
 		StringBuilder select = new StringBuilder(SELECT)
 								.append(THRESHOLD_IND).append(FROM)
 								.append(summaryTableName).append(WHERE_1_1)
@@ -754,9 +756,9 @@ public class DQOperator implements IParsable {
 
 	public String mapDetailLogValue(String detailLogValue) {
 		if (detailLogValue.equalsIgnoreCase("pass")) {
-			return "\"Y\"";
+			return "'Y'";
 		} else if (detailLogValue.equalsIgnoreCase("fail")) {
-			return "\"N\"";
+			return "'N'";
 		}
 		return null;
 	}

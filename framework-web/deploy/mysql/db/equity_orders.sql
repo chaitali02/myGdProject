@@ -2,15 +2,15 @@ DROP TABLE IF EXISTS equity_orders;
 
 CREATE TABLE equity_orders
   ( 
-     order_identifier                        VARCHAR(50), 
-     order_event_number                      VARCHAR(50), 
+     order_identifier                        BIGINT, 
+     order_event_number                      INT(2), 
      order_placement_date                    VARCHAR(50), 
-     parent_order_id                         VARCHAR(50), 
+     parent_order_id                         BIGINT, 
      parent_order_placement_date             VARCHAR(50), 
      root_order_identifier                   VARCHAR(50), 
      root_order_placement_date               VARCHAR(50), 
      order_allocation_relationship_code      VARCHAR(50), 
-     allocated_order_id                      VARCHAR(50), 
+     allocated_order_id                      BIGINT, 
      allocated_order_placement_date          VARCHAR(50), 
      order_event_type_cd                     VARCHAR(50), 
      order_event_date                        VARCHAR(50), 
@@ -77,5 +77,6 @@ CREATE TABLE equity_orders
      replaced_order_placement_date           VARCHAR(50), 
      business_domain                         VARCHAR(50), 
      jurisdiction                            VARCHAR(50), 
-     source_system                           VARCHAR(50) 
-  ); 
+     source_system                           VARCHAR(50),
+	 PRIMARY KEY(order_identifier,order_event_number)     
+  );

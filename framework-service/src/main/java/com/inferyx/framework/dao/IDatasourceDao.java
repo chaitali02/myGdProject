@@ -33,8 +33,8 @@ public interface IDatasourceDao extends MongoRepository<Datasource, String>{
 	@Query(value="{ 'uuid' : ?0 }")
 	public Datasource findLatestByUuid(String uuid, Sort sort);
 	
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
-	public List<Datasource> findAll(String appUuid);	
+	@Query(value = "{$or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]}")
+	public List<Datasource> findAll(String appUuid);
 	
 	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid':?1}")
 	public Datasource findAllByUuid(String appUuid,String uuid);
