@@ -1,8 +1,8 @@
 {
-  "uuid": "477e2f38-116c-4a03-ae78-5d1624691800",
+  "uuid": "477e2f38-116c-4a03-ae78-5d1624691901",
   "version": "1552115484",
-  "name": "dq_rule_dashboard",
-  "desc": "Creating datastore for dq_rule_dashboard",
+  "name": "dq_result_summary",
+  "desc": "Creating datastore for dq_result_summary",
   "createdBy": {
     "ref": {
       "type": "user",
@@ -26,14 +26,14 @@
   "metaId": {
     "ref": {
       "type": "datapod",
-      "uuid": "d2aad149-9700-4a05-aad0-4a8e9d6f0bd7",
-      "version": "1552412535",
-      "name": "dq_rule_dashboard"
+      "uuid": "17741969-5a2f-442a-bf8d-4fa5a0c71127",
+      "version": "1552115484",
+      "name": "dq_rule_summary"
     },
     "value": null
   },
   "execId": {},
-  "location": "/d2aad149-9700-4a05-aad0-4a8e9d6f0bd7/1552412535/1552412535",
+  "location": "/17741969-5a2f-442a-bf8d-4fa5a0c71125/1552115484/1552996326",
   "persistMode": "DISK_ONLY",
   "dimInfo": null,
   "numRows" : NumberLong(0),
