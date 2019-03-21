@@ -856,12 +856,13 @@ public class DataQualServiceImpl extends RuleTemplate {
 		List<BaseEntity> baseEntities = new ArrayList<BaseEntity>();
 		MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
 		List<MetaIdentifierHolder> appInfo = new ArrayList<MetaIdentifierHolder>();
-
+		appInfo.add(meta);
+		int count=1;
 		for (Attribute attr : attrList) {
 			DataQual dataqual = new DataQual();
-			dataqual.setName("dqr_" + dp.getName() + "_" + attr.getName() + "_not_null_check");
-
-			dataqual.setPublicFlag("N");
+			dataqual.setName("dqr_" + dp.getName() + "_rule" +count);
+			count++;
+			dataqual.setPublicFlag("Y");
 			dataqual.setPublicFlag("N");
 			dataqual.setDependsOn(dependsOn);
 
@@ -878,7 +879,7 @@ public class DataQualServiceImpl extends RuleTemplate {
 
 			dataqual.setDuplicateKeyCheck("N");
 			dataqual.setNullCheck("Y");
-			appInfo.add(meta);
+			
 			dataqual.setAppInfo(appInfo);
 			dataqual.setRangeCheck(new HashMap<String, String>());
 			dataqual.setLengthCheck(new HashMap<String, Long>());

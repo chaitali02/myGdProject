@@ -1,5 +1,17 @@
 select tabname,cnt from
 (
+select 'security' as tabname, count(*) as cnt from security
+union
+select 'equity_orders' as tabname, count(*) as cnt from equity_orders
+union
+select 'equity_executions' as tabname, count(*) as cnt from equity_executions
+union
+select 'rule_result_summary' as tabname, count(*) as cnt from rule_result_summary
+union
+select 'dq_result_summary' as tabname, count(*) as cnt from dq_result_summary
+union
+
+
 select 'account_mysql' as tabname, count(*) as cnt from account_mysql
 union
 select 'account' as tabname, count(*) as cnt from account
@@ -42,16 +54,13 @@ select 'dim_customer' as tabname, count(*) as cnt from dim_customer
 union
 select 'dim_transaction_type' as tabname, count(*) as cnt from dim_transaction_type
 union
-select 'dp_rule_results' as tabname, count(*) as cnt from dp_rule_results
-union
-select 'dq_rule_results' as tabname, count(*) as cnt from dq_rule_results
-union
+
+
 select 'fact_account_summary_monthly' as tabname, count(*) as cnt from fact_account_summary_monthly
 union
 select 'fact_customer_summary_monthly' as tabname, count(*) as cnt from fact_customer_summary_monthly
 union
 select 'fact_transaction' as tabname, count(*) as cnt from fact_transaction
-union
-select 'rc_rule_results' as tabname, count(*) as cnt from rc_rule_results
+
 ) t1
 order by tabname; 
