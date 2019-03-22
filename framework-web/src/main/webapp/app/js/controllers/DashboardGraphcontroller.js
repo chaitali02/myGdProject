@@ -1116,7 +1116,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
 
 
   $scope.actionEvent = function (d, i, data) {
-    debugger
+    
     var filterinfoArray = []
     var vizpodbody = {}
     var filterInfo = {};
