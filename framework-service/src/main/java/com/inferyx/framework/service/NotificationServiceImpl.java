@@ -112,7 +112,7 @@ public class NotificationServiceImpl {
 	        // Part two is attachment
 	        if(senderInfo.getEmailAttachment() != null && !senderInfo.getEmailAttachment().isEmpty() && senderInfo.getSendAttachment().equalsIgnoreCase("Y")) {
 	        	for(String fileName : senderInfo.getEmailAttachment().keySet()) {
-	        		logger.info("pdf file path: "+senderInfo.getEmailAttachment().get(fileName));
+	        		logger.info("notification file path: "+senderInfo.getEmailAttachment().get(fileName));
 			        BodyPart attachmentBodyPart = new MimeBodyPart();
 			        DataSource source = new FileDataSource(senderInfo.getEmailAttachment().get(fileName));
 			        attachmentBodyPart.setDataHandler(new DataHandler(source));
