@@ -2077,7 +2077,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
              var url=$location.absUrl().split("app")[0];
              execStates={state : dagMetaDataService.elementDefs[type.toLowerCase()+"exec"].detailState, params : {id :dagExec.uuid,version:dagExec.version || " ",name:dagExec.name,type:type+"exec",mode:true, returnBack: true}};
              $http.get(url+'metadata/getMetaIdByExecId?action=view&execUuid='+dagExec.uuid+'&execVersion='+dagExec.version+'&type='+type+"exec").then(function (res) {
-              state = {state : dagMetaDataService.elementDefs[res.data.type].state, params : {id :res.data.uuid,version:res.data.version || " ",name:"",type:type,mode:true, returnBack: true}};
+              state = {state : dagMetaDataService.elementDefs[res.data.type].state, params : {id :res.data.uuid,version:res.data.version || " ",name:res.data.name,type:type,mode:true, returnBack: true}};
                iconMenu(localPoint.x, localPoint.y, JSON.stringify(state),JSON.stringify(execStates),JSON.stringify(resultparams));
              });}
              else{
