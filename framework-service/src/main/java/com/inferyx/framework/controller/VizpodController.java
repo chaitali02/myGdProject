@@ -44,37 +44,6 @@ public class VizpodController {
 	DagExecServiceImpl dagExecImpl;
 	@Autowired
 	DataStoreServiceImpl datastoreImpl;
-//
-//	@RequestMapping(value = "/getVizpodResults/{VizpodUUID}/{VizpodVersion}", method = RequestMethod.GET)
-//	public List<Map<String, Object>> getVizpodResults(@PathVariable(value = "VizpodUUID") String vizpodUUID,
-//			@PathVariable(value = "VizpodVersion") String vizpodVersion,
-//			@RequestParam(value = "DatastoreUUID") String datastoreUUID,
-//			@RequestParam(value = "DatastoreVersion") String datastoreVersion,
-//			@RequestParam(value ="rows",defaultValue="1000") int rows,
-//			@RequestParam(value="offset", defaultValue="0") int offset, 
-//			@RequestParam(value="limit", defaultValue="300") int limit,
-//			@RequestParam(value="sortBy", required=false) String sortBy,
-//			@RequestParam(value="order", required=false) String order, 
-//			@RequestParam(value="requestId") String requestId,
-//			@RequestParam(value = "type", required = false) String type,
-//			@RequestParam(value = "action", required = false) String action) throws IOException, JSONException, ParseException {
-//		VizpodResultHolder resultHolder = vizpodServiceImpl.getVizpodResults(vizpodUUID, vizpodVersion, datastoreUUID, datastoreVersion, rows, offset, limit, sortBy, order, requestId);
-//		if (resultHolder == null) {
-//			return null;
-//		}
-//		return resultHolder.getVizpodResultDataList();
-//	}
-
-//	@RequestMapping(value = "/getVizpodResults/{VizpodUUID}/{VizpodVersion}", method = RequestMethod.POST)
-//	public List<Map<String, Object>> getVizpodResults(@PathVariable(value = "VizpodUUID") String vizpodUUID,
-//			@PathVariable(value = "VizpodVersion") String vizpodVersion,
-//			@RequestBody(required = false) ExecParams execParams) throws IOException {
-//		VizpodResultHolder resultHolder = vizpodServiceImpl.getVizpodResults(vizpodUUID, vizpodVersion, execParams);
-//		if (resultHolder == null) {
-//			return null;
-//		}
-//		return resultHolder.getVizpodResultDataList();
-//	}
 
 	@RequestMapping(value = "/getVizpodResults/{VizpodUUID}/{VizpodVersion}", method = RequestMethod.POST)
 	public List<Map<String, Object>> getVizpodResults(@PathVariable(value = "VizpodUUID") String vizpodUUID,
@@ -143,29 +112,6 @@ public class VizpodController {
 		return vizpodServiceImpl.getVizpodResults(vizExecUuid, vizExecVersion, saveOnRefresh, rows, offset, limit, sortBy, order, requestId, runMode);	
 	}
 	
-	
-	
-
-//@RequestMapping(value = "/getVizpodResults/{VizpodUUID}/{VizpodVersion}/{VizpodExecUUID}", method = RequestMethod.POST)
-//public VizpodResultHolder getVizpodResults(@PathVariable(value = "VizpodUUID") String vizpodUUID,
-//		@PathVariable(value = "VizpodVersion") String vizpodVersion, 
-//		@PathVariable(value = "VizpodExecUUID") String vizExecUUID,
-//		@RequestParam(value ="rows",defaultValue="1000") int rows,
-//		@RequestParam(value="offset", defaultValue="0") int offset, 
-//		@RequestParam(value="limit", defaultValue="200") int limit,
-//		@RequestParam(value="sortBy", required=false) String sortBy,
-//		@RequestParam(value="order", required=false) String order, 
-//		@RequestParam(value="requestId") String requestId, 
-//		@RequestBody(required = false) ExecParams execParams,
-//		@RequestParam(value = "type", required = false) String type,
-//		@RequestParam(value = "action", required = false) String action) throws IOException, JSONException, ParseException {
-//	VizpodResultHolder resultHolder = vizpodServiceImpl.getVizpodResults(vizpodUUID, vizpodVersion, execParams, vizExecUUID, rows, offset, limit, sortBy, order, requestId);
-//	if (resultHolder == null) {
-//		return null;
-//	}
-//	return resultHolder;
-//}
-
 	@RequestMapping(value = "/download", method = RequestMethod.GET)
 	public HttpServletResponse download(@RequestParam(value = "uuid") String vizExecUuid,
 			@RequestParam(value = "version") String vizExecVersion,

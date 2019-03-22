@@ -82,16 +82,6 @@ public class DatapodController {
 		 	RunMode runMode = Helper.getExecutionMode(mode);
 	    	return datastoreServiceImpl.getDatapodSample(datapodUUID,datapodVersion,rows, runMode);	   	
 	   }
-
-	 /********************** UNUSED **********************/
-	 /*@RequestMapping(value="/getAttributeValues", method=RequestMethod.GET)
-	    public List<String>  getAttributeValues(@RequestParam(value= "datapodUUID") String datapodUUID, 
-	    		@RequestParam(value= "type", required=false) String type, 
-	    		@RequestParam(value= "attributeId") int attributeID,
-				@RequestParam(value = "action", required = false) String action) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException
-	    		{
-	    	return datastoreServiceImpl.getAtributeValues(datapodUUID, type, attributeID);	   	
-	   }*/
 	 
 	 @RequestMapping(value="/getAttributeValues1", method=RequestMethod.GET)
 	    public List<Map<String, Object>>  getAttributeValues(@RequestParam(value= "datapodUUID") String datapodUUID,

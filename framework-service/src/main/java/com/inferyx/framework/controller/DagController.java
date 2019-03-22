@@ -84,11 +84,6 @@ public class DagController {
 		return true;		
 	}
 	
-	/*@RequestMapping(value="/dagWithParams/dagUUID/{uuid}/dagVersion/{version}", method=RequestMethod.POST)
-    public MetaIdentifierHolder submitDag(@PathVariable String uuid, @PathVariable String version, @RequestBody ExecParams execParams) throws JsonParseException, JsonMappingException, IOException, ParseException, JSONException {
-		return dagServiceImpl.submitDag(uuid, version, execParams);
-	}*/
-	
 	@RequestMapping(value="/dagWithParams", method=RequestMethod.POST)
     public MetaIdentifierHolder submitDag(@RequestBody DagWithParamsHolder dagWithParams,
 			@RequestParam(value = "type", required = false) String type,
@@ -118,12 +113,6 @@ public class DagController {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		return dagServiceImpl.submitDag(dagUuid, dagVersion, execParams, type, runMode);
 	}
-	/*
-	@RequestMapping(method=RequestMethod.POST)
-    public MetaIdentifierHolder submitDag(@RequestBody Dag dag) throws JsonParseException, JsonMappingException, IOException, ParseException, JSONException {
-		return dagServiceImpl.submitDag(dag);
-
-    }*/
 	
 	@RequestMapping(value = "/getDagByDagExec", method = RequestMethod.GET)
 	public @ResponseBody String getDagByDagExec(@RequestParam("DagExecUuid") String DagExecUuid,

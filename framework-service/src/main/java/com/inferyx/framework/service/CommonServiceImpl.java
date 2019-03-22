@@ -3182,51 +3182,7 @@ public class CommonServiceImpl<T> {
 	 * @param status
 	 * @return
 	 */
-	// public List<Status> setMetaStatus (String uuid, String version, MetaType
-	// metaType, Status.Stage stage) {
-	// Object object = null;
-	// Object iDao = null;
-	// List<Status> statusList = null;
-	// String appUuid = (securityServiceImpl.getAppInfo() != null &&
-	// securityServiceImpl.getAppInfo().getRef() != null)
-	// ? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-	// try {
-	// // Get the object
-	// iDao = this.getClass().getMethod(GET +
-	// Helper.getDaoClass(metaType)).invoke(this);
-	// if (appUuid != null) {
-	// object = (iDao).getClass().getMethod("findOneByUuidAndVersion", String.class,
-	// String.class, String.class).invoke(iDao, appUuid, uuid, version);
-	// } else {
-	// object = (iDao).getClass().getMethod("findOneByUuidAndVersion", String.class,
-	// String.class).invoke(iDao, uuid, version);
-	// }
-	// statusList = (List<Status>)
-	// Helper.getDomainClass(metaType).getMethod(GET+"Status").invoke(object);
-	// } catch(NullPointerException | NoSuchMethodException | IllegalAccessException
-	// | IllegalArgumentException | InvocationTargetException | SecurityException
-	// e){
-	// e.printStackTrace();
-	// }
-	//
-	// switch (stage) {
-	// case PENDING:
-	// statusList = setPENDINGStatus(statusList);
-	// break;
-	// case RUNNING:
-	// statusList = setRUNNINGStatus(statusList);
-	// break;
-	// case FAILED:
-	// statusList = setFailedStatus(statusList);
-	// break;
-	// case COMPLETED:
-	// statusList = setCOMPLETEDStatus(statusList);
-	// break;
-	// default:
-	// break;
-	// }
-	// return statusList;
-	// }
+	
 
 	/**
 	 * Set Meta Status for stage

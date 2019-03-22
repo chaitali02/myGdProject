@@ -161,22 +161,6 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 	 * }
 	 */
 
-	
-
-	/********************** UNUSED **********************/
-	/*
-	 * public List<ModelExec> findModelExecByModel(String modelUUID) throws
-	 * JsonProcessingException { List<ModelExec> modelExecList=null; String appUuid
-	 * = (securityServiceImpl.getAppInfo() != null &&
-	 * securityServiceImpl.getAppInfo().getRef() != null
-	 * )?securityServiceImpl.getAppInfo().getRef().getUuid():null; if (appUuid !=
-	 * null) modelExecList = iModelExecDao.findOneByModel(appUuid, modelUUID); else
-	 * modelExecList = iModelExecDao.findOneByModel(modelUUID);
-	 * 
-	 * List<ModelExec> resolvedModelExecList = new ArrayList<>(); for(ModelExec
-	 * modelExec : modelExecList){ resolveName(modelExec);
-	 * resolvedModelExecList.add(modelExec); } return resolvedModelExecList; }
-	 */
 
 		/********************** UNUSED **********************/
 	/*public MetaIdentifier getMetaIdByExecId(String execUuid, String execVersion) throws Exception {
@@ -381,23 +365,7 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 	 * List<ModelExec> execList = mongoTemplate.find(query, ModelExec.class); return
 	 * execList; }
 	 */
-
-	/********************** UNUSED **********************/
-	/*
-	 * public Algorithm getAlgorithmByModelExec(String modelExecUUID, String
-	 * modelExecVersion) throws JsonProcessingException { ModelExec modelExec =
-	 * (ModelExec) commonServiceImpl.getOneByUuidAndVersion(modelExecUUID,
-	 * modelExecVersion, MetaType.modelExec.toString()); Model model = (Model)
-	 * commonServiceImpl.getOneByUuidAndVersion(modelExec.getDependsOn().getRef().
-	 * getUuid(), modelExec.getDependsOn().getRef().getVersion(),
-	 * MetaType.model.toString());
-	 * 
-	 * return (Algorithm)
-	 * commonServiceImpl.getOneByUuidAndVersion(model.getAlgorithm().getRef().
-	 * getUuid(), model.getAlgorithm().getRef().getVersion(),
-	 * MetaType.algorithm.toString()); }
-	 */
-
+	
 	public Algorithm getAlgorithmByTrainExec(String trainExecUUID, String trainExecVersion)
 			throws JsonProcessingException {
 
