@@ -4150,25 +4150,7 @@ public class CommonServiceImpl<T> {
 		}
 		return response;
 	}
-
-	/*
-	 * public String upload(MultipartFile file, String extension, String fileType,
-	 * String fileName,String uuid,String version,MetaType metaType) throws
-	 * FileNotFoundException, IOException { String uploadFileName =
-	 * file.getOriginalFilename(); FileType type = Helper.getFileType(fileType);
-	 * String fileLocation = null; String directoryLocation =
-	 * Helper.getFileDirectoryByFileType(type); if(fileName == null) { fileName =
-	 * Helper.getFileCustomNameByFileType(type, extension); }
-	 * 
-	 * fileLocation = directoryLocation+"/" + fileName; UploadExec uploadExec=new
-	 * UploadExec(); uploadExec.setFileName(uploadFileName);
-	 * uploadExec.setBaseEntity();
-	 * uploadExec.setLocation(fileLocation+"/"+uploadExec.getUuid()+"_"+uploadExec.
-	 * getVersion()+""); uploadExec.setDependsOn(new MetaIdentifierHolder(new
-	 * MetaIdentifier(metaType,uuid,version))); File scriptFile = new
-	 * File(fileLocation); file.transferTo(scriptFile); return fileName; }
-	 */
-
+	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List<T> findAllLatestWithoutAppUuid(MetaType type) throws IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
