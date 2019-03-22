@@ -181,6 +181,7 @@
                           <div class="bounce3"></div>
                         </div>
                         <div ng-if="datacol.vizpodDetails.datapoints && datacol.vizpodDetails.datapoints.length >0 && !inprogressdata && ['bar-chart','line-chart','area-chart'].indexOf(datacol.vizpodDetails.type) !=-1 && datacol.vizpodInfo.groups.length >0 && !IsVizpodDetailShow && datacol.isChartShow">
+                        
                           <div class="{{datacol.vizpodDetails.id}}" multi-series-chart data="datacol.vizpodDetails.datapoints" column="datacol.vizpodInfo" chartid="datacol.vizpodDetails.id" on-right-click="selectData" objdetail="datacol">
                           </div>
                         </div>
