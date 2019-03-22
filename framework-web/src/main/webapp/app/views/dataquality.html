@@ -27,7 +27,7 @@
       <!-- END PAGE HEADER-->
 
       <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div>
-
+      <br>
       <div options="dirOptions" type="'dq'" on-close="onPanelClose" mode="mode" current-user="userDetail" comment-data="dataqualitydata"
         comment-panel-directive></div>
       <div class="portlet light bordered" id="form_wizard_1">
@@ -157,7 +157,6 @@
                       <div class="col-md-6">
                         <select class="form-control" select2 name="version" ng-disabled="isversionEnable" ng-change="selectVersion()"
                           data-ng-model="dq.defaultVersion.version" ng-options="c.version as c.version for c in dq.versions">
-                          <option>-select-</option>
                         </select>
                       </div>
                     </div>
