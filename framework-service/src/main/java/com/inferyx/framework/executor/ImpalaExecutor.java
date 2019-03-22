@@ -505,9 +505,9 @@ public class ImpalaExecutor implements IExecutor {
 	}
 	@Override
 	public ResultSetHolder histogram(Datapod locationDatapod, String locationTableName, String sql, String key,
-			int numBuckets, String clientContext) throws IOException {
+			int numBuckets, String clientContext, Datasource datasource) throws IOException {
 		logger.info(" Inside method histogram.");
-		return sparkExecutor.histogram(locationDatapod, locationTableName, sql, key, numBuckets, clientContext);
+		return sparkExecutor.histogram(locationDatapod, locationTableName, sql, key, numBuckets, clientContext, datasource);
 	}
 	@Override
 	public ResultSetHolder mattrix(Datapod locationDatapod, String operation, String lhsTableName, String rhsTableName,

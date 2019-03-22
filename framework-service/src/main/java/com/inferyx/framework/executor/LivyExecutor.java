@@ -461,7 +461,7 @@ public class LivyExecutor implements IExecutor {
 
 	@Override
 	public ResultSetHolder histogram(Datapod locationDatapod, String locationTableName, String sql, String key,
-			int numBuckets, String clientContext) throws IOException {
+			int numBuckets, String clientContext, Datasource datasource) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}

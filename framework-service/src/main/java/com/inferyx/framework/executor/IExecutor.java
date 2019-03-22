@@ -641,10 +641,11 @@ public interface IExecutor {
 	 * @param key
 	 * @param numBuckets
 	 * @param clientContext
+	 * @param datasource TODO
 	 * @return ResultSetHolder
 	 * @throws IOException 
 	 */
-	ResultSetHolder histogram(Datapod locationDatapod, String locationTableName, String sql, String key, int numBuckets, String clientContext) throws IOException;
+	ResultSetHolder histogram(Datapod locationDatapod, String locationTableName, String sql, String key, int numBuckets, String clientContext, Datasource datasource) throws IOException;
 
 	/**
 	 * 
