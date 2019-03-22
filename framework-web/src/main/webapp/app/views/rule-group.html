@@ -219,9 +219,15 @@
                     </auto-complete>
                   </tags-input>
                 </div>
-                <div class="col-md-1">
+                <!-- <div class="col-md-1">
                   <span ng-hide="{{mode}}" class="glyphicon glyphicon-erase" title="Clear All" data-toggle="tooltip" data-placement="top" tooltip
                     aria-hidden="true" ng-click=" clear()" style="top:3px;left:-24px;cursor: pointer;"></span>
+                </div> -->
+                <div class="col-md-1" style="left:-19px">
+                  <span ng-hide="{{mode}}" class="fa fa-list-alt" title="Select All" data-toggle="tooltip" data-placement="top" tooltip aria-hidden="true"
+                      ng-click="addAll()" style="top:6px;left:-24px;cursor: pointer;display: block;margin-bottom: 1px;margin-top: 10px;"></span>
+                  <span ng-hide="{{mode}}" class="glyphicon glyphicon-erase" title="Clear All" data-toggle="tooltip" data-placement="top" tooltip
+                      aria-hidden="true" ng-click=" clear()" style="top:3px;left:-1px;cursor: pointer;"></span>
                 </div>
               </div>
               <div class="form-group">

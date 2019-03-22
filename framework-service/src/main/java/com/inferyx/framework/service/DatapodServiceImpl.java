@@ -605,16 +605,6 @@ public class DatapodServiceImpl {
 	}
 */
 
-	/********************** UNUSED **********************/
-	/*public Datapod getAsOf(String uuid, String asOf) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;				
-		if (appUuid != null) {
-			return idatapodDao.findAsOf(appUuid, uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
-		}
-		else
-			return idatapodDao.findAsOf(uuid, asOf, new Sort(Sort.Direction.DESC, "version"));
-	}*/
 
 	public List<Datapod> searchDatapodByName(String name, String datasourceUuid) throws JsonProcessingException {	
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)

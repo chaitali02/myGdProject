@@ -170,17 +170,6 @@ public class ExpressionServiceImpl {
 		return result;
 	}
 
-	/********************** UNUSED 
-	 * @throws JsonProcessingException **********************/
-	/*public Expression getAsOf(String uuid, String asOf) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;				
-		if (appUuid != null) {
-			return iExpressionDao.findAsOf(appUuid, uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
-		}
-		else
-			return iExpressionDao.findAsOf(uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
-	}*/
 
 	public List<Expression> findExpressionByType(String uuid) throws JsonProcessingException {
 		/*String appUuid = (securityServiceImpl.getAppInfo() != null

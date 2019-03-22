@@ -130,16 +130,6 @@ public class DatasetServiceImpl {
 		return data;
 	}
 
-	/********************** UNUSED **********************/
-	/*public Dataset findLatestByUuid(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid == null) {
-			return iDatasetDao.findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version"));
-		} else
-			return iDatasetDao.findLatestByUuid(appUuid, uuid, new Sort(Sort.Direction.DESC, "version"));
-	}*/
-
 	
 	public DataSet save(DataSet dataset) throws Exception {
 		MetaIdentifierHolder meta = securityServiceImpl.getAppInfo();
@@ -359,16 +349,6 @@ public class DatasetServiceImpl {
 		}
 		return null;
 	}
-
-	/********************** UNUSED **********************/
-	/*public Dataset getAsOf(String uuid, String asOf) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iDatasetDao.findAsOf(appUuid, uuid, asOf, new Sort(Sort.Direction.DESC, "version"));
-		} else
-			return iDatasetDao.findAsOf(uuid, asOf, new Sort(Sort.Direction.DESC, "version"));
-	}*/
 
 	
 	public String generateSql (DataSet dataset, java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, 

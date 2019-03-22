@@ -2190,7 +2190,16 @@ RuleModule.controller('DetailRuleGroupController', function ($state, $timeout, $
       return $filter('filter')($scope.rullall, query);
     });
   };
+  
+  $scope.clear = function () {
+		$scope.ruleTags = null;
+		$scope.myform.$dirty=true;
+	}
 
+	$scope.addAll = function () {
+		$scope.ruleTags =$scope.rullall;
+		$scope.myform.$dirty=true;
+  }
   $scope.okrulesave = function () {
 
     var hidemode = "yes";

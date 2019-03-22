@@ -264,18 +264,8 @@ public class MetadataServiceImpl {
 			}
 	   }
 	   return result;
-	}*
-	
-	/********************** UNUSED **********************/
-	/*public Object getAsOf(String uuid, String asOf) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;				
-		if (appUuid != null) {
-			return iMetadataDao.findAsOf(appUuid, uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
-		}
-		else
-			return iMetadataDao.findAsOf(uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
 	}*/
+		
 
 	@SuppressWarnings("unchecked")
 	public List<BaseEntityStatus> getBaseEntityStatusByCriteria(String role, String appUuid, String type, String name, String userName, String startDate, String endDate, String tags, String active, String status) throws ParseException, JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
@@ -790,114 +780,6 @@ public class MetadataServiceImpl {
 		
 	}*/
 
-	/********************** UNUSED 
-	 * @throws JsonProcessingException **********************/
-	/*public List<StatusHolder> getGroupExecStatus(String reftype, String uuid, String version) {
-		MetaIdentifier ref = new MetaIdentifier(MetaType.valueOf(reftype), uuid, version);
-		String type = ref.getType().toString();
-		Class groupExecClass = null;
-		String execListName = null;
-		StatusHolder statusHolder = null;
-		List<StatusHolder> statusHolderList = new ArrayList<>();
-		// Find class
-		groupExecClass = Helper.getDomainClass(MetaType.valueOf(reftype));		
-		if (type.equals(MetaType.rulegroupExec.toString())) {
-			//groupExecClass = "com.inferyx.framework.metadata.RuleGroupExec";
-			execListName = "ruleExecList";
-		} else if (type.equals(MetaType.dqgroupExec.toString())) {
-			//groupExecClass = "com.inferyx.framework.metadata.DataQualGroupExec";
-			execListName = "dataQualExecList";
-		} else if (type.equals(MetaType.profilegroupExec.toString())) {
-			//groupExecClass = "com.inferyx.framework.metadata.ProfileGroupExec";
-			execListName = "profileExecList";
-		}
-				
-		//Create query
-		Query query = new Query();
-		query.fields().include("uuid");
-		query.fields().include("version");
-		query.fields().include("active");
-		query.fields().include("name");
-		query.fields().include("status");
-		query.fields().include(execListName);
-		
-		// Add criteria
-		query.addCriteria(Criteria.where("uuid").is(ref.getUuid()).andOperator(Criteria.where("version").is(ref.getVersion()),
-				  Criteria.where("active").is("Y")));
-		
-		List<Object> metaObjectList = new ArrayList<>();
-		
-		Class<?> dynamicClass = groupExecClass;
-		metaObjectList = (List<Object>) mongoTemplate.find(query, dynamicClass);
-
-		if (metaObjectList == null || metaObjectList.isEmpty()) {
-			return null;
-		}
-		
-		if (metaObjectList.get(0) instanceof RuleGroupExec) {
-			RuleGroupExec ruleGroupExec = (RuleGroupExec) metaObjectList.get(0);
-			if (ruleGroupExec.getExecList() == null || ruleGroupExec.getExecList().isEmpty()) {
-				return null;
-			}
-			for (MetaIdentifierHolder refHolder : ruleGroupExec.getExecList()) {
-				statusHolder = new StatusHolder();
-				RuleExec ruleExec = (RuleExec)daoRegister.getRefObject(refHolder.getRef());
-				refHolder.getRef().setName(ruleExec.getName());
-				statusHolder.setMetaRef(refHolder);
-				statusHolder.setStatusList(ruleExec.getStatusList());
-				statusHolderList.add(statusHolder);
-			}
-			statusHolder = new StatusHolder();
-			MetaIdentifierHolder mih = new MetaIdentifierHolder();
-			mih.setRef(ref);
-			mih.getRef().setName(ruleGroupExec.getName());
-			statusHolder.setMetaRef(mih);
-			statusHolder.setStatusList(ruleGroupExec.getStatusList());
-			statusHolderList.add(statusHolder);
-		} else if (metaObjectList.get(0) instanceof DataQualGroupExec) {
-			DataQualGroupExec dataQualGroupExec = (DataQualGroupExec) metaObjectList.get(0);
-			if (dataQualGroupExec.getExecList() == null || dataQualGroupExec.getExecList().isEmpty()) {
-				return null;
-			}
-			for (MetaIdentifierHolder refHolder : dataQualGroupExec.getExecList()) {
-				statusHolder = new StatusHolder();
-				DataQualExec dataQualExec = (DataQualExec)daoRegister.getRefObject(refHolder.getRef());
-				refHolder.getRef().setName(dataQualExec.getName());
-				statusHolder.setMetaRef(refHolder);
-				statusHolder.setStatusList(dataQualExec.getStatusList());
-				statusHolderList.add(statusHolder);
-			}
-			statusHolder = new StatusHolder();
-			MetaIdentifierHolder mih = new MetaIdentifierHolder();
-			mih.setRef(ref);
-			mih.getRef().setName(dataQualGroupExec.getName());
-			statusHolder.setMetaRef(mih);
-			statusHolder.setStatusList(dataQualGroupExec.getStatusList());
-			statusHolderList.add(statusHolder);			
-		} else if (metaObjectList.get(0) instanceof ProfileGroupExec) {
-			ProfileGroupExec profileGroupExec = (ProfileGroupExec) metaObjectList.get(0);
-			if (profileGroupExec.getExecList() == null || profileGroupExec.getExecList().isEmpty()) {
-				return null;
-			}
-			for (MetaIdentifierHolder refHolder : profileGroupExec.getExecList()) {
-				statusHolder = new StatusHolder();
-				ProfileExec profileExec = (ProfileExec)daoRegister.getRefObject(refHolder.getRef());
-				refHolder.getRef().setName(profileExec.getName());
-				statusHolder.setMetaRef(refHolder);
-				statusHolder.setStatusList(profileExec.getStatusList());
-				statusHolderList.add(statusHolder);
-			}
-			statusHolder = new StatusHolder();
-			MetaIdentifierHolder mih = new MetaIdentifierHolder();
-			mih.setRef(ref);
-			mih.getRef().setName(profileGroupExec.getName());
-			statusHolder.setMetaRef(mih);
-			statusHolder.setStatusList(profileGroupExec.getStatusList());
-			statusHolderList.add(statusHolder);			
-		} // End-If 
-		return statusHolderList;
-	}	
-	*/
 	@SuppressWarnings("unchecked")
 	public List<StatusHolder> getGroupExecStatusReflection(String reftype, String uuid, String version) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JsonProcessingException {
 		MetaIdentifier ref = new MetaIdentifier(Helper.getMetaType(reftype), uuid, version);

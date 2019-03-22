@@ -214,30 +214,7 @@ public class UserServiceImpl {
 			}
 		return appList;
 	}
-	/********************** UNUSED **********************/
-	/*public List<Role> findRoleByUser(String userName) throws JsonProcessingException {
-		List<Role> roleList = new ArrayList<Role>();
-			User userDO = findLatestByUsername(userName);
-			List<MetaIdentifierHolder> roleInfoList = userDO.getRoleInfo();
-			for(MetaIdentifierHolder roleInfo : roleInfoList) {
-				String roleUuid = roleInfo.getRef().getUuid();
-				//Role roleDO = roleServiceImpl.findLatestByUuid(roleUuid);
-				Role roleDO = (Role) commonServiceImpl.getLatestByUuid(roleUuid, MetaType.role.toString());
-				roleList.add(roleDO);
-			}
-		
-		return roleList;
-	}*/
 	
-	/********************** UNUSED **********************/
-	/*public User getAsOf(String uuid, String asOf) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid != null)
-		{
-		return iUserDao.findAsOf(appUuid,uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
-		}
-		return iUserDao.findAsOf(uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
-	}*/
-	
+
 	
 }

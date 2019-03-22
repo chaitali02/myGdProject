@@ -215,10 +215,12 @@ ProfileModule.controller('DetailProfileController', function (CommonService, $st
 
 	$scope.clear = function () {
 		$scope.profileTags = null;
+		$scope.myform2.$dirty=true;
 	}
 
 	$scope.addAll = function () {
 		$scope.profileTags = $scope.allattribute;
+		$scope.myform2.$dirty=true;
 	}
 
 	$scope.SearchAttribute = function (index, type, propertyType) {
@@ -1167,6 +1169,12 @@ ProfileModule.controller('DetailProfileGroupController', function (privilegeSvc,
 
 	$scope.clear = function () {
 		$scope.profileTags = null;
+		$scope.myform.$dirty=true;
+	}
+
+	$scope.addAll = function () {
+		$scope.profileTags =$scope.profileall;
+		$scope.myform.$dirty=true;
 	}
 
 	$scope.okProfileGroupSave = function () {
