@@ -86,11 +86,7 @@ public class SystemController {
 			List<BaseEntityStatus> activeSessionList = systemServiceImpl.getActiveJobByCriteria(type, appUuid, userName, startDate, endDate, tags, active, status, null);
 			return mapper.writeValueAsString(activeSessionList);
 		}
-	}	
-	/*@RequestMapping(value="/killSession", method=RequestMethod.GET)
-	public @ResponseBody boolean killSession(@RequestParam("sessionId") String sessionId) throws JsonProcessingException, JSONException, ParseException {
-		return systemServiceImpl.killSession(sessionId);
-	}*/	
+	}		
 	
 	@RequestMapping(value="/getActiveThread", method=RequestMethod.GET)
 	public @ResponseBody List<com.inferyx.framework.domain.Thread> getActiveThread() throws JsonProcessingException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {

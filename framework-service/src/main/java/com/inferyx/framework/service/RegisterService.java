@@ -1399,83 +1399,6 @@ public class RegisterService {
 		return result;
 	}
 
-	// public List<Map<String, Object>> createGraph(Datapod document, String
-	// type, String action){
-	/*
-	 * public String submit(Map<String, Object> document, String type) { String Id =
-	 * ""; Datapod datapodDet = null;
-	 * 
-	 * if (type != null && !type.isEmpty()) { ObjectMapper mapper = new
-	 * ObjectMapper(); type = type.toLowerCase(); // Create graph start//
-	 * 
-	 * if (type.equalsIgnoreCase("datapod")) { Datapod datapod =
-	 * mapper.convertValue(document, Datapod.class); Id = datapodServiceImpl.Save
-	 * case "datapod": result =
-	 * ow.writeValueAsString(datapodServiceImpl.findAllByVersion(uuid)); break; case
-	 * "relation": result =
-	 * ow.writeValueAsString(relationServiceImpl.findAllByVersion(uuid)); break;
-	 * case "activity": result =
-	 * ow.writeValueAsString(activityServiceImpl.findAllByVersion(uuid)); break;
-	 * case "application": result =
-	 * ow.writeValueAsString(applicationServiceImpl.findAllByVersion(uuid)); break;
-	 * case "condition": result =
-	 * ow.writeValueAsString(conditionServiceImpl.findAllByVersion(uuid)); break;
-	 * case "dagExec": result =
-	 * ow.writeValueAsString(dagExecServiceImpl.findAllByVersion(uuid)); break; case
-	 * "dag": result = ow.writeValueAsString(dagServiceImpl.findAllByVersion(uuid));
-	 * break; case "dashboard": result =
-	 * ow.writeValueAsString(dashboardSeviceImpl.findAllByVersion(uuid)); break;
-	 * case "dataset": result =
-	 * ow.writeValueAsString(datasetServiceImpl.findAllByVersion(uuid)); break; case
-	 * "datasource": result =
-	 * ow.writeValueAsString(datasourceServiceImpl.findAllByVersion(uuid)); break;
-	 * case "datastore": result =
-	 * ow.writeValueAsString(dataStoreServiceImpl.findAllByVersion(uuid)); break;
-	 * case "dimension": result =
-	 * ow.writeValueAsString(dimensionServiceImpl.findAllByVersion(uuid)); break;
-	 * case "expression": result =
-	 * ow.writeValueAsString(expressionServiceImpl.findAllByVersion(uuid)); break;
-	 * case "filter": result =
-	 * ow.writeValueAsString(filterServiceImpl.findAllByVersion(uuid)); break; case
-	 * "formula": result =
-	 * ow.writeValueAsString(formulaServiceImpl.findAllByVersion(uuid)); break; case
-	 * "group": result =
-	 * ow.writeValueAsString(groupServiceImpl.findAllByVersion(uuid)); break; case
-	 * "load": result =
-	 * ow.writeValueAsString(loadServiceImpl.findAllByVersion(uuid)); break; case
-	 * "map": result = ow.writeValueAsString(mapServiceImpl.findAllByVersion(uuid));
-	 * break; case "measure": result =
-	 * ow.writeValueAsString(measureServiceImpl.findAllByVersion(uuid)); break; case
-	 * "metadata": result =
-	 * ow.writeValueAsString(metadataServiceImpl.findAllByVersion(uuid)); break;
-	 * case "privilege": result =
-	 * ow.writeValueAsString(privilegeServiceImpl.findAllByVersion(uuid)); break;
-	 * case "role": result =
-	 * ow.writeValueAsString(roleServiceImpl.findAllByVersion(uuid)); break; case
-	 * "ruleExec": result =
-	 * ow.writeValueAsString(ruleExecServiceImpl.findAllByVersion(uuid)); break;
-	 * case "ruleGroup": result =
-	 * ow.writeValueAsString(ruleGroupServiceImpl.findAllByVersion(uuid)); break;
-	 * case "rule": result =
-	 * ow.writeValueAsString(ruleServiceImpl.findAllByVersion(uuid)); break; case
-	 * "session": result =
-	 * ow.writeValueAsString(sessionServiceImpl.findAllByVersion(uuid)); break; case
-	 * "userGroup": result =
-	 * ow.writeValueAsString(userGroupServiceImpl.findAllByVersion(uuid)); break;
-	 * case "user": result =
-	 * ow.writeValueAsString(userServiceImpl.findAllByVersion(uuid)); break; case
-	 * "vizExec": result =
-	 * ow.writeValueAsString(vizExecServiceImpl.findAllByVersion(uuid)); break; case
-	 * "vizpod": result =
-	 * ow.writeValueAsString(vizpodServiceImpl.findAllByVersion(uuid)); break;
-	 * (datapod).getId(); datapodDet = datapodServiceImpl.Save(datapod); createDet =
-	 * graphServiceImpl.submit(datapodDet);
-	 * 
-	 * }
-	 * 
-	 * } return Id; }
-	 */
-
 	/*public String getGraphResults(String uuid,String version, String degree) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		return graphServiceImpl.getGraphJson(uuid,version,degree);
 	}*/
@@ -1517,22 +1440,6 @@ public class RegisterService {
 	 * 
 	 * return Id; }
 	 */
-
-	/********************** UNUSED **********************/
-	/*public String getAppBySession(String userUuid) throws JsonProcessingException {
-		String result = null;
-		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-		result = ow.writeValueAsString(userServiceImpl.findAppBySession(userUuid));
-		return result;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public String getRoleBySession(String userUuid) throws JsonProcessingException {
-		String result = null;
-		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-		result = ow.writeValueAsString(userServiceImpl.findRoleBySession(userUuid));
-		return result;
-	}*/
 
 	public String getAppByUser(String userName)
 			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,

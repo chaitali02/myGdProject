@@ -48,38 +48,6 @@ public class MapController {
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
 
-	/********************** UNUSED **********************/
-	/*@RequestMapping(value = "/findAll", method = RequestMethod.POST)
-	public List<com.inferyx.framework.domain.Map> findAll(
-			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action) {
-		return mapServiceImpl.findAllDemo();
-	}*/
-	
-//	@RequestMapping(value = "/findAllLatest", method = RequestMethod.POST)
-//	public String findAllLatest() {
-//		Aggregation aggr = newAggregation(group("uuid").max("version").as("version"));
-//		try {
-//			return commonServiceImpl.getAllLatest(MetaType.map.toString(),null);
-//		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
-//				| SecurityException e) {
-//			e.printStackTrace();
-//		}
-//		return null;
-//	}
-
-	/********************** UNUSED **********************/
-	/*@RequestMapping(value = "/resolveNameDemo", method = RequestMethod.POST)
-	public com.inferyx.framework.domain.Map resolveNameDemo(
-			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ParseException {
-		List<com.inferyx.framework.domain.Map> mapList = mapServiceImpl.findAllDemo();
-		if (mapList == null || mapList.isEmpty()) {
-			return null;
-		}
-		commonServiceImpl.resolveName(mapList.get(0), MetaType.map);
-		return mapList.get(0);		
-	}*/
 	
 	@RequestMapping(value = "/execute", method = RequestMethod.POST)
 	public MetaIdentifierHolder execute(@RequestParam("uuid") String uuid, 

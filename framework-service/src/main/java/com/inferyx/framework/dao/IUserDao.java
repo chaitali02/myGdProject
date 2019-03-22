@@ -34,10 +34,10 @@ public interface IUserDao extends MongoRepository<User, String>
 	@Query(value="{'uuid':?0}")
 	public User findAllByUuid(String uuid);
 	
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid':?1}")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'uuid':?1}")
 	public User findAllByUuid(String appUuid, String uuid);
 	
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}}, 'uuid' : ?1 }")
+	@Query(value="{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] , 'uuid' : ?1 }")
 	public User findLatestByUuid(String appUuid, String datapodUUID, Sort sort);
 
 	@Query(value="{ 'uuid' : ?0 }")
@@ -46,7 +46,7 @@ public interface IUserDao extends MongoRepository<User, String>
 	@Query(value="{ 'name' : ?0 }")
 	public User findLatestByUsername(String userName, Sort sort);
 	
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'name' : ?1 }")
+	@Query(value="{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'name' : ?1 }")
 	public User findLatestByUsername(String appUuid, String userName, Sort sort);
 	
 	@Query(value="{'uuid' : ?0}")
@@ -55,31 +55,31 @@ public interface IUserDao extends MongoRepository<User, String>
 	@Query(value = "{$or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ],'uuid' : ?1}")
 	public List<User> findAllVersion(String appUuid, String uuid);
 
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
+	@Query(value="{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] }")
 	public List<User> findAll(String appUuid);	
 	
 	@Query(value="{ 'name' : ?0 }")
 	public User findUserByName(String userName);
 	
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'name' : ?1 }")
+	@Query(value="{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'name' : ?1 }")
 	public User findUserByName(String appUuid, String userName);
 	
 	@Query(value = "{ 'uuid' : ?0, 'version':{$lte:?1 }}")
 	public User findAsOf(String uuid, String version, Sort sort);
 	
-	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1, 'version':{$lte:?2 }}")
+	@Query(value = "{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'uuid' : ?1, 'version':{$lte:?2 }}")
 	public User findAsOf(String appUuid,String uuid, String version, Sort sort);
 	
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} , '_id' : ?1 }")
+	@Query(value="{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  , '_id' : ?1 }")
 	public User findOneById(String appUuid, String id);
 	
 	@Query(value = "{}")
 	public User findLatest(Sort sort);
 	
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] }")
 	public User findLatest(String appUuid, Sort sort);
 
-	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'_id' : ?1}")
+	@Query(value = "{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  ,'_id' : ?1}")
 	public void delete(String appUuid, String id);
 	
 

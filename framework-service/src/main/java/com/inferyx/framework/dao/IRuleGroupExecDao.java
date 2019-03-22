@@ -22,7 +22,7 @@ import com.inferyx.framework.domain.RuleGroupExec;
 
 public interface IRuleGroupExecDao extends MongoRepository<RuleGroupExec, String> {
 	
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'uuid':?1}")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  ,'uuid':?1}")
 	public List<RuleGroupExec> findAllByUuid(String appUuid,String uuid);
 	
 	@Query(value="{$or: [ { publicFlag: \"Y\"},{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} }],'uuid' : ?1 , 'version' : ?2 }")
@@ -31,19 +31,19 @@ public interface IRuleGroupExecDao extends MongoRepository<RuleGroupExec, String
 	@Query(value="{ 'uuid' : ?0 , 'version' : ?1 }")
 	public RuleGroupExec findOneByUuidAndVersion(String uuid, String version);
 	
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'uuid' : ?1 }")
+	@Query(value="{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  ,'uuid' : ?1 }")
 	public RuleGroupExec findLatestByUuid(String appUuid,String uuid, Sort sort);
 	
 	@Query(value="{ 'uuid' : ?0 }")
 	public RuleGroupExec findLatestByUuid(String uuid, Sort sort);
 	
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
+	@Query(value="{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] }")
 	public List<RuleGroupExec> findAll(String appUuid);
 	
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} , '_id' : ?1 }")
+	@Query(value="{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  , '_id' : ?1 }")
 	public RuleGroupExec findOneById(String appUuid, String id);
 	
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'_id' : ?1}")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  ,'_id' : ?1}")
 	public void delete(String appUuid, String id);
 	
 	@Query(value = "{'_id' : ?0}")
@@ -55,7 +55,7 @@ public interface IRuleGroupExecDao extends MongoRepository<RuleGroupExec, String
 	@Query(value = "{'uuid' : ?0}")
 	public List<RuleGroupExec> findAllVersion(String uuid);
 	
-	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'dependsOn.ref.uuid' : ?1,'dependsOn.ref.version' : ?2}")
+	@Query(value = "{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'dependsOn.ref.uuid' : ?1,'dependsOn.ref.version' : ?2}")
 	public List<RuleGroupExec> findRuleGroupExecByRuleGroup(String appUuid, String uuid, String version);
 	
 	@Query(value = "{'dependsOn.ref.uuid' : ?0,'dependsOn.ref.version' : ?1}")
@@ -67,10 +67,10 @@ public interface IRuleGroupExecDao extends MongoRepository<RuleGroupExec, String
 	@Query(value = "{}")
 	public RuleGroupExec findLatest(Sort sort);
 	
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] }")
 	public RuleGroupExec findLatest(String appUuid, Sort sort);
 
-	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1, 'version':{$lte:?2 }}")
+	@Query(value = "{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'uuid' : ?1, 'version':{$lte:?2 }}")
 	public RuleGroupExec findAsOf(String appUuid, String uuid, String version, Sort sort);
 	
 	@Query(value = "{ '_id' : ?0 }")

@@ -989,25 +989,7 @@ public class DataStoreServiceImpl {
 		
 	}
 	
-	/********************** UNUSED **********************/
-	/*public List<String> getAtributeValues(String datapodUUID, String type, int attributeID) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-
-		List<String> result = new ArrayList<>();
-		//Datapod datapodDO = datapodServiceImpl.findLatestByUuid(datapodUUID);
-				Datapod datapodDO = (Datapod) commonServiceImpl.getLatestByUuid(datapodUUID, MetaType.datapod.toString());
-		String attributeName = datapodDO.getAttributes().get(attributeID).getName();
-		DataStore datastore = findLatestByMeta(datapodDO.getUuid(), datapodDO.getVersion());
-		String tableName = getTableNameByDatastore(datastore.getUuid(), datastore.getVersion());
-		// DataFrame df = sqlContext.sql("select " + attributeName + " from " +
-		// tableName);
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		IExecutor exec = execFactory.getExecutor(datasource.getType());
-		ResultSetHolder rsHolder = exec.executeSql("SELECT " + attributeName + " FROM " + tableName);
-		result = dataFrameService.getAtributeValues(rsHolder, attributeName);
-
-		return result;
-	}*/
-
+	
 	@SuppressWarnings("static-access")
 	public List<DataStore> getDataStoreByDim(String uuid, List<AttributeRefHolder> dimensionList) {
 		String META_TYPE = "metaId.ref.type";

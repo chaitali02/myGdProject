@@ -889,6 +889,7 @@ DatavisualizationModule.directive('multiSeriesChart', function ($compile, $rootS
       $scope.$watch('data', function (newValue, oldValue) {
         $scope.chartcolor = ["#73c6b6", "#f8c471", "#d98880", "#7dcea0", "#f1948a", "#c39bd3", "#bb8fce", "#7fb3d5", "#85c1e9", "#76d7c4", "#82e0aa", "#f7dc6f", "#f0b27a", "#e59866"];
         var data =$scope.data;
+        $scope.objdetail.dataPoint=data;
         var keyPro ;
         if($scope.column.keys[0].ref.type !='formula'){
           keyPro= $scope.column.keys[0].attributeName;
@@ -957,7 +958,8 @@ DatavisualizationModule.directive('multiSeriesChart', function ($compile, $rootS
           }
         prepareChartData();
         chartData.xs=prepareXs(chartData.columns,chartData.columns2);
-        chartData.contextmenu = function () {
+        chartData.contextmenu = function (e) {
+          console.log(chartData);
           var data = {}
           data.vizpod = $scope.objdetail
           data.dataobj = arguments[0]

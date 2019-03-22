@@ -129,20 +129,6 @@ public class MapServiceImpl implements IParsable, IExecutable {
 		return iMapDao.findLatestByUuid(appUuid, uuid, new Sort(Sort.Direction.DESC, "version"));
 	}*/
 
-
-	/********************** UNUSED **********************/
-	/*@SuppressWarnings("unchecked")
-	public List<Map> findAllDemo() {
-		return (List<Map>) commonServiceImpl.findAll(MetaType.map);
-	}*/
-
-	/*public Map update(Map map) throws IOException {
-		map.exportBaseProperty();
-		Map mapDet = iMapDao.save(map);
-		registerService.createGraph();
-		return mapDet;
-	}*/
-
 	/********************** UNUSED **********************/
 	/*public boolean isExists(String id) {
 		return iMapDao.exists(id);
