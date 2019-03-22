@@ -1900,7 +1900,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
     'trainexec':{
       name : 'trainexec',
       caption : 'train Exec',
-      execType:'trainexec',
+      execType:'trainExec',
       metaType:'trainexec',
       color : '#EB54C3',
       parentIconCaption:'',

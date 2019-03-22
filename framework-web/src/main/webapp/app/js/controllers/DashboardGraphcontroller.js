@@ -827,6 +827,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
   }
 
   $scope.onChipsRemove = function (index, filterIndex) {
+    
 
     $scope.filterTag.splice(index, 1);
     $scope.selectedAttributeValue[filterIndex] = null;
@@ -1029,7 +1030,6 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
     }, 100);
   }
   $scope.selectData = function (data) {
-    debugger
     var menu = [{
       title: 'Show Detail',
       action: $scope.actionEvent,
@@ -1131,14 +1131,24 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
       }
       if (data.vizpod.vizpodInfo.type == "world-map" || data.vizpod.vizpodInfo.type == "usa-map") {
         filterInfo.value = data.dataobj.x;
+        filterinfoArray.push(filterInfo);
       } else if (["world-map", "usa-map", "pie-chart", "donut-chart"].indexOf(data.vizpod.vizpodInfo.type) == -1) {
         filterInfo.value = data.vizpod.vizpodDetails.datapoints[data.dataobj.x][data.vizpod.vizpodDetails.datax.id];
+        filterinfoArray.push(filterInfo);
+        // if(data.vizpod.vizpodInfo.groups.length >0 &&  data.vizpod.vizpodInfo.type =="bar-chart"){
+        //   var filterInfo1={};
+        //   filterInfo1=filterInfo;
+        //   filterInfo1.attrId=data.vizpod.vizpodInfo.groups[0].attributeId;
+        //   filterInfo1.value=data.vizpod.dataPoint[data.dataobj.x][data.vizpod.vizpodInfo.groups[0].attributeName];
+        //   filterinfoArray.push(filterInfo1);
+        // }
         //filterInfo.value = filterInfo.value.replace(/0 -/g, ' -');
         //filterInfo.value = filterInfo.value.replace(/0$/g, '');
       } else if (["pie-chart", "donut-chart"].indexOf(data.vizpod.vizpodInfo.type) != -1) {
-        filterInfo.value = data.dataobj.id
+        filterInfo.value = data.dataobj.id;
+        filterinfoArray.push(filterInfo);
       }
-      filterinfoArray.push(filterInfo);
+     
       vizpodbody.filterInfo = filterinfoArray
     }
     else {
@@ -1479,6 +1489,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
         var tempId=$scope.dashboardExecData.filterInfo[i].ref.uuid;
         filterTag.value=$scope.dashboardExecData.filterInfo[i].value;
         filterTag.text=$scope.dashboardExecData.filterInfo[i].ref.name+" - "+$scope.dashboardExecData.filterInfo[i].value;
+        filterTag.index=i;
         if($scope.dashboardExecData.filterInfo[i].ref.type !="formula"){
           tempId=$scope.dashboardExecData.filterInfo[i].ref.uuid+"_"+$scope.dashboardExecData.filterInfo[i].attrId;
           filterTag.text=$scope.dashboardExecData.filterInfo[i].attrName+" - "+$scope.dashboardExecData.filterInfo[i].value;;

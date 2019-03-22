@@ -22,12 +22,21 @@ JobMonitoringModule.controller('DetailDataPipelineExecController', function ($fi
   $scope.showExec = true;
   $scope.selectTitle = dagMetaDataService.elementDefs['dagexec'].caption;
   $scope.state = dagMetaDataService.elementDefs['dagexec'].listState + "({type:'" + dagMetaDataService.elementDefs['dagexec'].execType + "'})"
+  
   $scope.onTaskShowDetail = function (data) {
     $rootScope.previousState = {};
     $rootScope.previousState.name = dagMetaDataService.elementDefs['dagexec'].detailState;
     $rootScope.previousState.params = {};
     $rootScope.previousState.params.id = $stateParams.id;
     $rootScope.previousState.params.mode = true;
+    $rootScope.previousState.params.returnBack = true;
+    $rootScope.previousState.params.name = $scope.execData.name;
+    $rootScope.previousState.params.version = $scope.execData.version;
+    $rootScope.previousState.params.type = "dagexec";
+    var stateTabPrevious={};
+    stateTabPrevious.route=$rootScope.previousState.name;
+    stateTabPrevious.param= $rootScope.previousState.params;
+    stateTabPrevious.active=false;
     var type = data.operators[0].operatorInfo[0].ref.type
     var uuid = data.operators[0].operatorInfo[0].ref.uuid
     var stageName = dagMetaDataService.elementDefs[type.toLowerCase()].detailState;
@@ -35,12 +44,22 @@ JobMonitoringModule.controller('DetailDataPipelineExecController', function ($fi
     stageparam.id = uuid;
     stageparam.mode = true;
     stageparam.returnBack = true;
+    stageparam.name=data.operators[0].operatorInfo[0].ref.name;
+    stageparam.type=data.operators[0].operatorInfo[0].ref.type;
+    stageparam.version=data.operators[0].operatorInfo[0].ref.version;
     $state.go(stageName, stageparam);
+    var stateTabNew={};
+    stateTabNew.route=stageName;
+    stateTabNew.param= stageparam;
+    stateTabNew.active=false;
+    $rootScope.$broadcast('isTabAvailable',stateTabPrevious,stateTabNew);
+
   }
   $scope.close = function () {
     if ($stateParams.returnBack == "true" && $rootScope.previousState) {
       //revertback
       $state.go($rootScope.previousState.name, $rootScope.previousState.params);
+
     } else {
       $scope.statedetail = {};
       $scope.statedetail.name = dagMetaDataService.elementDefs['dagexec'].listState
