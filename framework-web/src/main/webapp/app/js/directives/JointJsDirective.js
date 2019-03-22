@@ -603,6 +603,24 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
        </div>
        </div>
        <div id="group-graph-wrapper"></div>
+       <div class="modal fade in" id="confmodal" tabindex="-1" role="basic" aria-hidden="true" style="display:none;padding-right:15px;">
+        <div class="modal-dialog">
+          <div class="modal-content rulemodel">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+              <!-- <h4 class="modal-title">Confirm</h4> -->
+              <h4 class="modal-title" title="{{lastParams.name}}"style="overflow: hidden;white-space:nowrap;max-width:230px;margin-bottom:-4px;
+              text-overflow:ellipsis;"v>{{lastParams.name}}</h4>
+            </div>
+            <div class="modal-body" style="text-transform: capitalize"> {{msgstatus | lowercase}}
+              <span style="text-transform: capitalize">{{msgtype}}</span> ?</div>
+            <div class="modal-footer">
+              <button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+              <button type="button" class="btn green" ng-click="oKSetStatus(lastParams,msgstatus)">Ok</button>
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div>
        `,
        scope : {
        },
@@ -1294,8 +1312,41 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
              window.setSubTaskStatus = function (row,status) {
                $scope.setStatus(row,status);
              }
+
              $scope.setStatus = function (row,status) {
-               var api = false;
+              $scope.lastParams = row;
+              $scope.msgstatus=status;
+              $scope.msgtype=dagMetaDataService.elementDefs[row.elementType.toLowerCase()].caption;
+              $('#confmodal').modal({
+                backdrop: 'static',
+                keyboard: false
+              });
+             }
+
+             $scope.oKSetStatus=function(row,status){
+              $('#confmodal').modal('hide');
+              var notify = {
+                type: 'success',
+                title: 'Success',
+                timeout: 3000 //time in ms
+              };
+              notify.type='success',
+              notify.title= 'Success'
+              status=status.toUpperCase();
+              if(status == 'KILLED'){
+                $scope.executionmsg =$scope.msgtype+" Killed Successfully"
+                notify.content=$scope.executionmsg
+              }
+              if(status =='PAUSE'){
+                $scope.executionmsg =$scope.msgtype+" Paused Successfully"
+                notify.content=$scope.executionmsg
+              }
+              if(status =='RESUME'){
+                $scope.executionmsg =$scope.msgtype+" Resumed Successfully"
+                notify.content=$scope.executionmsg
+              }
+              $rootScope.$emit('notify', notify);
+              var api = false;
                var execType = dagMetaDataService.elementDefs[row.elementType.toLowerCase()].execType;
                switch (row.elementType) {
                  case 'dq':
@@ -1342,7 +1393,9 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
                $http.put(url+''+api+'/setStatus?uuid='+row.id+'&version='+row.version+'&type='+execType+'&status='+status).then(function (response) {
                    console.log(response);
                });
-             }
+            }
+
+
            } //End Link
          };
   });
@@ -1540,7 +1593,6 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
         window.navigateTo(JSON.stringify(execUrl));
         return false;
       }
-      debugger
       if(["train"].indexOf(params.elementType) !=-1 && execUrl !=null){
         execUrl.state=dagMetaDataService.elementDefs[params.elementType.toLowerCase()+"exec"].resultState
         execUrl.params.type="trainexec"
@@ -1570,79 +1622,91 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
           }, 100);
         }
       }
-     }
+    }
      
-     window.setStatus = function(params,status){
-       $scope.lastParams = params;
-       console.log(params);
-       var notify = {
-         type: 'success',
-         title: 'Success',
-         timeout: 3000 //time in ms
-       };
-       notify.type='success',
-       notify.title= 'Success'
-       if(params.type=="dag"){
-         $scope.msgtype="Pipeline"
-       }
-       else if(params.type=="stage"){
-         $scope.msgtype="Stage"
-       }
-       else{
-         $scope.msgtype="Task"
-       }
-       if(status == 'KILLED'){
-         $scope.executionmsg =$scope.msgtype+" Killed Successfully"
-         notify.content=$scope.executionmsg
-       }
-       if(status =='PAUSE'){
-         $scope.executionmsg =$scope.msgtype+" Paused Successfully"
-         notify.content=$scope.executionmsg
-       }
-       if(status =='RESUME'){
-         $scope.executionmsg =$scope.msgtype+" Resumed Successfully"
-         notify.content=$scope.executionmsg
-       }
-       $rootScope.$emit('notify', notify);
-       var url=$location.absUrl().split("app")[0];
-       if(params.type == 'dag'){
-         $http.put(url+'dag/setStatus?uuid='+$scope.uuid+'&version='+$scope.version+'&status='+status).then(function (response) {
-           console.log(response);
-           if(status == 'KILLED')
-             $scope.$parent.allowReExecution = true;
-           });
-         }
-         else if(params.type == 'stage'){
-           var stageId = params.id;
-           $http.put(url+'dag/setStatus?uuid='+$scope.uuid+'&version='+$scope.version+'&stageId='+stageId+'&status='+status).then(function (response) {
-             console.log(response);
-           });
-         }
-         else {
-           var stageId = params.parentStage;
-           if(params.taskId.length > 5 && params.taskId.indexOf('task_')>-1){
-             var temp = params.taskId.split('task_');
-             var taskId = temp[temp.length-1];
-           }
-           else {
-             var taskId = params.taskId;
-           }
-           taskDetail={}; 
-           taskDetail.taskOnOperation=true;
-           taskDetail.taskId=taskId;
-           var type=$(".body[element-id=" + taskId + "]").attr("element-type");
-           $(".body[element-id=" + taskId + "]").attr("xlink:href","assets/layouts/layout/img/"+type+"inactive.svg");
-           setTimeout(function(){ 
+    window.setStatus = function(params,status){
+      $scope.lastParams = params;
+      $scope.msgstatus=status;
+      if(params.type=="dag"){
+        $scope.msgtype="Pipeline"
+      }
+      else if(params.type=="stage"){
+        $scope.msgtype="Stage"
+      }
+      else{
+        $scope.msgtype="Task"
+      }
+      $('#confPiplmodal').modal({
+        backdrop: 'static',
+        keyboard: false
+      });
+     
+      }
+
+      $scope.oKSetStatus=function(params,status){
+        $('#confPiplmodal').modal('hide');
+        var notify = {
+          type: 'success',
+          title: 'Success',
+          timeout: 3000 //time in ms
+        };
+        notify.type='success',
+        notify.title= 'Success'
+        status=status.toUpperCase();
+        if(status == 'KILLED'){
+          $scope.executionmsg =$scope.msgtype+" Killed Successfully"
+          notify.content=$scope.executionmsg
+        }
+        if(status =='PAUSE'){
+          $scope.executionmsg =$scope.msgtype+" Paused Successfully"
+          notify.content=$scope.executionmsg
+        }
+        if(status =='RESUME'){
+          $scope.executionmsg =$scope.msgtype+" Resumed Successfully"
+          notify.content=$scope.executionmsg
+        }
+        $rootScope.$emit('notify', notify);
+        var url=$location.absUrl().split("app")[0];
+        if(params.type == 'dag'){
+          $http.put(url+'dag/setStatus?uuid='+$scope.uuid+'&version='+$scope.version+'&status='+status).then(function (response) {
+            console.log(response);
+            if(status == 'KILLED')
+              $scope.$parent.allowReExecution = true;
+            });
+          }
+  
+          else if(params.type == 'stage'){
+            var stageId = params.id;
+            $http.put(url+'dag/setStatus?uuid='+$scope.uuid+'&version='+$scope.version+'&stageId='+stageId+'&status='+status).then(function (response) {
+              console.log(response);
+            });
+          }
+          else {
+            var stageId = params.parentStage;
+            if(params.taskId.length > 5 && params.taskId.indexOf('task_')>-1){
+              var temp = params.taskId.split('task_');
+              var taskId = temp[temp.length-1];
+            }
+            else {
+              var taskId = params.taskId;
+            }
+            taskDetail={}; 
+            taskDetail.taskOnOperation=true;
+            taskDetail.taskId=taskId;
+            var type=$(".body[element-id=" + taskId + "]").attr("element-type");
+            $(".body[element-id=" + taskId + "]").attr("xlink:href","assets/layouts/layout/img/"+type+"inactive.svg");
+            setTimeout(function(){ 
               $(".body[element-id=" + taskId + "]").attr("xlink:href","assets/layouts/layout/img/"+type+".svg");  
               taskDetail=null;
-           }, 3000);
-           $http.put(url+'dag/setStatus?uuid='+$scope.uuid+'&version='+$scope.version+'&stageId='+stageId+'&taskId='+taskId+'&status='+status).then(function (response) {
-             console.log(response);
-           });
-         }
-       }
+            }, 3000);
+            $http.put(url+'dag/setStatus?uuid='+$scope.uuid+'&version='+$scope.version+'&stageId='+stageId+'&taskId='+taskId+'&status='+status).then(function (response) {
+              console.log(response);
+            });
+          }
+      }
+      
          
-       window.holdExecution = function(params){
+       /*window.holdExecution = function(params){
          $scope.lastParams = params;
          console.log(params);
          var url=$location.absUrl().split("app")[0];
@@ -1722,12 +1786,13 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
          else {
            var taskId = params.taskId;
          }
-           
          $http.put(url+'dag/killTask?uuid='+$scope.uuid+'&version='+$scope.version+'&stageId='+stageId+'&taskId='+taskId).then(function (response) {
            console.log(response);
          });
-       }
-         
+       }*/
+      
+       
+
        window.refreshSubGroupGraph = function () {
          if($scope.showGroupGraph && !$scope.showResults){
            window.showResult($scope.lastGroupParams);
@@ -1759,11 +1824,9 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
            return;
          }
          $scope.dagData=data;
-        // console.log('graph data', data);
          $scope.uuid = data.uuid;
          $scope.version = data.version;
          var paperEl = $('#paper');
-        // console.log(paperEl);
          if(paperEl.length == 0){
            setTimeout(function () {
              paperEl = $('#paper');
@@ -2037,7 +2100,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
            }
            var type = cell.attributes.elementType;
            if(type == 'stage' || type == 'dag'){
-             debugger
+
              var svg = document.querySelector('svg');
              var pt = svg.createSVGPoint();
              pt.x = d3.event.clientX; pt.y = d3.event.clientY;
@@ -2070,7 +2133,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
                stage : {name:'stage', label: 'stage'},
              }
              
-             var resultparams = {id:id,name:type,elementType:type,type: apis[type].name,typeLabel:apis[type].label};
+             var resultparams = {id:id,name:cell.attributes['model-data'].name,elementType:type,type: apis[type].name,typeLabel:apis[type].label};
              var state;
              if(type =="dag"){
              var dagExec = cell.attributes['model-data'];
@@ -2078,7 +2141,8 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
              execStates={state : dagMetaDataService.elementDefs[type.toLowerCase()+"exec"].detailState, params : {id :dagExec.uuid,version:dagExec.version || " ",name:dagExec.name,type:type+"exec",mode:true, returnBack: true}};
              $http.get(url+'metadata/getMetaIdByExecId?action=view&execUuid='+dagExec.uuid+'&execVersion='+dagExec.version+'&type='+type+"exec").then(function (res) {
               state = {state : dagMetaDataService.elementDefs[res.data.type].state, params : {id :res.data.uuid,version:res.data.version || " ",name:res.data.name,type:type,mode:true, returnBack: true}};
-               iconMenu(localPoint.x, localPoint.y, JSON.stringify(state),JSON.stringify(execStates),JSON.stringify(resultparams));
+              //resultparams.name= res.data.name;
+              iconMenu(localPoint.x, localPoint.y, JSON.stringify(state),JSON.stringify(execStates),JSON.stringify(resultparams));
              });}
              else{
               iconMenu(localPoint.x, localPoint.y, JSON.stringify(state),JSON.stringify(state),JSON.stringify(resultparams));
@@ -2184,6 +2248,7 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
              execStates={state : dagMetaDataService.elementDefs[ref.type.toLowerCase()].detailState, params : {id :ref.uuid,version:ref.version || " ",name:ref.name,type:ref.type,mode:true, returnBack: true}};
              $http.get(url+'metadata/getMetaIdByExecId?action=view&execUuid='+ref.uuid+'&execVersion='+ref.version+'&type='+ref.type).then(function (res) {
               resultparams.elementType=res.data.type;
+              //resultparams.name= res.data.name;
               state = {state : dagMetaDataService.elementDefs[res.data.type].state, params : {id :res.data.uuid,version:res.data.version || " ",name:ref.name,type:ref.type,mode:true, returnBack: true}};
                iconMenu(localPoint.x, localPoint.y, JSON.stringify(state),JSON.stringify(execStates),JSON.stringify(resultparams));
              });
