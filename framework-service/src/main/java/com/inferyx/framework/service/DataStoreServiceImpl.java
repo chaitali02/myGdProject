@@ -620,11 +620,15 @@ public class DataStoreServiceImpl {
 			//DataStore ds = findOneByUuidAndVersion(uuid, version);
 			DataStore ds = (DataStore) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datastore.toString());
 			String tn = getTableNameByDatastore(ds.getUuid(), ds.getVersion(), runMode);
-			Datasource datasource = getDatapodByDatastore(ds.getUuid(), ds.getVersion(), runMode);
+//			Datasource datasource = getDatapodByDatastore(ds.getUuid(), ds.getVersion(), runMode);
 			logger.info("Table name:" + tn);
 			//String dpUuuid = ds.getMetaId().getRef().getUuid();
 			//String dsType = null;
 			boolean requestIdExistFlag = false;
+			
+			MetaIdentifier metaId = ds.getMetaId().getRef();
+			Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(metaId.getUuid(), metaId.getVersion(), MetaType.datapod.toString());
+			Datasource datapodDs = commonServiceImpl.getDatasourceByDatapod(datapod);
 			
 			List<String> orderList = new ArrayList<>();
 			List<String> sortList = new ArrayList<>();
@@ -647,14 +651,14 @@ public class DataStoreServiceImpl {
 				//Datasource dataSource = (Datasource) commonServiceImpl.getLatestByUuid(dsUuid, MetaType.datasource.toString());
 				//dsType = dataSource.getType();
 			}*/
-			if (datasource == null) {
-				datasource = commonServiceImpl.getDatasourceByApp();
-			}
+//			if (datasource == null) {
+				Datasource appDatasource = commonServiceImpl.getDatasourceByApp();
+//			}
 			if (runMode == null || runMode.equals(RunMode.ONLINE)) {
 				execContext = (engine.getExecEngine().equalsIgnoreCase("livy-spark") || engine.getExecEngine().equalsIgnoreCase("livy_spark"))
 						? helper.getExecutorContext(engine.getExecEngine()) : helper.getExecutorContext(ExecContext.spark.toString());
 			} else {
-				execContext = helper.getExecutorContext(datasource.getType().toLowerCase());
+				execContext = helper.getExecutorContext(appDatasource.getType().toLowerCase());
 			}
 			IExecutor exec = execFactory.getExecutor(execContext.toString());
 
@@ -677,213 +681,87 @@ public class DataStoreServiceImpl {
 					}
 					if (requestIdExistFlag) {
 						tn = requestMap.get(requestId);
-						if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
-								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
+						if(appDatasource.getType().toUpperCase().contains(ExecContext.spark.toString())
+								|| appDatasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
 //							data = exec.executeAndFetch("SELECT * FROM " + tn + " WHERE rownum >= " + offset + " AND rownum <= " + limit, appUuid);
-							data = exec.executeAndFetch("SELECT * FROM " + tn + " LIMIT " + limit, appUuid);
+							data = exec.executeAndFetchByDatasource("SELECT * FROM " + tn + " LIMIT " + limit, datapodDs, appUuid);
 						} else 
-							if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
+							if(appDatasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
 								if(engine.getExecEngine().equalsIgnoreCase("livy-spark")
-										|| datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
-										|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
-									data = exec.executeAndFetch("SELECT * FROM " + tn + " LIMIT " + limit, appUuid);
+										|| appDatasource.getType().toUpperCase().contains(ExecContext.spark.toString())
+										|| appDatasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
+									data = exec.executeAndFetchByDatasource("SELECT * FROM " + tn + " LIMIT " + limit, datapodDs, appUuid);
 								} else {
-									data = exec.executeAndFetch("SELECT * FROM " + tn + " WHERE rownum< " + limit, appUuid);
+									data = exec.executeAndFetchByDatasource("SELECT * FROM " + tn + " WHERE rownum< " + limit, datapodDs, appUuid);
 								}
 							} else {
-								data = exec.executeAndFetch("SELECT * FROM " + tn + " LIMIT " + limit, appUuid);
+								data = exec.executeAndFetchByDatasource("SELECT * FROM " + tn + " LIMIT " + limit, datapodDs, appUuid);
 							}
 					} else {
-						if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
-								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
+						if(appDatasource.getType().toUpperCase().contains(ExecContext.spark.toString())
+								|| appDatasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
 //							data = exec.executeAndFetch("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM (SELECT * FROM "
 //									+ tn + " ORDER BY " + orderBy.toString() + ") AS tab) AS tab1", appUuid);
-							data = exec.executeAndFetch("SELECT * FROM " + tn + " LIMIT " + limit, appUuid);
+							data = exec.executeAndFetchByDatasource("SELECT * FROM " + tn + " LIMIT " + limit, datapodDs, appUuid);
 						} else {
-							if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
+							if(appDatasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
 								if(engine.getExecEngine().equalsIgnoreCase("livy-spark")
-										|| datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
-										|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
-									data = exec.executeAndFetch("SELECT * FROM " + tn + " LIMIT " + limit, appUuid);
+										|| appDatasource.getType().toUpperCase().contains(ExecContext.spark.toString())
+										|| appDatasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
+									data = exec.executeAndFetchByDatasource("SELECT * FROM " + tn + " LIMIT " + limit, datapodDs, appUuid);
 								} else {
-									data = exec.executeAndFetch("SELECT * FROM " + tn + " WHERE rownum< " + limit, appUuid);
+									data = exec.executeAndFetchByDatasource("SELECT * FROM " + tn + " WHERE rownum< " + limit, datapodDs, appUuid);
 								}
 							} else {
-								data = exec.executeAndFetch("SELECT * FROM "+ tn + " LIMIT ", appUuid);
+								data = exec.executeAndFetchByDatasource("SELECT * FROM "+ tn + " LIMIT ", datapodDs, appUuid);
 							}
 						}
 						// tabName = exec.registerTempTable(dfSorted,
 						// requestId.replace("-", "_"));
-						if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
-								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
+						if(appDatasource.getType().toUpperCase().contains(ExecContext.spark.toString())
+								|| appDatasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
 							tn = requestId.replace("-", "_");
 						}
 						requestMap.put(requestId, tn);
-						if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
-								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
+						if(appDatasource.getType().toUpperCase().contains(ExecContext.spark.toString())
+								|| appDatasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
 //							data = exec.executeAndFetch("SELECT * FROM " + tn + " WHERE rownum >= " + offset + " AND rownum <= " + limit, null);
-							data = exec.executeAndFetch("SELECT * FROM " + tn + " LIMIT " + limit, appUuid);
+							data = exec.executeAndFetchByDatasource("SELECT * FROM " + tn + " LIMIT " + limit, datapodDs, appUuid);
 						} else {
-							if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
+							if(appDatasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
 								if(engine.getExecEngine().equalsIgnoreCase("livy-spark")
-										|| datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
-										|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
-									data = exec.executeAndFetch("SELECT * FROM " + tn + " LIMIT " + limit, appUuid);
+										|| appDatasource.getType().toUpperCase().contains(ExecContext.spark.toString())
+										|| appDatasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
+									data = exec.executeAndFetchByDatasource("SELECT * FROM " + tn + " LIMIT " + limit, datapodDs, appUuid);
 								} else {
-									data = exec.executeAndFetch("SELECT * FROM " + tn + " WHERE rownum< " + limit, appUuid);
+									data = exec.executeAndFetchByDatasource("SELECT * FROM " + tn + " WHERE rownum< " + limit, datapodDs, appUuid);
 								}
 							} else {
-								data = exec.executeAndFetch("SELECT * FROM " + tn + " LIMIT " + limit, null);
+								data = exec.executeAndFetchByDatasource("SELECT * FROM " + tn + " LIMIT " + limit, datapodDs, null);
 							}
 						}
 					}
 				}
 			} else {
-				if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
-						|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
+				if(appDatasource.getType().toUpperCase().contains(ExecContext.spark.toString())
+						|| appDatasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
 //					data = exec.executeAndFetch("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM " + tn
 //							+ ") AS tab WHERE rownum >= " + offset + " AND rownum <= " + limit, appUuid);
-					data = exec.executeAndFetch("SELECT * FROM " + tn + " LIMIT " + limit, appUuid);
+					data = exec.executeAndFetchByDatasource("SELECT * FROM " + tn + " LIMIT " + limit, datapodDs, appUuid);
 				} else {
-					if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
+					if(appDatasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
 						if(engine.getExecEngine().equalsIgnoreCase("livy-spark")
-								|| datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
-								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
-							data = exec.executeAndFetch("SELECT * FROM " + tn + " LIMIT " + limit, appUuid);
+								|| appDatasource.getType().toUpperCase().contains(ExecContext.spark.toString())
+								|| appDatasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
+							data = exec.executeAndFetchByDatasource("SELECT * FROM " + tn + " LIMIT " + limit, datapodDs, appUuid);
 						} else {
-							data = exec.executeAndFetch("SELECT * FROM " + tn + " WHERE rownum< " + limit, appUuid);
+							data = exec.executeAndFetchByDatasource("SELECT * FROM " + tn + " WHERE rownum< " + limit, datapodDs, appUuid);
 						}
 					} else {
-						data = exec.executeAndFetch("SELECT * FROM " + tn + " LIMIT " + limit, appUuid);
+						data = exec.executeAndFetchByDatasource("SELECT * FROM " + tn + " LIMIT " + limit, datapodDs, appUuid);
 					}
 				}
 			}
-			/*if (download.equalsIgnoreCase("n")) {
-				
-				 * DataStore ds = findDataStoreByMeta(uuid, version); String tn =
-				 * getTableName(ds.getUuid(), ds.getVersion());
-				 * logger.info("Datastore - Table name:"+tn); DataFrame df =
-				 * sqlContext.sql("select * from "+tn);
-				 
-				if(!isDataFrame) {
-					ResultSetMetaData rsmd = rsSorted.getMetaData();
-					int numOfCols = rsmd.getColumnCount();
-					while(rsSorted.next()) {
-						Map<String, Object> object = new LinkedHashMap<String, Object>(numOfCols);
-						for(int i = 1; i<= numOfCols; i++) {
-							//System.out.println(rsmd.getColumnName(i).substring(rsmd.getColumnName(i).indexOf(".")+1) +"  "+ rsSorted.getObject(i).toString());
-							if(rsmd.getColumnName(i).contains("."))
-								object.put(rsmd.getColumnName(i).substring(rsmd.getColumnName(i).indexOf(".")+1), rsSorted.getObject(i));
-							else
-								object.put(rsmd.getColumnName(i), rsSorted.getObject(i));
-						}
-						data.add(object);
-					}
-				}else {
-					Row[] rows = dfSorted.collect();
-					String[] columns = dfSorted.columns();
-					for (Row row : rows) {
-						Map<String, Object> object = new LinkedHashMap<String, Object>(columns.length);
-						for (String column : columns) {
-							object.put(column, row.getAs(column));
-						}
-						data.add(object);
-					}
-				}
-			}
-			if (download.equalsIgnoreCase("y")) {
-				response.setContentType("application/xml charset=utf-16");
-				response.setHeader("Content-type", "application/xml");
-				@SuppressWarnings("resource")
-				HSSFWorkbook workbook = new HSSFWorkbook();
-				HSSFSheet sheet = workbook.createSheet("Datapod");
-				ArrayList<String> al = null;
-				ArrayList<ArrayList<String>> arlist = new ArrayList<ArrayList<String>>();
-				if(rsHolder.getType().equals(ResultType.resultset)) {
-					workbook = dataFrameService.getDownloadableContentsForDatapodResults(response, rowLimit);
-					ResultSetMetaData rsmd = rsSorted.getMetaData();
-					int numOfCols = rsmd.getColumnCount();
-					String[] columns = new String[numOfCols];
-					for(int i=1; i<=numOfCols; i++)
-						columns[i] = rsmd.getColumnName(i);
-					try {
-						al = new ArrayList<>();
-						for (String column : columns) {
-							if(column.contains("."))
-								al.add(column.substring(column.indexOf(".")+1));
-							else
-								al.add(column);
-						}
-						arlist.add(al);
-						while(rsSorted.next()) {
-							al = new ArrayList<>();
-							for (int i=0; i<numOfCols; i++) {
-								al.add(String.valueOf(rsSorted.getObject(i)));
-								for (int k = 0; k < arlist.size(); k++) {
-									ArrayList<String> ardata = (ArrayList<String>) arlist.get(k);
-									HSSFRow hssfRow = sheet.createRow((short) k);
-									for (int p = 0; p < ardata.size(); p++) {
-										HSSFCell cell = hssfRow.createCell((short) p);
-										cell.setCellValue(ardata.get(p).toString());
-									}
-								}
-							}
-							arlist.add(al);
-						}
-						response.addHeader("Content-Disposition", "attachment; filename=Datapod.xlsx");
-						ServletOutputStream sos = response.getOutputStream();
-						workbook.write(sos);
-						sos.write(workbook.getBytes());
-						sos.close();
-					}catch (IOException e1) {
-						e1.printStackTrace();
-						logger.info("exception caught while download file");
-					}
-				}else {
-					workbook = dataFrameService.getDownloadableContentsForDatapodResults(response, rowLimit);
-//					
-//					 * DataStore dds = findDataStoreByMeta(uuid, version); String dtn =
-//					 * getTableName(ds.getUuid(), dds.getVersion());
-//					 * logger.info("Datastore - Table name:"+dtn);
-//					 
-					// DataFrame df = sqlContext.sql("select * from "+tn);
-					Row[] drows = dfSorted.head(rowLimit);
-					// logger.info("Rows"+df.count());
-					String[] dcolumns = dfSorted.columns();
-					try {
-						al = new ArrayList<>();
-						for (String column : dcolumns) {
-							al.add(column);
-						}
-						arlist.add(al);
-						for (Row row : drows) {
-							al = new ArrayList<>();
-							for (int i = 0; i < dcolumns.length; i++) {
-								al.add(String.valueOf(row.get(i)));
-
-								for (int k = 0; k < arlist.size(); k++) {
-									ArrayList<String> ardata = (ArrayList<String>) arlist.get(k);
-									HSSFRow hssfRow = sheet.createRow((short) k);
-
-									for (int p = 0; p < ardata.size(); p++) {
-										HSSFCell cell = hssfRow.createCell((short) p);
-										cell.setCellValue(ardata.get(p).toString());
-									}
-								}
-							}
-							arlist.add(al);
-						}
-						response.addHeader("Content-Disposition", "attachment; filename=Datapod.xlsx");
-						ServletOutputStream sos = response.getOutputStream();
-						workbook.write(sos);
-						sos.write(workbook.getBytes());
-						sos.close();
-					}catch (IOException e1) {
-						e1.printStackTrace();
-						logger.info("exception caught while download file");
-					}
-				}
-			}*/
 
 			return data;
 		}catch (IOException | NullPointerException e) {
