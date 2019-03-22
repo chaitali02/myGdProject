@@ -81,10 +81,5 @@ public class ApplicationServiceImpl {
 	}*/
 
 
-	/********************** UNUSED **********************/
-	/*public Application getAsOf(String uuid, String asOf) {
-		return iApplicationDao.findAsOf(uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
-	}*/
-
 	
 }

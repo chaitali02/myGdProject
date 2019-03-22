@@ -165,18 +165,6 @@ public class RuleServiceImpl extends RuleTemplate {
 	 * public List<Rule> test(String param1) { return iRuleDao.test(param1); }
 	 */
 
-
-	/********************** UNUSED **********************/
-	/*
-	 * public Rule findLatestByUuid(String uuid) { String appUuid =
-	 * (securityServiceImpl.getAppInfo() != null &&
-	 * securityServiceImpl.getAppInfo().getRef() != null) ?
-	 * securityServiceImpl.getAppInfo().getRef().getUuid() : null; if (appUuid ==
-	 * null) { return iRuleDao.findLatestByUuid(uuid, new Sort(Sort.Direction.DESC,
-	 * "version")); } return iRuleDao.findLatestByUuid(appUuid, uuid, new
-	 * Sort(Sort.Direction.DESC, "version")); }
-	 */
-
 	
 	/********************** UNUSED **********************/
 	/*

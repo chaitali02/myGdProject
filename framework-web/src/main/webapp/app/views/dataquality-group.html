@@ -44,14 +44,6 @@
             tooltip ng-class="(isEdit==true || isPrivlage || dqruleGroupDetail.locked == 'Y' ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="enableEdit(dqruleGroupDetail.uuid,dqruleGroupDetail.version)">
             <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
           </a>
-          <!-- <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
-            tooltip ng-class="(showRuleGroup==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="enableEdit(dqruleGroupDetail.uuid,dqruleGroupDetail.version)">
-            <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
-          </a>
-          <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="View" data-toggle="tooltip" data-placement="top"
-            tooltip ng-class="(showRuleGroup==true ||  isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="showview(dqruleGroupDetail.uuid,dqruleGroupDetail.version)">
-            <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
-          </a> -->
           <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" ng-show="isDependencyShow" ng-class="(showRuleGroup==false ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
             title="Knowledge Graph" data-toggle="tooltip" data-placement="top" tooltip data-ng-click="showRuleGroupGraph(dqruleGroupDetail.uuid,dqruleGroupDetail.version)">
             <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:#a0a0a0"></i>
@@ -219,9 +211,15 @@
                     </auto-complete>
                   </tags-input>
                 </div>
-                <div class="col-md-1">
+                <!-- <div class="col-md-1">
                   <span ng-hide="{{mode}}" class="glyphicon glyphicon-erase" title="Clear All" data-toggle="tooltip" data-placement="top" tooltip
                     aria-hidden="true" ng-click=" clear()" style="top:3px;left:-24px;cursor: pointer;"></span>
+                </div> -->
+                <div class="col-md-1" style="left:-19px">
+                  <span ng-hide="{{mode}}" class="fa fa-list-alt" title="Select All" data-toggle="tooltip" data-placement="top" tooltip aria-hidden="true"
+                    ng-click="addAll()" style="top:6px;left:-24px;cursor: pointer;display: block;margin-bottom: 1px;margin-top: 10px;"></span>
+                  <span ng-hide="{{mode}}" class="glyphicon glyphicon-erase" title="Clear All" data-toggle="tooltip" data-placement="top" tooltip
+                    aria-hidden="true" ng-click=" clear()" style="top:3px;left:-1px;cursor: pointer;"></span>
                 </div>
               </div>
 

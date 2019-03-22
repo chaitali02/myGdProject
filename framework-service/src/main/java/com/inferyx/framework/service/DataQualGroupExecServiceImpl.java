@@ -187,17 +187,6 @@ public class DataQualGroupExecServiceImpl  extends BaseGroupExecTemplate {
 		return resolveNameGroup(dqGroupExecList);
 	}
 
-	/********************** UNUSED **********************/
-	/*public DataQualGroupExec getAsOf(String uuid, String asOf) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;				
-		if (appUuid != null) {
-			return iDataQualGroupExecDao.findAsOf(appUuid, uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
-		}
-		else
-			return iDataQualGroupExecDao.findAsOf(uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
-	}*/
-
 	
 
 	/********************** UNUSED **********************/

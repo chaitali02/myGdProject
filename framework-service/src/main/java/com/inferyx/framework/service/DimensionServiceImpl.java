@@ -104,49 +104,5 @@ public class DimensionServiceImpl {
 		return iDimensionDao.findLatestByUuid(appUuid,uuid,new Sort(Sort.Direction.DESC, "version"));	
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public Dimension resolveName(Dimension dimension) throws JsonProcessingException {
-		if(dimension.getCreatedBy() != null)
-		{
-		String createdByRefUuid = dimension.getCreatedBy().getRef().getUuid();
-		User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-		dimension.getCreatedBy().getRef().setName(user.getName());
-		}
-		if (dimension.getAppInfo() != null) {
-			for (int i = 0; i < dimension.getAppInfo().size(); i++) {
-				String appUuid = dimension.getAppInfo().get(i).getRef().getUuid();
-				Application application = (Application) commonServiceImpl.getLatestByUuid(appUuid, MetaType.application.toString());
-				String appName = application.getName();
-				dimension.getAppInfo().get(i).getRef().setName(appName);
-			}
-		}
-		String dependsOnRefUuid = dimension.getDependsOn().getRef().getUuid();
-		Datapod datapoddependsOnDO = datapodServiceImpl.findLatestByUuid(dependsOnRefUuid);
-		
-		String datapodName = datapoddependsOnDO.getName();
-		dimension.getDependsOn().getRef().setName(datapodName);
-		
-		String dimUUID = dimension.getUuid();
-		Dimension dimDO = findLatestByUuid(dimUUID);
-		int attrID = Integer.parseInt(dimDO.getDimInfo().getAttrId());
-		String datapodUUID = dimDO.getDimInfo().getRef().getUuid();
-		Datapod datapodDO = datapodServiceImpl.findLatestByUuid(datapodUUID);
-		List<Attribute> attrList = datapodDO.getAttributes();
-		dimension.getDimInfo().setAttrName(attrList.get(attrID).getName());		
-		dimension.getDimInfo().getRef().setName(datapodDO.getName());
-		return dimension;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public Dimension getAsOf(String uuid, String asOf) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;				
-		if (appUuid != null) {
-			return iDimensionDao.findAsOf(appUuid, uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
-		}
-		else
-			return iDimensionDao.findAsOf(uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
-	}*/
-
 	
 }

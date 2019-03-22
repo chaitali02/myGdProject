@@ -78,20 +78,6 @@ public class GraphController {
 		
 	}
   
-  /*	@RequestMapping(value="/loadGraph",method=RequestMethod.GET)
-	public @ResponseBody boolean reloadGraph(
-			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action) throws IOException, ParseException, JSONException{
-		try {
-			graphRegister.loadGraph();
-		}catch (Exception e) {
-				e.printStackTrace();
-				return false;
-		}
-		return true;
-		
-	}*/
-  
   @RequestMapping(value="/buildGraph",method=RequestMethod.GET)
 	public @ResponseBody boolean  buildGraph(
 			@RequestParam(value = "type", required = false) String type,
@@ -104,22 +90,6 @@ public class GraphController {
 		}
 		return true;
 	}
-
-  /*@RequestMapping(value="/buildAndLoadGraph", method=RequestMethod.GET)
-	public @ResponseBody boolean  buildAndLoadGraph(
-			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action) throws IOException, ParseException, JSONException, java.text.ParseException{
-	  try {
-		  graphRegister.buildGraph();
-		  Message message = new Message("200", MessageStatus.SUCCESS.toString(), "Graph build successfully.");
-		  messageServiceImpl.save(message);
-		  graphRegister.loadGraph();
-	  }catch (Exception e) {
-			e.printStackTrace();
-			return false;
-	  }
-	  return true;
-	}*/
   
   @RequestMapping(value="/getGraphPodResults",method=RequestMethod.POST)
 	public @ResponseBody Map<String, List<GraphpodResult>>  getGraphPodResults(@RequestParam("uuid") String uuid,

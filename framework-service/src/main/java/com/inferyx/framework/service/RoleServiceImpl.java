@@ -69,20 +69,6 @@ public class RoleServiceImpl {
 	}*/
 	
 	/********************** UNUSED **********************/
-	/*public Role findLatestByUuid(String uuid) {
-		// String appUuid = (securityServiceImpl.getAppInfo() != null &&
-		// securityServiceImpl.getAppInfo().getRef() != null
-		// )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		// if(appUuid != null)
-		// {
-		// return iRoleDao.findLatestByUuid(appUuid,uuid,new
-		// Sort(Sort.Direction.DESC, "version"));
-		// }
-		// else
-		return iRoleDao.findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version"));
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public Role findOneById(String id) {
 		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
 				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;

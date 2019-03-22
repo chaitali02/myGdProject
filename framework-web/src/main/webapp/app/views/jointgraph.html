@@ -609,7 +609,24 @@
   </div>
 </div>
 
-
+<div class="modal fade in" id="confPiplmodal" tabindex="-1" role="basic" aria-hidden="true" style="display:none;padding-right:15px;">
+  <div class="modal-dialog">
+    <div class="modal-content rulemodel">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+        <!-- <h4 class="modal-title">Confirm</h4> -->
+        <h4 class="modal-title" title="{{lastParams.name}}"style="overflow: hidden;white-space:nowrap;max-width:230px;margin-bottom:-4px;
+        text-overflow:ellipsis;"v>{{lastParams.name}}</h4>
+      </div>
+      <div class="modal-body" style="text-transform: capitalize"> {{msgstatus | lowercase}}
+        <span style="text-transform: capitalize">{{msgtype}}</span> ?</div>
+      <div class="modal-footer">
+        <button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn green" ng-click="oKSetStatus(lastParams,msgstatus)">Ok</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
 
 
 <div id="viewResultModel" class="modal fade bs-modal-lg in" style="display: none;">

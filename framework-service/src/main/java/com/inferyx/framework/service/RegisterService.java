@@ -482,16 +482,6 @@ public class RegisterService {
 		return result;
 	}
 
-	/********************** UNUSED **********************/
-	/*public String getConditionByRelation(String relationUUID, String type) throws JsonProcessingException {
-
-		String result = null;
-		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-		if (type != null && !type.isEmpty() && type.equalsIgnoreCase("condition")) {
-			result = ow.writeValueAsString(conditionServiceImpl.findConditionByRelation(relationUUID));
-		}
-		return result;
-	}*/
 
 	public String getDagExecByDag(String dagUUID, String type) throws JsonProcessingException {
 
@@ -1398,17 +1388,6 @@ public class RegisterService {
 //		return attrRefDetails;
 //	}
 
-	/********************** UNUSED **********************/
-	// Find expression by given relation uuid
-	/*public String getExpressionByRelation(String relationUuid, String type) throws JsonProcessingException {
-		String result = null;
-		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-		if (type != null && !type.isEmpty() && type.equalsIgnoreCase("expression")) {
-			result = ow.writeValueAsString(expressionServiceImpl.findExpressionByRelation(relationUuid));
-		}
-		return result;
-	}*/
-
 	// Find vizpod by given relation uuid
 	public String getVizpodByRelation(String relationUUID, String type) throws JsonProcessingException {
 		String result = null;
@@ -1419,83 +1398,6 @@ public class RegisterService {
 
 		return result;
 	}
-
-	// public List<Map<String, Object>> createGraph(Datapod document, String
-	// type, String action){
-	/*
-	 * public String submit(Map<String, Object> document, String type) { String Id =
-	 * ""; Datapod datapodDet = null;
-	 * 
-	 * if (type != null && !type.isEmpty()) { ObjectMapper mapper = new
-	 * ObjectMapper(); type = type.toLowerCase(); // Create graph start//
-	 * 
-	 * if (type.equalsIgnoreCase("datapod")) { Datapod datapod =
-	 * mapper.convertValue(document, Datapod.class); Id = datapodServiceImpl.Save
-	 * case "datapod": result =
-	 * ow.writeValueAsString(datapodServiceImpl.findAllByVersion(uuid)); break; case
-	 * "relation": result =
-	 * ow.writeValueAsString(relationServiceImpl.findAllByVersion(uuid)); break;
-	 * case "activity": result =
-	 * ow.writeValueAsString(activityServiceImpl.findAllByVersion(uuid)); break;
-	 * case "application": result =
-	 * ow.writeValueAsString(applicationServiceImpl.findAllByVersion(uuid)); break;
-	 * case "condition": result =
-	 * ow.writeValueAsString(conditionServiceImpl.findAllByVersion(uuid)); break;
-	 * case "dagExec": result =
-	 * ow.writeValueAsString(dagExecServiceImpl.findAllByVersion(uuid)); break; case
-	 * "dag": result = ow.writeValueAsString(dagServiceImpl.findAllByVersion(uuid));
-	 * break; case "dashboard": result =
-	 * ow.writeValueAsString(dashboardSeviceImpl.findAllByVersion(uuid)); break;
-	 * case "dataset": result =
-	 * ow.writeValueAsString(datasetServiceImpl.findAllByVersion(uuid)); break; case
-	 * "datasource": result =
-	 * ow.writeValueAsString(datasourceServiceImpl.findAllByVersion(uuid)); break;
-	 * case "datastore": result =
-	 * ow.writeValueAsString(dataStoreServiceImpl.findAllByVersion(uuid)); break;
-	 * case "dimension": result =
-	 * ow.writeValueAsString(dimensionServiceImpl.findAllByVersion(uuid)); break;
-	 * case "expression": result =
-	 * ow.writeValueAsString(expressionServiceImpl.findAllByVersion(uuid)); break;
-	 * case "filter": result =
-	 * ow.writeValueAsString(filterServiceImpl.findAllByVersion(uuid)); break; case
-	 * "formula": result =
-	 * ow.writeValueAsString(formulaServiceImpl.findAllByVersion(uuid)); break; case
-	 * "group": result =
-	 * ow.writeValueAsString(groupServiceImpl.findAllByVersion(uuid)); break; case
-	 * "load": result =
-	 * ow.writeValueAsString(loadServiceImpl.findAllByVersion(uuid)); break; case
-	 * "map": result = ow.writeValueAsString(mapServiceImpl.findAllByVersion(uuid));
-	 * break; case "measure": result =
-	 * ow.writeValueAsString(measureServiceImpl.findAllByVersion(uuid)); break; case
-	 * "metadata": result =
-	 * ow.writeValueAsString(metadataServiceImpl.findAllByVersion(uuid)); break;
-	 * case "privilege": result =
-	 * ow.writeValueAsString(privilegeServiceImpl.findAllByVersion(uuid)); break;
-	 * case "role": result =
-	 * ow.writeValueAsString(roleServiceImpl.findAllByVersion(uuid)); break; case
-	 * "ruleExec": result =
-	 * ow.writeValueAsString(ruleExecServiceImpl.findAllByVersion(uuid)); break;
-	 * case "ruleGroup": result =
-	 * ow.writeValueAsString(ruleGroupServiceImpl.findAllByVersion(uuid)); break;
-	 * case "rule": result =
-	 * ow.writeValueAsString(ruleServiceImpl.findAllByVersion(uuid)); break; case
-	 * "session": result =
-	 * ow.writeValueAsString(sessionServiceImpl.findAllByVersion(uuid)); break; case
-	 * "userGroup": result =
-	 * ow.writeValueAsString(userGroupServiceImpl.findAllByVersion(uuid)); break;
-	 * case "user": result =
-	 * ow.writeValueAsString(userServiceImpl.findAllByVersion(uuid)); break; case
-	 * "vizExec": result =
-	 * ow.writeValueAsString(vizExecServiceImpl.findAllByVersion(uuid)); break; case
-	 * "vizpod": result =
-	 * ow.writeValueAsString(vizpodServiceImpl.findAllByVersion(uuid)); break;
-	 * (datapod).getId(); datapodDet = datapodServiceImpl.Save(datapod); createDet =
-	 * graphServiceImpl.submit(datapodDet);
-	 * 
-	 * }
-	 * 
-	 * } return Id; }
-	 */
 
 	/*public String getGraphResults(String uuid,String version, String degree) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		return graphServiceImpl.getGraphJson(uuid,version,degree);
@@ -1538,31 +1440,6 @@ public class RegisterService {
 	 * 
 	 * return Id; }
 	 */
-	
-	/********************** UNUSED **********************/
-	/*public MetaIdentifier getCreatedUserName(MetaIdentifier metaIdentifier) {
-		String userUUID = metaIdentifier.getUuid();
-		User userDO = userServiceImpl.findLatestByUuid(userUUID);
-		String userName = userDO.getName();
-		metaIdentifier.setName(userName);
-		return metaIdentifier;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public String getAppBySession(String userUuid) throws JsonProcessingException {
-		String result = null;
-		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-		result = ow.writeValueAsString(userServiceImpl.findAppBySession(userUuid));
-		return result;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public String getRoleBySession(String userUuid) throws JsonProcessingException {
-		String result = null;
-		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-		result = ow.writeValueAsString(userServiceImpl.findRoleBySession(userUuid));
-		return result;
-	}*/
 
 	public String getAppByUser(String userName)
 			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
@@ -1593,40 +1470,6 @@ public class RegisterService {
 		return result;
 	}
 
-	/********************** UNUSED **********************/
-	/*public String getRoleByUser(String userName) throws JsonProcessingException {
-		String result = null;
-		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-		result = ow.writeValueAsString(userServiceImpl.findRoleByUser(userName));
-		return result;
-	}*/
-
-	// public List<AttributeRef> getAttributesByDataset(String uuid) {
-	// List<AttributeRef> attrRefDetails = new ArrayList<AttributeRef>();
-	// Datapod datapod = null;
-	// MetaIdentifier finalDataRef = new MetaIdentifier();
-	// Dataset dataset = datasetServiceImpl.findLatestByUuid(uuid);
-	// List<SourceAttribute> sourceAttributes = dataset.getSourceAttributes();
-	// for (int i = 0; i < sourceAttributes.size(); i++) {
-	// AttributeRef attributeRef = new AttributeRef();
-	// if(sourceAttributes.get(i).getSourceAttr().getRef().getType() ==
-	// MetaType.datapod)
-	// {
-	// finalDataRef.setType(MetaType.datapod);
-	// datapod =
-	// datapodServiceImpl.findLatestByUuid(sourceAttributes.get(i).getSourceAttr().getRef().getUuid());
-	// finalDataRef.setUuid(datapod.getUuid());
-	// finalDataRef.setVersion(datapod.getVersion());
-	// finalDataRef.setName(datapod.getName());
-	// attributeRef.setAttributeId(Integer.parseInt(sourceAttributes.get(i).getAttrSourceId()));
-	// attributeRef.setAttributeName(datapod.getAttributes().get(i).getName());
-	// attributeRef.setAttributeDesc(sourceAttributes.get(i).getName());
-	// attributeRef.setDatapodRef(finalDataRef);
-	// attrRefDetails.add(attributeRef);
-	// }
-	// }
-	// return attrRefDetails;
-	// }
 
 	public List<AttributeRefHolder> getAttributesByDataset(String uuid) throws JsonProcessingException {
 		List<AttributeRefHolder> attrRefDetails = new ArrayList<AttributeRefHolder>();
@@ -1744,146 +1587,6 @@ public class RegisterService {
 
 		return result;
 	}
-
-	/********************** UNUSED **********************/
-/*	public String getAsOf(String uuid, String asOf, String type) throws JsonProcessingException {
-		String result = null;
-		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-		if (type != null && !type.isEmpty()) {
-			type = type.toLowerCase();
-			switch (type) {
-			case "relation":
-				Relation relation = relationServiceImpl.getAsOf(uuid, asOf);
-				result = ow.writeValueAsString(relationServiceImpl.resolveName(relation));
-				break;
-			case "datapod":
-				Datapod datapod = datapodServiceImpl.getAsOf(uuid, asOf);
-				result = ow.writeValueAsString(datapodServiceImpl.resolveName(datapod));
-				break;
-			case "dag":
-				Dag dag = dagServiceImpl.getAsOf(uuid, asOf);
-				result = ow.writeValueAsString(dagServiceImpl.resolveName(dag));
-				break;
-			case "filter":
-				Filter filter = filterServiceImpl.getAsOf(uuid, asOf);
-				result = ow.writeValueAsString(filterServiceImpl.resolveName(filter));
-				break;
-			case "expression":
-				Expression expression = expressionServiceImpl.getAsOf(uuid, asOf);
-				result = ow.writeValueAsString(expressionServiceImpl.resolveName(expression));
-				break;
-			case "formula":
-				Formula formula = formulaServiceImpl.getAsOf(uuid, asOf);
-				result = ow.writeValueAsString(formulaServiceImpl.resolveName(formula));
-				break;
-			case "map":
-				com.inferyx.framework.domain.Map map = mapServiceImpl.getAsOf(uuid, asOf);
-				result = ow.writeValueAsString(mapServiceImpl.resolveName(map));
-				break;
-			case "dagexec":
-				DagExec dagExec = dagExecServiceImpl.getAsOf(uuid, asOf);
-				result = ow.writeValueAsString(dagExecServiceImpl.resolveName(dagExec));
-				break;
-			case "condition":
-				Condition condition = conditionServiceImpl.getAsOf(uuid, asOf);
-				result = ow.writeValueAsString(conditionServiceImpl.resolveName(condition));
-				break;
-			case "meta":
-				result = ow.writeValueAsString(metadataServiceImpl.getAsOf(uuid, asOf));
-				break;
-			case "vizpod":
-				Vizpod vizpod = vizpodServiceImpl.getAsOf(uuid, asOf);
-				result = ow.writeValueAsString(vizpodServiceImpl.resolveName(vizpod));
-				break;
-			case "datastore":
-				DataStore datastore = dataStoreServiceImpl.getAsOf(uuid, asOf);
-				result = ow.writeValueAsString(dataStoreServiceImpl.resolveName(datastore));
-				break;
-			case "user":
-				User user = userServiceImpl.getAsOf(uuid, asOf);
-				result = ow.writeValueAsString(userServiceImpl.resolveName(user));
-				break;
-			case "session":
-				Session session = sessionServiceImpl.getAsOf(uuid, asOf);
-				result = ow.writeValueAsString(sessionServiceImpl.resolveName(session));
-				break;
-			case "activity":
-				Activity activity = activityServiceImpl.getAsOf(uuid, asOf);
-				result = ow.writeValueAsString(activityServiceImpl.resolveName(activity));
-				break;
-			case "role":
-				Role role = roleServiceImpl.getAsOf(uuid, asOf);
-				result = ow.writeValueAsString(roleServiceImpl.resolveName(role));
-				break;
-			case "group":
-				Group group = groupServiceImpl.getAsOf(uuid, asOf);
-				result = ow.writeValueAsString(groupServiceImpl.resolveName(group));
-				break;
-			case "privilege":
-				Privilege privilege = privilegeServiceImpl.getAsOf(uuid, asOf);
-				result = ow.writeValueAsString(privilegeServiceImpl.resolveName(privilege));
-				break;
-			case "dimension":
-				Dimension dimension = dimensionServiceImpl.getAsOf(uuid, asOf);
-				result = ow.writeValueAsString(dimensionServiceImpl.resolveName(dimension));
-				break;
-			case "measure":
-				Measure measure = measureServiceImpl.getAsOf(uuid, asOf);
-				result = ow.writeValueAsString(measureServiceImpl.resolveName(measure));
-				break;
-			case "vizexec":
-				VizExec vizExec = vizExecServiceImpl.getAsOf(uuid, asOf);
-				result = ow.writeValueAsString(vizExecServiceImpl.resolveName(vizExec));
-				break;
-			case "dataset":
-				Dataset dataset = datasetServiceImpl.getAsOf(uuid, asOf);
-				result = ow.writeValueAsString(datasetServiceImpl.resolveName(dataset));
-				break;
-			case "application":
-				Application application = applicationServiceImpl.getAsOf(uuid, asOf);
-				result = ow.writeValueAsString(applicationServiceImpl.resolveName(application));
-				break;
-			case "datasource":
-				Datasource datasource = datasourceServiceImpl.getAsOf(uuid, asOf);
-				result = ow.writeValueAsString(datasourceServiceImpl.resolveName(datasource));
-				break;
-			case "dq":
-				DataQual dq = dataQualServiceImpl.getAsOf(uuid, asOf);
-				result = ow.writeValueAsString(dataQualServiceImpl.resolveName(dq));
-				break;
-			case "dqgroup":
-				DataQualGroup dqgroup = dataQualGroupServiceImpl.getAsOf(uuid, asOf);
-				result = ow.writeValueAsString(dataQualGroupServiceImpl.resolveName(dqgroup));
-				break;
-			case "dqExec":
-				DataQualExec dqExec = dataQualExecServiceImpl.getAsOf(uuid, asOf);
-				result = ow.writeValueAsString(dataQualExecServiceImpl.resolveName(dqExec));
-				break;
-			case "dqgroupexec":
-				DataQualGroupExec dqgroupExec = dataQualGroupExecServiceImpl.getAsOf(uuid, asOf);
-				result = ow.writeValueAsString(dataQualGroupExecServiceImpl.resolveName(dqgroupExec));
-				break;
-			case "profile":
-				Profile profile = profileServiceImpl.getAsOf(uuid, asOf);
-				result = ow.writeValueAsString(profileServiceImpl.resolveName(profile));
-				break;
-			case "profileexec":
-				ProfileExec profileExec = profileExecServiceImpl.getAsOf(uuid, asOf);
-				result = ow.writeValueAsString(profileExecServiceImpl.resolveName(profileExec));
-				break;
-			case "profilegroup":
-				ProfileGroup profileGroup = profileGroupServiceImpl.getAsOf(uuid, asOf);
-				result = ow.writeValueAsString(profileGroupServiceImpl.resolveName(profileGroup));
-				break;
-			case "profilegroupexec":
-				ProfileGroupExec profilegroupExec = profileGroupExecServiceImpl.getAsOf(uuid, asOf);
-				result = ow.writeValueAsString(profileGroupExecServiceImpl.resolveName(profilegroupExec));
-				break;
-			}
-		}
-		return result;
-	}
-*/
 
 	
 	public String getExpressionByType(String uuid) throws JsonProcessingException {
@@ -2138,13 +1841,6 @@ public class RegisterService {
 		return dagExecServiceImpl.getStatusByDagExec(dagExecUuid);
 	}
 
-	/********************** UNUSED **********************/
-	/*public String getParamSetByModel(String modelUuid, String modelVersion) throws JsonProcessingException {
-		String result = null;
-		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-		result = ow.writeValueAsString(paramSetServiceImpl.getParamSetByModel(modelUuid, modelVersion));
-		return result;
-	}*/
 	
 	public String getParamSetByTrain(String trainUuid, String trainVersion) throws JsonProcessingException {
 		String result = null;

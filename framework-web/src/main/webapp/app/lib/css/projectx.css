@@ -1491,3 +1491,7 @@ transition: right 1m
    .portlet.box.green > .portlet-title > .actions .btn-default > i{
      color: white !important
    }
+
+   select.form-control{
+    padding-left: 8px;
+   }

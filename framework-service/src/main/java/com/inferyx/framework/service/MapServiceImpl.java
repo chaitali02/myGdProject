@@ -129,20 +129,6 @@ public class MapServiceImpl implements IParsable, IExecutable {
 		return iMapDao.findLatestByUuid(appUuid, uuid, new Sort(Sort.Direction.DESC, "version"));
 	}*/
 
-
-	/********************** UNUSED **********************/
-	/*@SuppressWarnings("unchecked")
-	public List<Map> findAllDemo() {
-		return (List<Map>) commonServiceImpl.findAll(MetaType.map);
-	}*/
-
-	/*public Map update(Map map) throws IOException {
-		map.exportBaseProperty();
-		Map mapDet = iMapDao.save(map);
-		registerService.createGraph();
-		return mapDet;
-	}*/
-
 	/********************** UNUSED **********************/
 	/*public boolean isExists(String id) {
 		return iMapDao.exists(id);
@@ -176,16 +162,6 @@ public class MapServiceImpl implements IParsable, IExecutable {
 			}
 		}
 		return result;
-	}*/
-
-		/********************** UNUSED **********************/
-	/*public com.inferyx.framework.domain.Map getAsOf(String uuid, String asOf) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iMapDao.findAsOf(appUuid, uuid, asOf, new Sort(Sort.Direction.DESC, "version"));
-		} else
-			return iMapDao.findAsOf(uuid, asOf, new Sort(Sort.Direction.DESC, "version"));
 	}*/
 
 

@@ -262,21 +262,6 @@ public class MetadataController {
 		return registerService.getDatapodByRelation(relationUuid, version, type);
 	}
 
-	/*@RequestMapping(value = "/getExpressionByRelation", method = RequestMethod.GET)
-	public @ResponseBody String getExpressionByRelation(@RequestParam("uuid") String relationUuid,
-			@RequestParam("type") String type,
-			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException, JSONException {
-		return registerService.getExpressionByRelation(relationUuid, type);
-	}*/
-
-	/********************** UNUSED **********************/
-	/*@RequestMapping(value = "/getConditionByRelation", method = RequestMethod.GET)
-	public @ResponseBody String getConditionByRelation(@RequestParam("relationUUID") String relationUUID,
-			@RequestParam("type") String type,
-			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
-		return registerService.getConditionByRelation(relationUUID, type);
-	}*/
-
 	@RequestMapping(value = "/genDataDict", method = RequestMethod.GET)
 	public boolean genDataDict(HttpServletResponse response, @RequestParam("multiTab") String multitab,
 			@RequestParam(value = "type", required = false) String type,
@@ -303,16 +288,6 @@ public class MetadataController {
 		return sessionId;
 	}
 
-	/********************** UNUSED **********************/
-	/*@RequestMapping(value = "/createdUserName", method = RequestMethod.POST)
-	public @ResponseBody MetaIdentifier getCreatedUserName(@RequestBody MetaIdentifier metaIdentifier,
-			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action)
-			throws JsonProcessingException, JSONException {
-
-		return registerService.getCreatedUserName(metaIdentifier);
-	}*/
-
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public @ResponseBody List<Registry> register(@RequestParam("uuid") String uuid,
 			@RequestParam("version") String version, 
@@ -323,15 +298,7 @@ public class MetadataController {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		return registerService.register(uuid, version, type, registryList, runMode);
 	}
-
-	/*@RequestMapping(value = "/getPrefixFormula", method = RequestMethod.POST)
-	public @ResponseBody DBObject getFormula(@RequestBody Formula formulaInfo,
-			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action)
-			throws JSONException, SQLException, IOException, ParseException {
-		return formulaParser.ConvertFormula(formulaInfo);
-	}*/
-
+	
 	@RequestMapping(value = "/getAppByUser", method = RequestMethod.GET)
 	public @ResponseBody String getAppByUser(@RequestParam("userName") String userName,
 			@RequestParam(value = "type", required = false) String type,
@@ -340,23 +307,6 @@ public class MetadataController {
 
 		return registerService.getAppByUser(userName);
 	}
-
-	/********************** UNUSED 
-	 * @throws java.text.ParseException 
-	 * @throws NullPointerException 
-	 * @throws SecurityException 
-	 * @throws NoSuchMethodException 
-	 * @throws InvocationTargetException 
-	 * @throws IllegalArgumentException 
-	 * @throws IllegalAccessException **********************/
-	/*@RequestMapping(value = "/getRoleByUser", method = RequestMethod.GET)
-	public @ResponseBody String getRoleByUser(@RequestParam("userName") String userName,
-			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action)
-			throws JSONException, SQLException, IOException, ParseException {
-
-		return registerService.getRoleByUser(userName);
-	}*/
 
 	@RequestMapping(value = "/getDatasourceByType", method = RequestMethod.GET)
 	public @ResponseBody List<Datasource> getDatasourceByType(@RequestParam("type") String type,
@@ -374,14 +324,6 @@ public class MetadataController {
 		return registerService.getAttributesByDataset(Uuid);
 	}
 
-	/********************** UNUSED **********************/
-	/*@RequestMapping(value = "/getDashboardByName", method = RequestMethod.GET)
-	public @ResponseBody Dashboard getDashboardByName(@RequestParam("name") String name,
-			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action)
-			throws JsonProcessingException {
-		return dashboardServiceImpl.getLatestDashboardByName(name);
-	}*/
 
 	@RequestMapping(value = "/getAttributesByDatapod", method = RequestMethod.GET)
 	public @ResponseBody List<AttributeRefHolder> getAttributesByDatapod(@RequestParam("uuid") String Uuid,
@@ -455,12 +397,6 @@ public class MetadataController {
 		return registerService.getExpressionByType2(uuid);
 	}
 
-	/*@RequestMapping(value = "/getAsOf", method = RequestMethod.GET)
-	public @ResponseBody String getAsOf(@RequestParam("uuid") String uuid, @RequestParam("asOf") String asOf,
-			@RequestParam("type") String type) throws JsonProcessingException {
-		return registerService.getAsOf(uuid, asOf, type);
-	}*/
-	
 	@RequestMapping(value = "/getRegistryByDatasource", method = RequestMethod.GET)
 	public @ResponseBody List<Registry> getRegistryByDatasource(@RequestParam("datasourceUuid") String datasourceUuid,
 			@RequestParam(value = "type", required = false) String type,
@@ -486,19 +422,6 @@ public class MetadataController {
 		return privilegeServiceImpl.getRolePriv(roleUuid);
 	}
 
-	/********************** UNUSED **********************/
-	/*@RequestMapping(value = "/getParamSetByModel", method = RequestMethod.GET)
-	public @ResponseBody String getParamSetByModel(@RequestParam("modelUuid") String modelUuid,
-			@RequestParam("modelVersion") String modelVersion,
-			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "modelType", required = false, defaultValue = "spark") String modelType,
-			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
-			if(!modelType.equalsIgnoreCase(ExecContext.R.toString()) && !modelType.equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-				return registerService.getParamSetByModel(modelUuid, modelVersion);
-			} else
-				return null;			
-	}*/
-	
 	@RequestMapping(value = "/getParamSetByTrain", method = RequestMethod.GET)
 	public @ResponseBody String getParamSetByTrain(@RequestParam("trainUuid") String trainUuid,
 			@RequestParam("trainVersion") String trainVersion,
@@ -545,11 +468,6 @@ public class MetadataController {
 		return registerService.getMetaIdByExecId(execUuid, execVersion, type);
 	}
 
-	/*@RequestMapping(value = "/getMetaStats", method = RequestMethod.GET)
-	public @ResponseBody List<MetaStatsHolder> getMetaStats() throws Exception {
-		return registerService.getMetaStats();
-	}
-*/
 	@RequestMapping(value = "/getMetaStatsByType", method = RequestMethod.GET)
 	public @ResponseBody long getMetaStatsByType(@RequestParam("type") String type,
 			@RequestParam(value = "action", required = false) String action) throws Exception {
@@ -607,14 +525,6 @@ public class MetadataController {
 				
 	}
 
-//	@RequestMapping(value = "/getGroupExecStatus", method = RequestMethod.GET)
-//	public @ResponseBody List<StatusHolder> getGroupExecStatus(@RequestParam("type") String type,
-//			@RequestParam(value = "uuid") String uuid, @RequestParam(value = "version") String version,
-//			@RequestParam(value = "action", required = false) String action)
-//			throws Exception {
-//		return metadataServiceImpl.getGroupExecStatus(type, uuid, version);
-//	}
-//	
 	@RequestMapping(value = "/getGroupExecStatus", method = RequestMethod.GET)
 	public @ResponseBody List<StatusHolder> getGroupExecStatusReflection(@RequestParam("type") String type,
 			@RequestParam(value = "uuid") String uuid, @RequestParam(value = "version") String version,
@@ -757,11 +667,7 @@ public class MetadataController {
 			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {		
 		return metadataServiceImpl.getParamList(collectionType,type,name, userName, startDate, endDate, tags, active, null, null, published);
 	}
-	/*@RequestMapping(value = "/getParamListBySimulate", method = RequestMethod.GET,params = {"simulate"})
-	public @ResponseBody List<ParamList> getParamListBySimulate(	
-			@RequestParam(value = "type", required = false,defaultValue = "simulate") String collectionType) throws JsonProcessingException {		
-		return metadataServiceImpl.getParamList(collectionType);
-	}*/
+
 	@RequestMapping(value = "/getCommentByType", method = RequestMethod.GET)
 	public @ResponseBody List<CommentView> getCommentByType(
 			@RequestParam(value ="type") String type,

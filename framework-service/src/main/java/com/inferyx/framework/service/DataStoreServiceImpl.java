@@ -165,58 +165,6 @@ public class DataStoreServiceImpl {
 		return dataStore;
 	}
 
-	/*public DataStore resolveName(DataStore dataStore) {
-		if (dataStore.getCreatedBy() != null) {
-			String createdByRefUuid = dataStore.getCreatedBy().getRef().getUuid();
-			User user = userServiceImpl.findLatestByUuid(createdByRefUuid);
-			dataStore.getCreatedBy().getRef().setName(user.getName());
-		}
-		if (dataStore.getAppInfo() != null) {
-			for (int i = 0; i < dataStore.getAppInfo().size(); i++) {
-				String appUuid = dataStore.getAppInfo().get(i).getRef().getUuid();
-				Application application = applicationServiceImpl.findLatestByUuid(appUuid);
-				String appName = application.getName();
-				dataStore.getAppInfo().get(i).getRef().setName(appName);
-			}
-		}
-		String metaIdType = dataStore.getMetaId().getRef().getType().toString();
-		String metaName = null;
-		String MetaIdRefUuid = dataStore.getMetaId().getRef().getUuid();
-		if (metaIdType.equalsIgnoreCase("datapod")) {
-			Datapod datapodDO = datapodServiceImpl.findLatestByUuid(MetaIdRefUuid);
-			metaName = datapodDO.getName();
-		} else if (metaIdType.equalsIgnoreCase("rule")) {
-			Rule ruleDO = ruleServiceImpl.findLatestByUuid(MetaIdRefUuid);
-			metaName = ruleDO.getName();
-		}
-		dataStore.getMetaId().getRef().setName(metaName);
-		if (dataStore.getExecId() != null) {
-			String ExecIdRefUuid = dataStore.getExecId().getRef().getUuid();
-			if (dataStore.getExecId().getRef().getType() == MetaType.loadExec) {
-				LoadExec loadexecDO = commonSer.findLatestByUuid(ExecIdRefUuid);
-				String loadexecName = loadexecDO.getName();
-				dataStore.getExecId().getRef().setName(loadexecName);
-			} else if (dataStore.getExecId().getRef().getType() == MetaType.mapExec) {
-				MapExec mapexecDO = mapExecServiceImpl.findLatestByUuid(ExecIdRefUuid);
-				String mapexecName = mapexecDO.getName();
-				dataStore.getExecId().getRef().setName(mapexecName);
-			} else if (dataStore.getExecId().getRef().getType() == MetaType.dagExec) {
-				DagExec dagexecDO = dagexecServiceImpl.findLatestByUuid(ExecIdRefUuid);
-				String dagexecName = dagexecDO.getName();
-				dataStore.getExecId().getRef().setName(dagexecName);
-			} else if (dataStore.getExecId().getRef().getType() == MetaType.ruleExec) {
-				RuleExec ruleExecDO = ruleExecServiceImpl.findLatestByUuid(ExecIdRefUuid);
-				String dagexecName = ruleExecDO.getName();
-				dataStore.getExecId().getRef().setName(dagexecName);
-			} else if (dataStore.getExecId().getRef().getType() == MetaType.dqExec) {
-				DataQualExec dqExecDO = dqExecServiceImpl.findLatestByUuid(ExecIdRefUuid);
-				String dagexecName = dqExecDO.getName();
-				dataStore.getExecId().getRef().setName(dagexecName);
-			}
-		}
-		return dataStore;
-	}
-*/
 	public DataStore findDataStoreByMeta(String uuid, String version)
 			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
@@ -1163,25 +1111,7 @@ public class DataStoreServiceImpl {
 		
 	}
 	
-	/********************** UNUSED **********************/
-	/*public List<String> getAtributeValues(String datapodUUID, String type, int attributeID) throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-
-		List<String> result = new ArrayList<>();
-		//Datapod datapodDO = datapodServiceImpl.findLatestByUuid(datapodUUID);
-				Datapod datapodDO = (Datapod) commonServiceImpl.getLatestByUuid(datapodUUID, MetaType.datapod.toString());
-		String attributeName = datapodDO.getAttributes().get(attributeID).getName();
-		DataStore datastore = findLatestByMeta(datapodDO.getUuid(), datapodDO.getVersion());
-		String tableName = getTableNameByDatastore(datastore.getUuid(), datastore.getVersion());
-		// DataFrame df = sqlContext.sql("select " + attributeName + " from " +
-		// tableName);
-		Datasource datasource = commonServiceImpl.getDatasourceByApp();
-		IExecutor exec = execFactory.getExecutor(datasource.getType());
-		ResultSetHolder rsHolder = exec.executeSql("SELECT " + attributeName + " FROM " + tableName);
-		result = dataFrameService.getAtributeValues(rsHolder, attributeName);
-
-		return result;
-	}*/
-
+	
 	@SuppressWarnings("static-access")
 	public List<DataStore> getDataStoreByDim(String uuid, List<AttributeRefHolder> dimensionList) {
 		String META_TYPE = "metaId.ref.type";

@@ -126,18 +126,6 @@ public class ProfileGroupExecServiceImpl extends BaseGroupExecTemplate {
 		return ProfileGroupExecList;
 	}
 
-	/********************** UNUSED **********************/
-	/*public ProfileGroupExec getAsOf(String uuid, String asOf) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;				
-		if (appUuid != null) {
-			return iProfileGroupExecDao.findAsOf(appUuid, uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
-		}
-		else
-			return iProfileGroupExecDao.findAsOf(uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
-	}*/
-
-	
 
 	public List<ProfileGroupExec> findProfileGroupExecByProfileGroup(String profileGroupUUID,
 			String profileGroupVersion) throws JsonProcessingException {

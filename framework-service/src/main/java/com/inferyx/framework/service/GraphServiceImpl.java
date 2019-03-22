@@ -601,16 +601,6 @@ public class GraphServiceImpl extends BaseRuleExecTemplate implements IParsable,
 		iEdgeDao.save(edge);
 	}
 
-	/*
-	 * public List<Edge> findEdges(int activePage, int pageSize) { Pageable pageable
-	 * = new PageRequest(activePage, pageSize); Page<Edge> page =
-	 * iEdgeDao.findAll(pageable); return Lists.newArrayList(page.iterator()); }
-	 * 
-	 * public List<Vertex> findVertices(int activePage, int pageSize) { Pageable
-	 * pageable = new PageRequest(activePage, pageSize); Page<Vertex> page =
-	 * iVertexDao.findAll(pageable); return Lists.newArrayList(page.iterator()); }
-	 */
-
 	public List<Vertex> findVertices() {
 		return iVertexDao.findAll();
 	}

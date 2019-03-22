@@ -261,6 +261,21 @@ InferyxApp.controller('TabController', function ($timeout, $state, $scope, $root
 
         return available;
     }
+
+    $scope.$on('isTabAvailable',function(e,previousState,newStage){
+        debugger
+        var indexOfTab = isTabAvailable(previousState);
+        if (indexOfTab > -1) {
+            $timeout(function () {
+                $scope.tabs.splice(indexOfTab,1);
+                $scope.activeTabIndex = null;
+                $scope.activeTabIndex = indexOfTab;
+            }, 1)  
+            $scope.addTab(newStage);
+            $scope.activeTabIndex = null;
+        }
+    });
+
     $scope.$on('onAddTab', function (e, tab) {
         $scope.addTab(tab)
         $scope.activeTabIndex = null;

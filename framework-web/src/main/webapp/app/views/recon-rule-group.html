@@ -42,15 +42,7 @@
             data-ng-click="enableEdit(ruleGroupDetail.uuid,ruleGroupDetail.version)">
             <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
           </a>
-          <!-- <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="Edit" data-toggle="tooltip" data-placement="top"
-            tooltip ng-class="(showForm==true && isEdit==true)? 'currentpage':'notcurrentpage'" ng-hide="isAdd"
-            data-ng-click="enableEdit(ruleGroupDetail.uuid,ruleGroupDetail.version)">
-            <i class="fa fa-edit" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
-          </a>
-          <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="View" data-toggle="tooltip" data-placement="top"
-            tooltip ng-class="(showForm==true || isEdit==false)? 'currentpage':'notcurrentpage'" ng-hide="isAdd" data-ng-click="showview(ruleGroupDetail.uuid,ruleGroupDetail.version)">
-            <i class="glyphicon glyphicon-file" style="display: block;margin: 2px auto;color:#a0a0a0"></i>
-          </a> -->
+      
           <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" title="Knowledge Graph" data-toggle="tooltip"
             data-placement="top" tooltip ng-show="isDependencyShow" ng-class="(showForm==false ||isEditInprogess ==true || isEditVeiwError ==true)? 'currentpage':'notcurrentpage'"
             data-ng-click="showGraph(ruleGroupDetail.uuid,ruleGroupDetail.version)">
@@ -203,7 +195,6 @@
                         ng-change="changeCheckboxExecution()">
                       <span style="border: 1px solid rgba(128, 128, 128, 0.38);background-color:white;" ng-disabled="{{mode}}"></span>
                     </label>
-
                   </div>
                 </div>
               </div>
@@ -220,9 +211,15 @@
                     </auto-complete>
                   </tags-input>
                 </div>
-                <div class="col-md-1">
+                <!-- <div class="col-md-1">
                   <span ng-hide="{{mode}}" class="glyphicon glyphicon-erase" title="Clear All" data-toggle="tooltip" data-placement="top" tooltip
                     aria-hidden="true" ng-click=" clear()" style="top:3px;left:-24px;cursor: pointer;"></span>
+                </div> -->
+                <div class="col-md-1" style="left:-19px">
+                  <span ng-hide="{{mode}}" class="fa fa-list-alt" title="Select All" data-toggle="tooltip" data-placement="top" tooltip aria-hidden="true"
+                      ng-click="addAll()" style="top:6px;left:-24px;cursor: pointer;display: block;margin-bottom: 1px;margin-top: 10px;"></span>
+                  <span ng-hide="{{mode}}" class="glyphicon glyphicon-erase" title="Clear All" data-toggle="tooltip" data-placement="top" tooltip
+                      aria-hidden="true" ng-click=" clear()" style="top:3px;left:-1px;cursor: pointer;"></span>
                 </div>
               </div>
               

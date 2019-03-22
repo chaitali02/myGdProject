@@ -1518,10 +1518,16 @@ DataQualityModule.controller('DetailDataqualityGroupController', function ($stat
     });
   };
 
+
   $scope.clear = function () {
     $scope.ruleTags = null;
-  }
+		$scope.myform.$dirty=true;
+	}
 
+	$scope.addAll = function () {
+		$scope.ruleTags =$scope.dqall;
+		$scope.myform.$dirty=true;
+	}
   $scope.okDqGroupSave = function () {
     $('#dqrulegroupsave').css("dispaly", "none");
     var hidemode = "yes";

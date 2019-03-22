@@ -176,17 +176,6 @@ public class DataQualGroupServiceImpl extends RuleGroupTemplate {
 				return super.execute(dataQualGroupUUID, dataQualGroupVersion, MetaType.dqgroup, MetaType.dqgroupExec, MetaType.dq, MetaType.dqExec, execParams, dataQualGroupExec, runMode);
 	}	
 
-	/********************** UNUSED **********************/
-	/*public DataQualGroup getAsOf(String uuid, String asOf) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;				
-		if (appUuid != null) {
-			return iDataQualGroupDao.findAsOf(appUuid, uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
-		}
-		else
-			return iDataQualGroupDao.findAsOf(uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
-	}*/
-
 	
 	
 	public void restart(String type,String uuid,String version, RunMode runMode) throws Exception{
