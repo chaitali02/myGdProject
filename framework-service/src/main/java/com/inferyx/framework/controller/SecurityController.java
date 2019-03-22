@@ -118,20 +118,7 @@ public class SecurityController {
 			@RequestParam(value = "action", required = false) String action) throws IOException, JSONException, java.text.ParseException, ServletException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 		return registerService.validateUser(userName, password);
 	}
-
-	/********************** UNUSED **********************/
-	/*@RequestMapping(value = "/getAppBySession", method = RequestMethod.GET)
-	public @ResponseBody String getAppBySession(@RequestParam("userUuid") String userUuid) throws JSONException, SQLException, IOException, ParseException {
-		return registerService.getAppBySession(userUuid);
-	}*/
 	
-	/*@RequestMapping(value = "/getRoleBySession", method = RequestMethod.GET)
-	public @ResponseBody String getRoleBySession(@RequestParam("userUuid") String userUuid,
-			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action) throws JSONException, SQLException, IOException, ParseException {
-		return registerService.getRoleBySession(userUuid);
-	}*/
-
 	@RequestMapping(value = "/getRolePriv", method = RequestMethod.GET)
 	public @ResponseBody List<RolePriv> getRolePriv(
 			@RequestParam(value = "type", required = false) String type,

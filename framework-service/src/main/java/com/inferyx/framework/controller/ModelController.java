@@ -76,64 +76,6 @@ public class ModelController {
 	@Autowired
 	private TrainResultViewServiceImpl trainResultViewServiceImpl;
 
-	/*@RequestMapping(value = "/train/execute", method = RequestMethod.POST)
-	public boolean train(@RequestParam("uuid") String modelUUID, @RequestParam("version") String modelVersion,
-			@RequestBody(required = false) ExecParams execParams,
-			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action,
-			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
-		try {
-			Mode runMode = Helper.getExecutionMode(mode);
-			modelServiceImpl.setRunMode(runMode);
-			ModelExec modelExec = null;
-			List<ParamMap> paramMapList = new ArrayList<>();
-
-			Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(modelUUID, modelVersion,
-					MetaType.model.toString());
-			if (!model.getType().equalsIgnoreCase(ExecContext.R.toString())
-					&& !model.getType().equalsIgnoreCase(ExecContext.PYTHON.toString())) {
-				paramMapList = paramSetServiceImpl.getParamMap(execParams, modelUUID, modelVersion);
-			}
-			if (paramMapList.size() > 0) {
-
-				for (ParamMap paramMap : paramMapList) {
-					modelExec = modelServiceImpl.create(modelUUID, modelVersion, execParams, paramMap, modelExec);
-					Thread.sleep(1000); // Should be parameterized in a class
-					modelServiceImpl.train(modelUUID, modelVersion, modelExec, execParams, paramMap);
-				}
-			} else {
-				modelExec = modelServiceImpl.create(modelUUID, modelVersion, execParams, null, modelExec);
-				modelServiceImpl.train(modelUUID, modelVersion, modelExec, execParams, null);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-		return true;
-	}*/
-
-	/********************** UNUSED **********************/	
-	/*@RequestMapping(value = "/trainCombined", method = RequestMethod.POST)
-	public ModelExec trainCombined(@RequestParam("modelUUID") String modelUUID,
-			@RequestParam("modelVersion") String modelVersion, @RequestBody(required = false) ExecParams execParams,
-			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action) throws Exception {
-		ParamMap paramMap = paramSetServiceImpl.getParamMapCombined(execParams, modelUUID, modelVersion);
-		ModelExec modelExec = null;
-		modelExec = modelServiceImpl.create(modelUUID, modelVersion, execParams, paramMap, modelExec);
-		modelServiceImpl.train(modelUUID, modelVersion, modelExec, execParams, paramMap);
-		return modelExec;
-
-	}*/
-
-	/********************** UNUSED **********************/
-	/*@RequestMapping(value = "/getModelExecByModel", method = RequestMethod.GET)
-	public List<ModelExec> getModelExecByModel(@RequestParam("modelUUID") String modelUUID,
-			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
-		return modelExecServiceImpl.findModelExecByModel(modelUUID);
-	}*/
-
 	@RequestMapping(value = "/train/getResults", method = RequestMethod.GET)
 	public String getModelResults(@RequestParam("uuid") String trainExecUUID,
 			@RequestParam("version") String trainExecVersion,
@@ -188,28 +130,6 @@ public class ModelController {
 		 */
 		return modelServiceImpl.uploadScript(customScriptFile, model, modelId, modelUuid, modelVersion, scriptName);
 	}
-	
-	/********************** UNUSED **********************/
-	/*@RequestMapping(value = "/executeScript", method = RequestMethod.GET)
-	public @ResponseBody String executeScript(@RequestParam("scriptName") String scriptName,
-			@RequestParam("modelType") String modelType,
-			@RequestParam(value = "modelExecUuid", required = false) String modelExecUuid,
-			@RequestParam(value = "modelExecVersion", required = false) String modelExecVersion)
-			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
-			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		return new ObjectMapper().writeValueAsString(
-				modelServiceImpl.executeScript(modelType, scriptName, modelExecUuid, modelExecVersion));
-	}*/
-
-	/********************** UNUSED **********************/
-	/*@RequestMapping(value = "/getAlgorithmByModelExec", method = RequestMethod.GET)
-	public com.inferyx.framework.domain.Algorithm getAlgorithmByModelExec(
-			@RequestParam("modelExecUUID") String modelExecUUID,
-			@RequestParam("modelExecVersion") String modelExecVersion,
-			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action) throws JsonProcessingException {
-		return modelExecServiceImpl.getAlgorithmByModelExec(modelExecUUID, modelExecVersion);
-	}*/
 
 	@RequestMapping(value = "/download", method = RequestMethod.GET)
 	public void download(@RequestParam(value = "modelExecUUID") String trainExecUuid,
@@ -372,14 +292,7 @@ public class ModelController {
 									   @RequestParam(value = "action", required = false) String action) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException{
 		return modelServiceImpl.getTrainByModel(modelUuid, modelVersion);
 	}	
-	
-//	@RequestMapping(value = "/train/kill",  method = RequestMethod.PUT)
-//	public void killTrain(@RequestParam(value = "uuid") String trainExecUuid,
-//						  @RequestParam(value = "version") String trainExecVersion,
-//						  @RequestParam(value = "type", required = false) String type,
-//						  @RequestParam(value = "action", required = false) String action) {
-//		modelExecServiceImpl.kill(trainExecUuid, trainExecVersion, MetaType.trainExec);
-//	}
+
 	
 	@RequestMapping(value="/setStatus", method= RequestMethod.PUT)
 	public boolean setStatus(@RequestParam("uuid") String uuid, 
@@ -406,22 +319,6 @@ public class ModelController {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		modelExecServiceImpl.restartTrain(type, trainExecUuid, trainExecVersion, execParams, runMode);
 	}
-	
-//	@RequestMapping(value = "/predict/kill",  method = RequestMethod.GET)
-//	public void killPredict(@RequestParam(value = "uuid") String trainExecUuid,
-//						  @RequestParam(value = "version") String trainExecVersion,
-//						  @RequestParam(value = "type", required = false) String type,
-//						  @RequestParam(value = "action", required = false) String action) {
-//		modelExecServiceImpl.kill(trainExecUuid, trainExecVersion, MetaType.predictExec);
-//	}
-//	
-//	@RequestMapping(value = "/simulate/kill",  method = RequestMethod.GET)
-//	public void killSimulate(@RequestParam(value = "uuid") String trainExecUuid,
-//						  @RequestParam(value = "version") String trainExecVersion,
-//						  @RequestParam(value = "type", required = false) String type,
-//						  @RequestParam(value = "action", required = false) String action) {
-//		modelExecServiceImpl.kill(trainExecUuid, trainExecVersion, MetaType.simulateExec);
-//	}
 	
 	@RequestMapping(value = "/predict/restart",  method = RequestMethod.GET)
 	public void restartPredict(@RequestParam(value = "uuid") String trainExecUuid,

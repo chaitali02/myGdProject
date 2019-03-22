@@ -169,40 +169,7 @@ public class UserServiceImpl {
 		return iUserDao.findLatestByUsername(userName,new Sort(Sort.Direction.DESC, "version"));
 	}
 	
-	/********************** UNUSED **********************/
-	/*public List<Application> findAppBySession(String userUuid) throws JsonProcessingException {
-		List<Application> appList = new ArrayList<Application>();			
-		Session sessionDO = sessionServiceImpl.findSessionByStatus("active");				
-		logger.info("useruuid: "+sessionDO.getUserInfo().getRef().getUuid());		
-		if(userUuid.equals(sessionDO.getUserInfo().getRef().getUuid())) {
-			//User userDO = findLatestByUuid(userUuid);
-			User userDO = (User) commonServiceImpl.getLatestByUuid(userUuid, MetaType.user.toString());
-			List<MetaIdentifierHolder> metaList = userDO.getAppInfo();
-			for(MetaIdentifierHolder appInfo : metaList) {
-				String appUuid = appInfo.getRef().getUuid();
-				Application appDO = (Application) commonServiceImpl.getLatestByUuid(appUuid, MetaType.application.toString());
-				appList.add(appDO);
-			}
-		}
-		return appList;
-	}*/
-
-	/********************** UNUSED **********************/
-	/*public List<Role> findRoleBySession(String userUuid) throws JsonProcessingException {
-		List<Role> roleList = new ArrayList<Role>();
-		Session sessionDO = sessionServiceImpl.findSessionByStatus("active");
-		if(userUuid.equals(sessionDO.getUserInfo().getRef().getUuid())) {
-			User userDO = findLatestByUuid(userUuid);
-			List<MetaIdentifierHolder> roleInfoList = userDO.getRoleInfo();
-			for(MetaIdentifierHolder roleInfo : roleInfoList) {
-				String roleUuid = roleInfo.getRef().getUuid();
-				//Role roleDO = roleServiceImpl.findLatestByUuid(roleUuid);
-				Role roleDO = (Role) commonServiceImpl.getLatestByUuid(roleUuid, MetaType.role.toString());
-				roleList.add(roleDO);
-			}
-		}
-		return roleList;
-	}*/
+	
 	public List<Application> findAppByUser(String userName) throws JsonProcessingException {
 		List<Application> appList = new ArrayList<Application>();			
 			User userDO = findLatestByUsername(userName);
@@ -214,7 +181,6 @@ public class UserServiceImpl {
 			}
 		return appList;
 	}
-	
 
 	
 }

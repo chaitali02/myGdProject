@@ -130,23 +130,7 @@ public class SystemServiceImpl {
 		}else
 			return new ArrayList<>();
 	}
-	/*public boolean killSession(String sessionId) throws JsonProcessingException, JSONException, ParseException {
-		//boolean isInvalidated = SessionCounter.invalidateSession(sessionId);
-		if(!StringUtils.isBlank(sessionId) && sessionId != null) {
-			boolean isUpdated = expireSession(sessionId);
-			if(isUpdated) {
-				ConcurrentHashMap<String, HttpSession> sessionMap = SessionCounter.getSessionList();
-				HttpSession session = sessionMap.get(sessionId);
-				if(session != null) {
-					session.invalidate();
-					logger.info("Session invalidated......."); return true;
-				}else
-					logger.info("Session alReady invalidated......."); return false; 
-			}else
-				logger.info("Unable to update Session object, aborting invalidated operation......."); return false;
-		}else
-			logger.info("Session ID is null, Session not invalidated......."); return false;
-	}*/
+	
 	public boolean expireSession(String sessionId) throws JsonProcessingException, JSONException, ParseException {
 		Session session = sessionServiceImpl.findSessionBySessionId(sessionId);
 		if(session != null) {

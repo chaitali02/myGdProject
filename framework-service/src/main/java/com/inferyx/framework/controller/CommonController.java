@@ -301,22 +301,6 @@ public class CommonController<T> {
 		return objectWriter.writeValueAsString(object);
 	}
 	
-	/*@RequestMapping(value="session/invalidate", method = RequestMethod.GET)
-    public @ResponseBody String invalidateSession(){
-		return commonServiceImpl.invalidateSession();
-    }*/
-	/*//Converted to genric
-	@RequestMapping(value = "/upload", headers = ("content-type=multipart/form-data; boundary=abcd"), method = RequestMethod.POST)
-	public @ResponseBody String upload(@RequestParam("file") MultipartFile file,
-									   @RequestParam(value = "extension") String extension,
-									   @RequestParam(value = "fileType") String fileType,
-									   @RequestParam(value = "type", required = false) String type,
-									   @RequestParam(value = "fileName", required = false) String fileName) throws FileNotFoundException, IOException, JSONException, ParseException {
-		return commonServiceImpl.upload(file, extension, fileType, fileName, type);
-	}
-	*/
-	
-	@RequestMapping("/download")
     public HttpServletResponse download(@RequestParam(value = "fileType") String fileType,
     						@RequestParam(value = "fileName") String fileName,
     						HttpServletRequest request,
@@ -341,23 +325,6 @@ public class CommonController<T> {
 		return objectWriter.writeValueAsString(baseEntityList);
 	}
 	
-	
-	
-	/*Converted to genric
-	 * @RequestMapping(value = "/uploadCommentFile", method = RequestMethod.POST)
-	public @ResponseBody boolean uploadCommentFile(HttpServletRequest request,
-											   @RequestParam("file") List<MultipartFile> multiPartFile, 
-											   @RequestParam("fileName") String filename,
-											   @RequestParam("uuid") String uuid,
-											   @RequestParam(value = "type", required = false) String type,
-											   @RequestParam(value = "action", required = false) String action)
-											throws IOException, JSONException, ParseException {
-		boolean result = commonServiceImpl.uploadCommentFile(multiPartFile, filename, type,uuid);
-		
-		return result;
-	}*/
-	
-
 	//uploadGenric
 	@RequestMapping(value = "/upload", method = RequestMethod.POST, headers = ("content-type=multipart/form-data; boundary=abcd"))
 	public @ResponseBody List<MetaIdentifierHolder> uploadGenric(HttpServletRequest request,
@@ -397,15 +364,6 @@ public class CommonController<T> {
 														   @RequestParam(value = "paramListType") MetaType paramListType) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException{
 		return commonServiceImpl.getAllLatestParamListByTemplate(templateFlg, null, null, paramListType);
 	}
-	
-//	@RequestMapping(value = "/getUserByApp",method=RequestMethod.GET)
-//	public @ResponseBody List<User> getUserByApp(@RequestParam(value = "uuid") String appUuid, 
-//									@RequestParam(value = "type", required = false) String type,
-//									@RequestParam(value = "action", required = false) String action) throws FileNotFoundException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException, JSONException {
-//						return  commonServiceImpl.getUserByApp(appUuid);
-//	}
-	
-	
 	
 	@RequestMapping(value = "/getUserByApp", method = RequestMethod.GET)
 	public @ResponseBody List<User> getUserByApp(

@@ -1281,49 +1281,6 @@ public class GraphRegister<T> {
 		}	
 	}
 	
-	/*public void loadGraph() {
-		
-		System.out.println("Graph flag is set to " + graphFlag.isMode() + ". Loading graph...");
-		if (!graphFlag.isMode()) {
-			System.out.println("Skipping loading of graph.");
-			return;
-		}
-		
-		long noOfEdges = graphServiceImpl.countEdges();
-		System.out.println(" No of Edges : " + noOfEdges);
-		long noOfVertices = graphServiceImpl.countVertices();
-		System.out.println(" No of Vertices : " + noOfVertices);
-		int pageSize = 10000;
-		List<Edge> edgeList = null;
-		List<Vertex> verticesList = null;
-		totalEdgeList = new ArrayList<>();
-		totalVertexList = new ArrayList<>();
-		for (int i = 0; i < (noOfEdges/pageSize)+1; i++) {
-			edgeList = graphServiceImpl.findEdges(i, pageSize);
-			if (edgeList == null || edgeList.isEmpty()) {
-				break;
-			}
-			totalEdgeList.addAll(convertToEdgeRow(edgeList));
-			System.out.println(" Loading Edge Page : " + i);
-		}
-		for (int i = 0; i < (noOfVertices/pageSize)+1; i++) {
-			verticesList = graphServiceImpl.findVertices(i, pageSize);
-			if (verticesList == null || verticesList.isEmpty()) {
-				break;
-			}
-			totalVertexList.addAll(convertToVertexRow(verticesList));
-			System.out.println(" Loading Vertex Page : " + i);
-		}
-		for (int i = 0; i < totalVertexList.size(); i++) {
-			if (i ==0) {
-				System.out.println(totalVertexList.get(i).schema());
-			}
-		}
-		graphServiceImpl.createGraph(totalVertexList, totalEdgeList);
-		
-		//totalVertexList.addAll(convertToVertexRow(graphServiceImpl.findVertices()));
-	}
-	*/
 	public void updateGraph(Object metaObj, MetaType type) throws JSONException, java.text.ParseException, JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 		String jsonString = writer.writeValueAsString(metaObj);
 		graphServiceImpl.createVnE(jsonString, totalVertexList, totalEdgeList, vertexRowMap, edgeRowMap, type.toString(), null);
