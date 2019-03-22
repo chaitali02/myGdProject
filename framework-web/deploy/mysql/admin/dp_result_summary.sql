@@ -27,5 +27,6 @@ CREATE TABLE dp_result_summary
      max_length        VARCHAR(50), 
      avg_length        VARCHAR(50), 
      num_duplicates    INT(10), 
-     version           INT(10) 
+     version           INT(10),
+     INDEX (version)     
   ); 

@@ -30,5 +30,6 @@ CREATE TABLE dq_result_detail
      expression_check_pass VARCHAR(1),  
      case_check_pass 	   VARCHAR(1), 
      all_check_pass        VARCHAR(1), 
-     version               INT(10) 
+     version               INT(10),
+     INDEX (version)
   ); 
