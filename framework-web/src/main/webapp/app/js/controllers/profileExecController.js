@@ -24,6 +24,23 @@ JobMonitoringModule.controller('DetailProfileExecController', function ($filter,
     if ($stateParams.returnBack == "true" && $rootScope.previousState) {
       //revertback
       $state.go($rootScope.previousState.name, $rootScope.previousState.params);
+      if($rootScope.previousState.name!="resultgraphwf"){
+        var stateTabPrevious={};
+        stateTabPrevious.route=dagMetaDataService.elementDefs['profileexec'].detailState;;
+        stateTabPrevious.param={};
+        stateTabPrevious.param.id = $stateParams.id; 
+        stateTabPrevious.param.mode = true;
+        stateTabPrevious.param.returnBack = true;
+        stateTabPrevious.param.name = $scope.execData.name;
+        stateTabPrevious.param.version = $scope.execData.version;
+        stateTabPrevious.param.type = dagMetaDataService.elementDefs['profileexec'].execType;
+        stateTabPrevious.active=false;
+        var stateTabNew={};
+        stateTabNew.route=$rootScope.previousState.name;
+        stateTabNew.param= $rootScope.previousState.params;
+        stateTabNew.active=false;
+        $rootScope.$broadcast('isTabAvailable',stateTabPrevious,stateTabNew);
+      }
     }
     else {
       $scope.statedetail = {};

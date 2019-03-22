@@ -218,7 +218,7 @@
                           <input class="form-control" type="text" ng-model="data.stageId" ng-disabled="true" />
                         </td>
                         <td>
-                          <input class="form-control" type="text" ng-model="data.naypalrechaypalrechame" ng-disabled="{{mode}}" />
+                          <input class="form-control" type="text" ng-model="data.name" ng-disabled="{{mode}}" />
                         </td>
                         <td>
                           <input class="form-control" type="text" ng-model="data.dependsOn" ng-disabled="{{mode}}" />
@@ -260,10 +260,10 @@
                                   <input class="form-control" type="text" ng-model="taskdata.dependsOn" ng-disabled="{{mode}}" />
                                 </td>
                                 <td>
-                                  <input class="form-control" type="text" ng-model="taskdata.operators[0].operatorInfo.ref.type" ng-disabled="{{mode}}" />
+                                  <input class="form-control" type="text" ng-model="taskdata.operators[0].operatorInfo[0].ref.type" ng-disabled="{{mode}}" />
                                 </td>
                                 <td>
-                                  <input class="form-control" type="text" ng-model="taskdata.operators[0].operatorInfo.ref.name" ng-disabled="{{mode}}" />
+                                  <input class="form-control" type="text" ng-model="taskdata.operators[0].operatorInfo[0].ref.name" ng-disabled="{{mode}}" />
                                 </td>
                                 <td ng-init="getTaskstatusList($parent.$index,$index,taskdata.statusList[taskdata.statusList.length-1].stage)" style="text-align: center">
                                   <img ng-src="{{taskdata.imgPathTask}}" width="15px" />
