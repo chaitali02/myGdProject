@@ -391,15 +391,6 @@ public class DashboardServiceImpl extends RuleTemplate {
 	}
 	*/
 
-	/********************** UNUSED **********************/
-	/*public Dashboard getLatestDashboardByName(String name) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid != null)	{
-			return iDashboardDao.findLatestByName(appUuid, name, new Sort(Sort.Direction.DESC, "version"));
-		} else {
-			return iDashboardDao.findLatestByName(name, new Sort(Sort.Direction.DESC, "version"));
-		}
-	}*/
 
 
 }

@@ -1187,19 +1187,7 @@ public class VizpodServiceImpl extends RuleTemplate {
 			return result;
 		}
 
-		/********************** UNUSED **********************/
-	/*public Vizpod getAsOf(String uuid, String asOf) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;				
-		if (appUuid != null) {
-			return iVizpodDao.findAsOf(appUuid, uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
-		}
-		else
-			return iVizpodDao.findAsOf(uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
-	}*/
-
-
-
+	
 	public HttpServletResponse download(String execUuid, String execVersion, String saveOnRefresh, String format,
 			ExecParams execParams, String download, int offset, int limit, HttpServletResponse response, int rowLimit,
 			String sortBy, String order, String requestId, RunMode runMode) throws Exception {

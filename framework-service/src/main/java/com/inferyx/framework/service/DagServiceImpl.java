@@ -491,18 +491,6 @@ public class DagServiceImpl {
 		return mHolder;
 	}
 	
-	
-	/********************** UNUSED 
-	 * @throws Exception **********************/
-	/*public Dag getAsOf(String uuid, String asOf) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid()
-				: null;
-		if (appUuid != null) {
-			return iDagDao.findAsOf(appUuid, uuid, asOf, new Sort(Sort.Direction.DESC, "version"));
-		} else
-			return iDagDao.findAsOf(uuid, asOf, new Sort(Sort.Direction.DESC, "version"));
-	}*/
 
 	public DagExec createDAGExec(Dag dag, ExecParams execParams) throws Exception {
 		DagExec dagExec = new DagExec(dag);
