@@ -357,8 +357,7 @@ public class ReportServiceImpl extends RuleTemplate {
 			} else {
 				 workbook = WorkbookFactory.create(reportFile);
 			}
-		} 
-		else {
+		} else {
 			DataStore datastore = dataStoreServiceImpl.getDatastore(reportExec.getResult().getRef().getUuid(),
 					reportExec.getResult().getRef().getVersion());
 			if (datastore == null) {
@@ -403,17 +402,17 @@ public class ReportServiceImpl extends RuleTemplate {
 			}
 			
 //			//writting as per provided format
-//			if(format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
-//				doc = pdfUtil.getPDFDocForReport(data, reportExec);
+			if(format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
+				doc = pdfUtil.getPDFDocForReport(data, reportExec);
 //				FileOutputStream fileOutPDF = new FileOutputStream(new File(filePathUrl));
 //				doc.save(fileOutPDF);
 //				fileOutPDF.close();
-//			} else {
+			} else {
+				workbook = workbookUtil.getWorkbookForReport(data, reportExec);
 //				FileOutputStream fileOut = new FileOutputStream(filePathUrl);
-//				workbook = workbookUtil.getWorkbookForReport(data, reportExec);
 //				workbook.write(fileOut);		
 //				fileOut.close();
-//			}
+			}
 			
 			DownloadExec downloadExec = new DownloadExec();
 			downloadExec.setBaseEntity();
@@ -772,7 +771,7 @@ public class ReportServiceImpl extends RuleTemplate {
 			reportDocDir.mkdirs();
 		}
 		String reportFileName = null;
-		if (format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
+		if(format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
 			reportFileName = String.format("%s_%s.%s", report.getName(), reportExec.getVersion(),
 					FileType.PDF.toString().toLowerCase());
 		} else {
@@ -792,6 +791,62 @@ public class ReportServiceImpl extends RuleTemplate {
 			} else {
 				workbook = WorkbookFactory.create(reportFile);
 			}
+		} else {
+			DataStore datastore = dataStoreServiceImpl.getDatastore(reportExec.getResult().getRef().getUuid(),
+					reportExec.getResult().getRef().getVersion());
+			if (datastore == null) {
+				logger.error("Datastore is not available.");
+				throw new Exception("Datastore is not available.");
+			}
+			
+			int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
+			if (!skipLimitCheck && limit > maxRows) {
+				logger.error("Requested rows exceeded the limit of " + maxRows);
+				MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+				dependsOn.setRef(new MetaIdentifier(MetaType.reportExec, reportExec.getUuid(), reportExec.getVersion()));
+				commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
+						"Requested rows exceeded the limit of " + maxRows, dependsOn);
+				throw new RuntimeException("Requested rows exceeded the limit of " + maxRows);
+			}
+
+			datastoreServiceImpl.setRunMode(runMode);
+			List<Map<String, Object>> data = null;
+			try {
+				data = datastoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, limit, null, null, null);	
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			//checking whether data is available or not
+			if(data == null || (data != null && data.isEmpty())) {
+				data = new ArrayList<>();
+				
+				Map<String,Object> dataMap = new LinkedHashMap<>();
+				int i = 0;
+				for(AttributeSource attributeSource : report.getAttributeInfo()) {
+					if(i == 0) {
+						dataMap.put(attributeSource.getAttrSourceName(), "no data available.");
+					} else {
+						dataMap.put(attributeSource.getAttrSourceName(), "");
+					}
+					i++;
+				}
+
+				data.add(dataMap);
+			}
+			
+//			//writting as per provided format
+			if(format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
+				doc = pdfUtil.getPDFDocForReport(data, reportExec);
+			} else {
+				workbook = workbookUtil.getWorkbookForReport(data, reportExec);
+			}
+			
+			DownloadExec downloadExec = new DownloadExec();
+			downloadExec.setBaseEntity();
+			downloadExec.setLocation(filePathUrl);
+			downloadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.reportExec, reportExec.getUuid(), reportExec.getVersion())));
+			commonServiceImpl.save(MetaType.downloadExec.toString(), downloadExec);			
 		}
 
 		if (response != null) {
