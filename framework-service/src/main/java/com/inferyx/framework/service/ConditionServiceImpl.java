@@ -134,36 +134,5 @@ public class ConditionServiceImpl {
 	}
 	*/
 
-	/********************** UNUSED **********************/
-	/*public List<Condition> findConditionByRelation(String relationUUID)
-	{
-		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();;
-	     		Aggregation conditionAggr = newAggregation(match(Criteria.where("dependsOn.ref.uuid").is(relationUUID)),
-				group("uuid").max("version").as("version"));
-
-		// Convert the aggregation result into a List
-		AggregationResults<Condition> groupResults = mongoTemplate.aggregate(conditionAggr, "condition", Condition.class);
-		List<Condition> conditionList = groupResults.getMappedResults();
-
-		// Fetch the datapod details for each id
-		List<Condition> result = new ArrayList<Condition>();
-		for (Condition s : conditionList) {
-			Condition conditionLatest = iConDao.findOneByUuidAndVersion(appUuid,s.getId(), s.getVersion());
-			result.add(conditionLatest);
-		}
-		return result;
-	}*/
-
-	/*public Condition getAsOf(String uuid, String asOf) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;				
-		if (appUuid != null) {
-			return iConDao.findAsOf(appUuid, uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
-		}
-		else
-			return iConDao.findAsOf(uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
-	}*/
-
-
 	
 }

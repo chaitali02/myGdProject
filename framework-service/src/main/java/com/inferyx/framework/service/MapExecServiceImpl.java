@@ -116,16 +116,6 @@ public class MapExecServiceImpl {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public MapExec findLatestByUuid(String mapExecUUID) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid == null)
-		{
-			return iMapExecDao.findLatestByUuid(mapExecUUID,new Sort(Sort.Direction.DESC, "version"));
-		}
-		return iMapExecDao.findLatestByUuid(appUuid,mapExecUUID,new Sort(Sort.Direction.DESC, "version"));		
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public void  delete(String id){
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
 		MapExec mapExec = iMapExecDao.findOneById(appUuid,id);

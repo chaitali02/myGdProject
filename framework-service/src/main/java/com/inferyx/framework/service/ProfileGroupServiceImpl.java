@@ -133,18 +133,6 @@ public class ProfileGroupServiceImpl extends RuleGroupTemplate {
 	   }
 	   return result;
 	}*/
-
-	/********************** UNUSED **********************/
-	/*public ProfileGroup getAsOf(String uuid, String asOf) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;				
-		if (appUuid != null) {
-			return iProfileGroupDao.findAsOf(appUuid, uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
-		}
-		else
-			return iProfileGroupDao.findAsOf(uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
-	}*/
-
 	
 
 	/**

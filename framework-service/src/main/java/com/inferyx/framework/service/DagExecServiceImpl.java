@@ -164,17 +164,6 @@ public class DagExecServiceImpl {
 		} else
 			return iDagExec.findOne(id);
 	}*/
-
-	/********************** UNUSED **********************/
-	/*public DagExec findLatestByUuid(String uuid) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid == null) {
-			return iDagExec.findLatestByUuid(uuid, new Sort(Sort.Direction.DESC, "version"));
-		}
-		return iDagExec.findLatestByUuid(appUuid, uuid, new Sort(Sort.Direction.DESC, "version"));
-	}*/
-
 	
 
 	public String kill(String uuid, String version, String stageId, String taskId) throws JsonProcessingException {
@@ -1558,16 +1547,6 @@ public class DagExecServiceImpl {
 		return tableName;
 	}*/
 
-
-	/********************** UNUSED **********************/
-	/*public DagExec getAsOf(String uuid, String asOf) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iDagExec.findAsOf(appUuid, uuid, asOf, new Sort(Sort.Direction.DESC, "version"));
-		} else
-			return iDagExec.findAsOf(uuid, asOf, new Sort(Sort.Direction.DESC, "version"));
-	}*/
 	
 	public DagStatusHolder getStatusByDagExec(String dagExecUuid) throws JsonProcessingException {
 		//DagExec dagExec = findLatestByUuid(dagExecUuid);

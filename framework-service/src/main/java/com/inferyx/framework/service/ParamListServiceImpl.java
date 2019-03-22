@@ -55,11 +55,6 @@ public class ParamListServiceImpl {
 	/*public ParamList findLatest() {
 		return resolveName(iParamListDao.findLatest(new Sort(Sort.Direction.DESC, "version")));
 	}*/
-
-	/********************** UNUSED **********************/
-	/*public ParamList findLatestByUuid(String uuid){
-		return iParamListDao.findLatestByUuid(uuid,new Sort(Sort.Direction.DESC, "version"));	
-	}*/
 	
 	/********************** UNUSED **********************/
 	/*public ParamList findOneById(String id){

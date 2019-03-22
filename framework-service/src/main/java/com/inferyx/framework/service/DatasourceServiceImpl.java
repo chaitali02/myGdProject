@@ -184,17 +184,6 @@ public class DatasourceServiceImpl {
 	}
 
 	/********************** UNUSED **********************/
-	/*public Datasource getAsOf(String uuid, String asOf) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;				
-		if (appUuid != null) {
-			return iDatasourceDao.findAsOf(appUuid, uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
-		}
-		else
-			return iDatasourceDao.findAsOf(uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
-	}*/
-
-	/********************** UNUSED **********************/
 	/*public MetaIdentifierHolder saveAs(Datasource datasource) throws Exception {
 		MetaIdentifierHolder refMeta = new MetaIdentifierHolder();
 		MetaIdentifier ref = new MetaIdentifier();		

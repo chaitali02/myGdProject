@@ -96,16 +96,6 @@ public class RuleExecServiceImpl extends BaseRuleExecTemplate {
 	}*/
 
 	/********************** UNUSED **********************/
-	/*public RuleExec findLatestByUuid(String RuleExecUUID) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null )?securityServiceImpl.getAppInfo().getRef().getUuid():null;
-		if(appUuid == null)
-		{
-			return iRuleExecDao.findLatestByUuid(RuleExecUUID,new Sort(Sort.Direction.DESC, "version"));
-		}
-		return iRuleExecDao.findLatestByUuid(appUuid,RuleExecUUID,new Sort(Sort.Direction.DESC, "version"));		
-	}*/	
-
-	/********************** UNUSED **********************/
 	/*public void  delete(String id){
 		String appUuid = securityServiceImpl.getAppInfo().getRef().getUuid();
 		RuleExec ruleExec = iRuleExecDao.findOneById(appUuid,id);

@@ -182,17 +182,6 @@ public class FormulaServiceImpl {
 		return result;
 	}
 
-	/********************** UNUSED **********************/
-	/*public Formula getAsOf(String uuid, String asOf) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;				
-		if (appUuid != null) {
-			return iFormulaDao.findAsOf(appUuid, uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
-		}
-		else
-			return iFormulaDao.findAsOf(uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
-	}*/
-
 
 	public List<FormulaTypeHolder> findFormulaByType2(String uuid, String[] formulaType) throws JsonProcessingException {
 		return findFormulaByType2(uuid, formulaType, "Y");

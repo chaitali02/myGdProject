@@ -178,16 +178,6 @@ public class MapServiceImpl implements IParsable, IExecutable {
 		return result;
 	}*/
 
-		/********************** UNUSED **********************/
-	/*public com.inferyx.framework.domain.Map getAsOf(String uuid, String asOf) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
-		if (appUuid != null) {
-			return iMapDao.findAsOf(appUuid, uuid, asOf, new Sort(Sort.Direction.DESC, "version"));
-		} else
-			return iMapDao.findAsOf(uuid, asOf, new Sort(Sort.Direction.DESC, "version"));
-	}*/
-
 
 	/********************** UNUSED **********************/
 //	/**

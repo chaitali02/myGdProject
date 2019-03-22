@@ -98,17 +98,4 @@ public class GroupServiceImpl {
 		return iUserGroupDao.findAllVersion(appUuid,datapodName);
 	}*/
 
-	/********************** UNUSED **********************/
-	/*public Group getAsOf(String uuid, String asOf) {
-		String appUuid = (securityServiceImpl.getAppInfo() != null && securityServiceImpl.getAppInfo().getRef() != null)
-				? securityServiceImpl.getAppInfo().getRef().getUuid() : null;				
-		if (appUuid != null) {
-			return iUserGroupDao.findAsOf(appUuid, uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
-		}
-		else
-			return iUserGroupDao.findAsOf(uuid, asOf,new Sort(Sort.Direction.DESC, "version"));
-	}*/
-
-		
-    
 }
