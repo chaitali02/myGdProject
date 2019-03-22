@@ -15,6 +15,8 @@ import java.util.List;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.inferyx.framework.enums.Layout;
+
 @Document(collection="report")
 public class Report extends BaseEntity {
 
@@ -31,7 +33,24 @@ public class Report extends BaseEntity {
 	private MetaIdentifierHolder paramList;
 	private int limit;
 	private String format;
+	private Layout layout;
 	
+	/**
+	 * @Ganesh
+	 *
+	 * @return the layout
+	 */
+	public Layout getLayout() {
+		return layout;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param layout the layout to set
+	 */
+	public void setLayout(Layout layout) {
+		this.layout = layout;
+	}
 	/**
 	 * @Ganesh
 	 *
