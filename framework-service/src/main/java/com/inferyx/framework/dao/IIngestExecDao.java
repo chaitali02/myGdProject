@@ -32,13 +32,13 @@ public interface IIngestExecDao extends MongoRepository<IngestExec, String> {
 	@Query(value = "{$group :{ _id : '$uuid', maxVersion : {$max : '$version'} }}")
 	public List<IngestExec> test(String param1);
 
-	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
+	@Query(value = "{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] }")
 	public List<IngestExec> findAll(String appUuid);
 
-	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid':?1}")
+	@Query(value = "{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'uuid':?1}")
 	public List<IngestExec> findAllByUuid(String appUuid, String uuid);
 
-	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1 }")
+	@Query(value = "{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'uuid' : ?1 }")
 	public IngestExec findLatestByUuid(String appUuid, String uuid, Sort sort);
 
 	@Query(value = "{ 'uuid' : ?0 }")
@@ -50,16 +50,16 @@ public interface IIngestExecDao extends MongoRepository<IngestExec, String> {
 	@Query(value = "{'uuid' : ?0}")
 	public List<IngestExec> findAllVersion(String uuid);
 
-	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} , '_id' : ?1 }")
+	@Query(value = "{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  , '_id' : ?1 }")
 	public IngestExec findOneById(String appUuid, String id);
 
-	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'_id' : ?1}")
+	@Query(value = "{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  ,'_id' : ?1}")
 	public void delete(String appUuid, String id);
 	
 	@Query(value = "{'_id' : ?0}")
 	public void delete(String id);
 
-	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1, 'version':{$lte:?2 }}")
+	@Query(value = "{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'uuid' : ?1, 'version':{$lte:?2 }}")
 	public IngestExec findAsOf(String appUuid, String uuid, String version, Sort sort);
 
 	@Query(value = "{ 'uuid' : ?0, 'version':{$lte:?1 }}")
@@ -68,7 +68,7 @@ public interface IIngestExecDao extends MongoRepository<IngestExec, String> {
 	@Query(value = "{}")
 	public IngestExec findLatest(Sort sort);
 	
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] }")
 	public IngestExec findLatest(String appUuid, Sort sort);
 	
 	@Query(value = "{ '_id' : ?0 }")

@@ -30,22 +30,22 @@ public interface IRuleDao extends MongoRepository<Rule, String> {
 	@Query(value="{$group :{ _id : '$uuid', maxVersion : {$max : '$version'} }}")
 	public List<Rule> test(String param1);
 
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid':?1}")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'uuid':?1}")
 	public List<Rule> findAllByUuid(String appUuid,String uuid);
 	
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1 }")
+	@Query(value="{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'uuid' : ?1 }")
 	public Rule findLatestByUuid(String appUuid,String uuid, Sort sort);
 	
 	@Query(value="{ 'uuid' : ?0 }")
 	public Rule findLatestByUuid(String uuid, Sort sort);
 	
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
+	@Query(value="{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] }")
 	public List<Rule> findAll(String appUuid);	
 	
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} , '_id' : ?1 }")
+	@Query(value="{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  , '_id' : ?1 }")
 	public Rule findOneById(String appUuid, String id);
 	
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'_id' : ?1}")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  ,'_id' : ?1}")
 	public void delete(String appUuid, String id);
 	
 	@Query(value = "{'_id' : ?0}")
@@ -60,10 +60,10 @@ public interface IRuleDao extends MongoRepository<Rule, String> {
 	@Query(value = "{}")
 	public Rule findLatest(Sort sort);
 	
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] }")
 	public Rule findLatest(String appUuid, Sort sort);
 	
-	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1, 'version':{$lte:?2 }}")
+	@Query(value = "{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'uuid' : ?1, 'version':{$lte:?2 }}")
 	public Rule findAsOf(String appUuid, String uuid, String version, Sort sort);
 	
 	@Query(value = "{ '_id' : ?0 }")

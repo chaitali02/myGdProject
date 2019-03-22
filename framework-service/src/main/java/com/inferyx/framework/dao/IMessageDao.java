@@ -22,16 +22,16 @@ import com.inferyx.framework.domain.Message;
 
 public interface IMessageDao extends MongoRepository<Message, String>{
 	
-	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1, 'version':{$lte:?2 }}")
+	@Query(value = "{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'uuid' : ?1, 'version':{$lte:?2 }}")
 	public Message findAsOf(String appUuid, String uuid, String version, Sort sort);
 	
-	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1}")
+	@Query(value = "{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'uuid' : ?1}")
 	public List<Message> findAllVersion(String appUuid, String uuid);
 
 	@Query(value = "{'uuid' : ?0}")
 	public List<Message> findAllVersion(String uuid);
 	
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} , '_id' : ?1 }")
+	@Query(value="{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  , '_id' : ?1 }")
 	public Message findOneById(String appUuid, String id);
 
 
@@ -42,10 +42,10 @@ public interface IMessageDao extends MongoRepository<Message, String>{
 	@Query(value = "{'uuid':?0}")
 	public Message findAllByUuid(String uuid);
 	
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'uuid':?1}")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  ,'uuid':?1}")
 	public Message findAllByUuid(String appUuid,String uuid);
 	
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'uuid' : ?1 }")
+	@Query(value="{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  ,'uuid' : ?1 }")
 	public Message findLatestByUuid(String appUuid,String uuid, Sort sort);
 	
 	@Query(value="{ 'uuid' : ?0 }")
@@ -60,18 +60,18 @@ public interface IMessageDao extends MongoRepository<Message, String>{
 	@Query(value = "{'_id' : ?0}")
 	public Message save(String id);		
 
-	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'_id' : ?1}")
+	@Query(value = "{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  ,'_id' : ?1}")
 	public void delete(String appUuid, String id);
 	
 	@Query(value = "{'_id' : ?0}")
 	public void delete(String id);
 	
-	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
+	@Query(value = "{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] }")
 	public List<Datapod> findAll(String appUuid);
 	
 	@Query(value = "{}")
 	public Message findLatest(Sort sort);	
 	
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] }")
 	public Message findLatest(String appUuid, Sort sort);
 }

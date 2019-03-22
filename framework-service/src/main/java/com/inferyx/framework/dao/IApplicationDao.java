@@ -20,65 +20,64 @@ import com.inferyx.framework.domain.Activity;
 import com.inferyx.framework.domain.Application;
 
 public interface IApplicationDao extends MongoRepository<Application, String> {
-	
-	@Query(value="{ 'uuid' : ?0 , 'version' : ?1 }")
-	public Application findOneByUuidAndVersion(String uuid, String version);	
-	
-	@Query(value="{$or: [ { publicFlag: \"Y\"},{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} }],'uuid' : ?1 , 'version' : ?2 }")
-	public Application findOneByUuidAndVersion(String appUuid,String uuid, String version);
-	
-	@Query(value="{'uuid':?0}")
+
+	@Query(value = "{ 'uuid' : ?0 , 'version' : ?1 }")
+	public Application findOneByUuidAndVersion(String uuid, String version);
+
+	@Query(value = "{$or: [ { publicFlag: \"Y\"},{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} }],'uuid' : ?1 , 'version' : ?2 }")
+	public Application findOneByUuidAndVersion(String appUuid, String uuid, String version);
+
+	@Query(value = "{'uuid':?0}")
 	public Application findAllByUuid(String uuid);
-	
-	@Query(value="{ 'uuid' : ?0 }")
+
+	@Query(value = "{ 'uuid' : ?0 }")
 	public Application findLatestByUuid(String uuid, Sort sort);
 
-	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'uuid' : ?1 }")
+	@Query(value = "{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ],'uuid' : ?1 }")
 	public Application findLatestByUuid(String appUuid, String uuid, Sort sort);
 
 	@Query(value = "{'uuid' : ?0}")
 	public List<Application> findAllVersion(String uuid);
-	
+
 	@Query(value = "{$or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ],'uuid' : ?1}")
 	public List<Application> findAllVersion(String appUuid, String uuid);
-	
+
 	@Query(value = "{ 'uuid' : ?0, 'version':{$lte:?1 }}")
 	public Application findAsOf(String uuid, String version, Sort sort);
-	
+
 	@Query(value = "{}")
 	public Application findLatest(Sort sort);
-	
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
+
+	@Query(value = "{$or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]}")
 	public Application findLatest(String appUuid, Sort sort);
-	
-	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1, 'version':{$lte:?2 }}")
+
+	@Query(value = "{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ],'uuid' : ?1, 'version':{$lte:?2 }}")
 	public Application findAsOf(String appUuid, String uuid, String version, Sort sort);
-	
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} , '_id' : ?1 }")
+
+	@Query(value = "{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] , '_id' : ?1 }")
 	public Application findOneById(String appUuid, String id);
 
-
-	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'_id' : ?1}")
+	@Query(value = "{$or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ],'_id' : ?1}")
 	public void delete(String appUuid, String id);
-	
+
 	@Query(value = "{'_id' : ?0}")
 	public void delete(String id);
-	
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
-	public List<Application> findAll(String appUuid);	
-	
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid':?1}")
+
+	@Query(value = "{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]}")
+	public List<Application> findAll(String appUuid);
+
+	@Query(value = "{$or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ],'uuid':?1}")
 	public Application findAllByUuid(String appUuid, String uuid);
-	
+
 	@Query(value = "{ '_id' : ?0 }")
 	public Application findOneById(String id);
-	
-	@Query(value="{}")
-	public List<Application> findAll();			
-	
+
+	@Query(value = "{}")
+	public List<Application> findAll();
+
 	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'_id' : ?1}")
 	public Application save(String appUuid, String id);
-	
+
 	@Query(value = "{'_id' : ?0}")
 	public Application save(String id);
 

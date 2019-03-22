@@ -27,7 +27,7 @@ public interface IDatasourceDao extends MongoRepository<Datasource, String>{
 	@Query(value="{ 'uuid' : ?0 , 'version' : ?1 }")
 	public Datasource findOneByUuidAndVersion(String uuid, String version);
 	
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1 }")
+	@Query(value="{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'uuid' : ?1 }")
 	public Datasource findLatestByUuid(String appUuid,String uuid, Sort sort);
 	
 	@Query(value="{ 'uuid' : ?0 }")
@@ -36,18 +36,18 @@ public interface IDatasourceDao extends MongoRepository<Datasource, String>{
 	@Query(value = "{$or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]}")
 	public List<Datasource> findAll(String appUuid);
 	
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid':?1}")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'uuid':?1}")
 	public Datasource findAllByUuid(String appUuid,String uuid);
 	
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'type':?1}")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'type':?1}")
 	public List<Datasource> findDatasourceByType(String appUuid,String type);
 	
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'type':?1,'dbname':?2,'host':?3}")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'type':?1,'dbname':?2,'host':?3}")
 	public List<Datasource> findDatasourceByParms(String appUuid,String type,String dbname,String host);
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} , '_id' : ?1 }")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  , '_id' : ?1 }")
 	public Datasource findOneById(String appUuid, String id);
 	
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'_id' : ?1}")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  ,'_id' : ?1}")
 	public void delete(String appUuid, String id);
 	
 	@Query(value = "{'_id' : ?0}")
@@ -59,7 +59,7 @@ public interface IDatasourceDao extends MongoRepository<Datasource, String>{
 	@Query(value = "{'uuid' : ?0}")
 	public List<Datasource> findAllVersion(String uuid);
 	
-	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1, 'version':{$lte:?2 }}")
+	@Query(value = "{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'uuid' : ?1, 'version':{$lte:?2 }}")
 	public Datasource findAsOf(String appUuid, String uuid, String version, Sort sort);
 
 	@Query(value = "{ 'uuid' : ?0, 'version':{$lte:?1 }}")
@@ -68,7 +68,7 @@ public interface IDatasourceDao extends MongoRepository<Datasource, String>{
 	@Query(value = "{}")
 	public Datasource findLatest(Sort sort);
 	
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] }")
 	public Datasource findLatest(String appUuid, Sort sort);
 	
 	@Query(value = "{ '_id' : ?0 }")

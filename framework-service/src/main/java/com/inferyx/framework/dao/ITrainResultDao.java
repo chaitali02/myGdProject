@@ -29,19 +29,19 @@ public interface ITrainResultDao extends MongoRepository<TrainResult, String> {
 	@Query(value = "{'uuid' : ?0 , 'version' : ?1 }")
 	public TrainResult findOneByUuidAndVersion(String uuid, String version);
 
-	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'name' : ?1 }")
+	@Query(value = "{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  ,'name' : ?1 }")
 	public TrainResult findOneByFileName(String appUuid, String fileName);
 
-	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} , '_id' : ?1 }")
+	@Query(value = "{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  , '_id' : ?1 }")
 	public TrainResult findOneById(String appUuid, String id);
 
 	@Query(value = "{ '_id' : ?0 }")
 	public TrainResult findOneById(String id);
 
-	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'id' : ?1, 'attributes.name' : ?2 ,'attributes.type' : ?3 ,'attributes.desc' : ?4}")
+	@Query(value = "{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  ,'id' : ?1, 'attributes.name' : ?2 ,'attributes.type' : ?3 ,'attributes.desc' : ?4}")
 	public List<TrainResult> findOneForDelete(String appUuid, String id, String name, String type, String desc);
 
-	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'uuid' : ?1 }")
+	@Query(value = "{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  ,'uuid' : ?1 }")
 	public TrainResult findLatestByUuid(String appUuid, String uuid, Sort sort);
 
 	@Query(value = "{'uuid' : ?0 }")
@@ -50,28 +50,28 @@ public interface ITrainResultDao extends MongoRepository<TrainResult, String> {
 	@Query(value = "{$group :{ _id : '$uuid', maxVersion : {$max : '$version'} }}")
 	public List<TrainResult> test(String param1);
 
-	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
+	@Query(value = "{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] }")
 	public List<TrainResult> findAll(String appUuid);
 
-	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'uuid':?1}")
+	@Query(value = "{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  ,'uuid':?1}")
 	public TrainResult findAllByUuid(String appUuid, String uuid);
 
 	@Query(value = "{'uuid':?0}")
 	public TrainResult findAllByUuid(String uuid);
 
-	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1 }")
+	@Query(value = "{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'uuid' : ?1 }")
 	public List<TrainResult> findAllVersion(String appUuid, String uuid);
 
 	@Query(value = "{'uuid' : ?0 }")
 	public List<TrainResult> findAllVersion(String uuid);
 
-	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'_id' : ?1}")
+	@Query(value = "{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  ,'_id' : ?1}")
 	public void delete(String appUuid, String id);
 	
 	@Query(value = "{'_id' : ?0}")
 	public void delete(String id);
 
-	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1, 'version':{$lte:?2 }}")
+	@Query(value = "{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'uuid' : ?1, 'version':{$lte:?2 }}")
 	public TrainResult findAsOf(String appUuid, String uuid, String version, Sort sort);
 
 	@Query(value = "{ 'uuid' : ?0, 'version':{$lte:?1 }}")
@@ -80,7 +80,7 @@ public interface ITrainResultDao extends MongoRepository<TrainResult, String> {
 	@Query(value = "{}")
 	public TrainResult findLatest(Sort sort);
 	
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] }")
 	public TrainResult findLatest(String appUuid, Sort sort);
 	
 	@Query(value="{}")

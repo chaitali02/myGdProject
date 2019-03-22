@@ -21,7 +21,7 @@ import com.inferyx.framework.domain.DataQualGroupExec;
 
 public interface IDataQualGroupExecDao extends MongoRepository<DataQualGroupExec, String> {
 	
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'uuid':?1}")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'uuid':?1}")
 	public List<DataQualGroupExec> findAllByUuid(String appUuid,String uuid);
 	
 	@Query(value="{$or: [ { publicFlag: \"Y\"},{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} }],'uuid' : ?1 , 'version' : ?2 }")
@@ -30,19 +30,19 @@ public interface IDataQualGroupExecDao extends MongoRepository<DataQualGroupExec
 	@Query(value="{ 'uuid' : ?0 , 'version' : ?1 }")
 	public DataQualGroupExec findOneByUuidAndVersion(String uuid, String version);
 	
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'uuid' : ?1 }")
+	@Query(value="{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  ,'uuid' : ?1 }")
 	public DataQualGroupExec findLatestByUuid(String appUuid,String uuid, Sort sort);
 	
 	@Query(value="{ 'uuid' : ?0 }")
 	public DataQualGroupExec findLatestByUuid(String uuid, Sort sort);
 	
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
+	@Query(value="{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] }")
 	public List<DataQualGroupExec> findAll(String appUuid);
 	
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} , '_id' : ?1 }")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] , '_id' : ?1 }")
 	public DataQualGroupExec findOneById(String appUuid, String id);
 	
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'_id' : ?1}")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'_id' : ?1}")
 	public void delete(String appUuid, String id);
 	
 	@Query(value = "{'_id' : ?0}")
@@ -54,7 +54,7 @@ public interface IDataQualGroupExecDao extends MongoRepository<DataQualGroupExec
 	@Query(value = "{'uuid' : ?0}")
 	public List<DataQualGroupExec> findAllVersion(String uuid);
 	
-	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'dependsOn.ref.uuid' : ?1,'dependsOn.ref.version' : ?2}")
+	@Query(value = "{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'dependsOn.ref.uuid' : ?1,'dependsOn.ref.version' : ?2}")
 	public List<DataQualGroupExec> findDataQualGroupExecByDataQualGroup(String appUuid, String uuid, String version);
 	
 	@Query(value = "{'dependsOn.ref.uuid' : ?0,'dependsOn.ref.version' : ?1}")
@@ -63,7 +63,7 @@ public interface IDataQualGroupExecDao extends MongoRepository<DataQualGroupExec
 	@Query(value = "{'$or':[{'dependsOn.ref.uuid' : ?0},{'dependsOn.ref.version' : ?1}]}")
 	public List<DataQualGroupExec> finddqGroupExecBydqGroup(String uuid, String version);
 	
-	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1, 'version':{$lte:?2 }}")
+	@Query(value = "{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'uuid' : ?1, 'version':{$lte:?2 }}")
 	public DataQualGroupExec findAsOf(String appUuid, String uuid, String version, Sort sort);
 
 	@Query(value = "{ 'uuid' : ?0, 'version':{$lte:?1 }}")
@@ -73,7 +73,7 @@ public interface IDataQualGroupExecDao extends MongoRepository<DataQualGroupExec
 	@Query(value = "{}")
 	public DataQualGroupExec findLatest(Sort sort);
 	
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] }")
 	public DataQualGroupExec findLatest(String appUuid, Sort sort);
 	
 	@Query(value = "{ '_id' : ?0 }")

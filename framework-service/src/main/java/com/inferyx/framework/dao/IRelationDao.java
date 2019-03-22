@@ -23,7 +23,7 @@ import com.inferyx.framework.domain.Relation;
 
 public interface IRelationDao extends MongoRepository<Relation, String>{
 
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'dependsOn.ref.uuid':?1}")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'dependsOn.ref.uuid':?1}")
     public List<Relation> findRelationByDatapod(String appUuid,String datapodUUID);
 
     @Query(value="{$group :{ _id : '$uuid', maxVersion : {$max : '$version'} }}")
@@ -35,10 +35,10 @@ public interface IRelationDao extends MongoRepository<Relation, String>{
     @Query(value="{ 'uuid' : ?0 , 'version' : ?1 }")
     public Relation findOneByUuidAndVersion(String uuid, String version);
 
-    @Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1 }")
+    @Query(value="{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'uuid' : ?1 }")
     public Relation findLatestByUuid(String appUuid,String uuid, Sort sort);
     
-    @Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1, 'version':{$lte:?2 }}")
+    @Query(value="{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'uuid' : ?1, 'version':{$lte:?2 }}")
     public Relation findAsOf(String appUuid,String uuid, String version,Sort sort);
     
     @Query(value="{ 'uuid' : ?0, 'version':{$lte:?1 }}")
@@ -47,7 +47,7 @@ public interface IRelationDao extends MongoRepository<Relation, String>{
     @Query(value="{'uuid' : ?0 }")
     public Relation findLatestByUuid(String uuid, Sort sort);
 
-    @Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid':?1}")
+    @Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'uuid':?1}")
     public Relation findAllByUuid(String appUuid,String uuid);
 
     @Query(value="{$or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ],'uuid' : ?1}")
@@ -56,16 +56,16 @@ public interface IRelationDao extends MongoRepository<Relation, String>{
     @Query(value="{'uuid' : ?0}")
     public List<Relation> findAllVersion(String uuid);
     
-    @Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} , '_id' : ?1 }")
+    @Query(value="{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  , '_id' : ?1 }")
 	public Relation findOneById(String appUuid, String id);
     
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
+	@Query(value="{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] }")
 	public List<Relation> findAll(String appUuid);	
 	
 	@Query(value="{}")
 	public List<Relation> findAll();	
 	
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'_id' : ?1}")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  ,'_id' : ?1}")
 	public void delete(String appUuid, String id);
 	
 	@Query(value = "{'_id' : ?0}")
@@ -74,7 +74,7 @@ public interface IRelationDao extends MongoRepository<Relation, String>{
 	@Query(value = "{}")
 	public Relation findLatest(Sort sort);
 	
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] }")
 	public Relation findLatest(String appUuid, Sort sort);
 	
 	@Query(value = "{ '_id' : ?0 }")

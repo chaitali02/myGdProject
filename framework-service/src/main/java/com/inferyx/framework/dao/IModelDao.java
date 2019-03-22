@@ -33,19 +33,19 @@ public interface IModelDao extends MongoRepository<Model, String>{
 	@Query(value="{ 'uuid' : ?0 }")
 	public Model findLatestByUuid(String uuid, Sort sort);
 		
-	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} , '_id' : ?1 }")
+	@Query(value = "{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  , '_id' : ?1 }")
 	public Model findOneById(String appUuid, String id);
 
 	@Query(value = "{ '_id' : ?0 }")
 	public Model findOneById(String id);
 	
-	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'uuid' : ?1 }")
+	@Query(value = "{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  ,'uuid' : ?1 }")
 	public Model findLatestByUuid(String appUuid, String uuid, Sort sort);
 
-	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'uuid':?1}")
+	@Query(value = "{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  ,'uuid':?1}")
 	public Model findAllByUuid(String appUuid, String uuid);
 
-	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'_id' : ?1}")
+	@Query(value = "{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  ,'_id' : ?1}")
 	public void delete(String appUuid, String id);
 
 	@Query(value = "{'_id' : ?0}")
@@ -60,19 +60,19 @@ public interface IModelDao extends MongoRepository<Model, String>{
 	@Query(value = "{}")
 	public Model findLatest(Sort sort);	
 	
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] }")
 	public Model findLatest(String appUuid, Sort sort);
 	
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
+	@Query(value="{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] }")
 	public List<Model> findAll(String appUuid);	
 
-	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1, 'version':{$lte:?2 }}")
+	@Query(value = "{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'uuid' : ?1, 'version':{$lte:?2 }}")
 	public Model findAsOf(String appUuid, String uuid, String version, Sort sort);
 	
 	@Query(value="{}")
 	public List<Model> findAll();
 	
-	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'_id' : ?1}")
+	@Query(value = "{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  ,'_id' : ?1}")
 	public Model save(String appUuid, String id);
 	
 	@Query(value = "{'_id' : ?0}")

@@ -32,19 +32,19 @@ public interface IAlgorithmDao  extends MongoRepository<Algorithm, String>{
 	@Query(value="{ 'uuid' : ?0 }")
 	public Algorithm findLatestByUuid(String uuid, Sort sort);
 
-	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} , '_id' : ?1 }")
+	@Query(value = "{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] , '_id' : ?1 }")
 	public Algorithm findOneById(String appUuid, String id);
 
 	@Query(value = "{ '_id' : ?0 }")
 	public Algorithm findOneById(String id);
 
-	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'uuid' : ?1 }")
+	@Query(value = "{$or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'uuid' : ?1 }")
 	public Algorithm findLatestByUuid(String appUuid, String uuid, Sort sort);
 
-	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'uuid':?1}")
+	@Query(value = "{$or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'uuid':?1}")
 	public Algorithm findAllByUuid(String appUuid, String uuid);
 
-	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'_id' : ?1}")
+	@Query(value = "{$or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'_id' : ?1}")
 	public void delete(String appUuid, String id);
 	
 	@Query(value = "{'_id' : ?0}")
@@ -62,10 +62,10 @@ public interface IAlgorithmDao  extends MongoRepository<Algorithm, String>{
 	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
 	public Algorithm findLatest(String appUuid, Sort sort);
 
-	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1, 'version':{$lte:?2 }}")
+	@Query(value = "{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ],'uuid' : ?1, 'version':{$lte:?2 }}")
 	public Algorithm findAsOf(String appUuid, String uuid, String version, Sort sort);
 
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
+	@Query(value="{$or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]}")
 	public List<Algorithm> findAll(String appUuid);
 	
 	@Query(value="{}")

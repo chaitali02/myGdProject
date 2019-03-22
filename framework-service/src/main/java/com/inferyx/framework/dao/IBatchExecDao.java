@@ -20,7 +20,7 @@ import com.inferyx.framework.domain.BatchExec;
 
 public interface IBatchExecDao extends MongoRepository<BatchExec, String> {
 
-	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1 , 'version' : ?2 }")
+	@Query(value = "{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'uuid' : ?1 , 'version' : ?2 }")
 	public BatchExec findOneByUuidAndVersion(String appUuid, String uuid, String version);
 
 	@Query(value = "{ 'uuid' : ?0 , 'version' : ?1 }")
@@ -29,13 +29,13 @@ public interface IBatchExecDao extends MongoRepository<BatchExec, String> {
 	@Query(value = "{$group :{ _id : '$uuid', maxVersion : {$max : '$version'} }}")
 	public List<BatchExec> test(String param1);
 
-	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
+	@Query(value = "{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] }")
 	public List<BatchExec> findAll(String appUuid);
 
-	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid':?1}")
+	@Query(value = "{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'uuid':?1}")
 	public List<BatchExec> findAllByUuid(String appUuid, String uuid);
 
-	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1 }")
+	@Query(value = "{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'uuid' : ?1 }")
 	public BatchExec findLatestByUuid(String appUuid, String uuid, Sort sort);
 
 	@Query(value = "{ 'uuid' : ?0 }")
@@ -47,16 +47,16 @@ public interface IBatchExecDao extends MongoRepository<BatchExec, String> {
 	@Query(value = "{'uuid' : ?0}")
 	public List<BatchExec> findAllVersion(String uuid);
 
-	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} , '_id' : ?1 }")
+	@Query(value = "{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  , '_id' : ?1 }")
 	public BatchExec findOneById(String appUuid, String id);
 
-	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'_id' : ?1}")
+	@Query(value = "{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'_id' : ?1}")
 	public void delete(String appUuid, String id);
 	
 	@Query(value = "{'_id' : ?0}")
 	public void delete(String id);
 
-	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1, 'version':{$lte:?2 }}")
+	@Query(value = "{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'uuid' : ?1, 'version':{$lte:?2 }}")
 	public BatchExec findAsOf(String appUuid, String uuid, String version, Sort sort);
 
 	@Query(value = "{ 'uuid' : ?0, 'version':{$lte:?1 }}")
@@ -65,7 +65,7 @@ public interface IBatchExecDao extends MongoRepository<BatchExec, String> {
 	@Query(value = "{}")
 	public BatchExec findLatest(Sort sort);
 	
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] }")
 	public BatchExec findLatest(String appUuid, Sort sort);
 	
 	@Query(value = "{ '_id' : ?0 }")

@@ -23,7 +23,7 @@ public interface IUploadDao extends MongoRepository<UploadExec, String> {
 	@Query(value = "{ 'uuid' : ?0 , 'version' : ?1 }")
 	public UploadExec findOneByUuidAndVersion(String uuid, String version);
 
-	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}}, 'uuid' : ?1 , 'version' : ?2 }")
+	@Query(value = "{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] , 'uuid' : ?1 , 'version' : ?2 }")
 	public UploadExec findOneByUuidAndVersion(String appUuid, String uuid, String version);
 
 	@Query(value = "{$group :{ _id : '$uuid', maxVersion : {$max : '$version'} }}")
@@ -32,43 +32,43 @@ public interface IUploadDao extends MongoRepository<UploadExec, String> {
 	@Query(value = "{'uuid':?0}")
 	public UploadExec findAllByUuid(String uuid);
 	
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid':?1}")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'uuid':?1}")
 	public UploadExec findAllByUuid(String appUuid, String uuid);
 
 	@Query(value = "{}")
 	public UploadExec findLatest(Sort sort);
 	
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] }")
 	public UploadExec findLatest(String appUuid, Sort sort);
 	
 	@Query(value = "{ 'uuid' : ?0 }")
 	public UploadExec findLatestByUuid(String uuid, Sort sort);
 	
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}}, 'uuid' : ?1 }")
+	@Query(value="{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] , 'uuid' : ?1 }")
 	public UploadExec findLatestByUuid(String appUuid, String datapodUUID, Sort sort);
 
 	@Query(value = "{ 'userInfo.ref.uuid' : ?0 }")
 	public List<UploadExec> findActivityByUser(String uuid, Sort sort);
 
-	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1}")
+	@Query(value = "{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'uuid' : ?1}")
 	public List<UploadExec> findAllVersion(String appUuid, String uuid);
 
 	@Query(value = "{'uuid' : ?0}")
 	public List<UploadExec> findAllVersion(String uuid);
 	
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
+	@Query(value="{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] }")
 	public List<UploadExec> findAll(String appUuid);	
 	
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} , '_id' : ?1 }")
+	@Query(value="{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  , '_id' : ?1 }")
 	public UploadExec findOneById(String appUuid, String id);
 
-	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1, 'version':{$lte:?2 }}")
+	@Query(value = "{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'uuid' : ?1, 'version':{$lte:?2 }}")
 	public UploadExec findAsOf(String appUuid, String uuid, String version, Sort sort);
 
 	@Query(value = "{ 'uuid' : ?0, 'version':{$lte:?1 }}")
 	public UploadExec findAsOf(String uuid, String version, Sort sort);
 
-	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'_id' : ?1}")
+	@Query(value = "{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  ,'_id' : ?1}")
 	public void delete(String appUuid, String id);
 	
 

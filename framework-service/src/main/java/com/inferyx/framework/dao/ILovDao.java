@@ -23,7 +23,7 @@ public interface ILovDao extends MongoRepository<Lov, String> {
 	@Query(value = "{ 'uuid' : ?0 , 'version' : ?1 }")
 	public Lov findOneByUuidAndVersion(String uuid, String version);
 
-	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}}, 'uuid' : ?1 , 'version' : ?2 }")
+	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} , 'uuid' : ?1 , 'version' : ?2 }")
 	public Lov findOneByUuidAndVersion(String appUuid, String uuid, String version);
 
 	@Query(value = "{$group :{ _id : '$uuid', maxVersion : {$max : '$version'} }}")
@@ -32,43 +32,43 @@ public interface ILovDao extends MongoRepository<Lov, String> {
 	@Query(value = "{'uuid':?0}")
 	public Lov findAllByUuid(String uuid);
 	
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid':?1}")
+	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'uuid':?1}")
 	public Lov findAllByUuid(String appUuid, String uuid);
 
 	@Query(value = "{}")
 	public Lov findLatest(Sort sort);
 	
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
+	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} }")
 	public Lov findLatest(String appUuid, Sort sort);
 	
 	@Query(value = "{ 'uuid' : ?0 }")
 	public Lov findLatestByUuid(String uuid, Sort sort);
 	
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}}, 'uuid' : ?1 }")
+	@Query(value="{  'appInfo':{$elemMatch: { 'ref.uuid': ?0}} , 'uuid' : ?1 }")
 	public Lov findLatestByUuid(String appUuid, String datapodUUID, Sort sort);
 
 	@Query(value = "{ 'userInfo.ref.uuid' : ?0 }")
 	public List<Lov> findActivityByUser(String uuid, Sort sort);
 
-	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1}")
+	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'uuid' : ?1}")
 	public List<Lov> findAllVersion(String appUuid, String uuid);
 
 	@Query(value = "{'uuid' : ?0}")
 	public List<Lov> findAllVersion(String uuid);
 	
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
+	@Query(value="{  'appInfo':{$elemMatch: { 'ref.uuid': ?0}} }")
 	public List<Lov> findAll(String appUuid);	
 	
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} , '_id' : ?1 }")
+	@Query(value="{  'appInfo':{$elemMatch: { 'ref.uuid': ?0}}  , '_id' : ?1 }")
 	public Lov findOneById(String appUuid, String id);
 
-	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1, 'version':{$lte:?2 }}")
+	@Query(value = "{  'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'uuid' : ?1, 'version':{$lte:?2 }}")
 	public Lov findAsOf(String appUuid, String uuid, String version, Sort sort);
 
 	@Query(value = "{ 'uuid' : ?0, 'version':{$lte:?1 }}")
 	public Lov findAsOf(String uuid, String version, Sort sort);
 
-	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'_id' : ?1}")
+	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}}  ,'_id' : ?1}")
 	public void delete(String appUuid, String id);
 	
 

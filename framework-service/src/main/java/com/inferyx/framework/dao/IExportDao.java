@@ -20,7 +20,7 @@ import com.inferyx.framework.domain.Edge;
 import com.inferyx.framework.domain.Export;
 
 public interface IExportDao extends MongoRepository<Export, String> {
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'uuid' : ?1 , 'version' : ?2 }")
+	@Query(value="{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  ,'uuid' : ?1 , 'version' : ?2 }")
 	public Export findOneByUuidAndVersion(String appUuid,String uuid, String version);
 	
 	@Query(value="{ 'uuid' : ?0 , 'version' : ?1 }")
@@ -29,10 +29,10 @@ public interface IExportDao extends MongoRepository<Export, String> {
 	@Query(value="{$group :{ _id : '$uuid', maxVersion : {$max : '$version'} }}")
 	public List<Export> test(String param1);
 	
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'uuid':?1}")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  ,'uuid':?1}")
 	public Export findAllByUuid(String appUuid,String uuid);
 	
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'uuid' : ?1 }")
+	@Query(value="{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  ,'uuid' : ?1 }")
 	public Export findLatestByUuid(String appUuid,String uuid, Sort sort);
 	
 	@Query(value="{'uuid' : ?0 }")
@@ -41,16 +41,16 @@ public interface IExportDao extends MongoRepository<Export, String> {
 	@Query(value="{ 'uuid' : ?0 }")
 	public Export findLatestByUuid(String uuid, Sort sort);
 	
-	@Query(value = "{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1}")
+	@Query(value = "{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'uuid' : ?1}")
 	public List<Export> findAllVersion(String appUuid, String uuid);
 
 	@Query(value = "{'uuid' : ?0}")
 	public List<Export> findAllVersion(String uuid);
 	
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] }")
 	public List<Export> findAll(String appUuid);
 		
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} , '_id' : ?1 }")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  , '_id' : ?1 }")
 	public Export findOneById(String appUuid, String id);
 	
 	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'_id' : ?1}")
@@ -59,7 +59,7 @@ public interface IExportDao extends MongoRepository<Export, String> {
 	@Query(value = "{'_id' : ?0}")
 	public void delete(String id);
 	
-	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1, 'version':{$lte:?2 }}")
+	@Query(value = "{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'uuid' : ?1, 'version':{$lte:?2 }}")
 	public Export findAsOf(String appUuid, String uuid, String version, Sort sort);
 
 	@Query(value = "{ 'uuid' : ?0, 'version':{$lte:?1 }}")
@@ -83,6 +83,6 @@ public interface IExportDao extends MongoRepository<Export, String> {
 	@Query(value = "{}")
 	public Export findLatest(Sort sort);
 	
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] }")
 	public Export findLatest(String appUuid, Sort sort);	
 }

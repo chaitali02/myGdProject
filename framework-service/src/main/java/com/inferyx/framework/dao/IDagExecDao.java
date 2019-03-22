@@ -23,25 +23,25 @@ import com.inferyx.framework.domain.DagExec;
 public interface IDagExecDao extends MongoRepository<DagExec, String>{
 	
 	
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'dag.name' : ?1, 'dag.version' : ?2 }")
+	@Query(value="{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'dag.name' : ?1, 'dag.version' : ?2 }")
 	public List<DagExec> findLatestDagExec(String appUuid,String dagUUID,String dagVersion);
 	
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'dependsOn.name' : ?1}")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'dependsOn.name' : ?1}")
 	public List<DagExec> findDagExecVersion(String appUuid, String datapodName);
 
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'stages.tasks.map.target.ref.uuid' : ?1}")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'stages.tasks.map.target.ref.uuid' : ?1}")
 	public List<DagExec> findOneByDatapod(String appUuid,String datapodUUID);
 	
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] }")
 	public List<DagExec> findAll(String appUuid);	
 	
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'dependsOn.uuid' : ?1}")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'dependsOn.uuid' : ?1}")
 	public List<DagExec> findAllByDag(String appUuid,String dagUUID);
 	
 	@Query(value="{$and: [ {'uuid' : ?0 },{'version' : ?1}]},{$project: [{'status' : 1}]}")
 	public List<DagExec> test(String param1, String param2);
 	
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid':?1}")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'uuid':?1}")
 	public DagExec findAllByUuid(String appUuid,String uuid);
 	
 	@Query(value="{$or: [ { publicFlag: \"Y\"},{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} }],'uuid' : ?1 , 'version' : ?2 }")
@@ -50,7 +50,7 @@ public interface IDagExecDao extends MongoRepository<DagExec, String>{
 	@Query(value="{'uuid' : ?0 , 'version' : ?1 }")
 	public DagExec findOneByUuidAndVersion(String uuid, String version);
 	
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1 }")
+	@Query(value="{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'uuid' : ?1 }")
 	public DagExec findLatestByUuid(String appUuid,String datapodUUID, Sort sort);
 	
 	@Query(value="{ 'uuid' : ?0 }")
@@ -62,16 +62,16 @@ public interface IDagExecDao extends MongoRepository<DagExec, String>{
 	@Query(value = "{'uuid' : ?0}")
 	public List<DagExec> findAllVersion(String uuid);
 	
-	@Query(value="{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} , '_id' : ?1 }")
+	@Query(value="{  $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  , '_id' : ?1 }")
 	public DagExec findOneById(String appUuid, String id);
 	
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}} ,'_id' : ?1}")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ]  ,'_id' : ?1}")
 	public void delete(String appUuid, String id);
 	
 	@Query(value = "{'_id' : ?0}")
 	public void delete(String id);
 	
-	@Query(value = "{ 'appInfo':{$elemMatch: { 'ref.uuid': ?0}},'uuid' : ?1, 'version':{$lte:?2 }}")
+	@Query(value = "{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] ,'uuid' : ?1, 'version':{$lte:?2 }}")
 	public DagExec findAsOf(String appUuid, String uuid, String version, Sort sort);
 
 	@Query(value = "{ 'uuid' : ?0, 'version':{$lte:?1 }}")
@@ -80,7 +80,7 @@ public interface IDagExecDao extends MongoRepository<DagExec, String>{
 	@Query(value = "{}")
 	public DagExec findLatest(Sort sort);
 	
-	@Query(value="{'appInfo':{$elemMatch: { 'ref.uuid': ?0}}}")
+	@Query(value="{ $or: [ { publicFlag: \"Y\"}, { 'appInfo':{$elemMatch: { 'ref.uuid': ?0}} } ] }")
 	public DagExec findLatest(String appUuid, Sort sort);
 	
 	@Query(value = "{ '_id' : ?0 }")
