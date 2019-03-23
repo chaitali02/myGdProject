@@ -1135,13 +1135,13 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
       } else if (["world-map", "usa-map", "pie-chart", "donut-chart"].indexOf(data.vizpod.vizpodInfo.type) == -1) {
         filterInfo.value = data.vizpod.vizpodDetails.datapoints[data.dataobj.x][data.vizpod.vizpodDetails.datax.id];
         filterinfoArray.push(filterInfo);
-        // if(data.vizpod.vizpodInfo.groups.length >0 &&  data.vizpod.vizpodInfo.type =="bar-chart"){
-        //   var filterInfo1={};
-        //   filterInfo1=filterInfo;
-        //   filterInfo1.attrId=data.vizpod.vizpodInfo.groups[0].attributeId;
-        //   filterInfo1.value=data.vizpod.dataPoint[data.dataobj.x][data.vizpod.vizpodInfo.groups[0].attributeName];
-        //   filterinfoArray.push(filterInfo1);
-        // }
+        if(data.vizpod.vizpodInfo.groups.length >0 &&  ["bar-chart","line-chart"].indexOf(data.vizpod.vizpodInfo.type)!=-1){
+          var filterInfo1={};
+          filterInfo1.ref=filterInfo.ref;
+          filterInfo1.attrId=data.vizpod.vizpodInfo.groups[0].attributeId;
+          filterInfo1.value=data.vizpod.dataPoint[data.dataobj.x][data.vizpod.vizpodInfo.groups[0].attributeName];
+          filterinfoArray.push(filterInfo1);
+        }
         //filterInfo.value = filterInfo.value.replace(/0 -/g, ' -');
         //filterInfo.value = filterInfo.value.replace(/0$/g, '');
       } else if (["pie-chart", "donut-chart"].indexOf(data.vizpod.vizpodInfo.type) != -1) {
