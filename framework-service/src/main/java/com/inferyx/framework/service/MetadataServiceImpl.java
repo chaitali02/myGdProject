@@ -2204,7 +2204,7 @@ public class MetadataServiceImpl {
 	}
 	
 	
-	public Datapod getDatapodByType(String type, String resultType) throws FileNotFoundException, IOException {
+	public Datapod getDatapodByType(String type, String resultType) throws FileNotFoundException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		
 		if(type.equalsIgnoreCase(MetaType.profile.toString()))
 			{
@@ -2220,16 +2220,19 @@ public class MetadataServiceImpl {
 		else if(type.equalsIgnoreCase(MetaType.dq.toString())){
 			Datapod dp =null;
 			if(resultType ==null) {
-				dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
-						Helper.getPropertyValue("framework.dataqual.datapod.uuid"), null, MetaType.datapod.toString());
+				dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(						
+						getConfigValueByName("framework.dataqual.datapod.uuid")
+						, null, MetaType.datapod.toString());
 			}
 			else if(resultType.equals("summary")) {
+				/*dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+						Helper.getPropertyValue("framework.dataqual.summary.uuid"), null, MetaType.datapod.toString());*/
 				dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
-						Helper.getPropertyValue("framework.dataqual.summary.uuid"), null, MetaType.datapod.toString());
+						getConfigValueByName("framework.dataqual.summary.uuid"), null, MetaType.datapod.toString());
 			}
 			else if(resultType.equals("detail")) {
 				dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
-						Helper.getPropertyValue("framework.dataqual.detail.uuid"), null, MetaType.datapod.toString());
+						getConfigValueByName("framework.dataqual.detail.uuid"), null, MetaType.datapod.toString());
 			}
 			return dp;
 		}

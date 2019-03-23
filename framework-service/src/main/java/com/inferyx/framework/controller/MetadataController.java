@@ -802,14 +802,14 @@ public class MetadataController {
 	@RequestMapping(value = "/getDpDatapod",method=RequestMethod.GET)
 	public @ResponseBody Datapod getdpByDatapod(
 			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action) throws FileNotFoundException, IOException {
+			@RequestParam(value = "action", required = false) String action) throws FileNotFoundException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {
 		return metadataServiceImpl.getDatapodByType(MetaType.profile.toString(), null);
 	}
 	
 	@RequestMapping(value = "/getRcDatapod",method=RequestMethod.GET)
 	public @ResponseBody Datapod getrcDatapod(
 			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action) throws FileNotFoundException, IOException {
+			@RequestParam(value = "action", required = false) String action) throws FileNotFoundException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {
 		return metadataServiceImpl.getDatapodByType(MetaType.recon.toString(), null);
 	}
 	
@@ -817,7 +817,7 @@ public class MetadataController {
 	public @ResponseBody Datapod getdqDatapod(
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
-			@RequestParam(value = "resultType", required = false,defaultValue="null") String resultType) throws FileNotFoundException, IOException {
+			@RequestParam(value = "resultType", required = false,defaultValue="null") String resultType) throws FileNotFoundException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {
 		return metadataServiceImpl.getDatapodByType(MetaType.dq.toString(),resultType);
 	}
 
@@ -825,7 +825,7 @@ public class MetadataController {
 	public @ResponseBody Datapod getRuleDatapod(
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
-			@RequestParam(value = "resultType", required = false,defaultValue="null") String resultType) throws FileNotFoundException, IOException {
+			@RequestParam(value = "resultType", required = false,defaultValue="null") String resultType) throws FileNotFoundException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, java.text.ParseException {
 		return metadataServiceImpl.getDatapodByType(MetaType.rule2.toString(),resultType);
 	}
 	
