@@ -795,7 +795,6 @@ export class BusinessRulesDetailComponent {
   }
 
   onSuccessgetParamByApp(response) {
-    debugger
     let paramlistArray = [];
     if (this.paramlistArray.length <= 0) {
       paramlistArray = [new AttributeIO];
@@ -813,7 +812,6 @@ export class BusinessRulesDetailComponent {
   }
 
   onSuccessgetLatestByUuid(response: any) {
-    debugger
     let attributeObj = new AttributeIO();
     if (response) {
       for (const i in response.params) {
@@ -1157,7 +1155,6 @@ export class BusinessRulesDetailComponent {
     this.displayDialogBox = false;
   }
   autoPopulate() {
-    debugger
     // this.attributeTableArray = [];
     // for (var i = 0; i < this.allSourceAttribute.length; i++) {
     //   let attributeinfo = new AttributeInfoIO();

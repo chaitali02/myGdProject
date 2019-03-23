@@ -508,7 +508,6 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy {
 
     this.filterTableArray = response.filterInfoIo;
 
-debugger
     this.dqdata.duplicateKeyCheck = this.appHelper.convertStringToBoolean(this.dqdata.duplicateKeyCheck);
     if (this.selectAttribute) {
       this.dqdata.nullCheck = this.appHelper.convertStringToBoolean(this.dqdata.nullCheck);

@@ -275,7 +275,7 @@ export class BusinessRulesGroupDetailComponent {
     let rulegroupJson = new RuleGroup();
     rulegroupJson.uuid = this.datarulegroup.uuid;
     rulegroupJson.name = this.datarulegroup.name;
-    rulegroupJson.desc = this.datarulegroup.desc;debugger
+    rulegroupJson.desc = this.datarulegroup.desc;
     rulegroupJson.tags = this.datarulegroup.tags;
     rulegroupJson.active = this.appHelper.convertBooleanToString(this.datarulegroup.active);
     rulegroupJson.published = this.appHelper.convertBooleanToString(this.datarulegroup.published);
