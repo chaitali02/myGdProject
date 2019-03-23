@@ -1154,7 +1154,11 @@ public class TaskServiceImpl implements Callable<String> {
 							Object execObj=commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getVersion(), taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getType().toString(), "N");
 							status = (List<Status>) execObj.getClass().getMethod("getStatusList").invoke(execObj);
 							logger.info(Helper.getLatestStatus(status).getStage());
-							commonServiceImpl.setMetaStatusForTask(dagExec, taskExec,Helper.getLatestStatus(status).getStage(), stageId, taskId);
+							if (Helper.getLatestStatus(status).getStage().equals(Status.Stage.ABORTED)) {
+								commonServiceImpl.setMetaStatusForTask(dagExec, taskExec,Status.Stage.FAILED, stageId, taskId);
+							} else {
+								commonServiceImpl.setMetaStatusForTask(dagExec, taskExec,Helper.getLatestStatus(status).getStage(), stageId, taskId);
+							}
 						} catch (Exception e) {
 							e.printStackTrace();
 						}

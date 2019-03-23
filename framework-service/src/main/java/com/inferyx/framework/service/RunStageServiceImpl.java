@@ -956,8 +956,8 @@ public class RunStageServiceImpl implements Callable<String> {
 					if (checkDependencyABORTED) {
 						synchronized (dagExecUUID) {
 							try {
-								logger.info("Setting status to ABORTED for stage : " + stageId);
-								commonServiceImpl.setMetaStatusForTask(dagExec, indvTaskExec, Status.Stage.ABORTED, stageId, indvTaskExec.getTaskId());
+								logger.info("Setting status to FAILED for stage : " + stageId);
+								commonServiceImpl.setMetaStatusForTask(dagExec, indvTaskExec, Status.Stage.FAILED, stageId, indvTaskExec.getTaskId());
 								continue;
 							} catch (Exception e) {
 								// TODO Auto-generated catch block
@@ -1090,7 +1090,7 @@ public class RunStageServiceImpl implements Callable<String> {
 					return true;
 				} else if (statusHolder.getCOMPLETED() && statusHolder.getABORTED()) {
 					synchronized (dagExecUUID) {
-						commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.ABORTED, stageId);
+						commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.FAILED, stageId);
 					}
 					return true;
 				} else if (statusHolder.getCOMPLETED()) {
@@ -1133,12 +1133,12 @@ public class RunStageServiceImpl implements Callable<String> {
 					return true;					
 				} else if (statusHolder.getCOMPLETED() && statusHolder.getABORTED()) {
 					synchronized (dagExecUUID) {
-						commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.ABORTED, stageId);
+						commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.FAILED, stageId);
 					}
 					return true;
 				} else if (statusHolder.getABORTED()) {
 					synchronized (dagExecUUID) {
-						commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.ABORTED, stageId);
+						commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.FAILED, stageId);
 					}
 					return true;
 				} else if (statusHolder.getCOMPLETED()) {
