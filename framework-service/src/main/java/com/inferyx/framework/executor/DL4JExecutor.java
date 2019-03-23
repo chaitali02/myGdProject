@@ -502,22 +502,7 @@ public class DL4JExecutor implements IExecutor {
 		return null;
 	}
 
-	/********************** UNUSED **********************/
-//	/* (non-Javadoc)
-//	 * @see com.inferyx.framework.executor.IExecutor#predict2(java.lang.Object, com.inferyx.framework.domain.Datapod, java.lang.String, java.lang.String, java.lang.String[], java.lang.String, java.lang.String, com.inferyx.framework.domain.Datasource, java.lang.String)
-//	 */
-//	@Override
-//	public ResultSetHolder predict2(Object trainedModel, Datapod targetDp, String filePathUrl, String tableName,
-//			String[] fieldArray, String trainName, String label, Datasource datasource, String clientContext)
-//			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
-//			SecurityException, NullPointerException, ParseException, IOException {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-
-	/* (non-Javadoc)
-	 * @see com.inferyx.framework.executor.IExecutor#load(com.inferyx.framework.domain.Load, java.lang.String, com.inferyx.framework.domain.Datasource, com.inferyx.framework.domain.Datapod, java.lang.String)
-	 */
+	
 	@Override
 	public long load(Load load, String targetTableName, Datasource datasource, Datapod datapod, String clientContext)
 			throws IOException {
