@@ -169,7 +169,7 @@ DatavisualizationModule.factory('ReportFactory', function ($http, $location) {
 		var url = $location.absUrl().split("app")[0]
 		return $http({
 			method: 'POST',
-			url: url + "report/reSendEMail?action=view&uuid=" + uuid + "&version=" + version + "&type=reportexec&mode="+mode,
+			url: url + "report/sendEMail?action=view&uuid=" + uuid + "&version=" + version + "&type=reportexec&mode="+mode,
 			headers: {
 				'Accept': '*/*',
 				'content-Type': "application/json",

@@ -12,7 +12,6 @@ package com.inferyx.framework.service;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
@@ -568,18 +567,15 @@ public class ReportServiceImpl extends RuleTemplate {
 		if (senderInfo.getSendAttachment().equalsIgnoreCase("Y")) {			
 			try {
 				String format = report.getFormat();
-//				download(reportExec.getUuid(), reportExec.getVersion(), format, 0, report.getLimit(), null, null, null, null,
-//						runMode, true);
-				
-				boolean createdSuccessfully = true;
+				boolean isDocCreated = true;
 				List<Map<String, Object>> data = prepareDocumentData(reportExec, report, runMode, report.getLimit(), true);
 				if(format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
-					createdSuccessfully = documentGenServiceImpl.createPDF(MetaType.report.toString(), report, reportExec, data, Layout.PORTRAIT.toString());
+					isDocCreated = documentGenServiceImpl.createPDF(MetaType.report.toString(), report, reportExec, data, Layout.PORTRAIT.toString());
 				} else {
-					createdSuccessfully = documentGenServiceImpl.createXLS(MetaType.report.toString(), report, reportExec, data);
+					isDocCreated = documentGenServiceImpl.createXLS(MetaType.report.toString(), report, reportExec, data);
 				}
 				
-				if(!createdSuccessfully) {
+				if(!isDocCreated) {
 					throw new RuntimeException((format != null ? format.toUpperCase() : "Document")+" creation failed...");
 				}
 				
@@ -662,38 +658,20 @@ public class ReportServiceImpl extends RuleTemplate {
 	 * @throws IllegalArgumentException 
 	 * @throws IllegalAccessException 
 	 */
-	public boolean reSendNotification(String reportExecUuid, String reportExecVersion, SenderInfo senderInfo,
+	public boolean sendNotification(String reportExecUuid, String reportExecVersion, SenderInfo senderInfo,
 			RunMode runMode) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException, IOException {
 		ReportExec reportExec = null;
 		try {
-			logger.info("resending notification...");
+			logger.info("sending notification...");
 			reportExec = (ReportExec) commonServiceImpl.getOneByUuidAndVersion(reportExecUuid, reportExecVersion,
 					MetaType.reportExec.toString(), "N");
 
 			MetaIdentifier dependsOnMI = reportExec.getDependsOn().getRef();
 			Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(),
 					dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
-			String format=report.getFormat();
 			Status status = Helper.getLatestStatus(reportExec.getStatusList());
-			if(status.getStage().equals(Status.Stage.COMPLETED)) {				
-				String defaultDownloadPath = Helper.getPropertyValue("framework.report.Path"); 
-				defaultDownloadPath = defaultDownloadPath.endsWith("/") ? defaultDownloadPath : defaultDownloadPath.concat("/");
-				String reportFilePath = String.format("%s/%s/%s/%s/", report.getUuid(), report.getVersion(), reportExec.getVersion(), "doc");
-			//	String reportFileName = String.format("%s_%s.%s", report.getName(), reportExec.getVersion(), "xls");
-				String reportFileName = null;
-				if(format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
-					reportFileName = String.format("%s_%s.%s", report.getName(), reportExec.getVersion(), FileType.PDF.toString().toLowerCase());
-				} else {
-					reportFileName = String.format("%s_%s.%s", report.getName(), reportExec.getVersion(), FileType.XLS.toString().toLowerCase());
-				}
-				
-				String filePathUrl = defaultDownloadPath.concat(reportFilePath).concat(reportFileName);		
-				
-				if(new File(filePathUrl).exists()) {
-					return sendSuccessNotification(senderInfo, report, reportExec, runMode);
-				} else {
-					throw new RuntimeException("Excel file is unavailable.");
-				}				
+			if(status.getStage().equals(Status.Stage.COMPLETED)) {								
+				return sendSuccessNotification(senderInfo, report, reportExec, runMode);		
 			} else if(status.getStage().equals(Status.Stage.FAILED)) {
 				return sendFailureNotification(senderInfo, report, reportExec);
 			} else {
@@ -1037,6 +1015,13 @@ public class ReportServiceImpl extends RuleTemplate {
 			data = datastoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, limit, null, null, null);	
 		}catch (Exception e) {
 			e.printStackTrace();
+			try {
+				data = getReportSample(reportExec.getUuid(), reportExec.getVersion(), limit, null, runMode);
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				throw new RuntimeException(e); 
+			}
 		}
 		
 		//checking whether data is available or not
