@@ -397,7 +397,7 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
    //   '        <li><a ng-disabled="[\'PENDING\'].indexOf(row.entity.status)==-1 || grid.appScope.privileges.indexOf(\'Execute\') == -1"  ng-click="grid.appScope.setStatus(row.entity,\'PAUSE\')"><i class="fa fa-pause" aria-hidden="true"></i> On Hold </a></li>',
    //   '        <li><a ng-disabled="[\'PAUSE\'].indexOf(row.entity.status)==-1 || grid.appScope.privileges.indexOf(\'Execute\') == -1"  ng-click="grid.appScope.setStatus(row.entity,\'RESUME\')"><i class="fa fa-repeat" aria-hidden="true"></i> RESUME </a></li>',
         '       <li><a ng-disabled="[\'RUNNING\',\'RESUME\',\'STARTING\'].indexOf(row.entity.status)==-1"  ng-click="grid.appScope.setStatus(row.entity,\'Killed\')"><i class="fa fa-times" aria-hidden="true"></i> Kill </a></li>',
-        '       <li><a ng-disabled="[\'KILLED\',\'FAILED\'].indexOf(row.entity.status)==-1"  ng-click="grid.appScope.restartExec(row.entity)"><i class="fa fa-repeat" aria-hidden="true"></i> Restart </a></li>',
+        '       <li><a ng-disabled="[\'KILLED\',\'FAILED\',\'ABORTED\'].indexOf(row.entity.status)==-1"  ng-click="grid.appScope.restartExec(row.entity)"><i class="fa fa-repeat" aria-hidden="true"></i> Restart </a></li>',
         '    </ul>',
         '  </div>',
         '</div>'
