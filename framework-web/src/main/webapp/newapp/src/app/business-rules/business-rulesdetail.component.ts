@@ -713,6 +713,7 @@ export class BusinessRulesDetailComponent {
       allname.value.uuid = response1[n].uuid;
       temp[n] = allname;
     }
+    temp.sort((a, b) => a.label.localeCompare(b.label.toString()));
     this.allNames = temp
     this.getAllAttributeBySource();
   }
@@ -794,21 +795,25 @@ export class BusinessRulesDetailComponent {
   }
 
   onSuccessgetParamByApp(response) {
+    debugger
     let paramlistArray = [];
-    paramlistArray = [new AttributeIO];
-    for (const i in response) {
-      let attributeObj = new AttributeIO();
-      attributeObj.label = "app." + response[i].paramName;
-      attributeObj.value = { label: "", uuid: "", attributeId: "" };
-      attributeObj.value.uuid = response[i].ref.uuid;
-      attributeObj.value.attributeId = response[i].paramId;
-      attributeObj.value.label = "app." + response[i].paramName;
-      paramlistArray[i] = attributeObj
+    if (this.paramlistArray.length <= 0) {
+      paramlistArray = [new AttributeIO];
+      for (const i in response) {
+        let attributeObj = new AttributeIO();
+        attributeObj.label = "app." + response[i].paramName;
+        attributeObj.value = { label: "", uuid: "", attributeId: "" };
+        attributeObj.value.uuid = response[i].ref.uuid;
+        attributeObj.value.attributeId = response[i].paramId;
+        attributeObj.value.label = "app." + response[i].paramName;
+        paramlistArray[i] = attributeObj
+      }
+      this.paramlistArray = paramlistArray;
     }
-    this.paramlistArray = paramlistArray;
   }
 
   onSuccessgetLatestByUuid(response: any) {
+    debugger
     let attributeObj = new AttributeIO();
     if (response) {
       for (const i in response.params) {
@@ -887,7 +892,7 @@ export class BusinessRulesDetailComponent {
         .subscribe(response => { this.onSuccessgetLatestByUuid(response) },
           error => console.log("Error ::", error));
     }
-    else 
+    else
       this.isFilterInprogess = false;
     if (response.isFunctionExits == true) {
 

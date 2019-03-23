@@ -1005,6 +1005,11 @@ border-bottom-color: white !important;
 .ui-state-disabled:hover {
 cursor: not-allowed !important;
 }
+
+.ui-button-text-icon-right .ui-button-icon-right {
+  top: 53%;
+  margin-right: 3px !important;
+}
 /*For Notification*/
 /*datatable Css Anguar4 prime ng*/
 /*

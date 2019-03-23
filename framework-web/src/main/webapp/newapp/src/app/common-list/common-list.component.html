@@ -7,7 +7,8 @@
       <i class="icon-magnifier"></i>Search Criteria
     </div>
     <div class="tools">
-      <a title="Refresh" data-toggle="tooltip" data-placement="top" (click)="refershGrid()" data-original-title="" title="">
+      <a title="Refresh" data-toggle="tooltip" data-placement="top" (click)="refershGrid()" data-original-title=""
+        title="">
         <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
       </a>
       <a href="javascript:;" class="collapse" data-original-title="" title="" style="height:14px;"></a>
@@ -23,10 +24,12 @@
               <label class="control-label col-md-3 col-sm-3 col-xs-6">Type</label>
               <div class="col-md-9 col-sm-9 col-xs-6">
                 <label class="control-label" style="padding-right: 5%;">
-                  <input type="radio" ng-control="selectedType" (change)="onChange(types[0].value)" [checked]="true" name="selectedType" [value]="types[0].value"> {{types[0].caption}}
+                  <input type="radio" ng-control="selectedType" (change)="onChange(types[0].value)" [checked]="true"
+                    name="selectedType" [value]="types[0].value"> {{types[0].caption}}
                 </label>
                 <label class="control-label">
-                  <input type="radio" ng-control="selectedType" (change)="onChange(types[1].value)" name="selectedType" [value]="types[1].value"> {{types[1].caption}}
+                  <input type="radio" ng-control="selectedType" (change)="onChange(types[1].value)" name="selectedType"
+                    [value]="types[1].value"> {{types[1].caption}}
                 </label>
               </div>
             </div>
@@ -39,7 +42,8 @@
             <div class="form-group">
               <label class="control-label col-md-3 col-sm-3 col-xs-6">Name</label>
               <div class="col-md-9 col-sm-9 col-xs-6">
-                <p-dropdown [options]="allExecName" [(ngModel)]="execname" name="execname" [style]="{'width':'100%','padding':'3px'}" [filter]="true">
+                <p-dropdown [options]="allExecName" [(ngModel)]="execname" name="execname" [style]="{'width':'100%','padding':'3px'}"
+                  [filter]="true">
                 </p-dropdown>
               </div>
             </div>
@@ -50,7 +54,10 @@
               <div class="col-md-9 col-sm-9 col-xs-9">
                 <form #form="ngForm">
                   <!-- <date-picker mode="datetime" format="ddd MMM D HH:mm:ss YYYY z" [(ngModel)]="startDate" name="startDate"></date-picker> -->
-                  <p-calendar format="ddd MMM D HH:mm:ss YYYY z" [(ngModel)]="startDate" name="startDate" [showTime]="true" [utc]="true" [showIcon]="true"></p-calendar>
+                  <div class="pcalender-border">
+                    <p-calendar inputStyleClass="form-control" format="ddd MMM D HH:mm:ss YYYY z" [(ngModel)]="startDate" name="startDate" [showTime]="true"
+                      [utc]="true" [showIcon]="true" [showIcon]="true" icon="fa fa-calendar"></p-calendar>
+                  </div>
                 </form>
               </div>
             </div>
@@ -71,7 +78,8 @@
             <div class="form-group">
               <label class="control-label col-md-3 col-sm-3 col-xs-6" for="select">User</label>
               <div class="col-md-9 col-sm-9 col-xs-6">
-                <p-dropdown [options]="allUserName" [(ngModel)]="username" name="username" [style]="{'width':'100%','padding':'3px'}" [filter]="true">
+                <p-dropdown [options]="allUserName" [(ngModel)]="username" name="username" [style]="{'width':'100%','padding':'3px'}"
+                  [filter]="true">
                 </p-dropdown>
               </div>
             </div>
@@ -81,7 +89,10 @@
               <label class="control-label col-md-3 col-sm-3 col-xs-12">End Date</label>
               <div class="col-md-9 col-sm-9 col-xs-9">
                 <form #form="ngForm">
-                  <p-calendar format="ddd MMM D HH:mm:ss YYYY z" [(ngModel)]="endDate" name="endDate" [showTime]="true" [utc]="true" [showIcon]="true"></p-calendar>
+                  <div class="pcalender-border">
+                    <p-calendar inputStyleClass="form-control" format="ddd MMM D HH:mm:ss YYYY z" [(ngModel)]="endDate" name="endDate" [showTime]="true"
+                      [utc]="true" [showIcon]="true" [showIcon]="true" icon="fa fa-calendar"></p-calendar>
+                  </div>
                 </form>
               </div>
             </div>
@@ -159,26 +170,28 @@
   </div>
   <div class="portlet-body">
     <div class="row">
-     
-          <div class="col-md-6 col-sm-6"></div>
-          <div class="col-md-6 col-sm-6">
-              <div style="float:right;">
-                  <label>Search:</label>
-                  <input #gb type="search"  style=" margin-left: 4px" class="form-control input-sm input-small input-inline" pInputText >
-              </div>
-          </div>
-        <!-- <div class="col-md-3 col-md-offset-9" style="padding:4px 10px;border-bottom: 0 none">
+
+      <div class="col-md-6 col-sm-6"></div>
+      <div class="col-md-6 col-sm-6">
+        <div style="float:right;">
+          <label>Search:</label>
+          <input #gb type="search" style=" margin-left: 4px" class="form-control input-sm input-small input-inline"
+            pInputText>
+        </div>
+      </div>
+      <!-- <div class="col-md-3 col-md-offset-9" style="padding:4px 10px;border-bottom: 0 none">
           <i class="fa fa-search" style="margin-left: 12%; margin-top: 2%;"></i>
           <label>Search:</label>
           <input #gb type="search" class="form-control input-sm input-small" style="float:right;" pInputText >
         </div> -->
-      </div>
+    </div>
     <br>
     <div class="row">
       <div class="col-md-12">
         <p-dataTable #dt [value]="rowData1" exportFilename="data" [(selection)]="selectedData" (onRowSelect)="onRowSelect($event)"
           selectionMode="multiple" [metaKeySelection]="false" scrollable="true" resizableColumns="true" scrollHeight="440px"
-          [globalFilter]="gb" sortMode="multiple" [paginator]="false" paginatorDropdownAppendTo="body" [rows]="10" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [sortField]="createdOn">
+          [globalFilter]="gb" sortMode="multiple" [paginator]="false" paginatorDropdownAppendTo="body" [rows]="10"
+          [pageLinks]="3" [rowsPerPageOptions]="[5,10,20]" [sortField]="createdOn">
           <!-- <p-column field="uuid" header="UUID" [sortable]="true"></p-column> -->
           <p-column field="name" header="Name" [sortable]="true"></p-column>
           <p-column field="version" header="Version" [sortable]="true"></p-column>
@@ -210,7 +223,8 @@
             <ng-template let-col let-car="rowData" pTemplate="body">
               <p-menu #menu popup="popup" [model]="items" appendTo="body"></p-menu>
               <div style="text-align: center;">
-                <button type="button" class="ui-button-raised ui-button-rounded" style="height:22px !important;" pButton label="Action" icon="fa fa-angle-down" iconPos="right" (click)="menu.toggle($event);onClickMenu(car);"></button>
+                <button type="button" class="ui-button-raised ui-button-rounded" style="height:22px !important;"
+                  pButton label="Action" icon="fa fa-angle-down" iconPos="right" (click)="menu.toggle($event);onClickMenu(car);"></button>
               </div>
             </ng-template>
           </p-column>
@@ -232,8 +246,8 @@
         </div>
         <div class="modal-body">
           <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 300px;">
-            <div class="scroller" style="height: 300px; overflow: hidden; width: auto;" data-always-visible="1" data-rail-visible1="1"
-              data-initialized="1">
+            <div class="scroller" style="height: 300px; overflow: hidden; width: auto;" data-always-visible="1"
+              data-rail-visible1="1" data-initialized="1">
               <div class="row">
                 <div class="col-md-12">
                   <br>
@@ -242,8 +256,8 @@
                       <label class="control-label col-md-3 col-sm-3 col-xs-12" for="select">Parameter Set
                       </label>
                       <div class="col-md-6">
-                        <select class="form-control" [(ngModel)]="paramsetdata" name="paramsetdata" (change)="onSelectparamSet()" [style]="{'width':'100%','padding':'3px'}"
-                          [disabled]="mode == 'true'">
+                        <select class="form-control" [(ngModel)]="paramsetdata" name="paramsetdata" (change)="onSelectparamSet()"
+                          [style]="{'width':'100%','padding':'3px'}" [disabled]="mode == 'true'">
                           <option value="" style="color:rgb(24, 18, 18)">USE DEFAULT VALUE</option>
                           <option *ngFor="let app of allparamset" [ngValue]="app">{{app.name}}</option>
                         </select>
@@ -257,8 +271,8 @@
                         <tr>
                           <th style="text-align:center;Vertical-align: middle;width:5%;">
                             <span class="form-group" style="margin-left:0px;margin-right:0px;">
-                              <input style="width:16px;height:16px;" type="checkbox" [disabled]="mode == 'true'" [(ngModel)]="selectAllParam" name="selectAllParam"
-                                (click)="selectAllRow()" />
+                              <input style="width:16px;height:16px;" type="checkbox" [disabled]="mode == 'true'"
+                                [(ngModel)]="selectAllParam" name="selectAllParam" (click)="selectAllRow()" />
                             </span>
                           </th>
                           <th style="width:6%;text-align:center">ID</th>
@@ -269,18 +283,20 @@
                         <tr *ngFor=" let tabledata of paramtable; let i=index">
                           <td style="text-align:center;Vertical-align:middle;width:5%;">
                             <span class="form-group" style="margin-left:0px;margin-right:0px;">
-                              <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="tabledata.selected" name="selected+{{i}}" [disabled]="mode == 'true'"
-                              />
+                              <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="tabledata.selected"
+                                name="selected+{{i}}" [disabled]="mode == 'true'" />
                             </span>
                           </td>
                           <td style="width:6%;">
                             <span class="form-group" style="margin-left:0px;margin-right:0px;">
-                              <input type="text" [(ngModel)]="tabledata.paramSetId" name="paramSetId+{{i}}" [disabled]="true" class="form-control">
+                              <input type="text" [(ngModel)]="tabledata.paramSetId" name="paramSetId+{{i}}" [disabled]="true"
+                                class="form-control">
                             </span>
                           </td>
 
                           <td style="width:20%;" *ngFor=" let tablecol of tabledata.paramSetVal;let j=index">
-                            <input type="text" class="form-control" [(ngModel)]="tablecol.value" name="value+{{tablecol.value}}" [disabled]="true">
+                            <input type="text" class="form-control" [(ngModel)]="tablecol.value" name="value+{{tablecol.value}}"
+                              [disabled]="true">
                           </td>
                         </tr>
                       </tbody>
@@ -320,7 +336,8 @@
                           Upload &hellip; <input id="csv_file" class="jfilestyle" (change)="readURL($event);" type="file" [(ngModel)]="file" accept=".csv"style="display:none">
                       </span>
                   </label> -->
-                <input id="csv_file" class="jfilestyle" (change)="readURL($event);" type="file" [(ngModel)]="file" accept=".csv" style="float:left;margin-left:4px;margin-top:3px">
+                <input id="csv_file" class="jfilestyle" (change)="readURL($event);" type="file" [(ngModel)]="file"
+                  accept=".csv" style="float:left;margin-left:4px;margin-top:3px">
                 <!-- <input type="file"  id="csv_file" class="jfilestyle" accept=".csv" data-buttonText="<span class='glyphicon glyphicon-folder-open'style='color:#94A0B2;'></span>" style="float:left;margin-left:4px;"> -->
               </div>
             </div>
@@ -336,14 +353,15 @@
 </div>
 
 <div class="col-md-6 col-sm-6 col-xs-12">
-  <p-dialog header="Execution" [(visible)]="displayDialogBoxSimulation" [modal]="true" [responsive]="true" [width]="900" [minWidth]="600"
-    [resizable]="true" [baseZIndex]="1000">
+  <p-dialog header="Execution" [(visible)]="displayDialogBoxSimulation" [modal]="true" [responsive]="true" [width]="900"
+    [minWidth]="600" [resizable]="true" [baseZIndex]="1000">
 
     <div class="caption">
       <span class="caption-subject sbold ">Run Params</span>
     </div>
     <div class="form-body" style="padding-top:10px;">
-      <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="executeWithExecParamList()" #myNewForm="ngForm">
+      <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="executeWithExecParamList()"
+        #myNewForm="ngForm">
 
         <table class=" row-border hover table  table-striped table-bordered">
           <!-- <table class=" row-border table table-striped table-bordered" style="height:200px;" cellspacing="20" cellpadding="20"> -->
@@ -366,24 +384,27 @@
               </td>
               <td>
                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                  <input type="text" class="form-control" [(ngModel)]="data.paramName" name="paramName+{{i}}" title="{{data.paramName}}" [disabled]="true">
+                  <input type="text" class="form-control" [(ngModel)]="data.paramName" name="paramName+{{i}}" title="{{data.paramName}}"
+                    [disabled]="true">
                 </span>
               </td>
               <td>
                 <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                  <input type="text" class="form-control" [(ngModel)]="data.paramType" name="paramType+{{i}}" title="{{data.paramType}}" [disabled]="true">
+                  <input type="text" class="form-control" [(ngModel)]="data.paramType" name="paramType+{{i}}" title="{{data.paramType}}"
+                    [disabled]="true">
                 </span>
               </td>
               <td>
                 <div *ngIf="['simple','distribution','list'].indexOf(data.selectedParamValueType)  !=-1">
                   <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                    <input type="text" class="form-control" [(ngModel)]="data.paramType" name="paramType+{{i}}" title="{{data.paramType}}" [disabled]="true">
+                    <input type="text" class="form-control" [(ngModel)]="data.paramType" name="paramType+{{i}}" title="{{data.paramType}}"
+                      [disabled]="true">
                   </span>
                 </div>
                 <div *ngIf="['attribute','attributes','datapod','rule','dataset'].indexOf(data.selectedParamValueType) !=-1">
                   <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                    <p-dropdown [options]="attributeTypes" [(ngModel)]="data.selectedParamValueType" name="selectedParamValueType+{{i}}" [style]="{'width':'150px','padding':'3px'}"
-                      [filter]="true" placeholder="Select">
+                    <p-dropdown [options]="attributeTypes" [(ngModel)]="data.selectedParamValueType" name="selectedParamValueType+{{i}}"
+                      [style]="{'width':'150px','padding':'3px'}" [filter]="true" placeholder="Select">
                     </p-dropdown>
                   </span>
                 </div>
@@ -398,36 +419,41 @@
                 </div>
                 <div *ngIf="data.selectedParamValueType =='list'">
                   <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                    <p-dropdown [options]="data.allListInfo" [(ngModel)]="data.paramValue" name="paramValue+{{i}}" [disabled]="mode == 'true'"
-                      [style]="{'width':'150px','padding':'3px'}" [filter]="true" placeholder="Select">
+                    <p-dropdown [options]="data.allListInfo" [(ngModel)]="data.paramValue" name="paramValue+{{i}}"
+                      [disabled]="mode == 'true'" [style]="{'width':'150px','padding':'3px'}" [filter]="true"
+                      placeholder="Select">
                     </p-dropdown>
                   </span>
                 </div>
                 <div *ngIf="data.selectedParamValueType =='datapod'">
                   <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                    <p-dropdown [options]="data.allDatapod" [(ngModel)]="data.paramValue" name="paramValue+{{i}}" [disabled]="mode == 'true'"
-                      [style]="{'width':'150px','padding':'3px'}" [filter]="true" placeholder="Select" (click)="getAllLatestSimulation('datapod',i)">
+                    <p-dropdown [options]="data.allDatapod" [(ngModel)]="data.paramValue" name="paramValue+{{i}}"
+                      [disabled]="mode == 'true'" [style]="{'width':'150px','padding':'3px'}" [filter]="true"
+                      placeholder="Select" (click)="getAllLatestSimulation('datapod',i)">
                     </p-dropdown>
                   </span>
                 </div>
                 <div *ngIf="data.selectedParamValueType =='dataset'">
                   <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                    <p-dropdown [options]="data.allDataset" [(ngModel)]="data.paramValue" name="paramValue+{{i}}" [disabled]="mode == 'true'"
-                      [style]="{'width':'150px','padding':'3px'}" [filter]="true" placeholder="Select" (click)="getAllLatestSimulation('dataset',i)">
+                    <p-dropdown [options]="data.allDataset" [(ngModel)]="data.paramValue" name="paramValue+{{i}}"
+                      [disabled]="mode == 'true'" [style]="{'width':'150px','padding':'3px'}" [filter]="true"
+                      placeholder="Select" (click)="getAllLatestSimulation('dataset',i)">
                     </p-dropdown>
                   </span>
                 </div>
                 <div *ngIf="data.selectedParamValueType =='rule'">
                   <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                    <p-dropdown [options]="data.allRule" [(ngModel)]="data.paramValue" name="paramValue+{{i}}" [disabled]="mode == 'true'" [style]="{'width':'150px','padding':'3px'}"
-                      [filter]="true" placeholder="Select" (click)="getAllLatestSimulation('rule',i)">
+                    <p-dropdown [options]="data.allRule" [(ngModel)]="data.paramValue" name="paramValue+{{i}}"
+                      [disabled]="mode == 'true'" [style]="{'width':'150px','padding':'3px'}" [filter]="true"
+                      placeholder="Select" (click)="getAllLatestSimulation('rule',i)">
                     </p-dropdown>
                   </span>
                 </div>
                 <div *ngIf="data.selectedParamValueType =='distribution'">
                   <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                    <p-dropdown [options]="data.allDistribution" [(ngModel)]="data.paramValue" name="paramValue+{{i}}" [disabled]="mode == 'true'"
-                      [style]="{'width':'150px','padding':'3px'}" [filter]="true" placeholder="Select" (click)="getAllLatestSimulation('distribution',i)">
+                    <p-dropdown [options]="data.allDistribution" [(ngModel)]="data.paramValue" name="paramValue+{{i}}"
+                      [disabled]="mode == 'true'" [style]="{'width':'150px','padding':'3px'}" [filter]="true"
+                      placeholder="Select" (click)="getAllLatestSimulation('distribution',i)">
                     </p-dropdown>
                   </span>
                 </div>
@@ -438,15 +464,16 @@
               <td>
                 <div *ngIf="data.paramType=='attribute'">
                   <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                    <p-dropdown [options]="data.allAttributeinto" [(ngModel)]="data.attributeInfo" name="attributeInfo+{{i}}" [disabled]="mode == 'true'"
-                      [style]="{'width':'150px','padding':'3px'}" [filter]="true" placeholder="Select" (click)="getAllAttribute(i)">
+                    <p-dropdown [options]="data.allAttributeinto" [(ngModel)]="data.attributeInfo" name="attributeInfo+{{i}}"
+                      [disabled]="mode == 'true'" [style]="{'width':'150px','padding':'3px'}" [filter]="true"
+                      placeholder="Select" (click)="getAllAttribute(i)">
                     </p-dropdown>
                   </span>
                 </div>
                 <div *ngIf="data.paramType=='attributes'">
                   <span class="form-group" style="margin-left:0px;margin-right: 0px;">
-                    <p-multiSelect [options]="data.allattributeInfoTag" [(ngModel)]="data.attributeInfoTag" name="attributeInfoTag+{{i}}" [style]="{'width':'150px'}"
-                      (click)="onChangeAtrributes(i)">
+                    <p-multiSelect [options]="data.allattributeInfoTag" [(ngModel)]="data.attributeInfoTag" name="attributeInfoTag+{{i}}"
+                      [style]="{'width':'150px'}" (click)="onChangeAtrributes(i)">
                     </p-multiSelect>
                   </span>
                 </div>
@@ -471,19 +498,19 @@
 
 
 <div class="col-md-6 col-sm-6 col-xs-12">
-  <p-dialog header="Run Params" [(visible)]="displayDialogBox" [modal]="true" [responsive]="true" [width]="600" [minWidth]="300"
-    [resizable]="true" [draggable]="false" [contentStyle]="{'height':'400px','overflow-y': 'auto','overflow-x': 'hidden'}">
+  <p-dialog header="Run Params" [(visible)]="displayDialogBox" [modal]="true" [responsive]="true" [width]="600"
+    [minWidth]="300" [resizable]="true" [draggable]="false" [contentStyle]="{'height':'400px','overflow-y': 'auto','overflow-x': 'hidden'}">
 
     <div class="row">
 
       <div class="form-body" style="padding-top:10px">
-        
+
         <!-- <form class="form-horizontal" name="myform2" id="submit_form2" (submit)="countContinue()" novalidate="novalidate"> -->
         <div class="form-group">
           <label class="control-label col-md-3 col-sm-3 col-xs-12 col-lg-4" style="text-align:right">Type</label>
           <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6">
-            <p-dropdown [options]="paramType" [(ngModel)]="selectParamType" name="selectParamType" dataKey="uuid" [style]="{'width':'100%','padding':'3px'}"
-              [filter]="true" (onChange)="onChangeType()" placeholder="Select">
+            <p-dropdown [options]="paramType" [(ngModel)]="selectParamType" name="selectParamType" dataKey="uuid"
+              [style]="{'width':'100%','padding':'3px'}" [filter]="true" (onChange)="onChangeType()" placeholder="Select">
             </p-dropdown>
           </div>
         </div>
@@ -498,8 +525,8 @@
         <div class="form-group" *ngIf="selectParamType == 'paramset'">
           <label class="control-label col-md-3 col-sm-3 col-xs-12 col-lg-3" style="text-align:right">Name11</label>
           <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6">
-            <p-dropdown [options]="paramsetData" [(ngModel)]="selectParamsetName" name="selectParamsetName" dataKey="uuid" [style]="{'width':'100%','padding':'3px'}"
-              [filter]="true">
+            <p-dropdown [options]="paramsetData" [(ngModel)]="selectParamsetName" name="selectParamsetName" dataKey="uuid"
+              [style]="{'width':'100%','padding':'3px'}" [filter]="true">
             </p-dropdown>
           </div>
         </div>
@@ -522,10 +549,12 @@
                   <input style="text-align:center;" type="text" [value]="i" [disabled]="true" class="form-control">
                 </td>
                 <td>
-                  <input type="text" class="form-control" [(ngModel)]="data1.paramName" name="name+{{i}}" [disabled]="true" class="form-control">
+                  <input type="text" class="form-control" [(ngModel)]="data1.paramName" name="name+{{i}}" [disabled]="true"
+                    class="form-control">
                 </td>
                 <td>
-                  <input type="text" class="form-control" [(ngModel)]="data1.paramType" name="type+{{i}}" [disabled]="true" class="form-control">
+                  <input type="text" class="form-control" [(ngModel)]="data1.paramType" name="type+{{i}}" [disabled]="true"
+                    class="form-control">
                 </td>
 
                 <td *ngIf="typeSimple.indexOf(data1.paramType) != -1">
@@ -533,8 +562,8 @@
                 </td>
 
                 <td *ngIf="data1.paramType == 'distribution'">
-                  <p-dropdown [options]="distributionListOptions" [(ngModel)]="data1.paramValue" name="value1+{{i}}" [disabled]="true" [style]="{'width':'100%'}"
-                    [filter]="true" dataKey="uuid" placeholder="Select">
+                  <p-dropdown [options]="distributionListOptions" [(ngModel)]="data1.paramValue" name="value1+{{i}}"
+                    [disabled]="true" [style]="{'width':'100%'}" [filter]="true" dataKey="uuid" placeholder="Select">
                   </p-dropdown>
                 </td>
 
@@ -550,8 +579,8 @@
             <thead>
               <tr>
                 <th style="width:5%;text-align: center; Vertical-align: middle;">
-                  <input [disabled]="mode == 'true'" style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="selectAllAttributeRow" name="selectAllAttributeRow"
-                    (click)="checkAllAttributeRow()" />
+                  <input [disabled]="mode == 'true'" style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="selectAllAttributeRow"
+                    name="selectAllAttributeRow" (click)="checkAllAttributeRow()" />
                 </th>
                 <th style="text-align: center; Vertical-align: middle;width:5%;">ID</th>
                 <th *ngFor="let data of paramTableCol2" style="text-align: center; Vertical-align: middle;width:10%">{{data.paramName}}</th>
@@ -563,11 +592,12 @@
                   <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="tabledata.selected" name="selectedAttr+{{i}}" />
                 </td>
                 <td style="width:5%;">
-                  <input style="text-align:center;" type="text" [(ngModel)]="tabledata.paramSetId" name="paramSetId+{{i}}" [disabled]="true"
-                    class="form-control">
+                  <input style="text-align:center;" type="text" [(ngModel)]="tabledata.paramSetId" name="paramSetId+{{i}}"
+                    [disabled]="true" class="form-control">
                 </td>
                 <td *ngFor="let tablecol of tabledata.paramSetVal; let j=index">
-                  <input type="text" class="form-control" [(ngModel)]="tablecol.value" name="value+{{i}}+{{j}}" [disabled]="true">
+                  <input type="text" class="form-control" [(ngModel)]="tablecol.value" name="value+{{i}}+{{j}}"
+                    [disabled]="true">
                 </td>
               </tr>
             </tbody>
@@ -584,4 +614,3 @@
   <!-- <p-checkbox [(ngModel)]="checkboxModelexecution" [disabled]="mode == 'true'" name="checkboxModelexecution" binary="true"
       (onChange)="onChangeRunImmediately()"></p-checkbox> -->
 </div>
-

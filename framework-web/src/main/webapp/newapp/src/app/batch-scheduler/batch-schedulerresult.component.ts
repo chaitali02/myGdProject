@@ -1,3 +1,4 @@
+import { Stage } from './../metadata/enums/stage';
 import { BaseEntity } from './../metadata/domain/domain.baseEntity';
 import { Http } from '@angular/http';
 import * as c3 from 'c3'
@@ -16,6 +17,8 @@ import { MetaType } from '../metadata/enums/metaType';
 import { RoutesParam } from '../metadata/domain/domain.routeParams';
 import { BaseEntityStatus } from '../metadata/domain/domain.baseEntityStatus';
 import { MetadataIO } from '../metadata/domainIO/domain.metadataIO';
+import { BatchService } from '../metadata/services/batch.service';
+import { AppConfig } from '../app.config';
 
 
 @Component({
@@ -43,7 +46,6 @@ export class BatchSchedulerResultComponent {
   endtime: any = "- N/A -";
   duration: any = "- N/A -";
   @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
-  // showGraph: boolean;
   isHomeEnable: boolean;
   showHome: boolean;
   isEditInprogess: boolean = false;
@@ -54,10 +56,24 @@ export class BatchSchedulerResultComponent {
   isEdit: boolean = false;
   isAdd: boolean;
   isversionEnable: boolean;
+  baseUrl: any;
+  colsSourcedata: string[];
+  showKnowledgeGraph: boolean;
+  _uuid: String;
+  _version: String;
 
-  constructor(private _commonListService: CommonListService, private http: Http, public _sharedService: SharedService, public router: Router, public metaconfig: AppMetadata, private activatedRoute: ActivatedRoute, private _metadataService: MetadataService, private activeroute: ActivatedRoute, private datePipe: DatePipe) {
-    // this.showGraph = false
-    this.isHomeEnable = false
+  constructor(private _commonListService: CommonListService, private http: Http, public _sharedService: SharedService,
+    public router: Router, public metaconfig: AppMetadata, private activatedRoute: ActivatedRoute,
+    private _metadataService: MetadataService, private activeroute: ActivatedRoute, private datePipe: DatePipe,
+    private _batchService: BatchService, private _activatedRoute: ActivatedRoute, ) {
+    this._activatedRoute.params.subscribe((params: Params) => {
+      let param = <RoutesParam>params;
+      this._uuid = param.id;
+      this._version = param.version;
+    });
+
+    this.isHomeEnable = false;
+    this.showKnowledgeGraph = false;
 
     this.breadcrumbDataFrom = [
       {
@@ -76,6 +92,8 @@ export class BatchSchedulerResultComponent {
 
     this.isEditInprogess = false;
     this.isEditError = false;
+
+    this.colsSourcedata = ['name', 'value', 'value1', 'value2'];
   }
 
   ngOnInit() {
@@ -86,13 +104,13 @@ export class BatchSchedulerResultComponent {
         }
       },
       {
-        label: 'Kill', icon: 'fa fa-pencil-square-o', command: (onclick) => {
-          //this.edit(this.rowUUid,this.rowVersion)
+        label: 'Kill', icon: 'fa fa-times', command: (onclick) => {
+          this.kill(this.rowUuid, this.rowVersion)
         }
       },
       {
-        label: 'Restart', icon: 'fa fa-pencil-square-o', command: (onclick) => {
-          //this.edit(this.rowUUid,this.rowVersion)
+        label: 'Restart', icon: 'fa fa-repeat', command: (onclick) => {
+          this.restart(this.rowUuid, this.rowVersion)
         }
       }];
 
@@ -129,17 +147,33 @@ export class BatchSchedulerResultComponent {
     this.isHomeEnable = false
     this.showDivGraph = false;
     this.showForm = true;
+    this.showKnowledgeGraph = false;
   }
 
-  showGraph(uuid, version) {
-    this.isHomeEnable = true;
-    this.showDivGraph = true;
-    this.showForm = false;
-    this.isGraphInprogess = true;
-    setTimeout(() => {
-      this.d_KnowledgeGraphComponent.getGraphData(this.id, this.version);
-    }, 1000);
+  showDagGraph(uuid, version, graphFlag) {
+    if (graphFlag) {
+      this.isHomeEnable = true;
+      this.showDivGraph = true;
+      this.showForm = false;
+      this.isGraphInprogess = true;
+      this.showKnowledgeGraph = true;
+      setTimeout(() => {
+        this.d_KnowledgeGraphComponent.getGraphData(this._uuid, this._version);
+      }, 1000);
+    }
+    else {
+      this.getExecListByBatchExec();
+    }
   }
+  // showGraph(uuid, version) {
+  //   this.isHomeEnable = true;
+  //   this.showDivGraph = true;
+  //   this.showForm = false;
+  //   this.isGraphInprogess = true;
+  //   setTimeout(() => {
+  //     this.d_KnowledgeGraphComponent.getGraphData(this.id, this.version);
+  //   }, 1000);
+  // }
 
   getExecListByBatchExec(): any {
     this.isEditInprogess = true;
@@ -194,28 +228,51 @@ export class BatchSchedulerResultComponent {
         this.batchexecData[i].color = this.metaconfig.getStatusDefs(response[i].status[j].stage).color;
       }
     }
-
     this.isEditInprogess = false;
   }
 
-  viewPage(uuid, version) {debugger
-    // let metadata = new MetadataIO();
-    //     metadata = this.metaconfig.getStatusDefs("dagexec");
-    let _moduleUrl = this.metaconfig.getMetadataDefs("dagexec")['moduleState']
-    let _routerUrl = this.metaconfig.getMetadataDefs("dagexec")['resultState']
+  viewPage(uuid, version) {
+    let _moduleUrl = this.metaconfig.getMetadataDefs("dagexec").moduleState;
+    let _routerUrl = this.metaconfig.getMetadataDefs("dagexec").resultState;
     this.router.navigate(["../../../../../" + _moduleUrl + "/" + _routerUrl, uuid, version, 'true'], { relativeTo: this.activeroute });
   }
 
-  onClickMenu(uuid, version, mtype) {
-    this.rowUuid = uuid;
-    this.rowVersion = version
-    this.metaType = mtype;
+  kill(uuid, version) {
+    console.log("kill call..");
+    // this._batchService.setStatus(uuid, version, "batchexec", "Killed")
+    //   .subscribe(
+    //     response => {
+    //       this.onSuccessSetStatus(response)
+    //     },
+    //     error => { console.log("Error :: " + error); });
+  }
+
+  onSuccessSetStatus(response) {
+    console.log("set status response: " + response);
+  }
+
+  restart(uuid, version) {
+    console.log("restart call..");
+  }
+
+  onClickMenu(data) {
+    // this.rowUuid = uuid;
+    // this.rowVersion = version
+    // this.metaType = mtype;
+    this.rowUuid = data.uuid;
+    this.rowVersion = data.version
+    this.metaType = data.type;
+    for (let i = 0; i < this.batchexecData.length; i++) {
+      this.items[1].disabled = ['InProgress'].indexOf(this.batchexecData[i].stage) == -1       //for kill
+      this.items[2].disabled = ['Killed', 'Failed', 'NotStarted', 'Not Started'].indexOf(this.batchexecData[i].stage) == -1 //For restart
+
+    }
   }
 
   public goBack() {
     this.router.navigate(['app/list/batchexec']);
-
   }
+
   refershGrid() {
     this.batchexecData.name = ''
     this.starttime = ''

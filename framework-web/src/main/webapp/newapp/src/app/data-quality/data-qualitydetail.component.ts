@@ -56,7 +56,7 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy {
   dataqualitycompare: any;
   valueCheck: any;
   allRefIntegrity: any[];
-  selectdatefromate: any;
+  selectDateFormat: any;
   selectDataType: any;
   selectedAllFitlerRow: boolean;
   //lhsdatapodattributefilter: any[];
@@ -67,7 +67,8 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy {
   allIntegrityAttribute: any[];
   selectIntegrityAttribute: any;
   selectRefIntegrity: any;
-  datefromate: string[];
+  // dateFormat: { label: string, value: string }[];
+  dateFormat: any[];
   datatype: any;
   selectAttribute: any;
   allAttribute: any[] = [];
@@ -133,21 +134,24 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy {
     this.dialogAttributeName = {};
     this.selectRefIntegrity = {};
     this.operators = [
-      { 'value': '=', 'label': 'EQUAL TO(=)' },
-      { 'value': '!=', 'label': 'NOT EQUAL(!=)' },
-      { 'value': '<', 'label': 'LESS THAN(<)' },
-      { 'value': '>', 'label': 'GREATER THAN(>)' },
-      { 'value': '<=', 'label': 'LESS OR  EQUAL(<=)' },
-      { 'value': '>=', 'label': 'GREATER OR EQUAL(>=)' },
-      { 'value': 'BETWEEN', 'label': 'BETWEEN' },
-      { 'value': 'LIKE', 'label': 'LIKE' },
-      { 'value': 'NOT LIKE', 'label': 'NOT LIKE' },
-      { 'value': 'RLIKE', 'label': 'RLIKE' },
-      { 'value': 'EXISTS', 'label': 'EXISTS' },
-      { 'value': 'NOT EXISTS', 'label': 'NOT EXISTS' },
-      { 'value': 'IN', 'label': 'IN' },
-      { 'value': 'NOT IN', 'label': 'NOT IN' },
-      { 'value': 'IS', 'label': 'IS' },
+      { 'label': 'dd/mm/yy', 'value': 'dd/mm/yy' },
+      { 'label': 'dd/mm/yyyy', 'value': 'dd/mm/yyyy' },
+      { 'label': 'd/m/yyyy', 'value': 'd/m/yyyy' },
+      { 'label': 'dd-mmm-yy', 'value': 'dd-mmm-yy' },
+      { 'label': 'dd-mmm-yyyy', 'value': 'dd-mmm-yyyy' },
+      { 'label': 'd-mmm-yy', 'value': 'd-mmm-yy' },
+      { 'label': 'd-mmm-yyyy', 'value': 'd-mmm-yyyy' },
+      { 'label': 'd-mmmm-yy', 'value': 'd-mmmm-yy' },
+      { 'label': 'd-mmmm-yyyy', 'value': 'd-mmmm-yyyy' },
+      { 'label': 'yy/mm/dd', 'value': 'yy/mm/dd' },
+      { 'label': 'yyyy/mm/dd', 'value': 'yyyy/mm/dd' },
+      { 'label': 'mm/dd/yy', 'value': 'mm/dd/yy' },
+      { 'label': 'mm/dd/yyyy', 'value': 'mm/dd/yyyy' },
+      { 'label': 'mmm-dd-yy', 'value': 'mmm-dd-yy' },
+      { 'label': 'mmm-dd-yyyy', 'value': 'mmm-dd-yyyy' },
+      { 'label': 'yyyy-mm-dd', 'value': 'yyyy-mm-dd' },
+      { 'label': 'mmm-yy', 'value': 'mmm-yy' },
+      { 'label': 'yyyy', 'value': 'yyyy' }
     ];
     this.logicalOperators = [
       { 'value': '', 'label': '' },
@@ -181,7 +185,8 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy {
       { 'value': 'NULL', 'label': 'NULL' },
       { 'value': 'NOT NULL', 'label': 'NOT NULL' }
     ]
-    this.datefromate = ["dd/mm/yy", "dd/mm/yyyy", "d/m/yyyy", "dd-mmm-yy", "dd-mmm-yyyy", "d-mmm-yy", "d-mmm-yyyy", "d-mmmm-yy", "d-mmmm-yyyy", "yy/mm/dd", "yyyy/mm/dd", "mm/dd/yy", "mm/dd/yyyy", "mmm-dd-yy", "mmm-dd-yyyy", "yyyy-mm-dd", "mmm-yy", "yyyy"];
+    this.dateFormat = ["dd/mm/yy", "dd/mm/yyyy", "d/m/yyyy", "dd-mmm-yy", "dd-mmm-yyyy", "d-mmm-yy", "d-mmm-yyyy", "d-mmmm-yy", "d-mmmm-yyyy", "yy/mm/dd", "yyyy/mm/dd", "mm/dd/yy", "mm/dd/yyyy", "mmm-dd-yy", "mmm-dd-yyyy", "yyyy-mm-dd", "mmm-yy", "yyyy"];
+
     this.continueCount = 1;
     this.IsSelectSoureceAttr = false
     this.isSubmit = "false"
@@ -189,7 +194,7 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy {
     this.source = this.sources[0];
     this.progressbarWidth = 25 * this.continueCount + "%";
     this.selectDataType = {}
-    this.selectdatefromate = "";
+    this.selectDateFormat = "";
     this.dataqualitycompare = null;
     this.filterTableArray = [];
     //this.dqdata["active"] = true;
@@ -313,7 +318,7 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy {
       this.IsSelectDataType = true;
     }
     else {
-      this.selectdatefromate = "";
+      // this.selectDateFormat = "";
       this.IsSelectDataType = false;
     }
   }
@@ -338,7 +343,7 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy {
     this.dqdata.lowerBound = "";
     this.dqdata.upperBound = "";
     this.selectDataType = {};
-    this.selectdatefromate = "";
+    this.selectDateFormat = "";
     this.dqdata.minLength = ""
     this.dqdata.maxLength = "";
     this.allRefIntegrity = [];
@@ -426,6 +431,7 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy {
 
     for (const i in response) {
       let name = new AttributeIO();
+      response.sort((a, b) => a.name.localeCompare(b.name.toString()));
       name.label = response[i].name;
       name.value = { label: "", u_Id: "", uuid: "", attrId: "" };
       name.value.label = response[i].name;
@@ -502,25 +508,31 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy {
 
     this.filterTableArray = response.filterInfoIo;
 
+debugger
     this.dqdata.duplicateKeyCheck = this.appHelper.convertStringToBoolean(this.dqdata.duplicateKeyCheck);
-    this.dqdata.nullCheck = this.appHelper.convertStringToBoolean(this.dqdata.nullCheck);
-    this.dqdata.upperBound = this.dqdata.rangeCheck.upperBound;
-    this.dqdata.lowerBound = this.dqdata.rangeCheck.lowerBound;
-    this.dqdata.selectDataType = this.dqdata.dataTypeCheck;
-    this.dqdata.maxLength = this.dqdata.lengthCheck.maxLength;
-    this.dqdata.minLength = this.dqdata.lengthCheck.minLength;
-    if (this.dqdata.refIntegrityCheck.ref != null) {
-      let selectrefIntegrity: DependsOnIO = new DependsOnIO();
-      selectrefIntegrity.label = this.dqdata.refIntegrityCheck.ref.name;
-      selectrefIntegrity.uuid = this.dqdata.refIntegrityCheck.ref.uuid;
-      this.selectRefIntegrity = selectrefIntegrity
+    if (this.selectAttribute) {
+      this.dqdata.nullCheck = this.appHelper.convertStringToBoolean(this.dqdata.nullCheck);
+      this.dqdata.upperBound = this.dqdata.rangeCheck.upperBound;
+      this.dqdata.lowerBound = this.dqdata.rangeCheck.lowerBound;
+      this.dqdata.selectDataType = this.dqdata.dataTypeCheck;
 
-      let selectintegrityattribute: AttributeHolder = new AttributeHolder();
-      selectintegrityattribute.label = this.dqdata.refIntegrityCheck.ref.name;
-      selectintegrityattribute.u_Id = this.dqdata.refIntegrityCheck.ref.uuid + "_" + this.dqdata.refIntegrityCheck.attrId;
-      selectintegrityattribute.uuid = this.dqdata.refIntegrityCheck.ref.uuid
-      selectintegrityattribute.attrId = this.dqdata.refIntegrityCheck.attrId
-      this.selectIntegrityAttribute = selectintegrityattribute;
+      this.selectDateFormat = this.dqdata.dateFormatCheck;
+
+      this.dqdata.maxLength = this.dqdata.lengthCheck.maxLength;
+      this.dqdata.minLength = this.dqdata.lengthCheck.minLength;
+      if (this.dqdata.refIntegrityCheck.ref != null) {
+        let selectrefIntegrity: DependsOnIO = new DependsOnIO();
+        selectrefIntegrity.label = this.dqdata.refIntegrityCheck.ref.name;
+        selectrefIntegrity.uuid = this.dqdata.refIntegrityCheck.ref.uuid;
+        this.selectRefIntegrity = selectrefIntegrity
+
+        let selectintegrityattribute: AttributeHolder = new AttributeHolder();
+        selectintegrityattribute.label = this.dqdata.refIntegrityCheck.ref.name;
+        selectintegrityattribute.u_Id = this.dqdata.refIntegrityCheck.ref.uuid + "_" + this.dqdata.refIntegrityCheck.attrId;
+        selectintegrityattribute.uuid = this.dqdata.refIntegrityCheck.ref.uuid
+        selectintegrityattribute.attrId = this.dqdata.refIntegrityCheck.attrId
+        this.selectIntegrityAttribute = selectintegrityattribute;
+      }
     }
     this.isEditInprogess = false;
   }
@@ -688,7 +700,7 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy {
     else if (this.filterTableArray[index].rhsType == MetaType.PARAMLIST) {
       this.getParamByApp();
     }
-    else if (this.filterTableArray[index].rhsType == MetaType.DATASET) {   
+    else if (this.filterTableArray[index].rhsType == MetaType.DATASET) {
       this.datasetNotEmpty = false;
       let rhsAttribute = new AttributeIO();
       rhsAttribute.label = "";
@@ -858,9 +870,9 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy {
     }
     dqJson.valueCheck = this.dqdata.valueCheck;
 
-    dqJson.active = this.appHelper.convertBooleanToString(this.dqdata.active);
+    dqJson.active = this.appHelper.convertBooleanToString(this.active);
     dqJson.locked = this.appHelper.convertBooleanToString(this.locked);
-    dqJson.published = this.appHelper.convertBooleanToString(this.dqdata.published);
+    dqJson.published = this.appHelper.convertBooleanToString(this.published);
 
     let dependsOn = new MetaIdentifierHolder();
     let ref = new MetaIdentifier();
@@ -896,10 +908,10 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy {
       rangeCheck.lowerBound = this.dqdata.lowerBound;
       rangeCheck.upperBound = this.dqdata.upperBound;
     }
-    dqJson.rangeCheck = rangeCheck;
+    rangeCheck.lowerBound == "" && rangeCheck.upperBound == "" ? dqJson.rangeCheck = {} : dqJson.rangeCheck = rangeCheck;
 
-    dqJson.dataTypeCheck = this.dqdata.selectDataType;
-    dqJson.dateFormatCheck = this.selectdatefromate;
+    this.dqdata.selectDataType ? dqJson.dataTypeCheck = this.dqdata.selectDataType : dqJson.dataTypeCheck = "";
+    this.selectDateFormat ? dqJson.dateFormatCheck = this.selectDateFormat : dqJson.dateFormatCheck = null;
     dqJson.customFormatCheck = this.dqdata.customFormatCheck
 
     var lengthCheck = { minLength: "", maxLength: "" }
@@ -907,7 +919,7 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy {
       lengthCheck.minLength = this.dqdata.minLength.toString();
       lengthCheck.maxLength = this.dqdata.maxLength.toString();
     }
-    dqJson.lengthCheck = lengthCheck;
+    lengthCheck.minLength == "" && lengthCheck.maxLength == "" ? dqJson.lengthCheck = {} : dqJson.lengthCheck = lengthCheck;
 
     let refIntegrityCheck = new AttributeRefHolder();
     if (typeof this.selectRefIntegrity != "undefined" && typeof this.selectIntegrityAttribute != "undefined") {
@@ -1020,6 +1032,9 @@ export class DataQualityDetailComponent implements OnInit, OnDestroy {
         dqJson.filterInfo = filterInfoArray;
       }
     }
+    else
+      dqJson.filterInfo = null;
+
     this._commonService.submit(MetaType.DQ, dqJson).subscribe(
       response => { this.OnSuccessubmit(response) },
       error => console.log('Error :: ' + error)

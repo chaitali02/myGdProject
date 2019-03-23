@@ -605,9 +605,9 @@
                       <div class="form-group taginput">
                         <label class="control-label col-md-3">Date Format Check</label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <select class="form-control" [(ngModel)]="selectdatefromate" name="selectdatefromate"
+                          <select class="form-control" [(ngModel)]="selectDateFormat" name="selectDateFormat"
                             [disabled]="mode == 'true' || !IsSelectSoureceAttr || !IsSelectDataType ">
-                            <option *ngFor="let app of datefromate" [ngValue]="app">{{app}} </option>
+                            <option *ngFor="let app of dateFormat" [ngValue]="app">{{app}} </option>
                           </select>
                         </div>
                       </div>

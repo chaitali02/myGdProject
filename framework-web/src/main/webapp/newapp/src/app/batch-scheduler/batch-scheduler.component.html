@@ -13,8 +13,8 @@
             <i class="fa fa-gift"></i>{{batch.name}}
           </div>
 
-          <div class="tools">
-            <a class="left-marginpage" *ngIf="!isAdd" style="color:white" title="Main" data-placement="top" tooltip
+          <div class="tools">            
+            <a *ngIf="!isAdd" class="left-marginpage"  style="color:white" title="Main" data-placement="top" tooltip
               [ngClass]="(showForm==true)? 'currentpage':'notcurrentpage'" data- (click)="showMainPage(uuid,version)">
               <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.1,1.1);"></i>
             </a>
@@ -28,14 +28,17 @@
               tooltip [ngClass]="showForm==false? 'currentpage':'notcurrentpage'" data- (click)="showGraph(uuid,version)">
               <i class="fa fa-sitemap" style="display: inline;margin:2px auto;color:white;"></i>
             </a>
-            <a class="left-marginpage" title="Refresh" data-toggle="tooltip" data-placement="top" tooltip [ngClass]="(showForm==true)? 'currentpage':'notcurrentpage'"
-              (click)="showGraph(uuid,label)">
+
+            <a class="left-marginpage" title="Refresh" data-toggle="tooltip" data-placement="top" tooltip disabled="true"
+              [ngClass]="(showForm==true)? 'currentpage':'notcurrentpage'" (click)="showGraph(uuid,label)">
               <i class="fa fa-refresh" aria-hidden="true" style="display: inline;margin: 2px auto;color:white;"></i>
             </a>
+            
             <a class="left-marginpage" title="Close" data-toggle="tooltip" data-placement="top" tooltip style="height:14px;"
               (click)="goBack()">
               <i class="fa fa-times" aria-hidden="true" style="display: inline;margin: 2px auto;color:white;"></i>
             </a>
+
           </div>
 
         </div>
@@ -66,7 +69,8 @@
               </div>
             </div>
             <div *ngIf="!isEditInprogess && !isEditError">
-              <form class="form-horizontal" name="myform" novalidate="novalidate" (ngSubmit)="submitbatch()" #myNewForm="ngForm">
+              <form class="form-horizontal" name="myNewForm" novalidate="novalidate" (ngSubmit)="myNewForm.form.valid && submitbatch()"
+                #myNewForm="ngForm">
 
                 <div class="form-group" *ngIf="mode">
                   <label class="col-md-3 control-label">UUID</label>
@@ -77,12 +81,18 @@
                 </div>
 
                 <div class="form-group">
-                  <label class="col-md-3 control-label">Name
+                  <label class="col-md-3 control-label" [ngClass]="{'has-error': myNewForm.submitted && (myNewForm.form.controls['name']?.invalid)}">Name
                     <span class="required" aria-required="true"> * </span>
                   </label>
                   <div class="col-md-6">
                     <input type="text" class="form-control" [(ngModel)]="batch.name" name="name" placeholder=""
-                      [disabled]="mode == 'true'">
+                      [disabled]="mode == 'true'" #name="ngModel" required (ngModelChange)="setBatchChg()" required
+                      [ngClass]="{'has-error':myNewForm.submitted && (myNewForm.form.controls['name']?.invalid)}">
+                    <div *ngIf="myNewForm.submitted && (myNewForm.form.controls['name']?.invalid)">
+                      <div class="help-block has-error error-msg">
+                        This field is required
+                      </div>
+                    </div>
                   </div>
                 </div>
 
@@ -90,7 +100,7 @@
                   <label class="col-md-3 control-label">Version </label>
                   <div class="col-md-6">
                     <p-dropdown [options]="versionList" [(ngModel)]="selectedVersion" name="selectedVersion" [style]="{'width':'100%','padding':'3px'}"
-                      [filter]="true" [disabled]="mode == 'false'" (onChange)="onVersionChange()">
+                      [filter]="true" [disabled]="mode == 'false'" (ngModelChange)="onVersionChange()">
                     </p-dropdown>
                   </div>
                 </div>
@@ -114,7 +124,8 @@
                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Tags</label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
                     <!-- <tag-input [(ngModel)]="batch.tags" [disable]="mode == 'true'" name="tags" theme='bootstrap' style=" max-height: 40px;overflow-x: hidden; border: 1px solid #ccc;overflow-y: scroll; border-radius: 5px; padding-left:5px"></tag-input> -->
-                    <p-chips [(ngModel)]="batch.tags" styleClass="pchip-height" [disabled]="mode == 'true'" name="tags"></p-chips>
+                    <p-chips [(ngModel)]="batch.tags" styleClass="pchip-height" [disabled]="mode == 'true'" name="tags"
+                      (ngModelChange)="setBatchChg()"></p-chips>
                   </div>
                 </div>
 
@@ -122,7 +133,7 @@
                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Desc</label>
                   <div class="col-md-6">
                     <textarea [disabled]="mode == 'true'" [(ngModel)]="batch.desc" name="desc" class="form-control noresize "
-                      rows="2" style="resize:none;" (change)="onChangeDesc()"></textarea>
+                      rows="2" style="resize:none;" (ngModelChange)="setBatchChg()"></textarea>
                   </div>
                 </div>
 
@@ -157,20 +168,34 @@
                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Run In Parallel ?</label>
                   <div class="col-md-6 col-sm-6 col-xs-12">
                     <div class="btn-group ui-switch-top-padding">
-                      <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="batch.inParallel" name="inParallel"></ui-switch>
+                      <!-- <ui-switch [disabled]="mode == 'true' || mode == 'false'" [(ngModel)]="batch.inParallel" name="inParallel"></ui-switch> -->
+                      <p-checkbox [(ngModel)]="inParallel" [disabled]="mode == 'true' " name="inParallel" binary="true"></p-checkbox>
                     </div>
+
+                    <!-- <label class="mt-checkbox " style="margin-bottom:-1px;">
+                      <input type="checkbox" ng-model="batchDetail.inParallel" ng-disabled="{{mode}}" ng-true-value="'true'" ng-false-value="'false'"
+                        ng-change="onChangeRunInParallel()">
+                      <span style="border: 1px solid rgba(128, 128, 128, 0.38);background-color:white;" ng-disabled="{{mode}}"></span>
+                    </label> -->
+
                   </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" [ngClass]="{'has-error':myNewForm.submitted && (myNewForm.form.controls['pipelineInfoTags1']?.invalid)}">
                   <label class="col-md-3 control-label">PipelineInfo
                     <span class="required" aria-required="true"> * </span>
                   </label>
-                  <div class="col-md-6" *ngIf="pipelineInfoArray">
-                    <angular2-multiselect [data]="pipelineInfoArray" [(ngModel)]="pipelineInfoTags" name="pipelineInfoTags"
+                  <div class="col-md-6" *ngIf="pipelineInfoArray" [ngClass]="{'has-error':myNewForm.submitted && (myNewForm.form.controls['pipelineInfoTags1']?.invalid)}">
+                    <angular2-multiselect [data]="pipelineInfoArray" [(ngModel)]="pipelineInfoTags" name="pipelineInfoTags1"
                       [settings]="dropdownSettingsPipeline" (onSelect)="onItemSelect($event)" (onDeSelect)="OnItemDeSelect($event)"
-                      (onSelectAll)="onSelectAll($event)" (onDeSelectAll)="onDeSelectAll($event)">
+                      (onSelectAll)="onSelectAll($event)" (onDeSelectAll)="onDeSelectAll($event)" #pipelineInfoTags1="ngModel"
+                      required>
                     </angular2-multiselect>
+                    <div *ngIf="myNewForm.submitted && (myNewForm.form.controls['pipelineInfoTags1']?.invalid)">
+                      <div class="help-block has-error error-msg">
+                        This field is required
+                      </div>
+                    </div>
                   </div>
                 </div>
 
@@ -185,7 +210,8 @@
                 <div class="form-group" style="padding-top: 10px;">
                   <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                     <a class="btn btn-primary" (click)="goBack()">Cancel</a>
-                    <input type="submit" class="btn btn-success btn-margin" value="Submit" name="submit" [disabled]="(!isSubmitEnable == false|| mode == false || myNewForm.form.dirty == true)?false:true">
+                    <!-- [disabled]="(!isSubmitEnable == false|| mode == false || myNewForm.form.dirty == true)?false:true" -->
+                    <input type="submit" class="btn btn-success btn-margin" value="Submit" name="submit">
                     <span class="spinner" style="padding-left:15px;font-size:23px;vertical-align:middle;" *ngIf="IsProgerssShow=='true'">
                       <div class="bounce1"></div>
                       <div class="bounce2"></div>
@@ -226,37 +252,39 @@
                       </td>
                       <td>
                         <input type="text" [(ngModel)]="tabledata.name" title="name" [disabled]="tabledata.isAttributeEnable || mode"
-                          class="form-control" name="name+{{i}}" (change)="onChangeName(i)">
+                          class="form-control" name="name{{i}}" (change)="onChangeName(i)" #name="ngModel" required
+                          [ngClass]="{'has-error':myNewForm.submitted && (myNewForm.form.controls['name'+i]?.invalid)}">
                       </td>
-
                       <td>
-                        <p-calendar [inputStyle]="{'width':'105%','height':'32px','margin':'0px 0px 0px 1px'}" format="ddd MMM D HH:mm:ss YYYY z"
-                          [(ngModel)]="tabledata.startDate" name="startDate+{{i}}" [showTime]="true" [utc]="true"
-                          hourFormat="12" [disabled]="mode == 'true'" [minDate]="today" (onSelect)="onUpdateStartDate(tabledata.startDate,i)">
-                        </p-calendar>
-                        <i class="fa fa-calendar" style="font-size:16px; padding-left: 18px; color:#5e5e5e"></i>
+                        <div class="pcalender-border" [ngClass]="{'has-error':myNewForm.submitted && (myNewForm.form.controls['startDate'+i]?.invalid)}">
+                          <!-- <p-calendar [inputStyle]="{'width':'105%','height':'32px','margin':'0px 0px 0px 1px'}" format="ddd MMM D HH:mm:ss YYYY z"
+                            [(ngModel)]="tabledata.startDate" name="startDate{{i}}" [showTime]="true" [utc]="true"
+                            hourFormat="12" [disabled]="mode == 'true'" [minDate]="today" (onSelect)="onUpdateStartDate(tabledata.startDate,i)"
+                            required #startDate="ngModel" [showIcon]="true" icon="fa fa-calendar">
+                          </p-calendar> -->
+                          <p-calendar inputStyleClass="form-control" format="ddd MMM D HH:mm:ss YYYY z" [(ngModel)]="tabledata.startDate"
+                            name="startDate{{i}}" [showTime]="true" [utc]="true" hourFormat="12" [disabled]="mode == 'true'"
+                            [minDate]="today" (onSelect)="onUpdateStartDate(tabledata.startDate,i)" [showIcon]="true"
+                            icon="fa fa-calendar" required #startDate="ngModel">
+                          </p-calendar>
+                          <!-- <i class="fa fa-calendar" style="font-size:16px; padding-left: 18px; color:#5e5e5e"></i> -->
+                        </div>
                       </td>
-
                       <td>
-                        <!-- <p-calendar [inputStyle]="{'width':'105%','height':'32px','margin':'0px 0px 0px 1px'}"
-                        [(ngModel)]="tabledata.startDate" name="startDate+{{i}}" [showTime]="true" hourFormat="12"
-                        [disabled]="mode == 'true'" [minDate]="tabledata.endDate" format="ddd MMM D HH:mm:ss YYYY z"
-                        [styleClass]="{'position': 'fixed', 'overflow': 'visible', 'z-index': '999'}" [readonlyInput]="true"
-                        (onSelect)="onUpdateStartDate(tabledata.startDate,i)">
-                      </p-calendar> -->
-
-                        <p-calendar [inputStyle]="{'width':'105%','height':'32px','margin':'0px 0px 0px 1px'}" format="ddd MMM D HH:mm:ss YYYY z"
-                          [(ngModel)]="tabledata.endDate" name="endDate+{{i}}" [showTime]="true" [utc]="true"
-                          hourFormat="12" [disabled]="mode == 'true'" [minDate]="tabledata.startDate" (onFocus)="onUpdateStartDate(tabledata.startDate,i)"
-                          [styleClass]="{'position': 'fixed', 'overflow': 'visible', 'z-index': '999'}" [readonlyInput]="true">
-                        </p-calendar>
-
-                        <!-- <p-calendar [(ngModel)]="tabledata.startDate"
-                        name="tabledata.endDate+{{i}}" 
-                        [readonlyInput]="true"  
-                        [minDate]="tabledata.startDate"></p-calendar> -->
-
-                        <i class="fa fa-calendar" style="font-size:16px; padding-left: 18px; color:#5e5e5e"></i>
+                        <div class="pcalender-border" [ngClass]="{'has-error':myNewForm.submitted && (myNewForm.form.controls['endDate'+i]?.invalid)}">
+                          <!-- <p-calendar [inputStyle]="{'width':'105%','height':'32px','margin':'0px 0px 0px 1px'}" format="ddd MMM D HH:mm:ss YYYY z"
+                            [(ngModel)]="tabledata.endDate" name="endDate{{i}}" [showTime]="true" [utc]="true"
+                            hourFormat="12" [disabled]="mode == 'true'" [minDate]="tabledata.startDate" (onFocus)="onUpdateStartDate(tabledata.startDate,i)"
+                            [styleClass]="{'position': 'fixed', 'overflow': 'visible', 'z-index': '999'}"
+                            [readonlyInput]="true" required #endDate="ngModel">
+                          </p-calendar> -->
+                          <p-calendar inputStyleClass="form-control" format="ddd MMM D HH:mm:ss YYYY z" [(ngModel)]="tabledata.endDate"
+                            name="endDate{{i}}" [showTime]="true" [utc]="true" hourFormat="12" [disabled]="mode == 'true'"
+                            [minDate]="tabledata.startDate" (onFocus)="onUpdateStartDate(tabledata.startDate,i)"
+                            [showIcon]="true" icon="fa fa-calendar" required #endDate="ngModel">
+                          </p-calendar>
+                          <!-- <i class="fa fa-calendar" style="font-size:16px; padding-left: 18px; color:#5e5e5e"></i> -->
+                        </div>
                       </td>
                       <td>
                         <select class="form-control" [(ngModel)]="tabledata.attrtype" name="attrtype+{{i}}" [disabled]="mode == 'true'"
@@ -330,11 +358,10 @@
                 </p-dialog>
 
                 <p-dialog class="dialogBox" [modal]="true" [closable]="false" [(visible)]="displayDialog2" [responsive]="true"
-                  [contentStyle]="{'overflow':'visible'}">
+                  [contentStyle]="{'overflow':'visible'}">{{defaultDate}}
                   <p-calendar [readonlyInput]="true" [(ngModel)]="frequencyDetailCal" name="frequencyDetailCal+{{frequencyDetail.index}}"
                     [inline]="true" [minDate]="startDate" selectionMode="multiple" [style]="{'width':'250px'}">
                   </p-calendar>
-
                   <br>
                   <div style="height: 50px; padding:  12px 0px 0px 0px;">
                     <button type="button" [disabled]="mode == 'true'" (click)="dialogDoneMonth(frequencyDetailCal,this.frequencyDetail.index)"
