@@ -27,6 +27,7 @@ import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.common.PDFUtil;
 import com.inferyx.framework.common.WorkbookUtil;
 import com.inferyx.framework.domain.BaseEntity;
+import com.inferyx.framework.domain.Document;
 import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.ReportExec;
@@ -140,4 +141,76 @@ public class DocumentGenServiceImpl {
 			return false;
 		}
 	}
+	
+//	public boolean createPDF(Document document) throws IOException {
+//		try {
+//			LOGGER.info("creating PDF file for ...");
+////			String execVersion = (String) metaExecObject.getClass().getMethod("getVersion").invoke(metaExecObject);
+////			String metaFilePath = getDocumentFilePath(metaObjType, metaObject, execVersion);
+////
+////			File metaDocDir = new File(metaFilePath);
+////			if (!metaDocDir.exists()) {
+////				metaDocDir.mkdirs();
+////			}
+////
+////			String metaFileName = getDocumentFileName(metaObject.getName(), execVersion, FileType.PDF.toString().toLowerCase());
+////
+////			String filePathUrl = metaFilePath.concat(metaFileName);
+//			String filePathUrl = document.getLocation();
+//			LOGGER.info("PDF file path: "+filePathUrl);
+//			
+//			PDDocument doc = null;
+//			if (document.getMetaObjType() != null && document.getMetaObjType().equalsIgnoreCase(MetaType.report.toString())) {
+//				if (document.getLayout() == null || (document.getLayout() != null && document.getLayout().equals(Layout.PORTRAIT))) {
+//					doc = pdfUtil.getPDFDocForReport(document.getData(), (ReportExec) metaExecObject);
+//				} else {
+//					doc = pdfUtil.getLandscapePDFDocForReport(document.getData(), (ReportExec) metaExecObject);
+//				}
+//			} else {
+//				doc = pdfUtil.getPDFDoc(document.getData());
+//			}
+//			FileOutputStream fileOutPDF = new FileOutputStream(new File(filePathUrl));
+//			doc.save(fileOutPDF);
+//			fileOutPDF.close();
+//			return true;
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//			e.printStackTrace();
+//			return false;
+//		}
+//	}
+//
+//	public boolean createXLS(Document document) {
+//		try {
+//			LOGGER.info("creating EXCEL file for "+metaObject.getName()+"...");
+//			String execVersion = (String) metaExecObject.getClass().getMethod("getVersion").invoke(metaExecObject);
+//			String metaFilePath = getDocumentFilePath(metaObjType, metaObject, execVersion);
+//
+//			File metaDocDir = new File(metaFilePath);
+//			if (!metaDocDir.exists()) {
+//				metaDocDir.mkdirs();
+//			}
+//
+//			String metaFileName = getDocumentFileName(metaObject.getName(), execVersion, FileType.XLS.toString().toLowerCase());
+//
+//			String filePathUrl = metaFilePath.concat(metaFileName);
+//			LOGGER.info("EXCEL file path: "+filePathUrl);
+//			
+//			Workbook workbook = null;
+//			if (metaObjType != null && metaObjType.equalsIgnoreCase(MetaType.report.toString())) {
+//				workbook = workbookUtil.getWorkbookForReport(data, (ReportExec) metaExecObject);
+//			} else {
+//				workbook = WorkbookUtil.getWorkbook(data);
+//			}
+//
+//			FileOutputStream fileOut = new FileOutputStream(filePathUrl);
+//			workbook.write(fileOut);
+//			fileOut.close();
+//			return true;
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//			e.printStackTrace();
+//			return false;
+//		}
+//	}
 }

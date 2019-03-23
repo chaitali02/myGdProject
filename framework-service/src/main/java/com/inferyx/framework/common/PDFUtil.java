@@ -21,13 +21,10 @@ import com.inferyx.framework.service.CommonServiceImpl;
 import be.quodlibet.boxable.BaseTable;
 import be.quodlibet.boxable.Cell;
 import be.quodlibet.boxable.Row;
-import be.quodlibet.boxable.datatable.DataTable;
-import be.quodlibet.boxable.page.DefaultPageProvider;
 import be.quodlibet.boxable.utils.PDStreamUtils;
 
 import java.awt.Color;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,20 +53,21 @@ public class PDFUtil {
 	
 	public PDDocument getLandscapePDFDocForReport(List<Map<String, Object>> resultList, ReportExec reportExec)
 			throws IOException {
+
+		float y = 400.0f;
+		float margin = 50.0f;
 		Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(reportExec.getDependsOn().getRef().getUuid(),
 				reportExec.getDependsOn().getRef().getVersion(),
 				reportExec.getDependsOn().getRef().getType().toString());
 		PDDocument pdfDoc = new PDDocument();
 		PDPage pdfPage = new PDPage(PDRectangle.A4);
 //		pdfPage.setRotation(90);
-		pdfPage.setMediaBox(new PDRectangle(PDRectangle.A4.getHeight(), PDRectangle.A4.getWidth()));
+//		pdfPage.setMediaBox(new PDRectangle(PDRectangle.A4.getHeight(), PDRectangle.A4.getWidth()));
+		pdfPage.setMediaBox(new PDRectangle(pdfPage.getMediaBox().getHeight() - (2 * margin), pdfPage.getMediaBox().getWidth() - 2.0f * margin));
 		pdfDoc.addPage(pdfPage);
 
 		contentStream = new PDPageContentStream(pdfDoc, pdfPage);
 //		contentStream.transform(new Matrix(0, 1, -1, 0, pdfPage.getMediaBox().getWidth(), 0));
-		
-		float y = 400.0f;
-		float margin = 50.0f;
 
 		//writting title
 		final float titleWidth = pdfPage.getMediaBox().getWidth() - 2.0f * margin;
@@ -139,7 +137,7 @@ public class PDFUtil {
 			colMap.put(colName, colName);
 		}
 		
-		resultList.add(0, colMap);
+//		resultList.add(0, colMap);
 		
 		//writting data into table
 //		final float tableWidth = pdfPage.getMediaBox().getWidth();
@@ -177,10 +175,10 @@ public class PDFUtil {
 			if(i != 0) {
 				pdPage.setRotation(90);
 			}
-			Matrix matrix = pdPage.getMatrix();
+//			Matrix matrix = pdPage.getMatrix();
 			pdPage.setMediaBox(new PDRectangle(PDRectangle.A4.getHeight(), PDRectangle.A4.getWidth()));
-			System.out.println("Height: "+PDRectangle.A4.getHeight()+" : "+(pdPage.getMediaBox().getHeight() - (2 * margin)));
-			System.out.println("Width: "+PDRectangle.A4.getWidth()+" : "+(pdPage.getMediaBox().getWidth() - (2 * margin)));
+//			System.out.println("Height: "+PDRectangle.A4.getHeight()+" : "+(pdPage.getMediaBox().getHeight() - (2 * margin)));
+//			System.out.println("Width: "+PDRectangle.A4.getWidth()+" : "+(pdPage.getMediaBox().getWidth() - (2 * margin)));
 //			pdPage.setMediaBox(new PDRectangle(pdPage.getMediaBox().getHeight() - (2 * margin), pdPage.getMediaBox().getWidth() - 2.0f * margin));
 			
 			pdfDoc2.addPage(pdPage);

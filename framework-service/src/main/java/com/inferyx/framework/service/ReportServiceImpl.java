@@ -822,10 +822,28 @@ public class ReportServiceImpl extends RuleTemplate {
 			
 			List<Map<String, Object>> data = prepareDocumentData(reportExec, report, runMode, limit, false);
 //			//writting as per provided format
+//			if(format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
+//				doc = pdfUtil.getPDFDocForReport(data, reportExec);
+//			} else {j
+//				workbook = workbookUtil.getWorkbookForReport(data, reportExec);
+//			}
+			
+			boolean isDocCreated = true;
 			if(format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
-				doc = pdfUtil.getPDFDocForReport(data, reportExec);
+				String layout = report.getLayout() != null ? report.getLayout().toString() : null;					
+				isDocCreated = documentGenServiceImpl.createPDF(MetaType.report.toString(), report, reportExec, data, layout);
+				if(isDocCreated) {
+					doc = PDDocument.load(reportFile);
+				}
 			} else {
-				workbook = workbookUtil.getWorkbookForReport(data, reportExec);
+				isDocCreated = documentGenServiceImpl.createXLS(MetaType.report.toString(), report, reportExec, data);
+				if(isDocCreated) {
+					workbook = 	WorkbookFactory.create(reportFile);
+				}
+			}
+			
+			if(!isDocCreated) {
+				throw new RuntimeException((format != null ? format.toUpperCase() : "Document")+" creation failed...");
 			}
 			
 			DownloadExec downloadExec = new DownloadExec();
