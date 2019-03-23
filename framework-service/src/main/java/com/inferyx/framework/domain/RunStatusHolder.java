@@ -17,18 +17,20 @@ public class RunStatusHolder {
 	private Boolean FAILED = false;
 	private Boolean PAUSE = false;
 	private Boolean RESUME = false;
+	private Boolean ABORTED = false;
 	
 	public RunStatusHolder() {
 		super();
 	}
 
-	public RunStatusHolder(Boolean COMPLETED, Boolean KILLED, Boolean FAILED, Boolean PAUSE, Boolean RESUME) {
+	public RunStatusHolder(Boolean COMPLETED, Boolean KILLED, Boolean FAILED, Boolean PAUSE, Boolean RESUME, Boolean ABORTED) {
 		super();
 		this.COMPLETED = COMPLETED;
 		this.KILLED = KILLED;
 		this.FAILED = FAILED;
 		this.PAUSE = PAUSE;
 		this.RESUME = RESUME;
+		this.ABORTED = ABORTED;
 	}
 
 	/**
@@ -99,6 +101,20 @@ public class RunStatusHolder {
 	 */
 	public void setResume(Boolean RESUME) {
 		this.RESUME = RESUME;
+	}
+
+	/**
+	 * @return the ABORTED
+	 */
+	public Boolean getABORTED() {
+		return ABORTED;
+	}
+
+	/**
+	 * @param ABORTED the ABORTED to set
+	 */
+	public void setAborted(Boolean ABORTED) {
+		this.ABORTED = ABORTED;
 	}
 
 }

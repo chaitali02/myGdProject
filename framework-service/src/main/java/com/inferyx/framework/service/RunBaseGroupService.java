@@ -368,12 +368,14 @@ public class RunBaseGroupService implements Callable<TaskHolder> {
 					 if(status.getStage().equals(Status.Stage.KILLED)){
 						 baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType,Status.Stage.TERMINATING);
 						 baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType,Status.Stage.KILLED);
+						 return true;
 					 }
-					 if(!latestStatus.equals(status.getStage()) || status.getStage().equals(Status.Stage.FAILED)){
+					 if(!latestStatus.equals(status.getStage()) 
+							 || status.getStage().equals(Status.Stage.FAILED) 
+							 || status.getStage().equals(Status.Stage.ABORTED)){
 						 baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType,status.getStage());
 						 return true;  
 					 }
-					
 				}
 		} catch (Exception e) {
 			synchronized (baseGroupExec.getUuid()) {

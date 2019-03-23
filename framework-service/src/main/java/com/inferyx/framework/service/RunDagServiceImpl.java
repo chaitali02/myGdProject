@@ -235,6 +235,12 @@ public class RunDagServiceImpl implements Callable<String> {
 					}
 					setCOMPLETEDStatus = false;
 					break;
+				} else if (latestStatus.getStage().equals(Status.Stage.ABORTED)) {
+					synchronized (dagExec.getUuid()) {
+						commonServiceImpl.setMetaStatus(dagExec, MetaType.dagExec, Status.Stage.ABORTED);
+					}
+					setCOMPLETEDStatus = false;
+					break;
 				} else if (!latestStatus.getStage().equals(Status.Stage.COMPLETED)) {
 					setCOMPLETEDStatus = false;
 					break;

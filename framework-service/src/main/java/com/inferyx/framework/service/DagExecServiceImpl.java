@@ -1011,6 +1011,13 @@ public class DagExecServiceImpl {
 		return false;
 	}
 	
+	public boolean checkStatus(List<Status> statusList, Status.Stage stage) {
+		if (Helper.getLatestStatus(statusList).getStage().equals(stage)) {
+			return true;
+		}
+		return false;
+	}
+	
 	public com.inferyx.framework.domain.Status.Stage getStageStatus(String uuid, String version, String stageId) throws JsonProcessingException {
 		//DagExec dagexec = iDagExec.findOneByUuidAndVersion(uuid, version);
 		DagExec dagexec  = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.dagExec.toString());
@@ -1079,7 +1086,11 @@ public class DagExecServiceImpl {
 					return Status.Stage.KILLED.toString();
 				} else if (checkStatusFAILED(taskExec.getStatusList()) || checkStatusFAILED(stageExec.getStatusList()) || checkStatusFAILED(dagexec.getStatusList())) {
 					return Status.Stage.FAILED.toString();
-				} else if (checkStatusPAUSE(taskExec.getStatusList()) || checkStatusPAUSE(stageExec.getStatusList()) || checkStatusPAUSE(dagexec.getStatusList())) {
+				} else if (checkStatus(taskExec.getStatusList(), Status.Stage.ABORTED) 
+							|| checkStatus(stageExec.getStatusList(), Status.Stage.ABORTED) 
+							|| checkStatus(dagexec.getStatusList(), Status.Stage.ABORTED)) {
+					return Status.Stage.ABORTED.toString();
+				}  else if (checkStatusPAUSE(taskExec.getStatusList()) || checkStatusPAUSE(stageExec.getStatusList()) || checkStatusPAUSE(dagexec.getStatusList())) {
 					return Status.Stage.PAUSE.toString();
 				}  else if (checkStatusRESUME(taskExec.getStatusList()) || checkStatusRESUME(stageExec.getStatusList()) || checkStatusRESUME(dagexec.getStatusList())) {
 					return Status.Stage.RESUME.toString();
