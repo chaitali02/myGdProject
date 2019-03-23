@@ -283,6 +283,7 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 				else if(response[i].paramValue != null && response[i].paramValue.ref.type == "simple" &&  response[i].paramType=="date"){
 					var temp =response[i].paramValue.value.replace(/["']/g, "")
 					paramInfo.paramValue = new Date(temp);
+					paramInfo.paramValueType = "simple"
 				}
 				 else if (response[i].paramValue != null) {
 					var paramValue = {};
@@ -2341,6 +2342,7 @@ DatavisualizationModule.controller('ReportResultController', function ($q, dagMe
 			.then(function (response) { onSuccessGetOneByUuidAndVersion(response.data) });
 		var onSuccessGetOneByUuidAndVersion = function (response) {
 			$scope.reportExecData = response;
+			debugger
 			$scope.filterTag = [];
 			if (response && response.execParams && response.execParams.paramListInfo != null && response.execParams.paramListInfo.length > 0) {
 				for (var i = 0; i < response.execParams.paramListInfo.length; i++) {
