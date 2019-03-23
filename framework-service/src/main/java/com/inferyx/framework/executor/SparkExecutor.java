@@ -465,9 +465,9 @@ public class SparkExecutor<T> implements IExecutor {
 	public ResultSetHolder executeAndRegisterByDatasource(String sql, String tableName, Datasource datasource, String clientContext) throws IOException {
 		ResultSetHolder rsHolder = executeSqlByDatasource(sql, datasource, clientContext);
 		Dataset<Row> df = rsHolder.getDataFrame();		
-		long countRows = df.count();
+//		long countRows = df.count();
 
-		rsHolder.setCountRows(countRows);
+//		rsHolder.setCountRows(countRows);
 		rsHolder.setTableName(tableName);
 		df.createOrReplaceGlobalTempView(tableName);
 		registerTempTable(df, tableName);
