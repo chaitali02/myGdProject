@@ -635,7 +635,7 @@
             // 		break;
             // 	}
             // }
-            if(response[i].status[len].stage == "COMPLETED"){
+            if(response[i].status[len].stage == "COMPLETED" || response[i].status[len].stage == "ABORTED"){
               result.endTime=$filter('date')(new Date(response[i].status[len].createdOn), "EEE MMM dd HH:mm:ss yyyy");
               var date1 = new Date(result.startTime)
               var date2 = new Date(result.endTime)

@@ -205,7 +205,7 @@
                 </label>
                 <div class="col-md-6">
                   <tags-input class="tag-scroll" ng-model="ruleTags" ng-disabled="{{mode}}" display-property="name" key-property="id" add-from-autocomplete-only="true"
-                    ng-focus="onTagFocuse()" required>
+                    on-tag-removed="onTagRemoved()"required>
                     <auto-complete source="loadRules($query)" min-length="1" debounce-delay="0" highlight-matched-text="true" load-on-focus="true"
                       load-on-empty="true" required>
                     </auto-complete>

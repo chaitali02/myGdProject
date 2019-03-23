@@ -18,7 +18,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,7 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.domain.BaseEntityStatus;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.ReportExec;
@@ -135,7 +133,7 @@ public class ReportController {
 		return reportServiceImpl.getReportByReportExec(reportExecUuid);
 	}
 	
-	@RequestMapping(value = "/reSendEMail", method = RequestMethod.POST)
+	@RequestMapping(value = "/sendEMail", method = RequestMethod.POST)
 	public boolean reSendEMail(@RequestParam(value = "uuid") String reportExecUuid,
 			@RequestParam(value = "version", required = false) String reportExecVersion,
 			@RequestBody(required = true) SenderInfo senderInfo,
@@ -143,7 +141,7 @@ public class ReportController {
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException, IOException {
 		RunMode runMode = Helper.getExecutionMode(mode);
-		return reportServiceImpl.reSendNotification(reportExecUuid, reportExecVersion, senderInfo, runMode);
+		return reportServiceImpl.sendNotification(reportExecUuid, reportExecVersion, senderInfo, runMode);
 	}	
 
 	@RequestMapping(value = "/getReportExecViewByCriteria", method = RequestMethod.GET)

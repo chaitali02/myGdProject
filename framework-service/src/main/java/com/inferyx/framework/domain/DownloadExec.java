@@ -12,23 +12,26 @@ package com.inferyx.framework.domain;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection="downloadexec")
-public class DownloadExec extends BaseEntity
-{
+@Document(collection = "downloadexec")
+public class DownloadExec extends BaseExec {
 	private String location;
-	MetaIdentifierHolder dependsOn;
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the location
+	 */
 	public String getLocation() {
 		return location;
 	}
 
+	/**
+	 * @Ganesh
+	 *
+	 * @param location the location to set
+	 */
 	public void setLocation(String location) {
 		this.location = location;
 	}
-	public MetaIdentifierHolder getDependsOn() {
-		return dependsOn;
-	}
-
-	public void setDependsOn(MetaIdentifierHolder dependsOn) {
-		this.dependsOn = dependsOn;
-	}
+	
 }

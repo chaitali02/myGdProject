@@ -2264,7 +2264,7 @@ public class CommonServiceImpl<T> {
 					return null;
 				}
 			}
-			logger.info("Not an instance of AttributeRefHolder or SourceAttr. Object is : " + object);
+//			logger.info("Not an instance of AttributeRefHolder or SourceAttr. Object is : " + object);
 
 			for (Method method : methodList) {
 				if (!method.getName().startsWith(GET) || method.getParameterCount() > 0) {
@@ -4117,6 +4117,12 @@ public class CommonServiceImpl<T> {
 		DownloadExec downloadExec = new DownloadExec();
 		downloadExec.setBaseEntity();
 		downloadExec.setDependsOn(dependsOn);
+		
+		downloadExec = (DownloadExec) setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.PENDING);
+		downloadExec = (DownloadExec) setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.STARTING);
+		downloadExec = (DownloadExec) setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.READY);
+		downloadExec = (DownloadExec) setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.RUNNING);
+		downloadExec = (DownloadExec) setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.COMPLETED);
 		
 		String fileName = null;		
 		if(format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {

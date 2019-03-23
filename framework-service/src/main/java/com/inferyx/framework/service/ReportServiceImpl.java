@@ -12,7 +12,6 @@ package com.inferyx.framework.service;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
@@ -65,7 +64,6 @@ import com.inferyx.framework.domain.ReportExec;
 import com.inferyx.framework.domain.ReportExecView;
 import com.inferyx.framework.domain.SenderInfo;
 import com.inferyx.framework.domain.Status;
-import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.operator.ReportOperator;
@@ -418,6 +416,13 @@ public class ReportServiceImpl extends RuleTemplate {
 			downloadExec.setBaseEntity();
 			downloadExec.setLocation(filePathUrl);
 			downloadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.reportExec, reportExec.getUuid(), reportExec.getVersion())));
+			
+			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.PENDING);
+			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.STARTING);
+			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.READY);
+			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.RUNNING);
+			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.COMPLETED);
+			
 			commonServiceImpl.save(MetaType.downloadExec.toString(), downloadExec);			
 		}
 		
@@ -568,18 +573,16 @@ public class ReportServiceImpl extends RuleTemplate {
 		if (senderInfo.getSendAttachment().equalsIgnoreCase("Y")) {			
 			try {
 				String format = report.getFormat();
-//				download(reportExec.getUuid(), reportExec.getVersion(), format, 0, report.getLimit(), null, null, null, null,
-//						runMode, true);
-				
-				boolean createdSuccessfully = true;
+				boolean isDocCreated = true;
 				List<Map<String, Object>> data = prepareDocumentData(reportExec, report, runMode, report.getLimit(), true);
 				if(format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
-					createdSuccessfully = documentGenServiceImpl.createPDF(MetaType.report.toString(), report, reportExec, data, Layout.PORTRAIT.toString());
+					String layout = report.getLayout() != null ? report.getLayout().toString() : null;					
+					isDocCreated = documentGenServiceImpl.createPDF(MetaType.report.toString(), report, reportExec, data, layout);
 				} else {
-					createdSuccessfully = documentGenServiceImpl.createXLS(MetaType.report.toString(), report, reportExec, data);
+					isDocCreated = documentGenServiceImpl.createXLS(MetaType.report.toString(), report, reportExec, data);
 				}
 				
-				if(!createdSuccessfully) {
+				if(!isDocCreated) {
 					throw new RuntimeException((format != null ? format.toUpperCase() : "Document")+" creation failed...");
 				}
 				
@@ -662,38 +665,20 @@ public class ReportServiceImpl extends RuleTemplate {
 	 * @throws IllegalArgumentException 
 	 * @throws IllegalAccessException 
 	 */
-	public boolean reSendNotification(String reportExecUuid, String reportExecVersion, SenderInfo senderInfo,
+	public boolean sendNotification(String reportExecUuid, String reportExecVersion, SenderInfo senderInfo,
 			RunMode runMode) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException, IOException {
 		ReportExec reportExec = null;
 		try {
-			logger.info("resending notification...");
+			logger.info("sending notification...");
 			reportExec = (ReportExec) commonServiceImpl.getOneByUuidAndVersion(reportExecUuid, reportExecVersion,
 					MetaType.reportExec.toString(), "N");
 
 			MetaIdentifier dependsOnMI = reportExec.getDependsOn().getRef();
 			Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(),
 					dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
-			String format=report.getFormat();
 			Status status = Helper.getLatestStatus(reportExec.getStatusList());
-			if(status.getStage().equals(Status.Stage.COMPLETED)) {				
-				String defaultDownloadPath = Helper.getPropertyValue("framework.report.Path"); 
-				defaultDownloadPath = defaultDownloadPath.endsWith("/") ? defaultDownloadPath : defaultDownloadPath.concat("/");
-				String reportFilePath = String.format("%s/%s/%s/%s/", report.getUuid(), report.getVersion(), reportExec.getVersion(), "doc");
-			//	String reportFileName = String.format("%s_%s.%s", report.getName(), reportExec.getVersion(), "xls");
-				String reportFileName = null;
-				if(format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
-					reportFileName = String.format("%s_%s.%s", report.getName(), reportExec.getVersion(), FileType.PDF.toString().toLowerCase());
-				} else {
-					reportFileName = String.format("%s_%s.%s", report.getName(), reportExec.getVersion(), FileType.XLS.toString().toLowerCase());
-				}
-				
-				String filePathUrl = defaultDownloadPath.concat(reportFilePath).concat(reportFileName);		
-				
-				if(new File(filePathUrl).exists()) {
-					return sendSuccessNotification(senderInfo, report, reportExec, runMode);
-				} else {
-					throw new RuntimeException("Excel file is unavailable.");
-				}				
+			if(status.getStage().equals(Status.Stage.COMPLETED)) {								
+				return sendSuccessNotification(senderInfo, report, reportExec, runMode);		
 			} else if(status.getStage().equals(Status.Stage.FAILED)) {
 				return sendFailureNotification(senderInfo, report, reportExec);
 			} else {
@@ -792,49 +777,50 @@ public class ReportServiceImpl extends RuleTemplate {
 				workbook = WorkbookFactory.create(reportFile);
 			}
 		} else {
-			DataStore datastore = dataStoreServiceImpl.getDatastore(reportExec.getResult().getRef().getUuid(),
-					reportExec.getResult().getRef().getVersion());
-			if (datastore == null) {
-				logger.error("Datastore is not available.");
-				throw new Exception("Datastore is not available.");
-			}
+//			DataStore datastore = dataStoreServiceImpl.getDatastore(reportExec.getResult().getRef().getUuid(),
+//					reportExec.getResult().getRef().getVersion());
+//			if (datastore == null) {
+//				logger.error("Datastore is not available.");
+//				throw new Exception("Datastore is not available.");
+//			}
+//			
+//			int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
+//			if (!skipLimitCheck && limit > maxRows) {
+//				logger.error("Requested rows exceeded the limit of " + maxRows);
+//				MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+//				dependsOn.setRef(new MetaIdentifier(MetaType.reportExec, reportExec.getUuid(), reportExec.getVersion()));
+//				commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
+//						"Requested rows exceeded the limit of " + maxRows, dependsOn);
+//				throw new RuntimeException("Requested rows exceeded the limit of " + maxRows);
+//			}
+//
+//			datastoreServiceImpl.setRunMode(runMode);
+//			List<Map<String, Object>> data = null;
+//			try {
+//				data = datastoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, limit, null, null, null);	
+//			}catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//			
+//			//checking whether data is available or not
+//			if(data == null || (data != null && data.isEmpty())) {
+//				data = new ArrayList<>();
+//				
+//				Map<String,Object> dataMap = new LinkedHashMap<>();
+//				int i = 0;
+//				for(AttributeSource attributeSource : report.getAttributeInfo()) {
+//					if(i == 0) {
+//						dataMap.put(attributeSource.getAttrSourceName(), "no data available.");
+//					} else {
+//						dataMap.put(attributeSource.getAttrSourceName(), "");
+//					}
+//					i++;
+//				}
+//
+//				data.add(dataMap);
+//			}
 			
-			int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
-			if (!skipLimitCheck && limit > maxRows) {
-				logger.error("Requested rows exceeded the limit of " + maxRows);
-				MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
-				dependsOn.setRef(new MetaIdentifier(MetaType.reportExec, reportExec.getUuid(), reportExec.getVersion()));
-				commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
-						"Requested rows exceeded the limit of " + maxRows, dependsOn);
-				throw new RuntimeException("Requested rows exceeded the limit of " + maxRows);
-			}
-
-			datastoreServiceImpl.setRunMode(runMode);
-			List<Map<String, Object>> data = null;
-			try {
-				data = datastoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, limit, null, null, null);	
-			}catch (Exception e) {
-				e.printStackTrace();
-			}
-			
-			//checking whether data is available or not
-			if(data == null || (data != null && data.isEmpty())) {
-				data = new ArrayList<>();
-				
-				Map<String,Object> dataMap = new LinkedHashMap<>();
-				int i = 0;
-				for(AttributeSource attributeSource : report.getAttributeInfo()) {
-					if(i == 0) {
-						dataMap.put(attributeSource.getAttrSourceName(), "no data available.");
-					} else {
-						dataMap.put(attributeSource.getAttrSourceName(), "");
-					}
-					i++;
-				}
-
-				data.add(dataMap);
-			}
-			
+			List<Map<String, Object>> data = prepareDocumentData(reportExec, report, runMode, limit, false);
 //			//writting as per provided format
 			if(format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
 				doc = pdfUtil.getPDFDocForReport(data, reportExec);
@@ -846,6 +832,14 @@ public class ReportServiceImpl extends RuleTemplate {
 			downloadExec.setBaseEntity();
 			downloadExec.setLocation(filePathUrl);
 			downloadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.reportExec, reportExec.getUuid(), reportExec.getVersion())));
+			
+			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.PENDING);
+			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.STARTING);
+			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.READY);
+			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.RUNNING);
+			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.COMPLETED);
+			
+			
 			commonServiceImpl.save(MetaType.downloadExec.toString(), downloadExec);			
 		}
 
@@ -977,6 +971,11 @@ public class ReportServiceImpl extends RuleTemplate {
 		downloadExec.setLocation(filePathUrl);
 		downloadExec.setDependsOn(datastore.getExecId());
 		
+		downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.PENDING);
+		downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.STARTING);
+		downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.READY);
+		downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.RUNNING);
+		downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.COMPLETED);
 		try {
 			commonServiceImpl.save(MetaType.downloadExec.toString(), downloadExec);
 		} catch (Exception e1) {
@@ -1037,6 +1036,13 @@ public class ReportServiceImpl extends RuleTemplate {
 			data = datastoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, limit, null, null, null);	
 		}catch (Exception e) {
 			e.printStackTrace();
+			try {
+				data = getReportSample(reportExec.getUuid(), reportExec.getVersion(), limit, null, runMode);
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				throw new RuntimeException(e); 
+			}
 		}
 		
 		//checking whether data is available or not

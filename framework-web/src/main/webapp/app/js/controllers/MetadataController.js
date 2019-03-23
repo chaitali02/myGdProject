@@ -758,9 +758,9 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 			console.log(response);
 			$scope.isShowDataGrid=false;
 			$scope.isShowChart=true;
-			if(row.colDef.attrType !="string"){
-				ConvertTwoDisit(response, 'bucket');
-			}
+//			if(row.colDef.attrType !="string"){
+//				ConvertTwoDisit(response, 'bucket');
+//			}
 			$scope.isHistogramInprogess=false;
 			$scope.isHistogramError=false;
 			$scope.datacol={};

@@ -92,7 +92,6 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       jointWidth:"70px"
 
     },
-  
     'STARTING':{
       name : 'STARTING',
       caption:'Starting',
@@ -100,6 +99,13 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
       iconPath : 'assets/layouts/layout/img/new_status/STARTING.svg',
       jointWidth:"65px"
 
+    },
+    'ABORTED':{
+      name : 'ABORTED',
+      caption:'Aborted',
+      color :'#dc3545',//'#659be0',
+      iconPath : 'assets/layouts/layout/img/new_status/ABORTED.svg',
+      jointWidth:"70px"
     },
     'READY':{
       name : 'READY',
@@ -384,9 +390,9 @@ InferyxApp.factory('dagMetaDataService',function($rootScope,$state, uiGridConsta
         '    <button class="btn green btn-xs btn-outline dropdown-toggle" uib-dropdown-toggle>Action',
         '    <i class="fa fa-angle-down"></i></button>',
         '    <ul uib-dropdown-menu class="dropdown-menu-grid">',
-        '       <li><a  ng-show ="[\'ingestExec\',\'dagexec\'].indexOf(grid.appScope.newType) != -1?false:true" ng-disabled="grid.appScope.newType.indexOf(\'batchexec\')!=-1?[\'COMPLETED\',\'PENDING\',\'TERMINATING\',\'FAILED\',\'RUNNING\',\'KILLED\',\'STARTING\',\'READY\'].indexOf(row.entity.status)==-1:grid.appScope.newType.indexOf(\'train\')!=-1?[\'COMPLETED\'].indexOf(row.entity.status)==-1:grid.appScope.newType.indexOf(\'dagexec\')!=-1?[\'COMPLETED\',\'PENDING\',\'TERMINATING\',\'FAILED\',\'RUNNING\',\'KILLED\',\'STARTING\',\'READY\'].indexOf(row.entity.status)==-1:grid.appScope.newType.indexOf(\'group\')==-1?[\'COMPLETED\'].indexOf(row.entity.status)==-1:[\'COMPLETED\',\'RUNNING\',\'KILLED\',\'FAILED\',\'TERMINATING\',\'STARTING\',\'READY\'].indexOf(row.entity.status)==-1"  ng-click="grid.appScope.getExec(row.entity)"><i class="fa fa-eye" aria-hidden="true"></i> View </a></li>',
+        '       <li><a  ng-show ="[\'ingestExec\',\'dagexec\'].indexOf(grid.appScope.newType) != -1?false:true" ng-disabled="grid.appScope.newType.indexOf(\'batchexec\')!=-1?[\'COMPLETED\',\'PENDING\',\'TERMINATING\',\'FAILED\',\'RUNNING\',\'KILLED\',\'STARTING\',\'READY\',\'ABORTED\'].indexOf(row.entity.status)==-1:grid.appScope.newType.indexOf(\'train\')!=-1?[\'COMPLETED\'].indexOf(row.entity.status)==-1:grid.appScope.newType.indexOf(\'dagexec\')!=-1?[\'COMPLETED\',\'PENDING\',\'TERMINATING\',\'FAILED\',\'RUNNING\',\'KILLED\',\'STARTING\',\'READY\',\'ABORTED\'].indexOf(row.entity.status)==-1:grid.appScope.newType.indexOf(\'group\')==-1?[\'COMPLETED\',\'ABORTED\'].indexOf(row.entity.status)==-1:[\'COMPLETED\',\'RUNNING\',\'KILLED\',\'FAILED\',\'TERMINATING\',\'STARTING\',\'READY\',\'ABORTED\'].indexOf(row.entity.status)==-1"  ng-click="grid.appScope.getExec(row.entity)"><i class="fa fa-eye" aria-hidden="true"></i> View </a></li>',
         '       <li><a  ng-show="grid.appScope.newType.indexOf(\'ingestExec\') != -1?true:false" ng-disabled="true"  ng-click="grid.appScope.getExec(row.entity)"><i class="fa fa-eye" aria-hidden="true"></i> View </a></li>',
-        '       <li><a  ng-show ="grid.appScope.newType.indexOf(\'dagexec\') != -1? true:false" ng-disabled="grid.appScope.newType.indexOf(\'dagexec\')!=-1?[\'COMPLETED\',\'PENDING\',\'TERMINATING\',\'FAILED\',\'RUNNING\',\'KILLED\',\'STARTING\',\'READY\'].indexOf(row.entity.status) !=-1 && row.entity.execCreated==\'Y\' ?false:true:true"  ng-click="grid.appScope.getExec(row.entity)"><i class="fa fa-eye" aria-hidden="true"></i> View </a></li>',
+        '       <li><a  ng-show ="grid.appScope.newType.indexOf(\'dagexec\') != -1? true:false" ng-disabled="grid.appScope.newType.indexOf(\'dagexec\')!=-1?[\'COMPLETED\',\'PENDING\',\'TERMINATING\',\'FAILED\',\'RUNNING\',\'KILLED\',\'STARTING\',\'READY\',\'ABORTED\'].indexOf(row.entity.status) !=-1 && row.entity.execCreated==\'Y\' ?false:true:true"  ng-click="grid.appScope.getExec(row.entity)"><i class="fa fa-eye" aria-hidden="true"></i> View </a></li>',
         //'      <li><a ng-disabled="grid.appScope.newType.indexOf(\'dagexec\')!=-1?[\'COMPLETED\',\'PENDING\',\'TERMINATING\',\'FAILED\',\'RUNNING\',\'KILLED\'].indexOf(row.entity.status)==-1:grid.appScope.newType.indexOf(\'group\')==-1?[\'COMPLETED\',\'KILLED\'].indexOf(row.entity.status)==-1:[\'COMPLETED\',\'RUNNING\',\'KILLED\',\'FAILED\',\'TERMINATING\'].indexOf(row.entity.status)==-1"  ng-click="grid.appScope.getExec(row.entity)"><i class="fa fa-eye" aria-hidden="true"></i> View </a></li>',
    //   '        <li><a ng-disabled="[\'PENDING\'].indexOf(row.entity.status)==-1 || grid.appScope.privileges.indexOf(\'Execute\') == -1"  ng-click="grid.appScope.setStatus(row.entity,\'PAUSE\')"><i class="fa fa-pause" aria-hidden="true"></i> On Hold </a></li>',
    //   '        <li><a ng-disabled="[\'PAUSE\'].indexOf(row.entity.status)==-1 || grid.appScope.privileges.indexOf(\'Execute\') == -1"  ng-click="grid.appScope.setStatus(row.entity,\'RESUME\')"><i class="fa fa-repeat" aria-hidden="true"></i> RESUME </a></li>',
