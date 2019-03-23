@@ -64,8 +64,6 @@ import com.inferyx.framework.domain.ReportExec;
 import com.inferyx.framework.domain.ReportExecView;
 import com.inferyx.framework.domain.SenderInfo;
 import com.inferyx.framework.domain.Status;
-import com.inferyx.framework.domain.TrainExec;
-import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.operator.ReportOperator;
@@ -418,6 +416,13 @@ public class ReportServiceImpl extends RuleTemplate {
 			downloadExec.setBaseEntity();
 			downloadExec.setLocation(filePathUrl);
 			downloadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.reportExec, reportExec.getUuid(), reportExec.getVersion())));
+			
+			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.PENDING);
+			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.STARTING);
+			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.READY);
+			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.RUNNING);
+			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.COMPLETED);
+			
 			commonServiceImpl.save(MetaType.downloadExec.toString(), downloadExec);			
 		}
 		
@@ -772,49 +777,50 @@ public class ReportServiceImpl extends RuleTemplate {
 				workbook = WorkbookFactory.create(reportFile);
 			}
 		} else {
-			DataStore datastore = dataStoreServiceImpl.getDatastore(reportExec.getResult().getRef().getUuid(),
-					reportExec.getResult().getRef().getVersion());
-			if (datastore == null) {
-				logger.error("Datastore is not available.");
-				throw new Exception("Datastore is not available.");
-			}
+//			DataStore datastore = dataStoreServiceImpl.getDatastore(reportExec.getResult().getRef().getUuid(),
+//					reportExec.getResult().getRef().getVersion());
+//			if (datastore == null) {
+//				logger.error("Datastore is not available.");
+//				throw new Exception("Datastore is not available.");
+//			}
+//			
+//			int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
+//			if (!skipLimitCheck && limit > maxRows) {
+//				logger.error("Requested rows exceeded the limit of " + maxRows);
+//				MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+//				dependsOn.setRef(new MetaIdentifier(MetaType.reportExec, reportExec.getUuid(), reportExec.getVersion()));
+//				commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
+//						"Requested rows exceeded the limit of " + maxRows, dependsOn);
+//				throw new RuntimeException("Requested rows exceeded the limit of " + maxRows);
+//			}
+//
+//			datastoreServiceImpl.setRunMode(runMode);
+//			List<Map<String, Object>> data = null;
+//			try {
+//				data = datastoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, limit, null, null, null);	
+//			}catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//			
+//			//checking whether data is available or not
+//			if(data == null || (data != null && data.isEmpty())) {
+//				data = new ArrayList<>();
+//				
+//				Map<String,Object> dataMap = new LinkedHashMap<>();
+//				int i = 0;
+//				for(AttributeSource attributeSource : report.getAttributeInfo()) {
+//					if(i == 0) {
+//						dataMap.put(attributeSource.getAttrSourceName(), "no data available.");
+//					} else {
+//						dataMap.put(attributeSource.getAttrSourceName(), "");
+//					}
+//					i++;
+//				}
+//
+//				data.add(dataMap);
+//			}
 			
-			int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
-			if (!skipLimitCheck && limit > maxRows) {
-				logger.error("Requested rows exceeded the limit of " + maxRows);
-				MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
-				dependsOn.setRef(new MetaIdentifier(MetaType.reportExec, reportExec.getUuid(), reportExec.getVersion()));
-				commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
-						"Requested rows exceeded the limit of " + maxRows, dependsOn);
-				throw new RuntimeException("Requested rows exceeded the limit of " + maxRows);
-			}
-
-			datastoreServiceImpl.setRunMode(runMode);
-			List<Map<String, Object>> data = null;
-			try {
-				data = datastoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), null, 0, limit, null, null, null);	
-			}catch (Exception e) {
-				e.printStackTrace();
-			}
-			
-			//checking whether data is available or not
-			if(data == null || (data != null && data.isEmpty())) {
-				data = new ArrayList<>();
-				
-				Map<String,Object> dataMap = new LinkedHashMap<>();
-				int i = 0;
-				for(AttributeSource attributeSource : report.getAttributeInfo()) {
-					if(i == 0) {
-						dataMap.put(attributeSource.getAttrSourceName(), "no data available.");
-					} else {
-						dataMap.put(attributeSource.getAttrSourceName(), "");
-					}
-					i++;
-				}
-
-				data.add(dataMap);
-			}
-			
+			List<Map<String, Object>> data = prepareDocumentData(reportExec, report, runMode, limit, false);
 //			//writting as per provided format
 			if(format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
 				doc = pdfUtil.getPDFDocForReport(data, reportExec);
@@ -965,6 +971,11 @@ public class ReportServiceImpl extends RuleTemplate {
 		downloadExec.setLocation(filePathUrl);
 		downloadExec.setDependsOn(datastore.getExecId());
 		
+		downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.PENDING);
+		downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.STARTING);
+		downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.READY);
+		downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.RUNNING);
+		downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.COMPLETED);
 		try {
 			commonServiceImpl.save(MetaType.downloadExec.toString(), downloadExec);
 		} catch (Exception e1) {
