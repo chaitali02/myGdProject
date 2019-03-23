@@ -3599,7 +3599,7 @@ public class SparkExecutor<T> implements IExecutor {
 	}
 	
 	@Override
-	public ResultSetHolder histogram(Datapod locationDatapod, String locationTableName, String sql, String key, int numBuckets, String clientContext) throws IOException {
+	public ResultSetHolder histogram(Datapod locationDatapod, String locationTableName, String sql, String key, int numBuckets, String clientContext, Datasource datasource) throws IOException {
 		IConnector connector = connectionFactory.getConnector(ExecContext.spark.toString());
 		SparkSession sparkSession = (SparkSession) connector.getConnection().getStmtObject();
 		
@@ -3626,7 +3626,7 @@ public class SparkExecutor<T> implements IExecutor {
 		}
 		
 
-		ResultSetHolder rsHolder = executeAndRegister(sql, "tempHistogram", clientContext);
+		ResultSetHolder rsHolder = executeAndRegisterByDatasource(sql, "tempHistogram", datasource, clientContext);
 		
 		Tuple2<double[], long[]> histogramTuples = histogramUtil.fetchHistogramTuples(rsHolder.getDataFrame(), numBuckets);
 		/*DoubleRDDFunctions doubleRDDFunctions = new DoubleRDDFunctions(rsHolder.getDataFrame().toJavaRDD().map(row -> row.get(0)).rdd());	

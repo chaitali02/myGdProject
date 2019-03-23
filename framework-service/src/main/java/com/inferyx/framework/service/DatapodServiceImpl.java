@@ -1002,6 +1002,7 @@ public class DatapodServiceImpl {
 			throw new RuntimeException("Requested rows exceeded the limit of "+maxRows);
 		}
 		
+		datastoreServiceImpl.setRunMode(runMode);
 		List<Map<String, Object>> results = datastoreServiceImpl.getDatapodResults(dataStore.getUuid(), dataStore.getVersion(), null,
 				0, rowLimit, response, rowLimit, null, null, null, runMode);
 		response = commonServiceImpl.download(format, response, runMode, results, dataStore.getExecId());

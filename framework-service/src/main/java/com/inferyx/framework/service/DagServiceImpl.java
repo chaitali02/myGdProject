@@ -1226,19 +1226,22 @@ public class DagServiceImpl {
 	}
 	
 	public DagExec prepareDagExec(String uuid, String version, ExecParams execParams, String metaType)throws Exception{
-		DagExec dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, metaType);
+		DagExec dagExec = (DagExec) commonServiceImpl.getOneByUuidAndVersion(uuid, version, metaType, "N");
 		logger.info("Before starting to set status to READY ");
 		synchronized (dagExec.getUuid()) {
 			if(Helper.getLatestStatus(dagExec.getStatusList()).equals(new Status(Status.Stage.FAILED, new Date()))
+					|| Helper.getLatestStatus(dagExec.getStatusList()).equals(new Status(Status.Stage.ABORTED, new Date()))
 					||Helper.getLatestStatus(dagExec.getStatusList()).equals(new Status(Status.Stage.KILLED, new Date()))) {
 				logger.info("DagExec FAILED/KILLED. So proceeding ... ");
 			for(int i=0;i<dagExec.getStages().size();i++){
 				StageExec stageExec = dagExecServiceImpl.getStageExec(dagExec,dagExec.getStages().get(i).getStageId());
-				if(Helper.getLatestStatus(dagExec.getStages().get(i).getStatusList()).equals(new Status(Status.Stage.FAILED, new Date()))
+				if(Helper.getLatestStatus(dagExec.getStages().get(i).getStatusList()).equals(new Status(Status.Stage.FAILED, new Date())) 
+						||Helper.getLatestStatus(dagExec.getStages().get(i).getStatusList()).equals(new Status(Status.Stage.ABORTED, new Date()))
 						||Helper.getLatestStatus(dagExec.getStages().get(i).getStatusList()).equals(new Status(Status.Stage.KILLED, new Date()))){
 					logger.info("StageExec FAILED/KILLED. So proceeding ... ");
 					for(int j=0;j<dagExec.getStages().get(i).getTasks().size();j++){
-						if(Helper.getLatestStatus(dagExec.getStages().get(i).getTasks().get(j).getStatusList()).equals(new Status(Status.Stage.FAILED, new Date()))
+						if(Helper.getLatestStatus(dagExec.getStages().get(i).getTasks().get(j).getStatusList()).equals(new Status(Status.Stage.FAILED, new Date())) 
+								||Helper.getLatestStatus(dagExec.getStages().get(i).getTasks().get(j).getStatusList()).equals(new Status(Status.Stage.ABORTED, new Date()))
 								||Helper.getLatestStatus(dagExec.getStages().get(i).getTasks().get(j).getStatusList()).equals(new Status(Status.Stage.KILLED, new Date()))){
 							logger.info("TaskExec FAILED/KILLED. So proceeding ... ");
 							TaskExec taskExec = dagExecServiceImpl.getTaskExec(dagExec,dagExec.getStages().get(i).getStageId(), dagExec.getStages().get(i).getTasks().get(j).getTaskId());

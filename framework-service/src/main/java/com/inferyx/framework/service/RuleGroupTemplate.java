@@ -492,7 +492,8 @@ public abstract class RuleGroupTemplate implements IExecutable, IParsable {
 		Status operatorLeastSigStatus = null;
 		BaseRuleGroupExec baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.getOneByUuidAndVersion(baseGroupExecUUID, baseGroupExecVersion, groupExecType.toString(), "N");
 		operatorLeastSigStatus = Helper.getLatestStatus(baseGroupExec.getStatusList());
-		if(Helper.getLatestStatus(baseGroupExec.getStatusList()).equals(new Status(Status.Stage.FAILED, new Date()))
+		if(Helper.getLatestStatus(baseGroupExec.getStatusList()).equals(new Status(Status.Stage.FAILED, new Date())) 
+				||Helper.getLatestStatus(baseGroupExec.getStatusList()).equals(new Status(Status.Stage.ABORTED, new Date()))
 				||Helper.getLatestStatus(baseGroupExec.getStatusList()).equals(new Status(Status.Stage.KILLED, new Date()))){
 			logger.info("BaseGroupExec " + baseGroupExecUUID + " FAILED/KILLED. So proceeding ... ");
 			operatorLeastSigStatus = new Status(Status.Stage.READY, new Date());

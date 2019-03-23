@@ -283,6 +283,7 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 				else if(response[i].paramValue != null && response[i].paramValue.ref.type == "simple" &&  response[i].paramType=="date"){
 					var temp =response[i].paramValue.value.replace(/["']/g, "")
 					paramInfo.paramValue = new Date(temp);
+					paramInfo.paramValueType = "simple"
 				}
 				 else if (response[i].paramValue != null) {
 					var paramValue = {};
@@ -676,6 +677,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 	$rootScope.isCommentVeiwPrivlage = true;
 	$scope.paramTypes = ["paramlist", "paramset"];
 	$scope.allFormats = CF_DOWNLOAD.formate;
+	$scope.allLayouts = ["LANDSCAPE","PORTRAIT"];
 
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
@@ -925,6 +927,12 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		ReportSerivce.getExpressionByType($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessExpression(response.data) });
 		var onSuccessExpression = function (response) {
 			$scope.allExpress = response
+		}
+	}
+
+	$scope.onChangeFromat=function(format){
+		if(format !="PDF"){
+			$scope.report.layout=null;
 		}
 	}
 	$scope.getFormulaByType = function () {
@@ -1817,7 +1825,9 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 		reportJson.headerAlign = $scope.report.headerAlign;
 		reportJson.footerAlign = $scope.report.footerAlign;
 		reportJson.limit = $scope.report.limit;
-        reportJson.format=$scope.report.format;
+		reportJson.format=$scope.report.format;
+		reportJson.layout=$scope.report.layout;
+
 		var tagArray = [];
 		if ($scope.tags != null) {
 			for (var counttag = 0; counttag < $scope.tags.length; counttag++) {
@@ -2341,6 +2351,7 @@ DatavisualizationModule.controller('ReportResultController', function ($q, dagMe
 			.then(function (response) { onSuccessGetOneByUuidAndVersion(response.data) });
 		var onSuccessGetOneByUuidAndVersion = function (response) {
 			$scope.reportExecData = response;
+			debugger
 			$scope.filterTag = [];
 			if (response && response.execParams && response.execParams.paramListInfo != null && response.execParams.paramListInfo.length > 0) {
 				for (var i = 0; i < response.execParams.paramListInfo.length; i++) {
@@ -2523,8 +2534,10 @@ DatavisualizationModule.controller("ReportArchivesSearchController", function ($
 			  '    <button class="btn green btn-xs btn-outline dropdown-toggle" uib-dropdown-toggle>Action',
 			  '    <i class="fa fa-angle-down"></i></button>',
 			  '    <ul uib-dropdown-menu class="dropdown-menu-grid">',
-			  '       <li><a  ng-disabled="[\'COMPLETED\'].indexOf(row.entity.status) !=-1?((row.entity.saveOnRefresh ==\'Y\' && row.entity.senderInfo.sendAttachment ==\'Y\')?false:true):true" ng-click="grid.appScope.getDownload(row.entity)"><i class="fa fa-download" aria-hidden="true"></i> Download </a></li>',
-			  '       <li><a  ng-disabled="[\'COMPLETED\'].indexOf(row.entity.status) !=-1?((row.entity.saveOnRefresh ==\'Y\' && row.entity.senderInfo.sendAttachment ==\'Y\')?false:true):true" ng-click="grid.appScope.sentMail(row.entity)"><i class="fa fa-envelope-o" aria-hidden="true"></i> Email </a></li>',		  
+//			  '       <li><a  ng-disabled="[\'COMPLETED\'].indexOf(row.entity.status) !=-1?((row.entity.saveOnRefresh ==\'Y\' && row.entity.senderInfo.sendAttachment ==\'Y\')?false:true):true" ng-click="grid.appScope.getDownload(row.entity)"><i class="fa fa-download" aria-hidden="true"></i> Download </a></li>',
+//			  '       <li><a  ng-disabled="[\'COMPLETED\'].indexOf(row.entity.status) !=-1?((row.entity.saveOnRefresh ==\'Y\' && row.entity.senderInfo.sendAttachment ==\'Y\')?false:true):true" ng-click="grid.appScope.sentMail(row.entity)"><i class="fa fa-envelope-o" aria-hidden="true"></i> Email </a></li>',	
+			  '       <li><a  ng-disabled="[\'COMPLETED\'].indexOf(row.entity.status) !=-1?false:true" ng-click="grid.appScope.getDownload(row.entity)"><i class="fa fa-download" aria-hidden="true"></i> Download </a></li>',
+			  '       <li><a  ng-disabled="[\'COMPLETED\'].indexOf(row.entity.status) !=-1?false:true" ng-click="grid.appScope.sentMail(row.entity)"><i class="fa fa-envelope-o" aria-hidden="true"></i> Email </a></li>',		  
 			  '    </ul>',
 			  '  </div>',
 			  '</div>'

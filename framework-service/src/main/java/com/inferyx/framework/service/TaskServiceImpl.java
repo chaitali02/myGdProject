@@ -1145,13 +1145,14 @@ public class TaskServiceImpl implements Callable<String> {
 					dagExecServiceImpl.setTaskResult(dagExecUUID, dagExecVer, stageId, taskId,resultRef);
 				}
 			    
-				//Set Task to Complete
+				//Set Task to the latest status of its operator
+				@SuppressWarnings("unchecked")
+				List<com.inferyx.framework.domain.Status> status = null;
 				synchronized (dagExecUUID) {
 					if (taskStatus != com.inferyx.framework.domain.Status.Stage.FAILED) {
 						try {
 							Object execObj=commonServiceImpl.getOneByUuidAndVersion(taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getUuid(), taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getVersion(), taskExec.getOperators().get(0).getOperatorInfo().get(0).getRef().getType().toString(), "N");
-							@SuppressWarnings("unchecked")
-							List<com.inferyx.framework.domain.Status> status = (List<Status>) execObj.getClass().getMethod("getStatusList").invoke(execObj);
+							status = (List<Status>) execObj.getClass().getMethod("getStatusList").invoke(execObj);
 							logger.info(Helper.getLatestStatus(status).getStage());
 							commonServiceImpl.setMetaStatusForTask(dagExec, taskExec,Helper.getLatestStatus(status).getStage(), stageId, taskId);
 						} catch (Exception e) {
@@ -1159,7 +1160,7 @@ public class TaskServiceImpl implements Callable<String> {
 						}
 					}
 				}
-				logger.info("Setting COMPLETED status for taskId: " + taskId);
+				logger.info(String.format("Setting status &s for taskId : %s ", Helper.getLatestStatus(status), taskId));
 
 				logger.info("Execution end dataframe is register as table name " + datapodTableName);
 

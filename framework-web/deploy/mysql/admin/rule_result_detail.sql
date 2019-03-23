@@ -15,5 +15,6 @@ CREATE TABLE rule_result_detail
      criteria_met_ind  VARCHAR(50), 
      criteria_expr     VARCHAR(500), 
      criteria_score    DECIMAL(6, 3), 
-     version           INT(10) 
+     version           INT(10),
+     INDEX (version)
   ); 

@@ -155,12 +155,13 @@ public class VizpodDetailParser {
 				whereBuilder.append(blankSpace);
 				whereBuilder.append(WHERE_1_1);
 				whereBuilder.append(blankSpace);
-
+				
 				for (AttributeRefHolder attrDet : vizpod.getFilterInfo()) {
-
 					if (attrDet.getRef().getType() == MetaType.datapod) {
 						Datasource datasource = commonServiceImpl.getDatasourceByObject(vizpod);
-						whereBuilder.append(filterOperator2.generateSql(vizpod.getFilterInfo(), null, null,
+						List<AttributeRefHolder> filterIdentifierList = new ArrayList<>();
+						filterIdentifierList.add(attrDet);
+						whereBuilder.append(filterOperator2.generateSql(filterIdentifierList, null, null,
 								usedRefKeySet, false, false, runMode, datasource));
 
 						if (allowColNameInFltr) {
@@ -181,7 +182,7 @@ public class VizpodDetailParser {
 
 						if (StringUtils.isNotBlank(attrDet.getFunction())) {
 
-							whereBuilder.append(" as " + formula.getName() + "= ");
+							whereBuilder.append(" AS " + formula.getName() + "= ");
 
 						} else {
 

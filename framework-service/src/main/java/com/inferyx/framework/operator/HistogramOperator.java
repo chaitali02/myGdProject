@@ -107,8 +107,8 @@ public class HistogramOperator implements IOperator {
 		
 		String locationTableName = otherParams.get("datapodUuid_" + locationDatapod.getUuid() + "_tableName");
 
-		Datasource datasource = commonServiceImpl.getDatasourceByDatapod(locationDatapod);
-		if(!datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+		Datasource locationDpDs = commonServiceImpl.getDatasourceByDatapod(locationDatapod);
+		if(!locationDpDs.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
 			locationTableName = datapodServiceImpl.getTableNameByDatapod(new OrderKey(locationDatapod.getUuid(), locationDatapod.getVersion()), runMode);
 		} else if(locationTableName == null || locationTableName.isEmpty()) {			
 			locationTableName = String.format("%s_%s_%s", locationDatapod.getUuid().replace("-", "_"), locationDatapod.getVersion(), baseExec.getVersion());
@@ -118,10 +118,10 @@ public class HistogramOperator implements IOperator {
 		
 		//Datasource datasource = commonServiceImpl.getDatasourceByApp();
 
-		IExecutor exec = execFactory.getExecutor(datasource.getType());		
+		IExecutor exec = execFactory.getExecutor(locationDpDs.getType());		
 		
 		String sql = generateSql(sourceInfo.getAttributeInfo(), execParams, otherParams, runMode);
-		ResultSetHolder rsHolder = exec.histogram(locationDatapod, locationTableName, sql, key, numBuckets, appUuid);
+		ResultSetHolder rsHolder = exec.histogram(locationDatapod, locationTableName, sql, key, numBuckets, appUuid, locationDpDs);
 		save(exec, rsHolder, locationTableName, locationDatapod,  baseExec.getRef(MetaType.operatorExec), runMode);
 		return null;
 	}	
@@ -166,6 +166,8 @@ public class HistogramOperator implements IOperator {
 			
 			Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceMI.getUuid(), sourceMI.getVersion(), sourceMI.getType().toString());
 			
+			Datasource datapodDs = commonServiceImpl.getDatasourceByDatapod(datapod);
+			
 			String tableName = null;
 			if(otherParams != null && !otherParams.isEmpty()) {
 				tableName = otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");				
@@ -175,9 +177,16 @@ public class HistogramOperator implements IOperator {
 			}
 			sqlBuilder.append("SELECT ");
 			
+			String castdataType = null;
+//			if(datapodDs.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())) {
+//				castdataType = "SIGNED";
+//			} else {
+				castdataType = "DOUBLE";
+//			}
+			
 			for(int i=0; i < sourceAttrs.size(); i++) {
 				String attrName = datapod.getAttributeName(Integer.parseInt(sourceAttrs.get(i).getAttrId()));				
-				sqlBuilder.append("CAST(").append(attrName).append(" AS DOUBLE) AS ").append(attrName);
+				sqlBuilder.append("CAST(").append(attrName).append(" AS "+castdataType+") AS ").append(attrName);
 				if(i<(sourceAttrs.size()-1))
 					sqlBuilder.append(",");				
 			}
@@ -270,29 +279,31 @@ public class HistogramOperator implements IOperator {
 		Datasource attrDpDs = commonServiceImpl.getDatasourceByObject(attrDp);
 		
 		Attribute attribute = attrDp.getAttribute(Integer.parseInt(attrRefHolderList.get(0).getAttrId()));
-		String attributeType = attribute.getType();
+//		String attributeType = attribute.getType();
 		String sql = null;
-		if(attributeType.equalsIgnoreCase("String")) {
+//		if(attributeType.equalsIgnoreCase("String")) {
 			String tableName = datapodServiceImpl.getTableNameByDatapod(new Key(attrDp.getUuid(), attrDp.getVersion()), runMode);
 			sql = "SELECT "
 					.concat(attribute.getName()).concat(" AS bucket ").concat(", ")
 					.concat(" COUNT("+attribute.getName()+") ").concat(" AS frequency")
-					.concat(" FROM ").concat(tableName).concat(" ").concat(tableName)
+					.concat(" FROM ").concat(tableName).concat(" ").concat(attrDp.getName())
 					.concat(" GROUP BY ").concat(attribute.getName())
+					.concat(" ORDER BY ").concat(attribute.getName()).concat(" DESC ")
 					.concat(" LIMIT "+limit);
 			
-			String ourLimitSql = "SELECT * FROM ("+sql+") "+tableName+" ORDER BY "+"frequency"+" DESC "+" LIMIT "+resultLimit;
-			exec.executeAndRegisterByDatasource(ourLimitSql, "tempAttrHistogram", attrDpDs, appUuid);
+//			String ourLimitSql = "SELECT * FROM ("+sql+") "+attrDp.getName().concat("_outer")+" ORDER BY "+"frequency"+" DESC "+" LIMIT "+resultLimit;
+//			exec.executeAndRegisterByDatasource(ourLimitSql, "tempAttrHistogram", attrDpDs, appUuid);
 			
-		} else {
-			sql = generateSql(attrRefHolderList, null, null, runMode);
-			sql = sql.concat(" ").concat(" LIMIT "+limit);
-
-			ResultSetHolder rsHolder = exec.histogram(null, null, sql, null, numBuckets, appUuid);
-			exec.registerTempTable(rsHolder.getDataFrame(), "tempAttrHistogram");
-		}
+//		} else {
+//			sql = generateSql(attrRefHolderList, null, null, runMode);
+//			sql = sql.concat(" ").concat(" LIMIT "+limit);
+//
+//			ResultSetHolder rsHolder = exec.histogram(null, null, sql, null, numBuckets, appUuid, attrDpDs);
+//			exec.registerTempTable(rsHolder.getDataFrame(), "tempAttrHistogram");
+//		}
 		
-		String dataSql = "SELECT * FROM "+" tempAttrHistogram ";
-		return exec.executeAndFetchByDatasource(dataSql, attrDpDs, appUuid);
+//		String dataSql = "SELECT * FROM "+" tempAttrHistogram ";
+//		return exec.executeAndFetchByDatasource(dataSql, datapodDS, appUuid);
+			return exec.executeAndFetchByDatasource(sql, attrDpDs, appUuid);
 	}
 }

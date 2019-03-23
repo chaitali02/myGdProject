@@ -592,12 +592,15 @@ public class Helper {
 												Boolean.FALSE, 
 												Boolean.FALSE, 
 												Boolean.FALSE, 
+												Boolean.FALSE,
 												Boolean.FALSE);
 		}
 		if (latestStatus.equals(Status.Stage.RUNNING)) {
 			statusHolder.setCompleted(Boolean.FALSE);
 		} else if (latestStatus.equals(Status.Stage.FAILED)) {
 			statusHolder.setFailed(Boolean.TRUE);
+		} else if (latestStatus.equals(Status.Stage.ABORTED)) {
+			statusHolder.setAborted(Boolean.TRUE);
 		} else if (latestStatus.equals(Status.Stage.KILLED)) {
 			statusHolder.setKilled(Boolean.TRUE);
 		} else if (latestStatus.equals(Status.Stage.RESUME)) {

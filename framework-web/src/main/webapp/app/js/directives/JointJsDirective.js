@@ -612,11 +612,11 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
               <h4 class="modal-title" title="{{lastParams.name}}"style="overflow: hidden;white-space:nowrap;max-width:230px;margin-bottom:-4px;
               text-overflow:ellipsis;"v>{{lastParams.name}}</h4>
             </div>
-            <div class="modal-body" style="text-transform: capitalize"> {{msgstatus | lowercase}}
+            <div class="modal-body" style="text-transform: capitalize"> {{statusObj.msgstatus | lowercase}}
               <span style="text-transform: capitalize">{{msgtype}}</span> ?</div>
             <div class="modal-footer">
               <button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
-              <button type="button" class="btn green" ng-click="oKSetStatus(lastParams,msgstatus)">Ok</button>
+              <button type="button" class="btn green" ng-click="oKSetStatus(lastParams,statusObj.status)">Ok</button>
             </div>
           </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
@@ -1315,7 +1315,10 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
 
              $scope.setStatus = function (row,status) {
               $scope.lastParams = row;
-              $scope.msgstatus=status;
+              $scope.statusObj={};
+              $scope.statusObj.msgstatus=status =="KILLED"?"Kill":status;
+              $scope.statusObj.status=status;
+              $scope.msgtype;
               $scope.msgtype=dagMetaDataService.elementDefs[row.elementType.toLowerCase()].caption;
               $('#confmodal').modal({
                 backdrop: 'static',
@@ -1626,7 +1629,10 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
      
     window.setStatus = function(params,status){
       $scope.lastParams = params;
-      $scope.msgstatus=status;
+      $scope.statusObj={};
+      $scope.statusObj.msgstatus=status =="KILLED"?"Kill":status;
+      $scope.statusObj.status=status;
+      $scope.msgtype;
       if(params.type=="dag"){
         $scope.msgtype="Pipeline"
       }

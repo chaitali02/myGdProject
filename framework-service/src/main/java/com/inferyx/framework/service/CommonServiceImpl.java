@@ -3095,10 +3095,11 @@ public class CommonServiceImpl<T> {
 		}
 		if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.PENDING, new Date())) 
 				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.KILLED, new Date())) 
-				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.FAILED, new Date())) ) {
+				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.FAILED, new Date()))
+				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.ABORTED, new Date()))) {
 			statusList.add(new Status(Status.Stage.STARTING, new Date()));
 		} else {
-			logger.info("Latest Status is not in PENDING/FAILED/KILLED. Cannot go to Starting status. Exiting...");
+			logger.info("Latest Status is not in PENDING/FAILED/KILLED/ABORTED. Cannot go to Starting status. Exiting...");
 		}
 		return statusList;
 	}
@@ -3111,14 +3112,38 @@ public class CommonServiceImpl<T> {
 		}
 		if ((Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.RESUME, new Date()))
 				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.FAILED, new Date()))
+				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.ABORTED, new Date()))
 				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.KILLED, new Date()))) 
 				&& Helper.isStatusPresent(new Status(Status.Stage.READY, new Date()), statusList)) {
 			statusList.add(new Status(Status.Stage.READY, new Date()));
 		}else if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.STARTING, new Date()))) {
 			statusList.add(new Status(Status.Stage.READY, new Date()));
 		} else {
-			logger.info("Latest Status is not in RESUME/FAILED/KILLED/Starting. Cannot go to READY status. Exiting...");
+			logger.info("Latest Status is not in RESUME/FAILED/KILLED/ABORTED/Starting. Cannot go to READY status. Exiting...");
 		}
+		return statusList;
+	}
+	
+	private List<Status> setAbortedStatus(List<Status> statusList) {
+		/*
+		 * if (!Helper.getLatestStatus(statusList).equals(new
+		 * Status(Status.Stage.RUNNING, new Date()))) {
+		 * logger.info("Latest Status is not in RUNNING. Exiting..."); return
+		 * statusList; }
+		 */
+		if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.COMPLETED, new Date()))
+				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.KILLED, new Date()))) {
+			logger.info("Latest Status is in COMPLETED or KILLED. Exiting...");
+			return statusList;
+		} else if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.TERMINATING, new Date()))) {
+			statusList.add(new Status(Status.Stage.KILLED, new Date()));
+			return statusList;
+		}
+		Status abortedStatus = new Status(Status.Stage.ABORTED, new Date());
+		if (Helper.getLatestStatus(statusList).equals(abortedStatus)) {
+			statusList.remove(statusList.size() - 1);
+		}
+		statusList.add(abortedStatus);
 		return statusList;
 	}
 
@@ -3130,7 +3155,8 @@ public class CommonServiceImpl<T> {
 		 * statusList; }
 		 */
 		if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.COMPLETED, new Date()))
-				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.KILLED, new Date()))) {
+				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.KILLED, new Date()))
+				|| Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.ABORTED, new Date()))) {
 			logger.info("Latest Status is in COMPLETED or KILLED. Exiting...");
 			return statusList;
 		} else if (Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.TERMINATING, new Date()))) {
@@ -3146,8 +3172,8 @@ public class CommonServiceImpl<T> {
 	}
 
 	private List<Status> setCompletedStatus(List<Status> statusList) {
-		if (!Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.RUNNING, new Date()))
-				&& !Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.TERMINATING, new Date()))) {
+		if (!Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.RUNNING, new Date()))/*
+				&& !Helper.getLatestStatus(statusList).equals(new Status(Status.Stage.TERMINATING, new Date()))*/) {
 			logger.info("Latest Status is not in RUNNING. Exiting...");
 			return statusList;
 		}
@@ -3182,7 +3208,51 @@ public class CommonServiceImpl<T> {
 	 * @param status
 	 * @return
 	 */
-	
+	// public List<Status> setMetaStatus (String uuid, String version, MetaType
+	// metaType, Status.Stage stage) {
+	// Object object = null;
+	// Object iDao = null;
+	// List<Status> statusList = null;
+	// String appUuid = (securityServiceImpl.getAppInfo() != null &&
+	// securityServiceImpl.getAppInfo().getRef() != null)
+	// ? securityServiceImpl.getAppInfo().getRef().getUuid() : null;
+	// try {
+	// // Get the object
+	// iDao = this.getClass().getMethod(GET +
+	// Helper.getDaoClass(metaType)).invoke(this);
+	// if (appUuid != null) {
+	// object = (iDao).getClass().getMethod("findOneByUuidAndVersion", String.class,
+	// String.class, String.class).invoke(iDao, appUuid, uuid, version);
+	// } else {
+	// object = (iDao).getClass().getMethod("findOneByUuidAndVersion", String.class,
+	// String.class).invoke(iDao, uuid, version);
+	// }
+	// statusList = (List<Status>)
+	// Helper.getDomainClass(metaType).getMethod(GET+"Status").invoke(object);
+	// } catch(NullPointerException | NoSuchMethodException | IllegalAccessException
+	// | IllegalArgumentException | InvocationTargetException | SecurityException
+	// e){
+	// e.printStackTrace();
+	// }
+	//
+	// switch (stage) {
+	// case PENDING:
+	// statusList = setPENDINGStatus(statusList);
+	// break;
+	// case RUNNING:
+	// statusList = setRUNNINGStatus(statusList);
+	// break;
+	// case FAILED:
+	// statusList = setFailedStatus(statusList);
+	// break;
+	// case COMPLETED:
+	// statusList = setCOMPLETEDStatus(statusList);
+	// break;
+	// default:
+	// break;
+	// }
+	// return statusList;
+	// }
 
 	/**
 	 * Set Meta Status for stage
@@ -3247,6 +3317,9 @@ public class CommonServiceImpl<T> {
 			break;
 		case RUNNING:
 			statusList = setRunningStatus(statusList);
+			break;
+		case ABORTED:
+			statusList = setAbortedStatus(statusList);
 			break;
 		case FAILED:
 			statusList = setFailedStatus(statusList);
@@ -3334,6 +3407,9 @@ public class CommonServiceImpl<T> {
 		case RUNNING:
 			statusList = setRunningStatus(statusList);
 			break;
+		case ABORTED:
+			statusList = setAbortedStatus(statusList);
+			break;
 		case FAILED:
 			statusList = setFailedStatus(statusList);
 			break;
@@ -3418,6 +3494,9 @@ public class CommonServiceImpl<T> {
 			break;
 		case RUNNING:
 			statusList = setRunningStatus(statusList);
+			break;
+		case ABORTED:
+			statusList = setAbortedStatus(statusList);
 			break;
 		case FAILED:
 			statusList = setFailedStatus(statusList);
@@ -3644,6 +3723,12 @@ public class CommonServiceImpl<T> {
 				&& !(stausMap.get(com.inferyx.framework.domain.Status.Stage.RUNNING) > 0)
 				&& !stausMap.containsKey(com.inferyx.framework.domain.Status.Stage.FAILED)) {
 			defaultStatus.setStage(Status.Stage.RUNNING);
+		} else if (stausMap.containsKey(com.inferyx.framework.domain.Status.Stage.ABORTED)
+				&& (stausMap.get(com.inferyx.framework.domain.Status.Stage.ABORTED) >= 1)
+				&& !stausMap.containsKey(com.inferyx.framework.domain.Status.Stage.KILLED)
+				&& !(stausMap.get(com.inferyx.framework.domain.Status.Stage.RUNNING) > 0)
+				&& !stausMap.containsKey(com.inferyx.framework.domain.Status.Stage.FAILED)) {
+			defaultStatus.setStage(Status.Stage.ABORTED);
 		} else if (stausMap.containsKey(com.inferyx.framework.domain.Status.Stage.COMPLETED)
 				&& (metaIdentifierHolderList.size() == stausMap
 						.get(com.inferyx.framework.domain.Status.Stage.COMPLETED))) {
@@ -4106,7 +4191,25 @@ public class CommonServiceImpl<T> {
 		}
 		return response;
 	}
-	
+
+	/*
+	 * public String upload(MultipartFile file, String extension, String fileType,
+	 * String fileName,String uuid,String version,MetaType metaType) throws
+	 * FileNotFoundException, IOException { String uploadFileName =
+	 * file.getOriginalFilename(); FileType type = Helper.getFileType(fileType);
+	 * String fileLocation = null; String directoryLocation =
+	 * Helper.getFileDirectoryByFileType(type); if(fileName == null) { fileName =
+	 * Helper.getFileCustomNameByFileType(type, extension); }
+	 * 
+	 * fileLocation = directoryLocation+"/" + fileName; UploadExec uploadExec=new
+	 * UploadExec(); uploadExec.setFileName(uploadFileName);
+	 * uploadExec.setBaseEntity();
+	 * uploadExec.setLocation(fileLocation+"/"+uploadExec.getUuid()+"_"+uploadExec.
+	 * getVersion()+""); uploadExec.setDependsOn(new MetaIdentifierHolder(new
+	 * MetaIdentifier(metaType,uuid,version))); File scriptFile = new
+	 * File(fileLocation); file.transferTo(scriptFile); return fileName; }
+	 */
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List<T> findAllLatestWithoutAppUuid(MetaType type) throws IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {

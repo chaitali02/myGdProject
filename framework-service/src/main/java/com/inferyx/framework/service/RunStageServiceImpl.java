@@ -867,6 +867,7 @@ public class RunStageServiceImpl implements Callable<String> {
 					boolean checkDependencyKILLED = false;
 					boolean checkDependencyRESUME = false;
 					boolean checkDependencyPAUSE = false;
+					boolean checkDependencyABORTED = false;
 					String dependencyStatus = null;
 					OrderKey datapodKey = null;
 					
@@ -909,6 +910,10 @@ public class RunStageServiceImpl implements Callable<String> {
 						checkDependencyFAILED = true;
 						checkDependencyStatus = true;
 						break;
+					} else if (dependencyStatus.equalsIgnoreCase(Status.Stage.ABORTED.toString())) {
+						checkDependencyABORTED = true;
+						checkDependencyStatus = true;
+						break;
 					} else if (dependencyStatus.equalsIgnoreCase(Status.Stage.PAUSE.toString())) {
 						checkDependencyPAUSE = true;
 						checkDependencyStatus = true;
@@ -920,8 +925,8 @@ public class RunStageServiceImpl implements Callable<String> {
 					} else {
 						checkDependencyStatus = true;
 					}
-					logger.info(" checkDependencyStatus : checkDependencyKILLED : checkDependencyFAILED : checkDependencyPAUSE : checkDependencyRESUME : " 
-								+ checkDependencyStatus + ":" + checkDependencyKILLED + ":" + checkDependencyFAILED + ":" + checkDependencyPAUSE + ":" + checkDependencyRESUME);
+					logger.info(" checkDependencyStatus : checkDependencyKILLED : checkDependencyFAILED : checkDependencyABORTED: checkDependencyPAUSE : checkDependencyRESUME : " 
+								+ checkDependencyStatus + ":" + checkDependencyKILLED + ":" + checkDependencyFAILED + ":" + checkDependencyABORTED + ":" + checkDependencyPAUSE + ":" + checkDependencyRESUME);
 					if (checkDependencyKILLED) {
 						synchronized (dagExecUUID) {
 							try {
@@ -940,6 +945,19 @@ public class RunStageServiceImpl implements Callable<String> {
 							try {
 								logger.info("Setting status to FAILED for stage : " + stageId);
 								commonServiceImpl.setMetaStatusForTask(dagExec, indvTaskExec, Status.Stage.FAILED, stageId, indvTaskExec.getTaskId());
+								continue;
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+					}
+					
+					if (checkDependencyABORTED) {
+						synchronized (dagExecUUID) {
+							try {
+								logger.info("Setting status to ABORTED for stage : " + stageId);
+								commonServiceImpl.setMetaStatusForTask(dagExec, indvTaskExec, Status.Stage.ABORTED, stageId, indvTaskExec.getTaskId());
 								continue;
 							} catch (Exception e) {
 								// TODO Auto-generated catch block
@@ -1017,57 +1035,6 @@ public class RunStageServiceImpl implements Callable<String> {
 			Thread.sleep(5000);
 		} while(!waitAndComplete(taskList));
 		
-		/*String outputThreadName = null;
-		for (FutureTask<String> futureTask : taskList) {
-			try {
-				outputThreadName = futureTask.get();
-				logger.info("Thread " + outputThreadName + " COMPLETED ");
-                taskThreadMap.remove(outputThreadName);
-			} catch (InterruptedException | ExecutionException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		boolean setCOMPLETEDStatus = true;
-		boolean setRESUMEStatus = true;
-		// Refresh DagExec from mongo
-		dagExec = dagExecServiceImpl.findOneByUuidAndVersion(dagExecUUID, dagExecVer);
-		stageExec = dagExecServiceImpl.getStageExec(dagExec, stageExec.getStageId());
-		dagTaskExecs = DagExecUtil.castToTaskExecList(stageExec.getTasks());
-		
-		for (TaskExec indvTaskExec : dagTaskExecs) {
-			Status latestStatus = Helper.getLatestStatus(indvTaskExec.getStatus());
-			logger.info("After stage exec latestStatus : " + latestStatus.getStage().toString() + " for task exec : " + indvTaskExec.getTaskId());
-			if (latestStatus.getStage().equals(Status.Stage.FAILED)) {
-				synchronized (dagExec.getUuid()) {
-					commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.FAILED, stageExec.getStageId());
-				}
-				setCOMPLETEDStatus = false;
-				break;
-			} else if (latestStatus.getStage().equals(Status.Stage.KILLED)) {
-				synchronized (dagExec.getUuid()) {
-					commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.TERMINATING, stageExec.getStageId());;
-					commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.KILLED, stageExec.getStageId());
-				}
-				setCOMPLETEDStatus = false;
-				break;
-			} else if (latestStatus.getStage().equals(Status.Stage.RESUME) 
-						|| latestStatus.getStage().equals(Status.Stage.PAUSE)) {
-				setCOMPLETEDStatus = false;
-				break;
-			} else if (!latestStatus.getStage().equals(Status.Stage.COMPLETED)) {
-				setCOMPLETEDStatus = false;
-				break;
-			}
-		}
-		
-		if (setCOMPLETEDStatus) {
-			logger.info("DagExec COMPLETED");
-			synchronized (dagExec.getUuid()) {
-				commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.COMPLETED, stageExec.getStageId());;
-			}
-		}
-	*/	
 		logger.info("Thread watch : DagExec : " + dagExec.getUuid() + " StageExec : " + stageId + " complete >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ");
 		return name;
 	}
@@ -1105,11 +1072,12 @@ public class RunStageServiceImpl implements Callable<String> {
 																	Boolean.FALSE, 
 																	Boolean.FALSE, 
 																	Boolean.FALSE, 
+																	Boolean.FALSE, 
 																	Boolean.FALSE);
 				// Update run status for stage
 				Helper.updateRunStatus(latestStatus, statusHolder);
 				logger.info(" StatusHolder of stageExec : " + statusHolder.getCOMPLETED() + ":" + statusHolder.getKILLED() + ":" + statusHolder.getFAILED() 
-							+ ":" + statusHolder.getPAUSE() + ":" + statusHolder.getRESUME());
+							+ ":" + statusHolder.getPAUSE() + ":" + statusHolder.getRESUME() + ":" + statusHolder.getABORTED());
 				if (statusHolder.getCOMPLETED() && statusHolder.getKILLED()) {
 					synchronized (dagExecUUID) {
 						commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.KILLED, stageId);
@@ -1118,6 +1086,11 @@ public class RunStageServiceImpl implements Callable<String> {
 				} else if (statusHolder.getCOMPLETED() && statusHolder.getFAILED()) {
 					synchronized (dagExecUUID) {
 						commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.FAILED, stageId);
+					}
+					return true;
+				} else if (statusHolder.getCOMPLETED() && statusHolder.getABORTED()) {
+					synchronized (dagExecUUID) {
+						commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.ABORTED, stageId);
 					}
 					return true;
 				} else if (statusHolder.getCOMPLETED()) {
@@ -1132,6 +1105,7 @@ public class RunStageServiceImpl implements Callable<String> {
 						Boolean.FALSE, 
 						Boolean.FALSE, 
 						Boolean.FALSE, 
+						Boolean.FALSE, 
 						Boolean.FALSE);
 				
 				for (TaskExec taskExec : DagExecUtil.castToTaskExecList(stageExec.getTasks())) {
@@ -1140,7 +1114,7 @@ public class RunStageServiceImpl implements Callable<String> {
 				}// End for
 				
 				logger.info(" StatusHolder of taskExec : " + statusHolder.getCOMPLETED() + ":" + statusHolder.getKILLED() + ":" + statusHolder.getFAILED() 
-				+ ":" + statusHolder.getPAUSE() + ":" + statusHolder.getRESUME());
+				+ ":" + statusHolder.getPAUSE() + ":" + statusHolder.getRESUME() + ":" + statusHolder.getABORTED());
 				
 				if (statusHolder.getCOMPLETED() && statusHolder.getKILLED()) {
 					synchronized (dagExecUUID) {
@@ -1157,6 +1131,16 @@ public class RunStageServiceImpl implements Callable<String> {
 						commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.FAILED, stageId);
 					}
 					return true;					
+				} else if (statusHolder.getCOMPLETED() && statusHolder.getABORTED()) {
+					synchronized (dagExecUUID) {
+						commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.ABORTED, stageId);
+					}
+					return true;
+				} else if (statusHolder.getABORTED()) {
+					synchronized (dagExecUUID) {
+						commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.ABORTED, stageId);
+					}
+					return true;
 				} else if (statusHolder.getCOMPLETED()) {
 					synchronized (dagExecUUID) {
 						commonServiceImpl.setMetaStatusForStage(dagExec, stageExec, Status.Stage.COMPLETED, stageId);

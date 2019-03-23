@@ -19,6 +19,7 @@ public class Status implements Comparable<Status>{
 		STARTING("STARTING"),
 		READY("READY"),
 		RUNNING("RUNNING"),
+		ABORTED("ABORTED"), 
 		COMPLETED("COMPLETED"), 
 		FAILED("FAILED"), 
 		Suspend("Suspend"),
@@ -111,6 +112,14 @@ public class Status implements Comparable<Status>{
 			return 1;
 		}
 		return 0;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Status [stage=" + stage + ", createdOn=" + createdOn + "]";
 	}
 	
 }

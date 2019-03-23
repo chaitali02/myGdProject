@@ -37,12 +37,14 @@ CREATE TABLE dq_result_summary
      expression_fail_count INT(10), 
      case_pass_count       INT(10), 
      case_fail_count       INT(10), 
-     total_row_count       INT(10), 
+     total_row_count  	   INT(10), 
      total_pass_count      INT(10), 
      total_fail_count      INT(10), 
      threshold_type        VARCHAR(50), 
      threshold_limit       INT(3), 
      threshold_ind         VARCHAR(6), 
      score                 INT(3), 
-     version               INT(10) 
+     version               INT(10),
+     INDEX (version),
+     INDEX (rule_uuid,datapod_uuid)  
   ); 

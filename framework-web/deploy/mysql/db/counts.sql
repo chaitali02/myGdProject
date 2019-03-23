@@ -1,8 +1,8 @@
 select tabname,cnt from
 (
-select 'dq_rule_summary' as tabname, count(*) as cnt from framework.dq_rule_summary
+select 'dq_result_summary' as tabname, count(*) as cnt from framework.dq_result_summary
 union
-select 'dq_rule_detail' as tabname, count(*) as cnt from framework.dq_rule_detail
+select 'dq_result_detail' as tabname, count(*) as cnt from framework.dq_result_detail
 union
 select 'equity_orders' as tabname, count(*) as cnt from framework.equity_orders
 union

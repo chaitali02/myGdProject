@@ -11,5 +11,6 @@ CREATE TABLE rule_result_summary
      entity_type       VARCHAR(50), 
      entity_id         VARCHAR(50), 
      score             DECIMAL(6, 3), 
-     version           INT(10) 
+     version           INT(10),
+     INDEX (version) 
   ); 
