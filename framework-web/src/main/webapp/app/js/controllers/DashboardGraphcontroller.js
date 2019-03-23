@@ -731,7 +731,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
     for (var i = 0; i < length; i++) {
       var defaultvalue = {}
       defaultvalue.id = null;
-      defaultvalue.value = "-select-"
+      defaultvalue.value = "-Select-"
       $scope.selectedAttributeValue[i] = defaultvalue
       $scope.filterAttribureIdValues[i].values.splice(0, 1);
       $scope.filterAttribureIdValues[i].values.splice(0, 0, defaultvalue);
@@ -800,7 +800,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
       var filterList = {};
       var filterTag = {};
       var ref = {};
-      if ($scope.selectedAttributeValue[i].value != "-select-") {
+      if ($scope.selectedAttributeValue[i].value != "-Select-") {
         ref.type = $scope.filterAttribureIdValues[i].type;
         ref.uuid = $scope.filterAttribureIdValues[i].datapoduuid
         filterList.ref = ref;
@@ -827,11 +827,11 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
   }
 
   $scope.onChipsRemove = function (index, filterIndex) {
-    
+    debugger
 
     $scope.filterTag.splice(index, 1);
     $scope.selectedAttributeValue[filterIndex] = null;
-    var noSelect = { "id": null, "value": "-select-" }
+    var noSelect = { "id": null, "value": "-Select-" }
     setTimeout(function () {
       $scope.selectedAttributeValue[filterIndex] = noSelect;
       $scope.onFilterChange();
@@ -855,7 +855,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
           var filterAttribureIdvalueJSON = {};
           var defaultvalue = {}
           defaultvalue.id = null;
-          defaultvalue.value = "-select-"
+          defaultvalue.value = "-Select-"
           filterAttribureIdvalueJSON.vizpoduuid =
           filterAttribureIdvalueJSON.vizpodversion = data.filterInfo[i].ref.uuid;
           filterAttribureIdvalueJSON.datapoduuid = data.filterInfo[i].ref.uuid;
@@ -1357,7 +1357,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
               }else{
                 propName=$scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].ref.name;
               }
-              if (isNaN(result.data[0][propName])) {
+              if ( result.data && result.data.length >0 && isNaN(result.data[0][propName])) {
                 if ($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.type == "bar-chart") {
                //   ConvertTwoDisit(result.data, $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].attributeName);
                   result.data.sort(sortAlphaNum(propName))
@@ -1473,7 +1473,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
         setTimeout(function(){
           var defaultvalue = {}
           defaultvalue.id = null;
-          defaultvalue.value = "-select-"
+          defaultvalue.value = "-Select-"
           $scope.selectedAttributeValue[i].value=defaultvalue.value;
         },100)
         
@@ -1484,22 +1484,25 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
   
   $scope.populateFilers=function(){
     if($scope.dashboardExecData !=null && $scope.dashboardExecData.filterInfo !=null &&  $scope.dashboardExecData.filterInfo.length >0){
+      console.log($scope.atttArrayId)
       for(var i=0;i<$scope.dashboardExecData.filterInfo.length;i++){
         var filterTag={};
+        
         var tempId=$scope.dashboardExecData.filterInfo[i].ref.uuid;
         filterTag.value=$scope.dashboardExecData.filterInfo[i].value;
         filterTag.text=$scope.dashboardExecData.filterInfo[i].ref.name+" - "+$scope.dashboardExecData.filterInfo[i].value;
-        filterTag.index=i;
-        if($scope.dashboardExecData.filterInfo[i].ref.type !="formula"){
+          if($scope.dashboardExecData.filterInfo[i].ref.type !="formula"){
           tempId=$scope.dashboardExecData.filterInfo[i].ref.uuid+"_"+$scope.dashboardExecData.filterInfo[i].attrId;
           filterTag.text=$scope.dashboardExecData.filterInfo[i].attrName+" - "+$scope.dashboardExecData.filterInfo[i].value;;
         }
+        filterTag.index=$scope.atttArrayId.indexOf(tempId);
+        console.log($scope.atttArrayId.indexOf(tempId))
         $scope.filterTag[i]=filterTag;
         if($scope.atttArrayId.indexOf(tempId) !=-1){
           setTimeout(function(){
             var defaultvalue = {}
             defaultvalue.id = null;
-            defaultvalue.value = "-select-"
+            defaultvalue.value = "-Select-"
             $scope.filterAttribureIdValues[$scope.atttArrayId.indexOf(tempId)].values[0]=defaultvalue;
           },100)
           $scope.selectedAttributeValue[$scope.atttArrayId.indexOf(tempId)].value=$scope.dashboardExecData.filterInfo[i].value
