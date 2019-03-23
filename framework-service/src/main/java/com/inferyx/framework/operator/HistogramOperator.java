@@ -178,11 +178,11 @@ public class HistogramOperator implements IOperator {
 			sqlBuilder.append("SELECT ");
 			
 			String castdataType = null;
-			if(datapodDs.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())) {
-				castdataType = "SIGNED";
-			} else {
+//			if(datapodDs.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())) {
+//				castdataType = "SIGNED";
+//			} else {
 				castdataType = "DOUBLE";
-			}
+//			}
 			
 			for(int i=0; i < sourceAttrs.size(); i++) {
 				String attrName = datapod.getAttributeName(Integer.parseInt(sourceAttrs.get(i).getAttrId()));				
@@ -288,10 +288,11 @@ public class HistogramOperator implements IOperator {
 					.concat(" COUNT("+attribute.getName()+") ").concat(" AS frequency")
 					.concat(" FROM ").concat(tableName).concat(" ").concat(attrDp.getName())
 					.concat(" GROUP BY ").concat(attribute.getName())
+					.concat(" ORDER BY ").concat(attribute.getName()).concat(" DESC ")
 					.concat(" LIMIT "+limit);
 			
-			String ourLimitSql = "SELECT * FROM ("+sql+") "+attrDp.getName().concat("_outer")+" ORDER BY "+"frequency"+" DESC "+" LIMIT "+resultLimit;
-			exec.executeAndRegisterByDatasource(ourLimitSql, "tempAttrHistogram", attrDpDs, appUuid);
+//			String ourLimitSql = "SELECT * FROM ("+sql+") "+attrDp.getName().concat("_outer")+" ORDER BY "+"frequency"+" DESC "+" LIMIT "+resultLimit;
+//			exec.executeAndRegisterByDatasource(ourLimitSql, "tempAttrHistogram", attrDpDs, appUuid);
 			
 //		} else {
 //			sql = generateSql(attrRefHolderList, null, null, runMode);
@@ -301,7 +302,8 @@ public class HistogramOperator implements IOperator {
 //			exec.registerTempTable(rsHolder.getDataFrame(), "tempAttrHistogram");
 //		}
 		
-		String dataSql = "SELECT * FROM "+" tempAttrHistogram ";
-		return exec.executeAndFetchByDatasource(dataSql, datapodDS, appUuid);
+//		String dataSql = "SELECT * FROM "+" tempAttrHistogram ";
+//		return exec.executeAndFetchByDatasource(dataSql, datapodDS, appUuid);
+			return exec.executeAndFetchByDatasource(sql, attrDpDs, appUuid);
 	}
 }
