@@ -5,6 +5,7 @@ export class FilterInfoIO {
 	lhsType: String;
 	logicalOperator: String;
 	operator: String;
+	operand: any[];
 	rhsType: String
 	// rhsAttribute: { uuid: String, label: String, attributeId: String };
 	// lhsAttribute: { uuid: String, label: String, attributeId: String };

@@ -547,7 +547,6 @@
                             </div>
                           </ul>
                         </div>
-
                       </div>
                       <div class="portlet-body form">
                         <div class="x_title" style="padding:10px;">
@@ -574,7 +573,7 @@
                               </tr>
                             </thead>
                             <tbody>
-                              <tr *ngFor="let data of filterTableArray ;let i=index">
+                              <tr *ngFor="let data of filterTableArray; let i=index">
 
                                 <td style="text-align:center;Vertical-align:middle;">
                                   <input style="width: 16px;height:16px;" type="checkbox" [(ngModel)]="data.selected"

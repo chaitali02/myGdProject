@@ -13,6 +13,8 @@ export class AttributeIO {
     attrName: String;
     
     value?: { 
+        id?:any;
+        name?: any;
         label?: String,
         value?: String,
         uuid?: String, 

@@ -25,6 +25,7 @@ import { MetaIdentifierHolder } from '../../metadata/domain/domain.metaIdentifie
 import { Attribute } from '../../metadata/domain/domain.attribute';
 import { RoutesParam } from '../../metadata/domain/domain.routeParams';
 import { MetadataIO } from '../../metadata/domainIO/domain.metadataIO';
+import { MetaType } from '../../metadata/enums/metaType';
 
 @Component({
   selector: 'app-data-preparation',
@@ -130,6 +131,7 @@ export class DatapodComponent {
   invalideMinRow: boolean = false;
   invalideMaxRow: boolean = false;
   moveTo: number;
+  metaType = MetaType;
 
   constructor(private _config: AppConfig, public metaconfig: AppMetadata, public appHelper: AppHelper, private http: Http, private _commonService: CommonService, private _datapodService: DatapodService, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private route: ActivatedRoute) {
     this.baseUrl = config.getBaseUrl();
@@ -230,7 +232,7 @@ export class DatapodComponent {
     });
   }
 
- setMode(mode: any) {
+  setMode(mode: any) {
     if (mode == 'true') {
       this.isEdit = false;
       this.isversionEnable = false;
@@ -279,7 +281,7 @@ export class DatapodComponent {
   }
 
   getAllVersionByUuid() {
-    this._commonService.getAllVersionByUuid('datapod', this.id)
+    this._commonService.getAllVersionByUuid(this.metaType.DATAPOD, this.id)
       .subscribe(
         response => {
           this.OnSuccesgetAllVersionByUuid(response)
@@ -307,7 +309,7 @@ export class DatapodComponent {
   getOneByUuidAndVersion(id, version) {
 
     this.isEditInprogess = true;
-    this._datapodService.getOneByUuidAndVersion(id, version, 'datapod')
+    this._datapodService.getOneByUuidAndVersion(id, version, this.metaType.DATAPOD)
       .subscribe(
         response => {
           this.onSuccessgetOneByUuidAndVersion(response)
@@ -477,7 +479,7 @@ export class DatapodComponent {
     }
     datapod.attributes = attributesArray;
     console.log(JSON.stringify(datapod));
-    this._commonService.submit("datapod", datapod).subscribe(
+    this._commonService.submit(this.metaType.DATAPOD, datapod).subscribe(
       response => { this.OnSuccessubmit(response) },
       error => console.log('Error :: ' + error)
     )
@@ -598,7 +600,7 @@ export class DatapodComponent {
     this.showdatapod = false
     this.showgetResults = false
     this.showForm = false;
-    this._datapodService.getDatastoreByDatapod(data, "datapod").subscribe(
+    this._datapodService.getDatastoreByDatapod(data, this.metaType.DATAPOD).subscribe(
       response => { this.OnSuccesgetDatastoreByDatapod(response) },
       error => console.log('Error :: ' + error)
     )
@@ -658,7 +660,7 @@ export class DatapodComponent {
     this.isShowDatastore = false
     this.showgetResults = false
     this.showForm = false;
-    this._datapodService.compareMetadata(data.uuid, data.version, 'datapod').subscribe(
+    this._datapodService.compareMetadata(data.uuid, data.version, this.metaType.DATAPOD).subscribe(
       response => { this.OnSuccescompareMetadata(response) },
       error => console.log('Error :: ' + error)
     )
@@ -695,7 +697,7 @@ export class DatapodComponent {
     if (this.isMetaSysn || this.selectdatasourceType == 'file') {
       return false
     }
-    this._datapodService.synchronizeMetadata(data.uuid, data.version, 'datapod').subscribe(
+    this._datapodService.synchronizeMetadata(data.uuid, data.version, this.metaType.DATAPOD).subscribe(
       response => {
         this.datapodjson = response;
         this.showCompareMetaData(this.datapodjson)
@@ -713,7 +715,7 @@ export class DatapodComponent {
     this.datacol = null;
     this.isHistogramInprogess = true;
     this.isHistogramError = false;
-    this._datapodService.getAttrHistogram(row.uuid, row.version, 'datapod', row.attributeId).subscribe(
+    this._datapodService.getAttrHistogram(row.uuid, row.version, this.metaType.DATAPOD, row.attributeId).subscribe(
       response => { this.onSuccessgetAttrHistogram(response) },
       error => console.log('Error :: ' + error)
     )

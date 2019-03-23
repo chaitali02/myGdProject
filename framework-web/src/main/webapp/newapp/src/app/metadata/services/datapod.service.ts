@@ -8,9 +8,6 @@ import { CommonService } from './common.service';
 import { Datapod } from '../domain/domain.datapod';
 import { DatapodIO } from '../domainIO/domain.datapodIO';
 import { DatapodAttributeIO } from '../domainIO/domain.datapodAttributeIO';
-//import { Datapod } from '../../data-preparation/datapod/datapod';
-//import { Datapod } from 'src/app/data-preparation/datapod/datapod';
-
 
 @Injectable()
 export class DatapodService {

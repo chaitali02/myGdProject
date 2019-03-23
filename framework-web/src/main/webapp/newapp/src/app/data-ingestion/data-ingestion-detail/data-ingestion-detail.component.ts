@@ -6,10 +6,8 @@ import { Version } from '../../metadata/domain/version';
 import { DataIngestionService } from '../../metadata/services/dataIngestion.service';
 import { KnowledgeGraphComponent } from '../../shared/components/knowledgeGraph/knowledgeGraph.component';
 import { AttributeIO } from '../../metadata/domainIO/domain.attributeIO';
-//import { IngestRule } from '../../metadata/domain/domain.ingestRule';
 import { AppHelper } from '../../app.helper';
 import { DataIngestRuleIO } from '../../metadata/domainIO/domain.dataIngestRuleIO';
-import * as MetaTypeEnum from '../../metadata/enums/metaType';
 import { IngestRule } from '../../metadata/domain/domain.ingestRule';
 import { BaseEntity } from '../../metadata/domain/domain.baseEntity';
 import { DropDownIO } from '../../metadata/domainIO/domain.dropDownIO';
@@ -29,6 +27,7 @@ import { AttributeRefHolder } from '../../metadata/domain/domain.attributeRefHol
 import { SourceAttr } from '../../metadata/domain/domain.sourceAttr';
 import { AttributeMap } from '../../metadata/domain/domain.attributeMap';
 import { RoutesParam } from '../../metadata/domain/domain.routeParams';
+import { MetaType } from '../../metadata/enums/metaType';
 @Component({
   selector: 'app-data-ingestion-detail',
   templateUrl: './data-ingestion-detail.component.html'
@@ -117,7 +116,8 @@ export class DataIngestionDetailComponent implements OnInit {
   active: any;
   locked: any;
   targetHeader: any;
-  metaType: any;
+  metaType = MetaType;
+  
   moveToEnable: boolean;
   count: any[];
   txtQueryChangedFilter: Subject<string> = new Subject<string>();
@@ -141,8 +141,9 @@ export class DataIngestionDetailComponent implements OnInit {
   datasetNotEmpty: boolean = true;
   checkAllFilter: boolean;
   datasetRowIndex: any;
+  
   constructor(private _location: Location, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _dataInjectService: DataIngestionService, private appHelper: AppHelper) {
-    this.metaType = MetaTypeEnum.MetaType;
+    //this.metaType = this.metaType;
     this.isSubmit = "false"
     this.ingestData = new IngestRule();
     this.sourceDs = {};
@@ -153,8 +154,7 @@ export class DataIngestionDetailComponent implements OnInit {
     this.dialogAttributeName = {};
     this.continueCount = 1;
     this.progressbarWidth = 25 * this.continueCount + "%";
-    this.topDisabled = false;
-    this.bottomDisabled = false;
+
 
     this.showGraph = false;
     this.showForm = true;
@@ -177,7 +177,6 @@ export class DataIngestionDetailComponent implements OnInit {
     this.moveToEnable = false;
     this.count = [];
 
-    
     this.txtQueryChangedFilter
       .pipe(debounceTime(3000), distinctUntilChanged())
       .subscribe(index => {
@@ -344,7 +343,7 @@ export class DataIngestionDetailComponent implements OnInit {
   }
 
   getAllVersionByUuid() {
-    this._commonService.getAllVersionByUuid(MetaTypeEnum.MetaType.INGEST, this.uuid)
+    this._commonService.getAllVersionByUuid(this.metaType.INGEST, this.uuid)
       .subscribe(
         response => {
           this.OnSuccesgetAllVersionByUuid(response)
@@ -372,7 +371,7 @@ export class DataIngestionDetailComponent implements OnInit {
 
     this.isEditInprogess = true;
     this.isEditError = false;
-    this._dataInjectService.getOneByUuidAndVersion(uuid, version, MetaTypeEnum.MetaType.INGEST).subscribe(
+    this._dataInjectService.getOneByUuidAndVersion(uuid, version, this.metaType.INGEST).subscribe(
       response => {
         this.onSuccessgetOneByUuidAndVersion(response);
       },
@@ -384,7 +383,7 @@ export class DataIngestionDetailComponent implements OnInit {
   }
 
   getDatasourceForFile(sourceType: any, TargetType: any) {
-    this._dataInjectService.getDatasourceForFile(MetaTypeEnum.MetaType.DATASOURCE).subscribe(
+    this._dataInjectService.getDatasourceForFile(this.metaType.DATASOURCE).subscribe(
       response => {
         this.onSuccessgetDatasourceForFile(response)
       },
@@ -425,7 +424,7 @@ export class DataIngestionDetailComponent implements OnInit {
   }
 
   getDatasourceForTable() {
-    this._dataInjectService.getDatasourceForTable(MetaTypeEnum.MetaType.DATASOURCE).subscribe(
+    this._dataInjectService.getDatasourceForTable(this.metaType.DATASOURCE).subscribe(
       response => { this.onSuccessgetDatasourceForTable(response) },
       error => console.log("Error::", +error)
     )
@@ -524,7 +523,7 @@ export class DataIngestionDetailComponent implements OnInit {
   }
 
   getDatasourceForStream() {
-    this._dataInjectService.getDatasourceForStream(MetaTypeEnum.MetaType.DATASOURCE).subscribe(
+    this._dataInjectService.getDatasourceForStream(this.metaType.DATASOURCE).subscribe(
       response => { this.onSuccessgetDatasourceForStream(response) },
       error => console.log("Error::", +error)
     )
@@ -615,13 +614,13 @@ export class DataIngestionDetailComponent implements OnInit {
 
   onChangeSourceType() {
     if (this.sourceType == "datapod") {
-      this._dataInjectService.getDatapodByDatasource(MetaTypeEnum.MetaType.DATASOURCE, this.sourceDs.uuid).subscribe(
+      this._dataInjectService.getDatapodByDatasource(this.metaType.DATASOURCE, this.sourceDs.uuid).subscribe(
         response => { this.onSuccessgetDatapodByDatasource(response) },
         error => console.log("Error::", +error)
       )
     }
     if (this.sourceType == "dataset") {
-      this._commonService.getAllLatest(MetaTypeEnum.MetaType.DATASET).subscribe(
+      this._commonService.getAllLatest(this.metaType.DATASET).subscribe(
         response => { this.onSuccessgetAllLatest(response) },
         error => console.log("Error::", +error)
       )
@@ -825,7 +824,7 @@ export class DataIngestionDetailComponent implements OnInit {
   }
 
   onChangeTargetDs() {
-    this._dataInjectService.getDatapodByDatasource(MetaTypeEnum.MetaType.DATASOURCE, this.targetDs.uuid).subscribe(
+    this._dataInjectService.getDatapodByDatasource(this.metaType.DATASOURCE, this.targetDs.uuid).subscribe(
       response => { this.onSuccessgetDatapodByDatasourceTarget(response) },
       error => console.log("Error::", +error)
     )
@@ -1058,7 +1057,7 @@ export class DataIngestionDetailComponent implements OnInit {
   }
 
   onChangeTargetNameTable() {
-    this._dataInjectService.getAttributesByDatapod(MetaTypeEnum.MetaType.DATAPOD, this.targetNameForTable.uuid).subscribe(
+    this._dataInjectService.getAttributesByDatapod(this.metaType.DATAPOD, this.targetNameForTable.uuid).subscribe(
       response => {
         this.onSuccessgetAttributesByDatapodTable(response),
           error => console.log("Error ::", +error)
@@ -1283,7 +1282,7 @@ export class DataIngestionDetailComponent implements OnInit {
   searchOption(index: any) {
     this.datasetRowIndex = index
     this.displayDialogBox = true;
-    this._commonService.getAllLatest(MetaTypeEnum.MetaType.DATASET)
+    this._commonService.getAllLatest(this.metaType.DATASET)
       .subscribe(response => { this.onSuccessgetAllLatestDialogBox(response) },
         error => console.log("Error ::", error))
   }
@@ -1304,7 +1303,7 @@ export class DataIngestionDetailComponent implements OnInit {
   }
 
   onChangeDialogAttribute() {
-    this._commonService.getAttributesByDataset(MetaTypeEnum.MetaType.DATASET, this.dialogSelectName.uuid)
+    this._commonService.getAttributesByDataset(this.metaType.DATASET, this.dialogSelectName.uuid)
       .subscribe(response => { this.onSuccessgetAttributesByDatasetDialogBox(response) },
         error => console.log("Error ::", error))
   }
@@ -1466,7 +1465,7 @@ export class DataIngestionDetailComponent implements OnInit {
         .subscribe(response => { this.onSuccessgetAttributesByDatapod(response) },
           error => console.log("Error::", +error))
 
-      this._dataInjectService.getAttributesByDatapod(MetaTypeEnum.MetaType.DATAPOD, this.targetNameForTable.uuid)
+      this._dataInjectService.getAttributesByDatapod(this.metaType.DATAPOD, this.targetNameForTable.uuid)
         .subscribe(response => { this.onSuccessgetAttributesByDatapodTarget(response) },
           error => console.log("Error::", +error))
     }
