@@ -1074,7 +1074,7 @@ DataPipelineModule.directive('renderGroupDirective',function ($rootScope,$state,
                 
                    if($scope.execMode || true){
                      var status = $(".status[element-id=" + taskId + "] .statusTitle")[0].innerHTML.toUpperCase();
-                     if(status && (status=='COMPLETED') && isGroupExec!=true && type !='ingest' ){
+                     if(status && (status=='COMPLETED'|| (status== 'ABORTED')) && isGroupExec!=true && type !='ingest' ){
                       iconMenuItems.splice(1,0,{title:'Show Results', type : 'results'});
                       // iconMenuItems.push({title:'Show Logs', type : 'logs'});
                      }
@@ -2165,12 +2165,14 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
            var ref = cell.attributes['model-data'].operators[0].operatorInfo[0].ref;
            var type = ref.type;
            var operator=cell.attributes['model-data'].operators;
+           var isExec = false;
            if(type.slice(-4) == 'Exec'){
              if(type.slice(-9) == 'groupExec'){
                var isGroupExec = true;
+              
              }
              else {
-               var isExec = true;
+               isExec = true;
              }
              type = type.slice(0,-4);
            }
@@ -2186,8 +2188,8 @@ DataPipelineModule.directive('jointGraphDirective',function ($state,$rootScope,g
              var iconMenuItems = [{title:'Show Details', type : 'element'},{title:'Show Logs', type : 'logs'}];
              if($scope.execMode){
                var status = $(".status[element-id=" + taskId + "] .statusTitle")[0].innerHTML.toUpperCase();
-               if(status && (status=='COMPLETED') ||(status== 'FAILED')||(status== 'KILLED')|| (status== 'RUNNING')){
-                 if(isExec && (status=='COMPLETED')){
+               if(status && (status=='COMPLETED') ||(status== 'FAILED')||(status== 'KILLED')|| (status== 'RUNNING') || (status== 'ABORTED')){
+                 if(isExec ==true &&  ((status=='COMPLETED') || (status== 'ABORTED'))){
                    iconMenuItems.splice(1,0,{title:'Show Results', type : 'results'});
                   // iconMenuItems.push({title:'Show Logs', type : 'logs'});
                  }

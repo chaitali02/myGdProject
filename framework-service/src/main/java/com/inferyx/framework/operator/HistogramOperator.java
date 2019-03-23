@@ -9,7 +9,6 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.Engine;
 import com.inferyx.framework.domain.Attribute;
@@ -268,7 +267,7 @@ public class HistogramOperator implements IOperator {
 		return String.format("%s_%s_%s", locationDatapod.getUuid().replace("-", "_"), locationDatapod.getVersion(), execVersion);
 	}
 
-	public List<Map<String, Object>> getAttrHistogram(List<AttributeRefHolder> attrRefHolderList, int numBuckets, int limit, int resultLimit, RunMode runMode) throws Exception {
+	/*public List<Map<String, Object>> getAttrHistogram(List<AttributeRefHolder> attrRefHolderList, int numBuckets, int limit, int resultLimit, RunMode runMode) throws Exception {
 		Datasource datapodDS = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datapodDS.getType());	
 		
@@ -288,11 +287,10 @@ public class HistogramOperator implements IOperator {
 					.concat(" COUNT("+attribute.getName()+") ").concat(" AS frequency")
 					.concat(" FROM ").concat(tableName).concat(" ").concat(attrDp.getName())
 					.concat(" GROUP BY ").concat(attribute.getName())
-					.concat(" ORDER BY ").concat(attribute.getName()).concat(" DESC ")
 					.concat(" LIMIT "+limit);
 			
-//			String ourLimitSql = "SELECT * FROM ("+sql+") "+attrDp.getName().concat("_outer")+" ORDER BY "+"frequency"+" DESC "+" LIMIT "+resultLimit;
-//			exec.executeAndRegisterByDatasource(ourLimitSql, "tempAttrHistogram", attrDpDs, appUuid);
+			String ourLimitSql = "SELECT * FROM ("+sql+") "+attrDp.getName().concat("_outer")+" ORDER BY "+"frequency"+" DESC "+" LIMIT "+resultLimit;
+			exec.executeAndRegisterByDatasource(ourLimitSql, "tempAttrHistogram", attrDpDs, appUuid);
 			
 //		} else {
 //			sql = generateSql(attrRefHolderList, null, null, runMode);
@@ -302,8 +300,46 @@ public class HistogramOperator implements IOperator {
 //			exec.registerTempTable(rsHolder.getDataFrame(), "tempAttrHistogram");
 //		}
 		
-//		String dataSql = "SELECT * FROM "+" tempAttrHistogram ";
-//		return exec.executeAndFetchByDatasource(dataSql, datapodDS, appUuid);
-			return exec.executeAndFetchByDatasource(sql, attrDpDs, appUuid);
+		String dataSql = "SELECT * FROM "+" tempAttrHistogram ";
+		return exec.executeAndFetchByDatasource(dataSql, datapodDS, appUuid);
+	}*/
+	
+	
+	public List<Map<String, Object>> getAttrHistogram(List<AttributeRefHolder> attrRefHolderList, int numBuckets, int limit, int resultLimit, RunMode runMode) throws Exception {
+		Datasource appDS = commonServiceImpl.getDatasourceByApp();
+		IExecutor exec = execFactory.getExecutor(appDS.getType());	
+		
+		String appUuid = commonServiceImpl.getApp().getUuid();
+		
+		MetaIdentifier attrDpMI = attrRefHolderList.get(0).getRef();
+		Datapod attrDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(attrDpMI.getUuid(), attrDpMI.getVersion(), attrDpMI.getType().toString(), "N");
+		Datasource attrDpDs = commonServiceImpl.getDatasourceByObject(attrDp);
+		
+		Attribute attribute = attrDp.getAttribute(Integer.parseInt(attrRefHolderList.get(0).getAttrId()));
+		String attributeType = attribute.getType();
+		String sql = null;
+		if(attributeType.equalsIgnoreCase("String") || attributeType.equalsIgnoreCase("Varchar")||attributeType.equalsIgnoreCase("text")||attributeType.equalsIgnoreCase("char")) {
+			String tableName = datapodServiceImpl.getTableNameByDatapod(new Key(attrDp.getUuid(), attrDp.getVersion()), runMode);
+			sql = "SELECT "
+					.concat(attribute.getName()).concat(" AS bucket ").concat(", ")
+					.concat(" COUNT("+attribute.getName()+") ").concat(" AS frequency")
+					.concat(" FROM ").concat(tableName).concat(" ").concat(attrDp.getName())
+					.concat(" GROUP BY ").concat(attribute.getName())
+					.concat(" LIMIT "+limit);
+			
+			
+	//		String ourLimitSql = "SELECT * FROM ("+sql+") "+tableName+" ORDER BY "+"frequency"+" DESC "+" LIMIT "+resultLimit;
+			exec.executeAndRegisterByDatasource(sql, "tempAttrHistogram", attrDpDs, appUuid);
+			
+		} else {
+			sql = generateSql(attrRefHolderList, null, null, runMode);
+			sql = sql.concat(" ").concat(" LIMIT "+limit);
+
+			ResultSetHolder rsHolder = exec.histogram(null, null, sql, null, numBuckets, appUuid, attrDpDs);
+			exec.registerTempTable(rsHolder.getDataFrame(), "tempAttrHistogram");
+		}
+		
+		String dataSql = "SELECT * FROM "+" tempAttrHistogram ";
+		return exec.executeAndFetchByDatasource(dataSql, appDS, appUuid);
 	}
 }

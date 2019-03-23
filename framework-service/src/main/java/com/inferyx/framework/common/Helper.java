@@ -115,15 +115,6 @@ public class Helper {
 		return String.format("%s_%s_%s", list[list.length-3].replaceAll("-", "_"), list[list.length-2], list[list.length-1]);
 	}
 
-	/********************** UNUSED **********************/
-//	public static String genTableName(String datapodUUID, String datapodVersion) 
-//	{
-//		String tableName = null;
-//		String datapod = datapodUUID.replace("-", "_");
-//		tableName = datapod+"_"+datapodVersion;
-//		logger.info("Hive Table name is :: "+tableName);
-//		return tableName;
-//	}
 	
 	public static String genTableName(String datapodUUID, String datapodVersion, String execVersion) {
 		String tableName = null;
@@ -863,27 +854,6 @@ public class Helper {
 		return destMap;
 	}
 
-	/********************** UNUSED **********************/
-//	public Object getDataType(String dataType) throws NullPointerException {
-//		if(dataType == null)
-//			return null;
-//
-//		if(dataType.contains("(")) {
-//			dataType = dataType.substring(0, dataType.indexOf("("));
-//		}
-//		
-//		switch (dataType.toLowerCase()) {
-//			case "integer": return DataTypes.IntegerType;
-//			case "double": return DataTypes.DoubleType;
-//			case "date": return DataTypes.DateType;
-//			case "string": return DataTypes.StringType;
-//			case "timestamp": return DataTypes.TimestampType;
-//			case "decimal" : return DataTypes.createDecimalType();
-//			case "vector" : return new VectorUDT();
-//			
-//            default: return null;
-//		}
-//	}
 	
 	/**
 	 * 
