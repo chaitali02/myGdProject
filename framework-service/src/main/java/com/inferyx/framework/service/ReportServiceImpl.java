@@ -571,7 +571,8 @@ public class ReportServiceImpl extends RuleTemplate {
 				boolean isDocCreated = true;
 				List<Map<String, Object>> data = prepareDocumentData(reportExec, report, runMode, report.getLimit(), true);
 				if(format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
-					isDocCreated = documentGenServiceImpl.createPDF(MetaType.report.toString(), report, reportExec, data, Layout.PORTRAIT.toString());
+					String layout = report.getLayout() != null ? report.getLayout().toString() : null;					
+					isDocCreated = documentGenServiceImpl.createPDF(MetaType.report.toString(), report, reportExec, data, layout);
 				} else {
 					isDocCreated = documentGenServiceImpl.createXLS(MetaType.report.toString(), report, reportExec, data);
 				}
