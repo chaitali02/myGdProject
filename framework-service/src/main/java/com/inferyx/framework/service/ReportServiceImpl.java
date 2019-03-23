@@ -64,6 +64,7 @@ import com.inferyx.framework.domain.ReportExec;
 import com.inferyx.framework.domain.ReportExecView;
 import com.inferyx.framework.domain.SenderInfo;
 import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.SparkExecutor;
@@ -825,6 +826,14 @@ public class ReportServiceImpl extends RuleTemplate {
 			downloadExec.setBaseEntity();
 			downloadExec.setLocation(filePathUrl);
 			downloadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.reportExec, reportExec.getUuid(), reportExec.getVersion())));
+			
+			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.PENDING);
+			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.STARTING);
+			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.READY);
+			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.RUNNING);
+			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.COMPLETED);
+			
+			
 			commonServiceImpl.save(MetaType.downloadExec.toString(), downloadExec);			
 		}
 
