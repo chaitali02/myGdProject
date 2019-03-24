@@ -1128,7 +1128,9 @@ public class DatapodServiceImpl {
 
 		Datasource ds = (Datasource) commonServiceImpl.getLatestByUuid(dp.getDatasource().getRef().getUuid(), MetaType.datasource.toString(), "N");
 //		Remove runMode == RunMode.BATCH condition once the online batch modes are retired. - Partha.
-		if (!ds.getType().equalsIgnoreCase(ExecContext.FILE.toString()) && runMode == RunMode.BATCH) {
+		if (!ds.getType().equalsIgnoreCase(ExecContext.FILE.toString()) 
+//				|| runMode == RunMode.BATCH
+				) {
 			String tableName = ds.getDbname() + "." + dp.getName();
 			return tableName;
 		} 
