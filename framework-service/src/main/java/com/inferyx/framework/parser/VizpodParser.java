@@ -245,12 +245,12 @@ public class VizpodParser {
 				dpKey.setUUID(vizpod.getSource().getRef().getUuid());
 				dpKey.setVersion(vizpod.getSource().getRef().getVersion());
 				
-				tableName = datapodServiceImpl.getTableNameByDatapod(dpKey,runMode);
+				tableName = datapodServiceImpl.getTableNameByDatapodKey(dpKey,runMode);
 //				List<DataStore> listDataStore = dataStoreServiceImpl
 //						.findDataStoreByDatapod(vizpod.getSource().getRef().getUuid());
 //				if (listDataStore != null && !listDataStore.isEmpty()) {
 //					DataStore dataStore = listDataStore.get(0);
-//					tableName = dataStoreServiceImpl.getTableNameByDatastore(dataStore.getUuid(),
+//					tableName = dataStoreServiceImpl.getTableNameByDatastoreKey(dataStore.getUuid(),
 //							dataStore.getVersion(), runMode);
 //				} else {
 //					throw new RuntimeException(

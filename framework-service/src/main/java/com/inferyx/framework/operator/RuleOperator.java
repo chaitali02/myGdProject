@@ -128,7 +128,7 @@ public class RuleOperator implements IParsable, IReferenceable {
 			
 			String table = null;
 			if (otherParams == null	|| otherParams.get("datapod_".concat(datapod.getUuid())) == null) {
-				table = datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+				table = datapodServiceImpl.getTableNameByDatapodKey(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
 			} else {
 				String tableKey = "datapod_".concat(datapod.getUuid());
 				table = otherParams.get(tableKey);

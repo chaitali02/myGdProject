@@ -322,7 +322,7 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 			String sql = mapExec.getExec();
 			if (!targetDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
 					&& appDatasource.getType().equalsIgnoreCase(targetDatasource.getType())) {
-				mapTableName = datapodServiceImpl.getTableNameByDatapod(datapodKey, runMode);
+				mapTableName = datapodServiceImpl.getTableNameByDatapodKey(datapodKey, runMode);
 				logger.info("Datapod: "+datapodKey.getUUID());
 				
 				String partitionColls = Helper.getPartitionColumns(targetDatapod);				

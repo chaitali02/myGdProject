@@ -182,7 +182,7 @@ public class MapServiceImpl implements IParsable, IExecutable {
 //			return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");
 //		} else {
 //			try {
-//				return datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+//				return datapodServiceImpl.getTableNameByDatapodKey(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
 //			} catch(Exception e) {
 //				return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(), mapExec.getVersion());
 //			}
@@ -558,7 +558,7 @@ public class MapServiceImpl implements IParsable, IExecutable {
 					if (/*!engine.getExecEngine().equalsIgnoreCase("livy-spark")
 							&& !datasource.getType().equalsIgnoreCase(ExecContext.spark.toString()) 
 							&&*/ !datasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
-						mapTableName = datapodServiceImpl.getTableNameByDatapod(datapodKey, runMode);
+						mapTableName = datapodServiceImpl.getTableNameByDatapodKey(datapodKey, runMode);
 					}  else {
 						mapTableName = String.format("%s_%s_%s", datapodKey.getUUID().replace("-", "_"), datapodKey.getVersion(), mapExec.getVersion());
 					}

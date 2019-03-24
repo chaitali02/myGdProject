@@ -201,7 +201,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 			entityAttrName = datapodServiceImpl.getAttributeName(attributeRefHolder.getRef().getUuid(),
 					Integer.parseInt(attributeRefHolder.getAttrId()));
 			aliasName = dp.getName();
-			tablename = datapodServiceImpl.getTableNameByDatapod(new Key(dp.getUuid(), dp.getVersion()), runMode);
+			tablename = datapodServiceImpl.getTableNameByDatapodKey(new Key(dp.getUuid(), dp.getVersion()), runMode);
 			break;
 		case dataset:
 			DataSet ds = (DataSet) commonServiceImpl.getLatestByUuid(attributeRefHolder.getRef().getUuid(),
@@ -392,7 +392,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 
 			String table = null;
 			if (otherParams == null || otherParams.get("datapod_".concat(datapod.getUuid())) == null) {
-				table = datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()),
+				table = datapodServiceImpl.getTableNameByDatapodKey(new OrderKey(datapod.getUuid(), datapod.getVersion()),
 						runMode);
 			} else {
 				String tableKey = "datapod_".concat(datapod.getUuid());

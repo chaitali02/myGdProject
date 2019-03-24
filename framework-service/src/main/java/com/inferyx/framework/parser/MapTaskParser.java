@@ -175,7 +175,7 @@ public class MapTaskParser extends TaskParser {
 			return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapodVersion,
 					dagExecVersion);
 		} else {
-			return datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), RunMode.BATCH);
+			return datapodServiceImpl.getTableNameByDatapodKey(new OrderKey(datapod.getUuid(), datapod.getVersion()), RunMode.BATCH);
 		}
 	}
 	

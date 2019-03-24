@@ -515,6 +515,6 @@ public class ProfileOperator {
 //		}
 //		//logger.info(" runMode : " + runMode.toString() + " : datapod : " + dp.getUuid() + " : datapodList.contains(datapod.getUuid()) : " + datapodList.contains(dp.getUuid()));
 //		datastoreServiceImpl.setRunMode(runMode);
-//		return datapodServiceImpl.getTableNameByDatapod(new OrderKey(dp.getUuid(), dp.getVersion()), runMode);
+//		return datapodServiceImpl.getTableNameByDatapodKey(new OrderKey(dp.getUuid(), dp.getVersion()), runMode);
 //	}
 }

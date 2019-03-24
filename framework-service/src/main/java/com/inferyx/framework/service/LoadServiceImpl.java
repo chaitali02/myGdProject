@@ -301,7 +301,7 @@ public class LoadServiceImpl {
 		DataStore datastore = dataStoreServiceImpl.getDatastore(loadExec.getResult().getRef().getUuid(),
 				loadExec.getResult().getRef().getVersion());
 		dataStoreServiceImpl.setRunMode(runMode);
-		String tableName = dataStoreServiceImpl.getTableNameByDatastore(datastore.getUuid(), datastore.getVersion(),
+		String tableName = dataStoreServiceImpl.getTableNameByDatastoreKey(datastore.getUuid(), datastore.getVersion(),
 				runMode);
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());

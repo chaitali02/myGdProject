@@ -282,7 +282,7 @@ public class GraphOperator implements IOperator {
 //			return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");
 //		} else {
 //			try {
-//				return datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+//				return datapodServiceImpl.getTableNameByDatapodKey(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
 //			} catch(Exception e) {
 //				return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(), baseExec.getVersion());
 //			}

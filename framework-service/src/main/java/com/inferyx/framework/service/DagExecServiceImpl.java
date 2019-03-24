@@ -1410,7 +1410,7 @@ public class DagExecServiceImpl {
 		logger.info(
 				"Extracting DataStore UUID :: " + dataStoreUUID + " And DataStore version " + dataStoreVersion);
 
-		String tableName = dataStoreServiceImpl.getTableNameByDatastore(dataStoreUUID, dataStoreVersion);
+		String tableName = dataStoreServiceImpl.getTableNameByDatastoreKey(dataStoreUUID, dataStoreVersion);
 
 		//DataFrame df = sqlContext.sql(String.format("select * from %s", tableName));
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
@@ -1454,7 +1454,7 @@ public class DagExecServiceImpl {
 
 		logger.info("Extracting DataStore UUID :: " + dataStoreUUID + " And DataStore version " + dataStoreVersion);
 
-		String tableName = dataStoreServiceImpl.getTableNameByDatastore(dataStoreUUID, dataStoreVersion);
+		String tableName = dataStoreServiceImpl.getTableNameByDatastoreKey(dataStoreUUID, dataStoreVersion);
 		//DataFrame df = sqlContext.sql(String.format("select * from %s", tableName));
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		IExecutor exec = execFactory.getExecutor(datasource.getType());
@@ -1554,7 +1554,7 @@ public class DagExecServiceImpl {
 		 
 
 		logger.info("Extracting DataStore UUID :: " + dataStoreUUID + " And DataStore version " + dataStoreVersion);
-		String tableName = dataStoreServiceImpl.getTableNameByDatastore(dataStoreUUID, dataStoreVersion);
+		String tableName = dataStoreServiceImpl.getTableNameByDatastoreKey(dataStoreUUID, dataStoreVersion);
 		return tableName;
 	}*/
 

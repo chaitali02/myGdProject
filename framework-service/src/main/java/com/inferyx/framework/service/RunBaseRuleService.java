@@ -581,7 +581,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 				
 				if (baseRuleExec.getDependsOn().getRef().getType()==MetaType.dq && isAbort(baseRule.getUuid(), baseRule.getVersion(), baseRuleExec, runMode)) {
 					synchronized (baseRuleExec.getUuid()) {
-						baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRule, ruleExecType,
+						baseRuleExec = (BaseRuleExec) commonServiceImpl.setMetaStatus(baseRuleExec, ruleExecType,
 								Status.Stage.ABORTED);
 					}
 					logger.error("Rule to be Aborted ");

@@ -531,7 +531,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 			/*boolean requestIdExistFlag = false;
 			StringBuilder orderBy = new StringBuilder();
 			dataStoreServiceImpl.setRunMode(runMode);
-			String tableName = dataStoreServiceImpl.getTableNameByDatastore(datastore.getUuid(),
+			String tableName = dataStoreServiceImpl.getTableNameByDatastoreKey(datastore.getUuid(),
 					datastore.getVersion(), runMode);
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			ExecContext execContext = null;
@@ -1031,7 +1031,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 //		String tableName = null;
 		List<Map<String, Object>> data = new ArrayList<>();
 		try {
-//			tableName = dataStoreServiceImpl.getTableNameByDatastore(datastore.getUuid(), datastore.getVersion(),
+//			tableName = dataStoreServiceImpl.getTableNameByDatastoreKey(datastore.getUuid(), datastore.getVersion(),
 //					runMode);
 		Datasource datasource = commonServiceImpl.getDatasourceByApp();
 		ExecContext execContext = null;
@@ -1079,7 +1079,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 			/*boolean requestIdExistFlag = false;
 			StringBuilder orderBy = new StringBuilder();
 			dataStoreServiceImpl.setRunMode(runMode);
-			String tableName = dataStoreServiceImpl.getTableNameByDatastore(datastore.getUuid(),
+			String tableName = dataStoreServiceImpl.getTableNameByDatastoreKey(datastore.getUuid(),
 					datastore.getVersion(), runMode);
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			ExecContext execContext = null;

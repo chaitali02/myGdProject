@@ -190,12 +190,12 @@ import com.inferyx.framework.service.DatapodServiceImpl;
 				String table = null;
 				/*if (otherParams == null 
 						|| otherParams.get("datapod_".concat(datapod.getUuid())) == null) {*/
-//					table = datastoreServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+//					table = datastoreServiceImpl.getTableNameByDatapodKey(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
 				if (otherParams != null && otherParams.containsKey("datapodUuid_" + datapod.getUuid() + "_tableName")) {
 					return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName") + " " + datapod.getName();
 				} else {
 					try {
-						table = datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+						table = datapodServiceImpl.getTableNameByDatapodKey(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
 					} catch(Exception e) {
 						table =  String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(), dataset.getVersion());
 					}

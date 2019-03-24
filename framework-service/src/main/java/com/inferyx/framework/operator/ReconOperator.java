@@ -407,7 +407,7 @@ public class ReconOperator {
 //		} else if (otherParams!= null && otherParams.containsKey("datapodUuid_" + datapod.getUuid() + "_tableName")) {
 //			return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");
 //		}
-//		return datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()),
+//		return datapodServiceImpl.getTableNameByDatapodKey(new OrderKey(datapod.getUuid(), datapod.getVersion()),
 //				runMode);
 //	}
 	

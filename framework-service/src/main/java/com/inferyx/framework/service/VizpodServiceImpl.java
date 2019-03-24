@@ -925,7 +925,7 @@ public class VizpodServiceImpl extends RuleTemplate {
 			dataStoreServiceImpl.setRunMode(runMode);
 			DataStore datastore = dataStoreServiceImpl.getDatastore(vizExec.getResult().getRef().getUuid(),
 					vizExec.getResult().getRef().getVersion());	
-			String tableName = dataStoreServiceImpl.getTableNameByDatastore(datastore.getUuid(), datastore.getVersion(), runMode);
+			String tableName = dataStoreServiceImpl.getTableNameByDatastoreKey(datastore.getUuid(), datastore.getVersion(), runMode);
 			if(saveOnRefresh.equalsIgnoreCase("Y")) {
 				String appUuid = commonServiceImpl.getApp().getUuid();
 				List<String> filePathList = new ArrayList<>();

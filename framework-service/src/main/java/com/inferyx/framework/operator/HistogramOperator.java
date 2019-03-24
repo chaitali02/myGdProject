@@ -108,7 +108,7 @@ public class HistogramOperator implements IOperator {
 
 		Datasource locationDpDs = commonServiceImpl.getDatasourceByDatapod(locationDatapod);
 		if(!locationDpDs.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
-			locationTableName = datapodServiceImpl.getTableNameByDatapod(new OrderKey(locationDatapod.getUuid(), locationDatapod.getVersion()), runMode);
+			locationTableName = datapodServiceImpl.getTableNameByDatapodKey(new OrderKey(locationDatapod.getUuid(), locationDatapod.getVersion()), runMode);
 		} else if(locationTableName == null || locationTableName.isEmpty()) {			
 			locationTableName = String.format("%s_%s_%s", locationDatapod.getUuid().replace("-", "_"), locationDatapod.getVersion(), baseExec.getVersion());
 		}
@@ -172,7 +172,7 @@ public class HistogramOperator implements IOperator {
 				tableName = otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");				
 			}
 			if(tableName == null || tableName.isEmpty()) {
-				tableName = datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+				tableName = datapodServiceImpl.getTableNameByDatapodKey(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
 			}
 			sqlBuilder.append("SELECT ");
 			
@@ -180,7 +180,7 @@ public class HistogramOperator implements IOperator {
 //			if(datapodDs.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())) {
 //				castdataType = "SIGNED";
 //			} else {
-				castdataType = "DOUBLE";
+				castdataType = "DECIMAL(30,15)";
 //			}
 			
 			for(int i=0; i < sourceAttrs.size(); i++) {
@@ -281,7 +281,7 @@ public class HistogramOperator implements IOperator {
 //		String attributeType = attribute.getType();
 		String sql = null;
 //		if(attributeType.equalsIgnoreCase("String")) {
-			String tableName = datapodServiceImpl.getTableNameByDatapod(new Key(attrDp.getUuid(), attrDp.getVersion()), runMode);
+			String tableName = datapodServiceImpl.getTableNameByDatapodKey(new Key(attrDp.getUuid(), attrDp.getVersion()), runMode);
 			sql = "SELECT "
 					.concat(attribute.getName()).concat(" AS bucket ").concat(", ")
 					.concat(" COUNT("+attribute.getName()+") ").concat(" AS frequency")
@@ -319,7 +319,7 @@ public class HistogramOperator implements IOperator {
 		String attributeType = attribute.getType();
 		String sql = null;
 		if(attributeType.equalsIgnoreCase("String") || attributeType.equalsIgnoreCase("Varchar")||attributeType.equalsIgnoreCase("text")||attributeType.equalsIgnoreCase("char")) {
-			String tableName = datapodServiceImpl.getTableNameByDatapod(new Key(attrDp.getUuid(), attrDp.getVersion()), runMode);
+			String tableName = datapodServiceImpl.getTableNameByDatapodKey(new Key(attrDp.getUuid(), attrDp.getVersion()), runMode);
 			sql = "SELECT "
 					.concat(attribute.getName()).concat(" AS bucket ").concat(", ")
 					.concat(" COUNT("+attribute.getName()+") ").concat(" AS frequency")

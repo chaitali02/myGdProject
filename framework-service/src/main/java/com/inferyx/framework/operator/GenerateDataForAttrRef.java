@@ -92,7 +92,7 @@ public class GenerateDataForAttrRef extends GenerateDataOperator {
 //		DataSet attrDataset = null;
 		if (attrDpIdentifier.getType() == MetaType.datapod) {
 			attrDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(attrDpIdentifier.getUuid(), attrDpIdentifier.getVersion(), attrDpIdentifier.getType().toString());
-			String attrDpTableName = datapodServiceImpl.getTableNameByDatapod(new OrderKey(attrDatapod.getUuid(), attrDatapod.getVersion()), runMode);
+			String attrDpTableName = datapodServiceImpl.getTableNameByDatapodKey(new OrderKey(attrDatapod.getUuid(), attrDatapod.getVersion()), runMode);
 			otherParams.put("datapodUuid_" + attrDatapod.getUuid() + "_tableName", attrDpTableName);
 		} 
 		

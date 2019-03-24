@@ -200,7 +200,7 @@ public class RandomDistribution {
 		// dataStoreServiceImpl.findDataStoreByMeta(paramDp.getUuid(),
 		// paramDp.getVersion());
 		// String tableName =
-		// dataStoreServiceImpl.getTableNameByDatastore(paramDs.getUuid(),
+		// dataStoreServiceImpl.getTableNameByDatastoreKey(paramDs.getUuid(),
 		// paramDs.getVersion(), RunMode.BATCH);
 		// LOGGER.info("Table name:" + tableName);
 		//
@@ -233,7 +233,7 @@ public class RandomDistribution {
 		// dataStoreServiceImpl.findDataStoreByMeta(paramDp.getUuid(),
 		// paramDp.getVersion());
 		// String tableName =
-		// dataStoreServiceImpl.getTableNameByDatastore(paramDs.getUuid(),
+		// dataStoreServiceImpl.getTableNameByDatastoreKey(paramDs.getUuid(),
 		// paramDs.getVersion(), RunMode.BATCH);
 		// LOGGER.info("Table name:" + tableName);
 		//

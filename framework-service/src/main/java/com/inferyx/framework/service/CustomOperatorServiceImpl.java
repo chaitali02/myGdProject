@@ -137,7 +137,7 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 			
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			IExecutor exec = execFactory.getExecutor(datasource.getType());
-			String tableName = dataStoreServiceImpl.getTableNameByDatastore(datastore.getUuid(), datastore.getVersion(), RunMode.BATCH);
+			String tableName = dataStoreServiceImpl.getTableNameByDatastoreKey(datastore.getUuid(), datastore.getVersion(), RunMode.BATCH);
 			Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datastore.getMetaId().getRef().getUuid(), datastore.getMetaId().getRef().getVersion(), datastore.getMetaId().getRef().getType().toString());
 			String filePathUrl = String.format("%s%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath(), getFilePath(datapod, operatorExecVersion));
 			datastore.setLocation(filePathUrl);

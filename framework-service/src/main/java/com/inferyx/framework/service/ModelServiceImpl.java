@@ -1571,7 +1571,7 @@ public class ModelServiceImpl {
 				throw new Exception();
 			}			
 		
-			String tableName = datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), RunMode.BATCH);
+			String tableName = datapodServiceImpl.getTableNameByDatapodKey(new OrderKey(datapod.getUuid(), datapod.getVersion()), RunMode.BATCH);
 			logger.info("Table name : " + tableName);
 			String sql = "SELECT * FROM "+tableName;
 			return sql;
@@ -2127,7 +2127,7 @@ public class ModelServiceImpl {
 //		return tableName;
 //	}
 
-	public String getTableNameByDatapod(Datapod datapod, Datasource datasource) {
+	public String getTableNameByDatapodKey(Datapod datapod, Datasource datasource) {
 		if(datasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
 			return datasource.getSid().concat(".").concat(datapod.getName());
 		} else {
@@ -2544,7 +2544,7 @@ public class ModelServiceImpl {
 								
 								trainSetDetails.put("trainSetSavePath", trainSetSavePath);
 							} else {								
-								trainSetDetails.put("testSetTableName", getTableNameByDatapod(trainSetDp, trainSetDpDs));
+								trainSetDetails.put("testSetTableName", getTableNameByDatapodKey(trainSetDp, trainSetDpDs));
 								trainSetDetails.put("trainSetHostName", trainSetDpDs.getHost());
 								trainSetDetails.put("trainSetDbName", trainSetDpDs.getDbname());
 								trainSetDetails.put("trainSetPort", trainSetDpDs.getPort());
@@ -2580,7 +2580,7 @@ public class ModelServiceImpl {
 							
 							testSetDetails.put("testSetSavePath", testSetSavePath);
 						} else {
-							testSetDetails.put("testSetTableName", getTableNameByDatapod(testSetDp, testSetDpDs));
+							testSetDetails.put("testSetTableName", getTableNameByDatapodKey(testSetDp, testSetDpDs));
 							testSetDetails.put("testSetHostName", testSetDpDs.getHost());
 							testSetDetails.put("testSetDbName", testSetDpDs.getDbname());
 							testSetDetails.put("testSetPort", testSetDpDs.getPort());

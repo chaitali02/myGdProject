@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -32,6 +33,7 @@ import java.util.regex.Pattern;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -99,6 +101,7 @@ import com.inferyx.framework.operator.FormulaOperator;
 import com.inferyx.framework.operator.HistogramOperator;
 import com.inferyx.framework.operator.RelationOperator;
 import com.inferyx.framework.operator.RuleOperator;
+import com.inferyx.framework.register.DatapodRegister;
 import com.inferyx.framework.register.GraphRegister;
 
 @Service
@@ -107,9 +110,13 @@ public class DatapodServiceImpl {
 	static final Logger logger = Logger.getLogger(DatapodServiceImpl.class);
 
 	@Autowired
+	DatapodRegister datapodRegister;	
+	@Autowired
 	GraphRegister<?> registerGraph;
 	@Autowired
 	IDatapodDao idatapodDao;
+	@Autowired
+	Helper helper;
 	@Autowired
 	IDataStoreDao idatastoreDao;
 	@Autowired
@@ -1042,7 +1049,7 @@ public class DatapodServiceImpl {
 		}
 	}
 
-//	public String genTableNameByDatapod(Datapod datapod, String execversion, List<String> datapodList, HashMap<String, String> otherParams, DagExec dagExec, RunMode runMode, boolean getFromGetTablenameBydatapod) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+//	public String genTableNameByDatapod(Datapod datapod, String execversion, List<String> datapodList, HashMap<String, String> otherParams, DagExec dagExec, RunMode runMode, boolean getFromgetTableNameByDatapodKey) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 //		Datasource datapodDs = commonServiceImpl.getDatasourceByDatapod(datapod);		
 //		if(runMode.equals(RunMode.BATCH)) {
 //			if (!datapodDs.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
@@ -1056,7 +1063,7 @@ public class DatapodServiceImpl {
 //	}
 
 	public String genTableNameByDatapod(Datapod datapod, String execversion, List<String> datapodList,
-			HashMap<String, String> otherParams, DagExec dagExec, RunMode runMode, boolean getFromGetTablenameBydatapod)
+			HashMap<String, String> otherParams, DagExec dagExec, RunMode runMode, boolean getFromgetTableNameByDatapodKey)
 			throws Exception {
 		logger.info(" OtherParams : datapod : " + otherParams + " : " + datapod.getUuid());
 		if (runMode.equals(RunMode.ONLINE) && datapodList != null && datapodList.contains(datapod.getUuid())) {
@@ -1066,9 +1073,9 @@ public class DatapodServiceImpl {
 			return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");
 		}
 		
-		if(getFromGetTablenameBydatapod) {
+		if(getFromgetTableNameByDatapodKey) {
 			try {
-				return getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()),
+				return getTableNameByDatapodKey(new OrderKey(datapod.getUuid(), datapod.getVersion()),
 						runMode);
 			} catch (Exception e) {
 				// TODO: handle exception
@@ -1096,38 +1103,54 @@ public class DatapodServiceImpl {
 		
 		String sourceTableName = null;
 		try {
-			sourceTableName = getTableNameByDatapod(new OrderKey(datapodUuid, datapodVersion), runMode);
+			sourceTableName = getTableNameByDatapodKey(new OrderKey(datapodUuid, datapodVersion), runMode);
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
 		return exec.compareMetadata(targetDatapod, targetDS, sourceTableName);
 	}
+
+	public String getTableNameByDatapodKey(Key sourceAttr, RunMode runMode) throws Exception {
+
+		Datapod dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(sourceAttr.getUUID(), sourceAttr.getVersion(), MetaType.datapod.toString(), "N");
+		return getTableNameByDatapod(dp, runMode);
+
+	}
 	
-	public String getTableNameByDatapod(Key sourceAttr, RunMode runMode) throws Exception {
-		//logger.info("sourceAttr ::: " + sourceAttr);
-		DataStore datastore = new DataStore();
-		String dataStoreMetaUUID = sourceAttr.getUUID();
-		String dataStoreMetaVer = sourceAttr.getVersion();
-		
-		Datapod dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dataStoreMetaUUID, dataStoreMetaVer, MetaType.datapod.toString(), "N");
-		
-		String datasource = dp.getDatasource().getRef().getUuid();
-		//Datasource ds = datasourceServiceImpl.findLatestByUuid(datasource);
-		Datasource ds = (Datasource) commonServiceImpl.getLatestByUuid(datasource, MetaType.datasource.toString(), "N");
-		String dsType = ds.getType();
-		if (/*!engine.getExecEngine().equalsIgnoreCase("livy-spark")
-				&& !dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
-				&& */!dsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
+	public String getTableNameByDatapodKey(String uuid, String version, RunMode runMode) throws Exception {
+
+		Datapod dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(uuid, version, MetaType.datapod.toString(), "N");
+		return getTableNameByDatapod(dp, runMode);
+
+	}
+
+	public String getTableNameByDatapod(Datapod dp, RunMode runMode) throws Exception {
+
+		Datasource ds = (Datasource) commonServiceImpl.getLatestByUuid(dp.getDatasource().getRef().getUuid(), MetaType.datasource.toString(), "N");
+//		Remove runMode == RunMode.BATCH condition once the online batch modes are retired. - Partha.
+		if (!ds.getType().equalsIgnoreCase(ExecContext.FILE.toString()) && runMode == RunMode.BATCH) {
 			String tableName = ds.getDbname() + "." + dp.getName();
 			return tableName;
 		} 
-		datastore = dataStoreServiceImpl.findLatestByMeta(dataStoreMetaUUID, dataStoreMetaVer);
+		
+		DataStore datastore = dataStoreServiceImpl.findLatestByMeta(dp.getUuid(), dp.getVersion());
 		if (datastore == null) {
-			//logger.error("No data found for datapod " + dp.getUuid());
-			logger.error("No data found for datapod "+dp.getName()+".");
-			throw new Exception("No data found for datapod "+dp.getName()+".");
+			logger.error("No datastore found for datapod "+dp.getName()+".");
+			throw new Exception("No datastore found for datapod "+dp.getName()+".");
 		}
-		return dataStoreServiceImpl.getTableNameByDatastore(datastore.getUuid(), datastore.getVersion(), runMode);
+
+//		return dataStoreServiceImpl.getTableNameByDatastoreKey(datastore.getUuid(), datastore.getVersion(), runMode);
+		
+		String hdfsLocation = String.format("%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath());
+		String filePath = datastore.getLocation();
+		filePath = String.format("%s%s", hdfsLocation, filePath);
+		String tableName = Helper.genTableName(filePath);
+
+		if (datastore.getPersistMode() == null || !datastore.getPersistMode().equals("MEMORY_ONLY")) {
+			datapodRegister.registerDatapod(datastore, dp, runMode);
+		}	
+		
+		return tableName;
 	}
 
 	public Datapod synchronizeMetadata(String datapodUuid, String datapodVersion, RunMode runMode) throws IOException, JSONException, ParseException {
@@ -1138,7 +1161,7 @@ public class DatapodServiceImpl {
 		
 		String sourceTableName = null;
 		try {
-			sourceTableName = getTableNameByDatapod(new OrderKey(datapodUuid, datapodVersion), runMode);
+			sourceTableName = getTableNameByDatapodKey(new OrderKey(datapodUuid, datapodVersion), runMode);
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -1220,7 +1243,7 @@ public class DatapodServiceImpl {
 		String sourceTableName = null;
 		try {
 			datastoreServiceImpl.setRunMode(runMode);
-			sourceTableName = getTableNameByDatapod(new OrderKey(datapodUuid, datapodVersion),
+			sourceTableName = getTableNameByDatapodKey(new OrderKey(datapodUuid, datapodVersion),
 					runMode);
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -1320,7 +1343,7 @@ public class DatapodServiceImpl {
 	}
 	
 	public String generateSqlByDatapod(Datapod datapod, RunMode runMode) throws Exception {
-		String tableName = getTableNameByDatapod(new Key(datapod.getUuid(), datapod.getVersion()), runMode);
+		String tableName = getTableNameByDatapodKey(new Key(datapod.getUuid(), datapod.getVersion()), runMode);
 		StringBuilder builder = new StringBuilder("SELECT ");
 		
 		int i = 0;
@@ -1340,7 +1363,7 @@ public class DatapodServiceImpl {
 	}
 	public String generateSqlByDatapod(Datapod datapod, RunMode runMode, List<AttributeRefHolder> listAttributes)
 			throws Exception {
-		String tableName = getTableNameByDatapod(new Key(datapod.getUuid(), datapod.getVersion()),
+		String tableName = getTableNameByDatapodKey(new Key(datapod.getUuid(), datapod.getVersion()),
 				runMode);
 		StringBuilder builder = new StringBuilder("SELECT ");
 
@@ -1366,4 +1389,119 @@ public class DatapodServiceImpl {
 		return builder.toString();
 
 	}
+
+	public List<Map<String, Object>> getDatapodSample(String uuid, String version, int rows, RunMode runMode) throws Exception {
+
+//		setRunMode(runMode);
+
+		DataStore ds = datastoreServiceImpl.findDataStoreByMeta(uuid, version);
+	
+		if (ds == null) {
+			logger.error("Datastore is not available for this datapod");			
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.datastore, uuid, version));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Datastore is not available for this datapod.", dependsOn);
+			throw new RuntimeException("Datastore is not available for this datapod.");
+			
+		}
+		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.sample.maxrows"));
+		if(rows > maxRows) {
+			logger.error("Number of rows "+rows+" exceeded. Max row allow "+maxRows);
+			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.datastore, uuid, version));
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Number of rows "+rows+" exceeded. Max row allow "+maxRows, dependsOn);
+			throw new RuntimeException("Number of rows "+rows+" exceeded. Max row allow "+maxRows);
+		}
+		
+		String order = null;
+		String sortBy = null;
+		int offset = 0;
+		int limit = rows;
+		
+		List<Map<String, Object>> data = new ArrayList<>();
+		try {
+			String tn = getTableNameByDatapodKey(uuid, version, runMode);
+			logger.info("Table name:" + tn);
+			
+			List<String> orderList = new ArrayList<>();
+			List<String> sortList = new ArrayList<>();
+			if(StringUtils.isNotBlank(order)) {	
+			 orderList = Arrays.asList(order.split("\\s*,\\s*"));
+			}
+			if(StringUtils.isNotBlank(sortBy)) {
+			 sortList = Arrays.asList(sortBy.split("\\s*,\\s*"));
+			}
+			
+			StringBuilder orderBy = new StringBuilder();
+			
+			ExecContext execContext = null;
+			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+			if (runMode == null || runMode.equals(RunMode.ONLINE)) {
+				execContext = (engine.getExecEngine().equalsIgnoreCase("livy-spark") || engine.getExecEngine().equalsIgnoreCase("livy_spark"))
+						? helper.getExecutorContext(engine.getExecEngine()) : helper.getExecutorContext(ExecContext.spark.toString());
+			} else {
+				execContext = helper.getExecutorContext(datasource.getType().toLowerCase());
+			}
+			IExecutor exec = execFactory.getExecutor(execContext.toString());
+
+			limit = offset + limit;
+			offset = offset + 1;
+			String appUuid = null;
+			appUuid = commonServiceImpl.getApp().getUuid();
+
+			MetaIdentifier datapodMI = ds.getMetaId().getRef();
+			Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodMI.getUuid(), datapodMI.getVersion(), datapodMI.getType().toString());
+			Datasource datapodDS = commonServiceImpl.getDatasourceByDatapod(datapod);
+			if (StringUtils.isNotBlank(sortBy) || StringUtils.isNotBlank(order) ) {
+				for (int i = 0; i < sortList.size(); i++) {
+					orderBy.append(sortList.get(i)).append(" ").append(orderList.get(i));
+				}
+			} else {
+				if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
+						|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
+					if(datapodDS.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
+						data = exec.executeAndFetchByDatasource("SELECT * FROM " + tn + " WHERE rownum< " + limit, datapodDS, appUuid);
+					} else {
+						data = exec.executeAndFetchByDatasource("SELECT * FROM " + tn + " LIMIT " + limit, datapodDS, appUuid);
+					}					
+				} else {
+					if(datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
+						if(engine.getExecEngine().equalsIgnoreCase("livy-spark")
+								|| datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
+								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
+							data = exec.executeAndFetchByDatasource("SELECT * FROM " + tn + " LIMIT " + limit, datapodDS, appUuid);
+						} else {
+							data = exec.executeAndFetchByDatasource("SELECT * FROM " + tn + " WHERE rownum< " + limit, datapodDS, appUuid);
+						}
+					} else {
+						data = exec.executeAndFetchByDatasource("SELECT * FROM " + tn + " LIMIT " + limit, datapodDS, appUuid);
+					}
+				}
+			}
+			return data;
+		}catch (IOException | NullPointerException e) {
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Table not found.", null);
+			throw new RuntimeException((message != null) ? message : "Table not found.");
+		}catch (Exception e) {
+			e.printStackTrace();
+			String message = null;
+			try {
+				message = e.getMessage();
+			}catch (Exception e2) {
+				// TODO: handle exception
+			}
+
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Table not found.", null);
+			throw new RuntimeException((message != null) ? message : "Table not found.");
+		}
+	}
+	
 }

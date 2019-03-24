@@ -267,7 +267,7 @@ public class DQOperator implements IParsable {
 //			return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");
 //		}
 //		//logger.info(" runMode : " + runMode.toString() + " : datapod : " + datapod.getUuid() + " : datapodList.contains(datapod.getUuid()) : " + datapodList.contains(datapod.getUuid()));
-//		return datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()),
+//		return datapodServiceImpl.getTableNameByDatapodKey(new OrderKey(datapod.getUuid(), datapod.getVersion()),
 //				runMode);
 //	}
 
@@ -785,7 +785,7 @@ public class DQOperator implements IParsable {
 
 		String summaryTableName = datapodServiceImpl.genTableNameByDatapod(summaryDp, dagExec != null ? dagExec.getVersion(): null, datapodList, otherParams, dagExec, runMode, true);
 //		DataStore datasore = datastoreServiceImpl.findLatestByMeta(summaryDpRef.getUuid(), summaryDpRef.getVersion());
-//		String summaryTableName = datastoreServiceImpl.getTableNameByDatastore(datasore.getUuid(), datasore.getVersion(), runMode);
+//		String summaryTableName = datastoreServiceImpl.getTableNameByDatastoreKey(datasore.getUuid(), datasore.getVersion(), runMode);
 
 //		String resSql = dataQualExec.getExec();
 		String resSql = generateSql(dq,datapodList,dataQualExec,dagExec,usedRefKeySet,otherParams,runMode,"Y");		

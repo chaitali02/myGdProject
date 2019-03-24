@@ -370,7 +370,7 @@ public class DataQualServiceImpl extends RuleTemplate {
 
 	/********************** UNUSED **********************/
 //	public String getTableName(Datapod datapod, RunMode runMode) throws Exception {
-//		return datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()),
+//		return datapodServiceImpl.getTableNameByDatapodKey(new OrderKey(datapod.getUuid(), datapod.getVersion()),
 //				runMode);
 //	}
 
@@ -637,7 +637,7 @@ public class DataQualServiceImpl extends RuleTemplate {
 		String tableName = null;
 		List<Map<String, Object>> data = new ArrayList<>();
 		try {
-			tableName = dataStoreServiceImpl.getTableNameByDatastore(datastore.getUuid(), datastore.getVersion(),
+			tableName = dataStoreServiceImpl.getTableNameByDatastoreKey(datastore.getUuid(), datastore.getVersion(),
 					runMode);
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			ExecContext execContext = null;

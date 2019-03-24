@@ -138,7 +138,7 @@ public class VizpodDetailParser {
 						.findDataStoreByDatapod(vizpod.getSource().getRef().getUuid());
 				if (listDataStore != null && !listDataStore.isEmpty()) {
 					DataStore dataStore = listDataStore.get(0);
-					tableName = dataStoreServiceImpl.getTableNameByDatastore(dataStore.getUuid(),
+					tableName = dataStoreServiceImpl.getTableNameByDatastoreKey(dataStore.getUuid(),
 							dataStore.getVersion(), runMode);
 				} else {
 					throw new RuntimeException(

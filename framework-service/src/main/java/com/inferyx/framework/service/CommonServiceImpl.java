@@ -4908,7 +4908,7 @@ public class CommonServiceImpl<T> {
 		if (sourceData instanceof Datapod) {
 			Datapod datapod = (Datapod) sourceData;
 			sourceTableName = datapodServiceImpl
-					.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+					.getTableNameByDatapodKey(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
 		} else if (sourceData instanceof DataSet) {
 			DataSet dataSet = (DataSet) sourceData;
 			MetaIdentifierHolder dependsOn = dataSet.getDependsOn();
@@ -4916,14 +4916,14 @@ public class CommonServiceImpl<T> {
 				Datapod datapod = (Datapod) getOneByUuidAndVersion(dependsOn.getRef().getUuid(),
 						dependsOn.getRef().getVersion(), dependsOn.getRef().getType().toString(), "N");
 				sourceTableName = datapodServiceImpl
-						.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+						.getTableNameByDatapodKey(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
 			} else if (dependsOn.getRef().getType().equals(MetaType.relation)) {
 				Relation relation = (Relation) sourceData;
 				Datapod datapod = (Datapod) getOneByUuidAndVersion(relation.getDependsOn().getRef().getUuid(),
 						relation.getDependsOn().getRef().getVersion(),
 						relation.getDependsOn().getRef().getType().toString(), "N");
 				sourceTableName = datapodServiceImpl
-						.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+						.getTableNameByDatapodKey(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
 			}
 		} else if (sourceData instanceof Rule) {
 			Rule rule = (Rule) sourceData;
@@ -4932,7 +4932,7 @@ public class CommonServiceImpl<T> {
 				Datapod datapod = (Datapod) getOneByUuidAndVersion(sourceHolder.getRef().getUuid(),
 						sourceHolder.getRef().getVersion(), sourceHolder.getRef().getType().toString(), "N");
 				sourceTableName = datapodServiceImpl
-						.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+						.getTableNameByDatapodKey(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
 			} else if (sourceHolder.getRef().getType().equals(MetaType.dataset)) {
 				DataSet dataSet = (DataSet) getOneByUuidAndVersion(sourceHolder.getRef().getUuid(),
 						sourceHolder.getRef().getVersion(), sourceHolder.getRef().getType().toString(), "N");
@@ -4941,14 +4941,14 @@ public class CommonServiceImpl<T> {
 					Datapod datapod = (Datapod) getOneByUuidAndVersion(dependsOn.getRef().getUuid(),
 							dependsOn.getRef().getVersion(), dependsOn.getRef().getType().toString(), "N");
 					sourceTableName = datapodServiceImpl
-							.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+							.getTableNameByDatapodKey(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
 				} else if (dependsOn.getRef().getType().equals(MetaType.relation)) {
 					Relation relation = (Relation) sourceData;
 					Datapod datapod = (Datapod) getOneByUuidAndVersion(relation.getDependsOn().getRef().getUuid(),
 							relation.getDependsOn().getRef().getVersion(),
 							relation.getDependsOn().getRef().getType().toString(), "N");
 					sourceTableName = datapodServiceImpl
-							.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+							.getTableNameByDatapodKey(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
 				}
 			} else if (sourceHolder.getRef().getType().equals(MetaType.relation)) {
 				Relation relation = (Relation) getOneByUuidAndVersion(sourceHolder.getRef().getUuid(),
@@ -4957,7 +4957,7 @@ public class CommonServiceImpl<T> {
 						relation.getDependsOn().getRef().getVersion(),
 						relation.getDependsOn().getRef().getType().toString(), "N");
 				sourceTableName = datapodServiceImpl
-						.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
+						.getTableNameByDatapodKey(new OrderKey(datapod.getUuid(), datapod.getVersion()), runMode);
 			} else if (sourceHolder.getRef().getType().equals(MetaType.rule)) {
 				Rule rule2 = (Rule) getOneByUuidAndVersion(sourceHolder.getRef().getUuid(),
 						sourceHolder.getRef().getVersion(), sourceHolder.getRef().getType().toString(), "N");
@@ -4967,19 +4967,19 @@ public class CommonServiceImpl<T> {
 		return sourceTableName;
 	}
 	
-	/**
-	 * 
-	 * @param baseExec
-	 * @param execType
-	 * @param runMode
-	 * @return
-	 * @throws Exception
-	 */
-	public String getTableNameForResult(BaseExec baseExec, MetaType execType, RunMode runMode) throws Exception {
-		// Find datastore 
-		DataStore datastore = (DataStore) getOneByUuidAndVersion(baseExec.getUuid(), baseExec.getVersion(), execType.toString(), "N");
-		return dataStoreServiceImpl.getTableNameByDatastore(datastore.getUuid(), datastore.getVersion(), runMode);
-	}
+//	/**
+//	 * 
+//	 * @param baseExec
+//	 * @param execType
+//	 * @param runMode
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	public String getTableNameForResult(BaseExec baseExec, MetaType execType, RunMode runMode) throws Exception {
+//		// Find datastore 
+//		DataStore datastore = (DataStore) getOneByUuidAndVersion(baseExec.getUuid(), baseExec.getVersion(), execType.toString(), "N");
+//		return dataStoreServiceImpl.getTableNameByDatastoreKey(datastore.getUuid(), datastore.getVersion(), runMode);
+//	}
 
 	/**
 	 * 

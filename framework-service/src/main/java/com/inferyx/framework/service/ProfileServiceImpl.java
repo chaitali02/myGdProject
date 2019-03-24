@@ -385,7 +385,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 			data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order, profileExec.getVersion());
 			
 			/*dataStoreServiceImpl.setRunMode(runMode);
-			String tableName = dataStoreServiceImpl.getTableNameByDatastore(datastore.getUuid(), datastore.getVersion(),
+			String tableName = dataStoreServiceImpl.getTableNameByDatastoreKey(datastore.getUuid(), datastore.getVersion(),
 					runMode);
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			ExecContext execContext = null;

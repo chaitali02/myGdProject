@@ -80,7 +80,7 @@ public class DatapodController {
 				@RequestParam(value = "action", required = false) String action, 
 				@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception{
 		 	RunMode runMode = Helper.getExecutionMode(mode);
-	    	return datastoreServiceImpl.getDatapodSample(datapodUUID,datapodVersion,rows, runMode);	   	
+	    	return datapodServiceImpl.getDatapodSample(datapodUUID,datapodVersion,rows, runMode);	   	
 	   }
 	 
 	 @RequestMapping(value="/getAttributeValues1", method=RequestMethod.GET)

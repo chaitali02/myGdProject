@@ -450,7 +450,7 @@ public class RuleServiceImpl extends RuleTemplate {
 			/*boolean requestIdExistFlag = false;
 			StringBuilder orderBy = new StringBuilder();
 			dataStoreServiceImpl.setRunMode(runMode);
-			String tableName = dataStoreServiceImpl.getTableNameByDatastore(datastore.getUuid(),
+			String tableName = dataStoreServiceImpl.getTableNameByDatastoreKey(datastore.getUuid(),
 					datastore.getVersion(), runMode);
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			ExecContext execContext = null;

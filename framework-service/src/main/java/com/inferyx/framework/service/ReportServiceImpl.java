@@ -283,7 +283,7 @@ public class ReportServiceImpl extends RuleTemplate {
 		MetaIdentifier dependsOnMI = reportExec.getDependsOn().getRef();
 		Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(), dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
 		
-		String tableName = dataStoreServiceImpl.getTableNameByDatastore(datastore.getUuid(), datastore.getVersion(), runMode);
+		String tableName = dataStoreServiceImpl.getTableNameByDatastoreKey(datastore.getUuid(), datastore.getVersion(), runMode);
 		
 		if(report.getSaveOnRefresh().equalsIgnoreCase("Y")) {
 			String appUuid = commonServiceImpl.getApp().getUuid();

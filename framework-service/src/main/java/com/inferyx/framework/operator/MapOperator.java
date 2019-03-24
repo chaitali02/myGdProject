@@ -144,7 +144,7 @@ public class MapOperator implements IParsable {
 				String table = null;
 				if (otherParams == null 
 						|| otherParams.get("datapod_".concat(datapod.getUuid())) == null) {
-					table = datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()), RunMode.BATCH);
+					table = datapodServiceImpl.getTableNameByDatapodKey(new OrderKey(datapod.getUuid(), datapod.getVersion()), RunMode.BATCH);
 				} else {
 					String tableKey = "datapod_".concat(datapod.getUuid());
 					table = otherParams.get(tableKey);
