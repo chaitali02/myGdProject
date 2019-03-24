@@ -1109,11 +1109,11 @@ public class DatapodServiceImpl {
 		String dataStoreMetaUUID = sourceAttr.getUUID();
 		String dataStoreMetaVer = sourceAttr.getVersion();
 		
-		Datapod dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dataStoreMetaUUID, dataStoreMetaVer, MetaType.datapod.toString());
+		Datapod dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dataStoreMetaUUID, dataStoreMetaVer, MetaType.datapod.toString(), "N");
 		
 		String datasource = dp.getDatasource().getRef().getUuid();
 		//Datasource ds = datasourceServiceImpl.findLatestByUuid(datasource);
-		Datasource ds = (Datasource) commonServiceImpl.getLatestByUuid(datasource, MetaType.datasource.toString());
+		Datasource ds = (Datasource) commonServiceImpl.getLatestByUuid(datasource, MetaType.datasource.toString(), "N");
 		String dsType = ds.getType();
 		if (/*!engine.getExecEngine().equalsIgnoreCase("livy-spark")
 				&& !dsType.equalsIgnoreCase(ExecContext.spark.toString()) 

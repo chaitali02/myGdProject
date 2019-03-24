@@ -746,7 +746,7 @@ public class DataQualServiceImpl extends RuleTemplate {
 		}
 	}
 
-	public String getTableName(Datasource datasource, Datapod datapod, DataQualExec dqExec, RunMode runMode) {
+	/*public String getTableName(Datasource datasource, Datapod datapod, DataQualExec dqExec, RunMode runMode) {
 		if (runMode.equals(RunMode.ONLINE)) {
 			return Helper.genTableName(datapod.getUuid(), datapod.getVersion(), dqExec.getVersion());
 		} else {
@@ -761,7 +761,7 @@ public class DataQualServiceImpl extends RuleTemplate {
 			}
 		}
 		}
-	}
+	}*/
 
 	public List<Map<String, Object>> getResultDetails(String execUuid, String execVersion, int offset, int limit,
 			String sortBy, String order, String requestId, RunMode runMode)

@@ -116,13 +116,13 @@ public class Helper {
 	}
 
 	
-	public static String genTableName(String datapodUUID, String datapodVersion, String execVersion) {
+	/*public static String genTableName(String datapodUUID, String datapodVersion, String execVersion) {
 		String tableName = null;
 		String datapod = datapodUUID.replace("-", "_");
 		tableName = datapod+"_"+datapodVersion+"_"+execVersion;
 		logger.info("Table name is :: "+tableName);
 		return tableName;
-	}
+	}*/
 	
 	public static String getFileName(String datapodUUID, String datapodVersion, String execVersion) {
 		logger.info("File name is :: "+String.format("/%s/%s/%s", datapodUUID, datapodVersion, execVersion));
