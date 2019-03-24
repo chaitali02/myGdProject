@@ -4893,34 +4893,8 @@ public class CommonServiceImpl<T> {
 		} // else
 		refKeyMap.put(ref.getType() + "_" + ref.getUuid(), ref);
 		return ref;
-
 	}
 
-	/********************** UNUSED **********************/
-//	/**
-//	 * 
-//	 * @param datapod
-//	 * @param indvTask
-//	 * @param datapodList
-//	 * @param dagExec
-//	 * @param otherParams
-//	 * @return
-//	 * @throws Exception
-//	 */
-//	protected String getTableName(Datapod datapod, HashMap<String, String> otherParams, BaseExec baseExec,
-//			RunMode runMode) throws Exception {
-//		if (otherParams != null && otherParams.containsKey("datapodUuid_" + datapod.getUuid() + "_tableName")) {
-//			return otherParams.get("datapodUuid_" + datapod.getUuid() + "_tableName");
-//		} else {
-//			try {
-//				return datapodServiceImpl.getTableNameByDatapod(new OrderKey(datapod.getUuid(), datapod.getVersion()),
-//						runMode);
-//			} catch (Exception e) {
-//				return String.format("%s_%s_%s", datapod.getUuid().replaceAll("-", "_"), datapod.getVersion(),
-//						baseExec.getVersion());
-//			}
-//		}
-//	}
 
 	/**
 	 * 
@@ -4991,6 +4965,20 @@ public class CommonServiceImpl<T> {
 			}
 		}
 		return sourceTableName;
+	}
+	
+	/**
+	 * 
+	 * @param baseExec
+	 * @param execType
+	 * @param runMode
+	 * @return
+	 * @throws Exception
+	 */
+	public String getTableNameForResult(BaseExec baseExec, MetaType execType, RunMode runMode) throws Exception {
+		// Find datastore 
+		DataStore datastore = (DataStore) getOneByUuidAndVersion(baseExec.getUuid(), baseExec.getVersion(), execType.toString(), "N");
+		return dataStoreServiceImpl.getTableNameByDatastore(datastore.getUuid(), datastore.getVersion(), runMode);
 	}
 
 	/**

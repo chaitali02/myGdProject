@@ -557,23 +557,8 @@ public class DataStoreServiceImpl {
 				tableName = appDatasource.getDbname() + "." + reportName;
 			}
 			
-//			if (runMode != null && runMode.equals(RunMode.BATCH)) {
-//				MetaIdentifier dependsOnMI = report.getDependsOn().getRef();
-//				Object dependsOnObj = commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(),
-//						dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
-//				Datasource reportDatasource = commonServiceImpl.getDatasourceByObject(dependsOnObj);
-//				if ((reportDatasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
-//						|| reportDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString()))) {
-//					tableName = Helper.genTableName(filePath);
-//				} else {
-//					tableName = appDatasource.getDbname() + "." + reportName;
-//				}
-//			} else {
-//				tableName = Helper.genTableName(filePath);
-//			}
 		} else if (metaType == MetaType.ingest) {
 			String[] list = filePath.split("/");	
-//			Ingest ingest = (Ingest) commonServiceImpl.getLatestByUuid( dataStore.getMetaId().getRef().getUuid(), dataStore.getMetaId().getRef().getType().toString());
 			if(runMode != null && runMode.equals(RunMode.ONLINE)) {
 				tableName = String.format("%s_%s_%s", list[list.length-3].replaceAll("-", "_"), list[list.length-2], list[list.length-1]);
 			} else {
