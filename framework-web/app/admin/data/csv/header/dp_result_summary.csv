@@ -1,0 +1,2 @@
+rule_exec_uuid,rule_exec_version,rule_exec_time,rule_uuid,rule_version,rule_name,datapod_uuid,datapod_version,datapod_name,attribute_id,attribute_name,num_rows,min_val,max_val,avg_val,median_val,std_dev,num_distinct,perc_distinct,num_null,perc_null,min_length,max_length,avg_length,num_duplicates,version
+dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,0,0,0,0,0,dummy,0,0,0,0,0,0,0,0,0,0,0
