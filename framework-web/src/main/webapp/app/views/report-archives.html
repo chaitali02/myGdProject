@@ -224,17 +224,18 @@
           <h4 class="modal-title" title="{{execDetail.name}}" style="overflow: hidden;white-space:nowrap;max-width:230px;margin-bottom:-4px;
                 text-overflow:ellipsis;">{{execDetail.name}}</h4>
         </div>
-        <div class="modal-body">{{msg}}
-          <span style="text-transform: capitalize">{{searchForm.modelType}}</span> ?</div>
+        <div class="modal-body">{{msgDetail.msg}}
+          <span style="text-transform: capitalize">{{msgDetail.metaType}}</span> ?</div>
         <div class="modal-footer">
           <button type="button" class="btn dark btn-outline" data-dismiss="modal">Cancel</button>
-          <button type="button" class="btn green" ng-click="submitOk(msg)">Ok</button>
+          <button type="button" class="btn green" ng-click="submitOk(execDetail,msgDetail)">Ok</button>
         </div>
       </div>
       <!--/.modal-content -->
     </div>
     <!--/.modal-dialog -->
   </div>
+
   <div id="mailSendMdoel" class="modal fade bs-modal-lg in" tabindex="-1" aria-hidden="true" style="display: none;">
     <div class="modal-dialog" style="width:50%">
       <div class="modal-content" style="resize: both;overflow: auto;">
@@ -255,7 +256,7 @@
                         <tags-input data-ng-model="tagsTo" class="tag-scroll-height-report" style="height:40px;"
                           min-length="0" ng-disabled="{{mode}}" name="tagsTo" allowed-tags-pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
                           template="my-custom-template"></tags-input>
-                        <input type="hidden" name="tagsTo" data-ng-model="tagsTo" required>
+                        <input type="hidden" name="tagsTo" data-ng-model="tagsTo[0]" required>
                       </div>
 
                     </div>
