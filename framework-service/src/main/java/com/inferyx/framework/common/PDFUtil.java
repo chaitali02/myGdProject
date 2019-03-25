@@ -36,8 +36,6 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.apache.pdfbox.util.Matrix;
-
 /**
  * @author Ganesh
  *
@@ -56,14 +54,16 @@ public class PDFUtil {
 
 		float y = 400.0f;
 		float margin = 50.0f;
+		
 		Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(reportExec.getDependsOn().getRef().getUuid(),
 				reportExec.getDependsOn().getRef().getVersion(),
 				reportExec.getDependsOn().getRef().getType().toString());
+		
 		PDDocument pdfDoc = new PDDocument();
 		PDPage pdfPage = new PDPage(PDRectangle.A4);
 //		pdfPage.setRotation(90);
-//		pdfPage.setMediaBox(new PDRectangle(PDRectangle.A4.getHeight(), PDRectangle.A4.getWidth()));
-		pdfPage.setMediaBox(new PDRectangle(pdfPage.getMediaBox().getHeight() - (2 * margin), pdfPage.getMediaBox().getWidth() - 2.0f * margin));
+		pdfPage.setMediaBox(new PDRectangle(PDRectangle.A4.getHeight(), PDRectangle.A4.getWidth()));
+//		pdfPage.setMediaBox(new PDRectangle(pdfPage.getMediaBox().getHeight() - (2 * margin), pdfPage.getMediaBox().getWidth() - 2.0f * margin));
 		pdfDoc.addPage(pdfPage);
 
 		contentStream = new PDPageContentStream(pdfDoc, pdfPage);

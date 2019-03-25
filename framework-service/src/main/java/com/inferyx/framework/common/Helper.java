@@ -64,7 +64,7 @@ import com.inferyx.framework.enums.OperatorType;
 import com.inferyx.framework.enums.ParamDataType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
-import com.inferyx.framework.service.DashboardServiceImpl;
+import com.inferyx.framework.service.MetadataServiceImpl;
 
 @Component
 public class Helper {
@@ -73,6 +73,8 @@ public class Helper {
 	Engine engine;
 	@Autowired
 	private HDFSInfo hdfsInfo;
+	@Autowired
+	MetadataServiceImpl metadataServiceImpl;
 
 	public static String getNextUUID(){
 		return UUID.randomUUID().toString();
@@ -1221,6 +1223,36 @@ public class Helper {
 			return mappedDTypes;
 		default:
 			return mappedDTypes;
+		}
+	}
+	
+	public static String getDocumentFilePath(String defaultFilePath, String metaObjUuid, String metaObjVersion,
+			String execVersion, String metaObjName, String fileExtension, boolean useDocDir)
+			throws FileNotFoundException, IOException {
+		
+		defaultFilePath = defaultFilePath.endsWith("/") ? defaultFilePath : defaultFilePath.concat("/");
+
+		String metFilePath = null;
+		if(useDocDir) {
+			metFilePath = String.format("%s/%s/%s/%s/", metaObjUuid, metaObjVersion, execVersion, "doc");
+		} else {
+			metFilePath = String.format("%s/%s/%s/", metaObjUuid, metaObjVersion, execVersion);
+		}
+
+		String fileName = getDocumentFileName(metaObjName, execVersion, fileExtension);
+
+		return defaultFilePath.concat(metFilePath).concat(fileName);
+	}
+	
+	public static String getDocumentFileName(String metaName, String execVersion, String fileExtension) {
+		return String.format("%s_%s.%s", metaName, execVersion, fileExtension.toLowerCase());		
+	}
+	
+	public static String mapFileFormat(String format) {
+		switch(format.toLowerCase()) {
+		case "excel" : return FileType.XLS.toString();
+		case "pdf" : return FileType.PDF.toString();
+		default : return null;
 		}
 	}
 }
