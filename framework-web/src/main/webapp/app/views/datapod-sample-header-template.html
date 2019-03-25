@@ -4,7 +4,7 @@
   <div role="button" tabindex="0" ng-keydown="handleKeyDown($event)" class="ui-grid-cell-contents ui-grid-header-cell-primary-focus"
     col-index="renderIndex" title="TOOLTIP" style="padding-top:14px;">
     <div style="height: 25px;display:inline-block;vertical-align: middle;" class="ui-grid-header-cell-label" ui-grid-one-bind-id-grid="col.uid + '-header-text'" ng-click="grid.appScope.text(col)">
-      <i class="{{ col.colDef.attrType=='string'?'fa-downcase-string':col.colDef.attrType=='date'?'fa-downcase-date':['float','decimal','double'].indexOf( col.colDef.attrType) !=-1?'fa-downcase-decimal':'fa-downcase-integer'}}"
+      <i class="{{ ['string','varchar'].indexOf( col.colDef.attrType) !=-1?'fa-downcase-string':col.colDef.attrType=='date'?'fa-downcase-date':['float','decimal','double'].indexOf( col.colDef.attrType) !=-1?'fa-downcase-decimal':'fa-downcase-integer'}}"
       tooltip-placement="right" tooltip-append-to-body="true" uib-tooltip="{{col.colDef.attrType}}" style="font-size:11px;"></i></div>
     <div style ="margin-right:3px;margin-left:3px;display:inline-block;"class="ui-grid-header-cell-label" ui-grid-one-bind-id-grid="col.uid + '-header-text'" ng-click="grid.appScope.text(col)">{{ col.name CUSTOM_FILTERS }}</div>
     <div style="display:inline-block;" class="ui-grid-header-cell-label" ui-grid-one-bind-id-grid="col.uid + '-header-text'" ng-click="grid.appScope.text(col)">

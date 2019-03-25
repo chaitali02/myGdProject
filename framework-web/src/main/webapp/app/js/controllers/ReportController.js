@@ -24,7 +24,7 @@ DatavisualizationModule.controller('ReportListController', function ($filter, $s
 	});
 	$scope.popup2 = {
     	opened: false
-    };
+	};
 	$scope.dateOptions = {
 		//dateDisabled: disabled,
 		formatYear: 'yy',
@@ -678,6 +678,7 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 	$scope.paramTypes = ["paramlist", "paramset"];
 	$scope.allFormats = CF_DOWNLOAD.formate;
 	$scope.allLayouts = ["LANDSCAPE","PORTRAIT"];
+	$scope.isLayoutDisable=true;
 
 	if ($stateParams.mode == 'true') {
 		$scope.isEdit = false;
@@ -931,9 +932,20 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 	}
 
 	$scope.onChangeFromat=function(format){
+		debugger
 		if(format !="PDF"){
 			$scope.report.layout=null;
+			$scope.isLayoutDisable=true;
+
 		}
+        else{
+			if($scope.mode =="false" && format =="PDF"){
+				$scope.isLayoutDisable=false
+			}else{
+				$scope.isLayoutDisable=true;
+			}
+		}
+		
 	}
 	$scope.getFormulaByType = function () {
 		ReportSerivce.getFormulaByType($scope.allSource.defaultoption.uuid, $scope.selectSourceType).then(function (response) { onSuccessFormula(response.data) });
@@ -1085,11 +1097,14 @@ DatavisualizationModule.controller('ReportDetailController', function ($q, dagMe
 				$scope.allparamlist.defaultoption = defaultoption;
 			}
 			$scope.getParamByApp();
-
+   
 			$scope.getAllLatest($scope.selectSourceType, response.report.dependsOn);
 			$scope.getFunctionByCriteria();
 			$scope.attributeTableArray = response.sourceAttributes;
 			$scope.filterTableArray = response.filterInfo;
+			debugger
+
+			$scope.onChangeFromat(response.report.format);
 		}//End onSuccessResult
 		var onError = function () {
 			$scope.isEditInprogess = false;

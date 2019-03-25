@@ -1075,7 +1075,7 @@
                                                   <label class="control-label col-md-2 col-sm-6 col-xs-12" style="padding-right: 0px;width:60px;padding-left:0px;">Layout
                                                   </label>
                                                   <div class="col-md-6 col-sm-6 col-xs-12">
-                                                    <select class="form-control" ng-disabled="{{mode}}||report.format=='PDF'?false:true" data-ng-model="report.layout"
+                                                    <select class="form-control" ng-disabled="isLayoutDisable" data-ng-model="report.layout"
                                                       ng-options="r for r in allLayouts">
                                                       <option value="">-Select-</option>
                                                     </select>
