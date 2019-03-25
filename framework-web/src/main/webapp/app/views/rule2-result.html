@@ -250,8 +250,10 @@
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div>
-
-    <div id="downloadSample" class="modal fade bs-modal-lg in" style="display: none;">
+    <div ng-if="isDownloadDirective">
+      <download-directive meta-type="download.type" uuid="download.uuid" version="download.version" on-downloade="onDownloaed" result-type="download.resultType"></download-directive>
+    </div>
+    <!-- <div id="downloadSample" class="modal fade bs-modal-lg in" style="display: none;">
       <div class="modal-dialog" style="width:40%">
         <div class="modal-content" style="resize: both;overflow: auto;">
           <div class="modal-header">
@@ -285,7 +287,6 @@
                 </div>
               </div>
             </div>
-            <!--End Model Body-->
             <div class="modal-footer">
               <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
               <button type="submit" class="btn green">Submit</button>
@@ -293,6 +294,6 @@
           </form>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </div>

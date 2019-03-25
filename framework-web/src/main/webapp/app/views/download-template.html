@@ -28,6 +28,24 @@
                         </select>
                       </div>
                     </div>
+                    <div class="form-group" ng-if="download.selectFormate=='PDF'">
+                      <label class="col-md-3 control-label">Layout</label>
+                      <div class="col-md-8">
+                        <select class="form-control" data-ng-model="download.selectLayout" ng-options="r for r in download.layout"
+                          required>
+                          
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group"  ng-if="download.selectFormate !='PDF'">
+                      <label class="col-md-3 control-label">Layout</label>
+                      <div class="col-md-8">
+                        <select class="form-control" ng-disabled="true" data-ng-model="download.selectLayouts" ng-options="r for r in download.layout"
+                          >
+                          <option value="">-Select-</option>
+                        </select>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
