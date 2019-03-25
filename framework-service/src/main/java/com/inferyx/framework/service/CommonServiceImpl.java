@@ -13,9 +13,6 @@ package com.inferyx.framework.service;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.mongodb.core.aggregation.SortOperation;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
@@ -53,11 +50,15 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.PropertiesFactoryBean;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.aggregation.GroupOperation;
 import org.springframework.data.mongodb.core.aggregation.MatchOperation;
+import org.springframework.data.mongodb.core.aggregation.SortOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -79,6 +80,7 @@ import com.inferyx.framework.dao.IActivityDao;
 import com.inferyx.framework.dao.IAlgorithmDao;
 import com.inferyx.framework.dao.IAppConfigDao;
 import com.inferyx.framework.dao.IApplicationDao;
+import com.inferyx.framework.dao.IAttributeDomainDao;
 import com.inferyx.framework.dao.IBatchDao;
 import com.inferyx.framework.dao.IBatchExecDao;
 import com.inferyx.framework.dao.ICommentDao;
@@ -98,7 +100,6 @@ import com.inferyx.framework.dao.IDatasourceDao;
 import com.inferyx.framework.dao.IDeployExecDao;
 import com.inferyx.framework.dao.IDimensionDao;
 import com.inferyx.framework.dao.IDistributionDao;
-import com.inferyx.framework.dao.IAttributeDomainDao;
 import com.inferyx.framework.dao.IDownloadDao;
 import com.inferyx.framework.dao.IEdgeDao;
 import com.inferyx.framework.dao.IExportDao;
@@ -148,8 +149,8 @@ import com.inferyx.framework.dao.IReportDao;
 import com.inferyx.framework.dao.IReportExecDao;
 import com.inferyx.framework.dao.IRoleDao;
 import com.inferyx.framework.dao.IRule2Dao;
-import com.inferyx.framework.dao.IRuleDao;
 import com.inferyx.framework.dao.IRule2ExecDao;
+import com.inferyx.framework.dao.IRuleDao;
 import com.inferyx.framework.dao.IRuleExecDao;
 import com.inferyx.framework.dao.IRuleGroupDao;
 import com.inferyx.framework.dao.IRuleGroupExecDao;
@@ -175,6 +176,7 @@ import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.BaseRule;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.BaseRuleGroupExec;
+import com.inferyx.framework.domain.Config;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataQual;
 import com.inferyx.framework.domain.DataSet;
@@ -513,6 +515,8 @@ public class CommonServiceImpl<T> {
 	IRule2ExecDao iRule2ExecDao;
 	@Autowired
 	private IAttributeDomainDao iAttributeDomainDao;	
+	@Autowired
+	private PropertiesFactoryBean frameworkProperties;
 	
 	
 	public IngestServiceImpl getIngestServiceImpl() {
@@ -5463,5 +5467,29 @@ public class CommonServiceImpl<T> {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	/**
+	 * 
+	 * @param configName
+	 * @return
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws NullPointerException
+	 * @throws ParseException
+	 * @throws IOException 
+	 */
+	public String getConfigValue(String configName) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
+		List<Config> appConfigList = metadataServiceImpl.getAppConfigByCurrentApp();
+		for (Config config : appConfigList) {
+			if (config.getConfigName().equals(configName)) {
+				return config.getConfigVal();
+			}
+		}
+		// Pull from framework.properties as resultConfig could not be resolved
+		return frameworkProperties.getObject().getProperty(configName);
 	}
 }

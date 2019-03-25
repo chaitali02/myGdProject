@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.Date;
@@ -67,6 +68,8 @@ public abstract class RuleTemplate implements IExecutable, IParsable {
 	protected CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	protected DataStoreServiceImpl dataStoreServiceImpl;
+	@Autowired
+	protected DatapodServiceImpl datapodServiceImpl;
 	@Autowired
 	protected ExecutorFactory execFactory;
 	@Autowired
@@ -218,31 +221,13 @@ public abstract class RuleTemplate implements IExecutable, IParsable {
 	 * @throws InvocationTargetException 
 	 * @throws IllegalArgumentException 
 	 * @throws IllegalAccessException 
-	 * @throws JsonProcessingException 
+	 * @throws IOException 
 	 */
-	public MetaIdentifier getSummaryOrDetail(String configName, String uuid) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		List<Config> appConfigList = metadataServiceImpl.getAppConfigByCurrentApp();
-		Config resultConfig = null;
+	public MetaIdentifier getSummaryOrDetail(String configName) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
+		String resultConfigVal = commonServiceImpl.getConfigValue(configName);
 		Datapod targetDp = null;
-		Datapod infoDatapod = null;
-		for (Config config : appConfigList) {
-			if (config.getConfigName().equals(configName)) {
-				resultConfig = config;
-				break;
-			}
-		}
-		if (StringUtils.isNotBlank(uuid)) {
-			infoDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(uuid, null, MetaType.datapod.toString(), "N");
-		}
 		
-		if (resultConfig == null) {
-			targetDp = infoDatapod; 
-		} else {
-			targetDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(resultConfig.getConfigVal(), null, MetaType.datapod.toString(), "N");
-			if (targetDp == null) {
-				targetDp = infoDatapod;
-			}
-		}
+		targetDp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(resultConfigVal, null, MetaType.datapod.toString(), "N");
 		
 		if (targetDp == null) {
 			return null;
@@ -305,6 +290,7 @@ public abstract class RuleTemplate implements IExecutable, IParsable {
 		runBaseRuleService.setExecParams(execParams);
 		runBaseRuleService.setDatasource(getDatasource(baseRule));
 		runBaseRuleService.setSummaryDatapodKey(getTargetSummaryDp());
+		runBaseRuleService.setDatapodService(datapodServiceImpl);
 
 		if (metaExecutor == null) {
 			runBaseRuleService.execute();
@@ -324,11 +310,11 @@ public abstract class RuleTemplate implements IExecutable, IParsable {
 		return commonServiceImpl.getDatasourceByApp();
 	}
 	
-	protected MetaIdentifier getTargetSummaryDp() throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	protected MetaIdentifier getTargetSummaryDp() throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
 		return null;
 	}
 	
-	protected MetaIdentifier getTargetResultDp() throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+	protected MetaIdentifier getTargetResultDp() throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
 		return null;
 	}
 	

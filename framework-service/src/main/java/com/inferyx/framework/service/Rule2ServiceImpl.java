@@ -1407,16 +1407,16 @@ public class Rule2ServiceImpl extends RuleTemplate {
 	}
 
 	/**
+	 * @throws IOException 
 	 * 
 	 */
-	protected MetaIdentifier getTargetSummaryDp () throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		return getSummaryOrDetail("framework.rule2.summary.uuid", (rule2Info != null) ? rule2Info.getRule_result_summary() : null);
+	protected MetaIdentifier getTargetSummaryDp () throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
+		return getSummaryOrDetail("framework.rule2.summary.uuid");
 	}
 
 	/**
 	 * 
 	 * @return
-	 * @throws JsonProcessingException
 	 * @throws IllegalAccessException
 	 * @throws IllegalArgumentException
 	 * @throws InvocationTargetException
@@ -1424,9 +1424,10 @@ public class Rule2ServiceImpl extends RuleTemplate {
 	 * @throws SecurityException
 	 * @throws NullPointerException
 	 * @throws ParseException
+	 * @throws IOException 
 	 */
-	protected MetaIdentifier getTargetResultDp () throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		return getSummaryOrDetail("framework.rule2.detail.uuid", (rule2Info != null) ? rule2Info.getRule_result_details() : null);
+	protected MetaIdentifier getTargetResultDp () throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
+		return getSummaryOrDetail("framework.rule2.detail.uuid");
 	}
 
 

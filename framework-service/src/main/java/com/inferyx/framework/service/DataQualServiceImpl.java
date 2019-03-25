@@ -314,16 +314,16 @@ public class DataQualServiceImpl extends RuleTemplate {
 	 */
 	
 	/**
+	 * @throws IOException 
 	 * 
 	 */
-	protected MetaIdentifier getTargetSummaryDp () throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		return getSummaryOrDetail("framework.dataqual.summary.uuid", (dqInfo != null) ? dqInfo.getDq_result_summary() : null);
+	protected MetaIdentifier getTargetSummaryDp () throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
+		return getSummaryOrDetail("framework.dataqual.summary.uuid");
 	}
 
 	/**
 	 * 
 	 * @return
-	 * @throws JsonProcessingException
 	 * @throws IllegalAccessException
 	 * @throws IllegalArgumentException
 	 * @throws InvocationTargetException
@@ -331,9 +331,10 @@ public class DataQualServiceImpl extends RuleTemplate {
 	 * @throws SecurityException
 	 * @throws NullPointerException
 	 * @throws ParseException
+	 * @throws IOException 
 	 */
-	protected MetaIdentifier getTargetResultDp () throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		return getSummaryOrDetail("framework.dataqual.detail.uuid", (dqInfo != null) ? dqInfo.getDq_result_detail() : null);
+	protected MetaIdentifier getTargetResultDp () throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
+		return getSummaryOrDetail("framework.dataqual.detail.uuid");
 	}
 
 

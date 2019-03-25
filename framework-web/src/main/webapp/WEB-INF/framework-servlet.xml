@@ -188,7 +188,7 @@
 		<constructor-arg value="#{sparkInfo.getSparkConfiguration()}" />
 	</bean> -->
 
-	<bean id="dbConfiguration"
+	<bean id="frameworkProperties"
 		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
 		<property name="location" value="classpath://framework.properties" />
 	</bean>
@@ -220,7 +220,7 @@
 	</bean>
 
 	<bean id="sparkInfo" class="com.inferyx.framework.common.SparkInfo">
-		<property name="prop" ref="dbConfiguration"></property>
+		<property name="prop" ref="frameworkProperties"></property>
 	</bean>
 
 	<bean id="miUtil" class="com.inferyx.framework.common.MetadataUtil">

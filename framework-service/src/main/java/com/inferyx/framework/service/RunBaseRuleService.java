@@ -80,6 +80,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 	protected Helper helper;
 	protected ExecParams execParams;
 	protected ExecutorServiceImpl executorServiceImpl;
+	protected DatapodServiceImpl datapodService;
 
 	static final Logger logger = Logger.getLogger(RunBaseRuleService.class);
 
@@ -370,6 +371,20 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 		this.execParams = execParams;
 	}
 
+	/**
+	 * @return the datapodService
+	 */
+	public DatapodServiceImpl getDatapodService() {
+		return datapodService;
+	}
+
+	/**
+	 * @param datapodService the datapodService to set
+	 */
+	public void setDatapodService(DatapodServiceImpl datapodService) {
+		this.datapodService = datapodService;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -401,10 +416,10 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 	 * @param baseRuleExec
 	 * @param datapodKey
 	 * @return
-	 * @throws JsonProcessingException
+	 * @throws Exception 
 	 */
 	protected String genTableNameByRule(BaseRule baseRule, BaseRuleExec baseRuleExec, MetaIdentifier datapodKey,
-			ExecContext execContext, RunMode runMode) throws JsonProcessingException {
+			ExecContext execContext, RunMode runMode) throws Exception {
 		if (datapodKey.getType().equals(MetaType.rule)) {
 			return String.format("%s_%s_%s", baseRule.getUuid().replace("-", "_"), baseRule.getVersion(),
 					baseRuleExec.getVersion());
@@ -417,7 +432,8 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 
 		try {
 			Datapod datapod = (Datapod) commonServiceImpl.getLatestByUuid(datapodKey.getUuid(), MetaType.datapod.toString(), "N");
-			Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(
+			return datapodService.getTableNameByDatapod(datapod, runMode);
+			/*Datasource datasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(
 					datapod.getDatasource().getRef().getUuid(), datapod.getDatasource().getRef().getVersion(),
 					MetaType.datasource.toString(), "N");
 			if (datasource.getType().equals(ExecContext.FILE.toString())) {
@@ -425,7 +441,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 						baseRuleExec.getVersion());
 			} else {
 				return datasource.getDbname() + "." + datapod.getName();
-			}
+			}*/
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
@@ -643,7 +659,27 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Datapod targetDp = null;
 		ResultSetHolder rsHolder = null;
-		if (runMode != null && runMode.equals(RunMode.BATCH)) {
+		MetaType ruleType = Helper.getMetaTypeByExecType(ruleExecType);
+		targetDp = (Datapod) commonServiceImpl.getLatestByUuid(datapodKey.getUuid(), MetaType.datapod.toString(),
+					"N");
+		MetaIdentifier targetDsMI = targetDp.getDatasource().getRef();
+		logger.info("Target datasource : " + targetDsMI);
+		logger.info("Target tableName : " + tableName);
+		Datasource targetDatasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(targetDsMI.getUuid(),
+				targetDsMI.getVersion(), targetDsMI.getType().toString(), "N");
+		String executionEngine = commonServiceImpl.getConfigValue("framework." + ruleType.toString() + ".execution.engine");
+		logger.info("framework execution engine : " + executionEngine);
+		if (executionEngine != null && executionEngine.equalsIgnoreCase("spark")) {
+//			rsHolder = exec.executeSqlByDatasource(execSql, ruleDatasource, appUuid);
+//			rsHolder.setTableName(tableName);
+//			rsHolder = exec.persistDataframe(rsHolder, targetDatasource, targetDp, SaveMode.APPEND.toString());
+			rsHolder = exec.executeRegisterAndPersist(execSql, tableName, filePath, targetDp,
+					SaveMode.APPEND.toString(), true, appUuid);
+		} else {
+			String sql = helper.buildInsertQuery(execContext.toString(), tableName, targetDp, execSql);
+			rsHolder = exec.executeSql(sql, appUuid);
+		}
+		/*if (runMode != null && runMode.equals(RunMode.BATCH)) {
 			targetDp = (Datapod) commonServiceImpl.getLatestByUuid(datapodKey.getUuid(), MetaType.datapod.toString(),
 					"N");
 			MetaIdentifier targetDsMI = targetDp.getDatasource().getRef();
@@ -669,7 +705,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 		} else {
 			rsHolder = exec.executeAndRegisterByDatasource(execSql, Helper.genTableName(filePath), ruleDatasource,
 					appUuid);
-		}
+		}*/
 		return rsHolder;
 	}
 	

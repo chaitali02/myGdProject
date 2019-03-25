@@ -575,7 +575,6 @@ public class ProfileServiceImpl extends RuleTemplate {
 	/**
 	 * 
 	 * @return
-	 * @throws JsonProcessingException
 	 * @throws IllegalAccessException
 	 * @throws IllegalArgumentException
 	 * @throws InvocationTargetException
@@ -583,9 +582,10 @@ public class ProfileServiceImpl extends RuleTemplate {
 	 * @throws SecurityException
 	 * @throws NullPointerException
 	 * @throws ParseException
+	 * @throws IOException 
 	 */
-	protected MetaIdentifier getTargetResultDp () throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		return getSummaryOrDetail("framework.profile.datapod.uuid", (profileInfo != null) ? profileInfo.getProfileTargetUUID() : null);
+	protected MetaIdentifier getTargetResultDp () throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
+		return getSummaryOrDetail("framework.profile.datapod.uuid");
 	}
 
 	@Override

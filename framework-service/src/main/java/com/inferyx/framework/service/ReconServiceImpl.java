@@ -148,7 +148,6 @@ public class ReconServiceImpl extends RuleTemplate {
 	/**
 	 * 
 	 * @return
-	 * @throws JsonProcessingException
 	 * @throws IllegalAccessException
 	 * @throws IllegalArgumentException
 	 * @throws InvocationTargetException
@@ -156,9 +155,10 @@ public class ReconServiceImpl extends RuleTemplate {
 	 * @throws SecurityException
 	 * @throws NullPointerException
 	 * @throws ParseException
+	 * @throws IOException 
 	 */
-	protected MetaIdentifier getTargetResultDp () throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		return getSummaryOrDetail("framework.recon.datapod.uuid", (reconInfo != null) ? reconInfo.getReconTargetUUID() : null);
+	protected MetaIdentifier getTargetResultDp () throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, IOException {
+		return getSummaryOrDetail("framework.recon.datapod.uuid");
 	}
 	
 	public ReconExec execute(String reconUuid, String reconVersion,
