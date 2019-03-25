@@ -649,10 +649,11 @@ public class MySqlExecutor implements IExecutor {
 				List<Map<String, String>> sourceColDetails = new ArrayList<>();
 				while(rs.next()) {					
 					sourceAttrList.add(rs.getString("COLUMN_NAME"));
-					
+			/*		int type=Integer.parseInt(rs.getString("DATA_TYPE"));
+					String a=Helper.getSqlTypeName(type);*/
 					Map<String, String> sourceAttrDetails = new HashMap<>();
 					sourceAttrDetails.put("COLUMN_NAME", rs.getString("COLUMN_NAME"));
-					sourceAttrDetails.put("TYPE_NAME", rs.getString("TYPE_NAME"));
+					sourceAttrDetails.put("TYPE_NAME",Helper.getSqlTypeName(Integer.parseInt(rs.getString("DATA_TYPE"))));
 					sourceAttrDetails.put("COLUMN_SIZE", rs.getString("COLUMN_SIZE"));
 					sourceColDetails.add(sourceAttrDetails);
 				}
@@ -693,7 +694,8 @@ public class MySqlExecutor implements IExecutor {
 		CompareMetaData comparison = new CompareMetaData();
 		String attrLength = attribute.getLength() != null ? attribute.getLength().toString() : "";
 		if(attribute.getName().equalsIgnoreCase(sourceAttrDetails.get("COLUMN_NAME"))) {	
-			String status = null;			
+			String status = null;		
+		
 			if(Helper.getMappedDataTypes(attribute.getType()).contains(sourceAttrDetails.get("TYPE_NAME").toLowerCase())) {
 				status = Compare.NOCHANGE.toString();
 			} else {
