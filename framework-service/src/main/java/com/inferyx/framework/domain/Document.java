@@ -23,12 +23,16 @@ import com.inferyx.framework.enums.Layout;
 public class Document {
 	private String location;
 	private String header;
+	private String headerAlignment;
 	private String footer;
+	private String footerAlignment;
 	private String title;
 	private LinkedHashMap<String, Object> otherFields;
 	private Layout layout;
 	private List<Map<String, Object>> data;
 	private String metaObjType;
+	private Object metExecObject;
+	private String documentType;
 
 	/**
 	 * @Ganesh
@@ -172,5 +176,77 @@ public class Document {
 	 */
 	public void setMetaObjType(String metaObjType) {
 		this.metaObjType = metaObjType;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the metExecObject
+	 */
+	public Object getMetExecObject() {
+		return metExecObject;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the documentType
+	 */
+	public String getDocumentType() {
+		return documentType;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param documentType the documentType to set
+	 */
+	public void setDocumentType(String documentType) {
+		this.documentType = documentType;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param metExecObject the metExecObject to set
+	 */
+	public void setMetExecObject(Object metExecObject) {
+		this.metExecObject = metExecObject;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the headerAlignment
+	 */
+	public String getHeaderAlignment() {
+		return headerAlignment;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param headerAlignment the headerAlignment to set
+	 */
+	public void setHeaderAlignment(String headerAlignment) {
+		this.headerAlignment = headerAlignment;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the footerAlignment
+	 */
+	public String getFooterAlignment() {
+		return footerAlignment;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param footerAlignment the footerAlignment to set
+	 */
+	public void setFooterAlignment(String footerAlignment) {
+		this.footerAlignment = footerAlignment;
 	}
 }
