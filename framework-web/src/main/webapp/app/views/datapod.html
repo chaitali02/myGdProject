@@ -644,8 +644,11 @@
       </div>
     </div>
   </div>
+  <div ng-if="isDownloadDirective">
+    <download-directive meta-type="download.type" uuid="download.uuid" version="download.version" on-downloade="onDownloaed"></download-directive>
+  </div>
+  <!-- <div id="downloadSample" class="modal fade bs-modal-lg in" style="display: none;">
 
-  <div id="downloadSample" class="modal fade bs-modal-lg in" style="display: none;">
     <div class="modal-dialog" style="width:40%">
       <div class="modal-content" style="resize: both;overflow: auto;">
         <div class="modal-header">
@@ -662,7 +665,6 @@
                     <div class="form-group">
                       <label class="col-md-3 control-label">Rows</label>
                       <div class="col-md-8">
-                        <!-- limit-to="{{download.limit_to}}" -->
                         <input type="number" min="1" class="form-control" ng-model="download.rows" max="{{download.maxrow}}"
                           required max-err-type="maxLimitDownload">
                       </div>
@@ -680,7 +682,6 @@
               </div>
             </div>
           </div>
-          <!--End Model Body-->
           <div class="modal-footer">
             <button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
             <button type="submit" class="btn green">Submit</button>
@@ -688,7 +689,7 @@
         </form>
       </div>
     </div>
-  </div>
+  </div> -->
   <div id="SampleModel" class="modal fade bs-modal-lg in" style="display: none;">
     <div class="modal-dialog" style="width:40%">
       <div class="modal-content" style="resize: both;overflow: auto;">

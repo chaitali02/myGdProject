@@ -28,6 +28,7 @@ InferyxApp.directive('ngEsc', function () {
       });
   };
 });
+
 InferyxApp.directive('ngSpinnerBar', ['$rootScope', '$state',
   function ($rootScope, $state) {
     return {
@@ -1765,3 +1766,101 @@ InferyxApp.directive('loadingPane', function ($timeout, $window) {
       }
   };
 });
+
+
+InferyxApp.directive('downloadDirective', function (CommonService, CF_DOWNLOAD) {
+  return {
+      restrict: 'EA',
+      scope: {
+        metaType: "=",
+        uuid: "=",
+        onDownloade: "=",
+        version: "=",
+        saveOnRefresh:"=?",
+      },
+      link: function (scope, element, attr,$location) {
+        scope.download={};
+	      scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
+	      scope.download.formates=CF_DOWNLOAD.formate;
+	      scope.download.selectFormate=CF_DOWNLOAD.formate[0];
+	      scope.download.maxrow=CF_DOWNLOAD.framework_download_maxrow;
+        scope.download.limit_to=CF_DOWNLOAD.limit_to;
+        scope.download.uuid=scope.uuid;
+        scope.download.version=scope.version;
+        scope.download.type=scope.metaType;
+        $('#downloadSample').modal({
+          backdrop: 'static',
+          keyboard: false
+        });
+        scope.submitDownload=function(){
+          $('#downloadSample').modal("hide");
+          scope.onDownloade({
+            isDownloadInprogess:true,
+            isDownloadDirective:true
+          })
+          var url;
+          if(scope.metaType=="datapod")
+            url= scope.download.type+"/download?action=view&uuid="+scope.download.uuid+"&version="+scope.download.version + "&rows="+scope.download.rows+"&format="+scope.download.selectFormate;
+          else if(scope.metaType=="datastore"){
+            url= scope.download.type+"/download?action=view&uuid="+scope.download.uuid+"&version="+scope.download.version + "&rows="+scope.download.rows+"&format="+scope.download.selectFormate;
+          }
+          else if(scope.metaType=="dashboard"){
+            url= "vizpod/download?action=view&uuid="+scope.download.uuid+"&version="+scope.download.version + "&rows="+scope.download.rows+"&format="+scope.download.selectFormate+"&saveOnRefresh="+scope.saveOnRefresh
+          }
+          else if(scope.metaType=="report"){
+            url= "report/download?action=view&uuid="+scope.download.uuid+"&version="+scope.download.version + "&rows="+scope.download.rows+"&format="+scope.download.selectFormate
+          }
+          else if(scope.metaType=="profile"){
+            url= "profile/download?action=view&profileExecUUID=" + uuid + "&profileExecVersion=" + version + "&rows=" + $scope.download.rows+"&format="+$scope.download.selectFormate
+          }
+
+          CommonService.downloadFile(url)
+              .then(function (response) { onSuccess(response.data) }, function(response){onError(response.data)});
+            var onSuccess = function (response) { 
+              scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
+              scope.isDownloadDatapod=false;
+              scope.onDownloade({
+                isDownloadInprogess:false,
+                isDownloadDirective:false
+              })
+              headers =response.headers();
+              var filename = headers['filename'];
+              var contentType = headers['content-type'];
+              var linkElement = document.createElement('a');
+              try {
+                var blob = new Blob([response.data], {
+                type: contentType
+              });
+              var url = window.URL.createObjectURL(blob);
+              linkElement.setAttribute('href', url);
+              linkElement.setAttribute("download",filename);
+              var clickEvent = new MouseEvent("click", {
+                "view": window,
+                "bubbles": true,
+                "cancelable": false
+              });
+              linkElement.dispatchEvent(clickEvent);
+            } catch (ex) {
+              console.log(ex);
+          }
+        }
+        var onError =function (data) {
+          $('#downloadSample').modal("hide");
+          setTimeout(function(){
+            scope.onDownloade({
+              isDownloadInprogess:false,
+              isDownloadDirective:false
+            },10);
+          })
+          
+          console.log(data);
+          
+        }
+      }
+    },
+    templateUrl: 'views/download-template.html',
+  };
+})
+
+
+

@@ -4,7 +4,7 @@
 MetadataModule = angular.module('MetadataModule');
 
 MetadataModule.controller('MetadataDatapodController', function ($location,$window,$timeout,$http,$filter,$rootScope,$state,$sessionStorage, 
-	 $scope, $stateParams, uiGridConstants,dagMetaDataService,MetadataDatapodSerivce,privilegeSvc,commentService,
+	 $scope, $stateParams, uiGridConstants,dagMetaDataService,MetadataDatapodSerivce,privilegeSvc,
 	 CommonService,CF_DOWNLOAD,CF_SAMPLE) {
 
 	if ($stateParams.mode == 'true') {
@@ -51,11 +51,11 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	$scope.unitTypes=[{"text":"*","caption":"* Text"},{"text":"#","caption":"# Number"},{"text":"$","caption":"$ Currrency"},{"text":"%","caption":"% Percent"}];
 	$scope.path = dagMetaDataService.compareMetaDataStatusDefs;
 	$scope.download={};
-	$scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
-	$scope.download.formates=CF_DOWNLOAD.formate;
-	$scope.download.selectFormate=CF_DOWNLOAD.formate[0];
-	$scope.download.maxrow=CF_DOWNLOAD.framework_download_maxrow;
-	$scope.download.limit_to=CF_DOWNLOAD.limit_to;
+//	$scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
+//	$scope.download.formates=CF_DOWNLOAD.formate;
+	//$scope.download.selectFormate=CF_DOWNLOAD.formate[0];
+//	$scope.download.maxrow=CF_DOWNLOAD.framework_download_maxrow;
+//	$scope.download.limit_to=CF_DOWNLOAD.limit_to;
 	$scope.sample={};
 	$scope.sample.maxrow=CF_SAMPLE.framework_sample_maxrows;
 	$scope.sample.rows=CF_SAMPLE.framework_sample_maxrows;//CF_SAMPLE.framework_sample_minrows;
@@ -1301,10 +1301,11 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		$scope.download.uuid = data.uuid;
 		$scope.download.version = data.version;
 		$scope.download.type="datastore";
-		$('#downloadSample').modal({
-			backdrop: 'static',
-			keyboard: false
-		});
+		$scope.isDownloadDirective=true;
+		// $('#downloadSample').modal({
+		// 	backdrop: 'static',
+		// 	keyboard: false
+		// });
 	};
 
 	$scope.downloadFile = function (data) {
@@ -1313,53 +1314,60 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 		if($scope.checkIsInrogess () ==false){
 			return false;
 		}
+		$scope.isDownloadDirective=true;
 		$scope.download.uuid = data.uuid;
 		$scope.download.version = data.version;
 		$scope.download.type="datapod";
-		$('#downloadSample').modal({
-			backdrop: 'static',
-			keyboard: false
-		});
+		// $('#downloadSample').modal({
+		// 	backdrop: 'static',
+		// 	keyboard: false
+		// });
 	};
-
-    $scope.submitDownload =function(){
-		$scope.isDownloadDatapod=true;
-		$('#downloadSample').modal("hide");
-		var url = $location.absUrl().split("app")[0]
-		$http({
-			method: 'GET',
-			url: url+$scope.download.type+"/download?action=view&uuid="+$scope.download.uuid+"&version="+$scope.download.version + "&rows="+$scope.download.rows+"&format="+$scope.download.selectFormate,
-			responseType: 'arraybuffer'
-		}).success(function (data, status, headers) {
-			$scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
-			$scope.isDownloadDatapod=false;
-			headers = headers();
-			var filename = headers['filename'];
-			var contentType = headers['content-type'];
-			var linkElement = document.createElement('a');
-			try {
-				var blob = new Blob([data], {
-					type: contentType
-				});
-				var url = window.URL.createObjectURL(blob);
-				linkElement.setAttribute('href', url);
-				linkElement.setAttribute("download",filename);
-
-				var clickEvent = new MouseEvent("click", {
-					"view": window,
-					"bubbles": true,
-					"cancelable": false
-				});
-				linkElement.dispatchEvent(clickEvent);
-			} catch (ex) {
-				console.log(ex);
-			}
-		}).error(function (data) {
-			$scope.isDownloadDatapod=false;
-			console.log(data);
-			$('#downloadSample').modal("hide");
-		});
+	$scope.onDownloaed=function(data){
+		console.log(data);
+		$scope.isDownloadDatapod=data.isDownloadInprogess;
+		$scope.isDownloadDatapod=data.isDownloadInprogess;
+		$scope.isDownloadDirective=data.isDownloadDirective;
 	}
+
+    // $scope.submitDownload =function(){
+	// 	$scope.isDownloadDatapod=true;
+	// 	$('#downloadSample').modal("hide");
+	// 	var url = $location.absUrl().split("app")[0]
+	// 	$http({
+	// 		method: 'GET',
+	// 		url: url+$scope.download.type+"/download?action=view&uuid="+$scope.download.uuid+"&version="+$scope.download.version + "&rows="+$scope.download.rows+"&format="+$scope.download.selectFormate,
+	// 		responseType: 'arraybuffer'
+	// 	}).success(function (data, status, headers) {
+	// 		$scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
+	// 		$scope.isDownloadDatapod=false;
+	// 		headers = headers();
+	// 		var filename = headers['filename'];
+	// 		var contentType = headers['content-type'];
+	// 		var linkElement = document.createElement('a');
+	// 		try {
+	// 			var blob = new Blob([data], {
+	// 				type: contentType
+	// 			});
+	// 			var url = window.URL.createObjectURL(blob);
+	// 			linkElement.setAttribute('href', url);
+	// 			linkElement.setAttribute("download",filename);
+
+	// 			var clickEvent = new MouseEvent("click", {
+	// 				"view": window,
+	// 				"bubbles": true,
+	// 				"cancelable": false
+	// 			});
+	// 			linkElement.dispatchEvent(clickEvent);
+	// 		} catch (ex) {
+	// 			console.log(ex);
+	// 		}
+	// 	}).error(function (data) {
+	// 		$scope.isDownloadDatapod=false;
+	// 		console.log(data);
+	// 		$('#downloadSample').modal("hide");
+	// 	});
+	// }
 
 	$scope.attrTableSelectedItem=[];
 	$scope.onChangeAttrRow=function(index,status){
@@ -1393,8 +1401,7 @@ MetadataModule.controller('MetadataDatapodController', function ($location,$wind
 	}
 
 	$scope.getDetailForUpload = function (data) {
-		debugger
-		console.log(data)
+		//console.log(data)
 		if($scope.checkIsInrogess () ==false){
 			return false;
 		}

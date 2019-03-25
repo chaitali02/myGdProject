@@ -1526,54 +1526,64 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
     $scope.getAllLatestDashboardExec("reRun"); 
   }
 
-  $scope.submitDownload = function () {
-    var uuid = $scope.download.data.uuid;
-    var version = $scope.download.data.version;
-    var url = $location.absUrl().split("app")[0];
-    $('#downloadSample').modal("hide");
-    $http({
-      method: 'GET',
-      url: url + "vizpod/download?action=view&uuid=" + uuid + "&version=" + version + "&rows=" + $scope.download.rows+"&saveOnRefresh="+$scope.dashboardExecData.dashboard.saveOnRefresh+"&format="+$scope.download.selectFormate,
-      responseType: 'arraybuffer'
-    }).success(function (data, status, headers) {
+  // $scope.submitDownload = function () {
+  //   var uuid = $scope.download.data.uuid;
+  //   var version = $scope.download.data.version;
+  //   var url = $location.absUrl().split("app")[0];
+  //   $('#downloadSample').modal("hide");
+  //   $http({
+  //     method: 'GET',
+  //     url: url + "vizpod/download?action=view&uuid=" + uuid + "&version=" + version + "&rows=" + $scope.download.rows+"&saveOnRefresh="+$scope.dashboardExecData.dashboard.saveOnRefresh+"&format="+$scope.download.selectFormate,
+  //     responseType: 'arraybuffer'
+  //   }).success(function (data, status, headers) {
 
-      $scope.download.rows = CF_DOWNLOAD.framework_download_minrows;
+  //     $scope.download.rows = CF_DOWNLOAD.framework_download_minrows;
 
-        headers = headers();
-		var filename = headers['filename'];
-		var contentType = headers['content-type'];
-		var linkElement = document.createElement('a');
-		try {
-			var blob = new Blob([data], {
-				type: contentType
-			});
-			var url = window.URL.createObjectURL(blob);
-			linkElement.setAttribute('href', url);
-			linkElement.setAttribute("download",filename);
-            var clickEvent = new MouseEvent("click", {
-          "view": window,
-          "bubbles": true,
-          "cancelable": false
-        });
-        linkElement.dispatchEvent(clickEvent);
-      } catch (ex) {
-        console.log(ex);
-      }
-    }).error(function (data) {
-      console.log(data);
-    });
-  }
+  //       headers = headers();
+	// 	var filename = headers['filename'];
+	// 	var contentType = headers['content-type'];
+	// 	var linkElement = document.createElement('a');
+	// 	try {
+	// 		var blob = new Blob([data], {
+	// 			type: contentType
+	// 		});
+	// 		var url = window.URL.createObjectURL(blob);
+	// 		linkElement.setAttribute('href', url);
+	// 		linkElement.setAttribute("download",filename);
+  //           var clickEvent = new MouseEvent("click", {
+  //         "view": window,
+  //         "bubbles": true,
+  //         "cancelable": false
+  //       });
+  //       linkElement.dispatchEvent(clickEvent);
+  //     } catch (ex) {
+  //       console.log(ex);
+  //     }
+  //   }).error(function (data) {
+  //     console.log(data);
+  //   });
+  // }
 
-
+  $scope.onDownloaed=function(data){
+		console.log(data);
+		$scope.isDownloadDatapod=data.isDownloadInprogess;
+		$scope.isDownloadDatapod=data.isDownloadInprogess;
+		$scope.isDownloadDirective=data.isDownloadDirective;
+	}
   $scope.downloadFile = function (data) {
     if($scope.checkIsInrogess () ==false){
 			return false;
 		}
     $scope.download.data = data;
-    $('#downloadSample').modal({
-      backdrop: 'static',
-      keyboard: false
-    });
+    $scope.download.uuid=data.uuid;
+    $scope.download.version=data.version;
+    $scope.download.type="dashboard";
+    $scope.isDownloadDirective=true;
+    // $('#downloadSample').modal({
+    //   backdrop: 'static',
+    //   keyboard: false
+    // });
+
   };
 
   $scope.executeDashboard = function (data) {
