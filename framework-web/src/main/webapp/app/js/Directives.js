@@ -1777,6 +1777,7 @@ InferyxApp.directive('downloadDirective', function (CommonService, CF_DOWNLOAD) 
         onDownloade: "=",
         version: "=",
         saveOnRefresh:"=?",
+        resultType:"=?"
       },
       link: function (scope, element, attr,$location) {
         scope.download={};
@@ -1788,6 +1789,7 @@ InferyxApp.directive('downloadDirective', function (CommonService, CF_DOWNLOAD) 
         scope.download.uuid=scope.uuid;
         scope.download.version=scope.version;
         scope.download.type=scope.metaType;
+        scope.download.resultType=scope.resultType||"";
         $('#downloadSample').modal({
           backdrop: 'static',
           keyboard: false
@@ -1811,7 +1813,16 @@ InferyxApp.directive('downloadDirective', function (CommonService, CF_DOWNLOAD) 
             url= "report/download?action=view&uuid="+scope.download.uuid+"&version="+scope.download.version + "&rows="+scope.download.rows+"&format="+scope.download.selectFormate
           }
           else if(scope.metaType=="profile"){
-            url= "profile/download?action=view&profileExecUUID=" + uuid + "&profileExecVersion=" + version + "&rows=" + $scope.download.rows+"&format="+$scope.download.selectFormate
+            url= "profile/download?action=view&profileExecUUID="+scope.download.uuid + "&profileExecVersion=" +scope.download.version + "&rows=" + scope.download.rows+"&format="+scope.download.selectFormate
+          }
+          else if(scope.metaType=="dq"){
+            url ="dataqual/download?action=view&dataQualExecUUID=" +scope.download.uuid + "&dataQualExecVersion=" + +scope.download.version + "&rows=" + scope.download.rows + "&format=" + scope.download.selectFormate + "&resultType=" + scope.download.resultType
+          }
+          else if(scope.metaType=="map"){
+            url ="map/download?action=view&mapExecUUID=" +scope.download.uuid + "&mapExecVersion=" + scope.download.version + "&mode=BATCH" + "&rows=" + scope.download.rows+"&format="+scope.download.selectFormate;
+          }
+          else if(scope.metaType=="recon"){
+            url="recon/download?action=view&reconExecUUID="+scope.download.uuid+"&reconExecVersion="+scope.download.version+"&rows="+scope.download.rows+"&format="+scope.download.selectFormate
           }
 
           CommonService.downloadFile(url)
