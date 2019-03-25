@@ -29,10 +29,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.PDPageContentStream.AppendMode;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
@@ -75,20 +77,46 @@ public class PDFUtil {
 		if(titleX < 0) {
 			titleX = margin;
 		}
-		PDStreamUtils.write(contentStream, report.getTitle(), (PDFont)PDType1Font.HELVETICA, 12.0f, titleX, y, Color.black);
+		PDStreamUtils.write(contentStream, report.getTitle(), (PDFont)PDType1Font.HELVETICA, 20.0f, titleX, y, Color.black);
 		y -= 50.0f;
 		
 		contentStream.setFont(PDType1Font.HELVETICA_BOLD, 10.0f);
 		
 		//writting other contents
-		PDStreamUtils.write(contentStream, "Report Name".concat(": ").concat(report.getName()),
-				(PDFont) PDType1Font.HELVETICA, 10.0f, margin, y, Color.black);
-		y -= 15.0f;
-		
-		PDStreamUtils.write(contentStream,
-				"Report Description".concat(": ").concat(report.getDesc() != null ? report.getDesc() : ""),
-				(PDFont) PDType1Font.HELVETICA, 10.0f, margin, y, Color.black);
-		y -= 15.0f;
+//		PDStreamUtils.write(contentStream, "Report Name".concat(": ").concat(report.getName()),
+//				(PDFont) PDType1Font.HELVETICA, 10.0f, margin, y, Color.black);
+//		y -= 15.0f;
+//		
+//		PDStreamUtils.write(contentStream,
+//				"Report Description".concat(": ").concat(report.getDesc() != null ? report.getDesc() : ""),
+//				(PDFont) PDType1Font.HELVETICA, 10.0f, margin, y, Color.black);
+//		y -= 15.0f;
+//
+//		StringBuilder reportParameters = new StringBuilder("");
+//		if (report.getParamList() != null && reportExec.getExecParams() != null
+//				&& reportExec.getExecParams().getParamListInfo() != null
+//				&& !reportExec.getExecParams().getParamListInfo().isEmpty()) {
+//
+//			for (ParamListHolder paramListHolder : reportExec.getExecParams().getParamListInfo()) {
+//				String paramName = paramListHolder.getParamName();
+//				String paramValue = paramListHolder.getParamValue().getValue();
+//				reportParameters.append(paramName).append(": ").append(paramValue).append(", ");
+//			}
+//
+//			if (reportParameters.length() > 0) {
+//				reportParameters = new StringBuilder(
+//						reportParameters.substring(0, reportParameters.toString().lastIndexOf(",")));
+//			}
+//
+//		}
+//
+//		PDStreamUtils.write(contentStream, "Report Parameters: ".concat(reportParameters.toString()),
+//				(PDFont) PDType1Font.HELVETICA, 10.0f, margin, y, Color.black);
+//		y -= 15.0f;
+//		
+//		PDStreamUtils.write(contentStream, "Report Generation Date: ".concat(reportExec.getCreatedOn()),
+//				(PDFont) PDType1Font.HELVETICA, 10.0f, margin, y, Color.black);
+//		y -= 30.0f;
 
 		StringBuilder reportParameters = new StringBuilder("");
 		if (report.getParamList() != null && reportExec.getExecParams() != null
@@ -107,26 +135,38 @@ public class PDFUtil {
 			}
 
 		}
-
-		PDStreamUtils.write(contentStream, "Report Parameters: ".concat(reportParameters.toString()),
-				(PDFont) PDType1Font.HELVETICA, 10.0f, margin, y, Color.black);
-		y -= 15.0f;
 		
-		PDStreamUtils.write(contentStream, "Report Generation Date: ".concat(reportExec.getCreatedOn()),
-				(PDFont) PDType1Font.HELVETICA, 10.0f, margin, y, Color.black);
-		y -= 30.0f;
+		final float tableWidth2 = pdfPage.getMediaBox().getHeight() - 3.00f * margin;
+		BaseTable baseTable2 = new BaseTable(y, tableWidth2, 50f, tableWidth2, margin, pdfDoc, pdfPage, true, true);
+	  
+		Map<String, String> otherDetails = new LinkedHashMap<>();
+		otherDetails.put("Report Name", report.getName());
+		otherDetails.put("Report Description", report.getDesc() != null ? report.getDesc() : "");
+		otherDetails.put("Report Parameters", reportParameters.toString());
+		otherDetails.put("Report Generation Date", reportExec.getCreatedOn());
 		
-		//writting header
+	    for(String key : otherDetails.keySet()) {
+	    	Row<PDPage> tableRow = baseTable2.createRow(18);
+			Cell<PDPage> cell1 = tableRow.createCell(30, key);
+			Cell<PDPage> cell2 = tableRow.createCell(50, otherDetails.get(key));
+		}
+	    
+	    baseTable2.draw();
+	    
+	    float cellHeight = baseTable2.getRows().get(0).getCells().get(0).getCellHeight();
+	    y -= ((baseTable2.getRows().size() * cellHeight) + 100);
+		
+	    //writting header
 		final float headerWidth = pdfPage.getMediaBox().getWidth() - 2.0f * margin;
 		float headerX = ((headerWidth - (report.getHeader().length()+margin))/2);
 		if(headerX < 0) {
 			headerX = margin;
 		}
-		PDStreamUtils.write(contentStream, report.getHeader(), (PDFont)PDType1Font.HELVETICA, 10.0f, headerX, y, Color.black);
+		PDStreamUtils.write(contentStream, report.getHeader(), (PDFont)PDType1Font.HELVETICA, 15.0f, headerX, y, Color.black);
 		y -= 30.0f;
 		
 		pdfPage = new PDPage(PDRectangle.A4);
-		pdfPage.setRotation(90);
+//		pdfPage.setRotation(90);
 //		pdfPage.setMediaBox(new PDRectangle(pdfPage.getMediaBox().getHeight() - (2 * margin), pdfPage.getMediaBox().getWidth() - 2.0f * margin));
 		pdfPage.setMediaBox(new PDRectangle(PDRectangle.A4.getHeight(), PDRectangle.A4.getWidth()));
 		pdfDoc.addPage(pdfPage);
@@ -169,24 +209,34 @@ public class PDFUtil {
 //	    PDStreamUtils.write(contentStream, report.getFooter(),
 //				(PDFont) PDType1Font.HELVETICA, 10.0f, margin, y, Color.black);
 		contentStream.close();
+		
 		PDDocument pdfDoc2 = new PDDocument();
 		for(int i = 0; i < pdfDoc.getNumberOfPages(); i++) {
 			PDPage pdPage = pdfDoc.getPages().get(i);
-			if(i != 0) {
-				pdPage.setRotation(90);
-			}
+//			if(i != 0) {
+//				pdPage.setRotation(90);
+//			}
 //			Matrix matrix = pdPage.getMatrix();
 			pdPage.setMediaBox(new PDRectangle(PDRectangle.A4.getHeight(), PDRectangle.A4.getWidth()));
 //			System.out.println("Height: "+PDRectangle.A4.getHeight()+" : "+(pdPage.getMediaBox().getHeight() - (2 * margin)));
 //			System.out.println("Width: "+PDRectangle.A4.getWidth()+" : "+(pdPage.getMediaBox().getWidth() - (2 * margin)));
 //			pdPage.setMediaBox(new PDRectangle(pdPage.getMediaBox().getHeight() - (2 * margin), pdPage.getMediaBox().getWidth() - 2.0f * margin));
 			
+//			PDPageContentStream contentStream = new PDPageContentStream(pdfDoc, pdPage, AppendMode.APPEND, true);
+//			
+//			float footerYStart = (pdfPage.getMediaBox().getHeight() - (pdfPage.getMediaBox().getHeight()-margin)) - 20;
+//			final float footerWidth = pdfPage.getMediaBox().getWidth() - 2.0f * margin;
+//			final String footer = !StringUtils.isBlank(report.getFooter()) ? report.getFooter() : ""; 
+//			float footerX = ((footerWidth - (footer.length()+margin))/2);
+//			
+//			PDStreamUtils.write(contentStream, footer, PDType1Font.HELVETICA, 10, footerX, footerYStart,
+//					new Color(102, 102, 102));// set stayle and size
+//			contentStream.close();
+			
 			pdfDoc2.addPage(pdPage);
 		}
 		return pdfDoc2;
 	}
-	
-
 
 	public PDDocument getPDFDocForReport(List<Map<String, Object>> resultList, ReportExec reportExec)
 			throws IOException {
