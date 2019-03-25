@@ -2717,42 +2717,42 @@ RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaData
 
 
 
-  $scope.submitDownload=function(){
-		var uuid = $scope.download.data.uuid;
-		var version = $scope.download.data.version;
-		var url = $location.absUrl().split("app")[0];
-		$('#downloadSample').modal("hide"); 
-    $http({
-      method: 'GET',
-      url: url + "rule/download?action=view&ruleExecUUID=" + uuid + "&ruleExecVersion=" + version+"&rows="+$scope.download.rows+"&format="+$scope.download.selectFormate,
-      responseType: 'arraybuffer'
-    }).success(function (data, status, headers) {
-      headers = headers();
-      $scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
+  // $scope.submitDownload=function(){
+	// 	var uuid = $scope.download.data.uuid;
+	// 	var version = $scope.download.data.version;
+	// 	var url = $location.absUrl().split("app")[0];
+	// 	$('#downloadSample').modal("hide"); 
+  //   $http({
+  //     method: 'GET',
+  //     url: url + "rule/download?action=view&ruleExecUUID=" + uuid + "&ruleExecVersion=" + version+"&rows="+$scope.download.rows+"&format="+$scope.download.selectFormate,
+  //     responseType: 'arraybuffer'
+  //   }).success(function (data, status, headers) {
+  //     headers = headers();
+  //     $scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
 			
-      var filename = headers['filename'];
-      var contentType = headers['content-type'];
-      var linkElement = document.createElement('a');
-      try {
-        var blob = new Blob([data], {
-          type: contentType
-        });
-        var url = window.URL.createObjectURL(blob);
-        linkElement.setAttribute('href', url);
-        linkElement.setAttribute("download", filename);
-        var clickEvent = new MouseEvent("click", {
-          "view": window,
-          "bubbles": true,
-          "cancelable": false
-        });
-        linkElement.dispatchEvent(clickEvent);
-      } catch (ex) {
-        console.log(ex);
-      }
-    }).error(function (data) {
-      console.log(data);
-    });
-	}
+  //     var filename = headers['filename'];
+  //     var contentType = headers['content-type'];
+  //     var linkElement = document.createElement('a');
+  //     try {
+  //       var blob = new Blob([data], {
+  //         type: contentType
+  //       });
+  //       var url = window.URL.createObjectURL(blob);
+  //       linkElement.setAttribute('href', url);
+  //       linkElement.setAttribute("download", filename);
+  //       var clickEvent = new MouseEvent("click", {
+  //         "view": window,
+  //         "bubbles": true,
+  //         "cancelable": false
+  //       });
+  //       linkElement.dispatchEvent(clickEvent);
+  //     } catch (ex) {
+  //       console.log(ex);
+  //     }
+  //   }).error(function (data) {
+  //     console.log(data);
+  //   });
+	// }
 
 
   $scope.downloadFile = function (data) {
@@ -2760,10 +2760,19 @@ RuleModule.controller('ResultRuleController', function ($http, $log, dagMetaData
       return false;
     }
     $scope.download.data=data;
-      $('#downloadSample').modal({
-        backdrop: 'static',
-        keyboard: false
-      });
-   
-  };
+    $scope.isDownloadDirective=true;
+		$scope.download.uuid = data.uuid;
+		$scope.download.version = data.version;
+		$scope.download.type="rule";
+		// $('#downloadSample').modal({
+		// 	backdrop: 'static',
+		// 	keyboard: false
+		// });
+	};
+	$scope.onDownloaed=function(data){
+		console.log(data);
+		$scope.isDownloadDatapod=data.isDownloadInprogess;
+		$scope.isDownloadDatapod=data.isDownloadInprogess;
+		$scope.isDownloadDirective=data.isDownloadDirective;
+	}
 }); //End RuleViewResultController

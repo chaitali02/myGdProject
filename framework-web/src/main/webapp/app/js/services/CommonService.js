@@ -95,6 +95,15 @@
         data:data,
         }).success(function(response){return response})
     }
+    factory.downloadFile = function (url) {
+    	var fullUrl = baseUrl + url
+      return $http({
+        url: fullUrl,
+        method: "GET",
+        responseType: 'arraybuffer'
+      }).then(function (response) { return response })
+    };
+
     factory.findBaseEntityStatusByCriteria = function(type, name, userName, startDate, endDate, tags, active,published,status) {
       var url = $location.absUrl().split("app")[0]
       return $http({
@@ -1234,8 +1243,21 @@
     return deferred.promise;
   }
   
+  this.downloadFile=function(url){
+    var deferred = $q.defer();
+      CommonFactory.downloadFile(url).then(function(response){onSuccess(response)},function(response){onError(response)});
+        var onSuccess=function(response){
+          deferred.resolve({
+              data:response
+           });
+        }
+        var onError = function (response) {
+          deferred.reject({
+            data: response
+          })
+        }
+       return deferred.promise;
+  }
    
   });
-  
-  
 })();

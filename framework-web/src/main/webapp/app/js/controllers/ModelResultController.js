@@ -706,56 +706,65 @@ DatascienceModule.controller('ResultModelController', function ($filter, $state,
 
 
     $scope.downloadMoldeResult = function () {
-        $('#downloadSample').modal({
-            backdrop: 'static',
-            keyboard: false
-        });
-    }
+        $scope.isDownloadDirective=true;
+		$scope.download.uuid =  $scope.modelDetail.uuid;
+		$scope.download.version = $scope.modelDetailversion;
+		$scope.download.type=$stateParams.type;
+		// $('#downloadSample').modal({
+		// 	backdrop: 'static',
+		// 	keyboard: false
+		// });
+	};
+	$scope.onDownloaed=function(data){
+		console.log(data);
+		$scope.isDownloadDirective=data.isDownloadDirective;
+	}
+    
 
-    $scope.submitDownload = function () {
-        var baseurl = $location.absUrl().split("app")[0];
-        var url;
-        if ($stateParams.type == "predict") {
-            url = baseurl + "model/predict/download?action=view&predictExecUUID=" + $scope.modelDetail.uuid + "&predictExecVersion=" + $scope.modelDetail.version + "&mode=BATCH" + "&rows=" + $scope.download.rows+"&format="+$scope.download.selectFormate;
-        }
-        else if ($stateParams.type == "simulate") {
-            url = baseurl + "model/simulate/download?action=view&simulateExecUUID=" + $scope.modelDetail.uuid + "&simulateExecVersion=" + $scope.modelDetail.version + "&mode=''" + "&rows=" + $scope.download.rows+"&format="+$scope.download.selectFormate;
-        }
+    // $scope.submitDownload = function () {
+    //     var baseurl = $location.absUrl().split("app")[0];
+    //     var url;
+    //     if ($stateParams.type == "predict") {
+    //         url = baseurl + "model/predict/download?action=view&predictExecUUID=" + $scope.modelDetail.uuid + "&predictExecVersion=" + $scope.modelDetail.version + "&mode=BATCH" + "&rows=" + $scope.download.rows+"&format="+$scope.download.selectFormate;
+    //     }
+    //     else if ($stateParams.type == "simulate") {
+    //         url = baseurl + "model/simulate/download?action=view&simulateExecUUID=" + $scope.modelDetail.uuid + "&simulateExecVersion=" + $scope.modelDetail.version + "&mode=''" + "&rows=" + $scope.download.rows+"&format="+$scope.download.selectFormate;
+    //     }
 
-        $('#downloadSample').modal("hide");
-        $http({
-            method: 'GET',
-            url: url,
-            responseType: 'arraybuffer'
-        }).success(
-            function (data, status, headers) {
-                $scope.download.rows = CF_DOWNLOAD.framework_download_minrows;
-                headers = headers();
-                console.log(typeof (data))
-                var filename = headers['filename'];
-                var contentType = headers['content-type'];
-                var linkElement = document.createElement('a');
-                try {
-                    var blob = new Blob([data], {
-                        type: contentType
-                    });
-                    var url = window.URL.createObjectURL(blob);
-                    linkElement.setAttribute('href', url);
-                    linkElement.setAttribute("download", filename);
-                    var clickEvent = new MouseEvent(
-                        "click", {
-                            "view": window,
-                            "bubbles": true,
-                            "cancelable": false
-                        });
-                    linkElement.dispatchEvent(clickEvent);
-                } catch (ex) {
-                    console.log(ex);
-                }
-            }).error(function (data) {
-                console.log();
-            });
-    };
+    //     $('#downloadSample').modal("hide");
+    //     $http({
+    //         method: 'GET',
+    //         url: url,
+    //         responseType: 'arraybuffer'
+    //     }).success(
+    //         function (data, status, headers) {
+    //             $scope.download.rows = CF_DOWNLOAD.framework_download_minrows;
+    //             headers = headers();
+    //             console.log(typeof (data))
+    //             var filename = headers['filename'];
+    //             var contentType = headers['content-type'];
+    //             var linkElement = document.createElement('a');
+    //             try {
+    //                 var blob = new Blob([data], {
+    //                     type: contentType
+    //                 });
+    //                 var url = window.URL.createObjectURL(blob);
+    //                 linkElement.setAttribute('href', url);
+    //                 linkElement.setAttribute("download", filename);
+    //                 var clickEvent = new MouseEvent(
+    //                     "click", {
+    //                         "view": window,
+    //                         "bubbles": true,
+    //                         "cancelable": false
+    //                     });
+    //                 linkElement.dispatchEvent(clickEvent);
+    //             } catch (ex) {
+    //                 console.log(ex);
+    //             }
+    //         }).error(function (data) {
+    //             console.log();
+    //         });
+    // };
 
 
     var myVarResult;

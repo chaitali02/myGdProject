@@ -28,6 +28,7 @@ InferyxApp.directive('ngEsc', function () {
       });
   };
 });
+
 InferyxApp.directive('ngSpinnerBar', ['$rootScope', '$state',
   function ($rootScope, $state) {
     return {
@@ -1765,3 +1766,129 @@ InferyxApp.directive('loadingPane', function ($timeout, $window) {
       }
   };
 });
+
+
+InferyxApp.directive('downloadDirective', function (CommonService, CF_DOWNLOAD) {
+  return {
+      restrict: 'EA',
+      scope: {
+        metaType: "=",
+        uuid: "=",
+        onDownloade: "=",
+        version: "=",
+        saveOnRefresh:"=?",
+        resultType:"=?"
+      },
+      link: function (scope, element, attr,$location) {
+        scope.download={};
+	      scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
+        scope.download.formates=CF_DOWNLOAD.formate;
+        scope.download.layout=CF_DOWNLOAD.layout;
+        scope.download.selectFormate=CF_DOWNLOAD.formate[0];
+        scope.download.selectLayout=CF_DOWNLOAD.layout[1];
+	      scope.download.maxrow=CF_DOWNLOAD.framework_download_maxrow;
+        scope.download.limit_to=CF_DOWNLOAD.limit_to;
+        scope.download.uuid=scope.uuid;
+        scope.download.version=scope.version;
+        scope.download.type=scope.metaType;
+        scope.download.resultType=scope.resultType||"";
+        $('#downloadSample').modal({
+          backdrop: 'static',
+          keyboard: false
+        });
+        scope.submitDownload=function(){
+          $('#downloadSample').modal("hide");
+          scope.onDownloade({
+            isDownloadInprogess:true,
+            isDownloadDirective:true
+          })
+          var url;
+          if(scope.metaType=="datapod")
+            url= scope.download.type+"/download?action=view&uuid="+scope.download.uuid+"&version="+scope.download.version + "&rows="+scope.download.rows+"&format="+scope.download.selectFormate;
+          else if(scope.metaType=="datastore"){
+            url= scope.download.type+"/download?action=view&uuid="+scope.download.uuid+"&version="+scope.download.version + "&rows="+scope.download.rows+"&format="+scope.download.selectFormate;
+          }
+          else if(scope.metaType=="dashboard"){
+            url= "vizpod/download?action=view&uuid="+scope.download.uuid+"&version="+scope.download.version + "&rows="+scope.download.rows+"&format="+scope.download.selectFormate+"&saveOnRefresh="+scope.saveOnRefresh
+          }
+          else if(scope.metaType=="report"){
+            url= "report/download?action=view&uuid="+scope.download.uuid+"&version="+scope.download.version + "&rows="+scope.download.rows+"&format="+scope.download.selectFormate
+          }
+          else if(scope.metaType=="profile"){
+            url= "profile/download?action=view&profileExecUUID="+scope.download.uuid + "&profileExecVersion=" +scope.download.version + "&rows=" + scope.download.rows+"&format="+scope.download.selectFormate
+          }
+          else if(scope.metaType=="dq"){
+            url ="dataqual/download?action=view&dataQualExecUUID=" +scope.download.uuid + "&dataQualExecVersion=" + +scope.download.version + "&rows=" + scope.download.rows + "&format=" + scope.download.selectFormate + "&resultType=" + scope.download.resultType
+          }
+          else if(scope.metaType=="map"){
+            url ="map/download?action=view&mapExecUUID=" +scope.download.uuid + "&mapExecVersion=" + scope.download.version + "&mode=BATCH" + "&rows=" + scope.download.rows+"&format="+scope.download.selectFormate;
+          }
+          else if(scope.metaType=="recon"){
+            url="recon/download?action=view&reconExecUUID="+scope.download.uuid+"&reconExecVersion="+scope.download.version+"&rows="+scope.download.rows+"&format="+scope.download.selectFormate
+          }
+          else if(scope.metaType=="rule2"){
+            url="rule2/download?action=view&ruleExecUUID=" + scope.download.uuid + "&ruleExecVersion=" + scope.download.version + "&rows=" + scope.download.rows + "&format=" + scope.download.selectFormate + "&resultType=" + scope.download.resultType
+          }
+          else if(scope.metaType=="rule"){
+            url= "rule/download?action=view&ruleExecUUID=" + scope.download.uuid + "&ruleExecVersion=" + scope.download.version+"&rows="+scope.download.rows+"&format="+scope.download.selectFormate
+          }
+          else if(scope.metaType=="predict"){
+            url = "model/predict/download?action=view&predictExecUUID=" + scope.download.uuid + "&predictExecVersion=" + scope.download.version + "&mode=BATCH" + "&rows=" + scope.download.rows+"&format="+scope.download.selectFormate;
+          }
+          else if(scope.metaType=="simulate"){
+            url = "model/simulate/download?action=view&simulateExecUUID=" + scope.download.uuid + "&simulateExecVersion=" + scope.download.version + "&mode=''" + "&rows=" + scope.download.rows+"&format="+scope.download.selectFormate;
+          }
+          if(scope.download.selectFormate =="PDF"){
+            url=url+"&layout="+scope.download.selectLayout
+          }
+
+          CommonService.downloadFile(url)
+              .then(function (response) { onSuccess(response.data) }, function(response){onError(response.data)});
+            var onSuccess = function (response) { 
+              scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
+              scope.isDownloadDatapod=false;
+              scope.onDownloade({
+                isDownloadInprogess:false,
+                isDownloadDirective:false
+              })
+              headers =response.headers();
+              var filename = headers['filename'];
+              var contentType = headers['content-type'];
+              var linkElement = document.createElement('a');
+              try {
+                var blob = new Blob([response.data], {
+                type: contentType
+              });
+              var url = window.URL.createObjectURL(blob);
+              linkElement.setAttribute('href', url);
+              linkElement.setAttribute("download",filename);
+              var clickEvent = new MouseEvent("click", {
+                "view": window,
+                "bubbles": true,
+                "cancelable": false
+              });
+              linkElement.dispatchEvent(clickEvent);
+            } catch (ex) {
+              console.log(ex);
+          }
+        }
+        var onError =function (data) {
+          $('#downloadSample').modal("hide");
+          setTimeout(function(){
+            scope.onDownloade({
+              isDownloadInprogess:false,
+              isDownloadDirective:false
+            },10);
+          })
+          
+          console.log(data);
+          
+        }
+      }
+    },
+    templateUrl: 'views/download-template.html',
+  };
+})
+
+
+

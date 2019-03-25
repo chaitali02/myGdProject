@@ -2290,12 +2290,11 @@ DatavisualizationModule.controller('ReportResultController', function ($q, dagMe
 
 	$scope.reportExec = { uuid: $stateParams.id, version: $stateParams.version }
 	$scope.download = {};
-	$scope.download.rows = CF_DOWNLOAD.framework_download_minrows;
-	$scope.download.formates = CF_DOWNLOAD.formate;
-	//$scope.download.formates[1]="PDF";
-	$scope.download.selectFormate = CF_DOWNLOAD.formate[0];
-	$scope.download.maxrow = CF_DOWNLOAD.framework_download_maxrow;
-	$scope.download.limit_to = CF_DOWNLOAD.limit_to;
+	//$scope.download.rows = CF_DOWNLOAD.framework_download_minrows;
+    //$scope.download.formates = CF_DOWNLOAD.formate;
+    //$scope.download.selectFormate = CF_DOWNLOAD.formate[0];
+	//$scope.download.maxrow = CF_DOWNLOAD.framework_download_maxrow;
+	//$scope.download.limit_to = CF_DOWNLOAD.limit_to;
 	$scope.name = $stateParams.name;
 	$scope.pagination = {
 		currentPage: 1,
@@ -2428,12 +2427,22 @@ DatavisualizationModule.controller('ReportResultController', function ($q, dagMe
 	$scope.downloadFile = function (data) {
 		if ($scope.gridOptions.data.length > 0 && $scope.isShowSimpleData == true && !$scope.isGraphShow) {
 			$scope.download.data = data;
-			$('#downloadSample').modal({
-				backdrop: 'static',
-				keyboard: false
-			});
+			$scope.isDownloadDirective=true;
+			$scope.download.uuid = data.uuid;
+			$scope.download.version = data.version;
+			$scope.download.type="report";
+			// $('#downloadSample').modal({
+			// 	backdrop: 'static',
+			// 	keyboard: false
+			// });
 		}
 	};
+
+	$scope.onDownloaed=function(data){
+		console.log(data);
+		$scope.isDownlodInprogess=data.isDownloadInprogess;
+		$scope.isDownloadDirective=data.isDownloadDirective;
+	}
 
 	$scope.submitDownload = function () {
 		var uuid = $scope.download.data.uuid;
