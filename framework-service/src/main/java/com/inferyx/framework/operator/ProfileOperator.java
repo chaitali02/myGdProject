@@ -35,14 +35,11 @@ import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DatapodServiceImpl;
-import com.inferyx.framework.service.ExecutorServiceImpl;
 
 @Component
 public class ProfileOperator {
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
-	@Autowired
-	private ExecutorServiceImpl executorServiceImpl;
 	@Autowired
 	private FilterOperator2 filterOperator2;
 	@Autowired

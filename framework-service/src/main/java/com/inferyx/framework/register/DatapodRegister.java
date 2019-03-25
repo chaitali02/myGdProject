@@ -238,30 +238,34 @@ public class DatapodRegister {
 			/*String datasourceUUID = datapod.getDatasource().getRef().getUuid();
 			String datasourceVersion = datapod.getDatasource().getRef().getVersion();*/
 			//Datasource datasource = (Datasource) commonActivity.getRefObject(new MetaIdentifier(MetaType.datasource, datasourceUUID, datasourceVersion));
-			Datasource datasource = commonServiceImpl.getDatasourceByApp();
+//			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			
 			String filepath = datastore.getLocation();
 			/*String dbName = datasource.getDbname();*/	
-			IExecutor exec = null;
+			IExecutor executor = null;
 			String tableName = Helper.genTableName(filepath);
 			ExecContext execContext = null;
 			String appUuid = null;
 			appUuid = commonServiceImpl.getApp().getUuid();
 			
-			if (runMode.equals(RunMode.ONLINE)) {
-				execContext = (engine.getExecEngine().equalsIgnoreCase("livy-spark") || engine.getExecEngine().equalsIgnoreCase("livy_spark"))
-								? helper.getExecutorContext(engine.getExecEngine()) : helper.getExecutorContext(ExecContext.spark.toString());
-			} else {
-				execContext = helper.getExecutorContext(datasource.getType().toLowerCase());
-			}
-			exec = execFactory.getExecutor(execContext.toString());
+//			if (runMode.equals(RunMode.ONLINE)) {
+//				execContext = (engine.getExecEngine().equalsIgnoreCase("livy-spark") || engine.getExecEngine().equalsIgnoreCase("livy_spark"))
+//								? helper.getExecutorContext(engine.getExecEngine()) : helper.getExecutorContext(ExecContext.spark.toString());
+//			} else {
+//				execContext = helper.getExecutorContext(datasource.getType().toLowerCase());
+//			}
+			
+			execContext = commonServiceImpl.getExecContext(runMode);
+			executor = execFactory.getExecutor(execContext.toString());
+			
+//			exec = execFactory.getExecutor(execContext.toString());
 			String hdfsLocation = String.format("%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath());
 			if (filepath != null && !filepath.contains(hdfsLocation)) {
 				filepath = String.format("%s%s", hdfsLocation, filepath);
 			}
 			
 			/*IConnector conn = connFactory.getConnector(datasource.getType().toLowerCase());*/	
-			exec.registerDatapod(tableName, datapod, datastore, execContext, appUuid);
+			executor.registerDatapod(tableName, datapod, datastore, execContext, appUuid);
 			/*dataFrameService.registerDatapod(conn, tableName, datapod, datasource, datastore, iReader, execContext);*/
 			/*ConnectionHolder conHolder = conn.getConnection();
 			Object obj = conHolder.getStmtObject();
@@ -290,7 +294,7 @@ public class DatapodRegister {
 				}
 			}*/ 
 			if (execContext.equals(ExecContext.livy_spark)) {
-				exec.registerDatapod(filepath, tableName, appUuid);
+				executor.registerDatapod(filepath, tableName, appUuid);
 			}
 		} catch (Exception e) {
 			logger.error("Error registering datastore", e);

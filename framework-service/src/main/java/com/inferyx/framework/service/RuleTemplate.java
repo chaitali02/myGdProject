@@ -91,8 +91,6 @@ public abstract class RuleTemplate implements IExecutable, IParsable {
 	@Autowired
 	Helper helper;
 	@Autowired
-	ExecutorServiceImpl executorServiceImpl;
-	@Autowired
 	DQInfo dqInfo;
 	@Autowired
 	MetadataServiceImpl metadataServiceImpl;
@@ -286,7 +284,6 @@ public abstract class RuleTemplate implements IExecutable, IParsable {
 		runBaseRuleService.setConnFactory(connFactory);
 		runBaseRuleService.setEngine(engine);
 		runBaseRuleService.setHelper(helper);
-		runBaseRuleService.setExecutorServiceImpl(executorServiceImpl);
 		runBaseRuleService.setExecParams(execParams);
 		runBaseRuleService.setDatasource(getDatasource(baseRule));
 		runBaseRuleService.setSummaryDatapodKey(getTargetSummaryDp());

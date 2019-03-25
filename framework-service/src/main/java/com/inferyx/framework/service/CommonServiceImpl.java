@@ -5492,4 +5492,9 @@ public class CommonServiceImpl<T> {
 		// Pull from framework.properties as resultConfig could not be resolved
 		return frameworkProperties.getObject().getProperty(configName);
 	}
+
+	public ExecContext getExecContext(RunMode runMode) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		return helper.getExecutorContext(getDatasourceByApp().getType());
+	}
+
 }

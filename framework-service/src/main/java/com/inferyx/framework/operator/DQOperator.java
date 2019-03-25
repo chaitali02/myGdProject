@@ -47,7 +47,6 @@ import com.inferyx.framework.enums.ThresholdType;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.DatapodServiceImpl;
-import com.inferyx.framework.service.ExecutorServiceImpl;
 import com.inferyx.framework.service.MessageStatus;
 import com.inferyx.framework.service.MetadataServiceImpl;
 
@@ -199,8 +198,6 @@ public class DQOperator implements IParsable {
 	private DatapodServiceImpl datapodServiceImpl;
 	@Autowired
 	private MetadataServiceImpl metadataServiceImpl;
-	@Autowired
-	private ExecutorServiceImpl executorServiceImpl;
 	@Autowired
 	private DQInfo dqInfo;
 	

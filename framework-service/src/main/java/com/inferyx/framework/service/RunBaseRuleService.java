@@ -79,7 +79,6 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 	protected Engine engine;
 	protected Helper helper;
 	protected ExecParams execParams;
-	protected ExecutorServiceImpl executorServiceImpl;
 	protected DatapodServiceImpl datapodService;
 
 	static final Logger logger = Logger.getLogger(RunBaseRuleService.class);
@@ -96,20 +95,6 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 	 */
 	public void setDatasource(Datasource datasource) {
 		this.datasource = datasource;
-	}
-
-	/**
-	 * @return the executorServiceImpl
-	 */
-	public ExecutorServiceImpl getExecutorServiceImpl() {
-		return executorServiceImpl;
-	}
-
-	/**
-	 * @param executorServiceImpl the executorServiceImpl to set
-	 */
-	public void setExecutorServiceImpl(ExecutorServiceImpl executorServiceImpl) {
-		this.executorServiceImpl = executorServiceImpl;
 	}
 
 	/**
@@ -535,19 +520,20 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 			if (StringUtils.isBlank(baseRuleExec.getExec())) {
 				throw new Exception("sql not generated");
 			}
-			IExecutor exec = null;
+			IExecutor executor = null;
 			ExecContext execContext = null;
 			String appUuid = null;
 
 //			Datapod targetDP = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodKey.getUuid(), datapodKey.getVersion(), MetaType.datapod.toString());
 //			Datasource targetDS = commonServiceImpl.getDatasourceByDatapod(targetDP);
 //			execContext = executorServiceImpl.getExecContext(runMode, targetDS);
-//			exec = execFactory.getExecutor(execContext.toString());
+//			executor = execFactory.getExecutor(execContext.toString());
 			
 //			execContext = executorServiceImpl.getExecContext(runMode, datasource);
 			
-			execContext = helper.getExecutorContext(datasource.getType().toLowerCase()); // This comes from app datasource.
-			exec = execFactory.getExecutor(execContext.toString());
+//			execContext = helper.getExecutorContext(datasource.getType().toLowerCase()); // This comes from app datasource.
+			execContext = commonServiceImpl.getExecContext(runMode);
+			executor = execFactory.getExecutor(execContext.toString());
 
 			tableName = genTableNameByRule(baseRule, baseRuleExec, datapodKey, execContext, runMode);
 			logger.info("Table name in RunBaseruleServiceImpl : " + tableName);
@@ -567,7 +553,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 			// Actual execution happens here - START
 			logger.info("Before execution result : " + baseRuleExec.getExec());
 			rsHolder = execute(baseRuleExec.getExec(), ruleDatasource, tableName, filePath, appUuid,
-					exec, execContext);
+					executor, execContext);
 
 			if (rsHolder != null) {
 				countRows = rsHolder.getCountRows();
@@ -592,7 +578,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 				logger.info("Table name registered : " + tableName);
 				logger.info("Before execution summary : " + baseRuleExec.getSummaryExec());
 				rsHolder = execute(baseRuleExec.getSummaryExec(), ruleDatasource, tableName, filePath,
-						appUuid, exec, execContext);
+						appUuid, executor, execContext);
 
 				if (rsHolder != null) {
 					countRows = rsHolder.getCountRows();
@@ -661,7 +647,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 	}
 
 	private ResultSetHolder execute(String execSql, Datasource ruleDatasource,
-			String tableName, String filePath, String appUuid, IExecutor exec, ExecContext execContext)
+			String tableName, String filePath, String appUuid, IExecutor executor, ExecContext execContext)
 			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Datapod targetDp = null;
@@ -669,7 +655,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 		
 //		 Special handling for Rule until it is retired.
 		if (baseRuleExec.getDependsOn().getRef().getType().equals(MetaType.rule)) {
-			rsHolder = exec.executeAndRegisterByDatasource(execSql, Helper.genTableName(filePath), ruleDatasource,
+			rsHolder = executor.executeAndRegisterByDatasource(execSql, Helper.genTableName(filePath), ruleDatasource,
 					appUuid);
 			return rsHolder;
 		}
@@ -687,22 +673,22 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 		logger.info("Execution engine : " + execContext);
 		if (execContext != null && execContext.equals(ExecContext.FILE)) {
 			if (targetDatasource.getType().equals(ExecContext.FILE.toString())) {
-				rsHolder = exec.executeRegisterAndPersist(execSql, tableName, filePath, targetDp,
+				rsHolder = executor.executeRegisterAndPersist(execSql, tableName, filePath, targetDp,
 						SaveMode.APPEND.toString(), true, appUuid);
 			}
 			else {
-				rsHolder = exec.executeSqlByDatasource(execSql, ruleDatasource, appUuid);
+				rsHolder = executor.executeSqlByDatasource(execSql, ruleDatasource, appUuid);
 				if(targetDatasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
 					tableName = targetDatasource.getSid().concat(".").concat(targetDp.getName());
 				} else {
 					tableName = targetDatasource.getDbname().concat(".").concat(targetDp.getName());					
 				}
 				rsHolder.setTableName(tableName);			
-				rsHolder = exec.persistDataframe(rsHolder, targetDatasource, targetDp, SaveMode.APPEND.toString());				
+				rsHolder = executor.persistDataframe(rsHolder, targetDatasource, targetDp, SaveMode.APPEND.toString());				
 				}
 		} else {
 			String sql = helper.buildInsertQuery(execContext.toString(), tableName, targetDp, execSql);
-			rsHolder = exec.executeSql(sql, appUuid);
+			rsHolder = executor.executeSql(sql, appUuid);
 		}
 		/*if (runMode != null && runMode.equals(RunMode.BATCH)) {
 			targetDp = (Datapod) commonServiceImpl.getLatestByUuid(datapodKey.getUuid(), MetaType.datapod.toString(),
@@ -712,23 +698,23 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 					targetDsMI.getVersion(), targetDsMI.getType().toString(), "N");
 			if (appDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
 					&& !targetDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
-				rsHolder = exec.executeSqlByDatasource(execSql, ruleDatasource, appUuid);
+				rsHolder = executor.executeSqlByDatasource(execSql, ruleDatasource, appUuid);
 //				if(targetDatasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
 //					tableName = targetDatasource.getSid().concat(".").concat(targetDp.getName());
 //				} else {
 //					tableName = targetDatasource.getDbname().concat(".").concat(targetDp.getName());					
 //				}
 				rsHolder.setTableName(tableName);
-				rsHolder = exec.persistDataframe(rsHolder, targetDatasource, targetDp, SaveMode.APPEND.toString());
+				rsHolder = executor.persistDataframe(rsHolder, targetDatasource, targetDp, SaveMode.APPEND.toString());
 			} else if (targetDatasource.getType().equals(ExecContext.FILE.toString())) {
-				rsHolder = exec.executeRegisterAndPersist(execSql, tableName, filePath, targetDp,
+				rsHolder = executor.executeRegisterAndPersist(execSql, tableName, filePath, targetDp,
 						SaveMode.APPEND.toString(), true, appUuid);
 			} else {
 				String sql = helper.buildInsertQuery(execContext.toString(), tableName, targetDp, execSql);
-				rsHolder = exec.executeSql(sql, appUuid);
+				rsHolder = executor.executeSql(sql, appUuid);
 			}
 		} else {
-			rsHolder = exec.executeAndRegisterByDatasource(execSql, Helper.genTableName(filePath), ruleDatasource,
+			rsHolder = executor.executeAndRegisterByDatasource(execSql, Helper.genTableName(filePath), ruleDatasource,
 					appUuid);
 		}*/
 		return rsHolder;
