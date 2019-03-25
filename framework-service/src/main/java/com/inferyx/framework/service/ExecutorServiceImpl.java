@@ -30,16 +30,17 @@ public class ExecutorServiceImpl {
 	 * @return
 	 */
 	public ExecContext getExecContext(RunMode runMode, Datasource datasource) {
-		ExecContext execContext = null;
-		if (runMode.equals(RunMode.ONLINE)) {
-			execContext = (engine.getExecEngine().equalsIgnoreCase("livy-spark")
-						|| engine.getExecEngine().equalsIgnoreCase("spark"))
-							? helper.getExecutorContext(engine.getExecEngine())
-							: helper.getExecutorContext(ExecContext.spark.toString());
-		} else {
-			execContext = helper.getExecutorContext(datasource.getType().toLowerCase());
-		}
-		return execContext;
+
+//		ExecContext execContext = null;
+//		if (runMode.equals(RunMode.ONLINE)) {
+//			execContext = (engine.getExecEngine().equalsIgnoreCase("livy-spark")
+//						|| engine.getExecEngine().equalsIgnoreCase("spark"))
+//							? helper.getExecutorContext(engine.getExecEngine())
+//							: helper.getExecutorContext(ExecContext.spark.toString());
+//		} else {
+//			execContext = helper.getExecutorContext(datasource.getType().toLowerCase());
+//		}
+		return helper.getExecutorContext(datasource.getType().toLowerCase());
 	}
 
 }

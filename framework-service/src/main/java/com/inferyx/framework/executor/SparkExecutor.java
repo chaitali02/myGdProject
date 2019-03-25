@@ -151,6 +151,7 @@ import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.MatrixToRddConverter;
 import com.inferyx.framework.reader.IReader;
 import com.inferyx.framework.service.CommonServiceImpl;
+import com.inferyx.framework.service.DatapodServiceImpl;
 import com.inferyx.framework.service.ModelExecServiceImpl;
 import com.inferyx.framework.service.ModelServiceImpl;
 import com.inferyx.framework.service.ParamSetServiceImpl;
@@ -186,6 +187,8 @@ public class SparkExecutor<T> implements IExecutor {
 	private DataSourceFactory datasourceFactory;
 	@Autowired
 	private ModelServiceImpl modelServiceImpl;
+	@Autowired
+	private DatapodServiceImpl datapodServiceImpl;
 	@Resource
 	private ConcurrentHashMap<String, GraphFrame> graphpodMap;
 	@Autowired
@@ -1992,7 +1995,7 @@ public class SparkExecutor<T> implements IExecutor {
 //		df.show(false);
 		df.printSchema();
 		
-		datasource = commonServiceImpl.getDatasourceByDatapod(targetDatapod);		
+//		datasource = commonServiceImpl.getDatasourceByDatapod(targetDatapod);
 		if(datasource.getType().equalsIgnoreCase(ExecContext.HIVE.toString())
 				|| datasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
 				String sessionParameters = datasource.getSessionParameters();

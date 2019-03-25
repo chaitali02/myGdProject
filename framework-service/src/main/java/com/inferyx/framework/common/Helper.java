@@ -710,7 +710,8 @@ public class Helper {
 		if(runMode != null && !StringUtils.isBlank(runMode))
 			switch(runMode.toLowerCase()) {
 			case "batch" : return ConstantsUtil.PERSIST_MODE_DISK_ONLY;
-			case "online": return ConstantsUtil.PERSIST_MODE_MEMORY_ONLY;
+//			case "online": return ConstantsUtil.PERSIST_MODE_MEMORY_ONLY;
+			case "online": return ConstantsUtil.PERSIST_MODE_DISK_ONLY;
 		}
 		return null;
 	}

@@ -424,8 +424,8 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 			return String.format("%s_%s_%s", baseRule.getUuid().replace("-", "_"), baseRule.getVersion(),
 					baseRuleExec.getVersion());
 
-		} else if (execContext == null || runMode.equals(RunMode.ONLINE)
-				&& execContext.equals(ExecContext.FILE)) {
+		} 
+		else if (execContext.equals(ExecContext.FILE)) {
 			return String.format("%s_%s_%s", baseRule.getUuid().replace("-", "_"), baseRule.getVersion(),
 					baseRuleExec.getVersion());
 		}
@@ -539,7 +539,14 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 			ExecContext execContext = null;
 			String appUuid = null;
 
-			execContext = executorServiceImpl.getExecContext(runMode, datasource);
+//			Datapod targetDP = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodKey.getUuid(), datapodKey.getVersion(), MetaType.datapod.toString());
+//			Datasource targetDS = commonServiceImpl.getDatasourceByDatapod(targetDP);
+//			execContext = executorServiceImpl.getExecContext(runMode, targetDS);
+//			exec = execFactory.getExecutor(execContext.toString());
+			
+//			execContext = executorServiceImpl.getExecContext(runMode, datasource);
+			
+			execContext = helper.getExecutorContext(datasource.getType().toLowerCase()); // This comes from app datasource.
 			exec = execFactory.getExecutor(execContext.toString());
 
 			tableName = genTableNameByRule(baseRule, baseRuleExec, datapodKey, execContext, runMode);
@@ -555,11 +562,11 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 			baseRuleExec.setSummaryExec(DagExecUtil.replaceInternalVarMap(execParams, baseRuleExec.getSummaryExec()));
 			/***** Replace internalVarMap - END *****/
 
-			Datasource appDatasource = commonServiceImpl.getDatasourceByApp();
+//			Datasource appDatasource = commonServiceImpl.getDatasourceByApp();
 			Datasource ruleDatasource = commonServiceImpl.getDatasourceByObject(baseRule);
 			// Actual execution happens here - START
 			logger.info("Before execution result : " + baseRuleExec.getExec());
-			rsHolder = execute(baseRuleExec.getExec(), appDatasource, ruleDatasource, tableName, filePath, appUuid,
+			rsHolder = execute(baseRuleExec.getExec(), ruleDatasource, tableName, filePath, appUuid,
 					exec, execContext);
 
 			if (rsHolder != null) {
@@ -584,7 +591,7 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 				
 				logger.info("Table name registered : " + tableName);
 				logger.info("Before execution summary : " + baseRuleExec.getSummaryExec());
-				rsHolder = execute(baseRuleExec.getSummaryExec(), appDatasource, ruleDatasource, tableName, filePath,
+				rsHolder = execute(baseRuleExec.getSummaryExec(), ruleDatasource, tableName, filePath,
 						appUuid, exec, execContext);
 
 				if (rsHolder != null) {
@@ -653,13 +660,20 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 
 	}
 
-	private ResultSetHolder execute(String execSql, Datasource appDatasource, Datasource ruleDatasource,
+	private ResultSetHolder execute(String execSql, Datasource ruleDatasource,
 			String tableName, String filePath, String appUuid, IExecutor exec, ExecContext execContext)
 			throws IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		Datapod targetDp = null;
 		ResultSetHolder rsHolder = null;
-		MetaType ruleType = Helper.getMetaTypeByExecType(ruleExecType);
+		
+//		 Special handling for Rule until it is retired.
+		if (baseRuleExec.getDependsOn().getRef().getType().equals(MetaType.rule)) {
+			rsHolder = exec.executeAndRegisterByDatasource(execSql, Helper.genTableName(filePath), ruleDatasource,
+					appUuid);
+			return rsHolder;
+		}
+		
 		targetDp = (Datapod) commonServiceImpl.getLatestByUuid(datapodKey.getUuid(), MetaType.datapod.toString(),
 					"N");
 		MetaIdentifier targetDsMI = targetDp.getDatasource().getRef();
@@ -667,14 +681,25 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 		logger.info("Target tableName : " + tableName);
 		Datasource targetDatasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(targetDsMI.getUuid(),
 				targetDsMI.getVersion(), targetDsMI.getType().toString(), "N");
-		String executionEngine = commonServiceImpl.getConfigValue("framework." + ruleType.toString() + ".execution.engine");
-		logger.info("framework execution engine : " + executionEngine);
-		if (executionEngine != null && executionEngine.equalsIgnoreCase("spark")) {
-//			rsHolder = exec.executeSqlByDatasource(execSql, ruleDatasource, appUuid);
-//			rsHolder.setTableName(tableName);
-//			rsHolder = exec.persistDataframe(rsHolder, targetDatasource, targetDp, SaveMode.APPEND.toString());
-			rsHolder = exec.executeRegisterAndPersist(execSql, tableName, filePath, targetDp,
-					SaveMode.APPEND.toString(), true, appUuid);
+//		MetaType ruleType = Helper.getMetaTypeByExecType(ruleExecType);
+//		String executionEngine = commonServiceImpl.getConfigValue("framework." + ruleType.toString() + ".execution.engine");
+//		logger.info("framework execution engine : " + executionEngine);
+		logger.info("Execution engine : " + execContext);
+		if (execContext != null && execContext.equals(ExecContext.FILE)) {
+			if (targetDatasource.getType().equals(ExecContext.FILE.toString())) {
+				rsHolder = exec.executeRegisterAndPersist(execSql, tableName, filePath, targetDp,
+						SaveMode.APPEND.toString(), true, appUuid);
+			}
+			else {
+				rsHolder = exec.executeSqlByDatasource(execSql, ruleDatasource, appUuid);
+				if(targetDatasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+					tableName = targetDatasource.getSid().concat(".").concat(targetDp.getName());
+				} else {
+					tableName = targetDatasource.getDbname().concat(".").concat(targetDp.getName());					
+				}
+				rsHolder.setTableName(tableName);			
+				rsHolder = exec.persistDataframe(rsHolder, targetDatasource, targetDp, SaveMode.APPEND.toString());				
+				}
 		} else {
 			String sql = helper.buildInsertQuery(execContext.toString(), tableName, targetDp, execSql);
 			rsHolder = exec.executeSql(sql, appUuid);

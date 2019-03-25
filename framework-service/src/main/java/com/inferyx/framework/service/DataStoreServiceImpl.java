@@ -448,132 +448,119 @@ public class DataStoreServiceImpl {
 
 	}
 	
-	public String getTableNameByDatastore(DataStore ds, RunMode runMode) throws Exception {
+	public String getTableNameByDatastore(DataStore dataStore, RunMode runMode) throws Exception {
 		
-		Datapod dp = getDatapodByDatastore(ds.getUuid(),ds.getVersion(),runMode);
-		return datapodServiceImpl.getTableNameByDatapod(dp,runMode);
-
-	}
-
-	// Remove this once rule is retired. Vaibhav
-	public String getTableNameByDatastore(String dataStoreUUID, String dataStoreVersion, RunMode runMode) throws Exception {
 		String tableName = null;
-		DataStore dataStore =  (DataStore) commonServiceImpl.getOneByUuidAndVersion(dataStoreUUID, dataStoreVersion, MetaType.datastore.toString());
-		String filePath = dataStore.getLocation();
-		String hdfsLocation = String.format("%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath());
-		String metaid = dataStore.getMetaId().getRef().getUuid();
-		String metaV = dataStore.getMetaId().getRef().getVersion();
+//		DataStore dataStore =  (DataStore) commonServiceImpl.getOneByUuidAndVersion(dataStoreUUID, dataStoreVersion, MetaType.datastore.toString());
+//		Datasource appDatasource = commonServiceImpl.getDatasourceByApp();
+//		String dsType = appDatasource.getType();
+
+		String filePath = dataStore.getLocation();		
 		MetaType metaType = dataStore.getMetaId().getRef().getType();
-		Datasource appDatasource = commonServiceImpl.getDatasourceByApp();
-		String dsType = appDatasource.getType();
 		if (metaType == MetaType.datapod) {
-			Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(metaid, metaV, MetaType.datapod.toString());
+			String hdfsLocation = String.format("%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath());
+			Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(dataStore.getMetaId().getRef().getUuid(), 
+					dataStore.getMetaId().getRef().getVersion(), MetaType.datapod.toString());
 			Datasource datapodDs = commonServiceImpl.getDatasourceByDatapod(datapod);
-			dsType = datapodDs.getType();
-			if(runMode != null && runMode.equals(RunMode.ONLINE)) {
-				if((appDatasource.getType().equalsIgnoreCase(ExecContext.spark.toString())
-							|| appDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString()))
-						&& !(datapodDs.getType().equalsIgnoreCase(ExecContext.spark.toString())
-							|| datapodDs.getType().equalsIgnoreCase(ExecContext.FILE.toString()))) {
+			String dsType = datapodDs.getType();
+			if (dsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
+				if (!filePath.contains(hdfsLocation)) {
 					filePath = String.format("%s%s", hdfsLocation, filePath);
-					tableName = Helper.genTableName(filePath);
-				} else {
-					filePath = String.format("%s%s", hdfsLocation, filePath);
-					tableName = Helper.genTableName(filePath);
 				}
+				tableName = Helper.genTableName(filePath);				
 			} else {
-				if (dsType.equalsIgnoreCase(ExecContext.FILE.toString())) {
-					if (!filePath.contains(hdfsLocation)) {
-						filePath = String.format("%s%s", hdfsLocation, filePath);
-					}
-					tableName = Helper.genTableName(filePath);				
-				} else {
-					tableName = datapodDs.getDbname() + "." + datapod.getName();
-				}
+				tableName = datapodDs.getDbname() + "." + datapod.getName();
 			}
 			if (dataStore.getPersistMode() == null || !dataStore.getPersistMode().equals("MEMORY_ONLY")) {
 				datapodRegister.registerDatapod(dataStore, datapod, runMode);
 			}	
-		} else if (metaType == MetaType.rule) {
-			Rule rule = (Rule) commonServiceImpl.getOneByUuidAndVersion(metaid, metaV, MetaType.rule.toString());
-			String ruleName = rule.getName();
-			if(ruleName.toLowerCase().contains("rule_"))
-				ruleName = ruleName.replace("rule_", "");
-			
-			/*if((engine.getExecEngine().equalsIgnoreCase("livy-spark"))) {
-				tableName = Helper.genTableName(filePath);
-			} else*/ if(runMode != null && runMode.equals(RunMode.ONLINE)) {
-				tableName = Helper.genTableName(filePath);
-			}else
-			if ((/*dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
-					||*/ dsType.equalsIgnoreCase(ExecContext.FILE.toString())))
-					tableName = Helper.genTableName(filePath);
-				else
-					tableName = appDatasource.getDbname() + "." + ruleName;
-		}else if (metaType == MetaType.rule2) {
-			Rule2 rule2 = (Rule2) commonServiceImpl.getOneByUuidAndVersion(metaid, metaV, MetaType.rule2.toString());
-			String ruleName = rule2.getName();
-			if(ruleName.toLowerCase().contains("rule2_"))
-				ruleName = ruleName.replace("rule2_", "");
-			
-			/*if((engine.getExecEngine().equalsIgnoreCase("livy-spark"))) {
-				tableName = Helper.genTableName(filePath);
-			} else*/ if(runMode != null && runMode.equals(RunMode.ONLINE)) {
-				tableName = Helper.genTableName(filePath);
-			}else
-			if ((/*dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
-					||*/ dsType.equalsIgnoreCase(ExecContext.FILE.toString())))
-					tableName = Helper.genTableName(filePath);
-				else
-					tableName = appDatasource.getDbname() + "." + ruleName;
-		} else if (metaType == MetaType.recon) {
-			Recon recon = (Recon) commonServiceImpl.getOneByUuidAndVersion(metaid, metaV, MetaType.recon.toString());
-			String reconName = recon.getName();
-			if(reconName.toLowerCase().contains("recon_"))
-				reconName = reconName.replace("recon_", "");
-			
-			/*if((engine.getExecEngine().equalsIgnoreCase("livy-spark"))) {
-				tableName = Helper.genTableName(filePath);
-			} else */if(runMode != null && runMode.equals(RunMode.ONLINE)) {
-				tableName = Helper.genTableName(filePath);
-			}else
-			if ((/*dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
-					||*/ dsType.equalsIgnoreCase(ExecContext.FILE.toString())))
-					tableName = Helper.genTableName(filePath);
-				else
-					tableName = appDatasource.getDbname() + "." + reconName;
-		} else if (metaType == MetaType.operator) {
-			Operator recon = (Operator) commonServiceImpl.getOneByUuidAndVersion(metaid, metaV, MetaType.operator.toString());
-			String operatorName = recon.getName();
-			if(operatorName.toLowerCase().contains("operator_"))
-				operatorName = operatorName.replace("operator_", "");
-			
-			/*if((engine.getExecEngine().equalsIgnoreCase("livy-spark"))) {
-				tableName = Helper.genTableName(filePath);
-			} else */if(runMode != null && runMode.equals(RunMode.ONLINE)) {
-				tableName = Helper.genTableName(filePath);
-			}else
-			if ((/*dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
-					||*/ dsType.equalsIgnoreCase(ExecContext.FILE.toString())))
-					tableName = Helper.genTableName(filePath);
-				else
-					tableName = appDatasource.getDbname() + "." + operatorName;
-		} else if (metaType == MetaType.report) {
-			Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(metaid, metaV,
-					MetaType.report.toString());
-			String reportName = report.getName();
-			if (reportName.toLowerCase().contains("report"))
-				reportName = reportName.replace("report_", "");
-
-			if (runMode != null && runMode.equals(RunMode.ONLINE)) {
-				tableName = Helper.genTableName(filePath);
-			} else if ((dsType.equalsIgnoreCase(ExecContext.spark.toString())
-					|| dsType.equalsIgnoreCase(ExecContext.FILE.toString()))) {
-				tableName = Helper.genTableName(filePath);
-			} else {
-				tableName = appDatasource.getDbname() + "." + reportName;
-			}
-			
+		} 
+		else {
+			tableName = Helper.genTableName(filePath);
+		}
+		return tableName;
+		
+//		else if (metaType == MetaType.rule) {
+//			Rule rule = (Rule) commonServiceImpl.getOneByUuidAndVersion(metaid, metaV, MetaType.rule.toString());
+//			String ruleName = rule.getName();
+//			if(ruleName.toLowerCase().contains("rule_"))
+//				ruleName = ruleName.replace("rule_", "");
+//			
+//			/*if((engine.getExecEngine().equalsIgnoreCase("livy-spark"))) {
+//				tableName = Helper.genTableName(filePath);
+//			} else*/ if(runMode != null && runMode.equals(RunMode.ONLINE)) {
+//				tableName = Helper.genTableName(filePath);
+//			}else
+//			if ((/*dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
+//					||*/ dsType.equalsIgnoreCase(ExecContext.FILE.toString())))
+//					tableName = Helper.genTableName(filePath);
+//				else
+//					tableName = appDatasource.getDbname() + "." + ruleName;
+//		}
+//			else if (metaType == MetaType.rule2) {
+//			Rule2 rule2 = (Rule2) commonServiceImpl.getOneByUuidAndVersion(metaid, metaV, MetaType.rule2.toString());
+//			String ruleName = rule2.getName();
+//			if(ruleName.toLowerCase().contains("rule2_"))
+//				ruleName = ruleName.replace("rule2_", "");
+//			
+//			/*if((engine.getExecEngine().equalsIgnoreCase("livy-spark"))) {
+//				tableName = Helper.genTableName(filePath);
+//			} else*/ if(runMode != null && runMode.equals(RunMode.ONLINE)) {
+//				tableName = Helper.genTableName(filePath);
+//			}else
+//			if ((/*dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
+//					||*/ dsType.equalsIgnoreCase(ExecContext.FILE.toString())))
+//					tableName = Helper.genTableName(filePath);
+//				else
+//					tableName = appDatasource.getDbname() + "." + ruleName;
+//		} else if (metaType == MetaType.recon) {
+//			Recon recon = (Recon) commonServiceImpl.getOneByUuidAndVersion(metaid, metaV, MetaType.recon.toString());
+//			String reconName = recon.getName();
+//			if(reconName.toLowerCase().contains("recon_"))
+//				reconName = reconName.replace("recon_", "");
+//			
+//			/*if((engine.getExecEngine().equalsIgnoreCase("livy-spark"))) {
+//				tableName = Helper.genTableName(filePath);
+//			} else */if(runMode != null && runMode.equals(RunMode.ONLINE)) {
+//				tableName = Helper.genTableName(filePath);
+//			}else
+//			if ((/*dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
+//					||*/ dsType.equalsIgnoreCase(ExecContext.FILE.toString())))
+//					tableName = Helper.genTableName(filePath);
+//				else
+//					tableName = appDatasource.getDbname() + "." + reconName;
+//		} 
+//		else if (metaType == MetaType.operator) {
+//			Operator recon = (Operator) commonServiceImpl.getOneByUuidAndVersion(metaid, metaV, MetaType.operator.toString());
+//			String operatorName = recon.getName();
+//			if(operatorName.toLowerCase().contains("operator_"))
+//				operatorName = operatorName.replace("operator_", "");
+//			
+//			/*if((engine.getExecEngine().equalsIgnoreCase("livy-spark"))) {
+//				tableName = Helper.genTableName(filePath);
+//			} else */if(runMode != null && runMode.equals(RunMode.ONLINE)) {
+//				tableName = Helper.genTableName(filePath);
+//			}else
+//			if ((/*dsType.equalsIgnoreCase(ExecContext.spark.toString()) 
+//					||*/ dsType.equalsIgnoreCase(ExecContext.FILE.toString())))
+//					tableName = Helper.genTableName(filePath);
+//				else
+//					tableName = appDatasource.getDbname() + "." + operatorName;
+//		} else if (metaType == MetaType.report) {
+//			Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(metaid, metaV,
+//					MetaType.report.toString());
+//			String reportName = report.getName();
+//			if (reportName.toLowerCase().contains("report"))
+//				reportName = reportName.replace("report_", "");
+//
+//			if (runMode != null && runMode.equals(RunMode.ONLINE)) {
+//				tableName = Helper.genTableName(filePath);
+//			} else if ((dsType.equalsIgnoreCase(ExecContext.spark.toString())
+//					|| dsType.equalsIgnoreCase(ExecContext.FILE.toString()))) {
+//				tableName = Helper.genTableName(filePath);
+//			} else {
+//				tableName = appDatasource.getDbname() + "." + reportName;
+//			}			
 //			if (runMode != null && runMode.equals(RunMode.BATCH)) {
 //				MetaIdentifier dependsOnMI = report.getDependsOn().getRef();
 //				Object dependsOnObj = commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(),
@@ -588,18 +575,17 @@ public class DataStoreServiceImpl {
 //			} else {
 //				tableName = Helper.genTableName(filePath);
 //			}
-		} else if (metaType == MetaType.ingest) {
-			String[] list = filePath.split("/");	
-//			Ingest ingest = (Ingest) commonServiceImpl.getLatestByUuid( dataStore.getMetaId().getRef().getUuid(), dataStore.getMetaId().getRef().getType().toString());
-			if(runMode != null && runMode.equals(RunMode.ONLINE)) {
-				tableName = String.format("%s_%s_%s", list[list.length-3].replaceAll("-", "_"), list[list.length-2], list[list.length-1]);
-			} else {
-				tableName = String.format("%s_%s_%s", list[list.length-3].replaceAll("-", "_"), list[list.length-2], list[list.length-1]);
-			}
-		} else if (metaType == MetaType.vizpod) {
-			tableName = Helper.genTableName(dataStore.getLocation());
-		}
-		return tableName;
+//		} 
+//		else if (metaType == MetaType.ingest) {
+//			String[] list = filePath.split("/");	
+////			Ingest ingest = (Ingest) commonServiceImpl.getLatestByUuid( dataStore.getMetaId().getRef().getUuid(), dataStore.getMetaId().getRef().getType().toString());
+//			if(runMode != null && runMode.equals(RunMode.ONLINE)) {
+//				tableName = String.format("%s_%s_%s", list[list.length-3].replaceAll("-", "_"), list[list.length-2], list[list.length-1]);
+//			} else {
+//				tableName = String.format("%s_%s_%s", list[list.length-3].replaceAll("-", "_"), list[list.length-2], list[list.length-1]);
+//			}
+//		} 
+		
 	}
 	
 //		Datasource dataSource = (Datasource) commonServiceImpl.getLatestByUuid(dp.getDatasource().getRef().getUuid(), MetaType.datasource.toString(), "N");
@@ -1229,20 +1215,23 @@ public class DataStoreServiceImpl {
 			ExecContext execContext = null;
 			IExecutor exec = null;
 			String appUuid = null;
-			if (runMode.equals(RunMode.ONLINE)) {
-				execContext = (engine.getExecEngine().equalsIgnoreCase("livy-spark")
-						|| engine.getExecEngine().equalsIgnoreCase("livy_spark"))
-								? helper.getExecutorContext(engine.getExecEngine())
-								: helper.getExecutorContext(ExecContext.spark.toString());
-				appUuid = commonServiceImpl.getApp().getUuid();
-			} else {
-				execContext = helper.getExecutorContext(datasource.getType().toLowerCase());
-			}
+//			if (runMode.equals(RunMode.ONLINE)) {
+//				execContext = (engine.getExecEngine().equalsIgnoreCase("livy-spark")
+//						|| engine.getExecEngine().equalsIgnoreCase("livy_spark"))
+//								? helper.getExecutorContext(engine.getExecEngine())
+//								: helper.getExecutorContext(ExecContext.spark.toString());
+//				appUuid = commonServiceImpl.getApp().getUuid();
+//			} else {
+//				execContext = helper.getExecutorContext(datasource.getType().toLowerCase());
+//			}
+
+			execContext = helper.getExecutorContext(datasource.getType().toLowerCase());			
 			exec = execFactory.getExecutor(execContext.toString());
 			appUuid = commonServiceImpl.getApp().getUuid();
 
 			boolean requestIdExistFlag = false;
-			String tableName = getTableNameByDatastore(dataStore.getUuid(), dataStore.getVersion(), runMode);
+//			String tableName = getTableNameByDatastore(dataStore.getUuid(), dataStore.getVersion(), runMode);
+			String tableName = getTableNameByDatastore(dataStore, runMode);
 
 			StringBuilder customCondition = new StringBuilder(" ");
 			if ((!execContext.equals(ExecContext.FILE) || !execContext.equals(ExecContext.spark)) && execVersion != null
@@ -1254,45 +1243,63 @@ public class DataStoreServiceImpl {
 
 			StringBuilder limitBuilder = new StringBuilder(" ");
 			if (limit > 0) {
-				limitBuilder.append(" LIMIT " + limit);
+				if (!datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
+						limitBuilder.append(" LIMIT " + limit);
+				}
+				else {
+						limitBuilder.append(" AND ROWNUM < " + limit);					
+				}
+						
 			}
 			Datasource mapSourceDS = commonServiceImpl.getDatasourceByObject(dataStore);
 			MetaType metaType = dataStore.getMetaId().getRef().getType();
-			if (runMode.equals(RunMode.ONLINE) || (metaType.equals(MetaType.rule) || metaType.equals(MetaType.rule2)
-					|| (runMode.equals(RunMode.ONLINE) && metaType.equals(MetaType.datapod))
-					|| metaType.equals(MetaType.report) || metaType.equals(MetaType.vizpod))) {
+//			if (runMode.equals(RunMode.ONLINE) || (metaType.equals(MetaType.rule) || metaType.equals(MetaType.rule2)
+//					|| (runMode.equals(RunMode.ONLINE) && metaType.equals(MetaType.datapod))
+//					|| metaType.equals(MetaType.report) || metaType.equals(MetaType.vizpod))) {
+//				customCondition.append(limitBuilder);
+//				data = sparkExecutor.executeAndFetchFromTempTable(
+//						"SELECT * FROM " + tableName + customCondition.toString(), appUuid);
+//			} else 
+			if ((metaType.equals(MetaType.rule) || metaType.equals(MetaType.report) || metaType.equals(MetaType.vizpod))) {
 				customCondition.append(limitBuilder);
 				data = sparkExecutor.executeAndFetchFromTempTable(
 						"SELECT * FROM " + tableName + customCondition.toString(), appUuid);
 			} else if (requestId == null || requestId.equals("null") || requestId.isEmpty()) {
-				if (datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
-						|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())
-						|| datasource.getType().toUpperCase().contains(ExecContext.HIVE.toString())
-						|| datasource.getType().toUpperCase().contains(ExecContext.IMPALA.toString())) {
-					customCondition.append(limitBuilder);
-					data = exec.executeAndFetchByDatasource("SELECT * FROM " + tableName + customCondition.toString(),
-							mapSourceDS, appUuid);
-				} else {
-					if (datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
-						if (runMode.equals(RunMode.ONLINE)) {
-							customCondition.append(limitBuilder);
-							data = exec.executeAndFetchByDatasource(
-									"SELECT * FROM " + tableName + customCondition.toString(), mapSourceDS, appUuid);
-						} else {
-							if (limit > 0) {
-								limitBuilder.append(" AND rownum < " + limit);
-							}
-							customCondition.append(limitBuilder);
-							data = exec.executeAndFetchByDatasource(
-									"SELECT * FROM " + tableName + customCondition.toString(), mapSourceDS, appUuid);
-						}
-					} else {
-						customCondition.append(limitBuilder);
-						data = exec.executeAndFetchByDatasource(
-								"SELECT * FROM " + tableName + customCondition.toString(), mapSourceDS, appUuid);
-					}
-				}
-			} else {
+				
+				customCondition.append(limitBuilder);
+				data = exec.executeAndFetchByDatasource(
+						"SELECT * FROM " + tableName + customCondition.toString(), mapSourceDS, appUuid);
+			}
+//				if (datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
+//						|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())
+//						|| datasource.getType().toUpperCase().contains(ExecContext.HIVE.toString())
+//						|| datasource.getType().toUpperCase().contains(ExecContext.IMPALA.toString())) {
+//					customCondition.append(limitBuilder);
+//					data = exec.executeAndFetchByDatasource("SELECT * FROM " + tableName + customCondition.toString(),
+//							mapSourceDS, appUuid);
+//				} else {
+//					if (datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
+//						if (runMode.equals(RunMode.ONLINE)) {
+//							customCondition.append(limitBuilder);
+//							data = exec.executeAndFetchByDatasource(
+//									"SELECT * FROM " + tableName + customCondition.toString(), mapSourceDS, appUuid);
+//						} else {
+//							if (limit > 0) {
+//								limitBuilder.append(" AND rownum < " + limit);
+//							}
+//							customCondition.append(limitBuilder);
+//							data = exec.executeAndFetchByDatasource(
+//									"SELECT * FROM " + tableName + customCondition.toString(), mapSourceDS, appUuid);
+//						}
+//					} else {
+//						customCondition.append(limitBuilder);
+//						data = exec.executeAndFetchByDatasource(
+//								"SELECT * FROM " + tableName + customCondition.toString(), mapSourceDS, appUuid);
+//					}
+//				}
+				
+//			} 
+			else {
 				List<String> orderList = Arrays.asList(order.split("\\s*,\\s*"));
 				List<String> sortList = Arrays.asList(sortBy.split("\\s*,\\s*"));
 
@@ -1308,79 +1315,103 @@ public class DataStoreServiceImpl {
 					if (requestIdExistFlag) {
 						data = requestNewMap.get(requestId);
 					} else {
-						if (runMode.equals(RunMode.ONLINE)
-								|| (metaType.equals(MetaType.rule) || metaType.equals(MetaType.rule2)
-										|| (runMode.equals(RunMode.ONLINE) && metaType.equals(MetaType.datapod))
-										|| metaType.equals(MetaType.report))) {
-							data = sparkExecutor.executeAndFetchFromTempTable(
-									"SELECT * FROM " + tableName + customCondition.toString(), appUuid);
-						} else if (datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
-								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())
-								|| datasource.getType().toUpperCase().contains(ExecContext.HIVE.toString())
-								|| datasource.getType().toUpperCase().contains(ExecContext.IMPALA.toString())) {
-							customCondition.append(limitBuilder);
-							data = exec.executeAndFetchByDatasource(
-									"SELECT * FROM " + tableName + customCondition.toString(), mapSourceDS, appUuid);
-						} else {
-							if (datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
-								if (runMode.equals(RunMode.ONLINE)) {
-									customCondition.append(limitBuilder);
-									data = exec.executeAndFetchByDatasource(
-											"SELECT * FROM " + tableName + customCondition.toString(), mapSourceDS,
-											appUuid);
-								} else {
-									if (limit > 0) {
-										limitBuilder.append(" AND rownum< " + limit);
-									}
-									customCondition.append(limitBuilder);
-									data = exec.executeAndFetchByDatasource(
-											"SELECT * FROM " + tableName + customCondition.toString(), mapSourceDS,
-											appUuid);
-								}
-							else {
+							if ((metaType.equals(MetaType.rule) || metaType.equals(MetaType.report) || metaType.equals(MetaType.vizpod))) {
+								customCondition.append(limitBuilder);
+								data = sparkExecutor.executeAndFetchFromTempTable(
+										"SELECT * FROM " + tableName + customCondition.toString(), appUuid);
+							} else if (requestId == null || requestId.equals("null") || requestId.isEmpty()) {
+								
 								customCondition.append(limitBuilder);
 								data = exec.executeAndFetchByDatasource(
-										"SELECT * FROM " + tableName + customCondition.toString(), mapSourceDS,
-										appUuid);
+										"SELECT * FROM " + tableName + customCondition.toString(), mapSourceDS, appUuid);
 							}
-						}
 						requestNewMap.put(requestId, data);
 					}
+							
+//						if (runMode.equals(RunMode.ONLINE)
+//								|| (metaType.equals(MetaType.rule) || metaType.equals(MetaType.rule2)
+//										|| (runMode.equals(RunMode.ONLINE) && metaType.equals(MetaType.datapod))
+//										|| metaType.equals(MetaType.report))) {
+//							data = sparkExecutor.executeAndFetchFromTempTable(
+//									"SELECT * FROM " + tableName + customCondition.toString(), appUuid);
+//						} else if (datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
+//								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())
+//								|| datasource.getType().toUpperCase().contains(ExecContext.HIVE.toString())
+//								|| datasource.getType().toUpperCase().contains(ExecContext.IMPALA.toString())) {
+//							customCondition.append(limitBuilder);
+//							data = exec.executeAndFetchByDatasource(
+//									"SELECT * FROM " + tableName + customCondition.toString(), mapSourceDS, appUuid);
+//						} else {
+//							if (datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
+//								if (runMode.equals(RunMode.ONLINE)) {
+//									customCondition.append(limitBuilder);
+//									data = exec.executeAndFetchByDatasource(
+//											"SELECT * FROM " + tableName + customCondition.toString(), mapSourceDS,
+//											appUuid);
+//								} else {
+//									if (limit > 0) {
+//										limitBuilder.append(" AND rownum< " + limit);
+//									}
+//									customCondition.append(limitBuilder);
+//									data = exec.executeAndFetchByDatasource(
+//											"SELECT * FROM " + tableName + customCondition.toString(), mapSourceDS,
+//											appUuid);
+//								}
+//							else {
+//								customCondition.append(limitBuilder);
+//								data = exec.executeAndFetchByDatasource(
+//										"SELECT * FROM " + tableName + customCondition.toString(), mapSourceDS,
+//										appUuid);
+//							}
+//						}
 				} else {
-					if (datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
-							|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())
-							|| datasource.getType().toUpperCase().contains(ExecContext.HIVE.toString())
-							|| datasource.getType().toUpperCase().contains(ExecContext.IMPALA.toString())) {
-						limitBuilder.append(" AND rownum >= " + offset);
-						if (limit > 0) {
-							limitBuilder.append(" AND rownum <= " + limit);
-						}
-						customCondition.append(limitBuilder);
-						data = exec.executeAndFetchByDatasource(
-								"SELECT * FROM " + tableName + customCondition.toString(), mapSourceDS, appUuid);
-					} else {
-						if (datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
-							if (runMode.equals(RunMode.ONLINE)) {
+
+							if ((metaType.equals(MetaType.rule) || metaType.equals(MetaType.report) || metaType.equals(MetaType.vizpod))) {
+								customCondition.append(limitBuilder);
+								data = sparkExecutor.executeAndFetchFromTempTable(
+										"SELECT * FROM " + tableName + customCondition.toString(), appUuid);
+							} else if (requestId == null || requestId.equals("null") || requestId.isEmpty()) {
+								
 								customCondition.append(limitBuilder);
 								data = exec.executeAndFetchByDatasource(
-										"SELECT * FROM " + tableName + customCondition.toString(), mapSourceDS,
-										appUuid);
-							} else {
-								if (limit > 0) {
-									limitBuilder.append(" AND rownum< " + limit);
-								}
-								customCondition.append(limitBuilder);
-								data = exec.executeAndFetchByDatasource(
-										"SELECT * FROM " + tableName + customCondition.toString(), mapSourceDS,
-										appUuid);
+										"SELECT * FROM " + tableName + customCondition.toString(), mapSourceDS, appUuid);
 							}
-						else {
-							customCondition.append(limitBuilder);
-							data = exec.executeAndFetchByDatasource(
-									"SELECT * FROM " + tableName + customCondition.toString(), mapSourceDS, appUuid);
-						}
-					}
+
 				}
+//					if (datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
+//							|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())
+//							|| datasource.getType().toUpperCase().contains(ExecContext.HIVE.toString())
+//							|| datasource.getType().toUpperCase().contains(ExecContext.IMPALA.toString())) {
+//						limitBuilder.append(" AND rownum >= " + offset);
+//						if (limit > 0) {
+//							limitBuilder.append(" AND rownum <= " + limit);
+//						}
+//						customCondition.append(limitBuilder);
+//						data = exec.executeAndFetchByDatasource(
+//								"SELECT * FROM " + tableName + customCondition.toString(), mapSourceDS, appUuid);
+//					} else {
+//						if (datasource.getType().toUpperCase().contains(ExecContext.ORACLE.toString()))
+//							if (runMode.equals(RunMode.ONLINE)) {
+//								customCondition.append(limitBuilder);
+//								data = exec.executeAndFetchByDatasource(
+//										"SELECT * FROM " + tableName + customCondition.toString(), mapSourceDS,
+//										appUuid);
+//							} else {
+//								if (limit > 0) {
+//									limitBuilder.append(" AND rownum< " + limit);
+//								}
+//								customCondition.append(limitBuilder);
+//								data = exec.executeAndFetchByDatasource(
+//										"SELECT * FROM " + tableName + customCondition.toString(), mapSourceDS,
+//										appUuid);
+//							}
+//						else {
+//							customCondition.append(limitBuilder);
+//							data = exec.executeAndFetchByDatasource(
+//									"SELECT * FROM " + tableName + customCondition.toString(), mapSourceDS, appUuid);
+//						}
+//					}
+//				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1394,7 +1425,7 @@ public class DataStoreServiceImpl {
 			dependsOn.setRef(new MetaIdentifier(MetaType.datastore, datastoreUuid, datastoreVersion));
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "FAILED to fetch data.",
 					new MetaIdentifierHolder(new MetaIdentifier(MetaType.datastore, datastoreUuid, datastoreVersion)));
-			throw new RuntimeException((message != null) ? message : "FAILED to fetch data.");
+			throw new RuntimeException((message != null) ? message : "Failed to fetch data.");
 		}
 
 		return data;

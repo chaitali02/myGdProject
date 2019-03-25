@@ -1126,33 +1126,29 @@ public class DatapodServiceImpl {
 
 	public String getTableNameByDatapod(Datapod dp, RunMode runMode) throws Exception {
 
-		Datasource ds = (Datasource) commonServiceImpl.getLatestByUuid(dp.getDatasource().getRef().getUuid(), MetaType.datasource.toString(), "N");
-//		Remove runMode == RunMode.BATCH condition once the online batch modes are retired. - Partha.
-		if (!ds.getType().equalsIgnoreCase(ExecContext.FILE.toString()) 
-//				|| runMode == RunMode.BATCH
-				) {
-			String tableName = ds.getDbname() + "." + dp.getName();
-			return tableName;
-		} 
-		
+//		Datasource ds = (Datasource) commonServiceImpl.getLatestByUuid(dp.getDatasource().getRef().getUuid(), MetaType.datasource.toString(), "N");
+//		if (!ds.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+//			String tableName = ds.getDbname() + "." + dp.getName();
+//			return tableName;
+//		} 
+
 		DataStore datastore = dataStoreServiceImpl.findLatestByMeta(dp.getUuid(), dp.getVersion());
 		if (datastore == null) {
 			logger.error("No datastore found for datapod "+dp.getName()+".");
 			throw new Exception("No datastore found for datapod "+dp.getName()+".");
 		}
 
-//		return dataStoreServiceImpl.getTableNameByDatastoreKey(datastore.getUuid(), datastore.getVersion(), runMode);
+		return dataStoreServiceImpl.getTableNameByDatastore(datastore, runMode);
+//		
+//		String hdfsLocation = String.format("%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath());
+//		String filePath = datastore.getLocation();
+//		filePath = String.format("%s%s", hdfsLocation, filePath);
+//		String tableName = Helper.genTableName(filePath);
+//
+//		if (datastore.getPersistMode() == null || !datastore.getPersistMode().equals("MEMORY_ONLY")) {
+//			datapodRegister.registerDatapod(datastore, dp, runMode);
+//		}	
 		
-		String hdfsLocation = String.format("%s%s", hdfsInfo.getHdfsURL(), hdfsInfo.getSchemaPath());
-		String filePath = datastore.getLocation();
-		filePath = String.format("%s%s", hdfsLocation, filePath);
-		String tableName = Helper.genTableName(filePath);
-
-		if (datastore.getPersistMode() == null || !datastore.getPersistMode().equals("MEMORY_ONLY")) {
-			datapodRegister.registerDatapod(datastore, dp, runMode);
-		}	
-		
-		return tableName;
 	}
 
 	public Datapod synchronizeMetadata(String datapodUuid, String datapodVersion, RunMode runMode) throws IOException, JSONException, ParseException {

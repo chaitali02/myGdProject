@@ -645,14 +645,15 @@ public class DataQualServiceImpl extends RuleTemplate {
 			IExecutor exec = null;
 			// String sql = null;
 			String appUuid = null;
-			if (runMode.equals(RunMode.ONLINE)) {
-				execContext = (engine.getExecEngine().equalsIgnoreCase("livy-spark")
-						|| engine.getExecEngine().equalsIgnoreCase("livy_spark"))
-								? helper.getExecutorContext(engine.getExecEngine())
-								: helper.getExecutorContext(ExecContext.spark.toString());
-			} else {
-				execContext = helper.getExecutorContext(datasource.getType().toLowerCase());
-			}
+//			if (runMode.equals(RunMode.ONLINE)) {
+//				execContext = (engine.getExecEngine().equalsIgnoreCase("livy-spark")
+//						|| engine.getExecEngine().equalsIgnoreCase("livy_spark"))
+//								? helper.getExecutorContext(engine.getExecEngine())
+//								: helper.getExecutorContext(ExecContext.spark.toString());
+//			} else {
+//				execContext = helper.getExecutorContext(datasource.getType().toLowerCase());
+//			}
+			execContext = helper.getExecutorContext(datasource.getType().toLowerCase());			
 			exec = execFactory.getExecutor(execContext.toString());
 			appUuid = commonServiceImpl.getApp().getUuid();
 			data = exec.executeAndFetch(getSummarySql(tableName, dqExec.getVersion(), execContext), appUuid);
