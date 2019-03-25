@@ -1782,8 +1782,10 @@ InferyxApp.directive('downloadDirective', function (CommonService, CF_DOWNLOAD) 
       link: function (scope, element, attr,$location) {
         scope.download={};
 	      scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
-	      scope.download.formates=CF_DOWNLOAD.formate;
-	      scope.download.selectFormate=CF_DOWNLOAD.formate[0];
+        scope.download.formates=CF_DOWNLOAD.formate;
+        scope.download.layout=CF_DOWNLOAD.layout;
+        scope.download.selectFormate=CF_DOWNLOAD.formate[0];
+        scope.download.selectLayout=CF_DOWNLOAD.layout[1];
 	      scope.download.maxrow=CF_DOWNLOAD.framework_download_maxrow;
         scope.download.limit_to=CF_DOWNLOAD.limit_to;
         scope.download.uuid=scope.uuid;
@@ -1823,6 +1825,21 @@ InferyxApp.directive('downloadDirective', function (CommonService, CF_DOWNLOAD) 
           }
           else if(scope.metaType=="recon"){
             url="recon/download?action=view&reconExecUUID="+scope.download.uuid+"&reconExecVersion="+scope.download.version+"&rows="+scope.download.rows+"&format="+scope.download.selectFormate
+          }
+          else if(scope.metaType=="rule2"){
+            url="rule2/download?action=view&ruleExecUUID=" + scope.download.uuid + "&ruleExecVersion=" + scope.download.version + "&rows=" + scope.download.rows + "&format=" + scope.download.selectFormate + "&resultType=" + scope.download.resultType
+          }
+          else if(scope.metaType=="rule"){
+            url= "rule/download?action=view&ruleExecUUID=" + scope.download.uuid + "&ruleExecVersion=" + scope.download.version+"&rows="+scope.download.rows+"&format="+scope.download.selectFormate
+          }
+          else if(scope.metaType=="predict"){
+            url = "model/predict/download?action=view&predictExecUUID=" + scope.download.uuid + "&predictExecVersion=" + scope.download.version + "&mode=BATCH" + "&rows=" + scope.download.rows+"&format="+scope.download.selectFormate;
+          }
+          else if(scope.metaType=="simulate"){
+            url = "model/simulate/download?action=view&simulateExecUUID=" + scope.download.uuid + "&simulateExecVersion=" + scope.download.version + "&mode=''" + "&rows=" + scope.download.rows+"&format="+scope.download.selectFormate;
+          }
+          if(scope.download.selectFormate =="PDF"){
+            url=url+"&layout="+scope.download.selectLayout
           }
 
           CommonService.downloadFile(url)

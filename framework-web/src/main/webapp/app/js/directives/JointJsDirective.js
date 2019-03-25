@@ -448,17 +448,34 @@ DataPipelineModule.directive('gridResultsDirective', function ($rootScope, $comp
         });
       }
 
-      $scope.downloaddata = function (url, uuid) {
+
+
+      $scope.downloaddata = function (url, uuid, version) {
         $scope.download.url = url
-        $('#downloadSampleCommon').modal({
-          backdrop: 'static',
-          keyboard: false
-        });
+        // $('#downloadSampleCommon').modal({
+        //   backdrop: 'static',
+        //   keyboard: false
+        // });
+        $scope.isDownloadDirective=true;
+	     	$scope.download.uuid = uuid;
+		    $scope.download.version =version;
+		    $scope.download.type=$scope.downloadDetail.type;
+		
+      };
+      
+      $scope.onDownloaed=function(data){
+        console.log(data);
+        $scope.isDownloadDirective=data.isDownloadDirective;
       }
+      
+
+
+
       $scope.$on("dowloadAction", function (evt, data) {
         $scope.downloadAction = data;
        
       });
+
       window.downloadPiplineFile = function () {
         var uuid = $scope.downloadDetail.uuid;
         var version = $scope.downloadDetail.version;
@@ -475,39 +492,39 @@ DataPipelineModule.directive('gridResultsDirective', function ($rootScope, $comp
           var url;
           if ($scope.downloadDetail.type == "profile") {
             url = baseurl + "profile/download?action=view&profileExecUUID=" + uuid + "&profileExecVersion=" + version + "&mode=" + mode;
-            $scope.downloaddata(url, uuid)
+            $scope.downloaddata(url, uuid,version)
           }
           else if ($scope.downloadDetail.type == "dataqual") {
             url = baseurl + "dataqual/download?action=view&dataQualExecUUID=" + uuid + "&dataQualExecVersion=" + version + "&mode=" + mode;
-            $scope.downloaddata(url, uuid);
+            $scope.downloaddata(url, version,version);
           } 
           else if($scope.downloadDetail.type == "rule"){
             url = baseurl + "rule/download?action=view&ruleExecUUID=" + uuid + "&ruleExecVersion=" + version + "&mode=" + mode;
-            $scope.downloaddata(url, uuid);
+            $scope.downloaddata(url, uuid,version);
           }
 
           else if ($scope.downloadDetail.type == "map") {
             url = baseurl + "map/download?action=view&mapExecUUID=" + uuid + "&mapExecVersion=" + version + "&mode=" + mode
-            $scope.downloaddata(url, uuid)
+            $scope.downloaddata(url, uuid,version)
           }
 
           else if ($scope.downloadDetail.type == "recon") {
             url = baseurl + "recon/download?action=view&reconExecUUID=" + uuid + "&reconExecVersion=" + version + "&mode=" + mode;
-            $scope.downloaddata(url, uuid)
+            $scope.downloaddata(url, uuid,version)
           }
 
           else if ($scope.downloadDetail.type == "predict") {
             url = baseurl + "/model/predict/download?action=view&predictExecUUID=" + uuid + "&predictExecVersion=" + version + "&mode=" + mode;
-            $scope.downloaddata(url, uuid)
+            $scope.downloaddata(url, uuid,version)
           }
           else if ($scope.downloadDetail.type == "simulate") {
             url = baseurl + "/model/simulate/download?action=view&simulateExecUUID=" + uuid + "&simulateExecVersion=" + version + "&mode=" + mode;
-            $scope.downloaddata(url, uuid)
+            $scope.downloaddata(url, uuid,version)
           }
 
           else if ($scope.downloadDetail.type == "operator") {
             url = baseurl + "/operator/download?action=view&uuid=" + uuid + "&version=" + version + "&mode=" + mode;
-            $scope.downloaddata(url, uuid)
+            $scope.downloaddata(url, uuid,version)
           }
 
           else if ($scope.downloadDetail.type == "train") {

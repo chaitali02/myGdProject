@@ -96,6 +96,7 @@ InferyxApp.constant('CF_DOWNLOAD',{
     framework_download_minrows:100,
     limit_to:6,
     formate:["EXCEL","PDF"],
+    layout:["LANDSCAPE","PORTRAIT"],
 });
 
 InferyxApp.constant('CF_GRID',{
