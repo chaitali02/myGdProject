@@ -2707,10 +2707,31 @@ DatavisualizationModule.controller("ReportArchivesSearchController", function ($
 		notify.type = 'success',
 		notify.title = 'Success',
 		notify.content = 'Report Download Submitted'
-		$scope.$emit('notify', notify);
-		$scope.submitDownload(data);
+		
+		$scope.execDetail=data;
+		$scope.msgDetail={};
+		$scope.msgDetail.msg="Download"
+		$scope.msgDetail.metaType="Report"
+		$('#confModal').modal({
+			backdrop: 'static',
+			keyboard: false
+		});
+	}
+	$scope.submitOk=function(data,msgDetail){
+		$('#confModal').modal('hide');
+		if(msgDetail.msg=="Download"){
+			$scope.$emit('notify', notify);
+			$scope.submitDownload(data);
+		}
+		if(msgDetail.msg=="E-Mail"){
+			$('#mailSendMdoel').modal({
+				backdrop: 'static',
+				keyboard: false
+			});
+		}
 	}
 	
+
     $scope.submitDownload = function (data) {
 		var uuid = data.uuid;
 		var version = data.version;
@@ -2750,12 +2771,16 @@ DatavisualizationModule.controller("ReportArchivesSearchController", function ($
 
 	}
     $scope.sentMail=function(data){
+		$scope.execDetail=data;
 		$scope.objDetail=data;
+		$scope.msgDetail={};
+		$scope.msgDetail.msg="E-Mail"
+		$scope.msgDetail.metaType="Report"
 		$scope.sendAttachment="Y";
 		$scope.tagsTo=[];
 		$scope.tagsCC=[];
 		$scope.tagsBcc=[];
-		$('#mailSendMdoel').modal({
+		$('#confModal').modal({
 			backdrop: 'static',
 			keyboard: false
 		});
@@ -2811,78 +2836,78 @@ DatavisualizationModule.controller("ReportArchivesSearchController", function ($
 		}
 	}
 
-    $scope.setStatus = function (row, status) {
-        $scope.execDetail=row;
-        $scope.execDetail.setStatus=status;
-        $scope.msg =status;
-        $('#confModal').modal({
-          backdrop: 'static',
-          keyboard: false
-        });  
+    // $scope.setStatus = function (row, status) {
+    //     $scope.execDetail=row;
+    //     $scope.execDetail.setStatus=status;
+    //     $scope.msg =status;
+    //     $('#confModal').modal({
+    //       backdrop: 'static',
+    //       keyboard: false
+    //     });  
      
-    }
+    // }
     
-    $scope.okSetStatus=function(){
-        var api = false;
-        var type = dagMetaDataService.elementDefs[$scope.searchForm.modelType].execType;
-        var api = false;
-        switch (type) {
-            case 'reportexec':
-                api = "reprot";
-                break;
-        }
-        if (!api) {
-            return
-        }
-        notify.type = 'success',
-        notify.title = 'Success',
-        notify.content = dagMetaDataService.elementDefs[$scope.searchForm.modelType].caption + " Killed Successfully"
-        $scope.$emit('notify', notify);
-        $('#confModal').modal('hide');
-        var url = $location.absUrl().split("app")[0];
-        $http.put(url + 'model/setStatus?uuid=' + $scope.execDetail.uuid + '&version=' + $scope.execDetail.version + '&type=' + type + '&status=' + $scope.execDetail.setStatus).then(function (response) {
-            console.log(response);
-        });
-    }
+    // $scope.okSetStatus=function(){
+    //     var api = false;
+    //     var type = dagMetaDataService.elementDefs[$scope.searchForm.modelType].execType;
+    //     var api = false;
+    //     switch (type) {
+    //         case 'reportexec':
+    //             api = "reprot";
+    //             break;
+    //     }
+    //     if (!api) {
+    //         return
+    //     }
+    //     notify.type = 'success',
+    //     notify.title = 'Success',
+    //     notify.content = dagMetaDataService.elementDefs[$scope.searchForm.modelType].caption + " Killed Successfully"
+    //     $scope.$emit('notify', notify);
+    //     $('#confModal').modal('hide');
+    //     var url = $location.absUrl().split("app")[0];
+    //     $http.put(url + 'model/setStatus?uuid=' + $scope.execDetail.uuid + '&version=' + $scope.execDetail.version + '&type=' + type + '&status=' + $scope.execDetail.setStatus).then(function (response) {
+    //         console.log(response);
+    //     });
+    // }
 
-    $scope.restartExec = function (row, status) {
-        $scope.execDetail=row;
-        $scope.msg ="Restart";
-        $('#confModal').modal({
-          backdrop: 'static',
-          keyboard: false
-        });  
-	}
+    // $scope.restartExec = function (row, status) {
+    //     $scope.execDetail=row;
+    //     $scope.msg ="Restart";
+    //     $('#confModal').modal({
+    //       backdrop: 'static',
+    //       keyboard: false
+    //     });  
+	// }
 	
-    $scope.okRestart=function(){
-        var type = dagMetaDataService.elementDefs[$scope.searchForm.modelType].execType;
-        var api = false;
-        switch (type) {
-            case 'reportexec':
-                api = 'report';
-                break;
-        }
-        if (!api) {
-            return
-        }
-        notify.type = 'success',
-        notify.title = 'Success',
-        notify.content = dagMetaDataService.elementDefs[$scope.searchForm.modelType].caption + " Restarted Successfully"
-        $scope.$emit('notify', notify);
-        $('#confModal').modal('hide');
-        var url = $location.absUrl().split("app")[0];
-        $http.get(url + '' + api + '/restart?uuid=' + $scope.execDetail.uuid + '&version=' + $scope.execDetail.version + '&type=' + type + '&action=execute').then(function (response) {
-            //console.log(response);
+    // $scope.okRestart=function(){
+    //     var type = dagMetaDataService.elementDefs[$scope.searchForm.modelType].execType;
+    //     var api = false;
+    //     switch (type) {
+    //         case 'reportexec':
+    //             api = 'report';
+    //             break;
+    //     }
+    //     if (!api) {
+    //         return
+    //     }
+    //     notify.type = 'success',
+    //     notify.title = 'Success',
+    //     notify.content = dagMetaDataService.elementDefs[$scope.searchForm.modelType].caption + " Restarted Successfully"
+    //     $scope.$emit('notify', notify);
+    //     $('#confModal').modal('hide');
+    //     var url = $location.absUrl().split("app")[0];
+    //     $http.get(url + '' + api + '/restart?uuid=' + $scope.execDetail.uuid + '&version=' + $scope.execDetail.version + '&type=' + type + '&action=execute').then(function (response) {
+    //         //console.log(response);
 
-        });
-    }
+    //     });
+    // }
 
-    $scope.submitOk = function (action) {
-        if (action == "Restart") {
-          $scope.okRestart();
-        }
-        if(action == "Killed"){
-            $scope.okSetStatus()
-        }
-    }
+    // $scope.submitOk = function (action) {
+    //     if (action == "Restart") {
+    //       $scope.okRestart();
+    //     }
+    //     if(action == "Killed"){
+    //         $scope.okSetStatus()
+    //     }
+    // }
 });
