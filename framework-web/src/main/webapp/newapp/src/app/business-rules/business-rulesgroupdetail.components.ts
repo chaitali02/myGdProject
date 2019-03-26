@@ -67,6 +67,8 @@ export class BusinessRulesGroupDetailComponent {
   locked: boolean;
   active: boolean;
   metaType = MetaType;
+  isGraphInprogess: boolean;
+  isGraphError: boolean;
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router, public metaconfig: AppMetadata,
     private _commonService: CommonService, private _location: Location, public appHelper: AppHelper) {
@@ -172,10 +174,13 @@ export class BusinessRulesGroupDetailComponent {
 
   showGraph(uuid, version) {
     this.isHomeEnable = true;
-    this.showDivGraph = false;
+    this.showDivGraph = true;
     this.showForm = false;
+    this.isGraphInprogess = true;
     setTimeout(() => {
-      this.d_KnowledgeGraphComponent.getGraphData(this.id, this.version);
+      this.d_KnowledgeGraphComponent.getGraphData(uuid, version);
+      this.isGraphInprogess = this.d_KnowledgeGraphComponent.isInprogess;
+      this.isGraphError = this.d_KnowledgeGraphComponent.isError;
     }, 1000);
   }
   onChangeName() {

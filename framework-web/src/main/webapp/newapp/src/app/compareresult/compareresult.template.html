@@ -67,13 +67,16 @@
 
                                 <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
                                     <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-3" style="padding-top: 1%;">Start Date</label>
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-3" style="padding-top: 1%;">Start
+                                            Date</label>
                                         <div class="col-md-9 col-sm-9 col-xs-9  col-lg-7">
-                                            <p-calendar format="ddd MMM D HH:mm:ss YYYY z" [(ngModel)]="searchForm.startDate" inputStyleClass="form-control"
-                                                name="startDate" [utc]="true" hourFormat="12" 
-                                                [disabled]="mode == 'true'" [minDate]="today" (onSelect)="onUpdateStartDate(startDate)"
-                                                [showIcon]="true" icon="fa fa-calendar" >
-                                            </p-calendar>
+                                            <div class="pcalender-border">
+                                                <p-calendar format="ddd MMM D HH:mm:ss YYYY z" [(ngModel)]="searchForm.startDate"
+                                                    inputStyleClass="form-control" name="startDate" [utc]="true"
+                                                    hourFormat="12" [disabled]="mode == 'true'" [minDate]="today"
+                                                    (onSelect)="onUpdateStartDate(startDate)" [showIcon]="true" icon="fa fa-calendar">
+                                                </p-calendar>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -117,12 +120,16 @@
 
                                 <div class="col-md-6 col-sm-6 col-xs-12 col-lg-6">
                                     <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-3 col-lg-3" style="padding-top: 1%;">End Date</label>
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-3 col-lg-3" style="padding-top: 1%;">End
+                                            Date</label>
                                         <div class="col-md-9 col-sm-9 col-xs-9 col-lg-7">
-                                            <p-calendar format="ddd MMM D HH:mm:ss YYYY z" [(ngModel)]="searchForm.endDate" inputStyleClass="form-control"
-                                                name="endDate" [utc]="true" hourFormat="12"
-                                                [disabled]="mode == 'true'" [showIcon]="true" (onSelect)="onUpdateEndDate()" icon="fa fa-calendar">
-                                            </p-calendar>
+                                            <div class="pcalender-border">
+                                                <p-calendar format="ddd MMM D HH:mm:ss YYYY z" [(ngModel)]="searchForm.endDate"
+                                                    inputStyleClass="form-control" name="endDate" [utc]="true"
+                                                    hourFormat="12" [disabled]="mode == 'true'" [showIcon]="true"
+                                                    (onSelect)="onUpdateEndDate()" icon="fa fa-calendar">
+                                                </p-calendar>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -135,8 +142,8 @@
                                     <div class="form-group">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-3"></label>
                                         <div class="col-md-9 col-sm-9 col-xs-6">
-                                            <input type="submit" class="btn btn-success" value="Search" name="submit" style="border-radius: 4px;"
-                                                [disabled]="isSubmitDisable" />
+                                            <input type="submit" class="btn btn-success" value="Search" name="submit"
+                                                style="border-radius: 4px;" [disabled]="isSubmitDisable" />
                                             <div class="spinner" style="float:right; padding-top:2%" *ngIf="isInProgress">
                                                 <div class="bounce1"></div>
                                                 <div class="bounce2"></div>

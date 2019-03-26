@@ -8,7 +8,7 @@
                     <i class="fa fa-cogs"></i>Result
                 </div>
                 <div class="tools">
-                    <a class="left-marginpage" title="Main" style="color:white;" title="Main" data-placement="top"
+                    <a class="left-marginpage" title="Main" style="color:white;" data-placement="top"
                         tooltip [ngClass]="isHomeEnable==true?'notcurrentpage':'currentpage'" (click)="showMainPage()">
                         <i class="fa fa-home" style="display: block;margin:0px 2px 0px 0px;color:white;transform:scale(1.2,1.2);"></i>
                     </a>
@@ -27,7 +27,7 @@
                     </a>
 
                     <a class="left-marginpage" title="Refresh" data-toggle="tooltip" data-placement="top" tooltip
-                        (click)="broadcastRefreshData()">
+                        (click)="showDagGraph(_uuid,_version)">
                         <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:white;"></i>
                     </a>
                     <a class="left-marginpage" title="Close" (click)="goBack()" style="height:14px;">

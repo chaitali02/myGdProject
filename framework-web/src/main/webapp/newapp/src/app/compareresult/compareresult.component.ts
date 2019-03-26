@@ -189,8 +189,9 @@ export class CompareResultComponent {
       // this.allNameDq = this.fillArrayName(response);
       for (const i in response) {
         let ver = new DropDownIO();
+        response.sort((a, b) => a.name.localeCompare(b.name.toString()));
         ver.label = response[i].name;
-        ver.value = {label: String, uuid: String, version: String};
+        ver.value = { label: String, uuid: String, version: String };
         ver.value.label = response[i].name;
         ver.value.uuid = response[i].uuid;
         ver.value.version = response[i].version;
@@ -204,7 +205,7 @@ export class CompareResultComponent {
       for (const i in response) {
         let ver = new DropDownIO();
         ver.label = response[i].name;
-        ver.value = {label: String, uuid: String, version: String};
+        ver.value = { label: String, uuid: String, version: String };
         ver.value.label = response[i].name;
         ver.value.uuid = response[i].uuid;
         ver.value.version = response[i].version;
@@ -217,7 +218,7 @@ export class CompareResultComponent {
       for (const i in response) {
         let ver = new DropDownIO();
         ver.label = response[i].name;
-        ver.value = {label: String, uuid: String, version: String};
+        ver.value = { label: String, uuid: String, version: String };
         ver.value.label = response[i].name;
         ver.value.uuid = response[i].uuid;
         ver.value.version = response[i].version;
@@ -230,7 +231,7 @@ export class CompareResultComponent {
       for (const i in response) {
         let ver = new DropDownIO();
         ver.label = response[i].name;
-        ver.value = {label: String, uuid: String, version: String};
+        ver.value = { label: String, uuid: String, version: String };
         ver.value.label = response[i].name;
         ver.value.uuid = response[i].uuid;
         ver.value.version = response[i].version;
@@ -339,7 +340,7 @@ export class CompareResultComponent {
     for (const i in response) {
       let ver = new DropDownIO();
       ver.label = response[i].createdOn;
-      ver.value = {label: String, uuid: String, version:""};
+      ver.value = { label: String, uuid: String, version: "" };
       ver.value.label = response[i].createdOn;
       ver.value.uuid = response[i].uuid;
       ver.value.version = response[i].version;

@@ -50,6 +50,7 @@ export class DataQualityResultComponent {
   @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
   constructor(private _config: AppConfig, private http: Http, private _location: Location, private _activatedRoute: ActivatedRoute, private router: Router, public appMetadata: AppMetadata, private _commonService: CommonService) {
     
+    this.graphParams = new GraphParamIO();
     this.baseUrl = _config.getBaseUrl();
     this.showKnowledgeGraph = false;
     this.numRows = 100;
@@ -88,7 +89,6 @@ export class DataQualityResultComponent {
       this.getOneByUuidAndVersion(this._uuid, this._version, this._type)
     });
 
-    this.graphParams = new GraphParamIO();
   }
 
   getOneByUuidAndVersion(id, version, type) {

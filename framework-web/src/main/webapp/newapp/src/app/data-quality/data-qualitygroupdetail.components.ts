@@ -44,7 +44,6 @@ export class DataQualityGroupDetailComponent {
   id: any;
   routerUrl: any;
   dqgroupdata: any;
-  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
   isEditInprogess: boolean = false;
   isEditError: boolean = false;
   isEdit: boolean = false;
@@ -55,6 +54,9 @@ export class DataQualityGroupDetailComponent {
   published: boolean;
   locked: boolean;
   active: boolean;
+  @ViewChild(KnowledgeGraphComponent) d_KnowledgeGraphComponent: KnowledgeGraphComponent;
+  isGraphError: boolean;
+  isGraphInprogess: boolean;
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router, public metaconfig: AppMetadata, private _commonService: CommonService, private _location: Location,
     private _dataQualityService: DataQualityService, public appHelper: AppHelper) {
@@ -153,10 +155,13 @@ export class DataQualityGroupDetailComponent {
 
   showGraph(uuid, version) {
     this.isHomeEnable = true;
-    this.showDivGraph = false;
+    this.showDivGraph = true;
     this.showForm = false;
+    this.isGraphInprogess = true;
     setTimeout(() => {
-      this.d_KnowledgeGraphComponent.getGraphData(this.id, this.version);
+      this.d_KnowledgeGraphComponent.getGraphData(uuid, version);
+      this.isGraphInprogess = this.d_KnowledgeGraphComponent.isInprogess;
+      this.isGraphError = this.d_KnowledgeGraphComponent.isError;
     }, 1000);
   }
 
@@ -262,9 +267,9 @@ export class DataQualityGroupDetailComponent {
     dqgroupJson.desc = this.dqgroupdata.desc;
     dqgroupJson.tags = this.dqgroupdata.tags;
 
-    dqgroupJson.active = this.appHelper.convertBooleanToString(this.dqgroupdata.active);
-    dqgroupJson.locked = this.appHelper.convertBooleanToString(this.dqgroupdata.locked);
-    dqgroupJson.published = this.appHelper.convertBooleanToString(this.dqgroupdata.published);
+    dqgroupJson.active = this.appHelper.convertBooleanToString(this.active);
+    dqgroupJson.locked = this.appHelper.convertBooleanToString(this.locked);
+    dqgroupJson.published = this.appHelper.convertBooleanToString(this.published);
 
     let ruleInfo = [new MetaIdentifierHolder];
     for (let i = 0; i < this.selectedItems.length; i++) {

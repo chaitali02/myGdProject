@@ -30,8 +30,8 @@
               <i class="fa fa-sitemap" style="margin:2px auto;color:#a0a0a0;"></i>
             </a>
 
-            <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default left-margin" disabled="true"
-              (click)="broadcastRefreshData()" data-original-title="" title="Refresh"
+            <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default left-margin" title="Refresh" data-placement="top" tooltip
+              (click)="showGraph(dqgroupdata.uuid,version)" data-original-title="" title="Refresh"
               [ngClass]="showForm==true ? 'currentpage':'notcurrentpage'">
               <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
             </a>
@@ -184,7 +184,7 @@
                 </div>
               </div>
               <div class="form-group">
-                <label class="control-label col-md-3 col-sm-3 col-xs-12">Run Immediately ?</label>
+                <label class="control-label col-md-3 col-sm-3 col-xs-12"style="text-align: right; padding-top: 6px;">Run Immediately ?</label>
                 <div class="col-md-6 col-sm-6 col-xs-12" style="padding: 0.3% 0% 0% 1.5%;">
                   <p-checkbox [(ngModel)]="checkboxModelexecution" [disabled]="mode == 'true' " name="checkboxModelexecution"
                     binary="true"></p-checkbox>
