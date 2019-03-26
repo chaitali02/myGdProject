@@ -1,0 +1,22 @@
+<div style="max-height:150px;">
+    <div ng-if="sCDetail.isSingleValue==true">
+        
+        <!-- <a class="dashboard-stat dashboard-stat-v2 {{sCDetail.class}}" href="#"> -->
+        <a class="dashboard-stat dashboard-stat-v2 " ng-style="sCDetail.objStyle" href="#">
+            <div class="visual" style="width:10px">
+                <i class=""></i>
+            </div>
+            <div class="details" style="position:inherit;">
+                <div class="number" style="text-align:center;">
+                    <span data-counter="counterup">{{sCDetail.value| isoCurrencyWithK1:2:""}}</span>
+                </div>
+                <div class="desc" style="text-align:center;">{{sCDetail.name}} </div>
+            </div>
+        </a>
+    </div>
+    <div ng-if="sCDetail.isSingleValue==false">
+        <div class ="centercontent" style="min-height:120px;">
+            <h3 style="font-size:14px;color:blue;">Too Many Values</h3>
+        </div>
+    </div>
+</div> 
