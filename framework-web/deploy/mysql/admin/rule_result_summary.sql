@@ -10,7 +10,8 @@ CREATE TABLE rule_result_summary
      rule_name         VARCHAR(100), 
      entity_type       VARCHAR(50), 
      entity_id         VARCHAR(50), 
-     score             DECIMAL(6, 3), 
+     score             DECIMAL(6, 3),
+     filter_expr       VARCHAR(500),      
      version           INT(10),
      INDEX (version) 
   ); 

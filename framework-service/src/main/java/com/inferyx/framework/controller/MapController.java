@@ -56,7 +56,7 @@ public class MapController {
 			@RequestBody(required=false) ExecParams execParams,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action, 
-			@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) {
+			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) {
 		MapExec mapExec = null;
 		try {
 			RunMode runMode = Helper.getExecutionMode(mode);
@@ -79,7 +79,7 @@ public class MapController {
 			@RequestParam(value = "rows", defaultValue = "200") int rows,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
-			@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode,
+			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode,
 			HttpServletResponse response,
 			@RequestParam(value = "layout", required = false) Layout layout) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
@@ -100,7 +100,7 @@ public class MapController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action, 
 			@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws IOException, SQLException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException {
-		RunMode runMode = Helper.getExecutionMode((mode.equals("undefined")) ? mode="BATCH" : mode);
+		RunMode runMode = Helper.getExecutionMode((mode.equals("undefined")) ? mode="ONLINE" : mode);
 		return mapServiceImpl.getMapResults(mapExecUUID, mapExecVersion, offset, limit, sortBy, order, requestId, runMode);
 	}
 	
@@ -124,7 +124,7 @@ public class MapController {
 			@RequestParam("version") String version,
 			@RequestParam("type") String type,
 			@RequestParam(value = "action", required = false) String action, 
-			@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception {
+			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
 			RunMode runMode = Helper.getExecutionMode(mode);
 			try {
 				mapServiceImpl.restart(uuid,version,runMode);

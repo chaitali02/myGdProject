@@ -65,6 +65,8 @@ import com.inferyx.framework.enums.OperatorType;
 import com.inferyx.framework.enums.ParamDataType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
+import com.inferyx.framework.executor.StorageContext;
+import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.MetadataServiceImpl;
 
 @Component
@@ -658,6 +660,22 @@ public class Helper {
 		else
 			return null;
 	}	
+
+	public StorageContext getStorageContext(String storageContext){
+		if(storageContext != null && !StringUtils.isBlank(storageContext))
+			switch(storageContext.toLowerCase()){
+				case "hive": return StorageContext.HIVE;
+				case "impala": return StorageContext.IMPALA;
+				case "oracle": return StorageContext.ORACLE;
+				case "mysql": return StorageContext.MYSQL;
+				case "file": return StorageContext.FILE;
+				case "postgres" : return StorageContext.POSTGRES;
+				default : return null;
+			}
+		else
+			return null;
+	}	
+	
 	public static RunMode getExecutionMode(String mode) {
 		switch(mode.toLowerCase()) {
 		case "batch": return RunMode.BATCH;
@@ -706,6 +724,7 @@ public class Helper {
 		}
 		return sql;
 	}
+
 	public static String getPersistModeFromRunMode(String runMode){
 		if(runMode != null && !StringUtils.isBlank(runMode))
 			switch(runMode.toLowerCase()) {
@@ -715,6 +734,7 @@ public class Helper {
 		}
 		return null;
 	}
+
 	public static java.util.Map<String, String> getPropertiesByFileType(FileType fileType) throws FileNotFoundException, IOException {
 		java.util.Map<String, String> properties = new HashMap<>();
 		String regex = null;

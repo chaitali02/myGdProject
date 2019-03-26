@@ -47,6 +47,7 @@ public class ConstantsUtil {
 	// Datastore
 	public static final String PERSIST_MODE_MEMORY_ONLY = "MEMORY_ONLY";
 	public static final String PERSIST_MODE_DISK_ONLY = "DISK_ONLY";
+	public static final String PERSIST_MODE_MEMORY_AND_DISK = "MEMORY_AND_DISK";
 	// Operator
 	public static final String EXEC_PARAMS = "EXEC_PARAMS";
 	

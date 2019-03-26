@@ -49,6 +49,7 @@ import com.inferyx.framework.enums.SaveMode;
 import com.inferyx.framework.enums.SysVarType;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
+import com.inferyx.framework.executor.StorageContext;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.register.DatapodRegister;
@@ -667,29 +668,35 @@ public class RunBaseRuleService implements Callable<TaskHolder> {
 		logger.info("Target tableName : " + tableName);
 		Datasource targetDatasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(targetDsMI.getUuid(),
 				targetDsMI.getVersion(), targetDsMI.getType().toString(), "N");
-//		MetaType ruleType = Helper.getMetaTypeByExecType(ruleExecType);
+		StorageContext storageContext = commonServiceImpl.getStorageContext(targetDatasource);
+
+		//		MetaType ruleType = Helper.getMetaTypeByExecType(ruleExecType);
 //		String executionEngine = commonServiceImpl.getConfigValue("framework." + ruleType.toString() + ".execution.engine");
 //		logger.info("framework execution engine : " + executionEngine);
 		logger.info("Execution engine : " + execContext);
-		if (execContext != null && execContext.equals(ExecContext.FILE)) {
-			if (targetDatasource.getType().equals(ExecContext.FILE.toString())) {
+		if (execContext.equals(ExecContext.FILE) && storageContext.equals(StorageContext.FILE)) { //For Spark + Spark
 				rsHolder = executor.executeRegisterAndPersist(execSql, tableName, filePath, targetDp,
 						SaveMode.APPEND.toString(), true, appUuid);
-			}
-			else {
-				rsHolder = executor.executeSqlByDatasource(execSql, ruleDatasource, appUuid);
-				if(targetDatasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
-					tableName = targetDatasource.getSid().concat(".").concat(targetDp.getName());
-				} else {
-					tableName = targetDatasource.getDbname().concat(".").concat(targetDp.getName());					
-				}
-				rsHolder.setTableName(tableName);			
-				rsHolder = executor.persistDataframe(rsHolder, targetDatasource, targetDp, SaveMode.APPEND.toString());				
-				}
-		} else {
+		}
+		else if (!execContext.equals(ExecContext.FILE) && !storageContext.equals(StorageContext.FILE)) { //For Mysql + Mysql
 			String sql = helper.buildInsertQuery(execContext.toString(), tableName, targetDp, execSql);
 			rsHolder = executor.executeSql(sql, appUuid);
 		}
+		else {
+			rsHolder = executor.executeSqlByDatasource(execSql, ruleDatasource, appUuid);
+			if (storageContext.equals(StorageContext.FILE)) { //For Mysql + Spark
+				executor = execFactory.getExecutor(ExecContext.spark.toString());
+				rsHolder = executor.registerAndPersist(rsHolder, tableName, filePath, targetDp,SaveMode.APPEND.toString(),null);
+			}
+			else //For Spark + Mysql
+				if(storageContext.equals(StorageContext.ORACLE))
+					tableName = targetDatasource.getSid().concat(".").concat(targetDp.getName());
+				else
+					tableName = targetDatasource.getDbname().concat(".").concat(targetDp.getName());					
+				rsHolder.setTableName(tableName);
+				rsHolder = executor.persistDataframe(rsHolder, targetDatasource, targetDp, SaveMode.APPEND.toString());					
+		}
+
 		/*if (runMode != null && runMode.equals(RunMode.BATCH)) {
 			targetDp = (Datapod) commonServiceImpl.getLatestByUuid(datapodKey.getUuid(), MetaType.datapod.toString(),
 					"N");

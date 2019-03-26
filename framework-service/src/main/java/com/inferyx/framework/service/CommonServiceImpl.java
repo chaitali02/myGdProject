@@ -230,6 +230,7 @@ import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
+import com.inferyx.framework.executor.StorageContext;
 import com.inferyx.framework.factory.ExecutorFactory;
 import com.inferyx.framework.operator.DatasetOperator;
 import com.inferyx.framework.operator.RuleOperator;
@@ -5514,4 +5515,22 @@ public class CommonServiceImpl<T> {
 		return helper.getExecutorContext(getDatasourceByApp().getType());
 	}
 
+	public StorageContext getStorageContext(Datasource ds) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		return helper.getStorageContext(ds.getType());
+	}
+	
+	public String getPersistModeByDatapod(Datapod datapod) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException{
+		Datasource datapodDS = (Datasource) getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid(), datapod.getDatasource().getRef().getVersion(), datapod.getDatasource().getRef().getType().toString());
+		StorageContext storageContext = getStorageContext(datapodDS);
+		return getPersistModeByStorageContext(storageContext);
+	}
+
+	public String getPersistModeByStorageContext(StorageContext storageContext){
+		if(storageContext.equals(StorageContext.FILE))
+			return ConstantsUtil.PERSIST_MODE_MEMORY_AND_DISK;
+		else
+			return ConstantsUtil.PERSIST_MODE_DISK_ONLY;
+	}
+	
+	
 }

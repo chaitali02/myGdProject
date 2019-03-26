@@ -15,6 +15,7 @@ import org.apache.spark.sql.SaveMode;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.ConstantsUtil;
+import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.BaseRule;
 import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.Datapod;
@@ -41,8 +42,11 @@ public class RunRule2ServiceImpl extends RunBaseRuleService {
 	protected void persistDatastore(String tableName, String filePath, MetaIdentifierHolder resultRef,MetaIdentifier datapodKey, long countRows, RunMode runMode) throws Exception {
 		/*DataStore ds = new DataStore();
 		ds.setCreatedBy(baseRuleExec.getCreatedBy());*/
+		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(datapodKey.getUuid(), datapodKey.getVersion(), datapodKey.getType().toString());		
 		dataStoreServiceImpl.setRunMode(runMode);
-		dataStoreServiceImpl.create(filePath, tableName, datapodKey, baseRuleExec.getRef(ruleExecType), baseRuleExec.getAppInfo(), baseRuleExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, countRows, ConstantsUtil.PERSIST_MODE_MEMORY_ONLY, null);
+		dataStoreServiceImpl.create(filePath, tableName, datapodKey, baseRuleExec.getRef(ruleExecType), baseRuleExec.getAppInfo(), 
+				baseRuleExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, countRows, 
+				commonServiceImpl.getPersistModeByDatapod(datapod), null);
 		/*dataStoreServiceImpl.persistDataStore(df, tableName, null, filePath, baseRuleExec.getDependsOn().getRef(), baseRuleExec.getRef(ruleExecType),
 				ConstantsUtil.PERSIST_MODE_MEMORY_ONLY,baseRuleExec.getAppInfo(),SaveMode.Append.toString(), resultRef,ds);*/
 	}

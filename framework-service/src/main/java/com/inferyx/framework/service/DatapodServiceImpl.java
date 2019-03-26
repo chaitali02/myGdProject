@@ -1080,6 +1080,8 @@ public class DatapodServiceImpl {
 				return getTableNameByDatapodKey(new OrderKey(datapod.getUuid(), datapod.getVersion()),
 						runMode);
 			} catch (Exception e) {
+				logger.info(e);
+				throw e;
 				// TODO: handle exception
 			} 
 		}

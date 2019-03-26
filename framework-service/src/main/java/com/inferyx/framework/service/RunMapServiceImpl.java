@@ -40,6 +40,7 @@ import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.enums.SaveMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
+import com.inferyx.framework.executor.StorageContext;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
 
@@ -314,62 +315,93 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 			String mapTableName  = null;
 			mapTableName = String.format("%s_%s_%s", datapodKey.getUUID().replace("-", "_"), datapodKey.getVersion(), mapExec.getVersion());
 			Datapod targetDatapod = (Datapod) commonServiceImpl.getOneByUuidAndVersionWithoutAppUuid(datapodKey.getUUID(), datapodKey.getVersion(), MetaType.datapod.toString());
-			Datasource appDatasource = commonServiceImpl.getDatasourceByApp();
+			ExecContext execContext = commonServiceImpl.getExecContext(runMode);
+			IExecutor executor = execFactory.getExecutor(execContext.toString());
+//			Datasource appDatasource = commonServiceImpl.getDatasourceByApp();
+//			IExecutor exec = execFactory.getExecutor(appDatasource.getType());
 			Datasource targetDatasource = (Datasource) commonServiceImpl.getOneByUuidAndVersion(targetDatapod.getDatasource().getRef().getUuid(), targetDatapod.getDatasource().getRef().getVersion(), targetDatapod.getDatasource().getRef().getType().toString());
+			StorageContext storageContext = commonServiceImpl.getStorageContext(targetDatasource);
 			
-			IExecutor exec = execFactory.getExecutor(appDatasource.getType());
 			logger.info("Before map execution ");
 			String sql = mapExec.getExec();
-			if (!targetDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
-					&& appDatasource.getType().equalsIgnoreCase(targetDatasource.getType())) {
-				mapTableName = datapodServiceImpl.getTableNameByDatapodKey(datapodKey, runMode);
-				logger.info("Datapod: "+datapodKey.getUUID());
-				
-				String partitionColls = Helper.getPartitionColumns(targetDatapod);				
-				logger.info("Partition collumns: "+partitionColls);
-				
-				String partitionClause = "";
-				if(partitionColls != null && !partitionColls.isEmpty()) {
-					partitionClause = " PARTITION ( " + partitionColls +" ) ";
-				}
-				
-				if(targetDatasource.getType().equalsIgnoreCase(ExecContext.HIVE.toString())
-						|| targetDatasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
-					sql = "INSERT OVERWRITE TABLE " + mapTableName +" "+ partitionClause + " " + sql;
-				} else if(targetDatasource.getType().equalsIgnoreCase(ExecContext.MYSQL.toString())
-						|| targetDatasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())
-						|| targetDatasource.getType().equalsIgnoreCase(ExecContext.POSTGRES.toString())) {
-						sql = "INSERT INTO " + mapTableName + " " + sql;
-				}
-			}
 
-			logger.info("Running SQL : " + sql);
-			ResultSetHolder rsHolder = null;
-
-			Datasource mapDatasource = commonServiceImpl.getDatasourceByObject(map);
-			if(appDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
-					&& !targetDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
-				rsHolder = exec.executeSqlByDatasource(sql, mapDatasource, appUuid);
-				if(targetDatasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
-					mapTableName = targetDatasource.getSid().concat(".").concat(targetDatapod.getName());
-				} else {
-					mapTableName = targetDatasource.getDbname().concat(".").concat(targetDatapod.getName());					
+			mapTableName = datapodServiceImpl.getTableNameByDatapodKey(datapodKey, runMode);
+			ResultSetHolder rsHolder = null;		
+			Datasource mapDatasource = commonServiceImpl.getDatasourceByObject(map);		
+			if (execContext.equals(ExecContext.FILE)) {
+				if (storageContext.equals(StorageContext.FILE)) { //For Spark + Spark
+					rsHolder = executor.executeRegisterAndPersist(sql, mapTableName, filePath, targetDatapod, SaveMode.APPEND.toString(), true, appUuid);
 				}
-				rsHolder.setTableName(mapTableName);
-				rsHolder = exec.persistDataframe(rsHolder, targetDatasource, targetDatapod, SaveMode.APPEND.toString());
-			} else if(targetDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
-				rsHolder = exec.executeRegisterAndPersist(sql, mapTableName, filePath, targetDatapod, SaveMode.APPEND.toString(), true, appUuid);
-			} else {
-				rsHolder = exec.executeSqlByDatasource(sql, mapDatasource, appUuid);
+				else { //For Spark + Mysql
+					rsHolder = executor.executeSqlByDatasource(sql, mapDatasource, appUuid);
+					if(storageContext.equals(StorageContext.ORACLE)) {
+						mapTableName = targetDatasource.getSid().concat(".").concat(targetDatapod.getName());
+					} else {
+						mapTableName = targetDatasource.getDbname().concat(".").concat(targetDatapod.getName());					
+					}
+					rsHolder.setTableName(mapTableName);
+					rsHolder = executor.persistDataframe(rsHolder, targetDatasource, targetDatapod, SaveMode.APPEND.toString());
+					}
+			} else { //For Mysql + Mysql
+				sql = helper.buildInsertQuery(execContext.toString(), mapTableName, targetDatapod, sql);
+				rsHolder = executor.executeSql(sql, appUuid);
 			}
 			
-			if(rsHolder.getType().equals(ResultType.resultset) 
-					&& targetDatasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
-				rsHolder = exec.executeSqlByDatasource("SELECT * FROM " + mapTableName + " WHERE rownum <= " + 100, mapDatasource, appUuid);
-			} else if(rsHolder.getType().equals(ResultType.resultset) &&
-					!targetDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
-					rsHolder = exec.executeSqlByDatasource("SELECT * FROM " + mapTableName + " LIMIT " + 100, mapDatasource, appUuid);
-			}
+////			if (!targetDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+////					&& appDatasource.getType().equalsIgnoreCase(targetDatasource.getType())) {
+//			if (!execContext.equals(ExecContext.FILE)) {
+//				mapTableName = datapodServiceImpl.getTableNameByDatapodKey(datapodKey, runMode);
+//				logger.info("Datapod: "+datapodKey.getUUID());
+//				
+//				String partitionColls = Helper.getPartitionColumns(targetDatapod);				
+//				logger.info("Partition collumns: "+partitionColls);
+//				
+//				String partitionClause = "";
+//				if(partitionColls != null && !partitionColls.isEmpty()) {
+//					partitionClause = " PARTITION ( " + partitionColls +" ) ";
+//				}
+//				
+////				if(targetDatasource.getType().equalsIgnoreCase(ExecContext.HIVE.toString())
+////						|| targetDatasource.getType().equalsIgnoreCase(ExecContext.IMPALA.toString())) {
+////					sql = "INSERT OVERWRITE TABLE " + mapTableName +" "+ partitionClause + " " + sql;
+//				if(storageContext.equals(ExecContext.HIVE) || storageContext.equals(StorageContext.IMPALA)) {
+//					sql = "INSERT INTO TABLE " + mapTableName +" "+ partitionClause + " " + sql;
+//				} else if(storageContext.equals(StorageContext.MYSQL)
+//						|| storageContext.equals(StorageContext.ORACLE)
+//						|| storageContext.equals(StorageContext.POSTGRES)) {
+//						sql = "INSERT INTO " + mapTableName + " " + sql;
+//				}
+//			}
+//
+//			logger.info("Running SQL : " + sql);
+//			ResultSetHolder rsHolder = null;
+//
+//			Datasource mapDatasource = commonServiceImpl.getDatasourceByObject(map);
+////			if(appDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())
+////					&& !targetDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+//			if(execContext.equals(ExecContext.FILE) && !storageContext.equals(StorageContext.FILE)) {
+//				rsHolder = exec.executeSqlByDatasource(sql, mapDatasource, appUuid);
+//				if(storageContext.equals(StorageContext.ORACLE)) {
+//					mapTableName = targetDatasource.getSid().concat(".").concat(targetDatapod.getName());
+//				} else {
+//					mapTableName = targetDatasource.getDbname().concat(".").concat(targetDatapod.getName());					
+//				}
+//				rsHolder.setTableName(mapTableName);
+//				rsHolder = exec.persistDataframe(rsHolder, targetDatasource, targetDatapod, SaveMode.APPEND.toString());
+////			} else if(targetDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+//			} else if(execContext.equals(ExecContext.FILE) && storageContext.equals(StorageContext.FILE)) {
+//				rsHolder = exec.executeRegisterAndPersist(sql, mapTableName, filePath, targetDatapod, SaveMode.APPEND.toString(), true, appUuid);
+//			} else {
+//				rsHolder = exec.executeSqlByDatasource(sql, mapDatasource, appUuid);
+//			}
+//			
+//			if(rsHolder.getType().equals(ResultType.resultset) 
+//					&& targetDatasource.getType().equalsIgnoreCase(ExecContext.ORACLE.toString())) {
+//				rsHolder = exec.executeSqlByDatasource("SELECT * FROM " + mapTableName + " WHERE rownum <= " + 100, mapDatasource, appUuid);
+//			} else if(rsHolder.getType().equals(ResultType.resultset) &&
+//					!targetDatasource.getType().equalsIgnoreCase(ExecContext.FILE.toString())) {
+//					rsHolder = exec.executeSqlByDatasource("SELECT * FROM " + mapTableName + " LIMIT " + 100, mapDatasource, appUuid);
+//			}
 			
 			logger.info("After map execution.");
 			// Persist dataStore
@@ -385,7 +417,8 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 					, new MetaIdentifier(MetaType.datapod, map.getTarget().getRef().getUuid(), map.getTarget().getRef().getVersion())
 					, new MetaIdentifier(MetaType.mapExec, mapExec.getUuid(), mapExec.getVersion())
 					, map.getAppInfo(), map.getCreatedBy(), SaveMode.APPEND.toString(), resultRef, countRows
-					, Helper.getPersistModeFromRunMode(runMode.toString()), null);
+					, commonServiceImpl.getPersistModeByStorageContext(storageContext),null);
+//					, Helper.getPersistModeFromRunMode(runMode.toString()), null);
 			logger.info("After map persist ");
 			mapExec.setResult(resultRef);
 			mapExec = (MapExec) commonServiceImpl.setMetaStatus(mapExec, MetaType.mapExec, Status.Stage.COMPLETED);			
