@@ -999,3 +999,65 @@ DatavisualizationModule.directive('multiSeriesChart', function ($compile, $rootS
   }; //End Return
 
 });
+
+DatavisualizationModule.directive('scoreCard', function (COLORPALETTE) {
+  return {
+    scope: {
+      data:"="
+    },
+    link: function ($scope, element, attrs) {
+      $scope.$watch('data', function (newValue, oldValue) {
+       var colorCodeArray= COLORPALETTE.Random_4;
+       if($scope.data.vizpodInfo.colorPalette !=null){
+          var str=$scope.data.vizpodInfo.colorPalette.replace(" ", "_");
+          colorCodeArray=COLORPALETTE[str];
+        }
+        $scope.sCDetail={};
+        if($scope.data.vizpodDetails.datapoints.length >0 && $scope.data.vizpodDetails.datapoints.length ==1){
+          $scope.sCDetail.isSingleValue=true;
+          $scope.sCDetail.name=$scope.data.vizpodInfo.values[0].attributeName;
+          if($scope.data.vizpodInfo.values[0].ref.type =="formula"){
+            $scope.sCDetail.name=$scope.data.vizpodInfo.values[0].ref.name;            
+          }
+          $scope.sCDetail.value=$scope.data.vizpodDetails.datapoints[0][$scope.sCDetail.name];
+         // var randomnoCode = Math.floor((Math.random() * 17) + 0);
+          var objStyle={
+            "background-color":colorCodeArray[$scope.data.colNo-1],
+            "color":"white"
+          };
+          $scope.sCDetail.objStyle=objStyle
+        }
+        else{
+          $scope.sCDetail.isSingleValue=false;
+        }
+      }); //End Watch
+    }, //End link
+    templateUrl: 'views/score-card-template.html',
+  }; //End Return
+});
+
+DatavisualizationModule.filter('isoCurrencyWithK1', ["$filter", "iso4217", function ($filter, iso4217) {
+  return function (amount, fraction) {
+      return Math.abs(Number(amount)) >= 1.0e+18
+          ? (Math.abs(Number(amount)) / 1.0e+18).toFixed(fraction) + "Qui"
+          // fifteen Zeroes for Millions 
+          : Math.abs(Number(amount)) >= 1.0e+15
+              ? (Math.abs(Number(amount)) / 1.0e+15).toFixed(fraction) + "Qua"
+              // twelve Zeroes for Millions 
+              : Math.abs(Number(amount)) >= 1.0e+12
+                  ? (Math.abs(Number(amount)) / 1.0e+12).toFixed(fraction) + "T"
+                  // Nine Zeroes for Millions 
+                  : Math.abs(Number(amount)) >= 1.0e+9
+                      ? (Math.abs(Number(amount)) / 1.0e+9).toFixed(fraction) + "B"
+                      // Six Zeroes for Millions 
+                      : Math.abs(Number(amount)) >= 1.0e+6
+
+                          ? ((Math.abs(Number(amount)) / 1.0e+6)) % 1 == 0 ? (Math.abs(Number(amount)) / 1.0e+6) + "M" : (Math.abs(Number(amount)) / 1.0e+6).toFixed(fraction) + "M"
+                          // Three Zeroes for Thousands
+                          : Math.abs(Number(amount)) >= 1.0e+3
+
+                              ? ((Math.abs(Number(amount)) / 1.0e+3)) % 1 == 0 ? (Math.abs(Number(amount)) / 1.0e+3) + "K" : (Math.abs(Number(amount)) / 1.0e+3).toFixed(fraction) + "K"
+
+                              : Math.abs(Number(amount));
+  }
+}])

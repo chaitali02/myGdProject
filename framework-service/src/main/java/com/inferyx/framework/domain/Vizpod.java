@@ -30,6 +30,7 @@ public class Vizpod extends BaseEntity {
 	private List<AttributeDetails> values;
 	private List<AttributeDetails> sortBy;
     private String sortOrder;
+    private String colorPalette;
 
 	public List<AttributeDetails> getDetailAttr() {
 		return detailAttr;
@@ -184,5 +185,13 @@ public class Vizpod extends BaseEntity {
 
 	public void setSortOrder(String sortOrder) {
 		this.sortOrder = sortOrder;
+	}
+
+	public String getColorPalette() {
+		return colorPalette;
+	}
+
+	public void setColorPalette(String colorPalette) {
+		this.colorPalette = colorPalette;
 	}
 }
