@@ -65,6 +65,7 @@ import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Threshold;
 import com.inferyx.framework.enums.AbortConditionType;
+import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.enums.ThresholdType;
 import com.inferyx.framework.executor.ExecContext;
@@ -544,7 +545,7 @@ public class DataQualServiceImpl extends RuleTemplate {
 
 	public HttpServletResponse download(String dqExecUuid, String dqExecVersion, String format, String download,
 			int offset, int limit, HttpServletResponse response, int rowLimit, String sortBy, String order,
-			String requestId, RunMode runMode, String resultType) throws Exception {
+			String requestId, RunMode runMode, String resultType, Layout layout) throws Exception {
 
 		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
 		if (rowLimit > maxRows) {
@@ -561,7 +562,7 @@ public class DataQualServiceImpl extends RuleTemplate {
 			results = getResultDetails(dqExecUuid, dqExecVersion, offset, rowLimit, sortBy, order, requestId, runMode);
 		}
 		response = commonServiceImpl.download(format, response, runMode, results,
-				new MetaIdentifierHolder(new MetaIdentifier(MetaType.dqExec, dqExecUuid, dqExecVersion)));
+				new MetaIdentifierHolder(new MetaIdentifier(MetaType.dqExec, dqExecUuid, dqExecVersion)), layout);
 		return response;
 	}
 

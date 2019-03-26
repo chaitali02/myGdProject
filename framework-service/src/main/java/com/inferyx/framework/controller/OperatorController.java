@@ -20,6 +20,7 @@ import com.inferyx.framework.domain.Function;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Operator;
 import com.inferyx.framework.domain.OperatorExec;
+import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.RExecutor;
 import com.inferyx.framework.service.CommonServiceImpl;
@@ -87,10 +88,12 @@ public class OperatorController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode,
-			HttpServletResponse response) throws Exception {
+			HttpServletResponse response,
+			@RequestParam(value = "layout", required = false) Layout layout) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
-		response = operatorServiceImpl.download(operatorExecuuid, operatorExecVersion, format, 0, rows, response, rows,
-				null, null, null, runMode);
+		response = operatorServiceImpl.download(operatorExecuuid, operatorExecVersion, format
+				, 0, rows, response, rows,
+				null, null, null, runMode, layout);
 		return null;
 
 	}

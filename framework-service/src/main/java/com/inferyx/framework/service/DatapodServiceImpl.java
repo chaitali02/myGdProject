@@ -91,6 +91,7 @@ import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.enums.Compare;
+import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
@@ -993,7 +994,7 @@ public class DatapodServiceImpl {
 
 	public HttpServletResponse download(String datastoreUuid, String datastoreVersion, String format, int offset,
 			int limit, HttpServletResponse response, int rowLimit, String sortBy, String order, String requestId,
-			RunMode runMode) throws Exception {
+			RunMode runMode, Layout layout) throws Exception {
 		datastoreServiceImpl.setRunMode(runMode);
 		DataStore dataStore = datastoreServiceImpl.findDataStoreByMeta(datastoreUuid, datastoreVersion);
 		if (dataStore == null) {
@@ -1012,7 +1013,7 @@ public class DatapodServiceImpl {
 		datastoreServiceImpl.setRunMode(runMode);
 		List<Map<String, Object>> results = datastoreServiceImpl.getDatapodResults(dataStore.getUuid(), dataStore.getVersion(), null,
 				0, rowLimit, response, rowLimit, null, null, null, runMode);
-		response = commonServiceImpl.download(format, response, runMode, results, dataStore.getExecId());
+		response = commonServiceImpl.download(format, response, runMode, results, dataStore.getExecId(), layout);
 		return response;
 
 	}

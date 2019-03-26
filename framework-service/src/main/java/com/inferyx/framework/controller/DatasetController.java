@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.ExecParams;
+import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.service.DatasetServiceImpl;
 
@@ -63,9 +64,10 @@ public class DatasetController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode,
-			HttpServletResponse response) throws Exception {
+			HttpServletResponse response,
+			@RequestParam(value = "layout", required = false) Layout layout) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
-		response =  datasetServiceImpl.download(datasetUUID, datasetVersion, format, rows, runMode, response);	   	
+		response =  datasetServiceImpl.download(datasetUUID, datasetVersion, format, rows, runMode, response, layout);	   	
 		return null;
 	}
 }

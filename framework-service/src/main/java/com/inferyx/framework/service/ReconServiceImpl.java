@@ -58,6 +58,7 @@ import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.ReconGroupExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.User;
+import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.operator.ReconOperator;
 
@@ -196,7 +197,7 @@ public class ReconServiceImpl extends RuleTemplate {
 
 	public HttpServletResponse download(String reconExecUuid, String reconExecVersion, String format, String download,
 			int offset, int limit, HttpServletResponse response, int rowLimit, String sortBy, String order,
-			String requestId, RunMode runMode) throws Exception {
+			String requestId, RunMode runMode, Layout layout) throws Exception {
 
 		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
 		if (rowLimit > maxRows) {
@@ -212,7 +213,7 @@ public class ReconServiceImpl extends RuleTemplate {
 		List<Map<String, Object>> results = getReconResults(reconExecUuid, reconExecVersion, offset, limit, sortBy,
 				order, requestId, runMode);
 		response = commonServiceImpl.download(format, response, runMode, results,
-				new MetaIdentifierHolder(new MetaIdentifier(MetaType.reconExec, reconExecUuid, reconExecVersion)));
+				new MetaIdentifierHolder(new MetaIdentifier(MetaType.reconExec, reconExecUuid, reconExecVersion)), layout);
 		return response;
 	}
 	

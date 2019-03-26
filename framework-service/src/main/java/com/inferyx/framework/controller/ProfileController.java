@@ -39,6 +39,7 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.ProfileGroupExec;
+import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.operator.ProfileOperator;
 import com.inferyx.framework.service.CommonServiceImpl;
@@ -203,10 +204,11 @@ public class ProfileController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode,
-			HttpServletResponse response) throws Exception {
+			HttpServletResponse response,
+			@RequestParam(value = "layout", required = false) Layout layout) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		profileServiceImpl.download(profileExecUUID, profileExecVersion, format, null, 0, rows, response, rows, null,
-				null, null, runMode);
+				null, null, runMode, layout);
 		return null;
 	}
 	

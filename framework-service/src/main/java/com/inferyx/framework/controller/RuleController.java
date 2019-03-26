@@ -43,6 +43,7 @@ import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.RuleGroupExec;
 import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.operator.DatasetOperator;
 import com.inferyx.framework.operator.RuleOperator;
@@ -285,10 +286,12 @@ public class RuleController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode,
-			HttpServletResponse response) throws Exception {
+			HttpServletResponse response,
+			@RequestParam(value = "layout", required = false) Layout layout) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
-		ruleServiceImpl.download(ruleExecUUID, ruleExecVersion, format, null, 0, rows, response, rows, null, null, null,
-				runMode);
+		ruleServiceImpl.download(ruleExecUUID, ruleExecVersion, format, null, 0
+				, rows, response, rows, null, null, null,
+				runMode, layout);
 		return null;
 	}
 

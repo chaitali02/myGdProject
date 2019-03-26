@@ -59,6 +59,7 @@ import com.inferyx.framework.domain.SimulateExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainExec;
+import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
@@ -610,7 +611,7 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 	
 	public HttpServletResponse download(String execUuid, String execVersion, String format, String download, int offset,
 			int limit, HttpServletResponse response, int rowLimit, String sortBy, String type, String order,
-			String requestId, RunMode runMode) throws Exception {
+			String requestId, RunMode runMode, Layout layout) throws Exception {
 
 		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
 		if (rowLimit > maxRows) {
@@ -623,11 +624,11 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 		if (type.equalsIgnoreCase(MetaType.predictExec.toString())) {
 			List<Map<String, Object>> results = getPredictResults(execUuid, execVersion, rowLimit);
 			response = commonServiceImpl.download(format, response, runMode, results,
-					new MetaIdentifierHolder(new MetaIdentifier(MetaType.predictExec, execUuid, execVersion)));
+					new MetaIdentifierHolder(new MetaIdentifier(MetaType.predictExec, execUuid, execVersion)), layout);
 		} else {
 			List<Map<String, Object>> results = getSimulateResults(execUuid, execVersion, rowLimit);
 			response = commonServiceImpl.download(format, response, runMode, results,
-					new MetaIdentifierHolder(new MetaIdentifier(MetaType.simulateExec, execUuid, execVersion)));
+					new MetaIdentifierHolder(new MetaIdentifier(MetaType.simulateExec, execUuid, execVersion)), layout);
 		}
 		return response;
 	}

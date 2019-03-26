@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -48,6 +49,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
@@ -183,6 +186,7 @@ import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
+import com.inferyx.framework.domain.Document;
 import com.inferyx.framework.domain.DownloadExec;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Feature;
@@ -222,6 +226,7 @@ import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.domain.Vizpod;
+import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
@@ -517,6 +522,8 @@ public class CommonServiceImpl<T> {
 	private IAttributeDomainDao iAttributeDomainDao;	
 	@Autowired
 	private PropertiesFactoryBean frameworkProperties;
+	@Autowired
+	private DocumentGenServiceImpl documentGenServiceImpl;
 	
 	
 	public IngestServiceImpl getIngestServiceImpl() {
@@ -4113,14 +4120,67 @@ public class CommonServiceImpl<T> {
 	}
 
 	public HttpServletResponse download(String format, HttpServletResponse response, RunMode runMode,
-			List<Map<String, Object>> results, MetaIdentifierHolder dependsOn) throws Exception {
-		logger.info("inside download method....");
-		String defaultPath = Helper.getPropertyValue("framework.file.download.path");
-		defaultPath = defaultPath.endsWith("/") ? defaultPath : defaultPath.concat("/");
+			List<Map<String, Object>> results, MetaIdentifierHolder dependsOn, Layout layout) throws Exception {
+		logger.info("Inside download method....");
+		
+		MetaIdentifier dependsOnMI = dependsOn.getRef();
+		BaseEntity metaObject = (BaseEntity) getOneByUuidAndVersion(dependsOnMI.getUuid(), dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
+		
+		if(StringUtils.isBlank(format)) {
+			throw new RuntimeException("Format not provided ...");
+		}
+		
+		format = Helper.mapFileFormat(format);
 
 		DownloadExec downloadExec = new DownloadExec();
 		downloadExec.setBaseEntity();
 		downloadExec.setDependsOn(dependsOn);
+		
+		String filePathUrl = Helper.getDocumentFilePath(metadataServiceImpl.getConfigValueByName("framework.file.download.path"), metaObject.getUuid(), metaObject.getVersion(), downloadExec.getVersion(), metaObject.getName(), format, true);
+		String fileName = Helper.getDocumentFileName(metaObject.getName(), downloadExec.getVersion(), format);
+		
+		String metObjDirPath = filePathUrl.replaceAll(fileName, "");
+		
+		File metObjDocDir = new File(metObjDirPath);
+		if (!metObjDocDir.exists()) {
+			metObjDocDir.mkdirs();
+		}		
+
+		downloadExec.setLocation(filePathUrl);
+		
+		Workbook workbook = null;
+		PDDocument doc = null;
+
+		Document document = new Document();
+		document.setLocation(filePathUrl);
+		document.setHeader("Confidential document");
+		document.setHeaderAlignment("CENTER");
+		document.setFooter("All rights reserved");
+		document.setFooterAlignment("CENTER");
+		document.setTitle(metaObject.getName());
+		document.setLayout(layout);
+		document.setData(results);
+		document.setMetaObjType(dependsOnMI.getType().toString());
+		document.setMetExecObject(downloadExec);
+		document.setDocumentType(format);
+		document.setName(metaObject.getName());
+		document.setDescription(!StringUtils.isBlank(metaObject.getDesc()) ? metaObject.getDesc() : "");
+		document.setParameters("");
+		SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+		document.setGenerationDate(formatter.format(new Date()));
+				
+		File metaObjFile = new File(filePathUrl);
+		boolean isDocCreated = documentGenServiceImpl.createDocument(document);
+		
+		if(!isDocCreated) {
+			throw new RuntimeException((format != null ? format.toUpperCase() : "Document")+" creation failed...");
+		}
+		
+		if(format.equalsIgnoreCase(FileType.PDF.toString())) {
+			doc = PDDocument.load(metaObjFile);
+		} else if(format.equalsIgnoreCase(FileType.XLS.toString())) {
+			workbook = 	WorkbookFactory.create(metaObjFile);
+		}
 		
 		downloadExec = (DownloadExec) setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.PENDING);
 		downloadExec = (DownloadExec) setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.STARTING);
@@ -4128,77 +4188,34 @@ public class CommonServiceImpl<T> {
 		downloadExec = (DownloadExec) setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.RUNNING);
 		downloadExec = (DownloadExec) setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.COMPLETED);
 		
-		String fileName = null;		
-		if(format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
-			fileName = String.format("%s_%s.%s", downloadExec.getUuid().replaceAll("-", "_"), downloadExec.getVersion(), FileType.PDF.toString().toLowerCase());
-		} else {
-			fileName = String.format("%s_%s.%s", downloadExec.getUuid().replaceAll("-", "_"), downloadExec.getVersion(), FileType.XLS.toString().toLowerCase());
+		save(MetaType.downloadExec.toString(), downloadExec);
+		
+		if (response != null) {
+			try {
+				ServletOutputStream servletOutputStream = response.getOutputStream();
+				if (format.equalsIgnoreCase(FileType.PDF.toString())) {
+					response.setContentType("application/pdf");
+					response.setHeader("Content-disposition", "attachment");
+					response.setHeader("filename", metaObject.getName().concat("_").concat(downloadExec.getVersion())
+							.concat(".").concat(FileType.PDF.toString().toLowerCase()));
+					doc.save(servletOutputStream);
+					doc.close();
+				} else if (format.equalsIgnoreCase(FileType.XLS.toString())) {
+					response.setContentType("application/xml");
+					response.setHeader("Content-disposition", "attachment");
+					response.setHeader("filename", metaObject.getName().concat("_").concat(downloadExec.getVersion())
+							.concat(".").concat(FileType.XLS.toString().toLowerCase()));
+					workbook.write(servletOutputStream);
+					workbook.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+				logger.error("Can not download file.");
+				response.setStatus(300);
+				throw new FileNotFoundException("Can not download file.");
+			}
 		}
 
-		String filePathUrl = defaultPath.concat(fileName);
-				
-		downloadExec.setLocation(filePathUrl);
-		try {
-//			//checking whether data is available or not
-//			if(results == null || (results != null && results.isEmpty())) {
-//				results = new ArrayList<>();
-//				
-//				Map<String,Object> dataMap = new LinkedHashMap<>();
-//				int i = 0;
-//				for(AttributeSource attributeSource : report.getAttributeInfo()) {
-//					if(i == 0) {
-//						dataMap.put(attributeSource.getAttrSourceName(), "no data available.");
-//					} else {
-//						dataMap.put(attributeSource.getAttrSourceName(), "");
-//					}
-//					i++;
-//				}
-//
-//				results.add(dataMap);
-//			}
-			
-			PDDocument doc = null;
-			HSSFWorkbook workbook = null;
-			ServletOutputStream servletOutputStream = response.getOutputStream();
-			
-			File defaultDir = new File(defaultPath);
-			if(!defaultDir.exists()) {
-				defaultDir.mkdirs();
-			}
-			
-			//writting as per provided format
-			if(format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
-				doc = pdfUtil.getPDFDoc(results);
-				FileOutputStream fileOutPDF = new FileOutputStream(new File(filePathUrl));
-				doc.save(fileOutPDF);
-				fileOutPDF.close();
-				
-				response.setContentType("application/pdf");
-				response.setHeader("Content-disposition", "attachment");
-				response.setHeader("filename", fileName);
-				doc.save(servletOutputStream);
-				doc.close();
-			} else {
-				FileOutputStream fileOut = new FileOutputStream(filePathUrl);
-				workbook = WorkbookUtil.getWorkbook(results);
-				workbook.write(fileOut);		
-				fileOut.close();
-				
-				response.setContentType("application/xml");
-				response.setHeader("Content-disposition", "attachment");
-				response.setHeader("filename", fileName);
-				workbook.write(servletOutputStream);
-				workbook.close();
-			}
-
-			save(MetaType.downloadExec.toString(), downloadExec);
-
-		} catch (IOException e1) {
-			e1.printStackTrace();
-			logger.info("exception caught while download file");
-			response.setStatus(300);
-			throw new FileNotFoundException();
-		}
 		return response;
 	}
 

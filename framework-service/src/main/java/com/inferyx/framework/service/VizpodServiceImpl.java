@@ -67,6 +67,7 @@ import com.inferyx.framework.domain.User;
 import com.inferyx.framework.domain.VizExec;
 import com.inferyx.framework.domain.Vizpod;
 import com.inferyx.framework.domain.Vizpod.AttributeDetails;
+import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
@@ -826,7 +827,7 @@ public class VizpodServiceImpl extends RuleTemplate {
 	
 	public HttpServletResponse download(String execUuid, String execVersion, String saveOnRefresh, String format,
 			ExecParams execParams, String download, int offset, int limit, HttpServletResponse response, int rowLimit,
-			String sortBy, String order, String requestId, RunMode runMode) throws Exception {
+			String sortBy, String order, String requestId, RunMode runMode, Layout layout) throws Exception {
 
 		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
 		if (rowLimit > maxRows) {
@@ -839,7 +840,7 @@ public class VizpodServiceImpl extends RuleTemplate {
 		List<Map<String, Object>> results = getVizpodResults(execUuid, execVersion, saveOnRefresh, rowLimit, offset,
 				limit, sortBy, order, requestId, runMode);
 		response = commonServiceImpl.download(format, response, runMode, results,
-				new MetaIdentifierHolder(new MetaIdentifier(MetaType.vizExec, execUuid, execVersion)));
+				new MetaIdentifierHolder(new MetaIdentifier(MetaType.vizExec, execUuid, execVersion)), layout);
 		return response;
 	}
 

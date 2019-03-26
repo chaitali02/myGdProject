@@ -28,6 +28,7 @@ import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.CompareMetaData;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.DatapodStatsHolder;
+import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.service.DataStoreServiceImpl;
 import com.inferyx.framework.service.DatapodServiceImpl;
@@ -64,10 +65,12 @@ public class DatapodController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode,
-			HttpServletResponse response) throws Exception {
+			HttpServletResponse response,
+			@RequestParam(value = "layout", required = false) Layout layout) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
-		response = datapodServiceImpl.download(datapodUUID, datapodVersion, format, 0, rows, response, rows, null, null,
-				null, runMode);
+		response = datapodServiceImpl.download(datapodUUID, datapodVersion, format, 0, 
+				rows, response, rows, null, null,
+				null, runMode, layout);
 		return null;
 
 	}

@@ -54,6 +54,7 @@ import com.inferyx.framework.domain.RelationInfo;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Task;
+import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.enums.SysVarType;
 import com.inferyx.framework.executor.ExecContext;
@@ -736,7 +737,7 @@ public class MapServiceImpl implements IParsable, IExecutable {
 	
 	public HttpServletResponse download(String mapExecUuid, String mapExecVersion, String format, int offset,
 			int limit, HttpServletResponse response, int rowLimit, String sortBy, String order, String requestId,
-			RunMode runMode) throws Exception {
+			RunMode runMode, Layout layout) throws Exception {
 		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
 		if(rowLimit > maxRows) {
 			logger.error("Requested rows exceeded the limit of "+maxRows);
@@ -745,7 +746,7 @@ public class MapServiceImpl implements IParsable, IExecutable {
 		}
 		
 		List<java.util.Map<String, Object>> results = getMapResults(mapExecUuid, mapExecVersion, offset, limit, sortBy, order, requestId, runMode);
-		response = commonServiceImpl.download(format, response, runMode, results, new MetaIdentifierHolder(new MetaIdentifier(MetaType.mapExec, mapExecUuid, mapExecVersion)));
+		response = commonServiceImpl.download(format, response, runMode, results, new MetaIdentifierHolder(new MetaIdentifier(MetaType.mapExec, mapExecUuid, mapExecVersion)), layout);
 		return response;
 
 	}

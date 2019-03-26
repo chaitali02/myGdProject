@@ -57,6 +57,7 @@ import com.inferyx.framework.domain.Recon;
 import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.Rule2;
+import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
@@ -1433,7 +1434,7 @@ public class DataStoreServiceImpl {
 	
 	public HttpServletResponse download(String datastoreUuid, String datastoreVersion, String format, int offset,
 			int limit, HttpServletResponse response, int rowLimit, String sortBy, String order, String requestId,
-			RunMode runMode) throws Exception {
+			RunMode runMode, Layout layout) throws Exception {
 		setRunMode(runMode);
 		DataStore datastore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(datastoreUuid, datastoreVersion, MetaType.datastore.toString());
 		if (datastore == null) {
@@ -1450,7 +1451,7 @@ public class DataStoreServiceImpl {
 		
 		List<Map<String, Object>> results = getDatapodResults(datastore.getUuid(), datastore.getVersion(), null,
 				0, limit, response, rowLimit, null, null, null, runMode);
-		response = commonServiceImpl.download(format, response, runMode, results, datastore.getExecId());	
+		response = commonServiceImpl.download(format, response, runMode, results, datastore.getExecId(), layout);	
 		return response;
 
 	}

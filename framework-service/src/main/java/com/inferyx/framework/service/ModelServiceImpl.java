@@ -125,6 +125,7 @@ import com.inferyx.framework.domain.TrainResultView;
 import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.enums.EncodingType;
+import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.enums.SaveMode;
 import com.inferyx.framework.executor.DL4JExecutor;
@@ -3616,7 +3617,7 @@ public class ModelServiceImpl {
 	}
 
 	public HttpServletResponse download(String trainExecUuid, String trainExecVersion, String format, int rows,
-			String setType, RunMode runMode, HttpServletResponse response) throws Exception {
+			String setType, RunMode runMode, HttpServletResponse response, Layout layout) throws Exception {
 		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
 		if (rows > maxRows) {
 			logger.error("Requested rows exceeded the limit of " + maxRows);
@@ -3627,7 +3628,7 @@ public class ModelServiceImpl {
 
 		List<Map<String, Object>> results = getTrainOrTestSet(trainExecUuid, trainExecVersion, setType);
 		response = commonServiceImpl.download(format, response, runMode, results,
-				new MetaIdentifierHolder(new MetaIdentifier(MetaType.trainExec, trainExecUuid, trainExecVersion)));
+				new MetaIdentifierHolder(new MetaIdentifier(MetaType.trainExec, trainExecUuid, trainExecVersion)), layout);
 		return response;
 	}
 	
