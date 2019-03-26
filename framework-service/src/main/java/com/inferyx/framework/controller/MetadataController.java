@@ -194,7 +194,7 @@ public class MetadataController {
 
 		return registerService.getDataStoreByDatapod(datapodUUID, type);
 	}
-
+	
 	@RequestMapping(value = "/getAllLatestActive", method = RequestMethod.GET)
 	public @ResponseBody String getAllLatestActive(@RequestParam("type") String type,
 			@RequestParam(value = "action", required = false) String action) 

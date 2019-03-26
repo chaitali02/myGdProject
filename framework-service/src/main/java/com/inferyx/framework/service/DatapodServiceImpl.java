@@ -702,8 +702,9 @@ public class DatapodServiceImpl {
 			dsh.setDataSource(dsMap.get(dp.getDatasource().getRef().getUuid()));
 
 			DataStore ds = datastoreServiceImpl.findLatestByMeta(dp.getUuid(), dp.getVersion());
+			
 			if (ds != null) {
-				dsh.setNumRows(ds.getNumRows());
+				dsh.setNumRows(datastoreServiceImpl.getDataStoreTotalCountByDatapod(dp.getUuid(),MetaType.datapod.toString()));
 				dsh.setLastUpdatedOn(ds.getCreatedOn());
 			}
 			result.add(dsh);

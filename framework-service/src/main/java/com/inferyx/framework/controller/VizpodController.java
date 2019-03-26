@@ -58,9 +58,9 @@ public class VizpodController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws Exception {
 		RunMode runMode = RunMode.BATCH;
-		VizExec vizExec = vizpodServiceImpl.create(vizpodUUID, vizpodVersion, null, execParams, runMode);
-		vizExec = vizpodServiceImpl.parse(vizExec.getUuid(), vizExec.getVersion(), execParams, null, null, null, null, runMode);
-		return vizpodServiceImpl.getVizpodResults(vizpodUUID, vizpodVersion, execParams, vizExec, rows, offset, limit, sortBy, order, requestId, runMode);
+		//VizExec vizExec = vizpodServiceImpl.create(vizpodUUID, vizpodVersion, null, execParams, runMode);
+		//vizExec = vizpodServiceImpl.parse(vizExec.getUuid(), vizExec.getVersion(), execParams, null, null, null, null, runMode);
+		return vizpodServiceImpl.getVizpodResults(vizpodUUID, vizpodVersion, execParams, rows, offset, limit, sortBy, order, requestId, runMode);
 	}
 	
 	@RequestMapping(value = "/execute", method = RequestMethod.POST)

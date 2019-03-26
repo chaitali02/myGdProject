@@ -11,6 +11,7 @@
 package com.inferyx.framework.service;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -43,6 +44,7 @@ import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.dao.IDataStoreDao;
 import com.inferyx.framework.dao.IDatapodDao;
 import com.inferyx.framework.dao.IDatasourceDao;
+import com.inferyx.framework.domain.Application;
 import com.inferyx.framework.domain.AttributeRefHolder;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.DataStore;
@@ -1453,6 +1455,23 @@ public class DataStoreServiceImpl {
 		response = commonServiceImpl.download(format, response, runMode, results, datastore.getExecId());	
 		return response;
 
+	}
+	
+	public Long getDataStoreTotalCountByDatapod(String datapodUUID, String type)
+			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		Application application = commonServiceImpl.getApp();
+		Query query = new Query();
+		query.fields().include("numRows");
+		if (application.getUuid() != null && !application.getUuid().isEmpty()) {
+			query.addCriteria(Criteria.where("_id").ne("1")
+					.orOperator(where("appInfo.ref.uuid").is(application.getUuid()), where("publicFlag").is("Y")));
+
+		}
+		query.addCriteria(Criteria.where("metaId.ref.uuid").is(datapodUUID));
+		Long sum = (Long) mongoTemplate.find(query, DataStore.class).stream().filter(o -> o.getNumRows() > 0)
+				.mapToLong(o -> o.getNumRows()).sum();
+		return sum;
 	}
 	
 }

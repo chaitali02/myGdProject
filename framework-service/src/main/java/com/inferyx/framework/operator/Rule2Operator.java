@@ -74,10 +74,10 @@ public class Rule2Operator implements IParsable, IReferenceable {
 	public List<String> generateDetailSql(Rule2 rule2, String withSql, String detailSelectSql,
 			Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,
 			Set<MetaIdentifier> usedRefKeySet, ExecParams execParams, RunMode runMode, RuleExec ruleExec,
-			List<FilterInfo> list) throws Exception {
+			List<FilterInfo> list,Boolean filterFlag) throws Exception {
 		// TODO Auto-generated method stub
 		return generateWith(rule2, withSql, detailSelectSql, refKeyMap, otherParams, execParams, runMode, ruleExec,
-				list);
+				list, filterFlag);
 	}
 
 	public String generateSummarySql(Rule2 rule2, List<String> listSql, ScoringMethod scoringMethod, String tableName,
@@ -178,7 +178,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 
 	public List<String> generateWith(Rule2 rule2, String withSql, String detailSelectSql,
 			java.util.Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams, ExecParams execParams,
-			RunMode runMode, RuleExec ruleExec, List<FilterInfo> list) throws Exception {
+			RunMode runMode, RuleExec ruleExec, List<FilterInfo> list,Boolean filterFlag) throws Exception {
 		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
 		String result = "";
 		StringBuilder selectbuilder = new StringBuilder();
@@ -321,7 +321,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 
 			selectbuilder.append(criteria.getScore()).append(" * ").append(criteria.getCriteriaWeight()).append(" as ")
 					.append("criteria_score").append(ConstantsUtil.COMMA);
-
+            if(filterFlag==true)
 			selectbuilder.append("filter_expr").append(ConstantsUtil.COMMA);
 
 			selectbuilder.append(ruleExec.getVersion()).append(" as ").append("version").append(" ")
@@ -348,6 +348,7 @@ public class Rule2Operator implements IParsable, IReferenceable {
 
 			attrListBuilder.append(ConstantsUtil.COMMA).append(attrList);
 		}
+        if(filterFlag==true)
 		attrListBuilder.append(ConstantsUtil.COMMA).append(filterExpr).append(" as ").append("filter_expr");
 
 		List<String> listSql = new ArrayList<String>();
@@ -471,10 +472,10 @@ public class Rule2Operator implements IParsable, IReferenceable {
 		// new Sort(Sort.Direction.DESC, "version"));
 		rule2 = (Rule2) commonServiceImpl.getLatestByUuid(ruleExec.getDependsOn().getRef().getUuid(),
 				MetaType.rule2.toString());
-
+		Boolean filterFlag=false;
 		ruleExec.setExec(
 				generateDetailSql(rule2, null, null, DagExecUtil.convertRefKeyListToMap(execParams.getRefKeyList()),
-						execParams.getOtherParams(), usedRefKeySet, ruleExec.getExecParams(), runMode, ruleExec, null)
+						execParams.getOtherParams(), usedRefKeySet, ruleExec.getExecParams(), runMode, ruleExec, null, filterFlag)
 								.get(0));
 		if (rule2.getParamList() != null) {
 			MetaIdentifier mi = rule2.getParamList().getRef();

@@ -6,9 +6,18 @@ select 'equity_orders' as tabname, count(*) as cnt from equity_orders
 union
 select 'equity_executions' as tabname, count(*) as cnt from equity_executions
 union
-select 'rule_result_summary' as tabname, count(*) as cnt from rule_result_summary
+select 'dq_result_detail' as tabname, count(*) as cnt from dq_result_detail
 union
 select 'dq_result_summary' as tabname, count(*) as cnt from dq_result_summary
+union
+
+select 'dp_result_summary' as tabname, count(*) as cnt from dp_result_summary
+union
+select 'rule_result_detail' as tabname, count(*) as cnt from rule_result_detail
+union
+select 'rule_result_summary' as tabname, count(*) as cnt from rule_result_summary
+union
+select 'rc_rule_results' as tabname, count(*) as cnt from rc_rule_results
 union
 
 

@@ -428,7 +428,7 @@ public class VizpodServiceImpl extends RuleTemplate {
 	}
 	
 	@SuppressWarnings("finally")
-	public List<Map<String, Object>> getVizpodResults(String vizpodUUID, String vizpodVersion, ExecParams execParams, VizExec vizExec, 
+	public List<Map<String, Object>> getVizpodResults(String vizpodUUID, String vizpodVersion, ExecParams execParams, 
 			 									int rowLimit, int offset, int limit, String sortBy, String order, String requestId, 
 												RunMode runMode) throws IOException, JSONException, ParseException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException {
 		List<Map<String, Object>> data = null;
@@ -457,15 +457,19 @@ public class VizpodServiceImpl extends RuleTemplate {
 //					}
 //				}
 		
-			
-			/**** Get sql and update in vizpodexec - START ****/
+			Set<MetaIdentifier> usedRefKeySet = null;
+			String sql=vizpodParser.toSql(vizpod, null, usedRefKeySet, true, runMode, false);
+			//code commented by vaibhav retired vizexec
+			/**** Get sql and update in vizpodexec - START ****//*
 			if (vizExec == null) {
 				vizExec = create(vizpodUUID, vizpodVersion, vizExec, execParams, runMode);
 				vizExec = parse(vizExec.getUuid(), vizExec.getVersion(), execParams, null, null, null, null, runMode);
-			}
+			}*/
+			
+			
 			/**** Get sql and update in vizpodexec - END ****/
-
-			vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.RUNNING);
+			//code commented by vaibhav retired vizexec
+			//vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.RUNNING);
 			
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
 			Datasource vizpodSourceDS =  commonServiceImpl.getDatasourceByObject(vizpod);
@@ -501,7 +505,7 @@ public class VizpodServiceImpl extends RuleTemplate {
 						if(datasource.getType().toUpperCase().contains(ExecContext.spark.toString())
 								|| datasource.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
 							data = exec.executeAndFetchByDatasource("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM (SELECT * FROM ("
-										+ vizExec.getSql() + ") tn ORDER BY " + orderBy.toString() + ") AS tab) AS tab1", vizpodSourceDS, appUuid);
+										+ sql + ") tn ORDER BY " + orderBy.toString() + ") AS tab) AS tab1", vizpodSourceDS, appUuid);
 						}
 						tabName = requestId.replace("-", "_");
 						requestMap.put(requestId, tabName);
@@ -518,12 +522,12 @@ public class VizpodServiceImpl extends RuleTemplate {
 			} else {
 				if(vizpodSourceDS.getType().toUpperCase().contains(ExecContext.spark.toString())
 						|| vizpodSourceDS.getType().toUpperCase().contains(ExecContext.FILE.toString())) {
-						data = exec.executeAndFetchByDatasource("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM (" + vizExec.getSql()
+						data = exec.executeAndFetchByDatasource("SELECT * FROM (SELECT Row_Number() Over(ORDER BY 1) AS rownum, * FROM (" + sql
 					+ ") tn ) AS tab WHERE rownum >= " + offset + " AND rownum <= " + limit, vizpodSourceDS, null);
 				} else if(vizpodSourceDS.getType().toUpperCase().contains(ExecContext.ORACLE.toString())) {
-						data = exec.executeAndFetchByDatasource("SELECT * FROM ("+vizExec.getSql() + ") vizpod WHERE rownum <= " + limit, vizpodSourceDS, appUuid);
+						data = exec.executeAndFetchByDatasource("SELECT * FROM ("+sql + ") vizpod WHERE rownum <= " + limit, vizpodSourceDS, appUuid);
 				} else {
-					data = exec.executeAndFetchByDatasource("SELECT * FROM ("+vizExec.getSql() + ") vizpod LIMIT " + limit, vizpodSourceDS, appUuid);
+					data = exec.executeAndFetchByDatasource("SELECT * FROM ("+sql + ") vizpod LIMIT " + limit, vizpodSourceDS, appUuid);
 				}
 			}
 //			/**** Get sql and update in vizpodexec - START ****/
@@ -533,7 +537,10 @@ public class VizpodServiceImpl extends RuleTemplate {
 //			vizExec.setBaseEntity();
 //			commonServiceImpl.save(MetaType.vizExec.toString(), vizExec);
 //			/**** Get sql and update in vizpodexec - END ****/
-			vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.COMPLETED);
+			
+			
+			//code commented by vaibhav retired vizexec
+			//vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.COMPLETED);
 		} catch (Exception e) {
 			e.printStackTrace();
 			String message = null;
@@ -545,16 +552,19 @@ public class VizpodServiceImpl extends RuleTemplate {
 			}catch (Exception e2) {
 				// TODO: handle exception
 			}
-			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
-			dependsOn.setRef(new MetaIdentifier(MetaType.vizExec, vizExec.getUuid(), vizExec.getVersion()));
+			//code commented by vaibhav retired vizexec
+
+			/*MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
+			dependsOn.setRef(new MetaIdentifier(MetaType.vizExec, vizExec.getUuid(), vizExec.getVersion()));*/
 			if(message.contains("sparkDriver")) {
 				message="Communication link failure";
 			} else {
 				message="Some error occurred";
 			}
+			//code commented by vaibhav retired vizexec
 
-			vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.FAILED);
-			commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Table or View does not exists.", dependsOn);
+			//vizExec = (VizExec) commonServiceImpl.setMetaStatus(vizExec, MetaType.vizExec, Status.Stage.FAILED);
+			//commonServiceImpl.sendResponse("404", MessageStatus.FAIL.toString(), (message != null) ? message : "Table or View does not exists.", dependsOn);
 			throw new RuntimeException((message != null) ? message : "Table or View does not exists.");			 		
 		} finally {
 			return data;

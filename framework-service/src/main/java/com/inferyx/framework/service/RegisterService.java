@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.inferyx.framework.service;
 
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -540,6 +542,8 @@ public class RegisterService {
 		}
 		return result;
 	}
+	
+	
 
 	public BaseEntity save(Map<String, Object> operator, String type) throws Exception {
 		// Session session=sessionServiceImpl.findOneById(sessionId);

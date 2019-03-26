@@ -761,12 +761,15 @@ public class Rule2ServiceImpl extends RuleTemplate {
 				MetaType.rule2.toString(), "N");
 		
 		List<String> listSql=new ArrayList<String>();
+		List<String> listSqlWithFilter=new ArrayList<String>();
+
 		String withSql = null;
 		String detailSelectSql=null;
+		Boolean filterFlag=false;
 		// ruleExec.setExec(rule2Operator.generateSql(rule2, refKeyMap, otherParams,
 		// usedRefKeySet, ruleExec.getExecParams(), runMode));
 		listSql = rule2Operator.generateDetailSql(rule2,withSql,detailSelectSql,refKeyMap, otherParams, usedRefKeySet,
-				ruleExec.getExecParams(), runMode, ruleExec, rule2.getFilterInfo());
+				ruleExec.getExecParams(), runMode, ruleExec, rule2.getFilterInfo(), filterFlag);
         String detailsql=listSql.get(0);
 		
 		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(rule2Info.getRule_result_details(), null,
@@ -839,8 +842,11 @@ public class Rule2ServiceImpl extends RuleTemplate {
 		
 		*/
 //		String filterExpr;
+		listSqlWithFilter = rule2Operator.generateDetailSql(rule2,withSql,detailSelectSql,refKeyMap, otherParams, usedRefKeySet,
+				ruleExec.getExecParams(), runMode, ruleExec, rule2.getFilterInfo(), true);
+        String detailsqlwithfilter=listSql.get(0);
 		ScoringMethod scoringMethod=rule2.getScoringMethod();
-		String summarysql = rule2Operator.generateSummarySql(rule2,listSql, scoringMethod, tableName, datapod, refKeyMap, otherParams,
+		String summarysql = rule2Operator.generateSummarySql(rule2,listSqlWithFilter, scoringMethod, tableName, datapod, refKeyMap, otherParams,
 				usedRefKeySet, new ExecParams(), runMode);
 
 		ruleExec.setExec(detailsql);
@@ -1049,7 +1055,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 		exec = execFactory.getExecutor(execContext.toString());
 		appUuid = commonServiceImpl.getApp().getUuid();
 		List<String> listSql=rule2Operator.generateDetailSql(rule2, null, null, null,
-				null, null, new ExecParams(), runMode,ruleExec, null);
+				null, null, new ExecParams(), runMode,ruleExec, null, false);
 		data = exec.executeAndFetch(listSql.get(0), appUuid);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
 				| NoSuchMethodException | SecurityException | NullPointerException | ParseException | IOException e) {
