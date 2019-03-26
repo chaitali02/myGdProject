@@ -38,6 +38,7 @@ import com.inferyx.framework.domain.Filter;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.factory.ExecutorFactory;
@@ -390,7 +391,7 @@ public class DatasetServiceImpl {
 	}
 	
 	
-	public HttpServletResponse download(String datasetUuid, String datasetVersion, String format,int rows,RunMode runMode, HttpServletResponse response) throws Exception {
+	public HttpServletResponse download(String datasetUuid, String datasetVersion, String format,int rows,RunMode runMode, HttpServletResponse response, Layout layout) throws Exception {
 		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
 		if(rows > maxRows) {
 			logger.error("Requested rows exceeded the limit of "+maxRows);
@@ -400,7 +401,7 @@ public class DatasetServiceImpl {
 //		getDatasetSample(uuid, version, rows, null, runMode);
 		List<Map<String, Object>> results = getDatasetSample(datasetUuid, datasetVersion, rows, null, runMode);
 		response = commonServiceImpl.download(format, response, runMode, results,
-				new MetaIdentifierHolder(new MetaIdentifier(MetaType.dataset, datasetUuid, datasetVersion)));
+				new MetaIdentifierHolder(new MetaIdentifier(MetaType.dataset, datasetUuid, datasetVersion)), layout);
 		return response;
 
 	}

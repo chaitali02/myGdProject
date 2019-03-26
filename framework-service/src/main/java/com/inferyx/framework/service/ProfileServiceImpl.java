@@ -66,6 +66,7 @@ import com.inferyx.framework.domain.Profile;
 import com.inferyx.framework.domain.ProfileExec;
 import com.inferyx.framework.domain.ProfileGroupExec;
 import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
@@ -612,7 +613,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 
 	public HttpServletResponse download(String profileExecUuid, String profileExecVersion, String format,
 			String download, int offset, int limit, HttpServletResponse response, int rowLimit, String sortBy,
-			String order, String requestId, RunMode runMode) throws Exception {
+			String order, String requestId, RunMode runMode, Layout layout) throws Exception {
 
 		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
 		if (rowLimit > maxRows) {
@@ -625,7 +626,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 		List<Map<String, Object>> results = getProfileResults(profileExecUuid, profileExecVersion, offset, limit,
 				sortBy, order, requestId, runMode);
 		response = commonServiceImpl.download(format, response, runMode, results, new MetaIdentifierHolder(
-				new MetaIdentifier(MetaType.profileExec, profileExecUuid, profileExecVersion)));
+				new MetaIdentifier(MetaType.profileExec, profileExecUuid, profileExecVersion)), layout);
 		return response;
 	}
 

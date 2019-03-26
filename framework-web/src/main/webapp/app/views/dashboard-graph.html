@@ -4,6 +4,7 @@
     }
   </style>
   <!-- BEGIN PAGE HEADER-->
+
   <div class="jitu" ng-controller="ShowDashboradController2">
     <div class="page-bar">
       <ul class="page-breadcrumb">
@@ -29,10 +30,15 @@
           <span class="thin uppercase hidden-xs">{{time +' '+tzName}}</span>&nbsp;
         </div>
       </div>
-    </div><!-- END PAGE HEADER-->
+    </div><!-- END PAGE HEADER --> <!-- | strReplace:'_':' '|capitalize -->
     <br>
-    <!--  <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div> -->
 
+    <!--  <div notifybar style="position:fixed;top:40px;right:0;z-index:1000"></div> -->
+    <!-- bg-yellow bg-hover-grey-salsa font-white fa-icon fa-edit
+        bg-blue bg-hover-grey-salsa font-white 
+        bg-green bg-hover-grey-salsa font-white 
+    -->
+           
     <!-- BEGIN MAIN CONTENT -->
     <div class="row" ng-if="!IsVizpodDetailShow">
       <div class="col-lg-12 col-xs-12 col-sm-12">
@@ -42,41 +48,39 @@
               <i class=" icon-layers "></i>
               <span class="caption-subject bold">{{dashboarddata.name }}</span>
             </div>
-            <!-- | strReplace:'_':' '|capitalize -->
             <div class="actions">
-              <!-- ui-sref="metaListdashboard({'id':dashboarddata.uuid,'mode':'false'})" -->
               <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" tooltip-placement="{{showtooltip}}" uib-tooltip="Main"ng-class="(showdashboard==true || isDashboardInprogess==true || isDashboardError==true ||inprogressdata==true)? 'currentpage':'notcurrentpage'"data-ng-click="showDashboardPage()" >
                   <i class="fa fa-home icon-circle home-icon-circle" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
-                </a>
+              </a>
               
               <a class="btn btn-circle btn-icon-only btn-default"  ng-class="( isPrivlageDashboard || dashboarddata.locked == 'Y' || isDashboardInprogess==true || isDashboardError==true ||inprogressdata==true)? 'currentpage':'notcurrentpage'"  ng-click="onClickEditDashboard(dashboarddata.uuid,dashboarddata.locked)" tooltip-placement="{{showtooltip}}" uib-tooltip="Edit" ng-show="hideIcon">
                 <i class="fa fa-edit " style="display:block;margin:2px 0px 0px 1px;"></i>    
-                <!-- bg-yellow bg-hover-grey-salsa font-white fa-icon fa-edit
-                 bg-blue bg-hover-grey-salsa font-white 
-                bg-green bg-hover-grey-salsa font-white -->
               </a>
+              
               <a class="btn btn-circle btn-icon-only btn-default" ng-class="(showdashboard==false || isDashboardInprogess==true || isDashboardError==true ||inprogressdata==true)? 'currentpage':'notcurrentpage'" 
                 title="Re-Run" data-toggle="tooltip" data-placement="top" tooltip data-ng-click="reRunDashboard()" style="height:27px;">
                   <i class="fa fa-play  icon-circle home-icon-circle" style=" padding-left:2px;"></i>
               </a>
+              
               <a class="btn btn-circle btn-icon-only btn-default fullscreen" tooltip-placement="{{showtooltip}}" uib-tooltip="{{showtooltiptitle}}" ng-click="fullscreen()"></a>
+              
               <a class="btn btn-circle btn-icon-only btn-default " href="javascript:;" tooltip-placement="{{showtooltip}}" uib-tooltip="Knowledge Graph" data-ng-click="showDashboardGraph(dashboarddata.dashboarddata.uuid,dashboarddata.dashboarddata.version)"  ng-class="(showdashboard==false || isDashboardInprogess==true || isDashboardError==true ||inprogressdata==true)? 'currentpage':'notcurrentpage'">   <!--style="border: 0px solid transparent !important;"-->
                 <i class="fa fa-sitemap" style="display: block;margin:2px auto;color:#a0a0a0;"></i>
               </a>
-              <!-- <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" tooltip-placement="{{showtooltip}}" uib-tooltip="Show Details" data-ng-show="!showdashboard" data-ng-click="showDashboardPage()" >
-                <i class="fa fa-file" style="display: block;margin: 2px auto;color:#a0a0a0;"></i>
-              </a> -->
+              
               <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default " ng-click="(showdashboard==true)?onChangeDashboardExec():broadcastRefreshData()" data-original-title="">
                 <i class="fa fa-refresh" aria-hidden="true" style="display: block;margin: 2px auto;color:#a0a0a0;"></i> 
               </a>
+             
               <a class="btn btn-circle btn-icon-only btn-default" ui-sref="dashboard" tooltip-placement="{{showtooltip}}" uib-tooltip="Close" ng-show="hideIcon">
                 <i class="fa fa-times" style="display: block;margin:2px auto;color:#a0a0a0;"></i>
               </a>
+            
             </div>
           </div><!--End portlet-title-->
+          
           <div class="portlet-body" style="margin-bottom:-15px;">
-           
-            
+
             <div class="form-body graph-body" ng-if="showgraphdiv">
               <div class="form-body text-center" id="errorMsg" style="color:blue;"></div>
                 <div class="spinner" id="graphloader">
@@ -87,6 +91,7 @@
               <div class="form-body show-graph-body" tree-graph-directive  uuid="uuid" version="version">
               </div>
             </div><!--End D3 Graph-->
+
             <div class="row" data-ng-show="showdashboard">
               <div class="col-md-12">
                 <div class="col-md-6 col-sm-6 col-xs-12 custpadding"></div>
@@ -95,7 +100,6 @@
                     <div class="col-md-5 col-sm-5 col-xs-5"style="padding:0px;float: right;">
                       <select title="Type" class="form-control ng-pristine ng-valid ng-not-empty ng-touched" ng-change="onChangeDashboardExec()" data-ng-model="$parent.selectedDExec"
                         ng-options="r as r.createdOn for r in allExecDetail | orderBy :'version':true track by r.uuid" select2 >
-                        <!-- <option value="">-Select-</option> -->
                       </select>
                     </div>
                     <label class="control-label col-md-3 col-sm-3 col-xs-3" style="margin-top:7px;float:right;margin-right:-4%;">Run Date</label>
@@ -104,6 +108,7 @@
               </div>
             </div>
             <br>
+
             <div class="col-md-12 col-sm-12" style="padding:0px;padding-bottom: 20px;"data-ng-show="showdashboard">
               <div class="col-md-12 col-sm-12"style="border-bottom:1px solid darkgray;padding:0px;">
                 <div class="col-md-11 col-sm-11" style="padding:0px;padding-bottom:15px;">
@@ -112,15 +117,16 @@
                     <span class="chipclosebtn" ng-click="onChipsRemove($index,filterdata.index)">&times;</span>
                   </div>
                 </div>
-                <!-- <div class="col-md-1 col-sm-1" style="margin-left:4%;width:4%;margin-top:4px;cursor:pointer;padding:0px;text-align:right;"> -->
                   <div class="col-md-1 col-sm-1" style="margin-top:4px;cursor:pointer;padding:0px;text-align:right;">
-                    <a  ng-disabled="(dashboarddata.filterInfo ==null || dashboarddata.filterInfo.length ==0)?true:false" class="caption-subject font-dark bold"  ng-click="openFilterPopup()" tooltip-placement="left" uib-tooltip="Select Filter"  style="font-size:16px;color: #666 !important;"><i class="fa fa-filter" style="font-size:17px;padding-bottom:5px;padding-right: 2px;"></i>Filter</a>
+                    <a  ng-disabled="(dashboarddata.filterInfo ==null || dashboarddata.filterInfo.length ==0)?true:false" class="caption-subject font-dark bold"  ng-click="openFilterPopup()" tooltip-placement="left" uib-tooltip="Select Filter"  style="font-size:16px;color: #666 !important;"><i class="fa fa-filter" style="font-size:17px;padding-bottom:5px;padding-right: 2px;"></i>Filter
+                    </a>
                 </div>
                 <br>       
               </div>
               <br>
             </div>
             <br>
+
             <div class="row">
               <div class="col-md-12">
                 <div class="form-body centercontent" ng-if="isDashboardError" style="color:red;">Some Error Occurred</div>
@@ -131,15 +137,18 @@
                 </div>
               </div>
             </div>
+
             <div ng-if="!isDashboardInprogess && !isDashboardError ">
             <div class="row" data-ng-show="showdashboard">
+
               <!--Start C3 Graph Code-->
               <div ng-repeat="row in sectionRows">
-                <div class="col-md-{{datacol.fullWidth?'12':(row.columns.length < 3 ? 12/(row.columns.length) : '4')}} {{datacol.vizpodDetails.class}}" ng-repeat="datacol in row.columns" ng-show="datacol.vizpodDetails.show" style="min-height:440px;">
-                  
-                  <div class="portlet light bordered"  style="min-height:420px;">
+                  <!-- style="min-height:440px;" -->
+                <div class="col-md-{{datacol.fullWidth?'12':(row.columns.length < 3 ? 12/(row.columns.length) : '4')}} {{datacol.vizpodDetails.class}}" ng-repeat="datacol in row.columns" ng-show="datacol.vizpodDetails.show" >
+                  <!-- style="min-height:420px;" -->
+                  <div class="portlet light bordered"  >
                     <div class="portlet-title">
-                      <div class="caption" style="width: 65%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
+                      <div class="caption" style="width:45%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
                         <span class="caption-subject font-dark bold " title="{{datacol.name}}">{{datacol.name}}</span>
                       </div>
                       <div class="actions">
@@ -149,16 +158,15 @@
                         <a class="btn btn-circle btn-icon-only btn-default" tooltip-placement="{{showtooltip}}" ng-show="datacol.isChartShow"  ng-class="(inprogressdata==true)? 'currentpage':'notcurrentpage'" uib-tooltip="Grid" ng-click="onClickGrid($parent.$index,$index)" ng-show="hideIcon">
                           <i class="fa fa-th" style="display:block;margin:2px 0px 0px 0px;"></i>   
                         </a>
-                        <!-- ui-sref="dvvizpod({'id':datacol.vizpodDetails.uuid,'version':datacol.vizpodDetails.version,'mode':'false'})" -->
                         <a class="btn btn-circle btn-icon-only btn-default"  ng-class="( isPrivlageVizpod|| datacol.vizpodDetails.locked == 'Y'|| inprogressdata==true)? 'currentpage':'notcurrentpage'"  ng-click="onClickEditVizpod(datacol.vizpodDetails.uuid,datacol.vizpodDetails.version,datacol.vizpodDetails.locked)"  tooltip-placement="{{showtooltip}}" uib-tooltip="Edit"
-                          ng-show="hideIcon">  
+                          ng-show="hideIcon" >  
                        <i class="fa fa-pencil-square-o" style="display: block;margin:2px 0px 0px 1px;"></i>
                        </a>
-                       <a ng-click="downloadFile(datacol.vizExecInfo)" class="btn btn-circle btn-icon-only btn-default"  tooltip-placement="{{showtooltip}}" uib-tooltip="Download Data" ng-class="(inprogressdata==true)? 'currentpage':'notcurrentpage'">  
+                       <a  ng-hide="['score-card'].indexOf(datacol.vizpodDetails.type) !=-1" ng-click="downloadFile(datacol.vizExecInfo)" class="btn btn-circle btn-icon-only btn-default"  tooltip-placement="{{showtooltip}}" uib-tooltip="Download Data" ng-class="(inprogressdata==true)? 'currentpage':'notcurrentpage'">  
                         <i class="fa fa-download" style="display: block;margin:2px 0px 0px 1px;"></i>
                        </a>
                        
-                        <a class="btn btn-circle btn-icon-only btn-default" tooltip-placement="top" uib-tooltip="{{datacol.vizpodDetails.showtooltiptitle}}" ng-click="datacol.fullWidth =!datacol.fullWidth;fullScreenVizpod($parent.$index,$index)" >
+                        <a class="btn btn-circle btn-icon-only btn-default" tooltip-placement="top" ng-hide="['score-card'].indexOf(datacol.vizpodDetails.type) !=-1" uib-tooltip="{{datacol.vizpodDetails.showtooltiptitle}}" ng-click="datacol.fullWidth =!datacol.fullWidth;fullScreenVizpod($parent.$index,$index)" >
                           <i class="{{datacol.vizpodDetails.iconclass}}" aria-hidden="true"></i>
                         </a>
                         <a href="javascript:;" class="reload btn btn-circle btn-icon-only btn-default" ng-click="refreshVizpod(datacol.rowNo,datacol.colNo)" data-original-title="" ng-class="(inprogressdata==true)? 'currentpage':'notcurrentpage'">
@@ -166,26 +174,32 @@
                         </a>
                       </div>
                     </div>
-                    <div class="portlet-body">
-                      
+
+                    <div class="portlet-body">  
                       <div>
                         <div class ="centercontent" style="min-height:300px" ng-show="datacol.isDataError">
                           <h3 style="font-size:14px;color:red;">{{datacol.errormsg}}</h3>
                         </div>
+
                         <div  class ="centercontent" style="min-height:300px" ng-if="datacol.vizpodDetails.datapoints !=null && datacol.vizpodDetails.datapoints.length == 0 && !datacol.isDataError" ng-show="!datacol.isInprogess">
                           <h3 style="font-size:14px;color:blue;">No data available</h3>
                         </div>
+
                         <div class="spinner centercontent" style="min-height:300px" ng-show="datacol.isInprogess">
                           <div class="bounce1"></div>
                           <div class="bounce2"></div>
                           <div class="bounce3"></div>
                         </div>
+
                         <div ng-if="datacol.vizpodDetails.datapoints && datacol.vizpodDetails.datapoints.length >0 && !inprogressdata && ['bar-chart','line-chart','area-chart'].indexOf(datacol.vizpodDetails.type) !=-1 && datacol.vizpodInfo.groups.length >0 && !IsVizpodDetailShow && datacol.isChartShow">
-                        
                           <div class="{{datacol.vizpodDetails.id}}" multi-series-chart data="datacol.vizpodDetails.datapoints" column="datacol.vizpodInfo" chartid="datacol.vizpodDetails.id" on-right-click="selectData" objdetail="datacol">
                           </div>
                         </div>
-                        <div ng-if="datacol.vizpodDetails.datapoints !=null && datacol.vizpodDetails.datapoints.length >0 && !inprogressdata  && datacol.vizpodDetails.type !='data-grid' && datacol.vizpodDetails.type !='bubble-chart' && datacol.vizpodDetails.type !='world-map' && datacol.vizpodDetails.type !='usa-map' && datacol.vizpodDetails.type !='bar-line-chart' && datacol.vizpodDetails.type !='network-graph' && datacol.vizpodDetails.type !='heat-map' && datacol.isDataError !=true && datacol.isChartShow && (datacol.vizpodInfo.groups.length ==0)">
+                        <div ng-if="datacol.vizpodDetails.datapoints && datacol.vizpodDetails.datapoints.length >0 && !inprogressdata && ['score-card'].indexOf(datacol.vizpodDetails.type) !=-1 && datacol.vizpodInfo.groups.length ==0 && !IsVizpodDetailShow && datacol.isChartShow">
+                          <score-card data="datacol"></score-card>
+                        </div>
+
+                        <div ng-if="datacol.vizpodDetails.datapoints !=null && datacol.vizpodDetails.datapoints.length >0 && !inprogressdata  && datacol.vizpodDetails.type !='data-grid' && datacol.vizpodDetails.type !='bubble-chart' && datacol.vizpodDetails.type !='world-map' && datacol.vizpodDetails.type !='usa-map' && datacol.vizpodDetails.type !='bar-line-chart' && datacol.vizpodDetails.type !='network-graph' && datacol.vizpodDetails.type !='heat-map' && datacol.vizpodDetails.type !='score-card' && datacol.isDataError !=true && datacol.isChartShow && (datacol.vizpodInfo.groups.length ==0)">
                            
                           <c3chart chartGroup="chart" bindto-id="{{datacol.vizpodDetails.id}}" chart-data="datacol.vizpodDetails.datapoints" chart-columns="datacol.vizpodDetails.datacolumns" chart-x="datacol.vizpodDetails.datax" enable-zoom="true" callback-function="handleCallbackGroup">
                             <chart-bar ratio="0.5" />
@@ -255,14 +269,13 @@
                         </div>
                         <div ng-if="(datacol.vizpodDetails.type =='data-grid' && datacol.vizpodDetails.datapoints !=null && datacol.vizpodDetails.datapoints.length >0 && !inprogressdata) ||  datacol.isDataGridShow">
                          
-                          <div ui-grid="datacol.gridOptions" class="grid" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter ng-style="getGridStyle(datacol.filteredRows)">
+                          <div ui-grid="datacol.gridOptions" class="grid" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter ng-style="getGridStyle(datacol.filteredRows, datacol.vizpodDetails.type)">
                             <div class="nodatawatermark_results" ng-show="!datacol.gridOptions.data.length">No data available</div>
                           </div>
                         </div>
                         <div ng-if="datacol.vizpodDetails.type == 'network-graph'  && !inprogressdata">
                              <h1>Network Graph</h1>
                         </div>
-                        {{data.isChartShow}}
                         <div  ng-if="datacol.vizpodDetails.type == 'heat-map'  && !inprogressdata && datacol.vizpodDetails.datapoints !=null && datacol.vizpodDetails.datapoints.length >0 && datacol.isChartShow">
                           <div class="{{datacol.vizpodDetails.id}}" heat-map data="datacol.vizpodDetails.datapoints" column="datacol.vizpodInfo" chartid="datacol.vizpodDetails.id"  objdetail="datacol">
                           </div>
@@ -271,14 +284,18 @@
                     </div>
                   </div>
                 </div>
+                <div class="clearfix visible-xs" style="display:block !important"></div>
               </div><!--End C3 Graph Code-->
+             
+
             </div>
           </div>
           </div>
         </div>
       </div>
     </div><!-- END MAIN CONTENT -->
-    
+    <div class="clearfix"></div>
+
     <div class="row" ng-show="IsVizpodDetailShow">
       <div class="col-lg-12 col-xs-12 col-sm-12">
         <div class="portlet light bordered fullscreendashobard">

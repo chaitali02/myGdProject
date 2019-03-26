@@ -33,7 +33,11 @@ public class Document {
 	private String metaObjType;
 	private Object metExecObject;
 	private String documentType;
-
+	private String name;
+	private String description;
+	private String parameters;
+	private String generationDate;
+	
 	/**
 	 * @Ganesh
 	 *
@@ -248,5 +252,77 @@ public class Document {
 	 */
 	public void setFooterAlignment(String footerAlignment) {
 		this.footerAlignment = footerAlignment;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the description
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param description the description to set
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the parameters
+	 */
+	public String getParameters() {
+		return parameters;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param parameters the parameters to set
+	 */
+	public void setParameters(String parameters) {
+		this.parameters = parameters;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the generationDate
+	 */
+	public String getGenerationDate() {
+		return generationDate;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param generationDate the generationDate to set
+	 */
+	public void setGenerationDate(String generationDate) {
+		this.generationDate = generationDate;
 	}
 }

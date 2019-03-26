@@ -35,6 +35,7 @@ import com.inferyx.framework.domain.DataQualGroupExec;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.operator.DQOperator;
 import com.inferyx.framework.service.CommonServiceImpl;
@@ -208,10 +209,11 @@ public class DataQualController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode,
-			HttpServletResponse response) throws Exception {
+			HttpServletResponse response,
+			@RequestParam(value = "layout", required = false) Layout layout) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		dataQualServiceImpl.download(dataQualExecUUID, dataQualExecVersion, format, null, 0, rows, response, rows, null,
-				null, null, runMode, resultType);
+				null, null, runMode, resultType, layout);
 		return null;
 	}
 	

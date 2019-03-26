@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.VizExec;
+import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.service.DagExecServiceImpl;
 import com.inferyx.framework.service.DataStoreServiceImpl;
@@ -122,10 +123,12 @@ public class VizpodController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode,
-			HttpServletResponse response) throws Exception {
+			HttpServletResponse response,
+			@RequestParam(value = "layout", required = false) Layout layout) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
-		vizpodServiceImpl.download(vizExecUuid, vizExecVersion, saveOnRefresh, format, execParams, null, 0, rows, response, rows, null,
-				null, null, runMode);
+		vizpodServiceImpl.download(vizExecUuid, vizExecVersion, saveOnRefresh, format, execParams
+				, null, 0, rows, response, rows, null,
+				null, null, runMode, layout);
 		return null;
 	}
 	

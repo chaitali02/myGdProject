@@ -35,6 +35,7 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.OrderKey;
+import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.service.CommonServiceImpl;
 import com.inferyx.framework.service.MapServiceImpl;
@@ -79,10 +80,12 @@ public class MapController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode,
-			HttpServletResponse response) throws Exception {
+			HttpServletResponse response,
+			@RequestParam(value = "layout", required = false) Layout layout) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
-		response = mapServiceImpl.download(mapExecUUID, mapExecVersion, format, 0, rows, response, rows, null, null,
-				null, runMode);
+		response = mapServiceImpl.download(mapExecUUID, mapExecVersion, format, 0, rows, response
+				, rows, null, null,
+				null, runMode, layout);
 		return null;
 
 	}

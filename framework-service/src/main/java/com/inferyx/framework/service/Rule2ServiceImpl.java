@@ -49,6 +49,7 @@ import com.inferyx.framework.domain.Rule2;
 import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.User;
+import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.enums.SaveMode;
 import com.inferyx.framework.enums.ScoringMethod;
@@ -897,7 +898,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 	
 	public HttpServletResponse download(String ruleExecUUID, String ruleExecVersion, String format, String download,
 			int offset, int limit, HttpServletResponse response, int rowLimit, String sortBy, String order,
-			String requestId, RunMode runMode,String resultType) throws Exception {
+			String requestId, RunMode runMode,String resultType, Layout layout) throws Exception {
 
 		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
 		if (rowLimit > maxRows) {
@@ -913,7 +914,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 			results = getResultDetail(ruleExecUUID, ruleExecVersion, offset, rowLimit, sortBy, order, requestId, runMode);
 		}
 		response = commonServiceImpl.download(format, response, runMode, results,
-				new MetaIdentifierHolder(new MetaIdentifier(MetaType.ruleExec, ruleExecUUID, ruleExecVersion)));
+				new MetaIdentifierHolder(new MetaIdentifier(MetaType.ruleExec, ruleExecUUID, ruleExecVersion)), layout);
 		return response;
 	}
 	

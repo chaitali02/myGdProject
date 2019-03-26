@@ -35,6 +35,7 @@ import com.inferyx.framework.common.Helper;
 import com.inferyx.framework.domain.ReconExec;
 import com.inferyx.framework.domain.ReconGroupExec;
 import com.inferyx.framework.domain.RuleGroupExec;
+import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.domain.DataQualExec;
 import com.inferyx.framework.domain.ExecParams;
@@ -118,10 +119,11 @@ public class ReconController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode,
-			HttpServletResponse response) throws Exception {
+			HttpServletResponse response,
+			@RequestParam(value = "layout", required = false) Layout layout) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		reconServiceImpl.download(reconExecUUID, reconExecVersion, format, null, 0, rows, response, rows,
-				null, null, null, runMode);
+				null, null, null, runMode, layout);
 		return null;
 	}
 

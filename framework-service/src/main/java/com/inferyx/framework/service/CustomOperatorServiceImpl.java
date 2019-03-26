@@ -39,6 +39,7 @@ import com.inferyx.framework.domain.Operator;
 import com.inferyx.framework.domain.OperatorExec;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.OperatorType;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.IExecutor;
@@ -398,7 +399,7 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 	
 	public HttpServletResponse download(String operatorExecUuid, String operatorExecVersion, String format, int offset,
 			int limit, HttpServletResponse response, int rowLimit, String sortBy, String order, String requestId,
-			RunMode runMode) throws Exception {
+			RunMode runMode, Layout layout) throws Exception {
 		OperatorExec operatorExec = (OperatorExec) commonServiceImpl.getOneByUuidAndVersion(operatorExecUuid,
 				operatorExecVersion, MetaType.operatorExec.toString());
 		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
@@ -410,7 +411,8 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 		}
 		
 		List<Map<String, Object>> results = getOperatorResults(operatorExecUuid, operatorExecVersion, rowLimit);
-		response = commonServiceImpl.download(format, response, runMode, results, new MetaIdentifierHolder(new MetaIdentifier(MetaType.operatorExec, operatorExecUuid, operatorExecVersion)));
+		response = commonServiceImpl.download(format, response, runMode, results
+				, new MetaIdentifierHolder(new MetaIdentifier(MetaType.operatorExec, operatorExecUuid, operatorExecVersion)), layout);
 	
 		return response;
 

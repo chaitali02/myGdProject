@@ -512,7 +512,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
       'margin-bottom': '10px',
     }
     if ($scope.filteredRows && $scope.filteredRows.length > 0) {
-      style['height'] = (($scope.filteredRows.length < 10 ? $scope.filteredRows.length * 40 : 400) + 60) + 'px';
+      style['height'] = (($scope.filteredRows.length < 10 ? $scope.filteredRows.length * 40 : 400) + 40) + 'px';
     }
     else {
       style['height'] = "100px";
@@ -553,7 +553,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
       rowHeight: 40,
       enableGridMenu: true,
       useExternalPagination: true,
-      exporterMenuPdf: true,
+      exporterMenuPdf: false,
       exporterPdfOrientation: 'landscape',
       exporterPdfPageSize: 'A4',
       exporterPdfDefaultStyle: { fontSize: 9 },
@@ -566,18 +566,20 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
       $scope.sectionRows[i].columns[j].filteredRows = $scope.gridApi.core.getVisibleRows($scope.gridApi.grid);
     };
   }
-  $scope.getGridStyle = function (data) {
+  $scope.getGridStyle = function (data, type) {
     var style = {
       'margin-top': '10px',
       'margin-bottom': '10px',
       'max-height': '297px'
     }
-    // if (data &&  data.length >0) {
-    //     style['height'] = (( data.length < 10 ? data.length * 40 : 400) + 40) + 'px';
-    //   }
-    //  else{
-    //     style['height']="100px";
-    //   }
+    if(type =="score-card"){
+      if (data &&  data.length >0) {
+        style['height'] = (( data.length < 10 ? data.length * 40 : 400) + 60) + 'px';
+      }
+      else{
+        style['height']="100px";
+      }
+    }
     return style;
   }
 
@@ -906,10 +908,12 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
         $scope.sectionRows[i].columns[j].isChartDataGrid = true;
         $scope.sectionRows[i].columns[j].isChartShow = true;
         $scope.sectionRows[i].columns[j].isDataGridShow = false;
-        if($scope.sectionRows[i].columns[j].vizpodInfo.keys[0].ref.type !='formula'){
-          datax.id = $scope.sectionRows[i].columns[j].vizpodInfo.keys[0].attributeName;//x value
-        }else{
-          datax.id = $scope.sectionRows[i].columns[j].vizpodInfo.keys[0].ref.name;
+        if($scope.sectionRows[i].columns[j].vizpodInfo.keys !=null && $scope.sectionRows[i].columns[j].vizpodInfo.keys.length >0 ){
+          if($scope.sectionRows[i].columns[j].vizpodInfo.keys[0].ref.type !='formula'){
+            datax.id = $scope.sectionRows[i].columns[j].vizpodInfo.keys[0].attributeName;//x value
+          }else{
+            datax.id = $scope.sectionRows[i].columns[j].vizpodInfo.keys[0].ref.name;
+          }
         }
         $scope.sectionRows[i].columns[j].vizpodDetails.datax = datax;
         var datacolumnsarray = [];
@@ -1271,11 +1275,14 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
           $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodDetails.datapoints = $scope.convertResultTwoDisit(result.data, $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodDetails.columnNameY2);
         } else {
           var propName;
-          if($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].ref.type !="formula"){
-            propName=$scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].attributeName;
-          }else{
-            propName=$scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].ref.name;
+          if($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys !=null && $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys.length >0){
+            if($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].ref.type !="formula"){
+              propName=$scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].attributeName;
+            }else{
+              propName=$scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].ref.name;
+            }
           }
+
           if (isNaN(result.data[0][propName])) {
             if ($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.type == "bar-chart") {
              // ConvertTwoDisit(result.data, $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].attributeName);
@@ -1352,11 +1359,13 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
               $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodDetails.datapoints = $scope.convertResultTwoDisit(result.data, $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodDetails.columnNameY2);
             } else {
               var propName;
-              if($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].ref.type !="formula"){
-                propName=$scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].attributeName;
-              }else{
-                propName=$scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].ref.name;
-              }
+              if($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys !=null && $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys.length >0){
+                if($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].ref.type !="formula"){
+                  propName=$scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].attributeName;
+                }else{
+                  propName=$scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].ref.name;
+                }
+              }  
               if ( result.data && result.data.length >0 && isNaN(result.data[0][propName])) {
                 if ($scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.type == "bar-chart") {
                //   ConvertTwoDisit(result.data, $scope.sectionRows[result.vizpodResuts.rowNo].columns[result.vizpodResuts.colNo].vizpodInfo.keys[0].attributeName);

@@ -51,6 +51,7 @@ import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.TrainExec;
 import com.inferyx.framework.domain.TrainExecView;
 import com.inferyx.framework.domain.TrainResult;
+import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.RExecutor;
 import com.inferyx.framework.service.CommonServiceImpl;
@@ -245,10 +246,11 @@ public class ModelController {
 			@RequestParam(value = "type", defaultValue = "predictExec") String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode,
-			HttpServletResponse response) throws Exception {
+			HttpServletResponse response,
+			@RequestParam(value = "layout", required = false) Layout layout) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		modelExecServiceImpl.download(predictExecUUID, predictExecVersion, format, null, 0, rows, response, rows, null,
-				type, null, null, runMode);
+				type, null, null, runMode, layout);
 		return null;
 	}
 
@@ -260,10 +262,11 @@ public class ModelController {
 			@RequestParam(value = "type", defaultValue = "simulateExec") String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode,
-			HttpServletResponse response) throws Exception {
+			HttpServletResponse response,
+			@RequestParam(value = "layout", required = false) Layout layout) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		modelExecServiceImpl.download(simulateExecUUID, simulateExecVersion, format, null, 0, rows, response, rows,
-				null, type, null, "1", runMode);
+				null, type, null, null, runMode, layout);
 		return null;
 	}
 	
@@ -437,9 +440,11 @@ public class ModelController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode,
-			HttpServletResponse response) throws Exception {
+			HttpServletResponse response,
+			@RequestParam(value = "layout", required = false) Layout layout) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
-		response = modelServiceImpl.download(trainExecUuid, trainExecVersion, format, rows, "trainSet", runMode, response);
+		response = modelServiceImpl.download(trainExecUuid, trainExecVersion, format
+				, rows, "trainSet", runMode, response, layout);
 	}
 	
 	@RequestMapping(value = "train/getTestSet/download", method = RequestMethod.GET)
@@ -451,9 +456,11 @@ public class ModelController {
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
 			@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode,
-			HttpServletResponse response) throws Exception {
+			HttpServletResponse response,
+			@RequestParam(value = "layout", required = false) Layout layout) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
-		response = modelServiceImpl.download(trainExecUuid, trainExecVersion, format, rows, "testSet", runMode, response);
+		response = modelServiceImpl.download(trainExecUuid, trainExecVersion, format, rows
+				, "testSet", runMode, response, layout);
 	}
 	
 	@RequestMapping(value = "getTrainByTrainExec", method = RequestMethod.GET)

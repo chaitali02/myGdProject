@@ -2,7 +2,8 @@
 DatavisualizationModule = angular.module('DatavisualizationModule');
 
 /*code for vizpod */
-DatavisualizationModule.controller('MetadataVizpodController', function ($filter, $timeout, $state, $rootScope, $scope, $stateParams, $sessionStorage, $q, $location, $http, VizpodSerivce, privilegeSvc, CommonService,CF_DOWNLOAD,dagMetaDataService,CF_SAMPLE) {
+DatavisualizationModule.controller('MetadataVizpodController', function ($filter, $timeout, $state, $rootScope, $scope, $stateParams, $sessionStorage, $q, $location, $http, VizpodSerivce, privilegeSvc, CommonService,CF_DOWNLOAD,dagMetaDataService,CF_SAMPLE,
+	COLORPALETTE) {
 
 
 	if ($stateParams.mode == 'true') {
@@ -49,8 +50,9 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 	$scope.showgraph = false
 	$scope.showgraphdiv = false
 	$scope.vizpod = {};
-	$scope.vizpodTypes = ["bar-chart", "pie-chart", "line-chart", "donut-chart", "area-chart", "bubble-chart", "world-map", "usa-map", "data-grid", 'network-graph','bar-line-chart','heat-map']
+	$scope.vizpodTypes = ["bar-chart", "pie-chart", "line-chart", "donut-chart", "area-chart", "bubble-chart", "world-map", "usa-map", "data-grid", 'network-graph','bar-line-chart','heat-map','score-card']
 	$scope.VizpodSourceTypes = ['datapod','dataset','relation'];
+	$scope.colorPalette=["Palette 1","Palette 2","Palette 3", "Random"]
 	$scope.sortOrders=["ASC","DESC"];
 	$scope.vizpod.versions = [];
 	$scope.isshowmodel = false;
@@ -155,6 +157,13 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 			else{
 				$scope.valuelist[index].popoverIsOpen=false;
 			}
+	    }
+	}
+
+	$scope.onChangeColorPalette=function(colorPalette){
+		if(colorPalette !=null){
+			var str=colorPalette.replace(" ", "_");
+			$scope.cPCodes=COLORPALETTE[str];
 	    }
 	}
 
@@ -270,23 +279,25 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 		var data = ui.draggable.scope().item
 		var type = ui.draggable.scope().item.type
 		var isEnable = ($scope.mode == 'true');
-		if (type == "formula") {
-			if ($scope.indexOfBySingleValue($scope.keylist, data) == -1 && isEnable == false) {
-				deferred.resolve();
+		if($scope.vizpodtype !="score-card"){
+			if (type == "formula") {
+				if ($scope.indexOfBySingleValue($scope.keylist, data) == -1 && isEnable == false) {
+					deferred.resolve();
+				}
+				else {
+					deferred.reject();
+				}
 			}
 			else {
-				deferred.reject();
+				if ($scope.indexOfByMultiplaValue($scope.grouplist, data) == -1 && $scope.indexOfByMultiplaValue($scope.keylist, data) == -1 && isEnable == false && type == "datapod" || type == "dataset") {
+					deferred.resolve();
+				}
+				else {
+					deferred.reject();
+				}
+				
 			}
-		}
-		else {
-			if ($scope.indexOfByMultiplaValue($scope.grouplist, data) == -1 && $scope.indexOfByMultiplaValue($scope.keylist, data) == -1 && isEnable == false && type == "datapod" || type == "dataset") {
-				deferred.resolve();
-			}
-			else {
-				deferred.reject();
-			}
-			
-		}
+	    } 
 		return deferred.promise;
 		
 	}//End beforeDropKey
@@ -319,12 +330,14 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 		var data = ui.draggable.scope().item
 		var type = ui.draggable.scope().item.type
 		var isEnable = ($scope.mode == 'true');
-		if ($scope.indexOfByMultiplaValue($scope.grouplist, data) == -1 && $scope.indexOfByMultiplaValue($scope.keylist, data) == -1 && isEnable == false && type == "datapod" ||  type == "dataset") {
-			deferred.resolve();
-		}
-		else {
-			deferred.reject();
-		}
+		if($scope.vizpodtype !="score-card"){
+			if ($scope.indexOfByMultiplaValue($scope.grouplist, data) == -1 && $scope.indexOfByMultiplaValue($scope.keylist, data) == -1 && isEnable == false && type == "datapod" ||  type == "dataset") {
+				deferred.resolve();
+			}
+			else {
+				deferred.reject();
+			}
+	    }
 		return deferred.promise;
 	}//End beforeDropGroup
 
@@ -523,7 +536,10 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 		$scope.filterAttributeTags=[];
 	}
 	$scope.checkValue = function () {
-		if ($scope.keylist.length > 0 && $scope.valuelist.length > 0) {
+		if($scope.valuelist.length > 0 && $scope.vizpodtype =="score-card"){
+			$scope.myform.$dirty = true;
+		}
+		else if ($scope.keylist.length > 0 && $scope.valuelist.length > 0 && $scope.vizpodtype !="") {
 			$scope.myform.$dirty = true
 		}
 		else {
@@ -553,6 +569,7 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 		var onGetLatestByUuid = function (response) {
 			$scope.isEditInprogess=false;
 			$scope.vizpoddata = response.vizpoddata;
+			$scope.onChangeColorPalette($scope.vizpoddata.colorPalette);
 			var defaultversion = {};
 			defaultversion.version = response.vizpoddata.version;
 			defaultversion.uuid = response.vizpoddata.uuid;
@@ -627,6 +644,7 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 		var onSuccess = function (response) {
 			$scope.isEditInprogess=false;
 			$scope.vizpoddata = response.vizpoddata;
+			$scope.onChangeColorPalette($scope.vizpoddata.colorPalette);
 			var defaultversion = {};
 			defaultversion.version = response.vizpoddata.version;
 			defaultversion.uuid = response.vizpoddata.uuid;
@@ -700,6 +718,7 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 		vizpodjson.locked = $scope.vizpoddata.locked;
 		vizpodjson.published = $scope.vizpoddata.published;
 		vizpodjson.publicFlag = $scope.vizpoddata.publicFlag;
+		vizpodjson.colorPalette=$scope.vizpoddata.colorPalette;
 		var sourece = {};
 		var ref = {};
 		ref.uuid = $scope.allSource.defaultoption.uuid;
