@@ -26,8 +26,8 @@ DatavisualizationModule.directive('bubbleChart', function ($compile, $rootScope,
         } else {
           columnname = $scope.column.values[0].attributeName
         }
-        console.log(keyname)
-        console.log(columnname)
+       // console.log(keyname)
+        //console.log(columnname)
         $scope.data.sort(sortFactory.sortByProperty(keyname));
         var data = {};
         var key = {};
@@ -171,8 +171,8 @@ DatavisualizationModule.directive('heatMap', function ($compile, $rootScope, sor
         var data1 = {}
         data1.labels = [];
         data1.datasets = [];
-        console.log(keynameX)
-        console.log(columnname)
+       // console.log(keynameX)
+       // console.log(columnname)
         function indexOfDataset(array, value) {
           var index = -1;
           for (var j = 0; j < array.length; j++) {
@@ -410,9 +410,9 @@ DatavisualizationModule.directive('worldMap', function ($compile, $filter, $root
           data: dataset,
           done: function (datamap) {
             datamap.svg.selectAll('.datamaps-subunit').on('contextmenu', function (geography, data) {
-              console.log(geography.id);
-              console.log(data);
-              console.log(datamap.options.data[geography.id] || "");
+             // console.log(geography.id);
+            //  console.log(data);
+           //   console.log(datamap.options.data[geography.id] || "");
               var d = {}
               d.vizpod = $scope.objdetail;
               d.dataobj = {};
@@ -959,11 +959,11 @@ DatavisualizationModule.directive('multiSeriesChart', function ($compile, $rootS
         prepareChartData();
         chartData.xs=prepareXs(chartData.columns,chartData.columns2);
         chartData.contextmenu = function (e) {
-          console.log(chartData);
+        //  console.log(chartData);
           var data = {}
           data.vizpod = $scope.objdetail
           data.dataobj = arguments[0]
-          console.log(arguments[0]);
+        //  console.log(arguments[0]);
           $scope.onRightClick(data);
         };
         if(chartData.columns.length >0){
@@ -1008,7 +1008,7 @@ DatavisualizationModule.directive('scoreCard', function (COLORPALETTE) {
     link: function ($scope, element, attrs) {
       $scope.$watch('data', function (newValue, oldValue) {
        var colorCodeArray= COLORPALETTE.Random_4;
-       if($scope.data.vizpodInfo.colorPalette !=null){
+       if($scope.data.vizpodInfo.colorPalette !=null && $scope.data.vizpodInfo.colorPalette !="Random" ){
           var str=$scope.data.vizpodInfo.colorPalette.replace(" ", "_");
           colorCodeArray=COLORPALETTE[str];
         }
@@ -1061,3 +1061,34 @@ DatavisualizationModule.filter('isoCurrencyWithK1', ["$filter", "iso4217", funct
                               : Math.abs(Number(amount));
   }
 }])
+
+DatavisualizationModule.directive('formCard', function (COLORPALETTE) {
+  return {
+    scope: {
+      data:"="
+    },
+    link: function ($scope, element, attrs) {
+      $scope.$watch('data', function (newValue, oldValue) {
+        $scope.fCDetail={};
+        if($scope.data.vizpodDetails.datapoints.length >0 && $scope.data.vizpodDetails.datapoints.length ==1){
+          $scope.fCDetail.isSingleValue=true;
+          var fCData=[];
+          for(var i=0;i<$scope.data.vizpodInfo.values.length;i++){
+            var fCDataObj={};
+            fCDataObj.colName=$scope.data.vizpodInfo.values[i].attributeName;
+            if($scope.data.vizpodInfo.values[0].ref.type =="formula"){
+              fCDataObj.colName=$scope.data.vizpodInfo.values[i].ref.name;            
+            }
+            fCDataObj.colValue=$scope.data.vizpodDetails.datapoints[0][fCDataObj.colName];
+            fCData[i]=fCDataObj;
+          } 
+          $scope.fCDetail.fCData=fCData;
+        }
+        else{
+          $scope.fCDetail.isSingleValue=false;
+        }
+      }); //End Watch
+    }, //End link
+    templateUrl: 'views/from-card-template.html',
+  }; //End Return
+});
