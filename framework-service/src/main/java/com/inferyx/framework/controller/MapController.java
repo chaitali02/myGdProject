@@ -99,7 +99,7 @@ public class MapController {
 			@RequestParam(value="requestId", required=false) String requestId,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action, 
-			@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws IOException, SQLException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException {
+			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws IOException, SQLException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException {
 		RunMode runMode = Helper.getExecutionMode((mode.equals("undefined")) ? mode="ONLINE" : mode);
 		return mapServiceImpl.getMapResults(mapExecUUID, mapExecVersion, offset, limit, sortBy, order, requestId, runMode);
 	}

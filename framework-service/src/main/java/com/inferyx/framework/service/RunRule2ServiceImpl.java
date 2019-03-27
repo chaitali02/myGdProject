@@ -46,7 +46,7 @@ public class RunRule2ServiceImpl extends RunBaseRuleService {
 		dataStoreServiceImpl.setRunMode(runMode);
 		dataStoreServiceImpl.create(filePath, tableName, datapodKey, baseRuleExec.getRef(ruleExecType), baseRuleExec.getAppInfo(), 
 				baseRuleExec.getCreatedBy(), SaveMode.Append.toString(), resultRef, countRows, 
-				commonServiceImpl.getPersistModeByDatapod(datapod), null);
+				commonServiceImpl.getPersistMode(datapod), null);
 		/*dataStoreServiceImpl.persistDataStore(df, tableName, null, filePath, baseRuleExec.getDependsOn().getRef(), baseRuleExec.getRef(ruleExecType),
 				ConstantsUtil.PERSIST_MODE_MEMORY_ONLY,baseRuleExec.getAppInfo(),SaveMode.Append.toString(), resultRef,ds);*/
 	}

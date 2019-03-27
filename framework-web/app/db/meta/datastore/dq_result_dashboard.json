@@ -33,7 +33,7 @@
     "value": null
   },
   "execId": {},
-  "location": "/d2aad149-9700-4a05-aad0-4a8e9d6f0bd7/1552412535/1552412535",
+  "location": null,
   "persistMode": "DISK_ONLY",
   "dimInfo": null,
   "numRows" : NumberLong(0),

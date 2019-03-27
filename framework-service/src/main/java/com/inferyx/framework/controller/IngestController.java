@@ -54,7 +54,7 @@ public class IngestController {
 			@RequestBody(required = false) ExecParams execParams,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
-			@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception {
+			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		IngestExec ingestExec = ingestServiceImpl.create(ingestUuid, ingestVersion, execParams, null, runMode);
 		ingestExec = (IngestExec) ingestServiceImpl.parse(ingestExec, execParams, runMode);
@@ -82,7 +82,7 @@ public class IngestController {
 			@RequestBody(required=false) ExecParams execParams,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action, 
-			@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception {
+			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		IngestGroupExec ingestGroupExec = null;
 		ingestGroupExec = ingestGroupServiceImpl.create(groupUuid, groupVersion, execParams, null, null, null, RunMode.ONLINE);
@@ -100,7 +100,7 @@ public class IngestController {
 			@RequestParam(value = "requestId", required = false) String requestId,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
-			@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode) throws Exception {
+			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		return ingestServiceImpl.getResults(execUuid, execVersion, offset, limit, sortBy, order, requestId, runMode);
 	}
@@ -110,7 +110,7 @@ public class IngestController {
 			@RequestParam("version") String version,
 			@RequestParam("type") String type, 
 			@RequestParam(value = "action", required = false) String action,
-			@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode) throws Exception {
+			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
 		try {
 			RunMode runMode = Helper.getExecutionMode(mode);
 			if (type.equalsIgnoreCase(MetaType.ingestExec.toString())) {
@@ -143,7 +143,7 @@ public class IngestController {
 	@RequestMapping(value = "/getTopicList", method = RequestMethod.GET)
 	public List<String> getTopicList(@RequestParam("uuid") String dsUuid,
 			@RequestParam("version") String dsVersion,		
-			@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode) throws Exception {
+			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		return ingestServiceImpl.getTopicList(dsUuid, dsVersion, runMode);
 	}

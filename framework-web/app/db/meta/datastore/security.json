@@ -32,8 +32,8 @@
   "metaId": {
     "ref": {
       "type": "datapod",
-      "uuid": "9c2f4463-e644-4f55-935f-2c551ee4f970",
-      "version": "1553031043",
+      "uuid": "1d83dac9-4733-4503-b14d-afd91675d69b",
+      "version": "1552343827",
       "name": null
     },
     "value": null
@@ -48,7 +48,7 @@
     "value": null
   },
   "location": null,
-  "persistMode": "MEMORY_ONLY",
+  "persistMode": "DISK_ONLY",
   "dimInfo": null,
   "numRows": 0,
   "runMode": null

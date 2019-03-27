@@ -50,7 +50,7 @@ public class DatapodController {
 				@RequestParam(value = "type", required = false) String type,
 				@RequestParam(value = "action", required = false) String action,
 				@RequestParam(value="requestId") String requestId, 
-				@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode, HttpServletResponse response) throws Exception
+				@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode, HttpServletResponse response) throws Exception
 	    		{
 			RunMode runMode = Helper.getExecutionMode(mode);
 	    	return datastoreServiceImpl.getDatapodResults(dataStoreUUID, dataStoreVersion,format,offset,limit,response,rows,sortBy,order,requestId, runMode);
@@ -64,7 +64,7 @@ public class DatapodController {
 			@RequestParam(value = "rows", defaultValue = "200") int rows,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
-			@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode,
+			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode,
 			HttpServletResponse response,
 			@RequestParam(value = "layout", required = false) Layout layout) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
@@ -81,7 +81,7 @@ public class DatapodController {
 				@RequestParam(value ="rows",defaultValue="100") int rows,
 				@RequestParam(value = "type", required = false) String type,
 				@RequestParam(value = "action", required = false) String action, 
-				@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception{
+				@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception{
 		 	RunMode runMode = Helper.getExecutionMode(mode);
 	    	return datapodServiceImpl.getDatapodSample(datapodUUID,datapodVersion,rows, runMode);	   	
 	   }
@@ -91,7 +91,7 @@ public class DatapodController {
 	    		@RequestParam(value= "attributeId") int attributeID,
 				@RequestParam(value = "type", required = false) String type,
 				@RequestParam(value = "action", required = false) String action,	    
-				@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception{
+				@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception{
 		 	RunMode runMode = Helper.getExecutionMode(mode);		 
 	    	return datastoreServiceImpl.getAttributeValues(datapodUUID, attributeID,runMode);   	
 	   }
@@ -145,7 +145,7 @@ public class DatapodController {
 					@RequestParam(value = "version")String datapodVersion,
 					@RequestParam(value = "type", required = false) String type,
 					@RequestParam(value = "action", required = false) String action,	    
-					@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception {
+					@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		return datapodServiceImpl.compareMetadata(datapodUuid, datapodVersion, runMode);
 	}
@@ -155,7 +155,7 @@ public class DatapodController {
 					@RequestParam(value = "version")String datapodVersion,
 					@RequestParam(value = "type", required = false) String type,
 					@RequestParam(value = "action", required = false) String action,	    
-					@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception {
+					@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		return datapodServiceImpl.synchronizeMetadata(datapodUuid, datapodVersion, runMode);
 	}
@@ -176,7 +176,7 @@ public class DatapodController {
 					@RequestParam(value = "version", required = false) String formulaVersion,
 					@RequestParam(value = "type", required = false) String type,
 					@RequestParam(value = "action", required = false) String action,	    
-					@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception {
+					@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		return datapodServiceImpl.getFormulaValues(formulaUuid, formulaVersion, runMode);
 	}

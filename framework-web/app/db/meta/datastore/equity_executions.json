@@ -48,7 +48,7 @@
     "value": null
   },
   "location": null,
-  "persistMode": "MEMORY_ONLY",
+  "persistMode": "DISK_ONLY",
   "dimInfo": null,
   "numRows": 0,
   "runMode": null

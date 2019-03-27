@@ -54,7 +54,7 @@ public class ReportController {
 			@RequestBody (required = false) ExecParams execParams,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
-			@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception {
+			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		ReportExec reportExec = reportServiceImpl.create(reportUuid, reportVersion, execParams, null, runMode);
 		reportExec = reportServiceImpl.parse(reportExec.getUuid(), reportExec.getVersion(), null, null, null, runMode);
@@ -86,7 +86,7 @@ public class ReportController {
 				@RequestParam(value = "rows", defaultValue = "200") int rows,
 				@RequestParam(value = "type", required = false) String type,
 				@RequestParam(value = "action", required = false) String action,
-				@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode,
+				@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode,
 				HttpServletResponse response,
 				@RequestParam(value = "layout", required = false) Layout layout) throws Exception {
 		    RunMode runMode = Helper.getExecutionMode(mode);
@@ -104,7 +104,7 @@ public class ReportController {
 				@RequestParam(value = "rows", defaultValue = "200") int rows,
 				@RequestParam(value = "type", required = false) String type,
 				@RequestParam(value = "action", required = false) String action,
-				@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode,
+				@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode,
 				HttpServletResponse response,
 				@RequestParam(value = "layout", required = false) Layout layout) throws Exception {
 		    RunMode runMode = Helper.getExecutionMode(mode);
@@ -121,7 +121,7 @@ public class ReportController {
 				@RequestParam(value = "rows", defaultValue = "200") int rows,
 				@RequestParam(value = "type", required = false) String type,
 				@RequestParam(value = "action", required = false) String action,
-				@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode,
+				@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode,
 				HttpServletResponse response) throws Exception {
 		    RunMode runMode = Helper.getExecutionMode(mode);
 		    reportServiceImpl.downloadReport(reportExecUuid, reportExecVersion, format, 0, rows, response, null, null,
@@ -142,7 +142,7 @@ public class ReportController {
 			@RequestBody(required = true) SenderInfo senderInfo,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
-			@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException, IOException {
+			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, JSONException, ParseException, IOException {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		return reportServiceImpl.sendNotification(reportExecUuid, reportExecVersion, senderInfo, runMode);
 	}	

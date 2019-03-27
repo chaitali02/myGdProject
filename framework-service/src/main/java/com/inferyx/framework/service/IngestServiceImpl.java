@@ -153,6 +153,7 @@ public class IngestServiceImpl extends RuleTemplate {
 			Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
 			ingestExec.setName(ingest.getName());
 			ingestExec.setAppInfo(ingest.getAppInfo());	
+			ingestExec.setRunMode(runMode);
 			
 			commonServiceImpl.save(MetaType.ingestExec.toString(), ingestExec);
 			

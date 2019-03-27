@@ -60,10 +60,12 @@ import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.Rule;
 import com.inferyx.framework.domain.Rule2;
 import com.inferyx.framework.enums.Layout;
+import com.inferyx.framework.enums.PersistMode;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
 import com.inferyx.framework.executor.SparkExecutor;
+import com.inferyx.framework.executor.StorageContext;
 import com.inferyx.framework.factory.ConnectionFactory;
 import com.inferyx.framework.factory.DataSourceFactory;
 import com.inferyx.framework.factory.ExecutorFactory;
@@ -476,7 +478,8 @@ public class DataStoreServiceImpl {
 			} else {
 				tableName = datapodDs.getDbname() + "." + datapod.getName();
 			}
-			if (dataStore.getPersistMode() == null || !dataStore.getPersistMode().equals("MEMORY_ONLY")) {
+//			if (dataStore.getPersistMode() == null || !dataStore.getPersistMode().equals("MEMORY_ONLY")) {
+			if (dataStore.getPersistMode().equals(PersistMode.DISK_AND_MEMORY_ONLY)) {
 				datapodRegister.registerDatapod(dataStore, datapod, runMode);
 			}	
 		} 
@@ -973,7 +976,7 @@ public class DataStoreServiceImpl {
 		MetaIdentifierHolder execDetails = new MetaIdentifierHolder();
 		MetaIdentifier resultDetails = new MetaIdentifier();
 		if(desc == null || desc.isEmpty())
-			dataStore.setDesc("Creating datastore for "+fileName);
+			dataStore.setDesc("Creating datastore for "+baseExec.getName());
 		else
 			dataStore.setDesc(desc);
 		dataStore.setName(fileName);
@@ -981,11 +984,17 @@ public class DataStoreServiceImpl {
 		dataStore.setMetaId(metaDetails);
 		execDetails.setRef(execId);
 		dataStore.setExecId(execDetails);
-		dataStore.setLocation(filePath);
-		dataStore.setCreatedBy(createdBy);
-		if (count >= 0) {
-			dataStore.setNumRows(count);
+		
+		if (metaId.getType().equals(MetaType.datapod))  {
+				StorageContext storageContext = commonServiceImpl.getStorageContext(metaId);
+				if (storageContext.equals(StorageContext.FILE))
+					dataStore.setLocation(filePath);
 		}
+		else
+			dataStore.setLocation(filePath);
+
+		dataStore.setCreatedBy(createdBy);
+		dataStore.setNumRows(count);
 		dataStore.setPersistMode(persistMode);
 		if (appInfo == null) {
 			List<MetaIdentifierHolder> appInfoList = new ArrayList<MetaIdentifierHolder>();

@@ -57,10 +57,9 @@ public class VizpodController {
 			@RequestParam(value="order", required=false) String order, 
 			@RequestParam(value="requestId", required=false) String requestId,
 			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action) throws Exception {
-		RunMode runMode = RunMode.BATCH;
-		//VizExec vizExec = vizpodServiceImpl.create(vizpodUUID, vizpodVersion, null, execParams, runMode);
-		//vizExec = vizpodServiceImpl.parse(vizExec.getUuid(), vizExec.getVersion(), execParams, null, null, null, null, runMode);
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
+		RunMode runMode = Helper.getExecutionMode(mode);
 		return vizpodServiceImpl.getVizpodResults(vizpodUUID, vizpodVersion, execParams, rows, offset, limit, sortBy, order, requestId, runMode);
 	}
 	
@@ -69,7 +68,7 @@ public class VizpodController {
 			@RequestParam(value = "version") String vizpodVersion,
 			@RequestParam(value = "saveOnRefresh", defaultValue = "N") String saveOnRefresh,
 			@RequestBody(required = false) ExecParams execParams, 
-			@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception {
+			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		VizExec vizExec = vizpodServiceImpl.create(vizpodUuid, vizpodVersion, null, execParams, runMode);
 		vizExec = vizpodServiceImpl.parse(vizExec.getUuid(), vizExec.getVersion(), execParams, null, null, null, null, runMode);
@@ -87,8 +86,9 @@ public class VizpodController {
 			@RequestParam(value="order", required=false) String order, 
 			@RequestParam(value="requestId", required=false) String requestId,
 			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action) throws Exception {
-		RunMode runMode = RunMode.BATCH;
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
+		RunMode runMode = Helper.getExecutionMode(mode);
 		VizExec vizExec = vizpodServiceImpl.create(vizpodUUID, vizpodVersion, null, execParams, runMode);	
 		vizExec = vizpodServiceImpl.parse(vizExec.getUuid(), vizExec.getVersion(), execParams, null, null, null, null, runMode);	
 		return vizpodServiceImpl.getVizpodDetails(vizpodUUID, vizpodVersion, execParams, vizExec, rows, offset, limit, sortBy, order, requestId, runMode);
@@ -122,7 +122,7 @@ public class VizpodController {
 			@RequestParam(value = "rows", defaultValue = "200") int rows,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
-			@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode,
+			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode,
 			HttpServletResponse response,
 			@RequestParam(value = "layout", required = false) Layout layout) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
@@ -139,7 +139,7 @@ public class VizpodController {
 			@RequestParam(value = "rows", defaultValue = "200") int rows,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
-			@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode,
+			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode,
 			HttpServletResponse response,
 			@RequestParam(value = "layout", required = false) Layout layout) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
@@ -161,9 +161,9 @@ public class VizpodController {
 			@RequestParam(value = "order", required = false) String order,
 			@RequestParam(value = "requestId", required = false) String requestId,
 			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "action", required = false) String action) throws Exception {
-		RunMode runMode = RunMode.BATCH;
-
+			@RequestParam(value = "action", required = false) String action,
+			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
+		RunMode runMode = Helper.getExecutionMode(mode);
 		return vizpodServiceImpl.getVizpodResultDetails(vizpodUuid, vizpodVersion, execParams, null, rows, offset,
 				limit, sortBy, order, requestId, runMode);
 	}

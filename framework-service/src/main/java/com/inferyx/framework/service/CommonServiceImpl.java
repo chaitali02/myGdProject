@@ -5504,17 +5504,27 @@ public class CommonServiceImpl<T> {
 		return helper.getExecutorContext(getDatasourceByApp().getType());
 	}
 
-	public StorageContext getStorageContext(Datasource ds) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
-		return helper.getStorageContext(ds.getType());
+	public StorageContext getStorageContext(MetaIdentifier datapodKey) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		Datapod datapod = (Datapod) getOneByUuidAndVersion(datapodKey.getUuid(), datapodKey.getVersion(), datapodKey.getType().toString());
+		Datasource datasource = (Datasource) getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid(), datapod.getDatasource().getRef().getVersion(), datapod.getDatasource().getRef().getType().toString());
+		return helper.getStorageContext(datasource.getType());
 	}
-	
-	public String getPersistModeByDatapod(Datapod datapod) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException{
-		Datasource datapodDS = (Datasource) getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid(), datapod.getDatasource().getRef().getVersion(), datapod.getDatasource().getRef().getType().toString());
-		StorageContext storageContext = getStorageContext(datapodDS);
-		return getPersistModeByStorageContext(storageContext);
+	public StorageContext getStorageContext(Datapod datapod) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		Datasource datasource = (Datasource) getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid(), datapod.getDatasource().getRef().getVersion(), datapod.getDatasource().getRef().getType().toString());
+		return helper.getStorageContext(datasource.getType());
 	}
 
-	public String getPersistModeByStorageContext(StorageContext storageContext){
+	public StorageContext getStorageContext(Datasource datasource) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		return helper.getStorageContext(datasource.getType());
+	}
+	
+	public String getPersistMode(Datapod datapod) throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException{
+		Datasource datasource = (Datasource) getOneByUuidAndVersion(datapod.getDatasource().getRef().getUuid(), datapod.getDatasource().getRef().getVersion(), datapod.getDatasource().getRef().getType().toString());
+		StorageContext storageContext = getStorageContext(datasource);
+		return getPersistMode(storageContext);
+	}
+
+	public String getPersistMode(StorageContext storageContext){
 		if(storageContext.equals(StorageContext.FILE))
 			return ConstantsUtil.PERSIST_MODE_MEMORY_AND_DISK;
 		else
