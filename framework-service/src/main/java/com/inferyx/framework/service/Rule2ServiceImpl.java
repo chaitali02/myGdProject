@@ -46,6 +46,7 @@ import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.ParamSetHolder;
 import com.inferyx.framework.domain.Rule2;
+import com.inferyx.framework.domain.Rule2Exec;
 import com.inferyx.framework.domain.RuleExec;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.User;
@@ -390,25 +391,26 @@ public class Rule2ServiceImpl extends RuleTemplate {
 	 * 
 	 * @param ruleUUID
 	 * @param ruleVersion
-	 * @param ruleExec
+	 * @param baseExec
 	 * @param refKeyMap
 	 * @param execParams
 	 * @param datapodList
 	 * @param dagExec
+	 * @param batch 
 	 * @return
 	 * @throws Exception 
 	 */
-	public RuleExec create(String ruleUUID, String ruleVersion, RuleExec ruleExec,
+	public RuleExec create(String ruleUUID, String ruleVersion, RuleExec baseExec,
 			java.util.Map<String, MetaIdentifier> refKeyMap, ExecParams execParams, List<String> datapodList,
-			DagExec dagExec) throws Exception {
+			DagExec dagExec, RunMode runmode) throws Exception {
 		try {			
-			ruleExec = (RuleExec) super.create(ruleUUID, ruleVersion, MetaType.rule2, MetaType.ruleExec, ruleExec,
-					refKeyMap, datapodList, dagExec);
+			baseExec = (RuleExec) super.create(ruleUUID, ruleVersion, MetaType.rule2, MetaType.ruleExec, baseExec,
+					refKeyMap, datapodList, dagExec, runmode);
 			if(execParams != null) {
-				ruleExec.setExecParams(execParams);
-				commonServiceImpl.save(MetaType.ruleExec.toString(), ruleExec);
+				baseExec.setExecParams(execParams);
+				commonServiceImpl.save(MetaType.ruleExec.toString(), baseExec);
 			}else {
-				ruleExec.setExecParams(execParams);
+				baseExec.setExecParams(execParams);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -419,11 +421,11 @@ public class Rule2ServiceImpl extends RuleTemplate {
 				// TODO: handle exception
 			}
 			MetaIdentifierHolder dependsOn = new MetaIdentifierHolder();
-			dependsOn.setRef(new MetaIdentifier(MetaType.ruleExec, ruleExec.getUuid(), ruleExec.getVersion()));
+			dependsOn.setRef(new MetaIdentifier(MetaType.ruleExec, baseExec.getUuid(), baseExec.getVersion()));
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), (message != null) ? message : "Can not create Business Rule.", dependsOn);
 			throw new Exception((message != null) ? message : "Can not create Business Rule.");
 		}
-		return ruleExec;
+		return baseExec;
 	}
 
 	/*
@@ -982,7 +984,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 							ref.setType(MetaType.paramset);
 							paramSetHolder.setRef(ref);
 							execParams.setCurrParamSet(paramSetHolder);
-							ruleExec = create(ruleUuid, ruleVersion, null, null, execParams, null, null);		
+							ruleExec = create(ruleUuid, ruleVersion, null, null, execParams, null, null, runMode);		
 						}
 						ruleExec = parse(ruleExec.getUuid(), ruleExec.getVersion(), null, null, null, null, runMode);
 						ruleExec = execute(metaExecutor, ruleExec, taskList, execParams, runMode);
@@ -994,7 +996,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 					for (ParamListHolder paramListHolder : execParams.getParamListInfo()) {
 						if(ruleExec == null) {
 							execParams.setParamListHolder(paramListHolder);
-							ruleExec = create(ruleUuid, ruleVersion, null, null, execParams, null, null);
+							ruleExec = create(ruleUuid, ruleVersion, null, null, execParams, null, null, runMode);
 						}
 						ruleExec = parse(ruleExec.getUuid(), ruleExec.getVersion(), null, null, null, null, runMode);
 						ruleExec = execute(metaExecutor, ruleExec, taskList, execParams, runMode);
@@ -1004,7 +1006,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 					}
 				} else {
 					if(ruleExec == null)
-						ruleExec = create(ruleUuid, ruleVersion, null, null, execParams, null, null);			
+						ruleExec = create(ruleUuid, ruleVersion, null, null, execParams, null, null, runMode);			
 					ruleExec = parse(ruleExec.getUuid(), ruleExec.getVersion(), null, null, null, null, runMode);
 					ruleExec = execute(metaExecutor, ruleExec, taskList, execParams, runMode);
 					ruleExecInfo = new MetaIdentifier(MetaType.ruleExec, ruleExec.getUuid(), ruleExec.getVersion());
@@ -1013,7 +1015,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 				}				
 			} else {
 				if(ruleExec == null)
-			    ruleExec = create(ruleUuid, ruleVersion, null, null, execParams, null, null);			
+			    ruleExec = create(ruleUuid, ruleVersion, null, null, execParams, null, null, runMode);			
 				ruleExec = parse(ruleExec.getUuid(), ruleExec.getVersion(), null, null, null, null, runMode);
 				ruleExec = execute(metaExecutor, ruleExec, taskList, execParams, runMode);
 				ruleExecInfo = new MetaIdentifier(MetaType.ruleExec, ruleExec.getUuid(), ruleExec.getVersion());

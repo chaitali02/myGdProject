@@ -85,7 +85,7 @@ public class IngestController {
 			@RequestParam(value="mode", required=false, defaultValue="BATCH") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		IngestGroupExec ingestGroupExec = null;
-		ingestGroupExec = ingestGroupServiceImpl.create(groupUuid, groupVersion, execParams, null, null, null);
+		ingestGroupExec = ingestGroupServiceImpl.create(groupUuid, groupVersion, execParams, null, null, null, RunMode.ONLINE);
 		ingestGroupExec = ingestGroupServiceImpl.parse(ingestGroupExec.getUuid(), ingestGroupExec.getVersion(), null, null, null, null, runMode);
 		return ingestGroupServiceImpl.execute(groupUuid, groupVersion, execParams, ingestGroupExec, runMode);
 	}

@@ -1606,7 +1606,7 @@ public class GraphServiceImpl extends BaseRuleExecTemplate implements IParsable,
 		Graphpod graphPod = (Graphpod) commonServiceImpl.getOneByUuidAndVersion(uuid, version,
 				MetaType.graphpod.toString());
 		GraphExec graphExec = (GraphExec) commonServiceImpl.createExec(MetaType.graphExec,
-				new MetaIdentifier(MetaType.graphpod, uuid, version));
+				new MetaIdentifier(MetaType.graphpod, uuid, version), runMode);
 		commonServiceImpl.save(MetaType.graphExec.toString(), graphExec);
 		return create(graphExec, execParams, runMode);
 	}

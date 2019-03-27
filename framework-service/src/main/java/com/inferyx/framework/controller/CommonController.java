@@ -39,6 +39,7 @@ import com.inferyx.framework.domain.Message;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaStatsHolder;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.Organization;
 import com.inferyx.framework.domain.ParamList;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.service.CommonServiceImpl;
@@ -379,6 +380,15 @@ public class CommonController<T> {
 			@RequestParam(value = "type", required = false) String type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException, ParseException  {
 		return commonServiceImpl.getAppByOrg(orgUuid);
 	}
+	
+	@RequestMapping(value = "/getOrgInfoByApp", method = RequestMethod.GET)
+	public @ResponseBody Organization getOrgInfoByApp(
+			@RequestParam(value = "uuid") String appUuid,
+			@RequestParam(value = "action", required=false) String action,
+			@RequestParam(value = "type", required = false) String type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException, ParseException  {
+		return commonServiceImpl.getOrgInfoByApp(appUuid);
+	}
+	
 	
 	
 }

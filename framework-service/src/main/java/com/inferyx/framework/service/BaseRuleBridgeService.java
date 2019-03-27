@@ -46,8 +46,8 @@ public class BaseRuleBridgeService {
 	}
 	
 	public BaseRuleExec create(String uuid, String version, MetaType type, MetaType execType, BaseRuleExec inputBaseRuleExec, 
-			Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec) throws Exception {
-		return baseRuleServiceImpl.create(uuid, version, type, execType, inputBaseRuleExec, refKeyMap, datapodList, dagExec);
+			Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec, RunMode runMode) throws Exception {
+		return baseRuleServiceImpl.create(uuid, version, type, execType, inputBaseRuleExec, refKeyMap, datapodList, dagExec, runMode);
 	}
 	
 	public BaseRuleExec parse(String uuid, String version, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams) throws Exception {
@@ -63,8 +63,8 @@ public class BaseRuleBridgeService {
 	}
 	
 	public BaseRuleExec createAndParse (String uuid, String version, MetaType type, MetaType execType, BaseRuleExec inputBaseRuleExec, 
-			Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec) throws Exception {
-		BaseRuleExec baseRuleExec = baseRuleServiceImpl.create(uuid, version, type, execType, inputBaseRuleExec, refKeyMap, datapodList, dagExec);
+			Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec, RunMode runMode) throws Exception {
+		BaseRuleExec baseRuleExec = baseRuleServiceImpl.create(uuid, version, type, execType, inputBaseRuleExec, refKeyMap, datapodList, dagExec, runMode);
 		if (baseRuleExec == null) {
 			logger.info(" no Exec. So cannot proceed to parse ");
 			return null;

@@ -81,7 +81,7 @@ public class RuleController {
 		    @RequestBody (required = false) ExecParams execParams,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws Exception {
-		RuleExec ruleExec = ruleServiceImpl.create(ruleUUID, ruleVersion, null, null, execParams, null, null);
+		RuleExec ruleExec = ruleServiceImpl.create(ruleUUID, ruleVersion, null, null, execParams, null, null, RunMode.ONLINE);
 		return ruleExec.getRef(MetaType.ruleExec);
 	}
 	
@@ -145,7 +145,7 @@ public class RuleController {
 			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		RuleGroupExec ruleGroupExec = null;
-		ruleGroupExec = ruleGroupServiceImpl.create(ruleGroupUUID, ruleGroupVersion, execParams, null, null, null);
+		ruleGroupExec = ruleGroupServiceImpl.create(ruleGroupUUID, ruleGroupVersion, execParams, null, null, null, RunMode.ONLINE);
 		ruleGroupExec = ruleGroupServiceImpl.parse(ruleGroupExec.getUuid(), ruleGroupExec.getVersion(), null, null, null, null, runMode);
 		return ruleGroupServiceImpl.execute(ruleGroupUUID, ruleGroupVersion, execParams, ruleGroupExec, runMode);
 	}
@@ -156,7 +156,7 @@ public class RuleController {
 			@RequestBody(required=false) ExecParams execParams,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action) throws Exception {
-		RuleGroupExec ruleGroupExec = ruleGroupServiceImpl.create(ruleGroupUUID, ruleGroupVersion, execParams, null, null, null);
+		RuleGroupExec ruleGroupExec = ruleGroupServiceImpl.create(ruleGroupUUID, ruleGroupVersion, execParams, null, null, null, RunMode.ONLINE);
 		return ruleGroupExec.getRef(MetaType.rulegroupExec);
 	}
 	

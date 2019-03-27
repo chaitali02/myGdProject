@@ -6,6 +6,8 @@ package com.inferyx.framework.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.inferyx.framework.enums.RunMode;
+
 /**
  * @author joy
  *
@@ -22,6 +24,15 @@ public class BaseExec extends BaseEntity {
 	protected List<MetaIdentifier> refKeyList;
 	protected ExecParams execParams;	
 //	protected Message messageInfo;
+	protected RunMode runMode;
+
+	public RunMode getRunMode() {
+		return runMode;
+	}
+
+	public void setRunMode(RunMode runMode) {
+		this.runMode = runMode;
+	}
 
 	public MetaIdentifierHolder getSummaryResult() {
 		return summaryResult;

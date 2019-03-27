@@ -429,6 +429,7 @@ public class MapServiceImpl implements IParsable, IExecutable {
 				mapRef.setRef(new MetaIdentifier(MetaType.map, uuid, version));
 				mapExec.setDependsOn(mapRef);
 				mapExec.setBaseEntity();
+				mapExec.setRunMode(runMode);
 			}
 			mapExec.setName(map.getName());
 			mapExec.setAppInfo(map.getAppInfo());

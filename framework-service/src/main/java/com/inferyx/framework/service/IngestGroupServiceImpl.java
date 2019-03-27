@@ -57,8 +57,8 @@ public class IngestGroupServiceImpl extends RuleGroupTemplate {
 
 	public IngestGroupExec create(String groupUuid, String groupVersion, ExecParams execParams, List<String> datapodList, 
 			IngestGroupExec ingestGroupExec, 
-			DagExec dagExec) throws Exception {
-		return (IngestGroupExec) super.create(groupUuid, groupVersion, MetaType.ingestgroup, MetaType.ingestgroupExec, MetaType.ingest, MetaType.ingestExec, execParams, datapodList, ingestGroupExec, dagExec);
+			DagExec dagExec, RunMode runmode) throws Exception {
+		return (IngestGroupExec) super.create(groupUuid, groupVersion, MetaType.ingestgroup, MetaType.ingestgroupExec, MetaType.ingest, MetaType.ingestExec, execParams, datapodList, ingestGroupExec, dagExec, runmode);
 	}
 
 	public IngestGroupExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,

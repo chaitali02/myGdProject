@@ -70,7 +70,7 @@ public class ReconController {
 			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		List<FutureTask<TaskHolder>> taskList = new ArrayList<FutureTask<TaskHolder>>();
-		ReconExec reconExec = reconServiceImpl.create(reconUuid, reconVersion, null, null, null);
+		ReconExec reconExec = reconServiceImpl.create(reconUuid, reconVersion, null, null, null, RunMode.ONLINE);
 		reconExec = (ReconExec) reconServiceImpl.parse(reconExec.getUuid(), reconExec.getVersion(), null, null, null, null,
 				runMode);
 		reconExec = reconServiceImpl.execute(reconUuid, reconVersion, metaExecutor, reconExec, null, taskList, null, runMode);
@@ -168,7 +168,7 @@ public class ReconController {
 			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		ReconGroupExec reconGroupExec = null;
-		reconGroupExec = reconGroupServiceImpl.create(reconGroupUUID, reconGroupVersion, execParams, null, null, null);
+		reconGroupExec = reconGroupServiceImpl.create(reconGroupUUID, reconGroupVersion, execParams, null, null, null, RunMode.ONLINE);
 		reconGroupExec = reconGroupServiceImpl.parse(reconGroupExec.getUuid(), reconGroupExec.getVersion(), null, null, null, null, runMode);
 		return reconGroupServiceImpl.execute(reconGroupUUID, reconGroupVersion, execParams, reconGroupExec, runMode);
 	}

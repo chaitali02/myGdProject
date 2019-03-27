@@ -254,7 +254,7 @@ public abstract class RuleGroupTemplate implements IExecutable, IParsable {
 			ExecParams execParams,
 			List<String> datapodList, 
 			BaseRuleGroupExec baseGroupExec, 
-			DagExec dagExec) throws Exception {
+			DagExec dagExec,RunMode runmode) throws Exception {
 		BaseRuleGroup baseGroup = null;
 		MetaIdentifier ruleGroupExecMeta = null;
 		List<MetaIdentifierHolder> appInfo = null;
@@ -342,7 +342,7 @@ public abstract class RuleGroupTemplate implements IExecutable, IParsable {
 				ruleExecList.add(baseRuleExec);
 				MetaIdentifierHolder ruleRef = new MetaIdentifierHolder(new MetaIdentifier(ruleExecType, baseRuleExec.getUuid(), baseRuleExec.getVersion()));			
 				baseGroupExec.getExecList().add(ruleRef);
-				baseRuleExec = baseRuleService.create(ruleMeta.getRef().getUuid(), ruleMeta.getRef().getVersion(), ruleType, ruleExecType, baseRuleExec, refKeyMap, datapodList, dagExec);
+				baseRuleExec = baseRuleService.create(ruleMeta.getRef().getUuid(), ruleMeta.getRef().getVersion(), ruleType, ruleExecType, baseRuleExec, refKeyMap, datapodList, dagExec, null);
 			} catch (Exception e) {
 				synchronized (baseGroupExec.getUuid()) {
 					baseGroupExec = (BaseRuleGroupExec) commonServiceImpl.setMetaStatus(baseGroupExec, groupExecType, Status.Stage.FAILED);

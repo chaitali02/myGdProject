@@ -127,11 +127,12 @@ public abstract class RuleTemplate implements IExecutable, IParsable {
 	 * @param refKeyMap
 	 * @param datapodList
 	 * @param dagExec
+	 * @param runMode 
 	 * @return inputBaseRuleExec
 	 * @throws Exception
 	 */
 	public BaseRuleExec create(String uuid, String version, MetaType type, MetaType execType, BaseRuleExec inputBaseRuleExec, 
-			Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec) throws Exception {
+			Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec, RunMode runMode) throws Exception {
 		logger.info("Inside BaseRuleExec.create ");
 		List<Status> statusList = null;
 		BaseRule baseRule = null;
@@ -149,6 +150,7 @@ public abstract class RuleTemplate implements IExecutable, IParsable {
 			inputBaseRuleExec = ruleExecFactory.getRuleExec(execType);
 			inputBaseRuleExec.setDependsOn(baseRuleMeta);
 			inputBaseRuleExec.setBaseEntity();
+			inputBaseRuleExec.setRunMode(runMode);
 			inputBaseRuleExec.setName(baseRule.getName());
 			inputBaseRuleExec.setAppInfo(baseRule.getAppInfo());
 			synchronized (inputBaseRuleExec.getUuid()) {
@@ -273,6 +275,7 @@ public abstract class RuleTemplate implements IExecutable, IParsable {
 		runBaseRuleService.setBaseRule(baseRule);
 		runBaseRuleService.setExecFactory(execFactory);
 		runBaseRuleService.setAuthentication(authentication);
+		baseRuleExec.setRunMode(runMode);
 		runBaseRuleService.setBaseRuleExec(baseRuleExec);
 		runBaseRuleService.setCommonServiceImpl(commonServiceImpl);
 		runBaseRuleService.setName(execType+"_"+baseRuleExec.getUuid()+"_"+baseRuleExec.getVersion());

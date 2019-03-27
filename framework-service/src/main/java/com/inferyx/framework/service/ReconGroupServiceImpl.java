@@ -81,10 +81,10 @@ public class ReconGroupServiceImpl extends RuleGroupTemplate {
 	}
 	
 	public ReconGroupExec create(String reconGroupUUID, String reconGroupVersion, ExecParams execParams,
-			List<String> datapodList, ReconGroupExec reconGroupExec, DagExec dagExec) throws Exception {
+			List<String> datapodList, ReconGroupExec reconGroupExec, DagExec dagExec, RunMode runmode) throws Exception {
 
 		return (ReconGroupExec) super.create(reconGroupUUID, reconGroupVersion, MetaType.recongroup, MetaType.recongroupExec,
-				MetaType.recon, MetaType.reconExec, execParams, datapodList, reconGroupExec, dagExec);
+				MetaType.recon, MetaType.reconExec, execParams, datapodList, reconGroupExec, dagExec, runmode);
 	}
 
 	public ReconGroupExec parse(String execUuid, String execVersion, Map<String, MetaIdentifier> refKeyMap, HashMap<String, String> otherParams,

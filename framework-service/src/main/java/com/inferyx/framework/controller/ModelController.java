@@ -146,7 +146,7 @@ public class ModelController {
 			@RequestBody(required = false) ExecParams execParams,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
-			@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode) throws Exception {
+			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
 		try {
 
 			RunMode runMode = Helper.getExecutionMode(mode);
@@ -169,7 +169,7 @@ public class ModelController {
 			@RequestBody(required = false) ExecParams execParams,
 			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "action", required = false) String action,
-			@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode) throws Exception {
+			@RequestParam(value = "mode", required = false, defaultValue = "ONLINE") String mode) throws Exception {
 		try {
 			RunMode runMode = Helper.getExecutionMode(mode);
 			Simulate simulate = (Simulate) commonServiceImpl.getOneByUuidAndVersion(simulateUUID, simulateVersion,

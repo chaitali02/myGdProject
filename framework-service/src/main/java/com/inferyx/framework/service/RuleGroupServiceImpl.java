@@ -132,10 +132,10 @@ public class RuleGroupServiceImpl extends RuleGroupTemplate {
 										ExecParams execParams,
 										List<String> datapodList, 
 										RuleGroupExec ruleGroupExec, 
-										DagExec dagExec) throws Exception {
+										DagExec dagExec, RunMode runmode) throws Exception {
 
 		return (RuleGroupExec) super.create(ruleGroupUUID, ruleGroupVersion, MetaType.rulegroup, MetaType.rulegroupExec, MetaType.rule, 
-							MetaType.ruleExec, execParams, datapodList, ruleGroupExec, dagExec);
+							MetaType.ruleExec, execParams, datapodList, ruleGroupExec, dagExec, runmode);
 	}	
 	
 	public MetaIdentifier execute(String ruleGroupUUID, String ruleGroupVersion, ExecParams execParams, RuleGroupExec ruleGroupExec, RunMode runMode) throws Exception {

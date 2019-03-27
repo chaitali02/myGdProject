@@ -1200,8 +1200,8 @@ public class RegisterService {
 				AttributeRefHolder attributeRefTemp = new AttributeRefHolder();
 				attributeRefTemp.setAttrId(Integer.toString((attr.getAttributeId())));
 				attributeRefTemp.setAttrType(datapodDet.getAttribute(attr.getAttributeId()).getType());
-				if (datapodDet.getAttribute(attr.getAttributeId()).getDispName() != null) {
-					attributeRefTemp.setAttrName(datapodDet.getAttribute(attr.getAttributeId()).getDispName());
+				if (datapodDet.getAttribute(attr.getAttributeId()).getName() != null) {
+					attributeRefTemp.setAttrName(datapodDet.getAttribute(attr.getAttributeId()).getName());
 				} else
 					attributeRefTemp.setAttrName(datapodDet.getAttribute(attr.getAttributeId()).getName());
 				attributeRefTemp.setRef(ref);
@@ -1540,8 +1540,8 @@ public class RegisterService {
 			finalDataRef.setName(datapod.getName());
 			attributeRef.setAttrId(Integer.toString(datapod.getAttributes().get(i).getAttributeId()));
 			attributeRef.setAttrType(datapod.getAttributes().get(i).getType());
-			if (datapod.getAttributes().get(i).getDispName() != null) {
-				attributeRef.setAttrName(datapod.getAttributes().get(i).getDispName());
+			if (datapod.getAttributes().get(i).getName() != null) {
+				attributeRef.setAttrName(datapod.getAttributes().get(i).getName());
 			} else
 				attributeRef.setAttrName(datapod.getAttributes().get(i).getName());
 			// attributeRef.setAttrDesc(datapod.getAttributes().get(i).getDesc());

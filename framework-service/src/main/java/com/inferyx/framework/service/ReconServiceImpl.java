@@ -138,14 +138,16 @@ public class ReconServiceImpl extends RuleTemplate {
 				, metaExecutor, (ReconExec) baseRuleExec, null, taskList, execParams, runMode);
 	}
 	
-	public ReconExec create(String reconUuid, String reconVersion, Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec) throws Exception{
-		return (ReconExec) super.create(reconUuid, reconVersion, MetaType.recon, MetaType.reconExec, null, refKeyMap, datapodList, dagExec);
+	public ReconExec create(String reconUuid, String reconVersion, Map<String, MetaIdentifier> refKeyMap,
+			List<String> datapodList, DagExec dagExec, RunMode runMode) throws Exception {
+		return (ReconExec) super.create(reconUuid, reconVersion, MetaType.recon, MetaType.reconExec, null, refKeyMap,
+				datapodList, dagExec, runMode);
 	}
 
-	
 	public ReconExec create(String reconUuid, String reconVersion, ReconExec reconExec,
-			Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec) throws Exception {
-		return (ReconExec) super.create(reconUuid, reconVersion, MetaType.recon, MetaType.reconExec, reconExec, refKeyMap, datapodList, dagExec);
+			Map<String, MetaIdentifier> refKeyMap, List<String> datapodList, DagExec dagExec, RunMode runMode) throws Exception {
+		return (ReconExec) super.create(reconUuid, reconVersion, MetaType.recon, MetaType.reconExec, reconExec,
+				refKeyMap, datapodList, dagExec, runMode);
 	}
 	
 	/**

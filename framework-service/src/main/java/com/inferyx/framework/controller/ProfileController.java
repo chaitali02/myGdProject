@@ -76,7 +76,7 @@ public class ProfileController {
 			@RequestParam("version") String profileVersion, 
 			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
-		ProfileExec profileExec = profileServiceImpl.create(profileUUID, profileVersion,null,null, null, null);
+		ProfileExec profileExec = profileServiceImpl.create(profileUUID, profileVersion,null,null, null, null, RunMode.ONLINE);
 		profileExec = (ProfileExec) profileServiceImpl.parse(profileExec.getUuid(), profileExec.getVersion(), null, null, null, null, runMode);
 		List<FutureTask<TaskHolder>> taskList = new ArrayList<FutureTask<TaskHolder>>();
 		profileExec = profileServiceImpl.execute(profileUUID, profileVersion, profileExec,metaExecutor,null, taskList, null, runMode);
@@ -92,7 +92,7 @@ public class ProfileController {
 			@RequestParam(value = "action", required = false) String action, 
 			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
-		ProfileGroupExec profileGroupExec = profileGroupServiceImpl.create(profileGroupUUID, profileGroupVersion, execParams, null, null);
+		ProfileGroupExec profileGroupExec = profileGroupServiceImpl.create(profileGroupUUID, profileGroupVersion, execParams, null, null, RunMode.ONLINE);
 		profileGroupExec = (ProfileGroupExec) profileGroupServiceImpl.parse(profileGroupExec.getUuid(), profileGroupExec.getVersion(), null, null, null, null, runMode);
 		return profileGroupServiceImpl.execute(profileGroupUUID, profileGroupVersion, execParams, profileGroupExec, runMode);
 	}

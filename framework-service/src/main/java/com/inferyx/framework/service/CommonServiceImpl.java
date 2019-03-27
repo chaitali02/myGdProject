@@ -204,6 +204,7 @@ import com.inferyx.framework.domain.MetaStatsHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Model;
 import com.inferyx.framework.domain.OrderKey;
+import com.inferyx.framework.domain.Organization;
 import com.inferyx.framework.domain.Param;
 import com.inferyx.framework.domain.ParamInfo;
 import com.inferyx.framework.domain.ParamList;
@@ -4595,13 +4596,14 @@ public class CommonServiceImpl<T> {
 	 * @param ref
 	 * @return
 	 */
-	public T createExec(MetaType metaType, MetaIdentifier ref) {
+	public T createExec(MetaType metaType, MetaIdentifier ref, RunMode runMode) {
 		logger.info("Metatype string : " + metaType.toString());
 		BaseExec baseExec = helper.createExec(metaType);
 		logger.info(baseExec);
 		T object = (T) Helper.getDomainClass(metaType).cast(baseExec);
 		baseExec.setDependsOn(new MetaIdentifierHolder(ref));
 		baseExec.setBaseEntity();
+		baseExec.setRunMode(runMode);
 		baseExec.setName(ref.getName());
 		return object;
 	}
@@ -4619,12 +4621,12 @@ public class CommonServiceImpl<T> {
 	 * @throws SecurityException
 	 * @throws InterruptedException
 	 */
-	public T createAndSetOperator(MetaType metaType, MetaIdentifier ref, TaskExec taskExec, int i)
+	public T createAndSetOperator(MetaType metaType, MetaIdentifier ref, TaskExec taskExec, int i, RunMode runMode)
 			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
 			SecurityException, InterruptedException {
 		synchronized (taskExec) {
 			Thread.sleep(1001);
-			T execObject = (T) createExec(metaType, ref);
+			T execObject = (T) createExec(metaType, ref, runMode);
 			MetaIdentifier metaExecIdentifier = new MetaIdentifier(metaType,
 					String.class.cast(execObject.getClass().getMethod("getUuid").invoke(execObject)),
 					String.class.cast(execObject.getClass().getMethod("getVersion").invoke(execObject)));
@@ -5532,6 +5534,14 @@ public class CommonServiceImpl<T> {
 		else
 			return ConstantsUtil.PERSIST_MODE_DISK_ONLY;
 	}
+
 	
-	
+	public Organization getOrgInfoByApp(String appUuid) throws JsonProcessingException {
+
+		Application application = (Application) getOneByUuidAndVersion(appUuid, "", MetaType.application.toString());
+		Organization organization = (Organization) getLatestByUuid(application.getOrgInfo().getRef().getUuid(), "Y");
+
+		return organization;
+	}
+
 }
