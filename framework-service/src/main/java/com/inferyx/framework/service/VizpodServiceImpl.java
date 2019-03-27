@@ -875,15 +875,10 @@ public class VizpodServiceImpl extends RuleTemplate {
 
 		List<Map<String, Object>> results = getVizpodResults(vizpodUuid, vizpodVersion, execParams, maxRows, offset, limit, sortBy, order, requestId, runMode);
 
-		MetaIdentifierHolder mihold = new MetaIdentifierHolder();
-		MetaIdentifier mi = new MetaIdentifier();
-		mi.setUuid(vizpodUuid);
-		mi.setVersion(vizpodVersion);
-		mi.setType(MetaType.vizpod);
-		mihold.setRef(mi);
+		MetaIdentifierHolder vizpodHolder = new MetaIdentifierHolder(new MetaIdentifier(MetaType.vizpod, vizpodUuid, vizpodVersion));
 		response = downloadServiceImpl.download(format, response, runMode, results,
 				new MetaIdentifierHolder(new MetaIdentifier(MetaType.vizpod, vizpodUuid, vizpodVersion)), layout, null,
-				false, "framework.file.download.path", null, mihold);
+				false, "framework.file.download.path", null, vizpodHolder, null);
 		return response;
 	}
 
