@@ -397,7 +397,7 @@ public class VizpodServiceImpl extends RuleTemplate {
 		
 		MetaIdentifier vizpodMI = vizExec.getDependsOn().getRef();
 		Vizpod vizpod = (Vizpod) commonServiceImpl.getOneByUuidAndVersion(vizpodMI.getUuid(), vizpodMI.getVersion(), MetaType.vizpod.toString(), "Y");
-		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
+		Set<MetaIdentifier> usedRefKeySet = new HashSet<MetaIdentifier>();
 		List<AttributeRefHolder> filterInfo = vizpod.getFilterInfo();			
 		if (execParams != null && execParams.getFilterInfo() != null) {
 			if (filterInfo == null) {
@@ -458,7 +458,7 @@ public class VizpodServiceImpl extends RuleTemplate {
 //					}
 //				}
 		
-			Set<MetaIdentifier> usedRefKeySet = null;
+			Set<MetaIdentifier> usedRefKeySet = new HashSet<MetaIdentifier>();
 			String sql=vizpodParser.toSql(vizpod, null, usedRefKeySet, true, runMode, false);
 			//code commented by vaibhav retired vizexec
 			/**** Get sql and update in vizpodexec - START ****//*

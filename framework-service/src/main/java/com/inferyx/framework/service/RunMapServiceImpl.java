@@ -324,8 +324,8 @@ public class RunMapServiceImpl implements Callable<TaskHolder> {
 			
 			logger.info("Before map execution ");
 			String sql = mapExec.getExec();
-
-			mapTableName = datapodServiceImpl.getTableNameByDatapodKey(datapodKey, runMode);
+         //commented following line for 
+		//	mapTableName = datapodServiceImpl.getTableNameByDatapodKey(datapodKey, runMode);
 			ResultSetHolder rsHolder = null;		
 			Datasource mapDatasource = commonServiceImpl.getDatasourceByObject(map);		
 			if (execContext.equals(ExecContext.FILE)) {

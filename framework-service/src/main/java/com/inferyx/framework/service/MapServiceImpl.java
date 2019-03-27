@@ -269,7 +269,7 @@ public class MapServiceImpl implements IParsable, IExecutable {
 		}
 		Datapod datapod = (Datapod) commonServiceImpl.getOneByUuidAndVersion(map.getTarget().getRef().getUuid(), map.getTarget().getRef().getVersion(), MetaType.datapod.toString());
 		logger.info("adding target datapod in parseDPNames : " + datapodStr);
-		otherParams.put("datapodUuid_" + datapodStr + "_tableName", datapodServiceImpl.genTableNameByDatapod(datapod, mapExec.getVersion(), null, otherParams, null, runMode, true));
+		otherParams.put("datapodUuid_" + datapodStr + "_tableName", datapodServiceImpl.genTableNameByDatapod(datapod, mapExec.getVersion(), null, otherParams, null, runMode, false));
 		datapodList.add(datapodStr);// Add target datapod in datapodlist
 	}
 	
