@@ -79,6 +79,8 @@ public class ReconServiceImpl extends RuleTemplate {
 	private ReconExecServiceImpl reconExecServiceImpl;
 	@Resource(name = "taskThreadMap")
 	ConcurrentHashMap<?, ?> taskThreadMap;
+	@Autowired
+	private DownloadServiceImpl downloadServiceImpl;
 
 	Map<String, String> requestMap = new HashMap<String, String>();
 
@@ -210,10 +212,13 @@ public class ReconServiceImpl extends RuleTemplate {
 			throw new RuntimeException("Requested rows exceeded the limit of " + maxRows);
 		}
 
+		ReconExec reconExec = (ReconExec) commonServiceImpl.getOneByUuidAndVersion(reconExecUuid, reconExecVersion, MetaType.reconExec.toString(), "N");
+		
 		List<Map<String, Object>> results = getReconResults(reconExecUuid, reconExecVersion, offset, limit, sortBy,
 				order, requestId, runMode);
-		response = commonServiceImpl.download(format, response, runMode, results,
-				new MetaIdentifierHolder(new MetaIdentifier(MetaType.reconExec, reconExecUuid, reconExecVersion)), layout);
+		response = downloadServiceImpl.download(format, response, runMode, results,
+				new MetaIdentifierHolder(new MetaIdentifier(MetaType.reconExec, reconExecUuid, reconExecVersion)), layout,
+				null, false, "framework.file.download.path", null, reconExec.getDependsOn());
 		return response;
 	}
 	

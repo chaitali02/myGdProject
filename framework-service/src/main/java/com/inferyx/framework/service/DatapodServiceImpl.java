@@ -168,6 +168,8 @@ public class DatapodServiceImpl {
 	private RuleOperator ruleOperator;
 	@Autowired
 	private RelationOperator relationOperator;
+	@Autowired
+	private DownloadServiceImpl downloadServiceImpl;
 	
 	public DatapodServiceImpl() {
 		// TODO Auto-generated constructor stub
@@ -1014,7 +1016,8 @@ public class DatapodServiceImpl {
 		datastoreServiceImpl.setRunMode(runMode);
 		List<Map<String, Object>> results = datastoreServiceImpl.getDatapodResults(dataStore.getUuid(), dataStore.getVersion(), null,
 				0, rowLimit, response, rowLimit, null, null, null, runMode);
-		response = commonServiceImpl.download(format, response, runMode, results, dataStore.getExecId(), layout);
+		response = downloadServiceImpl.download(format, response, runMode, results, dataStore.getExecId(), layout,
+				null, false, "framework.file.download.path", null, dataStore.getMetaId());
 		return response;
 
 	}

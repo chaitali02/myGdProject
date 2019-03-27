@@ -110,6 +110,8 @@ public class VizpodServiceImpl extends RuleTemplate {
 	private SessionHelper sessionHelper;
 	@Autowired
 	private VizpodDetailParser vizpodDetailParser;
+	@Autowired
+	private DownloadServiceImpl downloadServiceImpl;
 	
 	Map<String, String> requestMap = new HashMap<String, String>();
 		
@@ -846,11 +848,14 @@ public class VizpodServiceImpl extends RuleTemplate {
 					"Requested rows exceeded the limit of " + maxRows, null);
 			throw new RuntimeException("Requested rows exceeded the limit of " + maxRows);
 		}
+		
+		VizExec vizExec = (VizExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.vizExec.toString(), "N");
 
-		List<Map<String, Object>> results = getVizpodResults(execUuid, execVersion, saveOnRefresh, rowLimit, offset,
+		List<Map<String, Object>> results = getVizpodResults(vizExec.getUuid(), vizExec.getVersion(), saveOnRefresh, rowLimit, offset,
 				limit, sortBy, order, requestId, runMode);
-		response = commonServiceImpl.download(format, response, runMode, results,
-				new MetaIdentifierHolder(new MetaIdentifier(MetaType.vizExec, execUuid, execVersion)), layout);
+		response = downloadServiceImpl.download(format, response, runMode, results,
+				new MetaIdentifierHolder(new MetaIdentifier(MetaType.vizExec, execUuid, execVersion)), layout,
+				null, false, "framework.file.download.path", null, vizExec.getDependsOn());
 		return response;
 	}
 

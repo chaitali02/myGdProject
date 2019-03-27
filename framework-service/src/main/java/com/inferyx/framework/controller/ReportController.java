@@ -34,6 +34,7 @@ import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.ReportExec;
 import com.inferyx.framework.domain.ReportExecView;
 import com.inferyx.framework.domain.SenderInfo;
+import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.service.ReportServiceImpl;
 
@@ -86,10 +87,11 @@ public class ReportController {
 				@RequestParam(value = "type", required = false) String type,
 				@RequestParam(value = "action", required = false) String action,
 				@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode,
-				HttpServletResponse response) throws Exception {
+				HttpServletResponse response,
+				@RequestParam(value = "layout", required = false) Layout layout) throws Exception {
 		    RunMode runMode = Helper.getExecutionMode(mode);
 		    reportServiceImpl.download(reportExecUuid, reportExecVersion, format, 0, rows, response, null, null,
-					null, runMode, false);
+					null, runMode, false, layout);
 		    return null;
 	   }
 	
@@ -103,7 +105,8 @@ public class ReportController {
 				@RequestParam(value = "type", required = false) String type,
 				@RequestParam(value = "action", required = false) String action,
 				@RequestParam(value = "mode", required = false, defaultValue = "BATCH") String mode,
-				HttpServletResponse response) throws Exception {
+				HttpServletResponse response,
+				@RequestParam(value = "layout", required = false) Layout layout) throws Exception {
 		    RunMode runMode = Helper.getExecutionMode(mode);
 		    reportServiceImpl.downloadSample(reportExecUuid, reportExecVersion, format, 0, rows, response, null, null,
 					null, runMode, false);
