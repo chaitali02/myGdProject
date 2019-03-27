@@ -4120,105 +4120,106 @@ public class CommonServiceImpl<T> {
 		return response;
 	}
 
-	public HttpServletResponse download(String format, HttpServletResponse response, RunMode runMode,
-			List<Map<String, Object>> results, MetaIdentifierHolder dependsOn, Layout layout) throws Exception {
-		logger.info("Inside download method....");
-		
-		MetaIdentifier dependsOnMI = dependsOn.getRef();
-		BaseEntity metaObject = (BaseEntity) getOneByUuidAndVersion(dependsOnMI.getUuid(), dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
-		
-		if(StringUtils.isBlank(format)) {
-			throw new RuntimeException("Format not provided ...");
-		}
-		
-		format = Helper.mapFileFormat(format);
-
-		DownloadExec downloadExec = new DownloadExec();
-		downloadExec.setBaseEntity();
-		downloadExec.setDependsOn(dependsOn);
-		
-		String filePathUrl = Helper.getDocumentFilePath(metadataServiceImpl.getConfigValueByName("framework.file.download.path"), metaObject.getUuid(), metaObject.getVersion(), downloadExec.getVersion(), metaObject.getName(), format, true);
-		String fileName = Helper.getDocumentFileName(metaObject.getName(), downloadExec.getVersion(), format);
-		
-		String metObjDirPath = filePathUrl.replaceAll(fileName, "");
-		
-		File metObjDocDir = new File(metObjDirPath);
-		if (!metObjDocDir.exists()) {
-			metObjDocDir.mkdirs();
-		}		
-
-		downloadExec.setLocation(filePathUrl);
-		
-		Workbook workbook = null;
-		PDDocument doc = null;
-
-		Document document = new Document();
-		document.setLocation(filePathUrl);
-		document.setHeader("Confidential document");
-		document.setHeaderAlignment("CENTER");
-		document.setFooter("All rights reserved");
-		document.setFooterAlignment("CENTER");
-		document.setTitle(metaObject.getName());
-		document.setLayout(layout);
-		document.setData(results);
-		document.setMetaObjType(dependsOnMI.getType().toString());
-		document.setMetExecObject(downloadExec);
-		document.setDocumentType(format);
-		document.setName(metaObject.getName());
-		document.setDescription(!StringUtils.isBlank(metaObject.getDesc()) ? metaObject.getDesc() : "");
-		document.setParameters("");
-		SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
-		document.setGenerationDate(formatter.format(new Date()));
-				
-		File metaObjFile = new File(filePathUrl);
-		boolean isDocCreated = documentGenServiceImpl.createDocument(document);
-		
-		if(!isDocCreated) {
-			throw new RuntimeException((format != null ? format.toUpperCase() : "Document")+" creation failed...");
-		}
-		
-		if(format.equalsIgnoreCase(FileType.PDF.toString())) {
-			doc = PDDocument.load(metaObjFile);
-		} else if(format.equalsIgnoreCase(FileType.XLS.toString())) {
-			workbook = 	WorkbookFactory.create(metaObjFile);
-		}
-		
-		downloadExec = (DownloadExec) setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.PENDING);
-		downloadExec = (DownloadExec) setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.STARTING);
-		downloadExec = (DownloadExec) setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.READY);
-		downloadExec = (DownloadExec) setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.RUNNING);
-		downloadExec = (DownloadExec) setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.COMPLETED);
-		
-		save(MetaType.downloadExec.toString(), downloadExec);
-		
-		if (response != null) {
-			try {
-				ServletOutputStream servletOutputStream = response.getOutputStream();
-				if (format.equalsIgnoreCase(FileType.PDF.toString())) {
-					response.setContentType("application/pdf");
-					response.setHeader("Content-disposition", "attachment");
-					response.setHeader("filename", metaObject.getName().concat("_").concat(downloadExec.getVersion())
-							.concat(".").concat(FileType.PDF.toString().toLowerCase()));
-					doc.save(servletOutputStream);
-					doc.close();
-				} else if (format.equalsIgnoreCase(FileType.XLS.toString())) {
-					response.setContentType("application/xml");
-					response.setHeader("Content-disposition", "attachment");
-					response.setHeader("filename", metaObject.getName().concat("_").concat(downloadExec.getVersion())
-							.concat(".").concat(FileType.XLS.toString().toLowerCase()));
-					workbook.write(servletOutputStream);
-					workbook.close();
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-				logger.error("Can not download file.");
-				response.setStatus(300);
-				throw new FileNotFoundException("Can not download file.");
-			}
-		}
-
-		return response;
-	}
+	/********************** UNUSED **********************/
+//	public HttpServletResponse download(String format, HttpServletResponse response, RunMode runMode,
+//			List<Map<String, Object>> results, MetaIdentifierHolder dependsOn, Layout layout) throws Exception {
+//		logger.info("Inside download method....");
+//		
+//		MetaIdentifier dependsOnMI = dependsOn.getRef();
+//		BaseEntity metaObject = (BaseEntity) getOneByUuidAndVersion(dependsOnMI.getUuid(), dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
+//		
+//		if(StringUtils.isBlank(format)) {
+//			throw new RuntimeException("Format not provided ...");
+//		}
+//		
+//		format = Helper.mapFileFormat(format);
+//
+//		DownloadExec downloadExec = new DownloadExec();
+//		downloadExec.setBaseEntity();
+//		downloadExec.setDependsOn(dependsOn);
+//		
+//		String filePathUrl = Helper.getDocumentFilePath(metadataServiceImpl.getConfigValueByName("framework.file.download.path"), metaObject.getUuid(), metaObject.getVersion(), downloadExec.getVersion(), metaObject.getName(), format, true);
+//		String fileName = Helper.getDocumentFileName(metaObject.getName(), downloadExec.getVersion(), format);
+//		
+//		String metObjDirPath = filePathUrl.replaceAll(fileName, "");
+//		
+//		File metObjDocDir = new File(metObjDirPath);
+//		if (!metObjDocDir.exists()) {
+//			metObjDocDir.mkdirs();
+//		}		
+//
+//		downloadExec.setLocation(filePathUrl);
+//		
+//		Workbook workbook = null;
+//		PDDocument doc = null;
+//
+//		Document document = new Document();
+//		document.setLocation(filePathUrl);
+//		document.setHeader("Confidential document");
+//		document.setHeaderAlignment("CENTER");
+//		document.setFooter("All rights reserved");
+//		document.setFooterAlignment("CENTER");
+//		document.setTitle(metaObject.getName());
+//		document.setLayout(layout);
+//		document.setData(results);
+//		document.setMetaObjType(dependsOnMI.getType().toString());
+//		document.setMetExecObject(downloadExec);
+//		document.setDocumentType(format);
+//		document.setName(metaObject.getName());
+//		document.setDescription(!StringUtils.isBlank(metaObject.getDesc()) ? metaObject.getDesc() : "");
+//		document.setParameters("");
+//		SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+//		document.setGenerationDate(formatter.format(new Date()));
+//				
+//		File metaObjFile = new File(filePathUrl);
+//		boolean isDocCreated = documentGenServiceImpl.createDocument(document);
+//		
+//		if(!isDocCreated) {
+//			throw new RuntimeException((format != null ? format.toUpperCase() : "Document")+" creation failed...");
+//		}
+//		
+//		if(format.equalsIgnoreCase(FileType.PDF.toString())) {
+//			doc = PDDocument.load(metaObjFile);
+//		} else if(format.equalsIgnoreCase(FileType.XLS.toString())) {
+//			workbook = 	WorkbookFactory.create(metaObjFile);
+//		}
+//		
+//		downloadExec = (DownloadExec) setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.PENDING);
+//		downloadExec = (DownloadExec) setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.STARTING);
+//		downloadExec = (DownloadExec) setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.READY);
+//		downloadExec = (DownloadExec) setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.RUNNING);
+//		downloadExec = (DownloadExec) setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.COMPLETED);
+//		
+//		save(MetaType.downloadExec.toString(), downloadExec);
+//		
+//		if (response != null) {
+//			try {
+//				ServletOutputStream servletOutputStream = response.getOutputStream();
+//				if (format.equalsIgnoreCase(FileType.PDF.toString())) {
+//					response.setContentType("application/pdf");
+//					response.setHeader("Content-disposition", "attachment");
+//					response.setHeader("filename", metaObject.getName().concat("_").concat(downloadExec.getVersion())
+//							.concat(".").concat(FileType.PDF.toString().toLowerCase()));
+//					doc.save(servletOutputStream);
+//					doc.close();
+//				} else if (format.equalsIgnoreCase(FileType.XLS.toString())) {
+//					response.setContentType("application/xml");
+//					response.setHeader("Content-disposition", "attachment");
+//					response.setHeader("filename", metaObject.getName().concat("_").concat(downloadExec.getVersion())
+//							.concat(".").concat(FileType.XLS.toString().toLowerCase()));
+//					workbook.write(servletOutputStream);
+//					workbook.close();
+//				}
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//				logger.error("Can not download file.");
+//				response.setStatus(300);
+//				throw new FileNotFoundException("Can not download file.");
+//			}
+//		}
+//
+//		return response;
+//	}
 
 	/*
 	 * public String upload(MultipartFile file, String extension, String fileType,

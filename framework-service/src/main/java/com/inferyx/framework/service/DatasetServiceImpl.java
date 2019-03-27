@@ -87,6 +87,8 @@ public class DatasetServiceImpl {
 	AttributeMapOperator attributeMapOperator;
 	@Autowired
 	protected DataStoreServiceImpl dataStoreServiceImpl;
+	@Autowired
+	private DownloadServiceImpl downloadServiceImpl;
 	
 	/********************** UNUSED **********************/
 	/*public Dataset findLatest() {
@@ -400,8 +402,9 @@ public class DatasetServiceImpl {
 		}
 //		getDatasetSample(uuid, version, rows, null, runMode);
 		List<Map<String, Object>> results = getDatasetSample(datasetUuid, datasetVersion, rows, null, runMode);
-		response = commonServiceImpl.download(format, response, runMode, results,
-				new MetaIdentifierHolder(new MetaIdentifier(MetaType.dataset, datasetUuid, datasetVersion)), layout);
+		response = downloadServiceImpl.download(format, response, runMode, results,
+				new MetaIdentifierHolder(new MetaIdentifier(MetaType.dataset, datasetUuid, datasetVersion)), layout,
+				null, false, "framework.file.download.path", null, new MetaIdentifierHolder(new MetaIdentifier(MetaType.dataset, datasetUuid, datasetVersion)));
 		return response;
 
 	}

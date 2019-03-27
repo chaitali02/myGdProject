@@ -68,6 +68,8 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 	private TransposeOldOperator transposeOldOperator;
 	@Autowired
 	Helper helper;
+	@Autowired
+	private DownloadServiceImpl downloadServiceImpl;
 
 	static final Logger logger = Logger.getLogger(CustomOperatorServiceImpl.class);
 
@@ -409,10 +411,12 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Requested rows exceeded the limit of "+maxRows, null);
 			throw new RuntimeException("Requested rows exceeded the limit of "+maxRows);
 		}
-		
+	
 		List<Map<String, Object>> results = getOperatorResults(operatorExecUuid, operatorExecVersion, rowLimit);
-		response = commonServiceImpl.download(format, response, runMode, results
-				, new MetaIdentifierHolder(new MetaIdentifier(MetaType.operatorExec, operatorExecUuid, operatorExecVersion)), layout);
+		
+		response = downloadServiceImpl.download(format, response, runMode, results, new MetaIdentifierHolder(
+				new MetaIdentifier(MetaType.operatorExec, operatorExecUuid, operatorExecVersion)), layout,
+				null, false, "framework.file.download.path", null, operatorExec.getDependsOn());
 	
 		return response;
 

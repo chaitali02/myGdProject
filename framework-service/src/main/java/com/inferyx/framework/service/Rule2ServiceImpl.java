@@ -67,6 +67,8 @@ public class Rule2ServiceImpl extends RuleTemplate {
 	ThreadPoolTaskExecutor metaExecutor;
 	@Autowired
 	private CommonServiceImpl<?> commonServiceImpl;
+	@Autowired
+	private DownloadServiceImpl downloadServiceImpl;
 
 	Map<String, List<Map<String, Object>>> requestMap = new HashMap<>();
 
@@ -913,8 +915,12 @@ public class Rule2ServiceImpl extends RuleTemplate {
 		} else {
 			results = getResultDetail(ruleExecUUID, ruleExecVersion, offset, rowLimit, sortBy, order, requestId, runMode);
 		}
-		response = commonServiceImpl.download(format, response, runMode, results,
-				new MetaIdentifierHolder(new MetaIdentifier(MetaType.ruleExec, ruleExecUUID, ruleExecVersion)), layout);
+		
+		RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(ruleExecUUID, ruleExecVersion, MetaType.ruleExec.toString(), "N");
+		
+		response = downloadServiceImpl.download(format, response, runMode, results,
+				new MetaIdentifierHolder(new MetaIdentifier(MetaType.ruleExec, ruleExecUUID, ruleExecVersion)), layout,
+				null, false, "framework.file.download.path", null, ruleExec.getDependsOn());
 		return response;
 	}
 	

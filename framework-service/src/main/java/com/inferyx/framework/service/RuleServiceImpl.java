@@ -97,6 +97,8 @@ public class RuleServiceImpl extends RuleTemplate {
 	HDFSInfo hdfsInfo;
 	@Autowired
 	ThreadPoolTaskExecutor metaExecutor;
+	@Autowired
+	private DownloadServiceImpl downloadServiceImpl;
 	/*
 	 * @Autowired private IRuleExecDao iRuleExecDao;
 	 */
@@ -688,10 +690,13 @@ public class RuleServiceImpl extends RuleTemplate {
 			throw new RuntimeException("Requested rows exceeded the limit of " + maxRows);
 		}
 
+		RuleExec ruleExec = (RuleExec) commonServiceImpl.getOneByUuidAndVersion(ruleExecUUID, ruleExecVersion, MetaType.ruleExec.toString(), "N");
+		
 		List<Map<String, Object>> results = getRuleResults(ruleExecUUID, ruleExecVersion, offset, limit, sortBy, order,
 				requestId, runMode);
-		response = commonServiceImpl.download(format, response, runMode, results,
-				new MetaIdentifierHolder(new MetaIdentifier(MetaType.ruleExec, ruleExecUUID, ruleExecVersion)), layout);
+		response = downloadServiceImpl.download(format, response, runMode, results,
+				new MetaIdentifierHolder(new MetaIdentifier(MetaType.ruleExec, ruleExecUUID, ruleExecVersion)), layout,
+				null, false, "framework.file.download.path", null, ruleExec.getDependsOn());
 		return response;
 	}
 	

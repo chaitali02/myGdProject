@@ -132,6 +132,8 @@ public class DataStoreServiceImpl {
 	Helper helper;
 	@Autowired
 	private SparkExecutor<?> sparkExecutor;
+	@Autowired
+	private DownloadServiceImpl downloadServiceImpl;
 	
 	Map<String, String> requestMap = new HashMap<String, String>();
 	
@@ -1453,7 +1455,8 @@ public class DataStoreServiceImpl {
 		
 		List<Map<String, Object>> results = getDatapodResults(datastore.getUuid(), datastore.getVersion(), null,
 				0, limit, response, rowLimit, null, null, null, runMode);
-		response = commonServiceImpl.download(format, response, runMode, results, datastore.getExecId(), layout);	
+		response = downloadServiceImpl.download(format, response, runMode, results, datastore.getExecId(), layout,
+				null, false, "framework.file.download.path", null, datastore.getMetaId());	
 		return response;
 
 	}

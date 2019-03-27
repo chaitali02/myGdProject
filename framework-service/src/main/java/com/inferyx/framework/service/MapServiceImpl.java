@@ -91,6 +91,8 @@ public class MapServiceImpl implements IParsable, IExecutable {
 	SessionHelper sessionHelper;
 	@Resource(name="taskThreadMap")
 	protected ConcurrentHashMap<?, ?> taskThreadMap;
+	@Autowired
+	private DownloadServiceImpl downloadServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(MapServiceImpl.class);
 	
@@ -744,9 +746,11 @@ public class MapServiceImpl implements IParsable, IExecutable {
 			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(), "Requested rows exceeded the limit of "+maxRows, null);
 			throw new RuntimeException("Requested rows exceeded the limit of "+maxRows);
 		}
-		
+		MapExec mapExec = (MapExec) commonServiceImpl.getOneByUuidAndVersion(mapExecUuid, mapExecVersion, MetaType.mapExec.toString(), "N");
 		List<java.util.Map<String, Object>> results = getMapResults(mapExecUuid, mapExecVersion, offset, limit, sortBy, order, requestId, runMode);
-		response = commonServiceImpl.download(format, response, runMode, results, new MetaIdentifierHolder(new MetaIdentifier(MetaType.mapExec, mapExecUuid, mapExecVersion)), layout);
+		response = downloadServiceImpl.download(format, response, runMode, results,
+				new MetaIdentifierHolder(new MetaIdentifier(MetaType.mapExec, mapExecUuid, mapExecVersion)), layout,
+				null, false, "framework.file.download.path", null, mapExec.getDependsOn());
 		return response;
 
 	}
