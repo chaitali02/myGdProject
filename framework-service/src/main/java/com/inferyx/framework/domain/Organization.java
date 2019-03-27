@@ -8,13 +8,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection="organization")
 public class Organization extends BaseEntity {
-	
-	
 	private List<Contact> contact;
 	private List<Phone> phone;
 	private List<Email> email;
 	private List<Address> address;
-	
+	private String logoPath;
 	
 	public List<Contact> getContact() {
 		return this.contact;
@@ -39,6 +37,22 @@ public class Organization extends BaseEntity {
 	}
 	public void setAddress(List<Address> address) {
 		this.address = address;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @return the logoPath
+	 */
+	public String getLogoPath() {
+		return logoPath;
+	}
+	/**
+	 * @Ganesh
+	 *
+	 * @param logoPath the logoPath to set
+	 */
+	public void setLogoPath(String logoPath) {
+		this.logoPath = logoPath;
 	}
 	
 }
