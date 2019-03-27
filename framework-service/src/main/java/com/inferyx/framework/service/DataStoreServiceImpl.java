@@ -479,9 +479,10 @@ public class DataStoreServiceImpl {
 				tableName = datapodDs.getDbname() + "." + datapod.getName();
 			}
 //			if (dataStore.getPersistMode() == null || !dataStore.getPersistMode().equals("MEMORY_ONLY")) {
-			if (dataStore.getPersistMode().equals(PersistMode.DISK_AND_MEMORY_ONLY)) {
+			StorageContext storageContext = commonServiceImpl.getStorageContext(datapod);
+			if (storageContext.equals(StorageContext.FILE)) {
 				datapodRegister.registerDatapod(dataStore, datapod, runMode);
-			}	
+			}
 		} 
 		else {
 			tableName = Helper.genTableName(filePath);
