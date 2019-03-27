@@ -122,11 +122,11 @@ public class PDFUtil {
 		}
 
 		// writting data into table
-		float cellSize = 10.25f;
-		int numCellsPerPage = 7;
+		float cellSize = 12.0f;
+		int numCellsPerPage = 6;
 		if (document.getLayout().equals(Layout.LANDSCAPE)) {
-			cellSize = 15.1f;
-			numCellsPerPage = 11;
+			cellSize = 16.5f;
+			numCellsPerPage = 10;
 		}
 		final float tableWidth = pdfPage.getMediaBox().getHeight() - 3.00f * margin;
 		List<List<String>> partitionedLeyList = new ArrayList<>(
