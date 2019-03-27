@@ -373,7 +373,7 @@
 													<label for="name">Key
 														<span class="required" aria-required="true"> * </span>
 													</label>
-													<ul class="tagitdd" ng-class="({{mode}} ==true || vizpodtype=='score-card')?'disabled-ul':'default'" style="height:150px;" data-drop="true" ng-model='keylist'
+													<ul class="tagitdd" ng-class="({{mode}} ==true || ['score-card','form-card'].indexOf(vizpodtype) !=-1)?'disabled-ul':'default'" style="height:150px;" data-drop="true" ng-model='keylist'
 													 ng-disabled="{{mode}}" jqyoui-droppable="{multiple:true,'onDrop':'onDropKey($index)','onOver':'onOverCallBackKey()','beforeDrop':'beforeDropKey'}">
 														<li ng-disabled="{{mode}}" title="{{item.dname}}" class="tagit-choice-dd tagit-choice-editable-dd"
 														 ng-repeat="item in keylist" style="background-color:#99ddff" required="">
@@ -387,7 +387,7 @@
 												</div>
 												<div class="col-xs-4">
 													<label for="name">Group</label>
-													<ul class="tagitdd" style="height:150px;" data-drop="true" ng-model='grouplist' ng-class="({{mode}} ==true || vizpodtype=='score-card')?'disabled-ul':'default'"
+													<ul class="tagitdd" style="height:150px;" data-drop="true" ng-model='grouplist' ng-class="({{mode}} ==true || ['score-card','form-card'].indexOf(vizpodtype) !=-1)?'disabled-ul':'default'"
 													 jqyoui-droppable="{multiple:true,'onDrop':'onDropGroup($index)','beforeDrop':'beforeDropGroup'}">
 														<li title="{{item.name}}.{{item.attributeName}}" class="tagit-choice-dd tagit-choice-editable-dd" ng-repeat="item in grouplist"
 														 style="background-color:#ffb380">

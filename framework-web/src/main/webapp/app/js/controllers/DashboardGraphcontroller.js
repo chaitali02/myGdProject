@@ -1443,9 +1443,12 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
   $scope.getOneByUuidAndVersionDashboardExec = function (data) {
     
     if(data !=null){
+      $scope.isDashboardInprogess = true;
+      $scope.sectionRows=[];
       DahsboardSerivce.getOneByUuidAndVersion(data.uuid, data.version, "dashboardexecview").then(function (response) { onSuccessLatestByUuid(response.data) });
       var onSuccessLatestByUuid = function (response) {
       // console.log(response);
+      $scope.isDashboardInprogess = false;
         $scope.dashboardExecData = response;
         $scope.convertSectionInfo(response.sectionViewInfo)
         $scope.preparColumnData();
@@ -1627,7 +1630,7 @@ DatavisualizationModule.controller('ShowDashboradController2', function ($locati
     DahsboardSerivce.getDasboardExecBySave($stateParams.id,"dashboard","Y").then(function (response) { onSuccessGetAllLatest(response.data) });
     var onSuccessGetAllLatest = function (response) {
       $scope.allExecDetail = response;
-      if(response && response.length ==0){
+      if(response && response.length ==0 && action!='reRun'){
         $scope.executeDashboard(null);  
       }else if(action !=null && action=='reRun'){
         $scope.executeDashboard(null);

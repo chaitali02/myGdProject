@@ -1409,7 +1409,7 @@ transition: right 1m
   color: #a0a0a0;
 }
 
-.table-bordered.train-result>tbody>tr>td{
+.table-bordered.train-result>tbody>tr>td, .table-bordered.form-card>tbody>tr>td{
   border-left:1px solid white !important;
   border-right:1px solid white !important;
 
@@ -1516,4 +1516,12 @@ transition: right 1m
 
    select.form-control{
     padding-left: 8px;
+   }
+
+
+   .chartIcon{
+     display: none !important;
+   }
+   .chartBox:hover  .chartIcon {
+    display:block !important;
    }
