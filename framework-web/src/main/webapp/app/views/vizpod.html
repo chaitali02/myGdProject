@@ -234,7 +234,7 @@
 											</select>
 										</div>
 									</div>
-									<div class="form-group">
+									<!-- <div class="form-group">
 										<label class="control-label col-md-3 col-sm-3 col-xs-12">Color Palette
 										</label>
 										<div class="col-md-2 col-sm-2 col-xs-12">
@@ -250,8 +250,33 @@
 												<span  style="background-color:{{code}};width:10px;padding-right:20px;padding-bottom:14px;" ng-repeat="code in cPCodes">&nbsp;&nbsp;&nbsp;</span>
 											</div>
 										</div>
+									</div> -->
+									<div class="form-group">
+										<label class="control-label col-md-3 col-sm-3 col-xs-12">Color Palette
+										</label>
+										<div class="col-md-2 col-sm-2 col-xs-12">
+											<ui-select  name ="nodeIcon" ng-model="vizpoddata.colorPalette"  theme="" ng-disabled="{{mode}}"   on-select="onChangeColorPalette(vizpoddata.colorPalette)" append-to-body="true">
+												<ui-select-match  >
+													<div style="margin-top:0px;">
+														<span  ng-if="vizpoddata.colorPalette !='Random'" style="background-color:{{code}};width:10px;padding-right:20px;" ng-repeat="code in cPCodes | limitTo:5">&nbsp;&nbsp;&nbsp;</span>
+														<span  ng-if="vizpoddata.colorPalette =='Random'">{{vizpoddata.colorPalette}}</span>
+
+													</div>
+												</ui-select-match>
+												<ui-select-choices repeat="x in (colorPalette | filter: $select.search)  track by x" position='down'>
+													<div>
+														<span  ng-bind-html="x | highlight: $select.search"></span>
+													</div>
+												</ui-select-choices>
+											</ui-select>
+										</div>
+										<label class="control-label col-md-3 col-sm-3 col-xs-12" style="width: 8.5%;margin-left:-13px; padding-right:0px;">										
+										</label>
+										<div class="col-md-3 col-sm-3 col-xs-12" style="width:26%;">
+											
+										</div>
 									</div>
-							
+								
 								
 									<div class="form-group">
 										<label for="middle-name" class="control-label col-md-3 col-sm-3 col-xs-12">Type
@@ -373,7 +398,7 @@
 													<label for="name">Key
 														<span class="required" aria-required="true"> * </span>
 													</label>
-													<ul class="tagitdd" ng-class="({{mode}} ==true || vizpodtype=='score-card')?'disabled-ul':'default'" style="height:150px;" data-drop="true" ng-model='keylist'
+													<ul class="tagitdd" ng-class="({{mode}} ==true || ['score-card','form-card'].indexOf(vizpodtype) !=-1)?'disabled-ul':'default'" style="height:150px;" data-drop="true" ng-model='keylist'
 													 ng-disabled="{{mode}}" jqyoui-droppable="{multiple:true,'onDrop':'onDropKey($index)','onOver':'onOverCallBackKey()','beforeDrop':'beforeDropKey'}">
 														<li ng-disabled="{{mode}}" title="{{item.dname}}" class="tagit-choice-dd tagit-choice-editable-dd"
 														 ng-repeat="item in keylist" style="background-color:#99ddff" required="">
@@ -387,7 +412,7 @@
 												</div>
 												<div class="col-xs-4">
 													<label for="name">Group</label>
-													<ul class="tagitdd" style="height:150px;" data-drop="true" ng-model='grouplist' ng-class="({{mode}} ==true || vizpodtype=='score-card')?'disabled-ul':'default'"
+													<ul class="tagitdd" style="height:150px;" data-drop="true" ng-model='grouplist' ng-class="({{mode}} ==true || ['score-card','form-card'].indexOf(vizpodtype) !=-1)?'disabled-ul':'default'"
 													 jqyoui-droppable="{multiple:true,'onDrop':'onDropGroup($index)','beforeDrop':'beforeDropGroup'}">
 														<li title="{{item.name}}.{{item.attributeName}}" class="tagit-choice-dd tagit-choice-editable-dd" ng-repeat="item in grouplist"
 														 style="background-color:#ffb380">

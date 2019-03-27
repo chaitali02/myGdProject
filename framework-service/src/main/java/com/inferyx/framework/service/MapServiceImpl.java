@@ -751,7 +751,7 @@ public class MapServiceImpl implements IParsable, IExecutable {
 		List<java.util.Map<String, Object>> results = getMapResults(mapExecUuid, mapExecVersion, offset, limit, sortBy, order, requestId, runMode);
 		response = downloadServiceImpl.download(format, response, runMode, results,
 				new MetaIdentifierHolder(new MetaIdentifier(MetaType.mapExec, mapExecUuid, mapExecVersion)), layout,
-				null, false, "framework.file.download.path", null, mapExec.getDependsOn());
+				null, false, "framework.file.download.path", null, mapExec.getDependsOn(), null);
 		return response;
 
 	}

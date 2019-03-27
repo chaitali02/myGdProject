@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.common.Helper;
+import com.inferyx.framework.domain.Address;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.Document;
@@ -38,6 +39,7 @@ import com.inferyx.framework.domain.FileType;
 import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
+import com.inferyx.framework.domain.Organization;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
@@ -83,7 +85,8 @@ public class DownloadServiceImpl {
 
 	public HttpServletResponse download(String format, HttpServletResponse response, RunMode runMode,
 			List<Map<String, Object>> data, MetaIdentifierHolder dependsOn, Layout layout, BaseExec baseExec,
-			boolean checkFileExistance, String defaultPathKey, String parameters, MetaIdentifierHolder metaObjectHolder) throws Exception {
+			boolean checkFileExistance, String defaultPathKey, String parameters, MetaIdentifierHolder metaObjectHolder,
+			Map<String, String> otherDetails) throws Exception {
 		LOGGER.info("Inside download method....");
 		try {
 			DownloadExec downloadExec = create(dependsOn);
@@ -134,13 +137,13 @@ public class DownloadServiceImpl {
 				document.setData(data);
 				document.setMetaObjType(metaObjectMI.getType().toString());
 				
-				if(metaObjectMI.getType().equals(MetaType.report)) {
+				if(otherDetails != null) {
 					document.setLayout(layout);
-					document.setHeader(metaObject.getClass().getMethod("getHeader").invoke(metaObject).toString());
-					document.setHeaderAlignment(metaObject.getClass().getMethod("getHeaderAlign").invoke(metaObject).toString());
-					document.setFooter(metaObject.getClass().getMethod("getFooter").invoke(metaObject).toString());
-					document.setFooterAlignment(metaObject.getClass().getMethod("getFooterAlign").invoke(metaObject).toString());
-					document.setTitle(metaObject.getClass().getMethod("getTitle").invoke(metaObject).toString());
+					document.setHeader(otherDetails.get("doc_header"));
+					document.setHeaderAlignment(otherDetails.get("doc_header_align"));
+					document.setFooter(otherDetails.get("doc_footer"));
+					document.setFooterAlignment(otherDetails.get("doc_footer_align"));
+					document.setTitle(otherDetails.get("doc_title"));
 					document.setMetExecObject(baseExec);
 					document.setParameters(parameters);
 					document.setGenerationDate(baseExec.getCreatedOn());					
@@ -148,7 +151,7 @@ public class DownloadServiceImpl {
 					document.setHeader("Confidential document");
 					document.setHeaderAlignment("CENTER");
 					document.setFooter("All rights reserved");
-					document.setFooterAlignment("CENTER");
+					document.setFooterAlignment("RIGHT");
 					document.setTitle(metaObject.getName());
 					document.setMetExecObject(downloadExec);
 					document.setParameters("");
@@ -160,6 +163,11 @@ public class DownloadServiceImpl {
 				document.setName(metaObject.getName());
 				document.setDescription(!StringUtils.isBlank(metaObject.getDesc()) ? metaObject.getDesc() : "");
 				document.setFileName(fileName);
+				
+				Organization organization = commonServiceImpl.getOrgInfoByCurrentApp();
+				document.setOrgName(organization.getName());
+				document.setOrgLogo(organization.getLogoPath());
+				document.setOrgAddress(getOrganizationAddr(organization.getAddress()));
 				
 				File metaObjFile = new File(filePathUrl);
 				boolean isDocCreated = documentGenServiceImpl.createDocument(document);
@@ -196,6 +204,31 @@ public class DownloadServiceImpl {
 			LOGGER.error(message);
 			response.setStatus(300);
 			throw new RuntimeException(message);
+		}
+	}
+
+	/**
+	 * @param address
+	 * @return
+	 */
+	private String getOrganizationAddr(List<Address> address) {
+		if(address != null && !address.isEmpty()) {
+			StringBuffer addressBuff = new StringBuffer();
+			int i = 1;
+			for(Address address2 : address) {
+				addressBuff.append("Address "+i).append(": ");
+				addressBuff.append(address2.getAddressLine1());
+				addressBuff.append(address2.getAddressLine2());
+				addressBuff.append(address2.getCity());
+				addressBuff.append(address2.getState());
+				addressBuff.append(address2.getCountry());
+				addressBuff.append(" - ").append(address2.getZipcode());
+				addressBuff.append(".");
+				i++;
+			}
+			return addressBuff.toString();
+		} else {
+			return "";
 		}
 	}
 

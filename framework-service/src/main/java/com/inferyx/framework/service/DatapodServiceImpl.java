@@ -1017,7 +1017,7 @@ public class DatapodServiceImpl {
 		List<Map<String, Object>> results = datastoreServiceImpl.getDatapodResults(dataStore.getUuid(), dataStore.getVersion(), null,
 				0, rowLimit, response, rowLimit, null, null, null, runMode);
 		response = downloadServiceImpl.download(format, response, runMode, results, dataStore.getExecId(), layout,
-				null, false, "framework.file.download.path", null, dataStore.getMetaId());
+				null, false, "framework.file.download.path", null, dataStore.getMetaId(), null);
 		return response;
 
 	}

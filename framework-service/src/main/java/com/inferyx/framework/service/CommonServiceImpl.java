@@ -19,12 +19,10 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -47,10 +45,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
@@ -76,9 +70,7 @@ import com.inferyx.framework.common.CustomLogger;
 import com.inferyx.framework.common.DagExecUtil;
 import com.inferyx.framework.common.GraphInfo;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.PDFUtil;
 import com.inferyx.framework.common.SessionHelper;
-import com.inferyx.framework.common.WorkbookUtil;
 import com.inferyx.framework.dao.IActivityDao;
 import com.inferyx.framework.dao.IAlgorithmDao;
 import com.inferyx.framework.dao.IAppConfigDao;
@@ -186,7 +178,6 @@ import com.inferyx.framework.domain.DataSet;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Datapod;
 import com.inferyx.framework.domain.Datasource;
-import com.inferyx.framework.domain.Document;
 import com.inferyx.framework.domain.DownloadExec;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.Feature;
@@ -227,7 +218,6 @@ import com.inferyx.framework.domain.Train;
 import com.inferyx.framework.domain.UploadExec;
 import com.inferyx.framework.domain.User;
 import com.inferyx.framework.domain.Vizpod;
-import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.ExecContext;
 import com.inferyx.framework.executor.IExecutor;
@@ -515,8 +505,6 @@ public class CommonServiceImpl<T> {
 	@Autowired
 	private IDashboardExecDao iDashboardExecDao;
 	@Autowired
-	private PDFUtil pdfUtil;
-	@Autowired
 	IRule2Dao iRule2Dao;
 	@Autowired
 	IRule2ExecDao iRule2ExecDao;
@@ -524,8 +512,6 @@ public class CommonServiceImpl<T> {
 	private IAttributeDomainDao iAttributeDomainDao;	
 	@Autowired
 	private PropertiesFactoryBean frameworkProperties;
-	@Autowired
-	private DocumentGenServiceImpl documentGenServiceImpl;
 	
 	
 	public IngestServiceImpl getIngestServiceImpl() {
@@ -5534,4 +5520,14 @@ public class CommonServiceImpl<T> {
 		else
 			return ConstantsUtil.PERSIST_MODE_DISK_ONLY;
 	}
+
+	public Organization getOrgInfoByCurrentApp()
+			throws JsonProcessingException, IllegalAccessException, IllegalArgumentException, InvocationTargetException,
+			NoSuchMethodException, SecurityException, NullPointerException, ParseException {
+		Application application = (Application) getApp();
+		MetaIdentifier orgInfoMI = application.getOrgInfo().getRef();
+		return (Organization) getOneByUuidAndVersion(orgInfoMI.getUuid(), orgInfoMI.getVersion(),
+				orgInfoMI.getType().toString(), "N");
+	}
+
 }

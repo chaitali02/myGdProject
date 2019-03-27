@@ -330,11 +330,11 @@ public class ReportServiceImpl extends RuleTemplate {
 		
 		MetaIdentifierHolder dependsOn = new MetaIdentifierHolder(
 				new MetaIdentifier(MetaType.reportExec, reportExec.getUuid(), reportExec.getVersion()));
-		MetaIdentifierHolder metaObjectHolder = new MetaIdentifierHolder(
-				new MetaIdentifier(MetaType.report, report.getUuid(), report.getVersion()));
+		
+		Map<String, String> otherDetails = getOtherDetailsByReport(report);
 		
 		response = downloadServiceImpl.download(format, response, runMode, data, dependsOn, layout,
-				reportExec, true, "framework.report.Path", getReportParametrsForDoc(report, reportExec), metaObjectHolder);
+				reportExec, false, "framework.report.Path", getReportParametrsForDoc(report, reportExec), reportExec.getDependsOn(), otherDetails);
 		
 //		format = Helper.mapFileFormat(report.getFormat());
 //		
@@ -432,6 +432,22 @@ public class ReportServiceImpl extends RuleTemplate {
 		return response;
 	}
 	
+	/**
+	 * @param report
+	 * @return
+	 */
+	private Map<String, String> getOtherDetailsByReport(Report report) {
+		Map<String, String> otherDetails = new HashMap<>();
+		
+		otherDetails.put("doc_title", report.getTitle());
+		otherDetails.put("doc_header", report.getHeader());
+		otherDetails.put("doc_header_align", report.getHeaderAlign());
+		otherDetails.put("doc_footer", report.getFooter());
+		otherDetails.put("doc_footer_align", report.getFooterAlign());
+		
+		return otherDetails;
+	}
+
 	public Report getReportByReportExec(String reportExecUuid) throws JsonProcessingException {
 		Report report =null;
 		ReportExec reportExec = (ReportExec) commonServiceImpl.getOneByUuidAndVersion(reportExecUuid,null, MetaType.reportExec.toString(), "N");
@@ -766,11 +782,11 @@ public class ReportServiceImpl extends RuleTemplate {
 		
 		MetaIdentifierHolder dependsOn = new MetaIdentifierHolder(
 				new MetaIdentifier(MetaType.reportExec, reportExec.getUuid(), reportExec.getVersion()));
-		MetaIdentifierHolder metaObjectHolder = new MetaIdentifierHolder(
-				new MetaIdentifier(MetaType.report, report.getUuid(), report.getVersion()));
+		
+		Map<String, String> otherDetails = getOtherDetailsByReport(report);
 		
 		response = downloadServiceImpl.download(format, response, runMode, data, dependsOn, report.getLayout(),
-				reportExec, true, "framework.report.Path", getReportParametrsForDoc(report, reportExec), metaObjectHolder);
+				reportExec, true, "framework.report.Path", getReportParametrsForDoc(report, reportExec), reportExec.getDependsOn(), otherDetails);
 		
 //		format = Helper.mapFileFormat(report.getFormat());
 //		
@@ -887,11 +903,11 @@ public class ReportServiceImpl extends RuleTemplate {
 
 		MetaIdentifierHolder dependsOn = new MetaIdentifierHolder(
 				new MetaIdentifier(MetaType.reportExec, reportExec.getUuid(), reportExec.getVersion()));
-		MetaIdentifierHolder metaObjectHolder = new MetaIdentifierHolder(
-				new MetaIdentifier(MetaType.report, report.getUuid(), report.getVersion()));
+		
+		Map<String, String> otherDetails = getOtherDetailsByReport(report);
 		
 		response = downloadServiceImpl.download(format, response, runMode, data, dependsOn, report.getLayout(),
-				null, false, "framework.file.download.path", getReportParametrsForDoc(report, reportExec), metaObjectHolder);
+				null, false, "framework.file.download.path", getReportParametrsForDoc(report, reportExec), reportExec.getDependsOn(), otherDetails);
 		
 //		format = Helper.mapFileFormat(format);		
 //		

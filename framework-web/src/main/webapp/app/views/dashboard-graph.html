@@ -75,7 +75,6 @@
               <a class="btn btn-circle btn-icon-only btn-default" ui-sref="dashboard" tooltip-placement="{{showtooltip}}" uib-tooltip="Close" ng-show="hideIcon">
                 <i class="fa fa-times" style="display: block;margin:2px auto;color:#a0a0a0;"></i>
               </a>
-            
             </div>
           </div><!--End portlet-title-->
           
@@ -146,12 +145,13 @@
                   <!-- style="min-height:440px;" -->
                 <div class="col-md-{{datacol.fullWidth?'12':(row.columns.length < 3 ? 12/(row.columns.length) : '4')}} {{datacol.vizpodDetails.class}}" ng-repeat="datacol in row.columns" ng-show="datacol.vizpodDetails.show" >
                   <!-- style="min-height:420px;" -->
-                  <div class="portlet light bordered"  >
+                  <div class="portlet light bordered  chartBox">
+                    
                     <div class="portlet-title">
                       <div class="caption" style="width:45%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">
                         <span class="caption-subject font-dark bold " title="{{datacol.name}}">{{datacol.name}}</span>
                       </div>
-                      <div class="actions">
+                      <div class="actions chartIcon">
                         <a class="btn btn-circle btn-icon-only btn-default"  tooltip-placement="{{showtooltip}}" ng-show="datacol.isDataGridShow" uib-tooltip="Chart" ng-click="onClickChart($parent.$index,$index)" ng-show="hideIcon">
                           <i class="fa fa-line-chart" style="display:block;margin:2px 0px 0px 1px;" ng-class="(inprogressdata==true)? 'currentpage':'notcurrentpage'"></i>   
                         </a>
@@ -198,8 +198,11 @@
                         <div ng-if="datacol.vizpodDetails.datapoints && datacol.vizpodDetails.datapoints.length >0 && !inprogressdata && ['score-card'].indexOf(datacol.vizpodDetails.type) !=-1 && datacol.vizpodInfo.groups.length ==0 && !IsVizpodDetailShow && datacol.isChartShow">
                           <score-card data="datacol"></score-card>
                         </div>
+                        <div ng-if="datacol.vizpodDetails.datapoints && datacol.vizpodDetails.datapoints.length >0 && !inprogressdata && ['form-card'].indexOf(datacol.vizpodDetails.type) !=-1 && datacol.vizpodInfo.groups.length ==0 && !IsVizpodDetailShow && datacol.isChartShow">
+                          <form-card data="datacol"></form-card>
+                        </div>
 
-                        <div ng-if="datacol.vizpodDetails.datapoints !=null && datacol.vizpodDetails.datapoints.length >0 && !inprogressdata  && datacol.vizpodDetails.type !='data-grid' && datacol.vizpodDetails.type !='bubble-chart' && datacol.vizpodDetails.type !='world-map' && datacol.vizpodDetails.type !='usa-map' && datacol.vizpodDetails.type !='bar-line-chart' && datacol.vizpodDetails.type !='network-graph' && datacol.vizpodDetails.type !='heat-map' && datacol.vizpodDetails.type !='score-card' && datacol.isDataError !=true && datacol.isChartShow && (datacol.vizpodInfo.groups.length ==0)">
+                        <div ng-if="datacol.vizpodDetails.datapoints !=null && datacol.vizpodDetails.datapoints.length >0 && !inprogressdata  && datacol.vizpodDetails.type !='data-grid' && datacol.vizpodDetails.type !='bubble-chart' && datacol.vizpodDetails.type !='world-map' && datacol.vizpodDetails.type !='usa-map' && datacol.vizpodDetails.type !='bar-line-chart' && datacol.vizpodDetails.type !='network-graph' && datacol.vizpodDetails.type !='heat-map' && datacol.vizpodDetails.type !='score-card' && datacol.vizpodDetails.type !='form-card' && datacol.isDataError !=true && datacol.isChartShow && (datacol.vizpodInfo.groups.length ==0)">
                            
                           <c3chart chartGroup="chart" bindto-id="{{datacol.vizpodDetails.id}}" chart-data="datacol.vizpodDetails.datapoints" chart-columns="datacol.vizpodDetails.datacolumns" chart-x="datacol.vizpodDetails.datax" enable-zoom="true" callback-function="handleCallbackGroup">
                             <chart-bar ratio="0.5" />
@@ -214,9 +217,7 @@
                               <chart-axis-Y>
                                 <chart-axis-y-tick tick-format-function="time_format"/>
                               </chart-axis-Y>
-
                             </chart-axis>
-                            <!-- <chart- group-values="data 1,data 2"/> -->
                             <!--  <chart-legend show-legend="false" legend-position="right"/> -->
                             <chart-events on-contex-menu="showClick({vizpod:datacol,dataobj:data})"/>
                           </c3chart>
@@ -242,52 +243,45 @@
                                 <chart-axis-y-tick id="y2" tick-format-function="time_format"/>
                               </chart-axis-Y>
                             </chart-axis>
-                            
-                             
-                            
-                           
-                            <!-- <chart- group-values="data 1,data 2"/> -->
                             <!--  <chart-legend show-legend="false" legend-position="right"/> -->
                             <chart-events on-contex-menu="showClick({vizpod:datacol,dataobj:data})"/>
                           </c3chart>
                         </div>
+
                         <!-- chartEnd-->
                         <div ng-if="datacol.vizpodDetails.datapoints && datacol.vizpodDetails.datapoints.length >0 && !inprogressdata && datacol.vizpodDetails.type =='bubble-chart' && !IsVizpodDetailShow && datacol.isChartShow">
                           <div class="{{datacol.vizpodDetails.id}}" bubble-chart data="datacol.vizpodDetails.datapoints" column="datacol.vizpodInfo" chartid="datacol.vizpodDetails.id" on-right-click="selectData" objdetail="datacol">
                           </div>
                         </div>
 
-                      
-
                         <div ng-if="showmap && datacol.vizpodDetails.datapoints && datacol.vizpodDetails.datapoints.length >0 && !inprogressdata && datacol.vizpodDetails.type =='world-map' && datacol.isChartShow ">
                           <div id="{{datacol.vizpodDetails.id}}" world-map data="datacol.vizpodDetails.datapoints" column="datacol.vizpodInfo" chartid="datacol.vizpodDetails.id" style="position:relative;width:100%;height:320px;" on-right-click="selectData" objdetail="datacol">
                           </div>
                         </div>
+
                         <div ng-if="showmap && datacol.vizpodDetails.datapoints && datacol.vizpodDetails.datapoints.length >0 && !inprogressdata && datacol.vizpodDetails.type =='usa-map' && datacol.isChartShow  ">
                           <div id="{{datacol.vizpodDetails.id}}" world-map data="datacol.vizpodDetails.datapoints" column="datacol.vizpodInfo" chartid="datacol.vizpodDetails.id" style="position:relative;width:100%;height:320px;" on-right-click="selectData" objdetail="datacol">
                           </div>
                         </div>
+
                         <div ng-if="(datacol.vizpodDetails.type =='data-grid' && datacol.vizpodDetails.datapoints !=null && datacol.vizpodDetails.datapoints.length >0 && !inprogressdata) ||  datacol.isDataGridShow">
-                         
                           <div ui-grid="datacol.gridOptions" class="grid" ui-grid-resize-columns ui-grid-auto-resize ui-grid-exporter ng-style="getGridStyle(datacol.filteredRows, datacol.vizpodDetails.type)">
                             <div class="nodatawatermark_results" ng-show="!datacol.gridOptions.data.length">No data available</div>
                           </div>
                         </div>
-                        <div ng-if="datacol.vizpodDetails.type == 'network-graph'  && !inprogressdata">
-                             <h1>Network Graph</h1>
-                        </div>
+
                         <div  ng-if="datacol.vizpodDetails.type == 'heat-map'  && !inprogressdata && datacol.vizpodDetails.datapoints !=null && datacol.vizpodDetails.datapoints.length >0 && datacol.isChartShow">
                           <div class="{{datacol.vizpodDetails.id}}" heat-map data="datacol.vizpodDetails.datapoints" column="datacol.vizpodInfo" chartid="datacol.vizpodDetails.id"  objdetail="datacol">
                           </div>
-                     </div>
+                        </div>
+                        
                       </div>
                     </div>
                   </div>
                 </div>
                 <div class="clearfix visible-xs" style="display:block !important"></div>
               </div><!--End C3 Graph Code-->
-             
-
+            
             </div>
           </div>
           </div>

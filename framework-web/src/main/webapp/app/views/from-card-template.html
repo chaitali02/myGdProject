@@ -1,0 +1,26 @@
+
+<div style="height: 320px;">
+    <div ng-if="fCDetail.isSingleValue==true">
+        <table class="table table-bordered form-card">
+            <tbody>
+                <tr ng-repeat="row in fCDetail.fCData">
+                    <td style="width:40%">{{row.colName}}</td>
+                    <td style="width:60%">
+                        <b>{{row.colValue}}</b>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div ng-if="fCDetail.isSingleValue==false">
+        <div class ="centercontent" style="min-height:320px;">
+            <h3 style="font-size:14px;color:blue;line-height: 19px;
+            text-align: left !important;">
+                Too many values returned.
+                <br/>
+                Please choose the filter. 
+            </h3>
+            <br>
+        </div>
+    </div>
+</div> 
