@@ -145,14 +145,15 @@ export class DatasetComponent implements OnInit {
   datasetRowIndex: any;
   datasetNotEmpty: boolean = true;
 
-  // showForm: boolean;
-  // isEditError: boolean = false;
-  // isEditInprogess: boolean = false;
-  // isEdit: boolean = false;
-  // isversionEnable: boolean = false;
-  // isAdd: boolean = false;
-  // isGraphInprogess: boolean;
-  // isGraphError: boolean;
+  showForm: boolean;
+  isEditError: boolean = false;
+  isEditInprogess: boolean = false;
+  isEdit: boolean = false;
+  isversionEnable: boolean = false;
+  isAdd: boolean = false;
+  isGraphInprogess: boolean;
+  isGraphError: boolean;
+  checkAll: boolean;
 
   constructor(private _location: Location, config: AppConfig, private activatedRoute: ActivatedRoute, public router: Router, private _commonService: CommonService, private _datasetService: DatasetService, private activeroute: ActivatedRoute, @Inject(SESSION_STORAGE) private storage: WebStorageService, private appHelper : AppHelper) {
     this.baseUrl = config.getBaseUrl();
@@ -171,6 +172,10 @@ export class DatasetComponent implements OnInit {
     this.sourcedata = {}
     this.dialogSelectName = {}
     this.attributesArray = [];
+
+    this.showGraph = false;
+    this.showForm = true;
+
     this.operators = [
       { 'value': '<', 'label': 'LESS THAN(<)' },
       { 'value': '>', 'label': 'GREATER THAN(>)' },
@@ -306,16 +311,28 @@ export class DatasetComponent implements OnInit {
       //   this.getAllVersionByUuid();
       // }
       this.getFromLocal(0);
+
+      this.setMode(this.mode);
     })
   }
 
-  showDagGraph(id, version) {
-    console.log("showDagGraph Call... ");
-    this.isHomeEnable = true;
-    this.showGraph = true;
-    setTimeout(() => {
-      this.d_KnowledgeGraphComponent.getGraphData(this.id, this.version);
-    }, 1000);
+  setMode(mode: any) {
+    if (mode == 'true') {
+      this.isEdit = false;
+      this.isversionEnable = false;
+      this.isAdd = false;
+    } else if (mode == 'false') {
+      this.isEdit = true;
+      this.isversionEnable = true;
+      this.isAdd = false;
+    } else {
+      this.isAdd = true;
+      this.isEdit = false;
+    }
+  }
+
+  onChangeName() {
+    this.breadcrumbDataFrom[2].caption = this.dataset.name;
   }
   
   public goBack() {
@@ -337,12 +354,17 @@ export class DatasetComponent implements OnInit {
   }
 
   getOneByUuidAndVersion(id, version) {
+    this.isEditInprogess = true;
+    this.isEditError = false;
     this._datasetService.getOneByUuidAndVersion(id, version, this.metaType.DATASET)
       .subscribe(
         response => {
           this.onSuccessgetOneByUuidAndVersion(response)
         },
-        error => console.log("Error :: " + error));
+        error => {
+          console.log("Error::", +error)
+          this.isEditError = false;
+        })
   }
 
   getAllVersionByUuid() {
@@ -426,6 +448,8 @@ export class DatasetComponent implements OnInit {
       this.getAllFunctions(false, 0);}
     }
       this.dataset.attributeTableArray = response.attributeInfo
+
+      this.isEditInprogess = false;
   }
 
   onSuccessgetFunctionByCriteria(response: Function[]) {
@@ -649,6 +673,13 @@ export class DatasetComponent implements OnInit {
     }
   }
 
+  onSelectFormula(event) {
+    if (event.label == '---CreateNew---') {
+      this.saveInLocal(0, this.dataset);
+      this.router.navigate(['../../../../formulaDataset', this.dataset.source, this.dataset.sourcedata.label, this.dataset.sourcedata.uuid], { relativeTo: this.activatedRoute });
+    }
+  }
+
   getFromLocal(key): void {
     let data = this.storage.get(key);
 
@@ -732,23 +763,29 @@ export class DatasetComponent implements OnInit {
         this.dataset.attributeTableArray[index].sourceformula = sourceformula;
       }
     }
+    
+    this.allMapFormula.splice(0, 0, {
+      "label": "---CreateNew---",
+      "value": { "label": "---CreateNew---", "uuid": "01" }
+    });
   }
+  
   addRow() {
-    var filertable = new FilterInfoIO;
+    var filtertable = new FilterInfoIO;
     if (this.dataset.filterTableArray == null || this.dataset.filterTableArray.length == 0) {
-      this.filterTableArray = [];
-      filertable.logicalOperator = '';
+      this.dataset.filterTableArray = [];
+      filtertable.logicalOperator = '';
     }
     else {
-      filertable.logicalOperator = this.logicalOperators[1].label;
+      filtertable.logicalOperator = this.logicalOperators[1].label;
     }
     var len = this.dataset.filterTableArray.length + 1;
-    filertable.lhsType = "string"
-    filertable.lhsAttribute = null
-    filertable.operator = this.operators[0].value;
-    filertable.rhsType = "string"
-    filertable.rhsAttribute = null
-    this.dataset.filterTableArray.splice(this.dataset.filterTableArray.length, 0, filertable);
+    filtertable.lhsType = "string"
+    filtertable.lhsAttribute = null
+    filtertable.operator = this.operators[0].value;
+    filtertable.rhsType = "string"
+    filtertable.rhsAttribute = null
+    this.dataset.filterTableArray.splice(this.dataset.filterTableArray.length, 0, filtertable);
 
     this.checkSelected(false,null);
   }
@@ -767,7 +804,7 @@ export class DatasetComponent implements OnInit {
     this.count = [];
     this.checkSelected(false, null);
     this.dataset.filterTableArray = newDataList;
-   // this.checkAllFilter = false;
+    this.checkAll = false;
   }
 
   checkAllFilterRow() {
@@ -841,15 +878,17 @@ export class DatasetComponent implements OnInit {
   onChangeExpression(data, index) {
     this.dataset.attributeTableArray[index].name = data.name
   }
-  showDatapodSampleTable(data) {debugger
+  showDatapodSampleTable(data) {
     this.isDataError = false;
     this.isShowSimpleData = true;
     this.isDataInpogress = true;
     this.tableclass = 'centercontent';
     this.showdatapod = false;
     this.showgraph = false;
+    this.showGraph = false;
     this.graphDataStatus = false;
     this.showgraphdiv = false;
+    this.showForm = false;
     //const api_url = this.baseUrl + 'datapod/getDatapodSample?action=view&datapodUUID=' + data.uuid + '&datapodVersion=' + data.version + '&row=100';
     const DatapodSampleData = this._datasetService.getDatasetSample(data.uuid, data.version).subscribe(
       response => { this.OnSuccesDatapodSample(response) },
@@ -1301,9 +1340,22 @@ export class DatasetComponent implements OnInit {
     this.isHomeEnable = false
     // this._location.back();
     this.showGraph = false;
-    this.IsTableShow = false
+    this.IsTableShow = false;
+    this.showForm = true;
   }
 
+  showDagGraph(id, version) {
+    console.log("showDagGraph Call... ");
+    this.isHomeEnable = true;
+    this.showGraph = true;
+    this.isGraphInprogess = true;
+    this.showForm = false
+    this.isShowSimpleData = false
+    this.IsTableShow = false;
+    setTimeout(() => {
+      this.d_KnowledgeGraphComponent.getGraphData(this.id, this.version);
+    }, 1000);
+  }
 
   autoPopulate() {
     this.dataset.attributeTableArray = [];
@@ -1392,17 +1444,17 @@ export class DatasetComponent implements OnInit {
     }
     if (count > 0) {
       this.dataset.attributeTableArray[ind].dup = true;
-      //if(this.dataset.attributeTableArray[ind].dupIndex){
-      var indx = this.dataset.attributeTableArray[ind].dupIndex;
-      this.dataset.attributeTableArray[indx].dup = true;
-      //}  
+      if(this.dataset.attributeTableArray[ind].hasOwnProperty("dupIndex")){
+        var indx = this.dataset.attributeTableArray[ind].dupIndex;
+        this.dataset.attributeTableArray[indx].dup = true;
+      }  
     }
     else {
       this.dataset.attributeTableArray[ind].dup = false;
-      //if(this.dataset.attributeTableArray[ind].dupIndex){
-      var indx = this.dataset.attributeTableArray[ind].dupIndex;
-      this.dataset.attributeTableArray[indx].dup = false;
-      //}
+        if(this.dataset.attributeTableArray[ind].hasOwnProperty("dupIndex")){
+        var indx = this.dataset.attributeTableArray[ind].dupIndex;
+        this.dataset.attributeTableArray[indx].dup = false;
+      }
     }
     for (var j = 0; j < this.dataset.attributeTableArray.length; j++) {
       var cont = 0
@@ -1414,6 +1466,7 @@ export class DatasetComponent implements OnInit {
       }
       else {
         this.chkDuplicate = true;
+        break;
       }
     }
   }

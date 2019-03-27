@@ -54,7 +54,8 @@ const routes: Routes = [
         {path: 'mapexec/:id/:version/:mode', component: ResultComponent, pathMatch: 'full'},
        // {path: 'mapexec', component: ResultComponent, pathMatch: 'full'},
 
-        {path: 'expressionDataset/:depends/:dependsOnLabel/:dependsOnUuid', component: ExpressionComponent, pathMatch: 'full'}, 
+        {path: 'expressionDataset/:depends/:dependsOnLabel/:dependsOnUuid', component: ExpressionComponent, pathMatch: 'full'},
+        {path: 'formulaDataset/:depends/:dependsOnLabel/:dependsOnUuid', component: FormulaComponent, pathMatch: 'full'}, 
         ]
     }
 ]
