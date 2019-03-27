@@ -628,13 +628,13 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 			List<Map<String, Object>> results = getPredictResults(execUuid, execVersion, rowLimit);
 			response = downloadServiceImpl.download(format, response, runMode, results,
 					new MetaIdentifierHolder(new MetaIdentifier(MetaType.predictExec, execUuid, execVersion)), layout,
-					null, false, "framework.file.download.path", null, predictExec.getDependsOn());
+					null, false, "framework.file.download.path", null, predictExec.getDependsOn(), null);
 		} else {
 			SimulateExec simulateExec = (SimulateExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.simulateExec.toString(), "N");
 			List<Map<String, Object>> results = getSimulateResults(execUuid, execVersion, rowLimit);
 			response = downloadServiceImpl.download(format, response, runMode, results,
 					new MetaIdentifierHolder(new MetaIdentifier(MetaType.simulateExec, execUuid, execVersion)), layout,
-					null, false, "framework.file.download.path", null, simulateExec.getDependsOn());
+					null, false, "framework.file.download.path", null, simulateExec.getDependsOn(), null);
 		}
 		return response;
 	}

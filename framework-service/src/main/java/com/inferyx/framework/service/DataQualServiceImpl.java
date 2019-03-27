@@ -559,7 +559,7 @@ public class DataQualServiceImpl extends RuleTemplate {
 		DataQualExec dqExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(dqExecUuid, dqExecVersion, MetaType.dqExec.toString(), "N");
 		response = downloadServiceImpl.download(format, response, runMode, results,
 				new MetaIdentifierHolder(new MetaIdentifier(MetaType.dqExec, dqExecUuid, dqExecVersion)), layout,
-				null, false, "framework.file.download.path", null, dqExec.getDependsOn());
+				null, false, "framework.file.download.path", null, dqExec.getDependsOn(), null);
 		return response;
 	}
 

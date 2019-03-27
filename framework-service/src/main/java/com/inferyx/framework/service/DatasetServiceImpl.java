@@ -404,7 +404,7 @@ public class DatasetServiceImpl {
 		List<Map<String, Object>> results = getDatasetSample(datasetUuid, datasetVersion, rows, null, runMode);
 		response = downloadServiceImpl.download(format, response, runMode, results,
 				new MetaIdentifierHolder(new MetaIdentifier(MetaType.dataset, datasetUuid, datasetVersion)), layout,
-				null, false, "framework.file.download.path", null, new MetaIdentifierHolder(new MetaIdentifier(MetaType.dataset, datasetUuid, datasetVersion)));
+				null, false, "framework.file.download.path", null, new MetaIdentifierHolder(new MetaIdentifier(MetaType.dataset, datasetUuid, datasetVersion)), null);
 		return response;
 
 	}

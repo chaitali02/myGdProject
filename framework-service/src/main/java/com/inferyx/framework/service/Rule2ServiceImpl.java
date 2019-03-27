@@ -920,7 +920,7 @@ public class Rule2ServiceImpl extends RuleTemplate {
 		
 		response = downloadServiceImpl.download(format, response, runMode, results,
 				new MetaIdentifierHolder(new MetaIdentifier(MetaType.ruleExec, ruleExecUUID, ruleExecVersion)), layout,
-				null, false, "framework.file.download.path", null, ruleExec.getDependsOn());
+				null, false, "framework.file.download.path", null, ruleExec.getDependsOn(), null);
 		return response;
 	}
 	

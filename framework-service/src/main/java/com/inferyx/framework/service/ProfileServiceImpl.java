@@ -631,7 +631,7 @@ public class ProfileServiceImpl extends RuleTemplate {
 				sortBy, order, requestId, runMode);
 		response = downloadServiceImpl.download(format, response, runMode, results, new MetaIdentifierHolder(
 				new MetaIdentifier(MetaType.profileExec, profileExecUuid, profileExecVersion)), layout,
-				null, false, "framework.file.download.path", null, profileExec.getDependsOn());
+				null, false, "framework.file.download.path", null, profileExec.getDependsOn(), null);
 		return response;
 	}
 

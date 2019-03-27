@@ -218,7 +218,7 @@ public class ReconServiceImpl extends RuleTemplate {
 				order, requestId, runMode);
 		response = downloadServiceImpl.download(format, response, runMode, results,
 				new MetaIdentifierHolder(new MetaIdentifier(MetaType.reconExec, reconExecUuid, reconExecVersion)), layout,
-				null, false, "framework.file.download.path", null, reconExec.getDependsOn());
+				null, false, "framework.file.download.path", null, reconExec.getDependsOn(), null);
 		return response;
 	}
 	

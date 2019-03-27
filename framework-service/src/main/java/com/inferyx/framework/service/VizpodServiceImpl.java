@@ -855,7 +855,7 @@ public class VizpodServiceImpl extends RuleTemplate {
 				limit, sortBy, order, requestId, runMode);
 		response = downloadServiceImpl.download(format, response, runMode, results,
 				new MetaIdentifierHolder(new MetaIdentifier(MetaType.vizExec, execUuid, execVersion)), layout,
-				null, false, "framework.file.download.path", null, vizExec.getDependsOn());
+				null, false, "framework.file.download.path", null, vizExec.getDependsOn(), null);
 		return response;
 	}
 

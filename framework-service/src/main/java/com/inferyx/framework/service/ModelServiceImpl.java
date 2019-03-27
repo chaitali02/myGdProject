@@ -3633,7 +3633,7 @@ public class ModelServiceImpl {
 		List<Map<String, Object>> results = getTrainOrTestSet(trainExecUuid, trainExecVersion, setType);
 		response = downloadServiceImpl.download(format, response, runMode, results,
 				new MetaIdentifierHolder(new MetaIdentifier(MetaType.trainExec, trainExecUuid, trainExecVersion)), layout,
-				null, false, "framework.file.download.path", null, trainExec.getDependsOn());
+				null, false, "framework.file.download.path", null, trainExec.getDependsOn(), null);
 		return response;
 	}
 	

@@ -14,9 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.domain.Document;
-import com.inferyx.framework.domain.ParamListHolder;
-import com.inferyx.framework.domain.Report;
-import com.inferyx.framework.domain.ReportExec;
 import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.service.CommonServiceImpl;
 
@@ -29,7 +26,6 @@ import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,8 +51,6 @@ public class PDFUtil {
 
 	static final Logger logger = Logger.getLogger(PDFUtil.class);
 
-	@Autowired
-	private CommonServiceImpl<?> commonServiceImpl;
 	private PDPageContentStream contentStream;
 
 	public PDDocument createPDF(Document document) throws IOException {

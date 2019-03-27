@@ -38,6 +38,9 @@ public class Document {
 	private String parameters;
 	private String generationDate;
 	private String fileName;
+	private String orgName;
+	private String orgAddress;
+	private String orgLogo;
 	
 	/**
 	 * @Ganesh
@@ -343,5 +346,59 @@ public class Document {
 	 */
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the orgName
+	 */
+	public String getOrgName() {
+		return orgName;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param orgName the orgName to set
+	 */
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the orgAddress
+	 */
+	public String getOrgAddress() {
+		return orgAddress;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param orgAddress the orgAddress to set
+	 */
+	public void setOrgAddress(String orgAddress) {
+		this.orgAddress = orgAddress;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the orgLogo
+	 */
+	public String getOrgLogo() {
+		return orgLogo;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param orgLogo the orgLogo to set
+	 */
+	public void setOrgLogo(String orgLogo) {
+		this.orgLogo = orgLogo;
 	}
 }

@@ -416,7 +416,7 @@ public class CustomOperatorServiceImpl implements IParsable, IExecutable {
 		
 		response = downloadServiceImpl.download(format, response, runMode, results, new MetaIdentifierHolder(
 				new MetaIdentifier(MetaType.operatorExec, operatorExecUuid, operatorExecVersion)), layout,
-				null, false, "framework.file.download.path", null, operatorExec.getDependsOn());
+				null, false, "framework.file.download.path", null, operatorExec.getDependsOn(), null);
 	
 		return response;
 
