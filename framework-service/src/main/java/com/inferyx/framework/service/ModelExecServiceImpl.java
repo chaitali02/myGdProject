@@ -83,6 +83,8 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 	Helper helper;
 	@Autowired
 	MetadataServiceImpl metadataServiceImpl;
+	@Autowired
+	private DownloadServiceImpl downloadServiceImpl;
 
 	static final Logger logger = Logger.getLogger(ModelExecServiceImpl.class);
 
@@ -620,15 +622,19 @@ public class ModelExecServiceImpl extends BaseRuleExecTemplate {
 					"Requested rows exceeded the limit of " + maxRows, null);
 			throw new RuntimeException("Requested rows exceeded the limit of " + maxRows);
 		}
-
+		
 		if (type.equalsIgnoreCase(MetaType.predictExec.toString())) {
+			PredictExec predictExec = (PredictExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.predictExec.toString(), "N");
 			List<Map<String, Object>> results = getPredictResults(execUuid, execVersion, rowLimit);
-			response = commonServiceImpl.download(format, response, runMode, results,
-					new MetaIdentifierHolder(new MetaIdentifier(MetaType.predictExec, execUuid, execVersion)), layout);
+			response = downloadServiceImpl.download(format, response, runMode, results,
+					new MetaIdentifierHolder(new MetaIdentifier(MetaType.predictExec, execUuid, execVersion)), layout,
+					null, false, "framework.file.download.path", null, predictExec.getDependsOn());
 		} else {
+			SimulateExec simulateExec = (SimulateExec) commonServiceImpl.getOneByUuidAndVersion(execUuid, execVersion, MetaType.simulateExec.toString(), "N");
 			List<Map<String, Object>> results = getSimulateResults(execUuid, execVersion, rowLimit);
-			response = commonServiceImpl.download(format, response, runMode, results,
-					new MetaIdentifierHolder(new MetaIdentifier(MetaType.simulateExec, execUuid, execVersion)), layout);
+			response = downloadServiceImpl.download(format, response, runMode, results,
+					new MetaIdentifierHolder(new MetaIdentifier(MetaType.simulateExec, execUuid, execVersion)), layout,
+					null, false, "framework.file.download.path", null, simulateExec.getDependsOn());
 		}
 		return response;
 	}

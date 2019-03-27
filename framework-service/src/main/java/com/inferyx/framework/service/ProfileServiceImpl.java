@@ -130,6 +130,8 @@ public class ProfileServiceImpl extends RuleTemplate {
 	ProfileOperator profileOperator; 
 	@Resource(name = "taskThreadMap")
 	ConcurrentHashMap<?, ?> taskThreadMap;
+	@Autowired
+	private DownloadServiceImpl downloadServiceImpl;
 
 	Map<String, String> requestMap = new HashMap<String, String>();
 
@@ -623,10 +625,13 @@ public class ProfileServiceImpl extends RuleTemplate {
 			throw new RuntimeException("Requested rows exceeded the limit of " + maxRows);
 		}
 
+		ProfileExec profileExec = (ProfileExec) commonServiceImpl.getOneByUuidAndVersion(profileExecUuid, profileExecVersion, MetaType.profileExec.toString(), "N");
+		
 		List<Map<String, Object>> results = getProfileResults(profileExecUuid, profileExecVersion, offset, limit,
 				sortBy, order, requestId, runMode);
-		response = commonServiceImpl.download(format, response, runMode, results, new MetaIdentifierHolder(
-				new MetaIdentifier(MetaType.profileExec, profileExecUuid, profileExecVersion)), layout);
+		response = downloadServiceImpl.download(format, response, runMode, results, new MetaIdentifierHolder(
+				new MetaIdentifier(MetaType.profileExec, profileExecUuid, profileExecVersion)), layout,
+				null, false, "framework.file.download.path", null, profileExec.getDependsOn());
 		return response;
 	}
 

@@ -217,6 +217,8 @@ public class ModelServiceImpl {
 	private ConcurrentHashMap<String, Object> trainedModelMap;
 	@Autowired
 	private ImputeOperator imputeOperator;
+	@Autowired
+	private DownloadServiceImpl downloadServiceImpl;
 	
 	static final Logger logger = Logger.getLogger(ModelServiceImpl.class);
 	CustomLogger customLogger = new CustomLogger();
@@ -3625,10 +3627,13 @@ public class ModelServiceImpl {
 					"Requested rows exceeded the limit of " + maxRows, null);
 			throw new RuntimeException("Requested rows exceeded the limit of " + maxRows);
 		}
+		
+		TrainExec trainExec = (TrainExec) commonServiceImpl.getOneByUuidAndVersion(trainExecUuid, trainExecVersion, MetaType.trainExec.toString(), "N");
 
 		List<Map<String, Object>> results = getTrainOrTestSet(trainExecUuid, trainExecVersion, setType);
-		response = commonServiceImpl.download(format, response, runMode, results,
-				new MetaIdentifierHolder(new MetaIdentifier(MetaType.trainExec, trainExecUuid, trainExecVersion)), layout);
+		response = downloadServiceImpl.download(format, response, runMode, results,
+				new MetaIdentifierHolder(new MetaIdentifier(MetaType.trainExec, trainExecUuid, trainExecVersion)), layout,
+				null, false, "framework.file.download.path", null, trainExec.getDependsOn());
 		return response;
 	}
 	

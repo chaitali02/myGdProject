@@ -54,9 +54,11 @@ public class DocumentGenServiceImpl {
 	public boolean createPDF(Document document) throws IOException {
 		try {
 			LOGGER.info("creating PDF file ...");
-			
+
 			String filePathUrl = document.getLocation();
 			LOGGER.info("PDF file path: "+filePathUrl);
+						
+			createFilePathIfNotExists(filePathUrl, document.getFileName());
 			
 			PDDocument doc = pdfUtil.createPDF(document);
 			
@@ -71,12 +73,23 @@ public class DocumentGenServiceImpl {
 		}
 	}
 
+	public boolean createFilePathIfNotExists(String filePathUrl, String fileName) {
+		String metObjDirPath = filePathUrl.replaceAll(fileName, "");
+		File metObjDocDir = new File(metObjDirPath);
+		if (!metObjDocDir.exists()) {
+			metObjDocDir.mkdirs();
+		}
+		return true;
+	}
+	
 	public boolean createXLS(Document document) {
 		try {
 			LOGGER.info("creating EXCEL file ...");
 			
 			String filePathUrl = document.getLocation();
 			LOGGER.info("EXCEL file path: "+filePathUrl);
+			
+			createFilePathIfNotExists(filePathUrl, document.getFileName());
 			
 			Workbook workbook = null;
 			if (document.getMetaObjType() != null && document.getMetaObjType().equalsIgnoreCase(MetaType.report.toString())) {

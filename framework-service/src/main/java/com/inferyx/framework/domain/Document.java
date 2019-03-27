@@ -37,6 +37,7 @@ public class Document {
 	private String description;
 	private String parameters;
 	private String generationDate;
+	private String fileName;
 	
 	/**
 	 * @Ganesh
@@ -324,5 +325,23 @@ public class Document {
 	 */
 	public void setGenerationDate(String generationDate) {
 		this.generationDate = generationDate;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @return the fileName
+	 */
+	public String getFileName() {
+		return fileName;
+	}
+
+	/**
+	 * @Ganesh
+	 *
+	 * @param fileName the fileName to set
+	 */
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 }

@@ -26,14 +26,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.FutureTask;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.spark.sql.SaveMode;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,9 +39,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inferyx.framework.common.HDFSInfo;
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.common.PDFUtil;
 import com.inferyx.framework.common.SessionHelper;
-import com.inferyx.framework.common.WorkbookUtil;
 import com.inferyx.framework.domain.AttributeSource;
 import com.inferyx.framework.domain.BaseEntityStatus;
 import com.inferyx.framework.domain.BaseExec;
@@ -53,7 +47,6 @@ import com.inferyx.framework.domain.BaseRuleExec;
 import com.inferyx.framework.domain.DagExec;
 import com.inferyx.framework.domain.DataStore;
 import com.inferyx.framework.domain.Document;
-import com.inferyx.framework.domain.DownloadExec;
 import com.inferyx.framework.domain.ExecParams;
 import com.inferyx.framework.domain.ExecStatsHolder;
 import com.inferyx.framework.domain.FileType;
@@ -67,6 +60,7 @@ import com.inferyx.framework.domain.ReportExec;
 import com.inferyx.framework.domain.ReportExecView;
 import com.inferyx.framework.domain.SenderInfo;
 import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.SparkExecutor;
 import com.inferyx.framework.operator.ReportOperator;
@@ -88,8 +82,6 @@ public class ReportServiceImpl extends RuleTemplate {
 	@Autowired
 	private DataStoreServiceImpl datastoreServiceImpl;
 	@Autowired
-	private WorkbookUtil workbookUtil;
-	@Autowired
 	private SparkExecutor<?> sparkExecutor;
 	@Autowired
 	private HDFSInfo hdfsInfo;
@@ -98,7 +90,7 @@ public class ReportServiceImpl extends RuleTemplate {
 	@Autowired
 	private NotificationServiceImpl notificationServiceImpl;
 	@Autowired
-	private PDFUtil pdfUtil;
+	private DownloadServiceImpl downloadServiceImpl;
 	@Autowired
 	private DocumentGenServiceImpl documentGenServiceImpl;
 	
@@ -321,7 +313,7 @@ public class ReportServiceImpl extends RuleTemplate {
 	
 	public HttpServletResponse download(String reportExecUuid, String reportExecVersion, String format, int offset,
 			int limit, HttpServletResponse response, String sortBy, String order, String requestId,
-			RunMode runMode, boolean skipLimitCheck) throws Exception {
+			RunMode runMode, boolean skipLimitCheck, Layout layout) throws Exception {
 
 		if(StringUtils.isBlank(format)) {
 			throw new RuntimeException("Format not provided ...");
@@ -336,98 +328,106 @@ public class ReportServiceImpl extends RuleTemplate {
 
 		List<Map<String, Object>> data = prepareDocumentData(reportExec, report, runMode, limit, false);
 		
-		format = Helper.mapFileFormat(report.getFormat());
+		MetaIdentifierHolder dependsOn = new MetaIdentifierHolder(
+				new MetaIdentifier(MetaType.reportExec, reportExec.getUuid(), reportExec.getVersion()));
+		MetaIdentifierHolder metaObjectHolder = new MetaIdentifierHolder(
+				new MetaIdentifier(MetaType.report, report.getUuid(), report.getVersion()));
 		
-		String filePathUrl = Helper.getDocumentFilePath(metadataServiceImpl.getConfigValueByName("framework.report.Path"), report.getUuid(), report.getVersion(), reportExec.getVersion(), report.getName(), format, true);
-		String attachmentName = Helper.getDocumentFileName(report.getName(), reportExec.getVersion(), format);
+		response = downloadServiceImpl.download(format, response, runMode, data, dependsOn, layout,
+				reportExec, true, "framework.report.Path", getReportParametrsForDoc(report, reportExec), metaObjectHolder);
 		
-		String reportDirPath = filePathUrl.replaceAll(attachmentName, "");
-		
-		File reportDocDir = new File(reportDirPath);
-		if (!reportDocDir.exists()) {
-			reportDocDir.mkdirs();
-		}
-
-		Workbook workbook = null;
-		PDDocument doc = null;
-
-		File reportFile = new File(filePathUrl);
-		if (reportFile.exists()) {
-			if (format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
-				doc = PDDocument.load(reportFile);
-			} else {
-				workbook = WorkbookFactory.create(reportFile);
-			}
-		} else {			
-			
-			Document document = new Document();
-			document.setLocation(filePathUrl);
-			document.setHeader(report.getHeader());
-			document.setHeaderAlignment(report.getHeaderAlign());
-			document.setFooter(report.getFooter());
-			document.setFooterAlignment(report.getFooterAlign());
-			document.setTitle(report.getTitle());
-			document.setLayout(report.getLayout());
-			document.setData(data);
-			document.setMetaObjType(MetaType.report.toString());
-			document.setMetExecObject(reportExec);
-			document.setDocumentType(format);
-			document.setName(report.getName());
-			document.setDescription(!StringUtils.isBlank(report.getDesc()) ? report.getDesc() : "");
-			document.setParameters(getReportParametrsForDoc(report, reportExec));
-			document.setGenerationDate(report.getCreatedOn());
-			
-			boolean isDocCreated = documentGenServiceImpl.createDocument(document);
-			
-			if(!isDocCreated) {
-				throw new RuntimeException((format != null ? format.toUpperCase() : "Document")+" creation failed...");
-			}
-			
-			if(format.equalsIgnoreCase(FileType.PDF.toString())) {
-				doc = PDDocument.load(reportFile);
-			} else if(format.equalsIgnoreCase(FileType.XLS.toString())) {
-				workbook = 	WorkbookFactory.create(reportFile);
-			}
-			
-			DownloadExec downloadExec = new DownloadExec();
-			downloadExec.setBaseEntity();
-			downloadExec.setLocation(filePathUrl);
-			downloadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.reportExec, reportExec.getUuid(), reportExec.getVersion())));
-			
-			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.PENDING);
-			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.STARTING);
-			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.READY);
-			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.RUNNING);
-			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.COMPLETED);
-			
-			commonServiceImpl.save(MetaType.downloadExec.toString(), downloadExec);			
-		}
-
-		if (response != null) {
-			try {
-				ServletOutputStream servletOutputStream = response.getOutputStream();
-				if (format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
-					response.setContentType("application/pdf");
-					response.setHeader("Content-disposition", "attachment");
-					response.setHeader("filename", report.getName().concat("_").concat(reportExec.getVersion())
-							.concat(".").concat(FileType.PDF.toString().toLowerCase()));
-					doc.save(servletOutputStream);
-					doc.close();
-				} else if (format.equalsIgnoreCase(FileType.XLS.toString())) {
-					response.setContentType("application/xml");
-					response.setHeader("Content-disposition", "attachment");
-					response.setHeader("filename", report.getName().concat("_").concat(reportExec.getVersion())
-							.concat(".").concat(FileType.XLS.toString().toLowerCase()));
-					workbook.write(servletOutputStream);
-					workbook.close();
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-				logger.error("Can not download file.");
-				response.setStatus(300);
-				throw new FileNotFoundException("Can not download file.");
-			}
-		}
+//		format = Helper.mapFileFormat(report.getFormat());
+//		
+//		String filePathUrl = Helper.getDocumentFilePath(metadataServiceImpl.getConfigValueByName("framework.report.Path"), report.getUuid(), report.getVersion(), reportExec.getVersion(), report.getName(), format, true);
+//		String attachmentName = Helper.getDocumentFileName(report.getName(), reportExec.getVersion(), format);
+//		
+//		String reportDirPath = filePathUrl.replaceAll(attachmentName, "");
+//		
+//		File reportDocDir = new File(reportDirPath);
+//		if (!reportDocDir.exists()) {
+//			reportDocDir.mkdirs();
+//		}
+//
+//		Workbook workbook = null;
+//		PDDocument doc = null;
+//
+//		File reportFile = new File(filePathUrl);
+//		if (reportFile.exists()) {
+//			if (format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
+//				doc = PDDocument.load(reportFile);
+//			} else {
+//				workbook = WorkbookFactory.create(reportFile);
+//			}
+//		} else {			
+//			
+//			Document document = new Document();
+//			document.setLocation(filePathUrl);
+//			document.setHeader(report.getHeader());
+//			document.setHeaderAlignment(report.getHeaderAlign());
+//			document.setFooter(report.getFooter());
+//			document.setFooterAlignment(report.getFooterAlign());
+//			document.setTitle(report.getTitle());
+//			document.setLayout(report.getLayout());
+//			document.setData(data);
+//			document.setMetaObjType(MetaType.report.toString());
+//			document.setMetExecObject(reportExec);
+//			document.setDocumentType(format);
+//			document.setName(report.getName());
+//			document.setDescription(!StringUtils.isBlank(report.getDesc()) ? report.getDesc() : "");
+//			document.setParameters(getReportParametrsForDoc(report, reportExec));
+//			document.setGenerationDate(report.getCreatedOn());
+//			
+//			boolean isDocCreated = documentGenServiceImpl.createDocument(document);
+//			
+//			if(!isDocCreated) {
+//				throw new RuntimeException((format != null ? format.toUpperCase() : "Document")+" creation failed...");
+//			}
+//			
+//			if(format.equalsIgnoreCase(FileType.PDF.toString())) {
+//				doc = PDDocument.load(reportFile);
+//			} else if(format.equalsIgnoreCase(FileType.XLS.toString())) {
+//				workbook = 	WorkbookFactory.create(reportFile);
+//			}
+//			
+//			DownloadExec downloadExec = new DownloadExec();
+//			downloadExec.setBaseEntity();
+//			downloadExec.setLocation(filePathUrl);
+//			downloadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.reportExec, reportExec.getUuid(), reportExec.getVersion())));
+//			
+//			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.PENDING);
+//			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.STARTING);
+//			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.READY);
+//			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.RUNNING);
+//			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.COMPLETED);
+//			
+//			commonServiceImpl.save(MetaType.downloadExec.toString(), downloadExec);			
+//		}
+//
+//		if (response != null) {
+//			try {
+//				ServletOutputStream servletOutputStream = response.getOutputStream();
+//				if (format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
+//					response.setContentType("application/pdf");
+//					response.setHeader("Content-disposition", "attachment");
+//					response.setHeader("filename", report.getName().concat("_").concat(reportExec.getVersion())
+//							.concat(".").concat(FileType.PDF.toString().toLowerCase()));
+//					doc.save(servletOutputStream);
+//					doc.close();
+//				} else if (format.equalsIgnoreCase(FileType.XLS.toString())) {
+//					response.setContentType("application/xml");
+//					response.setHeader("Content-disposition", "attachment");
+//					response.setHeader("filename", report.getName().concat("_").concat(reportExec.getVersion())
+//							.concat(".").concat(FileType.XLS.toString().toLowerCase()));
+//					workbook.write(servletOutputStream);
+//					workbook.close();
+//				}
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//				logger.error("Can not download file.");
+//				response.setStatus(300);
+//				throw new FileNotFoundException("Can not download file.");
+//			}
+//		}
 
 		return response;
 	}
@@ -590,23 +590,14 @@ public class ReportServiceImpl extends RuleTemplate {
 					document.setDescription(!StringUtils.isBlank(report.getDesc()) ? report.getDesc() : "");
 					document.setParameters(getReportParametrsForDoc(report, reportExec));
 					document.setGenerationDate(report.getCreatedOn());
-					
-					LinkedHashMap<String, Object> otherFields = new LinkedHashMap<>();
-					otherFields.put("report_name", report.getName());
-					otherFields.put("report_description", report.getDesc());
-					otherFields.put("report_generation_date", report.getCreatedOn());
-					otherFields.put("report_parameters", getReportParametrsForDoc(report, reportExec));
-					document.setOtherFields(otherFields);
-					
+					document.setFileName(attachmentName);
+										
 					boolean isDocCreated = documentGenServiceImpl.createDocument(document);				
 					
 					if(!isDocCreated) {
 						throw new RuntimeException((format != null ? format.toUpperCase() : "Document")+" creation failed...");
 					}
 				}
-				
-					
-
 			} catch (Exception e) {
 				e.printStackTrace();
 				senderInfo.setEmailAttachment(null);
@@ -773,98 +764,106 @@ public class ReportServiceImpl extends RuleTemplate {
 
 		List<Map<String, Object>> data = prepareDocumentData(reportExec, report, runMode, limit, false);
 		
-		format = Helper.mapFileFormat(report.getFormat());
+		MetaIdentifierHolder dependsOn = new MetaIdentifierHolder(
+				new MetaIdentifier(MetaType.reportExec, reportExec.getUuid(), reportExec.getVersion()));
+		MetaIdentifierHolder metaObjectHolder = new MetaIdentifierHolder(
+				new MetaIdentifier(MetaType.report, report.getUuid(), report.getVersion()));
 		
-		String filePathUrl = Helper.getDocumentFilePath(metadataServiceImpl.getConfigValueByName("framework.report.Path"), report.getUuid(), report.getVersion(), reportExec.getVersion(), report.getName(), format, true);
-		String attachmentName = Helper.getDocumentFileName(report.getName(), reportExec.getVersion(), format);
+		response = downloadServiceImpl.download(format, response, runMode, data, dependsOn, report.getLayout(),
+				reportExec, true, "framework.report.Path", getReportParametrsForDoc(report, reportExec), metaObjectHolder);
 		
-		String reportDirPath = filePathUrl.replaceAll(attachmentName, "");
-		
-		File reportDocDir = new File(reportDirPath);
-		if (!reportDocDir.exists()) {
-			reportDocDir.mkdirs();
-		}
-
-		Workbook workbook = null;
-		PDDocument doc = null;
-
-		File reportFile = new File(filePathUrl);
-		if (reportFile.exists()) {
-			if (format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
-				doc = PDDocument.load(reportFile);
-			} else {
-				workbook = WorkbookFactory.create(reportFile);
-			}
-		} else {			
-			
-			Document document = new Document();
-			document.setLocation(filePathUrl);
-			document.setHeader(report.getHeader());
-			document.setHeaderAlignment(report.getHeaderAlign());
-			document.setFooter(report.getFooter());
-			document.setFooterAlignment(report.getFooterAlign());
-			document.setTitle(report.getTitle());
-			document.setLayout(report.getLayout());
-			document.setData(data);
-			document.setMetaObjType(MetaType.report.toString());
-			document.setMetExecObject(reportExec);
-			document.setDocumentType(format);
-			document.setName(report.getName());
-			document.setDescription(!StringUtils.isBlank(report.getDesc()) ? report.getDesc() : "");
-			document.setParameters(getReportParametrsForDoc(report, reportExec));
-			document.setGenerationDate(report.getCreatedOn());
-			
-			boolean isDocCreated = documentGenServiceImpl.createDocument(document);
-			
-			if(!isDocCreated) {
-				throw new RuntimeException((format != null ? format.toUpperCase() : "Document")+" creation failed...");
-			}
-			
-			if(format.equalsIgnoreCase(FileType.PDF.toString())) {
-				doc = PDDocument.load(reportFile);
-			} else if(format.equalsIgnoreCase(FileType.XLS.toString())) {
-				workbook = 	WorkbookFactory.create(reportFile);
-			}
-			
-			DownloadExec downloadExec = new DownloadExec();
-			downloadExec.setBaseEntity();
-			downloadExec.setLocation(filePathUrl);
-			downloadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.reportExec, reportExec.getUuid(), reportExec.getVersion())));
-			
-			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.PENDING);
-			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.STARTING);
-			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.READY);
-			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.RUNNING);
-			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.COMPLETED);
-			
-			commonServiceImpl.save(MetaType.downloadExec.toString(), downloadExec);			
-		}
-
-		if (response != null) {
-			try {
-				ServletOutputStream servletOutputStream = response.getOutputStream();
-				if (format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
-					response.setContentType("application/pdf");
-					response.setHeader("Content-disposition", "attachment");
-					response.setHeader("filename", report.getName().concat("_").concat(reportExec.getVersion())
-							.concat(".").concat(FileType.PDF.toString().toLowerCase()));
-					doc.save(servletOutputStream);
-					doc.close();
-				} else if (format.equalsIgnoreCase(FileType.XLS.toString())) {
-					response.setContentType("application/xml");
-					response.setHeader("Content-disposition", "attachment");
-					response.setHeader("filename", report.getName().concat("_").concat(reportExec.getVersion())
-							.concat(".").concat(FileType.XLS.toString().toLowerCase()));
-					workbook.write(servletOutputStream);
-					workbook.close();
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-				logger.error("Can not download file.");
-				response.setStatus(300);
-				throw new FileNotFoundException("Can not download file.");
-			}
-		}
+//		format = Helper.mapFileFormat(report.getFormat());
+//		
+//		String filePathUrl = Helper.getDocumentFilePath(metadataServiceImpl.getConfigValueByName("framework.report.Path"), report.getUuid(), report.getVersion(), reportExec.getVersion(), report.getName(), format, true);
+//		String attachmentName = Helper.getDocumentFileName(report.getName(), reportExec.getVersion(), format);
+//		
+//		String reportDirPath = filePathUrl.replaceAll(attachmentName, "");
+//		
+//		File reportDocDir = new File(reportDirPath);
+//		if (!reportDocDir.exists()) {
+//			reportDocDir.mkdirs();
+//		}
+//
+//		Workbook workbook = null;
+//		PDDocument doc = null;
+//
+//		File reportFile = new File(filePathUrl);
+//		if (reportFile.exists()) {
+//			if (format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
+//				doc = PDDocument.load(reportFile);
+//			} else {
+//				workbook = WorkbookFactory.create(reportFile);
+//			}
+//		} else {			
+//			
+//			Document document = new Document();
+//			document.setLocation(filePathUrl);
+//			document.setHeader(report.getHeader());
+//			document.setHeaderAlignment(report.getHeaderAlign());
+//			document.setFooter(report.getFooter());
+//			document.setFooterAlignment(report.getFooterAlign());
+//			document.setTitle(report.getTitle());
+//			document.setLayout(report.getLayout());
+//			document.setData(data);
+//			document.setMetaObjType(MetaType.report.toString());
+//			document.setMetExecObject(reportExec);
+//			document.setDocumentType(format);
+//			document.setName(report.getName());
+//			document.setDescription(!StringUtils.isBlank(report.getDesc()) ? report.getDesc() : "");
+//			document.setParameters(getReportParametrsForDoc(report, reportExec));
+//			document.setGenerationDate(report.getCreatedOn());
+//			
+//			boolean isDocCreated = documentGenServiceImpl.createDocument(document);
+//			
+//			if(!isDocCreated) {
+//				throw new RuntimeException((format != null ? format.toUpperCase() : "Document")+" creation failed...");
+//			}
+//			
+//			if(format.equalsIgnoreCase(FileType.PDF.toString())) {
+//				doc = PDDocument.load(reportFile);
+//			} else if(format.equalsIgnoreCase(FileType.XLS.toString())) {
+//				workbook = 	WorkbookFactory.create(reportFile);
+//			}
+//			
+//			DownloadExec downloadExec = new DownloadExec();
+//			downloadExec.setBaseEntity();
+//			downloadExec.setLocation(filePathUrl);
+//			downloadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.reportExec, reportExec.getUuid(), reportExec.getVersion())));
+//			
+//			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.PENDING);
+//			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.STARTING);
+//			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.READY);
+//			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.RUNNING);
+//			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.COMPLETED);
+//			
+//			commonServiceImpl.save(MetaType.downloadExec.toString(), downloadExec);			
+//		}
+//
+//		if (response != null) {
+//			try {
+//				ServletOutputStream servletOutputStream = response.getOutputStream();
+//				if (format != null && !format.isEmpty() && format.equalsIgnoreCase(FileType.PDF.toString())) {
+//					response.setContentType("application/pdf");
+//					response.setHeader("Content-disposition", "attachment");
+//					response.setHeader("filename", report.getName().concat("_").concat(reportExec.getVersion())
+//							.concat(".").concat(FileType.PDF.toString().toLowerCase()));
+//					doc.save(servletOutputStream);
+//					doc.close();
+//				} else if (format.equalsIgnoreCase(FileType.XLS.toString())) {
+//					response.setContentType("application/xml");
+//					response.setHeader("Content-disposition", "attachment");
+//					response.setHeader("filename", report.getName().concat("_").concat(reportExec.getVersion())
+//							.concat(".").concat(FileType.XLS.toString().toLowerCase()));
+//					workbook.write(servletOutputStream);
+//					workbook.close();
+//				}
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//				logger.error("Can not download file.");
+//				response.setStatus(300);
+//				throw new FileNotFoundException("Can not download file.");
+//			}
+//		}
 
 		return response;
 	}
@@ -884,91 +883,99 @@ public class ReportServiceImpl extends RuleTemplate {
 		Report report = (Report) commonServiceImpl.getOneByUuidAndVersion(dependsOnMI.getUuid(),
 				dependsOnMI.getVersion(), dependsOnMI.getType().toString(), "N");
 
-		format = Helper.mapFileFormat(format);
-		
 		List<Map<String, Object>> data = prepareDocumentData(reportExec, report, runMode, limit, false);
-		
-		String filePathUrl = Helper.getDocumentFilePath(metadataServiceImpl.getConfigValueByName("framework.file.download.path"), report.getUuid(), report.getVersion(), reportExec.getVersion(), report.getName(), format, true);
-		String attachmentName = Helper.getDocumentFileName(report.getName(), reportExec.getVersion(), format);
-		
-		String reportDirPath = filePathUrl.replaceAll(attachmentName, "");
-		
-		File reportDocDir = new File(reportDirPath);
-		if (!reportDocDir.exists()) {
-			reportDocDir.mkdirs();
-		}
 
-		Workbook workbook = null;
-		PDDocument doc = null;
-
-		Document document = new Document();
-		document.setLocation(filePathUrl);
-		document.setHeader(report.getHeader());
-		document.setHeaderAlignment(report.getHeaderAlign());
-		document.setFooter(report.getFooter());
-		document.setFooterAlignment(report.getFooterAlign());
-		document.setTitle(report.getTitle());
-		document.setLayout(report.getLayout());
-		document.setData(data);
-		document.setMetaObjType(MetaType.report.toString());
-		document.setMetExecObject(reportExec);
-		document.setDocumentType(format);
-		document.setName(report.getName());
-		document.setDescription(!StringUtils.isBlank(report.getDesc()) ? report.getDesc() : "");
-		document.setParameters(getReportParametrsForDoc(report, reportExec));
-		document.setGenerationDate(report.getCreatedOn());
-
-		File reportFile = new File(filePathUrl);
-		boolean isDocCreated = documentGenServiceImpl.createDocument(document);
+		MetaIdentifierHolder dependsOn = new MetaIdentifierHolder(
+				new MetaIdentifier(MetaType.reportExec, reportExec.getUuid(), reportExec.getVersion()));
+		MetaIdentifierHolder metaObjectHolder = new MetaIdentifierHolder(
+				new MetaIdentifier(MetaType.report, report.getUuid(), report.getVersion()));
 		
-		if(!isDocCreated) {
-			throw new RuntimeException((format != null ? format.toUpperCase() : "Document")+" creation failed...");
-		}
+		response = downloadServiceImpl.download(format, response, runMode, data, dependsOn, report.getLayout(),
+				null, false, "framework.file.download.path", getReportParametrsForDoc(report, reportExec), metaObjectHolder);
 		
-		if(format.equalsIgnoreCase(FileType.PDF.toString())) {
-			doc = PDDocument.load(reportFile);
-		} else if(format.equalsIgnoreCase(FileType.XLS.toString())) {
-			workbook = 	WorkbookFactory.create(reportFile);
-		}
-		
-		DownloadExec downloadExec = new DownloadExec();
-		downloadExec.setBaseEntity();
-		downloadExec.setLocation(filePathUrl);
-		downloadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.reportExec, reportExec.getUuid(), reportExec.getVersion())));
-		
-		downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.PENDING);
-		downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.STARTING);
-		downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.READY);
-		downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.RUNNING);
-		downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.COMPLETED);
-		
-		commonServiceImpl.save(MetaType.downloadExec.toString(), downloadExec);		
-
-		if (response != null) {
-			try {
-				ServletOutputStream servletOutputStream = response.getOutputStream();
-				if (format.equalsIgnoreCase(FileType.PDF.toString())) {
-					response.setContentType("application/pdf");
-					response.setHeader("Content-disposition", "attachment");
-					response.setHeader("filename", report.getName().concat("_").concat(reportExec.getVersion())
-							.concat(".").concat(FileType.PDF.toString().toLowerCase()));
-					doc.save(servletOutputStream);
-					doc.close();
-				} else if (format.equalsIgnoreCase(FileType.XLS.toString())) {
-					response.setContentType("application/xml");
-					response.setHeader("Content-disposition", "attachment");
-					response.setHeader("filename", report.getName().concat("_").concat(reportExec.getVersion())
-							.concat(".").concat(FileType.XLS.toString().toLowerCase()));
-					workbook.write(servletOutputStream);
-					workbook.close();
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-				logger.error("Can not download file.");
-				response.setStatus(300);
-				throw new FileNotFoundException("Can not download file.");
-			}
-		}
+//		format = Helper.mapFileFormat(format);		
+//		
+//		String filePathUrl = Helper.getDocumentFilePath(metadataServiceImpl.getConfigValueByName("framework.file.download.path"), report.getUuid(), report.getVersion(), reportExec.getVersion(), report.getName(), format, true);
+//		String attachmentName = Helper.getDocumentFileName(report.getName(), reportExec.getVersion(), format);
+//		
+//		String reportDirPath = filePathUrl.replaceAll(attachmentName, "");
+//		
+//		File reportDocDir = new File(reportDirPath);
+//		if (!reportDocDir.exists()) {
+//			reportDocDir.mkdirs();
+//		}
+//
+//		Workbook workbook = null;
+//		PDDocument doc = null;
+//
+//		Document document = new Document();
+//		document.setLocation(filePathUrl);
+//		document.setHeader(report.getHeader());
+//		document.setHeaderAlignment(report.getHeaderAlign());
+//		document.setFooter(report.getFooter());
+//		document.setFooterAlignment(report.getFooterAlign());
+//		document.setTitle(report.getTitle());
+//		document.setLayout(report.getLayout());
+//		document.setData(data);
+//		document.setMetaObjType(MetaType.report.toString());
+//		document.setMetExecObject(reportExec);
+//		document.setDocumentType(format);
+//		document.setName(report.getName());
+//		document.setDescription(!StringUtils.isBlank(report.getDesc()) ? report.getDesc() : "");
+//		document.setParameters(getReportParametrsForDoc(report, reportExec));
+//		document.setGenerationDate(report.getCreatedOn());
+//
+//		File reportFile = new File(filePathUrl);
+//		boolean isDocCreated = documentGenServiceImpl.createDocument(document);
+//		
+//		if(!isDocCreated) {
+//			throw new RuntimeException((format != null ? format.toUpperCase() : "Document")+" creation failed...");
+//		}
+//		
+//		if(format.equalsIgnoreCase(FileType.PDF.toString())) {
+//			doc = PDDocument.load(reportFile);
+//		} else if(format.equalsIgnoreCase(FileType.XLS.toString())) {
+//			workbook = 	WorkbookFactory.create(reportFile);
+//		}
+//		
+//		DownloadExec downloadExec = new DownloadExec();
+//		downloadExec.setBaseEntity();
+//		downloadExec.setLocation(filePathUrl);
+//		downloadExec.setDependsOn(new MetaIdentifierHolder(new MetaIdentifier(MetaType.reportExec, reportExec.getUuid(), reportExec.getVersion())));
+//		
+//		downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.PENDING);
+//		downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.STARTING);
+//		downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.READY);
+//		downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.RUNNING);
+//		downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec, Status.Stage.COMPLETED);
+//		
+//		commonServiceImpl.save(MetaType.downloadExec.toString(), downloadExec);		
+//
+//		if (response != null) {
+//			try {
+//				ServletOutputStream servletOutputStream = response.getOutputStream();
+//				if (format.equalsIgnoreCase(FileType.PDF.toString())) {
+//					response.setContentType("application/pdf");
+//					response.setHeader("Content-disposition", "attachment");
+//					response.setHeader("filename", report.getName().concat("_").concat(reportExec.getVersion())
+//							.concat(".").concat(FileType.PDF.toString().toLowerCase()));
+//					doc.save(servletOutputStream);
+//					doc.close();
+//				} else if (format.equalsIgnoreCase(FileType.XLS.toString())) {
+//					response.setContentType("application/xml");
+//					response.setHeader("Content-disposition", "attachment");
+//					response.setHeader("filename", report.getName().concat("_").concat(reportExec.getVersion())
+//							.concat(".").concat(FileType.XLS.toString().toLowerCase()));
+//					workbook.write(servletOutputStream);
+//					workbook.close();
+//				}
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//				logger.error("Can not download file.");
+//				response.setStatus(300);
+//				throw new FileNotFoundException("Can not download file.");
+//			}
+//		}
 
 		return response;
 	}

@@ -1838,6 +1838,9 @@ InferyxApp.directive('downloadDirective', function (CommonService, CF_DOWNLOAD) 
           else if(scope.metaType=="simulate"){
             url = "model/simulate/download?action=view&simulateExecUUID=" + scope.download.uuid + "&simulateExecVersion=" + scope.download.version + "&mode=''" + "&rows=" + scope.download.rows+"&format="+scope.download.selectFormate;
           }
+          else if(scope.metaType=="vizpod"){
+              url= "vizpod/downloadSample?action=view&uuid="+scope.download.uuid+"&version="+scope.download.version + "&rows="+scope.download.rows+"&format="+scope.download.selectFormate
+            }
           if(scope.download.selectFormate =="PDF"){
             url=url+"&layout="+scope.download.selectLayout
           }

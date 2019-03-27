@@ -852,7 +852,7 @@ public class VizpodParser {
 				}
 			}
 		}
-		if (isAnyFunction) {
+		if (isAnyFunction && groupByBuilder.toString().contains(",")) {
 			return new StringBuilder(groupByBuilder.substring(0, groupByBuilder.lastIndexOf(",")));
 		} else {
 			return new StringBuilder();

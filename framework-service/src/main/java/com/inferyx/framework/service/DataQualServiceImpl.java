@@ -12,7 +12,6 @@ package com.inferyx.framework.service;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -26,12 +25,8 @@ import java.util.concurrent.FutureTask;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.spark.sql.Row;
 import org.codehaus.jettison.json.JSONException;
-import org.datavec.api.transform.quality.DataQualityAnalysis;
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
@@ -61,10 +56,8 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.RefIntegrity;
-import com.inferyx.framework.domain.ResultSetHolder;
 import com.inferyx.framework.domain.Status;
 import com.inferyx.framework.domain.Threshold;
-import com.inferyx.framework.enums.AbortConditionType;
 import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.enums.ThresholdType;
@@ -95,6 +88,8 @@ public class DataQualServiceImpl extends RuleTemplate {
 	CommonServiceImpl<?> commonServiceImpl;
 	@Autowired
 	Engine engine;
+	@Autowired
+	private DownloadServiceImpl downloadServiceImpl;
 	
 	public IDataQualDao getiDataQualDao() {
 		return iDataQualDao;
@@ -561,8 +556,10 @@ public class DataQualServiceImpl extends RuleTemplate {
 		} else {
 			results = getResultDetails(dqExecUuid, dqExecVersion, offset, rowLimit, sortBy, order, requestId, runMode);
 		}
-		response = commonServiceImpl.download(format, response, runMode, results,
-				new MetaIdentifierHolder(new MetaIdentifier(MetaType.dqExec, dqExecUuid, dqExecVersion)), layout);
+		DataQualExec dqExec = (DataQualExec) commonServiceImpl.getOneByUuidAndVersion(dqExecUuid, dqExecVersion, MetaType.dqExec.toString(), "N");
+		response = downloadServiceImpl.download(format, response, runMode, results,
+				new MetaIdentifierHolder(new MetaIdentifier(MetaType.dqExec, dqExecUuid, dqExecVersion)), layout,
+				null, false, "framework.file.download.path", null, dqExec.getDependsOn());
 		return response;
 	}
 
