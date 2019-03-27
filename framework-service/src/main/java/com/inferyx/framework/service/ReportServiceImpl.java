@@ -334,7 +334,7 @@ public class ReportServiceImpl extends RuleTemplate {
 				new MetaIdentifier(MetaType.report, report.getUuid(), report.getVersion()));
 		
 		response = downloadServiceImpl.download(format, response, runMode, data, dependsOn, layout,
-				reportExec, true, "framework.report.Path", getReportParametrsForDoc(report, reportExec), metaObjectHolder);
+				reportExec, false, "framework.report.Path", getReportParametrsForDoc(report, reportExec), metaObjectHolder);
 		
 //		format = Helper.mapFileFormat(report.getFormat());
 //		
