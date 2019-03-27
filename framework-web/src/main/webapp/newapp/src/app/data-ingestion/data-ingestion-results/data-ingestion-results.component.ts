@@ -96,7 +96,7 @@ export class DataIngestionResultsComponent implements OnInit {
     this.params.id = this._uuid;
     this.params.uuid = this._uuid;
     this.params.name = response.name;
-   // this.params["elementType"] = this._type;
+    this.params.elementType = this._type;
     this.params.version = this._version;
     this.params.ref.id = this._uuid;
     this.params.ref.name = response.name;
