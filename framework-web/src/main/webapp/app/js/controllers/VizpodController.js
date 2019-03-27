@@ -913,52 +913,58 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 		if($scope.checkIsInrogess () ==false){
 			return false;
 		}
+		$scope.isDownloadDirective=true;
 		$scope.download.uuid = data.uuid;
 		$scope.download.version = data.version;
 		$scope.download.type="vizpod";
-		$('#downloadSample').modal({
-			backdrop: 'static',
-			keyboard: false
-		});
+		// $('#downloadSample').modal({
+		// 	backdrop: 'static',
+		// 	keyboard: false
+		// });
 	};
-   
-    $scope.submitDownload =function(){
-		$scope.isDownloadDatapod=true;
-		$('#downloadSample').modal("hide");
-		var url = $location.absUrl().split("app")[0]
-		$http({
-			method: 'GET',
-			url: url+$scope.download.type+"/download?action=view&uuid="+$scope.download.uuid+"&version="+$scope.download.version + "&rows="+$scope.download.rows+"&format="+$scope.download.selectFormate,
-			responseType: 'arraybuffer'
-		}).success(function (data, status, headers) {
-			$scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
-			$scope.isDownloadDatapod=false;
-			headers = headers();
-			var filename = headers['filename'];
-			var contentType = headers['content-type'];
-			var linkElement = document.createElement('a');
-			try {
-				var blob = new Blob([data], {
-					type: contentType
-				});
-				var url = window.URL.createObjectURL(blob);
-				linkElement.setAttribute('href', url);
-				linkElement.setAttribute("download",filename);
-
-				var clickEvent = new MouseEvent("click", {
-					"view": window,
-					"bubbles": true,
-					"cancelable": false
-				});
-				linkElement.dispatchEvent(clickEvent);
-			} catch (ex) {
-				console.log(ex);
-			}
-		}).error(function (data) {
-			$scope.isDownloadDatapod=false;
-			console.log(data);
-			$('#downloadSample').modal("hide");
-		});
+	$scope.onDownloaed=function(data){
+		console.log(data);
+		$scope.isDownloadDatapod=data.isDownloadInprogess;
+		$scope.isDownloadDirective=data.isDownloadDirective;
 	}
+//   
+//    $scope.submitDownload =function(){
+//		$scope.isDownloadDatapod=true;
+//		$('#downloadSample').modal("hide");
+//		var url = $location.absUrl().split("app")[0]
+//		$http({
+//			method: 'GET',
+//			url: url+$scope.download.type+"/download?action=view&uuid="+$scope.download.uuid+"&version="+$scope.download.version + "&rows="+$scope.download.rows+"&format="+$scope.download.selectFormate,
+//			responseType: 'arraybuffer'
+//		}).success(function (data, status, headers) {
+//			$scope.download.rows=CF_DOWNLOAD.framework_download_minrows;
+//			$scope.isDownloadDatapod=false;
+//			headers = headers();
+//			var filename = headers['filename'];
+//			var contentType = headers['content-type'];
+//			var linkElement = document.createElement('a');
+//			try {
+//				var blob = new Blob([data], {
+//					type: contentType
+//				});
+//				var url = window.URL.createObjectURL(blob);
+//				linkElement.setAttribute('href', url);
+//				linkElement.setAttribute("download",filename);
+//
+//				var clickEvent = new MouseEvent("click", {
+//					"view": window,
+//					"bubbles": true,
+//					"cancelable": false
+//				});
+//				linkElement.dispatchEvent(clickEvent);
+//			} catch (ex) {
+//				console.log(ex);
+//			}
+//		}).error(function (data) {
+//			$scope.isDownloadDatapod=false;
+//			console.log(data);
+//			$('#downloadSample').modal("hide");
+//		});
+//	}
 
 })/*End of Vizpod Controller*/

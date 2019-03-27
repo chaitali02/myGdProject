@@ -399,7 +399,7 @@ public class VizpodServiceImpl extends RuleTemplate {
 		
 		MetaIdentifier vizpodMI = vizExec.getDependsOn().getRef();
 		Vizpod vizpod = (Vizpod) commonServiceImpl.getOneByUuidAndVersion(vizpodMI.getUuid(), vizpodMI.getVersion(), MetaType.vizpod.toString(), "Y");
-		Set<MetaIdentifier> usedRefKeySet = new HashSet<>();
+		Set<MetaIdentifier> usedRefKeySet = new HashSet<MetaIdentifier>();
 		List<AttributeRefHolder> filterInfo = vizpod.getFilterInfo();			
 		if (execParams != null && execParams.getFilterInfo() != null) {
 			if (filterInfo == null) {
@@ -460,7 +460,7 @@ public class VizpodServiceImpl extends RuleTemplate {
 //					}
 //				}
 		
-			Set<MetaIdentifier> usedRefKeySet = null;
+			Set<MetaIdentifier> usedRefKeySet = new HashSet<MetaIdentifier>();
 			String sql=vizpodParser.toSql(vizpod, null, usedRefKeySet, true, runMode, false);
 			//code commented by vaibhav retired vizexec
 			/**** Get sql and update in vizpodexec - START ****//*
@@ -856,6 +856,34 @@ public class VizpodServiceImpl extends RuleTemplate {
 		response = downloadServiceImpl.download(format, response, runMode, results,
 				new MetaIdentifierHolder(new MetaIdentifier(MetaType.vizExec, execUuid, execVersion)), layout,
 				null, false, "framework.file.download.path", null, vizExec.getDependsOn(), null);
+		return response;
+	}
+	
+	
+	public HttpServletResponse downloadSample(String vizpodUuid, String vizpodVersion,
+			String format, ExecParams execParams, String download, int offset, int limit, HttpServletResponse response,
+			int rowLimit, String sortBy, String order, String requestId, RunMode runMode, Layout layout)
+			throws Exception {
+
+		int maxRows = Integer.parseInt(Helper.getPropertyValue("framework.download.maxrows"));
+		if (rowLimit > maxRows) {
+			logger.error("Requested rows exceeded the limit of " + maxRows);
+			commonServiceImpl.sendResponse("412", MessageStatus.FAIL.toString(),
+					"Requested rows exceeded the limit of " + maxRows, null);
+			throw new RuntimeException("Requested rows exceeded the limit of " + maxRows);
+		}
+
+		List<Map<String, Object>> results = getVizpodResults(vizpodUuid, vizpodVersion, execParams, maxRows, offset, limit, sortBy, order, requestId, runMode);
+
+		MetaIdentifierHolder mihold = new MetaIdentifierHolder();
+		MetaIdentifier mi = new MetaIdentifier();
+		mi.setUuid(vizpodUuid);
+		mi.setVersion(vizpodVersion);
+		mi.setType(MetaType.vizpod);
+		mihold.setRef(mi);
+		response = downloadServiceImpl.download(format, response, runMode, results,
+				new MetaIdentifierHolder(new MetaIdentifier(MetaType.vizpod, vizpodUuid, vizpodVersion)), layout, null,
+				false, "framework.file.download.path", null, mihold);
 		return response;
 	}
 
