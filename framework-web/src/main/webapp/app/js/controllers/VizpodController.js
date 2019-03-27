@@ -406,7 +406,7 @@ DatavisualizationModule.controller('MetadataVizpodController', function ($filter
 				notify.type = 'info',
 				notify.title = 'Info',
 				notify.timeout=5000,
-				notify.content = "Form Card Max 5 Attribute Allowed"
+				notify.content = "Max 5 attributes allowed"
 				$scope.$emit('notify', notify);
 				notify.timeout=3000;
 			}
