@@ -5534,14 +5534,4 @@ public class CommonServiceImpl<T> {
 		else
 			return ConstantsUtil.PERSIST_MODE_DISK_ONLY;
 	}
-
-	
-	public Organization getOrgInfoByApp(String appUuid) throws JsonProcessingException {
-
-		Application application = (Application) getOneByUuidAndVersion(appUuid, "", MetaType.application.toString());
-		Organization organization = (Organization) getLatestByUuid(application.getOrgInfo().getRef().getUuid(), "Y");
-
-		return organization;
-	}
-
 }

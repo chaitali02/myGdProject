@@ -380,15 +380,4 @@ public class CommonController<T> {
 			@RequestParam(value = "type", required = false) String type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException, ParseException  {
 		return commonServiceImpl.getAppByOrg(orgUuid);
 	}
-	
-	@RequestMapping(value = "/getOrgInfoByApp", method = RequestMethod.GET)
-	public @ResponseBody Organization getOrgInfoByApp(
-			@RequestParam(value = "uuid") String appUuid,
-			@RequestParam(value = "action", required=false) String action,
-			@RequestParam(value = "type", required = false) String type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, JsonProcessingException, ParseException  {
-		return commonServiceImpl.getOrgInfoByApp(appUuid);
-	}
-	
-	
-	
 }
