@@ -17,7 +17,7 @@
 	"numRows": {
 		"$numberLong": "50"
 	},
-            "runMode" : "BATCH",
+	"runMode": "BATCH",
 	"uuid": "ff94db4b-c3c0-4718-96a9-15e25c92fc75",
 	"version": "1490415211",
 	"name": "ed47f654_2d4b_483c_971f_804ee88f092f_1488620292_1490415210",
@@ -28,10 +28,9 @@
 			"uuid": "d04716df-e96a-419f-9118-c81342b47f86"
 		}
 	},
-    
 	"createdOn": ISODate("2017-11-07T10:24:13.443Z"),
-	"active" : "Y",
-  "locked" : "N",
+	"active": "Y",
+	"locked": "N",
 	"published": "N",
 	"appInfo": [
 		{

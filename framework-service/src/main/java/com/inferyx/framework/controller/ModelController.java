@@ -154,7 +154,7 @@ public class ModelController {
 					MetaType.predict.toString());
 
 			PredictExec predictExec = null;
-			predictExec = modelServiceImpl.create(predict, execParams, null, predictExec);
+			predictExec = modelServiceImpl.create(predict, execParams, null, predictExec,runMode);
 			modelServiceImpl.predict(predict, execParams, predictExec, runMode);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -176,7 +176,7 @@ public class ModelController {
 					MetaType.simulate.toString());
 
 			SimulateExec simulateExec = null;
-			simulateExec = modelServiceImpl.create(simulate, execParams, null, simulateExec);
+			simulateExec = modelServiceImpl.create(simulate, execParams, null, simulateExec, runMode);
 			return modelServiceImpl.simulate(simulate, execParams, simulateExec, runMode);
 		} catch (Exception e) {
 			e.printStackTrace();

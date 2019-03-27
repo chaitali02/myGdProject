@@ -1074,7 +1074,7 @@ public class ModelServiceImpl {
 	}
 
 	public PredictExec create(Predict predict, ExecParams execParams, ParamMap paramMap,
-			PredictExec predictExec) throws Exception {
+			PredictExec predictExec, RunMode runMode) throws Exception {
 		
 		MetaIdentifierHolder predictRef = new MetaIdentifierHolder();		
 		if (predictExec == null) {
@@ -1082,6 +1082,7 @@ public class ModelServiceImpl {
 			predictRef.setRef(new MetaIdentifier(MetaType.predict, predict.getUuid(), predict.getVersion()));
 			predictExec.setDependsOn(predictRef);
 			predictExec.setBaseEntity();
+			predictExec.setRunMode(RunMode.ONLINE);
 		}
 
 		try {
@@ -1130,7 +1131,7 @@ public class ModelServiceImpl {
 	}
 
 	public SimulateExec create(Simulate simulate, ExecParams execParams, ParamMap paramMap,
-			SimulateExec simulateExec) throws Exception {
+			SimulateExec simulateExec,RunMode runMode) throws Exception {
 
 		MetaIdentifierHolder simulateRef = new MetaIdentifierHolder();	
 		if (simulateExec == null) {
@@ -1138,6 +1139,8 @@ public class ModelServiceImpl {
 			simulateRef.setRef(new MetaIdentifier(MetaType.simulate, simulate.getUuid(), simulate.getVersion()));
 			simulateExec.setDependsOn(simulateRef);
 			simulateExec.setBaseEntity();
+			simulateExec.setRunMode(RunMode.ONLINE);
+
 		}
 		
 		try {
@@ -1187,7 +1190,7 @@ public class ModelServiceImpl {
 	}
 	
 	public TrainExec create(Train train, Model model, ExecParams execParams, ParamMap paramMap,
-			TrainExec trainExec) throws Exception {
+			TrainExec trainExec, RunMode runMode) throws Exception {
 //		String logPath = null;
 		
 		try {
@@ -1198,7 +1201,7 @@ public class ModelServiceImpl {
 				trainRef.setRef(new MetaIdentifier(MetaType.train, train.getUuid(), train.getVersion()));
 				trainExec.setDependsOn(trainRef);
 				trainExec.setBaseEntity();
-				
+				trainExec.setRunMode(runMode);
 				/*
 				 * 
 				 * log file_name formation : modeluuid + modelversion + trainexecversion
@@ -2424,7 +2427,7 @@ public class ModelServiceImpl {
 				MetaIdentifierHolder resultRef = new MetaIdentifierHolder();
 				boolean result = false;
 				if(trainExec == null) {
-					trainExec = create(train, model, execParams, null, trainExec);
+					trainExec = create(train, model, execParams, null, trainExec,runMode);
 				}
 				trainExec = (TrainExec) commonServiceImpl.setMetaStatus(trainExec, MetaType.trainExec, Status.Stage.RUNNING);
 				
@@ -2859,14 +2862,14 @@ public class ModelServiceImpl {
 				if (paramMapList.size() > 0) {
 					for (ParamMap paramMap : paramMapList) {
 						if(trainExec == null)
-							trainExec = create(train, model, execParams, paramMap, trainExec);
+							trainExec = create(train, model, execParams, paramMap, trainExec, runMode);
 						Thread.sleep(1000); // Should be parameterized in a class
 						train(train, model, trainExec, execParams, paramMap, runMode,algoClass);
 						trainExec = null;
 					}
 				} else {
 					if(trainExec == null)
-						trainExec = create(train, model, execParams, null, trainExec);
+						trainExec = create(train, model, execParams, null, trainExec, runMode);
 					train(train, model, trainExec, execParams, null, runMode,algoClass);
 				}
 			}			

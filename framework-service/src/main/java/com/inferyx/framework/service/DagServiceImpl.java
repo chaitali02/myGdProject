@@ -732,16 +732,16 @@ public class DagServiceImpl {
 					Model model = (Model) commonServiceImpl.getOneByUuidAndVersion(
 							train.getDependsOn().getRef().getUuid(), train.getDependsOn().getRef().getVersion(),
 							train.getDependsOn().getRef().getType().toString(), "N");
-					baseExec = modelServiceImpl.create(train, model, taskExecParams, null, (TrainExec) baseExec);
+					baseExec = modelServiceImpl.create(train, model, taskExecParams, null, (TrainExec) baseExec,runMode);
 				} else if (baseExecDependsOnMI.getType().equals(MetaType.predict)) {
 					Predict predict = (Predict) commonServiceImpl.getOneByUuidAndVersion(baseExecDependsOnMI.getUuid(),
 							baseExecDependsOnMI.getVersion(), baseExecDependsOnMI.getType().toString(), "N");
-					baseExec = modelServiceImpl.create(predict, taskExecParams, null, (PredictExec) baseExec);
+					baseExec = modelServiceImpl.create(predict, taskExecParams, null, (PredictExec) baseExec,runMode);
 				} else if (baseExecDependsOnMI.getType().equals(MetaType.simulate)) {
 					Simulate simulate = (Simulate) commonServiceImpl.getOneByUuidAndVersion(
 							baseExecDependsOnMI.getUuid(), baseExecDependsOnMI.getVersion(),
 							baseExecDependsOnMI.getType().toString());
-					baseExec = modelServiceImpl.create(simulate, taskExecParams, null, (SimulateExec) baseExec);
+					baseExec = modelServiceImpl.create(simulate, taskExecParams, null, (SimulateExec) baseExec,runMode);
 				} else if (baseExecDependsOnMI.getType().equals(MetaType.recon)) {
 					baseExec = reconServiceImpl.create(baseExecDependsOnMI.getUuid(), baseExecDependsOnMI.getVersion(),
 							(ReconExec) baseExec, refKeys, datapodList, dagExec, runMode);
