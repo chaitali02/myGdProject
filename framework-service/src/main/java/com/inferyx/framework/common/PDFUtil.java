@@ -10,13 +10,10 @@
  *******************************************************************************/
 package com.inferyx.framework.common;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.inferyx.framework.domain.Document;
-import com.inferyx.framework.enums.Alignment;
 import com.inferyx.framework.enums.Layout;
-import com.inferyx.framework.service.CommonServiceImpl;
 
 import be.quodlibet.boxable.BaseTable;
 import be.quodlibet.boxable.Cell;

@@ -29,7 +29,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.inferyx.framework.common.Helper;
-import com.inferyx.framework.domain.Address;
 import com.inferyx.framework.domain.BaseEntity;
 import com.inferyx.framework.domain.BaseExec;
 import com.inferyx.framework.domain.Document;
@@ -89,9 +88,10 @@ public class DownloadServiceImpl {
 			boolean checkFileExistance, String defaultPathKey, String parameters, MetaIdentifierHolder metaObjectHolder,
 			Map<String, String> otherDetails) throws Exception {
 		LOGGER.info("Inside download method....");
+		
+		DownloadExec downloadExec = create(dependsOn);
+		downloadExec = parse(downloadExec, null, null);
 		try {
-			DownloadExec downloadExec = create(dependsOn);
-			downloadExec = parse(downloadExec, null, null);
 			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec,
 					Status.Stage.RUNNING);
 			
@@ -205,6 +205,8 @@ public class DownloadServiceImpl {
 			}
 			message = !StringUtils.isBlank(message) ? message : "Can not download file ...";
 			LOGGER.error(message);
+			downloadExec = (DownloadExec) commonServiceImpl.setMetaStatus(downloadExec, MetaType.downloadExec,
+					Status.Stage.FAILED);
 			response.setStatus(300);
 			throw new RuntimeException(message);
 		}
