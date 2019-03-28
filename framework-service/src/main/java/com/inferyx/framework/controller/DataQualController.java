@@ -80,7 +80,7 @@ public class DataQualController {
 			@RequestParam(value="mode", required=false, defaultValue="ONLINE") String mode) throws Exception {
 		RunMode runMode = Helper.getExecutionMode(mode);
 		List<FutureTask<TaskHolder>> taskList = new ArrayList<FutureTask<TaskHolder>>();
-		DataQualExec dataQualExec = dataQualServiceImpl.create(dataQualUUID, dataQualVersion, null, null, null);
+		DataQualExec dataQualExec = dataQualServiceImpl.create(dataQualUUID, dataQualVersion, null, null, null, runMode);
 		dataQualExec = (DataQualExec) dataQualServiceImpl.parse(dataQualExec.getUuid(), dataQualExec.getVersion(), null, null, null, null, runMode);
 		dataQualExec = dataQualServiceImpl.execute(metaExecutor, dataQualExec, taskList, null, runMode);
 		commonServiceImpl.completeTaskThread(taskList);

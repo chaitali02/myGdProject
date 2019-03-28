@@ -242,10 +242,10 @@ public class DataQualServiceImpl extends RuleTemplate {
 //	}
 
 	public DataQualExec create(String dataQualUUID, String dataQualVersion, Map<String, MetaIdentifier> refKeyMap,
-			List<String> datapodList, DagExec dagExec) throws Exception {
+			List<String> datapodList, DagExec dagExec ,RunMode mode) throws Exception {
 		try {
 			return (DataQualExec) super.create(dataQualUUID, dataQualVersion, MetaType.dq, MetaType.dqExec, null,
-					refKeyMap, datapodList, dagExec, null);
+					refKeyMap, datapodList, dagExec, mode);
 		} catch (Exception e) {
 			e.printStackTrace();
 			String message = null;

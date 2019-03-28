@@ -1224,6 +1224,7 @@ public class DataStoreServiceImpl {
 		try {
 			DataStore dataStore = (DataStore) commonServiceImpl.getOneByUuidAndVersion(datastoreUuid, datastoreVersion,
 					MetaType.datastore.toString());
+			execVersion=dataStore.getExecId().getRef().getVersion();
 			StringBuilder orderBy = new StringBuilder();
 			RunMode runMode = Helper.getExecutionMode(dataStore.getRunMode());
 			Datasource datasource = commonServiceImpl.getDatasourceByApp();
@@ -1249,12 +1250,13 @@ public class DataStoreServiceImpl {
 			String tableName = getTableNameByDatastore(dataStore, runMode);
 
 			StringBuilder customCondition = new StringBuilder(" ");
-			if ((!execContext.equals(ExecContext.FILE) || !execContext.equals(ExecContext.spark)) && execVersion != null
+			/*if ((!execContext.equals(ExecContext.FILE) || !execContext.equals(ExecContext.spark)) && execVersion != null
 					&& !execVersion.isEmpty()) {
 				customCondition.append(" WHERE version = " + execVersion);
 			} else {
-				customCondition.append(" WHERE 1 = 1");
-			}
+				customCondition.append(" WHERE 1=1 ");
+			}*/
+			customCondition.append(" WHERE version = " + execVersion);
 
 			StringBuilder limitBuilder = new StringBuilder(" ");
 			if (limit > 0) {
