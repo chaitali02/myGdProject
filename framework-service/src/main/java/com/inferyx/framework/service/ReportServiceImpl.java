@@ -54,12 +54,14 @@ import com.inferyx.framework.domain.MetaIdentifier;
 import com.inferyx.framework.domain.MetaIdentifierHolder;
 import com.inferyx.framework.domain.MetaType;
 import com.inferyx.framework.domain.Notification;
+import com.inferyx.framework.domain.Organization;
 import com.inferyx.framework.domain.ParamListHolder;
 import com.inferyx.framework.domain.Report;
 import com.inferyx.framework.domain.ReportExec;
 import com.inferyx.framework.domain.ReportExecView;
 import com.inferyx.framework.domain.SenderInfo;
 import com.inferyx.framework.domain.Status;
+import com.inferyx.framework.enums.Alignment;
 import com.inferyx.framework.enums.Layout;
 import com.inferyx.framework.enums.RunMode;
 import com.inferyx.framework.executor.SparkExecutor;
@@ -607,6 +609,13 @@ public class ReportServiceImpl extends RuleTemplate {
 					document.setParameters(getReportParametrsForDoc(report, reportExec));
 					document.setGenerationDate(report.getCreatedOn());
 					document.setFileName(attachmentName);
+					document.setLogoAlignment(Alignment.RIGHT);
+					document.setTitleAlignment(Alignment.CENTER);
+					
+					Organization organization = commonServiceImpl.getOrgInfoByCurrentApp();
+					document.setOrgName(organization.getName());
+					document.setOrgLogo(organization.getLogoPath());
+					document.setOrgAddress(commonServiceImpl.getOrganizationAddr(organization.getAddress()));
 										
 					boolean isDocCreated = documentGenServiceImpl.createDocument(document);				
 					
