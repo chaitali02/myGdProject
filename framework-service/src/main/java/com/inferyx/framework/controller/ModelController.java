@@ -154,7 +154,7 @@ public class ModelController {
 					MetaType.predict.toString());
 
 			PredictExec predictExec = null;
-			predictExec = modelServiceImpl.create(predict, execParams, null, predictExec,runMode);
+			predictExec = modelServiceImpl.create(predict, execParams, null, predictExec, runMode);
 			modelServiceImpl.predict(predict, execParams, predictExec, runMode);
 		} catch (Exception e) {
 			e.printStackTrace();
