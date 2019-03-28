@@ -5570,4 +5570,23 @@ public class CommonServiceImpl<T> {
 		}
 	}
 
+	
+	public Boolean checkTypeVersion(String uuid) throws JsonProcessingException {
+		Datapod datapod = (Datapod) getOneByUuidAndVersion(uuid, null, MetaType.datapod.toString());
+		List<Attribute> attributes = datapod.getAttributes();
+		Boolean flag = false;
+		/*
+		 * attributes.stream().forEach(attr -> { if
+		 * (attr.getName().equalsIgnoreCase("version")) { flag=true; } else {
+		 * flag=false; } });
+		 */
+		for (Attribute attr : attributes) {
+			if (attr.getName().equalsIgnoreCase("version"))
+				return true;
+			else
+				flag = false;
+		}
+
+		return flag;
+	}
 }
