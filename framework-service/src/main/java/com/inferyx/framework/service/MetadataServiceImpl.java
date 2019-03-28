@@ -2263,33 +2263,32 @@ public class MetadataServiceImpl {
 		return latestAlgoList;
 	}
 	
-	
-	public Datapod getDatapodByType(String type, String resultType) throws FileNotFoundException, IOException {
+	public Datapod getDatapodByType(String type, String resultType) throws FileNotFoundException, IOException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException {
 		
 		if(type.equalsIgnoreCase(MetaType.profile.toString()))
 			{
 			Datapod dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
-					Helper.getPropertyValue("framework.profile.datapod.uuid"), null, MetaType.datapod.toString());
+					commonServiceImpl.getConfigValue("framework.profile.datapod.uuid"), null, MetaType.datapod.toString());
 			return dp;
 			}
 		else if(type.equalsIgnoreCase(MetaType.recon.toString())){
 			Datapod dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
-					Helper.getPropertyValue("framework.recon.datapod.uuid"), null, MetaType.datapod.toString());
+					commonServiceImpl.getConfigValue("framework.recon.datapod.uuid"), null, MetaType.datapod.toString());
 			return dp;
 		}
 		else if(type.equalsIgnoreCase(MetaType.dq.toString())){
 			Datapod dp =null;
 			if(resultType ==null) {
 				dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
-						Helper.getPropertyValue("framework.dataqual.datapod.uuid"), null, MetaType.datapod.toString());
+						commonServiceImpl.getConfigValue("framework.dataqual.datapod.uuid"), null, MetaType.datapod.toString());
 			}
 			else if(resultType.equals("summary")) {
 				dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
-						Helper.getPropertyValue("framework.dataqual.summary.uuid"), null, MetaType.datapod.toString());
+						commonServiceImpl.getConfigValue("framework.dataqual.summary.uuid"), null, MetaType.datapod.toString());
 			}
 			else if(resultType.equals("detail")) {
 				dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
-						Helper.getPropertyValue("framework.dataqual.detail.uuid"), null, MetaType.datapod.toString());
+						commonServiceImpl.getConfigValue("framework.dataqual.detail.uuid"), null, MetaType.datapod.toString());
 			}
 			return dp;
 		}
@@ -2297,16 +2296,61 @@ public class MetadataServiceImpl {
 			Datapod dp =null;
 			if(resultType.equals("summary")) {
 				dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
-						Helper.getPropertyValue("framework.rule2.summary.uuid"), null, MetaType.datapod.toString());
+						commonServiceImpl.getConfigValue("framework.rule2.summary.uuid"), null, MetaType.datapod.toString());
 			}
 			else if(resultType.equals("detail")) {
 				dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
-						Helper.getPropertyValue("framework.rule2.detail.uuid"), null, MetaType.datapod.toString());
+						commonServiceImpl.getConfigValue("framework.rule2.detail.uuid"), null, MetaType.datapod.toString());
 			}
 			return dp;
 		}
 		return null;
 	}
+
+	
+//	public Datapod getDatapodByType(String type, String resultType) throws FileNotFoundException, IOException {
+//		
+//		if(type.equalsIgnoreCase(MetaType.profile.toString()))
+//			{
+//			Datapod dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+//					Helper.getPropertyValue("framework.profile.datapod.uuid"), null, MetaType.datapod.toString());
+//			return dp;
+//			}
+//		else if(type.equalsIgnoreCase(MetaType.recon.toString())){
+//			Datapod dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+//					Helper.getPropertyValue("framework.recon.datapod.uuid"), null, MetaType.datapod.toString());
+//			return dp;
+//		}
+//		else if(type.equalsIgnoreCase(MetaType.dq.toString())){
+//			Datapod dp =null;
+//			if(resultType ==null) {
+//				dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+//						Helper.getPropertyValue("framework.dataqual.datapod.uuid"), null, MetaType.datapod.toString());
+//			}
+//			else if(resultType.equals("summary")) {
+//				dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+//						Helper.getPropertyValue("framework.dataqual.summary.uuid"), null, MetaType.datapod.toString());
+//			}
+//			else if(resultType.equals("detail")) {
+//				dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+//						Helper.getPropertyValue("framework.dataqual.detail.uuid"), null, MetaType.datapod.toString());
+//			}
+//			return dp;
+//		}
+//		else if(type.equalsIgnoreCase(MetaType.rule2.toString())){
+//			Datapod dp =null;
+//			if(resultType.equals("summary")) {
+//				dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+//						Helper.getPropertyValue("framework.rule2.summary.uuid"), null, MetaType.datapod.toString());
+//			}
+//			else if(resultType.equals("detail")) {
+//				dp = (Datapod) commonServiceImpl.getOneByUuidAndVersion(
+//						Helper.getPropertyValue("framework.rule2.detail.uuid"), null, MetaType.datapod.toString());
+//			}
+//			return dp;
+//		}
+//		return null;
+//	}
 
 	public List<Group> getGroupsByOrg(String orgUuid) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, NullPointerException, ParseException, JSONException, IOException{
 		

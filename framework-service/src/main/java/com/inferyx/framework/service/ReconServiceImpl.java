@@ -233,7 +233,7 @@ public class ReconServiceImpl extends RuleTemplate {
 					MetaType.reconExec.toString());
 			DataStore datastore = dataStoreServiceImpl.getDatastore(reconExec.getResult().getRef().getUuid(),
 					reconExec.getResult().getRef().getVersion());
-			data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order, reconExec.getVersion());
+			data = dataStoreServiceImpl.getResultByDatastore(datastore.getUuid(), datastore.getVersion(), requestId, offset, limit, sortBy, order, reconExec.getVersion(),runMode);
 			
 		}catch (Exception e) {
 			e.printStackTrace();
